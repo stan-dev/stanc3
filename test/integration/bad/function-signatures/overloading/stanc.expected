@@ -1,3 +1,28 @@
+  $ ../../../../../../install/default/bin/stanc define_extern1.stan
+Semantic error in 'define_extern1.stan', line 3, column 2 to line 5, column 3:
+   -------------------------------------------------
+     1:  functions {
+     2:    @extern real foo(int x, int y);
+     3:    real foo(int x, int y){
+           ^
+     4:      return 1.0;
+     5:    }
+   -------------------------------------------------
+
+Function 'foo' has already been declared for signature (int, int) => real
+[exit 1]
+  $ ../../../../../../install/default/bin/stanc define_extern2.stan
+Semantic error in 'define_extern2.stan', line 3, column 2 to column 25:
+   -------------------------------------------------
+     1:  functions {
+     2:    @extern real foo(int x, int y);
+     3:    real foo(int x, int y);
+           ^
+     4:  }
+   -------------------------------------------------
+
+Function 'foo' has already been declared for signature (int, int) => real
+[exit 1]
   $ ../../../../../../install/default/bin/stanc invalid_lpmf.stan
 Semantic error in 'invalid_lpmf.stan', line 8, column 3 to line 10, column 4:
    -------------------------------------------------

@@ -19,6 +19,7 @@ type info =
   ; kind:
       [ `Variable of varinfo
       | `UserDeclared of Location_span.t
+      | `UserExtern of Location_span.t
       | `StanMath
       | `UserDefined ] }
 

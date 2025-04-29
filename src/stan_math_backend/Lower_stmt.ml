@@ -344,7 +344,7 @@ let rec lower_statement Stmt.Fixed.{pattern; meta} : stmt list =
   | Return e -> [Return (Option.map ~f:lower_expr e)]
   | Block ls -> [Stmts.block (lower_statements ls)]
   | SList ls -> lower_statements ls
-  | Decl {decl_adtype; decl_id; decl_type; initialize} ->
+  | Decl {decl_adtype; decl_id; decl_type; initialize; decl_annotations= _} ->
       [lower_decl decl_id decl_type decl_adtype initialize]
   | Profile (name, ls) -> [lower_profile name (lower_statements ls)]
 

@@ -286,14 +286,14 @@ let check_id cf loc tenv id =
       Semantic_error.invalid_unnormalized_fn loc |> error
   | {kind= `Variable {origin; _}; type_} :: _ ->
       (calculate_autodifftype cf origin type_, type_)
-  | { kind= `UserDefined | `UserDeclared _
+  | { kind= `UserDefined | `UserExtern _ | `UserDeclared _
     ; type_= UFun (args, rt, (FnLpdf _ | FnLpmf _), mem_pattern) }
     :: _ ->
       let type_ =
         UnsizedType.UFun
           (args, rt, Fun_kind.suffix_from_name id.name, mem_pattern) in
       (calculate_autodifftype cf Functions type_, type_)
-  | {kind= `UserDefined | `UserDeclared _; type_} :: _ ->
+  | {kind= `UserDefined | `UserExtern _ | `UserDeclared _; type_} :: _ ->
       (calculate_autodifftype cf Functions type_, type_)
 
 let check_variable cf loc tenv id =
@@ -1179,7 +1179,8 @@ let verify_assignable_id loc cf tenv assign_id =
     | {kind= `Variable {origin; global; readonly}; _} :: _ ->
         (origin, global, readonly)
     | {kind= `StanMath; _} :: _ -> (MathLibrary, true, false)
-    | {kind= `UserDefined | `UserDeclared _; _} :: _ -> (Functions, true, false)
+    | {kind= `UserDefined | `UserDeclared _ | `UserExtern _; _} :: _ ->
+        (Functions, true, false)
     | _ ->
         Semantic_error.ident_not_in_scope loc assign_id.name
           (Env.nearest_ident tenv assign_id.name)
@@ -1669,7 +1670,7 @@ and check_transformation cf tenv ut trans =
       TupleTransformation tes
 
 and check_var_decl loc cf tenv sized_ty trans
-    (variables : untyped_expression Ast.variable list) is_global =
+    (variables : untyped_expression Ast.variable list) annotations is_global =
   let checked_type =
     check_sizedtype {cf with in_toplevel_decl= is_global} tenv sized_ty in
   let unsized_type = SizedType.to_unsized checked_type in
@@ -1694,6 +1695,7 @@ and check_var_decl loc cf tenv sized_ty trans
       { decl_type= checked_type
       ; transformation= checked_trans
       ; variables= tvariables
+      ; annotations
       ; is_global } in
   (tenv, mk_typed_statement ~stmt ~loc ~return_type:Incomplete)
 
@@ -1732,11 +1734,13 @@ and verify_fundef_overloaded loc tenv id arg_tys rt =
     verify_unique_signature tenv loc id arg_tys rt;
   verify_name_fresh tenv id ~is_udf:true
 
-and get_fn_decl_or_defn loc tenv id arg_tys rt body =
+and get_fn_decl_or_defn loc tenv id arg_tys rt body annotations =
   match body with
   | {stmt= Skip; _} ->
       if exists_matching_fn_declared tenv id arg_tys rt then
         Semantic_error.fn_decl_exists loc id.name |> error
+      else if List.mem annotations "extern" ~equal:String.equal then
+        `UserExtern id.id_loc
       else `UserDeclared id.id_loc
   | _ -> `UserDefined
 
@@ -1792,7 +1796,7 @@ and add_function tenv name type_ defined =
     Env.set_raw tenv name (new_fn :: defns)
   else Env.add tenv name type_ defined
 
-and check_fundef loc cf tenv return_ty id args body =
+and check_fundef loc cf tenv return_ty id args annotations body =
   List.iter args ~f:(fun (_, _, id) -> verify_identifier id);
   verify_identifier id;
   let arg_types = List.map ~f:(fun (w, y, _) -> (w, y)) args in
@@ -1836,8 +1840,11 @@ and check_fundef loc cf tenv return_ty id args body =
   verify_fundef_return_tys loc return_ty checked_body;
   let stmt =
     FunDef
-      {returntype= return_ty; funname= id; arguments= args; body= checked_body}
-  in
+      { returntype= return_ty
+      ; funname= id
+      ; arguments= args
+      ; annotations
+      ; body= checked_body } in
   (* NB: **not** tenv_body, so args don't leak out *)
   (tenv, mk_typed_statement ~return_type:Incomplete ~loc ~stmt)
 
@@ -1870,10 +1877,11 @@ and check_statement (cf : context_flags_record) (tenv : Env.t)
   | Block stmts -> (tenv, check_block loc cf tenv stmts)
   | Profile (name, vdsl) -> (tenv, check_profile loc cf tenv name vdsl)
   (* these two are special in that they're allowed to change the type environment *)
-  | VarDecl {decl_type; transformation; variables; is_global} ->
-      check_var_decl loc cf tenv decl_type transformation variables is_global
-  | FunDef {returntype; funname; arguments; body} ->
-      check_fundef loc cf tenv returntype funname arguments body
+  | VarDecl {decl_type; transformation; variables; annotations; is_global} ->
+      check_var_decl loc cf tenv decl_type transformation variables annotations
+        is_global
+  | FunDef {returntype; funname; arguments; annotations; body} ->
+      check_fundef loc cf tenv returntype funname arguments annotations body
 
 let verify_fun_def_body_in_block = function
   | {stmt= FunDef {body= {stmt= Block _; _}; _}; _}
@@ -1904,12 +1912,13 @@ let add_userdefined_functions tenv stmts_opt =
       Deprecation_analysis.set_jacobian_compatibility_mode stmts;
       let f tenv (s : Ast.untyped_statement) =
         match s with
-        | {stmt= FunDef {returntype; funname; arguments; body}; smeta= {loc}} ->
+        | { stmt= FunDef {returntype; funname; arguments; body; annotations}
+          ; smeta= {loc} } ->
             let arg_types = Ast.type_of_arguments arguments in
             verify_fundef_overloaded loc tenv funname arg_types returntype;
             let defined =
               get_fn_decl_or_defn loc tenv funname arg_types returntype body
-            in
+                annotations in
             add_function tenv funname.name
               (UFun
                  ( arg_types

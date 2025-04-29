@@ -2,7 +2,7 @@ program: WHILE
 ##
 ## Concrete syntax: while
 ##
-## Ends in an error in state: 407.
+## Ends in an error in state: 411.
 ##
 ## program' -> . program [ # ]
 ##
@@ -20,7 +20,7 @@ program: DATABLOCK LBRACE CHOLESKYFACTORCORR WHILE
 ##
 ## Concrete syntax: data { cholesky_factor_corr while
 ##
-## Ends in an error in state: 576.
+## Ends in an error in state: 584.
 ##
 ## top_var_type -> CHOLESKYFACTORCORR . LBRACK expression RBRACK [ WHILE VOID VECTOR UPPER UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER JACOBIAN INT IN IF IDENTIFIER FUNCTIONBLOCK FOR FATAL_ERROR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
 ##
@@ -42,7 +42,7 @@ program: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK WHILE
 ##
 ## Concrete syntax: data { cholesky_factor_cov [ while
 ##
-## Ends in an error in state: 570.
+## Ends in an error in state: 578.
 ##
 ## top_var_type -> CHOLESKYFACTORCOV LBRACK . expression option(pair(COMMA,expression)) RBRACK [ WHILE VOID VECTOR UPPER UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER JACOBIAN INT IN IF IDENTIFIER FUNCTIONBLOCK FOR FATAL_ERROR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
 ##
@@ -60,7 +60,7 @@ program: DATABLOCK LBRACE CORRMATRIX WHILE
 ##
 ## Concrete syntax: data { corr_matrix while
 ##
-## Ends in an error in state: 546.
+## Ends in an error in state: 554.
 ##
 ## top_var_type -> CORRMATRIX . LBRACK expression RBRACK [ WHILE VOID VECTOR UPPER UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER JACOBIAN INT IN IF IDENTIFIER FUNCTIONBLOCK FOR FATAL_ERROR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
 ##
@@ -78,7 +78,7 @@ program: DATABLOCK LBRACE COVMATRIX WHILE
 ##
 ## Concrete syntax: data { cov_matrix while
 ##
-## Ends in an error in state: 542.
+## Ends in an error in state: 550.
 ##
 ## top_var_type -> COVMATRIX . LBRACK expression RBRACK [ WHILE VOID VECTOR UPPER UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER JACOBIAN INT IN IF IDENTIFIER FUNCTIONBLOCK FOR FATAL_ERROR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
 ##
@@ -92,7 +92,7 @@ program: DATABLOCK LBRACE INT LABRACK WHILE
 ##
 ## Concrete syntax: data { int < while
 ##
-## Ends in an error in state: 540.
+## Ends in an error in state: 548.
 ##
 ## range_constraint -> LABRACK . range RABRACK [ WHILE VOID VECTOR UPPER UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER JACOBIAN INT IN IF IDENTIFIER FUNCTIONBLOCK FOR FATAL_ERROR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
 ##
@@ -106,7 +106,7 @@ program: DATABLOCK LBRACE INT LBRACE
 ##
 ## Concrete syntax: data { int {
 ##
-## Ends in an error in state: 539.
+## Ends in an error in state: 547.
 ##
 ## top_var_type -> INT . range_constraint [ WHILE VOID VECTOR UPPER UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER JACOBIAN INT IN IF IDENTIFIER FUNCTIONBLOCK FOR FATAL_ERROR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
 ##
@@ -124,7 +124,7 @@ program: DATABLOCK LBRACE ORDERED WHILE
 ##
 ## Concrete syntax: data { ordered while
 ##
-## Ends in an error in state: 528.
+## Ends in an error in state: 536.
 ##
 ## top_var_type -> ORDERED . LBRACK expression RBRACK [ WHILE VOID VECTOR UPPER UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER JACOBIAN INT IN IF IDENTIFIER FUNCTIONBLOCK FOR FATAL_ERROR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
 ##
@@ -142,7 +142,7 @@ program: DATABLOCK LBRACE POSITIVEORDERED WHILE
 ##
 ## Concrete syntax: data { positive_ordered while
 ##
-## Ends in an error in state: 524.
+## Ends in an error in state: 532.
 ##
 ## top_var_type -> POSITIVEORDERED . LBRACK expression RBRACK [ WHILE VOID VECTOR UPPER UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER JACOBIAN INT IN IF IDENTIFIER FUNCTIONBLOCK FOR FATAL_ERROR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
 ##
@@ -156,7 +156,7 @@ program: DATABLOCK LBRACE RBRACE WHILE
 ##
 ## Concrete syntax: data { } while
 ##
-## Ends in an error in state: 640.
+## Ends in an error in state: 645.
 ##
 ## program -> option(function_block) option(data_block) . option(transformed_data_block) option(parameters_block) option(transformed_parameters_block) option(model_block) option(generated_quantities_block) EOF [ # ]
 ##
@@ -170,7 +170,7 @@ program: DATABLOCK LBRACE REAL IDENTIFIER SEMICOLON WHILE
 ##
 ## Concrete syntax: data { real foo ; while
 ##
-## Ends in an error in state: 631.
+## Ends in an error in state: 421.
 ##
 ## list(top_var_decl_no_assign) -> top_var_decl_no_assign . list(top_var_decl_no_assign) [ RBRACE ]
 ##
@@ -184,7 +184,7 @@ program: DATABLOCK LBRACE REAL LBRACE
 ##
 ## Concrete syntax: data { real {
 ##
-## Ends in an error in state: 522.
+## Ends in an error in state: 530.
 ##
 ## top_var_type -> REAL . type_constraint [ WHILE VOID VECTOR UPPER UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER JACOBIAN INT IN IF IDENTIFIER FUNCTIONBLOCK FOR FATAL_ERROR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
 ##
@@ -198,7 +198,7 @@ program: DATABLOCK LBRACE ROWVECTOR LABRACK MULTIPLIER ASSIGN IDENTIFIER RABRACK
 ##
 ## Concrete syntax: data { row_vector < multiplier = foo > while
 ##
-## Ends in an error in state: 518.
+## Ends in an error in state: 526.
 ##
 ## top_var_type -> ROWVECTOR type_constraint . LBRACK expression RBRACK [ WHILE VOID VECTOR UPPER UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER JACOBIAN INT IN IF IDENTIFIER FUNCTIONBLOCK FOR FATAL_ERROR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
 ##
@@ -216,7 +216,7 @@ program: DATABLOCK LBRACE SIMPLEX WHILE
 ##
 ## Concrete syntax: data { simplex while
 ##
-## Ends in an error in state: 513.
+## Ends in an error in state: 521.
 ##
 ## top_var_type -> SIMPLEX . LBRACK expression RBRACK [ WHILE VOID VECTOR UPPER UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER JACOBIAN INT IN IF IDENTIFIER FUNCTIONBLOCK FOR FATAL_ERROR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
 ##
@@ -234,7 +234,7 @@ program: DATABLOCK LBRACE UNITVECTOR WHILE
 ##
 ## Concrete syntax: data { unit_vector while
 ##
-## Ends in an error in state: 485.
+## Ends in an error in state: 493.
 ##
 ## top_var_type -> UNITVECTOR . LBRACK expression RBRACK [ WHILE VOID VECTOR UPPER UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER JACOBIAN INT IN IF IDENTIFIER FUNCTIONBLOCK FOR FATAL_ERROR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
 ##
@@ -248,7 +248,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK OFFSET ASSIGN IDENTIFIER COMMA MULTIPLI
 ##
 ## Concrete syntax: data { vector < offset = foo , multiplier = foo ,
 ##
-## Ends in an error in state: 461.
+## Ends in an error in state: 469.
 ##
 ## constr_expression -> constr_expression . PLUS constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE ]
 ## constr_expression -> constr_expression . MINUS constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE ]
@@ -271,8 +271,8 @@ program: DATABLOCK LBRACE VECTOR LABRACK OFFSET ASSIGN IDENTIFIER COMMA MULTIPLI
 ## This implies that, although the LR(1) items shown above provide an
 ## accurate view of the past (what has been recognized so far), they
 ## may provide an INCOMPLETE view of the future (what was expected next).
-## In state 112, spurious reduction of production common_expression -> identifier
-## In state 429, spurious reduction of production constr_expression -> common_expression
+## In state 117, spurious reduction of production common_expression -> identifier
+## In state 437, spurious reduction of production constr_expression -> common_expression
 ##
 
 Expected ">" after "multiplier = " expression.
@@ -281,7 +281,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK OFFSET ASSIGN IDENTIFIER COMMA MULTIPLI
 ##
 ## Concrete syntax: data { vector < offset = foo , multiplier = while
 ##
-## Ends in an error in state: 460.
+## Ends in an error in state: 468.
 ##
 ## offset_mult -> OFFSET ASSIGN constr_expression COMMA MULTIPLIER ASSIGN . constr_expression [ RABRACK ]
 ##
@@ -295,7 +295,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK OFFSET ASSIGN IDENTIFIER COMMA MULTIPLI
 ##
 ## Concrete syntax: data { vector < offset = foo , multiplier while
 ##
-## Ends in an error in state: 459.
+## Ends in an error in state: 467.
 ##
 ## offset_mult -> OFFSET ASSIGN constr_expression COMMA MULTIPLIER . ASSIGN constr_expression [ RABRACK ]
 ##
@@ -311,7 +311,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK OFFSET ASSIGN IDENTIFIER COMMA WHILE
 ##
 ## Concrete syntax: data { vector < offset = foo , while
 ##
-## Ends in an error in state: 458.
+## Ends in an error in state: 466.
 ##
 ## offset_mult -> OFFSET ASSIGN constr_expression COMMA . MULTIPLIER ASSIGN constr_expression [ RABRACK ]
 ##
@@ -325,7 +325,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK OFFSET ASSIGN WHILE
 ##
 ## Concrete syntax: data { vector < offset = while
 ##
-## Ends in an error in state: 456.
+## Ends in an error in state: 464.
 ##
 ## offset_mult -> OFFSET ASSIGN . constr_expression COMMA MULTIPLIER ASSIGN constr_expression [ RABRACK ]
 ## offset_mult -> OFFSET ASSIGN . constr_expression [ RABRACK ]
@@ -340,7 +340,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK OFFSET WHILE
 ##
 ## Concrete syntax: data { vector < offset while
 ##
-## Ends in an error in state: 455.
+## Ends in an error in state: 463.
 ##
 ## offset_mult -> OFFSET . ASSIGN constr_expression COMMA MULTIPLIER ASSIGN constr_expression [ RABRACK ]
 ## offset_mult -> OFFSET . ASSIGN constr_expression [ RABRACK ]
@@ -383,7 +383,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN IDENTIFIER COMMA UPPER ASS
 ##
 ## Concrete syntax: data { vector < lower = foo , upper = foo ,
 ##
-## Ends in an error in state: 475.
+## Ends in an error in state: 483.
 ##
 ## constr_expression -> constr_expression . PLUS constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE ]
 ## constr_expression -> constr_expression . MINUS constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE ]
@@ -406,8 +406,8 @@ program: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN IDENTIFIER COMMA UPPER ASS
 ## This implies that, although the LR(1) items shown above provide an
 ## accurate view of the past (what has been recognized so far), they
 ## may provide an INCOMPLETE view of the future (what was expected next).
-## In state 112, spurious reduction of production common_expression -> identifier
-## In state 429, spurious reduction of production constr_expression -> common_expression
+## In state 117, spurious reduction of production common_expression -> identifier
+## In state 437, spurious reduction of production constr_expression -> common_expression
 ##
 
 Expected ">" after "upper = " expression.
@@ -418,7 +418,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN IDENTIFIER COMMA UPPER ASS
 ##
 ## Concrete syntax: data { vector < lower = foo , upper = while
 ##
-## Ends in an error in state: 474.
+## Ends in an error in state: 482.
 ##
 ## range -> LOWER ASSIGN constr_expression COMMA UPPER ASSIGN . constr_expression [ RABRACK ]
 ##
@@ -432,7 +432,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN IDENTIFIER COMMA UPPER WHI
 ##
 ## Concrete syntax: data { vector < lower = foo , upper while
 ##
-## Ends in an error in state: 473.
+## Ends in an error in state: 481.
 ##
 ## range -> LOWER ASSIGN constr_expression COMMA UPPER . ASSIGN constr_expression [ RABRACK ]
 ##
@@ -446,7 +446,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN IDENTIFIER COMMA WHILE
 ##
 ## Concrete syntax: data { vector < lower = foo , while
 ##
-## Ends in an error in state: 472.
+## Ends in an error in state: 480.
 ##
 ## range -> LOWER ASSIGN constr_expression COMMA . UPPER ASSIGN constr_expression [ RABRACK ]
 ##
@@ -460,7 +460,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN WHILE
 ##
 ## Concrete syntax: data { vector < lower = while
 ##
-## Ends in an error in state: 470.
+## Ends in an error in state: 478.
 ##
 ## range -> LOWER ASSIGN . constr_expression COMMA UPPER ASSIGN constr_expression [ RABRACK ]
 ## range -> LOWER ASSIGN . constr_expression [ RABRACK ]
@@ -475,7 +475,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK LOWER WHILE
 ##
 ## Concrete syntax: data { vector < lower while
 ##
-## Ends in an error in state: 469.
+## Ends in an error in state: 477.
 ##
 ## range -> LOWER . ASSIGN constr_expression COMMA UPPER ASSIGN constr_expression [ RABRACK ]
 ## range -> LOWER . ASSIGN constr_expression [ RABRACK ]
@@ -490,7 +490,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK MULTIPLIER ASSIGN WHILE
 ##
 ## Concrete syntax: data { vector < multiplier = while
 ##
-## Ends in an error in state: 463.
+## Ends in an error in state: 471.
 ##
 ## offset_mult -> MULTIPLIER ASSIGN . constr_expression COMMA OFFSET ASSIGN constr_expression [ RABRACK ]
 ## offset_mult -> MULTIPLIER ASSIGN . constr_expression [ RABRACK ]
@@ -505,7 +505,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK MULTIPLIER WHILE
 ##
 ## Concrete syntax: data { vector < multiplier while
 ##
-## Ends in an error in state: 462.
+## Ends in an error in state: 470.
 ##
 ## offset_mult -> MULTIPLIER . ASSIGN constr_expression COMMA OFFSET ASSIGN constr_expression [ RABRACK ]
 ## offset_mult -> MULTIPLIER . ASSIGN constr_expression [ RABRACK ]
@@ -522,7 +522,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN BANG WHILE
 ##
 ## Concrete syntax: data { vector < upper = ! while
 ##
-## Ends in an error in state: 422.
+## Ends in an error in state: 430.
 ##
 ## constr_expression -> BANG . constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE COMMA ]
 ##
@@ -536,7 +536,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN MINUS WHILE
 ##
 ## Concrete syntax: data { vector < upper = - while
 ##
-## Ends in an error in state: 421.
+## Ends in an error in state: 429.
 ##
 ## constr_expression -> MINUS . constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE COMMA ]
 ##
@@ -550,7 +550,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN PLUS WHILE
 ##
 ## Concrete syntax: data { vector < upper = + while
 ##
-## Ends in an error in state: 420.
+## Ends in an error in state: 428.
 ##
 ## constr_expression -> PLUS . constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE COMMA ]
 ##
@@ -564,7 +564,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER DIVIDE WHILE
 ##
 ## Concrete syntax: data { vector < upper = foo / while
 ##
-## Ends in an error in state: 447.
+## Ends in an error in state: 455.
 ##
 ## constr_expression -> constr_expression DIVIDE . constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE COMMA ]
 ##
@@ -578,7 +578,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER ELTDIVIDE WHILE
 ##
 ## Concrete syntax: data { vector < upper = foo ./ while
 ##
-## Ends in an error in state: 445.
+## Ends in an error in state: 453.
 ##
 ## constr_expression -> constr_expression ELTDIVIDE . constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE COMMA ]
 ##
@@ -592,7 +592,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER ELTTIMES WHILE
 ##
 ## Concrete syntax: data { vector < upper = foo .* while
 ##
-## Ends in an error in state: 443.
+## Ends in an error in state: 451.
 ##
 ## constr_expression -> constr_expression ELTTIMES . constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE COMMA ]
 ##
@@ -606,7 +606,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER HAT WHILE
 ##
 ## Concrete syntax: data { vector < upper = foo ^ while
 ##
-## Ends in an error in state: 425.
+## Ends in an error in state: 433.
 ##
 ## constr_expression -> constr_expression HAT . constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE COMMA ]
 ##
@@ -620,7 +620,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER LDIVIDE WHILE
 ##
 ## Concrete syntax: data { vector < upper = foo \ while
 ##
-## Ends in an error in state: 435.
+## Ends in an error in state: 443.
 ##
 ## constr_expression -> constr_expression LDIVIDE . constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE COMMA ]
 ##
@@ -634,7 +634,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER MINUS WHILE
 ##
 ## Concrete syntax: data { vector < upper = foo - while
 ##
-## Ends in an error in state: 449.
+## Ends in an error in state: 457.
 ##
 ## constr_expression -> constr_expression MINUS . constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE COMMA ]
 ##
@@ -648,7 +648,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER MODULO WHILE
 ##
 ## Concrete syntax: data { vector < upper = foo % while
 ##
-## Ends in an error in state: 441.
+## Ends in an error in state: 449.
 ##
 ## constr_expression -> constr_expression MODULO . constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE COMMA ]
 ##
@@ -662,7 +662,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER PLUS WHILE
 ##
 ## Concrete syntax: data { vector < upper = foo + while
 ##
-## Ends in an error in state: 439.
+## Ends in an error in state: 447.
 ##
 ## constr_expression -> constr_expression PLUS . constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE COMMA ]
 ##
@@ -676,7 +676,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER TIMES WHILE
 ##
 ## Concrete syntax: data { vector < upper = foo * while
 ##
-## Ends in an error in state: 433.
+## Ends in an error in state: 441.
 ##
 ## constr_expression -> constr_expression TIMES . constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE COMMA ]
 ##
@@ -690,7 +690,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN WHILE
 ##
 ## Concrete syntax: data { vector < upper = while
 ##
-## Ends in an error in state: 419.
+## Ends in an error in state: 427.
 ##
 ## range -> UPPER ASSIGN . constr_expression COMMA LOWER ASSIGN constr_expression [ RABRACK ]
 ## range -> UPPER ASSIGN . constr_expression [ RABRACK ]
@@ -705,7 +705,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER WHILE
 ##
 ## Concrete syntax: data { vector < upper while
 ##
-## Ends in an error in state: 418.
+## Ends in an error in state: 426.
 ##
 ## range -> UPPER . ASSIGN constr_expression COMMA LOWER ASSIGN constr_expression [ RABRACK ]
 ## range -> UPPER . ASSIGN constr_expression [ RABRACK ]
@@ -720,7 +720,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK WHILE
 ##
 ## Concrete syntax: data { vector < while
 ##
-## Ends in an error in state: 417.
+## Ends in an error in state: 425.
 ##
 ## range_constraint -> LABRACK . range RABRACK [ WHILE VOID VECTOR UPPER UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER LBRACK JACOBIAN INT IN IF IDENTIFIER FUNCTIONBLOCK FOR FATAL_ERROR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
 ## type_constraint -> LABRACK . offset_mult RABRACK [ WHILE VOID VECTOR UPPER UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER LBRACK JACOBIAN INT IN IF IDENTIFIER FUNCTIONBLOCK FOR FATAL_ERROR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
@@ -735,13 +735,13 @@ program: DATABLOCK LBRACE VECTOR LBRACK INTNUMERAL RBRACK HAT
 ##
 ## Concrete syntax: data { vector [ 24 ] ^
 ##
-## Ends in an error in state: 623.
+## Ends in an error in state: 630.
 ##
-## decl(top_var_type,no_assign) -> top_var_type . decl_identifier LBRACK separated_nonempty_list(COMMA,expression) RBRACK [ VECTOR UNITVECTOR TUPLE SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR REAL RBRACE POSITIVEORDERED ORDERED MATRIX INT COVMATRIX CORRMATRIX COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR ARRAY ]
-## decl(top_var_type,no_assign) -> top_var_type . id_and_optional_assignment(no_assign,decl_identifier) option(remaining_declarations(no_assign)) SEMICOLON [ VECTOR UNITVECTOR TUPLE SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR REAL RBRACE POSITIVEORDERED ORDERED MATRIX INT COVMATRIX CORRMATRIX COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR ARRAY ]
+## decl(top_var_type,no_assign) -> list(ANNOTATION) top_var_type . decl_identifier LBRACK separated_nonempty_list(COMMA,expression) RBRACK [ VECTOR UNITVECTOR TUPLE SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR REAL RBRACE POSITIVEORDERED ORDERED MATRIX INT COVMATRIX CORRMATRIX COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR ARRAY ANNOTATION ]
+## decl(top_var_type,no_assign) -> list(ANNOTATION) top_var_type . id_and_optional_assignment(no_assign,decl_identifier) option(remaining_declarations(no_assign)) SEMICOLON [ VECTOR UNITVECTOR TUPLE SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR REAL RBRACE POSITIVEORDERED ORDERED MATRIX INT COVMATRIX CORRMATRIX COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR ARRAY ANNOTATION ]
 ##
 ## The known suffix of the stack is as follows:
-## top_var_type
+## list(ANNOTATION) top_var_type
 ##
 
 We expect to see an identifier after a sized type.
@@ -750,7 +750,7 @@ program: DATABLOCK LBRACE IDENTIFIER
 ##
 ## Concrete syntax: data { foo
 ##
-## Ends in an error in state: 415.
+## Ends in an error in state: 419.
 ##
 ## data_block -> DATABLOCK LBRACE . list(top_var_decl_no_assign) RBRACE [ TRANSFORMEDPARAMETERSBLOCK TRANSFORMEDDATABLOCK PARAMETERSBLOCK MODELBLOCK GENERATEDQUANTITIESBLOCK EOF ]
 ##
@@ -770,7 +770,7 @@ program: DATABLOCK WHILE
 ##
 ## Concrete syntax: data while
 ##
-## Ends in an error in state: 414.
+## Ends in an error in state: 418.
 ##
 ## data_block -> DATABLOCK . LBRACE list(top_var_decl_no_assign) RBRACE [ TRANSFORMEDPARAMETERSBLOCK TRANSFORMEDDATABLOCK PARAMETERSBLOCK MODELBLOCK GENERATEDQUANTITIESBLOCK EOF ]
 ##
@@ -784,7 +784,7 @@ program: FUNCTIONBLOCK LBRACE RBRACE COVMATRIX
 ##
 ## Concrete syntax: functions { } cov_matrix
 ##
-## Ends in an error in state: 413.
+## Ends in an error in state: 417.
 ##
 ## program -> option(function_block) . option(data_block) option(transformed_data_block) option(parameters_block) option(transformed_parameters_block) option(model_block) option(generated_quantities_block) EOF [ # ]
 ##
@@ -800,7 +800,7 @@ program: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN RPAREN SEMICOLON WHILE
 ##
 ## Concrete syntax: functions { void foo ( ) ; while
 ##
-## Ends in an error in state: 405.
+## Ends in an error in state: 409.
 ##
 ## list(function_def) -> function_def . list(function_def) [ RBRACE EOF ]
 ##
@@ -818,7 +818,7 @@ program: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN DATABLOCK WHILE
 ##
 ## Concrete syntax: functions { void foo ( data while
 ##
-## Ends in an error in state: 92.
+## Ends in an error in state: 97.
 ##
 ## arg_decl -> option(DATABLOCK) . unsized_type decl_identifier [ RPAREN COMMA ]
 ##
@@ -832,12 +832,12 @@ program: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN RPAREN VOID
 ##
 ## Concrete syntax: functions { void foo ( ) void
 ##
-## Ends in an error in state: 96.
+## Ends in an error in state: 101.
 ##
-## function_def -> return_type decl_identifier LPAREN loption(separated_nonempty_list(COMMA,arg_decl)) RPAREN . statement [ VOID VECTOR TUPLE ROWVECTOR REAL RBRACE MATRIX INT EOF COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX ARRAY ]
+## function_def -> list(ANNOTATION) return_type decl_identifier LPAREN loption(separated_nonempty_list(COMMA,arg_decl)) RPAREN . statement [ VOID VECTOR TUPLE ROWVECTOR REAL RBRACE MATRIX INT EOF COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX ARRAY ANNOTATION ]
 ##
 ## The known suffix of the stack is as follows:
-## return_type decl_identifier LPAREN loption(separated_nonempty_list(COMMA,arg_decl)) RPAREN
+## list(ANNOTATION) return_type decl_identifier LPAREN loption(separated_nonempty_list(COMMA,arg_decl)) RPAREN
 ##
 
 Either "{" statement "}" is expected for a function definition or ";" for a function forward declaration.
@@ -848,7 +848,7 @@ program: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN VECTOR IDENTIFIER COMMA WHI
 ##
 ## Concrete syntax: functions { void foo ( vector foo , while
 ##
-## Ends in an error in state: 400.
+## Ends in an error in state: 406.
 ##
 ## separated_nonempty_list(COMMA,arg_decl) -> arg_decl COMMA . separated_nonempty_list(COMMA,arg_decl) [ RPAREN ]
 ##
@@ -862,7 +862,7 @@ program: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN VECTOR IDENTIFIER WHILE
 ##
 ## Concrete syntax: functions { void foo ( vector foo while
 ##
-## Ends in an error in state: 399.
+## Ends in an error in state: 405.
 ##
 ## separated_nonempty_list(COMMA,arg_decl) -> arg_decl . [ RPAREN ]
 ## separated_nonempty_list(COMMA,arg_decl) -> arg_decl . COMMA separated_nonempty_list(COMMA,arg_decl) [ RPAREN ]
@@ -877,12 +877,12 @@ program: FUNCTIONBLOCK LBRACE VOID IDENTIFIER WHILE
 ##
 ## Concrete syntax: functions { void foo while
 ##
-## Ends in an error in state: 88.
+## Ends in an error in state: 93.
 ##
-## function_def -> return_type decl_identifier . LPAREN loption(separated_nonempty_list(COMMA,arg_decl)) RPAREN statement [ VOID VECTOR TUPLE ROWVECTOR REAL RBRACE MATRIX INT EOF COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX ARRAY ]
+## function_def -> list(ANNOTATION) return_type decl_identifier . LPAREN loption(separated_nonempty_list(COMMA,arg_decl)) RPAREN statement [ VOID VECTOR TUPLE ROWVECTOR REAL RBRACE MATRIX INT EOF COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX ARRAY ANNOTATION ]
 ##
 ## The known suffix of the stack is as follows:
-## return_type decl_identifier
+## list(ANNOTATION) return_type decl_identifier
 ##
 
 "(" expected after function name.
@@ -891,12 +891,12 @@ program: FUNCTIONBLOCK LBRACE VOID LBRACK
 ##
 ## Concrete syntax: functions { void [
 ##
-## Ends in an error in state: 37.
+## Ends in an error in state: 42.
 ##
-## function_def -> return_type . decl_identifier LPAREN loption(separated_nonempty_list(COMMA,arg_decl)) RPAREN statement [ VOID VECTOR TUPLE ROWVECTOR REAL RBRACE MATRIX INT EOF COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX ARRAY ]
+## function_def -> list(ANNOTATION) return_type . decl_identifier LPAREN loption(separated_nonempty_list(COMMA,arg_decl)) RPAREN statement [ VOID VECTOR TUPLE ROWVECTOR REAL RBRACE MATRIX INT EOF COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX ARRAY ANNOTATION ]
 ##
 ## The known suffix of the stack is as follows:
-## return_type
+## list(ANNOTATION) return_type
 ##
 
 An identifier is expected as a function name.
@@ -905,7 +905,7 @@ program: FUNCTIONBLOCK LBRACE WHILE
 ##
 ## Concrete syntax: functions { while
 ##
-## Ends in an error in state: 409.
+## Ends in an error in state: 413.
 ##
 ## function_block -> FUNCTIONBLOCK LBRACE . list(function_def) RBRACE [ TRANSFORMEDPARAMETERSBLOCK TRANSFORMEDDATABLOCK PARAMETERSBLOCK MODELBLOCK GENERATEDQUANTITIESBLOCK EOF DATABLOCK ]
 ##
@@ -919,7 +919,7 @@ program: FUNCTIONBLOCK WHILE
 ##
 ## Concrete syntax: functions while
 ##
-## Ends in an error in state: 408.
+## Ends in an error in state: 412.
 ##
 ## function_block -> FUNCTIONBLOCK . LBRACE list(function_def) RBRACE [ TRANSFORMEDPARAMETERSBLOCK TRANSFORMEDDATABLOCK PARAMETERSBLOCK MODELBLOCK GENERATEDQUANTITIESBLOCK EOF DATABLOCK ]
 ##
@@ -933,7 +933,7 @@ program: GENERATEDQUANTITIESBLOCK LBRACE RBRACE ELTTIMESASSIGN
 ##
 ## Concrete syntax: generated quantities { } .*=
 ##
-## Ends in an error in state: 689.
+## Ends in an error in state: 695.
 ##
 ## program -> option(function_block) option(data_block) option(transformed_data_block) option(parameters_block) option(transformed_parameters_block) option(model_block) option(generated_quantities_block) . EOF [ # ]
 ##
@@ -947,7 +947,7 @@ program: GENERATEDQUANTITIESBLOCK LBRACE VOID
 ##
 ## Concrete syntax: generated quantities { void
 ##
-## Ends in an error in state: 686.
+## Ends in an error in state: 692.
 ##
 ## generated_quantities_block -> GENERATEDQUANTITIESBLOCK LBRACE . list(top_vardecl_or_statement) RBRACE [ EOF ]
 ##
@@ -961,7 +961,7 @@ program: GENERATEDQUANTITIESBLOCK WHILE
 ##
 ## Concrete syntax: generated quantities while
 ##
-## Ends in an error in state: 685.
+## Ends in an error in state: 691.
 ##
 ## generated_quantities_block -> GENERATEDQUANTITIESBLOCK . LBRACE list(top_vardecl_or_statement) RBRACE [ EOF ]
 ##
@@ -1017,7 +1017,7 @@ program: MODELBLOCK LBRACE MATRIX WHILE
 ##
 ## Concrete syntax: model { matrix while
 ##
-## Ends in an error in state: 204.
+## Ends in an error in state: 263.
 ##
 ## sized_basic_type -> MATRIX . LBRACK expression COMMA expression RBRACK [ WHILE VOID VECTOR UPPER UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER JACOBIAN INT IN IF IDENTIFIER FUNCTIONBLOCK FOR FATAL_ERROR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
 ##
@@ -1031,7 +1031,7 @@ program: MODELBLOCK LBRACE RBRACE ELTTIMESASSIGN
 ##
 ## Concrete syntax: model { } .*=
 ##
-## Ends in an error in state: 684.
+## Ends in an error in state: 690.
 ##
 ## program -> option(function_block) option(data_block) option(transformed_data_block) option(parameters_block) option(transformed_parameters_block) option(model_block) . option(generated_quantities_block) EOF [ # ]
 ##
@@ -1047,7 +1047,7 @@ program: MODELBLOCK LBRACE REAL IDENTIFIER ASSIGN WHILE
 ##
 ## Concrete syntax: model { real foo = while
 ##
-## Ends in an error in state: 315.
+## Ends in an error in state: 323.
 ##
 ## option(pair(ASSIGN,expression)) -> ASSIGN . expression [ SEMICOLON COMMA ]
 ##
@@ -1061,13 +1061,13 @@ program: MODELBLOCK LBRACE REAL LBRACK
 ##
 ## Concrete syntax: model { real [
 ##
-## Ends in an error in state: 325.
+## Ends in an error in state: 332.
 ##
-## decl(sized_basic_type,expression) -> sized_basic_type . decl_identifier LBRACK separated_nonempty_list(COMMA,expression) RBRACK [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
-## decl(sized_basic_type,expression) -> sized_basic_type . id_and_optional_assignment(expression,decl_identifier) option(remaining_declarations(expression)) SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
+## decl(sized_basic_type,expression) -> list(ANNOTATION) sized_basic_type . decl_identifier LBRACK separated_nonempty_list(COMMA,expression) RBRACK [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
+## decl(sized_basic_type,expression) -> list(ANNOTATION) sized_basic_type . id_and_optional_assignment(expression,decl_identifier) option(remaining_declarations(expression)) SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
 ##
 ## The known suffix of the stack is as follows:
-## sized_basic_type
+## list(ANNOTATION) sized_basic_type
 ##
 
 Identifier expected after sized type in local (or model block) variable declaration. (No transformations/constraints allowed.)
@@ -1100,7 +1100,7 @@ program: MODELBLOCK LBRACE ROWVECTOR LBRACK WHILE
 ##
 ## Concrete syntax: model { row_vector [ while
 ##
-## Ends in an error in state: 200.
+## Ends in an error in state: 259.
 ##
 ## sized_basic_type -> ROWVECTOR LBRACK . expression RBRACK [ WHILE VOID VECTOR UPPER UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER JACOBIAN INT IN IF IDENTIFIER FUNCTIONBLOCK FOR FATAL_ERROR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
 ##
@@ -1114,7 +1114,7 @@ program: MODELBLOCK LBRACE SEMICOLON VOID
 ##
 ## Concrete syntax: model { ; void
 ##
-## Ends in an error in state: 390.
+## Ends in an error in state: 396.
 ##
 ## list(vardecl_or_statement) -> vardecl_or_statement . list(vardecl_or_statement) [ RBRACE ]
 ##
@@ -1154,7 +1154,7 @@ program: MODELBLOCK LBRACE VECTOR WHILE
 ##
 ## Concrete syntax: model { vector while
 ##
-## Ends in an error in state: 193.
+## Ends in an error in state: 252.
 ##
 ## sized_basic_type -> VECTOR . LBRACK expression RBRACK [ WHILE VOID VECTOR UPPER UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER JACOBIAN INT IN IF IDENTIFIER FUNCTIONBLOCK FOR FATAL_ERROR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
 ##
@@ -1168,7 +1168,7 @@ program: MODELBLOCK LBRACE VOID
 ##
 ## Concrete syntax: model { void
 ##
-## Ends in an error in state: 681.
+## Ends in an error in state: 687.
 ##
 ## model_block -> MODELBLOCK LBRACE . list(vardecl_or_statement) RBRACE [ GENERATEDQUANTITIESBLOCK EOF ]
 ##
@@ -1182,7 +1182,7 @@ program: MODELBLOCK WHILE
 ##
 ## Concrete syntax: model while
 ##
-## Ends in an error in state: 680.
+## Ends in an error in state: 686.
 ##
 ## model_block -> MODELBLOCK . LBRACE list(vardecl_or_statement) RBRACE [ GENERATEDQUANTITIESBLOCK EOF ]
 ##
@@ -1196,7 +1196,7 @@ program: PARAMETERSBLOCK LBRACE RBRACE ELTTIMESASSIGN
 ##
 ## Concrete syntax: parameters { } .*=
 ##
-## Ends in an error in state: 673.
+## Ends in an error in state: 679.
 ##
 ## program -> option(function_block) option(data_block) option(transformed_data_block) option(parameters_block) . option(transformed_parameters_block) option(model_block) option(generated_quantities_block) EOF [ # ]
 ##
@@ -1210,7 +1210,7 @@ program: PARAMETERSBLOCK LBRACE WHILE
 ##
 ## Concrete syntax: parameters { while
 ##
-## Ends in an error in state: 669.
+## Ends in an error in state: 675.
 ##
 ## parameters_block -> PARAMETERSBLOCK LBRACE . list(top_var_decl_no_assign) RBRACE [ TRANSFORMEDPARAMETERSBLOCK MODELBLOCK GENERATEDQUANTITIESBLOCK EOF ]
 ##
@@ -1224,7 +1224,7 @@ program: PARAMETERSBLOCK WHILE
 ##
 ## Concrete syntax: parameters while
 ##
-## Ends in an error in state: 668.
+## Ends in an error in state: 674.
 ##
 ## parameters_block -> PARAMETERSBLOCK . LBRACE list(top_var_decl_no_assign) RBRACE [ TRANSFORMEDPARAMETERSBLOCK MODELBLOCK GENERATEDQUANTITIESBLOCK EOF ]
 ##
@@ -1240,7 +1240,7 @@ program: TRANSFORMEDDATABLOCK LBRACE BANG WHILE
 ##
 ## Concrete syntax: transformed data { ! while
 ##
-## Ends in an error in state: 111.
+## Ends in an error in state: 116.
 ##
 ## expression -> BANG . expression [ TRANSPOSE TIMES TILDE SEMICOLON RPAREN RBRACK RBRACE RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE COMMA COLON BAR AND ]
 ##
@@ -1254,9 +1254,9 @@ program: TRANSFORMEDDATABLOCK LBRACE BREAK WHILE
 ##
 ## Concrete syntax: transformed data { break while
 ##
-## Ends in an error in state: 301.
+## Ends in an error in state: 245.
 ##
-## atomic_statement -> BREAK . SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
+## atomic_statement -> BREAK . SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
 ##
 ## The known suffix of the stack is as follows:
 ## BREAK
@@ -1268,9 +1268,9 @@ program: TRANSFORMEDDATABLOCK LBRACE CONTINUE WHILE
 ##
 ## Concrete syntax: transformed data { continue while
 ##
-## Ends in an error in state: 299.
+## Ends in an error in state: 243.
 ##
-## atomic_statement -> CONTINUE . SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
+## atomic_statement -> CONTINUE . SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
 ##
 ## The known suffix of the stack is as follows:
 ## CONTINUE
@@ -1282,9 +1282,9 @@ program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN IDENTIFIER IN REALNUMERAL COLON 
 ##
 ## Concrete syntax: transformed data { for ( foo in 3.1415 : foo ) void
 ##
-## Ends in an error in state: 385.
+## Ends in an error in state: 391.
 ##
-## nested_statement -> FOR LPAREN identifier IN expression COLON expression RPAREN . vardecl_or_statement [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
+## nested_statement -> FOR LPAREN identifier IN expression COLON expression RPAREN . vardecl_or_statement [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
 ##
 ## The known suffix of the stack is as follows:
 ## FOR LPAREN identifier IN expression COLON expression RPAREN
@@ -1298,9 +1298,9 @@ program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN IDENTIFIER IN REALNUMERAL COLON 
 ##
 ## Concrete syntax: transformed data { for ( foo in 3.1415 : while
 ##
-## Ends in an error in state: 383.
+## Ends in an error in state: 389.
 ##
-## nested_statement -> FOR LPAREN identifier IN expression COLON . expression RPAREN vardecl_or_statement [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
+## nested_statement -> FOR LPAREN identifier IN expression COLON . expression RPAREN vardecl_or_statement [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
 ##
 ## The known suffix of the stack is as follows:
 ## FOR LPAREN identifier IN expression COLON
@@ -1312,9 +1312,9 @@ program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN IDENTIFIER IN REALNUMERAL RPAREN
 ##
 ## Concrete syntax: transformed data { for ( foo in 3.1415 ) void
 ##
-## Ends in an error in state: 293.
+## Ends in an error in state: 237.
 ##
-## nested_statement -> FOR LPAREN identifier IN expression RPAREN . vardecl_or_statement [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
+## nested_statement -> FOR LPAREN identifier IN expression RPAREN . vardecl_or_statement [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
 ##
 ## The known suffix of the stack is as follows:
 ## FOR LPAREN identifier IN expression RPAREN
@@ -1328,7 +1328,7 @@ program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN IDENTIFIER IN DOTNUMERAL TILDE
 ##
 ## Concrete syntax: transformed data { for ( foo in .2 ~
 ##
-## Ends in an error in state: 292.
+## Ends in an error in state: 236.
 ##
 ## expression -> expression . QMARK expression COLON expression [ TRANSPOSE TIMES RPAREN RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE COLON AND ]
 ## expression -> expression . PLUS expression [ TRANSPOSE TIMES RPAREN RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE COLON AND ]
@@ -1351,8 +1351,8 @@ program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN IDENTIFIER IN DOTNUMERAL TILDE
 ## expression -> expression . RABRACK expression [ TRANSPOSE TIMES RPAREN RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE COLON AND ]
 ## expression -> expression . GEQ expression [ TRANSPOSE TIMES RPAREN RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE COLON AND ]
 ## expression -> expression . TRANSPOSE [ TRANSPOSE TIMES RPAREN RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE COLON AND ]
-## nested_statement -> FOR LPAREN identifier IN expression . COLON expression RPAREN vardecl_or_statement [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
-## nested_statement -> FOR LPAREN identifier IN expression . RPAREN vardecl_or_statement [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
+## nested_statement -> FOR LPAREN identifier IN expression . COLON expression RPAREN vardecl_or_statement [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
+## nested_statement -> FOR LPAREN identifier IN expression . RPAREN vardecl_or_statement [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
 ##
 ## The known suffix of the stack is as follows:
 ## FOR LPAREN identifier IN expression
@@ -1361,7 +1361,7 @@ program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN IDENTIFIER IN DOTNUMERAL TILDE
 ## This implies that, although the LR(1) items shown above provide an
 ## accurate view of the past (what has been recognized so far), they
 ## may provide an INCOMPLETE view of the future (what was expected next).
-## In state 127, spurious reduction of production expression -> common_expression
+## In state 132, spurious reduction of production expression -> common_expression
 ##
 
 Ill-formed expression. Expected expression followed by ")" or ":" after "for (" identifier "in".
@@ -1370,10 +1370,10 @@ program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN IDENTIFIER WHILE
 ##
 ## Concrete syntax: transformed data { for ( foo while
 ##
-## Ends in an error in state: 290.
+## Ends in an error in state: 234.
 ##
-## nested_statement -> FOR LPAREN identifier . IN expression COLON expression RPAREN vardecl_or_statement [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
-## nested_statement -> FOR LPAREN identifier . IN expression RPAREN vardecl_or_statement [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
+## nested_statement -> FOR LPAREN identifier . IN expression COLON expression RPAREN vardecl_or_statement [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
+## nested_statement -> FOR LPAREN identifier . IN expression RPAREN vardecl_or_statement [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
 ##
 ## The known suffix of the stack is as follows:
 ## FOR LPAREN identifier
@@ -1385,10 +1385,10 @@ program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN WHILE
 ##
 ## Concrete syntax: transformed data { for ( while
 ##
-## Ends in an error in state: 289.
+## Ends in an error in state: 233.
 ##
-## nested_statement -> FOR LPAREN . identifier IN expression COLON expression RPAREN vardecl_or_statement [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
-## nested_statement -> FOR LPAREN . identifier IN expression RPAREN vardecl_or_statement [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
+## nested_statement -> FOR LPAREN . identifier IN expression COLON expression RPAREN vardecl_or_statement [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
+## nested_statement -> FOR LPAREN . identifier IN expression RPAREN vardecl_or_statement [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
 ##
 ## The known suffix of the stack is as follows:
 ## FOR LPAREN
@@ -1400,10 +1400,10 @@ program: TRANSFORMEDDATABLOCK LBRACE FOR WHILE
 ##
 ## Concrete syntax: transformed data { for while
 ##
-## Ends in an error in state: 288.
+## Ends in an error in state: 232.
 ##
-## nested_statement -> FOR . LPAREN identifier IN expression COLON expression RPAREN vardecl_or_statement [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
-## nested_statement -> FOR . LPAREN identifier IN expression RPAREN vardecl_or_statement [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
+## nested_statement -> FOR . LPAREN identifier IN expression COLON expression RPAREN vardecl_or_statement [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
+## nested_statement -> FOR . LPAREN identifier IN expression RPAREN vardecl_or_statement [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
 ##
 ## The known suffix of the stack is as follows:
 ## FOR
@@ -1417,10 +1417,10 @@ program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN IDENTIFIER RPAREN SEMICOLON UNREA
 ##
 ## Concrete syntax: transformed data { if ( foo ) ; <<<<UNREACHABLE>>>
 ##
-## Ends in an error in state: 387.
+## Ends in an error in state: 393.
 ##
-## nested_statement -> IF LPAREN expression RPAREN vardecl_or_statement . ELSE vardecl_or_statement [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
-## nested_statement -> IF LPAREN expression RPAREN vardecl_or_statement . [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
+## nested_statement -> IF LPAREN expression RPAREN vardecl_or_statement . ELSE vardecl_or_statement [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
+## nested_statement -> IF LPAREN expression RPAREN vardecl_or_statement . [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
 ##
 ## The known suffix of the stack is as follows:
 ## IF LPAREN expression RPAREN vardecl_or_statement
@@ -1432,10 +1432,10 @@ program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN REALNUMERAL RPAREN VOID
 ##
 ## Concrete syntax: transformed data { if ( 3.1415 ) void
 ##
-## Ends in an error in state: 287.
+## Ends in an error in state: 231.
 ##
-## nested_statement -> IF LPAREN expression RPAREN . vardecl_or_statement ELSE vardecl_or_statement [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
-## nested_statement -> IF LPAREN expression RPAREN . vardecl_or_statement [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
+## nested_statement -> IF LPAREN expression RPAREN . vardecl_or_statement ELSE vardecl_or_statement [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
+## nested_statement -> IF LPAREN expression RPAREN . vardecl_or_statement [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
 ##
 ## The known suffix of the stack is as follows:
 ## IF LPAREN expression RPAREN
@@ -1447,9 +1447,9 @@ program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN IDENTIFIER RPAREN SEMICOLON ELSE 
 ##
 ## Concrete syntax: transformed data { if ( foo ) ; else void
 ##
-## Ends in an error in state: 388.
+## Ends in an error in state: 394.
 ##
-## nested_statement -> IF LPAREN expression RPAREN vardecl_or_statement ELSE . vardecl_or_statement [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
+## nested_statement -> IF LPAREN expression RPAREN vardecl_or_statement ELSE . vardecl_or_statement [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
 ##
 ## The known suffix of the stack is as follows:
 ## IF LPAREN expression RPAREN vardecl_or_statement ELSE
@@ -1461,7 +1461,7 @@ program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN IDENTIFIER TILDE
 ##
 ## Concrete syntax: transformed data { if ( foo ~
 ##
-## Ends in an error in state: 286.
+## Ends in an error in state: 230.
 ##
 ## expression -> expression . QMARK expression COLON expression [ TRANSPOSE TIMES RPAREN RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
 ## expression -> expression . PLUS expression [ TRANSPOSE TIMES RPAREN RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
@@ -1484,8 +1484,8 @@ program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN IDENTIFIER TILDE
 ## expression -> expression . RABRACK expression [ TRANSPOSE TIMES RPAREN RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
 ## expression -> expression . GEQ expression [ TRANSPOSE TIMES RPAREN RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
 ## expression -> expression . TRANSPOSE [ TRANSPOSE TIMES RPAREN RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## nested_statement -> IF LPAREN expression . RPAREN vardecl_or_statement ELSE vardecl_or_statement [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
-## nested_statement -> IF LPAREN expression . RPAREN vardecl_or_statement [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
+## nested_statement -> IF LPAREN expression . RPAREN vardecl_or_statement ELSE vardecl_or_statement [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
+## nested_statement -> IF LPAREN expression . RPAREN vardecl_or_statement [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
 ##
 ## The known suffix of the stack is as follows:
 ## IF LPAREN expression
@@ -1494,8 +1494,8 @@ program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN IDENTIFIER TILDE
 ## This implies that, although the LR(1) items shown above provide an
 ## accurate view of the past (what has been recognized so far), they
 ## may provide an INCOMPLETE view of the future (what was expected next).
-## In state 112, spurious reduction of production common_expression -> identifier
-## In state 127, spurious reduction of production expression -> common_expression
+## In state 117, spurious reduction of production common_expression -> identifier
+## In state 132, spurious reduction of production expression -> common_expression
 ##
 
 Ill-formed expression. Expression expected after "(", for test of conditional control flow construct.
@@ -1504,10 +1504,10 @@ program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN WHILE
 ##
 ## Concrete syntax: transformed data { if ( while
 ##
-## Ends in an error in state: 285.
+## Ends in an error in state: 229.
 ##
-## nested_statement -> IF LPAREN . expression RPAREN vardecl_or_statement ELSE vardecl_or_statement [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
-## nested_statement -> IF LPAREN . expression RPAREN vardecl_or_statement [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
+## nested_statement -> IF LPAREN . expression RPAREN vardecl_or_statement ELSE vardecl_or_statement [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
+## nested_statement -> IF LPAREN . expression RPAREN vardecl_or_statement [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
 ##
 ## The known suffix of the stack is as follows:
 ## IF LPAREN
@@ -1519,10 +1519,10 @@ program: TRANSFORMEDDATABLOCK LBRACE IF WHILE
 ##
 ## Concrete syntax: transformed data { if while
 ##
-## Ends in an error in state: 284.
+## Ends in an error in state: 228.
 ##
-## nested_statement -> IF . LPAREN expression RPAREN vardecl_or_statement ELSE vardecl_or_statement [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
-## nested_statement -> IF . LPAREN expression RPAREN vardecl_or_statement [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
+## nested_statement -> IF . LPAREN expression RPAREN vardecl_or_statement ELSE vardecl_or_statement [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
+## nested_statement -> IF . LPAREN expression RPAREN vardecl_or_statement [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
 ##
 ## The known suffix of the stack is as follows:
 ## IF
@@ -1534,10 +1534,10 @@ program: TRANSFORMEDDATABLOCK LBRACE LBRACE VOID
 ##
 ## Concrete syntax: transformed data { { void
 ##
-## Ends in an error in state: 283.
+## Ends in an error in state: 227.
 ##
 ## common_expression -> LBRACE . separated_nonempty_list(COMMA,expression) RBRACE [ TRANSPOSE TIMESASSIGN TIMES TILDE RBRACE RABRACK QMARK PLUSASSIGN PLUS OR NEQUALS MODULO MINUSASSIGN MINUS LEQ LDIVIDE LBRACK LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMESASSIGN ELTTIMES ELTPOW ELTDIVIDEASSIGN ELTDIVIDE DOTNUMERAL DIVIDEASSIGN DIVIDE COMMA ASSIGN AND ]
-## nested_statement -> LBRACE . list(vardecl_or_statement) RBRACE [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
+## nested_statement -> LBRACE . list(vardecl_or_statement) RBRACE [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
 ##
 ## The known suffix of the stack is as follows:
 ## LBRACE
@@ -1549,7 +1549,7 @@ program: TRANSFORMEDDATABLOCK LBRACE LBRACK IDENTIFIER COMMA WHILE
 ##
 ## Concrete syntax: transformed data { [ foo , while
 ##
-## Ends in an error in state: 173.
+## Ends in an error in state: 178.
 ##
 ## separated_nonempty_list(COMMA,expression) -> expression COMMA . separated_nonempty_list(COMMA,expression) [ RPAREN RBRACK RBRACE ]
 ##
@@ -1567,7 +1567,7 @@ program: TRANSFORMEDDATABLOCK LBRACE LBRACK IDENTIFIER RPAREN
 ##
 ## Concrete syntax: transformed data { [ foo )
 ##
-## Ends in an error in state: 182.
+## Ends in an error in state: 187.
 ##
 ## common_expression -> LBRACK loption(separated_nonempty_list(COMMA,expression)) . RBRACK [ TRANSPOSE TIMESASSIGN TIMES TILDE SEMICOLON RPAREN RBRACK RBRACE RABRACK QMARK PLUSASSIGN PLUS OR NEQUALS MODULO MINUSASSIGN MINUS LEQ LDIVIDE LBRACK LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMESASSIGN ELTTIMES ELTPOW ELTDIVIDEASSIGN ELTDIVIDE DOTNUMERAL DIVIDEASSIGN DIVIDE COMMA COLON BAR ASSIGN AND ]
 ##
@@ -1578,10 +1578,10 @@ program: TRANSFORMEDDATABLOCK LBRACE LBRACK IDENTIFIER RPAREN
 ## This implies that, although the LR(1) items shown above provide an
 ## accurate view of the past (what has been recognized so far), they
 ## may provide an INCOMPLETE view of the future (what was expected next).
-## In state 112, spurious reduction of production common_expression -> identifier
-## In state 127, spurious reduction of production expression -> common_expression
-## In state 175, spurious reduction of production separated_nonempty_list(COMMA,expression) -> expression
-## In state 114, spurious reduction of production loption(separated_nonempty_list(COMMA,expression)) -> separated_nonempty_list(COMMA,expression)
+## In state 117, spurious reduction of production common_expression -> identifier
+## In state 132, spurious reduction of production expression -> common_expression
+## In state 180, spurious reduction of production separated_nonempty_list(COMMA,expression) -> expression
+## In state 119, spurious reduction of production loption(separated_nonempty_list(COMMA,expression)) -> separated_nonempty_list(COMMA,expression)
 ##
 
 Ill-formed expression. We expect a comma separated list of expressions, followed by "]".
@@ -1591,7 +1591,7 @@ program: TRANSFORMEDDATABLOCK LBRACE LBRACK WHILE
 ##
 ## Concrete syntax: transformed data { [ while
 ##
-## Ends in an error in state: 106.
+## Ends in an error in state: 111.
 ##
 ## common_expression -> LBRACK . loption(separated_nonempty_list(COMMA,expression)) RBRACK [ TRANSPOSE TIMESASSIGN TIMES TILDE SEMICOLON RPAREN RBRACK RBRACE RABRACK QMARK PLUSASSIGN PLUS OR NEQUALS MODULO MINUSASSIGN MINUS LEQ LDIVIDE LBRACK LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMESASSIGN ELTTIMES ELTPOW ELTDIVIDEASSIGN ELTDIVIDE DOTNUMERAL DIVIDEASSIGN DIVIDE COMMA COLON BAR ASSIGN AND ]
 ##
@@ -1607,7 +1607,7 @@ program: TRANSFORMEDDATABLOCK LBRACE LPAREN IDENTIFIER TILDE
 ##
 ## Concrete syntax: transformed data { ( foo ~
 ##
-## Ends in an error in state: 184.
+## Ends in an error in state: 189.
 ##
 ## common_expression -> LPAREN expression . COMMA separated_nonempty_list(COMMA,expression) RPAREN [ TRANSPOSE TIMESASSIGN TIMES TILDE SEMICOLON RPAREN RBRACK RBRACE RABRACK QMARK PLUSASSIGN PLUS OR NEQUALS MODULO MINUSASSIGN MINUS LEQ LDIVIDE LBRACK LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMESASSIGN ELTTIMES ELTPOW ELTDIVIDEASSIGN ELTDIVIDE DOTNUMERAL DIVIDEASSIGN DIVIDE COMMA COLON BAR ASSIGN AND ]
 ## common_expression -> LPAREN expression . RPAREN [ TRANSPOSE TIMESASSIGN TIMES TILDE SEMICOLON RPAREN RBRACK RBRACE RABRACK QMARK PLUSASSIGN PLUS OR NEQUALS MODULO MINUSASSIGN MINUS LEQ LDIVIDE LBRACK LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMESASSIGN ELTTIMES ELTPOW ELTDIVIDEASSIGN ELTDIVIDE DOTNUMERAL DIVIDEASSIGN DIVIDE COMMA COLON BAR ASSIGN AND ]
@@ -1640,8 +1640,8 @@ program: TRANSFORMEDDATABLOCK LBRACE LPAREN IDENTIFIER TILDE
 ## This implies that, although the LR(1) items shown above provide an
 ## accurate view of the past (what has been recognized so far), they
 ## may provide an INCOMPLETE view of the future (what was expected next).
-## In state 112, spurious reduction of production common_expression -> identifier
-## In state 127, spurious reduction of production expression -> common_expression
+## In state 117, spurious reduction of production common_expression -> identifier
+## In state 132, spurious reduction of production expression -> common_expression
 ##
 
 Ill-formed phrase. Found "(" followed by expression. Expect a "[", "," or ")" or an infix or postfix operator.
@@ -1650,7 +1650,7 @@ program: TRANSFORMEDDATABLOCK LBRACE MINUS WHILE
 ##
 ## Concrete syntax: transformed data { - while
 ##
-## Ends in an error in state: 104.
+## Ends in an error in state: 109.
 ##
 ## expression -> MINUS . expression [ TRANSPOSE TIMES TILDE SEMICOLON RPAREN RBRACK RBRACE RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE COMMA COLON BAR AND ]
 ##
@@ -1664,7 +1664,7 @@ program: TRANSFORMEDDATABLOCK LBRACE PLUS WHILE
 ##
 ## Concrete syntax: transformed data { + while
 ##
-## Ends in an error in state: 103.
+## Ends in an error in state: 108.
 ##
 ## expression -> PLUS . expression [ TRANSPOSE TIMES TILDE SEMICOLON RPAREN RBRACK RBRACE RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE COMMA COLON BAR AND ]
 ##
@@ -1678,9 +1678,9 @@ program: TRANSFORMEDDATABLOCK LBRACE PRINT LPAREN STRINGLITERAL WHILE
 ##
 ## Concrete syntax: transformed data { print ( "hello world" while
 ##
-## Ends in an error in state: 280.
+## Ends in an error in state: 224.
 ##
-## atomic_statement -> PRINT LPAREN printables . RPAREN SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
+## atomic_statement -> PRINT LPAREN printables . RPAREN SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
 ## printables -> printables . COMMA printables [ RPAREN COMMA ]
 ##
 ## The known suffix of the stack is as follows:
@@ -1693,9 +1693,9 @@ program: TRANSFORMEDDATABLOCK LBRACE PRINT LPAREN IDENTIFIER RPAREN WHILE
 ##
 ## Concrete syntax: transformed data { print ( foo ) while
 ##
-## Ends in an error in state: 281.
+## Ends in an error in state: 225.
 ##
-## atomic_statement -> PRINT LPAREN printables RPAREN . SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
+## atomic_statement -> PRINT LPAREN printables RPAREN . SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
 ##
 ## The known suffix of the stack is as follows:
 ## PRINT LPAREN printables RPAREN
@@ -1707,9 +1707,9 @@ program: TRANSFORMEDDATABLOCK LBRACE PRINT LPAREN WHILE
 ##
 ## Concrete syntax: transformed data { print ( while
 ##
-## Ends in an error in state: 279.
+## Ends in an error in state: 223.
 ##
-## atomic_statement -> PRINT LPAREN . printables RPAREN SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
+## atomic_statement -> PRINT LPAREN . printables RPAREN SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
 ##
 ## The known suffix of the stack is as follows:
 ## PRINT LPAREN
@@ -1721,9 +1721,9 @@ program: TRANSFORMEDDATABLOCK LBRACE PRINT WHILE
 ##
 ## Concrete syntax: transformed data { print while
 ##
-## Ends in an error in state: 278.
+## Ends in an error in state: 222.
 ##
-## atomic_statement -> PRINT . LPAREN printables RPAREN SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
+## atomic_statement -> PRINT . LPAREN printables RPAREN SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
 ##
 ## The known suffix of the stack is as follows:
 ## PRINT
@@ -1735,7 +1735,7 @@ program: TRANSFORMEDDATABLOCK LBRACE RBRACE ELTTIMESASSIGN
 ##
 ## Concrete syntax: transformed data { } .*=
 ##
-## Ends in an error in state: 667.
+## Ends in an error in state: 673.
 ##
 ## program -> option(function_block) option(data_block) option(transformed_data_block) . option(parameters_block) option(transformed_parameters_block) option(model_block) option(generated_quantities_block) EOF [ # ]
 ##
@@ -1799,9 +1799,9 @@ program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER WHILE
 ##
 ## Concrete syntax: transformed data { foo while
 ##
-## Ends in an error in state: 334.
+## Ends in an error in state: 344.
 ##
-## atomic_statement -> identifier . LPAREN loption(separated_nonempty_list(COMMA,expression)) RPAREN SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
+## atomic_statement -> identifier . LPAREN loption(separated_nonempty_list(COMMA,expression)) RPAREN SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
 ## common_expression -> identifier . [ TRANSPOSE TIMESASSIGN TIMES TILDE RBRACE RABRACK QMARK PLUSASSIGN PLUS OR NEQUALS MODULO MINUSASSIGN MINUS LEQ LDIVIDE LBRACK LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMESASSIGN ELTTIMES ELTPOW ELTDIVIDEASSIGN ELTDIVIDE DOTNUMERAL DIVIDEASSIGN DIVIDE COMMA ASSIGN AND ]
 ## common_expression -> identifier . LPAREN loption(separated_nonempty_list(COMMA,expression)) RPAREN [ TRANSPOSE TIMESASSIGN TIMES TILDE RBRACE RABRACK QMARK PLUSASSIGN PLUS OR NEQUALS MODULO MINUSASSIGN MINUS LEQ LDIVIDE LBRACK LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMESASSIGN ELTTIMES ELTPOW ELTDIVIDEASSIGN ELTDIVIDE DOTNUMERAL DIVIDEASSIGN DIVIDE COMMA ASSIGN AND ]
 ## common_expression -> identifier . LPAREN expression BAR loption(separated_nonempty_list(COMMA,expression)) RPAREN [ TRANSPOSE TIMESASSIGN TIMES TILDE RBRACE RABRACK QMARK PLUSASSIGN PLUS OR NEQUALS MODULO MINUSASSIGN MINUS LEQ LDIVIDE LBRACK LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMESASSIGN ELTTIMES ELTPOW ELTDIVIDEASSIGN ELTDIVIDE DOTNUMERAL DIVIDEASSIGN DIVIDE COMMA ASSIGN AND ]
@@ -1859,7 +1859,7 @@ program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL ELTPOW WHILE
 ##
 ## Concrete syntax: transformed data { 3.1415 .^ while
 ##
-## Ends in an error in state: 125.
+## Ends in an error in state: 130.
 ##
 ## expression -> expression ELTPOW . expression [ TRANSPOSE TIMES TILDE SEMICOLON RPAREN RBRACK RBRACE RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE COMMA COLON BAR AND ]
 ##
@@ -1877,7 +1877,7 @@ program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER QMARK WHILE
 ##
 ## Concrete syntax: transformed data { foo ? while
 ##
-## Ends in an error in state: 147.
+## Ends in an error in state: 152.
 ##
 ## expression -> expression QMARK . expression COLON expression [ TRANSPOSE TIMES TILDE SEMICOLON RPAREN RBRACK RBRACE RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE COMMA COLON BAR AND ]
 ##
@@ -1894,7 +1894,7 @@ program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK COLON IDENTIFIER TILDE
 ##
 ## Concrete syntax: transformed data { 3.1415 [ : foo ~
 ##
-## Ends in an error in state: 130.
+## Ends in an error in state: 135.
 ##
 ## expression -> expression . QMARK expression COLON expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE COMMA AND ]
 ## expression -> expression . PLUS expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE COMMA AND ]
@@ -1926,8 +1926,8 @@ program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK COLON IDENTIFIER TILDE
 ## This implies that, although the LR(1) items shown above provide an
 ## accurate view of the past (what has been recognized so far), they
 ## may provide an INCOMPLETE view of the future (what was expected next).
-## In state 112, spurious reduction of production common_expression -> identifier
-## In state 127, spurious reduction of production expression -> common_expression
+## In state 117, spurious reduction of production common_expression -> identifier
+## In state 132, spurious reduction of production expression -> common_expression
 ##
 
 Ill-formed phrase. Found ":" expression. We expect either an infix or postfix operator, or "," or or "[" or "]" next.
@@ -1938,7 +1938,7 @@ program: TRANSFORMEDDATABLOCK LBRACE PLUS IDENTIFIER TRANSPOSE WHILE
 ##
 ## Concrete syntax: transformed data { + foo ' while
 ##
-## Ends in an error in state: 190.
+## Ends in an error in state: 195.
 ##
 ## expression -> expression . QMARK expression COLON expression [ TRANSPOSE TIMES TILDE SEMICOLON RPAREN RBRACK RBRACE RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE COMMA COLON BAR AND ]
 ## expression -> expression . PLUS expression [ TRANSPOSE TIMES TILDE SEMICOLON RPAREN RBRACK RBRACE RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE COMMA COLON BAR AND ]
@@ -1973,7 +1973,7 @@ program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK COLON WHILE
 ##
 ## Concrete syntax: transformed data { 3.1415 [ : while
 ##
-## Ends in an error in state: 129.
+## Ends in an error in state: 134.
 ##
 ## indexes -> COLON . [ RBRACK COMMA ]
 ## indexes -> COLON . expression [ RBRACK COMMA ]
@@ -1988,7 +1988,7 @@ program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK COMMA WHILE
 ##
 ## Concrete syntax: transformed data { 3.1415 [ , while
 ##
-## Ends in an error in state: 167.
+## Ends in an error in state: 172.
 ##
 ## indexes -> indexes COMMA . indexes [ RBRACK COMMA ]
 ##
@@ -2004,7 +2004,7 @@ program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LBRACK REALNUMERAL COLON WHILE
 ##
 ## Concrete syntax: transformed data { foo [ 3.1415 : while
 ##
-## Ends in an error in state: 170.
+## Ends in an error in state: 175.
 ##
 ## indexes -> expression COLON . [ RBRACK COMMA ]
 ## indexes -> expression COLON . expression [ RBRACK COMMA ]
@@ -2019,9 +2019,9 @@ program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE IDENTIFIER LPAREN RPAREN 
 ##
 ## Concrete syntax: transformed data { 3.1415 ~ foo ( ) T [ , ] multiplier
 ##
-## Ends in an error in state: 353.
+## Ends in an error in state: 363.
 ##
-## atomic_statement -> expression TILDE identifier LPAREN loption(separated_nonempty_list(COMMA,expression)) RPAREN option(truncation) . SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
+## atomic_statement -> expression TILDE identifier LPAREN loption(separated_nonempty_list(COMMA,expression)) RPAREN option(truncation) . SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
 ##
 ## The known suffix of the stack is as follows:
 ## expression TILDE identifier LPAREN loption(separated_nonempty_list(COMMA,expression)) RPAREN option(truncation)
@@ -2043,7 +2043,7 @@ program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE IDENTIFIER LPAREN RPAREN 
 ##
 ## Concrete syntax: transformed data { 3.1415 ~ foo ( ) T [ while
 ##
-## Ends in an error in state: 346.
+## Ends in an error in state: 356.
 ##
 ## truncation -> TRUNCATE LBRACK . option(expression) COMMA option(expression) RBRACK [ SEMICOLON ]
 ##
@@ -2057,9 +2057,9 @@ program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE IDENTIFIER LPAREN RPAREN 
 ##
 ## Concrete syntax: transformed data { 3.1415 ~ foo ( ) while
 ##
-## Ends in an error in state: 344.
+## Ends in an error in state: 354.
 ##
-## atomic_statement -> expression TILDE identifier LPAREN loption(separated_nonempty_list(COMMA,expression)) RPAREN . option(truncation) SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
+## atomic_statement -> expression TILDE identifier LPAREN loption(separated_nonempty_list(COMMA,expression)) RPAREN . option(truncation) SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
 ##
 ## The known suffix of the stack is as follows:
 ## expression TILDE identifier LPAREN loption(separated_nonempty_list(COMMA,expression)) RPAREN
@@ -2071,9 +2071,9 @@ program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE IDENTIFIER LPAREN IDENTIF
 ##
 ## Concrete syntax: transformed data { 3.1415 ~ foo ( foo ]
 ##
-## Ends in an error in state: 343.
+## Ends in an error in state: 353.
 ##
-## atomic_statement -> expression TILDE identifier LPAREN loption(separated_nonempty_list(COMMA,expression)) . RPAREN option(truncation) SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
+## atomic_statement -> expression TILDE identifier LPAREN loption(separated_nonempty_list(COMMA,expression)) . RPAREN option(truncation) SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
 ##
 ## The known suffix of the stack is as follows:
 ## expression TILDE identifier LPAREN loption(separated_nonempty_list(COMMA,expression))
@@ -2082,10 +2082,10 @@ program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE IDENTIFIER LPAREN IDENTIF
 ## This implies that, although the LR(1) items shown above provide an
 ## accurate view of the past (what has been recognized so far), they
 ## may provide an INCOMPLETE view of the future (what was expected next).
-## In state 112, spurious reduction of production common_expression -> identifier
-## In state 127, spurious reduction of production expression -> common_expression
-## In state 175, spurious reduction of production separated_nonempty_list(COMMA,expression) -> expression
-## In state 114, spurious reduction of production loption(separated_nonempty_list(COMMA,expression)) -> separated_nonempty_list(COMMA,expression)
+## In state 117, spurious reduction of production common_expression -> identifier
+## In state 132, spurious reduction of production expression -> common_expression
+## In state 180, spurious reduction of production separated_nonempty_list(COMMA,expression) -> expression
+## In state 119, spurious reduction of production loption(separated_nonempty_list(COMMA,expression)) -> separated_nonempty_list(COMMA,expression)
 ##
 
 Ill-formed "~"-statement. Expect a comma separated list of expressions for arguments to the distribution, followed by ")".
@@ -2094,9 +2094,9 @@ program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE IDENTIFIER LPAREN WHILE
 ##
 ## Concrete syntax: transformed data { 3.1415 ~ foo ( while
 ##
-## Ends in an error in state: 342.
+## Ends in an error in state: 352.
 ##
-## atomic_statement -> expression TILDE identifier LPAREN . loption(separated_nonempty_list(COMMA,expression)) RPAREN option(truncation) SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
+## atomic_statement -> expression TILDE identifier LPAREN . loption(separated_nonempty_list(COMMA,expression)) RPAREN option(truncation) SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
 ##
 ## The known suffix of the stack is as follows:
 ## expression TILDE identifier LPAREN
@@ -2108,9 +2108,9 @@ program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE IDENTIFIER WHILE
 ##
 ## Concrete syntax: transformed data { 3.1415 ~ foo while
 ##
-## Ends in an error in state: 341.
+## Ends in an error in state: 351.
 ##
-## atomic_statement -> expression TILDE identifier . LPAREN loption(separated_nonempty_list(COMMA,expression)) RPAREN option(truncation) SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
+## atomic_statement -> expression TILDE identifier . LPAREN loption(separated_nonempty_list(COMMA,expression)) RPAREN option(truncation) SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
 ##
 ## The known suffix of the stack is as follows:
 ## expression TILDE identifier
@@ -2122,9 +2122,9 @@ program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE WHILE
 ##
 ## Concrete syntax: transformed data { 3.1415 ~ while
 ##
-## Ends in an error in state: 340.
+## Ends in an error in state: 350.
 ##
-## atomic_statement -> expression TILDE . identifier LPAREN loption(separated_nonempty_list(COMMA,expression)) RPAREN option(truncation) SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
+## atomic_statement -> expression TILDE . identifier LPAREN loption(separated_nonempty_list(COMMA,expression)) RPAREN option(truncation) SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
 ##
 ## The known suffix of the stack is as follows:
 ## expression TILDE
@@ -2136,7 +2136,7 @@ program: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN IDENTIFIER COMMA STRINGLITERA
 ##
 ## Concrete syntax: transformed data { reject ( foo , "hello world" while
 ##
-## Ends in an error in state: 271.
+## Ends in an error in state: 215.
 ##
 ## printables -> printables . COMMA printables [ RPAREN COMMA ]
 ## printables -> printables COMMA printables . [ RPAREN COMMA ]
@@ -2151,7 +2151,7 @@ program: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN IDENTIFIER COMMA WHILE
 ##
 ## Concrete syntax: transformed data { reject ( foo , while
 ##
-## Ends in an error in state: 270.
+## Ends in an error in state: 214.
 ##
 ## printables -> printables COMMA . printables [ RPAREN COMMA ]
 ##
@@ -2173,9 +2173,9 @@ program: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN WHILE
 ##
 ## Concrete syntax: transformed data { reject ( while
 ##
-## Ends in an error in state: 264.
+## Ends in an error in state: 208.
 ##
-## atomic_statement -> REJECT LPAREN . printables RPAREN SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
+## atomic_statement -> REJECT LPAREN . printables RPAREN SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
 ##
 ## The known suffix of the stack is as follows:
 ## REJECT LPAREN
@@ -2187,7 +2187,7 @@ program: TRANSFORMEDDATABLOCK LBRACE RETURN LBRACE WHILE
 ##
 ## Concrete syntax: transformed data { return { while
 ##
-## Ends in an error in state: 107.
+## Ends in an error in state: 112.
 ##
 ## common_expression -> LBRACE . separated_nonempty_list(COMMA,expression) RBRACE [ TRANSPOSE TIMES TILDE SEMICOLON RPAREN RBRACK RBRACE RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DOTNUMERAL DIVIDE COMMA COLON BAR AND ]
 ##
@@ -2201,7 +2201,7 @@ program: TRANSFORMEDDATABLOCK LBRACE RETURN TARGET WHILE
 ##
 ## Concrete syntax: transformed data { return target while
 ##
-## Ends in an error in state: 99.
+## Ends in an error in state: 104.
 ##
 ## common_expression -> TARGET . LPAREN RPAREN [ TRANSPOSE TIMES TILDE SEMICOLON RPAREN RBRACK RBRACE RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DOTNUMERAL DIVIDE COMMA COLON BAR AND ]
 ##
@@ -2215,7 +2215,7 @@ program: TRANSFORMEDDATABLOCK LBRACE RETURN IDENTIFIER LPAREN IDENTIFIER COMMA I
 ##
 ## Concrete syntax: transformed data { return foo ( foo , foo ]
 ##
-## Ends in an error in state: 115.
+## Ends in an error in state: 120.
 ##
 ## common_expression -> identifier LPAREN loption(separated_nonempty_list(COMMA,expression)) . RPAREN [ TRANSPOSE TIMES TILDE SEMICOLON RPAREN RBRACK RBRACE RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DOTNUMERAL DIVIDE COMMA COLON BAR AND ]
 ##
@@ -2226,11 +2226,11 @@ program: TRANSFORMEDDATABLOCK LBRACE RETURN IDENTIFIER LPAREN IDENTIFIER COMMA I
 ## This implies that, although the LR(1) items shown above provide an
 ## accurate view of the past (what has been recognized so far), they
 ## may provide an INCOMPLETE view of the future (what was expected next).
-## In state 112, spurious reduction of production common_expression -> identifier
-## In state 127, spurious reduction of production expression -> common_expression
-## In state 175, spurious reduction of production separated_nonempty_list(COMMA,expression) -> expression
-## In state 174, spurious reduction of production separated_nonempty_list(COMMA,expression) -> expression COMMA separated_nonempty_list(COMMA,expression)
-## In state 114, spurious reduction of production loption(separated_nonempty_list(COMMA,expression)) -> separated_nonempty_list(COMMA,expression)
+## In state 117, spurious reduction of production common_expression -> identifier
+## In state 132, spurious reduction of production expression -> common_expression
+## In state 180, spurious reduction of production separated_nonempty_list(COMMA,expression) -> expression
+## In state 179, spurious reduction of production separated_nonempty_list(COMMA,expression) -> expression COMMA separated_nonempty_list(COMMA,expression)
+## In state 119, spurious reduction of production loption(separated_nonempty_list(COMMA,expression)) -> separated_nonempty_list(COMMA,expression)
 ##
 
 Ill-formed expression. In function application, expect comma-separated list of expressions followed by ")", after "(".
@@ -2239,7 +2239,7 @@ program: TRANSFORMEDDATABLOCK LBRACE RETURN IDENTIFIER LPAREN WHILE
 ##
 ## Concrete syntax: transformed data { return foo ( while
 ##
-## Ends in an error in state: 113.
+## Ends in an error in state: 118.
 ##
 ## common_expression -> identifier LPAREN . loption(separated_nonempty_list(COMMA,expression)) RPAREN [ TRANSPOSE TIMES TILDE SEMICOLON RPAREN RBRACK RBRACE RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DOTNUMERAL DIVIDE COMMA COLON BAR AND ]
 ## common_expression -> identifier LPAREN . expression BAR loption(separated_nonempty_list(COMMA,expression)) RPAREN [ TRANSPOSE TIMES TILDE SEMICOLON RPAREN RBRACK RBRACE RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DOTNUMERAL DIVIDE COMMA COLON BAR AND ]
@@ -2256,9 +2256,9 @@ program: TRANSFORMEDDATABLOCK LBRACE RETURN IDENTIFIER TILDE
 ##
 ## Concrete syntax: transformed data { return foo ~
 ##
-## Ends in an error in state: 261.
+## Ends in an error in state: 205.
 ##
-## atomic_statement -> RETURN expression . SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
+## atomic_statement -> RETURN expression . SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
 ## expression -> expression . QMARK expression COLON expression [ TRANSPOSE TIMES SEMICOLON RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
 ## expression -> expression . PLUS expression [ TRANSPOSE TIMES SEMICOLON RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
 ## expression -> expression . MINUS expression [ TRANSPOSE TIMES SEMICOLON RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
@@ -2288,8 +2288,8 @@ program: TRANSFORMEDDATABLOCK LBRACE RETURN IDENTIFIER TILDE
 ## This implies that, although the LR(1) items shown above provide an
 ## accurate view of the past (what has been recognized so far), they
 ## may provide an INCOMPLETE view of the future (what was expected next).
-## In state 112, spurious reduction of production common_expression -> identifier
-## In state 127, spurious reduction of production expression -> common_expression
+## In state 117, spurious reduction of production common_expression -> identifier
+## In state 132, spurious reduction of production expression -> common_expression
 ##
 
 Ill-formed return statement. ";" or expression followed by ";" expected after "return".
@@ -2298,7 +2298,7 @@ program: TRANSFORMEDDATABLOCK LBRACE TARGET LPAREN WHILE
 ##
 ## Concrete syntax: transformed data { target ( while
 ##
-## Ends in an error in state: 100.
+## Ends in an error in state: 105.
 ##
 ## common_expression -> TARGET LPAREN . RPAREN [ TRANSPOSE TIMESASSIGN TIMES TILDE SEMICOLON RPAREN RBRACK RBRACE RABRACK QMARK PLUSASSIGN PLUS OR NEQUALS MODULO MINUSASSIGN MINUS LEQ LDIVIDE LBRACK LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMESASSIGN ELTTIMES ELTPOW ELTDIVIDEASSIGN ELTDIVIDE DOTNUMERAL DIVIDEASSIGN DIVIDE COMMA COLON BAR ASSIGN AND ]
 ##
@@ -2314,9 +2314,9 @@ program: TRANSFORMEDDATABLOCK LBRACE TARGET PLUSASSIGN IDENTIFIER TILDE
 ##
 ## Concrete syntax: transformed data { target += foo ~
 ##
-## Ends in an error in state: 256.
+## Ends in an error in state: 200.
 ##
-## atomic_statement -> TARGET PLUSASSIGN expression . SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
+## atomic_statement -> TARGET PLUSASSIGN expression . SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
 ## expression -> expression . QMARK expression COLON expression [ TRANSPOSE TIMES SEMICOLON RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
 ## expression -> expression . PLUS expression [ TRANSPOSE TIMES SEMICOLON RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
 ## expression -> expression . MINUS expression [ TRANSPOSE TIMES SEMICOLON RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
@@ -2346,8 +2346,8 @@ program: TRANSFORMEDDATABLOCK LBRACE TARGET PLUSASSIGN IDENTIFIER TILDE
 ## This implies that, although the LR(1) items shown above provide an
 ## accurate view of the past (what has been recognized so far), they
 ## may provide an INCOMPLETE view of the future (what was expected next).
-## In state 112, spurious reduction of production common_expression -> identifier
-## In state 127, spurious reduction of production expression -> common_expression
+## In state 117, spurious reduction of production common_expression -> identifier
+## In state 132, spurious reduction of production expression -> common_expression
 ##
 
 Ill-formed statement. Expression followed by ";" expected after "target +=".
@@ -2356,9 +2356,9 @@ program: TRANSFORMEDDATABLOCK LBRACE TARGET WHILE
 ##
 ## Concrete syntax: transformed data { target while
 ##
-## Ends in an error in state: 254.
+## Ends in an error in state: 198.
 ##
-## atomic_statement -> TARGET . PLUSASSIGN expression SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
+## atomic_statement -> TARGET . PLUSASSIGN expression SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
 ## common_expression -> TARGET . LPAREN RPAREN [ TRANSPOSE TIMESASSIGN TIMES TILDE RBRACE RABRACK QMARK PLUSASSIGN PLUS OR NEQUALS MODULO MINUSASSIGN MINUS LEQ LDIVIDE LBRACK LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMESASSIGN ELTTIMES ELTPOW ELTDIVIDEASSIGN ELTDIVIDE DOTNUMERAL DIVIDEASSIGN DIVIDE COMMA ASSIGN AND ]
 ##
 ## The known suffix of the stack is as follows:
@@ -2371,7 +2371,7 @@ program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LPAREN REALNUMERAL BAR IDENTIFIE
 ##
 ## Concrete syntax: transformed data { foo ( 3.1415 | foo ]
 ##
-## Ends in an error in state: 177.
+## Ends in an error in state: 182.
 ##
 ## common_expression -> identifier LPAREN expression BAR loption(separated_nonempty_list(COMMA,expression)) . RPAREN [ TRANSPOSE TIMESASSIGN TIMES TILDE SEMICOLON RPAREN RBRACK RBRACE RABRACK QMARK PLUSASSIGN PLUS OR NEQUALS MODULO MINUSASSIGN MINUS LEQ LDIVIDE LBRACK LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMESASSIGN ELTTIMES ELTPOW ELTDIVIDEASSIGN ELTDIVIDE DOTNUMERAL DIVIDEASSIGN DIVIDE COMMA COLON BAR ASSIGN AND ]
 ##
@@ -2382,10 +2382,10 @@ program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LPAREN REALNUMERAL BAR IDENTIFIE
 ## This implies that, although the LR(1) items shown above provide an
 ## accurate view of the past (what has been recognized so far), they
 ## may provide an INCOMPLETE view of the future (what was expected next).
-## In state 112, spurious reduction of production common_expression -> identifier
-## In state 127, spurious reduction of production expression -> common_expression
-## In state 175, spurious reduction of production separated_nonempty_list(COMMA,expression) -> expression
-## In state 114, spurious reduction of production loption(separated_nonempty_list(COMMA,expression)) -> separated_nonempty_list(COMMA,expression)
+## In state 117, spurious reduction of production common_expression -> identifier
+## In state 132, spurious reduction of production expression -> common_expression
+## In state 180, spurious reduction of production separated_nonempty_list(COMMA,expression) -> expression
+## In state 119, spurious reduction of production loption(separated_nonempty_list(COMMA,expression)) -> separated_nonempty_list(COMMA,expression)
 ##
 
 Ill-formed conditional distribution evaluation. Expect comma-separated list of expressions followed by ")" after "|".
@@ -2394,7 +2394,7 @@ program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LPAREN REALNUMERAL BAR WHILE
 ##
 ## Concrete syntax: transformed data { foo ( 3.1415 | while
 ##
-## Ends in an error in state: 176.
+## Ends in an error in state: 181.
 ##
 ## common_expression -> identifier LPAREN expression BAR . loption(separated_nonempty_list(COMMA,expression)) RPAREN [ TRANSPOSE TIMESASSIGN TIMES TILDE SEMICOLON RPAREN RBRACK RBRACE RABRACK QMARK PLUSASSIGN PLUS OR NEQUALS MODULO MINUSASSIGN MINUS LEQ LDIVIDE LBRACK LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMESASSIGN ELTTIMES ELTPOW ELTDIVIDEASSIGN ELTDIVIDE DOTNUMERAL DIVIDEASSIGN DIVIDE COMMA COLON BAR ASSIGN AND ]
 ##
@@ -2408,9 +2408,9 @@ program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LPAREN RPAREN WHILE
 ##
 ## Concrete syntax: transformed data { foo ( ) while
 ##
-## Ends in an error in state: 337.
+## Ends in an error in state: 347.
 ##
-## atomic_statement -> identifier LPAREN loption(separated_nonempty_list(COMMA,expression)) RPAREN . SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
+## atomic_statement -> identifier LPAREN loption(separated_nonempty_list(COMMA,expression)) RPAREN . SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
 ## common_expression -> identifier LPAREN loption(separated_nonempty_list(COMMA,expression)) RPAREN . [ TRANSPOSE TIMESASSIGN TIMES TILDE RBRACE RABRACK QMARK PLUSASSIGN PLUS OR NEQUALS MODULO MINUSASSIGN MINUS LEQ LDIVIDE LBRACK LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMESASSIGN ELTTIMES ELTPOW ELTDIVIDEASSIGN ELTDIVIDE DOTNUMERAL DIVIDEASSIGN DIVIDE COMMA ASSIGN AND ]
 ##
 ## The known suffix of the stack is as follows:
@@ -2427,9 +2427,9 @@ program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LPAREN IDENTIFIER COMMA IDENTIFI
 ##
 ## Concrete syntax: transformed data { foo ( foo , foo ]
 ##
-## Ends in an error in state: 336.
+## Ends in an error in state: 346.
 ##
-## atomic_statement -> identifier LPAREN loption(separated_nonempty_list(COMMA,expression)) . RPAREN SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
+## atomic_statement -> identifier LPAREN loption(separated_nonempty_list(COMMA,expression)) . RPAREN SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
 ## common_expression -> identifier LPAREN loption(separated_nonempty_list(COMMA,expression)) . RPAREN [ TRANSPOSE TIMESASSIGN TIMES TILDE RBRACE RABRACK QMARK PLUSASSIGN PLUS OR NEQUALS MODULO MINUSASSIGN MINUS LEQ LDIVIDE LBRACK LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMESASSIGN ELTTIMES ELTPOW ELTDIVIDEASSIGN ELTDIVIDE DOTNUMERAL DIVIDEASSIGN DIVIDE COMMA ASSIGN AND ]
 ##
 ## The known suffix of the stack is as follows:
@@ -2439,11 +2439,11 @@ program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LPAREN IDENTIFIER COMMA IDENTIFI
 ## This implies that, although the LR(1) items shown above provide an
 ## accurate view of the past (what has been recognized so far), they
 ## may provide an INCOMPLETE view of the future (what was expected next).
-## In state 112, spurious reduction of production common_expression -> identifier
-## In state 127, spurious reduction of production expression -> common_expression
-## In state 175, spurious reduction of production separated_nonempty_list(COMMA,expression) -> expression
-## In state 174, spurious reduction of production separated_nonempty_list(COMMA,expression) -> expression COMMA separated_nonempty_list(COMMA,expression)
-## In state 114, spurious reduction of production loption(separated_nonempty_list(COMMA,expression)) -> separated_nonempty_list(COMMA,expression)
+## In state 117, spurious reduction of production common_expression -> identifier
+## In state 132, spurious reduction of production expression -> common_expression
+## In state 180, spurious reduction of production separated_nonempty_list(COMMA,expression) -> expression
+## In state 179, spurious reduction of production separated_nonempty_list(COMMA,expression) -> expression COMMA separated_nonempty_list(COMMA,expression)
+## In state 119, spurious reduction of production loption(separated_nonempty_list(COMMA,expression)) -> separated_nonempty_list(COMMA,expression)
 ##
 
 Ill-formed function application. Expect comma-separated list of expressions followed by ")" after "(".
@@ -2454,9 +2454,9 @@ program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER RBRACE
 ##
 ## Concrete syntax: transformed data { foo }
 ##
-## Ends in an error in state: 339.
+## Ends in an error in state: 349.
 ##
-## atomic_statement -> expression . TILDE identifier LPAREN loption(separated_nonempty_list(COMMA,expression)) RPAREN option(truncation) SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
+## atomic_statement -> expression . TILDE identifier LPAREN loption(separated_nonempty_list(COMMA,expression)) RPAREN option(truncation) SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
 ## expression -> expression . QMARK expression COLON expression [ TRANSPOSE TIMES TILDE RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
 ## expression -> expression . PLUS expression [ TRANSPOSE TIMES TILDE RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
 ## expression -> expression . MINUS expression [ TRANSPOSE TIMES TILDE RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
@@ -2486,8 +2486,8 @@ program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER RBRACE
 ## This implies that, although the LR(1) items shown above provide an
 ## accurate view of the past (what has been recognized so far), they
 ## may provide an INCOMPLETE view of the future (what was expected next).
-## In state 334, spurious reduction of production common_expression -> identifier
-## In state 356, spurious reduction of production expression -> common_expression
+## In state 344, spurious reduction of production common_expression -> identifier
+## In state 366, spurious reduction of production expression -> common_expression
 ##
 
 Ill-formed phrase. Found an expression where we expected a statement.
@@ -2506,9 +2506,9 @@ program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER TIMESASSIGN IDENTIFIER TILDE
 ##
 ## Concrete syntax: transformed data { foo *= foo ~
 ##
-## Ends in an error in state: 358.
+## Ends in an error in state: 368.
 ##
-## atomic_statement -> common_expression TIMESASSIGN expression . SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
+## atomic_statement -> common_expression TIMESASSIGN expression . SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
 ## expression -> expression . QMARK expression COLON expression [ TRANSPOSE TIMES SEMICOLON RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
 ## expression -> expression . PLUS expression [ TRANSPOSE TIMES SEMICOLON RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
 ## expression -> expression . MINUS expression [ TRANSPOSE TIMES SEMICOLON RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
@@ -2538,8 +2538,8 @@ program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER TIMESASSIGN IDENTIFIER TILDE
 ## This implies that, although the LR(1) items shown above provide an
 ## accurate view of the past (what has been recognized so far), they
 ## may provide an INCOMPLETE view of the future (what was expected next).
-## In state 112, spurious reduction of production common_expression -> identifier
-## In state 127, spurious reduction of production expression -> common_expression
+## In state 117, spurious reduction of production common_expression -> identifier
+## In state 132, spurious reduction of production expression -> common_expression
 ##
 
 Ill-formed compound assignment statement. Expected a ";" after the value being assigned.
@@ -2556,9 +2556,9 @@ program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER TIMESASSIGN WHILE
 ##
 ## Concrete syntax: transformed data { foo *= while
 ##
-## Ends in an error in state: 357.
+## Ends in an error in state: 367.
 ##
-## atomic_statement -> common_expression TIMESASSIGN . expression SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
+## atomic_statement -> common_expression TIMESASSIGN . expression SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
 ##
 ## The known suffix of the stack is as follows:
 ## common_expression TIMESASSIGN
@@ -2570,9 +2570,9 @@ program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER ASSIGN IDENTIFIER TILDE
 ##
 ## Concrete syntax: transformed data { foo = foo ~
 ##
-## Ends in an error in state: 376.
+## Ends in an error in state: 386.
 ##
-## atomic_statement -> common_expression ASSIGN expression . SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
+## atomic_statement -> common_expression ASSIGN expression . SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
 ## expression -> expression . QMARK expression COLON expression [ TRANSPOSE TIMES SEMICOLON RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
 ## expression -> expression . PLUS expression [ TRANSPOSE TIMES SEMICOLON RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
 ## expression -> expression . MINUS expression [ TRANSPOSE TIMES SEMICOLON RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
@@ -2602,8 +2602,8 @@ program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER ASSIGN IDENTIFIER TILDE
 ## This implies that, although the LR(1) items shown above provide an
 ## accurate view of the past (what has been recognized so far), they
 ## may provide an INCOMPLETE view of the future (what was expected next).
-## In state 112, spurious reduction of production common_expression -> identifier
-## In state 127, spurious reduction of production expression -> common_expression
+## In state 117, spurious reduction of production common_expression -> identifier
+## In state 132, spurious reduction of production expression -> common_expression
 ##
 
 Ill-formed assignment statement. Expected a ";" after the value being assigned.
@@ -2612,9 +2612,9 @@ program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER ASSIGN WHILE
 ##
 ## Concrete syntax: transformed data { foo = while
 ##
-## Ends in an error in state: 375.
+## Ends in an error in state: 385.
 ##
-## atomic_statement -> common_expression ASSIGN . expression SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
+## atomic_statement -> common_expression ASSIGN . expression SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
 ##
 ## The known suffix of the stack is as follows:
 ## common_expression ASSIGN
@@ -2626,13 +2626,13 @@ program: TRANSFORMEDDATABLOCK LBRACE VECTOR LBRACK INTNUMERAL RBRACK HAT
 ##
 ## Concrete syntax: transformed data { vector [ 24 ] ^
 ##
-## Ends in an error in state: 648.
+## Ends in an error in state: 657.
 ##
-## decl(top_var_type,expression) -> top_var_type . decl_identifier LBRACK separated_nonempty_list(COMMA,expression) RBRACK [ WHILE VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
-## decl(top_var_type,expression) -> top_var_type . id_and_optional_assignment(expression,decl_identifier) option(remaining_declarations(expression)) SEMICOLON [ WHILE VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
+## decl(top_var_type,expression) -> list(ANNOTATION) top_var_type . decl_identifier LBRACK separated_nonempty_list(COMMA,expression) RBRACK [ WHILE VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
+## decl(top_var_type,expression) -> list(ANNOTATION) top_var_type . id_and_optional_assignment(expression,decl_identifier) option(remaining_declarations(expression)) SEMICOLON [ WHILE VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
 ##
 ## The known suffix of the stack is as follows:
-## top_var_type
+## list(ANNOTATION) top_var_type
 ##
 
 Ill-formed top-level variable declaration. Expect an identifier next.
@@ -2641,7 +2641,7 @@ program: TRANSFORMEDDATABLOCK LBRACE VOID
 ##
 ## Concrete syntax: transformed data { void
 ##
-## Ends in an error in state: 642.
+## Ends in an error in state: 647.
 ##
 ## transformed_data_block -> TRANSFORMEDDATABLOCK LBRACE . list(top_vardecl_or_statement) RBRACE [ TRANSFORMEDPARAMETERSBLOCK PARAMETERSBLOCK MODELBLOCK GENERATEDQUANTITIESBLOCK EOF ]
 ##
@@ -2655,9 +2655,9 @@ program: TRANSFORMEDDATABLOCK LBRACE WHILE LPAREN IDENTIFIER RPAREN VOID
 ##
 ## Concrete syntax: transformed data { while ( foo ) void
 ##
-## Ends in an error in state: 192.
+## Ends in an error in state: 197.
 ##
-## nested_statement -> WHILE LPAREN expression RPAREN . vardecl_or_statement [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
+## nested_statement -> WHILE LPAREN expression RPAREN . vardecl_or_statement [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
 ##
 ## The known suffix of the stack is as follows:
 ## WHILE LPAREN expression RPAREN
@@ -2671,9 +2671,9 @@ program: TRANSFORMEDDATABLOCK LBRACE WHILE LPAREN WHILE
 ##
 ## Concrete syntax: transformed data { while ( while
 ##
-## Ends in an error in state: 98.
+## Ends in an error in state: 103.
 ##
-## nested_statement -> WHILE LPAREN . expression RPAREN vardecl_or_statement [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
+## nested_statement -> WHILE LPAREN . expression RPAREN vardecl_or_statement [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
 ##
 ## The known suffix of the stack is as follows:
 ## WHILE LPAREN
@@ -2685,9 +2685,9 @@ program: TRANSFORMEDDATABLOCK LBRACE WHILE WHILE
 ##
 ## Concrete syntax: transformed data { while while
 ##
-## Ends in an error in state: 97.
+## Ends in an error in state: 102.
 ##
-## nested_statement -> WHILE . LPAREN expression RPAREN vardecl_or_statement [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
+## nested_statement -> WHILE . LPAREN expression RPAREN vardecl_or_statement [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
 ##
 ## The known suffix of the stack is as follows:
 ## WHILE
@@ -2699,7 +2699,7 @@ program: TRANSFORMEDDATABLOCK WHILE
 ##
 ## Concrete syntax: transformed data while
 ##
-## Ends in an error in state: 641.
+## Ends in an error in state: 646.
 ##
 ## transformed_data_block -> TRANSFORMEDDATABLOCK . LBRACE list(top_vardecl_or_statement) RBRACE [ TRANSFORMEDPARAMETERSBLOCK PARAMETERSBLOCK MODELBLOCK GENERATEDQUANTITIESBLOCK EOF ]
 ##
@@ -2713,7 +2713,7 @@ program: TRANSFORMEDPARAMETERSBLOCK LBRACE RBRACE ELTTIMESASSIGN
 ##
 ## Concrete syntax: transformed parameters { } .*=
 ##
-## Ends in an error in state: 679.
+## Ends in an error in state: 685.
 ##
 ## program -> option(function_block) option(data_block) option(transformed_data_block) option(parameters_block) option(transformed_parameters_block) . option(model_block) option(generated_quantities_block) EOF [ # ]
 ##
@@ -2727,7 +2727,7 @@ program: TRANSFORMEDPARAMETERSBLOCK LBRACE VOID
 ##
 ## Concrete syntax: transformed parameters { void
 ##
-## Ends in an error in state: 675.
+## Ends in an error in state: 681.
 ##
 ## transformed_parameters_block -> TRANSFORMEDPARAMETERSBLOCK LBRACE . list(top_vardecl_or_statement) RBRACE [ MODELBLOCK GENERATEDQUANTITIESBLOCK EOF ]
 ##
@@ -2741,7 +2741,7 @@ program: TRANSFORMEDPARAMETERSBLOCK WHILE
 ##
 ## Concrete syntax: transformed parameters while
 ##
-## Ends in an error in state: 674.
+## Ends in an error in state: 680.
 ##
 ## transformed_parameters_block -> TRANSFORMEDPARAMETERSBLOCK . LBRACE list(top_vardecl_or_statement) RBRACE [ MODELBLOCK GENERATEDQUANTITIESBLOCK EOF ]
 ##
@@ -2755,7 +2755,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER COMMA WHILE
 ##
 ## Concrete syntax: data { vector < upper = foo , while
 ##
-## Ends in an error in state: 451.
+## Ends in an error in state: 459.
 ##
 ## range -> UPPER ASSIGN constr_expression COMMA . LOWER ASSIGN constr_expression [ RABRACK ]
 ##
@@ -2769,7 +2769,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER COMMA LOWER WHI
 ##
 ## Concrete syntax: data { vector < upper = foo , lower while
 ##
-## Ends in an error in state: 452.
+## Ends in an error in state: 460.
 ##
 ## range -> UPPER ASSIGN constr_expression COMMA LOWER . ASSIGN constr_expression [ RABRACK ]
 ##
@@ -2783,7 +2783,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER COMMA LOWER ASS
 ##
 ## Concrete syntax: data { vector < upper = foo , lower = while
 ##
-## Ends in an error in state: 453.
+## Ends in an error in state: 461.
 ##
 ## range -> UPPER ASSIGN constr_expression COMMA LOWER ASSIGN . constr_expression [ RABRACK ]
 ##
@@ -2797,7 +2797,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER COMMA LOWER ASS
 ##
 ## Concrete syntax: data { vector < upper = foo , lower = foo ,
 ##
-## Ends in an error in state: 454.
+## Ends in an error in state: 462.
 ##
 ## constr_expression -> constr_expression . PLUS constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE ]
 ## constr_expression -> constr_expression . MINUS constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE ]
@@ -2820,8 +2820,8 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER COMMA LOWER ASS
 ## This implies that, although the LR(1) items shown above provide an
 ## accurate view of the past (what has been recognized so far), they
 ## may provide an INCOMPLETE view of the future (what was expected next).
-## In state 112, spurious reduction of production common_expression -> identifier
-## In state 429, spurious reduction of production constr_expression -> common_expression
+## In state 117, spurious reduction of production common_expression -> identifier
+## In state 437, spurious reduction of production constr_expression -> common_expression
 ##
 
 Expected '>' after lower expression.
@@ -2832,7 +2832,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK MULTIPLIER ASSIGN IDENTIFIER COMMA WHIL
 ##
 ## Concrete syntax: data { vector < multiplier = foo , while
 ##
-## Ends in an error in state: 465.
+## Ends in an error in state: 473.
 ##
 ## offset_mult -> MULTIPLIER ASSIGN constr_expression COMMA . OFFSET ASSIGN constr_expression [ RABRACK ]
 ##
@@ -2846,7 +2846,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK MULTIPLIER ASSIGN IDENTIFIER COMMA OFFS
 ##
 ## Concrete syntax: data { vector < multiplier = foo , offset while
 ##
-## Ends in an error in state: 466.
+## Ends in an error in state: 474.
 ##
 ## offset_mult -> MULTIPLIER ASSIGN constr_expression COMMA OFFSET . ASSIGN constr_expression [ RABRACK ]
 ##
@@ -2860,7 +2860,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK MULTIPLIER ASSIGN IDENTIFIER COMMA OFFS
 ##
 ## Concrete syntax: data { vector < multiplier = foo , offset = while
 ##
-## Ends in an error in state: 467.
+## Ends in an error in state: 475.
 ##
 ## offset_mult -> MULTIPLIER ASSIGN constr_expression COMMA OFFSET ASSIGN . constr_expression [ RABRACK ]
 ##
@@ -2874,7 +2874,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK MULTIPLIER ASSIGN IDENTIFIER COMMA OFFS
 ##
 ## Concrete syntax: data { vector < multiplier = foo , offset = foo ,
 ##
-## Ends in an error in state: 468.
+## Ends in an error in state: 476.
 ##
 ## constr_expression -> constr_expression . PLUS constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE ]
 ## constr_expression -> constr_expression . MINUS constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE ]
@@ -2897,8 +2897,8 @@ program: DATABLOCK LBRACE VECTOR LABRACK MULTIPLIER ASSIGN IDENTIFIER COMMA OFFS
 ## This implies that, although the LR(1) items shown above provide an
 ## accurate view of the past (what has been recognized so far), they
 ## may provide an INCOMPLETE view of the future (what was expected next).
-## In state 112, spurious reduction of production common_expression -> identifier
-## In state 429, spurious reduction of production constr_expression -> common_expression
+## In state 117, spurious reduction of production common_expression -> identifier
+## In state 437, spurious reduction of production constr_expression -> common_expression
 ##
 
 Expected '>' after multiplier expression.
@@ -2915,12 +2915,12 @@ program: DATABLOCK LBRACE REAL IDENTIFIER ASSIGN UNREACHABLE WHILE
 ##
 ## Concrete syntax: data { real foo = <<<<UNREACHABLE>>> while
 ##
-## Ends in an error in state: 624.
+## Ends in an error in state: 631.
 ##
-## decl(top_var_type,no_assign) -> top_var_type id_and_optional_assignment(no_assign,decl_identifier) . option(remaining_declarations(no_assign)) SEMICOLON [ VECTOR UNITVECTOR TUPLE SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR REAL RBRACE POSITIVEORDERED ORDERED MATRIX INT COVMATRIX CORRMATRIX COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR ARRAY ]
+## decl(top_var_type,no_assign) -> list(ANNOTATION) top_var_type id_and_optional_assignment(no_assign,decl_identifier) . option(remaining_declarations(no_assign)) SEMICOLON [ VECTOR UNITVECTOR TUPLE SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR REAL RBRACE POSITIVEORDERED ORDERED MATRIX INT COVMATRIX CORRMATRIX COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR ARRAY ANNOTATION ]
 ##
 ## The known suffix of the stack is as follows:
-## top_var_type id_and_optional_assignment(no_assign,decl_identifier)
+## list(ANNOTATION) top_var_type id_and_optional_assignment(no_assign,decl_identifier)
 ##
 
 Cannot assign to variables in the `data` or `parameters` blocks; expected ';'
@@ -2936,7 +2936,7 @@ program: MODELBLOCK LBRACE REAL IDENTIFIER COMMA UNREACHABLE
 ##
 ## Concrete syntax: model { real foo , <<<<UNREACHABLE>>>
 ##
-## Ends in an error in state: 307.
+## Ends in an error in state: 315.
 ##
 ## remaining_declarations(expression) -> COMMA . separated_nonempty_list(COMMA,id_and_optional_assignment(expression,decl_identifier_after_comma)) [ SEMICOLON ]
 ##
@@ -2951,9 +2951,9 @@ program: TRANSFORMEDDATABLOCK LBRACE PROFILE WHILE
 ##
 ## Concrete syntax: transformed data { profile while
 ##
-## Ends in an error in state: 273.
+## Ends in an error in state: 217.
 ##
-## nested_statement -> PROFILE . LPAREN string_literal RPAREN LBRACE list(vardecl_or_statement) RBRACE [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
+## nested_statement -> PROFILE . LPAREN string_literal RPAREN LBRACE list(vardecl_or_statement) RBRACE [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
 ##
 ## The known suffix of the stack is as follows:
 ## PROFILE
@@ -2965,9 +2965,9 @@ program: TRANSFORMEDDATABLOCK LBRACE PROFILE LPAREN WHILE
 ##
 ## Concrete syntax: transformed data { profile ( while
 ##
-## Ends in an error in state: 274.
+## Ends in an error in state: 218.
 ##
-## nested_statement -> PROFILE LPAREN . string_literal RPAREN LBRACE list(vardecl_or_statement) RBRACE [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
+## nested_statement -> PROFILE LPAREN . string_literal RPAREN LBRACE list(vardecl_or_statement) RBRACE [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
 ##
 ## The known suffix of the stack is as follows:
 ## PROFILE LPAREN
@@ -2979,9 +2979,9 @@ program: TRANSFORMEDDATABLOCK LBRACE PROFILE LPAREN STRINGLITERAL WHILE
 ##
 ## Concrete syntax: transformed data { profile ( "hello world" while
 ##
-## Ends in an error in state: 275.
+## Ends in an error in state: 219.
 ##
-## nested_statement -> PROFILE LPAREN string_literal . RPAREN LBRACE list(vardecl_or_statement) RBRACE [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
+## nested_statement -> PROFILE LPAREN string_literal . RPAREN LBRACE list(vardecl_or_statement) RBRACE [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
 ##
 ## The known suffix of the stack is as follows:
 ## PROFILE LPAREN string_literal
@@ -2993,9 +2993,9 @@ program: TRANSFORMEDDATABLOCK LBRACE PROFILE LPAREN STRINGLITERAL RPAREN WHILE
 ##
 ## Concrete syntax: transformed data { profile ( "hello world" ) while
 ##
-## Ends in an error in state: 276.
+## Ends in an error in state: 220.
 ##
-## nested_statement -> PROFILE LPAREN string_literal RPAREN . LBRACE list(vardecl_or_statement) RBRACE [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
+## nested_statement -> PROFILE LPAREN string_literal RPAREN . LBRACE list(vardecl_or_statement) RBRACE [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
 ##
 ## The known suffix of the stack is as follows:
 ## PROFILE LPAREN string_literal RPAREN
@@ -3007,9 +3007,9 @@ program: TRANSFORMEDDATABLOCK LBRACE PROFILE LPAREN STRINGLITERAL RPAREN LBRACE 
 ##
 ## Concrete syntax: transformed data { profile ( "hello world" ) { void
 ##
-## Ends in an error in state: 277.
+## Ends in an error in state: 221.
 ##
-## nested_statement -> PROFILE LPAREN string_literal RPAREN LBRACE . list(vardecl_or_statement) RBRACE [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
+## nested_statement -> PROFILE LPAREN string_literal RPAREN LBRACE . list(vardecl_or_statement) RBRACE [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
 ##
 ## The known suffix of the stack is as follows:
 ## PROFILE LPAREN string_literal RPAREN LBRACE
@@ -3021,7 +3021,7 @@ program: DATABLOCK LBRACE COMPLEX UNREACHABLE
 ##
 ## Concrete syntax: data { complex <<<<UNREACHABLE>>>
 ##
-## Ends in an error in state: 567.
+## Ends in an error in state: 575.
 ##
 ## top_var_type -> COMPLEX . type_constraint [ WHILE VOID VECTOR UPPER UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER JACOBIAN INT IN IF IDENTIFIER FUNCTIONBLOCK FOR FATAL_ERROR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
 ##
@@ -3049,7 +3049,7 @@ functions_only: VOID ARRAY LPAREN RPAREN SEMICOLON RBRACE
 ##
 ## Concrete syntax: void array ( ) ; }
 ##
-## Ends in an error in state: 402.
+## Ends in an error in state: 3.
 ##
 ## functions_only -> list(function_def) . EOF [ # ]
 ##
@@ -3060,8 +3060,8 @@ functions_only: VOID ARRAY LPAREN RPAREN SEMICOLON RBRACE
 ## This implies that, although the LR(1) items shown above provide an
 ## accurate view of the past (what has been recognized so far), they
 ## may provide an INCOMPLETE view of the future (what was expected next).
-## In state 405, spurious reduction of production list(function_def) ->
-## In state 406, spurious reduction of production list(function_def) -> function_def list(function_def)
+## In state 409, spurious reduction of production list(function_def) ->
+## In state 410, spurious reduction of production list(function_def) -> function_def list(function_def)
 ##
 
 Only function definitions/declarations are expected in '.stanfunctions' file
@@ -3074,7 +3074,7 @@ program: TRANSFORMEDDATABLOCK LBRACE ARRAY IDENTIFIER
 ##
 ## Concrete syntax: transformed data { array foo
 ##
-## Ends in an error in state: 226.
+## Ends in an error in state: 285.
 ##
 ## arr_dims -> ARRAY . LBRACK separated_nonempty_list(COMMA,expression) RBRACK [ VECTOR UNITVECTOR TUPLE SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX ROWVECTOR REAL POSITIVEORDERED ORDERED MATRIX INT COVMATRIX CORRMATRIX COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR ]
 ##
@@ -3092,12 +3092,12 @@ program: DATABLOCK LBRACE ARRAY LBRACK IDENTIFIER RBRACK VECTOR LBRACK INTNUMERA
 ##
 ## Concrete syntax: data { array [ foo ] vector [ 24 ] &&
 ##
-## Ends in an error in state: 634.
+## Ends in an error in state: 638.
 ##
-## decl(top_var_type,no_assign) -> array_type(top_var_type) . id_and_optional_assignment(no_assign,decl_identifier) option(remaining_declarations(no_assign)) SEMICOLON [ VECTOR UNITVECTOR TUPLE SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR REAL RBRACE POSITIVEORDERED ORDERED MATRIX INT COVMATRIX CORRMATRIX COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR ARRAY ]
+## decl(top_var_type,no_assign) -> list(ANNOTATION) array_type(top_var_type) . id_and_optional_assignment(no_assign,decl_identifier) option(remaining_declarations(no_assign)) SEMICOLON [ VECTOR UNITVECTOR TUPLE SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR REAL RBRACE POSITIVEORDERED ORDERED MATRIX INT COVMATRIX CORRMATRIX COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR ARRAY ANNOTATION ]
 ##
 ## The known suffix of the stack is as follows:
-## array_type(top_var_type)
+## list(ANNOTATION) array_type(top_var_type)
 ##
 
 Expected identifier after type in declaration.
@@ -3128,7 +3128,7 @@ program: DATABLOCK LBRACE TUPLE LPAREN REAL COMMA WHILE
 ##
 ## Concrete syntax: data { tuple ( real , while
 ##
-## Ends in an error in state: 597.
+## Ends in an error in state: 605.
 ##
 ## tuple_type(top_var_type) -> TUPLE LPAREN top_var_type COMMA . separated_nonempty_list(COMMA,higher_type(top_var_type)) RPAREN [ WHILE VOID VECTOR UPPER UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER JACOBIAN INT IN IF IDENTIFIER FUNCTIONBLOCK FOR FATAL_ERROR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
 ##
@@ -3152,7 +3152,7 @@ program: DATABLOCK LBRACE TUPLE LPAREN REAL WHILE
 ##
 ## Concrete syntax: data { tuple ( real while
 ##
-## Ends in an error in state: 596.
+## Ends in an error in state: 604.
 ##
 ## tuple_type(top_var_type) -> TUPLE LPAREN top_var_type . COMMA separated_nonempty_list(COMMA,higher_type(top_var_type)) RPAREN [ WHILE VOID VECTOR UPPER UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER JACOBIAN INT IN IF IDENTIFIER FUNCTIONBLOCK FOR FATAL_ERROR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
 ##
@@ -3163,9 +3163,9 @@ program: DATABLOCK LBRACE TUPLE LPAREN REAL WHILE
 ## This implies that, although the LR(1) items shown above provide an
 ## accurate view of the past (what has been recognized so far), they
 ## may provide an INCOMPLETE view of the future (what was expected next).
-## In state 522, spurious reduction of production range_constraint ->
-## In state 484, spurious reduction of production type_constraint -> range_constraint
-## In state 523, spurious reduction of production top_var_type -> REAL type_constraint
+## In state 530, spurious reduction of production range_constraint ->
+## In state 492, spurious reduction of production type_constraint -> range_constraint
+## In state 531, spurious reduction of production top_var_type -> REAL type_constraint
 ##
 
 Invalid type specification, unmatched "(".
@@ -3185,7 +3185,7 @@ program: DATABLOCK LBRACE TUPLE LPAREN REAL COMMA TUPLE LPAREN COMPLEX COMMA COM
 ##
 ## Concrete syntax: data { tuple ( real , tuple ( complex , complex ) while
 ##
-## Ends in an error in state: 582.
+## Ends in an error in state: 590.
 ##
 ## separated_nonempty_list(COMMA,higher_type(top_var_type)) -> tuple_type(top_var_type) . [ RPAREN ]
 ## separated_nonempty_list(COMMA,higher_type(top_var_type)) -> tuple_type(top_var_type) . COMMA separated_nonempty_list(COMMA,higher_type(top_var_type)) [ RPAREN ]
@@ -3203,7 +3203,7 @@ program: DATABLOCK LBRACE TUPLE LPAREN WHILE
 ##
 ## Concrete syntax: data { tuple ( while
 ##
-## Ends in an error in state: 490.
+## Ends in an error in state: 498.
 ##
 ## tuple_type(top_var_type) -> TUPLE LPAREN . array_type(top_var_type) COMMA separated_nonempty_list(COMMA,higher_type(top_var_type)) RPAREN [ WHILE VOID VECTOR UPPER UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER JACOBIAN INT IN IF IDENTIFIER FUNCTIONBLOCK FOR FATAL_ERROR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
 ## tuple_type(top_var_type) -> TUPLE LPAREN . tuple_type(top_var_type) COMMA separated_nonempty_list(COMMA,higher_type(top_var_type)) RPAREN [ WHILE VOID VECTOR UPPER UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER JACOBIAN INT IN IF IDENTIFIER FUNCTIONBLOCK FOR FATAL_ERROR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
@@ -3222,7 +3222,7 @@ program: TRANSFORMEDDATABLOCK LBRACE LPAREN IDENTIFIER COMMA WHILE
 ##
 ## Concrete syntax: transformed data { ( foo , while
 ##
-## Ends in an error in state: 186.
+## Ends in an error in state: 191.
 ##
 ## common_expression -> LPAREN expression COMMA . separated_nonempty_list(COMMA,expression) RPAREN [ TRANSPOSE TIMESASSIGN TIMES TILDE SEMICOLON RPAREN RBRACK RBRACE RABRACK QMARK PLUSASSIGN PLUS OR NEQUALS MODULO MINUSASSIGN MINUS LEQ LDIVIDE LBRACK LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMESASSIGN ELTTIMES ELTPOW ELTDIVIDEASSIGN ELTDIVIDE DOTNUMERAL DIVIDEASSIGN DIVIDE COMMA COLON BAR ASSIGN AND ]
 ##
@@ -3250,7 +3250,7 @@ functions_only: ARRAY LBRACK RBRACK TUPLE LPAREN WHILE
 ##
 ## Concrete syntax: array [ ] tuple ( while
 ##
-## Ends in an error in state: 21.
+## Ends in an error in state: 26.
 ##
 ## unsized_type -> ARRAY unsized_dims TUPLE LPAREN . unsized_type COMMA separated_nonempty_list(COMMA,unsized_type) RPAREN [ WHILE VOID VECTOR UPPER UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER JACOBIAN INT IN IF IDENTIFIER FUNCTIONBLOCK FOR FATAL_ERROR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
 ##
@@ -3268,7 +3268,7 @@ program: DATABLOCK LBRACE ARRAY LBRACK INTNUMERAL RBRACK IDENTIFIER
 ##
 ## Concrete syntax: data { array [ 24 ] foo
 ##
-## Ends in an error in state: 590.
+## Ends in an error in state: 598.
 ##
 ## array_type(top_var_type) -> arr_dims . top_var_type [ WHILE VOID VECTOR UPPER UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER JACOBIAN INT IN IF IDENTIFIER FUNCTIONBLOCK FOR FATAL_ERROR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
 ## array_type(top_var_type) -> arr_dims . tuple_type(top_var_type) [ WHILE VOID VECTOR UPPER UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER JACOBIAN INT IN IF IDENTIFIER FUNCTIONBLOCK FOR FATAL_ERROR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
@@ -3283,7 +3283,7 @@ program: DATABLOCK LBRACE ARRAY LBRACK WHILE
 ##
 ## Concrete syntax: data { array [ while
 ##
-## Ends in an error in state: 227.
+## Ends in an error in state: 286.
 ##
 ## arr_dims -> ARRAY LBRACK . separated_nonempty_list(COMMA,expression) RBRACK [ VECTOR UNITVECTOR TUPLE SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX ROWVECTOR REAL POSITIVEORDERED ORDERED MATRIX INT COVMATRIX CORRMATRIX COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR ]
 ##
@@ -3297,7 +3297,7 @@ program: DATABLOCK LBRACE ROWVECTOR LABRACK LOWER ASSIGN IDENTIFIER TRANSPOSE WH
 ##
 ## Concrete syntax: data { row_vector < lower = foo ' while
 ##
-## Ends in an error in state: 471.
+## Ends in an error in state: 479.
 ##
 ## constr_expression -> constr_expression . PLUS constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE COMMA ]
 ## constr_expression -> constr_expression . MINUS constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE COMMA ]
@@ -3330,12 +3330,12 @@ program: MODELBLOCK LBRACE TUPLE LPAREN COMPLEX COMMA COMPLEX RPAREN UNREACHABLE
 ##
 ## Concrete syntax: model { tuple ( complex , complex ) <<<<UNREACHABLE>>>
 ##
-## Ends in an error in state: 305.
+## Ends in an error in state: 313.
 ##
-## decl(sized_basic_type,expression) -> tuple_type(sized_basic_type) . id_and_optional_assignment(expression,decl_identifier) option(remaining_declarations(expression)) SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
+## decl(sized_basic_type,expression) -> list(ANNOTATION) tuple_type(sized_basic_type) . id_and_optional_assignment(expression,decl_identifier) option(remaining_declarations(expression)) SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
 ##
 ## The known suffix of the stack is as follows:
-## tuple_type(sized_basic_type)
+## list(ANNOTATION) tuple_type(sized_basic_type)
 ##
 
 Expected identifier as part of top-level variable declaration.
@@ -3350,7 +3350,7 @@ program: DATABLOCK LBRACE TUPLE WHILE
 ##
 ## Concrete syntax: data { tuple while
 ##
-## Ends in an error in state: 489.
+## Ends in an error in state: 497.
 ##
 ## tuple_type(top_var_type) -> TUPLE . LPAREN array_type(top_var_type) COMMA separated_nonempty_list(COMMA,higher_type(top_var_type)) RPAREN [ WHILE VOID VECTOR UPPER UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER JACOBIAN INT IN IF IDENTIFIER FUNCTIONBLOCK FOR FATAL_ERROR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
 ## tuple_type(top_var_type) -> TUPLE . LPAREN tuple_type(top_var_type) COMMA separated_nonempty_list(COMMA,higher_type(top_var_type)) RPAREN [ WHILE VOID VECTOR UPPER UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER JACOBIAN INT IN IF IDENTIFIER FUNCTIONBLOCK FOR FATAL_ERROR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
@@ -3373,13 +3373,13 @@ program: MODELBLOCK LBRACE REAL IDENTIFIER IDENTIFIER
 ##
 ## Concrete syntax: model { real foo foo
 ##
-## Ends in an error in state: 329.
+## Ends in an error in state: 336.
 ##
-## decl(sized_basic_type,expression) -> sized_basic_type decl_identifier . LBRACK separated_nonempty_list(COMMA,expression) RBRACK [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
+## decl(sized_basic_type,expression) -> list(ANNOTATION) sized_basic_type decl_identifier . LBRACK separated_nonempty_list(COMMA,expression) RBRACK [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
 ## id_and_optional_assignment(expression,decl_identifier) -> decl_identifier . optional_assignment(expression) [ SEMICOLON COMMA ]
 ##
 ## The known suffix of the stack is as follows:
-## sized_basic_type decl_identifier
+## list(ANNOTATION) sized_basic_type decl_identifier
 ##
 
 ";" or plain assignment expected after variable declaration.
@@ -3390,13 +3390,13 @@ program: DATABLOCK LBRACE REAL WHILE IDENTIFIER
 ##
 ## Concrete syntax: data { real while foo
 ##
-## Ends in an error in state: 627.
+## Ends in an error in state: 634.
 ##
-## decl(top_var_type,no_assign) -> top_var_type decl_identifier . LBRACK separated_nonempty_list(COMMA,expression) RBRACK [ VECTOR UNITVECTOR TUPLE SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR REAL RBRACE POSITIVEORDERED ORDERED MATRIX INT COVMATRIX CORRMATRIX COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR ARRAY ]
+## decl(top_var_type,no_assign) -> list(ANNOTATION) top_var_type decl_identifier . LBRACK separated_nonempty_list(COMMA,expression) RBRACK [ VECTOR UNITVECTOR TUPLE SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR REAL RBRACE POSITIVEORDERED ORDERED MATRIX INT COVMATRIX CORRMATRIX COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR ARRAY ANNOTATION ]
 ## id_and_optional_assignment(no_assign,decl_identifier) -> decl_identifier . optional_assignment(no_assign) [ SEMICOLON COMMA ]
 ##
 ## The known suffix of the stack is as follows:
-## top_var_type decl_identifier
+## list(ANNOTATION) top_var_type decl_identifier
 ##
 
 ";" expected after variable declaration.
@@ -3408,7 +3408,7 @@ functions_only: ARRAY LBRACK WHILE
 ##
 ## Concrete syntax: array [ while
 ##
-## Ends in an error in state: 14.
+## Ends in an error in state: 19.
 ##
 ## unsized_dims -> LBRACK . list(COMMA) RBRACK [ WHILE VOID VECTOR UPPER UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER JACOBIAN INT IN IF IDENTIFIER FUNCTIONBLOCK FOR FATAL_ERROR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
 ##
@@ -3428,9 +3428,9 @@ program: TRANSFORMEDDATABLOCK LBRACE FATAL_ERROR WHILE
 ##
 ## Concrete syntax: transformed data { fatal_error while
 ##
-## Ends in an error in state: 294.
+## Ends in an error in state: 238.
 ##
-## atomic_statement -> FATAL_ERROR . LPAREN printables RPAREN SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
+## atomic_statement -> FATAL_ERROR . LPAREN printables RPAREN SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
 ##
 ## The known suffix of the stack is as follows:
 ## FATAL_ERROR
@@ -3452,12 +3452,12 @@ program: MODELBLOCK LBRACE COMPLEX JACOBIAN LBRACK WHILE
 ##
 ## Concrete syntax: model { complex jacobian [ while
 ##
-## Ends in an error in state: 330.
+## Ends in an error in state: 337.
 ##
-## decl(sized_basic_type,expression) -> sized_basic_type decl_identifier LBRACK . separated_nonempty_list(COMMA,expression) RBRACK [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
+## decl(sized_basic_type,expression) -> list(ANNOTATION) sized_basic_type decl_identifier LBRACK . separated_nonempty_list(COMMA,expression) RBRACK [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ANNOTATION ]
 ##
 ## The known suffix of the stack is as follows:
-## sized_basic_type decl_identifier LBRACK
+## list(ANNOTATION) sized_basic_type decl_identifier LBRACK
 ##
 
 ";\" expected after variable declaration.
@@ -3478,7 +3478,7 @@ program: DATABLOCK LBRACE STOCHASTICROWMATRIX LBRACK IDENTIFIER COMMA IDENTIFIER
 ##
 ## Concrete syntax: data { row_stochastic_matrix [ foo , foo ~
 ##
-## Ends in an error in state: 505.
+## Ends in an error in state: 513.
 ##
 ## expression -> expression . QMARK expression COLON expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
 ## expression -> expression . PLUS expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
@@ -3510,8 +3510,8 @@ program: DATABLOCK LBRACE STOCHASTICROWMATRIX LBRACK IDENTIFIER COMMA IDENTIFIER
 ## This implies that, although the LR(1) items shown above provide an
 ## accurate view of the past (what has been recognized so far), they
 ## may provide an INCOMPLETE view of the future (what was expected next).
-## In state 112, spurious reduction of production common_expression -> identifier
-## In state 127, spurious reduction of production expression -> common_expression
+## In state 117, spurious reduction of production common_expression -> identifier
+## In state 132, spurious reduction of production expression -> common_expression
 ##
 
 Expected "[" expression "," expression "]" for size of row_stochastic_matrix.
@@ -3528,7 +3528,7 @@ program: DATABLOCK LBRACE STOCHASTICCOLUMNMATRIX LBRACK IDENTIFIER COMMA IDENTIF
 ##
 ## Concrete syntax: data { column_stochastic_matrix [ foo , foo ~
 ##
-## Ends in an error in state: 511.
+## Ends in an error in state: 519.
 ##
 ## expression -> expression . QMARK expression COLON expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
 ## expression -> expression . PLUS expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
@@ -3560,8 +3560,8 @@ program: DATABLOCK LBRACE STOCHASTICCOLUMNMATRIX LBRACK IDENTIFIER COMMA IDENTIF
 ## This implies that, although the LR(1) items shown above provide an
 ## accurate view of the past (what has been recognized so far), they
 ## may provide an INCOMPLETE view of the future (what was expected next).
-## In state 112, spurious reduction of production common_expression -> identifier
-## In state 127, spurious reduction of production expression -> common_expression
+## In state 117, spurious reduction of production common_expression -> identifier
+## In state 132, spurious reduction of production expression -> common_expression
 ##
 
 Expected "[" expression "," expression "]" for size of column_stochastic_matrix.
@@ -3574,7 +3574,7 @@ program: DATABLOCK LBRACE SUMTOZEROVEC WHILE
 ##
 ## Concrete syntax: data { sum_to_zero_vector while
 ##
-## Ends in an error in state: 491.
+## Ends in an error in state: 499.
 ##
 ## top_var_type -> SUMTOZEROVEC . LBRACK expression RBRACK [ WHILE VOID VECTOR UPPER UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER JACOBIAN INT IN IF IDENTIFIER FUNCTIONBLOCK FOR FATAL_ERROR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
 ##
@@ -3596,7 +3596,7 @@ program: DATABLOCK LBRACE SUMTOZEROMAT LBRACK IDENTIFIER COMMA WHILE
 ##
 ## Concrete syntax: data { sum_to_zero_matrix [ foo , while
 ##
-## Ends in an error in state: 498.
+## Ends in an error in state: 506.
 ##
 ## top_var_type -> SUMTOZEROMAT LBRACK expression COMMA . expression RBRACK [ WHILE VOID VECTOR UPPER UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER JACOBIAN INT IN IF IDENTIFIER FUNCTIONBLOCK FOR FATAL_ERROR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
 ##
@@ -3605,3 +3605,26 @@ program: DATABLOCK LBRACE SUMTOZEROMAT LBRACK IDENTIFIER COMMA WHILE
 ##
 
 Expected "[" expression "," expression "]" for size of sum_to_zero_matrix.
+
+
+functions_only: ANNOTATION UNITVECTOR
+## Concrete syntax: @baz unit_vector
+program: DATABLOCK LBRACE ANNOTATION VOID
+## Concrete syntax: data { @baz void
+program: TRANSFORMEDDATABLOCK LBRACE ANNOTATION VOID
+## Concrete syntax: transformed data { @baz void
+program: MODELBLOCK LBRACE ANNOTATION VOID
+## Concrete syntax: model { @baz void
+functions_only: ANNOTATION WHILE
+##
+## Concrete syntax: @baz while
+##
+## Ends in an error in state: 1.
+##
+## list(ANNOTATION) -> ANNOTATION . list(ANNOTATION) [ VOID VECTOR UNITVECTOR TUPLE SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX ROWVECTOR REAL POSITIVEORDERED ORDERED MATRIX INT COVMATRIX CORRMATRIX COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR ARRAY ]
+##
+## The known suffix of the stack is as follows:
+## ANNOTATION
+##
+
+Expected a declaration or more annotations following the annotation.

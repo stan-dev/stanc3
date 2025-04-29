@@ -390,6 +390,13 @@ let rec pp_transformed_type ppf (st, trans) =
         pp_possibly_transformed_type (ty, trans)
   | _ -> pf ppf "%a" pp_possibly_transformed_type (st, trans)
 
+let pp_annotations ppf ann =
+  (* TODO better comment handling? *)
+  if List.is_empty ann then ()
+  else
+    let pp ppf s = pf ppf "%@%s" s in
+    pf ppf "%a@ " (list ~sep:sp pp) ann
+
 let rec pp_indent_unless_block ppf ((s : untyped_statement), loc) =
   match s.stmt with
   | Block _ -> pp_statement ppf s
@@ -456,16 +463,23 @@ and pp_statement ppf ({stmt= s_content; smeta= {loc}} as ss : untyped_statement)
       pf ppf "profile(%s) {@,%a@,}" name
         (indented_box pp_list_of_statements)
         (vdsl, loc)
-  | VarDecl {decl_type= pst; transformation= trans; variables; is_global= _} ->
+  | VarDecl
+      { decl_type= pst
+      ; transformation= trans
+      ; variables
+      ; annotations
+      ; is_global= _ } ->
       let pp_var ppf {identifier; initial_value} =
         pf ppf "%a%a" pp_identifier identifier
           (option (fun ppf e -> pf ppf " = %a" pp_expression e))
           initial_value in
-      pf ppf "@[<h>%a %a;@]" pp_transformed_type (pst, trans)
-        (list ~sep:comma pp_var) variables
-  | FunDef {returntype= rt; funname= id; arguments= args; body= b} -> (
+      pf ppf "@[<hv>%a@[<h>%a %a;@]@]" pp_annotations annotations
+        pp_transformed_type (pst, trans) (list ~sep:comma pp_var) variables
+  | FunDef {returntype= rt; funname= id; arguments= args; annotations; body= b}
+    -> (
       let loc_of (_, _, id) = id.id_loc in
-      pf ppf "%a %a(%a" pp_returntype rt pp_identifier id
+      pf ppf "@[<hv>%a@[<h>%a %a(@]%a@]" pp_annotations annotations
+        pp_returntype rt pp_identifier id
         (box (pp_list_of pp_args loc_of))
         (args, {loc with end_loc= b.smeta.loc.begin_loc});
       match b with

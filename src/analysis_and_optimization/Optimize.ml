@@ -84,13 +84,18 @@ let gen_inline_var (name : string) (id_var : string) =
 
 let replace_fresh_local_vars (fname : string) stmt =
   let f (m : (string, string) Core.Map.Poly.t) = function
-    | Stmt.Fixed.Pattern.Decl {decl_adtype; decl_type; decl_id; initialize} ->
+    | Stmt.Fixed.Pattern.Decl
+        {decl_adtype; decl_type; decl_id; decl_annotations; initialize} ->
         let new_name =
           match Map.Poly.find m decl_id with
           | Some existing -> existing
           | None -> gen_inline_var fname decl_id in
         ( Stmt.Fixed.Pattern.Decl
-            {decl_adtype; decl_id= new_name; decl_type; initialize}
+            { decl_adtype
+            ; decl_id= new_name
+            ; decl_type
+            ; decl_annotations
+            ; initialize }
         , Map.Poly.set m ~key:decl_id ~data:new_name )
     | Stmt.Fixed.Pattern.For {loopvar; lower; upper; body} ->
         let new_name =
@@ -201,6 +206,7 @@ let handle_early_returns (fname : string) opt_var stmt =
                 { decl_adtype= DataOnly
                 ; decl_id= returned
                 ; decl_type= Sized SInt
+                ; decl_annotations= []
                 ; initialize= Default }
           ; meta= Location_span.empty }
       ; Stmt.Fixed.
@@ -306,6 +312,7 @@ let rec inline_function_expression propto adt fim (Expr.Fixed.{pattern; _} as e)
                             (Type.to_unsized decl_type)
                       ; decl_id= inline_return_name
                       ; decl_type
+                      ; decl_annotations= []
                       ; initialize= Uninit } ]
                   (* We should minimize the code that's having its variables
                      replaced to avoid conflict with the (two) new dummy
@@ -476,10 +483,20 @@ let rec inline_function_statement propto adt fim Stmt.Fixed.{pattern; meta} =
             Block (List.map l ~f:(inline_function_statement propto adt fim))
         | SList l ->
             SList (List.map l ~f:(inline_function_statement propto adt fim))
-        | Decl {decl_adtype; decl_id; decl_type; initialize= Assign expr} ->
+        | Decl
+            { decl_adtype
+            ; decl_id
+            ; decl_type
+            ; decl_annotations
+            ; initialize= Assign expr } ->
             let d, s, e = inline_function_expression propto adt fim expr in
             slist_concat_no_loc (d @ s)
-              (Decl {decl_adtype; decl_id; decl_type; initialize= Assign e})
+              (Decl
+                 { decl_adtype
+                 ; decl_id
+                 ; decl_type
+                 ; decl_annotations
+                 ; initialize= Assign e })
         | Decl r -> Decl r
         | Skip -> Skip
         | Break -> Break
@@ -993,6 +1010,7 @@ let lazy_code_motion ?(preserve_stability = false) (mir : Program.Typed.t) =
                   { decl_adtype= Expr.Typed.adlevel_of key
                   ; decl_id= data
                   ; decl_type= Type.Unsized (Expr.Typed.type_of key)
+                  ; decl_annotations= [] (* TODO annotations: correct? *)
                   ; initialize= Default }
             ; meta= Location_span.empty }
           :: accum) in
@@ -1375,4 +1393,5 @@ let optimization_suite ?(settings = all_optimizations) mir =
   let optimizations =
     List.filter_map maybe_optimizations ~f:(fun (fn, flag) ->
         if flag then Some fn else None) in
-  List.fold optimizations ~init:mir ~f:(fun mir opt -> opt mir)
+  let mir = List.fold optimizations ~init:mir ~f:(fun mir opt -> opt mir) in
+  mir

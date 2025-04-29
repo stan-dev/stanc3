@@ -13,9 +13,9 @@ data {
 }
 
 parameters {
-    matrix [5, 10] soa_x;
-    matrix [5, 10] aos_x;
-    matrix [5, 10] aos_y;
+    @debug_soa matrix [5, 10] soa_x;
+    @debug_soa matrix [5, 10] aos_x;
+    @debug_soa matrix [5, 10] aos_y;
 }
 
 transformed parameters {

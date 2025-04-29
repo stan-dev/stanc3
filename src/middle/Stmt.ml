@@ -25,6 +25,7 @@ module Fixed = struct
           { decl_adtype: UnsizedType.autodifftype
           ; decl_id: string
           ; decl_type: 'a Type.t
+          ; decl_annotations: string list
           ; initialize: 'a decl_init }
     [@@deriving sexp, hash, map, fold, compare]
 
@@ -73,7 +74,7 @@ module Fixed = struct
       | Block stmts ->
           Fmt.pf ppf "{@;<1 2>@[<v>%a@]@;}" Fmt.(list pp_s ~sep:cut) stmts
       | SList stmts -> Fmt.(list pp_s ~sep:cut |> vbox) ppf stmts
-      | Decl {decl_adtype; decl_id; decl_type; initialize} -> (
+      | Decl {decl_adtype; decl_id; decl_type; initialize; _} -> (
           match initialize with
           | Assign e ->
               Fmt.pf ppf "@[<hov 2>%a%a@ %s = %a;@]" UnsizedType.pp_autodifftype
@@ -151,6 +152,7 @@ module Helpers = struct
                   { decl_adtype= Expr.Typed.adlevel_of e
                   ; decl_id= sym
                   ; decl_type= Unsized (Expr.Typed.type_of e)
+                  ; decl_annotations= []
                   ; initialize= Default }
             ; meta= e.meta.loc } in
           let assign =

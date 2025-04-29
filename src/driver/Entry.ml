@@ -68,6 +68,10 @@ let stan2cpp model_name model (flags : Flags.t) (output : other_output -> unit)
   output (Warnings parser_warnings);
   let* result =
     let* ast = ast in
+    let unused_annotations =
+      Frontend.Annotations.find_unrecognized
+        Stan_math_backend.Annotations.recognized_annotation ast in
+    output (Warnings unused_annotations);
     if flags.debug_settings.print_ast then
       output (DebugOutput (fmt_sexp [%sexp (ast : Ast.untyped_program)]));
     let+ typed_ast, type_warnings =
@@ -132,6 +136,7 @@ let stan2cpp model_name model (flags : Flags.t) (output : other_output -> unit)
       Optimize.optimization_suite
         ~settings:(Flags.get_optimization_settings flags)
         tx_mir in
+    output (Warnings (Memory_patterns.check_annotations opt_mir));
     if flags.debug_settings.print_mem_patterns then
       output
         (Memory_patterns (Fmt.str "%a" Memory_patterns.pp_mem_patterns opt_mir));

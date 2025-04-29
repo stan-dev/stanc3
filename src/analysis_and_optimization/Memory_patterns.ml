@@ -562,12 +562,14 @@ let rec modify_stmt_pattern
       ; initialize=
           Assign
             ({ pattern= FunApp (CompilerInternal (FnReadParam read_param), args)
-             ; _ } as assigner) } ->
+             ; _ } as assigner)
+      ; decl_annotations } ->
       let name = decl_id in
       if Set.mem modifiable_set name then
         Stmt.Fixed.Pattern.Decl
           { decl_id
           ; decl_adtype
+          ; decl_annotations
           ; decl_type=
               Type.Sized (SizedType.modify_sizedtype_mem AoS sized_type)
           ; initialize=
@@ -582,6 +584,7 @@ let rec modify_stmt_pattern
         Stmt.Fixed.Pattern.Decl
           { decl_id
           ; decl_adtype
+          ; decl_annotations
           ; decl_type=
               Type.Sized (SizedType.modify_sizedtype_mem SoA sized_type)
           ; initialize=
@@ -682,15 +685,18 @@ and modify_stmt (Stmt.Fixed.{pattern; _} as stmt)
 
 let collect_mem_pattern_variables stmts =
   let take_stmt acc = function
-    | Stmt.Fixed.{pattern= Decl {decl_id; decl_type= Type.Sized stype; _}; _}
+    | Stmt.Fixed.
+        { pattern=
+            Decl {decl_id; decl_type= Type.Sized stype; decl_annotations; _}
+        ; meta }
       when SizedType.has_mem_pattern stype ->
-        (decl_id, stype) :: acc
+        (decl_id, meta, stype, decl_annotations) :: acc
     | _ -> acc in
   Mir_utils.fold_stmts ~take_expr:(fun acc _ -> acc) ~take_stmt ~init:[] stmts
   |> List.rev
 
 let pp_mem_patterns ppf (Program.{reverse_mode_log_prob; _} : Program.Typed.t) =
-  let pp_var ppf (name, stype) =
+  let pp_var ppf (name, _, stype, _) =
     Fmt.pf ppf "%a %s: %a"
       (SizedType.pp Expr.Typed.pp)
       stype name Middle.Mem_pattern.pp
@@ -699,3 +705,22 @@ let pp_mem_patterns ppf (Program.{reverse_mode_log_prob; _} : Program.Typed.t) =
     (* Collect all the sizedtypes which have a mem pattern *)
     collect_mem_pattern_variables reverse_mode_log_prob in
   Fmt.(pf ppf "@[<v>%a@.@]" (list pp_var)) mem_vars
+
+let check_annotations (Program.{reverse_mode_log_prob; _} : Program.Typed.t) =
+  let mem_vars = collect_mem_pattern_variables reverse_mode_log_prob in
+  List.filter_map
+    ~f:(fun (name, loc, stype, annotations) ->
+      match annotations with
+      | [] -> None
+      | _ ->
+          if
+            List.exists ~f:(fun x -> x = "debug_soa") annotations
+            && SizedType.get_mem_pattern stype <> Mem_pattern.SoA
+          then
+            Some
+              ( loc
+              , "Variable '" ^ name
+                ^ "' was marked with '@debug_soa' but is not SoA after \
+                   optimization." )
+          else None)
+    mem_vars
