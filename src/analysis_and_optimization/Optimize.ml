@@ -1393,4 +1393,5 @@ let optimization_suite ?(settings = all_optimizations) mir =
   let optimizations =
     List.filter_map maybe_optimizations ~f:(fun (fn, flag) ->
         if flag then Some fn else None) in
-  List.fold optimizations ~init:mir ~f:(fun mir opt -> opt mir)
+  let mir = List.fold optimizations ~init:mir ~f:(fun mir opt -> opt mir) in
+  mir

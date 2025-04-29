@@ -17758,7 +17758,7 @@ matrix[5, 10] tp_matrix_from_udf_reduced_soa: AoS
         (SMatrix AoS
          ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (decl_annotations ())
+      (decl_annotations (debug_soa))
       (initialize
        (Assign
         ((pattern
@@ -17781,7 +17781,7 @@ matrix[5, 10] tp_matrix_from_udf_reduced_soa: AoS
         (SMatrix AoS
          ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (decl_annotations ())
+      (decl_annotations (debug_soa))
       (initialize
        (Assign
         ((pattern
@@ -17804,7 +17804,7 @@ matrix[5, 10] tp_matrix_from_udf_reduced_soa: AoS
         (SMatrix AoS
          ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (decl_annotations ())
+      (decl_annotations (debug_soa))
       (initialize
        (Assign
         ((pattern
@@ -17915,7 +17915,7 @@ matrix[5, 10] tp_matrix_from_udf_reduced_soa: AoS
         (SMatrix SoA
          ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (decl_annotations ())
+      (decl_annotations (debug_soa))
       (initialize
        (Assign
         ((pattern
@@ -17938,7 +17938,7 @@ matrix[5, 10] tp_matrix_from_udf_reduced_soa: AoS
         (SMatrix AoS
          ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (decl_annotations ())
+      (decl_annotations (debug_soa))
       (initialize
        (Assign
         ((pattern
@@ -17961,7 +17961,7 @@ matrix[5, 10] tp_matrix_from_udf_reduced_soa: AoS
         (SMatrix AoS
          ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (decl_annotations ())
+      (decl_annotations (debug_soa))
       (initialize
        (Assign
         ((pattern
@@ -18072,7 +18072,7 @@ matrix[5, 10] tp_matrix_from_udf_reduced_soa: AoS
         (SMatrix AoS
          ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (decl_annotations ())
+      (decl_annotations (debug_soa))
       (initialize
        (Assign
         ((pattern
@@ -18095,7 +18095,7 @@ matrix[5, 10] tp_matrix_from_udf_reduced_soa: AoS
         (SMatrix AoS
          ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (decl_annotations ())
+      (decl_annotations (debug_soa))
       (initialize
        (Assign
         ((pattern
@@ -18118,7 +18118,7 @@ matrix[5, 10] tp_matrix_from_udf_reduced_soa: AoS
         (SMatrix AoS
          ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (decl_annotations ())
+      (decl_annotations (debug_soa))
       (initialize
        (Assign
         ((pattern
@@ -18323,7 +18323,7 @@ matrix[5, 10] tp_matrix_from_udf_reduced_soa: AoS
         (SMatrix AoS
          ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (decl_annotations ()) (initialize Default)))
+      (decl_annotations (debug_soa)) (initialize Default)))
     (meta <opaque>))
    ((pattern
      (Block
@@ -18417,7 +18417,7 @@ matrix[5, 10] tp_matrix_from_udf_reduced_soa: AoS
         (SMatrix AoS
          ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (decl_annotations ()) (initialize Default)))
+      (decl_annotations (debug_soa)) (initialize Default)))
     (meta <opaque>))
    ((pattern
      (Block
@@ -18511,7 +18511,7 @@ matrix[5, 10] tp_matrix_from_udf_reduced_soa: AoS
         (SMatrix AoS
          ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (decl_annotations ()) (initialize Default)))
+      (decl_annotations (debug_soa)) (initialize Default)))
     (meta <opaque>))
    ((pattern
      (Block
@@ -18606,7 +18606,7 @@ matrix[5, 10] tp_matrix_from_udf_reduced_soa: AoS
         (SMatrix AoS
          ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (decl_annotations ()) (initialize Default)))
+      (decl_annotations (debug_soa)) (initialize Default)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable soa_x) ()) UMatrix
@@ -18633,7 +18633,7 @@ matrix[5, 10] tp_matrix_from_udf_reduced_soa: AoS
         (SMatrix AoS
          ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (decl_annotations ()) (initialize Default)))
+      (decl_annotations (debug_soa)) (initialize Default)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable aos_x) ()) UMatrix
@@ -18660,7 +18660,7 @@ matrix[5, 10] tp_matrix_from_udf_reduced_soa: AoS
         (SMatrix AoS
          ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (decl_annotations ()) (initialize Default)))
+      (decl_annotations (debug_soa)) (initialize Default)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable aos_y) ()) UMatrix
@@ -18685,7 +18685,7 @@ matrix[5, 10] tp_matrix_from_udf_reduced_soa: AoS
     ((begin_loc
       ((filename reductions_allowed.stan) (line_num 16) (col_num 4) (included_from ())))
      (end_loc
-      ((filename reductions_allowed.stan) (line_num 16) (col_num 25) (included_from ()))))
+      ((filename reductions_allowed.stan) (line_num 16) (col_num 36) (included_from ()))))
     ((out_unconstrained_st
       (SMatrix AoS
        ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -18694,12 +18694,12 @@ matrix[5, 10] tp_matrix_from_udf_reduced_soa: AoS
       (SMatrix AoS
        ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans Identity) (out_annotations ())))
+     (out_block Parameters) (out_trans Identity) (out_annotations (debug_soa))))
    (aos_x
     ((begin_loc
       ((filename reductions_allowed.stan) (line_num 17) (col_num 4) (included_from ())))
      (end_loc
-      ((filename reductions_allowed.stan) (line_num 17) (col_num 25) (included_from ()))))
+      ((filename reductions_allowed.stan) (line_num 17) (col_num 36) (included_from ()))))
     ((out_unconstrained_st
       (SMatrix AoS
        ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -18708,12 +18708,12 @@ matrix[5, 10] tp_matrix_from_udf_reduced_soa: AoS
       (SMatrix AoS
        ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans Identity) (out_annotations ())))
+     (out_block Parameters) (out_trans Identity) (out_annotations (debug_soa))))
    (aos_y
     ((begin_loc
       ((filename reductions_allowed.stan) (line_num 18) (col_num 4) (included_from ())))
      (end_loc
-      ((filename reductions_allowed.stan) (line_num 18) (col_num 25) (included_from ()))))
+      ((filename reductions_allowed.stan) (line_num 18) (col_num 36) (included_from ()))))
     ((out_unconstrained_st
       (SMatrix AoS
        ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -18722,7 +18722,7 @@ matrix[5, 10] tp_matrix_from_udf_reduced_soa: AoS
       (SMatrix AoS
        ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans Identity) (out_annotations ())))
+     (out_block Parameters) (out_trans Identity) (out_annotations (debug_soa))))
    (tp_real_from_soa
     ((begin_loc
       ((filename reductions_allowed.stan) (line_num 22) (col_num 4) (included_from ())))
@@ -18759,6 +18759,10 @@ matrix[5, 10] tp_matrix_from_udf_reduced_soa: AoS
        ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block TransformedParameters) (out_trans Identity) (out_annotations ())))))
  (prog_name reductions_allowed_model) (prog_path reductions_allowed.stan))
+Warning in 'reductions_allowed.stan', line 17, column 4: Variable 'aos_x' was
+    marked with '@debug_soa' but is not SoA after optimization.
+Warning in 'reductions_allowed.stan', line 18, column 4: Variable 'aos_y' was
+    marked with '@debug_soa' but is not SoA after optimization.
 [exit 0]
   $ ../../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir --debug-mem-patterns return_types_and_udfs_demotes.stan
 matrix[10, 10] row_soa: SoA

@@ -278,6 +278,14 @@ let rec is_indexing_matrix = function
   | (UMatrix | UComplexMatrix), _ -> true
   | _ -> false
 
+let rec has_mem_pattern = function
+  | UInt | UReal | UComplex | UComplexVector | UComplexRowVector
+   |UComplexMatrix | UMathLibraryFunction | UFun _ ->
+      false
+  | UVector | URowVector | UMatrix -> true
+  | UArray t -> has_mem_pattern t
+  | UTuple subtypes -> List.exists ~f:has_mem_pattern subtypes
+
 (** In some places (e.g. code generation) we need to instantiate an AD type.
     Previously we would just say DataOnly or AutoDiffable, however this breaks
     the invariant that a Tuple always has TupleAD as it's autodifftype *)
