@@ -1,2 +1,4 @@
 val find_unrecognized :
-  (string -> bool) -> Ast.untyped_program -> Warnings.t list
+     (string -> Middle.UnsizedType.t -> [`Fine | `Unknown | `WrongType])
+  -> Ast.untyped_program
+  -> Warnings.t list
