@@ -16,7 +16,9 @@ let check_to_string = function
   | LowerUpper _ ->
       Common.ICE.internal_compiler_error
         [%message "LowerUpper is really two other checks tied together"]
-  | Offset _ | Multiplier _ | OffsetMultiplier _ -> None
+  | Offset _ | Multiplier _ | OffsetMultiplier _ ->
+      Common.ICE.internal_compiler_error
+        [%message "Offset and multiplier don't have a check"]
   | t -> constraint_to_string t
 
 let math_fn_translations = function
@@ -34,7 +36,7 @@ let trans_math_fn f =
    For scalar types this sets the value to NaN and for containers initializes the memory.
 *)
 let rec initialize_value st adtype =
-  let open Expression_syntax in
+  let open Cpp.DSL in
   let init_nan =
     (* NB: Never used by TupleAD directly *)
     if adtype = UnsizedType.DataOnly then Exprs.quiet_NaN else Var "DUMMY_VAR__"
@@ -43,46 +45,50 @@ let rec initialize_value st adtype =
   | UnsizedType.(DataOnly | AutoDiffable), SizedType.SInt -> Exprs.int_min
   | (DataOnly | AutoDiffable), SReal -> init_nan
   | (DataOnly | AutoDiffable), SComplex ->
-      let scalar = local_scalar (SizedType.to_unsized st) adtype in
-      Constructor (Types.complex scalar, [init_nan; init_nan])
+      let complex =
+        Types.complex (local_scalar (SizedType.to_unsized st) adtype) in
+      complex.:{init_nan; init_nan}
   | (DataOnly | AutoDiffable), SComplexVector size
    |(DataOnly | AutoDiffable), SComplexRowVector size ->
-      let typ = lower_st st adtype in
-      typ |::? ("Constant", [lower_expr size; initialize_value SComplex adtype])
+      let vec = lower_st st adtype in
+      vec |::? ("Constant", [lower_expr size; initialize_value SComplex adtype])
   | DataOnly, SVector (_, size)
    |DataOnly, SRowVector (_, size)
    |AutoDiffable, SVector (AoS, size)
    |AutoDiffable, SRowVector (AoS, size) ->
-      let typ = lower_st st adtype in
-      typ |::? ("Constant", [lower_expr size; init_nan])
+      let vec = lower_st st adtype in
+      vec |::? ("Constant", [lower_expr size; init_nan])
   | DataOnly, SMatrix (_, d1, d2) | AutoDiffable, SMatrix (AoS, d1, d2) ->
-      let typ = lower_st st adtype in
-      typ |::? ("Constant", [lower_expr d1; lower_expr d2; init_nan])
+      let mat = lower_st st adtype in
+      mat |::? ("Constant", [lower_expr d1; lower_expr d2; init_nan])
   | (DataOnly | AutoDiffable), SComplexMatrix (d1, d2) ->
-      let typ = lower_st st adtype in
-      typ
+      let mat = lower_st st adtype in
+      mat
       |::? ( "Constant"
            , [lower_expr d1; lower_expr d2; initialize_value SComplex adtype] )
   | AutoDiffable, SVector (SoA, size) ->
-      let typ = lower_possibly_var_decl adtype (SizedType.to_unsized st) SoA in
-      Constructor (typ, [initialize_value (SVector (AoS, size)) DataOnly])
+      let var_vec =
+        lower_possibly_var_decl adtype (SizedType.to_unsized st) SoA in
+      var_vec.:{initialize_value (SVector (AoS, size)) DataOnly}
   | AutoDiffable, SRowVector (SoA, size) ->
-      let typ = lower_possibly_var_decl adtype (SizedType.to_unsized st) SoA in
-      Constructor (typ, [initialize_value (SRowVector (AoS, size)) DataOnly])
+      let var_row_vec =
+        lower_possibly_var_decl adtype (SizedType.to_unsized st) SoA in
+      var_row_vec.:{initialize_value (SRowVector (AoS, size)) DataOnly}
   | AutoDiffable, SMatrix (SoA, d1, d2) ->
-      let typ = lower_possibly_var_decl adtype (SizedType.to_unsized st) SoA in
-      Constructor (typ, [initialize_value (SMatrix (AoS, d1, d2)) DataOnly])
+      let var_mat =
+        lower_possibly_var_decl adtype (SizedType.to_unsized st) SoA in
+      var_mat.:{initialize_value (SMatrix (AoS, d1, d2)) DataOnly}
   | DataOnly, SArray (t, d) ->
-      let typ = lower_st st adtype in
-      Constructor (typ, [lower_expr d; initialize_value t adtype])
+      let arr = lower_st st adtype in
+      arr.:{lower_expr d; initialize_value t adtype}
   | (AutoDiffable | TupleAD _), SArray (t, d) ->
-      let typ =
+      let var_arr =
         lower_possibly_var_decl adtype (SizedType.to_unsized st)
           (SizedType.get_mem_pattern t) in
-      Constructor (typ, [lower_expr d; initialize_value t adtype])
+      var_arr.:{lower_expr d; initialize_value t adtype}
   | TupleAD ads, STuple subts ->
-      let typ = lower_st st adtype in
-      InitializerExpr (typ, List.map2_exn ~f:initialize_value subts ads)
+      let tupl = lower_st st adtype in
+      InitializerExpr (tupl, List.map2_exn ~f:initialize_value subts ads)
   | _, STuple _ | TupleAD _, _ ->
       Common.ICE.internal_compiler_error
         [%message
@@ -187,7 +193,7 @@ let expr_overlaps_lhs_ref (lhs_base_ref : 'e Stmt.Fixed.Pattern.lvalue)
       expr_base_ref = lhs_base_ref)
 
 let throw_exn exn_type args =
-  let open Expression_syntax in
+  let open Cpp.DSL in
   let err_strm_name = "errmsg_stream__" in
   let stream_decl =
     VariableDefn
@@ -215,7 +221,7 @@ let rec lower_statement Stmt.Fixed.{pattern; meta} : stmt list =
         []
     | _ -> Numbering.assign_loc meta in
   let wrap_e e = [Expression e] in
-  let open Expression_syntax in
+  let open Cpp.DSL in
   location
   @
   match pattern with
@@ -261,6 +267,9 @@ let rec lower_statement Stmt.Fixed.{pattern; meta} : stmt list =
       let rhs = maybe_deep_copy (remove_promotions rhs) in
       (* Split up the top-level lvalue to fit in the assign call *)
       let lhs_base, lhs_idcs = lhs in
+      let lhs_idcs =
+        (* If the only indexes are omnis, we can just skip them *)
+        if Index.every_index_is_all lhs_idcs then [] else lhs_idcs in
       Exprs.fun_call "stan::model::assign"
         ([ lower_nonrange_lbase lhs_base; lower_expr rhs
          ; Exprs.literal_string
@@ -275,7 +284,7 @@ let rec lower_statement Stmt.Fixed.{pattern; meta} : stmt list =
       [ Stmts.if_block (Var "jacobian__")
           (accum.@?("add", [lower_expr e]) |> wrap_e) ]
   | NRFunApp (CompilerInternal FnPrint, args) ->
-      let open Expression_syntax in
+      let open Cpp.DSL in
       let pstream = Var "pstream__" in
       let print a =
         Expression

@@ -56,3 +56,4 @@
     "includes/another_include.stan"
   ]
 }
+[exit 0]

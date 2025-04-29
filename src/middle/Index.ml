@@ -27,6 +27,9 @@ let bounds = function
   | Single e | Upfrom e | MultiIndex e -> [e]
   | Between (e1, e2) -> [e1; e2]
 
+let every_index_is_all lst =
+  List.for_all lst ~f:(function All -> true | _ -> false)
+
 (**
  Apply an op over the [Index] types inner expressions.
  @param default Value to return for [All]

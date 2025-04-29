@@ -922,3 +922,4 @@
        ((pattern (Lit Int 0)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_annotations ())))))
  (prog_name simple_function_model) (prog_path simple_function.stan))
+[exit 0]

@@ -11,10 +11,8 @@ type originblock =
   | TParam
   | Model
   | GQuant
-[@@deriving sexp]
 
 type varinfo = {origin: originblock; global: bool; readonly: bool}
-[@@deriving sexp]
 
 type info =
   { type_: UnsizedType.t
@@ -24,20 +22,16 @@ type info =
       | `UserExtern of Location_span.t
       | `StanMath
       | `UserDefined ] }
-[@@deriving sexp]
 
 type t = info list String.Map.t
 
 let stan_math_environment =
   let functions =
-    Hashtbl.to_alist Stan_math_signatures.stan_math_signatures
+    Stan_math_signatures.get_stan_math_signatures_alist ()
     |> List.map ~f:(fun (key, values) ->
            ( key
-           , List.map values ~f:(fun (rt, args, mem) ->
-                 let type_ =
-                   UnsizedType.UFun
-                     (args, rt, Fun_kind.suffix_from_name key, mem) in
-                 {type_; kind= `StanMath}) ))
+           , List.map values ~f:(fun s ->
+                 {type_= UnsizedType.UFun s; kind= `StanMath}) ))
     |> String.Map.of_alist_exn in
   functions
 

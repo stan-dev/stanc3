@@ -15,6 +15,7 @@ model {
   fatal_error("user requested termination");
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format good_const.stan
 transformed data {
   real y;
@@ -24,6 +25,7 @@ model {
   
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format good_cov.stan
 data {
   array[10] vector[5] y;
@@ -37,6 +39,7 @@ model {
     y[i] ~ multi_normal(mu[i], Sigma[i]);
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format good_fun_name.stan
 parameters {
   real e;
@@ -54,6 +57,7 @@ model {
   e ~ normal(0, 1);
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format good_funs.stan
 transformed data {
   real x;
@@ -69,6 +73,7 @@ model {
   
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format good_intercept_var.stan
 data {
   int<lower=0> m1; // make sure didn't mess up spacing
@@ -84,6 +89,7 @@ model {
   
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format good_local_var_array_size.stan
 data {
   array[5] int M;
@@ -122,6 +128,7 @@ model {
   }
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format good_matrix_ops.stan
 transformed data {
   matrix[5, 5] A;
@@ -154,6 +161,7 @@ model {
   
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format good_nested_decl.stan
 functions {
   real foo() {
@@ -163,6 +171,7 @@ functions {
   }
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format good_semicolons.stan
 data {
   ;
@@ -195,6 +204,7 @@ generated quantities {
   ;
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format good_trunc.stan
 data {
   real y;
@@ -206,6 +216,7 @@ model {
   y ~ normal(0, 1);
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format good_vars.stan
 data {
   real a;
@@ -256,6 +267,7 @@ generated quantities {
   }
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format good_vec_constraints.stan
 data {
   vector<lower=0>[2] v0;
@@ -274,6 +286,7 @@ model {
   0 ~ bernoulli(0.5);
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format print_reject_function_gq.stan
 functions {
   void foo(real x) {
@@ -301,6 +314,7 @@ generated quantities {
   foo(v);
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format print_reject_function_model.stan
 functions {
   void foo(real x) {
@@ -327,6 +341,7 @@ generated quantities {
   print("In generated quantities");
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format print_reject_function_tdata.stan
 functions {
   void foo(real x) {
@@ -353,6 +368,7 @@ generated quantities {
   print("In generated quantities");
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format print_reject_function_tparams.stan
 functions {
   void foo(real x) {
@@ -379,6 +395,7 @@ generated quantities {
   print("In generated quantities");
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format print_reject_gq_block.stan
 transformed data {
   print("In transformed data");
@@ -399,6 +416,7 @@ generated quantities {
   reject("QUIT");
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format print_reject_model_block.stan
 transformed data {
   print("In transformed data");
@@ -419,6 +437,7 @@ generated quantities {
   print("In generated quantities");
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format print_reject_tdata_block.stan
 transformed data {
   print("In transformed data");
@@ -439,6 +458,7 @@ generated quantities {
   print("In generated quantities");
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format print_reject_tparams_block.stan
 transformed data {
   print("In transformed data");
@@ -459,6 +479,7 @@ generated quantities {
   print("In generated quantities");
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format reject_func_call_generated_quantities.stan
 functions {
   void foo(real x) {
@@ -475,6 +496,7 @@ generated quantities {
   foo(y);
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format reject_func_call_model.stan
 functions {
   void foo(real x) {
@@ -489,6 +511,7 @@ model {
   y ~ normal(0, 1);
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format reject_func_call_transformed_data.stan
 functions {
   void foo(real x) {
@@ -506,6 +529,7 @@ model {
   y ~ normal(0, 1);
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format reject_func_call_transformed_parameters.stan
 functions {
   void foo_bar() {
@@ -523,6 +547,7 @@ model {
   y ~ normal(0, 1);
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format reject_generated_quantities.stan
 parameters {
   real y;
@@ -535,6 +560,7 @@ generated quantities {
   reject("user-specified rejection");
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format reject_model.stan
 data {
   
@@ -552,6 +578,7 @@ model {
   reject("user-specified rejection");
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format reject_mult_args.stan
 functions {
   real relative_diff(real x, real y, real max_, real min_) {
@@ -583,6 +610,7 @@ model {
   y ~ normal(0, 1);
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format reject_transformed_data.stan
 transformed data {
   real<lower=0> x;
@@ -598,6 +626,7 @@ generated quantities {
   print("generating quantities");
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format reject_transformed_parameters.stan
 parameters {
   real y;
@@ -613,6 +642,7 @@ generated quantities {
   print("generating quantities");
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format test_lp.stan
 parameters {
   array[2] real<lower=-10, upper=10> y;
@@ -630,3 +660,4 @@ generated quantities {
   xgq = 2713;
 }
 
+[exit 0]

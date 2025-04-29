@@ -377,4 +377,5 @@ let gen_values_json_exn ?(new_only = false) ?(context = Map.Poly.empty) decls =
 
 let gen_values_json ?(new_only = false) ?(context = Map.Poly.empty) decls =
   try Ok (gen_values_json_exn ~new_only ~context decls)
-  with Partial_evaluator.Rejected (loc, msg) -> Error (loc, msg)
+  with Partial_evaluator.Rejected (loc, msg) ->
+    Error (Frontend.Errors.DebugDataError (loc, msg))

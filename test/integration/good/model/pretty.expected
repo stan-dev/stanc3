@@ -6,6 +6,7 @@ model {
   target += -sqrt(-x);
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format valid.stan
 parameters {
   real x;
@@ -14,3 +15,4 @@ model {
   target += -0.5 * square(x);
 }
 
+[exit 0]

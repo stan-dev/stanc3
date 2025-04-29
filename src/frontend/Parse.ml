@@ -71,3 +71,8 @@ let parse_file parse_fun path =
       let lexbuf = Lexing.from_channel chan in
       Preprocessor.init lexbuf path;
       parse parse_fun lexbuf
+
+let parse parse_fun file_or_code =
+  match file_or_code with
+  | `File path -> parse_file parse_fun path
+  | `Code code -> parse_string parse_fun code

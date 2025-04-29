@@ -128,6 +128,7 @@ model {
     y ~ std_normal(); //comment after else branch
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format --canonicalize deprecations deprecated.stan
 functions {
   array[] real sho(real t, array[] real y, array[] real theta,
@@ -173,6 +174,7 @@ generated quantities {
 
 Warning in 'deprecated.stan', line 24, column 2: Assignment of variable to
     itself.
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format --canonicalize deprecations funs.stanfunctions
 // comment test comment
 void test(int x, int y) {
@@ -182,6 +184,7 @@ void test(int x, int y) {
 real return_lp() {
   return target();
 }
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format --canonicalize deprecations parenthesize.stan
 transformed data {
   int N = 12;
@@ -226,6 +229,7 @@ Warning in 'parenthesize.stan', line 27, column 13: Found 1 < 2 > 3 > 4. This
     1 < 2 < 3 && 3 > 4 instead.
     You can silence this warning by adding explicit parenthesis. This can be
     automatically changed using the canonicalize flag for stanc
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format --canonicalize deprecations squaremc.stan
 /*
  * BUGS Volume 3, funshapes, square minus circle
@@ -252,3 +256,4 @@ model {
   target += log1m(sqrt(1 - square(1 - abs(x_raw))));
 }
 
+[exit 0]

@@ -3,18 +3,10 @@
  (modes
   (byte c)
   (best exe))
- (libraries frontend middle stan_math_backend analysis_and_optimization)
+ (libraries core fmt cmdliner driver stan_math_signatures)
  (instrumentation
   (backend bisect_ppx))
- (modules Stanc)
+ (modules Stanc CLI)
  (public_name stanc)
  (preprocess
   (pps ppx_jane)))
-
-(env
- (static
-  (flags
-   (-ccopt -static)))
- (dev
-  (flags
-   (:standard -g))))

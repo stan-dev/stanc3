@@ -40,3 +40,4 @@ Warning in 'good_annotations.stan', line 16, column 89: Unknown annotation
     'really_extra_long_now' will be ignored by the compiler
 Warning in 'good_annotations.stan', line 18, column 12: Unknown annotation
     'foo' will be ignored by the compiler
+[exit 0]

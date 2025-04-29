@@ -15,17 +15,21 @@ type t =
   | UComplexMatrix
   | UArray of t
   | UTuple of t list
-  | UFun of argumentlist * returntype * bool Fun_kind.suffix * Mem_pattern.t
+  | UFun of signature
   | UMathLibraryFunction
-[@@deriving compare, hash, sexp]
 
 and autodifftype = DataOnly | AutoDiffable | TupleAD of autodifftype list
-[@@deriving compare, hash, sexp]
-
 and argumentlist = (autodifftype * t) list
-
 and returntype = Void | ReturnType of t
+
+and signature = argumentlist * returntype * bool Fun_kind.suffix * Mem_pattern.t
 [@@deriving compare, hash, sexp, equal]
+
+type variadic_signature =
+  { return_type: t
+  ; control_args: argumentlist
+  ; required_fn_rt: t
+  ; required_fn_args: argumentlist }
 
 let rec pp_tuple_autodifftype ppf = function
   | DataOnly -> Fmt.string ppf "data"
@@ -41,12 +45,6 @@ let pp_autodifftype ppf = function
   | DataOnly -> Fmt.string ppf "data "
   | AutoDiffable -> ()
   | tup -> pp_tuple_autodifftype ppf tup
-
-let unsized_array_depth unsized_ty =
-  let rec aux depth = function
-    | UArray ut -> aux (depth + 1) ut
-    | ut -> (ut, depth) in
-  aux 0 unsized_ty
 
 let count_dims unsized_ty =
   let rec aux dims = function
@@ -99,6 +97,8 @@ and pp_fun_arg ppf (ad_ty, unsized_ty) =
 and pp_returntype ppf = function
   | Void -> Fmt.string ppf "void"
   | ReturnType ut -> pp ppf ut
+
+let pp_math_sig ppf s = pp ppf (UFun s)
 
 (* -- Type conversion -- *)
 let rec autodifftype_can_convert at1 at2 =
@@ -176,7 +176,7 @@ let rec common_type = function
 let rec is_autodiffable = function
   | UReal | UVector | URowVector | UMatrix -> true
   | UArray t -> is_autodiffable t
-  | _ -> false
+  | _ (* wrong? *) -> false
 
 let rec is_autodifftype possibly_adtype =
   match possibly_adtype with

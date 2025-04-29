@@ -360,7 +360,10 @@ let rec pp_transformed_type ppf (st, trans) =
     | PositiveOrdered -> pf ppf "positive_ordered%a" sizes_fmt ()
     | Simplex -> pf ppf "simplex%a" sizes_fmt ()
     | UnitVector -> pf ppf "unit_vector%a" sizes_fmt ()
-    | SumToZero -> pf ppf "sum_to_zero_vector%a" sizes_fmt ()
+    | SumToZero ->
+        let ty_str =
+          match st with SizedType.SMatrix _ -> "matrix" | _ -> "vector" in
+        pf ppf "sum_to_zero_%s%a" ty_str sizes_fmt ()
     | CholeskyCorr -> pf ppf "cholesky_factor_corr%a" cov_sizes_fmt ()
     | CholeskyCov -> pf ppf "cholesky_factor_cov%a" cov_sizes_fmt ()
     | Correlation -> pf ppf "corr_matrix%a" cov_sizes_fmt ()
@@ -434,7 +437,7 @@ and pp_statement ppf ({stmt= s_content; smeta= {loc}} as ss : untyped_statement)
       pf ppf "%a(@[%a);@]" pp_identifier id pp_list_of_expression (es, loc)
   | TargetPE e -> pf ppf "target += %a;" pp_expression e
   | JacobianPE e -> pf ppf "jacobian += %a;" pp_expression e
-  | Tilde {arg= e; distribution= id; args= es; truncation= t} ->
+  | Tilde {arg= e; distribution= id; args= es; truncation= t; kind= _} ->
       pf ppf "%a ~ %a(@[%a)@]%a;" pp_expression e pp_identifier id
         pp_list_of_expression (es, loc) pp_truncation t
   | Break -> pf ppf "break;"

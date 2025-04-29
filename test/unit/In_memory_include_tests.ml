@@ -4,7 +4,7 @@ open Frontend
 let print_ast_or_error code =
   let () =
     match Test_utils.untyped_ast_of_string code with
-    | Result.Error e -> print_endline @@ Errors.to_string e
+    | Result.Error e -> print_endline @@ Test_utils.error_to_string ~code e
     | Result.Ok ast -> print_s [%sexp (ast : Ast.untyped_program)] in
   (* reset *) Include_files.include_provider := FileSystemPaths []
 
@@ -22,6 +22,14 @@ let%expect_test "no includes" =
   [%expect
     {|
     Syntax error in 'string', line 2, column 0, include error:
+       -------------------------------------------------
+         1:
+         2:  #include <foo.stan>
+             ^
+         3:  data {
+         4:      int a;
+       -------------------------------------------------
+
     Could not find include file 'foo.stan'.
     stanc was given information about the following files:
     None |}]
@@ -33,6 +41,14 @@ let%expect_test "wrong include" =
   [%expect
     {|
     Syntax error in 'string', line 2, column 0, include error:
+       -------------------------------------------------
+         1:
+         2:  #include <foo.stan>
+             ^
+         3:  data {
+         4:      int a;
+       -------------------------------------------------
+
     Could not find include file 'foo.stan'.
     stanc was given information about the following files:
     bar.stan |}]

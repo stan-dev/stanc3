@@ -9,19 +9,19 @@ open Middle
    A label is a unique identifier for a node in the dataflow/dependency graph, and
    often corresponds to one node in the Mir.
 *)
-type label = int [@@deriving sexp, hash, compare]
+type label = int [@@deriving sexp]
 
 (**
    Representation of an expression that can be assigned to. This should also be able to
    represent indexed variables, but we don't support that yet.
 *)
-type vexpr = VVar of string [@@deriving sexp, hash, compare]
+type vexpr = VVar of string [@@deriving sexp]
 
 (**
    A 'reaching definition' (or reaching_defn or RD) statement (v, l) says that the variable
    v could have been affected at the label l.
 *)
-type reaching_defn = vexpr * label [@@deriving sexp, hash, compare]
+type reaching_defn = vexpr * label [@@deriving sexp]
 
 (**
    Description of where a node in the dependency graph came from, where MirNode is the
@@ -31,7 +31,6 @@ type source_loc =
   | MirNode of Location_span.t
   | StartOfBlock
   | TargetTerm of {term: Expr.Typed.t; assignment_label: label}
-[@@deriving sexp]
 
 (**
    Information to be collected about each node
@@ -54,7 +53,6 @@ type 'rd_info node_info =
   ; rhs_set: vexpr Set.Poly.t
   ; controlflow: label Set.Poly.t
   ; loc: source_loc }
-[@@deriving sexp]
 
 (**
    A node_info, where the reaching definition information takes the form of an update
@@ -70,7 +68,6 @@ type node_info_update =
 *)
 type node_info_fixedpoint =
   (reaching_defn Set.Poly.t * reaching_defn Set.Poly.t) node_info
-[@@deriving sexp]
 
 (**
    The state that will be maintained throughout the traversal of the Mir
@@ -112,7 +109,6 @@ type dataflow_graph =
   { node_info_map: (int, node_info_fixedpoint) Map.Poly.t
   ; possible_exits: label Set.Poly.t
   ; probabilistic_nodes: label Set.Poly.t }
-[@@deriving sexp]
 
 (**
    Represents the dataflow graphs for each interesting block in the program MIR.
@@ -121,4 +117,3 @@ type dataflow_graph =
 *)
 type prog_df_graphs =
   {tdatab: dataflow_graph; modelb: dataflow_graph; gqb: dataflow_graph}
-[@@deriving sexp]

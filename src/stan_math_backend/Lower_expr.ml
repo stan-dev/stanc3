@@ -19,7 +19,23 @@ let fn_renames =
   @ [ ("lmultiply", "stan::math::multiply_log")
     ; ("lchoose", "stan::math::binomial_coefficient_log")
     ; ("std_normal_qf", "stan::math::inv_Phi")
-    ; ("integrate_ode", "stan::math::integrate_ode_rk45") ]
+    ; ("integrate_ode", "stan::math::integrate_ode_rk45")
+      (* constraints -- originally internal functions, may be worth renaming now *)
+    ; ("cholesky_factor_corr_jacobian", "stan::math::cholesky_corr_constrain")
+    ; ("cholesky_factor_corr_constrain", "stan::math::cholesky_corr_constrain")
+    ; ("cholesky_factor_corr_unconstrain", "stan::math::cholesky_corr_free")
+    ; ("cholesky_factor_cov_jacobian", "stan::math::cholesky_factor_constrain")
+    ; ("cholesky_factor_cov_constrain", "stan::math::cholesky_factor_constrain")
+    ; ("cholesky_factor_cov_unconstrain", "stan::math::cholesky_factor_free")
+    ; ("lower_bound_jacobian", "stan::math::lb_constrain")
+    ; ("lower_bound_constrain", "stan::math::lb_constrain")
+    ; ("lower_bound_unconstrain", "stan::math::lb_free")
+    ; ("upper_bound_jacobian", "stan::math::ub_constrain")
+    ; ("upper_bound_constrain", "stan::math::ub_constrain")
+    ; ("upper_bound_unconstrain", "stan::math::ub_free")
+    ; ("lower_upper_bound_jacobian", "stan::math::lub_constrain")
+    ; ("lower_upper_bound_constrain", "stan::math::lub_constrain")
+    ; ("lower_upper_bound_unconstrain", "stan::math::lub_free") ]
   |> String.Map.of_alist_exn
 
 let constraint_to_string = function
@@ -52,7 +68,7 @@ type variadic = FixedArgs | ReduceSum | VariadicHOF of int
 [@@deriving compare, hash]
 
 let functor_type hof =
-  match Hashtbl.find Stan_math_signatures.stan_math_variadic_signatures hof with
+  match Stan_math_signatures.lookup_stan_math_variadic_function hof with
   | Some {required_fn_args; _} -> VariadicHOF (List.length required_fn_args)
   | None when Stan_math_signatures.is_reduce_sum_fn hof -> ReduceSum
   | None -> FixedArgs
@@ -103,10 +119,12 @@ let promote_adtype =
       | _ -> accum)
     ~init:UnsizedType.DataOnly
 
-let suffix_args = function
+let suffix_args udf = function
   | Fun_kind.FnRng -> ["base_rng__"]
-  | FnTarget | FnJacobian -> ["lp__"; "lp_accum__"]
-  | FnPlain | FnLpdf _ -> []
+  | FnTarget -> ["lp__"; "lp_accum__"]
+  | FnJacobian when udf -> ["lp__"; "lp_accum__"]
+  | FnJacobian -> ["lp__"]
+  | FnPlain | FnLpdf _ | FnLpmf _ -> []
 
 let rec stantype_prim = function
   | UnsizedType.UInt -> Int
@@ -115,10 +133,10 @@ let rec stantype_prim = function
 
 let templates udf suffix =
   match suffix with
-  | Fun_kind.FnLpdf true -> [TemplateType "propto__"]
-  | FnLpdf false -> [TemplateType "false"]
+  | Fun_kind.FnLpdf true | FnLpmf true -> [TemplateType "propto__"]
+  | FnLpdf false | FnLpmf false -> [TemplateType "false"]
   | FnTarget when udf -> [TemplateType "propto__"]
-  | FnJacobian when udf -> [TemplateType "jacobian__"]
+  | FnJacobian -> [TemplateType "jacobian__"]
   | _ -> []
 
 let deserializer = Var "in__"
@@ -136,11 +154,11 @@ let rec local_scalar ut ad =
             (ad : UnsizedType.autodifftype)]
 
 let minus_one e =
-  let open Expression_syntax in
+  let open Cpp.DSL in
   Parens (e - Literal "1")
 
 let plus_one e =
-  let open Expression_syntax in
+  let open Cpp.DSL in
   Parens (e + Literal "1")
 
 let rec lower_type ?(mem_pattern = Mem_pattern.AoS) (t : UnsizedType.t)
@@ -204,13 +222,12 @@ let rec lower_logical_op op e1 e2 =
 and lower_binary_fun f es = Exprs.fun_call f (lower_exprs es)
 
 and vector_literal ?(column = false) scalar es =
-  let open Expression_syntax in
-  let fn = if column then Types.vector else Types.row_vector in
-  let constructor size =
-    Constructor (fn scalar, [Literal (string_of_int size)]) in
-  if List.is_empty es then constructor 0
+  let open Cpp.DSL in
+  let vec = if column then Types.vector scalar else Types.row_vector scalar in
+  let make_vector size = vec.:{Literal (string_of_int size)} in
+  if List.is_empty es then make_vector 0
   else
-    let vector = constructor (List.length es) in
+    let vector = make_vector (List.length es) in
     let values = lower_exprs es in
     (vector << values).@!("finished")
 
@@ -225,7 +242,7 @@ and read_data ut es =
      |UMathLibraryFunction ->
         Common.ICE.internal_compiler_error
           [%message "Can't ReadData of " (ut : UnsizedType.t)] in
-  let open Expression_syntax in
+  let open Cpp.DSL in
   let data_context = Var "context__" in
   data_context.@?(val_method, [lower_expr (List.hd_exn es)])
 
@@ -375,9 +392,9 @@ and lower_functionals fname suffix es mem_pattern =
             , grainsize :: container :: msgs :: tl )
         | _, _
           when Stan_math_signatures.is_stan_math_variadic_function_name fname ->
-            let Stan_math_signatures.{control_args; _} =
-              Hashtbl.find_exn
-                Stan_math_signatures.stan_math_variadic_signatures fname in
+            let UnsizedType.{control_args; _} =
+              Stan_math_signatures.lookup_stan_math_variadic_function fname
+              |> Option.value_exn in
             let hd, tl =
               List.split_n converted_es (List.length control_args + 1) in
             (fname, hd @ (msgs :: tl))
@@ -396,6 +413,12 @@ and lower_functionals fname suffix es mem_pattern =
 and lower_fun_app suffix fname es mem_pattern
     (ret_type : UnsizedType.returntype option) =
   let fname = Option.value (Map.find fn_renames fname) ~default:fname in
+  let fname =
+    (* Handle systematic renaming of math's constrain and free functions *)
+    match String.rsplit2 fname ~on:'_' with
+    | Some (f, "jacobian") -> f ^ "_constrain"
+    | Some (f, "unconstrain") -> f ^ "_free"
+    | _ -> fname in
   let special_options =
     [ Option.map ~f:lower_operator_app (Operator.of_string_opt fname)
     ; lower_misc_special_math_app fname mem_pattern ret_type
@@ -406,17 +429,17 @@ and lower_fun_app suffix fname es mem_pattern
   | None ->
       let fname = stan_namespace_qualify fname in
       let templates = templates false suffix in
-      let extras = suffix_args suffix |> List.map ~f:Exprs.to_var in
+      let extras = suffix_args false suffix |> List.map ~f:Exprs.to_var in
       Exprs.templated_fun_call fname templates (lower_exprs es @ extras)
 
 and lower_user_defined_fun f suffix es =
   let extra_args =
-    suffix_args suffix @ ["pstream__"] |> List.map ~f:Exprs.to_var in
+    suffix_args true suffix @ ["pstream__"] |> List.map ~f:Exprs.to_var in
   Exprs.templated_fun_call f (templates true suffix)
     ((lower_exprs ~promote_reals:true) es @ extra_args)
 
 and lower_compiler_internal ad ut f es =
-  let open Expression_syntax in
+  let open Cpp.DSL in
   let gen_tuple_literal (es : Expr.Typed.t list) : expr =
     (* we make full copies of tuples
        due to a lack of templating sophistication
@@ -538,7 +561,7 @@ and lower_indexed_simple (e : expr) idcs =
               (e : expr)
               (idcs : Expr.Typed.t Index.t list)] in
   List.fold idcs ~init:e ~f:(fun e id ->
-      Index (e, idx_minus_one (Index.map lower_expr id)))
+      Subscript (e, idx_minus_one (Index.map lower_expr id)))
 
 and lower_expr ?(promote_reals = false)
     (Expr.Fixed.{pattern; meta} : Expr.Typed.t) : Cpp.expr =

@@ -166,7 +166,8 @@ let opencl_supported_functions =
   ; "ordered_logistic_glm_lpmf"; "pareto_lpdf"; "pareto_type_2_lpdf"
   ; "poisson_lpmf"; "poisson_log_lpmf"; "poisson_log_glm_lpmf"; "rayleigh_lpdf"
   ; "scaled_inv_chi_square_lpdf"; "skew_normal_lpdf"; "std_normal_lpdf"
-  ; "student_t_lpdf"; "uniform_lpdf"; "weibull_lpdf" ]
+  ; "student_t_lpdf"; "uniform_lpdf"; "weibull_lpdf"; "binomial_logit_lpmf"
+  ; "binomial_logit_glm_lpmf" ]
   |> String.Set.of_list
 
 let opencl_suffix = "_opencl__"
@@ -220,7 +221,7 @@ let meta_from_sizedtype st =
   ; adlevel= UnsizedType.fill_adtype_for_type DataOnly type_ }
 
 let munge_tuple_name name =
-  Str.global_replace (Str.regexp_string ".") "_dot_" name
+  String.substr_replace_all ~pattern:"." ~with_:"_dot_" name
 
 let make_tuple_temp name = munge_tuple_name name ^ "_temp__"
 

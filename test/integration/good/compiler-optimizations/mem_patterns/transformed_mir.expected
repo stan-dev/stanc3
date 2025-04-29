@@ -1712,6 +1712,7 @@ matrix[2, 2] aos_mat_from_vecs: AoS
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans Identity) (out_annotations ())))))
  (prog_name ad_scalar_data_matrix_model) (prog_path ad_scalar_data_matrix.stan))
+[exit 0]
   $ ../../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir --debug-mem-patterns complex-fails.stan
 matrix[10, 10] A_p: AoS
 ((functions_block ()) (input_vars ()) (prepare_data ())
@@ -2050,6 +2051,7 @@ matrix[10, 10] A_p: AoS
        ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block TransformedParameters) (out_trans Identity) (out_annotations ())))))
  (prog_name complex_fails_model) (prog_path complex-fails.stan))
+[exit 0]
   $ ../../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir --debug-mem-patterns constraints.stan
 vector[N] high_low_est: SoA
 vector[K] b: SoA
@@ -2075,6 +2077,7 @@ vector[Nr] err: SoA
 vector[Nr] h_i_mean: SoA
 vector[Nr] h_i_sigma: SoA
 vector[Nr] h_sigma: SoA
+vector[N] means_ordered: SoA
 ((functions_block ())
  (input_vars
   ((N
@@ -2909,6 +2912,13 @@ vector[Nr] h_sigma: SoA
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Str Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+    (meta <opaque>))
+   ((pattern
+     (NRFunApp (CompilerInternal FnValidateSize)
+      (((pattern (Lit Str means_ordered))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+       ((pattern (Lit Str N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+       ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))))
  (log_prob
   (((pattern
@@ -3900,6 +3910,22 @@ vector[Nr] h_sigma: SoA
            (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern (Lit Real 0.000001))
            (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype AutoDiffable) (decl_id means_ordered)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (decl_annotations ()) (initialize Default)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment ((LVariable means_ordered) ()) UVector
+      ((pattern
+        (FunApp (StanLib ordered_jacobian FnJacobian AoS)
+         (((pattern (Var mean_price))
+           (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
@@ -5120,6 +5146,22 @@ vector[Nr] h_sigma: SoA
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
+     (Decl (decl_adtype AutoDiffable) (decl_id means_ordered)
+      (decl_type
+       (Sized
+        (SVector SoA
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (decl_annotations ()) (initialize Default)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment ((LVariable means_ordered) ()) UVector
+      ((pattern
+        (FunApp (StanLib ordered_jacobian FnJacobian SoA)
+         (((pattern (Var mean_price))
+           (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
+       (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
      (NRFunApp
       (CompilerInternal
        (FnCheck
@@ -5976,6 +6018,14 @@ vector[Nr] h_sigma: SoA
       (decl_annotations ()) (initialize Default)))
     (meta <opaque>))
    ((pattern
+     (Decl (decl_adtype DataOnly) (decl_id means_ordered)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (decl_annotations ()) (initialize Default)))
+    (meta <opaque>))
+   ((pattern
      (NRFunApp
       (CompilerInternal
        (FnWriteParam (unconstrain_opt ())
@@ -6544,6 +6594,14 @@ vector[Nr] h_sigma: SoA
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
+     (Assignment ((LVariable means_ordered) ()) UVector
+      ((pattern
+        (FunApp (StanLib ordered_jacobian FnJacobian AoS)
+         (((pattern (Var mean_price))
+           (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
+       (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
      (NRFunApp
       (CompilerInternal
        (FnCheck
@@ -6684,6 +6742,15 @@ vector[Nr] h_sigma: SoA
               (FnWriteParam (unconstrain_opt ())
                (var
                 ((pattern (Var h_sigma))
+                 (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly)))))))
+             ()))
+           (meta <opaque>))
+          ((pattern
+            (NRFunApp
+             (CompilerInternal
+              (FnWriteParam (unconstrain_opt ())
+               (var
+                ((pattern (Var means_ordered))
                  (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly)))))))
              ()))
            (meta <opaque>)))))
@@ -9281,8 +9348,21 @@ vector[Nr] h_sigma: SoA
      (out_constrained_st
       (SVector AoS
        ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+     (out_block TransformedParameters) (out_trans Identity) (out_annotations ())))
+   (means_ordered
+    ((begin_loc
+      ((filename constraints.stan) (line_num 69) (col_num 2) (included_from ())))
+     (end_loc
+      ((filename constraints.stan) (line_num 69) (col_num 57) (included_from ()))))
+    ((out_unconstrained_st
+      (SVector AoS
+       ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+     (out_constrained_st
+      (SVector AoS
+       ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block TransformedParameters) (out_trans Identity) (out_annotations ())))))
  (prog_name constraints_model) (prog_path constraints.stan))
+[exit 0]
   $ ../../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir --debug-mem-patterns deep_dependence.stan
 matrix[10, 10] X_p: AoS
 matrix[10, 10] X_tp1: AoS
@@ -10219,6 +10299,7 @@ matrix[10, 10] X_tp7: AoS
        ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block TransformedParameters) (out_trans Identity) (out_annotations ())))))
  (prog_name deep_dependence_model) (prog_path deep_dependence.stan))
+[exit 0]
   $ ../../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir --debug-mem-patterns indexing.stan
 vector[M] p_soa_vec_v: SoA
 matrix[N, M] p_soa_mat: SoA
@@ -17009,6 +17090,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
        ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block TransformedParameters) (out_trans Identity) (out_annotations ())))))
  (prog_name indexing_model) (prog_path indexing.stan))
+[exit 0]
   $ ../../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir --debug-mem-patterns indexing2.stan
 vector[10] p_aos_loop_single_idx: AoS
 vector[N] tp_soa_multi_idx_assign_in_loop: SoA
@@ -17605,6 +17687,7 @@ vector[N] tp_soa_single_idx_in_upfrom_idx: SoA
        ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans Identity) (out_annotations ())))))
  (prog_name indexing2_model) (prog_path indexing2.stan))
+[exit 0]
   $ ../../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir --debug-mem-patterns reductions_allowed.stan
 matrix[5, 10] soa_x: SoA
 matrix[5, 10] aos_x: AoS
@@ -18676,6 +18759,7 @@ matrix[5, 10] tp_matrix_from_udf_reduced_soa: AoS
        ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block TransformedParameters) (out_trans Identity) (out_annotations ())))))
  (prog_name reductions_allowed_model) (prog_path reductions_allowed.stan))
+[exit 0]
   $ ../../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir --debug-mem-patterns return_types_and_udfs_demotes.stan
 matrix[10, 10] row_soa: SoA
 matrix[10, 10] udf_input_aos: AoS
@@ -19656,6 +19740,7 @@ matrix[10, 10] mul_two_aos: AoS
      (out_block TransformedParameters) (out_trans Identity) (out_annotations ())))))
  (prog_name return_types_and_udfs_demotes_model)
  (prog_path return_types_and_udfs_demotes.stan))
+[exit 0]
   $ ../../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir --debug-mem-patterns single_indexing.stan
 matrix[10, 10] aos_p: AoS
 matrix[10, 10] soa_p: SoA
@@ -20405,6 +20490,7 @@ matrix[10, 10] tp_matrix_from_soa_loop: SoA
     ((out_unconstrained_st SReal) (out_constrained_st SReal)
      (out_block TransformedParameters) (out_trans Identity) (out_annotations ())))))
  (prog_name single_indexing_model) (prog_path single_indexing.stan))
+[exit 0]
   $ ../../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir --debug-mem-patterns tp_reused.stan
 matrix[5, 10] first_pass_soa_x: AoS
 matrix[5, 10] aos_x: AoS
@@ -21019,6 +21105,7 @@ matrix[5, 10] tp_matrix_aos: AoS
        ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block TransformedParameters) (out_trans Identity) (out_annotations ())))))
  (prog_name tp_reused_model) (prog_path tp_reused.stan))
+[exit 0]
   $ ../../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir --debug-mem-patterns tuple_test.stan
 tuple(array[matrix[1, 1], 1], matrix[1, 2], matrix[1, 3]) xx: AoS
 matrix[1, 1] x: AoS
@@ -22028,6 +22115,7 @@ matrix[1, 1] x: AoS
        ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block TransformedParameters) (out_trans Identity) (out_annotations ())))))
  (prog_name tuple_test_model) (prog_path tuple_test.stan))
+[exit 0]
   $ ../../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir --debug-mem-patterns tuple_test2.stan
 matrix[3, 3] m1: AoS
 matrix[3, 3] m2: AoS
@@ -22707,3 +22795,4 @@ tuple(matrix[2, 2], matrix[3, 3]) temp: AoS
        ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans Identity) (out_annotations ())))))
  (prog_name tuple_test2_model) (prog_path tuple_test2.stan))
+[exit 0]
