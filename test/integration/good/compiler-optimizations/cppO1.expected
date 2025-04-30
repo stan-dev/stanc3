@@ -21276,7 +21276,7 @@ stan::math::profile_map profiles__;
 static constexpr std::array<const char*, 7> locations_array__ =
   {" (found before start of program)",
   " (in 'lcm-fails.stan', line 6, column 2 to column 22)",
-  " (in 'lcm-fails.stan', line 9, column 2 to column 23)",
+  " (in 'lcm-fails.stan', line 10, column 2 to column 23)",
   " (in 'lcm-fails.stan', line 2, column 2 to column 17)",
   " (in 'lcm-fails.stan', line 3, column 8 to column 9)",
   " (in 'lcm-fails.stan', line 3, column 2 to column 18)",

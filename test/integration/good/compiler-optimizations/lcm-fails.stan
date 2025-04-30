@@ -5,6 +5,7 @@ data {
 parameters {
   array[J] real theta;
 }
+
 model {
   y ~ normal(theta, 1);
 }
