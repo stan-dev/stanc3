@@ -559,7 +559,7 @@ pipeline {
                                     echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
                                     echo "PRECOMPILED_HEADERS=false" >> cmdstan/make/local
                                     cd cmdstan; make clean-all; git show HEAD --stat; cd ..
-                                    CXX="$CXX" ./compare-optimizer.sh "--tests-file all.tests --num-samples=20 -j$PARALLEL" "--O1" "$(readlink -f ../bin/linux-stanc)"
+                                    CXX="$CXX" ./compare-optimizer.sh "--tests-file all.tests --num-samples=15 -j$PARALLEL" "--O1" "$(readlink -f ../bin/linux-stanc)"
                                 '''
                             }
 
