@@ -79,7 +79,7 @@ transformed data {
   
   theta = algebra_solver_newton(algebra_system, x, y, dat, dat_int);
   theta = algebra_solver_newton(algebra_system, x, y, dat, dat_int, 0.01,
-                                0.01, 10);
+            0.01, 10);
 }
 parameters {
   vector[2] x_p;
@@ -92,19 +92,19 @@ transformed parameters {
   
   theta_p = algebra_solver_newton(algebra_system, x, y, dat, dat_int);
   theta_p = algebra_solver_newton(algebra_system, x, y, dat, dat_int, 0.01,
-                                  0.01, 10);
+              0.01, 10);
   
   theta_p = algebra_solver_newton(algebra_system, x, y_p, dat, dat_int);
   theta_p = algebra_solver_newton(algebra_system, x, y_p, dat, dat_int, 0.01,
-                                  0.01, 10);
+              0.01, 10);
   
   theta_p = algebra_solver_newton(algebra_system, x_p, y, dat, dat_int);
   theta_p = algebra_solver_newton(algebra_system, x_p, y, dat, dat_int, 0.01,
-                                  0.01, 10);
+              0.01, 10);
   
   theta_p = algebra_solver_newton(algebra_system, x_p, y_p, dat, dat_int);
   theta_p = algebra_solver_newton(algebra_system, x_p, y_p, dat, dat_int,
-                                  0.01, 0.01, 10);
+              0.01, 0.01, 10);
 }
 model {
   dummy_parameter ~ normal(0, 1);
@@ -3881,7 +3881,8 @@ transformed parameters {
   {
     vector[d] lambda_tilde;
     real c = slab_scale * sqrt(caux);
-    lambda_tilde = sqrt(c ^ 2 * square(lambda)
+    lambda_tilde = sqrt(
+                        c ^ 2 * square(lambda)
                         ./ (c ^ 2 + tau ^ 2 * square(lambda)));
     beta = z .* lambda_tilde * tau;
   }
@@ -4425,47 +4426,47 @@ transformed parameters {
                         x, // data
                         x_int); // integer data
   y_hat = integrate_ode_rk45(harm_osc_ode, // system
-                             y0, // initial state
-                             t0, // initial time
-                             ts, // solution times
-                             theta, // parameters
-                             x, // data
-                             x_int); // integer data
+            y0, // initial state
+            t0, // initial time
+            ts, // solution times
+            theta, // parameters
+            x, // data
+            x_int); // integer data
   y_hat = integrate_ode_bdf(harm_osc_ode, // system
-                            y0, // initial state
-                            t0, // initial time
-                            ts, // solution times
-                            theta, // parameters
-                            x, // data
-                            x_int); // integer data
+            y0, // initial state
+            t0, // initial time
+            ts, // solution times
+            theta, // parameters
+            x, // data
+            x_int); // integer data
   y_hat = integrate_ode_adams(harm_osc_ode, // system
-                              y0, // initial state
-                              t0, // initial time
-                              ts, // solution times
-                              theta, // parameters
-                              x, // data
-                              x_int); // integer data
+            y0, // initial state
+            t0, // initial time
+            ts, // solution times
+            theta, // parameters
+            x, // data
+            x_int); // integer data
   y_hat = integrate_ode_rk45(harm_osc_ode, // system
-                             y0, // initial state
-                             t0, // initial time
-                             ts, // solution times
-                             theta, // parameters
-                             x, // data
-                             x_int, 0.01, 0.01, 10); // integer data
+            y0, // initial state
+            t0, // initial time
+            ts, // solution times
+            theta, // parameters
+            x, // data
+            x_int, 0.01, 0.01, 10); // integer data
   y_hat = integrate_ode_bdf(harm_osc_ode, // system
-                            y0, // initial state
-                            t0, // initial time
-                            ts, // solution times
-                            theta, // parameters
-                            x, // data
-                            x_int, 0.01, 0.01, 10); // integer data
+            y0, // initial state
+            t0, // initial time
+            ts, // solution times
+            theta, // parameters
+            x, // data
+            x_int, 0.01, 0.01, 10); // integer data
   y_hat = integrate_ode_adams(harm_osc_ode, // system
-                              y0, // initial state
-                              t0, // initial time
-                              ts, // solution times
-                              theta, // parameters
-                              x, // data
-                              x_int, 0.01, 0.01, 10); // integer data
+            y0, // initial state
+            t0, // initial time
+            ts, // solution times
+            theta, // parameters
+            x, // data
+            x_int, 0.01, 0.01, 10); // integer data
 }
 model {
   for (t in 1 : 10) 

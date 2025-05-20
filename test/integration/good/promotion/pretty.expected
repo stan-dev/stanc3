@@ -147,7 +147,7 @@ parameters {
 transformed parameters {
   vector[2] y_s_p;
   y_s_p = algebra_solver_newton(algebra_system, y, theta_p, x_r, x_i, 0.01,
-                                0.01, 10);
+            0.01, 10);
 }
 model {
   dummy_parameter ~ normal(0, 1);
@@ -203,7 +203,8 @@ functions {
                             data array[] real x_r, data real tol) {
     int C = num_elements(m);
     real D = dot_product(to_row_vector(p), (m - to_vector(k[2 : C + 1])));
-    real lp = log(integrate_1d(multi_wallenius_integral, 0, 1,
+    real lp = log(
+                  integrate_1d(multi_wallenius_integral, 0, 1,
                                append_array({D}, to_array_1d(p)), x_r, k,
                                tol));
     

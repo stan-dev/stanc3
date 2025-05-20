@@ -109,7 +109,8 @@ functions {
           shape1[j] = 0.5 * j;
           shape2[j] = nu;
         }
-        target += beta_lpdf(rho[pos_rho : (pos_rho + p[i] - 2)] | shape1, shape2);
+        target += beta_lpdf(rho[pos_rho : (pos_rho + p[i] - 2)] | shape1,
+                            shape2);
         pos_rho += p[i] - 1;
       }
     target += gamma_lpdf(zeta | delta, 1);
@@ -123,7 +124,8 @@ functions {
     vector[K] lambda = local[1] .* sqrt(local[2]);
     real tau = global[1] * sqrt(global[2]) * global_prior_scale * error_scale;
     vector[K] lambda2 = square(lambda);
-    vector[K] lambda_tilde = sqrt(c2 * lambda2
+    vector[K] lambda_tilde = sqrt(
+                                  c2 * lambda2
                                   ./ (c2 + square(tau) * lambda2));
     return z_beta .* lambda_tilde * tau;
   }
@@ -136,7 +138,8 @@ functions {
     vector[K] eta = local[3] .* sqrt(local[4]);
     real tau = global[1] * sqrt(global[2]) * global_prior_scale * error_scale;
     vector[K] lambda_eta2 = square(lambda .* eta);
-    vector[K] lambda_tilde = sqrt(c2 * lambda_eta2
+    vector[K] lambda_tilde = sqrt(
+                                  c2 * lambda_eta2
                                   ./ (c2 + square(tau) * lambda_eta2));
     return z_beta .* lambda_tilde * tau;
   }
@@ -581,8 +584,8 @@ model {
     target += normal_lpdf(local[1] | 0, 1) - log_half;
     target += inv_gamma_lpdf(local[2] | 0.5 * prior_df, 0.5 * prior_df);
     target += normal_lpdf(global[1] | 0, 1) - log_half;
-    target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df, 0.5
-                                                                * global_prior_df);
+    target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df,
+                             0.5 * global_prior_df);
     target += inv_gamma_lpdf(caux | 0.5 * slab_df, 0.5 * slab_df);
   } else if (prior_dist == 4) {
     real log_half = -0.693147180559945286;
@@ -593,8 +596,8 @@ model {
     
     target += inv_gamma_lpdf(local[4] | 0.5 * prior_scale, 0.5 * prior_scale);
     target += normal_lpdf(global[1] | 0, 1) - log_half;
-    target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df, 0.5
-                                                                * global_prior_df);
+    target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df,
+                             0.5 * global_prior_df);
     target += inv_gamma_lpdf(caux | 0.5 * slab_df, 0.5 * slab_df);
   } else if (prior_dist == 5) {
     target += normal_lpdf(z_beta | 0, 1);
@@ -609,9 +612,12 @@ model {
   
   if (has_intercept == 1) {
     if (prior_dist_for_intercept == 1) 
-      target += normal_lpdf(gamma | prior_mean_for_intercept, prior_scale_for_intercept);
+      target += normal_lpdf(gamma | prior_mean_for_intercept,
+                            prior_scale_for_intercept);
     else if (prior_dist_for_intercept == 2) 
-      target += student_t_lpdf(gamma | prior_df_for_intercept, prior_mean_for_intercept, prior_scale_for_intercept);
+      target += student_t_lpdf(gamma | prior_df_for_intercept,
+                               prior_mean_for_intercept,
+                               prior_scale_for_intercept);
   }
   
   if (K_smooth) {
@@ -828,7 +834,8 @@ functions {
           shape1[j] = 0.5 * j;
           shape2[j] = nu;
         }
-        target += beta_lpdf(rho[pos_rho : (pos_rho + p[i] - 2)] | shape1, shape2);
+        target += beta_lpdf(rho[pos_rho : (pos_rho + p[i] - 2)] | shape1,
+                            shape2);
         pos_rho += p[i] - 1;
       }
     target += gamma_lpdf(zeta | delta, 1);
@@ -842,7 +849,8 @@ functions {
     vector[K] lambda = local[1] .* sqrt(local[2]);
     real tau = global[1] * sqrt(global[2]) * global_prior_scale * error_scale;
     vector[K] lambda2 = square(lambda);
-    vector[K] lambda_tilde = sqrt(c2 * lambda2
+    vector[K] lambda_tilde = sqrt(
+                                  c2 * lambda2
                                   ./ (c2 + square(tau) * lambda2));
     return z_beta .* lambda_tilde * tau;
   }
@@ -855,7 +863,8 @@ functions {
     vector[K] eta = local[3] .* sqrt(local[4]);
     real tau = global[1] * sqrt(global[2]) * global_prior_scale * error_scale;
     vector[K] lambda_eta2 = square(lambda .* eta);
-    vector[K] lambda_tilde = sqrt(c2 * lambda_eta2
+    vector[K] lambda_tilde = sqrt(
+                                  c2 * lambda_eta2
                                   ./ (c2 + square(tau) * lambda_eta2));
     return z_beta .* lambda_tilde * tau;
   }
@@ -1207,8 +1216,8 @@ model {
     target += normal_lpdf(local[1] | 0, 1) - log_half;
     target += inv_gamma_lpdf(local[2] | 0.5 * prior_df, 0.5 * prior_df);
     target += normal_lpdf(global[1] | 0, 1) - log_half;
-    target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df, 0.5
-                                                                * global_prior_df);
+    target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df,
+                             0.5 * global_prior_df);
     target += inv_gamma_lpdf(caux | 0.5 * slab_df, 0.5 * slab_df);
   } else if (prior_dist == 4) {
     real log_half = -0.693147180559945286;
@@ -1219,8 +1228,8 @@ model {
     
     target += inv_gamma_lpdf(local[4] | 0.5 * prior_scale, 0.5 * prior_scale);
     target += normal_lpdf(global[1] | 0, 1) - log_half;
-    target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df, 0.5
-                                                                * global_prior_df);
+    target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df,
+                             0.5 * global_prior_df);
     target += inv_gamma_lpdf(caux | 0.5 * slab_df, 0.5 * slab_df);
   } else if (prior_dist == 5) {
     target += normal_lpdf(z_beta | 0, 1);
@@ -1235,9 +1244,12 @@ model {
   
   if (has_intercept == 1) {
     if (prior_dist_for_intercept == 1) 
-      target += normal_lpdf(gamma | prior_mean_for_intercept, prior_scale_for_intercept);
+      target += normal_lpdf(gamma | prior_mean_for_intercept,
+                            prior_scale_for_intercept);
     else if (prior_dist_for_intercept == 2) 
-      target += student_t_lpdf(gamma | prior_df_for_intercept, prior_mean_for_intercept, prior_scale_for_intercept);
+      target += student_t_lpdf(gamma | prior_df_for_intercept,
+                               prior_mean_for_intercept,
+                               prior_scale_for_intercept);
   }
   
   if (K_smooth) {
@@ -1424,7 +1436,8 @@ functions {
           shape1[j] = 0.5 * j;
           shape2[j] = nu;
         }
-        target += beta_lpdf(rho[pos_rho : (pos_rho + p[i] - 2)] | shape1, shape2);
+        target += beta_lpdf(rho[pos_rho : (pos_rho + p[i] - 2)] | shape1,
+                            shape2);
         pos_rho += p[i] - 1;
       }
     target += gamma_lpdf(zeta | delta, 1);
@@ -1438,7 +1451,8 @@ functions {
     vector[K] lambda = local[1] .* sqrt(local[2]);
     real tau = global[1] * sqrt(global[2]) * global_prior_scale * error_scale;
     vector[K] lambda2 = square(lambda);
-    vector[K] lambda_tilde = sqrt(c2 * lambda2
+    vector[K] lambda_tilde = sqrt(
+                                  c2 * lambda2
                                   ./ (c2 + square(tau) * lambda2));
     return z_beta .* lambda_tilde * tau;
   }
@@ -1451,7 +1465,8 @@ functions {
     vector[K] eta = local[3] .* sqrt(local[4]);
     real tau = global[1] * sqrt(global[2]) * global_prior_scale * error_scale;
     vector[K] lambda_eta2 = square(lambda .* eta);
-    vector[K] lambda_tilde = sqrt(c2 * lambda_eta2
+    vector[K] lambda_tilde = sqrt(
+                                  c2 * lambda_eta2
                                   ./ (c2 + square(tau) * lambda_eta2));
     return z_beta .* lambda_tilde * tau;
   }
@@ -2215,9 +2230,8 @@ model {
       vector[N] mu_z;
       mu = linkinv_beta(eta, link);
       mu_z = linkinv_beta_z(eta_z, link_phi);
-      target += beta_lpdf(y | rows_dot_product(mu, mu_z), rows_dot_product((
-                                                                    1 - mu),
-                                                                    mu_z));
+      target += beta_lpdf(y | rows_dot_product(mu, mu_z),
+                          rows_dot_product((1 - mu), mu_z));
     }
   } else if (prior_PD == 0) {
     vector[N] summands;
@@ -2255,8 +2269,8 @@ model {
     target += normal_lpdf(local[1] | 0, 1) - log_half;
     target += inv_gamma_lpdf(local[2] | 0.5 * prior_df, 0.5 * prior_df);
     target += normal_lpdf(global[1] | 0, 1) - log_half;
-    target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df, 0.5
-                                                                * global_prior_df);
+    target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df,
+                             0.5 * global_prior_df);
     target += inv_gamma_lpdf(caux | 0.5 * slab_df, 0.5 * slab_df);
   } else if (prior_dist == 4) {
     real log_half = -0.693147180559945286;
@@ -2267,8 +2281,8 @@ model {
     
     target += inv_gamma_lpdf(local[4] | 0.5 * prior_scale, 0.5 * prior_scale);
     target += normal_lpdf(global[1] | 0, 1) - log_half;
-    target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df, 0.5
-                                                                * global_prior_df);
+    target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df,
+                             0.5 * global_prior_df);
     target += inv_gamma_lpdf(caux | 0.5 * slab_df, 0.5 * slab_df);
   } else if (prior_dist == 5) {
     target += normal_lpdf(z_beta | 0, 1);
@@ -2283,9 +2297,12 @@ model {
   
   if (has_intercept == 1) {
     if (prior_dist_for_intercept == 1) 
-      target += normal_lpdf(gamma | prior_mean_for_intercept, prior_scale_for_intercept);
+      target += normal_lpdf(gamma | prior_mean_for_intercept,
+                            prior_scale_for_intercept);
     else if (prior_dist_for_intercept == 2) 
-      target += student_t_lpdf(gamma | prior_df_for_intercept, prior_mean_for_intercept, prior_scale_for_intercept);
+      target += student_t_lpdf(gamma | prior_df_for_intercept,
+                               prior_mean_for_intercept,
+                               prior_scale_for_intercept);
   }
   
   if (K_smooth) {
@@ -2312,8 +2329,8 @@ model {
     target += normal_lpdf(local_z[1] | 0, 1) - log_half;
     target += inv_gamma_lpdf(local_z[2] | 0.5 * prior_df_z, 0.5 * prior_df_z);
     target += normal_lpdf(global_z[1] | 0, 1) - log_half;
-    target += inv_gamma_lpdf(global_z[2] | 0.5 * global_prior_df_z, 0.5
-                                                                    * global_prior_df_z);
+    target += inv_gamma_lpdf(global_z[2] | 0.5 * global_prior_df_z,
+                             0.5 * global_prior_df_z);
     target += inv_gamma_lpdf(caux_z | 0.5 * slab_df_z, 0.5 * slab_df_z);
   } else if (prior_dist_z == 4) {
     real log_half = -0.693147180559945286;
@@ -2322,8 +2339,8 @@ model {
     target += inv_gamma_lpdf(local_z[2] | 0.5 * prior_df_z, 0.5 * prior_df_z);
     target += normal_lpdf(local_z[3] | 0, 1) - log_half;
     
-    target += inv_gamma_lpdf(local_z[4] | 0.5 * prior_scale_z, 0.5
-                                                               * prior_scale_z);
+    target += inv_gamma_lpdf(local_z[4] | 0.5 * prior_scale_z,
+                             0.5 * prior_scale_z);
     target += normal_lpdf(global_z[1] | 0, 1) - log_half;
     target += inv_gamma_lpdf(global_z[2] | 0.5, 0.5);
     target += inv_gamma_lpdf(caux_z | 0.5 * slab_df_z, 0.5 * slab_df_z);
@@ -2340,9 +2357,12 @@ model {
   
   if (has_intercept_z == 1) {
     if (prior_dist_for_intercept_z == 1) 
-      target += normal_lpdf(gamma_z | prior_mean_for_intercept_z, prior_scale_for_intercept_z);
+      target += normal_lpdf(gamma_z | prior_mean_for_intercept_z,
+                            prior_scale_for_intercept_z);
     else if (prior_dist_for_intercept_z == 2) 
-      target += student_t_lpdf(gamma_z | prior_df_for_intercept_z, prior_mean_for_intercept_z, prior_scale_for_intercept_z);
+      target += student_t_lpdf(gamma_z | prior_df_for_intercept_z,
+                               prior_mean_for_intercept_z,
+                               prior_scale_for_intercept_z);
   }
   
   if (t > 0) {
@@ -2652,7 +2672,8 @@ functions {
           shape1[j] = 0.5 * j;
           shape2[j] = nu;
         }
-        target += beta_lpdf(rho[pos_rho : (pos_rho + p[i] - 2)] | shape1, shape2);
+        target += beta_lpdf(rho[pos_rho : (pos_rho + p[i] - 2)] | shape1,
+                            shape2);
         pos_rho += p[i] - 1;
       }
     target += gamma_lpdf(zeta | delta, 1);
@@ -2666,7 +2687,8 @@ functions {
     vector[K] lambda = local[1] .* sqrt(local[2]);
     real tau = global[1] * sqrt(global[2]) * global_prior_scale * error_scale;
     vector[K] lambda2 = square(lambda);
-    vector[K] lambda_tilde = sqrt(c2 * lambda2
+    vector[K] lambda_tilde = sqrt(
+                                  c2 * lambda2
                                   ./ (c2 + square(tau) * lambda2));
     return z_beta .* lambda_tilde * tau;
   }
@@ -2679,7 +2701,8 @@ functions {
     vector[K] eta = local[3] .* sqrt(local[4]);
     real tau = global[1] * sqrt(global[2]) * global_prior_scale * error_scale;
     vector[K] lambda_eta2 = square(lambda .* eta);
-    vector[K] lambda_tilde = sqrt(c2 * lambda_eta2
+    vector[K] lambda_tilde = sqrt(
+                                  c2 * lambda_eta2
                                   ./ (c2 + square(tau) * lambda_eta2));
     return z_beta .* lambda_tilde * tau;
   }
@@ -3063,8 +3086,8 @@ model {
     target += normal_lpdf(local[1] | 0, 1) - log_half;
     target += inv_gamma_lpdf(local[2] | 0.5 * prior_df, 0.5 * prior_df);
     target += normal_lpdf(global[1] | 0, 1) - log_half;
-    target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df, 0.5
-                                                                * global_prior_df);
+    target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df,
+                             0.5 * global_prior_df);
     target += inv_gamma_lpdf(caux | 0.5 * slab_df, 0.5 * slab_df);
   } else if (prior_dist == 4) {
     real log_half = -0.693147180559945286;
@@ -3075,8 +3098,8 @@ model {
     
     target += inv_gamma_lpdf(local[4] | 0.5 * prior_scale, 0.5 * prior_scale);
     target += normal_lpdf(global[1] | 0, 1) - log_half;
-    target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df, 0.5
-                                                                * global_prior_df);
+    target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df,
+                             0.5 * global_prior_df);
     target += inv_gamma_lpdf(caux | 0.5 * slab_df, 0.5 * slab_df);
   } else if (prior_dist == 5) {
     target += normal_lpdf(z_beta | 0, 1);
@@ -3091,9 +3114,12 @@ model {
   
   if (has_intercept == 1) {
     if (prior_dist_for_intercept == 1) 
-      target += normal_lpdf(gamma | prior_mean_for_intercept, prior_scale_for_intercept);
+      target += normal_lpdf(gamma | prior_mean_for_intercept,
+                            prior_scale_for_intercept);
     else if (prior_dist_for_intercept == 2) 
-      target += student_t_lpdf(gamma | prior_df_for_intercept, prior_mean_for_intercept, prior_scale_for_intercept);
+      target += student_t_lpdf(gamma | prior_df_for_intercept,
+                               prior_mean_for_intercept,
+                               prior_scale_for_intercept);
   }
   
   if (K_smooth) {
@@ -3309,7 +3335,8 @@ functions {
           shape1[j] = 0.5 * j;
           shape2[j] = nu;
         }
-        target += beta_lpdf(rho[pos_rho : (pos_rho + p[i] - 2)] | shape1, shape2);
+        target += beta_lpdf(rho[pos_rho : (pos_rho + p[i] - 2)] | shape1,
+                            shape2);
         pos_rho += p[i] - 1;
       }
     target += gamma_lpdf(zeta | delta, 1);
@@ -3323,7 +3350,8 @@ functions {
     vector[K] lambda = local[1] .* sqrt(local[2]);
     real tau = global[1] * sqrt(global[2]) * global_prior_scale * error_scale;
     vector[K] lambda2 = square(lambda);
-    vector[K] lambda_tilde = sqrt(c2 * lambda2
+    vector[K] lambda_tilde = sqrt(
+                                  c2 * lambda2
                                   ./ (c2 + square(tau) * lambda2));
     return z_beta .* lambda_tilde * tau;
   }
@@ -3336,7 +3364,8 @@ functions {
     vector[K] eta = local[3] .* sqrt(local[4]);
     real tau = global[1] * sqrt(global[2]) * global_prior_scale * error_scale;
     vector[K] lambda_eta2 = square(lambda .* eta);
-    vector[K] lambda_tilde = sqrt(c2 * lambda_eta2
+    vector[K] lambda_tilde = sqrt(
+                                  c2 * lambda_eta2
                                   ./ (c2 + square(tau) * lambda_eta2));
     return z_beta .* lambda_tilde * tau;
   }
@@ -3931,7 +3960,8 @@ functions {
       if (link == 1) 
         target += neg_binomial_2_log_lpmf(y_integer | eta, aux[1]);
       else 
-        target += neg_binomial_2_lpmf(y_integer | linkinv_count(eta, link), aux[1]);
+        target += neg_binomial_2_lpmf(y_integer | linkinv_count(eta, link),
+                    aux[1]);
     } else 
       reject("Invalid family.");
   }
@@ -3949,8 +3979,8 @@ functions {
       target += normal_lpdf(local[1] | 0, 1);
       target += inv_gamma_lpdf(local[2] | 0.5 * prior_df, 0.5 * prior_df);
       target += normal_lpdf(global[1] | 0, 1);
-      target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df, 0.5
-                                                                  * global_prior_df);
+      target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df,
+                               0.5 * global_prior_df);
       target += inv_gamma_lpdf(caux | 0.5 * slab_df, 0.5 * slab_df);
     } else if (prior_dist == 4) {
       target += normal_lpdf(z_beta | 0, 1);
@@ -3958,11 +3988,11 @@ functions {
       target += inv_gamma_lpdf(local[2] | 0.5 * prior_df, 0.5 * prior_df);
       target += normal_lpdf(local[3] | 0, 1);
       
-      target += inv_gamma_lpdf(local[4] | 0.5 * prior_scale, 0.5
-                                                             * prior_scale);
+      target += inv_gamma_lpdf(local[4] | 0.5 * prior_scale,
+                               0.5 * prior_scale);
       target += normal_lpdf(global[1] | 0, 1);
-      target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df, 0.5
-                                                                  * global_prior_df);
+      target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df,
+                               0.5 * global_prior_df);
       target += inv_gamma_lpdf(caux | 0.5 * slab_df, 0.5 * slab_df);
     } else if (prior_dist == 5) {
       target += normal_lpdf(z_beta | 0, 1);
@@ -4699,7 +4729,7 @@ transformed parameters {
                      a_ool, a_mix, rep_array(1.0, 0), 0, a_slab_scale,
                      a_caux);
   e_aux = make_basehaz_coef(e_aux_unscaled, e_prior_dist_for_aux,
-                            e_prior_mean_for_aux, e_prior_scale_for_aux);
+            e_prior_mean_for_aux, e_prior_scale_for_aux);
 }
 model {
   vector[yNeta[1]] yEta1;
@@ -4803,9 +4833,9 @@ model {
               if (has_grp[m] == 0) {
                 val = eta_tmp .* y_Xq_data[idx_q[m, 1] : idx_q[m, 2], sel];
               } else {
-                val = collapse_within_groups(eta_tmp
-                                             .* y_Xq_data[idx_q[m, 1] : idx_q[m, 2], sel],
-                                             grp_idx, grp_assoc);
+                val = collapse_within_groups(
+                        eta_tmp .* y_Xq_data[idx_q[m, 1] : idx_q[m, 2], sel],
+                        grp_idx, grp_assoc);
               }
               mark += 1;
               e_eta_q += a_beta[mark] * (val - a_xbar[mark]);
@@ -4942,9 +4972,10 @@ model {
               if (has_grp[m] == 0) {
                 val = dydt_eta_q .* y_Xq_data[idx_q[m, 1] : idx_q[m, 2], sel];
               } else {
-                val = collapse_within_groups(dydt_eta_q
-                                             .* y_Xq_data[idx_q[m, 1] : idx_q[m, 2], sel],
-                                             grp_idx, grp_assoc);
+                val = collapse_within_groups(
+                        dydt_eta_q
+                        .* y_Xq_data[idx_q[m, 1] : idx_q[m, 2], sel],
+                        grp_idx, grp_assoc);
               }
               mark += 1;
               e_eta_q += a_beta[mark] * (val - a_xbar[mark]);
@@ -5039,9 +5070,9 @@ model {
               if (has_grp[m] == 0) {
                 val = mu_tmp .* y_Xq_data[idx_q[m, 1] : idx_q[m, 2], sel];
               } else {
-                val = collapse_within_groups(mu_tmp
-                                             .* y_Xq_data[idx_q[m, 1] : idx_q[m, 2], sel],
-                                             grp_idx, grp_assoc);
+                val = collapse_within_groups(
+                        mu_tmp .* y_Xq_data[idx_q[m, 1] : idx_q[m, 2], sel],
+                        grp_idx, grp_assoc);
               }
               mark += 1;
               e_eta_q += a_beta[mark] * (val - a_xbar[mark]);
@@ -5257,7 +5288,8 @@ model {
       target += normal_lpdf(to_vector(z_bMat1) | 0, 1);
       
       if (bK1 > 1) 
-        target += lkj_corr_cholesky_lpdf(bCholesky1 | b1_prior_regularization);
+        target += lkj_corr_cholesky_lpdf(bCholesky1 |
+                    b1_prior_regularization);
     }
     if (bK2 > 0) {
       target += student_t_lpdf(bSd2 | b2_prior_df, 0, b2_prior_scale);
@@ -5265,7 +5297,8 @@ model {
       target += normal_lpdf(to_vector(z_bMat2) | 0, 1);
       
       if (bK2 > 1) 
-        target += lkj_corr_cholesky_lpdf(bCholesky2 | b2_prior_regularization);
+        target += lkj_corr_cholesky_lpdf(bCholesky2 |
+                    b2_prior_regularization);
     }
   }
   
@@ -5299,7 +5332,8 @@ generated quantities {
     int bMat2_colshift = 0;
     
     if (M > 0) {
-      vector[yNeta[1]] yEta1 = evaluate_mu(evaluate_eta(yX1, y1_Z1, y1_Z2,
+      vector[yNeta[1]] yEta1 = evaluate_mu(
+                                           evaluate_eta(yX1, y1_Z1, y1_Z2,
                                                         y1_Z1_id, y1_Z2_id,
                                                         yGamma1, yBeta1,
                                                         bMat1, bMat2,
@@ -5314,7 +5348,8 @@ generated quantities {
       vector[yNeta[2]] yEta2;
       bMat1_colshift += bK1_len[1];
       bMat2_colshift += bK2_len[1];
-      yEta2 = evaluate_mu(evaluate_eta(yX2, y2_Z1, y2_Z2, y2_Z1_id, y2_Z2_id,
+      yEta2 = evaluate_mu(
+                          evaluate_eta(yX2, y2_Z1, y2_Z2, y2_Z1_id, y2_Z2_id,
                                        yGamma2, yBeta2, bMat1, bMat2,
                                        bMat1_colshift, bMat2_colshift,
                                        intercept_type[2]),
@@ -5326,7 +5361,8 @@ generated quantities {
       vector[yNeta[3]] yEta3;
       bMat1_colshift += bK1_len[2];
       bMat2_colshift += bK2_len[2];
-      yEta3 = evaluate_mu(evaluate_eta(yX3, y3_Z1, y3_Z2, y3_Z1_id, y3_Z2_id,
+      yEta3 = evaluate_mu(
+                          evaluate_eta(yX3, y3_Z1, y3_Z2, y3_Z1_id, y3_Z2_id,
                                        yGamma3, yBeta3, bMat1, bMat2,
                                        bMat1_colshift, bMat2_colshift,
                                        intercept_type[3]),
@@ -5345,15 +5381,21 @@ generated quantities {
   if (prior_dist_for_cov == 2 && bK1 == 1) {
     bCov1[1] = bSd1[1] * bSd1[1];
   } else if (prior_dist_for_cov == 2 && bK1 > 1) {
-    bCov1 = to_vector(quad_form_diag(multiply_lower_tri_self_transpose(
-                                     bCholesky1), bSd1))[bCov1_idx];
+    bCov1 = to_vector(
+                      quad_form_diag(
+                                     multiply_lower_tri_self_transpose(
+                                       bCholesky1),
+                                     bSd1))[bCov1_idx];
   }
   
   if (prior_dist_for_cov == 2 && bK2 == 1) {
     bCov2[1] = bSd2[1] * bSd2[1];
   } else if (prior_dist_for_cov == 2 && bK2 > 1) {
-    bCov2 = to_vector(quad_form_diag(multiply_lower_tri_self_transpose(
-                                     bCholesky2), bSd2))[bCov2_idx];
+    bCov2 = to_vector(
+                      quad_form_diag(
+                                     multiply_lower_tri_self_transpose(
+                                       bCholesky2),
+                                     bSd2))[bCov2_idx];
   }
   
   if (e_has_intercept == 1) 
@@ -5586,7 +5628,8 @@ functions {
           shape1[j] = 0.5 * j;
           shape2[j] = nu;
         }
-        target += beta_lpdf(rho[pos_rho : (pos_rho + p[i] - 2)] | shape1, shape2);
+        target += beta_lpdf(rho[pos_rho : (pos_rho + p[i] - 2)] | shape1,
+                            shape2);
         pos_rho += p[i] - 1;
       }
     target += gamma_lpdf(zeta | delta, 1);
@@ -5600,7 +5643,8 @@ functions {
     vector[K] lambda = local[1] .* sqrt(local[2]);
     real tau = global[1] * sqrt(global[2]) * global_prior_scale * error_scale;
     vector[K] lambda2 = square(lambda);
-    vector[K] lambda_tilde = sqrt(c2 * lambda2
+    vector[K] lambda_tilde = sqrt(
+                                  c2 * lambda2
                                   ./ (c2 + square(tau) * lambda2));
     return z_beta .* lambda_tilde * tau;
   }
@@ -5613,7 +5657,8 @@ functions {
     vector[K] eta = local[3] .* sqrt(local[4]);
     real tau = global[1] * sqrt(global[2]) * global_prior_scale * error_scale;
     vector[K] lambda_eta2 = square(lambda .* eta);
-    vector[K] lambda_tilde = sqrt(c2 * lambda_eta2
+    vector[K] lambda_tilde = sqrt(
+                                  c2 * lambda_eta2
                                   ./ (c2 + square(tau) * lambda_eta2));
     return z_beta .* lambda_tilde * tau;
   }
@@ -6208,7 +6253,8 @@ functions {
       if (link == 1) 
         target += neg_binomial_2_log_lpmf(y_integer | eta, aux[1]);
       else 
-        target += neg_binomial_2_lpmf(y_integer | linkinv_count(eta, link), aux[1]);
+        target += neg_binomial_2_lpmf(y_integer | linkinv_count(eta, link),
+                    aux[1]);
     } else 
       reject("Invalid family.");
   }
@@ -6226,8 +6272,8 @@ functions {
       target += normal_lpdf(local[1] | 0, 1);
       target += inv_gamma_lpdf(local[2] | 0.5 * prior_df, 0.5 * prior_df);
       target += normal_lpdf(global[1] | 0, 1);
-      target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df, 0.5
-                                                                  * global_prior_df);
+      target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df,
+                               0.5 * global_prior_df);
       target += inv_gamma_lpdf(caux | 0.5 * slab_df, 0.5 * slab_df);
     } else if (prior_dist == 4) {
       target += normal_lpdf(z_beta | 0, 1);
@@ -6235,11 +6281,11 @@ functions {
       target += inv_gamma_lpdf(local[2] | 0.5 * prior_df, 0.5 * prior_df);
       target += normal_lpdf(local[3] | 0, 1);
       
-      target += inv_gamma_lpdf(local[4] | 0.5 * prior_scale, 0.5
-                                                             * prior_scale);
+      target += inv_gamma_lpdf(local[4] | 0.5 * prior_scale,
+                               0.5 * prior_scale);
       target += normal_lpdf(global[1] | 0, 1);
-      target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df, 0.5
-                                                                  * global_prior_df);
+      target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df,
+                               0.5 * global_prior_df);
       target += inv_gamma_lpdf(caux | 0.5 * slab_df, 0.5 * slab_df);
     } else if (prior_dist == 5) {
       target += normal_lpdf(z_beta | 0, 1);
@@ -6684,7 +6730,8 @@ model {
       target += normal_lpdf(to_vector(z_bMat1) | 0, 1);
       
       if (bK1 > 1) 
-        target += lkj_corr_cholesky_lpdf(bCholesky1 | b1_prior_regularization);
+        target += lkj_corr_cholesky_lpdf(bCholesky1 |
+                    b1_prior_regularization);
     }
     if (bK2 > 0) {
       target += student_t_lpdf(bSd2 | b2_prior_df, 0, b2_prior_scale);
@@ -6692,7 +6739,8 @@ model {
       target += normal_lpdf(to_vector(z_bMat2) | 0, 1);
       
       if (bK2 > 1) 
-        target += lkj_corr_cholesky_lpdf(bCholesky2 | b2_prior_regularization);
+        target += lkj_corr_cholesky_lpdf(bCholesky2 |
+                    b2_prior_regularization);
     }
   }
 }
@@ -6711,7 +6759,8 @@ generated quantities {
     int bMat2_colshift = 0;
     
     if (M > 0) {
-      vector[yNeta[1]] yEta1 = evaluate_mu(evaluate_eta(yX1, y1_Z1, y1_Z2,
+      vector[yNeta[1]] yEta1 = evaluate_mu(
+                                           evaluate_eta(yX1, y1_Z1, y1_Z2,
                                                         y1_Z1_id, y1_Z2_id,
                                                         yGamma1, yBeta1,
                                                         bMat1, bMat2,
@@ -6726,7 +6775,8 @@ generated quantities {
       vector[yNeta[2]] yEta2;
       bMat1_colshift += bK1_len[1];
       bMat2_colshift += bK2_len[1];
-      yEta2 = evaluate_mu(evaluate_eta(yX2, y2_Z1, y2_Z2, y2_Z1_id, y2_Z2_id,
+      yEta2 = evaluate_mu(
+                          evaluate_eta(yX2, y2_Z1, y2_Z2, y2_Z1_id, y2_Z2_id,
                                        yGamma2, yBeta2, bMat1, bMat2,
                                        bMat1_colshift, bMat2_colshift,
                                        intercept_type[2]),
@@ -6738,7 +6788,8 @@ generated quantities {
       vector[yNeta[3]] yEta3;
       bMat1_colshift += bK1_len[2];
       bMat2_colshift += bK2_len[2];
-      yEta3 = evaluate_mu(evaluate_eta(yX3, y3_Z1, y3_Z2, y3_Z1_id, y3_Z2_id,
+      yEta3 = evaluate_mu(
+                          evaluate_eta(yX3, y3_Z1, y3_Z2, y3_Z1_id, y3_Z2_id,
                                        yGamma3, yBeta3, bMat1, bMat2,
                                        bMat1_colshift, bMat2_colshift,
                                        intercept_type[3]),
@@ -6757,15 +6808,21 @@ generated quantities {
   if (prior_dist_for_cov == 2 && bK1 == 1) {
     bCov1[1] = bSd1[1] * bSd1[1];
   } else if (prior_dist_for_cov == 2 && bK1 > 1) {
-    bCov1 = to_vector(quad_form_diag(multiply_lower_tri_self_transpose(
-                                     bCholesky1), bSd1))[bCov1_idx];
+    bCov1 = to_vector(
+                      quad_form_diag(
+                                     multiply_lower_tri_self_transpose(
+                                       bCholesky1),
+                                     bSd1))[bCov1_idx];
   }
   
   if (prior_dist_for_cov == 2 && bK2 == 1) {
     bCov2[1] = bSd2[1] * bSd2[1];
   } else if (prior_dist_for_cov == 2 && bK2 > 1) {
-    bCov2 = to_vector(quad_form_diag(multiply_lower_tri_self_transpose(
-                                     bCholesky2), bSd2))[bCov2_idx];
+    bCov2 = to_vector(
+                      quad_form_diag(
+                                     multiply_lower_tri_self_transpose(
+                                       bCholesky2),
+                                     bSd2))[bCov2_idx];
   }
 }
 
@@ -6871,9 +6928,10 @@ functions {
     else if (link == 3) 
       while (!(ystar > lower_ && ystar < upper_)) ystar = gumbel_rng(eta, 1);
     else if (link == 4) 
-      while (!(ystar > lower_ && ystar < upper_)) ystar = log(-log1m(
-                                                              uniform_rng(
-                                                              0, 1)));
+      while (!(ystar > lower_ && ystar < upper_)) ystar = log(
+                                                              -log1m(
+                                                                    uniform_rng
+                                                                    (0, 1)));
     else if (link == 5) 
       while (!(ystar > lower_ && ystar < upper_)) ystar = cauchy_rng(eta, 1);
     else 
@@ -7060,8 +7118,8 @@ generated quantities {
           ystar = draw_ystar_rng(negative_infinity(), cutpoints[1], eta[n],
                                  link);
         else if (y[n] == J) 
-          ystar = draw_ystar_rng(cutpoints[J - 1], positive_infinity(
-                                 ), eta[n], link);
+          ystar = draw_ystar_rng(cutpoints[J - 1], positive_infinity(),
+                                 eta[n], link);
         else 
           ystar = draw_ystar_rng(cutpoints[y[n] - 1], cutpoints[y[n]],
                                  eta[n], link);
@@ -7582,9 +7640,8 @@ model {
       vector[N] mu_z;
       mu = linkinv_beta(eta, link);
       mu_z = linkinv_beta_z(eta_z, link_phi);
-      target += beta_lpdf(y | rows_dot_product(mu, mu_z), rows_dot_product((
-                                                                    1 - mu),
-                                                                    mu_z));
+      target += beta_lpdf(y | rows_dot_product(mu, mu_z),
+                          rows_dot_product((1 - mu), mu_z));
     }
   } else if (prior_PD == 0) {
     vector[N] summands;
@@ -8052,7 +8109,7 @@ transformed parameters {
                      a_ool, a_mix, rep_array(1.0, 0), 0, a_slab_scale,
                      a_caux);
   e_aux = make_basehaz_coef(e_aux_unscaled, e_prior_dist_for_aux,
-                            e_prior_mean_for_aux, e_prior_scale_for_aux);
+            e_prior_mean_for_aux, e_prior_scale_for_aux);
 }
 model {
   #include /model/mvmer_lp.stan
@@ -8362,9 +8419,10 @@ functions {
     else if (link == 3) 
       while (!(ystar > lower_ && ystar < upper_)) ystar = gumbel_rng(eta, 1);
     else if (link == 4) 
-      while (!(ystar > lower_ && ystar < upper_)) ystar = log(-log1m(
-                                                              uniform_rng(
-                                                              0, 1)));
+      while (!(ystar > lower_ && ystar < upper_)) ystar = log(
+                                                              -log1m(
+                                                                    uniform_rng
+                                                                    (0, 1)));
     else if (link == 5) 
       while (!(ystar > lower_ && ystar < upper_)) ystar = cauchy_rng(eta, 1);
     else 
@@ -8498,8 +8556,8 @@ generated quantities {
           ystar = draw_ystar_rng(negative_infinity(), cutpoints[1], eta[n],
                                  link);
         else if (y[n] == J) 
-          ystar = draw_ystar_rng(cutpoints[J - 1], positive_infinity(
-                                 ), eta[n], link);
+          ystar = draw_ystar_rng(cutpoints[J - 1], positive_infinity(),
+                                 eta[n], link);
         else 
           ystar = draw_ystar_rng(cutpoints[y[n] - 1], cutpoints[y[n]],
                                  eta[n], link);
