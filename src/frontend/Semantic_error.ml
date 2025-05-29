@@ -78,7 +78,7 @@ module TypeError = struct
     | 5 -> "fifth control parameter (max_steps_line_search)"
     | n -> Printf.sprintf "%dth control parameter" n
 
-  let trailing_s n pp = Fmt.(pp ++ if' (n <> 1) (any "s"))
+  let trailing_s n pp = Fmt.(pp ++ if' (n <> 1) (const string "s"))
 
   let pp ppf = function
     | IncorrectReturnType (t1, t2) ->
@@ -235,13 +235,15 @@ module TypeError = struct
            an embedded Laplace approximation."
           banned_function
     | IlltypedLaplaceTooMany (name, n_args) ->
-        Fmt.pf ppf "Recieved %d extra %a at the end of the call to '%s'.@ %a"
+        Fmt.pf ppf
+          "Recieved %d extra %a at the end of the call to '%s'.@ Did you mean \
+           to call the _tol version?"
           n_args
           (trailing_s n_args Fmt.string)
-          "argument" name Fmt.string "Did you mean to call the _tol version?"
-        (* For tolerances, because these come at the end,
-           we want to update their accordingly, which is why these
-           sort-of reimplement some of the printing from [SignatureMismatch] *)
+          "argument" name
+    (* For tolerances, because these come at the end, we want to update their
+       position number accordingly, which is why these reimplement some of the
+       printing from [SignatureMismatch] *)
     | IlltypedLaplaceTolArgs (name, ArgNumMismatch (_, found)) ->
         Fmt.pf ppf
           "@[<v>Recieved %d control %a at the end of the call to '%s'.@ \
