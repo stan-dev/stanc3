@@ -87,7 +87,7 @@ Syntax error in 'bad3.stanfunctions', line 1, column 0 to column 5, parsing erro
          ^
    -------------------------------------------------
 
-Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
+Function definitions/declarations expected in '.stanfunctions' file
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad4.stan
 Semantic error in 'bad4.stan', line 1, column 44 to column 48:

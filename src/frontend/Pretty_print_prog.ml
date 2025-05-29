@@ -48,9 +48,8 @@ let pp_program ~bare_functions ~line_length ~inline_includes ~strip_comments ppf
 let check_correctness ?(bare_functions = false) prog pretty =
   let result_ast =
     let res, (_ : Warnings.t list) =
-      if bare_functions then
-        Parse.parse_string Parser.Incremental.functions_only pretty
-      else Parse.parse_string Parser.Incremental.program pretty in
+      if bare_functions then Parse.parse_stanfunctions (`Code pretty)
+      else Parse.parse_program (`Code pretty) in
     match res with
     | Ok prog -> prog
     | Error e ->

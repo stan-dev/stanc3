@@ -62,9 +62,8 @@ let stan2cpp model_name model (flags : Flags.t) (output : other_output -> unit)
   reset_mutable_states model_name flags;
   if flags.version then output (Version (Fmt.str "%s" version));
   let ast, parser_warnings =
-    if flags.functions_only then
-      Parse.parse Parser.Incremental.functions_only model
-    else Parse.parse Parser.Incremental.program model in
+    if flags.functions_only then Parse.parse_stanfunctions model
+    else Parse.parse_program model in
   output (Warnings parser_warnings);
   let* result =
     let* ast = ast in
