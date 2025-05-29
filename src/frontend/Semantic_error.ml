@@ -78,6 +78,8 @@ module TypeError = struct
     | 5 -> "fifth control parameter (max_steps_line_search)"
     | n -> Printf.sprintf "%dth control parameter" n
 
+  let trailing_s n pp = Fmt.(pp ++ if' (n <> 1) (any "s"))
+
   let pp ppf = function
     | IncorrectReturnType (t1, t2) ->
         Fmt.pf ppf
@@ -233,21 +235,20 @@ module TypeError = struct
            an embedded Laplace approximation."
           banned_function
     | IlltypedLaplaceTooMany (name, n_args) ->
-        Fmt.pf ppf
-          "Recieved %d extra argument%s at the end of the call to '%s'.@ %a"
+        Fmt.pf ppf "Recieved %d extra %a at the end of the call to '%s'.@ %a"
           n_args
-          (if n_args > 1 then "s" else "")
-          name Fmt.string "Did you mean to call the _tol version?"
+          (trailing_s n_args Fmt.string)
+          "argument" name Fmt.string "Did you mean to call the _tol version?"
         (* For tolerances, because these come at the end,
            we want to update their accordingly, which is why these
            sort-of reimplement some of the printing from [SignatureMismatch] *)
     | IlltypedLaplaceTolArgs (name, ArgNumMismatch (_, found)) ->
         Fmt.pf ppf
-          "@[<v>Recieved %d argument%s at the end of the call to '%s'.@ \
+          "@[<v>Recieved %d control %a at the end of the call to '%s'.@ \
            Expected 5 arguments for the control parameters instead.@]"
           found
-          (if found > 1 then "s" else "")
-          name
+          (trailing_s found Fmt.string)
+          "argument" name
     | IlltypedLaplaceTolArgs (name, ArgError (n, DataOnlyError)) ->
         Fmt.pf ppf
           "@[<hov>The control parameters to '%s'@ must all be data-only,@ but \

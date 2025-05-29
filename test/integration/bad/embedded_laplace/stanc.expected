@@ -330,7 +330,7 @@ Semantic error in 'bad_tol3.stan', line 40, column 56 to column 57:
     41:  }
    -------------------------------------------------
 
-Recieved 4 arguments at the end of the call to 'laplace_latent_tol_rng'.
+Recieved 4 control arguments at the end of the call to 'laplace_latent_tol_rng'.
 Expected 5 arguments for the control parameters instead.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_tol4.stan
@@ -372,7 +372,7 @@ Semantic error in 'bad_tol6.stan', line 40, column 56 to column 57:
     41:  }
    -------------------------------------------------
 
-Recieved 6 arguments at the end of the call to 'laplace_latent_tol_rng'.
+Recieved 6 control arguments at the end of the call to 'laplace_latent_tol_rng'.
 Expected 5 arguments for the control parameters instead.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_tol7.stan
@@ -577,6 +577,6 @@ Semantic error in 'missing_args9.stan', line 40, column 24 to line 41, column 67
     42:  
    -------------------------------------------------
 
-Recieved 0 argument at the end of the call to 'laplace_latent_tol_neg_binomial_2_log_rng'.
+Recieved 0 control arguments at the end of the call to 'laplace_latent_tol_neg_binomial_2_log_rng'.
 Expected 5 arguments for the control parameters instead.
 [exit 1]
