@@ -16,7 +16,7 @@ let drive_parser parse_fun =
     Result.Ok {prog with Ast.comments= Preprocessor.get_comments ()} in
   let failure error_state =
     let env =
-      match[@warning "-4"] error_state with
+      match error_state with
       | Interp.HandlingError env -> env
       | _ ->
           Common.ICE.internal_compiler_error
