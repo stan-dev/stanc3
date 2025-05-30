@@ -2,19 +2,18 @@
     API *)
 
 open Core
+open Common.Let_syntax.Result
 module Interp = Parser.MenhirInterpreter
 
 let drive_parser parse_fun =
-  Input_warnings.init ();
-  (* see the Menhir manual for the description of
-     error messages support *)
   let input () =
     Interp.lexer_lexbuf_to_supplier Lexer.token
       (Preprocessor.current_buffer ())
       () in
-  let success prog =
-    Result.Ok {prog with Ast.comments= Preprocessor.get_comments ()} in
+  let success prog = Ok {prog with Ast.comments= Preprocessor.get_comments ()} in
   let failure error_state =
+    (* see the Menhir manual for the description of
+       error messages support *)
     let env =
       match error_state with
       | Interp.HandlingError env -> env
@@ -36,32 +35,26 @@ let drive_parser parse_fun =
     let location =
       Preprocessor.location_span_of_positions (Interp.positions env) in
     Error (Errors.Syntax_error (Errors.Parsing (message, location))) in
-  let result =
-    let startp = (Preprocessor.current_buffer ()).lex_curr_p in
-    try Interp.loop_handle success failure input (parse_fun startp)
-    with Errors.SyntaxError err -> Result.Error (Errors.Syntax_error err) in
-  (result, Input_warnings.collect ())
+  let startp = (Preprocessor.current_buffer ()).lex_curr_p in
+  try Interp.loop_handle success failure input (parse_fun startp)
+  with Errors.SyntaxError err -> Result.Error (Errors.Syntax_error err)
 
-let parse_string parse_fun str =
-  let lexbuf = Lexing.from_string str in
-  Preprocessor.init lexbuf "string";
-  drive_parser parse_fun
-
-let parse_file parse_fun path =
-  let chan =
-    try Ok (In_channel.create path) with _ -> Error (Errors.FileNotFound path)
-  in
-  match chan with
-  | Error err -> (Error err, [])
-  | Ok chan ->
-      let lexbuf = Lexing.from_channel chan in
-      Preprocessor.init lexbuf path;
-      drive_parser parse_fun
+let to_lexbuf file_or_code =
+  match file_or_code with
+  | `File path ->
+      let+ chan =
+        try Ok (In_channel.create path)
+        with _ -> Error (Errors.FileNotFound path) in
+      (Lexing.from_channel chan, path)
+  | `Code code -> Ok (Lexing.from_string code, "string")
 
 let parse parse_fun file_or_code =
-  match file_or_code with
-  | `File path -> parse_file parse_fun path
-  | `Code code -> parse_string parse_fun code
+  Input_warnings.init ();
+  let result =
+    let* lexbuf, name = to_lexbuf file_or_code in
+    Preprocessor.init lexbuf name;
+    drive_parser parse_fun in
+  (result, Input_warnings.collect ())
 
 let parse_stanfunctions file_or_code =
   parse Parser.Incremental.functions_only file_or_code

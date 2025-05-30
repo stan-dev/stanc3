@@ -113,17 +113,17 @@ let stan2cpp model_name model (flags : Flags.t) (output : other_output -> unit)
                  ))) in
     let* () =
       if flags.debug_settings.debug_generate_data then
-        let* data =
+        let+ data =
           Debug_data_generation.gen_values_json ~context:generation_context
             (Ast_to_Mir.gather_declarations typed_ast.datablock) in
-        Ok (output (Generated data))
+        output (Generated data)
       else Ok () in
-    let* () =
+    let+ () =
       if flags.debug_settings.debug_generate_inits then
-        let* inits =
+        let+ inits =
           Debug_data_generation.gen_values_json ~context:generation_context
             (Ast_to_Mir.gather_declarations typed_ast.parametersblock) in
-        Ok (output (Generated inits))
+        output (Generated inits)
       else Ok () in
     let tx_mir = Transform_Mir.trans_prog mir in
     debug_output_mir output tx_mir flags.debug_settings.print_transformed_mir;
@@ -140,6 +140,5 @@ let stan2cpp model_name model (flags : Flags.t) (output : other_output -> unit)
         opt_mir in
     if flags.debug_settings.print_lir then
       output (DebugOutput (fmt_sexp [%sexp (cpp : Cpp.program)]));
-    let cpp_str = Fmt.(to_to_string Cpp.Printing.pp_program) cpp in
-    Ok cpp_str in
+    Fmt.(to_to_string Cpp.Printing.pp_program) cpp in
   result
