@@ -312,19 +312,22 @@ module Helpers = struct
   (* Copied from AST's version in AST.ml *)
   let rec lvalue_of_expr_opt (expr : 'e Expr.Fixed.t) :
       'e Expr.Fixed.t Fixed.Pattern.lvalue option =
+    let open Common.Let_syntax.Option in
     let lbase_of_expr_opt (expr : 'e Expr.Fixed.t) =
       match expr.pattern with
       | Var s -> Some (Fixed.Pattern.LVariable s)
       | TupleProjection (l, i) ->
-          Option.map (lvalue_of_expr_opt l) ~f:(fun lv ->
-              Fixed.Pattern.LTupleProjection (lv, i))
+          let+ lv = lvalue_of_expr_opt l in
+          Fixed.Pattern.LTupleProjection (lv, i)
       | _ -> None in
     match expr.pattern with
     | Var s -> Some (lvariable s)
-    | Indexed (l, i) -> Option.map (lbase_of_expr_opt l) ~f:(fun lv -> (lv, i))
+    | Indexed (l, i) ->
+        let+ lv = lbase_of_expr_opt l in
+        (lv, i)
     | TupleProjection (l, i) ->
-        Option.map (lvalue_of_expr_opt l) ~f:(fun lv ->
-            (Fixed.Pattern.LTupleProjection (lv, i), []))
+        let+ lv = lvalue_of_expr_opt l in
+        (Fixed.Pattern.LTupleProjection (lv, i), [])
     | _ -> None
 
   let rec expr_of_lvalue (lhs : 'e Expr.Fixed.t Fixed.Pattern.lvalue)

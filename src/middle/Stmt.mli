@@ -22,7 +22,7 @@ module Fixed : sig
           ; decl_id: string
           ; decl_type: 'a Type.t
           ; initialize: 'a decl_init }
-    [@@deriving sexp, hash, compare]
+    [@@deriving sexp, hash, compare, map, fold]
 
     and 'e lvalue = 'e lbase * 'e Index.t list
     [@@deriving sexp, hash, map, compare, fold]

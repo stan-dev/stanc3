@@ -18,9 +18,9 @@ let pp pp_e ppf = function
 
 let pp_indices pp_e ppf indices =
   let open Fmt in
-  pf ppf {|@[%a@]|}
+  box
     (if' (not @@ List.is_empty indices) (brackets @@ list (pp pp_e) ~sep:comma))
-    indices
+    ppf indices
 
 let bounds = function
   | All -> []
