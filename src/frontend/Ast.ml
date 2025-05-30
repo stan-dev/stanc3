@@ -341,22 +341,26 @@ let rec extract_ids {expr; _} =
   | IntNumeral _ | RealNumeral _ | ImagNumeral _ | GetTarget -> []
 
 let rec lvalue_of_expr_opt ({expr; emeta} : untyped_expression) =
+  let open Common.Let_syntax.Option in
   let rec base_lvalue {expr; emeta} =
-    let lval_opt =
+    let+ lval =
       match expr with
       | Variable s -> Some (LVariable s)
       | Indexed (l, i) ->
-          Option.map (base_lvalue l) ~f:(fun lv -> LIndexed (lv, i))
+          let+ lv = base_lvalue l in
+          LIndexed (lv, i)
       | TupleProjection (l, i) ->
-          Option.map (base_lvalue l) ~f:(fun lv -> LTupleProjection (lv, i))
+          let+ lv = base_lvalue l in
+          LTupleProjection (lv, i)
       | _ -> None in
-    Option.map lval_opt ~f:(fun lval -> {lval; lmeta= emeta}) in
+    {lval; lmeta= emeta} in
   match expr with
   | TupleExpr l ->
-      List.map ~f:lvalue_of_expr_opt l
-      |> Option.all
-      |> Option.map ~f:(fun lvals -> LTuplePack {lvals; loc= emeta.loc})
-  | _ -> base_lvalue {expr; emeta} |> Option.map ~f:(fun l -> LValue l)
+      let+ lvals = List.map ~f:lvalue_of_expr_opt l |> Option.all in
+      LTuplePack {lvals; loc= emeta.loc}
+  | _ ->
+      let+ l = base_lvalue {expr; emeta} in
+      LValue l
 
 let type_of_arguments :
        (UnsizedType.autodifftype * UnsizedType.t * 'a) list
