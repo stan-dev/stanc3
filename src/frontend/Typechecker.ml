@@ -652,8 +652,7 @@ let verify_second_order_derivative_compatibility (ast : typed_program) =
       let visited' = Set.add visited fn_name in
       List.fold ~init:visited' bodies ~f:check_stmt in
   ignore
-    (List.fold ~f:check_fun
-       ~init:(Set.empty (module String))
+    (List.fold ~f:check_fun ~init:String.Set.empty
        !requires_higher_order_autodiff)
 
 (** Currently only used by the laplace functions, this
