@@ -619,29 +619,29 @@ let make_function_variable cf loc id = function
   don't have second derivative support *)
 let verify_second_order_derivative_compatibility (ast : typed_program) =
   let functions = Ast.get_stmts ast.functionblock in
-  let rec check_fun visited {name= fn_name; id_loc} =
+  let rec check_fun (visited : String.Set.t) {name= fn_name; id_loc} =
     if Set.mem visited fn_name then visited
     else
-      let ignore2 visited _ = visited in
-      let rec check_expr visited = function
+      let ignore2 v _ = v in
+      let rec check_expr seen = function
         | {expr= FunApp (StanLib _, {name; _}, _); _}
           when Stan_math_signatures.lacks_higher_order_autodiff name ->
             Semantic_error.laplace_compatibility id_loc name |> error
         | {expr= FunApp (UserDefined _, name, es); _} ->
             (* we want the location to be the use-site no matter what *)
-            let visited' = check_fun visited {name with id_loc} in
-            List.fold ~f:check_expr ~init:visited' es
+            let seen' = check_fun seen {name with id_loc} in
+            List.fold ~f:check_expr ~init:seen' es
         | {expr= Variable name; emeta= {type_= UFun _; _}} ->
-            check_fun visited {name with id_loc}
-        | e -> Ast.fold_expression check_expr ignore2 visited e.expr in
-      let rec check_stmt visited s =
+            check_fun seen {name with id_loc}
+        | e -> Ast.fold_expression check_expr ignore2 seen e.expr in
+      let rec check_stmt seen s =
         match s.stmt with
         | NRFunApp (UserDefined _, name, es) ->
-            let visited' = check_fun visited {name with id_loc} in
-            List.fold ~f:check_expr ~init:visited' es
+            let seen' = check_fun seen {name with id_loc} in
+            List.fold ~f:check_expr ~init:seen' es
         | stmt ->
-            Ast.fold_statement check_expr check_stmt ignore2 ignore2 visited
-              stmt in
+            Ast.fold_statement check_expr check_stmt ignore2 ignore2 seen stmt
+      in
       let bodies =
         List.concat_map functions ~f:(fun s ->
             match s.stmt with
