@@ -472,3 +472,14 @@ Flags not used elsewhere in the tests
   output_vars {
     parameters real theta; //real
   }
+
+  $ stanc parse_error.stan --debug-parse
+  Syntax error in 'parse_error.stan', line 1, column 0 to column 5, parsing error:
+     -------------------------------------------------
+       1:  datta {}
+           ^
+     -------------------------------------------------
+  
+  Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
+  (Parse error state 407)
+  [1]

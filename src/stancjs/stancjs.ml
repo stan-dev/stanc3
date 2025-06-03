@@ -111,7 +111,7 @@ let process_flags (flags : 'a Js.opt) includes : (Driver.Flags.t, string) result
     =
   let open Result in
   let open Common.Let_syntax.Result in
-  let* flags =
+  let+ flags =
     match Js.Opt.to_option flags with
     | None -> Ok None
     | Some flags ->
@@ -125,74 +125,70 @@ let process_flags (flags : 'a Js.opt) includes : (Driver.Flags.t, string) result
         Some ocaml_flags in
   match flags with
   | None ->
-      Ok
-        { Driver.Flags.default with
-          include_source= Include_files.InMemory includes }
+      {Driver.Flags.default with include_source= Include_files.InMemory includes}
   | Some flags ->
       let is_flag_set flag = Array.mem ~equal:String.equal flags flag in
       let flag_val flag =
         let prefix = flag ^ "=" in
         Array.find_map flags ~f:(String.chop_prefix ~prefix) in
-      Ok
-        { optimization_level=
-            (if is_flag_set "O0" then Optimize.O0
-             else if is_flag_set "O1" || is_flag_set "O" then Optimize.O1
-             else if is_flag_set "Oexperimental" then Optimize.Oexperimental
-             else Optimize.O0)
-        ; allow_undefined= is_flag_set "allow-undefined"
-        ; functions_only= is_flag_set "functions-only"
-        ; standalone_functions= is_flag_set "standalone-functions"
-        ; use_opencl= is_flag_set "use-opencl"
-        ; include_source= Include_files.InMemory includes
-        ; info= is_flag_set "info"
-        ; version= is_flag_set "version"
-        ; auto_format=
-            is_flag_set "auto-format" || is_flag_set "print-canonical"
-        ; debug_settings=
-            { print_ast= is_flag_set "debug-ast"
-            ; print_typed_ast= is_flag_set "debug-typed-ast"
-            ; print_mir=
-                (if is_flag_set "debug-mir" then Basic
-                 else if is_flag_set "debug-mir-pretty" then Pretty
-                 else Off)
-            ; print_transformed_mir=
-                (if is_flag_set "debug-transformed-mir" then Basic
-                 else if is_flag_set "debug-transformed-mir-pretty" then Pretty
-                 else Off)
-            ; print_optimized_mir=
-                (if is_flag_set "debug-optimized-mir" then Basic
-                 else if is_flag_set "debug-optimized-mir-pretty" then Pretty
-                 else Off)
-            ; print_mem_patterns= is_flag_set "debug-mem-patterns"
-            ; force_soa= None
-            ; print_lir= is_flag_set "debug-lir"
-            ; debug_generate_data= is_flag_set "debug-generate-data"
-            ; debug_generate_inits= is_flag_set "debug-generate-inits"
-            ; debug_data_json= flag_val "debug-data-json" }
-        ; line_length=
-            flag_val "max-line-length"
-            |> Option.map ~f:int_of_string
-            |> Option.value ~default:78
-        ; canonicalizer_settings=
-            (if is_flag_set "print-canonical" then Canonicalize.legacy
-             else
-               match flag_val "canonicalize" with
-               | None -> Canonicalize.none
-               | Some s ->
-                   let parse settings s =
-                     match String.lowercase s with
-                     | "deprecations" ->
-                         Canonicalize.{settings with deprecations= true}
-                     | "parentheses" -> {settings with parentheses= true}
-                     | "braces" -> {settings with braces= true}
-                     | "strip-comments" -> {settings with strip_comments= true}
-                     | "includes" -> {settings with inline_includes= true}
-                     | _ -> settings in
-                   List.fold ~f:parse ~init:Canonicalize.none
-                     (String.split ~on:',' s))
-        ; warn_pedantic= is_flag_set "warn-pedantic"
-        ; warn_uninitialized= is_flag_set "warn-uninitialized"
-        ; filename_in_msg= flag_val "filename-in-msg" }
+      { optimization_level=
+          (if is_flag_set "O0" then Optimize.O0
+           else if is_flag_set "O1" || is_flag_set "O" then Optimize.O1
+           else if is_flag_set "Oexperimental" then Optimize.Oexperimental
+           else Optimize.O0)
+      ; allow_undefined= is_flag_set "allow-undefined"
+      ; functions_only= is_flag_set "functions-only"
+      ; standalone_functions= is_flag_set "standalone-functions"
+      ; use_opencl= is_flag_set "use-opencl"
+      ; include_source= Include_files.InMemory includes
+      ; info= is_flag_set "info"
+      ; version= is_flag_set "version"
+      ; auto_format= is_flag_set "auto-format" || is_flag_set "print-canonical"
+      ; debug_settings=
+          { print_ast= is_flag_set "debug-ast"
+          ; print_typed_ast= is_flag_set "debug-typed-ast"
+          ; print_mir=
+              (if is_flag_set "debug-mir" then Basic
+               else if is_flag_set "debug-mir-pretty" then Pretty
+               else Off)
+          ; print_transformed_mir=
+              (if is_flag_set "debug-transformed-mir" then Basic
+               else if is_flag_set "debug-transformed-mir-pretty" then Pretty
+               else Off)
+          ; print_optimized_mir=
+              (if is_flag_set "debug-optimized-mir" then Basic
+               else if is_flag_set "debug-optimized-mir-pretty" then Pretty
+               else Off)
+          ; print_mem_patterns= is_flag_set "debug-mem-patterns"
+          ; force_soa= None
+          ; print_lir= is_flag_set "debug-lir"
+          ; debug_generate_data= is_flag_set "debug-generate-data"
+          ; debug_generate_inits= is_flag_set "debug-generate-inits"
+          ; debug_data_json= flag_val "debug-data-json" }
+      ; line_length=
+          flag_val "max-line-length"
+          |> Option.map ~f:int_of_string
+          |> Option.value ~default:78
+      ; canonicalizer_settings=
+          (if is_flag_set "print-canonical" then Canonicalize.legacy
+           else
+             match flag_val "canonicalize" with
+             | None -> Canonicalize.none
+             | Some s ->
+                 let parse settings s =
+                   match String.lowercase s with
+                   | "deprecations" ->
+                       Canonicalize.{settings with deprecations= true}
+                   | "parentheses" -> {settings with parentheses= true}
+                   | "braces" -> {settings with braces= true}
+                   | "strip-comments" -> {settings with strip_comments= true}
+                   | "includes" -> {settings with inline_includes= true}
+                   | _ -> settings in
+                 List.fold ~f:parse ~init:Canonicalize.none
+                   (String.split ~on:',' s))
+      ; warn_pedantic= is_flag_set "warn-pedantic"
+      ; warn_uninitialized= is_flag_set "warn-uninitialized"
+      ; filename_in_msg= flag_val "filename-in-msg" }
 
 (** Handle conversion of JS <-> OCaml values invoke driver *)
 let stan2cpp_wrapped name code flags includes =
