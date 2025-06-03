@@ -619,41 +619,42 @@ let make_function_variable cf loc id = function
   don't have second derivative support *)
 let verify_second_order_derivative_compatibility (ast : typed_program) =
   let functions = Ast.get_stmts ast.functionblock in
-  let to_check = Queue.of_list (List.rev !requires_higher_order_autodiff) in
-  let ignore () _ = () in
-  let rec check_expr ~loc () = function
-    | {expr= FunApp (StanLib _, {name; _}, _); _}
-      when Stan_math_signatures.lacks_higher_order_autodiff name ->
-        Semantic_error.laplace_compatibility loc name |> error
-    | {expr= FunApp (UserDefined _, name, es); _} ->
-        (* we want the location to be the use-site no matter what *)
-        Queue.enqueue to_check {name with id_loc= loc};
-        List.iter es ~f:(check_expr ~loc ())
-    | {expr= Variable name; emeta= {type_= UFun _; _}} ->
-        Queue.enqueue to_check {name with id_loc= loc}
-    | e -> Ast.fold_expression (check_expr ~loc) ignore () e.expr in
-  let rec check_stmt ~loc () s =
-    match s.stmt with
-    | NRFunApp (UserDefined _, name, es) ->
-        Queue.enqueue to_check {name with id_loc= loc};
-        List.iter es ~f:(check_expr ~loc ())
-    | stmt ->
-        Ast.fold_statement (check_expr ~loc) (check_stmt ~loc) ignore ignore ()
-          stmt in
-  let rec loop () =
-    match Queue.dequeue to_check with
-    | None -> ()
-    | Some fn ->
-        let bodies =
-          List.concat_map functions ~f:(fun s ->
-              match s.stmt with
-              | FunDef {funname= {name; _}; body= {stmt= Block b; _}; _}
-                when String.equal name fn.name ->
-                  b
-              | _ -> []) in
-        List.iter bodies ~f:(check_stmt ~loc:fn.id_loc ());
-        loop () in
-  loop ()
+  let rec check_fun visited {name= fn_name; id_loc} =
+    if Set.mem visited fn_name then visited
+    else
+      let ignore2 visited _ = visited in
+      let rec check_expr visited = function
+        | {expr= FunApp (StanLib _, {name; _}, _); _}
+          when Stan_math_signatures.lacks_higher_order_autodiff name ->
+            Semantic_error.laplace_compatibility id_loc name |> error
+        | {expr= FunApp (UserDefined _, name, es); _} ->
+            (* we want the location to be the use-site no matter what *)
+            let visited' = check_fun visited {name with id_loc} in
+            List.fold ~f:check_expr ~init:visited' es
+        | {expr= Variable name; emeta= {type_= UFun _; _}} ->
+            check_fun visited {name with id_loc}
+        | e -> Ast.fold_expression check_expr ignore2 visited e.expr in
+      let rec check_stmt visited s =
+        match s.stmt with
+        | NRFunApp (UserDefined _, name, es) ->
+            let visited' = check_fun visited {name with id_loc} in
+            List.fold ~f:check_expr ~init:visited' es
+        | stmt ->
+            Ast.fold_statement check_expr check_stmt ignore2 ignore2 visited
+              stmt in
+      let bodies =
+        List.concat_map functions ~f:(fun s ->
+            match s.stmt with
+            | FunDef {funname= {name; _}; body= {stmt= Block b; _}; _}
+              when String.equal name fn_name ->
+                b
+            | _ -> []) in
+      let visited' = Set.add visited fn_name in
+      List.fold ~init:visited' bodies ~f:check_stmt in
+  ignore
+    (List.fold ~f:check_fun
+       ~init:(Set.empty (module String))
+       !requires_higher_order_autodiff)
 
 (** Currently only used by the laplace functions, this
   checks that a function in [tenv] called [fname] can be invoked
