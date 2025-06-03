@@ -616,7 +616,10 @@ let make_function_variable cf loc id = function
 
 (** Check that the functions in the list [requires_higher_order_autodiff]
   cannot (**transitively**) call stan math functions that
-  don't have second derivative support *)
+  don't have second derivative support.
+
+  Note that this does not re-do overload resolution, so it implements
+  a correct-but-overly-conservative check. *)
 let verify_second_order_derivative_compatibility (ast : typed_program) =
   let get_function_bodies fn_name =
     List.concat_map (Ast.get_stmts ast.functionblock) ~f:(fun s ->
