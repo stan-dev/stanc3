@@ -618,7 +618,13 @@ let make_function_variable cf loc id = function
   cannot (**transitively**) call stan math functions that
   don't have second derivative support *)
 let verify_second_order_derivative_compatibility (ast : typed_program) =
-  let functions = Ast.get_stmts ast.functionblock in
+  let get_function_bodies fn_name =
+    List.concat_map (Ast.get_stmts ast.functionblock) ~f:(fun s ->
+        match s.stmt with
+        | FunDef {funname= {name; _}; body= {stmt= Block b; _}; _}
+          when String.equal name fn_name ->
+            b
+        | _ -> []) in
   let rec check_fun (visited : String.Set.t) {name= fn_name; id_loc} =
     if Set.mem visited fn_name then visited
     else
@@ -642,15 +648,8 @@ let verify_second_order_derivative_compatibility (ast : typed_program) =
         | stmt ->
             Ast.fold_statement check_expr check_stmt ignore2 ignore2 seen stmt
       in
-      let bodies =
-        List.concat_map functions ~f:(fun s ->
-            match s.stmt with
-            | FunDef {funname= {name; _}; body= {stmt= Block b; _}; _}
-              when String.equal name fn_name ->
-                b
-            | _ -> []) in
       let visited' = Set.add visited fn_name in
-      List.fold ~init:visited' bodies ~f:check_stmt in
+      List.fold ~f:check_stmt ~init:visited' (get_function_bodies fn_name) in
   ignore
     (List.fold ~f:check_fun ~init:String.Set.empty
        !requires_higher_order_autodiff)
