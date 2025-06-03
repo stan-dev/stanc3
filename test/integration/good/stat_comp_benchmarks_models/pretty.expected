@@ -99,7 +99,8 @@ model {
   array[T] real sigma;
   sigma[1] = sigma1;
   for (t in 2 : T) 
-    sigma[t] = sqrt(alpha0 + alpha1 * square(y[t - 1] - mu)
+    sigma[t] = sqrt(
+                    alpha0 + alpha1 * square(y[t - 1] - mu)
                     + beta1 * square(sigma[t - 1]));
   
   y ~ normal(mu, sigma);
@@ -355,7 +356,7 @@ transformed parameters {
   {
     array[3] real theta = {k_a, K_m, V_m};
     C = integrate_ode_bdf(one_comp_mm_elim_abs, C0, t0, times, theta, x_r,
-                          x_i);
+          x_i);
   }
 }
 model {

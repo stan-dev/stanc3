@@ -153,3 +153,68 @@ let reduce_sum_slice_types =
 
 let is_reduce_sum_fn f =
   String.equal f "reduce_sum" || String.equal f "reduce_sum_static"
+
+let embedded_laplace_functions =
+  [ (* general fns  *) "laplace_marginal"; "laplace_marginal_tol"
+  ; "laplace_latent_rng"; "laplace_latent_tol_rng"; (* "helpers" *)
+    "laplace_marginal_bernoulli_logit_lpmf"
+  ; "laplace_marginal_tol_bernoulli_logit_lpmf"
+  ; "laplace_marginal_neg_binomial_2_log_lpmf"
+  ; "laplace_marginal_tol_neg_binomial_2_log_lpmf"
+  ; "laplace_marginal_poisson_log_lpmf"; "laplace_marginal_tol_poisson_log_lpmf"
+  ; "laplace_marginal_poisson_2_log_lpmf"
+  ; "laplace_marginal_tol_poisson_2_log_lpmf"; (* rngs *)
+    "laplace_latent_bernoulli_logit_rng"
+  ; "laplace_latent_tol_bernoulli_logit_rng"
+  ; "laplace_latent_neg_binomial_2_log_rng"
+  ; "laplace_latent_tol_neg_binomial_2_log_rng"
+  ; "laplace_latent_poisson_log_rng"; "laplace_latent_tol_poisson_log_rng"
+  ; "laplace_latent_poisson_2_log_rng"; "laplace_latent_tol_poisson_2_log_rng"
+  ]
+  |> String.Set.of_list
+
+let is_embedded_laplace_fn name =
+  Set.mem embedded_laplace_functions (Utils.stdlib_distribution_name name)
+
+let laplace_helper_lik_args =
+  [ ( "bernoulli_logit"
+    , [UnsizedType.(AutoDiffable, UArray UInt); (AutoDiffable, UArray UInt)] )
+  ; ( "neg_binomial_2_log"
+    , [ (AutoDiffable, UArray UInt); (AutoDiffable, UArray UInt)
+      ; (AutoDiffable, UVector) ] )
+  ; ("poisson_log", [(AutoDiffable, UArray UInt); (AutoDiffable, UArray UInt)])
+  ; ( "poisson_2_log"
+    , [ (AutoDiffable, UArray UInt); (AutoDiffable, UArray UInt)
+      ; (AutoDiffable, UVector) ] ) ]
+  |> String.Map.of_alist_exn
+
+let laplace_helper_param_types name =
+  let without_prefix =
+    String.chop_prefix_exn name ~prefix:"laplace_"
+    |> String.chop_prefix_if_exists ~prefix:"marginal_"
+    |> String.chop_prefix_if_exists ~prefix:"latent_"
+    |> String.chop_prefix_if_exists ~prefix:"tol_" in
+  let variant =
+    without_prefix |> Utils.split_distribution_suffix
+    |> Option.value_map ~f:fst ~default:without_prefix in
+  Map.find laplace_helper_lik_args variant |> Option.value ~default:[]
+
+let laplace_tolerance_argument_types =
+  UnsizedType.
+    [ (DataOnly, UReal) (* tolerance *); (DataOnly, UInt) (* max_num_steps *)
+    ; (DataOnly, UInt) (* hessian_block_size *); (DataOnly, UInt) (* solver *)
+    ; (DataOnly, UInt) (* max_steps_line_search *) ]
+
+let is_special_function_name name =
+  is_stan_math_variadic_function_name name
+  || is_reduce_sum_fn name
+  || is_embedded_laplace_fn name
+
+let disallowed_second_order =
+  [ "algebra_solver"; "algebra_solver_newton"; "integrate_ode"
+  ; "integrate_ode_adams"; "integrate_ode_bdf"; "integrate_ode_rk45"; "map_rect"
+  ; "hmm_marginal"; "hmm_hidden_state_prob" ]
+  |> String.Set.of_list
+
+let lacks_higher_order_autodiff name =
+  Set.mem disallowed_second_order name || is_special_function_name name

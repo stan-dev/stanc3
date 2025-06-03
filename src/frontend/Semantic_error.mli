@@ -13,6 +13,8 @@ val invalid_row_vector_types : Location_span.t -> UnsizedType.t -> t
 val invalid_matrix_types : Location_span.t -> UnsizedType.t -> t
 val int_expected : Location_span.t -> string -> UnsizedType.t -> t
 val int_or_real_expected : Location_span.t -> string -> UnsizedType.t -> t
+val tuple_expected : Location_span.t -> string -> UnsizedType.t -> t
+val vector_expected : Location_span.t -> string -> UnsizedType.t -> t
 val int_intarray_or_range_expected : Location_span.t -> UnsizedType.t -> t
 val int_or_real_container_expected : Location_span.t -> UnsizedType.t -> t
 
@@ -47,7 +49,7 @@ val illtyped_reduce_sum :
      Location_span.t
   -> string
   -> UnsizedType.t list
-  -> (UnsizedType.autodifftype * UnsizedType.t) list
+  -> UnsizedType.argumentlist
   -> SignatureMismatch.function_mismatch
   -> t
 
@@ -55,18 +57,47 @@ val ambiguous_function_promotion :
      Location_span.t
   -> string
   -> UnsizedType.t list option
-  -> (UnsizedType.returntype * (UnsizedType.autodifftype * UnsizedType.t) list)
-     list
+  -> (UnsizedType.returntype * UnsizedType.argumentlist) list
   -> t
 
 val illtyped_variadic :
      Location_span.t
   -> string
   -> UnsizedType.t list
-  -> (UnsizedType.autodifftype * UnsizedType.t) list
+  -> UnsizedType.argumentlist
   -> UnsizedType.t
   -> SignatureMismatch.function_mismatch
   -> t
+
+val forwarded_function_signature_error :
+  Location_span.t -> string -> string -> SignatureMismatch.details -> t
+
+val forwarded_function_application_error :
+     Location_span.t
+  -> string
+  -> string
+  -> string list
+  -> SignatureMismatch.details
+  -> t
+
+val illtyped_laplace_helper_args :
+     Location_span.t
+  -> string
+  -> UnsizedType.argumentlist
+  -> SignatureMismatch.details
+  -> t
+
+val illtyped_laplace_generic :
+  Location_span.t -> string -> bool -> UnsizedType.argumentlist -> t
+(** Generic failure. This means too few arguments were supplied,
+       or that the function arguments are misplaced, both of which prevent us
+       from giving a better message *)
+
+val laplace_compatibility : Location_span.t -> string -> t
+val illtyped_laplace_extra_args : Location_span.t -> string -> int -> t
+
+val illtyped_laplace_tolerance_args :
+  Location_span.t -> string -> SignatureMismatch.function_mismatch -> t
 
 val nonreturning_fn_expected_returning_found : Location_span.t -> string -> t
 val nonreturning_fn_expected_nonfn_found : Location_span.t -> string -> t
@@ -121,7 +152,7 @@ val target_plusequals_outside_model_or_logprob : Location_span.t -> t
 val jacobian_plusequals_not_allowed : Location_span.t -> t
 
 val invalid_truncation_cdf_or_ccdf :
-  Location_span.t -> (UnsizedType.autodifftype * UnsizedType.t) list -> t
+  Location_span.t -> UnsizedType.argumentlist -> t
 
 val break_outside_loop : Location_span.t -> t
 val continue_outside_loop : Location_span.t -> t

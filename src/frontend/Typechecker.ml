@@ -29,6 +29,10 @@ let add_warning (span : Location_span.t) (message : string) =
   warnings := (span, message) :: !warnings
 
 let attach_warnings x = (x, List.rev !warnings)
+let requires_higher_order_autodiff = ref []
+
+let needs_higher_order_autodiff fn =
+  requires_higher_order_autodiff := fn :: !requires_higher_order_autodiff
 
 (* model name - don't love this here *)
 let model_name = ref ""
@@ -137,10 +141,9 @@ let verify_name_fresh_var loc tenv name =
 (** verify that the variable being declared is previous unused. *)
 let verify_name_fresh_udf loc tenv name =
   if
-    (* variadic functions are currently not in math sigs and aren't
-       overloadable due to their separate typechecking *)
-    Stan_math_signatures.is_reduce_sum_fn name
-    || Stan_math_signatures.is_stan_math_variadic_function_name name
+    (* variadic functions aren't overloadable due to
+        their separate typechecking *)
+    Stan_math_signatures.is_special_function_name name
   then Semantic_error.ident_is_stanmath_name loc name |> error
   else if Utils.is_unnormalized_distribution name then
     Semantic_error.udf_is_unnormalized_fn loc name |> error
@@ -316,6 +319,11 @@ let get_consistent_types type_ es =
            List.map (get_arg_types es)
              ~f:(Promotion.get_type_promotion_exn (ad, ty)) in
          (ad, ty, promotions))
+
+let check_texpression_is_tuple te name =
+  match (te.emeta.type_, te.emeta.ad_level) with
+  | UTuple ts, TupleAD ads -> List.zip_exn ads ts
+  | _ -> Semantic_error.tuple_expected te.emeta.loc name te.emeta.type_ |> error
 
 let check_array_expr loc es =
   match es with
@@ -606,12 +614,146 @@ let make_function_variable cf loc id = function
           "Attempting to create function variable out of "
             (type_ : UnsizedType.t)]
 
+(** Check that the functions in the list [requires_higher_order_autodiff]
+  cannot (**transitively**) call stan math functions that
+  don't have second derivative support.
+
+  Note that this does not re-do overload resolution, so it implements
+  a correct-but-overly-conservative check. *)
+let verify_second_order_derivative_compatibility (ast : typed_program) =
+  let get_function_bodies fn_name =
+    List.concat_map (Ast.get_stmts ast.functionblock) ~f:(fun s ->
+        match s.stmt with
+        | FunDef {funname= {name; _}; body= {stmt= Block b; _}; _}
+          when String.equal name fn_name ->
+            b
+        | _ -> []) in
+  let rec check_fun (visited : String.Set.t) {name= fn_name; id_loc} =
+    if Set.mem visited fn_name then visited
+    else
+      let fold_nop v _ = v in
+      let rec check_expr seen = function
+        | {expr= FunApp (StanLib _, {name; _}, _); _}
+          when Stan_math_signatures.lacks_higher_order_autodiff name ->
+            Semantic_error.laplace_compatibility id_loc name |> error
+        | {expr= FunApp (UserDefined _, name, es); _} ->
+            (* we want the location to be the use-site no matter what *)
+            let seen' = check_fun seen {name with id_loc} in
+            List.fold ~f:check_expr ~init:seen' es
+        | {expr= Variable name; emeta= {type_= UFun _; _}} ->
+            check_fun seen {name with id_loc}
+        | e -> Ast.fold_expression check_expr fold_nop seen e.expr in
+      let rec check_stmt seen s =
+        match s.stmt with
+        | NRFunApp (UserDefined _, name, es) ->
+            let seen' = check_fun seen {name with id_loc} in
+            List.fold ~f:check_expr ~init:seen' es
+        | stmt ->
+            Ast.fold_statement check_expr check_stmt fold_nop fold_nop seen stmt
+      in
+      let visited' = Set.add visited fn_name in
+      List.fold ~f:check_stmt ~init:visited' (get_function_bodies fn_name) in
+  ignore
+    (List.fold ~f:check_fun ~init:String.Set.empty
+       !requires_higher_order_autodiff)
+
+(** Currently only used by the laplace functions, this
+  checks that a function in [tenv] called [fname] can be invoked
+  with the arguments from [arg_tupl]. *)
+let check_function_callable_with_tuple cf tenv caller_id fname
+    ?(required_args = []) arg_tupl required_fn_return_type =
+  let arg_types =
+    check_texpression_is_tuple arg_tupl
+      (Printf.sprintf "Forwarded arguments to '%s' in call to '%s'" fname.name
+         caller_id.name) in
+  let required_arg_names, required_arg_types = List.unzip required_args in
+  let required = required_arg_types @ arg_types in
+  let matches = function
+    | Env.{type_= UnsizedType.UFun (args, return_type, sfx, _) as fn_type; _} ->
+        let open SignatureMismatch in
+        let open Common.Let_syntax.Result in
+        if return_type <> required_fn_return_type then
+          Error
+            (`FnRequirementsError
+              (ReturnTypeMismatch (required_fn_return_type, return_type)))
+        else if sfx <> FnPlain then
+          Error
+            (`FnRequirementsError
+              (SuffixMismatch (FnPlain, Fun_kind.forget_normalization sfx)))
+        else
+          let no_prom_args, _ =
+            List.split_n args (List.length required_arg_types) in
+          let* () =
+            (let* () =
+               check_compatible_arguments_no_promotion required_arg_types
+                 no_prom_args in
+             (* checking both ways around as this is the best way
+                to catch DataOnly misspecifications for these arguments *)
+             check_compatible_arguments_no_promotion no_prom_args
+               required_arg_types)
+            |> Result.map_error ~f:(fun x ->
+                   `FnRequirementsError (InputMismatch x)) in
+          let+ promotions =
+            check_compatible_arguments_mod_conv args required
+            |> Result.map_error ~f:(fun x ->
+                   `SuppliedArgsMismatch (InputMismatch x)) in
+          (fn_type, promotions)
+    | _ -> Error `NonFunction in
+  match find_matching_first_order_fn tenv matches fname with
+  | SignatureMismatch.UniqueMatch (ftype, promotions) ->
+      let fn = make_function_variable cf fname.id_loc fname ftype in
+      let args =
+        Promotion.promote arg_tupl
+          (Promotion.TuplePromotion
+             (snd @@ List.(split_n promotions (length required_arg_types))))
+      in
+      (fn, args)
+  | AmbiguousMatch ps ->
+      Semantic_error.ambiguous_function_promotion fname.id_loc fname.name None
+        ps
+      |> error
+  | SignatureErrors `NonFunction ->
+      Semantic_error.returning_fn_expected_nonfn_found fname.id_loc fname.name
+      |> error
+  | SignatureErrors (`FnRequirementsError details) ->
+      Semantic_error.forwarded_function_signature_error fname.id_loc
+        caller_id.name fname.name details
+      |> error
+  | SignatureErrors (`SuppliedArgsMismatch details) ->
+      Semantic_error.forwarded_function_application_error arg_tupl.emeta.loc
+        caller_id.name fname.name required_arg_names details
+      |> error
+
+let verify_laplace_control_args loc id (args : typed_expression list) =
+  match (String.is_substring ~substring:"_tol" id.name, args) with
+  | false, [] -> ()
+  | true, _ -> (
+      let arg_tys = List.map ~f:arg_type args in
+      match
+        SignatureMismatch.check_compatible_arguments_mod_conv
+          Stan_math_signatures.laplace_tolerance_argument_types arg_tys
+      with
+      | Ok _ -> ()
+      | Error err ->
+          let loc =
+            List.hd args
+            |> Option.value_map ~f:(fun expr -> expr.emeta.loc) ~default:loc
+          in
+          Semantic_error.illtyped_laplace_tolerance_args loc id.name err
+          |> error)
+  | false, a :: _ ->
+      Semantic_error.illtyped_laplace_extra_args a.emeta.loc id.name
+        (List.length args)
+      |> error
+
 let rec check_fn ~is_cond_dist loc cf tenv id (tes : Ast.typed_expression list)
     =
   if Stan_math_signatures.is_stan_math_variadic_function_name id.name then
     check_variadic ~is_cond_dist loc cf tenv id tes
   else if Stan_math_signatures.is_reduce_sum_fn id.name then
     check_reduce_sum ~is_cond_dist loc cf tenv id tes
+  else if Stan_math_signatures.is_embedded_laplace_fn id.name then
+    check_laplace_fn ~is_cond_dist loc cf tenv id tes
   else check_normal_fn ~is_cond_dist loc tenv id tes
 
 (** Reduce sum is a special case, even compared to the other
@@ -673,6 +815,73 @@ and check_reduce_sum ~is_cond_dist loc cf tenv id tes =
         (List.map ~f:type_of_expr_typed tes)
         expected_args err
       |> error
+
+(** Laplace functions are also special, in two ways:
+    1. The general forms accept two UDF callbacks, not just one
+    2. The callback arguments are passed as a tuple, not just as trailing arguments.
+        (this is a requirement of the first point, but worth noting separately). *)
+and check_laplace_fn ~is_cond_dist loc cf tenv id tes =
+  (* generic failure message for if the wrong number of argument is passed,
+     preventing us from pattern matching and doing a better job *)
+  let generic_failure ?(early = false) () =
+    Semantic_error.illtyped_laplace_generic loc id.name early
+      (List.map ~f:arg_type tes)
+    |> error in
+  let lik_args, rest =
+    (* Check the arguments for the likihood:
+       For helpers, this is required_prob_args, otherwise a callback and args *)
+    let required_prob_args =
+      Stan_math_signatures.laplace_helper_param_types id.name in
+    if not @@ List.is_empty required_prob_args then
+      (* helper argument check *)
+      let for_prob, rest = List.split_n tes (List.length required_prob_args) in
+      match
+        SignatureMismatch.check_compatible_arguments_mod_conv required_prob_args
+          (get_arg_types for_prob)
+      with
+      | Ok promotions -> (Promotion.promote_list for_prob promotions, rest)
+      | Error err ->
+          Semantic_error.illtyped_laplace_helper_args loc id.name
+            required_prob_args (SignatureMismatch.InputMismatch err)
+          |> error
+    else
+      (* likelihood callback check *)
+      match tes with
+      | {expr= Variable lik_fun; _} :: lik_tupl :: tes ->
+          let lik_fun, lik_tupl =
+            (* adds the function name to the global list that is checked later *)
+            needs_higher_order_autodiff lik_fun;
+            check_function_callable_with_tuple cf tenv id lik_fun lik_tupl
+              ~required_args:
+                [("latent gaussian vector", (AutoDiffable, UVector))]
+              (UnsizedType.ReturnType UReal) in
+          ([lik_fun; lik_tupl], tes)
+      | _ -> generic_failure ~early:true () in
+  (* Check the remaining arguments: initial guess, covariance, and tolerances *)
+  match rest with
+  | theta_init :: {expr= Variable cov_fun; _} :: cov_tupl :: control_args ->
+      if theta_init.emeta.type_ <> UnsizedType.UVector then
+        Semantic_error.vector_expected theta_init.emeta.loc
+          ("Initial guess argument to '" ^ id.name ^ "'")
+          theta_init.emeta.type_
+        |> error;
+      let cov_fun_type, cov_tupl =
+        check_function_callable_with_tuple cf tenv id cov_fun cov_tupl
+          (UnsizedType.ReturnType UMatrix) in
+      (* note for future: pred_rng typechecking would need to look at second tuple
+         for the training prediction and test prediction.
+         This would probably require two more calls to [check_function_callable_with_tuple] *)
+      verify_laplace_control_args loc id control_args;
+      let args =
+        lik_args @ (theta_init :: cov_fun_type :: cov_tupl :: control_args)
+      in
+      let return_type =
+        if String.is_suffix id.name ~suffix:"_rng" then UnsizedType.UVector
+        else UnsizedType.UReal in
+      mk_fun_app ~is_cond_dist ~loc
+        (StanLib (Fun_kind.suffix_from_name id.name))
+        id args ~type_:return_type
+  | _ -> generic_failure ()
 
 and check_variadic ~is_cond_dist loc cf tenv id tes =
   let UnsizedType.{control_args; required_fn_args; required_fn_rt; return_type}
@@ -1281,7 +1490,7 @@ let verify_valid_distribution_pos loc cf =
   if in_lp_function cf || cf.current_block = Model then ()
   else Semantic_error.target_plusequals_outside_model_or_logprob loc |> error
 
-let check_tilde_distribution loc tenv id arguments =
+let check_tilde_distribution loc cf tenv id arguments =
   let name = id.name in
   let argumenttypes = List.map ~f:arg_type arguments in
   let name_w_suffix_dist suffix =
@@ -1299,10 +1508,24 @@ let check_tilde_distribution loc tenv id arguments =
       (Promotion.promote_list arguments p, f suffix)
       (* real return type is enforced by [verify_fundef_dist_rt] *)
   | None | Some (SignatureErrors ([], _), _) ->
-      (* Function is non existent *)
-      Semantic_error.invalid_tilde_no_such_dist loc name
-        (List.hd_exn argumenttypes |> snd |> UnsizedType.is_int_type)
-      |> error
+      (* The laplace_marginal helpers are not in the
+         environment lookup, so we patch them back here *)
+      if Stan_math_signatures.is_embedded_laplace_fn (id.name ^ "_lupmf") then
+        let id = {id with name= id.name ^ "_lupmf"} in
+        let fn_expr =
+          check_laplace_fn ~is_cond_dist:true loc cf tenv id arguments in
+        match fn_expr.expr with
+        | CondDistApp (kind, _, args) -> (args, kind)
+        | _ ->
+            Common.ICE.internal_compiler_error
+              [%message
+                "Typechecking a laplace marginal did not return a distribution "
+                  (fn_expr : Ast.typed_expression)]
+      else
+        (* Otherwise, the function is non existent *)
+        Semantic_error.invalid_tilde_no_such_dist loc name
+          (List.hd_exn argumenttypes |> snd |> UnsizedType.is_int_type)
+        |> error
   | Some (AmbiguousMatch sigs, _) ->
       Semantic_error.ambiguous_function_promotion loc id.name
         (Some (List.map ~f:type_of_expr_typed arguments))
@@ -1356,7 +1579,7 @@ let check_tilde loc cf tenv distribution truncation arg args =
   verify_valid_distribution_pos loc cf;
   verify_distribution_cdf_ccdf loc distribution;
   let promoted_args, kind =
-    check_tilde_distribution loc tenv distribution (te :: tes) in
+    check_tilde_distribution loc cf tenv distribution (te :: tes) in
   let te, tes = (List.hd_exn promoted_args, List.tl_exn promoted_args) in
   verify_distribution_cdf_defined loc tenv distribution ttrunc tes;
   let stmt =
@@ -1951,6 +2174,7 @@ let check_program_exn
      ; generatedquantitiesblock= gqb
      ; comments } as ast) =
   warnings := [];
+  requires_higher_order_autodiff := [];
   (* create a new type environment which has only stan-math functions *)
   let tenv = Env.stan_math_environment in
   let tenv = add_userdefined_functions tenv fb in
@@ -1972,6 +2196,7 @@ let check_program_exn
     ; generatedquantitiesblock= typed_gqb
     ; comments } in
   verify_correctness_invariant ast prog;
+  verify_second_order_derivative_compatibility prog;
   attach_warnings prog
 
 let check_program ast =

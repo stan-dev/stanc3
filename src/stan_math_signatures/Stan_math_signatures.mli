@@ -48,3 +48,13 @@ val make_assignmentoperator_stan_math_signatures :
 (* reduce_sum helpers *)
 val is_reduce_sum_fn : string -> bool
 val reduce_sum_slice_types : UnsizedType.t list
+val is_embedded_laplace_fn : string -> bool
+val laplace_helper_param_types : string -> UnsizedType.argumentlist
+val laplace_tolerance_argument_types : UnsizedType.argumentlist
+
+val lacks_higher_order_autodiff : string -> bool
+(** Check if a function is in the Stan Math library and does not have higher order autodiff *)
+
+val is_special_function_name : string -> bool
+(** Check if a string names a special function in the Stan Math library. This combines
+  several of the above checks, e.g. [is_reduce_sum_fn] *)

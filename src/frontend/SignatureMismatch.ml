@@ -77,14 +77,11 @@ and function_mismatch =
   | ArgNumMismatch of int * int
 
 type signature_error =
-  (UnsizedType.returntype * (UnsizedType.autodifftype * UnsizedType.t) list)
-  * function_mismatch
+  (UnsizedType.returntype * UnsizedType.argumentlist) * function_mismatch
 
 type ('unique, 'error) generic_match_result =
   | UniqueMatch of 'unique
-  | AmbiguousMatch of
-      (UnsizedType.returntype * (UnsizedType.autodifftype * UnsizedType.t) list)
-      list
+  | AmbiguousMatch of (UnsizedType.returntype * UnsizedType.argumentlist) list
   | SignatureErrors of 'error
 [@@deriving sexp]
 
@@ -216,6 +213,10 @@ and check_compatible_arguments depth typs args2 :
 
 let check_of_same_type_mod_conv = check_same_type 0
 let check_compatible_arguments_mod_conv = check_compatible_arguments 0
+
+let check_compatible_arguments_no_promotion t1 t2 =
+  check_compatible_arguments 1 t1 t2 |> Result.map ~f:(fun _ -> ())
+
 let max_n_errors = 5
 
 let extract_function_types f =
@@ -319,22 +320,71 @@ let check_variadic_args ~allow_lpdf mandatory_arg_tys mandatory_fun_arg_tys
   | (_, x) :: _ -> TypeMismatch (minimal_func_type, x, None) |> wrap_err
   | [] -> Error ([], ArgNumMismatch (List.length mandatory_arg_tys, 0))
 
+let suffix_str = function
+  | Fun_kind.FnPlain -> "a pure function"
+  | FnRng -> "an rng function"
+  | FnLpdf () -> "a probability density function"
+  | FnLpmf () -> "a probability mass function"
+  | FnTarget -> "an _lp function"
+  | FnJacobian -> "a _jacobian function"
+
+let index_str = function
+  | 1 -> "first"
+  | 2 -> "second"
+  | 3 -> "third"
+  | 4 -> "fourth"
+  | n -> Fmt.str "%dth" n
+
+let data_only_msg =
+  "(Local variables are assumed to depend on parameters; same goes for \
+   function inputs unless they are marked with the keyword 'data'.)"
+
+let pp_mismatch_details ~skipped ppf details =
+  let open Fmt in
+  let ctx = ref TypeMap.empty in
+  let n_skipped = List.length skipped in
+  let plural_suffix = if n_skipped = 1 then "" else "s" in
+  let pp_skipped_index_str ppf n =
+    if n_skipped = 0 then pf ppf "%s argument" (index_str n)
+    else
+      pf ppf "%s argument (excluding the %a argument%s)"
+        (index_str (n - n_skipped))
+        (list ~sep:comma string) skipped plural_suffix in
+  match details with
+  | SuffixMismatch (expected, found) ->
+      pf ppf "@[<hov>Expected %s but got %s.@]" (suffix_str expected)
+        (suffix_str found)
+  | ReturnTypeMismatch (expected, found) ->
+      pf ppf
+        "@[<hov>Expected function returning %a but got function returning %a.@]"
+        UnsizedType.pp_returntype expected UnsizedType.pp_returntype found
+  | InputMismatch (ArgNumMismatch (expected, found)) ->
+      pf ppf "@[<hov>Expected %d arguments%a@ but got %d arguments.@]"
+        (expected - n_skipped)
+        (if' (n_skipped > 0) (fun ppf () ->
+             pf ppf " (excluding the %a argument%s)" (list ~sep:comma string)
+               skipped plural_suffix))
+        () (found - n_skipped)
+  | InputMismatch (ArgError (n, DataOnlyError)) ->
+      pf ppf "@[<hov>The@ %a is marked data-only. %a@]" pp_skipped_index_str n
+        text data_only_msg
+  | InputMismatch
+      (ArgError
+        ( n
+        , TypeMismatch
+            ( expected
+            , found
+            , (* NB: these usages are always for first-order mismatches, so no recursion here! *)
+              _ ) )) ->
+      pp_with_where ctx
+        (fun ppf () ->
+          pf ppf "@[<hov>The %a must be@ %a but got@ %a.@]" pp_skipped_index_str
+            n (pp_unsized_type ctx) expected (pp_unsized_type ctx) found)
+        ppf ()
+
 let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
   let open Fmt in
   let ctx = ref TypeMap.empty in
-  let suffix_str = function
-    | Fun_kind.FnPlain -> "a pure function"
-    | FnRng -> "an rng function"
-    | FnLpdf () -> "a probability density function"
-    | FnLpmf () -> "a probability mass function"
-    | FnTarget -> "an _lp function"
-    | FnJacobian -> "a _jacobian function" in
-  let index_str = function
-    | 1 -> "first"
-    | 2 -> "second"
-    | 3 -> "third"
-    | 4 -> "fourth"
-    | n -> Fmt.str "%dth" n in
   let rec pp_explain_rec ppf = function
     | ArgError (n, DataOnlyError) ->
         pf ppf "@[<hov>The@ %s@ argument%a@]" (index_str n) text
@@ -370,10 +420,8 @@ let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
           expected found in
   let pp_explain ppf = function
     | ArgError (n, DataOnlyError) ->
-        pf ppf "@[<hov>The@ %s@ argument%a@]" (index_str n) text
-          " must be data-only. (Local variables are assumed to depend on \
-           parameters; same goes for function inputs unless they are marked \
-           with the keyword 'data'.)"
+        pf ppf "@[<hov>The@ %s@ argument must be data-only.@ %a@]" (index_str n)
+          text data_only_msg
     | ArgError (n, TypeMismatch (expected, found, None)) ->
         pf ppf "@[<hv>The %s argument must be@, %a@ but got@, %a@]"
           (index_str n) (pp_unsized_type ctx) expected (pp_unsized_type ctx)
