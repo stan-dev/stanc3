@@ -849,6 +849,7 @@ and check_laplace_fn ~is_cond_dist loc cf tenv id tes =
       match tes with
       | {expr= Variable lik_fun; _} :: lik_tupl :: tes ->
           let lik_fun, lik_tupl =
+            (* adds the function name to the global list that is checked later *)
             needs_higher_order_autodiff lik_fun;
             check_function_callable_with_tuple cf tenv id lik_fun lik_tupl
               ~required_args:
@@ -867,7 +868,9 @@ and check_laplace_fn ~is_cond_dist loc cf tenv id tes =
       let cov_fun_type, cov_tupl =
         check_function_callable_with_tuple cf tenv id cov_fun cov_tupl
           (UnsizedType.ReturnType UMatrix) in
-      (* note for future: pred_rng typechecking would need to look at second tuple here *)
+      (* note for future: pred_rng typechecking would need to look at second tuple
+         for the training prediction and test prediction.
+         This would probably require two more calls to [check_function_callable_with_tuple] *)
       verify_laplace_control_args loc id control_args;
       let args =
         lik_args @ (theta_init :: cov_fun_type :: cov_tupl :: control_args)
