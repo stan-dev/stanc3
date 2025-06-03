@@ -614,8 +614,8 @@ let make_function_variable cf loc id = function
           "Attempting to create function variable out of "
             (type_ : UnsizedType.t)]
 
-(** Check that the functions in the list cannot
-  (**transitively**) call stan math functions that
+(** Check that the functions in the list [requires_higher_order_autodiff]
+  cannot (**transitively**) call stan math functions that
   don't have second derivative support *)
 let verify_second_order_derivative_compatibility (ast : typed_program) =
   let functions = Ast.get_stmts ast.functionblock in
@@ -659,34 +659,36 @@ let verify_second_order_derivative_compatibility (ast : typed_program) =
   checks that a function in [tenv] called [fname] can be invoked
   with the arguments from [arg_tupl]. *)
 let check_function_callable_with_tuple cf tenv caller_id fname
-    ?(required_args = []) arg_tupl required_fn_rt =
+    ?(required_args = []) arg_tupl required_fn_return_type =
   let arg_types =
     check_texpression_is_tuple arg_tupl
       (Printf.sprintf "Forwarded arguments to '%s' in call to '%s'" fname.name
          caller_id.name) in
-  let required_arg_names, required_arg_tys = List.unzip required_args in
-  let required = required_arg_tys @ arg_types in
+  let required_arg_names, required_arg_types = List.unzip required_args in
+  let required = required_arg_types @ arg_types in
   let matches = function
-    | Env.{type_= UnsizedType.UFun (args, rt, sfx, _) as fn_type; _} ->
+    | Env.{type_= UnsizedType.UFun (args, return_type, sfx, _) as fn_type; _} ->
         let open SignatureMismatch in
         let open Common.Let_syntax.Result in
-        if rt <> required_fn_rt then
-          Error (`FnRequirementsError (ReturnTypeMismatch (required_fn_rt, rt)))
+        if return_type <> required_fn_return_type then
+          Error
+            (`FnRequirementsError
+              (ReturnTypeMismatch (required_fn_return_type, return_type)))
         else if sfx <> FnPlain then
           Error
             (`FnRequirementsError
               (SuffixMismatch (FnPlain, Fun_kind.forget_normalization sfx)))
         else
           let no_prom_args, _ =
-            List.split_n args (List.length required_arg_tys) in
+            List.split_n args (List.length required_arg_types) in
           let* () =
             (let* () =
-               check_compatible_arguments_no_promotion required_arg_tys
+               check_compatible_arguments_no_promotion required_arg_types
                  no_prom_args in
              (* checking both ways around as this is the best way
                 to catch DataOnly misspecifications for these arguments *)
              check_compatible_arguments_no_promotion no_prom_args
-               required_arg_tys)
+               required_arg_types)
             |> Result.map_error ~f:(fun x ->
                    `FnRequirementsError (InputMismatch x)) in
           let+ promotions =
@@ -701,7 +703,8 @@ let check_function_callable_with_tuple cf tenv caller_id fname
       let args =
         Promotion.promote arg_tupl
           (Promotion.TuplePromotion
-             (snd @@ List.(split_n promotions (length required_arg_tys)))) in
+             (snd @@ List.(split_n promotions (length required_arg_types))))
+      in
       (fn, args)
   | AmbiguousMatch ps ->
       Semantic_error.ambiguous_function_promotion fname.id_loc fname.name None
