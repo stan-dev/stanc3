@@ -61,12 +61,34 @@ module Typed = struct
         ~loc:Location_span.empty ()
   end
 
-  include Specialized.Make (Fixed) (Meta)
+  type t = (Meta.t[@compare.ignore]) Fixed.t [@@deriving hash, sexp, compare]
 
   let type_of Fixed.{meta= Meta.{type_; _}; _} = type_
   let loc_of Fixed.{meta= Meta.{loc; _}; _} = loc
   let adlevel_of Fixed.{meta= Meta.{adlevel; _}; _} = adlevel
   let fun_arg Fixed.{meta= Meta.{type_; adlevel; _}; _} = (adlevel, type_)
+
+  (** Since the type [t] is now concrete (i.e. not a type _constructor_) we can
+construct a [Comparable.S] giving us [Map] and [Set] specialized to the type.
+*)
+
+  module Comparator = Comparator.Make (struct
+    type nonrec t = t
+
+    let compare = compare
+    let sexp_of_t = sexp_of_t
+  end)
+
+  include Comparator
+
+  include Comparable.Make_using_comparator (struct
+    type nonrec t = t
+
+    let sexp_of_t = sexp_of_t
+    let t_of_sexp = t_of_sexp
+
+    include Comparator
+  end)
 end
 
 module Helpers = struct
