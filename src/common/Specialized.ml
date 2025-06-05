@@ -14,21 +14,15 @@ open Core
 module type Meta = sig
   type t [@@deriving compare, sexp, hash]
 
-  include Pretty.S with type t := t
-
   val empty : t
 end
 
 module type Unspecialized = sig
-  type 'a t [@@deriving compare, map, fold, hash, sexp]
-
-  include Pretty.S1 with type 'a t := 'a t
+  type 'a t [@@deriving compare, hash, sexp]
 end
 
 module type Unspecialized2 = sig
-  type ('a, 'b) t [@@deriving compare, map, fold, hash, sexp]
-
-  include Pretty.S2 with type ('a, 'b) t := ('a, 'b) t
+  type ('a, 'b) t [@@deriving compare, hash, sexp]
 end
 
 (** Since the type [t] is now concrete (i.e. not a type _constructor_) we can
@@ -38,7 +32,6 @@ module type S = sig
   type t [@@deriving compare, hash, sexp]
 
   module Meta : Meta
-  include Pretty.S with type t := t
   include Comparator.S with type t := t
 
   include
@@ -51,8 +44,6 @@ module Make (X : Unspecialized) (Meta : Meta) :
   S with type t = (Meta.t[@compare.ignore]) X.t and module Meta := Meta = struct
   module Basic = struct
     type t = (Meta.t[@compare.ignore]) X.t [@@deriving hash, sexp, compare]
-
-    let pp ppf x = X.pp Meta.pp ppf x
 
     include Comparator.Make (struct
       type nonrec t = t
@@ -74,8 +65,6 @@ module Make2 (X : Unspecialized2) (First : S) (Meta : Meta) :
   module Basic = struct
     type t = ((First.Meta.t[@compare.ignore]), (Meta.t[@compare.ignore])) X.t
     [@@deriving hash, sexp, compare]
-
-    let pp ppf x = X.pp First.Meta.pp Meta.pp ppf x
 
     include Comparator.Make (struct
       type nonrec t = t
