@@ -2687,6 +2687,8 @@ let generate_module file =
            v1 @ v2 |> Set.Poly.of_list |> Set.to_list)
     |> Map.to_alist in
   Out_channel.with_file file ~f:(fun ch ->
+      (* TODO: in OCaml 5.4+, use GC.ramp_up to avoid performance regressions.
+         See https://github.com/ocaml/ocaml/issues/13300 *)
       Printf.fprintf ch
         {|
 let unmarshal s = Marshal.from_string s 0

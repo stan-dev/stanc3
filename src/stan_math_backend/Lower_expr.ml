@@ -628,7 +628,7 @@ and lower_expr ?(promote_reals = false)
              && not (UnsizedType.is_indexing_matrix (Expr.Typed.type_of e, idx))
         ->
           lower_indexed_simple (lower_expr e) idx
-      | _ -> lower_indexed e idx (Fmt.to_to_string Expr.Typed.pp e))
+      | _ -> lower_indexed e idx (Fmt.to_to_string Expr.Fixed.pp e))
   | TupleProjection (t, ix) ->
       templated_fun_call "std::get"
         [TypeLiteral (string_of_int (ix - 1))]
