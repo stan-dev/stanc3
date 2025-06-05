@@ -35,7 +35,7 @@ module Fixed : sig
     and 'a decl_init = Uninit | Default | Assign of 'a
     [@@deriving sexp, hash, map, fold, compare]
 
-    include Pattern.S2 with type ('a, 'b) t := ('a, 'b) t
+    include Fixed.Patterns.S2 with type ('a, 'b) t := ('a, 'b) t
   end
 
   include Fixed.S2 with module First = Expr.Fixed and module Pattern := Pattern
