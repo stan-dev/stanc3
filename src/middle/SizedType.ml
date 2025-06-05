@@ -252,5 +252,5 @@ let%expect_test "dims" =
   let sclr, dims = get_array_dims st in
   let st2 = build_sarray dims sclr in
   let open Fmt in
-  pf stdout "%a = %a" (pp Expr.Typed.pp) st (pp Expr.Typed.pp) st2;
+  pf stdout "%a = %a" (pp Expr.Fixed.pp) st (pp Expr.Fixed.pp) st2;
   [%expect {| array[array[real, N], 1] = array[array[real, N], 1] |}]

@@ -6,9 +6,9 @@ open Middle.Expr
 open Dataflow_types
 
 let rec fold_expr ~take_expr ~(init : 'c) (expr : Expr.Typed.t) : 'c =
-  Expr.Fixed.Pattern.fold_left
-    ~f:(fun a e -> fold_expr ~take_expr ~init:(take_expr a e) e)
-    ~init expr.pattern
+  Expr.Fixed.Pattern.fold
+    (fun a e -> fold_expr ~take_expr ~init:(take_expr a e) e)
+    init expr.pattern
 
 let fold_stmts ~take_expr ~take_stmt ~(init : 'c)
     (stmts : Stmt.Located.t List.t) : 'c =
@@ -19,10 +19,10 @@ let fold_stmts ~take_expr ~take_stmt ~(init : 'c)
    *     expr.pattern
    * in *)
   let rec fold_stmt (state : 'c) (stmt : Stmt.Located.t) =
-    Stmt.Fixed.Pattern.fold_left
-      ~f:(fun a e -> fold_expr ~take_expr ~init:(take_expr a e) e)
-      ~g:(fun a s -> fold_stmt (take_stmt a s) s)
-      ~init:state stmt.pattern in
+    Stmt.Fixed.Pattern.fold
+      (fun a e -> fold_expr ~take_expr ~init:(take_expr a e) e)
+      (fun a s -> fold_stmt (take_stmt a s) s)
+      state stmt.pattern in
   List.fold ~f:(fun a s -> fold_stmt (take_stmt a s) s) ~init stmts
 
 let rec num_expr_value (v : Expr.Typed.t) : (float * string) option =
