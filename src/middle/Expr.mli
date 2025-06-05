@@ -19,7 +19,7 @@ module Fixed : sig
       | TupleProjection of 'a * int
     [@@deriving sexp, hash, compare]
 
-    include Pattern.S with type 'a t := 'a t
+    include Fixed.Patterns.S with type 'a t := 'a t
   end
 
   include Fixed.S with module Pattern := Pattern
