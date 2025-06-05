@@ -2,9 +2,30 @@
     (or two-level) type we use for our intermediate representations
 *)
 
+(** A [Pattern] defines the signature of modules that may be fixed with
+[Fixed.Make] and [Fixed.Make2].
+
+These signatures ensure that all the operations we want to support on our
+top level intermediate representations can be defined by the [Fixed.Make]
+functors.
+*)
+module Patterns = struct
+  module type S = sig
+    type 'a t [@@deriving compare, fold, hash, map, sexp]
+
+    val pp : 'a Fmt.t -> 'a t Fmt.t
+  end
+
+  module type S2 = sig
+    type ('a, 'b) t [@@deriving compare, fold, hash, map, sexp]
+
+    val pp : 'a Fmt.t -> 'b Fmt.t -> ('a, 'b) t Fmt.t
+  end
+end
+
 (** The fixed-point of [Pattern.t] annotated with some meta-data *)
 module type S = sig
-  module Pattern : Pattern.S
+  module Pattern : Patterns.S
 
   type 'a t = {pattern: 'a t Pattern.t; meta: 'a}
   [@@deriving compare, hash, sexp]
@@ -21,7 +42,7 @@ end
 (** Functor  which creates the fixed-point of the type defined in the [Pattern]
 module argument
 *)
-module Make (Pattern : Pattern.S) : S with module Pattern := Pattern = struct
+module Make (Pattern : Patterns.S) : S with module Pattern := Pattern = struct
   type 'a t = {pattern: 'a t Pattern.t; meta: 'a}
   [@@deriving compare, hash, sexp]
 
@@ -41,7 +62,7 @@ expressions.
 *)
 module type S2 = sig
   module First : S
-  module Pattern : Pattern.S2
+  module Pattern : Patterns.S2
 
   type ('a, 'b) t = {pattern: ('a First.t, ('a, 'b) t) Pattern.t; meta: 'b}
   [@@deriving compare, hash, sexp]
@@ -64,7 +85,7 @@ module type S2 = sig
   *)
 end
 
-module Make2 (First : S) (Pattern : Pattern.S2) :
+module Make2 (First : S) (Pattern : Patterns.S2) :
   S2 with module First := First and module Pattern := Pattern = struct
   type ('a, 'b) t = {pattern: ('a First.t, ('a, 'b) t) Pattern.t; meta: 'b}
   [@@deriving compare, hash, sexp]
