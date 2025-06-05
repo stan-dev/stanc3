@@ -33,15 +33,22 @@ module Typed : sig
       ; adlevel: UnsizedType.autodifftype }
     [@@deriving compare, create, sexp, hash]
 
-    include Specialized.Meta with type t := t
+    val empty : t
   end
 
-  include Specialized.S with module Meta := Meta and type t = Meta.t Fixed.t
+  type t = (Meta.t[@compare.ignore]) Fixed.t [@@deriving hash, sexp, compare]
 
   val type_of : t -> UnsizedType.t
   val loc_of : t -> Location_span.t
   val adlevel_of : t -> UnsizedType.autodifftype
   val fun_arg : t -> UnsizedType.autodifftype * UnsizedType.t
+
+  include Core.Comparator.S with type t := t
+
+  include
+    Core.Comparable.S
+      with type t := t
+       and type comparator_witness := comparator_witness
 end
 
 module Helpers : sig

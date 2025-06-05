@@ -94,7 +94,8 @@ module Located = struct
     let empty = Location_span.empty
   end
 
-  include Specialized.Make2 (Fixed) (Expr.Typed) (Meta)
+  type t = (Expr.Typed.Meta.t, (Meta.t[@sexp.opaque] [@compare.ignore])) Fixed.t
+  [@@deriving compare, sexp, hash]
 
   let loc_of Fixed.{meta; _} = meta
 
@@ -102,11 +103,8 @@ module Located = struct
   is currently used within [analysis_and_optimization].
 
   The original intent of the type was to provide explicit sharing of subterms.
-  My feeling is that ultimately we either want to:
-  - use the recursive type directly and rely on OCaml for sharing
-  - provide the same interface as other [Specialized] modules so that
-    the analysis code isn't aware of the particular representation we are using.
-  *)
+  My feeling is that ultimately we want to use the recursive type directly and rely on OCaml for sharing
+ *)
   module Non_recursive = struct
     type t =
       { pattern: (Expr.Typed.t, int) Fixed.Pattern.t
@@ -124,7 +122,8 @@ module Numbered = struct
     let from_int (i : int) : t = i
   end
 
-  include Specialized.Make2 (Fixed) (Expr.Typed) (Meta)
+  type t = (Expr.Typed.Meta.t, (Meta.t[@sexp.opaque] [@compare.ignore])) Fixed.t
+  [@@deriving compare, sexp, hash]
 end
 
 module Helpers = struct

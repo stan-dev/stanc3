@@ -46,14 +46,11 @@ module Located : sig
     type t = (Location_span.t[@sexp.opaque] [@compare.ignore])
     [@@deriving compare, sexp, hash]
 
-    include Specialized.Meta with type t := t
+    val empty : t
   end
 
-  include
-    Specialized.S
-      with module Meta := Meta
-       and type t =
-        (Expr.Typed.Meta.t, (Meta.t[@sexp.opaque] [@compare.ignore])) Fixed.t
+  type t = (Expr.Typed.Meta.t, (Meta.t[@sexp.opaque] [@compare.ignore])) Fixed.t
+  [@@deriving compare, sexp, hash]
 
   val loc_of : t -> Location_span.t
 
@@ -70,15 +67,12 @@ module Numbered : sig
     type t = (int[@sexp.opaque] [@compare.ignore])
     [@@deriving compare, sexp, hash]
 
-    include Specialized.Meta with type t := t
-
+    val empty : t
     val from_int : int -> t
   end
 
-  include
-    Specialized.S
-      with module Meta := Meta
-       and type t = (Expr.Typed.Meta.t, Meta.t) Fixed.t
+  type t = (Expr.Typed.Meta.t, (Meta.t[@sexp.opaque] [@compare.ignore])) Fixed.t
+  [@@deriving compare, sexp, hash]
 end
 
 module Helpers : sig
