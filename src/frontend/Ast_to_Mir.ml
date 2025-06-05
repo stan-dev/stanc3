@@ -417,7 +417,7 @@ let rec check_decl var decl_type' decl_trans smeta adlevel =
             smeta ]
   | _ when Transformation.has_check decl_trans ->
       let check_id id =
-        let var_name = Fmt.str "%a" Expr.Typed.pp id in
+        let var_name = Fmt.str "%a" Expr.Fixed.pp id in
         let args = extract_transform_args id decl_trans in
         Stmt.Helpers.internal_nrfunapp
           (FnCheck {trans= decl_trans; var_name; var= id})

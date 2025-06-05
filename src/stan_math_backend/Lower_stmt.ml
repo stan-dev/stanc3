@@ -230,7 +230,7 @@ let rec lower_statement Stmt.Fixed.{pattern; meta} : stmt list =
     ->
       (* self-assign is a no-op *)
       [ Comment
-          ("self-assignment omitted: " ^ (Fmt.to_to_string Expr.Typed.pp) e) ]
+          ("self-assignment omitted: " ^ (Fmt.to_to_string Expr.Fixed.pp) e) ]
   | Assignment
       ( (((LVariable _ | LTupleProjection _) as lhs), [])
       , _
