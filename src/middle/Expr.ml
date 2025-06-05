@@ -35,22 +35,13 @@ module Fixed = struct
       | TernaryIf (pred, texpr, fexpr) ->
           Fmt.pf ppf "(@[%a@ ?@ %a@ :@ %a@])" pp_e pred pp_e texpr pp_e fexpr
       | Indexed (expr, indices) ->
-          Fmt.pf ppf "@[%a%a@]" pp_e expr
-            (if List.is_empty indices then fun _ _ -> ()
-             else Fmt.(list (Index.pp pp_e) ~sep:comma |> brackets))
-            indices
+          Fmt.pf ppf "@[%a%a@]" pp_e expr (Index.pp_indices pp_e) indices
       | TupleProjection (expr, ix) -> Fmt.pf ppf "@[%a.%d@]" pp_e expr ix
       | EAnd (l, r) -> Fmt.pf ppf "%a && %a" pp_e l pp_e r
       | EOr (l, r) -> Fmt.pf ppf "%a || %a" pp_e l pp_e r
       | Promotion (from, ut, ad) ->
           Fmt.pf ppf "promote(@[<hov>%a,@ %a,@ %a@])" pp_e from UnsizedType.pp
             ut UnsizedType.pp_tuple_autodifftype ad
-
-    include Foldable.Make (struct
-      type nonrec 'a t = 'a t
-
-      let fold = fold
-    end)
   end
 
   include Fixed.Make (Pattern)
@@ -68,8 +59,6 @@ module Typed = struct
     let empty =
       create ~type_:UnsizedType.UInt ~adlevel:UnsizedType.DataOnly
         ~loc:Location_span.empty ()
-
-    let pp _ _ = ()
   end
 
   include Specialized.Make (Fixed) (Meta)

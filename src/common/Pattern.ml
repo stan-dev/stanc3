@@ -9,13 +9,11 @@ functors.
 module type S = sig
   type 'a t [@@deriving compare, fold, hash, map, sexp]
 
-  include Foldable.S with type 'a t := 'a t
-  include Pretty.S1 with type 'a t := 'a t
+  val pp : 'a Fmt.t -> 'a t Fmt.t
 end
 
 module type S2 = sig
   type ('a, 'b) t [@@deriving compare, fold, hash, map, sexp]
 
-  include Foldable.S2 with type ('a, 'b) t := ('a, 'b) t
-  include Pretty.S2 with type ('a, 'b) t := ('a, 'b) t
+  val pp : 'a Fmt.t -> 'b Fmt.t -> ('a, 'b) t Fmt.t
 end

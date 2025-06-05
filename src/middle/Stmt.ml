@@ -3,8 +3,6 @@ open Common
 
 (** Fixed-point of statements *)
 module Fixed = struct
-  module First = Expr.Fixed
-
   module Pattern = struct
     type ('a, 'b) t =
       | Assignment of 'a lvalue * UnsizedType.t * 'a
@@ -81,14 +79,9 @@ module Fixed = struct
           | Uninit | Default ->
               Fmt.pf ppf "@[<hov 2>%a%a@ %s;@]" UnsizedType.pp_autodifftype
                 decl_adtype (Type.pp pp_e) decl_type decl_id)
-
-    include Foldable.Make2 (struct
-      type nonrec ('a, 'b) t = ('a, 'b) t
-
-      let fold = fold
-    end)
   end
 
+  module First = Expr.Fixed
   include Fixed.Make2 (First) (Pattern)
 end
 
@@ -99,7 +92,6 @@ module Located = struct
     [@@deriving compare, sexp, hash]
 
     let empty = Location_span.empty
-    let pp _ _ = ()
   end
 
   include Specialized.Make2 (Fixed) (Expr.Typed) (Meta)
@@ -130,7 +122,6 @@ module Numbered = struct
 
     let empty = 0
     let from_int (i : int) : t = i
-    let pp _ _ = ()
   end
 
   include Specialized.Make2 (Fixed) (Expr.Typed) (Meta)
@@ -238,10 +229,10 @@ module Helpers = struct
       match pattern with
       | NRFunApp (kind, _) when is_fn_kind kind -> true
       | stmt_pattern ->
-          Fixed.Pattern.fold_left ~init:accu stmt_pattern
-            ~f:(fun accu expr ->
+          Fixed.Pattern.fold
+            (fun accu expr ->
               Expr.Helpers.contains_fn_kind is_fn_kind ~init:accu expr)
-            ~g:aux in
+            aux accu stmt_pattern in
     aux init stmt
 
   (** [for_scalar unsizedtype...] generates a For statement that loops

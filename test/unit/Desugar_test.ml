@@ -2,7 +2,7 @@ open Core
 open Analysis_and_optimization
 
 let print_tdata Middle.Program.{prepare_data; _} =
-  Fmt.(str "@[<v>%a@]@," (list ~sep:cut Middle.Stmt.Located.pp) prepare_data)
+  Fmt.(str "@[<v>%a@]@," (list ~sep:cut Middle.Stmt.Fixed.pp) prepare_data)
   |> print_endline
 
 let%expect_test "matrix array multi indexing " =

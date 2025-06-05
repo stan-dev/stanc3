@@ -145,7 +145,7 @@ let pp pp_e pp_s ppf
 module Typed = struct
   type nonrec t = (Expr.Typed.t, Stmt.Located.t, Location_span.t) t
 
-  let pp ppf x = pp Expr.Typed.pp Stmt.Located.pp ppf x
+  let pp ppf x = pp Expr.Fixed.pp Stmt.Fixed.pp ppf x
 
   let sexp_of_t =
     sexp_of_t Expr.Typed.sexp_of_t Stmt.Located.sexp_of_t
@@ -159,7 +159,7 @@ end
 module Numbered = struct
   type nonrec t = (Expr.Typed.t, Stmt.Numbered.t, int) t
 
-  let pp ppf x = pp Expr.Typed.pp Stmt.Numbered.pp ppf x
+  let pp ppf x = pp Expr.Fixed.pp Stmt.Fixed.pp ppf x
 
   let sexp_of_t =
     sexp_of_t Expr.Typed.sexp_of_t Stmt.Numbered.sexp_of_t sexp_of_int
