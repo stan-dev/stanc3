@@ -81,8 +81,18 @@ module Fixed = struct
                 decl_adtype (Type.pp pp_e) decl_type decl_id)
   end
 
-  module First = Expr.Fixed
-  include Fixed.Make2 (First) (Pattern)
+  type ('a, 'b) t = {pattern: ('a Expr.Fixed.t, ('a, 'b) t) Pattern.t; meta: 'b}
+  [@@deriving compare, hash, sexp]
+
+  let rec pp ppf {pattern; meta= _} = Pattern.pp Expr.Fixed.pp pp ppf pattern
+
+  let rec rewrite_bottom_up ~f ~g t =
+    g
+      { t with
+        pattern=
+          Pattern.map
+            (Expr.Fixed.rewrite_bottom_up ~f)
+            (rewrite_bottom_up ~f ~g) t.pattern }
 end
 
 (** Statements with location information and types for contained expressions *)
