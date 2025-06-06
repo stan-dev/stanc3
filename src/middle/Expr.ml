@@ -44,7 +44,14 @@ module Fixed = struct
             ut UnsizedType.pp_tuple_autodifftype ad
   end
 
-  include Fixed.Make (Pattern)
+  type 'a t = {pattern: 'a t Pattern.t; meta: 'a}
+  [@@deriving compare, hash, sexp]
+
+  let rec pp ppf {pattern; _} = (Pattern.pp pp) ppf pattern
+
+  let rec rewrite_bottom_up ~f t =
+    let x = {t with pattern= Pattern.map (rewrite_bottom_up ~f) t.pattern} in
+    f x
 end
 
 (** Expressions with associated location and type *)

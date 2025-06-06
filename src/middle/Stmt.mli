@@ -1,7 +1,5 @@
 (** MIR types and modules corresponding to the statements of the language *)
 
-open Common
-
 module Fixed : sig
   module Pattern : sig
     type ('a, 'b) t =
@@ -34,11 +32,29 @@ module Fixed : sig
 
     and 'a decl_init = Uninit | Default | Assign of 'a
     [@@deriving sexp, hash, map, fold, compare]
-
-    include Fixed.Patterns.S2 with type ('a, 'b) t := ('a, 'b) t
   end
 
-  include Fixed.S2 with module First = Expr.Fixed and module Pattern := Pattern
+  (** The "two-level" type for statements in the MIR. This corresponds to what the AST calls
+      [Frontend.Ast.statement_with]  *)
+  type ('a, 'b) t = {pattern: ('a Expr.Fixed.t, ('a, 'b) t) Pattern.t; meta: 'b}
+  [@@deriving compare, hash, sexp]
+
+  val pp : ('a, 'b) t Fmt.t
+
+  val rewrite_bottom_up :
+       f:('a Expr.Fixed.t -> 'a Expr.Fixed.t)
+    -> g:(('a, 'b) t -> ('a, 'b) t)
+    -> ('a, 'b) t
+    -> ('a, 'b) t
+  (** [rewrite_bottom_up] specializes [fold] so that the result type
+  ['r1] is equal to the type of the nested fixed-point type
+  i.e. ['r1 = 'a First.t] and the result type ['r2] is equal to the top-level
+  fixed-point type i.e. ['r2 = ('a,'b) t].
+
+  This also means that the function [f] can be written with our nested
+  fixed-point type  ['a First.t] as its argument and [g] can be written with
+  [('a,'b) t] as its argument.
+  *)
 end
 
 module Located : sig
@@ -83,13 +99,13 @@ module Helpers : sig
     (Expr.Typed.t -> 'a -> Located.t) -> Expr.Typed.t -> 'a -> Located.t
 
   val internal_nrfunapp :
-       'a Fixed.First.t Internal_fun.t
-    -> 'a Fixed.First.t list
+       'a Expr.Fixed.t Internal_fun.t
+    -> 'a Expr.Fixed.t list
     -> 'b
     -> ('a, 'b) Fixed.t
 
   val contains_fn_kind :
-       ('a Fixed.First.t Fun_kind.t -> bool)
+       ('a Expr.Fixed.t Fun_kind.t -> bool)
     -> ?init:bool
     -> ('a, 'b) Fixed.t
     -> bool
@@ -129,7 +145,7 @@ module Helpers : sig
 
   val assign_indexed :
        UnsizedType.t
-    -> 'b Fixed.First.t Fixed.Pattern.lvalue
+    -> 'b Expr.Fixed.t Fixed.Pattern.lvalue
     -> 'a
     -> ('b Expr.Fixed.t -> 'b Expr.Fixed.t)
     -> 'b Expr.Fixed.t
