@@ -7,21 +7,21 @@ using namespace stan::math;
 stan::math::profile_map profiles__;
 static constexpr std::array<const char*, 16> locations_array__ =
   {" (found before start of program)",
-  " (in '8_schools_ncp.stan', line 7, column 2 to column 10)",
-  " (in '8_schools_ncp.stan', line 8, column 2 to column 20)",
-  " (in '8_schools_ncp.stan', line 9, column 2 to column 24)",
-  " (in '8_schools_ncp.stan', line 12, column 2 to column 43)",
-  " (in '8_schools_ncp.stan', line 15, column 2 to column 20)",
-  " (in '8_schools_ncp.stan', line 16, column 2 to column 21)",
-  " (in '8_schools_ncp.stan', line 17, column 2 to column 29)",
-  " (in '8_schools_ncp.stan', line 18, column 2 to column 27)",
+  " (in '8_schools_ncp.stan', line 9, column 2 to column 10)",
+  " (in '8_schools_ncp.stan', line 10, column 2 to column 20)",
+  " (in '8_schools_ncp.stan', line 11, column 2 to column 24)",
+  " (in '8_schools_ncp.stan', line 14, column 2 to column 43)",
+  " (in '8_schools_ncp.stan', line 17, column 2 to column 20)",
+  " (in '8_schools_ncp.stan', line 18, column 2 to column 21)",
+  " (in '8_schools_ncp.stan', line 19, column 2 to column 29)",
+  " (in '8_schools_ncp.stan', line 20, column 2 to column 27)",
   " (in '8_schools_ncp.stan', line 2, column 2 to column 17)",
   " (in '8_schools_ncp.stan', line 3, column 8 to column 9)",
   " (in '8_schools_ncp.stan', line 3, column 2 to column 18)",
   " (in '8_schools_ncp.stan', line 4, column 8 to column 9)",
   " (in '8_schools_ncp.stan', line 4, column 2 to column 31)",
-  " (in '8_schools_ncp.stan', line 9, column 9 to column 10)",
-  " (in '8_schools_ncp.stan', line 12, column 9 to column 10)"};
+  " (in '8_schools_ncp.stan', line 11, column 9 to column 10)",
+  " (in '8_schools_ncp.stan', line 14, column 9 to column 10)"};
 class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> {
  private:
   int J;

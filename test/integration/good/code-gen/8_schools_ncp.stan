@@ -3,6 +3,8 @@ data {
   array[J] real y;
   array[J] real<lower=0> sigma;
 }
+
+
 parameters {
   real mu;
   real<lower=0> tau;
