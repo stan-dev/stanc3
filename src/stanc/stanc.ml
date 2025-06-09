@@ -34,8 +34,14 @@ let output_callback output_file printed_filename :
 
 let main () =
   let CLI.
-        {debug_lex; debug_parse; print_cpp; name; output_file; model_file; flags}
-      =
+        { debug_lex
+        ; debug_parse
+        ; print_cpp
+        ; name
+        ; output_file
+        ; model_file
+        ; tty_colors
+        ; flags } =
     match CLI.parse_or_exit () with
     (* Deal with multiple modalities *)
     | DumpMathSigs ->
@@ -46,6 +52,7 @@ let main () =
           Format.std_formatter ();
         exit 0
     | Compile settings -> settings in
+  Fmt_tty.setup_std_outputs ?style_renderer:tty_colors ();
   Debugging.lexer_logging := debug_lex;
   Debugging.grammar_logging := debug_parse;
   Driver.Flags.set_backend_args_list

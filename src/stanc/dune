@@ -3,7 +3,7 @@
  (modes
   (byte c)
   (best exe))
- (libraries core fmt cmdliner driver stan_math_signatures)
+ (libraries core fmt cmdliner fmt.cli fmt.tty driver stan_math_signatures)
  (instrumentation
   (backend bisect_ppx))
  (modules Stanc CLI)

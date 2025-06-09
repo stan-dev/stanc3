@@ -4,8 +4,13 @@ type t = {filename: string; line_num: int; col_num: int; included_from: t option
 [@@deriving sexp, hash]
 
 let pp_context_for ppf (({line_num; _} as loc), lines) =
-  let bars = Fmt.fmt "   -------------------------------------------------\n" in
-  let pp_number ppf num = Fmt.pf ppf "%6d:" num in
+  let yellow = `Fg (`Hi `Yellow) in
+  let bars =
+    Fmt.styled `Faint
+      (Fmt.any "   -------------------------------------------------\n") in
+  let pp_number ppf num =
+    let style = if num = line_num then yellow else `Faint in
+    Fmt.styled style (Fmt.fmt "%6d:") ppf num in
   let get_line i =
     let line = i - 1 in
     if line < 0 || line >= Array.length lines then None
@@ -19,15 +24,15 @@ let pp_context_for ppf (({line_num; _} as loc), lines) =
       let highlighted_line = get_line line_num |> Option.value ~default:"" in
       String.sub highlighted_line ~pos:0 ~len:col_num
       |> String.map ~f:(function '\t' -> '\t' | _ -> ' ') in
-    Fmt.pf ppf "         %s^\n" blank_line in
-  bars ppf;
+    Fmt.pf ppf "         %s%a\n" blank_line Fmt.(styled yellow char) '^' in
+  bars ppf ();
   pp_line_and_number ppf (line_num - 2);
   pp_line_and_number ppf (line_num - 1);
   pp_line_and_number ppf line_num;
   cursor_line ppf loc;
   pp_line_and_number ppf (line_num + 1);
   pp_line_and_number ppf (line_num + 2);
-  bars ppf
+  bars ppf ()
 
 let empty = {filename= ""; line_num= 0; col_num= 0; included_from= None}
 
@@ -47,7 +52,9 @@ let rec pp ?(print_file = true) ?(print_line = true) printed_filename ppf loc =
     | None -> (ignore, Option.value ~default:loc.filename printed_filename)
   in
   let file =
-    Fmt.if' print_file (fun ppf s -> Fmt.pf ppf "%a, " (Fmt.fmt "'%s'") s) in
+    Fmt.if' print_file (fun ppf s ->
+        Fmt.pf ppf "%a, " Fmt.(styled (`Fg (`Hi `Blue)) (Fmt.fmt "'%s'")) s)
+  in
   let line = Fmt.if' print_line (Fmt.fmt "line %d, ") in
   Fmt.pf ppf "%a%acolumn %d%t" file filename line loc.line_num loc.col_num incl
 
