@@ -3,11 +3,14 @@ module Location = Middle.Location
 
 type t = Location_span.t * string
 
+let purple = Fmt.styled (`Fg `Magenta) Fmt.string
+
 let pp ?printed_filename ppf (span, message) =
-  let loc_str =
-    if span = Location_span.empty then ""
-    else " in " ^ Location.to_string ?printed_filename span.begin_loc in
-  Fmt.pf ppf "@[<hov 4>Warning%s: %a@]" loc_str Fmt.text message
+  let maybe_loc =
+    Fmt.if' (span <> Location_span.empty) (fun ppf loc ->
+        Fmt.pf ppf " in %a" (Location.pp ?printed_filename ()) loc) in
+  Fmt.pf ppf "@[<hov 4>%a%a: %a@]" purple "Warning" maybe_loc span.begin_loc
+    Fmt.text message
 
 let pp_warnings ?printed_filename ppf warnings =
   if List.length warnings > 0 then
