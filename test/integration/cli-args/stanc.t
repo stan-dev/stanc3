@@ -44,6 +44,9 @@ Show help
              Options are 'deprecations', 'parentheses', 'braces', 'includes',
              'strip-comments'.
   
+         --color=WHEN (absent=auto)
+             Colorize the output. WHEN must be one of auto, always or never.
+  
          --filename-in-msg=FILENAME (absent=MODEL_FILE)
              Sets the filename used in compiler and runtime errors. 
   
