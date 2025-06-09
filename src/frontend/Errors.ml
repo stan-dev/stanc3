@@ -32,9 +32,11 @@ let pp_context ?code ppf loc =
     |> Option.map ~f:(fun lines -> (loc, Array.of_list lines)) in
   (Fmt.option Middle.Location.pp_context_for) ppf context
 
+let red = Fmt.(styled `Bold (styled (`Fg `Red) string))
+
 let pp_semantic_error ?printed_filename ?code ppf err =
   let loc_span = Semantic_error.location err in
-  Fmt.pf ppf "Semantic error in %a:@;%a@,%a@."
+  Fmt.pf ppf "%a in %a:@;%a@,%a@." red "Semantic error"
     (Middle.Location_span.pp ?printed_filename)
     loc_span (pp_context ?code) loc_span.begin_loc Semantic_error.pp err
 
@@ -42,20 +44,20 @@ let pp_semantic_error ?printed_filename ?code ppf err =
 let pp_syntax_error ?printed_filename ?code ppf err =
   let loc_span = Syntax_error.location err in
   let error_type = Syntax_error.kind err in
-  Fmt.pf ppf "Syntax error in %a, %s:@;%a@,%a"
+  Fmt.pf ppf "%a in %a, %s:@;%a@,%a" red "Syntax error"
     (Middle.Location_span.pp ?printed_filename)
     loc_span error_type (pp_context ?code) loc_span.begin_loc Syntax_error.pp
     err
 
 let pp ?printed_filename ?code ppf = function
   | FileNotFound f ->
-      Fmt.pf ppf "Error: file '%s' not found or cannot be opened@." f
+      Fmt.pf ppf "%a: file '%s' not found or cannot be opened@." red "Error" f
   | Syntax_error e -> pp_syntax_error ?printed_filename ?code ppf e
   | Semantic_error e -> pp_semantic_error ?printed_filename ?code ppf e
   | DebugDataError (loc, msg) ->
       if Middle.Location_span.(compare loc empty = 0) then
-        Fmt.pf ppf "Error: %s" msg
+        Fmt.pf ppf "%a: %s" red "Error" msg
       else
-        Fmt.pf ppf "@[<v>Error in %a:@ %s@;@]"
+        Fmt.pf ppf "@[<v>%a in %a:@ %s@;@]" red "Error"
           (Middle.Location_span.pp ?printed_filename)
           loc msg
