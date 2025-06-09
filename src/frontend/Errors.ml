@@ -46,42 +46,44 @@ let pp_context ?code ppf loc =
     |> Option.map ~f:(fun lines -> (loc, Array.of_list lines)) in
   (Fmt.option Middle.Location.pp_context_for) ppf context
 
+let red = Fmt.(styled `Bold (styled (`Fg `Red) string))
+
 let pp_semantic_error ?printed_filename ?code ppf err =
   let loc_span = Semantic_error.location err in
-  Fmt.pf ppf "Semantic error in %a:@;%a@,%a@."
+  Fmt.pf ppf "%a in %a:@;%a@,%a@." red "Semantic error"
     (Middle.Location_span.pp ?printed_filename)
     loc_span (pp_context ?code) loc_span.begin_loc Semantic_error.pp err
 
 (** A syntax error message used when handling a SyntaxError *)
 let pp_syntax_error ?printed_filename ?code ppf = function
   | Parsing (message, loc_span) ->
-      Fmt.pf ppf "Syntax error in %a, parsing error:@,%a@,%s"
+      Fmt.pf ppf "%a in %a, parsing error:@,%a@,%s" red "Syntax error"
         (Middle.Location_span.pp ?printed_filename)
         loc_span (pp_context ?code) loc_span.begin_loc message
   | Lexing loc ->
-      Fmt.pf ppf "Syntax error in %a, lexing error:@,%a@,%s@."
+      Fmt.pf ppf "%a in %a, lexing error:@,%a@,%s@." red "Syntax error"
         (Middle.Location.pp ?printed_filename ())
         {loc with col_num= loc.col_num - 1}
         (pp_context ?code) loc "Invalid character found."
   | UnexpectedEOF loc ->
-      Fmt.pf ppf "Syntax error in %a, lexing error:@,%a@,%s@."
+      Fmt.pf ppf "%a in %a, lexing error:@,%a@,%s@." red "Syntax error"
         (Middle.Location.pp ?printed_filename ())
         {loc with col_num= loc.col_num - 1}
         (pp_context ?code) loc "Unexpected end of input"
   | Include (message, loc) ->
-      Fmt.pf ppf "Syntax error in %a, include error:@,%a@,%s@."
+      Fmt.pf ppf "%a in %a, include error:@,%a@,%s@." red "Syntax error"
         (Middle.Location.pp ?printed_filename ())
         loc (pp_context ?code) loc message
 
 let pp ?printed_filename ?code ppf = function
   | FileNotFound f ->
-      Fmt.pf ppf "Error: file '%s' not found or cannot be opened@." f
+      Fmt.pf ppf "%a: file '%s' not found or cannot be opened@." red "Error" f
   | Syntax_error e -> pp_syntax_error ?printed_filename ?code ppf e
   | Semantic_error e -> pp_semantic_error ?printed_filename ?code ppf e
   | DebugDataError (loc, msg) ->
       if Middle.Location_span.(compare loc empty = 0) then
-        Fmt.pf ppf "Error: %s" msg
+        Fmt.pf ppf "%a: %s" red "Error" msg
       else
-        Fmt.pf ppf "@[<v>Error in %a:@ %s@;@]"
+        Fmt.pf ppf "@[<v>%a in %a:@ %s@;@]" red "Error"
           (Middle.Location_span.pp ?printed_filename)
           loc msg
