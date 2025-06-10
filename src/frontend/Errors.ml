@@ -86,7 +86,7 @@ let pp ?printed_filename ?code ppf = function
   | Syntax_error e -> pp_syntax_error ?printed_filename ?code ppf e
   | Semantic_error e -> pp_semantic_error ?printed_filename ?code ppf e
   | DebugDataError (loc, msg) ->
-      if Middle.Location_span.(loc = empty) then
+      if Middle.Location_span.(compare loc empty = 0) then
         Fmt.pf ppf "%a: %s" red "Error" msg
       else
         Fmt.pf ppf "@[<v>%a in %a:@ %s@;@]" red "Error"
