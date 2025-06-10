@@ -3,55 +3,37 @@ open Core
 type t = {filename: string; line_num: int; col_num: int; included_from: t option}
 [@@deriving sexp, hash]
 
-let pp_context ppf (context_cb, {line_num; col_num; _}) =
+let pp_context_for get_lines ppf ({line_num; _} as loc) =
   let yellow = `Fg (`Hi `Yellow) in
   let bars =
     Fmt.styled `Faint
-    @@ Fmt.any "   -------------------------------------------------" in
-  let pp_line_number ppf num =
-    let pp ppf n = Fmt.pf ppf "%6d:" n in
+      (Fmt.any "   -------------------------------------------------\n") in
+  let pp_number ppf num =
     let style = if num = line_num then yellow else `Faint in
-    Fmt.styled style pp ppf num in
-  let pp_line_and_number =
-    let pp ppf (line, num) = Fmt.pf ppf "%a  %s\n" pp_line_number num line in
-    Fmt.option pp in
-  try
-    let advance l =
-      let front = List.hd !l in
-      match front with
-      | Some _ ->
-          l := List.tl_exn !l;
-          front
-      | None -> None in
-    let input = ref (context_cb ()) in
-    for _ = 1 to line_num - 3 do
-      ignore (advance input : string option)
-    done;
-    let get_line num =
-      if num > 0 then
-        match advance input with Some input -> Some (input, num) | _ -> None
-      else None in
-    let line_2_before = get_line (line_num - 2) in
-    let line_before = get_line (line_num - 1) in
-    let our_line = get_line line_num in
-    let cursor_line =
-      let rendered_line = Fmt.str "%a" pp_line_and_number our_line in
-      let offset = 9 + col_num in
-      let copied = Int.min offset (String.length rendered_line) in
-      let blank_line =
-        String.slice rendered_line 0 copied
-        |> String.map ~f:(function '\t' -> '\t' | _ -> ' ') in
-      fun ppf () ->
-        Fmt.pf ppf "%s%a\n"
-          (blank_line ^ String.make (offset - copied) ' ')
-          Fmt.(styled yellow char)
-          '^' in
-    let line_after = get_line (line_num + 1) in
-    let line_2_after = get_line (line_num + 2) in
-    Fmt.pf ppf "%a\n%a%a%a%a%a%a%a\n" bars () pp_line_and_number line_2_before
-      pp_line_and_number line_before pp_line_and_number our_line cursor_line ()
-      pp_line_and_number line_after pp_line_and_number line_2_after bars ()
-  with _ -> ()
+    Fmt.styled style (Fmt.fmt "%6d:") ppf num in
+  let lines = try Array.of_list (get_lines ()) with _ -> [||] in
+  let get_line i =
+    let line = i - 1 in
+    if line < 0 || line >= Array.length lines then None
+    else Some (Array.get lines line) in
+  let pp_line_and_number ppf n =
+    let pp ppf line = Fmt.pf ppf "%a  %s\n" pp_number n line in
+    Fmt.option pp ppf (get_line n) in
+  let cursor_line ppf {line_num; col_num; _} =
+    let blank_line =
+      (* to get visual alignment, we copy any tabs in the line we are pointing at *)
+      let highlighted_line = get_line line_num |> Option.value ~default:"" in
+      String.sub highlighted_line ~pos:0 ~len:col_num
+      |> String.map ~f:(function '\t' -> '\t' | _ -> ' ') in
+    Fmt.pf ppf "         %s%a\n" blank_line Fmt.(styled yellow char) '^' in
+  bars ppf ();
+  pp_line_and_number ppf (line_num - 2);
+  pp_line_and_number ppf (line_num - 1);
+  pp_line_and_number ppf line_num;
+  cursor_line ppf loc;
+  pp_line_and_number ppf (line_num + 1);
+  pp_line_and_number ppf (line_num + 2);
+  bars ppf ()
 
 let empty = {filename= ""; line_num= 0; col_num= 0; included_from= None}
 
@@ -73,10 +55,9 @@ let rec pp ?printed_filename ?(print_file = true) ?(print_line = true) () ppf
   in
   let file =
     Fmt.if' print_file (fun ppf s ->
-        Fmt.pf ppf "%a, "
-          Fmt.(styled (`Fg (`Hi `Blue)) (fun ppf s -> Fmt.pf ppf "'%s'" s))
-          s) in
-  let line = Fmt.if' print_line (fun ppf d -> Fmt.pf ppf "line %d, " d) in
+        Fmt.pf ppf "%a, " Fmt.(styled (`Fg (`Hi `Blue)) (Fmt.fmt "'%s'")) s)
+  in
+  let line = Fmt.if' print_line (Fmt.fmt "line %d, ") in
   Fmt.pf ppf "%a%acolumn %d%a" file filename line loc.line_num loc.col_num incl
     ()
 

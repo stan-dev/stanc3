@@ -275,9 +275,7 @@ module TypeError = struct
            function has several:@ @[<v>%a@]@ Consider defining a new signature \
            for the exact types needed or@ re-thinking existing definitions."
           name
-          (Fmt.option
-             ~none:(fun ppf () -> Fmt.pf ppf "This")
-             (fun ppf tys ->
+          (Fmt.option ~none:(Fmt.any "This") (fun ppf tys ->
                Fmt.pf ppf "For args @[(%a)@], this"
                  (Fmt.list ~sep:Fmt.comma UnsizedType.pp)
                  tys))

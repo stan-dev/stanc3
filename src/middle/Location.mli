@@ -14,4 +14,6 @@ val pp :
   -> unit
   -> t Fmt.t
 
-val pp_context : ((unit -> string list) * t) Fmt.t
+val pp_context_for : (unit -> string list) -> t Fmt.t
+(* Prints the text surrounding the provided [t].
+   If the callback fails, this gracefully degrades to printing nothing. *)
