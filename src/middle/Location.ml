@@ -1,8 +1,5 @@
-(** Storing locations in the original source *)
-
 open Core
 
-(** Source code locations *)
 type t = {filename: string; line_num: int; col_num: int; included_from: t option}
 [@@deriving sexp, hash]
 
