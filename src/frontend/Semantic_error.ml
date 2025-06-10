@@ -64,11 +64,6 @@ module TypeError = struct
     | TupleIndexNotTuple of UnsizedType.t
     | NotIndexable of UnsizedType.t * int
 
-  let pp_laplace_tols ppf () =
-    Fmt.pf ppf ", %a"
-      Fmt.(list ~sep:comma UnsizedType.pp_fun_arg)
-      Stan_math_signatures.laplace_tolerance_argument_types
-
   let laplace_tolerance_arg_name n =
     match n with
     | 1 -> "first control parameter (tolerance)"
@@ -215,17 +210,20 @@ module TypeError = struct
                Please ensure you are passing enough arguments and that the \
                %dth is a function."
               n (n + 2) in
-        let pp_lik_args ppf () =
+        let pp_lik_args ppf =
           if is_helper then Fmt.(list ~sep:comma UnsizedType.pp_fun_arg) ppf req
           else Fmt.pf ppf "(vector, T_l...) => real,@ tuple(T_l...)" in
+        let pp_laplace_tols ppf =
+          if String.is_substring ~substring:"_tol" name then
+            Fmt.pf ppf ", %a"
+              Fmt.(list ~sep:comma UnsizedType.pp_fun_arg)
+              Stan_math_signatures.laplace_tolerance_argument_types in
         Fmt.pf ppf
           "@[<v>Ill-typed arguments supplied to function '%s'.@ The valid \
-           signature of this function is@ @[<hov 2>%s(%a,@ vector,@ (T_k...) \
-           => matrix,@ tuple(T_k...)%a)@]@ However, we recieved the types:@ \
+           signature of this function is@ @[<hov 2>%s(%t,@ vector,@ (T_k...) \
+           => matrix,@ tuple(T_k...)%t)@]@ However, we recieved the types:@ \
            @[<hov 2>(%a)@]@ @[%a@]@]"
-          name name pp_lik_args ()
-          Fmt.(if' (String.is_substring ~substring:"_tol" name) pp_laplace_tols)
-          ()
+          name name pp_lik_args pp_laplace_tols
           Fmt.(list ~sep:comma UnsizedType.pp_fun_arg)
           supplied Fmt.text info
     | LaplaceCompatibilityIssue banned_function ->
