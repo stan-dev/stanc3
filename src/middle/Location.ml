@@ -48,18 +48,17 @@ let rec pp ?printed_filename ?(print_file = true) ?(print_line = true) () ppf
   let incl, filename =
     match loc.included_from with
     | Some loc2 ->
-        ( (fun ppf () ->
+        ( (fun ppf ->
             Fmt.pf ppf ", included from\n%a" (pp ?printed_filename ()) loc2)
         , loc.filename )
-    | None -> (Fmt.nop, Option.value ~default:loc.filename printed_filename)
+    | None -> (ignore, Option.value ~default:loc.filename printed_filename)
   in
   let file =
     Fmt.if' print_file (fun ppf s ->
         Fmt.pf ppf "%a, " Fmt.(styled (`Fg (`Hi `Blue)) (Fmt.fmt "'%s'")) s)
   in
   let line = Fmt.if' print_line (Fmt.fmt "line %d, ") in
-  Fmt.pf ppf "%a%acolumn %d%a" file filename line loc.line_num loc.col_num incl
-    ()
+  Fmt.pf ppf "%a%acolumn %d%t" file filename line loc.line_num loc.col_num incl
 
 let compare loc1 loc2 =
   let rec unfold = function
