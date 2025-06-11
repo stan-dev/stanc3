@@ -58,7 +58,7 @@ def runPerformanceTests(String testsPath, String stancFlags = ""){
         cd performance-tests-cmdstan/cmdstan
         echo 'O=0' >> make/local
         echo 'CXXFLAGS+=-Wall' >> make/local
-        make -j${env.PARALLEL} build
+        make -j${PARALLEL} build
     """
 
     if (params.run_slow_perf_tests) {
@@ -398,7 +398,7 @@ pipeline {
                     agent {
                         docker {
                             image 'stanorg/ci:gpu'
-                            label 'linux'
+                            label 'linux && 8core'
                         }
                     }
                     steps {
@@ -435,7 +435,7 @@ pipeline {
                     agent {
                         docker {
                             image 'stanorg/ci:gpu'
-                            label 'linux'
+                            label 'linux && 8core'
                         }
                     }
                     steps {
@@ -472,7 +472,7 @@ pipeline {
                     agent {
                         docker {
                             image 'stanorg/ci:gpu'
-                            label 'linux && 8core'
+                            label 'linux'
                         }
                     }
                     steps {
@@ -531,7 +531,7 @@ pipeline {
                     agent {
                         docker {
                             image 'stanorg/ci:gpu'
-                            label 'linux && 8core'
+                            label 'linux'
                         }
                     }
                     steps {
