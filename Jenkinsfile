@@ -64,12 +64,12 @@ def runPerformanceTests(String testsPath, String stancFlags = ""){
     if (params.run_slow_perf_tests) {
         sh """
             cd performance-tests-cmdstan
-            ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 --no-ignore-models ${testsPath}
+            ./runPerformanceTests.py -j${PARALLEL} --runs=0 --no-ignore-models ${testsPath}
         """
     } else {
         sh """
             cd performance-tests-cmdstan
-            ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 ${testsPath}
+            ./runPerformanceTests.py -j${PARALLEL} --runs=0 ${testsPath}
         """
     }
 }
@@ -116,7 +116,6 @@ pipeline {
     environment {
         CXX = 'clang++-6.0'
         MACOS_SWITCH = 'stanc3-4.14'
-        PARALLEL = 4
         GIT_AUTHOR_NAME = 'Stan Jenkins'
         GIT_AUTHOR_EMAIL = 'mc.stanislaw@gmail.com'
         GIT_COMMITTER_NAME = 'Stan Jenkins'
@@ -473,7 +472,7 @@ pipeline {
                     agent {
                         docker {
                             image 'stanorg/ci:gpu'
-                            label 'linux'
+                            label 'linux && 8core'
                         }
                     }
                     steps {
@@ -532,7 +531,7 @@ pipeline {
                     agent {
                         docker {
                             image 'stanorg/ci:gpu'
-                            label 'linux'
+                            label 'linux && 8core'
                         }
                     }
                     steps {
@@ -595,7 +594,7 @@ pipeline {
                     agent {
                         docker {
                             image 'stanorg/ci:gpu'
-                            label 'linux'
+                            label 'linux && 8core'
                         }
                     }
                     steps {
@@ -617,7 +616,7 @@ pipeline {
                                         echo "CXX=${env.CXX} -Werror " >> make/local
                                     """
                                     withEnv(['PATH+TBB=./lib/tbb']) {
-                                        try { sh "./runTests.py -j${env.PARALLEL} test/expressions" }
+                                        try { sh "./runTests.py -j${PARALLEL} test/expressions" }
                                         finally { junit 'test/**/*.xml' }
                                     }
                                 }
