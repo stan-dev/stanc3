@@ -42,8 +42,7 @@ pipeline {
     }
     options {
         parallelsAlwaysFailFast()
-        buildDiscarder(logRotator(numToKeepStr: '20', daysToKeepStr: '30', artifactDaysToKeepStr: '100'))
-        skipDefaultCheckout()
+        buildDiscarder(logRotator(numToKeepStr: '20', daysToKeepStr: '100', artifactDaysToKeepStr: '100'))
     }
     environment {
         MACOS_SWITCH = 'stanc3-4.14'
