@@ -248,9 +248,9 @@ Semantic error in 'bad_forward7.stan', line 2, column 12 to column 66:
 
 Ill-typed arguments supplied to function 'laplace_marginal_tol_neg_binomial_2_log_lpmf'
 for the likelihood:
-The first argument must be array[] int but got int.
+Expected 4 arguments but got 3 arguments.
 Expected the arguments to start with:
-(array[] int, array[] int, vector)
+(array[] int, array[] int, vector, vector)
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_forward8.stan
 Semantic error in 'bad_forward8.stan', line 2, column 2 to column 52:
@@ -263,9 +263,9 @@ Semantic error in 'bad_forward8.stan', line 2, column 2 to column 52:
 
 Ill-typed arguments supplied to function 'laplace_marginal_tol_neg_binomial_2_log_lupmf'
 for the likelihood:
-The first argument must be array[] int but got int.
+Expected 4 arguments but got 3 arguments.
 Expected the arguments to start with:
-(array[] int, array[] int, vector)
+(array[] int, array[] int, vector, vector)
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_forward9.stan
 Semantic error in 'bad_forward9.stan', line 37, column 32 to column 54:
@@ -478,9 +478,9 @@ Semantic error in 'missing_args3.stan', line 2, column 12 to column 58:
 
 Ill-typed arguments supplied to function 'laplace_marginal_tol_neg_binomial_2_log_lpmf'
 for the likelihood:
-Expected 3 arguments but got 0 arguments.
+Expected 4 arguments but got 0 arguments.
 Expected the arguments to start with:
-(array[] int, array[] int, vector)
+(array[] int, array[] int, vector, vector)
 [exit 1]
   $ ../../../../../install/default/bin/stanc missing_args4.stan
 Semantic error in 'missing_args4.stan', line 29, column 12 to column 59:
@@ -554,14 +554,11 @@ Semantic error in 'missing_args7.stan', line 18, column 24 to line 19, column 23
     20:  
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'laplace_latent_neg_binomial_2_log_rng'.
-The valid signature of this function is
-laplace_latent_neg_binomial_2_log_rng(array[] int, array[] int, vector,
-  vector, (T_k...) => matrix, tuple(T_k...))
-However, we recieved the types:
-(data array[] int, data array[] int, data vector)
-Typechecking failed after checking the first 3 arguments. Please ensure you
-are passing enough arguments and that the 4th is a function.
+Ill-typed arguments supplied to function 'laplace_latent_neg_binomial_2_log_rng'
+for the likelihood:
+Expected 4 arguments but got 3 arguments.
+Expected the arguments to start with:
+(array[] int, array[] int, vector, vector)
 [exit 1]
   $ ../../../../../install/default/bin/stanc missing_args8.stan
 Semantic error in 'missing_args8.stan', line 2, column 12 to column 59:
@@ -572,15 +569,11 @@ Semantic error in 'missing_args8.stan', line 2, column 12 to column 59:
      3:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'laplace_marginal_tol_poisson_log_lpmf'.
-The valid signature of this function is
-laplace_marginal_tol_poisson_log_lpmf(array[] int, array[] int, vector,
-  (T_k...) => matrix, tuple(T_k...), vector, data real, data int, data int,
-  data int, data int)
-However, we recieved the types:
-(data array[] int, data array[] int)
-Typechecking failed after checking the first 2 arguments. Please ensure you
-are passing enough arguments and that the 3rd is a function.
+Ill-typed arguments supplied to function 'laplace_marginal_tol_poisson_log_lpmf'
+for the likelihood:
+Expected 3 arguments but got 2 arguments.
+Expected the arguments to start with:
+(array[] int, array[] int, vector)
 [exit 1]
   $ ../../../../../install/default/bin/stanc missing_args9.stan
 Semantic error in 'missing_args9.stan', line 40, column 24 to line 41, column 59:
@@ -593,6 +586,10 @@ Semantic error in 'missing_args9.stan', line 40, column 24 to line 41, column 59
     42:  
    -------------------------------------------------
 
-Recieved 0 control arguments at the end of the call to 'laplace_latent_tol_neg_binomial_2_log_rng'.
-Expected 6 arguments for the control parameters instead.
+Ill-typed arguments supplied to function 'laplace_latent_tol_neg_binomial_2_log_rng'
+for the likelihood:
+The fourth argument must be vector but got <F1>.
+where F1 = (array[] vector, int, real, real) => matrix
+Expected the arguments to start with:
+(array[] int, array[] int, vector, vector)
 [exit 1]
