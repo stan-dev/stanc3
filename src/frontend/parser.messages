@@ -9,7 +9,11 @@
 # When the parser is updated, the command `dune build @update_messages` will
 # automatically update this file, leaving new placeholder messages for new states.
 #
-#
+# The messages below can use a markup language based on the one used by Cmdliner
+# for our command-line interface help message. In short, $(red,Text) will be red,
+# $(b,This $(green,Text)) will be bold, with the second word also being green, etc.
+# See the `markup_text` function in Syntax_error.ml for how this is done and the full
+# list of styles.
 #
 program: WHILE
 ##
@@ -1056,13 +1060,13 @@ program: DATABLOCK LBRACE IDENTIFIER
 ## DATABLOCK LBRACE
 ##
 
-Invalid type in declaration. Valid types:
-  int, real, vector, row_vector, matrix,
+$(light_red,Invalid type in declaration.) $(blue,Valid types:)
+  $(magenta,int), real, vector, row_vector, matrix,
   unit_vector, simplex, sum_to_zero_vector, ordered, positive_ordered,
   corr_matrix, cov_matrix, cholesky_factor_corr, cholesky_factor_cov,
   sum_to_zero_matrix, row_stochastic_matrix, column_stochastic_matrix,
-  tuple(...)
-optionally preceded by a single array[...]
+  tuple($(f,...))
+optionally preceded by a $(u,single) $(magenta,array)[$(f,...)]
 
 program: TRANSFORMEDDATABLOCK LBRACE COMPLEX IDENTIFIER WHILE
 ## Concrete syntax: transformed data { complex foo while
@@ -1175,7 +1179,7 @@ program: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN RPAREN VOID
 ## return_type decl_identifier LPAREN loption(separated_nonempty_list(COMMA,arg_decl)) RPAREN
 ##
 
-Ill-formed function. Expected either "{" statement "}" for a function definition or ";" for a function forward declaration.
+Either $(green,"{") $(i,statement) $(green,"}") is expected for a function definition or $(green,";") for a function forward declaration.
 
 program: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN WHILE
 ## Concrete syntax: functions { void foo ( while
