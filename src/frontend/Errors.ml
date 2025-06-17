@@ -49,12 +49,79 @@ let pp_semantic_error ?printed_filename ?code ppf err =
     (Middle.Location_span.pp ?printed_filename)
     loc_span (pp_context ?code) loc_span.begin_loc Semantic_error.pp err
 
+let markup_text ?(text = Fmt.string) () ppf s =
+  let style_of_string = function
+    | "b" -> Some `Bold
+    | "i" -> Some `Italic
+    | "u" -> Some `Underline
+    | "f" -> Some `Faint
+    | "red" -> Some (`Fg `Red)
+    | "blue" -> Some (`Fg `Blue)
+    | "reset" -> Some `None
+    (* TODO: more *)
+    | _ -> None in
+  let max_i = String.length s - 1 in
+  let buf = Buffer.create (String.length s) in
+  let styles = Stack.create () in
+  let pp_buffered () =
+    let styled =
+      Stack.fold ~f:(fun pp style -> Fmt.styled style pp) ~init:text styles
+    in
+    styled ppf (Buffer.contents buf);
+    Buffer.clear buf in
+  let rec loop i =
+    if i > max_i then pp_buffered ()
+    else
+      match s.[i] with
+      | '\\' ->
+          Buffer.add_char buf s.[i];
+          let next = i + 1 in
+          if next > max_i then loop next
+          else (
+            (* very simplistic escaping *)
+            Buffer.add_char buf s.[next];
+            loop (next + 1))
+      | ')' when not (Stack.is_empty styles) ->
+          pp_buffered ();
+          Stack.pop styles |> ignore;
+          loop (i + 1)
+      | '$' -> (
+          let bail () =
+            (* if we see an invalid sequence ahead, just add the $ *)
+            Buffer.add_char buf s.[i];
+            loop (i + 1) in
+          let next = i + 1 in
+          if next > max_i then bail ()
+          else
+            match s.[next] with
+            | '(' -> (
+                let next = next + 1 in
+                if next > max_i then bail ()
+                else
+                  match String.index_from s next ',' with
+                  | Some endi -> (
+                      match
+                        style_of_string
+                          (String.sub s ~pos:next ~len:(endi - next))
+                      with
+                      | Some st ->
+                          pp_buffered ();
+                          Stack.push styles st;
+                          loop (endi + 1)
+                      | None -> bail ())
+                  | None -> bail ())
+            | _ -> bail ())
+      | c ->
+          Buffer.add_char buf c;
+          loop (i + 1) in
+  loop 0
+
 (** A syntax error message used when handling a SyntaxError *)
 let pp_syntax_error ?printed_filename ?code ppf = function
   | Parsing (message, loc_span) ->
-      Fmt.pf ppf "%a in %a, parsing error:@,%a@,%s" red "Syntax error"
+      Fmt.pf ppf "%a in %a, parsing error:@,%a@,%a" red "Syntax error"
         (Middle.Location_span.pp ?printed_filename)
-        loc_span (pp_context ?code) loc_span.begin_loc message
+        loc_span (pp_context ?code) loc_span.begin_loc (markup_text ()) message
   | Lexing loc ->
       Fmt.pf ppf "%a in %a, lexing error:@,%a@,%s@." red "Syntax error"
         (Middle.Location.pp ?printed_filename ())
