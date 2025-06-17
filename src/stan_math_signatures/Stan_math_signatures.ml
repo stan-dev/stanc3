@@ -178,14 +178,17 @@ let is_embedded_laplace_fn name =
 
 let laplace_helper_lik_args =
   [ ( "bernoulli_logit"
-    , [UnsizedType.(AutoDiffable, UArray UInt); (AutoDiffable, UArray UInt)] )
+    , [ UnsizedType.(AutoDiffable, UArray UInt); (AutoDiffable, UArray UInt)
+      ; (AutoDiffable, UVector) ] )
   ; ( "neg_binomial_2_log"
     , [ (AutoDiffable, UArray UInt); (AutoDiffable, UArray UInt)
+      ; (AutoDiffable, UVector); (AutoDiffable, UVector) ] )
+  ; ( "poisson_log"
+    , [ (AutoDiffable, UArray UInt); (AutoDiffable, UArray UInt)
       ; (AutoDiffable, UVector) ] )
-  ; ("poisson_log", [(AutoDiffable, UArray UInt); (AutoDiffable, UArray UInt)])
   ; ( "poisson_2_log"
     , [ (AutoDiffable, UArray UInt); (AutoDiffable, UArray UInt)
-      ; (AutoDiffable, UVector) ] ) ]
+      ; (AutoDiffable, UVector); (AutoDiffable, UVector) ] ) ]
   |> String.Map.of_alist_exn
 
 let laplace_helper_param_types name =
@@ -201,7 +204,8 @@ let laplace_helper_param_types name =
 
 let laplace_tolerance_argument_types =
   UnsizedType.
-    [ (DataOnly, UReal) (* tolerance *); (DataOnly, UInt) (* max_num_steps *)
+    [ (AutoDiffable, UVector) (* theta_0 *); (DataOnly, UReal) (* tolerance *)
+    ; (DataOnly, UInt) (* max_num_steps *)
     ; (DataOnly, UInt) (* hessian_block_size *); (DataOnly, UInt) (* solver *)
     ; (DataOnly, UInt) (* max_steps_line_search *) ]
 

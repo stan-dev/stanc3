@@ -19,7 +19,6 @@ data {
 
 transformed data {
   vector[n_obs] log_ye = log(ye);
-  vector[n_obs] theta_0 = rep_vector(0.0, n_obs); // initial guess
 }
 parameters {
   real<lower=0> alpha;
@@ -27,8 +26,7 @@ parameters {
   real<lower=0> eta;
 }
 model {
-  target += laplace_marginal(ll_function, (eta, log_ye, y),
-                                  theta_0);
+  target += laplace_marginal(ll_function, (eta, log_ye, y));
 
 }
 

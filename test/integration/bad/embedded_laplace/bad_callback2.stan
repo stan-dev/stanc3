@@ -27,7 +27,6 @@ data {
 
 transformed data {
   vector[n_obs] log_ye = log(ye);
-  vector[n_obs] theta_0 = rep_vector(0.0, n_obs); // initial guess
 
 }
 parameters {
@@ -37,6 +36,5 @@ parameters {
 }
 model {
   target += laplace_marginal(ll_function_jacobian, (eta, log_ye, y),
-                                  theta_0,
                                   K_function, (x, n_obs, alpha, rho));
 }

@@ -14,7 +14,6 @@ val invalid_matrix_types : Location_span.t -> UnsizedType.t -> t
 val int_expected : Location_span.t -> string -> UnsizedType.t -> t
 val int_or_real_expected : Location_span.t -> string -> UnsizedType.t -> t
 val tuple_expected : Location_span.t -> string -> UnsizedType.t -> t
-val vector_expected : Location_span.t -> string -> UnsizedType.t -> t
 val int_intarray_or_range_expected : Location_span.t -> UnsizedType.t -> t
 val int_or_real_container_expected : Location_span.t -> UnsizedType.t -> t
 
