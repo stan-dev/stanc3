@@ -758,13 +758,13 @@ program: DATABLOCK LBRACE IDENTIFIER
 ## DATABLOCK LBRACE
 ##
 
-Invalid type in declaration. Valid types:
+Invalid type in declaration. $(blue,Valid types:)
   int, real, vector, row_vector, matrix,
   unit_vector, simplex, sum_to_zero_vector, ordered, positive_ordered,
   corr_matrix, cov_matrix, cholesky_factor_corr, cholesky_factor_cov,
   sum_to_zero_matrix, row_stochastic_matrix, column_stochastic_matrix,
-  tuple(...)
-optionally preceded by a single array[...]
+  tuple($(f,...))
+optionally preceded by a single array[$(f,...)]
 
 program: DATABLOCK WHILE
 ##
