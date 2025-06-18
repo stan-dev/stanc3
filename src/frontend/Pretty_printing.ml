@@ -287,12 +287,12 @@ and pp_expression ppf ({expr= e_content; emeta= {loc; _}} : untyped_expression)
   | ArrayExpr es -> pf ppf "{@[%a}@]" pp_list_of_expression (es, loc)
   | RowVectorExpr es -> pf ppf "[@[%a]@]" pp_list_of_expression (es, loc)
   | Paren e -> pf ppf "(%a)" pp_expression e
-  | Promotion (e, _, _) -> pp_expression ppf e
   | Indexed (e, l) -> pf ppf "%a[%a]" pp_expression e pp_list_of_indices l
   | TupleProjection (e, i) -> pf ppf "%a.%d" pp_expression e i
   | TupleExpr es ->
       pf ppf "(@[<hv>%a%s@])" pp_list_of_expression (es, loc)
         (if List.length es = 1 then "," else "")
+  | Promotion _ -> .
 
 and pp_list_of_expression ppf es =
   let loc_of (x : untyped_expression) = x.emeta.loc in
