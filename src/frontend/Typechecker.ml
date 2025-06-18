@@ -177,7 +177,7 @@ let check_ternary_if loc pe te fe =
       (not (UnsizedType.equal expr.emeta.type_ type_))
       || UnsizedType.compare_autodifftype expr.emeta.ad_level ad_level <> 0
     then
-      { expr= Promotion (expr, UnsizedType.internal_scalar type_, ad_level)
+      { expr= Promotion (expr, (UnsizedType.internal_scalar type_, ad_level))
       ; emeta= {expr.emeta with type_; ad_level} }
     else expr in
   match
@@ -643,7 +643,8 @@ let verify_second_order_derivative_compatibility (ast : typed_program) =
             List.fold ~f:check_expr ~init:seen' es
         | {expr= Variable name; emeta= {type_= UFun _; _}} ->
             check_fun seen {name with id_loc}
-        | e -> Ast.fold_expression check_expr fold_nop seen e.expr in
+        | e -> Ast.fold_expression check_expr fold_nop fold_nop seen e.expr
+      in
       let check_lval acc l = fold_lval_with check_expr fold_nop acc l in
       let rec check_stmt seen s =
         match s.stmt with
@@ -1100,10 +1101,7 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
       es |> List.map ~f:ce |> check_funapp loc cf tenv ~is_cond_dist:false id
   | CondDistApp ((), id, es) ->
       es |> List.map ~f:ce |> check_funapp loc cf tenv ~is_cond_dist:true id
-  | Promotion (e, _, _) ->
-      (* Should never happen: promotions are produced during typechecking *)
-      Common.ICE.internal_compiler_error
-        [%message "Promotion in untyped AST" (e : Ast.untyped_expression)]
+  | Promotion _ -> .
 
 and check_expression_of_int_type cf tenv e name =
   let te = check_expression cf tenv e in

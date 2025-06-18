@@ -33,7 +33,7 @@ type fun_kind =
 
 (** Expression shapes (used for both typed and untyped expressions, where we
     substitute untyped_expression or typed_expression for 'e *)
-type ('e, 'f) expression =
+type ('e, 'f, 'p) expression =
   | TernaryIf of 'e * 'e * 'e
   | BinOp of 'e * Operator.t * 'e
   | PrefixOp of Operator.t * 'e
@@ -44,7 +44,7 @@ type ('e, 'f) expression =
   | ImagNumeral of string
   | FunApp of 'f * identifier * 'e list
   | CondDistApp of 'f * identifier * 'e list
-  | Promotion of 'e * UnsizedType.t * UnsizedType.autodifftype
+  | Promotion of 'e * 'p
   | GetTarget
   | ArrayExpr of 'e list
   | RowVectorExpr of 'e list
@@ -54,14 +54,19 @@ type ('e, 'f) expression =
   | TupleExpr of 'e list
 [@@deriving sexp, hash, compare, map, fold]
 
-type ('m, 'f) expr_with = {expr: (('m, 'f) expr_with, 'f) expression; emeta: 'm}
+type ('m, 'f, 'p) expr_with =
+  {expr: (('m, 'f, 'p) expr_with, 'f, 'p) expression; emeta: 'm}
 [@@deriving sexp, compare, map, hash, fold]
 
 (** Untyped expressions, which have location_spans as meta-data *)
 type located_meta = {loc: (Location_span.t[@sexp.opaque] [@compare.ignore])}
 [@@deriving sexp, compare, map, hash, fold]
 
-type untyped_expression = (located_meta, unit) expr_with
+(** Uninhabited type. This is supplied as an argument to the Promotion node in
+    untyped ASTs so the compiler can deduce it is impossible *)
+type empty = | [@@deriving sexp, compare, hash]
+
+type untyped_expression = (located_meta, unit, empty) expr_with
 [@@deriving sexp, compare, map, hash, fold]
 
 (** Typed expressions also have meta-data after type checking: a location_span, as well as a type
@@ -72,7 +77,11 @@ type typed_expr_meta =
   ; type_: UnsizedType.t }
 [@@deriving sexp, compare, map, hash, fold]
 
-type typed_expression = (typed_expr_meta, fun_kind) expr_with
+type typed_expression =
+  ( typed_expr_meta
+  , fun_kind
+  , UnsizedType.t * UnsizedType.autodifftype )
+  expr_with
 [@@deriving sexp, compare, map, hash, fold]
 
 let mk_untyped_expression ~expr ~loc = {expr; emeta= {loc}}
@@ -263,11 +272,13 @@ type typed_program = typed_statement program [@@deriving sexp, compare, map]
 let rec untyped_expression_of_typed_expression
     ({expr; emeta} : typed_expression) : untyped_expression =
   match expr with
-  | Promotion (e, _, _) -> untyped_expression_of_typed_expression e
+  | Promotion (e, _) -> untyped_expression_of_typed_expression e
   | _ ->
       { expr=
-          map_expression untyped_expression_of_typed_expression
-            (fun _ -> ())
+          map_expression untyped_expression_of_typed_expression ignore
+            (fun _ ->
+              Common.ICE.internal_compiler_error
+                [%message "Promotion snuck through!"])
             expr
       ; emeta= {loc= emeta.loc} }
 
@@ -322,7 +333,7 @@ let rec expr_of_lvalue {lval; lmeta} =
 let rec extract_ids {expr; _} =
   match expr with
   | Variable id -> [id]
-  | Promotion (e, _, _)
+  | Promotion (e, _)
    |Indexed (e, _)
    |Paren e
    |TupleProjection (e, _)

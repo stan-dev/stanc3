@@ -47,7 +47,10 @@ let rec get_function_calls_expr (funs, distrs) expr =
     | FunApp (StanLib _, f, _) -> (Set.add funs f.name, distrs)
     | CondDistApp (StanLib _, f, _) -> (funs, Set.add distrs f.name)
     | _ -> (funs, distrs) in
-  fold_expression get_function_calls_expr (fun acc _ -> acc) acc expr.expr
+  fold_expression get_function_calls_expr
+    (fun acc _ -> acc)
+    (fun acc _ -> acc)
+    acc expr.expr
 
 let rec get_function_calls_stmt ud_dists (funs, distrs) stmt =
   let acc =

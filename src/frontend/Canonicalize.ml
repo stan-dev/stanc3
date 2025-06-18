@@ -33,7 +33,7 @@ let rec no_parens {expr; emeta} =
       { expr= BinOp ({e1 with expr= Paren (no_parens e1)}, op2, keep_parens e2)
       ; emeta }
   | TernaryIf _ | BinOp _ | PrefixOp _ | PostfixOp _ ->
-      {expr= map_expression keep_parens Fn.id expr; emeta}
+      {expr= map_expression keep_parens Fn.id Fn.id expr; emeta}
   | Indexed (e, l) ->
       { expr=
           Indexed
@@ -47,11 +47,11 @@ let rec no_parens {expr; emeta} =
   | TupleProjection (e, i) -> {expr= TupleProjection (keep_parens e, i); emeta}
   | ArrayExpr _ | RowVectorExpr _ | FunApp _ | CondDistApp _ | TupleExpr _
    |Promotion _ ->
-      {expr= map_expression no_parens Fn.id expr; emeta}
+      {expr= map_expression no_parens Fn.id Fn.id expr; emeta}
 
 and keep_parens {expr; emeta} =
   match expr with
-  | Promotion (e, ut, ad) -> {expr= Promotion (keep_parens e, ut, ad); emeta}
+  | Promotion (e, (ut, ad)) -> {expr= Promotion (keep_parens e, (ut, ad)); emeta}
   | Paren ({expr= Paren _; _} as e) -> keep_parens e
   | Paren ({expr= BinOp _; _} as e)
    |Paren ({expr= PrefixOp _; _} as e)

@@ -73,7 +73,7 @@ and trans_expr {Ast.expr; Ast.emeta} =
   | TupleProjection (lhs, i) -> TupleProjection (trans_expr lhs, i) |> ewrap
   | TupleExpr eles ->
       FunApp (CompilerInternal FnMakeTuple, trans_exprs eles) |> ewrap
-  | Promotion (e, ty, ad) -> Promotion (trans_expr e, ty, ad) |> ewrap
+  | Promotion (e, (ty, ad)) -> Promotion (trans_expr e, ty, ad) |> ewrap
 
 and trans_idx = function
   | Ast.All -> All
