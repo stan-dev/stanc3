@@ -133,6 +133,8 @@ let pp_comment ppf
   | `Line -> pf ppf "//%s" (List.hd_exn lines)
   | `Include -> pf ppf "@[#include %s@]" (List.hd_exn lines)
 
+let pp_comment = styled `Faint pp_comment
+
 let pp_spacing ?(newline = true) prev_loc next_loc ppf ls =
   let newline =
     newline
@@ -180,13 +182,7 @@ let comma_no_break = any ", "
 let indented_box ?(offset = 0) pp_v ppf v =
   pf ppf "@[<h>  %a@]" (box ~indent:offset pp_v) v
 
-let pp_unsizedtype = Middle.UnsizedType.pp
-let pp_autodifftype = Middle.UnsizedType.pp_autodifftype
-
-let pp_returntype ppf = function
-  | Middle.UnsizedType.ReturnType x -> pp_unsizedtype ppf x
-  | Void -> pf ppf "void"
-
+let pp_autodifftype = styled (`Fg `Magenta) Middle.UnsizedType.pp_autodifftype
 let pp_identifier ppf id = string ppf id.name
 let pp_operator = Middle.Operator.pp
 
@@ -198,7 +194,9 @@ let pp_start_funapp ppf id =
   let long = String.length id.name > 16 in
   pf ppf "%a%a%a"
     (if' long Format.pp_open_box)
-    2 pp_identifier id
+    2
+    (styled (`Fg `Cyan) pp_identifier)
+    id
     (if' (not long) Format.pp_open_box)
     1
 
@@ -233,6 +231,7 @@ and pp_list_of_indices ppf l = (list ~sep:comma_no_break pp_index) ppf l
 
 and pp_expression ppf ({expr= e_content; emeta= {loc; _}} : untyped_expression)
     =
+  let literal = styled (`Fg (`Hi `Yellow)) string in
   match e_content with
   | TernaryIf (e1, e2, e3) ->
       let then_loc = e2.emeta.loc.begin_loc in
@@ -259,9 +258,9 @@ and pp_expression ppf ({expr= e_content; emeta= {loc; _}} : untyped_expression)
         e.emeta.loc.begin_loc pp_operator op pp_expression e
   | PostfixOp (e, op) -> pf ppf "%a%a" pp_expression e pp_operator op
   | Variable id -> pp_identifier ppf id
-  | IntNumeral i -> string ppf i
-  | RealNumeral r -> string ppf r
-  | ImagNumeral z -> pf ppf "%si" z
+  | IntNumeral i -> literal ppf i
+  | RealNumeral r -> literal ppf r
+  | ImagNumeral z -> literal ppf (z ^ "i")
   | FunApp (_, id, es) ->
       pf ppf "%a(@,%a)@]" pp_start_funapp id pp_list_of_expression (es, loc)
   | CondDistApp (_, id, es) -> (
@@ -318,7 +317,7 @@ let pp_truncation ppf = function
       pf ppf " T[%a, %a]" pp_expression e1 pp_expression e2
 
 let pp_printable ppf = function
-  | PString s -> string ppf s
+  | PString s -> (styled (`Fg `Green) string) ppf s
   | PExpr e -> pp_expression ppf e
 
 let pp_list_of_printables ppf l = (hovbox @@ list ~sep:comma pp_printable) ppf l
@@ -341,6 +340,7 @@ let pp_bracketed_transform ppf = function
 
 let rec pp_transformed_type ppf (st, trans) =
   let open Middle in
+  let type_str = styled (`Fg `Magenta) string in
   let pp_possibly_transformed_type ppf (st, trans) =
     let sizes_fmt =
       match st with
@@ -360,12 +360,15 @@ let rec pp_transformed_type ppf (st, trans) =
       | _ -> ignore in
     match trans with
     | Transformation.Identity ->
-        pf ppf "%a" (Middle.SizedType.pp pp_expression) st
+        pf ppf "%a"
+          (styled (`Fg `Magenta)
+             (Middle.SizedType.pp (styled `None pp_expression)))
+          st
     | Lower _ | Upper _ | LowerUpper _ | Offset _ | Multiplier _
      |OffsetMultiplier _ ->
-        pf ppf "%a%a%t" pp_unsizedtype (SizedType.to_unsized st)
+        pf ppf "%a%a%t" UnsizedType.pp (SizedType.to_unsized st)
           pp_bracketed_transform trans sizes_fmt
-    | Ordered -> pf ppf "ordered%t" sizes_fmt
+    | Ordered -> pf ppf "%a%t" type_str "ordered" sizes_fmt
     | PositiveOrdered -> pf ppf "positive_ordered%t" sizes_fmt
     | Simplex -> pf ppf "simplex%t" sizes_fmt
     | UnitVector -> pf ppf "unit_vector%t" sizes_fmt
@@ -394,7 +397,7 @@ let rec pp_transformed_type ppf (st, trans) =
         List.last_exn ixs in
       let ({emeta= {loc= {begin_loc; _}; _}; _} : untyped_expression) =
         List.hd_exn ixs in
-      pf ppf "array[@[%a@]]@ %a" pp_list_of_expression
+      pf ppf "%a[@[%a@]]@ %a" type_str "array" pp_list_of_expression
         (ixs, {begin_loc; end_loc})
         pp_possibly_transformed_type (ty, trans)
   | _ -> pf ppf "%a" pp_possibly_transformed_type (st, trans)
@@ -474,7 +477,7 @@ and pp_statement ppf ({stmt= s_content; smeta= {loc}} as ss : untyped_statement)
         (list ~sep:comma pp_var) variables
   | FunDef {returntype= rt; funname= id; arguments= args; body= b} -> (
       let loc_of (_, _, id) = id.id_loc in
-      pf ppf "%a %a(%a" pp_returntype rt pp_identifier id
+      pf ppf "%a %a(%a" Middle.UnsizedType.pp_returntype rt pp_identifier id
         (box (pp_list_of pp_args loc_of))
         (args, {loc with end_loc= b.smeta.loc.begin_loc});
       match b with
@@ -482,7 +485,7 @@ and pp_statement ppf ({stmt= s_content; smeta= {loc}} as ss : untyped_statement)
       | b -> pf ppf ") %a" pp_statement b)
 
 and pp_args ppf (at, ut, id) =
-  pf ppf "%a%a %a" pp_autodifftype at pp_unsizedtype ut pp_identifier id
+  pf ppf "%a%a %a" pp_autodifftype at Middle.UnsizedType.pp ut pp_identifier id
 
 and pp_list_of_statements ppf (l, xloc) =
   let rec pp_head ppf ls =
