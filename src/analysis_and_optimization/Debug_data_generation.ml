@@ -128,7 +128,7 @@ let gen_vector m n t =
   match t with
   | Transformation.Simplex ->
       let l = repeat_th n (fun _ -> Random.float 1.) in
-      let sum = List.fold l ~init:0. ~f:(fun accum elt -> accum +. elt) in
+      let sum = List.fold l ~init:0. ~f:( +. ) in
       let l = List.map l ~f:(fun x -> x /. sum) in
       Expr.Helpers.vector l
   | Ordered ->
