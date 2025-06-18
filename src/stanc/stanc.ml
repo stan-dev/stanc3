@@ -10,7 +10,8 @@ let write filename data =
     exit 1
 
 let print_or_write_and_exit output_file data =
-  if not (String.equal output_file "") then write output_file data
+  if not (String.equal output_file "") then
+    write output_file (Common.Formatting.strip_ansi_escapes data)
   else print_endline data;
   exit 0
 
