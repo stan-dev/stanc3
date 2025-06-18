@@ -1,5 +1,4 @@
 open Core
-open Frontend
 open Common
 
 let%expect_test "with_exn_message" =
@@ -27,54 +26,17 @@ let%expect_test "backtrace indirect test" =
   [%expect {| Backtrace found in message |}]
 
 let%expect_test "ICE triggered" =
-  (* Manually construct an untyped AST with a Promotion node.
-     This is impossible in the parser, so leads to an ICE
-     during typechecking *)
-  let ast : Ast.untyped_program =
-    let open Middle in
-    let xloc = Location_span.empty in
-    let id_loc = xloc in
-    let emeta = Ast.{loc= xloc} in
-    let smeta = emeta in
-    Ast.
-      { functionblock= None
-      ; datablock= None
-      ; transformeddatablock= None
-      ; parametersblock= None
-      ; transformedparametersblock= None
-      ; modelblock= None
-      ; generatedquantitiesblock=
-          Some
-            Ast.
-              { stmts=
-                  [ { stmt=
-                        VarDecl
-                          { decl_type= SizedType.SReal
-                          ; transformation= Transformation.Identity
-                          ; is_global= false
-                          ; variables=
-                              [ Ast.
-                                  { identifier= Ast.{name= "foo"; id_loc}
-                                  ; initial_value=
-                                      Some
-                                        { expr=
-                                            Promotion
-                                              ( {expr= IntNumeral "1"; emeta}
-                                              , UnsizedType.UReal
-                                              , UnsizedType.DataOnly )
-                                        ; emeta } } ] }
-                    ; smeta } ]
-              ; xloc }
-      ; comments= [] } in
   Printexc.record_backtrace false;
-  ICE.with_exn_message (fun () -> Typechecker.check_program ast)
+  ICE.with_exn_message (fun () ->
+      Middle.(
+        Expr.Helpers.infer_type_of_indexed UnsizedType.UReal
+          [Index.Single Expr.Helpers.loop_bottom]))
   |> Result.error |> Option.value_exn |> print_endline;
   Printexc.record_backtrace true;
   [%expect
     {|
     Internal compiler error:
-    ("Promotion in untyped AST"
-     (e ((expr (IntNumeral 1)) (emeta ((loc <opaque>))))))
+    ("Can't index" (ut UReal))
     Backtrace missing.
 
     This should never happen. Please file a bug at https://github.com/stan-dev/stanc3/issues/new
