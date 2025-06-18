@@ -38,8 +38,7 @@ let rec extract_factors statement_map label =
   let stmt, _ = Map.Poly.find_exn statement_map label in
   let this_stmt =
     List.map (extract_factors_statement stmt) ~f:(fun x -> (label, x)) in
-  Stmt.Pattern.fold
-    (fun s _ -> s)
+  Stmt.Pattern.fold Fn.const
     (fun state label -> List.append state (extract_factors statement_map label))
     this_stmt stmt
 
@@ -90,9 +89,9 @@ let remove_touching vars fg =
   let facs =
     union_map vars ~f:(fun v ->
         Option.value ~default:Set.Poly.empty (Map.Poly.find fg.var_map v)) in
-  let without_vars = Set.fold ~f:(fun g v -> fg_remove_var v g) ~init:fg vars in
+  let without_vars = Set.fold ~f:(Fn.flip fg_remove_var) ~init:fg vars in
   let without_facs =
-    Set.fold ~f:(fun g f -> fg_remove_fac f g) ~init:without_vars facs in
+    Set.fold ~f:(Fn.flip fg_remove_fac) ~init:without_vars facs in
   without_facs
 
 (** Build a factor graph from prog.log_prob using dependency analysis *)
@@ -171,10 +170,7 @@ let list_priors ?factor_graph:(fg_opt = None) (mir : Program.Typed.t) :
     Set.diff data
       (Set.Poly.map ~f:(fun v -> VVar v) (data_set ~exclude_ints:true mir))
   in
-  let fg' =
-    Set.fold ~init:fg
-      ~f:(fun fg likely_size -> fg_remove_var likely_size fg)
-      likely_sizes in
+  let fg' = Set.fold ~init:fg ~f:(Fn.flip fg_remove_var) likely_sizes in
   (* for each param, apply fg_var_priors and collect results in a map*)
   generate_map params ~f:(fun p -> fg_var_priors p data fg')
 

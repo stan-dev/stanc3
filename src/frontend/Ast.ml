@@ -56,18 +56,18 @@ type ('e, 'f, 'p) expression =
 
 type ('m, 'f, 'p) expr_with =
   {expr: (('m, 'f, 'p) expr_with, 'f, 'p) expression; emeta: 'm}
-[@@deriving sexp, compare, map, hash, fold]
+[@@deriving sexp, compare, hash]
 
 (** Untyped expressions, which have location_spans as meta-data *)
 type located_meta = {loc: (Location_span.t[@sexp.opaque] [@compare.ignore])}
-[@@deriving sexp, compare, map, hash, fold]
+[@@deriving sexp, compare, hash]
 
 (** Uninhabited type. This is supplied as an argument to the Promotion node in
     untyped ASTs so the compiler can deduce it is impossible *)
 type empty = | [@@deriving sexp, compare, hash]
 
 type untyped_expression = (located_meta, unit, empty) expr_with
-[@@deriving sexp, compare, map, hash, fold]
+[@@deriving sexp, compare, hash]
 
 (** Typed expressions also have meta-data after type checking: a location_span, as well as a type
     and an origin block (lub of the origin blocks of the identifiers in it) *)
@@ -75,19 +75,14 @@ type typed_expr_meta =
   { loc: (Location_span.t[@sexp.opaque] [@compare.ignore])
   ; ad_level: UnsizedType.autodifftype
   ; type_: UnsizedType.t }
-[@@deriving sexp, compare, map, hash, fold]
+[@@deriving sexp, compare, hash]
 
 type typed_expression =
   ( typed_expr_meta
   , fun_kind
   , UnsizedType.t * UnsizedType.autodifftype )
   expr_with
-[@@deriving sexp, compare, map, hash, fold]
-
-let mk_untyped_expression ~expr ~loc = {expr; emeta= {loc}}
-
-let mk_typed_expression ~expr ~loc ~type_ ~ad_level =
-  {expr; emeta= {loc; type_; ad_level}}
+[@@deriving sexp, compare, hash]
 
 let expr_loc_lub exprs =
   match List.map ~f:(fun e -> e.emeta.loc) exprs with
@@ -207,19 +202,19 @@ type statement_returntype =
 
 type ('e, 'm, 'l, 'f) statement_with =
   {stmt: ('e, ('e, 'm, 'l, 'f) statement_with, 'l, 'f) statement; smeta: 'm}
-[@@deriving sexp, compare, map, hash, fold]
+[@@deriving sexp, compare, hash]
 
 (** Untyped statements, which have location_spans as meta-data *)
 type untyped_statement =
   (untyped_expression, located_meta, untyped_lval, unit) statement_with
-[@@deriving sexp, compare, map, hash]
+[@@deriving sexp, compare, hash]
 
 let mk_untyped_statement ~stmt ~loc : untyped_statement = {stmt; smeta= {loc}}
 
 type stmt_typed_located_meta =
   { loc: (Middle.Location_span.t[@sexp.opaque] [@compare.ignore])
   ; return_type: statement_returntype }
-[@@deriving sexp, compare, map, hash]
+[@@deriving sexp, compare, hash]
 
 (** Typed statements also have meta-data after type checking: a location_span, as well as a statement returntype
     to check that function bodies have the right return type*)
@@ -229,7 +224,7 @@ type typed_statement =
   , typed_lval
   , fun_kind )
   statement_with
-[@@deriving sexp, compare, map, hash]
+[@@deriving sexp, compare, hash]
 
 let mk_typed_statement ~stmt ~loc ~return_type =
   {stmt; smeta= {loc; return_type}}
@@ -261,10 +256,10 @@ and 's program =
 let get_stmts = Option.value_map ~default:[] ~f:(fun x -> x.stmts)
 
 (** Untyped programs (before type checking) *)
-type untyped_program = untyped_statement program [@@deriving sexp, compare, map]
+type untyped_program = untyped_statement program [@@deriving sexp, compare]
 
 (** Typed programs (after type checking) *)
-type typed_program = typed_statement program [@@deriving sexp, compare, map]
+type typed_program = typed_statement program [@@deriving sexp, compare]
 
 (*========================== Helper functions ===============================*)
 
@@ -321,6 +316,24 @@ let rec untyped_statement_of_typed_statement {stmt; smeta} =
 (** Forgetful function from typed to untyped programs *)
 let untyped_program_of_typed_program : typed_program -> untyped_program =
   map_program untyped_statement_of_typed_statement
+
+(** in practice, we never want to fold over the FnKind or Promotion types
+   so we over-write the @@derived fold_expression *)
+
+let fold_expression f acc e = fold_expression f Fn.const Fn.const acc e
+let fold_lvalue f acc = fold_lvalue f Fn.const acc
+let fold_lval_with f acc lval = fold_lval_with f Fn.const acc lval
+let fold_statement f g h acc s = fold_statement f g h Fn.const acc s
+
+(** similarly for map *)
+
+let map_expression f e = map_expression f Fn.id Fn.id e
+let map_lvalue f lval = map_lvalue f Fn.id lval
+let map_lval_with f lval = map_lval_with f Fn.id lval
+let map_statement f g h s = map_statement f g h Fn.id s
+
+let mk_typed_expression ~expr ~loc ~type_ ~ad_level =
+  {expr; emeta= {loc; type_; ad_level}}
 
 let rec expr_of_lvalue {lval; lmeta} =
   { expr=

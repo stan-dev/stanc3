@@ -630,7 +630,6 @@ let verify_second_order_derivative_compatibility (ast : typed_program) =
   let rec check_fun (visited : String.Set.t) {name= fn_name; id_loc} =
     if Set.mem visited fn_name then visited
     else
-      let fold_nop v _ = v in
       let rec check_expr seen = function
         | {expr= FunApp (StanLib _, {name; _}, _); _}
           when Stan_math_signatures.lacks_higher_order_autodiff name ->
@@ -643,17 +642,15 @@ let verify_second_order_derivative_compatibility (ast : typed_program) =
             List.fold ~f:check_expr ~init:seen' es
         | {expr= Variable name; emeta= {type_= UFun _; _}} ->
             check_fun seen {name with id_loc}
-        | e -> Ast.fold_expression check_expr fold_nop fold_nop seen e.expr
-      in
-      let check_lval acc l = fold_lval_with check_expr fold_nop acc l in
+        | e -> Ast.fold_expression check_expr seen e.expr in
+      let check_lval acc l = fold_lval_with check_expr acc l in
       let rec check_stmt seen s =
         match s.stmt with
         | NRFunApp (UserDefined _, name, es) ->
             let seen' = check_fun seen {name with id_loc} in
             List.fold ~f:check_expr ~init:seen' es
-        | stmt ->
-            Ast.fold_statement check_expr check_stmt check_lval fold_nop seen
-              stmt in
+        | stmt -> Ast.fold_statement check_expr check_stmt check_lval seen stmt
+      in
       let visited' = Set.add visited fn_name in
       List.fold ~f:check_stmt ~init:visited' (get_function_bodies fn_name) in
   ignore

@@ -679,8 +679,7 @@ let collect_mem_pattern_variables stmts =
       when SizedType.has_mem_pattern stype ->
         (decl_id, stype) :: acc
     | _ -> acc in
-  Mir_utils.fold_stmts ~take_expr:(fun acc _ -> acc) ~take_stmt ~init:[] stmts
-  |> List.rev
+  Mir_utils.fold_stmts ~take_expr:Fn.const ~take_stmt ~init:[] stmts |> List.rev
 
 let pp_mem_patterns ppf (Program.{reverse_mode_log_prob; _} : Program.Typed.t) =
   let pp_var ppf (name, stype) =

@@ -36,7 +36,7 @@ let rec pp pp_e ppf = function
         (d1_expr, d2_expr)
   | SArray (st, expr) ->
       Fmt.pf ppf "array%a"
-        Fmt.(pair ~sep:comma (fun ppf st -> pp pp_e ppf st) pp_e |> brackets)
+        Fmt.(pair ~sep:comma (pp pp_e) pp_e |> brackets)
         (st, expr)
   | STuple subtypes ->
       Fmt.pf ppf "tuple(@[%a@])" Fmt.(list ~sep:comma (pp pp_e)) subtypes
