@@ -118,8 +118,7 @@ let subst_args_stmt args es =
  * Count the number of returns that happen in a statement
  *)
 let rec count_returns Stmt.Fixed.{pattern; _} : int =
-  Stmt.Fixed.Pattern.fold
-    (fun acc _ -> acc)
+  Stmt.Fixed.Pattern.fold Fn.const
     (fun acc -> function
       | Stmt.Fixed.{pattern= Return _; _} -> acc + 1
       | stmt -> acc + count_returns stmt)
@@ -1375,4 +1374,4 @@ let optimization_suite ?(settings = all_optimizations) mir =
   let optimizations =
     List.filter_map maybe_optimizations ~f:(fun (fn, flag) ->
         if flag then Some fn else None) in
-  List.fold optimizations ~init:mir ~f:(fun mir opt -> opt mir)
+  List.fold optimizations ~init:mir ~f:Fn.( |> )
