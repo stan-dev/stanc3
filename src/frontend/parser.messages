@@ -1,3 +1,21 @@
+# This file is used by Menhir to generate error messages for bad
+# parser states.
+#
+# It is highly recommended to read the Menhir manual, section 11.1:
+#  https://gallium.inria.fr/~fpottier/menhir/manual.html#sec73
+# Notably, each example program below is just that -- ONE example of a
+# program ending in that state.
+#
+# When the parser is updated, the command `dune build @update_messages` will
+# automatically update this file, leaving new placeholder messages for new states.
+#
+#
+# The messages below can use a markup language based on the one used by Cmdliner
+# for our command-line interface help message. In short, $(red,Text) will be red,
+# $(b,This $(green,Text)) will be bold, with the second word also being green, etc.
+# See the `markup_text` function in Errors.ml for how this is done and the full
+# list of styles.
+#
 program: WHILE
 ##
 ## Concrete syntax: while
@@ -758,13 +776,13 @@ program: DATABLOCK LBRACE IDENTIFIER
 ## DATABLOCK LBRACE
 ##
 
-Invalid type in declaration. $(blue,Valid types:)
-  int, real, vector, row_vector, matrix,
+$(light_red,Invalid type in declaration.) $(blue,Valid types:)
+  $(magenta,int), real, vector, row_vector, matrix,
   unit_vector, simplex, sum_to_zero_vector, ordered, positive_ordered,
   corr_matrix, cov_matrix, cholesky_factor_corr, cholesky_factor_cov,
   sum_to_zero_matrix, row_stochastic_matrix, column_stochastic_matrix,
   tuple($(f,...))
-optionally preceded by a single array[$(f,...)]
+optionally preceded by a $(u,single) $(magenta,array)[$(f,...)]
 
 program: DATABLOCK WHILE
 ##
@@ -840,7 +858,7 @@ program: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN RPAREN VOID
 ## return_type decl_identifier LPAREN loption(separated_nonempty_list(COMMA,arg_decl)) RPAREN
 ##
 
-Either "{" statement "}" is expected for a function definition or ";" for a function forward declaration.
+Either $(green,"{") $(i,statement) $(green,"}") is expected for a function definition or $(green,";") for a function forward declaration.
 
 program: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN WHILE
 ## Concrete syntax: functions { void foo ( while
