@@ -8,7 +8,9 @@ let pp_bare_block ppf {stmts; xloc} =
   (hbox (box pp_list_of_statements)) ppf (stmts, xloc)
 
 let pp_block block_name ppf {stmts; xloc} =
-  pf ppf "%s {@,%a@,}@," block_name
+  pf ppf "%a {@,%a@,}@,"
+    (Fmt.styled (`Fg `Yellow) string)
+    block_name
     (indented_box pp_list_of_statements)
     (stmts, xloc)
 
@@ -46,6 +48,7 @@ let pp_program ~bare_functions ~line_length ~inline_includes ~strip_comments ppf
     pp_block_list ppf blocks
 
 let check_correctness ?(bare_functions = false) prog pretty =
+  let pretty = Common.Formatting.strip_ansi_escapes pretty in
   let result_ast =
     let res, (_ : Warnings.t list) =
       if bare_functions then Parse.parse_stanfunctions (`Code pretty)
@@ -70,7 +73,7 @@ let check_correctness ?(bare_functions = false) prog pretty =
 let pretty_print_program ?(bare_functions = false) ?(line_length = 78)
     ?(inline_includes = false) ?(strip_comments = false) p =
   let result =
-    str "%a"
+    (str_like stdout) "%a"
       (pp_program ~bare_functions ~line_length ~inline_includes ~strip_comments)
       p in
   check_correctness ~bare_functions p result;

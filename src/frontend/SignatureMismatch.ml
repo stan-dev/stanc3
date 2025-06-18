@@ -14,19 +14,10 @@ let get ctx key =
       s
 
 (** Like UnsizedType.pp but with opaque names for function types. *)
-let pp_unsized_type ctx ppf =
-  let rec pp ppf ty =
-    match ty with
-    | UnsizedType.UInt | UReal | UVector | URowVector | UMatrix | UComplex
-     |UMathLibraryFunction | UTuple _ | UComplexRowVector | UComplexVector
-     |UComplexMatrix ->
-        UnsizedType.pp ppf ty
-    | UArray ut ->
-        let ut2, d = UnsizedType.unwind_array_type ut in
-        let array_str = "[" ^ String.make d ',' ^ "]" in
-        Fmt.pf ppf "array%s %a" array_str pp ut2
-    | UFun _ -> Fmt.pf ppf "<%s>" (get ctx ty) in
-  pp ppf
+let pp_unsized_type ctx ppf ty =
+  match ty with
+  | UnsizedType.UFun _ -> Fmt.pf ppf "<%s>" (get ctx ty)
+  | _ -> UnsizedType.pp ppf ty
 
 let pp_fundef ctx ppf =
   let pp_returntype ppf = function

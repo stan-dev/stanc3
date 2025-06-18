@@ -65,37 +65,41 @@ let rec wind_array_type = function
   | typ, 0 -> typ
   | typ, n -> wind_array_type (UArray typ, n - 1)
 
-let rec pp ppf = function
-  | UInt -> Fmt.string ppf "int"
-  | UReal -> Fmt.string ppf "real"
-  | UComplex -> Fmt.string ppf "complex"
-  | UVector -> Fmt.string ppf "vector"
-  | URowVector -> Fmt.string ppf "row_vector"
-  | UMatrix -> Fmt.string ppf "matrix"
-  | UComplexVector -> Fmt.string ppf "complex_vector"
-  | UComplexRowVector -> Fmt.string ppf "complex_row_vector"
-  | UComplexMatrix -> Fmt.string ppf "complex_matrix"
+let rec pp ppf ut =
+  let open Fmt in
+  let ty_string = styled (`Fg `Magenta) string in
+  match ut with
+  | UInt -> ty_string ppf "int"
+  | UReal -> ty_string ppf "real"
+  | UComplex -> ty_string ppf "complex"
+  | UVector -> ty_string ppf "vector"
+  | URowVector -> ty_string ppf "row_vector"
+  | UMatrix -> ty_string ppf "matrix"
+  | UComplexVector -> ty_string ppf "complex_vector"
+  | UComplexRowVector -> ty_string ppf "complex_row_vector"
+  | UComplexMatrix -> ty_string ppf "complex_matrix"
   | UArray ut ->
       let ut2, d = unwind_array_type ut in
       let array_str = "[" ^ String.make d ',' ^ "]" in
-      Fmt.pf ppf "array%s %a" array_str pp ut2
+      pf ppf "%a%s %a" ty_string "array" array_str pp ut2
   | UTuple ts -> (
       match ts with
-      | [t] -> Fmt.pf ppf "tuple(@[%a,@])" pp t
-      | _ -> Fmt.pf ppf "tuple(@[%a@])" Fmt.(list ~sep:comma pp) ts)
+      | [t] -> pf ppf "%a(@[%a,@])" ty_string "tuple" pp t
+      | _ -> pf ppf "%a(@[%a@])" ty_string "tuple" (list ~sep:comma pp) ts)
   | UFun (argtypes, rt, _, _) ->
-      Fmt.pf ppf {|@[<h>(%a) => %a@]|}
-        Fmt.(list pp_fun_arg ~sep:comma)
+      pf ppf {|@[<h>(%a) => %a@]|}
+        (list pp_fun_arg ~sep:comma)
         argtypes pp_returntype rt
-  | UMathLibraryFunction -> Fmt.string ppf "<Stan Math function>"
+  | UMathLibraryFunction -> ty_string ppf "<Stan Math function>"
 
 and pp_fun_arg ppf (ad_ty, unsized_ty) =
   match ad_ty with
   | DataOnly -> Fmt.pf ppf {|data %a|} pp unsized_ty
   | _ -> pp ppf unsized_ty
 
-and pp_returntype ppf = function
-  | Void -> Fmt.string ppf "void"
+and pp_returntype ppf rt =
+  match rt with
+  | Void -> Fmt.(styled (`Fg `Magenta) string) ppf "void"
   | ReturnType ut -> pp ppf ut
 
 let pp_math_sig ppf s = pp ppf (UFun s)

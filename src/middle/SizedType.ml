@@ -16,30 +16,29 @@ type 'a t =
   | STuple of 'a t list
 [@@deriving sexp, compare, map, hash, fold]
 
-let rec pp pp_e ppf = function
-  | SInt -> Fmt.string ppf "int"
-  | SReal -> Fmt.string ppf "real"
-  | SComplex -> Fmt.string ppf "complex"
-  | SVector (_, expr) -> Fmt.pf ppf "vector%a" (Fmt.brackets pp_e) expr
-  | SRowVector (_, expr) -> Fmt.pf ppf "row_vector%a" (Fmt.brackets pp_e) expr
-  | SComplexVector expr ->
-      Fmt.pf ppf "complex_vector%a" (Fmt.brackets pp_e) expr
-  | SComplexRowVector expr ->
-      Fmt.pf ppf "complex_row_vector%a" (Fmt.brackets pp_e) expr
+let rec pp pp_e ppf st =
+  let open Fmt in
+  let brackets pp = styled `None (brackets pp) in
+  match st with
+  | SInt -> string ppf "int"
+  | SReal -> string ppf "real"
+  | SComplex -> string ppf "complex"
+  | SVector (_, expr) -> pf ppf "vector%a" (brackets pp_e) expr
+  | SRowVector (_, expr) -> pf ppf "row_vector%a" (brackets pp_e) expr
+  | SComplexVector expr -> pf ppf "complex_vector%a" (brackets pp_e) expr
+  | SComplexRowVector expr -> pf ppf "complex_row_vector%a" (brackets pp_e) expr
   | SMatrix (_, d1_expr, d2_expr) ->
-      Fmt.pf ppf "matrix%a"
-        Fmt.(pair ~sep:comma pp_e pp_e |> brackets)
+      pf ppf "matrix%a"
+        (pair ~sep:comma pp_e pp_e |> brackets)
         (d1_expr, d2_expr)
   | SComplexMatrix (d1_expr, d2_expr) ->
-      Fmt.pf ppf "complex_matrix%a"
-        Fmt.(pair ~sep:comma pp_e pp_e |> brackets)
+      pf ppf "complex_matrix%a"
+        (pair ~sep:comma pp_e pp_e |> brackets)
         (d1_expr, d2_expr)
   | SArray (st, expr) ->
-      Fmt.pf ppf "array%a"
-        Fmt.(pair ~sep:comma (pp pp_e) pp_e |> brackets)
-        (st, expr)
+      pf ppf "array%a" (pair ~sep:comma (pp pp_e) pp_e |> brackets) (st, expr)
   | STuple subtypes ->
-      Fmt.pf ppf "tuple(@[%a@])" Fmt.(list ~sep:comma (pp pp_e)) subtypes
+      pf ppf "tuple(@[%a@])" (list ~sep:comma (pp pp_e)) subtypes
 
 let rec to_unsized = function
   | SInt -> UnsizedType.UInt
