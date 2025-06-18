@@ -96,58 +96,53 @@ let markup_text ppf s =
   let max_i = String.length s - 1 in
   let buf = Buffer.create (String.length s) in
   let styles = Stack.create () in
-  let pp_buffered () =
+  let print_current_style () =
     let with_style =
       Stack.fold
         ~f:(fun pp style -> Fmt.styled style pp)
         ~init:Fmt.string styles in
     with_style ppf (Buffer.contents buf);
     Buffer.clear buf in
+  let start_style s =
+    print_current_style ();
+    Stack.push styles s in
+  let end_style () =
+    print_current_style ();
+    Stack.pop styles |> ignore in
   let rec loop i =
-    if i > max_i then pp_buffered ()
+    let next = i + 1 in
+    let continue () =
+      Buffer.add_char buf s.[i];
+      loop next in
+    if i > max_i then print_current_style ()
     else
       match s.[i] with
       | '\\' ->
           Buffer.add_char buf s.[i];
-          let next = i + 1 in
           if next > max_i then loop next
           else (
             (* very simplistic escaping *)
             Buffer.add_char buf s.[next];
             loop (next + 1))
       | ')' when not (Stack.is_empty styles) ->
-          pp_buffered ();
-          Stack.pop styles |> ignore;
+          end_style ();
           loop (i + 1)
-      | '$' -> (
-          let bail () =
-            (* if we see an invalid sequence ahead, just add the $ *)
-            Buffer.add_char buf s.[i];
-            loop (i + 1) in
-          let next = i + 1 in
-          if next > max_i then bail ()
-          else
-            match s.[next] with
-            | '(' -> (
-                let next = next + 1 in
-                if next > max_i then bail ()
-                else
-                  match String.index_from s next ',' with
-                  | Some endi -> (
-                      match
-                        style_of_string
-                          (String.sub s ~pos:next ~len:(endi - next))
-                      with
-                      | Some st ->
-                          pp_buffered ();
-                          Stack.push styles st;
-                          loop (endi + 1)
-                      | None -> bail ())
-                  | None -> bail ())
-            | _ -> bail ())
-      | c ->
-          Buffer.add_char buf c;
-          loop (i + 1) in
+      | '$'
+        when (* only process if it's possible to
+                have a style given the length *)
+             i + 3 < max_i -> (
+          let style_start = next + 1 in
+          match (s.[next], String.index_from s style_start ',') with
+          | '(', Some endi -> (
+              let style_string =
+                String.sub s ~pos:style_start ~len:(endi - style_start) in
+              match style_of_string style_string with
+              | Some style ->
+                  start_style style;
+                  loop (endi + 1)
+              | None -> continue ())
+          | _ -> continue ())
+      | _ -> continue () in
   loop 0
 
 (** A syntax error message used when handling a SyntaxError *)
