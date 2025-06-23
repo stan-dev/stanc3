@@ -18,101 +18,118 @@ let kind = function
   | Parsing _ -> "parsing error"
   | UnexpectedEOF _ | Lexing _ -> "lexing error"
   | Include _ -> "include error"
+(** Sets up the semantic tag machinery (https://ocaml.org/manual/api/Format.html#tags)
+   to print ANSI escape codes for formatting
+*)
+let styled_text ppf str =
+  let ansi_stags former =
+    let str_to_esc_seq styling =
+      match String.lowercase styling with
+      | "b" | "bold" -> Some "1"
+      | "i" | "italic" -> Some "3"
+      | "u" | "underline" -> Some "4"
+      | "f" | "faint" -> Some "2"
+      | "r" | "reset" -> Some "0"
+      | "reverse" -> Some "7"
+      | "black" -> Some "30"
+      | "red" -> Some "31"
+      | "green" -> Some "32"
+      | "yellow" -> Some "33"
+      | "blue" -> Some "34"
+      | "magenta" -> Some "35"
+      | "cyan" -> Some "36"
+      | "white" -> Some "37"
+      | "bg_black" -> Some "40"
+      | "bg_red" -> Some "41"
+      | "bg_green" -> Some "42"
+      | "bg_yellow" -> Some "43"
+      | "bg_blue" -> Some "44"
+      | "bg_magenta" -> Some "45"
+      | "bg_cyan" -> Some "46"
+      | "bg_white" -> Some "47"
+      | "light_black" -> Some "90"
+      | "light_red" -> Some "91"
+      | "light_green" -> Some "92"
+      | "light_yellow" -> Some "93"
+      | "light_blue" -> Some "94"
+      | "light_magenta" -> Some "95"
+      | "light_cyan" -> Some "96"
+      | "light_white" -> Some "97"
+      | _ -> None in
+    let styles = Stack.create () in
+    let print_current_styles () =
+      let styles_until_reset =
+        Stack.to_list styles
+        |> List.take_while ~f:(function "0" -> false | _ -> true)
+        |> List.rev in
+      let escs =
+        List.fold styles_until_reset ~init:"0" ~f:(fun acc s ->
+            Printf.sprintf "%s;%s" acc s) in
+      sprintf "\027[%sm" escs in
+    Format.
+      { former with
+        mark_open_stag=
+          (function
+          | String_tag s -> (
+              match str_to_esc_seq s with
+              | Some eseq ->
+                  Stack.push styles eseq;
+                  print_current_styles ()
+              | None -> former.mark_open_stag (String_tag s))
+          | stag -> former.mark_open_stag stag)
+      ; mark_close_stag=
+          (function
+          | String_tag s when Option.is_some (str_to_esc_seq s) ->
+              Stack.pop styles |> ignore;
+              print_current_styles ()
+          | stag -> former.mark_close_stag stag) } in
+  try
+    let format_string =
+      (* treat input like a format string with no placeholders *)
+      Scanf.format_from_string str "" in
+    (* Even though this isn't using the [Fmt.styled] system,
+       we still use Fmt's style _setting_ for consistent behavior *)
+    match Fmt.style_renderer ppf with
+    | `None -> Fmt.fmt format_string ppf
+    | `Ansi_tty ->
+        let former = Format.pp_get_formatter_stag_functions ppf () in
+        let marks = Format.pp_get_mark_tags ppf () in
+        Format.pp_set_formatter_stag_functions ppf (ansi_stags former);
+        Format.pp_set_mark_tags ppf true;
+        Fun.protect
+          (fun () ->
+            Fmt.fmt format_string ppf;
+            Fmt.flush ppf ())
+          ~finally:(fun () ->
+            Format.pp_set_formatter_stag_functions ppf former;
+            Format.pp_set_mark_tags ppf marks)
+  with Scanf.Scan_failure _ ->
+    (* This means the runtime typecheck of str failed, usually because
+       a format specifier like %d was used somewhere. We could throw a noisy
+       error here, but for now I've chosen to just print the string
+    *)
+    Fmt.string ppf str
 
-let style_of_string : string -> Fmt.style option = function
-  | "b" | "bold" -> Some `Bold
-  | "i" -> Some `Italic
-  | "u" -> Some `Underline
-  | "f" | "faint" -> Some `Faint
-  | "r" | "reset" -> Some `None
-  | "reverse" -> Some `Reverse
-  | "black" -> Some (`Fg `Black)
-  | "cyan" -> Some (`Fg `Cyan)
-  | "green" -> Some (`Fg `Green)
-  | "white" -> Some (`Fg `White)
-  | "yellow" -> Some (`Fg `Yellow)
-  | "red" -> Some (`Fg `Red)
-  | "blue" -> Some (`Fg `Blue)
-  | "magenta" -> Some (`Fg `Magenta)
-  | "bg_black" -> Some (`Bg `Black)
-  | "bg_cyan" -> Some (`Bg `Cyan)
-  | "bg_green" -> Some (`Bg `Green)
-  | "bg_white" -> Some (`Bg `White)
-  | "bg_yellow" -> Some (`Bg `Yellow)
-  | "bg_red" -> Some (`Bg `Red)
-  | "bg_blue" -> Some (`Bg `Blue)
-  | "bg_magenta" -> Some (`Bg `Magenta)
-  | "light_black" -> Some (`Fg (`Hi `Black))
-  | "light_cyan" -> Some (`Fg (`Hi `Cyan))
-  | "light_green" -> Some (`Fg (`Hi `Green))
-  | "light_white" -> Some (`Fg (`Hi `White))
-  | "light_yellow" -> Some (`Fg (`Hi `Yellow))
-  | "light_red" -> Some (`Fg (`Hi `Red))
-  | "light_blue" -> Some (`Fg (`Hi `Blue))
-  | "light_magenta" -> Some (`Fg (`Hi `Magenta))
-  | _ -> None
-
-(** This function formats strings that contain styling directives using the
-  [Fmt.styled] system.
-  For example, the string ["$(red,Hello) $(b,world)!"] will be formatted
-  with "Hello" in red and "world" in bold, followed by an
-  exclamation mark. *)
-let markup_text ppf s =
-  let max_i = String.length s - 1 in
-  let buf = Buffer.create (String.length s) in
-  let styles = Stack.create () in
-  let print_current_style () =
-    let with_style =
-      Stack.fold
-        ~f:(fun pp style -> Fmt.styled style pp)
-        ~init:Fmt.string styles in
-    with_style ppf (Buffer.contents buf);
-    Buffer.clear buf in
-  let start_style s =
-    print_current_style ();
-    Stack.push styles s in
-  let end_style () =
-    print_current_style ();
-    Stack.pop styles |> ignore in
-  let rec loop i =
-    let next = i + 1 in
-    let continue () =
-      Buffer.add_char buf s.[i];
-      loop next in
-    if i > max_i then print_current_style ()
-    else
-      match s.[i] with
-      | '\\' ->
-          Buffer.add_char buf s.[i];
-          if next > max_i then loop next
-          else (
-            (* very simplistic escaping *)
-            Buffer.add_char buf s.[next];
-            loop (next + 1))
-      | ')' when not (Stack.is_empty styles) ->
-          end_style ();
-          loop (i + 1)
-      | '$'
-        when (* only process if it's possible to
-                have a style given the length *)
-             i + 3 < max_i -> (
-          let style_start = next + 1 in
-          match (s.[next], String.index_from s style_start ',') with
-          | '(', Some endi -> (
-              let style_string =
-                String.sub s ~pos:style_start ~len:(endi - style_start) in
-              match style_of_string style_string with
-              | Some style ->
-                  start_style style;
-                  loop (endi + 1)
-              | None -> continue ())
-          | _ -> continue ())
-      | _ -> continue () in
-  loop 0
+let%expect_test "colored output" =
+  let s =
+    "@{<b>This @{<red>does @{<blue>what @{<reset>y@{<i>@{<green>o@}@}u@}@} \
+     want@}!@}" in
+  Fmt.set_style_renderer Fmt.stdout `None;
+  styled_text Fmt.stdout s;
+  Format.pp_print_newline Fmt.stdout ();
+  Fmt.set_style_renderer Fmt.stdout `Ansi_tty;
+  styled_text Fmt.stdout s;
+  Format.pp_print_newline Fmt.stdout ();
+  styled_text Fmt.stdout (s ^ "%d");
+  [%expect
+    {|
+    This does what you want!
+    [0;1mThis [0;1;31mdoes [0;1;31;34mwhat [0my[0;3m[0;3;32mo[0;3m[0mu[0;1;31;34m[0;1;31m want[0;1m![0m
+    @{<b>This @{<red>does @{<blue>what @{<reset>y@{<i>@{<green>o@}@}u@}@} want@}!@}%d |}]
 
 (** A syntax error message used when handling a SyntaxError *)
 let pp ppf = function
-  | Parsing (message, _) -> markup_text ppf message
+  | Parsing (message, _) -> styled_text ppf message
   | Lexing _ -> Fmt.pf ppf "Invalid character found.@."
   | UnexpectedEOF _ -> Fmt.pf ppf "Unexpected end of input.@."
   | Include (message, _) -> Fmt.pf ppf "%s@." message

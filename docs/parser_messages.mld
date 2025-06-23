@@ -98,3 +98,10 @@ This is enough to create a new parser state with a different error message.
 Much like after a change to the parser for a new feature, after creating a new parser state,
 you should run [dune build @update_messsages] to check the new entry and generate a error template
 in [parser.messages].
+
+{1 Styling error messages}
+
+The messages in [parser.messages] are interpreted by our error reporting
+system as [Format] strings with no placeholders. In particular, this means you can use
+{{:https://ocaml.org/manual/5.3/api/Format.html#tags}Format semantic tags}
+like [@{<bold>Text@}] to provide optional styling to the error messages.
