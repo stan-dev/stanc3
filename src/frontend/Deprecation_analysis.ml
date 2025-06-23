@@ -134,7 +134,7 @@ let rec collect_deprecated_expr (acc : (Location_span.t * string) list)
                 let version = string_of_int major ^ "." ^ string_of_int minor in
                 [ ( emeta.loc
                   , name ^ " is deprecated and will be removed in Stan "
-                    ^ version ^ ". Use " ^ rename
+                    ^ version ^ ".\nUse " ^ rename
                     ^ " instead. \n\
                        The new interface is slightly different, see: \
                        https://mc-stan.org/users/documentation/case-studies/convert_odes.html"

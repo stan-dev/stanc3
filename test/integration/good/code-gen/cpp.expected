@@ -28148,155 +28148,193 @@ STAN_REGISTER_MAP_RECT(10, motherHOF_model_namespace::foo_functor__)
 STAN_REGISTER_MAP_RECT(11, motherHOF_model_namespace::foo_functor__)
 STAN_REGISTER_MAP_RECT(12, motherHOF_model_namespace::foo_functor__)
 Warning in 'motherHOF.stan', line 100, column 10: integrate_ode_adams is
-    deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
+    deprecated and will be removed in Stan 3.0.
+    Use ode_adams instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 101, column 10: integrate_ode_adams is
-    deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
+    deprecated and will be removed in Stan 3.0.
+    Use ode_adams instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 102, column 10: integrate_ode_adams is
-    deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
+    deprecated and will be removed in Stan 3.0.
+    Use ode_adams instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 104, column 10: integrate_ode_adams is
-    deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
+    deprecated and will be removed in Stan 3.0.
+    Use ode_adams instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 106, column 10: integrate_ode_adams is
-    deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
+    deprecated and will be removed in Stan 3.0.
+    Use ode_adams instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 108, column 10: integrate_ode_adams is
-    deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
+    deprecated and will be removed in Stan 3.0.
+    Use ode_adams instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 111, column 10: integrate_ode_bdf is
-    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    deprecated and will be removed in Stan 3.0.
+    Use ode_bdf instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 112, column 10: integrate_ode_bdf is
-    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    deprecated and will be removed in Stan 3.0.
+    Use ode_bdf instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 113, column 10: integrate_ode_bdf is
-    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    deprecated and will be removed in Stan 3.0.
+    Use ode_bdf instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 114, column 10: integrate_ode_bdf is
-    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    deprecated and will be removed in Stan 3.0.
+    Use ode_bdf instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 116, column 10: integrate_ode_bdf is
-    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    deprecated and will be removed in Stan 3.0.
+    Use ode_bdf instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 118, column 10: integrate_ode_bdf is
-    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    deprecated and will be removed in Stan 3.0.
+    Use ode_bdf instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 120, column 10: integrate_ode_bdf is
-    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    deprecated and will be removed in Stan 3.0.
+    Use ode_bdf instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 122, column 10: integrate_ode_bdf is
-    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    deprecated and will be removed in Stan 3.0.
+    Use ode_bdf instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 125, column 10: integrate_ode_rk45 is
-    deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
+    deprecated and will be removed in Stan 3.0.
+    Use ode_rk45 instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 126, column 10: integrate_ode_rk45 is
-    deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
+    deprecated and will be removed in Stan 3.0.
+    Use ode_rk45 instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 127, column 10: integrate_ode_rk45 is
-    deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
+    deprecated and will be removed in Stan 3.0.
+    Use ode_rk45 instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 128, column 10: integrate_ode_rk45 is
-    deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
+    deprecated and will be removed in Stan 3.0.
+    Use ode_rk45 instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 158, column 10: integrate_ode_adams is
-    deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
+    deprecated and will be removed in Stan 3.0.
+    Use ode_adams instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 159, column 10: integrate_ode_adams is
-    deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
+    deprecated and will be removed in Stan 3.0.
+    Use ode_adams instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 160, column 10: integrate_ode_adams is
-    deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
+    deprecated and will be removed in Stan 3.0.
+    Use ode_adams instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 161, column 10: integrate_ode_adams is
-    deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
+    deprecated and will be removed in Stan 3.0.
+    Use ode_adams instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 163, column 10: integrate_ode_adams is
-    deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
+    deprecated and will be removed in Stan 3.0.
+    Use ode_adams instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 165, column 10: integrate_ode_adams is
-    deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
+    deprecated and will be removed in Stan 3.0.
+    Use ode_adams instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 167, column 10: integrate_ode_adams is
-    deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
+    deprecated and will be removed in Stan 3.0.
+    Use ode_adams instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 169, column 10: integrate_ode_adams is
-    deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
+    deprecated and will be removed in Stan 3.0.
+    Use ode_adams instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 172, column 10: integrate_ode_bdf is
-    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    deprecated and will be removed in Stan 3.0.
+    Use ode_bdf instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 173, column 10: integrate_ode_bdf is
-    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    deprecated and will be removed in Stan 3.0.
+    Use ode_bdf instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 174, column 10: integrate_ode_bdf is
-    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    deprecated and will be removed in Stan 3.0.
+    Use ode_bdf instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 175, column 10: integrate_ode_bdf is
-    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    deprecated and will be removed in Stan 3.0.
+    Use ode_bdf instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 177, column 10: integrate_ode_bdf is
-    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    deprecated and will be removed in Stan 3.0.
+    Use ode_bdf instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 179, column 10: integrate_ode_bdf is
-    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    deprecated and will be removed in Stan 3.0.
+    Use ode_bdf instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 181, column 10: integrate_ode_bdf is
-    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    deprecated and will be removed in Stan 3.0.
+    Use ode_bdf instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 183, column 10: integrate_ode_bdf is
-    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    deprecated and will be removed in Stan 3.0.
+    Use ode_bdf instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 186, column 10: integrate_ode_rk45 is
-    deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
+    deprecated and will be removed in Stan 3.0.
+    Use ode_rk45 instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 187, column 10: integrate_ode_rk45 is
-    deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
+    deprecated and will be removed in Stan 3.0.
+    Use ode_rk45 instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 188, column 10: integrate_ode_rk45 is
-    deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
+    deprecated and will be removed in Stan 3.0.
+    Use ode_rk45 instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 189, column 10: integrate_ode_rk45 is
-    deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
+    deprecated and will be removed in Stan 3.0.
+    Use ode_rk45 instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 [exit 0]
@@ -35284,8 +35322,9 @@ stan::math::profile_map& get_stan_profile_data() {
   return old_integrate_interface_model_namespace::profiles__;
 }
 #endif
-Warning in 'old_integrate_interface.stan', line 36, column 23: integrate_ode_bdf
-    is deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+Warning in 'old_integrate_interface.stan', line 36, column 23:
+    integrate_ode_bdf is deprecated and will be removed in Stan 3.0.
+    Use ode_bdf instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 [exit 0]

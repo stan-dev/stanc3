@@ -1456,7 +1456,8 @@ stan::math::profile_map& get_stan_profile_data() {
 }
 #endif
 Warning in 'ad-level-failing.stan', line 46, column 8: integrate_ode_rk45 is
-    deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
+    deprecated and will be removed in Stan 3.0.
+    Use ode_rk45 instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 [exit 0]
