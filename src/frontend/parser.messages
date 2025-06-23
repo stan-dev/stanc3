@@ -10,10 +10,11 @@
 # automatically update this file, leaving new placeholder messages for new states.
 #
 #
-# The messages below can use a markup language based on the one used by Cmdliner
-# for our command-line interface help message. In short, $(red,Text) will be red,
-# $(b,This $(green,Text)) will be bold, with the second word also being green, etc.
-# See the `markup_text` function in Errors.ml for how this is done and the full
+# The messages below can use formatting indicators like OCaml's format strings,
+# with the additional use of semantic tags for colors and text styling.
+# In short, @{<red>Text@} will be red,
+# @{<b>This @{<green>Text@}@} will be bold, with the second word also being green, etc.
+# See the `styled_text` function in Errors.ml for how this is done and the full
 # list of styles.
 #
 program: WHILE
@@ -776,13 +777,13 @@ program: DATABLOCK LBRACE IDENTIFIER
 ## DATABLOCK LBRACE
 ##
 
-$(light_red,Invalid type in declaration.) $(blue,Valid types:)
-  $(magenta,int), real, vector, row_vector, matrix,
+@{<light_red>Invalid type in declaration.@} @{<blue>Valid types:@}
+  int, real, vector, row_vector, matrix,
   unit_vector, simplex, sum_to_zero_vector, ordered, positive_ordered,
   corr_matrix, cov_matrix, cholesky_factor_corr, cholesky_factor_cov,
   sum_to_zero_matrix, row_stochastic_matrix, column_stochastic_matrix,
-  tuple($(f,...))
-optionally preceded by a $(u,single) $(magenta,array)[$(f,...)]
+  tuple(@{<f>...@})
+optionally preceded by a @{<u>single@} array[@{<f>...@}]
 
 program: DATABLOCK WHILE
 ##
@@ -858,7 +859,7 @@ program: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN RPAREN VOID
 ## return_type decl_identifier LPAREN loption(separated_nonempty_list(COMMA,arg_decl)) RPAREN
 ##
 
-Either $(green,"{") $(i,statement) $(green,"}") is expected for a function definition or $(green,";") for a function forward declaration.
+Either @{<green>"{"@} @{<i>statement@} @{<green>"}"@} is expected for a function definition or @{<green>";"@} for a function forward declaration.
 
 program: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN WHILE
 ## Concrete syntax: functions { void foo ( while
@@ -889,7 +890,7 @@ program: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN VECTOR IDENTIFIER WHILE
 ## arg_decl
 ##
 
-"," or ")" expected after function argument declaration.
+@{<green>","@} or @{<green>")"@} expected after function argument declaration.
 
 program: FUNCTIONBLOCK LBRACE VOID IDENTIFIER WHILE
 ##
@@ -1397,7 +1398,7 @@ program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN IDENTIFIER WHILE
 ## FOR LPAREN identifier
 ##
 
-Expected "in" after loop identifier.
+Expected @{<green>"in"@} after loop identifier.
 
 program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN WHILE
 ##
@@ -1412,7 +1413,7 @@ program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN WHILE
 ## FOR LPAREN
 ##
 
-Expected (loop) identifier after "(".
+Expected (loop) identifier after @{<green>"("@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE FOR WHILE
 ##
@@ -1427,7 +1428,7 @@ program: TRANSFORMEDDATABLOCK LBRACE FOR WHILE
 ## FOR
 ##
 
-Expected "(" after "for".
+Expected @{<green>"("@} after @{<green>"for"@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN REALNUMERAL RPAREN SEMICOLON VOID
 ## Concrete syntax: transformed data { if ( 3.1415 ) ; void
@@ -1475,7 +1476,7 @@ program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN IDENTIFIER RPAREN SEMICOLON ELSE 
 
 Ill-formed statement. Expected statement after else.
 
-program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN IDENTIFIER TILDE
+program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN IDENTIFIER LPAREN RPAREN TILDE
 ##
 ## Concrete syntax: transformed data { if ( foo ~
 ##
@@ -1516,8 +1517,10 @@ program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN IDENTIFIER TILDE
 ## In state 127, spurious reduction of production expression -> common_expression
 ##
 
-Ill-formed expression. Expression expected after "(", for test of conditional control flow construct.
+@{<light_red>Ill-formed expression.@} Expected @{<green>"("@} @{<i>expression@} @{<green>")"@} for the test of the if statement.
+A valid expression was found, but it was not followed by a closing parenthesis.
 
+program: TRANSFORMEDDATABLOCK LBRACE IF WHILE
 program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN WHILE
 ##
 ## Concrete syntax: transformed data { if ( while
@@ -1531,22 +1534,7 @@ program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN WHILE
 ## IF LPAREN
 ##
 
-Expected expression for test of conditional control flow construct.
-
-program: TRANSFORMEDDATABLOCK LBRACE IF WHILE
-##
-## Concrete syntax: transformed data { if while
-##
-## Ends in an error in state: 284.
-##
-## nested_statement -> IF . LPAREN expression RPAREN vardecl_or_statement ELSE vardecl_or_statement [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
-## nested_statement -> IF . LPAREN expression RPAREN vardecl_or_statement [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
-##
-## The known suffix of the stack is as follows:
-## IF
-##
-
-"(" expression ")" expected after "if".
+Expected @{<green>"("@} @{<i>expression@} @{<green>")"@} for the test of the if statement.
 
 program: TRANSFORMEDDATABLOCK LBRACE LBRACE VOID
 ##
@@ -1561,7 +1549,7 @@ program: TRANSFORMEDDATABLOCK LBRACE LBRACE VOID
 ## LBRACE
 ##
 
-Ill-formed phrase. "{" should be followed by a statement, variable declaration or expression.
+Ill-formed phrase. @{<green>"{"@} should be followed by a statement, variable declaration or expression.
 
 program: TRANSFORMEDDATABLOCK LBRACE LBRACK IDENTIFIER COMMA WHILE
 ##
@@ -1676,7 +1664,7 @@ program: TRANSFORMEDDATABLOCK LBRACE MINUS WHILE
 ## MINUS
 ##
 
-Ill-formed expression. Expect an expression after "-".
+Ill-formed expression. Expect an expression after @{<green>"-"@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE PLUS WHILE
 ##
@@ -1690,7 +1678,7 @@ program: TRANSFORMEDDATABLOCK LBRACE PLUS WHILE
 ## PLUS
 ##
 
-Ill-formed expression. Expect an expression after "+".
+Ill-formed expression. Expect an expression after @{<green>"+"@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE PRINT LPAREN STRINGLITERAL WHILE
 ##
