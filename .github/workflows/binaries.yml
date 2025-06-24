@@ -49,7 +49,10 @@ jobs:
           dune-cache: ${{ matrix.name != 'macos-x86_64' }}
 
       - if: matrix.name == 'macos-x86_64'
-        run: opam pin -y dune 3.6.0 --no-action
+        run: |
+          opam repository add archive git+https://github.com/ocaml/opam-repository-archive
+          opam update
+          opam pin -y dune 3.6.0 --no-action
 
       - run: bash -x scripts/install_build_deps.sh
 
