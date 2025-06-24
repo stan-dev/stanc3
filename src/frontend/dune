@@ -4,7 +4,7 @@
  (libraries core menhirLib yojson fmt middle stan_math_signatures)
  (instrumentation
   (backend bisect_ppx))
- (modules :standard \ parser_strip_redundant_state)
+ (modules :standard \ parser_messages_add_type parser_strip_redundant_state)
  (inline_tests)
  (preprocess
   (pps ppx_jane ppx_deriving.fold ppx_deriving.map)))
@@ -15,17 +15,24 @@
  (modules parser)
  (flags :standard --table --strict --require-aliases))
 
+(executable
+ (name parser_messages_add_type)
+ (modules parser_messages_add_type)
+ (libraries str))
+
 (rule
  (with-stdout-to
   parsing_errors.ml
-  (run
-   menhir
-   --explain
-   --strict
-   --unused-tokens
-   %{dep:parser.mly}
-   --compile-errors
-   %{dep:parser.messages})))
+  (pipe-stdout
+   (run
+    menhir
+    --explain
+    --strict
+    --unused-tokens
+    %{dep:parser.mly}
+    --compile-errors
+    %{dep:parser.messages})
+   (run ./parser_messages_add_type.exe))))
 
 (rule
  (with-stdout-to

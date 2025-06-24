@@ -13,27 +13,28 @@ let reducearray (sbt, l) =
   List.fold_right l ~f:(fun z y -> SizedType.SArray (y, z)) ~init:sbt
 
 let build_id id loc =
-  grammar_logger ("identifier " ^ id) ;
+  grammar_logger ("identifier " ^ id);
   {name= id; id_loc= location_span_of_positions loc}
 
-let reserved (name, loc, _) =
+let manual_error msg loc =
   raise
     (Errors.SyntaxError
        (Errors.Parsing
-          ( "Expected a new identifier but found reserved keyword '" ^ name
-            ^ "'.\n"
-          , location_span_of_positions loc ) ) )
+          (Scanf.format_from_string msg "", location_span_of_positions loc)))
+
+let reserved (name, loc, _) =
+  manual_error
+    ("Expected a new identifier but found reserved keyword '" ^ name ^ "'.\n")
+    loc
 
 let reserved_decl (name, loc, is_type) =
   if is_type then
-    raise
-      (Errors.SyntaxError
-         (Errors.Parsing
-            ( "Found a type ('" ^ name
-              ^ "') where an identifier was expected.\n\
-                 All variables declared in a comma-separated list must be of \
-                 the same type.\n"
-            , location_span_of_positions loc ) ) )
+    manual_error
+      ("Found a type ('" ^ name
+     ^ "') where an identifier was expected.\n\
+        All variables declared in a comma-separated list must be of the same \
+        type.\n")
+      loc
   else reserved (name, loc, is_type)
 
 let build_expr expr loc = {expr; emeta= {loc= location_span_of_positions loc}}
@@ -42,12 +43,10 @@ let rec iterate_n f x = function 0 -> x | n -> iterate_n f (f x) (n - 1)
 let parse_tuple_slot ix_str loc =
   match int_of_string_opt (String.drop_prefix ix_str 1) with
   | None ->
-      raise
-        (Errors.SyntaxError
-           (Errors.Parsing
-              ( "Failed to parse integer from string '" ^ ix_str
-                ^ "' in tuple index. \nThe index is likely too large.\n"
-              , location_span_of_positions loc ) ) )
+      manual_error
+        ("Failed to parse integer from string '" ^ ix_str
+       ^ "' in tuple index. \nThe index is likely too large.\n")
+        loc
   | Some ix -> ix
 
 (** Given a parsed expression, try to convert it to
@@ -56,11 +55,11 @@ let try_convert_to_lvalue expr loc =
   match Ast.lvalue_of_expr_opt expr with
   | Some l -> l
   | None ->
-    raise
+      raise
         (Errors.SyntaxError
            (Errors.Parsing
               ( "Expected an assignable value but found a general expression.\n"
-              , location_span_of_positions loc ) ) )
+              , location_span_of_positions loc )))
 
 let nest_unsized_array basic_type n =
   iterate_n (fun t -> UnsizedType.UArray t) basic_type n
@@ -307,16 +306,12 @@ unsized_type:
     It can go away at some point if it starts causing conflicts.
   *)
   | bt=basic_type dims=unsized_dims {
-    raise
-    (Errors.SyntaxError
-       (Errors.Parsing
-          (Fmt.str
+    manual_error (Fmt.str
               "An identifier is expected after the type as a function argument \
                name.@ It looks like you are trying to use the old array \
                syntax.@ Please use the new syntax: @ @[<h>array[%s] %a@]@\n"
-              (String.make (dims-1) ',')
-              UnsizedType.pp bt
-          , location_span_of_positions $loc(dims) )))
+              (String.make (dims-1) ',') UnsizedType.pp bt)
+              $loc(dims)
   }
   | bt=basic_type
     {  grammar_logger "unsized_type";
@@ -394,15 +389,11 @@ decl(type_rule, rhs):
     let (ty, trans) = ty in
     let ty = List.fold_right ~f:(fun e ty -> SizedType.SArray (ty, e)) ~init:ty dims in
     let ty = (ty, trans) in
-    raise
-    (Errors.SyntaxError
-       (Errors.Parsing
-          ( Fmt.str
+    manual_error (Fmt.str
               "\";\" expected after variable declaration.@ It looks like you \
                are trying to use the old array syntax.@ Please use the new \
-               syntax:@ @[<h>%a %s;@]@\n"
-              Pretty_printing.pp_transformed_type ty id.name
-          , location_span_of_positions $loc(dims) )))
+               syntax:@ @[<h>%a %s;@]@\n" Pretty_printing.pp_transformed_type ty id.name)
+              $loc(dims)
     }
   | ty=higher_type(type_rule)
     (* additional indirection only for better error messaging *)
