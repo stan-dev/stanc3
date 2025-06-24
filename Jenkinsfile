@@ -648,6 +648,7 @@ pipeline {
                                             export PATH=/Users/jenkins/brew/bin:$PATH
                                             bash -x scripts/install_ocaml.sh "$MACOS_SWITCH"
                                             eval $(opam env --switch="$MACOS_SWITCH" --set-switch)
+                                            opam repository add archive git+https://github.com/ocaml/opam-repository-archive
                                             opam switch list
                                             opam update -y || true
                                             opam pin -y dune 3.6.0 --no-action
