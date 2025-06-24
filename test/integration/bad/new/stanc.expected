@@ -1320,7 +1320,8 @@ Syntax error in 'ill-formed-statement28.stan', line 1, column 25 to column 26, p
                                   ^
    -------------------------------------------------
 
-Ill-formed expression. Expression expected after "(", for test of conditional control flow construct.
+Ill-formed expression. Expected "(" expression ")" for the test of the if statement.
+A valid expression was found, but it was not followed by a closing parenthesis.
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-statement3.stan
 Syntax error in 'ill-formed-statement3.stan', line 1, column 36 to column 40, parsing error:
