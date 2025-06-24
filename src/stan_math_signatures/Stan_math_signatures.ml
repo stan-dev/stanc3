@@ -162,15 +162,11 @@ let embedded_laplace_functions =
   ; "laplace_marginal_neg_binomial_2_log_lpmf"
   ; "laplace_marginal_tol_neg_binomial_2_log_lpmf"
   ; "laplace_marginal_poisson_log_lpmf"; "laplace_marginal_tol_poisson_log_lpmf"
-  ; "laplace_marginal_poisson_2_log_lpmf"
-  ; "laplace_marginal_tol_poisson_2_log_lpmf"; (* rngs *)
-    "laplace_latent_bernoulli_logit_rng"
+  ; (* rngs *) "laplace_latent_bernoulli_logit_rng"
   ; "laplace_latent_tol_bernoulli_logit_rng"
   ; "laplace_latent_neg_binomial_2_log_rng"
   ; "laplace_latent_tol_neg_binomial_2_log_rng"
-  ; "laplace_latent_poisson_log_rng"; "laplace_latent_tol_poisson_log_rng"
-  ; "laplace_latent_poisson_2_log_rng"; "laplace_latent_tol_poisson_2_log_rng"
-  ]
+  ; "laplace_latent_poisson_log_rng"; "laplace_latent_tol_poisson_log_rng" ]
   |> String.Set.of_list
 
 let is_embedded_laplace_fn name =
@@ -185,10 +181,7 @@ let laplace_helper_lik_args =
       ; (AutoDiffable, UVector); (AutoDiffable, UVector) ] )
   ; ( "poisson_log"
     , [ (AutoDiffable, UArray UInt); (AutoDiffable, UArray UInt)
-      ; (AutoDiffable, UVector) ] )
-  ; ( "poisson_2_log"
-    , [ (AutoDiffable, UArray UInt); (AutoDiffable, UArray UInt)
-      ; (AutoDiffable, UVector); (AutoDiffable, UVector) ] ) ]
+      ; (AutoDiffable, UVector) ] ) ]
   |> String.Map.of_alist_exn
 
 let laplace_helper_param_types name =
