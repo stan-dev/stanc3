@@ -7,6 +7,7 @@
  (modules
   :standard
   \
+  parser_messages_add_type
   parser_strip_redundant_state
   parser_add_missing_messages)
  (inline_tests)
@@ -15,20 +16,30 @@
 
 (ocamllex lexer)
 
+(executable
+ (name parser_messages_add_type)
+ (modules parser_messages_add_type)
+ (libraries str))
+
 (rule
  (targets parsing_errors.ml)
- (deps parser.mly parser.messages)
+ (deps
+  parser.mly
+  parser.messages
+  (:parser_messages_add_type ./parser_messages_add_type.exe))
  (action
   (with-stdout-to
    %{targets}
-   (run
-    menhir
-    --explain
-    --strict
-    --unused-tokens
-    parser.mly
-    --compile-errors
-    parser.messages))))
+   (pipe-stdout
+    (run
+     menhir
+     --explain
+     --strict
+     --unused-tokens
+     parser.mly
+     --compile-errors
+     parser.messages)
+    (run %{parser_messages_add_type})))))
 
 (menhir
  (modules parser)

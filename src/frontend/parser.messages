@@ -1478,7 +1478,7 @@ Ill-formed statement. Expected statement after else.
 
 program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN IDENTIFIER LPAREN RPAREN TILDE
 ##
-## Concrete syntax: transformed data { if ( foo ~
+## Concrete syntax: transformed data { if ( foo ( ) ~
 ##
 ## Ends in an error in state: 286.
 ##
@@ -1513,7 +1513,6 @@ program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN IDENTIFIER LPAREN RPAREN TILDE
 ## This implies that, although the LR(1) items shown above provide an
 ## accurate view of the past (what has been recognized so far), they
 ## may provide an INCOMPLETE view of the future (what was expected next).
-## In state 112, spurious reduction of production common_expression -> identifier
 ## In state 127, spurious reduction of production expression -> common_expression
 ##
 
@@ -1521,6 +1520,7 @@ program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN IDENTIFIER LPAREN RPAREN TILDE
 A valid expression was found, but it was not followed by a closing parenthesis.
 
 program: TRANSFORMEDDATABLOCK LBRACE IF WHILE
+## Concrete syntax: transformed data { if while
 program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN WHILE
 ##
 ## Concrete syntax: transformed data { if ( while

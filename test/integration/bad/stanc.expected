@@ -1002,7 +1002,7 @@ Syntax error in 'err-if-else-no-cond.stan', line 3, column 6 to column 7, parsin
      5:  model {
    -------------------------------------------------
 
-Expected expression for test of conditional control flow construct.
+Expected "(" expression ")" for the test of the if statement.
 [exit 1]
   $ ../../../../install/default/bin/stanc err-if-else.stan
 Syntax error in 'err-if-else.stan', line 3, column 8 to column 9, parsing error:
@@ -1182,7 +1182,7 @@ Syntax error in 'err-no-cond-else-if.stan', line 5, column 12 to column 13, pars
      7:    }
    -------------------------------------------------
 
-"(" expression ")" expected after "if".
+Expected "(" expression ")" for the test of the if statement.
 [exit 1]
   $ ../../../../install/default/bin/stanc err-no-cond.stan
 Syntax error in 'err-no-cond.stan', line 3, column 6 to column 7, parsing error:
@@ -1195,7 +1195,7 @@ Syntax error in 'err-no-cond.stan', line 3, column 6 to column 7, parsing error:
      5:  }
    -------------------------------------------------
 
-Expected expression for test of conditional control flow construct.
+Expected "(" expression ")" for the test of the if statement.
 [exit 1]
   $ ../../../../install/default/bin/stanc err-no-statement.stan
 Syntax error in 'err-no-statement.stan', line 4, column 0 to column 1, parsing error:
