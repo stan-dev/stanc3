@@ -12,7 +12,6 @@
     (:standard "--opt" "3"))))
  (dev
   (js_of_ocaml
-   (sourcemap no)
    (flags
     "--pretty"
     "--no-inline"
