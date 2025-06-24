@@ -5,7 +5,12 @@ type syntax_error =
   | Lexing of Middle.Location.t
   | UnexpectedEOF of Middle.Location.t
   | Include of string * Middle.Location.t
-  | Parsing of string * Middle.Location_span.t
+  | Parsing of (unit, Format.formatter, unit) format * Middle.Location_span.t
+      (** The first type is just the type of format strings with no
+      %-placeholders. Why? Because we can still include other formatting
+      indicators, including semantic tags used for things like
+      ["@{<green>Colored text@}"].
+      These strings usually come from the [parser.messages] text file. *)
 
 (** Exception for Syntax Errors *)
 exception SyntaxError of syntax_error
