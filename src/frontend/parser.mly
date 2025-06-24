@@ -7,7 +7,7 @@ open Debugging
 open Preprocessor
 
 let parse_error msg loc =
-  Syntax_error.parse_error msg (location_span_of_positions loc)
+  Syntax_error.parse_error (Scanf.format_from_string msg "") (location_span_of_positions loc)
 
 (* Takes a sized_basic_type and a list of sizes and repeatedly applies then
    SArray constructor, taking sizes off the list *)

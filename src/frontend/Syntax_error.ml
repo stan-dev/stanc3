@@ -1,11 +1,13 @@
 open Core
 
+type styled_text = (unit, Format.formatter, unit) format
+
 (** Our type of syntax error information *)
 type t =
   | Lexing of Middle.Location_span.t
   | UnexpectedEOF of Middle.Location_span.t
   | Include of string * Middle.Location_span.t
-  | Parsing of string * Middle.Location_span.t
+  | Parsing of styled_text * Middle.Location_span.t
 
 let location = function
   | Parsing (_, loc_span)
@@ -18,10 +20,12 @@ let kind = function
   | Parsing _ -> "parsing error"
   | UnexpectedEOF _ | Lexing _ -> "lexing error"
   | Include _ -> "include error"
+
 (** Sets up the semantic tag machinery (https://ocaml.org/manual/api/Format.html#tags)
    to print ANSI escape codes for formatting
 *)
-let styled_text ppf str =
+let pp_styled_text : styled_text Fmt.t =
+ fun ppf format_string ->
   let ansi_stags former =
     let str_to_esc_seq styling =
       match String.lowercase styling with
@@ -83,58 +87,43 @@ let styled_text ppf str =
               Stack.pop styles |> ignore;
               print_current_styles ()
           | stag -> former.mark_close_stag stag) } in
-  try
-    let format_string =
-      (* treat input like a format string with no placeholders *)
-      Scanf.format_from_string str "" in
-    (* Even though this isn't using the [Fmt.styled] system,
-       we still use Fmt's style _setting_ for consistent behavior *)
-    match Fmt.style_renderer ppf with
-    | `None -> Fmt.fmt format_string ppf
-    | `Ansi_tty ->
-        let former = Format.pp_get_formatter_stag_functions ppf () in
-        let marks = Format.pp_get_mark_tags ppf () in
-        Format.pp_set_formatter_stag_functions ppf (ansi_stags former);
-        Format.pp_set_mark_tags ppf true;
-        Fun.protect
-          (fun () ->
-            Fmt.fmt format_string ppf;
-            Fmt.flush ppf ())
-          ~finally:(fun () ->
-            Format.pp_set_formatter_stag_functions ppf former;
-            Format.pp_set_mark_tags ppf marks)
-  with Scanf.Scan_failure _ ->
-    (* This means the runtime typecheck of str failed, usually because
-       a format specifier like %d was used somewhere. We could throw a noisy
-       error here, but for now I've chosen to just print the string
-    *)
-    Fmt.string ppf str
+  match Fmt.style_renderer ppf with
+  | `None -> Fmt.pf ppf format_string
+  | `Ansi_tty ->
+      let former = Format.pp_get_formatter_stag_functions ppf () in
+      let marks = Format.pp_get_mark_tags ppf () in
+      Format.pp_set_formatter_stag_functions ppf (ansi_stags former);
+      Format.pp_set_mark_tags ppf true;
+      Fun.protect
+        (fun () ->
+          Fmt.pf ppf format_string;
+          Fmt.flush ppf ())
+        ~finally:(fun () ->
+          Format.pp_set_formatter_stag_functions ppf former;
+          Format.pp_set_mark_tags ppf marks)
 
 let%expect_test "colored output" =
-  let s =
+  let s : _ format =
     "@{<b>This @{<red>does @{<blue>what @{<reset>y@{<i>@{<green>o@}@}u@}@} \
      want@}!@}" in
   Fmt.set_style_renderer Fmt.stdout `None;
-  styled_text Fmt.stdout s;
+  pp_styled_text Fmt.stdout s;
   Format.pp_print_newline Fmt.stdout ();
   Fmt.set_style_renderer Fmt.stdout `Ansi_tty;
-  styled_text Fmt.stdout s;
-  Format.pp_print_newline Fmt.stdout ();
-  styled_text Fmt.stdout (s ^ "%d");
+  pp_styled_text Fmt.stdout s;
+  (* tip: view this file using `cat` to see the styling in the test output *)
   [%expect
     {|
     This does what you want!
-    [0;1mThis [0;1;31mdoes [0;1;31;34mwhat [0my[0;3m[0;3;32mo[0;3m[0mu[0;1;31;34m[0;1;31m want[0;1m![0m
-    @{<b>This @{<red>does @{<blue>what @{<reset>y@{<i>@{<green>o@}@}u@}@} want@}!@}%d |}]
+    [0;1mThis [0;1;31mdoes [0;1;31;34mwhat [0my[0;3m[0;3;32mo[0;3m[0mu[0;1;31;34m[0;1;31m want[0;1m![0m |}]
 
-(** A syntax error message used when handling a SyntaxError *)
 let pp ppf = function
-  | Parsing (message, _) -> styled_text ppf message
+  | Parsing (message, _) -> pp_styled_text ppf message
   | Lexing _ -> Fmt.pf ppf "Invalid character found.@."
   | UnexpectedEOF _ -> Fmt.pf ppf "Unexpected end of input.@."
   | Include (message, _) -> Fmt.pf ppf "%s@." message
 
-exception ParserException of string * Middle.Location_span.t
+exception ParserException of styled_text * Middle.Location_span.t
 exception UnexpectedEOF of Middle.Location_span.t
 exception UnexpectedCharacter of Middle.Location_span.t
 exception IncludeError of string * Middle.Location_span.t

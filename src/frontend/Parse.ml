@@ -23,11 +23,13 @@ let drive_parser parse_fun =
     let message =
       let state = Interp.current_state_number env in
       try
-        Fmt.str "%s%a"
-          (Parsing_errors.message state)
-          (Fmt.if' !Debugging.grammar_logging (fun ppf ->
-               Fmt.pf ppf "(Parse error state %d)"))
-          state
+        Parsing_errors.message state
+        ^^
+        if !Debugging.grammar_logging then
+          Scanf.format_from_string
+            ("(Parse error state " ^ string_of_int state ^ ")")
+            ""
+        else ""
       with _ ->
         Common.ICE.internal_compiler_error
           [%message
