@@ -1,19 +1,22 @@
-(** Helper program to remove extraneous comments from Menhir's
-    .messages file *)
+(** Helper program to remove redundant comments from Menhir's
+    .messages file. For messages that are used by multiple
+    different parser states, all of the comment lines except for
+    the 'concrete syntax' line are elided.
+*)
 
 let strip_redundant_parser_states content =
   let pattern =
+    (* match comment blocks between two input sentences *)
+    let input_sentence_p = {|\(\(program\|functions_only\):.*\)|} in
     Str.regexp
-      ("\\(\\(program\\|functions_only\\):.*\n\\)" ^ "\\(##.*\n\\)"
-     ^ "\\(## Concrete.*\n\\)?" ^ "\\(##.*\n\\)+"
-     ^ "\\(\\(program\\|functions_only\\):.*\n\\)") in
-  Str.global_substitute pattern
-    (fun s ->
-      let group1 = Str.matched_group 1 s in
-      let group4 = try Str.matched_group 4 s with Not_found -> "" in
-      let group6 = Str.matched_group 6 s in
-      group1 ^ group4 ^ group6)
-    content
+      (input_sentence_p ^ {|
+##
+\(## Concrete syntax: .*\)
+\(##.*
+\)+|}
+     ^ input_sentence_p) in
+  (* preserve only the input sentences and the "Concrete Syntax" line *)
+  Str.global_replace pattern "\\1\n\\3\n\\5" content
 
 let strip_lines content =
   String.split_on_char '\n' content

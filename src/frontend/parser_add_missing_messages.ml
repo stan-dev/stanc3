@@ -33,9 +33,9 @@ let update_one_message (new_file, line_no) =
 
 let parse_regex =
   Str.regexp
-    "File \"\\([^\"]*\\)\", line \\([0-9]+\\).*\n\
-     Error: this sentence.*\n\
-     No sentence that leads to this state exists"
+    {|File "\([^"]*\)", line \([0-9]+\).*
+Error: this sentence.*
+No sentence that leads to this state exists|}
 
 let do_updates input_text =
   let rec find count pos =
