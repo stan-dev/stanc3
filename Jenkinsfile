@@ -254,13 +254,7 @@ pipeline {
                             unstash "Stanc3Setup"
                             sh '''
                                 eval $(opam env)
-                                BISECT_FILE=$(pwd)/bisect dune runtest --instrument-with bisect_ppx --force --root=.
-                            '''
-
-                            sh '''
-                                eval $(opam env)
-                                bisect-ppx-report summary --expect src/ --do-not-expect src/stancjs/ --do-not-expect src/stan_math_signatures/Generate.ml
-                                bisect-ppx-report coveralls coverage.json --service-name jenkins --service-job-id $BUILD_ID --expect src/ --do-not-expect src/stancjs/ --do-not-expect src/stan_math_signatures/Generate.ml
+                                make testcoverage
                             '''
 
                             withCredentials([usernamePassword(credentialsId: 'stan-stanc3-codecov-token', usernameVariable: 'DUMMY_USERNAME', passwordVariable: 'CODECOV_TOKEN')]) {
@@ -297,7 +291,7 @@ pipeline {
                             sh '''
                                 node --version
                                 eval $(opam env)
-                                dune build @runjstest --root=.
+                                dune build @runjstest --root=. -j${PARALLEL}
                             '''
                         }
                     }
