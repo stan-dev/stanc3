@@ -48,26 +48,26 @@ model {
   alpha ~ inv_gamma(alpha_location_prior, alpha_scale_prior);
   eta ~ normal(0, 1);
 
-  target += laplace_marginal(ll_function, (eta, log_ye, y), theta_0,
+  target += laplace_marginal(ll_function, (eta, log_ye, y),
                              K_function, (x, n_obs, alpha, rho));
 
-  target += laplace_marginal_tol(ll_function, (eta, log_ye, y), theta_0,
+  target += laplace_marginal_tol(ll_function, (eta, log_ye, y),
                                  K_function, (x, n_obs, alpha, rho),
-                                 tolerance, max_num_steps,
+                                 theta_0, tolerance, max_num_steps,
                                  hessian_block_size, solver,
                                  max_steps_line_search);
 
 }
 generated quantities {
   vector[n_obs] theta = laplace_latent_rng(ll_function, (eta, log_ye, y),
-                                           theta_0, K_function,
+                                           K_function,
                                            (x, n_obs, alpha, rho));
 
   vector[n_obs] theta2 = laplace_latent_tol_rng(ll_function,
-                                                (eta, log_ye, y), theta_0,
+                                                (eta, log_ye, y),
                                                 K_function,
                                                 (x, n_obs, alpha, rho),
-                                                tolerance, max_num_steps,
+                                                theta_0, tolerance, max_num_steps,
                                                 hessian_block_size, solver,
                                                 max_steps_line_search);
 

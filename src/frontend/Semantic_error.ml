@@ -11,7 +11,6 @@ module TypeError = struct
     | IntExpected of string * UnsizedType.t
     | IntOrRealExpected of string * UnsizedType.t
     | TupleExpected of string * UnsizedType.t
-    | VectorExpected of string * UnsizedType.t
     | TypeExpected of string * UnsizedType.t * UnsizedType.t
     | IntIntArrayOrRangeExpected of UnsizedType.t
     | IntOrRealContainerExpected of UnsizedType.t
@@ -69,14 +68,43 @@ module TypeError = struct
       Fmt.(list ~sep:comma UnsizedType.pp_fun_arg)
       Stan_math_signatures.laplace_tolerance_argument_types
 
+  (* this function will be in [Fmt] version 0.11 *)
+  let ordinal =
+    let open Fmt in
+    let one ppf i =
+      int ppf i;
+      string ppf "st" in
+    let two ppf i =
+      int ppf i;
+      string ppf "nd" in
+    let three ppf i =
+      int ppf i;
+      string ppf "rd" in
+    let other ppf i =
+      int ppf i;
+      string ppf "th" in
+    fun ?zero ?(one = one) ?(two = two) ?(three = three) ?(other = other) () ->
+      let zero = Option.value ~default:other zero in
+      fun ppf i ->
+        if i = 0 then zero ppf i
+        else
+          let n = Int.abs i in
+          let mod10 = n mod 10 in
+          let mod100 = n mod 100 in
+          if mod10 = 1 && mod100 <> 11 then one ppf i
+          else if mod10 = 2 && mod100 <> 12 then two ppf i
+          else if mod10 = 3 && mod100 <> 13 then three ppf i
+          else other ppf i
+
   let laplace_tolerance_arg_name n =
     match n with
-    | 1 -> "first control parameter (tolerance)"
-    | 2 -> "second control parameter (max_num_steps)"
-    | 3 -> "third control parameter (hessian_block_size)"
-    | 4 -> "fourth control parameter (solver)"
-    | 5 -> "fifth control parameter (max_steps_line_search)"
-    | n -> Printf.sprintf "%dth control parameter" n
+    | 1 -> "first control parameter (initial guess)"
+    | 2 -> "second control parameter (tolerance)"
+    | 3 -> "third control parameter (max_num_steps)"
+    | 4 -> "fourth control parameter (hessian_block_size)"
+    | 5 -> "fifth control parameter (solver)"
+    | 6 -> "sixth control parameter (max_steps_line_search)"
+    | n -> Fmt.str "%a control parameter" (ordinal ()) n
 
   let trailing_s n pp = Fmt.(pp ++ if' (n <> 1) (const string "s"))
 
@@ -108,9 +136,6 @@ module TypeError = struct
           UnsizedType.pp ut
     | TupleExpected (name, ut) ->
         Fmt.pf ppf "%s must be a tuple.@ Instead found type %a." name
-          UnsizedType.pp ut
-    | VectorExpected (name, ut) ->
-        Fmt.pf ppf "%s must be a vector.@ Instead found type %a." name
           UnsizedType.pp ut
     | TypeExpected (name, (UInt | UReal | UComplex), ut) ->
         Fmt.pf ppf "%s must be a scalar. Instead found type %a." name
@@ -212,9 +237,9 @@ module TypeError = struct
             let n = if is_helper then List.length req else 2 in
             Fmt.str
               "Typechecking failed after checking the first %d arguments. \
-               Please ensure you are passing enough arguments and that the \
-               %dth is a function."
-              n (n + 2) in
+               Please ensure you are passing enough arguments and that the %a \
+               is a function."
+              n (ordinal ()) (n + 1) in
         let pp_lik_args ppf () =
           if is_helper then Fmt.(list ~sep:comma UnsizedType.pp_fun_arg) ppf req
           else Fmt.pf ppf "(vector, T_l...) => real,@ tuple(T_l...)" in
@@ -247,10 +272,11 @@ module TypeError = struct
     | IlltypedLaplaceTolArgs (name, ArgNumMismatch (_, found)) ->
         Fmt.pf ppf
           "@[<v>Recieved %d control %a at the end of the call to '%s'.@ \
-           Expected 5 arguments for the control parameters instead.@]"
+           Expected %d arguments for the control parameters instead.@]"
           found
           (trailing_s found Fmt.string)
           "argument" name
+          (List.length Stan_math_signatures.laplace_tolerance_argument_types)
     | IlltypedLaplaceTolArgs (name, ArgError (n, DataOnlyError)) ->
         Fmt.pf ppf
           "@[<hov>The control parameters to '%s'@ must all be data-only,@ but \
@@ -691,9 +717,6 @@ let int_or_real_expected loc name ut =
 
 let tuple_expected loc name ut =
   TypeError (loc, TypeError.TupleExpected (name, ut))
-
-let vector_expected loc name ut =
-  TypeError (loc, TypeError.VectorExpected (name, ut))
 
 let scalar_or_type_expected loc name et ut =
   TypeError (loc, TypeError.TypeExpected (name, et, ut))

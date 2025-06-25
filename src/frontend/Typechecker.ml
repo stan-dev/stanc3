@@ -739,7 +739,8 @@ let verify_laplace_control_args loc id (args : typed_expression list) =
       | Ok _ -> ()
       | Error err ->
           let loc =
-            List.hd args
+            let which_arg = match err with ArgError (i, _) -> i | _ -> 0 in
+            List.nth args which_arg
             |> Option.value_map ~f:(fun expr -> expr.emeta.loc) ~default:loc
           in
           Semantic_error.illtyped_laplace_tolerance_args loc id.name err
@@ -862,12 +863,7 @@ and check_laplace_fn ~is_cond_dist loc cf tenv id tes =
       | _ -> generic_failure ~early:true () in
   (* Check the remaining arguments: initial guess, covariance, and tolerances *)
   match rest with
-  | theta_init :: {expr= Variable cov_fun; _} :: cov_tupl :: control_args ->
-      if theta_init.emeta.type_ <> UnsizedType.UVector then
-        Semantic_error.vector_expected theta_init.emeta.loc
-          ("Initial guess argument to '" ^ id.name ^ "'")
-          theta_init.emeta.type_
-        |> error;
+  | {expr= Variable cov_fun; _} :: cov_tupl :: control_args ->
       let cov_fun_type, cov_tupl =
         check_function_callable_with_tuple cf tenv id cov_fun cov_tupl
           (UnsizedType.ReturnType UMatrix) in
@@ -875,9 +871,7 @@ and check_laplace_fn ~is_cond_dist loc cf tenv id tes =
          for the training prediction and test prediction.
          This would probably require two more calls to [check_function_callable_with_tuple] *)
       verify_laplace_control_args loc id control_args;
-      let args =
-        lik_args @ (theta_init :: cov_fun_type :: cov_tupl :: control_args)
-      in
+      let args = lik_args @ (cov_fun_type :: cov_tupl :: control_args) in
       let return_type =
         if String.is_suffix id.name ~suffix:"_rng" then UnsizedType.UVector
         else UnsizedType.UReal in

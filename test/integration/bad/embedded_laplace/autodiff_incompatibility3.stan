@@ -40,7 +40,6 @@ data {
 
 transformed data {
   vector[n_obs] log_ye = log(ye);
-  vector[n_obs] theta_0 = rep_vector(0.0, n_obs); // initial guess
 }
 parameters {
   real<lower=0> alpha;
@@ -50,6 +49,5 @@ parameters {
 
 generated quantities {
   vector[n_obs] theta = laplace_latent_rng(ll_function, (eta, log_ye, y),
-                        theta_0,
                         K_function, (x, n_obs, alpha, rho));
 }
