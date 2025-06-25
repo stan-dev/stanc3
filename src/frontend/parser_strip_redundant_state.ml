@@ -19,15 +19,8 @@ let strip_redundant_parser_states content =
   Str.global_replace pattern "\\1\n\\3\n\\5" content
 
 let strip_lines content =
-  String.split_on_char '\n' content
-  |> List.map (fun line ->
-         let len = String.length line in
-         let rec find_end i =
-           if i < 0 then 0
-           else if line.[i] = ' ' || line.[i] = '\t' then find_end (i - 1)
-           else i + 1 in
-         String.sub line 0 (find_end (len - 1)))
-  |> String.concat "\n"
+  let open Core.String in
+  split_lines content |> List.map rstrip |> concat_lines
 
 let rec strip_until_fixed content =
   let stripped = strip_redundant_parser_states content in
