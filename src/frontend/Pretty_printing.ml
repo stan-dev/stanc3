@@ -348,40 +348,37 @@ let rec pp_transformed_type ppf (st, trans) =
        |SRowVector (_, e)
        |SComplexVector e
        |SComplexRowVector e ->
-          const (fun ppf -> pf ppf "[%a]" pp_expression) e
+          fun ppf -> pf ppf "[%a]" pp_expression e
       | SMatrix (_, e1, e2) | SComplexMatrix (e1, e2) ->
-          const (fun ppf -> pf ppf "[%a, %a]" pp_expression e1 pp_expression) e2
-      | SArray _ | SInt | SReal | SComplex | STuple _ -> nop in
+          fun ppf -> pf ppf "[%a, %a]" pp_expression e1 pp_expression e2
+      | SArray _ | SInt | SReal | SComplex | STuple _ -> ignore in
     let cov_sizes_fmt =
       match st with
       | SMatrix (_, e1, e2) ->
-          if e1 = e2 then const (fun ppf -> pf ppf "[%a]" pp_expression) e1
-          else
-            const
-              (fun ppf -> pf ppf "[%a, %a]" pp_expression e1 pp_expression)
-              e2
-      | _ -> nop in
+          if e1 = e2 then fun ppf -> pf ppf "[%a]" pp_expression e1
+          else fun ppf -> pf ppf "[%a, %a]" pp_expression e1 pp_expression e2
+      | _ -> ignore in
     match trans with
     | Transformation.Identity ->
         pf ppf "%a" (Middle.SizedType.pp pp_expression) st
     | Lower _ | Upper _ | LowerUpper _ | Offset _ | Multiplier _
      |OffsetMultiplier _ ->
-        pf ppf "%a%a%a" pp_unsizedtype (SizedType.to_unsized st)
-          pp_bracketed_transform trans sizes_fmt ()
-    | Ordered -> pf ppf "ordered%a" sizes_fmt ()
-    | PositiveOrdered -> pf ppf "positive_ordered%a" sizes_fmt ()
-    | Simplex -> pf ppf "simplex%a" sizes_fmt ()
-    | UnitVector -> pf ppf "unit_vector%a" sizes_fmt ()
+        pf ppf "%a%a%t" pp_unsizedtype (SizedType.to_unsized st)
+          pp_bracketed_transform trans sizes_fmt
+    | Ordered -> pf ppf "ordered%t" sizes_fmt
+    | PositiveOrdered -> pf ppf "positive_ordered%t" sizes_fmt
+    | Simplex -> pf ppf "simplex%t" sizes_fmt
+    | UnitVector -> pf ppf "unit_vector%t" sizes_fmt
     | SumToZero ->
         let ty_str =
           match st with SizedType.SMatrix _ -> "matrix" | _ -> "vector" in
-        pf ppf "sum_to_zero_%s%a" ty_str sizes_fmt ()
-    | CholeskyCorr -> pf ppf "cholesky_factor_corr%a" cov_sizes_fmt ()
-    | CholeskyCov -> pf ppf "cholesky_factor_cov%a" cov_sizes_fmt ()
-    | Correlation -> pf ppf "corr_matrix%a" cov_sizes_fmt ()
-    | Covariance -> pf ppf "cov_matrix%a" cov_sizes_fmt ()
-    | StochasticColumn -> pf ppf "column_stochastic_matrix%a" sizes_fmt ()
-    | StochasticRow -> pf ppf "row_stochastic_matrix%a" sizes_fmt ()
+        pf ppf "sum_to_zero_%s%t" ty_str sizes_fmt
+    | CholeskyCorr -> pf ppf "cholesky_factor_corr%t" cov_sizes_fmt
+    | CholeskyCov -> pf ppf "cholesky_factor_cov%t" cov_sizes_fmt
+    | Correlation -> pf ppf "corr_matrix%t" cov_sizes_fmt
+    | Covariance -> pf ppf "cov_matrix%t" cov_sizes_fmt
+    | StochasticColumn -> pf ppf "column_stochastic_matrix%t" sizes_fmt
+    | StochasticRow -> pf ppf "row_stochastic_matrix%t" sizes_fmt
     | TupleTransformation transforms ->
         (* NB this calls the top-level function to handle internal arrays etc *)
         let transTypes = Middle.Utils.zip_stuple_trans_exn st transforms in
