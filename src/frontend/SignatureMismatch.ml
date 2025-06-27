@@ -457,14 +457,14 @@ let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
     Fmt.pf ppf "%a@ @[<hov 2>  %a@]"
       (pp_with_where ctx (pp_fundef ctx))
       fun_ty pp_explain err in
-  let pp_omitted ppf () =
+  let pp_omitted ppf =
     if omitted then pf ppf "@,(Additional signatures omitted)" in
   pf ppf
     "@[<v>Ill-typed arguments supplied to function '%s':@ %a@ Available \
-     signatures:@ %a%a@]"
+     signatures:@ %a%t@]"
     name pp_args arg_tys
     (list ~sep:cut pp_signature)
-    sigs pp_omitted ()
+    sigs pp_omitted
 
 let pp_math_lib_assignmentoperator_sigs ppf (lt, op) =
   let signatures =
