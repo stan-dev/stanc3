@@ -1,31 +1,19 @@
   $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir arrays-tuples-nested.stan
 ((functions_block ())
  (input_vars
-  ((basic
-    ((begin_loc
-      ((filename arrays-tuples-nested.stan) (line_num 2) (col_num 2) (included_from ())))
-     (end_loc
-      ((filename arrays-tuples-nested.stan) (line_num 2) (col_num 35) (included_from ()))))
+  ((basic <opaque>
     (STuple
      ((SArray SReal
        ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
       SInt)))
-   (tuple_tuple
-    ((begin_loc
-      ((filename arrays-tuples-nested.stan) (line_num 3) (col_num 2) (included_from ())))
-     (end_loc
-      ((filename arrays-tuples-nested.stan) (line_num 3) (col_num 49) (included_from ()))))
+   (tuple_tuple <opaque>
     (STuple
      (SInt
       (STuple
        (SReal
         (SVector AoS
          ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))))
-   (arr_tuple
-    ((begin_loc
-      ((filename arrays-tuples-nested.stan) (line_num 4) (col_num 2) (included_from ())))
-     (end_loc
-      ((filename arrays-tuples-nested.stan) (line_num 4) (col_num 58) (included_from ()))))
+   (arr_tuple <opaque>
     (SArray
      (STuple
       (SInt
@@ -34,11 +22,7 @@
        (SVector AoS
         ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
      ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-   (tuple_arr_tuple
-    ((begin_loc
-      ((filename arrays-tuples-nested.stan) (line_num 5) (col_num 2) (included_from ())))
-     (end_loc
-      ((filename arrays-tuples-nested.stan) (line_num 5) (col_num 80) (included_from ()))))
+   (tuple_arr_tuple <opaque>
     (STuple
      ((SArray SReal
        ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -49,11 +33,7 @@
          (SArray SInt
           ((pattern (Lit Int 4)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
-   (arr_tuple_tuple
-    ((begin_loc
-      ((filename arrays-tuples-nested.stan) (line_num 6) (col_num 2) (included_from ())))
-     (end_loc
-      ((filename arrays-tuples-nested.stan) (line_num 6) (col_num 80) (included_from ()))))
+   (arr_tuple_tuple <opaque>
     (SArray
      (STuple
       (SReal SInt
@@ -65,11 +45,7 @@
             ((pattern (Lit Int 4))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))))
      ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-   (arr_tuple_arr_tuple
-    ((begin_loc
-      ((filename arrays-tuples-nested.stan) (line_num 7) (col_num 2) (included_from ())))
-     (end_loc
-      ((filename arrays-tuples-nested.stan) (line_num 7) (col_num 75) (included_from ()))))
+   (arr_tuple_arr_tuple <opaque>
     (SArray
      (STuple
       (SInt
@@ -81,11 +57,7 @@
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
         ((pattern (Lit Int 4)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
      ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-   (very_deep
-    ((begin_loc
-      ((filename arrays-tuples-nested.stan) (line_num 8) (col_num 2) (included_from ())))
-     (end_loc
-      ((filename arrays-tuples-nested.stan) (line_num 9) (col_num 79) (included_from ()))))
+   (very_deep <opaque>
     (SArray
      (STuple
       (SInt
@@ -9538,12 +9510,7 @@
         (meta <opaque>)))))
     (meta <opaque>))))
  (output_vars
-  ((basic_p
-    ((begin_loc
-      ((filename arrays-tuples-nested.stan) (line_num 12) (col_num 2) (included_from ())))
-     (end_loc
-      ((filename arrays-tuples-nested.stan) (line_num 12) (col_num 38)
-       (included_from ()))))
+  ((basic_p <opaque>
     ((out_unconstrained_st
       (STuple
        ((SArray SReal
@@ -9555,12 +9522,7 @@
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
         SReal)))
      (out_block Parameters) (out_trans (TupleTransformation (Identity Identity)))))
-   (tuple_tuple_p
-    ((begin_loc
-      ((filename arrays-tuples-nested.stan) (line_num 13) (col_num 2) (included_from ())))
-     (end_loc
-      ((filename arrays-tuples-nested.stan) (line_num 13) (col_num 52)
-       (included_from ()))))
+   (tuple_tuple_p <opaque>
     ((out_unconstrained_st
       (STuple
        (SReal
@@ -9580,12 +9542,7 @@
      (out_block Parameters)
      (out_trans
       (TupleTransformation (Identity (TupleTransformation (Identity Identity)))))))
-   (arr_tuple_p
-    ((begin_loc
-      ((filename arrays-tuples-nested.stan) (line_num 14) (col_num 2) (included_from ())))
-     (end_loc
-      ((filename arrays-tuples-nested.stan) (line_num 14) (col_num 64)
-       (included_from ()))))
+   (arr_tuple_p <opaque>
     ((out_unconstrained_st
       (SArray
        (STuple
@@ -9606,12 +9563,7 @@
        ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters)
      (out_trans (TupleTransformation (Identity Identity Identity)))))
-   (tuple_arr_tuple_p
-    ((begin_loc
-      ((filename arrays-tuples-nested.stan) (line_num 15) (col_num 2) (included_from ())))
-     (end_loc
-      ((filename arrays-tuples-nested.stan) (line_num 15) (col_num 84)
-       (included_from ()))))
+   (tuple_arr_tuple_p <opaque>
     ((out_unconstrained_st
       (STuple
        ((SArray SReal
@@ -9639,12 +9591,7 @@
      (out_block Parameters)
      (out_trans
       (TupleTransformation (Identity Identity (TupleTransformation (Identity Identity)))))))
-   (arr_tuple_tuple_p
-    ((begin_loc
-      ((filename arrays-tuples-nested.stan) (line_num 16) (col_num 2) (included_from ())))
-     (end_loc
-      ((filename arrays-tuples-nested.stan) (line_num 16) (col_num 87)
-       (included_from ()))))
+   (arr_tuple_tuple_p <opaque>
     ((out_unconstrained_st
       (SArray
        (STuple
@@ -9674,12 +9621,7 @@
       (TupleTransformation
        (Identity Identity
         (TupleTransformation (Identity (TupleTransformation (Identity Identity)))))))))
-   (arr_tuple_arr_tuple_p
-    ((begin_loc
-      ((filename arrays-tuples-nested.stan) (line_num 17) (col_num 2) (included_from ())))
-     (end_loc
-      ((filename arrays-tuples-nested.stan) (line_num 17) (col_num 78)
-       (included_from ()))))
+   (arr_tuple_arr_tuple_p <opaque>
     ((out_unconstrained_st
       (SArray
        (STuple
@@ -9707,12 +9649,7 @@
      (out_block Parameters)
      (out_trans
       (TupleTransformation (Identity (TupleTransformation (Identity Identity)))))))
-   (very_deep_p
-    ((begin_loc
-      ((filename arrays-tuples-nested.stan) (line_num 18) (col_num 2) (included_from ())))
-     (end_loc
-      ((filename arrays-tuples-nested.stan) (line_num 19) (col_num 81)
-       (included_from ()))))
+   (very_deep_p <opaque>
     ((out_unconstrained_st
       (SArray
        (STuple
@@ -10201,11 +10138,7 @@
       ()))
     (meta <opaque>))))
  (output_vars
-  ((x
-    ((begin_loc
-      ((filename infer_tuple_ad.stan) (line_num 2) (col_num 2) (included_from ())))
-     (end_loc
-      ((filename infer_tuple_ad.stan) (line_num 2) (col_num 9) (included_from ()))))
+  ((x <opaque>
     ((out_unconstrained_st SReal) (out_constrained_st SReal) (out_block Parameters)
      (out_trans Identity)))))
  (prog_name infer_tuple_ad_model) (prog_path infer_tuple_ad.stan))
@@ -10213,11 +10146,7 @@
   $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir nested_unpacking.stan
 ((functions_block ())
  (input_vars
-  ((complicated
-    ((begin_loc
-      ((filename nested_unpacking.stan) (line_num 2) (col_num 2) (included_from ())))
-     (end_loc
-      ((filename nested_unpacking.stan) (line_num 2) (col_num 79) (included_from ()))))
+  ((complicated <opaque>
     (STuple
      ((SArray SReal
        ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -10729,16 +10658,7 @@
  (prog_name nested_unpacking_model) (prog_path nested_unpacking.stan))
 [exit 0]
   $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir qr_unpack.stan
-((functions_block ())
- (input_vars
-  ((N
-    ((begin_loc ((filename qr_unpack.stan) (line_num 2) (col_num 2) (included_from ())))
-     (end_loc ((filename qr_unpack.stan) (line_num 2) (col_num 17) (included_from ()))))
-    SInt)
-   (M
-    ((begin_loc ((filename qr_unpack.stan) (line_num 3) (col_num 2) (included_from ())))
-     (end_loc ((filename qr_unpack.stan) (line_num 3) (col_num 17) (included_from ()))))
-    SInt)))
+((functions_block ()) (input_vars ((N <opaque> SInt) (M <opaque> SInt)))
  (prepare_data
   (((pattern
      (Decl (decl_adtype DataOnly) (decl_id N) (decl_type (Sized SInt))
@@ -11261,9 +11181,7 @@
       ()))
     (meta <opaque>))))
  (output_vars
-  ((A
-    ((begin_loc ((filename qr_unpack.stan) (line_num 6) (col_num 2) (included_from ())))
-     (end_loc ((filename qr_unpack.stan) (line_num 6) (col_num 17) (included_from ()))))
+  ((A <opaque>
     ((out_unconstrained_st
       (SMatrix AoS
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -11581,32 +11499,13 @@
   $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir tuple-constraints-data.stan
 ((functions_block ())
  (input_vars
-  ((y
-    ((begin_loc
-      ((filename tuple-constraints-data.stan) (line_num 2) (col_num 2)
-       (included_from ())))
-     (end_loc
-      ((filename tuple-constraints-data.stan) (line_num 2) (col_num 60)
-       (included_from ()))))
-    (STuple (SInt (STuple (SReal SInt)))))
-   (x
-    ((begin_loc
-      ((filename tuple-constraints-data.stan) (line_num 3) (col_num 2)
-       (included_from ())))
-     (end_loc
-      ((filename tuple-constraints-data.stan) (line_num 3) (col_num 51)
-       (included_from ()))))
+  ((y <opaque> (STuple (SInt (STuple (SReal SInt)))))
+   (x <opaque>
     (STuple
      (SInt SReal
       (SVector AoS
        ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
-   (z
-    ((begin_loc
-      ((filename tuple-constraints-data.stan) (line_num 4) (col_num 2)
-       (included_from ())))
-     (end_loc
-      ((filename tuple-constraints-data.stan) (line_num 4) (col_num 48)
-       (included_from ()))))
+   (z <opaque>
     (SArray
      (SArray
       (STuple
@@ -12312,15 +12211,7 @@
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))))
- (input_vars
-  ((indicator
-    ((begin_loc
-      ((filename tuple-constraints-params.stan) (line_num 7) (col_num 2)
-       (included_from ())))
-     (end_loc
-      ((filename tuple-constraints-params.stan) (line_num 7) (col_num 34)
-       (included_from ()))))
-    SInt)))
+ (input_vars ((indicator <opaque> SInt)))
  (prepare_data
   (((pattern
      (Decl (decl_adtype DataOnly) (decl_id indicator) (decl_type (Sized SInt))
@@ -15378,13 +15269,7 @@
         (meta <opaque>)))))
     (meta <opaque>))))
  (output_vars
-  ((ps
-    ((begin_loc
-      ((filename tuple-constraints-params.stan) (line_num 10) (col_num 2)
-       (included_from ())))
-     (end_loc
-      ((filename tuple-constraints-params.stan) (line_num 10) (col_num 41)
-       (included_from ()))))
+  ((ps <opaque>
     ((out_unconstrained_st (STuple (SReal SReal)))
      (out_constrained_st (STuple (SReal SReal))) (out_block Parameters)
      (out_trans
@@ -15393,13 +15278,7 @@
          ((pattern (Lit Int 0)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
         (Lower
          ((pattern (Lit Int 0)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))))
-   (ps2
-    ((begin_loc
-      ((filename tuple-constraints-params.stan) (line_num 11) (col_num 2)
-       (included_from ())))
-     (end_loc
-      ((filename tuple-constraints-params.stan) (line_num 11) (col_num 51)
-       (included_from ()))))
+   (ps2 <opaque>
     ((out_unconstrained_st
       (SArray
        (SArray
@@ -15431,13 +15310,7 @@
        ((Lower
          ((pattern (Lit Int 0)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
         Simplex)))))
-   (t
-    ((begin_loc
-      ((filename tuple-constraints-params.stan) (line_num 12) (col_num 2)
-       (included_from ())))
-     (end_loc
-      ((filename tuple-constraints-params.stan) (line_num 12) (col_num 36)
-       (included_from ()))))
+   (t <opaque>
     ((out_unconstrained_st SReal) (out_constrained_st SReal) (out_block Parameters)
      (out_trans
       (LowerUpper
@@ -15457,13 +15330,7 @@
              (adlevel (TupleAD (AutoDiffable AutoDiffable))))))
           2))
         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
-   (complicated
-    ((begin_loc
-      ((filename tuple-constraints-params.stan) (line_num 14) (col_num 2)
-       (included_from ())))
-     (end_loc
-      ((filename tuple-constraints-params.stan) (line_num 15) (col_num 81)
-       (included_from ()))))
+   (complicated <opaque>
     ((out_unconstrained_st
       (SArray
        (STuple
@@ -15644,13 +15511,7 @@
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))))
- (input_vars
-  ((d
-    ((begin_loc
-      ((filename tuple-dataonly.stan) (line_num 13) (col_num 2) (included_from ())))
-     (end_loc
-      ((filename tuple-dataonly.stan) (line_num 13) (col_num 22) (included_from ()))))
-    (STuple (SReal SReal)))))
+ (input_vars ((d <opaque> (STuple (SReal SReal)))))
  (prepare_data
   (((pattern
      (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
@@ -16431,9 +16292,7 @@
   $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir tuple-full.stan
 ((functions_block ())
  (input_vars
-  ((ds
-    ((begin_loc ((filename tuple-full.stan) (line_num 2) (col_num 2) (included_from ())))
-     (end_loc ((filename tuple-full.stan) (line_num 2) (col_num 69) (included_from ()))))
+  ((ds <opaque>
     (STuple
      (SInt
       (STuple
@@ -17007,9 +16866,7 @@
       ()))
     (meta <opaque>))))
  (output_vars
-  ((ps
-    ((begin_loc ((filename tuple-full.stan) (line_num 5) (col_num 2) (included_from ())))
-     (end_loc ((filename tuple-full.stan) (line_num 5) (col_num 41) (included_from ()))))
+  ((ps <opaque>
     ((out_unconstrained_st (STuple (SReal SReal)))
      (out_constrained_st (STuple (SReal SReal))) (out_block Parameters)
      (out_trans
@@ -17952,19 +17809,11 @@
       ()))
     (meta <opaque>))))
  (output_vars
-  ((ps
-    ((begin_loc
-      ((filename tuple-nested-param.stan) (line_num 2) (col_num 2) (included_from ())))
-     (end_loc
-      ((filename tuple-nested-param.stan) (line_num 2) (col_num 23) (included_from ()))))
+  ((ps <opaque>
     ((out_unconstrained_st (STuple (SReal SReal)))
      (out_constrained_st (STuple (SReal SReal))) (out_block Parameters)
      (out_trans (TupleTransformation (Identity Identity)))))
-   (ps2
-    ((begin_loc
-      ((filename tuple-nested-param.stan) (line_num 3) (col_num 2) (included_from ())))
-     (end_loc
-      ((filename tuple-nested-param.stan) (line_num 3) (col_num 47) (included_from ()))))
+   (ps2 <opaque>
     ((out_unconstrained_st
       (STuple
        (SReal
@@ -18242,11 +18091,7 @@
       ()))
     (meta <opaque>))))
  (output_vars
-  ((ps
-    ((begin_loc
-      ((filename tuple-params.stan) (line_num 2) (col_num 2) (included_from ())))
-     (end_loc
-      ((filename tuple-params.stan) (line_num 2) (col_num 32) (included_from ()))))
+  ((ps <opaque>
     ((out_unconstrained_st (STuple (SReal SReal)))
      (out_constrained_st (STuple (SReal SReal))) (out_block Parameters)
      (out_trans
@@ -18298,18 +18143,10 @@
        (meta <opaque>))))
     (fdloc <opaque>))))
  (input_vars
-  ((V
-    ((begin_loc
-      ((filename tuple-promotion.stan) (line_num 7) (col_num 2) (included_from ())))
-     (end_loc
-      ((filename tuple-promotion.stan) (line_num 7) (col_num 14) (included_from ()))))
+  ((V <opaque>
     (SVector AoS
      ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-   (d
-    ((begin_loc
-      ((filename tuple-promotion.stan) (line_num 8) (col_num 2) (included_from ())))
-     (end_loc
-      ((filename tuple-promotion.stan) (line_num 8) (col_num 38) (included_from ()))))
+   (d <opaque>
     (STuple
      ((SArray SInt
        ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -19728,11 +19565,7 @@
     (meta <opaque>))))
  (transform_inits ()) (unconstrain_array ())
  (output_vars
-  ((d2
-    ((begin_loc
-      ((filename tuple-promotion.stan) (line_num 24) (col_num 2) (included_from ())))
-     (end_loc
-      ((filename tuple-promotion.stan) (line_num 24) (col_num 51) (included_from ()))))
+  ((d2 <opaque>
     ((out_unconstrained_st
       (STuple
        ((SArray SComplex
@@ -19747,11 +19580,7 @@
          ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
      (out_block TransformedParameters)
      (out_trans (TupleTransformation (Identity Identity)))))
-   (V3
-    ((begin_loc
-      ((filename tuple-promotion.stan) (line_num 25) (col_num 2) (included_from ())))
-     (end_loc
-      ((filename tuple-promotion.stan) (line_num 25) (col_num 33) (included_from ()))))
+   (V3 <opaque>
     ((out_unconstrained_st
       (STuple
        ((SVector AoS
@@ -19764,11 +19593,7 @@
         SReal)))
      (out_block TransformedParameters)
      (out_trans (TupleTransformation (Identity Identity)))))
-   (arrs2
-    ((begin_loc
-      ((filename tuple-promotion.stan) (line_num 27) (col_num 2) (included_from ())))
-     (end_loc
-      ((filename tuple-promotion.stan) (line_num 27) (col_num 54) (included_from ()))))
+   (arrs2 <opaque>
     ((out_unconstrained_st
       (SArray
        (STuple
@@ -19785,11 +19610,7 @@
        ((pattern (Lit Int 4)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block TransformedParameters)
      (out_trans (TupleTransformation (Identity Identity)))))
-   (nested2
-    ((begin_loc
-      ((filename tuple-promotion.stan) (line_num 29) (col_num 2) (included_from ())))
-     (end_loc
-      ((filename tuple-promotion.stan) (line_num 29) (col_num 86) (included_from ()))))
+   (nested2 <opaque>
     ((out_unconstrained_st
       (STuple
        ((STuple
@@ -19821,11 +19642,7 @@
       (TupleTransformation
        ((TupleTransformation (Identity Identity)) Identity
         (TupleTransformation (Identity Identity)))))))
-   (nested3
-    ((begin_loc
-      ((filename tuple-promotion.stan) (line_num 30) (col_num 2) (included_from ())))
-     (end_loc
-      ((filename tuple-promotion.stan) (line_num 30) (col_num 77) (included_from ()))))
+   (nested3 <opaque>
     ((out_unconstrained_st
       (STuple
        ((STuple
@@ -19857,34 +19674,18 @@
       (TupleTransformation
        ((TupleTransformation (Identity Identity)) Identity
         (TupleTransformation (Identity Identity)))))))
-   (y
-    ((begin_loc
-      ((filename tuple-promotion.stan) (line_num 34) (col_num 2) (included_from ())))
-     (end_loc
-      ((filename tuple-promotion.stan) (line_num 34) (col_num 12) (included_from ()))))
+   (y <opaque>
     ((out_unconstrained_st SInt) (out_constrained_st SInt)
      (out_block GeneratedQuantities) (out_trans Identity)))
-   (x
-    ((begin_loc
-      ((filename tuple-promotion.stan) (line_num 35) (col_num 2) (included_from ())))
-     (end_loc
-      ((filename tuple-promotion.stan) (line_num 35) (col_num 31) (included_from ()))))
+   (x <opaque>
     ((out_unconstrained_st (STuple (SReal SReal)))
      (out_constrained_st (STuple (SReal SReal))) (out_block GeneratedQuantities)
      (out_trans (TupleTransformation (Identity Identity)))))
-   (z
-    ((begin_loc
-      ((filename tuple-promotion.stan) (line_num 36) (col_num 2) (included_from ())))
-     (end_loc
-      ((filename tuple-promotion.stan) (line_num 36) (col_num 29) (included_from ()))))
+   (z <opaque>
     ((out_unconstrained_st (STuple (SComplex SReal)))
      (out_constrained_st (STuple (SComplex SReal))) (out_block GeneratedQuantities)
      (out_trans (TupleTransformation (Identity Identity)))))
-   (z2
-    ((begin_loc
-      ((filename tuple-promotion.stan) (line_num 37) (col_num 2) (included_from ())))
-     (end_loc
-      ((filename tuple-promotion.stan) (line_num 37) (col_num 30) (included_from ()))))
+   (z2 <opaque>
     ((out_unconstrained_st (STuple (SComplex SReal)))
      (out_constrained_st (STuple (SComplex SReal))) (out_block GeneratedQuantities)
      (out_trans (TupleTransformation (Identity Identity)))))))
@@ -20005,40 +19806,19 @@
        (meta <opaque>))))
     (fdloc <opaque>))))
  (input_vars
-  ((N
-    ((begin_loc
-      ((filename tuple-templating.stan) (line_num 24) (col_num 2) (included_from ())))
-     (end_loc
-      ((filename tuple-templating.stan) (line_num 24) (col_num 8) (included_from ()))))
-    SInt)
-   (m1
-    ((begin_loc
-      ((filename tuple-templating.stan) (line_num 25) (col_num 2) (included_from ())))
-     (end_loc
-      ((filename tuple-templating.stan) (line_num 25) (col_num 18) (included_from ()))))
+  ((N <opaque> SInt)
+   (m1 <opaque>
     (SMatrix AoS
      ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
      ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-   (m2
-    ((begin_loc
-      ((filename tuple-templating.stan) (line_num 26) (col_num 2) (included_from ())))
-     (end_loc
-      ((filename tuple-templating.stan) (line_num 26) (col_num 18) (included_from ()))))
+   (m2 <opaque>
     (SMatrix AoS
      ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
      ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-   (a1
-    ((begin_loc
-      ((filename tuple-templating.stan) (line_num 27) (col_num 2) (included_from ())))
-     (end_loc
-      ((filename tuple-templating.stan) (line_num 27) (col_num 18) (included_from ()))))
+   (a1 <opaque>
     (SArray SInt
      ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-   (a2
-    ((begin_loc
-      ((filename tuple-templating.stan) (line_num 28) (col_num 2) (included_from ())))
-     (end_loc
-      ((filename tuple-templating.stan) (line_num 28) (col_num 19) (included_from ()))))
+   (a2 <opaque>
     (SArray SReal
      ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
  (prepare_data
@@ -20519,11 +20299,7 @@
     (meta <opaque>))))
  (transform_inits ()) (unconstrain_array ())
  (output_vars
-  ((s
-    ((begin_loc
-      ((filename tuple-templating.stan) (line_num 34) (col_num 2) (included_from ())))
-     (end_loc
-      ((filename tuple-templating.stan) (line_num 34) (col_num 26) (included_from ()))))
+  ((s <opaque>
     ((out_unconstrained_st SReal) (out_constrained_st SReal)
      (out_block GeneratedQuantities) (out_trans Identity)))))
  (prog_name tuple_templating_model) (prog_path tuple-templating.stan))
@@ -20658,19 +20434,11 @@
        (meta <opaque>))))
     (fdloc <opaque>))))
  (input_vars
-  ((x
-    ((begin_loc
-      ((filename tuple_copying.stan) (line_num 20) (col_num 2) (included_from ())))
-     (end_loc
-      ((filename tuple_copying.stan) (line_num 20) (col_num 17) (included_from ()))))
+  ((x <opaque>
     (SMatrix AoS
      ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
      ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-   (y
-    ((begin_loc
-      ((filename tuple_copying.stan) (line_num 21) (col_num 2) (included_from ())))
-     (end_loc
-      ((filename tuple_copying.stan) (line_num 21) (col_num 19) (included_from ()))))
+   (y <opaque>
     (SArray SReal
      ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
  (prepare_data
@@ -21640,11 +21408,7 @@
       ()))
     (meta <opaque>))))
  (output_vars
-  ((m1
-    ((begin_loc
-      ((filename tuple_copying.stan) (line_num 27) (col_num 2) (included_from ())))
-     (end_loc
-      ((filename tuple_copying.stan) (line_num 27) (col_num 22) (included_from ()))))
+  ((m1 <opaque>
     ((out_unconstrained_st
       (SMatrix AoS
        ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -21654,11 +21418,7 @@
        ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans Identity)))
-   (m2
-    ((begin_loc
-      ((filename tuple_copying.stan) (line_num 27) (col_num 2) (included_from ())))
-     (end_loc
-      ((filename tuple_copying.stan) (line_num 27) (col_num 22) (included_from ()))))
+   (m2 <opaque>
     ((out_unconstrained_st
       (SMatrix AoS
        ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -21818,28 +21578,16 @@
     (meta <opaque>))))
  (transform_inits ()) (unconstrain_array ())
  (output_vars
-  ((x
-    ((begin_loc
-      ((filename tuple_exprs.stan) (line_num 2) (col_num 2) (included_from ())))
-     (end_loc ((filename tuple_exprs.stan) (line_num 2) (col_num 12) (included_from ()))))
+  ((x <opaque>
     ((out_unconstrained_st SInt) (out_constrained_st SInt)
      (out_block GeneratedQuantities) (out_trans Identity)))
-   (y
-    ((begin_loc
-      ((filename tuple_exprs.stan) (line_num 3) (col_num 2) (included_from ())))
-     (end_loc ((filename tuple_exprs.stan) (line_num 3) (col_num 12) (included_from ()))))
+   (y <opaque>
     ((out_unconstrained_st SInt) (out_constrained_st SInt)
      (out_block GeneratedQuantities) (out_trans Identity)))
-   (z
-    ((begin_loc
-      ((filename tuple_exprs.stan) (line_num 4) (col_num 2) (included_from ())))
-     (end_loc ((filename tuple_exprs.stan) (line_num 4) (col_num 12) (included_from ()))))
+   (z <opaque>
     ((out_unconstrained_st SComplex) (out_constrained_st SComplex)
      (out_block GeneratedQuantities) (out_trans Identity)))
-   (foo
-    ((begin_loc
-      ((filename tuple_exprs.stan) (line_num 5) (col_num 2) (included_from ())))
-     (end_loc ((filename tuple_exprs.stan) (line_num 5) (col_num 19) (included_from ()))))
+   (foo <opaque>
     ((out_unconstrained_st
       (SMatrix AoS
        ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -21883,18 +21631,11 @@
        (meta <opaque>))))
     (fdloc <opaque>))))
  (input_vars
-  ((N
-    ((begin_loc ((filename tuple_hof.stan) (line_num 8) (col_num 2) (included_from ())))
-     (end_loc ((filename tuple_hof.stan) (line_num 8) (col_num 8) (included_from ()))))
-    SInt)
-   (data_y
-    ((begin_loc ((filename tuple_hof.stan) (line_num 9) (col_num 2) (included_from ())))
-     (end_loc ((filename tuple_hof.stan) (line_num 9) (col_num 23) (included_from ()))))
+  ((N <opaque> SInt)
+   (data_y <opaque>
     (SArray SReal
      ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-   (data_m
-    ((begin_loc ((filename tuple_hof.stan) (line_num 10) (col_num 2) (included_from ())))
-     (end_loc ((filename tuple_hof.stan) (line_num 10) (col_num 35) (included_from ()))))
+   (data_m <opaque>
     (STuple
      (SReal
       (SArray SInt
@@ -22257,9 +21998,7 @@
       ()))
     (meta <opaque>))))
  (output_vars
-  ((param_y
-    ((begin_loc ((filename tuple_hof.stan) (line_num 16) (col_num 2) (included_from ())))
-     (end_loc ((filename tuple_hof.stan) (line_num 16) (col_num 24) (included_from ()))))
+  ((param_y <opaque>
     ((out_unconstrained_st
       (SArray SReal
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
@@ -22267,9 +22006,7 @@
       (SArray SReal
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans Identity)))
-   (sum2
-    ((begin_loc ((filename tuple_hof.stan) (line_num 19) (col_num 2) (included_from ())))
-     (end_loc ((filename tuple_hof.stan) (line_num 19) (col_num 50) (included_from ()))))
+   (sum2 <opaque>
     ((out_unconstrained_st SReal) (out_constrained_st SReal)
      (out_block TransformedParameters) (out_trans Identity)))))
  (prog_name tuple_hof_model) (prog_path tuple_hof.stan))
@@ -22794,11 +22531,7 @@
     (meta <opaque>))))
  (transform_inits ()) (unconstrain_array ())
  (output_vars
-  ((m
-    ((begin_loc
-      ((filename tuple_temporary.stan) (line_num 2) (col_num 2) (included_from ())))
-     (end_loc
-      ((filename tuple_temporary.stan) (line_num 2) (col_num 27) (included_from ()))))
+  ((m <opaque>
     ((out_unconstrained_st
       (SMatrix AoS
        ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -22808,11 +22541,7 @@
        ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block GeneratedQuantities) (out_trans Identity)))
-   (t
-    ((begin_loc
-      ((filename tuple_temporary.stan) (line_num 4) (col_num 2) (included_from ())))
-     (end_loc
-      ((filename tuple_temporary.stan) (line_num 4) (col_num 47) (included_from ()))))
+   (t <opaque>
     ((out_unconstrained_st
       (STuple
        (SReal
@@ -22827,11 +22556,7 @@
          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
      (out_block GeneratedQuantities)
      (out_trans (TupleTransformation (Identity Identity)))))
-   (s
-    ((begin_loc
-      ((filename tuple_temporary.stan) (line_num 6) (col_num 2) (included_from ())))
-     (end_loc
-      ((filename tuple_temporary.stan) (line_num 6) (col_num 41) (included_from ()))))
+   (s <opaque>
     ((out_unconstrained_st
       (STuple
        (SReal
@@ -22851,24 +22576,11 @@
   $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir unpack_promote.stan
 ((functions_block ())
  (input_vars
-  ((N
-    ((begin_loc
-      ((filename unpack_promote.stan) (line_num 2) (col_num 2) (included_from ())))
-     (end_loc
-      ((filename unpack_promote.stan) (line_num 2) (col_num 17) (included_from ()))))
-    SInt)
-   (x
-    ((begin_loc
-      ((filename unpack_promote.stan) (line_num 3) (col_num 2) (included_from ())))
-     (end_loc
-      ((filename unpack_promote.stan) (line_num 3) (col_num 14) (included_from ()))))
+  ((N <opaque> SInt)
+   (x <opaque>
     (SVector AoS
      ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-   (y
-    ((begin_loc
-      ((filename unpack_promote.stan) (line_num 4) (col_num 2) (included_from ())))
-     (end_loc
-      ((filename unpack_promote.stan) (line_num 4) (col_num 17) (included_from ()))))
+   (y <opaque>
     (SArray SInt
      ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
  (prepare_data
@@ -24032,11 +23744,7 @@
       ()))
     (meta <opaque>))))
  (output_vars
-  ((alpha
-    ((begin_loc
-      ((filename unpack_promote.stan) (line_num 10) (col_num 2) (included_from ())))
-     (end_loc
-      ((filename unpack_promote.stan) (line_num 10) (col_num 22) (included_from ()))))
+  ((alpha <opaque>
     ((out_unconstrained_st
       (SArray SReal
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
@@ -24044,11 +23752,7 @@
       (SArray SReal
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans Identity)))
-   (theta
-    ((begin_loc
-      ((filename unpack_promote.stan) (line_num 11) (col_num 2) (included_from ())))
-     (end_loc
-      ((filename unpack_promote.stan) (line_num 11) (col_num 18) (included_from ()))))
+   (theta <opaque>
     ((out_unconstrained_st
       (SVector AoS
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))

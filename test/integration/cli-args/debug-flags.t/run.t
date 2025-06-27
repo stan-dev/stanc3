@@ -202,9 +202,7 @@ Flags not used elsewhere in the tests
            (is_global true)
            (variables (((identifier ((name y) (id_loc <opaque>))) (initial_value ()))))))
          (smeta ((loc <opaque>))))))
-      (xloc
-       ((begin_loc ((filename basic.stan) (line_num 1) (col_num 0) (included_from ())))
-        (end_loc ((filename basic.stan) (line_num 4) (col_num 1) (included_from ()))))))))
+      (xloc <opaque>))))
    (transformeddatablock ())
    (parametersblock
     (((stmts
@@ -216,9 +214,7 @@ Flags not used elsewhere in the tests
            (is_global true)
            (variables (((identifier ((name theta) (id_loc <opaque>))) (initial_value ()))))))
          (smeta ((loc <opaque>))))))
-      (xloc
-       ((begin_loc ((filename basic.stan) (line_num 5) (col_num 0) (included_from ())))
-        (end_loc ((filename basic.stan) (line_num 7) (col_num 1) (included_from ()))))))))
+      (xloc <opaque>))))
    (transformedparametersblock ())
    (modelblock
     (((stmts
@@ -240,9 +236,7 @@ Flags not used elsewhere in the tests
             (((expr (Variable ((name theta) (id_loc <opaque>)))) (emeta ((loc <opaque>))))))
            (truncation NoTruncate)))
          (smeta ((loc <opaque>))))))
-      (xloc
-       ((begin_loc ((filename basic.stan) (line_num 8) (col_num 0) (included_from ())))
-        (end_loc ((filename basic.stan) (line_num 11) (col_num 1) (included_from ()))))))))
+      (xloc <opaque>))))
    (generatedquantitiesblock ()) (comments <opaque>))
   $ stanc basic.stan --debug-decorated-ast
   ((functionblock ())
@@ -272,9 +266,7 @@ Flags not used elsewhere in the tests
            (is_global true)
            (variables (((identifier ((name y) (id_loc <opaque>))) (initial_value ()))))))
          (smeta ((loc <opaque>) (return_type Incomplete))))))
-      (xloc
-       ((begin_loc ((filename basic.stan) (line_num 1) (col_num 0) (included_from ())))
-        (end_loc ((filename basic.stan) (line_num 4) (col_num 1) (included_from ()))))))))
+      (xloc <opaque>))))
    (transformeddatablock ())
    (parametersblock
     (((stmts
@@ -289,9 +281,7 @@ Flags not used elsewhere in the tests
            (is_global true)
            (variables (((identifier ((name theta) (id_loc <opaque>))) (initial_value ()))))))
          (smeta ((loc <opaque>) (return_type Incomplete))))))
-      (xloc
-       ((begin_loc ((filename basic.stan) (line_num 5) (col_num 0) (included_from ())))
-        (end_loc ((filename basic.stan) (line_num 7) (col_num 1) (included_from ()))))))))
+      (xloc <opaque>))))
    (transformedparametersblock ())
    (modelblock
     (((stmts
@@ -328,9 +318,7 @@ Flags not used elsewhere in the tests
               (emeta ((loc <opaque>) (ad_level AutoDiffable) (type_ UReal))))))
            (truncation NoTruncate)))
          (smeta ((loc <opaque>) (return_type Incomplete))))))
-      (xloc
-       ((begin_loc ((filename basic.stan) (line_num 8) (col_num 0) (included_from ())))
-        (end_loc ((filename basic.stan) (line_num 11) (col_num 1) (included_from ()))))))))
+      (xloc <opaque>))))
    (generatedquantitiesblock ()) (comments <opaque>))
 
 
