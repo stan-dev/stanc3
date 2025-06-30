@@ -4,11 +4,7 @@
  (libraries core menhirLib yojson fmt middle stan_math_signatures)
  (instrumentation
   (backend bisect_ppx))
- (modules
-  :standard
-  \
-  parser_strip_redundant_state
-  parser_add_missing_messages)
+ (modules :standard \ parser_strip_redundant_state)
  (inline_tests)
  (preprocess
   (pps ppx_jane ppx_deriving.fold ppx_deriving.map)))
@@ -33,13 +29,19 @@
 
 (rule
  (with-stdout-to
-  parser_updated.messages
-  (run menhir %{dep:parser.mly} --update-errors %{dep:parser.messages})))
+  parser_new.messages
+  (run menhir --list-errors %{dep:parser.mly})))
 
 (rule
  (with-stdout-to
-  parser_new.messages
-  (run menhir --list-errors %{dep:parser.mly})))
+  parser_updated.messages
+  (run
+   menhir
+   %{dep:parser.mly}
+   --merge-errors
+   %{dep:parser_new.messages}
+   --merge-errors
+   %{dep:parser.messages})))
 
 (executable
  (name parser_strip_redundant_state)
@@ -50,31 +52,8 @@
  (with-stdin-from
   %{dep:parser_updated.messages}
   (with-stdout-to
-   parser_trimmed.messages
+   parser_updated_trimmed.messages
    (run ./parser_strip_redundant_state.exe))))
-
-(executable
- (name parser_add_missing_messages)
- (modules parser_add_missing_messages)
- (libraries str))
-
-(rule
- (with-stdout-to
-  parser_updated_trimmed.messages
-  (progn
-   (cat %{dep:parser_trimmed.messages})
-   (pipe-stderr
-    (with-accepted-exit-codes
-     (or 0 1)
-     (ignore-stdout
-      (run
-       menhir
-       %{dep:parser.mly}
-       --compare-errors
-       %{dep:parser_new.messages}
-       --compare-errors
-       %{dep:parser_trimmed.messages})))
-    (run ./parser_add_missing_messages.exe)))))
 
 (rule
  (alias update_messages)
