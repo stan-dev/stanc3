@@ -29,8 +29,6 @@ data {
 transformed data {
   vector[n_obs] log_ye = log(ye);
 
-  vector[n_obs] theta_0 = rep_vector(0.0, n_obs); // initial guess
-
   // control parameters for Laplace approximation
   real tolerance = 1e-6;
   int max_num_steps = 100;
@@ -49,12 +47,12 @@ model {
   eta ~ normal(0, 1);
 
   target += laplace_marginal(ll_nested, ({({(eta, log_ye)}, y)}, eta),
-                             theta_0, K_function,
+                             K_function,
                              ({(x, {(n_obs, alpha)})}, rho));
 }
 generated quantities {
   vector[n_obs] theta3 = laplace_latent_rng(ll_nested,
-                           ({({(eta, log_ye)}, y)}, eta), theta_0,
+                           ({({(eta, log_ye)}, y)}, eta),
                            K_function, ({(x, {(n_obs, alpha)})}, rho));
 }
 
