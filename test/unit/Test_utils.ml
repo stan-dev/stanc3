@@ -12,7 +12,7 @@ let error_to_string ~code =
 let typed_ast_of_string_exn code =
   Result.(
     untyped_ast_of_string code >>= fun ast ->
-    Typechecker.check_program ast
+    Typechecker.check_program ~allow_undefined_functions:true ast
     |> map_error ~f:(fun e -> Errors.Semantic_error e))
   |> Result.map_error ~f:(error_to_string ~code)
   |> Result.ok_or_failwith |> fst

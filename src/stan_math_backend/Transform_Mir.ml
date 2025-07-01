@@ -3,8 +3,6 @@ open Core.Poly
 open Middle
 open Mangle
 
-let use_opencl = ref false
-
 let translate_funapps_and_kwrds e =
   let open Expr.Fixed in
   let f ({pattern; _} as expr) =
@@ -1016,7 +1014,7 @@ let map_prog_stmt_lists f (p : ('a, 'b, 'c) Program.t) =
   ; transform_inits= f p.transform_inits
   ; unconstrain_array= f p.unconstrain_array }
 
-let trans_prog (p : Program.Typed.t) =
+let trans_prog ?(use_opencl = false) (p : Program.Typed.t) =
   (* name mangling of c++ keywords*)
   let rec map_stmt {Stmt.Fixed.pattern; meta} =
     { Stmt.Fixed.pattern=
@@ -1090,7 +1088,7 @@ let trans_prog (p : Program.Typed.t) =
         true
     | _ -> false in
   let translate_to_open_cl stmts =
-    if !use_opencl then
+    if use_opencl then
       let decl Stmt.Fixed.{pattern; _} =
         match pattern with
         | Decl {decl_type= Sized (SInt | SReal); _} -> None
