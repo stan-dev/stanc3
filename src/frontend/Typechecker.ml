@@ -36,7 +36,6 @@ let needs_higher_order_autodiff fn =
 
 (* model name - don't love this here *)
 let model_name = ref ""
-let check_that_all_functions_have_definition = ref true
 
 type function_indicator =
   | NotInFunction
@@ -2100,15 +2099,15 @@ let verify_fun_def_body_in_block = function
       Semantic_error.fn_decl_needs_block smeta.loc |> error
   | _ -> ()
 
-let verify_functions_have_defn tenv function_block_stmts_opt =
+let verify_functions_have_defn ~allow_undefined_functions tenv
+    function_block_stmts_opt =
   let error_on_undefined name funs =
     List.iter (List.rev funs) ~f:(fun f ->
         match f with
         | Env.{kind= `UserDeclared loc; _} ->
             Semantic_error.fn_decl_without_def loc name |> error
         | _ -> ()) in
-  if !check_that_all_functions_have_definition then
-    Env.iteri tenv error_on_undefined;
+  if not allow_undefined_functions then Env.iteri tenv error_on_undefined;
   match function_block_stmts_opt with
   | Some {stmts= []; _} | None -> ()
   | Some {stmts= ls; _} -> List.iter ~f:verify_fun_def_body_in_block ls
@@ -2158,7 +2157,7 @@ let verify_correctness_invariant (ast : untyped_program)
           (detyped : untyped_program)
           (ast : untyped_program)]
 
-let check_program_exn
+let check_program_exn ~allow_undefined_functions
     ({ functionblock= fb
      ; datablock= db
      ; transformeddatablock= tdb
@@ -2173,7 +2172,7 @@ let check_program_exn
   let tenv = Env.stan_math_environment in
   let tenv = add_userdefined_functions tenv fb in
   let tenv, typed_fb = check_toplevel_block Functions tenv fb in
-  verify_functions_have_defn tenv typed_fb;
+  verify_functions_have_defn ~allow_undefined_functions tenv typed_fb;
   let tenv, typed_db = check_toplevel_block Data tenv db in
   let tenv, typed_tdb = check_toplevel_block TData tenv tdb in
   let tenv, typed_pb = check_toplevel_block Param tenv pb in
@@ -2193,6 +2192,6 @@ let check_program_exn
   verify_second_order_derivative_compatibility prog;
   attach_warnings prog
 
-let check_program ast =
-  try Result.Ok (check_program_exn ast)
+let check_program ?(allow_undefined_functions = false) ast =
+  try Result.Ok (check_program_exn ~allow_undefined_functions ast)
   with Errors.SemanticError err -> Result.Error err
