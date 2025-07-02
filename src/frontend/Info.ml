@@ -90,7 +90,7 @@ let includes_json () =
   `Assoc
     [ ( "included_files"
       , `List
-          (List.rev !Preprocessor.included_files
+          (Preprocessor.included_files ()
           |> List.map ~f:(fun str -> `String str)) ) ]
 
 let info_json ast =

@@ -26,7 +26,7 @@ val pop_buffer : unit -> Lexing.lexbuf
 val add_comment : Ast.comment_type -> unit
 val get_comments : unit -> Ast.comment_type list
 
-val included_files : string list ref
+val included_files : unit -> string list
 (** List of files that have been included *)
 
 val restore_prior_lexbuf : unit -> Lexing.lexbuf

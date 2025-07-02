@@ -148,3 +148,5 @@ let try_get_new_lexbuf fname =
   update_start_positions new_lexbuf.lex_curr_p;
   included_files := file :: !included_files;
   new_lexbuf
+
+let included_files () = List.rev !included_files
