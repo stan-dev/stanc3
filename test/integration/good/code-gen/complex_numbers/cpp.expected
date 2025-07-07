@@ -10080,13 +10080,9 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
       current_statement__ = 9;
       n = 1;
       current_statement__ = 10;
-      cm_1dim__ = std::numeric_limits<int>::min();
-      current_statement__ = 10;
       cm_1dim__ = (n + 1);
       current_statement__ = 10;
       stan::math::validate_non_negative_index("cm", "n + 1", cm_1dim__);
-      current_statement__ = 11;
-      cm_2dim__ = std::numeric_limits<int>::min();
       current_statement__ = 11;
       cm_2dim__ = (n + 1);
       current_statement__ = 11;

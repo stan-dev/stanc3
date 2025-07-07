@@ -755,6 +755,19 @@ let get_block block prog =
   | TransformedParameters -> prog.transformedparametersblock
   | GeneratedQuantities -> prog.generatedquantitiesblock
 
+(** Store a size in a variable to avoid re-computing *)
+let cache_integer_size decl_id (e : Expr.Typed.t) =
+  let decl =
+    { Stmt.Fixed.pattern=
+        Decl
+          { decl_type= Sized SInt
+          ; decl_id
+          ; decl_adtype= DataOnly
+          ; initialize= Assign e }
+    ; meta= e.meta.loc } in
+  let var = Expr.{e with Fixed.pattern= Var decl_id} in
+  (decl, var)
+
 let rec trans_sizedtype_decl declc tr name st =
   let check fn x n =
     Stmt.Helpers.internal_nrfunapp fn
@@ -774,27 +787,8 @@ let rec trans_sizedtype_decl declc tr name st =
           |> String.substr_replace_all ~pattern:"[]" ~with_:"_brack"
           |> String.substr_replace_all ~pattern:"." ~with_:"_dot" in
         let decl_id = Fmt.str "%s_%ddim__" decl_name n in
-        let decl =
-          { Stmt.Fixed.pattern=
-              Decl
-                { decl_type= Sized SInt
-                ; decl_id
-                ; decl_adtype= DataOnly
-                ; initialize= Default }
-          ; meta= e.meta.loc } in
-        let assign =
-          { Stmt.Fixed.pattern=
-              Assignment (Stmt.Helpers.lvariable decl_id, UInt, e)
-          ; meta= e.meta.loc } in
-        let var =
-          Expr.
-            { Fixed.pattern= Var decl_id
-            ; meta=
-                Typed.Meta.
-                  { type_= s.Ast.emeta.Ast.type_
-                  ; adlevel= s.emeta.ad_level
-                  ; loc= s.emeta.loc } } in
-        ([decl; assign; check fn s var], var) in
+        let decl, var = cache_integer_size decl_id e in
+        ([decl; check fn s var], var) in
   let rec go n = function
     | SizedType.(SInt | SReal | SComplex) as t -> ([], t)
     | SVector (mem_pattern, s) ->
@@ -866,7 +860,7 @@ let trans_block ud_dists declc block prog =
                ~f:(fun {identifier; initial_value} ->
                  let decl_id = identifier.Ast.name in
                  let transform = Transformation.map trans_expr transformation in
-                 let size, type_ =
+                 let size_decls, type_ =
                    trans_sizedtype_decl declc transform identifier.name type_
                  in
                  let outvar =
@@ -881,7 +875,7 @@ let trans_block ud_dists declc block prog =
                  let stmts =
                    create_decl_with_assign decl_id declc (Sized type_)
                      initial_value transform smeta.loc in
-                 (outvar, size, stmts))
+                 (outvar, size_decls, stmts))
                variables in
         ( outvars @ accum1
         , List.concat sizes @ accum2

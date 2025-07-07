@@ -6067,8 +6067,6 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
       current_statement__ = 5;
       stan::math::check_less_or_equal(function__, "indicator", indicator, 1);
       current_statement__ = 6;
-      complicated_brack_dot2_1dim__ = std::numeric_limits<int>::min();
-      current_statement__ = 6;
       complicated_brack_dot2_1dim__ = (indicator ? 3 : 0);
       current_statement__ = 6;
       stan::math::validate_non_negative_index("complicated[].2",
