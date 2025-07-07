@@ -923,16 +923,12 @@ class builtin_constraint_model final : public model_base_crtp<builtin_constraint
       current_statement__ = 8;
       stan::math::check_greater_or_equal(function__, "K", K, 1);
       current_statement__ = 9;
-      beta_raw_1dim__ = std::numeric_limits<int>::min();
-      current_statement__ = 9;
       beta_raw_1dim__ = (K - 1);
       current_statement__ = 9;
       stan::math::validate_non_negative_index("beta_raw", "K - 1",
         beta_raw_1dim__);
       current_statement__ = 10;
       stan::math::validate_non_negative_index("beta", "K", K);
-      current_statement__ = 11;
-      beta_recovered_1dim__ = std::numeric_limits<int>::min();
       current_statement__ = 11;
       beta_recovered_1dim__ = (K - 1);
       current_statement__ = 11;
@@ -51003,8 +50999,6 @@ class shadowing_model final : public model_base_crtp<shadowing_model> {
       }
       current_statement__ = 48;
       stan::math::validate_non_negative_index("called", "1", 1);
-      current_statement__ = 49;
-      result_1dim__ = std::numeric_limits<int>::min();
       current_statement__ = 49;
       result_1dim__ = stan::math::num_elements(x);
       current_statement__ = 49;

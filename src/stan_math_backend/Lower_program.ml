@@ -110,7 +110,7 @@ let rec validate_dims ~stage name st =
                    ; vector (SizedType.get_dims_io st) ] )) in
     [Expression validate]
 
-let gen_assign_data decl_id st =
+let gen_assign_data decl_id st initialize =
   let lower_placement_new decl_id st =
     let open Cpp.DSL in
     match st with
@@ -138,11 +138,14 @@ let gen_assign_data decl_id st =
      |SComplexRowVector _ | SComplexMatrix _ ->
         decl_id ^ "_data__"
     | SInt | SReal | SComplex | SArray _ | STuple _ -> decl_id in
-  Cpp.DSL.(
-    underlying_variable decl_id st
-    := initialize_value st
-         (UnsizedType.fill_adtype_for_type UnsizedType.DataOnly
-            (SizedType.to_unsized st)))
+  let value =
+    match initialize with
+    | Stmt.Fixed.Pattern.Assign e -> lower_expr e
+    | _ ->
+        initialize_value st
+          (UnsizedType.fill_adtype_for_type UnsizedType.DataOnly
+             (SizedType.to_unsized st)) in
+  Cpp.DSL.(underlying_variable decl_id st := value)
   :: lower_placement_new decl_id st
 
 let lower_constructor
@@ -167,7 +170,7 @@ let lower_constructor
   let data_idents = List.map ~f:fst3 input_vars |> String.Set.of_list in
   let lower_data (Stmt.Fixed.{pattern; meta} as s) =
     match pattern with
-    | Decl {decl_id; decl_type; _} when decl_id <> "pos__" -> (
+    | Decl {decl_id; decl_type; initialize; _} when decl_id <> "pos__" -> (
         match decl_type with
         | Sized st -> (
             Numbering.assign_loc meta
@@ -175,8 +178,8 @@ let lower_constructor
             match Set.mem data_idents decl_id with
             | true ->
                 validate_dims ~stage:"data initialization" decl_id st
-                @ gen_assign_data decl_id st
-            | false -> gen_assign_data decl_id st)
+                @ gen_assign_data decl_id st initialize
+            | false -> gen_assign_data decl_id st initialize)
         | Unsized _ -> [])
     | _ -> lower_statement s in
   let data =

@@ -12316,17 +12316,18 @@
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id complicated_brack_dot2_1dim__)
-      (decl_type (Sized SInt)) (initialize Default)))
-    (meta <opaque>))
-   ((pattern
-     (Assignment ((LVariable complicated_brack_dot2_1dim__) ()) UInt
-      ((pattern
-        (TernaryIf
-         ((pattern (Var indicator))
-          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-         ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-         ((pattern (Lit Int 0)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+      (decl_type (Sized SInt))
+      (initialize
+       (Assign
+        ((pattern
+          (TernaryIf
+           ((pattern (Var indicator))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+           ((pattern (Lit Int 3))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+           ((pattern (Lit Int 0))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)

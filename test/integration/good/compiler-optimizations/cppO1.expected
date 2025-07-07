@@ -7906,8 +7906,6 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       stan::model::assign(log_E, stan::math::log(E),
         "assigning variable log_E");
       current_statement__ = 40;
-      phi_std_raw_1dim__ = std::numeric_limits<int>::min();
-      current_statement__ = 40;
       phi_std_raw_1dim__ = (N - 1);
       current_statement__ = 40;
       stan::math::validate_non_negative_index("phi_std_raw", "N - 1",
@@ -10500,8 +10498,6 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       stan::math::validate_non_negative_index("epsilon", "M", M);
       current_statement__ = 134;
       stan::math::validate_non_negative_index("phi", "M", M);
-      current_statement__ = 135;
-      phi_2dim__ = std::numeric_limits<int>::min();
       current_statement__ = 135;
       phi_2dim__ = (n_occasions - 1);
       current_statement__ = 135;
@@ -18929,16 +18925,12 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       stan::math::validate_non_negative_index("gamma", "n_occasions",
         n_occasions);
       current_statement__ = 133;
-      epsilon_1dim__ = std::numeric_limits<int>::min();
-      current_statement__ = 133;
       epsilon_1dim__ = (n_occasions - 1);
       current_statement__ = 133;
       stan::math::validate_non_negative_index("epsilon", "n_occasions - 1",
         epsilon_1dim__);
       current_statement__ = 134;
       stan::math::validate_non_negative_index("phi", "M", M);
-      current_statement__ = 135;
-      phi_2dim__ = std::numeric_limits<int>::min();
       current_statement__ = 135;
       phi_2dim__ = (n_occasions - 1);
       current_statement__ = 135;
