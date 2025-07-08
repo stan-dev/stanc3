@@ -37,7 +37,7 @@ parameters {
 
 generated quantities {
 
-  vector[n_obs] theta = laplace_latent_tol_neg_binomial_2_log_rng(y, {1}, [1.0]',
+  vector[n_obs] theta = laplace_latent_tol_neg_binomial_2_log_rng(y, {1}, [1.0]', [0]',
                         K_function, (x, n_obs, alpha, rho));
 
 }
