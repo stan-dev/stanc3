@@ -2,11 +2,11 @@
 
   Functions which begin with "check_" return a typed version of their input
   Functions which begin with "verify_" return unit if a check succeeds, or else
-    throw an {!exception:Frontend.Errors.SemanticError} exception.
+    throw an exception.
   Other functions which begin with "infer"/"calculate" vary. Usually they return
     a value, but a few do have error conditions.
 
-  All [Error.SemanticError] excepetions are caught by check_program
+  All (intentional) exceptions are caught by [check_program]
   which turns the ast or exception into a [Result.t] for external usage
 
   A type environment {!type:Frontend.Environment.t} is used to hold variables

@@ -10,10 +10,6 @@ type syntax_error =
 (** Exception for Syntax Errors *)
 exception SyntaxError of syntax_error
 
-(** Exception [SemanticError (loc, msg)] indicates a semantic error with message
-    [msg], occurring at location [loc]. *)
-exception SemanticError of Semantic_error.t
-
 type t =
   | FileNotFound of string
   | Syntax_error of syntax_error
