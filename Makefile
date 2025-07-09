@@ -7,7 +7,7 @@ test:
 	dune runtest
 
 PARALLEL ?= auto
-BISECT_FLAGS = --expect src/ --do-not-expect src/stancjs/ --do-not-expect src/stan_math_signatures/Generate.ml --do-not-expect src/frontend/parser_strip_redundant_state.ml --do-not-expect src/frontend/parser_add_missing_messages.ml
+BISECT_FLAGS = --expect src/ --do-not-expect src/stancjs/ --do-not-expect src/stan_math_signatures/Generate.ml --do-not-expect src/frontend/parser_strip_redundant_state.ml
 
 
 testcoverage: clean

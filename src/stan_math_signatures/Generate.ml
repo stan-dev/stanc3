@@ -2672,7 +2672,7 @@ let () =
 
 (** Print a module definition to [file]
   that contains the signatures computed above *)
-let generate_module file =
+let generate_module () =
   let marshal e = Marshal.to_string e [] in
   (* Core's Hashtbl cannot be safely Marshal'd, so we
      round trip through an associative list *)
@@ -2686,27 +2686,32 @@ let generate_module file =
     |> String.Map.of_alist_reduce ~f:(fun v1 v2 ->
            v1 @ v2 |> Set.Poly.of_list |> Set.to_list)
     |> Map.to_alist in
-  Out_channel.with_file file ~f:(fun ch ->
-      Printf.fprintf ch
-        {|
+  Printf.printf
+    {|
 let unmarshal s = Marshal.from_string s 0
 let unmarshal_hashtbl s : 'a Core.String.Table.t =
   unmarshal s |> Core.String.Table.of_alist_exn |};
-      Printf.fprintf ch
-        {|
+  Printf.printf
+    {|
 let stan_math_signatures :
     Middle.UnsizedType.signature list Core.String.Table.t =
   unmarshal_hashtbl %S |}
-        (marshal_hashtbl stan_math_signatures);
-      Printf.fprintf ch
-        {|
+    (marshal_hashtbl stan_math_signatures);
+  Printf.printf
+    {|
 let stan_math_variadic_signatures :
     Middle.UnsizedType.variadic_signature Core.String.Table.t =
   unmarshal_hashtbl %S |}
-        (marshal_hashtbl stan_math_variadic_signatures);
-      Printf.fprintf ch
-        {|
+    (marshal_hashtbl stan_math_variadic_signatures);
+  Printf.printf
+    {|
 let distributions : (string * string list) list = unmarshal %S |}
-        (marshal distributions_simplified))
+    (marshal distributions_simplified);
+  Printf.eprintf
+    "Generated signatures for %d functions, %d distributions, and %d variadic \
+     functions.\n"
+    (Hashtbl.length stan_math_signatures)
+    (List.length distributions_simplified)
+    (Hashtbl.length stan_math_variadic_signatures)
 
-let () = generate_module (Sys.get_argv ()).(1)
+let () = generate_module ()
