@@ -83,6 +83,19 @@ let restore_prior_lexbuf () =
   lexbuf.lex_start_p <- old_pos;
   old_lexbuf
 
+exception SyntaxError of Errors.syntax_error
+
+let include_error msg = raise (SyntaxError (Include (msg, current_location ())))
+
+let parse_error ~loc msg =
+  raise (SyntaxError (Errors.Parsing (msg, location_span_of_positions loc)))
+
+let unexpected_character () =
+  raise (SyntaxError (Errors.Lexing (current_location ())))
+
+let unexpected_eof () =
+  raise (SyntaxError (Errors.UnexpectedEOF (current_location ())))
+
 let find_include_fs lookup_paths fname =
   let rec loop paths =
     match paths with
@@ -95,7 +108,7 @@ let find_include_fs lookup_paths fname =
           Fmt.str
             "Could not find include file '%s' in specified include paths.@\n\
              @[Current include paths: %a@]" fname pp_list lookup_paths in
-        raise (Errors.SyntaxError (Include (message, current_location ())))
+        include_error message
     | path :: rest_of_paths -> (
         try
           let full_path = path ^ "/" ^ fname in
@@ -115,7 +128,7 @@ let find_include_inmemory map fname =
           "Could not find include file '%s'.@ stanc was given information \
            about the following files:@ %a"
           fname pp_list map in
-      raise (Errors.SyntaxError (Include (message, current_location ())))
+      include_error message
   | Some s -> (Lexing.from_string s, fname)
 
 let find_include fname =
@@ -139,11 +152,7 @@ let try_get_new_lexbuf fname =
           if is_dup filename then true else go included_from in
     go included_from in
   if dup_exists (location_of_position lexbuf.lex_start_p) then
-    raise
-      (Errors.SyntaxError
-         (Include
-            ( Printf.sprintf "File %s recursively included itself." fname
-            , location_of_position (lexeme_start_p lexbuf) )));
+    include_error (Printf.sprintf "File %s recursively included itself." fname);
   Stack.push include_stack new_lexbuf;
   update_start_positions new_lexbuf.lex_curr_p;
   included_files := file :: !included_files;
