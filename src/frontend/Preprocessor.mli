@@ -36,3 +36,19 @@ val restore_prior_lexbuf : unit -> Lexing.lexbuf
 val try_get_new_lexbuf : string -> Lexing.lexbuf
 (** Search include paths for filename and try to create a new lexing buffer
     with that filename, record that included from specified position *)
+
+(** Helpers for error handling *)
+
+type exn +=
+  private
+  | SyntaxError of Errors.syntax_error
+        (** Raised by the parser or lexer to signal an out-of-band error *)
+
+val parse_error : loc:Lexing.position * Lexing.position -> string -> 'a
+(** Raise a parser error at the specified location *)
+
+val unexpected_eof : unit -> 'a
+(** Raise an unexpected end of file error at the specified position *)
+
+val unexpected_character : unit -> 'a
+(** Raise an unexpected character error at the specified position *)

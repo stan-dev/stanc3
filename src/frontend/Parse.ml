@@ -37,7 +37,7 @@ let drive_parser parse_fun =
     Error (Errors.Syntax_error (Errors.Parsing (message, location))) in
   let startp = (Preprocessor.current_buffer ()).lex_curr_p in
   try Interp.loop_handle success failure input (parse_fun startp)
-  with Errors.SyntaxError err -> Result.Error (Errors.Syntax_error err)
+  with Preprocessor.SyntaxError err -> Error (Errors.Syntax_error err)
 
 let to_lexbuf file_or_code =
   match file_or_code with
