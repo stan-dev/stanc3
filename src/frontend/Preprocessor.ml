@@ -60,9 +60,6 @@ let current_buffer () =
   let buf = Stack.top_exn include_stack in
   buf
 
-let current_location () =
-  location_of_position (lexeme_start_p (current_buffer ()))
-
 let pop_buffer () = Stack.pop_exn include_stack
 
 let update_start_positions pos =
@@ -83,70 +80,69 @@ let restore_prior_lexbuf () =
   lexbuf.lex_start_p <- old_pos;
   old_lexbuf
 
-let find_include_fs lookup_paths fname =
-  let rec loop paths =
-    match paths with
-    | [] ->
+module Make (ParserExns : Errors.ParserExn) = struct
+  let find_include_fs lookup_paths fname =
+    let rec loop paths =
+      match paths with
+      | [] ->
+          let message =
+            let pp_list ppf l =
+              match l with
+              | [] -> Fmt.string ppf "None"
+              | _ -> Fmt.(list ~sep:comma string) ppf l in
+            Fmt.str
+              "Could not find include file '%s' in specified include paths.@\n\
+               @[Current include paths: %a@]" fname pp_list lookup_paths in
+          ParserExns.include_error message
+      | path :: rest_of_paths -> (
+          try
+            let full_path = path ^ "/" ^ fname in
+            (In_channel.create full_path |> Lexing.from_channel, full_path)
+          with _ -> loop rest_of_paths) in
+    loop lookup_paths
+
+  let find_include_inmemory map fname =
+    match Map.find map fname with
+    | None ->
         let message =
           let pp_list ppf l =
-            match l with
-            | [] -> Fmt.string ppf "None"
-            | _ -> Fmt.(list ~sep:comma string) ppf l in
+            let keys = Map.keys l in
+            if List.is_empty keys then Fmt.string ppf "None"
+            else Fmt.(list ~sep:comma string) ppf keys in
           Fmt.str
-            "Could not find include file '%s' in specified include paths.@\n\
-             @[Current include paths: %a@]" fname pp_list lookup_paths in
-        raise (Errors.SyntaxError (Include (message, current_location ())))
-    | path :: rest_of_paths -> (
-        try
-          let full_path = path ^ "/" ^ fname in
-          (In_channel.create full_path |> Lexing.from_channel, full_path)
-        with _ -> loop rest_of_paths) in
-  loop lookup_paths
+            "Could not find include file '%s'.@ stanc was given information \
+             about the following files:@ %a"
+            fname pp_list map in
+        ParserExns.include_error message
+    | Some s -> (Lexing.from_string s, fname)
 
-let find_include_inmemory map fname =
-  match Map.find map fname with
-  | None ->
-      let message =
-        let pp_list ppf l =
-          let keys = Map.keys l in
-          if List.is_empty keys then Fmt.string ppf "None"
-          else Fmt.(list ~sep:comma string) ppf keys in
-        Fmt.str
-          "Could not find include file '%s'.@ stanc was given information \
-           about the following files:@ %a"
-          fname pp_list map in
-      raise (Errors.SyntaxError (Include (message, current_location ())))
-  | Some s -> (Lexing.from_string s, fname)
+  let find_include fname =
+    match !Include_files.include_provider with
+    | FileSystemPaths lookup_paths -> find_include_fs lookup_paths fname
+    | InMemory map -> find_include_inmemory map fname
 
-let find_include fname =
-  match !Include_files.include_provider with
-  | FileSystemPaths lookup_paths -> find_include_fs lookup_paths fname
-  | InMemory map -> find_include_inmemory map fname
-
-let try_get_new_lexbuf fname =
-  let lexbuf = Stack.top_exn include_stack in
-  let new_lexbuf, file = find_include fname in
-  lexer_logger ("opened " ^ file);
-  new_lexbuf.lex_start_p <-
-    new_file_start_position file
-    @@ Some (location_of_position lexbuf.lex_start_p);
-  new_lexbuf.lex_curr_p <- new_lexbuf.lex_start_p;
-  let dup_exists {Middle.Location.filename; included_from; _} =
-    let is_dup = String.equal filename in
-    let rec go = function
-      | None -> false
-      | Some {Middle.Location.filename; included_from; _} ->
-          if is_dup filename then true else go included_from in
-    go included_from in
-  if dup_exists (location_of_position lexbuf.lex_start_p) then
-    raise
-      (Errors.SyntaxError
-         (Include
-            ( Printf.sprintf "File %s recursively included itself." fname
-            , location_of_position (lexeme_start_p lexbuf) )));
-  Stack.push include_stack new_lexbuf;
-  update_start_positions new_lexbuf.lex_curr_p;
-  included_files := file :: !included_files;
-  new_lexbuf
+  let try_get_new_lexbuf fname =
+    let lexbuf = Stack.top_exn include_stack in
+    let new_lexbuf, file = find_include fname in
+    lexer_logger ("opened " ^ file);
+    new_lexbuf.lex_start_p <-
+      new_file_start_position file
+      @@ Some (location_of_position lexbuf.lex_start_p);
+    new_lexbuf.lex_curr_p <- new_lexbuf.lex_start_p;
+    let dup_exists {Middle.Location.filename; included_from; _} =
+      let is_dup = String.equal filename in
+      let rec go = function
+        | None -> false
+        | Some {Middle.Location.filename; included_from; _} ->
+            if is_dup filename then true else go included_from in
+      go included_from in
+    if dup_exists (location_of_position lexbuf.lex_start_p) then
+      ParserExns.include_error
+        (Printf.sprintf "File %s recursively included itself." fname);
+    Stack.push include_stack new_lexbuf;
+    update_start_positions new_lexbuf.lex_curr_p;
+    included_files := file :: !included_files;
+    new_lexbuf
+end
 
 let included_files () = List.rev !included_files

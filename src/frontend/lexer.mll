@@ -1,8 +1,13 @@
 (** The lexer that will feed into the parser. An OCamllex file. *)
 
 {
+module Make (ParserExns: Errors.ParserExn) = struct
+
   module Stack = Core.Stack
   module Queue = Core.Queue
+  module Parser = Parser.Make(ParserExns)
+  open Preprocessor.Make(ParserExns)
+  open ParserExns
   open Lexing
   open Debugging
   open Preprocessor
@@ -206,11 +211,7 @@ rule token = parse
                                   let old_lexbuf = restore_prior_lexbuf () in
                                   token old_lexbuf }
 
-  | _                         { raise (Errors.SyntaxError
-                                        (Errors.Lexing
-                                          (location_of_position
-                                            (lexeme_start_p
-                                              (current_buffer ()))))) }
+  | _                         { unexpected_character () }
 
 (* Multi-line comment terminated by "*/" *)
 and multiline_comment state = parse
@@ -218,9 +219,7 @@ and multiline_comment state = parse
                let lines = (Buffer.contents buffer) :: lines in
                add_multi_comment pos (List.rev lines) lexbuf.lex_curr_p;
                update_start_positions lexbuf.lex_curr_p }
-  | eof      { raise (Errors.SyntaxError
-                      (Errors.UnexpectedEOF
-                        (location_of_position lexbuf.lex_curr_p))) }
+  | eof      { unexpected_eof () }
   | newline  { incr_linenum lexbuf;
                let ((pos, lines), buffer) = state in
                let lines = (Buffer.contents buffer) :: lines in
@@ -235,4 +234,5 @@ and singleline_comment state = parse
   | _        { Buffer.add_string (snd state) (lexeme lexbuf) ; singleline_comment state lexbuf }
 
 {
+end
 }

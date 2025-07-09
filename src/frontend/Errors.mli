@@ -7,8 +7,21 @@ type syntax_error =
   | Include of string * Middle.Location.t
   | Parsing of string * Middle.Location_span.t
 
-(** Exception for Syntax Errors *)
-exception SyntaxError of syntax_error
+module type ParserExn = sig
+  (** Signal that a syntax_error has occured dynamically *)
+
+  val include_error : string -> 'a
+  (** Raise an include error with the given message *)
+
+  val parse_error : loc:Lexing.position * Lexing.position -> string -> 'a
+  (** Raise a parser error at the specified location *)
+
+  val unexpected_eof : unit -> 'a
+  (** Raise an unexpected end of file error at the current position *)
+
+  val unexpected_character : unit -> 'a
+  (** Raise an unexpected character error at the current position *)
+end
 
 type t =
   | FileNotFound of string
