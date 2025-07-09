@@ -3,6 +3,30 @@
 
 open Core
 open Common.Let_syntax.Result
+
+(** Internal (private) exception used for some out-of-band errors. *)
+exception ParserException of Errors.syntax_error
+
+(* Defining the exception and module here lets us hide the implementation from
+   the world outside this module. No other code can raise [ParserException],
+   or even observe that it exists. *)
+module ParserExns : Errors.ParserExn = struct
+  let error e = raise (ParserException e)
+
+  let parse_error ~loc msg =
+    error (Errors.Parsing (msg, Preprocessor.location_span_of_positions loc))
+
+  let current_location () =
+    Preprocessor.location_of_position
+      (Lexing.lexeme_start_p (Preprocessor.current_buffer ()))
+
+  let include_error msg = error (Errors.Include (msg, current_location ()))
+  let unexpected_eof () = error (Errors.UnexpectedEOF (current_location ()))
+  let unexpected_character () = error (Errors.Lexing (current_location ()))
+end
+
+module Lexer = Lexer.Make (ParserExns)
+module Parser = Parser.Make (ParserExns)
 module Interp = Parser.MenhirInterpreter
 
 let drive_parser parse_fun =
@@ -37,7 +61,7 @@ let drive_parser parse_fun =
     Error (Errors.Syntax_error (Errors.Parsing (message, location))) in
   let startp = (Preprocessor.current_buffer ()).lex_curr_p in
   try Interp.loop_handle success failure input (parse_fun startp)
-  with Errors.SyntaxError err -> Result.Error (Errors.Syntax_error err)
+  with ParserException e -> Error (Errors.Syntax_error e)
 
 let to_lexbuf file_or_code =
   match file_or_code with

@@ -9,9 +9,6 @@ type syntax_error =
   | Include of string * Middle.Location.t
   | Parsing of string * Middle.Location_span.t
 
-(** Exception for Syntax Errors *)
-exception SyntaxError of syntax_error
-
 type t =
   | FileNotFound of string
   | Syntax_error of syntax_error
@@ -81,3 +78,10 @@ let pp ?printed_filename ?code ppf = function
         Fmt.pf ppf "@[<v>Error in %a:@ %s@;@]"
           (Middle.Location_span.pp ?printed_filename)
           loc msg
+
+module type ParserExn = sig
+  val include_error : string -> 'a
+  val parse_error : loc:Lexing.position * Lexing.position -> string -> 'a
+  val unexpected_eof : unit -> 'a
+  val unexpected_character : unit -> 'a
+end
