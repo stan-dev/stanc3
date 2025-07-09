@@ -1228,8 +1228,7 @@ let optimize_soa (mir : Program.Typed.t) =
       (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t)
       (l : int) (aos_variables : string Set.Poly.t) =
     let mir_node mir_idx = Map.find_exn flowgraph_to_mir mir_idx in
-    match (mir_node l).pattern with
-    | stmt -> Memory_patterns.query_demotable_stmt aos_variables stmt in
+    Memory_patterns.query_demotable_stmt aos_variables (mir_node l) in
   let initial_variables =
     List.fold ~init:Set.Poly.empty
       ~f:(Memory_patterns.query_initial_demotable_stmt false)
