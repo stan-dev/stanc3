@@ -238,10 +238,10 @@ Consider defining a new signature for the exact types needed or
 re-thinking existing definitions.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_forward7.stan
-Semantic error in 'bad_forward7.stan', line 2, column 12 to column 66:
+Semantic error in 'bad_forward7.stan', line 2, column 12 to column 69:
    -------------------------------------------------
      1:  model {
-     2:    target += laplace_marginal_tol_neg_binomial_2_log_lpmf(1 | 1, 1);
+     2:    target += laplace_marginal_tol_neg_binomial_2_log_lpmf(1 | 1, 1, 1);
                      ^
      3:  }
    -------------------------------------------------
@@ -250,13 +250,13 @@ Ill-typed arguments supplied to function 'laplace_marginal_tol_neg_binomial_2_lo
 for the likelihood:
 The first argument must be array[] int but got int.
 Expected the arguments to start with:
-(array[] int, array[] int, vector)
+(array[] int, array[] int, vector, vector)
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_forward8.stan
-Semantic error in 'bad_forward8.stan', line 2, column 2 to column 52:
+Semantic error in 'bad_forward8.stan', line 2, column 2 to column 55:
    -------------------------------------------------
      1:  model {
-     2:    1 ~ laplace_marginal_tol_neg_binomial_2_log(1, 1);
+     2:    1 ~ laplace_marginal_tol_neg_binomial_2_log(1, 1, 1);
            ^
      3:  }
    -------------------------------------------------
@@ -265,7 +265,7 @@ Ill-typed arguments supplied to function 'laplace_marginal_tol_neg_binomial_2_lo
 for the likelihood:
 The first argument must be array[] int but got int.
 Expected the arguments to start with:
-(array[] int, array[] int, vector)
+(array[] int, array[] int, vector, vector)
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_forward9.stan
 Semantic error in 'bad_forward9.stan', line 37, column 32 to column 54:
@@ -478,9 +478,9 @@ Semantic error in 'missing_args3.stan', line 2, column 12 to column 58:
 
 Ill-typed arguments supplied to function 'laplace_marginal_tol_neg_binomial_2_log_lpmf'
 for the likelihood:
-Expected 3 arguments but got 0 arguments.
+Expected 4 arguments but got 0 arguments.
 Expected the arguments to start with:
-(array[] int, array[] int, vector)
+(array[] int, array[] int, vector, vector)
 [exit 1]
   $ ../../../../../install/default/bin/stanc missing_args4.stan
 Semantic error in 'missing_args4.stan', line 29, column 12 to column 59:
@@ -548,7 +548,7 @@ Semantic error in 'missing_args7.stan', line 18, column 24 to line 19, column 23
    -------------------------------------------------
     16:  generated quantities {
     17:  
-    18:    vector[n_obs] theta = laplace_latent_neg_binomial_2_log_rng(y, {1}, [1.0]'
+    18:    vector[n_obs] theta = laplace_latent_neg_binomial_2_log_rng(y, {1}, [1.0]', [0.0]'
                                  ^
     19:                        );
     20:  
@@ -557,17 +557,17 @@ Semantic error in 'missing_args7.stan', line 18, column 24 to line 19, column 23
 Ill-typed arguments supplied to function 'laplace_latent_neg_binomial_2_log_rng'.
 The valid signature of this function is
 laplace_latent_neg_binomial_2_log_rng(array[] int, array[] int, vector,
-  vector, (T_k...) => matrix, tuple(T_k...))
+  vector, vector, (T_k...) => matrix, tuple(T_k...))
 However, we recieved the types:
-(data array[] int, data array[] int, data vector)
-Typechecking failed after checking the first 3 arguments. Please ensure you
-are passing enough arguments and that the 4th is a function.
+(data array[] int, data array[] int, data vector, data vector)
+Typechecking failed after checking the first 4 arguments. Please ensure you
+are passing enough arguments and that the 5th is a function.
 [exit 1]
   $ ../../../../../install/default/bin/stanc missing_args8.stan
-Semantic error in 'missing_args8.stan', line 2, column 12 to column 59:
+Semantic error in 'missing_args8.stan', line 2, column 12 to column 65:
    -------------------------------------------------
      1:  model {
-     2:    target += laplace_marginal_tol_poisson_log_lpmf({1}, {1});
+     2:    target += laplace_marginal_tol_poisson_log_lpmf({1}, {1}, [0]');
                      ^
      3:  }
    -------------------------------------------------
@@ -575,19 +575,19 @@ Semantic error in 'missing_args8.stan', line 2, column 12 to column 59:
 Ill-typed arguments supplied to function 'laplace_marginal_tol_poisson_log_lpmf'.
 The valid signature of this function is
 laplace_marginal_tol_poisson_log_lpmf(array[] int, array[] int, vector,
-  (T_k...) => matrix, tuple(T_k...), vector, data real, data int, data int,
-  data int, data int)
+  vector, (T_k...) => matrix, tuple(T_k...), vector, data real, data int,
+  data int, data int, data int)
 However, we recieved the types:
-(data array[] int, data array[] int)
-Typechecking failed after checking the first 2 arguments. Please ensure you
-are passing enough arguments and that the 3rd is a function.
+(data array[] int, data array[] int, data vector)
+Typechecking failed after checking the first 3 arguments. Please ensure you
+are passing enough arguments and that the 4th is a function.
 [exit 1]
   $ ../../../../../install/default/bin/stanc missing_args9.stan
 Semantic error in 'missing_args9.stan', line 40, column 24 to line 41, column 59:
    -------------------------------------------------
     38:  generated quantities {
     39:  
-    40:    vector[n_obs] theta = laplace_latent_tol_neg_binomial_2_log_rng(y, {1}, [1.0]',
+    40:    vector[n_obs] theta = laplace_latent_tol_neg_binomial_2_log_rng(y, {1}, [1.0]', [0]',
                                  ^
     41:                          K_function, (x, n_obs, alpha, rho));
     42:  
