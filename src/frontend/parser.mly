@@ -24,14 +24,14 @@ let manual_error msg loc =
 
 let reserved (name, loc, _) =
   manual_error
-    ("Expected a new identifier but found reserved keyword '" ^ name ^ "'.\n")
+    ("Expected a new identifier but found reserved keyword @{<green>\"" ^ name ^ "\"@}.\n")
     loc
 
 let reserved_decl (name, loc, is_type) =
   if is_type then
     manual_error
-      ("Found a type ('" ^ name
-     ^ "') where an identifier was expected.\n\
+      ("Found a type (@{<green>\"" ^ name
+     ^ "\"@}) where an identifier was expected.\n\
         All variables declared in a comma-separated list must be of the same \
         type.\n")
       loc
@@ -44,8 +44,8 @@ let parse_tuple_slot ix_str loc =
   match int_of_string_opt (String.drop_prefix ix_str 1) with
   | None ->
       manual_error
-        ("Failed to parse integer from string '" ^ ix_str
-       ^ "' in tuple index. \nThe index is likely too large.\n")
+        ("Failed to parse integer from string @{<green>\"" ^ ix_str
+       ^ "\"@} in tuple index. \nThe index is likely too large.\n")
         loc
   | Some ix -> ix
 
@@ -308,8 +308,8 @@ unsized_type:
   | bt=basic_type dims=unsized_dims {
     manual_error (Fmt.str
               "An identifier is expected after the type as a function argument \
-               name.@ It looks like you are trying to use the old array \
-               syntax.@ Please use the new syntax: @ @[<h>array[%s] %a@]@\n"
+               name.@ %@{<yellow>It looks like you are trying to use the old array \
+               syntax.@ Please use the new syntax:%@} @ @[<h>array[%s] %a@]@\n"
               (String.make (dims-1) ',') UnsizedType.pp bt)
               $loc(dims)
   }
@@ -390,9 +390,9 @@ decl(type_rule, rhs):
     let ty = List.fold_right ~f:(fun e ty -> SizedType.SArray (ty, e)) ~init:ty dims in
     let ty = (ty, trans) in
     manual_error (Fmt.str
-              "\";\" expected after variable declaration.@ It looks like you \
+              "\";\" expected after variable declaration.@ %@{<yellow>It looks like you \
                are trying to use the old array syntax.@ Please use the new \
-               syntax:@ @[<h>%a %s;@]@\n" Pretty_printing.pp_transformed_type ty id.name)
+               syntax:%@}@ @[<h>%a %s;@]@\n" Pretty_printing.pp_transformed_type ty id.name)
               $loc(dims)
     }
   | ty=higher_type(type_rule)
