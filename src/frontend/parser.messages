@@ -29,7 +29,105 @@ program: WHILE
 ##
 ##
 
-Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
+Expected @{<green>"functions {"@} or @{<green>"data {"@} or @{<green>"transformed data {"@} or @{<green>"parameters {"@} or @{<green>"transformed parameters {"@} or @{<green>"model {"@} or @{<green>"generated quantities {"@}.
+
+program: FUNCTIONBLOCK LBRACE RBRACE COVMATRIX
+##
+## Concrete syntax: functions { } cov_matrix
+##
+## Ends in an error in state: 413.
+##
+## program -> option(function_block) . option(data_block) option(transformed_data_block) option(parameters_block) option(transformed_parameters_block) option(model_block) option(generated_quantities_block) EOF [ # ]
+##
+## The known suffix of the stack is as follows:
+## option(function_block)
+##
+
+Expected @{<green>"data {"@} or @{<green>"transformed data {"@} or @{<green>"parameters {"@} or @{<green>"transformed parameters {"@} or @{<green>"model {"@} or @{<green>"generated quantities {"@}.
+
+program: DATABLOCK LBRACE RBRACE WHILE
+##
+## Concrete syntax: data { } while
+##
+## Ends in an error in state: 640.
+##
+## program -> option(function_block) option(data_block) . option(transformed_data_block) option(parameters_block) option(transformed_parameters_block) option(model_block) option(generated_quantities_block) EOF [ # ]
+##
+## The known suffix of the stack is as follows:
+## option(function_block) option(data_block)
+##
+
+Expected @{<green>"transformed data {"@} or @{<green>"parameters {"@} or @{<green>"transformed parameters {"@} or @{<green>"model {"@} or @{<green>"generated quantities {"@}.
+
+program: TRANSFORMEDDATABLOCK LBRACE RBRACE ELTTIMESASSIGN
+##
+## Concrete syntax: transformed data { } .*=
+##
+## Ends in an error in state: 667.
+##
+## program -> option(function_block) option(data_block) option(transformed_data_block) . option(parameters_block) option(transformed_parameters_block) option(model_block) option(generated_quantities_block) EOF [ # ]
+##
+## The known suffix of the stack is as follows:
+## option(function_block) option(data_block) option(transformed_data_block)
+##
+
+Expected @{<green>"parameters {"@}, @{<green>"transformed parameters {"@}, @{<green>"model {"@}, @{<green>"generated quantities {"@} or end-of-file after end of transformed data block.
+
+program: PARAMETERSBLOCK LBRACE RBRACE ELTTIMESASSIGN
+##
+## Concrete syntax: parameters { } .*=
+##
+## Ends in an error in state: 673.
+##
+## program -> option(function_block) option(data_block) option(transformed_data_block) option(parameters_block) . option(transformed_parameters_block) option(model_block) option(generated_quantities_block) EOF [ # ]
+##
+## The known suffix of the stack is as follows:
+## option(function_block) option(data_block) option(transformed_data_block) option(parameters_block)
+##
+
+@{<green>"transformed parameters {"@}, @{<green>"model {"@} or @{<green>"generated quantities {"@} expected after end of parameters block.
+
+program: TRANSFORMEDPARAMETERSBLOCK LBRACE RBRACE ELTTIMESASSIGN
+##
+## Concrete syntax: transformed parameters { } .*=
+##
+## Ends in an error in state: 679.
+##
+## program -> option(function_block) option(data_block) option(transformed_data_block) option(parameters_block) option(transformed_parameters_block) . option(model_block) option(generated_quantities_block) EOF [ # ]
+##
+## The known suffix of the stack is as follows:
+## option(function_block) option(data_block) option(transformed_data_block) option(parameters_block) option(transformed_parameters_block)
+##
+
+@{<green>"model {"@} or @{<green>"generated quantities {"@} expected after end of transformed parameters block.
+
+program: MODELBLOCK LBRACE RBRACE ELTTIMESASSIGN
+##
+## Concrete syntax: model { } .*=
+##
+## Ends in an error in state: 684.
+##
+## program -> option(function_block) option(data_block) option(transformed_data_block) option(parameters_block) option(transformed_parameters_block) option(model_block) . option(generated_quantities_block) EOF [ # ]
+##
+## The known suffix of the stack is as follows:
+## option(function_block) option(data_block) option(transformed_data_block) option(parameters_block) option(transformed_parameters_block) option(model_block)
+##
+
+Expected @{<green>"generated quantities {"@} or end of file after end of model block.
+
+program: GENERATEDQUANTITIESBLOCK LBRACE RBRACE ELTTIMESASSIGN
+##
+## Concrete syntax: generated quantities { } .*=
+##
+## Ends in an error in state: 689.
+##
+## program -> option(function_block) option(data_block) option(transformed_data_block) option(parameters_block) option(transformed_parameters_block) option(model_block) option(generated_quantities_block) . EOF [ # ]
+##
+## The known suffix of the stack is as follows:
+## option(function_block) option(data_block) option(transformed_data_block) option(parameters_block) option(transformed_parameters_block) option(model_block) option(generated_quantities_block)
+##
+
+Expected end of file after end of generated quantities block.
 
 program: DATABLOCK LBRACE CHOLESKYFACTORCORR LBRACK IDENTIFIER TILDE
 ## Concrete syntax: data { cholesky_factor_corr [ foo ~
@@ -47,7 +145,7 @@ program: DATABLOCK LBRACE CHOLESKYFACTORCORR WHILE
 ## CHOLESKYFACTORCORR
 ##
 
-Expected "[" expression "]" for size of cholesky_factor_corr.
+Expected @{<green>"["@} @{<i>expression@} @{<green>"]"@} for size of cholesky_factor_corr.
 
 program: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK IDENTIFIER COMMA IDENTIFIER TILDE
 ## Concrete syntax: data { cholesky_factor_cov [ foo , foo ~
@@ -69,7 +167,7 @@ program: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK WHILE
 ## CHOLESKYFACTORCOV LBRACK
 ##
 
-Expected "[" expression "]" or "[" expression "," expression "]" for size of cholesky_factor_cov.
+Expected @{<green>"["@} @{<i>expression@} @{<green>"]"@} or @{<green>"["@} @{<i>expression@} @{<green>","@} @{<i>expression@} @{<green>"]"@} for size of cholesky_factor_cov.
 
 program: DATABLOCK LBRACE CORRMATRIX LBRACK IDENTIFIER TILDE
 ## Concrete syntax: data { corr_matrix [ foo ~
@@ -87,7 +185,7 @@ program: DATABLOCK LBRACE CORRMATRIX WHILE
 ## CORRMATRIX
 ##
 
-Expected "[" expression "]" for size of corr_matrix.
+Expected @{<green>"["@} @{<i>expression@} @{<green>"]"@} for size of corr_matrix.
 
 program: DATABLOCK LBRACE COVMATRIX LBRACK IDENTIFIER TILDE
 ## Concrete syntax: data { cov_matrix [ foo ~
@@ -105,7 +203,147 @@ program: DATABLOCK LBRACE COVMATRIX WHILE
 ## COVMATRIX
 ##
 
-Expected "[" expression "]" for size of cov_matrix.
+Expected @{<green>"["@} @{<i>expression@} @{<green>"]"@} for size of cov_matrix.
+
+program: DATABLOCK LBRACE STOCHASTICROWMATRIX WHILE
+## Concrete syntax: data { row_stochastic_matrix while
+program: DATABLOCK LBRACE STOCHASTICROWMATRIX LBRACK WHILE
+## Concrete syntax: data { row_stochastic_matrix [ while
+program: DATABLOCK LBRACE STOCHASTICROWMATRIX LBRACK IDENTIFIER TILDE
+## Concrete syntax: data { row_stochastic_matrix [ foo ~
+program: DATABLOCK LBRACE STOCHASTICROWMATRIX LBRACK IDENTIFIER COMMA WHILE
+## Concrete syntax: data { row_stochastic_matrix [ foo , while
+program: DATABLOCK LBRACE STOCHASTICROWMATRIX LBRACK IDENTIFIER COMMA IDENTIFIER TILDE
+##
+## Concrete syntax: data { row_stochastic_matrix [ foo , foo ~
+##
+## Ends in an error in state: 505.
+##
+## expression -> expression . QMARK expression COLON expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
+## expression -> expression . PLUS expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
+## expression -> expression . MINUS expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
+## expression -> expression . TIMES expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
+## expression -> expression . DIVIDE expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
+## expression -> expression . IDIVIDE expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
+## expression -> expression . MODULO expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
+## expression -> expression . LDIVIDE expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
+## expression -> expression . ELTTIMES expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
+## expression -> expression . ELTDIVIDE expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
+## expression -> expression . HAT expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
+## expression -> expression . ELTPOW expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
+## expression -> expression . OR expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
+## expression -> expression . AND expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
+## expression -> expression . EQUALS expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
+## expression -> expression . NEQUALS expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
+## expression -> expression . LABRACK expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
+## expression -> expression . LEQ expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
+## expression -> expression . RABRACK expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
+## expression -> expression . GEQ expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
+## expression -> expression . TRANSPOSE [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
+## top_var_type -> STOCHASTICROWMATRIX LBRACK expression COMMA expression . RBRACK [ WHILE VOID VECTOR UPPER UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER JACOBIAN INT IN IF IDENTIFIER FUNCTIONBLOCK FOR FATAL_ERROR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
+##
+## The known suffix of the stack is as follows:
+## STOCHASTICROWMATRIX LBRACK expression COMMA expression
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 112, spurious reduction of production common_expression -> identifier
+## In state 127, spurious reduction of production expression -> common_expression
+##
+
+Expected @{<green>"["@} @{<i>expression@} @{<green>","@} @{<i>expression@} @{<green>"]"@} for size of row_stochastic_matrix.
+
+program: DATABLOCK LBRACE STOCHASTICCOLUMNMATRIX WHILE
+## Concrete syntax: data { column_stochastic_matrix while
+program: DATABLOCK LBRACE STOCHASTICCOLUMNMATRIX LBRACK WHILE
+## Concrete syntax: data { column_stochastic_matrix [ while
+program: DATABLOCK LBRACE STOCHASTICCOLUMNMATRIX LBRACK IDENTIFIER TILDE
+## Concrete syntax: data { column_stochastic_matrix [ foo ~
+program: DATABLOCK LBRACE STOCHASTICCOLUMNMATRIX LBRACK IDENTIFIER COMMA WHILE
+## Concrete syntax: data { column_stochastic_matrix [ foo , while
+program: DATABLOCK LBRACE STOCHASTICCOLUMNMATRIX LBRACK IDENTIFIER COMMA IDENTIFIER TILDE
+##
+## Concrete syntax: data { column_stochastic_matrix [ foo , foo ~
+##
+## Ends in an error in state: 511.
+##
+## expression -> expression . QMARK expression COLON expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
+## expression -> expression . PLUS expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
+## expression -> expression . MINUS expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
+## expression -> expression . TIMES expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
+## expression -> expression . DIVIDE expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
+## expression -> expression . IDIVIDE expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
+## expression -> expression . MODULO expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
+## expression -> expression . LDIVIDE expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
+## expression -> expression . ELTTIMES expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
+## expression -> expression . ELTDIVIDE expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
+## expression -> expression . HAT expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
+## expression -> expression . ELTPOW expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
+## expression -> expression . OR expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
+## expression -> expression . AND expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
+## expression -> expression . EQUALS expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
+## expression -> expression . NEQUALS expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
+## expression -> expression . LABRACK expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
+## expression -> expression . LEQ expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
+## expression -> expression . RABRACK expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
+## expression -> expression . GEQ expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
+## expression -> expression . TRANSPOSE [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
+## top_var_type -> STOCHASTICCOLUMNMATRIX LBRACK expression COMMA expression . RBRACK [ WHILE VOID VECTOR UPPER UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER JACOBIAN INT IN IF IDENTIFIER FUNCTIONBLOCK FOR FATAL_ERROR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
+##
+## The known suffix of the stack is as follows:
+## STOCHASTICCOLUMNMATRIX LBRACK expression COMMA expression
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 112, spurious reduction of production common_expression -> identifier
+## In state 127, spurious reduction of production expression -> common_expression
+##
+
+Expected @{<green>"["@} @{<i>expression@} @{<green>","@} @{<i>expression@} @{<green>"]"@} for size of column_stochastic_matrix.
+
+program: DATABLOCK LBRACE SUMTOZEROVEC LBRACK IDENTIFIER TILDE
+## Concrete syntax: data { sum_to_zero_vector [ foo ~
+program: DATABLOCK LBRACE SUMTOZEROVEC LBRACK WHILE
+## Concrete syntax: data { sum_to_zero_vector [ while
+program: DATABLOCK LBRACE SUMTOZEROVEC WHILE
+##
+## Concrete syntax: data { sum_to_zero_vector while
+##
+## Ends in an error in state: 491.
+##
+## top_var_type -> SUMTOZEROVEC . LBRACK expression RBRACK [ WHILE VOID VECTOR UPPER UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER JACOBIAN INT IN IF IDENTIFIER FUNCTIONBLOCK FOR FATAL_ERROR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
+##
+## The known suffix of the stack is as follows:
+## SUMTOZEROVEC
+##
+
+Expected @{<green>"["@} @{<i>expression@} @{<green>"]"@} for size of sum_to_zero_vector.
+
+program: DATABLOCK LBRACE SUMTOZEROMAT LBRACK WHILE
+## Concrete syntax: data { sum_to_zero_matrix [ while
+program: DATABLOCK LBRACE SUMTOZEROMAT WHILE
+## Concrete syntax: data { sum_to_zero_matrix while
+program: DATABLOCK LBRACE SUMTOZEROMAT LBRACK IDENTIFIER TILDE
+## Concrete syntax: data { sum_to_zero_matrix [ foo ~
+program: DATABLOCK LBRACE SUMTOZEROMAT LBRACK IDENTIFIER COMMA IDENTIFIER TILDE
+## Concrete syntax: data { sum_to_zero_matrix [ foo , foo ~
+program: DATABLOCK LBRACE SUMTOZEROMAT LBRACK IDENTIFIER COMMA WHILE
+##
+## Concrete syntax: data { sum_to_zero_matrix [ foo , while
+##
+## Ends in an error in state: 498.
+##
+## top_var_type -> SUMTOZEROMAT LBRACK expression COMMA . expression RBRACK [ WHILE VOID VECTOR UPPER UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER JACOBIAN INT IN IF IDENTIFIER FUNCTIONBLOCK FOR FATAL_ERROR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
+##
+## The known suffix of the stack is as follows:
+## SUMTOZEROMAT LBRACK expression COMMA
+##
+
+Expected @{<green>"["@} @{<i>expression@} @{<green>","@} @{<i>expression@} @{<green>"]"@} for size of sum_to_zero_matrix.
 
 program: DATABLOCK LBRACE INT LABRACK WHILE
 ##
@@ -119,7 +357,7 @@ program: DATABLOCK LBRACE INT LABRACK WHILE
 ## LABRACK
 ##
 
-Expected "lower = " expression or "upper = " expression for integer bounds.
+Expected @{<green>"lower = "@} @{<i>expression@} or @{<green>"upper = "@} @{<i>expression@} for integer bounds.
 
 program: DATABLOCK LBRACE INT LBRACE
 ##
@@ -151,7 +389,7 @@ program: DATABLOCK LBRACE ORDERED WHILE
 ## ORDERED
 ##
 
-Expected "[" expression "]" for size of ordered.
+Expected @{<green>"["@} @{<i>expression@} @{<green>"]"@} for size of ordered.
 
 program: DATABLOCK LBRACE POSITIVEORDERED LBRACK IDENTIFIER TILDE
 ## Concrete syntax: data { positive_ordered [ foo ~
@@ -169,21 +407,7 @@ program: DATABLOCK LBRACE POSITIVEORDERED WHILE
 ## POSITIVEORDERED
 ##
 
-Expected "[" expression "]" for size of positive_ordered.
-
-program: DATABLOCK LBRACE RBRACE WHILE
-##
-## Concrete syntax: data { } while
-##
-## Ends in an error in state: 640.
-##
-## program -> option(function_block) option(data_block) . option(transformed_data_block) option(parameters_block) option(transformed_parameters_block) option(model_block) option(generated_quantities_block) EOF [ # ]
-##
-## The known suffix of the stack is as follows:
-## option(function_block) option(data_block)
-##
-
-Expected "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
+Expected @{<green>"["@} @{<i>expression@} @{<green>"]"@} for size of positive_ordered.
 
 program: DATABLOCK LBRACE REAL IDENTIFIER SEMICOLON WHILE
 ##
@@ -243,7 +467,7 @@ program: DATABLOCK LBRACE SIMPLEX WHILE
 ## SIMPLEX
 ##
 
-Expected "[" expression "]" for size of simplex.
+Expected @{<green>"["@} @{<i>expression@} @{<green>"]"@} for size of simplex.
 
 program: DATABLOCK LBRACE UNITVECTOR LBRACK IDENTIFIER TILDE
 ## Concrete syntax: data { unit_vector [ foo ~
@@ -261,7 +485,7 @@ program: DATABLOCK LBRACE UNITVECTOR WHILE
 ## UNITVECTOR
 ##
 
-Expected "[" expression "]" for size of unit_vector.
+Expected @{<green>"["@} @{<i>expression@} @{<green>"]"@} for size of unit_vector.
 
 program: DATABLOCK LBRACE VECTOR LABRACK OFFSET ASSIGN IDENTIFIER COMMA MULTIPLIER ASSIGN IDENTIFIER COMMA
 ##
@@ -294,8 +518,10 @@ program: DATABLOCK LBRACE VECTOR LABRACK OFFSET ASSIGN IDENTIFIER COMMA MULTIPLI
 ## In state 429, spurious reduction of production constr_expression -> common_expression
 ##
 
-Expected ">" after "multiplier = " expression.
+Expected @{<green>">"@} after @{<green>"multiplier = "@} @{<i>expression@}.
 
+program: DATABLOCK LBRACE VECTOR LABRACK OFFSET ASSIGN IDENTIFIER COMMA MULTIPLIER WHILE
+## Concrete syntax: data { vector < offset = foo , multiplier while
 program: DATABLOCK LBRACE VECTOR LABRACK OFFSET ASSIGN IDENTIFIER COMMA MULTIPLIER ASSIGN WHILE
 ##
 ## Concrete syntax: data { vector < offset = foo , multiplier = while
@@ -308,21 +534,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK OFFSET ASSIGN IDENTIFIER COMMA MULTIPLI
 ## OFFSET ASSIGN constr_expression COMMA MULTIPLIER ASSIGN
 ##
 
-Expected "multiplier = " expression (not containing binary logical operators).
-
-program: DATABLOCK LBRACE VECTOR LABRACK OFFSET ASSIGN IDENTIFIER COMMA MULTIPLIER WHILE
-##
-## Concrete syntax: data { vector < offset = foo , multiplier while
-##
-## Ends in an error in state: 459.
-##
-## offset_mult -> OFFSET ASSIGN constr_expression COMMA MULTIPLIER . ASSIGN constr_expression [ RABRACK ]
-##
-## The known suffix of the stack is as follows:
-## OFFSET ASSIGN constr_expression COMMA MULTIPLIER
-##
-
-Expected "multiplier = " expression (not containing binary logical operators).
+Expected @{<green>"multiplier = "@} @{<i>expression@} (not containing binary logical operators).
 
 program: DATABLOCK LBRACE ROWVECTOR LABRACK OFFSET ASSIGN IDENTIFIER TRANSPOSE WHILE
 ## Concrete syntax: data { row_vector < offset = foo ' while
@@ -338,23 +550,10 @@ program: DATABLOCK LBRACE VECTOR LABRACK OFFSET ASSIGN IDENTIFIER COMMA WHILE
 ## OFFSET ASSIGN constr_expression COMMA
 ##
 
-Expected ">" or ", multiplier = " expression (not containing binary logical operators) ">" after "offset = " expression.
+Expected @{<green>">"@} or @{<green>", multiplier = "@} @{<i>expression@} (not containing binary logical operators) @{<green>">"@} after @{<green>"offset = "@} @{<i>expression@}.
 
 program: DATABLOCK LBRACE VECTOR LABRACK OFFSET ASSIGN WHILE
-##
 ## Concrete syntax: data { vector < offset = while
-##
-## Ends in an error in state: 456.
-##
-## offset_mult -> OFFSET ASSIGN . constr_expression COMMA MULTIPLIER ASSIGN constr_expression [ RABRACK ]
-## offset_mult -> OFFSET ASSIGN . constr_expression [ RABRACK ]
-##
-## The known suffix of the stack is as follows:
-## OFFSET ASSIGN
-##
-
-Expected "offset = " expression (not containing binary logical operators).
-
 program: DATABLOCK LBRACE VECTOR LABRACK OFFSET WHILE
 ##
 ## Concrete syntax: data { vector < offset while
@@ -368,7 +567,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK OFFSET WHILE
 ## OFFSET
 ##
 
-Expected "offset = " expression (not containing binary logical operators).
+Expected @{<green>"offset = "@} @{<i>expression@} (not containing binary logical operators).
 
 program: DATABLOCK LBRACE ROWVECTOR LABRACK UPPER ASSIGN IDENTIFIER DIVIDE IDENTIFIER TRANSPOSE WHILE
 ## Concrete syntax: data { row_vector < upper = foo / foo ' while
@@ -429,23 +628,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN IDENTIFIER COMMA UPPER ASS
 ## In state 429, spurious reduction of production constr_expression -> common_expression
 ##
 
-Expected ">" after "upper = " expression.
-
-program: DATABLOCK LBRACE ROWVECTOR LABRACK UPPER ASSIGN BANG IDENTIFIER TRANSPOSE WHILE
-## Concrete syntax: data { row_vector < upper = ! foo ' while
-program: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN IDENTIFIER COMMA UPPER ASSIGN WHILE
-##
-## Concrete syntax: data { vector < lower = foo , upper = while
-##
-## Ends in an error in state: 474.
-##
-## range -> LOWER ASSIGN constr_expression COMMA UPPER ASSIGN . constr_expression [ RABRACK ]
-##
-## The known suffix of the stack is as follows:
-## LOWER ASSIGN constr_expression COMMA UPPER ASSIGN
-##
-
-Expected expression (not containing binary logical operators) after "upper = ".
+Expected @{<green>">"@} after @{<green>"upper = "@} @{<i>expression@}.
 
 program: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN IDENTIFIER COMMA UPPER WHILE
 ##
@@ -459,7 +642,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN IDENTIFIER COMMA UPPER WHI
 ## LOWER ASSIGN constr_expression COMMA UPPER
 ##
 
-Expected "=" expression (not containing binary logical operators) after "upper".
+Expected @{<green>"="@} @{<i>expression@} (not containing binary logical operators) after @{<green>"upper"@}.
 
 program: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN IDENTIFIER COMMA WHILE
 ##
@@ -473,22 +656,163 @@ program: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN IDENTIFIER COMMA WHILE
 ## LOWER ASSIGN constr_expression COMMA
 ##
 
-"upper =" expression (not containing binary logical operators) ">" expected after "<lower =" expression "," in top-level variable declaration.
+@{<green>"upper ="@} @{<i>expression@} (not containing binary logical operators) @{<green>">"@} expected after @{<green>"<lower ="@} @{<i>expression@} @{<green>","@} in top-level variable declaration.
 
-program: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER COMMA WHILE
 ##
-## Concrete syntax: data { vector < lower = while
+## Concrete syntax: data { vector < upper = foo , while
 ##
-## Ends in an error in state: 470.
+## Ends in an error in state: 451.
 ##
-## range -> LOWER ASSIGN . constr_expression COMMA UPPER ASSIGN constr_expression [ RABRACK ]
-## range -> LOWER ASSIGN . constr_expression [ RABRACK ]
+## range -> UPPER ASSIGN constr_expression COMMA . LOWER ASSIGN constr_expression [ RABRACK ]
 ##
 ## The known suffix of the stack is as follows:
-## LOWER ASSIGN
+## UPPER ASSIGN constr_expression COMMA
 ##
 
-An expression (not containing binary logical operators) is expected for type lower bound.
+@{<green>"lower ="@} @{<i>expression@} (not containing binary logical operators) @{<green>">"@} expected after @{<green>"<upper ="@} @{<i>expression@} @{<green>","@} in top-level variable declaration.
+
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER COMMA LOWER WHILE
+##
+## Concrete syntax: data { vector < upper = foo , lower while
+##
+## Ends in an error in state: 452.
+##
+## range -> UPPER ASSIGN constr_expression COMMA LOWER . ASSIGN constr_expression [ RABRACK ]
+##
+## The known suffix of the stack is as follows:
+## UPPER ASSIGN constr_expression COMMA LOWER
+##
+
+Expected @{<green>"="@} @{<i>expression@} (not containing binary logical operators) after @{<green>"lower"@}.
+
+program: DATABLOCK LBRACE ROWVECTOR LABRACK LOWER ASSIGN IDENTIFIER TRANSPOSE WHILE
+## Concrete syntax: data { row_vector < lower = foo ' while
+program: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN WHILE
+## Concrete syntax: data { vector < lower = while
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER COMMA LOWER ASSIGN WHILE
+##
+## Concrete syntax: data { vector < upper = foo , lower = while
+##
+## Ends in an error in state: 453.
+##
+## range -> UPPER ASSIGN constr_expression COMMA LOWER ASSIGN . constr_expression [ RABRACK ]
+##
+## The known suffix of the stack is as follows:
+## UPPER ASSIGN constr_expression COMMA LOWER ASSIGN
+##
+
+@{<light_red>Ill-formed expression.@} Expression (not containing binary logical operators) expected after @{<green>"lower ="@}.
+
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER COMMA LOWER ASSIGN IDENTIFIER COMMA
+##
+## Concrete syntax: data { vector < upper = foo , lower = foo ,
+##
+## Ends in an error in state: 454.
+##
+## constr_expression -> constr_expression . PLUS constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE ]
+## constr_expression -> constr_expression . MINUS constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE ]
+## constr_expression -> constr_expression . TIMES constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE ]
+## constr_expression -> constr_expression . DIVIDE constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE ]
+## constr_expression -> constr_expression . IDIVIDE constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE ]
+## constr_expression -> constr_expression . MODULO constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE ]
+## constr_expression -> constr_expression . LDIVIDE constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE ]
+## constr_expression -> constr_expression . ELTTIMES constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE ]
+## constr_expression -> constr_expression . ELTDIVIDE constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE ]
+## constr_expression -> constr_expression . HAT constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE ]
+## constr_expression -> constr_expression . ELTPOW constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE ]
+## constr_expression -> constr_expression . TRANSPOSE [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE ]
+## range -> UPPER ASSIGN constr_expression COMMA LOWER ASSIGN constr_expression . [ RABRACK ]
+##
+## The known suffix of the stack is as follows:
+## UPPER ASSIGN constr_expression COMMA LOWER ASSIGN constr_expression
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 112, spurious reduction of production common_expression -> identifier
+## In state 429, spurious reduction of production constr_expression -> common_expression
+##
+
+Expected @{<green>">"@} after @{<green>"lower = "@} @{<i>expression@}.
+
+program: DATABLOCK LBRACE ROWVECTOR LABRACK MULTIPLIER ASSIGN IDENTIFIER TRANSPOSE WHILE
+## Concrete syntax: data { row_vector < multiplier = foo ' while
+program: DATABLOCK LBRACE VECTOR LABRACK MULTIPLIER ASSIGN IDENTIFIER COMMA WHILE
+##
+## Concrete syntax: data { vector < multiplier = foo , while
+##
+## Ends in an error in state: 465.
+##
+## offset_mult -> MULTIPLIER ASSIGN constr_expression COMMA . OFFSET ASSIGN constr_expression [ RABRACK ]
+##
+## The known suffix of the stack is as follows:
+## MULTIPLIER ASSIGN constr_expression COMMA
+##
+
+Expected @{<green>">"@} or @{<green>", offset = "@} @{<i>expression@} (not containing binary logical operators) @{<green>">"@} after @{<green>"multiplier = "@} @{<i>expression@}.
+
+program: DATABLOCK LBRACE VECTOR LABRACK MULTIPLIER ASSIGN IDENTIFIER COMMA OFFSET WHILE
+##
+## Concrete syntax: data { vector < multiplier = foo , offset while
+##
+## Ends in an error in state: 466.
+##
+## offset_mult -> MULTIPLIER ASSIGN constr_expression COMMA OFFSET . ASSIGN constr_expression [ RABRACK ]
+##
+## The known suffix of the stack is as follows:
+## MULTIPLIER ASSIGN constr_expression COMMA OFFSET
+##
+
+Expected @{<green>"="@} @{<i>expression@} (not containing binary logical operators), after @{<green>"offset"@}.
+
+program: DATABLOCK LBRACE VECTOR LABRACK MULTIPLIER ASSIGN IDENTIFIER COMMA OFFSET ASSIGN WHILE
+##
+## Concrete syntax: data { vector < multiplier = foo , offset = while
+##
+## Ends in an error in state: 467.
+##
+## offset_mult -> MULTIPLIER ASSIGN constr_expression COMMA OFFSET ASSIGN . constr_expression [ RABRACK ]
+##
+## The known suffix of the stack is as follows:
+## MULTIPLIER ASSIGN constr_expression COMMA OFFSET ASSIGN
+##
+
+Numerical expression expected after '=' in a multiplier expression.
+
+program: DATABLOCK LBRACE VECTOR LABRACK MULTIPLIER ASSIGN IDENTIFIER COMMA OFFSET ASSIGN IDENTIFIER COMMA
+##
+## Concrete syntax: data { vector < multiplier = foo , offset = foo ,
+##
+## Ends in an error in state: 468.
+##
+## constr_expression -> constr_expression . PLUS constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE ]
+## constr_expression -> constr_expression . MINUS constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE ]
+## constr_expression -> constr_expression . TIMES constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE ]
+## constr_expression -> constr_expression . DIVIDE constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE ]
+## constr_expression -> constr_expression . IDIVIDE constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE ]
+## constr_expression -> constr_expression . MODULO constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE ]
+## constr_expression -> constr_expression . LDIVIDE constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE ]
+## constr_expression -> constr_expression . ELTTIMES constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE ]
+## constr_expression -> constr_expression . ELTDIVIDE constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE ]
+## constr_expression -> constr_expression . HAT constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE ]
+## constr_expression -> constr_expression . ELTPOW constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE ]
+## constr_expression -> constr_expression . TRANSPOSE [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE ]
+## offset_mult -> MULTIPLIER ASSIGN constr_expression COMMA OFFSET ASSIGN constr_expression . [ RABRACK ]
+##
+## The known suffix of the stack is as follows:
+## MULTIPLIER ASSIGN constr_expression COMMA OFFSET ASSIGN constr_expression
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 112, spurious reduction of production common_expression -> identifier
+## In state 429, spurious reduction of production constr_expression -> common_expression
+##
+
+Expected @{<green>">"@} after @{<green>"offset = "@} @{<i>expression@}.
 
 program: DATABLOCK LBRACE VECTOR LABRACK LOWER WHILE
 ##
@@ -503,7 +827,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK LOWER WHILE
 ## LOWER
 ##
 
-Expected "=" expression (not containing binary logical operators), after "lower".
+Expected @{<green>"="@} @{<i>expression@} (not containing binary logical operators), after @{<green>"lower"@}.
 
 program: DATABLOCK LBRACE VECTOR LABRACK MULTIPLIER ASSIGN WHILE
 ##
@@ -518,7 +842,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK MULTIPLIER ASSIGN WHILE
 ## MULTIPLIER ASSIGN
 ##
 
-Expected expression (not containing binary logical operators) after "multiplier =".
+Expected expression (not containing binary logical operators) after @{<green>"multiplier ="@}.
 
 program: DATABLOCK LBRACE VECTOR LABRACK MULTIPLIER WHILE
 ##
@@ -533,164 +857,32 @@ program: DATABLOCK LBRACE VECTOR LABRACK MULTIPLIER WHILE
 ## MULTIPLIER
 ##
 
-Expected "=" expression (not containing binary logical operators) ">" after "multiplier".
+Expected @{<green>"="@} @{<i>expression@} (not containing binary logical operators) @{<green>">"@} after @{<green>"multiplier"@}.
 
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN MINUS WHILE
+## Concrete syntax: data { vector < upper = - while
 program: DATABLOCK LBRACE VECTOR LABRACK OFFSET ASSIGN REALNUMERAL WHILE
 ## Concrete syntax: data { vector < offset = 3.1415 while
 program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN BANG WHILE
-##
 ## Concrete syntax: data { vector < upper = ! while
-##
-## Ends in an error in state: 422.
-##
-## constr_expression -> BANG . constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE COMMA ]
-##
-## The known suffix of the stack is as follows:
-## BANG
-##
-
-Ill-formed expression. Expected expression (not containing binary logical operators).
-
-program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN MINUS WHILE
-##
-## Concrete syntax: data { vector < upper = - while
-##
-## Ends in an error in state: 421.
-##
-## constr_expression -> MINUS . constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE COMMA ]
-##
-## The known suffix of the stack is as follows:
-## MINUS
-##
-
-Ill-formed expression. Expected expression (not containing binary logical operators).
-
 program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN PLUS WHILE
-##
 ## Concrete syntax: data { vector < upper = + while
-##
-## Ends in an error in state: 420.
-##
-## constr_expression -> PLUS . constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE COMMA ]
-##
-## The known suffix of the stack is as follows:
-## PLUS
-##
-
-Ill-formed expression. Expected expression (not containing binary logical operators).
-
 program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER DIVIDE WHILE
-##
 ## Concrete syntax: data { vector < upper = foo / while
-##
-## Ends in an error in state: 447.
-##
-## constr_expression -> constr_expression DIVIDE . constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE COMMA ]
-##
-## The known suffix of the stack is as follows:
-## constr_expression DIVIDE
-##
-
-Ill-formed expression. Expected expression (not containing binary logical operators).
-
 program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER ELTDIVIDE WHILE
-##
 ## Concrete syntax: data { vector < upper = foo ./ while
-##
-## Ends in an error in state: 445.
-##
-## constr_expression -> constr_expression ELTDIVIDE . constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE COMMA ]
-##
-## The known suffix of the stack is as follows:
-## constr_expression ELTDIVIDE
-##
-
-Ill-formed expression. Expected expression (not containing binary logical operators).
-
 program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER ELTTIMES WHILE
-##
 ## Concrete syntax: data { vector < upper = foo .* while
-##
-## Ends in an error in state: 443.
-##
-## constr_expression -> constr_expression ELTTIMES . constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE COMMA ]
-##
-## The known suffix of the stack is as follows:
-## constr_expression ELTTIMES
-##
-
-Ill-formed expression. Expected expression (not containing binary logical operators).
-
 program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER HAT WHILE
-##
 ## Concrete syntax: data { vector < upper = foo ^ while
-##
-## Ends in an error in state: 425.
-##
-## constr_expression -> constr_expression HAT . constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE COMMA ]
-##
-## The known suffix of the stack is as follows:
-## constr_expression HAT
-##
-
-Ill-formed expression. Expected expression (not containing binary logical operators).
-
 program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER LDIVIDE WHILE
-##
 ## Concrete syntax: data { vector < upper = foo \ while
-##
-## Ends in an error in state: 435.
-##
-## constr_expression -> constr_expression LDIVIDE . constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE COMMA ]
-##
-## The known suffix of the stack is as follows:
-## constr_expression LDIVIDE
-##
-
-Ill-formed expression. Expected expression (not containing binary logical operators).
-
 program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER MINUS WHILE
-##
 ## Concrete syntax: data { vector < upper = foo - while
-##
-## Ends in an error in state: 449.
-##
-## constr_expression -> constr_expression MINUS . constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE COMMA ]
-##
-## The known suffix of the stack is as follows:
-## constr_expression MINUS
-##
-
-Ill-formed expression. Expected expression (not containing binary logical operators).
-
 program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER MODULO WHILE
-##
 ## Concrete syntax: data { vector < upper = foo % while
-##
-## Ends in an error in state: 441.
-##
-## constr_expression -> constr_expression MODULO . constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE COMMA ]
-##
-## The known suffix of the stack is as follows:
-## constr_expression MODULO
-##
-
-Ill-formed expression. Expected expression (not containing binary logical operators).
-
 program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER PLUS WHILE
-##
 ## Concrete syntax: data { vector < upper = foo + while
-##
-## Ends in an error in state: 439.
-##
-## constr_expression -> constr_expression PLUS . constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE COMMA ]
-##
-## The known suffix of the stack is as follows:
-## constr_expression PLUS
-##
-
-Ill-formed expression. Expected expression (not containing binary logical operators).
-
 program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER TIMES WHILE
 ##
 ## Concrete syntax: data { vector < upper = foo * while
@@ -703,8 +895,12 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER TIMES WHILE
 ## constr_expression TIMES
 ##
 
-Ill-formed expression. Expected expression (not containing binary logical operators).
+@{<light_red>Ill-formed expression.@} Expected expression (not containing binary logical operators).
 
+program: DATABLOCK LBRACE ROWVECTOR LABRACK UPPER ASSIGN BANG IDENTIFIER TRANSPOSE WHILE
+## Concrete syntax: data { row_vector < upper = ! foo ' while
+program: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN IDENTIFIER COMMA UPPER ASSIGN WHILE
+## Concrete syntax: data { vector < lower = foo , upper = while
 program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN WHILE
 ##
 ## Concrete syntax: data { vector < upper = while
@@ -718,7 +914,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN WHILE
 ## UPPER ASSIGN
 ##
 
-Expression (not containing binary logical operators) expected after "upper =". Ill-formed expression.
+@{<light_red>Ill-formed expression.@} Expression (not containing binary logical operators) expected after @{<green>"upper ="@}.
 
 program: DATABLOCK LBRACE VECTOR LABRACK UPPER WHILE
 ##
@@ -733,7 +929,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER WHILE
 ## UPPER
 ##
 
-Expect "=" expression ">" after seeing "upper".
+Expect @{<green>"="@} @{<i>expression@} @{<green>">"@} after seeing @{<green>"upper"@}.
 
 program: DATABLOCK LBRACE VECTOR LABRACK WHILE
 ##
@@ -748,7 +944,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK WHILE
 ## LABRACK
 ##
 
-We expect to see "lower =", "upper =", "offset =" or "multiplier =" followed by an expression after "<".
+We expect to see @{<green>"lower ="@}, @{<green>"upper ="@}, @{<green>"offset ="@} or @{<green>"multiplier ="@} followed by an expression after @{<green>"<"@}.
 
 program: DATABLOCK LBRACE VECTOR LBRACK INTNUMERAL RBRACK HAT
 ##
@@ -797,21 +993,7 @@ program: DATABLOCK WHILE
 ## DATABLOCK
 ##
 
-"{" followed by a list of top-level variable declarations is expected after seeing "data".
-
-program: FUNCTIONBLOCK LBRACE RBRACE COVMATRIX
-##
-## Concrete syntax: functions { } cov_matrix
-##
-## Ends in an error in state: 413.
-##
-## program -> option(function_block) . option(data_block) option(transformed_data_block) option(parameters_block) option(transformed_parameters_block) option(model_block) option(generated_quantities_block) EOF [ # ]
-##
-## The known suffix of the stack is as follows:
-## option(function_block)
-##
-
-Expected "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
+@{<green>"{"@} followed by a list of top-level variable declarations is expected after seeing @{<green>"data"@}.
 
 program: FUNCTIONBLOCK LBRACE VOID WHILE LPAREN RPAREN SEMICOLON EOF
 ## Concrete syntax: functions { void while ( ) ;
@@ -827,7 +1009,7 @@ program: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN RPAREN SEMICOLON WHILE
 ## function_def
 ##
 
-A "}" or a function definition/declaration is expected.
+A @{<green>"}"@} or a function definition/declaration is expected.
 
 functions_only: COMPLEX JACOBIAN LPAREN COMPLEX RPAREN
 ## Concrete syntax: complex jacobian ( complex )
@@ -904,7 +1086,7 @@ program: FUNCTIONBLOCK LBRACE VOID IDENTIFIER WHILE
 ## return_type decl_identifier
 ##
 
-"(" expected after function name.
+@{<green>"("@} expected after function name.
 
 program: FUNCTIONBLOCK LBRACE VOID LBRACK
 ##
@@ -932,7 +1114,7 @@ program: FUNCTIONBLOCK LBRACE WHILE
 ## FUNCTIONBLOCK LBRACE
 ##
 
-Function forward declaration, definition or "}" expected after "functions {".
+Function forward declaration, definition or @{<green>"}"@} expected after @{<green>"functions {"@}.
 
 program: FUNCTIONBLOCK WHILE
 ##
@@ -946,21 +1128,7 @@ program: FUNCTIONBLOCK WHILE
 ## FUNCTIONBLOCK
 ##
 
-"{" expected after "functions".
-
-program: GENERATEDQUANTITIESBLOCK LBRACE RBRACE ELTTIMESASSIGN
-##
-## Concrete syntax: generated quantities { } .*=
-##
-## Ends in an error in state: 689.
-##
-## program -> option(function_block) option(data_block) option(transformed_data_block) option(parameters_block) option(transformed_parameters_block) option(model_block) option(generated_quantities_block) . EOF [ # ]
-##
-## The known suffix of the stack is as follows:
-## option(function_block) option(data_block) option(transformed_data_block) option(parameters_block) option(transformed_parameters_block) option(model_block) option(generated_quantities_block)
-##
-
-Expected end of file after end of generated quantities block.
+@{<green>"{"@} expected after @{<green>"functions"@}.
 
 program: GENERATEDQUANTITIESBLOCK LBRACE VOID
 ##
@@ -974,7 +1142,7 @@ program: GENERATEDQUANTITIESBLOCK LBRACE VOID
 ## GENERATEDQUANTITIESBLOCK LBRACE
 ##
 
-Variable declaration or statement or "}" expected in generated quantities block.
+Variable declaration or statement or @{<green>"}"@} expected in generated quantities block.
 
 program: GENERATEDQUANTITIESBLOCK WHILE
 ##
@@ -988,7 +1156,7 @@ program: GENERATEDQUANTITIESBLOCK WHILE
 ## GENERATEDQUANTITIESBLOCK
 ##
 
-Expected "{" after block keyword.
+Expected @{<green>"{"@} after @{<green>"generated quantities"@}.
 
 program: DATABLOCK LBRACE MATRIX LABRACK MULTIPLIER ASSIGN IDENTIFIER RABRACK WHILE
 ## Concrete syntax: data { matrix < multiplier = foo > while
@@ -1044,21 +1212,7 @@ program: MODELBLOCK LBRACE MATRIX WHILE
 ## MATRIX
 ##
 
-"[" expression "," expression "]" expected for matrix sizes.
-
-program: MODELBLOCK LBRACE RBRACE ELTTIMESASSIGN
-##
-## Concrete syntax: model { } .*=
-##
-## Ends in an error in state: 684.
-##
-## program -> option(function_block) option(data_block) option(transformed_data_block) option(parameters_block) option(transformed_parameters_block) option(model_block) . option(generated_quantities_block) EOF [ # ]
-##
-## The known suffix of the stack is as follows:
-## option(function_block) option(data_block) option(transformed_data_block) option(parameters_block) option(transformed_parameters_block) option(model_block)
-##
-
-Expected "generated quantities {" or end of file after end of model block.
+@{<green>"["@} @{<i>expression@} @{<green>","@} @{<i>expression@} @{<green>"]"@} expected for matrix sizes.
 
 program: MODELBLOCK LBRACE REAL IDENTIFIER ASSIGN IDENTIFIER TILDE
 ## Concrete syntax: model { real foo = foo ~
@@ -1074,7 +1228,7 @@ program: MODELBLOCK LBRACE REAL IDENTIFIER ASSIGN WHILE
 ## ASSIGN
 ##
 
-Ill-formed expression. Expression followed by ";" expected after "=".
+@{<light_red>Ill-formed expression.@} Expression followed by @{<green>";"@} expected after @{<green>"="@}.
 
 program: MODELBLOCK LBRACE REAL LBRACK
 ##
@@ -1127,8 +1281,10 @@ program: MODELBLOCK LBRACE ROWVECTOR LBRACK WHILE
 ## ROWVECTOR LBRACK
 ##
 
-"[" expression "]" expected for row_vector size.
+@{<green>"["@} @{<i>expression@} @{<green>"]"@} expected for row_vector size.
 
+program: MODELBLOCK LBRACE VOID
+## Concrete syntax: model { void
 program: MODELBLOCK LBRACE SEMICOLON VOID
 ##
 ## Concrete syntax: model { ; void
@@ -1141,7 +1297,7 @@ program: MODELBLOCK LBRACE SEMICOLON VOID
 ## vardecl_or_statement
 ##
 
-Variable declaration, statement or "}" expected.
+Variable declaration, statement or @{<green>"}"@} expected.
 
 program: DATABLOCK LBRACE COMPLEXVECTOR LABRACK OFFSET ASSIGN IDENTIFIER RABRACK WHILE
 ## Concrete syntax: data { complex_vector < offset = foo > while
@@ -1181,21 +1337,7 @@ program: MODELBLOCK LBRACE VECTOR WHILE
 ## VECTOR
 ##
 
-Expected "[" expression "]" for vector size.
-
-program: MODELBLOCK LBRACE VOID
-##
-## Concrete syntax: model { void
-##
-## Ends in an error in state: 681.
-##
-## model_block -> MODELBLOCK LBRACE . list(vardecl_or_statement) RBRACE [ GENERATEDQUANTITIESBLOCK EOF ]
-##
-## The known suffix of the stack is as follows:
-## MODELBLOCK LBRACE
-##
-
-Variable declaration, statement or "}" expected.
+Expected @{<green>"["@} @{<i>expression@} @{<green>"]"@} for vector size.
 
 program: MODELBLOCK WHILE
 ##
@@ -1209,21 +1351,7 @@ program: MODELBLOCK WHILE
 ## MODELBLOCK
 ##
 
-Expected "{" after "model".
-
-program: PARAMETERSBLOCK LBRACE RBRACE ELTTIMESASSIGN
-##
-## Concrete syntax: parameters { } .*=
-##
-## Ends in an error in state: 673.
-##
-## program -> option(function_block) option(data_block) option(transformed_data_block) option(parameters_block) . option(transformed_parameters_block) option(model_block) option(generated_quantities_block) EOF [ # ]
-##
-## The known suffix of the stack is as follows:
-## option(function_block) option(data_block) option(transformed_data_block) option(parameters_block)
-##
-
-"transformed parameters {", "model {" or "generated quantities {" expected after end of parameters block.
+Expected @{<green>"{"@} after @{<green>"model"@}.
 
 program: PARAMETERSBLOCK LBRACE WHILE
 ##
@@ -1237,7 +1365,7 @@ program: PARAMETERSBLOCK LBRACE WHILE
 ## PARAMETERSBLOCK LBRACE
 ##
 
-Expected top-level variable declaration or "}".
+Expected top-level variable declaration or @{<green>"}"@}.
 
 program: PARAMETERSBLOCK WHILE
 ##
@@ -1251,7 +1379,7 @@ program: PARAMETERSBLOCK WHILE
 ## PARAMETERSBLOCK
 ##
 
-Expected "{" after "parameters".
+Expected @{<green>"{"@} after @{<green>"parameters"@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE BANG IDENTIFIER TRANSPOSE WHILE
 ## Concrete syntax: transformed data { ! foo ' while
@@ -1267,7 +1395,7 @@ program: TRANSFORMEDDATABLOCK LBRACE BANG WHILE
 ## BANG
 ##
 
-Ill-formed expression. Expression expected after "!".
+@{<light_red>Ill-formed expression.@} Expression expected after @{<green>"!"@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE BREAK WHILE
 ##
@@ -1281,7 +1409,7 @@ program: TRANSFORMEDDATABLOCK LBRACE BREAK WHILE
 ## BREAK
 ##
 
-Expected ";" after "break".
+Expected @{<green>";"@} after @{<green>"break"@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE CONTINUE WHILE
 ##
@@ -1295,8 +1423,10 @@ program: TRANSFORMEDDATABLOCK LBRACE CONTINUE WHILE
 ## CONTINUE
 ##
 
-Expected ";" after "continue".
+Expected @{<green>";"@} after @{<green>"continue"@}.
 
+program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN IDENTIFIER IN REALNUMERAL RPAREN VOID
+## Concrete syntax: transformed data { for ( foo in 3.1415 ) void
 program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN IDENTIFIER IN REALNUMERAL COLON IDENTIFIER RPAREN VOID
 ##
 ## Concrete syntax: transformed data { for ( foo in 3.1415 : foo ) void
@@ -1309,7 +1439,7 @@ program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN IDENTIFIER IN REALNUMERAL COLON 
 ## FOR LPAREN identifier IN expression COLON expression RPAREN
 ##
 
-Ill-formed statement. Expected statement after ")" for the loop body of the for loop.
+@{<light_red>Ill-formed statement.@} Expected statement after @{<green>")"@} for the loop body of the for loop.
 
 program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN IDENTIFIER IN IDENTIFIER COLON DOTNUMERAL TILDE
 ## Concrete syntax: transformed data { for ( foo in foo : .2 ~
@@ -1325,21 +1455,7 @@ program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN IDENTIFIER IN REALNUMERAL COLON 
 ## FOR LPAREN identifier IN expression COLON
 ##
 
-Ill-formed expression. Expected expression followed by ")" after "for (" identifier "in" expression ":".
-
-program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN IDENTIFIER IN REALNUMERAL RPAREN VOID
-##
-## Concrete syntax: transformed data { for ( foo in 3.1415 ) void
-##
-## Ends in an error in state: 293.
-##
-## nested_statement -> FOR LPAREN identifier IN expression RPAREN . vardecl_or_statement [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
-##
-## The known suffix of the stack is as follows:
-## FOR LPAREN identifier IN expression RPAREN
-##
-
-Ill-formed statement. Expected statement after ")" for the loop body of the foreach loop.
+@{<light_red>Ill-formed expression.@} Expected expression followed by @{<green>")"@} after @{<green>"for ("@} @{<i>identifier@} @{<green>"in"@} @{<i>expression@} @{<green>":"@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN IDENTIFIER IN WHILE
 ## Concrete syntax: transformed data { for ( foo in while
@@ -1383,7 +1499,7 @@ program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN IDENTIFIER IN DOTNUMERAL TILDE
 ## In state 127, spurious reduction of production expression -> common_expression
 ##
 
-Ill-formed expression. Expected expression followed by ")" or ":" after "for (" identifier "in".
+@{<light_red>Ill-formed expression.@} Expected expression followed by @{<green>")"@} or @{<green>":"@} after @{<green>"for ("@} @{<i>identifier@} @{<green>"in"@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN IDENTIFIER WHILE
 ##
@@ -1430,8 +1546,8 @@ program: TRANSFORMEDDATABLOCK LBRACE FOR WHILE
 
 Expected @{<green>"("@} after @{<green>"for"@}.
 
-program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN REALNUMERAL RPAREN SEMICOLON VOID
-## Concrete syntax: transformed data { if ( 3.1415 ) ; void
+program: TRANSFORMEDDATABLOCK LBRACE SEMICOLON VOID
+## Concrete syntax: transformed data { ; void
 program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN IDENTIFIER RPAREN SEMICOLON UNREACHABLE
 ##
 ## Concrete syntax: transformed data { if ( foo ) ; <<<<UNREACHABLE>>>
@@ -1445,7 +1561,7 @@ program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN IDENTIFIER RPAREN SEMICOLON UNREA
 ## IF LPAREN expression RPAREN vardecl_or_statement
 ##
 
-Ill-formed block. Expected a statement, variable declaration, or just "}".
+@{<light_red>Ill-formed block.@} Expected a statement, variable declaration, or just @{<green>"}"@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN REALNUMERAL RPAREN VOID
 ##
@@ -1460,7 +1576,7 @@ program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN REALNUMERAL RPAREN VOID
 ## IF LPAREN expression RPAREN
 ##
 
-Ill-formed statement. Statement expected for true branch of conditional.
+@{<light_red>Ill-formed statement.@} Statement expected for true branch of conditional.
 
 program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN IDENTIFIER RPAREN SEMICOLON ELSE VOID
 ##
@@ -1474,7 +1590,7 @@ program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN IDENTIFIER RPAREN SEMICOLON ELSE 
 ## IF LPAREN expression RPAREN vardecl_or_statement ELSE
 ##
 
-Ill-formed statement. Expected statement after else.
+@{<light_red>Ill-formed statement.@} Expected statement after @{<green>"else"@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN IDENTIFIER LPAREN RPAREN TILDE
 ##
@@ -1549,7 +1665,7 @@ program: TRANSFORMEDDATABLOCK LBRACE LBRACE VOID
 ## LBRACE
 ##
 
-Ill-formed phrase. @{<green>"{"@} should be followed by a statement, variable declaration or expression.
+@{<light_red>Ill-formed phrase.@} @{<green>"{"@} should be followed by a statement, variable declaration or expression.
 
 program: TRANSFORMEDDATABLOCK LBRACE LBRACK IDENTIFIER COMMA WHILE
 ##
@@ -1563,7 +1679,7 @@ program: TRANSFORMEDDATABLOCK LBRACE LBRACK IDENTIFIER COMMA WHILE
 ## expression COMMA
 ##
 
-Ill-formed expression. We expect a comma separated list of expressions.
+@{<light_red>Ill-formed expression.@} We expect a comma separated list of expressions.
 
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK WHILE
 ## Concrete syntax: transformed data { 3.1415 [ while
@@ -1590,8 +1706,7 @@ program: TRANSFORMEDDATABLOCK LBRACE LBRACK IDENTIFIER RPAREN
 ## In state 114, spurious reduction of production loption(separated_nonempty_list(COMMA,expression)) -> separated_nonempty_list(COMMA,expression)
 ##
 
-Ill-formed expression. We expect a comma separated list of expressions, followed by "]".
-
+@{<light_red>Ill-formed expression.@} We expect a comma separated list of expressions, followed by @{<green>"]"@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE LBRACK WHILE
 ##
@@ -1605,7 +1720,7 @@ program: TRANSFORMEDDATABLOCK LBRACE LBRACK WHILE
 ## LBRACK
 ##
 
-Comma separated list of expressions followed by "]" expected after "[".
+Comma separated list of expressions followed by @{<green>"]"@} expected after @{<green>"["@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE LPAREN IDENTIFIER COMMA IDENTIFIER RBRACK
 ## Concrete syntax: transformed data { ( foo , foo ]
@@ -1650,7 +1765,7 @@ program: TRANSFORMEDDATABLOCK LBRACE LPAREN IDENTIFIER TILDE
 ## In state 127, spurious reduction of production expression -> common_expression
 ##
 
-Ill-formed phrase. Found "(" followed by expression. Expect a "[", "," or ")" or an infix or postfix operator.
+@{<light_red>Ill-formed phrase.@} Found @{<green>"("@} followed by expression. Expect a @{<green>"["@}, @{<green>","@} or @{<green>")"@} or an infix or postfix operator.
 
 program: TRANSFORMEDDATABLOCK LBRACE MINUS WHILE
 ##
@@ -1664,7 +1779,7 @@ program: TRANSFORMEDDATABLOCK LBRACE MINUS WHILE
 ## MINUS
 ##
 
-Ill-formed expression. Expect an expression after @{<green>"-"@}.
+@{<light_red>Ill-formed expression.@} Expect an expression after @{<green>"-"@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE PLUS WHILE
 ##
@@ -1678,22 +1793,7 @@ program: TRANSFORMEDDATABLOCK LBRACE PLUS WHILE
 ## PLUS
 ##
 
-Ill-formed expression. Expect an expression after @{<green>"+"@}.
-
-program: TRANSFORMEDDATABLOCK LBRACE PRINT LPAREN STRINGLITERAL WHILE
-##
-## Concrete syntax: transformed data { print ( "hello world" while
-##
-## Ends in an error in state: 280.
-##
-## atomic_statement -> PRINT LPAREN printables . RPAREN SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
-## printables -> printables . COMMA printables [ RPAREN COMMA ]
-##
-## The known suffix of the stack is as follows:
-## PRINT LPAREN printables
-##
-
-Expected a comma-separated list of expressions or strings followed by ");" after "print(".
+@{<light_red>Ill-formed expression.@} Expect an expression after @{<green>"+"@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE PRINT LPAREN IDENTIFIER RPAREN WHILE
 ##
@@ -1707,8 +1807,10 @@ program: TRANSFORMEDDATABLOCK LBRACE PRINT LPAREN IDENTIFIER RPAREN WHILE
 ## PRINT LPAREN printables RPAREN
 ##
 
-Expected a ";" after "print(...)".
+Expected a @{<green>";"@} after @{<green>"print(@{<r>@{<f>...@}@})"@}.
 
+program: TRANSFORMEDDATABLOCK LBRACE PRINT LPAREN STRINGLITERAL WHILE
+## Concrete syntax: transformed data { print ( "hello world" while
 program: TRANSFORMEDDATABLOCK LBRACE PRINT LPAREN WHILE
 ##
 ## Concrete syntax: transformed data { print ( while
@@ -1721,7 +1823,7 @@ program: TRANSFORMEDDATABLOCK LBRACE PRINT LPAREN WHILE
 ## PRINT LPAREN
 ##
 
-Expected a comma-separated list of expressions or strings followed by ");" after "print(".
+Expected a comma-separated list of expressions or strings followed by @{<green>");"@} after @{<green>"print("@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE PRINT WHILE
 ##
@@ -1736,20 +1838,6 @@ program: TRANSFORMEDDATABLOCK LBRACE PRINT WHILE
 ##
 
 Expected "(" followed by a comma-separated list of expressions or strings followed by ");" after "print".
-
-program: TRANSFORMEDDATABLOCK LBRACE RBRACE ELTTIMESASSIGN
-##
-## Concrete syntax: transformed data { } .*=
-##
-## Ends in an error in state: 667.
-##
-## program -> option(function_block) option(data_block) option(transformed_data_block) . option(parameters_block) option(transformed_parameters_block) option(model_block) option(generated_quantities_block) EOF [ # ]
-##
-## The known suffix of the stack is as follows:
-## option(function_block) option(data_block) option(transformed_data_block)
-##
-
-Expected "parameters {", "transformed parameters {", "model {", "generated quantities {" or end-of-file after end of transformed data block.
 
 program: TRANSFORMEDDATABLOCK LBRACE LBRACE REALNUMERAL SEMICOLON
 ## Concrete syntax: transformed data { { 3.1415 ;
@@ -1817,7 +1905,7 @@ program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER WHILE
 ##
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
+You may be missing a @{<green>","@} between expressions, an operator, or a terminating @{<green>"}"@}, @{<green>")"@}, @{<green>"]"@}, or @{<green>";"@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LDIVIDE WHILE
 ## Concrete syntax: transformed data { 3.1415 \ while
@@ -1891,10 +1979,10 @@ program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER QMARK WHILE
 ## expression QMARK
 ##
 
-Found an incomplete ternary expression, should be "(condition) ? (true branch) : (false branch)".
+Found an incomplete ternary expression, should be @{<green>"(@{<r>@{<f>condition@}@}) ? (@{<r>@{<f>true branch@}@}) : (@{<r>@{<f>false branch@}@})"@}.
 Did you forget to add a colon or a false branch?
-For example, this returns 3.0:
-  1 ? 0.0 : 3.0
+For example, this returns @{<b>@{<green>3.0@}@}:
+  @{<green>1 ? 3.0 : 0.0@}
 
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK COLON IDENTIFIER TILDE
 ##
@@ -1936,7 +2024,7 @@ program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK COLON IDENTIFIER TILDE
 ## In state 127, spurious reduction of production expression -> common_expression
 ##
 
-Ill-formed phrase. Found ":" expression. We expect either an infix or postfix operator, or "," or or "[" or "]" next.
+@{<light_red>Ill-formed phrase.@} Found @{<green>":"@} @{<i>expression@}. We expect either an infix or postfix operator, or @{<green>","@} or @{<green>"["@} or @{<green>"]"@} next.
 
 program: TRANSFORMEDDATABLOCK LBRACE MINUS IDENTIFIER TRANSPOSE WHILE
 ## Concrete syntax: transformed data { - foo ' while
@@ -1973,7 +2061,7 @@ program: TRANSFORMEDDATABLOCK LBRACE PLUS IDENTIFIER TRANSPOSE WHILE
 ## PLUS expression
 ##
 
-Ill-formed expression. Found an expression. Expect an infix or postfix operator or "["
+@{<light_red>Ill-formed expression.@} Found an expression. Expect an infix or postfix operator or @{<green>"["@}
 
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK COLON WHILE
 ##
@@ -1988,7 +2076,7 @@ program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK COLON WHILE
 ## COLON
 ##
 
-Ill-formed expression. Expected expression or "]" or "," after ":".
+@{<light_red>Ill-formed expression.@} Expected expression or @{<green>"]"@} or @{<green>","@} after @{<green>":"@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK COMMA WHILE
 ##
@@ -2002,7 +2090,7 @@ program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK COMMA WHILE
 ## indexes COMMA
 ##
 
-Expected index after indices followed by ",".
+Expected index after indices followed by @{<green>","@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK IDENTIFIER COLON IDENTIFIER TILDE
 ## Concrete syntax: transformed data { 3.1415 [ foo : foo ~
@@ -2019,7 +2107,7 @@ program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LBRACK REALNUMERAL COLON WHILE
 ## expression COLON
 ##
 
-Ill-formed expression. Expected expression or "]" or "," after ":".
+@{<light_red>Ill-formed expression.@} Expected expression or @{<green>"]"@} or @{<green>","@} after @{<green>":"@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE IDENTIFIER LPAREN RPAREN TRUNCATE LBRACK COMMA RBRACK MULTIPLIER
 ##
@@ -2033,7 +2121,7 @@ program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE IDENTIFIER LPAREN RPAREN 
 ## expression TILDE identifier LPAREN loption(separated_nonempty_list(COMMA,expression)) RPAREN option(truncation)
 ##
 
-Expected ";" after "~"-statement (with optional truncation).
+Expected @{<green>";"@} after truncated @{<green>"~"@}-statement.
 
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE IDENTIFIER LPAREN RPAREN TRUNCATE LBRACK COMMA WHILE
 ## Concrete syntax: transformed data { 3.1415 ~ foo ( ) T [ , while
@@ -2057,7 +2145,7 @@ program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE IDENTIFIER LPAREN RPAREN 
 ## TRUNCATE LBRACK
 ##
 
-Ill-formed truncation. Expect the format "T[" optional expression "," optional expression "];".
+@{<light_red>Ill-formed truncation.@} Expect the format @{<green>"T["@} @{<i>optional expression@} @{<green>","@} @{<i>optional expression@} @{<green>"];"@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE IDENTIFIER LPAREN RPAREN WHILE
 ##
@@ -2071,8 +2159,10 @@ program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE IDENTIFIER LPAREN RPAREN 
 ## expression TILDE identifier LPAREN loption(separated_nonempty_list(COMMA,expression)) RPAREN
 ##
 
-Ill-formed "~"-statement. Expect either ";" or a truncation with the format "T[" optional expression "," optional expression "];".
+@{<light_red>Ill-formed @{<green>"~"@}-statement@}. Expect either @{<green>";"@} or a truncation with the format @{<green>"T["@} @{<i>optional expression@} @{<green>","@} @{<i>optional expression@} @{<green>"];"@}.
 
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE IDENTIFIER LPAREN WHILE
+## Concrete syntax: transformed data { 3.1415 ~ foo ( while
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE IDENTIFIER LPAREN IDENTIFIER RBRACK
 ##
 ## Concrete syntax: transformed data { 3.1415 ~ foo ( foo ]
@@ -2094,21 +2184,7 @@ program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE IDENTIFIER LPAREN IDENTIF
 ## In state 114, spurious reduction of production loption(separated_nonempty_list(COMMA,expression)) -> separated_nonempty_list(COMMA,expression)
 ##
 
-Ill-formed "~"-statement. Expect a comma separated list of expressions for arguments to the distribution, followed by ")".
-
-program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE IDENTIFIER LPAREN WHILE
-##
-## Concrete syntax: transformed data { 3.1415 ~ foo ( while
-##
-## Ends in an error in state: 342.
-##
-## atomic_statement -> expression TILDE identifier LPAREN . loption(separated_nonempty_list(COMMA,expression)) RPAREN option(truncation) SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
-##
-## The known suffix of the stack is as follows:
-## expression TILDE identifier LPAREN
-##
-
-Ill-formed "~"-statement. Expect a comma separated list of expressions for arguments to the distribution, followed by ")".
+@{<light_red>Ill-formed @{<green>"~"@}-statement.@} Expect a comma separated list of expressions for arguments to the distribution, followed by @{<green>")"@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE IDENTIFIER WHILE
 ##
@@ -2122,7 +2198,7 @@ program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE IDENTIFIER WHILE
 ## expression TILDE identifier
 ##
 
-Ill-formed "~"-statement. Expect "(" after distribution name, followed by a comma separated list of expressions for arguments to the distribution, followed by ")".
+@{<light_red>Ill-formed @{<green>"~"@}-statement.@} Expect @{<green>"("@} after distribution name, followed by a comma separated list of expressions for arguments to the distribution, followed by @{<green>")"@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE WHILE
 ##
@@ -2136,8 +2212,10 @@ program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE WHILE
 ## expression TILDE
 ##
 
-Ill-formed "~"-statement. Expect an distribution name after "~".
+@{<light_red>Ill-formed @{<green>"~"@}-statement.@} Expect an distribution name after @{<green>"~"@}.
 
+program: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN IDENTIFIER COMMA WHILE
+## Concrete syntax: transformed data { reject ( foo , while
 program: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN IDENTIFIER COMMA STRINGLITERAL WHILE
 ##
 ## Concrete syntax: transformed data { reject ( foo , "hello world" while
@@ -2151,21 +2229,7 @@ program: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN IDENTIFIER COMMA STRINGLITERA
 ## printables COMMA printables
 ##
 
-Ill-formed printable. After "print(" and "reject(", we expect a comma separated list of either expressions or strings, followed by ");".
-
-program: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN IDENTIFIER COMMA WHILE
-##
-## Concrete syntax: transformed data { reject ( foo , while
-##
-## Ends in an error in state: 270.
-##
-## printables -> printables COMMA . printables [ RPAREN COMMA ]
-##
-## The known suffix of the stack is as follows:
-## printables COMMA
-##
-
-Ill-formed printable. After "print(" and "reject(", we expect a comma separated list of either expressions or strings, followed by ");".
+@{<light_red>Ill-formed printable.@} We expect a comma separated list of either expressions or strings, followed by @{<green>");"@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE REJECT WHILE
 ## Concrete syntax: transformed data { reject while
@@ -2187,7 +2251,7 @@ program: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN WHILE
 ## REJECT LPAREN
 ##
 
-Ill-formed reject statement. After "reject(", we expect a comma separated list of either expressions or strings, followed by ");".
+@{<light_red>Ill-formed reject statement.@} After @{<green>"reject("@}, we expect a comma separated list of either expressions or strings, followed by @{<green>");"@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE RETURN LBRACE WHILE
 ##
@@ -2201,22 +2265,16 @@ program: TRANSFORMEDDATABLOCK LBRACE RETURN LBRACE WHILE
 ## LBRACE
 ##
 
-Expression expected after "{" in array expression.
+Expression expected after @{<green>"{"@} in array expression.
 
-program: TRANSFORMEDDATABLOCK LBRACE RETURN TARGET WHILE
-##
-## Concrete syntax: transformed data { return target while
-##
-## Ends in an error in state: 99.
-##
-## common_expression -> TARGET . LPAREN RPAREN [ TRANSPOSE TIMES TILDE SEMICOLON RPAREN RBRACK RBRACE RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DOTNUMERAL DIVIDE COMMA COLON BAR AND ]
-##
-## The known suffix of the stack is as follows:
-## TARGET
-##
-
-Ill formed expression. After "target", we expect "()".
-
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LPAREN WHILE
+## Concrete syntax: transformed data { foo ( while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LPAREN DOTNUMERAL TILDE
+## Concrete syntax: transformed data { foo ( .2 ~
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LPAREN IDENTIFIER COMMA IDENTIFIER RBRACK
+## Concrete syntax: transformed data { foo ( foo , foo ]
+program: TRANSFORMEDDATABLOCK LBRACE RETURN IDENTIFIER LPAREN WHILE
+## Concrete syntax: transformed data { return foo ( while
 program: TRANSFORMEDDATABLOCK LBRACE RETURN IDENTIFIER LPAREN IDENTIFIER COMMA IDENTIFIER RBRACK
 ##
 ## Concrete syntax: transformed data { return foo ( foo , foo ]
@@ -2239,22 +2297,7 @@ program: TRANSFORMEDDATABLOCK LBRACE RETURN IDENTIFIER LPAREN IDENTIFIER COMMA I
 ## In state 114, spurious reduction of production loption(separated_nonempty_list(COMMA,expression)) -> separated_nonempty_list(COMMA,expression)
 ##
 
-Ill-formed expression. In function application, expect comma-separated list of expressions followed by ")", after "(".
-
-program: TRANSFORMEDDATABLOCK LBRACE RETURN IDENTIFIER LPAREN WHILE
-##
-## Concrete syntax: transformed data { return foo ( while
-##
-## Ends in an error in state: 113.
-##
-## common_expression -> identifier LPAREN . loption(separated_nonempty_list(COMMA,expression)) RPAREN [ TRANSPOSE TIMES TILDE SEMICOLON RPAREN RBRACK RBRACE RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DOTNUMERAL DIVIDE COMMA COLON BAR AND ]
-## common_expression -> identifier LPAREN . expression BAR loption(separated_nonempty_list(COMMA,expression)) RPAREN [ TRANSPOSE TIMES TILDE SEMICOLON RPAREN RBRACK RBRACE RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DOTNUMERAL DIVIDE COMMA COLON BAR AND ]
-##
-## The known suffix of the stack is as follows:
-## identifier LPAREN
-##
-
-Ill-formed expression. In function application, expect comma-separated list of expressions followed by ")", after "(".
+@{<light_red>Ill-formed function application.@} Expect comma-separated list of expressions followed by @{<green>")"@} after @{<green>"("@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE RETURN WHILE
 ## Concrete syntax: transformed data { return while
@@ -2298,21 +2341,23 @@ program: TRANSFORMEDDATABLOCK LBRACE RETURN IDENTIFIER TILDE
 ## In state 127, spurious reduction of production expression -> common_expression
 ##
 
-Ill-formed return statement. ";" or expression followed by ";" expected after "return".
+@{<light_red>Ill-formed return statement.@} @{<green>";"@} or expression followed by @{<green>";"@} expected after @{<green>"return"@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE TARGET LPAREN WHILE
-##
 ## Concrete syntax: transformed data { target ( while
+program: TRANSFORMEDDATABLOCK LBRACE RETURN TARGET WHILE
 ##
-## Ends in an error in state: 100.
+## Concrete syntax: transformed data { return target while
 ##
-## common_expression -> TARGET LPAREN . RPAREN [ TRANSPOSE TIMESASSIGN TIMES TILDE SEMICOLON RPAREN RBRACK RBRACE RABRACK QMARK PLUSASSIGN PLUS OR NEQUALS MODULO MINUSASSIGN MINUS LEQ LDIVIDE LBRACK LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMESASSIGN ELTTIMES ELTPOW ELTDIVIDEASSIGN ELTDIVIDE DOTNUMERAL DIVIDEASSIGN DIVIDE COMMA COLON BAR ASSIGN AND ]
+## Ends in an error in state: 99.
+##
+## common_expression -> TARGET . LPAREN RPAREN [ TRANSPOSE TIMES TILDE SEMICOLON RPAREN RBRACK RBRACE RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DOTNUMERAL DIVIDE COMMA COLON BAR AND ]
 ##
 ## The known suffix of the stack is as follows:
-## TARGET LPAREN
+## TARGET
 ##
 
-Ill-formed expression. Expected ")" after "target(".
+@{<light_red>Ill formed expression.@} After @{<green>"target"@}, we expect @{<green>"()"@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE TARGET PLUSASSIGN WHILE
 ## Concrete syntax: transformed data { target += while
@@ -2356,7 +2401,7 @@ program: TRANSFORMEDDATABLOCK LBRACE TARGET PLUSASSIGN IDENTIFIER TILDE
 ## In state 127, spurious reduction of production expression -> common_expression
 ##
 
-Ill-formed statement. Expression followed by ";" expected after "target +=".
+@{<light_red>Ill-formed statement.@} Expression followed by @{<green>";"@} expected after @{<green>"target +="@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE TARGET WHILE
 ##
@@ -2371,8 +2416,10 @@ program: TRANSFORMEDDATABLOCK LBRACE TARGET WHILE
 ## TARGET
 ##
 
-Ill-formed phrase. Expect either "+=" or "()" after "target".
+@{<light_red>Ill-formed phrase.@} Expect either @{<green>"+="@} @{<i>expression@} or @{<green>"()"@} after @{<green>"target"@}.
 
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LPAREN REALNUMERAL BAR WHILE
+## Concrete syntax: transformed data { foo ( 3.1415 | while
 program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LPAREN REALNUMERAL BAR IDENTIFIER RBRACK
 ##
 ## Concrete syntax: transformed data { foo ( 3.1415 | foo ]
@@ -2394,21 +2441,7 @@ program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LPAREN REALNUMERAL BAR IDENTIFIE
 ## In state 114, spurious reduction of production loption(separated_nonempty_list(COMMA,expression)) -> separated_nonempty_list(COMMA,expression)
 ##
 
-Ill-formed conditional distribution evaluation. Expect comma-separated list of expressions followed by ")" after "|".
-
-program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LPAREN REALNUMERAL BAR WHILE
-##
-## Concrete syntax: transformed data { foo ( 3.1415 | while
-##
-## Ends in an error in state: 176.
-##
-## common_expression -> identifier LPAREN expression BAR . loption(separated_nonempty_list(COMMA,expression)) RPAREN [ TRANSPOSE TIMESASSIGN TIMES TILDE SEMICOLON RPAREN RBRACK RBRACE RABRACK QMARK PLUSASSIGN PLUS OR NEQUALS MODULO MINUSASSIGN MINUS LEQ LDIVIDE LBRACK LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMESASSIGN ELTTIMES ELTPOW ELTDIVIDEASSIGN ELTDIVIDE DOTNUMERAL DIVIDEASSIGN DIVIDE COMMA COLON BAR ASSIGN AND ]
-##
-## The known suffix of the stack is as follows:
-## identifier LPAREN expression BAR
-##
-
-Ill-formed conditional distribution evaluation. Expect comma-separated list of expressions followed by ")" after "|".
+@{<light_red>Ill-formed conditional distribution evaluation.@} Expect comma-separated list of expressions followed by @{<green>")"@} after @{<green>"|"@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LPAREN RPAREN WHILE
 ##
@@ -2423,36 +2456,7 @@ program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LPAREN RPAREN WHILE
 ## identifier LPAREN loption(separated_nonempty_list(COMMA,expression)) RPAREN
 ##
 
-Ill-formed phrase. Found a well-formed function application. Expected either a ";" or a valid continuation of the expression.
-
-program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LPAREN WHILE
-## Concrete syntax: transformed data { foo ( while
-program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LPAREN DOTNUMERAL TILDE
-## Concrete syntax: transformed data { foo ( .2 ~
-program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LPAREN IDENTIFIER COMMA IDENTIFIER RBRACK
-##
-## Concrete syntax: transformed data { foo ( foo , foo ]
-##
-## Ends in an error in state: 336.
-##
-## atomic_statement -> identifier LPAREN loption(separated_nonempty_list(COMMA,expression)) . RPAREN SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
-## common_expression -> identifier LPAREN loption(separated_nonempty_list(COMMA,expression)) . RPAREN [ TRANSPOSE TIMESASSIGN TIMES TILDE RBRACE RABRACK QMARK PLUSASSIGN PLUS OR NEQUALS MODULO MINUSASSIGN MINUS LEQ LDIVIDE LBRACK LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMESASSIGN ELTTIMES ELTPOW ELTDIVIDEASSIGN ELTDIVIDE DOTNUMERAL DIVIDEASSIGN DIVIDE COMMA ASSIGN AND ]
-##
-## The known suffix of the stack is as follows:
-## identifier LPAREN loption(separated_nonempty_list(COMMA,expression))
-##
-## WARNING: This example involves spurious reductions.
-## This implies that, although the LR(1) items shown above provide an
-## accurate view of the past (what has been recognized so far), they
-## may provide an INCOMPLETE view of the future (what was expected next).
-## In state 112, spurious reduction of production common_expression -> identifier
-## In state 127, spurious reduction of production expression -> common_expression
-## In state 175, spurious reduction of production separated_nonempty_list(COMMA,expression) -> expression
-## In state 174, spurious reduction of production separated_nonempty_list(COMMA,expression) -> expression COMMA separated_nonempty_list(COMMA,expression)
-## In state 114, spurious reduction of production loption(separated_nonempty_list(COMMA,expression)) -> separated_nonempty_list(COMMA,expression)
-##
-
-Ill-formed function application. Expect comma-separated list of expressions followed by ")" after "(".
+@{<light_red>Ill-formed phrase.@} Found a well-formed function application. Expected either a @{<green>";"@} or a valid continuation of the expression.
 
 program: TRANSFORMEDDATABLOCK LBRACE LBRACE TRUNCATE TRANSPOSE WHILE
 ## Concrete syntax: transformed data { { T ' while
@@ -2496,7 +2500,7 @@ program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER RBRACE
 ## In state 356, spurious reduction of production expression -> common_expression
 ##
 
-Ill-formed phrase. Found an expression where we expected a statement.
+@{<light_red>Ill-formed phrase.@} Found an expression where we expected a statement. Did you forget a @{<green>";"@}?
 
 program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER PLUSASSIGN IDENTIFIER TILDE
 ## Concrete syntax: transformed data { foo += foo ~
@@ -2548,7 +2552,7 @@ program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER TIMESASSIGN IDENTIFIER TILDE
 ## In state 127, spurious reduction of production expression -> common_expression
 ##
 
-Ill-formed compound assignment statement. Expected a ";" after the value being assigned.
+@{<light_red>Ill-formed compound assignment statement.@} Expected a @{<green>";"@} after the value being assigned.
 
 program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER MINUSASSIGN WHILE
 ## Concrete syntax: transformed data { foo -= while
@@ -2570,7 +2574,7 @@ program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER TIMESASSIGN WHILE
 ## common_expression TIMESASSIGN
 ##
 
-Ill-formed compound assignment statement. Expected an expression followed by ";" next.
+@{<light_red>Ill-formed compound assignment statement.@} Expected an expression followed by @{<green>";"@} next.
 
 program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER ASSIGN IDENTIFIER TILDE
 ##
@@ -2612,7 +2616,7 @@ program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER ASSIGN IDENTIFIER TILDE
 ## In state 127, spurious reduction of production expression -> common_expression
 ##
 
-Ill-formed assignment statement. Expected a ";" after the value being assigned.
+@{<light_red>Ill-formed assignment statement.@} Expected a @{<green>";"@} after the value being assigned.
 
 program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER ASSIGN WHILE
 ##
@@ -2626,7 +2630,7 @@ program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER ASSIGN WHILE
 ## common_expression ASSIGN
 ##
 
-Ill-formed assignment statement. Expected an expression followed by ";" next.
+@{<light_red>Ill-formed assignment statement.@} Expected an expression followed by @{<green>";"@} next.
 
 program: TRANSFORMEDDATABLOCK LBRACE VECTOR LBRACK INTNUMERAL RBRACK HAT
 ##
@@ -2669,7 +2673,7 @@ program: TRANSFORMEDDATABLOCK LBRACE WHILE LPAREN IDENTIFIER RPAREN VOID
 ## WHILE LPAREN expression RPAREN
 ##
 
-Ill-formed statement. We expect a statement after ")", for the body of the while-loop.
+@{<light_red>Ill-formed statement.@} We expect a statement after @{<green>")"@}, for the body of the while-loop.
 
 program: TRANSFORMEDDATABLOCK LBRACE WHILE LPAREN IDENTIFIER TILDE
 ## Concrete syntax: transformed data { while ( foo ~
@@ -2685,7 +2689,7 @@ program: TRANSFORMEDDATABLOCK LBRACE WHILE LPAREN WHILE
 ## WHILE LPAREN
 ##
 
-Ill-formed expression. We expect an expression after "(" for the test of a while-loop.
+@{<light_red>Ill-formed expression.@} We expect an expression after @{<green>"("@} for the test of a while-loop.
 
 program: TRANSFORMEDDATABLOCK LBRACE WHILE WHILE
 ##
@@ -2699,7 +2703,7 @@ program: TRANSFORMEDDATABLOCK LBRACE WHILE WHILE
 ## WHILE
 ##
 
-After "while", we expect "(" expression ")" statement.
+After @{<green>"while"@}, we expect @{<green>"("@} @{<i>expression@} @{<green>")"@} @{<i>statement@}.
 
 program: TRANSFORMEDDATABLOCK WHILE
 ##
@@ -2713,21 +2717,7 @@ program: TRANSFORMEDDATABLOCK WHILE
 ## TRANSFORMEDDATABLOCK
 ##
 
-We expect "{" after "transformed data".
-
-program: TRANSFORMEDPARAMETERSBLOCK LBRACE RBRACE ELTTIMESASSIGN
-##
-## Concrete syntax: transformed parameters { } .*=
-##
-## Ends in an error in state: 679.
-##
-## program -> option(function_block) option(data_block) option(transformed_data_block) option(parameters_block) option(transformed_parameters_block) . option(model_block) option(generated_quantities_block) EOF [ # ]
-##
-## The known suffix of the stack is as follows:
-## option(function_block) option(data_block) option(transformed_data_block) option(parameters_block) option(transformed_parameters_block)
-##
-
-"model {" or "generated quantities {" expected after end of transformed parameters block.
+Expected @{<green>"{"@} after @{<green>"transformed data"@}.
 
 program: TRANSFORMEDPARAMETERSBLOCK LBRACE VOID
 ##
@@ -2741,7 +2731,7 @@ program: TRANSFORMEDPARAMETERSBLOCK LBRACE VOID
 ## TRANSFORMEDPARAMETERSBLOCK LBRACE
 ##
 
-Expect a statement or top-level variable declaration.
+Expected a statement or top-level variable declaration.
 
 program: TRANSFORMEDPARAMETERSBLOCK WHILE
 ##
@@ -2755,159 +2745,7 @@ program: TRANSFORMEDPARAMETERSBLOCK WHILE
 ## TRANSFORMEDPARAMETERSBLOCK
 ##
 
-We expect "{" after "transformed parameters".
-
-program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER COMMA WHILE
-##
-## Concrete syntax: data { vector < upper = foo , while
-##
-## Ends in an error in state: 451.
-##
-## range -> UPPER ASSIGN constr_expression COMMA . LOWER ASSIGN constr_expression [ RABRACK ]
-##
-## The known suffix of the stack is as follows:
-## UPPER ASSIGN constr_expression COMMA
-##
-
-'>' or lower expression expected after upper expression.
-
-program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER COMMA LOWER WHILE
-##
-## Concrete syntax: data { vector < upper = foo , lower while
-##
-## Ends in an error in state: 452.
-##
-## range -> UPPER ASSIGN constr_expression COMMA LOWER . ASSIGN constr_expression [ RABRACK ]
-##
-## The known suffix of the stack is as follows:
-## UPPER ASSIGN constr_expression COMMA LOWER
-##
-
-'=' expected after 'upper' keyword.
-
-program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER COMMA LOWER ASSIGN WHILE
-##
-## Concrete syntax: data { vector < upper = foo , lower = while
-##
-## Ends in an error in state: 453.
-##
-## range -> UPPER ASSIGN constr_expression COMMA LOWER ASSIGN . constr_expression [ RABRACK ]
-##
-## The known suffix of the stack is as follows:
-## UPPER ASSIGN constr_expression COMMA LOWER ASSIGN
-##
-
-Numerical expression expected after '=' in a lower expression.
-
-program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER COMMA LOWER ASSIGN IDENTIFIER COMMA
-##
-## Concrete syntax: data { vector < upper = foo , lower = foo ,
-##
-## Ends in an error in state: 454.
-##
-## constr_expression -> constr_expression . PLUS constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE ]
-## constr_expression -> constr_expression . MINUS constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE ]
-## constr_expression -> constr_expression . TIMES constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE ]
-## constr_expression -> constr_expression . DIVIDE constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE ]
-## constr_expression -> constr_expression . IDIVIDE constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE ]
-## constr_expression -> constr_expression . MODULO constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE ]
-## constr_expression -> constr_expression . LDIVIDE constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE ]
-## constr_expression -> constr_expression . ELTTIMES constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE ]
-## constr_expression -> constr_expression . ELTDIVIDE constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE ]
-## constr_expression -> constr_expression . HAT constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE ]
-## constr_expression -> constr_expression . ELTPOW constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE ]
-## constr_expression -> constr_expression . TRANSPOSE [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE ]
-## range -> UPPER ASSIGN constr_expression COMMA LOWER ASSIGN constr_expression . [ RABRACK ]
-##
-## The known suffix of the stack is as follows:
-## UPPER ASSIGN constr_expression COMMA LOWER ASSIGN constr_expression
-##
-## WARNING: This example involves spurious reductions.
-## This implies that, although the LR(1) items shown above provide an
-## accurate view of the past (what has been recognized so far), they
-## may provide an INCOMPLETE view of the future (what was expected next).
-## In state 112, spurious reduction of production common_expression -> identifier
-## In state 429, spurious reduction of production constr_expression -> common_expression
-##
-
-Expected '>' after lower expression.
-
-program: DATABLOCK LBRACE ROWVECTOR LABRACK MULTIPLIER ASSIGN IDENTIFIER TRANSPOSE WHILE
-## Concrete syntax: data { row_vector < multiplier = foo ' while
-program: DATABLOCK LBRACE VECTOR LABRACK MULTIPLIER ASSIGN IDENTIFIER COMMA WHILE
-##
-## Concrete syntax: data { vector < multiplier = foo , while
-##
-## Ends in an error in state: 465.
-##
-## offset_mult -> MULTIPLIER ASSIGN constr_expression COMMA . OFFSET ASSIGN constr_expression [ RABRACK ]
-##
-## The known suffix of the stack is as follows:
-## MULTIPLIER ASSIGN constr_expression COMMA
-##
-
-Expected '>' or offset expression after multiplier expression.
-
-program: DATABLOCK LBRACE VECTOR LABRACK MULTIPLIER ASSIGN IDENTIFIER COMMA OFFSET WHILE
-##
-## Concrete syntax: data { vector < multiplier = foo , offset while
-##
-## Ends in an error in state: 466.
-##
-## offset_mult -> MULTIPLIER ASSIGN constr_expression COMMA OFFSET . ASSIGN constr_expression [ RABRACK ]
-##
-## The known suffix of the stack is as follows:
-## MULTIPLIER ASSIGN constr_expression COMMA OFFSET
-##
-
-'=' expected after 'multiplier' keyword.
-
-program: DATABLOCK LBRACE VECTOR LABRACK MULTIPLIER ASSIGN IDENTIFIER COMMA OFFSET ASSIGN WHILE
-##
-## Concrete syntax: data { vector < multiplier = foo , offset = while
-##
-## Ends in an error in state: 467.
-##
-## offset_mult -> MULTIPLIER ASSIGN constr_expression COMMA OFFSET ASSIGN . constr_expression [ RABRACK ]
-##
-## The known suffix of the stack is as follows:
-## MULTIPLIER ASSIGN constr_expression COMMA OFFSET ASSIGN
-##
-
-Numerical expression expected after '=' in a multiplier expression.
-
-program: DATABLOCK LBRACE VECTOR LABRACK MULTIPLIER ASSIGN IDENTIFIER COMMA OFFSET ASSIGN IDENTIFIER COMMA
-##
-## Concrete syntax: data { vector < multiplier = foo , offset = foo ,
-##
-## Ends in an error in state: 468.
-##
-## constr_expression -> constr_expression . PLUS constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE ]
-## constr_expression -> constr_expression . MINUS constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE ]
-## constr_expression -> constr_expression . TIMES constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE ]
-## constr_expression -> constr_expression . DIVIDE constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE ]
-## constr_expression -> constr_expression . IDIVIDE constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE ]
-## constr_expression -> constr_expression . MODULO constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE ]
-## constr_expression -> constr_expression . LDIVIDE constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE ]
-## constr_expression -> constr_expression . ELTTIMES constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE ]
-## constr_expression -> constr_expression . ELTDIVIDE constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE ]
-## constr_expression -> constr_expression . HAT constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE ]
-## constr_expression -> constr_expression . ELTPOW constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE ]
-## constr_expression -> constr_expression . TRANSPOSE [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE ]
-## offset_mult -> MULTIPLIER ASSIGN constr_expression COMMA OFFSET ASSIGN constr_expression . [ RABRACK ]
-##
-## The known suffix of the stack is as follows:
-## MULTIPLIER ASSIGN constr_expression COMMA OFFSET ASSIGN constr_expression
-##
-## WARNING: This example involves spurious reductions.
-## This implies that, although the LR(1) items shown above provide an
-## accurate view of the past (what has been recognized so far), they
-## may provide an INCOMPLETE view of the future (what was expected next).
-## In state 112, spurious reduction of production common_expression -> identifier
-## In state 429, spurious reduction of production constr_expression -> common_expression
-##
-
-Expected '>' after multiplier expression.
+Expected @{<green>"{"@} after @{<green>"transformed parameters"@}.
 
 program: DATABLOCK LBRACE ARRAY LBRACK IDENTIFIER RBRACK REAL WHILE ASSIGN UNREACHABLE WHILE
 ## Concrete syntax: data { array [ foo ] real while = <<<<UNREACHABLE>>> while
@@ -2929,8 +2767,8 @@ program: DATABLOCK LBRACE REAL IDENTIFIER ASSIGN UNREACHABLE WHILE
 ## top_var_type id_and_optional_assignment(no_assign,decl_identifier)
 ##
 
-Cannot assign to variables in the `data` or `parameters` blocks; expected ';'
-after variable declaration.
+Cannot assign to variables in the @{<green>"data"@} or @{<green>"parameters"@} blocks
+Expected @{<green>";"@} after variable declaration.
 
 program: MODELBLOCK LBRACE REAL IDENTIFIER COMMA INT WHILE
 ## Concrete syntax: model { real foo , int while
@@ -2953,6 +2791,8 @@ program: MODELBLOCK LBRACE REAL IDENTIFIER COMMA UNREACHABLE
 Expected a new identifier after comma in declaration.
 All variables declared must be of the same type, and any initializing assignment must follow the identifier before the next comma.
 
+program: TRANSFORMEDDATABLOCK LBRACE PROFILE LPAREN WHILE
+## Concrete syntax: transformed data { profile ( while
 program: TRANSFORMEDDATABLOCK LBRACE PROFILE WHILE
 ##
 ## Concrete syntax: transformed data { profile while
@@ -2963,20 +2803,6 @@ program: TRANSFORMEDDATABLOCK LBRACE PROFILE WHILE
 ##
 ## The known suffix of the stack is as follows:
 ## PROFILE
-##
-
-Expected profile name as string in parenthesis
-
-program: TRANSFORMEDDATABLOCK LBRACE PROFILE LPAREN WHILE
-##
-## Concrete syntax: transformed data { profile ( while
-##
-## Ends in an error in state: 274.
-##
-## nested_statement -> PROFILE LPAREN . string_literal RPAREN LBRACE list(vardecl_or_statement) RBRACE [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
-##
-## The known suffix of the stack is as follows:
-## PROFILE LPAREN
 ##
 
 Expected profile name as string in parenthesis
@@ -2993,7 +2819,7 @@ program: TRANSFORMEDDATABLOCK LBRACE PROFILE LPAREN STRINGLITERAL WHILE
 ## PROFILE LPAREN string_literal
 ##
 
-Expected ")" after profile name.
+Expected @{<green>")"@} after profile name.
 
 program: TRANSFORMEDDATABLOCK LBRACE PROFILE LPAREN STRINGLITERAL RPAREN WHILE
 ##
@@ -3007,7 +2833,7 @@ program: TRANSFORMEDDATABLOCK LBRACE PROFILE LPAREN STRINGLITERAL RPAREN WHILE
 ## PROFILE LPAREN string_literal RPAREN
 ##
 
-Expected "{" after profile definition.
+Expected @{<green>"{"@} after profile definition.
 
 program: TRANSFORMEDDATABLOCK LBRACE PROFILE LPAREN STRINGLITERAL RPAREN LBRACE VOID
 ##
@@ -3021,7 +2847,7 @@ program: TRANSFORMEDDATABLOCK LBRACE PROFILE LPAREN STRINGLITERAL RPAREN LBRACE 
 ## PROFILE LPAREN string_literal RPAREN LBRACE
 ##
 
-Ill-formed phrase. "{" should be followed by a statement, variable declaration or expression.
+@{<light_red>Ill-formed phrase.@} @{<green>"{"@} should be followed by a statement, variable declaration or expression.
 
 program: DATABLOCK LBRACE COMPLEX UNREACHABLE
 ##
@@ -3049,7 +2875,7 @@ functions_only: WHILE
 ##
 ##
 
-Function definitions/declarations expected in '.stanfunctions' file
+Function definitions/declarations expected in @{<light_blue>'.stanfunctions'@} file
 
 functions_only: VOID ARRAY LPAREN RPAREN SEMICOLON RBRACE
 ##
@@ -3070,7 +2896,7 @@ functions_only: VOID ARRAY LPAREN RPAREN SEMICOLON RBRACE
 ## In state 406, spurious reduction of production list(function_def) -> function_def list(function_def)
 ##
 
-Only function definitions/declarations are expected in '.stanfunctions' file
+Only function definitions/declarations are expected in @{<light_blue>'.stanfunctions'@} file
 
 program: DATABLOCK LBRACE ARRAY LBRACK IDENTIFIER RPAREN
 ## Concrete syntax: data { array [ foo )
@@ -3088,7 +2914,7 @@ program: TRANSFORMEDDATABLOCK LBRACE ARRAY IDENTIFIER
 ## ARRAY
 ##
 
-Expected "[" array sizes "]" followed by type after "array".
+Expected @{<green>"["@} @{<i>array sizes@} @{<green>"]"@} followed by type after @{<green>"array"@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE ARRAY LBRACK IDENTIFIER RBRACK VECTOR LBRACK IMAGNUMERAL RBRACK AND
 ## Concrete syntax: transformed data { array [ foo ] vector [ 1i ] &&
@@ -3142,7 +2968,7 @@ program: DATABLOCK LBRACE TUPLE LPAREN REAL COMMA WHILE
 ## TUPLE LPAREN top_var_type COMMA
 ##
 
-Incomplete type specification, expected further types followed by ")" to complete tuple.
+Incomplete type specification, expected further types followed by @{<green>")"@} to complete tuple.
 
 program: MODELBLOCK LBRACE TUPLE LPAREN TUPLE LPAREN REAL COMMA COMPLEX RPAREN WHILE
 ## Concrete syntax: model { tuple ( tuple ( real , complex ) while
@@ -3174,8 +3000,8 @@ program: DATABLOCK LBRACE TUPLE LPAREN REAL WHILE
 ## In state 523, spurious reduction of production top_var_type -> REAL type_constraint
 ##
 
-Invalid type specification, unmatched "(".
-Expected "," followed by further types and ")" to complete tuple.
+Invalid type specification, unmatched @{<green>"("@}.
+Expected @{<green>","@} followed by further types and @{<green>")"@} to complete tuple.
 
 program: MODELBLOCK LBRACE TUPLE LPAREN REAL COMMA ARRAY LBRACK IDENTIFIER RBRACK REAL WHILE
 ## Concrete syntax: model { tuple ( real , array [ foo ] real while
@@ -3200,8 +3026,8 @@ program: DATABLOCK LBRACE TUPLE LPAREN REAL COMMA TUPLE LPAREN COMPLEX COMMA COM
 ## tuple_type(top_var_type)
 ##
 
-Incomplete type specification. Expected either ")" or "," followed by
-further types and ")" to complete tuple.
+Incomplete type specification. Expected either @{<green>")"@} or @{<green>","@} followed by
+further types and @{<green>")"@} to complete tuple.
 
 program: MODELBLOCK LBRACE TUPLE LPAREN REAL COMMA TUPLE LPAREN WHILE
 ## Concrete syntax: model { tuple ( real , tuple ( while
@@ -3219,8 +3045,8 @@ program: DATABLOCK LBRACE TUPLE LPAREN WHILE
 ## TUPLE LPAREN
 ##
 
-Incomplete type declaration. Expected comma separated list of types between "("
-and ")" to declare tuple variable.
+Incomplete type declaration. Expected comma separated list of types between @{<green>"("@}
+and @{<green>")"@} to declare tuple variable.
 
 program: TRANSFORMEDDATABLOCK LBRACE RETURN LPAREN WHILE
 ## Concrete syntax: transformed data { return ( while
@@ -3236,7 +3062,7 @@ program: TRANSFORMEDDATABLOCK LBRACE LPAREN IDENTIFIER COMMA WHILE
 ## LPAREN expression COMMA
 ##
 
-Expression or comma separated list of expressions followed by ")" expected after "(".
+Expression or comma separated list of expressions followed by @{<green>")"@} expected after @{<green>"("@}.
 
 functions_only: ARRAY LBRACK RBRACK TUPLE LPAREN VECTOR COMMA WHILE
 ## Concrete syntax: array [ ] tuple ( vector , while
@@ -3264,7 +3090,7 @@ functions_only: ARRAY LBRACK RBRACK TUPLE LPAREN WHILE
 ## ARRAY unsized_dims TUPLE LPAREN
 ##
 
-Expected comma-separated list of types followed by ")" to declare tuple type.
+Expected comma-separated list of types followed by @{<green>")"@} to declare tuple type.
 
 functions_only: ARRAY LBRACK RBRACK WHILE
 ## Concrete syntax: array [ ] while
@@ -3283,7 +3109,7 @@ program: DATABLOCK LBRACE ARRAY LBRACK INTNUMERAL RBRACK IDENTIFIER
 ## arr_dims
 ##
 
-Expected non-array type after "array" declaration.
+Expected non-array type after @{<green>"array"@} declaration.
 
 program: DATABLOCK LBRACE ARRAY LBRACK WHILE
 ##
@@ -3298,33 +3124,6 @@ program: DATABLOCK LBRACE ARRAY LBRACK WHILE
 ##
 
 Expected expressions for size of array.
-
-program: DATABLOCK LBRACE ROWVECTOR LABRACK LOWER ASSIGN IDENTIFIER TRANSPOSE WHILE
-##
-## Concrete syntax: data { row_vector < lower = foo ' while
-##
-## Ends in an error in state: 471.
-##
-## constr_expression -> constr_expression . PLUS constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE COMMA ]
-## constr_expression -> constr_expression . MINUS constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE COMMA ]
-## constr_expression -> constr_expression . TIMES constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE COMMA ]
-## constr_expression -> constr_expression . DIVIDE constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE COMMA ]
-## constr_expression -> constr_expression . IDIVIDE constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE COMMA ]
-## constr_expression -> constr_expression . MODULO constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE COMMA ]
-## constr_expression -> constr_expression . LDIVIDE constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE COMMA ]
-## constr_expression -> constr_expression . ELTTIMES constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE COMMA ]
-## constr_expression -> constr_expression . ELTDIVIDE constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE COMMA ]
-## constr_expression -> constr_expression . HAT constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE COMMA ]
-## constr_expression -> constr_expression . ELTPOW constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE COMMA ]
-## constr_expression -> constr_expression . TRANSPOSE [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE IDIVIDE HAT ELTTIMES ELTPOW ELTDIVIDE DIVIDE COMMA ]
-## range -> LOWER ASSIGN constr_expression . COMMA UPPER ASSIGN constr_expression [ RABRACK ]
-## range -> LOWER ASSIGN constr_expression . [ RABRACK ]
-##
-## The known suffix of the stack is as follows:
-## LOWER ASSIGN constr_expression
-##
-
-Expected ">" or ", upper = expression>" (with expression not containing binary logical operators) expected after specifying lower bound for type.
 
 program: DATABLOCK LBRACE REAL WHILE COMMA WHILE COMMA UNREACHABLE
 ## Concrete syntax: data { real while , while , <<<<UNREACHABLE>>>
@@ -3367,7 +3166,7 @@ program: DATABLOCK LBRACE TUPLE WHILE
 ##
 
 Invalid type specification.
-Expected "(" followed by further types and ")" to complete tuple.
+Expected @{<green>"("@} followed by further types and @{<green>")"@} to complete tuple.
 
 program: TRANSFORMEDDATABLOCK LBRACE COMPLEX JACOBIAN WHILE
 ## Concrete syntax: transformed data { complex jacobian while
@@ -3388,13 +3187,13 @@ program: MODELBLOCK LBRACE REAL IDENTIFIER IDENTIFIER
 ## sized_basic_type decl_identifier
 ##
 
-";" or plain assignment expected after variable declaration.
+@{<green>";"@} or plain assignment expected after variable declaration.
 
 program: DATABLOCK LBRACE ARRAY LBRACK JACOBIAN RBRACK COMPLEX JACOBIAN WHILE
 ## Concrete syntax: data { array [ jacobian ] complex jacobian while
-program: DATABLOCK LBRACE REAL WHILE IDENTIFIER
+program: DATABLOCK LBRACE REAL IDENTIFIER IDENTIFIER
 ##
-## Concrete syntax: data { real while foo
+## Concrete syntax: data { real foo foo
 ##
 ## Ends in an error in state: 627.
 ##
@@ -3405,8 +3204,7 @@ program: DATABLOCK LBRACE REAL WHILE IDENTIFIER
 ## top_var_type decl_identifier
 ##
 
-";" expected after variable declaration.
-
+@{<green>";"@} expected after variable declaration.
 
 functions_only: ARRAY LBRACK COMMA WHILE
 ## Concrete syntax: array [ , while
@@ -3422,7 +3220,7 @@ functions_only: ARRAY LBRACK WHILE
 ## LBRACK
 ##
 
-"[" (list of commas) "]" expected in unsized return type of function definition.
+@{<green>"["@} @{<i>(list of commas)@} @{<green>"]"@} expected in unsized return type of function definition.
 
 program: TRANSFORMEDDATABLOCK LBRACE FATAL_ERROR LPAREN IDENTIFIER RPAREN WHILE
 ## Concrete syntax: transformed data { fatal_error ( foo ) while
@@ -3442,7 +3240,7 @@ program: TRANSFORMEDDATABLOCK LBRACE FATAL_ERROR WHILE
 ## FATAL_ERROR
 ##
 
-Ill-formed fatal error statement. After "fatal_error(", we expect a comma separated list of either expressions or strings, followed by ");".
+@{<light_red>Ill-formed fatal error statement.@} After @{<green>"fatal_error("@}, we expect a comma separated list of either expressions or strings, followed by @{<green>");"@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE COMPLEX JACOBIAN LBRACK JACOBIAN RPAREN
 ## Concrete syntax: transformed data { complex jacobian [ jacobian )
@@ -3466,148 +3264,7 @@ program: MODELBLOCK LBRACE COMPLEX JACOBIAN LBRACK WHILE
 ## sized_basic_type decl_identifier LBRACK
 ##
 
-";\" expected after variable declaration.
-It looks like you are trying to use the old array syntax.
-Please use the new syntax:
+@{<green>";"@} expected after variable declaration.
+@{<light_yellow>It looks like you are trying to use the old array syntax.
+Please use the new syntax:@}
 https://mc-stan.org/docs/reference-manual/types.html#array-data-types.section
-
-
-program: DATABLOCK LBRACE STOCHASTICROWMATRIX WHILE
-## Concrete syntax: data { row_stochastic_matrix while
-program: DATABLOCK LBRACE STOCHASTICROWMATRIX LBRACK WHILE
-## Concrete syntax: data { row_stochastic_matrix [ while
-program: DATABLOCK LBRACE STOCHASTICROWMATRIX LBRACK IDENTIFIER TILDE
-## Concrete syntax: data { row_stochastic_matrix [ foo ~
-program: DATABLOCK LBRACE STOCHASTICROWMATRIX LBRACK IDENTIFIER COMMA WHILE
-## Concrete syntax: data { row_stochastic_matrix [ foo , while
-program: DATABLOCK LBRACE STOCHASTICROWMATRIX LBRACK IDENTIFIER COMMA IDENTIFIER TILDE
-##
-## Concrete syntax: data { row_stochastic_matrix [ foo , foo ~
-##
-## Ends in an error in state: 505.
-##
-## expression -> expression . QMARK expression COLON expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . PLUS expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . MINUS expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . TIMES expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . DIVIDE expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . IDIVIDE expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . MODULO expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . LDIVIDE expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . ELTTIMES expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . ELTDIVIDE expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . HAT expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . ELTPOW expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . OR expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . AND expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . EQUALS expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . NEQUALS expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . LABRACK expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . LEQ expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . RABRACK expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . GEQ expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . TRANSPOSE [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## top_var_type -> STOCHASTICROWMATRIX LBRACK expression COMMA expression . RBRACK [ WHILE VOID VECTOR UPPER UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER JACOBIAN INT IN IF IDENTIFIER FUNCTIONBLOCK FOR FATAL_ERROR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
-##
-## The known suffix of the stack is as follows:
-## STOCHASTICROWMATRIX LBRACK expression COMMA expression
-##
-## WARNING: This example involves spurious reductions.
-## This implies that, although the LR(1) items shown above provide an
-## accurate view of the past (what has been recognized so far), they
-## may provide an INCOMPLETE view of the future (what was expected next).
-## In state 112, spurious reduction of production common_expression -> identifier
-## In state 127, spurious reduction of production expression -> common_expression
-##
-
-Expected "[" expression "," expression "]" for size of row_stochastic_matrix.
-
-program: DATABLOCK LBRACE STOCHASTICCOLUMNMATRIX WHILE
-## Concrete syntax: data { column_stochastic_matrix while
-program: DATABLOCK LBRACE STOCHASTICCOLUMNMATRIX LBRACK WHILE
-## Concrete syntax: data { column_stochastic_matrix [ while
-program: DATABLOCK LBRACE STOCHASTICCOLUMNMATRIX LBRACK IDENTIFIER TILDE
-## Concrete syntax: data { column_stochastic_matrix [ foo ~
-program: DATABLOCK LBRACE STOCHASTICCOLUMNMATRIX LBRACK IDENTIFIER COMMA WHILE
-## Concrete syntax: data { column_stochastic_matrix [ foo , while
-program: DATABLOCK LBRACE STOCHASTICCOLUMNMATRIX LBRACK IDENTIFIER COMMA IDENTIFIER TILDE
-##
-## Concrete syntax: data { column_stochastic_matrix [ foo , foo ~
-##
-## Ends in an error in state: 511.
-##
-## expression -> expression . QMARK expression COLON expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . PLUS expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . MINUS expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . TIMES expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . DIVIDE expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . IDIVIDE expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . MODULO expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . LDIVIDE expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . ELTTIMES expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . ELTDIVIDE expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . HAT expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . ELTPOW expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . OR expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . AND expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . EQUALS expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . NEQUALS expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . LABRACK expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . LEQ expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . RABRACK expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . GEQ expression [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . TRANSPOSE [ TRANSPOSE TIMES RBRACK RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## top_var_type -> STOCHASTICCOLUMNMATRIX LBRACK expression COMMA expression . RBRACK [ WHILE VOID VECTOR UPPER UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER JACOBIAN INT IN IF IDENTIFIER FUNCTIONBLOCK FOR FATAL_ERROR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
-##
-## The known suffix of the stack is as follows:
-## STOCHASTICCOLUMNMATRIX LBRACK expression COMMA expression
-##
-## WARNING: This example involves spurious reductions.
-## This implies that, although the LR(1) items shown above provide an
-## accurate view of the past (what has been recognized so far), they
-## may provide an INCOMPLETE view of the future (what was expected next).
-## In state 112, spurious reduction of production common_expression -> identifier
-## In state 127, spurious reduction of production expression -> common_expression
-##
-
-Expected "[" expression "," expression "]" for size of column_stochastic_matrix.
-
-program: DATABLOCK LBRACE SUMTOZEROVEC LBRACK IDENTIFIER TILDE
-## Concrete syntax: data { sum_to_zero_vector [ foo ~
-program: DATABLOCK LBRACE SUMTOZEROVEC LBRACK WHILE
-## Concrete syntax: data { sum_to_zero_vector [ while
-program: DATABLOCK LBRACE SUMTOZEROVEC WHILE
-##
-## Concrete syntax: data { sum_to_zero_vector while
-##
-## Ends in an error in state: 491.
-##
-## top_var_type -> SUMTOZEROVEC . LBRACK expression RBRACK [ WHILE VOID VECTOR UPPER UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER JACOBIAN INT IN IF IDENTIFIER FUNCTIONBLOCK FOR FATAL_ERROR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
-##
-## The known suffix of the stack is as follows:
-## SUMTOZEROVEC
-##
-
-Expected "[" expression "]" for size of sum_to_zero_vector.
-
-program: DATABLOCK LBRACE SUMTOZEROMAT LBRACK WHILE
-## Concrete syntax: data { sum_to_zero_matrix [ while
-program: DATABLOCK LBRACE SUMTOZEROMAT WHILE
-## Concrete syntax: data { sum_to_zero_matrix while
-program: DATABLOCK LBRACE SUMTOZEROMAT LBRACK IDENTIFIER TILDE
-## Concrete syntax: data { sum_to_zero_matrix [ foo ~
-program: DATABLOCK LBRACE SUMTOZEROMAT LBRACK IDENTIFIER COMMA IDENTIFIER TILDE
-## Concrete syntax: data { sum_to_zero_matrix [ foo , foo ~
-program: DATABLOCK LBRACE SUMTOZEROMAT LBRACK IDENTIFIER COMMA WHILE
-##
-## Concrete syntax: data { sum_to_zero_matrix [ foo , while
-##
-## Ends in an error in state: 498.
-##
-## top_var_type -> SUMTOZEROMAT LBRACK expression COMMA . expression RBRACK [ WHILE VOID VECTOR UPPER UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER JACOBIAN INT IN IF IDENTIFIER FUNCTIONBLOCK FOR FATAL_ERROR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
-##
-## The known suffix of the stack is as follows:
-## SUMTOZEROMAT LBRACK expression COMMA
-##
-
-Expected "[" expression "," expression "]" for size of sum_to_zero_matrix.
