@@ -616,8 +616,8 @@ Syntax error in 'declare-define-param-block.stan', line 6, column 11 to column 1
      8:  model {
    -------------------------------------------------
 
-Cannot assign to variables in the `data` or `parameters` blocks; expected ';'
-after variable declaration.
+Cannot assign to variables in the "data" or "parameters" blocks
+Expected ";" after variable declaration.
 [exit 1]
   $ ../../../../install/default/bin/stanc declare-define-var-double-1.stan
 Semantic error in 'declare-define-var-double-1.stan', line 5, column 2 to column 18:
@@ -664,8 +664,8 @@ Syntax error in 'declare-define-var-double-3.stan', line 3, column 12 to column 
      5:  parameters {
    -------------------------------------------------
 
-Cannot assign to variables in the `data` or `parameters` blocks; expected ';'
-after variable declaration.
+Cannot assign to variables in the "data" or "parameters" blocks
+Expected ";" after variable declaration.
 [exit 1]
   $ ../../../../install/default/bin/stanc declare-define-var-double-4.stan
 Syntax error in 'declare-define-var-double-4.stan', line 6, column 12 to column 15, parsing error:
@@ -678,8 +678,8 @@ Syntax error in 'declare-define-var-double-4.stan', line 6, column 12 to column 
      8:  model {
    -------------------------------------------------
 
-Cannot assign to variables in the `data` or `parameters` blocks; expected ';'
-after variable declaration.
+Cannot assign to variables in the "data" or "parameters" blocks
+Expected ";" after variable declaration.
 [exit 1]
   $ ../../../../install/default/bin/stanc declare-define-var-int-1.stan
 Semantic error in 'declare-define-var-int-1.stan', line 5, column 2 to column 17:
@@ -829,7 +829,7 @@ Syntax error in 'err-decl-double-params.stan', line 4, column 0 to column 1, par
      6:  }
    -------------------------------------------------
 
-Ill-formed phrase. Found an expression where we expected a statement.
+Ill-formed phrase. Found an expression where we expected a statement. Did you forget a ";"?
 [exit 1]
   $ ../../../../install/default/bin/stanc err-decl-double.stan
 Syntax error in 'err-decl-double.stan', line 2, column 2 to column 8, parsing error:
@@ -883,7 +883,7 @@ Syntax error in 'err-decl-no-expression.stan', line 2, column 13 to column 14, p
      4:  model {
    -------------------------------------------------
 
-An expression (not containing binary logical operators) is expected for type lower bound.
+Ill-formed expression. Expression (not containing binary logical operators) expected after "lower =".
 [exit 1]
   $ ../../../../install/default/bin/stanc err-decl-vector-2.stan
 Syntax error in 'err-decl-vector-2.stan', line 2, column 10 to column 11, parsing error:
@@ -929,7 +929,7 @@ Syntax error in 'err-expected-bracket.stan', line 4, column 0 to column 0, parsi
          ^
    -------------------------------------------------
 
-Expected "{" after block keyword.
+Expected "{" after "generated quantities".
 [exit 1]
   $ ../../../../install/default/bin/stanc err-expected-end-of-model.stan
 Syntax error in 'err-expected-end-of-model.stan', line 3, column 0 to column 3, parsing error:
