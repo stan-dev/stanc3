@@ -60,7 +60,7 @@ Syntax error in 'decl.stan', line 2, column 7 to column 12, parsing error:
      4:  }
    -------------------------------------------------
 
-Expected a new identifier but found reserved keyword 'array'.
+Expected a new identifier but found reserved keyword "array".
 [exit 1]
   $ ../../../../../install/default/bin/stanc declarations.stan
 Syntax error in 'declarations.stan', line 3, column 18 to column 19, parsing error:
@@ -141,7 +141,7 @@ Syntax error in 'identifiers.stan', line 2, column 6 to column 11, parsing error
      4:    int multiplier;
    -------------------------------------------------
 
-Expected a new identifier but found reserved keyword 'upper'.
+Expected a new identifier but found reserved keyword "upper".
 [exit 1]
   $ ../../../../../install/default/bin/stanc if_else.stan
 Semantic error in 'if_else.stan', line 9, column 26 to column 54:
@@ -259,7 +259,7 @@ Syntax error in 'unreserved-array-keyword.stan', line 2, column 24 to column 29,
      4:  
    -------------------------------------------------
 
-Expected a new identifier but found reserved keyword 'array'.
+Expected a new identifier but found reserved keyword "array".
 [exit 1]
   $ ../../../../../install/default/bin/stanc unsized-old-array.stan
 Syntax error in 'unsized-old-array.stan', line 2, column 17 to column 20, parsing error:
