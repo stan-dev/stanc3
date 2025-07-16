@@ -929,7 +929,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER WHILE
 ## UPPER
 ##
 
-Expect @{<green>"="@} @{<i>expression@} @{<green>">"@} after seeing @{<green>"upper"@}.
+Expected @{<green>"="@} @{<i>expression@} @{<green>">"@} after seeing @{<green>"upper"@}.
 
 program: DATABLOCK LBRACE VECTOR LABRACK WHILE
 ##
@@ -944,7 +944,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK WHILE
 ## LABRACK
 ##
 
-We expect to see @{<green>"lower ="@}, @{<green>"upper ="@}, @{<green>"offset ="@} or @{<green>"multiplier ="@} followed by an expression after @{<green>"<"@}.
+Expected @{<green>"lower ="@}, @{<green>"upper ="@}, @{<green>"offset ="@} or @{<green>"multiplier ="@} followed by an expression after @{<green>"<"@}.
 
 program: DATABLOCK LBRACE VECTOR LBRACK INTNUMERAL RBRACK HAT
 ##
@@ -959,7 +959,7 @@ program: DATABLOCK LBRACE VECTOR LBRACK INTNUMERAL RBRACK HAT
 ## top_var_type
 ##
 
-We expect to see an identifier after a sized type.
+Expected to see an identifier after a sized type.
 
 program: DATABLOCK LBRACE IDENTIFIER
 ##
@@ -1679,7 +1679,7 @@ program: TRANSFORMEDDATABLOCK LBRACE LBRACK IDENTIFIER COMMA WHILE
 ## expression COMMA
 ##
 
-@{<light_red>Ill-formed expression.@} We expect a comma separated list of expressions.
+@{<light_red>Ill-formed expression.@} Expected a comma separated list of expressions.
 
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK WHILE
 ## Concrete syntax: transformed data { 3.1415 [ while
@@ -1706,7 +1706,7 @@ program: TRANSFORMEDDATABLOCK LBRACE LBRACK IDENTIFIER RPAREN
 ## In state 114, spurious reduction of production loption(separated_nonempty_list(COMMA,expression)) -> separated_nonempty_list(COMMA,expression)
 ##
 
-@{<light_red>Ill-formed expression.@} We expect a comma separated list of expressions, followed by @{<green>"]"@}.
+@{<light_red>Ill-formed expression.@} Expected a comma separated list of expressions, followed by @{<green>"]"@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE LBRACK WHILE
 ##
@@ -1765,7 +1765,7 @@ program: TRANSFORMEDDATABLOCK LBRACE LPAREN IDENTIFIER TILDE
 ## In state 127, spurious reduction of production expression -> common_expression
 ##
 
-@{<light_red>Ill-formed phrase.@} Found @{<green>"("@} followed by expression. Expect a @{<green>"["@}, @{<green>","@} or @{<green>")"@} or an infix or postfix operator.
+@{<light_red>Ill-formed phrase.@} Found @{<green>"("@} followed by expression. Expected a @{<green>"["@}, @{<green>","@} or @{<green>")"@} or an infix or postfix operator.
 
 program: TRANSFORMEDDATABLOCK LBRACE MINUS WHILE
 ##
@@ -1779,7 +1779,7 @@ program: TRANSFORMEDDATABLOCK LBRACE MINUS WHILE
 ## MINUS
 ##
 
-@{<light_red>Ill-formed expression.@} Expect an expression after @{<green>"-"@}.
+@{<light_red>Ill-formed expression.@} Expected an expression after @{<green>"-"@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE PLUS WHILE
 ##
@@ -1793,7 +1793,7 @@ program: TRANSFORMEDDATABLOCK LBRACE PLUS WHILE
 ## PLUS
 ##
 
-@{<light_red>Ill-formed expression.@} Expect an expression after @{<green>"+"@}.
+@{<light_red>Ill-formed expression.@} Expected an expression after @{<green>"+"@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE PRINT LPAREN IDENTIFIER RPAREN WHILE
 ##
@@ -2024,7 +2024,7 @@ program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK COLON IDENTIFIER TILDE
 ## In state 127, spurious reduction of production expression -> common_expression
 ##
 
-@{<light_red>Ill-formed phrase.@} Found @{<green>":"@} @{<i>expression@}. We expect either an infix or postfix operator, or @{<green>","@} or @{<green>"["@} or @{<green>"]"@} next.
+@{<light_red>Ill-formed phrase.@} Found @{<green>":"@} @{<i>expression@}. Expected either an infix or postfix operator, or @{<green>","@} or @{<green>"["@} or @{<green>"]"@} next.
 
 program: TRANSFORMEDDATABLOCK LBRACE MINUS IDENTIFIER TRANSPOSE WHILE
 ## Concrete syntax: transformed data { - foo ' while
@@ -2061,7 +2061,7 @@ program: TRANSFORMEDDATABLOCK LBRACE PLUS IDENTIFIER TRANSPOSE WHILE
 ## PLUS expression
 ##
 
-@{<light_red>Ill-formed expression.@} Found an expression. Expect an infix or postfix operator or @{<green>"["@}
+@{<light_red>Ill-formed expression.@} Found an expression. Expected an infix or postfix operator or @{<green>"["@}
 
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK COLON WHILE
 ##
@@ -2145,7 +2145,7 @@ program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE IDENTIFIER LPAREN RPAREN 
 ## TRUNCATE LBRACK
 ##
 
-@{<light_red>Ill-formed truncation.@} Expect the format @{<green>"T["@} @{<i>optional expression@} @{<green>","@} @{<i>optional expression@} @{<green>"];"@}.
+@{<light_red>Ill-formed truncation.@} Expected @{<green>"T["@} @{<i>optional expression@} @{<green>","@} @{<i>optional expression@} @{<green>"];"@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE IDENTIFIER LPAREN RPAREN WHILE
 ##
@@ -2159,7 +2159,7 @@ program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE IDENTIFIER LPAREN RPAREN 
 ## expression TILDE identifier LPAREN loption(separated_nonempty_list(COMMA,expression)) RPAREN
 ##
 
-@{<light_red>Ill-formed @{<green>"~"@}-statement@}. Expect either @{<green>";"@} or a truncation with the format @{<green>"T["@} @{<i>optional expression@} @{<green>","@} @{<i>optional expression@} @{<green>"];"@}.
+@{<light_red>Ill-formed @{<green>"~"@}-statement@}. Expected either @{<green>";"@} or a truncation with the format @{<green>"T["@} @{<i>optional expression@} @{<green>","@} @{<i>optional expression@} @{<green>"];"@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE IDENTIFIER LPAREN WHILE
 ## Concrete syntax: transformed data { 3.1415 ~ foo ( while
@@ -2184,7 +2184,7 @@ program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE IDENTIFIER LPAREN IDENTIF
 ## In state 114, spurious reduction of production loption(separated_nonempty_list(COMMA,expression)) -> separated_nonempty_list(COMMA,expression)
 ##
 
-@{<light_red>Ill-formed @{<green>"~"@}-statement.@} Expect a comma separated list of expressions for arguments to the distribution, followed by @{<green>")"@}.
+@{<light_red>Ill-formed @{<green>"~"@}-statement.@} Expected a comma separated list of expressions for arguments to the distribution, followed by @{<green>")"@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE IDENTIFIER WHILE
 ##
@@ -2198,7 +2198,7 @@ program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE IDENTIFIER WHILE
 ## expression TILDE identifier
 ##
 
-@{<light_red>Ill-formed @{<green>"~"@}-statement.@} Expect @{<green>"("@} after distribution name, followed by a comma separated list of expressions for arguments to the distribution, followed by @{<green>")"@}.
+@{<light_red>Ill-formed @{<green>"~"@}-statement.@} Expected @{<green>"("@} after distribution name, followed by a comma separated list of expressions for arguments to the distribution, followed by @{<green>")"@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE WHILE
 ##
@@ -2212,7 +2212,7 @@ program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE WHILE
 ## expression TILDE
 ##
 
-@{<light_red>Ill-formed @{<green>"~"@}-statement.@} Expect an distribution name after @{<green>"~"@}.
+@{<light_red>Ill-formed @{<green>"~"@}-statement.@} Expected an distribution name after @{<green>"~"@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN IDENTIFIER COMMA WHILE
 ## Concrete syntax: transformed data { reject ( foo , while
@@ -2229,7 +2229,7 @@ program: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN IDENTIFIER COMMA STRINGLITERA
 ## printables COMMA printables
 ##
 
-@{<light_red>Ill-formed printable.@} We expect a comma separated list of either expressions or strings, followed by @{<green>");"@}.
+@{<light_red>Ill-formed printable.@} Expected a comma separated list of either expressions or strings, followed by @{<green>");"@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE REJECT WHILE
 ## Concrete syntax: transformed data { reject while
@@ -2251,7 +2251,7 @@ program: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN WHILE
 ## REJECT LPAREN
 ##
 
-@{<light_red>Ill-formed reject statement.@} After @{<green>"reject("@}, we expect a comma separated list of either expressions or strings, followed by @{<green>");"@}.
+@{<light_red>Ill-formed reject statement.@} After @{<green>"reject("@}, expected a comma separated list of either expressions or strings, followed by @{<green>");"@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE RETURN LBRACE WHILE
 ##
@@ -2297,7 +2297,7 @@ program: TRANSFORMEDDATABLOCK LBRACE RETURN IDENTIFIER LPAREN IDENTIFIER COMMA I
 ## In state 114, spurious reduction of production loption(separated_nonempty_list(COMMA,expression)) -> separated_nonempty_list(COMMA,expression)
 ##
 
-@{<light_red>Ill-formed function application.@} Expect comma-separated list of expressions followed by @{<green>")"@} after @{<green>"("@}.
+@{<light_red>Ill-formed function application.@} Expected comma-separated list of expressions followed by @{<green>")"@} after @{<green>"("@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE RETURN WHILE
 ## Concrete syntax: transformed data { return while
@@ -2357,7 +2357,7 @@ program: TRANSFORMEDDATABLOCK LBRACE RETURN TARGET WHILE
 ## TARGET
 ##
 
-@{<light_red>Ill formed expression.@} After @{<green>"target"@}, we expect @{<green>"()"@}.
+@{<light_red>Ill formed expression.@} Expected @{<green>"()"@} after @{<green>"target"@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE TARGET PLUSASSIGN WHILE
 ## Concrete syntax: transformed data { target += while
@@ -2416,7 +2416,7 @@ program: TRANSFORMEDDATABLOCK LBRACE TARGET WHILE
 ## TARGET
 ##
 
-@{<light_red>Ill-formed phrase.@} Expect either @{<green>"+="@} @{<i>expression@} or @{<green>"()"@} after @{<green>"target"@}.
+@{<light_red>Ill-formed phrase.@} Expected either @{<green>"+="@} @{<i>expression@} or @{<green>"()"@} after @{<green>"target"@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LPAREN REALNUMERAL BAR WHILE
 ## Concrete syntax: transformed data { foo ( 3.1415 | while
@@ -2441,7 +2441,7 @@ program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LPAREN REALNUMERAL BAR IDENTIFIE
 ## In state 114, spurious reduction of production loption(separated_nonempty_list(COMMA,expression)) -> separated_nonempty_list(COMMA,expression)
 ##
 
-@{<light_red>Ill-formed conditional distribution evaluation.@} Expect comma-separated list of expressions followed by @{<green>")"@} after @{<green>"|"@}.
+@{<light_red>Ill-formed conditional distribution evaluation.@} Expected comma-separated list of expressions followed by @{<green>")"@} after @{<green>"|"@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LPAREN RPAREN WHILE
 ##
@@ -2500,7 +2500,7 @@ program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER RBRACE
 ## In state 356, spurious reduction of production expression -> common_expression
 ##
 
-@{<light_red>Ill-formed phrase.@} Found an expression where we expected a statement. Did you forget a @{<green>";"@}?
+@{<light_red>Ill-formed phrase.@} Found an expression where a statement was expected. Did you forget a @{<green>";"@}?
 
 program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER PLUSASSIGN IDENTIFIER TILDE
 ## Concrete syntax: transformed data { foo += foo ~
@@ -2645,7 +2645,7 @@ program: TRANSFORMEDDATABLOCK LBRACE VECTOR LBRACK INTNUMERAL RBRACK HAT
 ## top_var_type
 ##
 
-Ill-formed top-level variable declaration. Expect an identifier next.
+@{<light_red>Ill-formed top-level variable declaration.@} Expected an identifier next.
 
 program: TRANSFORMEDDATABLOCK LBRACE VOID
 ##
@@ -2659,7 +2659,7 @@ program: TRANSFORMEDDATABLOCK LBRACE VOID
 ## TRANSFORMEDDATABLOCK LBRACE
 ##
 
-Expect a statement or top-level variable declaration.
+Expected a statement or top-level variable declaration.
 
 program: TRANSFORMEDDATABLOCK LBRACE WHILE LPAREN IDENTIFIER RPAREN VOID
 ##
@@ -2673,7 +2673,7 @@ program: TRANSFORMEDDATABLOCK LBRACE WHILE LPAREN IDENTIFIER RPAREN VOID
 ## WHILE LPAREN expression RPAREN
 ##
 
-@{<light_red>Ill-formed statement.@} We expect a statement after @{<green>")"@}, for the body of the while-loop.
+@{<light_red>Ill-formed statement.@} Expected a statement after @{<green>")"@} for the body of the while-loop.
 
 program: TRANSFORMEDDATABLOCK LBRACE WHILE LPAREN IDENTIFIER TILDE
 ## Concrete syntax: transformed data { while ( foo ~
@@ -2689,7 +2689,7 @@ program: TRANSFORMEDDATABLOCK LBRACE WHILE LPAREN WHILE
 ## WHILE LPAREN
 ##
 
-@{<light_red>Ill-formed expression.@} We expect an expression after @{<green>"("@} for the test of a while-loop.
+@{<light_red>Ill-formed expression.@} Expected an expression after @{<green>"("@} for the test of a while-loop.
 
 program: TRANSFORMEDDATABLOCK LBRACE WHILE WHILE
 ##
@@ -2703,7 +2703,7 @@ program: TRANSFORMEDDATABLOCK LBRACE WHILE WHILE
 ## WHILE
 ##
 
-After @{<green>"while"@}, we expect @{<green>"("@} @{<i>expression@} @{<green>")"@} @{<i>statement@}.
+@{<light_red>Ill-formed statement.@} Expected @{<green>"("@} @{<i>expression@} @{<green>")"@} @{<i>statement@} after @{<green>"while"@}.
 
 program: TRANSFORMEDDATABLOCK WHILE
 ##
@@ -3240,7 +3240,7 @@ program: TRANSFORMEDDATABLOCK LBRACE FATAL_ERROR WHILE
 ## FATAL_ERROR
 ##
 
-@{<light_red>Ill-formed fatal error statement.@} After @{<green>"fatal_error("@}, we expect a comma separated list of either expressions or strings, followed by @{<green>");"@}.
+@{<light_red>Ill-formed fatal error statement.@} After @{<green>"fatal_error("@}, expected a comma separated list of either expressions or strings, followed by @{<green>");"@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE COMPLEX JACOBIAN LBRACK JACOBIAN RPAREN
 ## Concrete syntax: transformed data { complex jacobian [ jacobian )
