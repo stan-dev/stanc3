@@ -29,7 +29,31 @@ program: WHILE
 ##
 ##
 
-Expected @{<green>"functions {"@} or @{<green>"data {"@} or @{<green>"transformed data {"@} or @{<green>"parameters {"@} or @{<green>"transformed parameters {"@} or @{<green>"model {"@} or @{<green>"generated quantities {"@}.
+@{<light_red>Ill-formed program.@} Expected @{<green>"functions {"@}, @{<green>"transformed data {"@}, @{<green>"parameters {"@},
+@{<green>"transformed parameters {"@}, @{<green>"model {"@}, or @{<green>"generated quantities {"@}.
+
+functions_only: WHILE
+## Concrete syntax: while
+functions_only: VOID IDENTIFIER LPAREN RPAREN SEMICOLON RBRACE
+##
+## Concrete syntax: void foo ( ) ; }
+##
+## Ends in an error in state: 402.
+##
+## functions_only -> list(function_def) . EOF [ # ]
+##
+## The known suffix of the stack is as follows:
+## list(function_def)
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 405, spurious reduction of production list(function_def) ->
+## In state 406, spurious reduction of production list(function_def) -> function_def list(function_def)
+##
+
+@{<light_red>Ill-formed program.@} Only function definitions/declarations are expected in @{<light_blue>'.stanfunctions'@} files.
 
 program: FUNCTIONBLOCK LBRACE RBRACE COVMATRIX
 ##
@@ -43,7 +67,8 @@ program: FUNCTIONBLOCK LBRACE RBRACE COVMATRIX
 ## option(function_block)
 ##
 
-Expected @{<green>"data {"@} or @{<green>"transformed data {"@} or @{<green>"parameters {"@} or @{<green>"transformed parameters {"@} or @{<green>"model {"@} or @{<green>"generated quantities {"@}.
+@{<light_red>Ill-formed program.@} Expected @{<green>"data {"@}, @{<green>"transformed data {"@}, @{<green>"parameters {"@},
+@{<green>"transformed parameters {"@}, @{<green>"model {"@}, @{<green>"generated quantities {"@}, or end-of-file.
 
 program: DATABLOCK LBRACE RBRACE WHILE
 ##
@@ -57,7 +82,8 @@ program: DATABLOCK LBRACE RBRACE WHILE
 ## option(function_block) option(data_block)
 ##
 
-Expected @{<green>"transformed data {"@} or @{<green>"parameters {"@} or @{<green>"transformed parameters {"@} or @{<green>"model {"@} or @{<green>"generated quantities {"@}.
+@{<light_red>Ill-formed program.@} Expected @{<green>"transformed data {"@}, @{<green>"parameters {"@},
+@{<green>"transformed parameters {"@}, @{<green>"model {"@}, @{<green>"generated quantities {"@}, or end-of-file.
 
 program: TRANSFORMEDDATABLOCK LBRACE RBRACE ELTTIMESASSIGN
 ##
@@ -71,7 +97,8 @@ program: TRANSFORMEDDATABLOCK LBRACE RBRACE ELTTIMESASSIGN
 ## option(function_block) option(data_block) option(transformed_data_block)
 ##
 
-Expected @{<green>"parameters {"@}, @{<green>"transformed parameters {"@}, @{<green>"model {"@}, @{<green>"generated quantities {"@} or end-of-file after end of transformed data block.
+@{<light_red>Ill-formed program.@} Expected @{<green>"parameters {"@}, @{<green>"transformed parameters {"@},
+@{<green>"model {"@}, @{<green>"generated quantities {"@}, or end-of-file.
 
 program: PARAMETERSBLOCK LBRACE RBRACE ELTTIMESASSIGN
 ##
@@ -85,7 +112,7 @@ program: PARAMETERSBLOCK LBRACE RBRACE ELTTIMESASSIGN
 ## option(function_block) option(data_block) option(transformed_data_block) option(parameters_block)
 ##
 
-@{<green>"transformed parameters {"@}, @{<green>"model {"@} or @{<green>"generated quantities {"@} expected after end of parameters block.
+@{<light_red>Ill-formed program.@} @{<green>"transformed parameters {"@}, @{<green>"model {"@} or @{<green>"generated quantities {"@} expected after end of parameters block.
 
 program: TRANSFORMEDPARAMETERSBLOCK LBRACE RBRACE ELTTIMESASSIGN
 ##
@@ -99,7 +126,7 @@ program: TRANSFORMEDPARAMETERSBLOCK LBRACE RBRACE ELTTIMESASSIGN
 ## option(function_block) option(data_block) option(transformed_data_block) option(parameters_block) option(transformed_parameters_block)
 ##
 
-@{<green>"model {"@} or @{<green>"generated quantities {"@} expected after end of transformed parameters block.
+@{<light_red>Ill-formed program.@} @{<green>"model {"@} or @{<green>"generated quantities {"@} expected after end of transformed parameters block.
 
 program: MODELBLOCK LBRACE RBRACE ELTTIMESASSIGN
 ##
@@ -113,7 +140,7 @@ program: MODELBLOCK LBRACE RBRACE ELTTIMESASSIGN
 ## option(function_block) option(data_block) option(transformed_data_block) option(parameters_block) option(transformed_parameters_block) option(model_block)
 ##
 
-Expected @{<green>"generated quantities {"@} or end of file after end of model block.
+@{<light_red>Ill-formed program.@} Expected @{<green>"generated quantities {"@} or end of file after end of model block.
 
 program: GENERATEDQUANTITIESBLOCK LBRACE RBRACE ELTTIMESASSIGN
 ##
@@ -127,7 +154,7 @@ program: GENERATEDQUANTITIESBLOCK LBRACE RBRACE ELTTIMESASSIGN
 ## option(function_block) option(data_block) option(transformed_data_block) option(parameters_block) option(transformed_parameters_block) option(model_block) option(generated_quantities_block)
 ##
 
-Expected end of file after end of generated quantities block.
+@{<light_red>Ill-formed program.@} Expected end of file after end of generated quantities block.
 
 program: DATABLOCK LBRACE CHOLESKYFACTORCORR LBRACK IDENTIFIER TILDE
 ## Concrete syntax: data { cholesky_factor_corr [ foo ~
@@ -145,7 +172,7 @@ program: DATABLOCK LBRACE CHOLESKYFACTORCORR WHILE
 ## CHOLESKYFACTORCORR
 ##
 
-Expected @{<green>"["@} @{<i>expression@} @{<green>"]"@} for size of cholesky_factor_corr.
+@{<light_red>Ill-formed type.@} Expected @{<green>"["@} @{<i>expression@} @{<green>"]"@} for size of cholesky_factor_corr.
 
 program: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK IDENTIFIER COMMA IDENTIFIER TILDE
 ## Concrete syntax: data { cholesky_factor_cov [ foo , foo ~
@@ -167,7 +194,7 @@ program: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK WHILE
 ## CHOLESKYFACTORCOV LBRACK
 ##
 
-Expected @{<green>"["@} @{<i>expression@} @{<green>"]"@} or @{<green>"["@} @{<i>expression@} @{<green>","@} @{<i>expression@} @{<green>"]"@} for size of cholesky_factor_cov.
+@{<light_red>Ill-formed type.@} Expected @{<green>"["@} @{<i>expression@} @{<green>"]"@} or @{<green>"["@} @{<i>expression@} @{<green>","@} @{<i>expression@} @{<green>"]"@} for size of cholesky_factor_cov.
 
 program: DATABLOCK LBRACE CORRMATRIX LBRACK IDENTIFIER TILDE
 ## Concrete syntax: data { corr_matrix [ foo ~
@@ -185,7 +212,7 @@ program: DATABLOCK LBRACE CORRMATRIX WHILE
 ## CORRMATRIX
 ##
 
-Expected @{<green>"["@} @{<i>expression@} @{<green>"]"@} for size of corr_matrix.
+@{<light_red>Ill-formed type.@} Expected @{<green>"["@} @{<i>expression@} @{<green>"]"@} for size of corr_matrix.
 
 program: DATABLOCK LBRACE COVMATRIX LBRACK IDENTIFIER TILDE
 ## Concrete syntax: data { cov_matrix [ foo ~
@@ -203,7 +230,7 @@ program: DATABLOCK LBRACE COVMATRIX WHILE
 ## COVMATRIX
 ##
 
-Expected @{<green>"["@} @{<i>expression@} @{<green>"]"@} for size of cov_matrix.
+@{<light_red>Ill-formed type.@} Expected @{<green>"["@} @{<i>expression@} @{<green>"]"@} for size of cov_matrix.
 
 program: DATABLOCK LBRACE STOCHASTICROWMATRIX WHILE
 ## Concrete syntax: data { row_stochastic_matrix while
@@ -253,7 +280,7 @@ program: DATABLOCK LBRACE STOCHASTICROWMATRIX LBRACK IDENTIFIER COMMA IDENTIFIER
 ## In state 127, spurious reduction of production expression -> common_expression
 ##
 
-Expected @{<green>"["@} @{<i>expression@} @{<green>","@} @{<i>expression@} @{<green>"]"@} for size of row_stochastic_matrix.
+@{<light_red>Ill-formed type.@} Expected @{<green>"["@} @{<i>expression@} @{<green>","@} @{<i>expression@} @{<green>"]"@} for size of row_stochastic_matrix.
 
 program: DATABLOCK LBRACE STOCHASTICCOLUMNMATRIX WHILE
 ## Concrete syntax: data { column_stochastic_matrix while
@@ -303,7 +330,7 @@ program: DATABLOCK LBRACE STOCHASTICCOLUMNMATRIX LBRACK IDENTIFIER COMMA IDENTIF
 ## In state 127, spurious reduction of production expression -> common_expression
 ##
 
-Expected @{<green>"["@} @{<i>expression@} @{<green>","@} @{<i>expression@} @{<green>"]"@} for size of column_stochastic_matrix.
+@{<light_red>Ill-formed type.@} Expected @{<green>"["@} @{<i>expression@} @{<green>","@} @{<i>expression@} @{<green>"]"@} for size of column_stochastic_matrix.
 
 program: DATABLOCK LBRACE SUMTOZEROVEC LBRACK IDENTIFIER TILDE
 ## Concrete syntax: data { sum_to_zero_vector [ foo ~
@@ -321,7 +348,7 @@ program: DATABLOCK LBRACE SUMTOZEROVEC WHILE
 ## SUMTOZEROVEC
 ##
 
-Expected @{<green>"["@} @{<i>expression@} @{<green>"]"@} for size of sum_to_zero_vector.
+@{<light_red>Ill-formed type.@} Expected @{<green>"["@} @{<i>expression@} @{<green>"]"@} for size of sum_to_zero_vector.
 
 program: DATABLOCK LBRACE SUMTOZEROMAT LBRACK WHILE
 ## Concrete syntax: data { sum_to_zero_matrix [ while
@@ -343,7 +370,7 @@ program: DATABLOCK LBRACE SUMTOZEROMAT LBRACK IDENTIFIER COMMA WHILE
 ## SUMTOZEROMAT LBRACK expression COMMA
 ##
 
-Expected @{<green>"["@} @{<i>expression@} @{<green>","@} @{<i>expression@} @{<green>"]"@} for size of sum_to_zero_matrix.
+@{<light_red>Ill-formed type.@} Expected @{<green>"["@} @{<i>expression@} @{<green>","@} @{<i>expression@} @{<green>"]"@} for size of sum_to_zero_matrix.
 
 program: DATABLOCK LBRACE INT LABRACK WHILE
 ##
@@ -357,21 +384,7 @@ program: DATABLOCK LBRACE INT LABRACK WHILE
 ## LABRACK
 ##
 
-Expected @{<green>"lower = "@} @{<i>expression@} or @{<green>"upper = "@} @{<i>expression@} for integer bounds.
-
-program: DATABLOCK LBRACE INT LBRACE
-##
-## Concrete syntax: data { int {
-##
-## Ends in an error in state: 539.
-##
-## top_var_type -> INT . range_constraint [ WHILE VOID VECTOR UPPER UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER JACOBIAN INT IN IF IDENTIFIER FUNCTIONBLOCK FOR FATAL_ERROR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
-##
-## The known suffix of the stack is as follows:
-## INT
-##
-
-Expected range constraint or identifier as part of top-level variable declaration.
+@{<light_red>Ill-formed type.@} Expected @{<green>"lower = "@} @{<i>expression@} or @{<green>"upper = "@} @{<i>expression@} for integer bounds.
 
 program: DATABLOCK LBRACE ORDERED LBRACK IDENTIFIER TILDE
 ## Concrete syntax: data { ordered [ foo ~
@@ -389,7 +402,7 @@ program: DATABLOCK LBRACE ORDERED WHILE
 ## ORDERED
 ##
 
-Expected @{<green>"["@} @{<i>expression@} @{<green>"]"@} for size of ordered.
+@{<light_red>Ill-formed type.@} Expected @{<green>"["@} @{<i>expression@} @{<green>"]"@} for size of ordered.
 
 program: DATABLOCK LBRACE POSITIVEORDERED LBRACK IDENTIFIER TILDE
 ## Concrete syntax: data { positive_ordered [ foo ~
@@ -407,7 +420,7 @@ program: DATABLOCK LBRACE POSITIVEORDERED WHILE
 ## POSITIVEORDERED
 ##
 
-Expected @{<green>"["@} @{<i>expression@} @{<green>"]"@} for size of positive_ordered.
+@{<light_red>Ill-formed type.@} Expected @{<green>"["@} @{<i>expression@} @{<green>"]"@} for size of positive_ordered.
 
 program: DATABLOCK LBRACE REAL IDENTIFIER SEMICOLON WHILE
 ##
@@ -421,35 +434,23 @@ program: DATABLOCK LBRACE REAL IDENTIFIER SEMICOLON WHILE
 ## top_var_decl_no_assign
 ##
 
-Only top-level variable declarations allowed in data and parameters blocks.
+@{<light_red>Ill-formed statement.@} Only top-level variable declarations are allowed in the @{<green>"data"@} and @{<green>"parameters"@} blocks.
 
 program: DATABLOCK LBRACE REAL LBRACE
-##
 ## Concrete syntax: data { real {
+program: DATABLOCK LBRACE INT LBRACE
 ##
-## Ends in an error in state: 522.
+## Concrete syntax: data { int {
 ##
-## top_var_type -> REAL . type_constraint [ WHILE VOID VECTOR UPPER UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER JACOBIAN INT IN IF IDENTIFIER FUNCTIONBLOCK FOR FATAL_ERROR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
+## Ends in an error in state: 539.
 ##
-## The known suffix of the stack is as follows:
-## REAL
-##
-
-Identifier expected after type in top-level variable declaration.
-
-program: DATABLOCK LBRACE ROWVECTOR LABRACK MULTIPLIER ASSIGN IDENTIFIER RABRACK WHILE
-##
-## Concrete syntax: data { row_vector < multiplier = foo > while
-##
-## Ends in an error in state: 518.
-##
-## top_var_type -> ROWVECTOR type_constraint . LBRACK expression RBRACK [ WHILE VOID VECTOR UPPER UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER JACOBIAN INT IN IF IDENTIFIER FUNCTIONBLOCK FOR FATAL_ERROR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
+## top_var_type -> INT . range_constraint [ WHILE VOID VECTOR UPPER UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER JACOBIAN INT IN IF IDENTIFIER FUNCTIONBLOCK FOR FATAL_ERROR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
 ##
 ## The known suffix of the stack is as follows:
-## ROWVECTOR type_constraint
+## INT
 ##
 
-Expected identifier as part of top-level variable declaration.
+@{<light_red>Ill-formed declaration.@} Expected @{<green>"<"@} @{<i>constraint@} @{<green>">"@} or identifier next as part of top-level variable declaration.
 
 program: DATABLOCK LBRACE SIMPLEX LBRACK IDENTIFIER TILDE
 ## Concrete syntax: data { simplex [ foo ~
@@ -467,7 +468,7 @@ program: DATABLOCK LBRACE SIMPLEX WHILE
 ## SIMPLEX
 ##
 
-Expected @{<green>"["@} @{<i>expression@} @{<green>"]"@} for size of simplex.
+@{<light_red>Ill-formed type.@} Expected @{<green>"["@} @{<i>expression@} @{<green>"]"@} for size of simplex.
 
 program: DATABLOCK LBRACE UNITVECTOR LBRACK IDENTIFIER TILDE
 ## Concrete syntax: data { unit_vector [ foo ~
@@ -485,7 +486,7 @@ program: DATABLOCK LBRACE UNITVECTOR WHILE
 ## UNITVECTOR
 ##
 
-Expected @{<green>"["@} @{<i>expression@} @{<green>"]"@} for size of unit_vector.
+@{<light_red>Ill-formed type.@} Expected @{<green>"["@} @{<i>expression@} @{<green>"]"@} for size of unit_vector.
 
 program: DATABLOCK LBRACE VECTOR LABRACK OFFSET ASSIGN IDENTIFIER COMMA MULTIPLIER ASSIGN IDENTIFIER COMMA
 ##
@@ -518,7 +519,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK OFFSET ASSIGN IDENTIFIER COMMA MULTIPLI
 ## In state 429, spurious reduction of production constr_expression -> common_expression
 ##
 
-Expected @{<green>">"@} after @{<green>"multiplier = "@} @{<i>expression@}.
+@{<light_red>Ill-formed constraint.@} Expected @{<green>">"@} after @{<green>"multiplier = "@} @{<i>expression@}.
 
 program: DATABLOCK LBRACE VECTOR LABRACK OFFSET ASSIGN IDENTIFIER COMMA MULTIPLIER WHILE
 ## Concrete syntax: data { vector < offset = foo , multiplier while
@@ -534,7 +535,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK OFFSET ASSIGN IDENTIFIER COMMA MULTIPLI
 ## OFFSET ASSIGN constr_expression COMMA MULTIPLIER ASSIGN
 ##
 
-Expected @{<green>"multiplier = "@} @{<i>expression@} (not containing binary logical operators).
+@{<light_red>Ill-formed constraint.@} Expected @{<green>"multiplier = "@} @{<i>expression@} (not containing binary logical operators).
 
 program: DATABLOCK LBRACE ROWVECTOR LABRACK OFFSET ASSIGN IDENTIFIER TRANSPOSE WHILE
 ## Concrete syntax: data { row_vector < offset = foo ' while
@@ -550,7 +551,8 @@ program: DATABLOCK LBRACE VECTOR LABRACK OFFSET ASSIGN IDENTIFIER COMMA WHILE
 ## OFFSET ASSIGN constr_expression COMMA
 ##
 
-Expected @{<green>">"@} or @{<green>", multiplier = "@} @{<i>expression@} (not containing binary logical operators) @{<green>">"@} after @{<green>"offset = "@} @{<i>expression@}.
+@{<light_red>Ill-formed constraint.@} Expected @{<green>">"@} or @{<green>", multiplier = "@} @{<i>expression@}
+(not containing binary logical operators) @{<green>">"@} after @{<green>"offset = "@} @{<i>expression@}.
 
 program: DATABLOCK LBRACE VECTOR LABRACK OFFSET ASSIGN WHILE
 ## Concrete syntax: data { vector < offset = while
@@ -567,7 +569,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK OFFSET WHILE
 ## OFFSET
 ##
 
-Expected @{<green>"offset = "@} @{<i>expression@} (not containing binary logical operators).
+@{<light_red>Ill-formed constraint.@} Expected @{<green>"offset = "@} @{<i>expression@} (not containing binary logical operators).
 
 program: DATABLOCK LBRACE ROWVECTOR LABRACK UPPER ASSIGN IDENTIFIER DIVIDE IDENTIFIER TRANSPOSE WHILE
 ## Concrete syntax: data { row_vector < upper = foo / foo ' while
@@ -628,7 +630,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN IDENTIFIER COMMA UPPER ASS
 ## In state 429, spurious reduction of production constr_expression -> common_expression
 ##
 
-Expected @{<green>">"@} after @{<green>"upper = "@} @{<i>expression@}.
+@{<light_red>Ill-formed constraint.@} Expected @{<green>">"@} after @{<green>"upper = "@} @{<i>expression@}.
 
 program: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN IDENTIFIER COMMA UPPER WHILE
 ##
@@ -642,7 +644,8 @@ program: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN IDENTIFIER COMMA UPPER WHI
 ## LOWER ASSIGN constr_expression COMMA UPPER
 ##
 
-Expected @{<green>"="@} @{<i>expression@} (not containing binary logical operators) after @{<green>"upper"@}.
+@{<light_red>Ill-formed constraint.@} Expected @{<green>"="@} @{<i>expression@}
+(not containing binary logical operators) after @{<green>"upper"@}.
 
 program: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN IDENTIFIER COMMA WHILE
 ##
@@ -656,7 +659,8 @@ program: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN IDENTIFIER COMMA WHILE
 ## LOWER ASSIGN constr_expression COMMA
 ##
 
-@{<green>"upper ="@} @{<i>expression@} (not containing binary logical operators) @{<green>">"@} expected after @{<green>"<lower ="@} @{<i>expression@} @{<green>","@} in top-level variable declaration.
+@{<light_red>Ill-formed constraint.@} @{<green>"upper ="@} @{<i>expression@} (not containing binary logical operators) @{<green>">"@} expected
+after @{<green>"<lower ="@} @{<i>expression@} @{<green>","@} in top-level variable declaration.
 
 program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER COMMA WHILE
 ##
@@ -670,7 +674,8 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER COMMA WHILE
 ## UPPER ASSIGN constr_expression COMMA
 ##
 
-@{<green>"lower ="@} @{<i>expression@} (not containing binary logical operators) @{<green>">"@} expected after @{<green>"<upper ="@} @{<i>expression@} @{<green>","@} in top-level variable declaration.
+@{<light_red>Ill-formed constraint.@} @{<green>"lower ="@} @{<i>expression@} (not containing binary logical operators) @{<green>">"@} expected
+after @{<green>"<upper ="@} @{<i>expression@} @{<green>","@} in top-level variable declaration.
 
 program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER COMMA LOWER WHILE
 ##
@@ -684,7 +689,8 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER COMMA LOWER WHI
 ## UPPER ASSIGN constr_expression COMMA LOWER
 ##
 
-Expected @{<green>"="@} @{<i>expression@} (not containing binary logical operators) after @{<green>"lower"@}.
+@{<light_red>Ill-formed constraint.@} Expected @{<green>"="@} @{<i>expression@}
+(not containing binary logical operators) after @{<green>"lower"@}.
 
 program: DATABLOCK LBRACE ROWVECTOR LABRACK LOWER ASSIGN IDENTIFIER TRANSPOSE WHILE
 ## Concrete syntax: data { row_vector < lower = foo ' while
@@ -702,7 +708,8 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER COMMA LOWER ASS
 ## UPPER ASSIGN constr_expression COMMA LOWER ASSIGN
 ##
 
-@{<light_red>Ill-formed expression.@} Expression (not containing binary logical operators) expected after @{<green>"lower ="@}.
+@{<light_red>Ill-formed constraint.@} Expression (not containing binary logical operators)
+expected after @{<green>"lower ="@}.
 
 program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER COMMA LOWER ASSIGN IDENTIFIER COMMA
 ##
@@ -735,7 +742,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER COMMA LOWER ASS
 ## In state 429, spurious reduction of production constr_expression -> common_expression
 ##
 
-Expected @{<green>">"@} after @{<green>"lower = "@} @{<i>expression@}.
+@{<light_red>Ill-formed constraint.@} Expected @{<green>">"@} after @{<green>"lower = "@} @{<i>expression@}.
 
 program: DATABLOCK LBRACE ROWVECTOR LABRACK MULTIPLIER ASSIGN IDENTIFIER TRANSPOSE WHILE
 ## Concrete syntax: data { row_vector < multiplier = foo ' while
@@ -751,7 +758,8 @@ program: DATABLOCK LBRACE VECTOR LABRACK MULTIPLIER ASSIGN IDENTIFIER COMMA WHIL
 ## MULTIPLIER ASSIGN constr_expression COMMA
 ##
 
-Expected @{<green>">"@} or @{<green>", offset = "@} @{<i>expression@} (not containing binary logical operators) @{<green>">"@} after @{<green>"multiplier = "@} @{<i>expression@}.
+@{<light_red>Ill-formed constraint.@} Expected @{<green>">"@} or @{<green>", offset = "@} @{<i>expression@}
+(not containing binary logical operators) @{<green>">"@} after @{<green>"multiplier = "@} @{<i>expression@}.
 
 program: DATABLOCK LBRACE VECTOR LABRACK MULTIPLIER ASSIGN IDENTIFIER COMMA OFFSET WHILE
 ##
@@ -765,7 +773,8 @@ program: DATABLOCK LBRACE VECTOR LABRACK MULTIPLIER ASSIGN IDENTIFIER COMMA OFFS
 ## MULTIPLIER ASSIGN constr_expression COMMA OFFSET
 ##
 
-Expected @{<green>"="@} @{<i>expression@} (not containing binary logical operators), after @{<green>"offset"@}.
+@{<light_red>Ill-formed constraint.@} Expected @{<green>"="@} @{<i>expression@}
+(not containing binary logical operators) after @{<green>"offset"@}.
 
 program: DATABLOCK LBRACE VECTOR LABRACK MULTIPLIER ASSIGN IDENTIFIER COMMA OFFSET ASSIGN WHILE
 ##
@@ -779,7 +788,8 @@ program: DATABLOCK LBRACE VECTOR LABRACK MULTIPLIER ASSIGN IDENTIFIER COMMA OFFS
 ## MULTIPLIER ASSIGN constr_expression COMMA OFFSET ASSIGN
 ##
 
-Numerical expression expected after '=' in a multiplier expression.
+@{<light_red>Ill-formed constraint.@} Expected expression (not containing binary logical operators)
+after @{<green>"offset ="@}.
 
 program: DATABLOCK LBRACE VECTOR LABRACK MULTIPLIER ASSIGN IDENTIFIER COMMA OFFSET ASSIGN IDENTIFIER COMMA
 ##
@@ -812,7 +822,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK MULTIPLIER ASSIGN IDENTIFIER COMMA OFFS
 ## In state 429, spurious reduction of production constr_expression -> common_expression
 ##
 
-Expected @{<green>">"@} after @{<green>"offset = "@} @{<i>expression@}.
+@{<light_red>Ill-formed constraint.@} Expected @{<green>">"@} after @{<green>"offset = "@} @{<i>expression@}.
 
 program: DATABLOCK LBRACE VECTOR LABRACK LOWER WHILE
 ##
@@ -827,7 +837,8 @@ program: DATABLOCK LBRACE VECTOR LABRACK LOWER WHILE
 ## LOWER
 ##
 
-Expected @{<green>"="@} @{<i>expression@} (not containing binary logical operators), after @{<green>"lower"@}.
+@{<light_red>Ill-formed constraint.@} Expected @{<green>"="@} @{<i>expression@}
+(not containing binary logical operators) after @{<green>"lower"@}.
 
 program: DATABLOCK LBRACE VECTOR LABRACK MULTIPLIER ASSIGN WHILE
 ##
@@ -842,7 +853,8 @@ program: DATABLOCK LBRACE VECTOR LABRACK MULTIPLIER ASSIGN WHILE
 ## MULTIPLIER ASSIGN
 ##
 
-Expected expression (not containing binary logical operators) after @{<green>"multiplier ="@}.
+@{<light_red>Ill-formed constraint.@} Expected expression (not containing binary logical operators)
+after @{<green>"multiplier ="@}.
 
 program: DATABLOCK LBRACE VECTOR LABRACK MULTIPLIER WHILE
 ##
@@ -857,7 +869,8 @@ program: DATABLOCK LBRACE VECTOR LABRACK MULTIPLIER WHILE
 ## MULTIPLIER
 ##
 
-Expected @{<green>"="@} @{<i>expression@} (not containing binary logical operators) @{<green>">"@} after @{<green>"multiplier"@}.
+@{<light_red>Ill-formed constraint.@} Expected @{<green>"="@} @{<i>expression@}
+(not containing binary logical operators) @{<green>">"@} after @{<green>"multiplier"@}.
 
 program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN MINUS WHILE
 ## Concrete syntax: data { vector < upper = - while
@@ -895,7 +908,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER TIMES WHILE
 ## constr_expression TIMES
 ##
 
-@{<light_red>Ill-formed expression.@} Expected expression (not containing binary logical operators).
+@{<light_red>Ill-formed constraint.@} Expected expression (not containing binary logical operators).
 
 program: DATABLOCK LBRACE ROWVECTOR LABRACK UPPER ASSIGN BANG IDENTIFIER TRANSPOSE WHILE
 ## Concrete syntax: data { row_vector < upper = ! foo ' while
@@ -914,7 +927,8 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN WHILE
 ## UPPER ASSIGN
 ##
 
-@{<light_red>Ill-formed expression.@} Expression (not containing binary logical operators) expected after @{<green>"upper ="@}.
+@{<light_red>Ill-formed constraint.@} Expression (not containing binary logical operators)
+expected after @{<green>"upper ="@}.
 
 program: DATABLOCK LBRACE VECTOR LABRACK UPPER WHILE
 ##
@@ -929,7 +943,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER WHILE
 ## UPPER
 ##
 
-Expected @{<green>"="@} @{<i>expression@} @{<green>">"@} after seeing @{<green>"upper"@}.
+@{<light_red>Ill-formed constraint.@} Expected @{<green>"="@} @{<i>expression@} @{<green>">"@} after seeing @{<green>"upper"@}.
 
 program: DATABLOCK LBRACE VECTOR LABRACK WHILE
 ##
@@ -944,8 +958,14 @@ program: DATABLOCK LBRACE VECTOR LABRACK WHILE
 ## LABRACK
 ##
 
-Expected @{<green>"lower ="@}, @{<green>"upper ="@}, @{<green>"offset ="@} or @{<green>"multiplier ="@} followed by an expression after @{<green>"<"@}.
+@{<light_red>Ill-formed constraint.@} Expected @{<green>"lower ="@}, @{<green>"upper ="@}, @{<green>"offset ="@} or @{<green>"multiplier ="@} followed by an expression after @{<green>"<"@}.
 
+program: DATABLOCK LBRACE TUPLE LPAREN REAL COMMA COMPLEX RPAREN UNREACHABLE
+## Concrete syntax: data { tuple ( real , complex ) <<<<UNREACHABLE>>>
+program: DATABLOCK LBRACE ARRAY LBRACK IDENTIFIER RBRACK VECTOR LBRACK INTNUMERAL RBRACK AND
+## Concrete syntax: data { array [ foo ] vector [ 24 ] &&
+program: DATABLOCK LBRACE COMPLEX UNREACHABLE
+## Concrete syntax: data { complex <<<<UNREACHABLE>>>
 program: DATABLOCK LBRACE VECTOR LBRACK INTNUMERAL RBRACK HAT
 ##
 ## Concrete syntax: data { vector [ 24 ] ^
@@ -959,7 +979,76 @@ program: DATABLOCK LBRACE VECTOR LBRACK INTNUMERAL RBRACK HAT
 ## top_var_type
 ##
 
-Expected to see an identifier after a sized type.
+@{<light_red>Ill-formed declaration.@} Expected identifier after type in variable declaration.
+
+program: TRANSFORMEDDATABLOCK LBRACE TUPLE LPAREN REAL COMMA COMPLEX RPAREN UNREACHABLE
+## Concrete syntax: transformed data { tuple ( real , complex ) <<<<UNREACHABLE>>>
+program: MODELBLOCK LBRACE TUPLE LPAREN COMPLEX COMMA COMPLEX RPAREN UNREACHABLE
+## Concrete syntax: model { tuple ( complex , complex ) <<<<UNREACHABLE>>>
+program: TRANSFORMEDDATABLOCK LBRACE ARRAY LBRACK IDENTIFIER RBRACK VECTOR LBRACK IMAGNUMERAL RBRACK AND
+## Concrete syntax: transformed data { array [ foo ] vector [ 1i ] &&
+program: MODELBLOCK LBRACE ARRAY LBRACK IDENTIFIER RBRACK REAL UNREACHABLE
+## Concrete syntax: model { array [ foo ] real <<<<UNREACHABLE>>>
+program: TRANSFORMEDDATABLOCK LBRACE VECTOR LBRACK INTNUMERAL RBRACK HAT
+##
+## Concrete syntax: transformed data { vector [ 24 ] ^
+##
+## Ends in an error in state: 648.
+##
+## decl(top_var_type,expression) -> top_var_type . decl_identifier LBRACK separated_nonempty_list(COMMA,expression) RBRACK [ WHILE VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
+## decl(top_var_type,expression) -> top_var_type . id_and_optional_assignment(expression,decl_identifier) option(remaining_declarations(expression)) SEMICOLON [ WHILE VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
+##
+## The known suffix of the stack is as follows:
+## top_var_type
+##
+
+@{<light_red>Ill-formed declaration.@} Expected an identifier and optional assignment after type in variable declaration.
+
+program: DATABLOCK LBRACE ARRAY LBRACK IDENTIFIER RBRACK REAL WHILE ASSIGN UNREACHABLE WHILE
+## Concrete syntax: data { array [ foo ] real while = <<<<UNREACHABLE>>> while
+program: DATABLOCK LBRACE REAL WHILE COMMA WHILE ASSIGN UNREACHABLE WHILE
+## Concrete syntax: data { real while , while = <<<<UNREACHABLE>>> while
+program: DATABLOCK LBRACE TUPLE LPAREN COMPLEX COMMA COMPLEX RPAREN WHILE ASSIGN UNREACHABLE WHILE
+## Concrete syntax: data { tuple ( complex , complex ) while = <<<<UNREACHABLE>>> while
+program: DATABLOCK LBRACE REAL IDENTIFIER ASSIGN WHILE
+## Concrete syntax: data { real foo = while
+program: DATABLOCK LBRACE REAL IDENTIFIER ASSIGN UNREACHABLE WHILE
+##
+## Concrete syntax: data { real foo = <<<<UNREACHABLE>>> while
+##
+## Ends in an error in state: 624.
+##
+## decl(top_var_type,no_assign) -> top_var_type id_and_optional_assignment(no_assign,decl_identifier) . option(remaining_declarations(no_assign)) SEMICOLON [ VECTOR UNITVECTOR TUPLE SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR REAL RBRACE POSITIVEORDERED ORDERED MATRIX INT COVMATRIX CORRMATRIX COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR ARRAY ]
+##
+## The known suffix of the stack is as follows:
+## top_var_type id_and_optional_assignment(no_assign,decl_identifier)
+##
+
+@{<light_red>Ill-formed declaration.@} Cannot assign to variables in the @{<green>"data"@} or @{<green>"parameters"@} blocks.
+Expected @{<green>";"@} after variable declaration.
+
+program: DATABLOCK LBRACE REAL WHILE COMMA WHILE COMMA UNREACHABLE
+## Concrete syntax: data { real while , while , <<<<UNREACHABLE>>>
+program: MODELBLOCK LBRACE REAL IDENTIFIER COMMA INT WHILE
+## Concrete syntax: model { real foo , int while
+program: DATABLOCK LBRACE REAL IDENTIFIER COMMA INT WHILE
+## Concrete syntax: data { real foo , int while
+program: DATABLOCK LBRACE REAL IDENTIFIER COMMA UNREACHABLE
+## Concrete syntax: data { real foo , <<<<UNREACHABLE>>>
+program: MODELBLOCK LBRACE REAL IDENTIFIER COMMA UNREACHABLE
+##
+## Concrete syntax: model { real foo , <<<<UNREACHABLE>>>
+##
+## Ends in an error in state: 307.
+##
+## remaining_declarations(expression) -> COMMA . separated_nonempty_list(COMMA,id_and_optional_assignment(expression,decl_identifier_after_comma)) [ SEMICOLON ]
+##
+## The known suffix of the stack is as follows:
+## COMMA
+##
+
+@{<light_red>Ill-formed declaration.@} Expected a new identifier after comma in declaration.
+All variables declared must be of the same type, and any initializing assignment must follow the identifier before the next comma.
 
 program: DATABLOCK LBRACE IDENTIFIER
 ##
@@ -981,6 +1070,44 @@ program: DATABLOCK LBRACE IDENTIFIER
   tuple(@{<f>...@})
 optionally preceded by a @{<u>single@} array[@{<f>...@}]
 
+program: TRANSFORMEDDATABLOCK LBRACE COMPLEX JACOBIAN WHILE
+## Concrete syntax: transformed data { complex jacobian while
+program: TRANSFORMEDDATABLOCK LBRACE ARRAY LBRACK JACOBIAN RBRACK COMPLEX JACOBIAN WHILE
+## Concrete syntax: transformed data { array [ jacobian ] complex jacobian while
+program: MODELBLOCK LBRACE REAL IDENTIFIER COMMA IDENTIFIER COMMA UNREACHABLE
+## Concrete syntax: model { real foo , foo , <<<<UNREACHABLE>>>
+program: MODELBLOCK LBRACE REAL IDENTIFIER IDENTIFIER
+##
+## Concrete syntax: model { real foo foo
+##
+## Ends in an error in state: 329.
+##
+## decl(sized_basic_type,expression) -> sized_basic_type decl_identifier . LBRACK separated_nonempty_list(COMMA,expression) RBRACK [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
+## id_and_optional_assignment(expression,decl_identifier) -> decl_identifier . optional_assignment(expression) [ SEMICOLON COMMA ]
+##
+## The known suffix of the stack is as follows:
+## sized_basic_type decl_identifier
+##
+
+@{<light_red>Ill-formed declaration.@} @{<green>";"@} or plain assignment expected after variable declaration.
+
+program: DATABLOCK LBRACE ARRAY LBRACK JACOBIAN RBRACK COMPLEX JACOBIAN WHILE
+## Concrete syntax: data { array [ jacobian ] complex jacobian while
+program: DATABLOCK LBRACE REAL IDENTIFIER IDENTIFIER
+##
+## Concrete syntax: data { real foo foo
+##
+## Ends in an error in state: 627.
+##
+## decl(top_var_type,no_assign) -> top_var_type decl_identifier . LBRACK separated_nonempty_list(COMMA,expression) RBRACK [ VECTOR UNITVECTOR TUPLE SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR REAL RBRACE POSITIVEORDERED ORDERED MATRIX INT COVMATRIX CORRMATRIX COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR ARRAY ]
+## id_and_optional_assignment(no_assign,decl_identifier) -> decl_identifier . optional_assignment(no_assign) [ SEMICOLON COMMA ]
+##
+## The known suffix of the stack is as follows:
+## top_var_type decl_identifier
+##
+
+@{<light_red>Ill-formed declaration.@} @{<green>";"@} expected after variable declaration.
+
 program: DATABLOCK WHILE
 ##
 ## Concrete syntax: data while
@@ -993,10 +1120,10 @@ program: DATABLOCK WHILE
 ## DATABLOCK
 ##
 
-@{<green>"{"@} followed by a list of top-level variable declarations is expected after seeing @{<green>"data"@}.
+@{<light_red>Ill-formed block.@} @{<green>"{"@} followed by a list of top-level variable declarations is expected after seeing @{<green>"data"@}.
 
 program: FUNCTIONBLOCK LBRACE VOID WHILE LPAREN RPAREN SEMICOLON EOF
-## Concrete syntax: functions { void while ( ) ;
+## Concrete syntax: functions { void while ( ) ; <EOF>
 program: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN RPAREN SEMICOLON WHILE
 ##
 ## Concrete syntax: functions { void foo ( ) ; while
@@ -1009,12 +1136,25 @@ program: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN RPAREN SEMICOLON WHILE
 ## function_def
 ##
 
-A @{<green>"}"@} or a function definition/declaration is expected.
+@{<light_red>Ill-formed block.@} A @{<green>"}"@} or a function definition/declaration is expected.
 
 functions_only: COMPLEX JACOBIAN LPAREN COMPLEX RPAREN
 ## Concrete syntax: complex jacobian ( complex )
 functions_only: COMPLEX IDENTIFIER LPAREN COMPLEX UNREACHABLE
+##
 ## Concrete syntax: complex foo ( complex <<<<UNREACHABLE>>>
+##
+## Ends in an error in state: 27.
+##
+## unsized_type -> basic_type . unsized_dims [ WHILE VOID VECTOR UPPER UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER JACOBIAN INT IN IF IDENTIFIER FUNCTIONBLOCK FOR FATAL_ERROR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
+## unsized_type -> basic_type . [ WHILE VOID VECTOR UPPER UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER JACOBIAN INT IN IF IDENTIFIER FUNCTIONBLOCK FOR FATAL_ERROR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
+##
+## The known suffix of the stack is as follows:
+## basic_type
+##
+
+@{<light_red>Ill-formed function argument.@} An identifier is expected after the type as a function argument name.
+
 program: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN DATABLOCK WHILE
 ##
 ## Concrete syntax: functions { void foo ( data while
@@ -1027,7 +1167,7 @@ program: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN DATABLOCK WHILE
 ## option(DATABLOCK)
 ##
 
-An identifier is expected after the type as a function argument name.
+@{<light_red>Ill-formed function argument.@} A type is expected after @{<green>"data"@} specifier.
 
 program: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN RPAREN VOID
 ##
@@ -1041,7 +1181,7 @@ program: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN RPAREN VOID
 ## return_type decl_identifier LPAREN loption(separated_nonempty_list(COMMA,arg_decl)) RPAREN
 ##
 
-Either @{<green>"{"@} @{<i>statement@} @{<green>"}"@} is expected for a function definition or @{<green>";"@} for a function forward declaration.
+@{<light_red>Ill-formed function.@} Either @{<green>"{"@} @{<i>statement@} @{<green>"}"@} is expected for a function definition or @{<green>";"@} for a function forward declaration.
 
 program: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN WHILE
 ## Concrete syntax: functions { void foo ( while
@@ -1057,7 +1197,7 @@ program: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN VECTOR IDENTIFIER COMMA WHI
 ## arg_decl COMMA
 ##
 
-An argument declaration (unsized and unconstrained type followed by identifier) is expected.
+@{<light_red>Ill-formed function argument.@} An argument declaration (unsized and unconstrained type followed by identifier) is expected.
 
 program: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN VECTOR IDENTIFIER WHILE
 ##
@@ -1072,7 +1212,7 @@ program: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN VECTOR IDENTIFIER WHILE
 ## arg_decl
 ##
 
-@{<green>","@} or @{<green>")"@} expected after function argument declaration.
+@{<light_red>Ill-formed function argument.@} @{<green>","@} or @{<green>")"@} expected after function argument declaration.
 
 program: FUNCTIONBLOCK LBRACE VOID IDENTIFIER WHILE
 ##
@@ -1086,7 +1226,7 @@ program: FUNCTIONBLOCK LBRACE VOID IDENTIFIER WHILE
 ## return_type decl_identifier
 ##
 
-@{<green>"("@} expected after function name.
+@{<light_red>Ill-formed function.@} @{<green>"("@} expected after function name.
 
 program: FUNCTIONBLOCK LBRACE VOID LBRACK
 ##
@@ -1100,7 +1240,7 @@ program: FUNCTIONBLOCK LBRACE VOID LBRACK
 ## return_type
 ##
 
-An identifier is expected as a function name.
+@{<light_red>Ill-formed function.@} An identifier is expected as a function name.
 
 program: FUNCTIONBLOCK LBRACE WHILE
 ##
@@ -1114,7 +1254,7 @@ program: FUNCTIONBLOCK LBRACE WHILE
 ## FUNCTIONBLOCK LBRACE
 ##
 
-Function forward declaration, definition or @{<green>"}"@} expected after @{<green>"functions {"@}.
+@{<light_red>Ill-formed block.@} Function forward declaration, definition or @{<green>"}"@} expected after @{<green>"functions {"@}.
 
 program: FUNCTIONBLOCK WHILE
 ##
@@ -1128,7 +1268,7 @@ program: FUNCTIONBLOCK WHILE
 ## FUNCTIONBLOCK
 ##
 
-@{<green>"{"@} expected after @{<green>"functions"@}.
+@{<light_red>Ill-formed block.@} @{<green>"{"@} expected after @{<green>"functions"@}.
 
 program: GENERATEDQUANTITIESBLOCK LBRACE VOID
 ##
@@ -1142,7 +1282,7 @@ program: GENERATEDQUANTITIESBLOCK LBRACE VOID
 ## GENERATEDQUANTITIESBLOCK LBRACE
 ##
 
-Variable declaration or statement or @{<green>"}"@} expected in generated quantities block.
+@{<light_red>Ill-formed block.@} Variable declaration or statement or @{<green>"}"@} expected in generated quantities block.
 
 program: GENERATEDQUANTITIESBLOCK WHILE
 ##
@@ -1156,7 +1296,7 @@ program: GENERATEDQUANTITIESBLOCK WHILE
 ## GENERATEDQUANTITIESBLOCK
 ##
 
-Expected @{<green>"{"@} after @{<green>"generated quantities"@}.
+@{<light_red>Ill-formed block.@} Expected @{<green>"{"@} after @{<green>"generated quantities"@}.
 
 program: DATABLOCK LBRACE MATRIX LABRACK MULTIPLIER ASSIGN IDENTIFIER RABRACK WHILE
 ## Concrete syntax: data { matrix < multiplier = foo > while
@@ -1212,7 +1352,7 @@ program: MODELBLOCK LBRACE MATRIX WHILE
 ## MATRIX
 ##
 
-@{<green>"["@} @{<i>expression@} @{<green>","@} @{<i>expression@} @{<green>"]"@} expected for matrix sizes.
+@{<light_red>Ill-formed type.@} @{<green>"["@} @{<i>expression@} @{<green>","@} @{<i>expression@} @{<green>"]"@} expected for matrix sizes.
 
 program: MODELBLOCK LBRACE REAL IDENTIFIER ASSIGN IDENTIFIER TILDE
 ## Concrete syntax: model { real foo = foo ~
@@ -1228,7 +1368,7 @@ program: MODELBLOCK LBRACE REAL IDENTIFIER ASSIGN WHILE
 ## ASSIGN
 ##
 
-@{<light_red>Ill-formed expression.@} Expression followed by @{<green>";"@} expected after @{<green>"="@}.
+@{<light_red>Ill-formed statement.@} Expression followed by @{<green>";"@} expected after @{<green>"="@}.
 
 program: MODELBLOCK LBRACE REAL LBRACK
 ##
@@ -1243,12 +1383,14 @@ program: MODELBLOCK LBRACE REAL LBRACK
 ## sized_basic_type
 ##
 
-Identifier expected after sized type in local (or model block) variable declaration. (No transformations/constraints allowed.)
+@{<light_red>Ill-formed declaration.@} Identifier expected after sized type in local (or model block) variable declaration. (No transformations/constraints allowed.)
 
 program: DATABLOCK LBRACE ROWVECTOR LBRACK WHILE
 ## Concrete syntax: data { row_vector [ while
 program: DATABLOCK LBRACE ROWVECTOR WHILE
 ## Concrete syntax: data { row_vector while
+program: DATABLOCK LBRACE ROWVECTOR LABRACK MULTIPLIER ASSIGN IDENTIFIER RABRACK WHILE
+## Concrete syntax: data { row_vector < multiplier = foo > while
 program: DATABLOCK LBRACE COMPLEXROWVECTOR LABRACK OFFSET ASSIGN IDENTIFIER RABRACK WHILE
 ## Concrete syntax: data { complex_row_vector < offset = foo > while
 program: DATABLOCK LBRACE COMPLEXROWVECTOR LBRACK REALNUMERAL TILDE
@@ -1281,8 +1423,10 @@ program: MODELBLOCK LBRACE ROWVECTOR LBRACK WHILE
 ## ROWVECTOR LBRACK
 ##
 
-@{<green>"["@} @{<i>expression@} @{<green>"]"@} expected for row_vector size.
+@{<light_red>Ill-formed type.@} @{<green>"["@} @{<i>expression@} @{<green>"]"@} expected for row_vector size.
 
+program: TRANSFORMEDDATABLOCK LBRACE PROFILE LPAREN STRINGLITERAL RPAREN LBRACE VOID
+## Concrete syntax: transformed data { profile ( "hello world" ) { void
 program: MODELBLOCK LBRACE VOID
 ## Concrete syntax: model { void
 program: MODELBLOCK LBRACE SEMICOLON VOID
@@ -1297,7 +1441,7 @@ program: MODELBLOCK LBRACE SEMICOLON VOID
 ## vardecl_or_statement
 ##
 
-Variable declaration, statement or @{<green>"}"@} expected.
+@{<light_red>Ill-formed block.@} Variable declaration, statement or @{<green>"}"@} expected.
 
 program: DATABLOCK LBRACE COMPLEXVECTOR LABRACK OFFSET ASSIGN IDENTIFIER RABRACK WHILE
 ## Concrete syntax: data { complex_vector < offset = foo > while
@@ -1337,7 +1481,7 @@ program: MODELBLOCK LBRACE VECTOR WHILE
 ## VECTOR
 ##
 
-Expected @{<green>"["@} @{<i>expression@} @{<green>"]"@} for vector size.
+@{<light_red>Ill-formed type.@} Expected @{<green>"["@} @{<i>expression@} @{<green>"]"@} for vector size.
 
 program: MODELBLOCK WHILE
 ##
@@ -1351,7 +1495,7 @@ program: MODELBLOCK WHILE
 ## MODELBLOCK
 ##
 
-Expected @{<green>"{"@} after @{<green>"model"@}.
+@{<light_red>Ill-formed block.@} Expected @{<green>"{"@} after @{<green>"model"@}.
 
 program: PARAMETERSBLOCK LBRACE WHILE
 ##
@@ -1365,7 +1509,7 @@ program: PARAMETERSBLOCK LBRACE WHILE
 ## PARAMETERSBLOCK LBRACE
 ##
 
-Expected top-level variable declaration or @{<green>"}"@}.
+@{<light_red>Ill-formed block.@} Expected top-level variable declaration or @{<green>"}"@}.
 
 program: PARAMETERSBLOCK WHILE
 ##
@@ -1379,7 +1523,7 @@ program: PARAMETERSBLOCK WHILE
 ## PARAMETERSBLOCK
 ##
 
-Expected @{<green>"{"@} after @{<green>"parameters"@}.
+@{<light_red>Ill-formed block.@} Expected @{<green>"{"@} after @{<green>"parameters"@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE BANG IDENTIFIER TRANSPOSE WHILE
 ## Concrete syntax: transformed data { ! foo ' while
@@ -1409,7 +1553,7 @@ program: TRANSFORMEDDATABLOCK LBRACE BREAK WHILE
 ## BREAK
 ##
 
-Expected @{<green>";"@} after @{<green>"break"@}.
+@{<light_red>Ill-formed statement.@} Expected @{<green>";"@} after @{<green>"break"@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE CONTINUE WHILE
 ##
@@ -1423,7 +1567,7 @@ program: TRANSFORMEDDATABLOCK LBRACE CONTINUE WHILE
 ## CONTINUE
 ##
 
-Expected @{<green>";"@} after @{<green>"continue"@}.
+@{<light_red>Ill-formed statement.@} Expected @{<green>";"@} after @{<green>"continue"@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN IDENTIFIER IN REALNUMERAL RPAREN VOID
 ## Concrete syntax: transformed data { for ( foo in 3.1415 ) void
@@ -1514,7 +1658,7 @@ program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN IDENTIFIER WHILE
 ## FOR LPAREN identifier
 ##
 
-Expected @{<green>"in"@} after loop identifier.
+@{<light_red>Ill-formed statement.@} Expected @{<green>"in"@} after loop identifier.
 
 program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN WHILE
 ##
@@ -1529,7 +1673,7 @@ program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN WHILE
 ## FOR LPAREN
 ##
 
-Expected (loop) identifier after @{<green>"("@}.
+@{<light_red>Ill-formed statement.@} Expected (loop) identifier after @{<green>"("@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE FOR WHILE
 ##
@@ -1544,7 +1688,7 @@ program: TRANSFORMEDDATABLOCK LBRACE FOR WHILE
 ## FOR
 ##
 
-Expected @{<green>"("@} after @{<green>"for"@}.
+@{<light_red>Ill-formed statement.@} Expected @{<green>"("@} after @{<green>"for"@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE SEMICOLON VOID
 ## Concrete syntax: transformed data { ; void
@@ -1632,7 +1776,7 @@ program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN IDENTIFIER LPAREN RPAREN TILDE
 ## In state 127, spurious reduction of production expression -> common_expression
 ##
 
-@{<light_red>Ill-formed expression.@} Expected @{<green>"("@} @{<i>expression@} @{<green>")"@} for the test of the if statement.
+@{<light_red>Ill-formed statement.@} Expected @{<green>"("@} @{<i>expression@} @{<green>")"@} for the test of the if statement.
 A valid expression was found, but it was not followed by a closing parenthesis.
 
 program: TRANSFORMEDDATABLOCK LBRACE IF WHILE
@@ -1650,7 +1794,7 @@ program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN WHILE
 ## IF LPAREN
 ##
 
-Expected @{<green>"("@} @{<i>expression@} @{<green>")"@} for the test of the if statement.
+@{<light_red>Ill-formed statement.@} Expected @{<green>"("@} @{<i>expression@} @{<green>")"@} for the test of the if statement.
 
 program: TRANSFORMEDDATABLOCK LBRACE LBRACE VOID
 ##
@@ -1665,7 +1809,7 @@ program: TRANSFORMEDDATABLOCK LBRACE LBRACE VOID
 ## LBRACE
 ##
 
-@{<light_red>Ill-formed phrase.@} @{<green>"{"@} should be followed by a statement, variable declaration or expression.
+@{<light_red>Ill-formed block.@} @{<green>"{"@} should be followed by a statement, variable declaration, or just @{<green>"}"@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE LBRACK IDENTIFIER COMMA WHILE
 ##
@@ -1720,7 +1864,7 @@ program: TRANSFORMEDDATABLOCK LBRACE LBRACK WHILE
 ## LBRACK
 ##
 
-Comma separated list of expressions followed by @{<green>"]"@} expected after @{<green>"["@}.
+@{<light_red>Ill-formed expression.@} Comma separated list of expressions followed by @{<green>"]"@} expected after @{<green>"["@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE LPAREN IDENTIFIER COMMA IDENTIFIER RBRACK
 ## Concrete syntax: transformed data { ( foo , foo ]
@@ -1807,7 +1951,7 @@ program: TRANSFORMEDDATABLOCK LBRACE PRINT LPAREN IDENTIFIER RPAREN WHILE
 ## PRINT LPAREN printables RPAREN
 ##
 
-Expected a @{<green>";"@} after @{<green>"print(@{<r>@{<f>...@}@})"@}.
+@{<light_red>Ill-formed statement.@} Expected a @{<green>";"@} after @{<green>"print(@{<r>@{<f>...@}@})"@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE PRINT LPAREN STRINGLITERAL WHILE
 ## Concrete syntax: transformed data { print ( "hello world" while
@@ -1823,7 +1967,8 @@ program: TRANSFORMEDDATABLOCK LBRACE PRINT LPAREN WHILE
 ## PRINT LPAREN
 ##
 
-Expected a comma-separated list of expressions or strings followed by @{<green>");"@} after @{<green>"print("@}.
+@{<light_red>Ill-formed statement.@} Expected a comma-separated list of expressions or
+strings followed by @{<green>");"@} after @{<green>"print("@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE PRINT WHILE
 ##
@@ -1837,7 +1982,8 @@ program: TRANSFORMEDDATABLOCK LBRACE PRINT WHILE
 ## PRINT
 ##
 
-Expected "(" followed by a comma-separated list of expressions or strings followed by ");" after "print".
+@{<light_red>Ill-formed statement.@} Expected @{<green>"("@} followed by a comma-separated list of expressions or
+strings followed by @{<green>");"@} after @{<green>"print"@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE LBRACE REALNUMERAL SEMICOLON
 ## Concrete syntax: transformed data { { 3.1415 ;
@@ -1904,7 +2050,7 @@ program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER WHILE
 ## identifier
 ##
 
-Unexpected input after the conclusion of a valid expression.
+@{<light_red>Ill-formed expression.@} Unexpected input after the conclusion of a valid expression.
 You may be missing a @{<green>","@} between expressions, an operator, or a terminating @{<green>"}"@}, @{<green>")"@}, @{<green>"]"@}, or @{<green>";"@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LDIVIDE WHILE
@@ -1961,7 +2107,8 @@ program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL ELTPOW WHILE
 ## expression ELTPOW
 ##
 
-Found an incomplete binary expression - are you missing the right hand side?
+@{<light_red>Ill-formed expression.@} Found an incomplete binary expression.
+Are you missing the right hand side?
 
 program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER QMARK IDENTIFIER COLON WHILE
 ## Concrete syntax: transformed data { foo ? foo : while
@@ -1979,7 +2126,7 @@ program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER QMARK WHILE
 ## expression QMARK
 ##
 
-Found an incomplete ternary expression, should be @{<green>"(@{<r>@{<f>condition@}@}) ? (@{<r>@{<f>true branch@}@}) : (@{<r>@{<f>false branch@}@})"@}.
+@{<light_red>Ill-formed expression.@} Found an incomplete ternary expression, should be @{<green>"(@{<r>@{<f>condition@}@}) ? (@{<r>@{<f>true branch@}@}) : (@{<r>@{<f>false branch@}@})"@}.
 Did you forget to add a colon or a false branch?
 For example, this returns @{<b>@{<green>3.0@}@}:
   @{<green>1 ? 3.0 : 0.0@}
@@ -2090,7 +2237,7 @@ program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK COMMA WHILE
 ## indexes COMMA
 ##
 
-Expected index after indices followed by @{<green>","@}.
+@{<light_red>Ill-formed index.@} Expected index after indices followed by @{<green>","@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK IDENTIFIER COLON IDENTIFIER TILDE
 ## Concrete syntax: transformed data { 3.1415 [ foo : foo ~
@@ -2107,7 +2254,7 @@ program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LBRACK REALNUMERAL COLON WHILE
 ## expression COLON
 ##
 
-@{<light_red>Ill-formed expression.@} Expected expression or @{<green>"]"@} or @{<green>","@} after @{<green>":"@}.
+@{<light_red>Ill-formed index.@} Expected expression or @{<green>"]"@} or @{<green>","@} after @{<green>":"@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE IDENTIFIER LPAREN RPAREN TRUNCATE LBRACK COMMA RBRACK MULTIPLIER
 ##
@@ -2121,7 +2268,7 @@ program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE IDENTIFIER LPAREN RPAREN 
 ## expression TILDE identifier LPAREN loption(separated_nonempty_list(COMMA,expression)) RPAREN option(truncation)
 ##
 
-Expected @{<green>";"@} after truncated @{<green>"~"@}-statement.
+@{<light_red>Ill-formed statement.@} Expected @{<green>";"@} after truncated @{<green>"~"@}-statement.
 
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE IDENTIFIER LPAREN RPAREN TRUNCATE LBRACK COMMA WHILE
 ## Concrete syntax: transformed data { 3.1415 ~ foo ( ) T [ , while
@@ -2229,7 +2376,7 @@ program: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN IDENTIFIER COMMA STRINGLITERA
 ## printables COMMA printables
 ##
 
-@{<light_red>Ill-formed printable.@} Expected a comma separated list of either expressions or strings, followed by @{<green>");"@}.
+@{<light_red>Ill-formed statement.@} Expected a comma separated list of either expressions or strings, followed by @{<green>");"@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE REJECT WHILE
 ## Concrete syntax: transformed data { reject while
@@ -2251,7 +2398,7 @@ program: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN WHILE
 ## REJECT LPAREN
 ##
 
-@{<light_red>Ill-formed reject statement.@} After @{<green>"reject("@}, expected a comma separated list of either expressions or strings, followed by @{<green>");"@}.
+@{<light_red>Ill-formed statement.@} After @{<green>"reject("@}, expected a comma separated list of either expressions or strings, followed by @{<green>");"@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE RETURN LBRACE WHILE
 ##
@@ -2265,7 +2412,7 @@ program: TRANSFORMEDDATABLOCK LBRACE RETURN LBRACE WHILE
 ## LBRACE
 ##
 
-Expression expected after @{<green>"{"@} in array expression.
+@{<light_red>Ill-formed expression.@} Expression expected after @{<green>"{"@} in array expression.
 
 program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LPAREN WHILE
 ## Concrete syntax: transformed data { foo ( while
@@ -2341,7 +2488,7 @@ program: TRANSFORMEDDATABLOCK LBRACE RETURN IDENTIFIER TILDE
 ## In state 127, spurious reduction of production expression -> common_expression
 ##
 
-@{<light_red>Ill-formed return statement.@} @{<green>";"@} or expression followed by @{<green>";"@} expected after @{<green>"return"@}.
+@{<light_red>Ill-formed statement.@} @{<green>";"@} or expression followed by @{<green>";"@} expected after @{<green>"return"@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE TARGET LPAREN WHILE
 ## Concrete syntax: transformed data { target ( while
@@ -2357,7 +2504,7 @@ program: TRANSFORMEDDATABLOCK LBRACE RETURN TARGET WHILE
 ## TARGET
 ##
 
-@{<light_red>Ill formed expression.@} Expected @{<green>"()"@} after @{<green>"target"@}.
+@{<light_red>Ill-formed expression.@} Expected @{<green>"()"@} after @{<green>"target"@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE TARGET PLUSASSIGN WHILE
 ## Concrete syntax: transformed data { target += while
@@ -2632,21 +2779,8 @@ program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER ASSIGN WHILE
 
 @{<light_red>Ill-formed assignment statement.@} Expected an expression followed by @{<green>";"@} next.
 
-program: TRANSFORMEDDATABLOCK LBRACE VECTOR LBRACK INTNUMERAL RBRACK HAT
-##
-## Concrete syntax: transformed data { vector [ 24 ] ^
-##
-## Ends in an error in state: 648.
-##
-## decl(top_var_type,expression) -> top_var_type . decl_identifier LBRACK separated_nonempty_list(COMMA,expression) RBRACK [ WHILE VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
-## decl(top_var_type,expression) -> top_var_type . id_and_optional_assignment(expression,decl_identifier) option(remaining_declarations(expression)) SEMICOLON [ WHILE VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
-##
-## The known suffix of the stack is as follows:
-## top_var_type
-##
-
-@{<light_red>Ill-formed top-level variable declaration.@} Expected an identifier next.
-
+program: TRANSFORMEDPARAMETERSBLOCK LBRACE VOID
+## Concrete syntax: transformed parameters { void
 program: TRANSFORMEDDATABLOCK LBRACE VOID
 ##
 ## Concrete syntax: transformed data { void
@@ -2659,7 +2793,7 @@ program: TRANSFORMEDDATABLOCK LBRACE VOID
 ## TRANSFORMEDDATABLOCK LBRACE
 ##
 
-Expected a statement or top-level variable declaration.
+@{<light_red>Ill-formed block.@} Expected a statement or top-level variable declaration.
 
 program: TRANSFORMEDDATABLOCK LBRACE WHILE LPAREN IDENTIFIER RPAREN VOID
 ##
@@ -2717,21 +2851,7 @@ program: TRANSFORMEDDATABLOCK WHILE
 ## TRANSFORMEDDATABLOCK
 ##
 
-Expected @{<green>"{"@} after @{<green>"transformed data"@}.
-
-program: TRANSFORMEDPARAMETERSBLOCK LBRACE VOID
-##
-## Concrete syntax: transformed parameters { void
-##
-## Ends in an error in state: 675.
-##
-## transformed_parameters_block -> TRANSFORMEDPARAMETERSBLOCK LBRACE . list(top_vardecl_or_statement) RBRACE [ MODELBLOCK GENERATEDQUANTITIESBLOCK EOF ]
-##
-## The known suffix of the stack is as follows:
-## TRANSFORMEDPARAMETERSBLOCK LBRACE
-##
-
-Expected a statement or top-level variable declaration.
+@{<light_red>Ill-formed statement.@} Expected @{<green>"{"@} after @{<green>"transformed data"@}.
 
 program: TRANSFORMEDPARAMETERSBLOCK WHILE
 ##
@@ -2745,51 +2865,7 @@ program: TRANSFORMEDPARAMETERSBLOCK WHILE
 ## TRANSFORMEDPARAMETERSBLOCK
 ##
 
-Expected @{<green>"{"@} after @{<green>"transformed parameters"@}.
-
-program: DATABLOCK LBRACE ARRAY LBRACK IDENTIFIER RBRACK REAL WHILE ASSIGN UNREACHABLE WHILE
-## Concrete syntax: data { array [ foo ] real while = <<<<UNREACHABLE>>> while
-program: DATABLOCK LBRACE REAL WHILE COMMA WHILE ASSIGN UNREACHABLE WHILE
-## Concrete syntax: data { real while , while = <<<<UNREACHABLE>>> while
-program: DATABLOCK LBRACE TUPLE LPAREN COMPLEX COMMA COMPLEX RPAREN WHILE ASSIGN UNREACHABLE WHILE
-## Concrete syntax: data { tuple ( complex , complex ) while = <<<<UNREACHABLE>>> while
-program: DATABLOCK LBRACE REAL IDENTIFIER ASSIGN WHILE
-## Concrete syntax: data { real foo = while
-program: DATABLOCK LBRACE REAL IDENTIFIER ASSIGN UNREACHABLE WHILE
-##
-## Concrete syntax: data { real foo = <<<<UNREACHABLE>>> while
-##
-## Ends in an error in state: 624.
-##
-## decl(top_var_type,no_assign) -> top_var_type id_and_optional_assignment(no_assign,decl_identifier) . option(remaining_declarations(no_assign)) SEMICOLON [ VECTOR UNITVECTOR TUPLE SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR REAL RBRACE POSITIVEORDERED ORDERED MATRIX INT COVMATRIX CORRMATRIX COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR ARRAY ]
-##
-## The known suffix of the stack is as follows:
-## top_var_type id_and_optional_assignment(no_assign,decl_identifier)
-##
-
-Cannot assign to variables in the @{<green>"data"@} or @{<green>"parameters"@} blocks
-Expected @{<green>";"@} after variable declaration.
-
-program: MODELBLOCK LBRACE REAL IDENTIFIER COMMA INT WHILE
-## Concrete syntax: model { real foo , int while
-program: DATABLOCK LBRACE REAL IDENTIFIER COMMA INT WHILE
-## Concrete syntax: data { real foo , int while
-program: DATABLOCK LBRACE REAL IDENTIFIER COMMA UNREACHABLE
-## Concrete syntax: data { real foo , <<<<UNREACHABLE>>>
-program: MODELBLOCK LBRACE REAL IDENTIFIER COMMA UNREACHABLE
-##
-## Concrete syntax: model { real foo , <<<<UNREACHABLE>>>
-##
-## Ends in an error in state: 307.
-##
-## remaining_declarations(expression) -> COMMA . separated_nonempty_list(COMMA,id_and_optional_assignment(expression,decl_identifier_after_comma)) [ SEMICOLON ]
-##
-## The known suffix of the stack is as follows:
-## COMMA
-##
-
-Expected a new identifier after comma in declaration.
-All variables declared must be of the same type, and any initializing assignment must follow the identifier before the next comma.
+@{<light_red>Ill-formed block.@} Expected @{<green>"{"@} after @{<green>"transformed parameters"@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE PROFILE LPAREN WHILE
 ## Concrete syntax: transformed data { profile ( while
@@ -2805,7 +2881,7 @@ program: TRANSFORMEDDATABLOCK LBRACE PROFILE WHILE
 ## PROFILE
 ##
 
-Expected profile name as string in parenthesis
+@{<light_red>Ill-formed statement.@} Expected profile name as string in parenthesis
 
 program: TRANSFORMEDDATABLOCK LBRACE PROFILE LPAREN STRINGLITERAL WHILE
 ##
@@ -2819,7 +2895,7 @@ program: TRANSFORMEDDATABLOCK LBRACE PROFILE LPAREN STRINGLITERAL WHILE
 ## PROFILE LPAREN string_literal
 ##
 
-Expected @{<green>")"@} after profile name.
+@{<light_red>Ill-formed statement.@} Expected @{<green>")"@} after profile name.
 
 program: TRANSFORMEDDATABLOCK LBRACE PROFILE LPAREN STRINGLITERAL RPAREN WHILE
 ##
@@ -2833,70 +2909,7 @@ program: TRANSFORMEDDATABLOCK LBRACE PROFILE LPAREN STRINGLITERAL RPAREN WHILE
 ## PROFILE LPAREN string_literal RPAREN
 ##
 
-Expected @{<green>"{"@} after profile definition.
-
-program: TRANSFORMEDDATABLOCK LBRACE PROFILE LPAREN STRINGLITERAL RPAREN LBRACE VOID
-##
-## Concrete syntax: transformed data { profile ( "hello world" ) { void
-##
-## Ends in an error in state: 277.
-##
-## nested_statement -> PROFILE LPAREN string_literal RPAREN LBRACE . list(vardecl_or_statement) RBRACE [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
-##
-## The known suffix of the stack is as follows:
-## PROFILE LPAREN string_literal RPAREN LBRACE
-##
-
-@{<light_red>Ill-formed phrase.@} @{<green>"{"@} should be followed by a statement, variable declaration or expression.
-
-program: DATABLOCK LBRACE COMPLEX UNREACHABLE
-##
-## Concrete syntax: data { complex <<<<UNREACHABLE>>>
-##
-## Ends in an error in state: 567.
-##
-## top_var_type -> COMPLEX . type_constraint [ WHILE VOID VECTOR UPPER UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER JACOBIAN INT IN IF IDENTIFIER FUNCTIONBLOCK FOR FATAL_ERROR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
-##
-## The known suffix of the stack is as follows:
-## COMPLEX
-##
-
-Expected identifier as part of top-level variable declaration.
-
-functions_only: WHILE
-##
-## Concrete syntax: while
-##
-## Ends in an error in state: 0.
-##
-## functions_only' -> . functions_only [ # ]
-##
-## The known suffix of the stack is as follows:
-##
-##
-
-Function definitions/declarations expected in @{<light_blue>'.stanfunctions'@} file
-
-functions_only: VOID ARRAY LPAREN RPAREN SEMICOLON RBRACE
-##
-## Concrete syntax: void array ( ) ; }
-##
-## Ends in an error in state: 402.
-##
-## functions_only -> list(function_def) . EOF [ # ]
-##
-## The known suffix of the stack is as follows:
-## list(function_def)
-##
-## WARNING: This example involves spurious reductions.
-## This implies that, although the LR(1) items shown above provide an
-## accurate view of the past (what has been recognized so far), they
-## may provide an INCOMPLETE view of the future (what was expected next).
-## In state 405, spurious reduction of production list(function_def) ->
-## In state 406, spurious reduction of production list(function_def) -> function_def list(function_def)
-##
-
-Only function definitions/declarations are expected in @{<light_blue>'.stanfunctions'@} file
+@{<light_red>Ill-formed statement.@} Expected @{<green>"{"@} to begin profile block.
 
 program: DATABLOCK LBRACE ARRAY LBRACK IDENTIFIER RPAREN
 ## Concrete syntax: data { array [ foo )
@@ -2914,25 +2927,7 @@ program: TRANSFORMEDDATABLOCK LBRACE ARRAY IDENTIFIER
 ## ARRAY
 ##
 
-Expected @{<green>"["@} @{<i>array sizes@} @{<green>"]"@} followed by type after @{<green>"array"@}.
-
-program: TRANSFORMEDDATABLOCK LBRACE ARRAY LBRACK IDENTIFIER RBRACK VECTOR LBRACK IMAGNUMERAL RBRACK AND
-## Concrete syntax: transformed data { array [ foo ] vector [ 1i ] &&
-program: MODELBLOCK LBRACE ARRAY LBRACK IDENTIFIER RBRACK REAL UNREACHABLE
-## Concrete syntax: model { array [ foo ] real <<<<UNREACHABLE>>>
-program: DATABLOCK LBRACE ARRAY LBRACK IDENTIFIER RBRACK VECTOR LBRACK INTNUMERAL RBRACK AND
-##
-## Concrete syntax: data { array [ foo ] vector [ 24 ] &&
-##
-## Ends in an error in state: 634.
-##
-## decl(top_var_type,no_assign) -> array_type(top_var_type) . id_and_optional_assignment(no_assign,decl_identifier) option(remaining_declarations(no_assign)) SEMICOLON [ VECTOR UNITVECTOR TUPLE SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR REAL RBRACE POSITIVEORDERED ORDERED MATRIX INT COVMATRIX CORRMATRIX COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR ARRAY ]
-##
-## The known suffix of the stack is as follows:
-## array_type(top_var_type)
-##
-
-Expected identifier after type in declaration.
+@{<light_red>Ill-formed type.@} Expected @{<green>"["@} @{<i>array sizes@} @{<green>"]"@} followed by type after @{<green>"array"@}.
 
 program: MODELBLOCK LBRACE TUPLE LPAREN ARRAY LBRACK IDENTIFIER RBRACK REAL COMMA WHILE
 ## Concrete syntax: model { tuple ( array [ foo ] real , while
@@ -2968,7 +2963,7 @@ program: DATABLOCK LBRACE TUPLE LPAREN REAL COMMA WHILE
 ## TUPLE LPAREN top_var_type COMMA
 ##
 
-Incomplete type specification, expected further types followed by @{<green>")"@} to complete tuple.
+@{<light_red>Ill-formed type.@} Incomplete type specification, expected further types followed by @{<green>")"@} to complete tuple.
 
 program: MODELBLOCK LBRACE TUPLE LPAREN TUPLE LPAREN REAL COMMA COMPLEX RPAREN WHILE
 ## Concrete syntax: model { tuple ( tuple ( real , complex ) while
@@ -3000,8 +2995,7 @@ program: DATABLOCK LBRACE TUPLE LPAREN REAL WHILE
 ## In state 523, spurious reduction of production top_var_type -> REAL type_constraint
 ##
 
-Invalid type specification, unmatched @{<green>"("@}.
-Expected @{<green>","@} followed by further types and @{<green>")"@} to complete tuple.
+@{<light_red>Ill-formed type.@} Expected @{<green>","@} followed by further types and @{<green>")"@} to complete tuple.
 
 program: MODELBLOCK LBRACE TUPLE LPAREN REAL COMMA ARRAY LBRACK IDENTIFIER RBRACK REAL WHILE
 ## Concrete syntax: model { tuple ( real , array [ foo ] real while
@@ -3026,9 +3020,32 @@ program: DATABLOCK LBRACE TUPLE LPAREN REAL COMMA TUPLE LPAREN COMPLEX COMMA COM
 ## tuple_type(top_var_type)
 ##
 
-Incomplete type specification. Expected either @{<green>")"@} or @{<green>","@} followed by
+@{<light_red>Ill-formed type.@} Expected either @{<green>")"@} or @{<green>","@} followed by
 further types and @{<green>")"@} to complete tuple.
 
+functions_only: ARRAY LBRACK RBRACK TUPLE WHILE
+## Concrete syntax: array [ ] tuple while
+functions_only: TUPLE WHILE
+## Concrete syntax: tuple while
+program: MODELBLOCK LBRACE TUPLE WHILE
+## Concrete syntax: model { tuple while
+program: DATABLOCK LBRACE TUPLE WHILE
+functions_only: ARRAY LBRACK RBRACK TUPLE LPAREN VECTOR COMMA WHILE
+## Concrete syntax: array [ ] tuple ( vector , while
+functions_only: ARRAY LBRACK RBRACK TUPLE LPAREN VECTOR WHILE
+## Concrete syntax: array [ ] tuple ( vector while
+functions_only: TUPLE LPAREN VECTOR COMMA VECTOR WHILE
+## Concrete syntax: tuple ( vector , vector while
+functions_only: TUPLE LPAREN VECTOR WHILE
+## Concrete syntax: tuple ( vector while
+functions_only: TUPLE LPAREN VECTOR COMMA WHILE
+## Concrete syntax: tuple ( vector , while
+functions_only: TUPLE LPAREN WHILE
+## Concrete syntax: tuple ( while
+functions_only: TUPLE LPAREN VECTOR COMMA VECTOR COMMA WHILE
+## Concrete syntax: tuple ( vector , vector , while
+functions_only: ARRAY LBRACK RBRACK TUPLE LPAREN WHILE
+## Concrete syntax: array [ ] tuple ( while
 program: MODELBLOCK LBRACE TUPLE LPAREN REAL COMMA TUPLE LPAREN WHILE
 ## Concrete syntax: model { tuple ( real , tuple ( while
 program: DATABLOCK LBRACE TUPLE LPAREN WHILE
@@ -3045,8 +3062,7 @@ program: DATABLOCK LBRACE TUPLE LPAREN WHILE
 ## TUPLE LPAREN
 ##
 
-Incomplete type declaration. Expected comma separated list of types between @{<green>"("@}
-and @{<green>")"@} to declare tuple variable.
+@{<light_red>Ill-formed type.@} Expected comma separated list of types between @{<green>"("@} and @{<green>")"@} to declare tuple variable.
 
 program: TRANSFORMEDDATABLOCK LBRACE RETURN LPAREN WHILE
 ## Concrete syntax: transformed data { return ( while
@@ -3062,35 +3078,7 @@ program: TRANSFORMEDDATABLOCK LBRACE LPAREN IDENTIFIER COMMA WHILE
 ## LPAREN expression COMMA
 ##
 
-Expression or comma separated list of expressions followed by @{<green>")"@} expected after @{<green>"("@}.
-
-functions_only: ARRAY LBRACK RBRACK TUPLE LPAREN VECTOR COMMA WHILE
-## Concrete syntax: array [ ] tuple ( vector , while
-functions_only: ARRAY LBRACK RBRACK TUPLE LPAREN VECTOR WHILE
-## Concrete syntax: array [ ] tuple ( vector while
-functions_only: TUPLE LPAREN VECTOR COMMA VECTOR WHILE
-## Concrete syntax: tuple ( vector , vector while
-functions_only: TUPLE LPAREN VECTOR WHILE
-## Concrete syntax: tuple ( vector while
-functions_only: TUPLE LPAREN VECTOR COMMA WHILE
-## Concrete syntax: tuple ( vector , while
-functions_only: TUPLE LPAREN WHILE
-## Concrete syntax: tuple ( while
-functions_only: TUPLE LPAREN VECTOR COMMA VECTOR COMMA WHILE
-## Concrete syntax: tuple ( vector , vector , while
-functions_only: ARRAY LBRACK RBRACK TUPLE LPAREN WHILE
-##
-## Concrete syntax: array [ ] tuple ( while
-##
-## Ends in an error in state: 21.
-##
-## unsized_type -> ARRAY unsized_dims TUPLE LPAREN . unsized_type COMMA separated_nonempty_list(COMMA,unsized_type) RPAREN [ WHILE VOID VECTOR UPPER UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER JACOBIAN INT IN IF IDENTIFIER FUNCTIONBLOCK FOR FATAL_ERROR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
-##
-## The known suffix of the stack is as follows:
-## ARRAY unsized_dims TUPLE LPAREN
-##
-
-Expected comma-separated list of types followed by @{<green>")"@} to declare tuple type.
+@{<light_red>Ill-formed expression.@} Expression or comma separated list of expressions followed by @{<green>")"@} expected after @{<green>"("@}.
 
 functions_only: ARRAY LBRACK RBRACK WHILE
 ## Concrete syntax: array [ ] while
@@ -3109,7 +3097,7 @@ program: DATABLOCK LBRACE ARRAY LBRACK INTNUMERAL RBRACK IDENTIFIER
 ## arr_dims
 ##
 
-Expected non-array type after @{<green>"array"@} declaration.
+@{<light_red>Ill-formed type.@} Expected non-array type after @{<green>"array"@} declaration.
 
 program: DATABLOCK LBRACE ARRAY LBRACK WHILE
 ##
@@ -3123,88 +3111,7 @@ program: DATABLOCK LBRACE ARRAY LBRACK WHILE
 ## ARRAY LBRACK
 ##
 
-Expected expressions for size of array.
-
-program: DATABLOCK LBRACE REAL WHILE COMMA WHILE COMMA UNREACHABLE
-## Concrete syntax: data { real while , while , <<<<UNREACHABLE>>>
-program: TRANSFORMEDDATABLOCK LBRACE TUPLE LPAREN REAL COMMA COMPLEX RPAREN UNREACHABLE
-## Concrete syntax: transformed data { tuple ( real , complex ) <<<<UNREACHABLE>>>
-program: DATABLOCK LBRACE TUPLE LPAREN REAL COMMA COMPLEX RPAREN UNREACHABLE
-## Concrete syntax: data { tuple ( real , complex ) <<<<UNREACHABLE>>>
-program: MODELBLOCK LBRACE TUPLE LPAREN COMPLEX COMMA COMPLEX RPAREN UNREACHABLE
-##
-## Concrete syntax: model { tuple ( complex , complex ) <<<<UNREACHABLE>>>
-##
-## Ends in an error in state: 305.
-##
-## decl(sized_basic_type,expression) -> tuple_type(sized_basic_type) . id_and_optional_assignment(expression,decl_identifier) option(remaining_declarations(expression)) SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
-##
-## The known suffix of the stack is as follows:
-## tuple_type(sized_basic_type)
-##
-
-Expected identifier as part of top-level variable declaration.
-
-functions_only: ARRAY LBRACK RBRACK TUPLE WHILE
-## Concrete syntax: array [ ] tuple while
-functions_only: TUPLE WHILE
-## Concrete syntax: tuple while
-program: MODELBLOCK LBRACE TUPLE WHILE
-## Concrete syntax: model { tuple while
-program: DATABLOCK LBRACE TUPLE WHILE
-##
-## Concrete syntax: data { tuple while
-##
-## Ends in an error in state: 489.
-##
-## tuple_type(top_var_type) -> TUPLE . LPAREN array_type(top_var_type) COMMA separated_nonempty_list(COMMA,higher_type(top_var_type)) RPAREN [ WHILE VOID VECTOR UPPER UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER JACOBIAN INT IN IF IDENTIFIER FUNCTIONBLOCK FOR FATAL_ERROR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
-## tuple_type(top_var_type) -> TUPLE . LPAREN tuple_type(top_var_type) COMMA separated_nonempty_list(COMMA,higher_type(top_var_type)) RPAREN [ WHILE VOID VECTOR UPPER UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER JACOBIAN INT IN IF IDENTIFIER FUNCTIONBLOCK FOR FATAL_ERROR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
-## tuple_type(top_var_type) -> TUPLE . LPAREN top_var_type COMMA separated_nonempty_list(COMMA,higher_type(top_var_type)) RPAREN [ WHILE VOID VECTOR UPPER UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER JACOBIAN INT IN IF IDENTIFIER FUNCTIONBLOCK FOR FATAL_ERROR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
-##
-## The known suffix of the stack is as follows:
-## TUPLE
-##
-
-Invalid type specification.
-Expected @{<green>"("@} followed by further types and @{<green>")"@} to complete tuple.
-
-program: TRANSFORMEDDATABLOCK LBRACE COMPLEX JACOBIAN WHILE
-## Concrete syntax: transformed data { complex jacobian while
-program: TRANSFORMEDDATABLOCK LBRACE ARRAY LBRACK JACOBIAN RBRACK COMPLEX JACOBIAN WHILE
-## Concrete syntax: transformed data { array [ jacobian ] complex jacobian while
-program: MODELBLOCK LBRACE REAL IDENTIFIER COMMA IDENTIFIER COMMA UNREACHABLE
-## Concrete syntax: model { real foo , foo , <<<<UNREACHABLE>>>
-program: MODELBLOCK LBRACE REAL IDENTIFIER IDENTIFIER
-##
-## Concrete syntax: model { real foo foo
-##
-## Ends in an error in state: 329.
-##
-## decl(sized_basic_type,expression) -> sized_basic_type decl_identifier . LBRACK separated_nonempty_list(COMMA,expression) RBRACK [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
-## id_and_optional_assignment(expression,decl_identifier) -> decl_identifier . optional_assignment(expression) [ SEMICOLON COMMA ]
-##
-## The known suffix of the stack is as follows:
-## sized_basic_type decl_identifier
-##
-
-@{<green>";"@} or plain assignment expected after variable declaration.
-
-program: DATABLOCK LBRACE ARRAY LBRACK JACOBIAN RBRACK COMPLEX JACOBIAN WHILE
-## Concrete syntax: data { array [ jacobian ] complex jacobian while
-program: DATABLOCK LBRACE REAL IDENTIFIER IDENTIFIER
-##
-## Concrete syntax: data { real foo foo
-##
-## Ends in an error in state: 627.
-##
-## decl(top_var_type,no_assign) -> top_var_type decl_identifier . LBRACK separated_nonempty_list(COMMA,expression) RBRACK [ VECTOR UNITVECTOR TUPLE SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR REAL RBRACE POSITIVEORDERED ORDERED MATRIX INT COVMATRIX CORRMATRIX COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR ARRAY ]
-## id_and_optional_assignment(no_assign,decl_identifier) -> decl_identifier . optional_assignment(no_assign) [ SEMICOLON COMMA ]
-##
-## The known suffix of the stack is as follows:
-## top_var_type decl_identifier
-##
-
-@{<green>";"@} expected after variable declaration.
+@{<light_red>Ill-formed type.@} Expected expressions for size of array.
 
 functions_only: ARRAY LBRACK COMMA WHILE
 ## Concrete syntax: array [ , while
@@ -3220,7 +3127,7 @@ functions_only: ARRAY LBRACK WHILE
 ## LBRACK
 ##
 
-@{<green>"["@} @{<i>(list of commas)@} @{<green>"]"@} expected in unsized return type of function definition.
+@{<light_red>Ill-formed type.@} @{<green>"["@} @{<i>(list of commas)@} @{<green>"]"@} expected in unsized return type of function definition.
 
 program: TRANSFORMEDDATABLOCK LBRACE FATAL_ERROR LPAREN IDENTIFIER RPAREN WHILE
 ## Concrete syntax: transformed data { fatal_error ( foo ) while
@@ -3240,7 +3147,7 @@ program: TRANSFORMEDDATABLOCK LBRACE FATAL_ERROR WHILE
 ## FATAL_ERROR
 ##
 
-@{<light_red>Ill-formed fatal error statement.@} After @{<green>"fatal_error("@}, expected a comma separated list of either expressions or strings, followed by @{<green>");"@}.
+@{<light_red>Ill-formed statement.@} After @{<green>"fatal_error("@}, expected a comma separated list of either expressions or strings, followed by @{<green>");"@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE COMPLEX JACOBIAN LBRACK JACOBIAN RPAREN
 ## Concrete syntax: transformed data { complex jacobian [ jacobian )
@@ -3264,7 +3171,7 @@ program: MODELBLOCK LBRACE COMPLEX JACOBIAN LBRACK WHILE
 ## sized_basic_type decl_identifier LBRACK
 ##
 
-@{<green>";"@} expected after variable declaration.
+@{<light_red>Ill-formed declaration.@} @{<green>";"@} expected after variable declaration.
 @{<light_yellow>It looks like you are trying to use the old array syntax.
 Please use the new syntax:@}
 https://mc-stan.org/docs/reference-manual/types.html#array-data-types.section
