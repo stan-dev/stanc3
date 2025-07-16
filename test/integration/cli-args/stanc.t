@@ -278,5 +278,5 @@ Filename is set to stdin when reading from stdin
                              ^
      -------------------------------------------------
   
-  ";" expected after variable declaration.
+  Ill-formed declaration. ";" expected after variable declaration.
   [1]

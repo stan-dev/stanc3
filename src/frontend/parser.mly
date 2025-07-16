@@ -101,7 +101,7 @@ let nest_unsized_array basic_type n =
        DIVIDEASSIGN "/=" ELTDIVIDEASSIGN "./=" ELTTIMESASSIGN ".*="
 %token PRINT "print" REJECT "reject" FATAL_ERROR "fatal_error"
 %token TRUNCATE "T"
-%token EOF ""
+%token EOF "<EOF>"
 
 (* UNREACHABLE tokens will never be produced by the lexer, so we can use them as
    "a thing that will never parse". This is useful in a few places. For example,
