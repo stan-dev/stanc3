@@ -829,7 +829,7 @@ Syntax error in 'err-decl-double-params.stan', line 4, column 0 to column 1, par
      6:  }
    -------------------------------------------------
 
-Ill-formed phrase. Found an expression where we expected a statement. Did you forget a ";"?
+Ill-formed phrase. Found an expression where a statement was expected. Did you forget a ";"?
 [exit 1]
   $ ../../../../install/default/bin/stanc err-decl-double.stan
 Syntax error in 'err-decl-double.stan', line 2, column 2 to column 8, parsing error:
@@ -1157,7 +1157,7 @@ Syntax error in 'err-nested-parens-close.stan', line 3, column 12 to column 13, 
      4:  }
    -------------------------------------------------
 
-Ill-formed phrase. Found "(" followed by expression. Expect a "[", "," or ")" or an infix or postfix operator.
+Ill-formed phrase. Found "(" followed by expression. Expected a "[", "," or ")" or an infix or postfix operator.
 [exit 1]
   $ ../../../../install/default/bin/stanc err-nested-parens.stan
 Syntax error in 'err-nested-parens.stan', line 3, column 12 to column 13, parsing error:
