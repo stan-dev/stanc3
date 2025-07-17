@@ -427,7 +427,8 @@ Syntax error in 'ill-formed-expression22.stan', line 2, column 14 to column 15, 
      3:  }
    -------------------------------------------------
 
-Ill-formed assignment statement. Expected "=" expression ";" next.
+Ill-formed phrase. Expected a statement, but found a partial value before this point.
+Did you mean for this to be the start of an assignment or "~" statement?
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-expression23.stan
 Syntax error in 'ill-formed-expression23.stan', line 1, column 21 to column 26, parsing error:
@@ -1339,7 +1340,8 @@ Syntax error in 'ill-formed-statement26.stan', line 2, column 0 to column 0, par
          ^
    -------------------------------------------------
 
-Ill-formed assignment statement. Expected "=" expression ";" next.
+Ill-formed phrase. Expected a statement, but found a partial value before this point.
+Did you mean for this to be the start of an assignment or "~" statement?
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-statement27.stan
 Syntax error in 'ill-formed-statement27.stan', line 1, column 28 to column 32, parsing error:
