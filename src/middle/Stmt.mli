@@ -69,6 +69,7 @@ module Located : sig
   [@@deriving compare, sexp, hash]
 
   val loc_of : t -> Location_span.t
+  val pp : t Fmt.t
 
   module Non_recursive : sig
     type t =
@@ -89,6 +90,8 @@ module Numbered : sig
 
   type t = (Expr.Typed.Meta.t, (Meta.t[@sexp.opaque] [@compare.ignore])) Fixed.t
   [@@deriving compare, sexp, hash]
+
+  val pp : t Fmt.t
 end
 
 module Helpers : sig

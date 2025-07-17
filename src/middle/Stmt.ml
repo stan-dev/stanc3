@@ -108,6 +108,7 @@ module Located = struct
   [@@deriving compare, sexp, hash]
 
   let loc_of Fixed.{meta; _} = meta
+  let pp = Fixed.pp
 
   (** This module acts as a temporary replace for the [stmt_loc_num] type that
   is currently used within [analysis_and_optimization].
@@ -134,6 +135,8 @@ module Numbered = struct
 
   type t = (Expr.Typed.Meta.t, (Meta.t[@sexp.opaque] [@compare.ignore])) Fixed.t
   [@@deriving compare, sexp, hash]
+
+  let pp = Fixed.pp
 end
 
 module Helpers = struct
