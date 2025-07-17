@@ -829,7 +829,8 @@ Syntax error in 'err-decl-double-params.stan', line 4, column 0 to column 1, par
      6:  }
    -------------------------------------------------
 
-Ill-formed phrase. Found an expression where a statement was expected. Did you forget a ";"?
+Ill-formed phrase. Expected a statement, but found a partial value before this point.
+Did you mean for this to be the start of a "~" statement?
 [exit 1]
   $ ../../../../install/default/bin/stanc err-decl-double.stan
 Syntax error in 'err-decl-double.stan', line 2, column 2 to column 8, parsing error:
