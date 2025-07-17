@@ -24,13 +24,14 @@ let manual_error msg loc =
 
 let reserved (name, loc, _) =
   manual_error
-    ("Expected a new identifier but found reserved keyword @{<green>\"" ^ name ^ "\"@}.\n")
+    ("@{<light_red>Ill-formed identifier.@} Expected a new identifier but \
+      found reserved keyword @{<green>\"" ^ name ^ "\"@}.\n")
     loc
 
 let reserved_decl (name, loc, is_type) =
   if is_type then
     manual_error
-      ("Found a type (@{<green>\"" ^ name
+      ("@{<light_red>Ill-formed identifier.@} Found a type (@{<green>\"" ^ name
      ^ "\"@}) where an identifier was expected.\n\
         All variables declared in a comma-separated list must be of the same \
         type.\n")
@@ -44,7 +45,8 @@ let parse_tuple_slot ix_str loc =
   match int_of_string_opt (String.drop_prefix ix_str 1) with
   | None ->
       manual_error
-        ("Failed to parse integer from string @{<green>\"" ^ ix_str
+        ("@{<light_red>Ill-formed index.@} Failed to parse integer from string \
+          @{<green>\"" ^ ix_str
        ^ "\"@} in tuple index. \nThe index is likely too large.\n")
         loc
   | Some ix -> ix
@@ -55,11 +57,11 @@ let try_convert_to_lvalue expr loc =
   match Ast.lvalue_of_expr_opt expr with
   | Some l -> l
   | None ->
-      raise
-        (Errors.SyntaxError
-           (Errors.Parsing
-              ( "Expected an assignable value but found a general expression.\n"
-              , location_span_of_positions loc )))
+      manual_error
+        "@{<light_red>Ill-formed assignment.@} Expected an assignable value \
+         but found a general expression.\n"
+        loc
+
 
 let nest_unsized_array basic_type n =
   iterate_n (fun t -> UnsizedType.UArray t) basic_type n
@@ -306,12 +308,14 @@ unsized_type:
     It can go away at some point if it starts causing conflicts.
   *)
   | bt=basic_type dims=unsized_dims {
-    manual_error (Fmt.str
-              "An identifier is expected after the type as a function argument \
-               name.@ %@{<yellow>It looks like you are trying to use the old array \
-               syntax.@ Please use the new syntax:%@} @ @[<h>array[%s] %a@]@\n"
-              (String.make (dims-1) ',') UnsizedType.pp bt)
-              $loc(dims)
+    manual_error
+      (Fmt.str
+         "%@{<light_red>Ill-formed type.%@}@ %@{<yellow>It looks like you are \
+          trying to use the old array syntax.@ Please use the new syntax:%@} @ \
+          @[<h>array[%s] %a@]@\n"
+         (String.make (dims - 1) ',')
+         UnsizedType.pp bt)
+      $loc(dims)
   }
   | bt=basic_type
     {  grammar_logger "unsized_type";
@@ -389,11 +393,14 @@ decl(type_rule, rhs):
     let (ty, trans) = ty in
     let ty = List.fold_right ~f:(fun e ty -> SizedType.SArray (ty, e)) ~init:ty dims in
     let ty = (ty, trans) in
-    manual_error (Fmt.str
-              "\";\" expected after variable declaration.@ %@{<yellow>It looks like you \
-               are trying to use the old array syntax.@ Please use the new \
-               syntax:%@}@ @[<h>%a %s;@]@\n" Pretty_printing.pp_transformed_type ty id.name)
-              $loc(dims)
+    manual_error
+      (Fmt.str
+         "%@{<light_red>Ill-formed declaration.%@} %@{<green>\";\"%@} expected \
+          after variable declaration.@ %@{<yellow>It looks like you are trying \
+          to use the old array syntax.@ Please use the new syntax:%@}@ @[<h>%a \
+          %s;@]@\n"
+         Pretty_printing.pp_transformed_type ty id.name)
+      $loc(dims)
     }
   | ty=higher_type(type_rule)
     (* additional indirection only for better error messaging *)
