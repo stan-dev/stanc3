@@ -3476,5 +3476,5 @@ let%expect_test "Mapping acts recursively" =
       , [from] ) in
   let m = Expr.Typed.Map.of_alist_exn [(from, into)] in
   let s' = expr_subst_stmt_base m s in
-  Fmt.str "@[<v>%a@]" Stmt.Fixed.pp (unpattern s') |> print_endline;
+  Fmt.str "@[<v>%a@]" Stmt.Located.pp (unpattern s') |> print_endline;
   [%expect {| (FnWriteParam(unconstrain_opt())(var y))__(y); |}]

@@ -74,6 +74,7 @@ module Typed = struct
   let loc_of Fixed.{meta= Meta.{loc; _}; _} = loc
   let adlevel_of Fixed.{meta= Meta.{adlevel; _}; _} = adlevel
   let fun_arg Fixed.{meta= Meta.{type_; adlevel; _}; _} = (adlevel, type_)
+  let pp = Fixed.pp
 
   (** Since the type [t] is now concrete (i.e. not a type _constructor_) we can
 construct a [Comparable.S] giving us [Map] and [Set] specialized to the type.

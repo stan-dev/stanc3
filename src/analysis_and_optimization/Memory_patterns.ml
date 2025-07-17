@@ -689,7 +689,7 @@ let collect_mem_pattern_variables stmts =
 let pp_mem_patterns ppf (Program.{reverse_mode_log_prob; _} : Program.Typed.t) =
   let pp_var ppf (name, stype) =
     Fmt.pf ppf "%a %s: %a"
-      (SizedType.pp Expr.Fixed.pp)
+      (SizedType.pp Expr.Typed.pp)
       stype name Middle.Mem_pattern.pp
       (SizedType.get_mem_pattern stype) in
   let mem_vars =

@@ -44,7 +44,7 @@ let unwrap_num_exn m e =
   | Lit (_, s) -> Float.of_string s
   | _ ->
       reject e.meta.loc
-        (Fmt.str "Cannot evaluate expression: %a" Expr.Fixed.pp e)
+        (Fmt.str "Cannot evaluate expression: %a" Expr.Typed.pp e)
 
 let unwrap_int_exn m e = Int.of_float (unwrap_num_exn m e)
 
@@ -81,7 +81,7 @@ let gen_bounded m gen e =
   | None ->
       reject e.meta.loc
         (Fmt.str "Cannot evaluate bounded (upper OR lower) expr: %a"
-           Expr.Fixed.pp e)
+           Expr.Typed.pp e)
 
 let gen_ul_bounded m gen e1 e2 =
   let create_bounds l u =
@@ -100,7 +100,7 @@ let gen_ul_bounded m gen e1 e2 =
   | None, None ->
       reject e1.meta.loc
         (Fmt.str "Cannot evaluate upper and lower bound expr: %a and %a"
-           Expr.Fixed.pp e1 Expr.Fixed.pp e2)
+           Expr.Typed.pp e1 Expr.Typed.pp e2)
 
 let gen_row_vector m n t =
   match (t : Expr.Typed.t Transformation.t) with
@@ -360,7 +360,7 @@ let generate_json_entries (name, expr) : string * t =
         expr_to_json e
     | _ ->
         reject e.meta.Expr.Typed.Meta.loc
-          (Fmt.str "Could not evaluate expression %a" Expr.Fixed.pp e) in
+          (Fmt.str "Could not evaluate expression %a" Expr.Typed.pp e) in
   (name, expr_to_json expr)
 
 let gen_values_json_exn ?(new_only = false) ?(context = Map.Poly.empty) decls =

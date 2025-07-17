@@ -180,7 +180,7 @@ let list_priors ?factor_graph:(fg_opt = None) (mir : Program.Typed.t) :
 
 let string_of_factor (factor : factor) : string =
   match factor with
-  | TargetTerm e -> Fmt.str "\"%a\"" Expr.Fixed.pp e
+  | TargetTerm e -> Fmt.str "\"%a\"" Expr.Typed.pp e
   | Reject -> "reject"
   | LPFunction (s, _) -> s
 

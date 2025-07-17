@@ -11,7 +11,7 @@ let%expect_test "Operator-assign example" =
         }
       |}
   |> (fun Program.{log_prob; _} -> log_prob)
-  |> Fmt.str "@[<v>%a@]" (Fmt.list ~sep:Fmt.cut Stmt.Fixed.pp)
+  |> Fmt.str "@[<v>%a@]" (Fmt.list ~sep:Fmt.cut Stmt.Located.pp)
   |> print_endline;
   [%expect
     {|
