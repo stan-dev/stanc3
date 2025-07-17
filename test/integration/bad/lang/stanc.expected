@@ -478,7 +478,8 @@ Syntax error in 'incomplete4.stan', line 2, column 13 to column 14, parsing erro
      3:  }
    -------------------------------------------------
 
-Ill-formed phrase. Found an expression where a statement was expected. Did you forget a ";"?
+Ill-formed phrase. Expected a statement, but found a partial value before this point.
+Did you mean for this to be the start of a "~" statement?
 [exit 1]
   $ ../../../../../install/default/bin/stanc incomplete5.stan
 Syntax error in 'incomplete5.stan', line 3, column 0 to column 0, parsing error:
