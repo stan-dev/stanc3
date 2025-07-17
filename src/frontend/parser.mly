@@ -758,12 +758,13 @@ statement:
 atomic_statement:
   | l=common_expression op=assignment_op e=expression SEMICOLON
     {  grammar_logger "assignment_statement" ;
+       (* slight hack: we over-parse but only allow ids, tuples of ids, or id projections *)
        Assignment {assign_lhs=try_convert_to_lvalue l $sloc;
                    assign_op=op;
                    assign_rhs=e} }
   | id=identifier LPAREN args=separated_list(COMMA, expression) RPAREN SEMICOLON
     {  grammar_logger "funapp_statement" ; NRFunApp ((),id, args)  }
- | e=expression TILDE id=identifier LPAREN es=separated_list(COMMA, expression)
+  | e=expression TILDE id=identifier LPAREN es=separated_list(COMMA, expression)
     RPAREN ot=option(truncation) SEMICOLON
     {  grammar_logger "tilde_statement" ;
        let t = match ot with Some tt -> tt | None -> NoTruncate in

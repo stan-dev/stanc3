@@ -109,7 +109,8 @@ Syntax error in 'blocks-bad8.stan', line 1, column 21 to column 22, parsing erro
                               ^
    -------------------------------------------------
 
-Ill-formed phrase. Found an expression where a statement was expected. Did you forget a ";"?
+Ill-formed phrase. Expected a statement, but found a partial value before this point.
+Did you mean for this to be the start of a "~" statement?
 [exit 1]
   $ ../../../../../install/default/bin/stanc blocks-bad9.stan
 Syntax error in 'blocks-bad9.stan', line 1, column 19 to column 23, parsing error:
@@ -426,8 +427,7 @@ Syntax error in 'ill-formed-expression22.stan', line 2, column 14 to column 15, 
      3:  }
    -------------------------------------------------
 
-Ill-formed expression. Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
+Ill-formed assignment statement. Expected "=" expression ";" next.
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-expression23.stan
 Syntax error in 'ill-formed-expression23.stan', line 1, column 21 to column 26, parsing error:
@@ -491,8 +491,8 @@ Syntax error in 'ill-formed-expression30.stan', line 1, column 24 to column 29, 
                                  ^
    -------------------------------------------------
 
-Ill-formed expression. Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
+Ill-formed phrase. Expected a statement, but found a partial value before this point.
+Did you mean for this to be the start of an assignment or "~" statement?
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-expression31.stan
 Syntax error in 'ill-formed-expression31.stan', line 1, column 20 to column 24, parsing error:
@@ -510,8 +510,8 @@ Syntax error in 'ill-formed-expression32.stan', line 1, column 24 to column 29, 
                                  ^
    -------------------------------------------------
 
-Ill-formed expression. Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
+Ill-formed phrase. Expected a statement, but found a partial value before this point.
+Did you mean for this to be the start of an assignment or "~" statement?
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-expression33.stan
 Syntax error in 'ill-formed-expression33.stan', line 1, column 25 to column 30, parsing error:
@@ -1320,7 +1320,8 @@ Syntax error in 'ill-formed-statement24.stan', line 1, column 33 to column 34, p
                                           ^
    -------------------------------------------------
 
-Ill-formed phrase. Found an expression where a statement was expected. Did you forget a ";"?
+Ill-formed phrase. Expected a statement, but found a partial value before this point.
+Did you mean for this to be the start of a "~" statement?
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-statement25.stan
 Syntax error in 'ill-formed-statement25.stan', line 1, column 34 to column 38, parsing error:
@@ -1338,8 +1339,7 @@ Syntax error in 'ill-formed-statement26.stan', line 2, column 0 to column 0, par
          ^
    -------------------------------------------------
 
-Ill-formed expression. Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
+Ill-formed assignment statement. Expected "=" expression ";" next.
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-statement27.stan
 Syntax error in 'ill-formed-statement27.stan', line 1, column 28 to column 32, parsing error:
@@ -2157,8 +2157,8 @@ Syntax error in 'mystery50.stan', line 1, column 12 to column 17, parsing error:
                      ^
    -------------------------------------------------
 
-Ill-formed expression. Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
+Ill-formed phrase. Expected a statement, but found a partial value before this point.
+Did you mean for this to be the start of an assignment or "~" statement?
 [exit 1]
   $ ../../../../../install/default/bin/stanc mystery51.stan
 Syntax error in 'mystery51.stan', line 1, column 29 to column 30, parsing error:
