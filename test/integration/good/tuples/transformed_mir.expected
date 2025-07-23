@@ -11275,6 +11275,58 @@
      (out_block Parameters) (out_trans Identity)))))
  (prog_name qr_unpack_model) (prog_path qr_unpack.stan))
 [exit 0]
+  $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir reconstruct.stan
+((functions_block
+  (((fdrt Void) (fdname do_something_reconstruct) (fdsuffix FnPlain)
+    (fdargs ((DataOnly indices (UArray UInt)) (DataOnly mem UVector)))
+    (fdbody
+     (((pattern
+        (Block
+         (((pattern
+            (NRFunApp (UserDefined do_something FnPlain)
+             (((pattern
+                (FunApp (CompilerInternal FnMakeTuple)
+                 (((pattern (Var indices))
+                   (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly))))
+                  ((pattern (Var mem))
+                   (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly)))))))
+               (meta
+                ((type_ (UTuple ((UArray UInt) UVector))) (loc <opaque>)
+                 (adlevel (TupleAD (DataOnly DataOnly)))))))))
+           (meta <opaque>)))))
+       (meta <opaque>))))
+    (fdloc <opaque>))
+   ((fdrt Void) (fdname do_something) (fdsuffix FnPlain)
+    (fdargs ((DataOnly combined (UTuple ((UArray UInt) UVector)))))
+    (fdbody (((pattern (Block ())) (meta <opaque>)))) (fdloc <opaque>))))
+ (input_vars ()) (prepare_data ()) (log_prob ()) (reverse_mode_log_prob ())
+ (generate_quantities
+  (((pattern
+     (IfElse
+      ((pattern
+        (FunApp (StanLib PNot__ FnPlain AoS)
+         (((pattern
+            (EOr
+             ((pattern (Var emit_transformed_parameters__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+             ((pattern (Var emit_generated_quantities__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+      ((pattern (Block (((pattern (Return ())) (meta <opaque>))))) (meta <opaque>)) ()))
+    (meta <opaque>))
+   ((pattern
+     (IfElse
+      ((pattern
+        (FunApp (StanLib PNot__ FnPlain AoS)
+         (((pattern (Var emit_generated_quantities__))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+      ((pattern (Block (((pattern (Return ())) (meta <opaque>))))) (meta <opaque>)) ()))
+    (meta <opaque>))))
+ (transform_inits ()) (unconstrain_array ()) (output_vars ())
+ (prog_name reconstruct_model) (prog_path reconstruct.stan))
+[exit 0]
   $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir simple.stan
 ((functions_block ()) (input_vars ())
  (prepare_data
