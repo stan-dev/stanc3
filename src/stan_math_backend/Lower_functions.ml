@@ -94,22 +94,26 @@ let return_optional_arg_types (args : Program.fun_arg_decl) =
   @return A list of arguments with template parameter names added.
  *)
 let template_parameters (args : Program.fun_arg_decl) =
-  let rec template_p start i (ad, typ) =
+  let rec template_p ?(in_tuple = false) start i (ad, typ) =
     match (ad, UnsizedType.unwind_array_type typ) with
     | _, (UTuple tys, dims) ->
         (* (arrays of) Tuples directly print std::tuple *)
         (* TODO/future: use [std::tuple_element] to fully templatize tuples *)
         let temps, reqs, sclrs =
           List.map ~f:(fun ty -> (ad, ty)) tys
-          |> List.mapi ~f:(template_p (sprintf "%s%d__" start i))
+          |> List.mapi ~f:(template_p ~in_tuple:true (sprintf "%s%d__" start i))
           |> List.unzip3 in
         let templates = List.concat temps in
         let requires = List.concat reqs in
         let scalar = Tuple sclrs in
         (templates, requires, Types.std_vector ~dims scalar)
-    | UnsizedType.DataOnly, _ when not (UnsizedType.is_eigen_type typ) ->
-        (* For types that are [DataOnly] as not either a tuple or eigen type,
-           we can just directly print the type *)
+    | UnsizedType.DataOnly, _
+      when not
+             ((in_tuple && UnsizedType.is_array typ)
+             || UnsizedType.is_eigen_type typ) ->
+        (* we can just directly print the type of DataOnly types **except** for:
+           - Eigen matrices (these are stored as Maps in the data block)
+           - Vectors that are part of tuples (these can be passed as const-refs or not) *)
         ([], [], lower_type typ (stantype_prim typ))
     | _ ->
         (* all other types are templated *)

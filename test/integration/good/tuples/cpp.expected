@@ -4591,12 +4591,14 @@ template <typename T1__,
 void
 do_something_reconstruct(const std::vector<int>& indices, const T1__&
                          mem_arg__, std::ostream* pstream__);
-template <typename T0__1__,
-          stan::require_all_t<stan::is_col_vector<T0__1__>,
+template <typename T0__0__, typename T0__1__,
+          stan::require_all_t<stan::is_std_vector<T0__0__>,
+                              std::is_integral<std::decay_t<stan::value_type_t<T0__0__>>>,
+                              stan::is_col_vector<T0__1__>,
                               stan::is_vt_not_complex<T0__1__>>* = nullptr>
 void
-do_something(const std::tuple<std::vector<int>, T0__1__>& combined,
-             std::ostream* pstream__);
+do_something(const std::tuple<T0__0__, T0__1__>& combined, std::ostream*
+             pstream__);
 // void do_something_reconstruct(data array[] int, data vector)
 template <typename T1__,
           stan::require_all_t<stan::is_col_vector<T1__>,
@@ -4625,12 +4627,14 @@ do_something_reconstruct(const std::vector<int>& indices, const T1__&
   }
 }
 // void do_something(data tuple(array[] int, vector))
-template <typename T0__1__,
-          stan::require_all_t<stan::is_col_vector<T0__1__>,
+template <typename T0__0__, typename T0__1__,
+          stan::require_all_t<stan::is_std_vector<T0__0__>,
+                              std::is_integral<std::decay_t<stan::value_type_t<T0__0__>>>,
+                              stan::is_col_vector<T0__1__>,
                               stan::is_vt_not_complex<T0__1__>>*>
 void
-do_something(const std::tuple<std::vector<int>, T0__1__>& combined,
-             std::ostream* pstream__) {
+do_something(const std::tuple<T0__0__, T0__1__>& combined, std::ostream*
+             pstream__) {
   using local_scalar_t__ = stan::return_type_t<stan::base_type_t<T0__1__>>;
   int current_statement__ = 0;
   // suppress unused var warning
@@ -7523,10 +7527,13 @@ static constexpr std::array<const char*, 11> locations_array__ =
 double foo(const std::tuple<double, double>& x, std::ostream* pstream__);
 double
 bar(const std::vector<std::tuple<double, double>>& x, std::ostream* pstream__);
+template <typename T0__0__,
+          stan::require_all_t<stan::is_std_vector<T0__0__>,
+                              stan::is_eigen_matrix_dynamic<stan::value_type_t<T0__0__>>,
+                              stan::is_vt_not_complex<stan::value_type_t<T0__0__>>>* = nullptr>
 double
-baz(const std::vector<
-            std::tuple<std::vector<Eigen::Matrix<double,-1,-1>>, double>>& x,
-    std::ostream* pstream__);
+baz(const std::vector<std::tuple<T0__0__, double>>& x, std::ostream*
+    pstream__);
 // real foo(data tuple(real, real))
 double foo(const std::tuple<double, double>& x, std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -7567,10 +7574,13 @@ bar(const std::vector<std::tuple<double, double>>& x, std::ostream* pstream__) {
   }
 }
 // real baz(data array[] tuple(array[] matrix, real))
+template <typename T0__0__,
+          stan::require_all_t<stan::is_std_vector<T0__0__>,
+                              stan::is_eigen_matrix_dynamic<stan::value_type_t<T0__0__>>,
+                              stan::is_vt_not_complex<stan::value_type_t<T0__0__>>>*>
 double
-baz(const std::vector<
-            std::tuple<std::vector<Eigen::Matrix<double,-1,-1>>, double>>& x,
-    std::ostream* pstream__) {
+baz(const std::vector<std::tuple<T0__0__, double>>& x, std::ostream*
+    pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;
   // suppress unused var warning
@@ -7971,13 +7981,23 @@ static constexpr std::array<const char*, 4> locations_array__ =
   " (in 'tuple-dataonly2.stan', line 7, column 2 to column 34)",
   " (in 'tuple-dataonly2.stan', line 3, column 4 to column 18)",
   " (in 'tuple-dataonly2.stan', line 2, column 53 to line 4, column 3)"};
+template <typename T0__0__,
+          stan::require_all_t<stan::is_std_vector<T0__0__>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      stan::value_type_t<T0__0__>>,
+                                                      std::is_floating_point<
+                                                      std::decay_t<stan::value_type_t<T0__0__>>>>>* = nullptr>
 double
-tuple_tester(const std::tuple<std::vector<double>, int>& x, std::ostream*
-             pstream__);
+tuple_tester(const std::tuple<T0__0__, int>& x, std::ostream* pstream__);
 // real tuple_tester(data tuple(array[] real, int))
+template <typename T0__0__,
+          stan::require_all_t<stan::is_std_vector<T0__0__>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      stan::value_type_t<T0__0__>>,
+                                                      std::is_floating_point<
+                                                      std::decay_t<stan::value_type_t<T0__0__>>>>>*>
 double
-tuple_tester(const std::tuple<std::vector<double>, int>& x, std::ostream*
-             pstream__) {
+tuple_tester(const std::tuple<T0__0__, int>& x, std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;
   // suppress unused var warning

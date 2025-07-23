@@ -463,8 +463,10 @@ and lower_compiler_internal ad ut f es =
             && (not
                   (UnsizedType.is_scalar_type type_
                   || UnsizedType.contains_tuple type_))
-            (* Eigen types in the data block are stored as maps
-               (but normal Eigen matrices in GQ) *)
+            (* Eigen types in the data block are stored as maps.
+               Note that this is a non-optimal overcorrection, because
+               Eigen matrices in the GQ block or as data arguments
+               to other functions could be const-ref'd *)
             && not
                  (UnsizedType.is_dataonlytype adlevel
                  && UnsizedType.is_eigen_type type_)

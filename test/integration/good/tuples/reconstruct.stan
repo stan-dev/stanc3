@@ -3,6 +3,6 @@ functions {
     do_something((indices, mem));
   }
   void do_something(data tuple(array[] int, vector) combined) {
-
+    
   }
 }
