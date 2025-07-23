@@ -7512,12 +7512,22 @@ namespace tuple_dataonly_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 11> locations_array__ =
+static constexpr std::array<const char*, 21> locations_array__ =
   {" (found before start of program)",
-  " (in 'tuple-dataonly.stan', line 16, column 2 to column 19)",
-  " (in 'tuple-dataonly.stan', line 17, column 2 to column 24)",
-  " (in 'tuple-dataonly.stan', line 18, column 2 to column 34)",
+  " (in 'tuple-dataonly.stan', line 24, column 2 to column 19)",
+  " (in 'tuple-dataonly.stan', line 25, column 2 to column 20)",
+  " (in 'tuple-dataonly.stan', line 26, column 2 to column 24)",
+  " (in 'tuple-dataonly.stan', line 27, column 2 to column 20)",
+  " (in 'tuple-dataonly.stan', line 28, column 2 to column 21)",
+  " (in 'tuple-dataonly.stan', line 29, column 2 to column 30)",
+  " (in 'tuple-dataonly.stan', line 30, column 2 to column 29)",
+  " (in 'tuple-dataonly.stan', line 31, column 2 to column 34)",
   " (in 'tuple-dataonly.stan', line 13, column 2 to column 22)",
+  " (in 'tuple-dataonly.stan', line 16, column 2 to column 40)",
+  " (in 'tuple-dataonly.stan', line 18, column 2 to column 25)",
+  " (in 'tuple-dataonly.stan', line 19, column 2 to column 33)",
+  " (in 'tuple-dataonly.stan', line 20, column 2 to column 51)",
+  " (in 'tuple-dataonly.stan', line 21, column 2 to column 55)",
   " (in 'tuple-dataonly.stan', line 3, column 4 to column 15)",
   " (in 'tuple-dataonly.stan', line 2, column 37 to line 4, column 3)",
   " (in 'tuple-dataonly.stan', line 6, column 4 to column 18)",
@@ -7547,7 +7557,7 @@ double foo(const std::tuple<double, double>& x, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 5;
+    current_statement__ = 15;
     return std::get<0>(x);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7567,7 +7577,7 @@ bar(const std::vector<std::tuple<double, double>>& x, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 7;
+    current_statement__ = 17;
     return std::get<1>(stan::model::rvalue(x, "x", stan::model::index_uni(1)));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7592,7 +7602,7 @@ baz(const std::vector<std::tuple<T0__0__, double>>& x, std::ostream*
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 9;
+    current_statement__ = 19;
     return stan::model::rvalue(
              stan::model::rvalue(
                std::get<0>(
@@ -7606,6 +7616,13 @@ baz(const std::vector<std::tuple<T0__0__, double>>& x, std::ostream*
 class tuple_dataonly_model final : public model_base_crtp<tuple_dataonly_model> {
  private:
   std::tuple<double, double> d;
+  std::vector<std::tuple<double, double>> d2;
+  Eigen::Matrix<double,-1,-1> m_data__;
+  std::vector<Eigen::Matrix<double,-1,-1>> m2;
+  std::tuple<std::vector<Eigen::Matrix<double,-1,-1>>, double> x;
+  std::vector<std::tuple<std::vector<Eigen::Matrix<double,-1,-1>>, double>>
+    x2;
+  Eigen::Map<Eigen::Matrix<double,-1,-1>> m{nullptr, 0, 0};
  public:
   ~tuple_dataonly_model() {}
   tuple_dataonly_model(stan::io::var_context& context__, unsigned int
@@ -7628,16 +7645,69 @@ class tuple_dataonly_model final : public model_base_crtp<tuple_dataonly_model> 
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-      current_statement__ = 4;
+      current_statement__ = 9;
       context__.validate_dims("data initialization", "d.1", "double",
         std::vector<size_t>{});
       context__.validate_dims("data initialization", "d.2", "double",
         std::vector<size_t>{});
       d = std::tuple<double, double>{std::numeric_limits<double>::quiet_NaN(),
             std::numeric_limits<double>::quiet_NaN()};
-      current_statement__ = 4;
+      current_statement__ = 9;
       std::get<0>(d) = context__.vals_r("d.1")[(1 - 1)];
       std::get<1>(d) = context__.vals_r("d.2")[(1 - 1)];
+      current_statement__ = 10;
+      d2 = std::vector<std::tuple<double, double>>(2,
+             std::tuple<double, double>{std::numeric_limits<double>::quiet_NaN(
+                                          ),
+               std::numeric_limits<double>::quiet_NaN()});
+      current_statement__ = 10;
+      stan::model::assign(d2,
+        std::vector<std::tuple<double, double>>{stan::math::promote_scalar<
+                                                  std::tuple<double, double>>(
+                                                  d),
+          stan::math::promote_scalar<std::tuple<double, double>>(d)},
+        "assigning variable d2");
+      current_statement__ = 11;
+      m_data__ = Eigen::Matrix<double,-1,-1>::Constant(1, 1,
+                   std::numeric_limits<double>::quiet_NaN());
+      new (&m) Eigen::Map<Eigen::Matrix<double,-1,-1>>(m_data__.data(), 1, 1);
+      current_statement__ = 11;
+      stan::model::assign(m,
+        stan::math::to_matrix(
+          std::vector<Eigen::Matrix<double,1,-1>>{(Eigen::Matrix<double,1,-1>(1) <<
+                                                     1).finished()}),
+        "assigning variable m");
+      current_statement__ = 12;
+      m2 = std::vector<Eigen::Matrix<double,-1,-1>>(1,
+             Eigen::Matrix<double,-1,-1>::Constant(1, 1,
+               std::numeric_limits<double>::quiet_NaN()));
+      current_statement__ = 12;
+      stan::model::assign(m2, std::vector<Eigen::Matrix<double,-1,-1>>{m},
+        "assigning variable m2");
+      current_statement__ = 13;
+      x = std::tuple<std::vector<Eigen::Matrix<double,-1,-1>>, double>{
+            std::vector<Eigen::Matrix<double,-1,-1>>(1,
+              Eigen::Matrix<double,-1,-1>::Constant(1, 1,
+                std::numeric_limits<double>::quiet_NaN())),
+            std::numeric_limits<double>::quiet_NaN()};
+      current_statement__ = 13;
+      stan::model::assign(x,
+        std::tuple<const std::vector<Eigen::Matrix<double,-1,-1>>&, double>(m2,
+          std::get<1>(d)), "assigning variable x");
+      current_statement__ = 14;
+      x2 = std::vector<
+             std::tuple<std::vector<Eigen::Matrix<double,-1,-1>>, double>>(1,
+             std::tuple<std::vector<Eigen::Matrix<double,-1,-1>>, double>{
+               std::vector<Eigen::Matrix<double,-1,-1>>(1,
+                 Eigen::Matrix<double,-1,-1>::Constant(1, 1,
+                   std::numeric_limits<double>::quiet_NaN())),
+               std::numeric_limits<double>::quiet_NaN()});
+      current_statement__ = 14;
+      stan::model::assign(x2,
+        std::vector<
+          std::tuple<std::vector<Eigen::Matrix<double,-1,-1>>, double>>{
+          stan::math::promote_scalar<std::tuple<double, double>>(x)},
+        "assigning variable x2");
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -7677,6 +7747,8 @@ class tuple_dataonly_model final : public model_base_crtp<tuple_dataonly_model> 
       current_statement__ = 1;
       lp_accum__.add(foo(d, pstream__));
       current_statement__ = 2;
+      lp_accum__.add(bar(d2, pstream__));
+      current_statement__ = 3;
       lp_accum__.add(bar(
                        std::vector<std::tuple<double, double>>{stan::math::promote_scalar<
                                                                  std::tuple<
@@ -7684,7 +7756,34 @@ class tuple_dataonly_model final : public model_base_crtp<tuple_dataonly_model> 
                                                                    double>>(d),
                          stan::math::promote_scalar<
                            std::tuple<double, double>>(d)}, pstream__));
-      current_statement__ = 3;
+      current_statement__ = 4;
+      lp_accum__.add(baz(x2, pstream__));
+      current_statement__ = 5;
+      lp_accum__.add(baz(
+                       std::vector<
+                         std::tuple<std::vector<Eigen::Matrix<double,-1,-1>>,
+                           double>>{stan::math::promote_scalar<
+                                      std::tuple<double, double>>(x)},
+                       pstream__));
+      current_statement__ = 6;
+      lp_accum__.add(baz(
+                       std::vector<
+                         std::tuple<std::vector<Eigen::Matrix<double,-1,-1>>,
+                           double>>{std::tuple<
+                                      std::vector<
+                                        Eigen::Matrix<double,-1,-1>>,
+                                      double>(std::vector<
+                                                Eigen::Matrix<double,-1,-1>>{m},
+                                      std::get<1>(d))}, pstream__));
+      current_statement__ = 7;
+      lp_accum__.add(baz(
+                       std::vector<
+                         std::tuple<std::vector<Eigen::Matrix<double,-1,-1>>,
+                           double>>{std::tuple<
+                                      const std::vector<
+                                              Eigen::Matrix<double,-1,-1>>&,
+                                      double>(m2, std::get<1>(d))}, pstream__));
+      current_statement__ = 8;
       lp_accum__.add(baz(
                        std::vector<
                          std::tuple<std::vector<Eigen::Matrix<double,-1,-1>>,
@@ -7732,6 +7831,8 @@ class tuple_dataonly_model final : public model_base_crtp<tuple_dataonly_model> 
       current_statement__ = 1;
       lp_accum__.add(foo(d, pstream__));
       current_statement__ = 2;
+      lp_accum__.add(bar(d2, pstream__));
+      current_statement__ = 3;
       lp_accum__.add(bar(
                        std::vector<std::tuple<double, double>>{stan::math::promote_scalar<
                                                                  std::tuple<
@@ -7739,7 +7840,34 @@ class tuple_dataonly_model final : public model_base_crtp<tuple_dataonly_model> 
                                                                    double>>(d),
                          stan::math::promote_scalar<
                            std::tuple<double, double>>(d)}, pstream__));
-      current_statement__ = 3;
+      current_statement__ = 4;
+      lp_accum__.add(baz(x2, pstream__));
+      current_statement__ = 5;
+      lp_accum__.add(baz(
+                       std::vector<
+                         std::tuple<std::vector<Eigen::Matrix<double,-1,-1>>,
+                           double>>{stan::math::promote_scalar<
+                                      std::tuple<double, double>>(x)},
+                       pstream__));
+      current_statement__ = 6;
+      lp_accum__.add(baz(
+                       std::vector<
+                         std::tuple<std::vector<Eigen::Matrix<double,-1,-1>>,
+                           double>>{std::tuple<
+                                      std::vector<
+                                        Eigen::Matrix<double,-1,-1>>,
+                                      double>(std::vector<
+                                                Eigen::Matrix<double,-1,-1>>{m},
+                                      std::get<1>(d))}, pstream__));
+      current_statement__ = 7;
+      lp_accum__.add(baz(
+                       std::vector<
+                         std::tuple<std::vector<Eigen::Matrix<double,-1,-1>>,
+                           double>>{std::tuple<
+                                      const std::vector<
+                                              Eigen::Matrix<double,-1,-1>>&,
+                                      double>(m2, std::get<1>(d))}, pstream__));
+      current_statement__ = 8;
       lp_accum__.add(baz(
                        std::vector<
                          std::tuple<std::vector<Eigen::Matrix<double,-1,-1>>,
