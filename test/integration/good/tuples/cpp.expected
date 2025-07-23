@@ -178,8 +178,7 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
             arr_tuple_dot_3_flat__pos__ = (arr_tuple_dot_3_flat__pos__ + 3);
           }
           stan::model::assign(arr_tuple,
-            std::tuple<int, const std::vector<double>&,
-              Eigen::Matrix<double,-1,1>>(arr_tuple_dot_1_temp__,
+            std::forward_as_tuple(arr_tuple_dot_1_temp__,
               arr_tuple_dot_2_temp__, arr_tuple_dot_3_temp__),
             "assigning variable arr_tuple", stan::model::index_uni(sym1__));
         }
@@ -236,7 +235,7 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
           tuple_arr_tuple_dot_3_dot_2_flat__pos__ = (tuple_arr_tuple_dot_3_dot_2_flat__pos__
             + 4);
           stan::model::assign(std::get<2>(tuple_arr_tuple),
-            std::tuple<double, const std::vector<int>&>(tuple_arr_tuple_dot_3_dot_1_temp__,
+            std::forward_as_tuple(tuple_arr_tuple_dot_3_dot_1_temp__,
               tuple_arr_tuple_dot_3_dot_2_temp__),
             "assigning variable tuple_arr_tuple.3",
             stan::model::index_uni(sym1__));
@@ -352,8 +351,7 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
               + 4);
           }
           stan::model::assign(arr_tuple_tuple,
-            std::tuple<double, int,
-              std::tuple<double, std::tuple<int, Eigen::Matrix<double,-1,1>>>>(arr_tuple_tuple_dot_1_temp__,
+            std::forward_as_tuple(arr_tuple_tuple_dot_1_temp__,
               arr_tuple_tuple_dot_2_temp__, arr_tuple_tuple_dot_3_temp__),
             "assigning variable arr_tuple_tuple",
             stan::model::index_uni(sym1__));
@@ -453,15 +451,14 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                   + 5);
               }
               stan::model::assign(arr_tuple_arr_tuple_dot_2_temp__,
-                std::tuple<double, Eigen::Matrix<double,-1,1>>(arr_tuple_arr_tuple_dot_2_dot_1_temp__,
+                std::forward_as_tuple(arr_tuple_arr_tuple_dot_2_dot_1_temp__,
                   arr_tuple_arr_tuple_dot_2_dot_2_temp__),
                 "assigning variable arr_tuple_arr_tuple_dot_2_temp__",
                 stan::model::index_uni(sym2__));
             }
           }
           stan::model::assign(arr_tuple_arr_tuple,
-            std::tuple<int,
-              std::vector<std::tuple<double, Eigen::Matrix<double,-1,1>>>>(arr_tuple_arr_tuple_dot_1_temp__,
+            std::forward_as_tuple(arr_tuple_arr_tuple_dot_1_temp__,
               arr_tuple_arr_tuple_dot_2_temp__),
             "assigning variable arr_tuple_arr_tuple",
             stan::model::index_uni(sym1__));
@@ -624,30 +621,21 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                       + (6 * 7));
                   }
                   stan::model::assign(very_deep_dot_2_dot_2_temp__,
-                    std::tuple<const std::complex<double>&,
-                      Eigen::Matrix<double,-1,-1>>(very_deep_dot_2_dot_2_dot_1_temp__,
+                    std::forward_as_tuple(very_deep_dot_2_dot_2_dot_1_temp__,
                       very_deep_dot_2_dot_2_dot_2_temp__),
                     "assigning variable very_deep_dot_2_dot_2_temp__",
                     stan::model::index_uni(sym3__));
                 }
               }
               stan::model::assign(very_deep_dot_2_temp__,
-                std::tuple<double,
-                  std::vector<
-                    std::tuple<std::complex<double>,
-                      Eigen::Matrix<double,-1,-1>>>>(very_deep_dot_2_dot_1_temp__,
+                std::forward_as_tuple(very_deep_dot_2_dot_1_temp__,
                   very_deep_dot_2_dot_2_temp__),
                 "assigning variable very_deep_dot_2_temp__",
                 stan::model::index_uni(sym2__));
             }
           }
           stan::model::assign(very_deep,
-            std::tuple<int,
-              std::vector<
-                std::tuple<double,
-                  std::vector<
-                    std::tuple<std::complex<double>,
-                      Eigen::Matrix<double,-1,-1>>>>>>(very_deep_dot_1_temp__,
+            std::forward_as_tuple(very_deep_dot_1_temp__,
               very_deep_dot_2_temp__), "assigning variable very_deep",
             stan::model::index_uni(sym1__));
         }
@@ -2009,8 +1997,7 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
               3);
           }
           stan::model::assign(arr_tuple_p,
-            std::tuple<const std::complex<double>&,
-              const std::vector<double>&, Eigen::Matrix<double,-1,1>>(arr_tuple_p_dot_1_temp__,
+            std::forward_as_tuple(arr_tuple_p_dot_1_temp__,
               arr_tuple_p_dot_2_temp__, arr_tuple_p_dot_3_temp__),
             "assigning variable arr_tuple_p", stan::model::index_uni(sym1__));
         }
@@ -2064,7 +2051,7 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
           tuple_arr_tuple_p_dot_3_dot_2_flat__pos__ = (tuple_arr_tuple_p_dot_3_dot_2_flat__pos__
             + 4);
           stan::model::assign(std::get<2>(tuple_arr_tuple_p),
-            std::tuple<double, const std::vector<double>&>(tuple_arr_tuple_p_dot_3_dot_1_temp__,
+            std::forward_as_tuple(tuple_arr_tuple_p_dot_3_dot_1_temp__,
               tuple_arr_tuple_p_dot_3_dot_2_temp__),
             "assigning variable tuple_arr_tuple_p.3",
             stan::model::index_uni(sym1__));
@@ -2186,9 +2173,7 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
               + 4);
           }
           stan::model::assign(arr_tuple_tuple_p,
-            std::tuple<double, double,
-              std::tuple<double,
-                std::tuple<std::complex<double>, Eigen::Matrix<double,-1,1>>>>(arr_tuple_tuple_p_dot_1_temp__,
+            std::forward_as_tuple(arr_tuple_tuple_p_dot_1_temp__,
               arr_tuple_tuple_p_dot_2_temp__, arr_tuple_tuple_p_dot_3_temp__),
             "assigning variable arr_tuple_tuple_p",
             stan::model::index_uni(sym1__));
@@ -2298,15 +2283,15 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                   + 5);
               }
               stan::model::assign(arr_tuple_arr_tuple_p_dot_2_temp__,
-                std::tuple<double, Eigen::Matrix<double,-1,1>>(arr_tuple_arr_tuple_p_dot_2_dot_1_temp__,
+                std::forward_as_tuple(
+                  arr_tuple_arr_tuple_p_dot_2_dot_1_temp__,
                   arr_tuple_arr_tuple_p_dot_2_dot_2_temp__),
                 "assigning variable arr_tuple_arr_tuple_p_dot_2_temp__",
                 stan::model::index_uni(sym2__));
             }
           }
           stan::model::assign(arr_tuple_arr_tuple_p,
-            std::tuple<double,
-              std::vector<std::tuple<double, Eigen::Matrix<double,-1,1>>>>(arr_tuple_arr_tuple_p_dot_1_temp__,
+            std::forward_as_tuple(arr_tuple_arr_tuple_p_dot_1_temp__,
               arr_tuple_arr_tuple_p_dot_2_temp__),
             "assigning variable arr_tuple_arr_tuple_p",
             stan::model::index_uni(sym1__));
@@ -2470,30 +2455,22 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                       + (6 * 7));
                   }
                   stan::model::assign(very_deep_p_dot_2_dot_2_temp__,
-                    std::tuple<const std::complex<double>&,
-                      Eigen::Matrix<double,-1,-1>>(very_deep_p_dot_2_dot_2_dot_1_temp__,
+                    std::forward_as_tuple(
+                      very_deep_p_dot_2_dot_2_dot_1_temp__,
                       very_deep_p_dot_2_dot_2_dot_2_temp__),
                     "assigning variable very_deep_p_dot_2_dot_2_temp__",
                     stan::model::index_uni(sym3__));
                 }
               }
               stan::model::assign(very_deep_p_dot_2_temp__,
-                std::tuple<double,
-                  std::vector<
-                    std::tuple<std::complex<double>,
-                      Eigen::Matrix<double,-1,-1>>>>(very_deep_p_dot_2_dot_1_temp__,
+                std::forward_as_tuple(very_deep_p_dot_2_dot_1_temp__,
                   very_deep_p_dot_2_dot_2_temp__),
                 "assigning variable very_deep_p_dot_2_temp__",
                 stan::model::index_uni(sym2__));
             }
           }
           stan::model::assign(very_deep_p,
-            std::tuple<double,
-              std::vector<
-                std::tuple<double,
-                  std::vector<
-                    std::tuple<std::complex<double>,
-                      Eigen::Matrix<double,-1,-1>>>>>>(very_deep_p_dot_1_temp__,
+            std::forward_as_tuple(very_deep_p_dot_1_temp__,
               very_deep_p_dot_2_temp__), "assigning variable very_deep_p",
             stan::model::index_uni(sym1__));
         }
@@ -2990,7 +2967,7 @@ class basic_unpacking_model final : public model_base_crtp<basic_unpacking_model
       {
         std::tuple<int, int> sym1__;
         current_statement__ = 4;
-        stan::model::assign(sym1__, std::tuple<int, int>(5, 6),
+        stan::model::assign(sym1__, std::forward_as_tuple(5, 6),
           "assigning variable sym1__");
         current_statement__ = 5;
         x = std::get<0>(sym1__);
@@ -3006,7 +2983,7 @@ class basic_unpacking_model final : public model_base_crtp<basic_unpacking_model
       {
         std::tuple<int, int> sym1__;
         current_statement__ = 7;
-        stan::model::assign(sym1__, std::tuple<int, int>(y, x),
+        stan::model::assign(sym1__, std::forward_as_tuple(y, x),
           "assigning variable sym1__");
         current_statement__ = 8;
         x = std::get<0>(sym1__);
@@ -3022,7 +2999,7 @@ class basic_unpacking_model final : public model_base_crtp<basic_unpacking_model
       {
         std::tuple<int, int> sym1__;
         current_statement__ = 10;
-        stan::model::assign(sym1__, std::tuple<int, int>(y, x),
+        stan::model::assign(sym1__, std::forward_as_tuple(y, x),
           "assigning variable sym1__");
         current_statement__ = 11;
         x = std::get<0>(sym1__);
@@ -3032,7 +3009,7 @@ class basic_unpacking_model final : public model_base_crtp<basic_unpacking_model
       {
         std::tuple<int, int> sym1__;
         current_statement__ = 12;
-        stan::model::assign(sym1__, std::tuple<int, int>(y, x),
+        stan::model::assign(sym1__, std::forward_as_tuple(y, x),
           "assigning variable sym1__");
         current_statement__ = 13;
         x = std::get<0>(sym1__);
@@ -3388,8 +3365,7 @@ class infer_tuple_ad_model final : public model_base_crtp<infer_tuple_ad_model> 
         current_statement__ = 2;
         stan::model::assign(z,
           std::vector<std::tuple<local_scalar_t__, local_scalar_t__>>{
-            std::tuple<local_scalar_t__, local_scalar_t__>(1, x),
-            std::tuple<local_scalar_t__, local_scalar_t__>(x, 1)},
+            std::forward_as_tuple(1, x), std::forward_as_tuple(x, 1)},
           "assigning variable z");
       }
     } catch (const std::exception& e) {
@@ -3432,8 +3408,7 @@ class infer_tuple_ad_model final : public model_base_crtp<infer_tuple_ad_model> 
         current_statement__ = 2;
         stan::model::assign(z,
           std::vector<std::tuple<local_scalar_t__, local_scalar_t__>>{
-            std::tuple<local_scalar_t__, local_scalar_t__>(1, x),
-            std::tuple<local_scalar_t__, local_scalar_t__>(x, 1)},
+            std::forward_as_tuple(1, x), std::forward_as_tuple(x, 1)},
           "assigning variable z");
       }
     } catch (const std::exception& e) {
@@ -4591,14 +4566,18 @@ template <typename T1__,
 void
 do_something_reconstruct(const std::vector<int>& indices, const T1__&
                          mem_arg__, std::ostream* pstream__);
-template <typename T0__0__, typename T0__1__,
-          stan::require_all_t<stan::is_std_vector<T0__0__>,
-                              std::is_integral<std::decay_t<stan::value_type_t<T0__0__>>>,
-                              stan::is_col_vector<T0__1__>,
-                              stan::is_vt_not_complex<T0__1__>>* = nullptr>
-void
-do_something(const std::tuple<T0__0__, T0__1__>& combined, std::ostream*
-             pstream__);
+template <typename T0__,
+          stan::require_all_t<stan::math::is_tuple<std::decay_t<T0__>>,
+                              stan::is_std_vector<std::tuple_element_t<0,
+                                                    std::decay_t<T0__>>>,
+                              std::is_integral<std::decay_t<stan::value_type_t<
+                                                              std::tuple_element_t<0,
+                                                                std::decay_t<T0__>>>>>,
+                              stan::is_col_vector<std::tuple_element_t<1,
+                                                    std::decay_t<T0__>>>,
+                              stan::is_vt_not_complex<std::tuple_element_t<1,
+                                                        std::decay_t<T0__>>>>* = nullptr>
+void do_something(const T0__& combined, std::ostream* pstream__);
 // void do_something_reconstruct(data array[] int, data vector)
 template <typename T1__,
           stan::require_all_t<stan::is_col_vector<T1__>,
@@ -4619,23 +4598,26 @@ do_something_reconstruct(const std::vector<int>& indices, const T1__&
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 1;
-    do_something(
-      std::tuple<const std::vector<int>&, Eigen::Matrix<double,-1,1>>(indices,
-        mem), pstream__);
+    do_something(std::forward_as_tuple(indices, mem), pstream__);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
 // void do_something(data tuple(array[] int, vector))
-template <typename T0__0__, typename T0__1__,
-          stan::require_all_t<stan::is_std_vector<T0__0__>,
-                              std::is_integral<std::decay_t<stan::value_type_t<T0__0__>>>,
-                              stan::is_col_vector<T0__1__>,
-                              stan::is_vt_not_complex<T0__1__>>*>
-void
-do_something(const std::tuple<T0__0__, T0__1__>& combined, std::ostream*
-             pstream__) {
-  using local_scalar_t__ = stan::return_type_t<stan::base_type_t<T0__1__>>;
+template <typename T0__,
+          stan::require_all_t<stan::math::is_tuple<std::decay_t<T0__>>,
+                              stan::is_std_vector<std::tuple_element_t<0,
+                                                    std::decay_t<T0__>>>,
+                              std::is_integral<std::decay_t<stan::value_type_t<
+                                                              std::tuple_element_t<0,
+                                                                std::decay_t<T0__>>>>>,
+                              stan::is_col_vector<std::tuple_element_t<1,
+                                                    std::decay_t<T0__>>>,
+                              stan::is_vt_not_complex<std::tuple_element_t<1,
+                                                        std::decay_t<T0__>>>>*>
+void do_something(const T0__& combined, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<stan::base_type_t<std::tuple_element_t<1,
+                                                                   std::decay_t<T0__>>>>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -4978,7 +4960,7 @@ class simple_model final : public model_base_crtp<simple_model> {
       x = std::tuple<double, int>{std::numeric_limits<double>::quiet_NaN(),
             std::numeric_limits<int>::min()};
       current_statement__ = 1;
-      stan::model::assign(x, std::tuple<double, int>(3.14, 2),
+      stan::model::assign(x, std::forward_as_tuple(3.14, 2),
         "assigning variable x");
       current_statement__ = 2;
       if (pstream__) {
@@ -5301,8 +5283,8 @@ class simple2_model final : public model_base_crtp<simple2_model> {
             std::numeric_limits<int>::min()};
       current_statement__ = 1;
       stan::model::assign(x,
-        std::tuple<std::vector<double>, int>(std::vector<double>{1.01, 3.14},
-          2), "assigning variable x");
+        std::forward_as_tuple(std::vector<double>{1.01, 3.14}, 2),
+        "assigning variable x");
       current_statement__ = 2;
       if (pstream__) {
         stan::math::stan_print(pstream__,
@@ -5630,19 +5612,10 @@ class simple3_model final : public model_base_crtp<simple3_model> {
             std::numeric_limits<int>::min()};
       current_statement__ = 1;
       stan::model::assign(x,
-        std::tuple<std::vector<std::vector<double>>, int>(std::vector<
-                                                            std::vector<
-                                                              double>>{
-                                                            std::vector<
-                                                              double>{1.01,
-                                                              3.14},
-                                                            std::vector<
-                                                              double>{1.01,
-                                                              3.14},
-                                                            std::vector<
-                                                              double>{1.01,
-                                                              3.14}}, 2),
-        "assigning variable x");
+        std::forward_as_tuple(
+          std::vector<std::vector<double>>{std::vector<double>{1.01, 3.14},
+            std::vector<double>{1.01, 3.14}, std::vector<double>{1.01, 3.14}},
+          2), "assigning variable x");
       current_statement__ = 2;
       if (pstream__) {
         stan::math::stan_print(pstream__,
@@ -6066,9 +6039,9 @@ class tuple_constraints_data_model final : public model_base_crtp<tuple_constrai
               z_dot_2_flat__pos__ = (z_dot_2_flat__pos__ + 4);
             }
             stan::model::assign(z,
-              std::tuple<double, Eigen::Matrix<double,-1,1>>(z_dot_1_temp__,
-                z_dot_2_temp__), "assigning variable z",
-              stan::model::index_uni(sym2__), stan::model::index_uni(sym1__));
+              std::forward_as_tuple(z_dot_1_temp__, z_dot_2_temp__),
+              "assigning variable z", stan::model::index_uni(sym2__),
+              stan::model::index_uni(sym1__));
           }
         }
       }
@@ -6390,7 +6363,7 @@ std::tuple<double, double> foo(std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 8;
-    return std::tuple<local_scalar_t__, local_scalar_t__>(1.0, 2.0);
+    return std::forward_as_tuple(1.0, 2.0);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -7090,9 +7063,9 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
               ps2_dot_2_flat__pos__ = (ps2_dot_2_flat__pos__ + 4);
             }
             stan::model::assign(ps2,
-              std::tuple<double, Eigen::Matrix<double,-1,1>>(ps2_dot_1_temp__,
-                ps2_dot_2_temp__), "assigning variable ps2",
-              stan::model::index_uni(sym2__), stan::model::index_uni(sym1__));
+              std::forward_as_tuple(ps2_dot_1_temp__, ps2_dot_2_temp__),
+              "assigning variable ps2", stan::model::index_uni(sym2__),
+              stan::model::index_uni(sym1__));
           }
         }
       }
@@ -7238,8 +7211,7 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
                   + (5 * 4));
               }
               stan::model::assign(complicated_dot_2_temp__,
-                std::tuple<double, Eigen::Matrix<double,-1,1>,
-                  Eigen::Matrix<double,-1,-1>>(complicated_dot_2_dot_1_temp__,
+                std::forward_as_tuple(complicated_dot_2_dot_1_temp__,
                   complicated_dot_2_dot_2_temp__,
                   complicated_dot_2_dot_3_temp__),
                 "assigning variable complicated_dot_2_temp__",
@@ -7247,10 +7219,7 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
             }
           }
           stan::model::assign(complicated,
-            std::tuple<double,
-              std::vector<
-                std::tuple<double, Eigen::Matrix<double,-1,1>,
-                  Eigen::Matrix<double,-1,-1>>>>(complicated_dot_1_temp__,
+            std::forward_as_tuple(complicated_dot_1_temp__,
               complicated_dot_2_temp__), "assigning variable complicated",
             stan::model::index_uni(sym1__));
         }
@@ -7534,18 +7503,71 @@ static constexpr std::array<const char*, 21> locations_array__ =
   " (in 'tuple-dataonly.stan', line 5, column 45 to line 7, column 3)",
   " (in 'tuple-dataonly.stan', line 9, column 4 to column 27)",
   " (in 'tuple-dataonly.stan', line 8, column 55 to line 10, column 3)"};
-double foo(const std::tuple<double, double>& x, std::ostream* pstream__);
-double
-bar(const std::vector<std::tuple<double, double>>& x, std::ostream* pstream__);
-template <typename T0__0__,
-          stan::require_all_t<stan::is_std_vector<T0__0__>,
-                              stan::is_eigen_matrix_dynamic<stan::value_type_t<T0__0__>>,
-                              stan::is_vt_not_complex<stan::value_type_t<T0__0__>>>* = nullptr>
-double
-baz(const std::vector<std::tuple<T0__0__, double>>& x, std::ostream*
-    pstream__);
+template <typename T0__,
+          stan::require_all_t<stan::math::is_tuple<std::decay_t<T0__>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      std::tuple_element_t<0,
+                                                        std::decay_t<T0__>>>,
+                                                      std::is_floating_point<
+                                                      std::decay_t<std::tuple_element_t<0,
+                                                                    std::decay_t<T0__>>>>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      std::tuple_element_t<1,
+                                                        std::decay_t<T0__>>>,
+                                                      std::is_floating_point<
+                                                      std::decay_t<std::tuple_element_t<1,
+                                                                    std::decay_t<T0__>>>>>>* = nullptr>
+double foo(const T0__& x, std::ostream* pstream__);
+template <typename T0__,
+          stan::require_all_t<stan::is_std_vector<T0__>,
+                              stan::math::is_tuple<stan::value_type_t<T0__>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      std::tuple_element_t<0,
+                                                        stan::value_type_t<T0__>>>,
+                                                      std::is_floating_point<
+                                                      std::decay_t<std::tuple_element_t<0,
+                                                                    stan::value_type_t<T0__>>>>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      std::tuple_element_t<1,
+                                                        stan::value_type_t<T0__>>>,
+                                                      std::is_floating_point<
+                                                      std::decay_t<std::tuple_element_t<1,
+                                                                    stan::value_type_t<T0__>>>>>>* = nullptr>
+double bar(const T0__& x, std::ostream* pstream__);
+template <typename T0__,
+          stan::require_all_t<stan::is_std_vector<T0__>,
+                              stan::math::is_tuple<stan::value_type_t<T0__>>,
+                              stan::is_std_vector<std::tuple_element_t<0,
+                                                    stan::value_type_t<T0__>>>,
+                              stan::is_eigen_matrix_dynamic<stan::value_type_t<
+                                                              std::tuple_element_t<0,
+                                                                stan::value_type_t<T0__>>>>,
+                              stan::is_vt_not_complex<stan::value_type_t<
+                                                        std::tuple_element_t<0,
+                                                          stan::value_type_t<T0__>>>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      std::tuple_element_t<1,
+                                                        stan::value_type_t<T0__>>>,
+                                                      std::is_floating_point<
+                                                      std::decay_t<std::tuple_element_t<1,
+                                                                    stan::value_type_t<T0__>>>>>>* = nullptr>
+double baz(const T0__& x, std::ostream* pstream__);
 // real foo(data tuple(real, real))
-double foo(const std::tuple<double, double>& x, std::ostream* pstream__) {
+template <typename T0__,
+          stan::require_all_t<stan::math::is_tuple<std::decay_t<T0__>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      std::tuple_element_t<0,
+                                                        std::decay_t<T0__>>>,
+                                                      std::is_floating_point<
+                                                      std::decay_t<std::tuple_element_t<0,
+                                                                    std::decay_t<T0__>>>>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      std::tuple_element_t<1,
+                                                        std::decay_t<T0__>>>,
+                                                      std::is_floating_point<
+                                                      std::decay_t<std::tuple_element_t<1,
+                                                                    std::decay_t<T0__>>>>>>*>
+double foo(const T0__& x, std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;
   // suppress unused var warning
@@ -7564,8 +7586,22 @@ double foo(const std::tuple<double, double>& x, std::ostream* pstream__) {
   }
 }
 // real bar(data array[] tuple(real, real))
-double
-bar(const std::vector<std::tuple<double, double>>& x, std::ostream* pstream__) {
+template <typename T0__,
+          stan::require_all_t<stan::is_std_vector<T0__>,
+                              stan::math::is_tuple<stan::value_type_t<T0__>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      std::tuple_element_t<0,
+                                                        stan::value_type_t<T0__>>>,
+                                                      std::is_floating_point<
+                                                      std::decay_t<std::tuple_element_t<0,
+                                                                    stan::value_type_t<T0__>>>>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      std::tuple_element_t<1,
+                                                        stan::value_type_t<T0__>>>,
+                                                      std::is_floating_point<
+                                                      std::decay_t<std::tuple_element_t<1,
+                                                                    stan::value_type_t<T0__>>>>>>*>
+double bar(const T0__& x, std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;
   // suppress unused var warning
@@ -7584,13 +7620,24 @@ bar(const std::vector<std::tuple<double, double>>& x, std::ostream* pstream__) {
   }
 }
 // real baz(data array[] tuple(array[] matrix, real))
-template <typename T0__0__,
-          stan::require_all_t<stan::is_std_vector<T0__0__>,
-                              stan::is_eigen_matrix_dynamic<stan::value_type_t<T0__0__>>,
-                              stan::is_vt_not_complex<stan::value_type_t<T0__0__>>>*>
-double
-baz(const std::vector<std::tuple<T0__0__, double>>& x, std::ostream*
-    pstream__) {
+template <typename T0__,
+          stan::require_all_t<stan::is_std_vector<T0__>,
+                              stan::math::is_tuple<stan::value_type_t<T0__>>,
+                              stan::is_std_vector<std::tuple_element_t<0,
+                                                    stan::value_type_t<T0__>>>,
+                              stan::is_eigen_matrix_dynamic<stan::value_type_t<
+                                                              std::tuple_element_t<0,
+                                                                stan::value_type_t<T0__>>>>,
+                              stan::is_vt_not_complex<stan::value_type_t<
+                                                        std::tuple_element_t<0,
+                                                          stan::value_type_t<T0__>>>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      std::tuple_element_t<1,
+                                                        stan::value_type_t<T0__>>>,
+                                                      std::is_floating_point<
+                                                      std::decay_t<std::tuple_element_t<1,
+                                                                    stan::value_type_t<T0__>>>>>>*>
+double baz(const T0__& x, std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;
   // suppress unused var warning
@@ -7691,9 +7738,8 @@ class tuple_dataonly_model final : public model_base_crtp<tuple_dataonly_model> 
                 std::numeric_limits<double>::quiet_NaN())),
             std::numeric_limits<double>::quiet_NaN()};
       current_statement__ = 13;
-      stan::model::assign(x,
-        std::tuple<const std::vector<Eigen::Matrix<double,-1,-1>>&, double>(m2,
-          std::get<1>(d)), "assigning variable x");
+      stan::model::assign(x, std::forward_as_tuple(m2, std::get<1>(d)),
+        "assigning variable x");
       current_statement__ = 14;
       x2 = std::vector<
              std::tuple<std::vector<Eigen::Matrix<double,-1,-1>>, double>>(1,
@@ -7769,34 +7815,28 @@ class tuple_dataonly_model final : public model_base_crtp<tuple_dataonly_model> 
       lp_accum__.add(baz(
                        std::vector<
                          std::tuple<std::vector<Eigen::Matrix<double,-1,-1>>,
-                           double>>{std::tuple<
+                           double>>{std::forward_as_tuple(
                                       std::vector<
-                                        Eigen::Matrix<double,-1,-1>>,
-                                      double>(std::vector<
-                                                Eigen::Matrix<double,-1,-1>>{m},
+                                        Eigen::Matrix<double,-1,-1>>{m},
                                       std::get<1>(d))}, pstream__));
       current_statement__ = 7;
       lp_accum__.add(baz(
                        std::vector<
                          std::tuple<std::vector<Eigen::Matrix<double,-1,-1>>,
-                           double>>{std::tuple<
-                                      const std::vector<
-                                              Eigen::Matrix<double,-1,-1>>&,
-                                      double>(m2, std::get<1>(d))}, pstream__));
+                           double>>{std::forward_as_tuple(m2, std::get<1>(d))},
+                       pstream__));
       current_statement__ = 8;
       lp_accum__.add(baz(
                        std::vector<
                          std::tuple<std::vector<Eigen::Matrix<double,-1,-1>>,
-                           double>>{std::tuple<
+                           double>>{std::forward_as_tuple(
                                       std::vector<
-                                        Eigen::Matrix<double,-1,-1>>,
-                                      double>(std::vector<
-                                                Eigen::Matrix<double,-1,-1>>{
-                                                stan::math::to_matrix(
-                                                  std::vector<
-                                                    Eigen::Matrix<double,1,-1>>{
-                                                    (Eigen::Matrix<double,1,-1>(1) <<
-                                                       1).finished()})},
+                                        Eigen::Matrix<double,-1,-1>>{
+                                        stan::math::to_matrix(
+                                          std::vector<
+                                            Eigen::Matrix<double,1,-1>>{
+                                            (Eigen::Matrix<double,1,-1>(1) <<
+                                               1).finished()})},
                                       std::get<1>(d))}, pstream__));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7853,34 +7893,28 @@ class tuple_dataonly_model final : public model_base_crtp<tuple_dataonly_model> 
       lp_accum__.add(baz(
                        std::vector<
                          std::tuple<std::vector<Eigen::Matrix<double,-1,-1>>,
-                           double>>{std::tuple<
+                           double>>{std::forward_as_tuple(
                                       std::vector<
-                                        Eigen::Matrix<double,-1,-1>>,
-                                      double>(std::vector<
-                                                Eigen::Matrix<double,-1,-1>>{m},
+                                        Eigen::Matrix<double,-1,-1>>{m},
                                       std::get<1>(d))}, pstream__));
       current_statement__ = 7;
       lp_accum__.add(baz(
                        std::vector<
                          std::tuple<std::vector<Eigen::Matrix<double,-1,-1>>,
-                           double>>{std::tuple<
-                                      const std::vector<
-                                              Eigen::Matrix<double,-1,-1>>&,
-                                      double>(m2, std::get<1>(d))}, pstream__));
+                           double>>{std::forward_as_tuple(m2, std::get<1>(d))},
+                       pstream__));
       current_statement__ = 8;
       lp_accum__.add(baz(
                        std::vector<
                          std::tuple<std::vector<Eigen::Matrix<double,-1,-1>>,
-                           double>>{std::tuple<
+                           double>>{std::forward_as_tuple(
                                       std::vector<
-                                        Eigen::Matrix<double,-1,-1>>,
-                                      double>(std::vector<
-                                                Eigen::Matrix<double,-1,-1>>{
-                                                stan::math::to_matrix(
-                                                  std::vector<
-                                                    Eigen::Matrix<double,1,-1>>{
-                                                    (Eigen::Matrix<double,1,-1>(1) <<
-                                                       1).finished()})},
+                                        Eigen::Matrix<double,-1,-1>>{
+                                        stan::math::to_matrix(
+                                          std::vector<
+                                            Eigen::Matrix<double,1,-1>>{
+                                            (Eigen::Matrix<double,1,-1>(1) <<
+                                               1).finished()})},
                                       std::get<1>(d))}, pstream__));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -8109,23 +8143,37 @@ static constexpr std::array<const char*, 4> locations_array__ =
   " (in 'tuple-dataonly2.stan', line 7, column 2 to column 34)",
   " (in 'tuple-dataonly2.stan', line 3, column 4 to column 18)",
   " (in 'tuple-dataonly2.stan', line 2, column 53 to line 4, column 3)"};
-template <typename T0__0__,
-          stan::require_all_t<stan::is_std_vector<T0__0__>,
+template <typename T0__,
+          stan::require_all_t<stan::math::is_tuple<std::decay_t<T0__>>,
+                              stan::is_std_vector<std::tuple_element_t<0,
+                                                    std::decay_t<T0__>>>,
                               stan::math::disjunction<stan::is_autodiff<
-                                                      stan::value_type_t<T0__0__>>,
+                                                      stan::value_type_t<
+                                                        std::tuple_element_t<0,
+                                                          std::decay_t<T0__>>>>,
                                                       std::is_floating_point<
-                                                      std::decay_t<stan::value_type_t<T0__0__>>>>>* = nullptr>
-double
-tuple_tester(const std::tuple<T0__0__, int>& x, std::ostream* pstream__);
+                                                      std::decay_t<stan::value_type_t<
+                                                                    std::tuple_element_t<0,
+                                                                    std::decay_t<T0__>>>>>>,
+                              std::is_integral<std::decay_t<std::tuple_element_t<1,
+                                                              std::decay_t<T0__>>>>>* = nullptr>
+double tuple_tester(const T0__& x, std::ostream* pstream__);
 // real tuple_tester(data tuple(array[] real, int))
-template <typename T0__0__,
-          stan::require_all_t<stan::is_std_vector<T0__0__>,
+template <typename T0__,
+          stan::require_all_t<stan::math::is_tuple<std::decay_t<T0__>>,
+                              stan::is_std_vector<std::tuple_element_t<0,
+                                                    std::decay_t<T0__>>>,
                               stan::math::disjunction<stan::is_autodiff<
-                                                      stan::value_type_t<T0__0__>>,
+                                                      stan::value_type_t<
+                                                        std::tuple_element_t<0,
+                                                          std::decay_t<T0__>>>>,
                                                       std::is_floating_point<
-                                                      std::decay_t<stan::value_type_t<T0__0__>>>>>*>
-double
-tuple_tester(const std::tuple<T0__0__, int>& x, std::ostream* pstream__) {
+                                                      std::decay_t<stan::value_type_t<
+                                                                    std::tuple_element_t<0,
+                                                                    std::decay_t<T0__>>>>>>,
+                              std::is_integral<std::decay_t<std::tuple_element_t<1,
+                                                              std::decay_t<T0__>>>>>*>
+double tuple_tester(const T0__& x, std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;
   // suppress unused var warning
@@ -8202,8 +8250,7 @@ class tuple_dataonly2_model final : public model_base_crtp<tuple_dataonly2_model
       current_statement__ = 1;
       if (pstream__) {
         stan::math::stan_print(pstream__,
-          tuple_tester(
-            std::tuple<std::vector<double>, int>(std::vector<double>{1.0}, 2),
+          tuple_tester(std::forward_as_tuple(std::vector<double>{1.0}, 2),
             pstream__));
         *(pstream__) << std::endl;
       }
@@ -8240,8 +8287,7 @@ class tuple_dataonly2_model final : public model_base_crtp<tuple_dataonly2_model
       current_statement__ = 1;
       if (pstream__) {
         stan::math::stan_print(pstream__,
-          tuple_tester(
-            std::tuple<std::vector<double>, int>(std::vector<double>{1.0}, 2),
+          tuple_tester(std::forward_as_tuple(std::vector<double>{1.0}, 2),
             pstream__));
         *(pstream__) << std::endl;
       }
@@ -11391,35 +11437,63 @@ static constexpr std::array<const char*, 22> locations_array__ =
   " (in 'tuple-promotion.stan', line 21, column 2 to column 20)",
   " (in 'tuple-promotion.stan', line 3, column 4 to column 37)",
   " (in 'tuple-promotion.stan', line 2, column 53 to line 4, column 3)"};
-template <typename T0__0__, typename T0__1__,
-          stan::require_all_t<stan::is_std_vector<T0__0__>,
+template <typename T0__,
+          stan::require_all_t<stan::math::is_tuple<std::decay_t<T0__>>,
+                              stan::is_std_vector<std::tuple_element_t<0,
+                                                    std::decay_t<T0__>>>,
                               stan::math::disjunction<stan::is_autodiff<
-                                                      stan::value_type_t<T0__0__>>,
+                                                      stan::value_type_t<
+                                                        std::tuple_element_t<0,
+                                                          std::decay_t<T0__>>>>,
                                                       std::is_floating_point<
-                                                      std::decay_t<stan::value_type_t<T0__0__>>>>,
-                              stan::is_std_vector<T0__1__>,
+                                                      std::decay_t<stan::value_type_t<
+                                                                    std::tuple_element_t<0,
+                                                                    std::decay_t<T0__>>>>>>,
+                              stan::is_std_vector<std::tuple_element_t<1,
+                                                    std::decay_t<T0__>>>,
                               stan::math::disjunction<stan::is_autodiff<
-                                                      stan::value_type_t<T0__1__>>,
+                                                      stan::value_type_t<
+                                                        std::tuple_element_t<1,
+                                                          std::decay_t<T0__>>>>,
                                                       std::is_floating_point<
-                                                      std::decay_t<stan::value_type_t<T0__1__>>>>>* = nullptr>
-stan::return_type_t<stan::base_type_t<T0__0__>, stan::base_type_t<T0__1__>>
-dummy(const std::tuple<T0__0__, T0__1__>& test, std::ostream* pstream__);
+                                                      std::decay_t<stan::value_type_t<
+                                                                    std::tuple_element_t<1,
+                                                                    std::decay_t<T0__>>>>>>>* = nullptr>
+stan::return_type_t<stan::base_type_t<std::tuple_element_t<0,
+                                        std::decay_t<T0__>>>,
+  stan::base_type_t<std::tuple_element_t<1, std::decay_t<T0__>>>>
+dummy(const T0__& test, std::ostream* pstream__);
 // real dummy(tuple(array[] real, array[] real))
-template <typename T0__0__, typename T0__1__,
-          stan::require_all_t<stan::is_std_vector<T0__0__>,
+template <typename T0__,
+          stan::require_all_t<stan::math::is_tuple<std::decay_t<T0__>>,
+                              stan::is_std_vector<std::tuple_element_t<0,
+                                                    std::decay_t<T0__>>>,
                               stan::math::disjunction<stan::is_autodiff<
-                                                      stan::value_type_t<T0__0__>>,
+                                                      stan::value_type_t<
+                                                        std::tuple_element_t<0,
+                                                          std::decay_t<T0__>>>>,
                                                       std::is_floating_point<
-                                                      std::decay_t<stan::value_type_t<T0__0__>>>>,
-                              stan::is_std_vector<T0__1__>,
+                                                      std::decay_t<stan::value_type_t<
+                                                                    std::tuple_element_t<0,
+                                                                    std::decay_t<T0__>>>>>>,
+                              stan::is_std_vector<std::tuple_element_t<1,
+                                                    std::decay_t<T0__>>>,
                               stan::math::disjunction<stan::is_autodiff<
-                                                      stan::value_type_t<T0__1__>>,
+                                                      stan::value_type_t<
+                                                        std::tuple_element_t<1,
+                                                          std::decay_t<T0__>>>>,
                                                       std::is_floating_point<
-                                                      std::decay_t<stan::value_type_t<T0__1__>>>>>*>
-stan::return_type_t<stan::base_type_t<T0__0__>, stan::base_type_t<T0__1__>>
-dummy(const std::tuple<T0__0__, T0__1__>& test, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::return_type_t<stan::base_type_t<T0__0__>,
-                             stan::base_type_t<T0__1__>>;
+                                                      std::decay_t<stan::value_type_t<
+                                                                    std::tuple_element_t<1,
+                                                                    std::decay_t<T0__>>>>>>>*>
+stan::return_type_t<stan::base_type_t<std::tuple_element_t<0,
+                                        std::decay_t<T0__>>>,
+  stan::base_type_t<std::tuple_element_t<1, std::decay_t<T0__>>>>
+dummy(const T0__& test, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<stan::base_type_t<std::tuple_element_t<0,
+                                                                   std::decay_t<T0__>>>,
+                             stan::base_type_t<std::tuple_element_t<1,
+                                                 std::decay_t<T0__>>>>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -11530,8 +11604,7 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
                   std::numeric_limits<double>::quiet_NaN())};
       current_statement__ = 15;
       stan::model::assign(basic,
-        std::tuple<std::vector<double>, std::complex<double>>(std::vector<
-                                                                double>{1, 2},
+        std::forward_as_tuple(std::vector<double>{1, 2},
           stan::math::to_complex(3, 0)), "assigning variable basic");
       current_statement__ = 16;
       CV = std::tuple<Eigen::Matrix<std::complex<double>,-1,1>, double>{
@@ -11541,7 +11614,7 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
              std::numeric_limits<double>::quiet_NaN()};
       current_statement__ = 16;
       stan::model::assign(CV,
-        std::tuple<Eigen::Matrix<std::complex<double>,-1,1>, double>(
+        std::forward_as_tuple(
           stan::math::promote_scalar<std::complex<double>>(V), 2),
         "assigning variable CV");
       current_statement__ = 17;
@@ -11550,8 +11623,7 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
                                                            )),
              std::numeric_limits<int>::min()};
       current_statement__ = 17;
-      stan::model::assign(V2,
-        std::tuple<Eigen::Matrix<double,-1,1>, int>(V, 2),
+      stan::model::assign(V2, std::forward_as_tuple(V, 2),
         "assigning variable V2");
       current_statement__ = 18;
       stan::model::assign(CV,
@@ -11996,7 +12068,7 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
         std::tuple<double, double>{std::numeric_limits<double>::quiet_NaN(),
           std::numeric_limits<double>::quiet_NaN()};
       current_statement__ = 7;
-      stan::model::assign(x, std::tuple<double, double>(y, 3),
+      stan::model::assign(x, std::forward_as_tuple(y, 3),
         "assigning variable x");
       std::tuple<std::complex<double>, double> z =
         std::tuple<std::complex<double>, double>{std::complex<double>(
@@ -12451,61 +12523,107 @@ static constexpr std::array<const char*, 27> locations_array__ =
   " (in 'tuple-templating.stan', line 14, column 38 to line 16, column 3)",
   " (in 'tuple-templating.stan', line 20, column 4 to column 18)",
   " (in 'tuple-templating.stan', line 19, column 57 to line 21, column 3)"};
-template <typename T0__0__, typename T0__1__,
-          stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__0__>,
-                              stan::is_vt_not_complex<T0__0__>,
-                              std::is_integral<std::decay_t<T0__1__>>>* = nullptr>
-void foo(const std::tuple<T0__0__, T0__1__>& test, std::ostream* pstream__);
-template <typename T0__0__, typename T0__1__,
-          stan::require_all_t<stan::is_std_vector<T0__0__>,
-                              std::is_integral<std::decay_t<stan::value_type_t<T0__0__>>>,
-                              stan::is_std_vector<T0__1__>,
+template <typename T0__,
+          stan::require_all_t<stan::math::is_tuple<std::decay_t<T0__>>,
+                              stan::is_eigen_matrix_dynamic<std::tuple_element_t<0,
+                                                              std::decay_t<T0__>>>,
+                              stan::is_vt_not_complex<std::tuple_element_t<0,
+                                                        std::decay_t<T0__>>>,
+                              std::is_integral<std::decay_t<std::tuple_element_t<1,
+                                                              std::decay_t<T0__>>>>>* = nullptr>
+void foo(const T0__& test, std::ostream* pstream__);
+template <typename T0__,
+          stan::require_all_t<stan::math::is_tuple<std::decay_t<T0__>>,
+                              stan::is_std_vector<std::tuple_element_t<0,
+                                                    std::decay_t<T0__>>>,
+                              std::is_integral<std::decay_t<stan::value_type_t<
+                                                              std::tuple_element_t<0,
+                                                                std::decay_t<T0__>>>>>,
+                              stan::is_std_vector<std::tuple_element_t<1,
+                                                    std::decay_t<T0__>>>,
                               stan::math::disjunction<stan::is_autodiff<
-                                                      stan::value_type_t<T0__1__>>,
+                                                      stan::value_type_t<
+                                                        std::tuple_element_t<1,
+                                                          std::decay_t<T0__>>>>,
                                                       std::is_floating_point<
-                                                      std::decay_t<stan::value_type_t<T0__1__>>>>>* = nullptr>
-stan::return_type_t<stan::base_type_t<T0__1__>>
-tsum(const std::tuple<T0__0__, T0__1__>& s, std::ostream* pstream__);
-template <typename T0__0__, typename T0__1__,
-          stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__0__>,
-                              stan::is_vt_not_complex<T0__0__>,
-                              std::is_integral<std::decay_t<T0__1__>>>* = nullptr>
+                                                      std::decay_t<stan::value_type_t<
+                                                                    std::tuple_element_t<1,
+                                                                    std::decay_t<T0__>>>>>>>* = nullptr>
+stan::return_type_t<stan::base_type_t<std::tuple_element_t<1,
+                                        std::decay_t<T0__>>>>
+tsum(const T0__& s, std::ostream* pstream__);
+template <typename T0__,
+          stan::require_all_t<stan::is_std_vector<T0__>,
+                              stan::math::is_tuple<stan::value_type_t<T0__>>,
+                              stan::is_eigen_matrix_dynamic<std::tuple_element_t<0,
+                                                              stan::value_type_t<T0__>>>,
+                              stan::is_vt_not_complex<std::tuple_element_t<0,
+                                                        stan::value_type_t<T0__>>>,
+                              std::is_integral<std::decay_t<std::tuple_element_t<1,
+                                                              stan::value_type_t<T0__>>>>>* = nullptr>
+void foo2(const T0__& test, std::ostream* pstream__);
+template <typename T0__,
+          stan::require_all_t<stan::math::is_tuple<std::decay_t<T0__>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      std::tuple_element_t<0,
+                                                        std::decay_t<T0__>>>,
+                                                      std::is_floating_point<
+                                                      std::decay_t<std::tuple_element_t<0,
+                                                                    std::decay_t<T0__>>>>>,
+                              stan::is_eigen_matrix_dynamic<std::tuple_element_t<1,
+                                                              std::decay_t<T0__>>>,
+                              stan::is_vt_not_complex<std::tuple_element_t<1,
+                                                        std::decay_t<T0__>>>>* = nullptr>
+void foo3(const T0__& test, std::ostream* pstream__);
+template <typename T0__, typename T1__,
+          stan::require_all_t<stan::math::is_tuple<std::decay_t<T0__>>,
+                              stan::is_std_vector<std::tuple_element_t<0,
+                                                    std::decay_t<T0__>>>,
+                              stan::is_eigen_matrix_dynamic<stan::value_type_t<
+                                                              std::tuple_element_t<0,
+                                                                std::decay_t<T0__>>>>,
+                              stan::is_vt_not_complex<stan::value_type_t<
+                                                        std::tuple_element_t<0,
+                                                          std::decay_t<T0__>>>>,
+                              stan::math::is_tuple<std::tuple_element_t<1,
+                                                     std::decay_t<T0__>>>,
+                              std::is_integral<std::decay_t<std::tuple_element_t<0,
+                                                              std::tuple_element_t<1,
+                                                                std::decay_t<T0__>>>>>,
+                              stan::is_eigen_matrix_dynamic<std::tuple_element_t<1,
+                                                              std::tuple_element_t<1,
+                                                                std::decay_t<T0__>>>>,
+                              stan::is_vt_not_complex<std::tuple_element_t<1,
+                                                        std::tuple_element_t<1,
+                                                          std::decay_t<T0__>>>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      std::tuple_element_t<2,
+                                                        std::decay_t<T0__>>>,
+                                                      std::is_floating_point<
+                                                      std::decay_t<std::tuple_element_t<2,
+                                                                    std::decay_t<T0__>>>>>,
+                              stan::is_std_vector<T1__>,
+                              stan::math::is_tuple<stan::value_type_t<T1__>>,
+                              std::is_integral<std::decay_t<std::tuple_element_t<0,
+                                                              stan::value_type_t<T1__>>>>,
+                              stan::is_eigen_matrix_dynamic<std::tuple_element_t<1,
+                                                              stan::value_type_t<T1__>>>,
+                              stan::is_vt_not_complex<std::tuple_element_t<1,
+                                                        stan::value_type_t<T1__>>>>* = nullptr>
 void
-foo2(const std::vector<std::tuple<T0__0__, T0__1__>>& test, std::ostream*
-     pstream__);
-template <typename T0__0__, typename T0__1__,
-          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__0__>,
-                                                      std::is_floating_point<
-                                                      std::decay_t<T0__0__>>>,
-                              stan::is_eigen_matrix_dynamic<T0__1__>,
-                              stan::is_vt_not_complex<T0__1__>>* = nullptr>
-void foo3(const std::tuple<T0__0__, T0__1__>& test, std::ostream* pstream__);
-template <typename T0__0__, typename T0__1__0__, typename T0__1__1__,
-          typename T0__2__, typename T1__0__, typename T1__1__,
-          stan::require_all_t<stan::is_std_vector<T0__0__>,
-                              stan::is_eigen_matrix_dynamic<stan::value_type_t<T0__0__>>,
-                              stan::is_vt_not_complex<stan::value_type_t<T0__0__>>,
-                              std::is_integral<std::decay_t<T0__1__0__>>,
-                              stan::is_eigen_matrix_dynamic<T0__1__1__>,
-                              stan::is_vt_not_complex<T0__1__1__>,
-                              stan::math::disjunction<stan::is_autodiff<T0__2__>,
-                                                      std::is_floating_point<
-                                                      std::decay_t<T0__2__>>>,
-                              std::is_integral<std::decay_t<T1__0__>>,
-                              stan::is_eigen_matrix_dynamic<T1__1__>,
-                              stan::is_vt_not_complex<T1__1__>>* = nullptr>
-void
-overly_complicated(const std::tuple<T0__0__,
-                           std::tuple<T0__1__0__, T0__1__1__>, T0__2__>& t1,
-                   const std::vector<std::tuple<T1__0__, T1__1__>>& t2,
-                   std::ostream* pstream__);
+overly_complicated(const T0__& t1, const T1__& t2, std::ostream* pstream__);
 // void foo(tuple(matrix, int))
-template <typename T0__0__, typename T0__1__,
-          stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__0__>,
-                              stan::is_vt_not_complex<T0__0__>,
-                              std::is_integral<std::decay_t<T0__1__>>>*>
-void foo(const std::tuple<T0__0__, T0__1__>& test, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::return_type_t<stan::base_type_t<T0__0__>>;
+template <typename T0__,
+          stan::require_all_t<stan::math::is_tuple<std::decay_t<T0__>>,
+                              stan::is_eigen_matrix_dynamic<std::tuple_element_t<0,
+                                                              std::decay_t<T0__>>>,
+                              stan::is_vt_not_complex<std::tuple_element_t<0,
+                                                        std::decay_t<T0__>>>,
+                              std::is_integral<std::decay_t<std::tuple_element_t<1,
+                                                              std::decay_t<T0__>>>>>*>
+void foo(const T0__& test, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<stan::base_type_t<std::tuple_element_t<0,
+                                                                   std::decay_t<T0__>>>>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -12526,17 +12644,28 @@ void foo(const std::tuple<T0__0__, T0__1__>& test, std::ostream* pstream__) {
   }
 }
 // real tsum(tuple(array[] int, array[] real))
-template <typename T0__0__, typename T0__1__,
-          stan::require_all_t<stan::is_std_vector<T0__0__>,
-                              std::is_integral<std::decay_t<stan::value_type_t<T0__0__>>>,
-                              stan::is_std_vector<T0__1__>,
+template <typename T0__,
+          stan::require_all_t<stan::math::is_tuple<std::decay_t<T0__>>,
+                              stan::is_std_vector<std::tuple_element_t<0,
+                                                    std::decay_t<T0__>>>,
+                              std::is_integral<std::decay_t<stan::value_type_t<
+                                                              std::tuple_element_t<0,
+                                                                std::decay_t<T0__>>>>>,
+                              stan::is_std_vector<std::tuple_element_t<1,
+                                                    std::decay_t<T0__>>>,
                               stan::math::disjunction<stan::is_autodiff<
-                                                      stan::value_type_t<T0__1__>>,
+                                                      stan::value_type_t<
+                                                        std::tuple_element_t<1,
+                                                          std::decay_t<T0__>>>>,
                                                       std::is_floating_point<
-                                                      std::decay_t<stan::value_type_t<T0__1__>>>>>*>
-stan::return_type_t<stan::base_type_t<T0__1__>>
-tsum(const std::tuple<T0__0__, T0__1__>& s, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::return_type_t<stan::base_type_t<T0__1__>>;
+                                                      std::decay_t<stan::value_type_t<
+                                                                    std::tuple_element_t<1,
+                                                                    std::decay_t<T0__>>>>>>>*>
+stan::return_type_t<stan::base_type_t<std::tuple_element_t<1,
+                                        std::decay_t<T0__>>>>
+tsum(const T0__& s, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<stan::base_type_t<std::tuple_element_t<1,
+                                                                   std::decay_t<T0__>>>>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -12554,14 +12683,18 @@ tsum(const std::tuple<T0__0__, T0__1__>& s, std::ostream* pstream__) {
   }
 }
 // void foo2(array[] tuple(matrix, int))
-template <typename T0__0__, typename T0__1__,
-          stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__0__>,
-                              stan::is_vt_not_complex<T0__0__>,
-                              std::is_integral<std::decay_t<T0__1__>>>*>
-void
-foo2(const std::vector<std::tuple<T0__0__, T0__1__>>& test, std::ostream*
-     pstream__) {
-  using local_scalar_t__ = stan::return_type_t<stan::base_type_t<T0__0__>>;
+template <typename T0__,
+          stan::require_all_t<stan::is_std_vector<T0__>,
+                              stan::math::is_tuple<stan::value_type_t<T0__>>,
+                              stan::is_eigen_matrix_dynamic<std::tuple_element_t<0,
+                                                              stan::value_type_t<T0__>>>,
+                              stan::is_vt_not_complex<std::tuple_element_t<0,
+                                                        stan::value_type_t<T0__>>>,
+                              std::is_integral<std::decay_t<std::tuple_element_t<1,
+                                                              stan::value_type_t<T0__>>>>>*>
+void foo2(const T0__& test, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<stan::base_type_t<std::tuple_element_t<0,
+                                                                   stan::base_type_t<T0__>>>>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -12584,15 +12717,23 @@ foo2(const std::vector<std::tuple<T0__0__, T0__1__>>& test, std::ostream*
   }
 }
 // void foo3(tuple(real, matrix))
-template <typename T0__0__, typename T0__1__,
-          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__0__>,
+template <typename T0__,
+          stan::require_all_t<stan::math::is_tuple<std::decay_t<T0__>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      std::tuple_element_t<0,
+                                                        std::decay_t<T0__>>>,
                                                       std::is_floating_point<
-                                                      std::decay_t<T0__0__>>>,
-                              stan::is_eigen_matrix_dynamic<T0__1__>,
-                              stan::is_vt_not_complex<T0__1__>>*>
-void foo3(const std::tuple<T0__0__, T0__1__>& test, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::return_type_t<T0__0__,
-                             stan::base_type_t<T0__1__>>;
+                                                      std::decay_t<std::tuple_element_t<0,
+                                                                    std::decay_t<T0__>>>>>,
+                              stan::is_eigen_matrix_dynamic<std::tuple_element_t<1,
+                                                              std::decay_t<T0__>>>,
+                              stan::is_vt_not_complex<std::tuple_element_t<1,
+                                                        std::decay_t<T0__>>>>*>
+void foo3(const T0__& test, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<std::tuple_element_t<0,
+                                                 std::decay_t<T0__>>,
+                             stan::base_type_t<std::tuple_element_t<1,
+                                                 std::decay_t<T0__>>>>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -12616,28 +12757,51 @@ void foo3(const std::tuple<T0__0__, T0__1__>& test, std::ostream* pstream__) {
    overly_complicated(tuple(array[] matrix, tuple(int, matrix), real),
                       array[] tuple(int, matrix))
  */
-template <typename T0__0__, typename T0__1__0__, typename T0__1__1__,
-          typename T0__2__, typename T1__0__, typename T1__1__,
-          stan::require_all_t<stan::is_std_vector<T0__0__>,
-                              stan::is_eigen_matrix_dynamic<stan::value_type_t<T0__0__>>,
-                              stan::is_vt_not_complex<stan::value_type_t<T0__0__>>,
-                              std::is_integral<std::decay_t<T0__1__0__>>,
-                              stan::is_eigen_matrix_dynamic<T0__1__1__>,
-                              stan::is_vt_not_complex<T0__1__1__>,
-                              stan::math::disjunction<stan::is_autodiff<T0__2__>,
+template <typename T0__, typename T1__,
+          stan::require_all_t<stan::math::is_tuple<std::decay_t<T0__>>,
+                              stan::is_std_vector<std::tuple_element_t<0,
+                                                    std::decay_t<T0__>>>,
+                              stan::is_eigen_matrix_dynamic<stan::value_type_t<
+                                                              std::tuple_element_t<0,
+                                                                std::decay_t<T0__>>>>,
+                              stan::is_vt_not_complex<stan::value_type_t<
+                                                        std::tuple_element_t<0,
+                                                          std::decay_t<T0__>>>>,
+                              stan::math::is_tuple<std::tuple_element_t<1,
+                                                     std::decay_t<T0__>>>,
+                              std::is_integral<std::decay_t<std::tuple_element_t<0,
+                                                              std::tuple_element_t<1,
+                                                                std::decay_t<T0__>>>>>,
+                              stan::is_eigen_matrix_dynamic<std::tuple_element_t<1,
+                                                              std::tuple_element_t<1,
+                                                                std::decay_t<T0__>>>>,
+                              stan::is_vt_not_complex<std::tuple_element_t<1,
+                                                        std::tuple_element_t<1,
+                                                          std::decay_t<T0__>>>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      std::tuple_element_t<2,
+                                                        std::decay_t<T0__>>>,
                                                       std::is_floating_point<
-                                                      std::decay_t<T0__2__>>>,
-                              std::is_integral<std::decay_t<T1__0__>>,
-                              stan::is_eigen_matrix_dynamic<T1__1__>,
-                              stan::is_vt_not_complex<T1__1__>>*>
+                                                      std::decay_t<std::tuple_element_t<2,
+                                                                    std::decay_t<T0__>>>>>,
+                              stan::is_std_vector<T1__>,
+                              stan::math::is_tuple<stan::value_type_t<T1__>>,
+                              std::is_integral<std::decay_t<std::tuple_element_t<0,
+                                                              stan::value_type_t<T1__>>>>,
+                              stan::is_eigen_matrix_dynamic<std::tuple_element_t<1,
+                                                              stan::value_type_t<T1__>>>,
+                              stan::is_vt_not_complex<std::tuple_element_t<1,
+                                                        stan::value_type_t<T1__>>>>*>
 void
-overly_complicated(const std::tuple<T0__0__,
-                           std::tuple<T0__1__0__, T0__1__1__>, T0__2__>& t1,
-                   const std::vector<std::tuple<T1__0__, T1__1__>>& t2,
-                   std::ostream* pstream__) {
-  using local_scalar_t__ = stan::return_type_t<stan::base_type_t<T0__0__>,
-                             stan::base_type_t<T0__1__1__>, T0__2__,
-                             stan::base_type_t<T1__1__>>;
+overly_complicated(const T0__& t1, const T1__& t2, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<stan::base_type_t<std::tuple_element_t<0,
+                                                                   std::decay_t<T0__>>>,
+                             stan::base_type_t<std::tuple_element_t<1,
+                                                 std::decay_t<std::tuple_element_t<1,
+                                                                std::decay_t<T0__>>>>>,
+                             std::tuple_element_t<2, std::decay_t<T0__>>,
+                             stan::base_type_t<std::tuple_element_t<1,
+                                                 stan::base_type_t<T1__>>>>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -12868,50 +13032,34 @@ class tuple_templating_model final : public model_base_crtp<tuple_templating_mod
         return ;
       }
       current_statement__ = 2;
-      foo(
-        std::tuple<Eigen::Matrix<double,-1,-1>, int>(stan::math::add(m1, m2),
-          1), pstream__);
+      foo(std::forward_as_tuple(stan::math::add(m1, m2), 1), pstream__);
       double s = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 1;
-      s = tsum(
-            std::tuple<const std::vector<int>&, const std::vector<double>&>(a1,
-              a2), pstream__);
+      s = tsum(std::forward_as_tuple(a1, a2), pstream__);
       current_statement__ = 3;
       foo2(
-        std::vector<std::tuple<Eigen::Matrix<double,-1,-1>, int>>{std::tuple<
-                                                                    Eigen::Matrix<double,-1,-1>,
-                                                                    int>(
+        std::vector<std::tuple<Eigen::Matrix<double,-1,-1>, int>>{std::forward_as_tuple(
                                                                     stan::math::add(
                                                                     m1, m2),
                                                                     1)},
         pstream__);
       current_statement__ = 4;
       overly_complicated(
-        std::tuple<std::vector<Eigen::Matrix<double,-1,-1>>,
-          std::tuple<int, Eigen::Matrix<double,-1,-1>>, double>(std::vector<
-                                                                  Eigen::Matrix<double,-1,-1>>{
-                                                                  stan::math::add(
-                                                                    m1, m2)},
-          std::tuple<int, Eigen::Matrix<double,-1,-1>>(1,
-            stan::math::add(m1, m2)), 3.5),
-        std::vector<std::tuple<int, Eigen::Matrix<double,-1,-1>>>{std::tuple<
-                                                                    int,
-                                                                    Eigen::Matrix<double,-1,-1>>(1,
+        std::forward_as_tuple(
+          std::vector<Eigen::Matrix<double,-1,-1>>{stan::math::add(m1, m2)},
+          std::forward_as_tuple(1, stan::math::add(m1, m2)), 3.5),
+        std::vector<std::tuple<int, Eigen::Matrix<double,-1,-1>>>{std::forward_as_tuple(
+                                                                    1,
                                                                     stan::math::multiply(
                                                                     m1, 2)),
-          std::tuple<int, Eigen::Matrix<double,-1,-1>>(2,
-            stan::math::multiply(m2, 3))}, pstream__);
+          std::forward_as_tuple(2, stan::math::multiply(m2, 3))}, pstream__);
       current_statement__ = 5;
       overly_complicated(
-        std::tuple<std::vector<Eigen::Matrix<double,-1,-1>>,
-          std::tuple<int, Eigen::Matrix<double,-1,-1>>, double>(std::vector<
-                                                                  Eigen::Matrix<double,-1,-1>>{m1},
-          std::tuple<int, Eigen::Matrix<double,-1,-1>>(1, m1), 3.5),
-        std::vector<std::tuple<int, Eigen::Matrix<double,-1,-1>>>{std::tuple<
-                                                                    int,
-                                                                    Eigen::Matrix<double,-1,-1>>(1,
-                                                                    m1),
-          std::tuple<int, Eigen::Matrix<double,-1,-1>>(2, m2)}, pstream__);
+        std::forward_as_tuple(std::vector<Eigen::Matrix<double,-1,-1>>{m1},
+          std::forward_as_tuple(1, m1), 3.5),
+        std::vector<std::tuple<int, Eigen::Matrix<double,-1,-1>>>{std::forward_as_tuple(
+                                                                    1, m1),
+          std::forward_as_tuple(2, m2)}, pstream__);
       out__.write(s);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -13125,46 +13273,82 @@ static constexpr std::array<const char*, 26> locations_array__ =
   " (in 'tuple_copying.stan', line 15, column 4 to column 17)",
   " (in 'tuple_copying.stan', line 16, column 4 to column 17)",
   " (in 'tuple_copying.stan', line 13, column 53 to line 17, column 3)"};
-template <typename T0__0__, typename T0__1__,
-          stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__0__>,
-                              stan::is_vt_not_complex<T0__0__>,
-                              stan::is_eigen_matrix_dynamic<T0__1__>,
-                              stan::is_vt_not_complex<T0__1__>>* = nullptr>
-void f(const std::tuple<T0__0__, T0__1__>& x, std::ostream* pstream__);
-template <typename T0__0__, typename T0__1__, typename T0__2__,
-          stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__0__>,
-                              stan::is_vt_not_complex<T0__0__>,
-                              std::is_integral<std::decay_t<T0__1__>>,
-                              stan::is_std_vector<T0__2__>,
+template <typename T0__,
+          stan::require_all_t<stan::math::is_tuple<std::decay_t<T0__>>,
+                              stan::is_eigen_matrix_dynamic<std::tuple_element_t<0,
+                                                              std::decay_t<T0__>>>,
+                              stan::is_vt_not_complex<std::tuple_element_t<0,
+                                                        std::decay_t<T0__>>>,
+                              stan::is_eigen_matrix_dynamic<std::tuple_element_t<1,
+                                                              std::decay_t<T0__>>>,
+                              stan::is_vt_not_complex<std::tuple_element_t<1,
+                                                        std::decay_t<T0__>>>>* = nullptr>
+void f(const T0__& x, std::ostream* pstream__);
+template <typename T0__,
+          stan::require_all_t<stan::math::is_tuple<std::decay_t<T0__>>,
+                              stan::is_eigen_matrix_dynamic<std::tuple_element_t<0,
+                                                              std::decay_t<T0__>>>,
+                              stan::is_vt_not_complex<std::tuple_element_t<0,
+                                                        std::decay_t<T0__>>>,
+                              std::is_integral<std::decay_t<std::tuple_element_t<1,
+                                                              std::decay_t<T0__>>>>,
+                              stan::is_std_vector<std::tuple_element_t<2,
+                                                    std::decay_t<T0__>>>,
                               stan::math::disjunction<stan::is_autodiff<
-                                                      stan::value_type_t<T0__2__>>,
+                                                      stan::value_type_t<
+                                                        std::tuple_element_t<2,
+                                                          std::decay_t<T0__>>>>,
                                                       std::is_floating_point<
-                                                      std::decay_t<stan::value_type_t<T0__2__>>>>>* = nullptr>
-void
-g(const std::tuple<T0__0__, T0__1__, T0__2__>& x, std::ostream* pstream__);
-template <typename T0__0__, typename T0__1__0__, typename T0__1__1__,
-          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__0__>,
-                                                      std::is_floating_point<
-                                                      std::decay_t<T0__0__>>>,
-                              stan::is_eigen_matrix_dynamic<T0__1__0__>,
-                              stan::is_vt_not_complex<T0__1__0__>,
-                              stan::is_std_vector<T0__1__1__>,
+                                                      std::decay_t<stan::value_type_t<
+                                                                    std::tuple_element_t<2,
+                                                                    std::decay_t<T0__>>>>>>>* = nullptr>
+void g(const T0__& x, std::ostream* pstream__);
+template <typename T0__,
+          stan::require_all_t<stan::math::is_tuple<std::decay_t<T0__>>,
                               stan::math::disjunction<stan::is_autodiff<
-                                                      stan::value_type_t<T0__1__1__>>,
+                                                      std::tuple_element_t<0,
+                                                        std::decay_t<T0__>>>,
                                                       std::is_floating_point<
-                                                      std::decay_t<stan::value_type_t<T0__1__1__>>>>>* = nullptr>
-void
-h(const std::tuple<T0__0__, std::tuple<T0__1__0__, T0__1__1__>>& x,
-  std::ostream* pstream__);
+                                                      std::decay_t<std::tuple_element_t<0,
+                                                                    std::decay_t<T0__>>>>>,
+                              stan::math::is_tuple<std::tuple_element_t<1,
+                                                     std::decay_t<T0__>>>,
+                              stan::is_eigen_matrix_dynamic<std::tuple_element_t<0,
+                                                              std::tuple_element_t<1,
+                                                                std::decay_t<T0__>>>>,
+                              stan::is_vt_not_complex<std::tuple_element_t<0,
+                                                        std::tuple_element_t<1,
+                                                          std::decay_t<T0__>>>>,
+                              stan::is_std_vector<std::tuple_element_t<1,
+                                                    std::tuple_element_t<1,
+                                                      std::decay_t<T0__>>>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      stan::value_type_t<
+                                                        std::tuple_element_t<1,
+                                                          std::tuple_element_t<1,
+                                                            std::decay_t<T0__>>>>>,
+                                                      std::is_floating_point<
+                                                      std::decay_t<stan::value_type_t<
+                                                                    std::tuple_element_t<1,
+                                                                    std::tuple_element_t<1,
+                                                                    std::decay_t<T0__>>>>>>>>* = nullptr>
+void h(const T0__& x, std::ostream* pstream__);
 // void f(tuple(matrix, matrix))
-template <typename T0__0__, typename T0__1__,
-          stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__0__>,
-                              stan::is_vt_not_complex<T0__0__>,
-                              stan::is_eigen_matrix_dynamic<T0__1__>,
-                              stan::is_vt_not_complex<T0__1__>>*>
-void f(const std::tuple<T0__0__, T0__1__>& x, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::return_type_t<stan::base_type_t<T0__0__>,
-                             stan::base_type_t<T0__1__>>;
+template <typename T0__,
+          stan::require_all_t<stan::math::is_tuple<std::decay_t<T0__>>,
+                              stan::is_eigen_matrix_dynamic<std::tuple_element_t<0,
+                                                              std::decay_t<T0__>>>,
+                              stan::is_vt_not_complex<std::tuple_element_t<0,
+                                                        std::decay_t<T0__>>>,
+                              stan::is_eigen_matrix_dynamic<std::tuple_element_t<1,
+                                                              std::decay_t<T0__>>>,
+                              stan::is_vt_not_complex<std::tuple_element_t<1,
+                                                        std::decay_t<T0__>>>>*>
+void f(const T0__& x, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<stan::base_type_t<std::tuple_element_t<0,
+                                                                   std::decay_t<T0__>>>,
+                             stan::base_type_t<std::tuple_element_t<1,
+                                                 std::decay_t<T0__>>>>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -13190,19 +13374,29 @@ void f(const std::tuple<T0__0__, T0__1__>& x, std::ostream* pstream__) {
   }
 }
 // void g(tuple(matrix, int, array[] real))
-template <typename T0__0__, typename T0__1__, typename T0__2__,
-          stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__0__>,
-                              stan::is_vt_not_complex<T0__0__>,
-                              std::is_integral<std::decay_t<T0__1__>>,
-                              stan::is_std_vector<T0__2__>,
+template <typename T0__,
+          stan::require_all_t<stan::math::is_tuple<std::decay_t<T0__>>,
+                              stan::is_eigen_matrix_dynamic<std::tuple_element_t<0,
+                                                              std::decay_t<T0__>>>,
+                              stan::is_vt_not_complex<std::tuple_element_t<0,
+                                                        std::decay_t<T0__>>>,
+                              std::is_integral<std::decay_t<std::tuple_element_t<1,
+                                                              std::decay_t<T0__>>>>,
+                              stan::is_std_vector<std::tuple_element_t<2,
+                                                    std::decay_t<T0__>>>,
                               stan::math::disjunction<stan::is_autodiff<
-                                                      stan::value_type_t<T0__2__>>,
+                                                      stan::value_type_t<
+                                                        std::tuple_element_t<2,
+                                                          std::decay_t<T0__>>>>,
                                                       std::is_floating_point<
-                                                      std::decay_t<stan::value_type_t<T0__2__>>>>>*>
-void
-g(const std::tuple<T0__0__, T0__1__, T0__2__>& x, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::return_type_t<stan::base_type_t<T0__0__>,
-                             stan::base_type_t<T0__2__>>;
+                                                      std::decay_t<stan::value_type_t<
+                                                                    std::tuple_element_t<2,
+                                                                    std::decay_t<T0__>>>>>>>*>
+void g(const T0__& x, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<stan::base_type_t<std::tuple_element_t<0,
+                                                                   std::decay_t<T0__>>>,
+                             stan::base_type_t<std::tuple_element_t<2,
+                                                 std::decay_t<T0__>>>>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -13233,23 +13427,44 @@ g(const std::tuple<T0__0__, T0__1__, T0__2__>& x, std::ostream* pstream__) {
   }
 }
 // void h(tuple(real, tuple(matrix, array[] real)))
-template <typename T0__0__, typename T0__1__0__, typename T0__1__1__,
-          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__0__>,
-                                                      std::is_floating_point<
-                                                      std::decay_t<T0__0__>>>,
-                              stan::is_eigen_matrix_dynamic<T0__1__0__>,
-                              stan::is_vt_not_complex<T0__1__0__>,
-                              stan::is_std_vector<T0__1__1__>,
+template <typename T0__,
+          stan::require_all_t<stan::math::is_tuple<std::decay_t<T0__>>,
                               stan::math::disjunction<stan::is_autodiff<
-                                                      stan::value_type_t<T0__1__1__>>,
+                                                      std::tuple_element_t<0,
+                                                        std::decay_t<T0__>>>,
                                                       std::is_floating_point<
-                                                      std::decay_t<stan::value_type_t<T0__1__1__>>>>>*>
-void
-h(const std::tuple<T0__0__, std::tuple<T0__1__0__, T0__1__1__>>& x,
-  std::ostream* pstream__) {
-  using local_scalar_t__ = stan::return_type_t<T0__0__,
-                             stan::base_type_t<T0__1__0__>,
-                             stan::base_type_t<T0__1__1__>>;
+                                                      std::decay_t<std::tuple_element_t<0,
+                                                                    std::decay_t<T0__>>>>>,
+                              stan::math::is_tuple<std::tuple_element_t<1,
+                                                     std::decay_t<T0__>>>,
+                              stan::is_eigen_matrix_dynamic<std::tuple_element_t<0,
+                                                              std::tuple_element_t<1,
+                                                                std::decay_t<T0__>>>>,
+                              stan::is_vt_not_complex<std::tuple_element_t<0,
+                                                        std::tuple_element_t<1,
+                                                          std::decay_t<T0__>>>>,
+                              stan::is_std_vector<std::tuple_element_t<1,
+                                                    std::tuple_element_t<1,
+                                                      std::decay_t<T0__>>>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      stan::value_type_t<
+                                                        std::tuple_element_t<1,
+                                                          std::tuple_element_t<1,
+                                                            std::decay_t<T0__>>>>>,
+                                                      std::is_floating_point<
+                                                      std::decay_t<stan::value_type_t<
+                                                                    std::tuple_element_t<1,
+                                                                    std::tuple_element_t<1,
+                                                                    std::decay_t<T0__>>>>>>>>*>
+void h(const T0__& x, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<std::tuple_element_t<0,
+                                                 std::decay_t<T0__>>,
+                             stan::base_type_t<std::tuple_element_t<0,
+                                                 std::decay_t<std::tuple_element_t<1,
+                                                                std::decay_t<T0__>>>>>,
+                             stan::base_type_t<std::tuple_element_t<1,
+                                                 std::decay_t<std::tuple_element_t<1,
+                                                                std::decay_t<T0__>>>>>>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -13393,16 +13608,12 @@ class tuple_copying_model final : public model_base_crtp<tuple_copying_model> {
               DUMMY_VAR__)};
         current_statement__ = 2;
         stan::model::assign(temp,
-          std::tuple<Eigen::Matrix<double,-1,-1>,
-            Eigen::Matrix<local_scalar_t__,-1,-1>>(x,
-            stan::math::multiply(m1, m2)), "assigning variable temp");
+          std::forward_as_tuple(x, stan::math::multiply(m1, m2)),
+          "assigning variable temp");
         current_statement__ = 3;
         f(temp, pstream__);
         current_statement__ = 4;
-        f(
-          std::tuple<Eigen::Matrix<double,-1,-1>,
-            Eigen::Matrix<local_scalar_t__,-1,-1>>(x,
-            stan::math::multiply(m1, m2)), pstream__);
+        f(std::forward_as_tuple(x, stan::math::multiply(m1, m2)), pstream__);
         std::tuple<Eigen::Matrix<local_scalar_t__,-1,-1>, int,
           std::vector<local_scalar_t__>> temp2 =
           std::tuple<Eigen::Matrix<local_scalar_t__,-1,-1>, int,
@@ -13412,16 +13623,12 @@ class tuple_copying_model final : public model_base_crtp<tuple_copying_model> {
             std::vector<local_scalar_t__>(10, DUMMY_VAR__)};
         current_statement__ = 5;
         stan::model::assign(temp2,
-          std::tuple<Eigen::Matrix<local_scalar_t__,-1,-1>, int,
-            const std::vector<double>&>(stan::math::add(m1, m2), 1, y),
+          std::forward_as_tuple(stan::math::add(m1, m2), 1, y),
           "assigning variable temp2");
         current_statement__ = 6;
         g(temp2, pstream__);
         current_statement__ = 7;
-        g(
-          std::tuple<Eigen::Matrix<local_scalar_t__,-1,-1>, int,
-            const std::vector<double>&>(stan::math::add(m1, m2), 1, y),
-          pstream__);
+        g(std::forward_as_tuple(stan::math::add(m1, m2), 1, y), pstream__);
         std::tuple<local_scalar_t__,
           std::tuple<Eigen::Matrix<local_scalar_t__,-1,-1>,
             std::vector<local_scalar_t__>>> temp3 =
@@ -13433,23 +13640,14 @@ class tuple_copying_model final : public model_base_crtp<tuple_copying_model> {
                                                2, DUMMY_VAR__),
               std::vector<local_scalar_t__>(10, DUMMY_VAR__)}};
         current_statement__ = 8;
-        stan::model::assign(temp3,
-          std::tuple<double,
-            std::tuple<Eigen::Matrix<double,-1,-1>, std::vector<double>>>(1,
-            data_tuple), "assigning variable temp3");
+        stan::model::assign(temp3, std::forward_as_tuple(1, data_tuple),
+          "assigning variable temp3");
         current_statement__ = 9;
         h(temp3, pstream__);
         current_statement__ = 10;
-        h(
-          std::tuple<double,
-            std::tuple<Eigen::Matrix<double,-1,-1>, std::vector<double>>>(1,
-            data_tuple), pstream__);
+        h(std::forward_as_tuple(1, data_tuple), pstream__);
         current_statement__ = 11;
-        h(
-          std::tuple<double,
-            std::tuple<Eigen::Matrix<double,-1,-1>, std::vector<double>>>(1,
-            std::tuple<Eigen::Matrix<double,-1,-1>,
-              const std::vector<double>&>(x, y)), pstream__);
+        h(std::forward_as_tuple(1, std::forward_as_tuple(x, y)), pstream__);
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -13497,16 +13695,12 @@ class tuple_copying_model final : public model_base_crtp<tuple_copying_model> {
               DUMMY_VAR__)};
         current_statement__ = 2;
         stan::model::assign(temp,
-          std::tuple<Eigen::Matrix<double,-1,-1>,
-            Eigen::Matrix<local_scalar_t__,-1,-1>>(x,
-            stan::math::multiply(m1, m2)), "assigning variable temp");
+          std::forward_as_tuple(x, stan::math::multiply(m1, m2)),
+          "assigning variable temp");
         current_statement__ = 3;
         f(temp, pstream__);
         current_statement__ = 4;
-        f(
-          std::tuple<Eigen::Matrix<double,-1,-1>,
-            Eigen::Matrix<local_scalar_t__,-1,-1>>(x,
-            stan::math::multiply(m1, m2)), pstream__);
+        f(std::forward_as_tuple(x, stan::math::multiply(m1, m2)), pstream__);
         std::tuple<Eigen::Matrix<local_scalar_t__,-1,-1>, int,
           std::vector<local_scalar_t__>> temp2 =
           std::tuple<Eigen::Matrix<local_scalar_t__,-1,-1>, int,
@@ -13516,16 +13710,12 @@ class tuple_copying_model final : public model_base_crtp<tuple_copying_model> {
             std::vector<local_scalar_t__>(10, DUMMY_VAR__)};
         current_statement__ = 5;
         stan::model::assign(temp2,
-          std::tuple<Eigen::Matrix<local_scalar_t__,-1,-1>, int,
-            const std::vector<double>&>(stan::math::add(m1, m2), 1, y),
+          std::forward_as_tuple(stan::math::add(m1, m2), 1, y),
           "assigning variable temp2");
         current_statement__ = 6;
         g(temp2, pstream__);
         current_statement__ = 7;
-        g(
-          std::tuple<Eigen::Matrix<local_scalar_t__,-1,-1>, int,
-            const std::vector<double>&>(stan::math::add(m1, m2), 1, y),
-          pstream__);
+        g(std::forward_as_tuple(stan::math::add(m1, m2), 1, y), pstream__);
         std::tuple<local_scalar_t__,
           std::tuple<Eigen::Matrix<local_scalar_t__,-1,-1>,
             std::vector<local_scalar_t__>>> temp3 =
@@ -13537,23 +13727,14 @@ class tuple_copying_model final : public model_base_crtp<tuple_copying_model> {
                                                2, DUMMY_VAR__),
               std::vector<local_scalar_t__>(10, DUMMY_VAR__)}};
         current_statement__ = 8;
-        stan::model::assign(temp3,
-          std::tuple<double,
-            std::tuple<Eigen::Matrix<double,-1,-1>, std::vector<double>>>(1,
-            data_tuple), "assigning variable temp3");
+        stan::model::assign(temp3, std::forward_as_tuple(1, data_tuple),
+          "assigning variable temp3");
         current_statement__ = 9;
         h(temp3, pstream__);
         current_statement__ = 10;
-        h(
-          std::tuple<double,
-            std::tuple<Eigen::Matrix<double,-1,-1>, std::vector<double>>>(1,
-            data_tuple), pstream__);
+        h(std::forward_as_tuple(1, data_tuple), pstream__);
         current_statement__ = 11;
-        h(
-          std::tuple<double,
-            std::tuple<Eigen::Matrix<double,-1,-1>, std::vector<double>>>(1,
-            std::tuple<Eigen::Matrix<double,-1,-1>,
-              const std::vector<double>&>(x, y)), pstream__);
+        h(std::forward_as_tuple(1, std::forward_as_tuple(x, y)), pstream__);
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -14027,23 +14208,19 @@ class tuple_exprs_model final : public model_base_crtp<tuple_exprs_model> {
       current_statement__ = 5;
       if (pstream__) {
         stan::math::stan_print(pstream__,
-          std::tuple<std::tuple<std::complex<double>, int>, std::vector<int>,
-            int>(std::tuple<const std::complex<double>&, int>(z, x),
+          std::forward_as_tuple(std::forward_as_tuple(z, x),
             std::vector<int>{1, 2}, 3));
         *(pstream__) << std::endl;
       }
       current_statement__ = 6;
       if (pstream__) {
         stan::math::stan_print(pstream__,
-          std::tuple<int, std::tuple<int, int>>(x,
-            std::tuple<int, int>(1, x)));
+          std::forward_as_tuple(x, std::forward_as_tuple(1, x)));
         *(pstream__) << std::endl;
       }
       current_statement__ = 7;
       if (pstream__) {
-        stan::math::stan_print(pstream__,
-          std::tuple<Eigen::Matrix<double,-1,-1>, int, int, int>(foo, 2, 3,
-            x));
+        stan::math::stan_print(pstream__, std::forward_as_tuple(foo, 2, 3, x));
         *(pstream__) << std::endl;
       }
       out__.write(x);
@@ -14272,8 +14449,7 @@ static constexpr std::array<const char*, 12> locations_array__ =
   " (in 'tuple_hof.stan', line 16, column 8 to column 9)",
   " (in 'tuple_hof.stan', line 4, column 4 to column 30)",
   " (in 'tuple_hof.stan', line 3, column 39 to line 5, column 3)"};
-template <typename T0__, typename T1__, typename T2__, typename T3__0__,
-          typename T3__1__,
+template <typename T0__, typename T1__, typename T2__, typename T3__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::math::disjunction<stan::is_autodiff<
                                                       stan::value_type_t<T0__>>,
@@ -14281,17 +14457,24 @@ template <typename T0__, typename T1__, typename T2__, typename T3__0__,
                                                       std::decay_t<stan::value_type_t<T0__>>>>,
                               std::is_integral<std::decay_t<T1__>>,
                               std::is_integral<std::decay_t<T2__>>,
-                              stan::math::disjunction<stan::is_autodiff<T3__0__>,
+                              stan::math::is_tuple<std::decay_t<T3__>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      std::tuple_element_t<0,
+                                                        std::decay_t<T3__>>>,
                                                       std::is_floating_point<
-                                                      std::decay_t<T3__0__>>>,
-                              stan::is_std_vector<T3__1__>,
-                              std::is_integral<std::decay_t<stan::value_type_t<T3__1__>>>>* = nullptr>
-stan::return_type_t<stan::base_type_t<T0__>, T3__0__>
-fun(const T0__& y_slice, const T1__& start, const T2__& end,
-    const std::tuple<T3__0__, T3__1__>& m, std::ostream* pstream__);
+                                                      std::decay_t<std::tuple_element_t<0,
+                                                                    std::decay_t<T3__>>>>>,
+                              stan::is_std_vector<std::tuple_element_t<1,
+                                                    std::decay_t<T3__>>>,
+                              std::is_integral<std::decay_t<stan::value_type_t<
+                                                              std::tuple_element_t<1,
+                                                                std::decay_t<T3__>>>>>>* = nullptr>
+stan::return_type_t<stan::base_type_t<T0__>,
+  std::tuple_element_t<0, std::decay_t<T3__>>>
+fun(const T0__& y_slice, const T1__& start, const T2__& end, const T3__& m,
+    std::ostream* pstream__);
 struct fun_rsfunctor__ {
-  template <typename T0__, typename T1__, typename T2__, typename T3__0__,
-            typename T3__1__,
+  template <typename T0__, typename T1__, typename T2__, typename T3__,
             stan::require_all_t<stan::is_std_vector<T0__>,
                                 stan::math::disjunction<stan::is_autodiff<
                                                         stan::value_type_t<T0__>>,
@@ -14300,20 +14483,28 @@ struct fun_rsfunctor__ {
                                                           stan::value_type_t<T0__>>>>,
                                 std::is_integral<std::decay_t<T1__>>,
                                 std::is_integral<std::decay_t<T2__>>,
-                                stan::math::disjunction<stan::is_autodiff<T3__0__>,
+                                stan::math::is_tuple<std::decay_t<T3__>>,
+                                stan::math::disjunction<stan::is_autodiff<
+                                                        std::tuple_element_t<0,
+                                                          std::decay_t<T3__>>>,
                                                         std::is_floating_point<
-                                                        std::decay_t<T3__0__>>>,
-                                stan::is_std_vector<T3__1__>,
-                                std::is_integral<std::decay_t<stan::value_type_t<T3__1__>>>>* = nullptr>
-  stan::return_type_t<stan::base_type_t<T0__>, T3__0__>
+                                                        std::decay_t<
+                                                          std::tuple_element_t<0,
+                                                            std::decay_t<T3__>>>>>,
+                                stan::is_std_vector<std::tuple_element_t<1,
+                                                      std::decay_t<T3__>>>,
+                                std::is_integral<std::decay_t<stan::value_type_t<
+                                                                std::tuple_element_t<1,
+                                                                  std::decay_t<T3__>>>>>>* = nullptr>
+  stan::return_type_t<stan::base_type_t<T0__>,
+    std::tuple_element_t<0, std::decay_t<T3__>>>
   operator()(const T0__& y_slice, const T1__& start, const T2__& end,
-             std::ostream* pstream__, const std::tuple<T3__0__, T3__1__>& m) const {
+             std::ostream* pstream__, const T3__& m) const {
     return fun(y_slice, (start + 1), (end + 1), m, pstream__);
   }
 };
 // real fun(array[] real, int, int, tuple(real, array[] int))
-template <typename T0__, typename T1__, typename T2__, typename T3__0__,
-          typename T3__1__,
+template <typename T0__, typename T1__, typename T2__, typename T3__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::math::disjunction<stan::is_autodiff<
                                                       stan::value_type_t<T0__>>,
@@ -14321,16 +14512,24 @@ template <typename T0__, typename T1__, typename T2__, typename T3__0__,
                                                       std::decay_t<stan::value_type_t<T0__>>>>,
                               std::is_integral<std::decay_t<T1__>>,
                               std::is_integral<std::decay_t<T2__>>,
-                              stan::math::disjunction<stan::is_autodiff<T3__0__>,
+                              stan::math::is_tuple<std::decay_t<T3__>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      std::tuple_element_t<0,
+                                                        std::decay_t<T3__>>>,
                                                       std::is_floating_point<
-                                                      std::decay_t<T3__0__>>>,
-                              stan::is_std_vector<T3__1__>,
-                              std::is_integral<std::decay_t<stan::value_type_t<T3__1__>>>>*>
-stan::return_type_t<stan::base_type_t<T0__>, T3__0__>
-fun(const T0__& y_slice, const T1__& start, const T2__& end,
-    const std::tuple<T3__0__, T3__1__>& m, std::ostream* pstream__) {
+                                                      std::decay_t<std::tuple_element_t<0,
+                                                                    std::decay_t<T3__>>>>>,
+                              stan::is_std_vector<std::tuple_element_t<1,
+                                                    std::decay_t<T3__>>>,
+                              std::is_integral<std::decay_t<stan::value_type_t<
+                                                              std::tuple_element_t<1,
+                                                                std::decay_t<T3__>>>>>>*>
+stan::return_type_t<stan::base_type_t<T0__>,
+  std::tuple_element_t<0, std::decay_t<T3__>>>
+fun(const T0__& y_slice, const T1__& start, const T2__& end, const T3__& m,
+    std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<stan::base_type_t<T0__>,
-                             T3__0__>;
+                             std::tuple_element_t<0, std::decay_t<T3__>>>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -14769,51 +14968,91 @@ static constexpr std::array<const char*, 4> locations_array__ =
   " (in 'tuple_lpdf.stan', line 8, column 3 to column 34)",
   " (in 'tuple_lpdf.stan', line 3, column 5 to column 14)",
   " (in 'tuple_lpdf.stan', line 2, column 63 to line 4, column 4)"};
-template <bool propto__, typename T0__0__, typename T0__1__,
-          typename T1__0__, typename T1__1__, typename T1__2__,
-          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__0__>,
+template <bool propto__, typename T0__, typename T1__,
+          stan::require_all_t<stan::math::is_tuple<std::decay_t<T0__>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      std::tuple_element_t<0,
+                                                        std::decay_t<T0__>>>,
                                                       std::is_floating_point<
-                                                      std::decay_t<T0__0__>>>,
-                              stan::math::disjunction<stan::is_autodiff<T0__1__>,
+                                                      std::decay_t<std::tuple_element_t<0,
+                                                                    std::decay_t<T0__>>>>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      std::tuple_element_t<1,
+                                                        std::decay_t<T0__>>>,
                                                       std::is_floating_point<
-                                                      std::decay_t<T0__1__>>>,
-                              stan::math::disjunction<stan::is_autodiff<T1__0__>,
+                                                      std::decay_t<std::tuple_element_t<1,
+                                                                    std::decay_t<T0__>>>>>,
+                              stan::math::is_tuple<std::decay_t<T1__>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      std::tuple_element_t<0,
+                                                        std::decay_t<T1__>>>,
                                                       std::is_floating_point<
-                                                      std::decay_t<T1__0__>>>,
-                              stan::math::disjunction<stan::is_autodiff<T1__1__>,
+                                                      std::decay_t<std::tuple_element_t<0,
+                                                                    std::decay_t<T1__>>>>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      std::tuple_element_t<1,
+                                                        std::decay_t<T1__>>>,
                                                       std::is_floating_point<
-                                                      std::decay_t<T1__1__>>>,
-                              stan::math::disjunction<stan::is_autodiff<T1__2__>,
+                                                      std::decay_t<std::tuple_element_t<1,
+                                                                    std::decay_t<T1__>>>>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      std::tuple_element_t<2,
+                                                        std::decay_t<T1__>>>,
                                                       std::is_floating_point<
-                                                      std::decay_t<T1__2__>>>>* = nullptr>
-stan::return_type_t<T0__0__, T0__1__, T1__0__, T1__1__, T1__2__>
-foo_lpdf(const std::tuple<T0__0__, T0__1__>& x,
-         const std::tuple<T1__0__, T1__1__, T1__2__>& y, std::ostream*
-         pstream__);
+                                                      std::decay_t<std::tuple_element_t<2,
+                                                                    std::decay_t<T1__>>>>>>* = nullptr>
+stan::return_type_t<std::tuple_element_t<0, std::decay_t<T0__>>,
+  std::tuple_element_t<1, std::decay_t<T0__>>,
+  std::tuple_element_t<0, std::decay_t<T1__>>,
+  std::tuple_element_t<1, std::decay_t<T1__>>,
+  std::tuple_element_t<2, std::decay_t<T1__>>>
+foo_lpdf(const T0__& x, const T1__& y, std::ostream* pstream__);
 // real foo_lpdf(tuple(real, real), tuple(real, real, real))
-template <bool propto__, typename T0__0__, typename T0__1__,
-          typename T1__0__, typename T1__1__, typename T1__2__,
-          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__0__>,
+template <bool propto__, typename T0__, typename T1__,
+          stan::require_all_t<stan::math::is_tuple<std::decay_t<T0__>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      std::tuple_element_t<0,
+                                                        std::decay_t<T0__>>>,
                                                       std::is_floating_point<
-                                                      std::decay_t<T0__0__>>>,
-                              stan::math::disjunction<stan::is_autodiff<T0__1__>,
+                                                      std::decay_t<std::tuple_element_t<0,
+                                                                    std::decay_t<T0__>>>>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      std::tuple_element_t<1,
+                                                        std::decay_t<T0__>>>,
                                                       std::is_floating_point<
-                                                      std::decay_t<T0__1__>>>,
-                              stan::math::disjunction<stan::is_autodiff<T1__0__>,
+                                                      std::decay_t<std::tuple_element_t<1,
+                                                                    std::decay_t<T0__>>>>>,
+                              stan::math::is_tuple<std::decay_t<T1__>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      std::tuple_element_t<0,
+                                                        std::decay_t<T1__>>>,
                                                       std::is_floating_point<
-                                                      std::decay_t<T1__0__>>>,
-                              stan::math::disjunction<stan::is_autodiff<T1__1__>,
+                                                      std::decay_t<std::tuple_element_t<0,
+                                                                    std::decay_t<T1__>>>>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      std::tuple_element_t<1,
+                                                        std::decay_t<T1__>>>,
                                                       std::is_floating_point<
-                                                      std::decay_t<T1__1__>>>,
-                              stan::math::disjunction<stan::is_autodiff<T1__2__>,
+                                                      std::decay_t<std::tuple_element_t<1,
+                                                                    std::decay_t<T1__>>>>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      std::tuple_element_t<2,
+                                                        std::decay_t<T1__>>>,
                                                       std::is_floating_point<
-                                                      std::decay_t<T1__2__>>>>*>
-stan::return_type_t<T0__0__, T0__1__, T1__0__, T1__1__, T1__2__>
-foo_lpdf(const std::tuple<T0__0__, T0__1__>& x,
-         const std::tuple<T1__0__, T1__1__, T1__2__>& y, std::ostream*
-         pstream__) {
-  using local_scalar_t__ = stan::return_type_t<T0__0__, T0__1__, T1__0__,
-                             T1__1__, T1__2__>;
+                                                      std::decay_t<std::tuple_element_t<2,
+                                                                    std::decay_t<T1__>>>>>>*>
+stan::return_type_t<std::tuple_element_t<0, std::decay_t<T0__>>,
+  std::tuple_element_t<1, std::decay_t<T0__>>,
+  std::tuple_element_t<0, std::decay_t<T1__>>,
+  std::tuple_element_t<1, std::decay_t<T1__>>,
+  std::tuple_element_t<2, std::decay_t<T1__>>>
+foo_lpdf(const T0__& x, const T1__& y, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<std::tuple_element_t<0,
+                                                 std::decay_t<T0__>>,
+                             std::tuple_element_t<1, std::decay_t<T0__>>,
+                             std::tuple_element_t<0, std::decay_t<T1__>>,
+                             std::tuple_element_t<1, std::decay_t<T1__>>,
+                             std::tuple_element_t<2, std::decay_t<T1__>>>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -14883,9 +15122,8 @@ class tuple_lpdf_model final : public model_base_crtp<tuple_lpdf_model> {
     (void) function__;
     try {
       current_statement__ = 1;
-      lp_accum__.add(foo_lpdf<propto__>(std::tuple<double, double>(1.5, 2),
-                       std::tuple<double, double, double>(1.2, 1.5, 4.5),
-                       pstream__));
+      lp_accum__.add(foo_lpdf<propto__>(std::forward_as_tuple(1.5, 2),
+                       std::forward_as_tuple(1.2, 1.5, 4.5), pstream__));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -14917,9 +15155,8 @@ class tuple_lpdf_model final : public model_base_crtp<tuple_lpdf_model> {
     (void) function__;
     try {
       current_statement__ = 1;
-      lp_accum__.add(foo_lpdf<propto__>(std::tuple<double, double>(1.5, 2),
-                       std::tuple<double, double, double>(1.2, 1.5, 4.5),
-                       pstream__));
+      lp_accum__.add(foo_lpdf<propto__>(std::forward_as_tuple(1.5, 2),
+                       std::forward_as_tuple(1.2, 1.5, 4.5), pstream__));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -15147,22 +15384,33 @@ static constexpr std::array<const char*, 4> locations_array__ =
   " (in 'tuple_lpdf2.stan', line 8, column 3 to column 20)",
   " (in 'tuple_lpdf2.stan', line 3, column 5 to column 14)",
   " (in 'tuple_lpdf2.stan', line 2, column 37 to line 4, column 4)"};
-template <bool propto__, typename T0__0__, typename T0__1__,
-          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__0__>,
+template <bool propto__, typename T0__,
+          stan::require_all_t<stan::math::is_tuple<std::decay_t<T0__>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      std::tuple_element_t<0,
+                                                        std::decay_t<T0__>>>,
                                                       std::is_floating_point<
-                                                      std::decay_t<T0__0__>>>,
-                              std::is_integral<std::decay_t<T0__1__>>>* = nullptr>
-stan::return_type_t<T0__0__>
-foo_lpdf(const std::tuple<T0__0__, T0__1__>& x, std::ostream* pstream__);
+                                                      std::decay_t<std::tuple_element_t<0,
+                                                                    std::decay_t<T0__>>>>>,
+                              std::is_integral<std::decay_t<std::tuple_element_t<1,
+                                                              std::decay_t<T0__>>>>>* = nullptr>
+stan::return_type_t<std::tuple_element_t<0, std::decay_t<T0__>>>
+foo_lpdf(const T0__& x, std::ostream* pstream__);
 // real foo_lpdf(tuple(real, int))
-template <bool propto__, typename T0__0__, typename T0__1__,
-          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__0__>,
+template <bool propto__, typename T0__,
+          stan::require_all_t<stan::math::is_tuple<std::decay_t<T0__>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      std::tuple_element_t<0,
+                                                        std::decay_t<T0__>>>,
                                                       std::is_floating_point<
-                                                      std::decay_t<T0__0__>>>,
-                              std::is_integral<std::decay_t<T0__1__>>>*>
-stan::return_type_t<T0__0__>
-foo_lpdf(const std::tuple<T0__0__, T0__1__>& x, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::return_type_t<T0__0__>;
+                                                      std::decay_t<std::tuple_element_t<0,
+                                                                    std::decay_t<T0__>>>>>,
+                              std::is_integral<std::decay_t<std::tuple_element_t<1,
+                                                              std::decay_t<T0__>>>>>*>
+stan::return_type_t<std::tuple_element_t<0, std::decay_t<T0__>>>
+foo_lpdf(const T0__& x, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<std::tuple_element_t<0,
+                                                 std::decay_t<T0__>>>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -15232,7 +15480,7 @@ class tuple_lpdf2_model final : public model_base_crtp<tuple_lpdf2_model> {
     (void) function__;
     try {
       current_statement__ = 1;
-      lp_accum__.add(foo_lpdf<propto__>(std::tuple<double, int>(1.5, 2),
+      lp_accum__.add(foo_lpdf<propto__>(std::forward_as_tuple(1.5, 2),
                        pstream__));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -15265,7 +15513,7 @@ class tuple_lpdf2_model final : public model_base_crtp<tuple_lpdf2_model> {
     (void) function__;
     try {
       current_statement__ = 1;
-      lp_accum__.add(foo_lpdf<propto__>(std::tuple<double, int>(1.5, 2),
+      lp_accum__.add(foo_lpdf<propto__>(std::forward_as_tuple(1.5, 2),
                        pstream__));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -15494,25 +15742,29 @@ static constexpr std::array<const char*, 4> locations_array__ =
   " (in 'tuple_lpmf.stan', line 8, column 2 to column 20)",
   " (in 'tuple_lpmf.stan', line 3, column 6 to column 25)",
   " (in 'tuple_lpmf.stan', line 2, column 42 to line 4, column 4)"};
-template <bool propto__, typename T0__0__, typename T0__1__, typename T1__,
-          stan::require_all_t<std::is_integral<std::decay_t<T0__0__>>,
-                              std::is_integral<std::decay_t<T0__1__>>,
+template <bool propto__, typename T0__, typename T1__,
+          stan::require_all_t<stan::math::is_tuple<std::decay_t<T0__>>,
+                              std::is_integral<std::decay_t<std::tuple_element_t<0,
+                                                              std::decay_t<T0__>>>>,
+                              std::is_integral<std::decay_t<std::tuple_element_t<1,
+                                                              std::decay_t<T0__>>>>,
                               stan::math::disjunction<stan::is_autodiff<T1__>,
                                                       std::is_floating_point<
                                                       std::decay_t<T1__>>>>* = nullptr>
 stan::return_type_t<T1__>
-foo_lpmf(const std::tuple<T0__0__, T0__1__>& x, const T1__& y, std::ostream*
-         pstream__);
+foo_lpmf(const T0__& x, const T1__& y, std::ostream* pstream__);
 // real foo_lpmf(tuple(int, int), real)
-template <bool propto__, typename T0__0__, typename T0__1__, typename T1__,
-          stan::require_all_t<std::is_integral<std::decay_t<T0__0__>>,
-                              std::is_integral<std::decay_t<T0__1__>>,
+template <bool propto__, typename T0__, typename T1__,
+          stan::require_all_t<stan::math::is_tuple<std::decay_t<T0__>>,
+                              std::is_integral<std::decay_t<std::tuple_element_t<0,
+                                                              std::decay_t<T0__>>>>,
+                              std::is_integral<std::decay_t<std::tuple_element_t<1,
+                                                              std::decay_t<T0__>>>>,
                               stan::math::disjunction<stan::is_autodiff<T1__>,
                                                       std::is_floating_point<
                                                       std::decay_t<T1__>>>>*>
 stan::return_type_t<T1__>
-foo_lpmf(const std::tuple<T0__0__, T0__1__>& x, const T1__& y, std::ostream*
-         pstream__) {
+foo_lpmf(const T0__& x, const T1__& y, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T1__>;
   int current_statement__ = 0;
   // suppress unused var warning
@@ -15583,7 +15835,7 @@ class tuple_lpmf_model final : public model_base_crtp<tuple_lpmf_model> {
     (void) function__;
     try {
       current_statement__ = 1;
-      lp_accum__.add(foo_lpmf<propto__>(std::tuple<int, int>(1, 3), 0.5,
+      lp_accum__.add(foo_lpmf<propto__>(std::forward_as_tuple(1, 3), 0.5,
                        pstream__));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -15616,7 +15868,7 @@ class tuple_lpmf_model final : public model_base_crtp<tuple_lpmf_model> {
     (void) function__;
     try {
       current_statement__ = 1;
-      lp_accum__.add(foo_lpmf<propto__>(std::tuple<int, int>(1, 3), 0.5,
+      lp_accum__.add(foo_lpmf<propto__>(std::forward_as_tuple(1, 3), 0.5,
                        pstream__));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -16009,16 +16261,15 @@ class tuple_temporary_model final : public model_base_crtp<tuple_temporary_model
             std::numeric_limits<double>::quiet_NaN())};
       current_statement__ = 2;
       stan::model::assign(t,
-        std::tuple<double, Eigen::Matrix<double,-1,-1>>(1.2,
-          stan::math::multiply(m, 2.0)), "assigning variable t");
+        std::forward_as_tuple(1.2, stan::math::multiply(m, 2.0)),
+        "assigning variable t");
       std::tuple<double, Eigen::Matrix<double,-1,-1>> s =
         std::tuple<double, Eigen::Matrix<double,-1,-1>>{std::numeric_limits<double>::quiet_NaN(
                                                           ),
           Eigen::Matrix<double,-1,-1>::Constant(1, 1,
             std::numeric_limits<double>::quiet_NaN())};
       current_statement__ = 3;
-      stan::model::assign(s,
-        std::tuple<double, Eigen::Matrix<double,-1,-1>>(std::get<0>(t), m),
+      stan::model::assign(s, std::forward_as_tuple(std::get<0>(t), m),
         "assigning variable s");
       out__.write(m);
       out__.write(std::get<0>(t));
@@ -16374,8 +16625,7 @@ class unpack_promote_model final : public model_base_crtp<unpack_promote_model> 
              Eigen::Matrix<double,-1,1>::Constant(N,
                std::numeric_limits<double>::quiet_NaN())};
       current_statement__ = 30;
-      stan::model::assign(td,
-        std::tuple<const std::vector<int>&, Eigen::Matrix<double,-1,1>>(y, x),
+      stan::model::assign(td, std::forward_as_tuple(y, x),
         "assigning variable td");
       current_statement__ = 31;
       stan::math::validate_non_negative_index("alpha", "N", N);
@@ -16461,10 +16711,7 @@ class unpack_promote_model final : public model_base_crtp<unpack_promote_model> 
             Eigen::Matrix<std::complex<double>,-1,1>> sym1__;
           current_statement__ = 12;
           stan::model::assign(sym1__,
-            std::tuple<std::vector<double>,
-              std::vector<std::complex<double>>,
-              Eigen::Matrix<std::complex<double>,-1,1>>(stan::math::promote_scalar<
-                                                          double>(y),
+            std::forward_as_tuple(stan::math::promote_scalar<double>(y),
               stan::math::promote_scalar<std::complex<double>>(y),
               stan::math::promote_scalar<std::complex<double>>(x)),
             "assigning variable sym1__");
@@ -16488,9 +16735,7 @@ class unpack_promote_model final : public model_base_crtp<unpack_promote_model> 
             Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>> sym1__;
           current_statement__ = 15;
           stan::model::assign(sym1__,
-            std::tuple<const std::vector<local_scalar_t__>&,
-              std::vector<std::complex<local_scalar_t__>>,
-              Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>(alpha,
+            std::forward_as_tuple(alpha,
               stan::math::promote_scalar<std::complex<local_scalar_t__>>(
                 alpha),
               stan::math::promote_scalar<std::complex<local_scalar_t__>>(
@@ -16522,10 +16767,9 @@ class unpack_promote_model final : public model_base_crtp<unpack_promote_model> 
             sym1__;
           current_statement__ = 20;
           stan::model::assign(sym1__,
-            std::tuple<Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>,
-              int>(stan::math::promote_scalar<
-                     std::complex<local_scalar_t__>>(theta), 1),
-            "assigning variable sym1__");
+            std::forward_as_tuple(
+              stan::math::promote_scalar<std::complex<local_scalar_t__>>(
+                theta), 1), "assigning variable sym1__");
           current_statement__ = 21;
           stan::model::assign(std::get<0>(tup), std::get<0>(sym1__),
             "assigning variable tup.1");
@@ -16612,10 +16856,7 @@ class unpack_promote_model final : public model_base_crtp<unpack_promote_model> 
             Eigen::Matrix<std::complex<double>,-1,1>> sym1__;
           current_statement__ = 12;
           stan::model::assign(sym1__,
-            std::tuple<std::vector<double>,
-              std::vector<std::complex<double>>,
-              Eigen::Matrix<std::complex<double>,-1,1>>(stan::math::promote_scalar<
-                                                          double>(y),
+            std::forward_as_tuple(stan::math::promote_scalar<double>(y),
               stan::math::promote_scalar<std::complex<double>>(y),
               stan::math::promote_scalar<std::complex<double>>(x)),
             "assigning variable sym1__");
@@ -16639,9 +16880,7 @@ class unpack_promote_model final : public model_base_crtp<unpack_promote_model> 
             Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>> sym1__;
           current_statement__ = 15;
           stan::model::assign(sym1__,
-            std::tuple<const std::vector<local_scalar_t__>&,
-              std::vector<std::complex<local_scalar_t__>>,
-              Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>(alpha,
+            std::forward_as_tuple(alpha,
               stan::math::promote_scalar<std::complex<local_scalar_t__>>(
                 alpha),
               stan::math::promote_scalar<std::complex<local_scalar_t__>>(
@@ -16673,10 +16912,9 @@ class unpack_promote_model final : public model_base_crtp<unpack_promote_model> 
             sym1__;
           current_statement__ = 20;
           stan::model::assign(sym1__,
-            std::tuple<Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>,
-              int>(stan::math::promote_scalar<
-                     std::complex<local_scalar_t__>>(theta), 1),
-            "assigning variable sym1__");
+            std::forward_as_tuple(
+              stan::math::promote_scalar<std::complex<local_scalar_t__>>(
+                theta), 1), "assigning variable sym1__");
           current_statement__ = 21;
           stan::model::assign(std::get<0>(tup), std::get<0>(sym1__),
             "assigning variable tup.1");

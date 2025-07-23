@@ -445,34 +445,6 @@ and lower_user_defined_fun f suffix es =
 
 and lower_compiler_internal ad ut f es =
   let open Cpp.DSL in
-  let gen_tuple_literal (es : Expr.Typed.t list) : expr =
-    (* we make full copies of tuples
-       due to a lack of templating sophistication
-       in function generation *)
-    let is_variable ({pattern; _} : Expr.Typed.t) =
-      match pattern with Var _ -> true | _ -> false in
-    let types =
-      List.map es ~f:(fun ({meta= {adlevel; type_; _}; _} as e) ->
-          let base_type = lower_unsizedtype_local adlevel type_ in
-          if
-            (* avoid trying to reference temporaries like the
-               result of adding two matrices *)
-            is_variable e
-            (* avoid nested tuples as references or passing a
-               reference to a pointer-sized type like double *)
-            && (not
-                  (UnsizedType.is_scalar_type type_
-                  || UnsizedType.contains_tuple type_))
-            (* Eigen types in the data block are stored as maps.
-               Note that this is a non-optimal overcorrection, because
-               Eigen matrices in the GQ block or as data arguments
-               to other functions could be const-ref'd *)
-            && not
-                 (UnsizedType.is_dataonlytype adlevel
-                 && UnsizedType.is_eigen_type type_)
-          then Types.const_ref base_type
-          else base_type) in
-    Constructor (Tuple types, lower_exprs es) in
   match f with
   | Internal_fun.FnMakeArray ->
       let ut =
@@ -533,7 +505,7 @@ and lower_compiler_internal ad ut f es =
   | FnDeepCopy ->
       lower_fun_app Fun_kind.FnPlain "stan::model::deep_copy" es Mem_pattern.AoS
         (Some UnsizedType.Void)
-  | FnMakeTuple -> gen_tuple_literal es
+  | FnMakeTuple -> fun_call "std::forward_as_tuple" (lower_exprs es)
   | _ ->
       lower_fun_app FnPlain (Internal_fun.to_string f) es Mem_pattern.AoS
         (Some UnsizedType.Void)

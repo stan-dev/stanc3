@@ -1397,39 +1397,83 @@ static constexpr std::array<const char*, 11> locations_array__ =
   " (in 'complex-tuples.stan', line 16, column 2 to column 74)",
   " (in 'complex-tuples.stan', line 3, column 4 to column 27)",
   " (in 'complex-tuples.stan', line 2, column 105 to line 4, column 3)"};
-template <typename T0__, typename T1__0__0__, typename T1__0__1__,
-          typename T1__1__,
+template <typename T0__, typename T1__,
           stan::require_all_t<std::is_integral<std::decay_t<T0__>>,
-                              std::is_integral<std::decay_t<T1__0__0__>>,
-                              std::is_integral<std::decay_t<T1__0__1__>>,
-                              stan::is_std_vector<T1__1__>,
-                              stan::is_std_vector<stan::value_type_t<T1__1__>>,
+                              stan::is_std_vector<T1__>,
+                              stan::is_std_vector<stan::value_type_t<T1__>>,
+                              stan::math::is_tuple<stan::value_type_t<
+                                                     stan::value_type_t<T1__>>>,
+                              stan::is_std_vector<std::tuple_element_t<0,
+                                                    stan::value_type_t<
+                                                      stan::value_type_t<T1__>>>>,
+                              stan::math::is_tuple<stan::value_type_t<
+                                                     std::tuple_element_t<0,
+                                                       stan::value_type_t<
+                                                         stan::value_type_t<T1__>>>>>,
+                              std::is_integral<std::decay_t<std::tuple_element_t<0,
+                                                              stan::value_type_t<
+                                                                std::tuple_element_t<0,
+                                                                  stan::value_type_t<
+                                                                    stan::value_type_t<T1__>>>>>>>,
+                              std::is_integral<std::decay_t<std::tuple_element_t<1,
+                                                              stan::value_type_t<
+                                                                std::tuple_element_t<0,
+                                                                  stan::value_type_t<
+                                                                    stan::value_type_t<T1__>>>>>>>,
+                              stan::is_std_vector<std::tuple_element_t<1,
+                                                    stan::value_type_t<
+                                                      stan::value_type_t<T1__>>>>,
+                              stan::is_std_vector<stan::value_type_t<
+                                                    std::tuple_element_t<1,
+                                                      stan::value_type_t<
+                                                        stan::value_type_t<T1__>>>>>,
                               std::is_integral<std::decay_t<stan::value_type_t<
-                                                              stan::value_type_t<T1__1__>>>>>* = nullptr>
+                                                              stan::value_type_t<
+                                                                std::tuple_element_t<1,
+                                                                  stan::value_type_t<
+                                                                    stan::value_type_t<T1__>>>>>>>>* = nullptr>
 std::tuple<int, std::vector<std::tuple<int, double>>>
-f(const T0__& x,
-  const std::vector<
-          std::vector<
-            std::tuple<std::vector<std::tuple<T1__0__0__, T1__0__1__>>,
-              T1__1__>>>& x2, std::ostream* pstream__);
+f(const T0__& x, const T1__& x2, std::ostream* pstream__);
 /* tuple(int, array[] tuple(int, real))
    f(int, array[,] tuple(array[] tuple(int, int), array[,] int))
  */
-template <typename T0__, typename T1__0__0__, typename T1__0__1__,
-          typename T1__1__,
+template <typename T0__, typename T1__,
           stan::require_all_t<std::is_integral<std::decay_t<T0__>>,
-                              std::is_integral<std::decay_t<T1__0__0__>>,
-                              std::is_integral<std::decay_t<T1__0__1__>>,
-                              stan::is_std_vector<T1__1__>,
-                              stan::is_std_vector<stan::value_type_t<T1__1__>>,
+                              stan::is_std_vector<T1__>,
+                              stan::is_std_vector<stan::value_type_t<T1__>>,
+                              stan::math::is_tuple<stan::value_type_t<
+                                                     stan::value_type_t<T1__>>>,
+                              stan::is_std_vector<std::tuple_element_t<0,
+                                                    stan::value_type_t<
+                                                      stan::value_type_t<T1__>>>>,
+                              stan::math::is_tuple<stan::value_type_t<
+                                                     std::tuple_element_t<0,
+                                                       stan::value_type_t<
+                                                         stan::value_type_t<T1__>>>>>,
+                              std::is_integral<std::decay_t<std::tuple_element_t<0,
+                                                              stan::value_type_t<
+                                                                std::tuple_element_t<0,
+                                                                  stan::value_type_t<
+                                                                    stan::value_type_t<T1__>>>>>>>,
+                              std::is_integral<std::decay_t<std::tuple_element_t<1,
+                                                              stan::value_type_t<
+                                                                std::tuple_element_t<0,
+                                                                  stan::value_type_t<
+                                                                    stan::value_type_t<T1__>>>>>>>,
+                              stan::is_std_vector<std::tuple_element_t<1,
+                                                    stan::value_type_t<
+                                                      stan::value_type_t<T1__>>>>,
+                              stan::is_std_vector<stan::value_type_t<
+                                                    std::tuple_element_t<1,
+                                                      stan::value_type_t<
+                                                        stan::value_type_t<T1__>>>>>,
                               std::is_integral<std::decay_t<stan::value_type_t<
-                                                              stan::value_type_t<T1__1__>>>>>*>
+                                                              stan::value_type_t<
+                                                                std::tuple_element_t<1,
+                                                                  stan::value_type_t<
+                                                                    stan::value_type_t<T1__>>>>>>>>*>
 std::tuple<int, std::vector<std::tuple<int, double>>>
-f(const T0__& x,
-  const std::vector<
-          std::vector<
-            std::tuple<std::vector<std::tuple<T1__0__0__, T1__0__1__>>,
-              T1__1__>>>& x2, std::ostream* pstream__) {
+f(const T0__& x, const T1__& x2, std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;
   // suppress unused var warning
@@ -1442,10 +1486,9 @@ f(const T0__& x,
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 9;
-    return std::tuple<int, std::vector<std::tuple<int, local_scalar_t__>>>(1,
-             std::vector<std::tuple<int, local_scalar_t__>>{std::tuple<int,
-                                                              local_scalar_t__>(2,
-                                                              3.4)});
+    return std::forward_as_tuple(1,
+             std::vector<std::tuple<int, local_scalar_t__>>{std::forward_as_tuple(
+                                                              2, 3.4)});
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -1545,9 +1588,9 @@ class complex_tuples_model final : public model_base_crtp<complex_tuples_model> 
                 std::numeric_limits<int>::min()})};
       current_statement__ = 8;
       stan::model::assign(d,
-        std::tuple<int, double, std::vector<std::tuple<int, int>>>(1, 2.5,
-          std::vector<std::tuple<int, int>>{std::tuple<int, int>(1, 2),
-            std::tuple<int, int>(3, 4)}), "assigning variable d");
+        std::forward_as_tuple(1, 2.5,
+          std::vector<std::tuple<int, int>>{std::forward_as_tuple(1, 2),
+            std::forward_as_tuple(3, 4)}), "assigning variable d");
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -7247,49 +7290,37 @@ class laplace_bernoulli_logit_model final : public model_base_crtp<laplace_berno
         current_statement__ = 9;
         lp_accum__.add(stan::math::laplace_marginal_bernoulli_logit_lpmf<
                          propto__>(y, y, prior_mean, K_function_functor__(),
-                         std::tuple<
-                           const std::vector<Eigen::Matrix<double,-1,1>>&,
-                           int, local_scalar_t__, local_scalar_t__>(x, n_obs,
-                           alpha, rho), pstream__));
+                         std::forward_as_tuple(x, n_obs, alpha, rho),
+                         pstream__));
         current_statement__ = 10;
         lp_accum__.add(stan::math::laplace_marginal_bernoulli_logit_lpmf<
                          false>(y, y, prior_mean, K_function_functor__(),
-                         std::tuple<
-                           const std::vector<Eigen::Matrix<double,-1,1>>&,
-                           int, local_scalar_t__, local_scalar_t__>(x, n_obs,
-                           alpha, rho), pstream__));
+                         std::forward_as_tuple(x, n_obs, alpha, rho),
+                         pstream__));
         current_statement__ = 11;
         lp_accum__.add(stan::math::laplace_marginal_bernoulli_logit_lpmf<
                          propto__>(y, y, prior_mean, K_function_functor__(),
-                         std::tuple<
-                           const std::vector<Eigen::Matrix<double,-1,1>>&,
-                           int, local_scalar_t__, local_scalar_t__>(x, n_obs,
-                           alpha, rho), pstream__));
+                         std::forward_as_tuple(x, n_obs, alpha, rho),
+                         pstream__));
         current_statement__ = 12;
         lp_accum__.add(stan::math::laplace_marginal_tol_bernoulli_logit_lpmf<
                          propto__>(y, y, prior_mean, K_function_functor__(),
-                         std::tuple<
-                           const std::vector<Eigen::Matrix<double,-1,1>>&,
-                           int, local_scalar_t__, local_scalar_t__>(x, n_obs,
-                           alpha, rho), theta_0, tolerance, max_num_steps,
+                         std::forward_as_tuple(x, n_obs, alpha, rho),
+                         theta_0, tolerance, max_num_steps,
                          hessian_block_size, solver, max_steps_line_search,
                          pstream__));
         current_statement__ = 13;
         lp_accum__.add(stan::math::laplace_marginal_tol_bernoulli_logit_lpmf<
                          false>(y, y, prior_mean, K_function_functor__(),
-                         std::tuple<
-                           const std::vector<Eigen::Matrix<double,-1,1>>&,
-                           int, local_scalar_t__, local_scalar_t__>(x, n_obs,
-                           alpha, rho), theta_0, tolerance, max_num_steps,
+                         std::forward_as_tuple(x, n_obs, alpha, rho),
+                         theta_0, tolerance, max_num_steps,
                          hessian_block_size, solver, max_steps_line_search,
                          pstream__));
         current_statement__ = 14;
         lp_accum__.add(stan::math::laplace_marginal_tol_bernoulli_logit_lpmf<
                          propto__>(y, y, prior_mean, K_function_functor__(),
-                         std::tuple<
-                           const std::vector<Eigen::Matrix<double,-1,1>>&,
-                           int, local_scalar_t__, local_scalar_t__>(x, n_obs,
-                           alpha, rho), theta_0, tolerance, max_num_steps,
+                         std::forward_as_tuple(x, n_obs, alpha, rho),
+                         theta_0, tolerance, max_num_steps,
                          hessian_block_size, solver, max_steps_line_search,
                          pstream__));
       }
@@ -7347,49 +7378,37 @@ class laplace_bernoulli_logit_model final : public model_base_crtp<laplace_berno
         current_statement__ = 9;
         lp_accum__.add(stan::math::laplace_marginal_bernoulli_logit_lpmf<
                          propto__>(y, y, prior_mean, K_function_functor__(),
-                         std::tuple<
-                           const std::vector<Eigen::Matrix<double,-1,1>>&,
-                           int, local_scalar_t__, local_scalar_t__>(x, n_obs,
-                           alpha, rho), pstream__));
+                         std::forward_as_tuple(x, n_obs, alpha, rho),
+                         pstream__));
         current_statement__ = 10;
         lp_accum__.add(stan::math::laplace_marginal_bernoulli_logit_lpmf<
                          false>(y, y, prior_mean, K_function_functor__(),
-                         std::tuple<
-                           const std::vector<Eigen::Matrix<double,-1,1>>&,
-                           int, local_scalar_t__, local_scalar_t__>(x, n_obs,
-                           alpha, rho), pstream__));
+                         std::forward_as_tuple(x, n_obs, alpha, rho),
+                         pstream__));
         current_statement__ = 11;
         lp_accum__.add(stan::math::laplace_marginal_bernoulli_logit_lpmf<
                          propto__>(y, y, prior_mean, K_function_functor__(),
-                         std::tuple<
-                           const std::vector<Eigen::Matrix<double,-1,1>>&,
-                           int, local_scalar_t__, local_scalar_t__>(x, n_obs,
-                           alpha, rho), pstream__));
+                         std::forward_as_tuple(x, n_obs, alpha, rho),
+                         pstream__));
         current_statement__ = 12;
         lp_accum__.add(stan::math::laplace_marginal_tol_bernoulli_logit_lpmf<
                          propto__>(y, y, prior_mean, K_function_functor__(),
-                         std::tuple<
-                           const std::vector<Eigen::Matrix<double,-1,1>>&,
-                           int, local_scalar_t__, local_scalar_t__>(x, n_obs,
-                           alpha, rho), theta_0, tolerance, max_num_steps,
+                         std::forward_as_tuple(x, n_obs, alpha, rho),
+                         theta_0, tolerance, max_num_steps,
                          hessian_block_size, solver, max_steps_line_search,
                          pstream__));
         current_statement__ = 13;
         lp_accum__.add(stan::math::laplace_marginal_tol_bernoulli_logit_lpmf<
                          false>(y, y, prior_mean, K_function_functor__(),
-                         std::tuple<
-                           const std::vector<Eigen::Matrix<double,-1,1>>&,
-                           int, local_scalar_t__, local_scalar_t__>(x, n_obs,
-                           alpha, rho), theta_0, tolerance, max_num_steps,
+                         std::forward_as_tuple(x, n_obs, alpha, rho),
+                         theta_0, tolerance, max_num_steps,
                          hessian_block_size, solver, max_steps_line_search,
                          pstream__));
         current_statement__ = 14;
         lp_accum__.add(stan::math::laplace_marginal_tol_bernoulli_logit_lpmf<
                          propto__>(y, y, prior_mean, K_function_functor__(),
-                         std::tuple<
-                           const std::vector<Eigen::Matrix<double,-1,1>>&,
-                           int, local_scalar_t__, local_scalar_t__>(x, n_obs,
-                           alpha, rho), theta_0, tolerance, max_num_steps,
+                         std::forward_as_tuple(x, n_obs, alpha, rho),
+                         theta_0, tolerance, max_num_steps,
                          hessian_block_size, solver, max_steps_line_search,
                          pstream__));
       }
@@ -7464,8 +7483,7 @@ class laplace_bernoulli_logit_model final : public model_base_crtp<laplace_berno
       stan::model::assign(theta,
         stan::math::laplace_latent_bernoulli_logit_rng(y, y, prior_mean,
           K_function_functor__(),
-          std::tuple<const std::vector<Eigen::Matrix<double,-1,1>>&, int,
-            double, double>(x, n_obs, alpha, rho), base_rng__, pstream__),
+          std::forward_as_tuple(x, n_obs, alpha, rho), base_rng__, pstream__),
         "assigning variable theta");
       Eigen::Matrix<double,-1,1> theta2 =
         Eigen::Matrix<double,-1,1>::Constant(n_obs,
@@ -7474,8 +7492,7 @@ class laplace_bernoulli_logit_model final : public model_base_crtp<laplace_berno
       stan::model::assign(theta2,
         stan::math::laplace_latent_tol_bernoulli_logit_rng(y, y, prior_mean,
           K_function_functor__(),
-          std::tuple<const std::vector<Eigen::Matrix<double,-1,1>>&, int,
-            double, double>(x, n_obs, alpha, rho), theta_0, tolerance,
+          std::forward_as_tuple(x, n_obs, alpha, rho), theta_0, tolerance,
           max_num_steps, hessian_block_size, solver, max_steps_line_search,
           base_rng__, pstream__), "assigning variable theta2");
       out__.write(theta);
@@ -8163,25 +8180,17 @@ class laplace_functionals_model final : public model_base_crtp<laplace_functiona
         lp_accum__.add(stan::math::normal_lpdf<propto__>(eta, 0, 1));
         current_statement__ = 9;
         lp_accum__.add(stan::math::laplace_marginal(ll_function_functor__(),
-                         std::tuple<local_scalar_t__,
-                           Eigen::Matrix<double,-1,1>,
-                           const std::vector<int>&>(eta, log_ye, y),
+                         std::forward_as_tuple(eta, log_ye, y),
                          K_function_functor__(),
-                         std::tuple<
-                           const std::vector<Eigen::Matrix<double,-1,1>>&,
-                           int, local_scalar_t__, local_scalar_t__>(x, n_obs,
-                           alpha, rho), pstream__));
+                         std::forward_as_tuple(x, n_obs, alpha, rho),
+                         pstream__));
         current_statement__ = 10;
         lp_accum__.add(stan::math::laplace_marginal_tol(
                          ll_function_functor__(),
-                         std::tuple<local_scalar_t__,
-                           Eigen::Matrix<double,-1,1>,
-                           const std::vector<int>&>(eta, log_ye, y),
+                         std::forward_as_tuple(eta, log_ye, y),
                          K_function_functor__(),
-                         std::tuple<
-                           const std::vector<Eigen::Matrix<double,-1,1>>&,
-                           int, local_scalar_t__, local_scalar_t__>(x, n_obs,
-                           alpha, rho), theta_0, tolerance, max_num_steps,
+                         std::forward_as_tuple(x, n_obs, alpha, rho),
+                         theta_0, tolerance, max_num_steps,
                          hessian_block_size, solver, max_steps_line_search,
                          pstream__));
       }
@@ -8238,25 +8247,17 @@ class laplace_functionals_model final : public model_base_crtp<laplace_functiona
         lp_accum__.add(stan::math::normal_lpdf<propto__>(eta, 0, 1));
         current_statement__ = 9;
         lp_accum__.add(stan::math::laplace_marginal(ll_function_functor__(),
-                         std::tuple<local_scalar_t__,
-                           Eigen::Matrix<double,-1,1>,
-                           const std::vector<int>&>(eta, log_ye, y),
+                         std::forward_as_tuple(eta, log_ye, y),
                          K_function_functor__(),
-                         std::tuple<
-                           const std::vector<Eigen::Matrix<double,-1,1>>&,
-                           int, local_scalar_t__, local_scalar_t__>(x, n_obs,
-                           alpha, rho), pstream__));
+                         std::forward_as_tuple(x, n_obs, alpha, rho),
+                         pstream__));
         current_statement__ = 10;
         lp_accum__.add(stan::math::laplace_marginal_tol(
                          ll_function_functor__(),
-                         std::tuple<local_scalar_t__,
-                           Eigen::Matrix<double,-1,1>,
-                           const std::vector<int>&>(eta, log_ye, y),
+                         std::forward_as_tuple(eta, log_ye, y),
                          K_function_functor__(),
-                         std::tuple<
-                           const std::vector<Eigen::Matrix<double,-1,1>>&,
-                           int, local_scalar_t__, local_scalar_t__>(x, n_obs,
-                           alpha, rho), theta_0, tolerance, max_num_steps,
+                         std::forward_as_tuple(x, n_obs, alpha, rho),
+                         theta_0, tolerance, max_num_steps,
                          hessian_block_size, solver, max_steps_line_search,
                          pstream__));
       }
@@ -8330,10 +8331,8 @@ class laplace_functionals_model final : public model_base_crtp<laplace_functiona
       current_statement__ = 4;
       stan::model::assign(theta,
         stan::math::laplace_latent_rng(ll_function_functor__(),
-          std::tuple<double, Eigen::Matrix<double,-1,1>,
-            const std::vector<int>&>(eta, log_ye, y), K_function_functor__(),
-          std::tuple<const std::vector<Eigen::Matrix<double,-1,1>>&, int,
-            double, double>(x, n_obs, alpha, rho), base_rng__, pstream__),
+          std::forward_as_tuple(eta, log_ye, y), K_function_functor__(),
+          std::forward_as_tuple(x, n_obs, alpha, rho), base_rng__, pstream__),
         "assigning variable theta");
       Eigen::Matrix<double,-1,1> theta2 =
         Eigen::Matrix<double,-1,1>::Constant(n_obs,
@@ -8341,10 +8340,8 @@ class laplace_functionals_model final : public model_base_crtp<laplace_functiona
       current_statement__ = 5;
       stan::model::assign(theta2,
         stan::math::laplace_latent_tol_rng(ll_function_functor__(),
-          std::tuple<double, Eigen::Matrix<double,-1,1>,
-            const std::vector<int>&>(eta, log_ye, y), K_function_functor__(),
-          std::tuple<const std::vector<Eigen::Matrix<double,-1,1>>&, int,
-            double, double>(x, n_obs, alpha, rho), theta_0, tolerance,
+          std::forward_as_tuple(eta, log_ye, y), K_function_functor__(),
+          std::forward_as_tuple(x, n_obs, alpha, rho), theta_0, tolerance,
           max_num_steps, hessian_block_size, solver, max_steps_line_search,
           base_rng__, pstream__), "assigning variable theta2");
       out__.write(theta);
@@ -8987,54 +8984,42 @@ class laplace_neg_binomial_2_log_model final : public model_base_crtp<laplace_ne
         lp_accum__.add(stan::math::laplace_marginal_neg_binomial_2_log_lpmf<
                          propto__>(y, y, log_ye, prior_mean,
                          K_function_functor__(),
-                         std::tuple<
-                           const std::vector<Eigen::Matrix<double,-1,1>>&,
-                           int, local_scalar_t__, local_scalar_t__>(x, n_obs,
-                           alpha, rho), pstream__));
+                         std::forward_as_tuple(x, n_obs, alpha, rho),
+                         pstream__));
         current_statement__ = 10;
         lp_accum__.add(stan::math::laplace_marginal_neg_binomial_2_log_lpmf<
                          false>(y, y, log_ye, prior_mean,
                          K_function_functor__(),
-                         std::tuple<
-                           const std::vector<Eigen::Matrix<double,-1,1>>&,
-                           int, local_scalar_t__, local_scalar_t__>(x, n_obs,
-                           alpha, rho), pstream__));
+                         std::forward_as_tuple(x, n_obs, alpha, rho),
+                         pstream__));
         current_statement__ = 11;
         lp_accum__.add(stan::math::laplace_marginal_neg_binomial_2_log_lpmf<
                          propto__>(y, y, log_ye, prior_mean,
                          K_function_functor__(),
-                         std::tuple<
-                           const std::vector<Eigen::Matrix<double,-1,1>>&,
-                           int, local_scalar_t__, local_scalar_t__>(x, n_obs,
-                           alpha, rho), pstream__));
+                         std::forward_as_tuple(x, n_obs, alpha, rho),
+                         pstream__));
         current_statement__ = 12;
         lp_accum__.add(stan::math::laplace_marginal_tol_neg_binomial_2_log_lpmf<
                          propto__>(y, y, log_ye, prior_mean,
                          K_function_functor__(),
-                         std::tuple<
-                           const std::vector<Eigen::Matrix<double,-1,1>>&,
-                           int, local_scalar_t__, local_scalar_t__>(x, n_obs,
-                           alpha, rho), theta_0, tolerance, max_num_steps,
+                         std::forward_as_tuple(x, n_obs, alpha, rho),
+                         theta_0, tolerance, max_num_steps,
                          hessian_block_size, solver, max_steps_line_search,
                          pstream__));
         current_statement__ = 13;
         lp_accum__.add(stan::math::laplace_marginal_tol_neg_binomial_2_log_lpmf<
                          false>(y, y, log_ye, prior_mean,
                          K_function_functor__(),
-                         std::tuple<
-                           const std::vector<Eigen::Matrix<double,-1,1>>&,
-                           int, local_scalar_t__, local_scalar_t__>(x, n_obs,
-                           alpha, rho), theta_0, tolerance, max_num_steps,
+                         std::forward_as_tuple(x, n_obs, alpha, rho),
+                         theta_0, tolerance, max_num_steps,
                          hessian_block_size, solver, max_steps_line_search,
                          pstream__));
         current_statement__ = 14;
         lp_accum__.add(stan::math::laplace_marginal_tol_neg_binomial_2_log_lpmf<
                          propto__>(y, y, log_ye, prior_mean,
                          K_function_functor__(),
-                         std::tuple<
-                           const std::vector<Eigen::Matrix<double,-1,1>>&,
-                           int, local_scalar_t__, local_scalar_t__>(x, n_obs,
-                           alpha, rho), theta_0, tolerance, max_num_steps,
+                         std::forward_as_tuple(x, n_obs, alpha, rho),
+                         theta_0, tolerance, max_num_steps,
                          hessian_block_size, solver, max_steps_line_search,
                          pstream__));
       }
@@ -9093,54 +9078,42 @@ class laplace_neg_binomial_2_log_model final : public model_base_crtp<laplace_ne
         lp_accum__.add(stan::math::laplace_marginal_neg_binomial_2_log_lpmf<
                          propto__>(y, y, log_ye, prior_mean,
                          K_function_functor__(),
-                         std::tuple<
-                           const std::vector<Eigen::Matrix<double,-1,1>>&,
-                           int, local_scalar_t__, local_scalar_t__>(x, n_obs,
-                           alpha, rho), pstream__));
+                         std::forward_as_tuple(x, n_obs, alpha, rho),
+                         pstream__));
         current_statement__ = 10;
         lp_accum__.add(stan::math::laplace_marginal_neg_binomial_2_log_lpmf<
                          false>(y, y, log_ye, prior_mean,
                          K_function_functor__(),
-                         std::tuple<
-                           const std::vector<Eigen::Matrix<double,-1,1>>&,
-                           int, local_scalar_t__, local_scalar_t__>(x, n_obs,
-                           alpha, rho), pstream__));
+                         std::forward_as_tuple(x, n_obs, alpha, rho),
+                         pstream__));
         current_statement__ = 11;
         lp_accum__.add(stan::math::laplace_marginal_neg_binomial_2_log_lpmf<
                          propto__>(y, y, log_ye, prior_mean,
                          K_function_functor__(),
-                         std::tuple<
-                           const std::vector<Eigen::Matrix<double,-1,1>>&,
-                           int, local_scalar_t__, local_scalar_t__>(x, n_obs,
-                           alpha, rho), pstream__));
+                         std::forward_as_tuple(x, n_obs, alpha, rho),
+                         pstream__));
         current_statement__ = 12;
         lp_accum__.add(stan::math::laplace_marginal_tol_neg_binomial_2_log_lpmf<
                          propto__>(y, y, log_ye, prior_mean,
                          K_function_functor__(),
-                         std::tuple<
-                           const std::vector<Eigen::Matrix<double,-1,1>>&,
-                           int, local_scalar_t__, local_scalar_t__>(x, n_obs,
-                           alpha, rho), theta_0, tolerance, max_num_steps,
+                         std::forward_as_tuple(x, n_obs, alpha, rho),
+                         theta_0, tolerance, max_num_steps,
                          hessian_block_size, solver, max_steps_line_search,
                          pstream__));
         current_statement__ = 13;
         lp_accum__.add(stan::math::laplace_marginal_tol_neg_binomial_2_log_lpmf<
                          false>(y, y, log_ye, prior_mean,
                          K_function_functor__(),
-                         std::tuple<
-                           const std::vector<Eigen::Matrix<double,-1,1>>&,
-                           int, local_scalar_t__, local_scalar_t__>(x, n_obs,
-                           alpha, rho), theta_0, tolerance, max_num_steps,
+                         std::forward_as_tuple(x, n_obs, alpha, rho),
+                         theta_0, tolerance, max_num_steps,
                          hessian_block_size, solver, max_steps_line_search,
                          pstream__));
         current_statement__ = 14;
         lp_accum__.add(stan::math::laplace_marginal_tol_neg_binomial_2_log_lpmf<
                          propto__>(y, y, log_ye, prior_mean,
                          K_function_functor__(),
-                         std::tuple<
-                           const std::vector<Eigen::Matrix<double,-1,1>>&,
-                           int, local_scalar_t__, local_scalar_t__>(x, n_obs,
-                           alpha, rho), theta_0, tolerance, max_num_steps,
+                         std::forward_as_tuple(x, n_obs, alpha, rho),
+                         theta_0, tolerance, max_num_steps,
                          hessian_block_size, solver, max_steps_line_search,
                          pstream__));
       }
@@ -9215,8 +9188,7 @@ class laplace_neg_binomial_2_log_model final : public model_base_crtp<laplace_ne
       stan::model::assign(theta,
         stan::math::laplace_latent_neg_binomial_2_log_rng(y, y, log_ye,
           prior_mean, K_function_functor__(),
-          std::tuple<const std::vector<Eigen::Matrix<double,-1,1>>&, int,
-            double, double>(x, n_obs, alpha, rho), base_rng__, pstream__),
+          std::forward_as_tuple(x, n_obs, alpha, rho), base_rng__, pstream__),
         "assigning variable theta");
       Eigen::Matrix<double,-1,1> theta2 =
         Eigen::Matrix<double,-1,1>::Constant(n_obs,
@@ -9225,8 +9197,7 @@ class laplace_neg_binomial_2_log_model final : public model_base_crtp<laplace_ne
       stan::model::assign(theta2,
         stan::math::laplace_latent_tol_neg_binomial_2_log_rng(y, y, log_ye,
           prior_mean, K_function_functor__(),
-          std::tuple<const std::vector<Eigen::Matrix<double,-1,1>>&, int,
-            double, double>(x, n_obs, alpha, rho), theta_0, tolerance,
+          std::forward_as_tuple(x, n_obs, alpha, rho), theta_0, tolerance,
           max_num_steps, hessian_block_size, solver, max_steps_line_search,
           base_rng__, pstream__), "assigning variable theta2");
       out__.write(theta);
@@ -9527,31 +9498,55 @@ static constexpr std::array<const char*, 42> locations_array__ =
   " (in 'laplace_nested_tuple.stan', line 20, column 4 to line 21, column 22)",
   " (in 'laplace_nested_tuple.stan', line 22, column 4 to column 13)",
   " (in 'laplace_nested_tuple.stan', line 18, column 49 to line 23, column 3)"};
-template <typename T0__, typename T1__0__, typename T1__1__0__,
-          typename T1__1__1__,
+template <typename T0__, typename T1__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::is_col_vector<stan::value_type_t<T0__>>,
                               stan::is_vt_not_complex<stan::value_type_t<T0__>>,
-                              std::is_integral<std::decay_t<T1__0__>>,
-                              stan::math::disjunction<stan::is_autodiff<T1__1__0__>,
+                              stan::math::is_tuple<std::decay_t<T1__>>,
+                              std::is_integral<std::decay_t<std::tuple_element_t<0,
+                                                              std::decay_t<T1__>>>>,
+                              stan::math::is_tuple<std::tuple_element_t<1,
+                                                     std::decay_t<T1__>>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      std::tuple_element_t<0,
+                                                        std::tuple_element_t<1,
+                                                          std::decay_t<T1__>>>>,
                                                       std::is_floating_point<
-                                                      std::decay_t<T1__1__0__>>>,
-                              stan::math::disjunction<stan::is_autodiff<T1__1__1__>,
+                                                      std::decay_t<std::tuple_element_t<0,
+                                                                    std::tuple_element_t<1,
+                                                                    std::decay_t<T1__>>>>>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      std::tuple_element_t<1,
+                                                        std::tuple_element_t<1,
+                                                          std::decay_t<T1__>>>>,
                                                       std::is_floating_point<
-                                                      std::decay_t<T1__1__1__>>>>* = nullptr>
-Eigen::Matrix<stan::return_type_t<stan::base_type_t<T0__>, T1__1__0__,
-                T1__1__1__>,-1,-1>
-scalar_tuple(const T0__& x,
-             const std::tuple<T1__0__, std::tuple<T1__1__0__, T1__1__1__>>&
-             p, std::ostream* pstream__);
-template <typename T0__0__, typename T0__1__, typename T1__, typename T2__,
-          typename T3__,
-          stan::require_all_t<stan::is_std_vector<T0__0__>,
-                              stan::is_col_vector<stan::value_type_t<T0__0__>>,
-                              stan::is_vt_not_complex<stan::value_type_t<T0__0__>>,
-                              stan::is_std_vector<T0__1__>,
-                              stan::is_col_vector<stan::value_type_t<T0__1__>>,
-                              stan::is_vt_not_complex<stan::value_type_t<T0__1__>>,
+                                                      std::decay_t<std::tuple_element_t<1,
+                                                                    std::tuple_element_t<1,
+                                                                    std::decay_t<T1__>>>>>>>* = nullptr>
+Eigen::Matrix<stan::return_type_t<stan::base_type_t<T0__>,
+                std::tuple_element_t<0,
+                  std::decay_t<std::tuple_element_t<1, std::decay_t<T1__>>>>,
+                std::tuple_element_t<1,
+                  std::decay_t<std::tuple_element_t<1, std::decay_t<T1__>>>>>,-1,-1>
+scalar_tuple(const T0__& x, const T1__& p, std::ostream* pstream__);
+template <typename T0__, typename T1__, typename T2__, typename T3__,
+          stan::require_all_t<stan::math::is_tuple<std::decay_t<T0__>>,
+                              stan::is_std_vector<std::tuple_element_t<0,
+                                                    std::decay_t<T0__>>>,
+                              stan::is_col_vector<stan::value_type_t<
+                                                    std::tuple_element_t<0,
+                                                      std::decay_t<T0__>>>>,
+                              stan::is_vt_not_complex<stan::value_type_t<
+                                                        std::tuple_element_t<0,
+                                                          std::decay_t<T0__>>>>,
+                              stan::is_std_vector<std::tuple_element_t<1,
+                                                    std::decay_t<T0__>>>,
+                              stan::is_col_vector<stan::value_type_t<
+                                                    std::tuple_element_t<1,
+                                                      std::decay_t<T0__>>>>,
+                              stan::is_vt_not_complex<stan::value_type_t<
+                                                        std::tuple_element_t<1,
+                                                          std::decay_t<T0__>>>>,
                               std::is_integral<std::decay_t<T1__>>,
                               stan::math::disjunction<stan::is_autodiff<T2__>,
                                                       std::is_floating_point<
@@ -9559,17 +9554,26 @@ template <typename T0__0__, typename T0__1__, typename T1__, typename T2__,
                               stan::math::disjunction<stan::is_autodiff<T3__>,
                                                       std::is_floating_point<
                                                       std::decay_t<T3__>>>>* = nullptr>
-Eigen::Matrix<stan::return_type_t<stan::base_type_t<T0__0__>,
-                stan::base_type_t<T0__1__>, T2__, T3__>,-1,-1>
-arr_vec_tuple(const std::tuple<T0__0__, T0__1__>& x, const T1__& n_obs,
-              const T2__& alpha, const T3__& rho, std::ostream* pstream__);
-template <typename T0__0__, typename T0__1__, typename T1__, typename T2__,
-          typename T3__,
-          stan::require_all_t<stan::is_std_vector<T0__0__>,
-                              stan::is_col_vector<stan::value_type_t<T0__0__>>,
-                              stan::is_vt_not_complex<stan::value_type_t<T0__0__>>,
-                              stan::is_col_vector<T0__1__>,
-                              stan::is_vt_not_complex<T0__1__>,
+Eigen::Matrix<stan::return_type_t<stan::base_type_t<std::tuple_element_t<0,
+                                                      std::decay_t<T0__>>>,
+                stan::base_type_t<std::tuple_element_t<1, std::decay_t<T0__>>>,
+                T2__, T3__>,-1,-1>
+arr_vec_tuple(const T0__& x, const T1__& n_obs, const T2__& alpha,
+              const T3__& rho, std::ostream* pstream__);
+template <typename T0__, typename T1__, typename T2__, typename T3__,
+          stan::require_all_t<stan::math::is_tuple<std::decay_t<T0__>>,
+                              stan::is_std_vector<std::tuple_element_t<0,
+                                                    std::decay_t<T0__>>>,
+                              stan::is_col_vector<stan::value_type_t<
+                                                    std::tuple_element_t<0,
+                                                      std::decay_t<T0__>>>>,
+                              stan::is_vt_not_complex<stan::value_type_t<
+                                                        std::tuple_element_t<0,
+                                                          std::decay_t<T0__>>>>,
+                              stan::is_col_vector<std::tuple_element_t<1,
+                                                    std::decay_t<T0__>>>,
+                              stan::is_vt_not_complex<std::tuple_element_t<1,
+                                                        std::decay_t<T0__>>>,
                               std::is_integral<std::decay_t<T1__>>,
                               stan::math::disjunction<stan::is_autodiff<T2__>,
                                                       std::is_floating_point<
@@ -9577,19 +9581,31 @@ template <typename T0__0__, typename T0__1__, typename T1__, typename T2__,
                               stan::math::disjunction<stan::is_autodiff<T3__>,
                                                       std::is_floating_point<
                                                       std::decay_t<T3__>>>>* = nullptr>
-Eigen::Matrix<stan::return_type_t<stan::base_type_t<T0__0__>,
-                stan::base_type_t<T0__1__>, T2__, T3__>,-1,-1>
-arr_and_vec_tuple(const std::tuple<T0__0__, T0__1__>& x, const T1__& n_obs,
-                  const T2__& alpha, const T3__& rho, std::ostream* pstream__);
+Eigen::Matrix<stan::return_type_t<stan::base_type_t<std::tuple_element_t<0,
+                                                      std::decay_t<T0__>>>,
+                stan::base_type_t<std::tuple_element_t<1, std::decay_t<T0__>>>,
+                T2__, T3__>,-1,-1>
+arr_and_vec_tuple(const T0__& x, const T1__& n_obs, const T2__& alpha,
+                  const T3__& rho, std::ostream* pstream__);
 struct arr_vec_tuple_functor__ {
-  template <typename T0__0__, typename T0__1__, typename T1__, typename T2__,
-            typename T3__,
-            stan::require_all_t<stan::is_std_vector<T0__0__>,
-                                stan::is_col_vector<stan::value_type_t<T0__0__>>,
-                                stan::is_vt_not_complex<stan::value_type_t<T0__0__>>,
-                                stan::is_std_vector<T0__1__>,
-                                stan::is_col_vector<stan::value_type_t<T0__1__>>,
-                                stan::is_vt_not_complex<stan::value_type_t<T0__1__>>,
+  template <typename T0__, typename T1__, typename T2__, typename T3__,
+            stan::require_all_t<stan::math::is_tuple<std::decay_t<T0__>>,
+                                stan::is_std_vector<std::tuple_element_t<0,
+                                                      std::decay_t<T0__>>>,
+                                stan::is_col_vector<stan::value_type_t<
+                                                      std::tuple_element_t<0,
+                                                        std::decay_t<T0__>>>>,
+                                stan::is_vt_not_complex<stan::value_type_t<
+                                                          std::tuple_element_t<0,
+                                                            std::decay_t<T0__>>>>,
+                                stan::is_std_vector<std::tuple_element_t<1,
+                                                      std::decay_t<T0__>>>,
+                                stan::is_col_vector<stan::value_type_t<
+                                                      std::tuple_element_t<1,
+                                                        std::decay_t<T0__>>>>,
+                                stan::is_vt_not_complex<stan::value_type_t<
+                                                          std::tuple_element_t<1,
+                                                            std::decay_t<T0__>>>>,
                                 std::is_integral<std::decay_t<T1__>>,
                                 stan::math::disjunction<stan::is_autodiff<T2__>,
                                                         std::is_floating_point<
@@ -9597,21 +9613,31 @@ struct arr_vec_tuple_functor__ {
                                 stan::math::disjunction<stan::is_autodiff<T3__>,
                                                         std::is_floating_point<
                                                         std::decay_t<T3__>>>>* = nullptr>
-  Eigen::Matrix<stan::return_type_t<stan::base_type_t<T0__0__>,
-                  stan::base_type_t<T0__1__>, T2__, T3__>,-1,-1>
-  operator()(const std::tuple<T0__0__, T0__1__>& x, const T1__& n_obs,
-             const T2__& alpha, const T3__& rho, std::ostream* pstream__) const {
+  Eigen::Matrix<stan::return_type_t<stan::base_type_t<std::tuple_element_t<0,
+                                                        std::decay_t<T0__>>>,
+                  stan::base_type_t<std::tuple_element_t<1,
+                                      std::decay_t<T0__>>>,
+                  T2__, T3__>,-1,-1>
+  operator()(const T0__& x, const T1__& n_obs, const T2__& alpha, const T3__&
+             rho, std::ostream* pstream__) const {
     return arr_vec_tuple(x, n_obs, alpha, rho, pstream__);
   }
 };
 struct arr_and_vec_tuple_functor__ {
-  template <typename T0__0__, typename T0__1__, typename T1__, typename T2__,
-            typename T3__,
-            stan::require_all_t<stan::is_std_vector<T0__0__>,
-                                stan::is_col_vector<stan::value_type_t<T0__0__>>,
-                                stan::is_vt_not_complex<stan::value_type_t<T0__0__>>,
-                                stan::is_col_vector<T0__1__>,
-                                stan::is_vt_not_complex<T0__1__>,
+  template <typename T0__, typename T1__, typename T2__, typename T3__,
+            stan::require_all_t<stan::math::is_tuple<std::decay_t<T0__>>,
+                                stan::is_std_vector<std::tuple_element_t<0,
+                                                      std::decay_t<T0__>>>,
+                                stan::is_col_vector<stan::value_type_t<
+                                                      std::tuple_element_t<0,
+                                                        std::decay_t<T0__>>>>,
+                                stan::is_vt_not_complex<stan::value_type_t<
+                                                          std::tuple_element_t<0,
+                                                            std::decay_t<T0__>>>>,
+                                stan::is_col_vector<std::tuple_element_t<1,
+                                                      std::decay_t<T0__>>>,
+                                stan::is_vt_not_complex<std::tuple_element_t<1,
+                                                          std::decay_t<T0__>>>,
                                 std::is_integral<std::decay_t<T1__>>,
                                 stan::math::disjunction<stan::is_autodiff<T2__>,
                                                         std::is_floating_point<
@@ -9619,54 +9645,92 @@ struct arr_and_vec_tuple_functor__ {
                                 stan::math::disjunction<stan::is_autodiff<T3__>,
                                                         std::is_floating_point<
                                                         std::decay_t<T3__>>>>* = nullptr>
-  Eigen::Matrix<stan::return_type_t<stan::base_type_t<T0__0__>,
-                  stan::base_type_t<T0__1__>, T2__, T3__>,-1,-1>
-  operator()(const std::tuple<T0__0__, T0__1__>& x, const T1__& n_obs,
-             const T2__& alpha, const T3__& rho, std::ostream* pstream__) const {
+  Eigen::Matrix<stan::return_type_t<stan::base_type_t<std::tuple_element_t<0,
+                                                        std::decay_t<T0__>>>,
+                  stan::base_type_t<std::tuple_element_t<1,
+                                      std::decay_t<T0__>>>,
+                  T2__, T3__>,-1,-1>
+  operator()(const T0__& x, const T1__& n_obs, const T2__& alpha, const T3__&
+             rho, std::ostream* pstream__) const {
     return arr_and_vec_tuple(x, n_obs, alpha, rho, pstream__);
   }
 };
 struct scalar_tuple_functor__ {
-  template <typename T0__, typename T1__0__, typename T1__1__0__,
-            typename T1__1__1__,
+  template <typename T0__, typename T1__,
             stan::require_all_t<stan::is_std_vector<T0__>,
                                 stan::is_col_vector<stan::value_type_t<T0__>>,
                                 stan::is_vt_not_complex<stan::value_type_t<T0__>>,
-                                std::is_integral<std::decay_t<T1__0__>>,
-                                stan::math::disjunction<stan::is_autodiff<T1__1__0__>,
+                                stan::math::is_tuple<std::decay_t<T1__>>,
+                                std::is_integral<std::decay_t<std::tuple_element_t<0,
+                                                                std::decay_t<T1__>>>>,
+                                stan::math::is_tuple<std::tuple_element_t<1,
+                                                       std::decay_t<T1__>>>,
+                                stan::math::disjunction<stan::is_autodiff<
+                                                        std::tuple_element_t<0,
+                                                          std::tuple_element_t<1,
+                                                            std::decay_t<T1__>>>>,
                                                         std::is_floating_point<
-                                                        std::decay_t<T1__1__0__>>>,
-                                stan::math::disjunction<stan::is_autodiff<T1__1__1__>,
+                                                        std::decay_t<
+                                                          std::tuple_element_t<0,
+                                                            std::tuple_element_t<1,
+                                                              std::decay_t<T1__>>>>>>,
+                                stan::math::disjunction<stan::is_autodiff<
+                                                        std::tuple_element_t<1,
+                                                          std::tuple_element_t<1,
+                                                            std::decay_t<T1__>>>>,
                                                         std::is_floating_point<
-                                                        std::decay_t<T1__1__1__>>>>* = nullptr>
-  Eigen::Matrix<stan::return_type_t<stan::base_type_t<T0__>, T1__1__0__,
-                  T1__1__1__>,-1,-1>
-  operator()(const T0__& x,
-             const std::tuple<T1__0__, std::tuple<T1__1__0__, T1__1__1__>>&
-             p, std::ostream* pstream__) const {
+                                                        std::decay_t<
+                                                          std::tuple_element_t<1,
+                                                            std::tuple_element_t<1,
+                                                              std::decay_t<T1__>>>>>>>* = nullptr>
+  Eigen::Matrix<stan::return_type_t<stan::base_type_t<T0__>,
+                  std::tuple_element_t<0,
+                    std::decay_t<std::tuple_element_t<1, std::decay_t<T1__>>>>,
+                  std::tuple_element_t<1,
+                    std::decay_t<std::tuple_element_t<1, std::decay_t<T1__>>>>>,-1,-1>
+  operator()(const T0__& x, const T1__& p, std::ostream* pstream__) const {
     return scalar_tuple(x, p, pstream__);
   }
 };
 // matrix scalar_tuple(array[] vector, tuple(int, tuple(real, real)))
-template <typename T0__, typename T1__0__, typename T1__1__0__,
-          typename T1__1__1__,
+template <typename T0__, typename T1__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::is_col_vector<stan::value_type_t<T0__>>,
                               stan::is_vt_not_complex<stan::value_type_t<T0__>>,
-                              std::is_integral<std::decay_t<T1__0__>>,
-                              stan::math::disjunction<stan::is_autodiff<T1__1__0__>,
+                              stan::math::is_tuple<std::decay_t<T1__>>,
+                              std::is_integral<std::decay_t<std::tuple_element_t<0,
+                                                              std::decay_t<T1__>>>>,
+                              stan::math::is_tuple<std::tuple_element_t<1,
+                                                     std::decay_t<T1__>>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      std::tuple_element_t<0,
+                                                        std::tuple_element_t<1,
+                                                          std::decay_t<T1__>>>>,
                                                       std::is_floating_point<
-                                                      std::decay_t<T1__1__0__>>>,
-                              stan::math::disjunction<stan::is_autodiff<T1__1__1__>,
+                                                      std::decay_t<std::tuple_element_t<0,
+                                                                    std::tuple_element_t<1,
+                                                                    std::decay_t<T1__>>>>>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      std::tuple_element_t<1,
+                                                        std::tuple_element_t<1,
+                                                          std::decay_t<T1__>>>>,
                                                       std::is_floating_point<
-                                                      std::decay_t<T1__1__1__>>>>*>
-Eigen::Matrix<stan::return_type_t<stan::base_type_t<T0__>, T1__1__0__,
-                T1__1__1__>,-1,-1>
-scalar_tuple(const T0__& x,
-             const std::tuple<T1__0__, std::tuple<T1__1__0__, T1__1__1__>>&
-             p, std::ostream* pstream__) {
+                                                      std::decay_t<std::tuple_element_t<1,
+                                                                    std::tuple_element_t<1,
+                                                                    std::decay_t<T1__>>>>>>>*>
+Eigen::Matrix<stan::return_type_t<stan::base_type_t<T0__>,
+                std::tuple_element_t<0,
+                  std::decay_t<std::tuple_element_t<1, std::decay_t<T1__>>>>,
+                std::tuple_element_t<1,
+                  std::decay_t<std::tuple_element_t<1, std::decay_t<T1__>>>>>,-1,-1>
+scalar_tuple(const T0__& x, const T1__& p, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<stan::base_type_t<T0__>,
-                             T1__1__0__, T1__1__1__>;
+                             std::tuple_element_t<0,
+                               std::decay_t<std::tuple_element_t<1,
+                                              std::decay_t<T1__>>>>,
+                             std::tuple_element_t<1,
+                               std::decay_t<std::tuple_element_t<1,
+                                              std::decay_t<T1__>>>>>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -9703,14 +9767,24 @@ scalar_tuple(const T0__& x,
   }
 }
 // matrix arr_vec_tuple(tuple(array[] vector, array[] vector), int, real, real)
-template <typename T0__0__, typename T0__1__, typename T1__, typename T2__,
-          typename T3__,
-          stan::require_all_t<stan::is_std_vector<T0__0__>,
-                              stan::is_col_vector<stan::value_type_t<T0__0__>>,
-                              stan::is_vt_not_complex<stan::value_type_t<T0__0__>>,
-                              stan::is_std_vector<T0__1__>,
-                              stan::is_col_vector<stan::value_type_t<T0__1__>>,
-                              stan::is_vt_not_complex<stan::value_type_t<T0__1__>>,
+template <typename T0__, typename T1__, typename T2__, typename T3__,
+          stan::require_all_t<stan::math::is_tuple<std::decay_t<T0__>>,
+                              stan::is_std_vector<std::tuple_element_t<0,
+                                                    std::decay_t<T0__>>>,
+                              stan::is_col_vector<stan::value_type_t<
+                                                    std::tuple_element_t<0,
+                                                      std::decay_t<T0__>>>>,
+                              stan::is_vt_not_complex<stan::value_type_t<
+                                                        std::tuple_element_t<0,
+                                                          std::decay_t<T0__>>>>,
+                              stan::is_std_vector<std::tuple_element_t<1,
+                                                    std::decay_t<T0__>>>,
+                              stan::is_col_vector<stan::value_type_t<
+                                                    std::tuple_element_t<1,
+                                                      std::decay_t<T0__>>>>,
+                              stan::is_vt_not_complex<stan::value_type_t<
+                                                        std::tuple_element_t<1,
+                                                          std::decay_t<T0__>>>>,
                               std::is_integral<std::decay_t<T1__>>,
                               stan::math::disjunction<stan::is_autodiff<T2__>,
                                                       std::is_floating_point<
@@ -9718,12 +9792,17 @@ template <typename T0__0__, typename T0__1__, typename T1__, typename T2__,
                               stan::math::disjunction<stan::is_autodiff<T3__>,
                                                       std::is_floating_point<
                                                       std::decay_t<T3__>>>>*>
-Eigen::Matrix<stan::return_type_t<stan::base_type_t<T0__0__>,
-                stan::base_type_t<T0__1__>, T2__, T3__>,-1,-1>
-arr_vec_tuple(const std::tuple<T0__0__, T0__1__>& x, const T1__& n_obs,
-              const T2__& alpha, const T3__& rho, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::return_type_t<stan::base_type_t<T0__0__>,
-                             stan::base_type_t<T0__1__>, T2__, T3__>;
+Eigen::Matrix<stan::return_type_t<stan::base_type_t<std::tuple_element_t<0,
+                                                      std::decay_t<T0__>>>,
+                stan::base_type_t<std::tuple_element_t<1, std::decay_t<T0__>>>,
+                T2__, T3__>,-1,-1>
+arr_vec_tuple(const T0__& x, const T1__& n_obs, const T2__& alpha,
+              const T3__& rho, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<stan::base_type_t<std::tuple_element_t<0,
+                                                                   std::decay_t<T0__>>>,
+                             stan::base_type_t<std::tuple_element_t<1,
+                                                 std::decay_t<T0__>>>,
+                             T2__, T3__>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -9760,13 +9839,20 @@ arr_vec_tuple(const std::tuple<T0__0__, T0__1__>& x, const T1__& n_obs,
   }
 }
 // matrix arr_and_vec_tuple(tuple(array[] vector, vector), int, real, real)
-template <typename T0__0__, typename T0__1__, typename T1__, typename T2__,
-          typename T3__,
-          stan::require_all_t<stan::is_std_vector<T0__0__>,
-                              stan::is_col_vector<stan::value_type_t<T0__0__>>,
-                              stan::is_vt_not_complex<stan::value_type_t<T0__0__>>,
-                              stan::is_col_vector<T0__1__>,
-                              stan::is_vt_not_complex<T0__1__>,
+template <typename T0__, typename T1__, typename T2__, typename T3__,
+          stan::require_all_t<stan::math::is_tuple<std::decay_t<T0__>>,
+                              stan::is_std_vector<std::tuple_element_t<0,
+                                                    std::decay_t<T0__>>>,
+                              stan::is_col_vector<stan::value_type_t<
+                                                    std::tuple_element_t<0,
+                                                      std::decay_t<T0__>>>>,
+                              stan::is_vt_not_complex<stan::value_type_t<
+                                                        std::tuple_element_t<0,
+                                                          std::decay_t<T0__>>>>,
+                              stan::is_col_vector<std::tuple_element_t<1,
+                                                    std::decay_t<T0__>>>,
+                              stan::is_vt_not_complex<std::tuple_element_t<1,
+                                                        std::decay_t<T0__>>>,
                               std::is_integral<std::decay_t<T1__>>,
                               stan::math::disjunction<stan::is_autodiff<T2__>,
                                                       std::is_floating_point<
@@ -9774,12 +9860,17 @@ template <typename T0__0__, typename T0__1__, typename T1__, typename T2__,
                               stan::math::disjunction<stan::is_autodiff<T3__>,
                                                       std::is_floating_point<
                                                       std::decay_t<T3__>>>>*>
-Eigen::Matrix<stan::return_type_t<stan::base_type_t<T0__0__>,
-                stan::base_type_t<T0__1__>, T2__, T3__>,-1,-1>
-arr_and_vec_tuple(const std::tuple<T0__0__, T0__1__>& x, const T1__& n_obs,
-                  const T2__& alpha, const T3__& rho, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::return_type_t<stan::base_type_t<T0__0__>,
-                             stan::base_type_t<T0__1__>, T2__, T3__>;
+Eigen::Matrix<stan::return_type_t<stan::base_type_t<std::tuple_element_t<0,
+                                                      std::decay_t<T0__>>>,
+                stan::base_type_t<std::tuple_element_t<1, std::decay_t<T0__>>>,
+                T2__, T3__>,-1,-1>
+arr_and_vec_tuple(const T0__& x, const T1__& n_obs, const T2__& alpha,
+                  const T3__& rho, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<stan::base_type_t<std::tuple_element_t<0,
+                                                                   std::decay_t<T0__>>>,
+                             stan::base_type_t<std::tuple_element_t<1,
+                                                 std::decay_t<T0__>>>,
+                             T2__, T3__>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -9967,49 +10058,25 @@ class laplace_nested_tuple_model final : public model_base_crtp<laplace_nested_t
                          propto__>(y, y, ye,
                          stan::math::rep_vector(0.0, n_obs),
                          scalar_tuple_functor__(),
-                         std::tuple<
-                           const std::vector<Eigen::Matrix<double,-1,1>>&,
-                           std::tuple<int,
-                             std::tuple<local_scalar_t__, local_scalar_t__>>>(x,
-                           std::tuple<int,
-                             std::tuple<local_scalar_t__, local_scalar_t__>>(n_obs,
-                             std::tuple<local_scalar_t__, local_scalar_t__>(alpha,
-                               rho))), pstream__));
+                         std::forward_as_tuple(x,
+                           std::forward_as_tuple(n_obs,
+                             std::forward_as_tuple(alpha, rho))), pstream__));
         current_statement__ = 7;
         lp_accum__.add(stan::math::laplace_marginal_neg_binomial_2_log_lpmf<
                          propto__>(y, y, ye,
                          stan::math::rep_vector(0.0, n_obs),
                          arr_vec_tuple_functor__(),
-                         std::tuple<
-                           std::tuple<
-                             std::vector<Eigen::Matrix<double,-1,1>>,
-                             std::vector<Eigen::Matrix<double,-1,1>>>,
-                           int, local_scalar_t__, local_scalar_t__>(std::tuple<
-                                                                    const 
-                                                                    std::vector<
-                                                                    Eigen::Matrix<double,-1,1>>&,
-                                                                    const 
-                                                                    std::vector<
-                                                                    Eigen::Matrix<double,-1,1>>&>(x,
-                                                                    x),
+                         std::forward_as_tuple(std::forward_as_tuple(x, x),
                            n_obs, alpha, rho), pstream__));
         current_statement__ = 8;
         lp_accum__.add(stan::math::laplace_marginal_neg_binomial_2_log_lpmf<
                          propto__>(y, y, ye,
                          stan::math::rep_vector(0.0, n_obs),
                          arr_and_vec_tuple_functor__(),
-                         std::tuple<
-                           std::tuple<
-                             std::vector<Eigen::Matrix<double,-1,1>>,
-                             Eigen::Matrix<local_scalar_t__,-1,1>>,
-                           int, local_scalar_t__, local_scalar_t__>(std::tuple<
-                                                                    const 
-                                                                    std::vector<
-                                                                    Eigen::Matrix<double,-1,1>>&,
-                                                                    Eigen::Matrix<local_scalar_t__,-1,1>>(x,
-                                                                    stan::math::rep_vector(
-                                                                    rho, 10)),
-                           n_obs, alpha, rho), pstream__));
+                         std::forward_as_tuple(
+                           std::forward_as_tuple(x,
+                             stan::math::rep_vector(rho, 10)), n_obs, alpha,
+                           rho), pstream__));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -10055,49 +10122,25 @@ class laplace_nested_tuple_model final : public model_base_crtp<laplace_nested_t
                          propto__>(y, y, ye,
                          stan::math::rep_vector(0.0, n_obs),
                          scalar_tuple_functor__(),
-                         std::tuple<
-                           const std::vector<Eigen::Matrix<double,-1,1>>&,
-                           std::tuple<int,
-                             std::tuple<local_scalar_t__, local_scalar_t__>>>(x,
-                           std::tuple<int,
-                             std::tuple<local_scalar_t__, local_scalar_t__>>(n_obs,
-                             std::tuple<local_scalar_t__, local_scalar_t__>(alpha,
-                               rho))), pstream__));
+                         std::forward_as_tuple(x,
+                           std::forward_as_tuple(n_obs,
+                             std::forward_as_tuple(alpha, rho))), pstream__));
         current_statement__ = 7;
         lp_accum__.add(stan::math::laplace_marginal_neg_binomial_2_log_lpmf<
                          propto__>(y, y, ye,
                          stan::math::rep_vector(0.0, n_obs),
                          arr_vec_tuple_functor__(),
-                         std::tuple<
-                           std::tuple<
-                             std::vector<Eigen::Matrix<double,-1,1>>,
-                             std::vector<Eigen::Matrix<double,-1,1>>>,
-                           int, local_scalar_t__, local_scalar_t__>(std::tuple<
-                                                                    const 
-                                                                    std::vector<
-                                                                    Eigen::Matrix<double,-1,1>>&,
-                                                                    const 
-                                                                    std::vector<
-                                                                    Eigen::Matrix<double,-1,1>>&>(x,
-                                                                    x),
+                         std::forward_as_tuple(std::forward_as_tuple(x, x),
                            n_obs, alpha, rho), pstream__));
         current_statement__ = 8;
         lp_accum__.add(stan::math::laplace_marginal_neg_binomial_2_log_lpmf<
                          propto__>(y, y, ye,
                          stan::math::rep_vector(0.0, n_obs),
                          arr_and_vec_tuple_functor__(),
-                         std::tuple<
-                           std::tuple<
-                             std::vector<Eigen::Matrix<double,-1,1>>,
-                             Eigen::Matrix<local_scalar_t__,-1,1>>,
-                           int, local_scalar_t__, local_scalar_t__>(std::tuple<
-                                                                    const 
-                                                                    std::vector<
-                                                                    Eigen::Matrix<double,-1,1>>&,
-                                                                    Eigen::Matrix<local_scalar_t__,-1,1>>(x,
-                                                                    stan::math::rep_vector(
-                                                                    rho, 10)),
-                           n_obs, alpha, rho), pstream__));
+                         std::forward_as_tuple(
+                           std::forward_as_tuple(x,
+                             stan::math::rep_vector(rho, 10)), n_obs, alpha,
+                           rho), pstream__));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -10165,11 +10208,9 @@ class laplace_nested_tuple_model final : public model_base_crtp<laplace_nested_t
       stan::model::assign(theta,
         stan::math::laplace_latent_neg_binomial_2_log_rng(y, y, ye,
           stan::math::rep_vector(0.0, n_obs), scalar_tuple_functor__(),
-          std::tuple<const std::vector<Eigen::Matrix<double,-1,1>>&,
-            std::tuple<int, std::tuple<double, double>>>(x,
-            std::tuple<int, std::tuple<double, double>>(n_obs,
-              std::tuple<double, double>(alpha, rho))), base_rng__, pstream__),
-        "assigning variable theta");
+          std::forward_as_tuple(x,
+            std::forward_as_tuple(n_obs, std::forward_as_tuple(alpha, rho))),
+          base_rng__, pstream__), "assigning variable theta");
       Eigen::Matrix<double,-1,1> theta2 =
         Eigen::Matrix<double,-1,1>::Constant(n_obs,
           std::numeric_limits<double>::quiet_NaN());
@@ -10177,16 +10218,8 @@ class laplace_nested_tuple_model final : public model_base_crtp<laplace_nested_t
       stan::model::assign(theta2,
         stan::math::laplace_latent_neg_binomial_2_log_rng(y, y, ye,
           stan::math::rep_vector(0.0, n_obs), arr_vec_tuple_functor__(),
-          std::tuple<
-            std::tuple<std::vector<Eigen::Matrix<double,-1,1>>,
-              std::vector<Eigen::Matrix<double,-1,1>>>,
-            int, double, double>(std::tuple<
-                                   const std::vector<
-                                           Eigen::Matrix<double,-1,1>>&,
-                                   const std::vector<
-                                           Eigen::Matrix<double,-1,1>>&>(x,
-                                   x), n_obs, alpha, rho), base_rng__,
-          pstream__), "assigning variable theta2");
+          std::forward_as_tuple(std::forward_as_tuple(x, x), n_obs, alpha,
+            rho), base_rng__, pstream__), "assigning variable theta2");
       Eigen::Matrix<double,-1,1> theta3 =
         Eigen::Matrix<double,-1,1>::Constant(n_obs,
           std::numeric_limits<double>::quiet_NaN());
@@ -10194,14 +10227,8 @@ class laplace_nested_tuple_model final : public model_base_crtp<laplace_nested_t
       stan::model::assign(theta3,
         stan::math::laplace_latent_neg_binomial_2_log_rng(y, y, ye,
           stan::math::rep_vector(0.0, n_obs), arr_and_vec_tuple_functor__(),
-          std::tuple<
-            std::tuple<std::vector<Eigen::Matrix<double,-1,1>>,
-              Eigen::Matrix<double,-1,1>>,
-            int, double, double>(std::tuple<
-                                   const std::vector<
-                                           Eigen::Matrix<double,-1,1>>&,
-                                   Eigen::Matrix<double,-1,1>>(x,
-                                   stan::math::rep_vector(rho, 10)), n_obs,
+          std::forward_as_tuple(
+            std::forward_as_tuple(x, stan::math::rep_vector(rho, 10)), n_obs,
             alpha, rho), base_rng__, pstream__), "assigning variable theta3");
       out__.write(theta);
       out__.write(theta2);
@@ -10505,58 +10532,88 @@ static constexpr std::array<const char*, 49> locations_array__ =
   " (in 'laplace_nested_tuple2.stan', line 18, column 4 to line 19, column 22)",
   " (in 'laplace_nested_tuple2.stan', line 20, column 4 to column 13)",
   " (in 'laplace_nested_tuple2.stan', line 16, column 71 to line 21, column 3)"};
-template <typename T0__, typename T1__0__, typename T1__1__, typename T2__,
-          typename T3__,
+template <typename T0__, typename T1__, typename T2__, typename T3__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>,
-                              stan::math::disjunction<stan::is_autodiff<T1__0__>,
+                              stan::math::is_tuple<std::decay_t<T1__>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      std::tuple_element_t<0,
+                                                        std::decay_t<T1__>>>,
                                                       std::is_floating_point<
-                                                      std::decay_t<T1__0__>>>,
-                              stan::math::disjunction<stan::is_autodiff<T1__1__>,
+                                                      std::decay_t<std::tuple_element_t<0,
+                                                                    std::decay_t<T1__>>>>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      std::tuple_element_t<1,
+                                                        std::decay_t<T1__>>>,
                                                       std::is_floating_point<
-                                                      std::decay_t<T1__1__>>>,
+                                                      std::decay_t<std::tuple_element_t<1,
+                                                                    std::decay_t<T1__>>>>>,
                               stan::is_col_vector<T2__>,
                               stan::is_vt_not_complex<T2__>,
                               stan::is_std_vector<T3__>,
                               std::is_integral<std::decay_t<stan::value_type_t<T3__>>>>* = nullptr>
-stan::return_type_t<stan::base_type_t<T0__>, T1__0__, T1__1__,
-  stan::base_type_t<T2__>>
-scalar_tuple(const T0__& theta_arg__, const std::tuple<T1__0__, T1__1__>&
-             eta, const T2__& log_ye_arg__, const T3__& y, std::ostream*
-             pstream__);
-template <typename T0__, typename T1__, typename T2__0__, typename T2__1__,
+stan::return_type_t<stan::base_type_t<T0__>,
+  std::tuple_element_t<0, std::decay_t<T1__>>,
+  std::tuple_element_t<1, std::decay_t<T1__>>, stan::base_type_t<T2__>>
+scalar_tuple(const T0__& theta_arg__, const T1__& eta, const T2__&
+             log_ye_arg__, const T3__& y, std::ostream* pstream__);
+template <typename T0__, typename T1__, typename T2__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>,
                               stan::math::disjunction<stan::is_autodiff<T1__>,
                                                       std::is_floating_point<
                                                       std::decay_t<T1__>>>,
-                              stan::is_col_vector<T2__0__>,
-                              stan::is_vt_not_complex<T2__0__>,
-                              stan::is_std_vector<T2__1__>,
-                              std::is_integral<std::decay_t<stan::value_type_t<T2__1__>>>>* = nullptr>
+                              stan::math::is_tuple<std::decay_t<T2__>>,
+                              stan::is_col_vector<std::tuple_element_t<0,
+                                                    std::decay_t<T2__>>>,
+                              stan::is_vt_not_complex<std::tuple_element_t<0,
+                                                        std::decay_t<T2__>>>,
+                              stan::is_std_vector<std::tuple_element_t<1,
+                                                    std::decay_t<T2__>>>,
+                              std::is_integral<std::decay_t<stan::value_type_t<
+                                                              std::tuple_element_t<1,
+                                                                std::decay_t<T2__>>>>>>* = nullptr>
 stan::return_type_t<stan::base_type_t<T0__>, T1__,
-  stan::base_type_t<T2__0__>>
-arr_vec_tuple(const T0__& theta_arg__, const T1__& eta,
-              const std::tuple<T2__0__, T2__1__>& p, std::ostream* pstream__);
-template <typename T0__, typename T1__0__0__, typename T1__0__1__,
-          typename T1__1__, typename T2__,
+  stan::base_type_t<std::tuple_element_t<0, std::decay_t<T2__>>>>
+arr_vec_tuple(const T0__& theta_arg__, const T1__& eta, const T2__& p,
+              std::ostream* pstream__);
+template <typename T0__, typename T1__, typename T2__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>,
-                              stan::math::disjunction<stan::is_autodiff<T1__0__0__>,
+                              stan::math::is_tuple<std::decay_t<T1__>>,
+                              stan::math::is_tuple<std::tuple_element_t<0,
+                                                     std::decay_t<T1__>>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      std::tuple_element_t<0,
+                                                        std::tuple_element_t<0,
+                                                          std::decay_t<T1__>>>>,
                                                       std::is_floating_point<
-                                                      std::decay_t<T1__0__0__>>>,
-                              stan::is_col_vector<T1__0__1__>,
-                              stan::is_vt_not_complex<T1__0__1__>,
-                              stan::is_std_vector<T1__1__>,
-                              std::is_integral<std::decay_t<stan::value_type_t<T1__1__>>>,
+                                                      std::decay_t<std::tuple_element_t<0,
+                                                                    std::tuple_element_t<0,
+                                                                    std::decay_t<T1__>>>>>>,
+                              stan::is_col_vector<std::tuple_element_t<1,
+                                                    std::tuple_element_t<0,
+                                                      std::decay_t<T1__>>>>,
+                              stan::is_vt_not_complex<std::tuple_element_t<1,
+                                                        std::tuple_element_t<0,
+                                                          std::decay_t<T1__>>>>,
+                              stan::is_std_vector<std::tuple_element_t<1,
+                                                    std::decay_t<T1__>>>,
+                              std::is_integral<std::decay_t<stan::value_type_t<
+                                                              std::tuple_element_t<1,
+                                                                std::decay_t<T1__>>>>>,
                               stan::math::disjunction<stan::is_autodiff<T2__>,
                                                       std::is_floating_point<
                                                       std::decay_t<T2__>>>>* = nullptr>
-stan::return_type_t<stan::base_type_t<T0__>, T1__0__0__,
-  stan::base_type_t<T1__0__1__>, T2__>
-nested(const T0__& theta_arg__,
-       const std::tuple<std::tuple<T1__0__0__, T1__0__1__>, T1__1__>& p,
-       const T2__& unused, std::ostream* pstream__);
+stan::return_type_t<stan::base_type_t<T0__>,
+  std::tuple_element_t<0,
+    std::decay_t<std::tuple_element_t<0, std::decay_t<T1__>>>>,
+  stan::base_type_t<std::tuple_element_t<1,
+                      std::decay_t<std::tuple_element_t<0,
+                                     std::decay_t<T1__>>>>>,
+  T2__>
+nested(const T0__& theta_arg__, const T1__& p, const T2__& unused,
+       std::ostream* pstream__);
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::is_col_vector<stan::value_type_t<T0__>>,
@@ -10572,65 +10629,99 @@ Eigen::Matrix<stan::return_type_t<stan::base_type_t<T0__>, T2__, T3__>,-1,-1>
 K_function(const T0__& x, const T1__& n_obs, const T2__& alpha, const T3__&
            rho, std::ostream* pstream__);
 struct arr_vec_tuple_functor__ {
-  template <typename T0__, typename T1__, typename T2__0__, typename T2__1__,
+  template <typename T0__, typename T1__, typename T2__,
             stan::require_all_t<stan::is_col_vector<T0__>,
                                 stan::is_vt_not_complex<T0__>,
                                 stan::math::disjunction<stan::is_autodiff<T1__>,
                                                         std::is_floating_point<
                                                         std::decay_t<T1__>>>,
-                                stan::is_col_vector<T2__0__>,
-                                stan::is_vt_not_complex<T2__0__>,
-                                stan::is_std_vector<T2__1__>,
-                                std::is_integral<std::decay_t<stan::value_type_t<T2__1__>>>>* = nullptr>
+                                stan::math::is_tuple<std::decay_t<T2__>>,
+                                stan::is_col_vector<std::tuple_element_t<0,
+                                                      std::decay_t<T2__>>>,
+                                stan::is_vt_not_complex<std::tuple_element_t<0,
+                                                          std::decay_t<T2__>>>,
+                                stan::is_std_vector<std::tuple_element_t<1,
+                                                      std::decay_t<T2__>>>,
+                                std::is_integral<std::decay_t<stan::value_type_t<
+                                                                std::tuple_element_t<1,
+                                                                  std::decay_t<T2__>>>>>>* = nullptr>
   stan::return_type_t<stan::base_type_t<T0__>, T1__,
-    stan::base_type_t<T2__0__>>
-  operator()(const T0__& theta, const T1__& eta,
-             const std::tuple<T2__0__, T2__1__>& p, std::ostream* pstream__) const {
+    stan::base_type_t<std::tuple_element_t<0, std::decay_t<T2__>>>>
+  operator()(const T0__& theta, const T1__& eta, const T2__& p, std::ostream*
+             pstream__) const {
     return arr_vec_tuple(theta, eta, p, pstream__);
   }
 };
 struct scalar_tuple_functor__ {
-  template <typename T0__, typename T1__0__, typename T1__1__, typename T2__,
-            typename T3__,
+  template <typename T0__, typename T1__, typename T2__, typename T3__,
             stan::require_all_t<stan::is_col_vector<T0__>,
                                 stan::is_vt_not_complex<T0__>,
-                                stan::math::disjunction<stan::is_autodiff<T1__0__>,
+                                stan::math::is_tuple<std::decay_t<T1__>>,
+                                stan::math::disjunction<stan::is_autodiff<
+                                                        std::tuple_element_t<0,
+                                                          std::decay_t<T1__>>>,
                                                         std::is_floating_point<
-                                                        std::decay_t<T1__0__>>>,
-                                stan::math::disjunction<stan::is_autodiff<T1__1__>,
+                                                        std::decay_t<
+                                                          std::tuple_element_t<0,
+                                                            std::decay_t<T1__>>>>>,
+                                stan::math::disjunction<stan::is_autodiff<
+                                                        std::tuple_element_t<1,
+                                                          std::decay_t<T1__>>>,
                                                         std::is_floating_point<
-                                                        std::decay_t<T1__1__>>>,
+                                                        std::decay_t<
+                                                          std::tuple_element_t<1,
+                                                            std::decay_t<T1__>>>>>,
                                 stan::is_col_vector<T2__>,
                                 stan::is_vt_not_complex<T2__>,
                                 stan::is_std_vector<T3__>,
                                 std::is_integral<std::decay_t<stan::value_type_t<T3__>>>>* = nullptr>
-  stan::return_type_t<stan::base_type_t<T0__>, T1__0__, T1__1__,
-    stan::base_type_t<T2__>>
-  operator()(const T0__& theta, const std::tuple<T1__0__, T1__1__>& eta,
-             const T2__& log_ye, const T3__& y, std::ostream* pstream__) const {
+  stan::return_type_t<stan::base_type_t<T0__>,
+    std::tuple_element_t<0, std::decay_t<T1__>>,
+    std::tuple_element_t<1, std::decay_t<T1__>>, stan::base_type_t<T2__>>
+  operator()(const T0__& theta, const T1__& eta, const T2__& log_ye,
+             const T3__& y, std::ostream* pstream__) const {
     return scalar_tuple(theta, eta, log_ye, y, pstream__);
   }
 };
 struct nested_functor__ {
-  template <typename T0__, typename T1__0__0__, typename T1__0__1__,
-            typename T1__1__, typename T2__,
+  template <typename T0__, typename T1__, typename T2__,
             stan::require_all_t<stan::is_col_vector<T0__>,
                                 stan::is_vt_not_complex<T0__>,
-                                stan::math::disjunction<stan::is_autodiff<T1__0__0__>,
+                                stan::math::is_tuple<std::decay_t<T1__>>,
+                                stan::math::is_tuple<std::tuple_element_t<0,
+                                                       std::decay_t<T1__>>>,
+                                stan::math::disjunction<stan::is_autodiff<
+                                                        std::tuple_element_t<0,
+                                                          std::tuple_element_t<0,
+                                                            std::decay_t<T1__>>>>,
                                                         std::is_floating_point<
-                                                        std::decay_t<T1__0__0__>>>,
-                                stan::is_col_vector<T1__0__1__>,
-                                stan::is_vt_not_complex<T1__0__1__>,
-                                stan::is_std_vector<T1__1__>,
-                                std::is_integral<std::decay_t<stan::value_type_t<T1__1__>>>,
+                                                        std::decay_t<
+                                                          std::tuple_element_t<0,
+                                                            std::tuple_element_t<0,
+                                                              std::decay_t<T1__>>>>>>,
+                                stan::is_col_vector<std::tuple_element_t<1,
+                                                      std::tuple_element_t<0,
+                                                        std::decay_t<T1__>>>>,
+                                stan::is_vt_not_complex<std::tuple_element_t<1,
+                                                          std::tuple_element_t<0,
+                                                            std::decay_t<T1__>>>>,
+                                stan::is_std_vector<std::tuple_element_t<1,
+                                                      std::decay_t<T1__>>>,
+                                std::is_integral<std::decay_t<stan::value_type_t<
+                                                                std::tuple_element_t<1,
+                                                                  std::decay_t<T1__>>>>>,
                                 stan::math::disjunction<stan::is_autodiff<T2__>,
                                                         std::is_floating_point<
                                                         std::decay_t<T2__>>>>* = nullptr>
-  stan::return_type_t<stan::base_type_t<T0__>, T1__0__0__,
-    stan::base_type_t<T1__0__1__>, T2__>
-  operator()(const T0__& theta,
-             const std::tuple<std::tuple<T1__0__0__, T1__0__1__>, T1__1__>&
-             p, const T2__& unused, std::ostream* pstream__) const {
+  stan::return_type_t<stan::base_type_t<T0__>,
+    std::tuple_element_t<0,
+      std::decay_t<std::tuple_element_t<0, std::decay_t<T1__>>>>,
+    stan::base_type_t<std::tuple_element_t<1,
+                        std::decay_t<std::tuple_element_t<0,
+                                       std::decay_t<T1__>>>>>,
+    T2__>
+  operator()(const T0__& theta, const T1__& p, const T2__& unused,
+             std::ostream* pstream__) const {
     return nested(theta, p, unused, pstream__);
   }
 };
@@ -10653,27 +10744,35 @@ struct K_function_functor__ {
   }
 };
 // real scalar_tuple(vector, tuple(real, real), vector, array[] int)
-template <typename T0__, typename T1__0__, typename T1__1__, typename T2__,
-          typename T3__,
+template <typename T0__, typename T1__, typename T2__, typename T3__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>,
-                              stan::math::disjunction<stan::is_autodiff<T1__0__>,
+                              stan::math::is_tuple<std::decay_t<T1__>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      std::tuple_element_t<0,
+                                                        std::decay_t<T1__>>>,
                                                       std::is_floating_point<
-                                                      std::decay_t<T1__0__>>>,
-                              stan::math::disjunction<stan::is_autodiff<T1__1__>,
+                                                      std::decay_t<std::tuple_element_t<0,
+                                                                    std::decay_t<T1__>>>>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      std::tuple_element_t<1,
+                                                        std::decay_t<T1__>>>,
                                                       std::is_floating_point<
-                                                      std::decay_t<T1__1__>>>,
+                                                      std::decay_t<std::tuple_element_t<1,
+                                                                    std::decay_t<T1__>>>>>,
                               stan::is_col_vector<T2__>,
                               stan::is_vt_not_complex<T2__>,
                               stan::is_std_vector<T3__>,
                               std::is_integral<std::decay_t<stan::value_type_t<T3__>>>>*>
-stan::return_type_t<stan::base_type_t<T0__>, T1__0__, T1__1__,
-  stan::base_type_t<T2__>>
-scalar_tuple(const T0__& theta_arg__, const std::tuple<T1__0__, T1__1__>&
-             eta, const T2__& log_ye_arg__, const T3__& y, std::ostream*
-             pstream__) {
+stan::return_type_t<stan::base_type_t<T0__>,
+  std::tuple_element_t<0, std::decay_t<T1__>>,
+  std::tuple_element_t<1, std::decay_t<T1__>>, stan::base_type_t<T2__>>
+scalar_tuple(const T0__& theta_arg__, const T1__& eta, const T2__&
+             log_ye_arg__, const T3__& y, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<stan::base_type_t<T0__>,
-                             T1__0__, T1__1__, stan::base_type_t<T2__>>;
+                             std::tuple_element_t<0, std::decay_t<T1__>>,
+                             std::tuple_element_t<1, std::decay_t<T1__>>,
+                             stan::base_type_t<T2__>>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -10695,22 +10794,29 @@ scalar_tuple(const T0__& theta_arg__, const std::tuple<T1__0__, T1__1__>&
   }
 }
 // real arr_vec_tuple(vector, real, tuple(vector, array[] int))
-template <typename T0__, typename T1__, typename T2__0__, typename T2__1__,
+template <typename T0__, typename T1__, typename T2__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>,
                               stan::math::disjunction<stan::is_autodiff<T1__>,
                                                       std::is_floating_point<
                                                       std::decay_t<T1__>>>,
-                              stan::is_col_vector<T2__0__>,
-                              stan::is_vt_not_complex<T2__0__>,
-                              stan::is_std_vector<T2__1__>,
-                              std::is_integral<std::decay_t<stan::value_type_t<T2__1__>>>>*>
+                              stan::math::is_tuple<std::decay_t<T2__>>,
+                              stan::is_col_vector<std::tuple_element_t<0,
+                                                    std::decay_t<T2__>>>,
+                              stan::is_vt_not_complex<std::tuple_element_t<0,
+                                                        std::decay_t<T2__>>>,
+                              stan::is_std_vector<std::tuple_element_t<1,
+                                                    std::decay_t<T2__>>>,
+                              std::is_integral<std::decay_t<stan::value_type_t<
+                                                              std::tuple_element_t<1,
+                                                                std::decay_t<T2__>>>>>>*>
 stan::return_type_t<stan::base_type_t<T0__>, T1__,
-  stan::base_type_t<T2__0__>>
-arr_vec_tuple(const T0__& theta_arg__, const T1__& eta,
-              const std::tuple<T2__0__, T2__1__>& p, std::ostream* pstream__) {
+  stan::base_type_t<std::tuple_element_t<0, std::decay_t<T2__>>>>
+arr_vec_tuple(const T0__& theta_arg__, const T1__& eta, const T2__& p,
+              std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<stan::base_type_t<T0__>, T1__,
-                             stan::base_type_t<T2__0__>>;
+                             stan::base_type_t<std::tuple_element_t<0,
+                                                 std::decay_t<T2__>>>>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -10730,27 +10836,51 @@ arr_vec_tuple(const T0__& theta_arg__, const T1__& eta,
   }
 }
 // real nested(vector, tuple(tuple(real, vector), array[] int), real)
-template <typename T0__, typename T1__0__0__, typename T1__0__1__,
-          typename T1__1__, typename T2__,
+template <typename T0__, typename T1__, typename T2__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>,
-                              stan::math::disjunction<stan::is_autodiff<T1__0__0__>,
+                              stan::math::is_tuple<std::decay_t<T1__>>,
+                              stan::math::is_tuple<std::tuple_element_t<0,
+                                                     std::decay_t<T1__>>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      std::tuple_element_t<0,
+                                                        std::tuple_element_t<0,
+                                                          std::decay_t<T1__>>>>,
                                                       std::is_floating_point<
-                                                      std::decay_t<T1__0__0__>>>,
-                              stan::is_col_vector<T1__0__1__>,
-                              stan::is_vt_not_complex<T1__0__1__>,
-                              stan::is_std_vector<T1__1__>,
-                              std::is_integral<std::decay_t<stan::value_type_t<T1__1__>>>,
+                                                      std::decay_t<std::tuple_element_t<0,
+                                                                    std::tuple_element_t<0,
+                                                                    std::decay_t<T1__>>>>>>,
+                              stan::is_col_vector<std::tuple_element_t<1,
+                                                    std::tuple_element_t<0,
+                                                      std::decay_t<T1__>>>>,
+                              stan::is_vt_not_complex<std::tuple_element_t<1,
+                                                        std::tuple_element_t<0,
+                                                          std::decay_t<T1__>>>>,
+                              stan::is_std_vector<std::tuple_element_t<1,
+                                                    std::decay_t<T1__>>>,
+                              std::is_integral<std::decay_t<stan::value_type_t<
+                                                              std::tuple_element_t<1,
+                                                                std::decay_t<T1__>>>>>,
                               stan::math::disjunction<stan::is_autodiff<T2__>,
                                                       std::is_floating_point<
                                                       std::decay_t<T2__>>>>*>
-stan::return_type_t<stan::base_type_t<T0__>, T1__0__0__,
-  stan::base_type_t<T1__0__1__>, T2__>
-nested(const T0__& theta_arg__,
-       const std::tuple<std::tuple<T1__0__0__, T1__0__1__>, T1__1__>& p,
-       const T2__& unused, std::ostream* pstream__) {
+stan::return_type_t<stan::base_type_t<T0__>,
+  std::tuple_element_t<0,
+    std::decay_t<std::tuple_element_t<0, std::decay_t<T1__>>>>,
+  stan::base_type_t<std::tuple_element_t<1,
+                      std::decay_t<std::tuple_element_t<0,
+                                     std::decay_t<T1__>>>>>,
+  T2__>
+nested(const T0__& theta_arg__, const T1__& p, const T2__& unused,
+       std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<stan::base_type_t<T0__>,
-                             T1__0__0__, stan::base_type_t<T1__0__1__>, T2__>;
+                             std::tuple_element_t<0,
+                               std::decay_t<std::tuple_element_t<0,
+                                              std::decay_t<T1__>>>>,
+                             stan::base_type_t<std::tuple_element_t<1,
+                                                 std::decay_t<std::tuple_element_t<0,
+                                                                std::decay_t<T1__>>>>>,
+                             T2__>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -11049,50 +11179,27 @@ class laplace_nested_tuple2_model final : public model_base_crtp<laplace_nested_
         lp_accum__.add(stan::math::normal_lpdf<propto__>(eta, 0, 1));
         current_statement__ = 10;
         lp_accum__.add(stan::math::laplace_marginal(scalar_tuple_functor__(),
-                         std::tuple<
-                           std::tuple<local_scalar_t__, local_scalar_t__>,
-                           Eigen::Matrix<double,-1,1>,
-                           const std::vector<int>&>(std::tuple<
-                                                      local_scalar_t__,
-                                                      local_scalar_t__>(eta,
-                                                      eta), log_ye, y),
+                         std::forward_as_tuple(
+                           std::forward_as_tuple(eta, eta), log_ye, y),
                          K_function_functor__(),
-                         std::tuple<
-                           const std::vector<Eigen::Matrix<double,-1,1>>&,
-                           int, local_scalar_t__, local_scalar_t__>(x, n_obs,
-                           alpha, rho), pstream__));
+                         std::forward_as_tuple(x, n_obs, alpha, rho),
+                         pstream__));
         current_statement__ = 11;
         lp_accum__.add(stan::math::laplace_marginal(
                          arr_vec_tuple_functor__(),
-                         std::tuple<local_scalar_t__,
-                           std::tuple<Eigen::Matrix<double,-1,1>,
-                             std::vector<int>>>(eta,
-                           std::tuple<Eigen::Matrix<double,-1,1>,
-                             const std::vector<int>&>(log_ye, y)),
+                         std::forward_as_tuple(eta,
+                           std::forward_as_tuple(log_ye, y)),
                          K_function_functor__(),
-                         std::tuple<
-                           const std::vector<Eigen::Matrix<double,-1,1>>&,
-                           int, local_scalar_t__, local_scalar_t__>(x, n_obs,
-                           alpha, rho), pstream__));
+                         std::forward_as_tuple(x, n_obs, alpha, rho),
+                         pstream__));
         current_statement__ = 12;
         lp_accum__.add(stan::math::laplace_marginal(nested_functor__(),
-                         std::tuple<
-                           std::tuple<
-                             std::tuple<local_scalar_t__,
-                               Eigen::Matrix<double,-1,1>>,
-                             std::vector<int>>,
-                           local_scalar_t__>(std::tuple<
-                                               std::tuple<local_scalar_t__,
-                                                 Eigen::Matrix<double,-1,1>>,
-                                               const std::vector<int>&>(
-                                               std::tuple<local_scalar_t__,
-                                                 Eigen::Matrix<double,-1,1>>(eta,
-                                                 log_ye), y), eta),
+                         std::forward_as_tuple(
+                           std::forward_as_tuple(
+                             std::forward_as_tuple(eta, log_ye), y), eta),
                          K_function_functor__(),
-                         std::tuple<
-                           const std::vector<Eigen::Matrix<double,-1,1>>&,
-                           int, local_scalar_t__, local_scalar_t__>(x, n_obs,
-                           alpha, rho), pstream__));
+                         std::forward_as_tuple(x, n_obs, alpha, rho),
+                         pstream__));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -11147,50 +11254,27 @@ class laplace_nested_tuple2_model final : public model_base_crtp<laplace_nested_
         lp_accum__.add(stan::math::normal_lpdf<propto__>(eta, 0, 1));
         current_statement__ = 10;
         lp_accum__.add(stan::math::laplace_marginal(scalar_tuple_functor__(),
-                         std::tuple<
-                           std::tuple<local_scalar_t__, local_scalar_t__>,
-                           Eigen::Matrix<double,-1,1>,
-                           const std::vector<int>&>(std::tuple<
-                                                      local_scalar_t__,
-                                                      local_scalar_t__>(eta,
-                                                      eta), log_ye, y),
+                         std::forward_as_tuple(
+                           std::forward_as_tuple(eta, eta), log_ye, y),
                          K_function_functor__(),
-                         std::tuple<
-                           const std::vector<Eigen::Matrix<double,-1,1>>&,
-                           int, local_scalar_t__, local_scalar_t__>(x, n_obs,
-                           alpha, rho), pstream__));
+                         std::forward_as_tuple(x, n_obs, alpha, rho),
+                         pstream__));
         current_statement__ = 11;
         lp_accum__.add(stan::math::laplace_marginal(
                          arr_vec_tuple_functor__(),
-                         std::tuple<local_scalar_t__,
-                           std::tuple<Eigen::Matrix<double,-1,1>,
-                             std::vector<int>>>(eta,
-                           std::tuple<Eigen::Matrix<double,-1,1>,
-                             const std::vector<int>&>(log_ye, y)),
+                         std::forward_as_tuple(eta,
+                           std::forward_as_tuple(log_ye, y)),
                          K_function_functor__(),
-                         std::tuple<
-                           const std::vector<Eigen::Matrix<double,-1,1>>&,
-                           int, local_scalar_t__, local_scalar_t__>(x, n_obs,
-                           alpha, rho), pstream__));
+                         std::forward_as_tuple(x, n_obs, alpha, rho),
+                         pstream__));
         current_statement__ = 12;
         lp_accum__.add(stan::math::laplace_marginal(nested_functor__(),
-                         std::tuple<
-                           std::tuple<
-                             std::tuple<local_scalar_t__,
-                               Eigen::Matrix<double,-1,1>>,
-                             std::vector<int>>,
-                           local_scalar_t__>(std::tuple<
-                                               std::tuple<local_scalar_t__,
-                                                 Eigen::Matrix<double,-1,1>>,
-                                               const std::vector<int>&>(
-                                               std::tuple<local_scalar_t__,
-                                                 Eigen::Matrix<double,-1,1>>(eta,
-                                                 log_ye), y), eta),
+                         std::forward_as_tuple(
+                           std::forward_as_tuple(
+                             std::forward_as_tuple(eta, log_ye), y), eta),
                          K_function_functor__(),
-                         std::tuple<
-                           const std::vector<Eigen::Matrix<double,-1,1>>&,
-                           int, local_scalar_t__, local_scalar_t__>(x, n_obs,
-                           alpha, rho), pstream__));
+                         std::forward_as_tuple(x, n_obs, alpha, rho),
+                         pstream__));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -11262,11 +11346,9 @@ class laplace_nested_tuple2_model final : public model_base_crtp<laplace_nested_
       current_statement__ = 4;
       stan::model::assign(theta,
         stan::math::laplace_latent_rng(scalar_tuple_functor__(),
-          std::tuple<std::tuple<double, double>, Eigen::Matrix<double,-1,1>,
-            const std::vector<int>&>(std::tuple<double, double>(eta, eta),
-            log_ye, y), K_function_functor__(),
-          std::tuple<const std::vector<Eigen::Matrix<double,-1,1>>&, int,
-            double, double>(x, n_obs, alpha, rho), base_rng__, pstream__),
+          std::forward_as_tuple(std::forward_as_tuple(eta, eta), log_ye, y),
+          K_function_functor__(),
+          std::forward_as_tuple(x, n_obs, alpha, rho), base_rng__, pstream__),
         "assigning variable theta");
       Eigen::Matrix<double,-1,1> theta2 =
         Eigen::Matrix<double,-1,1>::Constant(n_obs,
@@ -11274,12 +11356,9 @@ class laplace_nested_tuple2_model final : public model_base_crtp<laplace_nested_
       current_statement__ = 5;
       stan::model::assign(theta2,
         stan::math::laplace_latent_rng(arr_vec_tuple_functor__(),
-          std::tuple<double,
-            std::tuple<Eigen::Matrix<double,-1,1>, std::vector<int>>>(eta,
-            std::tuple<Eigen::Matrix<double,-1,1>, const std::vector<int>&>(log_ye,
-              y)), K_function_functor__(),
-          std::tuple<const std::vector<Eigen::Matrix<double,-1,1>>&, int,
-            double, double>(x, n_obs, alpha, rho), base_rng__, pstream__),
+          std::forward_as_tuple(eta, std::forward_as_tuple(log_ye, y)),
+          K_function_functor__(),
+          std::forward_as_tuple(x, n_obs, alpha, rho), base_rng__, pstream__),
         "assigning variable theta2");
       Eigen::Matrix<double,-1,1> theta3 =
         Eigen::Matrix<double,-1,1>::Constant(n_obs,
@@ -11287,17 +11366,10 @@ class laplace_nested_tuple2_model final : public model_base_crtp<laplace_nested_
       current_statement__ = 6;
       stan::model::assign(theta3,
         stan::math::laplace_latent_rng(nested_functor__(),
-          std::tuple<
-            std::tuple<std::tuple<double, Eigen::Matrix<double,-1,1>>,
-              std::vector<int>>,
-            double>(std::tuple<
-                      std::tuple<double, Eigen::Matrix<double,-1,1>>,
-                      const std::vector<int>&>(std::tuple<double,
-                                                 Eigen::Matrix<double,-1,1>>(eta,
-                                                 log_ye), y), eta),
+          std::forward_as_tuple(
+            std::forward_as_tuple(std::forward_as_tuple(eta, log_ye), y), eta),
           K_function_functor__(),
-          std::tuple<const std::vector<Eigen::Matrix<double,-1,1>>&, int,
-            double, double>(x, n_obs, alpha, rho), base_rng__, pstream__),
+          std::forward_as_tuple(x, n_obs, alpha, rho), base_rng__, pstream__),
         "assigning variable theta3");
       out__.write(theta);
       out__.write(theta2);
@@ -11604,89 +11676,183 @@ static constexpr std::array<const char*, 39> locations_array__ =
   " (in 'laplace_nested_tuple3.stan', line 13, column 4 to line 14, column 22)",
   " (in 'laplace_nested_tuple3.stan', line 15, column 4 to column 13)",
   " (in 'laplace_nested_tuple3.stan', line 10, column 30 to line 16, column 3)"};
-template <typename T0__, typename T1__0__0__, typename T1__0__1__,
-          typename T1__1__, typename T2__,
+template <typename T0__, typename T1__, typename T2__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>,
-                              stan::math::disjunction<stan::is_autodiff<T1__0__0__>,
+                              stan::is_std_vector<T1__>,
+                              stan::math::is_tuple<stan::value_type_t<T1__>>,
+                              stan::is_std_vector<std::tuple_element_t<0,
+                                                    stan::value_type_t<T1__>>>,
+                              stan::math::is_tuple<stan::value_type_t<
+                                                     std::tuple_element_t<0,
+                                                       stan::value_type_t<T1__>>>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      std::tuple_element_t<0,
+                                                        stan::value_type_t<
+                                                          std::tuple_element_t<0,
+                                                            stan::value_type_t<T1__>>>>>,
                                                       std::is_floating_point<
-                                                      std::decay_t<T1__0__0__>>>,
-                              stan::is_col_vector<T1__0__1__>,
-                              stan::is_vt_not_complex<T1__0__1__>,
-                              stan::is_std_vector<T1__1__>,
-                              std::is_integral<std::decay_t<stan::value_type_t<T1__1__>>>,
+                                                      std::decay_t<std::tuple_element_t<0,
+                                                                    stan::value_type_t<
+                                                                    std::tuple_element_t<0,
+                                                                    stan::value_type_t<T1__>>>>>>>,
+                              stan::is_col_vector<std::tuple_element_t<1,
+                                                    stan::value_type_t<
+                                                      std::tuple_element_t<0,
+                                                        stan::value_type_t<T1__>>>>>,
+                              stan::is_vt_not_complex<std::tuple_element_t<1,
+                                                        stan::value_type_t<
+                                                          std::tuple_element_t<0,
+                                                            stan::value_type_t<T1__>>>>>,
+                              stan::is_std_vector<std::tuple_element_t<1,
+                                                    stan::value_type_t<T1__>>>,
+                              std::is_integral<std::decay_t<stan::value_type_t<
+                                                              std::tuple_element_t<1,
+                                                                stan::value_type_t<T1__>>>>>,
                               stan::math::disjunction<stan::is_autodiff<T2__>,
                                                       std::is_floating_point<
                                                       std::decay_t<T2__>>>>* = nullptr>
-stan::return_type_t<stan::base_type_t<T0__>, T1__0__0__,
-  stan::base_type_t<T1__0__1__>, T2__>
-ll_nested(const T0__& theta_arg__,
-          const std::vector<
-                  std::tuple<std::vector<std::tuple<T1__0__0__, T1__0__1__>>,
-                    T1__1__>>& p, const T2__& unused, std::ostream* pstream__);
-template <typename T0__0__, typename T0__1__0__, typename T0__1__1__,
-          typename T1__,
-          stan::require_all_t<stan::is_std_vector<T0__0__>,
-                              stan::is_col_vector<stan::value_type_t<T0__0__>>,
-                              stan::is_vt_not_complex<stan::value_type_t<T0__0__>>,
-                              std::is_integral<std::decay_t<T0__1__0__>>,
-                              stan::math::disjunction<stan::is_autodiff<T0__1__1__>,
+stan::return_type_t<stan::base_type_t<T0__>,
+  std::tuple_element_t<0,
+    stan::base_type_t<std::tuple_element_t<0, stan::base_type_t<T1__>>>>,
+  stan::base_type_t<std::tuple_element_t<1,
+                      stan::base_type_t<std::tuple_element_t<0,
+                                          stan::base_type_t<T1__>>>>>,
+  T2__>
+ll_nested(const T0__& theta_arg__, const T1__& p, const T2__& unused,
+          std::ostream* pstream__);
+template <typename T0__, typename T1__,
+          stan::require_all_t<stan::is_std_vector<T0__>,
+                              stan::math::is_tuple<stan::value_type_t<T0__>>,
+                              stan::is_std_vector<std::tuple_element_t<0,
+                                                    stan::value_type_t<T0__>>>,
+                              stan::is_col_vector<stan::value_type_t<
+                                                    std::tuple_element_t<0,
+                                                      stan::value_type_t<T0__>>>>,
+                              stan::is_vt_not_complex<stan::value_type_t<
+                                                        std::tuple_element_t<0,
+                                                          stan::value_type_t<T0__>>>>,
+                              stan::is_std_vector<std::tuple_element_t<1,
+                                                    stan::value_type_t<T0__>>>,
+                              stan::math::is_tuple<stan::value_type_t<
+                                                     std::tuple_element_t<1,
+                                                       stan::value_type_t<T0__>>>>,
+                              std::is_integral<std::decay_t<std::tuple_element_t<0,
+                                                              stan::value_type_t<
+                                                                std::tuple_element_t<1,
+                                                                  stan::value_type_t<T0__>>>>>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      std::tuple_element_t<1,
+                                                        stan::value_type_t<
+                                                          std::tuple_element_t<1,
+                                                            stan::value_type_t<T0__>>>>>,
                                                       std::is_floating_point<
-                                                      std::decay_t<T0__1__1__>>>,
+                                                      std::decay_t<std::tuple_element_t<1,
+                                                                    stan::value_type_t<
+                                                                    std::tuple_element_t<1,
+                                                                    stan::value_type_t<T0__>>>>>>>,
                               stan::math::disjunction<stan::is_autodiff<T1__>,
                                                       std::is_floating_point<
                                                       std::decay_t<T1__>>>>* = nullptr>
-Eigen::Matrix<stan::return_type_t<stan::base_type_t<T0__0__>, T0__1__1__,
+Eigen::Matrix<stan::return_type_t<stan::base_type_t<std::tuple_element_t<0,
+                                                      stan::base_type_t<T0__>>>,
+                std::tuple_element_t<1,
+                  stan::base_type_t<std::tuple_element_t<1,
+                                      stan::base_type_t<T0__>>>>,
                 T1__>,-1,-1>
-K_function(const std::vector<
-                   std::tuple<T0__0__,
-                     std::vector<std::tuple<T0__1__0__, T0__1__1__>>>>& p,
-           const T1__& rho, std::ostream* pstream__);
+K_function(const T0__& p, const T1__& rho, std::ostream* pstream__);
 struct ll_nested_functor__ {
-  template <typename T0__, typename T1__0__0__, typename T1__0__1__,
-            typename T1__1__, typename T2__,
+  template <typename T0__, typename T1__, typename T2__,
             stan::require_all_t<stan::is_col_vector<T0__>,
                                 stan::is_vt_not_complex<T0__>,
-                                stan::math::disjunction<stan::is_autodiff<T1__0__0__>,
+                                stan::is_std_vector<T1__>,
+                                stan::math::is_tuple<stan::value_type_t<T1__>>,
+                                stan::is_std_vector<std::tuple_element_t<0,
+                                                      stan::value_type_t<T1__>>>,
+                                stan::math::is_tuple<stan::value_type_t<
+                                                       std::tuple_element_t<0,
+                                                         stan::value_type_t<T1__>>>>,
+                                stan::math::disjunction<stan::is_autodiff<
+                                                        std::tuple_element_t<0,
+                                                          stan::value_type_t<
+                                                            std::tuple_element_t<0,
+                                                              stan::value_type_t<T1__>>>>>,
                                                         std::is_floating_point<
-                                                        std::decay_t<T1__0__0__>>>,
-                                stan::is_col_vector<T1__0__1__>,
-                                stan::is_vt_not_complex<T1__0__1__>,
-                                stan::is_std_vector<T1__1__>,
-                                std::is_integral<std::decay_t<stan::value_type_t<T1__1__>>>,
+                                                        std::decay_t<
+                                                          std::tuple_element_t<0,
+                                                            stan::value_type_t<
+                                                              std::tuple_element_t<0,
+                                                                stan::value_type_t<T1__>>>>>>>,
+                                stan::is_col_vector<std::tuple_element_t<1,
+                                                      stan::value_type_t<
+                                                        std::tuple_element_t<0,
+                                                          stan::value_type_t<T1__>>>>>,
+                                stan::is_vt_not_complex<std::tuple_element_t<1,
+                                                          stan::value_type_t<
+                                                            std::tuple_element_t<0,
+                                                              stan::value_type_t<T1__>>>>>,
+                                stan::is_std_vector<std::tuple_element_t<1,
+                                                      stan::value_type_t<T1__>>>,
+                                std::is_integral<std::decay_t<stan::value_type_t<
+                                                                std::tuple_element_t<1,
+                                                                  stan::value_type_t<T1__>>>>>,
                                 stan::math::disjunction<stan::is_autodiff<T2__>,
                                                         std::is_floating_point<
                                                         std::decay_t<T2__>>>>* = nullptr>
-  stan::return_type_t<stan::base_type_t<T0__>, T1__0__0__,
-    stan::base_type_t<T1__0__1__>, T2__>
-  operator()(const T0__& theta,
-             const std::vector<
-                     std::tuple<
-                       std::vector<std::tuple<T1__0__0__, T1__0__1__>>,
-                       T1__1__>>& p, const T2__& unused, std::ostream*
-             pstream__) const {
+  stan::return_type_t<stan::base_type_t<T0__>,
+    std::tuple_element_t<0,
+      stan::base_type_t<std::tuple_element_t<0, stan::base_type_t<T1__>>>>,
+    stan::base_type_t<std::tuple_element_t<1,
+                        stan::base_type_t<std::tuple_element_t<0,
+                                            stan::base_type_t<T1__>>>>>,
+    T2__>
+  operator()(const T0__& theta, const T1__& p, const T2__& unused,
+             std::ostream* pstream__) const {
     return ll_nested(theta, p, unused, pstream__);
   }
 };
 struct K_function_functor__ {
-  template <typename T0__0__, typename T0__1__0__, typename T0__1__1__,
-            typename T1__,
-            stan::require_all_t<stan::is_std_vector<T0__0__>,
-                                stan::is_col_vector<stan::value_type_t<T0__0__>>,
-                                stan::is_vt_not_complex<stan::value_type_t<T0__0__>>,
-                                std::is_integral<std::decay_t<T0__1__0__>>,
-                                stan::math::disjunction<stan::is_autodiff<T0__1__1__>,
+  template <typename T0__, typename T1__,
+            stan::require_all_t<stan::is_std_vector<T0__>,
+                                stan::math::is_tuple<stan::value_type_t<T0__>>,
+                                stan::is_std_vector<std::tuple_element_t<0,
+                                                      stan::value_type_t<T0__>>>,
+                                stan::is_col_vector<stan::value_type_t<
+                                                      std::tuple_element_t<0,
+                                                        stan::value_type_t<T0__>>>>,
+                                stan::is_vt_not_complex<stan::value_type_t<
+                                                          std::tuple_element_t<0,
+                                                            stan::value_type_t<T0__>>>>,
+                                stan::is_std_vector<std::tuple_element_t<1,
+                                                      stan::value_type_t<T0__>>>,
+                                stan::math::is_tuple<stan::value_type_t<
+                                                       std::tuple_element_t<1,
+                                                         stan::value_type_t<T0__>>>>,
+                                std::is_integral<std::decay_t<std::tuple_element_t<0,
+                                                                stan::value_type_t<
+                                                                  std::tuple_element_t<1,
+                                                                    stan::value_type_t<T0__>>>>>>,
+                                stan::math::disjunction<stan::is_autodiff<
+                                                        std::tuple_element_t<1,
+                                                          stan::value_type_t<
+                                                            std::tuple_element_t<1,
+                                                              stan::value_type_t<T0__>>>>>,
                                                         std::is_floating_point<
-                                                        std::decay_t<T0__1__1__>>>,
+                                                        std::decay_t<
+                                                          std::tuple_element_t<1,
+                                                            stan::value_type_t<
+                                                              std::tuple_element_t<1,
+                                                                stan::value_type_t<T0__>>>>>>>,
                                 stan::math::disjunction<stan::is_autodiff<T1__>,
                                                         std::is_floating_point<
                                                         std::decay_t<T1__>>>>* = nullptr>
-  Eigen::Matrix<stan::return_type_t<stan::base_type_t<T0__0__>, T0__1__1__,
+  Eigen::Matrix<stan::return_type_t<stan::base_type_t<std::tuple_element_t<0,
+                                                        stan::base_type_t<T0__>>>,
+                  std::tuple_element_t<1,
+                    stan::base_type_t<std::tuple_element_t<1,
+                                        stan::base_type_t<T0__>>>>,
                   T1__>,-1,-1>
-  operator()(const std::vector<
-                     std::tuple<T0__0__,
-                       std::vector<std::tuple<T0__1__0__, T0__1__1__>>>>& p,
-             const T1__& rho, std::ostream* pstream__) const {
+  operator()(const T0__& p, const T1__& rho, std::ostream* pstream__) const {
     return K_function(p, rho, pstream__);
   }
 };
@@ -11694,28 +11860,59 @@ struct K_function_functor__ {
    ll_nested(vector, array[] tuple(array[] tuple(real, vector), array[] int),
              real)
  */
-template <typename T0__, typename T1__0__0__, typename T1__0__1__,
-          typename T1__1__, typename T2__,
+template <typename T0__, typename T1__, typename T2__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>,
-                              stan::math::disjunction<stan::is_autodiff<T1__0__0__>,
+                              stan::is_std_vector<T1__>,
+                              stan::math::is_tuple<stan::value_type_t<T1__>>,
+                              stan::is_std_vector<std::tuple_element_t<0,
+                                                    stan::value_type_t<T1__>>>,
+                              stan::math::is_tuple<stan::value_type_t<
+                                                     std::tuple_element_t<0,
+                                                       stan::value_type_t<T1__>>>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      std::tuple_element_t<0,
+                                                        stan::value_type_t<
+                                                          std::tuple_element_t<0,
+                                                            stan::value_type_t<T1__>>>>>,
                                                       std::is_floating_point<
-                                                      std::decay_t<T1__0__0__>>>,
-                              stan::is_col_vector<T1__0__1__>,
-                              stan::is_vt_not_complex<T1__0__1__>,
-                              stan::is_std_vector<T1__1__>,
-                              std::is_integral<std::decay_t<stan::value_type_t<T1__1__>>>,
+                                                      std::decay_t<std::tuple_element_t<0,
+                                                                    stan::value_type_t<
+                                                                    std::tuple_element_t<0,
+                                                                    stan::value_type_t<T1__>>>>>>>,
+                              stan::is_col_vector<std::tuple_element_t<1,
+                                                    stan::value_type_t<
+                                                      std::tuple_element_t<0,
+                                                        stan::value_type_t<T1__>>>>>,
+                              stan::is_vt_not_complex<std::tuple_element_t<1,
+                                                        stan::value_type_t<
+                                                          std::tuple_element_t<0,
+                                                            stan::value_type_t<T1__>>>>>,
+                              stan::is_std_vector<std::tuple_element_t<1,
+                                                    stan::value_type_t<T1__>>>,
+                              std::is_integral<std::decay_t<stan::value_type_t<
+                                                              std::tuple_element_t<1,
+                                                                stan::value_type_t<T1__>>>>>,
                               stan::math::disjunction<stan::is_autodiff<T2__>,
                                                       std::is_floating_point<
                                                       std::decay_t<T2__>>>>*>
-stan::return_type_t<stan::base_type_t<T0__>, T1__0__0__,
-  stan::base_type_t<T1__0__1__>, T2__>
-ll_nested(const T0__& theta_arg__,
-          const std::vector<
-                  std::tuple<std::vector<std::tuple<T1__0__0__, T1__0__1__>>,
-                    T1__1__>>& p, const T2__& unused, std::ostream* pstream__) {
+stan::return_type_t<stan::base_type_t<T0__>,
+  std::tuple_element_t<0,
+    stan::base_type_t<std::tuple_element_t<0, stan::base_type_t<T1__>>>>,
+  stan::base_type_t<std::tuple_element_t<1,
+                      stan::base_type_t<std::tuple_element_t<0,
+                                          stan::base_type_t<T1__>>>>>,
+  T2__>
+ll_nested(const T0__& theta_arg__, const T1__& p, const T2__& unused,
+          std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<stan::base_type_t<T0__>,
-                             T1__0__0__, stan::base_type_t<T1__0__1__>, T2__>;
+                             std::tuple_element_t<0,
+                               stan::base_type_t<std::tuple_element_t<0,
+                                                   stan::base_type_t<T1__>>>>,
+                             stan::base_type_t<std::tuple_element_t<1,
+                                                 stan::base_type_t<std::tuple_element_t<0,
+                                                                    stan::base_type_t<T1__>>>>>,
+                             T2__>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -11750,26 +11947,52 @@ ll_nested(const T0__& theta_arg__,
 /* matrix
    K_function(array[] tuple(array[] vector, array[] tuple(int, real)), real)
  */
-template <typename T0__0__, typename T0__1__0__, typename T0__1__1__,
-          typename T1__,
-          stan::require_all_t<stan::is_std_vector<T0__0__>,
-                              stan::is_col_vector<stan::value_type_t<T0__0__>>,
-                              stan::is_vt_not_complex<stan::value_type_t<T0__0__>>,
-                              std::is_integral<std::decay_t<T0__1__0__>>,
-                              stan::math::disjunction<stan::is_autodiff<T0__1__1__>,
+template <typename T0__, typename T1__,
+          stan::require_all_t<stan::is_std_vector<T0__>,
+                              stan::math::is_tuple<stan::value_type_t<T0__>>,
+                              stan::is_std_vector<std::tuple_element_t<0,
+                                                    stan::value_type_t<T0__>>>,
+                              stan::is_col_vector<stan::value_type_t<
+                                                    std::tuple_element_t<0,
+                                                      stan::value_type_t<T0__>>>>,
+                              stan::is_vt_not_complex<stan::value_type_t<
+                                                        std::tuple_element_t<0,
+                                                          stan::value_type_t<T0__>>>>,
+                              stan::is_std_vector<std::tuple_element_t<1,
+                                                    stan::value_type_t<T0__>>>,
+                              stan::math::is_tuple<stan::value_type_t<
+                                                     std::tuple_element_t<1,
+                                                       stan::value_type_t<T0__>>>>,
+                              std::is_integral<std::decay_t<std::tuple_element_t<0,
+                                                              stan::value_type_t<
+                                                                std::tuple_element_t<1,
+                                                                  stan::value_type_t<T0__>>>>>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      std::tuple_element_t<1,
+                                                        stan::value_type_t<
+                                                          std::tuple_element_t<1,
+                                                            stan::value_type_t<T0__>>>>>,
                                                       std::is_floating_point<
-                                                      std::decay_t<T0__1__1__>>>,
+                                                      std::decay_t<std::tuple_element_t<1,
+                                                                    stan::value_type_t<
+                                                                    std::tuple_element_t<1,
+                                                                    stan::value_type_t<T0__>>>>>>>,
                               stan::math::disjunction<stan::is_autodiff<T1__>,
                                                       std::is_floating_point<
                                                       std::decay_t<T1__>>>>*>
-Eigen::Matrix<stan::return_type_t<stan::base_type_t<T0__0__>, T0__1__1__,
+Eigen::Matrix<stan::return_type_t<stan::base_type_t<std::tuple_element_t<0,
+                                                      stan::base_type_t<T0__>>>,
+                std::tuple_element_t<1,
+                  stan::base_type_t<std::tuple_element_t<1,
+                                      stan::base_type_t<T0__>>>>,
                 T1__>,-1,-1>
-K_function(const std::vector<
-                   std::tuple<T0__0__,
-                     std::vector<std::tuple<T0__1__0__, T0__1__1__>>>>& p,
-           const T1__& rho, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::return_type_t<stan::base_type_t<T0__0__>,
-                             T0__1__1__, T1__>;
+K_function(const T0__& p, const T1__& rho, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<stan::base_type_t<std::tuple_element_t<0,
+                                                                   stan::base_type_t<T0__>>>,
+                             std::tuple_element_t<1,
+                               stan::base_type_t<std::tuple_element_t<1,
+                                                   stan::base_type_t<T0__>>>>,
+                             T1__>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -12060,61 +12283,28 @@ class laplace_nested_tuple3_model final : public model_base_crtp<laplace_nested_
         lp_accum__.add(stan::math::normal_lpdf<propto__>(eta, 0, 1));
         current_statement__ = 8;
         lp_accum__.add(stan::math::laplace_marginal(ll_nested_functor__(),
-                         std::tuple<
+                         std::forward_as_tuple(
                            std::vector<
                              std::tuple<
                                std::vector<
                                  std::tuple<local_scalar_t__,
                                    Eigen::Matrix<double,-1,1>>>,
-                               std::vector<int>>>,
-                           local_scalar_t__>(std::vector<
-                                               std::tuple<
-                                                 std::vector<
-                                                   std::tuple<
-                                                     local_scalar_t__,
-                                                     Eigen::Matrix<double,-1,1>>>,
-                                                 std::vector<int>>>{std::tuple<
-                                                                    std::vector<
-                                                                    std::tuple<
-                                                                    local_scalar_t__,
-                                                                    Eigen::Matrix<double,-1,1>>>,
-                                                                    const 
-                                                                    std::vector<
-                                                                    int>&>(
-                                                                    std::vector<
-                                                                    std::tuple<
-                                                                    local_scalar_t__,
-                                                                    Eigen::Matrix<double,-1,1>>>{
-                                                                    std::tuple<
-                                                                    local_scalar_t__,
-                                                                    Eigen::Matrix<double,-1,1>>(eta,
-                                                                    log_ye)},
-                                                                    y)}, eta),
-                         K_function_functor__(),
-                         std::tuple<
+                               std::vector<int>>>{std::forward_as_tuple(
+                                                    std::vector<
+                                                      std::tuple<
+                                                        local_scalar_t__,
+                                                        Eigen::Matrix<double,-1,1>>>{
+                                                      std::forward_as_tuple(
+                                                        eta, log_ye)}, y)},
+                           eta), K_function_functor__(),
+                         std::forward_as_tuple(
                            std::vector<
                              std::tuple<
                                std::vector<Eigen::Matrix<double,-1,1>>,
-                               std::vector<std::tuple<int, local_scalar_t__>>>>,
-                           local_scalar_t__>(std::vector<
-                                               std::tuple<
-                                                 std::vector<
-                                                   Eigen::Matrix<double,-1,1>>,
-                                                 std::vector<
-                                                   std::tuple<int,
-                                                     local_scalar_t__>>>>{
-                                               std::tuple<
-                                                 const std::vector<
-                                                         Eigen::Matrix<double,-1,1>>&,
-                                                 std::vector<
-                                                   std::tuple<int,
-                                                     local_scalar_t__>>>(x,
-                                                 std::vector<
-                                                   std::tuple<int,
-                                                     local_scalar_t__>>{
-                                                   std::tuple<int,
-                                                     local_scalar_t__>(n_obs,
-                                                     alpha)})}, rho),
+                               std::vector<std::tuple<int, local_scalar_t__>>>>{
+                             std::forward_as_tuple(x,
+                               std::vector<std::tuple<int, local_scalar_t__>>{
+                                 std::forward_as_tuple(n_obs, alpha)})}, rho),
                          pstream__));
       }
     } catch (const std::exception& e) {
@@ -12170,61 +12360,28 @@ class laplace_nested_tuple3_model final : public model_base_crtp<laplace_nested_
         lp_accum__.add(stan::math::normal_lpdf<propto__>(eta, 0, 1));
         current_statement__ = 8;
         lp_accum__.add(stan::math::laplace_marginal(ll_nested_functor__(),
-                         std::tuple<
+                         std::forward_as_tuple(
                            std::vector<
                              std::tuple<
                                std::vector<
                                  std::tuple<local_scalar_t__,
                                    Eigen::Matrix<double,-1,1>>>,
-                               std::vector<int>>>,
-                           local_scalar_t__>(std::vector<
-                                               std::tuple<
-                                                 std::vector<
-                                                   std::tuple<
-                                                     local_scalar_t__,
-                                                     Eigen::Matrix<double,-1,1>>>,
-                                                 std::vector<int>>>{std::tuple<
-                                                                    std::vector<
-                                                                    std::tuple<
-                                                                    local_scalar_t__,
-                                                                    Eigen::Matrix<double,-1,1>>>,
-                                                                    const 
-                                                                    std::vector<
-                                                                    int>&>(
-                                                                    std::vector<
-                                                                    std::tuple<
-                                                                    local_scalar_t__,
-                                                                    Eigen::Matrix<double,-1,1>>>{
-                                                                    std::tuple<
-                                                                    local_scalar_t__,
-                                                                    Eigen::Matrix<double,-1,1>>(eta,
-                                                                    log_ye)},
-                                                                    y)}, eta),
-                         K_function_functor__(),
-                         std::tuple<
+                               std::vector<int>>>{std::forward_as_tuple(
+                                                    std::vector<
+                                                      std::tuple<
+                                                        local_scalar_t__,
+                                                        Eigen::Matrix<double,-1,1>>>{
+                                                      std::forward_as_tuple(
+                                                        eta, log_ye)}, y)},
+                           eta), K_function_functor__(),
+                         std::forward_as_tuple(
                            std::vector<
                              std::tuple<
                                std::vector<Eigen::Matrix<double,-1,1>>,
-                               std::vector<std::tuple<int, local_scalar_t__>>>>,
-                           local_scalar_t__>(std::vector<
-                                               std::tuple<
-                                                 std::vector<
-                                                   Eigen::Matrix<double,-1,1>>,
-                                                 std::vector<
-                                                   std::tuple<int,
-                                                     local_scalar_t__>>>>{
-                                               std::tuple<
-                                                 const std::vector<
-                                                         Eigen::Matrix<double,-1,1>>&,
-                                                 std::vector<
-                                                   std::tuple<int,
-                                                     local_scalar_t__>>>(x,
-                                                 std::vector<
-                                                   std::tuple<int,
-                                                     local_scalar_t__>>{
-                                                   std::tuple<int,
-                                                     local_scalar_t__>(n_obs,
-                                                     alpha)})}, rho),
+                               std::vector<std::tuple<int, local_scalar_t__>>>>{
+                             std::forward_as_tuple(x,
+                               std::vector<std::tuple<int, local_scalar_t__>>{
+                                 std::forward_as_tuple(n_obs, alpha)})}, rho),
                          pstream__));
       }
     } catch (const std::exception& e) {
@@ -12297,49 +12454,26 @@ class laplace_nested_tuple3_model final : public model_base_crtp<laplace_nested_
       current_statement__ = 4;
       stan::model::assign(theta3,
         stan::math::laplace_latent_rng(ll_nested_functor__(),
-          std::tuple<
+          std::forward_as_tuple(
             std::vector<
               std::tuple<
                 std::vector<std::tuple<double, Eigen::Matrix<double,-1,1>>>,
-                std::vector<int>>>,
-            double>(std::vector<
-                      std::tuple<
-                        std::vector<
-                          std::tuple<double, Eigen::Matrix<double,-1,1>>>,
-                        std::vector<int>>>{std::tuple<
-                                             std::vector<
-                                               std::tuple<double,
-                                                 Eigen::Matrix<double,-1,1>>>,
-                                             const std::vector<int>&>(
-                                             std::vector<
-                                               std::tuple<double,
-                                                 Eigen::Matrix<double,-1,1>>>{
-                                               std::tuple<double,
-                                                 Eigen::Matrix<double,-1,1>>(eta,
-                                                 log_ye)}, y)}, eta),
-          K_function_functor__(),
-          std::tuple<
+                std::vector<int>>>{std::forward_as_tuple(
+                                     std::vector<
+                                       std::tuple<double,
+                                         Eigen::Matrix<double,-1,1>>>{
+                                       std::forward_as_tuple(eta, log_ye)}, y)},
+            eta), K_function_functor__(),
+          std::forward_as_tuple(
             std::vector<
               std::tuple<std::vector<Eigen::Matrix<double,-1,1>>,
-                std::vector<std::tuple<int, double>>>>,
-            double>(std::vector<
-                      std::tuple<std::vector<Eigen::Matrix<double,-1,1>>,
-                        std::vector<std::tuple<int, double>>>>{std::tuple<
-                                                                 const 
-                                                                 std::vector<
-                                                                   Eigen::Matrix<double,-1,1>>&,
-                                                                 std::vector<
-                                                                   std::tuple<
-                                                                    int,
-                                                                    double>>>(x,
-                                                                 std::vector<
-                                                                   std::tuple<
-                                                                    int,
-                                                                    double>>{
-                                                                   std::tuple<
-                                                                    int,
-                                                                    double>(n_obs,
-                                                                    alpha)})},
+                std::vector<std::tuple<int, double>>>>{std::forward_as_tuple(
+                                                         x,
+                                                         std::vector<
+                                                           std::tuple<int,
+                                                             double>>{
+                                                           std::forward_as_tuple(
+                                                             n_obs, alpha)})},
             rho), base_rng__, pstream__), "assigning variable theta3");
       out__.write(theta3);
     } catch (const std::exception& e) {
@@ -12989,14 +13123,10 @@ class laplace_overload_weird_model final : public model_base_crtp<laplace_overlo
         lp_accum__.add(stan::math::normal_lpdf<propto__>(eta, 0, 1));
         current_statement__ = 7;
         lp_accum__.add(stan::math::laplace_marginal(my_fun_functor__(),
-                         std::tuple<local_scalar_t__,
-                           Eigen::Matrix<double,-1,1>,
-                           const std::vector<int>&>(eta, log_ye, y),
+                         std::forward_as_tuple(eta, log_ye, y),
                          my_fun_functor__(),
-                         std::tuple<
-                           const std::vector<Eigen::Matrix<double,-1,1>>&,
-                           int, local_scalar_t__, local_scalar_t__>(x, n_obs,
-                           alpha, rho), pstream__));
+                         std::forward_as_tuple(x, n_obs, alpha, rho),
+                         pstream__));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -13051,14 +13181,10 @@ class laplace_overload_weird_model final : public model_base_crtp<laplace_overlo
         lp_accum__.add(stan::math::normal_lpdf<propto__>(eta, 0, 1));
         current_statement__ = 7;
         lp_accum__.add(stan::math::laplace_marginal(my_fun_functor__(),
-                         std::tuple<local_scalar_t__,
-                           Eigen::Matrix<double,-1,1>,
-                           const std::vector<int>&>(eta, log_ye, y),
+                         std::forward_as_tuple(eta, log_ye, y),
                          my_fun_functor__(),
-                         std::tuple<
-                           const std::vector<Eigen::Matrix<double,-1,1>>&,
-                           int, local_scalar_t__, local_scalar_t__>(x, n_obs,
-                           alpha, rho), pstream__));
+                         std::forward_as_tuple(x, n_obs, alpha, rho),
+                         pstream__));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -13792,12 +13918,10 @@ class laplace_poisson_model final : public model_base_crtp<laplace_poisson_model
       current_statement__ = 5;
       log_lik_sum = stan::math::laplace_marginal_tol(
                       poisson_re_log_ll_functor__(),
-                      std::tuple<const std::vector<int>&,
-                        Eigen::Matrix<double,-1,1>>(y,
+                      std::forward_as_tuple(y,
                         stan::math::add(stan::math::add(offsett, alpha),
                           stan::math::multiply(X, beta))),
-                      cov_fun_functor__(),
-                      std::tuple<double, int>(sigmaz, N),
+                      cov_fun_functor__(), std::forward_as_tuple(sigmaz, N),
                       stan::math::rep_vector(0.0, N), tolerance,
                       max_num_steps, hessian_block_size, solver,
                       max_steps_line_search, pstream__);
@@ -14461,49 +14585,37 @@ class laplace_poisson_log_model final : public model_base_crtp<laplace_poisson_l
         current_statement__ = 9;
         lp_accum__.add(stan::math::laplace_marginal_poisson_log_lpmf<
                          propto__>(y, y, prior_mean, K_function_functor__(),
-                         std::tuple<
-                           const std::vector<Eigen::Matrix<double,-1,1>>&,
-                           int, local_scalar_t__, local_scalar_t__>(x, n_obs,
-                           alpha, rho), pstream__));
+                         std::forward_as_tuple(x, n_obs, alpha, rho),
+                         pstream__));
         current_statement__ = 10;
         lp_accum__.add(stan::math::laplace_marginal_poisson_log_lpmf<false>(
                          y, y, prior_mean, K_function_functor__(),
-                         std::tuple<
-                           const std::vector<Eigen::Matrix<double,-1,1>>&,
-                           int, local_scalar_t__, local_scalar_t__>(x, n_obs,
-                           alpha, rho), pstream__));
+                         std::forward_as_tuple(x, n_obs, alpha, rho),
+                         pstream__));
         current_statement__ = 11;
         lp_accum__.add(stan::math::laplace_marginal_poisson_log_lpmf<
                          propto__>(y, y, prior_mean, K_function_functor__(),
-                         std::tuple<
-                           const std::vector<Eigen::Matrix<double,-1,1>>&,
-                           int, local_scalar_t__, local_scalar_t__>(x, n_obs,
-                           alpha, rho), pstream__));
+                         std::forward_as_tuple(x, n_obs, alpha, rho),
+                         pstream__));
         current_statement__ = 12;
         lp_accum__.add(stan::math::laplace_marginal_tol_poisson_log_lpmf<
                          propto__>(y, y, prior_mean, K_function_functor__(),
-                         std::tuple<
-                           const std::vector<Eigen::Matrix<double,-1,1>>&,
-                           int, local_scalar_t__, local_scalar_t__>(x, n_obs,
-                           alpha, rho), theta_0, tolerance, max_num_steps,
+                         std::forward_as_tuple(x, n_obs, alpha, rho),
+                         theta_0, tolerance, max_num_steps,
                          hessian_block_size, solver, max_steps_line_search,
                          pstream__));
         current_statement__ = 13;
         lp_accum__.add(stan::math::laplace_marginal_tol_poisson_log_lpmf<
                          false>(y, y, prior_mean, K_function_functor__(),
-                         std::tuple<
-                           const std::vector<Eigen::Matrix<double,-1,1>>&,
-                           int, local_scalar_t__, local_scalar_t__>(x, n_obs,
-                           alpha, rho), theta_0, tolerance, max_num_steps,
+                         std::forward_as_tuple(x, n_obs, alpha, rho),
+                         theta_0, tolerance, max_num_steps,
                          hessian_block_size, solver, max_steps_line_search,
                          pstream__));
         current_statement__ = 14;
         lp_accum__.add(stan::math::laplace_marginal_tol_poisson_log_lpmf<
                          propto__>(y, y, prior_mean, K_function_functor__(),
-                         std::tuple<
-                           const std::vector<Eigen::Matrix<double,-1,1>>&,
-                           int, local_scalar_t__, local_scalar_t__>(x, n_obs,
-                           alpha, rho), theta_0, tolerance, max_num_steps,
+                         std::forward_as_tuple(x, n_obs, alpha, rho),
+                         theta_0, tolerance, max_num_steps,
                          hessian_block_size, solver, max_steps_line_search,
                          pstream__));
       }
@@ -14561,49 +14673,37 @@ class laplace_poisson_log_model final : public model_base_crtp<laplace_poisson_l
         current_statement__ = 9;
         lp_accum__.add(stan::math::laplace_marginal_poisson_log_lpmf<
                          propto__>(y, y, prior_mean, K_function_functor__(),
-                         std::tuple<
-                           const std::vector<Eigen::Matrix<double,-1,1>>&,
-                           int, local_scalar_t__, local_scalar_t__>(x, n_obs,
-                           alpha, rho), pstream__));
+                         std::forward_as_tuple(x, n_obs, alpha, rho),
+                         pstream__));
         current_statement__ = 10;
         lp_accum__.add(stan::math::laplace_marginal_poisson_log_lpmf<false>(
                          y, y, prior_mean, K_function_functor__(),
-                         std::tuple<
-                           const std::vector<Eigen::Matrix<double,-1,1>>&,
-                           int, local_scalar_t__, local_scalar_t__>(x, n_obs,
-                           alpha, rho), pstream__));
+                         std::forward_as_tuple(x, n_obs, alpha, rho),
+                         pstream__));
         current_statement__ = 11;
         lp_accum__.add(stan::math::laplace_marginal_poisson_log_lpmf<
                          propto__>(y, y, prior_mean, K_function_functor__(),
-                         std::tuple<
-                           const std::vector<Eigen::Matrix<double,-1,1>>&,
-                           int, local_scalar_t__, local_scalar_t__>(x, n_obs,
-                           alpha, rho), pstream__));
+                         std::forward_as_tuple(x, n_obs, alpha, rho),
+                         pstream__));
         current_statement__ = 12;
         lp_accum__.add(stan::math::laplace_marginal_tol_poisson_log_lpmf<
                          propto__>(y, y, prior_mean, K_function_functor__(),
-                         std::tuple<
-                           const std::vector<Eigen::Matrix<double,-1,1>>&,
-                           int, local_scalar_t__, local_scalar_t__>(x, n_obs,
-                           alpha, rho), theta_0, tolerance, max_num_steps,
+                         std::forward_as_tuple(x, n_obs, alpha, rho),
+                         theta_0, tolerance, max_num_steps,
                          hessian_block_size, solver, max_steps_line_search,
                          pstream__));
         current_statement__ = 13;
         lp_accum__.add(stan::math::laplace_marginal_tol_poisson_log_lpmf<
                          false>(y, y, prior_mean, K_function_functor__(),
-                         std::tuple<
-                           const std::vector<Eigen::Matrix<double,-1,1>>&,
-                           int, local_scalar_t__, local_scalar_t__>(x, n_obs,
-                           alpha, rho), theta_0, tolerance, max_num_steps,
+                         std::forward_as_tuple(x, n_obs, alpha, rho),
+                         theta_0, tolerance, max_num_steps,
                          hessian_block_size, solver, max_steps_line_search,
                          pstream__));
         current_statement__ = 14;
         lp_accum__.add(stan::math::laplace_marginal_tol_poisson_log_lpmf<
                          propto__>(y, y, prior_mean, K_function_functor__(),
-                         std::tuple<
-                           const std::vector<Eigen::Matrix<double,-1,1>>&,
-                           int, local_scalar_t__, local_scalar_t__>(x, n_obs,
-                           alpha, rho), theta_0, tolerance, max_num_steps,
+                         std::forward_as_tuple(x, n_obs, alpha, rho),
+                         theta_0, tolerance, max_num_steps,
                          hessian_block_size, solver, max_steps_line_search,
                          pstream__));
       }
@@ -14678,8 +14778,7 @@ class laplace_poisson_log_model final : public model_base_crtp<laplace_poisson_l
       stan::model::assign(theta,
         stan::math::laplace_latent_poisson_log_rng(y, y, prior_mean,
           K_function_functor__(),
-          std::tuple<const std::vector<Eigen::Matrix<double,-1,1>>&, int,
-            double, double>(x, n_obs, alpha, rho), base_rng__, pstream__),
+          std::forward_as_tuple(x, n_obs, alpha, rho), base_rng__, pstream__),
         "assigning variable theta");
       Eigen::Matrix<double,-1,1> theta2 =
         Eigen::Matrix<double,-1,1>::Constant(n_obs,
@@ -14688,8 +14787,7 @@ class laplace_poisson_log_model final : public model_base_crtp<laplace_poisson_l
       stan::model::assign(theta2,
         stan::math::laplace_latent_tol_poisson_log_rng(y, y, prior_mean,
           K_function_functor__(),
-          std::tuple<const std::vector<Eigen::Matrix<double,-1,1>>&, int,
-            double, double>(x, n_obs, alpha, rho), theta_0, tolerance,
+          std::forward_as_tuple(x, n_obs, alpha, rho), theta_0, tolerance,
           max_num_steps, hessian_block_size, solver, max_steps_line_search,
           base_rng__, pstream__), "assigning variable theta2");
       out__.write(theta);
@@ -50060,8 +50158,7 @@ baz(const T0__& a, std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 7;
-    return std::tuple<std::vector<local_scalar_t__>, local_scalar_t__>(
-             std::vector<local_scalar_t__>{0.1}, 0.2);
+    return std::forward_as_tuple(std::vector<local_scalar_t__>{0.1}, 0.2);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -50605,7 +50702,7 @@ class self_assign_model final : public model_base_crtp<self_assign_model> {
         std::tuple<double, int>{std::numeric_limits<double>::quiet_NaN(),
           std::numeric_limits<int>::min()};
       current_statement__ = 2;
-      stan::model::assign(x, std::tuple<double, int>(1.5, i),
+      stan::model::assign(x, std::forward_as_tuple(1.5, i),
         "assigning variable x");
       current_statement__ = 5;
       // self-assignment omitted: x.1

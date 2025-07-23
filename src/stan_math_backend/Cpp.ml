@@ -62,6 +62,9 @@ module Types = struct
     | _ ->
         Common.ICE.internal_compiler_error
           [%message "Tried to make an Eigen::Map of" (t : type_)]
+
+  let tuple_elt t i =
+    TypeTrait ("std::tuple_element_t", [TypeLiteral (string_of_int i); t])
 end
 
 type operator =
