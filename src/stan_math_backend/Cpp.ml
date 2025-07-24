@@ -17,6 +17,7 @@ type type_ =
   | Array of type_ * int
   | Tuple of type_ list
   | TypeLiteral of identifier  (** Used for things like Eigen::Index *)
+  | NonTypeTemplateInt of int
   | Matrix of type_ * int * int * Middle.Mem_pattern.t
   | Ref of type_
   | Const of type_
@@ -63,13 +64,18 @@ module Types = struct
         Common.ICE.internal_compiler_error
           [%message "Tried to make an Eigen::Map of" (t : type_)]
 
+  let var_context = TypeLiteral "stan::io::var_context"
+  let ostream = TypeLiteral "std::ostream"
+  let base_type t = TypeTrait ("stan::base_type_t", [t])
+  let decay t = TypeTrait ("std::decay_t", [t])
+
   let tuple_elt t i =
     let t =
       match t with
       (* std::tuple_element isn't specialized for references *)
       | TypeTrait (("stan::base_type_t" | "stan::value_type_t"), _) -> t
-      | _ -> TypeTrait ("std::decay_t", [t]) in
-    TypeTrait ("std::tuple_element_t", [TypeLiteral (string_of_int i); t])
+      | _ -> decay t in
+    TypeTrait ("std::tuple_element_t", [NonTypeTemplateInt i; t])
 end
 
 type operator =
@@ -142,6 +148,7 @@ module Exprs = struct
   let int_min = fun_call "std::numeric_limits<int>::min" []
 
   let static_cast type_ expr = FunCall ("static_cast", [type_], [expr])
+  let tuple_get i tuple = FunCall ("std::get", [NonTypeTemplateInt i], [tuple])
 end
 
 (**/**)
@@ -441,6 +448,7 @@ module Printing = struct
     | Tuple subtypes ->
         pf ppf "@[<2>std::tuple<@,%a>@]" (list ~sep:comma pp_type_) subtypes
     | TypeLiteral id -> pp_identifier ppf id
+    | NonTypeTemplateInt i -> int ppf i
     | Matrix (t, i, j, mem_pattern) -> (
         match mem_pattern with
         | Middle.Mem_pattern.AoS ->
@@ -457,9 +465,8 @@ module Printing = struct
     if not (List.is_empty requires) then
       let pp_single_require t ppf trait =
         let ty =
-          if String.is_prefix trait ~prefix:"std::" then
-            TypeTrait ("std::decay_t", [t])
-          else t in
+          if String.is_prefix trait ~prefix:"std::" then Types.decay t else t
+        in
         pf ppf "%s<%a>" trait pp_type_ ty in
       let pp_require ppf (req, t) =
         match req with

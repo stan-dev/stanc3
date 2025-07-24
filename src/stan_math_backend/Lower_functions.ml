@@ -36,7 +36,7 @@ let rec requires ut t =
   | UInt -> [RequireAllCondition (`Exact "std::is_integral", t)]
   | UComplex ->
       RequireAllCondition (`Exact "stan::is_complex", t)
-      :: requires UReal (TypeTrait ("stan::base_type_t", [t]))
+      :: requires UReal (Types.base_type t)
   | UArray inner_ut ->
       RequireAllCondition (`Exact "stan::is_std_vector", t)
       :: requires inner_ut (TypeTrait ("stan::value_type_t", [t]))
@@ -63,7 +63,7 @@ let return_optional_arg_types (args : Program.fun_arg_decl) =
         []
     | _, ut when UnsizedType.contains_tuple ut -> (
         let internal, dims = UnsizedType.unwind_array_type ut in
-        let t = if dims > 0 then TypeTrait ("stan::base_type_t", [t]) else t in
+        let t = if dims > 0 then Types.base_type t else t in
         match internal with
         | UTuple tys ->
             let temps =
@@ -83,7 +83,7 @@ let return_optional_arg_types (args : Program.fun_arg_decl) =
     | ( _
       , ( UnsizedType.UArray _ | UComplex | UVector | URowVector | UMatrix
         | UComplexRowVector | UComplexVector | UComplexMatrix ) ) ->
-        [TypeTrait ("stan::base_type_t", [t])]
+        [Types.base_type t]
     | _ -> [t] in
   List.mapi args ~f:(fun i (ad, _, ty) ->
       template_p (TemplateType (sprintf "T%d__" i)) (ad, ty))
@@ -132,16 +132,16 @@ let%expect_test "arg types tuple template" =
     ((RequireAllCondition (Exact stan::math::is_tuple) (TemplateType T0__))
      (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
       (TypeTrait std::tuple_element_t
-       ((TypeLiteral 0) (TypeTrait std::decay_t ((TemplateType T0__))))))
+       ((NonTypeTemplateInt 0) (TypeTrait std::decay_t ((TemplateType T0__))))))
      (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
       (TypeTrait std::tuple_element_t
-       ((TypeLiteral 1) (TypeTrait std::decay_t ((TemplateType T0__))))))
+       ((NonTypeTemplateInt 1) (TypeTrait std::decay_t ((TemplateType T0__))))))
      (RequireAllCondition (Exact stan::is_vt_not_complex)
       (TypeTrait std::tuple_element_t
-       ((TypeLiteral 1) (TypeTrait std::decay_t ((TemplateType T0__))))))
+       ((NonTypeTemplateInt 1) (TypeTrait std::decay_t ((TemplateType T0__))))))
      (RequireAllCondition (Exact std::is_integral)
       (TypeTrait std::tuple_element_t
-       ((TypeLiteral 2) (TypeTrait std::decay_t ((TemplateType T0__)))))))
+       ((NonTypeTemplateInt 2) (TypeTrait std::decay_t ((TemplateType T0__)))))))
     T0__ |}]
 
 let%expect_test "arg types tuple template" =
@@ -161,17 +161,21 @@ let%expect_test "arg types tuple template" =
     (TypeTrait stan::value_type_t ((TemplateType T0__))))
    (RequireAllCondition (Exact stan::is_std_vector)
     (TypeTrait std::tuple_element_t
-     ((TypeLiteral 0) (TypeTrait stan::value_type_t ((TemplateType T0__))))))
+     ((NonTypeTemplateInt 0)
+      (TypeTrait stan::value_type_t ((TemplateType T0__))))))
    (RequireAllCondition (Exact std::is_integral)
     (TypeTrait stan::value_type_t
      ((TypeTrait std::tuple_element_t
-       ((TypeLiteral 0) (TypeTrait stan::value_type_t ((TemplateType T0__))))))))
+       ((NonTypeTemplateInt 0)
+        (TypeTrait stan::value_type_t ((TemplateType T0__))))))))
    (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
     (TypeTrait std::tuple_element_t
-     ((TypeLiteral 1) (TypeTrait stan::value_type_t ((TemplateType T0__))))))
+     ((NonTypeTemplateInt 1)
+      (TypeTrait stan::value_type_t ((TemplateType T0__))))))
    (RequireAllCondition (Exact stan::is_vt_not_complex)
     (TypeTrait std::tuple_element_t
-     ((TypeLiteral 1) (TypeTrait stan::value_type_t ((TemplateType T0__)))))))
+     ((NonTypeTemplateInt 1)
+      (TypeTrait stan::value_type_t ((TemplateType T0__)))))))
   T0__ |}]
 
 let lower_promoted_scalar args =
@@ -260,7 +264,7 @@ let lower_args extra_templates extra args variadic =
   let arg_strs =
     args
     @ mk_extra_args extra_templates extra
-    @ [(Pointer (TypeLiteral "std::ostream"), "pstream__")]
+    @ [(Pointer Types.ostream, "pstream__")]
     @ variadic_args in
   arg_strs
 
@@ -403,7 +407,7 @@ let lower_standalone_fun_def namespace_fun
   let all_args =
     args
     @ mk_extra_args extra_templates extra
-    @ [(Pointer (TypeLiteral "std::ostream"), "pstream__ = nullptr")] in
+    @ [(Pointer Types.ostream, "pstream__ = nullptr")] in
   let mark_function_comment = !//"[[stan::function]]" in
   let return_type, return_stmt =
     match fdrt with

@@ -174,9 +174,7 @@ let rec lower_nonrange_lvalue lvalue =
 and lower_nonrange_lbase = function
   | Stmt.Fixed.Pattern.LVariable v -> Var v
   | LTupleProjection (lv, ix) ->
-      Exprs.templated_fun_call "std::get"
-        [TypeLiteral (string_of_int (ix - 1))]
-        [lower_nonrange_lvalue lv]
+      Exprs.tuple_get (ix - 1) (lower_nonrange_lvalue lv)
 
 (* True if expr has a 'shallow' overlap with the lhs, for the purpose of checking if expr needs to be deep copied when it's assigned to the lhs.
    This is 'shallow' in the sense that it doesn't recurse into expressions *)

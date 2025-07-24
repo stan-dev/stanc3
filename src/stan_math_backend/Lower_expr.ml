@@ -604,10 +604,7 @@ and lower_expr ?(promote_reals = false)
         ->
           lower_indexed_simple (lower_expr ~promote_reals e) idx
       | _ -> lower_indexed e idx (Fmt.to_to_string Expr.Typed.pp e))
-  | TupleProjection (t, ix) ->
-      templated_fun_call "std::get"
-        [TypeLiteral (string_of_int (ix - 1))]
-        [lower_expr ~promote_reals t]
+  | TupleProjection (t, ix) -> tuple_get (ix - 1) (lower_expr ~promote_reals t)
 
 and lower_exprs ?(promote_reals = false) =
   List.map ~f:(lower_expr ~promote_reals)
