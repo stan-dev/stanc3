@@ -3365,8 +3365,10 @@ class infer_tuple_ad_model final : public model_base_crtp<infer_tuple_ad_model> 
         current_statement__ = 2;
         stan::model::assign(z,
           std::vector<std::tuple<local_scalar_t__, local_scalar_t__>>{
-            std::forward_as_tuple(1, x), std::forward_as_tuple(x, 1)},
-          "assigning variable z");
+            std::forward_as_tuple(static_cast<double>(1),
+              static_cast<double>(x)),
+            std::forward_as_tuple(static_cast<double>(x),
+              static_cast<double>(1))}, "assigning variable z");
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -3408,8 +3410,10 @@ class infer_tuple_ad_model final : public model_base_crtp<infer_tuple_ad_model> 
         current_statement__ = 2;
         stan::model::assign(z,
           std::vector<std::tuple<local_scalar_t__, local_scalar_t__>>{
-            std::forward_as_tuple(1, x), std::forward_as_tuple(x, 1)},
-          "assigning variable z");
+            std::forward_as_tuple(static_cast<double>(1),
+              static_cast<double>(x)),
+            std::forward_as_tuple(static_cast<double>(x),
+              static_cast<double>(1))}, "assigning variable z");
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -6363,7 +6367,8 @@ std::tuple<double, double> foo(std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 8;
-    return std::forward_as_tuple(1.0, 2.0);
+    return std::forward_as_tuple(static_cast<double>(1.0),
+             static_cast<double>(2.0));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -11615,8 +11620,8 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
       current_statement__ = 16;
       stan::model::assign(CV,
         std::forward_as_tuple(
-          stan::math::promote_scalar<std::complex<double>>(V), 2),
-        "assigning variable CV");
+          stan::math::promote_scalar<std::complex<double>>(V),
+          static_cast<double>(2)), "assigning variable CV");
       current_statement__ = 17;
       V2 = std::tuple<Eigen::Matrix<double,-1,1>, int>{Eigen::Matrix<double,-1,1>::Constant(3,
                                                          std::numeric_limits<double>::quiet_NaN(
@@ -12068,7 +12073,8 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
         std::tuple<double, double>{std::numeric_limits<double>::quiet_NaN(),
           std::numeric_limits<double>::quiet_NaN()};
       current_statement__ = 7;
-      stan::model::assign(x, std::forward_as_tuple(y, 3),
+      stan::model::assign(x,
+        std::forward_as_tuple(static_cast<double>(y), static_cast<double>(3)),
         "assigning variable x");
       std::tuple<std::complex<double>, double> z =
         std::tuple<std::complex<double>, double>{std::complex<double>(
@@ -13654,14 +13660,18 @@ class tuple_copying_model final : public model_base_crtp<tuple_copying_model> {
                                                2, DUMMY_VAR__),
               std::vector<local_scalar_t__>(10, DUMMY_VAR__)}};
         current_statement__ = 8;
-        stan::model::assign(temp3, std::forward_as_tuple(1, data_tuple),
+        stan::model::assign(temp3,
+          std::forward_as_tuple(static_cast<double>(1), data_tuple),
           "assigning variable temp3");
         current_statement__ = 9;
         h(temp3, pstream__);
         current_statement__ = 10;
-        h(std::forward_as_tuple(1, data_tuple), pstream__);
+        h(std::forward_as_tuple(static_cast<double>(1), data_tuple),
+          pstream__);
         current_statement__ = 11;
-        h(std::forward_as_tuple(1, std::forward_as_tuple(x, y)), pstream__);
+        h(
+          std::forward_as_tuple(static_cast<double>(1),
+            std::forward_as_tuple(x, y)), pstream__);
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -13741,14 +13751,18 @@ class tuple_copying_model final : public model_base_crtp<tuple_copying_model> {
                                                2, DUMMY_VAR__),
               std::vector<local_scalar_t__>(10, DUMMY_VAR__)}};
         current_statement__ = 8;
-        stan::model::assign(temp3, std::forward_as_tuple(1, data_tuple),
+        stan::model::assign(temp3,
+          std::forward_as_tuple(static_cast<double>(1), data_tuple),
           "assigning variable temp3");
         current_statement__ = 9;
         h(temp3, pstream__);
         current_statement__ = 10;
-        h(std::forward_as_tuple(1, data_tuple), pstream__);
+        h(std::forward_as_tuple(static_cast<double>(1), data_tuple),
+          pstream__);
         current_statement__ = 11;
-        h(std::forward_as_tuple(1, std::forward_as_tuple(x, y)), pstream__);
+        h(
+          std::forward_as_tuple(static_cast<double>(1),
+            std::forward_as_tuple(x, y)), pstream__);
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -15136,7 +15150,8 @@ class tuple_lpdf_model final : public model_base_crtp<tuple_lpdf_model> {
     (void) function__;
     try {
       current_statement__ = 1;
-      lp_accum__.add(foo_lpdf<propto__>(std::forward_as_tuple(1.5, 2),
+      lp_accum__.add(foo_lpdf<propto__>(
+                       std::forward_as_tuple(1.5, static_cast<double>(2)),
                        std::forward_as_tuple(1.2, 1.5, 4.5), pstream__));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -15169,7 +15184,8 @@ class tuple_lpdf_model final : public model_base_crtp<tuple_lpdf_model> {
     (void) function__;
     try {
       current_statement__ = 1;
-      lp_accum__.add(foo_lpdf<propto__>(std::forward_as_tuple(1.5, 2),
+      lp_accum__.add(foo_lpdf<propto__>(
+                       std::forward_as_tuple(1.5, static_cast<double>(2)),
                        std::forward_as_tuple(1.2, 1.5, 4.5), pstream__));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);

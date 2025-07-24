@@ -505,7 +505,8 @@ and lower_compiler_internal ad ut f es =
   | FnDeepCopy ->
       lower_fun_app Fun_kind.FnPlain "stan::model::deep_copy" es Mem_pattern.AoS
         (Some UnsizedType.Void)
-  | FnMakeTuple -> fun_call "std::forward_as_tuple" (lower_exprs es)
+  | FnMakeTuple ->
+      fun_call "std::forward_as_tuple" (lower_exprs ~promote_reals:true es)
   | _ ->
       lower_fun_app FnPlain (Internal_fun.to_string f) es Mem_pattern.AoS
         (Some UnsizedType.Void)
@@ -570,7 +571,7 @@ and lower_expr ?(promote_reals = false)
       let maybe_eval (e : Expr.Typed.t) =
         if UnsizedType.is_eigen_type e.meta.type_ then
           fun_call "stan::math::eval" [lower_expr e]
-        else lower_expr e in
+        else lower_expr ~promote_reals e in
       Parens (TernaryIf (maybe_eval ec, maybe_eval et, maybe_eval ef))
   | FunApp
       ( StanLib (op, _, _)
@@ -592,21 +593,21 @@ and lower_expr ?(promote_reals = false)
       let ret_type = Some (UnsizedType.ReturnType meta.type_) in
       lower_fun_app suffix f es mem_pattern ret_type
   | FunApp (UserDefined (f, suffix), es) -> lower_user_defined_fun f suffix es
-  | Indexed (e, []) -> lower_expr e
+  | Indexed (e, []) -> lower_expr ~promote_reals e
   | Indexed (e, idx) -> (
       match e.pattern with
       | FunApp (CompilerInternal FnReadData, _) ->
-          lower_indexed_simple (lower_expr e) idx
+          lower_indexed_simple (lower_expr ~promote_reals e) idx
       | _
         when List.for_all ~f:dont_need_range_check idx
              && not (UnsizedType.is_indexing_matrix (Expr.Typed.type_of e, idx))
         ->
-          lower_indexed_simple (lower_expr e) idx
+          lower_indexed_simple (lower_expr ~promote_reals e) idx
       | _ -> lower_indexed e idx (Fmt.to_to_string Expr.Typed.pp e))
   | TupleProjection (t, ix) ->
       templated_fun_call "std::get"
         [TypeLiteral (string_of_int (ix - 1))]
-        [lower_expr t]
+        [lower_expr ~promote_reals t]
 
 and lower_exprs ?(promote_reals = false) =
   List.map ~f:(lower_expr ~promote_reals)
