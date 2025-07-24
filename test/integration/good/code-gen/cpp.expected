@@ -1488,9 +1488,7 @@ f(const T0__& x, const T1__& x2, std::ostream* pstream__) {
     current_statement__ = 9;
     return std::forward_as_tuple(1,
              std::vector<std::tuple<int, local_scalar_t__>>{std::forward_as_tuple(
-                                                              2,
-                                                              static_cast<
-                                                                double>(3.4))});
+                                                              2, 3.4)});
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -50181,8 +50179,7 @@ baz(const T0__& a, std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 7;
-    return std::forward_as_tuple(std::vector<local_scalar_t__>{0.1},
-             static_cast<double>(0.2));
+    return std::forward_as_tuple(std::vector<local_scalar_t__>{0.1}, 0.2);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }

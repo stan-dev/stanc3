@@ -552,8 +552,8 @@ and lower_expr ?(promote_reals = false)
   | Lit (Imaginary, s) ->
       fun_call "stan::math::to_complex" [Literal "0"; Literal s]
   | Lit ((Real | Int), s) -> Literal s
-  | Promotion (expr, UReal, _) when is_scalar expr ->
-      if promote_reals then
+  | Promotion (expr, UReal, ad) when is_scalar expr ->
+      if promote_reals && ad = UnsizedType.DataOnly then
         (* this can be important for e.g. templated function calls
            where we might generate an incorrect specification for int *)
         static_cast Cpp.Double (lower_expr expr)

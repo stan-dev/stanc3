@@ -3365,10 +3365,8 @@ class infer_tuple_ad_model final : public model_base_crtp<infer_tuple_ad_model> 
         current_statement__ = 2;
         stan::model::assign(z,
           std::vector<std::tuple<local_scalar_t__, local_scalar_t__>>{
-            std::forward_as_tuple(static_cast<double>(1),
-              static_cast<double>(x)),
-            std::forward_as_tuple(static_cast<double>(x),
-              static_cast<double>(1))}, "assigning variable z");
+            std::forward_as_tuple(1, x), std::forward_as_tuple(x, 1)},
+          "assigning variable z");
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -3410,10 +3408,8 @@ class infer_tuple_ad_model final : public model_base_crtp<infer_tuple_ad_model> 
         current_statement__ = 2;
         stan::model::assign(z,
           std::vector<std::tuple<local_scalar_t__, local_scalar_t__>>{
-            std::forward_as_tuple(static_cast<double>(1),
-              static_cast<double>(x)),
-            std::forward_as_tuple(static_cast<double>(x),
-              static_cast<double>(1))}, "assigning variable z");
+            std::forward_as_tuple(1, x), std::forward_as_tuple(x, 1)},
+          "assigning variable z");
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -6367,8 +6363,7 @@ std::tuple<double, double> foo(std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 8;
-    return std::forward_as_tuple(static_cast<double>(1.0),
-             static_cast<double>(2.0));
+    return std::forward_as_tuple(1.0, 2.0);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
