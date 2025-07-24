@@ -64,6 +64,11 @@ module Types = struct
           [%message "Tried to make an Eigen::Map of" (t : type_)]
 
   let tuple_elt t i =
+    let t =
+      match t with
+      (* std::tuple_element isn't specialized for references *)
+      | TypeTrait (("stan::base_type_t" | "stan::value_type_t"), _) -> t
+      | _ -> TypeTrait ("std::decay_t", [t]) in
     TypeTrait ("std::tuple_element_t", [TypeLiteral (string_of_int i); t])
 end
 

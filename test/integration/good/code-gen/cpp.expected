@@ -9502,27 +9502,31 @@ template <typename T0__, typename T1__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::is_col_vector<stan::value_type_t<T0__>>,
                               stan::is_vt_not_complex<stan::value_type_t<T0__>>,
-                              stan::math::is_tuple<std::decay_t<T1__>>,
+                              stan::math::is_tuple<T1__>,
                               std::is_integral<std::decay_t<std::tuple_element_t<0,
                                                               std::decay_t<T1__>>>>,
                               stan::math::is_tuple<std::tuple_element_t<1,
                                                      std::decay_t<T1__>>>,
                               stan::math::disjunction<stan::is_autodiff<
                                                       std::tuple_element_t<0,
-                                                        std::tuple_element_t<1,
-                                                          std::decay_t<T1__>>>>,
+                                                        std::decay_t<
+                                                          std::tuple_element_t<1,
+                                                            std::decay_t<T1__>>>>>,
                                                       std::is_floating_point<
                                                       std::decay_t<std::tuple_element_t<0,
+                                                                    std::decay_t<
                                                                     std::tuple_element_t<1,
-                                                                    std::decay_t<T1__>>>>>>,
+                                                                    std::decay_t<T1__>>>>>>>,
                               stan::math::disjunction<stan::is_autodiff<
                                                       std::tuple_element_t<1,
-                                                        std::tuple_element_t<1,
-                                                          std::decay_t<T1__>>>>,
+                                                        std::decay_t<
+                                                          std::tuple_element_t<1,
+                                                            std::decay_t<T1__>>>>>,
                                                       std::is_floating_point<
                                                       std::decay_t<std::tuple_element_t<1,
+                                                                    std::decay_t<
                                                                     std::tuple_element_t<1,
-                                                                    std::decay_t<T1__>>>>>>>* = nullptr>
+                                                                    std::decay_t<T1__>>>>>>>>* = nullptr>
 Eigen::Matrix<stan::return_type_t<stan::base_type_t<T0__>,
                 std::tuple_element_t<0,
                   std::decay_t<std::tuple_element_t<1, std::decay_t<T1__>>>>,
@@ -9530,7 +9534,7 @@ Eigen::Matrix<stan::return_type_t<stan::base_type_t<T0__>,
                   std::decay_t<std::tuple_element_t<1, std::decay_t<T1__>>>>>,-1,-1>
 scalar_tuple(const T0__& x, const T1__& p, std::ostream* pstream__);
 template <typename T0__, typename T1__, typename T2__, typename T3__,
-          stan::require_all_t<stan::math::is_tuple<std::decay_t<T0__>>,
+          stan::require_all_t<stan::math::is_tuple<T0__>,
                               stan::is_std_vector<std::tuple_element_t<0,
                                                     std::decay_t<T0__>>>,
                               stan::is_col_vector<stan::value_type_t<
@@ -9561,7 +9565,7 @@ Eigen::Matrix<stan::return_type_t<stan::base_type_t<std::tuple_element_t<0,
 arr_vec_tuple(const T0__& x, const T1__& n_obs, const T2__& alpha,
               const T3__& rho, std::ostream* pstream__);
 template <typename T0__, typename T1__, typename T2__, typename T3__,
-          stan::require_all_t<stan::math::is_tuple<std::decay_t<T0__>>,
+          stan::require_all_t<stan::math::is_tuple<T0__>,
                               stan::is_std_vector<std::tuple_element_t<0,
                                                     std::decay_t<T0__>>>,
                               stan::is_col_vector<stan::value_type_t<
@@ -9589,7 +9593,7 @@ arr_and_vec_tuple(const T0__& x, const T1__& n_obs, const T2__& alpha,
                   const T3__& rho, std::ostream* pstream__);
 struct arr_vec_tuple_functor__ {
   template <typename T0__, typename T1__, typename T2__, typename T3__,
-            stan::require_all_t<stan::math::is_tuple<std::decay_t<T0__>>,
+            stan::require_all_t<stan::math::is_tuple<T0__>,
                                 stan::is_std_vector<std::tuple_element_t<0,
                                                       std::decay_t<T0__>>>,
                                 stan::is_col_vector<stan::value_type_t<
@@ -9625,7 +9629,7 @@ struct arr_vec_tuple_functor__ {
 };
 struct arr_and_vec_tuple_functor__ {
   template <typename T0__, typename T1__, typename T2__, typename T3__,
-            stan::require_all_t<stan::math::is_tuple<std::decay_t<T0__>>,
+            stan::require_all_t<stan::math::is_tuple<T0__>,
                                 stan::is_std_vector<std::tuple_element_t<0,
                                                       std::decay_t<T0__>>>,
                                 stan::is_col_vector<stan::value_type_t<
@@ -9660,29 +9664,33 @@ struct scalar_tuple_functor__ {
             stan::require_all_t<stan::is_std_vector<T0__>,
                                 stan::is_col_vector<stan::value_type_t<T0__>>,
                                 stan::is_vt_not_complex<stan::value_type_t<T0__>>,
-                                stan::math::is_tuple<std::decay_t<T1__>>,
+                                stan::math::is_tuple<T1__>,
                                 std::is_integral<std::decay_t<std::tuple_element_t<0,
                                                                 std::decay_t<T1__>>>>,
                                 stan::math::is_tuple<std::tuple_element_t<1,
                                                        std::decay_t<T1__>>>,
                                 stan::math::disjunction<stan::is_autodiff<
                                                         std::tuple_element_t<0,
-                                                          std::tuple_element_t<1,
-                                                            std::decay_t<T1__>>>>,
+                                                          std::decay_t<
+                                                            std::tuple_element_t<1,
+                                                              std::decay_t<T1__>>>>>,
                                                         std::is_floating_point<
                                                         std::decay_t<
                                                           std::tuple_element_t<0,
-                                                            std::tuple_element_t<1,
-                                                              std::decay_t<T1__>>>>>>,
+                                                            std::decay_t<
+                                                              std::tuple_element_t<1,
+                                                                std::decay_t<T1__>>>>>>>,
                                 stan::math::disjunction<stan::is_autodiff<
                                                         std::tuple_element_t<1,
-                                                          std::tuple_element_t<1,
-                                                            std::decay_t<T1__>>>>,
+                                                          std::decay_t<
+                                                            std::tuple_element_t<1,
+                                                              std::decay_t<T1__>>>>>,
                                                         std::is_floating_point<
                                                         std::decay_t<
                                                           std::tuple_element_t<1,
-                                                            std::tuple_element_t<1,
-                                                              std::decay_t<T1__>>>>>>>* = nullptr>
+                                                            std::decay_t<
+                                                              std::tuple_element_t<1,
+                                                                std::decay_t<T1__>>>>>>>>* = nullptr>
   Eigen::Matrix<stan::return_type_t<stan::base_type_t<T0__>,
                   std::tuple_element_t<0,
                     std::decay_t<std::tuple_element_t<1, std::decay_t<T1__>>>>,
@@ -9697,27 +9705,31 @@ template <typename T0__, typename T1__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::is_col_vector<stan::value_type_t<T0__>>,
                               stan::is_vt_not_complex<stan::value_type_t<T0__>>,
-                              stan::math::is_tuple<std::decay_t<T1__>>,
+                              stan::math::is_tuple<T1__>,
                               std::is_integral<std::decay_t<std::tuple_element_t<0,
                                                               std::decay_t<T1__>>>>,
                               stan::math::is_tuple<std::tuple_element_t<1,
                                                      std::decay_t<T1__>>>,
                               stan::math::disjunction<stan::is_autodiff<
                                                       std::tuple_element_t<0,
-                                                        std::tuple_element_t<1,
-                                                          std::decay_t<T1__>>>>,
+                                                        std::decay_t<
+                                                          std::tuple_element_t<1,
+                                                            std::decay_t<T1__>>>>>,
                                                       std::is_floating_point<
                                                       std::decay_t<std::tuple_element_t<0,
+                                                                    std::decay_t<
                                                                     std::tuple_element_t<1,
-                                                                    std::decay_t<T1__>>>>>>,
+                                                                    std::decay_t<T1__>>>>>>>,
                               stan::math::disjunction<stan::is_autodiff<
                                                       std::tuple_element_t<1,
-                                                        std::tuple_element_t<1,
-                                                          std::decay_t<T1__>>>>,
+                                                        std::decay_t<
+                                                          std::tuple_element_t<1,
+                                                            std::decay_t<T1__>>>>>,
                                                       std::is_floating_point<
                                                       std::decay_t<std::tuple_element_t<1,
+                                                                    std::decay_t<
                                                                     std::tuple_element_t<1,
-                                                                    std::decay_t<T1__>>>>>>>*>
+                                                                    std::decay_t<T1__>>>>>>>>*>
 Eigen::Matrix<stan::return_type_t<stan::base_type_t<T0__>,
                 std::tuple_element_t<0,
                   std::decay_t<std::tuple_element_t<1, std::decay_t<T1__>>>>,
@@ -9768,7 +9780,7 @@ scalar_tuple(const T0__& x, const T1__& p, std::ostream* pstream__) {
 }
 // matrix arr_vec_tuple(tuple(array[] vector, array[] vector), int, real, real)
 template <typename T0__, typename T1__, typename T2__, typename T3__,
-          stan::require_all_t<stan::math::is_tuple<std::decay_t<T0__>>,
+          stan::require_all_t<stan::math::is_tuple<T0__>,
                               stan::is_std_vector<std::tuple_element_t<0,
                                                     std::decay_t<T0__>>>,
                               stan::is_col_vector<stan::value_type_t<
@@ -9840,7 +9852,7 @@ arr_vec_tuple(const T0__& x, const T1__& n_obs, const T2__& alpha,
 }
 // matrix arr_and_vec_tuple(tuple(array[] vector, vector), int, real, real)
 template <typename T0__, typename T1__, typename T2__, typename T3__,
-          stan::require_all_t<stan::math::is_tuple<std::decay_t<T0__>>,
+          stan::require_all_t<stan::math::is_tuple<T0__>,
                               stan::is_std_vector<std::tuple_element_t<0,
                                                     std::decay_t<T0__>>>,
                               stan::is_col_vector<stan::value_type_t<
@@ -10535,7 +10547,7 @@ static constexpr std::array<const char*, 49> locations_array__ =
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>,
-                              stan::math::is_tuple<std::decay_t<T1__>>,
+                              stan::math::is_tuple<T1__>,
                               stan::math::disjunction<stan::is_autodiff<
                                                       std::tuple_element_t<0,
                                                         std::decay_t<T1__>>>,
@@ -10563,7 +10575,7 @@ template <typename T0__, typename T1__, typename T2__,
                               stan::math::disjunction<stan::is_autodiff<T1__>,
                                                       std::is_floating_point<
                                                       std::decay_t<T1__>>>,
-                              stan::math::is_tuple<std::decay_t<T2__>>,
+                              stan::math::is_tuple<T2__>,
                               stan::is_col_vector<std::tuple_element_t<0,
                                                     std::decay_t<T2__>>>,
                               stan::is_vt_not_complex<std::tuple_element_t<0,
@@ -10580,23 +10592,26 @@ arr_vec_tuple(const T0__& theta_arg__, const T1__& eta, const T2__& p,
 template <typename T0__, typename T1__, typename T2__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>,
-                              stan::math::is_tuple<std::decay_t<T1__>>,
+                              stan::math::is_tuple<T1__>,
                               stan::math::is_tuple<std::tuple_element_t<0,
                                                      std::decay_t<T1__>>>,
                               stan::math::disjunction<stan::is_autodiff<
                                                       std::tuple_element_t<0,
-                                                        std::tuple_element_t<0,
-                                                          std::decay_t<T1__>>>>,
+                                                        std::decay_t<
+                                                          std::tuple_element_t<0,
+                                                            std::decay_t<T1__>>>>>,
                                                       std::is_floating_point<
                                                       std::decay_t<std::tuple_element_t<0,
+                                                                    std::decay_t<
                                                                     std::tuple_element_t<0,
-                                                                    std::decay_t<T1__>>>>>>,
+                                                                    std::decay_t<T1__>>>>>>>,
                               stan::is_col_vector<std::tuple_element_t<1,
-                                                    std::tuple_element_t<0,
-                                                      std::decay_t<T1__>>>>,
+                                                    std::decay_t<std::tuple_element_t<0,
+                                                                   std::decay_t<T1__>>>>>,
                               stan::is_vt_not_complex<std::tuple_element_t<1,
-                                                        std::tuple_element_t<0,
-                                                          std::decay_t<T1__>>>>,
+                                                        std::decay_t<
+                                                          std::tuple_element_t<0,
+                                                            std::decay_t<T1__>>>>>,
                               stan::is_std_vector<std::tuple_element_t<1,
                                                     std::decay_t<T1__>>>,
                               std::is_integral<std::decay_t<stan::value_type_t<
@@ -10635,7 +10650,7 @@ struct arr_vec_tuple_functor__ {
                                 stan::math::disjunction<stan::is_autodiff<T1__>,
                                                         std::is_floating_point<
                                                         std::decay_t<T1__>>>,
-                                stan::math::is_tuple<std::decay_t<T2__>>,
+                                stan::math::is_tuple<T2__>,
                                 stan::is_col_vector<std::tuple_element_t<0,
                                                       std::decay_t<T2__>>>,
                                 stan::is_vt_not_complex<std::tuple_element_t<0,
@@ -10656,7 +10671,7 @@ struct scalar_tuple_functor__ {
   template <typename T0__, typename T1__, typename T2__, typename T3__,
             stan::require_all_t<stan::is_col_vector<T0__>,
                                 stan::is_vt_not_complex<T0__>,
-                                stan::math::is_tuple<std::decay_t<T1__>>,
+                                stan::math::is_tuple<T1__>,
                                 stan::math::disjunction<stan::is_autodiff<
                                                         std::tuple_element_t<0,
                                                           std::decay_t<T1__>>>,
@@ -10687,24 +10702,27 @@ struct nested_functor__ {
   template <typename T0__, typename T1__, typename T2__,
             stan::require_all_t<stan::is_col_vector<T0__>,
                                 stan::is_vt_not_complex<T0__>,
-                                stan::math::is_tuple<std::decay_t<T1__>>,
+                                stan::math::is_tuple<T1__>,
                                 stan::math::is_tuple<std::tuple_element_t<0,
                                                        std::decay_t<T1__>>>,
                                 stan::math::disjunction<stan::is_autodiff<
                                                         std::tuple_element_t<0,
-                                                          std::tuple_element_t<0,
-                                                            std::decay_t<T1__>>>>,
+                                                          std::decay_t<
+                                                            std::tuple_element_t<0,
+                                                              std::decay_t<T1__>>>>>,
                                                         std::is_floating_point<
                                                         std::decay_t<
                                                           std::tuple_element_t<0,
-                                                            std::tuple_element_t<0,
-                                                              std::decay_t<T1__>>>>>>,
+                                                            std::decay_t<
+                                                              std::tuple_element_t<0,
+                                                                std::decay_t<T1__>>>>>>>,
                                 stan::is_col_vector<std::tuple_element_t<1,
-                                                      std::tuple_element_t<0,
-                                                        std::decay_t<T1__>>>>,
+                                                      std::decay_t<std::tuple_element_t<0,
+                                                                    std::decay_t<T1__>>>>>,
                                 stan::is_vt_not_complex<std::tuple_element_t<1,
-                                                          std::tuple_element_t<0,
-                                                            std::decay_t<T1__>>>>,
+                                                          std::decay_t<
+                                                            std::tuple_element_t<0,
+                                                              std::decay_t<T1__>>>>>,
                                 stan::is_std_vector<std::tuple_element_t<1,
                                                       std::decay_t<T1__>>>,
                                 std::is_integral<std::decay_t<stan::value_type_t<
@@ -10747,7 +10765,7 @@ struct K_function_functor__ {
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>,
-                              stan::math::is_tuple<std::decay_t<T1__>>,
+                              stan::math::is_tuple<T1__>,
                               stan::math::disjunction<stan::is_autodiff<
                                                       std::tuple_element_t<0,
                                                         std::decay_t<T1__>>>,
@@ -10800,7 +10818,7 @@ template <typename T0__, typename T1__, typename T2__,
                               stan::math::disjunction<stan::is_autodiff<T1__>,
                                                       std::is_floating_point<
                                                       std::decay_t<T1__>>>,
-                              stan::math::is_tuple<std::decay_t<T2__>>,
+                              stan::math::is_tuple<T2__>,
                               stan::is_col_vector<std::tuple_element_t<0,
                                                     std::decay_t<T2__>>>,
                               stan::is_vt_not_complex<std::tuple_element_t<0,
@@ -10839,23 +10857,26 @@ arr_vec_tuple(const T0__& theta_arg__, const T1__& eta, const T2__& p,
 template <typename T0__, typename T1__, typename T2__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>,
-                              stan::math::is_tuple<std::decay_t<T1__>>,
+                              stan::math::is_tuple<T1__>,
                               stan::math::is_tuple<std::tuple_element_t<0,
                                                      std::decay_t<T1__>>>,
                               stan::math::disjunction<stan::is_autodiff<
                                                       std::tuple_element_t<0,
-                                                        std::tuple_element_t<0,
-                                                          std::decay_t<T1__>>>>,
+                                                        std::decay_t<
+                                                          std::tuple_element_t<0,
+                                                            std::decay_t<T1__>>>>>,
                                                       std::is_floating_point<
                                                       std::decay_t<std::tuple_element_t<0,
+                                                                    std::decay_t<
                                                                     std::tuple_element_t<0,
-                                                                    std::decay_t<T1__>>>>>>,
+                                                                    std::decay_t<T1__>>>>>>>,
                               stan::is_col_vector<std::tuple_element_t<1,
-                                                    std::tuple_element_t<0,
-                                                      std::decay_t<T1__>>>>,
+                                                    std::decay_t<std::tuple_element_t<0,
+                                                                   std::decay_t<T1__>>>>>,
                               stan::is_vt_not_complex<std::tuple_element_t<1,
-                                                        std::tuple_element_t<0,
-                                                          std::decay_t<T1__>>>>,
+                                                        std::decay_t<
+                                                          std::tuple_element_t<0,
+                                                            std::decay_t<T1__>>>>>,
                               stan::is_std_vector<std::tuple_element_t<1,
                                                     std::decay_t<T1__>>>,
                               std::is_integral<std::decay_t<stan::value_type_t<

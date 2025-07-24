@@ -45,11 +45,6 @@ let rec requires ut t =
       [ RequireAllCondition
           (`OneOf ["stan::is_autodiff"; "std::is_floating_point"], t) ]
   | UTuple ts ->
-      let t =
-        match t with
-        (* std::tuple_element isn't specialized for references *)
-        | TemplateType _ -> TypeTrait ("std::decay_t", [t])
-        | _ -> t in
       RequireAllCondition (`Exact "stan::math::is_tuple", t)
       :: List.concat_mapi ts ~f:(fun i ty -> requires ty (Types.tuple_elt t i))
   | UMathLibraryFunction | UFun _ ->
@@ -68,9 +63,7 @@ let return_optional_arg_types (args : Program.fun_arg_decl) =
         []
     | _, ut when UnsizedType.contains_tuple ut -> (
         let internal, dims = UnsizedType.unwind_array_type ut in
-        let t =
-          if dims > 0 then TypeTrait ("stan::base_type_t", [t])
-          else TypeTrait ("std::decay_t", [t]) in
+        let t = if dims > 0 then TypeTrait ("stan::base_type_t", [t]) else t in
         match internal with
         | UTuple tys ->
             let temps =
@@ -136,8 +129,7 @@ let%expect_test "arg types tuple template" =
   [%expect
     {|
     T0__
-    ((RequireAllCondition (Exact stan::math::is_tuple)
-      (TypeTrait std::decay_t ((TemplateType T0__))))
+    ((RequireAllCondition (Exact stan::math::is_tuple) (TemplateType T0__))
      (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
       (TypeTrait std::tuple_element_t
        ((TypeLiteral 0) (TypeTrait std::decay_t ((TemplateType T0__))))))
