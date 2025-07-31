@@ -20,7 +20,6 @@ let with_exn_message f =
          "Internal compiler error:@ @[%a@]@\n\
           %s@\n\
           @\n\
-          This should never happen. Please file a bug at \
-          https://github.com/stan-dev/stanc3/issues/new@ and include this \
-          message and the model that caused this issue.@\n"
+          This should never happen. Please file a bug at %%PKG_ISSUES%%@ and \
+          include this message and the model that caused this issue.@\n"
          Exn.pp e bt)

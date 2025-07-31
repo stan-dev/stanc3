@@ -471,10 +471,8 @@ let info =
     ; `P
         "For more documentation on the compiler for users, see \
          https://mc-stan.org/docs/stan-users-guide/using-stanc.html."
-    ; `P
-        "For more information on the compiler for developers, see \
-         https://mc-stan.org/stanc3/stanc/."; `S Manpage.s_arguments
-    ; `S Manpage.s_options; `S Manpage.s_commands
+    ; `P "For more information on the compiler for developers, see %%PKG_DOC%%."
+    ; `S Manpage.s_arguments; `S Manpage.s_options; `S Manpage.s_commands
     ; `P
         "The following flags will cause the compiler to exit after printing \
          information. No $(b,MODEL_FILE) is required."; `S Debug_Options.section
@@ -482,8 +480,7 @@ let info =
         "These flags are provided primarily for development and debugging; \
          their exact behavior should not be relied on."
     ; `S Manpage.s_exit_status; `S Manpage.s_bugs
-    ; `P "Please report at https://github.com/stan-dev/stanc3/issues/new." ]
-  in
+    ; `P "Please report at %%PKG_ISSUES%%." ] in
   let exits =
     Cmd.Exit.
       [ info ~doc:"on success." exit_ok

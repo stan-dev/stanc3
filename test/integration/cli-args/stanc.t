@@ -19,8 +19,7 @@ Show help
          For more documentation on the compiler for users, see
          https://mc-stan.org/docs/stan-users-guide/using-stanc.html.
   
-         For more information on the compiler for developers, see
-         https://mc-stan.org/stanc3/stanc/.
+         For more information on the compiler for developers, see %%PKG_DOC%%.
   
   ARGUMENTS
          MODEL_FILE
@@ -207,7 +206,7 @@ Show help
              See option --color.
   
   BUGS
-         Please report at https://github.com/stan-dev/stanc3/issues/new.
+         Please report at %%PKG_ISSUES%%.
   
 Qmark alias
   $ stanc -? plain | head
