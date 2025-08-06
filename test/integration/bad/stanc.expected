@@ -2841,6 +2841,20 @@ Syntax error in 'string_literal_newline.stan', line 3, column 1, lexing error:
 
 Invalid character found.
 [exit 1]
+  $ ../../../../install/default/bin/stanc tabs_error_line.stan
+Syntax error in 'tabs_error_line.stan', line 5, column 16 to column 17, parsing error:
+   -------------------------------------------------
+     3:  transformed data {
+     4:    int<lower=0> some_long_line =
+     5:      				    		1 4;
+             				    		  ^
+     6:  
+     7:  }
+   -------------------------------------------------
+
+Unexpected input after the conclusion of a valid expression.
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
+[exit 1]
   $ ../../../../install/default/bin/stanc target-reserved.stan
 Syntax error in 'target-reserved.stan', line 2, column 7 to column 13, parsing error:
    -------------------------------------------------
