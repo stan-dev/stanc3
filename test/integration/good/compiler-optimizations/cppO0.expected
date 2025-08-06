@@ -25224,7 +25224,7 @@ class partial_eval_tuple_model final : public model_base_crtp<partial_eval_tuple
       std::get<0>(x) = 0.4;
       {
         current_statement__ = 3;
-        lp_accum__.add(std::get<0>(std::tuple<double, double>(0.3, 3.5)));
+        lp_accum__.add(std::get<0>(std::forward_as_tuple(0.3, 3.5)));
         current_statement__ = 4;
         lp_accum__.add(std::get<0>(x));
       }
@@ -25266,7 +25266,7 @@ class partial_eval_tuple_model final : public model_base_crtp<partial_eval_tuple
       std::get<0>(x) = 0.4;
       {
         current_statement__ = 3;
-        lp_accum__.add(std::get<0>(std::tuple<double, double>(0.3, 3.5)));
+        lp_accum__.add(std::get<0>(std::forward_as_tuple(0.3, 3.5)));
         current_statement__ = 4;
         lp_accum__.add(std::get<0>(x));
       }

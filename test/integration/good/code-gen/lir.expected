@@ -16255,8 +16255,7 @@
          (Expression (Cast Void (Var current_statement__)))
          (Using local_scalar_t__ (Double))
          (VariableDefn
-          ((static false) (constexpr false) (type_ (TypeLiteral auto)) 
-           (name base_rng__)
+          ((static false) (constexpr false) (type_ Auto) (name base_rng__)
            (init
             (Assignment
              (FunCall stan::services::util::create_rng ()

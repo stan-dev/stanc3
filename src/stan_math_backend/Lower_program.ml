@@ -148,14 +148,14 @@ let gen_assign_data decl_id st =
 let lower_constructor
     {Program.prog_name; input_vars; prepare_data; output_vars; _} =
   let args =
-    [ (Ref (TypeLiteral "stan::io::var_context"), "context__")
+    [ (Ref Types.var_context, "context__")
     ; (TypeLiteral "unsigned int", "random_seed__ = 0")
-    ; (Pointer (TypeLiteral "std::ostream"), "pstream__ = nullptr") ] in
+    ; (Pointer Types.ostream, "pstream__ = nullptr") ] in
   let preamble =
     Decls.current_statement
     @ [ Using ("local_scalar_t__", Some Double)
       ; VariableDefn
-          (make_variable_defn ~type_:(TypeLiteral "auto") ~name:"base_rng__"
+          (make_variable_defn ~type_:Auto ~name:"base_rng__"
              ~init:
                (Assignment
                   (Exprs.fun_call "stan::services::util::create_rng"
@@ -197,7 +197,7 @@ let gen_log_prob Program.{prog_name; log_prob; reverse_mode_log_prob; _} =
   let args : (type_ * string) list =
     [ (Ref (TemplateType "VecR"), "params_r__")
     ; (Ref (TemplateType "VecI"), "params_i__")
-    ; (Pointer (TypeLiteral "std::ostream"), "pstream__ = nullptr") ] in
+    ; (Pointer Types.ostream, "pstream__ = nullptr") ] in
   (*
      NOTE: There is a bug in clang-6.0 where removing this T__ causes the
       reverse mode autodiff path to fail with an initializer list error
@@ -255,7 +255,7 @@ let gen_write_array {Program.prog_name; generate_quantities; _} =
     ; (Ref (TemplateType "VecVar"), "vars__")
     ; (Const Types.bool, "emit_transformed_parameters__ = true")
     ; (Const Types.bool, "emit_generated_quantities__ = true")
-    ; (Pointer (TypeLiteral "std::ostream"), "pstream__ = nullptr") ] in
+    ; (Pointer Types.ostream, "pstream__ = nullptr") ] in
   let intro =
     [ Using ("local_scalar_t__", Some Double); Decls.serializer_in
     ; Decls.serializer_out
@@ -285,9 +285,9 @@ let gen_transform_inits_impl {Program.transform_inits; output_vars; _} =
   let templates =
     [Typename "VecVar"; Require ("stan::require_vector_t", ["VecVar"])] in
   let args =
-    [ (Types.const_ref (TypeLiteral "stan::io::var_context"), "context__")
+    [ (Types.const_ref Types.var_context, "context__")
     ; (Ref (TemplateType "VecVar"), "vars__")
-    ; (Pointer (TypeLiteral "std::ostream"), "pstream__ = nullptr") ] in
+    ; (Pointer Types.ostream, "pstream__ = nullptr") ] in
   let intro =
     Using ("local_scalar_t__", Some Double)
     :: Decls.serializer_out :: Decls.current_statement
@@ -322,7 +322,7 @@ let gen_unconstrain_array_impl {Program.unconstrain_array; _} =
     [ (Types.const_ref (TemplateType "VecVar"), "params_r__")
     ; (Types.const_ref (TemplateType "VecI"), "params_i__")
     ; (Ref (TemplateType "VecVar"), "vars__")
-    ; (Pointer (TypeLiteral "std::ostream"), "pstream__ = nullptr") ] in
+    ; (Pointer Types.ostream, "pstream__ = nullptr") ] in
   let intro =
     [ Using ("local_scalar_t__", Some Double); Decls.serializer_in
     ; Decls.serializer_out ]
@@ -578,7 +578,7 @@ let gen_constrained_types {Program.output_vars; _} =
 
 (** The generic method overloads needed in the model class. *)
 let gen_overloads {Program.output_vars; _} =
-  let pstream = (Pointer (TypeLiteral "std::ostream"), "pstream = nullptr") in
+  let pstream = (Pointer Types.ostream, "pstream = nullptr") in
   let open Cpp.DSL in
   let write_arrays =
     let templates_init = ([[Typename "RNG"]], false) in
@@ -699,7 +699,7 @@ let gen_overloads {Program.output_vars; _} =
     [ FunDef
         (make_fun_defn ~inline:true ~return_type:Void ~name:"transform_inits"
            ~args:
-             [ (Types.const_ref (TypeLiteral "stan::io::var_context"), "context")
+             [ (Types.const_ref Types.var_context, "context")
              ; (Ref (Types.vector Double), "params_r"); pstream ]
            ~body:
              [ VariableDefn
@@ -720,10 +720,10 @@ let gen_overloads {Program.output_vars; _} =
                  params_r_vec.@!("size")} ]
            ~cv_qualifiers:[Const; Final] ())
     ; (let args =
-         [ (Types.const_ref (TypeLiteral "stan::io::var_context"), "context")
+         [ (Types.const_ref Types.var_context, "context")
          ; (Ref (Types.std_vector Int), "params_i")
          ; (Ref (Types.std_vector Double), "vars")
-         ; (Pointer (TypeLiteral "std::ostream"), "pstream__ = nullptr") ] in
+         ; (Pointer Types.ostream, "pstream__ = nullptr") ] in
        let body =
          let open Cpp.DSL in
          [ Expression (Var "vars").@?("resize", [Var "num_params_r__"])
@@ -823,9 +823,9 @@ let usings =
 let new_model_boilerplate prog_name =
   let new_model =
     let args =
-      [ (Ref (TypeLiteral "stan::io::var_context"), "data_context")
+      [ (Ref Types.var_context, "data_context")
       ; (TypeLiteral "unsigned int", "seed")
-      ; (Pointer (TypeLiteral "std::ostream"), "msg_stream") ] in
+      ; (Pointer Types.ostream, "msg_stream") ] in
     let body =
       [ VariableDefn
           (make_variable_defn ~type_:(Pointer (TypeLiteral "stan_model"))
