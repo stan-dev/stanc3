@@ -10147,9 +10147,8 @@ class tuple_test2_model final : public model_base_crtp<tuple_test2_model> {
               DUMMY_VAR__)};
         current_statement__ = 2;
         stan::model::assign(temp,
-          std::tuple<Eigen::Matrix<double,-1,-1>,
-            Eigen::Matrix<local_scalar_t__,-1,-1>>(x,
-            stan::math::multiply(m1, m2)), "assigning variable temp");
+          std::forward_as_tuple(x, stan::math::multiply(m1, m2)),
+          "assigning variable temp");
         current_statement__ = 3;
         if (pstream__) {
           stan::math::stan_print(pstream__, std::get<0>(temp));
@@ -10207,9 +10206,8 @@ class tuple_test2_model final : public model_base_crtp<tuple_test2_model> {
               DUMMY_VAR__)};
         current_statement__ = 2;
         stan::model::assign(temp,
-          std::tuple<Eigen::Matrix<double,-1,-1>,
-            Eigen::Matrix<local_scalar_t__,-1,-1>>(x,
-            stan::math::multiply(m1, m2)), "assigning variable temp");
+          std::forward_as_tuple(x, stan::math::multiply(m1, m2)),
+          "assigning variable temp");
         current_statement__ = 3;
         if (pstream__) {
           stan::math::stan_print(pstream__, std::get<0>(temp));
