@@ -107,7 +107,6 @@ module Located = struct
   type t = (Expr.Typed.Meta.t, (Meta.t[@sexp.opaque] [@compare.ignore])) Fixed.t
   [@@deriving compare, sexp, hash]
 
-  let loc_of Fixed.{meta; _} = meta
   let pp = Fixed.pp
 
   (** This module acts as a temporary replace for the [stmt_loc_num] type that

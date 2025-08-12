@@ -71,7 +71,6 @@ module Typed = struct
   type t = (Meta.t[@compare.ignore]) Fixed.t [@@deriving hash, sexp, compare]
 
   let type_of Fixed.{meta= Meta.{type_; _}; _} = type_
-  let loc_of Fixed.{meta= Meta.{loc; _}; _} = loc
   let adlevel_of Fixed.{meta= Meta.{adlevel; _}; _} = adlevel
   let fun_arg Fixed.{meta= Meta.{type_; adlevel; _}; _} = (adlevel, type_)
   let pp = Fixed.pp

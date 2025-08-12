@@ -46,7 +46,6 @@ module Typed : sig
   type t = (Meta.t[@compare.ignore]) Fixed.t [@@deriving hash, sexp, compare]
 
   val type_of : t -> UnsizedType.t
-  val loc_of : t -> Location_span.t
   val adlevel_of : t -> UnsizedType.autodifftype
   val fun_arg : t -> UnsizedType.autodifftype * UnsizedType.t
   val pp : t Fmt.t
