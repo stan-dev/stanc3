@@ -3,8 +3,6 @@ open Common
 
 (** Fixed-point of statements *)
 module Fixed = struct
-  module First = Expr.Fixed
-
   module Pattern = struct
     type ('a, 'b) t =
       | Assignment of 'a lvalue * UnsizedType.t * 'a
@@ -81,15 +79,20 @@ module Fixed = struct
           | Uninit | Default ->
               Fmt.pf ppf "@[<hov 2>%a%a@ %s;@]" UnsizedType.pp_autodifftype
                 decl_adtype (Type.pp pp_e) decl_type decl_id)
-
-    include Foldable.Make2 (struct
-      type nonrec ('a, 'b) t = ('a, 'b) t
-
-      let fold = fold
-    end)
   end
 
-  include Fixed.Make2 (First) (Pattern)
+  type ('a, 'b) t = {pattern: ('a Expr.Fixed.t, ('a, 'b) t) Pattern.t; meta: 'b}
+  [@@deriving compare, hash, sexp]
+
+  let rec pp ppf {pattern; meta= _} = Pattern.pp Expr.Fixed.pp pp ppf pattern
+
+  let rec rewrite_bottom_up ~f ~g t =
+    g
+      { t with
+        pattern=
+          Pattern.map
+            (Expr.Fixed.rewrite_bottom_up ~f)
+            (rewrite_bottom_up ~f ~g) t.pattern }
 end
 
 (** Statements with location information and types for contained expressions *)
@@ -99,22 +102,19 @@ module Located = struct
     [@@deriving compare, sexp, hash]
 
     let empty = Location_span.empty
-    let pp _ _ = ()
   end
 
-  include Specialized.Make2 (Fixed) (Expr.Typed) (Meta)
+  type t = (Expr.Typed.Meta.t, (Meta.t[@sexp.opaque] [@compare.ignore])) Fixed.t
+  [@@deriving compare, sexp, hash]
 
-  let loc_of Fixed.{meta; _} = meta
+  let pp = Fixed.pp
 
   (** This module acts as a temporary replace for the [stmt_loc_num] type that
   is currently used within [analysis_and_optimization].
 
   The original intent of the type was to provide explicit sharing of subterms.
-  My feeling is that ultimately we either want to:
-  - use the recursive type directly and rely on OCaml for sharing
-  - provide the same interface as other [Specialized] modules so that
-    the analysis code isn't aware of the particular representation we are using.
-  *)
+  My feeling is that ultimately we want to use the recursive type directly and rely on OCaml for sharing
+ *)
   module Non_recursive = struct
     type t =
       { pattern: (Expr.Typed.t, int) Fixed.Pattern.t
@@ -130,10 +130,12 @@ module Numbered = struct
 
     let empty = 0
     let from_int (i : int) : t = i
-    let pp _ _ = ()
   end
 
-  include Specialized.Make2 (Fixed) (Expr.Typed) (Meta)
+  type t = (Expr.Typed.Meta.t, (Meta.t[@sexp.opaque] [@compare.ignore])) Fixed.t
+  [@@deriving compare, sexp, hash]
+
+  let pp = Fixed.pp
 end
 
 module Helpers = struct
@@ -238,10 +240,10 @@ module Helpers = struct
       match pattern with
       | NRFunApp (kind, _) when is_fn_kind kind -> true
       | stmt_pattern ->
-          Fixed.Pattern.fold_left ~init:accu stmt_pattern
-            ~f:(fun accu expr ->
+          Fixed.Pattern.fold
+            (fun accu expr ->
               Expr.Helpers.contains_fn_kind is_fn_kind ~init:accu expr)
-            ~g:aux in
+            aux accu stmt_pattern in
     aux init stmt
 
   (** [for_scalar unsizedtype...] generates a For statement that loops
@@ -312,19 +314,22 @@ module Helpers = struct
   (* Copied from AST's version in AST.ml *)
   let rec lvalue_of_expr_opt (expr : 'e Expr.Fixed.t) :
       'e Expr.Fixed.t Fixed.Pattern.lvalue option =
+    let open Common.Let_syntax.Option in
     let lbase_of_expr_opt (expr : 'e Expr.Fixed.t) =
       match expr.pattern with
       | Var s -> Some (Fixed.Pattern.LVariable s)
       | TupleProjection (l, i) ->
-          Option.map (lvalue_of_expr_opt l) ~f:(fun lv ->
-              Fixed.Pattern.LTupleProjection (lv, i))
+          let+ lv = lvalue_of_expr_opt l in
+          Fixed.Pattern.LTupleProjection (lv, i)
       | _ -> None in
     match expr.pattern with
     | Var s -> Some (lvariable s)
-    | Indexed (l, i) -> Option.map (lbase_of_expr_opt l) ~f:(fun lv -> (lv, i))
+    | Indexed (l, i) ->
+        let+ lv = lbase_of_expr_opt l in
+        (lv, i)
     | TupleProjection (l, i) ->
-        Option.map (lvalue_of_expr_opt l) ~f:(fun lv ->
-            (Fixed.Pattern.LTupleProjection (lv, i), []))
+        let+ lv = lvalue_of_expr_opt l in
+        (Fixed.Pattern.LTupleProjection (lv, i), [])
     | _ -> None
 
   let rec expr_of_lvalue (lhs : 'e Expr.Fixed.t Fixed.Pattern.lvalue)

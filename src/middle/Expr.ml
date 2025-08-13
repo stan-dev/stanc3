@@ -35,25 +35,23 @@ module Fixed = struct
       | TernaryIf (pred, texpr, fexpr) ->
           Fmt.pf ppf "(@[%a@ ?@ %a@ :@ %a@])" pp_e pred pp_e texpr pp_e fexpr
       | Indexed (expr, indices) ->
-          Fmt.pf ppf "@[%a%a@]" pp_e expr
-            (if List.is_empty indices then fun _ _ -> ()
-             else Fmt.(list (Index.pp pp_e) ~sep:comma |> brackets))
-            indices
+          Fmt.pf ppf "@[%a%a@]" pp_e expr (Index.pp_indices pp_e) indices
       | TupleProjection (expr, ix) -> Fmt.pf ppf "@[%a.%d@]" pp_e expr ix
       | EAnd (l, r) -> Fmt.pf ppf "%a && %a" pp_e l pp_e r
       | EOr (l, r) -> Fmt.pf ppf "%a || %a" pp_e l pp_e r
       | Promotion (from, ut, ad) ->
           Fmt.pf ppf "promote(@[<hov>%a,@ %a,@ %a@])" pp_e from UnsizedType.pp
             ut UnsizedType.pp_tuple_autodifftype ad
-
-    include Foldable.Make (struct
-      type nonrec 'a t = 'a t
-
-      let fold = fold
-    end)
   end
 
-  include Fixed.Make (Pattern)
+  type 'a t = {pattern: 'a t Pattern.t; meta: 'a}
+  [@@deriving compare, hash, sexp]
+
+  let rec pp ppf {pattern; _} = (Pattern.pp pp) ppf pattern
+
+  let rec rewrite_bottom_up ~f t =
+    let x = {t with pattern= Pattern.map (rewrite_bottom_up ~f) t.pattern} in
+    f x
 end
 
 (** Expressions with associated location and type *)
@@ -68,16 +66,36 @@ module Typed = struct
     let empty =
       create ~type_:UnsizedType.UInt ~adlevel:UnsizedType.DataOnly
         ~loc:Location_span.empty ()
-
-    let pp _ _ = ()
   end
 
-  include Specialized.Make (Fixed) (Meta)
+  type t = (Meta.t[@compare.ignore]) Fixed.t [@@deriving hash, sexp, compare]
 
   let type_of Fixed.{meta= Meta.{type_; _}; _} = type_
-  let loc_of Fixed.{meta= Meta.{loc; _}; _} = loc
   let adlevel_of Fixed.{meta= Meta.{adlevel; _}; _} = adlevel
   let fun_arg Fixed.{meta= Meta.{type_; adlevel; _}; _} = (adlevel, type_)
+  let pp = Fixed.pp
+
+  (** Since the type [t] is now concrete (i.e. not a type _constructor_) we can
+construct a [Comparable.S] giving us [Map] and [Set] specialized to the type.
+*)
+
+  module Comparator = Comparator.Make (struct
+    type nonrec t = t
+
+    let compare = compare
+    let sexp_of_t = sexp_of_t
+  end)
+
+  include Comparator
+
+  include Comparable.Make_using_comparator (struct
+    type nonrec t = t
+
+    let sexp_of_t = sexp_of_t
+    let t_of_sexp = t_of_sexp
+
+    include Comparator
+  end)
 end
 
 module Helpers = struct
