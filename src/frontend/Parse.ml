@@ -4,13 +4,16 @@
 open Core
 open Common.Let_syntax.Result
 
-(** Internal (private) exception used for some out-of-band errors. *)
-exception ParserException of Errors.syntax_error
+(** Defining the exception and module here lets us hide the implementation from
+    the world outside this module. No other code can raise [ParserException] *)
+module ParserExns : sig
+  include Errors.ParserExn
 
-(* Defining the exception and module here lets us hide the implementation from
-   the world outside this module. No other code can raise [ParserException],
-   or even observe that it exists. *)
-module ParserExns : Errors.ParserExn = struct
+  type exn += private ParserException of Errors.syntax_error
+end = struct
+  (** Internal (private) exception used for some out-of-band errors. *)
+  exception ParserException of Errors.syntax_error
+
   let error e = raise (ParserException e)
 
   let parse_error ~loc msg =
@@ -61,7 +64,7 @@ let drive_parser parse_fun =
     Error (Errors.Syntax_error (Errors.Parsing (message, location))) in
   let startp = (Preprocessor.current_buffer ()).lex_curr_p in
   try Interp.loop_handle success failure input (parse_fun startp)
-  with ParserException e -> Error (Errors.Syntax_error e)
+  with ParserExns.ParserException e -> Error (Errors.Syntax_error e)
 
 let to_lexbuf file_or_code =
   match file_or_code with
