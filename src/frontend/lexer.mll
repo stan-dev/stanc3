@@ -6,7 +6,6 @@ module Make (ParserExns: Errors.ParserExn) = struct
   module Stack = Core.Stack
   module Queue = Core.Queue
   module Parser = Parser.Make(ParserExns)
-  open Preprocessor.Make(ParserExns)
   open ParserExns
   open Lexing
   open Debugging
@@ -74,7 +73,7 @@ rule token = parse
     )                         { lexer_logger ("include " ^ fname) ;
                                 add_include fname lexbuf ;
                                 let new_lexbuf =
-                                  try_get_new_lexbuf fname in
+                                  try_get_new_lexbuf (module ParserExns) fname in
                                 token new_lexbuf }
 (* Program blocks *)
   | "functions"               { lexer_logger "functions" ;

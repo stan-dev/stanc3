@@ -33,8 +33,6 @@ val restore_prior_lexbuf : unit -> Lexing.lexbuf
 (** Restore to a previous lexing buffer (assumes that one exists) and
     updates positions accordingly. *)
 
-module Make (ParserExns : Errors.ParserExn) : sig
-  val try_get_new_lexbuf : string -> Lexing.lexbuf
-  (** Search include paths for filename and try to create a new lexing buffer
+val try_get_new_lexbuf : (module Errors.ParserExn) -> string -> Lexing.lexbuf
+(** Search include paths for filename and try to create a new lexing buffer
     with that filename, record that included from specified position *)
-end
