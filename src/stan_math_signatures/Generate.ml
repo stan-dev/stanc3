@@ -2686,6 +2686,8 @@ let generate_module () =
     |> String.Map.of_alist_reduce ~f:(fun v1 v2 ->
            v1 @ v2 |> Set.Poly.of_list |> Set.to_list)
     |> Map.to_alist in
+  (* TODO: in OCaml 5.4+, use GC.ramp_up to avoid performance regressions.
+     See https://github.com/ocaml/ocaml/issues/13300 *)
   Printf.printf
     {|
 let unmarshal s = Marshal.from_string s 0
