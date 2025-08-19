@@ -112,18 +112,18 @@ let set_jacobian_compatibility_mode stmts =
   Fun_kind.jacobian_compat_mode := not (functions_block_contains_jac_pe stmts)
 
 let rec collect_deprecated_expr (acc : (Location_span.t * string) list)
-    ({expr; emeta} : (typed_expr_meta, fun_kind) expr_with) :
+    ({expr; _} : (typed_expr_meta, fun_kind) expr_with) :
     (Location_span.t * string) list =
   match expr with
-  | CondDistApp ((StanLib _ | UserDefined _), {name; _}, l)
-   |FunApp ((StanLib _ | UserDefined _), {name; _}, l) ->
+  | CondDistApp ((StanLib _ | UserDefined _), {name; id_loc}, l)
+   |FunApp ((StanLib _ | UserDefined _), {name; id_loc}, l) ->
       let w =
         match Map.find stan_lib_deprecations name with
         | Some (rename, (major, minor)) ->
             if expired (major, minor) then []
             else
               let version = string_of_int major ^ "." ^ string_of_int minor in
-              [ ( emeta.loc
+              [ ( id_loc
                 , name ^ " is deprecated and will be removed in Stan " ^ version
                   ^ ". Use " ^ rename
                   ^ " instead. This can be automatically changed using the \
@@ -132,7 +132,7 @@ let rec collect_deprecated_expr (acc : (Location_span.t * string) list)
             match Map.find deprecated_odes name with
             | Some (rename, (major, minor)) ->
                 let version = string_of_int major ^ "." ^ string_of_int minor in
-                [ ( emeta.loc
+                [ ( id_loc
                   , name ^ " is deprecated and will be removed in Stan "
                     ^ version ^ ".\nUse " ^ rename
                     ^ " instead. \n\
@@ -141,7 +141,7 @@ let rec collect_deprecated_expr (acc : (Location_span.t * string) list)
                   ) ]
             | _ ->
                 if String.equal name "lkj_cov_lpdf" then
-                  [(emeta.loc, lkj_cov_message)]
+                  [(id_loc, lkj_cov_message)]
                 else []) in
       acc @ w @ List.concat_map l ~f:(fun e -> collect_deprecated_expr [] e)
   | _ -> fold_expression collect_deprecated_expr (fun l _ -> l) acc expr
