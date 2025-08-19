@@ -970,7 +970,7 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
       let binop_type_warnings x y =
         match (x.emeta.type_, y.emeta.type_, op) with
         | UInt, UInt, Divide ->
-            let hint ppf () =
+            let hint ppf =
               match (x.expr, y.expr) with
               | IntNumeral x, _ ->
                   Fmt.pf ppf "%s.0 / %a" x Pretty_printing.pp_typed_expression y
@@ -982,12 +982,12 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
             let s =
               Fmt.str
                 "@[<v>@[<hov 0>Found int division:@]@   @[<hov 2>%a@]@,\
-                 @[<hov>%a@]@   @[<hov 2>%a@]@,\
+                 @[<hov>%a@]@   @[<hov 2>%t@]@,\
                  @[<hov>%a@]@]"
                 Pretty_printing.pp_expression {expr; emeta} Fmt.text
                 "Values will be rounded towards zero. If rounding is not \
                  desired you can write the division as"
-                hint () Fmt.text
+                hint Fmt.text
                 "If rounding is intended please use the integer division \
                  operator %/%." in
             add_warning x.emeta.loc s
@@ -1011,21 +1011,18 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
                 let pp = Operator.pp in
                 add_warning loc
                   (Fmt.str
-                     "Found %a. This is interpreted as %a. Consider if the \
-                      intended meaning was %a instead.@ You can silence this \
+                     "Found %t. This is interpreted as %t. Consider if the \
+                      intended meaning was %t instead.@ You can silence this \
                       warning by adding explicit parenthesis. This can be \
                       automatically changed using the canonicalize flag for \
                       stanc"
-                     (fun ppf () ->
+                     (fun ppf ->
                        Fmt.pf ppf "@[<hov>%a %a %a@]" pp_e le pp op2 pp_e re)
-                     ()
-                     (fun ppf () ->
+                     (fun ppf ->
                        Fmt.pf ppf "@[<hov>(%a) %a %a@]" pp_e le pp op2 pp_e re)
-                     ()
-                     (fun ppf () ->
+                     (fun ppf ->
                        Fmt.pf ppf "@[<hov>%a %a %a && %a %a %a@]" pp_e e1 pp op
-                         pp_e e2 pp_e e2 pp op2 pp_e re)
-                     ())
+                         pp_e e2 pp_e e2 pp op2 pp_e re))
             | _ -> ())
         | _ -> () in
       binop_type_warnings le re;
