@@ -856,8 +856,15 @@ pipeline {
                         unstash 'linux-armel-exe'
                         unstash 'js-exe'
 
+                        script {
+                            if (tagName() == "nightly"){
+                                sh "gh release delete ${tagName()} --cleanup-tag -y || true"
+                            } else {
+                                sh "gh release delete ${tagName()} -y || true"
+                            }
+                        }
+
                         sh """
-                            gh release delete ${tagName()} --cleanup-tag -y || true
                             gh release create ${tagName()} --latest --target master --notes "\$(git log --pretty=format:'nightly: %h %s' -n 1)" ./bin/*
                         """
 
