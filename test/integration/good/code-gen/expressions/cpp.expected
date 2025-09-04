@@ -481,10 +481,10 @@ class operators_model final : public model_base_crtp<operators_model> {
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = ((N + N) + (N * N));
-    const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (((((1 + 1)
-      + 1) + N) + N));
+    const size_t num_params__ = N + N + (N * N);
+    const size_t num_transformed = emit_transformed_parameters * (0U);
+    const size_t num_gen_quantities = emit_generated_quantities * (1 + 1 + 1
+      + N + N);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -499,10 +499,10 @@ class operators_model final : public model_base_crtp<operators_model> {
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = ((N + N) + (N * N));
-    const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (((((1 + 1)
-      + 1) + N) + N));
+    const size_t num_params__ = N + N + (N * N);
+    const size_t num_transformed = emit_transformed_parameters * (0U);
+    const size_t num_gen_quantities = emit_generated_quantities * (1 + 1 + 1
+      + N + N);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,
@@ -1021,9 +1021,9 @@ class simple_function_model final : public model_base_crtp<simple_function_model
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = 0;
-    const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_params__ = 0U;
+    const size_t num_transformed = emit_transformed_parameters * (0U);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -1038,9 +1038,9 @@ class simple_function_model final : public model_base_crtp<simple_function_model
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = 0;
-    const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_params__ = 0U;
+    const size_t num_transformed = emit_transformed_parameters * (0U);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,
@@ -1616,10 +1616,9 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (((2 + 2) + 1) + 2);
-    const size_t num_transformed = emit_transformed_parameters * (((2 + 2) +
-      2));
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_params__ = 2 + 2 + 1 + 2;
+    const size_t num_transformed = emit_transformed_parameters * (2 + 2 + 2);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -1634,10 +1633,9 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (((2 + 2) + 1) + 2);
-    const size_t num_transformed = emit_transformed_parameters * (((2 + 2) +
-      2));
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_params__ = 2 + 2 + 1 + 2;
+    const size_t num_transformed = emit_transformed_parameters * (2 + 2 + 2);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,
