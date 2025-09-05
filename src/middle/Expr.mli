@@ -1,7 +1,5 @@
 (** MIR types and modules corresponding to the expressions of the language *)
 
-open Common
-
 module Fixed : sig
   module Pattern : sig
     type litType = Int | Real | Imaginary | Str
@@ -17,12 +15,21 @@ module Fixed : sig
       | Indexed of 'a * 'a Index.t list
       | Promotion of 'a * UnsizedType.t * UnsizedType.autodifftype
       | TupleProjection of 'a * int
-    [@@deriving sexp, hash, compare]
-
-    include Pattern.S with type 'a t := 'a t
+    [@@deriving sexp, hash, compare, map, fold]
   end
 
-  include Fixed.S with module Pattern := Pattern
+  (** The "two-level" type for statements in the MIR. This corresponds to what the AST calls
+      [Frontend.Ast.expr_with]  *)
+  type 'a t = {pattern: 'a t Pattern.t; meta: 'a}
+  [@@deriving compare, hash, sexp]
+
+  val pp : 'a t Fmt.t
+
+  val rewrite_bottom_up : f:('a t -> 'a t) -> 'a t -> 'a t
+  (** [rewrite_bottom_up] specializes [fold] so that the result type
+      ['r] is equal to the type of our fixed-point data structure i.e. ['r = 'a t].
+      This also means that the function [f] can be written with our fixed-point type
+      ['a t] as its argument. *)
 end
 
 module Typed : sig
@@ -33,15 +40,22 @@ module Typed : sig
       ; adlevel: UnsizedType.autodifftype }
     [@@deriving compare, create, sexp, hash]
 
-    include Specialized.Meta with type t := t
+    val empty : t
   end
 
-  include Specialized.S with module Meta := Meta and type t = Meta.t Fixed.t
+  type t = (Meta.t[@compare.ignore]) Fixed.t [@@deriving hash, sexp, compare]
 
   val type_of : t -> UnsizedType.t
-  val loc_of : t -> Location_span.t
   val adlevel_of : t -> UnsizedType.autodifftype
   val fun_arg : t -> UnsizedType.autodifftype * UnsizedType.t
+  val pp : t Fmt.t
+
+  include Core.Comparator.S with type t := t
+
+  include
+    Core.Comparable.S
+      with type t := t
+       and type comparator_witness := comparator_witness
 end
 
 module Helpers : sig
