@@ -15,5 +15,5 @@ val pp :
   -> t Fmt.t
 
 val pp_context_for : (t * string Array.t) Fmt.t
-(* Prints the text surrounding the provided [t].
-   If the callback fails, this gracefully degrades to printing nothing. *)
+(* Prints the text surrounding the provided location [t]
+   from the given array *)
