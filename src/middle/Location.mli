@@ -8,10 +8,9 @@ val compare : t -> t -> int
 val empty : t
 
 val pp :
-     ?printed_filename:string
-  -> ?print_file:bool
+     ?print_file:bool
   -> ?print_line:bool
-  -> unit
+  -> (* printed_filename *) string option
   -> t Fmt.t
 
 val pp_context_for : (t * string Array.t) Fmt.t

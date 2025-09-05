@@ -37,13 +37,12 @@ Format the location for error messaging.
 If printed_filename is passed, it replaces the highest-level name and
 leaves the filenames of included files intact.
 *)
-let rec pp ?printed_filename ?(print_file = true) ?(print_line = true) () ppf
-    loc =
+let rec pp ?(print_file = true) ?(print_line = true) printed_filename ppf loc =
   let incl, filename =
     match loc.included_from with
     | Some loc2 ->
         ( (fun ppf ->
-            Fmt.pf ppf ", included from\n%a" (pp ?printed_filename ()) loc2)
+            Fmt.pf ppf ", included from\n%a" (pp printed_filename) loc2)
         , loc.filename )
     | None -> (ignore, Option.value ~default:loc.filename printed_filename)
   in

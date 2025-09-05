@@ -60,17 +60,17 @@ let pp_syntax_error ?printed_filename ?code ppf = function
         loc_span (pp_context ?code) loc_span.begin_loc message
   | Lexing loc ->
       Fmt.pf ppf "Syntax error in %a, lexing error:@,%a@,%s@."
-        (Middle.Location.pp ?printed_filename ())
+        (Middle.Location.pp printed_filename)
         {loc with col_num= loc.col_num - 1}
         (pp_context ?code) loc "Invalid character found."
   | UnexpectedEOF loc ->
       Fmt.pf ppf "Syntax error in %a, lexing error:@,%a@,%s@."
-        (Middle.Location.pp ?printed_filename ())
+        (Middle.Location.pp printed_filename)
         {loc with col_num= loc.col_num - 1}
         (pp_context ?code) loc "Unexpected end of input"
   | Include (message, loc) ->
       Fmt.pf ppf "Syntax error in %a, include error:@,%a@,%s@."
-        (Middle.Location.pp ?printed_filename ())
+        (Middle.Location.pp printed_filename)
         loc (pp_context ?code) loc message
 
 let pp ?printed_filename ?code ppf = function
