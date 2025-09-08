@@ -32,12 +32,7 @@ let set_model_name model_name =
 let reset_mutable_states model_name (flags : Flags.t) =
   Common.Gensym.reset_danger_use_cautiously ();
   Include_files.include_provider := flags.include_source;
-  set_model_name model_name;
-  Typechecker.check_that_all_functions_have_definition :=
-    not flags.allow_undefined;
-  Transform_Mir.use_opencl := flags.use_opencl;
-  Lower_program.standalone_functions :=
-    flags.functions_only || flags.standalone_functions
+  set_model_name model_name
 
 type other_output =
   | Formatted of string
@@ -69,7 +64,8 @@ let stan2cpp model_name model (flags : Flags.t) (output : other_output -> unit)
   if flags.debug_settings.print_ast then
     output (DebugOutput (fmt_sexp [%sexp (ast : Ast.untyped_program)]));
   let* typed_ast, type_warnings =
-    Typechecker.check_program ast
+    Typechecker.check_program ~allow_undefined_functions:flags.allow_undefined
+      ast
     |> Result.map_error ~f:(fun e -> Errors.Semantic_error e) in
   if flags.debug_settings.print_typed_ast then
     output (DebugOutput (fmt_sexp [%sexp (typed_ast : Ast.typed_program)]));
@@ -123,7 +119,7 @@ let stan2cpp model_name model (flags : Flags.t) (output : other_output -> unit)
           (Ast_to_Mir.gather_declarations typed_ast.parametersblock) in
       output (Generated inits)
     else Ok () in
-  let tx_mir = Transform_Mir.trans_prog mir in
+  let tx_mir = Transform_Mir.trans_prog ~use_opencl:flags.use_opencl mir in
   debug_output_mir output tx_mir flags.debug_settings.print_transformed_mir;
   let opt_mir =
     Optimize.optimization_suite
@@ -134,8 +130,9 @@ let stan2cpp model_name model (flags : Flags.t) (output : other_output -> unit)
       (Memory_patterns (Fmt.str "%a" Memory_patterns.pp_mem_patterns opt_mir));
   debug_output_mir output opt_mir flags.debug_settings.print_optimized_mir;
   let cpp =
-    Lower_program.lower_program ?printed_filename:flags.filename_in_msg opt_mir
-  in
+    Lower_program.lower_program
+      ~standalone_functions:(flags.functions_only || flags.standalone_functions)
+      ?printed_filename:flags.filename_in_msg opt_mir in
   if flags.debug_settings.print_lir then
     output (DebugOutput (fmt_sexp [%sexp (cpp : Cpp.program)]));
   Fmt.(to_to_string Cpp.Printing.pp_program) cpp

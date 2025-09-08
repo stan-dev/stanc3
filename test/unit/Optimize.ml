@@ -463,8 +463,6 @@ let%expect_test "recursive functions" =
       } |}]
 
 let%expect_test "do not try to inline extern functions" =
-  let before = !Frontend.Typechecker.check_that_all_functions_have_definition in
-  Frontend.Typechecker.check_that_all_functions_have_definition := false;
   let mir =
     reset_and_mir_of_string
       {|
@@ -476,7 +474,6 @@ let%expect_test "do not try to inline extern functions" =
             }
             |}
   in
-  Frontend.Typechecker.check_that_all_functions_have_definition := before;
   let mir = function_inlining mir in
   Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
   [%expect

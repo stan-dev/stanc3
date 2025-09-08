@@ -10,10 +10,7 @@
 (* Boilerplate for getting line numbers for errors *)
   let incr_linenum lexbuf =
     lexer_pos_logger lexbuf.lex_curr_p;
-    let pos = lexbuf.lex_curr_p in
-    lexbuf.lex_curr_p <- { pos with
-      pos_lnum = pos.pos_lnum + 1;
-      pos_bol = pos.pos_cnum } ;
+    Lexing.new_line lexbuf;
     update_start_positions lexbuf.lex_curr_p
 
   (* Store comments *)
