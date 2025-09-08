@@ -1,6 +1,27 @@
 STANC3 RELEASE NOTES
 ======================================================================
 
+v2.37.0 (2 September 2025)
+======================================================================
+
+ - Added a new constraint, `sum_to_zero_matrix`, which is a matrix that sums to zero along both axes. (#1506)
+ - Exposed the `hypergeometric_1F0`, `hypergeometric_2F1`, `hypergeometric_3F2`, and `hypergeometric_pFq` functions (#1504)
+ - All the built-in constraint types now have corresponding `_jacobian`, `_constrain`, and `_unconstrain` functions. The first two functions are identical except for the _jacobian version will increment the target with the necessary change of variables adjustment. (#1494)
+ - Improved the command-line argument parser for `stanc`. Existing flags are still supported, but new aliases may be available. See the new and improved `stanc --help` for details. (#1478)
+ - The compiler now accepts `-` as a model argument, in which case it reads from standard input. (#1488)
+ - Decreased the start-up overhead of the compiler. (#1496, #1498)
+ - Fixed a bug with assigning to an entire vector or matrix using `:` with the `--O1` flag. (#1508)
+ - Fixed a few functions being labeled as supporting the struct-of-arrays matrix type when they in fact did not. (#1540)
+ - Updated code generation of tuples to avoid issues with dangling references and some generated code being uncompilable. (#1535)
+ - The MacOS binaries we distribute are now 'universal' (fat) binaries, and therefore will not require Rosetta to run. (#1483, #1501)
+ - Updated our build process to make it easier to maintain. Note: Stan is no longer building binaries for the mips64le architecture. (#1495)
+ - Removed usages of the `re` library (#1489)
+ - `stanc.js` will now properly complain if it is supplied with incorrect javascript types for its arguments. (#1475)
+ - `stanc.js` and `stanc.exe` now share significantly more code between them. (#1477)
+ - Fixed an issue where repeated calls to `stanc.js` would re-use the same model namespace in the generated C++ (#1492)
+ - Updated `js_of_ocaml` version to 5.9.1 (#1484)
+ - Updated `fmt` version to 0.10.0 (#1512)
+
 v2.36.0 (10 December 2024)
 ======================================================================
 
