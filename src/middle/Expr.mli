@@ -1,36 +1,32 @@
 (** MIR types and modules corresponding to the expressions of the language *)
 
-module Fixed : sig
-  module Pattern : sig
-    type litType = Int | Real | Imaginary | Str
-    [@@deriving sexp, hash, compare]
+module Pattern : sig
+  type litType = Int | Real | Imaginary | Str [@@deriving sexp, hash, compare]
 
-    type 'a t =
-      | Var of string
-      | Lit of litType * string
-      | FunApp of 'a Fun_kind.t * 'a list
-      | TernaryIf of 'a * 'a * 'a
-      | EAnd of 'a * 'a
-      | EOr of 'a * 'a
-      | Indexed of 'a * 'a Index.t list
-      | Promotion of 'a * UnsizedType.t * UnsizedType.autodifftype
-      | TupleProjection of 'a * int
-    [@@deriving sexp, hash, compare, map, fold]
-  end
+  type 'a t =
+    | Var of string
+    | Lit of litType * string
+    | FunApp of 'a Fun_kind.t * 'a list
+    | TernaryIf of 'a * 'a * 'a
+    | EAnd of 'a * 'a
+    | EOr of 'a * 'a
+    | Indexed of 'a * 'a Index.t list
+    | Promotion of 'a * UnsizedType.t * UnsizedType.autodifftype
+    | TupleProjection of 'a * int
+  [@@deriving sexp, hash, compare, map, fold]
+end
 
-  (** The "two-level" type for statements in the MIR. This corresponds to what the AST calls
+(** The "two-level" type for statements in the MIR. This corresponds to what the AST calls
       [Frontend.Ast.expr_with]  *)
-  type 'a t = {pattern: 'a t Pattern.t; meta: 'a}
-  [@@deriving compare, hash, sexp]
+type 'a t = {pattern: 'a t Pattern.t; meta: 'a} [@@deriving compare, hash, sexp]
 
-  val pp : 'a t Fmt.t
+val pp : 'a t Fmt.t
 
-  val rewrite_bottom_up : f:('a t -> 'a t) -> 'a t -> 'a t
-  (** [rewrite_bottom_up] specializes [fold] so that the result type
+val rewrite_bottom_up : f:('a t -> 'a t) -> 'a t -> 'a t
+(** [rewrite_bottom_up] specializes [fold] so that the result type
       ['r] is equal to the type of our fixed-point data structure i.e. ['r = 'a t].
       This also means that the function [f] can be written with our fixed-point type
       ['a t] as its argument. *)
-end
 
 module Typed : sig
   module Meta : sig
@@ -43,7 +39,7 @@ module Typed : sig
     val empty : t
   end
 
-  type t = (Meta.t[@compare.ignore]) Fixed.t [@@deriving hash, sexp, compare]
+  type nonrec t = (Meta.t[@compare.ignore]) t [@@deriving hash, sexp, compare]
 
   val type_of : t -> UnsizedType.t
   val adlevel_of : t -> UnsizedType.autodifftype
@@ -80,15 +76,10 @@ module Helpers : sig
   val tuple_expr : Typed.t list -> Typed.t
   val try_unpack : Typed.t -> Typed.t list option
   val loop_bottom : Typed.t
-
-  val internal_funapp :
-    'a Fixed.t Internal_fun.t -> 'a Fixed.t list -> 'a -> 'a Fixed.t
-
-  val contains_fn_kind :
-    ('a Fixed.t Fun_kind.t -> bool) -> ?init:bool -> 'a Fixed.t -> bool
-
+  val internal_funapp : 'a t Internal_fun.t -> 'a t list -> 'a -> 'a t
+  val contains_fn_kind : ('a t Fun_kind.t -> bool) -> ?init:bool -> 'a t -> bool
   val infer_type_of_indexed : UnsizedType.t -> 'a Index.t list -> UnsizedType.t
   val add_int_index : Typed.t -> Typed.t Index.t -> Typed.t
   val add_tuple_index : Typed.t -> int -> Typed.t
-  val collect_indices : 'a Fixed.t -> 'a Fixed.t Index.t list
+  val collect_indices : 'a t -> 'a t Index.t list
 end

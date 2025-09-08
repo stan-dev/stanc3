@@ -345,7 +345,7 @@ let json_to_mir (decls : (Expr.Typed.t SizedType.t * 'a * string) list)
 
 let generate_json_entries (name, expr) : string * t =
   let rec expr_to_json e : t =
-    match e.Expr.Fixed.pattern with
+    match e.Expr.pattern with
     | Lit (Real, s) when String.is_suffix s ~suffix:"." -> `Floatlit (s ^ "0")
     | Lit (Int, s) -> `Intlit s
     | Lit (Real, s) -> `Floatlit s

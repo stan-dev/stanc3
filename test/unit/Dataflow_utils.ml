@@ -18,9 +18,9 @@ let%expect_test "Loop test" =
       }
       |}
   in
-  let block = Stmt.Fixed.Pattern.Block mir.log_prob in
+  let block = Stmt.Pattern.Block mir.log_prob in
   let statement_map =
-    Stmt.Fixed.(
+    Stmt.(
       build_statement_map
         (fun {pattern; _} -> pattern)
         (fun {meta; _} -> meta)
@@ -30,7 +30,7 @@ let%expect_test "Loop test" =
     [%sexp
       (statement_map
         : ( label
-          , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * Location_span.t )
+          , (Expr.Typed.t, label) Stmt.Pattern.t * Location_span.t )
           Map.Poly.t)];
   print_s [%sexp (exits : label Set.Poly.t)];
   print_s [%sexp (preds : (label, label Set.Poly.t) Map.Poly.t)];
@@ -111,9 +111,9 @@ let%expect_test "Loop passthrough" =
         }
       |}
   in
-  let block = Stmt.Fixed.Pattern.Block mir.log_prob in
+  let block = Stmt.Pattern.Block mir.log_prob in
   let statement_map =
-    Stmt.Fixed.(
+    Stmt.(
       build_statement_map
         (fun {pattern; _} -> pattern)
         (fun {meta; _} -> meta)
@@ -160,11 +160,11 @@ let example1_program =
         }
       |}
   in
-  let block = Stmt.Fixed.Pattern.Block mir.log_prob in
-  Stmt.Fixed.{meta= Location_span.empty; pattern= block}
+  let block = Stmt.Pattern.Block mir.log_prob in
+  Stmt.{meta= Location_span.empty; pattern= block}
 
 let example1_statement_map =
-  Stmt.Fixed.(
+  Stmt.(
     build_statement_map
       (fun {pattern; _} -> pattern)
       (fun {meta; _} -> meta)
@@ -174,7 +174,7 @@ let%expect_test "Statement label map example" =
   print_s
     [%sexp
       (Map.Poly.map example1_statement_map ~f:fst
-        : (label, (Expr.Typed.t, label) Stmt.Fixed.Pattern.t) Map.Poly.t)];
+        : (label, (Expr.Typed.t, label) Stmt.Pattern.t) Map.Poly.t)];
   [%expect
     {|
       ((1 (Block (2))) (2 (Block (3 4 5)))
@@ -302,7 +302,7 @@ let%expect_test "Controlflow graph example" =
 let%test "Reconstructed recursive statement" =
   let stmt =
     build_recursive_statement
-      (fun pattern meta -> Stmt.Fixed.{pattern; meta})
+      (fun pattern meta -> Stmt.{pattern; meta})
       example1_statement_map 1 in
   stmt = example1_program
 
@@ -317,13 +317,13 @@ let example3_program =
       |}
   in
   let blocks =
-    Stmt.Fixed.(
+    Stmt.(
       Pattern.SList [{pattern= Block mir.log_prob; meta= Location_span.empty}])
   in
-  Stmt.Fixed.{meta= Location_span.empty; pattern= blocks}
+  Stmt.{meta= Location_span.empty; pattern= blocks}
 
 let example3_statement_map =
-  Stmt.Fixed.(
+  Stmt.(
     build_statement_map
       (fun {pattern; _} -> pattern)
       (fun {meta; _} -> meta)
@@ -334,7 +334,7 @@ let%expect_test "Statement label map example 3" =
     [%sexp
       (example3_statement_map
         : ( label
-          , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * Location_span.t )
+          , (Expr.Typed.t, label) Stmt.Pattern.t * Location_span.t )
           Map.Poly.t)];
   [%expect
     {|
@@ -411,13 +411,13 @@ let example4_program =
       |}
   in
   let blocks =
-    Stmt.Fixed.(
+    Stmt.(
       Pattern.SList [{pattern= Block mir.log_prob; meta= Location_span.empty}])
   in
-  Stmt.Fixed.{meta= Location_span.empty; pattern= blocks}
+  Stmt.{meta= Location_span.empty; pattern= blocks}
 
 let example4_statement_map =
-  Stmt.Fixed.(
+  Stmt.(
     build_statement_map
       (fun {pattern; _} -> pattern)
       (fun {meta; _} -> meta)
@@ -428,7 +428,7 @@ let%expect_test "Statement label map example 4" =
     [%sexp
       (example4_statement_map
         : ( label
-          , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * Location_span.t )
+          , (Expr.Typed.t, label) Stmt.Pattern.t * Location_span.t )
           Map.Poly.t)];
   [%expect
     {|
@@ -513,13 +513,13 @@ let example5_program =
       |}
   in
   let blocks =
-    Stmt.Fixed.(
+    Stmt.(
       Pattern.SList [{pattern= Block mir.log_prob; meta= Location_span.empty}])
   in
-  Stmt.Fixed.{meta= Location_span.empty; pattern= blocks}
+  Stmt.{meta= Location_span.empty; pattern= blocks}
 
 let example5_statement_map =
-  Stmt.Fixed.(
+  Stmt.(
     build_statement_map
       (fun {pattern; _} -> pattern)
       (fun {meta; _} -> meta)
@@ -530,7 +530,7 @@ let%expect_test "Statement label map example 5" =
     [%sexp
       (example5_statement_map
         : ( label
-          , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * Location_span.t )
+          , (Expr.Typed.t, label) Stmt.Pattern.t * Location_span.t )
           Map.Poly.t)];
   [%expect
     {|

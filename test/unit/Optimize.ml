@@ -24,8 +24,8 @@ let%expect_test "map_rec_stmt_loc" =
       |}
   in
   let f = function
-    | Stmt.Fixed.Pattern.NRFunApp (CompilerInternal FnPrint, [s]) ->
-        Stmt.Fixed.Pattern.NRFunApp (CompilerInternal FnPrint, [s; s])
+    | Stmt.Pattern.NRFunApp (CompilerInternal FnPrint, [s]) ->
+        Stmt.Pattern.NRFunApp (CompilerInternal FnPrint, [s; s])
     | x -> x in
   let mir = Program.map Fn.id (map_rec_stmt_loc f) Fn.id mir in
   Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
@@ -65,12 +65,12 @@ let%expect_test "map_rec_state_stmt_loc" =
       |}
   in
   let f i = function
-    | Stmt.Fixed.Pattern.NRFunApp (CompilerInternal FnPrint, [s]) ->
-        Stmt.Fixed.Pattern.(NRFunApp (CompilerInternal FnPrint, [s; s]), i + 1)
+    | Stmt.Pattern.NRFunApp (CompilerInternal FnPrint, [s]) ->
+        Stmt.Pattern.(NRFunApp (CompilerInternal FnPrint, [s; s]), i + 1)
     | x -> (x, i) in
   let mir_stmt, num =
     (map_rec_state_stmt_loc f 0)
-      Stmt.Fixed.{pattern= SList mir.log_prob; meta= Location_span.empty} in
+      Stmt.{pattern= SList mir.log_prob; meta= Location_span.empty} in
   let mir = {mir with log_prob= [mir_stmt]} in
   Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
   print_endline (string_of_int num);
@@ -3077,7 +3077,7 @@ let%expect_test "block fixing" =
   let mir =
     { mir with
       Middle.Program.log_prob=
-        [ Stmt.Fixed.
+        [ Stmt.
             { pattern=
                 IfElse
                   ( Expr.Helpers.zero
@@ -3469,9 +3469,9 @@ let%expect_test "adlevel_optimization 2" =
 let%expect_test "Mapping acts recursively" =
   let from = Expr.Helpers.variable "x" in
   let into = Expr.Helpers.variable "y" in
-  let unpattern p = {Stmt.Fixed.pattern= p; meta= Location_span.empty} in
+  let unpattern p = {Stmt.pattern= p; meta= Location_span.empty} in
   let s =
-    Stmt.Fixed.Pattern.NRFunApp
+    Stmt.Pattern.NRFunApp
       ( CompilerInternal (FnWriteParam {var= from; unconstrain_opt= None})
       , [from] ) in
   let m = Expr.Typed.Map.of_alist_exn [(from, into)] in

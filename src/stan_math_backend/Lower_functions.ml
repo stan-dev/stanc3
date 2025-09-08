@@ -346,7 +346,7 @@ let lower_fun_def (functors : Lower_expr.variadic list)
   (fd, functors |> List.map ~f:register_functor)
 
 let get_functor_requirements (p : Program.Numbered.t) =
-  let open Expr.Fixed in
+  let open Expr in
   let rec find_functors_expr init = function
     | {pattern= FunApp (StanLib (hof, _, _), args); _} ->
         let f accum = function
@@ -359,8 +359,7 @@ let get_functor_requirements (p : Program.Numbered.t) =
         List.fold ~init ~f args
     | {pattern; _} -> Pattern.fold find_functors_expr init pattern in
   let rec find_functors_stmt accum stmt =
-    Stmt.Fixed.(
-      Pattern.fold find_functors_expr find_functors_stmt accum stmt.pattern)
+    Stmt.(Pattern.fold find_functors_expr find_functors_stmt accum stmt.pattern)
   in
   Program.fold find_functors_expr find_functors_stmt Fn.const String.Map.empty p
 
@@ -440,21 +439,20 @@ module Testing = struct
     (list ~sep:cut Cpp.Printing.pp_struct_defn) ppf st
 
   let%expect_test "udf" =
-    let with_no_loc stmt =
-      Stmt.Fixed.{pattern= stmt; meta= Numbering.no_span_num} in
-    let w e = Expr.{Fixed.pattern= e; meta= Typed.Meta.empty} in
+    let with_no_loc stmt = Stmt.{pattern= stmt; meta= Numbering.no_span_num} in
+    let w e = Expr.{pattern= e; meta= Typed.Meta.empty} in
     { fdrt= Void
     ; fdname= "sars"
     ; fdsuffix= FnPlain
     ; fdargs= [(DataOnly, "x", UMatrix); (AutoDiffable, "y", URowVector)]
     ; fdbody=
-        Stmt.Fixed.Pattern.Return
+        Stmt.Pattern.Return
           (Some
              (w
              @@ FunApp
                   ( StanLib ("add", FnPlain, AoS)
                   , [w @@ Var "x"; w @@ Lit (Int, "1")] )))
-        |> with_no_loc |> List.return |> Stmt.Fixed.Pattern.Block |> with_no_loc
+        |> with_no_loc |> List.return |> Stmt.Pattern.Block |> with_no_loc
         |> Some
     ; fdloc= Location_span.empty }
     |> str "@[<v>%a" pp_fun_def_test
@@ -499,9 +497,8 @@ module Testing = struct
     }; |}]
 
   let%expect_test "udf-expressions" =
-    let with_no_loc stmt =
-      Stmt.Fixed.{pattern= stmt; meta= Numbering.no_span_num} in
-    let w e = Expr.{Fixed.pattern= e; meta= Typed.Meta.empty} in
+    let with_no_loc stmt = Stmt.{pattern= stmt; meta= Numbering.no_span_num} in
+    let w e = Expr.{pattern= e; meta= Typed.Meta.empty} in
     { fdrt= ReturnType UMatrix
     ; fdname= "sars"
     ; fdsuffix= FnPlain
@@ -510,13 +507,13 @@ module Testing = struct
         ; (AutoDiffable, "z", URowVector); (AutoDiffable, "w", UArray UMatrix)
         ]
     ; fdbody=
-        Stmt.Fixed.Pattern.Return
+        Stmt.Pattern.Return
           (Some
              (w
              @@ FunApp
                   ( StanLib ("add", FnPlain, AoS)
                   , [w @@ Var "x"; w @@ Lit (Int, "1")] )))
-        |> with_no_loc |> List.return |> Stmt.Fixed.Pattern.Block |> with_no_loc
+        |> with_no_loc |> List.return |> Stmt.Pattern.Block |> with_no_loc
         |> Some
     ; fdloc= Location_span.empty }
     |> str "@[<v>%a" pp_fun_def_test
