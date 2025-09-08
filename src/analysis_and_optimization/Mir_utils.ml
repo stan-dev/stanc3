@@ -12,12 +12,6 @@ let rec fold_expr ~take_expr ~(init : 'c) (expr : Expr.Typed.t) : 'c =
 
 let fold_stmts ~take_expr ~take_stmt ~(init : 'c)
     (stmts : Stmt.Located.t List.t) : 'c =
-  (* let rec fold_expr (state : 'c) (expr : Expr.t) =
-   *   Expr.Pattern.fold_left
-   *     ~f:(fun a e -> fold_expr (take_expr a e) e)
-   *     ~init:state
-   *     expr.pattern
-   * in *)
   let rec fold_stmt (state : 'c) (stmt : Stmt.Located.t) =
     Stmt.Pattern.fold
       (fun a e -> fold_expr ~take_expr ~init:(take_expr a e) e)
@@ -29,8 +23,7 @@ let rec num_expr_value (v : Expr.Typed.t) : (float * string) option =
   match v with
   (* internal type promotions should be ignored *)
   | {pattern= Pattern.Promotion (e, _, _); _} -> num_expr_value e
-  | {pattern= Pattern.Lit (Real, str); _} | {pattern= Pattern.Lit (Int, str); _}
-    ->
+  | {pattern= Pattern.Lit ((Real | Int), str); _} ->
       Some (float_of_string str, str)
   | {pattern= Pattern.FunApp (StanLib ("PMinus__", FnPlain, _), [v]); _} -> (
       match num_expr_value v with
@@ -299,12 +292,7 @@ let rec summation_terms (Expr.{pattern; _} as rhs) =
 
 let rec fn_subst_expr m e =
   match m e with
-  | Some e' ->
-      (* let print_expr (e:Expr.Typed.t) = *)
-      (* [%sexp (e.pattern : Expr.Typed.t Expr.Pattern.t)] |> Sexp.to_string *)
-      (* in *)
-      (* let _ = print_endline ("Replaced expr: " ^ print_expr e ^ " -> " ^ print_expr e') in *)
-      e'
+  | Some e' -> e'
   | _ -> Expr.{e with pattern= Pattern.map (fn_subst_expr m) e.pattern}
 
 let fn_subst_idx m = Index.map (fn_subst_expr m)

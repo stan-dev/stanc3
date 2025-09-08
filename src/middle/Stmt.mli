@@ -47,11 +47,11 @@ val rewrite_bottom_up :
   -> ('a, 'b) t
 (** [rewrite_bottom_up] specializes [fold] so that the result type
   ['r1] is equal to the type of the nested fixed-point type
-  i.e. ['r1 = 'a First.t] and the result type ['r2] is equal to the top-level
+  i.e. ['r1 = 'a Expr.t] and the result type ['r2] is equal to the top-level
   fixed-point type i.e. ['r2 = ('a,'b) t].
 
   This also means that the function [f] can be written with our nested
-  fixed-point type  ['a First.t] as its argument and [g] can be written with
+  fixed-point type  ['a Expr.t] as its argument and [g] can be written with
   [('a,'b) t] as its argument.
   *)
 
