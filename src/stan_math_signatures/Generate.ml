@@ -270,7 +270,7 @@ let distributions =
   ; (full_lpdf, "rayleigh", [DVReal; DVReal], SoA)
   ; (full_lpdf, "scaled_inv_chi_square", [DVReal; DVReal; DVReal], SoA)
   ; (full_lpdf, "skew_normal", [DVReal; DVReal; DVReal; DVReal], SoA)
-  ; (full_lpdf, "skew_double_exponential", [DVReal; DVReal; DVReal; DVReal], SoA)
+  ; (full_lpdf, "skew_double_exponential", [DVReal; DVReal; DVReal; DVReal], AoS)
   ; (full_lpdf, "student_t", [DVReal; DVReal; DVReal; DVReal], SoA)
   ; (full_lpdf, "std_normal", [DVReal], SoA)
   ; (full_lpdf, "uniform", [DVReal; DVReal; DVReal], SoA)
@@ -344,7 +344,7 @@ let math_sigs =
   ; ([UnaryVectorized SameAsArg], "minus", [DDeepComplexVectorized], SoA)
   ; ([basic_vectorized], "Phi", [DDeepVectorized], SoA)
   ; ([basic_vectorized], "Phi_approx", [DDeepVectorized], SoA)
-  ; ([basic_vectorized], "round", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "round", [DDeepVectorized], AoS)
   ; ([basic_vectorized], "sin", [DDeepVectorized], SoA)
   ; ([basic_vectorized], "sinh", [DDeepVectorized], SoA)
   ; ([basic_vectorized], "sqrt", [DDeepVectorized], SoA)
@@ -353,12 +353,12 @@ let math_sigs =
   ; ([basic_vectorized], "std_normal_qf", [DDeepVectorized], SoA)
     (* std_normal_qf is an alias for inv_Phi *)
   ; ([basic_vectorized], "std_normal_log_qf", [DDeepVectorized], SoA)
-  ; ([basic_vectorized], "step", [DReal], SoA)
+  ; ([basic_vectorized], "step", [DReal], AoS)
   ; ([basic_vectorized], "tan", [DDeepVectorized], SoA)
   ; ([basic_vectorized], "tanh", [DDeepVectorized], SoA)
   ; ([basic_vectorized], "tgamma", [DDeepVectorized], SoA)
-  ; ([basic_vectorized], "trunc", [DDeepVectorized], SoA)
-  ; ([basic_vectorized], "trigamma", [DDeepVectorized], SoA) ]
+  ; ([basic_vectorized], "trunc", [DDeepVectorized], AoS)
+  ; ([basic_vectorized], "trigamma", [DDeepVectorized], AoS) ]
 
 let all_declarative_sigs = distributions @ math_sigs
 
