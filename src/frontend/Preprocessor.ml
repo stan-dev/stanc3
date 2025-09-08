@@ -60,6 +60,9 @@ let current_buffer () =
   let buf = Stack.top_exn include_stack in
   buf
 
+let current_location () =
+  location_of_position (Lexing.lexeme_start_p (current_buffer ()))
+
 let pop_buffer () = Stack.pop_exn include_stack
 
 let update_start_positions pos =
@@ -80,7 +83,9 @@ let restore_prior_lexbuf () =
   lexbuf.lex_start_p <- old_pos;
   old_lexbuf
 
-let find_include_fs (module ParserExns : Errors.ParserExn) lookup_paths fname =
+let include_error msg = Syntax_error.include_error msg (current_location ())
+
+let find_include_fs lookup_paths fname =
   let rec loop paths =
     match paths with
     | [] ->
@@ -92,7 +97,7 @@ let find_include_fs (module ParserExns : Errors.ParserExn) lookup_paths fname =
           Fmt.str
             "Could not find include file '%s' in specified include paths.@\n\
              @[Current include paths: %a@]" fname pp_list lookup_paths in
-        ParserExns.include_error message
+        include_error message
     | path :: rest_of_paths -> (
         try
           let full_path = path ^ "/" ^ fname in
@@ -100,7 +105,7 @@ let find_include_fs (module ParserExns : Errors.ParserExn) lookup_paths fname =
         with _ -> loop rest_of_paths) in
   loop lookup_paths
 
-let find_include_inmemory (module ParserExns : Errors.ParserExn) map fname =
+let find_include_inmemory map fname =
   match Map.find map fname with
   | None ->
       let message =
@@ -112,18 +117,17 @@ let find_include_inmemory (module ParserExns : Errors.ParserExn) map fname =
           "Could not find include file '%s'.@ stanc was given information \
            about the following files:@ %a"
           fname pp_list map in
-      ParserExns.include_error message
+      include_error message
   | Some s -> (Lexing.from_string s, fname)
 
-let find_include (module ParserExns : Errors.ParserExn) fname =
+let find_include fname =
   match !Include_files.include_provider with
-  | FileSystemPaths lookup_paths ->
-      find_include_fs (module ParserExns) lookup_paths fname
-  | InMemory map -> find_include_inmemory (module ParserExns) map fname
+  | FileSystemPaths lookup_paths -> find_include_fs lookup_paths fname
+  | InMemory map -> find_include_inmemory map fname
 
-let try_get_new_lexbuf (module ParserExns : Errors.ParserExn) fname =
+let try_get_new_lexbuf fname =
   let lexbuf = Stack.top_exn include_stack in
-  let new_lexbuf, file = find_include (module ParserExns) fname in
+  let new_lexbuf, file = find_include fname in
   lexer_logger ("opened " ^ file);
   new_lexbuf.lex_start_p <-
     new_file_start_position file
@@ -137,8 +141,7 @@ let try_get_new_lexbuf (module ParserExns : Errors.ParserExn) fname =
           if is_dup filename then true else go included_from in
     go included_from in
   if dup_exists (location_of_position lexbuf.lex_start_p) then
-    ParserExns.include_error
-      (Printf.sprintf "File %s recursively included itself." fname);
+    include_error (Printf.sprintf "File %s recursively included itself." fname);
   Stack.push include_stack new_lexbuf;
   update_start_positions new_lexbuf.lex_curr_p;
   included_files := file :: !included_files;

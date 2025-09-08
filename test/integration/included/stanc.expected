@@ -181,7 +181,7 @@ Could not find include file 'I'm not here.stan' in specified include paths.
 Current include paths: ../included
 [exit 1]
   $ ../../../../install/default/bin/stanc --include-paths="../included"  stanc_helper_with_bad_include_lex_error.stan
-Syntax error in '../included/lex-err.stan', line 2, column 8, included from
+Syntax error in '../included/lex-err.stan', line 2, column 9, included from
 '../included/incl_stanc_helper_lex_error.stan', line 2, column 2, included from
 'stanc_helper_with_bad_include_lex_error.stan', line 2, column 0, lexing error:
    -------------------------------------------------

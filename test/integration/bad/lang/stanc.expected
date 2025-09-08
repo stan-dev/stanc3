@@ -1,5 +1,5 @@
   $ ../../../../../install/default/bin/stanc bad1.stan
-Syntax error in 'bad1.stan', line 1, column 8 to column 8, parsing error:
+Syntax error in 'bad1.stan', line 1, column 8, parsing error:
    -------------------------------------------------
      1:  model { 
                  ^
@@ -283,7 +283,7 @@ Semantic error in 'bad_lpdf.stan', line 2, column 2 to line 4, column 3:
 Probability density functions require real variates (first argument).
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_periods_data.stan
-Syntax error in 'bad_periods_data.stan', line 2, column 7, lexing error:
+Syntax error in 'bad_periods_data.stan', line 2, column 8, lexing error:
    -------------------------------------------------
      1:  data {
      2:    real x.y;
@@ -295,7 +295,7 @@ Syntax error in 'bad_periods_data.stan', line 2, column 7, lexing error:
 Invalid character found.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_periods_gqs.stan
-Syntax error in 'bad_periods_gqs.stan', line 8, column 7, lexing error:
+Syntax error in 'bad_periods_gqs.stan', line 8, column 8, lexing error:
    -------------------------------------------------
      6:  }
      7:  generated quantities {
@@ -308,7 +308,7 @@ Syntax error in 'bad_periods_gqs.stan', line 8, column 7, lexing error:
 Invalid character found.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_periods_local.stan
-Syntax error in 'bad_periods_local.stan', line 5, column 7, lexing error:
+Syntax error in 'bad_periods_local.stan', line 5, column 8, lexing error:
    -------------------------------------------------
      3:  }
      4:  model {
@@ -321,7 +321,7 @@ Syntax error in 'bad_periods_local.stan', line 5, column 7, lexing error:
 Invalid character found.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_periods_params.stan
-Syntax error in 'bad_periods_params.stan', line 2, column 7, lexing error:
+Syntax error in 'bad_periods_params.stan', line 2, column 8, lexing error:
    -------------------------------------------------
      1:  parameters {
      2:    real x.y;
@@ -333,7 +333,7 @@ Syntax error in 'bad_periods_params.stan', line 2, column 7, lexing error:
 Invalid character found.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_periods_tdata.stan
-Syntax error in 'bad_periods_tdata.stan', line 2, column 7, lexing error:
+Syntax error in 'bad_periods_tdata.stan', line 2, column 8, lexing error:
    -------------------------------------------------
      1:  transformed data {
      2:    real x.y;
@@ -345,7 +345,7 @@ Syntax error in 'bad_periods_tdata.stan', line 2, column 7, lexing error:
 Invalid character found.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_periods_tparams.stan
-Syntax error in 'bad_periods_tparams.stan', line 2, column 7, lexing error:
+Syntax error in 'bad_periods_tparams.stan', line 2, column 8, lexing error:
    -------------------------------------------------
      1:  transformed parameters {
      2:    real x.;
@@ -479,7 +479,7 @@ Syntax error in 'incomplete4.stan', line 2, column 13 to column 14, parsing erro
 Ill-formed phrase. Found an expression where we expected a statement.
 [exit 1]
   $ ../../../../../install/default/bin/stanc incomplete5.stan
-Syntax error in 'incomplete5.stan', line 3, column 0 to column 0, parsing error:
+Syntax error in 'incomplete5.stan', line 3, column 0, parsing error:
    -------------------------------------------------
      1:  transformed data {
      2:    if (2.0) ;
@@ -535,12 +535,12 @@ Semantic error in 'tparam_tuple_int.stan', line 2, column 2 to column 21:
 (Transformed) Parameters cannot be integers.
 [exit 1]
   $ ../../../../../install/default/bin/stanc unterminated_comment.stan
-Syntax error in 'unterminated_comment.stan', line 4, column -1, lexing error:
+Syntax error in 'unterminated_comment.stan', line 4, column 0, lexing error:
    -------------------------------------------------
      2:  never
      3:  ends
          ^
    -------------------------------------------------
 
-Unexpected end of input
+Unexpected end of input.
 [exit 1]

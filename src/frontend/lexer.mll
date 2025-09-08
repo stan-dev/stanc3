@@ -1,12 +1,8 @@
 (** The lexer that will feed into the parser. An OCamllex file. *)
 
 {
-module Make (ParserExns: Errors.ParserExn) = struct
-
   module Stack = Core.Stack
   module Queue = Core.Queue
-  module Parser = Parser.Make(ParserExns)
-  open ParserExns
   open Lexing
   open Debugging
   open Preprocessor
@@ -73,7 +69,7 @@ rule token = parse
     )                         { lexer_logger ("include " ^ fname) ;
                                 add_include fname lexbuf ;
                                 let new_lexbuf =
-                                  try_get_new_lexbuf (module ParserExns) fname in
+                                  try_get_new_lexbuf fname in
                                 token new_lexbuf }
 (* Program blocks *)
   | "functions"               { lexer_logger "functions" ;
@@ -210,7 +206,7 @@ rule token = parse
                                   let old_lexbuf = restore_prior_lexbuf () in
                                   token old_lexbuf }
 
-  | _                         { unexpected_character () }
+  | _                         { Syntax_error.unexpected_character (current_location ()) }
 
 (* Multi-line comment terminated by "*/" *)
 and multiline_comment state = parse
@@ -218,7 +214,7 @@ and multiline_comment state = parse
                let lines = (Buffer.contents buffer) :: lines in
                add_multi_comment pos (List.rev lines) lexbuf.lex_curr_p;
                update_start_positions lexbuf.lex_curr_p }
-  | eof      { unexpected_eof () }
+  | eof      { Syntax_error.unexpected_eof (current_location ()) }
   | newline  { incr_linenum lexbuf;
                let ((pos, lines), buffer) = state in
                let lines = (Buffer.contents buffer) :: lines in
@@ -233,5 +229,4 @@ and singleline_comment state = parse
   | _        { Buffer.add_string (snd state) (lexeme lexbuf) ; singleline_comment state lexbuf }
 
 {
-end
 }

@@ -1,12 +1,13 @@
 (** The parser for Stan. A Menhir file. *)
-%parameter<ParserExns: Errors.ParserExn>
 %{
 open Core
 open Middle
 open Ast
 open Debugging
 open Preprocessor
-open ParserExns
+
+let parse_error ~loc msg =
+  Syntax_error.parse_error msg (location_span_of_positions loc)
 
 (* Takes a sized_basic_type and a list of sizes and repeatedly applies then
    SArray constructor, taking sizes off the list *)

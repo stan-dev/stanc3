@@ -8,6 +8,9 @@ val location_span_of_positions :
 val current_buffer : unit -> Lexing.lexbuf
 (** Buffer at the top of the include stack *)
 
+val current_location : unit -> Middle.Location.t
+(** Current location in the top buffer *)
+
 val size : unit -> int
 (** Size of the include stack *)
 
@@ -33,6 +36,6 @@ val restore_prior_lexbuf : unit -> Lexing.lexbuf
 (** Restore to a previous lexing buffer (assumes that one exists) and
     updates positions accordingly. *)
 
-val try_get_new_lexbuf : (module Errors.ParserExn) -> string -> Lexing.lexbuf
+val try_get_new_lexbuf : string -> Lexing.lexbuf
 (** Search include paths for filename and try to create a new lexing buffer
     with that filename, record that included from specified position *)
