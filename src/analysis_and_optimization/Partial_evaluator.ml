@@ -6,14 +6,14 @@ open Middle
 
 exception Rejected of Location_span.t * string
 
-let rec is_int query Expr.Fixed.{pattern; _} =
+let rec is_int query Expr.{pattern; _} =
   match pattern with
   | Lit (Int, i) | Lit (Real, i) -> float_of_string i = float_of_int query
   | Promotion (e, _, _) -> is_int query e
   | _ -> false
 
 let apply_prefix_operator_int (op : string) i =
-  Expr.Fixed.Pattern.Lit
+  Expr.Pattern.Lit
     ( Int
     , Int.to_string
         (match op with
@@ -25,7 +25,7 @@ let apply_prefix_operator_int (op : string) i =
               [%message "Not an int prefix operator: " s]) )
 
 let apply_prefix_operator_real (op : string) i =
-  Expr.Fixed.Pattern.Lit
+  Expr.Pattern.Lit
     ( Real
     , Float.to_string
         (match op with
@@ -36,7 +36,7 @@ let apply_prefix_operator_real (op : string) i =
               [%message "Not a real prefix operator: " s]) )
 
 let apply_operator_int (op : string) i1 i2 =
-  Expr.Fixed.Pattern.Lit
+  Expr.Pattern.Lit
     ( Int
     , Int.to_string
         (match op with
@@ -56,7 +56,7 @@ let apply_operator_int (op : string) i1 i2 =
               [%message "Not an int operator: " s]) )
 
 let apply_arithmetic_operator_real (op : string) r1 r2 =
-  Expr.Fixed.Pattern.Lit
+  Expr.Pattern.Lit
     ( Real
     , Float.to_string
         (match op with
@@ -69,7 +69,7 @@ let apply_arithmetic_operator_real (op : string) r1 r2 =
               [%message "Not a real operator: " s]) )
 
 let apply_logical_operator_real (op : string) r1 r2 =
-  Expr.Fixed.Pattern.Lit
+  Expr.Pattern.Lit
     ( Int
     , Int.to_string
         (match op with
@@ -113,7 +113,7 @@ let rec eval_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
                        (Frontend.Typechecker.stan_math_return_type name
                           argument_types) in
               let try_partially_evaluate_stanlib e =
-                Expr.Fixed.Pattern.(
+                Expr.Pattern.(
                   match e with
                   | FunApp (StanLib (f', suffix', mem_type), l') -> (
                       match get_fun_or_op_rt_opt f' l' with
@@ -788,7 +788,7 @@ let rec eval_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
                             , _ )
                       ; _ }; ({pattern= Lit (Imaginary, i); _} as im) ] ) ->
                     let im_part =
-                      Expr.Fixed.
+                      Expr.
                         { pattern= Lit (Real, i)
                         ; meta= {im.meta with type_= UReal} } in
                     FunApp
@@ -1059,7 +1059,7 @@ let rec eval_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
           Indexed (eval_expr e, List.map ~f:(Index.map eval_expr) l)) }
 
 let rec simplify_index_expr pattern =
-  Expr.Fixed.(
+  Expr.(
     match pattern with
     | Pattern.Indexed
         ( { pattern=
@@ -1122,35 +1122,34 @@ let rec simplify_index_expr pattern =
     | e -> e)
 
 let remove_trailing_alls_expr = function
-  | Expr.Fixed.Pattern.Indexed (obj, indices) ->
+  | Expr.Pattern.Indexed (obj, indices) ->
       (* a[2][:] -> a[2] *)
       let rec remove_trailing_alls indices =
         match List.rev indices with
         | Index.All :: tl -> remove_trailing_alls (List.rev tl)
         | _ -> indices in
-      Expr.Fixed.Pattern.Indexed (obj, remove_trailing_alls indices)
+      Expr.Pattern.Indexed (obj, remove_trailing_alls indices)
   | e -> e
 
 let rec simplify_indices_expr expr =
-  Expr.Fixed.(
+  Expr.(
     let pattern =
       expr.pattern |> remove_trailing_alls_expr |> simplify_index_expr
-      |> Expr.Fixed.Pattern.map simplify_indices_expr in
+      |> Expr.Pattern.map simplify_indices_expr in
     {expr with pattern})
 
 let try_eval_expr expr = try eval_expr expr with Rejected _ -> expr
 
 let rec eval_stmt s =
   try
-    Stmt.Fixed.
+    Stmt.
       { s with
         pattern=
           Pattern.map
             (Fn.compose eval_expr simplify_indices_expr)
             eval_stmt s.pattern }
   with Rejected (loc, m) ->
-    { Stmt.Fixed.pattern=
-        NRFunApp (CompilerInternal FnReject, [Expr.Helpers.str m])
+    { Stmt.pattern= NRFunApp (CompilerInternal FnReject, [Expr.Helpers.str m])
     ; meta= loc }
 
 let eval_prog p : Program.Typed.t = Program.map try_eval_expr eval_stmt Fn.id p

@@ -20,7 +20,7 @@ type factor_graph =
 
 let extract_factors_statement stmt =
   match stmt with
-  | Stmt.Fixed.Pattern.TargetPE e | JacobianPE e ->
+  | Stmt.Pattern.TargetPE e | JacobianPE e ->
       List.map (summation_terms e) ~f:(fun x -> TargetTerm x)
   | NRFunApp (CompilerInternal (FnReject | FnFatalError), _) -> [Reject]
   | NRFunApp ((UserDefined (s, FnTarget) | StanLib (s, FnTarget, _)), args) ->
@@ -38,7 +38,7 @@ let rec extract_factors statement_map label =
   let stmt, _ = Map.Poly.find_exn statement_map label in
   let this_stmt =
     List.map (extract_factors_statement stmt) ~f:(fun x -> (label, x)) in
-  Stmt.Fixed.Pattern.fold
+  Stmt.Pattern.fold
     (fun s _ -> s)
     (fun state label -> List.append state (extract_factors statement_map label))
     this_stmt stmt

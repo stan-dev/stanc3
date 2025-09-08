@@ -108,7 +108,7 @@ let transform_args = function
 let is_single_index = function Index.Single _ -> true | _ -> false
 
 let dont_need_range_check = function
-  | Index.Single Expr.Fixed.{pattern= Var id; _} -> not (Utils.is_user_ident id)
+  | Index.Single Expr.{pattern= Var id; _} -> not (Utils.is_user_ident id)
   | _ -> false
 
 let promote_adtype =
@@ -252,7 +252,7 @@ and lower_binary_op op fn es =
   else lower_binary_fun fn es
 
 and lower_operator_app op es_in =
-  let remove_basic_promotion (e : 'a Expr.Fixed.t) =
+  let remove_basic_promotion (e : 'a Expr.t) =
     match e.pattern with Promotion (e, _, _) when is_scalar e -> e | _ -> e
   in
   let es =
@@ -310,7 +310,7 @@ and lower_misc_special_math_app (f : string) (mem_pattern : Mem_pattern.t)
           Exprs.fun_call "stan::math::get_lp" [Var "lp__"; Var "lp_accum__"])
   | "rep_matrix" | "rep_vector" | "rep_row_vector" | "append_row" | "append_col"
     when mem_pattern = Mem_pattern.SoA -> (
-      let is_autodiffable Expr.Fixed.{meta= Expr.Typed.Meta.{adlevel; _}; _} =
+      let is_autodiffable Expr.{meta= Expr.Typed.Meta.{adlevel; _}; _} =
         adlevel = UnsizedType.AutoDiffable in
       match ret_type with
       | Some (UnsizedType.ReturnType t) ->
@@ -331,16 +331,15 @@ and lower_misc_special_math_app (f : string) (mem_pattern : Mem_pattern.t)
 
 and lower_functionals fname suffix es mem_pattern =
   let contains_hof_vars = function
-    | {Expr.Fixed.pattern= Var _; meta= {Expr.Typed.Meta.type_= UFun _; _}} ->
-        true
+    | {Expr.pattern= Var _; meta= {Expr.Typed.Meta.type_= UFun _; _}} -> true
     | _ -> false in
   let is_hof_call = List.exists ~f:contains_hof_vars es in
   if not is_hof_call then None
   else
     let lower_hov es =
       let convert_hof_vars = function
-        | { Expr.Fixed.pattern= Var name
-          ; meta= {Expr.Typed.Meta.type_= UFun _; _} } as e ->
+        | {Expr.pattern= Var name; meta= {Expr.Typed.Meta.type_= UFun _; _}} as
+          e ->
             { e with
               pattern=
                 FunApp
@@ -495,8 +494,7 @@ and lower_compiler_internal ad ut f es =
                            , lower_exprs dims ))
       | Some constraint_string ->
           let constraint_args = transform_args constrain in
-          let lp =
-            Expr.Fixed.{pattern= Var "lp__"; meta= Expr.Typed.Meta.empty} in
+          let lp = Expr.{pattern= Var "lp__"; meta= Expr.Typed.Meta.empty} in
           let args = constraint_args @ [lp] @ dims in
           deserializer.@<>(( "template read_constrain_" ^ constraint_string
                            , [ lower_possibly_var_decl AutoDiffable ut
@@ -543,8 +541,8 @@ and lower_indexed_simple (e : expr) idcs =
   List.fold idcs ~init:e ~f:(fun e id ->
       Subscript (e, idx_minus_one (Index.map lower_expr id)))
 
-and lower_expr ?(promote_reals = false)
-    (Expr.Fixed.{pattern; meta} : Expr.Typed.t) : Cpp.expr =
+and lower_expr ?(promote_reals = false) (Expr.{pattern; meta} : Expr.Typed.t) :
+    Cpp.expr =
   let open Exprs in
   match pattern with
   | Var s -> Var s
@@ -612,12 +610,11 @@ and lower_exprs ?(promote_reals = false) =
 module Testing = struct
   (* these functions are just for testing *)
   let dummy_locate pattern =
-    Expr.(
-      Fixed.
-        { pattern
-        ; meta=
-            Typed.Meta.{type_= UInt; adlevel= DataOnly; loc= Location_span.empty}
-        })
+    Expr.
+      { pattern
+      ; meta=
+          Typed.Meta.{type_= UInt; adlevel= DataOnly; loc= Location_span.empty}
+      }
 
   let pp_unlocated e =
     Fmt.str "%a" Cpp.Printing.pp_expr (lower_expr @@ dummy_locate e)

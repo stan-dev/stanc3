@@ -2,7 +2,7 @@ open Core
 open Middle
 open Dataflow_types
 
-val var_declarations : ('a, 'b) Stmt.Fixed.t -> string Set.Poly.t
+val var_declarations : ('a, 'b) Stmt.t -> string Set.Poly.t
 val num_expr_value : Expr.Typed.t -> (float * string) option
 
 type bound_values =
@@ -38,34 +38,32 @@ val fold_stmts :
   -> 'c
 
 val map_rec_expr :
-     (Expr.Typed.t Expr.Fixed.Pattern.t -> Expr.Typed.t Expr.Fixed.Pattern.t)
+     (Expr.Typed.t Expr.Pattern.t -> Expr.Typed.t Expr.Pattern.t)
   -> Expr.Typed.t
   -> Expr.Typed.t
 
 val map_rec_expr_state :
-     (   's
-      -> Expr.Typed.t Expr.Fixed.Pattern.t
-      -> Expr.Typed.t Expr.Fixed.Pattern.t * 's)
+     ('s -> Expr.Typed.t Expr.Pattern.t -> Expr.Typed.t Expr.Pattern.t * 's)
   -> 's
   -> Expr.Typed.t
   -> Expr.Typed.t * 's
 
 val map_rec_stmt_loc :
-     (   (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t
-      -> (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t)
+     (   (Expr.Typed.t, Stmt.Located.t) Stmt.Pattern.t
+      -> (Expr.Typed.t, Stmt.Located.t) Stmt.Pattern.t)
   -> Stmt.Located.t
   -> Stmt.Located.t
 
 val top_down_map_rec_stmt_loc :
-     (   (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t
-      -> (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t)
+     (   (Expr.Typed.t, Stmt.Located.t) Stmt.Pattern.t
+      -> (Expr.Typed.t, Stmt.Located.t) Stmt.Pattern.t)
   -> Stmt.Located.t
   -> Stmt.Located.t
 
 val map_rec_state_stmt_loc :
      (   's
-      -> (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t
-      -> (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t * 's)
+      -> (Expr.Typed.t, Stmt.Located.t) Stmt.Pattern.t
+      -> (Expr.Typed.t, Stmt.Located.t) Stmt.Pattern.t * 's)
   -> 's
   -> Stmt.Located.t
   -> Stmt.Located.t * 's
@@ -73,8 +71,8 @@ val map_rec_state_stmt_loc :
 val map_rec_stmt_loc_num :
      (int, Stmt.Located.Non_recursive.t) Map.Poly.t
   -> (   int
-      -> (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t
-      -> (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t)
+      -> (Expr.Typed.t, Stmt.Located.t) Stmt.Pattern.t
+      -> (Expr.Typed.t, Stmt.Located.t) Stmt.Pattern.t)
   -> Stmt.Located.Non_recursive.t
   -> Stmt.Located.t
 
@@ -85,8 +83,8 @@ val stmt_loc_of_stmt_loc_num :
 
 val statement_stmt_loc_of_statement_stmt_loc_num :
      (int, Stmt.Located.Non_recursive.t) Map.Poly.t
-  -> (Expr.Typed.t, int) Stmt.Fixed.Pattern.t
-  -> (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t
+  -> (Expr.Typed.t, int) Stmt.Pattern.t
+  -> (Expr.Typed.t, Stmt.Located.t) Stmt.Pattern.t
 
 val unnumbered_prog_of_numbered_prog :
      (int, Stmt.Located.Non_recursive.t) Map.Poly.t
@@ -95,10 +93,10 @@ val unnumbered_prog_of_numbered_prog :
   -> (Stmt.Located.t, 'b, 'c) Program.t
 
 val fwd_traverse_statement :
-     ('e, 'a) Stmt.Fixed.Pattern.t
+     ('e, 'a) Stmt.Pattern.t
   -> init:'f
   -> f:('f -> 'a -> 'f * 'c)
-  -> 'f * ('e, 'c) Stmt.Fixed.Pattern.t
+  -> 'f * ('e, 'c) Stmt.Pattern.t
 (**
    A traversal that simultaneously accumulates a state (type 'f) and replaces the
    substatement values from ('a to 'c). Traversal is done in-order but ignores branching,
@@ -129,8 +127,7 @@ val expr_var_names_set : Expr.Typed.t -> string Core.Set.Poly.t
    Return the names of the variables in an expression.
 *)
 
-val stmt_rhs :
-  (Expr.Typed.t, 's) Stmt.Fixed.Pattern.t -> Expr.Typed.t Set.Poly.t
+val stmt_rhs : (Expr.Typed.t, 's) Stmt.Pattern.t -> Expr.Typed.t Set.Poly.t
 (**
    The set of variables that can affect the value or behavior of the expression, i.e. rhs.
    Using Set.Poly instead of ExprSet so that 'e can be polymorphic, it usually doesn't
@@ -143,8 +140,7 @@ val union_map : 'a Set.Poly.t -> f:('a -> 'b Set.Poly.t) -> 'b Set.Poly.t
 *)
 
 val stmt_rhs_var_set :
-     (Expr.Typed.t, 's) Stmt.Fixed.Pattern.t
-  -> (vexpr * Expr.Typed.Meta.t) Set.Poly.t
+  (Expr.Typed.t, 's) Stmt.Pattern.t -> (vexpr * Expr.Typed.Meta.t) Set.Poly.t
 (**
    The set of variables in an expression, including inside an index.
    For use in RHS sets, not LHS assignment sets, except in a target term.
@@ -164,8 +160,8 @@ val subst_expr :
 
 val subst_stmt_base :
      (string, Expr.Typed.t) Map.Poly.t
-  -> (Expr.Typed.t, 'a) Stmt.Fixed.Pattern.t
-  -> (Expr.Typed.t, 'a) Stmt.Fixed.Pattern.t
+  -> (Expr.Typed.t, 'a) Stmt.Pattern.t
+  -> (Expr.Typed.t, 'a) Stmt.Pattern.t
 (** Substitute variables occurring at the top level in statements according to the provided Map. *)
 
 val subst_stmt :
@@ -183,8 +179,8 @@ val expr_subst_expr :
 
 val expr_subst_stmt_base :
      Expr.Typed.t Expr.Typed.Map.t
-  -> (Expr.Typed.t, 'a) Stmt.Fixed.Pattern.t
-  -> (Expr.Typed.t, 'a) Stmt.Fixed.Pattern.t
+  -> (Expr.Typed.t, 'a) Stmt.Pattern.t
+  -> (Expr.Typed.t, 'a) Stmt.Pattern.t
 (** Substitute subexpressions occurring at the top level in statements according to the provided Map. *)
 
 val expr_depth : Expr.Typed.t -> int
@@ -194,7 +190,5 @@ val update_expr_ad_levels : string Set.Poly.t -> Expr.Typed.t -> Expr.Typed.t
 (** Recompute all AD-levels in the metadata of an expression from the bottom up, making the variables
     in the first argument autodiffable *)
 
-val cleanup_empty_stmts :
-  ('e, 's) Stmt.Fixed.t list -> ('e, 's) Stmt.Fixed.t list
-
+val cleanup_empty_stmts : ('e, 's) Stmt.t list -> ('e, 's) Stmt.t list
 val unsafe_unsized_to_sized_type : Expr.Typed.t Type.t -> Expr.Typed.t Type.t

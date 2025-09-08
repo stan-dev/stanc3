@@ -68,7 +68,7 @@ let lower_map_decl (vident, ut) : defn =
           "Error during Map data construction for " vident " of type "
             (x : UnsizedType.t)]
 
-let rec top_level_decls Stmt.Fixed.{pattern; _} =
+let rec top_level_decls Stmt.{pattern; _} =
   match pattern with
   | Decl d when d.decl_id <> "pos__" ->
       [(d.decl_id, Type.to_unsized d.decl_type)]
@@ -165,7 +165,7 @@ let lower_constructor
     @ gen_function__ prog_name prog_name
     @ Decls.dummy_var in
   let data_idents = List.map ~f:fst3 input_vars |> String.Set.of_list in
-  let lower_data (Stmt.Fixed.{pattern; meta} as s) =
+  let lower_data (Stmt.{pattern; meta} as s) =
     match pattern with
     | Decl {decl_id; decl_type; _} when decl_id <> "pos__" -> (
         match decl_type with

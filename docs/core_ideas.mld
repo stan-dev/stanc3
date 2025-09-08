@@ -63,7 +63,7 @@ which will later be filled in with something like [type expr_with_meta = metadat
 
 This takes some getting used to, and also can lead to some unhelpful type signatures in editors such as
 VSCode, because abbreviations are not always used in hover-over text. For example, [Expr.Typed.t], the MIR's typed
-expression type, actually has a signature of [Expr.Typed.Meta.t Expr.Fixed.t].
+expression type, actually has a signature of [Expr.Typed.Meta.t Expr.t].
 
 {1 The [Fmt] library and pretty-printing}
 
