@@ -2196,7 +2196,5 @@ let check_program_exn ~allow_undefined_functions
   attach_warnings prog
 
 let check_program ?(allow_undefined_functions = false) ast =
-  Result.try_with (fun () -> check_program_exn ~allow_undefined_functions ast)
-  |> Result.map_error ~f:(function
-       | TypecheckerException exn -> exn
-       | exn -> raise exn)
+  try Result.Ok (check_program_exn ~allow_undefined_functions ast)
+  with TypecheckerException err -> Result.Error err
