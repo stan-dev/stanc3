@@ -22,7 +22,7 @@ let pp ppf = function
   | Parsing (message, _) -> Fmt.string ppf message
   | Lexing _ -> Fmt.pf ppf "Invalid character found.@."
   | UnexpectedEOF _ -> Fmt.pf ppf "Unexpected end of input.@."
-  | Include (message, _) -> Fmt.string ppf message
+  | Include (message, _) -> Fmt.pf ppf "%s@." message
 
 exception ParserException of string * Middle.Location_span.t
 exception UnexpectedEOF of Middle.Location_span.t
