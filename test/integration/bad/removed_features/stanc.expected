@@ -209,7 +209,7 @@ Semantic error in 'old-log-funs.stan', line 3, column 6 to column 24:
 A returning function was expected but an undeclared identifier 'multiply_log' was supplied.
 [exit 1]
   $ ../../../../../install/default/bin/stanc pound-comment-deprecated.stan
-Syntax error in 'pound-comment-deprecated.stan', line 2, column 2, lexing error:
+Syntax error in 'pound-comment-deprecated.stan', line 2, column 2 to column 3, lexing error:
    -------------------------------------------------
      1:  data {
      2:    # hey, this is the old way to do things, should raise warning

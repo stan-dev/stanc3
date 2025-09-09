@@ -1,14 +1,16 @@
 (** Our type of syntax error information *)
 type t =
-  | Lexing of Middle.Location.t
-  | UnexpectedEOF of Middle.Location.t
-  | Include of string * Middle.Location.t
+  | Lexing of Middle.Location_span.t
+  | UnexpectedEOF of Middle.Location_span.t
+  | Include of string * Middle.Location_span.t
   | Parsing of string * Middle.Location_span.t
 
 let location = function
-  | Parsing (_, loc_span) -> loc_span
-  | Lexing loc | UnexpectedEOF loc | Include (_, loc) ->
-      {begin_loc= loc; end_loc= loc}
+  | Parsing (_, loc_span)
+   |Lexing loc_span
+   |UnexpectedEOF loc_span
+   |Include (_, loc_span) ->
+      loc_span
 
 let kind = function
   | Parsing _ -> "parsing error"
@@ -23,9 +25,9 @@ let pp ppf = function
   | Include (message, _) -> Fmt.string ppf message
 
 exception ParserException of string * Middle.Location_span.t
-exception UnexpectedEOF of Middle.Location.t
-exception UnexpectedCharacter of Middle.Location.t
-exception IncludeError of string * Middle.Location.t
+exception UnexpectedEOF of Middle.Location_span.t
+exception UnexpectedCharacter of Middle.Location_span.t
+exception IncludeError of string * Middle.Location_span.t
 
 let unexpected_eof loc = raise (UnexpectedEOF loc)
 let unexpected_character loc = raise (UnexpectedCharacter loc)

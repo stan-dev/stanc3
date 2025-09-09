@@ -61,7 +61,8 @@ let current_buffer () =
   buf
 
 let current_location () =
-  location_of_position (Lexing.lexeme_start_p (current_buffer ()))
+  let buf = current_buffer () in
+  location_span_of_positions (Lexing.lexeme_start_p buf, Lexing.lexeme_end_p buf)
 
 let pop_buffer () = Stack.pop_exn include_stack
 

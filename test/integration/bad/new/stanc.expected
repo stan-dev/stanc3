@@ -1444,7 +1444,7 @@ Syntax error in 'indices-bad3.stan', line 1, column 22 to column 27, parsing err
 Ill-formed expression. We expect a comma separated list of expressions, followed by "]".
 [exit 1]
   $ ../../../../../install/default/bin/stanc lexing_error.stan
-Syntax error in 'lexing_error.stan', line 1, column 7, lexing error:
+Syntax error in 'lexing_error.stan', line 1, column 7 to column 8, lexing error:
    -------------------------------------------------
      1:  model {½ }
                 ^

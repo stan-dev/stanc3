@@ -8,7 +8,7 @@ val location_span_of_positions :
 val current_buffer : unit -> Lexing.lexbuf
 (** Buffer at the top of the include stack *)
 
-val current_location : unit -> Middle.Location.t
+val current_location : unit -> Middle.Location_span.t
 (** Current location in the top buffer *)
 
 val size : unit -> int

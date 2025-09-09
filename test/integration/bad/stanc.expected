@@ -2829,7 +2829,7 @@ Semantic error in 'stanc_helper.stan', line 5, column 2 to column 18:
 Ill-typed arguments to '~' statement. No function 'ormal_lpdf' was found when looking for distribution 'ormal'.
 [exit 1]
   $ ../../../../install/default/bin/stanc string_literal_newline.stan
-Syntax error in 'string_literal_newline.stan', line 3, column 2, lexing error:
+Syntax error in 'string_literal_newline.stan', line 3, column 2 to column 3, lexing error:
    -------------------------------------------------
      1:  transformed data {
      2:    print(
