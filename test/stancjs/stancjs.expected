@@ -219,7 +219,7 @@ Syntax error in 'string', line 8, column 0 to column 5, parsing error:
 Expected "generated quantities {" or end of file after end of model block.
 
 $ node includes.js
-Syntax error in 'string', line 2, column 0, include error:
+Syntax error in 'string', line 2, column 0 to column 19, include error:
    -------------------------------------------------
      1:  
      2:  #include <foo.stan>
@@ -231,8 +231,7 @@ Syntax error in 'string', line 2, column 0, include error:
 Could not find include file 'foo.stan'.
 stanc was given information about the following files:
 None
-
-Syntax error in 'string', line 2, column 0, include error:
+Syntax error in 'string', line 2, column 0 to column 19, include error:
    -------------------------------------------------
      1:  
      2:  #include <foo.stan>
@@ -244,8 +243,7 @@ Syntax error in 'string', line 2, column 0, include error:
 Could not find include file 'foo.stan'.
 stanc was given information about the following files:
 bar.stan
-
-Syntax error in 'string', line 2, column 0, include error:
+Syntax error in 'string', line 2, column 0 to column 19, include error:
    -------------------------------------------------
      1:  
      2:  #include <foo.stan>
@@ -257,7 +255,6 @@ Syntax error in 'string', line 2, column 0, include error:
 Could not find include file 'foo.stan'.
 stanc was given information about the following files:
 ./foo.stan
-
 functions {
   int foo(real a) {
     return 1;
@@ -317,7 +314,6 @@ Syntax error in 'include/b.stan', line 1, column 0, included from
    -------------------------------------------------
 
 File include/a.stan recursively included itself.
-
 $ node info.js
 {
   "inputs": {
