@@ -62,11 +62,7 @@ type ('m, 'f, 'p) expr_with =
 type located_meta = {loc: (Location_span.t[@sexp.opaque] [@compare.ignore])}
 [@@deriving sexp, compare, hash]
 
-(** Uninhabited type. This is supplied as an argument to the Promotion node in
-    untyped ASTs so the compiler can deduce it is impossible *)
-type empty = | [@@deriving sexp, compare, hash]
-
-type untyped_expression = (located_meta, unit, empty) expr_with
+type untyped_expression = (located_meta, unit, Core.Nothing.t) expr_with
 [@@deriving sexp, compare, hash]
 
 (** Typed expressions also have meta-data after type checking: a location_span, as well as a type
