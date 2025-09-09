@@ -318,17 +318,15 @@ let untyped_program_of_typed_program : typed_program -> untyped_program =
   map_program untyped_statement_of_typed_statement
 
 (** in practice, we never want to fold over the FnKind or Promotion types
-   so we over-write the @@derived fold_expression *)
+   so we shadow the [@@derived] fold_expression *)
 
 let fold_expression f acc e = fold_expression f Fn.const Fn.const acc e
-let fold_lvalue f acc = fold_lvalue f Fn.const acc
 let fold_lval_with f acc lval = fold_lval_with f Fn.const acc lval
 let fold_statement f g h acc s = fold_statement f g h Fn.const acc s
 
 (** similarly for map *)
 
 let map_expression f e = map_expression f Fn.id Fn.id e
-let map_lvalue f lval = map_lvalue f Fn.id lval
 let map_lval_with f lval = map_lval_with f Fn.id lval
 let map_statement f g h s = map_statement f g h Fn.id s
 
