@@ -56,8 +56,7 @@ let list_multi_tildes (mir : Program.Typed.t) :
   let tildes =
     fold_stmts
       ~take_stmt:(fun m s -> merge_set_maps m (collect_tilde_stmt s))
-      ~take_expr:(fun m _ -> m)
-      ~init:Map.Poly.empty mir.log_prob in
+      ~take_expr:Fn.const ~init:Map.Poly.empty mir.log_prob in
   (* Filter for parameters assigned more than one distribution *)
   let multi_tildes = Map.Poly.filter ~f:(fun s -> Set.length s <> 1) tildes in
   Map.fold ~init:Set.Poly.empty
@@ -129,8 +128,7 @@ let list_possible_nonlinear (mir : Program.Typed.t) : Location_span.t Set.Poly.t
   let bad_tildes =
     fold_stmts
       ~take_stmt:(fun m s -> Set.union m (maybe_nonlinear_tilde s))
-      ~take_expr:(fun m _ -> m)
-      ~init:Set.Poly.empty mir.log_prob in
+      ~take_expr:Fn.const ~init:Set.Poly.empty mir.log_prob in
   bad_tildes
 
 (* Find all of the targets which are dependencies for a given label *)
@@ -203,14 +201,12 @@ let list_arg_dependant_fundef_cf (mir : Program.Typed.t)
 let expr_collect_exprs (expr : Expr.Typed.t) ~f : 'a Set.Poly.t =
   let collect_expr s (expr : Expr.Typed.t) =
     match f expr with Some a -> Set.add s a | _ -> s in
-  fold_expr ~init:Set.Poly.empty ~take_expr:(fun s e -> collect_expr s e) expr
+  fold_expr ~init:Set.Poly.empty ~take_expr:collect_expr expr
 
 let stmts_collect_exprs (stmts : Stmt.Located.t List.t) ~f : 'a Set.Poly.t =
   let collect_expr s (expr : Expr.Typed.t) =
     match f expr with Some a -> Set.add s a | _ -> s in
-  fold_stmts ~init:Set.Poly.empty
-    ~take_stmt:(fun s _ -> s)
-    ~take_expr:(fun s e -> collect_expr s e)
+  fold_stmts ~init:Set.Poly.empty ~take_stmt:Fn.const ~take_expr:collect_expr
     stmts
 
 let list_param_dependant_fundef_cf (mir : Program.Typed.t)

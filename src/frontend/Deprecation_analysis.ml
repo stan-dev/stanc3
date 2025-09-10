@@ -112,8 +112,7 @@ let set_jacobian_compatibility_mode stmts =
   Fun_kind.jacobian_compat_mode := not (functions_block_contains_jac_pe stmts)
 
 let rec collect_deprecated_expr (acc : (Location_span.t * string) list)
-    ({expr; emeta} : (typed_expr_meta, fun_kind) expr_with) :
-    (Location_span.t * string) list =
+    ({expr; emeta} : Ast.typed_expression) : (Location_span.t * string) list =
   match expr with
   | CondDistApp ((StanLib _ | UserDefined _), {name; _}, l)
    |FunApp ((StanLib _ | UserDefined _), {name; _}, l) ->
@@ -144,10 +143,9 @@ let rec collect_deprecated_expr (acc : (Location_span.t * string) list)
                   [(emeta.loc, lkj_cov_message)]
                 else []) in
       acc @ w @ List.concat_map l ~f:(fun e -> collect_deprecated_expr [] e)
-  | _ -> fold_expression collect_deprecated_expr (fun l _ -> l) acc expr
+  | _ -> fold_expression collect_deprecated_expr acc expr
 
-let collect_deprecated_lval acc l =
-  fold_lval_with collect_deprecated_expr (fun x _ -> x) acc l
+let collect_deprecated_lval acc l = fold_lval_with collect_deprecated_expr acc l
 
 let rec collect_deprecated_stmt fundefs (acc : (Location_span.t * string) list)
     {stmt; _} : (Location_span.t * string) list =
@@ -172,22 +170,16 @@ let rec collect_deprecated_stmt fundefs (acc : (Location_span.t * string) list)
         :: acc in
       fold_statement collect_deprecated_expr
         (collect_deprecated_stmt fundefs)
-        collect_deprecated_lval
-        (fun l _ -> l)
-        acc body.stmt
+        collect_deprecated_lval acc body.stmt
   | Tilde {distribution; _} when String.equal distribution.name "lkj_cov" ->
       let acc = (distribution.id_loc, lkj_cov_message) :: acc in
       fold_statement collect_deprecated_expr
-        (fun s _ -> s)
-        collect_deprecated_lval
-        (fun l _ -> l)
-        acc stmt
+        (collect_deprecated_stmt fundefs)
+        collect_deprecated_lval acc stmt
   | _ ->
       fold_statement collect_deprecated_expr
         (collect_deprecated_stmt fundefs)
-        collect_deprecated_lval
-        (fun l _ -> l)
-        acc stmt
+        collect_deprecated_lval acc stmt
 
 let collect_warnings (program : typed_program) =
   let fundefs = userdef_functions program in

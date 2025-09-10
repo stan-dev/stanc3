@@ -306,13 +306,13 @@ Flags not used elsewhere in the tests
                (Promotion
                 ((expr (IntNumeral 1))
                  (emeta ((loc <opaque>) (ad_level DataOnly) (type_ UInt))))
-                UReal DataOnly))
+                (UReal DataOnly)))
               (emeta ((loc <opaque>) (ad_level DataOnly) (type_ UReal))))
              ((expr
                (Promotion
                 ((expr (IntNumeral 1))
                  (emeta ((loc <opaque>) (ad_level DataOnly) (type_ UInt))))
-                UReal DataOnly))
+                (UReal DataOnly)))
               (emeta ((loc <opaque>) (ad_level DataOnly) (type_ UReal))))))
            (truncation NoTruncate)))
          (smeta ((loc <opaque>) (return_type Incomplete))))
