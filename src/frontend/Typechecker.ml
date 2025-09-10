@@ -2,11 +2,11 @@
 
   Functions which begin with "check_" return a typed version of their input
   Functions which begin with "verify_" return unit if a check succeeds, or else
-    throw an Errors.SemanticError exception.
+    throw an TypecheckerException exception.
   Other functions which begin with "infer"/"calculate" vary. Usually they return
     a value, but a few do have error conditions.
 
-  All Error.SemanticError exceptions are caught by check_program
+  All TypecheckerException exceptions are caught by check_program
   which turns the ast or exception into a Result.t for external usage
 
   A type environment (Env.t) is used to hold variables and functions, including
@@ -19,8 +19,11 @@ open Middle
 open Ast
 module Env = Environment
 
+(** Internal (private) exception used for errors. *)
+exception TypecheckerException of Semantic_error.t
+
 (* we only allow errors raised by this function *)
-let error e = raise (Errors.SemanticError e)
+let error e = raise (TypecheckerException e)
 
 (* warnings are built up in a list *)
 let warnings : Warnings.t list ref = ref []
@@ -2194,4 +2197,4 @@ let check_program_exn ~allow_undefined_functions
 
 let check_program ?(allow_undefined_functions = false) ast =
   try Result.Ok (check_program_exn ~allow_undefined_functions ast)
-  with Errors.SemanticError err -> Result.Error err
+  with TypecheckerException err -> Result.Error err

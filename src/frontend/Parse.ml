@@ -10,7 +10,7 @@ let drive_parser parse_fun =
     Interp.lexer_lexbuf_to_supplier Lexer.token
       (Preprocessor.current_buffer ())
       () in
-  let success prog = Ok {prog with Ast.comments= Preprocessor.get_comments ()} in
+  let success prog = {prog with Ast.comments= Preprocessor.get_comments ()} in
   let failure error_state =
     (* see the Menhir manual for the description of
        error messages support *)
@@ -34,10 +34,10 @@ let drive_parser parse_fun =
             "Failed to find error for parser error state " (state : int)] in
     let location =
       Preprocessor.location_span_of_positions (Interp.positions env) in
-    Error (Errors.Syntax_error (Errors.Parsing (message, location))) in
+    Syntax_error.parse_error message location in
   let startp = (Preprocessor.current_buffer ()).lex_curr_p in
-  try Interp.loop_handle success failure input (parse_fun startp)
-  with Errors.SyntaxError err -> Result.Error (Errors.Syntax_error err)
+  Syntax_error.try_with (fun () ->
+      Interp.loop_handle success failure input (parse_fun startp))
 
 let to_lexbuf file_or_code =
   match file_or_code with
@@ -53,7 +53,8 @@ let parse parse_fun file_or_code =
   let result =
     let* lexbuf, name = to_lexbuf file_or_code in
     Preprocessor.init lexbuf name;
-    drive_parser parse_fun in
+    drive_parser parse_fun
+    |> Result.map_error ~f:(fun e -> Errors.Syntax_error e) in
   (result, Input_warnings.collect ())
 
 let parse_stanfunctions file_or_code =

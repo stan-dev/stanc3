@@ -2,23 +2,9 @@
 
 open Core
 
-(** Our type of syntax error information *)
-type syntax_error =
-  | Lexing of Middle.Location.t
-  | UnexpectedEOF of Middle.Location.t
-  | Include of string * Middle.Location.t
-  | Parsing of string * Middle.Location_span.t
-
-(** Exception for Syntax Errors *)
-exception SyntaxError of syntax_error
-
-(** Exception [SemanticError (msg, loc)] indicates a semantic error with message
-    [msg], occurring in location [loc]. *)
-exception SemanticError of Semantic_error.t
-
 type t =
   | FileNotFound of string
-  | Syntax_error of syntax_error
+  | Syntax_error of Syntax_error.t
   | Semantic_error of Semantic_error.t
   | DebugDataError of (Middle.Location_span.t * string)
 
@@ -53,25 +39,13 @@ let pp_semantic_error ?printed_filename ?code ppf err =
     loc_span (pp_context ?code) loc_span.begin_loc Semantic_error.pp err
 
 (** A syntax error message used when handling a SyntaxError *)
-let pp_syntax_error ?printed_filename ?code ppf = function
-  | Parsing (message, loc_span) ->
-      Fmt.pf ppf "Syntax error in %a, parsing error:@,%a@,%s"
-        (Middle.Location_span.pp ?printed_filename)
-        loc_span (pp_context ?code) loc_span.begin_loc message
-  | Lexing loc ->
-      Fmt.pf ppf "Syntax error in %a, lexing error:@,%a@,%s@."
-        (Middle.Location.pp printed_filename)
-        {loc with col_num= loc.col_num - 1}
-        (pp_context ?code) loc "Invalid character found."
-  | UnexpectedEOF loc ->
-      Fmt.pf ppf "Syntax error in %a, lexing error:@,%a@,%s@."
-        (Middle.Location.pp printed_filename)
-        {loc with col_num= loc.col_num - 1}
-        (pp_context ?code) loc "Unexpected end of input"
-  | Include (message, loc) ->
-      Fmt.pf ppf "Syntax error in %a, include error:@,%a@,%s@."
-        (Middle.Location.pp printed_filename)
-        loc (pp_context ?code) loc message
+let pp_syntax_error ?printed_filename ?code ppf err =
+  let loc_span = Syntax_error.location err in
+  let error_type = Syntax_error.kind err in
+  Fmt.pf ppf "Syntax error in %a, %s:@;%a@,%a"
+    (Middle.Location_span.pp ?printed_filename)
+    loc_span error_type (pp_context ?code) loc_span.begin_loc Syntax_error.pp
+    err
 
 let pp ?printed_filename ?code ppf = function
   | FileNotFound f ->

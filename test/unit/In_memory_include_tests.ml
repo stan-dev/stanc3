@@ -21,7 +21,7 @@ let%expect_test "no includes" =
   print_ast_or_error include_model;
   [%expect
     {|
-    Syntax error in 'string', line 2, column 0, include error:
+    Syntax error in 'string', line 2, column 0 to column 19, include error:
        -------------------------------------------------
          1:
          2:  #include <foo.stan>
@@ -40,7 +40,7 @@ let%expect_test "wrong include" =
   print_ast_or_error include_model;
   [%expect
     {|
-    Syntax error in 'string', line 2, column 0, include error:
+    Syntax error in 'string', line 2, column 0 to column 19, include error:
        -------------------------------------------------
          1:
          2:  #include <foo.stan>

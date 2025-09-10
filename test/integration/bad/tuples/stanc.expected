@@ -379,7 +379,7 @@ Invalid type specification, unmatched "(".
 Expected "," followed by further types and ")" to complete tuple.
 [exit 1]
   $ ../../../../../install/default/bin/stanc incomplete3.stan
-Syntax error in 'incomplete3.stan', line 2, column 0 to column 0, parsing error:
+Syntax error in 'incomplete3.stan', line 2, column 0, parsing error:
    -------------------------------------------------
      1:  model { tuple( complex , complex ) foo,
          ^

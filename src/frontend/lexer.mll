@@ -206,11 +206,7 @@ rule token = parse
                                   let old_lexbuf = restore_prior_lexbuf () in
                                   token old_lexbuf }
 
-  | _                         { raise (Errors.SyntaxError
-                                        (Errors.Lexing
-                                          (location_of_position
-                                            (lexeme_start_p
-                                              (current_buffer ()))))) }
+  | _                         { Syntax_error.unexpected_character (current_location ()) }
 
 (* Multi-line comment terminated by "*/" *)
 and multiline_comment state = parse
@@ -218,9 +214,7 @@ and multiline_comment state = parse
                let lines = (Buffer.contents buffer) :: lines in
                add_multi_comment pos (List.rev lines) lexbuf.lex_curr_p;
                update_start_positions lexbuf.lex_curr_p }
-  | eof      { raise (Errors.SyntaxError
-                      (Errors.UnexpectedEOF
-                        (location_of_position lexbuf.lex_curr_p))) }
+  | eof      { Syntax_error.unexpected_eof (current_location ()) }
   | newline  { incr_linenum lexbuf;
                let ((pos, lines), buffer) = state in
                let lines = (Buffer.contents buffer) :: lines in
