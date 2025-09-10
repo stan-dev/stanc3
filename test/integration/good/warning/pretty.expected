@@ -80,8 +80,8 @@ Warning in 'deprecated_syntax.stan', line 17, column 6 to column 19:
 [exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format empty.stan
 
-Warning: Empty file 'empty.stan' detected; this is a valid stan model but
-    likely unintended!
+Warning in 'empty.stan', line 1, column 0:
+    Empty model detected; this is a valid Stan model but likely unintended!
 [exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format fun_log_forward_decl.stan
 /**
