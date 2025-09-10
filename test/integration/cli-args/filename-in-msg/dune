@@ -20,13 +20,14 @@
  (targets filename_good.output)
  (deps
   (package stanc)
+  also_empty.stan
   (:stanfiles filename_good.stan empty.stan))
  (action
   (with-stdout-to
    %{targets}
    (run
     %{bin:run_bin_on_args}
-    "%{bin:stanc} --filename-in-msg=foo.stan --print-cpp "
+    "%{bin:stanc} --filename-in-msg=foo.stan --include-paths=. --print-cpp "
     %{stanfiles}))))
 
 (rule
