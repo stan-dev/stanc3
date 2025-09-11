@@ -116,7 +116,7 @@ type 'l lvalue_pack =
   | LValue of 'l
   | LTuplePack of
       { lvals: 'l lvalue_pack list
-      ; loc: Location_span.t [@sexp.opaque] [@compare.ignore] }
+      ; loc: (Location_span.t[@sexp.opaque] [@compare.ignore]) }
 [@@deriving sexp, hash, compare, map, fold]
 
 type ('e, 'm) lval_with = {lval: (('e, 'm) lval_with, 'e) lvalue; lmeta: 'm}
@@ -227,18 +227,20 @@ let mk_typed_statement ~stmt ~loc ~return_type =
 
 (** Program shapes, where we obtain types of programs if we substitute typed or untyped
     statements for 's *)
-type 's block = {stmts: 's list; xloc: Middle.Location_span.t [@ignore]}
+type 's block =
+  {stmts: 's list; xloc: (Location_span.t[@sexp.opaque] [@compare.ignore])}
+[@@deriving sexp, hash, compare, map, fold]
 
-and comment_type =
-  | LineComment of string * Middle.Location_span.t
-  | Include of string * Middle.Location_span.t
-  | BlockComment of string list * Middle.Location_span.t
-  | Separator of Middle.Location.t
+type comment_type =
+  | LineComment of string * Location_span.t
+  | Include of string * Location_span.t
+  | BlockComment of string list * Location_span.t
+  | Separator of Location.t
       (** Separator records the location of items like commas, operators, and keywords
           which don't have location information stored in the AST
           but are useful for placing comments in pretty printing *)
 
-and 's program =
+type 's program =
   { functionblock: 's block option
   ; datablock: 's block option
   ; transformeddatablock: 's block option
@@ -246,7 +248,7 @@ and 's program =
   ; transformedparametersblock: 's block option
   ; modelblock: 's block option
   ; generatedquantitiesblock: 's block option
-  ; comments: (comment_type list[@sexp.opaque] [@ignore]) }
+  ; comments: (comment_type list[@sexp.opaque] [@compare.ignore]) }
 [@@deriving sexp, hash, compare, map, fold]
 
 let get_stmts = Option.value_map ~default:[] ~f:(fun x -> x.stmts)
