@@ -2,21 +2,22 @@ open Core
 open Core.Poly
 open Middle
 
-let log_demotions = ref true
+let demotion_reasons = ref []
+
+let get_warnings () =
+  let mem_name pattern =
+    match pattern with Mem_pattern.SoA -> "SoA" | AoS -> "AoS" in
+  List.map !demotion_reasons ~f:(fun (linenum, pattern, msg) ->
+      Printf.sprintf "%s (Line %i) warning: %s" (mem_name pattern) linenum msg)
 
 let user_warning (mem_pattern : Mem_pattern.t) (linenum : int) (msg : string) =
-  if !log_demotions then
-    let mem_name =
-      match mem_pattern with Mem_pattern.SoA -> "SoA" | AoS -> "AoS" in
-    Printf.eprintf "%s (Line: %i) warning: %s\n" mem_name linenum msg
+  if not (String.is_empty msg) then
+    demotion_reasons := (linenum, mem_pattern, msg) :: !demotion_reasons
 
 let user_warning_op (mem_pattern : Mem_pattern.t) (linenum : int) (msg : string)
     (names : string) =
-  if !log_demotions then
-    let mem_name =
-      match mem_pattern with Mem_pattern.SoA -> "SoA" | AoS -> "AoS" in
-    if not (String.is_empty names || String.is_empty msg) then
-      Printf.eprintf "%s (Line %i) warning: %s\n" mem_name linenum (msg ^ names)
+  if not (String.is_empty names || String.is_empty msg) then
+    demotion_reasons := (linenum, mem_pattern, msg ^ names) :: !demotion_reasons
 
 let concat_set_str (set : string Set.Poly.t) =
   Set.fold
