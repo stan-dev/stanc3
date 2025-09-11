@@ -127,7 +127,11 @@ let stan2cpp model_name model (flags : Flags.t) (output : other_output -> unit)
       tx_mir in
   if flags.debug_settings.print_mem_patterns then
     output
-      (Memory_patterns (Fmt.str "%a" Memory_patterns.pp_mem_patterns opt_mir));
+      (Memory_patterns
+         (Fmt.str "%a%a@\n" Memory_patterns.pp_mem_patterns opt_mir
+            (* TODO should be better associated with the names from above? *)
+            Fmt.(list string)
+            (Memory_patterns.get_warnings ())));
   debug_output_mir output opt_mir flags.debug_settings.print_optimized_mir;
   let cpp =
     Lower_program.lower_program
