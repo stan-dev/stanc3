@@ -968,6 +968,8 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
       let le = ce e1 in
       let re = ce e2 in
       let binop_type_warnings x y =
+        let pp_indented_box pp ppf = Fmt.pf ppf "@,    @[<hov 2>%a@]@," pp in
+        let pp_indented_box_t pp ppf = pp_indented_box (Fmt.fmt "%t") ppf pp in
         match (x.emeta.type_, y.emeta.type_, op) with
         | UInt, UInt, Divide ->
             let hint ppf =
@@ -981,28 +983,26 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
                     x Pretty_printing.pp_typed_expression y in
             let s =
               Fmt.str
-                "@[<v>@[<hov 0>Found int division:@]@   @[<hov 2>%a@]@,\
-                 @[<hov>%a@]@   @[<hov 2>%t@]@,\
-                 @[<hov>%a@]@]"
-                Pretty_printing.pp_expression {expr; emeta} Fmt.text
-                "Values will be rounded towards zero. If rounding is not \
-                 desired you can write the division as"
-                hint Fmt.text
-                "If rounding is intended please use the integer division \
-                 operator %/%." in
+                "@[<v>Found int division:%aValues will be rounded towards \
+                 zero. If rounding is not desired you can write the division \
+                 as%tIf rounding is intended please use the integer division \
+                 operator %%/%%.@]"
+                (pp_indented_box Pretty_printing.pp_expression)
+                {expr; emeta} (pp_indented_box_t hint) in
             add_warning x.emeta.loc s
         | (UArray UMatrix | UMatrix), (UInt | UReal), Pow ->
             let s =
               Fmt.str
-                "@[<v>@[<hov 0>Found matrix^scalar:@]@   @[<hov 2>%a@]@,\
-                 @[<hov>%a@]@ @[<hov>%a@]@]" Pretty_printing.pp_expression
-                {expr; emeta} Fmt.text
-                "matrix ^ number is interpreted as element-wise \
-                 exponentiation. If this is intended, you can silence this \
-                 warning by using elementwise operator .^"
-                Fmt.text
-                "If you intended matrix exponentiation, use the function \
-                 matrix_power(matrix,int) instead." in
+                "@[<v>Found matrix^scalar:%amatrix ^ number is interpreted as \
+                 element-wise exponentiation. If this is intended, you can \
+                 silence this warning by using elementwise operator .^@ If you \
+                 intended matrix exponentiation, use%tinstead.@]"
+                (pp_indented_box Pretty_printing.pp_expression)
+                {expr; emeta}
+                (pp_indented_box_t (fun ppf ->
+                     Fmt.pf ppf "matrix_power(%a, %a)"
+                       Pretty_printing.pp_expression e1
+                       Pretty_printing.pp_expression e2)) in
             add_warning x.emeta.loc s
         | _ when Operator.is_cmp op -> (
             match le.expr with
@@ -1011,18 +1011,18 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
                 let pp = Operator.pp in
                 add_warning loc
                   (Fmt.str
-                     "Found %t. This is interpreted as %t. Consider if the \
-                      intended meaning was %t instead.@ You can silence this \
-                      warning by adding explicit parenthesis. This can be \
-                      automatically changed using the canonicalize flag for \
-                      stanc"
-                     (fun ppf ->
-                       Fmt.pf ppf "@[<hov>%a %a %a@]" pp_e le pp op2 pp_e re)
-                     (fun ppf ->
-                       Fmt.pf ppf "@[<hov>(%a) %a %a@]" pp_e le pp op2 pp_e re)
-                     (fun ppf ->
-                       Fmt.pf ppf "@[<hov>%a %a %a && %a %a %a@]" pp_e e1 pp op
-                         pp_e e2 pp_e e2 pp op2 pp_e re))
+                     "@[<v>Found chained comparison%aThis is interpreted \
+                      as%tConsider if the intended meaning was%tinstead. You \
+                      can silence this warning by adding explicit parenthesis. \
+                      This can be automatically changed using the canonicalize \
+                      flag for stanc@]"
+                     (pp_indented_box Pretty_printing.pp_expression)
+                     {expr; emeta}
+                     (pp_indented_box_t (fun ppf ->
+                          Fmt.pf ppf "(%a) %a %a" pp_e le pp op pp_e re))
+                     (pp_indented_box_t (fun ppf ->
+                          Fmt.pf ppf "%a %a %a && %a %a %a" pp_e e1 pp op2 pp_e
+                            e2 pp_e e2 pp op pp_e re)))
             | _ -> ())
         | _ -> () in
       binop_type_warnings le re;

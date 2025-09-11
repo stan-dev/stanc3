@@ -135,12 +135,8 @@ program:
     {
       grammar_logger "program" ;
       (* check for empty programs*)
-      let () =
-        match (ofb, odb, otdb, opb, otpb, omb, ogb) with
-        | None, None, None, None, None, None, None ->
-            Input_warnings.empty (location_of_position $startpos).filename
-        | _ -> ()
-      in
+      if List.is_empty (List.filter_opt [ofb; odb; otdb; opb; otpb; omb; ogb])
+      then Input_warnings.empty ();
       { functionblock= ofb
       ; datablock= odb
       ; transformeddatablock= otdb
