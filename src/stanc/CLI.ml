@@ -2,9 +2,6 @@ open Core
 open Frontend
 open Cmdliner
 
-let flag_all_to_bool (flags : bool list Term.t) : bool Term.t =
-  Term.map (Fn.compose not List.is_empty) flags
-
 module Arguments = struct
   (** Positional arguments *)
 
@@ -36,17 +33,33 @@ module Options = struct
           None
       & info ["?"] ~doc:"Synonym for $(b,--help)." ~docv:"=FMT")
 
+  (** Wrapper around flag_all to support passing the same flag multiple times. Emits a warning *)
+  let multi_flag name arg_info =
+    let flags = Arg.(value & flag_all & arg_info [name]) in
+    Term.map
+      (fun fs ->
+        match List.length fs with
+        | 0 -> false
+        | 1 -> true
+        | _ ->
+            Printf.eprintf
+              "Warning: Duplicated flag '--%s' ignored, consider updating your \
+               call to stanc!"
+              name;
+            true)
+      flags
+
   let allow_undefined =
     let doc =
       "Do not fail if a function is declared but not defined. This usually \
        means the definition will be provided later as a C++ function." in
-    Arg.(value & flag_all & info ["allow-undefined"] ~doc) |> flag_all_to_bool
+    Arg.(multi_flag "allow-undefined" & info ~doc)
 
   let auto_format =
     let doc =
       "Output a formatted version of the Stan program. The output can be \
        tweaked using $(b,--max-line-length) and $(b,--canonicalize)." in
-    Arg.(value & flag_all & info ["auto-format"] ~doc) |> flag_all_to_bool
+    Arg.(multi_flag "auto-format" & info ~doc)
 
   let canonicalizer_settings =
     let fold_canonicalize_options
@@ -97,7 +110,7 @@ module Options = struct
 
   let info =
     let doc = "If set, print information about the model." in
-    Arg.(value & flag_all & info ["info"] ~doc) |> flag_all_to_bool
+    Arg.(multi_flag "info" & info ~doc)
 
   let max_line_length =
     let doc = "Set the maximum line length for the formatter." in
@@ -121,55 +134,53 @@ module Options = struct
 
   let o0 =
     let doc = "$(i,(Default)) Do not apply optimizations to the Stan code." in
-    Arg.(value & flag_all & info ["O0"] ~doc) |> flag_all_to_bool
+    Arg.(multi_flag "O0" & info ~doc)
 
   let o1 =
     let doc =
       "Only basic optimizations are applied. Recommended. The deprecated \
        option $(b,--O) is aliased to this starting in Stan 2.37." in
-    Arg.(value & flag_all & info ["O1"] ~doc) |> flag_all_to_bool
+    Arg.(multi_flag "O1" & info ~doc)
 
   let oexperimental =
     let doc =
       "$(i,(Experimental)) Apply all compiler optimizations. Some of these are \
        not thorougly tested and may not always improve a programs performance."
     in
-    Arg.(value & flag_all & info ["Oexperimental"] ~doc) |> flag_all_to_bool
+    Arg.(multi_flag "Oexperimental" & info ~doc)
 
   let print_canonical =
     let doc =
       "Prints the canonicalized program. Equivalent to $(b,--auto-format \
        --canonicalize=deprecations,includes,parentheses,braces)." in
-    Arg.(value & flag_all & info ["print-canonical"] ~doc) |> flag_all_to_bool
+    Arg.(multi_flag "print-canonical" & info ~doc)
 
   let print_cpp =
     let doc = "If set, output the generated C++ Stan model class to stdout." in
-    Arg.(value & flag_all & info ["print-cpp"] ~doc) |> flag_all_to_bool
+    Arg.(multi_flag "print-cpp" & info ~doc)
 
   let standalone_functions =
     let doc =
       "If set, the generated C++ will only contain the code for the functions \
        in the functions block, not the full Stan model class." in
-    Arg.(value & flag_all & info ["standalone-functions"] ~doc)
-    |> flag_all_to_bool
+    Arg.(multi_flag "standalone-functions" & info ~doc)
 
   let use_opencl =
     let doc =
       "If set, try to use matrix_cl signatures for supported Stan Math \
        functions." in
-    Arg.(value & flag_all & info ["use-opencl"] ~doc) |> flag_all_to_bool
+    Arg.(multi_flag "use-opencl" & info ~doc)
 
   let warn_pedantic =
     let doc =
       "Emit warnings about common mistakes in Stan programs. $(i,Note:) This \
        may produce false positive warnings." in
-    Arg.(value & flag_all & info ["warn-pedantic"] ~doc) |> flag_all_to_bool
+    Arg.(multi_flag "warn-pedantic" & info ~doc)
 
   let warn_uninitialized =
     let doc =
       "$(i,(Experimental)) Emit warnings about uninitialized variables." in
-    Arg.(value & flag_all & info ["warn-uninitialized"] ~doc)
-    |> flag_all_to_bool
+    Arg.(multi_flag "warn-uninitialized" & info ~doc)
 end
 
 module Commands = struct
@@ -181,18 +192,16 @@ module Commands = struct
       "Dump out the list of supported function signatures the for Stan Math \
        backend." in
     Arg.(
-      value & flag_all
+      value & flag
       & info ["dump-stan-math-signatures"] ~doc ~docs:Manpage.s_commands)
-    |> flag_all_to_bool
 
   let dump_stan_math_distributions =
     let doc =
       "Dump out the list of supported probability distributions and their \
        supported suffix types for the Stan Math backend." in
     Arg.(
-      value & flag_all
+      value & flag
       & info ["dump-stan-math-distributions"] ~doc ~docs:Manpage.s_commands)
-    |> flag_all_to_bool
 end
 
 module Debug_Options = struct
@@ -205,7 +214,7 @@ module Debug_Options = struct
     let doc =
       "For debugging purposes: print the undecorated AST, before semantic \
        checking." in
-    Arg.(value & flag_all & info ["debug-ast"] ~doc ~docs) |> flag_all_to_bool
+    Arg.(value & flag & info ["debug-ast"] ~doc ~docs)
 
   let debug_data_json : string option Term.ret Term.t =
     let doc =
@@ -228,32 +237,29 @@ module Debug_Options = struct
     let doc =
       "For debugging purposes: print the decorated AST, after semantic \
        checking." in
-    Arg.(value & flag_all & info ["debug-decorated-ast"] ~doc ~docs)
-    |> flag_all_to_bool
+    Arg.(value & flag & info ["debug-decorated-ast"] ~doc ~docs)
 
   let debug_generate_data =
     let doc =
       "For debugging purposes: generate a mock dataset to run the model on."
     in
-    Arg.(value & flag_all & info ["debug-generate-data"] ~doc ~docs)
-    |> flag_all_to_bool
+    Arg.(value & flag & info ["debug-generate-data"] ~doc ~docs)
 
   let debug_generate_inits =
     let doc =
       "For debugging purposes: generate a mock initial value for each \
        parameter." in
-    Arg.(value & flag_all & info ["debug-generate-inits"] ~doc ~docs)
-    |> flag_all_to_bool
+    Arg.(value & flag & info ["debug-generate-inits"] ~doc ~docs)
 
   let debug_lex =
     let doc = "For debugging purposes: print the lexer actions." in
-    Arg.(value & flag_all & info ["debug-lex"] ~doc ~docs) |> flag_all_to_bool
+    Arg.(value & flag & info ["debug-lex"] ~doc ~docs)
 
   let debug_lir =
     let doc =
       "For debugging purposes: print the C++ LIR as a s-expression. Mainly for \
        comparison with $(b,--print-cpp)." in
-    Arg.(value & flag_all & info ["debug-lir"] ~doc ~docs) |> flag_all_to_bool
+    Arg.(value & flag & info ["debug-lir"] ~doc ~docs)
 
   let debug_mem_patterns =
     let doc =
@@ -261,8 +267,7 @@ module Debug_Options = struct
        memory type, either AoS (array of structs) or the more efficient SoA \
        (struct of arrays). Only has an effect when optimizations are turned \
        on." in
-    Arg.(value & flag_all & info ["debug-mem-patterns"] ~doc ~docs)
-    |> flag_all_to_bool
+    Arg.(value & flag & info ["debug-mem-patterns"] ~doc ~docs)
 
   (** helper for paired args like --debug-mir and --debug-mir-pretty *)
   let debug_basic_or_pretty ~doc flag_name : Driver.Flags.debug_options Term.t =
@@ -286,7 +291,7 @@ module Debug_Options = struct
 
   let debug_parse =
     let doc = "For debugging purposes: print the parser actions." in
-    Arg.(value & flag_all & info ["debug-parse"] ~doc ~docs) |> flag_all_to_bool
+    Arg.(value & flag & info ["debug-parse"] ~doc ~docs)
 
   let debug_transformed_mir =
     let doc =

@@ -284,3 +284,4 @@ Flags can be passed multiple times
     real y;
   }
   
+  Warning: Duplicated flag '--auto-format' ignored, consider updating your call to stanc!
