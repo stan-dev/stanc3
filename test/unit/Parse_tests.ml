@@ -440,3 +440,47 @@ let%expect_test "parse nested loop" =
            (smeta ((loc <opaque>))))))
         (xloc <opaque>))))
      (generatedquantitiesblock ()) (comments <opaque>)) |}]
+
+let%expect_test "parse crazy truncation example" =
+  print_ast_of_string
+    "\n\
+    \      model {\n\
+    \        real a, b; \n\
+    \        (a,b) = (1,2); \n\
+    \      }\n\
+    \      ";
+  [%expect
+    {|
+    ((functionblock ()) (datablock ()) (transformeddatablock ())
+     (parametersblock ()) (transformedparametersblock ())
+     (modelblock
+      (((stmts
+         (((stmt
+            (VarDecl (decl_type SReal) (transformation Identity)
+             (is_global false)
+             (variables
+              (((identifier ((name a) (id_loc <opaque>))) (initial_value ()))
+               ((identifier ((name b) (id_loc <opaque>))) (initial_value ()))))))
+           (smeta ((loc <opaque>))))
+          ((stmt
+            (Assignment
+             (assign_lhs
+              (LTuplePack
+               (lvals
+                ((LValue
+                  ((lval (LVariable ((name a) (id_loc <opaque>))))
+                   (lmeta ((loc <opaque>)))))
+                 (LValue
+                  ((lval (LVariable ((name b) (id_loc <opaque>))))
+                   (lmeta ((loc <opaque>)))))))
+               (loc <opaque>)))
+             (assign_op Assign)
+             (assign_rhs
+              ((expr
+                (TupleExpr
+                 (((expr (IntNumeral 1)) (emeta ((loc <opaque>))))
+                  ((expr (IntNumeral 2)) (emeta ((loc <opaque>)))))))
+               (emeta ((loc <opaque>)))))))
+           (smeta ((loc <opaque>))))))
+        (xloc <opaque>))))
+     (generatedquantitiesblock ()) (comments <opaque>)) |}]
