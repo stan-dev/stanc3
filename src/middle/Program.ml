@@ -147,9 +147,9 @@ module Typed = struct
 
   let pp ppf x = pp Expr.Typed.pp Stmt.Located.pp ppf x
 
-  let sexp_of_t (x : t) =
+  let sexp_of_t : t -> Sexp.t =
     sexp_of_t Expr.Typed.sexp_of_t Stmt.Located.sexp_of_t
-      Sexplib.Conv.sexp_of_opaque x
+      Sexplib.Conv.sexp_of_opaque
 end
 
 module Numbered = struct
