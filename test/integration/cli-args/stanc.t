@@ -201,6 +201,7 @@ Show help
 
 
 
+
 Qmark alias
   $ stanc -? plain | head
   NAME
@@ -266,7 +267,6 @@ Can read from stdin
   
 
 
-
 Filename is set to stdin when reading from stdin
   $ echo 'parameters {real y}' | stanc -
   Syntax error in 'stdin', line 1, column 18 to column 19, parsing error:
@@ -277,3 +277,11 @@ Filename is set to stdin when reading from stdin
   
   ";" expected after variable declaration.
   [1]
+
+Flags can be passed multiple times
+  $ echo 'parameters {real y;}' | stanc - --auto-format --auto-format
+  parameters {
+    real y;
+  }
+  
+  Warning: Duplicated flag '--auto-format' ignored, consider updating your call to stanc!
