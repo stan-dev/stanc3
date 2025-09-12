@@ -5,7 +5,7 @@ Syntax error in 'bad1.stan', line 1, column 8, parsing error:
                  ^
    -------------------------------------------------
 
-Variable declaration, statement or "}" expected.
+Ill-formed block. Variable declaration, statement or "}" expected.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad1.stanfunctions
 Syntax error in 'bad1.stanfunctions', line 1, column 5 to column 6, parsing error:
@@ -14,7 +14,7 @@ Syntax error in 'bad1.stanfunctions', line 1, column 5 to column 6, parsing erro
               ^
    -------------------------------------------------
 
-"(" expected after function name.
+Ill-formed function. "(" expected after function name.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad10.stan
 Semantic error in 'bad10.stan', line 2, column 8 to column 11:
@@ -69,7 +69,7 @@ Syntax error in 'bad2.stanfunctions', line 5, column 0 to column 1, parsing erro
          ^
    -------------------------------------------------
 
-Only function definitions/declarations are expected in '.stanfunctions' file
+Ill-formed program. Only function definitions/declarations are expected in '.stanfunctions' files.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad3.stan
 Syntax error in 'bad3.stan', line 1, column 21 to column 22, parsing error:
@@ -78,7 +78,7 @@ Syntax error in 'bad3.stan', line 1, column 21 to column 22, parsing error:
                               ^
    -------------------------------------------------
 
-"[" expression "," expression "]" expected for matrix sizes.
+Ill-formed type. "[" expression "," expression "]" expected for matrix sizes.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad3.stanfunctions
 Syntax error in 'bad3.stanfunctions', line 1, column 0 to column 5, parsing error:
@@ -87,7 +87,7 @@ Syntax error in 'bad3.stanfunctions', line 1, column 0 to column 5, parsing erro
          ^
    -------------------------------------------------
 
-Function definitions/declarations expected in '.stanfunctions' file
+Ill-formed program. Only function definitions/declarations are expected in '.stanfunctions' files.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad4.stan
 Semantic error in 'bad4.stan', line 1, column 44 to column 48:
@@ -184,7 +184,7 @@ Syntax error in 'bad_bounds1.stan', line 2, column 15 to column 17, parsing erro
      4:  parameters {
    -------------------------------------------------
 
-Ill-formed expression. Expected expression (not containing binary logical operators).
+Ill-formed constraint. Expected expression (not containing binary logical operators).
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_decl1.stan
 Syntax error in 'bad_decl1.stan', line 2, column 10 to column 13, parsing error:
@@ -207,7 +207,7 @@ Syntax error in 'bad_decl2.stan', line 2, column 13 to column 14, parsing error:
      3:  }
    -------------------------------------------------
 
-Expected non-array type after "array" declaration.
+Ill-formed type. Expected non-array type after "array" declaration.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_decl3.stan
 Syntax error in 'bad_decl3.stan', line 3, column 28 to column 29, parsing error:
@@ -220,7 +220,7 @@ Syntax error in 'bad_decl3.stan', line 3, column 28 to column 29, parsing error:
      5:      }
    -------------------------------------------------
 
-Expected a new identifier after comma in declaration.
+Ill-formed declaration. Expected a new identifier after comma in declaration.
 All variables declared must be of the same type, and any initializing assignment must follow the identifier before the next comma.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_decl4.stan
@@ -442,7 +442,8 @@ Syntax error in 'incomplete.stan', line 2, column 18 to column 19, parsing error
      3:  }
    -------------------------------------------------
 
-Found an incomplete binary expression - are you missing the right hand side?
+Ill-formed expression. Found an incomplete binary expression.
+Are you missing the right hand side?
 [exit 1]
   $ ../../../../../install/default/bin/stanc incomplete2.stan
 Syntax error in 'incomplete2.stan', line 2, column 15 to column 20, parsing error:
@@ -453,7 +454,7 @@ Syntax error in 'incomplete2.stan', line 2, column 15 to column 20, parsing erro
      3:  }
    -------------------------------------------------
 
-Unexpected input after the conclusion of a valid expression.
+Ill-formed expression. Unexpected input after the conclusion of a valid expression.
 You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
 [exit 1]
   $ ../../../../../install/default/bin/stanc incomplete3.stan
@@ -465,7 +466,8 @@ Syntax error in 'incomplete3.stan', line 2, column 10 to column 15, parsing erro
      3:  }
    -------------------------------------------------
 
-Found an incomplete binary expression - are you missing the right hand side?
+Ill-formed expression. Found an incomplete binary expression.
+Are you missing the right hand side?
 [exit 1]
   $ ../../../../../install/default/bin/stanc incomplete4.stan
 Syntax error in 'incomplete4.stan', line 2, column 13 to column 14, parsing error:
@@ -476,7 +478,8 @@ Syntax error in 'incomplete4.stan', line 2, column 13 to column 14, parsing erro
      3:  }
    -------------------------------------------------
 
-Ill-formed phrase. Found an expression where we expected a statement.
+Ill-formed phrase. Expected a statement, but found a partial value before this point.
+Did you mean for this to be the start of a "~" statement?
 [exit 1]
   $ ../../../../../install/default/bin/stanc incomplete5.stan
 Syntax error in 'incomplete5.stan', line 3, column 0, parsing error:
@@ -498,7 +501,7 @@ Syntax error in 'incomplete6.stan', line 3, column 16 to column 21, parsing erro
      4:  }
    -------------------------------------------------
 
-Ill-formed expression. We expect a comma separated list of expressions, followed by "]".
+Ill-formed expression. Expected a comma separated list of expressions, followed by "]".
 [exit 1]
   $ ../../../../../install/default/bin/stanc reused_name.stan
 Semantic error in 'reused_name.stan', line 4, column 14 to column 15:
