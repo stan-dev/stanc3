@@ -44,7 +44,7 @@ Syntax error in 'plus_equals_bad_init.stan', line 3, column 20 to column 22, par
      4:  }
    -------------------------------------------------
 
-";" or plain assignment expected after variable declaration.
+Ill-formed declaration. Expected ";" or plain assignment after variable declaration.
 [exit 1]
   $ ../../../../../install/default/bin/stanc plus_equals_bad_lhs_idxs.stan
 Semantic error in 'plus_equals_bad_lhs_idxs.stan', line 4, column 2 to column 8:
@@ -151,7 +151,7 @@ Syntax error in 'plus_equals_matrix_shape_mismatch.stan', line 4, column 10 to c
      6:  }
    -------------------------------------------------
 
-Expected "[" expression "]" for vector size.
+Ill-formed type. Expected "[" expression "]" for vector size.
 [exit 1]
   $ ../../../../../install/default/bin/stanc plus_equals_prim_array.stan
 Semantic error in 'plus_equals_prim_array.stan', line 5, column 2 to column 3:

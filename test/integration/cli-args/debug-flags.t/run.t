@@ -468,6 +468,7 @@ Flags not used elsewhere in the tests
            ^
      -------------------------------------------------
   
-  Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
+  Ill-formed program. Expected "functions {", "transformed data {", "parameters {",
+  "transformed parameters {", "model {", or "generated quantities {".
   (Parse error state 407)
   [1]

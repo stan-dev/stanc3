@@ -284,7 +284,7 @@ Filename is set to stdin when reading from stdin
                              ^
      -------------------------------------------------
   
-  ";" expected after variable declaration.
+  Ill-formed declaration. Expected ";" after variable declaration.
   [1]
 
 Flags can be passed multiple times
