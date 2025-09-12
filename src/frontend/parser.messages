@@ -1117,7 +1117,7 @@ program: DATABLOCK WHILE
 Ill-formed block. Expected "{" followed by a list of top-level variable declarations after "data".
 
 program: FUNCTIONBLOCK LBRACE VOID WHILE LPAREN RPAREN SEMICOLON EOF
-## Concrete syntax: functions { void while ( ) ;
+## Concrete syntax: functions { void while ( ) ; <EOF>
 program: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN RPAREN SEMICOLON WHILE
 ##
 ## Concrete syntax: functions { void foo ( ) ; while

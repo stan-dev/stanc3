@@ -60,7 +60,7 @@ Syntax error in 'decl.stan', line 2, column 7 to column 12, parsing error:
      4:  }
    -------------------------------------------------
 
-Expected a new identifier but found reserved keyword 'array'.
+Ill-formed identifier. Expected a new identifier but found reserved keyword "array".
 [exit 1]
   $ ../../../../../install/default/bin/stanc declarations.stan
 Syntax error in 'declarations.stan', line 3, column 18 to column 19, parsing error:
@@ -73,7 +73,7 @@ Syntax error in 'declarations.stan', line 3, column 18 to column 19, parsing err
      5:    array[1] int a3;
    -------------------------------------------------
 
-";" expected after variable declaration.
+Ill-formed declaration. ";" expected after variable declaration.
 It looks like you are trying to use the old array syntax.
 Please use the new syntax:
 array[1] int<lower=0> a1;
@@ -141,7 +141,7 @@ Syntax error in 'identifiers.stan', line 2, column 6 to column 11, parsing error
      4:    int multiplier;
    -------------------------------------------------
 
-Expected a new identifier but found reserved keyword 'upper'.
+Ill-formed identifier. Expected a new identifier but found reserved keyword "upper".
 [exit 1]
   $ ../../../../../install/default/bin/stanc if_else.stan
 Semantic error in 'if_else.stan', line 9, column 26 to column 54:
@@ -244,7 +244,7 @@ Syntax error in 'removed_deprecated_syntax.stan', line 10, column 9 to column 10
     12:  }
    -------------------------------------------------
 
-";" expected after variable declaration.
+Ill-formed declaration. ";" expected after variable declaration.
 It looks like you are trying to use the old array syntax.
 Please use the new syntax:
 array[7] real c;
@@ -259,7 +259,7 @@ Syntax error in 'unreserved-array-keyword.stan', line 2, column 24 to column 29,
      4:  
    -------------------------------------------------
 
-Expected a new identifier but found reserved keyword 'array'.
+Ill-formed identifier. Expected a new identifier but found reserved keyword "array".
 [exit 1]
   $ ../../../../../install/default/bin/stanc unsized-old-array.stan
 Syntax error in 'unsized-old-array.stan', line 2, column 17 to column 20, parsing error:
@@ -271,8 +271,21 @@ Syntax error in 'unsized-old-array.stan', line 2, column 17 to column 20, parsin
      4:    }
    -------------------------------------------------
 
-An identifier is expected after the type as a function argument name.
-It looks like you are trying to use the old array syntax.
-Please use the new syntax: 
+Ill-formed type. It looks like you are trying to use the old array syntax.
+Please use the new syntax:
 array[,] real
+[exit 1]
+  $ ../../../../../install/default/bin/stanc unsized-old-array2.stan
+Syntax error in 'unsized-old-array2.stan', line 2, column 6 to column 8, parsing error:
+   -------------------------------------------------
+     1:  functions{
+     2:    real[] foo(real v){
+               ^
+     3:      return sum(v);
+     4:    }
+   -------------------------------------------------
+
+Ill-formed type. It looks like you are trying to use the old array syntax.
+Please use the new syntax:
+array[] real
 [exit 1]

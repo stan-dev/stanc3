@@ -107,7 +107,7 @@ Syntax error in 'assign_invalid_lhs1.stan', line 2, column 2 to column 12, parsi
      3:  }
    -------------------------------------------------
 
-Expected an assignable value but found a general expression.
+Ill-formed assignment. Expected an assignable value but found a general expression.
 [exit 1]
   $ ../../../../install/default/bin/stanc assign_invalid_lhs2.stan
 Syntax error in 'assign_invalid_lhs2.stan', line 2, column 3 to column 21, parsing error:
@@ -118,7 +118,7 @@ Syntax error in 'assign_invalid_lhs2.stan', line 2, column 3 to column 21, parsi
      3:  }
    -------------------------------------------------
 
-Expected an assignable value but found a general expression.
+Ill-formed assignment. Expected an assignable value but found a general expression.
 [exit 1]
   $ ../../../../install/default/bin/stanc assign_real_to_int.stan
 Semantic error in 'assign_real_to_int.stan', line 11, column 2 to column 3:
@@ -2869,7 +2869,7 @@ Syntax error in 'target-reserved.stan', line 2, column 7 to column 13, parsing e
      4:  parameters {
    -------------------------------------------------
 
-Expected a new identifier but found reserved keyword 'target'.
+Ill-formed identifier. Expected a new identifier but found reserved keyword "target".
 [exit 1]
   $ ../../../../install/default/bin/stanc target_pe_bad.stan
 Semantic error in 'target_pe_bad.stan', line 8, column 2 to column 16:

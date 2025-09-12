@@ -151,7 +151,7 @@ Syntax error in 'bad_unpack_lhs.stan', line 4, column 2 to column 15, parsing er
      5:  }
    -------------------------------------------------
 
-Expected an assignable value but found a general expression.
+Ill-formed assignment. Expected an assignable value but found a general expression.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_unpack_overlap1.stan
 Semantic error in 'bad_unpack_overlap1.stan', line 9, column 2 to column 30:
@@ -334,7 +334,7 @@ Syntax error in 'fuzz-tuple-idx1.stan', line 1, column 36 to column 58, parsing 
                                              ^
    -------------------------------------------------
 
-Failed to parse integer from string '.40000000000000000000' in tuple index. 
+Ill-formed index. Failed to parse integer from string ".40000000000000000000" in tuple index. 
 The index is likely too large.
 [exit 1]
   $ ../../../../../install/default/bin/stanc fuzz-tuple-idx2.stan
@@ -344,7 +344,7 @@ Syntax error in 'fuzz-tuple-idx2.stan', line 1, column 61 to column 83, parsing 
                                                                       ^
    -------------------------------------------------
 
-Failed to parse integer from string '.10000000000000000000' in tuple index. 
+Ill-formed index. Failed to parse integer from string ".10000000000000000000" in tuple index. 
 The index is likely too large.
 [exit 1]
   $ ../../../../../install/default/bin/stanc fuzz-tuple-idx3.stan
@@ -354,7 +354,7 @@ Syntax error in 'fuzz-tuple-idx3.stan', line 1, column 45 to column 66, parsing 
                                                       ^
    -------------------------------------------------
 
-Failed to parse integer from string '.6000000000000000000' in tuple index. 
+Ill-formed index. Failed to parse integer from string ".6000000000000000000" in tuple index. 
 The index is likely too large.
 [exit 1]
   $ ../../../../../install/default/bin/stanc incomplete1.stan
