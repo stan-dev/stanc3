@@ -323,6 +323,7 @@ type compiler_flags =
   ; print_cpp: bool
   ; name: string option
   ; output_file: string
+  ; tty_colors: Fmt.style_renderer option
   ; flags: Driver.Flags.t
   ; model_file: string }
 
@@ -416,7 +417,9 @@ module Conversion = struct
     and+ name = Options.name
     and+ output_file = Options.output_file
     and+ model_file = Arguments.model_file
-    and+ flags = flags in
+    and+ flags = flags
+    and+ tty_colors =
+      Fmt_cli.style_renderer ~env:(Cmd.Env.info "STANC_COLORS") () in
     match qmark with
     | Some fmt -> `Help (fmt, None)
     | None -> (
@@ -434,6 +437,7 @@ module Conversion = struct
                    ; name
                    ; output_file
                    ; model_file
+                   ; tty_colors
                    ; flags }))
 end
 

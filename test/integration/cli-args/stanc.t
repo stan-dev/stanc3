@@ -44,6 +44,9 @@ Show help
              Options are 'deprecations', 'parentheses', 'braces', 'includes',
              'strip-comments'.
   
+         --color=WHEN (absent=auto or STANC_COLORS env)
+             Colorize the output. WHEN must be one of auto, always or never.
+  
          --filename-in-msg=FILENAME (absent=MODEL_FILE)
              Sets the filename used in compiler and runtime errors. 
   
@@ -194,6 +197,12 @@ Show help
          124 on command line parsing errors.
   
          125 on internal compiler errors. Please file a bug!
+  
+  ENVIRONMENT
+         These environment variables affect the execution of %%NAME%%:
+  
+         STANC_COLORS
+             See option --color.
   
   BUGS
          Please report at https://github.com/stan-dev/stanc3/issues/new.
