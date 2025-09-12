@@ -1950,7 +1950,7 @@ program: TRANSFORMEDDATABLOCK LBRACE PRINT LPAREN WHILE
 ## PRINT LPAREN
 ##
 
-Ill-formed statement. Expected a comma-separated list of expressions or
+Ill-formed statement. Expected a comma separated list of expressions or
 strings followed by ");" after "print(".
 
 program: TRANSFORMEDDATABLOCK LBRACE PRINT WHILE
@@ -1965,7 +1965,7 @@ program: TRANSFORMEDDATABLOCK LBRACE PRINT WHILE
 ## PRINT
 ##
 
-Ill-formed statement. Expected "(" followed by a comma-separated list of expressions or
+Ill-formed statement. Expected "(" followed by a comma separated list of expressions or
 strings followed by ");" after "print".
 
 program: TRANSFORMEDDATABLOCK LBRACE RETURN LBRACE IDENTIFIER RPAREN
@@ -2442,7 +2442,7 @@ program: TRANSFORMEDDATABLOCK LBRACE RETURN IDENTIFIER LPAREN IDENTIFIER COMMA I
 ## In state 114, spurious reduction of production loption(separated_nonempty_list(COMMA,expression)) -> separated_nonempty_list(COMMA,expression)
 ##
 
-Ill-formed function application. Expected a comma-separated list of expressions followed by ")" after "(".
+Ill-formed function application. Expected a comma separated list of expressions followed by ")" after "(".
 
 program: TRANSFORMEDDATABLOCK LBRACE RETURN WHILE
 ## Concrete syntax: transformed data { return while
@@ -2586,7 +2586,7 @@ program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LPAREN REALNUMERAL BAR IDENTIFIE
 ## In state 114, spurious reduction of production loption(separated_nonempty_list(COMMA,expression)) -> separated_nonempty_list(COMMA,expression)
 ##
 
-Ill-formed conditional distribution evaluation. Expected a comma-separated list of expressions followed by ")" after "|".
+Ill-formed conditional distribution evaluation. Expected a comma separated list of expressions followed by ")" after "|".
 
 program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LPAREN RPAREN WHILE
 ##
@@ -2812,7 +2812,7 @@ program: TRANSFORMEDDATABLOCK LBRACE WHILE LPAREN WHILE
 ## WHILE LPAREN
 ##
 
-Ill-formed expression. Expected an expression after "(" for the test of a while-loop.
+Ill-formed expression. Expected an expression after "(" for the test of a "while" loop.
 
 program: TRANSFORMEDDATABLOCK LBRACE WHILE WHILE
 ##

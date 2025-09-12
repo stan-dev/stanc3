@@ -128,7 +128,7 @@ Syntax error in 'fun-app-bad1.stan', line 1, column 30 to column 31, parsing err
                                        ^
    -------------------------------------------------
 
-Ill-formed conditional distribution evaluation. Expected a comma-separated list of expressions followed by ")" after "|".
+Ill-formed conditional distribution evaluation. Expected a comma separated list of expressions followed by ")" after "|".
 [exit 1]
   $ ../../../../../install/default/bin/stanc fun-app-bad2.stan
 Syntax error in 'fun-app-bad2.stan', line 1, column 29 to column 34, parsing error:
@@ -137,7 +137,7 @@ Syntax error in 'fun-app-bad2.stan', line 1, column 29 to column 34, parsing err
                                       ^
    -------------------------------------------------
 
-Ill-formed conditional distribution evaluation. Expected a comma-separated list of expressions followed by ")" after "|".
+Ill-formed conditional distribution evaluation. Expected a comma separated list of expressions followed by ")" after "|".
 [exit 1]
   $ ../../../../../install/default/bin/stanc fun-app-bad3.stan
 Syntax error in 'fun-app-bad3.stan', line 1, column 27 to column 32, parsing error:
@@ -165,7 +165,7 @@ Syntax error in 'fun-app-bad5.stan', line 1, column 26 to column 27, parsing err
                                    ^
    -------------------------------------------------
 
-Ill-formed conditional distribution evaluation. Expected a comma-separated list of expressions followed by ")" after "|".
+Ill-formed conditional distribution evaluation. Expected a comma separated list of expressions followed by ")" after "|".
 [exit 1]
   $ ../../../../../install/default/bin/stanc fun-app-bad6.stan
 Syntax error in 'fun-app-bad6.stan', line 1, column 25 to column 30, parsing error:
@@ -174,7 +174,7 @@ Syntax error in 'fun-app-bad6.stan', line 1, column 25 to column 30, parsing err
                                   ^
    -------------------------------------------------
 
-Ill-formed conditional distribution evaluation. Expected a comma-separated list of expressions followed by ")" after "|".
+Ill-formed conditional distribution evaluation. Expected a comma separated list of expressions followed by ")" after "|".
 [exit 1]
   $ ../../../../../install/default/bin/stanc fun-app-bad7.stan
 Syntax error in 'fun-app-bad7.stan', line 1, column 27 to column 28, parsing error:
@@ -183,7 +183,7 @@ Syntax error in 'fun-app-bad7.stan', line 1, column 27 to column 28, parsing err
                                     ^
    -------------------------------------------------
 
-Ill-formed function application. Expected a comma-separated list of expressions followed by ")" after "(".
+Ill-formed function application. Expected a comma separated list of expressions followed by ")" after "(".
 [exit 1]
   $ ../../../../../install/default/bin/stanc fun-app-bad8.stan
 Syntax error in 'fun-app-bad8.stan', line 1, column 23 to column 24, parsing error:
@@ -192,7 +192,7 @@ Syntax error in 'fun-app-bad8.stan', line 1, column 23 to column 24, parsing err
                                 ^
    -------------------------------------------------
 
-Ill-formed function application. Expected a comma-separated list of expressions followed by ")" after "(".
+Ill-formed function application. Expected a comma separated list of expressions followed by ")" after "(".
 [exit 1]
   $ ../../../../../install/default/bin/stanc fun-app-bad9.stan
 Syntax error in 'fun-app-bad9.stan', line 1, column 22 to column 27, parsing error:
@@ -201,7 +201,7 @@ Syntax error in 'fun-app-bad9.stan', line 1, column 22 to column 27, parsing err
                                ^
    -------------------------------------------------
 
-Ill-formed function application. Expected a comma-separated list of expressions followed by ")" after "(".
+Ill-formed function application. Expected a comma separated list of expressions followed by ")" after "(".
 [exit 1]
   $ ../../../../../install/default/bin/stanc fundef-bad10.stan
 Syntax error in 'fundef-bad10.stan', line 2, column 12 to column 23, parsing error:
@@ -867,7 +867,7 @@ Syntax error in 'ill-formed-expression65.stan', line 1, column 31 to column 32, 
                                         ^
    -------------------------------------------------
 
-Ill-formed function application. Expected a comma-separated list of expressions followed by ")" after "(".
+Ill-formed function application. Expected a comma separated list of expressions followed by ")" after "(".
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-expression66.stan
 Syntax error in 'ill-formed-expression66.stan', line 1, column 28 to column 33, parsing error:
@@ -876,7 +876,7 @@ Syntax error in 'ill-formed-expression66.stan', line 1, column 28 to column 33, 
                                      ^
    -------------------------------------------------
 
-Ill-formed function application. Expected a comma-separated list of expressions followed by ")" after "(".
+Ill-formed function application. Expected a comma separated list of expressions followed by ")" after "(".
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-expression67.stan
 Syntax error in 'ill-formed-expression67.stan', line 1, column 24 to column 29, parsing error:
@@ -2697,7 +2697,7 @@ Syntax error in 'print-bad1.stan', line 1, column 29 to column 34, parsing error
                                       ^
    -------------------------------------------------
 
-Ill-formed statement. Expected a comma-separated list of expressions or
+Ill-formed statement. Expected a comma separated list of expressions or
 strings followed by ");" after "print(".
 [exit 1]
   $ ../../../../../install/default/bin/stanc print-bad2.stan
@@ -2716,7 +2716,7 @@ Syntax error in 'print-bad3.stan', line 1, column 25 to column 30, parsing error
                                   ^
    -------------------------------------------------
 
-Ill-formed statement. Expected a comma-separated list of expressions or
+Ill-formed statement. Expected a comma separated list of expressions or
 strings followed by ");" after "print(".
 [exit 1]
   $ ../../../../../install/default/bin/stanc print-bad4.stan
@@ -2726,7 +2726,7 @@ Syntax error in 'print-bad4.stan', line 1, column 25 to column 30, parsing error
                                   ^
    -------------------------------------------------
 
-Ill-formed statement. Expected "(" followed by a comma-separated list of expressions or
+Ill-formed statement. Expected "(" followed by a comma separated list of expressions or
 strings followed by ");" after "print".
 [exit 1]
   $ ../../../../../install/default/bin/stanc reject-bad1.stan
@@ -3897,7 +3897,7 @@ Syntax error in 'while-bad4.stan', line 1, column 27 to column 28, parsing error
                                     ^
    -------------------------------------------------
 
-Ill-formed expression. Expected an expression after "(" for the test of a while-loop.
+Ill-formed expression. Expected an expression after "(" for the test of a "while" loop.
 [exit 1]
   $ ../../../../../install/default/bin/stanc while-bad5.stan
 Syntax error in 'while-bad5.stan', line 1, column 26 to column 31, parsing error:
@@ -3906,7 +3906,7 @@ Syntax error in 'while-bad5.stan', line 1, column 26 to column 31, parsing error
                                    ^
    -------------------------------------------------
 
-Ill-formed expression. Expected an expression after "(" for the test of a while-loop.
+Ill-formed expression. Expected an expression after "(" for the test of a "while" loop.
 [exit 1]
   $ ../../../../../install/default/bin/stanc while-bad6.stan
 Syntax error in 'while-bad6.stan', line 1, column 25 to column 30, parsing error:
