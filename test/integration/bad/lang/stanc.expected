@@ -5,7 +5,7 @@ Syntax error in 'bad1.stan', line 1, column 8, parsing error:
                  ^
    -------------------------------------------------
 
-Ill-formed block. Variable declaration, statement or "}" expected.
+Ill-formed block. Expected variable declaration, statement or "}".
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad1.stanfunctions
 Syntax error in 'bad1.stanfunctions', line 1, column 5 to column 6, parsing error:
@@ -14,7 +14,7 @@ Syntax error in 'bad1.stanfunctions', line 1, column 5 to column 6, parsing erro
               ^
    -------------------------------------------------
 
-Ill-formed function. "(" expected after function name.
+Ill-formed function. Expected "(" after function name.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad10.stan
 Semantic error in 'bad10.stan', line 2, column 8 to column 11:
@@ -78,7 +78,7 @@ Syntax error in 'bad3.stan', line 1, column 21 to column 22, parsing error:
                               ^
    -------------------------------------------------
 
-Ill-formed type. "[" expression "," expression "]" expected for matrix sizes.
+Ill-formed type. Expected "[" expression "," expression "]" for matrix sizes.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad3.stanfunctions
 Syntax error in 'bad3.stanfunctions', line 1, column 0 to column 5, parsing error:
@@ -184,7 +184,7 @@ Syntax error in 'bad_bounds1.stan', line 2, column 15 to column 17, parsing erro
      4:  parameters {
    -------------------------------------------------
 
-Ill-formed constraint. Expected expression (not containing binary logical operators).
+Ill-formed constraint. Expected an expression (not containing binary logical operators).
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_decl1.stan
 Syntax error in 'bad_decl1.stan', line 2, column 10 to column 13, parsing error:
@@ -479,7 +479,7 @@ Syntax error in 'incomplete4.stan', line 2, column 13 to column 14, parsing erro
    -------------------------------------------------
 
 Ill-formed phrase. Expected a statement, but found a partial value before this point.
-Did you mean for this to be the start of a "~" statement?
+Did you mean for this to be the start of an assignment or "~"-statement?
 [exit 1]
   $ ../../../../../install/default/bin/stanc incomplete5.stan
 Syntax error in 'incomplete5.stan', line 3, column 0, parsing error:

@@ -792,7 +792,7 @@ Syntax error in 'err-bare-type-close-square.stan', line 2, column 9 to column 13
      4:  model {
    -------------------------------------------------
 
-Ill-formed type. "[" (list of commas) "]" expected in unsized return type of function definition.
+Ill-formed type. Expected "[" (list of commas) "]" in unsized return type of function definition.
 [exit 1]
   $ ../../../../install/default/bin/stanc err-close-block.stan
 Syntax error in 'err-close-block.stan', line 3, column 0 to column 5, parsing error:
@@ -804,7 +804,7 @@ Syntax error in 'err-close-block.stan', line 3, column 0 to column 5, parsing er
      4:  }
    -------------------------------------------------
 
-Ill-formed block. Function forward declaration, definition or "}" expected after "functions {".
+Ill-formed block. Expected a function forward declaration, definition, or "}" after "functions {".
 [exit 1]
   $ ../../../../install/default/bin/stanc err-close-function-args.stan
 Syntax error in 'err-close-function-args.stan', line 2, column 18 to column 19, parsing error:
@@ -816,7 +816,7 @@ Syntax error in 'err-close-function-args.stan', line 2, column 18 to column 19, 
      4:    }
    -------------------------------------------------
 
-Ill-formed function argument. "," or ")" expected after function argument declaration.
+Ill-formed function argument. Expected "," or ")" after function argument declaration.
 [exit 1]
   $ ../../../../install/default/bin/stanc err-decl-double-params.stan
 Syntax error in 'err-decl-double-params.stan', line 4, column 0 to column 1, parsing error:
@@ -830,7 +830,7 @@ Syntax error in 'err-decl-double-params.stan', line 4, column 0 to column 1, par
    -------------------------------------------------
 
 Ill-formed phrase. Expected a statement, but found a partial value before this point.
-Did you mean for this to be the start of a "~" statement?
+Did you mean for this to be the start of an assignment or "~"-statement?
 [exit 1]
   $ ../../../../install/default/bin/stanc err-decl-double.stan
 Syntax error in 'err-decl-double.stan', line 2, column 2 to column 8, parsing error:
@@ -872,7 +872,7 @@ Syntax error in 'err-decl-matrix.stan', line 2, column 10 to column 11, parsing 
      4:  model {
    -------------------------------------------------
 
-Ill-formed type. "[" expression "," expression "]" expected for matrix sizes.
+Ill-formed type. Expected "[" expression "," expression "]" for matrix sizes.
 [exit 1]
   $ ../../../../install/default/bin/stanc err-decl-no-expression.stan
 Syntax error in 'err-decl-no-expression.stan', line 2, column 13 to column 14, parsing error:
@@ -884,8 +884,8 @@ Syntax error in 'err-decl-no-expression.stan', line 2, column 13 to column 14, p
      4:  model {
    -------------------------------------------------
 
-Ill-formed constraint. Expression (not containing binary logical operators)
-expected after "lower =".
+Ill-formed constraint. Expected an expression (not containing binary logical operators)
+after "lower =".
 [exit 1]
   $ ../../../../install/default/bin/stanc err-decl-vector-2.stan
 Syntax error in 'err-decl-vector-2.stan', line 2, column 10 to column 11, parsing error:
@@ -978,7 +978,7 @@ Syntax error in 'err-fun-bare-types-int.stan', line 2, column 8 to column 9, par
      4:      return a;
    -------------------------------------------------
 
-Ill-formed type. "[" (list of commas) "]" expected in unsized return type of function definition.
+Ill-formed type. Expected "[" (list of commas) "]" in unsized return type of function definition.
 [exit 1]
   $ ../../../../install/default/bin/stanc err-if-else-double-else.stan
 Syntax error in 'err-if-else-double-else.stan', line 4, column 2 to column 6, parsing error:
@@ -1171,7 +1171,7 @@ Syntax error in 'err-nested-parens.stan', line 3, column 12 to column 13, parsin
      4:  }
    -------------------------------------------------
 
-Ill-formed expression. Expression or comma separated list of expressions followed by ")" expected after "(".
+Ill-formed expression. Expected an expression or comma separated list of expressions followed by ")" after "(".
 [exit 1]
   $ ../../../../install/default/bin/stanc err-no-cond-else-if.stan
 Syntax error in 'err-no-cond-else-if.stan', line 5, column 12 to column 13, parsing error:
@@ -1210,7 +1210,7 @@ Syntax error in 'err-no-statement.stan', line 4, column 0 to column 1, parsing e
      6:  }
    -------------------------------------------------
 
-Ill-formed statement. Statement expected for true branch of conditional.
+Ill-formed statement. Expected a statement for the true branch of conditional.
 [exit 1]
   $ ../../../../install/default/bin/stanc err-non-int-dims.stan
 Semantic error in 'err-non-int-dims.stan', line 4, column 10 to column 13:
@@ -1234,7 +1234,7 @@ Syntax error in 'err-open-block.stan', line 1, column 10 to column 13, parsing e
      3:  model {
    -------------------------------------------------
 
-Ill-formed block. "{" expected after "functions".
+Ill-formed block. Expected "{" after "functions".
 [exit 1]
   $ ../../../../install/default/bin/stanc err-second-operand-plus.stan
 Syntax error in 'err-second-operand-plus.stan', line 4, column 0 to column 1, parsing error:
@@ -1274,7 +1274,7 @@ Syntax error in 'err-transformed-params.stan', line 4, column 0 to column 11, pa
      6:  model {
    -------------------------------------------------
 
-Ill-formed program. "transformed parameters {", "model {" or "generated quantities {" expected after end of parameters block.
+Ill-formed program. Expected "transformed parameters {", "model {" or "generated quantities {" after end of parameters block.
 [exit 1]
   $ ../../../../install/default/bin/stanc err_void_rng_check.stan
 Semantic error in 'err_void_rng_check.stan', line 8, column 4 to column 17:
@@ -1296,7 +1296,7 @@ Syntax error in 'expect_statement_seq_close_brace.stan', line 6, column 0, parsi
          ^
    -------------------------------------------------
 
-Ill-formed block. Variable declaration, statement or "}" expected.
+Ill-formed block. Expected variable declaration, statement or "}".
 [exit 1]
   $ ../../../../install/default/bin/stanc expect_statement_seq_close_brace_2.stan
 Syntax error in 'expect_statement_seq_close_brace_2.stan', line 17, column 0, parsing error:
@@ -1306,7 +1306,7 @@ Syntax error in 'expect_statement_seq_close_brace_2.stan', line 17, column 0, pa
          ^
    -------------------------------------------------
 
-Ill-formed block. Variable declaration, statement or "}" expected.
+Ill-formed block. Expected variable declaration, statement or "}".
 [exit 1]
   $ ../../../../install/default/bin/stanc expect_statement_seq_close_brace_3.stan
 Syntax error in 'expect_statement_seq_close_brace_3.stan', line 8, column 0 to column 10, parsing error:
@@ -1387,7 +1387,7 @@ Syntax error in 'functions-bad0.stan', line 2, column 11 to column 15, parsing e
      4:    }
    -------------------------------------------------
 
-Ill-formed function argument. An argument declaration (unsized and unconstrained type followed by identifier) is expected.
+Ill-formed function argument. Expected an argument declaration (unsized and unconstrained type followed by identifier).
 [exit 1]
   $ ../../../../install/default/bin/stanc functions-bad1.stan
 Semantic error in 'functions-bad1.stan', line 6, column 2 to column 20:
@@ -1624,7 +1624,7 @@ Syntax error in 'functions-bad25.stan', line 5, column 2 to column 3, parsing er
      6:  }
    -------------------------------------------------
 
-Ill-formed statement. ";" or expression followed by ";" expected after "return".
+Ill-formed statement. Expected ";" or expression followed by ";" after "return".
 [exit 1]
   $ ../../../../install/default/bin/stanc functions-bad26.stan
 Syntax error in 'functions-bad26.stan', line 5, column 2 to column 3, parsing error:
@@ -1636,7 +1636,7 @@ Syntax error in 'functions-bad26.stan', line 5, column 2 to column 3, parsing er
      6:  }
    -------------------------------------------------
 
-Ill-formed statement. ";" or expression followed by ";" expected after "return".
+Ill-formed statement. Expected ";" or expression followed by ";" after "return".
 [exit 1]
   $ ../../../../install/default/bin/stanc functions-bad27.stan
 Semantic error in 'functions-bad27.stan', line 10, column 2 to column 20:
@@ -1684,7 +1684,7 @@ Syntax error in 'functions-bad3.stan', line 2, column 10 to column 11, parsing e
      4:    }
    -------------------------------------------------
 
-Ill-formed function. "(" expected after function name.
+Ill-formed function. Expected "(" after function name.
 [exit 1]
   $ ../../../../install/default/bin/stanc functions-bad30.stan
 Semantic error in 'functions-bad30.stan', line 2, column 7 to column 16:
@@ -1858,7 +1858,7 @@ Syntax error in 'local_var_constraint.stan', line 5, column 12 to column 13, par
      7:  }
    -------------------------------------------------
 
-Ill-formed type. "[" expression "]" expected for row_vector size.
+Ill-formed type. Expected "[" expression "]" for row_vector size.
 [exit 1]
   $ ../../../../install/default/bin/stanc local_var_constraint2.stan
 Syntax error in 'local_var_constraint2.stan', line 5, column 8 to column 9, parsing error:
@@ -1884,7 +1884,7 @@ Syntax error in 'local_var_constraint3.stan', line 5, column 8 to column 9, pars
      7:  }
    -------------------------------------------------
 
-Ill-formed type. "[" expression "," expression "]" expected for matrix sizes.
+Ill-formed type. Expected "[" expression "," expression "]" for matrix sizes.
 [exit 1]
   $ ../../../../install/default/bin/stanc local_var_constraint4.stan
 Syntax error in 'local_var_constraint4.stan', line 5, column 6 to column 7, parsing error:
@@ -1897,7 +1897,8 @@ Syntax error in 'local_var_constraint4.stan', line 5, column 6 to column 7, pars
      7:  }
    -------------------------------------------------
 
-Ill-formed declaration. Identifier expected after sized type in local (or model block) variable declaration. (No transformations/constraints allowed.)
+Ill-formed declaration. Expected an identifier after sized type in local (or model block) variable declaration.
+(No transformations/constraints allowed.)
 [exit 1]
   $ ../../../../install/default/bin/stanc log_suffix_bad1.stan
 Semantic error in 'log_suffix_bad1.stan', line 8, column 2 to column 19:
@@ -3123,7 +3124,7 @@ Syntax error in 'validate_array_expr_bad3.stan', line 6, column 14 to column 15,
      8:  }
    -------------------------------------------------
 
-Ill-formed expression. Expression expected after "{" in array expression.
+Ill-formed expression. Expected an expression after "{" in array expression.
 [exit 1]
   $ ../../../../install/default/bin/stanc validate_array_expr_bad3a.stan
 Syntax error in 'validate_array_expr_bad3a.stan', line 5, column 36 to column 37, parsing error:
@@ -3136,7 +3137,7 @@ Syntax error in 'validate_array_expr_bad3a.stan', line 5, column 36 to column 37
      7:  }
    -------------------------------------------------
 
-Ill-formed expression. Expression expected after "{" in array expression.
+Ill-formed expression. Expected an expression after "{" in array expression.
 [exit 1]
   $ ../../../../install/default/bin/stanc validate_conditional_op_bad-1.stan
 Semantic error in 'validate_conditional_op_bad-1.stan', line 5, column 7 to column 19:
@@ -3298,7 +3299,7 @@ Syntax error in 'validate_set_double_offset_multiplier_bad3.stan', line 2, colum
      4:  }
    -------------------------------------------------
 
-Ill-formed constraint. "upper =" expression (not containing binary logical operators) ">" expected
+Ill-formed constraint. Expected "upper =" expression (not containing binary logical operators) ">"
 after "<lower =" expression "," in top-level variable declaration.
 [exit 1]
   $ ../../../../install/default/bin/stanc validate_set_double_range_lower_bad1.stan

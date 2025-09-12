@@ -20,7 +20,7 @@ Syntax error in 'bad-arg.stan', line 2, column 23 to column 27, parsing error:
      4:    }
    -------------------------------------------------
 
-Ill-formed type. Expected comma separated list of types between "(" and ")" to declare tuple variable.
+Ill-formed type. Expected a comma separated list of types between "(" and ")" to declare tuple variable.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad-index1.stan
 Semantic error in 'bad-index1.stan', line 3, column 9 to column 12:
@@ -285,7 +285,7 @@ Syntax error in 'empty_tuple_expr.stan', line 2, column 25 to column 26, parsing
      3:  }
    -------------------------------------------------
 
-Ill-formed expression. Expression or comma separated list of expressions followed by ")" expected after "(".
+Ill-formed expression. Expected an expression or comma separated list of expressions followed by ")" after "(".
 [exit 1]
   $ ../../../../../install/default/bin/stanc empty_tuple_type.stan
 Syntax error in 'empty_tuple_type.stan', line 2, column 8 to column 9, parsing error:
@@ -296,7 +296,7 @@ Syntax error in 'empty_tuple_type.stan', line 2, column 8 to column 9, parsing e
      3:  }
    -------------------------------------------------
 
-Ill-formed type. Expected comma separated list of types between "(" and ")" to declare tuple variable.
+Ill-formed type. Expected a comma separated list of types between "(" and ")" to declare tuple variable.
 [exit 1]
   $ ../../../../../install/default/bin/stanc fn-assign.stan
 Semantic error in 'fn-assign.stan', line 4, column 4 to column 17:
@@ -404,7 +404,7 @@ Syntax error in 'incomplete5.stan', line 1, column 14 to column 19, parsing erro
                        ^
    -------------------------------------------------
 
-Ill-formed type. Expected comma separated list of types between "(" and ")" to declare tuple variable.
+Ill-formed type. Expected a comma separated list of types between "(" and ")" to declare tuple variable.
 [exit 1]
   $ ../../../../../install/default/bin/stanc incomplete6.stan
 Syntax error in 'incomplete6.stan', line 2, column 30 to column 31, parsing error:
@@ -426,7 +426,7 @@ Syntax error in 'incomplete7.stan', line 2, column 20 to column 21, parsing erro
      3:  }
    -------------------------------------------------
 
-Ill-formed type. Expected comma separated list of types between "(" and ")" to declare tuple variable.
+Ill-formed type. Expected a comma separated list of types between "(" and ")" to declare tuple variable.
 [exit 1]
   $ ../../../../../install/default/bin/stanc onepl_expr.stan
 Syntax error in 'onepl_expr.stan', line 2, column 13 to column 14, parsing error:
@@ -437,7 +437,7 @@ Syntax error in 'onepl_expr.stan', line 2, column 13 to column 14, parsing error
      3:  }
    -------------------------------------------------
 
-Ill-formed expression. Expression or comma separated list of expressions followed by ")" expected after "(".
+Ill-formed expression. Expected an expression or comma separated list of expressions followed by ")" after "(".
 [exit 1]
   $ ../../../../../install/default/bin/stanc onepl_type.stan
 Syntax error in 'onepl_type.stan', line 2, column 22 to column 23, parsing error:
@@ -449,7 +449,7 @@ Syntax error in 'onepl_type.stan', line 2, column 22 to column 23, parsing error
      4:    }
    -------------------------------------------------
 
-Ill-formed type. Expected comma separated list of types between "(" and ")" to declare tuple variable.
+Ill-formed type. Expected a comma separated list of types between "(" and ")" to declare tuple variable.
 [exit 1]
   $ ../../../../../install/default/bin/stanc onepl_type2.stan
 Syntax error in 'onepl_type2.stan', line 2, column 13 to column 14, parsing error:

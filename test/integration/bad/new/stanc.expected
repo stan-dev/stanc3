@@ -7,7 +7,7 @@ Syntax error in 'arg-decl-bad1.stan', line 2, column 16 to column 21, parsing er
      3:  }
    -------------------------------------------------
 
-Ill-formed function argument. An argument declaration (unsized and unconstrained type followed by identifier) is expected.
+Ill-formed function argument. Expected an argument declaration (unsized and unconstrained type followed by identifier).
 [exit 1]
   $ ../../../../../install/default/bin/stanc blocks-bad1.stan
 Syntax error in 'blocks-bad1.stan', line 1, column 5 to column 10, parsing error:
@@ -16,7 +16,7 @@ Syntax error in 'blocks-bad1.stan', line 1, column 5 to column 10, parsing error
               ^
    -------------------------------------------------
 
-Ill-formed block. "{" followed by a list of top-level variable declarations is expected after seeing "data".
+Ill-formed block. Expected "{" followed by a list of top-level variable declarations after "data".
 [exit 1]
   $ ../../../../../install/default/bin/stanc blocks-bad10.stan
 Syntax error in 'blocks-bad10.stan', line 1, column 18 to column 23, parsing error:
@@ -110,7 +110,7 @@ Syntax error in 'blocks-bad8.stan', line 1, column 21 to column 22, parsing erro
    -------------------------------------------------
 
 Ill-formed phrase. Expected a statement, but found a partial value before this point.
-Did you mean for this to be the start of a "~" statement?
+Did you mean for this to be the start of an assignment or "~"-statement?
 [exit 1]
   $ ../../../../../install/default/bin/stanc blocks-bad9.stan
 Syntax error in 'blocks-bad9.stan', line 1, column 19 to column 23, parsing error:
@@ -128,7 +128,7 @@ Syntax error in 'fun-app-bad1.stan', line 1, column 30 to column 31, parsing err
                                        ^
    -------------------------------------------------
 
-Ill-formed conditional distribution evaluation. Expected comma-separated list of expressions followed by ")" after "|".
+Ill-formed conditional distribution evaluation. Expected a comma-separated list of expressions followed by ")" after "|".
 [exit 1]
   $ ../../../../../install/default/bin/stanc fun-app-bad2.stan
 Syntax error in 'fun-app-bad2.stan', line 1, column 29 to column 34, parsing error:
@@ -137,7 +137,7 @@ Syntax error in 'fun-app-bad2.stan', line 1, column 29 to column 34, parsing err
                                       ^
    -------------------------------------------------
 
-Ill-formed conditional distribution evaluation. Expected comma-separated list of expressions followed by ")" after "|".
+Ill-formed conditional distribution evaluation. Expected a comma-separated list of expressions followed by ")" after "|".
 [exit 1]
   $ ../../../../../install/default/bin/stanc fun-app-bad3.stan
 Syntax error in 'fun-app-bad3.stan', line 1, column 27 to column 32, parsing error:
@@ -165,7 +165,7 @@ Syntax error in 'fun-app-bad5.stan', line 1, column 26 to column 27, parsing err
                                    ^
    -------------------------------------------------
 
-Ill-formed conditional distribution evaluation. Expected comma-separated list of expressions followed by ")" after "|".
+Ill-formed conditional distribution evaluation. Expected a comma-separated list of expressions followed by ")" after "|".
 [exit 1]
   $ ../../../../../install/default/bin/stanc fun-app-bad6.stan
 Syntax error in 'fun-app-bad6.stan', line 1, column 25 to column 30, parsing error:
@@ -174,7 +174,7 @@ Syntax error in 'fun-app-bad6.stan', line 1, column 25 to column 30, parsing err
                                   ^
    -------------------------------------------------
 
-Ill-formed conditional distribution evaluation. Expected comma-separated list of expressions followed by ")" after "|".
+Ill-formed conditional distribution evaluation. Expected a comma-separated list of expressions followed by ")" after "|".
 [exit 1]
   $ ../../../../../install/default/bin/stanc fun-app-bad7.stan
 Syntax error in 'fun-app-bad7.stan', line 1, column 27 to column 28, parsing error:
@@ -183,7 +183,7 @@ Syntax error in 'fun-app-bad7.stan', line 1, column 27 to column 28, parsing err
                                     ^
    -------------------------------------------------
 
-Ill-formed function application. Expected comma-separated list of expressions followed by ")" after "(".
+Ill-formed function application. Expected a comma-separated list of expressions followed by ")" after "(".
 [exit 1]
   $ ../../../../../install/default/bin/stanc fun-app-bad8.stan
 Syntax error in 'fun-app-bad8.stan', line 1, column 23 to column 24, parsing error:
@@ -192,7 +192,7 @@ Syntax error in 'fun-app-bad8.stan', line 1, column 23 to column 24, parsing err
                                 ^
    -------------------------------------------------
 
-Ill-formed function application. Expected comma-separated list of expressions followed by ")" after "(".
+Ill-formed function application. Expected a comma-separated list of expressions followed by ")" after "(".
 [exit 1]
   $ ../../../../../install/default/bin/stanc fun-app-bad9.stan
 Syntax error in 'fun-app-bad9.stan', line 1, column 22 to column 27, parsing error:
@@ -201,7 +201,7 @@ Syntax error in 'fun-app-bad9.stan', line 1, column 22 to column 27, parsing err
                                ^
    -------------------------------------------------
 
-Ill-formed function application. Expected comma-separated list of expressions followed by ")" after "(".
+Ill-formed function application. Expected a comma-separated list of expressions followed by ")" after "(".
 [exit 1]
   $ ../../../../../install/default/bin/stanc fundef-bad10.stan
 Syntax error in 'fundef-bad10.stan', line 2, column 12 to column 23, parsing error:
@@ -213,7 +213,7 @@ Syntax error in 'fundef-bad10.stan', line 2, column 12 to column 23, parsing err
      4:     }
    -------------------------------------------------
 
-Ill-formed function argument. An argument declaration (unsized and unconstrained type followed by identifier) is expected.
+Ill-formed function argument. Expected an argument declaration (unsized and unconstrained type followed by identifier).
 [exit 1]
   $ ../../../../../install/default/bin/stanc fundef-bad2.stan
 Syntax error in 'fundef-bad2.stan', line 1, column 23 to column 24, parsing error:
@@ -222,7 +222,7 @@ Syntax error in 'fundef-bad2.stan', line 1, column 23 to column 24, parsing erro
                                 ^
    -------------------------------------------------
 
-Ill-formed function. "(" expected after function name.
+Ill-formed function. Expected "(" after function name.
 [exit 1]
   $ ../../../../../install/default/bin/stanc fundef-bad3.stan
 Syntax error in 'fundef-bad3.stan', line 1, column 23 to column 28, parsing error:
@@ -231,7 +231,7 @@ Syntax error in 'fundef-bad3.stan', line 1, column 23 to column 28, parsing erro
                                 ^
    -------------------------------------------------
 
-Ill-formed block. A "}" or a function definition/declaration is expected.
+Ill-formed block. Expected a "}" or a function definition or declaration.
 [exit 1]
   $ ../../../../../install/default/bin/stanc fundef-bad4.stan
 Syntax error in 'fundef-bad4.stan', line 1, column 24 to column 29, parsing error:
@@ -240,7 +240,7 @@ Syntax error in 'fundef-bad4.stan', line 1, column 24 to column 29, parsing erro
                                  ^
    -------------------------------------------------
 
-Ill-formed function argument. A type is expected after "data" specifier.
+Ill-formed function argument. Expected a type after the "data" specifier.
 [exit 1]
   $ ../../../../../install/default/bin/stanc fundef-bad5.stan
 Syntax error in 'fundef-bad5.stan', line 1, column 22 to column 26, parsing error:
@@ -249,7 +249,7 @@ Syntax error in 'fundef-bad5.stan', line 1, column 22 to column 26, parsing erro
                                ^
    -------------------------------------------------
 
-Ill-formed function. Either "{" statement "}" is expected for a function definition or ";" for a function forward declaration.
+Ill-formed function. Expected either "{" statement "}" for a function definition or ";" for a function forward declaration.
 [exit 1]
   $ ../../../../../install/default/bin/stanc fundef-bad6.stan
 Syntax error in 'fundef-bad6.stan', line 1, column 37 to column 42, parsing error:
@@ -267,7 +267,7 @@ Syntax error in 'fundef-bad7.stan', line 1, column 21 to column 26, parsing erro
                               ^
    -------------------------------------------------
 
-Ill-formed function argument. An argument declaration (unsized and unconstrained type followed by identifier) is expected.
+Ill-formed function argument. Expected an argument declaration (unsized and unconstrained type followed by identifier).
 [exit 1]
   $ ../../../../../install/default/bin/stanc fundef-bad8.stan
 Syntax error in 'fundef-bad8.stan', line 1, column 17 to column 22, parsing error:
@@ -285,7 +285,7 @@ Syntax error in 'fundef-bad9.stan', line 1, column 23 to column 27, parsing erro
                                 ^
    -------------------------------------------------
 
-Ill-formed block. Variable declaration or statement or "}" expected in generated quantities block.
+Ill-formed block. Expected variable declaration, statement or "}".
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-expression1.stan
 Syntax error in 'ill-formed-expression1.stan', line 1, column 34 to column 39, parsing error:
@@ -313,7 +313,7 @@ Syntax error in 'ill-formed-expression11.stan', line 1, column 27 to column 32, 
                                     ^
    -------------------------------------------------
 
-Ill-formed constraint. Expected expression (not containing binary logical operators).
+Ill-formed constraint. Expected an expression (not containing binary logical operators).
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-expression12.stan
 Syntax error in 'ill-formed-expression12.stan', line 1, column 24 to column 29, parsing error:
@@ -322,7 +322,7 @@ Syntax error in 'ill-formed-expression12.stan', line 1, column 24 to column 29, 
                                  ^
    -------------------------------------------------
 
-Ill-formed constraint. Expected expression (not containing binary logical operators).
+Ill-formed constraint. Expected an expression (not containing binary logical operators).
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-expression13.stan
 Syntax error in 'ill-formed-expression13.stan', line 1, column 28 to column 33, parsing error:
@@ -331,7 +331,7 @@ Syntax error in 'ill-formed-expression13.stan', line 1, column 28 to column 33, 
                                      ^
    -------------------------------------------------
 
-Ill-formed constraint. Expected expression (not containing binary logical operators).
+Ill-formed constraint. Expected an expression (not containing binary logical operators).
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-expression14.stan
 Syntax error in 'ill-formed-expression14.stan', line 1, column 25 to column 30, parsing error:
@@ -340,7 +340,7 @@ Syntax error in 'ill-formed-expression14.stan', line 1, column 25 to column 30, 
                                   ^
    -------------------------------------------------
 
-Ill-formed constraint. Expected expression (not containing binary logical operators).
+Ill-formed constraint. Expected an expression (not containing binary logical operators).
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-expression15.stan
 Syntax error in 'ill-formed-expression15.stan', line 1, column 28 to column 33, parsing error:
@@ -349,7 +349,7 @@ Syntax error in 'ill-formed-expression15.stan', line 1, column 28 to column 33, 
                                      ^
    -------------------------------------------------
 
-Ill-formed constraint. Expected expression (not containing binary logical operators).
+Ill-formed constraint. Expected an expression (not containing binary logical operators).
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-expression16.stan
 Syntax error in 'ill-formed-expression16.stan', line 1, column 24 to column 29, parsing error:
@@ -358,7 +358,7 @@ Syntax error in 'ill-formed-expression16.stan', line 1, column 24 to column 29, 
                                  ^
    -------------------------------------------------
 
-Ill-formed constraint. Expected expression (not containing binary logical operators).
+Ill-formed constraint. Expected an expression (not containing binary logical operators).
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-expression17.stan
 Syntax error in 'ill-formed-expression17.stan', line 1, column 29 to column 34, parsing error:
@@ -367,7 +367,7 @@ Syntax error in 'ill-formed-expression17.stan', line 1, column 29 to column 34, 
                                       ^
    -------------------------------------------------
 
-Ill-formed constraint. Expected expression (not containing binary logical operators).
+Ill-formed constraint. Expected an expression (not containing binary logical operators).
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-expression18.stan
 Syntax error in 'ill-formed-expression18.stan', line 1, column 24 to column 29, parsing error:
@@ -376,7 +376,7 @@ Syntax error in 'ill-formed-expression18.stan', line 1, column 24 to column 29, 
                                  ^
    -------------------------------------------------
 
-Ill-formed constraint. Expected expression (not containing binary logical operators).
+Ill-formed constraint. Expected an expression (not containing binary logical operators).
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-expression19.stan
 Syntax error in 'ill-formed-expression19.stan', line 1, column 28 to column 33, parsing error:
@@ -385,7 +385,7 @@ Syntax error in 'ill-formed-expression19.stan', line 1, column 28 to column 33, 
                                      ^
    -------------------------------------------------
 
-Ill-formed constraint. Expected expression (not containing binary logical operators).
+Ill-formed constraint. Expected an expression (not containing binary logical operators).
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-expression2.stan
 Syntax error in 'ill-formed-expression2.stan', line 2, column 14 to column 19, parsing error:
@@ -406,7 +406,7 @@ Syntax error in 'ill-formed-expression20.stan', line 1, column 24 to column 29, 
                                  ^
    -------------------------------------------------
 
-Ill-formed constraint. Expected expression (not containing binary logical operators).
+Ill-formed constraint. Expected an expression (not containing binary logical operators).
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-expression21.stan
 Syntax error in 'ill-formed-expression21.stan', line 1, column 22 to column 27, parsing error:
@@ -428,7 +428,7 @@ Syntax error in 'ill-formed-expression22.stan', line 2, column 14 to column 15, 
    -------------------------------------------------
 
 Ill-formed phrase. Expected a statement, but found a partial value before this point.
-Did you mean for this to be the start of an assignment or "~" statement?
+Did you mean for this to be the start of an assignment or "~"-statement?
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-expression23.stan
 Syntax error in 'ill-formed-expression23.stan', line 1, column 21 to column 26, parsing error:
@@ -447,7 +447,7 @@ Syntax error in 'ill-formed-expression24.stan', line 1, column 19 to column 20, 
                             ^
    -------------------------------------------------
 
-Ill-formed statement. Expression followed by ";" expected after "=".
+Ill-formed statement. Expected an expression followed by ";" after "=".
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-expression25.stan
 Syntax error in 'ill-formed-expression25.stan', line 1, column 17 to column 22, parsing error:
@@ -456,7 +456,7 @@ Syntax error in 'ill-formed-expression25.stan', line 1, column 17 to column 22, 
                           ^
    -------------------------------------------------
 
-Ill-formed statement. Expression followed by ";" expected after "=".
+Ill-formed statement. Expected an expression followed by ";" after "=".
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-expression28.stan
 Syntax error in 'ill-formed-expression28.stan', line 1, column 21 to column 26, parsing error:
@@ -465,7 +465,7 @@ Syntax error in 'ill-formed-expression28.stan', line 1, column 21 to column 26, 
                               ^
    -------------------------------------------------
 
-Ill-formed expression. Expression expected after "!".
+Ill-formed expression. Expected an expression after "!".
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-expression29.stan
 Syntax error in 'ill-formed-expression29.stan', line 1, column 25 to column 30, parsing error:
@@ -483,7 +483,7 @@ Syntax error in 'ill-formed-expression3.stan', line 1, column 22 to column 27, p
                                ^
    -------------------------------------------------
 
-Ill-formed constraint. Expected expression (not containing binary logical operators).
+Ill-formed constraint. Expected an expression (not containing binary logical operators).
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-expression30.stan
 Syntax error in 'ill-formed-expression30.stan', line 1, column 24 to column 29, parsing error:
@@ -493,7 +493,7 @@ Syntax error in 'ill-formed-expression30.stan', line 1, column 24 to column 29, 
    -------------------------------------------------
 
 Ill-formed phrase. Expected a statement, but found a partial value before this point.
-Did you mean for this to be the start of an assignment or "~" statement?
+Did you mean for this to be the start of an assignment or "~"-statement?
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-expression31.stan
 Syntax error in 'ill-formed-expression31.stan', line 1, column 20 to column 24, parsing error:
@@ -502,7 +502,7 @@ Syntax error in 'ill-formed-expression31.stan', line 1, column 20 to column 24, 
                              ^
    -------------------------------------------------
 
-Ill-formed block. "{" should be followed by a statement, variable declaration, or just "}".
+Ill-formed block. Expected a statement, variable declaration, or just "}" after "{".
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-expression32.stan
 Syntax error in 'ill-formed-expression32.stan', line 1, column 24 to column 29, parsing error:
@@ -512,7 +512,7 @@ Syntax error in 'ill-formed-expression32.stan', line 1, column 24 to column 29, 
    -------------------------------------------------
 
 Ill-formed phrase. Expected a statement, but found a partial value before this point.
-Did you mean for this to be the start of an assignment or "~" statement?
+Did you mean for this to be the start of an assignment or "~"-statement?
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-expression33.stan
 Syntax error in 'ill-formed-expression33.stan', line 1, column 25 to column 30, parsing error:
@@ -588,7 +588,7 @@ Syntax error in 'ill-formed-expression4.stan', line 1, column 27 to column 32, p
                                     ^
    -------------------------------------------------
 
-Ill-formed constraint. Expected expression (not containing binary logical operators).
+Ill-formed constraint. Expected an expression (not containing binary logical operators).
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-expression40.stan
 Syntax error in 'ill-formed-expression40.stan', line 1, column 21 to column 26, parsing error:
@@ -686,7 +686,7 @@ Syntax error in 'ill-formed-expression49.stan', line 1, column 24 to column 29, 
                                  ^
    -------------------------------------------------
 
-Ill-formed expression. Expected expression or "]" or "," after ":".
+Ill-formed expression. Expected an expression or "]" or "," after ":".
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-expression5.stan
 Syntax error in 'ill-formed-expression5.stan', line 1, column 24 to column 29, parsing error:
@@ -695,7 +695,7 @@ Syntax error in 'ill-formed-expression5.stan', line 1, column 24 to column 29, p
                                  ^
    -------------------------------------------------
 
-Ill-formed constraint. Expected expression (not containing binary logical operators).
+Ill-formed constraint. Expected an expression (not containing binary logical operators).
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-expression50.stan
 Syntax error in 'ill-formed-expression50.stan', line 1, column 24 to column 29, parsing error:
@@ -704,7 +704,7 @@ Syntax error in 'ill-formed-expression50.stan', line 1, column 24 to column 29, 
                                  ^
    -------------------------------------------------
 
-Ill-formed index. Expected expression or "]" or "," after ":".
+Ill-formed index. Expected an expression or "]" or "," after ":".
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-expression51.stan
 Syntax error in 'ill-formed-expression51.stan', line 1, column 24 to column 29, parsing error:
@@ -713,7 +713,7 @@ Syntax error in 'ill-formed-expression51.stan', line 1, column 24 to column 29, 
                                  ^
    -------------------------------------------------
 
-Ill-formed index. Expected expression or "]" or "," after ":".
+Ill-formed index. Expected an expression or "]" or "," after ":".
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-expression52.stan
 Syntax error in 'ill-formed-expression52.stan', line 1, column 25 to column 30, parsing error:
@@ -804,7 +804,7 @@ Syntax error in 'ill-formed-expression6.stan', line 1, column 28 to column 33, p
                                      ^
    -------------------------------------------------
 
-Ill-formed constraint. Expected expression (not containing binary logical operators).
+Ill-formed constraint. Expected an expression (not containing binary logical operators).
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-expression60.stan
 Syntax error in 'ill-formed-expression60.stan', line 1, column 34 to column 39, parsing error:
@@ -867,7 +867,7 @@ Syntax error in 'ill-formed-expression65.stan', line 1, column 31 to column 32, 
                                         ^
    -------------------------------------------------
 
-Ill-formed function application. Expected comma-separated list of expressions followed by ")" after "(".
+Ill-formed function application. Expected a comma-separated list of expressions followed by ")" after "(".
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-expression66.stan
 Syntax error in 'ill-formed-expression66.stan', line 1, column 28 to column 33, parsing error:
@@ -876,7 +876,7 @@ Syntax error in 'ill-formed-expression66.stan', line 1, column 28 to column 33, 
                                      ^
    -------------------------------------------------
 
-Ill-formed function application. Expected comma-separated list of expressions followed by ")" after "(".
+Ill-formed function application. Expected a comma-separated list of expressions followed by ")" after "(".
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-expression67.stan
 Syntax error in 'ill-formed-expression67.stan', line 1, column 24 to column 29, parsing error:
@@ -913,7 +913,7 @@ Syntax error in 'ill-formed-expression7.stan', line 1, column 24 to column 29, p
                                  ^
    -------------------------------------------------
 
-Ill-formed constraint. Expected expression (not containing binary logical operators).
+Ill-formed constraint. Expected an expression (not containing binary logical operators).
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-expression70.stan
 Syntax error in 'ill-formed-expression70.stan', line 1, column 23 to column 28, parsing error:
@@ -1020,7 +1020,7 @@ Syntax error in 'ill-formed-expression8.stan', line 1, column 26 to column 31, p
                                    ^
    -------------------------------------------------
 
-Ill-formed constraint. Expected expression (not containing binary logical operators).
+Ill-formed constraint. Expected an expression (not containing binary logical operators).
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-expression80.stan
 Syntax error in 'ill-formed-expression80.stan', line 1, column 26 to column 31, parsing error:
@@ -1132,7 +1132,7 @@ Syntax error in 'ill-formed-expression9.stan', line 1, column 22 to column 27, p
                                ^
    -------------------------------------------------
 
-Ill-formed constraint. Expected expression (not containing binary logical operators).
+Ill-formed constraint. Expected an expression (not containing binary logical operators).
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-expression90.stan
 Syntax error in 'ill-formed-expression90.stan', line 1, column 25 to column 26, parsing error:
@@ -1203,7 +1203,7 @@ Syntax error in 'ill-formed-statement10.stan', line 1, column 38 to column 42, p
                                                ^
    -------------------------------------------------
 
-Ill-formed statement. Expected statement after ")" for the loop body of the for loop.
+Ill-formed statement. Expected a statement after ")" for the loop body of the "for" loop.
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-statement11.stan
 Syntax error in 'ill-formed-statement11.stan', line 1, column 37 to column 42, parsing error:
@@ -1222,7 +1222,7 @@ Syntax error in 'ill-formed-statement12.stan', line 1, column 38 to column 42, p
                                                ^
    -------------------------------------------------
 
-Ill-formed statement. Expected statement after ")" for the loop body of the for loop.
+Ill-formed statement. Expected a statement after ")" for the loop body of the "for" loop.
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-statement13.stan
 Syntax error in 'ill-formed-statement13.stan', line 1, column 35 to column 36, parsing error:
@@ -1231,7 +1231,7 @@ Syntax error in 'ill-formed-statement13.stan', line 1, column 35 to column 36, p
                                             ^
    -------------------------------------------------
 
-Ill-formed expression. Expected expression followed by ")" after "for (" identifier "in" expression ":".
+Ill-formed expression. Expected an expression followed by ")" after "for (" identifier "in" expression ":".
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-statement14.stan
 Syntax error in 'ill-formed-statement14.stan', line 1, column 33 to column 38, parsing error:
@@ -1240,7 +1240,7 @@ Syntax error in 'ill-formed-statement14.stan', line 1, column 33 to column 38, p
                                           ^
    -------------------------------------------------
 
-Ill-formed expression. Expected expression followed by ")" after "for (" identifier "in" expression ":".
+Ill-formed expression. Expected an expression followed by ")" after "for (" identifier "in" expression ":".
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-statement15.stan
 Syntax error in 'ill-formed-statement15.stan', line 1, column 34 to column 38, parsing error:
@@ -1249,7 +1249,7 @@ Syntax error in 'ill-formed-statement15.stan', line 1, column 34 to column 38, p
                                            ^
    -------------------------------------------------
 
-Ill-formed statement. Expected statement after ")" for the loop body of the for loop.
+Ill-formed statement. Expected a statement after ")" for the loop body of the "for" loop.
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-statement16.stan
 Syntax error in 'ill-formed-statement16.stan', line 1, column 32 to column 33, parsing error:
@@ -1258,7 +1258,7 @@ Syntax error in 'ill-formed-statement16.stan', line 1, column 32 to column 33, p
                                          ^
    -------------------------------------------------
 
-Ill-formed expression. Expected expression followed by ")" or ":" after "for (" identifier "in".
+Ill-formed expression. Expected an expression followed by ")" or ":" after "for (" identifier "in".
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-statement17.stan
 Syntax error in 'ill-formed-statement17.stan', line 1, column 30 to column 35, parsing error:
@@ -1267,7 +1267,7 @@ Syntax error in 'ill-formed-statement17.stan', line 1, column 30 to column 35, p
                                        ^
    -------------------------------------------------
 
-Ill-formed expression. Expected expression followed by ")" or ":" after "for (" identifier "in".
+Ill-formed expression. Expected an expression followed by ")" or ":" after "for (" identifier "in".
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-statement18.stan
 Syntax error in 'ill-formed-statement18.stan', line 1, column 27 to column 32, parsing error:
@@ -1312,7 +1312,7 @@ Syntax error in 'ill-formed-statement23.stan', line 1, column 35 to column 39, p
                                             ^
    -------------------------------------------------
 
-Ill-formed statement. Expected statement after "else".
+Ill-formed statement. Expected a statement after "else".
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-statement24.stan
 Syntax error in 'ill-formed-statement24.stan', line 1, column 33 to column 34, parsing error:
@@ -1322,7 +1322,7 @@ Syntax error in 'ill-formed-statement24.stan', line 1, column 33 to column 34, p
    -------------------------------------------------
 
 Ill-formed phrase. Expected a statement, but found a partial value before this point.
-Did you mean for this to be the start of a "~" statement?
+Did you mean for this to be the start of an assignment or "~"-statement?
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-statement25.stan
 Syntax error in 'ill-formed-statement25.stan', line 1, column 34 to column 38, parsing error:
@@ -1331,7 +1331,7 @@ Syntax error in 'ill-formed-statement25.stan', line 1, column 34 to column 38, p
                                            ^
    -------------------------------------------------
 
-Ill-formed statement. Expected statement after "else".
+Ill-formed statement. Expected a statement after "else".
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-statement26.stan
 Syntax error in 'ill-formed-statement26.stan', line 2, column 0, parsing error:
@@ -1341,7 +1341,7 @@ Syntax error in 'ill-formed-statement26.stan', line 2, column 0, parsing error:
    -------------------------------------------------
 
 Ill-formed phrase. Expected a statement, but found a partial value before this point.
-Did you mean for this to be the start of an assignment or "~" statement?
+Did you mean for this to be the start of an assignment or "~"-statement?
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-statement27.stan
 Syntax error in 'ill-formed-statement27.stan', line 1, column 28 to column 32, parsing error:
@@ -1350,7 +1350,7 @@ Syntax error in 'ill-formed-statement27.stan', line 1, column 28 to column 32, p
                                      ^
    -------------------------------------------------
 
-Ill-formed statement. Statement expected for true branch of conditional.
+Ill-formed statement. Expected a statement for the true branch of conditional.
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-statement28.stan
 Syntax error in 'ill-formed-statement28.stan', line 1, column 25 to column 26, parsing error:
@@ -1369,7 +1369,7 @@ Syntax error in 'ill-formed-statement3.stan', line 1, column 36 to column 40, pa
                                              ^
    -------------------------------------------------
 
-Ill-formed statement. Expected statement after ")" for the loop body of the for loop.
+Ill-formed statement. Expected a statement after ")" for the loop body of the "for" loop.
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-statement30.stan
 Syntax error in 'ill-formed-statement30.stan', line 1, column 42 to column 47, parsing error:
@@ -1408,7 +1408,7 @@ Syntax error in 'ill-formed-statement5.stan', line 1, column 34 to column 38, pa
                                            ^
    -------------------------------------------------
 
-Ill-formed statement. Expected statement after ")" for the loop body of the for loop.
+Ill-formed statement. Expected a statement after ")" for the loop body of the "for" loop.
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-statement6.stan
 Syntax error in 'ill-formed-statement6.stan', line 1, column 35 to column 36, parsing error:
@@ -1417,7 +1417,7 @@ Syntax error in 'ill-formed-statement6.stan', line 1, column 35 to column 36, pa
                                             ^
    -------------------------------------------------
 
-Ill-formed expression. Expected expression followed by ")" after "for (" identifier "in" expression ":".
+Ill-formed expression. Expected an expression followed by ")" after "for (" identifier "in" expression ":".
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-statement7.stan
 Syntax error in 'ill-formed-statement7.stan', line 1, column 33 to column 38, parsing error:
@@ -1426,7 +1426,7 @@ Syntax error in 'ill-formed-statement7.stan', line 1, column 33 to column 38, pa
                                           ^
    -------------------------------------------------
 
-Ill-formed expression. Expected expression followed by ")" after "for (" identifier "in" expression ":".
+Ill-formed expression. Expected an expression followed by ")" after "for (" identifier "in" expression ":".
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-statement8.stan
 Syntax error in 'ill-formed-statement8.stan', line 1, column 33 to column 37, parsing error:
@@ -1435,7 +1435,7 @@ Syntax error in 'ill-formed-statement8.stan', line 1, column 33 to column 37, pa
                                           ^
    -------------------------------------------------
 
-Ill-formed statement. Expected statement after ")" for the loop body of the for loop.
+Ill-formed statement. Expected a statement after ")" for the loop body of the "for" loop.
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-statement9.stan
 Syntax error in 'ill-formed-statement9.stan', line 1, column 32 to column 37, parsing error:
@@ -1500,7 +1500,7 @@ Syntax error in 'location-scale-bad1.stan', line 1, column 27 to column 32, pars
                                     ^
    -------------------------------------------------
 
-Ill-formed constraint. Expected expression (not containing binary logical operators).
+Ill-formed constraint. Expected an expression (not containing binary logical operators).
 [exit 1]
   $ ../../../../../install/default/bin/stanc location-scale-bad10.stan
 Syntax error in 'location-scale-bad10.stan', line 1, column 27 to column 32, parsing error:
@@ -1509,7 +1509,7 @@ Syntax error in 'location-scale-bad10.stan', line 1, column 27 to column 32, par
                                     ^
    -------------------------------------------------
 
-Ill-formed constraint. Expected expression (not containing binary logical operators)
+Ill-formed constraint. Expected and expression (not containing binary logical operators)
 after "multiplier =".
 [exit 1]
   $ ../../../../../install/default/bin/stanc location-scale-bad11.stan
@@ -1850,7 +1850,7 @@ Syntax error in 'mystery22.stan', line 1, column 32 to column 33, parsing error:
                                          ^
    -------------------------------------------------
 
-Ill-formed index. Expected expression or "]" or "," after ":".
+Ill-formed index. Expected an expression or "]" or "," after ":".
 [exit 1]
   $ ../../../../../install/default/bin/stanc mystery23.stan
 Syntax error in 'mystery23.stan', line 1, column 24 to column 29, parsing error:
@@ -1879,7 +1879,7 @@ Syntax error in 'mystery25.stan', line 1, column 25 to column 26, parsing error:
                                   ^
    -------------------------------------------------
 
-Ill-formed index. Expected expression or "]" or "," after ":".
+Ill-formed index. Expected an expression or "]" or "," after ":".
 [exit 1]
   $ ../../../../../install/default/bin/stanc mystery26.stan
 Syntax error in 'mystery26.stan', line 1, column 23 to column 24, parsing error:
@@ -2160,7 +2160,7 @@ Syntax error in 'mystery50.stan', line 1, column 12 to column 17, parsing error:
    -------------------------------------------------
 
 Ill-formed phrase. Expected a statement, but found a partial value before this point.
-Did you mean for this to be the start of an assignment or "~" statement?
+Did you mean for this to be the start of an assignment or "~"-statement?
 [exit 1]
   $ ../../../../../install/default/bin/stanc mystery51.stan
 Syntax error in 'mystery51.stan', line 1, column 29 to column 30, parsing error:
@@ -2169,7 +2169,7 @@ Syntax error in 'mystery51.stan', line 1, column 29 to column 30, parsing error:
                                       ^
    -------------------------------------------------
 
-Ill-formed statement. After "reject(", expected a comma separated list of either expressions or strings, followed by ");".
+Ill-formed statement. Expected a comma separated list of either expressions or strings followed by ");" after "reject(",.
 [exit 1]
   $ ../../../../../install/default/bin/stanc mystery52.stan
 Syntax error in 'mystery52.stan', line 1, column 29 to column 30, parsing error:
@@ -2198,7 +2198,7 @@ Syntax error in 'mystery54.stan', line 1, column 28 to column 29, parsing error:
                                      ^
    -------------------------------------------------
 
-Ill-formed statement. ";" or expression followed by ";" expected after "return".
+Ill-formed statement. Expected ";" or expression followed by ";" after "return".
 [exit 1]
   $ ../../../../../install/default/bin/stanc mystery55.stan
 Syntax error in 'mystery55.stan', line 1, column 28 to column 33, parsing error:
@@ -2746,7 +2746,7 @@ Syntax error in 'reject-bad2.stan', line 1, column 31 to column 36, parsing erro
                                         ^
    -------------------------------------------------
 
-Ill-formed statement. After "reject(", expected a comma separated list of either expressions or strings, followed by ");".
+Ill-formed statement. Expected a comma separated list of either expressions or strings followed by ");" after "reject(",.
 [exit 1]
   $ ../../../../../install/default/bin/stanc reject-bad3.stan
 Syntax error in 'reject-bad3.stan', line 1, column 34 to column 39, parsing error:
@@ -2773,7 +2773,7 @@ Syntax error in 'reject-bad5.stan', line 1, column 29 to column 34, parsing erro
                                       ^
    -------------------------------------------------
 
-Ill-formed statement. After "reject(", expected a comma separated list of either expressions or strings, followed by ");".
+Ill-formed statement. Expected a comma separated list of either expressions or strings followed by ");" after "reject(",.
 [exit 1]
   $ ../../../../../install/default/bin/stanc reject-bad6.stan
 Syntax error in 'reject-bad6.stan', line 1, column 27 to column 32, parsing error:
@@ -2782,7 +2782,7 @@ Syntax error in 'reject-bad6.stan', line 1, column 27 to column 32, parsing erro
                                     ^
    -------------------------------------------------
 
-Ill-formed statement. After "reject(", expected a comma separated list of either expressions or strings, followed by ");".
+Ill-formed statement. Expected a comma separated list of either expressions or strings followed by ");" after "reject(",.
 [exit 1]
   $ ../../../../../install/default/bin/stanc reject-bad7.stan
 Syntax error in 'reject-bad7.stan', line 1, column 26 to column 31, parsing error:
@@ -2791,7 +2791,7 @@ Syntax error in 'reject-bad7.stan', line 1, column 26 to column 31, parsing erro
                                    ^
    -------------------------------------------------
 
-Ill-formed statement. After "reject(", expected a comma separated list of either expressions or strings, followed by ");".
+Ill-formed statement. Expected a comma separated list of either expressions or strings followed by ");" after "reject(",.
 [exit 1]
   $ ../../../../../install/default/bin/stanc return-bad1.stan
 Syntax error in 'return-bad1.stan', line 1, column 33 to column 38, parsing error:
@@ -2859,7 +2859,7 @@ Syntax error in 'target-pe-bad1.stan', line 3, column 10 to column 17, parsing e
      4:  }
    -------------------------------------------------
 
-Ill-formed statement. Expression followed by ";" expected after "target +=".
+Ill-formed statement. Expected an expression followed by ";" after "target +=".
 [exit 1]
   $ ../../../../../install/default/bin/stanc target-pe-bad2.stan
 Syntax error in 'target-pe-bad2.stan', line 1, column 33 to column 38, parsing error:
@@ -2878,7 +2878,7 @@ Syntax error in 'target-pe-bad3.stan', line 1, column 30 to column 31, parsing e
                                        ^
    -------------------------------------------------
 
-Ill-formed statement. Expression followed by ";" expected after "target +=".
+Ill-formed statement. Expected an expression followed by ";" after "target +=".
 [exit 1]
   $ ../../../../../install/default/bin/stanc target-pe-bad4.stan
 Syntax error in 'target-pe-bad4.stan', line 1, column 29 to column 34, parsing error:
@@ -2887,7 +2887,7 @@ Syntax error in 'target-pe-bad4.stan', line 1, column 29 to column 34, parsing e
                                       ^
    -------------------------------------------------
 
-Ill-formed statement. Expression followed by ";" expected after "target +=".
+Ill-formed statement. Expected an expression followed by ";" after "target +=".
 [exit 1]
   $ ../../../../../install/default/bin/stanc tilde-bad1.stan
 Syntax error in 'tilde-bad1.stan', line 1, column 43 to column 53, parsing error:
@@ -3078,7 +3078,7 @@ Syntax error in 'transformations-bad10.stan', line 1, column 24 to column 29, pa
                                  ^
    -------------------------------------------------
 
-Ill-formed constraint. Expected expression (not containing binary logical operators).
+Ill-formed constraint. Expected an expression (not containing binary logical operators).
 [exit 1]
   $ ../../../../../install/default/bin/stanc transformations-bad11.stan
 Syntax error in 'transformations-bad11.stan', line 1, column 28 to column 33, parsing error:
@@ -3087,7 +3087,7 @@ Syntax error in 'transformations-bad11.stan', line 1, column 28 to column 33, pa
                                      ^
    -------------------------------------------------
 
-Ill-formed constraint. Expected expression (not containing binary logical operators).
+Ill-formed constraint. Expected an expression (not containing binary logical operators).
 [exit 1]
   $ ../../../../../install/default/bin/stanc transformations-bad12.stan
 Syntax error in 'transformations-bad12.stan', line 1, column 24 to column 29, parsing error:
@@ -3096,7 +3096,7 @@ Syntax error in 'transformations-bad12.stan', line 1, column 24 to column 29, pa
                                  ^
    -------------------------------------------------
 
-Ill-formed constraint. Expected expression (not containing binary logical operators).
+Ill-formed constraint. Expected an expression (not containing binary logical operators).
 [exit 1]
   $ ../../../../../install/default/bin/stanc transformations-bad13.stan
 Syntax error in 'transformations-bad13.stan', line 1, column 24 to column 25, parsing error:
@@ -3105,7 +3105,7 @@ Syntax error in 'transformations-bad13.stan', line 1, column 24 to column 25, pa
                                  ^
    -------------------------------------------------
 
-Ill-formed constraint. "lower =" expression (not containing binary logical operators) ">" expected
+Ill-formed constraint. Expected "lower =" expression (not containing binary logical operators) ">"
 after "<upper =" expression "," in top-level variable declaration.
 [exit 1]
   $ ../../../../../install/default/bin/stanc transformations-bad14.stan
@@ -3115,7 +3115,7 @@ Syntax error in 'transformations-bad14.stan', line 1, column 28 to column 33, pa
                                      ^
    -------------------------------------------------
 
-Ill-formed constraint. Expected expression (not containing binary logical operators).
+Ill-formed constraint. Expected an expression (not containing binary logical operators).
 [exit 1]
   $ ../../../../../install/default/bin/stanc transformations-bad15.stan
 Syntax error in 'transformations-bad15.stan', line 1, column 20 to column 25, parsing error:
@@ -3124,8 +3124,8 @@ Syntax error in 'transformations-bad15.stan', line 1, column 20 to column 25, pa
                              ^
    -------------------------------------------------
 
-Ill-formed constraint. Expression (not containing binary logical operators)
-expected after "upper =".
+Ill-formed constraint. Expected an expression (not containing binary logical operators)
+after "upper =".
 [exit 1]
   $ ../../../../../install/default/bin/stanc transformations-bad16.stan
 Syntax error in 'transformations-bad16.stan', line 1, column 20 to column 25, parsing error:
@@ -3161,8 +3161,8 @@ Syntax error in 'transformations-bad3.stan', line 1, column 29 to column 34, par
                                       ^
    -------------------------------------------------
 
-Ill-formed constraint. Expression (not containing binary logical operators)
-expected after "upper =".
+Ill-formed constraint. Expected an expression (not containing binary logical operators)
+after "upper =".
 [exit 1]
   $ ../../../../../install/default/bin/stanc transformations-bad4.stan
 Syntax error in 'transformations-bad4.stan', line 1, column 29 to column 34, parsing error:
@@ -3181,7 +3181,7 @@ Syntax error in 'transformations-bad5.stan', line 1, column 24 to column 29, par
                                  ^
    -------------------------------------------------
 
-Ill-formed constraint. "upper =" expression (not containing binary logical operators) ">" expected
+Ill-formed constraint. Expected "upper =" expression (not containing binary logical operators) ">"
 after "<lower =" expression "," in top-level variable declaration.
 [exit 1]
   $ ../../../../../install/default/bin/stanc transformations-bad6.stan
@@ -3201,7 +3201,7 @@ Syntax error in 'transformations-bad7.stan', line 1, column 27 to column 32, par
                                     ^
    -------------------------------------------------
 
-Ill-formed constraint. Expected expression (not containing binary logical operators).
+Ill-formed constraint. Expected an expression (not containing binary logical operators).
 [exit 1]
   $ ../../../../../install/default/bin/stanc transformations-bad8.stan
 Syntax error in 'transformations-bad8.stan', line 1, column 24 to column 29, parsing error:
@@ -3210,7 +3210,7 @@ Syntax error in 'transformations-bad8.stan', line 1, column 24 to column 29, par
                                  ^
    -------------------------------------------------
 
-Ill-formed constraint. Expected expression (not containing binary logical operators).
+Ill-formed constraint. Expected an expression (not containing binary logical operators).
 [exit 1]
   $ ../../../../../install/default/bin/stanc transformations-bad9.stan
 Syntax error in 'transformations-bad9.stan', line 1, column 27 to column 32, parsing error:
@@ -3219,7 +3219,7 @@ Syntax error in 'transformations-bad9.stan', line 1, column 27 to column 32, par
                                     ^
    -------------------------------------------------
 
-Ill-formed constraint. Expected expression (not containing binary logical operators).
+Ill-formed constraint. Expected an expression (not containing binary logical operators).
 [exit 1]
   $ ../../../../../install/default/bin/stanc type-bad1.stan
 Syntax error in 'type-bad1.stan', line 1, column 16 to column 17, parsing error:
@@ -3321,7 +3321,7 @@ Syntax error in 'type-size-bad17.stan', line 1, column 20 to column 21, parsing 
      2:  }
    -------------------------------------------------
 
-Ill-formed type. "[" expression "," expression "]" expected for matrix sizes.
+Ill-formed type. Expected "[" expression "," expression "]" for matrix sizes.
 [exit 1]
   $ ../../../../../install/default/bin/stanc type-size-bad18.stan
 Syntax error in 'type-size-bad18.stan', line 1, column 19 to column 24, parsing error:
@@ -3331,7 +3331,7 @@ Syntax error in 'type-size-bad18.stan', line 1, column 19 to column 24, parsing 
      2:  }
    -------------------------------------------------
 
-Ill-formed type. "[" expression "," expression "]" expected for matrix sizes.
+Ill-formed type. Expected "[" expression "," expression "]" for matrix sizes.
 [exit 1]
   $ ../../../../../install/default/bin/stanc type-size-bad19.stan
 Syntax error in 'type-size-bad19.stan', line 1, column 21 to column 26, parsing error:
@@ -3360,7 +3360,7 @@ Syntax error in 'type-size-bad20.stan', line 1, column 18 to column 19, parsing 
                            ^
    -------------------------------------------------
 
-Ill-formed type. "[" expression "," expression "]" expected for matrix sizes.
+Ill-formed type. Expected "[" expression "," expression "]" for matrix sizes.
 [exit 1]
   $ ../../../../../install/default/bin/stanc type-size-bad21.stan
 Syntax error in 'type-size-bad21.stan', line 1, column 17 to column 22, parsing error:
@@ -3369,7 +3369,7 @@ Syntax error in 'type-size-bad21.stan', line 1, column 17 to column 22, parsing 
                           ^
    -------------------------------------------------
 
-Ill-formed type. "[" expression "," expression "]" expected for matrix sizes.
+Ill-formed type. Expected "[" expression "," expression "]" for matrix sizes.
 [exit 1]
   $ ../../../../../install/default/bin/stanc type-size-bad22.stan
 Syntax error in 'type-size-bad22.stan', line 1, column 16 to column 17, parsing error:
@@ -3378,7 +3378,7 @@ Syntax error in 'type-size-bad22.stan', line 1, column 16 to column 17, parsing 
                          ^
    -------------------------------------------------
 
-Ill-formed type. "[" expression "," expression "]" expected for matrix sizes.
+Ill-formed type. Expected "[" expression "," expression "]" for matrix sizes.
 [exit 1]
   $ ../../../../../install/default/bin/stanc type-size-bad23.stan
 Syntax error in 'type-size-bad23.stan', line 1, column 14 to column 19, parsing error:
@@ -3387,7 +3387,7 @@ Syntax error in 'type-size-bad23.stan', line 1, column 14 to column 19, parsing 
                        ^
    -------------------------------------------------
 
-Ill-formed type. "[" expression "," expression "]" expected for matrix sizes.
+Ill-formed type. Expected "[" expression "," expression "]" for matrix sizes.
 [exit 1]
   $ ../../../../../install/default/bin/stanc type-size-bad24.stan
 Syntax error in 'type-size-bad24.stan', line 1, column 19 to column 24, parsing error:
@@ -3491,7 +3491,7 @@ Syntax error in 'type-size-bad35.stan', line 1, column 19 to column 20, parsing 
                             ^
    -------------------------------------------------
 
-Ill-formed type. "[" expression "]" expected for row_vector size.
+Ill-formed type. Expected "[" expression "]" for row_vector size.
 [exit 1]
   $ ../../../../../install/default/bin/stanc type-size-bad36.stan
 Syntax error in 'type-size-bad36.stan', line 1, column 18 to column 23, parsing error:
@@ -3500,7 +3500,7 @@ Syntax error in 'type-size-bad36.stan', line 1, column 18 to column 23, parsing 
                            ^
    -------------------------------------------------
 
-Ill-formed type. "[" expression "]" expected for row_vector size.
+Ill-formed type. Expected "[" expression "]" for row_vector size.
 [exit 1]
   $ ../../../../../install/default/bin/stanc type-size-bad37.stan
 Syntax error in 'type-size-bad37.stan', line 1, column 19 to column 24, parsing error:
@@ -3621,7 +3621,7 @@ Syntax error in 'type-size-bad48.stan', line 1, column 19 to column 20, parsing 
                             ^
    -------------------------------------------------
 
-Ill-formed type. "[" expression "," expression "]" expected for matrix sizes.
+Ill-formed type. Expected "[" expression "," expression "]" for matrix sizes.
 [exit 1]
   $ ../../../../../install/default/bin/stanc type-size-bad49.stan
 Syntax error in 'type-size-bad49.stan', line 1, column 18 to column 23, parsing error:
@@ -3630,7 +3630,7 @@ Syntax error in 'type-size-bad49.stan', line 1, column 18 to column 23, parsing 
                            ^
    -------------------------------------------------
 
-Ill-formed type. "[" expression "," expression "]" expected for matrix sizes.
+Ill-formed type. Expected "[" expression "," expression "]" for matrix sizes.
 [exit 1]
   $ ../../../../../install/default/bin/stanc type-size-bad5.stan
 Syntax error in 'type-size-bad5.stan', line 1, column 31 to column 32, parsing error:
@@ -3669,7 +3669,7 @@ Syntax error in 'type-size-bad52.stan', line 1, column 21 to column 22, parsing 
                               ^
    -------------------------------------------------
 
-Ill-formed type. "[" expression "," expression "]" expected for matrix sizes.
+Ill-formed type. Expected "[" expression "," expression "]" for matrix sizes.
 [exit 1]
   $ ../../../../../install/default/bin/stanc type-size-bad53.stan
 Syntax error in 'type-size-bad53.stan', line 1, column 18 to column 23, parsing error:
@@ -3678,7 +3678,7 @@ Syntax error in 'type-size-bad53.stan', line 1, column 18 to column 23, parsing 
                            ^
    -------------------------------------------------
 
-Ill-formed type. "[" expression "," expression "]" expected for matrix sizes.
+Ill-formed type. Expected "[" expression "," expression "]" for matrix sizes.
 [exit 1]
   $ ../../../../../install/default/bin/stanc type-size-bad54.stan
 Syntax error in 'type-size-bad54.stan', line 1, column 16 to column 17, parsing error:
@@ -3687,7 +3687,7 @@ Syntax error in 'type-size-bad54.stan', line 1, column 16 to column 17, parsing 
                          ^
    -------------------------------------------------
 
-Ill-formed type. "[" expression "," expression "]" expected for matrix sizes.
+Ill-formed type. Expected "[" expression "," expression "]" for matrix sizes.
 [exit 1]
   $ ../../../../../install/default/bin/stanc type-size-bad55.stan
 Syntax error in 'type-size-bad55.stan', line 1, column 17 to column 22, parsing error:
@@ -3696,7 +3696,7 @@ Syntax error in 'type-size-bad55.stan', line 1, column 17 to column 22, parsing 
                           ^
    -------------------------------------------------
 
-Ill-formed type. "[" expression "," expression "]" expected for matrix sizes.
+Ill-formed type. Expected "[" expression "," expression "]" for matrix sizes.
 [exit 1]
   $ ../../../../../install/default/bin/stanc type-size-bad56.stan
 Syntax error in 'type-size-bad56.stan', line 1, column 23 to column 28, parsing error:
@@ -3715,7 +3715,7 @@ Syntax error in 'type-size-bad57.stan', line 1, column 21 to column 22, parsing 
                               ^
    -------------------------------------------------
 
-Ill-formed type. "[" expression "]" expected for row_vector size.
+Ill-formed type. Expected "[" expression "]" for row_vector size.
 [exit 1]
   $ ../../../../../install/default/bin/stanc type-size-bad58.stan
 Syntax error in 'type-size-bad58.stan', line 1, column 21 to column 26, parsing error:
@@ -3724,7 +3724,7 @@ Syntax error in 'type-size-bad58.stan', line 1, column 21 to column 26, parsing 
                               ^
    -------------------------------------------------
 
-Ill-formed type. "[" expression "]" expected for row_vector size.
+Ill-formed type. Expected "[" expression "]" for row_vector size.
 [exit 1]
   $ ../../../../../install/default/bin/stanc type-size-bad59.stan
 Syntax error in 'type-size-bad59.stan', line 1, column 19 to column 24, parsing error:
@@ -3824,7 +3824,7 @@ Syntax error in 'variable-decl-bad2.stan', line 1, column 27 to column 28, parsi
      2:  }
    -------------------------------------------------
 
-Ill-formed type. "[" expression "," expression "]" expected for matrix sizes.
+Ill-formed type. Expected "[" expression "," expression "]" for matrix sizes.
 [exit 1]
   $ ../../../../../install/default/bin/stanc variable-decl-bad4.stan
 Syntax error in 'variable-decl-bad4.stan', line 1, column 32 to column 37, parsing error:
@@ -3833,7 +3833,7 @@ Syntax error in 'variable-decl-bad4.stan', line 1, column 32 to column 37, parsi
                                          ^
    -------------------------------------------------
 
-Ill-formed type. "[" expression "]" expected for row_vector size.
+Ill-formed type. Expected "[" expression "]" for row_vector size.
 [exit 1]
   $ ../../../../../install/default/bin/stanc variable-decl-bad5.stan
 Syntax error in 'variable-decl-bad5.stan', line 1, column 18 to column 23, parsing error:
@@ -3842,7 +3842,7 @@ Syntax error in 'variable-decl-bad5.stan', line 1, column 18 to column 23, parsi
                            ^
    -------------------------------------------------
 
-Ill-formed type. "[" expression "]" expected for row_vector size.
+Ill-formed type. Expected "[" expression "]" for row_vector size.
 [exit 1]
   $ ../../../../../install/default/bin/stanc variable-decl-bad6.stan
 Syntax error in 'variable-decl-bad6.stan', line 1, column 15 to column 20, parsing error:
@@ -3869,7 +3869,7 @@ Syntax error in 'while-bad1.stan', line 1, column 31 to column 35, parsing error
                                         ^
    -------------------------------------------------
 
-Ill-formed statement. Expected a statement after ")" for the body of the while-loop.
+Ill-formed statement. Expected a statement after ")" for the body of the "while" loop.
 [exit 1]
   $ ../../../../../install/default/bin/stanc while-bad2.stan
 Syntax error in 'while-bad2.stan', line 1, column 30 to column 35, parsing error:
@@ -3888,7 +3888,7 @@ Syntax error in 'while-bad3.stan', line 1, column 29 to column 33, parsing error
                                       ^
    -------------------------------------------------
 
-Ill-formed statement. Expected a statement after ")" for the body of the while-loop.
+Ill-formed statement. Expected a statement after ")" for the body of the "while" loop.
 [exit 1]
   $ ../../../../../install/default/bin/stanc while-bad4.stan
 Syntax error in 'while-bad4.stan', line 1, column 27 to column 28, parsing error:

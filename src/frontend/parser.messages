@@ -10,6 +10,7 @@
 # automatically update this file, leaving new placeholder messages for new states.
 #
 #
+#
 program: WHILE
 ##
 ## Concrete syntax: while
@@ -105,7 +106,7 @@ program: PARAMETERSBLOCK LBRACE RBRACE ELTTIMESASSIGN
 ## option(function_block) option(data_block) option(transformed_data_block) option(parameters_block)
 ##
 
-Ill-formed program. "transformed parameters {", "model {" or "generated quantities {" expected after end of parameters block.
+Ill-formed program. Expected "transformed parameters {", "model {" or "generated quantities {" after end of parameters block.
 
 program: TRANSFORMEDPARAMETERSBLOCK LBRACE RBRACE ELTTIMESASSIGN
 ##
@@ -119,7 +120,7 @@ program: TRANSFORMEDPARAMETERSBLOCK LBRACE RBRACE ELTTIMESASSIGN
 ## option(function_block) option(data_block) option(transformed_data_block) option(parameters_block) option(transformed_parameters_block)
 ##
 
-Ill-formed program. "model {" or "generated quantities {" expected after end of transformed parameters block.
+Ill-formed program. Expected "model {" or "generated quantities {" after end of transformed parameters block.
 
 program: MODELBLOCK LBRACE RBRACE ELTTIMESASSIGN
 ##
@@ -652,7 +653,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN IDENTIFIER COMMA WHILE
 ## LOWER ASSIGN constr_expression COMMA
 ##
 
-Ill-formed constraint. "upper =" expression (not containing binary logical operators) ">" expected
+Ill-formed constraint. Expected "upper =" expression (not containing binary logical operators) ">"
 after "<lower =" expression "," in top-level variable declaration.
 
 program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER COMMA WHILE
@@ -667,7 +668,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER COMMA WHILE
 ## UPPER ASSIGN constr_expression COMMA
 ##
 
-Ill-formed constraint. "lower =" expression (not containing binary logical operators) ">" expected
+Ill-formed constraint. Expected "lower =" expression (not containing binary logical operators) ">"
 after "<upper =" expression "," in top-level variable declaration.
 
 program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER COMMA LOWER WHILE
@@ -701,8 +702,8 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER COMMA LOWER ASS
 ## UPPER ASSIGN constr_expression COMMA LOWER ASSIGN
 ##
 
-Ill-formed constraint. Expression (not containing binary logical operators)
-expected after "lower =".
+Ill-formed constraint. Expected an expression (not containing binary logical operators)
+after "lower =".
 
 program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER COMMA LOWER ASSIGN IDENTIFIER COMMA
 ##
@@ -781,7 +782,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK MULTIPLIER ASSIGN IDENTIFIER COMMA OFFS
 ## MULTIPLIER ASSIGN constr_expression COMMA OFFSET ASSIGN
 ##
 
-Ill-formed constraint. Expected expression (not containing binary logical operators)
+Ill-formed constraint. Expected an expression (not containing binary logical operators)
 after "offset =".
 
 program: DATABLOCK LBRACE VECTOR LABRACK MULTIPLIER ASSIGN IDENTIFIER COMMA OFFSET ASSIGN IDENTIFIER COMMA
@@ -846,7 +847,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK MULTIPLIER ASSIGN WHILE
 ## MULTIPLIER ASSIGN
 ##
 
-Ill-formed constraint. Expected expression (not containing binary logical operators)
+Ill-formed constraint. Expected and expression (not containing binary logical operators)
 after "multiplier =".
 
 program: DATABLOCK LBRACE VECTOR LABRACK MULTIPLIER WHILE
@@ -901,7 +902,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER TIMES WHILE
 ## constr_expression TIMES
 ##
 
-Ill-formed constraint. Expected expression (not containing binary logical operators).
+Ill-formed constraint. Expected an expression (not containing binary logical operators).
 
 program: DATABLOCK LBRACE ROWVECTOR LABRACK UPPER ASSIGN BANG IDENTIFIER TRANSPOSE WHILE
 ## Concrete syntax: data { row_vector < upper = ! foo ' while
@@ -920,8 +921,8 @@ program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN WHILE
 ## UPPER ASSIGN
 ##
 
-Ill-formed constraint. Expression (not containing binary logical operators)
-expected after "upper =".
+Ill-formed constraint. Expected an expression (not containing binary logical operators)
+after "upper =".
 
 program: DATABLOCK LBRACE VECTOR LABRACK UPPER WHILE
 ##
@@ -1082,7 +1083,7 @@ program: MODELBLOCK LBRACE REAL IDENTIFIER IDENTIFIER
 ## sized_basic_type decl_identifier
 ##
 
-Ill-formed declaration. ";" or plain assignment expected after variable declaration.
+Ill-formed declaration. Expected ";" or plain assignment after variable declaration.
 
 program: DATABLOCK LBRACE ARRAY LBRACK IDENTIFIER RBRACK COMPLEX IDENTIFIER WHILE
 ## Concrete syntax: data { array [ foo ] complex foo while
@@ -1099,7 +1100,7 @@ program: DATABLOCK LBRACE REAL IDENTIFIER IDENTIFIER
 ## top_var_type decl_identifier
 ##
 
-Ill-formed declaration. ";" expected after variable declaration.
+Ill-formed declaration. Expected ";" after variable declaration.
 
 program: DATABLOCK WHILE
 ##
@@ -1113,10 +1114,10 @@ program: DATABLOCK WHILE
 ## DATABLOCK
 ##
 
-Ill-formed block. "{" followed by a list of top-level variable declarations is expected after seeing "data".
+Ill-formed block. Expected "{" followed by a list of top-level variable declarations after "data".
 
 program: FUNCTIONBLOCK LBRACE VOID WHILE LPAREN RPAREN SEMICOLON EOF
-## Concrete syntax: functions { void while ( ) ; <EOF>
+## Concrete syntax: functions { void while ( ) ;
 program: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN RPAREN SEMICOLON WHILE
 ##
 ## Concrete syntax: functions { void foo ( ) ; while
@@ -1129,7 +1130,7 @@ program: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN RPAREN SEMICOLON WHILE
 ## function_def
 ##
 
-Ill-formed block. A "}" or a function definition/declaration is expected.
+Ill-formed block. Expected a "}" or a function definition or declaration.
 
 functions_only: COMPLEX IDENTIFIER LPAREN COMPLEX RPAREN
 ## Concrete syntax: complex foo ( complex )
@@ -1146,7 +1147,7 @@ functions_only: COMPLEX IDENTIFIER LPAREN COMPLEX UNREACHABLE
 ## basic_type
 ##
 
-Ill-formed function argument. An identifier is expected after the type as a function argument name.
+Ill-formed function argument. Expected an identifier after the type for the function argument name.
 
 program: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN DATABLOCK WHILE
 ##
@@ -1160,7 +1161,7 @@ program: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN DATABLOCK WHILE
 ## option(DATABLOCK)
 ##
 
-Ill-formed function argument. A type is expected after "data" specifier.
+Ill-formed function argument. Expected a type after the "data" specifier.
 
 program: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN RPAREN VOID
 ##
@@ -1174,7 +1175,7 @@ program: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN RPAREN VOID
 ## return_type decl_identifier LPAREN loption(separated_nonempty_list(COMMA,arg_decl)) RPAREN
 ##
 
-Ill-formed function. Either "{" statement "}" is expected for a function definition or ";" for a function forward declaration.
+Ill-formed function. Expected either "{" statement "}" for a function definition or ";" for a function forward declaration.
 
 program: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN WHILE
 ## Concrete syntax: functions { void foo ( while
@@ -1190,7 +1191,7 @@ program: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN VECTOR IDENTIFIER COMMA WHI
 ## arg_decl COMMA
 ##
 
-Ill-formed function argument. An argument declaration (unsized and unconstrained type followed by identifier) is expected.
+Ill-formed function argument. Expected an argument declaration (unsized and unconstrained type followed by identifier).
 
 program: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN VECTOR IDENTIFIER WHILE
 ##
@@ -1205,7 +1206,7 @@ program: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN VECTOR IDENTIFIER WHILE
 ## arg_decl
 ##
 
-Ill-formed function argument. "," or ")" expected after function argument declaration.
+Ill-formed function argument. Expected "," or ")" after function argument declaration.
 
 program: FUNCTIONBLOCK LBRACE VOID IDENTIFIER WHILE
 ##
@@ -1219,7 +1220,7 @@ program: FUNCTIONBLOCK LBRACE VOID IDENTIFIER WHILE
 ## return_type decl_identifier
 ##
 
-Ill-formed function. "(" expected after function name.
+Ill-formed function. Expected "(" after function name.
 
 program: FUNCTIONBLOCK LBRACE VOID LBRACK
 ##
@@ -1233,7 +1234,7 @@ program: FUNCTIONBLOCK LBRACE VOID LBRACK
 ## return_type
 ##
 
-Ill-formed function. An identifier is expected as a function name.
+Ill-formed function. Expected an identifier as a function name.
 
 program: FUNCTIONBLOCK LBRACE WHILE
 ##
@@ -1247,7 +1248,7 @@ program: FUNCTIONBLOCK LBRACE WHILE
 ## FUNCTIONBLOCK LBRACE
 ##
 
-Ill-formed block. Function forward declaration, definition or "}" expected after "functions {".
+Ill-formed block. Expected a function forward declaration, definition, or "}" after "functions {".
 
 program: FUNCTIONBLOCK WHILE
 ##
@@ -1261,21 +1262,7 @@ program: FUNCTIONBLOCK WHILE
 ## FUNCTIONBLOCK
 ##
 
-Ill-formed block. "{" expected after "functions".
-
-program: GENERATEDQUANTITIESBLOCK LBRACE VOID
-##
-## Concrete syntax: generated quantities { void
-##
-## Ends in an error in state: 686.
-##
-## generated_quantities_block -> GENERATEDQUANTITIESBLOCK LBRACE . list(top_vardecl_or_statement) RBRACE [ EOF ]
-##
-## The known suffix of the stack is as follows:
-## GENERATEDQUANTITIESBLOCK LBRACE
-##
-
-Ill-formed block. Variable declaration or statement or "}" expected in generated quantities block.
+Ill-formed block. Expected "{" after "functions".
 
 program: GENERATEDQUANTITIESBLOCK WHILE
 ##
@@ -1345,7 +1332,7 @@ program: MODELBLOCK LBRACE MATRIX WHILE
 ## MATRIX
 ##
 
-Ill-formed type. "[" expression "," expression "]" expected for matrix sizes.
+Ill-formed type. Expected "[" expression "," expression "]" for matrix sizes.
 
 program: MODELBLOCK LBRACE REAL IDENTIFIER ASSIGN IDENTIFIER TILDE
 ## Concrete syntax: model { real foo = foo ~
@@ -1361,7 +1348,7 @@ program: MODELBLOCK LBRACE REAL IDENTIFIER ASSIGN WHILE
 ## ASSIGN
 ##
 
-Ill-formed statement. Expression followed by ";" expected after "=".
+Ill-formed statement. Expected an expression followed by ";" after "=".
 
 program: MODELBLOCK LBRACE REAL LBRACK
 ##
@@ -1376,7 +1363,8 @@ program: MODELBLOCK LBRACE REAL LBRACK
 ## sized_basic_type
 ##
 
-Ill-formed declaration. Identifier expected after sized type in local (or model block) variable declaration. (No transformations/constraints allowed.)
+Ill-formed declaration. Expected an identifier after sized type in local (or model block) variable declaration.
+(No transformations/constraints allowed.)
 
 program: DATABLOCK LBRACE ROWVECTOR LBRACK WHILE
 ## Concrete syntax: data { row_vector [ while
@@ -1416,12 +1404,14 @@ program: MODELBLOCK LBRACE ROWVECTOR LBRACK WHILE
 ## ROWVECTOR LBRACK
 ##
 
-Ill-formed type. "[" expression "]" expected for row_vector size.
+Ill-formed type. Expected "[" expression "]" for row_vector size.
 
 program: TRANSFORMEDDATABLOCK LBRACE PROFILE LPAREN STRINGLITERAL RPAREN LBRACE VOID
 ## Concrete syntax: transformed data { profile ( "hello world" ) { void
 program: MODELBLOCK LBRACE VOID
 ## Concrete syntax: model { void
+program: GENERATEDQUANTITIESBLOCK LBRACE VOID
+## Concrete syntax: generated quantities { void
 program: MODELBLOCK LBRACE SEMICOLON VOID
 ##
 ## Concrete syntax: model { ; void
@@ -1434,7 +1424,7 @@ program: MODELBLOCK LBRACE SEMICOLON VOID
 ## vardecl_or_statement
 ##
 
-Ill-formed block. Variable declaration, statement or "}" expected.
+Ill-formed block. Expected variable declaration, statement or "}".
 
 program: DATABLOCK LBRACE COMPLEXVECTOR LABRACK OFFSET ASSIGN IDENTIFIER RABRACK WHILE
 ## Concrete syntax: data { complex_vector < offset = foo > while
@@ -1532,7 +1522,7 @@ program: TRANSFORMEDDATABLOCK LBRACE BANG WHILE
 ## BANG
 ##
 
-Ill-formed expression. Expression expected after "!".
+Ill-formed expression. Expected an expression after "!".
 
 program: TRANSFORMEDDATABLOCK LBRACE BREAK WHILE
 ##
@@ -1576,7 +1566,7 @@ program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN IDENTIFIER IN REALNUMERAL COLON 
 ## FOR LPAREN identifier IN expression COLON expression RPAREN
 ##
 
-Ill-formed statement. Expected statement after ")" for the loop body of the for loop.
+Ill-formed statement. Expected a statement after ")" for the loop body of the "for" loop.
 
 program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN IDENTIFIER IN IDENTIFIER COLON DOTNUMERAL TILDE
 ## Concrete syntax: transformed data { for ( foo in foo : .2 ~
@@ -1592,7 +1582,7 @@ program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN IDENTIFIER IN REALNUMERAL COLON 
 ## FOR LPAREN identifier IN expression COLON
 ##
 
-Ill-formed expression. Expected expression followed by ")" after "for (" identifier "in" expression ":".
+Ill-formed expression. Expected an expression followed by ")" after "for (" identifier "in" expression ":".
 
 program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN IDENTIFIER IN WHILE
 ## Concrete syntax: transformed data { for ( foo in while
@@ -1636,7 +1626,7 @@ program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN IDENTIFIER IN DOTNUMERAL TILDE
 ## In state 127, spurious reduction of production expression -> common_expression
 ##
 
-Ill-formed expression. Expected expression followed by ")" or ":" after "for (" identifier "in".
+Ill-formed expression. Expected an expression followed by ")" or ":" after "for (" identifier "in".
 
 program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN IDENTIFIER WHILE
 ##
@@ -1713,7 +1703,7 @@ program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN REALNUMERAL RPAREN VOID
 ## IF LPAREN expression RPAREN
 ##
 
-Ill-formed statement. Statement expected for true branch of conditional.
+Ill-formed statement. Expected a statement for the true branch of conditional.
 
 program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN IDENTIFIER RPAREN SEMICOLON ELSE VOID
 ##
@@ -1727,7 +1717,7 @@ program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN IDENTIFIER RPAREN SEMICOLON ELSE 
 ## IF LPAREN expression RPAREN vardecl_or_statement ELSE
 ##
 
-Ill-formed statement. Expected statement after "else".
+Ill-formed statement. Expected a statement after "else".
 
 program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN IDENTIFIER LPAREN RPAREN TILDE
 ##
@@ -1802,7 +1792,7 @@ program: TRANSFORMEDDATABLOCK LBRACE LBRACE VOID
 ## LBRACE
 ##
 
-Ill-formed block. "{" should be followed by a statement, variable declaration, or just "}".
+Ill-formed block. Expected a statement, variable declaration, or just "}" after "{".
 
 program: TRANSFORMEDDATABLOCK LBRACE LBRACK IDENTIFIER COMMA WHILE
 ##
@@ -1857,7 +1847,7 @@ program: TRANSFORMEDDATABLOCK LBRACE LBRACK WHILE
 ## LBRACK
 ##
 
-Ill-formed expression. Comma separated list of expressions followed by "]" expected after "[".
+Ill-formed expression. Expected a comma separated list of expressions followed by "]" after "[".
 
 program: TRANSFORMEDDATABLOCK LBRACE LPAREN IDENTIFIER COMMA IDENTIFIER RBRACK
 ## Concrete syntax: transformed data { ( foo , foo ]
@@ -2211,7 +2201,7 @@ program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK COLON WHILE
 ## COLON
 ##
 
-Ill-formed expression. Expected expression or "]" or "," after ":".
+Ill-formed expression. Expected an expression or "]" or "," after ":".
 
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK COMMA WHILE
 ##
@@ -2242,7 +2232,7 @@ program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LBRACK REALNUMERAL COLON WHILE
 ## expression COLON
 ##
 
-Ill-formed index. Expected expression or "]" or "," after ":".
+Ill-formed index. Expected an expression or "]" or "," after ":".
 
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE IDENTIFIER LPAREN RPAREN TRUNCATE LBRACK COMMA RBRACK MULTIPLIER
 ##
@@ -2386,7 +2376,27 @@ program: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN WHILE
 ## REJECT LPAREN
 ##
 
-Ill-formed statement. After "reject(", expected a comma separated list of either expressions or strings, followed by ");".
+Ill-formed statement. Expected a comma separated list of either expressions or strings followed by ");" after "reject(",.
+
+program: TRANSFORMEDDATABLOCK LBRACE FATAL_ERROR LPAREN IDENTIFIER RPAREN WHILE
+## Concrete syntax: transformed data { fatal_error ( foo ) while
+program: TRANSFORMEDDATABLOCK LBRACE FATAL_ERROR LPAREN STRINGLITERAL WHILE
+## Concrete syntax: transformed data { fatal_error ( "hello world" while
+program: TRANSFORMEDDATABLOCK LBRACE FATAL_ERROR LPAREN WHILE
+## Concrete syntax: transformed data { fatal_error ( while
+program: TRANSFORMEDDATABLOCK LBRACE FATAL_ERROR WHILE
+##
+## Concrete syntax: transformed data { fatal_error while
+##
+## Ends in an error in state: 294.
+##
+## atomic_statement -> FATAL_ERROR . LPAREN printables RPAREN SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
+##
+## The known suffix of the stack is as follows:
+## FATAL_ERROR
+##
+
+Ill-formed statement. Expected a comma separated list of either expressions or strings followed by ");" after "fatal_error(".
 
 program: TRANSFORMEDDATABLOCK LBRACE RETURN LBRACE WHILE
 ##
@@ -2400,7 +2410,7 @@ program: TRANSFORMEDDATABLOCK LBRACE RETURN LBRACE WHILE
 ## LBRACE
 ##
 
-Ill-formed expression. Expression expected after "{" in array expression.
+Ill-formed expression. Expected an expression after "{" in array expression.
 
 program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LPAREN WHILE
 ## Concrete syntax: transformed data { foo ( while
@@ -2432,7 +2442,7 @@ program: TRANSFORMEDDATABLOCK LBRACE RETURN IDENTIFIER LPAREN IDENTIFIER COMMA I
 ## In state 114, spurious reduction of production loption(separated_nonempty_list(COMMA,expression)) -> separated_nonempty_list(COMMA,expression)
 ##
 
-Ill-formed function application. Expected comma-separated list of expressions followed by ")" after "(".
+Ill-formed function application. Expected a comma-separated list of expressions followed by ")" after "(".
 
 program: TRANSFORMEDDATABLOCK LBRACE RETURN WHILE
 ## Concrete syntax: transformed data { return while
@@ -2476,7 +2486,7 @@ program: TRANSFORMEDDATABLOCK LBRACE RETURN IDENTIFIER TILDE
 ## In state 127, spurious reduction of production expression -> common_expression
 ##
 
-Ill-formed statement. ";" or expression followed by ";" expected after "return".
+Ill-formed statement. Expected ";" or expression followed by ";" after "return".
 
 program: TRANSFORMEDDATABLOCK LBRACE TARGET LPAREN WHILE
 ## Concrete syntax: transformed data { target ( while
@@ -2536,7 +2546,7 @@ program: TRANSFORMEDDATABLOCK LBRACE TARGET PLUSASSIGN IDENTIFIER TILDE
 ## In state 127, spurious reduction of production expression -> common_expression
 ##
 
-Ill-formed statement. Expression followed by ";" expected after "target +=".
+Ill-formed statement. Expected an expression followed by ";" after "target +=".
 
 program: TRANSFORMEDDATABLOCK LBRACE TARGET WHILE
 ##
@@ -2576,7 +2586,7 @@ program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LPAREN REALNUMERAL BAR IDENTIFIE
 ## In state 114, spurious reduction of production loption(separated_nonempty_list(COMMA,expression)) -> separated_nonempty_list(COMMA,expression)
 ##
 
-Ill-formed conditional distribution evaluation. Expected comma-separated list of expressions followed by ")" after "|".
+Ill-formed conditional distribution evaluation. Expected a comma-separated list of expressions followed by ")" after "|".
 
 program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LPAREN RPAREN WHILE
 ##
@@ -2600,6 +2610,10 @@ Ill-formed phrase. Found a well-formed function application. Expected either a "
 # "3" is a valid start of a ~ but not of an assignment.
 program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER SEMICOLON
 ## Concrete syntax: transformed data { foo ;
+program: TRANSFORMEDDATABLOCK LBRACE LBRACE IDENTIFIER TRANSPOSE WHILE
+## Concrete syntax: transformed data { { foo ' while
+program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER RBRACE
+## Concrete syntax: transformed data { foo }
 program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER DOTNUMERAL SEMICOLON
 ##
 ## Concrete syntax: transformed data { foo .2 ;
@@ -2622,52 +2636,7 @@ program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER DOTNUMERAL SEMICOLON
 ##
 
 Ill-formed phrase. Expected a statement, but found a partial value before this point.
-Did you mean for this to be the start of an assignment or "~" statement?
-
-program: TRANSFORMEDDATABLOCK LBRACE LBRACE IDENTIFIER TRANSPOSE WHILE
-## Concrete syntax: transformed data { { foo ' while
-program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER RBRACE
-##
-## Concrete syntax: transformed data { foo }
-##
-## Ends in an error in state: 339.
-##
-## atomic_statement -> expression . TILDE identifier LPAREN loption(separated_nonempty_list(COMMA,expression)) RPAREN option(truncation) SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
-## expression -> expression . QMARK expression COLON expression [ TRANSPOSE TIMES TILDE RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . PLUS expression [ TRANSPOSE TIMES TILDE RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . MINUS expression [ TRANSPOSE TIMES TILDE RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . TIMES expression [ TRANSPOSE TIMES TILDE RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . DIVIDE expression [ TRANSPOSE TIMES TILDE RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . IDIVIDE expression [ TRANSPOSE TIMES TILDE RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . MODULO expression [ TRANSPOSE TIMES TILDE RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . LDIVIDE expression [ TRANSPOSE TIMES TILDE RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . ELTTIMES expression [ TRANSPOSE TIMES TILDE RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . ELTDIVIDE expression [ TRANSPOSE TIMES TILDE RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . HAT expression [ TRANSPOSE TIMES TILDE RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . ELTPOW expression [ TRANSPOSE TIMES TILDE RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . OR expression [ TRANSPOSE TIMES TILDE RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . AND expression [ TRANSPOSE TIMES TILDE RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . EQUALS expression [ TRANSPOSE TIMES TILDE RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . NEQUALS expression [ TRANSPOSE TIMES TILDE RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . LABRACK expression [ TRANSPOSE TIMES TILDE RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . LEQ expression [ TRANSPOSE TIMES TILDE RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . RABRACK expression [ TRANSPOSE TIMES TILDE RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . GEQ expression [ TRANSPOSE TIMES TILDE RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-## expression -> expression . TRANSPOSE [ TRANSPOSE TIMES TILDE RABRACK QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMES ELTPOW ELTDIVIDE DIVIDE AND ]
-##
-## The known suffix of the stack is as follows:
-## expression
-##
-## WARNING: This example involves spurious reductions.
-## This implies that, although the LR(1) items shown above provide an
-## accurate view of the past (what has been recognized so far), they
-## may provide an INCOMPLETE view of the future (what was expected next).
-## In state 334, spurious reduction of production common_expression -> identifier
-## In state 356, spurious reduction of production expression -> common_expression
-##
-
-Ill-formed phrase. Expected a statement, but found a partial value before this point.
-Did you mean for this to be the start of a "~" statement?
+Did you mean for this to be the start of an assignment or "~"-statement?
 
 program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER PLUSASSIGN IDENTIFIER TILDE
 ## Concrete syntax: transformed data { foo += foo ~
@@ -2827,7 +2796,7 @@ program: TRANSFORMEDDATABLOCK LBRACE WHILE LPAREN IDENTIFIER RPAREN VOID
 ## WHILE LPAREN expression RPAREN
 ##
 
-Ill-formed statement. Expected a statement after ")" for the body of the while-loop.
+Ill-formed statement. Expected a statement after ")" for the body of the "while" loop.
 
 program: TRANSFORMEDDATABLOCK LBRACE WHILE LPAREN IDENTIFIER TILDE
 ## Concrete syntax: transformed data { while ( foo ~
@@ -3083,7 +3052,7 @@ program: DATABLOCK LBRACE TUPLE LPAREN WHILE
 ## TUPLE LPAREN
 ##
 
-Ill-formed type. Expected comma separated list of types between "(" and ")" to declare tuple variable.
+Ill-formed type. Expected a comma separated list of types between "(" and ")" to declare tuple variable.
 
 program: TRANSFORMEDDATABLOCK LBRACE RETURN LPAREN WHILE
 ## Concrete syntax: transformed data { return ( while
@@ -3099,7 +3068,7 @@ program: TRANSFORMEDDATABLOCK LBRACE LPAREN IDENTIFIER COMMA WHILE
 ## LPAREN expression COMMA
 ##
 
-Ill-formed expression. Expression or comma separated list of expressions followed by ")" expected after "(".
+Ill-formed expression. Expected an expression or comma separated list of expressions followed by ")" after "(".
 
 functions_only: ARRAY LBRACK RBRACK WHILE
 ## Concrete syntax: array [ ] while
@@ -3148,27 +3117,7 @@ functions_only: ARRAY LBRACK WHILE
 ## LBRACK
 ##
 
-Ill-formed type. "[" (list of commas) "]" expected in unsized return type of function definition.
-
-program: TRANSFORMEDDATABLOCK LBRACE FATAL_ERROR LPAREN IDENTIFIER RPAREN WHILE
-## Concrete syntax: transformed data { fatal_error ( foo ) while
-program: TRANSFORMEDDATABLOCK LBRACE FATAL_ERROR LPAREN STRINGLITERAL WHILE
-## Concrete syntax: transformed data { fatal_error ( "hello world" while
-program: TRANSFORMEDDATABLOCK LBRACE FATAL_ERROR LPAREN WHILE
-## Concrete syntax: transformed data { fatal_error ( while
-program: TRANSFORMEDDATABLOCK LBRACE FATAL_ERROR WHILE
-##
-## Concrete syntax: transformed data { fatal_error while
-##
-## Ends in an error in state: 294.
-##
-## atomic_statement -> FATAL_ERROR . LPAREN printables RPAREN SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
-##
-## The known suffix of the stack is as follows:
-## FATAL_ERROR
-##
-
-Ill-formed statement. After "fatal_error(", expected a comma separated list of either expressions or strings, followed by ");".
+Ill-formed type. Expected "[" (list of commas) "]" in unsized return type of function definition.
 
 program: TRANSFORMEDDATABLOCK LBRACE COMPLEX IDENTIFIER LBRACK IDENTIFIER RPAREN
 ## Concrete syntax: transformed data { complex foo [ foo )
@@ -3192,7 +3141,7 @@ program: MODELBLOCK LBRACE COMPLEX IDENTIFIER LBRACK WHILE
 ## sized_basic_type decl_identifier LBRACK
 ##
 
-Ill-formed declaration. ";" expected after variable declaration.
+Ill-formed declaration. Expected ";" after variable declaration.
 It looks like you are trying to use the old array syntax.
 Please use the new syntax:
 https://mc-stan.org/docs/reference-manual/types.html#array-data-types.section
