@@ -216,7 +216,7 @@ Syntax error in 'string', line 8, column 0 to column 5, parsing error:
     10:  }
    -------------------------------------------------
 
-Expected "generated quantities {" or end of file after end of model block.
+Ill-formed program. Expected "generated quantities {" or end of file after end of model block.
 
 $ node includes.js
 Syntax error in 'string', line 2, column 0 to column 19, include error:
