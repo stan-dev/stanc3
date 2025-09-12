@@ -55,7 +55,7 @@ Syntax error in 'profile-bad5.stan', line 2, column 9 to column 16, parsing erro
      3:  }
    -------------------------------------------------
 
-Expected a new identifier but found reserved keyword 'profile'.
+Ill-formed identifier. Expected a new identifier but found reserved keyword "profile".
 [exit 1]
   $ ../../../../../install/default/bin/stanc profile-bad6.stan
 Syntax error in 'profile-bad6.stan', line 2, column 9 to column 16, parsing error:
@@ -67,5 +67,5 @@ Syntax error in 'profile-bad6.stan', line 2, column 9 to column 16, parsing erro
      4:      }
    -------------------------------------------------
 
-Expected a new identifier but found reserved keyword 'profile'.
+Ill-formed identifier. Expected a new identifier but found reserved keyword "profile".
 [exit 1]

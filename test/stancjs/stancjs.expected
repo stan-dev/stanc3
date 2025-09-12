@@ -386,7 +386,7 @@ Syntax error in 'string', line 3, column 8 to column 10, parsing error:
      5:  model {
    -------------------------------------------------
 
-";" expected after variable declaration.
+Ill-formed declaration. ";" expected after variable declaration.
 It looks like you are trying to use the old array syntax.
 Please use the new syntax:
 array[10] real y;
@@ -401,7 +401,7 @@ Syntax error in 'string', line 3, column 8 to column 10, parsing error:
      5:  model {
    -------------------------------------------------
 
-";" expected after variable declaration.
+Ill-formed declaration. ";" expected after variable declaration.
 It looks like you are trying to use the old array syntax.
 Please use the new syntax:
 array[10] real y;

@@ -6,7 +6,7 @@ open Ast
 open Debugging
 open Preprocessor
 
-let parse_error ~loc msg =
+let parse_error msg loc =
   Syntax_error.parse_error msg (location_span_of_positions loc)
 
 (* Takes a sized_basic_type and a list of sizes and repeatedly applies then
@@ -19,16 +19,18 @@ let build_id id loc =
   {name= id; id_loc= location_span_of_positions loc}
 
 let reserved (name, loc, _) =
-  parse_error ~loc
-    ("Expected a new identifier but found reserved keyword '" ^ name ^ "'.\n")
+  parse_error
+    ("Ill-formed identifier. Expected a new identifier but \
+      found reserved keyword \"" ^ name ^ "\".\n")
+    loc
 
 let reserved_decl (name, loc, is_type) =
   if is_type then
-    parse_error ~loc
-      ("Found a type ('" ^ name
-     ^ "') where an identifier was expected.\n\
-        All variables declared in a comma-separated list must be of the same \
-        type.\n")
+    parse_error
+      ("Ill-formed identifier. Found a type (\"" ^ name
+     ^ "\") where an identifier was expected.\n\
+        All variables declared in a comma-separated list must be of the same type.\n")
+      loc
   else reserved (name, loc, is_type)
 
 let build_expr expr loc = {expr; emeta= {loc= location_span_of_positions loc}}
@@ -37,9 +39,11 @@ let rec iterate_n f x = function 0 -> x | n -> iterate_n f (f x) (n - 1)
 let parse_tuple_slot ix_str loc =
   match int_of_string_opt (String.drop_prefix ix_str 1) with
   | None ->
-      parse_error ~loc
-        ("Failed to parse integer from string '" ^ ix_str
-       ^ "' in tuple index. \nThe index is likely too large.\n")
+      parse_error
+        ("Ill-formed index. Failed to parse integer from string \
+          \"" ^ ix_str
+       ^ "\" in tuple index. \nThe index is likely too large.\n")
+        loc
   | Some ix -> ix
 
 (** Given a parsed expression, try to convert it to
@@ -48,8 +52,11 @@ let try_convert_to_lvalue expr loc =
   match Ast.lvalue_of_expr_opt expr with
   | Some l -> l
   | None ->
-      parse_error ~loc
-        "Expected an assignable value but found a general expression.\n"
+      parse_error
+        "Ill-formed assignment. Expected an assignable value \
+         but found a general expression.\n"
+        loc
+
 
 let nest_unsized_array basic_type n =
   iterate_n (fun t -> UnsizedType.UArray t) basic_type n
@@ -91,7 +98,7 @@ let nest_unsized_array basic_type n =
        DIVIDEASSIGN "/=" ELTDIVIDEASSIGN "./=" ELTTIMESASSIGN ".*="
 %token PRINT "print" REJECT "reject" FATAL_ERROR "fatal_error"
 %token TRUNCATE "T"
-%token EOF ""
+%token EOF "<EOF>"
 
 (* UNREACHABLE tokens will never be produced by the lexer, so we can use them as
    "a thing that will never parse". This is useful in a few places. For example,
@@ -292,13 +299,14 @@ unsized_type:
     It can go away at some point if it starts causing conflicts.
   *)
   | bt=basic_type dims=unsized_dims {
-    parse_error ~loc:($loc(dims))
+    parse_error
       (Fmt.str
-         "An identifier is expected after the type as a function argument \
-          name.@ It looks like you are trying to use the old array syntax.@ \
-          Please use the new syntax: @ @[<h>array[%s] %a@]@\n"
+         "Ill-formed type. It looks like you are trying to use the old array syntax.@ \
+          Please use the new syntax:@ \
+          @[<h>array[%s] %a@]@\n"
          (String.make (dims - 1) ',')
          UnsizedType.pp bt)
+      $loc(dims)
   }
   | bt=basic_type
     {  grammar_logger "unsized_type";
@@ -376,12 +384,14 @@ decl(type_rule, rhs):
     let (ty, trans) = ty in
     let ty = List.fold_right ~f:(fun e ty -> SizedType.SArray (ty, e)) ~init:ty dims in
     let ty = (ty, trans) in
-    parse_error ~loc:($loc(dims))
+    parse_error
       (Fmt.str
-         "\";\" expected after variable declaration.@ It looks like you are \
-          trying to use the old array syntax.@ Please use the new syntax:@ \
-          @[<h>%a %s;@]@\n"
+         "Ill-formed declaration. \";\" expected \
+          after variable declaration.@ It looks like you are trying \
+          to use the old array syntax.@ Please use the new syntax:@ @[<h>%a \
+          %s;@]@\n"
          Pretty_printing.pp_transformed_type ty id.name)
+      $loc(dims)
     }
   | ty=higher_type(type_rule)
     (* additional indirection only for better error messaging *)
@@ -746,12 +756,13 @@ statement:
 atomic_statement:
   | l=common_expression op=assignment_op e=expression SEMICOLON
     {  grammar_logger "assignment_statement" ;
+       (* slight hack: we over-parse but only allow ids, tuples of ids, or id projections *)
        Assignment {assign_lhs=try_convert_to_lvalue l $sloc;
                    assign_op=op;
                    assign_rhs=e} }
   | id=identifier LPAREN args=separated_list(COMMA, expression) RPAREN SEMICOLON
     {  grammar_logger "funapp_statement" ; NRFunApp ((),id, args)  }
- | e=expression TILDE id=identifier LPAREN es=separated_list(COMMA, expression)
+  | e=expression TILDE id=identifier LPAREN es=separated_list(COMMA, expression)
     RPAREN ot=option(truncation) SEMICOLON
     {  grammar_logger "tilde_statement" ;
        let t = match ot with Some tt -> tt | None -> NoTruncate in

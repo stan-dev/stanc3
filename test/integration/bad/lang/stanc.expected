@@ -195,7 +195,7 @@ Syntax error in 'bad_decl1.stan', line 2, column 10 to column 13, parsing error:
      3:  }
    -------------------------------------------------
 
-Found a type ('int') where an identifier was expected.
+Ill-formed identifier. Found a type ("int") where an identifier was expected.
 All variables declared in a comma-separated list must be of the same type.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_decl2.stan
@@ -232,7 +232,7 @@ Syntax error in 'bad_decl4.stan', line 2, column 10 to column 16, parsing error:
      3:  }
    -------------------------------------------------
 
-Expected a new identifier but found reserved keyword 'reject'.
+Ill-formed identifier. Expected a new identifier but found reserved keyword "reject".
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_function.stan
 Semantic error in 'bad_function.stan', line 3, column 3 to column 7:
