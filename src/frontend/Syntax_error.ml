@@ -130,7 +130,7 @@ module Tests = struct
 
   let%expect_test "nested formatting" =
     let s : _ format =
-      "@{<b>This @{<red>does @{<blue>what @{<reset>y@{<i>@{<green>o@}@}u@}@} \
+      "@{<b>This @{<red>does @{<blue>what @{<r>y@{<i>@{<green>o@}@}u@}@} \
        want@}!@}" in
     Fmt.set_style_renderer Fmt.stdout `None;
     pp_styled_text Fmt.stdout s;
@@ -182,7 +182,6 @@ module Tests = struct
     Format.pp_print_newline Fmt.stdout ();
     Fmt.set_style_renderer Fmt.stdout `Ansi_tty;
     pp_styled_text Fmt.stdout s;
-    (* tip: view this file using `cat` to see the styling in the test output *)
     [%expect
       {|
     bold
