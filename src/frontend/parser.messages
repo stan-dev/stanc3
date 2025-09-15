@@ -11,8 +11,10 @@
 #
 # The messages below can use formatting indicators like OCaml's format strings,
 # with the additional use of semantic tags for colors and text styling.
-# In short, @{<red>Text@} will be red,
-# @{<b>This @{<green>Text@}@} will be bold, with the second word also being green, etc.
+# In short, @{<red>Text@} will be red, @{<b>This @{<green>Text@}@} will be bold,
+# with the second word also being green, etc.
+# As a general rule, we start each message with a short description in red. Quoted
+# examples are in green, and non-quoted examples like 'expression' are italicized.
 # See the `styled_text` function in Syntax_error.ml for how this is done and the full
 # list of styles.
 #
