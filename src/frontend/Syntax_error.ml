@@ -64,11 +64,9 @@ let pp_styled_text : styled_text Fmt.t =
     let print_current_styles () =
       let styles_until_reset =
         Stack.to_list styles
-        |> List.take_while ~f:(function "0" -> false | _ -> true)
+        |> List.take_while ~f:(String.( <> ) "0")
         |> List.rev in
-      let escs =
-        List.fold styles_until_reset ~init:"0" ~f:(fun acc s ->
-            Printf.sprintf "%s;%s" acc s) in
+      let escs = String.concat ~sep:";" ("0" :: styles_until_reset) in
       sprintf "\027[%sm" escs in
     Format.
       { former with
