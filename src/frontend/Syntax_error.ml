@@ -102,21 +102,6 @@ let pp_styled_text : styled_text Fmt.t =
           Format.pp_set_formatter_stag_functions ppf former;
           Format.pp_set_mark_tags ppf marks)
 
-let%expect_test "colored output" =
-  let s : _ format =
-    "@{<b>This @{<red>does @{<blue>what @{<reset>y@{<i>@{<green>o@}@}u@}@} \
-     want@}!@}" in
-  Fmt.set_style_renderer Fmt.stdout `None;
-  pp_styled_text Fmt.stdout s;
-  Format.pp_print_newline Fmt.stdout ();
-  Fmt.set_style_renderer Fmt.stdout `Ansi_tty;
-  pp_styled_text Fmt.stdout s;
-  (* tip: view this file using `cat` to see the styling in the test output *)
-  [%expect
-    {|
-    This does what you want!
-    [0;1mThis [0;1;31mdoes [0;1;31;34mwhat [0my[0;3m[0;3;32mo[0;3m[0mu[0;1;31;34m[0;1;31m want[0;1m![0m |}]
-
 let pp ppf = function
   | Parsing (message, _) -> pp_styled_text ppf message
   | Lexing _ -> Fmt.pf ppf "Invalid character found.@."
@@ -139,3 +124,128 @@ let try_with f =
   | UnexpectedEOF loc -> Error (UnexpectedEOF loc)
   | UnexpectedCharacter loc -> Error (Lexing loc)
   | IncludeError (msg, loc) -> Error (Include (msg, loc))
+
+module Tests = struct
+  (** tip: view this file using `cat` to see the styling in the test output *)
+
+  let%expect_test "nested formatting" =
+    let s : _ format =
+      "@{<b>This @{<red>does @{<blue>what @{<reset>y@{<i>@{<green>o@}@}u@}@} \
+       want@}!@}" in
+    Fmt.set_style_renderer Fmt.stdout `None;
+    pp_styled_text Fmt.stdout s;
+    Format.pp_print_newline Fmt.stdout ();
+    Fmt.set_style_renderer Fmt.stdout `Ansi_tty;
+    pp_styled_text Fmt.stdout s;
+    [%expect
+      {|
+    This does what you want!
+    [0;1mThis [0;1;31mdoes [0;1;31;34mwhat [0my[0;3m[0;3;32mo[0;3m[0mu[0;1;31;34m[0;1;31m want[0;1m![0m |}]
+
+  let%expect_test "formatting with stags" =
+    let s : _ format =
+      {|
+    @{<bold>bold@}
+    @{<italic>italic@}
+    @{<underline>underline@}
+    @{<faint>faint@}
+    @{<reset>reset@}
+    @{<reverse>reverse@}
+    @{<black>black@}
+    @{<red>red@}
+    @{<green>green@}
+    @{<yellow>yellow@}
+    @{<blue>blue@}
+    @{<magenta>magenta@}
+    @{<cyan>cyan@}
+    @{<white>white@}
+    @{<bg_black>bg_black@}
+    @{<bg_red>bg_red@}
+    @{<bg_green>bg_green@}
+    @{<bg_yellow>bg_yellow@}
+    @{<bg_blue>bg_blue@}
+    @{<bg_magenta>bg_magenta@}
+    @{<bg_cyan>bg_cyan@}
+    @{<bg_white>bg_white@}
+    @{<light_black>light_black@}
+    @{<light_red>light_red@}
+    @{<light_green>light_green@}
+    @{<light_yellow>light_yellow@}
+    @{<light_blue>light_blue@}
+    @{<light_magenta>light_magenta@}
+    @{<light_cyan>light_cyan@}
+    @{<light_white>light_white@}
+    @{<body>Unknown tag@}|}
+    in
+    Fmt.set_style_renderer Fmt.stdout `None;
+    pp_styled_text Fmt.stdout s;
+    Format.pp_print_newline Fmt.stdout ();
+    Fmt.set_style_renderer Fmt.stdout `Ansi_tty;
+    pp_styled_text Fmt.stdout s;
+    (* tip: view this file using `cat` to see the styling in the test output *)
+    [%expect
+      {|
+    bold
+    italic
+    underline
+    faint
+    reset
+    reverse
+    black
+    red
+    green
+    yellow
+    blue
+    magenta
+    cyan
+    white
+    bg_black
+    bg_red
+    bg_green
+    bg_yellow
+    bg_blue
+    bg_magenta
+    bg_cyan
+    bg_white
+    light_black
+    light_red
+    light_green
+    light_yellow
+    light_blue
+    light_magenta
+    light_cyan
+    light_white
+    Unknown tag
+
+    [0;1mbold[0m
+    [0;3mitalic[0m
+    [0;4munderline[0m
+    [0;2mfaint[0m
+    [0mreset[0m
+    [0;7mreverse[0m
+    [0;30mblack[0m
+    [0;31mred[0m
+    [0;32mgreen[0m
+    [0;33myellow[0m
+    [0;34mblue[0m
+    [0;35mmagenta[0m
+    [0;36mcyan[0m
+    [0;37mwhite[0m
+    [0;40mbg_black[0m
+    [0;41mbg_red[0m
+    [0;42mbg_green[0m
+    [0;43mbg_yellow[0m
+    [0;44mbg_blue[0m
+    [0;45mbg_magenta[0m
+    [0;46mbg_cyan[0m
+    [0;47mbg_white[0m
+    [0;90mlight_black[0m
+    [0;91mlight_red[0m
+    [0;92mlight_green[0m
+    [0;93mlight_yellow[0m
+    [0;94mlight_blue[0m
+    [0;95mlight_magenta[0m
+    [0;96mlight_cyan[0m
+    [0;97mlight_white[0m
+    <body>Unknown tag</body> |}]
+end
