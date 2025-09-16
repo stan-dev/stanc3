@@ -7,7 +7,7 @@ open Debugging
 open Preprocessor
 
 let parse_error msg loc =
-  Syntax_error.parse_error msg (location_span_of_positions loc)
+  Syntax_error.parse_error (Scanf.format_from_string msg "") (location_span_of_positions loc)
 
 (* Takes a sized_basic_type and a list of sizes and repeatedly applies then
    SArray constructor, taking sizes off the list *)
@@ -20,16 +20,17 @@ let build_id id loc =
 
 let reserved (name, loc, _) =
   parse_error
-    ("Ill-formed identifier. Expected a new identifier but \
-      found reserved keyword \"" ^ name ^ "\".\n")
+    ("@{<light_red>Ill-formed identifier.@} Expected a new identifier but \
+      found reserved keyword @{<green>\"" ^ name ^ "\"@}.\n")
     loc
 
 let reserved_decl (name, loc, is_type) =
   if is_type then
     parse_error
-      ("Ill-formed identifier. Found a type (\"" ^ name
-     ^ "\") where an identifier was expected.\n\
-        All variables declared in a comma-separated list must be of the same type.\n")
+      ("@{<light_red>Ill-formed identifier.@} Found a type (@{<green>\"" ^ name
+     ^ "\"@}) where an identifier was expected.\n\
+        All variables declared in a comma-separated list must be of the same \
+        type.\n")
       loc
   else reserved (name, loc, is_type)
 
@@ -40,9 +41,9 @@ let parse_tuple_slot ix_str loc =
   match int_of_string_opt (String.drop_prefix ix_str 1) with
   | None ->
       parse_error
-        ("Ill-formed index. Failed to parse integer from string \
-          \"" ^ ix_str
-       ^ "\" in tuple index. \nThe index is likely too large.\n")
+        ("@{<light_red>Ill-formed index.@} Failed to parse integer from string \
+          @{<green>\"" ^ ix_str
+       ^ "\"@} in tuple index. \nThe index is likely too large.\n")
         loc
   | Some ix -> ix
 
@@ -53,7 +54,7 @@ let try_convert_to_lvalue expr loc =
   | Some l -> l
   | None ->
       parse_error
-        "Ill-formed assignment. Expected an assignable value \
+        "@{<light_red>Ill-formed assignment.@} Expected an assignable value \
          but found a general expression.\n"
         loc
 
@@ -301,8 +302,8 @@ unsized_type:
   | bt=basic_type dims=unsized_dims {
     parse_error
       (Fmt.str
-         "Ill-formed type. It looks like you are trying to use the old array syntax.@ \
-          Please use the new syntax:@ \
+         "%@{<light_red>Ill-formed type.%@} %@{<yellow>It looks like you are \
+          trying to use the old array syntax.@ Please use the new syntax:%@}@ \
           @[<h>array[%s] %a@]@\n"
          (String.make (dims - 1) ',')
          UnsizedType.pp bt)
@@ -386,9 +387,9 @@ decl(type_rule, rhs):
     let ty = (ty, trans) in
     parse_error
       (Fmt.str
-         "Ill-formed declaration. \";\" expected \
-          after variable declaration.@ It looks like you are trying \
-          to use the old array syntax.@ Please use the new syntax:@ @[<h>%a \
+         "%@{<light_red>Ill-formed declaration.%@} %@{<green>\";\"%@} expected \
+          after variable declaration.@ %@{<yellow>It looks like you are trying \
+          to use the old array syntax.@ Please use the new syntax:%@}@ @[<h>%a \
           %s;@]@\n"
          Pretty_printing.pp_transformed_type ty id.name)
       $loc(dims)
