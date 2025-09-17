@@ -20,7 +20,7 @@ Syntax error in 'break.stan', line 2, column 7 to column 12, parsing error:
      4:  model {
    -------------------------------------------------
 
-Expected a new identifier but found reserved keyword 'break'.
+Ill-formed identifier. Expected a new identifier but found reserved keyword "break".
 [exit 1]
   $ ../../../../../install/default/bin/stanc cholesky_factor_corr.stan
 Syntax error in 'cholesky_factor_corr.stan', line 2, column 7 to column 27, parsing error:
@@ -32,7 +32,7 @@ Syntax error in 'cholesky_factor_corr.stan', line 2, column 7 to column 27, pars
      4:  model {
    -------------------------------------------------
 
-Expected a new identifier but found reserved keyword 'cholesky_factor_corr'.
+Ill-formed identifier. Expected a new identifier but found reserved keyword "cholesky_factor_corr".
 [exit 1]
   $ ../../../../../install/default/bin/stanc cholesky_factor_cov.stan
 Syntax error in 'cholesky_factor_cov.stan', line 2, column 7 to column 26, parsing error:
@@ -44,7 +44,7 @@ Syntax error in 'cholesky_factor_cov.stan', line 2, column 7 to column 26, parsi
      4:  model {
    -------------------------------------------------
 
-Expected a new identifier but found reserved keyword 'cholesky_factor_cov'.
+Ill-formed identifier. Expected a new identifier but found reserved keyword "cholesky_factor_cov".
 [exit 1]
   $ ../../../../../install/default/bin/stanc column_stochastic_matrix.stan
 Syntax error in 'column_stochastic_matrix.stan', line 2, column 7 to column 31, parsing error:
@@ -55,7 +55,7 @@ Syntax error in 'column_stochastic_matrix.stan', line 2, column 7 to column 31, 
      3:  }
    -------------------------------------------------
 
-Expected a new identifier but found reserved keyword 'column_stochastic_matrix'.
+Ill-formed identifier. Expected a new identifier but found reserved keyword "column_stochastic_matrix".
 [exit 1]
   $ ../../../../../install/default/bin/stanc continue.stan
 Syntax error in 'continue.stan', line 2, column 7 to column 15, parsing error:
@@ -67,7 +67,7 @@ Syntax error in 'continue.stan', line 2, column 7 to column 15, parsing error:
      4:  model {
    -------------------------------------------------
 
-Expected a new identifier but found reserved keyword 'continue'.
+Ill-formed identifier. Expected a new identifier but found reserved keyword "continue".
 [exit 1]
   $ ../../../../../install/default/bin/stanc corr_matrix.stan
 Syntax error in 'corr_matrix.stan', line 2, column 7 to column 18, parsing error:
@@ -79,7 +79,7 @@ Syntax error in 'corr_matrix.stan', line 2, column 7 to column 18, parsing error
      4:  model {
    -------------------------------------------------
 
-Expected a new identifier but found reserved keyword 'corr_matrix'.
+Ill-formed identifier. Expected a new identifier but found reserved keyword "corr_matrix".
 [exit 1]
   $ ../../../../../install/default/bin/stanc cov_matrix.stan
 Syntax error in 'cov_matrix.stan', line 2, column 7 to column 17, parsing error:
@@ -91,7 +91,7 @@ Syntax error in 'cov_matrix.stan', line 2, column 7 to column 17, parsing error:
      4:  model {
    -------------------------------------------------
 
-Expected a new identifier but found reserved keyword 'cov_matrix'.
+Ill-formed identifier. Expected a new identifier but found reserved keyword "cov_matrix".
 [exit 1]
   $ ../../../../../install/default/bin/stanc data.stan
 Syntax error in 'data.stan', line 2, column 7 to column 11, parsing error:
@@ -103,7 +103,7 @@ Syntax error in 'data.stan', line 2, column 7 to column 11, parsing error:
      4:  model {
    -------------------------------------------------
 
-Expected a new identifier but found reserved keyword 'data'.
+Ill-formed identifier. Expected a new identifier but found reserved keyword "data".
 [exit 1]
   $ ../../../../../install/default/bin/stanc else.stan
 Syntax error in 'else.stan', line 2, column 7 to column 11, parsing error:
@@ -115,7 +115,7 @@ Syntax error in 'else.stan', line 2, column 7 to column 11, parsing error:
      4:  model {
    -------------------------------------------------
 
-Expected a new identifier but found reserved keyword 'else'.
+Ill-formed identifier. Expected a new identifier but found reserved keyword "else".
 [exit 1]
   $ ../../../../../install/default/bin/stanc export.stan
 Semantic error in 'export.stan', line 2, column 7 to column 13:
@@ -163,7 +163,7 @@ Syntax error in 'for.stan', line 2, column 7 to column 10, parsing error:
      4:  model {
    -------------------------------------------------
 
-Expected a new identifier but found reserved keyword 'for'.
+Ill-formed identifier. Expected a new identifier but found reserved keyword "for".
 [exit 1]
   $ ../../../../../install/default/bin/stanc generated.stan
 Semantic error in 'generated.stan', line 2, column 7 to column 16:
@@ -187,7 +187,7 @@ Syntax error in 'if.stan', line 2, column 7 to column 9, parsing error:
      4:  model {
    -------------------------------------------------
 
-Expected a new identifier but found reserved keyword 'if'.
+Ill-formed identifier. Expected a new identifier but found reserved keyword "if".
 [exit 1]
   $ ../../../../../install/default/bin/stanc in.stan
 Syntax error in 'in.stan', line 2, column 7 to column 9, parsing error:
@@ -199,7 +199,7 @@ Syntax error in 'in.stan', line 2, column 7 to column 9, parsing error:
      4:  model {
    -------------------------------------------------
 
-Expected a new identifier but found reserved keyword 'in'.
+Ill-formed identifier. Expected a new identifier but found reserved keyword "in".
 [exit 1]
   $ ../../../../../install/default/bin/stanc int.stan
 Syntax error in 'int.stan', line 2, column 7 to column 10, parsing error:
@@ -211,7 +211,7 @@ Syntax error in 'int.stan', line 2, column 7 to column 10, parsing error:
      4:  model {
    -------------------------------------------------
 
-Expected a new identifier but found reserved keyword 'int'.
+Ill-formed identifier. Expected a new identifier but found reserved keyword "int".
 [exit 1]
   $ ../../../../../install/default/bin/stanc matrix.stan
 Syntax error in 'matrix.stan', line 2, column 7 to column 13, parsing error:
@@ -223,7 +223,7 @@ Syntax error in 'matrix.stan', line 2, column 7 to column 13, parsing error:
      4:  model {
    -------------------------------------------------
 
-Expected a new identifier but found reserved keyword 'matrix'.
+Ill-formed identifier. Expected a new identifier but found reserved keyword "matrix".
 [exit 1]
   $ ../../../../../install/default/bin/stanc model.stan
 Syntax error in 'model.stan', line 2, column 7 to column 12, parsing error:
@@ -235,7 +235,7 @@ Syntax error in 'model.stan', line 2, column 7 to column 12, parsing error:
      4:  model {
    -------------------------------------------------
 
-Expected a new identifier but found reserved keyword 'model'.
+Ill-formed identifier. Expected a new identifier but found reserved keyword "model".
 [exit 1]
   $ ../../../../../install/default/bin/stanc ordered.stan
 Syntax error in 'ordered.stan', line 2, column 7 to column 14, parsing error:
@@ -247,7 +247,7 @@ Syntax error in 'ordered.stan', line 2, column 7 to column 14, parsing error:
      4:  model {
    -------------------------------------------------
 
-Expected a new identifier but found reserved keyword 'ordered'.
+Ill-formed identifier. Expected a new identifier but found reserved keyword "ordered".
 [exit 1]
   $ ../../../../../install/default/bin/stanc parameters.stan
 Syntax error in 'parameters.stan', line 2, column 7 to column 17, parsing error:
@@ -259,7 +259,7 @@ Syntax error in 'parameters.stan', line 2, column 7 to column 17, parsing error:
      4:  model {
    -------------------------------------------------
 
-Expected a new identifier but found reserved keyword 'parameters'.
+Ill-formed identifier. Expected a new identifier but found reserved keyword "parameters".
 [exit 1]
   $ ../../../../../install/default/bin/stanc positive_ordered.stan
 Syntax error in 'positive_ordered.stan', line 2, column 7 to column 23, parsing error:
@@ -271,7 +271,7 @@ Syntax error in 'positive_ordered.stan', line 2, column 7 to column 23, parsing 
      4:  model {
    -------------------------------------------------
 
-Expected a new identifier but found reserved keyword 'positive_ordered'.
+Ill-formed identifier. Expected a new identifier but found reserved keyword "positive_ordered".
 [exit 1]
   $ ../../../../../install/default/bin/stanc quantities.stan
 Semantic error in 'quantities.stan', line 2, column 7 to column 17:
@@ -295,7 +295,7 @@ Syntax error in 'real.stan', line 2, column 7 to column 11, parsing error:
      4:  model {
    -------------------------------------------------
 
-Expected a new identifier but found reserved keyword 'real'.
+Ill-formed identifier. Expected a new identifier but found reserved keyword "real".
 [exit 1]
   $ ../../../../../install/default/bin/stanc repeat.stan
 Semantic error in 'repeat.stan', line 2, column 7 to column 13:
@@ -319,7 +319,7 @@ Syntax error in 'return.stan', line 2, column 7 to column 13, parsing error:
      4:  model {
    -------------------------------------------------
 
-Expected a new identifier but found reserved keyword 'return'.
+Ill-formed identifier. Expected a new identifier but found reserved keyword "return".
 [exit 1]
   $ ../../../../../install/default/bin/stanc row_stochastic_matrix.stan
 Syntax error in 'row_stochastic_matrix.stan', line 2, column 6 to column 27, parsing error:
@@ -330,7 +330,7 @@ Syntax error in 'row_stochastic_matrix.stan', line 2, column 6 to column 27, par
      3:  }
    -------------------------------------------------
 
-Expected a new identifier but found reserved keyword 'row_stochastic_matrix'.
+Ill-formed identifier. Expected a new identifier but found reserved keyword "row_stochastic_matrix".
 [exit 1]
   $ ../../../../../install/default/bin/stanc row_vector.stan
 Syntax error in 'row_vector.stan', line 2, column 7 to column 17, parsing error:
@@ -342,7 +342,7 @@ Syntax error in 'row_vector.stan', line 2, column 7 to column 17, parsing error:
      4:  model {
    -------------------------------------------------
 
-Expected a new identifier but found reserved keyword 'row_vector'.
+Ill-formed identifier. Expected a new identifier but found reserved keyword "row_vector".
 [exit 1]
   $ ../../../../../install/default/bin/stanc simplex.stan
 Syntax error in 'simplex.stan', line 2, column 7 to column 14, parsing error:
@@ -354,7 +354,7 @@ Syntax error in 'simplex.stan', line 2, column 7 to column 14, parsing error:
      4:  model {
    -------------------------------------------------
 
-Expected a new identifier but found reserved keyword 'simplex'.
+Ill-formed identifier. Expected a new identifier but found reserved keyword "simplex".
 [exit 1]
   $ ../../../../../install/default/bin/stanc static.stan
 Semantic error in 'static.stan', line 2, column 7 to column 13:
@@ -389,7 +389,7 @@ Syntax error in 'sum_to_zero_matrix.stan', line 2, column 7 to column 25, parsin
      3:  }
    -------------------------------------------------
 
-Expected a new identifier but found reserved keyword 'sum_to_zero_matrix'.
+Ill-formed identifier. Expected a new identifier but found reserved keyword "sum_to_zero_matrix".
 [exit 1]
   $ ../../../../../install/default/bin/stanc sum_to_zero_vector.stan
 Syntax error in 'sum_to_zero_vector.stan', line 2, column 7 to column 25, parsing error:
@@ -400,7 +400,7 @@ Syntax error in 'sum_to_zero_vector.stan', line 2, column 7 to column 25, parsin
      3:  }
    -------------------------------------------------
 
-Expected a new identifier but found reserved keyword 'sum_to_zero_vector'.
+Ill-formed identifier. Expected a new identifier but found reserved keyword "sum_to_zero_vector".
 [exit 1]
   $ ../../../../../install/default/bin/stanc then.stan
 Semantic error in 'then.stan', line 2, column 7 to column 11:
@@ -460,7 +460,7 @@ Syntax error in 'unit_vector.stan', line 2, column 7 to column 18, parsing error
      4:  model {
    -------------------------------------------------
 
-Expected a new identifier but found reserved keyword 'unit_vector'.
+Ill-formed identifier. Expected a new identifier but found reserved keyword "unit_vector".
 [exit 1]
   $ ../../../../../install/default/bin/stanc until.stan
 Semantic error in 'until.stan', line 2, column 7 to column 12:
@@ -496,7 +496,7 @@ Syntax error in 'vector.stan', line 2, column 7 to column 13, parsing error:
      4:  model {
    -------------------------------------------------
 
-Expected a new identifier but found reserved keyword 'vector'.
+Ill-formed identifier. Expected a new identifier but found reserved keyword "vector".
 [exit 1]
   $ ../../../../../install/default/bin/stanc void.stan
 Syntax error in 'void.stan', line 2, column 7 to column 11, parsing error:
@@ -508,7 +508,7 @@ Syntax error in 'void.stan', line 2, column 7 to column 11, parsing error:
      4:  model {
    -------------------------------------------------
 
-Expected a new identifier but found reserved keyword 'void'.
+Ill-formed identifier. Expected a new identifier but found reserved keyword "void".
 [exit 1]
   $ ../../../../../install/default/bin/stanc while.stan
 Syntax error in 'while.stan', line 2, column 7 to column 12, parsing error:
@@ -520,5 +520,5 @@ Syntax error in 'while.stan', line 2, column 7 to column 12, parsing error:
      4:  model {
    -------------------------------------------------
 
-Expected a new identifier but found reserved keyword 'while'.
+Ill-formed identifier. Expected a new identifier but found reserved keyword "while".
 [exit 1]

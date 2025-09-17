@@ -216,10 +216,10 @@ Syntax error in 'string', line 8, column 0 to column 5, parsing error:
     10:  }
    -------------------------------------------------
 
-Expected "generated quantities {" or end of file after end of model block.
+Ill-formed program. Expected "generated quantities {" or end of file after end of model block.
 
 $ node includes.js
-Syntax error in 'string', line 2, column 0, include error:
+Syntax error in 'string', line 2, column 0 to column 19, include error:
    -------------------------------------------------
      1:  
      2:  #include <foo.stan>
@@ -232,7 +232,7 @@ Could not find include file 'foo.stan'.
 stanc was given information about the following files:
 None
 
-Syntax error in 'string', line 2, column 0, include error:
+Syntax error in 'string', line 2, column 0 to column 19, include error:
    -------------------------------------------------
      1:  
      2:  #include <foo.stan>
@@ -245,7 +245,7 @@ Could not find include file 'foo.stan'.
 stanc was given information about the following files:
 bar.stan
 
-Syntax error in 'string', line 2, column 0, include error:
+Syntax error in 'string', line 2, column 0 to column 19, include error:
    -------------------------------------------------
      1:  
      2:  #include <foo.stan>
@@ -368,13 +368,13 @@ Function 'foo' is declared without specifying a definition.
 
 "stancflags = --use-opencl --allow-undefined"
 $ node pedantic.js
-Warning in 'string', line 7, column 17: Argument 10000 suggests there may be
-    parameters that are not unit scale; consider rescaling with a multiplier
-    (see manual section 22.12).
+Warning in 'string', line 7, column 17 to column 22:
+    Argument 10000 suggests there may be parameters that are not unit scale;
+    consider rescaling with a multiplier (see manual section 22.12).
 Warning: The parameter k was declared but was not used in the density
     calculation.
-Warning in 'string', line 4, column 9: The variable tt may not have been
-    assigned a value before its use.
+Warning in 'string', line 4, column 9 to column 11:
+    The variable tt may not have been assigned a value before its use.
 $ node removed.js
 Syntax error in 'string', line 3, column 8 to column 10, parsing error:
    -------------------------------------------------
@@ -386,7 +386,7 @@ Syntax error in 'string', line 3, column 8 to column 10, parsing error:
      5:  model {
    -------------------------------------------------
 
-";" expected after variable declaration.
+Ill-formed declaration. ";" expected after variable declaration.
 It looks like you are trying to use the old array syntax.
 Please use the new syntax:
 array[10] real y;
@@ -401,7 +401,7 @@ Syntax error in 'string', line 3, column 8 to column 10, parsing error:
      5:  model {
    -------------------------------------------------
 
-";" expected after variable declaration.
+Ill-formed declaration. ";" expected after variable declaration.
 It looks like you are trying to use the old array syntax.
 Please use the new syntax:
 array[10] real y;
@@ -414,10 +414,10 @@ $ node version.js
 %%NAME%%3 %%VERSION%%
 %%NAME%%3 %%VERSION%%
 $ node warnings.js
-Warning in 'string', line 10, column 11: Found int division:
-      x / w
+Warning in 'string', line 10, column 11 to column 12:
+    Found int division:
+        x / w
     Values will be rounded towards zero. If rounding is not desired you can
-    write
-    the division as
-      x * 1.0 / w
+    write the division as
+        x * 1.0 / w
     If rounding is intended please use the integer division operator %/%.

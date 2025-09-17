@@ -476,9 +476,9 @@ generated quantities {
   }
 }
 
-Warning in 'ode.stan', line 26, column 10: integrate_ode is deprecated and
-    will be removed in Stan 3.0. Use ode_rk45 instead. 
-    The new interface is slightly different, see:
+Warning in 'ode.stan', line 26, column 10 to column 23:
+    integrate_ode is deprecated and will be removed in Stan 3.0. Use ode_rk45
+    instead. The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 [exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format ode_control.stan
@@ -522,17 +522,17 @@ generated quantities {
   }
 }
 
-Warning in 'ode_control.stan', line 26, column 10: integrate_ode_rk45 is
-    deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
-    The new interface is slightly different, see:
+Warning in 'ode_control.stan', line 26, column 10 to column 28:
+    integrate_ode_rk45 is deprecated and will be removed in Stan 3.0. Use
+    ode_rk45 instead. The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'ode_control.stan', line 28, column 10: integrate_ode_bdf is
-    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
-    The new interface is slightly different, see:
+Warning in 'ode_control.stan', line 28, column 10 to column 27:
+    integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use
+    ode_bdf instead. The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'ode_control.stan', line 30, column 10: integrate_ode_adams is
-    deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
-    The new interface is slightly different, see:
+Warning in 'ode_control.stan', line 30, column 10 to column 29:
+    integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use
+    ode_adams instead. The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 [exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format prim_var_data_block.stan

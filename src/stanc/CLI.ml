@@ -33,17 +33,33 @@ module Options = struct
           None
       & info ["?"] ~doc:"Synonym for $(b,--help)." ~docv:"=FMT")
 
+  (** Wrapper around flag_all to support passing the same flag multiple times. Emits a warning *)
+  let multi_flag name arg_info =
+    let flags = Arg.(value & flag_all & arg_info [name]) in
+    Term.map
+      (fun fs ->
+        match List.length fs with
+        | 0 -> false
+        | 1 -> true
+        | _ ->
+            Printf.eprintf
+              "Warning: Duplicated flag '--%s' ignored, consider updating your \
+               call to stanc!"
+              name;
+            true)
+      flags
+
   let allow_undefined =
     let doc =
       "Do not fail if a function is declared but not defined. This usually \
        means the definition will be provided later as a C++ function." in
-    Arg.(value & flag & info ["allow-undefined"] ~doc)
+    Arg.(multi_flag "allow-undefined" & info ~doc)
 
   let auto_format =
     let doc =
       "Output a formatted version of the Stan program. The output can be \
        tweaked using $(b,--max-line-length) and $(b,--canonicalize)." in
-    Arg.(value & flag & info ["auto-format"] ~doc)
+    Arg.(multi_flag "auto-format" & info ~doc)
 
   let canonicalizer_settings =
     let fold_canonicalize_options
@@ -94,7 +110,7 @@ module Options = struct
 
   let info =
     let doc = "If set, print information about the model." in
-    Arg.(value & flag & info ["info"] ~doc)
+    Arg.(multi_flag "info" & info ~doc)
 
   let max_line_length =
     let doc = "Set the maximum line length for the formatter." in
@@ -118,53 +134,53 @@ module Options = struct
 
   let o0 =
     let doc = "$(i,(Default)) Do not apply optimizations to the Stan code." in
-    Arg.(value & flag & info ["O0"] ~doc)
+    Arg.(multi_flag "O0" & info ~doc)
 
   let o1 =
     let doc =
       "Only basic optimizations are applied. Recommended. The deprecated \
        option $(b,--O) is aliased to this starting in Stan 2.37." in
-    Arg.(value & flag & info ["O1"] ~doc)
+    Arg.(multi_flag "O1" & info ~doc)
 
   let oexperimental =
     let doc =
       "$(i,(Experimental)) Apply all compiler optimizations. Some of these are \
        not thorougly tested and may not always improve a programs performance."
     in
-    Arg.(value & flag & info ["Oexperimental"] ~doc)
+    Arg.(multi_flag "Oexperimental" & info ~doc)
 
   let print_canonical =
     let doc =
       "Prints the canonicalized program. Equivalent to $(b,--auto-format \
        --canonicalize=deprecations,includes,parentheses,braces)." in
-    Arg.(value & flag & info ["print-canonical"] ~doc)
+    Arg.(multi_flag "print-canonical" & info ~doc)
 
   let print_cpp =
     let doc = "If set, output the generated C++ Stan model class to stdout." in
-    Arg.(value & flag & info ["print-cpp"] ~doc)
+    Arg.(multi_flag "print-cpp" & info ~doc)
 
   let standalone_functions =
     let doc =
       "If set, the generated C++ will only contain the code for the functions \
        in the functions block, not the full Stan model class." in
-    Arg.(value & flag & info ["standalone-functions"] ~doc)
+    Arg.(multi_flag "standalone-functions" & info ~doc)
 
   let use_opencl =
     let doc =
       "If set, try to use matrix_cl signatures for supported Stan Math \
        functions." in
-    Arg.(value & flag & info ["use-opencl"] ~doc)
+    Arg.(multi_flag "use-opencl" & info ~doc)
 
   let warn_pedantic =
     let doc =
       "Emit warnings about common mistakes in Stan programs. $(i,Note:) This \
        may produce false positive warnings." in
-    Arg.(value & flag & info ["warn-pedantic"] ~doc)
+    Arg.(multi_flag "warn-pedantic" & info ~doc)
 
   let warn_uninitialized =
     let doc =
       "$(i,(Experimental)) Emit warnings about uninitialized variables." in
-    Arg.(value & flag & info ["warn-uninitialized"] ~doc)
+    Arg.(multi_flag "warn-uninitialized" & info ~doc)
 end
 
 module Commands = struct
@@ -307,6 +323,7 @@ type compiler_flags =
   ; print_cpp: bool
   ; name: string option
   ; output_file: string
+  ; tty_colors: Fmt.style_renderer option
   ; flags: Driver.Flags.t
   ; model_file: string }
 
@@ -400,7 +417,9 @@ module Conversion = struct
     and+ name = Options.name
     and+ output_file = Options.output_file
     and+ model_file = Arguments.model_file
-    and+ flags = flags in
+    and+ flags = flags
+    and+ tty_colors =
+      Fmt_cli.style_renderer ~env:(Cmd.Env.info "STANC_COLORS") () in
     match qmark with
     | Some fmt -> `Help (fmt, None)
     | None -> (
@@ -418,6 +437,7 @@ module Conversion = struct
                    ; name
                    ; output_file
                    ; model_file
+                   ; tty_colors
                    ; flags }))
 end
 

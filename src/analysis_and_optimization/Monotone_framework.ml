@@ -49,15 +49,14 @@ and free_vars_fnapp kind l =
       Set.Poly.union_list (Set.Poly.singleton f :: List.map ~f:free_vars_expr l)
   | _ -> Set.Poly.union_list arg_vars
 
-let rec free_vars_lval ((lval, idxs) : Expr.Typed.t Stmt.Fixed.Pattern.lvalue) =
+let rec free_vars_lval ((lval, idxs) : Expr.Typed.t Stmt.Pattern.lvalue) =
   let free_idx = Set.Poly.union_list (List.map ~f:free_vars_idx idxs) in
   match lval with
   | LVariable _ -> free_idx
   | LTupleProjection (e, _) -> Set.union free_idx (free_vars_lval e)
 
 (** Calculate the free (non-bound) variables in a statement *)
-let rec free_vars_stmt (s : (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t)
-    =
+let rec free_vars_stmt (s : (Expr.Typed.t, Stmt.Located.t) Stmt.Pattern.t) =
   match s with
   | Return (Some e) | TargetPE e | JacobianPE e -> free_vars_expr e
   | Assignment (l, _, e) ->
@@ -80,7 +79,7 @@ let rec free_vars_stmt (s : (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t)
     variables in sub statements  *)
 let top_free_vars_stmt
     (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t)
-    (s : (Expr.Typed.t, int) Stmt.Fixed.Pattern.t) =
+    (s : (Expr.Typed.t, int) Stmt.Pattern.t) =
   match s with
   | Decl {initialize= Assign e; _} -> free_vars_expr e
   | Assignment _ | Return _ | TargetPE _ | JacobianPE _ | NRFunApp _ | Decl _
@@ -99,8 +98,8 @@ let inverse_flowgraph_of_stmt ?(flatten_loops = false)
     * (int, Stmt.Located.Non_recursive.t) Map.Poly.t =
   let flowgraph_to_mir =
     Dataflow_utils.build_statement_map
-      (fun Stmt.Fixed.{pattern; _} -> pattern)
-      (fun Stmt.Fixed.{meta; _} -> meta)
+      (fun Stmt.{pattern; _} -> pattern)
+      (fun Stmt.{meta; _} -> meta)
       stmt in
   let initials, successors =
     Dataflow_utils.build_predecessor_graph ~flatten_loops ~blocks_after_body
@@ -393,7 +392,7 @@ let expression_propagation_transfer ?(preserve_stability = false)
             (match mir_node with
             (* TODO: we are currently only propagating constants for scalars.
                We could do the same for matrix and array expressions if we wanted. *)
-            | Middle.Stmt.Fixed.Pattern.Assignment ((LVariable s, []), t, e) ->
+            | Middle.Stmt.Pattern.Assignment ((LVariable s, []), t, e) ->
                 let m' = kill_var m s in
                 if
                   can_side_effect_expr e
@@ -443,7 +442,7 @@ let copy_propagation_transfer (globals : string Set.Poly.t)
                 if Set.mem globals assignee then expr_map
                 else
                   Map.set m' ~key:assignee
-                    ~data:Expr.Fixed.{pattern= Var assigner; meta}
+                    ~data:Expr.{pattern= Var assigner; meta}
             | Decl {decl_id= name; _} -> kill_var expr_map name
             | Assignment (lhs, _, _) ->
                 kill_var expr_map (Stmt.Helpers.lhs_variable lhs)
@@ -470,7 +469,7 @@ let transfer_gen_kill p gen kill = Set.union gen (Set.diff p kill)
 (* TODO: from here *)
 
 (** Calculate the set of variables that a statement can assign to *)
-let assigned_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Fixed.Pattern.t) =
+let assigned_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Pattern.t) =
   match s with
   | Assignment (lhs, _, _) ->
       Set.Poly.singleton (Middle.Stmt.Helpers.lhs_variable lhs)
@@ -491,14 +490,13 @@ let assigned_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Fixed.Pattern.t) =
       Set.Poly.empty
 
 (** Calculate the set of variables that a statement can declare *)
-let declared_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Fixed.Pattern.t) =
+let declared_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Pattern.t) =
   match s with
   | Decl {decl_id= x; _} -> Set.Poly.singleton x
   | _ -> Set.Poly.empty
 
 (** Calculate the set of variables that a statement can assign to or declare *)
-let assigned_or_declared_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Fixed.Pattern.t)
-    =
+let assigned_or_declared_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Pattern.t) =
   Set.union (assigned_vars_stmt s) (declared_vars_stmt s)
 
 (** The transfer function for a reaching definitions analysis *)
@@ -611,7 +609,7 @@ and used_expressions_idx_help f (i : Expr.Typed.t Index.t) =
   | Between (e1, e2) -> Set.union (f e1) (f e2)
 
 let rec used_expressions_lval f
-    ((lval, idxs) : Expr.Typed.t Stmt.Fixed.Pattern.lvalue) =
+    ((lval, idxs) : Expr.Typed.t Stmt.Pattern.lvalue) =
   let used_idx =
     Expr.Typed.Set.union_list (List.map ~f:(used_expressions_idx_help f) idxs)
   in
@@ -623,7 +621,7 @@ let rec used_expressions_lval f
 let used_expressions_expr e = Expr.Typed.Set.singleton e
 
 let rec used_expressions_stmt_help f
-    (s : (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t) =
+    (s : (Expr.Typed.t, Stmt.Located.t) Stmt.Pattern.t) =
   match s with
   | TargetPE e | JacobianPE e | Return (Some e) | Decl {initialize= Assign e; _}
     ->
@@ -658,8 +656,7 @@ let used_subexpressions_stmt =
 (** Calculate the set of expressions in a statement *)
 let used_expressions_stmt = used_expressions_stmt_help used_expressions_expr
 
-let top_used_expressions_stmt_help f
-    (s : (Expr.Typed.t, int) Stmt.Fixed.Pattern.t) =
+let top_used_expressions_stmt_help f (s : (Expr.Typed.t, int) Stmt.Pattern.t) =
   match s with
   | TargetPE e | JacobianPE e | Return (Some e) | Decl {initialize= Assign e; _}
     ->
@@ -686,7 +683,7 @@ let top_used_expressions_stmt =
     consequence of evaluating the statement s (because of writes to variables performed
     by s) *)
 let killed_expressions_stmt (p : Expr.Typed.Set.t)
-    (s : (Expr.Typed.t, int) Stmt.Fixed.Pattern.t) =
+    (s : (Expr.Typed.t, int) Stmt.Pattern.t) =
   Set.filter p ~f:(fun e ->
       let free_vars = free_vars_expr e in
       (* Note: a simple test for membership would be more efficient here,
@@ -891,7 +888,7 @@ let monotone_framework (type l p) (module F : FLOWGRAPH with type labels = l)
      and type properties = p)
 
 let rec declared_variables_stmt
-    (s : (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t) =
+    (s : (Expr.Typed.t, Stmt.Located.t) Stmt.Pattern.t) =
   match s with
   | Decl {decl_id= x; _} -> Set.Poly.singleton x
   | Assignment (_, _, _)

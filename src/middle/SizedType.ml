@@ -36,7 +36,7 @@ let rec pp pp_e ppf = function
         (d1_expr, d2_expr)
   | SArray (st, expr) ->
       Fmt.pf ppf "array%a"
-        Fmt.(pair ~sep:comma (fun ppf st -> pp pp_e ppf st) pp_e |> brackets)
+        Fmt.(pair ~sep:comma (pp pp_e) pp_e |> brackets)
         (st, expr)
   | STuple subtypes ->
       Fmt.pf ppf "tuple(@[%a@])" Fmt.(list ~sep:comma (pp pp_e)) subtypes
@@ -161,8 +161,8 @@ let%expect_test "dims" =
   let open Fmt in
   str "@[%a@]" (list ~sep:comma string)
     (List.map
-       ~f:(fun Expr.Fixed.{pattern; _} ->
-         match pattern with Expr.Fixed.Pattern.Lit (_, x) -> x | _ -> "fail")
+       ~f:(fun Expr.{pattern; _} ->
+         match pattern with Expr.Pattern.Lit (_, x) -> x | _ -> "fail")
        (get_dims_io
           (SArray
              ( SMatrix
