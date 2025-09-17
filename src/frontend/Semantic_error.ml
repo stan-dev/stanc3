@@ -63,34 +63,6 @@ module TypeError = struct
     | TupleIndexNotTuple of UnsizedType.t
     | NotIndexable of UnsizedType.t * int
 
-  (* this function will be in [Fmt] version 0.11 *)
-  let ordinal =
-    let open Fmt in
-    let one ppf i =
-      int ppf i;
-      string ppf "st" in
-    let two ppf i =
-      int ppf i;
-      string ppf "nd" in
-    let three ppf i =
-      int ppf i;
-      string ppf "rd" in
-    let other ppf i =
-      int ppf i;
-      string ppf "th" in
-    fun ?zero ?(one = one) ?(two = two) ?(three = three) ?(other = other) () ->
-      let zero = Option.value ~default:other zero in
-      fun ppf i ->
-        if i = 0 then zero ppf i
-        else
-          let n = Int.abs i in
-          let mod10 = n mod 10 in
-          let mod100 = n mod 100 in
-          if mod10 = 1 && mod100 <> 11 then one ppf i
-          else if mod10 = 2 && mod100 <> 12 then two ppf i
-          else if mod10 = 3 && mod100 <> 13 then three ppf i
-          else other ppf i
-
   let laplace_tolerance_arg_name n =
     match n with
     | 1 -> "first control parameter (initial guess)"
@@ -99,7 +71,7 @@ module TypeError = struct
     | 4 -> "fourth control parameter (hessian_block_size)"
     | 5 -> "fifth control parameter (solver)"
     | 6 -> "sixth control parameter (max_steps_line_search)"
-    | n -> Fmt.str "%a control parameter" (ordinal ()) n
+    | n -> Fmt.str "%a control parameter" (Fmt.ordinal ()) n
 
   let trailing_s n pp = Fmt.(pp ++ if' (n <> 1) (const string "s"))
 
@@ -234,7 +206,7 @@ module TypeError = struct
               "Typechecking failed after checking the first %d arguments. \
                Please ensure you are passing enough arguments and that the %a \
                is a function."
-              n (ordinal ()) (n + 1) in
+              n (Fmt.ordinal ()) (n + 1) in
         let pp_lik_args ppf =
           if is_helper then Fmt.(list ~sep:comma UnsizedType.pp_fun_arg) ppf req
           else Fmt.pf ppf "(vector, T_l...) => real,@ tuple(T_l...)" in

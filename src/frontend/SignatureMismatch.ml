@@ -333,7 +333,7 @@ let index_str = function
   | 2 -> "second"
   | 3 -> "third"
   | 4 -> "fourth"
-  | n -> Fmt.str "%dth" n
+  | n -> Fmt.(to_to_string @@ ordinal ()) n
 
 let data_only_msg =
   "(Local variables are assumed to depend on parameters; same goes for \
