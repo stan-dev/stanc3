@@ -617,272 +617,286 @@ module StatementError = struct
           SignatureMismatch.pp_math_lib_assignmentoperator_sigs (lt, op)
 end
 
-type t =
-  | TypeError of Location_span.t * TypeError.t
-  | IdentifierError of Location_span.t * IdentifierError.t
-  | ExpressionError of Location_span.t * ExpressionError.t
-  | StatementError of Location_span.t * StatementError.t
+type err =
+  | TypeError of TypeError.t
+  | IdentifierError of IdentifierError.t
+  | ExpressionError of ExpressionError.t
+  | StatementError of StatementError.t
 
-let pp ppf = function
-  | TypeError (_, err) -> TypeError.pp ppf err
-  | IdentifierError (_, err) -> IdentifierError.pp ppf err
-  | ExpressionError (_, err) -> ExpressionError.pp ppf err
-  | StatementError (_, err) -> StatementError.pp ppf err
+type t = Location_span.t * err
 
-let location = function
-  | TypeError (loc, _) -> loc
-  | IdentifierError (loc, _) -> loc
-  | ExpressionError (loc, _) -> loc
-  | StatementError (loc, _) -> loc
+let pp ppf (_, err) =
+  match err with
+  | TypeError err -> TypeError.pp ppf err
+  | IdentifierError err -> IdentifierError.pp ppf err
+  | ExpressionError err -> ExpressionError.pp ppf err
+  | StatementError err -> StatementError.pp ppf err
+
+let location = fst
 
 (* -- Constructors ---------------------------------------------------------- *)
 
 let invalid_return loc t1 t2 =
-  TypeError (loc, TypeError.IncorrectReturnType (t1, t2))
+  (loc, TypeError (TypeError.IncorrectReturnType (t1, t2)))
 
 let mismatched_array_types loc t1 t2 =
-  TypeError (loc, TypeError.MismatchedArrayTypes (t1, t2))
+  (loc, TypeError (TypeError.MismatchedArrayTypes (t1, t2)))
 
 let invalid_row_vector_types loc ty =
-  TypeError (loc, TypeError.InvalidRowVectorTypes ty)
+  (loc, TypeError (TypeError.InvalidRowVectorTypes ty))
 
 let invalid_matrix_types loc ty =
-  TypeError (loc, TypeError.InvalidMatrixTypes ty)
+  (loc, TypeError (TypeError.InvalidMatrixTypes ty))
 
-let int_expected loc name ut = TypeError (loc, TypeError.IntExpected (name, ut))
+let int_expected loc name ut =
+  (loc, TypeError (TypeError.IntExpected (name, ut)))
 
 let int_or_real_expected loc name ut =
-  TypeError (loc, TypeError.IntOrRealExpected (name, ut))
+  (loc, TypeError (TypeError.IntOrRealExpected (name, ut)))
 
 let tuple_expected loc name ut =
-  TypeError (loc, TypeError.TupleExpected (name, ut))
+  (loc, TypeError (TypeError.TupleExpected (name, ut)))
 
 let scalar_or_type_expected loc name et ut =
-  TypeError (loc, TypeError.TypeExpected (name, et, ut))
+  (loc, TypeError (TypeError.TypeExpected (name, et, ut)))
 
 let int_intarray_or_range_expected loc ut =
-  TypeError (loc, TypeError.IntIntArrayOrRangeExpected ut)
+  (loc, TypeError (TypeError.IntIntArrayOrRangeExpected ut))
 
 let int_or_real_container_expected loc ut =
-  TypeError (loc, TypeError.IntOrRealContainerExpected ut)
+  (loc, TypeError (TypeError.IntOrRealContainerExpected ut))
 
 let array_vector_rowvector_matrix_expected loc ut =
-  TypeError (loc, TypeError.ArrayVectorRowVectorMatrixExpected ut)
+  (loc, TypeError (TypeError.ArrayVectorRowVectorMatrixExpected ut))
 
 let illtyped_assignment loc assignop lt rt =
-  StatementError (loc, StatementError.IllTypedAssignment (assignop, lt, rt))
+  (loc, StatementError (StatementError.IllTypedAssignment (assignop, lt, rt)))
 
 let illtyped_ternary_if loc predt lt rt =
-  ExpressionError (loc, ExpressionError.IllTypedTernaryIf (predt, lt, rt))
+  (loc, ExpressionError (ExpressionError.IllTypedTernaryIf (predt, lt, rt)))
 
 let returning_fn_expected_nonreturning_found loc name =
-  TypeError (loc, TypeError.ReturningFnExpectedNonReturningFound name)
+  (loc, TypeError (TypeError.ReturningFnExpectedNonReturningFound name))
 
 let illtyped_reduce_sum_not_array loc ty =
-  TypeError (loc, TypeError.IllTypedReduceSumNotArray ty)
+  (loc, TypeError (TypeError.IllTypedReduceSumNotArray ty))
 
 let illtyped_reduce_sum_slice loc ty =
-  TypeError (loc, TypeError.IllTypedReduceSumSlice ty)
+  (loc, TypeError (TypeError.IllTypedReduceSumSlice ty))
 
 let illtyped_reduce_sum loc name arg_tys args error =
-  TypeError (loc, TypeError.IllTypedReduceSum (name, arg_tys, args, error))
+  (loc, TypeError (TypeError.IllTypedReduceSum (name, arg_tys, args, error)))
 
 let illtyped_variadic loc name arg_tys args fn_rt error =
-  TypeError (loc, TypeError.IllTypedVariadic (name, arg_tys, args, error, fn_rt))
+  ( loc
+  , TypeError (TypeError.IllTypedVariadic (name, arg_tys, args, error, fn_rt))
+  )
 
 let forwarded_function_application_error loc caller name required_args details =
-  TypeError
-    ( loc
-    , TypeError.IllTypedForwardedFunctionApp
-        (caller, name, required_args, details) )
+  ( loc
+  , TypeError
+      (TypeError.IllTypedForwardedFunctionApp
+         (caller, name, required_args, details)) )
 
 let forwarded_function_signature_error loc caller name details =
-  TypeError
-    (loc, TypeError.IllTypedForwardedFunctionSignature (caller, name, details))
+  ( loc
+  , TypeError
+      (TypeError.IllTypedForwardedFunctionSignature (caller, name, details)) )
 
 let illtyped_laplace_helper_args loc name lik_args details =
-  TypeError (loc, TypeError.IllTypedLaplaceHelperArgs (name, lik_args, details))
+  ( loc
+  , TypeError (TypeError.IllTypedLaplaceHelperArgs (name, lik_args, details)) )
 
 let illtyped_laplace_generic loc name early supplied =
-  TypeError (loc, TypeError.IllTypedLaplaceMarginal (name, early, supplied))
+  (loc, TypeError (TypeError.IllTypedLaplaceMarginal (name, early, supplied)))
 
 let laplace_compatibility loc banned_function =
-  TypeError (loc, TypeError.LaplaceCompatibilityIssue banned_function)
+  (loc, TypeError (TypeError.LaplaceCompatibilityIssue banned_function))
 
 let illtyped_laplace_extra_args loc name args =
-  TypeError (loc, TypeError.IlltypedLaplaceTooMany (name, args))
+  (loc, TypeError (TypeError.IlltypedLaplaceTooMany (name, args)))
 
 let illtyped_laplace_tolerance_args loc name mismatch =
-  TypeError (loc, TypeError.IlltypedLaplaceTolArgs (name, mismatch))
+  (loc, TypeError (TypeError.IlltypedLaplaceTolArgs (name, mismatch)))
 
 let ambiguous_function_promotion loc name arg_tys signatures =
-  TypeError
-    (loc, TypeError.AmbiguousFunctionPromotion (name, arg_tys, signatures))
+  ( loc
+  , TypeError (TypeError.AmbiguousFunctionPromotion (name, arg_tys, signatures))
+  )
 
 let returning_fn_expected_nonfn_found loc name =
-  TypeError (loc, TypeError.ReturningFnExpectedNonFnFound name)
+  (loc, TypeError (TypeError.ReturningFnExpectedNonFnFound name))
 
 let returning_fn_expected_undeclaredident_found loc name sug =
-  IdentifierError
-    (loc, IdentifierError.ReturningFnExpectedUndeclaredIdentFound (name, sug))
+  ( loc
+  , IdentifierError
+      (IdentifierError.ReturningFnExpectedUndeclaredIdentFound (name, sug)) )
 
 let returning_fn_expected_undeclared_dist_suffix_found loc (prefix, suffix) =
-  TypeError
-    ( loc
-    , TypeError.ReturningFnExpectedUndeclaredDistSuffixFound (prefix, suffix) )
+  ( loc
+  , TypeError
+      (TypeError.ReturningFnExpectedUndeclaredDistSuffixFound (prefix, suffix))
+  )
 
 let returning_fn_expected_wrong_dist_suffix_found loc (prefix, suffix) =
-  TypeError
-    (loc, TypeError.ReturningFnExpectedWrongDistSuffixFound (prefix, suffix))
+  ( loc
+  , TypeError
+      (TypeError.ReturningFnExpectedWrongDistSuffixFound (prefix, suffix)) )
 
 let nonreturning_fn_expected_returning_found loc name =
-  TypeError (loc, TypeError.NonReturningFnExpectedReturningFound name)
+  (loc, TypeError (TypeError.NonReturningFnExpectedReturningFound name))
 
 let nonreturning_fn_expected_nonfn_found loc name =
-  TypeError (loc, TypeError.NonReturningFnExpectedNonFnFound name)
+  (loc, TypeError (TypeError.NonReturningFnExpectedNonFnFound name))
 
 let nonreturning_fn_expected_undeclaredident_found loc name sug =
-  IdentifierError
-    (loc, IdentifierError.NonReturningFnExpectedUndeclaredIdentFound (name, sug))
+  ( loc
+  , IdentifierError
+      (IdentifierError.NonReturningFnExpectedUndeclaredIdentFound (name, sug))
+  )
 
 let illtyped_fn_app loc name errors arg_tys =
-  TypeError (loc, TypeError.IllTypedFunctionApp (name, arg_tys, errors))
+  (loc, TypeError (TypeError.IllTypedFunctionApp (name, arg_tys, errors)))
 
 let illtyped_binary_op loc op lt rt =
-  ExpressionError (loc, ExpressionError.IllTypedBinaryOperator (op, lt, rt))
+  (loc, ExpressionError (ExpressionError.IllTypedBinaryOperator (op, lt, rt)))
 
 let illtyped_prefix_op loc op ut =
-  ExpressionError (loc, ExpressionError.IllTypedPrefixOperator (op, ut))
+  (loc, ExpressionError (ExpressionError.IllTypedPrefixOperator (op, ut)))
 
 let illtyped_postfix_op loc op ut =
-  ExpressionError (loc, ExpressionError.IllTypedPostfixOperator (op, ut))
+  (loc, ExpressionError (ExpressionError.IllTypedPostfixOperator (op, ut)))
 
 let not_indexable loc ut nidcs =
-  ExpressionError (loc, ExpressionError.NotIndexable (ut, nidcs))
+  (loc, ExpressionError (ExpressionError.NotIndexable (ut, nidcs)))
 
 let tuple_index_invalid_index loc ix_max ix =
-  ExpressionError (loc, ExpressionError.TupleIndexInvalidIndex (ix_max, ix))
+  (loc, ExpressionError (ExpressionError.TupleIndexInvalidIndex (ix_max, ix)))
 
 let tuple_index_not_tuple loc ut =
-  ExpressionError (loc, ExpressionError.TupleIndexNotTuple ut)
+  (loc, ExpressionError (ExpressionError.TupleIndexNotTuple ut))
 
 let ident_is_keyword loc name =
-  IdentifierError (loc, IdentifierError.IsKeyword name)
+  (loc, IdentifierError (IdentifierError.IsKeyword name))
 
 let ident_is_model_name loc name =
-  IdentifierError (loc, IdentifierError.IsModelName name)
+  (loc, IdentifierError (IdentifierError.IsModelName name))
 
 let ident_is_stanmath_name loc name =
-  IdentifierError (loc, IdentifierError.IsStanMathName name)
+  (loc, IdentifierError (IdentifierError.IsStanMathName name))
 
-let ident_in_use loc name = IdentifierError (loc, IdentifierError.InUse name)
+let ident_in_use loc name = (loc, IdentifierError (IdentifierError.InUse name))
 
 let ident_not_in_scope loc name sug =
-  IdentifierError (loc, IdentifierError.NotInScope (name, sug))
+  (loc, IdentifierError (IdentifierError.NotInScope (name, sug)))
 
 let ident_has_unnormalized_suffix loc name =
-  IdentifierError (loc, IdentifierError.UnnormalizedSuffix name)
+  (loc, IdentifierError (IdentifierError.UnnormalizedSuffix name))
 
 let invalid_decl_rng_fn loc =
-  ExpressionError (loc, ExpressionError.InvalidSizeDeclRng)
+  (loc, ExpressionError ExpressionError.InvalidSizeDeclRng)
 
 let invalid_rng_fn loc =
-  ExpressionError (loc, ExpressionError.InvalidRngFunction)
+  (loc, ExpressionError ExpressionError.InvalidRngFunction)
 
 let invalid_unnormalized_fn loc =
-  ExpressionError (loc, ExpressionError.InvalidUnnormalizedFunction)
+  (loc, ExpressionError ExpressionError.InvalidUnnormalizedFunction)
 
 let udf_is_unnormalized_fn loc name =
-  ExpressionError (loc, ExpressionError.InvalidUnnormalizedUDF name)
+  (loc, ExpressionError (ExpressionError.InvalidUnnormalizedUDF name))
 
 let conditional_notation_not_allowed loc =
-  ExpressionError (loc, ExpressionError.ConditionalNotationNotAllowed)
+  (loc, ExpressionError ExpressionError.ConditionalNotationNotAllowed)
 
 let conditioning_required loc =
-  ExpressionError (loc, ExpressionError.ConditioningRequired)
+  (loc, ExpressionError ExpressionError.ConditioningRequired)
 
-let not_printable loc = ExpressionError (loc, ExpressionError.NotPrintable)
-let empty_array loc = ExpressionError (loc, ExpressionError.EmptyArray)
-let empty_tuple loc = ExpressionError (loc, ExpressionError.EmptyTuple)
-let bad_int_literal loc = ExpressionError (loc, ExpressionError.IntTooLarge)
+let not_printable loc = (loc, ExpressionError ExpressionError.NotPrintable)
+let empty_array loc = (loc, ExpressionError ExpressionError.EmptyArray)
+let empty_tuple loc = (loc, ExpressionError ExpressionError.EmptyTuple)
+let bad_int_literal loc = (loc, ExpressionError ExpressionError.IntTooLarge)
 
 let cannot_assign_to_read_only loc name =
-  StatementError (loc, StatementError.CannotAssignToReadOnly name)
+  (loc, StatementError (StatementError.CannotAssignToReadOnly name))
 
 let cannot_assign_to_global loc name =
-  StatementError (loc, StatementError.CannotAssignToGlobal name)
+  (loc, StatementError (StatementError.CannotAssignToGlobal name))
 
 let cannot_assign_function loc name ut =
-  StatementError (loc, StatementError.CannotAssignFunction (name, ut))
+  (loc, StatementError (StatementError.CannotAssignFunction (name, ut)))
 
 let cannot_assign_to_multiindex loc =
-  StatementError (loc, StatementError.LValueMultiIndexing)
+  (loc, StatementError StatementError.LValueMultiIndexing)
 
 let cannot_assign_duplicate_unpacking loc names =
-  StatementError (loc, StatementError.LValueTupleUnpackDuplicates names)
+  (loc, StatementError (StatementError.LValueTupleUnpackDuplicates names))
 
 let cannot_access_assigning_var loc names =
-  StatementError (loc, StatementError.LValueTupleReadAndWrite names)
+  (loc, StatementError (StatementError.LValueTupleReadAndWrite names))
 
 let invalid_tilde_pdf_or_pmf loc =
-  StatementError (loc, StatementError.InvalidTildePDForPMF)
+  (loc, StatementError StatementError.InvalidTildePDForPMF)
 
 let invalid_tilde_cdf_or_ccdf loc name =
-  StatementError (loc, StatementError.InvalidTildeCDForCCDF name)
+  (loc, StatementError (StatementError.InvalidTildeCDForCCDF name))
 
 let invalid_tilde_no_such_dist loc name is_int =
-  StatementError
-    (loc, StatementError.InvalidTildeNoSuchDistribution (name, is_int))
+  ( loc
+  , StatementError
+      (StatementError.InvalidTildeNoSuchDistribution (name, is_int)) )
 
 let target_plusequals_outside_model_or_logprob loc =
-  StatementError (loc, StatementError.TargetPlusEqualsOutsideModelOrLogProb)
+  (loc, StatementError StatementError.TargetPlusEqualsOutsideModelOrLogProb)
 
 let jacobian_plusequals_not_allowed loc =
-  StatementError (loc, StatementError.JacobianPlusEqualsNotAllowed)
+  (loc, StatementError StatementError.JacobianPlusEqualsNotAllowed)
 
 let invalid_truncation_cdf_or_ccdf loc args =
-  StatementError (loc, StatementError.InvalidTruncationCDForCCDF args)
+  (loc, StatementError (StatementError.InvalidTruncationCDForCCDF args))
 
 let break_outside_loop loc =
-  StatementError (loc, StatementError.BreakOutsideLoop)
+  (loc, StatementError StatementError.BreakOutsideLoop)
 
 let continue_outside_loop loc =
-  StatementError (loc, StatementError.ContinueOutsideLoop)
+  (loc, StatementError StatementError.ContinueOutsideLoop)
 
 let expression_return_outside_returning_fn loc =
-  StatementError (loc, StatementError.ExpressionReturnOutsideReturningFn)
+  (loc, StatementError StatementError.ExpressionReturnOutsideReturningFn)
 
 let void_outside_nonreturning_fn loc =
-  StatementError (loc, StatementError.VoidReturnOutsideNonReturningFn)
+  (loc, StatementError StatementError.VoidReturnOutsideNonReturningFn)
 
 let non_data_variable_size_decl loc =
-  StatementError (loc, StatementError.NonDataVariableSizeDecl)
+  (loc, StatementError StatementError.NonDataVariableSizeDecl)
 
-let non_int_bounds loc = StatementError (loc, StatementError.NonIntBounds)
-let complex_transform loc = StatementError (loc, StatementError.ComplexTransform)
+let non_int_bounds loc = (loc, StatementError StatementError.NonIntBounds)
+let complex_transform loc = (loc, StatementError StatementError.ComplexTransform)
 
 let transformed_params_int loc =
-  StatementError (loc, StatementError.TransformedParamsInt)
+  (loc, StatementError StatementError.TransformedParamsInt)
 
 let fn_overload_rt_only loc name rt1 rt2 =
-  TypeError (loc, TypeError.FuncOverloadRtOnly (name, rt1, rt2))
+  (loc, TypeError (TypeError.FuncOverloadRtOnly (name, rt1, rt2)))
 
 let fn_decl_redefined loc name ~stan_math ut =
-  TypeError (loc, TypeError.FuncDeclRedefined (name, ut, stan_math))
+  (loc, TypeError (TypeError.FuncDeclRedefined (name, ut, stan_math)))
 
-let fn_decl_exists loc name = TypeError (loc, TypeError.FunDeclExists name)
-let fn_decl_without_def loc name = TypeError (loc, TypeError.FunDeclNoDefn name)
-let fn_decl_needs_block loc = TypeError (loc, TypeError.FunDeclNeedsBlock)
-let non_real_prob_fn_def loc = TypeError (loc, TypeError.NonRealProbFunDef)
+let fn_decl_exists loc name = (loc, TypeError (TypeError.FunDeclExists name))
+
+let fn_decl_without_def loc name =
+  (loc, TypeError (TypeError.FunDeclNoDefn name))
+
+let fn_decl_needs_block loc = (loc, TypeError TypeError.FunDeclNeedsBlock)
+let non_real_prob_fn_def loc = (loc, TypeError TypeError.NonRealProbFunDef)
 
 let prob_density_non_real_variate loc ut_opt =
-  TypeError (loc, TypeError.ProbDensityNonRealVariate ut_opt)
+  (loc, TypeError (TypeError.ProbDensityNonRealVariate ut_opt))
 
 let prob_mass_non_int_variate loc ut_opt =
-  TypeError (loc, TypeError.ProbMassNonIntVariate ut_opt)
+  (loc, TypeError (TypeError.ProbMassNonIntVariate ut_opt))
 
 let duplicate_arg_names loc =
-  IdentifierError (loc, IdentifierError.DuplicateArgNames)
+  (loc, IdentifierError IdentifierError.DuplicateArgNames)
 
 let incompatible_return_types loc =
-  TypeError (loc, TypeError.IncompatibleReturnType)
+  (loc, TypeError TypeError.IncompatibleReturnType)
