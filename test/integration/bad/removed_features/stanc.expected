@@ -10,7 +10,7 @@ Semantic error in 'abs-deprecate.stan', line 3, column 7 to column 17:
    -------------------------------------------------
 
 A returning function was expected but an undeclared identifier 'fabs' was supplied.
-A similar known identifier is 'abs'
+A similar known identifier is 'abs'.
 [exit 1]
   $ ../../../../../install/default/bin/stanc binomial_coefficient_log.stan
 Semantic error in 'binomial_coefficient_log.stan', line 12, column 26 to column 66:

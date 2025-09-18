@@ -310,31 +310,20 @@ module TypeError = struct
           "A non-returning function was expected but a non-function value '%s' \
            was supplied."
           fn_name
-    | ReturningFnExpectedUndeclaredIdentFound (fn_name, sug) -> (
-        match sug with
-        | None ->
-            Fmt.pf ppf
-              "A returning function was expected but an undeclared identifier \
-               '%s' was supplied."
-              fn_name
-        | Some s ->
-            Fmt.pf ppf
-              "A returning function was expected but an undeclared identifier \
-               '%s' was supplied.@ A similar known identifier is '%s'"
-              fn_name s)
-    | NonReturningFnExpectedUndeclaredIdentFound (fn_name, sug) -> (
-        match sug with
-        | None ->
-            Fmt.pf ppf
-              "A non-returning function was expected but an undeclared \
-               identifier '%s' was supplied."
-              fn_name
-        | Some s ->
-            Fmt.pf ppf
-              "A non-returning function was expected but an undeclared \
-               identifier '%s' was supplied.@ A nearby known identifier is \
-               '%s'"
-              fn_name s)
+    | ReturningFnExpectedUndeclaredIdentFound (fn_name, sug) ->
+        let did_you_mean ppf s =
+          Fmt.pf ppf "@ A similar known identifier is '%s'." s in
+        Fmt.pf ppf
+          "@[A returning function was expected but an undeclared identifier \
+           '%s' was supplied.%a@]"
+          fn_name (Fmt.option did_you_mean) sug
+    | NonReturningFnExpectedUndeclaredIdentFound (fn_name, sug) ->
+        let did_you_mean ppf s =
+          Fmt.pf ppf "@ A similar known identifier is '%s'." s in
+        Fmt.pf ppf
+          "A non-returning function was expected but an undeclared identifier \
+           '%s' was supplied.%a"
+          fn_name (Fmt.option did_you_mean) sug
     | ReturningFnExpectedUndeclaredDistSuffixFound (prefix, suffix) ->
         Fmt.pf ppf "Function '%s_%s' is not implemented for distribution '%s'."
           prefix suffix prefix
@@ -402,12 +391,10 @@ module IdentifierError = struct
         Fmt.pf ppf "Identifier '%s' clashes with model name." name
     | IsKeyword name ->
         Fmt.pf ppf "Identifier '%s' clashes with reserved keyword." name
-    | NotInScope (name, sug) -> (
-        match sug with
-        | None -> Fmt.pf ppf "Identifier '%s' not in scope." name
-        | Some s ->
-            Fmt.pf ppf "Identifier '%s' not in scope. Did you mean '%s'?" name s
-        )
+    | NotInScope (name, sug) ->
+        let did_you_mean ppf s = Fmt.pf ppf "@ Did you mean '%s'?" s in
+        Fmt.pf ppf "Identifier '%s' not in scope.%a" name
+          (Fmt.option did_you_mean) sug
     | UnnormalizedSuffix name ->
         Fmt.pf ppf
           "Identifier '%s' has a _lupdf/_lupmf suffix, which is only allowed \
