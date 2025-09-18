@@ -139,7 +139,8 @@ Semantic error in 'for_statements_bad_indices3.stan', line 5, column 16 to colum
      7:      return 0;
    -------------------------------------------------
 
-Foreach-loop must be over array, vector, row_vector or matrix. Instead found expression of type int.
+Foreach-loop must be over array, vector, row_vector or matrix.
+Instead found type int.
 [exit 1]
   $ ../../../../../install/default/bin/stanc for_statements_bad_indices4.stan
 Semantic error in 'for_statements_bad_indices4.stan', line 6, column 18 to column 19:
@@ -152,7 +153,8 @@ Semantic error in 'for_statements_bad_indices4.stan', line 6, column 18 to colum
      8:      }
    -------------------------------------------------
 
-Foreach-loop must be over array, vector, row_vector or matrix. Instead found expression of type real.
+Foreach-loop must be over array, vector, row_vector or matrix.
+Instead found type real.
 [exit 1]
   $ ../../../../../install/default/bin/stanc name_in_use.stan
 Semantic error in 'name_in_use.stan', line 7, column 7 to column 10:

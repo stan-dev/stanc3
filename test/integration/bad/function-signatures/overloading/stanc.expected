@@ -9,7 +9,8 @@ Semantic error in 'invalid_lpmf.stan', line 8, column 3 to line 10, column 4:
     10:     }
    -------------------------------------------------
 
-Probability mass functions require integer variates (first argument). Instead found type real.
+Probability mass functions require integer variates (first argument).
+Instead found type real.
 [exit 1]
   $ ../../../../../../install/default/bin/stanc no_minimum_dae.stan
 Semantic error in 'no_minimum_dae.stan', line 38, column 12 to column 59:

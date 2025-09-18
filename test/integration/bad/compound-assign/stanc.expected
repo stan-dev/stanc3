@@ -100,8 +100,7 @@ Semantic error in 'plus_equals_bad_var_rhs.stan', line 4, column 11 to column 13
      6:  }
    -------------------------------------------------
 
-Identifier 'a2' not in scope.
-Did you mean 'a1'?
+Identifier 'a2' not in scope. Did you mean 'a1'?
 [exit 1]
   $ ../../../../../install/default/bin/stanc plus_equals_matrix_array.stan
 Semantic error in 'plus_equals_matrix_array.stan', line 7, column 2 to column 3:

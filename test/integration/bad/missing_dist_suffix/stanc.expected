@@ -151,7 +151,7 @@ Semantic error in 'user_defined_no_cdf.stan', line 7, column 14 to column 29:
    -------------------------------------------------
 
 A returning function was expected but an undeclared identifier 'bar_lcdf' was supplied.
-A similar known identifier is 'bar_lpdf'.
+Did you mean 'bar_lpdf'?
 [exit 1]
   $ ../../../../../install/default/bin/stanc user_defined_no_rng.stan
 Semantic error in 'user_defined_no_rng.stan', line 7, column 12 to column 23:

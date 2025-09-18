@@ -268,7 +268,8 @@ Semantic error in 'bad_lmpf.stan', line 2, column 2 to line 4, column 3:
      4:    }
    -------------------------------------------------
 
-Probability mass functions require integer variates (first argument). Instead found type real.
+Probability mass functions require integer variates (first argument).
+Instead found type real.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_lpdf.stan
 Semantic error in 'bad_lpdf.stan', line 2, column 2 to line 4, column 3:
