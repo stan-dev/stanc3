@@ -343,13 +343,13 @@ let pp_mismatch_details ~skipped ppf details =
   let open Fmt in
   let ctx = ref TypeMap.empty in
   let n_skipped = List.length skipped in
-  let plural_suffix = if n_skipped = 1 then "" else "s" in
+  let arguments = Fmt.cardinal ~one:(Fmt.any "argument") () in
   let pp_skipped_index_str ppf n =
     if n_skipped = 0 then pf ppf "%s argument" (index_str n)
     else
-      pf ppf "%s argument (excluding the %a argument%s)"
+      pf ppf "%s argument (excluding the %a %a)"
         (index_str (n - n_skipped))
-        (list ~sep:comma string) skipped plural_suffix in
+        (list ~sep:comma string) skipped arguments n_skipped in
   match details with
   | SuffixMismatch (expected, found) ->
       pf ppf "@[<hov>Expected %s but got %s.@]" (suffix_str expected)
@@ -362,8 +362,8 @@ let pp_mismatch_details ~skipped ppf details =
       pf ppf "@[<hov>Expected %d arguments%a@ but got %d arguments.@]"
         (expected - n_skipped)
         (if' (n_skipped > 0) (fun ppf () ->
-             pf ppf " (excluding the %a argument%s)" (list ~sep:comma string)
-               skipped plural_suffix))
+             pf ppf " (excluding the %a %a)" (list ~sep:comma string) skipped
+               arguments n_skipped))
         () (found - n_skipped)
   | InputMismatch (ArgError (n, DataOnlyError)) ->
       pf ppf "@[<hov>The@ %a is marked data-only. %a@]" pp_skipped_index_str n

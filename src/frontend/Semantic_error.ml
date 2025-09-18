@@ -73,7 +73,7 @@ module TypeError = struct
     | 6 -> "sixth control parameter (max_steps_line_search)"
     | n -> Fmt.str "%a control parameter" (Fmt.ordinal ()) n
 
-  let trailing_s n pp = Fmt.(pp ++ if' (n <> 1) (const string "s"))
+  let arguments = Fmt.cardinal ~one:(Fmt.any "argument") ()
 
   let pp ppf = function
     | IncorrectReturnType (t1, t2) ->
@@ -233,9 +233,7 @@ module TypeError = struct
         Fmt.pf ppf
           "Recieved %d extra %a at the end of the call to '%s'.@ Did you mean \
            to call the _tol version?"
-          n_args
-          (trailing_s n_args Fmt.string)
-          "argument" name
+          n_args arguments n_args name
     (* For tolerances, because these come at the end, we want to update their
        position number accordingly, which is why these reimplement some of the
        printing from [SignatureMismatch] *)
@@ -243,9 +241,7 @@ module TypeError = struct
         Fmt.pf ppf
           "@[<v>Recieved %d control %a at the end of the call to '%s'.@ \
            Expected %d arguments for the control parameters instead.@]"
-          found
-          (trailing_s found Fmt.string)
-          "argument" name
+          found arguments found name
           (List.length Stan_math_signatures.laplace_tolerance_argument_types)
     | IlltypedLaplaceTolArgs (name, ArgError (n, DataOnlyError)) ->
         Fmt.pf ppf
