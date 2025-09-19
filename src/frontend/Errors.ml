@@ -34,26 +34,21 @@ let pp_context ?code ppf loc =
 
 let red = Fmt.(styled `Bold (styled (`Fg `Red) string))
 
-let pp_semantic_error ?printed_filename ?code ppf err =
-  let loc_span = Semantic_error.location err in
-  Fmt.pf ppf "%a in %a:@;%a@,%a@." red "Semantic error"
-    (Middle.Location_span.pp ?printed_filename)
-    loc_span (pp_context ?code) loc_span.begin_loc Semantic_error.pp err
-
-(** A syntax error message used when handling a SyntaxError *)
-let pp_syntax_error ?printed_filename ?code ppf err =
-  let loc_span = Syntax_error.location err in
-  let error_type = Syntax_error.kind err in
-  Fmt.pf ppf "%a in %a, %s:@;%a@,%a" red "Syntax error"
-    (Middle.Location_span.pp ?printed_filename)
-    loc_span error_type (pp_context ?code) loc_span.begin_loc Syntax_error.pp
-    err
-
 let pp ?printed_filename ?code ppf = function
   | FileNotFound f ->
       Fmt.pf ppf "%a: file '%s' not found or cannot be opened@." red "Error" f
-  | Syntax_error e -> pp_syntax_error ?printed_filename ?code ppf e
-  | Semantic_error e -> pp_semantic_error ?printed_filename ?code ppf e
+  | Syntax_error err ->
+      let loc_span = Syntax_error.location err in
+      let error_type = Syntax_error.kind err in
+      Fmt.pf ppf "%a in %a, %s:@;%a@,%a" red "Syntax error"
+        (Middle.Location_span.pp ?printed_filename)
+        loc_span error_type (pp_context ?code) loc_span.begin_loc
+        Syntax_error.pp err
+  | Semantic_error err ->
+      let loc_span = Semantic_error.location err in
+      Fmt.pf ppf "%a in %a:@;%a@,%a@." red "Semantic error"
+        (Middle.Location_span.pp ?printed_filename)
+        loc_span (pp_context ?code) loc_span.begin_loc Semantic_error.pp err
   | DebugDataError (loc, msg) ->
       if Middle.Location_span.(compare loc empty = 0) then
         Fmt.pf ppf "%a: %s" red "Error" msg

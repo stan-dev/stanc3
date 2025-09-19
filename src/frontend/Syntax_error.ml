@@ -3,22 +3,16 @@ open Core
 type styled_text = (unit, Format.formatter, unit) format
 
 (** Our type of syntax error information *)
-type t =
-  | Lexing of Middle.Location_span.t
-  | UnexpectedEOF of Middle.Location_span.t
-  | Include of string * Middle.Location_span.t
-  | Parsing of styled_text * Middle.Location_span.t
+type err = Lexing | UnexpectedEOF | Include of string | Parsing of styled_text
 
-let location = function
-  | Parsing (_, loc_span)
-   |Lexing loc_span
-   |UnexpectedEOF loc_span
-   |Include (_, loc_span) ->
-      loc_span
+type t = Middle.Location_span.t * err
 
-let kind = function
+let location = fst
+
+let kind (_, err) =
+  match err with
   | Parsing _ -> "parsing error"
-  | UnexpectedEOF _ | Lexing _ -> "lexing error"
+  | UnexpectedEOF | Lexing -> "lexing error"
   | Include _ -> "include error"
 
 (** Sets up the semantic tag machinery (https://ocaml.org/manual/api/Format.html#tags)
@@ -100,11 +94,12 @@ let pp_styled_text : styled_text Fmt.t =
           Format.pp_set_formatter_stag_functions ppf former;
           Format.pp_set_mark_tags ppf marks)
 
-let pp ppf = function
-  | Parsing (message, _) -> pp_styled_text ppf message
-  | Lexing _ -> Fmt.pf ppf "Invalid character found.@."
-  | UnexpectedEOF _ -> Fmt.pf ppf "Unexpected end of input.@."
-  | Include (message, _) -> Fmt.pf ppf "%s@." message
+let pp ppf (_, err) =
+  match err with
+  | Parsing message -> pp_styled_text ppf message
+  | Lexing -> Fmt.pf ppf "Invalid character found.@."
+  | UnexpectedEOF -> Fmt.pf ppf "Unexpected end of input.@."
+  | Include message -> Fmt.pf ppf "%s@." message
 
 exception ParserException of styled_text * Middle.Location_span.t
 exception UnexpectedEOF of Middle.Location_span.t
@@ -118,10 +113,10 @@ let parse_error msg loc = raise (ParserException (msg, loc))
 
 let try_with f =
   try Ok (f ()) with
-  | ParserException (msg, loc) -> Error (Parsing (msg, loc))
-  | UnexpectedEOF loc -> Error (UnexpectedEOF loc)
-  | UnexpectedCharacter loc -> Error (Lexing loc)
-  | IncludeError (msg, loc) -> Error (Include (msg, loc))
+  | ParserException (msg, loc) -> Error (loc, Parsing msg)
+  | UnexpectedEOF loc -> Error (loc, UnexpectedEOF)
+  | UnexpectedCharacter loc -> Error (loc, Lexing)
+  | IncludeError (msg, loc) -> Error (loc, Include msg)
 
 module Tests = struct
   (** tip: view this file using `cat` to see the styling in the test output *)

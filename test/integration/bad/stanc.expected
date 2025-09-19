@@ -451,7 +451,7 @@ Semantic error in 'call_dist_no_suffix.stan', line 5, column 12 to column 25:
    -------------------------------------------------
 
 A returning function was expected but an undeclared identifier 'std_normal' was supplied.
-A similar known identifier is 'std_normal_lpdf'
+Did you mean 'std_normal_lpdf'?
 [exit 1]
   $ ../../../../install/default/bin/stanc ccdf-sample.stan
 Semantic error in 'ccdf-sample.stan', line 5, column 2 to column 24:
@@ -1223,7 +1223,8 @@ Semantic error in 'err-non-int-dims.stan', line 4, column 10 to column 13:
      6:  model {
    -------------------------------------------------
 
-Index must be of type int or int[] or must be a range. Instead found type real.
+Index must be of type int or array[] int or must be a range.
+Instead found type real.
 [exit 1]
   $ ../../../../install/default/bin/stanc err-open-block.stan
 Syntax error in 'err-open-block.stan', line 1, column 10 to column 13, parsing error:
@@ -2546,7 +2547,8 @@ Semantic error in 'real-pdf.stan', line 2, column 2 to line 4, column 3:
      4:    }
    -------------------------------------------------
 
-Probability density functions require real variates (first argument). Instead found type int.
+Probability density functions require real variates (first argument).
+Instead found type int.
 [exit 1]
   $ ../../../../install/default/bin/stanc real-pmf.stan
 Semantic error in 'real-pmf.stan', line 2, column 2 to line 4, column 3:
@@ -2558,7 +2560,8 @@ Semantic error in 'real-pmf.stan', line 2, column 2 to line 4, column 3:
      4:    }
    -------------------------------------------------
 
-Probability mass functions require integer variates (first argument). Instead found type real.
+Probability mass functions require integer variates (first argument).
+Instead found type real.
 [exit 1]
   $ ../../../../install/default/bin/stanc real_idx.stan
 Semantic error in 'real_idx.stan', line 3, column 4 to column 7:
@@ -2571,7 +2574,8 @@ Semantic error in 'real_idx.stan', line 3, column 4 to column 7:
      5:  model {
    -------------------------------------------------
 
-Index must be of type int or int[] or must be a range. Instead found type real.
+Index must be of type int or array[] int or must be a range.
+Instead found type real.
 [exit 1]
   $ ../../../../install/default/bin/stanc rng-no-suffix.stan
 Semantic error in 'rng-no-suffix.stan', line 7, column 13 to column 31:
@@ -2584,7 +2588,7 @@ Semantic error in 'rng-no-suffix.stan', line 7, column 13 to column 31:
    -------------------------------------------------
 
 A returning function was expected but an undeclared identifier 'newdistribution' was supplied.
-A similar known identifier is 'newdistribution_rng'
+Did you mean 'newdistribution_rng'?
 [exit 1]
   $ ../../../../install/default/bin/stanc rng_loc1.stan
 Semantic error in 'rng_loc1.stan', line 3, column 11 to column 29:
@@ -3001,7 +3005,7 @@ Semantic error in 'typo.stan', line 2, column 17 to column 34:
    -------------------------------------------------
 
 A returning function was expected but an undeclared identifier 'to_vetor' was supplied.
-A similar known identifier is 'to_vector'
+Did you mean 'to_vector'?
 [exit 1]
   $ ../../../../install/default/bin/stanc validate_add_expression_dimss_bad.stan
 Semantic error in 'validate_add_expression_dimss_bad.stan', line 4, column 6 to column 13:
