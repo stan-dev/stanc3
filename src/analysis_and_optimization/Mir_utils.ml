@@ -6,34 +6,26 @@ open Middle.Expr
 open Dataflow_types
 
 let rec fold_expr ~take_expr ~(init : 'c) (expr : Expr.Typed.t) : 'c =
-  Expr.Fixed.Pattern.fold_left
-    ~f:(fun a e -> fold_expr ~take_expr ~init:(take_expr a e) e)
-    ~init expr.pattern
+  Expr.Pattern.fold
+    (fun a e -> fold_expr ~take_expr ~init:(take_expr a e) e)
+    init expr.pattern
 
 let fold_stmts ~take_expr ~take_stmt ~(init : 'c)
     (stmts : Stmt.Located.t List.t) : 'c =
-  (* let rec fold_expr (state : 'c) (expr : Expr.t) =
-   *   Expr.Fixed.Pattern.fold_left
-   *     ~f:(fun a e -> fold_expr (take_expr a e) e)
-   *     ~init:state
-   *     expr.pattern
-   * in *)
   let rec fold_stmt (state : 'c) (stmt : Stmt.Located.t) =
-    Stmt.Fixed.Pattern.fold_left
-      ~f:(fun a e -> fold_expr ~take_expr ~init:(take_expr a e) e)
-      ~g:(fun a s -> fold_stmt (take_stmt a s) s)
-      ~init:state stmt.pattern in
+    Stmt.Pattern.fold
+      (fun a e -> fold_expr ~take_expr ~init:(take_expr a e) e)
+      (fun a s -> fold_stmt (take_stmt a s) s)
+      state stmt.pattern in
   List.fold ~f:(fun a s -> fold_stmt (take_stmt a s) s) ~init stmts
 
 let rec num_expr_value (v : Expr.Typed.t) : (float * string) option =
   match v with
   (* internal type promotions should be ignored *)
-  | {pattern= Fixed.Pattern.Promotion (e, _, _); _} -> num_expr_value e
-  | {pattern= Fixed.Pattern.Lit (Real, str); _}
-   |{pattern= Fixed.Pattern.Lit (Int, str); _} ->
+  | {pattern= Pattern.Promotion (e, _, _); _} -> num_expr_value e
+  | {pattern= Pattern.Lit ((Real | Int), str); _} ->
       Some (float_of_string str, str)
-  | {pattern= Fixed.Pattern.FunApp (StanLib ("PMinus__", FnPlain, _), [v]); _}
-    -> (
+  | {pattern= Pattern.FunApp (StanLib ("PMinus__", FnPlain, _), [v]); _} -> (
       match num_expr_value v with
       | Some (v, s) -> Some (-.v, "-" ^ s)
       | None -> None)
@@ -72,7 +64,7 @@ let chop_dist_name (fname : string) : string Option.t =
        ~f:(fun suffix -> String.chop_suffix ~suffix fname)
        Middle.Utils.distribution_suffices)
 
-let rec top_var_declarations Stmt.Fixed.{pattern; _} : string Set.Poly.t =
+let rec top_var_declarations Stmt.{pattern; _} : string Set.Poly.t =
   match pattern with
   | Decl {decl_id; _} -> Set.Poly.singleton decl_id
   | SList l -> Set.Poly.union_list (List.map ~f:top_var_declarations l)
@@ -110,7 +102,7 @@ let parameter_set ?(include_transformed = false) (mir : Program.Typed.t) =
 let parameter_names_set ?(include_transformed = false) (mir : Program.Typed.t) =
   Set.Poly.map ~f:fst (parameter_set ~include_transformed mir)
 
-let rec var_declarations Stmt.Fixed.{pattern; _} : string Set.Poly.t =
+let rec var_declarations Stmt.{pattern; _} : string Set.Poly.t =
   match pattern with
   | Decl {decl_id; _} -> Set.Poly.singleton decl_id
   | IfElse (_, s, None) | While (_, s) | For {body= s; _} -> var_declarations s
@@ -122,7 +114,7 @@ let rec var_declarations Stmt.Fixed.{pattern; _} : string Set.Poly.t =
 
 let rec map_rec_expr f e =
   let recurse = map_rec_expr f in
-  Expr.Fixed.{e with pattern= f (Pattern.map recurse e.pattern)}
+  Expr.{e with pattern= f (Pattern.map recurse e.pattern)}
 
 let map_rec_expr_state f state e =
   let cur_state = ref state in
@@ -136,11 +128,11 @@ let map_rec_expr_state f state e =
 
 let rec map_rec_stmt_loc f stmt =
   let recurse = map_rec_stmt_loc f in
-  Stmt.Fixed.{stmt with pattern= f (Pattern.map Fn.id recurse stmt.pattern)}
+  Stmt.{stmt with pattern= f (Pattern.map Fn.id recurse stmt.pattern)}
 
 let rec top_down_map_rec_stmt_loc f stmt =
   let recurse = top_down_map_rec_stmt_loc f in
-  Stmt.Fixed.{stmt with pattern= Pattern.map Fn.id recurse (f stmt.pattern)}
+  Stmt.{stmt with pattern= Pattern.map Fn.id recurse (f stmt.pattern)}
 
 let map_rec_state_stmt_loc f state stmt =
   let cur_state = ref state in
@@ -157,7 +149,7 @@ let map_rec_stmt_loc_num flowgraph_to_mir f s =
       (stmt : Stmt.Located.Non_recursive.t) =
     let find_node i = Map.find_exn flowgraph_to_mir i in
     let recurse i = map_rec_stmt_loc_num' i (find_node i) in
-    Stmt.Fixed.
+    Stmt.
       { pattern= f cur_node (Pattern.map Fn.id recurse stmt.pattern)
       ; meta= stmt.meta } in
   map_rec_stmt_loc_num' 1 s
@@ -177,7 +169,7 @@ let unnumbered_prog_of_numbered_prog flowgraph_to_mir p =
 
 (** See interface file *)
 let fwd_traverse_statement stmt ~init ~f =
-  Stmt.Fixed.Pattern.(
+  Stmt.Pattern.(
     match stmt with
     | IfElse (pred, then_s, else_s_opt) ->
         let s', c = f init then_s in
@@ -227,7 +219,7 @@ let fwd_traverse_statement stmt ~init ~f =
     | Decl _ as s -> (init, s))
 
 (** See interface file *)
-let vexpr_of_expr_exn Expr.Fixed.{pattern; _} =
+let vexpr_of_expr_exn Expr.{pattern; _} =
   match pattern with
   | Var s -> VVar s
   | _ ->
@@ -235,7 +227,7 @@ let vexpr_of_expr_exn Expr.Fixed.{pattern; _} =
         [%message "Non-var expression found, but var expected"]
 
 (** See interface file *)
-let rec expr_var_set Expr.Fixed.{pattern; meta} =
+let rec expr_var_set Expr.{pattern; meta} =
   let union_recur exprs = Set.Poly.union_list (List.map exprs ~f:expr_var_set) in
   match pattern with
   | Var s -> Set.Poly.singleton (VVar s, meta)
@@ -263,7 +255,7 @@ let expr_var_names_set expr =
 
 let stmt_rhs stmt =
   match stmt with
-  | Stmt.Fixed.Pattern.For vars -> Set.Poly.of_list [vars.lower; vars.upper]
+  | Stmt.Pattern.For vars -> Set.Poly.of_list [vars.lower; vars.upper]
   | NRFunApp (kind, exprs) ->
       Set.Poly.of_list (exprs @ Fun_kind.collect_exprs kind)
   | IfElse (rhs, _, _)
@@ -283,7 +275,7 @@ let union_map (set : ('a, 'c) Set_intf.Set.t) ~(f : 'a -> 'b Set.Poly.t) =
 let stmt_rhs_var_set stmt = union_map (stmt_rhs stmt) ~f:expr_var_set
 
 (** See interface file *)
-let expr_assigned_var Expr.Fixed.{pattern; _} =
+let expr_assigned_var Expr.{pattern; _} =
   match pattern with
   | Var s -> VVar s
   | Indexed ({pattern= Var s; _}, _) -> VVar s
@@ -292,7 +284,7 @@ let expr_assigned_var Expr.Fixed.{pattern; _} =
         [%message "Unimplemented: analysis of assigning to non-var"]
 
 (** See interface file *)
-let rec summation_terms (Expr.Fixed.{pattern; _} as rhs) =
+let rec summation_terms (Expr.{pattern; _} as rhs) =
   match pattern with
   | FunApp (StanLib ("Plus__", FnPlain, _), [e1; e2]) ->
       List.append (summation_terms e1) (summation_terms e2)
@@ -300,18 +292,13 @@ let rec summation_terms (Expr.Fixed.{pattern; _} as rhs) =
 
 let rec fn_subst_expr m e =
   match m e with
-  | Some e' ->
-      (* let print_expr (e:Expr.Typed.t) = *)
-      (* [%sexp (e.pattern : Expr.Typed.t Expr.Fixed.Pattern.t)] |> Sexp.to_string *)
-      (* in *)
-      (* let _ = print_endline ("Replaced expr: " ^ print_expr e ^ " -> " ^ print_expr e') in *)
-      e'
-  | _ -> Expr.Fixed.{e with pattern= Pattern.map (fn_subst_expr m) e.pattern}
+  | Some e' -> e'
+  | _ -> Expr.{e with pattern= Pattern.map (fn_subst_expr m) e.pattern}
 
 let fn_subst_idx m = Index.map (fn_subst_expr m)
 
 let fn_subst_stmt_base_helper g h b =
-  Stmt.Fixed.Pattern.(
+  Stmt.Pattern.(
     match b with
     | Assignment ((x, l), ut, e2) -> Assignment ((x, List.map ~f:h l), ut, g e2)
     | x -> map g (fun y -> y) x)
@@ -345,7 +332,7 @@ let expr_subst_idx m = Index.map (expr_subst_expr m)
 let expr_subst_stmt_base m =
   fn_subst_stmt_base_helper (expr_subst_expr m) (expr_subst_idx m)
 
-let rec expr_depth Expr.Fixed.{pattern; _} =
+let rec expr_depth Expr.{pattern; _} =
   match pattern with
   | Var _ | Lit (_, _) -> 0
   | FunApp (kind, args) ->
@@ -376,8 +363,7 @@ and idx_depth i =
   | Single e | Upfrom e | MultiIndex e -> expr_depth e
   | Between (e1, e2) -> max (expr_depth e1) (expr_depth e2)
 
-let rec update_expr_ad_levels autodiffable_variables
-    (Expr.Fixed.{pattern; _} as e) =
+let rec update_expr_ad_levels autodiffable_variables (Expr.{pattern; _} as e) =
   let max_adlevel l =
     let base =
       if
@@ -441,8 +427,8 @@ and update_idx_ad_levels autodiffable_variables =
 (** [cleanup_stmts statements] will do a few simple transformations like
     removing Skips, collapsing empty blocks and SLists, etc. *)
 let cleanup_empty_stmts stmts =
-  let open Stmt.Fixed in
-  let open Stmt.Fixed.Pattern in
+  let open Stmt in
+  let open Stmt.Pattern in
   let cleanup_stmt s =
     let ellide = {s with pattern= Skip} in
     match s.pattern with
@@ -506,8 +492,8 @@ let unsafe_unsized_to_sized_type (rt : Expr.Typed.t Type.t) =
 
 let%expect_test "cleanup" =
   let open Expr.Helpers in
-  let open Stmt.Fixed in
-  let open Stmt.Fixed.Pattern in
+  let open Stmt in
+  let open Stmt.Pattern in
   let swrap pattern = {pattern; meta= Location_span.empty} in
   let body = Block [Skip |> swrap] |> swrap in
   let s = For {loopvar= "i"; lower= loop_bottom; upper= loop_bottom; body} in

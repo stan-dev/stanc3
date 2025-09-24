@@ -9,8 +9,5 @@ val init : unit -> unit
 val collect : unit -> Warnings.t list
 (** Returns all of the warnings issued since [init] was called. *)
 
-val add_warning : Middle.Location_span.t -> string -> unit
-(** Add a generic warning string to the current list *)
-
-val empty : string -> unit
+val empty : unit -> unit
 (** Register that an empty file is being parsed *)

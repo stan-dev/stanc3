@@ -18,8 +18,8 @@ Syntax error in 'foo.stan', line 2, column 4 to column 5, parsing error:
              ^
    -------------------------------------------------
 
-Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
+Ill-formed phrase. Expected a statement, but found a partial value before this point.
+Did you mean for this to be the start of an assignment or "~"-statement?
 [exit 1]
   $ ../../../../../install/default/bin/stanc --filename-in-msg=foo.stan --include-paths=.  includes.stan
 Syntax error in './filename_syntax_error.stan', line 2, column 4, included from
@@ -30,6 +30,6 @@ Syntax error in './filename_syntax_error.stan', line 2, column 4, included from
              ^
    -------------------------------------------------
 
-Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
+Ill-formed phrase. Expected a statement, but found a partial value before this point.
+Did you mean for this to be the start of an assignment or "~"-statement?
 [exit 1]

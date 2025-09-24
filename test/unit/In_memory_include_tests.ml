@@ -21,7 +21,7 @@ let%expect_test "no includes" =
   print_ast_or_error include_model;
   [%expect
     {|
-    Syntax error in 'string', line 2, column 0, include error:
+    Syntax error in 'string', line 2, column 0 to column 19, include error:
        -------------------------------------------------
          1:
          2:  #include <foo.stan>
@@ -40,7 +40,7 @@ let%expect_test "wrong include" =
   print_ast_or_error include_model;
   [%expect
     {|
-    Syntax error in 'string', line 2, column 0, include error:
+    Syntax error in 'string', line 2, column 0 to column 19, include error:
        -------------------------------------------------
          1:
          2:  #include <foo.stan>
@@ -111,15 +111,7 @@ let%expect_test "good include" =
                    (smeta ((loc <opaque>)))))))
                (smeta ((loc <opaque>)))))))
            (smeta ((loc <opaque>))))))
-        (xloc
-         ((begin_loc
-           ((filename foo.stan) (line_num 2) (col_num 0)
-            (included_from
-             (((filename string) (line_num 2) (col_num 0) (included_from ()))))))
-          (end_loc
-           ((filename foo.stan) (line_num 6) (col_num 1)
-            (included_from
-             (((filename string) (line_num 2) (col_num 0) (included_from ())))))))))))
+        (xloc <opaque>))))
      (datablock
       (((stmts
          (((stmt
@@ -127,11 +119,7 @@ let%expect_test "good include" =
              (variables
               (((identifier ((name a) (id_loc <opaque>))) (initial_value ()))))))
            (smeta ((loc <opaque>))))))
-        (xloc
-         ((begin_loc
-           ((filename string) (line_num 3) (col_num 19) (included_from ())))
-          (end_loc
-           ((filename string) (line_num 5) (col_num 1) (included_from ()))))))))
+        (xloc <opaque>))))
      (transformeddatablock ()) (parametersblock ())
      (transformedparametersblock ()) (modelblock ())
      (generatedquantitiesblock ()) (comments <opaque>)) |}]

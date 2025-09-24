@@ -125,8 +125,8 @@ model {
   
 }
 
-Warning in 'integrate.stan', line 21, column 12: integrate_ode_bdf is
-    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
-    The new interface is slightly different, see:
+Warning in 'integrate.stan', line 21, column 12 to column 29:
+    integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use
+    ode_bdf instead. The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 [exit 0]

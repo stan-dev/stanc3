@@ -36,7 +36,7 @@ let generate_map s ~f =
    recombined with join.
 *)
 let branching_traverse_statement stmt ~join ~init ~f =
-  Stmt.Fixed.Pattern.(
+  Stmt.Pattern.(
     match stmt with
     | IfElse (pred, then_s, else_s_opt) ->
         let s', c = f init then_s in
@@ -79,7 +79,7 @@ let build_statement_map extract metadata stmt =
 let rec build_recursive_statement rebuild statement_map label =
   let stmt_ints, meta = Map.Poly.find_exn statement_map label in
   let build_stmt = build_recursive_statement rebuild statement_map in
-  let stmt = Stmt.Fixed.Pattern.map Fn.id build_stmt stmt_ints in
+  let stmt = Stmt.Pattern.map Fn.id build_stmt stmt_ints in
   rebuild stmt meta
 
 (** Represents the state required to build control flow information during an MIR
@@ -114,7 +114,7 @@ let join_cf_states (state1 : cf_state) (state2 : cf_state) : cf_state =
 (** Check if the statement controls the execution of its substatements. *)
 let is_ctrl_flow pattern =
   match pattern with
-  | Stmt.Fixed.Pattern.IfElse _ -> true
+  | Stmt.Pattern.IfElse _ -> true
   | While _ -> true
   | For _ -> true
   | _ -> false

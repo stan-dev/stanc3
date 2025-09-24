@@ -128,7 +128,7 @@ let gen_vector m n t =
   match t with
   | Transformation.Simplex ->
       let l = repeat_th n (fun _ -> Random.float 1.) in
-      let sum = List.fold l ~init:0. ~f:(fun accum elt -> accum +. elt) in
+      let sum = List.fold l ~init:0. ~f:( +. ) in
       let l = List.map l ~f:(fun x -> x /. sum) in
       Expr.Helpers.vector l
   | Ordered ->
@@ -345,7 +345,7 @@ let json_to_mir (decls : (Expr.Typed.t SizedType.t * 'a * string) list)
 
 let generate_json_entries (name, expr) : string * t =
   let rec expr_to_json e : t =
-    match e.Expr.Fixed.pattern with
+    match e.Expr.pattern with
     | Lit (Real, s) when String.is_suffix s ~suffix:"." -> `Floatlit (s ^ "0")
     | Lit (Int, s) -> `Intlit s
     | Lit (Real, s) -> `Floatlit s

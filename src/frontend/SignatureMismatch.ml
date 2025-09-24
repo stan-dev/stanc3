@@ -333,7 +333,7 @@ let index_str = function
   | 2 -> "second"
   | 3 -> "third"
   | 4 -> "fourth"
-  | n -> Fmt.str "%dth" n
+  | n -> Fmt.(to_to_string @@ ordinal ()) n
 
 let data_only_msg =
   "(Local variables are assumed to depend on parameters; same goes for \
@@ -343,13 +343,13 @@ let pp_mismatch_details ~skipped ppf details =
   let open Fmt in
   let ctx = ref TypeMap.empty in
   let n_skipped = List.length skipped in
-  let plural_suffix = if n_skipped = 1 then "" else "s" in
+  let arguments = Fmt.cardinal ~one:(Fmt.any "argument") () in
   let pp_skipped_index_str ppf n =
     if n_skipped = 0 then pf ppf "%s argument" (index_str n)
     else
-      pf ppf "%s argument (excluding the %a argument%s)"
+      pf ppf "%s argument (excluding the %a %a)"
         (index_str (n - n_skipped))
-        (list ~sep:comma string) skipped plural_suffix in
+        (list ~sep:comma string) skipped arguments n_skipped in
   match details with
   | SuffixMismatch (expected, found) ->
       pf ppf "@[<hov>Expected %s but got %s.@]" (suffix_str expected)
@@ -362,8 +362,8 @@ let pp_mismatch_details ~skipped ppf details =
       pf ppf "@[<hov>Expected %d arguments%a@ but got %d arguments.@]"
         (expected - n_skipped)
         (if' (n_skipped > 0) (fun ppf () ->
-             pf ppf " (excluding the %a argument%s)" (list ~sep:comma string)
-               skipped plural_suffix))
+             pf ppf " (excluding the %a %a)" (list ~sep:comma string) skipped
+               arguments n_skipped))
         () (found - n_skipped)
   | InputMismatch (ArgError (n, DataOnlyError)) ->
       pf ppf "@[<hov>The@ %a is marked data-only. %a@]" pp_skipped_index_str n
@@ -457,14 +457,14 @@ let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
     Fmt.pf ppf "%a@ @[<hov 2>  %a@]"
       (pp_with_where ctx (pp_fundef ctx))
       fun_ty pp_explain err in
-  let pp_omitted ppf () =
+  let pp_omitted ppf =
     if omitted then pf ppf "@,(Additional signatures omitted)" in
   pf ppf
     "@[<v>Ill-typed arguments supplied to function '%s':@ %a@ Available \
-     signatures:@ %a%a@]"
+     signatures:@ %a%t@]"
     name pp_args arg_tys
     (list ~sep:cut pp_signature)
-    sigs pp_omitted ()
+    sigs pp_omitted
 
 let pp_math_lib_assignmentoperator_sigs ppf (lt, op) =
   let signatures =

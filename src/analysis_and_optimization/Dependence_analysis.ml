@@ -27,10 +27,9 @@ let reaching_defn_lookup (rds : reaching_defn Set.Poly.t) (var : vexpr) :
 
 let node_immediate_dependencies
     (statement_map :
-      ( label
-      , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * node_dep_info )
-      Map.Poly.t) ?(blockers : vexpr Set.Poly.t = Set.Poly.empty)
-    (label : label) : label Set.Poly.t =
+      (label, (Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) Map.Poly.t)
+    ?(blockers : vexpr Set.Poly.t = Set.Poly.empty) (label : label) :
+    label Set.Poly.t =
   let stmt, info = Map.Poly.find_exn statement_map label in
   let rhs_set = Set.Poly.map (stmt_rhs_var_set stmt) ~f:fst in
   let rhs_deps =
@@ -45,10 +44,9 @@ let node_immediate_dependencies
 *)
 let rec node_dependencies_rec
     (statement_map :
-      ( label
-      , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * node_dep_info )
-      Map.Poly.t) ?(blockers : vexpr Set.Poly.t = Set.Poly.empty)
-    (visited : label Set.Poly.t) (label : label) : label Set.Poly.t =
+      (label, (Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) Map.Poly.t)
+    ?(blockers : vexpr Set.Poly.t = Set.Poly.empty) (visited : label Set.Poly.t)
+    (label : label) : label Set.Poly.t =
   if Set.mem visited label then visited
   else
     let visited' = Set.add visited label in
@@ -57,17 +55,15 @@ let rec node_dependencies_rec
 
 let node_dependencies
     (statement_map :
-      ( label
-      , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * node_dep_info )
-      Map.Poly.t) (label : label) : label Set.Poly.t =
+      (label, (Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) Map.Poly.t)
+    (label : label) : label Set.Poly.t =
   node_dependencies_rec statement_map Set.Poly.empty label
 
 let node_vars_dependencies
     (statement_map :
-      ( label
-      , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * node_dep_info )
-      Map.Poly.t) ?(blockers : vexpr Set.Poly.t = Set.Poly.empty)
-    (vars : vexpr Set.Poly.t) (label : label) : label Set.Poly.t =
+      (label, (Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) Map.Poly.t)
+    ?(blockers : vexpr Set.Poly.t = Set.Poly.empty) (vars : vexpr Set.Poly.t)
+    (label : label) : label Set.Poly.t =
   let _, info = Map.Poly.find_exn statement_map label in
   let var_deps =
     union_map (Set.diff vars blockers)
@@ -85,9 +81,8 @@ let node_vars_dependencies
 *)
 let all_node_dependencies
     (statement_map :
-      ( label
-      , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * node_dep_info )
-      Map.Poly.t) : (label, label Set.Poly.t) Map.Poly.t =
+      (label, (Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) Map.Poly.t)
+    : (label, label Set.Poly.t) Map.Poly.t =
   let immediate_map =
     Map.mapi statement_map ~f:(fun ~key:label ~data:_ ->
         node_immediate_dependencies statement_map label) in
@@ -204,13 +199,11 @@ let mir_uninitialized_variables (mir : Program.Typed.t) :
                    fdbody))) ]
 
 let build_dep_info_map (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
-    ( label
-    , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * node_dep_info )
-    Map.Poly.t =
+    (label, (Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) Map.Poly.t =
   let statement_map =
     build_statement_map
-      (fun Stmt.Fixed.{pattern; _} -> pattern)
-      (fun Stmt.Fixed.{meta; _} -> meta)
+      (fun Stmt.{pattern; _} -> pattern)
+      (fun Stmt.{meta; _} -> meta)
       stmt in
   let _, preds, parents = build_cf_graphs statement_map in
   let rd_map = mir_reaching_definitions mir stmt in
@@ -224,11 +217,9 @@ let build_dep_info_map (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
         ; meta } ))
 
 let log_prob_build_dep_info_map (mir : Program.Typed.t) :
-    ( label
-    , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * node_dep_info )
-    Map.Poly.t =
+    (label, (Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) Map.Poly.t =
   let log_prob_stmt =
-    Stmt.Fixed.{meta= Location_span.empty; pattern= SList mir.log_prob} in
+    Stmt.{meta= Location_span.empty; pattern= SList mir.log_prob} in
   build_dep_info_map mir log_prob_stmt
 
 let log_prob_dependency_graph (mir : Program.Typed.t) :

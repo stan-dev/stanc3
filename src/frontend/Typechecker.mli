@@ -2,11 +2,11 @@
 
   Functions which begin with "check_" return a typed version of their input
   Functions which begin with "verify_" return unit if a check succeeds, or else
-    throw an {!exception:Frontend.Errors.SemanticError} exception.
+    throw an exception.
   Other functions which begin with "infer"/"calculate" vary. Usually they return
     a value, but a few do have error conditions.
 
-  All [Error.SemanticError] excepetions are caught by check_program
+  All (intentional) exceptions are caught by [check_program]
   which turns the ast or exception into a [Result.t] for external usage
 
   A type environment {!type:Frontend.Environment.t} is used to hold variables
@@ -16,18 +16,15 @@
 
 open Ast
 
-val check_program_exn : untyped_program -> typed_program * Warnings.t list
-(**
-    Type check a full Stan program.
-    Can raise [Errors.SemanticError]
-*)
-
 val check_program :
-  untyped_program -> (typed_program * Warnings.t list, Semantic_error.t) result
+     ?allow_undefined_functions:bool
+  -> untyped_program
+  -> (typed_program * Warnings.t list, Semantic_error.t) result
 (**
-    The safe version of [check_program_exn]. This catches
-    all [Errors.SemanticError] exceptions and converts them
-    into a [Result.t]
+    Type check a Stan program, returning a typed program and warnings or
+    an error.
+    When [allow_undefined_functions] is set to [true], the typechecker
+    will not check that all functions have a definition.
 *)
 
 val operator_stan_math_return_type :
@@ -43,6 +40,3 @@ val stan_math_return_type :
 val model_name : string ref
 (** A reference to hold the model name. Relevant for checking variable
     clashes and used in code generation. *)
-
-val check_that_all_functions_have_definition : bool ref
-(** A switch to determine whether we check that all functions have a definition *)

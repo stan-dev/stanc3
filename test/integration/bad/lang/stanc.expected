@@ -1,11 +1,11 @@
   $ ../../../../../install/default/bin/stanc bad1.stan
-Syntax error in 'bad1.stan', line 1, column 8 to column 8, parsing error:
+Syntax error in 'bad1.stan', line 1, column 8, parsing error:
    -------------------------------------------------
      1:  model { 
                  ^
    -------------------------------------------------
 
-Variable declaration, statement or "}" expected.
+Ill-formed block. Expected variable declaration, statement or "}".
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad1.stanfunctions
 Syntax error in 'bad1.stanfunctions', line 1, column 5 to column 6, parsing error:
@@ -14,7 +14,7 @@ Syntax error in 'bad1.stanfunctions', line 1, column 5 to column 6, parsing erro
               ^
    -------------------------------------------------
 
-"(" expected after function name.
+Ill-formed function. Expected "(" after function name.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad10.stan
 Semantic error in 'bad10.stan', line 2, column 8 to column 11:
@@ -69,7 +69,7 @@ Syntax error in 'bad2.stanfunctions', line 5, column 0 to column 1, parsing erro
          ^
    -------------------------------------------------
 
-Only function definitions/declarations are expected in '.stanfunctions' file
+Ill-formed program. Only function definitions/declarations are expected in '.stanfunctions' files.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad3.stan
 Syntax error in 'bad3.stan', line 1, column 21 to column 22, parsing error:
@@ -78,7 +78,7 @@ Syntax error in 'bad3.stan', line 1, column 21 to column 22, parsing error:
                               ^
    -------------------------------------------------
 
-"[" expression "," expression "]" expected for matrix sizes.
+Ill-formed type. Expected "[" expression "," expression "]" for matrix sizes.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad3.stanfunctions
 Syntax error in 'bad3.stanfunctions', line 1, column 0 to column 5, parsing error:
@@ -87,7 +87,7 @@ Syntax error in 'bad3.stanfunctions', line 1, column 0 to column 5, parsing erro
          ^
    -------------------------------------------------
 
-Function definitions/declarations expected in '.stanfunctions' file
+Ill-formed program. Only function definitions/declarations are expected in '.stanfunctions' files.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad4.stan
 Semantic error in 'bad4.stan', line 1, column 44 to column 48:
@@ -184,7 +184,7 @@ Syntax error in 'bad_bounds1.stan', line 2, column 15 to column 17, parsing erro
      4:  parameters {
    -------------------------------------------------
 
-Ill-formed expression. Expected expression (not containing binary logical operators).
+Ill-formed constraint. Expected an expression (not containing binary logical operators).
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_decl1.stan
 Syntax error in 'bad_decl1.stan', line 2, column 10 to column 13, parsing error:
@@ -195,7 +195,7 @@ Syntax error in 'bad_decl1.stan', line 2, column 10 to column 13, parsing error:
      3:  }
    -------------------------------------------------
 
-Found a type ('int') where an identifier was expected.
+Ill-formed identifier. Found a type ("int") where an identifier was expected.
 All variables declared in a comma-separated list must be of the same type.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_decl2.stan
@@ -207,7 +207,7 @@ Syntax error in 'bad_decl2.stan', line 2, column 13 to column 14, parsing error:
      3:  }
    -------------------------------------------------
 
-Expected non-array type after "array" declaration.
+Ill-formed type. Expected non-array type after "array" declaration.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_decl3.stan
 Syntax error in 'bad_decl3.stan', line 3, column 28 to column 29, parsing error:
@@ -220,7 +220,7 @@ Syntax error in 'bad_decl3.stan', line 3, column 28 to column 29, parsing error:
      5:      }
    -------------------------------------------------
 
-Expected a new identifier after comma in declaration.
+Ill-formed declaration. Expected a new identifier after comma in declaration.
 All variables declared must be of the same type, and any initializing assignment must follow the identifier before the next comma.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_decl4.stan
@@ -232,7 +232,7 @@ Syntax error in 'bad_decl4.stan', line 2, column 10 to column 16, parsing error:
      3:  }
    -------------------------------------------------
 
-Expected a new identifier but found reserved keyword 'reject'.
+Ill-formed identifier. Expected a new identifier but found reserved keyword "reject".
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_function.stan
 Semantic error in 'bad_function.stan', line 3, column 3 to column 7:
@@ -268,7 +268,8 @@ Semantic error in 'bad_lmpf.stan', line 2, column 2 to line 4, column 3:
      4:    }
    -------------------------------------------------
 
-Probability mass functions require integer variates (first argument). Instead found type real.
+Probability mass functions require integer variates (first argument).
+Instead found type real.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_lpdf.stan
 Semantic error in 'bad_lpdf.stan', line 2, column 2 to line 4, column 3:
@@ -283,7 +284,7 @@ Semantic error in 'bad_lpdf.stan', line 2, column 2 to line 4, column 3:
 Probability density functions require real variates (first argument).
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_periods_data.stan
-Syntax error in 'bad_periods_data.stan', line 2, column 7, lexing error:
+Syntax error in 'bad_periods_data.stan', line 2, column 8 to column 9, lexing error:
    -------------------------------------------------
      1:  data {
      2:    real x.y;
@@ -295,7 +296,7 @@ Syntax error in 'bad_periods_data.stan', line 2, column 7, lexing error:
 Invalid character found.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_periods_gqs.stan
-Syntax error in 'bad_periods_gqs.stan', line 8, column 7, lexing error:
+Syntax error in 'bad_periods_gqs.stan', line 8, column 8 to column 9, lexing error:
    -------------------------------------------------
      6:  }
      7:  generated quantities {
@@ -308,7 +309,7 @@ Syntax error in 'bad_periods_gqs.stan', line 8, column 7, lexing error:
 Invalid character found.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_periods_local.stan
-Syntax error in 'bad_periods_local.stan', line 5, column 7, lexing error:
+Syntax error in 'bad_periods_local.stan', line 5, column 8 to column 9, lexing error:
    -------------------------------------------------
      3:  }
      4:  model {
@@ -321,7 +322,7 @@ Syntax error in 'bad_periods_local.stan', line 5, column 7, lexing error:
 Invalid character found.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_periods_params.stan
-Syntax error in 'bad_periods_params.stan', line 2, column 7, lexing error:
+Syntax error in 'bad_periods_params.stan', line 2, column 8 to column 9, lexing error:
    -------------------------------------------------
      1:  parameters {
      2:    real x.y;
@@ -333,7 +334,7 @@ Syntax error in 'bad_periods_params.stan', line 2, column 7, lexing error:
 Invalid character found.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_periods_tdata.stan
-Syntax error in 'bad_periods_tdata.stan', line 2, column 7, lexing error:
+Syntax error in 'bad_periods_tdata.stan', line 2, column 8 to column 9, lexing error:
    -------------------------------------------------
      1:  transformed data {
      2:    real x.y;
@@ -345,7 +346,7 @@ Syntax error in 'bad_periods_tdata.stan', line 2, column 7, lexing error:
 Invalid character found.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_periods_tparams.stan
-Syntax error in 'bad_periods_tparams.stan', line 2, column 7, lexing error:
+Syntax error in 'bad_periods_tparams.stan', line 2, column 8 to column 9, lexing error:
    -------------------------------------------------
      1:  transformed parameters {
      2:    real x.;
@@ -442,7 +443,8 @@ Syntax error in 'incomplete.stan', line 2, column 18 to column 19, parsing error
      3:  }
    -------------------------------------------------
 
-Found an incomplete binary expression - are you missing the right hand side?
+Ill-formed expression. Found an incomplete binary expression.
+Are you missing the right hand side?
 [exit 1]
   $ ../../../../../install/default/bin/stanc incomplete2.stan
 Syntax error in 'incomplete2.stan', line 2, column 15 to column 20, parsing error:
@@ -453,7 +455,7 @@ Syntax error in 'incomplete2.stan', line 2, column 15 to column 20, parsing erro
      3:  }
    -------------------------------------------------
 
-Unexpected input after the conclusion of a valid expression.
+Ill-formed expression. Unexpected input after the conclusion of a valid expression.
 You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
 [exit 1]
   $ ../../../../../install/default/bin/stanc incomplete3.stan
@@ -465,7 +467,8 @@ Syntax error in 'incomplete3.stan', line 2, column 10 to column 15, parsing erro
      3:  }
    -------------------------------------------------
 
-Found an incomplete binary expression - are you missing the right hand side?
+Ill-formed expression. Found an incomplete binary expression.
+Are you missing the right hand side?
 [exit 1]
   $ ../../../../../install/default/bin/stanc incomplete4.stan
 Syntax error in 'incomplete4.stan', line 2, column 13 to column 14, parsing error:
@@ -476,10 +479,11 @@ Syntax error in 'incomplete4.stan', line 2, column 13 to column 14, parsing erro
      3:  }
    -------------------------------------------------
 
-Ill-formed phrase. Found an expression where we expected a statement.
+Ill-formed phrase. Expected a statement, but found a partial value before this point.
+Did you mean for this to be the start of an assignment or "~"-statement?
 [exit 1]
   $ ../../../../../install/default/bin/stanc incomplete5.stan
-Syntax error in 'incomplete5.stan', line 3, column 0 to column 0, parsing error:
+Syntax error in 'incomplete5.stan', line 3, column 0, parsing error:
    -------------------------------------------------
      1:  transformed data {
      2:    if (2.0) ;
@@ -498,7 +502,7 @@ Syntax error in 'incomplete6.stan', line 3, column 16 to column 21, parsing erro
      4:  }
    -------------------------------------------------
 
-Ill-formed expression. We expect a comma separated list of expressions, followed by "]".
+Ill-formed expression. Expected a comma separated list of expressions, followed by "]".
 [exit 1]
   $ ../../../../../install/default/bin/stanc reused_name.stan
 Semantic error in 'reused_name.stan', line 4, column 14 to column 15:
@@ -535,12 +539,12 @@ Semantic error in 'tparam_tuple_int.stan', line 2, column 2 to column 21:
 (Transformed) Parameters cannot be integers.
 [exit 1]
   $ ../../../../../install/default/bin/stanc unterminated_comment.stan
-Syntax error in 'unterminated_comment.stan', line 4, column -1, lexing error:
+Syntax error in 'unterminated_comment.stan', line 4, column 0, lexing error:
    -------------------------------------------------
      2:  never
      3:  ends
          ^
    -------------------------------------------------
 
-Unexpected end of input
+Unexpected end of input.
 [exit 1]

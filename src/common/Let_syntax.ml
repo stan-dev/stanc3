@@ -6,3 +6,8 @@ module Result = struct
   let ( let* ) = Core.Result.( >>= )
   let ( let+ ) = Core.Result.( >>| )
 end
+
+module Option = struct
+  let ( let* ) = Core.Option.( >>= )
+  let ( let+ ) = Core.Option.( >>| )
+end

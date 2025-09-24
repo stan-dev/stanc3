@@ -2,11 +2,11 @@
 
   Functions which begin with "check_" return a typed version of their input
   Functions which begin with "verify_" return unit if a check succeeds, or else
-    throw an Errors.SemanticError exception.
+    throw an TypecheckerException exception.
   Other functions which begin with "infer"/"calculate" vary. Usually they return
     a value, but a few do have error conditions.
 
-  All Error.SemanticError exceptions are caught by check_program
+  All TypecheckerException exceptions are caught by check_program
   which turns the ast or exception into a Result.t for external usage
 
   A type environment (Env.t) is used to hold variables and functions, including
@@ -19,8 +19,11 @@ open Middle
 open Ast
 module Env = Environment
 
+(** Internal (private) exception used for errors. *)
+exception TypecheckerException of Semantic_error.t
+
 (* we only allow errors raised by this function *)
-let error e = raise (Errors.SemanticError e)
+let error e = raise (TypecheckerException e)
 
 (* warnings are built up in a list *)
 let warnings : Warnings.t list ref = ref []
@@ -36,7 +39,6 @@ let needs_higher_order_autodiff fn =
 
 (* model name - don't love this here *)
 let model_name = ref ""
-let check_that_all_functions_have_definition = ref true
 
 type function_indicator =
   | NotInFunction
@@ -178,7 +180,7 @@ let check_ternary_if loc pe te fe =
       (not (UnsizedType.equal expr.emeta.type_ type_))
       || UnsizedType.compare_autodifftype expr.emeta.ad_level ad_level <> 0
     then
-      { expr= Promotion (expr, UnsizedType.internal_scalar type_, ad_level)
+      { expr= Promotion (expr, (UnsizedType.internal_scalar type_, ad_level))
       ; emeta= {expr.emeta with type_; ad_level} }
     else expr in
   match
@@ -631,7 +633,6 @@ let verify_second_order_derivative_compatibility (ast : typed_program) =
   let rec check_fun (visited : String.Set.t) {name= fn_name; id_loc} =
     if Set.mem visited fn_name then visited
     else
-      let fold_nop v _ = v in
       let rec check_expr seen = function
         | {expr= FunApp (StanLib _, {name; _}, _); _}
           when Stan_math_signatures.lacks_higher_order_autodiff name ->
@@ -644,16 +645,15 @@ let verify_second_order_derivative_compatibility (ast : typed_program) =
             List.fold ~f:check_expr ~init:seen' es
         | {expr= Variable name; emeta= {type_= UFun _; _}} ->
             check_fun seen {name with id_loc}
-        | e -> Ast.fold_expression check_expr fold_nop seen e.expr in
-      let check_lval acc l = fold_lval_with check_expr fold_nop acc l in
+        | e -> Ast.fold_expression check_expr seen e.expr in
+      let check_lval acc l = fold_lval_with check_expr acc l in
       let rec check_stmt seen s =
         match s.stmt with
         | NRFunApp (UserDefined _, name, es) ->
             let seen' = check_fun seen {name with id_loc} in
             List.fold ~f:check_expr ~init:seen' es
-        | stmt ->
-            Ast.fold_statement check_expr check_stmt check_lval fold_nop seen
-              stmt in
+        | stmt -> Ast.fold_statement check_expr check_stmt check_lval seen stmt
+      in
       let visited' = Set.add visited fn_name in
       List.fold ~f:check_stmt ~init:visited' (get_function_bodies fn_name) in
   ignore
@@ -968,9 +968,11 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
       let le = ce e1 in
       let re = ce e2 in
       let binop_type_warnings x y =
+        let pp_indented_box pp ppf = Fmt.pf ppf "@,    @[<hov 2>%a@]@," pp in
+        let pp_indented_box_t pp ppf = pp_indented_box (Fmt.fmt "%t") ppf pp in
         match (x.emeta.type_, y.emeta.type_, op) with
         | UInt, UInt, Divide ->
-            let hint ppf () =
+            let hint ppf =
               match (x.expr, y.expr) with
               | IntNumeral x, _ ->
                   Fmt.pf ppf "%s.0 / %a" x Pretty_printing.pp_typed_expression y
@@ -981,28 +983,26 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
                     x Pretty_printing.pp_typed_expression y in
             let s =
               Fmt.str
-                "@[<v>@[<hov 0>Found int division:@]@   @[<hov 2>%a@]@,\
-                 @[<hov>%a@]@   @[<hov 2>%a@]@,\
-                 @[<hov>%a@]@]"
-                Pretty_printing.pp_expression {expr; emeta} Fmt.text
-                "Values will be rounded towards zero. If rounding is not \
-                 desired you can write the division as"
-                hint () Fmt.text
-                "If rounding is intended please use the integer division \
-                 operator %/%." in
+                "@[<v>Found int division:%aValues will be rounded towards \
+                 zero. If rounding is not desired you can write the division \
+                 as%tIf rounding is intended please use the integer division \
+                 operator %%/%%.@]"
+                (pp_indented_box Pretty_printing.pp_expression)
+                {expr; emeta} (pp_indented_box_t hint) in
             add_warning x.emeta.loc s
         | (UArray UMatrix | UMatrix), (UInt | UReal), Pow ->
             let s =
               Fmt.str
-                "@[<v>@[<hov 0>Found matrix^scalar:@]@   @[<hov 2>%a@]@,\
-                 @[<hov>%a@]@ @[<hov>%a@]@]" Pretty_printing.pp_expression
-                {expr; emeta} Fmt.text
-                "matrix ^ number is interpreted as element-wise \
-                 exponentiation. If this is intended, you can silence this \
-                 warning by using elementwise operator .^"
-                Fmt.text
-                "If you intended matrix exponentiation, use the function \
-                 matrix_power(matrix,int) instead." in
+                "@[<v>Found matrix^scalar:%amatrix ^ number is interpreted as \
+                 element-wise exponentiation. If this is intended, you can \
+                 silence this warning by using elementwise operator .^@ If you \
+                 intended matrix exponentiation, use%tinstead.@]"
+                (pp_indented_box Pretty_printing.pp_expression)
+                {expr; emeta}
+                (pp_indented_box_t (fun ppf ->
+                     Fmt.pf ppf "matrix_power(%a, %a)"
+                       Pretty_printing.pp_expression e1
+                       Pretty_printing.pp_expression e2)) in
             add_warning x.emeta.loc s
         | _ when Operator.is_cmp op -> (
             match le.expr with
@@ -1011,21 +1011,18 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
                 let pp = Operator.pp in
                 add_warning loc
                   (Fmt.str
-                     "Found %a. This is interpreted as %a. Consider if the \
-                      intended meaning was %a instead.@ You can silence this \
-                      warning by adding explicit parenthesis. This can be \
-                      automatically changed using the canonicalize flag for \
-                      stanc"
-                     (fun ppf () ->
-                       Fmt.pf ppf "@[<hov>%a %a %a@]" pp_e le pp op2 pp_e re)
-                     ()
-                     (fun ppf () ->
-                       Fmt.pf ppf "@[<hov>(%a) %a %a@]" pp_e le pp op2 pp_e re)
-                     ()
-                     (fun ppf () ->
-                       Fmt.pf ppf "@[<hov>%a %a %a && %a %a %a@]" pp_e e1 pp op
-                         pp_e e2 pp_e e2 pp op2 pp_e re)
-                     ())
+                     "@[<v>Found chained comparison%aThis is interpreted \
+                      as%tConsider if the intended meaning was%tinstead. You \
+                      can silence this warning by adding explicit parenthesis. \
+                      This can be automatically changed using the canonicalize \
+                      flag for stanc@]"
+                     (pp_indented_box Pretty_printing.pp_expression)
+                     {expr; emeta}
+                     (pp_indented_box_t (fun ppf ->
+                          Fmt.pf ppf "(%a) %a %a" pp_e le pp op pp_e re))
+                     (pp_indented_box_t (fun ppf ->
+                          Fmt.pf ppf "%a %a %a && %a %a %a" pp_e e1 pp op2 pp_e
+                            e2 pp_e e2 pp op pp_e re)))
             | _ -> ())
         | _ -> () in
       binop_type_warnings le re;
@@ -1104,10 +1101,7 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
       es |> List.map ~f:ce |> check_funapp loc cf tenv ~is_cond_dist:false id
   | CondDistApp ((), id, es) ->
       es |> List.map ~f:ce |> check_funapp loc cf tenv ~is_cond_dist:true id
-  | Promotion (e, _, _) ->
-      (* Should never happen: promotions are produced during typechecking *)
-      Common.ICE.internal_compiler_error
-        [%message "Promotion in untyped AST" (e : Ast.untyped_expression)]
+  | Promotion _ -> .
 
 and check_expression_of_int_type cf tenv e name =
   let te = check_expression cf tenv e in
@@ -2103,15 +2097,15 @@ let verify_fun_def_body_in_block = function
       Semantic_error.fn_decl_needs_block smeta.loc |> error
   | _ -> ()
 
-let verify_functions_have_defn tenv function_block_stmts_opt =
+let verify_functions_have_defn ~allow_undefined_functions tenv
+    function_block_stmts_opt =
   let error_on_undefined name funs =
     List.iter (List.rev funs) ~f:(fun f ->
         match f with
         | Env.{kind= `UserDeclared loc; _} ->
             Semantic_error.fn_decl_without_def loc name |> error
         | _ -> ()) in
-  if !check_that_all_functions_have_definition then
-    Env.iteri tenv error_on_undefined;
+  if not allow_undefined_functions then Env.iteri tenv error_on_undefined;
   match function_block_stmts_opt with
   | Some {stmts= []; _} | None -> ()
   | Some {stmts= ls; _} -> List.iter ~f:verify_fun_def_body_in_block ls
@@ -2161,7 +2155,7 @@ let verify_correctness_invariant (ast : untyped_program)
           (detyped : untyped_program)
           (ast : untyped_program)]
 
-let check_program_exn
+let check_program_exn ~allow_undefined_functions
     ({ functionblock= fb
      ; datablock= db
      ; transformeddatablock= tdb
@@ -2176,7 +2170,7 @@ let check_program_exn
   let tenv = Env.stan_math_environment in
   let tenv = add_userdefined_functions tenv fb in
   let tenv, typed_fb = check_toplevel_block Functions tenv fb in
-  verify_functions_have_defn tenv typed_fb;
+  verify_functions_have_defn ~allow_undefined_functions tenv typed_fb;
   let tenv, typed_db = check_toplevel_block Data tenv db in
   let tenv, typed_tdb = check_toplevel_block TData tenv tdb in
   let tenv, typed_pb = check_toplevel_block Param tenv pb in
@@ -2196,6 +2190,6 @@ let check_program_exn
   verify_second_order_derivative_compatibility prog;
   attach_warnings prog
 
-let check_program ast =
-  try Result.Ok (check_program_exn ast)
-  with Errors.SemanticError err -> Result.Error err
+let check_program ?(allow_undefined_functions = false) ast =
+  try Result.Ok (check_program_exn ~allow_undefined_functions ast)
+  with TypecheckerException err -> Result.Error err

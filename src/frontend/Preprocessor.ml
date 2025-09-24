@@ -61,7 +61,8 @@ let current_buffer () =
   buf
 
 let current_location () =
-  location_of_position (lexeme_start_p (current_buffer ()))
+  let buf = current_buffer () in
+  location_span_of_positions (Lexing.lexeme_start_p buf, Lexing.lexeme_end_p buf)
 
 let pop_buffer () = Stack.pop_exn include_stack
 
@@ -83,6 +84,8 @@ let restore_prior_lexbuf () =
   lexbuf.lex_start_p <- old_pos;
   old_lexbuf
 
+let include_error msg = Syntax_error.include_error msg (current_location ())
+
 let find_include_fs lookup_paths fname =
   let rec loop paths =
     match paths with
@@ -95,7 +98,7 @@ let find_include_fs lookup_paths fname =
           Fmt.str
             "Could not find include file '%s' in specified include paths.@\n\
              @[Current include paths: %a@]" fname pp_list lookup_paths in
-        raise (Errors.SyntaxError (Include (message, current_location ())))
+        include_error message
     | path :: rest_of_paths -> (
         try
           let full_path = path ^ "/" ^ fname in
@@ -115,7 +118,7 @@ let find_include_inmemory map fname =
           "Could not find include file '%s'.@ stanc was given information \
            about the following files:@ %a"
           fname pp_list map in
-      raise (Errors.SyntaxError (Include (message, current_location ())))
+      include_error message
   | Some s -> (Lexing.from_string s, fname)
 
 let find_include fname =
@@ -139,12 +142,10 @@ let try_get_new_lexbuf fname =
           if is_dup filename then true else go included_from in
     go included_from in
   if dup_exists (location_of_position lexbuf.lex_start_p) then
-    raise
-      (Errors.SyntaxError
-         (Include
-            ( Printf.sprintf "File %s recursively included itself." fname
-            , location_of_position (lexeme_start_p lexbuf) )));
+    include_error (Printf.sprintf "File %s recursively included itself." fname);
   Stack.push include_stack new_lexbuf;
   update_start_positions new_lexbuf.lex_curr_p;
   included_files := file :: !included_files;
   new_lexbuf
+
+let included_files () = List.rev !included_files

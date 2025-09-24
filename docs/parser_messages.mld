@@ -73,7 +73,7 @@ I can now replace this message with my new version
 
 Often a new language feature will need new syntax messages. The command
 [dune build @update_messages] will add dummy error messages to [parser.messages]
-that you can replace. 
+that you can replace.
 
 It is crucial to understand that the example programs Menhir provides in this file
 may not represent all possible programs leading to this state. See
@@ -98,3 +98,11 @@ This is enough to create a new parser state with a different error message.
 Much like after a change to the parser for a new feature, after creating a new parser state,
 you should run [dune build @update_messsages] to check the new entry and generate a error template
 in [parser.messages].
+
+{1 Styling error messages}
+
+The messages in [parser.messages] are interpreted by our error reporting
+system as [Format] strings with no placeholders. In particular, this means you can use
+{{:https://ocaml.org/manual/5.3/api/Format.html#tags}Format semantic tags}
+like [@{<bold>Text@}] to provide optional styling to the error messages. See
+the current messages file for examples and conventions we use here.
