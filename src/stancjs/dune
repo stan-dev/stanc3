@@ -9,7 +9,7 @@
  (release
   (js_of_ocaml
    (flags
-    (:standard "--opt" "3"))))
+    (:standard "--opt" "3" "--target-env" "browser"))))
  (dev
   (js_of_ocaml
    (flags
@@ -21,7 +21,9 @@
     "--disable"
     "share"
     "--enable"
-    "with-js-error"))))
+    "with-js-error"
+    "--target-env"
+    "browser"))))
 
 (alias
  (name default)
