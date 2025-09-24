@@ -9,7 +9,7 @@ Semantic error in 'autodiff_incompatibility1.stan', line 56, column 29 to column
     58:  }
    -------------------------------------------------
 
-The function 'algebra_solver', called by this likelihood function,
+The function "algebra_solver", called by this likelihood function,
 does not currently support higher-order derivatives, and
 cannot be used in an embedded Laplace approximation.
 [exit 1]
@@ -24,7 +24,7 @@ Semantic error in 'autodiff_incompatibility2.stan', line 59, column 43 to column
     61:  }
    -------------------------------------------------
 
-The function 'ode_rk45', called by this likelihood function,
+The function "ode_rk45", called by this likelihood function,
 does not currently support higher-order derivatives, and
 cannot be used in an embedded Laplace approximation.
 [exit 1]
@@ -39,7 +39,7 @@ Semantic error in 'autodiff_incompatibility3.stan', line 51, column 43 to column
     53:  }
    -------------------------------------------------
 
-The function 'reduce_sum', called by this likelihood function,
+The function "reduce_sum", called by this likelihood function,
 does not currently support higher-order derivatives, and
 cannot be used in an embedded Laplace approximation.
 [exit 1]
@@ -54,7 +54,7 @@ Semantic error in 'autodiff_incompatibility4.stan', line 50, column 43 to column
     52:  }
    -------------------------------------------------
 
-The function 'reduce_sum', called by this likelihood function,
+The function "reduce_sum", called by this likelihood function,
 does not currently support higher-order derivatives, and
 cannot be used in an embedded Laplace approximation.
 [exit 1]
@@ -69,7 +69,7 @@ Semantic error in 'autodiff_incompatibility5.stan', line 54, column 43 to column
     56:  }
    -------------------------------------------------
 
-The function 'algebra_solver', called by this likelihood function,
+The function "algebra_solver", called by this likelihood function,
 does not currently support higher-order derivatives, and
 cannot be used in an embedded Laplace approximation.
 [exit 1]
@@ -84,7 +84,7 @@ Semantic error in 'bad_callback1.stan', line 36, column 29 to column 40:
     38:  }
    -------------------------------------------------
 
-Function 'll_function' does not have a valid signature for use in 'laplace_marginal':
+Function "ll_function" does not have a valid signature for use in "laplace_marginal":
 Expected function returning real but got function returning void.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_callback2.stan
@@ -98,7 +98,8 @@ Semantic error in 'bad_callback2.stan', line 38, column 29 to column 49:
     40:  }
    -------------------------------------------------
 
-Function 'll_function_jacobian' does not have a valid signature for use in 'laplace_marginal':
+Function "ll_function_jacobian" does not have a valid signature for use in 
+"laplace_marginal":
 Expected a pure function but got a _jacobian function.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_callback3.stan
@@ -112,7 +113,7 @@ Semantic error in 'bad_callback3.stan', line 28, column 29 to column 40:
     30:  }
    -------------------------------------------------
 
-A returning function was expected but a non-function value 'll_function' was supplied.
+A returning function was expected but a non-function value "ll_function" was supplied.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_callback4.stan
 Semantic error in 'bad_callback4.stan', line 37, column 29 to column 40:
@@ -125,10 +126,10 @@ Semantic error in 'bad_callback4.stan', line 37, column 29 to column 40:
     39:  }
    -------------------------------------------------
 
-Function 'll_function' does not have a valid signature for use in 'laplace_marginal':
+Function "ll_function" does not have a valid signature for use in "laplace_marginal":
 The first argument is marked data-only. (Local variables are assumed to
 depend on parameters; same goes for function inputs unless they are marked
-with the keyword 'data'.)
+with the keyword "data".)
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_callback5.stan
 Semantic error in 'bad_callback5.stan', line 37, column 29 to column 40:
@@ -141,7 +142,7 @@ Semantic error in 'bad_callback5.stan', line 37, column 29 to column 40:
     39:  }
    -------------------------------------------------
 
-Function 'll_function' does not have a valid signature for use in 'laplace_marginal':
+Function "ll_function" does not have a valid signature for use in "laplace_marginal":
 The first argument must be vector but got complex_vector.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_forward1.stan
@@ -169,8 +170,8 @@ Semantic error in 'bad_forward2.stan', line 37, column 42 to column 58:
     39:  }
    -------------------------------------------------
 
-Cannot call 'll_function' with arguments forwarded from call to
-'laplace_marginal':
+Cannot call "ll_function" with arguments forwarded from call to
+"laplace_marginal":
 The second argument (excluding the latent gaussian vector argument) must be
 vector but got array[] int.
 [exit 1]
@@ -185,8 +186,8 @@ Semantic error in 'bad_forward3.stan', line 36, column 42 to column 50:
     38:  }
    -------------------------------------------------
 
-Cannot call 'll_function' with arguments forwarded from call to
-'laplace_marginal':
+Cannot call "ll_function" with arguments forwarded from call to
+"laplace_marginal":
 Expected 3 arguments (excluding the latent gaussian vector argument)
 but got 2 arguments.
 [exit 1]
@@ -200,8 +201,8 @@ Semantic error in 'bad_forward4.stan', line 37, column 46 to column 71:
     38:  }
    -------------------------------------------------
 
-Cannot call 'K_function' with arguments forwarded from call to
-'laplace_marginal':
+Cannot call "K_function" with arguments forwarded from call to
+"laplace_marginal":
 Expected 4 arguments but got 5 arguments.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_forward5.stan
@@ -214,8 +215,8 @@ Semantic error in 'bad_forward5.stan', line 38, column 32 to column 56:
     39:  }
    -------------------------------------------------
 
-Cannot call 'K_function' with arguments forwarded from call to
-'laplace_latent_rng':
+Cannot call "K_function" with arguments forwarded from call to
+"laplace_latent_rng":
 The fourth argument must be real but got array[] real.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_forward6.stan
@@ -229,7 +230,7 @@ Semantic error in 'bad_forward6.stan', line 49, column 43 to column 54:
     51:  }
    -------------------------------------------------
 
-No unique minimum promotion found for function 'll_function'.
+No unique minimum promotion found for function "ll_function".
 Overloaded functions must not have multiple equally valid promotion paths.
 This function has several:
 (vector, int, real, vector, array[] int) => real
@@ -246,7 +247,7 @@ Semantic error in 'bad_forward7.stan', line 2, column 12 to column 69:
      3:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'laplace_marginal_tol_neg_binomial_2_log_lpmf'
+Ill-typed arguments supplied to function "laplace_marginal_tol_neg_binomial_2_log_lpmf"
 for the likelihood:
 The first argument must be array[] int but got int.
 Expected the arguments to start with:
@@ -261,7 +262,7 @@ Semantic error in 'bad_forward8.stan', line 2, column 2 to column 55:
      3:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'laplace_marginal_tol_neg_binomial_2_log_lupmf'
+Ill-typed arguments supplied to function "laplace_marginal_tol_neg_binomial_2_log_lupmf"
 for the likelihood:
 The first argument must be array[] int but got int.
 Expected the arguments to start with:
@@ -277,11 +278,11 @@ Semantic error in 'bad_forward9.stan', line 37, column 32 to column 54:
     38:  }
    -------------------------------------------------
 
-Cannot call 'K_function' with arguments forwarded from call to
-'laplace_marginal':
+Cannot call "K_function" with arguments forwarded from call to
+"laplace_marginal":
 The fourth argument is marked data-only. (Local variables are assumed to
 depend on parameters; same goes for function inputs unless they are marked
-with the keyword 'data'.)
+with the keyword "data".)
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_overload.stan
 Semantic error in 'bad_overload.stan', line 2, column 7 to column 51:
@@ -293,7 +294,7 @@ Semantic error in 'bad_overload.stan', line 2, column 7 to column 51:
      4:    }
    -------------------------------------------------
 
-Identifier 'laplace_marginal_tol_neg_binomial_2_log_lpmf' clashes with a non-overloadable Stan Math library function.
+Identifier "laplace_marginal_tol_neg_binomial_2_log_lpmf" clashes with a non-overloadable Stan Math library function.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_theta0.stan
 Semantic error in 'bad_theta0.stan', line 42, column 79 to column 88:
@@ -306,8 +307,8 @@ Semantic error in 'bad_theta0.stan', line 42, column 79 to column 88:
     44:  }
    -------------------------------------------------
 
-The first control parameter (initial guess) to 'laplace_marginal_tol' must be
-vector but got array[] real.
+The first control parameter (initial guess) to "laplace_marginal_tol" must be
+vector. Instead found type array[] real.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_tol1.stan
 Semantic error in 'bad_tol1.stan', line 40, column 56 to column 63:
@@ -319,7 +320,7 @@ Semantic error in 'bad_tol1.stan', line 40, column 56 to column 63:
     41:  }
    -------------------------------------------------
 
-Recieved 2 extra arguments at the end of the call to 'laplace_latent_rng'.
+Recieved 2 extra arguments at the end of the call to "laplace_latent_rng".
 Did you mean to call the _tol version?
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_tol2.stan
@@ -332,7 +333,7 @@ Semantic error in 'bad_tol2.stan', line 39, column 56 to column 63:
     40:  }
    -------------------------------------------------
 
-Recieved 6 extra arguments at the end of the call to 'laplace_latent_rng'.
+Recieved 6 extra arguments at the end of the call to "laplace_latent_rng".
 Did you mean to call the _tol version?
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_tol3.stan
@@ -345,7 +346,7 @@ Semantic error in 'bad_tol3.stan', line 39, column 56 to column 63:
     40:  }
    -------------------------------------------------
 
-Recieved 5 control arguments at the end of the call to 'laplace_latent_tol_rng'.
+Recieved 5 control arguments at the end of the call to "laplace_latent_tol_rng".
 Expected 6 arguments for the control parameters instead.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_tol4.stan
@@ -359,10 +360,10 @@ Semantic error in 'bad_tol4.stan', line 46, column 37 to column 50:
     48:  }
    -------------------------------------------------
 
-The control parameters to 'laplace_marginal_tol' must all be data-only,
+The control parameters to "laplace_marginal_tol" must all be data-only,
 but the second control parameter (tolerance) here is not. (Local variables
 are assumed to depend on parameters; same goes for function inputs unless
-they are marked with the keyword 'data'.)
+they are marked with the keyword "data".)
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_tol5.stan
 Semantic error in 'bad_tol5.stan', line 38, column 24 to line 39, column 77:
@@ -375,8 +376,8 @@ Semantic error in 'bad_tol5.stan', line 38, column 24 to line 39, column 77:
     40:  }
    -------------------------------------------------
 
-The sixth control parameter (max_steps_line_search) to 'laplace_latent_tol_rng'
-must be int but got real.
+The sixth control parameter (max_steps_line_search) to "laplace_latent_tol_rng"
+must be int. Instead found type real.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_tol6.stan
 Semantic error in 'bad_tol6.stan', line 39, column 56 to column 63:
@@ -388,7 +389,7 @@ Semantic error in 'bad_tol6.stan', line 39, column 56 to column 63:
     40:  }
    -------------------------------------------------
 
-Recieved 7 control arguments at the end of the call to 'laplace_latent_tol_rng'.
+Recieved 7 control arguments at the end of the call to "laplace_latent_tol_rng".
 Expected 6 arguments for the control parameters instead.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_tol7.stan
@@ -401,8 +402,8 @@ Semantic error in 'bad_tol7.stan', line 39, column 76 to column 77:
     40:  }
    -------------------------------------------------
 
-The fifth control parameter (solver) to 'laplace_latent_tol_rng' must be
-int but got real.
+The fifth control parameter (solver) to "laplace_latent_tol_rng" must be int.
+Instead found type real.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_tol8.stan
 Semantic error in 'bad_tol8.stan', line 39, column 72 to column 73:
@@ -414,8 +415,8 @@ Semantic error in 'bad_tol8.stan', line 39, column 72 to column 73:
     40:  }
    -------------------------------------------------
 
-The fourth control parameter (hessian_block_size) to 'laplace_latent_tol_rng'
-must be int but got complex.
+The fourth control parameter (hessian_block_size) to "laplace_latent_tol_rng"
+must be int. Instead found type complex.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_tol9.stan
 Semantic error in 'bad_tol9.stan', line 39, column 71 to column 72:
@@ -427,8 +428,8 @@ Semantic error in 'bad_tol9.stan', line 39, column 71 to column 72:
     40:  }
    -------------------------------------------------
 
-The third control parameter (max_num_steps) to 'laplace_latent_tol_rng'
-must be int but got array[] int.
+The third control parameter (max_num_steps) to "laplace_latent_tol_rng"
+must be int. Instead found type array[] int.
 [exit 1]
   $ ../../../../../install/default/bin/stanc missing_args1.stan
 Semantic error in 'missing_args1.stan', line 2, column 12 to column 30:
@@ -439,7 +440,7 @@ Semantic error in 'missing_args1.stan', line 2, column 12 to column 30:
      3:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'laplace_marginal'.
+Ill-typed arguments supplied to function "laplace_marginal".
 The valid signature of this function is
 laplace_marginal((vector, T_l...) => real, tuple(T_l...), vector,
   (T_k...) => matrix, tuple(T_k...))
@@ -457,7 +458,7 @@ Semantic error in 'missing_args2.stan', line 2, column 12 to column 34:
      3:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'laplace_marginal_tol'.
+Ill-typed arguments supplied to function "laplace_marginal_tol".
 The valid signature of this function is
 laplace_marginal_tol((vector, T_l...) => real, tuple(T_l...), vector,
   (T_k...) => matrix, tuple(T_k...), vector, data real, data int, data int,
@@ -476,7 +477,7 @@ Semantic error in 'missing_args3.stan', line 2, column 12 to column 58:
      3:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'laplace_marginal_tol_neg_binomial_2_log_lpmf'
+Ill-typed arguments supplied to function "laplace_marginal_tol_neg_binomial_2_log_lpmf"
 for the likelihood:
 Expected 4 arguments but got 0 arguments.
 Expected the arguments to start with:
@@ -493,7 +494,7 @@ Semantic error in 'missing_args4.stan', line 29, column 12 to column 59:
     31:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'laplace_marginal'.
+Ill-typed arguments supplied to function "laplace_marginal".
 The valid signature of this function is
 laplace_marginal((vector, T_l...) => real, tuple(T_l...), vector,
   (T_k...) => matrix, tuple(T_k...))
@@ -513,7 +514,7 @@ Semantic error in 'missing_args5.stan', line 3, column 20 to column 40:
      4:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'laplace_latent_rng'.
+Ill-typed arguments supplied to function "laplace_latent_rng".
 The valid signature of this function is
 laplace_latent_rng((vector, T_l...) => real, tuple(T_l...), vector,
   (T_k...) => matrix, tuple(T_k...))
@@ -533,7 +534,7 @@ Semantic error in 'missing_args6.stan', line 40, column 22 to column 71:
     42:  
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'laplace_latent_rng'.
+Ill-typed arguments supplied to function "laplace_latent_rng".
 The valid signature of this function is
 laplace_latent_rng((vector, T_l...) => real, tuple(T_l...), vector,
   (T_k...) => matrix, tuple(T_k...))
@@ -554,7 +555,7 @@ Semantic error in 'missing_args7.stan', line 18, column 24 to line 19, column 23
     20:  
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'laplace_latent_neg_binomial_2_log_rng'.
+Ill-typed arguments supplied to function "laplace_latent_neg_binomial_2_log_rng".
 The valid signature of this function is
 laplace_latent_neg_binomial_2_log_rng(array[] int, array[] int, vector,
   vector, vector, (T_k...) => matrix, tuple(T_k...))
@@ -572,7 +573,7 @@ Semantic error in 'missing_args8.stan', line 2, column 12 to column 65:
      3:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'laplace_marginal_tol_poisson_log_lpmf'.
+Ill-typed arguments supplied to function "laplace_marginal_tol_poisson_log_lpmf".
 The valid signature of this function is
 laplace_marginal_tol_poisson_log_lpmf(array[] int, array[] int, vector,
   vector, (T_k...) => matrix, tuple(T_k...), vector, data real, data int,
@@ -593,6 +594,6 @@ Semantic error in 'missing_args9.stan', line 40, column 24 to line 41, column 59
     42:  
    -------------------------------------------------
 
-Recieved 0 control arguments at the end of the call to 'laplace_latent_tol_neg_binomial_2_log_rng'.
+Recieved 0 control arguments at the end of the call to "laplace_latent_tol_neg_binomial_2_log_rng".
 Expected 6 arguments for the control parameters instead.
 [exit 1]

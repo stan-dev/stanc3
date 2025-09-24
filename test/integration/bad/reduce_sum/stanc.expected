@@ -345,28 +345,30 @@ Available signatures:
   The 5th argument must be real but got vector
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_not_slice_type.stan
-Semantic error in 'bad_not_slice_type.stan', line 12, column 12 to column 47:
+Semantic error in 'bad_not_slice_type.stan', line 12, column 32 to column 33:
    -------------------------------------------------
     10:  
     11:  model {
     12:    target += reduce_sum(my_func, a, 1, 0.0, 1.0);
-                     ^
+                                         ^
     13:  }
    -------------------------------------------------
 
-The second argument to reduce_sum must be an array but found real
+The second argument to reduce_sum must be an array.
+Instead found type real.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_not_slice_type_static.stan
-Semantic error in 'bad_not_slice_type_static.stan', line 12, column 12 to column 54:
+Semantic error in 'bad_not_slice_type_static.stan', line 12, column 39 to column 40:
    -------------------------------------------------
     10:  
     11:  model {
     12:    target += reduce_sum_static(my_func, a, 1, 0.0, 1.0);
-                     ^
+                                                ^
     13:  }
    -------------------------------------------------
 
-The second argument to reduce_sum must be an array but found real
+The second argument to reduce_sum must be an array.
+Instead found type real.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_reduce_sum_multiple.stan
 Semantic error in 'bad_reduce_sum_multiple.stan', line 27, column 18 to column 51:
@@ -431,16 +433,18 @@ where F2 = (array[] real, data int, data int) => real
   The return types are not compatible.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_slice_type.stan
-Semantic error in 'bad_slice_type.stan', line 12, column 12 to column 47:
+Semantic error in 'bad_slice_type.stan', line 12, column 32 to column 33:
    -------------------------------------------------
     10:  
     11:  model {
     12:    target += reduce_sum(my_func, a, 1, 0.0, 1.0);
-                     ^
+                                         ^
     13:  }
    -------------------------------------------------
 
-The inner type in reduce_sum array must be real, int, matrix, vector, or row_vector but found complex
+The inner type in reduce_sum array must be real, int, matrix, vector,
+or row_vector.
+Instead found type complex.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_suffix.stan
 Semantic error in 'bad_suffix.stan', line 27, column 12 to line 28, column 45:
@@ -471,7 +475,7 @@ Semantic error in 'bad_userdefined_reduce_sum.stan', line 2, column 7 to column 
      4:    }
    -------------------------------------------------
 
-Identifier 'reduce_sum' clashes with a non-overloadable Stan Math library function.
+Identifier "reduce_sum" clashes with a non-overloadable Stan Math library function.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_userdefined_reduce_sum_static.stan
 Semantic error in 'bad_userdefined_reduce_sum_static.stan', line 2, column 7 to column 24:
@@ -483,5 +487,5 @@ Semantic error in 'bad_userdefined_reduce_sum_static.stan', line 2, column 7 to 
      4:    }
    -------------------------------------------------
 
-Identifier 'reduce_sum_static' clashes with a non-overloadable Stan Math library function.
+Identifier "reduce_sum_static" clashes with a non-overloadable Stan Math library function.
 [exit 1]

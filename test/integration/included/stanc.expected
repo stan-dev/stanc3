@@ -240,7 +240,7 @@ Semantic error in 'stanc_helper_with_good_include_err_after_incl.stan', line 9, 
     10:  }
    -------------------------------------------------
 
-Identifier 'ww' not in scope. Did you mean 'w'?
+Identifier "ww" not in scope. Did you mean "w"?
 [exit 1]
   $ ../../../../install/default/bin/stanc stanc_helper_with_good_include.stan
 Syntax error in 'stanc_helper_with_good_include.stan', line 2, column 0 to column 31, include error:

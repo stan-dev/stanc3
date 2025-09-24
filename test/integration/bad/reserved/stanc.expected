@@ -8,7 +8,7 @@ Semantic error in 'auto.stan', line 2, column 7 to column 11:
      4:  model {
    -------------------------------------------------
 
-Identifier 'auto' clashes with reserved keyword.
+Identifier "auto" clashes with reserved keyword.
 [exit 1]
   $ ../../../../../install/default/bin/stanc break.stan
 Syntax error in 'break.stan', line 2, column 7 to column 12, parsing error:
@@ -127,7 +127,7 @@ Semantic error in 'export.stan', line 2, column 7 to column 13:
      4:  model {
    -------------------------------------------------
 
-Identifier 'export' clashes with reserved keyword.
+Identifier "export" clashes with reserved keyword.
 [exit 1]
   $ ../../../../../install/default/bin/stanc extern.stan
 Semantic error in 'extern.stan', line 2, column 7 to column 13:
@@ -139,7 +139,7 @@ Semantic error in 'extern.stan', line 2, column 7 to column 13:
      4:  model {
    -------------------------------------------------
 
-Identifier 'extern' clashes with reserved keyword.
+Identifier "extern" clashes with reserved keyword.
 [exit 1]
   $ ../../../../../install/default/bin/stanc false.stan
 Semantic error in 'false.stan', line 2, column 7 to column 12:
@@ -151,7 +151,7 @@ Semantic error in 'false.stan', line 2, column 7 to column 12:
      4:  model {
    -------------------------------------------------
 
-Identifier 'false' clashes with reserved keyword.
+Identifier "false" clashes with reserved keyword.
 [exit 1]
   $ ../../../../../install/default/bin/stanc for.stan
 Syntax error in 'for.stan', line 2, column 7 to column 10, parsing error:
@@ -175,7 +175,7 @@ Semantic error in 'generated.stan', line 2, column 7 to column 16:
      4:  model {
    -------------------------------------------------
 
-Identifier 'generated' clashes with reserved keyword.
+Identifier "generated" clashes with reserved keyword.
 [exit 1]
   $ ../../../../../install/default/bin/stanc if.stan
 Syntax error in 'if.stan', line 2, column 7 to column 9, parsing error:
@@ -283,7 +283,7 @@ Semantic error in 'quantities.stan', line 2, column 7 to column 17:
      4:  model {
    -------------------------------------------------
 
-Identifier 'quantities' clashes with reserved keyword.
+Identifier "quantities" clashes with reserved keyword.
 [exit 1]
   $ ../../../../../install/default/bin/stanc real.stan
 Syntax error in 'real.stan', line 2, column 7 to column 11, parsing error:
@@ -307,7 +307,7 @@ Semantic error in 'repeat.stan', line 2, column 7 to column 13:
      4:  model {
    -------------------------------------------------
 
-Identifier 'repeat' clashes with reserved keyword.
+Identifier "repeat" clashes with reserved keyword.
 [exit 1]
   $ ../../../../../install/default/bin/stanc return.stan
 Syntax error in 'return.stan', line 2, column 7 to column 13, parsing error:
@@ -366,7 +366,7 @@ Semantic error in 'static.stan', line 2, column 7 to column 13:
      4:  model {
    -------------------------------------------------
 
-Identifier 'static' clashes with reserved keyword.
+Identifier "static" clashes with reserved keyword.
 [exit 1]
   $ ../../../../../install/default/bin/stanc struct.stan
 Semantic error in 'struct.stan', line 2, column 7 to column 13:
@@ -378,7 +378,7 @@ Semantic error in 'struct.stan', line 2, column 7 to column 13:
      4:  model {
    -------------------------------------------------
 
-Identifier 'struct' clashes with reserved keyword.
+Identifier "struct" clashes with reserved keyword.
 [exit 1]
   $ ../../../../../install/default/bin/stanc sum_to_zero_matrix.stan
 Syntax error in 'sum_to_zero_matrix.stan', line 2, column 7 to column 25, parsing error:
@@ -412,7 +412,7 @@ Semantic error in 'then.stan', line 2, column 7 to column 11:
      4:  model {
    -------------------------------------------------
 
-Identifier 'then' clashes with reserved keyword.
+Identifier "then" clashes with reserved keyword.
 [exit 1]
   $ ../../../../../install/default/bin/stanc transformed.stan
 Semantic error in 'transformed.stan', line 2, column 7 to column 18:
@@ -424,7 +424,7 @@ Semantic error in 'transformed.stan', line 2, column 7 to column 18:
      4:  model {
    -------------------------------------------------
 
-Identifier 'transformed' clashes with reserved keyword.
+Identifier "transformed" clashes with reserved keyword.
 [exit 1]
   $ ../../../../../install/default/bin/stanc true.stan
 Semantic error in 'true.stan', line 2, column 7 to column 11:
@@ -436,7 +436,7 @@ Semantic error in 'true.stan', line 2, column 7 to column 11:
      4:  model {
    -------------------------------------------------
 
-Identifier 'true' clashes with reserved keyword.
+Identifier "true" clashes with reserved keyword.
 [exit 1]
   $ ../../../../../install/default/bin/stanc typedef.stan
 Semantic error in 'typedef.stan', line 2, column 7 to column 14:
@@ -448,7 +448,7 @@ Semantic error in 'typedef.stan', line 2, column 7 to column 14:
      4:  model {
    -------------------------------------------------
 
-Identifier 'typedef' clashes with reserved keyword.
+Identifier "typedef" clashes with reserved keyword.
 [exit 1]
   $ ../../../../../install/default/bin/stanc unit_vector.stan
 Syntax error in 'unit_vector.stan', line 2, column 7 to column 18, parsing error:
@@ -472,7 +472,7 @@ Semantic error in 'until.stan', line 2, column 7 to column 12:
      4:  model {
    -------------------------------------------------
 
-Identifier 'until' clashes with reserved keyword.
+Identifier "until" clashes with reserved keyword.
 [exit 1]
   $ ../../../../../install/default/bin/stanc var.stan
 Semantic error in 'var.stan', line 2, column 7 to column 10:
@@ -484,7 +484,7 @@ Semantic error in 'var.stan', line 2, column 7 to column 10:
      4:  model {
    -------------------------------------------------
 
-Identifier 'var' clashes with reserved keyword.
+Identifier "var" clashes with reserved keyword.
 [exit 1]
   $ ../../../../../install/default/bin/stanc vector.stan
 Syntax error in 'vector.stan', line 2, column 7 to column 13, parsing error:

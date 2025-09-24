@@ -581,7 +581,7 @@ Available signatures:
  data int) => vector
   The 9th argument must be data-only. (Local variables are assumed to depend
   on parameters; same goes for function inputs unless they are marked with
-  the keyword 'data'.)
+  the keyword "data".)
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_var_tol_2.stan
 Semantic error in 'bad_var_tol_2.stan', line 38, column 6 to line 39, column 104:
@@ -604,7 +604,7 @@ Available signatures:
  data int) => vector
   The 7th argument must be data-only. (Local variables are assumed to depend
   on parameters; same goes for function inputs unless they are marked with
-  the keyword 'data'.)
+  the keyword "data".)
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_var_tol_3.stan
 Semantic error in 'bad_var_tol_3.stan', line 38, column 6 to line 39, column 104:
@@ -627,7 +627,7 @@ Available signatures:
  data int) => vector
   The 6th argument must be data-only. (Local variables are assumed to depend
   on parameters; same goes for function inputs unless they are marked with
-  the keyword 'data'.)
+  the keyword "data".)
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_x_int_type.stan
 Semantic error in 'bad_x_int_type.stan', line 26, column 10 to line 32, column 27:
@@ -895,7 +895,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
             data array[] int) => array[] real
   The 6th argument must be data-only. (Local variables are assumed to depend
   on parameters; same goes for function inputs unless they are marked with
-  the keyword 'data'.)
+  the keyword "data".)
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_x_var_type_bdf.stan
 Semantic error in 'bad_x_var_type_bdf.stan', line 26, column 10 to line 32, column 27:
@@ -919,7 +919,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
             data array[] int) => array[] real
   The 6th argument must be data-only. (Local variables are assumed to depend
   on parameters; same goes for function inputs unless they are marked with
-  the keyword 'data'.)
+  the keyword "data".)
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int, data real, data real, data real) => array[,] real
   Expected 10 arguments but found 7 arguments.
@@ -946,7 +946,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
             data array[] int) => array[] real
   The 6th argument must be data-only. (Local variables are assumed to depend
   on parameters; same goes for function inputs unless they are marked with
-  the keyword 'data'.)
+  the keyword "data".)
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int) => array[,] real
   Expected 7 arguments but found 10 arguments.
@@ -973,7 +973,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
             data array[] int) => array[] real
   The 6th argument must be data-only. (Local variables are assumed to depend
   on parameters; same goes for function inputs unless they are marked with
-  the keyword 'data'.)
+  the keyword "data".)
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int, data real, data real, data real) => array[,] real
   Expected 10 arguments but found 7 arguments.
@@ -1000,7 +1000,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
             data array[] int) => array[] real
   The 6th argument must be data-only. (Local variables are assumed to depend
   on parameters; same goes for function inputs unless they are marked with
-  the keyword 'data'.)
+  the keyword "data".)
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int) => array[,] real
   Expected 7 arguments but found 10 arguments.
