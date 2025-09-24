@@ -181,7 +181,7 @@ Available signatures:
 (<F1>, vector, vector, data real, data array[] real) => vector
   The fourth argument must be data-only. (Local variables are assumed to
   depend on parameters; same goes for function inputs unless they are marked
-  with the keyword 'data'.)
+  with the keyword "data".)
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_times_param.stan
 Semantic error in 'bad_times_param.stan', line 13, column 6 to column 60:
@@ -201,7 +201,7 @@ Available signatures:
 (<F1>, vector, vector, data real, data array[] real) => vector
   The 5th argument must be data-only. (Local variables are assumed to depend
   on parameters; same goes for function inputs unless they are marked with
-  the keyword 'data'.)
+  the keyword "data".)
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_times_tol.stan
 Semantic error in 'bad_times_tol.stan', line 27, column 10 to column 69:
