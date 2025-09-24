@@ -144,6 +144,11 @@ let gen_assign_data decl_id st =
             (SizedType.to_unsized st)))
   :: lower_placement_new decl_id st
 
+let sum_expr_sizes es =
+  match lower_exprs es |> List.reduce ~f:Cpp.DSL.( + ) with
+  | None -> Literal "0U"
+  | Some e -> e
+
 let lower_constructor
     {Program.prog_name; input_vars; prepare_data; output_vars; _} =
   let args =
@@ -181,12 +186,9 @@ let lower_constructor
   let data =
     Stmts.rethrow_located (List.concat_map ~f:lower_data prepare_data) in
   let set_num_params =
-    let open Cpp.DSL in
     let output_params =
       List.filter_map ~f:get_unconstrained_param_st output_vars in
-    match lower_exprs output_params |> List.reduce ~f:( + ) with
-    | None -> "num_params_r__" := Literal "0U"
-    | Some pars -> "num_params_r__" := pars in
+    Cpp.DSL.("num_params_r__" := sum_expr_sizes output_params) in
   make_constructor ~args
     ~init_list:[("model_base_crtp", [Literal "0"])]
     ~body:(preamble @ data @ [set_num_params])
@@ -588,13 +590,10 @@ let gen_overloads {Program.output_vars; _} =
     let sizes =
       (* An expression for the number of individual parameters in a list of output variables *)
       let num_outvars (outvars : Expr.Typed.t Program.outvar list) =
-        Expr.Helpers.binop_list
-          (List.map
-             ~f:(fun outvar ->
-               SizedType.io_size outvar.Program.out_constrained_st)
-             outvars)
-          Operator.Plus ~default:Expr.Helpers.zero
-        |> lower_expr in
+        List.map
+          ~f:(fun outvar -> SizedType.io_size outvar.Program.out_constrained_st)
+          outvars
+        |> sum_expr_sizes in
       (* The list of output variables that came from a particular block *)
       let block_outvars (block : Program.io_block) =
         List.filter_map output_vars
