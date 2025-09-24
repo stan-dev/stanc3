@@ -8,7 +8,7 @@ Semantic error in 'foo.stan', line 3, column 17 to column 18:
      4:  }
    -------------------------------------------------
 
-Identifier 'a' not in scope.
+Identifier "a" not in scope.
 [exit 1]
   $ ../../../../../install/default/bin/stanc --filename-in-msg=foo.stan --include-paths=.  filename_syntax_error.stan
 Syntax error in 'foo.stan', line 2, column 4 to column 5, parsing error:

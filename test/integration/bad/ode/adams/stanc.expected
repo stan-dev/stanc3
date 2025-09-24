@@ -396,7 +396,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
             data array[] int) => array[] real
   The 6th argument must be data-only. (Local variables are assumed to depend
   on parameters; same goes for function inputs unless they are marked with
-  the keyword 'data'.)
+  the keyword "data".)
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int, data real, data real, data real) => array[,] real
   Expected 10 arguments but found 7 arguments.
@@ -423,7 +423,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
             data array[] int) => array[] real
   The 6th argument must be data-only. (Local variables are assumed to depend
   on parameters; same goes for function inputs unless they are marked with
-  the keyword 'data'.)
+  the keyword "data".)
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int) => array[,] real
   Expected 7 arguments but found 10 arguments.
@@ -450,7 +450,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
             data array[] int) => array[] real
   The 6th argument must be data-only. (Local variables are assumed to depend
   on parameters; same goes for function inputs unless they are marked with
-  the keyword 'data'.)
+  the keyword "data".)
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int) => array[,] real
   Expected 7 arguments but found 10 arguments.

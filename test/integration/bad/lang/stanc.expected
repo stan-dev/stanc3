@@ -26,7 +26,7 @@ Semantic error in 'bad10.stan', line 2, column 8 to column 11:
      4:  model {
    -------------------------------------------------
 
-Identifier 'y__' clashes with reserved keyword.
+Identifier "y__" clashes with reserved keyword.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad11.stan
 Semantic error in 'bad11.stan', line 2, column 2 to column 12:
@@ -49,7 +49,7 @@ Semantic error in 'bad12.stan', line 2, column 2 to column 6:
      3:  }
    -------------------------------------------------
 
-Cannot assign to global variable 'beta' declared in previous blocks.
+Cannot assign to global variable "beta" declared in previous blocks.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad2.stan
 Semantic error in 'bad2.stan', line 1, column 34 to column 35:
@@ -58,7 +58,7 @@ Semantic error in 'bad2.stan', line 1, column 34 to column 35:
                                            ^
    -------------------------------------------------
 
-Cannot assign to global variable 'a' declared in previous blocks.
+Cannot assign to global variable "a" declared in previous blocks.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad2.stanfunctions
 Syntax error in 'bad2.stanfunctions', line 5, column 0 to column 1, parsing error:
@@ -109,7 +109,7 @@ Semantic error in 'bad5.stan', line 3, column 6 to column 10:
      5:  model {
    -------------------------------------------------
 
-Identifier 'lp__' clashes with reserved keyword.
+Identifier "lp__" clashes with reserved keyword.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad6.stan
 Semantic error in 'bad6.stan', line 7, column 3 to column 4:
@@ -122,7 +122,7 @@ Semantic error in 'bad6.stan', line 7, column 3 to column 4:
      9:  model {
    -------------------------------------------------
 
-Cannot assign to global variable 'y' declared in previous blocks.
+Cannot assign to global variable "y" declared in previous blocks.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad7.stan
 Semantic error in 'bad7.stan', line 7, column 2 to column 3:
@@ -135,7 +135,7 @@ Semantic error in 'bad7.stan', line 7, column 2 to column 3:
      9:  model { 
    -------------------------------------------------
 
-Cannot assign to global variable 'y' declared in previous blocks.
+Cannot assign to global variable "y" declared in previous blocks.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad8.stan
 Semantic error in 'bad8.stan', line 5, column 4 to column 5:
@@ -147,7 +147,7 @@ Semantic error in 'bad8.stan', line 5, column 4 to column 5:
      6:  }
    -------------------------------------------------
 
-Cannot assign to global variable 'y' declared in previous blocks.
+Cannot assign to global variable "y" declared in previous blocks.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad9.stan
 Semantic error in 'bad9.stan', line 5, column 3 to column 9:
@@ -172,7 +172,9 @@ Semantic error in 'bad_bar.stan', line 3, column 9 to column 28:
      4:  }
    -------------------------------------------------
 
-Only functions with names ending in _lpdf, _lupdf, _lpmf, _lupmf, _cdf, _lcdf, _lccdf can make use of conditional notation.
+Only functions with names ending in _lpdf, _lupdf, _lpmf, _lupmf, _cdf,
+_lcdf, _lccdf can make use of conditional
+notation.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_bounds1.stan
 Syntax error in 'bad_bounds1.stan', line 2, column 15 to column 17, parsing error:
@@ -244,7 +246,7 @@ Semantic error in 'bad_function.stan', line 3, column 3 to column 7:
      4:  }
    -------------------------------------------------
 
-A non-returning function was expected but a non-function value 'x' was supplied.
+A non-returning function was expected but a non-function value "x" was supplied.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_function2.stan
 Semantic error in 'bad_function2.stan', line 3, column 3 to column 7:
@@ -256,7 +258,7 @@ Semantic error in 'bad_function2.stan', line 3, column 3 to column 7:
      4:  }
    -------------------------------------------------
 
-A non-returning function was expected but an undeclared identifier 'y' was supplied.
+A non-returning function was expected but an undeclared identifier "y" was supplied.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_lmpf.stan
 Semantic error in 'bad_lmpf.stan', line 2, column 2 to line 4, column 3:
@@ -432,7 +434,7 @@ Semantic error in 'good_all.stan', line 25, column 2 to column 3:
     27:    s = m[1,2];
    -------------------------------------------------
 
-Cannot assign to global variable 'm' declared in previous blocks.
+Cannot assign to global variable "m" declared in previous blocks.
 [exit 1]
   $ ../../../../../install/default/bin/stanc incomplete.stan
 Syntax error in 'incomplete.stan', line 2, column 18 to column 19, parsing error:
@@ -514,7 +516,7 @@ Semantic error in 'reused_name.stan', line 4, column 14 to column 15:
      5:  }
    -------------------------------------------------
 
-Identifier 'e' is already in use.
+Identifier "e" is already in use.
 [exit 1]
   $ ../../../../../install/default/bin/stanc tparam_array_int.stan
 Semantic error in 'tparam_array_int.stan', line 2, column 2 to column 21:

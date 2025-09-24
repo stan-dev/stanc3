@@ -23,7 +23,7 @@ Semantic error in 'no_minimum_dae.stan', line 38, column 12 to column 59:
     40:  
    -------------------------------------------------
 
-No unique minimum promotion found for function 'chem_dae'.
+No unique minimum promotion found for function "chem_dae".
 Overloaded functions must not have multiple equally valid promotion paths.
 This function has several:
 (real, vector, vector, array[] real, array[] real, real, int) => vector
@@ -41,7 +41,7 @@ Semantic error in 'no_minimum_promotion.stan', line 12, column 9 to column 17:
     13:  }
    -------------------------------------------------
 
-No unique minimum promotion found for function 'foo'.
+No unique minimum promotion found for function "foo".
 Overloaded functions must not have multiple equally valid promotion paths.
 For args (int, int), this function has several:
 (real, int) => real
@@ -59,7 +59,7 @@ Semantic error in 'no_minimum_promotion2.stan', line 12, column 9 to column 17:
     13:  }
    -------------------------------------------------
 
-No unique minimum promotion found for function 'foo'.
+No unique minimum promotion found for function "foo".
 Overloaded functions must not have multiple equally valid promotion paths.
 For args (int, int), this function has several:
 (int, complex) => real
@@ -77,7 +77,7 @@ Semantic error in 'no_minimum_promotion3.stan', line 21, column 9 to column 20:
     22:  }
    -------------------------------------------------
 
-No unique minimum promotion found for function 'foo3'.
+No unique minimum promotion found for function "foo3".
 Overloaded functions must not have multiple equally valid promotion paths.
 For args (int, int, int), this function has several:
 (int, int, real) => real
@@ -97,7 +97,7 @@ Semantic error in 'no_minimum_reduce_sum.stan', line 11, column 11 to column 55:
     13:  
    -------------------------------------------------
 
-No unique minimum promotion found for function 'foo'.
+No unique minimum promotion found for function "foo".
 Overloaded functions must not have multiple equally valid promotion paths.
 This function has several:
 (array[] real, int, int, int, real) => real
@@ -116,7 +116,7 @@ Semantic error in 'no_minimum_tilde.stan', line 12, column 3 to column 16:
     14:  }
    -------------------------------------------------
 
-No unique minimum promotion found for function 'foo'.
+No unique minimum promotion found for function "foo".
 Overloaded functions must not have multiple equally valid promotion paths.
 For args (int, int, int), this function has several:
 (real, real, int) => real
@@ -134,7 +134,7 @@ Semantic error in 'no_minimum_tilde2.stan', line 12, column 3 to column 16:
     13:  }
    -------------------------------------------------
 
-No unique minimum promotion found for function 'foo'.
+No unique minimum promotion found for function "foo".
 Overloaded functions must not have multiple equally valid promotion paths.
 For args (int, int, int), this function has several:
 (int, real, int) => real
@@ -153,7 +153,7 @@ Semantic error in 'no_minimum_variadic.stan', line 82, column 37 to line 84, col
     84:                                                  gamma, xi, delta, unused, unused);
    -------------------------------------------------
 
-No unique minimum promotion found for function 'simple_SIR'.
+No unique minimum promotion found for function "simple_SIR".
 Overloaded functions must not have multiple equally valid promotion paths.
 This function has several:
 (real, vector, real, real, real, real, real, real, int) => vector
@@ -171,7 +171,7 @@ Semantic error in 'overload_reduce_sum.stan', line 2, column 7 to column 17:
      4:    }
    -------------------------------------------------
 
-Identifier 'reduce_sum' clashes with a non-overloadable Stan Math library function.
+Identifier "reduce_sum" clashes with a non-overloadable Stan Math library function.
 [exit 1]
   $ ../../../../../../install/default/bin/stanc redefine-ccdf-same.stan
 Semantic error in 'redefine-ccdf-same.stan', line 2, column 2 to line 4, column 3:
@@ -183,7 +183,7 @@ Semantic error in 'redefine-ccdf-same.stan', line 2, column 2 to line 4, column 
      4:    }
    -------------------------------------------------
 
-Function 'poisson_lccdf' is already declared in the Stan Math library with signature 
+Function "poisson_lccdf" is already declared in the Stan Math library with signature 
 (int, real) => real
 [exit 1]
   $ ../../../../../../install/default/bin/stanc redefine-ccdf-same2.stan
@@ -196,7 +196,7 @@ Semantic error in 'redefine-ccdf-same2.stan', line 2, column 2 to line 4, column
      4:    }
    -------------------------------------------------
 
-Function 'poisson_lccdf' is already declared in the Stan Math library with signature 
+Function "poisson_lccdf" is already declared in the Stan Math library with signature 
 (int, real) => real
 [exit 1]
   $ ../../../../../../install/default/bin/stanc redefine-cdf-same.stan
@@ -209,7 +209,7 @@ Semantic error in 'redefine-cdf-same.stan', line 2, column 2 to line 4, column 3
      4:    }
    -------------------------------------------------
 
-Function 'poisson_lcdf' is already declared in the Stan Math library with signature 
+Function "poisson_lcdf" is already declared in the Stan Math library with signature 
 (int, real) => real
 [exit 1]
   $ ../../../../../../install/default/bin/stanc redefine-cdf-same2.stan
@@ -222,7 +222,7 @@ Semantic error in 'redefine-cdf-same2.stan', line 2, column 2 to line 4, column 
      4:    }
    -------------------------------------------------
 
-Function 'poisson_lcdf' is already declared in the Stan Math library with signature 
+Function "poisson_lcdf" is already declared in the Stan Math library with signature 
 (int, real) => real
 [exit 1]
   $ ../../../../../../install/default/bin/stanc redefine-prob-same.stan
@@ -235,7 +235,7 @@ Semantic error in 'redefine-prob-same.stan', line 2, column 2 to line 4, column 
      4:    }
    -------------------------------------------------
 
-Function 'poisson_lpmf' is already declared in the Stan Math library with signature 
+Function "poisson_lpmf" is already declared in the Stan Math library with signature 
 (int, real) => real
 [exit 1]
   $ ../../../../../../install/default/bin/stanc redefinition.stan
@@ -249,7 +249,7 @@ Semantic error in 'redefinition.stan', line 6, column 3 to line 8, column 4:
      8:     }
    -------------------------------------------------
 
-Function 'foo' has already been declared for signature (real) => int
+Function "foo" has already been declared for signature (real) => int
 [exit 1]
   $ ../../../../../../install/default/bin/stanc returntype_issues.stan
 Semantic error in 'returntype_issues.stan', line 6, column 3 to line 8, column 4:
@@ -262,5 +262,5 @@ Semantic error in 'returntype_issues.stan', line 6, column 3 to line 8, column 4
      8:     }
    -------------------------------------------------
 
-Function 'foo' cannot be overloaded by return type only. Previously used return type real
+Function "foo" cannot be overloaded by return type only. Previously used return type real
 [exit 1]

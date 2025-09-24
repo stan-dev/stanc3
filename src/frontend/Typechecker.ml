@@ -788,15 +788,18 @@ and check_reduce_sum ~is_cond_dist loc cf tenv id tes =
     | _ -> basic_mismatch () in
   match tes with
   | {expr= Variable fname; _}
-    :: ({emeta= {type_= slice_type; _}; _} :: _ as remaining_es) -> (
+    :: ({emeta= {type_= slice_type; loc= slice_loc; _}; _} :: _ as remaining_es)
+    -> (
       let slice_type, n = UnsizedType.unwind_array_type slice_type in
       if n = 0 then
-        Semantic_error.illtyped_reduce_sum_not_array loc slice_type |> error
+        Semantic_error.illtyped_reduce_sum_not_array slice_loc slice_type
+        |> error
       else if
         not
         @@ List.mem Stan_math_signatures.reduce_sum_slice_types slice_type
              ~equal:( = )
-      then Semantic_error.illtyped_reduce_sum_slice loc slice_type |> error;
+      then
+        Semantic_error.illtyped_reduce_sum_slice slice_loc slice_type |> error;
       match find_matching_first_order_fn tenv (matching remaining_es) fname with
       | SignatureMismatch.UniqueMatch (ftype, promotions) ->
           (* a valid signature exists *)
@@ -1962,7 +1965,7 @@ and verify_fundef_dist_rt loc id return_ty =
   if is_dist then
     match return_ty with
     | UnsizedType.ReturnType UReal -> ()
-    | _ -> Semantic_error.non_real_prob_fn_def loc |> error
+    | _ -> Semantic_error.non_real_prob_fn_def loc return_ty |> error
 
 and verify_pdf_fundef_first_arg_ty loc id arg_tys =
   if String.is_suffix id.name ~suffix:"_lpdf" then
