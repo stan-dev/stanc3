@@ -43,7 +43,8 @@ let rec requires ut t =
   | UReal ->
       (* not using stan::is_stan_scalar to explictly exclude int *)
       [ RequireAllCondition
-          (`OneOf ["stan::is_autodiff"; "std::is_floating_point"], t) ]
+          (`OneOf ["stan::is_var"; "stan::is_fvar"; "std::is_floating_point"], t)
+      ]
   | UTuple ts ->
       RequireAllCondition (`Exact "stan::math::is_tuple", t)
       :: List.concat_mapi ts ~f:(fun i ty -> requires ty (Types.tuple_elt t i))
@@ -130,7 +131,8 @@ let%expect_test "arg types tuple template" =
     {|
     T0__
     ((RequireAllCondition (Exact stan::math::is_tuple) (TemplateType T0__))
-     (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+     (RequireAllCondition
+      (OneOf (stan::is_var stan::is_fvar std::is_floating_point))
       (TypeTrait std::tuple_element_t
        ((NonTypeTemplateInt 0) (TypeTrait std::decay_t ((TemplateType T0__))))))
      (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)

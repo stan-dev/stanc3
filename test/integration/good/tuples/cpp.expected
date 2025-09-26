@@ -7503,15 +7503,17 @@ static constexpr std::array<const char*, 21> locations_array__ =
   " (in 'tuple-dataonly.stan', line 8, column 55 to line 10, column 3)"};
 template <typename T0__,
           stan::require_all_t<stan::math::is_tuple<T0__>,
-                              stan::math::disjunction<stan::is_autodiff<
-                                                      std::tuple_element_t<0,
-                                                        std::decay_t<T0__>>>,
+                              stan::math::disjunction<stan::is_var<std::tuple_element_t<0,
+                                                                    std::decay_t<T0__>>>,
+                                                      stan::is_fvar<std::tuple_element_t<0,
+                                                                    std::decay_t<T0__>>>,
                                                       std::is_floating_point<
                                                       std::decay_t<std::tuple_element_t<0,
                                                                     std::decay_t<T0__>>>>>,
-                              stan::math::disjunction<stan::is_autodiff<
-                                                      std::tuple_element_t<1,
-                                                        std::decay_t<T0__>>>,
+                              stan::math::disjunction<stan::is_var<std::tuple_element_t<1,
+                                                                    std::decay_t<T0__>>>,
+                                                      stan::is_fvar<std::tuple_element_t<1,
+                                                                    std::decay_t<T0__>>>,
                                                       std::is_floating_point<
                                                       std::decay_t<std::tuple_element_t<1,
                                                                     std::decay_t<T0__>>>>>>* = nullptr>
@@ -7519,15 +7521,17 @@ double foo(const T0__& x, std::ostream* pstream__);
 template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::math::is_tuple<stan::value_type_t<T0__>>,
-                              stan::math::disjunction<stan::is_autodiff<
-                                                      std::tuple_element_t<0,
-                                                        stan::value_type_t<T0__>>>,
+                              stan::math::disjunction<stan::is_var<std::tuple_element_t<0,
+                                                                    stan::value_type_t<T0__>>>,
+                                                      stan::is_fvar<std::tuple_element_t<0,
+                                                                    stan::value_type_t<T0__>>>,
                                                       std::is_floating_point<
                                                       std::decay_t<std::tuple_element_t<0,
                                                                     stan::value_type_t<T0__>>>>>,
-                              stan::math::disjunction<stan::is_autodiff<
-                                                      std::tuple_element_t<1,
-                                                        stan::value_type_t<T0__>>>,
+                              stan::math::disjunction<stan::is_var<std::tuple_element_t<1,
+                                                                    stan::value_type_t<T0__>>>,
+                                                      stan::is_fvar<std::tuple_element_t<1,
+                                                                    stan::value_type_t<T0__>>>,
                                                       std::is_floating_point<
                                                       std::decay_t<std::tuple_element_t<1,
                                                                     stan::value_type_t<T0__>>>>>>* = nullptr>
@@ -7543,9 +7547,10 @@ template <typename T0__,
                               stan::is_vt_not_complex<stan::value_type_t<
                                                         std::tuple_element_t<0,
                                                           stan::value_type_t<T0__>>>>,
-                              stan::math::disjunction<stan::is_autodiff<
-                                                      std::tuple_element_t<1,
-                                                        stan::value_type_t<T0__>>>,
+                              stan::math::disjunction<stan::is_var<std::tuple_element_t<1,
+                                                                    stan::value_type_t<T0__>>>,
+                                                      stan::is_fvar<std::tuple_element_t<1,
+                                                                    stan::value_type_t<T0__>>>,
                                                       std::is_floating_point<
                                                       std::decay_t<std::tuple_element_t<1,
                                                                     stan::value_type_t<T0__>>>>>>* = nullptr>
@@ -7553,15 +7558,17 @@ double baz(const T0__& x, std::ostream* pstream__);
 // real foo(data tuple(real, real))
 template <typename T0__,
           stan::require_all_t<stan::math::is_tuple<T0__>,
-                              stan::math::disjunction<stan::is_autodiff<
-                                                      std::tuple_element_t<0,
-                                                        std::decay_t<T0__>>>,
+                              stan::math::disjunction<stan::is_var<std::tuple_element_t<0,
+                                                                    std::decay_t<T0__>>>,
+                                                      stan::is_fvar<std::tuple_element_t<0,
+                                                                    std::decay_t<T0__>>>,
                                                       std::is_floating_point<
                                                       std::decay_t<std::tuple_element_t<0,
                                                                     std::decay_t<T0__>>>>>,
-                              stan::math::disjunction<stan::is_autodiff<
-                                                      std::tuple_element_t<1,
-                                                        std::decay_t<T0__>>>,
+                              stan::math::disjunction<stan::is_var<std::tuple_element_t<1,
+                                                                    std::decay_t<T0__>>>,
+                                                      stan::is_fvar<std::tuple_element_t<1,
+                                                                    std::decay_t<T0__>>>,
                                                       std::is_floating_point<
                                                       std::decay_t<std::tuple_element_t<1,
                                                                     std::decay_t<T0__>>>>>>*>
@@ -7587,15 +7594,17 @@ double foo(const T0__& x, std::ostream* pstream__) {
 template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::math::is_tuple<stan::value_type_t<T0__>>,
-                              stan::math::disjunction<stan::is_autodiff<
-                                                      std::tuple_element_t<0,
-                                                        stan::value_type_t<T0__>>>,
+                              stan::math::disjunction<stan::is_var<std::tuple_element_t<0,
+                                                                    stan::value_type_t<T0__>>>,
+                                                      stan::is_fvar<std::tuple_element_t<0,
+                                                                    stan::value_type_t<T0__>>>,
                                                       std::is_floating_point<
                                                       std::decay_t<std::tuple_element_t<0,
                                                                     stan::value_type_t<T0__>>>>>,
-                              stan::math::disjunction<stan::is_autodiff<
-                                                      std::tuple_element_t<1,
-                                                        stan::value_type_t<T0__>>>,
+                              stan::math::disjunction<stan::is_var<std::tuple_element_t<1,
+                                                                    stan::value_type_t<T0__>>>,
+                                                      stan::is_fvar<std::tuple_element_t<1,
+                                                                    stan::value_type_t<T0__>>>,
                                                       std::is_floating_point<
                                                       std::decay_t<std::tuple_element_t<1,
                                                                     stan::value_type_t<T0__>>>>>>*>
@@ -7629,9 +7638,10 @@ template <typename T0__,
                               stan::is_vt_not_complex<stan::value_type_t<
                                                         std::tuple_element_t<0,
                                                           stan::value_type_t<T0__>>>>,
-                              stan::math::disjunction<stan::is_autodiff<
-                                                      std::tuple_element_t<1,
-                                                        stan::value_type_t<T0__>>>,
+                              stan::math::disjunction<stan::is_var<std::tuple_element_t<1,
+                                                                    stan::value_type_t<T0__>>>,
+                                                      stan::is_fvar<std::tuple_element_t<1,
+                                                                    stan::value_type_t<T0__>>>,
                                                       std::is_floating_point<
                                                       std::decay_t<std::tuple_element_t<1,
                                                                     stan::value_type_t<T0__>>>>>>*>
@@ -8145,10 +8155,12 @@ template <typename T0__,
           stan::require_all_t<stan::math::is_tuple<T0__>,
                               stan::is_std_vector<std::tuple_element_t<0,
                                                     std::decay_t<T0__>>>,
-                              stan::math::disjunction<stan::is_autodiff<
-                                                      stan::value_type_t<
-                                                        std::tuple_element_t<0,
-                                                          std::decay_t<T0__>>>>,
+                              stan::math::disjunction<stan::is_var<stan::value_type_t<
+                                                                    std::tuple_element_t<0,
+                                                                    std::decay_t<T0__>>>>,
+                                                      stan::is_fvar<stan::value_type_t<
+                                                                    std::tuple_element_t<0,
+                                                                    std::decay_t<T0__>>>>,
                                                       std::is_floating_point<
                                                       std::decay_t<stan::value_type_t<
                                                                     std::tuple_element_t<0,
@@ -8161,10 +8173,12 @@ template <typename T0__,
           stan::require_all_t<stan::math::is_tuple<T0__>,
                               stan::is_std_vector<std::tuple_element_t<0,
                                                     std::decay_t<T0__>>>,
-                              stan::math::disjunction<stan::is_autodiff<
-                                                      stan::value_type_t<
-                                                        std::tuple_element_t<0,
-                                                          std::decay_t<T0__>>>>,
+                              stan::math::disjunction<stan::is_var<stan::value_type_t<
+                                                                    std::tuple_element_t<0,
+                                                                    std::decay_t<T0__>>>>,
+                                                      stan::is_fvar<stan::value_type_t<
+                                                                    std::tuple_element_t<0,
+                                                                    std::decay_t<T0__>>>>,
                                                       std::is_floating_point<
                                                       std::decay_t<stan::value_type_t<
                                                                     std::tuple_element_t<0,
@@ -11439,20 +11453,24 @@ template <typename T0__,
           stan::require_all_t<stan::math::is_tuple<T0__>,
                               stan::is_std_vector<std::tuple_element_t<0,
                                                     std::decay_t<T0__>>>,
-                              stan::math::disjunction<stan::is_autodiff<
-                                                      stan::value_type_t<
-                                                        std::tuple_element_t<0,
-                                                          std::decay_t<T0__>>>>,
+                              stan::math::disjunction<stan::is_var<stan::value_type_t<
+                                                                    std::tuple_element_t<0,
+                                                                    std::decay_t<T0__>>>>,
+                                                      stan::is_fvar<stan::value_type_t<
+                                                                    std::tuple_element_t<0,
+                                                                    std::decay_t<T0__>>>>,
                                                       std::is_floating_point<
                                                       std::decay_t<stan::value_type_t<
                                                                     std::tuple_element_t<0,
                                                                     std::decay_t<T0__>>>>>>,
                               stan::is_std_vector<std::tuple_element_t<1,
                                                     std::decay_t<T0__>>>,
-                              stan::math::disjunction<stan::is_autodiff<
-                                                      stan::value_type_t<
-                                                        std::tuple_element_t<1,
-                                                          std::decay_t<T0__>>>>,
+                              stan::math::disjunction<stan::is_var<stan::value_type_t<
+                                                                    std::tuple_element_t<1,
+                                                                    std::decay_t<T0__>>>>,
+                                                      stan::is_fvar<stan::value_type_t<
+                                                                    std::tuple_element_t<1,
+                                                                    std::decay_t<T0__>>>>,
                                                       std::is_floating_point<
                                                       std::decay_t<stan::value_type_t<
                                                                     std::tuple_element_t<1,
@@ -11466,20 +11484,24 @@ template <typename T0__,
           stan::require_all_t<stan::math::is_tuple<T0__>,
                               stan::is_std_vector<std::tuple_element_t<0,
                                                     std::decay_t<T0__>>>,
-                              stan::math::disjunction<stan::is_autodiff<
-                                                      stan::value_type_t<
-                                                        std::tuple_element_t<0,
-                                                          std::decay_t<T0__>>>>,
+                              stan::math::disjunction<stan::is_var<stan::value_type_t<
+                                                                    std::tuple_element_t<0,
+                                                                    std::decay_t<T0__>>>>,
+                                                      stan::is_fvar<stan::value_type_t<
+                                                                    std::tuple_element_t<0,
+                                                                    std::decay_t<T0__>>>>,
                                                       std::is_floating_point<
                                                       std::decay_t<stan::value_type_t<
                                                                     std::tuple_element_t<0,
                                                                     std::decay_t<T0__>>>>>>,
                               stan::is_std_vector<std::tuple_element_t<1,
                                                     std::decay_t<T0__>>>,
-                              stan::math::disjunction<stan::is_autodiff<
-                                                      stan::value_type_t<
-                                                        std::tuple_element_t<1,
-                                                          std::decay_t<T0__>>>>,
+                              stan::math::disjunction<stan::is_var<stan::value_type_t<
+                                                                    std::tuple_element_t<1,
+                                                                    std::decay_t<T0__>>>>,
+                                                      stan::is_fvar<stan::value_type_t<
+                                                                    std::tuple_element_t<1,
+                                                                    std::decay_t<T0__>>>>,
                                                       std::is_floating_point<
                                                       std::decay_t<stan::value_type_t<
                                                                     std::tuple_element_t<1,
@@ -12540,10 +12562,12 @@ template <typename T0__,
                                                                 std::decay_t<T0__>>>>>,
                               stan::is_std_vector<std::tuple_element_t<1,
                                                     std::decay_t<T0__>>>,
-                              stan::math::disjunction<stan::is_autodiff<
-                                                      stan::value_type_t<
-                                                        std::tuple_element_t<1,
-                                                          std::decay_t<T0__>>>>,
+                              stan::math::disjunction<stan::is_var<stan::value_type_t<
+                                                                    std::tuple_element_t<1,
+                                                                    std::decay_t<T0__>>>>,
+                                                      stan::is_fvar<stan::value_type_t<
+                                                                    std::tuple_element_t<1,
+                                                                    std::decay_t<T0__>>>>,
                                                       std::is_floating_point<
                                                       std::decay_t<stan::value_type_t<
                                                                     std::tuple_element_t<1,
@@ -12563,9 +12587,10 @@ template <typename T0__,
 void foo2(const T0__& test, std::ostream* pstream__);
 template <typename T0__,
           stan::require_all_t<stan::math::is_tuple<T0__>,
-                              stan::math::disjunction<stan::is_autodiff<
-                                                      std::tuple_element_t<0,
-                                                        std::decay_t<T0__>>>,
+                              stan::math::disjunction<stan::is_var<std::tuple_element_t<0,
+                                                                    std::decay_t<T0__>>>,
+                                                      stan::is_fvar<std::tuple_element_t<0,
+                                                                    std::decay_t<T0__>>>,
                                                       std::is_floating_point<
                                                       std::decay_t<std::tuple_element_t<0,
                                                                     std::decay_t<T0__>>>>>,
@@ -12598,9 +12623,10 @@ template <typename T0__, typename T1__,
                                                         std::decay_t<
                                                           std::tuple_element_t<1,
                                                             std::decay_t<T0__>>>>>,
-                              stan::math::disjunction<stan::is_autodiff<
-                                                      std::tuple_element_t<2,
-                                                        std::decay_t<T0__>>>,
+                              stan::math::disjunction<stan::is_var<std::tuple_element_t<2,
+                                                                    std::decay_t<T0__>>>,
+                                                      stan::is_fvar<std::tuple_element_t<2,
+                                                                    std::decay_t<T0__>>>,
                                                       std::is_floating_point<
                                                       std::decay_t<std::tuple_element_t<2,
                                                                     std::decay_t<T0__>>>>>,
@@ -12655,10 +12681,12 @@ template <typename T0__,
                                                                 std::decay_t<T0__>>>>>,
                               stan::is_std_vector<std::tuple_element_t<1,
                                                     std::decay_t<T0__>>>,
-                              stan::math::disjunction<stan::is_autodiff<
-                                                      stan::value_type_t<
-                                                        std::tuple_element_t<1,
-                                                          std::decay_t<T0__>>>>,
+                              stan::math::disjunction<stan::is_var<stan::value_type_t<
+                                                                    std::tuple_element_t<1,
+                                                                    std::decay_t<T0__>>>>,
+                                                      stan::is_fvar<stan::value_type_t<
+                                                                    std::tuple_element_t<1,
+                                                                    std::decay_t<T0__>>>>,
                                                       std::is_floating_point<
                                                       std::decay_t<stan::value_type_t<
                                                                     std::tuple_element_t<1,
@@ -12721,9 +12749,10 @@ void foo2(const T0__& test, std::ostream* pstream__) {
 // void foo3(tuple(real, matrix))
 template <typename T0__,
           stan::require_all_t<stan::math::is_tuple<T0__>,
-                              stan::math::disjunction<stan::is_autodiff<
-                                                      std::tuple_element_t<0,
-                                                        std::decay_t<T0__>>>,
+                              stan::math::disjunction<stan::is_var<std::tuple_element_t<0,
+                                                                    std::decay_t<T0__>>>,
+                                                      stan::is_fvar<std::tuple_element_t<0,
+                                                                    std::decay_t<T0__>>>,
                                                       std::is_floating_point<
                                                       std::decay_t<std::tuple_element_t<0,
                                                                     std::decay_t<T0__>>>>>,
@@ -12783,9 +12812,10 @@ template <typename T0__, typename T1__,
                                                         std::decay_t<
                                                           std::tuple_element_t<1,
                                                             std::decay_t<T0__>>>>>,
-                              stan::math::disjunction<stan::is_autodiff<
-                                                      std::tuple_element_t<2,
-                                                        std::decay_t<T0__>>>,
+                              stan::math::disjunction<stan::is_var<std::tuple_element_t<2,
+                                                                    std::decay_t<T0__>>>,
+                                                      stan::is_fvar<std::tuple_element_t<2,
+                                                                    std::decay_t<T0__>>>,
                                                       std::is_floating_point<
                                                       std::decay_t<std::tuple_element_t<2,
                                                                     std::decay_t<T0__>>>>>,
@@ -13299,10 +13329,12 @@ template <typename T0__,
                                                               std::decay_t<T0__>>>>,
                               stan::is_std_vector<std::tuple_element_t<2,
                                                     std::decay_t<T0__>>>,
-                              stan::math::disjunction<stan::is_autodiff<
-                                                      stan::value_type_t<
-                                                        std::tuple_element_t<2,
-                                                          std::decay_t<T0__>>>>,
+                              stan::math::disjunction<stan::is_var<stan::value_type_t<
+                                                                    std::tuple_element_t<2,
+                                                                    std::decay_t<T0__>>>>,
+                                                      stan::is_fvar<stan::value_type_t<
+                                                                    std::tuple_element_t<2,
+                                                                    std::decay_t<T0__>>>>,
                                                       std::is_floating_point<
                                                       std::decay_t<stan::value_type_t<
                                                                     std::tuple_element_t<2,
@@ -13310,9 +13342,10 @@ template <typename T0__,
 void g(const T0__& x, std::ostream* pstream__);
 template <typename T0__,
           stan::require_all_t<stan::math::is_tuple<T0__>,
-                              stan::math::disjunction<stan::is_autodiff<
-                                                      std::tuple_element_t<0,
-                                                        std::decay_t<T0__>>>,
+                              stan::math::disjunction<stan::is_var<std::tuple_element_t<0,
+                                                                    std::decay_t<T0__>>>,
+                                                      stan::is_fvar<std::tuple_element_t<0,
+                                                                    std::decay_t<T0__>>>,
                                                       std::is_floating_point<
                                                       std::decay_t<std::tuple_element_t<0,
                                                                     std::decay_t<T0__>>>>>,
@@ -13329,12 +13362,16 @@ template <typename T0__,
                               stan::is_std_vector<std::tuple_element_t<1,
                                                     std::decay_t<std::tuple_element_t<1,
                                                                    std::decay_t<T0__>>>>>,
-                              stan::math::disjunction<stan::is_autodiff<
-                                                      stan::value_type_t<
-                                                        std::tuple_element_t<1,
-                                                          std::decay_t<
-                                                            std::tuple_element_t<1,
-                                                              std::decay_t<T0__>>>>>>,
+                              stan::math::disjunction<stan::is_var<stan::value_type_t<
+                                                                    std::tuple_element_t<1,
+                                                                    std::decay_t<
+                                                                    std::tuple_element_t<1,
+                                                                    std::decay_t<T0__>>>>>>,
+                                                      stan::is_fvar<stan::value_type_t<
+                                                                    std::tuple_element_t<1,
+                                                                    std::decay_t<
+                                                                    std::tuple_element_t<1,
+                                                                    std::decay_t<T0__>>>>>>,
                                                       std::is_floating_point<
                                                       std::decay_t<stan::value_type_t<
                                                                     std::tuple_element_t<1,
@@ -13393,10 +13430,12 @@ template <typename T0__,
                                                               std::decay_t<T0__>>>>,
                               stan::is_std_vector<std::tuple_element_t<2,
                                                     std::decay_t<T0__>>>,
-                              stan::math::disjunction<stan::is_autodiff<
-                                                      stan::value_type_t<
-                                                        std::tuple_element_t<2,
-                                                          std::decay_t<T0__>>>>,
+                              stan::math::disjunction<stan::is_var<stan::value_type_t<
+                                                                    std::tuple_element_t<2,
+                                                                    std::decay_t<T0__>>>>,
+                                                      stan::is_fvar<stan::value_type_t<
+                                                                    std::tuple_element_t<2,
+                                                                    std::decay_t<T0__>>>>,
                                                       std::is_floating_point<
                                                       std::decay_t<stan::value_type_t<
                                                                     std::tuple_element_t<2,
@@ -13438,9 +13477,10 @@ void g(const T0__& x, std::ostream* pstream__) {
 // void h(tuple(real, tuple(matrix, array[] real)))
 template <typename T0__,
           stan::require_all_t<stan::math::is_tuple<T0__>,
-                              stan::math::disjunction<stan::is_autodiff<
-                                                      std::tuple_element_t<0,
-                                                        std::decay_t<T0__>>>,
+                              stan::math::disjunction<stan::is_var<std::tuple_element_t<0,
+                                                                    std::decay_t<T0__>>>,
+                                                      stan::is_fvar<std::tuple_element_t<0,
+                                                                    std::decay_t<T0__>>>,
                                                       std::is_floating_point<
                                                       std::decay_t<std::tuple_element_t<0,
                                                                     std::decay_t<T0__>>>>>,
@@ -13457,12 +13497,16 @@ template <typename T0__,
                               stan::is_std_vector<std::tuple_element_t<1,
                                                     std::decay_t<std::tuple_element_t<1,
                                                                    std::decay_t<T0__>>>>>,
-                              stan::math::disjunction<stan::is_autodiff<
-                                                      stan::value_type_t<
-                                                        std::tuple_element_t<1,
-                                                          std::decay_t<
-                                                            std::tuple_element_t<1,
-                                                              std::decay_t<T0__>>>>>>,
+                              stan::math::disjunction<stan::is_var<stan::value_type_t<
+                                                                    std::tuple_element_t<1,
+                                                                    std::decay_t<
+                                                                    std::tuple_element_t<1,
+                                                                    std::decay_t<T0__>>>>>>,
+                                                      stan::is_fvar<stan::value_type_t<
+                                                                    std::tuple_element_t<1,
+                                                                    std::decay_t<
+                                                                    std::tuple_element_t<1,
+                                                                    std::decay_t<T0__>>>>>>,
                                                       std::is_floating_point<
                                                       std::decay_t<stan::value_type_t<
                                                                     std::tuple_element_t<1,
@@ -14472,16 +14516,17 @@ static constexpr std::array<const char*, 12> locations_array__ =
   " (in 'tuple_hof.stan', line 3, column 39 to line 5, column 3)"};
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           stan::require_all_t<stan::is_std_vector<T0__>,
-                              stan::math::disjunction<stan::is_autodiff<
-                                                      stan::value_type_t<T0__>>,
+                              stan::math::disjunction<stan::is_var<stan::value_type_t<T0__>>,
+                                                      stan::is_fvar<stan::value_type_t<T0__>>,
                                                       std::is_floating_point<
                                                       std::decay_t<stan::value_type_t<T0__>>>>,
                               std::is_integral<std::decay_t<T1__>>,
                               std::is_integral<std::decay_t<T2__>>,
                               stan::math::is_tuple<T3__>,
-                              stan::math::disjunction<stan::is_autodiff<
-                                                      std::tuple_element_t<0,
-                                                        std::decay_t<T3__>>>,
+                              stan::math::disjunction<stan::is_var<std::tuple_element_t<0,
+                                                                    std::decay_t<T3__>>>,
+                                                      stan::is_fvar<std::tuple_element_t<0,
+                                                                    std::decay_t<T3__>>>,
                                                       std::is_floating_point<
                                                       std::decay_t<std::tuple_element_t<0,
                                                                     std::decay_t<T3__>>>>>,
@@ -14497,7 +14542,9 @@ fun(const T0__& y_slice, const T1__& start, const T2__& end, const T3__& m,
 struct fun_rsfunctor__ {
   template <typename T0__, typename T1__, typename T2__, typename T3__,
             stan::require_all_t<stan::is_std_vector<T0__>,
-                                stan::math::disjunction<stan::is_autodiff<
+                                stan::math::disjunction<stan::is_var<
+                                                        stan::value_type_t<T0__>>,
+                                                        stan::is_fvar<
                                                         stan::value_type_t<T0__>>,
                                                         std::is_floating_point<
                                                         std::decay_t<
@@ -14505,7 +14552,10 @@ struct fun_rsfunctor__ {
                                 std::is_integral<std::decay_t<T1__>>,
                                 std::is_integral<std::decay_t<T2__>>,
                                 stan::math::is_tuple<T3__>,
-                                stan::math::disjunction<stan::is_autodiff<
+                                stan::math::disjunction<stan::is_var<
+                                                        std::tuple_element_t<0,
+                                                          std::decay_t<T3__>>>,
+                                                        stan::is_fvar<
                                                         std::tuple_element_t<0,
                                                           std::decay_t<T3__>>>,
                                                         std::is_floating_point<
@@ -14527,16 +14577,17 @@ struct fun_rsfunctor__ {
 // real fun(array[] real, int, int, tuple(real, array[] int))
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           stan::require_all_t<stan::is_std_vector<T0__>,
-                              stan::math::disjunction<stan::is_autodiff<
-                                                      stan::value_type_t<T0__>>,
+                              stan::math::disjunction<stan::is_var<stan::value_type_t<T0__>>,
+                                                      stan::is_fvar<stan::value_type_t<T0__>>,
                                                       std::is_floating_point<
                                                       std::decay_t<stan::value_type_t<T0__>>>>,
                               std::is_integral<std::decay_t<T1__>>,
                               std::is_integral<std::decay_t<T2__>>,
                               stan::math::is_tuple<T3__>,
-                              stan::math::disjunction<stan::is_autodiff<
-                                                      std::tuple_element_t<0,
-                                                        std::decay_t<T3__>>>,
+                              stan::math::disjunction<stan::is_var<std::tuple_element_t<0,
+                                                                    std::decay_t<T3__>>>,
+                                                      stan::is_fvar<std::tuple_element_t<0,
+                                                                    std::decay_t<T3__>>>,
                                                       std::is_floating_point<
                                                       std::decay_t<std::tuple_element_t<0,
                                                                     std::decay_t<T3__>>>>>,
@@ -14991,34 +15042,39 @@ static constexpr std::array<const char*, 4> locations_array__ =
   " (in 'tuple_lpdf.stan', line 2, column 63 to line 4, column 4)"};
 template <bool propto__, typename T0__, typename T1__,
           stan::require_all_t<stan::math::is_tuple<T0__>,
-                              stan::math::disjunction<stan::is_autodiff<
-                                                      std::tuple_element_t<0,
-                                                        std::decay_t<T0__>>>,
+                              stan::math::disjunction<stan::is_var<std::tuple_element_t<0,
+                                                                    std::decay_t<T0__>>>,
+                                                      stan::is_fvar<std::tuple_element_t<0,
+                                                                    std::decay_t<T0__>>>,
                                                       std::is_floating_point<
                                                       std::decay_t<std::tuple_element_t<0,
                                                                     std::decay_t<T0__>>>>>,
-                              stan::math::disjunction<stan::is_autodiff<
-                                                      std::tuple_element_t<1,
-                                                        std::decay_t<T0__>>>,
+                              stan::math::disjunction<stan::is_var<std::tuple_element_t<1,
+                                                                    std::decay_t<T0__>>>,
+                                                      stan::is_fvar<std::tuple_element_t<1,
+                                                                    std::decay_t<T0__>>>,
                                                       std::is_floating_point<
                                                       std::decay_t<std::tuple_element_t<1,
                                                                     std::decay_t<T0__>>>>>,
                               stan::math::is_tuple<T1__>,
-                              stan::math::disjunction<stan::is_autodiff<
-                                                      std::tuple_element_t<0,
-                                                        std::decay_t<T1__>>>,
+                              stan::math::disjunction<stan::is_var<std::tuple_element_t<0,
+                                                                    std::decay_t<T1__>>>,
+                                                      stan::is_fvar<std::tuple_element_t<0,
+                                                                    std::decay_t<T1__>>>,
                                                       std::is_floating_point<
                                                       std::decay_t<std::tuple_element_t<0,
                                                                     std::decay_t<T1__>>>>>,
-                              stan::math::disjunction<stan::is_autodiff<
-                                                      std::tuple_element_t<1,
-                                                        std::decay_t<T1__>>>,
+                              stan::math::disjunction<stan::is_var<std::tuple_element_t<1,
+                                                                    std::decay_t<T1__>>>,
+                                                      stan::is_fvar<std::tuple_element_t<1,
+                                                                    std::decay_t<T1__>>>,
                                                       std::is_floating_point<
                                                       std::decay_t<std::tuple_element_t<1,
                                                                     std::decay_t<T1__>>>>>,
-                              stan::math::disjunction<stan::is_autodiff<
-                                                      std::tuple_element_t<2,
-                                                        std::decay_t<T1__>>>,
+                              stan::math::disjunction<stan::is_var<std::tuple_element_t<2,
+                                                                    std::decay_t<T1__>>>,
+                                                      stan::is_fvar<std::tuple_element_t<2,
+                                                                    std::decay_t<T1__>>>,
                                                       std::is_floating_point<
                                                       std::decay_t<std::tuple_element_t<2,
                                                                     std::decay_t<T1__>>>>>>* = nullptr>
@@ -15031,34 +15087,39 @@ foo_lpdf(const T0__& x, const T1__& y, std::ostream* pstream__);
 // real foo_lpdf(tuple(real, real), tuple(real, real, real))
 template <bool propto__, typename T0__, typename T1__,
           stan::require_all_t<stan::math::is_tuple<T0__>,
-                              stan::math::disjunction<stan::is_autodiff<
-                                                      std::tuple_element_t<0,
-                                                        std::decay_t<T0__>>>,
+                              stan::math::disjunction<stan::is_var<std::tuple_element_t<0,
+                                                                    std::decay_t<T0__>>>,
+                                                      stan::is_fvar<std::tuple_element_t<0,
+                                                                    std::decay_t<T0__>>>,
                                                       std::is_floating_point<
                                                       std::decay_t<std::tuple_element_t<0,
                                                                     std::decay_t<T0__>>>>>,
-                              stan::math::disjunction<stan::is_autodiff<
-                                                      std::tuple_element_t<1,
-                                                        std::decay_t<T0__>>>,
+                              stan::math::disjunction<stan::is_var<std::tuple_element_t<1,
+                                                                    std::decay_t<T0__>>>,
+                                                      stan::is_fvar<std::tuple_element_t<1,
+                                                                    std::decay_t<T0__>>>,
                                                       std::is_floating_point<
                                                       std::decay_t<std::tuple_element_t<1,
                                                                     std::decay_t<T0__>>>>>,
                               stan::math::is_tuple<T1__>,
-                              stan::math::disjunction<stan::is_autodiff<
-                                                      std::tuple_element_t<0,
-                                                        std::decay_t<T1__>>>,
+                              stan::math::disjunction<stan::is_var<std::tuple_element_t<0,
+                                                                    std::decay_t<T1__>>>,
+                                                      stan::is_fvar<std::tuple_element_t<0,
+                                                                    std::decay_t<T1__>>>,
                                                       std::is_floating_point<
                                                       std::decay_t<std::tuple_element_t<0,
                                                                     std::decay_t<T1__>>>>>,
-                              stan::math::disjunction<stan::is_autodiff<
-                                                      std::tuple_element_t<1,
-                                                        std::decay_t<T1__>>>,
+                              stan::math::disjunction<stan::is_var<std::tuple_element_t<1,
+                                                                    std::decay_t<T1__>>>,
+                                                      stan::is_fvar<std::tuple_element_t<1,
+                                                                    std::decay_t<T1__>>>,
                                                       std::is_floating_point<
                                                       std::decay_t<std::tuple_element_t<1,
                                                                     std::decay_t<T1__>>>>>,
-                              stan::math::disjunction<stan::is_autodiff<
-                                                      std::tuple_element_t<2,
-                                                        std::decay_t<T1__>>>,
+                              stan::math::disjunction<stan::is_var<std::tuple_element_t<2,
+                                                                    std::decay_t<T1__>>>,
+                                                      stan::is_fvar<std::tuple_element_t<2,
+                                                                    std::decay_t<T1__>>>,
                                                       std::is_floating_point<
                                                       std::decay_t<std::tuple_element_t<2,
                                                                     std::decay_t<T1__>>>>>>*>
@@ -15409,9 +15470,10 @@ static constexpr std::array<const char*, 4> locations_array__ =
   " (in 'tuple_lpdf2.stan', line 2, column 37 to line 4, column 4)"};
 template <bool propto__, typename T0__,
           stan::require_all_t<stan::math::is_tuple<T0__>,
-                              stan::math::disjunction<stan::is_autodiff<
-                                                      std::tuple_element_t<0,
-                                                        std::decay_t<T0__>>>,
+                              stan::math::disjunction<stan::is_var<std::tuple_element_t<0,
+                                                                    std::decay_t<T0__>>>,
+                                                      stan::is_fvar<std::tuple_element_t<0,
+                                                                    std::decay_t<T0__>>>,
                                                       std::is_floating_point<
                                                       std::decay_t<std::tuple_element_t<0,
                                                                     std::decay_t<T0__>>>>>,
@@ -15422,9 +15484,10 @@ foo_lpdf(const T0__& x, std::ostream* pstream__);
 // real foo_lpdf(tuple(real, int))
 template <bool propto__, typename T0__,
           stan::require_all_t<stan::math::is_tuple<T0__>,
-                              stan::math::disjunction<stan::is_autodiff<
-                                                      std::tuple_element_t<0,
-                                                        std::decay_t<T0__>>>,
+                              stan::math::disjunction<stan::is_var<std::tuple_element_t<0,
+                                                                    std::decay_t<T0__>>>,
+                                                      stan::is_fvar<std::tuple_element_t<0,
+                                                                    std::decay_t<T0__>>>,
                                                       std::is_floating_point<
                                                       std::decay_t<std::tuple_element_t<0,
                                                                     std::decay_t<T0__>>>>>,
@@ -15771,7 +15834,8 @@ template <bool propto__, typename T0__, typename T1__,
                                                               std::decay_t<T0__>>>>,
                               std::is_integral<std::decay_t<std::tuple_element_t<1,
                                                               std::decay_t<T0__>>>>,
-                              stan::math::disjunction<stan::is_autodiff<T1__>,
+                              stan::math::disjunction<stan::is_var<T1__>,
+                                                      stan::is_fvar<T1__>,
                                                       std::is_floating_point<
                                                       std::decay_t<T1__>>>>* = nullptr>
 stan::return_type_t<T1__>
@@ -15783,7 +15847,8 @@ template <bool propto__, typename T0__, typename T1__,
                                                               std::decay_t<T0__>>>>,
                               std::is_integral<std::decay_t<std::tuple_element_t<1,
                                                               std::decay_t<T0__>>>>,
-                              stan::math::disjunction<stan::is_autodiff<T1__>,
+                              stan::math::disjunction<stan::is_var<T1__>,
+                                                      stan::is_fvar<T1__>,
                                                       std::is_floating_point<
                                                       std::decay_t<T1__>>>>*>
 stan::return_type_t<T1__>
