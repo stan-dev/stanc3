@@ -43,7 +43,8 @@ static constexpr std::array<const char*, 36> locations_array__ =
   " (in 'ode_adjoint_test_model.stan', line 9, column 4 to column 13)",
   " (in 'ode_adjoint_test_model.stan', line 8, column 50 to line 10, column 3)"};
 template <typename T0__, typename T1__,
-          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+          stan::require_all_t<stan::math::disjunction<stan::is_var<T0__>,
+                                                      stan::is_fvar<T0__>,
                                                       std::is_floating_point<
                                                       std::decay_t<T0__>>>,
                               stan::is_col_vector<T1__>,
@@ -51,25 +52,29 @@ template <typename T0__, typename T1__,
 Eigen::Matrix<stan::return_type_t<T0__, stan::base_type_t<T1__>>,-1,1>
 f_0_arg(const T0__& t, const T1__& z_arg__, std::ostream* pstream__);
 template <typename T0__, typename T1__, typename T2__,
-          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+          stan::require_all_t<stan::math::disjunction<stan::is_var<T0__>,
+                                                      stan::is_fvar<T0__>,
                                                       std::is_floating_point<
                                                       std::decay_t<T0__>>>,
                               stan::is_col_vector<T1__>,
                               stan::is_vt_not_complex<T1__>,
-                              stan::math::disjunction<stan::is_autodiff<T2__>,
+                              stan::math::disjunction<stan::is_var<T2__>,
+                                                      stan::is_fvar<T2__>,
                                                       std::is_floating_point<
                                                       std::decay_t<T2__>>>>* = nullptr>
 Eigen::Matrix<stan::return_type_t<T0__, stan::base_type_t<T1__>, T2__>,-1,1>
 f_1_arg(const T0__& t, const T1__& z_arg__, const T2__& a, std::ostream*
         pstream__);
 template <typename T0__, typename T1__, typename T2__, typename T3__,
-          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+          stan::require_all_t<stan::math::disjunction<stan::is_var<T0__>,
+                                                      stan::is_fvar<T0__>,
                                                       std::is_floating_point<
                                                       std::decay_t<T0__>>>,
                               stan::is_col_vector<T1__>,
                               stan::is_vt_not_complex<T1__>,
                               std::is_integral<std::decay_t<T2__>>,
-                              stan::math::disjunction<stan::is_autodiff<T3__>,
+                              stan::math::disjunction<stan::is_var<T3__>,
+                                                      stan::is_fvar<T3__>,
                                                       std::is_floating_point<
                                                       std::decay_t<T3__>>>>* = nullptr>
 Eigen::Matrix<stan::return_type_t<T0__, stan::base_type_t<T1__>, T3__>,-1,1>
@@ -77,12 +82,14 @@ f_2_arg(const T0__& t, const T1__& z_arg__, const T2__& b, const T3__& a,
         std::ostream* pstream__);
 struct f_1_arg_variadic2_functor__ {
   template <typename T0__, typename T1__, typename T2__,
-            stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+            stan::require_all_t<stan::math::disjunction<stan::is_var<T0__>,
+                                                        stan::is_fvar<T0__>,
                                                         std::is_floating_point<
                                                         std::decay_t<T0__>>>,
                                 stan::is_col_vector<T1__>,
                                 stan::is_vt_not_complex<T1__>,
-                                stan::math::disjunction<stan::is_autodiff<T2__>,
+                                stan::math::disjunction<stan::is_var<T2__>,
+                                                        stan::is_fvar<T2__>,
                                                         std::is_floating_point<
                                                         std::decay_t<T2__>>>>* = nullptr>
   Eigen::Matrix<stan::return_type_t<T0__, stan::base_type_t<T1__>, T2__>,-1,1>
@@ -93,13 +100,15 @@ struct f_1_arg_variadic2_functor__ {
 };
 struct f_2_arg_variadic2_functor__ {
   template <typename T0__, typename T1__, typename T2__, typename T3__,
-            stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+            stan::require_all_t<stan::math::disjunction<stan::is_var<T0__>,
+                                                        stan::is_fvar<T0__>,
                                                         std::is_floating_point<
                                                         std::decay_t<T0__>>>,
                                 stan::is_col_vector<T1__>,
                                 stan::is_vt_not_complex<T1__>,
                                 std::is_integral<std::decay_t<T2__>>,
-                                stan::math::disjunction<stan::is_autodiff<T3__>,
+                                stan::math::disjunction<stan::is_var<T3__>,
+                                                        stan::is_fvar<T3__>,
                                                         std::is_floating_point<
                                                         std::decay_t<T3__>>>>* = nullptr>
   Eigen::Matrix<stan::return_type_t<T0__, stan::base_type_t<T1__>, T3__>,-1,1>
@@ -110,7 +119,8 @@ struct f_2_arg_variadic2_functor__ {
 };
 struct f_0_arg_variadic2_functor__ {
   template <typename T0__, typename T1__,
-            stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+            stan::require_all_t<stan::math::disjunction<stan::is_var<T0__>,
+                                                        stan::is_fvar<T0__>,
                                                         std::is_floating_point<
                                                         std::decay_t<T0__>>>,
                                 stan::is_col_vector<T1__>,
@@ -122,7 +132,8 @@ struct f_0_arg_variadic2_functor__ {
 };
 // vector f_0_arg(real, vector)
 template <typename T0__, typename T1__,
-          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+          stan::require_all_t<stan::math::disjunction<stan::is_var<T0__>,
+                                                      stan::is_fvar<T0__>,
                                                       std::is_floating_point<
                                                       std::decay_t<T0__>>>,
                               stan::is_col_vector<T1__>,
@@ -149,12 +160,14 @@ f_0_arg(const T0__& t, const T1__& z_arg__, std::ostream* pstream__) {
 }
 // vector f_1_arg(real, vector, real)
 template <typename T0__, typename T1__, typename T2__,
-          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+          stan::require_all_t<stan::math::disjunction<stan::is_var<T0__>,
+                                                      stan::is_fvar<T0__>,
                                                       std::is_floating_point<
                                                       std::decay_t<T0__>>>,
                               stan::is_col_vector<T1__>,
                               stan::is_vt_not_complex<T1__>,
-                              stan::math::disjunction<stan::is_autodiff<T2__>,
+                              stan::math::disjunction<stan::is_var<T2__>,
+                                                      stan::is_fvar<T2__>,
                                                       std::is_floating_point<
                                                       std::decay_t<T2__>>>>*>
 Eigen::Matrix<stan::return_type_t<T0__, stan::base_type_t<T1__>, T2__>,-1,1>
@@ -181,13 +194,15 @@ f_1_arg(const T0__& t, const T1__& z_arg__, const T2__& a, std::ostream*
 }
 // vector f_2_arg(real, vector, int, real)
 template <typename T0__, typename T1__, typename T2__, typename T3__,
-          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+          stan::require_all_t<stan::math::disjunction<stan::is_var<T0__>,
+                                                      stan::is_fvar<T0__>,
                                                       std::is_floating_point<
                                                       std::decay_t<T0__>>>,
                               stan::is_col_vector<T1__>,
                               stan::is_vt_not_complex<T1__>,
                               std::is_integral<std::decay_t<T2__>>,
-                              stan::math::disjunction<stan::is_autodiff<T3__>,
+                              stan::math::disjunction<stan::is_var<T3__>,
+                                                      stan::is_fvar<T3__>,
                                                       std::is_floating_point<
                                                       std::decay_t<T3__>>>>*>
 Eigen::Matrix<stan::return_type_t<T0__, stan::base_type_t<T1__>, T3__>,-1,1>
@@ -890,24 +905,30 @@ static constexpr std::array<const char*, 55> locations_array__ =
   " (in 'overloaded-ode.stan', line 29, column 22 to line 39, column 3)"};
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__, typename T5__, typename T6__,
-          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+          stan::require_all_t<stan::math::disjunction<stan::is_var<T0__>,
+                                                      stan::is_fvar<T0__>,
                                                       std::is_floating_point<
                                                       std::decay_t<T0__>>>,
                               stan::is_col_vector<T1__>,
                               stan::is_vt_not_complex<T1__>,
-                              stan::math::disjunction<stan::is_autodiff<T2__>,
+                              stan::math::disjunction<stan::is_var<T2__>,
+                                                      stan::is_fvar<T2__>,
                                                       std::is_floating_point<
                                                       std::decay_t<T2__>>>,
-                              stan::math::disjunction<stan::is_autodiff<T3__>,
+                              stan::math::disjunction<stan::is_var<T3__>,
+                                                      stan::is_fvar<T3__>,
                                                       std::is_floating_point<
                                                       std::decay_t<T3__>>>,
-                              stan::math::disjunction<stan::is_autodiff<T4__>,
+                              stan::math::disjunction<stan::is_var<T4__>,
+                                                      stan::is_fvar<T4__>,
                                                       std::is_floating_point<
                                                       std::decay_t<T4__>>>,
-                              stan::math::disjunction<stan::is_autodiff<T5__>,
+                              stan::math::disjunction<stan::is_var<T5__>,
+                                                      stan::is_fvar<T5__>,
                                                       std::is_floating_point<
                                                       std::decay_t<T5__>>>,
-                              stan::math::disjunction<stan::is_autodiff<T6__>,
+                              stan::math::disjunction<stan::is_var<T6__>,
+                                                      stan::is_fvar<T6__>,
                                                       std::is_floating_point<
                                                       std::decay_t<T6__>>>>* = nullptr>
 Eigen::Matrix<stan::return_type_t<T0__, stan::base_type_t<T1__>, T2__, T3__,
@@ -917,24 +938,30 @@ simple_SIR(const T0__& t, const T1__& y_arg__, const T2__& beta, const T3__&
            std::ostream* pstream__);
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__, typename T5__, typename T6__, typename T7__,
-          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+          stan::require_all_t<stan::math::disjunction<stan::is_var<T0__>,
+                                                      stan::is_fvar<T0__>,
                                                       std::is_floating_point<
                                                       std::decay_t<T0__>>>,
                               stan::is_col_vector<T1__>,
                               stan::is_vt_not_complex<T1__>,
-                              stan::math::disjunction<stan::is_autodiff<T2__>,
+                              stan::math::disjunction<stan::is_var<T2__>,
+                                                      stan::is_fvar<T2__>,
                                                       std::is_floating_point<
                                                       std::decay_t<T2__>>>,
-                              stan::math::disjunction<stan::is_autodiff<T3__>,
+                              stan::math::disjunction<stan::is_var<T3__>,
+                                                      stan::is_fvar<T3__>,
                                                       std::is_floating_point<
                                                       std::decay_t<T3__>>>,
-                              stan::math::disjunction<stan::is_autodiff<T4__>,
+                              stan::math::disjunction<stan::is_var<T4__>,
+                                                      stan::is_fvar<T4__>,
                                                       std::is_floating_point<
                                                       std::decay_t<T4__>>>,
-                              stan::math::disjunction<stan::is_autodiff<T5__>,
+                              stan::math::disjunction<stan::is_var<T5__>,
+                                                      stan::is_fvar<T5__>,
                                                       std::is_floating_point<
                                                       std::decay_t<T5__>>>,
-                              stan::math::disjunction<stan::is_autodiff<T6__>,
+                              stan::math::disjunction<stan::is_var<T6__>,
+                                                      stan::is_fvar<T6__>,
                                                       std::is_floating_point<
                                                       std::decay_t<T6__>>>,
                               std::is_integral<std::decay_t<T7__>>>* = nullptr>
@@ -946,24 +973,30 @@ simple_SIR(const T0__& t, const T1__& y_arg__, const T2__& beta, const T3__&
 struct simple_SIR_variadic2_functor__ {
   template <typename T0__, typename T1__, typename T2__, typename T3__,
             typename T4__, typename T5__, typename T6__,
-            stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+            stan::require_all_t<stan::math::disjunction<stan::is_var<T0__>,
+                                                        stan::is_fvar<T0__>,
                                                         std::is_floating_point<
                                                         std::decay_t<T0__>>>,
                                 stan::is_col_vector<T1__>,
                                 stan::is_vt_not_complex<T1__>,
-                                stan::math::disjunction<stan::is_autodiff<T2__>,
+                                stan::math::disjunction<stan::is_var<T2__>,
+                                                        stan::is_fvar<T2__>,
                                                         std::is_floating_point<
                                                         std::decay_t<T2__>>>,
-                                stan::math::disjunction<stan::is_autodiff<T3__>,
+                                stan::math::disjunction<stan::is_var<T3__>,
+                                                        stan::is_fvar<T3__>,
                                                         std::is_floating_point<
                                                         std::decay_t<T3__>>>,
-                                stan::math::disjunction<stan::is_autodiff<T4__>,
+                                stan::math::disjunction<stan::is_var<T4__>,
+                                                        stan::is_fvar<T4__>,
                                                         std::is_floating_point<
                                                         std::decay_t<T4__>>>,
-                                stan::math::disjunction<stan::is_autodiff<T5__>,
+                                stan::math::disjunction<stan::is_var<T5__>,
+                                                        stan::is_fvar<T5__>,
                                                         std::is_floating_point<
                                                         std::decay_t<T5__>>>,
-                                stan::math::disjunction<stan::is_autodiff<T6__>,
+                                stan::math::disjunction<stan::is_var<T6__>,
+                                                        stan::is_fvar<T6__>,
                                                         std::is_floating_point<
                                                         std::decay_t<T6__>>>>* = nullptr>
   Eigen::Matrix<stan::return_type_t<T0__, stan::base_type_t<T1__>, T2__,
@@ -975,24 +1008,30 @@ struct simple_SIR_variadic2_functor__ {
   }
   template <typename T0__, typename T1__, typename T2__, typename T3__,
             typename T4__, typename T5__, typename T6__, typename T7__,
-            stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+            stan::require_all_t<stan::math::disjunction<stan::is_var<T0__>,
+                                                        stan::is_fvar<T0__>,
                                                         std::is_floating_point<
                                                         std::decay_t<T0__>>>,
                                 stan::is_col_vector<T1__>,
                                 stan::is_vt_not_complex<T1__>,
-                                stan::math::disjunction<stan::is_autodiff<T2__>,
+                                stan::math::disjunction<stan::is_var<T2__>,
+                                                        stan::is_fvar<T2__>,
                                                         std::is_floating_point<
                                                         std::decay_t<T2__>>>,
-                                stan::math::disjunction<stan::is_autodiff<T3__>,
+                                stan::math::disjunction<stan::is_var<T3__>,
+                                                        stan::is_fvar<T3__>,
                                                         std::is_floating_point<
                                                         std::decay_t<T3__>>>,
-                                stan::math::disjunction<stan::is_autodiff<T4__>,
+                                stan::math::disjunction<stan::is_var<T4__>,
+                                                        stan::is_fvar<T4__>,
                                                         std::is_floating_point<
                                                         std::decay_t<T4__>>>,
-                                stan::math::disjunction<stan::is_autodiff<T5__>,
+                                stan::math::disjunction<stan::is_var<T5__>,
+                                                        stan::is_fvar<T5__>,
                                                         std::is_floating_point<
                                                         std::decay_t<T5__>>>,
-                                stan::math::disjunction<stan::is_autodiff<T6__>,
+                                stan::math::disjunction<stan::is_var<T6__>,
+                                                        stan::is_fvar<T6__>,
                                                         std::is_floating_point<
                                                         std::decay_t<T6__>>>,
                                 std::is_integral<std::decay_t<T7__>>>* = nullptr>
@@ -1007,24 +1046,30 @@ struct simple_SIR_variadic2_functor__ {
 // vector simple_SIR(real, vector, real, real, real, real, real)
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__, typename T5__, typename T6__,
-          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+          stan::require_all_t<stan::math::disjunction<stan::is_var<T0__>,
+                                                      stan::is_fvar<T0__>,
                                                       std::is_floating_point<
                                                       std::decay_t<T0__>>>,
                               stan::is_col_vector<T1__>,
                               stan::is_vt_not_complex<T1__>,
-                              stan::math::disjunction<stan::is_autodiff<T2__>,
+                              stan::math::disjunction<stan::is_var<T2__>,
+                                                      stan::is_fvar<T2__>,
                                                       std::is_floating_point<
                                                       std::decay_t<T2__>>>,
-                              stan::math::disjunction<stan::is_autodiff<T3__>,
+                              stan::math::disjunction<stan::is_var<T3__>,
+                                                      stan::is_fvar<T3__>,
                                                       std::is_floating_point<
                                                       std::decay_t<T3__>>>,
-                              stan::math::disjunction<stan::is_autodiff<T4__>,
+                              stan::math::disjunction<stan::is_var<T4__>,
+                                                      stan::is_fvar<T4__>,
                                                       std::is_floating_point<
                                                       std::decay_t<T4__>>>,
-                              stan::math::disjunction<stan::is_autodiff<T5__>,
+                              stan::math::disjunction<stan::is_var<T5__>,
+                                                      stan::is_fvar<T5__>,
                                                       std::is_floating_point<
                                                       std::decay_t<T5__>>>,
-                              stan::math::disjunction<stan::is_autodiff<T6__>,
+                              stan::math::disjunction<stan::is_var<T6__>,
+                                                      stan::is_fvar<T6__>,
                                                       std::is_floating_point<
                                                       std::decay_t<T6__>>>>*>
 Eigen::Matrix<stan::return_type_t<T0__, stan::base_type_t<T1__>, T2__, T3__,
@@ -1079,24 +1124,30 @@ simple_SIR(const T0__& t, const T1__& y_arg__, const T2__& beta, const T3__&
 // vector simple_SIR(real, vector, real, real, real, real, real, int)
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__, typename T5__, typename T6__, typename T7__,
-          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+          stan::require_all_t<stan::math::disjunction<stan::is_var<T0__>,
+                                                      stan::is_fvar<T0__>,
                                                       std::is_floating_point<
                                                       std::decay_t<T0__>>>,
                               stan::is_col_vector<T1__>,
                               stan::is_vt_not_complex<T1__>,
-                              stan::math::disjunction<stan::is_autodiff<T2__>,
+                              stan::math::disjunction<stan::is_var<T2__>,
+                                                      stan::is_fvar<T2__>,
                                                       std::is_floating_point<
                                                       std::decay_t<T2__>>>,
-                              stan::math::disjunction<stan::is_autodiff<T3__>,
+                              stan::math::disjunction<stan::is_var<T3__>,
+                                                      stan::is_fvar<T3__>,
                                                       std::is_floating_point<
                                                       std::decay_t<T3__>>>,
-                              stan::math::disjunction<stan::is_autodiff<T4__>,
+                              stan::math::disjunction<stan::is_var<T4__>,
+                                                      stan::is_fvar<T4__>,
                                                       std::is_floating_point<
                                                       std::decay_t<T4__>>>,
-                              stan::math::disjunction<stan::is_autodiff<T5__>,
+                              stan::math::disjunction<stan::is_var<T5__>,
+                                                      stan::is_fvar<T5__>,
                                                       std::is_floating_point<
                                                       std::decay_t<T5__>>>,
-                              stan::math::disjunction<stan::is_autodiff<T6__>,
+                              stan::math::disjunction<stan::is_var<T6__>,
+                                                      stan::is_fvar<T6__>,
                                                       std::is_floating_point<
                                                       std::decay_t<T6__>>>,
                               std::is_integral<std::decay_t<T7__>>>*>

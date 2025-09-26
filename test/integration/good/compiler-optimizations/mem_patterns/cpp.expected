@@ -6997,7 +6997,8 @@ template <typename T0__,
 Eigen::Matrix<stan::return_type_t<stan::base_type_t<T0__>>,-1,-1>
 nono_func(const T0__& x_arg__, std::ostream* pstream__);
 template <typename T0__, typename T1__,
-          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+          stan::require_all_t<stan::math::disjunction<stan::is_var<T0__>,
+                                                      stan::is_fvar<T0__>,
                                                       std::is_floating_point<
                                                       std::decay_t<T0__>>>,
                               stan::is_eigen_matrix_dynamic<T1__>,
@@ -7031,7 +7032,8 @@ nono_func(const T0__& x_arg__, std::ostream* pstream__) {
 }
 // matrix okay_reduction(real, matrix)
 template <typename T0__, typename T1__,
-          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+          stan::require_all_t<stan::math::disjunction<stan::is_var<T0__>,
+                                                      stan::is_fvar<T0__>,
                                                       std::is_floating_point<
                                                       std::decay_t<T0__>>>,
                               stan::is_eigen_matrix_dynamic<T1__>,
@@ -8876,7 +8878,8 @@ template <typename T0__,
 Eigen::Matrix<stan::return_type_t<stan::base_type_t<T0__>>,-1,-1>
 nono_func(const T0__& x_arg__, std::ostream* pstream__);
 template <typename T0__, typename T1__,
-          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+          stan::require_all_t<stan::math::disjunction<stan::is_var<T0__>,
+                                                      stan::is_fvar<T0__>,
                                                       std::is_floating_point<
                                                       std::decay_t<T0__>>>,
                               stan::is_eigen_matrix_dynamic<T1__>,
@@ -8910,7 +8913,8 @@ nono_func(const T0__& x_arg__, std::ostream* pstream__) {
 }
 // matrix okay_reduction(real, matrix)
 template <typename T0__, typename T1__,
-          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+          stan::require_all_t<stan::math::disjunction<stan::is_var<T0__>,
+                                                      stan::is_fvar<T0__>,
                                                       std::is_floating_point<
                                                       std::decay_t<T0__>>>,
                               stan::is_eigen_matrix_dynamic<T1__>,

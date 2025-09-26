@@ -46,7 +46,8 @@ let requires ut t =
     | UReal ->
         (* not using stan::is_stan_scalar to explictly exclude int *)
         [ RequireAllCondition
-            (`OneOf ["stan::is_autodiff"; "std::is_floating_point"], t) ]
+            ( `OneOf ["stan::is_var"; "stan::is_fvar"; "std::is_floating_point"]
+            , t ) ]
     | UTuple _ | UMathLibraryFunction | UFun _ ->
         Common.ICE.internal_compiler_error
           [%message
@@ -137,7 +138,8 @@ let%expect_test "arg types tuple template" =
   [%expect
     {|
     T0__0__,T0__1__,T0__2__
-    ((RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+    ((RequireAllCondition
+      (OneOf (stan::is_var stan::is_fvar std::is_floating_point))
       (TemplateType T0__0__))
      (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
       (TemplateType T0__1__))
