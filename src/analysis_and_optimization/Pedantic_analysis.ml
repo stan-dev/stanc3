@@ -49,16 +49,14 @@ let list_multi_tildes (mir : Program.Typed.t) :
   let collect_tilde_stmt (stmt : Stmt.Located.t) :
       (string, Location_span.t Set.Poly.t) Map.Poly.t =
     match stmt.pattern with
-    | Stmt.Fixed.Pattern.TargetPE
-        {pattern= Expr.Fixed.Pattern.FunApp (_, {pattern= Var vname; _} :: _); _}
-      ->
+    | Stmt.Pattern.TargetPE
+        {pattern= Expr.Pattern.FunApp (_, {pattern= Var vname; _} :: _); _} ->
         Map.Poly.singleton vname (Set.Poly.singleton stmt.meta)
     | _ -> Map.Poly.empty in
   let tildes =
     fold_stmts
       ~take_stmt:(fun m s -> merge_set_maps m (collect_tilde_stmt s))
-      ~take_expr:(fun m _ -> m)
-      ~init:Map.Poly.empty mir.log_prob in
+      ~take_expr:Fn.const ~init:Map.Poly.empty mir.log_prob in
   (* Filter for parameters assigned more than one distribution *)
   let multi_tildes = Map.Poly.filter ~f:(fun s -> Set.length s <> 1) tildes in
   Map.fold ~init:Set.Poly.empty
@@ -84,9 +82,9 @@ let list_possible_nonlinear (mir : Program.Typed.t) : Location_span.t Set.Poly.t
      allow_var is used for expressions like a*b, where at most one
      of a and b can be a variable
   *)
-  let rec is_linear allow_var Expr.Fixed.{pattern; _} =
+  let rec is_linear allow_var Expr.{pattern; _} =
     match pattern with
-    | Expr.Fixed.Pattern.Var _ -> allow_var
+    | Expr.Pattern.Var _ -> allow_var
     | Lit _ -> true
     | Indexed (e, _) | Promotion (e, _, _) -> is_linear allow_var e
     | TernaryIf (e1, e2, e3) ->
@@ -97,7 +95,7 @@ let list_possible_nonlinear (mir : Program.Typed.t) : Location_span.t Set.Poly.t
     | FunApp (CompilerInternal (FnMakeArray | FnMakeRowVec), args) ->
         List.for_all ~f:(is_linear allow_var) args
     | _ -> false
-  and is_linear_function allow_var name (args : 'a Expr.Fixed.t list) =
+  and is_linear_function allow_var name (args : 'a Expr.t list) =
     match (name, args) with
     | _, _ when Set.mem linear_fnames name ->
         List.for_all ~f:(is_linear allow_var) args
@@ -117,9 +115,9 @@ let list_possible_nonlinear (mir : Program.Typed.t) : Location_span.t Set.Poly.t
   let maybe_nonlinear_tilde (stmt : Stmt.Located.t) =
     match stmt.pattern with
     (* a ~ foo(...) gets translated to target += foo_lpdf(a, ...) *)
-    | Stmt.Fixed.Pattern.TargetPE
+    | Stmt.Pattern.TargetPE
         { pattern=
-            Expr.Fixed.Pattern.FunApp
+            Expr.Pattern.FunApp
               ( ( StanLib (_, (FnLpdf _ | FnLpmf _), _)
                 | UserDefined (_, (FnLpdf _ | FnLpmf _)) )
               , e :: _ )
@@ -130,8 +128,7 @@ let list_possible_nonlinear (mir : Program.Typed.t) : Location_span.t Set.Poly.t
   let bad_tildes =
     fold_stmts
       ~take_stmt:(fun m s -> Set.union m (maybe_nonlinear_tilde s))
-      ~take_expr:(fun m _ -> m)
-      ~init:Set.Poly.empty mir.log_prob in
+      ~take_expr:Fn.const ~init:Set.Poly.empty mir.log_prob in
   bad_tildes
 
 (* Find all of the targets which are dependencies for a given label *)
@@ -157,9 +154,8 @@ let var_deps info_map label ?expr:(expr_opt : Expr.Typed.t option = None)
 
 let list_target_dependant_cf
     (info_map :
-      ( label
-      , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * node_dep_info )
-      Map.Poly.t) (targets : string Set.Poly.t) :
+      (label, (Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) Map.Poly.t)
+    (targets : string Set.Poly.t) :
     (Location_span.t * string Set.Poly.t) Set.Poly.t =
   (* Find all the control flow nodes *)
   let cf_labels =
@@ -205,21 +201,18 @@ let list_arg_dependant_fundef_cf (mir : Program.Typed.t)
 let expr_collect_exprs (expr : Expr.Typed.t) ~f : 'a Set.Poly.t =
   let collect_expr s (expr : Expr.Typed.t) =
     match f expr with Some a -> Set.add s a | _ -> s in
-  fold_expr ~init:Set.Poly.empty ~take_expr:(fun s e -> collect_expr s e) expr
+  fold_expr ~init:Set.Poly.empty ~take_expr:collect_expr expr
 
 let stmts_collect_exprs (stmts : Stmt.Located.t List.t) ~f : 'a Set.Poly.t =
   let collect_expr s (expr : Expr.Typed.t) =
     match f expr with Some a -> Set.add s a | _ -> s in
-  fold_stmts ~init:Set.Poly.empty
-    ~take_stmt:(fun s _ -> s)
-    ~take_expr:(fun s e -> collect_expr s e)
+  fold_stmts ~init:Set.Poly.empty ~take_stmt:Fn.const ~take_expr:collect_expr
     stmts
 
 let list_param_dependant_fundef_cf (mir : Program.Typed.t)
     (info_map :
-      ( label
-      , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * node_dep_info )
-      Map.Poly.t) (fun_def : 'a Program.fun_def) :
+      (label, (Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) Map.Poly.t)
+    (fun_def : 'a Program.fun_def) :
     (Location_span.t * string Set.Poly.t * string * Location_span.t) Set.Poly.t
     =
   let dep_args = list_arg_dependant_fundef_cf mir fun_def in
@@ -232,15 +225,14 @@ let list_param_dependant_fundef_cf (mir : Program.Typed.t)
                    union_map (stmt_rhs stmt) ~f:(fun rhs_expr ->
                        expr_collect_exprs rhs_expr ~f:(fun rhs_subexpr ->
                            match rhs_subexpr.pattern with
-                           | Expr.Fixed.Pattern.FunApp
-                               (UserDefined (fname, _), _)
+                           | Expr.Pattern.FunApp (UserDefined (fname, _), _)
                              when fname = fun_def.fdname ->
                                Some (rhs_subexpr, label)
                            | _ -> None)) in
                  if Set.is_empty funapps then None else Some funapps)))) in
   let arg_exprs (fcall_expr : Expr.Typed.t) =
     match fcall_expr with
-    | {pattern= Expr.Fixed.Pattern.FunApp (UserDefined (fname, _), arg_exprs); _}
+    | {pattern= Expr.Pattern.FunApp (UserDefined (fname, _), arg_exprs); _}
       when fname = fun_def.fdname ->
         Set.Poly.map dep_args ~f:(fun (loc, ix, arg_name) ->
             (loc, List.nth_exn arg_exprs ix, arg_name))
@@ -309,7 +301,7 @@ let compiletime_value_of_expr
 let list_distributions (mir : Program.Typed.t) : dist_info Set.Poly.t =
   let take_dist (expr : Expr.Typed.t) =
     match expr.pattern with
-    | Expr.Fixed.Pattern.FunApp
+    | Expr.Pattern.FunApp
         (StanLib (fname, (FnLpdf true | FnLpmf true), _), arg_exprs) ->
         let fname = chop_dist_name fname |> Option.value_exn in
         let params = parameter_set mir in

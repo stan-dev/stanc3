@@ -29,11 +29,7 @@ let%expect_test "parse conditional" =
               (smeta ((loc <opaque>))))
              ()))
            (smeta ((loc <opaque>))))))
-        (xloc
-         ((begin_loc
-           ((filename string) (line_num 1) (col_num 0) (included_from ())))
-          (end_loc
-           ((filename string) (line_num 1) (col_num 35) (included_from ()))))))))
+        (xloc <opaque>))))
      (generatedquantitiesblock ()) (comments <opaque>)) |}]
 
 let%expect_test "parse dangling else problem" =
@@ -66,11 +62,7 @@ let%expect_test "parse dangling else problem" =
                (((stmt (Print ((PString "\"I'm afraid I can't do that.\""))))
                  (smeta ((loc <opaque>)))))))
              (smeta ((loc <opaque>))))))
-          (xloc
-           ((begin_loc
-             ((filename string) (line_num 1) (col_num 0) (included_from ())))
-            (end_loc
-             ((filename string) (line_num 1) (col_num 112) (included_from ()))))))))
+          (xloc <opaque>))))
        (generatedquantitiesblock ()) (comments <opaque>)) |}]
 
 let%expect_test "parse minus unary" =
@@ -101,11 +93,7 @@ let%expect_test "parse minus unary" =
                     (emeta ((loc <opaque>))))))
                  (emeta ((loc <opaque>)))))))
              (smeta ((loc <opaque>))))))
-          (xloc
-           ((begin_loc
-             ((filename string) (line_num 1) (col_num 0) (included_from ())))
-            (end_loc
-             ((filename string) (line_num 1) (col_num 24) (included_from ()))))))))
+          (xloc <opaque>))))
        (generatedquantitiesblock ()) (comments <opaque>)) |}]
 
 let%expect_test "parse unary over binary" =
@@ -143,11 +131,7 @@ let%expect_test "parse unary over binary" =
                       (emeta ((loc <opaque>))))))
                    (emeta ((loc <opaque>)))))))))))
            (smeta ((loc <opaque>))))))
-        (xloc
-         ((begin_loc
-           ((filename string) (line_num 1) (col_num 0) (included_from ())))
-          (end_loc
-           ((filename string) (line_num 1) (col_num 33) (included_from ()))))))))
+        (xloc <opaque>))))
      (generatedquantitiesblock ()) (comments <opaque>)) |}]
 
 let%expect_test "parse indices, two different colons" =
@@ -187,11 +171,7 @@ let%expect_test "parse indices, two different colons" =
                 ((expr (IntNumeral 2)) (emeta ((loc <opaque>))))))))
             (emeta ((loc <opaque>))))))))
        (smeta ((loc <opaque>))))))
-    (xloc
-     ((begin_loc
-       ((filename string) (line_num 1) (col_num 0) (included_from ())))
-      (end_loc
-       ((filename string) (line_num 1) (col_num 54) (included_from ()))))))))
+    (xloc <opaque>))))
  (generatedquantitiesblock ()) (comments <opaque>)) |}]
 
 let%expect_test "parse operator precedence" =
@@ -364,11 +344,7 @@ let%expect_test "parse operator precedence" =
                       (emeta ((loc <opaque>)))))))
                   (emeta ((loc <opaque>))))))))
              (smeta ((loc <opaque>))))))
-          (xloc
-           ((begin_loc
-             ((filename string) (line_num 1) (col_num 0) (included_from ())))
-            (end_loc
-             ((filename string) (line_num 1) (col_num 74) (included_from ()))))))))
+          (xloc <opaque>))))
        (generatedquantitiesblock ()) (comments <opaque>)) |}]
 
 let%expect_test "parse crazy truncation example" =
@@ -431,11 +407,7 @@ let%expect_test "parse crazy truncation example" =
                      (Single ((expr (IntNumeral 1)) (emeta ((loc <opaque>))))))))
                   (emeta ((loc <opaque>))))))))
              (smeta ((loc <opaque>))))))
-          (xloc
-           ((begin_loc
-             ((filename string) (line_num 2) (col_num 6) (included_from ())))
-            (end_loc
-             ((filename string) (line_num 6) (col_num 7) (included_from ()))))))))
+          (xloc <opaque>))))
        (generatedquantitiesblock ()) (comments <opaque>)) |}]
 
 let%expect_test "parse nested loop" =
@@ -466,9 +438,49 @@ let%expect_test "parse nested loop" =
                    (smeta ((loc <opaque>)))))))
                (smeta ((loc <opaque>)))))))
            (smeta ((loc <opaque>))))))
-        (xloc
-         ((begin_loc
-           ((filename string) (line_num 1) (col_num 6) (included_from ())))
-          (end_loc
-           ((filename string) (line_num 5) (col_num 13) (included_from ()))))))))
+        (xloc <opaque>))))
+     (generatedquantitiesblock ()) (comments <opaque>)) |}]
+
+let%expect_test "parse crazy truncation example" =
+  print_ast_of_string
+    "\n\
+    \      model {\n\
+    \        real a, b; \n\
+    \        (a,b) = (1,2); \n\
+    \      }\n\
+    \      ";
+  [%expect
+    {|
+    ((functionblock ()) (datablock ()) (transformeddatablock ())
+     (parametersblock ()) (transformedparametersblock ())
+     (modelblock
+      (((stmts
+         (((stmt
+            (VarDecl (decl_type SReal) (transformation Identity)
+             (is_global false)
+             (variables
+              (((identifier ((name a) (id_loc <opaque>))) (initial_value ()))
+               ((identifier ((name b) (id_loc <opaque>))) (initial_value ()))))))
+           (smeta ((loc <opaque>))))
+          ((stmt
+            (Assignment
+             (assign_lhs
+              (LTuplePack
+               (lvals
+                ((LValue
+                  ((lval (LVariable ((name a) (id_loc <opaque>))))
+                   (lmeta ((loc <opaque>)))))
+                 (LValue
+                  ((lval (LVariable ((name b) (id_loc <opaque>))))
+                   (lmeta ((loc <opaque>)))))))
+               (loc <opaque>)))
+             (assign_op Assign)
+             (assign_rhs
+              ((expr
+                (TupleExpr
+                 (((expr (IntNumeral 1)) (emeta ((loc <opaque>))))
+                  ((expr (IntNumeral 2)) (emeta ((loc <opaque>)))))))
+               (emeta ((loc <opaque>)))))))
+           (smeta ((loc <opaque>))))))
+        (xloc <opaque>))))
      (generatedquantitiesblock ()) (comments <opaque>)) |}]

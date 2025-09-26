@@ -77,11 +77,10 @@ Note: [ocamlformat] does not support [.mly] or [.mll] files used in the frontend
 If the parser has been edited, the command [dune build @update_messages] will add any
 new error states to the [parser.messages] file. These will say
 
-[TODO: PARSER MESSAGE NEEDED HERE.]
+[<YOUR SYNTAX ERROR MESSAGE HERE>]
 
 See {{!page-parser_messages}adding or changing the syntax error messages} for more information.
 
-Note that python3 is required to run this command.
 
 {3 Building these docs}
 

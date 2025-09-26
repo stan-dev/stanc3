@@ -270,7 +270,7 @@ let distributions =
   ; (full_lpdf, "rayleigh", [DVReal; DVReal], SoA)
   ; (full_lpdf, "scaled_inv_chi_square", [DVReal; DVReal; DVReal], SoA)
   ; (full_lpdf, "skew_normal", [DVReal; DVReal; DVReal; DVReal], SoA)
-  ; (full_lpdf, "skew_double_exponential", [DVReal; DVReal; DVReal; DVReal], SoA)
+  ; (full_lpdf, "skew_double_exponential", [DVReal; DVReal; DVReal; DVReal], AoS)
   ; (full_lpdf, "student_t", [DVReal; DVReal; DVReal; DVReal], SoA)
   ; (full_lpdf, "std_normal", [DVReal], SoA)
   ; (full_lpdf, "uniform", [DVReal; DVReal; DVReal], SoA)
@@ -344,7 +344,7 @@ let math_sigs =
   ; ([UnaryVectorized SameAsArg], "minus", [DDeepComplexVectorized], SoA)
   ; ([basic_vectorized], "Phi", [DDeepVectorized], SoA)
   ; ([basic_vectorized], "Phi_approx", [DDeepVectorized], SoA)
-  ; ([basic_vectorized], "round", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "round", [DDeepVectorized], AoS)
   ; ([basic_vectorized], "sin", [DDeepVectorized], SoA)
   ; ([basic_vectorized], "sinh", [DDeepVectorized], SoA)
   ; ([basic_vectorized], "sqrt", [DDeepVectorized], SoA)
@@ -353,12 +353,12 @@ let math_sigs =
   ; ([basic_vectorized], "std_normal_qf", [DDeepVectorized], SoA)
     (* std_normal_qf is an alias for inv_Phi *)
   ; ([basic_vectorized], "std_normal_log_qf", [DDeepVectorized], SoA)
-  ; ([basic_vectorized], "step", [DReal], SoA)
+  ; ([basic_vectorized], "step", [DReal], AoS)
   ; ([basic_vectorized], "tan", [DDeepVectorized], SoA)
   ; ([basic_vectorized], "tanh", [DDeepVectorized], SoA)
   ; ([basic_vectorized], "tgamma", [DDeepVectorized], SoA)
-  ; ([basic_vectorized], "trunc", [DDeepVectorized], SoA)
-  ; ([basic_vectorized], "trigamma", [DDeepVectorized], SoA) ]
+  ; ([basic_vectorized], "trunc", [DDeepVectorized], AoS)
+  ; ([basic_vectorized], "trigamma", [DDeepVectorized], AoS) ]
 
 let all_declarative_sigs = distributions @ math_sigs
 
@@ -2672,7 +2672,7 @@ let () =
 
 (** Print a module definition to [file]
   that contains the signatures computed above *)
-let generate_module file =
+let generate_module () =
   let marshal e = Marshal.to_string e [] in
   (* Core's Hashtbl cannot be safely Marshal'd, so we
      round trip through an associative list *)
@@ -2686,27 +2686,34 @@ let generate_module file =
     |> String.Map.of_alist_reduce ~f:(fun v1 v2 ->
            v1 @ v2 |> Set.Poly.of_list |> Set.to_list)
     |> Map.to_alist in
-  Out_channel.with_file file ~f:(fun ch ->
-      Printf.fprintf ch
-        {|
+  (* TODO: in OCaml 5.4+, use GC.ramp_up to avoid performance regressions.
+     See https://github.com/ocaml/ocaml/issues/13300 *)
+  Printf.printf
+    {|
 let unmarshal s = Marshal.from_string s 0
 let unmarshal_hashtbl s : 'a Core.String.Table.t =
   unmarshal s |> Core.String.Table.of_alist_exn |};
-      Printf.fprintf ch
-        {|
+  Printf.printf
+    {|
 let stan_math_signatures :
     Middle.UnsizedType.signature list Core.String.Table.t =
   unmarshal_hashtbl %S |}
-        (marshal_hashtbl stan_math_signatures);
-      Printf.fprintf ch
-        {|
+    (marshal_hashtbl stan_math_signatures);
+  Printf.printf
+    {|
 let stan_math_variadic_signatures :
     Middle.UnsizedType.variadic_signature Core.String.Table.t =
   unmarshal_hashtbl %S |}
-        (marshal_hashtbl stan_math_variadic_signatures);
-      Printf.fprintf ch
-        {|
+    (marshal_hashtbl stan_math_variadic_signatures);
+  Printf.printf
+    {|
 let distributions : (string * string list) list = unmarshal %S |}
-        (marshal distributions_simplified))
+    (marshal distributions_simplified);
+  Printf.eprintf
+    "Generated signatures for %d functions, %d distributions, and %d variadic \
+     functions.\n"
+    (Hashtbl.length stan_math_signatures)
+    (List.length distributions_simplified)
+    (Hashtbl.length stan_math_variadic_signatures)
 
-let () = generate_module (Sys.get_argv ()).(1)
+let () = generate_module ()

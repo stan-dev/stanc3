@@ -6,7 +6,6 @@ open Lower_stmt
 open Lower_functions
 open Cpp
 
-let standalone_functions = ref false
 let stanc_args_to_print = ref ""
 
 let get_unconstrained_param_st lst =
@@ -68,7 +67,7 @@ let lower_map_decl (vident, ut) : defn =
           "Error during Map data construction for " vident " of type "
             (x : UnsizedType.t)]
 
-let rec top_level_decls Stmt.Fixed.{pattern; _} =
+let rec top_level_decls Stmt.{pattern; _} =
   match pattern with
   | Decl d when d.decl_id <> "pos__" ->
       [(d.decl_id, Type.to_unsized d.decl_type)]
@@ -145,17 +144,22 @@ let gen_assign_data decl_id st =
             (SizedType.to_unsized st)))
   :: lower_placement_new decl_id st
 
+let sum_expr_sizes es =
+  match lower_exprs es |> List.reduce ~f:Cpp.DSL.( + ) with
+  | None -> Literal "0U"
+  | Some e -> e
+
 let lower_constructor
     {Program.prog_name; input_vars; prepare_data; output_vars; _} =
   let args =
-    [ (Ref (TypeLiteral "stan::io::var_context"), "context__")
+    [ (Ref Types.var_context, "context__")
     ; (TypeLiteral "unsigned int", "random_seed__ = 0")
-    ; (Pointer (TypeLiteral "std::ostream"), "pstream__ = nullptr") ] in
+    ; (Pointer Types.ostream, "pstream__ = nullptr") ] in
   let preamble =
     Decls.current_statement
     @ [ Using ("local_scalar_t__", Some Double)
       ; VariableDefn
-          (make_variable_defn ~type_:(TypeLiteral "auto") ~name:"base_rng__"
+          (make_variable_defn ~type_:Auto ~name:"base_rng__"
              ~init:
                (Assignment
                   (Exprs.fun_call "stan::services::util::create_rng"
@@ -165,7 +169,7 @@ let lower_constructor
     @ gen_function__ prog_name prog_name
     @ Decls.dummy_var in
   let data_idents = List.map ~f:fst3 input_vars |> String.Set.of_list in
-  let lower_data (Stmt.Fixed.{pattern; meta} as s) =
+  let lower_data (Stmt.{pattern; meta} as s) =
     match pattern with
     | Decl {decl_id; decl_type; _} when decl_id <> "pos__" -> (
         match decl_type with
@@ -182,12 +186,9 @@ let lower_constructor
   let data =
     Stmts.rethrow_located (List.concat_map ~f:lower_data prepare_data) in
   let set_num_params =
-    let open Cpp.DSL in
     let output_params =
       List.filter_map ~f:get_unconstrained_param_st output_vars in
-    match lower_exprs output_params |> List.reduce ~f:( + ) with
-    | None -> "num_params_r__" := Literal "0U"
-    | Some pars -> "num_params_r__" := pars in
+    Cpp.DSL.("num_params_r__" := sum_expr_sizes output_params) in
   make_constructor ~args
     ~init_list:[("model_base_crtp", [Literal "0"])]
     ~body:(preamble @ data @ [set_num_params])
@@ -197,7 +198,7 @@ let gen_log_prob Program.{prog_name; log_prob; reverse_mode_log_prob; _} =
   let args : (type_ * string) list =
     [ (Ref (TemplateType "VecR"), "params_r__")
     ; (Ref (TemplateType "VecI"), "params_i__")
-    ; (Pointer (TypeLiteral "std::ostream"), "pstream__ = nullptr") ] in
+    ; (Pointer Types.ostream, "pstream__ = nullptr") ] in
   (*
      NOTE: There is a bug in clang-6.0 where removing this T__ causes the
       reverse mode autodiff path to fail with an initializer list error
@@ -255,7 +256,7 @@ let gen_write_array {Program.prog_name; generate_quantities; _} =
     ; (Ref (TemplateType "VecVar"), "vars__")
     ; (Const Types.bool, "emit_transformed_parameters__ = true")
     ; (Const Types.bool, "emit_generated_quantities__ = true")
-    ; (Pointer (TypeLiteral "std::ostream"), "pstream__ = nullptr") ] in
+    ; (Pointer Types.ostream, "pstream__ = nullptr") ] in
   let intro =
     [ Using ("local_scalar_t__", Some Double); Decls.serializer_in
     ; Decls.serializer_out
@@ -285,9 +286,9 @@ let gen_transform_inits_impl {Program.transform_inits; output_vars; _} =
   let templates =
     [Typename "VecVar"; Require ("stan::require_vector_t", ["VecVar"])] in
   let args =
-    [ (Types.const_ref (TypeLiteral "stan::io::var_context"), "context__")
+    [ (Types.const_ref Types.var_context, "context__")
     ; (Ref (TemplateType "VecVar"), "vars__")
-    ; (Pointer (TypeLiteral "std::ostream"), "pstream__ = nullptr") ] in
+    ; (Pointer Types.ostream, "pstream__ = nullptr") ] in
   let intro =
     Using ("local_scalar_t__", Some Double)
     :: Decls.serializer_out :: Decls.current_statement
@@ -322,7 +323,7 @@ let gen_unconstrain_array_impl {Program.unconstrain_array; _} =
     [ (Types.const_ref (TemplateType "VecVar"), "params_r__")
     ; (Types.const_ref (TemplateType "VecI"), "params_i__")
     ; (Ref (TemplateType "VecVar"), "vars__")
-    ; (Pointer (TypeLiteral "std::ostream"), "pstream__ = nullptr") ] in
+    ; (Pointer Types.ostream, "pstream__ = nullptr") ] in
   let intro =
     [ Using ("local_scalar_t__", Some Double); Decls.serializer_in
     ; Decls.serializer_out ]
@@ -578,7 +579,7 @@ let gen_constrained_types {Program.output_vars; _} =
 
 (** The generic method overloads needed in the model class. *)
 let gen_overloads {Program.output_vars; _} =
-  let pstream = (Pointer (TypeLiteral "std::ostream"), "pstream = nullptr") in
+  let pstream = (Pointer Types.ostream, "pstream = nullptr") in
   let open Cpp.DSL in
   let write_arrays =
     let templates_init = ([[Typename "RNG"]], false) in
@@ -589,13 +590,10 @@ let gen_overloads {Program.output_vars; _} =
     let sizes =
       (* An expression for the number of individual parameters in a list of output variables *)
       let num_outvars (outvars : Expr.Typed.t Program.outvar list) =
-        Expr.Helpers.binop_list
-          (List.map
-             ~f:(fun outvar ->
-               SizedType.io_size outvar.Program.out_constrained_st)
-             outvars)
-          Operator.Plus ~default:Expr.Helpers.zero
-        |> lower_expr in
+        List.map
+          ~f:(fun outvar -> SizedType.io_size outvar.Program.out_constrained_st)
+          outvars
+        |> sum_expr_sizes in
       (* The list of output variables that came from a particular block *)
       let block_outvars (block : Program.io_block) =
         List.filter_map output_vars
@@ -699,7 +697,7 @@ let gen_overloads {Program.output_vars; _} =
     [ FunDef
         (make_fun_defn ~inline:true ~return_type:Void ~name:"transform_inits"
            ~args:
-             [ (Types.const_ref (TypeLiteral "stan::io::var_context"), "context")
+             [ (Types.const_ref Types.var_context, "context")
              ; (Ref (Types.vector Double), "params_r"); pstream ]
            ~body:
              [ VariableDefn
@@ -720,10 +718,10 @@ let gen_overloads {Program.output_vars; _} =
                  params_r_vec.@!("size")} ]
            ~cv_qualifiers:[Const; Final] ())
     ; (let args =
-         [ (Types.const_ref (TypeLiteral "stan::io::var_context"), "context")
+         [ (Types.const_ref Types.var_context, "context")
          ; (Ref (Types.std_vector Int), "params_i")
          ; (Ref (Types.std_vector Double), "vars")
-         ; (Pointer (TypeLiteral "std::ostream"), "pstream__ = nullptr") ] in
+         ; (Pointer Types.ostream, "pstream__ = nullptr") ] in
        let body =
          let open Cpp.DSL in
          [ Expression (Var "vars").@?("resize", [Var "num_params_r__"])
@@ -823,9 +821,9 @@ let usings =
 let new_model_boilerplate prog_name =
   let new_model =
     let args =
-      [ (Ref (TypeLiteral "stan::io::var_context"), "data_context")
+      [ (Ref Types.var_context, "data_context")
       ; (TypeLiteral "unsigned int", "seed")
-      ; (Pointer (TypeLiteral "std::ostream"), "msg_stream") ] in
+      ; (Pointer Types.ostream, "msg_stream") ] in
     let body =
       [ VariableDefn
           (make_variable_defn ~type_:(Pointer (TypeLiteral "stan_model"))
@@ -857,7 +855,8 @@ let version = !//"Code generated by %%NAME%% %%VERSION%%"
 let model_header_include = Preprocessor (Include "stan/model/model_header.hpp")
 let math_mix_include = Preprocessor (Include "stan/math/mix.hpp")
 
-let lower_program ?printed_filename (p : Program.Typed.t) : Cpp.program =
+let lower_program ?(standalone_functions = false) ?printed_filename
+    (p : Program.Typed.t) : Cpp.program =
   (* First, do some transformations on the MIR itself before we begin printing it.*)
   let p, s, map_rect_calls, needs_mix_header = Numbering.prepare_prog p in
   let model_namespace_str = namespace p in
@@ -865,7 +864,7 @@ let lower_program ?printed_filename (p : Program.Typed.t) : Cpp.program =
     usings
     @ Numbering.gen_globals ?printed_filename s
     @ collect_functors_functions p
-    @ if !standalone_functions then [] else [lower_model p] in
+    @ if standalone_functions then [] else [lower_model p] in
   let model_namespace = Namespace (model_namespace_str, model_contents) in
   let includes =
     if needs_mix_header then
@@ -874,7 +873,7 @@ let lower_program ?printed_filename (p : Program.Typed.t) : Cpp.program =
       ; math_mix_include; model_header_include ]
     else [model_header_include] in
   let global_fns =
-    if !standalone_functions then
+    if standalone_functions then
       List.concat_map
         ~f:(lower_standalone_fun_def model_namespace_str)
         p.functions_block

@@ -97,8 +97,7 @@ let rec initialize_value st adtype =
             (adtype : UnsizedType.autodifftype)]
 
 (*Initialize an object of a given size.*)
-let lower_assign_sized st adtype (initialize : 'a Stmt.Fixed.Pattern.decl_init)
-    =
+let lower_assign_sized st adtype (initialize : 'a Stmt.Pattern.decl_init) =
   match initialize with
   | Assign e -> Some (lower_expr e)
   | Default -> Some (initialize_value st adtype)
@@ -114,14 +113,14 @@ let lower_unsized_decl name ut adtype =
   make_variable_defn ~type_ ~name ()
 
 let lower_possibly_opencl_decl name st adtype
-    (initialize : 'a Stmt.Fixed.Pattern.decl_init) =
+    (initialize : 'a Stmt.Pattern.decl_init) =
   let ut = SizedType.to_unsized st in
   let mem_pattern = SizedType.get_mem_pattern st in
   match (Transform_Mir.is_opencl_var name, ut) with
   | _, UnsizedType.(UInt | UReal) | false, _ -> (
       match initialize with
       | Assign
-          Expr.Fixed.
+          Expr.
             { pattern= FunApp (CompilerInternal (Internal_fun.FnReadParam _), _)
             ; _ } ->
           (* Peephole optimization for param reads, avoids copying *)
@@ -172,16 +171,14 @@ let rec lower_nonrange_lvalue lvalue =
         [%message "Multi-index must be the last (rightmost) index."]
 
 and lower_nonrange_lbase = function
-  | Stmt.Fixed.Pattern.LVariable v -> Var v
+  | Stmt.Pattern.LVariable v -> Var v
   | LTupleProjection (lv, ix) ->
-      Exprs.templated_fun_call "std::get"
-        [TypeLiteral (string_of_int (ix - 1))]
-        [lower_nonrange_lvalue lv]
+      Exprs.tuple_get (ix - 1) (lower_nonrange_lvalue lv)
 
 (* True if expr has a 'shallow' overlap with the lhs, for the purpose of checking if expr needs to be deep copied when it's assigned to the lhs.
    This is 'shallow' in the sense that it doesn't recurse into expressions *)
-let expr_overlaps_lhs_ref (lhs_base_ref : 'e Stmt.Fixed.Pattern.lvalue)
-    (expr : 'a Expr.Fixed.t) : bool =
+let expr_overlaps_lhs_ref (lhs_base_ref : 'e Stmt.Pattern.lvalue)
+    (expr : 'a Expr.t) : bool =
   Option.value_map
     (* Convert the expression to an lvalue to get rid of everything but variables and indices *)
     (Stmt.Helpers.lvalue_of_expr_opt expr)
@@ -206,8 +203,8 @@ let throw_exn exn_type args =
   in
   Stmts.block ((stream_decl :: List.map ~f:add_to_string args) @ [throw])
 
-let rec lower_statement Stmt.Fixed.{pattern; meta} : stmt list =
-  let remove_promotions (e : 'a Expr.Fixed.t) =
+let rec lower_statement Stmt.{pattern; meta} : stmt list =
+  let remove_promotions (e : 'a Expr.t) =
     (* assignment handles one level of promotion internally, don't do it twice *)
     match e.pattern with
     | Promotion (_, UTuple _, _) -> e
@@ -249,7 +246,7 @@ let rec lower_statement Stmt.Fixed.{pattern; meta} : stmt list =
          (in all cases???) *)
       let lhs_ref = Stmt.Helpers.lvalue_base_reference lhs in
       let rec maybe_deep_copy e =
-        match e.Expr.Fixed.pattern with
+        match e.Expr.pattern with
         (* Never need to copy a scalar type *)
         | _ when UnsizedType.is_scalar_type (Expr.Typed.type_of e) -> e
         (* Never need to copy exprs inside a compiler FunApp *)
@@ -257,13 +254,11 @@ let rec lower_statement Stmt.Fixed.{pattern; meta} : stmt list =
         (* When the expression overlaps with the LHS, *)
         | _ when expr_overlaps_lhs_ref lhs_ref e ->
             (* then wrap it in a deep copy. *)
-            { e with
-              Expr.Fixed.pattern= FunApp (CompilerInternal FnDeepCopy, [e]) }
+            {e with Expr.pattern= FunApp (CompilerInternal FnDeepCopy, [e])}
         | _ ->
             (* Otherwise recurse on subexpressions *)
-            { e with
-              Expr.Fixed.pattern=
-                Expr.Fixed.Pattern.map maybe_deep_copy e.pattern } in
+            {e with Expr.pattern= Expr.Pattern.map maybe_deep_copy e.pattern}
+      in
       let rhs = maybe_deep_copy (remove_promotions rhs) in
       (* Split up the top-level lvalue to fit in the assign call *)
       let lhs_base, lhs_idcs = lhs in
@@ -357,7 +352,7 @@ module Testing = struct
       (Fmt.option Cpp.Printing.pp_expr)
       (lower_assign_sized
          (SArray (SArray (SMatrix (AoS, int 2, int 3), int 4), int 5))
-         DataOnly Stmt.Fixed.Pattern.Uninit)
+         DataOnly Stmt.Pattern.Uninit)
     |> print_endline;
     [%expect {| |}]
 
@@ -367,7 +362,7 @@ module Testing = struct
       (Fmt.option Cpp.Printing.pp_expr)
       (lower_assign_sized
          (SArray (SArray (SMatrix (AoS, int 2, int 3), int 4), int 5))
-         DataOnly Stmt.Fixed.Pattern.Default)
+         DataOnly Stmt.Pattern.Default)
     |> print_endline;
     [%expect
       {|

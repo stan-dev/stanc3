@@ -23,4 +23,4 @@ RUN eval $(opam env)
 COPY ./scripts/install_build_deps.sh ./
 RUN opam update; bash -x install_build_deps.sh
 
-RUN opam install odoc -y
+RUN opam install odoc sherlodoc -y

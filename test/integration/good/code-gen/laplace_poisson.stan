@@ -15,6 +15,11 @@ data {
   vector[N] offsett;        // offset (offset variable name is reserved)
   real integrate_1d_reltol;
 }
+transformed data {
+    // control parameters for Laplace approximation
+  real tolerance = 1e-6;
+  int max_num_steps = 100, hessian_block_size = 1, solver = 1, max_steps_line_search = 0;
+}
 parameters {
   real alpha;               // intercept
   vector[P] beta;           // slope
@@ -32,5 +37,6 @@ model {
 }
 generated quantities {
 
-real log_lik_sum =  laplace_marginal(poisson_re_log_ll, (y, offsett + alpha + X*beta), rep_vector(0.0, N), cov_fun, (sigmaz, N));
+real log_lik_sum = laplace_marginal_tol(poisson_re_log_ll, (y, offsett + alpha + X*beta), cov_fun, (sigmaz, N), rep_vector(0.0, N), tolerance, max_num_steps,
+              hessian_block_size, solver, max_steps_line_search);
 }

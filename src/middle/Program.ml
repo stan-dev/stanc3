@@ -147,23 +147,13 @@ module Typed = struct
 
   let pp ppf x = pp Expr.Typed.pp Stmt.Located.pp ppf x
 
-  let sexp_of_t =
+  let sexp_of_t : t -> Sexp.t =
     sexp_of_t Expr.Typed.sexp_of_t Stmt.Located.sexp_of_t
-      Location_span.sexp_of_t
-
-  let t_of_sexp =
-    t_of_sexp Expr.Typed.t_of_sexp Stmt.Located.t_of_sexp
-      Location_span.t_of_sexp
+      Sexplib.Conv.sexp_of_opaque
 end
 
 module Numbered = struct
   type nonrec t = (Expr.Typed.t, Stmt.Numbered.t, int) t
 
   let pp ppf x = pp Expr.Typed.pp Stmt.Numbered.pp ppf x
-
-  let sexp_of_t =
-    sexp_of_t Expr.Typed.sexp_of_t Stmt.Numbered.sexp_of_t sexp_of_int
-
-  let t_of_sexp =
-    t_of_sexp Expr.Typed.t_of_sexp Stmt.Numbered.t_of_sexp int_of_sexp
 end

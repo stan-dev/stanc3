@@ -254,13 +254,7 @@ pipeline {
                             unstash "Stanc3Setup"
                             sh '''
                                 eval $(opam env)
-                                BISECT_FILE=$(pwd)/bisect dune runtest --instrument-with bisect_ppx --force --root=.
-                            '''
-
-                            sh '''
-                                eval $(opam env)
-                                bisect-ppx-report summary --expect src/ --do-not-expect src/stancjs/ --do-not-expect src/stan_math_signatures/Generate.ml
-                                bisect-ppx-report coveralls coverage.json --service-name jenkins --service-job-id $BUILD_ID --expect src/ --do-not-expect src/stancjs/ --do-not-expect src/stan_math_signatures/Generate.ml
+                                make testcoverage
                             '''
 
                             withCredentials([usernamePassword(credentialsId: 'stan-stanc3-codecov-token', usernameVariable: 'DUMMY_USERNAME', passwordVariable: 'CODECOV_TOKEN')]) {
@@ -297,7 +291,7 @@ pipeline {
                             sh '''
                                 node --version
                                 eval $(opam env)
-                                dune build @runjstest --root=.
+                                dune build @runjstest --root=. -j${PARALLEL}
                             '''
                         }
                     }
@@ -648,6 +642,7 @@ pipeline {
                                             export PATH=/Users/jenkins/brew/bin:$PATH
                                             bash -x scripts/install_ocaml.sh "$MACOS_SWITCH"
                                             eval $(opam env --switch="$MACOS_SWITCH" --set-switch)
+                                            opam repository add archive git+https://github.com/ocaml/opam-repository-archive
                                             opam switch list
                                             opam update -y || true
                                             opam pin -y dune 3.6.0 --no-action
@@ -861,8 +856,15 @@ pipeline {
                         unstash 'linux-armel-exe'
                         unstash 'js-exe'
 
+                        script {
+                            if (tagName() == "nightly"){
+                                sh "gh release delete ${tagName()} --cleanup-tag -y || true"
+                            } else {
+                                sh "gh release delete ${tagName()} -y || true"
+                            }
+                        }
+
                         sh """
-                            gh release delete ${tagName()} --cleanup-tag -y || true
                             gh release create ${tagName()} --latest --target master --notes "\$(git log --pretty=format:'nightly: %h %s' -n 1)" ./bin/*
                         """
 

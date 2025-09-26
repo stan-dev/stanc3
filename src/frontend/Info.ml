@@ -47,7 +47,7 @@ let rec get_function_calls_expr (funs, distrs) expr =
     | FunApp (StanLib _, f, _) -> (Set.add funs f.name, distrs)
     | CondDistApp (StanLib _, f, _) -> (funs, Set.add distrs f.name)
     | _ -> (funs, distrs) in
-  fold_expression get_function_calls_expr (fun acc _ -> acc) acc expr.expr
+  fold_expression get_function_calls_expr acc expr.expr
 
 let rec get_function_calls_stmt ud_dists (funs, distrs) stmt =
   let acc =
@@ -63,8 +63,7 @@ let rec get_function_calls_stmt ud_dists (funs, distrs) stmt =
     | _ -> (funs, distrs) in
   fold_statement get_function_calls_expr
     (get_function_calls_stmt ud_dists)
-    (fun acc _ -> acc)
-    (fun acc _ -> acc)
+    (fold_lval_with get_function_calls_expr)
     acc stmt.stmt
 
 let function_calls_json p =
@@ -90,7 +89,7 @@ let includes_json () =
   `Assoc
     [ ( "included_files"
       , `List
-          (List.rev !Preprocessor.included_files
+          (Preprocessor.included_files ()
           |> List.map ~f:(fun str -> `String str)) ) ]
 
 let info_json ast =

@@ -27,14 +27,14 @@ let prepare_prog (mir : Program.Typed.t) :
   let rec number_locations_stmt ({pattern; meta} : Stmt.Located.t) :
       Stmt.Numbered.t =
     let pattern =
-      Stmt.Fixed.Pattern.map number_map_rect_calls_expr number_locations_stmt
-        pattern in
+      Stmt.Pattern.map number_map_rect_calls_expr number_locations_stmt pattern
+    in
     let meta = number_meta meta in
     {meta; pattern}
   (* map_rect numbering *)
   and number_map_rect_calls_expr ({meta; pattern} : Expr.Typed.t) : Expr.Typed.t
       =
-    let pattern = Expr.Fixed.Pattern.map number_map_rect_calls_expr pattern in
+    let pattern = Expr.Pattern.map number_map_rect_calls_expr pattern in
     match pattern with
     | FunApp
         ( StanLib ("map_rect", suffix, mem_pattern)
@@ -43,7 +43,7 @@ let prepare_prog (mir : Program.Typed.t) :
         Queue.enqueue map_rect_calls
           (next_map_rect_id, f ^ Lower_expr.functor_suffix);
         let pattern =
-          Expr.Fixed.Pattern.FunApp
+          Expr.Pattern.FunApp
             ( StanLib ("map_rect", suffix, mem_pattern)
             , List.map ~f:number_map_rect_calls_expr
                 (Expr.Helpers.int next_map_rect_id :: es) ) in

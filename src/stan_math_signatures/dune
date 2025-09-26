@@ -18,8 +18,6 @@
  (libraries core common middle))
 
 (rule
- (targets Generated_signatures.ml)
- (deps
-  (:generate ./generate.exe))
- (action
-  (run %{generate} %{targets})))
+ (with-stdout-to
+  Generated_signatures.ml
+  (run ./generate.exe)))

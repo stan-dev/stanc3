@@ -29,8 +29,6 @@ data {
 transformed data {
   vector[n_obs] log_ye = log(ye);
 
-  vector[n_obs] theta_0 = rep_vector(0.0, n_obs); // initial guess
-
   // control parameters for Laplace approximation
   real tolerance = 1e-6;
   int max_num_steps = 100;
@@ -48,7 +46,7 @@ model {
   alpha ~ inv_gamma(alpha_location_prior, alpha_scale_prior);
   eta ~ normal(0, 1);
 
-  target += laplace_marginal(my_fun, (eta, log_ye, y), theta_0,
+  target += laplace_marginal(my_fun, (eta, log_ye, y), 
                              my_fun, (x, n_obs, alpha, rho));
 
 }

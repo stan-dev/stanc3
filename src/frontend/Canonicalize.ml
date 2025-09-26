@@ -33,7 +33,7 @@ let rec no_parens {expr; emeta} =
       { expr= BinOp ({e1 with expr= Paren (no_parens e1)}, op2, keep_parens e2)
       ; emeta }
   | TernaryIf _ | BinOp _ | PrefixOp _ | PostfixOp _ ->
-      {expr= map_expression keep_parens Fn.id expr; emeta}
+      {expr= map_expression keep_parens expr; emeta}
   | Indexed (e, l) ->
       { expr=
           Indexed
@@ -47,11 +47,11 @@ let rec no_parens {expr; emeta} =
   | TupleProjection (e, i) -> {expr= TupleProjection (keep_parens e, i); emeta}
   | ArrayExpr _ | RowVectorExpr _ | FunApp _ | CondDistApp _ | TupleExpr _
    |Promotion _ ->
-      {expr= map_expression no_parens Fn.id expr; emeta}
+      {expr= map_expression no_parens expr; emeta}
 
 and keep_parens {expr; emeta} =
   match expr with
-  | Promotion (e, ut, ad) -> {expr= Promotion (keep_parens e, ut, ad); emeta}
+  | Promotion (e, (ut, ad)) -> {expr= Promotion (keep_parens e, (ut, ad)); emeta}
   | Paren ({expr= Paren _; _} as e) -> keep_parens e
   | Paren ({expr= BinOp _; _} as e)
    |Paren ({expr= PrefixOp _; _} as e)
@@ -60,7 +60,7 @@ and keep_parens {expr; emeta} =
       {expr= Paren (no_parens e); emeta}
   | _ -> no_parens {expr; emeta}
 
-let parens_lval = map_lval_with no_parens Fn.id
+let parens_lval = map_lval_with no_parens
 
 let rec parens_stmt ({stmt; smeta} : typed_statement) : typed_statement =
   let stmt =
@@ -77,7 +77,7 @@ let rec parens_stmt ({stmt; smeta} : typed_statement) : typed_statement =
           ; lower_bound= keep_parens lower_bound
           ; upper_bound= keep_parens upper_bound
           ; loop_body= parens_stmt loop_body }
-    | _ -> map_statement no_parens parens_stmt parens_lval Fn.id stmt in
+    | _ -> map_statement no_parens parens_stmt parens_lval stmt in
   {stmt; smeta}
 
 let rec blocks_stmt ({stmt; smeta} : typed_statement) : typed_statement =
@@ -101,7 +101,7 @@ let rec blocks_stmt ({stmt; smeta} : typed_statement) : typed_statement =
         IfThenElse (e, stmt_to_block s1, Option.map ~f:stmt_to_block s2)
     | For ({loop_body; _} as f) ->
         For {f with loop_body= stmt_to_block loop_body}
-    | _ -> map_statement Fn.id blocks_stmt Fn.id Fn.id stmt in
+    | _ -> map_statement Fn.id blocks_stmt Fn.id stmt in
   {stmt; smeta}
 
 let canonicalize_program program settings : typed_program =

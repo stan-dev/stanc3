@@ -83,28 +83,28 @@ let promote_inner (exp : Ast.typed_expression) prom =
   match prom with
   | ToVar ->
       Ast.
-        { expr= Ast.Promotion (exp, UReal, AutoDiffable)
+        { expr= Ast.Promotion (exp, (UReal, AutoDiffable))
         ; emeta=
             { emeta with
               type_= UnsizedType.promote_container emeta.type_ UReal
             ; ad_level= AutoDiffable } }
   | ToComplexVar ->
       Ast.
-        { expr= Ast.Promotion (exp, UComplex, AutoDiffable)
+        { expr= Ast.Promotion (exp, (UComplex, AutoDiffable))
         ; emeta=
             { emeta with
               type_= UnsizedType.promote_container emeta.type_ UComplex
             ; ad_level= AutoDiffable } }
   | IntToReal when UnsizedType.is_int_type emeta.type_ ->
       Ast.
-        { expr= Ast.Promotion (exp, UReal, emeta.ad_level)
+        { expr= Ast.Promotion (exp, (UReal, emeta.ad_level))
         ; emeta=
             {emeta with type_= UnsizedType.promote_container emeta.type_ UReal}
         }
   | (IntToComplex | RealToComplex)
     when not (UnsizedType.is_complex_type emeta.type_) ->
       (* these two promotions are separated for cost, but are actually the same promotion *)
-      { expr= Promotion (exp, UComplex, emeta.ad_level)
+      { expr= Promotion (exp, (UComplex, emeta.ad_level))
       ; emeta=
           {emeta with type_= UnsizedType.promote_container emeta.type_ UComplex}
       }
@@ -116,7 +116,7 @@ let promote_inner (exp : Ast.typed_expression) prom =
             promote_unsized_type element emeta.ad_level prom in
           let prom_type = scalarize type_ in
           let type_ = UnsizedType.wind_array_type (type_, size) in
-          { expr= Promotion (exp, prom_type, ad_level)
+          { expr= Promotion (exp, (prom_type, ad_level))
           ; emeta= {emeta with type_; ad_level} }
       | _ ->
           Common.ICE.internal_compiler_error

@@ -9,7 +9,7 @@ val union_maps_left :
 val build_cf_graphs :
      ?flatten_loops:bool
   -> ?blocks_after_body:bool
-  -> (label, (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * 'm) Map.Poly.t
+  -> (label, (Expr.Typed.t, label) Stmt.Pattern.t * 'm) Map.Poly.t
   -> label Set.Poly.t
      * (label, label Set.Poly.t) Map.Poly.t
      * (label, label Set.Poly.t) Map.Poly.t
@@ -26,7 +26,7 @@ val build_cf_graphs :
 *)
 
 val build_cf_graph :
-     (label, (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * 'm) Map.Poly.t
+     (label, (Expr.Typed.t, label) Stmt.Pattern.t * 'm) Map.Poly.t
   -> (label, label Set.Poly.t) Map.Poly.t
 (**
    Building the controlflow graph requires a traversal with state that includes continues,
@@ -38,7 +38,7 @@ val build_cf_graph :
 val build_predecessor_graph :
      ?flatten_loops:bool
   -> ?blocks_after_body:bool
-  -> (label, (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * 'm) Map.Poly.t
+  -> (label, (Expr.Typed.t, label) Stmt.Pattern.t * 'm) Map.Poly.t
   -> label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t
 (**
    Building the predecessor graph requires a traversal with state that includes the
@@ -49,8 +49,8 @@ val build_predecessor_graph :
 *)
 
 val build_recursive_statement :
-     (('e, 's) Stmt.Fixed.Pattern.t -> 'm -> 's)
-  -> (label, ('e, label) Stmt.Fixed.Pattern.t * 'm) Map.Poly.t
+     (('e, 's) Stmt.Pattern.t -> 'm -> 's)
+  -> (label, ('e, label) Stmt.Pattern.t * 'm) Map.Poly.t
   -> label
   -> 's
 (**
@@ -58,7 +58,7 @@ val build_recursive_statement :
    representation.
 *)
 
-val is_ctrl_flow : ('a, 'b) Stmt.Fixed.Pattern.t -> bool
+val is_ctrl_flow : ('a, 'b) Stmt.Pattern.t -> bool
 (** Check if the statement controls the execution of its substatements. *)
 
 val merge_set_maps :
@@ -75,10 +75,10 @@ val generate_map : 'a Set.Poly.t -> f:('a -> 'b) -> ('a, 'b) Map.Poly.t
 *)
 
 val build_statement_map :
-     ('s -> ('e, 's) Stmt.Fixed.Pattern.t)
+     ('s -> ('e, 's) Stmt.Pattern.t)
   -> ('s -> 'm)
   -> 's
-  -> (label, ('e, label) Stmt.Fixed.Pattern.t * 'm) Map.Poly.t
+  -> (label, ('e, label) Stmt.Pattern.t * 'm) Map.Poly.t
 (**
    The statement map is built by traversing substatements recursively to replace
    substatements with their labels while building up the substatements' statement maps.

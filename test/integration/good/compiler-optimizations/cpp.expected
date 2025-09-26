@@ -1774,10 +1774,9 @@ class ad_level_deep_dependence_model final : public model_base_crtp<ad_level_dee
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
     const size_t num_params__ = (10 * 10);
-    const size_t num_transformed = emit_transformed_parameters * ((((((((10 *
-      10) + (10 * 10)) + (10 * 10)) + (10 * 10)) + (10 * 10)) + (10 * 10)) +
-      (10 * 10)));
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_transformed = emit_transformed_parameters * ((10 * 10) +
+      (10 * 10) + (10 * 10) + (10 * 10) + (10 * 10) + (10 * 10) + (10 * 10));
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -1793,10 +1792,9 @@ class ad_level_deep_dependence_model final : public model_base_crtp<ad_level_dee
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
     const size_t num_params__ = (10 * 10);
-    const size_t num_transformed = emit_transformed_parameters * ((((((((10 *
-      10) + (10 * 10)) + (10 * 10)) + (10 * 10)) + (10 * 10)) + (10 * 10)) +
-      (10 * 10)));
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_transformed = emit_transformed_parameters * ((10 * 10) +
+      (10 * 10) + (10 * 10) + (10 * 10) + (10 * 10) + (10 * 10) + (10 * 10));
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,
@@ -2710,9 +2708,9 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (((1 + 1) + 1) + 1);
+    const size_t num_params__ = 1 + 1 + 1 + 1;
     const size_t num_transformed = emit_transformed_parameters * ((N_t * 4));
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -2727,9 +2725,9 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (((1 + 1) + 1) + 1);
+    const size_t num_params__ = 1 + 1 + 1 + 1;
     const size_t num_transformed = emit_transformed_parameters * ((N_t * 4));
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,
@@ -2799,9 +2797,9 @@ stan::math::profile_map& get_stan_profile_data() {
   return ad_level_failing_model_namespace::profiles__;
 }
 #endif
-Warning in 'ad-level-failing.stan', line 46, column 8: integrate_ode_rk45 is
-    deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
-    The new interface is slightly different, see:
+Warning in 'ad-level-failing.stan', line 46, column 8 to column 26:
+    integrate_ode_rk45 is deprecated and will be removed in Stan 3.0. Use
+    ode_rk45 instead. The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 [exit 0]
   $ ../../../../../install/default/bin/stanc --Oexperimental --print-cpp ad-levels-deep.stan
@@ -4404,9 +4402,9 @@ class ad_levels_deep_model final : public model_base_crtp<ad_levels_deep_model> 
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
     const size_t num_params__ = (10 * 10);
-    const size_t num_transformed = emit_transformed_parameters * (((10 * 10)
-      + (10 * 10)));
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_transformed = emit_transformed_parameters * ((10 * 10) +
+      (10 * 10));
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -4422,9 +4420,9 @@ class ad_levels_deep_model final : public model_base_crtp<ad_levels_deep_model> 
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
     const size_t num_params__ = (10 * 10);
-    const size_t num_transformed = emit_transformed_parameters * (((10 * 10)
-      + (10 * 10)));
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_transformed = emit_transformed_parameters * ((10 * 10) +
+      (10 * 10));
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,
@@ -4907,8 +4905,8 @@ class copy_prop_profile_model final : public model_base_crtp<copy_prop_profile_m
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
     const size_t num_params__ = (N * N);
-    const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_transformed = emit_transformed_parameters * (0U);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -4924,8 +4922,8 @@ class copy_prop_profile_model final : public model_base_crtp<copy_prop_profile_m
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
     const size_t num_params__ = (N * N);
-    const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_transformed = emit_transformed_parameters * (0U);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,
@@ -6976,10 +6974,10 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (1 + max_age);
-    const size_t num_transformed = emit_transformed_parameters * ((((nind *
-      n_occ_minus_1) + (nind * n_occ_minus_1)) + (nind * n_occasions)));
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_params__ = 1 + max_age;
+    const size_t num_transformed = emit_transformed_parameters * ((nind *
+      n_occ_minus_1) + (nind * n_occ_minus_1) + (nind * n_occasions));
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -6994,10 +6992,10 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (1 + max_age);
-    const size_t num_transformed = emit_transformed_parameters * ((((nind *
-      n_occ_minus_1) + (nind * n_occ_minus_1)) + (nind * n_occasions)));
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_params__ = 1 + max_age;
+    const size_t num_transformed = emit_transformed_parameters * ((nind *
+      n_occ_minus_1) + (nind * n_occ_minus_1) + (nind * n_occasions));
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,
@@ -8495,11 +8493,10 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (((((((((((((((1 + 1) + 1) + 1) + 1) + 1) +
-      1) + 1) + 1) + 1) + 1) + n_age) + n_edu) + n_region) + (n_age * n_edu))
-      + n_state);
-    const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_params__ = 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 +
+      n_age + n_edu + n_region + (n_age * n_edu) + n_state;
+    const size_t num_transformed = emit_transformed_parameters * (0U);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -8514,11 +8511,10 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (((((((((((((((1 + 1) + 1) + 1) + 1) + 1) +
-      1) + 1) + 1) + 1) + 1) + n_age) + n_edu) + n_region) + (n_age * n_edu))
-      + n_state);
-    const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_params__ = 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 +
+      n_age + n_edu + n_region + (n_age * n_edu) + n_state;
+    const size_t num_transformed = emit_transformed_parameters * (0U);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,
@@ -8843,9 +8839,9 @@ class expr_prop_experiment_model final : public model_base_crtp<expr_prop_experi
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = 0;
-    const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_params__ = 0U;
+    const size_t num_transformed = emit_transformed_parameters * (0U);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -8860,9 +8856,9 @@ class expr_prop_experiment_model final : public model_base_crtp<expr_prop_experi
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = 0;
-    const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_params__ = 0U;
+    const size_t num_transformed = emit_transformed_parameters * (0U);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,
@@ -9184,9 +9180,9 @@ class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_exper
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = 0;
-    const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_params__ = 0U;
+    const size_t num_transformed = emit_transformed_parameters * (0U);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -9201,9 +9197,9 @@ class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_exper
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = 0;
-    const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_params__ = 0U;
+    const size_t num_transformed = emit_transformed_parameters * (0U);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,
@@ -9781,9 +9777,9 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = ((2 + 2) + 1);
-    const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_params__ = 2 + 2 + 1;
+    const size_t num_transformed = emit_transformed_parameters * (0U);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -9798,9 +9794,9 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = ((2 + 2) + 1);
-    const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_params__ = 2 + 2 + 1;
+    const size_t num_transformed = emit_transformed_parameters * (0U);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,
@@ -10238,9 +10234,9 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = ((1 + J) + 1);
-    const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_params__ = 1 + J + 1;
+    const size_t num_transformed = emit_transformed_parameters * (0U);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -10255,9 +10251,9 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = ((1 + J) + 1);
-    const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_params__ = 1 + J + 1;
+    const size_t num_transformed = emit_transformed_parameters * (0U);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,
@@ -11707,10 +11703,10 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = ((((((((((n_age + n_edu) + n_age_edu) +
-      n_state) + n_region_full) + 5) + 1) + 1) + 1) + 1) + 1);
+    const size_t num_params__ = n_age + n_edu + n_age_edu + n_state +
+      n_region_full + 5 + 1 + 1 + 1 + 1 + 1;
     const size_t num_transformed = emit_transformed_parameters * (N);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -11725,10 +11721,10 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = ((((((((((n_age + n_edu) + n_age_edu) +
-      n_state) + n_region_full) + 5) + 1) + 1) + 1) + 1) + 1);
+    const size_t num_params__ = n_age + n_edu + n_age_edu + n_state +
+      n_region_full + 5 + 1 + 1 + 1 + 1 + 1;
     const size_t num_transformed = emit_transformed_parameters * (N);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,
@@ -12541,10 +12537,10 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (1 + phi_std_raw_1dim__);
-    const size_t num_transformed = emit_transformed_parameters * ((1 + N));
-    const size_t num_gen_quantities = emit_generated_quantities * ((((((((1 +
-      1) + 1) + 1) + N) + N) + N) + N));
+    const size_t num_params__ = 1 + phi_std_raw_1dim__;
+    const size_t num_transformed = emit_transformed_parameters * (1 + N);
+    const size_t num_gen_quantities = emit_generated_quantities * (1 + 1 + 1
+      + 1 + N + N + N + N);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -12559,10 +12555,10 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (1 + phi_std_raw_1dim__);
-    const size_t num_transformed = emit_transformed_parameters * ((1 + N));
-    const size_t num_gen_quantities = emit_generated_quantities * ((((((((1 +
-      1) + 1) + 1) + N) + N) + N) + N));
+    const size_t num_params__ = 1 + phi_std_raw_1dim__;
+    const size_t num_transformed = emit_transformed_parameters * (1 + N);
+    const size_t num_gen_quantities = emit_generated_quantities * (1 + 1 + 1
+      + 1 + N + N + N + N);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,
@@ -14595,9 +14591,9 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (((1 + 1) + nind) + 1);
-    const size_t num_transformed = emit_transformed_parameters * (((((nind *
-      n_occ_minus_1) + (nind * n_occ_minus_1)) + (nind * n_occasions)) + 1));
+    const size_t num_params__ = 1 + 1 + nind + 1;
+    const size_t num_transformed = emit_transformed_parameters * ((nind *
+      n_occ_minus_1) + (nind * n_occ_minus_1) + (nind * n_occasions) + 1);
     const size_t num_gen_quantities = emit_generated_quantities * (1);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
@@ -14613,9 +14609,9 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (((1 + 1) + nind) + 1);
-    const size_t num_transformed = emit_transformed_parameters * (((((nind *
-      n_occ_minus_1) + (nind * n_occ_minus_1)) + (nind * n_occasions)) + 1));
+    const size_t num_params__ = 1 + 1 + nind + 1;
+    const size_t num_transformed = emit_transformed_parameters * ((nind *
+      n_occ_minus_1) + (nind * n_occ_minus_1) + (nind * n_occasions) + 1);
     const size_t num_gen_quantities = emit_generated_quantities * (1);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
@@ -18765,12 +18761,12 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (((((1 + 1) + 1) + n_occasions) + M) + 1);
-    const size_t num_transformed = emit_transformed_parameters * ((((((M *
-      phi_2dim__) + (M * n_occasions)) + n_occasions) + n_occasions) + (M *
-      n_occasions)));
-    const size_t num_gen_quantities = emit_generated_quantities * (((((1 + 1)
-      + n_occasions) + n_occasions) + (M * n_occasions)));
+    const size_t num_params__ = 1 + 1 + 1 + n_occasions + M + 1;
+    const size_t num_transformed = emit_transformed_parameters * ((M *
+      phi_2dim__) + (M * n_occasions) + n_occasions + n_occasions + (M *
+      n_occasions));
+    const size_t num_gen_quantities = emit_generated_quantities * (1 + 1 +
+      n_occasions + n_occasions + (M * n_occasions));
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -18785,12 +18781,12 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (((((1 + 1) + 1) + n_occasions) + M) + 1);
-    const size_t num_transformed = emit_transformed_parameters * ((((((M *
-      phi_2dim__) + (M * n_occasions)) + n_occasions) + n_occasions) + (M *
-      n_occasions)));
-    const size_t num_gen_quantities = emit_generated_quantities * (((((1 + 1)
-      + n_occasions) + n_occasions) + (M * n_occasions)));
+    const size_t num_params__ = 1 + 1 + 1 + n_occasions + M + 1;
+    const size_t num_transformed = emit_transformed_parameters * ((M *
+      phi_2dim__) + (M * n_occasions) + n_occasions + n_occasions + (M *
+      n_occasions));
+    const size_t num_gen_quantities = emit_generated_quantities * (1 + 1 +
+      n_occasions + n_occasions + (M * n_occasions));
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,
@@ -20009,8 +20005,8 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (K + (J * (K * K)));
-    const size_t num_transformed = emit_transformed_parameters * (0);
+    const size_t num_params__ = K + (J * (K * K));
+    const size_t num_transformed = emit_transformed_parameters * (0U);
     const size_t num_gen_quantities = emit_generated_quantities * ((I * K));
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
@@ -20026,8 +20022,8 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (K + (J * (K * K)));
-    const size_t num_transformed = emit_transformed_parameters * (0);
+    const size_t num_params__ = K + (J * (K * K));
+    const size_t num_transformed = emit_transformed_parameters * (0U);
     const size_t num_gen_quantities = emit_generated_quantities * ((I * K));
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
@@ -20749,9 +20745,9 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (((((1 + 1) + 1) + 1) + N) + N);
-    const size_t num_transformed = emit_transformed_parameters * ((1 + N));
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_params__ = 1 + 1 + 1 + 1 + N + N;
+    const size_t num_transformed = emit_transformed_parameters * (1 + N);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -20766,9 +20762,9 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (((((1 + 1) + 1) + 1) + N) + N);
-    const size_t num_transformed = emit_transformed_parameters * ((1 + N));
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_params__ = 1 + 1 + 1 + 1 + N + N;
+    const size_t num_transformed = emit_transformed_parameters * (1 + N);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,
@@ -22819,10 +22815,10 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (1 + max_age);
-    const size_t num_transformed = emit_transformed_parameters * ((((nind *
-      n_occ_minus_1) + (nind * n_occ_minus_1)) + (nind * n_occasions)));
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_params__ = 1 + max_age;
+    const size_t num_transformed = emit_transformed_parameters * ((nind *
+      n_occ_minus_1) + (nind * n_occ_minus_1) + (nind * n_occasions));
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -22837,10 +22833,10 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (1 + max_age);
-    const size_t num_transformed = emit_transformed_parameters * ((((nind *
-      n_occ_minus_1) + (nind * n_occ_minus_1)) + (nind * n_occasions)));
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_params__ = 1 + max_age;
+    const size_t num_transformed = emit_transformed_parameters * ((nind *
+      n_occ_minus_1) + (nind * n_occ_minus_1) + (nind * n_occasions));
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,
@@ -23299,9 +23295,9 @@ class function_in_function_inline_model final : public model_base_crtp<function_
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = 0;
-    const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_params__ = 0U;
+    const size_t num_transformed = emit_transformed_parameters * (0U);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -23316,9 +23312,9 @@ class function_in_function_inline_model final : public model_base_crtp<function_
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = 0;
-    const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_params__ = 0U;
+    const size_t num_transformed = emit_transformed_parameters * (0U);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,
@@ -23856,9 +23852,9 @@ class function_in_function_loops_model final : public model_base_crtp<function_i
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = 0;
-    const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_params__ = 0U;
+    const size_t num_transformed = emit_transformed_parameters * (0U);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -23873,9 +23869,9 @@ class function_in_function_loops_model final : public model_base_crtp<function_i
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = 0;
-    const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_params__ = 0U;
+    const size_t num_transformed = emit_transformed_parameters * (0U);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,
@@ -24202,9 +24198,9 @@ class fuzz_div0_model final : public model_base_crtp<fuzz_div0_model> {
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = 0;
-    const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_params__ = 0U;
+    const size_t num_transformed = emit_transformed_parameters * (0U);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -24219,9 +24215,9 @@ class fuzz_div0_model final : public model_base_crtp<fuzz_div0_model> {
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = 0;
-    const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_params__ = 0U;
+    const size_t num_transformed = emit_transformed_parameters * (0U);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,
@@ -24291,19 +24287,19 @@ stan::math::profile_map& get_stan_profile_data() {
   return fuzz_div0_model_namespace::profiles__;
 }
 #endif
-Warning in 'fuzz-div0.stan', line 2, column 34: Found int division:
-      0 / 0
+Warning in 'fuzz-div0.stan', line 2, column 34 to column 35:
+    Found int division:
+        0 / 0
     Values will be rounded towards zero. If rounding is not desired you can
-    write
-    the division as
-      0.0 / 0
+    write the division as
+        0.0 / 0
     If rounding is intended please use the integer division operator %/%.
-Warning in 'fuzz-div0.stan', line 2, column 41: Found int division:
-      1 / 0
+Warning in 'fuzz-div0.stan', line 2, column 41 to column 42:
+    Found int division:
+        1 / 0
     Values will be rounded towards zero. If rounding is not desired you can
-    write
-    the division as
-      1.0 / 0
+    write the division as
+        1.0 / 0
     If rounding is intended please use the integer division operator %/%.
 [exit 0]
   $ ../../../../../install/default/bin/stanc --Oexperimental --print-cpp initialize-SoA.stan
@@ -24883,9 +24879,9 @@ class initialize_SoA_model final : public model_base_crtp<initialize_SoA_model> 
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (3 + (3 * 4));
+    const size_t num_params__ = 3 + (3 * 4);
     const size_t num_transformed = emit_transformed_parameters * (3);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -24900,9 +24896,9 @@ class initialize_SoA_model final : public model_base_crtp<initialize_SoA_model> 
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (3 + (3 * 4));
+    const size_t num_params__ = 3 + (3 * 4);
     const size_t num_transformed = emit_transformed_parameters * (3);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,
@@ -25574,9 +25570,9 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (5 + 5);
-    const size_t num_transformed = emit_transformed_parameters * ((5 + 5));
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_params__ = 5 + 5;
+    const size_t num_transformed = emit_transformed_parameters * (5 + 5);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -25591,9 +25587,9 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (5 + 5);
-    const size_t num_transformed = emit_transformed_parameters * ((5 + 5));
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_params__ = 5 + 5;
+    const size_t num_transformed = emit_transformed_parameters * (5 + 5);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,
@@ -25998,8 +25994,8 @@ class inline_tdata_model final : public model_base_crtp<inline_tdata_model> {
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
     const size_t num_params__ = 1;
-    const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_transformed = emit_transformed_parameters * (0U);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -26015,8 +26011,8 @@ class inline_tdata_model final : public model_base_crtp<inline_tdata_model> {
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
     const size_t num_params__ = 1;
-    const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_transformed = emit_transformed_parameters * (0U);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,
@@ -26459,9 +26455,9 @@ class inliner_same_names_model final : public model_base_crtp<inliner_same_names
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = 0;
-    const size_t num_transformed = emit_transformed_parameters * ((N + N));
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_params__ = 0U;
+    const size_t num_transformed = emit_transformed_parameters * (N + N);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -26476,9 +26472,9 @@ class inliner_same_names_model final : public model_base_crtp<inliner_same_names
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = 0;
-    const size_t num_transformed = emit_transformed_parameters * ((N + N));
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_params__ = 0U;
+    const size_t num_transformed = emit_transformed_parameters * (N + N);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,
@@ -30618,13 +30614,11 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = ((((1 + 1) + n_occasions) + epsilon_1dim__) +
-      1);
-    const size_t num_transformed = emit_transformed_parameters * ((((M *
-      phi_2dim__) + (M * n_occasions)) + (M * n_occasions)));
-    const size_t num_gen_quantities = emit_generated_quantities * (((((((1 +
-      1) + n_occasions) + 1) + n_occasions) + n_occasions) + (M *
-      n_occasions)));
+    const size_t num_params__ = 1 + 1 + n_occasions + epsilon_1dim__ + 1;
+    const size_t num_transformed = emit_transformed_parameters * ((M *
+      phi_2dim__) + (M * n_occasions) + (M * n_occasions));
+    const size_t num_gen_quantities = emit_generated_quantities * (1 + 1 +
+      n_occasions + 1 + n_occasions + n_occasions + (M * n_occasions));
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -30639,13 +30633,11 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = ((((1 + 1) + n_occasions) + epsilon_1dim__) +
-      1);
-    const size_t num_transformed = emit_transformed_parameters * ((((M *
-      phi_2dim__) + (M * n_occasions)) + (M * n_occasions)));
-    const size_t num_gen_quantities = emit_generated_quantities * (((((((1 +
-      1) + n_occasions) + 1) + n_occasions) + n_occasions) + (M *
-      n_occasions)));
+    const size_t num_params__ = 1 + 1 + n_occasions + epsilon_1dim__ + 1;
+    const size_t num_transformed = emit_transformed_parameters * ((M *
+      phi_2dim__) + (M * n_occasions) + (M * n_occasions));
+    const size_t num_gen_quantities = emit_generated_quantities * (1 + 1 +
+      n_occasions + 1 + n_occasions + n_occasions + (M * n_occasions));
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,
@@ -30966,9 +30958,9 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = 0;
-    const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_params__ = 0U;
+    const size_t num_transformed = emit_transformed_parameters * (0U);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -30983,9 +30975,9 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = 0;
-    const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_params__ = 0U;
+    const size_t num_transformed = emit_transformed_parameters * (0U);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,
@@ -31347,8 +31339,8 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
     const size_t num_params__ = 1;
-    const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_transformed = emit_transformed_parameters * (0U);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -31364,8 +31356,8 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
     const size_t num_params__ = 1;
-    const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_transformed = emit_transformed_parameters * (0U);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,
@@ -31734,8 +31726,8 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
     const size_t num_params__ = J;
-    const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_transformed = emit_transformed_parameters * (0U);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -31751,8 +31743,8 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
     const size_t num_params__ = J;
-    const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_transformed = emit_transformed_parameters * (0U);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,
@@ -33634,10 +33626,10 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (1 + 1);
-    const size_t num_transformed = emit_transformed_parameters * ((((nind *
-      n_occ_minus_1) + (nind * n_occ_minus_1)) + (nind * n_occasions)));
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_params__ = 1 + 1;
+    const size_t num_transformed = emit_transformed_parameters * ((nind *
+      n_occ_minus_1) + (nind * n_occ_minus_1) + (nind * n_occasions));
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -33652,10 +33644,10 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (1 + 1);
-    const size_t num_transformed = emit_transformed_parameters * ((((nind *
-      n_occ_minus_1) + (nind * n_occ_minus_1)) + (nind * n_occasions)));
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_params__ = 1 + 1;
+    const size_t num_transformed = emit_transformed_parameters * ((nind *
+      n_occ_minus_1) + (nind * n_occ_minus_1) + (nind * n_occasions));
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,
@@ -34207,7 +34199,7 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
               pstream = nullptr) const {
     const size_t num_params__ = 1;
     const size_t num_transformed = emit_transformed_parameters * (1);
-    const size_t num_gen_quantities = emit_generated_quantities * ((1 + 1));
+    const size_t num_gen_quantities = emit_generated_quantities * (1 + 1);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -34224,7 +34216,7 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
               pstream = nullptr) const {
     const size_t num_params__ = 1;
     const size_t num_transformed = emit_transformed_parameters * (1);
-    const size_t num_gen_quantities = emit_generated_quantities * ((1 + 1));
+    const size_t num_gen_quantities = emit_generated_quantities * (1 + 1);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,
@@ -35188,11 +35180,10 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (((1 + 1) + 1) + 1);
-    const size_t num_transformed = emit_transformed_parameters * ((R + (R *
-      T)));
-    const size_t num_gen_quantities = emit_generated_quantities * (((1 + R) +
-      R));
+    const size_t num_params__ = 1 + 1 + 1 + 1;
+    const size_t num_transformed = emit_transformed_parameters * (R + (R *
+      T));
+    const size_t num_gen_quantities = emit_generated_quantities * (1 + R + R);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -35207,11 +35198,10 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (((1 + 1) + 1) + 1);
-    const size_t num_transformed = emit_transformed_parameters * ((R + (R *
-      T)));
-    const size_t num_gen_quantities = emit_generated_quantities * (((1 + R) +
-      R));
+    const size_t num_params__ = 1 + 1 + 1 + 1;
+    const size_t num_transformed = emit_transformed_parameters * (R + (R *
+      T));
+    const size_t num_gen_quantities = emit_generated_quantities * (1 + R + R);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,
@@ -36188,10 +36178,9 @@ class off_small_model final : public model_base_crtp<off_small_model> {
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (((((((1 + J) + J) + 1) + 1) + 1) + 1) + 1);
-    const size_t num_transformed = emit_transformed_parameters * (((J + J) +
-      N));
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_params__ = 1 + J + J + 1 + 1 + 1 + 1 + 1;
+    const size_t num_transformed = emit_transformed_parameters * (J + J + N);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -36206,10 +36195,9 @@ class off_small_model final : public model_base_crtp<off_small_model> {
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (((((((1 + J) + J) + 1) + 1) + 1) + 1) + 1);
-    const size_t num_transformed = emit_transformed_parameters * (((J + J) +
-      N));
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_params__ = 1 + J + J + 1 + 1 + 1 + 1 + 1;
+    const size_t num_transformed = emit_transformed_parameters * (J + J + N);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,
@@ -37927,9 +37915,9 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = ((((1 + 1) + (3 * 2)) + 2) + (2 * 2));
-    const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_params__ = 1 + 1 + (3 * 2) + 2 + (2 * 2);
+    const size_t num_transformed = emit_transformed_parameters * (0U);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -37944,9 +37932,9 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = ((((1 + 1) + (3 * 2)) + 2) + (2 * 2));
-    const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_params__ = 1 + 1 + (3 * 2) + 2 + (2 * 2);
+    const size_t num_transformed = emit_transformed_parameters * (0U);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,
@@ -38421,8 +38409,8 @@ class overload_tilde_stanlib_model final : public model_base_crtp<overload_tilde
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
     const size_t num_params__ = N;
-    const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_transformed = emit_transformed_parameters * (0U);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -38438,8 +38426,8 @@ class overload_tilde_stanlib_model final : public model_base_crtp<overload_tilde
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
     const size_t num_params__ = N;
-    const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_transformed = emit_transformed_parameters * (0U);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,
@@ -38806,9 +38794,9 @@ class overloaded_fn_model final : public model_base_crtp<overloaded_fn_model> {
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = 0;
-    const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_params__ = 0U;
+    const size_t num_transformed = emit_transformed_parameters * (0U);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -38823,9 +38811,9 @@ class overloaded_fn_model final : public model_base_crtp<overloaded_fn_model> {
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = 0;
-    const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_params__ = 0U;
+    const size_t num_transformed = emit_transformed_parameters * (0U);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,
@@ -39226,9 +39214,9 @@ class overloaded_fn2_model final : public model_base_crtp<overloaded_fn2_model> 
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = 0;
-    const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_params__ = 0U;
+    const size_t num_transformed = emit_transformed_parameters * (0U);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -39243,9 +39231,9 @@ class overloaded_fn2_model final : public model_base_crtp<overloaded_fn2_model> 
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = 0;
-    const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_params__ = 0U;
+    const size_t num_transformed = emit_transformed_parameters * (0U);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,
@@ -39605,10 +39593,10 @@ class partial_eval_tuple_model final : public model_base_crtp<partial_eval_tuple
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = 0;
+    const size_t num_params__ = 0U;
     const size_t num_transformed = emit_transformed_parameters * ((1 + (10 *
       10)));
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -39623,10 +39611,10 @@ class partial_eval_tuple_model final : public model_base_crtp<partial_eval_tuple
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = 0;
+    const size_t num_params__ = 0U;
     const size_t num_transformed = emit_transformed_parameters * ((1 + (10 *
       10)));
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,
@@ -40480,9 +40468,9 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = ((((n_pair + 2) + 1) + 1) + 1);
+    const size_t num_params__ = n_pair + 2 + 1 + 1 + 1;
     const size_t num_transformed = emit_transformed_parameters * (N);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -40497,9 +40485,9 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = ((((n_pair + 2) + 1) + 1) + 1);
+    const size_t num_params__ = n_pair + 2 + 1 + 1 + 1;
     const size_t num_transformed = emit_transformed_parameters * (N);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,
@@ -43421,9 +43409,9 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = ((10 * 10) + (10 * 10));
-    const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_params__ = (10 * 10) + (10 * 10);
+    const size_t num_transformed = emit_transformed_parameters * (0U);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -43438,9 +43426,9 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = ((10 * 10) + (10 * 10));
-    const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_params__ = (10 * 10) + (10 * 10);
+    const size_t num_transformed = emit_transformed_parameters * (0U);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,
@@ -43762,9 +43750,9 @@ class partial_eval_zeros_model final : public model_base_crtp<partial_eval_zeros
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = 0;
-    const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_params__ = 0U;
+    const size_t num_transformed = emit_transformed_parameters * (0U);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -43779,9 +43767,9 @@ class partial_eval_zeros_model final : public model_base_crtp<partial_eval_zeros
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = 0;
-    const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_params__ = 0U;
+    const size_t num_transformed = emit_transformed_parameters * (0U);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,
@@ -44791,9 +44779,9 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (((((1 + 1) + 1) + 1) + 1) + (I * K));
+    const size_t num_params__ = 1 + 1 + 1 + 1 + 1 + (I * K);
     const size_t num_transformed = emit_transformed_parameters * (1);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -44808,9 +44796,9 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (((((1 + 1) + 1) + 1) + 1) + (I * K));
+    const size_t num_params__ = 1 + 1 + 1 + 1 + 1 + (I * K);
     const size_t num_transformed = emit_transformed_parameters * (1);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,
@@ -47040,9 +47028,9 @@ class unenforce_initialize_omni_model final : public model_base_crtp<unenforce_i
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (2 + (3 * (4 * 5)));
-    const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_params__ = 2 + (3 * (4 * 5));
+    const size_t num_transformed = emit_transformed_parameters * (0U);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -47057,9 +47045,9 @@ class unenforce_initialize_omni_model final : public model_base_crtp<unenforce_i
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (2 + (3 * (4 * 5)));
-    const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_params__ = 2 + (3 * (4 * 5));
+    const size_t num_transformed = emit_transformed_parameters * (0U);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,
@@ -47747,7 +47735,7 @@ class unenforce_initialize_should_fail_model final : public model_base_crtp<unen
               pstream = nullptr) const {
     const size_t num_params__ = 1;
     const size_t num_transformed = emit_transformed_parameters * ((2 * 5));
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -47764,7 +47752,7 @@ class unenforce_initialize_should_fail_model final : public model_base_crtp<unen
               pstream = nullptr) const {
     const size_t num_params__ = 1;
     const size_t num_transformed = emit_transformed_parameters * ((2 * 5));
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,
@@ -48305,9 +48293,9 @@ class unenforce_initialize_model final : public model_base_crtp<unenforce_initia
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
     const size_t num_params__ = 1;
-    const size_t num_transformed = emit_transformed_parameters * ((((((1 + 1)
-      + 1) + 1) + 1) + 1));
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_transformed = emit_transformed_parameters * (1 + 1 + 1 +
+      1 + 1 + 1);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -48323,9 +48311,9 @@ class unenforce_initialize_model final : public model_base_crtp<unenforce_initia
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
     const size_t num_params__ = 1;
-    const size_t num_transformed = emit_transformed_parameters * ((((((1 + 1)
-      + 1) + 1) + 1) + 1));
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_transformed = emit_transformed_parameters * (1 + 1 + 1 +
+      1 + 1 + 1);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,
@@ -48395,8 +48383,9 @@ stan::math::profile_map& get_stan_profile_data() {
   return unenforce_initialize_model_namespace::profiles__;
 }
 #endif
-Warning in 'unenforce-initialize.stan', line 8, column 2: Assignment of
-    variable to itself during declaration. This is almost certainly a bug.
+Warning in 'unenforce-initialize.stan', line 8, column 2 to column 33:
+    Assignment of variable to itself during declaration. This is almost
+    certainly a bug.
 [exit 0]
   $ ../../../../../install/default/bin/stanc --Oexperimental --print-cpp unroll-limit.stan
 // Code generated by %%NAME%% %%VERSION%%
@@ -48912,8 +48901,8 @@ class unroll_limit_model final : public model_base_crtp<unroll_limit_model> {
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = 0;
-    const size_t num_transformed = emit_transformed_parameters * (0);
+    const size_t num_params__ = 0U;
+    const size_t num_transformed = emit_transformed_parameters * (0U);
     const size_t num_gen_quantities = emit_generated_quantities * (1);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
@@ -48929,8 +48918,8 @@ class unroll_limit_model final : public model_base_crtp<unroll_limit_model> {
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = 0;
-    const size_t num_transformed = emit_transformed_parameters * (0);
+    const size_t num_params__ = 0U;
+    const size_t num_transformed = emit_transformed_parameters * (0U);
     const size_t num_gen_quantities = emit_generated_quantities * (1);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;

@@ -29,9 +29,7 @@ type node_dep_info =
   ; meta: Location_span.t }
 
 val node_immediate_dependencies :
-     ( label
-     , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * node_dep_info )
-     Map.Poly.t
+     (label, (Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) Map.Poly.t
   -> ?blockers:vexpr Set.Poly.t
   -> label
   -> label Set.Poly.t
@@ -42,9 +40,7 @@ val node_immediate_dependencies :
 *)
 
 val node_dependencies :
-     ( label
-     , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * node_dep_info )
-     Map.Poly.t
+     (label, (Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) Map.Poly.t
   -> label
   -> label Set.Poly.t
 (**
@@ -52,9 +48,7 @@ val node_dependencies :
 *)
 
 val node_vars_dependencies :
-     ( label
-     , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * node_dep_info )
-     Map.Poly.t
+     (label, (Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) Map.Poly.t
   -> ?blockers:vexpr Set.Poly.t
   -> vexpr Set.Poly.t
   -> label
@@ -69,26 +63,20 @@ val node_vars_dependencies :
 val build_dep_info_map :
      Program.Typed.t
   -> Stmt.Located.t
-  -> ( label
-     , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * node_dep_info )
-     Map.Poly.t
+  -> (label, (Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) Map.Poly.t
 (**
    Build the dependency information for each node in the log_prob section of a program
 *)
 
 val log_prob_build_dep_info_map :
      Program.Typed.t
-  -> ( label
-     , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * node_dep_info )
-     Map.Poly.t
+  -> (label, (Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) Map.Poly.t
 (**
    Build the dependency information for each node in the log_prob section of a program
 *)
 
 val all_node_dependencies :
-     ( label
-     , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * node_dep_info )
-     Map.Poly.t
+     (label, (Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) Map.Poly.t
   -> (label, label Set.Poly.t) Map.Poly.t
 (**
    Given dependency information for each node, find all of the dependencies of all nodes,
