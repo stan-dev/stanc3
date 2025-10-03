@@ -10694,6 +10694,18 @@
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
            (meta <opaque>)))))
        (meta <opaque>))))
+    (fdloc <opaque>))
+   ((fdrt (ReturnType UInt)) (fdname f) (fdsuffix FnPlain)
+    (fdargs ((AutoDiffable x UReal)))
+    (fdbody
+     (((pattern
+        (Block
+         (((pattern
+            (Return
+             (((pattern (Lit Int 1))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta <opaque>)))))
+       (meta <opaque>))))
     (fdloc <opaque>))))
  (input_vars ())
  (prepare_data
@@ -10760,6 +10772,18 @@
            (meta
             ((type_ (UTuple (UInt UInt))) (loc <opaque>)
              (adlevel (TupleAD (DataOnly DataOnly)))))))))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype DataOnly) (decl_id y4) (decl_type (Sized SInt))
+      (initialize Default)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment ((LVariable y4) ()) UInt
+      ((pattern
+        (FunApp (UserDefined f FnPlain)
+         (((pattern (Lit Real 4.5))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))))
  (log_prob ()) (reverse_mode_log_prob ())

@@ -4088,16 +4088,19 @@ namespace overloading_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 9> locations_array__ =
+static constexpr std::array<const char*, 12> locations_array__ =
   {" (found before start of program)",
-  " (in 'overloading.stan', line 10, column 2 to column 38)",
-  " (in 'overloading.stan', line 11, column 2 to column 30)",
-  " (in 'overloading.stan', line 12, column 2 to column 17)",
-  " (in 'overloading.stan', line 13, column 2 to column 17)",
+  " (in 'overloading.stan', line 13, column 2 to column 38)",
+  " (in 'overloading.stan', line 14, column 2 to column 30)",
+  " (in 'overloading.stan', line 15, column 2 to column 17)",
+  " (in 'overloading.stan', line 16, column 2 to column 17)",
+  " (in 'overloading.stan', line 17, column 2 to column 18)",
   " (in 'overloading.stan', line 3, column 4 to column 15)",
   " (in 'overloading.stan', line 2, column 32 to line 4, column 3)",
   " (in 'overloading.stan', line 6, column 4 to column 15)",
-  " (in 'overloading.stan', line 5, column 27 to line 7, column 3)"};
+  " (in 'overloading.stan', line 5, column 27 to line 7, column 3)",
+  " (in 'overloading.stan', line 9, column 4 to column 13)",
+  " (in 'overloading.stan', line 8, column 16 to line 10, column 3)"};
 template <typename T0__,
           stan::require_all_t<stan::is_tuple_of_size<T0__, 3>,
                               stan::is_integral<stan::tuple_element_t<0,
@@ -4113,6 +4116,10 @@ template <typename T0__,
                                                   T0__>>,
                               stan::is_integral<stan::tuple_element_t<1,
                                                   T0__>>>* = nullptr>
+int f(const T0__& x, std::ostream* pstream__);
+template <typename T0__,
+          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+                                                      stan::is_floating_point<T0__>>>* = nullptr>
 int f(const T0__& x, std::ostream* pstream__);
 // int f(tuple(int, int, int))
 template <typename T0__,
@@ -4135,7 +4142,7 @@ int f(const T0__& x, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 5;
+    current_statement__ = 6;
     return std::get<2>(x);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -4160,8 +4167,30 @@ int f(const T0__& x, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 7;
+    current_statement__ = 8;
     return std::get<1>(x);
+  } catch (const std::exception& e) {
+    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+  }
+}
+// int f(real)
+template <typename T0__,
+          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+                                                      stan::is_floating_point<T0__>>>*>
+int f(const T0__& x, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<T0__>;
+  int current_statement__ = 0;
+  // suppress unused var warning
+  (void) current_statement__;
+  static constexpr bool propto__ = true;
+  // suppress unused var warning
+  (void) propto__;
+  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+  // suppress unused var warning
+  (void) DUMMY_VAR__;
+  try {
+    current_statement__ = 10;
+    return 1;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -4172,6 +4201,7 @@ class overloading_model final : public model_base_crtp<overloading_model> {
   std::tuple<int, int> x2;
   int y3;
   int y2;
+  int y4;
  public:
   ~overloading_model() {}
   overloading_model(stan::io::var_context& context__, unsigned int
@@ -4215,6 +4245,10 @@ class overloading_model final : public model_base_crtp<overloading_model> {
       y2 = std::numeric_limits<int>::min();
       current_statement__ = 4;
       y2 = f(x2, pstream__);
+      current_statement__ = 5;
+      y4 = std::numeric_limits<int>::min();
+      current_statement__ = 5;
+      y4 = f(4.5, pstream__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
