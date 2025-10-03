@@ -331,13 +331,14 @@ module Decls = struct
 end
 
 type template_parameter =
-  | Typename of string  (** The name of a template typename *)
-  | RequireAllCondition of string * type_ list
-      (** A C++ type trait (e.g. is_arithmetic) and the template
-          types which needs to satisfy that.
-          These are collated into one require_all_t<> *)
+  | Typename of string  (** A typename, e.g. [template <typename Foo>] *)
+  | Bool of string  (** A named boolean non-type template parameter *)
   | Require of string * string list
-  | Bool of string  (** A named boolean template type *)
+      (** A straightforward [require_...<...>] template. *)
+  | RequireAllCondition of string * type_ list
+      (** A C++ type trait (e.g. [is_arithmetic]) and the template
+          types which need to satisfy that.
+          These are collated into one [require_all_t<...>]. *)
 [@@deriving sexp]
 
 type cv_qualifiers = Const | Final | NoExcept [@@deriving sexp]
