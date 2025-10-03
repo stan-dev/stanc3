@@ -6992,7 +6992,7 @@ template <typename T0__,
 Eigen::Matrix<stan::return_type_t<stan::base_type_t<T0__>>,-1,-1>
 nono_func(const T0__& x_arg__, std::ostream* pstream__);
 template <typename T0__, typename T1__,
-          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+          stan::require_all_t<stan::math::disjunction<stan::is_autodiff_scalar<T0__>,
                                                       stan::is_floating_point<T0__>>,
                               stan::is_eigen_matrix_dynamic<T1__>,
                               stan::is_vt_not_complex<T1__>>* = nullptr>
@@ -7025,7 +7025,7 @@ nono_func(const T0__& x_arg__, std::ostream* pstream__) {
 }
 // matrix okay_reduction(real, matrix)
 template <typename T0__, typename T1__,
-          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+          stan::require_all_t<stan::math::disjunction<stan::is_autodiff_scalar<T0__>,
                                                       stan::is_floating_point<T0__>>,
                               stan::is_eigen_matrix_dynamic<T1__>,
                               stan::is_vt_not_complex<T1__>>*>
@@ -8869,7 +8869,7 @@ template <typename T0__,
 Eigen::Matrix<stan::return_type_t<stan::base_type_t<T0__>>,-1,-1>
 nono_func(const T0__& x_arg__, std::ostream* pstream__);
 template <typename T0__, typename T1__,
-          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+          stan::require_all_t<stan::math::disjunction<stan::is_autodiff_scalar<T0__>,
                                                       stan::is_floating_point<T0__>>,
                               stan::is_eigen_matrix_dynamic<T1__>,
                               stan::is_vt_not_complex<T1__>>* = nullptr>
@@ -8902,7 +8902,7 @@ nono_func(const T0__& x_arg__, std::ostream* pstream__) {
 }
 // matrix okay_reduction(real, matrix)
 template <typename T0__, typename T1__,
-          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+          stan::require_all_t<stan::math::disjunction<stan::is_autodiff_scalar<T0__>,
                                                       stan::is_floating_point<T0__>>,
                               stan::is_eigen_matrix_dynamic<T1__>,
                               stan::is_vt_not_complex<T1__>>*>

@@ -43,7 +43,8 @@ let rec requires ut t =
   | UReal ->
       (* not using stan::is_stan_scalar to explictly exclude int *)
       [ RequireAllCondition
-          (`OneOf ["stan::is_autodiff"; "stan::is_floating_point"], [t]) ]
+          (`OneOf ["stan::is_autodiff_scalar"; "stan::is_floating_point"], [t])
+      ]
   | UTuple ts ->
       RequireAllCondition
         ( `Exact "stan::is_tuple_of_size"
@@ -133,7 +134,8 @@ let%expect_test "arg types tuple template" =
     T0__
     ((RequireAllCondition (Exact stan::is_tuple_of_size)
       ((TemplateType T0__) (NonTypeTemplateInt 3)))
-     (RequireAllCondition (OneOf (stan::is_autodiff stan::is_floating_point))
+     (RequireAllCondition
+      (OneOf (stan::is_autodiff_scalar stan::is_floating_point))
       ((TypeTrait stan::tuple_element_t
         ((NonTypeTemplateInt 0) (TemplateType T0__)))))
      (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)

@@ -4118,7 +4118,7 @@ template <typename T0__,
                                                   T0__>>>* = nullptr>
 int f(const T0__& x, std::ostream* pstream__);
 template <typename T0__,
-          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+          stan::require_all_t<stan::math::disjunction<stan::is_autodiff_scalar<T0__>,
                                                       stan::is_floating_point<T0__>>>* = nullptr>
 int f(const T0__& x, std::ostream* pstream__);
 // int f(tuple(int, int, int))
@@ -4175,7 +4175,7 @@ int f(const T0__& x, std::ostream* pstream__) {
 }
 // int f(real)
 template <typename T0__,
-          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+          stan::require_all_t<stan::math::disjunction<stan::is_autodiff_scalar<T0__>,
                                                       stan::is_floating_point<T0__>>>*>
 int f(const T0__& x, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__>;
@@ -7942,13 +7942,13 @@ static constexpr std::array<const char*, 21> locations_array__ =
   " (in 'tuple-dataonly.stan', line 8, column 55 to line 10, column 3)"};
 template <typename T0__,
           stan::require_all_t<stan::is_tuple_of_size<T0__, 2>,
-                              stan::math::disjunction<stan::is_autodiff<
+                              stan::math::disjunction<stan::is_autodiff_scalar<
                                                       stan::tuple_element_t<0,
                                                         T0__>>,
                                                       stan::is_floating_point<
                                                       stan::tuple_element_t<0,
                                                         T0__>>>,
-                              stan::math::disjunction<stan::is_autodiff<
+                              stan::math::disjunction<stan::is_autodiff_scalar<
                                                       stan::tuple_element_t<1,
                                                         T0__>>,
                                                       stan::is_floating_point<
@@ -7959,13 +7959,13 @@ template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::is_tuple_of_size<stan::value_type_t<T0__>,
                               2>,
-                              stan::math::disjunction<stan::is_autodiff<
+                              stan::math::disjunction<stan::is_autodiff_scalar<
                                                       stan::tuple_element_t<0,
                                                         stan::value_type_t<T0__>>>,
                                                       stan::is_floating_point<
                                                       stan::tuple_element_t<0,
                                                         stan::value_type_t<T0__>>>>,
-                              stan::math::disjunction<stan::is_autodiff<
+                              stan::math::disjunction<stan::is_autodiff_scalar<
                                                       stan::tuple_element_t<1,
                                                         stan::value_type_t<T0__>>>,
                                                       stan::is_floating_point<
@@ -7984,7 +7984,7 @@ template <typename T0__,
                               stan::is_vt_not_complex<stan::value_type_t<
                                                         stan::tuple_element_t<0,
                                                           stan::value_type_t<T0__>>>>,
-                              stan::math::disjunction<stan::is_autodiff<
+                              stan::math::disjunction<stan::is_autodiff_scalar<
                                                       stan::tuple_element_t<1,
                                                         stan::value_type_t<T0__>>>,
                                                       stan::is_floating_point<
@@ -7994,13 +7994,13 @@ double baz(const T0__& x, std::ostream* pstream__);
 // real foo(data tuple(real, real))
 template <typename T0__,
           stan::require_all_t<stan::is_tuple_of_size<T0__, 2>,
-                              stan::math::disjunction<stan::is_autodiff<
+                              stan::math::disjunction<stan::is_autodiff_scalar<
                                                       stan::tuple_element_t<0,
                                                         T0__>>,
                                                       stan::is_floating_point<
                                                       stan::tuple_element_t<0,
                                                         T0__>>>,
-                              stan::math::disjunction<stan::is_autodiff<
+                              stan::math::disjunction<stan::is_autodiff_scalar<
                                                       stan::tuple_element_t<1,
                                                         T0__>>,
                                                       stan::is_floating_point<
@@ -8029,13 +8029,13 @@ template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::is_tuple_of_size<stan::value_type_t<T0__>,
                               2>,
-                              stan::math::disjunction<stan::is_autodiff<
+                              stan::math::disjunction<stan::is_autodiff_scalar<
                                                       stan::tuple_element_t<0,
                                                         stan::value_type_t<T0__>>>,
                                                       stan::is_floating_point<
                                                       stan::tuple_element_t<0,
                                                         stan::value_type_t<T0__>>>>,
-                              stan::math::disjunction<stan::is_autodiff<
+                              stan::math::disjunction<stan::is_autodiff_scalar<
                                                       stan::tuple_element_t<1,
                                                         stan::value_type_t<T0__>>>,
                                                       stan::is_floating_point<
@@ -8072,7 +8072,7 @@ template <typename T0__,
                               stan::is_vt_not_complex<stan::value_type_t<
                                                         stan::tuple_element_t<0,
                                                           stan::value_type_t<T0__>>>>,
-                              stan::math::disjunction<stan::is_autodiff<
+                              stan::math::disjunction<stan::is_autodiff_scalar<
                                                       stan::tuple_element_t<1,
                                                         stan::value_type_t<T0__>>>,
                                                       stan::is_floating_point<
@@ -8588,7 +8588,7 @@ template <typename T0__,
           stan::require_all_t<stan::is_tuple_of_size<T0__, 2>,
                               stan::is_std_vector<stan::tuple_element_t<0,
                                                     T0__>>,
-                              stan::math::disjunction<stan::is_autodiff<
+                              stan::math::disjunction<stan::is_autodiff_scalar<
                                                       stan::value_type_t<
                                                         stan::tuple_element_t<0,
                                                           T0__>>>,
@@ -8604,7 +8604,7 @@ template <typename T0__,
           stan::require_all_t<stan::is_tuple_of_size<T0__, 2>,
                               stan::is_std_vector<stan::tuple_element_t<0,
                                                     T0__>>,
-                              stan::math::disjunction<stan::is_autodiff<
+                              stan::math::disjunction<stan::is_autodiff_scalar<
                                                       stan::value_type_t<
                                                         stan::tuple_element_t<0,
                                                           T0__>>>,
@@ -11882,7 +11882,7 @@ template <typename T0__,
           stan::require_all_t<stan::is_tuple_of_size<T0__, 2>,
                               stan::is_std_vector<stan::tuple_element_t<0,
                                                     T0__>>,
-                              stan::math::disjunction<stan::is_autodiff<
+                              stan::math::disjunction<stan::is_autodiff_scalar<
                                                       stan::value_type_t<
                                                         stan::tuple_element_t<0,
                                                           T0__>>>,
@@ -11892,7 +11892,7 @@ template <typename T0__,
                                                           T0__>>>>,
                               stan::is_std_vector<stan::tuple_element_t<1,
                                                     T0__>>,
-                              stan::math::disjunction<stan::is_autodiff<
+                              stan::math::disjunction<stan::is_autodiff_scalar<
                                                       stan::value_type_t<
                                                         stan::tuple_element_t<1,
                                                           T0__>>>,
@@ -11908,7 +11908,7 @@ template <typename T0__,
           stan::require_all_t<stan::is_tuple_of_size<T0__, 2>,
                               stan::is_std_vector<stan::tuple_element_t<0,
                                                     T0__>>,
-                              stan::math::disjunction<stan::is_autodiff<
+                              stan::math::disjunction<stan::is_autodiff_scalar<
                                                       stan::value_type_t<
                                                         stan::tuple_element_t<0,
                                                           T0__>>>,
@@ -11918,7 +11918,7 @@ template <typename T0__,
                                                           T0__>>>>,
                               stan::is_std_vector<stan::tuple_element_t<1,
                                                     T0__>>,
-                              stan::math::disjunction<stan::is_autodiff<
+                              stan::math::disjunction<stan::is_autodiff_scalar<
                                                       stan::value_type_t<
                                                         stan::tuple_element_t<1,
                                                           T0__>>>,
@@ -12979,7 +12979,7 @@ template <typename T0__,
                                                                     T0__>>>,
                               stan::is_std_vector<stan::tuple_element_t<1,
                                                     T0__>>,
-                              stan::math::disjunction<stan::is_autodiff<
+                              stan::math::disjunction<stan::is_autodiff_scalar<
                                                       stan::value_type_t<
                                                         stan::tuple_element_t<1,
                                                           T0__>>>,
@@ -13002,7 +13002,7 @@ template <typename T0__,
 void foo2(const T0__& test, std::ostream* pstream__);
 template <typename T0__,
           stan::require_all_t<stan::is_tuple_of_size<T0__, 2>,
-                              stan::math::disjunction<stan::is_autodiff<
+                              stan::math::disjunction<stan::is_autodiff_scalar<
                                                       stan::tuple_element_t<0,
                                                         T0__>>,
                                                       stan::is_floating_point<
@@ -13035,7 +13035,7 @@ template <typename T0__, typename T1__,
                               stan::is_vt_not_complex<stan::tuple_element_t<1,
                                                         stan::tuple_element_t<1,
                                                           T0__>>>,
-                              stan::math::disjunction<stan::is_autodiff<
+                              stan::math::disjunction<stan::is_autodiff_scalar<
                                                       stan::tuple_element_t<2,
                                                         T0__>>,
                                                       stan::is_floating_point<
@@ -13092,7 +13092,7 @@ template <typename T0__,
                                                                     T0__>>>,
                               stan::is_std_vector<stan::tuple_element_t<1,
                                                     T0__>>,
-                              stan::math::disjunction<stan::is_autodiff<
+                              stan::math::disjunction<stan::is_autodiff_scalar<
                                                       stan::value_type_t<
                                                         stan::tuple_element_t<1,
                                                           T0__>>>,
@@ -13158,7 +13158,7 @@ void foo2(const T0__& test, std::ostream* pstream__) {
 // void foo3(tuple(real, matrix))
 template <typename T0__,
           stan::require_all_t<stan::is_tuple_of_size<T0__, 2>,
-                              stan::math::disjunction<stan::is_autodiff<
+                              stan::math::disjunction<stan::is_autodiff_scalar<
                                                       stan::tuple_element_t<0,
                                                         T0__>>,
                                                       stan::is_floating_point<
@@ -13216,7 +13216,7 @@ template <typename T0__, typename T1__,
                               stan::is_vt_not_complex<stan::tuple_element_t<1,
                                                         stan::tuple_element_t<1,
                                                           T0__>>>,
-                              stan::math::disjunction<stan::is_autodiff<
+                              stan::math::disjunction<stan::is_autodiff_scalar<
                                                       stan::tuple_element_t<2,
                                                         T0__>>,
                                                       stan::is_floating_point<
@@ -13733,7 +13733,7 @@ template <typename T0__,
                                                   T0__>>,
                               stan::is_std_vector<stan::tuple_element_t<2,
                                                     T0__>>,
-                              stan::math::disjunction<stan::is_autodiff<
+                              stan::math::disjunction<stan::is_autodiff_scalar<
                                                       stan::value_type_t<
                                                         stan::tuple_element_t<2,
                                                           T0__>>>,
@@ -13744,7 +13744,7 @@ template <typename T0__,
 void g(const T0__& x, std::ostream* pstream__);
 template <typename T0__,
           stan::require_all_t<stan::is_tuple_of_size<T0__, 2>,
-                              stan::math::disjunction<stan::is_autodiff<
+                              stan::math::disjunction<stan::is_autodiff_scalar<
                                                       stan::tuple_element_t<0,
                                                         T0__>>,
                                                       stan::is_floating_point<
@@ -13762,7 +13762,7 @@ template <typename T0__,
                               stan::is_std_vector<stan::tuple_element_t<1,
                                                     stan::tuple_element_t<1,
                                                       T0__>>>,
-                              stan::math::disjunction<stan::is_autodiff<
+                              stan::math::disjunction<stan::is_autodiff_scalar<
                                                       stan::value_type_t<
                                                         stan::tuple_element_t<1,
                                                           stan::tuple_element_t<1,
@@ -13823,7 +13823,7 @@ template <typename T0__,
                                                   T0__>>,
                               stan::is_std_vector<stan::tuple_element_t<2,
                                                     T0__>>,
-                              stan::math::disjunction<stan::is_autodiff<
+                              stan::math::disjunction<stan::is_autodiff_scalar<
                                                       stan::value_type_t<
                                                         stan::tuple_element_t<2,
                                                           T0__>>>,
@@ -13867,7 +13867,7 @@ void g(const T0__& x, std::ostream* pstream__) {
 // void h(tuple(real, tuple(matrix, array[] real)))
 template <typename T0__,
           stan::require_all_t<stan::is_tuple_of_size<T0__, 2>,
-                              stan::math::disjunction<stan::is_autodiff<
+                              stan::math::disjunction<stan::is_autodiff_scalar<
                                                       stan::tuple_element_t<0,
                                                         T0__>>,
                                                       stan::is_floating_point<
@@ -13885,7 +13885,7 @@ template <typename T0__,
                               stan::is_std_vector<stan::tuple_element_t<1,
                                                     stan::tuple_element_t<1,
                                                       T0__>>>,
-                              stan::math::disjunction<stan::is_autodiff<
+                              stan::math::disjunction<stan::is_autodiff_scalar<
                                                       stan::value_type_t<
                                                         stan::tuple_element_t<1,
                                                           stan::tuple_element_t<1,
@@ -14897,14 +14897,14 @@ static constexpr std::array<const char*, 12> locations_array__ =
   " (in 'tuple_hof.stan', line 3, column 39 to line 5, column 3)"};
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           stan::require_all_t<stan::is_std_vector<T0__>,
-                              stan::math::disjunction<stan::is_autodiff<
+                              stan::math::disjunction<stan::is_autodiff_scalar<
                                                       stan::value_type_t<T0__>>,
                                                       stan::is_floating_point<
                                                       stan::value_type_t<T0__>>>,
                               stan::is_integral<T1__>,
                               stan::is_integral<T2__>,
                               stan::is_tuple_of_size<T3__, 2>,
-                              stan::math::disjunction<stan::is_autodiff<
+                              stan::math::disjunction<stan::is_autodiff_scalar<
                                                       stan::tuple_element_t<0,
                                                         T3__>>,
                                                       stan::is_floating_point<
@@ -14920,14 +14920,14 @@ fun(const T0__& y_slice, const T1__& start, const T2__& end, const T3__& m,
 struct fun_rsfunctor__ {
   template <typename T0__, typename T1__, typename T2__, typename T3__,
             stan::require_all_t<stan::is_std_vector<T0__>,
-                                stan::math::disjunction<stan::is_autodiff<
+                                stan::math::disjunction<stan::is_autodiff_scalar<
                                                         stan::value_type_t<T0__>>,
                                                         stan::is_floating_point<
                                                         stan::value_type_t<T0__>>>,
                                 stan::is_integral<T1__>,
                                 stan::is_integral<T2__>,
                                 stan::is_tuple_of_size<T3__, 2>,
-                                stan::math::disjunction<stan::is_autodiff<
+                                stan::math::disjunction<stan::is_autodiff_scalar<
                                                         stan::tuple_element_t<0,
                                                           T3__>>,
                                                         stan::is_floating_point<
@@ -14948,14 +14948,14 @@ struct fun_rsfunctor__ {
 // real fun(array[] real, int, int, tuple(real, array[] int))
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           stan::require_all_t<stan::is_std_vector<T0__>,
-                              stan::math::disjunction<stan::is_autodiff<
+                              stan::math::disjunction<stan::is_autodiff_scalar<
                                                       stan::value_type_t<T0__>>,
                                                       stan::is_floating_point<
                                                       stan::value_type_t<T0__>>>,
                               stan::is_integral<T1__>,
                               stan::is_integral<T2__>,
                               stan::is_tuple_of_size<T3__, 2>,
-                              stan::math::disjunction<stan::is_autodiff<
+                              stan::math::disjunction<stan::is_autodiff_scalar<
                                                       stan::tuple_element_t<0,
                                                         T3__>>,
                                                       stan::is_floating_point<
@@ -15410,32 +15410,32 @@ static constexpr std::array<const char*, 4> locations_array__ =
   " (in 'tuple_lpdf.stan', line 2, column 63 to line 4, column 4)"};
 template <bool propto__, typename T0__, typename T1__,
           stan::require_all_t<stan::is_tuple_of_size<T0__, 2>,
-                              stan::math::disjunction<stan::is_autodiff<
+                              stan::math::disjunction<stan::is_autodiff_scalar<
                                                       stan::tuple_element_t<0,
                                                         T0__>>,
                                                       stan::is_floating_point<
                                                       stan::tuple_element_t<0,
                                                         T0__>>>,
-                              stan::math::disjunction<stan::is_autodiff<
+                              stan::math::disjunction<stan::is_autodiff_scalar<
                                                       stan::tuple_element_t<1,
                                                         T0__>>,
                                                       stan::is_floating_point<
                                                       stan::tuple_element_t<1,
                                                         T0__>>>,
                               stan::is_tuple_of_size<T1__, 3>,
-                              stan::math::disjunction<stan::is_autodiff<
+                              stan::math::disjunction<stan::is_autodiff_scalar<
                                                       stan::tuple_element_t<0,
                                                         T1__>>,
                                                       stan::is_floating_point<
                                                       stan::tuple_element_t<0,
                                                         T1__>>>,
-                              stan::math::disjunction<stan::is_autodiff<
+                              stan::math::disjunction<stan::is_autodiff_scalar<
                                                       stan::tuple_element_t<1,
                                                         T1__>>,
                                                       stan::is_floating_point<
                                                       stan::tuple_element_t<1,
                                                         T1__>>>,
-                              stan::math::disjunction<stan::is_autodiff<
+                              stan::math::disjunction<stan::is_autodiff_scalar<
                                                       stan::tuple_element_t<2,
                                                         T1__>>,
                                                       stan::is_floating_point<
@@ -15448,32 +15448,32 @@ foo_lpdf(const T0__& x, const T1__& y, std::ostream* pstream__);
 // real foo_lpdf(tuple(real, real), tuple(real, real, real))
 template <bool propto__, typename T0__, typename T1__,
           stan::require_all_t<stan::is_tuple_of_size<T0__, 2>,
-                              stan::math::disjunction<stan::is_autodiff<
+                              stan::math::disjunction<stan::is_autodiff_scalar<
                                                       stan::tuple_element_t<0,
                                                         T0__>>,
                                                       stan::is_floating_point<
                                                       stan::tuple_element_t<0,
                                                         T0__>>>,
-                              stan::math::disjunction<stan::is_autodiff<
+                              stan::math::disjunction<stan::is_autodiff_scalar<
                                                       stan::tuple_element_t<1,
                                                         T0__>>,
                                                       stan::is_floating_point<
                                                       stan::tuple_element_t<1,
                                                         T0__>>>,
                               stan::is_tuple_of_size<T1__, 3>,
-                              stan::math::disjunction<stan::is_autodiff<
+                              stan::math::disjunction<stan::is_autodiff_scalar<
                                                       stan::tuple_element_t<0,
                                                         T1__>>,
                                                       stan::is_floating_point<
                                                       stan::tuple_element_t<0,
                                                         T1__>>>,
-                              stan::math::disjunction<stan::is_autodiff<
+                              stan::math::disjunction<stan::is_autodiff_scalar<
                                                       stan::tuple_element_t<1,
                                                         T1__>>,
                                                       stan::is_floating_point<
                                                       stan::tuple_element_t<1,
                                                         T1__>>>,
-                              stan::math::disjunction<stan::is_autodiff<
+                              stan::math::disjunction<stan::is_autodiff_scalar<
                                                       stan::tuple_element_t<2,
                                                         T1__>>,
                                                       stan::is_floating_point<
@@ -15823,7 +15823,7 @@ static constexpr std::array<const char*, 4> locations_array__ =
   " (in 'tuple_lpdf2.stan', line 2, column 37 to line 4, column 4)"};
 template <bool propto__, typename T0__,
           stan::require_all_t<stan::is_tuple_of_size<T0__, 2>,
-                              stan::math::disjunction<stan::is_autodiff<
+                              stan::math::disjunction<stan::is_autodiff_scalar<
                                                       stan::tuple_element_t<0,
                                                         T0__>>,
                                                       stan::is_floating_point<
@@ -15836,7 +15836,7 @@ foo_lpdf(const T0__& x, std::ostream* pstream__);
 // real foo_lpdf(tuple(real, int))
 template <bool propto__, typename T0__,
           stan::require_all_t<stan::is_tuple_of_size<T0__, 2>,
-                              stan::math::disjunction<stan::is_autodiff<
+                              stan::math::disjunction<stan::is_autodiff_scalar<
                                                       stan::tuple_element_t<0,
                                                         T0__>>,
                                                       stan::is_floating_point<
@@ -16184,7 +16184,7 @@ template <bool propto__, typename T0__, typename T1__,
                                                   T0__>>,
                               stan::is_integral<stan::tuple_element_t<1,
                                                   T0__>>,
-                              stan::math::disjunction<stan::is_autodiff<T1__>,
+                              stan::math::disjunction<stan::is_autodiff_scalar<T1__>,
                                                       stan::is_floating_point<T1__>>>* = nullptr>
 stan::return_type_t<T1__>
 foo_lpmf(const T0__& x, const T1__& y, std::ostream* pstream__);
@@ -16195,7 +16195,7 @@ template <bool propto__, typename T0__, typename T1__,
                                                   T0__>>,
                               stan::is_integral<stan::tuple_element_t<1,
                                                   T0__>>,
-                              stan::math::disjunction<stan::is_autodiff<T1__>,
+                              stan::math::disjunction<stan::is_autodiff_scalar<T1__>,
                                                       stan::is_floating_point<T1__>>>*>
 stan::return_type_t<T1__>
 foo_lpmf(const T0__& x, const T1__& y, std::ostream* pstream__) {

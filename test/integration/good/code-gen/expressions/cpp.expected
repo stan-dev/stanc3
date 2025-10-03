@@ -596,11 +596,11 @@ static constexpr std::array<const char*, 13> locations_array__ =
   " (in 'simple_function.stan', line 11, column 37 to line 13, column 3)"};
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__, typename T5__,
-          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+          stan::require_all_t<stan::math::disjunction<stan::is_autodiff_scalar<T0__>,
                                                       stan::is_floating_point<T0__>>,
                               stan::is_integral<T1__>,
                               stan::is_std_vector<T2__>,
-                              stan::math::disjunction<stan::is_autodiff<
+                              stan::math::disjunction<stan::is_autodiff_scalar<
                                                       stan::value_type_t<T2__>>,
                                                       stan::is_floating_point<
                                                       stan::value_type_t<T2__>>>,
@@ -646,11 +646,11 @@ add_udf(const T0__& a_arg__, const T1__& b_arg__, std::ostream* pstream__);
 // real foo1(real, int, array[] real, vector, matrix, row_vector)
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__, typename T5__,
-          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+          stan::require_all_t<stan::math::disjunction<stan::is_autodiff_scalar<T0__>,
                                                       stan::is_floating_point<T0__>>,
                               stan::is_integral<T1__>,
                               stan::is_std_vector<T2__>,
-                              stan::math::disjunction<stan::is_autodiff<
+                              stan::math::disjunction<stan::is_autodiff_scalar<
                                                       stan::value_type_t<T2__>>,
                                                       stan::is_floating_point<
                                                       stan::value_type_t<T2__>>>,
