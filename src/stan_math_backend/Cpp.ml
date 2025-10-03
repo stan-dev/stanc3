@@ -333,12 +333,10 @@ end
 type template_parameter =
   | Typename of string  (** The name of a template typename *)
   | RequireAllCondition of
-      [ `Exact of string * [`Type of type_ | `Int of int] list
-        (** A C++ type trait (e.g. is_arithmetic) and the template
-          args which needs to satisfy that. *)
-      | `OneOf of string list * type_
-        (** A disjunction of several type traits on the same type *) ]
-      (** These are collated into one require_all_t<>*)
+      [`Exact of string | `OneOf of string list] * type_ list
+      (** A C++ type trait (e.g. is_arithmetic) and the template
+          types which needs to satisfy that.
+          These are collated into one require_all_t<> *)
   | Require of string * string list
   | Bool of string  (** A named boolean template type *)
 [@@deriving sexp]
@@ -460,17 +458,14 @@ module Printing = struct
 
   let pp_requires ~default ppf requires =
     if not (List.is_empty requires) then
-      let pp_require_arg ppf = function
-        | `Type t -> pp_type_ ppf t
-        | `Int n -> int ppf n in
       let pp_single_require args ppf trait =
-        pf ppf "%s<%a>" trait (list ~sep:comma pp_require_arg) args in
-      let pp_require ppf req =
+        pf ppf "%s<%a>" trait (list ~sep:comma pp_type_) args in
+      let pp_require ppf (req, tys) =
         match req with
-        | `Exact (trait, args) -> pp_single_require args ppf trait
-        | `OneOf (traits, ty) ->
+        | `Exact trait -> pp_single_require tys ppf trait
+        | `OneOf traits ->
             pf ppf "stan::math::disjunction<@[%a@]>"
-              (list ~sep:comma (pp_single_require [`Type ty]))
+              (list ~sep:comma (pp_single_require tys))
               traits in
       pf ppf ",@ stan::require_all_t<@[%a@]>*%s"
         (list ~sep:comma pp_require)
@@ -491,7 +486,7 @@ module Printing = struct
     if not (List.is_empty template_parameters) then
       let templates, requires =
         List.partition_map template_parameters ~f:(function
-          | RequireAllCondition trait -> Second trait
+          | RequireAllCondition (trait, tys) -> Second (trait, tys)
           | Typename name -> First (`Typename name)
           | Bool name -> First (`Bool name)
           | Require (requirement, args) -> First (`Require (requirement, args)))
@@ -823,8 +818,7 @@ module Tests = struct
           ~templates_init:
             ( [ [ Typename "T0__"
                 ; RequireAllCondition
-                    (`Exact ("stan::is_foobar", [`Type (TemplateType "T0__")]))
-                ] ]
+                    (`Exact "stan::is_foobar", [TemplateType "T0__"]) ] ]
             , true )
           ~name:"foobar" ~return_type:Void ~inline:true ()
       ; (let s =
@@ -835,8 +829,7 @@ module Tests = struct
            ~templates_init:
              ( [ [ Typename "T0__"
                  ; RequireAllCondition
-                     (`Exact ("stan::is_foobar", [`Type (TemplateType "T0__")]))
-                 ] ]
+                     (`Exact "stan::is_foobar", [TemplateType "T0__"]) ] ]
              , false )
            ~name:"foobar" ~return_type:Void ~inline:true ~body:rethrow ()) ]
     in
