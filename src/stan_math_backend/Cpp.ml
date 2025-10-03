@@ -70,12 +70,7 @@ module Types = struct
   let decay t = TypeTrait ("std::decay_t", [t])
 
   let tuple_elt t i =
-    let t =
-      match t with
-      (* std::tuple_element isn't specialized for references *)
-      | TypeTrait (("stan::base_type_t" | "stan::value_type_t"), _) -> t
-      | _ -> decay t in
-    TypeTrait ("std::tuple_element_t", [NonTypeTemplateInt i; t])
+    TypeTrait ("stan::tuple_element_t", [NonTypeTemplateInt i; t])
 end
 
 type operator =
@@ -338,7 +333,8 @@ end
 
 type template_parameter =
   | Typename of string  (** The name of a template typename *)
-  | RequireAllCondition of [`Exact of string | `OneOf of string list] * type_
+  | RequireAllCondition of
+      [`Exact of string | `TupleSize of int | `OneOf of string list] * type_
       (** A C++ type trait (e.g. is_arithmetic) and the template
           name which needs to satisfy that.
           These are collated into one require_all_t<> *)
@@ -471,6 +467,8 @@ module Printing = struct
       let pp_require ppf (req, t) =
         match req with
         | `Exact trait -> pp_single_require t ppf trait
+        | `TupleSize n ->
+            pf ppf "stan::is_tuple_of_size<@[%a,@ %d@]>" pp_type_ t n
         | `OneOf traits ->
             pf ppf "stan::math::disjunction<@[%a@]>"
               (list ~sep:comma (pp_single_require t))

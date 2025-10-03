@@ -35,23 +35,21 @@ static constexpr std::array<const char*, 28> locations_array__ =
   " (in 'basic.stan', line 51, column 4 to column 23)",
   " (in 'basic.stan', line 49, column 52 to line 52, column 3)"};
 template <typename T0__,
-          stan::require_all_t<stan::math::disjunction<stan::is_var<T0__>,
-                                                      stan::is_fvar<T0__>,
-                                                      std::is_floating_point<
-                                                      std::decay_t<T0__>>>>* = nullptr>
+          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+                                                      stan::is_floating_point<T0__>>>* = nullptr>
 stan::return_type_t<T0__>
 my_log1p_exp(const T0__& x, std::ostream* pstream__);
 template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
-                              stan::math::disjunction<stan::is_var<stan::value_type_t<T0__>>,
-                                                      stan::is_fvar<stan::value_type_t<T0__>>,
-                                                      std::is_floating_point<
-                                                      std::decay_t<stan::value_type_t<T0__>>>>>* = nullptr>
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      stan::value_type_t<T0__>>,
+                                                      stan::is_floating_point<
+                                                      stan::value_type_t<T0__>>>>* = nullptr>
 stan::return_type_t<stan::base_type_t<T0__>>
 array_fun(const T0__& a, std::ostream* pstream__);
 template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
-                              std::is_integral<std::decay_t<stan::value_type_t<T0__>>>>* = nullptr>
+                              stan::is_integral<stan::value_type_t<T0__>>>* = nullptr>
 double int_array_fun(const T0__& a, std::ostream* pstream__);
 template <typename T0__,
           stan::require_all_t<stan::is_col_vector<T0__>,
@@ -59,41 +57,31 @@ template <typename T0__,
 Eigen::Matrix<stan::return_type_t<stan::base_type_t<T0__>>,-1,1>
 my_vector_mul_by_5(const T0__& x_arg__, std::ostream* pstream__);
 template <typename T0__, typename T1__,
-          stan::require_all_t<std::is_integral<std::decay_t<T0__>>,
-                              std::is_integral<std::decay_t<T1__>>>* = nullptr>
+          stan::require_all_t<stan::is_integral<T0__>,
+                              stan::is_integral<T1__>>* = nullptr>
 int
 int_only_multiplication(const T0__& a, const T1__& b, std::ostream* pstream__);
 template <typename T0__,
-          stan::require_all_t<stan::math::disjunction<stan::is_var<T0__>,
-                                                      stan::is_fvar<T0__>,
-                                                      std::is_floating_point<
-                                                      std::decay_t<T0__>>>>* = nullptr>
+          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+                                                      stan::is_floating_point<T0__>>>* = nullptr>
 stan::return_type_t<T0__> test_lgamma(const T0__& x, std::ostream* pstream__);
 template <bool propto__, typename T0__, typename T_lp__,
           typename T_lp_accum__,
-          stan::require_all_t<stan::math::disjunction<stan::is_var<T0__>,
-                                                      stan::is_fvar<T0__>,
-                                                      std::is_floating_point<
-                                                      std::decay_t<T0__>>>>* = nullptr>
+          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+                                                      stan::is_floating_point<T0__>>>* = nullptr>
 void
 test_lp(const T0__& a, T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream*
         pstream__);
 template <typename T0__, typename RNG,
-          stan::require_all_t<stan::math::disjunction<stan::is_var<T0__>,
-                                                      stan::is_fvar<T0__>,
-                                                      std::is_floating_point<
-                                                      std::decay_t<T0__>>>>* = nullptr>
+          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+                                                      stan::is_floating_point<T0__>>>* = nullptr>
 stan::return_type_t<T0__>
 test_rng(const T0__& a, RNG& base_rng__, std::ostream* pstream__);
 template <bool propto__, typename T0__, typename T1__,
-          stan::require_all_t<stan::math::disjunction<stan::is_var<T0__>,
-                                                      stan::is_fvar<T0__>,
-                                                      std::is_floating_point<
-                                                      std::decay_t<T0__>>>,
-                              stan::math::disjunction<stan::is_var<T1__>,
-                                                      stan::is_fvar<T1__>,
-                                                      std::is_floating_point<
-                                                      std::decay_t<T1__>>>>* = nullptr>
+          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+                                                      stan::is_floating_point<T0__>>,
+                              stan::math::disjunction<stan::is_autodiff<T1__>,
+                                                      stan::is_floating_point<T1__>>>* = nullptr>
 stan::return_type_t<T0__, T1__>
 test_lpdf(const T0__& a, const T1__& b, std::ostream* pstream__);
 template <typename T0__,
@@ -108,19 +96,16 @@ template <typename T0__,
                                                     stan::value_type_t<T0__>>>,
                               stan::is_complex<stan::value_type_t<stan::value_type_t<
                                                                     stan::value_type_t<T0__>>>>,
-                              stan::math::disjunction<stan::is_var<stan::base_type_t<
-                                                                    stan::value_type_t<
-                                                                    stan::value_type_t<
-                                                                    stan::value_type_t<T0__>>>>>,
-                                                      stan::is_fvar<stan::base_type_t<
-                                                                    stan::value_type_t<
-                                                                    stan::value_type_t<
-                                                                    stan::value_type_t<T0__>>>>>,
-                                                      std::is_floating_point<
-                                                      std::decay_t<stan::base_type_t<
-                                                                    stan::value_type_t<
-                                                                    stan::value_type_t<
-                                                                    stan::value_type_t<T0__>>>>>>>>* = nullptr>
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      stan::base_type_t<
+                                                        stan::value_type_t<
+                                                          stan::value_type_t<
+                                                            stan::value_type_t<T0__>>>>>,
+                                                      stan::is_floating_point<
+                                                      stan::base_type_t<
+                                                        stan::value_type_t<
+                                                          stan::value_type_t<
+                                                            stan::value_type_t<T0__>>>>>>>* = nullptr>
 std::vector<
   std::vector<
     std::vector<std::complex<stan::return_type_t<stan::base_type_t<T0__>>>>>>
@@ -129,19 +114,15 @@ template <bool jacobian__, typename T0__, typename T1__, typename T_lp__,
           typename T_lp_accum__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>,
-                              stan::math::disjunction<stan::is_var<T1__>,
-                                                      stan::is_fvar<T1__>,
-                                                      std::is_floating_point<
-                                                      std::decay_t<T1__>>>>* = nullptr>
+                              stan::math::disjunction<stan::is_autodiff<T1__>,
+                                                      stan::is_floating_point<T1__>>>* = nullptr>
 Eigen::Matrix<stan::return_type_t<stan::base_type_t<T0__>, T1__>,-1,1>
 my_upper_bound_jacobian(const T0__& x_arg__, const T1__& ub, T_lp__& lp__,
                         T_lp_accum__& lp_accum__, std::ostream* pstream__);
 // real my_log1p_exp(real)
 template <typename T0__,
-          stan::require_all_t<stan::math::disjunction<stan::is_var<T0__>,
-                                                      stan::is_fvar<T0__>,
-                                                      std::is_floating_point<
-                                                      std::decay_t<T0__>>>>*>
+          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+                                                      stan::is_floating_point<T0__>>>*>
 stan::return_type_t<T0__>
 my_log1p_exp(const T0__& x, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__>;
@@ -164,10 +145,10 @@ my_log1p_exp(const T0__& x, std::ostream* pstream__) {
 // real array_fun(array[] real)
 template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
-                              stan::math::disjunction<stan::is_var<stan::value_type_t<T0__>>,
-                                                      stan::is_fvar<stan::value_type_t<T0__>>,
-                                                      std::is_floating_point<
-                                                      std::decay_t<stan::value_type_t<T0__>>>>>*>
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      stan::value_type_t<T0__>>,
+                                                      stan::is_floating_point<
+                                                      stan::value_type_t<T0__>>>>*>
 stan::return_type_t<stan::base_type_t<T0__>>
 array_fun(const T0__& a, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<stan::base_type_t<T0__>>;
@@ -190,7 +171,7 @@ array_fun(const T0__& a, std::ostream* pstream__) {
 // real int_array_fun(array[] int)
 template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
-                              std::is_integral<std::decay_t<stan::value_type_t<T0__>>>>*>
+                              stan::is_integral<stan::value_type_t<T0__>>>*>
 double int_array_fun(const T0__& a, std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;
@@ -244,8 +225,8 @@ my_vector_mul_by_5(const T0__& x_arg__, std::ostream* pstream__) {
 }
 // int int_only_multiplication(int, int)
 template <typename T0__, typename T1__,
-          stan::require_all_t<std::is_integral<std::decay_t<T0__>>,
-                              std::is_integral<std::decay_t<T1__>>>*>
+          stan::require_all_t<stan::is_integral<T0__>,
+                              stan::is_integral<T1__>>*>
 int
 int_only_multiplication(const T0__& a, const T1__& b, std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -267,10 +248,8 @@ int_only_multiplication(const T0__& a, const T1__& b, std::ostream* pstream__) {
 }
 // real test_lgamma(real)
 template <typename T0__,
-          stan::require_all_t<stan::math::disjunction<stan::is_var<T0__>,
-                                                      stan::is_fvar<T0__>,
-                                                      std::is_floating_point<
-                                                      std::decay_t<T0__>>>>*>
+          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+                                                      stan::is_floating_point<T0__>>>*>
 stan::return_type_t<T0__> test_lgamma(const T0__& x, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__>;
   int current_statement__ = 0;
@@ -292,10 +271,8 @@ stan::return_type_t<T0__> test_lgamma(const T0__& x, std::ostream* pstream__) {
 // void test_lp(real)
 template <bool propto__, typename T0__, typename T_lp__,
           typename T_lp_accum__,
-          stan::require_all_t<stan::math::disjunction<stan::is_var<T0__>,
-                                                      stan::is_fvar<T0__>,
-                                                      std::is_floating_point<
-                                                      std::decay_t<T0__>>>>*>
+          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+                                                      stan::is_floating_point<T0__>>>*>
 void
 test_lp(const T0__& a, T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream*
         pstream__) {
@@ -315,10 +292,8 @@ test_lp(const T0__& a, T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream*
 }
 // real test_rng(real)
 template <typename T0__, typename RNG,
-          stan::require_all_t<stan::math::disjunction<stan::is_var<T0__>,
-                                                      stan::is_fvar<T0__>,
-                                                      std::is_floating_point<
-                                                      std::decay_t<T0__>>>>*>
+          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+                                                      stan::is_floating_point<T0__>>>*>
 stan::return_type_t<T0__>
 test_rng(const T0__& a, RNG& base_rng__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__>;
@@ -340,14 +315,10 @@ test_rng(const T0__& a, RNG& base_rng__, std::ostream* pstream__) {
 }
 // real test_lpdf(real, real)
 template <bool propto__, typename T0__, typename T1__,
-          stan::require_all_t<stan::math::disjunction<stan::is_var<T0__>,
-                                                      stan::is_fvar<T0__>,
-                                                      std::is_floating_point<
-                                                      std::decay_t<T0__>>>,
-                              stan::math::disjunction<stan::is_var<T1__>,
-                                                      stan::is_fvar<T1__>,
-                                                      std::is_floating_point<
-                                                      std::decay_t<T1__>>>>*>
+          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+                                                      stan::is_floating_point<T0__>>,
+                              stan::math::disjunction<stan::is_autodiff<T1__>,
+                                                      stan::is_floating_point<T1__>>>*>
 stan::return_type_t<T0__, T1__>
 test_lpdf(const T0__& a, const T1__& b, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__, T1__>;
@@ -396,19 +367,16 @@ template <typename T0__,
                                                     stan::value_type_t<T0__>>>,
                               stan::is_complex<stan::value_type_t<stan::value_type_t<
                                                                     stan::value_type_t<T0__>>>>,
-                              stan::math::disjunction<stan::is_var<stan::base_type_t<
-                                                                    stan::value_type_t<
-                                                                    stan::value_type_t<
-                                                                    stan::value_type_t<T0__>>>>>,
-                                                      stan::is_fvar<stan::base_type_t<
-                                                                    stan::value_type_t<
-                                                                    stan::value_type_t<
-                                                                    stan::value_type_t<T0__>>>>>,
-                                                      std::is_floating_point<
-                                                      std::decay_t<stan::base_type_t<
-                                                                    stan::value_type_t<
-                                                                    stan::value_type_t<
-                                                                    stan::value_type_t<T0__>>>>>>>>*>
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      stan::base_type_t<
+                                                        stan::value_type_t<
+                                                          stan::value_type_t<
+                                                            stan::value_type_t<T0__>>>>>,
+                                                      stan::is_floating_point<
+                                                      stan::base_type_t<
+                                                        stan::value_type_t<
+                                                          stan::value_type_t<
+                                                            stan::value_type_t<T0__>>>>>>>*>
 std::vector<
   std::vector<
     std::vector<std::complex<stan::return_type_t<stan::base_type_t<T0__>>>>>>
@@ -435,10 +403,8 @@ template <bool jacobian__, typename T0__, typename T1__, typename T_lp__,
           typename T_lp_accum__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>,
-                              stan::math::disjunction<stan::is_var<T1__>,
-                                                      stan::is_fvar<T1__>,
-                                                      std::is_floating_point<
-                                                      std::decay_t<T1__>>>>*>
+                              stan::math::disjunction<stan::is_autodiff<T1__>,
+                                                      stan::is_floating_point<T1__>>>*>
 Eigen::Matrix<stan::return_type_t<stan::base_type_t<T0__>, T1__>,-1,1>
 my_upper_bound_jacobian(const T0__& x_arg__, const T1__& ub, T_lp__& lp__,
                         T_lp_accum__& lp_accum__, std::ostream* pstream__) {
@@ -560,23 +526,21 @@ static constexpr std::array<const char*, 21> locations_array__ =
   " (in 'basic.stanfunctions', line 36, column 2 to column 31)",
   " (in 'basic.stanfunctions', line 35, column 31 to line 37, column 1)"};
 template <typename T0__,
-          stan::require_all_t<stan::math::disjunction<stan::is_var<T0__>,
-                                                      stan::is_fvar<T0__>,
-                                                      std::is_floating_point<
-                                                      std::decay_t<T0__>>>>* = nullptr>
+          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+                                                      stan::is_floating_point<T0__>>>* = nullptr>
 stan::return_type_t<T0__>
 my_log1p_exp(const T0__& x, std::ostream* pstream__);
 template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
-                              stan::math::disjunction<stan::is_var<stan::value_type_t<T0__>>,
-                                                      stan::is_fvar<stan::value_type_t<T0__>>,
-                                                      std::is_floating_point<
-                                                      std::decay_t<stan::value_type_t<T0__>>>>>* = nullptr>
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      stan::value_type_t<T0__>>,
+                                                      stan::is_floating_point<
+                                                      stan::value_type_t<T0__>>>>* = nullptr>
 stan::return_type_t<stan::base_type_t<T0__>>
 array_fun(const T0__& a, std::ostream* pstream__);
 template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
-                              std::is_integral<std::decay_t<stan::value_type_t<T0__>>>>* = nullptr>
+                              stan::is_integral<stan::value_type_t<T0__>>>* = nullptr>
 double int_array_fun(const T0__& a, std::ostream* pstream__);
 template <typename T0__,
           stan::require_all_t<stan::is_col_vector<T0__>,
@@ -584,49 +548,37 @@ template <typename T0__,
 Eigen::Matrix<stan::return_type_t<stan::base_type_t<T0__>>,-1,1>
 my_vector_mul_by_5(const T0__& x_arg__, std::ostream* pstream__);
 template <typename T0__, typename T1__,
-          stan::require_all_t<std::is_integral<std::decay_t<T0__>>,
-                              std::is_integral<std::decay_t<T1__>>>* = nullptr>
+          stan::require_all_t<stan::is_integral<T0__>,
+                              stan::is_integral<T1__>>* = nullptr>
 int
 int_only_multiplication(const T0__& a, const T1__& b, std::ostream* pstream__);
 template <typename T0__,
-          stan::require_all_t<stan::math::disjunction<stan::is_var<T0__>,
-                                                      stan::is_fvar<T0__>,
-                                                      std::is_floating_point<
-                                                      std::decay_t<T0__>>>>* = nullptr>
+          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+                                                      stan::is_floating_point<T0__>>>* = nullptr>
 stan::return_type_t<T0__> test_lgamma(const T0__& x, std::ostream* pstream__);
 template <bool propto__, typename T0__, typename T_lp__,
           typename T_lp_accum__,
-          stan::require_all_t<stan::math::disjunction<stan::is_var<T0__>,
-                                                      stan::is_fvar<T0__>,
-                                                      std::is_floating_point<
-                                                      std::decay_t<T0__>>>>* = nullptr>
+          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+                                                      stan::is_floating_point<T0__>>>* = nullptr>
 void
 test_lp(const T0__& a, T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream*
         pstream__);
 template <typename T0__, typename RNG,
-          stan::require_all_t<stan::math::disjunction<stan::is_var<T0__>,
-                                                      stan::is_fvar<T0__>,
-                                                      std::is_floating_point<
-                                                      std::decay_t<T0__>>>>* = nullptr>
+          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+                                                      stan::is_floating_point<T0__>>>* = nullptr>
 stan::return_type_t<T0__>
 test_rng(const T0__& a, RNG& base_rng__, std::ostream* pstream__);
 template <bool propto__, typename T0__, typename T1__,
-          stan::require_all_t<stan::math::disjunction<stan::is_var<T0__>,
-                                                      stan::is_fvar<T0__>,
-                                                      std::is_floating_point<
-                                                      std::decay_t<T0__>>>,
-                              stan::math::disjunction<stan::is_var<T1__>,
-                                                      stan::is_fvar<T1__>,
-                                                      std::is_floating_point<
-                                                      std::decay_t<T1__>>>>* = nullptr>
+          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+                                                      stan::is_floating_point<T0__>>,
+                              stan::math::disjunction<stan::is_autodiff<T1__>,
+                                                      stan::is_floating_point<T1__>>>* = nullptr>
 stan::return_type_t<T0__, T1__>
 test_lpdf(const T0__& a, const T1__& b, std::ostream* pstream__);
 // real my_log1p_exp(real)
 template <typename T0__,
-          stan::require_all_t<stan::math::disjunction<stan::is_var<T0__>,
-                                                      stan::is_fvar<T0__>,
-                                                      std::is_floating_point<
-                                                      std::decay_t<T0__>>>>*>
+          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+                                                      stan::is_floating_point<T0__>>>*>
 stan::return_type_t<T0__>
 my_log1p_exp(const T0__& x, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__>;
@@ -649,10 +601,10 @@ my_log1p_exp(const T0__& x, std::ostream* pstream__) {
 // real array_fun(array[] real)
 template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
-                              stan::math::disjunction<stan::is_var<stan::value_type_t<T0__>>,
-                                                      stan::is_fvar<stan::value_type_t<T0__>>,
-                                                      std::is_floating_point<
-                                                      std::decay_t<stan::value_type_t<T0__>>>>>*>
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      stan::value_type_t<T0__>>,
+                                                      stan::is_floating_point<
+                                                      stan::value_type_t<T0__>>>>*>
 stan::return_type_t<stan::base_type_t<T0__>>
 array_fun(const T0__& a, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<stan::base_type_t<T0__>>;
@@ -675,7 +627,7 @@ array_fun(const T0__& a, std::ostream* pstream__) {
 // real int_array_fun(array[] int)
 template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
-                              std::is_integral<std::decay_t<stan::value_type_t<T0__>>>>*>
+                              stan::is_integral<stan::value_type_t<T0__>>>*>
 double int_array_fun(const T0__& a, std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;
@@ -729,8 +681,8 @@ my_vector_mul_by_5(const T0__& x_arg__, std::ostream* pstream__) {
 }
 // int int_only_multiplication(int, int)
 template <typename T0__, typename T1__,
-          stan::require_all_t<std::is_integral<std::decay_t<T0__>>,
-                              std::is_integral<std::decay_t<T1__>>>*>
+          stan::require_all_t<stan::is_integral<T0__>,
+                              stan::is_integral<T1__>>*>
 int
 int_only_multiplication(const T0__& a, const T1__& b, std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -752,10 +704,8 @@ int_only_multiplication(const T0__& a, const T1__& b, std::ostream* pstream__) {
 }
 // real test_lgamma(real)
 template <typename T0__,
-          stan::require_all_t<stan::math::disjunction<stan::is_var<T0__>,
-                                                      stan::is_fvar<T0__>,
-                                                      std::is_floating_point<
-                                                      std::decay_t<T0__>>>>*>
+          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+                                                      stan::is_floating_point<T0__>>>*>
 stan::return_type_t<T0__> test_lgamma(const T0__& x, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__>;
   int current_statement__ = 0;
@@ -777,10 +727,8 @@ stan::return_type_t<T0__> test_lgamma(const T0__& x, std::ostream* pstream__) {
 // void test_lp(real)
 template <bool propto__, typename T0__, typename T_lp__,
           typename T_lp_accum__,
-          stan::require_all_t<stan::math::disjunction<stan::is_var<T0__>,
-                                                      stan::is_fvar<T0__>,
-                                                      std::is_floating_point<
-                                                      std::decay_t<T0__>>>>*>
+          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+                                                      stan::is_floating_point<T0__>>>*>
 void
 test_lp(const T0__& a, T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream*
         pstream__) {
@@ -800,10 +748,8 @@ test_lp(const T0__& a, T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream*
 }
 // real test_rng(real)
 template <typename T0__, typename RNG,
-          stan::require_all_t<stan::math::disjunction<stan::is_var<T0__>,
-                                                      stan::is_fvar<T0__>,
-                                                      std::is_floating_point<
-                                                      std::decay_t<T0__>>>>*>
+          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+                                                      stan::is_floating_point<T0__>>>*>
 stan::return_type_t<T0__>
 test_rng(const T0__& a, RNG& base_rng__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__>;
@@ -825,14 +771,10 @@ test_rng(const T0__& a, RNG& base_rng__, std::ostream* pstream__) {
 }
 // real test_lpdf(real, real)
 template <bool propto__, typename T0__, typename T1__,
-          stan::require_all_t<stan::math::disjunction<stan::is_var<T0__>,
-                                                      stan::is_fvar<T0__>,
-                                                      std::is_floating_point<
-                                                      std::decay_t<T0__>>>,
-                              stan::math::disjunction<stan::is_var<T1__>,
-                                                      stan::is_fvar<T1__>,
-                                                      std::is_floating_point<
-                                                      std::decay_t<T1__>>>>*>
+          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+                                                      stan::is_floating_point<T0__>>,
+                              stan::math::disjunction<stan::is_autodiff<T1__>,
+                                                      stan::is_floating_point<T1__>>>*>
 stan::return_type_t<T0__, T1__>
 test_lpdf(const T0__& a, const T1__& b, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__, T1__>;
@@ -924,27 +866,25 @@ Eigen::Matrix<stan::return_type_t<stan::base_type_t<T0__>>,-1,1>
 integrand(const T0__& x_arg__, std::ostream* pstream__);
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__,
-          stan::require_all_t<stan::math::disjunction<stan::is_var<T0__>,
-                                                      stan::is_fvar<T0__>,
-                                                      std::is_floating_point<
-                                                      std::decay_t<T0__>>>,
+          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+                                                      stan::is_floating_point<T0__>>,
                               stan::is_std_vector<T1__>,
-                              stan::math::disjunction<stan::is_var<stan::value_type_t<T1__>>,
-                                                      stan::is_fvar<stan::value_type_t<T1__>>,
-                                                      std::is_floating_point<
-                                                      std::decay_t<stan::value_type_t<T1__>>>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      stan::value_type_t<T1__>>,
+                                                      stan::is_floating_point<
+                                                      stan::value_type_t<T1__>>>,
                               stan::is_std_vector<T2__>,
-                              stan::math::disjunction<stan::is_var<stan::value_type_t<T2__>>,
-                                                      stan::is_fvar<stan::value_type_t<T2__>>,
-                                                      std::is_floating_point<
-                                                      std::decay_t<stan::value_type_t<T2__>>>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      stan::value_type_t<T2__>>,
+                                                      stan::is_floating_point<
+                                                      stan::value_type_t<T2__>>>,
                               stan::is_std_vector<T3__>,
-                              stan::math::disjunction<stan::is_var<stan::value_type_t<T3__>>,
-                                                      stan::is_fvar<stan::value_type_t<T3__>>,
-                                                      std::is_floating_point<
-                                                      std::decay_t<stan::value_type_t<T3__>>>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      stan::value_type_t<T3__>>,
+                                                      stan::is_floating_point<
+                                                      stan::value_type_t<T3__>>>,
                               stan::is_std_vector<T4__>,
-                              std::is_integral<std::decay_t<stan::value_type_t<T4__>>>>* = nullptr>
+                              stan::is_integral<stan::value_type_t<T4__>>>* = nullptr>
 std::vector<
   stan::return_type_t<T0__, stan::base_type_t<T1__>, stan::base_type_t<T2__>,
     stan::base_type_t<T3__>>>
@@ -954,36 +894,25 @@ double ode_integrate(std::ostream* pstream__);
 struct integrand_ode_functor__ {
   template <typename T0__, typename T1__, typename T2__, typename T3__,
             typename T4__,
-            stan::require_all_t<stan::math::disjunction<stan::is_var<T0__>,
-                                                        stan::is_fvar<T0__>,
-                                                        std::is_floating_point<
-                                                        std::decay_t<T0__>>>,
+            stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+                                                        stan::is_floating_point<T0__>>,
                                 stan::is_std_vector<T1__>,
-                                stan::math::disjunction<stan::is_var<
+                                stan::math::disjunction<stan::is_autodiff<
                                                         stan::value_type_t<T1__>>,
-                                                        stan::is_fvar<
-                                                        stan::value_type_t<T1__>>,
-                                                        std::is_floating_point<
-                                                        std::decay_t<
-                                                          stan::value_type_t<T1__>>>>,
+                                                        stan::is_floating_point<
+                                                        stan::value_type_t<T1__>>>,
                                 stan::is_std_vector<T2__>,
-                                stan::math::disjunction<stan::is_var<
+                                stan::math::disjunction<stan::is_autodiff<
                                                         stan::value_type_t<T2__>>,
-                                                        stan::is_fvar<
-                                                        stan::value_type_t<T2__>>,
-                                                        std::is_floating_point<
-                                                        std::decay_t<
-                                                          stan::value_type_t<T2__>>>>,
+                                                        stan::is_floating_point<
+                                                        stan::value_type_t<T2__>>>,
                                 stan::is_std_vector<T3__>,
-                                stan::math::disjunction<stan::is_var<
+                                stan::math::disjunction<stan::is_autodiff<
                                                         stan::value_type_t<T3__>>,
-                                                        stan::is_fvar<
-                                                        stan::value_type_t<T3__>>,
-                                                        std::is_floating_point<
-                                                        std::decay_t<
-                                                          stan::value_type_t<T3__>>>>,
+                                                        stan::is_floating_point<
+                                                        stan::value_type_t<T3__>>>,
                                 stan::is_std_vector<T4__>,
-                                std::is_integral<std::decay_t<stan::value_type_t<T4__>>>>* = nullptr>
+                                stan::is_integral<stan::value_type_t<T4__>>>* = nullptr>
   std::vector<
     stan::return_type_t<T0__, stan::base_type_t<T1__>,
       stan::base_type_t<T2__>, stan::base_type_t<T3__>>>
@@ -1021,27 +950,25 @@ integrand(const T0__& x_arg__, std::ostream* pstream__) {
  */
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__,
-          stan::require_all_t<stan::math::disjunction<stan::is_var<T0__>,
-                                                      stan::is_fvar<T0__>,
-                                                      std::is_floating_point<
-                                                      std::decay_t<T0__>>>,
+          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+                                                      stan::is_floating_point<T0__>>,
                               stan::is_std_vector<T1__>,
-                              stan::math::disjunction<stan::is_var<stan::value_type_t<T1__>>,
-                                                      stan::is_fvar<stan::value_type_t<T1__>>,
-                                                      std::is_floating_point<
-                                                      std::decay_t<stan::value_type_t<T1__>>>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      stan::value_type_t<T1__>>,
+                                                      stan::is_floating_point<
+                                                      stan::value_type_t<T1__>>>,
                               stan::is_std_vector<T2__>,
-                              stan::math::disjunction<stan::is_var<stan::value_type_t<T2__>>,
-                                                      stan::is_fvar<stan::value_type_t<T2__>>,
-                                                      std::is_floating_point<
-                                                      std::decay_t<stan::value_type_t<T2__>>>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      stan::value_type_t<T2__>>,
+                                                      stan::is_floating_point<
+                                                      stan::value_type_t<T2__>>>,
                               stan::is_std_vector<T3__>,
-                              stan::math::disjunction<stan::is_var<stan::value_type_t<T3__>>,
-                                                      stan::is_fvar<stan::value_type_t<T3__>>,
-                                                      std::is_floating_point<
-                                                      std::decay_t<stan::value_type_t<T3__>>>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      stan::value_type_t<T3__>>,
+                                                      stan::is_floating_point<
+                                                      stan::value_type_t<T3__>>>,
                               stan::is_std_vector<T4__>,
-                              std::is_integral<std::decay_t<stan::value_type_t<T4__>>>>*>
+                              stan::is_integral<stan::value_type_t<T4__>>>*>
 std::vector<
   stan::return_type_t<T0__, stan::base_type_t<T1__>, stan::base_type_t<T2__>,
     stan::base_type_t<T3__>>>
