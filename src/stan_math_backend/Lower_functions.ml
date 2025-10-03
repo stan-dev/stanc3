@@ -46,7 +46,7 @@ let rec requires ut t =
           (`OneOf (["stan::is_autodiff"; "stan::is_floating_point"], t)) ]
   | UTuple ts ->
       RequireAllCondition
-        (`Exact ("stan::is_tuple_of_size", [`Int (List.length ts); `Type t]))
+        (`Exact ("stan::is_tuple_of_size", [`Type t; `Int (List.length ts)]))
       :: List.concat_mapi ts ~f:(fun i ty -> requires ty (Types.tuple_elt t i))
   | UMathLibraryFunction | UFun _ ->
       Common.ICE.internal_compiler_error
@@ -131,7 +131,7 @@ let%expect_test "arg types tuple template" =
     {|
     T0__
     ((RequireAllCondition
-      (Exact (stan::is_tuple_of_size ((Int 3) (Type (TemplateType T0__))))))
+      (Exact (stan::is_tuple_of_size ((Type (TemplateType T0__)) (Int 3)))))
      (RequireAllCondition
       (OneOf
        ((stan::is_autodiff stan::is_floating_point)
@@ -174,7 +174,7 @@ let%expect_test "arg types tuple template" =
    (RequireAllCondition
     (Exact
      (stan::is_tuple_of_size
-      ((Int 2) (Type (TypeTrait stan::value_type_t ((TemplateType T0__))))))))
+      ((Type (TypeTrait stan::value_type_t ((TemplateType T0__)))) (Int 2)))))
    (RequireAllCondition
     (Exact
      (stan::is_std_vector
