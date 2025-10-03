@@ -332,8 +332,7 @@ end
 
 type template_parameter =
   | Typename of string  (** The name of a template typename *)
-  | RequireAllCondition of
-      [`Exact of string | `OneOf of string list] * type_ list
+  | RequireAllCondition of string * type_ list
       (** A C++ type trait (e.g. is_arithmetic) and the template
           types which needs to satisfy that.
           These are collated into one require_all_t<> *)
@@ -453,22 +452,15 @@ module Printing = struct
     | Const t -> pf ppf "const %a" pp_type_ t
     | Ref t -> pf ppf "%a&" pp_type_ t
     | Pointer t -> pf ppf "%a*" pp_type_ t
-    | TypeTrait (s, types) ->
-        pf ppf "@[<2>%s<%a>@]" s (list ~sep:comma pp_type_) types
+    | TypeTrait (trait, tys) -> pp_type_trait ppf (trait, tys)
+
+  and pp_type_trait ppf (trait, tys) =
+    pf ppf "@[<2>%s<%a>@]" trait (list ~sep:comma pp_type_) tys
 
   let pp_requires ~default ppf requires =
     if not (List.is_empty requires) then
-      let pp_single_require args ppf trait =
-        pf ppf "%s<%a>" trait (list ~sep:comma pp_type_) args in
-      let pp_require ppf (req, tys) =
-        match req with
-        | `Exact trait -> pp_single_require tys ppf trait
-        | `OneOf traits ->
-            pf ppf "stan::math::disjunction<@[%a@]>"
-              (list ~sep:comma (pp_single_require tys))
-              traits in
       pf ppf ",@ stan::require_all_t<@[%a@]>*%s"
-        (list ~sep:comma pp_require)
+        (list ~sep:comma pp_type_trait)
         requires
         (if default then " = nullptr" else "")
 
@@ -817,8 +809,8 @@ module Tests = struct
       [ make_fun_defn
           ~templates_init:
             ( [ [ Typename "T0__"
-                ; RequireAllCondition
-                    (`Exact "stan::is_foobar", [TemplateType "T0__"]) ] ]
+                ; RequireAllCondition ("stan::is_foobar", [TemplateType "T0__"])
+                ] ]
             , true )
           ~name:"foobar" ~return_type:Void ~inline:true ()
       ; (let s =
@@ -828,8 +820,8 @@ module Tests = struct
          make_fun_defn
            ~templates_init:
              ( [ [ Typename "T0__"
-                 ; RequireAllCondition
-                     (`Exact "stan::is_foobar", [TemplateType "T0__"]) ] ]
+                 ; RequireAllCondition ("stan::is_foobar", [TemplateType "T0__"])
+                 ] ]
              , false )
            ~name:"foobar" ~return_type:Void ~inline:true ~body:rethrow ()) ]
     in

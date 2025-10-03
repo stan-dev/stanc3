@@ -14,41 +14,38 @@ let lower_arg ~is_possibly_eigen_expr type_ (_, name, ut) =
 
 (** Generate the require_* templates to constrain an argument to a specific type *)
 let rec requires ut t =
-  let require_simple s t = RequireAllCondition (`Exact s, [t]) in
+  let require trait ty = RequireAllCondition (trait, [ty]) in
+  let require_any traits ty =
+    RequireAllCondition
+      ( "stan::math::disjunction"
+      , List.map traits ~f:(fun trait -> TypeTrait (trait, [ty])) ) in
   match ut with
   | UnsizedType.URowVector ->
-      [ require_simple "stan::is_row_vector" t
-      ; require_simple "stan::is_vt_not_complex" t ]
+      [require "stan::is_row_vector" t; require "stan::is_vt_not_complex" t]
   | UComplexRowVector ->
-      [ require_simple "stan::is_row_vector" t
-      ; require_simple "stan::is_vt_complex" t ]
+      [require "stan::is_row_vector" t; require "stan::is_vt_complex" t]
   | UVector ->
-      [ require_simple "stan::is_col_vector" t
-      ; require_simple "stan::is_vt_not_complex" t ]
+      [require "stan::is_col_vector" t; require "stan::is_vt_not_complex" t]
   | UComplexVector ->
-      [ require_simple "stan::is_col_vector" t
-      ; require_simple "stan::is_vt_complex" t ]
+      [require "stan::is_col_vector" t; require "stan::is_vt_complex" t]
   | UMatrix ->
-      [ require_simple "stan::is_eigen_matrix_dynamic" t
-      ; require_simple "stan::is_vt_not_complex" t ]
+      [ require "stan::is_eigen_matrix_dynamic" t
+      ; require "stan::is_vt_not_complex" t ]
   | UComplexMatrix ->
-      [ require_simple "stan::is_eigen_matrix_dynamic" t
-      ; require_simple "stan::is_vt_complex" t ]
-  | UInt -> [require_simple "stan::is_integral" t]
+      [ require "stan::is_eigen_matrix_dynamic" t
+      ; require "stan::is_vt_complex" t ]
+  | UInt -> [require "stan::is_integral" t]
   | UComplex ->
-      require_simple "stan::is_complex" t :: requires UReal (Types.base_type t)
+      require "stan::is_complex" t :: requires UReal (Types.base_type t)
   | UArray inner_ut ->
-      require_simple "stan::is_std_vector" t
+      require "stan::is_std_vector" t
       :: requires inner_ut (TypeTrait ("stan::value_type_t", [t]))
   | UReal ->
       (* not using stan::is_stan_scalar to explictly exclude int *)
-      [ RequireAllCondition
-          (`OneOf ["stan::is_autodiff_scalar"; "stan::is_floating_point"], [t])
-      ]
+      [require_any ["stan::is_autodiff_scalar"; "stan::is_floating_point"] t]
   | UTuple ts ->
       RequireAllCondition
-        ( `Exact "stan::is_tuple_of_size"
-        , [t; NonTypeTemplateInt (List.length ts)] )
+        ("stan::is_tuple_of_size", [t; NonTypeTemplateInt (List.length ts)])
       :: List.concat_mapi ts ~f:(fun i ty -> requires ty (Types.tuple_elt t i))
   | UMathLibraryFunction | UFun _ ->
       Common.ICE.internal_compiler_error
@@ -132,19 +129,22 @@ let%expect_test "arg types tuple template" =
   [%expect
     {|
     T0__
-    ((RequireAllCondition (Exact stan::is_tuple_of_size)
+    ((RequireAllCondition stan::is_tuple_of_size
       ((TemplateType T0__) (NonTypeTemplateInt 3)))
-     (RequireAllCondition
-      (OneOf (stan::is_autodiff_scalar stan::is_floating_point))
-      ((TypeTrait stan::tuple_element_t
-        ((NonTypeTemplateInt 0) (TemplateType T0__)))))
-     (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
+     (RequireAllCondition stan::math::disjunction
+      ((TypeTrait stan::is_autodiff_scalar
+        ((TypeTrait stan::tuple_element_t
+          ((NonTypeTemplateInt 0) (TemplateType T0__)))))
+       (TypeTrait stan::is_floating_point
+        ((TypeTrait stan::tuple_element_t
+          ((NonTypeTemplateInt 0) (TemplateType T0__)))))))
+     (RequireAllCondition stan::is_eigen_matrix_dynamic
       ((TypeTrait stan::tuple_element_t
         ((NonTypeTemplateInt 1) (TemplateType T0__)))))
-     (RequireAllCondition (Exact stan::is_vt_not_complex)
+     (RequireAllCondition stan::is_vt_not_complex
       ((TypeTrait stan::tuple_element_t
         ((NonTypeTemplateInt 1) (TemplateType T0__)))))
-     (RequireAllCondition (Exact stan::is_integral)
+     (RequireAllCondition stan::is_integral
       ((TypeTrait stan::tuple_element_t
         ((NonTypeTemplateInt 2) (TemplateType T0__))))))
     T0__ |}]
@@ -161,24 +161,24 @@ let%expect_test "arg types tuple template" =
   [%expect
     {|
   T0__
-  ((RequireAllCondition (Exact stan::is_std_vector) ((TemplateType T0__)))
-   (RequireAllCondition (Exact stan::is_tuple_of_size)
+  ((RequireAllCondition stan::is_std_vector ((TemplateType T0__)))
+   (RequireAllCondition stan::is_tuple_of_size
     ((TypeTrait stan::value_type_t ((TemplateType T0__)))
      (NonTypeTemplateInt 2)))
-   (RequireAllCondition (Exact stan::is_std_vector)
+   (RequireAllCondition stan::is_std_vector
     ((TypeTrait stan::tuple_element_t
       ((NonTypeTemplateInt 0)
        (TypeTrait stan::value_type_t ((TemplateType T0__)))))))
-   (RequireAllCondition (Exact stan::is_integral)
+   (RequireAllCondition stan::is_integral
     ((TypeTrait stan::value_type_t
       ((TypeTrait stan::tuple_element_t
         ((NonTypeTemplateInt 0)
          (TypeTrait stan::value_type_t ((TemplateType T0__)))))))))
-   (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
+   (RequireAllCondition stan::is_eigen_matrix_dynamic
     ((TypeTrait stan::tuple_element_t
       ((NonTypeTemplateInt 1)
        (TypeTrait stan::value_type_t ((TemplateType T0__)))))))
-   (RequireAllCondition (Exact stan::is_vt_not_complex)
+   (RequireAllCondition stan::is_vt_not_complex
     ((TypeTrait stan::tuple_element_t
       ((NonTypeTemplateInt 1)
        (TypeTrait stan::value_type_t ((TemplateType T0__))))))))
