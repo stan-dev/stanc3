@@ -67,7 +67,6 @@ module Types = struct
   let var_context = TypeLiteral "stan::io::var_context"
   let ostream = TypeLiteral "std::ostream"
   let base_type t = TypeTrait ("stan::base_type_t", [t])
-  let decay t = TypeTrait ("std::decay_t", [t])
 
   let tuple_elt t i =
     TypeTrait ("stan::tuple_element_t", [NonTypeTemplateInt i; t])
@@ -334,10 +333,12 @@ end
 type template_parameter =
   | Typename of string  (** The name of a template typename *)
   | RequireAllCondition of
-      [`Exact of string | `TupleSize of int | `OneOf of string list] * type_
-      (** A C++ type trait (e.g. is_arithmetic) and the template
-          name which needs to satisfy that.
-          These are collated into one require_all_t<> *)
+      [ `Exact of string * [`Type of type_ | `Int of int] list
+        (** A C++ type trait (e.g. is_arithmetic) and the template
+          args which needs to satisfy that. *)
+      | `OneOf of string list * type_
+        (** A disjunction of several type traits on the same type *) ]
+      (** These are collated into one require_all_t<>*)
   | Require of string * string list
   | Bool of string  (** A named boolean template type *)
 [@@deriving sexp]
@@ -459,19 +460,17 @@ module Printing = struct
 
   let pp_requires ~default ppf requires =
     if not (List.is_empty requires) then
-      let pp_single_require t ppf trait =
-        let ty =
-          if String.is_prefix trait ~prefix:"std::" then Types.decay t else t
-        in
-        pf ppf "%s<%a>" trait pp_type_ ty in
-      let pp_require ppf (req, t) =
+      let pp_require_arg ppf = function
+        | `Type t -> pp_type_ ppf t
+        | `Int n -> int ppf n in
+      let pp_single_require args ppf trait =
+        pf ppf "%s<%a>" trait (list ~sep:comma pp_require_arg) args in
+      let pp_require ppf req =
         match req with
-        | `Exact trait -> pp_single_require t ppf trait
-        | `TupleSize n ->
-            pf ppf "stan::is_tuple_of_size<@[%a,@ %d@]>" pp_type_ t n
-        | `OneOf traits ->
+        | `Exact (trait, args) -> pp_single_require args ppf trait
+        | `OneOf (traits, ty) ->
             pf ppf "stan::math::disjunction<@[%a@]>"
-              (list ~sep:comma (pp_single_require t))
+              (list ~sep:comma (pp_single_require [`Type ty]))
               traits in
       pf ppf ",@ stan::require_all_t<@[%a@]>*%s"
         (list ~sep:comma pp_require)
@@ -492,7 +491,7 @@ module Printing = struct
     if not (List.is_empty template_parameters) then
       let templates, requires =
         List.partition_map template_parameters ~f:(function
-          | RequireAllCondition (trait, name) -> Second (trait, name)
+          | RequireAllCondition trait -> Second trait
           | Typename name -> First (`Typename name)
           | Bool name -> First (`Bool name)
           | Require (requirement, args) -> First (`Require (requirement, args)))
@@ -824,7 +823,8 @@ module Tests = struct
           ~templates_init:
             ( [ [ Typename "T0__"
                 ; RequireAllCondition
-                    (`Exact "stan::is_foobar", TemplateType "T0__") ] ]
+                    (`Exact ("stan::is_foobar", [`Type (TemplateType "T0__")]))
+                ] ]
             , true )
           ~name:"foobar" ~return_type:Void ~inline:true ()
       ; (let s =
@@ -835,7 +835,8 @@ module Tests = struct
            ~templates_init:
              ( [ [ Typename "T0__"
                  ; RequireAllCondition
-                     (`Exact "stan::is_foobar", TemplateType "T0__") ] ]
+                     (`Exact ("stan::is_foobar", [`Type (TemplateType "T0__")]))
+                 ] ]
              , false )
            ~name:"foobar" ~return_type:Void ~inline:true ~body:rethrow ()) ]
     in
