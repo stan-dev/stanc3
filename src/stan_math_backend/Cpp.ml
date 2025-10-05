@@ -458,24 +458,23 @@ module Printing = struct
   and pp_type_trait ppf (trait, tys) =
     pf ppf "@[<2>%s<%a>@]" trait (list ~sep:comma pp_type_) tys
 
-  let pp_requires ~default ppf requires =
-    if not (List.is_empty requires) then
-      pf ppf ",@ stan::require_all_t<@[%a@]>*%s"
-        (list ~sep:comma pp_type_trait)
-        requires
-        (if default then " = nullptr" else "")
-
   (**
    Pretty print a list of templates as [template <parameter-list>].name
    This function pools together [RequireAllCondition] nodes into a [require_all_t]
   *)
   let pp_template ~default ppf template_parameters =
+    let default = if default then " = nullptr" else "" in
     let pp_basic_template ppf = function
       | `Typename name -> pf ppf "typename %s" name
       | `Bool name -> pf ppf "bool %s" name
       | `Require (requirement, args) ->
-          pf ppf "%s<%a>*%s" requirement (list ~sep:comma string) args
-            (if default then " = nullptr" else "") in
+          pf ppf "%s<%a>*%s" requirement (list ~sep:comma string) args default
+    in
+    let pp_requires ppf requires =
+      if not (List.is_empty requires) then
+        pf ppf ",@ stan::require_all_t<@[%a@]>*%s"
+          (list ~sep:comma pp_type_trait)
+          requires default in
     if not (List.is_empty template_parameters) then
       let templates, requires =
         List.partition_map template_parameters ~f:(function
@@ -486,7 +485,7 @@ module Printing = struct
       in
       pf ppf "template <@[%a%a@]>@ "
         (list ~sep:comma pp_basic_template)
-        templates (pp_requires ~default) requires
+        templates pp_requires requires
 
   let pp_operator ppf = function
     | Multiply -> string ppf "*"
