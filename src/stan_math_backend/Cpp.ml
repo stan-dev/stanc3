@@ -67,15 +67,9 @@ module Types = struct
   let var_context = TypeLiteral "stan::io::var_context"
   let ostream = TypeLiteral "std::ostream"
   let base_type t = TypeTrait ("stan::base_type_t", [t])
-  let decay t = TypeTrait ("std::decay_t", [t])
 
   let tuple_elt t i =
-    let t =
-      match t with
-      (* std::tuple_element isn't specialized for references *)
-      | TypeTrait (("stan::base_type_t" | "stan::value_type_t"), _) -> t
-      | _ -> decay t in
-    TypeTrait ("std::tuple_element_t", [NonTypeTemplateInt i; t])
+    TypeTrait ("stan::tuple_element_t", [NonTypeTemplateInt i; t])
 end
 
 type operator =
@@ -337,13 +331,14 @@ module Decls = struct
 end
 
 type template_parameter =
-  | Typename of string  (** The name of a template typename *)
-  | RequireAllCondition of [`Exact of string | `OneOf of string list] * type_
-      (** A C++ type trait (e.g. is_arithmetic) and the template
-          name which needs to satisfy that.
-          These are collated into one require_all_t<> *)
+  | Typename of string  (** A typename, e.g. [template <typename Foo>] *)
+  | Bool of string  (** A named boolean non-type template parameter *)
   | Require of string * string list
-  | Bool of string  (** A named boolean template type *)
+      (** A straightforward [require_...<...>] template. *)
+  | RequireAllCondition of string * type_ list
+      (** A C++ type trait (e.g. [is_arithmetic]) and the template
+          types which need to satisfy that.
+          These are collated into one [require_all_t<...>]. *)
 [@@deriving sexp]
 
 type cv_qualifiers = Const | Final | NoExcept [@@deriving sexp]
@@ -458,50 +453,39 @@ module Printing = struct
     | Const t -> pf ppf "const %a" pp_type_ t
     | Ref t -> pf ppf "%a&" pp_type_ t
     | Pointer t -> pf ppf "%a*" pp_type_ t
-    | TypeTrait (s, types) ->
-        pf ppf "@[<2>%s<%a>@]" s (list ~sep:comma pp_type_) types
+    | TypeTrait (trait, tys) -> pp_type_trait ppf (trait, tys)
 
-  let pp_requires ~default ppf requires =
-    if not (List.is_empty requires) then
-      let pp_single_require t ppf trait =
-        let ty =
-          if String.is_prefix trait ~prefix:"std::" then Types.decay t else t
-        in
-        pf ppf "%s<%a>" trait pp_type_ ty in
-      let pp_require ppf (req, t) =
-        match req with
-        | `Exact trait -> pp_single_require t ppf trait
-        | `OneOf traits ->
-            pf ppf "stan::math::disjunction<@[%a@]>"
-              (list ~sep:comma (pp_single_require t))
-              traits in
-      pf ppf ",@ stan::require_all_t<@[%a@]>*%s"
-        (list ~sep:comma pp_require)
-        requires
-        (if default then " = nullptr" else "")
+  and pp_type_trait ppf (trait, tys) =
+    pf ppf "@[<2>%s<%a>@]" trait (list ~sep:comma pp_type_) tys
 
   (**
    Pretty print a list of templates as [template <parameter-list>].name
    This function pools together [RequireAllCondition] nodes into a [require_all_t]
   *)
   let pp_template ~default ppf template_parameters =
+    let default = if default then " = nullptr" else "" in
     let pp_basic_template ppf = function
       | `Typename name -> pf ppf "typename %s" name
       | `Bool name -> pf ppf "bool %s" name
       | `Require (requirement, args) ->
-          pf ppf "%s<%a>*%s" requirement (list ~sep:comma string) args
-            (if default then " = nullptr" else "") in
+          pf ppf "%s<%a>*%s" requirement (list ~sep:comma string) args default
+    in
+    let pp_requires ppf requires =
+      if not (List.is_empty requires) then
+        pf ppf ",@ stan::require_all_t<@[%a@]>*%s"
+          (list ~sep:comma pp_type_trait)
+          requires default in
     if not (List.is_empty template_parameters) then
       let templates, requires =
         List.partition_map template_parameters ~f:(function
-          | RequireAllCondition (trait, name) -> Second (trait, name)
+          | RequireAllCondition (trait, tys) -> Second (trait, tys)
           | Typename name -> First (`Typename name)
           | Bool name -> First (`Bool name)
           | Require (requirement, args) -> First (`Require (requirement, args)))
       in
       pf ppf "template <@[%a%a@]>@ "
         (list ~sep:comma pp_basic_template)
-        templates (pp_requires ~default) requires
+        templates pp_requires requires
 
   let pp_operator ppf = function
     | Multiply -> string ppf "*"
@@ -825,8 +809,8 @@ module Tests = struct
       [ make_fun_defn
           ~templates_init:
             ( [ [ Typename "T0__"
-                ; RequireAllCondition
-                    (`Exact "stan::is_foobar", TemplateType "T0__") ] ]
+                ; RequireAllCondition ("stan::is_foobar", [TemplateType "T0__"])
+                ] ]
             , true )
           ~name:"foobar" ~return_type:Void ~inline:true ()
       ; (let s =
@@ -836,8 +820,8 @@ module Tests = struct
          make_fun_defn
            ~templates_init:
              ( [ [ Typename "T0__"
-                 ; RequireAllCondition
-                     (`Exact "stan::is_foobar", TemplateType "T0__") ] ]
+                 ; RequireAllCondition ("stan::is_foobar", [TemplateType "T0__"])
+                 ] ]
              , false )
            ~name:"foobar" ~return_type:Void ~inline:true ~body:rethrow ()) ]
     in
