@@ -51,9 +51,6 @@ let stanc ?tty_colors ?(debug_lex : bool = false) ?(debug_parse : bool = false)
   Fmt_tty.setup_std_outputs ?style_renderer:tty_colors ();
   Debugging.lexer_logging := debug_lex;
   Debugging.grammar_logging := debug_parse;
-  Driver.Flags.set_backend_args_list
-    (* remove executable itself from list before passing *)
-    (Sys.get_argv () |> Array.to_list |> List.tl_exn);
   (* if we only have functions, always compile as standalone *)
   let flags =
     if String.is_suffix model_file ~suffix:".stanfunctions" then
@@ -123,6 +120,9 @@ let main () =
   let open Cmdliner in
   let stanc_cmd = Cmd.v CLI.info (Term.map dispatch_commands CLI.commands) in
   let argv = Sys.get_argv () in
+  Driver.Flags.set_backend_args_list
+    (* remove executable itself from list before passing *)
+    (argv |> Array.to_list |> List.tl_exn);
   (* workaround the fact that single letter flags must be - in CmdLiner *)
   Array.map_inplace argv ~f:(fun s ->
       if String.equal s "--O" then "--O1" else s);
