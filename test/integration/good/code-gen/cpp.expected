@@ -2612,29 +2612,30 @@ template <typename T0__, typename T1__, typename T2__,
                               stan::math::disjunction<stan::is_autodiff_scalar<T2__>,
                                 stan::is_floating_point<T2__>>>* = nullptr>
 stan::return_type_t<T0__, T1__, T2__>
-clamp(const T0__& x, const T1__& lo, const T2__& hi, std::ostream* pstream__);
+_stan_clamp(const T0__& x, const T1__& lo, const T2__& hi, std::ostream*
+            pstream__);
 template <typename T0__, typename T1__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff_scalar<T0__>,
                                 stan::is_floating_point<T0__>>,
                               stan::math::disjunction<stan::is_autodiff_scalar<T1__>,
                                 stan::is_floating_point<T1__>>>* = nullptr>
 stan::return_type_t<T0__, T1__>
-min(const T0__& x, const T1__& y, std::ostream* pstream__);
+_stan_min(const T0__& x, const T1__& y, std::ostream* pstream__);
 template <typename T0__, typename T1__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff_scalar<T0__>,
                                 stan::is_floating_point<T0__>>,
                               stan::math::disjunction<stan::is_autodiff_scalar<T1__>,
                                 stan::is_floating_point<T1__>>>* = nullptr>
 stan::return_type_t<T0__, T1__>
-max(const T0__& x, const T1__& y, std::ostream* pstream__);
+_stan_max(const T0__& x, const T1__& y, std::ostream* pstream__);
 template <typename T0__, typename T1__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff_scalar<T0__>,
                                 stan::is_floating_point<T0__>>,
                               stan::math::disjunction<stan::is_autodiff_scalar<T1__>,
                                 stan::is_floating_point<T1__>>>* = nullptr>
 std::tuple<stan::return_type_t<T0__, T1__>, stan::return_type_t<T0__, T1__>>
-minmax(const T0__& x, const T1__& y, std::ostream* pstream__);
-// real clamp(real, real, real)
+_stan_minmax(const T0__& x, const T1__& y, std::ostream* pstream__);
+// real _stan_clamp(real, real, real)
 template <typename T0__, typename T1__, typename T2__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff_scalar<T0__>,
                                 stan::is_floating_point<T0__>>,
@@ -2643,7 +2644,8 @@ template <typename T0__, typename T1__, typename T2__,
                               stan::math::disjunction<stan::is_autodiff_scalar<T2__>,
                                 stan::is_floating_point<T2__>>>*>
 stan::return_type_t<T0__, T1__, T2__>
-clamp(const T0__& x, const T1__& lo, const T2__& hi, std::ostream* pstream__) {
+_stan_clamp(const T0__& x, const T1__& lo, const T2__& hi, std::ostream*
+            pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__, T1__, T2__>;
   int current_statement__ = 0;
   // suppress unused var warning
@@ -2661,14 +2663,14 @@ clamp(const T0__& x, const T1__& lo, const T2__& hi, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-// real min(real, real)
+// real _stan_min(real, real)
 template <typename T0__, typename T1__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff_scalar<T0__>,
                                 stan::is_floating_point<T0__>>,
                               stan::math::disjunction<stan::is_autodiff_scalar<T1__>,
                                 stan::is_floating_point<T1__>>>*>
 stan::return_type_t<T0__, T1__>
-min(const T0__& x, const T1__& y, std::ostream* pstream__) {
+_stan_min(const T0__& x, const T1__& y, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__, T1__>;
   int current_statement__ = 0;
   // suppress unused var warning
@@ -2686,14 +2688,14 @@ min(const T0__& x, const T1__& y, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-// real max(real, real)
+// real _stan_max(real, real)
 template <typename T0__, typename T1__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff_scalar<T0__>,
                                 stan::is_floating_point<T0__>>,
                               stan::math::disjunction<stan::is_autodiff_scalar<T1__>,
                                 stan::is_floating_point<T1__>>>*>
 stan::return_type_t<T0__, T1__>
-max(const T0__& x, const T1__& y, std::ostream* pstream__) {
+_stan_max(const T0__& x, const T1__& y, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__, T1__>;
   int current_statement__ = 0;
   // suppress unused var warning
@@ -2711,14 +2713,14 @@ max(const T0__& x, const T1__& y, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-// tuple(real, real) minmax(real, real)
+// tuple(real, real) _stan_minmax(real, real)
 template <typename T0__, typename T1__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff_scalar<T0__>,
                                 stan::is_floating_point<T0__>>,
                               stan::math::disjunction<stan::is_autodiff_scalar<T1__>,
                                 stan::is_floating_point<T1__>>>*>
 std::tuple<stan::return_type_t<T0__, T1__>, stan::return_type_t<T0__, T1__>>
-minmax(const T0__& x, const T1__& y, std::ostream* pstream__) {
+_stan_minmax(const T0__& x, const T1__& y, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__, T1__>;
   int current_statement__ = 0;
   // suppress unused var warning
@@ -2731,7 +2733,8 @@ minmax(const T0__& x, const T1__& y, std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 12;
-    return std::forward_as_tuple(min(x, y, pstream__), max(x, y, pstream__));
+    return std::forward_as_tuple(_stan_min(x, y, pstream__),
+             _stan_max(x, y, pstream__));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -2764,19 +2767,19 @@ class cpp_overload_stdlib_model final : public model_base_crtp<cpp_overload_stdl
       current_statement__ = 1;
       m1 = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 1;
-      m1 = clamp(0., 1., 2., pstream__);
+      m1 = _stan_clamp(0., 1., 2., pstream__);
       current_statement__ = 2;
       m2 = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 2;
-      m2 = min(1., 2., pstream__);
+      m2 = _stan_min(1., 2., pstream__);
       current_statement__ = 3;
       m3 = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 3;
-      m3 = max(1., 2., pstream__);
+      m3 = _stan_max(1., 2., pstream__);
       {
         std::tuple<double, double> sym1__;
         current_statement__ = 4;
-        stan::model::assign(sym1__, minmax(1., 2., pstream__),
+        stan::model::assign(sym1__, _stan_minmax(1., 2., pstream__),
           "assigning variable sym1__");
         current_statement__ = 5;
         m2 = std::get<0>(sym1__);
