@@ -6,20 +6,19 @@ open Js_of_ocaml
 let invoke_driver model_name model flags =
   let warnings = ref [] in
   let compilation_result =
-    With_return.with_return (fun r ->
-        let output_callback : Driver.Entry.other_output -> unit = function
-          | Warnings w -> warnings := !warnings @ w
-          | Formatted s
-           |DebugOutput s
-           |Memory_patterns s
-           |Info s
-           |Version s
-           |Generated s ->
-              (* unlike stanc.exe, stanc.js will only ever return one output,
-                 so we break out prematurely *)
-              r.return (Ok s) in
-        Driver.Entry.stan2cpp model_name (`Code model) flags output_callback)
-  in
+    With_return.with_return @@ fun {return} ->
+    let output_callback : Driver.Entry.other_output -> unit = function
+      | Warnings w -> warnings := !warnings @ w
+      | Formatted s
+       |DebugOutput s
+       |Memory_patterns s
+       |Info s
+       |Version s
+       |Generated s ->
+          (* stanc.js will only ever return one output,
+             so we break out prematurely *)
+          return (Ok s) in
+    Driver.Entry.stan2cpp model_name (`Code model) flags output_callback in
   (compilation_result, !warnings)
 
 let wrap_warnings ~warnings =

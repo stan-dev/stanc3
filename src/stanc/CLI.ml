@@ -327,14 +327,10 @@ type compiler_flags =
   ; flags: Driver.Flags.t
   ; model_file: string }
 
-(* The result of parsing the command line. Either we're in one of the dump sub-commands,
-   or we have all the flags we need to proceed *)
-type cli_result = DumpMathSigs | DumpMathDists | Compile of compiler_flags
+open Cmdliner.Term.Syntax
 
 module Conversion = struct
   (** Helper terms to combine the above arguments into useful ocaml values *)
-
-  open Cmdliner.Term.Syntax
 
   let optimization_level :
       Analysis_and_optimization.Optimize.optimization_level Term.t =
@@ -406,42 +402,51 @@ module Conversion = struct
       ; warn_uninitialized
       ; filename_in_msg
       ; debug_settings }
-
-  let cli_result =
-    let+ qmark = Options.qmark
-    and+ dump_stan_math_distributions = Commands.dump_stan_math_distributions
-    and+ dump_stan_math_sigs = Commands.dump_stan_math_signatures
-    and+ debug_lex = Debug_Options.debug_lex
-    and+ debug_parse = Debug_Options.debug_parse
-    and+ print_cpp = Options.print_cpp
-    and+ name = Options.name
-    and+ output_file = Options.output_file
-    and+ model_file = Arguments.model_file
-    and+ flags = flags
-    and+ tty_colors =
-      Fmt_cli.style_renderer ~env:(Cmd.Env.info "STANC_COLORS") () in
-    match qmark with
-    | Some fmt -> `Help (fmt, None)
-    | None -> (
-        if dump_stan_math_distributions then `Ok DumpMathDists
-        else if dump_stan_math_sigs then `Ok DumpMathSigs
-        else
-          match model_file with
-          | None -> `Error (true, "No model file provided")
-          | Some model_file ->
-              `Ok
-                (Compile
-                   { debug_lex
-                   ; debug_parse
-                   ; print_cpp
-                   ; name
-                   ; output_file
-                   ; model_file
-                   ; tty_colors
-                   ; flags }))
 end
 
-let cmd : cli_result Cmd.t =
+(* The overarching command line.
+   Either we're in one of the dump sub-commands,
+   or we have all the flags we need to proceed *)
+let commands =
+  Term.ret
+  @@
+  let+ qmark = Options.qmark
+  and+ dump_stan_math_distributions = Commands.dump_stan_math_distributions
+  and+ dump_stan_math_sigs = Commands.dump_stan_math_signatures
+  and+ debug_lex = Debug_Options.debug_lex
+  and+ debug_parse = Debug_Options.debug_parse
+  and+ print_cpp = Options.print_cpp
+  and+ name = Options.name
+  and+ output_file = Options.output_file
+  and+ model_file = Arguments.model_file
+  and+ flags = Conversion.flags
+  and+ tty_colors =
+    Fmt_cli.style_renderer ~env:(Cmd.Env.info "STANC_COLORS") () in
+  match qmark with
+  | Some fmt -> `Help (fmt, None)
+  | None -> (
+      if dump_stan_math_distributions then `Ok `DumpMathDists
+      else if dump_stan_math_sigs then `Ok `DumpMathSigs
+      else
+        match model_file with
+        | None -> `Error (true, "No model file provided")
+        | Some model_file ->
+            `Ok
+              (`Default
+                { debug_lex
+                ; debug_parse
+                ; print_cpp
+                ; name
+                ; output_file
+                ; model_file
+                ; tty_colors
+                ; flags }))
+
+let exit_ok = 0
+let exit_err = 1
+let exit_ice = 125
+
+let info =
   let doc = "compile Stan programs to C++" in
   let man =
     [ `S Manpage.s_description
@@ -469,20 +474,11 @@ let cmd : cli_result Cmd.t =
   in
   let exits =
     Cmd.Exit.
-      [ info ~doc:"on success." 0; info ~doc:"on compilation failure." 1
+      [ info ~doc:"on success." exit_ok
+      ; info ~doc:"on compilation failure." exit_err
       ; info ~doc:"on command line parsing errors." 124
-      ; info ~doc:"on internal compiler errors. Please file a bug!" 125 ] in
-  let info =
-    Cmd.info "%%NAME%%"
-      ~version:("%%NAME%%3 %%VERSION%%" ^ " (" ^ Sys.os_type ^ ")")
-      ~sdocs:Manpage.s_options ~doc ~man ~exits in
-  Cmd.v info (Term.ret Conversion.cli_result)
-
-let parse_or_exit () : cli_result =
-  let argv = Sys.get_argv () in
-  (* workaround the fact that single letter flags must be - in CmdLiner *)
-  Array.map_inplace argv ~f:(fun s ->
-      if String.equal s "--O" then "--O1" else s);
-  match Cmd.eval_value' ~argv ~catch:false cmd with
-  | `Ok flags -> flags
-  | `Exit code -> exit code
+      ; info ~doc:"on internal compiler errors. Please file a bug!" exit_ice ]
+  in
+  Cmd.info "%%NAME%%"
+    ~version:("%%NAME%%3 %%VERSION%%" ^ " (" ^ Sys.os_type ^ ")")
+    ~sdocs:Manpage.s_options ~doc ~man ~exits
