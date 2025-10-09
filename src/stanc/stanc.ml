@@ -3,55 +3,51 @@ open Core
 
 open Frontend
 
+let exit_ok = CLI.exit_ok
+let exit_err = CLI.exit_err
+
+let dump_math_sigs () =
+  Stan_math_signatures.pretty_print_all_math_sigs Format.std_formatter ();
+  exit_ok
+
+let dump_math_dists () =
+  Stan_math_signatures.pretty_print_all_math_distributions Format.std_formatter
+    ();
+  exit_ok
+
 let write filename data =
-  try Out_channel.write_all filename ~data
+  try
+    Out_channel.write_all filename ~data;
+    exit_ok
   with Sys_error msg ->
     Fmt.epr "Error writing to file '%s': %s@." filename msg;
-    exit 1
-
-let print_or_write_and_exit output_file data =
-  if not (String.equal output_file "") then write output_file data
-  else print_endline data;
-  exit 0
+    exit_err
 
 let print_and_exit data =
   print_endline data;
-  exit 0
+  exit_ok
 
-let output_callback output_file printed_filename :
+let print_or_write_and_exit output_file data =
+  if not (String.equal output_file "") then write output_file data
+  else print_and_exit data
+
+let output_callback break output_file printed_filename :
     Driver.Entry.other_output -> unit = function
-  | Info s -> print_and_exit s
+  | Info s -> break (print_and_exit s)
   | Version s ->
       (* note: in practice, handled by Cmdliner for this driver *)
-      print_and_exit (s ^ " (" ^ Sys.os_type ^ ")")
+      break (print_and_exit (s ^ " (" ^ Sys.os_type ^ ")"))
   | Generated s | Formatted s ->
       (* these options will use the --o flag if it was passed *)
-      print_or_write_and_exit output_file s
+      break (print_or_write_and_exit output_file s)
   | DebugOutput s | Memory_patterns s ->
       (* historically, these flags didn't prevent you from continuing *)
       print_string s
   | Warnings ws -> Warnings.pp_warnings Fmt.stderr ?printed_filename ws
 
-let main () =
-  let CLI.
-        { debug_lex
-        ; debug_parse
-        ; print_cpp
-        ; name
-        ; output_file
-        ; model_file
-        ; tty_colors
-        ; flags } =
-    match CLI.parse_or_exit () with
-    (* Deal with multiple modalities *)
-    | DumpMathSigs ->
-        Stan_math_signatures.pretty_print_all_math_sigs Format.std_formatter ();
-        exit 0
-    | DumpMathDists ->
-        Stan_math_signatures.pretty_print_all_math_distributions
-          Format.std_formatter ();
-        exit 0
-    | Compile settings -> settings in
+let stanc ?tty_colors ?(debug_lex : bool = false) ?(debug_parse : bool = false)
+    ?(print_cpp : bool = false) ?name ~output_file ~model_file
+    (flags : Driver.Flags.t) =
   Fmt_tty.setup_std_outputs ?style_renderer:tty_colors ();
   Debugging.lexer_logging := debug_lex;
   Debugging.grammar_logging := debug_parse;
@@ -69,11 +65,12 @@ let main () =
       , `Code (In_channel.input_all In_channel.stdin)
       , Option.first_some flags.filename_in_msg (Some "stdin") )
     else (model_file, `File model_file, flags.filename_in_msg) in
+  With_return.with_return @@ fun {return} ->
   match
     Driver.Entry.stan2cpp
       (Option.value ~default:model_file_name name)
       model_source flags
-      (output_callback output_file printed_filename)
+      (output_callback return output_file printed_filename)
   with
   | Ok cpp_str ->
       if print_cpp then print_endline cpp_str;
@@ -87,17 +84,48 @@ let main () =
       Errors.pp Fmt.stderr ?printed_filename e;
       if Option.is_none flags.debug_settings.debug_data_json then
         Fmt.pf Fmt.stderr "Supplying a --debug-data-file may help@;";
-      exit 1
+      exit_err
   | Error e ->
       (match model_source with
       | `File _ -> Errors.pp Fmt.stderr ?printed_filename e
       | `Code code -> Errors.pp Fmt.stderr ?printed_filename ~code e);
-      exit 1
+      exit_err
 
-let () =
-  match Common.ICE.with_exn_message main with
-  | Ok () -> ()
+(** Deal with multiple modalities.
+    [Cmdliner.Cmd.groups] would probably be preferable, but
+    doesn't allow for subcommands that look like options
+    (i.e., start with [--]) *)
+let dispatch_commands args =
+  let go () =
+    match args with
+    | `DumpMathSigs -> dump_math_sigs ()
+    | `DumpMathDists -> dump_math_dists ()
+    | `Default
+        CLI.
+          { debug_lex
+          ; debug_parse
+          ; print_cpp
+          ; name
+          ; output_file
+          ; model_file
+          ; tty_colors
+          ; flags } ->
+        stanc ?tty_colors ~debug_lex ~debug_parse ~print_cpp ?name ~output_file
+          ~model_file flags in
+  match Common.ICE.with_exn_message go with
+  | Ok code -> code
   | Error internal_error ->
       Out_channel.output_string stderr internal_error;
       Out_channel.flush stderr;
-      exit 125
+      CLI.exit_ice
+
+let main () =
+  let open Cmdliner in
+  let stanc_cmd = Cmd.v CLI.info (Term.map dispatch_commands CLI.commands) in
+  let argv = Sys.get_argv () in
+  (* workaround the fact that single letter flags must be - in CmdLiner *)
+  Array.map_inplace argv ~f:(fun s ->
+      if String.equal s "--O" then "--O1" else s);
+  Cmd.eval' ~argv ~catch:false stanc_cmd
+
+let () = if !Sys.interactive then () else exit (main ())
