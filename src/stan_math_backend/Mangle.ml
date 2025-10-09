@@ -34,8 +34,11 @@ let cpp_kwrds =
     (* stan implementation keywords *)
     @ [ "fvar"; "STAN_MAJOR"; "STAN_MINOR"; "STAN_PATCH"; "STAN_MATH_MAJOR"
       ; "STAN_MATH_MINOR"; "STAN_MATH_PATCH" ]
-    @ (* system macros *)
-    [ "BSD"; "BSD4_2"; "BSD4_3"; "BSD4_4"; "EMSCRIPTEN"; "hpux"; "sun"; "linux"
-    ; "VMS"; "i386"; "mips" ])
+    (* system macros *)
+    @ [ "BSD"; "BSD4_2"; "BSD4_3"; "BSD4_4"; "EMSCRIPTEN"; "hpux"; "sun"; "linux"
+      ; "VMS"; "i386"; "mips"; "WIN32" ]
+    @ (* std:: functions that don't have concepts for their templates, leading to ambiguity
+         (usually the [Comparator] named concept is the issue) *)
+    ["clamp"; "max"; "min"; "minmax"])
 
 let add_prefix_to_kwrds s = if Set.mem cpp_kwrds s then prepend_kwrd s else s
