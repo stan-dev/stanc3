@@ -34,7 +34,7 @@ Output file for formatting prevents cpp generation
 Output file isn't present in C++ args array
   $ stanc --O -fno-soa --o=foo.cpp basic.stan
   $ grep "stancflags" foo.cpp
-               "stancflags = --O1 -fno-soa"};
+               "stancflags = --O -fno-soa"};
   $ rm foo.cpp
 
 Error on un-writable output file
