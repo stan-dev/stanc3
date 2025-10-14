@@ -85,7 +85,7 @@ module TypeError = struct
     | 6 -> "sixth control parameter (max_steps_line_search)"
     | n -> Fmt.str "%a control parameter" (Fmt.ordinal ()) n
 
-  let rec expected_types : UnsizedType.t Nonempty_list.t Fmt.t =
+  let rec expected_types : UnsizedType.t Common.Nonempty_list.t Fmt.t =
     let ust = expected_style UnsizedType.pp in
     fun ppf l ->
       match l with
@@ -94,7 +94,7 @@ module TypeError = struct
       | [t1; t2; t3] -> Fmt.pf ppf "%a,@ %a,@ or %a" ust t1 ust t2 ust t3
       | t :: ts ->
           Fmt.pf ppf "%a,@ %a" ust t expected_types
-            (ts |> Nonempty_list.of_list_exn)
+            (ts |> Common.Nonempty_list.of_list_exn)
 
   let pp ppf = function
     | IncorrectReturnType (t1, t2) ->
@@ -157,7 +157,7 @@ module TypeError = struct
         Fmt.pf ppf "The inner type in reduce_sum array must be %a.%a"
           expected_types
           (Stan_math_signatures.reduce_sum_slice_types
-         |> Nonempty_list.of_list_exn)
+         |> Common.Nonempty_list.of_list_exn)
           found_type ty
     | IllTypedReduceSum (name, arg_tys, expected_args, error) ->
         SignatureMismatch.pp_signature_mismatch ppf
