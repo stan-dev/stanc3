@@ -320,7 +320,7 @@ Semantic error in 'bad_tol1.stan', line 40, column 56 to column 63:
     41:  }
    -------------------------------------------------
 
-Recieved 2 extra arguments at the end of the call to "laplace_latent_rng".
+Received 2 extra arguments at the end of the call to "laplace_latent_rng".
 Did you mean to call the _tol version?
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_tol2.stan
@@ -333,7 +333,7 @@ Semantic error in 'bad_tol2.stan', line 39, column 56 to column 63:
     40:  }
    -------------------------------------------------
 
-Recieved 6 extra arguments at the end of the call to "laplace_latent_rng".
+Received 6 extra arguments at the end of the call to "laplace_latent_rng".
 Did you mean to call the _tol version?
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_tol3.stan
@@ -346,7 +346,7 @@ Semantic error in 'bad_tol3.stan', line 39, column 56 to column 63:
     40:  }
    -------------------------------------------------
 
-Recieved 5 control arguments at the end of the call to "laplace_latent_tol_rng".
+Received 5 control arguments at the end of the call to "laplace_latent_tol_rng".
 Expected 6 arguments for the control parameters instead.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_tol4.stan
@@ -389,7 +389,7 @@ Semantic error in 'bad_tol6.stan', line 39, column 56 to column 63:
     40:  }
    -------------------------------------------------
 
-Recieved 7 control arguments at the end of the call to "laplace_latent_tol_rng".
+Received 7 control arguments at the end of the call to "laplace_latent_tol_rng".
 Expected 6 arguments for the control parameters instead.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_tol7.stan
@@ -444,7 +444,7 @@ Ill-typed arguments supplied to function "laplace_marginal".
 The valid signature of this function is
 laplace_marginal((vector, T_l...) => real, tuple(T_l...), vector,
   (T_k...) => matrix, tuple(T_k...))
-However, we recieved the types:
+However, we received the types:
 ()
 We were unable to start more in-depth checking. Please ensure you are passing
 enough arguments and that the first argument is a function.
@@ -463,7 +463,7 @@ The valid signature of this function is
 laplace_marginal_tol((vector, T_l...) => real, tuple(T_l...), vector,
   (T_k...) => matrix, tuple(T_k...), vector, data real, data int, data int,
   data int, data int)
-However, we recieved the types:
+However, we received the types:
 ()
 We were unable to start more in-depth checking. Please ensure you are passing
 enough arguments and that the first argument is a function.
@@ -498,7 +498,7 @@ Ill-typed arguments supplied to function "laplace_marginal".
 The valid signature of this function is
 laplace_marginal((vector, T_l...) => real, tuple(T_l...), vector,
   (T_k...) => matrix, tuple(T_k...))
-However, we recieved the types:
+However, we received the types:
 ((vector, real, vector, array[] int) => real,
   tuple(real, vector, array[] int))
 Typechecking failed after checking the first 2 arguments. Please ensure you
@@ -518,7 +518,7 @@ Ill-typed arguments supplied to function "laplace_latent_rng".
 The valid signature of this function is
 laplace_latent_rng((vector, T_l...) => real, tuple(T_l...), vector,
   (T_k...) => matrix, tuple(T_k...))
-However, we recieved the types:
+However, we received the types:
 ()
 We were unable to start more in-depth checking. Please ensure you are passing
 enough arguments and that the first argument is a function.
@@ -538,7 +538,7 @@ Ill-typed arguments supplied to function "laplace_latent_rng".
 The valid signature of this function is
 laplace_latent_rng((vector, T_l...) => real, tuple(T_l...), vector,
   (T_k...) => matrix, tuple(T_k...))
-However, we recieved the types:
+However, we received the types:
 (data (vector, real, vector, array[] int) => real,
   tuple(real, vector, array[] int))
 Typechecking failed after checking the first 2 arguments. Please ensure you
@@ -559,7 +559,7 @@ Ill-typed arguments supplied to function "laplace_latent_neg_binomial_2_log_rng"
 The valid signature of this function is
 laplace_latent_neg_binomial_2_log_rng(array[] int, array[] int, vector,
   vector, vector, (T_k...) => matrix, tuple(T_k...))
-However, we recieved the types:
+However, we received the types:
 (data array[] int, data array[] int, data vector, data vector)
 Typechecking failed after checking the first 4 arguments. Please ensure you
 are passing enough arguments and that the 5th is a function.
@@ -578,7 +578,7 @@ The valid signature of this function is
 laplace_marginal_tol_poisson_log_lpmf(array[] int, array[] int, vector,
   vector, (T_k...) => matrix, tuple(T_k...), vector, data real, data int,
   data int, data int, data int)
-However, we recieved the types:
+However, we received the types:
 (data array[] int, data array[] int, data vector)
 Typechecking failed after checking the first 3 arguments. Please ensure you
 are passing enough arguments and that the 4th is a function.
@@ -594,6 +594,6 @@ Semantic error in 'missing_args9.stan', line 40, column 24 to line 41, column 59
     42:  
    -------------------------------------------------
 
-Recieved 0 control arguments at the end of the call to "laplace_latent_tol_neg_binomial_2_log_rng".
+Received 0 control arguments at the end of the call to "laplace_latent_tol_neg_binomial_2_log_rng".
 Expected 6 arguments for the control parameters instead.
 [exit 1]

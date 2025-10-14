@@ -218,7 +218,7 @@ module TypeError = struct
         Fmt.pf ppf
           "@[<v>Ill-typed arguments supplied to function %a.@ The valid \
            signature of this function is@ @[<hov 2>%s(%t,@ vector,@ (T_k%t) => \
-           matrix,@ tuple(T_k%t)%t)@]@ However, we recieved the types:@ @[<hov \
+           matrix,@ tuple(T_k%t)%t)@]@ However, we received the types:@ @[<hov \
            2>(%a)@]@ @[%a@]@]"
           quoted name name pp_lik_args ellipsis ellipsis pp_laplace_tols
           Fmt.(list ~sep:comma UnsizedType.pp_fun_arg)
@@ -231,7 +231,7 @@ module TypeError = struct
           quoted banned_function
     | IlltypedLaplaceTooMany (name, n_args) ->
         Fmt.pf ppf
-          "Recieved %d extra %a at the end of the call to %a.@ Did you mean to \
+          "Received %d extra %a at the end of the call to %a.@ Did you mean to \
            call the _tol version?"
           n_args arguments n_args quoted name
     (* For tolerances, because these come at the end, we want to update their
@@ -239,7 +239,7 @@ module TypeError = struct
        printing from [SignatureMismatch] *)
     | IlltypedLaplaceTolArgs (name, ArgNumMismatch (_, found)) ->
         Fmt.pf ppf
-          "@[<v>Recieved %a control %a at the end of the call to %a.@ Expected \
+          "@[<v>Received %a control %a at the end of the call to %a.@ Expected \
            %a arguments for the control parameters instead.@]"
           (actual_style Fmt.int) found arguments found quoted name
           (expected_style Fmt.int)
