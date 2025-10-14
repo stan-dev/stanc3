@@ -121,6 +121,26 @@ Syntax error in 'blocks-bad9.stan', line 1, column 19 to column 23, parsing erro
 
 Ill-formed block. Expected a statement or top-level variable declaration.
 [exit 1]
+  $ ../../../../../install/default/bin/stanc fatal_error-bad1.stan
+Syntax error in 'fatal_error-bad1.stan', line 1, column 48 to column 53, parsing error:
+   -------------------------------------------------
+     1:   transformed data { fatal_error ( "hello world" while
+                                                         ^
+   -------------------------------------------------
+
+Ill-formed statement. Expected a comma separated list of either expressions or strings followed by ");" after "fatal_error(".
+[exit 1]
+  $ ../../../../../install/default/bin/stanc fatal_error-bad2.stan
+Syntax error in 'fatal_error-bad2.stan', line 2, column 17 to column 18, parsing error:
+   -------------------------------------------------
+     1:  transformed data {
+     2:      fatal_error(1:10);
+                          ^
+     3:  }
+   -------------------------------------------------
+
+Ill-formed statement. Expected a comma separated list of either expressions or strings, followed by ");".
+[exit 1]
   $ ../../../../../install/default/bin/stanc fun-app-bad1.stan
 Syntax error in 'fun-app-bad1.stan', line 1, column 30 to column 31, parsing error:
    -------------------------------------------------
@@ -2169,7 +2189,7 @@ Syntax error in 'mystery51.stan', line 1, column 29 to column 30, parsing error:
                                       ^
    -------------------------------------------------
 
-Ill-formed statement. Expected a comma separated list of either expressions or strings followed by ");" after "reject(",.
+Ill-formed statement. Expected a comma separated list of either expressions or strings, followed by ");".
 [exit 1]
   $ ../../../../../install/default/bin/stanc mystery52.stan
 Syntax error in 'mystery52.stan', line 1, column 29 to column 30, parsing error:
@@ -2729,6 +2749,27 @@ Syntax error in 'print-bad4.stan', line 1, column 25 to column 30, parsing error
 Ill-formed statement. Expected "(" followed by a comma separated list of expressions or
 strings followed by ");" after "print".
 [exit 1]
+  $ ../../../../../install/default/bin/stanc print-bad5.stan
+Syntax error in 'print-bad5.stan', line 2, column 11 to column 12, parsing error:
+   -------------------------------------------------
+     1:  transformed data {
+     2:      print(1:10);
+                    ^
+     3:  }
+   -------------------------------------------------
+
+Ill-formed statement. Expected a comma separated list of either expressions or strings, followed by ");".
+[exit 1]
+  $ ../../../../../install/default/bin/stanc print-bad6.stan
+Syntax error in 'print-bad6.stan', line 1, column 42 to column 47, parsing error:
+   -------------------------------------------------
+     1:   transformed data { print ( "hello world" while
+                                                   ^
+   -------------------------------------------------
+
+Ill-formed statement. Expected a comma separated list of expressions or
+strings followed by ");" after "print(".
+[exit 1]
   $ ../../../../../install/default/bin/stanc reject-bad1.stan
 Syntax error in 'reject-bad1.stan', line 1, column 31 to column 36, parsing error:
    -------------------------------------------------
@@ -2789,6 +2830,15 @@ Syntax error in 'reject-bad7.stan', line 1, column 26 to column 31, parsing erro
    -------------------------------------------------
      1:  transformed data { reject while
                                    ^
+   -------------------------------------------------
+
+Ill-formed statement. Expected a comma separated list of either expressions or strings followed by ");" after "reject(",.
+[exit 1]
+  $ ../../../../../install/default/bin/stanc reject-bad8.stan
+Syntax error in 'reject-bad8.stan', line 1, column 43 to column 48, parsing error:
+   -------------------------------------------------
+     1:   transformed data { reject ( "hello world" while
+                                                    ^
    -------------------------------------------------
 
 Ill-formed statement. Expected a comma separated list of either expressions or strings followed by ");" after "reject(",.
