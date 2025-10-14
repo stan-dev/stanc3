@@ -2348,9 +2348,11 @@ program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE WHILE
 
 program: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN IDENTIFIER COMMA WHILE
 ## Concrete syntax: transformed data { reject ( foo , while
-program: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN IDENTIFIER COMMA STRINGLITERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE FATAL_ERROR LPAREN IDENTIFIER TILDE
+## Concrete syntax: transformed data { fatal_error ( foo ~
+program: TRANSFORMEDDATABLOCK LBRACE PRINT LPAREN IDENTIFIER COMMA STRINGLITERAL WHILE
 ##
-## Concrete syntax: transformed data { reject ( foo , "hello world" while
+## Concrete syntax: transformed data { print ( foo , "hello world" while
 ##
 ## Ends in an error in state: 271.
 ##
@@ -2367,8 +2369,6 @@ program: TRANSFORMEDDATABLOCK LBRACE REJECT WHILE
 ## Concrete syntax: transformed data { reject while
 program: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN STRINGLITERAL WHILE
 ## Concrete syntax: transformed data { reject ( "hello world" while
-program: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN IDENTIFIER TILDE
-## Concrete syntax: transformed data { reject ( foo ~
 program: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN IDENTIFIER RPAREN WHILE
 ## Concrete syntax: transformed data { reject ( foo ) while
 program: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN WHILE
