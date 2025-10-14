@@ -9,7 +9,7 @@ Semantic error in 'string', line 3, column 8 to column 11:
      5:  transformed data {
    -------------------------------------------------
 
-Function 'foo' is declared without specifying a definition.
+Function "foo" is declared without specifying a definition.
 
 $ node auto-format.js
 parameters {
@@ -57,7 +57,7 @@ Semantic error in 'string', line 6, column 4 to column 5:
      7:  }
    -------------------------------------------------
 
-Identifier 'z' not in scope.
+Identifier "z" not in scope.
 
 $ node canonical.js
 functions {
@@ -117,7 +117,7 @@ Semantic error in 'good_filename', line 6, column 4 to column 5:
      7:  }
    -------------------------------------------------
 
-Identifier 'z' not in scope.
+Identifier "z" not in scope.
 
 Semantic error in 'string', line 6, column 4 to column 5:
    -------------------------------------------------
@@ -128,7 +128,7 @@ Semantic error in 'string', line 6, column 4 to column 5:
      7:  }
    -------------------------------------------------
 
-Identifier 'z' not in scope.
+Identifier "z" not in scope.
 
 $ node functions-only.js
 real my_log1p_exp(real x) {
@@ -364,7 +364,7 @@ Semantic error in 'string', line 3, column 8 to column 11:
      5:  
    -------------------------------------------------
 
-Function 'foo' is declared without specifying a definition.
+Function "foo" is declared without specifying a definition.
 
 "stancflags = --use-opencl --allow-undefined"
 $ node pedantic.js

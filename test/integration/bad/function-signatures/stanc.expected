@@ -21,7 +21,7 @@ Semantic error in 'falling_factorial.stan', line 7, column 26 to column 59:
      9:  
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'falling_factorial':
+Ill-typed arguments supplied to function "falling_factorial":
 (real, real)
 Available signatures:
 (real, int) => real
@@ -46,7 +46,7 @@ Semantic error in 'rising_factorial.stan', line 7, column 28 to column 60:
      8:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'rising_factorial':
+Ill-typed arguments supplied to function "rising_factorial":
 (real, real)
 Available signatures:
 (real, int) => real

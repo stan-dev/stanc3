@@ -9,8 +9,8 @@ Semantic error in 'abs-deprecate.stan', line 3, column 7 to column 17:
      5:  parameters {
    -------------------------------------------------
 
-A returning function was expected but an undeclared identifier 'fabs' was supplied.
-Did you mean 'abs'?
+A returning function was expected but an undeclared identifier "fabs" was supplied.
+Did you mean "abs"?
 [exit 1]
   $ ../../../../../install/default/bin/stanc binomial_coefficient_log.stan
 Semantic error in 'binomial_coefficient_log.stan', line 12, column 26 to column 66:
@@ -23,7 +23,7 @@ Semantic error in 'binomial_coefficient_log.stan', line 12, column 26 to column 
     14:    transformed_data_real = binomial_coefficient_log(d_real, d_int);
    -------------------------------------------------
 
-A returning function was expected but an undeclared identifier 'binomial_coefficient_log' was supplied.
+A returning function was expected but an undeclared identifier "binomial_coefficient_log" was supplied.
 [exit 1]
   $ ../../../../../install/default/bin/stanc cdf_conditioning.stan
 Semantic error in 'cdf_conditioning.stan', line 7, column 12 to column 28:
@@ -35,7 +35,9 @@ Semantic error in 'cdf_conditioning.stan', line 7, column 12 to column 28:
      8:  }
    -------------------------------------------------
 
-Probability functions with suffixes _lpdf, _lupdf, _lpmf, _lupmf, _cdf, _lcdf and _lccdf, require a vertical bar (|) between the first two arguments.
+Probability functions with suffixes _lpdf, _lupdf, _lpmf, _lupmf, _cdf, _lcdf
+and _lccdf, require a vertical bar (|) between the first two
+arguments.
 [exit 1]
   $ ../../../../../install/default/bin/stanc cov_exp_quad.stan
 Semantic error in 'cov_exp_quad.stan', line 17, column 28 to column 65:
@@ -48,7 +50,7 @@ Semantic error in 'cov_exp_quad.stan', line 17, column 28 to column 65:
     19:    transformed_data_matrix = cov_exp_quad(d_vec_1, d_sigma, d_len);
    -------------------------------------------------
 
-A returning function was expected but an undeclared identifier 'cov_exp_quad' was supplied.
+A returning function was expected but an undeclared identifier "cov_exp_quad" was supplied.
 [exit 1]
   $ ../../../../../install/default/bin/stanc decl.stan
 Syntax error in 'decl.stan', line 2, column 7 to column 12, parsing error:
@@ -103,7 +105,7 @@ Semantic error in 'duplicate-warns.stan', line 4, column 2 to column 24:
      6:    foo = multiply_log(1, 1);
    -------------------------------------------------
 
-A non-returning function was expected but an undeclared identifier 'increment_log_prob' was supplied.
+A non-returning function was expected but an undeclared identifier "increment_log_prob" was supplied.
 [exit 1]
   $ ../../../../../install/default/bin/stanc get-lp-deprecate.stan
 Semantic error in 'get-lp-deprecate.stan', line 5, column 19 to column 27:
@@ -116,7 +118,7 @@ Semantic error in 'get-lp-deprecate.stan', line 5, column 19 to column 27:
      7:  }
    -------------------------------------------------
 
-A returning function was expected but an undeclared identifier 'get_lp' was supplied.
+A returning function was expected but an undeclared identifier "get_lp" was supplied.
 [exit 1]
   $ ../../../../../install/default/bin/stanc get_lp_target.stan
 Semantic error in 'get_lp_target.stan', line 6, column 21 to column 29:
@@ -129,7 +131,7 @@ Semantic error in 'get_lp_target.stan', line 6, column 21 to column 29:
      8:  model {
    -------------------------------------------------
 
-A returning function was expected but an undeclared identifier 'get_lp' was supplied.
+A returning function was expected but an undeclared identifier "get_lp" was supplied.
 [exit 1]
   $ ../../../../../install/default/bin/stanc identifiers.stan
 Syntax error in 'identifiers.stan', line 2, column 6 to column 11, parsing error:
@@ -154,7 +156,7 @@ Semantic error in 'if_else.stan', line 9, column 26 to column 54:
     11:    transformed_data_real = if_else(d_int, d_real, d_real);
    -------------------------------------------------
 
-A returning function was expected but an undeclared identifier 'if_else' was supplied.
+A returning function was expected but an undeclared identifier "if_else" was supplied.
 [exit 1]
   $ ../../../../../install/default/bin/stanc increment_log_prob.stan
 Semantic error in 'increment_log_prob.stan', line 42, column 2 to column 24:
@@ -167,7 +169,7 @@ Semantic error in 'increment_log_prob.stan', line 42, column 2 to column 24:
     44:    increment_log_prob(nnn);
    -------------------------------------------------
 
-A non-returning function was expected but an undeclared identifier 'increment_log_prob' was supplied.
+A non-returning function was expected but an undeclared identifier "increment_log_prob" was supplied.
 [exit 1]
   $ ../../../../../install/default/bin/stanc lvalue_multiindex.stan
 Semantic error in 'lvalue_multiindex.stan', line 6, column 3 to column 10:
@@ -193,7 +195,7 @@ Semantic error in 'multiply_log.stan', line 11, column 26 to column 54:
     13:    transformed_data_real = multiply_log(d_real, d_int);
    -------------------------------------------------
 
-A returning function was expected but an undeclared identifier 'multiply_log' was supplied.
+A returning function was expected but an undeclared identifier "multiply_log" was supplied.
 [exit 1]
   $ ../../../../../install/default/bin/stanc old-log-funs.stan
 Semantic error in 'old-log-funs.stan', line 3, column 6 to column 24:
@@ -206,7 +208,7 @@ Semantic error in 'old-log-funs.stan', line 3, column 6 to column 24:
      5:    x = lmultiply(x, x);  // new function is OK
    -------------------------------------------------
 
-A returning function was expected but an undeclared identifier 'multiply_log' was supplied.
+A returning function was expected but an undeclared identifier "multiply_log" was supplied.
 [exit 1]
   $ ../../../../../install/default/bin/stanc pound-comment-deprecated.stan
 Syntax error in 'pound-comment-deprecated.stan', line 2, column 2 to column 3, lexing error:

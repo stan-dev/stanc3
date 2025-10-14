@@ -126,7 +126,7 @@ Semantic error in 'bad_unpack_fn_type.stan', line 4, column 4 to column 24:
      6:    }
    -------------------------------------------------
 
-Cannot assign a function type '() => int' to variable 'foo'.
+Cannot assign a function type "() => int" to variable "foo".
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_unpack_global.stan
 Semantic error in 'bad_unpack_global.stan', line 8, column 3 to column 4:
@@ -139,7 +139,7 @@ Semantic error in 'bad_unpack_global.stan', line 8, column 3 to column 4:
     10:  }
    -------------------------------------------------
 
-Cannot assign to global variable 'x' declared in previous blocks.
+Cannot assign to global variable "x" declared in previous blocks.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_unpack_lhs.stan
 Syntax error in 'bad_unpack_lhs.stan', line 4, column 2 to column 15, parsing error:
@@ -309,7 +309,7 @@ Semantic error in 'fn-assign.stan', line 4, column 4 to column 17:
      6:    }
    -------------------------------------------------
 
-Cannot assign a function type '() => int' to variable 'x'.
+Cannot assign a function type "() => int" to variable "x".
 [exit 1]
   $ ../../../../../install/default/bin/stanc function-mismatch1.stan
 Semantic error in 'function-mismatch1.stan', line 8, column 2 to column 17:
@@ -321,7 +321,7 @@ Semantic error in 'function-mismatch1.stan', line 8, column 2 to column 17:
      9:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'foo':
+Ill-typed arguments supplied to function "foo":
 (tuple(int, int, int))
 Available signatures:
 (tuple(real, real)) => void
@@ -483,13 +483,13 @@ Semantic error in 'tuple-dataonly-ad.stan', line 13, column 12 to column 19:
     14:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'foo':
+Ill-typed arguments supplied to function "foo":
 (tuple(real, real))
 Available signatures:
 (data tuple(real, real)) => real
   The first argument must be data-only. (Local variables are assumed to
   depend on parameters; same goes for function inputs unless they are marked
-  with the keyword 'data'.)
+  with the keyword "data".)
 [exit 1]
   $ ../../../../../install/default/bin/stanc tuple-dataonly-ad2.stan
 Semantic error in 'tuple-dataonly-ad2.stan', line 17, column 12 to column 24:
@@ -501,13 +501,13 @@ Semantic error in 'tuple-dataonly-ad2.stan', line 17, column 12 to column 24:
     18:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'foo':
+Ill-typed arguments supplied to function "foo":
 (tuple(real, real))
 Available signatures:
 (data tuple(real, real)) => real
   The first argument must be data-only. (Local variables are assumed to
   depend on parameters; same goes for function inputs unless they are marked
-  with the keyword 'data'.)
+  with the keyword "data".)
 [exit 1]
   $ ../../../../../install/default/bin/stanc tuple_ternary.stan
 Semantic error in 'tuple_ternary.stan', line 2, column 25 to column 47:

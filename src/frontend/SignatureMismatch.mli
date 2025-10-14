@@ -73,7 +73,19 @@ val check_variadic_args :
       If none is found, returns [Error] of the list of args and a function_mismatch.
      *)
 
-val data_only_msg : string
+val data_only_msg : unit Fmt.t
+
+val expected_style : 'a Fmt.t -> 'a Fmt.t
+(** Add the formatting style for an expected value *)
+
+val actual_style : 'a Fmt.t -> 'a Fmt.t
+(** Add the formatting style for an incorrect actual value *)
+
+val arguments : int Fmt.t
+(** Formatter for "arguments" with correct pluralization *)
+
+val quoted : string Fmt.t
+(** Formatter for quoting a string *)
 
 val pp_mismatch_details :
   skipped:string list -> Format.formatter -> details -> unit

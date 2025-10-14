@@ -2,5 +2,7 @@
  (name common)
  (public_name stanc.common)
  (libraries core fmt)
+ (preprocess
+  (pps ppx_jane ppx_deriving.fold ppx_deriving.map))
  (instrumentation
   (backend bisect_ppx)))
