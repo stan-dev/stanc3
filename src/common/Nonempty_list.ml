@@ -6,15 +6,15 @@ type 'a t = ( :: ) of 'a * 'a list
 let to_list (hd :: tl) : _ list = hd :: tl
 
 let of_list_exn : _ list -> _ t = function
-  | [] -> raise_s [%message "Nonempty_list.of_list_exn: empty list"]
+  | [] ->
+      ICE.internal_compiler_error
+        [%message "Nonempty_list.of_list_exn: empty list"]
   | hd :: tl -> hd :: tl
 
-(** @@deriving sexp doesn't like this type, so we do it manually *)
+(** [@@deriving sexp] doesn't like this type, so we do it manually *)
 include
   Sexpable.Of_sexpable1
-    (struct
-      type 'a t = 'a list [@@deriving sexp]
-    end)
+    (List)
     (struct
       type nonrec 'a t = 'a t
 
