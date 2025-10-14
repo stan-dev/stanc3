@@ -68,7 +68,7 @@ flowchart TB
     end
 
     subgraph backend[Backend]
-        codegen(*_backend/*_code_gen.ml)
+        codegen(*_backend/Lower_program.ml)
         transform(*_backend/Transform_Mir.ml)
 
         transform -.->|MIR with backend specific code| optimize
@@ -88,7 +88,7 @@ flowchart TB
     click lower "https://github.com/stan-dev/stanc3/blob/master/src/frontend/Ast_to_Mir.ml"
     click optimize "https://github.com/stan-dev/stanc3/blob/master/src/analysis_and_optimization/Optimize.ml"
     click data "https://github.com/stan-dev/stanc3/tree/master/src/middle"
-    click codegen "https://github.com/stan-dev/stanc3/blob/master/src/stan_math_backend/Stan_math_code_gen.ml"
+    click codegen "https://github.com/stan-dev/stanc3/blob/master/src/stan_math_backend/Lower_program.ml"
     click transform "https://github.com/stan-dev/stanc3/blob/master/src/stan_math_backend/Transform_Mir.ml"
 ```
 
