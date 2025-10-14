@@ -321,7 +321,7 @@ Semantic error in 'function-mismatch1.stan', line 8, column 2 to column 17:
      9:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'foo':
+Ill-typed arguments supplied to function "foo":
 (tuple(int, int, int))
 Available signatures:
 (tuple(real, real)) => void
@@ -483,7 +483,7 @@ Semantic error in 'tuple-dataonly-ad.stan', line 13, column 12 to column 19:
     14:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'foo':
+Ill-typed arguments supplied to function "foo":
 (tuple(real, real))
 Available signatures:
 (data tuple(real, real)) => real
@@ -501,7 +501,7 @@ Semantic error in 'tuple-dataonly-ad2.stan', line 17, column 12 to column 24:
     18:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'foo':
+Ill-typed arguments supplied to function "foo":
 (tuple(real, real))
 Available signatures:
 (data tuple(real, real)) => real

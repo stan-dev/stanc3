@@ -9,7 +9,7 @@ Semantic error in 'bad_abs_tol.stan', line 28, column 10 to column 66:
     30:  model {
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'dae_tol':
+Ill-typed arguments supplied to function "dae_tol":
 (<F1>, vector, vector, real, array[] real, real, array[] real, int,
  array[] real)
 where F1 = (real, vector, vector, array[] real) => vector
@@ -29,7 +29,7 @@ Semantic error in 'bad_initial_derivative.stan', line 27, column 10 to column 70
     29:  model {
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'dae_tol':
+Ill-typed arguments supplied to function "dae_tol":
 (<F1>, vector, real, real, array[] real, real, real, int, array[] real)
 where F1 = (real, vector, vector, array[] real) => vector
 Available signatures:
@@ -48,7 +48,7 @@ Semantic error in 'bad_initial_state.stan', line 27, column 10 to column 70:
     29:  model {
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'dae_tol':
+Ill-typed arguments supplied to function "dae_tol":
 (<F1>, real, vector, real, array[] real, real, real, int, array[] real)
 where F1 = (real, vector, vector, array[] real) => vector
 Available signatures:
@@ -67,7 +67,7 @@ Semantic error in 'bad_initial_time.stan', line 27, column 10 to column 70:
     29:  model {
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'dae_tol':
+Ill-typed arguments supplied to function "dae_tol":
 (<F1>, vector, vector, vector, array[] real, real, real, int, array[] real)
 where F1 = (real, vector, vector, array[] real) => vector
 Available signatures:
@@ -86,7 +86,7 @@ Semantic error in 'bad_max_num_steps.stan', line 28, column 10 to column 68:
     30:  model {
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'dae_tol':
+Ill-typed arguments supplied to function "dae_tol":
 (<F1>, vector, vector, real, array[] real, real, real, array[] real,
  array[] real)
 where F1 = (real, vector, vector, array[] real) => vector
@@ -106,7 +106,7 @@ Semantic error in 'bad_no_args.stan', line 27, column 10 to column 63:
     29:  model {
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'dae_tol':
+Ill-typed arguments supplied to function "dae_tol":
 (<F1>, vector, vector, real, array[] real, real, real, int)
 where F1 = (real, vector, array[] real) => vector
 Available signatures:
@@ -134,7 +134,7 @@ Semantic error in 'bad_non_matching_args.stan', line 27, column 10 to column 77:
     29:  model {
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'dae_tol':
+Ill-typed arguments supplied to function "dae_tol":
 (<F1>, vector, vector, real, array[] real, real, real, int, array[] real,
  array[] real)
 where F1 = (real, vector, vector, array[] real, real) => vector
@@ -154,7 +154,7 @@ Semantic error in 'bad_rel_tol.stan', line 28, column 10 to column 69:
     30:  model {
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'dae_tol':
+Ill-typed arguments supplied to function "dae_tol":
 (<F1>, vector, vector, real, array[] real, array[] real, real, int,
  array[] real, array[] real)
 where F1 = (real, vector, vector, array[] real) => vector
@@ -174,7 +174,7 @@ Semantic error in 'bad_time0.stan', line 13, column 6 to column 52:
     15:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'dae':
+Ill-typed arguments supplied to function "dae":
 (<F1>, vector, vector, real, array[] int)
 where F1 = (real, vector, vector) => vector
 Available signatures:
@@ -194,7 +194,7 @@ Semantic error in 'bad_times_param.stan', line 13, column 6 to column 60:
     15:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'dae':
+Ill-typed arguments supplied to function "dae":
 (<F1>, vector, vector, real, array[] real)
 where F1 = (real, vector, vector) => vector
 Available signatures:
@@ -214,7 +214,7 @@ Semantic error in 'bad_times_tol.stan', line 27, column 10 to column 69:
     29:  model {
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'dae_tol':
+Ill-typed arguments supplied to function "dae_tol":
 (<F1>, vector, vector, real, array[] vector, real, real, int, array[] real)
 where F1 = (real, vector, vector, array[] real) => vector
 Available signatures:

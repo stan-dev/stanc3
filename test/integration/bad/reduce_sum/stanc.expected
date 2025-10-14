@@ -8,7 +8,7 @@ Semantic error in 'bad_args_length_mismatch.stan', line 12, column 12 to column 
     13:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum':
+Ill-typed arguments supplied to function "reduce_sum":
 (<F1>, array[] real, int, real)
 where F1 = (array[] real, int, int, real, real) => real
 Available signatures:
@@ -25,7 +25,7 @@ Semantic error in 'bad_args_length_mismatch2.stan', line 12, column 12 to column
     13:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum':
+Ill-typed arguments supplied to function "reduce_sum":
 (<F1>, array[] real, int, real, real)
 where F1 = (array[] real, int, int, real) => real
 Available signatures:
@@ -42,7 +42,7 @@ Semantic error in 'bad_args_length_mismatch2_static.stan', line 12, column 12 to
     13:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum_static':
+Ill-typed arguments supplied to function "reduce_sum_static":
 (<F1>, array[] real, int, real, real)
 where F1 = (array[] real, int, int, real) => real
 Available signatures:
@@ -59,7 +59,7 @@ Semantic error in 'bad_args_length_mismatch_static.stan', line 12, column 12 to 
     13:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum_static':
+Ill-typed arguments supplied to function "reduce_sum_static":
 (<F1>, array[] real, int, real)
 where F1 = (array[] real, int, int, real, real) => real
 Available signatures:
@@ -76,7 +76,7 @@ Semantic error in 'bad_fun_1.stan', line 12, column 12 to column 39:
     13:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum':
+Ill-typed arguments supplied to function "reduce_sum":
 (<F1>, array[] real, int)
 where F1 = (array[] real, int) => real
 Available signatures:
@@ -99,7 +99,7 @@ Semantic error in 'bad_fun_1_static.stan', line 12, column 12 to column 46:
     13:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum_static':
+Ill-typed arguments supplied to function "reduce_sum_static":
 (<F1>, array[] real, int)
 where F1 = (array[] real, int) => real
 Available signatures:
@@ -122,7 +122,7 @@ Semantic error in 'bad_fun_first_arg.stan', line 12, column 12 to column 42:
     13:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum':
+Ill-typed arguments supplied to function "reduce_sum":
 (<F1>, array[] real, int, real)
 where F1 = (array[] real, real, int, real, real) => real
 Available signatures:
@@ -148,7 +148,7 @@ Semantic error in 'bad_fun_first_arg_static.stan', line 12, column 12 to column 
     13:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum_static':
+Ill-typed arguments supplied to function "reduce_sum_static":
 (<F1>, array[] real, int, real)
 where F1 = (array[] real, real, int, real, real) => real
 Available signatures:
@@ -174,7 +174,7 @@ Semantic error in 'bad_fun_second_arg.stan', line 12, column 12 to column 42:
     13:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum':
+Ill-typed arguments supplied to function "reduce_sum":
 (<F1>, array[] real, int, real)
 where F1 = (array[] real, int, real, real, real) => real
 Available signatures:
@@ -200,7 +200,7 @@ Semantic error in 'bad_fun_second_arg_static.stan', line 12, column 12 to column
     13:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum_static':
+Ill-typed arguments supplied to function "reduce_sum_static":
 (<F1>, array[] real, int, real)
 where F1 = (array[] real, int, real, real, real) => real
 Available signatures:
@@ -226,7 +226,7 @@ Semantic error in 'bad_fun_slice_and_slice_dont_match.stan', line 12, column 12 
     13:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum':
+Ill-typed arguments supplied to function "reduce_sum":
 (<F1>, array[] vector, int, real)
 where F1 = (array[] real, int, int, real, real) => real
 Available signatures:
@@ -243,7 +243,7 @@ Semantic error in 'bad_fun_slice_and_slice_dont_match_static.stan', line 12, col
     13:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum_static':
+Ill-typed arguments supplied to function "reduce_sum_static":
 (<F1>, array[] vector, int, real)
 where F1 = (array[] real, int, int, real, real) => real
 Available signatures:
@@ -260,7 +260,7 @@ Semantic error in 'bad_non_matching_arg_types.stan', line 16, column 14 to colum
     17:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum':
+Ill-typed arguments supplied to function "reduce_sum":
 (<F1>, array[] real, int, real, int)
 where F1 = (array[] real, real, int, int, real) => real
 Available signatures:
@@ -286,7 +286,7 @@ Semantic error in 'bad_non_matching_arg_types2.stan', line 16, column 14 to colu
     17:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum':
+Ill-typed arguments supplied to function "reduce_sum":
 (<F1>, array[] real, int, real, array[] real)
 where F1 = (array[] real, int, int, real, real) => real
 Available signatures:
@@ -303,7 +303,7 @@ Semantic error in 'bad_non_matching_arg_types2_static.stan', line 16, column 14 
     17:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum_static':
+Ill-typed arguments supplied to function "reduce_sum_static":
 (<F1>, array[] real, int, real, array[] real)
 where F1 = (array[] real, int, int, real, real) => real
 Available signatures:
@@ -320,7 +320,7 @@ Semantic error in 'bad_non_matching_arg_types3.stan', line 13, column 14 to colu
     14:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum':
+Ill-typed arguments supplied to function "reduce_sum":
 (<F1>, array[] real, int, real, vector)
 where F1 = (array[] real, int, int, real, real) => real
 Available signatures:
@@ -337,7 +337,7 @@ Semantic error in 'bad_non_matching_arg_types3_static.stan', line 13, column 14 
     14:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum_static':
+Ill-typed arguments supplied to function "reduce_sum_static":
 (<F1>, array[] real, int, real, vector)
 where F1 = (array[] real, int, int, real, real) => real
 Available signatures:
@@ -381,7 +381,7 @@ Semantic error in 'bad_reduce_sum_multiple.stan', line 27, column 18 to column 5
     29:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum':
+Ill-typed arguments supplied to function "reduce_sum":
 (<F1>, array[] real, int, real, real)
 where F1 = (array[] real, int, int) => real
 Available signatures:
@@ -398,7 +398,7 @@ Semantic error in 'bad_return_type.stan', line 12, column 12 to column 39:
     13:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum':
+Ill-typed arguments supplied to function "reduce_sum":
 (<F1>, array[] real, int)
 where F1 = (array[] real, int, int) => int
 Available signatures:
@@ -420,7 +420,7 @@ Semantic error in 'bad_return_type_static.stan', line 12, column 12 to column 46
     13:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum_static':
+Ill-typed arguments supplied to function "reduce_sum_static":
 (<F1>, array[] real, int)
 where F1 = (array[] real, int, int) => int
 Available signatures:
@@ -457,7 +457,7 @@ Semantic error in 'bad_suffix.stan', line 27, column 12 to line 28, column 45:
     29:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum':
+Ill-typed arguments supplied to function "reduce_sum":
 (<F1>, array[] int, int, array[] int, vector, vector)
 where F1 = (array[] int, int, int, array[] int, vector, vector) => real
 Available signatures:

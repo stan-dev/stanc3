@@ -84,6 +84,9 @@ val actual_style : 'a Fmt.t -> 'a Fmt.t
 val arguments : int Fmt.t
 (** Formatter for "arguments" with correct pluralization *)
 
+val quoted : string Fmt.t
+(** Formatter for quoting a string *)
+
 val pp_mismatch_details :
   skipped:string list -> Format.formatter -> details -> unit
 

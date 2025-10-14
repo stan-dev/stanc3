@@ -369,7 +369,7 @@ Semantic error in 'bad_promotion1.stan', line 9, column 2 to column 13:
     10:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'printer':
+Ill-typed arguments supplied to function "printer":
 (array[] int)
 Available signatures:
 (array[] vector) => void
@@ -385,7 +385,7 @@ Semantic error in 'bad_promotions2.stan', line 9, column 8 to column 17:
     10:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'nested':
+Ill-typed arguments supplied to function "nested":
 (array[] int)
 Available signatures:
 (array[,] complex) => real
@@ -401,7 +401,7 @@ Semantic error in 'bad_promotions3.stan', line 9, column 2 to column 17:
     10:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'printer':
+Ill-typed arguments supplied to function "printer":
 (array[,] int)
 Available signatures:
 (array[] real) => void
@@ -417,7 +417,7 @@ Semantic error in 'bad_promotions4.stan', line 9, column 2 to column 13:
     10:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'printer':
+Ill-typed arguments supplied to function "printer":
 (array[] real)
 Available signatures:
 (array[] int) => void

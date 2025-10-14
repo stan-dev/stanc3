@@ -343,9 +343,10 @@ let data_only_msg ppf () =
     (styled (`Fg `Green) (quote string))
     "data"
 
-let expected_style pp = Fmt.(styled (`Fg `Blue)) pp
+let expected_style pp = Fmt.(styled (`Fg `Green)) pp
 let actual_style pp = Fmt.(styled (`Fg `Yellow)) pp
 let arguments = Fmt.cardinal ~one:(Fmt.any "argument") ()
+let quoted = Fmt.styled (`Fg `Green) Fmt.(quote string)
 
 let pp_mismatch_details ~skipped ppf details =
   let open Fmt in
@@ -485,12 +486,11 @@ let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
       fun_ty pp_explain err in
   let pp_omitted =
     Fmt.if' omitted
-      (Fmt.styled `Bold (fun ppf () ->
+      (Fmt.styled `Faint (fun ppf () ->
            Fmt.pf ppf "@,(Additional signatures omitted)")) in
-  pf ppf
-    "@[<v>Ill-typed arguments supplied to function '%s':@ %a@ Available \
-     signatures:@ %a%a@]"
-    name pp_args arg_tys
+  pf ppf "@[<v>Ill-typed arguments supplied to function %a:@ %a@ %a@ %a%a@]"
+    quoted name pp_args arg_tys (Fmt.styled `Bold string)
+    "Available signatures:"
     (list ~sep:cut pp_signature)
     sigs pp_omitted ()
 

@@ -223,7 +223,7 @@ Semantic error in 'bad_to_int1.stan', line 6, column 19 to column 28:
      7:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'to_int':
+Ill-typed arguments supplied to function "to_int":
 (array[] real)
 Available signatures:
 (data array[] real) => array[] int
@@ -250,7 +250,7 @@ Semantic error in 'bad_to_int2.stan', line 3, column 19 to column 28:
      4:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'to_int':
+Ill-typed arguments supplied to function "to_int":
 (array[] real)
 Available signatures:
 (data array[] real) => array[] int
@@ -465,7 +465,7 @@ Semantic error in 'ccdf-sample.stan', line 5, column 2 to column 24:
      6:  }
    -------------------------------------------------
 
-CDF and CCDF functions may not be used with distribution notation (~). Use target += weibull_ccdf_log(...) instead.
+CDF and CCDF functions may not be used with distribution notation (~). Use target += weibull_lccdf(...) instead.
 [exit 1]
   $ ../../../../install/default/bin/stanc cdf-sample.stan
 Semantic error in 'cdf-sample.stan', line 5, column 2 to column 23:
@@ -477,7 +477,7 @@ Semantic error in 'cdf-sample.stan', line 5, column 2 to column 23:
      6:  }
    -------------------------------------------------
 
-CDF and CCDF functions may not be used with distribution notation (~). Use target += normal_cdf_log(...) instead.
+CDF and CCDF functions may not be used with distribution notation (~). Use target += normal_lcdf(...) instead.
 [exit 1]
   $ ../../../../install/default/bin/stanc complex_mat_bad.stan
 Semantic error in 'complex_mat_bad.stan', line 7, column 2 to column 18:
@@ -1047,7 +1047,7 @@ Semantic error in 'err-jacobian-plusequals-functor.stan', line 16, column 16 to 
     18:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'ode_rk45':
+Ill-typed arguments supplied to function "ode_rk45":
 (<F1>, vector, real, array[] real, real)
 where F1 = (real, vector, real) => vector
 Available signatures:
@@ -1572,7 +1572,7 @@ Semantic error in 'functions-bad21.stan', line 13, column 11 to column 21:
     15:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'my_fun3':
+Ill-typed arguments supplied to function "my_fun3":
 (real)
 Available signatures:
 (data real) => real
@@ -1591,7 +1591,7 @@ Semantic error in 'functions-bad22-ode.stan', line 15, column 11 to column 82:
     17:  
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'integrate_ode_rk45':
+Ill-typed arguments supplied to function "integrate_ode_rk45":
 (<F1>, array[] real, real, array[] real, array[] real, array[] real,
  array[] int)
 where F1 = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
@@ -2758,7 +2758,7 @@ Semantic error in 'signature_function_known.stan', line 8, column 12 to column 4
      9:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'bernoulli_logit_lpmf':
+Ill-typed arguments supplied to function "bernoulli_logit_lpmf":
 (vector, vector)
 Available signatures:
 (array[] int, row_vector) => real
@@ -2795,7 +2795,7 @@ Semantic error in 'signature_sampling_known.stan', line 8, column 2 to column 29
      9:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'bernoulli_logit':
+Ill-typed arguments supplied to function "bernoulli_logit":
 (vector, vector)
 Available signatures:
 (array[] int, row_vector) => real
@@ -2832,7 +2832,7 @@ Semantic error in 'signature_sampling_udf.stan', line 8, column 2 to column 19:
      9:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'foo':
+Ill-typed arguments supplied to function "foo":
 (real, real, int)
 Available signatures:
 (real, int, real) => real

@@ -5,11 +5,11 @@ open Middle
    fairly loose, the main idea is to keep similar errors close to each other
    and still be semi-organized *)
 
-let quoted = Fmt.styled (`Fg `Green) Fmt.(quote string)
 let ellipsis ppf = Fmt.styled `Faint Fmt.string ppf "..."
 let expected_style = SignatureMismatch.expected_style
 let actual_style = SignatureMismatch.actual_style
 let arguments = SignatureMismatch.arguments
+let quoted = SignatureMismatch.quoted
 
 let found_type ppf =
   Fmt.pf ppf "@ Instead found type %a." (actual_style UnsizedType.pp)
@@ -241,7 +241,7 @@ module TypeError = struct
         Fmt.pf ppf
           "@[<v>Recieved %a control %a at the end of the call to %a.@ Expected \
            %a arguments for the control parameters instead.@]"
-          (expected_style Fmt.int) found arguments found quoted name
+          (actual_style Fmt.int) found arguments found quoted name
           (expected_style Fmt.int)
           (List.length Stan_math_signatures.laplace_tolerance_argument_types)
     | IlltypedLaplaceTolArgs (name, ArgError (n, DataOnlyError)) ->
@@ -601,9 +601,16 @@ module StatementError = struct
            For example, \"target += normal_lpdf(y, 0, 1)\" should become \"y ~ \
            normal(0, 1).\""
     | InvalidTildeCDForCCDF name ->
+        let name =
+          match String.chop_suffix name ~suffix:"_cdf" with
+          | Some n -> n ^ "_lcdf"
+          | None -> (
+              match String.chop_suffix name ~suffix:"_ccdf" with
+              | Some n -> n ^ "_lccdf"
+              | None -> name) in
         Fmt.pf ppf
           "CDF and CCDF functions may not be used with distribution notation \
-           (~). Use target += %s_log(%t) instead."
+           (~). Use target += %s(%t) instead."
           name ellipsis
     | InvalidTildeNoSuchDistribution (name, true) ->
         Fmt.pf ppf

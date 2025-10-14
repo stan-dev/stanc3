@@ -9,7 +9,7 @@ Semantic error in 'bad_gamma_var.stan', line 19, column 9 to column 55:
     21:  
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'hmm_hidden_state_prob':
+Ill-typed arguments supplied to function "hmm_hidden_state_prob":
 (matrix, matrix, vector)
 Available signatures:
 (data matrix, data matrix, data vector) => matrix
@@ -28,7 +28,7 @@ Semantic error in 'bad_log_omega_var.stan', line 19, column 9 to column 55:
     21:  
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'hmm_hidden_state_prob':
+Ill-typed arguments supplied to function "hmm_hidden_state_prob":
 (matrix, matrix, vector)
 Available signatures:
 (data matrix, data matrix, data vector) => matrix
@@ -47,7 +47,7 @@ Semantic error in 'bad_rho_var.stan', line 19, column 9 to column 55:
     21:  
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'hmm_hidden_state_prob':
+Ill-typed arguments supplied to function "hmm_hidden_state_prob":
 (matrix, matrix, vector)
 Available signatures:
 (data matrix, data matrix, data vector) => matrix
