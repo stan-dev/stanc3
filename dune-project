@@ -16,6 +16,8 @@
    (= 4.14.1))
   (core
    (= v0.16.1))
+  (core_kernel
+   (= v0.16.0))
   (menhir
    (= 20230608))
   (ppx_deriving
