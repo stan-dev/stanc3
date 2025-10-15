@@ -10,6 +10,7 @@
 
 open Core
 open Middle
+module Nonempty_list = Common.Nonempty_list
 
 (** Our type for identifiers, on which we record a location *)
 type identifier =
@@ -43,10 +44,10 @@ type ('e, 'f, 'p) expression =
   | RealNumeral of string
   | ImagNumeral of string
   | FunApp of 'f * identifier * 'e list
-  | CondDistApp of 'f * identifier * 'e list
+  | CondDistApp of 'f * identifier * 'e Nonempty_list.t
   | Promotion of 'e * 'p
   | GetTarget
-  | ArrayExpr of 'e list
+  | ArrayExpr of 'e Nonempty_list.t
   | RowVectorExpr of 'e list
   | Paren of 'e
   | Indexed of 'e * 'e index list
@@ -172,7 +173,7 @@ type ('e, 's, 'l, 'f) statement =
       { decl_type: 'e SizedType.t
       ; transformation: 'e Transformation.t
       ; is_global: bool
-      ; variables: 'e variable list }
+      ; variables: 'e variable Nonempty_list.t }
   | FunDef of
       { returntype: UnsizedType.returntype
       ; funname: identifier
@@ -352,12 +353,10 @@ let rec extract_ids {expr; _} =
   | TernaryIf (e1, e2, e3) ->
       List.concat [extract_ids e1; extract_ids e2; extract_ids e3]
   | BinOp (e1, _, e2) -> extract_ids e1 @ extract_ids e2
-  | ArrayExpr es
-   |RowVectorExpr es
-   |TupleExpr es
-   |CondDistApp (_, _, es)
-   |FunApp (_, _, es) ->
+  | RowVectorExpr es | TupleExpr es | FunApp (_, _, es) ->
       List.concat_map ~f:extract_ids es
+  | ArrayExpr es | CondDistApp (_, _, es) ->
+      List.concat_map ~f:extract_ids (Nonempty_list.to_list es)
   | IntNumeral _ | RealNumeral _ | ImagNumeral _ | GetTarget -> []
 
 let rec lvalue_of_expr_opt ({expr; emeta} : untyped_expression) =
@@ -435,10 +434,10 @@ let get_first_loc (s : untyped_statement) =
   | Assignment _ | Profile _ | Block _ | Tilde _ | Break | Continue
    |ReturnVoid | Print _ | Reject _ | FatalError _ | Skip ->
       s.smeta.loc.begin_loc
-  | VarDecl {decl_type; transformation; variables; _} -> (
+  | VarDecl {decl_type; transformation; variables= var :: _; _} -> (
       match get_loc_dt decl_type with
       | Some loc -> loc
       | None -> (
           match get_loc_tf transformation with
           | Some loc -> loc
-          | None -> (List.hd_exn variables).identifier.id_loc.begin_loc))
+          | None -> var.identifier.id_loc.begin_loc))

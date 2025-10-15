@@ -11,6 +11,9 @@ let of_list_exn : _ list -> _ t = function
         [%message "Nonempty_list.of_list_exn: empty list"]
   | hd :: tl -> hd :: tl
 
+let fold_map t ~init ~f =
+  List.fold_map ~init (to_list t) ~f |> Tuple2.map_snd ~f:of_list_exn
+
 (** [@@deriving sexp] doesn't like this type, so we do it manually *)
 include
   Sexpable.Of_sexpable1

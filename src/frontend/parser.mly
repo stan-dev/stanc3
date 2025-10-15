@@ -398,13 +398,11 @@ decl(type_rule, rhs):
     (* additional indirection only for better error messaging *)
     v = id_and_optional_assignment(rhs, decl_identifier) vs=option(remaining_declarations(rhs)) SEMICOLON
     { (fun ~is_global ->
-      let vs = v :: Option.value vs ~default:[]
-      in
       { stmt=
           VarDecl {
               decl_type= fst ty
             ; transformation= snd ty
-            ; variables=vs
+            ; variables=v :: Option.value vs ~default:[]
             ; is_global
             }
       ; smeta= {
@@ -607,6 +605,14 @@ constr_expression:
     { grammar_logger "constr_expression_common_expr" ; e }
 
 
+(* A version of the stdlib's separated_nonempty_list that encodes that fact in the type *)
+typed_separated_nonempty_list(separator, X):
+  x = X
+    { [ x ] : _ Common.Nonempty_list.t }
+| x = X; separator; xs = separated_nonempty_list(separator, X)
+    { (x :: xs) : _ Common.Nonempty_list.t  }
+
+
 common_expression:
   | id=identifier
     { grammar_logger "identifier_expr" ;
@@ -621,7 +627,7 @@ common_expression:
   | z=IMAGNUMERAL
     { grammar_logger ("imagnumeral " ^ z) ;
       build_expr (ImagNumeral (String.drop_suffix z 1)) $loc }
-  | LBRACE xs=separated_nonempty_list(COMMA, expression) RBRACE
+  | LBRACE xs=typed_separated_nonempty_list(COMMA, expression) RBRACE
     { grammar_logger "array_expression" ;
       build_expr (ArrayExpr xs) $loc }
   | LBRACK xs=separated_list(COMMA, expression) RBRACK
@@ -633,7 +639,7 @@ common_expression:
        if
          List.length args = 1
          && List.exists ~f:(fun x -> String.is_suffix ~suffix:x id.name) Utils.conditioning_suffices
-       then CondDistApp ((), id, args)
+       then CondDistApp ((), id, Common.Nonempty_list.of_list_exn args)
        else FunApp ((), id, args)
        in build_expr app $loc }
   | TARGET LPAREN RPAREN

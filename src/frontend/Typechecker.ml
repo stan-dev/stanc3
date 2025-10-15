@@ -15,6 +15,7 @@
 
 open Core
 open Core.Poly
+open Common
 open Middle
 open Ast
 module Env = Environment
@@ -327,20 +328,19 @@ let check_texpression_is_tuple te name =
   | UTuple ts, TupleAD ads -> List.zip_exn ads ts
   | _ -> Semantic_error.tuple_expected te.emeta.loc name te.emeta.type_ |> error
 
-let check_array_expr loc es =
-  match es with
-  | [] ->
-      (* NB: This is actually disallowed by parser *)
-      Semantic_error.empty_array loc |> error
-  | {emeta= {type_; _}; _} :: _ -> (
-      match get_consistent_types type_ es with
-      | Error (ty, meta) ->
-          Semantic_error.mismatched_array_types meta.loc ty meta.type_ |> error
-      | Ok (ad_level, type_, promotions) ->
-          let type_ = UnsizedType.UArray type_ in
-          mk_typed_expression
-            ~expr:(ArrayExpr (Promotion.promote_list es promotions))
-            ~ad_level ~type_ ~loc)
+let check_array_expr loc (es : _ Nonempty_list.t) =
+  let ({emeta= {type_; _}; _} :: _) = es in
+  let les = Nonempty_list.to_list es in
+  match get_consistent_types type_ les with
+  | Error (ty, meta) ->
+      Semantic_error.mismatched_array_types meta.loc ty meta.type_ |> error
+  | Ok (ad_level, type_, promotions) ->
+      let type_ = UnsizedType.UArray type_ in
+      mk_typed_expression
+        ~expr:
+          (ArrayExpr
+             (Promotion.promote_list les promotions |> Nonempty_list.of_list_exn))
+        ~ad_level ~type_ ~loc
 
 let check_rowvector loc es =
   match es with
@@ -504,7 +504,7 @@ let verify_unnormalized cf loc id =
 
 let mk_fun_app ~is_cond_dist ~loc kind name args ~type_ : Ast.typed_expression =
   let fn =
-    if is_cond_dist then CondDistApp (kind, name, args)
+    if is_cond_dist then CondDistApp (kind, name, Nonempty_list.of_list_exn args)
     else FunApp (kind, name, args) in
   let ad_type =
     if UnsizedType.is_discrete_type type_ then UnsizedType.DataOnly
@@ -611,7 +611,7 @@ let make_function_variable cf loc id = function
         ~ad_level:(calculate_autodifftype cf Functions type_)
         ~type_ ~loc
   | type_ ->
-      Common.ICE.internal_compiler_error
+      ICE.internal_compiler_error
         [%message
           "Attempting to create function variable out of "
             (type_ : UnsizedType.t)]
@@ -674,7 +674,7 @@ let check_function_callable_with_tuple cf tenv caller_id fname
   let matches = function
     | Env.{type_= UnsizedType.UFun (args, return_type, sfx, _) as fn_type; _} ->
         let open SignatureMismatch in
-        let open Common.Let_syntax.Result in
+        let open Let_syntax.Result in
         if return_type <> required_fn_return_type then
           Error
             (`FnRequirementsError
@@ -1059,7 +1059,7 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
         mk_typed_expression ~expr:GetTarget
           ~ad_level:(calculate_autodifftype cf cf.current_block UReal)
           ~type_:UReal ~loc
-  | ArrayExpr es -> es |> List.map ~f:ce |> check_array_expr loc
+  | ArrayExpr es -> es |> Nonempty_list.map ce |> check_array_expr loc
   | RowVectorExpr es -> es |> List.map ~f:ce |> check_rowvector loc
   | Paren e ->
       let te = ce e in
@@ -1080,12 +1080,12 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
                 (List.length ts) i
               |> error
           | _ ->
-              Common.ICE.internal_compiler_error
+              ICE.internal_compiler_error
                 [%message
                   "Error in internal representation: tuple types don't match AD"]
           )
       | UTuple _, ad ->
-          Common.ICE.internal_compiler_error
+          ICE.internal_compiler_error
             [%message
               "Error in internal representation: tuple doesn't have tupleAD"
                 (ad : UnsizedType.autodifftype)]
@@ -1103,7 +1103,8 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
   | FunApp ((), id, es) ->
       es |> List.map ~f:ce |> check_funapp loc cf tenv ~is_cond_dist:false id
   | CondDistApp ((), id, es) ->
-      es |> List.map ~f:ce |> check_funapp loc cf tenv ~is_cond_dist:true id
+      es |> Nonempty_list.to_list |> List.map ~f:ce
+      |> check_funapp loc cf tenv ~is_cond_dist:true id
   | Promotion _ -> .
 
 and check_expression_of_int_type cf tenv e name =
@@ -1410,7 +1411,7 @@ let rec check_lvalue cf tenv {lval; lmeta= ({loc} : located_meta)} =
                 idx
               |> error
           | _ ->
-              Common.ICE.internal_compiler_error
+              ICE.internal_compiler_error
                 [%message
                   "Error in internal representation: tuple types don't match AD"]
           )
@@ -1484,11 +1485,13 @@ let verify_valid_distribution_pos loc cf =
   if in_lp_function cf || cf.current_block = Model then ()
   else Semantic_error.target_plusequals_outside_model_or_logprob loc |> error
 
-let check_tilde_distribution loc cf tenv id arguments =
+let check_tilde_distribution loc cf tenv id
+    (arguments : typed_expression Nonempty_list.t) =
   let name = id.name in
-  let argumenttypes = List.map ~f:arg_type arguments in
+  let argumenttypes = Nonempty_list.map arg_type arguments in
   let name_w_suffix_dist suffix =
-    ( SignatureMismatch.matching_function tenv (name ^ suffix) argumenttypes
+    ( SignatureMismatch.matching_function tenv (name ^ suffix)
+        (Nonempty_list.to_list argumenttypes)
     , suffix ) in
   let distributions =
     List.map ~f:name_w_suffix_dist Utils.distribution_suffices in
@@ -1499,7 +1502,9 @@ let check_tilde_distribution loc cf tenv id arguments =
   | Some (UniqueMatch (_, f, p), sfx) ->
       let suffix =
         Fun_kind.suffix_from_name (name ^ Utils.unnormalized_suffix sfx) in
-      (Promotion.promote_list arguments p, f suffix)
+      ( Promotion.promote_list (Nonempty_list.to_list arguments) p
+        |> Nonempty_list.of_list_exn
+      , f suffix )
       (* real return type is enforced by [verify_fundef_dist_rt] *)
   | None | Some (SignatureErrors ([], _), _) ->
       (* The laplace_marginal helpers are not in the
@@ -1507,27 +1512,29 @@ let check_tilde_distribution loc cf tenv id arguments =
       if Stan_math_signatures.is_embedded_laplace_fn (id.name ^ "_lupmf") then
         let id = {id with name= id.name ^ "_lupmf"} in
         let fn_expr =
-          check_laplace_fn ~is_cond_dist:true loc cf tenv id arguments in
+          check_laplace_fn ~is_cond_dist:true loc cf tenv id
+            (Nonempty_list.to_list arguments) in
         match fn_expr.expr with
         | CondDistApp (kind, _, args) -> (args, kind)
         | _ ->
-            Common.ICE.internal_compiler_error
+            ICE.internal_compiler_error
               [%message
                 "Typechecking a laplace marginal did not return a distribution "
                   (fn_expr : Ast.typed_expression)]
       else
         (* Otherwise, the function is non existent *)
+        let (fst_arg :: _) = argumenttypes in
         Semantic_error.invalid_tilde_no_such_dist loc name
-          (List.hd_exn argumenttypes |> snd |> UnsizedType.is_int_type)
+          (fst_arg |> snd |> UnsizedType.is_int_type)
         |> error
   | Some (AmbiguousMatch sigs, _) ->
       Semantic_error.ambiguous_function_promotion loc id.name
-        (Some (List.map ~f:type_of_expr_typed arguments))
+        (Some (List.map ~f:type_of_expr_typed (Nonempty_list.to_list arguments)))
         sigs
       |> error
   | Some (SignatureErrors (l, b), _) ->
-      arguments
-      |> List.map ~f:(fun e -> e.emeta.type_)
+      arguments |> Nonempty_list.to_list
+      |> List.map ~f:type_of_expr_typed
       |> Semantic_error.illtyped_fn_app loc id.name (l, b)
       |> error
 
@@ -1572,9 +1579,8 @@ let check_tilde loc cf tenv distribution truncation arg args =
   verify_distribution_pdf_pmf distribution;
   verify_valid_distribution_pos loc cf;
   verify_distribution_cdf_ccdf loc distribution;
-  let promoted_args, kind =
+  let te :: tes, kind =
     check_tilde_distribution loc cf tenv distribution (te :: tes) in
-  let te, tes = (List.hd_exn promoted_args, List.tl_exn promoted_args) in
   verify_distribution_cdf_defined loc tenv distribution ttrunc tes;
   let stmt =
     Tilde {arg= te; distribution; args= tes; truncation= ttrunc; kind} in
@@ -1886,13 +1892,13 @@ and check_transformation cf tenv ut trans =
       TupleTransformation tes
 
 and check_var_decl loc cf tenv sized_ty trans
-    (variables : untyped_expression Ast.variable list) is_global =
+    (variables : untyped_expression Ast.variable Nonempty_list.t) is_global =
   let checked_type =
     check_sizedtype {cf with in_toplevel_decl= is_global} tenv sized_ty in
   let unsized_type = SizedType.to_unsized checked_type in
   let checked_trans = check_transformation cf tenv unsized_type trans in
   let tenv, tvariables =
-    List.fold_map ~init:tenv
+    Nonempty_list.fold_map ~init:tenv
       ~f:(fun tenv' ({identifier; initial_value} as var) ->
         verify_identifier identifier;
         verify_name_fresh tenv' identifier ~is_udf:false;
@@ -2031,7 +2037,7 @@ and check_fundef loc cf tenv return_ty id args body =
         | UnsizedType.DataOnly, ut -> (Env.Data, ut)
         | AutoDiffable, ut -> (Param, ut)
         | TupleAD _, _ ->
-            Common.ICE.internal_compiler_error
+            ICE.internal_compiler_error
               [%message "TupleAD in function definition, this is unexpected!"])
       arg_types in
   let tenv_body =
@@ -2152,7 +2158,7 @@ let verify_correctness_invariant (ast : untyped_program)
   let detyped = untyped_program_of_typed_program decorated_ast in
   if compare_untyped_program ast detyped = 0 then ()
   else
-    Common.ICE.internal_compiler_error
+    ICE.internal_compiler_error
       [%message
         "Type checked AST does not match original AST. "
           (detyped : untyped_program)

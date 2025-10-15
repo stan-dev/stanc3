@@ -60,12 +60,19 @@ and trans_expr {Ast.expr; Ast.emeta} =
   | IntNumeral x -> Lit (Int, format_number x) |> ewrap
   | RealNumeral x -> Lit (Real, format_number x) |> ewrap
   | ImagNumeral x -> Lit (Imaginary, format_number x) |> ewrap
-  | FunApp (fn_kind, {name; _}, args) | CondDistApp (fn_kind, {name; _}, args)
-    ->
+  | FunApp (fn_kind, {name; _}, args) ->
       FunApp (trans_fn_kind fn_kind name, trans_exprs args) |> ewrap
+  | CondDistApp (fn_kind, {name; _}, args) ->
+      FunApp
+        ( trans_fn_kind fn_kind name
+        , trans_exprs (Common.Nonempty_list.to_list args) )
+      |> ewrap
   | GetTarget -> FunApp (StanLib ("target", FnTarget, AoS), []) |> ewrap
   | ArrayExpr eles ->
-      FunApp (CompilerInternal FnMakeArray, trans_exprs eles) |> ewrap
+      FunApp
+        ( CompilerInternal FnMakeArray
+        , trans_exprs (Common.Nonempty_list.to_list eles) )
+      |> ewrap
   | RowVectorExpr eles ->
       FunApp (CompilerInternal FnMakeRowVec, trans_exprs eles) |> ewrap
   | Indexed (lhs, indices) ->
@@ -642,7 +649,7 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
           size_checks
           @ create_decl_with_assign decl_id declc dt initial_value transform
               smeta)
-        variables
+        (variables |> Common.Nonempty_list.to_list)
   | Ast.Block stmts -> Block (List.concat_map ~f:trans_stmt stmts) |> swrap
   | Ast.Profile (name, stmts) ->
       Profile (name, List.concat_map ~f:trans_stmt stmts) |> swrap
@@ -879,7 +886,7 @@ let trans_block ud_dists declc block prog =
                    create_decl_with_assign decl_id declc (Sized type_)
                      initial_value transform smeta.loc in
                  (outvar, size, stmts))
-               variables in
+               (Common.Nonempty_list.to_list variables) in
         ( outvars @ accum1
         , List.concat sizes @ accum2
         , List.concat stmts @ accum3 )
@@ -905,7 +912,7 @@ let gather_declarations (b : Ast.typed_statement Ast.block option) =
             ( SizedType.map trans_expr sizedtype
             , Transformation.map trans_expr transformation
             , identifier.name ))
-          variables
+          (Common.Nonempty_list.to_list variables)
     | _ -> [])
 
 let trans_prog filename (p : Ast.typed_program) : Program.Typed.t =
@@ -930,7 +937,7 @@ let trans_prog filename (p : Ast.typed_program) : Program.Typed.t =
             , trans_sizedtype st
             , transformation
             , s.Ast.smeta.loc ))
-          variables
+          (Common.Nonempty_list.to_list variables)
     | _ -> [] in
   let input_vars =
     map get_name_size datablock

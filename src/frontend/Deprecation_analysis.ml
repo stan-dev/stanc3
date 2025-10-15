@@ -93,7 +93,7 @@ let functions_block_contains_jac_pe (stmts : untyped_statement list) =
         if
           List.exists
             ~f:(fun {identifier; _} -> String.equal identifier.name "jacobian")
-            variables
+            (Common.Nonempty_list.to_list variables)
         then found_jacobian ();
         false
     | _ -> false in
@@ -113,35 +113,38 @@ let set_jacobian_compatibility_mode stmts =
 
 let rec collect_deprecated_expr (acc : (Location_span.t * string) list)
     ({expr; _} : Ast.typed_expression) : (Location_span.t * string) list =
-  match expr with
-  | CondDistApp ((StanLib _ | UserDefined _), {name; id_loc}, l)
-   |FunApp ((StanLib _ | UserDefined _), {name; id_loc}, l) ->
-      let w =
-        match Map.find stan_lib_deprecations name with
-        | Some (rename, (major, minor)) ->
-            if expired (major, minor) then []
-            else
+  let check_funapp name id_loc l =
+    let w =
+      match Map.find stan_lib_deprecations name with
+      | Some (rename, (major, minor)) ->
+          if expired (major, minor) then []
+          else
+            let version = string_of_int major ^ "." ^ string_of_int minor in
+            [ ( id_loc
+              , name ^ " is deprecated and will be removed in Stan " ^ version
+                ^ ". Use " ^ rename
+                ^ " instead. This can be automatically changed using the \
+                   canonicalize flag for stanc" ) ]
+      | _ -> (
+          match Map.find deprecated_odes name with
+          | Some (rename, (major, minor)) ->
               let version = string_of_int major ^ "." ^ string_of_int minor in
               [ ( id_loc
                 , name ^ " is deprecated and will be removed in Stan " ^ version
                   ^ ". Use " ^ rename
-                  ^ " instead. This can be automatically changed using the \
-                     canonicalize flag for stanc" ) ]
-        | _ -> (
-            match Map.find deprecated_odes name with
-            | Some (rename, (major, minor)) ->
-                let version = string_of_int major ^ "." ^ string_of_int minor in
-                [ ( id_loc
-                  , name ^ " is deprecated and will be removed in Stan "
-                    ^ version ^ ". Use " ^ rename
-                    ^ " instead. The new interface is slightly different, see: \
-                       https://mc-stan.org/users/documentation/case-studies/convert_odes.html"
-                  ) ]
-            | _ ->
-                if String.equal name "lkj_cov_lpdf" then
-                  [(id_loc, lkj_cov_message)]
-                else []) in
-      acc @ w @ List.concat_map l ~f:(fun e -> collect_deprecated_expr [] e)
+                  ^ " instead. The new interface is slightly different, see: \
+                     https://mc-stan.org/users/documentation/case-studies/convert_odes.html"
+                ) ]
+          | _ ->
+              if String.equal name "lkj_cov_lpdf" then
+                [(id_loc, lkj_cov_message)]
+              else []) in
+    acc @ w @ List.concat_map l ~f:(fun e -> collect_deprecated_expr [] e) in
+  match expr with
+  | CondDistApp ((StanLib _ | UserDefined _), {name; id_loc}, l) ->
+      check_funapp name id_loc (Common.Nonempty_list.to_list l)
+  | FunApp ((StanLib _ | UserDefined _), {name; id_loc}, l) ->
+      check_funapp name id_loc l
   | _ -> fold_expression collect_deprecated_expr acc expr
 
 let collect_deprecated_lval acc l = fold_lval_with collect_deprecated_expr acc l

@@ -33,7 +33,7 @@ let get_var_decl {stmts; _} : t =
              let decl_info =
                List.map
                  ~f:(fun {identifier; _} -> (identifier.name, type_info))
-                 decl.variables in
+                 (Common.Nonempty_list.to_list decl.variables) in
              decl_info @ acc
          | _ -> acc)
        stmts)

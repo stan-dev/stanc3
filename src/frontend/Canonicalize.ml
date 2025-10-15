@@ -69,7 +69,8 @@ let rec parens_stmt ({stmt; smeta} : typed_statement) : typed_statement =
         VarDecl
           { decl_type= Middle.SizedType.map no_parens d
           ; transformation= Middle.Transformation.map keep_parens t
-          ; variables= List.map ~f:(map_variable no_parens) variables
+          ; variables=
+              Common.Nonempty_list.map (map_variable no_parens) variables
           ; is_global }
     | For {loop_variable; lower_bound; upper_bound; loop_body} ->
         For

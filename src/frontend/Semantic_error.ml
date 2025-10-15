@@ -418,7 +418,6 @@ module ExpressionError = struct
     | ConditionalNotationNotAllowed
     | ConditioningRequired
     | NotPrintable
-    | EmptyArray
     | EmptyTuple
     | IntTooLarge
     | TupleIndexInvalidIndex of int * int
@@ -461,8 +460,6 @@ module ExpressionError = struct
            _cdf, _lcdf and _lccdf, require a vertical bar (|) between the \
            first two arguments."
     | NotPrintable -> Fmt.pf ppf "Functions cannot be printed."
-    | EmptyArray ->
-        Fmt.pf ppf "Array expressions must contain at least one element."
     | EmptyTuple ->
         Fmt.pf ppf "Tuple expressions must contain at least one element."
     | IntTooLarge ->
@@ -863,7 +860,6 @@ let conditioning_required loc =
   (loc, ExpressionError ExpressionError.ConditioningRequired)
 
 let not_printable loc = (loc, ExpressionError ExpressionError.NotPrintable)
-let empty_array loc = (loc, ExpressionError ExpressionError.EmptyArray)
 let empty_tuple loc = (loc, ExpressionError ExpressionError.EmptyTuple)
 let bad_int_literal loc = (loc, ExpressionError ExpressionError.IntTooLarge)
 

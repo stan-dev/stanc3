@@ -11,3 +11,6 @@ type 'a t = ( :: ) of 'a * 'a list
 
 val to_list : 'a t -> 'a list
 val of_list_exn : 'a list -> 'a t
+
+val fold_map : 'a t -> init:'b -> f:('b -> 'a -> 'b * 'c) -> 'b * 'c t
+(** Wrapper around [Core.List.fold_map] *)

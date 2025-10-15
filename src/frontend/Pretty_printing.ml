@@ -266,9 +266,6 @@ and pp_expression ppf ({expr= e_content; emeta= {loc; _}} : untyped_expression)
       pf ppf "%a(@,%a)@]" pp_start_funapp id pp_list_of_expression (es, loc)
   | CondDistApp (_, id, es) -> (
       match es with
-      | [] ->
-          Common.ICE.internal_compiler_error
-            [%message "CondDistApp with no arguments: " id.name]
       | [e] ->
           pf ppf "%a(@,%a%a)@]" pp_start_funapp id pp_expression e
             (pp_comments_spacing true get_comments)
@@ -284,7 +281,7 @@ and pp_expression ppf ({expr= e_content; emeta= {loc; _}} : untyped_expression)
             (pp_comments_spacing false get_comments)
             begin_loc pp_list_of_expression (es', loc))
   | GetTarget -> pf ppf "target()"
-  | ArrayExpr es -> pf ppf "{@[%a}@]" pp_list_of_expression (es, loc)
+  | ArrayExpr (e :: es) -> pf ppf "{@[%a}@]" pp_list_of_expression (e :: es, loc)
   | RowVectorExpr es -> pf ppf "[@[%a]@]" pp_list_of_expression (es, loc)
   | Paren e -> pf ppf "(%a)" pp_expression e
   | Indexed (e, l) -> pf ppf "%a[%a]" pp_expression e pp_list_of_indices l
@@ -471,7 +468,8 @@ and pp_statement ppf ({stmt= s_content; smeta= {loc}} as ss : untyped_statement)
           (option (fun ppf e -> pf ppf " = %a" pp_expression e))
           initial_value in
       pf ppf "@[<h>%a %a;@]" pp_transformed_type (pst, trans)
-        (list ~sep:comma pp_var) variables
+        (using Common.Nonempty_list.to_list @@ list ~sep:comma pp_var)
+        variables
   | FunDef {returntype= rt; funname= id; arguments= args; body= b} -> (
       let loc_of (_, _, id) = id.id_loc in
       pf ppf "%a %a(%a" pp_returntype rt pp_identifier id

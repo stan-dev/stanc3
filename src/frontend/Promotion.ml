@@ -131,8 +131,8 @@ let rec promote (exp : Ast.typed_expression) prom =
   let open Ast in
   match exp.expr with
   | ArrayExpr es ->
-      let pes = List.map ~f:(fun e -> promote e prom) es in
-      let fst = List.hd_exn pes in
+      let pes = Common.Nonempty_list.map (fun e -> promote e prom) es in
+      let (fst :: _) = pes in
       let type_, ad_level =
         ( UnsizedType.promote_container exp.emeta.type_ fst.emeta.type_
         , fst.emeta.ad_level ) in
