@@ -128,12 +128,6 @@ let find_include fname =
 
 let try_get_new_lexbuf fname =
   let lexbuf = Stack.top_exn include_stack in
-  let new_lexbuf, file = find_include fname in
-  lexer_logger ("opened " ^ file);
-  new_lexbuf.lex_start_p <-
-    new_file_start_position file
-    @@ Some (location_of_position lexbuf.lex_start_p);
-  new_lexbuf.lex_curr_p <- new_lexbuf.lex_start_p;
   let dup_exists {Middle.Location.filename; included_from; _} =
     let is_dup = String.equal filename in
     let rec go = function
@@ -143,6 +137,18 @@ let try_get_new_lexbuf fname =
     go included_from in
   if dup_exists (location_of_position lexbuf.lex_start_p) then
     include_error (Printf.sprintf "File %s recursively included itself." fname);
+  let new_lexbuf, file = find_include fname in
+  lexer_logger ("opened " ^ file);
+  let new_lexbuf =
+    if
+      String.is_suffix ~suffix:".stanfunctions" file
+      && List.mem !included_files file ~equal:String.equal
+    then Lexing.from_string ""
+    else new_lexbuf in
+  new_lexbuf.lex_start_p <-
+    new_file_start_position file
+    @@ Some (location_of_position lexbuf.lex_start_p);
+  new_lexbuf.lex_curr_p <- new_lexbuf.lex_start_p;
   Stack.push include_stack new_lexbuf;
   update_start_positions new_lexbuf.lex_curr_p;
   included_files := file :: !included_files;

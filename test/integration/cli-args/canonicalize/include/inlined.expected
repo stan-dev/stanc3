@@ -33,6 +33,13 @@ int baz(real z) {
     return 3;
   // trailing coment in c
 }
+
+// line comment a
+/*weird block a*/
+void foo(real x) {
+  return;
+}
+// another line comment a
 [exit 0]
   $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. --canonicalize=includes main.stan
 functions {

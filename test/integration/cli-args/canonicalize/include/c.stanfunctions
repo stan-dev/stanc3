@@ -6,3 +6,5 @@ int baz(real z){
   else return 3;
   // trailing coment in c
 }
+
+#include "a.stanfunctions"

@@ -1,4 +1,5 @@
 functions {
+   #include a.stanfunctions
    #include b.stanfunctions
    #include c.stanfunctions
 }
