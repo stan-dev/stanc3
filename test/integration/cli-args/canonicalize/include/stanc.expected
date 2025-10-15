@@ -32,6 +32,8 @@ int baz(real z) {
     return 3;
   // trailing coment in c
 }
+
+#include a.stanfunctions
 [exit 0]
   $ stanc --auto-format --include-paths=. data.stan
 data {
@@ -52,6 +54,7 @@ functions {
 [exit 0]
   $ stanc --auto-format --include-paths=. main.stan
 functions {
+  #include a.stanfunctions
   #include b.stanfunctions
   #include c.stanfunctions
 }

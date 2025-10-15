@@ -128,7 +128,16 @@ let try_get_new_lexbuf fname =
     let lexbuf = Stack.top_exn include_stack in
     location_of_position lexbuf.lex_start_p in
   let new_lexbuf, file = find_include fname in
-  lexer_logger ("opened " ^ file);
+  let new_lexbuf =
+    if
+      String.is_suffix ~suffix:".stanfunctions" file
+      && List.mem !included_files file ~equal:String.equal
+    then (
+      lexer_logger ("ignoring duplicated include  " ^ file);
+      Lexing.from_string "")
+    else (
+      lexer_logger ("opened " ^ file);
+      new_lexbuf) in
   new_file_start_position new_lexbuf file (Some prior_loc);
   let dup_exists {Middle.Location.filename; included_from; _} =
     let is_dup = String.equal filename in
