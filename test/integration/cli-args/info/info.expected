@@ -53,7 +53,7 @@
   ],
   "included_files": [
     "./included.stan", "includes/recursive.stan",
-    "includes/another_include.stan"
+    "includes/another_include.stan", "includes/foo.stanfunctions"
   ]
 }
 [exit 0]

@@ -144,14 +144,15 @@ let try_get_new_lexbuf fname =
       String.is_suffix ~suffix:".stanfunctions" file
       && List.mem !included_files file ~equal:String.equal
     then Lexing.from_string ""
-    else new_lexbuf in
+    else (
+      included_files := file :: !included_files;
+      new_lexbuf) in
   new_lexbuf.lex_start_p <-
     new_file_start_position file
     @@ Some (location_of_position lexbuf.lex_start_p);
   new_lexbuf.lex_curr_p <- new_lexbuf.lex_start_p;
   Stack.push include_stack new_lexbuf;
   update_start_positions new_lexbuf.lex_curr_p;
-  included_files := file :: !included_files;
   new_lexbuf
 
 let included_files () = List.rev !included_files

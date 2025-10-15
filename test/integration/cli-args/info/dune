@@ -5,7 +5,8 @@
   info.stan
   included.stan
   includes/recursive.stan
-  includes/another_include.stan)
+  includes/another_include.stan
+  includes/foo.stanfunctions)
  (action
   (with-stdout-to
    %{targets}

@@ -2,9 +2,10 @@
 #include <recursive.stan>
 
 functions {
-  real foo(real a) {
-    return sin(a);
-  }
+  #include <foo.stanfunctions>
+  #include <foo.stanfunctions>
+  #include <foo.stanfunctions>
+
   real goo_lpdf(real a) {
     return a;
   }
