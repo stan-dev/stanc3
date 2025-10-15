@@ -137,6 +137,7 @@ let try_get_new_lexbuf fname =
       Lexing.from_string "")
     else (
       lexer_logger ("opened " ^ file);
+      included_files := file :: !included_files;
       new_lexbuf) in
   new_file_start_position new_lexbuf file (Some prior_loc);
   let dup_exists {Middle.Location.filename; included_from; _} =
@@ -149,7 +150,6 @@ let try_get_new_lexbuf fname =
   if dup_exists prior_loc then
     include_error (Printf.sprintf "File %s recursively included itself." fname);
   Stack.push include_stack new_lexbuf;
-  included_files := file :: !included_files;
   new_lexbuf
 
 let included_files () = List.rev !included_files
