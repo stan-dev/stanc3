@@ -494,10 +494,10 @@ and pp_statement ppf ({stmt= s_content; smeta= {loc}} as ss : untyped_statement)
       let long = String.length id.name > max_line_length / 3 in
       let many_args = List.length args > max_line_length / 10 in
       if long then
-        pf ppf "%a @[@[<hv 2>%a(@,%t@]@,)@]%t" pp_returntype rt pp_identifier id
-          pp_args pp_body
+        pf ppf "@[%a@ @]@[@[<hv 2>%a(@,%t@]@,)@]%t" pp_returntype rt
+          pp_identifier id pp_args pp_body
       else
-        pf ppf "%a %a(%a%t)@]%t" pp_returntype rt pp_identifier id
+        pf ppf "@[%a@ @]%a(%a%t)@]%t" pp_returntype rt pp_identifier id
           (if many_args then Format.pp_open_hvbox else Format.pp_open_box)
           0 pp_args pp_body
 
