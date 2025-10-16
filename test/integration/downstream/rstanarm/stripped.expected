@@ -1850,13 +1850,13 @@ functions {
   }
   
   vector test_csr_matrix_times_vector(
-    int m,
-    int n,
-    vector w,
-    array[] int v,
-    array[] int u,
-    vector b
-  ) {
+           int m,
+           int n,
+           vector w,
+           array[] int v,
+           array[] int u,
+           vector b
+         ) {
     return csr_matrix_times_vector(m, n, w, v, u, b);
   }
 }
@@ -7614,13 +7614,13 @@ functions {
   #include /functions/SSfunctions.stan
   
   vector test_csr_matrix_times_vector(
-    int m,
-    int n,
-    vector w,
-    array[] int v,
-    array[] int u,
-    vector b
-  ) {
+           int m,
+           int n,
+           vector w,
+           array[] int v,
+           array[] int u,
+           vector b
+         ) {
     return csr_matrix_times_vector(m, n, w, v, u, b);
   }
 }

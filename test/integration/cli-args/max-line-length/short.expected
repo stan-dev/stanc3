@@ -238,20 +238,20 @@ functions {
     return x1;
   }
   real foo_five_args_lp(
-    real x1,
-    real x2,
-    real x3,
-    real x4,
-    real x5,
-    real x6
-  ) {
+         real x1,
+         real x2,
+         real x3,
+         real x4,
+         real x5,
+         real x6
+       ) {
     return x1;
   }
   
   matrix covsqrt2corsqrt(
-    matrix mat,
-    int invert
-  ) {
+           matrix mat,
+           int invert
+         ) {
     matrix[rows(mat), cols(mat)] o;
     o = mat;
     o[1] = o[2];
@@ -482,11 +482,11 @@ functions {
     return l[{1, 2, 3, 4, 5}];
   }
   vector algebra_system(
-    vector x,
-    vector y,
-    array[] real dat,
-    array[] int dat_int
-  ) {
+           vector x,
+           vector y,
+           array[] real dat,
+           array[] int dat_int
+         ) {
     vector[2] f_x;
     f_x[1] = x[1] - y[1];
     f_x[2] = x[2] - y[2];
