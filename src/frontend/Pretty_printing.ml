@@ -471,7 +471,10 @@ and pp_statement ppf ({stmt= s_content; smeta= {loc}} as ss : untyped_statement)
           (option (fun ppf e -> pf ppf " = %a" pp_expression e))
           initial_value in
       pf ppf "@[<h>%a %a;@]" pp_transformed_type (pst, trans)
-        (list ~sep:comma pp_var) variables
+        (pp_list_of pp_var (fun v -> v.identifier.id_loc))
+        ( variables
+        , {loc with end_loc= (List.hd_exn variables).identifier.id_loc.begin_loc}
+        )
   | FunDef {returntype= rt; funname= id; arguments= args; body= b} ->
       let pp_args ppf =
         let loc_of (_, _, id) = id.id_loc in

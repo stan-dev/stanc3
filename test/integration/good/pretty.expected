@@ -1365,9 +1365,11 @@ data {
 transformed data {
   int N;
   array[N /*test1*/, //test1.5
-        N] real arr;
+        N] real /*test2*/ arr;
   
-  /* ^^^:test2*/
+  int foo, //test3
+  bar, //test4
+  baz; //test5
 }
 model {
   // unicode in comments

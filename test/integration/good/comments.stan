@@ -22,6 +22,10 @@ transformed data {
     int N;
       array[N/*test1*/ , //test1.5
     N/*test2*/] real arr;
+
+    int foo, //test3
+    bar, //test4
+    baz; //test5
 }
 
 model {
