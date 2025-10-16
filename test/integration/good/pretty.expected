@@ -1365,7 +1365,7 @@ data {
 transformed data {
   int N;
   array[N /*test1*/, //test1.5
-        N] real /*test2*/ arr;
+        N /*test2*/] real arr;
   
   int foo, //test3
   bar, //test4

@@ -2920,10 +2920,10 @@ static constexpr std::array<const char*, 14> locations_array__ =
   " (in 'basic_unpacking.stan', line 7, column 11 to column 17)",
   " (in 'basic_unpacking.stan', line 7, column 2 to column 18)",
   " (in 'basic_unpacking.stan', line 8, column 2 to column 14)",
-  " (in 'basic_unpacking.stan', line 9, column 78 to column 84)",
-  " (in 'basic_unpacking.stan', line 9, column 2 to column 85)",
-  " (in 'basic_unpacking.stan', line 15, column 6 to column 12)",
-  " (in 'basic_unpacking.stan', line 10, column 2 to line 15, column 13)"};
+  " (in 'basic_unpacking.stan', line 9, column 92 to column 151)",
+  " (in 'basic_unpacking.stan', line 9, column 2 to column 152)",
+  " (in 'basic_unpacking.stan', line 17, column 5 to line 21, column 7)",
+  " (in 'basic_unpacking.stan', line 10, column 2 to line 21, column 8)"};
 class basic_unpacking_model final : public model_base_crtp<basic_unpacking_model> {
  private:
   int x;

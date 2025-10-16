@@ -342,7 +342,7 @@ let pp_bracketed_transform ppf = function
     ->
       ()
 
-let rec pp_transformed_type ppf (st, trans) =
+let rec pp_transformed_type ?end_loc () ppf (st, trans) =
   let open Middle in
   let pp_possibly_transformed_type ppf (st, trans) =
     let sizes_fmt =
@@ -386,15 +386,17 @@ let rec pp_transformed_type ppf (st, trans) =
         (* NB this calls the top-level function to handle internal arrays etc *)
         let transTypes = Middle.Utils.zip_stuple_trans_exn st transforms in
         pf ppf "tuple(@[%a%s@])"
-          (list ~sep:comma pp_transformed_type)
+          (list ~sep:comma (pp_transformed_type ?end_loc ()))
           transTypes
           (if List.length transforms = 1 then "," else "") in
   match st with
   (* array goes before something like cov_matrix *)
   | Middle.SizedType.SArray _ ->
       let ty, ixs = Middle.SizedType.get_array_dims st in
-      let ({emeta= {loc= {end_loc; _}; _}; _} : untyped_expression) =
-        List.last_exn ixs in
+      let end_loc =
+        match end_loc with
+        | Some x -> x
+        | None -> (List.last_exn ixs).emeta.loc.end_loc in
       let ({emeta= {loc= {begin_loc; _}; _}; _} : untyped_expression) =
         List.hd_exn ixs in
       pf ppf "array[@[%a@]]@ %a" pp_list_of_expression
@@ -436,8 +438,9 @@ and pp_statement ppf ({stmt= s_content; smeta= {loc}} as ss : untyped_statement)
     =
   match s_content with
   | Assignment {assign_lhs= l; assign_op= assop; assign_rhs= e} ->
-      pf ppf "@[<h>%a %a %a;@]" pp_lvalue l pp_assignmentoperator assop
-        pp_expression e
+      pf ppf "@[<h>%a %a%a %a;@]" pp_lvalue l
+        (pp_comments_spacing get_comments_until_separator)
+        e.emeta.loc.begin_loc pp_assignmentoperator assop pp_expression e
   | NRFunApp (_, id, es) ->
       pf ppf "%a(@,%a);@]" pp_start_funapp id pp_list_of_expression (es, loc)
   | TargetPE e -> pf ppf "target += %a;" pp_expression e
@@ -473,11 +476,12 @@ and pp_statement ppf ({stmt= s_content; smeta= {loc}} as ss : untyped_statement)
         pf ppf "%a%a" pp_identifier identifier
           (option (fun ppf e -> pf ppf " = %a" pp_expression e))
           initial_value in
-      pf ppf "@[<h>%a %a;@]" pp_transformed_type (pst, trans)
+      pf ppf "@[<h>%a %a;@]"
+        (pp_transformed_type
+           ~end_loc:(List.hd_exn variables).identifier.id_loc.begin_loc ())
+        (pst, trans)
         (pp_list_of pp_var (fun v -> v.identifier.id_loc))
-        ( variables
-        , {loc with end_loc= (List.hd_exn variables).identifier.id_loc.begin_loc}
-        )
+        (variables, loc)
   | FunDef {returntype= rt; funname= id; arguments= args; body= b} ->
       let pp_args ppf =
         let loc_of (_, _, id) = id.id_loc in
