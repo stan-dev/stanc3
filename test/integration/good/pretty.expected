@@ -1367,9 +1367,15 @@ transformed data {
   array[N /*test1*/, //test1.5
         N /*test2*/] real arr;
   
+  /*test1*/ //test1.5
+  /*test2*/ /*test2.1*/ /*test2.2*/ /*test2.3*/
+  tuple(array[N, N] real, real) tup;
+  
   int foo, //test3
-  bar, //test4
-  baz; //test5
+  bar //test4
+  = 3 //test5
+  , //test6
+  baz; //test7
 }
 model {
   // unicode in comments

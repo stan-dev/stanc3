@@ -384,6 +384,7 @@ let rec pp_transformed_type ?end_loc () ppf (st, trans) =
     | StochasticRow -> pf ppf "row_stochastic_matrix%t" sizes_fmt
     | TupleTransformation transforms ->
         (* NB this calls the top-level function to handle internal arrays etc *)
+        (* it isn't perfect with comment placement currently *)
         let transTypes = Middle.Utils.zip_stuple_trans_exn st transforms in
         pf ppf "tuple(@[%a%s@])"
           (list ~sep:comma (pp_transformed_type ?end_loc ()))
@@ -474,7 +475,10 @@ and pp_statement ppf ({stmt= s_content; smeta= {loc}} as ss : untyped_statement)
   | VarDecl {decl_type= pst; transformation= trans; variables; is_global= _} ->
       let pp_var ppf {identifier; initial_value} =
         pf ppf "%a%a" pp_identifier identifier
-          (option (fun ppf e -> pf ppf " = %a" pp_expression e))
+          (option (fun ppf (e : untyped_expression) ->
+               pf ppf " %a= %a"
+                 (pp_comments_spacing get_comments_until_separator)
+                 e.emeta.loc.begin_loc pp_expression e))
           initial_value in
       pf ppf "@[<h>%a %a;@]"
         (pp_transformed_type
