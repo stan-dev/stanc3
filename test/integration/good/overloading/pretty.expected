@@ -214,13 +214,20 @@ functions {
     return dydt;
   }
   
-  vector simple_SIR(real t, vector y, real beta,
+  vector simple_SIR(real t,
+                    vector y,
+                    real beta,
                     // water contact rate
-                    real kappa, // C_{50}
-                    real gamma, // recovery rate
-                    real xi, // bacteria production rate
-                    real delta, // bacteria removal rate
-                    int unused // just for testing
+                    real kappa,
+                    // C_{50}
+                    real gamma,
+                    // recovery rate
+                    real xi,
+                    // bacteria production rate
+                    real delta,
+                    // bacteria removal rate
+                    int unused
+                    // just for testing
                     ) {
     vector[4] dydt;
     

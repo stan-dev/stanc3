@@ -472,17 +472,36 @@ and pp_statement ppf ({stmt= s_content; smeta= {loc}} as ss : untyped_statement)
           initial_value in
       pf ppf "@[<h>%a %a;@]" pp_transformed_type (pst, trans)
         (list ~sep:comma pp_var) variables
-  | FunDef {returntype= rt; funname= id; arguments= args; body= b} -> (
+  | FunDef {returntype= rt; funname= id; arguments= args; body= b} ->
+      (* similar to [pp_start_funapp]:
+         - if a name is long, start the box early in the name
+         - if there are a lot of args, or a long name, display them one-per-line *)
+      let max = Format.pp_get_margin ppf () in
+      (* these values are picked heuristically so they look decent on the
+         default line-length, where they work out to 26+ characters being a 'long'
+         name, and 8+ args being 'many' arguments *)
+      let long = String.length id.name > max / 3 in
+      let arg_box =
+        let many_args = List.length args > max / 10 in
+        if long || many_args then Format.pp_open_hvbox
+        else Format.pp_open_hovbox in
+      let pp_open_long_box ppf = (if' long arg_box) ppf 2 in
+      let pp_open_short_box ppf = (if' (not long) arg_box) ppf 1 in
+      let pp_args ppf (at, ut, id) =
+        pf ppf "%a%a %a" pp_autodifftype at pp_unsizedtype ut pp_identifier id
+      in
       let loc_of (_, _, id) = id.id_loc in
-      pf ppf "%a %a(%a" pp_returntype rt pp_identifier id
-        (box (pp_list_of pp_args loc_of))
-        (args, {loc with end_loc= b.smeta.loc.begin_loc});
-      match b with
-      | {stmt= Skip; _} -> pf ppf ");"
-      | b -> pf ppf ") %a" pp_statement b)
-
-and pp_args ppf (at, ut, id) =
-  pf ppf "%a%a %a" pp_autodifftype at pp_unsizedtype ut pp_identifier id
+      let pp_dedent ppf =
+        (* TODO: use pp_print_custom_break for trailing commas? *)
+        if long then Format.pp_print_break ppf 0 (-2) else () in
+      let body = match b with {stmt= Skip; _} -> None | _ -> Some b in
+      pf ppf "%t%a %a%t(%a%a%t)@]%a" pp_open_long_box pp_returntype rt
+        pp_identifier id pp_open_short_box (if' long cut) ()
+        (pp_list_of pp_args loc_of)
+        (args, {loc with end_loc= b.smeta.loc.begin_loc})
+        pp_dedent
+        (option ~none:(any ";") (any " " ++ pp_statement))
+        body
 
 and pp_list_of_statements ppf (l, xloc) =
   let rec pp_head ppf ls =

@@ -47,9 +47,14 @@ functions {
     return gamma;
   }
   
-  array[] real logistic_trend(real k, real m, array[] real delta,
-                              array[] real t, array[] real cap,
-                              array[,] real A, array[] real t_change, int S,
+  array[] real logistic_trend(real k,
+                              real m,
+                              array[] real delta,
+                              array[] real t,
+                              array[] real cap,
+                              array[,] real A,
+                              array[] real t_change,
+                              int S,
                               int T) {
     array[S] real gamma;
     array[T] real Y;
@@ -67,9 +72,14 @@ functions {
   
   // Linear trend function
   
-  array[] real linear_trend(real k, real m, array[] real delta,
-                            array[] real t, array[,] real A,
-                            array[] real t_change, int S, int T) {
+  array[] real linear_trend(real k,
+                            real m,
+                            array[] real delta,
+                            array[] real t,
+                            array[,] real A,
+                            array[] real t_change,
+                            int S,
+                            int T) {
     array[S] real gamma;
     array[T] real Y;
     

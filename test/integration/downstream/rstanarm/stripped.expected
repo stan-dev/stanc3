@@ -1,7 +1,12 @@
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --canonicalize=includes,strip-comments --allow-undefined bernoulli.stan
 functions {
-  vector make_theta_L(int len_theta_L, array[] int p, real dispersion,
-                      vector tau, vector scale, vector zeta, vector rho,
+  vector make_theta_L(int len_theta_L,
+                      array[] int p,
+                      real dispersion,
+                      vector tau,
+                      vector scale,
+                      vector zeta,
+                      vector rho,
                       vector z_T) {
     vector[len_theta_L] theta_L;
     int zeta_mark = 1;
@@ -89,9 +94,16 @@ functions {
     return b;
   }
   
-  real decov_lp(vector z_b, vector z_T, vector rho, vector zeta, vector tau,
-                array[] real regularization, array[] real delta,
-                vector shape, int t, array[] int p) {
+  real decov_lp(vector z_b,
+                vector z_T,
+                vector rho,
+                vector zeta,
+                vector tau,
+                array[] real regularization,
+                array[] real delta,
+                vector shape,
+                int t,
+                array[] int p) {
     int pos_reg = 1;
     int pos_rho = 1;
     target += normal_lpdf(z_b | 0, 1);
@@ -725,8 +737,13 @@ Warning in './/functions/bernoulli_likelihoods.stan', line 84, column 7, include
 [exit 0]
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --canonicalize=includes,strip-comments --allow-undefined binomial.stan
 functions {
-  vector make_theta_L(int len_theta_L, array[] int p, real dispersion,
-                      vector tau, vector scale, vector zeta, vector rho,
+  vector make_theta_L(int len_theta_L,
+                      array[] int p,
+                      real dispersion,
+                      vector tau,
+                      vector scale,
+                      vector zeta,
+                      vector rho,
                       vector z_T) {
     vector[len_theta_L] theta_L;
     int zeta_mark = 1;
@@ -814,9 +831,16 @@ functions {
     return b;
   }
   
-  real decov_lp(vector z_b, vector z_T, vector rho, vector zeta, vector tau,
-                array[] real regularization, array[] real delta,
-                vector shape, int t, array[] int p) {
+  real decov_lp(vector z_b,
+                vector z_T,
+                vector rho,
+                vector zeta,
+                vector tau,
+                array[] real regularization,
+                array[] real delta,
+                vector shape,
+                int t,
+                array[] int p) {
     int pos_reg = 1;
     int pos_rho = 1;
     target += normal_lpdf(z_b | 0, 1);
@@ -1327,8 +1351,13 @@ generated quantities {
 [exit 0]
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --canonicalize=includes,strip-comments --allow-undefined continuous.stan
 functions {
-  vector make_theta_L(int len_theta_L, array[] int p, real dispersion,
-                      vector tau, vector scale, vector zeta, vector rho,
+  vector make_theta_L(int len_theta_L,
+                      array[] int p,
+                      real dispersion,
+                      vector tau,
+                      vector scale,
+                      vector zeta,
+                      vector rho,
                       vector z_T) {
     vector[len_theta_L] theta_L;
     int zeta_mark = 1;
@@ -1416,9 +1445,16 @@ functions {
     return b;
   }
   
-  real decov_lp(vector z_b, vector z_T, vector rho, vector zeta, vector tau,
-                array[] real regularization, array[] real delta,
-                vector shape, int t, array[] int p) {
+  real decov_lp(vector z_b,
+                vector z_T,
+                vector rho,
+                vector zeta,
+                vector tau,
+                array[] real regularization,
+                array[] real delta,
+                vector shape,
+                int t,
+                array[] int p) {
     int pos_reg = 1;
     int pos_rho = 1;
     target += normal_lpdf(z_b | 0, 1);
@@ -1661,7 +1697,8 @@ functions {
     return ll;
   }
   
-  vector pw_beta_z(vector y, vector eta, vector eta_z, int link, int link_phi) {
+  vector pw_beta_z(vector y, vector eta, vector eta_z, int link,
+                   int link_phi) {
     vector[rows(y)] ll;
     vector[rows(y)] mu = linkinv_beta(eta, link);
     vector[rows(y)] mu_z = linkinv_beta_z(eta_z, link_phi);
@@ -1812,8 +1849,14 @@ functions {
     return out;
   }
   
-  vector test_csr_matrix_times_vector(int m, int n, vector w, array[] int v,
-                                      array[] int u, vector b) {
+  vector test_csr_matrix_times_vector(
+    int m,
+    int n,
+    vector w,
+    array[] int v,
+    array[] int u,
+    vector b
+  ) {
     return csr_matrix_times_vector(m, n, w, v, u, b);
   }
 }
@@ -2563,8 +2606,13 @@ Warning in './/functions/SSfunctions.stan', line 10, column 7, included from
 [exit 0]
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --canonicalize=includes,strip-comments --allow-undefined count.stan
 functions {
-  vector make_theta_L(int len_theta_L, array[] int p, real dispersion,
-                      vector tau, vector scale, vector zeta, vector rho,
+  vector make_theta_L(int len_theta_L,
+                      array[] int p,
+                      real dispersion,
+                      vector tau,
+                      vector scale,
+                      vector zeta,
+                      vector rho,
                       vector z_T) {
     vector[len_theta_L] theta_L;
     int zeta_mark = 1;
@@ -2652,9 +2700,16 @@ functions {
     return b;
   }
   
-  real decov_lp(vector z_b, vector z_T, vector rho, vector zeta, vector tau,
-                array[] real regularization, array[] real delta,
-                vector shape, int t, array[] int p) {
+  real decov_lp(vector z_b,
+                vector z_T,
+                vector rho,
+                vector zeta,
+                vector tau,
+                array[] real regularization,
+                array[] real delta,
+                vector shape,
+                int t,
+                array[] int p) {
     int pos_reg = 1;
     int pos_rho = 1;
     target += normal_lpdf(z_b | 0, 1);
@@ -3226,8 +3281,13 @@ generated quantities {
 [exit 0]
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --canonicalize=includes,strip-comments --allow-undefined jm.stan
 functions {
-  vector make_theta_L(int len_theta_L, array[] int p, real dispersion,
-                      vector tau, vector scale, vector zeta, vector rho,
+  vector make_theta_L(int len_theta_L,
+                      array[] int p,
+                      real dispersion,
+                      vector tau,
+                      vector scale,
+                      vector zeta,
+                      vector rho,
                       vector z_T) {
     vector[len_theta_L] theta_L;
     int zeta_mark = 1;
@@ -3315,9 +3375,16 @@ functions {
     return b;
   }
   
-  real decov_lp(vector z_b, vector z_T, vector rho, vector zeta, vector tau,
-                array[] real regularization, array[] real delta,
-                vector shape, int t, array[] int p) {
+  real decov_lp(vector z_b,
+                vector z_T,
+                vector rho,
+                vector zeta,
+                vector tau,
+                array[] real regularization,
+                array[] real delta,
+                vector shape,
+                int t,
+                array[] int p) {
     int pos_reg = 1;
     int pos_rho = 1;
     target += normal_lpdf(z_b | 0, 1);
@@ -3704,7 +3771,8 @@ functions {
     return ll;
   }
   
-  vector pw_beta_z(vector y, vector eta, vector eta_z, int link, int link_phi) {
+  vector pw_beta_z(vector y, vector eta, vector eta_z, int link,
+                   int link_phi) {
     vector[rows(y)] ll;
     vector[rows(y)] mu = linkinv_beta(eta, link);
     vector[rows(y)] mu_z = linkinv_beta_z(eta_z, link_phi);
@@ -3801,12 +3869,20 @@ functions {
     return aux;
   }
   
-  vector make_beta(vector z_beta, int prior_dist, vector prior_mean,
-                   vector prior_scale, vector prior_df,
-                   real global_prior_scale, array[] real global,
-                   array[] vector local, array[] real ool,
-                   array[] vector mix, array[] real aux, int family,
-                   real slab_scale, array[] real caux) {
+  vector make_beta(vector z_beta,
+                   int prior_dist,
+                   vector prior_mean,
+                   vector prior_scale,
+                   vector prior_df,
+                   real global_prior_scale,
+                   array[] real global,
+                   array[] vector local,
+                   array[] real ool,
+                   array[] vector mix,
+                   array[] real aux,
+                   int family,
+                   real slab_scale,
+                   array[] real caux) {
     vector[rows(z_beta)] beta;
     if (prior_dist == 0) 
       beta = z_beta;
@@ -3873,10 +3949,17 @@ functions {
     return b_matrix';
   }
   
-  vector evaluate_eta(matrix X, array[] vector Z1, array[] vector Z2,
-                      array[] int Z1_id, array[] int Z2_id,
-                      array[] real gamma, vector beta, matrix b1Mat,
-                      matrix b2Mat, int b1Mat_colshift, int b2Mat_colshift,
+  vector evaluate_eta(matrix X,
+                      array[] vector Z1,
+                      array[] vector Z2,
+                      array[] int Z1_id,
+                      array[] int Z2_id,
+                      array[] real gamma,
+                      vector beta,
+                      matrix b1Mat,
+                      matrix b2Mat,
+                      int b1Mat_colshift,
+                      int b2Mat_colshift,
                       int intercept_type) {
     int N = rows(X);
     int K = rows(beta);
@@ -3929,9 +4012,15 @@ functions {
     return mu;
   }
   
-  void glm_lp(vector y_real, array[] int y_integer, vector eta,
-              array[] real aux, int family, int link, real sum_log_y,
-              vector sqrt_y, vector log_y) {
+  void glm_lp(vector y_real,
+              array[] int y_integer,
+              vector eta,
+              array[] real aux,
+              int family,
+              int link,
+              real sum_log_y,
+              vector sqrt_y,
+              vector log_y) {
     if (family == 1) {
       if (link == 1) 
         target += normal_lpdf(y_real | eta, aux[1]);
@@ -3966,10 +4055,17 @@ functions {
       reject("Invalid family.");
   }
   
-  void beta_lp(vector z_beta, int prior_dist, vector prior_scale,
-               vector prior_df, real global_prior_df, array[] vector local,
-               array[] real global, array[] vector mix,
-               array[] real one_over_lambda, real slab_df, array[] real caux) {
+  void beta_lp(vector z_beta,
+               int prior_dist,
+               vector prior_scale,
+               vector prior_df,
+               real global_prior_df,
+               array[] vector local,
+               array[] real global,
+               array[] vector mix,
+               array[] real one_over_lambda,
+               real slab_df,
+               array[] real caux) {
     if (prior_dist == 1) 
       target += normal_lpdf(z_beta | 0, 1);
     else if (prior_dist == 2) 
@@ -4110,10 +4206,17 @@ functions {
     return val;
   }
   
-  matrix make_x_assoc_shared_b(vector b, array[] int l, array[] int p,
-                               array[,] int pmat, int Npat, int qnodes,
-                               array[] int which_b, int sum_size_which_b,
-                               array[] int size_which_b, int t_i, int M) {
+  matrix make_x_assoc_shared_b(vector b,
+                               array[] int l,
+                               array[] int p,
+                               array[,] int pmat,
+                               int Npat,
+                               int qnodes,
+                               array[] int which_b,
+                               int sum_size_which_b,
+                               array[] int size_which_b,
+                               int t_i,
+                               int M) {
     int prior_shift;
     int start_store;
     int end_store;
@@ -4156,10 +4259,17 @@ functions {
     return x_assoc_shared_b;
   }
   
-  matrix make_x_assoc_shared_coef(vector b, vector beta, array[] int KM,
-                                  int M, int t_i, array[] int l,
-                                  array[] int p, array[,] int pmat, int Npat,
-                                  int qnodes, int sum_size_which_coef,
+  matrix make_x_assoc_shared_coef(vector b,
+                                  vector beta,
+                                  array[] int KM,
+                                  int M,
+                                  int t_i,
+                                  array[] int l,
+                                  array[] int p,
+                                  array[,] int pmat,
+                                  int Npat,
+                                  int qnodes,
+                                  int sum_size_which_coef,
                                   array[] int size_which_coef,
                                   array[] int which_coef_zindex,
                                   array[] int which_coef_xindex,
@@ -5519,8 +5629,13 @@ generated quantities {
 [exit 0]
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --canonicalize=includes,strip-comments --allow-undefined mvmer.stan
 functions {
-  vector make_theta_L(int len_theta_L, array[] int p, real dispersion,
-                      vector tau, vector scale, vector zeta, vector rho,
+  vector make_theta_L(int len_theta_L,
+                      array[] int p,
+                      real dispersion,
+                      vector tau,
+                      vector scale,
+                      vector zeta,
+                      vector rho,
                       vector z_T) {
     vector[len_theta_L] theta_L;
     int zeta_mark = 1;
@@ -5608,9 +5723,16 @@ functions {
     return b;
   }
   
-  real decov_lp(vector z_b, vector z_T, vector rho, vector zeta, vector tau,
-                array[] real regularization, array[] real delta,
-                vector shape, int t, array[] int p) {
+  real decov_lp(vector z_b,
+                vector z_T,
+                vector rho,
+                vector zeta,
+                vector tau,
+                array[] real regularization,
+                array[] real delta,
+                vector shape,
+                int t,
+                array[] int p) {
     int pos_reg = 1;
     int pos_rho = 1;
     target += normal_lpdf(z_b | 0, 1);
@@ -5997,7 +6119,8 @@ functions {
     return ll;
   }
   
-  vector pw_beta_z(vector y, vector eta, vector eta_z, int link, int link_phi) {
+  vector pw_beta_z(vector y, vector eta, vector eta_z, int link,
+                   int link_phi) {
     vector[rows(y)] ll;
     vector[rows(y)] mu = linkinv_beta(eta, link);
     vector[rows(y)] mu_z = linkinv_beta_z(eta_z, link_phi);
@@ -6094,12 +6217,20 @@ functions {
     return aux;
   }
   
-  vector make_beta(vector z_beta, int prior_dist, vector prior_mean,
-                   vector prior_scale, vector prior_df,
-                   real global_prior_scale, array[] real global,
-                   array[] vector local, array[] real ool,
-                   array[] vector mix, array[] real aux, int family,
-                   real slab_scale, array[] real caux) {
+  vector make_beta(vector z_beta,
+                   int prior_dist,
+                   vector prior_mean,
+                   vector prior_scale,
+                   vector prior_df,
+                   real global_prior_scale,
+                   array[] real global,
+                   array[] vector local,
+                   array[] real ool,
+                   array[] vector mix,
+                   array[] real aux,
+                   int family,
+                   real slab_scale,
+                   array[] real caux) {
     vector[rows(z_beta)] beta;
     if (prior_dist == 0) 
       beta = z_beta;
@@ -6166,10 +6297,17 @@ functions {
     return b_matrix';
   }
   
-  vector evaluate_eta(matrix X, array[] vector Z1, array[] vector Z2,
-                      array[] int Z1_id, array[] int Z2_id,
-                      array[] real gamma, vector beta, matrix b1Mat,
-                      matrix b2Mat, int b1Mat_colshift, int b2Mat_colshift,
+  vector evaluate_eta(matrix X,
+                      array[] vector Z1,
+                      array[] vector Z2,
+                      array[] int Z1_id,
+                      array[] int Z2_id,
+                      array[] real gamma,
+                      vector beta,
+                      matrix b1Mat,
+                      matrix b2Mat,
+                      int b1Mat_colshift,
+                      int b2Mat_colshift,
                       int intercept_type) {
     int N = rows(X);
     int K = rows(beta);
@@ -6222,9 +6360,15 @@ functions {
     return mu;
   }
   
-  void glm_lp(vector y_real, array[] int y_integer, vector eta,
-              array[] real aux, int family, int link, real sum_log_y,
-              vector sqrt_y, vector log_y) {
+  void glm_lp(vector y_real,
+              array[] int y_integer,
+              vector eta,
+              array[] real aux,
+              int family,
+              int link,
+              real sum_log_y,
+              vector sqrt_y,
+              vector log_y) {
     if (family == 1) {
       if (link == 1) 
         target += normal_lpdf(y_real | eta, aux[1]);
@@ -6259,10 +6403,17 @@ functions {
       reject("Invalid family.");
   }
   
-  void beta_lp(vector z_beta, int prior_dist, vector prior_scale,
-               vector prior_df, real global_prior_df, array[] vector local,
-               array[] real global, array[] vector mix,
-               array[] real one_over_lambda, real slab_df, array[] real caux) {
+  void beta_lp(vector z_beta,
+               int prior_dist,
+               vector prior_scale,
+               vector prior_df,
+               real global_prior_df,
+               array[] vector local,
+               array[] real global,
+               array[] vector mix,
+               array[] real one_over_lambda,
+               real slab_df,
+               array[] real caux) {
     if (prior_dist == 1) 
       target += normal_lpdf(z_beta | 0, 1);
     else if (prior_dist == 2) 
@@ -7462,8 +7613,14 @@ functions {
   
   #include /functions/SSfunctions.stan
   
-  vector test_csr_matrix_times_vector(int m, int n, vector w, array[] int v,
-                                      array[] int u, vector b) {
+  vector test_csr_matrix_times_vector(
+    int m,
+    int n,
+    vector w,
+    array[] int v,
+    array[] int u,
+    vector b
+  ) {
     return csr_matrix_times_vector(m, n, w, v, u, b);
   }
 }

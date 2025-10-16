@@ -3960,10 +3960,13 @@ functions {
     return count;
   }
   
-  array[] int vote_countvote_countvote_countvote_count(array[] int rating,
-                                                       array[] int item,
-                                                       array[] int rater,
-                                                       int I, int J) {
+  array[] int vote_countvote_countvote_countvote_count(
+    array[] int rating,
+    array[] int item,
+    array[] int rater,
+    int I,
+    int J
+  ) {
     int N = size(rating);
     array[I] int count_by_item = rep_array(1, I); // index 0:5 by 1:6
     for (n in 1 : N) {

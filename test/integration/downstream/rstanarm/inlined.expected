@@ -37,8 +37,13 @@ functions {
    * @param z_T Vector used in the onion method for creating Cholesky factors
    * @return A vector that corresponds to theta in lme4
    */
-  vector make_theta_L(int len_theta_L, array[] int p, real dispersion,
-                      vector tau, vector scale, vector zeta, vector rho,
+  vector make_theta_L(int len_theta_L,
+                      array[] int p,
+                      real dispersion,
+                      vector tau,
+                      vector scale,
+                      vector zeta,
+                      vector rho,
                       vector z_T) {
     vector[len_theta_L] theta_L;
     int zeta_mark = 1;
@@ -159,9 +164,16 @@ functions {
    * @param p An integer array with the number variables on the LHS of each |
    * @return target()
    */
-  real decov_lp(vector z_b, vector z_T, vector rho, vector zeta, vector tau,
-                array[] real regularization, array[] real delta,
-                vector shape, int t, array[] int p) {
+  real decov_lp(vector z_b,
+                vector z_T,
+                vector rho,
+                vector zeta,
+                vector tau,
+                array[] real regularization,
+                array[] real delta,
+                vector shape,
+                int t,
+                array[] int p) {
     int pos_reg = 1;
     int pos_rho = 1;
     target += normal_lpdf(z_b | 0, 1);
@@ -996,8 +1008,13 @@ functions {
    * @param z_T Vector used in the onion method for creating Cholesky factors
    * @return A vector that corresponds to theta in lme4
    */
-  vector make_theta_L(int len_theta_L, array[] int p, real dispersion,
-                      vector tau, vector scale, vector zeta, vector rho,
+  vector make_theta_L(int len_theta_L,
+                      array[] int p,
+                      real dispersion,
+                      vector tau,
+                      vector scale,
+                      vector zeta,
+                      vector rho,
                       vector z_T) {
     vector[len_theta_L] theta_L;
     int zeta_mark = 1;
@@ -1118,9 +1135,16 @@ functions {
    * @param p An integer array with the number variables on the LHS of each |
    * @return target()
    */
-  real decov_lp(vector z_b, vector z_T, vector rho, vector zeta, vector tau,
-                array[] real regularization, array[] real delta,
-                vector shape, int t, array[] int p) {
+  real decov_lp(vector z_b,
+                vector z_T,
+                vector rho,
+                vector zeta,
+                vector tau,
+                array[] real regularization,
+                array[] real delta,
+                vector shape,
+                int t,
+                array[] int p) {
     int pos_reg = 1;
     int pos_rho = 1;
     target += normal_lpdf(z_b | 0, 1);
@@ -1814,8 +1838,13 @@ functions {
    * @param z_T Vector used in the onion method for creating Cholesky factors
    * @return A vector that corresponds to theta in lme4
    */
-  vector make_theta_L(int len_theta_L, array[] int p, real dispersion,
-                      vector tau, vector scale, vector zeta, vector rho,
+  vector make_theta_L(int len_theta_L,
+                      array[] int p,
+                      real dispersion,
+                      vector tau,
+                      vector scale,
+                      vector zeta,
+                      vector rho,
                       vector z_T) {
     vector[len_theta_L] theta_L;
     int zeta_mark = 1;
@@ -1936,9 +1965,16 @@ functions {
    * @param p An integer array with the number variables on the LHS of each |
    * @return target()
    */
-  real decov_lp(vector z_b, vector z_T, vector rho, vector zeta, vector tau,
-                array[] real regularization, array[] real delta,
-                vector shape, int t, array[] int p) {
+  real decov_lp(vector z_b,
+                vector z_T,
+                vector rho,
+                vector zeta,
+                vector tau,
+                array[] real regularization,
+                array[] real delta,
+                vector shape,
+                int t,
+                array[] int p) {
     int pos_reg = 1;
     int pos_rho = 1;
     target += normal_lpdf(z_b | 0, 1);
@@ -2368,7 +2404,8 @@ functions {
   * @param link_phi An integer indicating the link function passed to linkinv_beta_z
   * @return A vector of log-likelihoods
   */
-  vector pw_beta_z(vector y, vector eta, vector eta_z, int link, int link_phi) {
+  vector pw_beta_z(vector y, vector eta, vector eta_z, int link,
+                   int link_phi) {
     vector[rows(y)] ll;
     vector[rows(y)] mu = linkinv_beta(eta, link); // link checked
     vector[rows(y)] mu_z = linkinv_beta_z(eta_z, link_phi); // link checked
@@ -2548,8 +2585,14 @@ functions {
   * @param b Vector that is multiplied from the left by the CSR matrix
   * @return A vector that is the product of the CSR matrix and b
   */
-  vector test_csr_matrix_times_vector(int m, int n, vector w, array[] int v,
-                                      array[] int u, vector b) {
+  vector test_csr_matrix_times_vector(
+    int m,
+    int n,
+    vector w,
+    array[] int v,
+    array[] int u,
+    vector b
+  ) {
     return csr_matrix_times_vector(m, n, w, v, u, b);
   }
 }
@@ -3404,8 +3447,13 @@ functions {
    * @param z_T Vector used in the onion method for creating Cholesky factors
    * @return A vector that corresponds to theta in lme4
    */
-  vector make_theta_L(int len_theta_L, array[] int p, real dispersion,
-                      vector tau, vector scale, vector zeta, vector rho,
+  vector make_theta_L(int len_theta_L,
+                      array[] int p,
+                      real dispersion,
+                      vector tau,
+                      vector scale,
+                      vector zeta,
+                      vector rho,
                       vector z_T) {
     vector[len_theta_L] theta_L;
     int zeta_mark = 1;
@@ -3526,9 +3574,16 @@ functions {
    * @param p An integer array with the number variables on the LHS of each |
    * @return target()
    */
-  real decov_lp(vector z_b, vector z_T, vector rho, vector zeta, vector tau,
-                array[] real regularization, array[] real delta,
-                vector shape, int t, array[] int p) {
+  real decov_lp(vector z_b,
+                vector z_T,
+                vector rho,
+                vector zeta,
+                vector tau,
+                array[] real regularization,
+                array[] real delta,
+                vector shape,
+                int t,
+                array[] int p) {
     int pos_reg = 1;
     int pos_rho = 1;
     target += normal_lpdf(z_b | 0, 1);
@@ -4286,8 +4341,13 @@ functions {
    * @param z_T Vector used in the onion method for creating Cholesky factors
    * @return A vector that corresponds to theta in lme4
    */
-  vector make_theta_L(int len_theta_L, array[] int p, real dispersion,
-                      vector tau, vector scale, vector zeta, vector rho,
+  vector make_theta_L(int len_theta_L,
+                      array[] int p,
+                      real dispersion,
+                      vector tau,
+                      vector scale,
+                      vector zeta,
+                      vector rho,
                       vector z_T) {
     vector[len_theta_L] theta_L;
     int zeta_mark = 1;
@@ -4408,9 +4468,16 @@ functions {
    * @param p An integer array with the number variables on the LHS of each |
    * @return target()
    */
-  real decov_lp(vector z_b, vector z_T, vector rho, vector zeta, vector tau,
-                array[] real regularization, array[] real delta,
-                vector shape, int t, array[] int p) {
+  real decov_lp(vector z_b,
+                vector z_T,
+                vector rho,
+                vector zeta,
+                vector tau,
+                array[] real regularization,
+                array[] real delta,
+                vector shape,
+                int t,
+                array[] int p) {
     int pos_reg = 1;
     int pos_rho = 1;
     target += normal_lpdf(z_b | 0, 1);
@@ -5060,7 +5127,8 @@ functions {
   * @param link_phi An integer indicating the link function passed to linkinv_beta_z
   * @return A vector of log-likelihoods
   */
-  vector pw_beta_z(vector y, vector eta, vector eta_z, int link, int link_phi) {
+  vector pw_beta_z(vector y, vector eta, vector eta_z, int link,
+                   int link_phi) {
     vector[rows(y)] ll;
     vector[rows(y)] mu = linkinv_beta(eta, link); // link checked
     vector[rows(y)] mu_z = linkinv_beta_z(eta_z, link_phi); // link checked
@@ -5220,12 +5288,20 @@ functions {
   *   for the prior distributions
   * @return A vector containing the population level parameters (coefficients)
   */
-  vector make_beta(vector z_beta, int prior_dist, vector prior_mean,
-                   vector prior_scale, vector prior_df,
-                   real global_prior_scale, array[] real global,
-                   array[] vector local, array[] real ool,
-                   array[] vector mix, array[] real aux, int family,
-                   real slab_scale, array[] real caux) {
+  vector make_beta(vector z_beta,
+                   int prior_dist,
+                   vector prior_mean,
+                   vector prior_scale,
+                   vector prior_df,
+                   real global_prior_scale,
+                   array[] real global,
+                   array[] vector local,
+                   array[] real ool,
+                   array[] vector mix,
+                   array[] real aux,
+                   int family,
+                   real slab_scale,
+                   array[] real caux) {
     vector[rows(z_beta)] beta;
     if (prior_dist == 0) 
       beta = z_beta;
@@ -5323,10 +5399,17 @@ functions {
   *   1 = unbounded, 2 = lower bound, 3 = upper bound)
   * @return A vector containing the linear predictor for the glmer submodel
   */
-  vector evaluate_eta(matrix X, array[] vector Z1, array[] vector Z2,
-                      array[] int Z1_id, array[] int Z2_id,
-                      array[] real gamma, vector beta, matrix b1Mat,
-                      matrix b2Mat, int b1Mat_colshift, int b2Mat_colshift,
+  vector evaluate_eta(matrix X,
+                      array[] vector Z1,
+                      array[] vector Z2,
+                      array[] int Z1_id,
+                      array[] int Z2_id,
+                      array[] real gamma,
+                      vector beta,
+                      matrix b1Mat,
+                      matrix b2Mat,
+                      int b1Mat_colshift,
+                      int b2Mat_colshift,
                       int intercept_type) {
     int N = rows(X); // num rows in design matrix
     int K = rows(beta); // num predictors
@@ -5399,9 +5482,15 @@ functions {
   *   for the prior distributions
   * @return A vector containing the population level parameters (coefficients)
   */
-  void glm_lp(vector y_real, array[] int y_integer, vector eta,
-              array[] real aux, int family, int link, real sum_log_y,
-              vector sqrt_y, vector log_y) {
+  void glm_lp(vector y_real,
+              array[] int y_integer,
+              vector eta,
+              array[] real aux,
+              int family,
+              int link,
+              real sum_log_y,
+              vector sqrt_y,
+              vector log_y) {
     if (family == 1) {
       // gaussian
       if (link == 1) 
@@ -5457,10 +5546,17 @@ functions {
   * @param one_over_lambda Real
   * @return nothing
   */
-  void beta_lp(vector z_beta, int prior_dist, vector prior_scale,
-               vector prior_df, real global_prior_df, array[] vector local,
-               array[] real global, array[] vector mix,
-               array[] real one_over_lambda, real slab_df, array[] real caux) {
+  void beta_lp(vector z_beta,
+               int prior_dist,
+               vector prior_scale,
+               vector prior_df,
+               real global_prior_df,
+               array[] vector local,
+               array[] real global,
+               array[] vector mix,
+               array[] real one_over_lambda,
+               real slab_df,
+               array[] real caux) {
     if (prior_dist == 1) 
       target += normal_lpdf(z_beta | 0, 1);
     else if (prior_dist == 2) 
@@ -5713,10 +5809,17 @@ functions {
   *   in columns, and the individuals on the rows; the matrix is
   *   repeated (qnodes + 1) times (bounded by rows)
   */
-  matrix make_x_assoc_shared_b(vector b, array[] int l, array[] int p,
-                               array[,] int pmat, int Npat, int qnodes,
-                               array[] int which_b, int sum_size_which_b,
-                               array[] int size_which_b, int t_i, int M) {
+  matrix make_x_assoc_shared_b(vector b,
+                               array[] int l,
+                               array[] int p,
+                               array[,] int pmat,
+                               int Npat,
+                               int qnodes,
+                               array[] int which_b,
+                               int sum_size_which_b,
+                               array[] int size_which_b,
+                               int t_i,
+                               int M) {
     int prior_shift; // num. ranefs prior to subject-specific ranefs
     int start_store;
     int end_store;
@@ -5789,10 +5892,17 @@ functions {
   *   in columns, and the individuals on the rows; the matrix is
   *   repeated (qnodes + 1) times (bounded by rows)
   */
-  matrix make_x_assoc_shared_coef(vector b, vector beta, array[] int KM,
-                                  int M, int t_i, array[] int l,
-                                  array[] int p, array[,] int pmat, int Npat,
-                                  int qnodes, int sum_size_which_coef,
+  matrix make_x_assoc_shared_coef(vector b,
+                                  vector beta,
+                                  array[] int KM,
+                                  int M,
+                                  int t_i,
+                                  array[] int l,
+                                  array[] int p,
+                                  array[,] int pmat,
+                                  int Npat,
+                                  int qnodes,
+                                  int sum_size_which_coef,
                                   array[] int size_which_coef,
                                   array[] int which_coef_zindex,
                                   array[] int which_coef_xindex,
@@ -7493,8 +7603,13 @@ functions {
    * @param z_T Vector used in the onion method for creating Cholesky factors
    * @return A vector that corresponds to theta in lme4
    */
-  vector make_theta_L(int len_theta_L, array[] int p, real dispersion,
-                      vector tau, vector scale, vector zeta, vector rho,
+  vector make_theta_L(int len_theta_L,
+                      array[] int p,
+                      real dispersion,
+                      vector tau,
+                      vector scale,
+                      vector zeta,
+                      vector rho,
                       vector z_T) {
     vector[len_theta_L] theta_L;
     int zeta_mark = 1;
@@ -7615,9 +7730,16 @@ functions {
    * @param p An integer array with the number variables on the LHS of each |
    * @return target()
    */
-  real decov_lp(vector z_b, vector z_T, vector rho, vector zeta, vector tau,
-                array[] real regularization, array[] real delta,
-                vector shape, int t, array[] int p) {
+  real decov_lp(vector z_b,
+                vector z_T,
+                vector rho,
+                vector zeta,
+                vector tau,
+                array[] real regularization,
+                array[] real delta,
+                vector shape,
+                int t,
+                array[] int p) {
     int pos_reg = 1;
     int pos_rho = 1;
     target += normal_lpdf(z_b | 0, 1);
@@ -8267,7 +8389,8 @@ functions {
   * @param link_phi An integer indicating the link function passed to linkinv_beta_z
   * @return A vector of log-likelihoods
   */
-  vector pw_beta_z(vector y, vector eta, vector eta_z, int link, int link_phi) {
+  vector pw_beta_z(vector y, vector eta, vector eta_z, int link,
+                   int link_phi) {
     vector[rows(y)] ll;
     vector[rows(y)] mu = linkinv_beta(eta, link); // link checked
     vector[rows(y)] mu_z = linkinv_beta_z(eta_z, link_phi); // link checked
@@ -8427,12 +8550,20 @@ functions {
   *   for the prior distributions
   * @return A vector containing the population level parameters (coefficients)
   */
-  vector make_beta(vector z_beta, int prior_dist, vector prior_mean,
-                   vector prior_scale, vector prior_df,
-                   real global_prior_scale, array[] real global,
-                   array[] vector local, array[] real ool,
-                   array[] vector mix, array[] real aux, int family,
-                   real slab_scale, array[] real caux) {
+  vector make_beta(vector z_beta,
+                   int prior_dist,
+                   vector prior_mean,
+                   vector prior_scale,
+                   vector prior_df,
+                   real global_prior_scale,
+                   array[] real global,
+                   array[] vector local,
+                   array[] real ool,
+                   array[] vector mix,
+                   array[] real aux,
+                   int family,
+                   real slab_scale,
+                   array[] real caux) {
     vector[rows(z_beta)] beta;
     if (prior_dist == 0) 
       beta = z_beta;
@@ -8530,10 +8661,17 @@ functions {
   *   1 = unbounded, 2 = lower bound, 3 = upper bound)
   * @return A vector containing the linear predictor for the glmer submodel
   */
-  vector evaluate_eta(matrix X, array[] vector Z1, array[] vector Z2,
-                      array[] int Z1_id, array[] int Z2_id,
-                      array[] real gamma, vector beta, matrix b1Mat,
-                      matrix b2Mat, int b1Mat_colshift, int b2Mat_colshift,
+  vector evaluate_eta(matrix X,
+                      array[] vector Z1,
+                      array[] vector Z2,
+                      array[] int Z1_id,
+                      array[] int Z2_id,
+                      array[] real gamma,
+                      vector beta,
+                      matrix b1Mat,
+                      matrix b2Mat,
+                      int b1Mat_colshift,
+                      int b2Mat_colshift,
                       int intercept_type) {
     int N = rows(X); // num rows in design matrix
     int K = rows(beta); // num predictors
@@ -8606,9 +8744,15 @@ functions {
   *   for the prior distributions
   * @return A vector containing the population level parameters (coefficients)
   */
-  void glm_lp(vector y_real, array[] int y_integer, vector eta,
-              array[] real aux, int family, int link, real sum_log_y,
-              vector sqrt_y, vector log_y) {
+  void glm_lp(vector y_real,
+              array[] int y_integer,
+              vector eta,
+              array[] real aux,
+              int family,
+              int link,
+              real sum_log_y,
+              vector sqrt_y,
+              vector log_y) {
     if (family == 1) {
       // gaussian
       if (link == 1) 
@@ -8664,10 +8808,17 @@ functions {
   * @param one_over_lambda Real
   * @return nothing
   */
-  void beta_lp(vector z_beta, int prior_dist, vector prior_scale,
-               vector prior_df, real global_prior_df, array[] vector local,
-               array[] real global, array[] vector mix,
-               array[] real one_over_lambda, real slab_df, array[] real caux) {
+  void beta_lp(vector z_beta,
+               int prior_dist,
+               vector prior_scale,
+               vector prior_df,
+               real global_prior_df,
+               array[] vector local,
+               array[] real global,
+               array[] vector mix,
+               array[] real one_over_lambda,
+               real slab_df,
+               array[] real caux) {
     if (prior_dist == 1) 
       target += normal_lpdf(z_beta | 0, 1);
     else if (prior_dist == 2) 
