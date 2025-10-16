@@ -33,6 +33,13 @@ transformed data {
     = 3 //test5
     , //test6
     baz; //test7
+
+      array[// 1
+    3] // 2
+    vector[2 // 3
+    ] // 4
+    x;
+
 }
 
 model {

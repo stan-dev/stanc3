@@ -1376,6 +1376,12 @@ transformed data {
   //test5
   , //test6
   baz; //test7
+  
+  // 1
+  array[3 // 2
+        // 3
+        // 4
+        ] vector[2] x;
 }
 model {
   // unicode in comments
