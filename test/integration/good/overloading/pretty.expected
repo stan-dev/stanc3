@@ -197,8 +197,8 @@ transformed data {
 // http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3380087/pdf/nihms372789.pdf
 
 functions {
-  vector simple_SIR(real t, vector y, real beta,
-                    // water contact rate
+  vector simple_SIR(real t, vector y,
+                    real beta, // water contact rate
                     real kappa, // C_{50}
                     real gamma, // recovery rate
                     real xi, // bacteria production rate
@@ -216,16 +216,11 @@ functions {
   
   vector simple_SIR(real t,
                     vector y,
-                    real beta,
-                    // water contact rate
-                    real kappa,
-                    // C_{50}
-                    real gamma,
-                    // recovery rate
-                    real xi,
-                    // bacteria production rate
-                    real delta,
-                    // bacteria removal rate
+                    real beta, // water contact rate
+                    real kappa, // C_{50}
+                    real gamma, // recovery rate
+                    real xi, // bacteria production rate
+                    real delta, // bacteria removal rate
                     int unused
                     // just for testing
                     ) {

@@ -162,18 +162,20 @@ let pp_spacing ?(newline = true) prev_loc next_loc ppf ls =
       skipped := [];
       Option.iter prev_loc ~f:finish
 
-let pp_comments_spacing space_before f ppf loc =
+let pp_comments_spacing ?(no_comment = Fmt.nop) ?before f ppf loc =
+  let pp_before = match before with Some f -> f | None -> Fmt.nop in
   let comments = f loc in
   if not (List.is_empty comments) then (
-    if space_before then sp ppf ();
+    pp_before ppf ();
     let rec go was_block = function
       | ((block, _, _) as comment) :: tl ->
           let is_block = match block with `Block -> true | _ -> false in
           pp_comment ppf comment;
           if not is_block then Format.pp_force_newline ppf ();
           go is_block tl
-      | [] -> if was_block && not space_before then sp ppf () in
+      | [] -> if was_block && not (Option.is_some before) then sp ppf () in
     go true comments)
+  else no_comment ppf ()
 
 let comma_no_break = any ", "
 
@@ -207,20 +209,21 @@ let pp_list_of pp (loc_of : 'a -> Middle.Location_span.t) ppf
   let rec go expr more =
     match more with
     | next :: rest ->
-        pp ppf expr;
         let next_loc = (loc_of next).begin_loc in
-        pp_comments_spacing true get_comments_until_separator ppf next_loc;
-        comma ppf ();
-        pp_comments_spacing false get_comments ppf next_loc;
+        pf ppf "%a%a,%a" pp expr
+          (pp_comments_spacing ~before:sp get_comments_until_separator)
+          next_loc
+          (pp_comments_spacing ~no_comment:sp ~before:(any " ") get_comments)
+          next_loc;
         go next rest
     | [] -> pp ppf expr in
   skip_comments begin_loc;
   (match es with
   | [] -> ()
   | e :: es ->
-      pp_comments_spacing false get_comments ppf (loc_of e).begin_loc;
+      pp_comments_spacing get_comments ppf (loc_of e).begin_loc;
       go e es);
-  pp_comments_spacing true get_comments ppf end_loc
+  pp_comments_spacing ~before:sp get_comments ppf end_loc
 
 let rec pp_index ppf = function
   | All -> pf ppf " : "
@@ -238,24 +241,24 @@ and pp_expression ppf ({expr= e_content; emeta= {loc; _}} : untyped_expression)
       let then_loc = e2.emeta.loc.begin_loc in
       let else_loc = e3.emeta.loc.begin_loc in
       pf ppf "@[%a@ %a? %a%a@ %a: %a%a@]" pp_expression e1
-        (pp_comments_spacing false get_comments_until_separator)
+        (pp_comments_spacing get_comments_until_separator)
         then_loc
-        (pp_comments_spacing false get_comments)
+        (pp_comments_spacing get_comments)
         then_loc pp_expression e2
-        (pp_comments_spacing false get_comments_until_separator)
+        (pp_comments_spacing get_comments_until_separator)
         else_loc
-        (pp_comments_spacing false get_comments)
+        (pp_comments_spacing get_comments)
         else_loc pp_expression e3
   | BinOp (e1, op, e2) ->
       let next_loc = e2.emeta.loc.begin_loc in
       pf ppf "@[%a@ %a%a %a%a@]" pp_expression e1
-        (pp_comments_spacing false get_comments_until_separator)
+        (pp_comments_spacing get_comments_until_separator)
         next_loc pp_operator op
-        (pp_comments_spacing false get_comments)
+        (pp_comments_spacing get_comments)
         next_loc pp_expression e2
   | PrefixOp (op, e) ->
       pf ppf "%a%a%a"
-        (pp_comments_spacing false get_comments)
+        (pp_comments_spacing get_comments)
         e.emeta.loc.begin_loc pp_operator op pp_expression e
   | PostfixOp (e, op) -> pf ppf "%a%a" pp_expression e pp_operator op
   | Variable id -> pp_identifier ppf id
@@ -271,7 +274,7 @@ and pp_expression ppf ({expr= e_content; emeta= {loc; _}} : untyped_expression)
             [%message "CondDistApp with no arguments: " id.name]
       | [e] ->
           pf ppf "%a(@,%a%a)@]" pp_start_funapp id pp_expression e
-            (pp_comments_spacing true get_comments)
+            (pp_comments_spacing ~before:sp get_comments)
             loc.end_loc
       | e :: es' ->
           let begin_loc =
@@ -279,9 +282,9 @@ and pp_expression ppf ({expr= e_content; emeta= {loc; _}} : untyped_expression)
             |> Option.map ~f:(fun e -> e.emeta.loc.begin_loc)
             |> Option.value ~default:loc.end_loc in
           pf ppf "%a(@,%a%a |@ %a%a)@]" pp_start_funapp id pp_expression e
-            (pp_comments_spacing true get_comments_until_separator)
+            (pp_comments_spacing ~before:sp get_comments_until_separator)
             begin_loc
-            (pp_comments_spacing false get_comments)
+            (pp_comments_spacing get_comments)
             begin_loc pp_list_of_expression (es', loc))
   | GetTarget -> pf ppf "target()"
   | ArrayExpr es -> pf ppf "{@[%a}@]" pp_list_of_expression (es, loc)
@@ -424,7 +427,7 @@ and pp_recursive_ifthenelse ppf (s, loc) =
       pp_spacing ~newline (Some loc) (Some loc) ppf
         (get_comments_until_separator s2.smeta.loc.begin_loc);
       pf ppf "else %a%a"
-        (pp_comments_spacing false get_comments)
+        (pp_comments_spacing get_comments)
         s2.smeta.loc.begin_loc pp_recursive_ifthenelse
         (s2, {loc with line_num= loc.line_num + 1})
   | _ -> pp_indent_unless_block ppf (s, loc)

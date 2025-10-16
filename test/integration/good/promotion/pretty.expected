@@ -182,10 +182,9 @@ transformed parameters {
   $ ../../../../../install/default/bin/stanc --auto-format tilde_syntax.stan
 functions {
   real multi_wallenius_integral(real t, // Function argument
-                                real xc, array[] real theta,
-                                // parameters
-                                array[] real x_r,
-                                // data (real)
+                                real xc,
+                                array[] real theta, // parameters
+                                array[] real x_r, // data (real)
                                 array[] int x_i) {
     // data (integer)
     real Dinv = 1 / theta[1];
