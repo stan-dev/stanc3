@@ -439,9 +439,8 @@ and pp_statement ppf ({stmt= s_content; smeta= {loc}} as ss : untyped_statement)
     =
   match s_content with
   | Assignment {assign_lhs= l; assign_op= assop; assign_rhs= e} ->
-      pf ppf "@[<h>%a %a%a %a;@]" pp_lvalue l
-        (pp_comments_spacing get_comments_until_separator)
-        e.emeta.loc.begin_loc pp_assignmentoperator assop pp_expression e
+      pf ppf "@[<h>%a %a %a;@]" pp_lvalue l pp_assignmentoperator assop
+        pp_expression e
   | NRFunApp (_, id, es) ->
       pf ppf "%a(@,%a);@]" pp_start_funapp id pp_list_of_expression (es, loc)
   | TargetPE e -> pf ppf "target += %a;" pp_expression e
@@ -475,10 +474,7 @@ and pp_statement ppf ({stmt= s_content; smeta= {loc}} as ss : untyped_statement)
   | VarDecl {decl_type= pst; transformation= trans; variables; is_global= _} ->
       let pp_var ppf {identifier; initial_value} =
         pf ppf "%a%a" pp_identifier identifier
-          (option (fun ppf (e : untyped_expression) ->
-               pf ppf " %a= %a"
-                 (pp_comments_spacing get_comments_until_separator)
-                 e.emeta.loc.begin_loc pp_expression e))
+          (option (fun ppf e -> pf ppf " = %a" pp_expression e))
           initial_value in
       pf ppf "@[<h>%a %a;@]"
         (pp_transformed_type

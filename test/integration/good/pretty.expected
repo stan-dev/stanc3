@@ -1372,8 +1372,8 @@ transformed data {
   tuple(array[N, N] real, real) tup;
   
   int foo, //test3
-  bar //test4
-  = 3 //test5
+  bar = 3 //test4
+  //test5
   , //test6
   baz; //test7
 }
