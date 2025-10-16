@@ -223,7 +223,7 @@ let pp_list_of pp (loc_of : 'a -> Middle.Location_span.t) ppf
   | e :: es ->
       pp_comments_spacing get_comments ppf (loc_of e).begin_loc;
       go e es);
-  pp_comments_spacing ~before:sp get_comments ppf end_loc
+  pp_comments_spacing ~before:(any " ") get_comments ppf end_loc
 
 let rec pp_index ppf = function
   | All -> pf ppf " : "

@@ -221,8 +221,7 @@ functions {
                     real gamma, // recovery rate
                     real xi, // bacteria production rate
                     real delta, // bacteria removal rate
-                    int unused
-                    // just for testing
+                    int unused // just for testing
                     ) {
     vector[4] dydt;
     
