@@ -14,7 +14,8 @@ let pp_block block_name ppf {stmts; xloc} =
 
 let rec pp_block_list ppf = function
   | (name, {stmts; xloc}) :: tl ->
-      if should_skip xloc.end_loc then pp_block_list ppf tl
+      if should_skip xloc.begin_loc && should_skip xloc.end_loc then
+        pp_block_list ppf tl
       else (
         pp_spacing None (Some xloc.begin_loc) ppf (get_comments xloc.begin_loc);
         pp_block name ppf {stmts; xloc};
