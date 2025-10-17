@@ -52395,17 +52395,17 @@ class stochastic_matrices_model final : public model_base_crtp<stochastic_matric
       current_statement__ = 17;
       stan::math::check_stochastic_row(function__, "td_arsm", td_arsm);
       current_statement__ = 18;
-      stan::math::validate_non_negative_index("p_csm", "ROWS", ROWS);
+      stan::math::validate_positive_index("p_csm", "ROWS", ROWS);
       current_statement__ = 19;
       stan::math::validate_non_negative_index("p_csm", "COLS", COLS);
       current_statement__ = 20;
       stan::math::validate_non_negative_index("p_rsm", "ROWS", ROWS);
       current_statement__ = 21;
-      stan::math::validate_non_negative_index("p_rsm", "COLS", COLS);
+      stan::math::validate_positive_index("p_rsm", "COLS", COLS);
       current_statement__ = 22;
       stan::math::validate_non_negative_index("p_arsm", "ROWS", ROWS);
       current_statement__ = 23;
-      stan::math::validate_non_negative_index("p_arsm", "COLS", COLS);
+      stan::math::validate_positive_index("p_arsm", "COLS", COLS);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -53402,27 +53402,25 @@ class sum_to_zero_model final : public model_base_crtp<sum_to_zero_model> {
       current_statement__ = 22;
       stan::math::check_sum_to_zero(function__, "td_astzm", td_astzm);
       current_statement__ = 23;
-      stan::math::validate_non_negative_index("p_stzv", "v", v);
+      stan::math::validate_positive_index("p_stzv", "v", v);
       current_statement__ = 24;
-      stan::math::validate_non_negative_index("p_astzv", "v", v);
+      stan::math::validate_positive_index("p_astzv", "v", v);
       current_statement__ = 25;
-      stan::math::validate_non_negative_index("p_stzm", "N", N);
+      stan::math::validate_positive_index("p_stzm", "N", N);
       current_statement__ = 26;
       p_stzm_2dim__ = std::numeric_limits<int>::min();
       current_statement__ = 26;
       p_stzm_2dim__ = (N + 1);
       current_statement__ = 26;
-      stan::math::validate_non_negative_index("p_stzm", "N + 1",
-        p_stzm_2dim__);
+      stan::math::validate_positive_index("p_stzm", "N + 1", p_stzm_2dim__);
       current_statement__ = 27;
-      stan::math::validate_non_negative_index("p_astzm", "N", N);
+      stan::math::validate_positive_index("p_astzm", "N", N);
       current_statement__ = 28;
       p_astzm_4dim__ = std::numeric_limits<int>::min();
       current_statement__ = 28;
       p_astzm_4dim__ = (N + 1);
       current_statement__ = 28;
-      stan::math::validate_non_negative_index("p_astzm", "N + 1",
-        p_astzm_4dim__);
+      stan::math::validate_positive_index("p_astzm", "N + 1", p_astzm_4dim__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
