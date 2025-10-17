@@ -6256,7 +6256,7 @@
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal FnValidateSizeSimplex)
+     (NRFunApp (CompilerInternal FnValidateSizePositive)
       (((pattern (Lit Str p_simplex))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Str N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -6270,7 +6270,7 @@
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal FnValidateSizeSimplex)
+     (NRFunApp (CompilerInternal FnValidateSizePositive)
       (((pattern (Lit Str p_1d_simplex))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Str N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -6298,7 +6298,7 @@
        ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal FnValidateSizeSimplex)
+     (NRFunApp (CompilerInternal FnValidateSizePositive)
       (((pattern (Lit Str p_3d_simplex))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Str N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))

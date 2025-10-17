@@ -797,8 +797,8 @@ let rec trans_sizedtype_decl declc tr name st =
     | SVector (mem_pattern, s) ->
         let fn =
           match (declc.transform_action, tr) with
-          | Constrain, Transformation.Simplex ->
-              Internal_fun.FnValidateSizeSimplex
+          | Constrain, (Transformation.Simplex | SumToZero) ->
+              Internal_fun.FnValidateSizePositive
           | Constrain, UnitVector -> FnValidateSizeUnitVector
           | _ -> FnValidateSize in
         let l, s = grab_size fn n s in
@@ -813,8 +813,17 @@ let rec trans_sizedtype_decl declc tr name st =
         let l, s = grab_size FnValidateSize n s in
         (l, SizedType.SComplexVector s)
     | SMatrix (mem_pattern, r, c) ->
-        let l1, r = grab_size FnValidateSize n r in
-        let l2, c = grab_size FnValidateSize (n + 1) c in
+        let fn1, fn2 =
+          match (declc.transform_action, tr) with
+          | Constrain, Transformation.SumToZero ->
+              ( Internal_fun.FnValidateSizePositive
+              , Internal_fun.FnValidateSizePositive )
+          | Constrain, StochasticColumn ->
+              (FnValidateSizePositive, FnValidateSize)
+          | Constrain, StochasticRow -> (FnValidateSize, FnValidateSizePositive)
+          | _ -> (FnValidateSize, FnValidateSize) in
+        let l1, r = grab_size fn1 n r in
+        let l2, c = grab_size fn2 (n + 1) c in
         let cf_cov =
           match (declc.transform_action, tr) with
           | Constrain, CholeskyCov ->

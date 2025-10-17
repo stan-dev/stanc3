@@ -5,14 +5,16 @@ data {
 }
 
 transformed data {
+   int ROWS = 10;
+   int COLS = 10;
    column_stochastic_matrix[10, 10] td_csm = d_csm;
    row_stochastic_matrix[10, 10] td_rsm = d_rsm;
    array[2, 2] row_stochastic_matrix[10, 10] td_arsm;
 }
 parameters {
-   column_stochastic_matrix[10, 10] p_csm;
-   row_stochastic_matrix[10, 10] p_rsm;
-   array[2, 2] row_stochastic_matrix[10, 10] p_arsm;
+   column_stochastic_matrix[ROWS, COLS] p_csm;
+   row_stochastic_matrix[ROWS, COLS] p_rsm;
+   array[2, 2] row_stochastic_matrix[ROWS, COLS] p_arsm;
 }
 
 transformed parameters {

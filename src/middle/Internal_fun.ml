@@ -18,7 +18,7 @@ type 'expr t =
       ; mem_pattern: Mem_pattern.t }
   | FnWriteParam of {unconstrain_opt: 'expr Transformation.t option; var: 'expr}
   | FnValidateSize
-  | FnValidateSizeSimplex
+  | FnValidateSizePositive
   | FnValidateSizeUnitVector
   | FnCheck of {trans: 'expr Transformation.t; var_name: string; var: 'expr}
   | FnPrint
@@ -54,7 +54,7 @@ let pp (pp_expr : 'a Fmt.t) ppf internal =
 *)
 let can_side_effect = function
   | FnReadParam _ | FnReadData | FnReadDeserializer | FnWriteParam _
-   |FnValidateSize | FnValidateSizeSimplex | FnValidateSizeUnitVector
+   |FnValidateSize | FnValidateSizePositive | FnValidateSizeUnitVector
    |FnReadWriteEventsOpenCL _ ->
       true
   | FnLength | FnMakeArray | FnMakeRowVec | FnNegInf | FnPrint | FnReject

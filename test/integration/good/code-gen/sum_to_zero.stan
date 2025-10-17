@@ -6,16 +6,18 @@ data {
 }
 
 transformed data {
+   int v = 10;
+   int N = 4;
    sum_to_zero_vector[10] td_stzv = d_stzv;
    array[2, 3] sum_to_zero_vector[10] td_astzv;
    sum_to_zero_matrix[4,5] td_stzm = d_stzm;
    array[2, 3] sum_to_zero_matrix[4,5] td_astzm;
 }
 parameters {
-   sum_to_zero_vector[10] p_stzv;
-   array[2, 3] sum_to_zero_vector[10] p_astzv;
-   sum_to_zero_matrix[4,5] p_stzm;
-   array[2, 3] sum_to_zero_matrix[4,5] p_astzm;
+   sum_to_zero_vector[v] p_stzv;
+   array[2, 3] sum_to_zero_vector[v] p_astzv;
+   sum_to_zero_matrix[N,N+1] p_stzm;
+   array[2, 3] sum_to_zero_matrix[N,N+1] p_astzm;
 }
 
 transformed parameters {

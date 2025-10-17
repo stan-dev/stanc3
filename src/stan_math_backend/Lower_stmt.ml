@@ -24,7 +24,7 @@ let check_to_string = function
 let math_fn_translations = function
   | Internal_fun.FnValidateSize ->
       Some "stan::math::validate_non_negative_index"
-  | FnValidateSizeSimplex -> Some "stan::math::validate_positive_index"
+  | FnValidateSizePositive -> Some "stan::math::validate_positive_index"
   | FnValidateSizeUnitVector -> Some "stan::math::validate_unit_vector_index"
   | FnReadWriteEventsOpenCL x -> Some (x ^ ".wait_for_read_write_events")
   | _ -> None
