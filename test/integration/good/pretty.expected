@@ -1365,7 +1365,7 @@ data {
 transformed data {
   int N;
   array[N /*test1*/, //test1.5
-        N /*test2*/] real arr;
+        N] real /*test2*/ arr;
   
   /*test1*/ //test1.5
   /*test2*/ /*test2.1*/ /*test2.2*/ /*test2.3*/
@@ -1378,10 +1378,10 @@ transformed data {
   baz; //test7
   
   // 1
-  array[3 // 2
-        // 3
-        // 4
-        ] vector[2] x;
+  array[3] vector[2] // 2
+  // 3
+  // 4
+  x;
 }
 model {
   // unicode in comments

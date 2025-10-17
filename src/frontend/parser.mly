@@ -391,7 +391,7 @@ decl(type_rule, rhs):
           after variable declaration.@ %@{<yellow>It looks like you are trying \
           to use the old array syntax.@ Please use the new syntax:%@}@ @[<h>%a \
           %s;@]@\n"
-         (Pretty_printing.pp_transformed_type ()) ty id.name)
+         Pretty_printing.pp_transformed_type ty id.name)
       $loc(dims)
     }
   | ty=higher_type(type_rule)

@@ -342,7 +342,7 @@ let pp_bracketed_transform ppf = function
     ->
       ()
 
-let rec pp_transformed_type ?end_loc () ppf (st, trans) =
+let rec pp_transformed_type ppf (st, trans) =
   let open Middle in
   let pp_possibly_transformed_type ppf (st, trans) =
     let sizes_fmt =
@@ -387,17 +387,15 @@ let rec pp_transformed_type ?end_loc () ppf (st, trans) =
         (* it isn't perfect with comment placement currently *)
         let transTypes = Middle.Utils.zip_stuple_trans_exn st transforms in
         pf ppf "tuple(@[%a%s@])"
-          (list ~sep:comma (pp_transformed_type ?end_loc ()))
+          (list ~sep:comma pp_transformed_type)
           transTypes
           (if List.length transforms = 1 then "," else "") in
   match st with
   (* array goes before something like cov_matrix *)
   | Middle.SizedType.SArray _ ->
       let ty, ixs = Middle.SizedType.get_array_dims st in
-      let end_loc =
-        match end_loc with
-        | Some x -> x
-        | None -> (List.last_exn ixs).emeta.loc.end_loc in
+      let ({emeta= {loc= {end_loc; _}; _}; _} : untyped_expression) =
+        List.last_exn ixs in
       let ({emeta= {loc= {begin_loc; _}; _}; _} : untyped_expression) =
         List.hd_exn ixs in
       pf ppf "array[@[%a@]]@ %a" pp_list_of_expression
@@ -476,10 +474,7 @@ and pp_statement ppf ({stmt= s_content; smeta= {loc}} as ss : untyped_statement)
         pf ppf "%a%a" pp_identifier identifier
           (option (fun ppf e -> pf ppf " = %a" pp_expression e))
           initial_value in
-      pf ppf "@[<h>%a %a;@]"
-        (pp_transformed_type
-           ~end_loc:(List.hd_exn variables).identifier.id_loc.begin_loc ())
-        (pst, trans)
+      pf ppf "@[<h>%a %a;@]" pp_transformed_type (pst, trans)
         (pp_list_of pp_var (fun v -> v.identifier.id_loc))
         (variables, loc)
   | FunDef {returntype= rt; funname= id; arguments= args; body= b} ->
