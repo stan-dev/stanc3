@@ -22,6 +22,24 @@ transformed data {
     int N;
       array[N/*test1*/ , //test1.5
     N/*test2*/] real arr;
+
+
+          tuple(array[N/*test1*/ , //test1.5
+    N/*test2*/]real/*test2.1*/, /*test2.2*/real /*test2.3*/)  tup;
+
+
+    int foo, //test3
+    bar //test4
+    = 3 //test5
+    , //test6
+    baz; //test7
+
+      array[// 1
+    3] // 2
+    vector[2 // 3
+    ] // 4
+    x;
+
 }
 
 model {

@@ -1365,9 +1365,23 @@ data {
 transformed data {
   int N;
   array[N /*test1*/, //test1.5
-        N] real arr;
+        N] real /*test2*/ arr;
   
-  /* ^^^:test2*/
+  /*test1*/ //test1.5
+  /*test2*/ /*test2.1*/ /*test2.2*/ /*test2.3*/
+  tuple(array[N, N] real, real) tup;
+  
+  int foo, //test3
+  bar = 3 //test4
+  //test5
+  , //test6
+  baz; //test7
+  
+  // 1
+  array[3] vector[2] // 2
+  // 3
+  // 4
+  x;
 }
 model {
   // unicode in comments
@@ -3944,6 +3958,64 @@ model {
 }
 
 [exit 0]
+  $ ../../../../install/default/bin/stanc --auto-format long_functions.stan
+functions {
+  array[] int vote_count(array[] int rating, array[] int item,
+                         array[] int rater, int I, int J) {
+    int N = size(rating);
+    array[I] int count_by_item = rep_array(1, I); // index 0:5 by 1:6
+    for (n in 1 : N) {
+      count_by_item[item[n]] += rating[n];
+    }
+    array[J + 1] int count = rep_array(0, J + 1);
+    for (i in 1 : I) {
+      count[count_by_item[i]] += 1;
+    }
+    return count;
+  }
+  
+  array[] int vote_countvote_countvote_countvote_count(
+                array[] int rating,
+                array[] int item,
+                array[] int rater,
+                int I,
+                int J
+              ) {
+    int N = size(rating);
+    array[I] int count_by_item = rep_array(1, I); // index 0:5 by 1:6
+    for (n in 1 : N) {
+      count_by_item[item[n]] += rating[n];
+    }
+    array[J + 1] int count = rep_array(0, J + 1);
+    for (i in 1 : I) {
+      count[count_by_item[i]] += 1;
+    }
+    return count;
+  }
+  
+  tuple(array[] int, array[] int, real, array[] int, real, real, real, real,
+        real, real, real)
+  vote_countvote_countvote_countvote_count2(
+    array[] int rating,
+    array[] int item,
+    array[] int rater,
+    int I,
+    int J
+  ) {
+    int N = size(rating);
+    array[I] int count_by_item = rep_array(1, I); // index 0:5 by 1:6
+    for (n in 1 : N) {
+      count_by_item[item[n]] += rating[n];
+    }
+    array[J + 1] int count = rep_array(0, J + 1);
+    for (i in 1 : I) {
+      count[count_by_item[i]] += 1;
+    }
+    return (count, item, 3.14, rater, 2.71, 1, 1, 1, 1, 1, 1);
+  }
+}
+
+[exit 0]
   $ ../../../../install/default/bin/stanc --auto-format lower-trunc-discrete.stan
 functions {
   // new syntax
@@ -4441,8 +4513,8 @@ Warning in 'ode-nested-quotes.stan', line 14, column 6 to column 19:
 [exit 0]
   $ ../../../../install/default/bin/stanc --auto-format ode_good.stan
 functions {
-  array[] real harm_osc_ode(real t, array[] real y,
-                            // state
+  array[] real harm_osc_ode(real t,
+                            array[] real y, // state
                             array[] real theta, // parameters
                             array[] real x, // data
                             array[] int x_int) {
@@ -4467,49 +4539,56 @@ parameters {
 }
 transformed parameters {
   array[10, 2] real y_hat;
-  y_hat = integrate_ode(harm_osc_ode, // system
+  y_hat = integrate_ode(
+                        harm_osc_ode, // system
                         y0, // initial state
                         t0, // initial time
                         ts, // solution times
                         theta, // parameters
                         x, // data
                         x_int); // integer data
-  y_hat = integrate_ode_rk45(harm_osc_ode, // system
+  y_hat = integrate_ode_rk45(
+            harm_osc_ode, // system
             y0, // initial state
             t0, // initial time
             ts, // solution times
             theta, // parameters
             x, // data
             x_int); // integer data
-  y_hat = integrate_ode_bdf(harm_osc_ode, // system
+  y_hat = integrate_ode_bdf(
+            harm_osc_ode, // system
             y0, // initial state
             t0, // initial time
             ts, // solution times
             theta, // parameters
             x, // data
             x_int); // integer data
-  y_hat = integrate_ode_adams(harm_osc_ode, // system
+  y_hat = integrate_ode_adams(
+            harm_osc_ode, // system
             y0, // initial state
             t0, // initial time
             ts, // solution times
             theta, // parameters
             x, // data
             x_int); // integer data
-  y_hat = integrate_ode_rk45(harm_osc_ode, // system
+  y_hat = integrate_ode_rk45(
+            harm_osc_ode, // system
             y0, // initial state
             t0, // initial time
             ts, // solution times
             theta, // parameters
             x, // data
             x_int, 0.01, 0.01, 10); // integer data
-  y_hat = integrate_ode_bdf(harm_osc_ode, // system
+  y_hat = integrate_ode_bdf(
+            harm_osc_ode, // system
             y0, // initial state
             t0, // initial time
             ts, // solution times
             theta, // parameters
             x, // data
             x_int, 0.01, 0.01, 10); // integer data
-  y_hat = integrate_ode_adams(harm_osc_ode, // system
+  y_hat = integrate_ode_adams(
+            harm_osc_ode, // system
             y0, // initial state
             t0, // initial time
             ts, // solution times

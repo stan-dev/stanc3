@@ -230,32 +230,41 @@ functions {
     return [1, 2, 3]';
   }
   
-  real foo_five_args(real x1, real x2,
-                     real x3, real x4,
+  real foo_five_args(real x1,
+                     real x2,
+                     real x3,
+                     real x4,
                      real x5) {
     return x1;
   }
-  real foo_five_args_lp(real x1,
-                        real x2,
-                        real x3,
-                        real x4,
-                        real x5,
-                        real x6) {
+  real foo_five_args_lp(
+         real x1,
+         real x2,
+         real x3,
+         real x4,
+         real x5,
+         real x6
+       ) {
     return x1;
   }
   
-  matrix covsqrt2corsqrt(matrix mat,
-                         int invert) {
+  matrix covsqrt2corsqrt(
+           matrix mat,
+           int invert
+         ) {
     matrix[rows(mat), cols(mat)] o;
     o = mat;
     o[1] = o[2];
     o[3 : 4] = o[1 : 2];
     return o;
   }
-  void f0(int a1, array[] int a2,
-          array[,] int a3, real a4,
+  void f0(int a1,
+          array[] int a2,
+          array[,] int a3,
+          real a4,
           array[] real a5,
-          array[,] real a6, vector a7,
+          array[,] real a6,
+          vector a7,
           array[] vector a8,
           array[,] vector a9,
           matrix a10,
@@ -264,10 +273,13 @@ functions {
     print("hi");
   }
   
-  int f1(int a1, array[] int a2,
-         array[,] int a3, real a4,
+  int f1(int a1,
+         array[] int a2,
+         array[,] int a3,
+         real a4,
          array[] real a5,
-         array[,] real a6, vector a7,
+         array[,] real a6,
+         vector a7,
          array[] vector a8,
          array[,] vector a9,
          matrix a10,
@@ -306,10 +318,13 @@ functions {
     return a3;
   }
   
-  real f4(int a1, array[] int a2,
-          array[,] int a3, real a4,
+  real f4(int a1,
+          array[] int a2,
+          array[,] int a3,
+          real a4,
           array[] real a5,
-          array[,] real a6, vector a7,
+          array[,] real a6,
+          vector a7,
           array[] vector a8,
           array[,] vector a9,
           matrix a10,
@@ -348,8 +363,10 @@ functions {
     return a6;
   }
   
-  vector f7(int a1, array[] int a2,
-            array[,] int a3, real a4,
+  vector f7(int a1,
+            array[] int a2,
+            array[,] int a3,
+            real a4,
             array[] real a5,
             array[,] real a6,
             vector a7,
@@ -391,8 +408,10 @@ functions {
     return a9;
   }
   
-  matrix f10(int a1, array[] int a2,
-             array[,] int a3, real a4,
+  matrix f10(int a1,
+             array[] int a2,
+             array[,] int a3,
+             real a4,
              array[] real a5,
              array[,] real a6,
              vector a7,
@@ -462,10 +481,12 @@ functions {
                       7, 8, 9, 10]';
     return l[{1, 2, 3, 4, 5}];
   }
-  vector algebra_system(vector x,
-                        vector y,
-                        array[] real dat,
-                        array[] int dat_int) {
+  vector algebra_system(
+           vector x,
+           vector y,
+           array[] real dat,
+           array[] int dat_int
+         ) {
     vector[2] f_x;
     f_x[1] = x[1] - y[1];
     f_x[2] = x[2] - y[2];
