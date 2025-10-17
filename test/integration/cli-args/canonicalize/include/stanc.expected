@@ -28,6 +28,9 @@ int baz(real z) {
   // trailing coment in c
 }
 [exit 0]
+  $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. first.stanfunctions
+#include second.stanfunctions
+[exit 0]
   $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. main.stan
 functions {
   #include b.stanfunctions
@@ -58,6 +61,89 @@ generated quantities {
   }
 }
 
+[exit 0]
+  $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. main2.stan
+Internal compiler error:
+("Pretty-printed program failed to parse"
+  "Syntax error in './second.stanfunctions', line 1, column 0, included from\
+ \n'./first.stanfunctions', line 1, column 0, included from\
+ \n'string', line 1, column 0, parsing error:\
+ \n   -------------------------------------------------\
+ \n     1:  real bar(matrix x) {\
+ \n         ^\
+ \n     2:    print(x);\
+ \n     3:    return sum(x);\
+ \n   -------------------------------------------------\
+ \n\
+ \nIll-formed program. Expected \"functions {\", \"transformed data {\", \"parameters {\",\
+ \n\"transformed parameters {\", \"model {\", or \"generated quantities {\".\
+ \n"
+ (prog
+  ((functionblock
+    (((stmts
+       (((stmt
+          (FunDef (returntype Void) (funname ((name foo) (id_loc <opaque>)))
+           (arguments
+            ((DataOnly (UArray (UArray UReal)) ((name x) (id_loc <opaque>)))))
+           (body
+            ((stmt
+              (Block
+               (((stmt
+                  (Print
+                   ((PExpr
+                     ((expr (Variable ((name x) (id_loc <opaque>))))
+                      (emeta ((loc <opaque>))))))))
+                 (smeta ((loc <opaque>))))
+                ((stmt ReturnVoid) (smeta ((loc <opaque>)))))))
+             (smeta ((loc <opaque>)))))))
+         (smeta ((loc <opaque>))))
+        ((stmt
+          (FunDef (returntype (ReturnType UReal))
+           (funname ((name bar) (id_loc <opaque>)))
+           (arguments ((AutoDiffable UMatrix ((name x) (id_loc <opaque>)))))
+           (body
+            ((stmt
+              (Block
+               (((stmt
+                  (Print
+                   ((PExpr
+                     ((expr (Variable ((name x) (id_loc <opaque>))))
+                      (emeta ((loc <opaque>))))))))
+                 (smeta ((loc <opaque>))))
+                ((stmt
+                  (Return
+                   ((expr
+                     (FunApp () ((name sum) (id_loc <opaque>))
+                      (((expr (Variable ((name x) (id_loc <opaque>))))
+                        (emeta ((loc <opaque>)))))))
+                    (emeta ((loc <opaque>))))))
+                 (smeta ((loc <opaque>)))))))
+             (smeta ((loc <opaque>)))))))
+         (smeta ((loc <opaque>))))))
+      (xloc <opaque>))))
+   (datablock ()) (transformeddatablock ()) (parametersblock ())
+   (transformedparametersblock ()) (modelblock ())
+   (generatedquantitiesblock ()) (comments <opaque>)))
+ "#include first.stanfunctions")
+Raised at Base__Error.raise in file "src/error.ml" (inlined), line 9, characters 14-30
+Called from Base__Error.raise_s in file "src/error.ml", line 10, characters 19-40
+Called from Frontend__Pretty_print_prog.check_correctness in file "src/frontend/Pretty_print_prog.ml", line 58, characters 8-186
+Called from Frontend__Pretty_print_prog.pretty_print_program in file "src/frontend/Pretty_print_prog.ml", line 76, characters 2-44
+Called from Driver__Entry.stan2cpp in file "src/driver/Entry.ml", line 81, characters 9-383
+Called from Dune__exe__Stanc.stanc.(fun) in file "src/stanc/stanc.ml", line 67, characters 4-161
+Called from Base__With_return.with_return in file "src/with_return.ml", line 21, characters 12-24
+Re-raised at Base__With_return.with_return in file "src/with_return.ml", line 29, characters 12-21
+Called from Common__ICE.with_exn_message in file "src/common/ICE.ml", line 14, characters 9-15
+
+
+This should never happen. Please file a bug at https://github.com/stan-dev/stanc3/issues/new
+and include this message and the model that caused this issue.
+[exit 125]
+  $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. second.stanfunctions
+real bar(matrix x) {
+  print(x);
+  return sum(x);
+}
 [exit 0]
   $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. tdata.stan
 // I'm in another file!

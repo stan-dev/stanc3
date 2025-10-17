@@ -34,6 +34,12 @@ int baz(real z) {
   // trailing coment in c
 }
 [exit 0]
+  $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. --canonicalize=includes first.stanfunctions
+real bar(matrix x) {
+  print(x);
+  return sum(x);
+}
+[exit 0]
   $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. --canonicalize=includes main.stan
 functions {
   // line comment a
@@ -103,6 +109,27 @@ generated quantities {
   }
 }
 
+[exit 0]
+  $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. --canonicalize=includes main2.stan
+functions {
+  void foo(data array[,] real x) {
+    print(x);
+    
+    return;
+  }
+  
+  real bar(matrix x) {
+    print(x);
+    return sum(x);
+  }
+}
+
+[exit 0]
+  $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. --canonicalize=includes second.stanfunctions
+real bar(matrix x) {
+  print(x);
+  return sum(x);
+}
 [exit 0]
   $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. --canonicalize=includes tdata.stan
 // I'm in another file!
