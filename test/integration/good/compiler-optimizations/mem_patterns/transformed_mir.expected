@@ -10,6 +10,20 @@ matrix[N, N] soa_mat_rep: SoA
 matrix[N, N] soa_mat_rep_vec: SoA
 matrix[N, N] aos_mat_rep: AoS
 matrix[2, 2] aos_mat_from_vecs: AoS
+SoA (Line 21) warning: Right hand side contains only AoS expressions: aos_mat_from_vecs
+SoA (Line 20) warning: Right hand side contains only AoS expressions: aos_mat_rep
+SoA (Line 17) warning: Right hand side contains only AoS expressions: aos_from_data
+SoA (Line 13) warning: Right hand side contains only AoS expressions: aos_deep
+SoA (Line 20) warning: Right hand side contains only AoS expressions: aos_mat_rep
+SoA (Line 17) warning: Right hand side contains only AoS expressions: aos_from_data
+SoA (Line 13) warning: Right hand side contains only AoS expressions: aos_deep
+SoA (Line 21) warning: Right hand side contains only AoS expressions: aos_mat_from_vecs
+SoA (Line 20) warning: Right hand side contains only AoS expressions: aos_mat_rep
+SoA (Line 17) warning: Right hand side contains only AoS expressions: aos_from_data
+SoA (Line 13) warning: Right hand side contains only AoS expressions: aos_deep
+SoA (Line 21) warning: The right hand side of the assignment only contains data and scalar operations that are not promotable to SoA: aos_mat_from_vecs
+SoA (Line 17) warning: The right hand side of the assignment only contains data and scalar operations that are not promotable to SoA: aos_from_data
+SoA (Line 13) warning: The right hand side of the assignment only contains data and scalar operations that are not promotable to SoA: aos_deep
 ((functions_block ())
  (input_vars
   ((N <opaque> SInt)
@@ -1673,6 +1687,11 @@ matrix[2, 2] aos_mat_from_vecs: AoS
 [exit 0]
   $ ../../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir --debug-mem-patterns complex-fails.stan
 matrix[10, 10] A_p: AoS
+SoA (Line 6) warning: Right hand side contains only AoS expressions: A_complex_tp
+SoA (Line 2) warning: Right hand side contains only AoS expressions: A_p
+SoA (Line 6) warning: Right hand side contains only AoS expressions: A_complex_tp
+SoA (Line 2) warning: Right hand side contains only AoS expressions: A_p
+SoA (Line 6) warning: Right hand side contains only AoS expressions: A_complex_tp
 ((functions_block ()) (input_vars ()) (prepare_data ())
  (log_prob
   (((pattern
@@ -2024,6 +2043,7 @@ vector[Nr] h_i_mean: SoA
 vector[Nr] h_i_sigma: SoA
 vector[Nr] h_sigma: SoA
 vector[N] means_ordered: SoA
+
 ((functions_block ())
  (input_vars
   ((N <opaque> SInt) (K <opaque> SInt)
@@ -9039,6 +9059,53 @@ matrix[10, 10] X_tp4: AoS
 matrix[10, 10] X_tp5: AoS
 matrix[10, 10] X_tp6: AoS
 matrix[10, 10] X_tp7: AoS
+SoA (Line 19) warning: Right hand side contains only AoS expressions: X_tp7
+SoA (Line 16) warning: Right hand side contains only AoS expressions: X_tp7
+SoA (Line 15) warning: Right hand side contains only AoS expressions: X_tp6
+SoA (Line 14) warning: Right hand side contains only AoS expressions: X_tp5
+SoA (Line 13) warning: Right hand side contains only AoS expressions: X_tp4
+SoA (Line 12) warning: Right hand side contains only AoS expressions: X_tp3
+SoA (Line 11) warning: Right hand side contains only AoS expressions: X_tp2
+SoA (Line 10) warning: Right hand side contains only AoS expressions: X_tp1
+SoA (Line 6) warning: Right hand side contains only AoS expressions: X_p
+SoA (Line 10) warning: Right hand side contains only AoS expressions: X_tp1
+SoA (Line 6) warning: Right hand side contains only AoS expressions: X_p
+SoA (Line 19) warning: Right hand side contains only AoS expressions: X_tp7
+SoA (Line 16) warning: Right hand side contains only AoS expressions: X_tp7
+SoA (Line 15) warning: Right hand side contains only AoS expressions: X_tp6
+SoA (Line 14) warning: Right hand side contains only AoS expressions: X_tp5
+SoA (Line 13) warning: Right hand side contains only AoS expressions: X_tp4
+SoA (Line 12) warning: Right hand side contains only AoS expressions: X_tp3
+SoA (Line 11) warning: Right hand side contains only AoS expressions: X_tp2
+SoA (Line 10) warning: Right hand side contains only AoS expressions: X_tp1
+SoA (Line 19) warning: Right hand side contains only AoS expressions: X_tp7
+SoA (Line 16) warning: Right hand side contains only AoS expressions: X_tp7
+SoA (Line 15) warning: Right hand side contains only AoS expressions: X_tp6
+SoA (Line 14) warning: Right hand side contains only AoS expressions: X_tp5
+SoA (Line 13) warning: Right hand side contains only AoS expressions: X_tp4
+SoA (Line 12) warning: Right hand side contains only AoS expressions: X_tp3
+SoA (Line 11) warning: Right hand side contains only AoS expressions: X_tp2
+SoA (Line 19) warning: Right hand side contains only AoS expressions: X_tp7
+SoA (Line 16) warning: Right hand side contains only AoS expressions: X_tp7
+SoA (Line 15) warning: Right hand side contains only AoS expressions: X_tp6
+SoA (Line 14) warning: Right hand side contains only AoS expressions: X_tp5
+SoA (Line 13) warning: Right hand side contains only AoS expressions: X_tp4
+SoA (Line 12) warning: Right hand side contains only AoS expressions: X_tp3
+SoA (Line 19) warning: Right hand side contains only AoS expressions: X_tp7
+SoA (Line 16) warning: Right hand side contains only AoS expressions: X_tp7
+SoA (Line 15) warning: Right hand side contains only AoS expressions: X_tp6
+SoA (Line 14) warning: Right hand side contains only AoS expressions: X_tp5
+SoA (Line 13) warning: Right hand side contains only AoS expressions: X_tp4
+SoA (Line 19) warning: Right hand side contains only AoS expressions: X_tp7
+SoA (Line 16) warning: Right hand side contains only AoS expressions: X_tp7
+SoA (Line 15) warning: Right hand side contains only AoS expressions: X_tp6
+SoA (Line 14) warning: Right hand side contains only AoS expressions: X_tp5
+SoA (Line 19) warning: Right hand side contains only AoS expressions: X_tp7
+SoA (Line 16) warning: Right hand side contains only AoS expressions: X_tp7
+SoA (Line 15) warning: Right hand side contains only AoS expressions: X_tp6
+SoA (Line 19) warning: Right hand side contains only AoS expressions: X_tp7
+SoA (Line 16) warning: Right hand side contains only AoS expressions: X_tp7
+SoA (Line 19) warning: Accessed by element in a for loop: X_tp7
 ((functions_block ()) (input_vars ()) (prepare_data ())
  (log_prob
   (((pattern
@@ -9961,6 +10028,60 @@ vector[N] tp_soa_single_assign: SoA
 vector[N] tp_soa_single_assign_from_soa: SoA
 vector[N] tp_aos_loop_vec_v_uni_idx: AoS
 vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
+SoA (Line 112) warning: Right hand side contains only AoS expressions: tp_aos_loop_vec_v_multi_uni_idx
+SoA (Line 111) warning: Right hand side contains only AoS expressions: tp_aos_loop_vec_v_uni_idx
+SoA (Line 71) warning: Right hand side contains only AoS expressions: tp_aos_fail_assign_from_top_idx
+SoA (Line 68) warning: Right hand side contains only AoS expressions: tp_aos_fail_func_vec_v
+SoA (Line 66) warning: Right hand side contains only AoS expressions: tp_aos_fail_func_vec_v
+SoA (Line 59) warning: Right hand side contains only AoS expressions: tp_aos_vec_v
+SoA (Line 50) warning: Right hand side contains only AoS expressions: p_aos_mat_fail_uni_uni_idx2
+SoA (Line 49) warning: Right hand side contains only AoS expressions: p_aos_mat_fail_uni_uni_idx1
+SoA (Line 46) warning: Right hand side contains only AoS expressions: p_aos_mat_pass_func_outer_single_indexed2
+SoA (Line 45) warning: Right hand side contains only AoS expressions: p_aos_mat_pass_func_outer_single_indexed1
+SoA (Line 43) warning: Right hand side contains only AoS expressions: p_aos_mat
+SoA (Line 40) warning: Right hand side contains only AoS expressions: p_aos_loop_mat_uni_uni_idx
+SoA (Line 39) warning: Right hand side contains only AoS expressions: p_aos_fail_assign_from_top_idx
+SoA (Line 37) warning: Right hand side contains only AoS expressions: p_aos_loop_vec_v_uni_idx
+SoA (Line 35) warning: Right hand side contains only AoS expressions: p_aos_vec_v_tp_fails_func
+SoA (Line 33) warning: Right hand side contains only AoS expressions: p_aos_vec_v_assign_to_aos
+SoA (Line 71) warning: Right hand side contains only AoS expressions: tp_aos_fail_assign_from_top_idx
+SoA (Line 68) warning: Right hand side contains only AoS expressions: tp_aos_fail_func_vec_v
+SoA (Line 66) warning: Right hand side contains only AoS expressions: tp_aos_fail_func_vec_v
+SoA (Line 59) warning: Right hand side contains only AoS expressions: tp_aos_vec_v
+SoA (Line 50) warning: Right hand side contains only AoS expressions: p_aos_mat_fail_uni_uni_idx2
+SoA (Line 49) warning: Right hand side contains only AoS expressions: p_aos_mat_fail_uni_uni_idx1
+SoA (Line 46) warning: Right hand side contains only AoS expressions: p_aos_mat_pass_func_outer_single_indexed2
+SoA (Line 45) warning: Right hand side contains only AoS expressions: p_aos_mat_pass_func_outer_single_indexed1
+SoA (Line 43) warning: Right hand side contains only AoS expressions: p_aos_mat
+SoA (Line 40) warning: Right hand side contains only AoS expressions: p_aos_loop_mat_uni_uni_idx
+SoA (Line 39) warning: Right hand side contains only AoS expressions: p_aos_fail_assign_from_top_idx
+SoA (Line 37) warning: Right hand side contains only AoS expressions: p_aos_loop_vec_v_uni_idx
+SoA (Line 35) warning: Right hand side contains only AoS expressions: p_aos_vec_v_tp_fails_func
+SoA (Line 33) warning: Right hand side contains only AoS expressions: p_aos_vec_v_assign_to_aos
+SoA (Line 112) warning: Right hand side contains only AoS expressions: tp_aos_loop_vec_v_multi_uni_idx
+SoA (Line 111) warning: Right hand side contains only AoS expressions: tp_aos_loop_vec_v_uni_idx
+SoA (Line 71) warning: Right hand side contains only AoS expressions: tp_aos_fail_assign_from_top_idx
+SoA (Line 68) warning: Right hand side contains only AoS expressions: tp_aos_fail_func_vec_v
+SoA (Line 66) warning: Right hand side contains only AoS expressions: tp_aos_fail_func_vec_v
+SoA (Line 59) warning: Right hand side contains only AoS expressions: tp_aos_vec_v
+SoA (Line 50) warning: Right hand side contains only AoS expressions: p_aos_mat_fail_uni_uni_idx2
+SoA (Line 49) warning: Right hand side contains only AoS expressions: p_aos_mat_fail_uni_uni_idx1
+SoA (Line 46) warning: Right hand side contains only AoS expressions: p_aos_mat_pass_func_outer_single_indexed2
+SoA (Line 45) warning: Right hand side contains only AoS expressions: p_aos_mat_pass_func_outer_single_indexed1
+SoA (Line 43) warning: Right hand side contains only AoS expressions: p_aos_mat
+SoA (Line 40) warning: Right hand side contains only AoS expressions: p_aos_loop_mat_uni_uni_idx
+SoA (Line 37) warning: Right hand side contains only AoS expressions: p_aos_loop_vec_v_uni_idx
+SoA (Line 33) warning: Right hand side contains only AoS expressions: p_aos_vec_v_assign_to_aos
+SoA (Line 112) warning: Accessed by element in a for loop: tp_aos_loop_vec_v_multi_uni_idx
+SoA (Line 111) warning: Accessed by element in a for loop: tp_aos_loop_vec_v_uni_idx
+SoA (Line 101) warning: Used in user defined function:p_aos_vec_v_assign_to_aos, tp_aos_vec_v
+SoA (Line 101) warning: Used in user defined function:p_aos_vec_v_assign_to_aos, tp_aos_vec_v
+SoA (Line 83) warning: Used in user defined function:p_aos_vec_v_assign_to_aos, tp_aos_vec_v
+SoA (Line 82) warning: Used in user defined function:p_aos_vec_v_assign_to_aos, tp_aos_vec_v
+SoA (Line 81) warning: Used in user defined function:p_aos_vec_v_assign_to_aos, tp_aos_vec_v
+SoA (Line 80) warning: Used in user defined function:p_aos_vec_v_assign_to_aos, tp_aos_vec_v
+SoA (Line 59) warning: Function on right hand side of assignment is not supported by SoA: p_aos_vec_v_assign_to_aos, tp_aos_vec_v
+SoA (Line 59) warning: Right hand side of assignment is all AoS: p_aos_vec_v_assign_to_aos, tp_aos_vec_v
 ((functions_block
   (((fdrt (ReturnType UInt)) (fdname mask_fun) (fdsuffix FnPlain)
     (fdargs ((AutoDiffable i UInt)))
@@ -16576,6 +16697,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
 vector[10] p_aos_loop_single_idx: AoS
 vector[N] tp_soa_multi_idx_assign_in_loop: SoA
 vector[N] tp_soa_single_idx_in_upfrom_idx: SoA
+SoA (Line 9) warning: Right hand side contains only AoS expressions: p_aos_loop_single_idx
+SoA (Line 9) warning: Right hand side contains only AoS expressions: p_aos_loop_single_idx
 ((functions_block ())
  (input_vars
   ((N <opaque> SInt) (M <opaque> SInt)
@@ -17155,6 +17278,18 @@ matrix[5, 10] aos_x: AoS
 matrix[5, 10] aos_y: AoS
 matrix[5, 10] tp_matrix_aos_from_mix: AoS
 matrix[5, 10] tp_matrix_from_udf_reduced_soa: AoS
+SoA (Line 24) warning: Right hand side contains only AoS expressions: tp_matrix_from_udf_reduced_soa
+SoA (Line 23) warning: Right hand side contains only AoS expressions: tp_matrix_aos_from_mix
+SoA (Line 18) warning: Right hand side contains only AoS expressions: aos_y
+SoA (Line 17) warning: Right hand side contains only AoS expressions: aos_x
+SoA (Line 24) warning: Right hand side contains only AoS expressions: tp_matrix_from_udf_reduced_soa
+SoA (Line 23) warning: Right hand side contains only AoS expressions: tp_matrix_aos_from_mix
+SoA (Line 18) warning: Right hand side contains only AoS expressions: aos_y
+SoA (Line 17) warning: Right hand side contains only AoS expressions: aos_x
+SoA (Line 24) warning: Function on right hand side of assignment is not supported by SoA: aos_x, tp_matrix_from_udf_reduced_soa
+SoA (Line 24) warning: Right hand side of assignment is all AoS: aos_x, tp_matrix_from_udf_reduced_soa
+SoA (Line 24) warning: Used in user defined function:aos_x, aos_y, tp_matrix_aos_from_mix
+SoA (Line 23) warning: Right hand side of assignment is all AoS: aos_x, aos_y, tp_matrix_aos_from_mix
 ((functions_block
   (((fdrt (ReturnType UMatrix)) (fdname nono_func) (fdsuffix FnPlain)
     (fdargs ((AutoDiffable x UMatrix)))
@@ -18187,6 +18322,26 @@ matrix[10, 10] empty_user_func_aos: AoS
 matrix[10, 10] inner_empty_user_func_aos: AoS
 matrix[10, 10] int_aos_mul_aos: AoS
 matrix[10, 10] mul_two_aos: AoS
+SoA (Line 29) warning: Right hand side contains only AoS expressions: mul_two_aos
+SoA (Line 28) warning: Right hand side contains only AoS expressions: int_aos_mul_aos
+SoA (Line 27) warning: Right hand side contains only AoS expressions: inner_empty_user_func_aos
+SoA (Line 26) warning: Right hand side contains only AoS expressions: empty_user_func_aos
+SoA (Line 25) warning: Right hand side contains only AoS expressions: user_func_aos
+SoA (Line 21) warning: Right hand side contains only AoS expressions: udf_input_aos
+SoA (Line 29) warning: Right hand side contains only AoS expressions: mul_two_aos
+SoA (Line 28) warning: Right hand side contains only AoS expressions: int_aos_mul_aos
+SoA (Line 27) warning: Right hand side contains only AoS expressions: inner_empty_user_func_aos
+SoA (Line 26) warning: Right hand side contains only AoS expressions: empty_user_func_aos
+SoA (Line 25) warning: Right hand side contains only AoS expressions: user_func_aos
+SoA (Line 21) warning: Right hand side contains only AoS expressions: udf_input_aos
+SoA (Line 29) warning: Right hand side of assignment is all AoS: int_aos_mul_aos, mul_two_aos, user_func_aos
+SoA (Line 28) warning: Right hand side of assignment is all AoS: empty_user_func_aos, int_aos_mul_aos
+SoA (Line 27) warning: Right hand side of assignment is all AoS: inner_empty_user_func_aos, udf_input_aos
+SoA (Line 27) warning: Used in user defined function:empty_user_func_aos, udf_input_aos, user_func_aos
+SoA (Line 26) warning: Function on right hand side of assignment is not supported by SoA: empty_user_func_aos
+SoA (Line 26) warning: Used in user defined function:udf_input_aos, user_func_aos
+SoA (Line 25) warning: Function on right hand side of assignment is not supported by SoA: udf_input_aos, user_func_aos
+SoA (Line 25) warning: Right hand side of assignment is all AoS: udf_input_aos, user_func_aos
 ((functions_block
   (((fdrt (ReturnType UMatrix)) (fdname empty_user_func) (fdsuffix FnPlain) 
     (fdargs ())
@@ -19115,6 +19270,8 @@ matrix[10, 10] aos_p: AoS
 matrix[10, 10] soa_p: SoA
 row_vector[10] tp_row_vector_from_soa_loop: SoA
 matrix[10, 10] tp_matrix_from_soa_loop: SoA
+SoA (Line 6) warning: Right hand side contains only AoS expressions: aos_p
+SoA (Line 6) warning: Right hand side contains only AoS expressions: aos_p
 ((functions_block ()) (input_vars ()) (prepare_data ())
  (log_prob
   (((pattern
@@ -19844,6 +20001,18 @@ matrix[10, 10] tp_matrix_from_soa_loop: SoA
 matrix[5, 10] first_pass_soa_x: AoS
 matrix[5, 10] aos_x: AoS
 matrix[5, 10] tp_matrix_aos: AoS
+SoA (Line 22) warning: Right hand side contains only AoS expressions: tp_matrix_aos
+SoA (Line 21) warning: Right hand side contains only AoS expressions: tp_matrix_aos
+SoA (Line 17) warning: Right hand side contains only AoS expressions: aos_x
+SoA (Line 16) warning: Right hand side contains only AoS expressions: first_pass_soa_x
+SoA (Line 21) warning: Right hand side contains only AoS expressions: tp_matrix_aos
+SoA (Line 17) warning: Right hand side contains only AoS expressions: aos_x
+SoA (Line 16) warning: Right hand side contains only AoS expressions: first_pass_soa_x
+SoA (Line 22) warning: Right hand side contains only AoS expressions: tp_matrix_aos
+SoA (Line 21) warning: Right hand side contains only AoS expressions: tp_matrix_aos
+SoA (Line 17) warning: Right hand side contains only AoS expressions: aos_x
+SoA (Line 22) warning: Function on right hand side of assignment is not supported by SoA: aos_x, tp_matrix_aos
+SoA (Line 22) warning: Right hand side of assignment is all AoS: aos_x, tp_matrix_aos
 ((functions_block
   (((fdrt (ReturnType UMatrix)) (fdname nono_func) (fdsuffix FnPlain)
     (fdargs ((AutoDiffable x UMatrix)))
@@ -20440,6 +20609,16 @@ matrix[5, 10] tp_matrix_aos: AoS
   $ ../../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir --debug-mem-patterns tuple_test.stan
 tuple(array[matrix[1, 1], 1], matrix[1, 2], matrix[1, 3]) xx: AoS
 matrix[1, 1] x: AoS
+SoA (Line 6) warning: Right hand side contains only AoS expressions: x
+SoA (Line 3) warning: Right hand side contains only AoS expressions: xx
+SoA (Line 3) warning: Right hand side contains only AoS expressions: xx
+SoA (Line 3) warning: Right hand side contains only AoS expressions: xx
+SoA (Line 6) warning: Right hand side contains only AoS expressions: x
+SoA (Line 3) warning: Right hand side contains only AoS expressions: xx
+SoA (Line 3) warning: Right hand side contains only AoS expressions: xx
+SoA (Line 3) warning: Right hand side contains only AoS expressions: xx
+SoA (Line 6) warning: The right hand side of the assignment only contains data and scalar operations that are not promotable to SoA: x, xx
+SoA (Line 6) warning: Right hand side of assignment is all AoS: x, xx
 ((functions_block ()) (input_vars ())
  (prepare_data
   (((pattern
@@ -21444,6 +21623,13 @@ matrix[1, 1] x: AoS
 matrix[3, 3] m1: AoS
 matrix[3, 3] m2: AoS
 tuple(matrix[2, 2], matrix[3, 3]) temp: AoS
+SoA (Line 8) warning: Right hand side contains only AoS expressions: temp
+SoA (Line 5) warning: Right hand side contains only AoS expressions: m2
+SoA (Line 5) warning: Right hand side contains only AoS expressions: m1
+SoA (Line 8) warning: Right hand side contains only AoS expressions: temp
+SoA (Line 5) warning: Right hand side contains only AoS expressions: m2
+SoA (Line 5) warning: Right hand side contains only AoS expressions: m1
+SoA (Line 8) warning: Right hand side of assignment is all AoS: m1, m2, temp
 ((functions_block ())
  (input_vars
   ((x <opaque>
