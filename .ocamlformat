@@ -1,4 +1,5 @@
-version=0.26.1
+version=0.28.1
+ocaml-version=4.14
 # loosely re-creates the now-removed "compact" profile
 break-separators=before
 break-before-in=auto
@@ -11,3 +12,5 @@ space-around-lists=false
 space-around-records=false
 space-around-variants=false
 sequence-blank-line=compact
+parse-docstrings=true
+wrap-comments=true

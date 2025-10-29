@@ -35,7 +35,7 @@ build requirements) with [scripts/setup_dev_env.sh]. Versioning of these depende
 strict, though some (like ocamlformat) are used to ensure a standard format across developers
 and must use the same version.
 
-- ocamlformat 0.26.1
+- ocamlformat 0.28.1
 - merlin
 - ocaml-lsp-server
 - utop
