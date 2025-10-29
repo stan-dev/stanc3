@@ -29,7 +29,7 @@
   (ocamlformat
    (and
     :with-test
-    (= 0.26.1)))
+    (= 0.28.1)))
   (bisect_ppx :with-test)
   (merlin :with-test)
   (utop :with-test)
