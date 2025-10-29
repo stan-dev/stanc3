@@ -2,10 +2,8 @@ open Core
 open Core.Poly
 open Middle
 
-(**
-  Return a Var expression of the name for each type
-   containing an eigen matrix
- *)
+(** Return a Var expression of the name for each type containing an eigen matrix
+*)
 let rec matrix_set Expr.{pattern; meta= Expr.Typed.Meta.{type_; _} as meta} =
   let union_recur exprs = Set.Poly.union_list (List.map exprs ~f:matrix_set) in
   if UnsizedType.contains_eigen_type type_ then
@@ -21,10 +19,8 @@ let rec matrix_set Expr.{pattern; meta= Expr.Typed.Meta.{type_; _} as meta} =
     | EAnd (expr1, expr2) | EOr (expr1, expr2) -> union_recur [expr1; expr2]
   else Set.Poly.empty
 
-(**
-  Return a set of all types containing autodiffable Eigen matrices
-   in an expression.
- *)
+(** Return a set of all types containing autodiffable Eigen matrices in an
+    expression. *)
 let query_var_eigen_names (expr : Expr.Typed.t) : string Set.Poly.t =
   let get_expr_eigen_names
       (Dataflow_types.VVar s, Expr.Typed.Meta.{adlevel; type_; _}) =
@@ -35,37 +31,31 @@ let query_var_eigen_names (expr : Expr.Typed.t) : string Set.Poly.t =
     else None in
   Set.Poly.filter_map ~f:get_expr_eigen_names (matrix_set expr)
 
-(**
-  Check whether one set is a nonzero subset of another set.
- *)
+(** Check whether one set is a nonzero subset of another set. *)
 let is_nonzero_subset ~set ~subset =
   Set.is_subset subset ~of_:set
   && (not (Set.is_empty set))
   && not (Set.is_empty subset)
 
-(**
- Check an Index to count how many times we see a single index.
- @param acc An accumulator from previous folds of multiple expressions.
- @param idx An Index to match. For Single types this adds 1 to the
-   acc. For Upfrom and MultiIndex types we check the inner expression
-   for a Single index. All and Between cannot be Single cell access
-   and so pass acc along.
- *)
+(** Check an Index to count how many times we see a single index.
+    @param acc An accumulator from previous folds of multiple expressions.
+    @param idx
+      An Index to match. For Single types this adds 1 to the acc. For Upfrom and
+      MultiIndex types we check the inner expression for a Single index. All and
+      Between cannot be Single cell access and so pass acc along. *)
 and count_single_idx (acc : int) (idx : Expr.Typed.t Index.t) =
   match idx with
   | Index.All | Between _ | Upfrom _ | MultiIndex _ -> acc
   | Single _ -> acc + 1
 
-(**
-  Find indices on Matrix and Vector types that perform single
-   cell access. Returns true if it finds
-  a vector, row vector, matrix, or matrix with single cell access
-  as well as an array of any of the above that is accessing the
-  inner matrix types cell.
-  @param ut An UnsizedType to match against.
-  @param index This list is checked for Single cell access
-   either at the top level or within the [Index] types of the list.
- *)
+(** Find indices on Matrix and Vector types that perform single cell access.
+    Returns true if it finds a vector, row vector, matrix, or matrix with single
+    cell access as well as an array of any of the above that is accessing the
+    inner matrix types cell.
+    @param ut An UnsizedType to match against.
+    @param index
+      This list is checked for Single cell access either at the top level or
+      within the [Index] types of the list. *)
 let rec is_uni_eigen_loop_indexing in_loop (ut : UnsizedType.t)
     (index : Expr.Typed.t Index.t list) =
   match in_loop with
@@ -106,16 +96,14 @@ let is_fun_soa_supported name exprs =
   let fun_args = List.map ~f:Expr.Typed.fun_arg exprs in
   query_stan_math_mem_pattern_support name fun_args
 
-(**
-  Query to find the initial set of objects that cannot be SoA.
-   This is mostly recursing over expressions, with the exceptions
-   being functions and indexing expressions. For the logic on functions
-   see the docs for [query_initial_demotable_funs].
-  @param in_loop a boolean to signify if the expression exists inside
-   of a loop. If so, the names of matrix and vector like objects
-    will be returned if the matrix or vector is accessed by single
-     cell indexing.
- *)
+(** Query to find the initial set of objects that cannot be SoA. This is mostly
+    recursing over expressions, with the exceptions being functions and indexing
+    expressions. For the logic on functions see the docs for
+    [query_initial_demotable_funs].
+    @param in_loop
+      a boolean to signify if the expression exists inside of a loop. If so, the
+      names of matrix and vector like objects will be returned if the matrix or
+      vector is accessed by single cell indexing. *)
 let rec query_initial_demotable_expr (in_loop : bool) ~(acc : string Set.Poly.t)
     Expr.{pattern; _} : string Set.Poly.t =
   let query_expr (accum : string Set.Poly.t) =
@@ -149,23 +137,23 @@ let rec query_initial_demotable_expr (in_loop : bool) ~(acc : string Set.Poly.t)
       let full_lhs_rhs = Set.union (query_expr acc lhs) (query_expr acc rhs) in
       Set.union (query_expr full_lhs_rhs lhs) (query_expr full_lhs_rhs rhs)
 
-(**
-  Query a function to detect if it or any of its used
-   expression's objects or expressions should be demoted to AoS.
- *
-  The logic here demotes the expressions in a function to AoS if
-  the function's inner expression returns has a meta type containing a matrix
-  and either of :
-  (1) The function is user defined and the UDFs inputs are matrices.
-  (2) The Stan math function cannot support AoS
-  @param in_loop A boolean to specify the logic of indexing expressions. See
-   [query_initial_demotable_expr] for an explanation of the logic.
-  @param kind The function type, for StanLib functions we check if the
-   function supports SoA and for UserDefined functions we always fail
-   and return back all of the names of the objects passed in expressions
-   to the UDF.
-  exprs The expression list passed to the functions.
- *)
+(** Query a function to detect if it or any of its used expression's objects or
+    expressions should be demoted to AoS.
+
+    The logic here demotes the expressions in a function to AoS if the
+    function's inner expression returns has a meta type containing a matrix and
+    either of :
+    - (1) The function is user defined and the UDFs inputs are matrices.
+    - (2) The Stan math function cannot support AoS
+
+    @param in_loop
+      A boolean to specify the logic of indexing expressions. See
+      [query_initial_demotable_expr] for an explanation of the logic.
+    @param kind
+      The function type, for StanLib functions we check if the function supports
+      SoA and for UserDefined functions we always fail and return back all of
+      the names of the objects passed in expressions to the UDF. exprs The
+      expression list passed to the functions. *)
 and query_initial_demotable_funs (in_loop : bool) (acc : string Set.Poly.t)
     (kind : 'a Fun_kind.t) (exprs : Expr.Typed.t list) : string Set.Poly.t =
   let query_expr accum = query_initial_demotable_expr in_loop ~acc:accum in
@@ -188,13 +176,11 @@ and query_initial_demotable_funs (in_loop : bool) (acc : string Set.Poly.t)
   | UserDefined ((_ : string), (_ : bool Fun_kind.suffix)) ->
       Set.union acc demoted_and_top_level_names
 
-(**
-  * Recurse through subexpressions and return a list of Unsized types.
-  * Recursion continues until
-  * 1. A non-autodiffable type is found
-  * 2. An autodiffable scalar is found
-  * 3. A `Var` type is found that is an autodiffable matrix
-  *)
+(** Recurse through subexpressions and return a list of Unsized types. Recursion
+    continues until
+    - 1. A non-autodiffable type is found
+    - 2. An autodiffable scalar is found
+    - 3. A `Var` type is found that is an autodiffable matrix *)
 let rec extract_nonderived_admatrix_types
     Expr.{pattern; meta= Expr.Typed.Meta.{adlevel; type_; _}} =
   if
@@ -217,13 +203,14 @@ let rec extract_nonderived_admatrix_types
           ; extract_nonderived_admatrix_types rhs ]
   else [(adlevel, type_)]
 
-(**
- * Recurse through functions to find nonderived ad matrix types.
- * Special cases for StanLib functions are for
- * - `check_matching_dims`: compiler function that has no effect on optimization
- * - `rep_*vector` These are templated in the C++ to cast up to `Var<Matrix>` types
- * - `rep_matrix`. When it's only a scalar being propogated an math library overload can upcast to `Var<Matrix>`
- *)
+(** Recurse through functions to find nonderived ad matrix types. Special cases
+    for StanLib functions are for
+    - `check_matching_dims`: compiler function that has no effect on
+      optimization
+    - `rep_*vector` These are templated in the C++ to cast up to `Var<Matrix>`
+      types
+    - `rep_matrix`. When it's only a scalar being propogated an math library
+      overload can upcast to `Var<Matrix>` *)
 and extract_nonderived_admatrix_types_fun (kind : 'a Fun_kind.t)
     (exprs : Expr.Typed.t list) =
   match kind with
@@ -246,7 +233,8 @@ and extract_nonderived_admatrix_types_fun (kind : 'a Fun_kind.t)
   | CompilerInternal (_ : 'a Internal_fun.t) -> []
   | UserDefined ((_ : string), (_ : bool Fun_kind.suffix)) -> []
 
-(**Checks if a list of types contains at least on ad matrix or if everything is derived from data*)
+(**Checks if a list of types contains at least on ad matrix or if everything is
+   derived from data*)
 let contains_at_least_one_ad_matrix_or_all_data
     (fun_args : UnsizedType.argumentlist) =
   List.is_empty fun_args
@@ -257,31 +245,28 @@ let contains_at_least_one_ad_matrix_or_all_data
        fun_args
   || List.for_all ~f:(fun x -> UnsizedType.is_dataonlytype (fst x)) fun_args
 
-(**
-  Query to find the initial set of objects in statements that cannot be SoA.
-  This is mostly recursive over expressions and statements, with the exception of
-  functions and Assignments.
- *
-  For assignments:
-   We demote the LHS variable if any of the following are true:
-   1. A single cell of the LHS is being assigned within a loop.
-   2. The top level expression on the RHS is a combination of only
-    data matrices and scalar types. Operations on data matrix and
-    scalar values in Stan math will return a AoS matrix. We currently
-    have no way to tell Stan math to return a SoA matrix.
-   3. None of the RHS's functions are able to accept SoA matrices
-    and the rhs is not an internal compiler function.
- *
-   We demote RHS variables if any of the following are true:
-   1. The LHS variable has previously or through this iteration
-    been marked AoS.
-   2. The LHS is a tuple projection
- *
-  For functions see the documentation for [query_initial_demotable_funs] for
-   the logic on demotion rules.
-  @param in_loop A boolean to specify the logic of indexing expressions. See
-   [query_initial_demotable_expr] for an explanation of the logic.
- *)
+(** Query to find the initial set of objects in statements that cannot be SoA.
+    This is mostly recursive over expressions and statements, with the exception
+    of functions and Assignments. For assignments: We demote the LHS variable if
+    any of the following are true:
+    - 1. A single cell of the LHS is being assigned within a loop.
+    - 2. The top level expression on the RHS is a combination of only data
+      matrices and scalar types. Operations on data matrix and scalar values in
+      Stan math will return a AoS matrix. We currently have no way to tell Stan
+      math to return a SoA matrix.
+    - 3. None of the RHS's functions are able to accept SoA matrices and the rhs
+      is not an internal compiler function.
+
+    We demote RHS variables if any of the following are true:
+    - 1. The LHS variable has previously or through this iteration been marked
+      AoS.
+    - 2. The LHS is a tuple projection
+
+    For functions see the documentation for [query_initial_demotable_funs] for
+    the logic on demotion rules.
+    @param in_loop
+      A boolean to specify the logic of indexing expressions. See
+      [query_initial_demotable_expr] for an explanation of the logic. *)
 let rec query_initial_demotable_stmt (in_loop : bool) (acc : string Set.Poly.t)
     (Stmt.{pattern; _} : Stmt.Located.t) : string Set.Poly.t =
   let query_expr (accum : string Set.Poly.t) =
@@ -366,8 +351,8 @@ let rec query_initial_demotable_stmt (in_loop : bool) (acc : string Set.Poly.t)
       Set.Poly.union_list
         (List.map ~f:(query_initial_demotable_stmt in_loop acc) lst)
   | TargetPE expr | JacobianPE expr -> query_expr acc expr
-  (* NOTE: loops generated by inlining are not actually loops;
-     we do not unconditionally set "in_loop" *)
+  (* NOTE: loops generated by inlining are not actually loops; we do not
+     unconditionally set "in_loop" *)
   | For
       { lower= Expr.{pattern= Lit (Int, lb); _}
       ; upper= Expr.{pattern= Lit (Int, ub); _}
@@ -396,17 +381,14 @@ let rec query_initial_demotable_stmt (in_loop : bool) (acc : string Set.Poly.t)
   | Skip | Break | Continue | Decl _ -> acc
 
 (** Look through a statement to see whether the objects used in it need to be
-   modified from SoA to AoS. Returns the set of object names that need demoted
-  in a statement, if any.
-  This function looks at Assignment statements, and returns back the
-   set of top level object names given:
-  1. If the name of the lhs assignee is in the [aos_exits], all the names
-   of the expressions with a type containing a matrix are returned.
-  2. If the names of the rhs objects containing matrix types are in the subset of
-   aos_exits.
-  @param aos_exits A set of variables that can be demoted.
-  @param pattern The Stmt pattern to query.
- *)
+    modified from SoA to AoS. Returns the set of object names that need demoted
+    in a statement, if any. This function looks at Assignment statements, and
+    returns back the set of top level object names given: 1. If the name of the
+    lhs assignee is in the [aos_exits], all the names of the expressions with a
+    type containing a matrix are returned. 2. If the names of the rhs objects
+    containing matrix types are in the subset of aos_exits.
+    @param aos_exits A set of variables that can be demoted.
+    @param pattern The Stmt pattern to query. *)
 let query_demotable_stmt (aos_exits : string Set.Poly.t)
     (pattern : (Expr.Typed.t, int) Stmt.Pattern.t) : string Set.Poly.t =
   match pattern with
@@ -430,21 +412,18 @@ let query_demotable_stmt (aos_exits : string Set.Poly.t)
   (* All other statements do not need logic here*)
   | _ -> Set.Poly.empty
 
-(**
-  Modify a function and it's subexpressions from SoA <-> AoS and vice versa.
-  This performs demotion for sub expressions recursively. The top level
-   expression and it's sub expressions are demoted to SoA if
-   1. The names of the variables in the subexpressions returning
-    objects holding matrices are all in the modifiable set.
-   2. The function does not support SoA
-   3. The [force] argument is [true]
-  @param force_demotion If true, forces an expression and it's sub-expressions
-   to be AoS.
-  @param modifiable_set The set of names that are either demotable
-   to AoS or promotable to SoA.
-  @param kind A [Fun_kind.t]
-  @param exprs A list of expressions going into the function.
- **)
+(** Modify a function and it's subexpressions from SoA <-> AoS and vice versa.
+    This performs demotion for sub expressions recursively. The top level
+    expression and it's sub expressions are demoted to SoA if 1. The names of
+    the variables in the subexpressions returning objects holding matrices are
+    all in the modifiable set. 2. The function does not support SoA 3. The
+    [force] argument is [true]
+    @param force_demotion
+      If true, forces an expression and it's sub-expressions to be AoS.
+    @param modifiable_set
+      The set of names that are either demotable to AoS or promotable to SoA.
+    @param kind A [Fun_kind.t]
+    @param exprs A list of expressions going into the function. **)
 let rec modify_kind ?force_demotion:(force = false)
     (modifiable_set : string Set.Poly.t) (kind : 'a Fun_kind.t)
     (exprs : Expr.Typed.t list) =
@@ -469,20 +448,16 @@ let rec modify_kind ?force_demotion:(force = false)
       ( kind
       , List.map ~f:(modify_expr ~force_demotion:force modifiable_set) exprs )
 
-(**
-  Modify an expression and it's subexpressions from SoA <-> AoS
-   and vice versa. The only real paths in the below is on the
-   functions and ternary expressions.
- *
-  The logic for functions is defined in [modify_kind].
-  [TernaryIf] is forcefully demoted to AoS if the type of the expression
-   contains a matrix.
-  @param force_demotion If true, forces an expression and it's sub-expressions
-   to be AoS.
-  @param modifiable_set The name of the variables whose
-   associated expressions we want to modify.
-  @param pattern The expression to modify.
- *)
+(** Modify an expression and it's subexpressions from SoA <-> AoS and vice
+    versa. The only real paths in the below is on the functions and ternary
+    expressions. The logic for functions is defined in [modify_kind].
+    [TernaryIf] is forcefully demoted to AoS if the type of the expression
+    contains a matrix.
+    @param force_demotion
+      If true, forces an expression and it's sub-expressions to be AoS.
+    @param modifiable_set
+      The name of the variables whose associated expressions we want to modify.
+    @param pattern The expression to modify. *)
 and modify_expr_pattern ?force_demotion:(force = false)
     (modifiable_set : string Set.Poly.t) (pattern : Expr.Typed.t Expr.Pattern.t)
     =
@@ -518,31 +493,26 @@ and modify_expr_pattern ?force_demotion:(force = false)
       Promotion (mod_expr expr, type_, ad_level)
   | Var (_ : string) | Lit ((_ : Expr.Pattern.litType), (_ : string)) -> pattern
 
-(**
-  Given a Set of strings containing the names of objects that can be
-  modified from AoS <-> SoA and vice versa, modify them within the expression.
-  @param mem_pattern The memory pattern to change expressions to.
-  @param modifiable_set The name of the variables whose
-   associated expressions we want to modify.
-  @param expr the expression to modify.
-*)
+(** Given a Set of strings containing the names of objects that can be modified
+    from AoS <-> SoA and vice versa, modify them within the expression.
+    @param mem_pattern The memory pattern to change expressions to.
+    @param modifiable_set
+      The name of the variables whose associated expressions we want to modify.
+    @param expr the expression to modify. *)
 and modify_expr ?force_demotion:(force = false)
     (modifiable_set : string Set.Poly.t) (Expr.{pattern; _} as expr) =
   { expr with
     pattern= modify_expr_pattern ~force_demotion:force modifiable_set pattern }
 
-(**
-  Modify statement patterns in the MIR from AoS <-> SoA and vice versa
-  For [Decl] and [Assignment]'s reading in parameters, we demote to AoS
-   if the [decl_id] (or assign name) is in the modifiable set and
-  otherwise promote the statement to [SoA].
-  For general [Assignment] statements, we check if the assignee is in
-  the demotable set. If so, we force demotion of all of the rhs expressions.
-  All other statements recurse over their statements and expressions.
-*
-  @param pattern The statement pattern to modify
-  @param modifiable_set The name of the variable we are searching for.
-*)
+(** Modify statement patterns in the MIR from AoS <-> SoA and vice versa For
+    [Decl] and [Assignment]'s reading in parameters, we demote to AoS if the
+    [decl_id] (or assign name) is in the modifiable set and otherwise promote
+    the statement to [SoA]. For general [Assignment] statements, we check if the
+    assignee is in the demotable set. If so, we force demotion of all of the rhs
+    expressions. All other statements recurse over their statements and
+    expressions. *
+    @param pattern The statement pattern to modify
+    @param modifiable_set The name of the variable we are searching for. *)
 let rec modify_stmt_pattern
     (pattern : (Expr.Typed.t, Stmt.Located.t) Stmt.Pattern.t)
     (modifiable_set : string Core.Set.Poly.t) =
@@ -661,14 +631,12 @@ let rec modify_stmt_pattern
   | While (predicate, body) -> While ((mod_expr false) predicate, mod_stmt body)
   | Skip | Break | Continue | Decl _ -> pattern
 
-(**
-  Modify statement patterns in the MIR from AoS <-> SoA and vice versa
-  @param mem_pattern A mem_pattern to modify expressions to. For the
-   given memory pattern, this modifies
-   statement patterns and expressions to it.
-  @param stmt The statement to modify.
-  @param modifiable_set The name of the variable we are searching for.
-*)
+(** Modify statement patterns in the MIR from AoS <-> SoA and vice versa
+    @param mem_pattern
+      A mem_pattern to modify expressions to. For the given memory pattern, this
+      modifies statement patterns and expressions to it.
+    @param stmt The statement to modify.
+    @param modifiable_set The name of the variable we are searching for. *)
 and modify_stmt (Stmt.{pattern; _} as stmt) (modifiable_set : string Set.Poly.t)
     =
   {stmt with pattern= modify_stmt_pattern pattern modifiable_set}

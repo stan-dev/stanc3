@@ -166,13 +166,13 @@ let rec check_same_type depth t1 t2 =
    |UComplexRowVector, URowVector
     when depth < 1 ->
       Ok RealToComplex
-  (* Arrays: Try to recursively promote, but make sure the error is for these types,
-     not the recursive call *)
+  (* Arrays: Try to recursively promote, but make sure the error is for these
+     types, not the recursive call *)
   | UArray nt1, UArray nt2 ->
       check_same_type depth nt1 nt2
       |> Result.map_error ~f:(function
-           | TypeMismatch _ -> TypeMismatch (t1, t2, None)
-           | e -> e)
+        | TypeMismatch _ -> TypeMismatch (t1, t2, None)
+        | e -> e)
   | UTuple nts1, UTuple nts2 -> (
       match List.map2 ~f:(check_same_type depth) nts1 nts2 with
       | List.Or_unequal_lengths.Unequal_lengths ->
@@ -247,7 +247,8 @@ let unique_minimum_promotion promotion_options =
   | None -> Error None
 
 let find_compatible_rt function_types args =
-  (* NB: Variadic arguments are special-cased in the typechecker and not handled here *)
+  (* NB: Variadic arguments are special-cased in the typechecker and not handled
+     here *)
   let matches, errors =
     List.partition_map function_types
       ~f:(fun (rt, tys, funkind_constructor, _) ->
@@ -273,7 +274,7 @@ let matching_function env name args =
     Environment.find env name
     |> List.filter_map ~f:extract_function_types
     |> List.sort ~compare:(fun (ret1, _, _, _) (ret2, _, _, _) ->
-           UnsizedType.compare_returntype ret1 ret2) in
+        UnsizedType.compare_returntype ret1 ret2) in
   find_compatible_rt function_types args
 
 let matching_stanlib_function =
@@ -383,12 +384,13 @@ let pp_mismatch_details ~skipped ppf details =
         data_only_msg ()
   | InputMismatch
       (ArgError
-        ( n
-        , TypeMismatch
-            ( expected
-            , found
-            , (* NB: these usages are always for first-order mismatches, so no recursion here! *)
-              _ ) )) ->
+         ( n
+         , TypeMismatch
+             ( expected
+             , found
+             , (* NB: these usages are always for first-order mismatches, so no
+                  recursion here! *)
+               _ ) )) ->
       pp_with_where ctx
         (fun ppf () ->
           pf ppf "@[<hov>The %a must be@ %a but got@ %a.@]" pp_skipped_index_str
@@ -410,8 +412,9 @@ let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
         pf ppf
           "@[<hv>The types for the %s argument are incompatible: one is@,\
           \ %a@ but the other is@,\
-          \ %a@]" (index_str n) (pp_unsized_type ctx) expected
-          (pp_unsized_type ctx) found
+          \ %a@]"
+          (index_str n) (pp_unsized_type ctx) expected (pp_unsized_type ctx)
+          found
     | ArgError (n, TypeMismatch (_, _, Some (SuffixMismatch (expected, found))))
       ->
         pf ppf
@@ -430,8 +433,8 @@ let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
         pf ppf
           "@[<v>The %s argument must be@,\
           \ %a@ but got@,\
-          \ %a@ The return types are different.@]" (index_str n) (pp_fundef ctx)
-          expected (pp_fundef ctx) found
+          \ %a@ The return types are different.@]"
+          (index_str n) (pp_fundef ctx) expected (pp_fundef ctx) found
     | ArgNumMismatch (expected, found) ->
         pf ppf "One takes %d %a but the other takes %d %a." expected arguments
           expected found arguments found in
@@ -468,7 +471,8 @@ let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
         pf ppf
           "@[<v>The %s argument must be@,\
           \ %a@ but got@,\
-          \ %a@ The return types are not compatible.@]" (index_str n)
+          \ %a@ The return types are not compatible.@]"
+          (index_str n)
           (expected_style @@ pp_fundef ctx)
           expected
           (actual_style @@ pp_fundef ctx)

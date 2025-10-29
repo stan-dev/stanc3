@@ -195,9 +195,9 @@ let truncate_dist ud_dists (id : Ast.identifier)
               UnsizedType.is_container e.emeta.type_)
             ast_args
         with
-        (* If any of the arguments (besides the data) are vectors, need to generate a loop
-           This can go away if https://github.com/stan-dev/stan/issues/1154 is implemented
-        *)
+        (* If any of the arguments (besides the data) are vectors, need to
+           generate a loop This can go away if
+           https://github.com/stan-dev/stan/issues/1154 is implemented *)
         | Some (i, _) ->
             let ast_args = trans_exprs ast_args in
             (* avoid recomputing in each iteration of the loop *)
@@ -240,8 +240,8 @@ let trans_printables mloc (ps : Ast.typed_expression Ast.printable list) =
       | Ast.PExpr e -> trans_expr e)
     ps
 
-(** These types signal the context for a declaration during statement translation.
-   They are only interpreted by trans_decl.*)
+(** These types signal the context for a declaration during statement
+    translation. They are only interpreted by trans_decl.*)
 type transform_action = Check | Constrain | IgnoreTransform [@@deriving sexp]
 
 type decl_context =
@@ -298,8 +298,8 @@ let extract_transform_args var = function
    |TupleTransformation _ | StochasticRow | StochasticColumn ->
       []
 
-(** Allows [shrink_helper] to operate either on each dimension independently
-   or on both matrix dimensions at once *)
+(** Allows [shrink_helper] to operate either on each dimension independently or
+    on both matrix dimensions at once *)
 type size_change =
   | Univariate of (Expr.Typed.t -> Expr.Typed.t)
   | Multivariate of (Expr.Typed.t -> Expr.Typed.t -> Expr.Typed.t)
@@ -307,11 +307,10 @@ type size_change =
 (** We need to compute somewhat arbitrary new sizes for the unconstrained
     parameters. This function handles the primary cases:
 
-  - A vector of size N is transformed to a vector of size (f N)
-  - A matrix of size N x M is transformed to a vector of size (f N) x (f_d2 M)
-  - A matrix of size N x N is transformed to a vector of size (f N M)
-  - Arrays of the above are handled recursively
-*)
+    - A vector of size N is transformed to a vector of size (f N)
+    - A matrix of size N x M is transformed to a vector of size (f N) x (f_d2 M)
+    - A matrix of size N x N is transformed to a vector of size (f N M)
+    - Arrays of the above are handled recursively *)
 let rec shrink_helper (f : size_change) f_d2 st =
   let f_assert_univariate d =
     match f with
@@ -343,7 +342,8 @@ let rec transform_sizedtype transformation sizedtype =
     (* Matrices become vectors, with size computed by [f] *)
     shrink_helper (Multivariate f) Fn.id st in
   let shrink_eigen_vec f st =
-    (* Matrices are mapped to vectors, only depending on their first dimension for sizing *)
+    (* Matrices are mapped to vectors, only depending on their first dimension
+       for sizing *)
     shrink_eigen_mat (fun x _ -> f x) st in
   let shrink_eigen f1 f2 st =
     (* Types don't change, just sizes *)
@@ -653,8 +653,8 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
   | Ast.Skip -> Skip |> swrap
 
 and trans_packed_assign loc trans_stmt lvals rhs assign_op =
-  (* TODO tuple-unpacking: could be more efficient in case where rhs is a tuple expr and
-     names don't overlap *)
+  (* TODO tuple-unpacking: could be more efficient in case where rhs is a tuple
+     expr and names don't overlap *)
   let smeta = Ast.{loc; return_type= Incomplete} in
   let sym, reset = Common.Gensym.enter () in
   let rhs_type = rhs.emeta.type_ in
@@ -688,10 +688,8 @@ and trans_packed_assign loc trans_stmt lvals rhs assign_op =
 
 and trans_single_assignment smeta assign_lhs assign_rhs assign_op =
   let rec group_lvalue carry_idcs lv =
-    (* Group up non-tuple indices
-       e.g. x[1][2].1[3] -> x[1,2].1[3]
-       Done by passing current stack of indices down until it hits a non-indexed
-    *)
+    (* Group up non-tuple indices e.g. x[1][2].1[3] -> x[1,2].1[3] Done by
+       passing current stack of indices down until it hits a non-indexed *)
     match lv.Ast.lval with
     | LVariable _ ->
         if List.is_empty carry_idcs then lv
@@ -701,8 +699,8 @@ and trans_single_assignment smeta assign_lhs assign_rhs assign_op =
         if List.is_empty carry_idcs then lv''
         else {lv with lval= LIndexed (lv'', carry_idcs)}
     | LIndexed (lv', idcs) ->
-        (* When we group indices,
-           the metadata of group-indexed LHS equals the metadata of the outermost indexed LHS *)
+        (* When we group indices, the metadata of group-indexed LHS equals the
+           metadata of the outermost indexed LHS *)
         {lv with Ast.lval= (group_lvalue (idcs @ carry_idcs) lv').lval} in
   let grouped_lhs = group_lvalue [] assign_lhs in
   let rec trans_lvalue lv =
@@ -714,9 +712,8 @@ and trans_single_assignment smeta assign_lhs assign_rhs assign_op =
         let lbase, idxs = trans_lvalue lv in
         (lbase, idxs @ List.map ~f:trans_idx idcs) in
   let lhs = trans_lvalue grouped_lhs in
-  (* The type of the assignee if it weren't indexed
-     e.g. in x[1,2] it's type(x), and in y.2 it's type(y.2)
-  *)
+  (* The type of the assignee if it weren't indexed e.g. in x[1,2] it's type(x),
+     and in y.2 it's type(y.2) *)
   let unindexed_type =
     match grouped_lhs.Ast.lval with
     | LVariable _ | LTupleProjection _ -> grouped_lhs.Ast.lmeta.type_
@@ -987,9 +984,9 @@ let trans_prog filename (p : Ast.typed_program) : Program.Typed.t =
   let txparam_decls, txparam_checks, txparam_stmts =
     txparam_gq
     |> List.partition3_map ~f:(function
-         | {pattern= Decl _; _} as d -> `Fst d
-         | s when stmt_contains_check s -> `Snd s
-         | s -> `Trd s) in
+      | {pattern= Decl _; _} as d -> `Fst d
+      | s when stmt_contains_check s -> `Snd s
+      | s -> `Trd s) in
   let compiler_if_return cond =
     Stmt.
       { pattern=

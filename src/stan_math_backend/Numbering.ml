@@ -71,7 +71,7 @@ let gen_globals ?printed_filename location_list =
     " (found before start of program)"
     :: (List.filter ~f:(fun x -> x <> Location_span.empty) location_list
        |> List.map ~f:(fun x ->
-              " (in " ^ Location_span.to_string ?printed_filename x ^ ")"))
+           " (in " ^ Location_span.to_string ?printed_filename x ^ ")"))
     |> List.map ~f:Exprs.literal_string in
   let location_count = List.length location_list in
   let arr_type = Types.const_char_array location_count in

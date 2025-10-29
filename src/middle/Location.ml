@@ -22,7 +22,8 @@ let pp_context_for ppf (({line_num; _} as loc), lines) =
     Fmt.option pp ppf (get_line n) in
   let cursor_line ppf {line_num; col_num; _} =
     let blank_line =
-      (* to get visual alignment, we copy any tabs in the line we are pointing at *)
+      (* to get visual alignment, we copy any tabs in the line we are pointing
+         at *)
       let highlighted_line = get_line line_num |> Option.value ~default:"" in
       String.sub highlighted_line ~pos:0 ~len:col_num
       |> String.map ~f:(function '\t' -> '\t' | _ -> ' ') in
@@ -38,12 +39,10 @@ let pp_context_for ppf (({line_num; _} as loc), lines) =
 
 let empty = {filename= ""; line_num= -1; col_num= -1; included_from= None}
 
-(**
-Format the location for error messaging.
+(** Format the location for error messaging.
 
-If printed_filename is passed, it replaces the highest-level name and
-leaves the filenames of included files intact.
-*)
+    If printed_filename is passed, it replaces the highest-level name and leaves
+    the filenames of included files intact. *)
 let rec pp ?(print_file = true) ?(print_line = true) printed_filename ppf loc =
   let incl, filename =
     match loc.included_from with
@@ -64,10 +63,10 @@ let compare loc1 loc2 =
     | {included_from= None; _} as loc -> [loc]
     | {included_from= Some loc1; _} as loc2 ->
         (* When pretty-printing comments it is possible to end up with multiple
-           locations at an identical point in the file when they originated in an include.
-           We artificially break this tie by pretending that included locations
-           were included from the one line down from where they truly were.
-        *)
+           locations at an identical point in the file when they originated in
+           an include. We artificially break this tie by pretending that
+           included locations were included from the one line down from where
+           they truly were. *)
         loc2 :: unfold {loc1 with line_num= loc1.line_num + 1} in
   let rec go = function
     | [], [] -> 0

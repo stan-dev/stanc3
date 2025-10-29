@@ -15,9 +15,9 @@ let kind (_, err) =
   | UnexpectedEOF | Lexing -> "lexing error"
   | Include _ -> "include error"
 
-(** Sets up the semantic tag machinery (https://ocaml.org/manual/api/Format.html#tags)
-   to print ANSI escape codes for formatting
-*)
+(** Sets up the semantic tag machinery
+    (https://ocaml.org/manual/api/Format.html#tags) to print ANSI escape codes
+    for formatting *)
 let pp_styled_text : styled_text Fmt.t =
  fun ppf format_string ->
   let ansi_stags former =

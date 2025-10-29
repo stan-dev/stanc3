@@ -15,17 +15,16 @@ let locations_map : (string * Middle.Location.t option) String.Table.t =
   String.Table.create ()
 
 let new_file_start_position filename included_from =
-  (* Lexing.position does not have a field to store `included_from`
-     so we store it in a global hashmap instead and put the hashmap key
-     in `pos_fname`. The keys are arbitrary unique strings. (Filenames are
-     not good keys because the same file could be included multiple times.)
+  (* Lexing.position does not have a field to store `included_from` so we store
+     it in a global hashmap instead and put the hashmap key in `pos_fname`. The
+     keys are arbitrary unique strings. (Filenames are not good keys because the
+     same file could be included multiple times.)
 
-     Prefixing the key with NUL allows us to do a little optimization:
-     when `included_from` is None we don't need to access the hashmap and
-     can store the filename directly in `pos_fname`. Filenames never
-     begin with NUL so `location_of_position` only needs to check the
-     first character to know whether to do a hashmap lookup.
-  *)
+     Prefixing the key with NUL allows us to do a little optimization: when
+     `included_from` is None we don't need to access the hashmap and can store
+     the filename directly in `pos_fname`. Filenames never begin with NUL so
+     `location_of_position` only needs to check the first character to know
+     whether to do a hashmap lookup. *)
   if Option.is_none included_from then
     {Lexing.pos_fname= filename; pos_lnum= 1; pos_bol= 0; pos_cnum= 0}
   else
@@ -72,9 +71,8 @@ let update_start_positions pos =
 let restore_prior_lexbuf () =
   let lexbuf = pop_buffer () in
   let old_lexbuf = current_buffer () in
-  (* to get printing includes right we need to make sure that the 'start' of
-      our next token is on the following line
-  *)
+  (* to get printing includes right we need to make sure that the 'start' of our
+     next token is on the following line *)
   let old_pos =
     {old_lexbuf.lex_curr_p with pos_lnum= old_lexbuf.lex_curr_p.pos_lnum + 1}
   in
@@ -97,7 +95,8 @@ let find_include_fs lookup_paths fname =
             | _ -> Fmt.(list ~sep:comma string) ppf l in
           Fmt.str
             "Could not find include file '%s' in specified include paths.@\n\
-             @[Current include paths: %a@]" fname pp_list lookup_paths in
+             @[Current include paths: %a@]"
+            fname pp_list lookup_paths in
         include_error message
     | path :: rest_of_paths -> (
         try

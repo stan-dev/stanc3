@@ -33,8 +33,8 @@ module Pattern : sig
   [@@deriving sexp, hash, map, fold, compare]
 end
 
-(** The "two-level" type for statements in the MIR. This corresponds to what the AST calls
-      [Frontend.Ast.statement_with]  *)
+(** The "two-level" type for statements in the MIR. This corresponds to what the
+    AST calls [Frontend.Ast.statement_with] *)
 type ('a, 'b) t = {pattern: ('a Expr.t, ('a, 'b) t) Pattern.t; meta: 'b}
 [@@deriving compare, hash, sexp]
 
@@ -45,15 +45,14 @@ val rewrite_bottom_up :
   -> g:(('a, 'b) t -> ('a, 'b) t)
   -> ('a, 'b) t
   -> ('a, 'b) t
-(** [rewrite_bottom_up] specializes [fold] so that the result type
-  ['r1] is equal to the type of the nested fixed-point type
-  i.e. ['r1 = 'a Expr.t] and the result type ['r2] is equal to the top-level
-  fixed-point type i.e. ['r2 = ('a,'b) t].
+(** [rewrite_bottom_up] specializes [fold] so that the result type ['r1] is
+    equal to the type of the nested fixed-point type i.e. ['r1 = 'a Expr.t] and
+    the result type ['r2] is equal to the top-level fixed-point type i.e.
+    ['r2 = ('a,'b) t].
 
-  This also means that the function [f] can be written with our nested
-  fixed-point type  ['a Expr.t] as its argument and [g] can be written with
-  [('a,'b) t] as its argument.
-  *)
+    This also means that the function [f] can be written with our nested
+    fixed-point type ['a Expr.t] as its argument and [g] can be written with
+    [('a,'b) t] as its argument. *)
 
 module Located : sig
   module Meta : sig
@@ -148,8 +147,7 @@ module Helpers : sig
     -> ('b, 'a) t
 
   val get_lhs_name : 'a Pattern.lvalue -> string
-  (** The name of the lhs.
-  This adds "." and an index to tuple projections *)
+  (** The name of the lhs. This adds "." and an index to tuple projections *)
 
   val lvariable : string -> 'e Pattern.lvalue
   val lvalue_of_expr_opt : 'e Expr.t -> 'e Expr.t Pattern.lvalue option
@@ -161,15 +159,15 @@ module Helpers : sig
   val lhs_indices : 'e Pattern.lvalue -> 'e Index.t list
 
   val lhs_variable : 'e Pattern.lvalue -> string
-  (** This gets the innermost name of the variable.
-  It differs from [get_lhs_name] in that tuple
-  projections do not add their indices here. *)
+  (** This gets the innermost name of the variable. It differs from
+      [get_lhs_name] in that tuple projections do not add their indices here. *)
 
   val lvalue_base_reference : 'e Pattern.lvalue -> 'e Pattern.lvalue
-  (** Reduce an lvalue down to its "base reference", which is a variable with maximum tuple indices after it.
-     For example:
-     {[x[1,2][3] -> x
-     x.1[1,2].2[3].3 -> x.1
-     x.1.2[1,2][3].3 -> x.1.2]}
-  *)
+  (** Reduce an lvalue down to its "base reference", which is a variable with
+      maximum tuple indices after it. For example:
+      {[
+        x[1,2][3] -> x
+        x.1[1,2].2[3].3 -> x.1
+        x.1.2[1,2][3].3 -> x.1.2
+      ]} *)
 end

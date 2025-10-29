@@ -2,9 +2,8 @@ open Core
 open Core.Poly
 module UnsizedType = Middle.UnsizedType
 
-(** Type to represent promotions in the typechecker.
-  This can be used to return information about how to promote
-  expressions for use in [Ast.Promotion] *)
+(** Type to represent promotions in the typechecker. This can be used to return
+    information about how to promote expressions for use in [Ast.Promotion] *)
 type t =
   | NoPromotion
   | IntToReal
@@ -15,18 +14,17 @@ type t =
   | TuplePromotion of t list
 [@@deriving sexp]
 
-(** Our promotion nodes only store the scalar type to promote, e.g
-   to promote a [tuple(array int)] to a [tuple(array real)], we store
-   [tuple(real)], not [tuple(array real)]
-*)
+(** Our promotion nodes only store the scalar type to promote, e.g to promote a
+    [tuple(array int)] to a [tuple(array real)], we store [tuple(real)], not
+    [tuple(array real)] *)
 let rec scalarize type_ =
   let type_, _ = UnsizedType.unwind_array_type type_ in
   match type_ with
   | UnsizedType.UTuple ts -> UnsizedType.UTuple (List.map ~f:scalarize ts)
   | _ -> UnsizedType.internal_scalar type_
 
-(** Get the [UnsizedType.t] which is the result of promoting a given type.
-    See [promote] for the version which promotes expressions directly. *)
+(** Get the [UnsizedType.t] which is the result of promoting a given type. See
+    [promote] for the version which promotes expressions directly. *)
 let rec promote_unsized_type (typ : UnsizedType.t)
     (ad : UnsizedType.autodifftype) (prom : t) =
   match (prom, typ, ad) with
@@ -103,7 +101,8 @@ let promote_inner (exp : Ast.typed_expression) prom =
         }
   | (IntToComplex | RealToComplex)
     when not (UnsizedType.is_complex_type emeta.type_) ->
-      (* these two promotions are separated for cost, but are actually the same promotion *)
+      (* these two promotions are separated for cost, but are actually the same
+         promotion *)
       { expr= Promotion (exp, (UComplex, emeta.ad_level))
       ; emeta=
           {emeta with type_= UnsizedType.promote_container emeta.type_ UComplex}
@@ -127,7 +126,8 @@ let promote_inner (exp : Ast.typed_expression) prom =
   | _ -> exp
 
 let rec promote (exp : Ast.typed_expression) prom =
-  (* promote arrays and rowvector literals at the lowest level to avoid unnecessary copies *)
+  (* promote arrays and rowvector literals at the lowest level to avoid
+     unnecessary copies *)
   let open Ast in
   match exp.expr with
   | ArrayExpr es ->
@@ -142,7 +142,8 @@ let rec promote (exp : Ast.typed_expression) prom =
       let fst = List.hd_exn pes in
       let ad_level = fst.emeta.ad_level in
       let type_ =
-        (* "RowVectorExpr" can also be a matrix expr, depends on what is inside *)
+        (* "RowVectorExpr" can also be a matrix expr, depends on what is
+           inside *)
         match fst.emeta.type_ with
         | UComplexRowVector -> UnsizedType.UComplexMatrix
         | URowVector -> UMatrix
@@ -166,10 +167,9 @@ let rec promote (exp : Ast.typed_expression) prom =
 
 let promote_list es promotions = List.map2_exn es promotions ~f:promote
 
-(** Get the promotion needed to make the second type into the first.
-    Types NEED to have previously been checked to be promotable or
-    else a fatal error will be thrown.
-*)
+(** Get the promotion needed to make the second type into the first. Types NEED
+    to have previously been checked to be promotable or else a fatal error will
+    be thrown. *)
 let rec get_type_promotion_exn (ad_requested, ty_requested)
     (ad_current, ty_current) =
   if UnsizedType.autodifftype_can_convert ad_requested ad_current then
@@ -221,9 +221,8 @@ let rec get_type_promotion_exn (ad_requested, ty_requested)
           "cannot be promoted to "
           (ad_requested : UnsizedType.autodifftype)]
 
-(** Calculate the "cost"/number of promotions performed.
-    Used to disambiguate function signatures
-*)
+(** Calculate the "cost"/number of promotions performed. Used to disambiguate
+    function signatures *)
 let rec promotion_cost p =
   match p with
   | NoPromotion | ToVar | ToComplexVar -> 0

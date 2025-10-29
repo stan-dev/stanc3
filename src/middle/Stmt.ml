@@ -76,8 +76,9 @@ module Pattern = struct
               decl_adtype (Type.pp pp_e) decl_type decl_id)
 end
 
-(** Defined in a separate module so that we can define [Typed.t] etc
-     in terms of the module name, since [ppx_deriving] does not support the [nonrec] keyword *)
+(** Defined in a separate module so that we can define [Typed.t] etc in terms of
+    the module name, since [ppx_deriving] does not support the [nonrec] keyword
+*)
 module Fixed = struct
   (** Fixed-point of statements *)
   type ('a, 'b) t = {pattern: ('a Expr.t, ('a, 'b) t) Pattern.t; meta: 'b}
@@ -111,11 +112,11 @@ module Located = struct
   let pp = pp
 
   (** This module acts as a temporary replace for the [stmt_loc_num] type that
-  is currently used within [analysis_and_optimization].
+      is currently used within [analysis_and_optimization].
 
-  The original intent of the type was to provide explicit sharing of subterms.
-  My feeling is that ultimately we want to use the recursive type directly and rely on OCaml for sharing
- *)
+      The original intent of the type was to provide explicit sharing of
+      subterms. My feeling is that ultimately we want to use the recursive type
+      directly and rely on OCaml for sharing *)
   module Non_recursive = struct
     type t =
       { pattern: (Expr.Typed.t, int) Pattern.t
@@ -176,8 +177,8 @@ module Helpers = struct
   let internal_nrfunapp fn args meta =
     {pattern= NRFunApp (CompilerInternal fn, args); meta}
 
-  (** [mk_for] returns a MIR For statement from 0 to [upper] that calls the [bodyfn] with the loop
-      variable inside the loop. *)
+  (** [mk_for] returns a MIR For statement from 0 to [upper] that calls the
+      [bodyfn] with the loop variable inside the loop. *)
   let mk_for upper bodyfn meta =
     let loopvar, reset = Gensym.enter () in
     let loopvar_expr =
@@ -190,8 +191,9 @@ module Helpers = struct
     let pattern = Pattern.For {loopvar; lower; upper; body} in
     {meta; pattern}
 
-  (** [mk_nested_for] returns nested MIR For statements with ranges from 0 to each element of
-      [uppers], and calls the [bodyfn] in the innermost loop with the list of loop variables. *)
+  (** [mk_nested_for] returns nested MIR For statements with ranges from 0 to
+      each element of [uppers], and calls the [bodyfn] in the innermost loop
+      with the list of loop variables. *)
   let rec mk_nested_for uppers bodyfn meta =
     match uppers with
     | [] -> bodyfn []
@@ -203,8 +205,8 @@ module Helpers = struct
               Location_span.empty)
           meta
 
-  (** [mk_for_iteratee] returns a MIR For statement that iterates over the given expression
-    [iteratee]. *)
+  (** [mk_for_iteratee] returns a MIR For statement that iterates over the given
+      expression [iteratee]. *)
   let mk_for_iteratee upper iteratee_bodyfn iteratee meta =
     let bodyfn loopvar =
       iteratee_bodyfn
@@ -245,15 +247,14 @@ module Helpers = struct
             aux accu stmt_pattern in
     aux init stmt
 
-  (** [for_scalar unsizedtype...] generates a For statement that loops
-    over the scalars in the underlying [unsizedtype].
+  (** [for_scalar unsizedtype...] generates a For statement that loops over the
+      scalars in the underlying [unsizedtype].
 
-    We can call [bodyfn] directly on scalars, make a direct For loop
-    around Eigen types, or for Arrays we call mk_for_iteratee but inserting a
-    recursive call into the [bodyfn] that will operate on the nested
-    type. In this way we recursively create for loops that loop over
-    the outermost layers first.
-*)
+      We can call [bodyfn] directly on scalars, make a direct For loop around
+      Eigen types, or for Arrays we call mk_for_iteratee but inserting a
+      recursive call into the [bodyfn] that will operate on the nested type. In
+      this way we recursively create for loops that loop over the outermost
+      layers first. *)
   let rec for_scalar st bodyfn var smeta =
     match st with
     | SizedType.SInt | SReal | SComplex -> bodyfn st var
@@ -275,7 +276,7 @@ module Helpers = struct
     | STuple _ -> bodyfn st var
 
   (** Exactly like for_scalar, but iterating through array dimensions in the
-  inverted order.*)
+      inverted order.*)
   let for_scalar_inv st bodyfn (var : Expr.Typed.t) smeta =
     let var = {var with pattern= Indexed (var, [])} in
     let invert_index_order (Expr.{pattern; _} as e) =
@@ -357,12 +358,9 @@ module Helpers = struct
     | LVariable v, _ -> v
     | LTupleProjection (lv, _), _ -> lhs_variable lv
 
-  (* Reduce an lvalue down to its "base reference", which is a variable with maximum tuple indices after it.
-     For example:
-     x[1,2][3] -> x
-     x.1[1,2].2[3].3 -> x.1
-     x.1.2[1,2][3].3 -> x.1.2
-  *)
+  (* Reduce an lvalue down to its "base reference", which is a variable with
+     maximum tuple indices after it. For example: x[1,2][3] -> x x.1[1,2].2[3].3
+     -> x.1 x.1.2[1,2][3].3 -> x.1.2 *)
   let lvalue_base_reference (lvalue : 'e Pattern.lvalue) =
     let get_tuple_idxs lv =
       let rec go lv acc =

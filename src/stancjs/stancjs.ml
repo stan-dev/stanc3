@@ -15,8 +15,8 @@ let invoke_driver model_name model flags =
        |Info s
        |Version s
        |Generated s ->
-          (* stanc.js will only ever return one output,
-             so we break out prematurely *)
+          (* stanc.js will only ever return one output, so we break out
+             prematurely *)
           return (Ok s) in
     Driver.Entry.stan2cpp model_name (`Code model) flags output_callback in
   (compilation_result, !warnings)
@@ -76,8 +76,8 @@ let checked_to_array ~name value =
          (Js.typeof value |> Js.to_string))
   else Ok (Js.to_array value)
 
-(** Converts from a [{ [s:string]:string }] JS object type
-to an OCaml map, with error messages on bad input. *)
+(** Converts from a [{ [s:string]:string }] JS object type to an OCaml map, with
+    error messages on bad input. *)
 let get_includes includes : string String.Map.t * string list =
   let open Common.Let_syntax.Result in
   let map, warnings =

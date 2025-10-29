@@ -12,9 +12,7 @@ open Pedantic_dist_warnings
 
 type warning_span = Location_span.t * string [@@deriving compare]
 
-(*********************
-   Pattern collection functions
- ********************)
+(********************* Pattern collection functions ********************)
 
 let list_unused_params (factor_graph : factor_graph) (mir : Program.Typed.t) :
     (string * Location_span.t) Set.Poly.t =
@@ -69,8 +67,8 @@ let list_multi_tildes (mir : Program.Typed.t) :
     ~f:(fun ~key ~data s -> Set.add s (key, data))
     multi_tildes
 
-(**  Collect statements of the form "target += Dist(param, ...)" where param
-  has possibly been transformed non-linearly *)
+(** Collect statements of the form "target += Dist(param, ...)" where param has
+    possibly been transformed non-linearly *)
 let list_possible_nonlinear (mir : Program.Typed.t) : Location_span.t Set.Poly.t
     =
   (* These functions are linear if all of their arguments are *)
@@ -84,10 +82,8 @@ let list_possible_nonlinear (mir : Program.Typed.t) : Location_span.t Set.Poly.t
       ; "to_row_vector"; "to_matrix"; "to_array_1d"; "to_array_2d"; "transpose"
       ]
     |> String.Set.of_list in
-  (* A simple check of linearity of an expression.
-     allow_var is used for expressions like a*b, where at most one
-     of a and b can be a variable
-  *)
+  (* A simple check of linearity of an expression. allow_var is used for
+     expressions like a*b, where at most one of a and b can be a variable *)
   let rec is_linear allow_var Expr.{pattern; _} =
     match pattern with
     | Expr.Pattern.Var _ -> allow_var
@@ -112,8 +108,8 @@ let list_possible_nonlinear (mir : Program.Typed.t) : Location_span.t Set.Poly.t
         (is_linear allow_var a && is_linear false b)
         || (is_linear false a && is_linear allow_var b)
     | "fma", [a; b; c] ->
-        (* Similar to above.
-           Partial evaluation can create fmas where the user wrote Times *)
+        (* Similar to above. Partial evaluation can create fmas where the user
+           wrote Times *)
         is_linear allow_var c
         && ((is_linear allow_var a && is_linear false b)
            || (is_linear false a && is_linear allow_var b))
@@ -303,8 +299,7 @@ let compiletime_value_of_expr
 
 (* Scrape all distributions from the program by searching for their function
    names and function type, and wrangle some useful data about them, like the
-   nature of their first argument
-*)
+   nature of their first argument *)
 let list_distributions (mir : Program.Typed.t) : dist_info Set.Poly.t =
   let take_dist (expr : Expr.Typed.t) =
     match expr.pattern with
@@ -341,9 +336,7 @@ let list_unscaled_constants (distributions_list : dist_info Set.Poly.t) :
       Set.Poly.union_list (List.map ~f:collect_unscaled_expr args))
     distributions_list
 
-(*********************
-   Printing functions
- ********************)
+(********************* Printing functions ********************)
 
 let unscaled_constants_message (name : string) : string =
   Printf.sprintf
@@ -480,8 +473,7 @@ let uninitialized_warnings (mir : Program.Typed.t) =
 let to_list warning_set =
   Set.to_list warning_set |> List.sort ~compare:compare_warning_span |> List.rev
 
-(* String-print uninitialized warnings
-   In case a user wants only this warning *)
+(* String-print uninitialized warnings In case a user wants only this warning *)
 let warn_uninitialized mir = uninitialized_warnings mir |> to_list
 
 (* Optimization settings for constant propagation and partial evaluation *)

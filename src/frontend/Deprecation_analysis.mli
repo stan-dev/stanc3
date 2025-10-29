@@ -1,6 +1,5 @@
-(** Utilities for emitting deprecation warnings and
-  finding proper replacements for deprecated features
-*)
+(** Utilities for emitting deprecation warnings and finding proper replacements
+    for deprecated features *)
 
 open Core
 open Ast
@@ -13,6 +12,6 @@ val collect_warnings : typed_program -> Warnings.t list
 val remove_unneeded_forward_decls : typed_program -> typed_program
 
 val set_jacobian_compatibility_mode : untyped_statement list -> unit
-(** Pre-Stan 2.39, we need to know if _jacobian functions are
-  FnPlain or not. We use the presence of any jacobian+= statements
-  as our condition. If none are present, we assume this is old code. *)
+(** Pre-Stan 2.39, we need to know if _jacobian functions are FnPlain or not. We
+    use the presence of any jacobian+= statements as our condition. If none are
+    present, we assume this is old code. *)

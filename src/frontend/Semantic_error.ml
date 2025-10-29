@@ -1,9 +1,9 @@
 open Core
 open Middle
 
-(* The following categories (type, identifier, expression, statement) are
-   fairly loose, the main idea is to keep similar errors close to each other
-   and still be semi-organized *)
+(* The following categories (type, identifier, expression, statement) are fairly
+   loose, the main idea is to keep similar errors close to each other and still
+   be semi-organized *)
 
 let ellipsis ppf = Fmt.styled `Faint Fmt.string ppf "..."
 let expected_style = SignatureMismatch.expected_style
@@ -523,7 +523,8 @@ module ExpressionError = struct
         Fmt.pf ppf
           "Ill-typed arguments supplied to postfix operator %a. Available \
            signatures: %s\n\
-           Instead supplied argument of incompatible type: %a." Operator.pp op
+           Instead supplied argument of incompatible type: %a."
+          Operator.pp op
           (Stan_math_signatures.pretty_print_math_lib_operator_sigs op
           |> String.concat ~sep:"\n")
           UnsizedType.pp ut

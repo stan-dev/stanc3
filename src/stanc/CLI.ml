@@ -33,7 +33,8 @@ module Options = struct
           None
       & info ["?"] ~doc:"Synonym for $(b,--help)." ~docv:"=FMT")
 
-  (** Wrapper around flag_all to support passing the same flag multiple times. Emits a warning *)
+  (** Wrapper around flag_all to support passing the same flag multiple times.
+      Emits a warning *)
   let multi_flag name arg_info =
     let flags = Arg.(value & flag_all & arg_info [name]) in
     Term.map
@@ -184,8 +185,8 @@ module Options = struct
 end
 
 module Commands = struct
-  (** These would be subcommands if we hadn't originally made
-    them options. They change 'modes' and do not need a model file *)
+  (** These would be subcommands if we hadn't originally made them options. They
+      change 'modes' and do not need a model file *)
 
   let dump_stan_math_signatures =
     let doc =
@@ -316,7 +317,8 @@ module Debug_Options = struct
       & info ["f"] ~doc ~docv:"SETTING" ~docs)
 end
 
-(** Flags common to all compiler drivers and those specific to the command line *)
+(** Flags common to all compiler drivers and those specific to the command line
+*)
 type compiler_flags =
   { debug_lex: bool
   ; debug_parse: bool
@@ -350,10 +352,10 @@ module Conversion = struct
     and+ print_transformed_mir = debug_transformed_mir
     and+ print_optimized_mir = debug_optimized_mir
     and+ print_mem_patterns = debug_mem_patterns
-    and+ force_soa = force_soa
+    and+ force_soa
     and+ print_lir = debug_lir
-    and+ debug_generate_data = debug_generate_data
-    and+ debug_generate_inits = debug_generate_inits
+    and+ debug_generate_data
+    and+ debug_generate_inits
     and+ debug_data_json = Term.ret debug_data_json in
     Driver.Flags.
       { print_ast
@@ -370,20 +372,20 @@ module Conversion = struct
 
   let flags : Driver.Flags.t Term.t =
     let open Options in
-    let+ optimization_level = optimization_level
-    and+ allow_undefined = allow_undefined
-    and+ standalone_functions = standalone_functions
-    and+ use_opencl = use_opencl
+    let+ optimization_level
+    and+ allow_undefined
+    and+ standalone_functions
+    and+ use_opencl
     and+ include_source = include_paths
-    and+ info = info
-    and+ auto_format = auto_format
+    and+ info
+    and+ auto_format
     and+ line_length = max_line_length
-    and+ print_canonical = print_canonical
-    and+ canonicalizer_settings = canonicalizer_settings
-    and+ warn_pedantic = warn_pedantic
-    and+ warn_uninitialized = warn_uninitialized
-    and+ filename_in_msg = filename_in_msg
-    and+ debug_settings = debug_settings in
+    and+ print_canonical
+    and+ canonicalizer_settings
+    and+ warn_pedantic
+    and+ warn_uninitialized
+    and+ filename_in_msg
+    and+ debug_settings in
     Driver.Flags.
       { optimization_level
       ; allow_undefined
@@ -404,8 +406,7 @@ module Conversion = struct
       ; debug_settings }
 end
 
-(* The overarching command line.
-   Either we're in one of the dump sub-commands,
+(* The overarching command line. Either we're in one of the dump sub-commands,
    or we have all the flags we need to proceed *)
 let commands =
   Term.ret
@@ -433,14 +434,14 @@ let commands =
         | Some model_file ->
             `Ok
               (`Default
-                { debug_lex
-                ; debug_parse
-                ; print_cpp
-                ; name
-                ; output_file
-                ; model_file
-                ; tty_colors
-                ; flags }))
+                 { debug_lex
+                 ; debug_parse
+                 ; print_cpp
+                 ; name
+                 ; output_file
+                 ; model_file
+                 ; tty_colors
+                 ; flags }))
 
 let exit_ok = 0
 let exit_err = 1

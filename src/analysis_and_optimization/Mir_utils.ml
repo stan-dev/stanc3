@@ -50,10 +50,8 @@ let trans_bounds_values (trans : Expr.Typed.t Transformation.t) : bound_values =
   | CholeskyCorr | CholeskyCov | Correlation | Covariance | Ordered | Offset _
    |Multiplier _ | OffsetMultiplier _ | Identity
    |SumToZero
-    (* This is a stub, but,
-       until we define a distribution which accepts a tuple,
-       this doesn't matter.
-    *)
+    (* This is a stub, but, until we define a distribution which accepts a
+       tuple, this doesn't matter. *)
    |TupleTransformation _ ->
       {lower= `None; upper= `None}
 
@@ -412,12 +410,10 @@ let rec update_expr_ad_levels autodiffable_variables (Expr.{pattern; _} as e) =
       { pattern= Indexed (ixed, i_list)
       ; meta= {e.meta with adlevel= ixed.meta.adlevel} }
   | TupleProjection (e, ix) ->
-      (* TODO For the purposes of program analysis, tuples
-         _should_ be treated as n Vars. So for example,
-         autodiffable_variables should possibly include tuple.1 but not tuple.2
-         In the mean time, what's the most conservative?
-         Make the whole thing AD when any part is?
-      *)
+      (* TODO For the purposes of program analysis, tuples _should_ be treated
+         as n Vars. So for example, autodiffable_variables should possibly
+         include tuple.1 but not tuple.2 In the mean time, what's the most
+         conservative? Make the whole thing AD when any part is? *)
       let e' = update_expr_ad_levels autodiffable_variables e in
       { pattern= TupleProjection (e', ix)
       ; meta= {e.meta with adlevel= e'.meta.adlevel} }
@@ -441,7 +437,8 @@ let cleanup_empty_stmts stmts =
   let is_decl = function {pattern= Decl _; _} -> true | _ -> false in
   let flatten_block s =
     match s.pattern with
-    (* NB: Does not include Profile since we don't want to remove those blocks *)
+    (* NB: Does not include Profile since we don't want to remove those
+       blocks *)
     | SList ls | Block ls ->
         if List.for_all ~f:(Fn.non is_decl) ls then ls else [s]
     | _ -> [s] in
@@ -450,19 +447,15 @@ let cleanup_empty_stmts stmts =
   |> List.concat_map ~f:flatten_block
   |> List.concat_map ~f:ellide_skip
 
-(**
- * Convert a Type.Unsized to a Type.Sized.
- * This function is useful in the inlining scheme as
- * the Mem_patterns optimization cannot work with decl types
- * for unsized types. (Steve: tmk the inline optimization is the only place
- * we create Decl's with unsized types.)
- *
- * Note that there is no true mapping from Sized types to Unsized types.
- * Any sizes are set to 0 and it is assumed that the intent
- * of Types.Unsized with inner UFun types is to size the return
- * type of the UFun. Any Decl that uses this type should
- * have initialize set to false.
- *)
+(** Convert a Type.Unsized to a Type.Sized. This function is useful in the
+    inlining scheme as the Mem_patterns optimization cannot work with decl types
+    for unsized types. (Steve: tmk the inline optimization is the only place we
+    create Decl's with unsized types.)
+
+    Note that there is no true mapping from Sized types to Unsized types. Any
+    sizes are set to 0 and it is assumed that the intent of Types.Unsized with
+    inner UFun types is to size the return type of the UFun. Any Decl that uses
+    this type should have initialize set to false. *)
 let unsafe_unsized_to_sized_type (rt : Expr.Typed.t Type.t) =
   match rt with
   | Type.Sized _ as ret_type -> ret_type

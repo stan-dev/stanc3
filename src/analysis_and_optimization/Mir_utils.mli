@@ -97,59 +97,42 @@ val fwd_traverse_statement :
   -> init:'f
   -> f:('f -> 'a -> 'f * 'c)
   -> 'f * ('e, 'c) Stmt.Pattern.t
-(**
-   A traversal that simultaneously accumulates a state (type 'f) and replaces the
-   substatement values from ('a to 'c). Traversal is done in-order but ignores branching,
-   e.g., and if's then block is followed by the else block rather than branching.
-*)
+(** A traversal that simultaneously accumulates a state (type 'f) and replaces
+    the substatement values from ('a to 'c). Traversal is done in-order but
+    ignores branching, e.g., and if's then block is followed by the else block
+    rather than branching. *)
 
 val vexpr_of_expr_exn : Expr.Typed.t -> vexpr
-(**
-   Take a LHS expression from a general expression, throwing an exception if it can't be a
-   LHS expression.
-*)
+(** Take a LHS expression from a general expression, throwing an exception if it
+    can't be a LHS expression. *)
 
 val expr_var_set : Expr.Typed.t -> (vexpr * Expr.Typed.Meta.t) Set.Poly.t
-(**
-   The set of variables in an expression, including inside an index.
-   For use in RHS sets, not LHS assignment sets, except in a target term.
-*)
+(** The set of variables in an expression, including inside an index. For use in
+    RHS sets, not LHS assignment sets, except in a target term. *)
 
 val index_var_set :
   Expr.Typed.t Index.t -> (vexpr * Expr.Typed.Meta.t) Set.Poly.t
-(**
-   The set of variables in an index.
-   For use in RHS sets, not LHS assignment sets, except in a target term
-*)
+(** The set of variables in an index. For use in RHS sets, not LHS assignment
+    sets, except in a target term *)
 
 val expr_var_names_set : Expr.Typed.t -> string Core.Set.Poly.t
-(**
-   Return the names of the variables in an expression.
-*)
+(** Return the names of the variables in an expression. *)
 
 val stmt_rhs : (Expr.Typed.t, 's) Stmt.Pattern.t -> Expr.Typed.t Set.Poly.t
-(**
-   The set of variables that can affect the value or behavior of the expression, i.e. rhs.
-   Using Set.Poly instead of ExprSet so that 'e can be polymorphic, it usually doesn't
-   matter if there's duplication.
-*)
+(** The set of variables that can affect the value or behavior of the
+    expression, i.e. rhs. Using Set.Poly instead of ExprSet so that 'e can be
+    polymorphic, it usually doesn't matter if there's duplication. *)
 
 val union_map : 'a Set.Poly.t -> f:('a -> 'b Set.Poly.t) -> 'b Set.Poly.t
-(**
-   This is a helper function equivalent to List.concat_map but for Sets
-*)
+(** This is a helper function equivalent to List.concat_map but for Sets *)
 
 val stmt_rhs_var_set :
   (Expr.Typed.t, 's) Stmt.Pattern.t -> (vexpr * Expr.Typed.Meta.t) Set.Poly.t
-(**
-   The set of variables in an expression, including inside an index.
-   For use in RHS sets, not LHS assignment sets, except in a target term.
-*)
+(** The set of variables in an expression, including inside an index. For use in
+    RHS sets, not LHS assignment sets, except in a target term. *)
 
 val expr_assigned_var : Expr.Typed.t -> vexpr
-(**
-   The variable being assigned to when the expression is the LHS
-*)
+(** The variable being assigned to when the expression is the LHS *)
 
 val summation_terms : Expr.Typed.t -> Expr.Typed.t list
 (** The list of terms in expression separated by a + *)
@@ -162,33 +145,37 @@ val subst_stmt_base :
      (string, Expr.Typed.t) Map.Poly.t
   -> (Expr.Typed.t, 'a) Stmt.Pattern.t
   -> (Expr.Typed.t, 'a) Stmt.Pattern.t
-(** Substitute variables occurring at the top level in statements according to the provided Map. *)
+(** Substitute variables occurring at the top level in statements according to
+    the provided Map. *)
 
 val subst_stmt :
   (string, Expr.Typed.t) Map.Poly.t -> Stmt.Located.t -> Stmt.Located.t
-(** Substitute variables occurring anywhere in a statement according to the provided Map. *)
+(** Substitute variables occurring anywhere in a statement according to the
+    provided Map. *)
 
 val name_subst_stmt :
   (string, string) Map.Poly.t -> Stmt.Located.t -> Stmt.Located.t
-(** Substitute subexpressions occurring anywhere in a statement according to the provided Map. *)
+(** Substitute subexpressions occurring anywhere in a statement according to the
+    provided Map. *)
 
 val expr_subst_expr :
   Expr.Typed.t Expr.Typed.Map.t -> Expr.Typed.t -> Expr.Typed.t
-(** Substitute subexpressions in an expression according to the provided Map, trying
-    to match on larger subexpressions before smaller ones. *)
+(** Substitute subexpressions in an expression according to the provided Map,
+    trying to match on larger subexpressions before smaller ones. *)
 
 val expr_subst_stmt_base :
      Expr.Typed.t Expr.Typed.Map.t
   -> (Expr.Typed.t, 'a) Stmt.Pattern.t
   -> (Expr.Typed.t, 'a) Stmt.Pattern.t
-(** Substitute subexpressions occurring at the top level in statements according to the provided Map. *)
+(** Substitute subexpressions occurring at the top level in statements according
+    to the provided Map. *)
 
 val expr_depth : Expr.Typed.t -> int
 (** Calculate how deeply nested an expression is. *)
 
 val update_expr_ad_levels : string Set.Poly.t -> Expr.Typed.t -> Expr.Typed.t
-(** Recompute all AD-levels in the metadata of an expression from the bottom up, making the variables
-    in the first argument autodiffable *)
+(** Recompute all AD-levels in the metadata of an expression from the bottom up,
+    making the variables in the first argument autodiffable *)
 
 val cleanup_empty_stmts : ('e, 's) Stmt.t list -> ('e, 's) Stmt.t list
 val unsafe_unsized_to_sized_type : Expr.Typed.t Type.t -> Expr.Typed.t Type.t

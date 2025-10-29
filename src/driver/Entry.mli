@@ -21,7 +21,5 @@ val stan2cpp :
   -> Flags.t
   -> (other_output -> unit)
   -> compilation_result
-(** The main function of the compiler. Takes in the model's name,
-  the model code, compiler settings, and a callback for all non-C++
-  output
-  *)
+(** The main function of the compiler. Takes in the model's name, the model
+    code, compiler settings, and a callback for all non-C++ output *)

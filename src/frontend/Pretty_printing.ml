@@ -1,14 +1,16 @@
-(** Some helpers to produce nice error messages and for auto-formatting Stan programs *)
+(** Some helpers to produce nice error messages and for auto-formatting Stan
+    programs *)
 
 open Core
 open Core.Poly
 open Ast
 open Fmt
 
-(** To avoid cluttering the AST, comments are not associated with any particular AST node but instead come in a separate list.
-   The pretty printer uses the AST nodes' location metadata to insert whitespace and comments.
-   The comment list is stored in a global state that is accessed by set_comments, get_comments, and skip_comments.
- *)
+(** To avoid cluttering the AST, comments are not associated with any particular
+    AST node but instead come in a separate list. The pretty printer uses the
+    AST nodes' location metadata to insert whitespace and comments. The comment
+    list is stored in a global state that is accessed by set_comments,
+    get_comments, and skip_comments. *)
 let comments : comment_type list ref = ref []
 
 let skipped = ref []
@@ -75,26 +77,27 @@ let skip_comments loc =
   skipped :=
     !skipped
     @ List.filter_map (get_comments loc) ~f:(function
-        | `Include, l, loc ->
-            (* This prevents against bad behavior, but also really terrible but technically allowed things fail
-               For example, an if statement where the 'else' is entirely inside the include.
-               This makes the failure noisy rather than ever producing anything invalid for these. *)
-            Common.ICE.internal_compiler_error
-              [%message
-                "Unable to format #include in this position!"
-                  (l : string list)
-                  (loc : Middle.Location_span.t)]
-        | x, s :: l, loc -> Some (x, (" ^^^:" ^ s) :: l, loc)
-        | _, [], _ -> None)
+      | `Include, l, loc ->
+          (* This prevents against bad behavior, but also really terrible but
+             technically allowed things fail For example, an if statement where
+             the 'else' is entirely inside the include. This makes the failure
+             noisy rather than ever producing anything invalid for these. *)
+          Common.ICE.internal_compiler_error
+            [%message
+              "Unable to format #include in this position!"
+                (l : string list)
+                (loc : Middle.Location_span.t)]
+      | x, s :: l, loc -> Some (x, (" ^^^:" ^ s) :: l, loc)
+      | _, [], _ -> None)
 
 let remaining_comments () =
   let x =
     !skipped
     @ List.filter_map !comments ~f:(function
-        | LineComment (a, b) -> Some (`Line, [a], b)
-        | Include (a, b) -> Some (`Include, [a], b)
-        | BlockComment (a, b) -> Some (`Block, a, b)
-        | Separator _ -> None) in
+      | LineComment (a, b) -> Some (`Line, [a], b)
+      | Include (a, b) -> Some (`Include, [a], b)
+      | BlockComment (a, b) -> Some (`Block, a, b)
+      | Separator _ -> None) in
   skipped := [];
   comments := [];
   x
@@ -192,10 +195,8 @@ let pp_returntype ppf = function
 let pp_identifier ppf id = string ppf id.name
 let pp_operator = Middle.Operator.pp
 
-(** For long function names, we
-  let the indent of the arguments be ragged
-  under the name, otherwise we align it under the "("
-  *)
+(** For long function names, we let the indent of the arguments be ragged under
+    the name, otherwise we align it under the "(" *)
 let pp_start_funapp ppf id =
   let long = String.length id.name > 16 in
   pf ppf "%a%a%a"
@@ -411,10 +412,9 @@ let rec pp_indent_unless_block ppf ((s : untyped_statement), loc) =
       pp_spacing (Some loc) (Some begin_loc) ppf (get_comments begin_loc);
       (indented_box pp_statement) ppf s
 
-(** This function helps write chained if-then-else-if-... blocks
- correctly. Without it, each IfThenElse would trigger a new
- vbox in front of the if, adding spaces for each level of IfThenElse.
- *)
+(** This function helps write chained if-then-else-if-... blocks correctly.
+    Without it, each IfThenElse would trigger a new vbox in front of the if,
+    adding spaces for each level of IfThenElse. *)
 and pp_recursive_ifthenelse ppf (s, loc) =
   match s.stmt with
   | IfThenElse (e, s, None) ->
@@ -489,13 +489,13 @@ and pp_statement ppf ({stmt= s_content; smeta= {loc}} as ss : untyped_statement)
         match b with
         | {stmt= Skip; _} -> char ppf ';'
         | _ -> pf ppf " %a" pp_statement b in
-      (* similar to [pp_start_funapp]:
-         - if a name is long, start the box early in the name
-         - if there are a lot of args, or a long name, display them one-per-line *)
+      (* similar to [pp_start_funapp]: - if a name is long, start the box early
+         in the name - if there are a lot of args, or a long name, display them
+         one-per-line *)
       let max_line_length = Format.pp_get_margin ppf () in
       (* these values are picked heuristically so they look decent on the
-         default line-length, where they work out to 26+ characters being a 'long'
-         name, and 8+ args being 'many' arguments *)
+         default line-length, where they work out to 26+ characters being a
+         'long' name, and 8+ args being 'many' arguments *)
       let long = String.length id.name > max_line_length / 3 in
       let many_args = List.length args > max_line_length / 10 in
       if long then

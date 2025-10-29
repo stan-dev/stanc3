@@ -1,8 +1,6 @@
-(** Helper program to remove redundant comments from Menhir's
-    .messages file. For messages that are used by multiple
-    different parser states, all of the comment lines except for
-    the 'concrete syntax' line are elided.
-*)
+(** Helper program to remove redundant comments from Menhir's .messages file.
+    For messages that are used by multiple different parser states, all of the
+    comment lines except for the 'concrete syntax' line are elided. *)
 
 let strip_redundant_parser_states content =
   let pattern =

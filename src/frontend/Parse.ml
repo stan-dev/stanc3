@@ -1,5 +1,5 @@
-(** Some complicated stuff to get the custom syntax errors out of Menhir's Incremental
-    API *)
+(** Some complicated stuff to get the custom syntax errors out of Menhir's
+    Incremental API *)
 
 open Core
 open Common.Let_syntax.Result
@@ -12,8 +12,7 @@ let drive_parser parse_fun =
       () in
   let success prog = {prog with Ast.comments= Preprocessor.get_comments ()} in
   let failure error_state =
-    (* see the Menhir manual for the description of
-       error messages support *)
+    (* see the Menhir manual for the description of error messages support *)
     let env =
       match error_state with
       | Interp.HandlingError env -> env

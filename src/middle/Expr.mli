@@ -16,17 +16,17 @@ module Pattern : sig
   [@@deriving sexp, hash, compare, map, fold]
 end
 
-(** The "two-level" type for statements in the MIR. This corresponds to what the AST calls
-      [Frontend.Ast.expr_with]  *)
+(** The "two-level" type for statements in the MIR. This corresponds to what the
+    AST calls [Frontend.Ast.expr_with] *)
 type 'a t = {pattern: 'a t Pattern.t; meta: 'a} [@@deriving compare, hash, sexp]
 
 val pp : 'a t Fmt.t
 
 val rewrite_bottom_up : f:('a t -> 'a t) -> 'a t -> 'a t
-(** [rewrite_bottom_up] specializes [fold] so that the result type
-      ['r] is equal to the type of our fixed-point data structure i.e. ['r = 'a t].
-      This also means that the function [f] can be written with our fixed-point type
-      ['a t] as its argument. *)
+(** [rewrite_bottom_up] specializes [fold] so that the result type ['r] is equal
+    to the type of our fixed-point data structure i.e. ['r = 'a t]. This also
+    means that the function [f] can be written with our fixed-point type ['a t]
+    as its argument. *)
 
 module Typed : sig
   module Meta : sig

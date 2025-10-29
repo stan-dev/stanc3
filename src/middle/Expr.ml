@@ -41,8 +41,8 @@ module Pattern = struct
           UnsizedType.pp_tuple_autodifftype ad
 end
 
-(** Defined in a separate module so that we can define [Typed.t] in terms
- of the module name, since [ppx_deriving] does not support the [nonrec] keyword *)
+(** Defined in a separate module so that we can define [Typed.t] in terms of the
+    module name, since [ppx_deriving] does not support the [nonrec] keyword *)
 module Fixed = struct
   (** Fixed-point of MIR expressions *)
   type 'a t = {pattern: 'a t Pattern.t; meta: 'a}
@@ -79,8 +79,8 @@ module Typed = struct
   let pp = pp
 
   (** Since the type [t] is now concrete (i.e. not a type _constructor_) we can
-construct a [Comparable.S] giving us [Map] and [Set] specialized to the type.
-*)
+      construct a [Comparable.S] giving us [Map] and [Set] specialized to the
+      type. *)
 
   module Comparator = Comparator.Make (struct
     type nonrec t = t
@@ -203,8 +203,8 @@ module Helpers = struct
   let%test "expr contains fn" =
     internal_funapp FnReadData [] ()
     |> contains_fn_kind (function
-         | CompilerInternal FnReadData -> true
-         | _ -> false)
+      | CompilerInternal FnReadData -> true
+      | _ -> false)
 
   let rec infer_type_of_indexed ut indices =
     match (ut, indices) with
@@ -247,10 +247,10 @@ module Helpers = struct
             [%message "Expected Var or Indexed but found " (e : Typed.t)] in
     {meta; pattern}
 
-  (** [add_tuple_index expression index] returns an expression that (additionally)
-      projects into the input [expression] by the tuple index [index].
-      This will raise an error at runtime if [expression] does not have a tuple type.
-    *)
+  (** [add_tuple_index expression index] returns an expression that
+      (additionally) projects into the input [expression] by the tuple index
+      [index]. This will raise an error at runtime if [expression] does not have
+      a tuple type. *)
   let add_tuple_index e i =
     let mtype =
       match Typed.(type_of e) with
