@@ -41,7 +41,6 @@ let reject_example =
       |}
 
 let%expect_test "Factor graph reject example" =
-  (*let deps = snd (build_predecessor_graph example1_statement_map) in*)
   let deps = prog_factor_graph reject_example in
   print_s [%sexp (deps : factor_graph)];
   [%expect

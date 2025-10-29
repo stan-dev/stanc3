@@ -11,8 +11,8 @@ type 'a fun_def =
   ; fdsuffix: unit Fun_kind.suffix
   ; fdargs: (UnsizedType.autodifftype * string * UnsizedType.t) list
   ; fdbody: 'a option
-        (* If fdbody is None, this is an external function declaration
-           (forward decls are removed during AST lowering) *)
+        (* If fdbody is None, this is an external function declaration (forward
+           decls are removed during AST lowering) *)
   ; fdloc: (Location_span.t[@sexp.opaque] [@compare.ignore]) }
 [@@deriving compare, hash, sexp, map, fold]
 
@@ -30,16 +30,15 @@ type ('a, 'b, 'm) t =
   { functions_block: 'b fun_def list
   ; input_vars: (string * 'm * 'a SizedType.t) list
   ; prepare_data: 'b list (* data & transformed data decls and statements *)
-  ; log_prob: 'b list (*assumes data & params are in scope and ready*)
+  ; log_prob: 'b list (* assumes data & params are in scope and ready *)
   ; reverse_mode_log_prob: 'b list
-        (* assumes data & params ready & in scope.
-           A copy of log_prob but with optimizations which are specific
-           to reverse-mode autodiff. This is used in the C++ backend,
-           but can be ignored if not needed. It is initialized
-            to [[]] in [Ast_to_Mir], set it equal to log_prob
-           before calling into the optimization suite if desired. *)
+        (* assumes data & params ready & in scope. A copy of log_prob but with
+           optimizations which are specific to reverse-mode autodiff. This is
+           used in the C++ backend, but can be ignored if not needed. It is
+           initialized to [[]] in [Ast_to_Mir], set it equal to log_prob before
+           calling into the optimization suite if desired. *)
   ; generate_quantities: 'b list
-        (* assumes data & params ready & in scope*)
+        (* assumes data & params ready & in scope *)
         (* NOTE: the following two items are really backend-specific,
            and are set to [] by Ast_to_mir before being populated in
            Stan_math_backend.Transform_Mir.

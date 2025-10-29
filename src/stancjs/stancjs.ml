@@ -15,8 +15,8 @@ let invoke_driver model_name model flags =
        |Info s
        |Version s
        |Generated s ->
-          (* stanc.js will only ever return one output,
-             so we break out prematurely *)
+          (* stanc.js will only ever return one output, so we break out
+             prematurely *)
           return (Ok s) in
     Driver.Entry.stan2cpp model_name (`Code model) flags output_callback in
   (compilation_result, !warnings)
@@ -29,17 +29,16 @@ let wrap_warnings ~warnings =
 let wrap_error ~warnings e =
   Js.Unsafe.obj
     [| ( "errors"
-       , (* NB: The "0" entry is due to a historical mistake that led
-            the first entry always being a 0 (this element is a 'tag' used by jsoo
-            internally, but was not meant to be exposed to the user).
-            For backward compatibility with existing consumers
-            of stanc.js we have to keep this behavior.
-         *)
+       , (* NB: The "0" entry is due to a historical mistake that led the first
+            entry always being a 0 (this element is a 'tag' used by jsoo
+            internally, but was not meant to be exposed to the user). For
+            backward compatibility with existing consumers of stanc.js we have
+            to keep this behavior. *)
          Js.Unsafe.coerce (Js.array (Array.map ~f:Js.string [| "0"; e |])) )
      ; wrap_warnings ~warnings |]
 
-(** similar to [Fmt.str_like] but directly sets style
-    rendering rather than copying from another ppf *)
+(** similar to [Fmt.str_like] but directly sets style rendering rather than
+    copying from another ppf *)
 let str_color ~color_output =
   let buf = Buffer.create 64 in
   let ppf = Format.formatter_of_buffer buf in
@@ -96,8 +95,8 @@ let checked_to_array ~name value =
          (Js.typeof value |> Js.to_string))
   else Ok (Js.to_array value)
 
-(** Converts from a [{ [s:string]:string }] JS object type
-to an OCaml map, with error messages on bad input. *)
+(** Converts from a [{ [s:string]:string }] JS object type to an OCaml map, with
+    error messages on bad input. *)
 let get_includes includes : string String.Map.t * string list =
   let open Common.Let_syntax.Result in
   let map, warnings =

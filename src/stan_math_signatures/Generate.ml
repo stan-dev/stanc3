@@ -1,22 +1,20 @@
-(** This is an executable program that dumps out a list
-  of all the functions defined in the Stan math library and their type.
+(** This is an executable program that dumps out a list of all the functions
+    defined in the Stan math library and their type.
 
-  This used to just be done at runtime, but it was actually an appreciable percentage
-  of the total time spent by the compiler just to generate all the combinations,
-  so now it is done by the build system and just stored in the binary using
-  the [Marshal] library.
-*)
+    This used to just be done at runtime, but it was actually an appreciable
+    percentage of the total time spent by the compiler just to generate all the
+    combinations, so now it is done by the build system and just stored in the
+    binary using the [Marshal] library. *)
 
 open Core
 open Middle
 
 (** The "dimensionality" (bad name?) is supposed to help us represent the
-    vectorized nature of many Stan functions. It allows us to represent when
-    a function argument can be just a real or matrix, or some common forms of
+    vectorized nature of many Stan functions. It allows us to represent when a
+    function argument can be just a real or matrix, or some common forms of
     vectorization over reals. This captures the most commonly used forms in our
     previous signatures; there are a lot partially because we had a lot of
-    inconsistencies.
-*)
+    inconsistencies. *)
 type dimensionality =
   | DInt
   | DReal
@@ -38,8 +36,8 @@ type dimensionality =
 [@@warning "-37"]
 (* don't warn that some constructors are not yet used *)
 
-(* all base types with up 8 levels of nested containers -
-                       just used for element-wise vectorized unary functions now *)
+(* all base types with up 8 levels of nested containers - just used for
+   element-wise vectorized unary functions now *)
 
 let rec bare_array_type (t, i) =
   match i with 0 -> t | j -> UnsizedType.UArray (bare_array_type (t, j - 1))
@@ -104,8 +102,7 @@ let (stan_math_signatures : (string, UnsizedType.signature list) Hashtbl.t) =
 
 (** The variadic signatures hash table
 
-    These functions cannot be overloaded.
-*)
+    These functions cannot be overloaded. *)
 let (stan_math_variadic_signatures :
       (string, UnsizedType.variadic_signature) Hashtbl.t) =
   String.Table.create ()
@@ -190,10 +187,10 @@ let mk_declarative_sig (fnkinds, name, args, mem_pattern) =
   List.concat_map fnkinds ~f:add_fnkind
   |> List.filter ~f:(fun (n, _, _, _) -> not (Set.mem missing_math_functions n))
   |> List.map ~f:(fun (n, rt, args, support_soa) ->
-         ( n
-         , rt
-         , List.map ~f:(fun x -> (UnsizedType.AutoDiffable, x)) args
-         , support_soa ))
+      ( n
+      , rt
+      , List.map ~f:(fun x -> (UnsizedType.AutoDiffable, x)) args
+      , support_soa ))
 
 let full_lpdf = [Lpdf; Rng; Ccdf; Cdf]
 let full_lpmf = [Lpmf; Rng; Ccdf; Cdf]
@@ -277,9 +274,9 @@ let distributions =
   ; (full_lpdf, "von_mises", [DVReal; DVReal; DVReal], SoA)
   ; (full_lpdf, "weibull", [DVReal; DVReal; DVReal], SoA)
   ; ([Lpdf], "wiener", [DVReal; DVReal; DVReal; DVReal; DVReal], SoA)
-    (* new wiener_lpdfs -- c++ is fully vectorized, but this style of implementation
-       in the typechecker is too expensive to enumerate, so we provide only the
-       full scalar and full vector case *)
+    (* new wiener_lpdfs -- c++ is fully vectorized, but this style of
+       implementation in the typechecker is too expensive to enumerate, so we
+       provide only the full scalar and full vector case *)
   ; ([Lpdf], "wiener", [DReal; DReal; DReal; DReal; DReal; DReal], AoS)
   ; ( [Lpdf]
     , "wiener"
@@ -349,7 +346,8 @@ let math_sigs =
   ; ([basic_vectorized], "sinh", [DDeepVectorized], SoA)
   ; ([basic_vectorized], "sqrt", [DDeepVectorized], SoA)
   ; ([basic_vectorized], "square", [DDeepVectorized], SoA)
-    (* TODO: Eventually will want to move _qf to be part of the distribution list above *)
+    (* TODO: Eventually will want to move _qf to be part of the distribution
+       list above *)
   ; ([basic_vectorized], "std_normal_qf", [DDeepVectorized], SoA)
     (* std_normal_qf is an alias for inv_Phi *)
   ; ([basic_vectorized], "std_normal_log_qf", [DDeepVectorized], SoA)
@@ -442,8 +440,8 @@ let add_binary_vec_reals_to_complex name supports_soa =
     ~vectors:[UArray UReal; UVector; URowVector; UMatrix]
     ~scalars:[UReal] name supports_soa
 
-(* the following mix types in a way that doesn't
-   work with the general method used above *)
+(* the following mix types in a way that doesn't work with the general method
+   used above *)
 let add_binary_vec_int_real name supports_soa =
   List.iter
     ~f:(fun i ->
@@ -550,9 +548,8 @@ let add_binary_vec_int_int name supports_soa =
         , supports_soa ))
     (List.range 1 8)
 
-(* things like lower_bound require the second argument be a scalar or the same
-    - this is basically the general case above with the last nested loop removed
-*)
+(* things like lower_bound require the second argument be a scalar or the same -
+   this is basically the general case above with the last nested loop removed *)
 let add_first_arg_vector_binary name supports_soa =
   let vectors = [UnsizedType.UArray UReal; UVector; URowVector; UMatrix] in
   add_unqualified (name, ReturnType UReal, [UReal; UReal], supports_soa);
@@ -580,7 +577,7 @@ let add_first_arg_vector_ternary name supports_soa =
         vectors)
     (List.range 0 8)
 
-(** For functions that accept and return (arrays of...) vectors*)
+(** For functions that accept and return (arrays of...) vectors *)
 let add_nested_unary base name supports_soa =
   List.iter
     ~f:(fun i ->
@@ -591,7 +588,7 @@ let add_nested_unary base name supports_soa =
 let add_ternary name supports_soa =
   add_unqualified (name, ReturnType UReal, [UReal; UReal; UReal], supports_soa)
 
-(*Adds functions that operate on matrix, double array and real types*)
+(** Adds functions that operate on matrix, double array and real types *)
 let add_ternary_vec name supports_soa =
   add_unqualified (name, ReturnType UReal, [UReal; UReal; UReal], supports_soa);
   add_unqualified
@@ -2670,24 +2667,24 @@ let () =
     ~required_fn_args:[UnsizedType.(AutoDiffable, UVector)]
     ()
 
-(** Print a module definition to [file]
-  that contains the signatures computed above *)
+(** Print a module definition to [file] that contains the signatures computed
+    above *)
 let generate_module () =
   let marshal e = Marshal.to_string e [] in
-  (* Core's Hashtbl cannot be safely Marshal'd, so we
-     round trip through an associative list *)
+  (* Core's Hashtbl cannot be safely Marshal'd, so we round trip through an
+     associative list *)
   let marshal_hashtbl (type value) (t : value String.Table.t) =
     marshal (Hashtbl.to_alist t) in
   let distributions_simplified =
     distributions
     |> List.map ~f:(fun (kind, name, _, _) ->
-           (name, List.map ~f:(Fn.compose String.lowercase show_fkind) kind))
-       (* combine any common keys *)
+        (name, List.map ~f:(Fn.compose String.lowercase show_fkind) kind))
+      (* combine any common keys *)
     |> String.Map.of_alist_reduce ~f:(fun v1 v2 ->
-           v1 @ v2 |> Set.Poly.of_list |> Set.to_list)
+        v1 @ v2 |> Set.Poly.of_list |> Set.to_list)
     |> Map.to_alist in
-  (* TODO: in OCaml 5.4+, use GC.ramp_up to avoid performance regressions.
-     See https://github.com/ocaml/ocaml/issues/13300 *)
+  (* TODO: in OCaml 5.4+, use GC.ramp_up to avoid performance regressions. See
+     https://github.com/ocaml/ocaml/issues/13300 *)
   Printf.printf
     {|
 let unmarshal s = Marshal.from_string s 0

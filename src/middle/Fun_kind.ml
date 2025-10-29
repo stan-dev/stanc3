@@ -1,6 +1,5 @@
-(** Types for function kinds, e.g. [StanLib] or [UserDefined], and
-  function suffix types, e.g. [foo_ldfp], [bar_lp]
-*)
+(** Types for function kinds, e.g. [StanLib] or [UserDefined], and function
+    suffix types, e.g. [foo_ldfp], [bar_lp] *)
 
 open Core
 
@@ -21,9 +20,8 @@ type 'e t =
   | UserDefined of string * bool suffix
 [@@deriving compare, sexp, hash, map, fold]
 
-(** If true, we assume _jacobian functions are
-  "plain" functions for the purposes of typechecking and warnings
-*)
+(** If true, we assume _jacobian functions are "plain" functions for the
+    purposes of typechecking and warnings *)
 let jacobian_compat_mode = ref false
 
 let suffix_from_name fname =

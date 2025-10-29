@@ -13,9 +13,8 @@ let union_maps_left (m1 : ('a, 'b) Map.Poly.t) (m2 : ('a, 'b) Map.Poly.t) :
     | `Both (v1, _) -> Some v1 in
   Map.Poly.merge m1 m2 ~f
 
-(**
-   Merge two maps whose values are sets, and union the sets when there's a collision.
-*)
+(** Merge two maps whose values are sets, and union the sets when there's a
+    collision. *)
 let merge_set_maps m1 m2 =
   let merge_map_elems ~key:_ es =
     match es with
@@ -24,10 +23,8 @@ let merge_set_maps m1 m2 =
     | `Both (e1, e2) -> Some (Set.union e1 e2) in
   Map.Poly.merge ~f:merge_map_elems m1 m2
 
-(**
-   Like a forward traversal, but branches accumulate two different states that are
-   recombined with join.
-*)
+(** Like a forward traversal, but branches accumulate two different states that
+    are recombined with join. *)
 let branching_traverse_statement stmt ~join ~init ~f =
   Stmt.Pattern.(
     match stmt with
@@ -40,15 +37,12 @@ let branching_traverse_statement stmt ~join ~init ~f =
             (join s' s'', IfElse (pred, c, Some c')))
     | _ as s -> fwd_traverse_statement s ~init ~f)
 
-(** Like a branching traversal, but doesn't return an updated statement.
-*)
+(** Like a branching traversal, but doesn't return an updated statement. *)
 let branching_fold_statement stmt ~join ~init ~f =
   fst
     (branching_traverse_statement stmt ~join ~init ~f:(fun s a -> (f s a, ())))
 
-(**
-   See interface file
-*)
+(** See interface file *)
 let build_statement_map extract metadata stmt =
   let rec build_statement_map_rec next_label map stmt =
     let this_label = next_label in
@@ -66,38 +60,37 @@ let build_statement_map extract metadata stmt =
 (* TODO: this currently does not seem to be labelling inside function bodies.
    Could we also do that? *)
 
-(**
-   See interface file
-*)
+(** See interface file *)
 let rec build_recursive_statement rebuild statement_map label =
   let stmt_ints, meta = Map.Poly.find_exn statement_map label in
   let build_stmt = build_recursive_statement rebuild statement_map in
   let stmt = Stmt.Pattern.map Fn.id build_stmt stmt_ints in
   rebuild stmt meta
 
-(** Represents the state required to build control flow information during an MIR
-    traversal, where
-     * breaks is the set of Breaks seen since the beginning of their loop
-     * continues is the set of Continues seen since the beginning of their loop
-     * returns is the set of Returns seen since the beginning of their function definition
-     * exits is the set of nodes that could have been the last one to execute before this
-       node
-*)
+(** Represents the state required to build control flow information during an
+    MIR traversal, where
+    - breaks is the set of Breaks seen since the beginning of their loop
+    - continues is the set of Continues seen since the beginning of their loop
+    - returns is the set of Returns seen since the beginning of their function
+      definition
+    - exits is the set of nodes that could have been the last one to execute
+      before this node *)
 type cf_state =
   { breaks: label Set.Poly.t
   ; continues: label Set.Poly.t
   ; returns: label Set.Poly.t
   ; exits: label Set.Poly.t }
 
-(** Represents the control flow information at each node in the control graph, where
-     * predecessors points to the nodes which could have executed before this node
-     * parents points to the adjacent nodes which directly influence the execution of this
-       node
-*)
+(** Represents the control flow information at each node in the control graph,
+    where
+    - predecessors points to the nodes which could have executed before this
+      node
+    - parents points to the adjacent nodes which directly influence the
+      execution of this node *)
 type cf_edges = {predecessors: label Set.Poly.t; parents: label Set.Poly.t}
 
-(** Join the state of a controlflow traversal across different branches of execution such
-    as over if/else branch. *)
+(** Join the state of a controlflow traversal across different branches of
+    execution such as over if/else branch. *)
 let join_cf_states (state1 : cf_state) (state2 : cf_state) : cf_state =
   { breaks= Set.union state1.breaks state2.breaks
   ; continues= Set.union state1.continues state2.continues
@@ -112,11 +105,10 @@ let is_ctrl_flow pattern =
   | For _ -> true
   | _ -> false
 
-(**
-   Simultaneously builds the controlflow parent graph, the predecessor graph and the exit
-   set of a statement. It's advantageous to build them together because they both rely on
-   some of the same Break, Continue and Return bookkeeping.
-*)
+(** Simultaneously builds the controlflow parent graph, the predecessor graph
+    and the exit set of a statement. It's advantageous to build them together
+    because they both rely on some of the same Break, Continue and Return
+    bookkeeping. *)
 let build_cf_graphs ?(flatten_loops = false) ?(blocks_after_body = true)
     statement_map =
   let rec build_cf_graph_rec (cf_parent : label option)
@@ -138,28 +130,31 @@ let build_cf_graphs ?(flatten_loops = false) ?(blocks_after_body = true)
       branching_fold_statement stmt ~join
         ~init:({in_state with exits= substmt_preds}, in_map)
         ~f:(build_cf_graph_rec child_cf) in
-    (* If the statement is a loop, we need to include the loop body exits as predecessors
-         of the loop *)
+    (* If the statement is a loop, we need to include the loop body exits as
+       predecessors of the loop *)
     let substmt_state, predecessors =
       match stmt with
       | For _ | While _ ->
           (* Loop statements are preceded by:
+
              1. The statements that come before the loop
+
              2. The natural exit points of the loop body
-             3. Continue statements in the loop body
-             This comment mangling brought to you by the autoformatter
-          *)
+
+             3. Continue statements in the loop body This comment mangling
+             brought to you by the autoformatter *)
           let loop_predecessors =
             Set.Poly.union_list
               [ (*1*) in_state.exits; (*2*) substmt_state_unlooped.exits; (*3*)
                 Set.diff substmt_state_unlooped.continues in_state.continues ]
           in
           (* Loop exits are:
-             1. The loop node itself, since the last action of a typical loop execution is
-                to check if there are any iterations remaining
-             2. Break statements in the loop body, since broken loops don't execute the
-                loop statement
-          *)
+
+             1. The loop node itself, since the last action of a typical loop
+             execution is to check if there are any iterations remaining
+
+             2. Break statements in the loop body, since broken loops don't
+             execute the loop statement *)
           let loop_exits =
             if flatten_loops then substmt_state_unlooped.exits
             else
@@ -168,16 +163,16 @@ let build_cf_graphs ?(flatten_loops = false) ?(blocks_after_body = true)
                   Set.diff substmt_state_unlooped.breaks in_state.breaks ] in
           ({substmt_state_unlooped with exits= loop_exits}, loop_predecessors)
       | (Block _ | Profile _) when blocks_after_body ->
-          (* Block statements are preceded by the natural exit points of the block
-             body *)
+          (* Block statements are preceded by the natural exit points of the
+             block body *)
           let block_predecessors = substmt_state_unlooped.exits in
           (* Block exits are just the block node *)
           let block_exits = Set.Poly.singleton label in
           ({substmt_state_unlooped with exits= block_exits}, block_predecessors)
       | _ -> (substmt_state_unlooped, in_state.exits) in
-    (* Some statements interact with the break/return/continue states
-       E.g., loops nullify breaks and continues in their body, but are still affected by
-       breaks and input continues*)
+    (* Some statements interact with the break/return/continue states E.g.,
+       loops nullify breaks and continues in their body, but are still affected
+       by breaks and input continues *)
     let breaks_out, returns_out, continues_out, extra_cf_deps =
       match stmt with
       | Break ->

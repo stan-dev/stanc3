@@ -1,4 +1,5 @@
-(** Type environments used during typechecking. Maps from strings to function or variable information *)
+(** Type environments used during typechecking. Maps from strings to function or
+    variable information *)
 
 open Middle
 
@@ -27,8 +28,7 @@ type info =
 type t
 
 val stan_math_environment : t
-(** A type environment which contains the Stan math library functions
-*)
+(** A type environment which contains the Stan math library functions *)
 
 val find : t -> string -> info list
 
@@ -41,7 +41,8 @@ val add :
      | `UserDefined
      | `Variable of varinfo ]
   -> t
-(** Add a new item to the type environment. Does not overwrite existing, but shadows *)
+(** Add a new item to the type environment. Does not overwrite existing, but
+    shadows *)
 
 val set_raw : t -> string -> info list -> t
 (** Overwrite the existing items bound to a name *)
@@ -50,4 +51,5 @@ val mem : t -> string -> bool
 val iteri : t -> (string -> info list -> unit) -> unit
 
 val nearest_ident : t -> string -> string option
-(** The nearest identifier by edit distance, capped at edit distance 3 (if one exists) *)
+(** The nearest identifier by edit distance, capped at edit distance 3 (if one
+    exists) *)

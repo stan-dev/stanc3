@@ -88,10 +88,9 @@ let stanc ?tty_colors ?(debug_lex : bool = false) ?(debug_parse : bool = false)
       | `Code code -> Errors.pp Fmt.stderr ?printed_filename ~code e);
       exit_err
 
-(** Deal with multiple modalities.
-    [Cmdliner.Cmd.groups] would probably be preferable, but
-    doesn't allow for subcommands that look like options
-    (i.e., start with [--]) *)
+(** Deal with multiple modalities. [Cmdliner.Cmd.groups] would probably be
+    preferable, but doesn't allow for subcommands that look like options (i.e.,
+    start with [--]) *)
 let dispatch_commands args =
   let go () =
     match args with

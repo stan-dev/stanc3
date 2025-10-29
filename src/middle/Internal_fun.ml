@@ -45,13 +45,13 @@ let pp (pp_expr : 'a Fmt.t) ppf internal =
        ~expr_to_string:(fun expr -> sexp_of_string (Fmt.str "%a" pp_expr expr))
        internal)
 
-(* Does this function call change state? Can we call it twice with the same results?
+(* Does this function call change state? Can we call it twice with the same
+   results?
 
-   E.g., FnReadDeserializer moves the deserializer forward, so calling it again has
-    different results
+   E.g., FnReadDeserializer moves the deserializer forward, so calling it again
+   has different results
 
-    Useful for optimizations
-*)
+   Useful for optimizations *)
 let can_side_effect = function
   | FnReadParam _ | FnReadData | FnReadDeserializer | FnWriteParam _
    |FnValidateSize | FnValidateSizePositive | FnValidateSizeUnitVector

@@ -12,7 +12,8 @@ let lower_arg ~is_possibly_eigen_expr type_ (_, name, ut) =
     else name in
   (Types.const_ref type_, opt_arg_suffix)
 
-(** Generate the require_* templates to constrain an argument to a specific type *)
+(** Generate the require_* templates to constrain an argument to a specific type
+*)
 let rec requires ut t =
   let require trait ty = RequireAllCondition (trait, [ty]) in
   let require_any traits ty =
@@ -52,14 +53,14 @@ let rec requires ut t =
         [%message
           "Cannot formulate require templates for type " (ut : UnsizedType.t)]
 
-(** Identify the templates which need to be considered in
-      the return type of the function (i.e., the scalar types) *)
+(** Identify the templates which need to be considered in the return type of the
+    function (i.e., the scalar types) *)
 let return_optional_arg_types (args : Program.fun_arg_decl) =
   let rec template_p t (ad, typ) =
     match (ad, typ) with
     | _, t when UnsizedType.is_int_type t ->
-        (* integers are templated,
-           but can never make the return type into a var *)
+        (* integers are templated, but can never make the return type into a
+           var *)
         []
     | _, ut when UnsizedType.contains_tuple ut -> (
         let internal, dims = UnsizedType.unwind_array_type ut in
@@ -89,9 +90,9 @@ let return_optional_arg_types (args : Program.fun_arg_decl) =
       template_p (TemplateType (sprintf "T%d__" i)) (ad, ty))
 
 (** Print template arguments for C++ functions that need templates
-  @param args A pack of [Program.fun_arg_decl] containing functions to detect templates.
-  @return A list of arguments with template parameter names added.
- *)
+    @param args
+      A pack of [Program.fun_arg_decl] containing functions to detect templates.
+    @return A list of arguments with template parameter names added. *)
 let template_parameters (args : Program.fun_arg_decl) =
   let template_p template (ad, typ) =
     match (ad, UnsizedType.unwind_array_type typ) with
@@ -99,7 +100,9 @@ let template_parameters (args : Program.fun_arg_decl) =
       when not (UnsizedType.contains_tuple typ || UnsizedType.is_eigen_type typ)
       ->
         (* we can just directly print the type of DataOnly types **except** for:
+
            - Eigen matrices (these are stored as Maps in the data block)
+
            - Tuples (can be constructed of various refs) *)
         ([], [], lower_type typ (stantype_prim typ))
     | _ ->
@@ -200,8 +203,8 @@ let lower_promoted_scalar args =
       promote_args_chunked
         List.(chunks_of ~length:5 (concat (return_optional_arg_types args)))
 
-(** Pretty-prints a function's return-type, taking into account templated argument
-promotion.*)
+(** Pretty-prints a function's return-type, taking into account templated
+    argument promotion.*)
 let lower_returntype arg_types rt =
   let scalar = lower_promoted_scalar arg_types in
   match rt with
@@ -225,9 +228,9 @@ let lower_eigen_args_to_ref arg_types =
 let typename parameter_name = Typename parameter_name
 
 (** Construct an object with it's needed templates for function signatures.
-@param is_possibly_eigen_expr if true, argument can possibly be an unevaluated eigen expression.
-@param fdargs A sexp list of strings representing C++ types.
-*)
+    @param is_possibly_eigen_expr
+      if true, argument can possibly be an unevaluated eigen expression.
+    @param fdargs A sexp list of strings representing C++ types. *)
 let templates_and_args (is_possibly_eigen_expr : bool)
     (fdargs : Program.fun_arg_decl) :
     string list * template_parameter list * (type_ * string) list =
@@ -237,9 +240,8 @@ let templates_and_args (is_possibly_eigen_expr : bool)
   , List.concat require_arg_templates
   , List.map2_exn ~f:(lower_arg ~is_possibly_eigen_expr) arg_types fdargs )
 
-(**
-Prints boilerplate at start of function. Body of function wrapped in a `try` block.
-*)
+(** Prints boilerplate at start of function. Body of function wrapped in a `try`
+    block. *)
 let lower_fun_body fdargs fdsuffix fdbody =
   let local_scalar =
     Using ("local_scalar_t__", Some (lower_promoted_scalar fdargs)) in
@@ -387,11 +389,11 @@ let collect_functors_functions (p : Program.Numbered.t) : defn list =
   let fun_decls, fun_defns =
     p.functions_block
     |> List.filter_map ~f:(fun d ->
-           let fn = register_functors d in
-           if Option.is_none d.fdbody then None
-           else
-             let decl, defn = Cpp.split_fun_decl_defn fn in
-             Some (FunDef decl, [signature_comment d; FunDef defn]))
+        let fn = register_functors d in
+        if Option.is_none d.fdbody then None
+        else
+          let decl, defn = Cpp.split_fun_decl_defn fn in
+          Some (FunDef decl, [signature_comment d; FunDef defn]))
     |> List.unzip in
   let structs = Hashtbl.data structs |> List.map ~f:(fun s -> Struct s) in
   fun_decls @ structs @ List.concat fun_defns

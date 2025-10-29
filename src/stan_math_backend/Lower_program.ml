@@ -15,9 +15,8 @@ let get_unconstrained_param_st lst =
   | _ -> None
 
 (** Create a variable for the name of model function.
-  @param prog_name Name of the Stan program.
-  @param fname Name of the function.
- *)
+    @param prog_name Name of the Stan program.
+    @param fname Name of the function. *)
 let gen_function__ prog_name fname =
   [ VariableDefn
       (make_variable_defn ~static:true ~constexpr:true
@@ -30,10 +29,9 @@ let gen_function__ prog_name fname =
 
 (** Generate the private members of the model class
 
-  This accounts for types that can be moved to OpenCL.
-  @param vident name of the private member.
-  @param ut The unsized type to print.
- *)
+    This accounts for types that can be moved to OpenCL.
+    @param vident name of the private member.
+    @param ut The unsized type to print. *)
 let lower_data_decl (vident, ut) : defn =
   let data_vident =
     if UnsizedType.is_eigen_type ut && not (Transform_Mir.is_opencl_var vident)
@@ -43,7 +41,7 @@ let lower_data_decl (vident, ut) : defn =
     (lower_unsized_decl data_vident ut
        (UnsizedType.fill_adtype_for_type DataOnly ut))
 
-(** Create maps of Eigen types*)
+(** Create maps of Eigen types *)
 let lower_map_decl (vident, ut) : defn =
   let eigen_map_def t ndims =
     GlobalVariableDefn
@@ -77,7 +75,7 @@ let rec top_level_decls Stmt.{pattern; _} =
 (** Generate the private data members of the model class *)
 let lower_model_private {Program.prepare_data; _} =
   let data_decls = List.concat_map ~f:top_level_decls prepare_data in
-  (*Filter out Any data that is not an Eigen matrix*)
+  (* Filter out Any data that is not an Eigen matrix *)
   let get_eigen_map (name, ut) =
     UnsizedType.is_eigen_type ut && not (Transform_Mir.is_opencl_var name) in
   let eigen_map_decls = (List.filter ~f:get_eigen_map) data_decls in
@@ -87,7 +85,8 @@ let lower_model_private {Program.prepare_data; _} =
 let rec validate_dims ~stage name st =
   if String.is_suffix ~suffix:"__" name then []
   else if SizedType.contains_tuple st then
-    (* We know tuples are given as flattened names containing "." in var_contexts *)
+    (* We know tuples are given as flattened names containing "." in
+       var_contexts *)
     let names =
       UnsizedType.enumerate_tuple_names_io name (SizedType.to_unsized st) in
     let subtypes = SizedType.flatten_tuple_io st in
@@ -199,12 +198,10 @@ let gen_log_prob Program.{prog_name; log_prob; reverse_mode_log_prob; _} =
     [ (Ref (TemplateType "VecR"), "params_r__")
     ; (Ref (TemplateType "VecI"), "params_i__")
     ; (Pointer Types.ostream, "pstream__ = nullptr") ] in
-  (*
-     NOTE: There is a bug in clang-6.0 where removing this T__ causes the
-      reverse mode autodiff path to fail with an initializer list error
-      for validate_array_expr_primitives on line 930. Need to investigate
-      more into why this is happening
-      *)
+  (* NOTE: There is a bug in clang-6.0 where removing this T__ causes the
+     reverse mode autodiff path to fail with an initializer list error for
+     validate_array_expr_primitives on line 930. Need to investigate more into
+     why this is happening *)
   let intro =
     let t__ = TypeLiteral "T__" in
     [ Using
@@ -387,12 +384,11 @@ let gen_get_param_names {Program.output_vars; _} =
        ~body ~cv_qualifiers:[Const] ())
 
 let gen_get_dims {Program.output_vars; _} =
-  (* NOTE: for tuples this is a mirror of how we give dims in var context.
-      This won't generalize to ragged arrays, I don't think.
+  (* NOTE: for tuples this is a mirror of how we give dims in var context. This
+     won't generalize to ragged arrays, I don't think.
 
-      We should probably deprecate get_dims and replace it with a
-      new function later on which returns a more structured type
-  *)
+     We should probably deprecate get_dims and replace it with a new function
+     later on which returns a more structured type *)
   let cast x = Exprs.static_cast Types.size_t (lower_expr x) in
   let pack inner_dims =
     List.map
@@ -487,7 +483,8 @@ let rec gen_param_names ?(outer_idcs = []) (decl_id, st) =
         List.concat_map
           ~f:(fun (idx, sub) -> gen_param_names ~outer_idcs:(idcs @ [idx]) sub)
           idxes_subtypes
-    (* same name, different idcs going forward. would also cover the above case but generate worse code? *)
+    (* same name, different idcs going forward. would also cover the above case
+       but generate worse code? *)
     | SizedType.SArray _ when SizedType.contains_tuple st ->
         gen_param_names ~outer_idcs:idcs
           (name, fst (SizedType.get_array_dims st))
@@ -549,11 +546,9 @@ let gen_unconstrained_param_names {Program.output_vars; _} =
              `Trd (id, st))
        output_vars)
 
-(** Create constrained and unconstrained sizedtype methods
- in the model class
- @param name The name of the method to wrap the body in.
- @param outvars The parameters to gather the sizes for.
- *)
+(** Create constrained and unconstrained sizedtype methods in the model class
+    @param name The name of the method to wrap the body in.
+    @param outvars The parameters to gather the sizes for. *)
 let gen_outvar_metadata name outvars =
   let open Cpp.DSL in
   let json_str = Cpp_Json.out_var_interpolated_json_str outvars in
@@ -588,7 +583,8 @@ let gen_overloads {Program.output_vars; _} =
       [ (t, "emit_transformed_parameters = true")
       ; (t, "emit_generated_quantities = true") ] in
     let sizes =
-      (* An expression for the number of individual parameters in a list of output variables *)
+      (* An expression for the number of individual parameters in a list of
+         output variables *)
       let num_outvars (outvars : Expr.Typed.t Program.outvar list) =
         List.map
           ~f:(fun outvar -> SizedType.io_size outvar.Program.out_constrained_st)
@@ -849,15 +845,17 @@ let new_model_boilerplate prog_name =
   ; Preprocessor
       (IfNDef ("USING_R", [!//"Boilerplate"; new_model; profile_data])) ]
 
-(* Top-level directives. The fwd and mix headers are only included if they are necessary,
-   which at the moment is only if the embedded laplace functions are used. *)
+(* Top-level directives. The fwd and mix headers are only included if they are
+   necessary, which at the moment is only if the embedded laplace functions are
+   used. *)
 let version = !//"Code generated by %%NAME%% %%VERSION%%"
 let model_header_include = Preprocessor (Include "stan/model/model_header.hpp")
 let math_mix_include = Preprocessor (Include "stan/math/mix.hpp")
 
 let lower_program ?(standalone_functions = false) ?printed_filename
     (p : Program.Typed.t) : Cpp.program =
-  (* First, do some transformations on the MIR itself before we begin printing it.*)
+  (* First, do some transformations on the MIR itself before we begin printing
+     it.*)
   let p, s, map_rect_calls, needs_mix_header = Numbering.prepare_prog p in
   let model_namespace_str = namespace p in
   let model_contents =
@@ -869,8 +867,8 @@ let lower_program ?(standalone_functions = false) ?printed_filename
   let includes =
     if needs_mix_header then
       [ !//"Including the mix header for embedded laplace usage"
-        (* TODO should this be a #define and subsumed into the model header? A second model header? *)
-      ; math_mix_include; model_header_include ]
+        (* TODO should this be a #define and subsumed into the model header? A
+           second model header? *); math_mix_include; model_header_include ]
     else [model_header_include] in
   let global_fns =
     if standalone_functions then

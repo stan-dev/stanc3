@@ -42,11 +42,7 @@ let out_var_json (name, st, block) : Yojson.Basic.t =
 
 let%expect_test "outvar to json pretty" =
   let var x = {Expr.pattern= Var x; meta= Expr.Typed.Meta.empty} in
-  (* the following is equivalent to:
-     parameters {
-       vector[N] var_one[K];
-     }
-  *)
+  (* the following is equivalent to: parameters { vector[N] var_one[K]; } *)
   ("var_one", SArray (SVector (Mem_pattern.AoS, var "N"), var "K"), Parameters)
   |> out_var_json |> Yojson.Basic.pretty_to_string |> print_endline;
   [%expect
@@ -61,8 +57,8 @@ let%expect_test "outvar to json pretty" =
     "block": "parameters"
   } |}]
 
-(*Adds a backslash to all the inner quotes and then
-  unslash the ones near a plus*)
+(* Adds a backslash to all the inner quotes and then unslash the ones near a
+   plus *)
 let replace_cpp_expr s =
   s
   |> String.substr_replace_all ~pattern:{|"|} ~with_:{|\"|}

@@ -18,9 +18,7 @@ type node_dep_info =
   ; reaching_defn_exit: reaching_defn Set.Poly.t
   ; meta: Location_span.t }
 
-(**
-   Find all of the reaching definitions of a variable in an RD set
-*)
+(** Find all of the reaching definitions of a variable in an RD set *)
 let reaching_defn_lookup (rds : reaching_defn Set.Poly.t) (var : vexpr) :
     label Set.Poly.t =
   Set.Poly.map (Set.filter rds ~f:(fun (var', _) -> var' = var)) ~f:snd
@@ -38,10 +36,8 @@ let node_immediate_dependencies
       ~f:(reaching_defn_lookup info.reaching_defn_entry) in
   Set.union info.parents rhs_deps
 
-(*
-   This is doing an explicit graph traversal with edges defined by
-   node_immediate_dependencies.
-*)
+(* This is doing an explicit graph traversal with edges defined by
+   node_immediate_dependencies. *)
 let rec node_dependencies_rec
     (statement_map :
       (label, (Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) Map.Poly.t)
@@ -73,12 +69,11 @@ let node_vars_dependencies
     ~init:Set.Poly.empty
     ~f:(node_dependencies_rec statement_map ~blockers)
 
-(*
-   The strategy here is to write an update function on the whole dependency graph in terms
-   of node_immediate_dependencies, and then to find a fixed-point. Since it's updating the
-   dependencies for the whole graph at a time, it should be more efficient than doing a
-   graph traversal for each node.
-*)
+(* The strategy here is to write an update function on the whole dependency
+   graph in terms of node_immediate_dependencies, and then to find a
+   fixed-point. Since it's updating the dependencies for the whole graph at a
+   time, it should be more efficient than doing a graph traversal for each
+   node. *)
 let all_node_dependencies
     (statement_map :
       (label, (Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) Map.Poly.t)

@@ -1,4 +1,4 @@
-(** Types which have dimensionalities but not sizes, e.g. [array\[,,\]] *)
+(** Types which have dimensionalities but not sizes, e.g. [array[,,]] *)
 
 open Core
 open Core.Poly
@@ -165,8 +165,8 @@ let rec common_type = function
       common_type (t1, t2) |> Option.map ~f:(fun t -> UArray t)
   | UTuple ts1, UTuple ts2 ->
       (match List.zip ts1 ts2 with
-      | Ok ts -> List.map ts ~f:common_type |> Option.all
-      | Unequal_lengths -> None)
+        | Ok ts -> List.map ts ~f:common_type |> Option.all
+        | Unequal_lengths -> None)
       |> Option.map ~f:(fun ts -> UTuple ts)
   | t1, t2 when t1 = t2 -> Some t1
   | _, _ -> None
@@ -210,7 +210,8 @@ let rec is_discrete_type ut =
   | UTuple ts -> List.for_all ~f:is_discrete_type ts
   | _ -> false
 
-(** Used in code generation and other places, does _not_ include tuples of ints *)
+(** Used in code generation and other places, does _not_ include tuples of ints
+*)
 let rec is_int_type ut =
   match ut with UInt -> true | UArray ut -> is_int_type ut | _ -> false
 
@@ -295,11 +296,8 @@ let rec fill_adtype_for_type ad ut =
             (ad : autodifftype)]
   | _, _ -> ad
 
-(** List all possible tuple sub-names for IO purposes.
-    E.g, the decl
-    [array[2] (int, real) foo;]
-    should yield the list [["foo.1";"foo.2"]].
-  *)
+(** List all possible tuple sub-names for IO purposes. E.g, the decl
+    [array[2] (int, real) foo;] should yield the list [["foo.1";"foo.2"]]. *)
 let enumerate_tuple_names_io name (ut : t) =
   let rec loop base ut =
     match ut with

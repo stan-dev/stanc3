@@ -3,11 +3,10 @@ open Core.Poly
 open Middle
 open Mir_utils
 
-(*********************
-   Types and utilities
- ********************)
+(** Types and utilities *)
 
-(** Useful information about an expression. [Opaque] means we don't know anything. *)
+(** Useful information about an expression. [Opaque] means we don't know
+    anything. *)
 type compiletime_val =
   | Opaque
   | Number of (float * string)
@@ -15,8 +14,7 @@ type compiletime_val =
   | Data of string
 
 (** Info about a distribution occurrences that's useful for checking that
-   distribution properties are met
-*)
+    distribution properties are met *)
 type dist_info =
   { name: string
   ; loc: Location_span.t
@@ -66,8 +64,8 @@ let covariance = {name= "covariance"; constr= Covariance}
 let cholesky_covariance =
   {name= "Cholesky factor of covariance"; constr= CholeskyCov}
 
-(** Check for inconsistency between a distribution argument's value range and the
-   declared bounds of a variable *)
+(** Check for inconsistency between a distribution argument's value range and
+    the declared bounds of a variable *)
 let bounds_out_of_range (range : range) (bounds : bound_values) : bool =
   match (bounds.lower, bounds.upper, range.lower, range.upper) with
   | `None, _, Some _, _ -> true
@@ -77,7 +75,7 @@ let bounds_out_of_range (range : range) (bounds : bound_values) : bool =
   | _ -> false
 
 (** Check for inconsistency between a distribution argument's constraint and the
-   constraint transformation of a variable *)
+    constraint transformation of a variable *)
 let transform_mismatch_constraint (constr : var_constraint)
     (trans : Expr.Typed.t Transformation.t) : bool =
   match constr with
@@ -91,8 +89,8 @@ let transform_mismatch_constraint (constr : var_constraint)
   | Correlation -> trans <> Correlation
   | Covariance -> trans <> Covariance && trans <> Correlation
 
-(** Check for inconsistency between a distribution argument's range and
-   a literal value *)
+(** Check for inconsistency between a distribution argument's range and a
+    literal value *)
 let value_out_of_range (range : range) (v : float) =
   let lower_bad =
     match range.lower with
@@ -106,8 +104,8 @@ let value_out_of_range (range : range) (v : float) =
     | None -> false in
   lower_bad || upper_bad
 
-(** Check for inconsistency between a distribution argument's constraint and
-   a literal value *)
+(** Check for inconsistency between a distribution argument's constraint and a
+    literal value *)
 let value_mismatch_constraint (constr : var_constraint) (v : float) =
   match constr with
   | Range range -> value_out_of_range range v
@@ -115,9 +113,7 @@ let value_mismatch_constraint (constr : var_constraint) (v : float) =
      Range, unless we want to inspect e.g. matrix literals. *)
   | _ -> false
 
-(*********************
-   Argument constraint mismatch warnings
- ********************)
+(** Argument constraint mismatch warnings *)
 
 type arg_info = Arg of (int * string) | Variate
 
@@ -178,9 +174,7 @@ let constr_mismatch_warning (constr : var_constraint_named) (arg : arg_info)
       else None
   | _ -> None
 
-(*********************
-   Distribution-specific warnings
- ********************)
+(** Distribution-specific warnings *)
 
 let uniform_dist_message (pname : string) : string =
   Printf.sprintf
@@ -238,9 +232,7 @@ let gamma_arg_dist_warning (dist_info : dist_info) :
       if a = b && a < 1. then Some (meta.loc, gamma_arg_dist_message) else None
   | _ -> None
 
-(*********************
-   Distribution properties table
- ********************)
+(** Distribution properties table *)
 
 (** Generate all of the warnings that are relevant to a given distribution *)
 let distribution_warning (dist_info : dist_info) :
@@ -252,8 +244,7 @@ let distribution_warning (dist_info : dist_info) :
   let dof_name = "degrees of freedom" in
   let cov_name = "a covariance matrix" in
   (* Information mostly from:
-     https://mc-stan.org/docs/2_21/functions-reference/unbounded-continuous-distributions.html
-  *)
+     https://mc-stan.org/docs/2_21/functions-reference/unbounded-continuous-distributions.html *)
   let warning_fns =
     match dist_info.name with
     (* Binary Distributions *)
@@ -423,10 +414,10 @@ let distribution_warning (dist_info : dist_info) :
     | "multi_normal_cholesky" ->
         [constr_mismatch_warning cholesky_covariance (Arg (2, cov_name))]
     | "multi_gp" ->
-        [ (* Note: arg 2 "inverse scales" is vector of positive inverse scales*)
+        [ (* Note: arg 2 "inverse scales" is vector of positive inverse scales *)
           constr_mismatch_warning covariance (Arg (1, "a kernel matrix")) ]
     | "multi_gp_cholesky" ->
-        [ (* Note: arg 2 "inverse scales" is vector of positive inverse scales*)
+        [ (* Note: arg 2 "inverse scales" is vector of positive inverse scales *)
           constr_mismatch_warning cholesky_covariance
             (Arg (1, "Cholesky factor of the kernel matrix")) ]
     | "multi_student_t" ->

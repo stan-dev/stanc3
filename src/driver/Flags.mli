@@ -34,7 +34,8 @@ and debug_settings =
   ; print_optimized_mir: debug_options
   ; print_mem_patterns: bool
   ; force_soa: bool option
-        (** if None, do nothing. If Some true, force on, if Some false, force off *)
+        (** if None, do nothing. If Some true, force on, if Some false, force
+            off *)
   ; print_lir: bool
   ; debug_generate_data: bool
   ; debug_generate_inits: bool
@@ -48,8 +49,8 @@ val get_optimization_settings :
   t -> Analysis_and_optimization.Optimize.optimization_settings
 
 val set_backend_args_list : string list -> unit
-(** This is a helper function to set the [model_compile_info] method
-    of the generated C++ to contain a copy of the (relevant) compiler flags *)
+(** This is a helper function to set the [model_compile_info] method of the
+    generated C++ to contain a copy of the (relevant) compiler flags *)
 
 val remove_dotstan : string -> string
 (** Strip '.stan' or '.stanfunctions' from a filename *)

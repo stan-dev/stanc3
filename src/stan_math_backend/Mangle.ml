@@ -1,16 +1,12 @@
-(** Mangle variables which are C++ reserved words into
-    valid C++ identifiers.
+(** Mangle variables which are C++ reserved words into valid C++ identifiers.
 
-    This is done in Transform_Mir. When one of these
-    names is emitted as a string, we use remove_prefix
-    such that this mangling is opaque to the user -
-    e.g., a cmdstan output file would still have a column
-    called "public", even if internally we called this
-    "_stan_public"
+    This is done in Transform_Mir. When one of these names is emitted as a
+    string, we use remove_prefix such that this mangling is opaque to the user -
+    e.g., a cmdstan output file would still have a column called "public", even
+    if internally we called this "_stan_public"
 
-    NB: the use of a leading _ is essential, because
-    the lexer won't allow this in a user-created variable.
-*)
+    NB: the use of a leading _ is essential, because the lexer won't allow this
+    in a user-created variable. *)
 
 open Core
 
@@ -37,8 +33,9 @@ let cpp_kwrds =
     (* system macros *)
     @ [ "BSD"; "BSD4_2"; "BSD4_3"; "BSD4_4"; "EMSCRIPTEN"; "hpux"; "sun"; "linux"
       ; "VMS"; "i386"; "mips"; "WIN32" ]
-    @ (* std:: functions that don't have concepts for their templates, leading to ambiguity
-         (usually the [Comparator] named concept is the issue) *)
+    @
+    (* std:: functions that don't have concepts for their templates, leading to
+       ambiguity (usually the [Comparator] named concept is the issue) *)
     ["clamp"; "max"; "min"; "minmax"])
 
 let add_prefix_to_kwrds s = if Set.mem cpp_kwrds s then prepend_kwrd s else s

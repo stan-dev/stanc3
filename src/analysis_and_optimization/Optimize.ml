@@ -6,10 +6,8 @@ open Common
 open Middle
 open Mir_utils
 
-(**
-   Apply the transformation to each function body and to the rest of the program as one
-   block.
-*)
+(** Apply the transformation to each function body and to the rest of the
+    program as one block. *)
 let transform_program (mir : Program.Typed.t)
     (transform : Stmt.Located.t -> Stmt.Located.t) : Program.Typed.t =
   let packed_prog_body =
@@ -44,9 +42,8 @@ let transform_program (mir : Program.Typed.t)
       ICE.internal_compiler_error
         [%message "Something went wrong with program transformation packing!"]
 
-(**
-   Apply the transformation to each function body and to each program block separately.
-*)
+(** Apply the transformation to each function body and to each program block
+    separately. *)
 let transform_program_blockwise (mir : Program.Typed.t)
     (transform :
       Stmt.Located.t Program.fun_def option -> Stmt.Located.t -> Stmt.Located.t)
@@ -113,9 +110,7 @@ let subst_args_stmt args es =
   let m = Map.Poly.of_alist_exn (List.zip_exn args es) in
   subst_stmt m
 
-(**
- * Count the number of returns that happen in a statement
- *)
+(** Count the number of returns that happen in a statement *)
 let rec count_returns Stmt.{pattern; _} : int =
   Stmt.Pattern.fold Fn.const
     (fun acc -> function
@@ -124,12 +119,12 @@ let rec count_returns Stmt.{pattern; _} : int =
     0 pattern
 
 (* The strategy here is to wrap the function body in a dummy loop, then replace
-   returns with breaks. One issue is early return from internal loops - in
-   those cases, a break would only break out of the inner loop. The solution is
-   a flag variable to indicate whether a 'return' break has been called, and
-   then to check if that flag is set after each loop. Then, if a 'return' break
-   is called from an inner loop, there's a cascade of breaks all the way out of
-   the dummy loop. *)
+   returns with breaks. One issue is early return from internal loops - in those
+   cases, a break would only break out of the inner loop. The solution is a flag
+   variable to indicate whether a 'return' break has been called, and then to
+   check if that flag is set after each loop. Then, if a 'return' break is
+   called from an inner loop, there's a cascade of breaks all the way out of the
+   dummy loop. *)
 let handle_early_returns (fname : string) opt_var stmt =
   let returned = gen_inline_var fname "early_ret_check" in
   let generate_inner_breaks num_returns stmt_pattern =
@@ -239,7 +234,8 @@ let handle_early_returns (fname : string) opt_var stmt =
 
 let inline_list f es =
   let dse_list = List.map ~f es in
-  (* function arguments are evaluated from right to left in C++, so we need to reverse *)
+  (* function arguments are evaluated from right to left in C++, so we need to
+     reverse *)
   let d_list =
     List.concat (List.rev (List.map ~f:(function x, _, _ -> x) dse_list)) in
   let s_list =
@@ -385,7 +381,8 @@ let rec inline_function_statement propto adt fim Stmt.{pattern; meta} =
         (match pattern with
         | Assignment (lhs, ut, e2) ->
             let e1 = Middle.Stmt.Helpers.expr_of_lvalue lhs ~meta:e2.meta in
-            (* This inner e2 is wrong. We are giving the wrong type to Var x. But it doens't really matter as we discard it later. *)
+            (* This inner e2 is wrong. We are giving the wrong type to Var x.
+               But it doens't really matter as we discard it later. *)
             let dl1, sl1, e1 = inline_function_expression propto adt fim e1 in
             let dl2, sl2, e2 = inline_function_expression propto adt fim e2 in
             let lhs' =
@@ -558,7 +555,9 @@ let rec contains_top_break_or_continue Stmt.{pattern; _} =
   | IfElse (_, b1, b2) -> (
       contains_top_break_or_continue b1
       ||
-      match b2 with None -> false | Some b -> contains_top_break_or_continue b)
+      match b2 with
+      | None -> false
+      | Some b -> contains_top_break_or_continue b)
 
 let unroll_static_limit = 32
 
@@ -712,8 +711,8 @@ let cannot_duplicate_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
   let pred e =
     can_side_effect_top_expr e
     || (match e.pattern with
-       | FunApp ((UserDefined (_, FnRng) | StanLib (_, FnRng, _)), _) -> true
-       | _ -> false)
+      | FunApp ((UserDefined (_, FnRng) | StanLib (_, FnRng, _)), _) -> true
+      | _ -> false)
     || (preserve_stability && UnsizedType.is_autodiffable e.meta.type_) in
   expr_any pred e
 
@@ -734,11 +733,11 @@ let is_skip_break_continue s =
 
 (* TODO: could also implement partial dead code elimination *)
 let dead_code_elimination (mir : Program.Typed.t) =
-  (* TODO: think about whether we should treat function bodies as local scopes in the statement
-     from the POV of a live variables analysis.
-     (Obviously, this shouldn't be the case for the purposes of reaching definitions,
-     constant propagation, expressions analyses. But I do think that's the right way to
-     go about live variables. *)
+  (* TODO: think about whether we should treat function bodies as local scopes
+     in the statement from the POV of a live variables analysis. (Obviously,
+     this shouldn't be the case for the purposes of reaching definitions,
+     constant propagation, expressions analyses. But I do think that's the right
+     way to go about live variables. *)
   let transform s =
     let rev_flowgraph, flowgraph_to_mir =
       Monotone_framework.inverse_flowgraph_of_stmt s in
@@ -748,7 +747,8 @@ let dead_code_elimination (mir : Program.Typed.t) =
         (module Rev_Flowgraph)
         flowgraph_to_mir in
     let dead_code_elim_stmt_base i stmt =
-      (* NOTE: entry in the reverse flowgraph, so exit in the forward flowgraph *)
+      (* NOTE: entry in the reverse flowgraph, so exit in the forward
+         flowgraph *)
       let live_variables_s =
         (Map.find_exn live_variables i).Monotone_framework_sigs.entry in
       match stmt with
@@ -774,7 +774,8 @@ let dead_code_elimination (mir : Program.Typed.t) =
           stmt
       | IfElse (e, b1, b2) -> (
           if
-            (* TODO: check if e has side effects, like print, reject, then don't optimize? *)
+            (* TODO: check if e has side effects, like print, reject, then don't
+               optimize? *)
             (not (cannot_remove_expr e))
             && b1.Stmt.pattern = Skip
             && (Option.map ~f:(fun Stmt.{pattern; _} -> pattern) b2 = Some Skip
@@ -815,10 +816,8 @@ let dead_code_elimination (mir : Program.Typed.t) =
 
 let partial_evaluation = Partial_evaluator.eval_prog
 
-(**
- * Given a name and Stmt, search the statement for the first assignment
- * where that name is the assignee.
- *)
+(** Given a name and Stmt, search the statement for the first assignment where
+    that name is the assignee. *)
 let rec find_assignment_idx (name : string) Stmt.{pattern; _} =
   match pattern with
   | Stmt.Pattern.Assignment (lval, lhs_ut, (rhs : 'a Expr.t)) ->
@@ -834,11 +833,8 @@ let rec find_assignment_idx (name : string) Stmt.{pattern; _} =
       else None
   | _ -> None
 
-(**
- * Given a list of Stmts, find Decls whose objects are fully assigned to
- *  in their first assignment and mark them as not needing to be
- *  initialized.
- *)
+(** Given a list of Stmts, find Decls whose objects are fully assigned to in
+    their first assignment and mark them as not needing to be initialized. *)
 and unenforce_initialize (lst : Stmt.Located.t list) =
   let rec unenforce_initialize_patt (Stmt.{pattern; _} as stmt) sub_lst =
     match pattern with
@@ -855,7 +851,7 @@ and unenforce_initialize (lst : Stmt.Located.t list) =
     | Block block_lst ->
         {stmt with pattern= Block (unenforce_initialize block_lst)}
     | SList s_lst -> {stmt with pattern= SList (unenforce_initialize s_lst)}
-    (*[] here because we do not want to check out of scope*)
+    (*[] here because we do not want to check out of scope *)
     | While (expr, stmt) ->
         {stmt with pattern= While (expr, unenforce_initialize_patt stmt [])}
     | For ({body; _} as pat) ->
@@ -882,13 +878,10 @@ and unenforce_initialize (lst : Stmt.Located.t list) =
       | None -> lst)
   | None -> lst
 
-(**
- * Take the Mir and perform a transform that requires searching
- *  across the list inside of each piece of the Mir.
- *  @param mir The mir
- *  @param transformer a function that takes in and returns a list of
- *    Stmts.
- *)
+(** Take the Mir and perform a transform that requires searching across the list
+    inside of each piece of the Mir.
+    @param mir The mir
+    @param transformer a function that takes in and returns a list of Stmts. *)
 let transform_mir_blocks (mir : Program.Typed.t)
     (transformer : Stmt.Located.t list -> Stmt.Located.t list) : Program.Typed.t
     =
@@ -977,7 +970,8 @@ let lazy_code_motion ?(preserve_stability = false) (mir : Program.Typed.t) =
       Set.fold
         (Monotone_framework.used_expressions_stmt s.pattern)
         ~init:Expr.Typed.Map.empty ~f:collect_expressions in
-    (* TODO: it'd be more efficient to just not accumulate constants in the static analysis *)
+    (* TODO: it'd be more efficient to just not accumulate constants in the
+       static analysis *)
     let declarations_list =
       Map.fold expression_map ~init:[] ~f:(fun ~key ~data accum ->
           Stmt.
@@ -999,9 +993,9 @@ let lazy_code_motion ?(preserve_stability = false) (mir : Program.Typed.t) =
         |> Set.filter ~f:(fun x -> Map.mem expression_map x)
         |> Set.to_list
         |> List.sort ~compare:(fun e e' ->
-               compare_int (expr_depth e) (expr_depth e')) in
-      (* TODO: is this sort doing anything or are they already stored in the right order by
-         chance? It appears to not do anything. *)
+            compare_int (expr_depth e) (expr_depth e')) in
+      (* TODO: is this sort doing anything or are they already stored in the
+         right order by chance? It appears to not do anything. *)
       let assignments_to_add_to_s =
         List.map
           ~f:(fun e ->
@@ -1103,20 +1097,19 @@ let block_fixing mir =
 (* TODO: add tests *)
 (* TODO: add pass to get rid of redundant declarations? *)
 
-(**
- * A generic optimization pass for finding a minimal set of variables that
- * are generated by some circumstance, and then updating the MIR with that set.
- * @param gen_variables: the variables that must be added to the set at
- *  the given statement
- * @param update_expr: update an MIR expression given the variable set
- * @param update_stmt: Function for updating an MIR statement given the
- *  variable set
- * @param extra_variables: the set of variables that are implied
- *  to be in the set by a given variable in the set
- *  (usually empty, sometimes unrepresented variables like _in__ variables)
- * @param initial_variables: the initial known members of the set of variables
- * @param stmt the MIR statement to optimize.
-*)
+(** A generic optimization pass for finding a minimal set of variables that are
+    generated by some circumstance, and then updating the MIR with that set.
+    @param gen_variables:
+      the variables that must be added to the set at the given statement
+    @param update_expr: update an MIR expression given the variable set
+    @param update_stmt:
+      Function for updating an MIR statement given the variable set
+    @param extra_variables:
+      the set of variables that are implied to be in the set by a given variable
+      in the set (usually empty, sometimes unrepresented variables like _in__
+      variables)
+    @param initial_variables: the initial known members of the set of variables
+    @param stmt the MIR statement to optimize. *)
 let optimize_minimal_variables
     ~(gen_variables :
           (int, Stmt.Located.Non_recursive.t) Map.Poly.t
@@ -1150,7 +1143,8 @@ let optimize_minimal_variables
   map_rec_stmt_loc_num flowgraph_to_mir optimize_min_vars_stmt_base
     (Map.find_exn flowgraph_to_mir 1)
 
-(* XXX: This optimization current promotes/demotes entire tuples at once. This could be signficantly better *)
+(* XXX: This optimization current promotes/demotes entire tuples at once. This
+   could be signficantly better *)
 let optimize_ad_levels (mir : Program.Typed.t) =
   let gen_ad_variables
       (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t)
@@ -1202,27 +1196,22 @@ let optimize_ad_levels (mir : Program.Typed.t) =
       stmt in
   transform_program_blockwise mir transform
 
-(**
-  * Deduces whether types can be Structures of Arrays (SoA/fast) or
-  *  Arrays of Structs (AoS/slow). See the docs in
-  *  Mem_pattern.query_demote_stmt/exprs* functions for
-  *  details on the rules surrounding when demotion from
-  *  SoA -> AoS needs to happen.
-  *
-  * This first does a simple iter over
-  * the log_prob portion of the MIR, finding the names of all matrices
-  * (and arrays of matrices) where either the Stan math function
-  * does not support SoA or the object is single cell accesed within a
-  * For or While loop. These are the initial variables
-  * given to the monotone framework. Then log_prob has all matrix like objects
-  * and the functions that use them to SoA. After that the
-  * Monotone framework is used to deduce assignment paths of AoS <-> SoA
-  * and vice versa which need to be demoted to AoS as well as updating
-  * functions and objects after these assignment passes that then
-  * also need to be AoS.
-  *
-  * @param mir: The program's whole MIR.
-  *)
+(** Deduces whether types can be Structures of Arrays (SoA/fast) or Arrays of
+    Structs (AoS/slow). See the docs in Mem_pattern.query_demote_stmt/exprs*
+    functions for details on the rules surrounding when demotion from SoA -> AoS
+    needs to happen.
+
+    This first does a simple iter over the log_prob portion of the MIR, finding
+    the names of all matrices (and arrays of matrices) where either the Stan
+    math function does not support SoA or the object is single cell accesed
+    within a For or While loop. These are the initial variables given to the
+    monotone framework. Then log_prob has all matrix like objects and the
+    functions that use them to SoA. After that the Monotone framework is used to
+    deduce assignment paths of AoS <-> SoA and vice versa which need to be
+    demoted to AoS as well as updating functions and objects after these
+    assignment passes that then also need to be AoS.
+
+    @param mir: The program's whole MIR. *)
 let optimize_soa (mir : Program.Typed.t) =
   let gen_aos_variables
       (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t)
@@ -1252,8 +1241,8 @@ let optimize_soa (mir : Program.Typed.t) =
   in
   {mir with reverse_mode_log_prob= transform' mir.reverse_mode_log_prob}
 
-(* Apparently you need to completely copy/paste type definitions between
-   ml and mli files?*)
+(* Apparently you need to completely copy/paste type definitions between ml and
+   mli files?*)
 type optimization_settings =
   { function_inlining: bool
   ; static_loop_unrolling: bool
@@ -1340,7 +1329,8 @@ let optimization_suite ?(settings = all_optimizations) mir =
     ; (partial_evaluation, settings.partial_evaluation)
       (* Book: Loop-invariant code motion *)
     ; (lazy_code_motion ~preserve_stability, settings.lazy_code_motion)
-      (* Matthijs: lazy_code_motion < copy_propagation TODO: Check if this is necessary *)
+      (* Matthijs: lazy_code_motion < copy_propagation TODO: Check if this is
+         necessary *)
     ; (copy_propagation, settings.copy_propagation)
       (* Matthijs: Constant propagation before static loop unrolling *)
     ; (constant_propagation ~preserve_stability, settings.constant_propagation)
@@ -1354,7 +1344,7 @@ let optimization_suite ?(settings = all_optimizations) mir =
       (* Book: Machine idioms and instruction combining *)
     ; (optimize_ad_levels, settings.optimize_ad_levels)
     ; (optimize_soa, settings.optimize_soa)
-      (*Remove decls immediately assigned to*)
+      (* Remove decls immediately assigned to *)
     ; (allow_uninitialized_decls, settings.allow_uninitialized_decls)
       (* Book: Machine idioms and instruction combining *)
       (* Matthijs: Everything < block_fixing *)
