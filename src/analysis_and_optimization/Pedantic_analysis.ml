@@ -374,9 +374,11 @@ let hard_constrained_warnings (mir : Program.Typed.t) =
   Set.Poly.map
     ~f:(fun (pname, c) ->
       match c with
-      | `HardConstraint -> (Location_span.empty, hard_constrained_message pname)
+      | `HardConstraint ->
+          (Location_span.file_only mir.prog_path, hard_constrained_message pname)
       | `NonsenseConstraint ->
-          (Location_span.empty, nonsense_constrained_message pname))
+          ( Location_span.file_only mir.prog_path
+          , nonsense_constrained_message pname ))
     pnames
 
 let maybe_jacobian_adjustment_warnings (mir : Program.Typed.t) =
@@ -440,7 +442,8 @@ let unused_params_message (pname : string) : string =
 let unused_params_warnings (factor_graph : factor_graph) (mir : Program.Typed.t)
     =
   Set.Poly.map
-    ~f:(fun pname -> (Location_span.empty, unused_params_message pname))
+    ~f:(fun pname ->
+      (Location_span.file_only mir.prog_path, unused_params_message pname))
     (list_unused_params factor_graph mir)
 
 let non_one_priors_message (pname : string) (n : int) : string =
@@ -455,7 +458,8 @@ let non_one_priors_message (pname : string) (n : int) : string =
 let non_one_priors_warnings (factor_graph : factor_graph)
     (mir : Program.Typed.t) =
   Set.Poly.map
-    ~f:(fun (pname, n) -> (Location_span.empty, non_one_priors_message pname n))
+    ~f:(fun (pname, n) ->
+      (Location_span.file_only mir.prog_path, non_one_priors_message pname n))
     (list_non_one_priors factor_graph mir)
 
 let uninitialized_message (vname : string) : string =

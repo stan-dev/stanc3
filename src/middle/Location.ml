@@ -36,7 +36,7 @@ let pp_context_for ppf (({line_num; _} as loc), lines) =
   pp_line_and_number ppf (line_num + 2);
   bars ppf ()
 
-let empty = {filename= ""; line_num= 0; col_num= 0; included_from= None}
+let empty = {filename= ""; line_num= -1; col_num= -1; included_from= None}
 
 (**
 Format the location for error messaging.
@@ -48,17 +48,21 @@ let rec pp ?(print_file = true) ?(print_line = true) printed_filename ppf loc =
   let incl, filename =
     match loc.included_from with
     | Some loc2 ->
-        ( (fun ppf ->
-            Fmt.pf ppf ", included from\n%a" (pp printed_filename) loc2)
+        ( Format.dprintf ", included from\n%a" (pp printed_filename) loc2
         , loc.filename )
     | None -> (ignore, Option.value ~default:loc.filename printed_filename)
   in
+  let print_line = print_line && loc.line_num <> empty.line_num in
+  let print_column = loc.col_num <> empty.col_num in
   let file =
-    Fmt.if' print_file (fun ppf s ->
-        Fmt.pf ppf "%a, " Fmt.(styled (`Fg (`Hi `Blue)) (Fmt.fmt "'%s'")) s)
-  in
+    Fmt.if' print_file Fmt.(styled (`Fg (`Hi `Blue)) (Fmt.fmt "'%s'")) in
+  let file_comma =
+    if print_file && (print_line || print_column) then Format.dprintf ", "
+    else ignore in
   let line = Fmt.if' print_line (Fmt.fmt "line %d, ") in
-  Fmt.pf ppf "%a%acolumn %d%t" file filename line loc.line_num loc.col_num incl
+  let column = Fmt.if' print_column (Fmt.fmt "column %d") in
+  Fmt.pf ppf "%a%t%a%a%t" file filename file_comma line loc.line_num column
+    loc.col_num incl
 
 let compare loc1 loc2 =
   let rec unfold = function
