@@ -38,8 +38,8 @@ let%expect_test "Loop test" =
     {|
       ((1
         ((Block (2))
-         ((begin_loc ((filename "") (line_num 0) (col_num 0) (included_from ())))
-          (end_loc ((filename "") (line_num 0) (col_num 0) (included_from ()))))))
+         ((begin_loc ((filename "") (line_num -1) (col_num -1) (included_from ())))
+          (end_loc ((filename "") (line_num -1) (col_num -1) (included_from ()))))))
        (2
         ((Block (3))
          ((begin_loc
@@ -340,12 +340,12 @@ let%expect_test "Statement label map example 3" =
     {|
       ((1
         ((SList (2))
-         ((begin_loc ((filename "") (line_num 0) (col_num 0) (included_from ())))
-          (end_loc ((filename "") (line_num 0) (col_num 0) (included_from ()))))))
+         ((begin_loc ((filename "") (line_num -1) (col_num -1) (included_from ())))
+          (end_loc ((filename "") (line_num -1) (col_num -1) (included_from ()))))))
        (2
         ((Block (3))
-         ((begin_loc ((filename "") (line_num 0) (col_num 0) (included_from ())))
-          (end_loc ((filename "") (line_num 0) (col_num 0) (included_from ()))))))
+         ((begin_loc ((filename "") (line_num -1) (col_num -1) (included_from ())))
+          (end_loc ((filename "") (line_num -1) (col_num -1) (included_from ()))))))
        (3
         ((Block (4 6))
          ((begin_loc
@@ -434,12 +434,12 @@ let%expect_test "Statement label map example 4" =
     {|
       ((1
         ((SList (2))
-         ((begin_loc ((filename "") (line_num 0) (col_num 0) (included_from ())))
-          (end_loc ((filename "") (line_num 0) (col_num 0) (included_from ()))))))
+         ((begin_loc ((filename "") (line_num -1) (col_num -1) (included_from ())))
+          (end_loc ((filename "") (line_num -1) (col_num -1) (included_from ()))))))
        (2
         ((Block (3))
-         ((begin_loc ((filename "") (line_num 0) (col_num 0) (included_from ())))
-          (end_loc ((filename "") (line_num 0) (col_num 0) (included_from ()))))))
+         ((begin_loc ((filename "") (line_num -1) (col_num -1) (included_from ())))
+          (end_loc ((filename "") (line_num -1) (col_num -1) (included_from ()))))))
        (3
         ((Block (4))
          ((begin_loc
@@ -536,12 +536,12 @@ let%expect_test "Statement label map example 5" =
     {|
       ((1
         ((SList (2))
-         ((begin_loc ((filename "") (line_num 0) (col_num 0) (included_from ())))
-          (end_loc ((filename "") (line_num 0) (col_num 0) (included_from ()))))))
+         ((begin_loc ((filename "") (line_num -1) (col_num -1) (included_from ())))
+          (end_loc ((filename "") (line_num -1) (col_num -1) (included_from ()))))))
        (2
         ((Block (3))
-         ((begin_loc ((filename "") (line_num 0) (col_num 0) (included_from ())))
-          (end_loc ((filename "") (line_num 0) (col_num 0) (included_from ()))))))
+         ((begin_loc ((filename "") (line_num -1) (col_num -1) (included_from ())))
+          (end_loc ((filename "") (line_num -1) (col_num -1) (included_from ()))))))
        (3
         ((Block (4 8))
          ((begin_loc

@@ -25,13 +25,6 @@ let merge_set_maps m1 m2 =
   Map.Poly.merge ~f:merge_map_elems m1 m2
 
 (**
-   Generate a Map by applying a function to each element of a key set.
-*)
-let generate_map s ~f =
-  Set.fold s ~init:Map.Poly.empty ~f:(fun m e ->
-      Map.Poly.add_exn m ~key:e ~data:(f e))
-
-(**
    Like a forward traversal, but branches accumulate two different states that are
    recombined with join.
 *)

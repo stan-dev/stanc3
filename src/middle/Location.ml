@@ -36,7 +36,7 @@ let pp_context_for ppf (({line_num; _} as loc), lines) =
   pp_line_and_number ppf (line_num + 2);
   bars ppf ()
 
-let empty = {filename= ""; line_num= 0; col_num= 0; included_from= None}
+let empty = {filename= ""; line_num= -1; col_num= -1; included_from= None}
 
 (**
 Format the location for error messaging.
@@ -48,8 +48,7 @@ let rec pp ?(print_file = true) ?(print_line = true) printed_filename ppf loc =
   let incl, filename =
     match loc.included_from with
     | Some loc2 ->
-        ( (fun ppf ->
-            Fmt.pf ppf ", included from\n%a" (pp printed_filename) loc2)
+        ( Format.dprintf ", included from\n%a" (pp printed_filename) loc2
         , loc.filename )
     | None -> (ignore, Option.value ~default:loc.filename printed_filename)
   in

@@ -17,17 +17,23 @@ type warning_span = Location_span.t * string [@@deriving compare]
  ********************)
 
 let list_unused_params (factor_graph : factor_graph) (mir : Program.Typed.t) :
-    string Set.Poly.t =
+    (string * Location_span.t) Set.Poly.t =
   (* Build a factor graph of the program, check for missing parameters *)
-  let params = parameter_names_set ~include_transformed:false mir in
+  let param_info = parameter_set ~include_transformed:false mir in
+  let params = Set.Poly.map ~f:fst3 param_info in
   let used_params =
     Set.Poly.map
       ~f:(fun (VVar v) -> v)
       (Set.Poly.of_list (Map.Poly.keys factor_graph.var_map)) in
-  Set.diff params used_params
+  let unused = Set.diff params used_params in
+  Set.Poly.filter_map
+    ~f:(fun (pname, _, loc) ->
+      if Set.mem unused pname then Some (pname, loc) else None)
+    param_info
 
 let list_hard_constrained (mir : Program.Typed.t) :
-    (string * [`HardConstraint | `NonsenseConstraint]) Set.Poly.t =
+    (string * [`HardConstraint | `NonsenseConstraint] * Location_span.t)
+    Set.Poly.t =
   (* Iterate through all parameters' transformations for hard constraints *)
   let constrained (e : bound_values) =
     match e with
@@ -37,9 +43,9 @@ let list_hard_constrained (mir : Program.Typed.t) :
     | {lower= `Lit _; upper= `Lit _} -> Some `HardConstraint
     | _ -> None in
   Set.Poly.filter_map
-    ~f:(fun (name, trans) ->
+    ~f:(fun (name, trans, loc) ->
       Option.map
-        ~f:(fun c -> (name, c))
+        ~f:(fun c -> (name, c, loc))
         (constrained (trans_bounds_values trans)))
     (parameter_set mir)
 
@@ -261,30 +267,31 @@ let list_param_dependant_fundefs_cf (mir : Program.Typed.t) :
           (fun_def.fdname, cf_loc, deps, arg_name, arg_loc)))
 
 let list_non_one_priors (fg : factor_graph) (mir : Program.Typed.t) :
-    (string * int) Set.Poly.t =
+    (string * int * Location_span.t) Set.Poly.t =
   (* Use the factor graph definition of priors, which treats a neighboring
      factor as a prior for parameter P if it has no connection to the data
      except through P *)
   let priors = list_priors ~factor_graph:(Some fg) mir in
   let prior_set =
     Map.Poly.fold priors ~init:Set.Poly.empty
-      ~f:(fun ~key:(VVar v) ~data:factors_opt s ->
+      ~f:(fun ~key:(VVar v) ~data:(factors_opt, loc) s ->
         Option.value_map factors_opt ~default:s ~f:(fun factors ->
-            Set.add s (v, Set.length factors))) in
+            Set.add s (v, Set.length factors, loc))) in
   (* Return only multi-prior parameters *)
-  Set.filter prior_set ~f:(fun (_, n) -> n <> 1)
+  Set.filter prior_set ~f:(fun (_, n, _) -> n <> 1)
 
 (* Collect useful information about an expression that's available at
    compile-time into a convenient form. *)
 let compiletime_value_of_expr
-    (params : (string * Expr.Typed.t Transformation.t) Set.Poly.t)
+    (params :
+      (string * Expr.Typed.t Transformation.t * Location_span.t) Set.Poly.t)
     (data : string Set.Poly.t) (expr : Expr.Typed.t) :
     compiletime_val * Expr.Typed.Meta.t =
   let v =
     match expr with
     | {pattern= Var pname; _} -> (
-        match Set.find params ~f:(fun (name, _) -> name = pname) with
-        | Some (name, trans) -> Param (name, trans)
+        match Set.find params ~f:(fun (name, _, _) -> name = pname) with
+        | Some (name, trans, _) -> Param (name, trans)
         | None -> (
             match Set.find data ~f:(fun name -> name = pname) with
             | Some name -> Data name
@@ -372,11 +379,10 @@ let hard_constrained_message (pname : string) : string =
 let hard_constrained_warnings (mir : Program.Typed.t) =
   let pnames = list_hard_constrained mir in
   Set.Poly.map
-    ~f:(fun (pname, c) ->
+    ~f:(fun (pname, c, loc) ->
       match c with
-      | `HardConstraint -> (Location_span.empty, hard_constrained_message pname)
-      | `NonsenseConstraint ->
-          (Location_span.empty, nonsense_constrained_message pname))
+      | `HardConstraint -> (loc, hard_constrained_message pname)
+      | `NonsenseConstraint -> (loc, nonsense_constrained_message pname))
     pnames
 
 let maybe_jacobian_adjustment_warnings (mir : Program.Typed.t) =
@@ -440,7 +446,7 @@ let unused_params_message (pname : string) : string =
 let unused_params_warnings (factor_graph : factor_graph) (mir : Program.Typed.t)
     =
   Set.Poly.map
-    ~f:(fun pname -> (Location_span.empty, unused_params_message pname))
+    ~f:(fun (pname, loc) -> (loc, unused_params_message pname))
     (list_unused_params factor_graph mir)
 
 let non_one_priors_message (pname : string) (n : int) : string =
@@ -455,7 +461,7 @@ let non_one_priors_message (pname : string) (n : int) : string =
 let non_one_priors_warnings (factor_graph : factor_graph)
     (mir : Program.Typed.t) =
   Set.Poly.map
-    ~f:(fun (pname, n) -> (Location_span.empty, non_one_priors_message pname n))
+    ~f:(fun (pname, n, loc) -> (loc, non_one_priors_message pname n))
     (list_non_one_priors factor_graph mir)
 
 let uninitialized_message (vname : string) : string =
@@ -500,4 +506,4 @@ let warn_pedantic (mir_unopt : Program.Typed.t) =
     ; param_dependant_cf_warnings mir; param_dependant_fundef_cf_warnings mir
     ; non_one_priors_warnings factor_graph mir
     ; distribution_warnings distributions_info ]
-  |> to_list
+  |> to_list |> List.rev

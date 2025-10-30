@@ -91,16 +91,17 @@ let data_set ?(exclude_transformed = false) ?(exclude_ints = false)
 
 let parameter_set ?(include_transformed = false) (mir : Program.Typed.t) =
   Set.Poly.of_list
-    (List.map
-       ~f:(fun (pname, _, {out_trans; _}) -> (pname, out_trans))
-       (List.filter
-          ~f:(fun (_, _, {out_block; _}) ->
-            out_block = Parameters
-            || (include_transformed && out_block = TransformedParameters))
-          mir.output_vars))
+    (List.filter_map
+       ~f:(fun (pname, l, {out_trans; out_block; _}) ->
+         if
+           out_block = Parameters
+           || (include_transformed && out_block = TransformedParameters)
+         then Some (pname, out_trans, l)
+         else None)
+       mir.output_vars)
 
 let parameter_names_set ?(include_transformed = false) (mir : Program.Typed.t) =
-  Set.Poly.map ~f:fst (parameter_set ~include_transformed mir)
+  Set.Poly.map ~f:fst3 (parameter_set ~include_transformed mir)
 
 let rec var_declarations Stmt.{pattern; _} : string Set.Poly.t =
   match pattern with

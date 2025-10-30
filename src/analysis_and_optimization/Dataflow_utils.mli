@@ -69,11 +69,6 @@ val merge_set_maps :
    Merge two maps whose values are sets, and union the sets when there's a collision.
 *)
 
-val generate_map : 'a Set.Poly.t -> f:('a -> 'b) -> ('a, 'b) Map.Poly.t
-(**
-   Generate a Map by applying a function to each element of a key set.
-*)
-
 val build_statement_map :
      ('s -> ('e, 's) Stmt.Pattern.t)
   -> ('s -> 'm)
