@@ -696,10 +696,12 @@ Warning: The parameter a has 2 priors.
   $ ../../../../../install/default/bin/stanc --warn-pedantic  unscaled.stan
 Warning in 'unscaled.stan', line 10, column 20 to column 25:
     Argument 10000 suggests there may be parameters that are not unit scale;
-    consider rescaling with a multiplier (see manual section 22.12).
+    consider rescaling with a multiplier, see:
+    https://mc-stan.org/docs/stan-users-guide/efficiency-tuning.html#standardizing-predictors
 Warning in 'unscaled.stan', line 10, column 13 to column 18:
     Argument 0.001 suggests there may be parameters that are not unit scale;
-    consider rescaling with a multiplier (see manual section 22.12).
+    consider rescaling with a multiplier, see:
+    https://mc-stan.org/docs/stan-users-guide/efficiency-tuning.html#standardizing-predictors
 [exit 0]
   $ ../../../../../install/default/bin/stanc --warn-pedantic  unused-param.stan
 Warning: The parameter e was declared but was not used in the density

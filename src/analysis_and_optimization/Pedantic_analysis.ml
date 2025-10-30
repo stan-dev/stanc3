@@ -341,7 +341,8 @@ let list_unscaled_constants (distributions_list : dist_info Set.Poly.t) :
 let unscaled_constants_message (name : string) : string =
   Printf.sprintf
     "Argument %s suggests there may be parameters that are not unit scale; \
-     consider rescaling with a multiplier (see manual section 22.12)."
+     consider rescaling with a multiplier, see: \
+     https://mc-stan.org/docs/stan-users-guide/efficiency-tuning.html#standardizing-predictors"
     name
 
 let unscaled_constants_warnings (distributions_list : dist_info Set.Poly.t) =
