@@ -506,4 +506,4 @@ let warn_pedantic (mir_unopt : Program.Typed.t) =
     ; param_dependant_cf_warnings mir; param_dependant_fundef_cf_warnings mir
     ; non_one_priors_warnings factor_graph mir
     ; distribution_warnings distributions_info ]
-  |> to_list
+  |> to_list |> List.rev
