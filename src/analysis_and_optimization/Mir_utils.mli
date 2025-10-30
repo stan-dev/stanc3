@@ -22,7 +22,7 @@ val data_set :
 val parameter_set :
      ?include_transformed:bool
   -> Program.Typed.t
-  -> (string * Expr.Typed.t Transformation.t) Set.Poly.t
+  -> (string * Expr.Typed.t Transformation.t * Location_span.t) Set.Poly.t
 
 val parameter_names_set :
   ?include_transformed:bool -> Program.Typed.t -> string Set.Poly.t

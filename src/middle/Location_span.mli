@@ -5,7 +5,6 @@ type t = {begin_loc: Location.t; end_loc: Location.t}
 
 val empty : t
 val merge : t -> t -> t
-val file_only : string -> t
 val pp : ?printed_filename:string -> t Fmt.t
 
 val to_string : ?printed_filename:string -> t -> string

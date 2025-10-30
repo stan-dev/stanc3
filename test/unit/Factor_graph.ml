@@ -385,89 +385,124 @@ let complex_example =
 let%expect_test "Priors complex example" =
   let priors = list_priors complex_example in
   print_s
-    [%sexp (priors : (vexpr, (factor * label) Set.Poly.t option) Map.Poly.t)];
+    [%sexp
+      (priors
+        : ( vexpr
+          , (factor * label) Set.Poly.t option * Middle.Location_span.t )
+          Map.Poly.t)];
   [%expect
     {|
 (((VVar a)
-  ((((TargetTerm
-      ((pattern
-        (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
-         (((pattern (Var a))
-           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
-          ((pattern
-            (Promotion
-             ((pattern (Lit Int 0))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-             UReal DataOnly))
-           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
-          ((pattern
-            (Promotion
-             ((pattern (Lit Int 1))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-             UReal DataOnly))
-           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
-       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
-     9)
-    ((TargetTerm
-      ((pattern
-        (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
-         (((pattern (Var e))
-           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
-          ((pattern (Var a))
-           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
-          ((pattern
-            (Promotion
-             ((pattern (Lit Int 1))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-             UReal DataOnly))
-           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
-       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
-     14)
-    ((TargetTerm
-      ((pattern
-        (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
-         (((pattern (Var f))
-           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
-          ((pattern (Var a))
-           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
-          ((pattern
-            (Promotion
-             ((pattern (Lit Int 1))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-             UReal DataOnly))
-           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
-       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
-     15))))
+  (((((TargetTerm
+       ((pattern
+         (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+          (((pattern (Var a))
+            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+           ((pattern
+             (Promotion
+              ((pattern (Lit Int 0))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+              UReal DataOnly))
+            (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+           ((pattern
+             (Promotion
+              ((pattern (Lit Int 1))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+              UReal DataOnly))
+            (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
+      9)
+     ((TargetTerm
+       ((pattern
+         (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+          (((pattern (Var e))
+            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+           ((pattern (Var a))
+            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+           ((pattern
+             (Promotion
+              ((pattern (Lit Int 1))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+              UReal DataOnly))
+            (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
+      14)
+     ((TargetTerm
+       ((pattern
+         (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+          (((pattern (Var f))
+            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+           ((pattern (Var a))
+            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+           ((pattern
+             (Promotion
+              ((pattern (Lit Int 1))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+              UReal DataOnly))
+            (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
+      15)))
+   ((begin_loc
+     ((filename string) (line_num 7) (col_num 10) (included_from ())))
+    (end_loc
+     ((filename string) (line_num 7) (col_num 17) (included_from ()))))))
  ((VVar b)
-  ((((TargetTerm
-      ((pattern
-        (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
-         (((pattern (Var b))
-           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
-          ((pattern (Var a))
-           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
-          ((pattern
-            (Promotion
-             ((pattern (Lit Int 1))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-             UReal DataOnly))
-           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
-       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
-     10)
-    ((TargetTerm
-      ((pattern
-        (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
-         (((pattern (Var d))
-           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
-          ((pattern (Var b))
-           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
-          ((pattern
-            (Promotion
-             ((pattern (Lit Int 1))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-             UReal DataOnly))
-           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
-       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
-     13))))
- ((VVar c) (())) ((VVar d) (())) ((VVar e) (())) ((VVar f) (())))
+  (((((TargetTerm
+       ((pattern
+         (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+          (((pattern (Var b))
+            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+           ((pattern (Var a))
+            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+           ((pattern
+             (Promotion
+              ((pattern (Lit Int 1))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+              UReal DataOnly))
+            (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
+      10)
+     ((TargetTerm
+       ((pattern
+         (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+          (((pattern (Var d))
+            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+           ((pattern (Var b))
+            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+           ((pattern
+             (Promotion
+              ((pattern (Lit Int 1))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+              UReal DataOnly))
+            (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
+      13)))
+   ((begin_loc
+     ((filename string) (line_num 8) (col_num 10) (included_from ())))
+    (end_loc
+     ((filename string) (line_num 8) (col_num 17) (included_from ()))))))
+ ((VVar c)
+  ((())
+   ((begin_loc
+     ((filename string) (line_num 9) (col_num 10) (included_from ())))
+    (end_loc
+     ((filename string) (line_num 9) (col_num 17) (included_from ()))))))
+ ((VVar d)
+  ((())
+   ((begin_loc
+     ((filename string) (line_num 10) (col_num 10) (included_from ())))
+    (end_loc
+     ((filename string) (line_num 10) (col_num 17) (included_from ()))))))
+ ((VVar e)
+  ((())
+   ((begin_loc
+     ((filename string) (line_num 11) (col_num 10) (included_from ())))
+    (end_loc
+     ((filename string) (line_num 11) (col_num 17) (included_from ()))))))
+ ((VVar f)
+  ((())
+   ((begin_loc
+     ((filename string) (line_num 12) (col_num 10) (included_from ())))
+    (end_loc
+     ((filename string) (line_num 12) (col_num 17) (included_from ())))))))
     |}]

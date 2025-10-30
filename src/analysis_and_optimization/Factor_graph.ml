@@ -161,9 +161,10 @@ let fg_var_priors (var : vexpr) (data : vexpr Set.Poly.t) (fg : factor_graph) :
   | None -> None
 
 let list_priors ?factor_graph:(fg_opt = None) (mir : Program.Typed.t) :
-    (vexpr, (factor * label) Set.Poly.t option) Map.Poly.t =
+    (vexpr, (factor * label) Set.Poly.t option * Location_span.t) Map.Poly.t =
   let fg = Option.value ~default:(prog_factor_graph mir) fg_opt in
-  let params = Set.Poly.map ~f:(fun v -> VVar v) (parameter_names_set mir) in
+  let params =
+    Set.Poly.map ~f:(fun (v, _, loc) -> (VVar v, loc)) (parameter_set mir) in
   let data = Set.Poly.map ~f:(fun v -> VVar v) (data_set mir) in
   let likely_sizes =
     Set.diff data
@@ -171,7 +172,8 @@ let list_priors ?factor_graph:(fg_opt = None) (mir : Program.Typed.t) :
   in
   let fg' = Set.fold ~init:fg ~f:fg_remove_var likely_sizes in
   (* for each param, apply fg_var_priors and collect results in a map*)
-  generate_map params ~f:(fun p -> fg_var_priors p data fg')
+  Set.fold params ~init:Map.Poly.empty ~f:(fun m (p, loc) ->
+      Map.Poly.add_exn m ~key:p ~data:(fg_var_priors p data fg', loc))
 
 let string_of_factor (factor : factor) : string =
   match factor with

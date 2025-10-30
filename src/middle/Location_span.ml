@@ -6,10 +6,6 @@ type t = {begin_loc: Location.t; end_loc: Location.t}
 let empty = {begin_loc= Location.empty; end_loc= Location.empty}
 let merge left right = {begin_loc= left.begin_loc; end_loc= right.end_loc}
 
-let file_only filename =
-  { begin_loc= {Location.empty with filename}
-  ; end_loc= {Location.empty with filename} }
-
 let pp ?printed_filename ppf {begin_loc; end_loc} =
   let end_loc_pp =
     let same_file = String.equal begin_loc.filename end_loc.filename in
