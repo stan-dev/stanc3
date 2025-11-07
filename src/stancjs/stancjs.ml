@@ -28,10 +28,30 @@ let wrap_warnings ~warnings =
 
 let wrap_error ~warnings e =
   Js.Unsafe.obj
-    [| ("errors", Js.Unsafe.inject (Array.map ~f:Js.string [| e |]))
+    [| ( "errors"
+       , (* NB: This should really be [Js.Unsafe.Inject (Js.array ...)] as above.
+            The fact that it is not is a historical mistake, and leads to the
+            resulting list in JS having a first entry of '0', the index.
+            Unfortunately, many tools have been built assuming the error message is
+            actually in the second entry, so we're stuck with this bad behavior.
+         *)
+         Js.Unsafe.inject (Array.map ~f:Js.string [| e |]) )
      ; wrap_warnings ~warnings |]
 
-let wrap_result ?printed_filename ~code ~warnings res =
+(** similar to [Fmt.str_like] but directly sets style
+    rendering rather than copying from another ppf *)
+let str_color ~color_output =
+  let buf = Buffer.create 64 in
+  let ppf = Format.formatter_of_buffer buf in
+  Fmt.set_style_renderer ppf (if color_output then `Ansi_tty else `None);
+  let flush ppf =
+    Format.pp_print_flush ppf ();
+    let s = Buffer.contents buf in
+    Buffer.reset buf;
+    s in
+  Format.kfprintf flush ppf
+
+let wrap_result ?printed_filename ~color_output ~code ~warnings res =
   match res with
   | Result.Ok s ->
       Js.Unsafe.obj
@@ -39,7 +59,7 @@ let wrap_result ?printed_filename ~code ~warnings res =
         |]
   | Error e ->
       let e =
-        Fmt.str "%a"
+        str_color ~color_output "%a"
           (Errors.pp ?printed_filename ?code:(Some (Js.to_string code)))
           e in
       wrap_error ~warnings e
@@ -105,9 +125,10 @@ let get_includes includes : string String.Map.t * string list =
         (Fmt.str "Warning: stanc.js failed to parse included file mapping:@ %s")
       warnings )
 
-(** Turn our array of flags into a Driver.Flats.t *)
-let process_flags (flags : 'a Js.opt) includes : (Driver.Flags.t, string) result
-    =
+type flags = {driver_flags: Driver.Flags.t; color_output: bool}
+
+(** Turn our array of flags into a Driver.Flags.t *)
+let process_flags (flags : 'a Js.opt) includes : (flags, string) result =
   let open Result in
   let open Common.Let_syntax.Result in
   let+ flags =
@@ -124,70 +145,77 @@ let process_flags (flags : 'a Js.opt) includes : (Driver.Flags.t, string) result
         Some ocaml_flags in
   match flags with
   | None ->
-      {Driver.Flags.default with include_source= Include_files.InMemory includes}
+      { driver_flags=
+          { Driver.Flags.default with
+            include_source= Include_files.InMemory includes }
+      ; color_output= false }
   | Some flags ->
       let is_flag_set flag = Array.mem ~equal:String.equal flags flag in
       let flag_val flag =
         let prefix = flag ^ "=" in
         Array.find_map flags ~f:(String.chop_prefix ~prefix) in
-      { optimization_level=
-          (if is_flag_set "O0" then Optimize.O0
-           else if is_flag_set "O1" || is_flag_set "O" then Optimize.O1
-           else if is_flag_set "Oexperimental" then Optimize.Oexperimental
-           else Optimize.O0)
-      ; allow_undefined= is_flag_set "allow-undefined"
-      ; functions_only= is_flag_set "functions-only"
-      ; standalone_functions= is_flag_set "standalone-functions"
-      ; use_opencl= is_flag_set "use-opencl"
-      ; include_source= Include_files.InMemory includes
-      ; info= is_flag_set "info"
-      ; version= is_flag_set "version"
-      ; auto_format= is_flag_set "auto-format" || is_flag_set "print-canonical"
-      ; debug_settings=
-          { print_ast= is_flag_set "debug-ast"
-          ; print_typed_ast= is_flag_set "debug-typed-ast"
-          ; print_mir=
-              (if is_flag_set "debug-mir" then Basic
-               else if is_flag_set "debug-mir-pretty" then Pretty
-               else Off)
-          ; print_transformed_mir=
-              (if is_flag_set "debug-transformed-mir" then Basic
-               else if is_flag_set "debug-transformed-mir-pretty" then Pretty
-               else Off)
-          ; print_optimized_mir=
-              (if is_flag_set "debug-optimized-mir" then Basic
-               else if is_flag_set "debug-optimized-mir-pretty" then Pretty
-               else Off)
-          ; print_mem_patterns= is_flag_set "debug-mem-patterns"
-          ; force_soa= None
-          ; print_lir= is_flag_set "debug-lir"
-          ; debug_generate_data= is_flag_set "debug-generate-data"
-          ; debug_generate_inits= is_flag_set "debug-generate-inits"
-          ; debug_data_json= flag_val "debug-data-json" }
-      ; line_length=
-          flag_val "max-line-length"
-          |> Option.map ~f:int_of_string
-          |> Option.value ~default:78
-      ; canonicalizer_settings=
-          (if is_flag_set "print-canonical" then Canonicalize.legacy
-           else
-             match flag_val "canonicalize" with
-             | None -> Canonicalize.none
-             | Some s ->
-                 let parse settings s =
-                   match String.lowercase s with
-                   | "deprecations" ->
-                       Canonicalize.{settings with deprecations= true}
-                   | "parentheses" -> {settings with parentheses= true}
-                   | "braces" -> {settings with braces= true}
-                   | "strip-comments" -> {settings with strip_comments= true}
-                   | "includes" -> {settings with inline_includes= true}
-                   | _ -> settings in
-                 List.fold ~f:parse ~init:Canonicalize.none
-                   (String.split ~on:',' s))
-      ; warn_pedantic= is_flag_set "warn-pedantic"
-      ; warn_uninitialized= is_flag_set "warn-uninitialized"
-      ; filename_in_msg= flag_val "filename-in-msg" }
+      { driver_flags=
+          { optimization_level=
+              (if is_flag_set "O0" then Optimize.O0
+               else if is_flag_set "O1" || is_flag_set "O" then Optimize.O1
+               else if is_flag_set "Oexperimental" then Optimize.Oexperimental
+               else Optimize.O0)
+          ; allow_undefined= is_flag_set "allow-undefined"
+          ; functions_only= is_flag_set "functions-only"
+          ; standalone_functions= is_flag_set "standalone-functions"
+          ; use_opencl= is_flag_set "use-opencl"
+          ; include_source= Include_files.InMemory includes
+          ; info= is_flag_set "info"
+          ; version= is_flag_set "version"
+          ; auto_format=
+              is_flag_set "auto-format" || is_flag_set "print-canonical"
+          ; debug_settings=
+              { print_ast= is_flag_set "debug-ast"
+              ; print_typed_ast= is_flag_set "debug-typed-ast"
+              ; print_mir=
+                  (if is_flag_set "debug-mir" then Basic
+                   else if is_flag_set "debug-mir-pretty" then Pretty
+                   else Off)
+              ; print_transformed_mir=
+                  (if is_flag_set "debug-transformed-mir" then Basic
+                   else if is_flag_set "debug-transformed-mir-pretty" then
+                     Pretty
+                   else Off)
+              ; print_optimized_mir=
+                  (if is_flag_set "debug-optimized-mir" then Basic
+                   else if is_flag_set "debug-optimized-mir-pretty" then Pretty
+                   else Off)
+              ; print_mem_patterns= is_flag_set "debug-mem-patterns"
+              ; force_soa= None
+              ; print_lir= is_flag_set "debug-lir"
+              ; debug_generate_data= is_flag_set "debug-generate-data"
+              ; debug_generate_inits= is_flag_set "debug-generate-inits"
+              ; debug_data_json= flag_val "debug-data-json" }
+          ; line_length=
+              flag_val "max-line-length"
+              |> Option.map ~f:int_of_string
+              |> Option.value ~default:78
+          ; canonicalizer_settings=
+              (if is_flag_set "print-canonical" then Canonicalize.legacy
+               else
+                 match flag_val "canonicalize" with
+                 | None -> Canonicalize.none
+                 | Some s ->
+                     let parse settings s =
+                       match String.lowercase s with
+                       | "deprecations" ->
+                           Canonicalize.{settings with deprecations= true}
+                       | "parentheses" -> {settings with parentheses= true}
+                       | "braces" -> {settings with braces= true}
+                       | "strip-comments" -> {settings with strip_comments= true}
+                       | "includes" -> {settings with inline_includes= true}
+                       | _ -> settings in
+                     List.fold ~f:parse ~init:Canonicalize.none
+                       (String.split ~on:',' s))
+          ; warn_pedantic= is_flag_set "warn-pedantic"
+          ; warn_uninitialized= is_flag_set "warn-uninitialized"
+          ; filename_in_msg= flag_val "filename-in-msg" }
+      ; color_output= is_flag_set "color-output" }
 
 (** Handle conversion of JS <-> OCaml values invoke driver *)
 let stan2cpp_wrapped name code flags includes =
@@ -196,18 +224,19 @@ let stan2cpp_wrapped name code flags includes =
   let compilation_result =
     let* name = checked_to_string ~name:"name" name in
     let* code = checked_to_string ~name:"code" code in
-    let* driver_flags = process_flags flags includes in
+    let* {driver_flags; color_output} = process_flags flags includes in
     let+ result, warnings =
       Common.ICE.with_exn_message (fun () ->
           invoke_driver name code driver_flags) in
-    (result, warnings, driver_flags.filename_in_msg) in
+    (result, warnings, driver_flags.filename_in_msg, color_output) in
   match compilation_result with
-  | Ok (result, warnings, printed_filename) ->
+  | Ok (result, warnings, printed_filename, color_output) ->
       let warnings =
         include_reader_warnings
-        @ List.map ~f:(Fmt.str "%a" (Warnings.pp ?printed_filename)) warnings
-      in
-      wrap_result ?printed_filename ~code result ~warnings
+        @ List.map
+            ~f:(str_color ~color_output "%a" (Warnings.pp ?printed_filename))
+            warnings in
+      wrap_result ?printed_filename ~color_output ~code result ~warnings
   | Error non_compilation_error (* either an ICE or malformed JS input *) ->
       wrap_error ~warnings:include_reader_warnings non_compilation_error
 
