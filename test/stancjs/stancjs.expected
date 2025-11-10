@@ -59,6 +59,18 @@ Semantic error in 'string', line 6, column 4 to column 5:
 
 Identifier "z" not in scope.
 
+With ANSI color output:
+[1m[31mSemantic error[0;1m[0m in [94m'string'[0m, line 6, column 4 to column 5:
+[2m   -------------------------------------------------
+[0m[2m     4:[0m  }
+[2m     5:[0m  model {
+[93m     6:[0m      z ~ std_normal();
+             [1m[31m^[0;1m[0m
+[2m     7:[0m  }
+[2m   -------------------------------------------------
+[0m
+Identifier [32m"z"[0m not in scope.
+
 $ node canonical.js
 functions {
   int foo(int x) {
