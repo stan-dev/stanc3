@@ -2,13 +2,18 @@ open Core
 open Core.Poly
 open Middle
 
+type demotion = int * Mem_pattern.t * string [@@deriving compare]
+
 let demotion_reasons = ref []
 
 let get_warnings () =
   let mem_name pattern =
     match pattern with Mem_pattern.SoA -> "SoA" | AoS -> "AoS" in
-  List.map !demotion_reasons ~f:(fun (linenum, pattern, msg) ->
-      Printf.sprintf "%s (Line %i) warning: %s" (mem_name pattern) linenum msg)
+  !demotion_reasons
+  |> List.dedup_and_sort ~compare:compare_demotion
+  |> List.map ~f:(fun (linenum, pattern, msg) ->
+         Printf.sprintf "%s (Line %i) warning: %s" (mem_name pattern) linenum
+           msg)
 
 let user_warning (mem_pattern : Mem_pattern.t) (linenum : int) (msg : string) =
   if not (String.is_empty msg) then
