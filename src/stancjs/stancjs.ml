@@ -30,8 +30,9 @@ let wrap_error ~warnings e =
   Js.Unsafe.obj
     [| ( "errors"
        , (* NB: The "0" entry is due to a historical mistake that led
-            to the output being an array which alternates between indices and
-            the actual error messages. For backward compatibility with existing consumers
+            the first entry always being a 0 (this element is a 'tag' used by jsoo
+            internally, but was not meant to be exposed to the user).
+            For backward compatibility with existing consumers
             of stanc.js we have to keep this behavior.
          *)
          Js.Unsafe.inject (Js.array (Array.map ~f:Js.string [| "0"; e |])) )
