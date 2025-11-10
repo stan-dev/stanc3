@@ -14,6 +14,7 @@ SoA (Line 13) warning: Right hand side contains only AoS expressions: aos_deep
 SoA (Line 13) warning: The right hand side of the assignment only contains data and scalar operations that are not promotable to SoA: aos_deep
 SoA (Line 17) warning: Right hand side contains only AoS expressions: aos_from_data
 SoA (Line 17) warning: The right hand side of the assignment only contains data and scalar operations that are not promotable to SoA: aos_from_data
+SoA (Line 20) warning: Right hand side contains AoS expressions (aos_deep): aos_mat_rep
 SoA (Line 20) warning: Right hand side contains only AoS expressions: aos_mat_rep
 SoA (Line 21) warning: Right hand side contains only AoS expressions: aos_mat_from_vecs
 SoA (Line 21) warning: The right hand side of the assignment only contains data and scalar operations that are not promotable to SoA: aos_mat_from_vecs
@@ -1681,6 +1682,7 @@ SoA (Line 21) warning: The right hand side of the assignment only contains data 
   $ ../../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir --debug-mem-patterns complex-fails.stan
 matrix[10, 10] A_p: AoS
 SoA (Line 2) warning: Right hand side contains only AoS expressions: A_p
+SoA (Line 6) warning: Complex-valued types cannot be SoA: A_complex_tp
 SoA (Line 6) warning: Right hand side contains only AoS expressions: A_complex_tp
 ((functions_block ()) (input_vars ()) (prepare_data ())
  (log_prob
@@ -9991,7 +9993,7 @@ SoA (Line 45) warning: Right hand side contains only AoS expressions: p_aos_mat_
 SoA (Line 46) warning: Right hand side contains only AoS expressions: p_aos_mat_pass_func_outer_single_indexed2
 SoA (Line 49) warning: Right hand side contains only AoS expressions: p_aos_mat_fail_uni_uni_idx1
 SoA (Line 50) warning: Right hand side contains only AoS expressions: p_aos_mat_fail_uni_uni_idx2
-SoA (Line 59) warning: Function on right hand side of assignment is not supported by SoA: p_aos_vec_v_assign_to_aos, tp_aos_vec_v
+SoA (Line 59) warning: Function 'udf_fun' on right hand side of assignment is not supported by SoA: p_aos_vec_v_assign_to_aos, tp_aos_vec_v
 SoA (Line 59) warning: Right hand side contains only AoS expressions: tp_aos_vec_v
 SoA (Line 59) warning: Right hand side of assignment is all AoS: p_aos_vec_v_assign_to_aos, tp_aos_vec_v
 SoA (Line 66) warning: Right hand side contains only AoS expressions: tp_aos_fail_func_vec_v
@@ -17205,7 +17207,7 @@ SoA (Line 17) warning: Right hand side contains only AoS expressions: aos_x
 SoA (Line 18) warning: Right hand side contains only AoS expressions: aos_y
 SoA (Line 23) warning: Right hand side contains only AoS expressions: tp_matrix_aos_from_mix
 SoA (Line 23) warning: Right hand side of assignment is all AoS: aos_x, aos_y, tp_matrix_aos_from_mix
-SoA (Line 24) warning: Function on right hand side of assignment is not supported by SoA: aos_x, tp_matrix_from_udf_reduced_soa
+SoA (Line 24) warning: Function 'okay_reduction' on right hand side of assignment is not supported by SoA: aos_x, tp_matrix_from_udf_reduced_soa
 SoA (Line 24) warning: Right hand side contains only AoS expressions: tp_matrix_from_udf_reduced_soa
 SoA (Line 24) warning: Right hand side of assignment is all AoS: aos_x, tp_matrix_from_udf_reduced_soa
 SoA (Line 24) warning: Used in user defined function:aos_x, aos_y, tp_matrix_aos_from_mix
@@ -18242,10 +18244,10 @@ matrix[10, 10] inner_empty_user_func_aos: AoS
 matrix[10, 10] int_aos_mul_aos: AoS
 matrix[10, 10] mul_two_aos: AoS
 SoA (Line 21) warning: Right hand side contains only AoS expressions: udf_input_aos
-SoA (Line 25) warning: Function on right hand side of assignment is not supported by SoA: udf_input_aos, user_func_aos
+SoA (Line 25) warning: Function 'mat_ret_user_func' on right hand side of assignment is not supported by SoA: udf_input_aos, user_func_aos
 SoA (Line 25) warning: Right hand side contains only AoS expressions: user_func_aos
 SoA (Line 25) warning: Right hand side of assignment is all AoS: udf_input_aos, user_func_aos
-SoA (Line 26) warning: Function on right hand side of assignment is not supported by SoA: empty_user_func_aos
+SoA (Line 26) warning: Function 'empty_user_func' on right hand side of assignment is not supported by SoA: empty_user_func_aos
 SoA (Line 26) warning: Right hand side contains only AoS expressions: empty_user_func_aos
 SoA (Line 26) warning: Used in user defined function:udf_input_aos, user_func_aos
 SoA (Line 27) warning: Right hand side contains only AoS expressions: inner_empty_user_func_aos
@@ -19916,7 +19918,7 @@ matrix[5, 10] tp_matrix_aos: AoS
 SoA (Line 16) warning: Right hand side contains only AoS expressions: first_pass_soa_x
 SoA (Line 17) warning: Right hand side contains only AoS expressions: aos_x
 SoA (Line 21) warning: Right hand side contains only AoS expressions: tp_matrix_aos
-SoA (Line 22) warning: Function on right hand side of assignment is not supported by SoA: aos_x, tp_matrix_aos
+SoA (Line 22) warning: Function 'nono_func' on right hand side of assignment is not supported by SoA: aos_x, tp_matrix_aos
 SoA (Line 22) warning: Right hand side contains only AoS expressions: tp_matrix_aos
 SoA (Line 22) warning: Right hand side of assignment is all AoS: aos_x, tp_matrix_aos
 ((functions_block

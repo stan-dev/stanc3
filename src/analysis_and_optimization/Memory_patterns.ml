@@ -387,15 +387,15 @@ let rec query_initial_demotable_stmt (in_loop : bool) (acc : string Set.Poly.t)
                      (extract_nonderived_admatrix_types rhs))
             | _ -> false in
           (* LHS (3) rhs unsupported function*)
-          let is_not_supported_func =
+          let non_supported_func_name =
             match rhs.pattern with
-            | FunApp (UserDefined _, _) -> true
-            | FunApp (CompilerInternal _, _) -> false
-            | FunApp (StanLib (name, _, _), exprs) ->
-                not
-                  (query_stan_math_mem_pattern_support name
-                     (List.map ~f:Expr.Typed.fun_arg exprs))
-            | _ -> false in
+            | FunApp (UserDefined (name, _), _) -> Some name
+            | FunApp (StanLib (name, _, _), exprs)
+              when not
+                     (query_stan_math_mem_pattern_support name
+                        (List.map ~f:Expr.Typed.fun_arg exprs)) ->
+                Some name
+            | _ -> None in
           (* LHS (3) all rhs aos*)
           let is_all_rhs_aos =
             is_nonzero_subset
@@ -403,7 +403,7 @@ let rec query_initial_demotable_stmt (in_loop : bool) (acc : string Set.Poly.t)
               ~set:rhs_demotable_names in
           if
             is_all_rhs_aos || is_rhs_not_promoteable_to_soa
-            || is_not_supported_func
+            || Option.is_some non_supported_func_name
           then (
             let rhs_set = query_var_eigen_names rhs in
             let all_rhs_warn =
@@ -416,10 +416,12 @@ let rec query_initial_demotable_stmt (in_loop : bool) (acc : string Set.Poly.t)
                  scalar operations that are not promotable to SoA: "
               else "" in
             let not_supported_func_warn =
-              if is_not_supported_func then
-                "Function on right hand side of assignment is not supported by \
-                 SoA: "
-              else "" in
+              match non_supported_func_name with
+              | Some fname ->
+                  "Function '" ^ fname
+                  ^ "' on right hand side of assignment is not supported by \
+                     SoA: "
+              | None -> "" in
             let rhs_name_set = Set.add rhs_set name in
             let rhs_name_set_str = concat_set_str rhs_name_set in
             user_warning_op SoA linenum all_rhs_warn rhs_name_set_str;
@@ -467,7 +469,10 @@ let rec query_initial_demotable_stmt (in_loop : bool) (acc : string Set.Poly.t)
   | Decl {decl_type= Type.Sized st; decl_id; initialize; _} ->
       let complex_name =
         match SizedType.is_complex_type st with
-        | true -> Set.Poly.singleton decl_id
+        | true ->
+            user_warning_op SoA linenum "Complex-valued types cannot be SoA: "
+              decl_id;
+            Set.Poly.singleton decl_id
         | false -> Set.Poly.empty in
       let init_names =
         match initialize with
@@ -503,8 +508,12 @@ let query_demotable_stmt (aos_exits : string Set.Poly.t)
       else
         match is_nonzero_subset ~set:aos_exits ~subset:all_rhs_eigen_names with
         | true ->
-            user_warning_op SoA linenum
-              "Right hand side contains only AoS expressions: " assign_name;
+            let faults = Set.inter aos_exits all_rhs_eigen_names in
+            let warn =
+              Fmt.(
+                str "Right hand side contains AoS expressions (%a): "
+                  (list string) (Set.to_list faults)) in
+            user_warning_op SoA linenum warn assign_name;
             Set.add all_rhs_eigen_names assign_name
         | false -> Set.Poly.empty)
   | Decl {decl_id; initialize= Assign e; _} -> (
@@ -516,8 +525,12 @@ let query_demotable_stmt (aos_exits : string Set.Poly.t)
       else
         match is_nonzero_subset ~set:aos_exits ~subset:all_rhs_eigen_names with
         | true ->
-            user_warning_op SoA linenum
-              "Right hand side contains only AoS expressions: " decl_id;
+            let faults = Set.inter aos_exits all_rhs_eigen_names in
+            let warn =
+              Fmt.(
+                str "Right hand side contains AoS expressions (%a): "
+                  (list string) (Set.to_list faults)) in
+            user_warning_op SoA linenum warn decl_id;
             Set.add all_rhs_eigen_names decl_id
         | false -> Set.Poly.empty)
   (* All other statements do not need logic here*)
