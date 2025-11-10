@@ -23,7 +23,7 @@ let invoke_driver model_name model flags =
 
 let wrap_warnings ~warnings =
   ( "warnings"
-  , Js.Unsafe.inject (Js.array (List.to_array (List.map ~f:Js.string warnings)))
+  , Js.Unsafe.coerce (Js.array (List.to_array (List.map ~f:Js.string warnings)))
   )
 
 let wrap_error ~warnings e =
@@ -35,7 +35,7 @@ let wrap_error ~warnings e =
             For backward compatibility with existing consumers
             of stanc.js we have to keep this behavior.
          *)
-         Js.Unsafe.inject (Js.array (Array.map ~f:Js.string [| "0"; e |])) )
+         Js.Unsafe.coerce (Js.array (Array.map ~f:Js.string [| "0"; e |])) )
      ; wrap_warnings ~warnings |]
 
 (** similar to [Fmt.str_like] but directly sets style
@@ -55,7 +55,7 @@ let wrap_result ?printed_filename ~color_output ~code ~warnings res =
   match res with
   | Result.Ok s ->
       Js.Unsafe.obj
-        [| ("result", Js.Unsafe.inject (Js.string s)); wrap_warnings ~warnings
+        [| ("result", Js.Unsafe.coerce (Js.string s)); wrap_warnings ~warnings
         |]
   | Error e ->
       let e =
@@ -86,7 +86,7 @@ let checked_to_array ~name value =
          (Js.Unsafe.meth_call
             (Js.Unsafe.pure_js_expr "Array")
             "isArray"
-            [| Js.Unsafe.inject value |]))
+            [| Js.Unsafe.coerce value |]))
   then
     Error
       (Fmt.str
