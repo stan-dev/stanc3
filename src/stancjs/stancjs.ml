@@ -29,13 +29,12 @@ let wrap_warnings ~warnings =
 let wrap_error ~warnings e =
   Js.Unsafe.obj
     [| ( "errors"
-       , (* NB: This should really be [Js.Unsafe.Inject (Js.array ...)] as above.
-            The fact that it is not is a historical mistake, and leads to the
-            resulting list in JS having a first entry of '0', the index.
-            Unfortunately, many tools have been built assuming the error message is
-            actually in the second entry, so we're stuck with this bad behavior.
+       , (* NB: The "0" entry is due to a historical mistake that led
+            to the output being an array which alternates between indices and
+            the actual error messages. For backward compatibility with existing consumers
+            of stanc.js we have to keep this behavior.
          *)
-         Js.Unsafe.inject (Array.map ~f:Js.string [| e |]) )
+         Js.Unsafe.inject (Js.array (Array.map ~f:Js.string [| "0"; e |])) )
      ; wrap_warnings ~warnings |]
 
 (** similar to [Fmt.str_like] but directly sets style
