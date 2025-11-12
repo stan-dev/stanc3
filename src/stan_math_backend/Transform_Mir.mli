@@ -1,6 +1,5 @@
-(** Perform backend-specific transformations of the MIR
-such as mangling or renaming of functions which differ in
-the library implementation *)
+(** Perform backend-specific transformations of the MIR such as mangling or
+    renaming of functions which differ in the library implementation *)
 
 open Middle
 

@@ -124,7 +124,8 @@ let rec eval_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
                 Mem_pattern.lub_mem_pat (List.cons mem_type lst) in
               try_partially_evaluate_stanlib
                 (match (f, l) with
-                (* TODO: deal with tilde statements and unnormalized distributions properly here *)
+                (* TODO: deal with tilde statements and unnormalized
+                   distributions properly here *)
                 | ( "bernoulli_lpmf"
                   , [ y
                     ; { pattern=
@@ -706,7 +707,8 @@ let rec eval_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
                   when is_int 1 y && is_int 2 z ->
                     let lub_mem = lub_mem_pat [mem] in
                     FunApp (StanLib ("sqrt", suffix, lub_mem), [x])
-                    (* This is wrong; if both are type UInt the exponent is rounds down to zero. *)
+                    (* This is wrong; if both are type UInt the exponent is
+                       rounds down to zero. *)
                 | ( "square"
                   , [{pattern= FunApp (StanLib ("sd", FnPlain, mem), [x]); _}] )
                   ->
@@ -1055,18 +1057,15 @@ let rec eval_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
       | TupleProjection (e, ix) -> TupleProjection (eval_expr e, ix)
       | Indexed (e, l) ->
           (* TODO: do something clever with array and matrix expressions here?
-             Note  that we could also constant fold array sizes if we keep those around on declarations. *)
+             Note that we could also constant fold array sizes if we keep those
+             around on declarations. *)
           Indexed (eval_expr e, List.map ~f:(Index.map eval_expr) l)) }
 
 let rec simplify_index_expr pattern =
   Expr.(
     match pattern with
     | Pattern.Indexed
-        ( { pattern=
-              Indexed (obj, inner_indices)
-              (* , Single ({emeta= {type_= UArray UInt; _} as emeta; _} as multi)
-               *   :: inner_tl ) *)
-          ; meta }
+        ( {pattern= Indexed (obj, inner_indices); meta}
         , (Single ({meta= Expr.Typed.Meta.{type_= UInt; _}; _} as single_e) as
            single)
           :: outer_tl )
@@ -1074,7 +1073,8 @@ let rec simplify_index_expr pattern =
         match List.split_while ~f:(Fn.non is_multi_index) inner_indices with
         | inner_singles, MultiIndex first_multi :: inner_tl ->
             (* foo [arr1, ..., arrN] [i1, ..., iN] ->
-               foo [arr1[i1]] [arr[i2]] ... [arrN[iN]] *)
+             * foo [arr1[i1]] [arr[i2]] ... [arrN[iN]]
+             *)
             simplify_index_expr
               (Indexed
                  ( { pattern=

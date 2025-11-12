@@ -48,16 +48,13 @@ val unique_minimum_promotion :
 
 val matching_function :
   Environment.t -> string -> UnsizedType.argumentlist -> match_result
-(** Searches for a function of the given name which can
-    support the required argument types.
-    Requires a unique minimum option under type promotion
-*)
+(** Searches for a function of the given name which can support the required
+    argument types. Requires a unique minimum option under type promotion *)
 
 val matching_stanlib_function :
   string -> UnsizedType.argumentlist -> match_result
-(** Same as [matching_function] but requires specifically that the function
-    be from StanMath (uses [Environment.stan_math_environment])
-*)
+(** Same as [matching_function] but requires specifically that the function be
+    from StanMath (uses [Environment.stan_math_environment]) *)
 
 val check_variadic_args :
      allow_lpdf:bool
@@ -68,10 +65,9 @@ val check_variadic_args :
   -> ( UnsizedType.t * Promotion.t list
      , UnsizedType.argumentlist * function_mismatch )
      result
-(** Check variadic function arguments.
-      If a match is found, returns [Ok] of the function type and a list of promotions (see [promote])
-      If none is found, returns [Error] of the list of args and a function_mismatch.
-     *)
+(** Check variadic function arguments. If a match is found, returns [Ok] of the
+    function type and a list of promotions (see [promote]) If none is found,
+    returns [Error] of the list of args and a function_mismatch. *)
 
 val data_only_msg : unit Fmt.t
 

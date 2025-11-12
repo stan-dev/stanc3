@@ -142,7 +142,7 @@ program:
     EOF
     {
       grammar_logger "program" ;
-      (* check for empty programs*)
+      (* check for empty programs *)
       if List.is_empty (List.filter_opt [ofb; odb; otdb; opb; otpb; omb; ogb])
       then Input_warnings.empty ();
       { functionblock= ofb

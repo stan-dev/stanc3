@@ -32,9 +32,9 @@ let math_fn_translations = function
 let trans_math_fn f =
   Option.value ~default:(Internal_fun.to_string f) (math_fn_translations f)
 
-(* Code generation for the right hand side of expressions to initialize objects.
-   For scalar types this sets the value to NaN and for containers initializes the memory.
-*)
+(** Code generation for the right hand side of expressions to initialize
+    objects. For scalar types this sets the value to NaN and for containers
+    initializes the memory. *)
 let rec initialize_value st adtype =
   let open Cpp.DSL in
   let init_nan =
@@ -96,7 +96,7 @@ let rec initialize_value st adtype =
             (st : Expr.Typed.t SizedType.t)
             (adtype : UnsizedType.autodifftype)]
 
-(*Initialize an object of a given size.*)
+(** Initialize an object of a given size.*)
 let lower_assign_sized st adtype (initialize : 'a Stmt.Pattern.decl_init) =
   match initialize with
   | Assign e -> Some (lower_expr e)
@@ -175,17 +175,19 @@ and lower_nonrange_lbase = function
   | LTupleProjection (lv, ix) ->
       Exprs.tuple_get (ix - 1) (lower_nonrange_lvalue lv)
 
-(* True if expr has a 'shallow' overlap with the lhs, for the purpose of checking if expr needs to be deep copied when it's assigned to the lhs.
-   This is 'shallow' in the sense that it doesn't recurse into expressions *)
+(* True if expr has a 'shallow' overlap with the lhs, for the purpose of
+   checking if expr needs to be deep copied when it's assigned to the lhs. This
+   is 'shallow' in the sense that it doesn't recurse into expressions *)
 let expr_overlaps_lhs_ref (lhs_base_ref : 'e Stmt.Pattern.lvalue)
     (expr : 'a Expr.t) : bool =
   Option.value_map
-    (* Convert the expression to an lvalue to get rid of everything but variables and indices *)
+    (* Convert the expression to an lvalue to get rid of everything but
+       variables and indices *)
     (Stmt.Helpers.lvalue_of_expr_opt expr)
     (* If we can't, this expression can't be deep copied *)
     ~default:false
-      (* If we can, then find it's base reference and see if it overlaps with the LHS *)
-    ~f:(fun expr_lv ->
+      (* If we can, then find it's base reference and see if it overlaps with
+         the LHS *) ~f:(fun expr_lv ->
       let expr_base_ref = Stmt.Helpers.lvalue_base_reference expr_lv in
       expr_base_ref = lhs_base_ref)
 
@@ -205,7 +207,8 @@ let throw_exn exn_type args =
 
 let rec lower_statement Stmt.{pattern; meta} : stmt list =
   let remove_promotions (e : 'a Expr.t) =
-    (* assignment handles one level of promotion internally, don't do it twice *)
+    (* assignment handles one level of promotion internally, don't do it
+       twice *)
     match e.pattern with
     | Promotion (_, UTuple _, _) -> e
     | Promotion (e, _, _) -> e
@@ -307,8 +310,8 @@ let rec lower_statement Stmt.{pattern; meta} : stmt list =
       match
         (unconstrain_opt, Option.bind ~f:constraint_to_string unconstrain_opt)
       with
-      (* When the current block or this transformation doesn't require unconstraining,
-         use vanilla write *)
+      (* When the current block or this transformation doesn't require
+         unconstraining, use vanilla write *)
       | None, _ | _, None -> out.@?("write", [lower_expr var]) |> wrap_e
       (* Otherwise, use stan::io::serializer's write_free functions *)
       | Some trans, Some unconstrain_string ->

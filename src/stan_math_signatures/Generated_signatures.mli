@@ -1,7 +1,7 @@
 (** The [Generated_signatures] module is produced by the [Generate.ml]
-   executable in this folder.
+    executable in this folder.
 
-   These values should only be used by the [Stan_math_signatures] module. *)
+    These values should only be used by the [Stan_math_signatures] module. *)
 
 open Core
 open Middle

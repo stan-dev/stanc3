@@ -38,20 +38,19 @@ let eigen_block_expr_fns =
   ["head"; "tail"; "segment"; "col"; "row"; "block"; "sub_row"; "sub_col"]
   |> String.Set.of_list
 
-(** Eval indexed eigen types in UDF calls to prevent
-   infinite template expansion if the call is recursive
+(** Eval indexed eigen types in UDF calls to prevent infinite template expansion
+    if the call is recursive
 
-   Infinite expansion can happen only when the call graph is cyclic.
-   The strategy here is to build the call graph one edge at the time
-   and check if adding that edge creates a cycle. If it does, insert
-   an [eval()] to stop template expansion.
+    Infinite expansion can happen only when the call graph is cyclic. The
+    strategy here is to build the call graph one edge at the time and check if
+    adding that edge creates a cycle. If it does, insert an [eval()] to stop
+    template expansion.
 
-   All relevant function calls are recorded transitively in [callgraph],
-   meaning if [A] calls [B] and [B] calls [C] then [callgraph[A] = {B,C}].
-   In the worst case every function calls every other, [callgraph] has
-   size O(n^2) and this algorithm is O(n^3) so it's important to track
-   only the function calls that really can propagate eigen templates.
-*)
+    All relevant function calls are recorded transitively in [callgraph],
+    meaning if [A] calls [B] and [B] calls [C] then [callgraph[A] = {B,C}]. In
+    the worst case every function calls every other, [callgraph] has size O(n^2)
+    and this algorithm is O(n^3) so it's important to track only the function
+    calls that really can propagate eigen templates. *)
 let break_eigen_cycles functions_block =
   let callgraph = String.Table.create () in
   let eval_eigen_cycles fun_args calls (f : _ Program.fun_def) =
@@ -79,7 +78,8 @@ let break_eigen_cycles functions_block =
         match Hashtbl.find callgraph name with
         | Some nested when Hash_set.mem nested f.fdname -> eval_args
         | Some nested ->
-            (* [calls] records all functions reachable from the current function *)
+            (* [calls] records all functions reachable from the current
+               function *)
             Hash_set.add calls name;
             Hash_set.iter nested ~f:(Hash_set.add calls);
             args
@@ -116,7 +116,8 @@ let break_eigen_cycles functions_block =
       let calls = String.Hash_set.create () in
       let fndef = eval_eigen_cycles fun_args calls fd in
       if not (Hash_set.is_empty calls) then (
-        (* update [callgraph] with the call paths going through the current function *)
+        (* update [callgraph] with the call paths going through the current
+           function *)
         Hashtbl.map_inplace callgraph ~f:(fun x ->
             if Hash_set.mem x fdname then Hash_set.union calls x else x);
         Hashtbl.update callgraph fdname
@@ -220,17 +221,17 @@ let munge_tuple_name name =
 
 let make_tuple_temp name = munge_tuple_name name ^ "_temp__"
 
-(** This function is essentially copied from [var_context_read],
-    but rather than calling ReadDataFn, this indexes
-    into the flattened versions of the tuple data
-    created by [var_context_read] when it encounters an array of tuples
+(** This function is essentially copied from [var_context_read], but rather than
+    calling ReadDataFn, this indexes into the flattened versions of the tuple
+    data created by [var_context_read] when it encounters an array of tuples
 
-    @param enclosing_tuple_name The name (in the sense of [Stmt.Helpers.get_lhs_name])
-      of the element of the tuple this recursive call is handling. This is
-      used to generate the appropriate [_flat__] variable to pull from
-    @param origin_type The type of the flat variable for this call, if one exists.
-      In situations where this is an array of tuples still, this type is unused.
-  *)
+    @param enclosing_tuple_name
+      The name (in the sense of [Stmt.Helpers.get_lhs_name]) of the element of
+      the tuple this recursive call is handling. This is used to generate the
+      appropriate [_flat__] variable to pull from
+    @param origin_type
+      The type of the flat variable for this call, if one exists. In situations
+      where this is an array of tuples still, this type is unused. *)
 let rec var_context_read_inside_tuple enclosing_tuple_name origin_type
     ((decl_id_lval : 'a Stmt.Pattern.lvalue), _, st) =
   let smeta =
@@ -442,16 +443,22 @@ let rec var_context_read_internal
           subtypes in
       List.concat_map ~f:var_context_read_internal sub_sts
   | SArray _ when SizedType.contains_tuple st ->
-      (* The IO format for tuples is complicated in this case.
-         Therefore, we need to do the following
+      (* The IO format for tuples is complicated in this case. Therefore, we
+         need to do the following
+
          1. Make "_flat__" decls for everything
+
          2. Declare a temp for each item of this tuple
+
          3. in a loop:
-           i. call [var_context_read_inside_tuple] with the temp variable as the destination
-             this function does essentially the same things recursively, but it doesn't create
-             more "_flat__" variables for deeper nested arrays-of-tuples.
-           ii. assign those temps (forwarding as tuple) to this variable, properly indexed.
-      *)
+
+         - i. call [var_context_read_inside_tuple] with the temp variable as the
+         destination this function does essentially the same things recursively,
+         but it doesn't create more "_flat__" variables for deeper nested
+         arrays-of-tuples.
+
+         - ii. assign those temps (forwarding as tuple) to this variable,
+         properly indexed. *)
       let tupl, dims = SizedType.get_array_dims st in
       let flat_decls =
         (* Here we need to go recursively all the way down the tuple *)
@@ -489,8 +496,8 @@ let rec var_context_read_internal
               |> swrap_noloc ])
           flat_vars flat_io_names flat_types
         |> List.concat in
-      (* from now on, we only care about things at this level,
-         calling [var_context_read_inside_tuple] *)
+      (* from now on, we only care about things at this level, calling
+         [var_context_read_inside_tuple] *)
       let tuple_component_names, tuple_types =
         match tupl with
         | STuple subtypes ->
@@ -595,13 +602,11 @@ let var_context_read p =
   (* this never uses the declare-define fast path at the moment *)
   (var_context_read_internal p, None)
 
-(*
-  Get the dimension expressions that are expected by constrain/unconstrain
-  functions for a sized type.
+(* Get the dimension expressions that are expected by constrain/unconstrain
+   functions for a sized type.
 
-  For constrains that return square / lower triangular matrices the C++
-  only wants one of the matrix dimensions.
-*)
+   For constrains that return square / lower triangular matrices the C++ only
+   wants one of the matrix dimensions. *)
 let read_constrain_dims constrain_transform st =
   let rec constrain_get_dims st =
     match st with
@@ -682,7 +687,8 @@ let param_deserializer_read
                 { pattern=
                     Pattern.Assignment (lval, SizedType.to_unsized cst, read)
                 ; meta= smeta } ]
-          , (* if we're assigning to a top level variable, we can opt into to the declare-define *)
+          , (* if we're assigning to a top level variable, we can opt into to
+               the declare-define *)
             match lval with
             | Stmt.Pattern.LVariable _, [] -> Some read
             | _ -> None )) in
@@ -694,9 +700,9 @@ let escape_name str =
   |> String.substr_replace_all ~pattern:"-" ~with_:"_"
 
 (** Make sure that all if-while-and-for bodies are safely wrapped in a block in
-  such a way that we can insert a location update before. The blocks make sure
-  that the program with the inserted location update is still well-formed C++ though.
-*)
+    such a way that we can insert a location update before. The blocks make sure
+    that the program with the inserted location update is still well-formed C++
+    though. *)
 let rec ensure_body_in_block (Stmt.{pattern; _} as stmt) =
   let in_block stmt =
     let pattern =
@@ -787,7 +793,7 @@ let param_serializer_write ?(unconstrain = false)
         let tuple_elements =
           subtypes
           |> List.mapi ~f:(fun iter x ->
-                 (Expr.Helpers.add_tuple_index var (iter + 1), x))
+              (Expr.Helpers.add_tuple_index var (iter + 1), x))
           |> List.map2_exn ~f:(fun t (v, st) -> (v, st, t)) transforms in
         List.concat_map ~f:write tuple_elements
     | true, SArray _, TupleTransformation _ ->
@@ -823,12 +829,10 @@ let param_serializer_write ?(unconstrain = false)
           ; adlevel= DataOnly } } in
   write (decl_var, out_constrained_st, out_trans)
 
-(**
-  Generate write instructions for unconstrained types. For scalars,
-  matrices, vectors, and arrays with one dimension we can write
-  these directly, but for arrays of arrays/vectors/matrices we
-  need to write them in "column major order"
- *)
+(** Generate write instructions for unconstrained types. For scalars, matrices,
+    vectors, and arrays with one dimension we can write these directly, but for
+    arrays of arrays/vectors/matrices we need to write them in "column major
+    order" *)
 let param_unconstrained_serializer_write
     (decl_id, smeta, Program.{out_constrained_st; _}) =
   let rec write (var, st) =
@@ -867,8 +871,8 @@ let param_unconstrained_serializer_write
           ; adlevel= DataOnly } } in
   write (var, out_constrained_st)
 
-(** Reads in parameters from a var_context, the same way as is done in the constructor,
-     and then writes out the unconstrained versions *)
+(** Reads in parameters from a var_context, the same way as is done in the
+    constructor, and then writes out the unconstrained versions *)
 let var_context_unconstrain_transform (decl_id, smeta, outvar) =
   let st = outvar.Program.out_constrained_st in
   Stmt.
@@ -884,7 +888,8 @@ let var_context_unconstrain_transform (decl_id, smeta, outvar) =
   :: var_context_read_internal (Stmt.Helpers.lvariable decl_id, smeta, st)
   @ param_serializer_write ~unconstrain:true (decl_id, outvar)
 
-(** Reads in parameters from a serializer and then writes out the unconstrained versions *)
+(** Reads in parameters from a serializer and then writes out the unconstrained
+    versions *)
 let array_unconstrain_transform (decl_id, smeta, outvar) =
   let decl =
     Stmt.
@@ -1008,7 +1013,7 @@ let map_prog_stmt_lists f (p : ('a, 'b, 'c) Program.t) =
   ; unconstrain_array= f p.unconstrain_array }
 
 let trans_prog ?(use_opencl = false) (p : Program.Typed.t) =
-  (* name mangling of c++ keywords*)
+  (* name mangling of c++ keywords *)
   let rec map_stmt {Stmt.pattern; meta} =
     { Stmt.pattern= Stmt.Pattern.map translate_funapps_and_kwrds map_stmt pattern
     ; meta } in
@@ -1054,12 +1059,12 @@ let trans_prog ?(use_opencl = false) (p : Program.Typed.t) =
   let param_writes, tparam_writes, gq_writes =
     List.map p.output_vars ~f:param_unconstrained_serializer_write
     |> List.map2_exn p.output_vars ~f:(fun (_, meta, outvar) writes ->
-           (outvar.Program.out_block, Stmt.{pattern= SList writes; meta}))
+        (outvar.Program.out_block, Stmt.{pattern= SList writes; meta}))
     |> List.partition3_map ~f:(fun (b, x) ->
-           match b with
-           | Parameters -> `Fst x
-           | TransformedParameters -> `Snd x
-           | GeneratedQuantities -> `Trd x) in
+        match b with
+        | Parameters -> `Fst x
+        | TransformedParameters -> `Snd x
+        | GeneratedQuantities -> `Trd x) in
   let tparam_start stmt =
     Stmt.(
       match stmt.pattern with
@@ -1167,7 +1172,7 @@ let trans_prog ?(use_opencl = false) (p : Program.Typed.t) =
     { p with
       log_prob=
         log_prob @ maybe_add_opencl_events_clear
-        (*First initialization of reverse mode log prob *)
+        (* First initialization of reverse mode log prob *)
     ; reverse_mode_log_prob= log_prob @ maybe_add_opencl_events_clear
     ; prog_name= escape_name p.prog_name
     ; prepare_data=

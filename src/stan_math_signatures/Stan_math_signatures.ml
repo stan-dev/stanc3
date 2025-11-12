@@ -5,11 +5,10 @@ open Core.Poly
 open Middle
 
 (** The [Generated_signatures] module is produced by the [Generate.ml]
-   executable in this folder.
+    executable in this folder.
 
-   **This is an optimization**, one can proceed as-if the
-   hashtables here were built at runtime by the code in that module
-   (i.e., by [include Generate]) *)
+    {b This is an optimization}, one can proceed as-if the hashtables here were
+    built at runtime by the code in that module (i.e., by [include Generate]) *)
 
 let stan_math_signatures = Generated_signatures.stan_math_signatures
 
@@ -71,23 +70,23 @@ let get_sigs name =
 
 let make_assignmentoperator_stan_math_signatures assop =
   (match assop with
-  | Operator.Divide -> ["divide"]
-  | assop -> operator_to_stan_math_fns assop)
+    | Operator.Divide -> ["divide"]
+    | assop -> operator_to_stan_math_fns assop)
   |> List.concat_map ~f:get_sigs
   |> List.concat_map ~f:(function
-       | [(ad1, lhs); (ad2, rhs)], ReturnType rtype, _, _
-         when rtype = lhs
-              && not
-                   ((assop = Operator.EltTimes || assop = Operator.EltDivide)
-                   && UnsizedType.is_scalar_type rtype) ->
-           if rhs = UReal then
-             [ ( [(ad1, lhs); (ad2, UInt)]
-               , UnsizedType.Void
-               , Fun_kind.FnPlain
-               , Mem_pattern.SoA )
-             ; ([(ad1, lhs); (ad2, UReal)], Void, FnPlain, SoA) ]
-           else [([(ad1, lhs); (ad2, rhs)], Void, FnPlain, SoA)]
-       | _ -> [])
+    | [(ad1, lhs); (ad2, rhs)], ReturnType rtype, _, _
+      when rtype = lhs
+           && not
+                ((assop = Operator.EltTimes || assop = Operator.EltDivide)
+                && UnsizedType.is_scalar_type rtype) ->
+        if rhs = UReal then
+          [ ( [(ad1, lhs); (ad2, UInt)]
+            , UnsizedType.Void
+            , Fun_kind.FnPlain
+            , Mem_pattern.SoA )
+          ; ([(ad1, lhs); (ad2, UReal)], Void, FnPlain, SoA) ]
+        else [([(ad1, lhs); (ad2, rhs)], Void, FnPlain, SoA)]
+    | _ -> [])
 
 let pp_math_sigs ppf name =
   (Fmt.list ~sep:Fmt.cut UnsizedType.pp_math_sig) ppf (get_sigs name)
@@ -155,7 +154,7 @@ let is_reduce_sum_fn f =
   String.equal f "reduce_sum" || String.equal f "reduce_sum_static"
 
 let embedded_laplace_functions =
-  [ (* general fns  *) "laplace_marginal"; "laplace_marginal_tol"
+  [ (* general fns *) "laplace_marginal"; "laplace_marginal_tol"
   ; "laplace_latent_rng"; "laplace_latent_tol_rng"; (* "helpers" *)
     "laplace_marginal_bernoulli_logit_lpmf"
   ; "laplace_marginal_tol_bernoulli_logit_lpmf"

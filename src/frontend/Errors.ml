@@ -12,12 +12,12 @@ let get_context ?code Middle.Location.{filename; included_from; _} =
   Option.try_with @@ fun () ->
   match (included_from, code) with
   | None, Some code ->
-      (* If the location is not included from anywhere, and we
-         have code provided, use it *)
+      (* If the location is not included from anywhere, and we have code
+         provided, use it *)
       String.split_lines code
   | _ -> (
-      (* Otherwise, by the time we are printing an error,
-         all these files are already resolved. *)
+      (* Otherwise, by the time we are printing an error, all these files are
+         already resolved. *)
       match !Include_files.include_provider with
       | FileSystemPaths _ ->
           (* So we can read directly from the filesystem *)

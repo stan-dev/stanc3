@@ -54,8 +54,8 @@ let functions_block_contains_jac_pe (stmts : untyped_statement list) =
     current_scope_id := !current_scope_id - 1;
     (* if the scope we just left was the one defining jacobian, reset it *)
     if !jacobian_scope_id > !current_scope_id then jacobian_scope_id := 0 in
-  (* walk over the tree, looking for usages of jacobian+= where
-     there is no variable called jacobian already in scope *)
+  (* walk over the tree, looking for usages of jacobian+= where there is no
+     variable called jacobian already in scope *)
   let rec f (s : untyped_statement) =
     match s.stmt with
     | FunDef {body; funname; _}

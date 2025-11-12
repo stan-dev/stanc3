@@ -30,14 +30,12 @@ let bounds = function
 let every_index_is_all lst =
   List.for_all lst ~f:(function All -> true | _ -> false)
 
-(**
- Apply an op over the [Index] types inner expressions.
- @param default Value to return for [All]
- @param merge Function taking in lhs and rhs of [Between] and
- merging their result.
- @param op a functor to run with inputs of inner exprs
- @param ind the Index.t to
- *)
+(** Apply an op over the [Index] types inner expressions.
+    @param default Value to return for [All]
+    @param merge
+      Function taking in lhs and rhs of [Between] and merging their result.
+    @param op a functor to run with inputs of inner exprs
+    @param ind the Index.t to *)
 let apply ~default ~merge op (ind : 'a t) =
   match ind with
   | All -> default

@@ -23,10 +23,12 @@ let set_model_name model_name =
     Flags.remove_dotstan List.(hd_exn (rev (String.split model_name ~on:'/')))
   in
   if String.equal model_name model_name_munged then
-    (* model name was not file-like, so we leave as is (e.g. from --name argument) *)
+    (* model name was not file-like, so we leave as is (e.g. from --name
+       argument) *)
     Typechecker.model_name := mangle model_name
   else
-    (* model name was a file-like thing, so we add _model to match existing behavior *)
+    (* model name was a file-like thing, so we add _model to match existing
+       behavior *)
     Typechecker.model_name := mangle (model_name_munged ^ "_model")
 
 let reset_mutable_states model_name (flags : Flags.t) =
@@ -60,7 +62,7 @@ let stan2cpp model_name model (flags : Flags.t) (output : other_output -> unit)
     if flags.functions_only then Parse.parse_stanfunctions model
     else Parse.parse_program model in
   output (Warnings parser_warnings);
-  let* ast = ast in
+  let* ast in
   if flags.debug_settings.print_ast then
     output (DebugOutput (fmt_sexp [%sexp (ast : Ast.untyped_program)]));
   let* typed_ast, type_warnings =

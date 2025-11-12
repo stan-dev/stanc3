@@ -15,7 +15,8 @@ let%expect_test "with_exn_message" =
     This should never happen. Please file a bug at https://github.com/stan-dev/stanc3/issues/new
     and include this message and the model that caused this issue. |}]
 
-(* expect_tests warn against directly including a backtrace for fragility reasons *)
+(* expect_tests warn against directly including a backtrace for fragility
+   reasons *)
 let%expect_test "backtrace indirect test" =
   ( ICE.with_exn_message (fun () -> failwith "oops!")
   |> Result.error |> Option.value_exn

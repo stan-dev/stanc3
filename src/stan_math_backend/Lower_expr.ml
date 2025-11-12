@@ -20,7 +20,8 @@ let fn_renames =
     ; ("lchoose", "stan::math::binomial_coefficient_log")
     ; ("std_normal_qf", "stan::math::inv_Phi")
     ; ("integrate_ode", "stan::math::integrate_ode_rk45")
-      (* constraints -- originally internal functions, may be worth renaming now *)
+      (* constraints -- originally internal functions, may be worth renaming
+         now *)
     ; ("cholesky_factor_corr_jacobian", "stan::math::cholesky_corr_constrain")
     ; ("cholesky_factor_corr_constrain", "stan::math::cholesky_corr_constrain")
     ; ("cholesky_factor_corr_unconstrain", "stan::math::cholesky_corr_free")
@@ -78,13 +79,12 @@ let functor_suffix_select = function
   | ReduceSum -> reduce_sum_functor_suffix
   | FixedArgs -> functor_suffix
 
-(* return true if the type of the expression
-   is integer, real, or complex (e.g. not a container) *)
+(* return true if the type of the expression is integer, real, or complex (e.g.
+   not a container) *)
 let is_scalar e =
   match Expr.Typed.type_of e with UInt | UReal | UComplex -> true | _ -> false
 
-(** Used to determine if [operator/] should be
-      mdivide_right() or divide() *)
+(** Used to determine if [operator/] should be mdivide_right() or divide() *)
 let is_matrix e =
   match Expr.Typed.type_of e with
   | UMatrix | UComplexMatrix -> true
@@ -272,8 +272,8 @@ and lower_operator_app op es_in =
   | Minus -> lower_binary_op Subtract "stan::math::subtract" es
   | Times -> lower_binary_op Multiply "stan::math::multiply" es
   | Divide | IntDivide ->
-      (* XXX: This conditional is probably a sign that we need to rethink how we store Operators
-         in the MIR *)
+      (* XXX: This conditional is probably a sign that we need to rethink how we
+         store Operators in the MIR *)
       if
         is_matrix (second es)
         && (is_matrix (first es) || is_row_vector (first es))
@@ -351,14 +351,12 @@ and lower_functionals fname suffix es mem_pattern =
         | e -> e in
       let converted_es = List.map ~f:convert_hof_vars es in
       let msgs = "pstream__" |> Middle.Expr.Helpers.variable in
-      (* Here, because these signatures are written in C++ such that they
-         wanted to have optional arguments and piggyback on C++ default
-         arguments and not write the necessary overloads, we have to
-         reorder the arguments as pstream__ does not always come last
-         in a way that is specific to the function name. If you are a C++
-         developer please don't add more of these - just add the
-         overloads.
-      *)
+      (* Here, because these signatures are written in C++ such that they wanted
+         to have optional arguments and piggyback on C++ default arguments and
+         not write the necessary overloads, we have to reorder the arguments as
+         pstream__ does not always come last in a way that is specific to the
+         function name. If you are a C++ developer please don't add more of
+         these - just add the overloads. *)
       let fname, args =
         match (fname, converted_es) with
         | "algebra_solver", f :: x :: y :: dat :: datint :: tl
@@ -552,12 +550,13 @@ and lower_expr ?(promote_reals = false) (Expr.{pattern; meta} : Expr.Typed.t) :
   | Lit ((Real | Int), s) -> Literal s
   | Promotion (expr, UReal, ad) when is_scalar expr ->
       if promote_reals && ad = UnsizedType.DataOnly then
-        (* this can be important for e.g. templated function calls
-           where we might generate an incorrect specification for int *)
+        (* this can be important for e.g. templated function calls where we
+           might generate an incorrect specification for int *)
         static_cast Cpp.Double (lower_expr expr)
       else lower_expr expr
   | Promotion (expr, UComplex, DataOnly) when is_scalar expr ->
-      (* this is in principle a little better than promote_scalar since it is constexpr *)
+      (* this is in principle a little better than promote_scalar since it is
+         constexpr *)
       fun_call "stan::math::to_complex" [lower_expr expr; Literal "0"]
   | Promotion (expr, ut, ad) ->
       templated_fun_call "stan::math::promote_scalar"

@@ -195,10 +195,6 @@ let gen_corr_cholesky_unwrapped n =
 
 let gen_corr_cholesky n = wrap_real_mat (gen_corr_cholesky_unwrapped n)
 
-(* let gen_identity_matrix m n =
-   let id_mat = gen_diag_mat (List.init ~f:(fun _ -> 1.) n) in
-   if m <= n then wrap_real_mat id_mat else pad_mat id_mat m n *)
-
 let gen_cov_matrix n =
   let cov = gen_cov_unwrapped n in
   wrap_real_mat cov
@@ -327,7 +323,7 @@ let json_to_mir (decls : (Expr.Typed.t SizedType.t * 'a * string) list)
     | `Assoc l, UTuple ts ->
         l
         |> List.sort ~compare:(fun (x, _) (y, _) ->
-               Int.compare (int_of_string x) (int_of_string y))
+            Int.compare (int_of_string x) (int_of_string y))
         |> List.map2_exn ~f:(fun typ_ (_, json) -> create_expr typ_ json) ts
         |> Option.all
         |> Option.map ~f:(fun l -> Expr.Helpers.tuple_expr l)
@@ -339,7 +335,7 @@ let json_to_mir (decls : (Expr.Typed.t SizedType.t * 'a * string) list)
   List.filter_map decls ~f:(fun (st, _, name) ->
       Map.find map name
       |> Option.bind ~f:(fun value ->
-             create_expr (SizedType.to_unsized st) value)
+          create_expr (SizedType.to_unsized st) value)
       |> Option.map ~f:(fun value -> (name, value)))
   |> Map.Poly.of_alist_reduce ~f:Fn.const
 

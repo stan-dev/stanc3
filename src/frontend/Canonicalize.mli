@@ -1,12 +1,11 @@
-(** Re-write ASTs to remove deprecated features and clean up
-    extra parenthesis, etc *)
+(** Re-write ASTs to remove deprecated features and clean up extra parenthesis,
+    etc *)
 
 open Ast
 
-(** Flags to enable or disable certain kinds of canonicalization.
-    NB: [inline_includes] is controlled by the [--canonicalize] argument
-    to stanc, but it consumed by the pretty-printer, {i not} this module.
-*)
+(** Flags to enable or disable certain kinds of canonicalization. NB:
+    [inline_includes] is controlled by the [--canonicalize] argument to stanc,
+    but is consumed by the pretty-printer, {i not} this module. *)
 type canonicalizer_settings =
   { deprecations: bool
   ; parentheses: bool
@@ -15,11 +14,12 @@ type canonicalizer_settings =
   ; strip_comments: bool }
 
 val legacy : canonicalizer_settings
-(** Equivalent to what [--print-canonical] did before these settings were available *)
+(** Equivalent to what [--print-canonical] did before these settings were
+    available *)
 
 val none : canonicalizer_settings
 
 val canonicalize_program :
   typed_program -> canonicalizer_settings -> typed_program
-(** "Canonicalize" the program by removing deprecations, adding or removing parenthesis
-    and braces, etc. *)
+(** "Canonicalize" the program by removing deprecations, adding or removing
+    parenthesis and braces, etc. *)

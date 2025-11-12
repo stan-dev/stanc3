@@ -2521,8 +2521,8 @@ let%expect_test "lazy code motion, 4" =
   in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  (* TODO: make sure that these
-     temporaries do not get assigned level DataOnly unless appropriate *)
+  (* TODO: make sure that these temporaries do not get assigned level DataOnly
+     unless appropriate *)
   Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
   [%expect
     {|
@@ -3013,8 +3013,9 @@ let%expect_test "lazy code motion, 13" =
         if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
-let%expect_test "cool example: expression propagation + partial evaluation + \
-                 lazy code motion + dead code elimination" =
+let%expect_test
+    "cool example: expression propagation + partial evaluation + lazy code \
+     motion + dead code elimination" =
   let mir =
     reset_and_mir_of_string
       {|

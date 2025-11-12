@@ -34,7 +34,7 @@ let%expect_test "Prefix-Op-Example" =
   in
   let op = mir.log_prob in
   print_s [%sexp (op : Stmt.Located.t list)];
-  (* Perhaps this is producing too many nested lists. XXX*)
+  (* Perhaps this is producing too many nested lists. XXX *)
   [%expect
     {|
       (((pattern
