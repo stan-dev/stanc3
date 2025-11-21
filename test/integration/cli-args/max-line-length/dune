@@ -8,7 +8,7 @@
   (with-stdout-to
    %{targets}
    (run
-    %{bin:run_bin_on_args}
+    %{project_root}/test/integration/run_bin_on_args.exe
     "%{bin:stanc} --auto-format --max-line-length=40"
     %{stanfiles}))))
 
@@ -27,7 +27,7 @@
   (with-stdout-to
    %{targets}
    (run
-    %{bin:run_bin_on_args}
+    %{project_root}/test/integration/run_bin_on_args.exe
     "%{bin:stanc} --auto-format --max-line-length=120"
     %{stanfiles}))))
 
