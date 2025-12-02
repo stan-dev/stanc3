@@ -45,7 +45,7 @@ pipeline {
         buildDiscarder(logRotator(numToKeepStr: '20', daysToKeepStr: '100', artifactDaysToKeepStr: '100'))
     }
     environment {
-        MACOS_SWITCH = 'stanc3-4.14'
+        MACOS_SWITCH = 'stanc3-cmdliner2.1.0'
     }
     stages {
 
@@ -105,7 +105,7 @@ pipeline {
                                             opam repository add archive git+https://github.com/ocaml/opam-repository-archive
                                             opam switch list
                                             opam update -y || true
-                                            opam pin -y dune 3.6.0 --no-action
+                                            opam pin -y dune 3.6.1 --no-action
                                             bash -x scripts/install_build_deps.sh
                                             dune subst
                                             dune build --root=. --profile release

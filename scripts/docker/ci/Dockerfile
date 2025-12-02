@@ -13,7 +13,7 @@ ENV OPAMROOT=/usr/local/opam
 RUN apt-get update -qq && apt-get install -y --no-install-recommends \
     build-essential ca-certificates curl gawk gcc git libpcre3-dev m4 \
     mingw-w64 nano pkg-config python3 python3-pip rsync sudo time unzip \
-    wget
+    zip wget
 
 # Newer nodejs version
 RUN curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
@@ -61,8 +61,8 @@ COPY ./scripts/install_js_deps.sh ./
 RUN opam update; bash -x install_js_deps.sh
 
 # Install dev dependencies
-COPY ./scripts/install_dev_deps.sh ./
-RUN opam update; bash -x install_dev_deps.sh
+COPY ./scripts/install_ci_deps.sh ./
+RUN opam update; bash -x install_ci_deps.sh
 
 # Specify our entrypoint
 ENTRYPOINT [ "opam", "exec", "--" ]
