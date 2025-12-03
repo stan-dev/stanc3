@@ -209,8 +209,6 @@ Show help
   BUGS
          Please report at https://github.com/stan-dev/stanc3/issues/new.
   
-
-
 Qmark alias
   $ stanc -? plain | head
   NAME
@@ -263,18 +261,12 @@ Error when unreadable file is passed
   [1]
   $ rm unreadable.stan
 
-
 Can read from stdin
   $ echo 'parameters {real y;}' | stanc - --auto-format
   parameters {
     real y;
   }
   
-
-
-
-
-
 Filename is set to stdin when reading from stdin
   $ echo 'parameters {real y}' | stanc -
   Syntax error in 'stdin', line 1, column 18 to column 19, parsing error:
@@ -293,3 +285,9 @@ Flags can be passed multiple times
   }
   
   Warning: Duplicated flag '--auto-format' ignored, consider updating your call to stanc!
+
+Cmdliner completion suggests the enum options
+  $ stanc --__complete --__complete=--canonicalize= | grep 'deprecations'
+  deprecations
+  $ stanc --__complete --canonicalize --__complete=DEPRECATIONS, | grep 'parentheses'
+  deprecations,parentheses
