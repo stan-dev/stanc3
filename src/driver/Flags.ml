@@ -77,7 +77,7 @@ let set_backend_args_list flags =
       String.(
         is_suffix ~suffix:".stan" x
         && not (is_prefix ~prefix:"--filename-in-msg" x)
-        || is_prefix ~prefix:"--o=" x) in
+        || is_prefix ~prefix:"--o" x) in
   let stanc_args_to_print =
     flags |> List.filter ~f:sans_model_and_hpp_paths |> String.concat ~sep:" "
   in

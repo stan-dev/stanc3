@@ -1,3 +1,5 @@
+Cmdliner error output can be different if color is enabled
+  $ export NO_COLOR=1
 Debug data generation
 Provide partial data file
   $ stanc --debug-generate-data debug.stan --debug-data-file partial_data.json | python3 -c "import sys, json; data=json.loads(sys.stdin.read()); print(len(data['y']))"
@@ -31,9 +33,8 @@ Don't provide _enough_ data
 
 Provide a non-existant file
   $ stanc --debug-generate-inits debug.stan --debug-data-file non_existant.json
+  Usage: %%NAME%% [--help] [OPTION]… [MODEL_FILE]
   %%NAME%%: option '--debug-data-file': no 'non_existant.json' file
-  Usage: %%NAME%% [OPTION]… [MODEL_FILE]
-  Try '%%NAME%% --help' for more information.
   [124]
 
 Provide an invalid JSON file
@@ -47,9 +48,8 @@ Provide an unreadable JSON file
   $ touch unreadable.json
   $ chmod -r unreadable.json
   $ stanc --debug-generate-inits debug.stan --debug-data-file unreadable.json
+  Usage: %%NAME%% [--help] [OPTION]… [MODEL_FILE]
   %%NAME%%: File 'unreadable.json' not found or cannot be opened.
-  Usage: %%NAME%% [OPTION]… [MODEL_FILE]
-  Try '%%NAME%% --help' for more information.
   [124]
   $ rm unreadable.json
 

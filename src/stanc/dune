@@ -10,3 +10,16 @@
  (public_name stanc)
  (preprocess
   (pps ppx_jane)))
+
+(rule
+ (target
+  (dir cmdliner-support))
+ (deps stanc.exe)
+ (action
+  (ignore-stdout
+   (run cmdliner install tool-support ./stanc.exe:stanc cmdliner-support))))
+
+(install
+ (section share_root)
+ (dirs
+  (cmdliner-support/share as .)))

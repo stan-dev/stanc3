@@ -11,12 +11,7 @@ module Arguments = struct
        $(b,.stan) or $(b,.stanfunctions) (which automatically sets \
        $(b,--standalone-functions)), or '-' to read from standard input." in
     Arg.(
-      let dash_or_file =
-        let else_parse = conv_parser non_dir_file in
-        let pp = conv_printer non_dir_file in
-        let parse s = if String.equal s "-" then Ok s else else_parse s in
-        conv (parse, pp) in
-      value & pos 0 (some dash_or_file) None & info [] ~docv:"MODEL_FILE" ~doc)
+      value & pos 0 (some non_dir_file) None & info [] ~docv:"MODEL_FILE" ~doc)
 end
 
 module Options = struct
@@ -33,8 +28,8 @@ module Options = struct
           None
       & info ["?"] ~doc:"Synonym for $(b,--help)." ~docv:"=FMT")
 
-  (** Wrapper around flag_all to support passing the same flag multiple times.
-      Emits a warning *)
+  (** Wrapper around [Arg.flag_all] to support passing the same flag multiple
+      times. Emits a warning if supplied more than once. *)
   let multi_flag name arg_info =
     let flags = Arg.(value & flag_all & arg_info [name]) in
     Term.map
@@ -50,6 +45,34 @@ module Options = struct
             true)
       flags
 
+  (** Wrapper around [Arg.opt_all] for [Arg.list] arguments, with the result
+      being the concatenation of all values *)
+  let multi_opt_all arg arg_info =
+    Arg.(value & Arg.opt_all arg [] & arg_info) |> Term.map List.concat
+
+  (** the advantage of this over [list enum] is that it allows uppercase names
+      and provides completion after the separator character *)
+  let case_insensitive_enum_list ?(sep = ',') sl =
+    let open Arg in
+    let base = list ~sep @@ enum sl in
+    let parser = Fn.compose (Conv.parser base) String.lowercase in
+    let completion =
+      let func _ctx ~token =
+        let token = String.lowercase token in
+        let prefix_complete name =
+          (* complete prefixes of valid names after the final separator *)
+          match String.rsplit2 ~on:sep token with
+          | None when String.is_prefix ~prefix:token name ->
+              Some (Completion.string name)
+          | Some (prev, last)
+            when String.is_prefix ~prefix:last name
+                 && not (String.is_substring ~substring:name prev) ->
+              Some (Completion.string (prev ^ String.of_char sep ^ name))
+          | _ -> None in
+        Ok (List.filter_map ~f:(Fn.compose prefix_complete fst) sl) in
+      Completion.make func in
+    Conv.of_conv ~completion ~parser base
+
   let allow_undefined =
     let doc =
       "Do not fail if a function is declared but not defined. This usually \
@@ -63,6 +86,14 @@ module Options = struct
     Arg.(multi_flag "auto-format" & info ~doc)
 
   let canonicalizer_settings =
+    let doc =
+      "Enable specific canonicalizations in a comma separated list. Options \
+       are 'deprecations', 'parentheses', 'braces', 'includes', \
+       'strip-comments'." in
+    let flags =
+      [ ("deprecations", `Deprecations); ("parentheses", `Parentheses)
+      ; ("braces", `Braces); ("includes", `Includes)
+      ; ("strip-comments", `Strip_comments) ] in
     let fold_canonicalize_options
         (settings : Canonicalize.canonicalizer_settings) = function
       | `Deprecations -> {settings with deprecations= true}
@@ -70,26 +101,11 @@ module Options = struct
       | `Braces -> {settings with braces= true}
       | `Includes -> {settings with inline_includes= true}
       | `Strip_comments -> {settings with strip_comments= true} in
-    let doc =
-      "Enable specific canonicalizations in a comma separated list. Options \
-       are 'deprecations', 'parentheses', 'braces', 'includes', \
-       'strip-comments'." in
-    let base_arg =
-      Arg.enum
-        [ ("deprecations", `Deprecations); ("parentheses", `Parentheses)
-        ; ("braces", `Braces); ("includes", `Includes)
-        ; ("strip-comments", `Strip_comments) ] in
-    let make_case_insensitive converter =
+    Term.map
+      (List.fold ~f:fold_canonicalize_options ~init:Canonicalize.none)
       Arg.(
-        conv
-          ( Fn.compose (conv_parser converter) String.lowercase
-          , conv_printer converter )) in
-    Term.(
-      const (List.fold ~f:fold_canonicalize_options ~init:Canonicalize.none)
-      $ Arg.(
-          value
-          & opt (list (make_case_insensitive base_arg)) []
-          & info ["canonicalize"] ~doc ~docv:"OPTIONS"))
+        multi_opt_all (case_insensitive_enum_list flags)
+        & info ["canonicalize"] ~doc ~docv:"OPTIONS")
 
   let filename_in_msg =
     let doc = "Sets the filename used in compiler and runtime errors. " in
@@ -102,12 +118,14 @@ module Options = struct
     let doc =
       "A comma-separated list of directories which are searched whenever an \
        #include directive is parsed." in
-    Term.(
-      const (fun p -> Frontend.Include_files.FileSystemPaths p)
-      $ Arg.(
-          value
-          & opt (list string) []
-          & info ["include-paths"] ~doc ~absent:"\"\"" ~docv:"DIRS"))
+    let list_of_dirs =
+      Arg.(Conv.of_conv ~completion:Completion.complete_dirs (list dirpath))
+    in
+    Term.map
+      (fun p -> Frontend.Include_files.FileSystemPaths p)
+      Arg.(
+        multi_opt_all list_of_dirs
+        & info ["I"; "include-paths"] ~doc ~absent:"\"\"" ~docv:"DIRS")
 
   let info =
     let doc = "If set, print information about the model." in
@@ -221,18 +239,18 @@ module Debug_Options = struct
     let doc =
       "Provide (possibly partially specified) data block values for use with \
        $(b,--debug-generate-data) or $(b,--debug-generate-inits)." in
-    Term.(
-      const (function
+    Term.map
+      (function
         | None -> `Ok None
         | Some file -> (
             try `Ok (Some (In_channel.read_all file))
             with _ ->
               `Error (true, "File '" ^ file ^ "' not found or cannot be opened.")
             ))
-      $ Arg.(
-          value
-          & opt (some non_dir_file) None
-          & info ["debug-data-file"] ~doc ~docv:"JSON_FILE" ~docs))
+      Arg.(
+        value
+        & opt (some non_dir_file) None
+        & info ["debug-data-file"] ~doc ~docv:"JSON_FILE" ~docs)
 
   let debug_decorated_ast =
     let doc =
@@ -304,16 +322,9 @@ module Debug_Options = struct
     let doc =
       "Debugging features. Valid values: $(b,-fsoa) to force on the Struct of \
        Arrays optimization. $(b,-fno-soa) to force it off." in
-    let soa_conv =
-      Arg.(conv_parser (enum [("soa", Some true); ("no-soa", Some false)]))
-    in
-    let soa_printer pf = function
-      | Some true -> Fmt.string pf "soa"
-      | Some false -> Fmt.string pf "no-soa"
-      | None -> Fmt.string pf "" in
     Arg.(
       value
-      & opt (conv (soa_conv, soa_printer)) None
+      & opt (some @@ enum [("soa", true); ("no-soa", false)]) None
       & info ["f"] ~doc ~docv:"SETTING" ~docs)
 end
 

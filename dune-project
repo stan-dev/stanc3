@@ -1,6 +1,8 @@
-(lang dune 3.0)
+(lang dune 3.5)
 
 (using menhir 2.0)
+
+(using directory-targets 0.1)
 
 (name stanc)
 
@@ -25,7 +27,7 @@
   (yojson
    (= 2.1.0))
   (cmdliner
-   (= 1.3.0))
+   (= 2.1.0))
   (ocamlformat
    (and
     :with-test

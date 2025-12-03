@@ -24,8 +24,7 @@ standard library. There are a few differences from the OCaml standard library wh
 }
 
 If for some reason you {e need} functionality from the OCaml standard library that is not available in Jane Street
-(be sure to triple check), you can use the modules [Stdlib] and [Caml] to access the built-in versions. Currently there
-is only one such usage in the compiler, to use the standard definition of [!=] in the Menhir parser.
+(be sure to triple check), you can use the module [Stdlib] to access the built-in versions.
 
 There are a few other things we gain from these libraries. The most important idea to understand is {b deriving}.
 
