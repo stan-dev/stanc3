@@ -115,7 +115,7 @@ pipeline {
     }
     environment {
         CXX = 'clang++-6.0'
-        MACOS_SWITCH = 'stanc3-4.14'
+        MACOS_SWITCH = 'stanc3-cmdliner2.1.0'
         GIT_AUTHOR_NAME = 'Stan Jenkins'
         GIT_AUTHOR_EMAIL = 'mc.stanislaw@gmail.com'
         GIT_COMMITTER_NAME = 'Stan Jenkins'
@@ -645,7 +645,7 @@ pipeline {
                                             opam repository add archive git+https://github.com/ocaml/opam-repository-archive
                                             opam switch list
                                             opam update -y || true
-                                            opam pin -y dune 3.6.0 --no-action
+                                            opam pin -y dune 3.6.1 --no-action
                                             bash -x scripts/install_build_deps.sh
                                             dune subst
                                             dune build --root=. --profile=release
@@ -736,6 +736,42 @@ pipeline {
                         }
                     }
                     post {always { sh "rm -rf ${env.WORKSPACE}/stancjs/*"}}
+                }
+
+                stage("Generate shell support files") {
+                    when {
+                        beforeAgent true
+                        expression {
+                            !skipRebuildingBinaries
+                        }
+                    }
+                    agent {
+                        dockerfile {
+                            filename 'scripts/docker/ci/Dockerfile'
+                            dir '.'
+                            label 'linux && triqs'
+                            args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\''
+                            additionalBuildArgs  '--build-arg PUID=$(id -u) --build-arg PGID=$(id -g)'
+                        }
+                    }
+                    steps {
+                        dir("${env.WORKSPACE}/support"){
+                            cleanCheckout()
+                            sh '''
+                                eval $(opam env)
+                                dune subst
+                                dune build --root=. --profile=release
+                                cmdliner install tool-support --standalone-completion "./_build/default/src/stanc/stanc.exe:stanc" shell-support/
+                                cd shell-support
+                                zip -r ../shell-support-files.zip *
+                                cd ..
+                                mkdir -p bin && mv shell-support-files.zip bin/shell-support-files.zip
+                            '''
+
+                            stash name:'shell-support', includes:'bin/*'
+                        }
+                    }
+                    post {always { sh "rm -rf ${env.WORKSPACE}/support/*"}}
                 }
 
                 // Cross compiling for windows on debian
@@ -855,6 +891,7 @@ pipeline {
                         unstash 'linux-armhf-exe'
                         unstash 'linux-armel-exe'
                         unstash 'js-exe'
+                        unstash 'shell-support'
 
                         script {
                             if (tagName() == "nightly"){

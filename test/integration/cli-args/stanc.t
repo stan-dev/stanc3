@@ -1,3 +1,5 @@
+Cmdliner error output can be different if color is enabled
+  $ export NO_COLOR=1
 Show help
   $ stanc --help=plain
   NAME
@@ -55,7 +57,7 @@ Show help
              pager, groff or plain. With auto, the format is pager or plain
              whenever the TERM env var is dumb or undefined.
   
-         --include-paths=DIRS (absent="")
+         -I DIRS, --include-paths=DIRS (absent="")
              A comma-separated list of directories which are searched whenever
              an #include directive is parsed.
   
@@ -207,10 +209,6 @@ Show help
   BUGS
          Please report at https://github.com/stan-dev/stanc3/issues/new.
   
-
-
-
-
 Qmark alias
   $ stanc -? plain | head
   NAME
@@ -230,33 +228,29 @@ Show version
 
 Error when no file passed
   $ stanc
+  Usage: %%NAME%% [--help] [OPTION]… [MODEL_FILE]
   %%NAME%%: No model file provided
-  Usage: %%NAME%% [OPTION]… [MODEL_FILE]
-  Try '%%NAME%% --help' for more information.
   [124]
 
 Error when multiple files passed
   $ stanc foo.stan foo2.stan
+  Usage: %%NAME%% [--help] [OPTION]… [MODEL_FILE]
   %%NAME%%: too many arguments, don't know what to do with 'foo2.stan'
-  Usage: %%NAME%% [OPTION]… [MODEL_FILE]
-  Try '%%NAME%% --help' for more information.
   [124]
 
 Error when a folder is passed
   $ mkdir foo.d
   $ stanc foo.d
+  Usage: %%NAME%% [--help] [OPTION]… [MODEL_FILE]
   %%NAME%%: MODEL_FILE argument: 'foo.d' is a directory
-  Usage: %%NAME%% [OPTION]… [MODEL_FILE]
-  Try '%%NAME%% --help' for more information.
   [124]
   $ rm -r foo.d
 
 Error when nonsense argument is passed
   $ stanc -fno-generated-quantities
+  Usage: %%NAME%% [--help] [OPTION]… [MODEL_FILE]
   %%NAME%%: option '-f': invalid value 'no-generated-quantities', expected
             either 'soa' or 'no-soa'
-  Usage: %%NAME%% [OPTION]… [MODEL_FILE]
-  Try '%%NAME%% --help' for more information.
   [124]
 
 Error when unreadable file is passed
@@ -267,15 +261,12 @@ Error when unreadable file is passed
   [1]
   $ rm unreadable.stan
 
-
 Can read from stdin
   $ echo 'parameters {real y;}' | stanc - --auto-format
   parameters {
     real y;
   }
   
-
-
 Filename is set to stdin when reading from stdin
   $ echo 'parameters {real y}' | stanc -
   Syntax error in 'stdin', line 1, column 18 to column 19, parsing error:
@@ -294,3 +285,9 @@ Flags can be passed multiple times
   }
   
   Warning: Duplicated flag '--auto-format' ignored, consider updating your call to stanc!
+
+Cmdliner completion suggests the enum options
+  $ stanc --__complete --__complete=--canonicalize= | grep 'deprecations'
+  deprecations
+  $ stanc --__complete --canonicalize --__complete=DEPRECATIONS, | grep 'parentheses'
+  deprecations,parentheses

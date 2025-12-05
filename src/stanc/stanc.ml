@@ -117,14 +117,18 @@ let dispatch_commands args =
 
 let main () =
   let open Cmdliner in
-  let stanc_cmd = Cmd.v CLI.info (Term.map dispatch_commands CLI.commands) in
+  let stanc_cmd = Cmd.make CLI.info (Term.map dispatch_commands CLI.commands) in
   let argv = Sys.get_argv () in
   Driver.Flags.set_backend_args_list
     (* remove executable itself from list before passing *)
     (argv |> Array.to_list |> List.tl_exn);
   (* workaround the fact that single letter flags must be - in CmdLiner *)
-  Array.map_inplace argv ~f:(fun s ->
-      if String.equal s "--O" then "--O1" else s);
+  Array.map_inplace argv ~f:(function
+    | "--O" -> "--O1"
+    | "--o" -> "-o" (* legacy shorthand for --output *)
+    | s when String.is_prefix s ~prefix:"--o=" ->
+        "-o" ^ String.chop_prefix_exn s ~prefix:"--o="
+    | s -> s);
   Cmd.eval' ~argv ~catch:false stanc_cmd
 
 let () = if !Sys.interactive then () else exit (main ())

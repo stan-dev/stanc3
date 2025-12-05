@@ -1,5 +1,5 @@
 #!/bin/bash
 
-# Merlin, utop, ocp-indent, ocamlformat, and patdiff are all for developer assistance
-opam pin -y ocamlformat 0.28.1 --no-action
-opam install -y ocamlformat.0.28.1 bisect_ppx landmarks-ppx merlin ocaml-lsp-server utop ocp-indent patdiff odoc
+bash -x ./install_ci_deps.sh
+# Useful packages for developer assistance
+opam install -y merlin ocaml-lsp-server utop ocp-indent patdiff

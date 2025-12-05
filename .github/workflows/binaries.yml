@@ -52,7 +52,7 @@ jobs:
         run: |
           opam repository add archive git+https://github.com/ocaml/opam-repository-archive
           opam update
-          opam pin -y dune 3.6.0 --no-action
+          opam pin -y dune 3.6.1 --no-action
 
       - run: bash -x scripts/install_build_deps.sh
 
