@@ -10,12 +10,7 @@ open Middle
     {b This is an optimization}, one can proceed as-if the hashtables here were
     built at runtime by the code in that module (i.e., by [include Generate]) *)
 
-let stan_math_signatures = Generated_signatures.stan_math_signatures
-
-let stan_math_variadic_signatures =
-  Generated_signatures.stan_math_variadic_signatures
-
-let distributions = Generated_signatures.distributions
+include Generated_signatures
 
 let is_stan_math_function_name name =
   let name = Utils.stdlib_distribution_name name in

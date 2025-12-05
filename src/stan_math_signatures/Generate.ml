@@ -2683,29 +2683,38 @@ let generate_module () =
     |> String.Map.of_alist_reduce ~f:(fun v1 v2 ->
         v1 @ v2 |> Set.Poly.of_list |> Set.to_list)
     |> Map.to_alist in
-  (* TODO: in OCaml 5.4+, use GC.ramp_up to avoid performance regressions. See
-     https://github.com/ocaml/ocaml/issues/13300 *)
   Printf.printf
     {|
-let unmarshal s = Marshal.from_string s 0
+let unmarshal s =
+  Marshal.from_string s 0
 let unmarshal_hashtbl s : 'a Core.String.Table.t =
-  unmarshal s |> Core.String.Table.of_alist_exn |};
+  unmarshal s |> Core.String.Table.of_alist_exn
+
+let (stan_math_signatures, stan_math_variadic_signatures, distributions) =
+  fst @@ Gc.ramp_up @@ fun () ->
+ |};
   Printf.printf
     {|
-let stan_math_signatures :
-    Middle.UnsizedType.signature list Core.String.Table.t =
-  unmarshal_hashtbl %S |}
+  let stan_math_signatures :
+      Middle.UnsizedType.signature list Core.String.Table.t =
+    unmarshal_hashtbl %S |}
     (marshal_hashtbl stan_math_signatures);
   Printf.printf
     {|
-let stan_math_variadic_signatures :
-    Middle.UnsizedType.variadic_signature Core.String.Table.t =
-  unmarshal_hashtbl %S |}
+  and stan_math_variadic_signatures :
+      Middle.UnsizedType.variadic_signature Core.String.Table.t =
+    unmarshal_hashtbl %S  |}
     (marshal_hashtbl stan_math_variadic_signatures);
   Printf.printf
     {|
-let distributions : (string * string list) list = unmarshal %S |}
+  and distributions :
+      (string * string list) list =
+    unmarshal %S |}
     (marshal distributions_simplified);
+  Printf.printf
+    {|
+  in (stan_math_signatures, stan_math_variadic_signatures, distributions)
+  |};
   Printf.eprintf
     "Generated signatures for %d functions, %d distributions, and %d variadic \
      functions.\n"

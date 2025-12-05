@@ -18,6 +18,22 @@
  (libraries core common middle))
 
 (rule
- (with-stdout-to
-  Generated_signatures.ml
-  (run ./generate.exe)))
+ (enabled_if
+  (>= %{ocaml_version} 5.4))
+ (action
+  (with-stdout-to
+   Generated_signatures.ml
+   (run ./generate.exe))))
+
+; for now, maintain source compatibility older OCaml versions
+; TODO: remove this at some point when we are using other features that require OCaml >= 5.4
+
+(rule
+ (enabled_if
+  (< %{ocaml_version} 5.4))
+ (action
+  (pipe-stdout
+   (run ./generate.exe)
+   (with-stdout-to
+    Generated_signatures.ml
+    (run grep -v Gc.ramp)))))
