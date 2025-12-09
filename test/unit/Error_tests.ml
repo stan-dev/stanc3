@@ -12,7 +12,7 @@ let%expect_test "with_exn_message" =
     (Failure oops!)
     Backtrace missing.
 
-    This should never happen. Please file a bug at https://github.com/stan-dev/stanc3/issues/new
+    This should never happen. Please file a bug at %PKG_ISSUES%
     and include this message and the model that caused this issue. |}]
 
 (* expect_tests warn against directly including a backtrace for fragility
@@ -40,5 +40,5 @@ let%expect_test "ICE triggered" =
     ("Can't index" (ut UReal))
     Backtrace missing.
 
-    This should never happen. Please file a bug at https://github.com/stan-dev/stanc3/issues/new
+    This should never happen. Please file a bug at %PKG_ISSUES%
     and include this message and the model that caused this issue. |}]

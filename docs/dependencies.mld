@@ -39,7 +39,6 @@ and must use the same version.
 - merlin
 - ocaml-lsp-server
 - utop
-- ocp-indent
 - patdiff
 - odoc
 - bisect_ppx

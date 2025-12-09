@@ -169,11 +169,12 @@ let embedded_laplace_functions =
   |> String.Set.of_list
 
 let is_embedded_laplace_fn name =
-  (* TEMPORARY: remove after 2.37 release *)
+  (* TEMPORARY: remove after https://github.com/stan-dev/math/pull/3250 or
+     similar is merged *)
   (not
      (let version = "%%VERSION%%" in
-      String.equal "v2.37.0" version
-      || String.equal "v2.37.0-rc"
+      String.equal "v2.38.0" version
+      || String.equal "v2.38.0-rc"
            (String.sub ~pos:0 ~len:(String.length version - 1) version)))
   && Set.mem embedded_laplace_functions (Utils.stdlib_distribution_name name)
 
