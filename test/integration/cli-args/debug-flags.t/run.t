@@ -472,7 +472,3 @@ Flags not used elsewhere in the tests
   "transformed parameters {", "model {", or "generated quantities {".
   (Parse error state 410)
   [1]
-<<<<<<< HEAD
-||||||| parent of ff8bc8cbb (Remove deprecated use of 'jacobian' as non-keyword)
-=======
->>>>>>> ff8bc8cbb (Remove deprecated use of 'jacobian' as non-keyword)
