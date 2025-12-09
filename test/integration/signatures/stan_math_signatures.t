@@ -22695,6 +22695,14 @@ Display all Stan math signatures exposed in the language
   weibull_rng(array[] real, row_vector) => array[] real
   weibull_rng(array[] real, array[] int) => array[] real
   weibull_rng(array[] real, array[] real) => array[] real
+  wiener_lccdf_defective(real, real, real, real, real) => real
+  wiener_lccdf_defective(real, real, real, real, real, real, real, real) => real
+  wiener_lccdf_defective(vector, vector, vector, vector, vector) => real
+  wiener_lccdf_defective(vector, vector, vector, vector, vector, vector, vector, vector) => real
+  wiener_lcdf_defective(real, real, real, real, real) => real
+  wiener_lcdf_defective(real, real, real, real, real, real, real, real) => real
+  wiener_lcdf_defective(vector, vector, vector, vector, vector) => real
+  wiener_lcdf_defective(vector, vector, vector, vector, vector, vector, vector, vector) => real
   wiener_lpdf(real, real, real, real, real) => real
   wiener_lpdf(real, real, real, real, real, real) => real
   wiener_lpdf(real, real, real, real, real, real, real, real) => real
