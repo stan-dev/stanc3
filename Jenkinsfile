@@ -818,6 +818,7 @@ pipeline {
                     anyOf { buildingTag(); branch 'master'; expression { params.build_multiarch } }
                 }
             }
+            environment { DOCKER_BUILDKIT = '1' }
             matrix {
                 axes {
                     axis {
