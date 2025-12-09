@@ -2528,24 +2528,20 @@ let () =
   (* new wiener distribution functions -- c++ is fully vectorized, but this
      style of implementation in the typechecker is too expensive to enumerate,
      so we provide only the full scalar and full vector cases *)
-  List.iter [UnsizedType.UReal; UVector] ~f:(fun t ->
-      List.iter [6; 8] ~f:(fun n_args ->
-          add_unqualified
-            ( "wiener_lpdf"
-            , ReturnType UReal
-            , List.init n_args ~f:(Fn.const t)
-            , AoS ));
-      List.iter [5; 8] ~f:(fun n_args ->
-          add_unqualified
-            ( "wiener_lcdf_defective"
-            , ReturnType UReal
-            , List.init n_args ~f:(Fn.const t)
-            , AoS );
-          add_unqualified
-            ( "wiener_lccdf_defective"
-            , ReturnType UReal
-            , List.init n_args ~f:(Fn.const t)
-            , AoS )));
+  let build_wiener_function name args =
+    add_qualified (name, ReturnType UReal, args, AoS) in
+  let build_wiener_functions name num_args =
+    List.iter [UnsizedType.UReal; UVector] ~f:(fun t ->
+        List.iter num_args ~f:(fun n ->
+            let normal =
+              List.init n ~f:(Fn.const (UnsizedType.AutoDiffable, t)) in
+            build_wiener_function name normal;
+            (* grad precision as last argument *)
+            build_wiener_function name (normal @ [(DataOnly, UnsizedType.UReal)])))
+  in
+  build_wiener_functions "wiener_lpdf" [6; 8];
+  build_wiener_functions "wiener_lcdf_defective" [5; 8];
+  build_wiener_functions "wiener_lccdf_defective" [5; 8];
   add_unqualified
     ("wishart_cholesky_rng", ReturnType UMatrix, [UReal; UMatrix], AoS);
   add_unqualified ("wishart_rng", ReturnType UMatrix, [UReal; UMatrix], AoS);
