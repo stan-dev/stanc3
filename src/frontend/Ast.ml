@@ -296,25 +296,12 @@ let rec untyped_lvalue_of_typed_lvalue_pack :
 
 (** Forgetful function from typed to untyped statements *)
 let rec untyped_statement_of_typed_statement {stmt; smeta} =
-  match stmt with
-  (* TODO(2.38): Remove this workaround *)
-  | JacobianPE e ->
-      { stmt=
-          Assignment
-            { assign_lhs=
-                LValue
-                  { lval= LVariable {name= "jacobian"; id_loc= smeta.loc}
-                  ; lmeta= {loc= smeta.loc} }
-            ; assign_op= OperatorAssign Plus
-            ; assign_rhs= untyped_expression_of_typed_expression e }
-      ; smeta= {loc= smeta.loc} }
-  | _ ->
-      { stmt=
-          map_statement untyped_expression_of_typed_expression
-            untyped_statement_of_typed_statement untyped_lvalue_of_typed_lvalue
-            (fun _ -> ())
-            stmt
-      ; smeta= {loc= smeta.loc} }
+  { stmt=
+      map_statement untyped_expression_of_typed_expression
+        untyped_statement_of_typed_statement untyped_lvalue_of_typed_lvalue
+        (fun _ -> ())
+        stmt
+  ; smeta= {loc= smeta.loc} }
 
 (** Forgetful function from typed to untyped programs *)
 let untyped_program_of_typed_program : typed_program -> untyped_program =

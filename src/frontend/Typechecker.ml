@@ -118,10 +118,6 @@ let reserved_keywords =
   ; "false"; "typedef"; "struct"; "var"; "export"; "extern"; "static"; "auto" ]
 
 let verify_identifier id : unit =
-  if id.name = "jacobian" then
-    add_warning id.id_loc
-      "Variable name 'jacobian' will be a reserved word starting in Stan 2.38. \
-       Please rename it!";
   if id.name = !model_name then
     Semantic_error.ident_is_model_name id.id_loc id.name |> error;
   if
@@ -1443,20 +1439,12 @@ let rec check_lvalues cf tenv = function
       LTuplePack {lvals; loc}
 
 let check_assignment loc cf tenv assign_lhs assign_op assign_rhs =
-  (* TODO(2.38): Remove this workaround *)
-  match (assign_lhs, assign_op, Env.find tenv "jacobian") with
-  | LValue {lval= LVariable {name= "jacobian"; _}; _}, OperatorAssign Plus, []
-    ->
-      (* if jacobian is not a user-defined variable, and we find a statement
-         like "jacobian +=", we can assume it is the new statement *)
-      check_jacobian_pe loc cf tenv assign_rhs
-  | _ ->
-      let lhs = check_lvalues cf tenv assign_lhs in
-      verify_lvalue_unique lhs;
-      let rhs = check_expression cf tenv assign_rhs in
-      let rhs' = check_assignment_operator loc assign_op lhs rhs in
-      mk_typed_statement ~return_type:Incomplete ~loc
-        ~stmt:(Assignment {assign_lhs= lhs; assign_op; assign_rhs= rhs'})
+  let lhs = check_lvalues cf tenv assign_lhs in
+  verify_lvalue_unique lhs;
+  let rhs = check_expression cf tenv assign_rhs in
+  let rhs' = check_assignment_operator loc assign_op lhs rhs in
+  mk_typed_statement ~return_type:Incomplete ~loc
+    ~stmt:(Assignment {assign_lhs= lhs; assign_op; assign_rhs= rhs'})
 
 (* tilde/distribution notation *)
 let verify_distribution_pdf_pmf id =

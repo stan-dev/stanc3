@@ -4960,23 +4960,13 @@ namespace deprecated_jacobian_usage_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 12> locations_array__ =
+static constexpr std::array<const char*, 6> locations_array__ =
   {" (found before start of program)",
-  " (in 'deprecated_jacobian_usage.stan', line 19, column 2 to column 20)",
-  " (in 'deprecated_jacobian_usage.stan', line 24, column 2 to column 28)",
-  " (in 'deprecated_jacobian_usage.stan', line 20, column 2 to column 21)",
-  " (in 'deprecated_jacobian_usage.stan', line 5, column 4 to column 22)",
-  " (in 'deprecated_jacobian_usage.stan', line 6, column 4 to column 18)",
-  " (in 'deprecated_jacobian_usage.stan', line 7, column 4 to column 20)",
-  " (in 'deprecated_jacobian_usage.stan', line 4, column 19 to line 8, column 3)",
-  " (in 'deprecated_jacobian_usage.stan', line 11, column 4 to column 13)",
-  " (in 'deprecated_jacobian_usage.stan', line 10, column 28 to line 12, column 3)",
-  " (in 'deprecated_jacobian_usage.stan', line 15, column 4 to column 27)",
-  " (in 'deprecated_jacobian_usage.stan', line 14, column 19 to line 16, column 3)"};
-template <typename T0__,
-          stan::require_all_t<stan::math::disjunction<stan::is_autodiff_scalar<T0__>,
-                                stan::is_floating_point<T0__>>>* = nullptr>
-stan::return_type_t<T0__> foo(const T0__& x, std::ostream* pstream__);
+  " (in 'deprecated_jacobian_usage.stan', line 19, column 2 to column 28)",
+  " (in 'deprecated_jacobian_usage.stan', line 7, column 4 to column 13)",
+  " (in 'deprecated_jacobian_usage.stan', line 6, column 28 to line 8, column 3)",
+  " (in 'deprecated_jacobian_usage.stan', line 11, column 4 to column 27)",
+  " (in 'deprecated_jacobian_usage.stan', line 10, column 19 to line 12, column 3)"};
 template <typename T0__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff_scalar<T0__>,
                                 stan::is_floating_point<T0__>>>* = nullptr>
@@ -4986,33 +4976,6 @@ template <typename T0__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff_scalar<T0__>,
                                 stan::is_floating_point<T0__>>>* = nullptr>
 stan::return_type_t<T0__> bar(const T0__& x, std::ostream* pstream__);
-// real foo(real)
-template <typename T0__,
-          stan::require_all_t<stan::math::disjunction<stan::is_autodiff_scalar<T0__>,
-                                stan::is_floating_point<T0__>>>*>
-stan::return_type_t<T0__> foo(const T0__& x, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::return_type_t<T0__>;
-  int current_statement__ = 0;
-  // suppress unused var warning
-  (void) current_statement__;
-  static constexpr bool propto__ = true;
-  // suppress unused var warning
-  (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  // suppress unused var warning
-  (void) DUMMY_VAR__;
-  try {
-    local_scalar_t__ jacobian = DUMMY_VAR__;
-    current_statement__ = 4;
-    jacobian = 0;
-    current_statement__ = 5;
-    jacobian = (jacobian + x);
-    current_statement__ = 6;
-    return jacobian;
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
-}
 // real bar_jacobian(real)
 template <typename T0__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff_scalar<T0__>,
@@ -5030,7 +4993,7 @@ bar_jacobian(const T0__& x, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 8;
+    current_statement__ = 2;
     return x;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -5052,7 +5015,7 @@ stan::return_type_t<T0__> bar(const T0__& x, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 10;
+    current_statement__ = 4;
     return bar_jacobian(x, pstream__);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -5113,15 +5076,6 @@ class deprecated_jacobian_usage_model final : public model_base_crtp<deprecated_
       "deprecated_jacobian_usage_model_namespace::log_prob";
     // suppress unused var warning
     (void) function__;
-    try {
-      local_scalar_t__ jacobian = DUMMY_VAR__;
-      current_statement__ = 1;
-      jacobian = 1;
-      current_statement__ = 3;
-      jacobian = (jacobian + foo(static_cast<double>(1), pstream__));
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
   }
@@ -5148,15 +5102,6 @@ class deprecated_jacobian_usage_model final : public model_base_crtp<deprecated_
       "deprecated_jacobian_usage_model_namespace::log_prob";
     // suppress unused var warning
     (void) function__;
-    try {
-      local_scalar_t__ jacobian = DUMMY_VAR__;
-      current_statement__ = 1;
-      jacobian = 1;
-      current_statement__ = 3;
-      jacobian = (jacobian + foo(static_cast<double>(1), pstream__));
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
   }
@@ -5195,24 +5140,16 @@ class deprecated_jacobian_usage_model final : public model_base_crtp<deprecated_
     // suppress unused var warning
     (void) function__;
     try {
-      double jacobian = std::numeric_limits<double>::quiet_NaN();
       if (stan::math::logical_negation(
             (stan::math::primitive_value(emit_transformed_parameters__) ||
             stan::math::primitive_value(emit_generated_quantities__)))) {
         return ;
       }
-      current_statement__ = 1;
-      jacobian = 1;
-      current_statement__ = 3;
-      jacobian = (jacobian + foo(static_cast<double>(1), pstream__));
-      if (emit_transformed_parameters__) {
-        out__.write(jacobian);
-      }
       if (stan::math::logical_negation(emit_generated_quantities__)) {
         return ;
       }
       double b_jacobian = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 2;
+      current_statement__ = 1;
       b_jacobian = bar(static_cast<double>(10), pstream__);
       out__.write(b_jacobian);
     } catch (const std::exception& e) {
@@ -5253,11 +5190,7 @@ class deprecated_jacobian_usage_model final : public model_base_crtp<deprecated_
                   emit_transformed_parameters__ = true, const bool
                   emit_generated_quantities__ = true) const {
     names__ = std::vector<std::string>{};
-    if (emit_transformed_parameters__) {
-      std::vector<std::string> temp{"jacobian"};
-      names__.reserve(names__.size() + temp.size());
-      names__.insert(names__.end(), temp.begin(), temp.end());
-    }
+    if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {
       std::vector<std::string> temp{"b_jacobian"};
       names__.reserve(names__.size() + temp.size());
@@ -5269,11 +5202,7 @@ class deprecated_jacobian_usage_model final : public model_base_crtp<deprecated_
            emit_transformed_parameters__ = true, const bool
            emit_generated_quantities__ = true) const {
     dimss__ = std::vector<std::vector<size_t>>{};
-    if (emit_transformed_parameters__) {
-      std::vector<std::vector<size_t>> temp{std::vector<size_t>{}};
-      dimss__.reserve(dimss__.size() + temp.size());
-      dimss__.insert(dimss__.end(), temp.begin(), temp.end());
-    }
+    if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {
       std::vector<std::vector<size_t>> temp{std::vector<size_t>{}};
       dimss__.reserve(dimss__.size() + temp.size());
@@ -5284,9 +5213,7 @@ class deprecated_jacobian_usage_model final : public model_base_crtp<deprecated_
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    if (emit_transformed_parameters__) {
-      param_names__.emplace_back(std::string() + "jacobian");
-    }
+    if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {
       param_names__.emplace_back(std::string() + "b_jacobian");
     }
@@ -5295,18 +5222,16 @@ class deprecated_jacobian_usage_model final : public model_base_crtp<deprecated_
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    if (emit_transformed_parameters__) {
-      param_names__.emplace_back(std::string() + "jacobian");
-    }
+    if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {
       param_names__.emplace_back(std::string() + "b_jacobian");
     }
   }
   inline std::string get_constrained_sizedtypes() const {
-    return std::string("[{\"name\":\"jacobian\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"b_jacobian\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"}]");
+    return std::string("[{\"name\":\"b_jacobian\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"}]");
   }
   inline std::string get_unconstrained_sizedtypes() const {
-    return std::string("[{\"name\":\"jacobian\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"b_jacobian\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"}]");
+    return std::string("[{\"name\":\"b_jacobian\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"}]");
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -5316,7 +5241,7 @@ class deprecated_jacobian_usage_model final : public model_base_crtp<deprecated_
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
     const size_t num_params__ = 0U;
-    const size_t num_transformed = emit_transformed_parameters * (1);
+    const size_t num_transformed = emit_transformed_parameters * (0U);
     const size_t num_gen_quantities = emit_generated_quantities * (1);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
@@ -5333,7 +5258,7 @@ class deprecated_jacobian_usage_model final : public model_base_crtp<deprecated_
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
     const size_t num_params__ = 0U;
-    const size_t num_transformed = emit_transformed_parameters * (1);
+    const size_t num_transformed = emit_transformed_parameters * (0U);
     const size_t num_gen_quantities = emit_generated_quantities * (1);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
@@ -5404,28 +5329,7 @@ stan::math::profile_map& get_stan_profile_data() {
   return deprecated_jacobian_usage_model_namespace::profiles__;
 }
 #endif
-Warning in 'deprecated_jacobian_usage.stan', line 5, column 9 to column 17:
-    Variable name 'jacobian' will be a reserved word starting in Stan 2.38.
-    Please rename it!
-Warning in 'deprecated_jacobian_usage.stan', line 5, column 9 to column 17:
-    Variable name 'jacobian' will be a reserved word starting in Stan 2.38.
-    Please rename it!
-Warning in 'deprecated_jacobian_usage.stan', line 6, column 4 to column 12:
-    Variable name 'jacobian' will be a reserved word starting in Stan 2.38.
-    Please rename it!
-Warning in 'deprecated_jacobian_usage.stan', line 7, column 11 to column 19:
-    Variable name 'jacobian' will be a reserved word starting in Stan 2.38.
-    Please rename it!
-Warning in 'deprecated_jacobian_usage.stan', line 19, column 7 to column 15:
-    Variable name 'jacobian' will be a reserved word starting in Stan 2.38.
-    Please rename it!
-Warning in 'deprecated_jacobian_usage.stan', line 19, column 7 to column 15:
-    Variable name 'jacobian' will be a reserved word starting in Stan 2.38.
-    Please rename it!
-Warning in 'deprecated_jacobian_usage.stan', line 20, column 2 to column 10:
-    Variable name 'jacobian' will be a reserved word starting in Stan 2.38.
-    Please rename it!
-Warning in 'deprecated_jacobian_usage.stan', line 10, column 7 to column 19:
+Warning in 'deprecated_jacobian_usage.stan', line 6, column 7 to column 19:
     Functions that end in _jacobian will change meaning in Stan 2.39. They
     will be used for the encapsulating usages of 'jacobian +=', and therefore
     not available to be called in all the same places as this function is
