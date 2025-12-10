@@ -713,7 +713,7 @@ pipeline {
                         dockerfile {
                             filename 'scripts/docker/ci/Dockerfile'
                             dir '.'
-                            label 'linux && triqs'
+                            label 'linux'
                             args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\''
                             additionalBuildArgs  '--build-arg PUID=$(id -u) --build-arg PGID=$(id -g)'
                         }
@@ -749,7 +749,7 @@ pipeline {
                         dockerfile {
                             filename 'scripts/docker/ci/Dockerfile'
                             dir '.'
-                            label 'linux && triqs'
+                            label 'linux'
                             args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\''
                             additionalBuildArgs  '--build-arg PUID=$(id -u) --build-arg PGID=$(id -g)'
                         }
@@ -939,10 +939,10 @@ pipeline {
             }
             agent {
                 dockerfile {
-                    filename 'scripts/docker/static-builder/Dockerfile'
+                    filename 'scripts/docker/ci/Dockerfile'
                     dir '.'
-                    label 'linux && triqs'
-                    args '--entrypoint=\'\''
+                    label 'linux'
+                    args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\''
                     additionalBuildArgs  '--build-arg PUID=$(id -u) --build-arg PGID=$(id -g)'
                 }
             }
