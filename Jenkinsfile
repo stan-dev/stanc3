@@ -96,7 +96,7 @@ pipeline {
         booleanParam(name:"skip_compile", defaultValue: false, description:"Skip compile tests")
         booleanParam(name:"skip_math_func_expr", defaultValue: false, description:"Skip math functions expressions test")
         booleanParam(name:"skip_ocaml_tests", defaultValue: false, description:"Skip ocaml tests")
-        booleanParam(name:"build_multiarch", defaultValue: false, description:"Build multiarch images even when not on 'master'")
+        booleanParam(name:"build_multiarch", defaultValue: true, description:"Build multiarch images even when not on 'master'")
 
         string(defaultValue: 'develop', name: 'cmdstan_pr',
                description: "CmdStan PR to test against. Will check out this PR in the downstream Stan repo.")
@@ -339,6 +339,7 @@ pipeline {
                     }
                     post { always { sh "rm -rf ${env.WORKSPACE}/compile-tests-good/*" }}
                 }
+
 
                 stage("Compile tests - example-models") {
                     when {
