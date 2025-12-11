@@ -16,7 +16,7 @@ USER jenkins
 
 # Init opam, create and switch to 4.14.0, update shell environment
 RUN opam init --disable-sandboxing --bare -y
-RUN opam repo set-url default  https://github.com/hannesm/opam-repository.git#archival-20260101 --set-default
+RUN opam repo set-url default https://github.com/hannesm/opam-repository.git#archival-20260101 --set-default
 RUN opam switch create 4.14.1
 RUN opam switch 4.14.1
 RUN eval $(opam env)
