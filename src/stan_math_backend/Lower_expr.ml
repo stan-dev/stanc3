@@ -408,8 +408,7 @@ and lower_functionals fname suffix es mem_pattern =
               @ [msgs] ) in
       let fname = stan_namespace_qualify fname in
       let templates = templates false suffix in
-      Exprs.templated_fun_call fname templates
-        (lower_exprs ~promote_reals:true args) in
+      Exprs.templated_fun_call fname templates (lower_exprs args) in
     Some lower_hov
 
 and lower_fun_app suffix fname es mem_pattern
@@ -438,7 +437,7 @@ and lower_user_defined_fun f suffix es =
   let extra_args =
     suffix_args true suffix @ ["pstream__"] |> List.map ~f:Exprs.to_var in
   Exprs.templated_fun_call f (templates true suffix)
-    ((lower_exprs ~promote_reals:true) es @ extra_args)
+    (lower_exprs es @ extra_args)
 
 and lower_compiler_internal ad ut f es =
   let open Cpp.DSL in
@@ -501,8 +500,7 @@ and lower_compiler_internal ad ut f es =
   | FnDeepCopy ->
       lower_fun_app Fun_kind.FnPlain "stan::model::deep_copy" es Mem_pattern.AoS
         (Some UnsizedType.Void)
-  | FnMakeTuple ->
-      fun_call "std::forward_as_tuple" (lower_exprs ~promote_reals:true es)
+  | FnMakeTuple -> fun_call "std::forward_as_tuple" (lower_exprs es)
   | _ ->
       lower_fun_app FnPlain (Internal_fun.to_string f) es Mem_pattern.AoS
         (Some UnsizedType.Void)
@@ -539,8 +537,7 @@ and lower_indexed_simple (e : expr) idcs =
   List.fold idcs ~init:e ~f:(fun e id ->
       Subscript (e, idx_minus_one (Index.map lower_expr id)))
 
-and lower_expr ?(promote_reals = false) (Expr.{pattern; meta} : Expr.Typed.t) :
-    Cpp.expr =
+and lower_expr (Expr.{pattern; meta} : Expr.Typed.t) : Cpp.expr =
   let open Exprs in
   match pattern with
   | Var s -> Var s
@@ -548,12 +545,10 @@ and lower_expr ?(promote_reals = false) (Expr.{pattern; meta} : Expr.Typed.t) :
   | Lit (Imaginary, s) ->
       fun_call "stan::math::to_complex" [Literal "0"; Literal s]
   | Lit ((Real | Int), s) -> Literal s
-  | Promotion (expr, UReal, ad) when is_scalar expr ->
-      if promote_reals && ad = UnsizedType.DataOnly then
-        (* this can be important for e.g. templated function calls where we
-           might generate an incorrect specification for int *)
-        static_cast Cpp.Double (lower_expr expr)
-      else lower_expr expr
+  | Promotion (expr, UReal, UnsizedType.DataOnly) when is_scalar expr ->
+      (* this can be important for e.g. templated function calls where we might
+         generate an incorrect specification for int *)
+      static_cast Cpp.Double (lower_expr expr)
   | Promotion (expr, UComplex, DataOnly) when is_scalar expr ->
       (* this is in principle a little better than promote_scalar since it is
          constexpr *)
@@ -568,7 +563,7 @@ and lower_expr ?(promote_reals = false) (Expr.{pattern; meta} : Expr.Typed.t) :
       let maybe_eval (e : Expr.Typed.t) =
         if UnsizedType.is_eigen_type e.meta.type_ then
           fun_call "stan::math::eval" [lower_expr e]
-        else lower_expr ~promote_reals e in
+        else lower_expr e in
       Parens (TernaryIf (maybe_eval ec, maybe_eval et, maybe_eval ef))
   | FunApp
       ( StanLib (op, _, _)
@@ -590,21 +585,20 @@ and lower_expr ?(promote_reals = false) (Expr.{pattern; meta} : Expr.Typed.t) :
       let ret_type = Some (UnsizedType.ReturnType meta.type_) in
       lower_fun_app suffix f es mem_pattern ret_type
   | FunApp (UserDefined (f, suffix), es) -> lower_user_defined_fun f suffix es
-  | Indexed (e, []) -> lower_expr ~promote_reals e
+  | Indexed (e, []) -> lower_expr e
   | Indexed (e, idx) -> (
       match e.pattern with
       | FunApp (CompilerInternal FnReadData, _) ->
-          lower_indexed_simple (lower_expr ~promote_reals e) idx
+          lower_indexed_simple (lower_expr e) idx
       | _
         when List.for_all ~f:dont_need_range_check idx
              && not (UnsizedType.is_indexing_matrix (Expr.Typed.type_of e, idx))
         ->
-          lower_indexed_simple (lower_expr ~promote_reals e) idx
+          lower_indexed_simple (lower_expr e) idx
       | _ -> lower_indexed e idx (Fmt.to_to_string Expr.Typed.pp e))
-  | TupleProjection (t, ix) -> tuple_get (ix - 1) (lower_expr ~promote_reals t)
+  | TupleProjection (t, ix) -> tuple_get (ix - 1) (lower_expr t)
 
-and lower_exprs ?(promote_reals = false) =
-  List.map ~f:(lower_expr ~promote_reals)
+and lower_exprs = List.map ~f:lower_expr
 
 module Testing = struct
   (* these functions are just for testing *)

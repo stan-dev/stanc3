@@ -182,7 +182,7 @@ double int_array_fun(const T0__& a, std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 5;
-    return stan::math::sum(a);
+    return stan::math::promote_scalar<local_scalar_t__>(stan::math::sum(a));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -282,7 +282,8 @@ test_lp(const T0__& a, T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream*
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 15;
-    lp_accum__.add(stan::math::normal_lpdf<propto__>(a, 0, 1));
+    lp_accum__.add(stan::math::normal_lpdf<propto__>(a,
+                     static_cast<double>(0), static_cast<double>(1)));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -327,7 +328,7 @@ test_lpdf(const T0__& a, const T1__& b, std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 19;
-    return stan::math::normal_lpdf<false>(a, b, 1);
+    return stan::math::normal_lpdf<false>(a, b, static_cast<double>(1));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -635,7 +636,7 @@ double int_array_fun(const T0__& a, std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 5;
-    return stan::math::sum(a);
+    return stan::math::promote_scalar<local_scalar_t__>(stan::math::sum(a));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -735,7 +736,8 @@ test_lp(const T0__& a, T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream*
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 15;
-    lp_accum__.add(stan::math::normal_lpdf<propto__>(a, 0, 1));
+    lp_accum__.add(stan::math::normal_lpdf<propto__>(a,
+                     static_cast<double>(0), static_cast<double>(1)));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -780,7 +782,7 @@ test_lpdf(const T0__& a, const T1__& b, std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 19;
-    return stan::math::normal_lpdf<false>(a, b, 1);
+    return stan::math::normal_lpdf<false>(a, b, static_cast<double>(1));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }

@@ -3363,7 +3363,12 @@ class infer_tuple_ad_model final : public model_base_crtp<infer_tuple_ad_model> 
         current_statement__ = 2;
         stan::model::assign(z,
           std::vector<std::tuple<local_scalar_t__, local_scalar_t__>>{
-            std::forward_as_tuple(1, x), std::forward_as_tuple(x, 1)},
+            std::forward_as_tuple(
+              stan::math::promote_scalar<local_scalar_t__>(1),
+              stan::math::promote_scalar<local_scalar_t__>(x)),
+            std::forward_as_tuple(
+              stan::math::promote_scalar<local_scalar_t__>(x),
+              stan::math::promote_scalar<local_scalar_t__>(1))},
           "assigning variable z");
       }
     } catch (const std::exception& e) {
@@ -3406,7 +3411,12 @@ class infer_tuple_ad_model final : public model_base_crtp<infer_tuple_ad_model> 
         current_statement__ = 2;
         stan::model::assign(z,
           std::vector<std::tuple<local_scalar_t__, local_scalar_t__>>{
-            std::forward_as_tuple(1, x), std::forward_as_tuple(x, 1)},
+            std::forward_as_tuple(
+              stan::math::promote_scalar<local_scalar_t__>(1),
+              stan::math::promote_scalar<local_scalar_t__>(x)),
+            std::forward_as_tuple(
+              stan::math::promote_scalar<local_scalar_t__>(x),
+              stan::math::promote_scalar<local_scalar_t__>(1))},
           "assigning variable z");
       }
     } catch (const std::exception& e) {
@@ -6800,7 +6810,9 @@ std::tuple<double, double> foo(std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 8;
-    return std::forward_as_tuple(1.0, 2.0);
+    return std::forward_as_tuple(
+             stan::math::promote_scalar<local_scalar_t__>(1.0),
+             stan::math::promote_scalar<local_scalar_t__>(2.0));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -8012,7 +8024,7 @@ double foo(const T0__& x, std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 15;
-    return std::get<0>(x);
+    return stan::math::promote_scalar<local_scalar_t__>(std::get<0>(x));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -8045,7 +8057,9 @@ double bar(const T0__& x, std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 17;
-    return std::get<1>(stan::model::rvalue(x, "x", stan::model::index_uni(1)));
+    return stan::math::promote_scalar<local_scalar_t__>(
+             std::get<1>(
+               stan::model::rvalue(x, "x", stan::model::index_uni(1))));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -8081,12 +8095,13 @@ double baz(const T0__& x, std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 19;
-    return stan::model::rvalue(
+    return stan::math::promote_scalar<local_scalar_t__>(
              stan::model::rvalue(
-               std::get<0>(
-                 stan::model::rvalue(x, "x", stan::model::index_uni(1))),
-               "x[1].1", stan::model::index_uni(1)), "x[1].1[1]",
-             stan::model::index_uni(1), stan::model::index_uni(1));
+               stan::model::rvalue(
+                 std::get<0>(
+                   stan::model::rvalue(x, "x", stan::model::index_uni(1))),
+                 "x[1].1", stan::model::index_uni(1)), "x[1].1[1]",
+               stan::model::index_uni(1), stan::model::index_uni(1)));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -8153,7 +8168,7 @@ class tuple_dataonly_model final : public model_base_crtp<tuple_dataonly_model> 
       stan::model::assign(m,
         stan::math::to_matrix(
           std::vector<Eigen::Matrix<double,1,-1>>{(Eigen::Matrix<double,1,-1>(1) <<
-                                                     1).finished()}),
+                                                     static_cast<double>(1)).finished()}),
         "assigning variable m");
       current_statement__ = 12;
       m2 = std::vector<Eigen::Matrix<double,-1,-1>>(1,
@@ -8267,7 +8282,7 @@ class tuple_dataonly_model final : public model_base_crtp<tuple_dataonly_model> 
                                           std::vector<
                                             Eigen::Matrix<double,1,-1>>{
                                             (Eigen::Matrix<double,1,-1>(1) <<
-                                               1).finished()})},
+                                               static_cast<double>(1)).finished()})},
                                       std::get<1>(d))}, pstream__));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -8345,7 +8360,7 @@ class tuple_dataonly_model final : public model_base_crtp<tuple_dataonly_model> 
                                           std::vector<
                                             Eigen::Matrix<double,1,-1>>{
                                             (Eigen::Matrix<double,1,-1>(1) <<
-                                               1).finished()})},
+                                               static_cast<double>(1)).finished()})},
                                       std::get<1>(d))}, pstream__));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -8615,8 +8630,9 @@ double tuple_tester(const T0__& x, std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 2;
-    return stan::model::rvalue(std::get<0>(x), "x.1",
-             stan::model::index_uni(1));
+    return stan::math::promote_scalar<local_scalar_t__>(
+             stan::model::rvalue(std::get<0>(x), "x.1",
+               stan::model::index_uni(1)));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -12026,7 +12042,8 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
                   std::numeric_limits<double>::quiet_NaN())};
       current_statement__ = 15;
       stan::model::assign(basic,
-        std::forward_as_tuple(std::vector<double>{1, 2},
+        std::forward_as_tuple(
+          std::vector<double>{static_cast<double>(1), static_cast<double>(2)},
           stan::math::to_complex(3, 0)), "assigning variable basic");
       current_statement__ = 16;
       CV = std::tuple<Eigen::Matrix<std::complex<double>,-1,1>, double>{
@@ -13468,8 +13485,11 @@ class tuple_templating_model final : public model_base_crtp<tuple_templating_mod
         std::vector<std::tuple<int, Eigen::Matrix<double,-1,-1>>>{std::forward_as_tuple(
                                                                     1,
                                                                     stan::math::multiply(
-                                                                    m1, 2)),
-          std::forward_as_tuple(2, stan::math::multiply(m2, 3))}, pstream__);
+                                                                    m1,
+                                                                    static_cast<
+                                                                    double>(2))),
+          std::forward_as_tuple(2,
+            stan::math::multiply(m2, static_cast<double>(3)))}, pstream__);
       current_statement__ = 5;
       overly_complicated(
         std::forward_as_tuple(std::vector<Eigen::Matrix<double,-1,-1>>{m1},
@@ -15452,7 +15472,7 @@ foo_lpdf(const T0__& x, const T1__& y, std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 2;
-    return 0;
+    return stan::math::promote_scalar<local_scalar_t__>(0);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -15809,7 +15829,7 @@ foo_lpdf(const T0__& x, std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 2;
-    return 0;
+    return stan::math::promote_scalar<local_scalar_t__>(0);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
