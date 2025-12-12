@@ -131,11 +131,14 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
         "assigning variable theta");
       {
         current_statement__ = 5;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(mu, 0, 5));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(mu,
+                         static_cast<double>(0), static_cast<double>(5)));
         current_statement__ = 6;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(tau, 0, 5));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(tau,
+                         static_cast<double>(0), static_cast<double>(5)));
         current_statement__ = 7;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(theta_tilde, 0, 1));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(theta_tilde,
+                         static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 8;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(y, theta, sigma));
       }
@@ -186,11 +189,14 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
         "assigning variable theta");
       {
         current_statement__ = 5;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(mu, 0, 5));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(mu,
+                         static_cast<double>(0), static_cast<double>(5)));
         current_statement__ = 6;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(tau, 0, 5));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(tau,
+                         static_cast<double>(0), static_cast<double>(5)));
         current_statement__ = 7;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(theta_tilde, 0, 1));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(theta_tilde,
+                         static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 8;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(y, theta, sigma));
       }
@@ -988,7 +994,8 @@ class builtin_constraint_model final : public model_base_crtp<builtin_constraint
       stan::math::check_sum_to_zero(function__, "beta", beta);
       {
         current_statement__ = 7;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(beta, 0,
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(beta,
+                         static_cast<double>(0),
                          stan::math::inv(
                            stan::math::sqrt((1 - stan::math::inv(K))))));
       }
@@ -1036,7 +1043,8 @@ class builtin_constraint_model final : public model_base_crtp<builtin_constraint
       stan::math::check_sum_to_zero(function__, "beta", beta);
       {
         current_statement__ = 7;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(beta, 0,
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(beta,
+                         static_cast<double>(0),
                          stan::math::inv(
                            stan::math::sqrt((1 - stan::math::inv(K))))));
       }
@@ -1490,7 +1498,10 @@ f(const T0__& x, const T1__& x2, std::ostream* pstream__) {
     current_statement__ = 9;
     return std::forward_as_tuple(1,
              std::vector<std::tuple<int, local_scalar_t__>>{std::forward_as_tuple(
-                                                              2, 3.4)});
+                                                              2,
+                                                              stan::math::promote_scalar<
+                                                                local_scalar_t__>(
+                                                                3.4))});
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -1921,8 +1932,11 @@ class container_promotion_model final : public model_base_crtp<container_promoti
                 std::numeric_limits<double>::quiet_NaN()));
       current_statement__ = 15;
       stan::model::assign(Arr,
-        std::vector<std::vector<double>>{std::vector<double>{1, 2},
-          std::vector<double>{3, 4.5}}, "assigning variable Arr");
+        std::vector<std::vector<double>>{std::vector<double>{static_cast<
+                                                               double>(1),
+                                           static_cast<double>(2)},
+          std::vector<double>{static_cast<double>(3), 4.5}},
+        "assigning variable Arr");
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -1965,7 +1979,10 @@ class container_promotion_model final : public model_base_crtp<container_promoti
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__);
       current_statement__ = 8;
       stan::model::assign(V,
-        (Eigen::Matrix<local_scalar_t__,-1,1>(2) << 1, y).finished(),
+        (Eigen::Matrix<local_scalar_t__,-1,1>(2) <<
+                                                   stan::math::promote_scalar<
+                                                     local_scalar_t__>(1),
+                                                   y).finished(),
         "assigning variable V");
       std::vector<Eigen::Matrix<local_scalar_t__,1,-1>> arRV =
         std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>(2,
@@ -1973,8 +1990,18 @@ class container_promotion_model final : public model_base_crtp<container_promoti
       current_statement__ = 9;
       stan::model::assign(arRV,
         std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>{(Eigen::Matrix<local_scalar_t__,1,-1>(2) <<
-                                                             1, 2).finished(),
-          (Eigen::Matrix<local_scalar_t__,1,-1>(2) << 3, y).finished()},
+                                                             stan::math::promote_scalar<
+                                                               local_scalar_t__>(
+                                                               static_cast<
+                                                                 double>(1)),
+                                                            stan::math::promote_scalar<
+                                                              local_scalar_t__>(
+                                                              static_cast<
+                                                                double>(2))).finished(),
+          (Eigen::Matrix<local_scalar_t__,1,-1>(2) <<
+                                                     stan::math::promote_scalar<
+                                                       local_scalar_t__>(3),
+                                                     y).finished()},
         "assigning variable arRV");
       std::vector<std::vector<local_scalar_t__>> Mar =
         std::vector<std::vector<local_scalar_t__>>(2,
@@ -1982,16 +2009,32 @@ class container_promotion_model final : public model_base_crtp<container_promoti
       current_statement__ = 10;
       stan::model::assign(Mar,
         std::vector<std::vector<local_scalar_t__>>{std::vector<
-                                                     local_scalar_t__>{1, 2},
-          std::vector<local_scalar_t__>{3, y}}, "assigning variable Mar");
+                                                     local_scalar_t__>{
+                                                     stan::math::promote_scalar<
+                                                       local_scalar_t__>(1),
+                                                     stan::math::promote_scalar<
+                                                       local_scalar_t__>(2)},
+          std::vector<local_scalar_t__>{stan::math::promote_scalar<
+                                          local_scalar_t__>(3), y}},
+        "assigning variable Mar");
       Eigen::Matrix<local_scalar_t__,-1,-1> M =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(2, 2, DUMMY_VAR__);
       current_statement__ = 11;
       stan::model::assign(M,
         stan::math::to_matrix(
           std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>{(Eigen::Matrix<local_scalar_t__,1,-1>(2) <<
-                                                               1, 2).finished(),
-            (Eigen::Matrix<local_scalar_t__,1,-1>(2) << 3, y).finished()}),
+                                                               stan::math::promote_scalar<
+                                                                 local_scalar_t__>(
+                                                                 static_cast<
+                                                                   double>(1)),
+                                                              stan::math::promote_scalar<
+                                                                local_scalar_t__>(
+                                                                static_cast<
+                                                                  double>(2))).finished(),
+            (Eigen::Matrix<local_scalar_t__,1,-1>(2) <<
+                                                       stan::math::promote_scalar<
+                                                         local_scalar_t__>(3),
+                                                       y).finished()}),
         "assigning variable M");
       std::vector<std::vector<std::vector<local_scalar_t__>>> deep_Mar =
         std::vector<std::vector<std::vector<local_scalar_t__>>>(2,
@@ -2003,15 +2046,29 @@ class container_promotion_model final : public model_base_crtp<container_promoti
                                                                   std::vector<
                                                                     local_scalar_t__>>{
                                                                   std::vector<
-                                                                    local_scalar_t__>{0,
-                                                                    0},
+                                                                    local_scalar_t__>{
+                                                                    stan::math::promote_scalar<
+                                                                    local_scalar_t__>(
+                                                                    0),
+                                                                    stan::math::promote_scalar<
+                                                                    local_scalar_t__>(
+                                                                    0)},
                                                                   std::vector<
-                                                                    local_scalar_t__>{0,
-                                                                    0}},
+                                                                    local_scalar_t__>{
+                                                                    stan::math::promote_scalar<
+                                                                    local_scalar_t__>(
+                                                                    0),
+                                                                    stan::math::promote_scalar<
+                                                                    local_scalar_t__>(
+                                                                    0)}},
           std::vector<std::vector<local_scalar_t__>>{std::vector<
-                                                       local_scalar_t__>{1,
-                                                       2},
-            std::vector<local_scalar_t__>{3, y}}},
+                                                       local_scalar_t__>{
+                                                       stan::math::promote_scalar<
+                                                         local_scalar_t__>(1),
+                                                       stan::math::promote_scalar<
+                                                         local_scalar_t__>(2)},
+            std::vector<local_scalar_t__>{stan::math::promote_scalar<
+                                            local_scalar_t__>(3), y}}},
         "assigning variable deep_Mar");
       std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>> deep_M =
         std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>(2,
@@ -2022,13 +2079,37 @@ class container_promotion_model final : public model_base_crtp<container_promoti
                                                              std::vector<
                                                                Eigen::Matrix<local_scalar_t__,1,-1>>{
                                                                (Eigen::Matrix<local_scalar_t__,1,-1>(2) <<
-                                                                  0, 0).finished(),
+                                                                  stan::math::promote_scalar<
+                                                                    local_scalar_t__>(
+                                                                    static_cast<
+                                                                    double>(0)),
+                                                                 stan::math::promote_scalar<
+                                                                   local_scalar_t__>(
+                                                                   static_cast<
+                                                                    double>(0))).finished(),
                                                                (Eigen::Matrix<local_scalar_t__,1,-1>(2) <<
-                                                                  0, 0).finished()}),
+                                                                  stan::math::promote_scalar<
+                                                                    local_scalar_t__>(
+                                                                    static_cast<
+                                                                    double>(0)),
+                                                                 stan::math::promote_scalar<
+                                                                   local_scalar_t__>(
+                                                                   static_cast<
+                                                                    double>(0))).finished()}),
           stan::math::to_matrix(
             std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>{(Eigen::Matrix<local_scalar_t__,1,-1>(2) <<
-                                                                 1, 2).finished(),
-              (Eigen::Matrix<local_scalar_t__,1,-1>(2) << y, 4).finished()})},
+                                                                 stan::math::promote_scalar<
+                                                                   local_scalar_t__>(
+                                                                   static_cast<
+                                                                    double>(1)),
+                                                                stan::math::promote_scalar<
+                                                                  local_scalar_t__>(
+                                                                  static_cast<
+                                                                    double>(2))).finished(),
+              (Eigen::Matrix<local_scalar_t__,1,-1>(2) << y,
+                                                         stan::math::promote_scalar<
+                                                           local_scalar_t__>(
+                                                           4)).finished()})},
         "assigning variable deep_M");
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2066,7 +2147,10 @@ class container_promotion_model final : public model_base_crtp<container_promoti
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__);
       current_statement__ = 8;
       stan::model::assign(V,
-        (Eigen::Matrix<local_scalar_t__,-1,1>(2) << 1, y).finished(),
+        (Eigen::Matrix<local_scalar_t__,-1,1>(2) <<
+                                                   stan::math::promote_scalar<
+                                                     local_scalar_t__>(1),
+                                                   y).finished(),
         "assigning variable V");
       std::vector<Eigen::Matrix<local_scalar_t__,1,-1>> arRV =
         std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>(2,
@@ -2074,8 +2158,18 @@ class container_promotion_model final : public model_base_crtp<container_promoti
       current_statement__ = 9;
       stan::model::assign(arRV,
         std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>{(Eigen::Matrix<local_scalar_t__,1,-1>(2) <<
-                                                             1, 2).finished(),
-          (Eigen::Matrix<local_scalar_t__,1,-1>(2) << 3, y).finished()},
+                                                             stan::math::promote_scalar<
+                                                               local_scalar_t__>(
+                                                               static_cast<
+                                                                 double>(1)),
+                                                            stan::math::promote_scalar<
+                                                              local_scalar_t__>(
+                                                              static_cast<
+                                                                double>(2))).finished(),
+          (Eigen::Matrix<local_scalar_t__,1,-1>(2) <<
+                                                     stan::math::promote_scalar<
+                                                       local_scalar_t__>(3),
+                                                     y).finished()},
         "assigning variable arRV");
       std::vector<std::vector<local_scalar_t__>> Mar =
         std::vector<std::vector<local_scalar_t__>>(2,
@@ -2083,16 +2177,32 @@ class container_promotion_model final : public model_base_crtp<container_promoti
       current_statement__ = 10;
       stan::model::assign(Mar,
         std::vector<std::vector<local_scalar_t__>>{std::vector<
-                                                     local_scalar_t__>{1, 2},
-          std::vector<local_scalar_t__>{3, y}}, "assigning variable Mar");
+                                                     local_scalar_t__>{
+                                                     stan::math::promote_scalar<
+                                                       local_scalar_t__>(1),
+                                                     stan::math::promote_scalar<
+                                                       local_scalar_t__>(2)},
+          std::vector<local_scalar_t__>{stan::math::promote_scalar<
+                                          local_scalar_t__>(3), y}},
+        "assigning variable Mar");
       Eigen::Matrix<local_scalar_t__,-1,-1> M =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(2, 2, DUMMY_VAR__);
       current_statement__ = 11;
       stan::model::assign(M,
         stan::math::to_matrix(
           std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>{(Eigen::Matrix<local_scalar_t__,1,-1>(2) <<
-                                                               1, 2).finished(),
-            (Eigen::Matrix<local_scalar_t__,1,-1>(2) << 3, y).finished()}),
+                                                               stan::math::promote_scalar<
+                                                                 local_scalar_t__>(
+                                                                 static_cast<
+                                                                   double>(1)),
+                                                              stan::math::promote_scalar<
+                                                                local_scalar_t__>(
+                                                                static_cast<
+                                                                  double>(2))).finished(),
+            (Eigen::Matrix<local_scalar_t__,1,-1>(2) <<
+                                                       stan::math::promote_scalar<
+                                                         local_scalar_t__>(3),
+                                                       y).finished()}),
         "assigning variable M");
       std::vector<std::vector<std::vector<local_scalar_t__>>> deep_Mar =
         std::vector<std::vector<std::vector<local_scalar_t__>>>(2,
@@ -2104,15 +2214,29 @@ class container_promotion_model final : public model_base_crtp<container_promoti
                                                                   std::vector<
                                                                     local_scalar_t__>>{
                                                                   std::vector<
-                                                                    local_scalar_t__>{0,
-                                                                    0},
+                                                                    local_scalar_t__>{
+                                                                    stan::math::promote_scalar<
+                                                                    local_scalar_t__>(
+                                                                    0),
+                                                                    stan::math::promote_scalar<
+                                                                    local_scalar_t__>(
+                                                                    0)},
                                                                   std::vector<
-                                                                    local_scalar_t__>{0,
-                                                                    0}},
+                                                                    local_scalar_t__>{
+                                                                    stan::math::promote_scalar<
+                                                                    local_scalar_t__>(
+                                                                    0),
+                                                                    stan::math::promote_scalar<
+                                                                    local_scalar_t__>(
+                                                                    0)}},
           std::vector<std::vector<local_scalar_t__>>{std::vector<
-                                                       local_scalar_t__>{1,
-                                                       2},
-            std::vector<local_scalar_t__>{3, y}}},
+                                                       local_scalar_t__>{
+                                                       stan::math::promote_scalar<
+                                                         local_scalar_t__>(1),
+                                                       stan::math::promote_scalar<
+                                                         local_scalar_t__>(2)},
+            std::vector<local_scalar_t__>{stan::math::promote_scalar<
+                                            local_scalar_t__>(3), y}}},
         "assigning variable deep_Mar");
       std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>> deep_M =
         std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>(2,
@@ -2123,13 +2247,37 @@ class container_promotion_model final : public model_base_crtp<container_promoti
                                                              std::vector<
                                                                Eigen::Matrix<local_scalar_t__,1,-1>>{
                                                                (Eigen::Matrix<local_scalar_t__,1,-1>(2) <<
-                                                                  0, 0).finished(),
+                                                                  stan::math::promote_scalar<
+                                                                    local_scalar_t__>(
+                                                                    static_cast<
+                                                                    double>(0)),
+                                                                 stan::math::promote_scalar<
+                                                                   local_scalar_t__>(
+                                                                   static_cast<
+                                                                    double>(0))).finished(),
                                                                (Eigen::Matrix<local_scalar_t__,1,-1>(2) <<
-                                                                  0, 0).finished()}),
+                                                                  stan::math::promote_scalar<
+                                                                    local_scalar_t__>(
+                                                                    static_cast<
+                                                                    double>(0)),
+                                                                 stan::math::promote_scalar<
+                                                                   local_scalar_t__>(
+                                                                   static_cast<
+                                                                    double>(0))).finished()}),
           stan::math::to_matrix(
             std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>{(Eigen::Matrix<local_scalar_t__,1,-1>(2) <<
-                                                                 1, 2).finished(),
-              (Eigen::Matrix<local_scalar_t__,1,-1>(2) << y, 4).finished()})},
+                                                                 stan::math::promote_scalar<
+                                                                   local_scalar_t__>(
+                                                                   static_cast<
+                                                                    double>(1)),
+                                                                stan::math::promote_scalar<
+                                                                  local_scalar_t__>(
+                                                                  static_cast<
+                                                                    double>(2))).finished(),
+              (Eigen::Matrix<local_scalar_t__,1,-1>(2) << y,
+                                                         stan::math::promote_scalar<
+                                                           local_scalar_t__>(
+                                                           4)).finished()})},
         "assigning variable deep_M");
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2203,25 +2351,54 @@ class container_promotion_model final : public model_base_crtp<container_promoti
       }
       current_statement__ = 8;
       stan::model::assign(V,
-        (Eigen::Matrix<local_scalar_t__,-1,1>(2) << 1, y).finished(),
+        (Eigen::Matrix<local_scalar_t__,-1,1>(2) <<
+                                                   stan::math::promote_scalar<
+                                                     local_scalar_t__>(1),
+                                                   y).finished(),
         "assigning variable V");
       current_statement__ = 9;
       stan::model::assign(arRV,
         std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>{(Eigen::Matrix<local_scalar_t__,1,-1>(2) <<
-                                                             1, 2).finished(),
-          (Eigen::Matrix<local_scalar_t__,1,-1>(2) << 3, y).finished()},
+                                                             stan::math::promote_scalar<
+                                                               local_scalar_t__>(
+                                                               static_cast<
+                                                                 double>(1)),
+                                                            stan::math::promote_scalar<
+                                                              local_scalar_t__>(
+                                                              static_cast<
+                                                                double>(2))).finished(),
+          (Eigen::Matrix<local_scalar_t__,1,-1>(2) <<
+                                                     stan::math::promote_scalar<
+                                                       local_scalar_t__>(3),
+                                                     y).finished()},
         "assigning variable arRV");
       current_statement__ = 10;
       stan::model::assign(Mar,
         std::vector<std::vector<local_scalar_t__>>{std::vector<
-                                                     local_scalar_t__>{1, 2},
-          std::vector<local_scalar_t__>{3, y}}, "assigning variable Mar");
+                                                     local_scalar_t__>{
+                                                     stan::math::promote_scalar<
+                                                       local_scalar_t__>(1),
+                                                     stan::math::promote_scalar<
+                                                       local_scalar_t__>(2)},
+          std::vector<local_scalar_t__>{stan::math::promote_scalar<
+                                          local_scalar_t__>(3), y}},
+        "assigning variable Mar");
       current_statement__ = 11;
       stan::model::assign(M,
         stan::math::to_matrix(
           std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>{(Eigen::Matrix<local_scalar_t__,1,-1>(2) <<
-                                                               1, 2).finished(),
-            (Eigen::Matrix<local_scalar_t__,1,-1>(2) << 3, y).finished()}),
+                                                               stan::math::promote_scalar<
+                                                                 local_scalar_t__>(
+                                                                 static_cast<
+                                                                   double>(1)),
+                                                              stan::math::promote_scalar<
+                                                                local_scalar_t__>(
+                                                                static_cast<
+                                                                  double>(2))).finished(),
+            (Eigen::Matrix<local_scalar_t__,1,-1>(2) <<
+                                                       stan::math::promote_scalar<
+                                                         local_scalar_t__>(3),
+                                                       y).finished()}),
         "assigning variable M");
       current_statement__ = 12;
       stan::model::assign(deep_Mar,
@@ -2229,15 +2406,29 @@ class container_promotion_model final : public model_base_crtp<container_promoti
                                                                   std::vector<
                                                                     local_scalar_t__>>{
                                                                   std::vector<
-                                                                    local_scalar_t__>{0,
-                                                                    0},
+                                                                    local_scalar_t__>{
+                                                                    stan::math::promote_scalar<
+                                                                    local_scalar_t__>(
+                                                                    0),
+                                                                    stan::math::promote_scalar<
+                                                                    local_scalar_t__>(
+                                                                    0)},
                                                                   std::vector<
-                                                                    local_scalar_t__>{0,
-                                                                    0}},
+                                                                    local_scalar_t__>{
+                                                                    stan::math::promote_scalar<
+                                                                    local_scalar_t__>(
+                                                                    0),
+                                                                    stan::math::promote_scalar<
+                                                                    local_scalar_t__>(
+                                                                    0)}},
           std::vector<std::vector<local_scalar_t__>>{std::vector<
-                                                       local_scalar_t__>{1,
-                                                       2},
-            std::vector<local_scalar_t__>{3, y}}},
+                                                       local_scalar_t__>{
+                                                       stan::math::promote_scalar<
+                                                         local_scalar_t__>(1),
+                                                       stan::math::promote_scalar<
+                                                         local_scalar_t__>(2)},
+            std::vector<local_scalar_t__>{stan::math::promote_scalar<
+                                            local_scalar_t__>(3), y}}},
         "assigning variable deep_Mar");
       current_statement__ = 13;
       stan::model::assign(deep_M,
@@ -2245,13 +2436,37 @@ class container_promotion_model final : public model_base_crtp<container_promoti
                                                              std::vector<
                                                                Eigen::Matrix<local_scalar_t__,1,-1>>{
                                                                (Eigen::Matrix<local_scalar_t__,1,-1>(2) <<
-                                                                  0, 0).finished(),
+                                                                  stan::math::promote_scalar<
+                                                                    local_scalar_t__>(
+                                                                    static_cast<
+                                                                    double>(0)),
+                                                                 stan::math::promote_scalar<
+                                                                   local_scalar_t__>(
+                                                                   static_cast<
+                                                                    double>(0))).finished(),
                                                                (Eigen::Matrix<local_scalar_t__,1,-1>(2) <<
-                                                                  0, 0).finished()}),
+                                                                  stan::math::promote_scalar<
+                                                                    local_scalar_t__>(
+                                                                    static_cast<
+                                                                    double>(0)),
+                                                                 stan::math::promote_scalar<
+                                                                   local_scalar_t__>(
+                                                                   static_cast<
+                                                                    double>(0))).finished()}),
           stan::math::to_matrix(
             std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>{(Eigen::Matrix<local_scalar_t__,1,-1>(2) <<
-                                                                 1, 2).finished(),
-              (Eigen::Matrix<local_scalar_t__,1,-1>(2) << y, 4).finished()})},
+                                                                 stan::math::promote_scalar<
+                                                                   local_scalar_t__>(
+                                                                   static_cast<
+                                                                    double>(1)),
+                                                                stan::math::promote_scalar<
+                                                                  local_scalar_t__>(
+                                                                  static_cast<
+                                                                    double>(2))).finished(),
+              (Eigen::Matrix<local_scalar_t__,1,-1>(2) << y,
+                                                         stan::math::promote_scalar<
+                                                           local_scalar_t__>(
+                                                           4)).finished()})},
         "assigning variable deep_M");
       if (emit_transformed_parameters__) {
         out__.write(V);
@@ -4358,8 +4573,9 @@ baz(const T0__& y_arg__, std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 14;
-    return stan::model::rvalue(y, "y", stan::model::index_uni(1),
-             stan::model::index_uni(1));
+    return stan::math::promote_scalar<local_scalar_t__>(
+             stan::model::rvalue(y, "y", stan::model::index_uni(1),
+               stan::model::index_uni(1)));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -4380,9 +4596,10 @@ bar(const std::vector<Eigen::Matrix<double,-1,-1>>& z, std::ostream*
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 16;
-    return stan::model::rvalue(
-             stan::model::rvalue(z, "z", stan::model::index_uni(1)), "z[1]",
-             stan::model::index_uni(1), stan::model::index_uni(1));
+    return stan::math::promote_scalar<local_scalar_t__>(
+             stan::model::rvalue(
+               stan::model::rvalue(z, "z", stan::model::index_uni(1)),
+               "z[1]", stan::model::index_uni(1), stan::model::index_uni(1)));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -4403,8 +4620,9 @@ foo(const std::vector<std::vector<std::vector<double>>>& x,
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 18;
-    return stan::model::rvalue(x, "x", stan::model::index_uni(1),
-             stan::model::index_uni(1), stan::model::index_uni(1));
+    return stan::math::promote_scalar<local_scalar_t__>(
+             stan::model::rvalue(x, "x", stan::model::index_uni(1),
+               stan::model::index_uni(1), stan::model::index_uni(1)));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -5807,11 +6025,14 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
         "assigning variable theta");
       {
         current_statement__ = 5;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(mu, 0, 5));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(mu,
+                         static_cast<double>(0), static_cast<double>(5)));
         current_statement__ = 6;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(tau, 0, 5));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(tau,
+                         static_cast<double>(0), static_cast<double>(5)));
         current_statement__ = 7;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(theta_tilde, 0, 1));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(theta_tilde,
+                         static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 8;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(y, theta, sigma));
       }
@@ -5862,11 +6083,14 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
         "assigning variable theta");
       {
         current_statement__ = 5;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(mu, 0, 5));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(mu,
+                         static_cast<double>(0), static_cast<double>(5)));
         current_statement__ = 6;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(tau, 0, 5));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(tau,
+                         static_cast<double>(0), static_cast<double>(5)));
         current_statement__ = 7;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(theta_tilde, 0, 1));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(theta_tilde,
+                         static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 8;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(y, theta, sigma));
       }
@@ -7630,7 +7854,8 @@ class laplace_bernoulli_logit_model final : public model_base_crtp<laplace_berno
         lp_accum__.add(stan::math::inv_gamma_lpdf<propto__>(alpha,
                          alpha_location_prior, alpha_scale_prior));
         current_statement__ = 8;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(eta, 0, 1));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(eta,
+                         static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 9;
         lp_accum__.add(stan::math::laplace_marginal_bernoulli_logit_lpmf<
                          propto__>(y, y, prior_mean, K_function_functor__(),
@@ -7718,7 +7943,8 @@ class laplace_bernoulli_logit_model final : public model_base_crtp<laplace_berno
         lp_accum__.add(stan::math::inv_gamma_lpdf<propto__>(alpha,
                          alpha_location_prior, alpha_scale_prior));
         current_statement__ = 8;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(eta, 0, 1));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(eta,
+                         static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 9;
         lp_accum__.add(stan::math::laplace_marginal_bernoulli_logit_lpmf<
                          propto__>(y, y, prior_mean, K_function_functor__(),
@@ -8512,7 +8738,8 @@ class laplace_functionals_model final : public model_base_crtp<laplace_functiona
         lp_accum__.add(stan::math::inv_gamma_lpdf<propto__>(alpha,
                          alpha_location_prior, alpha_scale_prior));
         current_statement__ = 8;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(eta, 0, 1));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(eta,
+                         static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 9;
         lp_accum__.add(stan::math::laplace_marginal(ll_function_functor__(),
                          std::forward_as_tuple(eta, log_ye, y),
@@ -8579,7 +8806,8 @@ class laplace_functionals_model final : public model_base_crtp<laplace_functiona
         lp_accum__.add(stan::math::inv_gamma_lpdf<propto__>(alpha,
                          alpha_location_prior, alpha_scale_prior));
         current_statement__ = 8;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(eta, 0, 1));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(eta,
+                         static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 9;
         lp_accum__.add(stan::math::laplace_marginal(ll_function_functor__(),
                          std::forward_as_tuple(eta, log_ye, y),
@@ -9308,7 +9536,8 @@ class laplace_neg_binomial_2_log_model final : public model_base_crtp<laplace_ne
         lp_accum__.add(stan::math::inv_gamma_lpdf<propto__>(alpha,
                          alpha_location_prior, alpha_scale_prior));
         current_statement__ = 8;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(eta, 0, 1));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(eta,
+                         static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 9;
         lp_accum__.add(stan::math::laplace_marginal_neg_binomial_2_log_lpmf<
                          propto__>(y, y, log_ye, prior_mean,
@@ -9402,7 +9631,8 @@ class laplace_neg_binomial_2_log_model final : public model_base_crtp<laplace_ne
         lp_accum__.add(stan::math::inv_gamma_lpdf<propto__>(alpha,
                          alpha_location_prior, alpha_scale_prior));
         current_statement__ = 8;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(eta, 0, 1));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(eta,
+                         static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 9;
         lp_accum__.add(stan::math::laplace_marginal_neg_binomial_2_log_lpmf<
                          propto__>(y, y, log_ye, prior_mean,
@@ -11439,7 +11669,8 @@ class laplace_nested_tuple2_model final : public model_base_crtp<laplace_nested_
         lp_accum__.add(stan::math::inv_gamma_lpdf<propto__>(alpha,
                          alpha_location_prior, alpha_scale_prior));
         current_statement__ = 9;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(eta, 0, 1));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(eta,
+                         static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 10;
         lp_accum__.add(stan::math::laplace_marginal(scalar_tuple_functor__(),
                          std::forward_as_tuple(
@@ -11514,7 +11745,8 @@ class laplace_nested_tuple2_model final : public model_base_crtp<laplace_nested_
         lp_accum__.add(stan::math::inv_gamma_lpdf<propto__>(alpha,
                          alpha_location_prior, alpha_scale_prior));
         current_statement__ = 9;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(eta, 0, 1));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(eta,
+                         static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 10;
         lp_accum__.add(stan::math::laplace_marginal(scalar_tuple_functor__(),
                          std::forward_as_tuple(
@@ -12539,7 +12771,8 @@ class laplace_nested_tuple3_model final : public model_base_crtp<laplace_nested_
         lp_accum__.add(stan::math::inv_gamma_lpdf<propto__>(alpha,
                          alpha_location_prior, alpha_scale_prior));
         current_statement__ = 7;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(eta, 0, 1));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(eta,
+                         static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 8;
         lp_accum__.add(stan::math::laplace_marginal(ll_nested_functor__(),
                          std::forward_as_tuple(
@@ -12616,7 +12849,8 @@ class laplace_nested_tuple3_model final : public model_base_crtp<laplace_nested_
         lp_accum__.add(stan::math::inv_gamma_lpdf<propto__>(alpha,
                          alpha_location_prior, alpha_scale_prior));
         current_statement__ = 7;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(eta, 0, 1));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(eta,
+                         static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 8;
         lp_accum__.add(stan::math::laplace_marginal(ll_nested_functor__(),
                          std::forward_as_tuple(
@@ -13370,7 +13604,8 @@ class laplace_overload_weird_model final : public model_base_crtp<laplace_overlo
         lp_accum__.add(stan::math::inv_gamma_lpdf<propto__>(alpha,
                          alpha_location_prior, alpha_scale_prior));
         current_statement__ = 6;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(eta, 0, 1));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(eta,
+                         static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 7;
         lp_accum__.add(stan::math::laplace_marginal(my_fun_functor__(),
                          std::forward_as_tuple(eta, log_ye, y),
@@ -13428,7 +13663,8 @@ class laplace_overload_weird_model final : public model_base_crtp<laplace_overlo
         lp_accum__.add(stan::math::inv_gamma_lpdf<propto__>(alpha,
                          alpha_location_prior, alpha_scale_prior));
         current_statement__ = 6;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(eta, 0, 1));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(eta,
+                         static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 7;
         lp_accum__.add(stan::math::laplace_marginal(my_fun_functor__(),
                          std::forward_as_tuple(eta, log_ye, y),
@@ -14032,13 +14268,17 @@ class laplace_poisson_model final : public model_base_crtp<laplace_poisson_model
           lp__);
       {
         current_statement__ = 6;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(alpha, 0, 3));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(alpha,
+                         static_cast<double>(0), static_cast<double>(3)));
         current_statement__ = 7;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(beta, 0, 3));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(beta,
+                         static_cast<double>(0), static_cast<double>(3)));
         current_statement__ = 8;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(z, 0, sigmaz));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(z,
+                         static_cast<double>(0), sigmaz));
         current_statement__ = 9;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(sigmaz, 0, 1));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(sigmaz,
+                         static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 10;
         lp_accum__.add(stan::math::poisson_log_glm_lpmf<propto__>(y, X,
                          stan::math::add(stan::math::add(z, offsett), alpha),
@@ -14086,13 +14326,17 @@ class laplace_poisson_model final : public model_base_crtp<laplace_poisson_model
           lp__);
       {
         current_statement__ = 6;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(alpha, 0, 3));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(alpha,
+                         static_cast<double>(0), static_cast<double>(3)));
         current_statement__ = 7;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(beta, 0, 3));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(beta,
+                         static_cast<double>(0), static_cast<double>(3)));
         current_statement__ = 8;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(z, 0, sigmaz));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(z,
+                         static_cast<double>(0), sigmaz));
         current_statement__ = 9;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(sigmaz, 0, 1));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(sigmaz,
+                         static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 10;
         lp_accum__.add(stan::math::poisson_log_glm_lpmf<propto__>(y, X,
                          stan::math::add(stan::math::add(z, offsett), alpha),
@@ -14822,7 +15066,8 @@ class laplace_poisson_log_model final : public model_base_crtp<laplace_poisson_l
         lp_accum__.add(stan::math::inv_gamma_lpdf<propto__>(alpha,
                          alpha_location_prior, alpha_scale_prior));
         current_statement__ = 8;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(eta, 0, 1));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(eta,
+                         static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 9;
         lp_accum__.add(stan::math::laplace_marginal_poisson_log_lpmf<
                          propto__>(y, y, prior_mean, K_function_functor__(),
@@ -14910,7 +15155,8 @@ class laplace_poisson_log_model final : public model_base_crtp<laplace_poisson_l
         lp_accum__.add(stan::math::inv_gamma_lpdf<propto__>(alpha,
                          alpha_location_prior, alpha_scale_prior));
         current_statement__ = 8;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(eta, 0, 1));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(eta,
+                         static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 9;
         lp_accum__.add(stan::math::laplace_marginal_poisson_log_lpmf<
                          propto__>(y, y, prior_mean, K_function_functor__(),
@@ -15368,16 +15614,28 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
       current_statement__ = 3;
       stan::model::assign(w,
         std::vector<std::vector<local_scalar_t__>>{std::vector<
-                                                     local_scalar_t__>{1.0,
-                                                     2, 3}, xx, xx},
-        "assigning variable w");
+                                                     local_scalar_t__>{
+                                                     stan::math::promote_scalar<
+                                                       local_scalar_t__>(1.0),
+                                                     stan::math::promote_scalar<
+                                                       local_scalar_t__>(
+                                                       static_cast<double>(2)),
+                                                     stan::math::promote_scalar<
+                                                       local_scalar_t__>(
+                                                       static_cast<double>(3))},
+          xx, xx}, "assigning variable w");
       std::vector<std::vector<local_scalar_t__>> td_arr33 =
         std::vector<std::vector<local_scalar_t__>>(3,
           std::vector<local_scalar_t__>(3, DUMMY_VAR__));
       current_statement__ = 4;
       stan::model::assign(td_arr33,
-        std::vector<std::vector<double>>{std::vector<double>{1, 2, 3},
-          std::vector<double>{1, 2., 3}, std::vector<double>{1., 2., 3}},
+        std::vector<std::vector<double>>{std::vector<double>{static_cast<
+                                                               double>(1),
+                                           static_cast<double>(2),
+                                           static_cast<double>(3)},
+          std::vector<double>{static_cast<double>(1), 2.,
+            static_cast<double>(3)},
+          std::vector<double>{1., 2., static_cast<double>(3)}},
         "assigning variable td_arr33");
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -15425,16 +15683,28 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
       current_statement__ = 3;
       stan::model::assign(w,
         std::vector<std::vector<local_scalar_t__>>{std::vector<
-                                                     local_scalar_t__>{1.0,
-                                                     2, 3}, xx, xx},
-        "assigning variable w");
+                                                     local_scalar_t__>{
+                                                     stan::math::promote_scalar<
+                                                       local_scalar_t__>(1.0),
+                                                     stan::math::promote_scalar<
+                                                       local_scalar_t__>(
+                                                       static_cast<double>(2)),
+                                                     stan::math::promote_scalar<
+                                                       local_scalar_t__>(
+                                                       static_cast<double>(3))},
+          xx, xx}, "assigning variable w");
       std::vector<std::vector<local_scalar_t__>> td_arr33 =
         std::vector<std::vector<local_scalar_t__>>(3,
           std::vector<local_scalar_t__>(3, DUMMY_VAR__));
       current_statement__ = 4;
       stan::model::assign(td_arr33,
-        std::vector<std::vector<double>>{std::vector<double>{1, 2, 3},
-          std::vector<double>{1, 2., 3}, std::vector<double>{1., 2., 3}},
+        std::vector<std::vector<double>>{std::vector<double>{static_cast<
+                                                               double>(1),
+                                           static_cast<double>(2),
+                                           static_cast<double>(3)},
+          std::vector<double>{static_cast<double>(1), 2.,
+            static_cast<double>(3)},
+          std::vector<double>{1., 2., static_cast<double>(3)}},
         "assigning variable td_arr33");
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -15502,13 +15772,25 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
       current_statement__ = 3;
       stan::model::assign(w,
         std::vector<std::vector<local_scalar_t__>>{std::vector<
-                                                     local_scalar_t__>{1.0,
-                                                     2, 3}, xx, xx},
-        "assigning variable w");
+                                                     local_scalar_t__>{
+                                                     stan::math::promote_scalar<
+                                                       local_scalar_t__>(1.0),
+                                                     stan::math::promote_scalar<
+                                                       local_scalar_t__>(
+                                                       static_cast<double>(2)),
+                                                     stan::math::promote_scalar<
+                                                       local_scalar_t__>(
+                                                       static_cast<double>(3))},
+          xx, xx}, "assigning variable w");
       current_statement__ = 4;
       stan::model::assign(td_arr33,
-        std::vector<std::vector<double>>{std::vector<double>{1, 2, 3},
-          std::vector<double>{1, 2., 3}, std::vector<double>{1., 2., 3}},
+        std::vector<std::vector<double>>{std::vector<double>{static_cast<
+                                                               double>(1),
+                                           static_cast<double>(2),
+                                           static_cast<double>(3)},
+          std::vector<double>{static_cast<double>(1), 2.,
+            static_cast<double>(3)},
+          std::vector<double>{1., 2., static_cast<double>(3)}},
         "assigning variable td_arr33");
       if (emit_transformed_parameters__) {
         current_statement__ = 2;
@@ -17576,7 +17858,7 @@ double foo_bar0(std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 602;
-    return 0.0;
+    return stan::math::promote_scalar<local_scalar_t__>(0.0);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -17598,7 +17880,7 @@ stan::return_type_t<T0__> foo_bar1(const T0__& x, std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 604;
-    return 1.0;
+    return stan::math::promote_scalar<local_scalar_t__>(1.0);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -17623,7 +17905,7 @@ foo_bar2(const T0__& x, const T1__& y, std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 606;
-    return 2.0;
+    return stan::math::promote_scalar<local_scalar_t__>(2.0);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -17644,7 +17926,7 @@ foo_lpmf(const T0__& y, const T1__& lambda, std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 608;
-    return 1.0;
+    return stan::math::promote_scalar<local_scalar_t__>(1.0);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -17668,7 +17950,7 @@ foo_lcdf(const T0__& y, const T1__& lambda, std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 610;
-    return 1.0;
+    return stan::math::promote_scalar<local_scalar_t__>(1.0);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -17692,7 +17974,7 @@ foo_lccdf(const T0__& y, const T1__& lambda, std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 612;
-    return 1.0;
+    return stan::math::promote_scalar<local_scalar_t__>(1.0);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -17740,9 +18022,11 @@ unit_normal_lp(const T0__& u, T_lp__& lp__, T_lp_accum__& lp_accum__,
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 616;
-    lp_accum__.add(stan::math::normal_lpdf<false>(u, 0, 1));
+    lp_accum__.add(stan::math::normal_lpdf<false>(u, static_cast<double>(0),
+                     static_cast<double>(1)));
     current_statement__ = 617;
-    lp_accum__.add(stan::math::uniform_lpdf<propto__>(u, -(100), 100));
+    lp_accum__.add(stan::math::uniform_lpdf<propto__>(u,
+                     static_cast<double>(-(100)), static_cast<double>(100)));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -17870,7 +18154,7 @@ foo_1(const T0__& a, std::ostream* pstream__) {
           v = stan::model::rvalue(vs, "vs", stan::model::index_uni(sym1__),
                 stan::model::index_uni(sym2__));
           current_statement__ = 664;
-          z = 0;
+          z = stan::math::promote_scalar<local_scalar_t__>(0);
           break;
         }
       }
@@ -17901,7 +18185,7 @@ foo_1(const T0__& a, std::ostream* pstream__) {
         current_statement__ = 673;
         v = vs[(sym1__ - 1)];
         current_statement__ = 674;
-        z = 0;
+        z = stan::math::promote_scalar<local_scalar_t__>(0);
         break;
       }
       current_statement__ = 676;
@@ -17925,7 +18209,7 @@ foo_1(const T0__& a, std::ostream* pstream__) {
         current_statement__ = 683;
         v = vs[(sym1__ - 1)];
         current_statement__ = 684;
-        z = 0;
+        z = stan::math::promote_scalar<local_scalar_t__>(0);
         break;
       }
       current_statement__ = 686;
@@ -18158,7 +18442,9 @@ foo_5(const T0__& shared_params_arg__, const T1__& job_params_arg__,
   try {
     current_statement__ = 723;
     return stan::math::promote_scalar<local_scalar_t__>(
-             (Eigen::Matrix<double,-1,1>(3) << 1, 2, 3).finished());
+             (Eigen::Matrix<double,-1,1>(3) << static_cast<double>(1),
+                                              static_cast<double>(2),
+                                              static_cast<double>(3)).finished());
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -19417,13 +19703,129 @@ Eigen::Matrix<double,-1,-1> matfoo(std::ostream* pstream__) {
     current_statement__ = 769;
     return stan::math::to_matrix(
              std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>{(Eigen::Matrix<local_scalar_t__,1,-1>(10) <<
-                                                                  1, 2, 3, 4,
-                                                                 5, 6, 7, 8,
-                                                                 9, 10).finished(),
-               (Eigen::Matrix<local_scalar_t__,1,-1>(10) << 1, 2, 3, 4, 5, 6,
-                                                           7, 8, 9, 10).finished(),
-               (Eigen::Matrix<local_scalar_t__,1,-1>(10) << 1, 2, 3, 4, 5, 6,
-                                                           7, 8, 9, 10).finished()});
+                                                                  stan::math::promote_scalar<
+                                                                    local_scalar_t__>(
+                                                                    static_cast<
+                                                                    double>(1)),
+                                                                 stan::math::promote_scalar<
+                                                                   local_scalar_t__>(
+                                                                   static_cast<
+                                                                    double>(2)),
+                                                                 stan::math::promote_scalar<
+                                                                   local_scalar_t__>(
+                                                                   static_cast<
+                                                                    double>(3)),
+                                                                 stan::math::promote_scalar<
+                                                                   local_scalar_t__>(
+                                                                   static_cast<
+                                                                    double>(4)),
+                                                                 stan::math::promote_scalar<
+                                                                   local_scalar_t__>(
+                                                                   static_cast<
+                                                                    double>(5)),
+                                                                 stan::math::promote_scalar<
+                                                                   local_scalar_t__>(
+                                                                   static_cast<
+                                                                    double>(6)),
+                                                                 stan::math::promote_scalar<
+                                                                   local_scalar_t__>(
+                                                                   static_cast<
+                                                                    double>(7)),
+                                                                 stan::math::promote_scalar<
+                                                                   local_scalar_t__>(
+                                                                   static_cast<
+                                                                    double>(8)),
+                                                                 stan::math::promote_scalar<
+                                                                   local_scalar_t__>(
+                                                                   static_cast<
+                                                                    double>(9)),
+                                                                 stan::math::promote_scalar<
+                                                                   local_scalar_t__>(
+                                                                   static_cast<
+                                                                    double>(
+                                                                    10))).finished(),
+               (Eigen::Matrix<local_scalar_t__,1,-1>(10) <<
+                                                           stan::math::promote_scalar<
+                                                             local_scalar_t__>(
+                                                             static_cast<
+                                                               double>(1)),
+                                                           stan::math::promote_scalar<
+                                                             local_scalar_t__>(
+                                                             static_cast<
+                                                               double>(2)),
+                                                           stan::math::promote_scalar<
+                                                             local_scalar_t__>(
+                                                             static_cast<
+                                                               double>(3)),
+                                                           stan::math::promote_scalar<
+                                                             local_scalar_t__>(
+                                                             static_cast<
+                                                               double>(4)),
+                                                           stan::math::promote_scalar<
+                                                             local_scalar_t__>(
+                                                             static_cast<
+                                                               double>(5)),
+                                                           stan::math::promote_scalar<
+                                                             local_scalar_t__>(
+                                                             static_cast<
+                                                               double>(6)),
+                                                           stan::math::promote_scalar<
+                                                             local_scalar_t__>(
+                                                             static_cast<
+                                                               double>(7)),
+                                                           stan::math::promote_scalar<
+                                                             local_scalar_t__>(
+                                                             static_cast<
+                                                               double>(8)),
+                                                           stan::math::promote_scalar<
+                                                             local_scalar_t__>(
+                                                             static_cast<
+                                                               double>(9)),
+                                                           stan::math::promote_scalar<
+                                                             local_scalar_t__>(
+                                                             static_cast<
+                                                               double>(10))).finished(),
+               (Eigen::Matrix<local_scalar_t__,1,-1>(10) <<
+                                                           stan::math::promote_scalar<
+                                                             local_scalar_t__>(
+                                                             static_cast<
+                                                               double>(1)),
+                                                           stan::math::promote_scalar<
+                                                             local_scalar_t__>(
+                                                             static_cast<
+                                                               double>(2)),
+                                                           stan::math::promote_scalar<
+                                                             local_scalar_t__>(
+                                                             static_cast<
+                                                               double>(3)),
+                                                           stan::math::promote_scalar<
+                                                             local_scalar_t__>(
+                                                             static_cast<
+                                                               double>(4)),
+                                                           stan::math::promote_scalar<
+                                                             local_scalar_t__>(
+                                                             static_cast<
+                                                               double>(5)),
+                                                           stan::math::promote_scalar<
+                                                             local_scalar_t__>(
+                                                             static_cast<
+                                                               double>(6)),
+                                                           stan::math::promote_scalar<
+                                                             local_scalar_t__>(
+                                                             static_cast<
+                                                               double>(7)),
+                                                           stan::math::promote_scalar<
+                                                             local_scalar_t__>(
+                                                             static_cast<
+                                                               double>(8)),
+                                                           stan::math::promote_scalar<
+                                                             local_scalar_t__>(
+                                                             static_cast<
+                                                               double>(9)),
+                                                           stan::math::promote_scalar<
+                                                             local_scalar_t__>(
+                                                             static_cast<
+                                                               double>(10))).finished()});
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -19443,7 +19845,16 @@ Eigen::Matrix<double,-1,1> vecfoo(std::ostream* pstream__) {
   try {
     current_statement__ = 771;
     return stan::math::promote_scalar<local_scalar_t__>(
-             (Eigen::Matrix<double,-1,1>(10) << 1, 2, 3, 4, 5, 6, 7, 8, 9, 10).finished());
+             (Eigen::Matrix<double,-1,1>(10) << static_cast<double>(1),
+                                               static_cast<double>(2),
+                                               static_cast<double>(3),
+                                               static_cast<double>(4),
+                                               static_cast<double>(5),
+                                               static_cast<double>(6),
+                                               static_cast<double>(7),
+                                               static_cast<double>(8),
+                                               static_cast<double>(9),
+                                               static_cast<double>(10)).finished());
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -19498,7 +19909,16 @@ vecmubar(const T0__& mu, std::ostream* pstream__) {
     current_statement__ = 776;
     stan::model::assign(l,
       stan::math::multiply(mu,
-        (Eigen::Matrix<double,-1,1>(10) << 1, 2, 3, 4, 5, 6, 7, 8, 9, 10).finished()),
+        (Eigen::Matrix<double,-1,1>(10) << static_cast<double>(1),
+                                          static_cast<double>(2),
+                                          static_cast<double>(3),
+                                          static_cast<double>(4),
+                                          static_cast<double>(5),
+                                          static_cast<double>(6),
+                                          static_cast<double>(7),
+                                          static_cast<double>(8),
+                                          static_cast<double>(9),
+                                          static_cast<double>(10)).finished()),
       "assigning variable l");
     current_statement__ = 777;
     return stan::model::rvalue(l, "l",
@@ -20929,13 +21349,13 @@ class mother_model final : public model_base_crtp<mother_model> {
       current_statement__ = 347;
       stan::model::assign(td_cfcov_54,
         stan::math::diag_matrix(
-          stan::math::rep_vector(1, stan::math::rows(td_cfcov_54))),
-        "assigning variable td_cfcov_54");
+          stan::math::rep_vector(static_cast<double>(1),
+            stan::math::rows(td_cfcov_54))), "assigning variable td_cfcov_54");
       current_statement__ = 348;
       stan::model::assign(td_cfcov_33,
         stan::math::diag_matrix(
-          stan::math::rep_vector(1, stan::math::rows(td_cfcov_33))),
-        "assigning variable td_cfcov_33");
+          stan::math::rep_vector(static_cast<double>(1),
+            stan::math::rows(td_cfcov_33))), "assigning variable td_cfcov_33");
       {
         double z = std::numeric_limits<double>::quiet_NaN();
         Eigen::Matrix<double,1,-1> blocked_tdata_vs =
@@ -20948,7 +21368,7 @@ class mother_model final : public model_base_crtp<mother_model> {
           current_statement__ = 351;
           v = blocked_tdata_vs[(sym1__ - 1)];
           current_statement__ = 352;
-          z = 0;
+          z = static_cast<double>(0);
         }
         std::vector<int> indices =
           std::vector<int>(4, std::numeric_limits<int>::min());
@@ -20967,7 +21387,7 @@ class mother_model final : public model_base_crtp<mother_model> {
             current_statement__ = 355;
             i = sym1__[(sym3__ - 1)];
             current_statement__ = 356;
-            z = i;
+            z = static_cast<double>(i);
           }
         }
       }
@@ -21002,7 +21422,8 @@ class mother_model final : public model_base_crtp<mother_model> {
       x_mul_ind = std::vector<double>(2,
                     std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 364;
-      stan::model::assign(x_mul_ind, std::vector<double>{1, 2},
+      stan::model::assign(x_mul_ind,
+        std::vector<double>{static_cast<double>(1), static_cast<double>(2)},
         "assigning variable x_mul_ind");
       current_statement__ = 365;
       transformed_data_real = std::numeric_limits<double>::quiet_NaN();
@@ -22143,38 +22564,43 @@ class mother_model final : public model_base_crtp<mother_model> {
         current_statement__ = 157;
         r2 = foo_bar1(J, pstream__);
         current_statement__ = 158;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(p_real, 0, 1));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(p_real,
+                         static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 159;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(offset_multiplier,
-                         0, 1));
+                         static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 160;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(
-                         no_offset_multiplier, 0, 1));
+                         no_offset_multiplier, static_cast<double>(0),
+                         static_cast<double>(1)));
         current_statement__ = 161;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(
-                         offset_no_multiplier, 0, 1));
+                         offset_no_multiplier, static_cast<double>(0),
+                         static_cast<double>(1)));
         current_statement__ = 162;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(
-                         stan::math::to_vector(p_real_1d_ar), 0, 1));
+                         stan::math::to_vector(p_real_1d_ar),
+                         static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 175;
         for (int n = 1; n <= N; ++n) {
           current_statement__ = 163;
           lp_accum__.add(stan::math::normal_lpdf<propto__>(
                            stan::math::to_vector(
                              stan::model::rvalue(p_1d_vec, "p_1d_vec",
-                               stan::model::index_uni(n))), 0, 1));
+                               stan::model::index_uni(n))),
+                           static_cast<double>(0), static_cast<double>(1)));
           current_statement__ = 164;
           lp_accum__.add(stan::math::normal_lpdf<propto__>(
                            stan::math::to_vector(
                              stan::model::rvalue(p_1d_row_vec,
                                "p_1d_row_vec", stan::model::index_uni(n))),
-                           0, 1));
+                           static_cast<double>(0), static_cast<double>(1)));
           current_statement__ = 165;
           lp_accum__.add(stan::math::normal_lpdf<propto__>(
                            stan::math::to_vector(
                              stan::model::rvalue(p_1d_simplex,
                                "p_1d_simplex", stan::model::index_uni(n))),
-                           0, 1));
+                           static_cast<double>(0), static_cast<double>(1)));
           current_statement__ = 173;
           for (int m = 1; m <= M; ++m) {
             current_statement__ = 171;
@@ -22189,7 +22615,8 @@ class mother_model final : public model_base_crtp<mother_model> {
                                stan::model::rvalue(d_3d_vec, "d_3d_vec",
                                  stan::model::index_uni(n),
                                  stan::model::index_uni(m),
-                                 stan::model::index_uni(k)), 1));
+                                 stan::model::index_uni(k)),
+                               static_cast<double>(1)));
               current_statement__ = 167;
               lp_accum__.add(stan::math::normal_lpdf<propto__>(
                                stan::math::to_vector(
@@ -22200,7 +22627,8 @@ class mother_model final : public model_base_crtp<mother_model> {
                                stan::model::rvalue(d_3d_row_vec,
                                  "d_3d_row_vec", stan::model::index_uni(n),
                                  stan::model::index_uni(m),
-                                 stan::model::index_uni(k)), 1));
+                                 stan::model::index_uni(k)),
+                               static_cast<double>(1)));
               current_statement__ = 168;
               lp_accum__.add(stan::math::normal_lpdf<propto__>(
                                stan::math::to_vector(
@@ -22211,7 +22639,8 @@ class mother_model final : public model_base_crtp<mother_model> {
                                stan::model::rvalue(d_3d_simplex,
                                  "d_3d_simplex", stan::model::index_uni(n),
                                  stan::model::index_uni(m),
-                                 stan::model::index_uni(k)), 1));
+                                 stan::model::index_uni(k)),
+                               static_cast<double>(1)));
               current_statement__ = 169;
               lp_accum__.add(stan::math::normal_lpdf<propto__>(
                                stan::model::rvalue(p_real_3d_ar,
@@ -22221,7 +22650,8 @@ class mother_model final : public model_base_crtp<mother_model> {
                                stan::model::rvalue(p_real_3d_ar,
                                  "p_real_3d_ar", stan::model::index_uni(n),
                                  stan::model::index_uni(m),
-                                 stan::model::index_uni(k)), 1));
+                                 stan::model::index_uni(k)),
+                               static_cast<double>(1)));
             }
           }
         }
@@ -22234,7 +22664,8 @@ class mother_model final : public model_base_crtp<mother_model> {
                              stan::math::to_vector(
                                stan::model::rvalue(p_ar_mat, "p_ar_mat",
                                  stan::model::index_uni(i),
-                                 stan::model::index_uni(j))), 0, 1));
+                                 stan::model::index_uni(j))),
+                             static_cast<double>(0), static_cast<double>(1)));
           }
         }
         current_statement__ = 183;
@@ -22244,23 +22675,28 @@ class mother_model final : public model_base_crtp<mother_model> {
                            stan::math::to_vector(
                              stan::model::rvalue(p_cfcov_33_ar,
                                "p_cfcov_33_ar", stan::model::index_uni(k))),
-                           0, 1));
+                           static_cast<double>(0), static_cast<double>(1)));
         }
         current_statement__ = 184;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(
-                         stan::math::to_vector(p_vec), d_vec, 1));
+                         stan::math::to_vector(p_vec), d_vec,
+                         static_cast<double>(1)));
         current_statement__ = 185;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(
-                         stan::math::to_vector(p_row_vec), 0, 1));
+                         stan::math::to_vector(p_row_vec),
+                         static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 186;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(
-                         stan::math::to_vector(p_simplex), 0, 1));
+                         stan::math::to_vector(p_simplex),
+                         static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 187;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(
-                         stan::math::to_vector(p_cfcov_54), 0, 1));
+                         stan::math::to_vector(p_cfcov_54),
+                         static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 188;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(
-                         stan::math::to_vector(p_cfcov_33), 0, 1));
+                         stan::math::to_vector(p_cfcov_33),
+                         static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 189;
         lp_accum__.add(stan::math::map_rect<2, binomialf_functor__>(tmp,
                          tmp2, x_r, x_i, pstream__));
@@ -22602,38 +23038,43 @@ class mother_model final : public model_base_crtp<mother_model> {
         current_statement__ = 157;
         r2 = foo_bar1(J, pstream__);
         current_statement__ = 158;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(p_real, 0, 1));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(p_real,
+                         static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 159;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(offset_multiplier,
-                         0, 1));
+                         static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 160;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(
-                         no_offset_multiplier, 0, 1));
+                         no_offset_multiplier, static_cast<double>(0),
+                         static_cast<double>(1)));
         current_statement__ = 161;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(
-                         offset_no_multiplier, 0, 1));
+                         offset_no_multiplier, static_cast<double>(0),
+                         static_cast<double>(1)));
         current_statement__ = 162;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(
-                         stan::math::to_vector(p_real_1d_ar), 0, 1));
+                         stan::math::to_vector(p_real_1d_ar),
+                         static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 175;
         for (int n = 1; n <= N; ++n) {
           current_statement__ = 163;
           lp_accum__.add(stan::math::normal_lpdf<propto__>(
                            stan::math::to_vector(
                              stan::model::rvalue(p_1d_vec, "p_1d_vec",
-                               stan::model::index_uni(n))), 0, 1));
+                               stan::model::index_uni(n))),
+                           static_cast<double>(0), static_cast<double>(1)));
           current_statement__ = 164;
           lp_accum__.add(stan::math::normal_lpdf<propto__>(
                            stan::math::to_vector(
                              stan::model::rvalue(p_1d_row_vec,
                                "p_1d_row_vec", stan::model::index_uni(n))),
-                           0, 1));
+                           static_cast<double>(0), static_cast<double>(1)));
           current_statement__ = 165;
           lp_accum__.add(stan::math::normal_lpdf<propto__>(
                            stan::math::to_vector(
                              stan::model::rvalue(p_1d_simplex,
                                "p_1d_simplex", stan::model::index_uni(n))),
-                           0, 1));
+                           static_cast<double>(0), static_cast<double>(1)));
           current_statement__ = 173;
           for (int m = 1; m <= M; ++m) {
             current_statement__ = 171;
@@ -22648,7 +23089,8 @@ class mother_model final : public model_base_crtp<mother_model> {
                                stan::model::rvalue(d_3d_vec, "d_3d_vec",
                                  stan::model::index_uni(n),
                                  stan::model::index_uni(m),
-                                 stan::model::index_uni(k)), 1));
+                                 stan::model::index_uni(k)),
+                               static_cast<double>(1)));
               current_statement__ = 167;
               lp_accum__.add(stan::math::normal_lpdf<propto__>(
                                stan::math::to_vector(
@@ -22659,7 +23101,8 @@ class mother_model final : public model_base_crtp<mother_model> {
                                stan::model::rvalue(d_3d_row_vec,
                                  "d_3d_row_vec", stan::model::index_uni(n),
                                  stan::model::index_uni(m),
-                                 stan::model::index_uni(k)), 1));
+                                 stan::model::index_uni(k)),
+                               static_cast<double>(1)));
               current_statement__ = 168;
               lp_accum__.add(stan::math::normal_lpdf<propto__>(
                                stan::math::to_vector(
@@ -22670,7 +23113,8 @@ class mother_model final : public model_base_crtp<mother_model> {
                                stan::model::rvalue(d_3d_simplex,
                                  "d_3d_simplex", stan::model::index_uni(n),
                                  stan::model::index_uni(m),
-                                 stan::model::index_uni(k)), 1));
+                                 stan::model::index_uni(k)),
+                               static_cast<double>(1)));
               current_statement__ = 169;
               lp_accum__.add(stan::math::normal_lpdf<propto__>(
                                stan::model::rvalue(p_real_3d_ar,
@@ -22680,7 +23124,8 @@ class mother_model final : public model_base_crtp<mother_model> {
                                stan::model::rvalue(p_real_3d_ar,
                                  "p_real_3d_ar", stan::model::index_uni(n),
                                  stan::model::index_uni(m),
-                                 stan::model::index_uni(k)), 1));
+                                 stan::model::index_uni(k)),
+                               static_cast<double>(1)));
             }
           }
         }
@@ -22693,7 +23138,8 @@ class mother_model final : public model_base_crtp<mother_model> {
                              stan::math::to_vector(
                                stan::model::rvalue(p_ar_mat, "p_ar_mat",
                                  stan::model::index_uni(i),
-                                 stan::model::index_uni(j))), 0, 1));
+                                 stan::model::index_uni(j))),
+                             static_cast<double>(0), static_cast<double>(1)));
           }
         }
         current_statement__ = 183;
@@ -22703,23 +23149,28 @@ class mother_model final : public model_base_crtp<mother_model> {
                            stan::math::to_vector(
                              stan::model::rvalue(p_cfcov_33_ar,
                                "p_cfcov_33_ar", stan::model::index_uni(k))),
-                           0, 1));
+                           static_cast<double>(0), static_cast<double>(1)));
         }
         current_statement__ = 184;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(
-                         stan::math::to_vector(p_vec), d_vec, 1));
+                         stan::math::to_vector(p_vec), d_vec,
+                         static_cast<double>(1)));
         current_statement__ = 185;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(
-                         stan::math::to_vector(p_row_vec), 0, 1));
+                         stan::math::to_vector(p_row_vec),
+                         static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 186;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(
-                         stan::math::to_vector(p_simplex), 0, 1));
+                         stan::math::to_vector(p_simplex),
+                         static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 187;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(
-                         stan::math::to_vector(p_cfcov_54), 0, 1));
+                         stan::math::to_vector(p_cfcov_54),
+                         static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 188;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(
-                         stan::math::to_vector(p_cfcov_33), 0, 1));
+                         stan::math::to_vector(p_cfcov_33),
+                         static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 189;
         lp_accum__.add(stan::math::map_rect<1, binomialf_functor__>(tmp,
                          tmp2, x_r, x_i, pstream__));
@@ -26222,7 +26673,7 @@ integrand(const T0__& x, const T1__& xc, const T2__& theta, const T3__& x_r,
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 145;
-    return 0.0;
+    return stan::math::promote_scalar<local_scalar_t__>(0.0);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -26260,7 +26711,9 @@ foo(const T0__& shared_params_arg__, const T1__& job_params_arg__,
   try {
     current_statement__ = 147;
     return stan::math::promote_scalar<local_scalar_t__>(
-             (Eigen::Matrix<double,-1,1>(3) << 1, 2, 3).finished());
+             (Eigen::Matrix<double,-1,1>(3) << static_cast<double>(1),
+                                              static_cast<double>(2),
+                                              static_cast<double>(3)).finished());
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -26298,7 +26751,9 @@ goo(const T0__& shared_params_arg__, const T1__& job_params_arg__,
   try {
     current_statement__ = 149;
     return stan::math::promote_scalar<local_scalar_t__>(
-             (Eigen::Matrix<double,-1,1>(3) << 4, 5, 6).finished());
+             (Eigen::Matrix<double,-1,1>(3) << static_cast<double>(4),
+                                              static_cast<double>(5),
+                                              static_cast<double>(6)).finished());
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -26615,7 +27070,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       auto x_r = in__.template read<local_scalar_t__>();
       local_scalar_t__ abc1_p = DUMMY_VAR__;
       current_statement__ = 8;
-      abc1_p = 3;
+      abc1_p = stan::math::promote_scalar<local_scalar_t__>(3);
       local_scalar_t__ abc2_p = DUMMY_VAR__;
       current_statement__ = 9;
       abc2_p = map_rectfake(abc1_p, pstream__);
@@ -26929,7 +27384,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       auto x_r = in__.template read<local_scalar_t__>();
       local_scalar_t__ abc1_p = DUMMY_VAR__;
       current_statement__ = 8;
-      abc1_p = 3;
+      abc1_p = stan::math::promote_scalar<local_scalar_t__>(3);
       local_scalar_t__ abc2_p = DUMMY_VAR__;
       current_statement__ = 9;
       abc2_p = map_rectfake(abc1_p, pstream__);
@@ -27291,7 +27746,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
         return ;
       }
       current_statement__ = 8;
-      abc1_p = 3;
+      abc1_p = stan::math::promote_scalar<local_scalar_t__>(3);
       current_statement__ = 9;
       abc2_p = map_rectfake(abc1_p, pstream__);
       current_statement__ = 10;
@@ -30798,7 +31253,8 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
           stan::math::ode_bdf(f_variadic2_functor__(), v, r, ra, pstream__,
             r, v), "assigning variable zm");
         current_statement__ = 600;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(r, 0, 1));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(r,
+                         static_cast<double>(0), static_cast<double>(1)));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -32444,7 +32900,8 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
           stan::math::ode_bdf(f_variadic2_functor__(), v, r, ra, pstream__,
             r, v), "assigning variable zm");
         current_statement__ = 600;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(r, 0, 1));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(r,
+                         static_cast<double>(0), static_cast<double>(1)));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -34725,18 +35182,21 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
           pstream__, 1e-5, 1e-3, 5e2), "assigning variable z");
       {
         current_statement__ = 8;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(alpha, 1, 0.5));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(alpha,
+                         static_cast<double>(1), 0.5));
         current_statement__ = 9;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(gamma, 1, 0.5));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(gamma,
+                         static_cast<double>(1), 0.5));
         current_statement__ = 10;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(beta, 0.05, 0.05));
         current_statement__ = 11;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(delta, 0.05, 0.05));
         current_statement__ = 12;
-        lp_accum__.add(stan::math::lognormal_lpdf<propto__>(sigma, -(1), 1));
+        lp_accum__.add(stan::math::lognormal_lpdf<propto__>(sigma,
+                         static_cast<double>(-(1)), static_cast<double>(1)));
         current_statement__ = 13;
         lp_accum__.add(stan::math::lognormal_lpdf<propto__>(z_init,
-                         stan::math::log(10), 1));
+                         stan::math::log(10), static_cast<double>(1)));
         current_statement__ = 17;
         for (int k = 1; k <= 2; ++k) {
           current_statement__ = 14;
@@ -34827,18 +35287,21 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
           pstream__, 1e-5, 1e-3, 5e2), "assigning variable z");
       {
         current_statement__ = 8;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(alpha, 1, 0.5));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(alpha,
+                         static_cast<double>(1), 0.5));
         current_statement__ = 9;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(gamma, 1, 0.5));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(gamma,
+                         static_cast<double>(1), 0.5));
         current_statement__ = 10;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(beta, 0.05, 0.05));
         current_statement__ = 11;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(delta, 0.05, 0.05));
         current_statement__ = 12;
-        lp_accum__.add(stan::math::lognormal_lpdf<propto__>(sigma, -(1), 1));
+        lp_accum__.add(stan::math::lognormal_lpdf<propto__>(sigma,
+                         static_cast<double>(-(1)), static_cast<double>(1)));
         current_statement__ = 13;
         lp_accum__.add(stan::math::lognormal_lpdf<propto__>(z_init,
-                         stan::math::log(10), 1));
+                         stan::math::log(10), static_cast<double>(1)));
         current_statement__ = 17;
         for (int k = 1; k <= 2; ++k) {
           current_statement__ = 14;
@@ -38374,7 +38837,7 @@ double foo(const T0__& p, std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 17;
-    return (p + 1.0);
+    return stan::math::promote_scalar<local_scalar_t__>((p + 1.0));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -38623,7 +39086,8 @@ double foo(const T0__& p, std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 37;
-    return (stan::math::sum(p) + 12);
+    return stan::math::promote_scalar<local_scalar_t__>((stan::math::sum(p) +
+             12));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -38718,49 +39182,57 @@ class overloading_templating_model final : public model_base_crtp<overloading_te
       {
         current_statement__ = 3;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(y,
-                         foo(1, pstream__), 1));
+                         foo(1, pstream__), static_cast<double>(1)));
         current_statement__ = 4;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(y,
-                         foo(1.5, pstream__), 1));
+                         foo(1.5, pstream__), static_cast<double>(1)));
         current_statement__ = 5;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(a,
-                         foo(z, pstream__), 1));
+                         foo(z, pstream__), static_cast<double>(1)));
         current_statement__ = 6;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(y,
-                         foo(a, pstream__), 1));
+                         foo(a, pstream__), static_cast<double>(1)));
         current_statement__ = 7;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(y,
-                         foo(stan::math::transpose(a), pstream__), 1));
+                         foo(stan::math::transpose(a), pstream__),
+                         static_cast<double>(1)));
         current_statement__ = 8;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(y,
-                         foo(M, pstream__), 1));
+                         foo(M, pstream__), static_cast<double>(1)));
         current_statement__ = 9;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(y,
                          foo(
                            stan::model::rvalue(M, "M",
                              stan::model::index_omni(),
-                             stan::model::index_uni(1)), pstream__), 1));
+                             stan::model::index_uni(1)), pstream__),
+                         static_cast<double>(1)));
         current_statement__ = 10;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(y,
                          foo(
                            stan::model::rvalue(M, "M",
                              stan::model::index_uni(1),
-                             stan::model::index_omni()), pstream__), 1));
+                             stan::model::index_omni()), pstream__),
+                         static_cast<double>(1)));
         current_statement__ = 11;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(y,
                          foo(std::vector<Eigen::Matrix<double,-1,1>>{a},
-                           pstream__), 1));
+                           pstream__), static_cast<double>(1)));
         current_statement__ = 12;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(y,
-                         foo(std::vector<int>{1, 2}, pstream__), 1));
+                         foo(std::vector<int>{1, 2}, pstream__),
+                         static_cast<double>(1)));
         current_statement__ = 13;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(y,
-                         foo(std::vector<double>{1, 2.3}, pstream__), 1));
+                         foo(
+                           std::vector<double>{static_cast<double>(1), 2.3},
+                           pstream__), static_cast<double>(1)));
         current_statement__ = 14;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(
                          std::vector<double>{5.5, 6.5},
-                         foo(std::vector<local_scalar_t__>{z, 2.3}, pstream__),
-                         1));
+                         foo(
+                           std::vector<local_scalar_t__>{z,
+                             stan::math::promote_scalar<local_scalar_t__>(2.3)},
+                           pstream__), static_cast<double>(1)));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -38799,49 +39271,57 @@ class overloading_templating_model final : public model_base_crtp<overloading_te
       {
         current_statement__ = 3;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(y,
-                         foo(1, pstream__), 1));
+                         foo(1, pstream__), static_cast<double>(1)));
         current_statement__ = 4;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(y,
-                         foo(1.5, pstream__), 1));
+                         foo(1.5, pstream__), static_cast<double>(1)));
         current_statement__ = 5;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(a,
-                         foo(z, pstream__), 1));
+                         foo(z, pstream__), static_cast<double>(1)));
         current_statement__ = 6;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(y,
-                         foo(a, pstream__), 1));
+                         foo(a, pstream__), static_cast<double>(1)));
         current_statement__ = 7;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(y,
-                         foo(stan::math::transpose(a), pstream__), 1));
+                         foo(stan::math::transpose(a), pstream__),
+                         static_cast<double>(1)));
         current_statement__ = 8;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(y,
-                         foo(M, pstream__), 1));
+                         foo(M, pstream__), static_cast<double>(1)));
         current_statement__ = 9;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(y,
                          foo(
                            stan::model::rvalue(M, "M",
                              stan::model::index_omni(),
-                             stan::model::index_uni(1)), pstream__), 1));
+                             stan::model::index_uni(1)), pstream__),
+                         static_cast<double>(1)));
         current_statement__ = 10;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(y,
                          foo(
                            stan::model::rvalue(M, "M",
                              stan::model::index_uni(1),
-                             stan::model::index_omni()), pstream__), 1));
+                             stan::model::index_omni()), pstream__),
+                         static_cast<double>(1)));
         current_statement__ = 11;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(y,
                          foo(std::vector<Eigen::Matrix<double,-1,1>>{a},
-                           pstream__), 1));
+                           pstream__), static_cast<double>(1)));
         current_statement__ = 12;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(y,
-                         foo(std::vector<int>{1, 2}, pstream__), 1));
+                         foo(std::vector<int>{1, 2}, pstream__),
+                         static_cast<double>(1)));
         current_statement__ = 13;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(y,
-                         foo(std::vector<double>{1, 2.3}, pstream__), 1));
+                         foo(
+                           std::vector<double>{static_cast<double>(1), 2.3},
+                           pstream__), static_cast<double>(1)));
         current_statement__ = 14;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(
                          std::vector<double>{5.5, 6.5},
-                         foo(std::vector<local_scalar_t__>{z, 2.3}, pstream__),
-                         1));
+                         foo(
+                           std::vector<local_scalar_t__>{z,
+                             stan::math::promote_scalar<local_scalar_t__>(2.3)},
+                           pstream__), static_cast<double>(1)));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -40116,7 +40596,7 @@ class promotion_model final : public model_base_crtp<promotion_model> {
       }
       double z = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 1;
-      z = 1;
+      z = static_cast<double>(1);
       std::complex<double> zi =
         std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
           std::numeric_limits<double>::quiet_NaN());
@@ -40487,7 +40967,7 @@ test2(const T0__& gamma_arg__, std::ostream* pstream__) {
     if (stan::math::logical_eq(D, 1)) {
       current_statement__ = 10;
       return stan::math::promote_scalar<local_scalar_t__>(
-               stan::math::rep_vector(D, 0));
+               stan::math::rep_vector(static_cast<double>(D), 0));
     } else {
       current_statement__ = 9;
       return test2(
@@ -40523,7 +41003,8 @@ matrix_pow(const T0__& a_arg__, const T1__& n, std::ostream* pstream__) {
       current_statement__ = 15;
       return stan::math::promote_scalar<local_scalar_t__>(
                stan::math::diag_matrix(
-                 stan::math::rep_vector(1, stan::math::rows(a))));
+                 stan::math::rep_vector(static_cast<double>(1),
+                   stan::math::rows(a))));
     } else {
       current_statement__ = 13;
       return stan::math::multiply(a,
@@ -40557,7 +41038,7 @@ foo(const T0__& a_arg__, std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 19;
-    return 1;
+    return stan::math::promote_scalar<local_scalar_t__>(1);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -40616,7 +41097,7 @@ test4(const T0__& gamma_arg__, std::ostream* pstream__) {
     if (stan::math::logical_eq(D, 1)) {
       current_statement__ = 26;
       return stan::math::promote_scalar<local_scalar_t__>(
-               stan::math::rep_vector(D, 0));
+               stan::math::rep_vector(static_cast<double>(D), 0));
     } else {
       current_statement__ = 25;
       return test3(
@@ -40715,7 +41196,7 @@ test7(const T0__& gamma_arg__, std::ostream* pstream__) {
     if (stan::math::logical_eq(D, 1)) {
       current_statement__ = 38;
       return stan::math::promote_scalar<local_scalar_t__>(
-               stan::math::rep_vector(D, 0));
+               stan::math::rep_vector(static_cast<double>(D), 0));
     } else {
       current_statement__ = 37;
       return test7(stan::math::eval(stan::math::head(gamma, (D - 1))),
@@ -40754,8 +41235,8 @@ foo(const T0__& x, const T1__& s_arg__, const T2__& y_arg__, std::ostream*
     current_statement__ = 41;
     return stan::model::rvalue(
              stan::math::ode_rk45(foo_variadic2_functor__(),
-               (Eigen::Matrix<double,-1,1>(1) << 1).finished(), 0.0,
-               std::vector<double>{1.0}, pstream__,
+               (Eigen::Matrix<double,-1,1>(1) << static_cast<double>(1)).finished(),
+               0.0, std::vector<double>{1.0}, pstream__,
                stan::math::eval(
                  stan::model::rvalue(y, "y", stan::model::index_min(2)))),
              "ode_rk45(foo, Transpose__(FnMakeRowVec__(promote(1, real, data))), 0.0,\n         FnMakeArray__(1.0), eval(y[2:]))",
@@ -41349,7 +41830,8 @@ g(const T0__& y_slice, const T1__& start, const T2__& end, std::ostream*
       return stan::math::reduce_sum<g_rsfunctor__>(y_slice, 1, pstream__);
     } else {
       current_statement__ = 12;
-      return stan::math::normal_lpdf<false>(y_slice, 0, 1);
+      return stan::math::normal_lpdf<false>(y_slice, static_cast<double>(0),
+               static_cast<double>(1));
     }
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -41390,7 +41872,8 @@ h(const T0__& y_slice, const T1__& start, const T2__& end, const T3__& a,
                  stan::model::index_min_max(start, end)));
     } else {
       current_statement__ = 18;
-      return stan::math::normal_lpdf<false>(a, 0, 1);
+      return stan::math::normal_lpdf<false>(a, static_cast<double>(0),
+               static_cast<double>(1));
     }
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -41416,7 +41899,8 @@ foo_lpdf(const T0__& y_slice, const T1__& start, const T2__& end,
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 24;
-    return stan::math::normal_lpdf<false>(y_slice, 0, 1);
+    return stan::math::normal_lpdf<false>(y_slice, static_cast<double>(0),
+             static_cast<double>(1));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -42542,7 +43026,8 @@ g1(const T0__& y_slice, const T1__& start, const T2__& end, std::ostream*
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 76;
-    return stan::math::normal_lpdf<false>(y_slice, 0, 1);
+    return stan::math::normal_lpdf<false>(y_slice, static_cast<double>(0),
+             static_cast<double>(1));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -42577,7 +43062,7 @@ g2(const T0__& y_slice, const T1__& start, const T2__& end, std::ostream*
       sum_lpdf = (sum_lpdf +
         stan::math::normal_lpdf<false>(
           stan::model::rvalue(y_slice, "y_slice", stan::model::index_uni(n)),
-          0, 1));
+          static_cast<double>(0), static_cast<double>(1)));
     }
     current_statement__ = 82;
     return sum_lpdf;
@@ -42615,7 +43100,7 @@ g3(const T0__& y_slice, const T1__& start, const T2__& end, std::ostream*
       sum_lpdf = (sum_lpdf +
         stan::math::normal_lpdf<false>(
           stan::model::rvalue(y_slice, "y_slice", stan::model::index_uni(n)),
-          0, 1));
+          static_cast<double>(0), static_cast<double>(1)));
     }
     current_statement__ = 88;
     return sum_lpdf;
@@ -42654,7 +43139,7 @@ g4(const T0__& y_slice, const T1__& start, const T2__& end, std::ostream*
         stan::math::normal_lpdf<false>(
           stan::math::to_vector(
             stan::model::rvalue(y_slice, "y_slice", stan::model::index_uni(n))),
-          0, 1));
+          static_cast<double>(0), static_cast<double>(1)));
     }
     current_statement__ = 94;
     return sum_lpdf;
@@ -42701,7 +43186,8 @@ g5(const T0__& y_slice, const T1__& start, const T2__& end, std::ostream*
         sum_lpdf = (sum_lpdf +
           stan::math::normal_lpdf<false>(
             stan::model::rvalue(y_slice, "y_slice",
-              stan::model::index_uni(n), stan::model::index_uni(m)), 0, 1));
+              stan::model::index_uni(n), stan::model::index_uni(m)),
+            static_cast<double>(0), static_cast<double>(1)));
       }
     }
     current_statement__ = 102;
@@ -42749,7 +43235,8 @@ g6(const T0__& y_slice, const T1__& start, const T2__& end, std::ostream*
           stan::math::normal_lpdf<false>(
             stan::math::to_vector(
               stan::model::rvalue(y_slice, "y_slice",
-                stan::model::index_uni(n), stan::model::index_uni(m))), 0, 1));
+                stan::model::index_uni(n), stan::model::index_uni(m))),
+            static_cast<double>(0), static_cast<double>(1)));
       }
     }
     current_statement__ = 110;
@@ -42797,7 +43284,8 @@ g7(const T0__& y_slice, const T1__& start, const T2__& end, std::ostream*
           stan::math::normal_lpdf<false>(
             stan::math::to_vector(
               stan::model::rvalue(y_slice, "y_slice",
-                stan::model::index_uni(n), stan::model::index_uni(m))), 0, 1));
+                stan::model::index_uni(n), stan::model::index_uni(m))),
+            static_cast<double>(0), static_cast<double>(1)));
       }
     }
     current_statement__ = 118;
@@ -42845,7 +43333,8 @@ g8(const T0__& y_slice, const T1__& start, const T2__& end, std::ostream*
           stan::math::normal_lpdf<false>(
             stan::math::to_vector(
               stan::model::rvalue(y_slice, "y_slice",
-                stan::model::index_uni(n), stan::model::index_uni(m))), 0, 1));
+                stan::model::index_uni(n), stan::model::index_uni(m))),
+            static_cast<double>(0), static_cast<double>(1)));
       }
     }
     current_statement__ = 126;
@@ -42884,7 +43373,8 @@ h1(const T0__& y, const T1__& start, const T2__& end, const T3__& a,
     current_statement__ = 128;
     return stan::math::normal_lpdf<false>(
              stan::model::rvalue(a, "a",
-               stan::model::index_min_max(start, end)), 0, 1);
+               stan::model::index_min_max(start, end)),
+             static_cast<double>(0), static_cast<double>(1));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -42923,7 +43413,8 @@ h2(const T0__& y, const T1__& start, const T2__& end, const T3__& a,
       current_statement__ = 131;
       sum_lpdf = (sum_lpdf +
         stan::math::normal_lpdf<false>(
-          stan::model::rvalue(a, "a", stan::model::index_uni(n)), 0, 1));
+          stan::model::rvalue(a, "a", stan::model::index_uni(n)),
+          static_cast<double>(0), static_cast<double>(1)));
     }
     current_statement__ = 134;
     return sum_lpdf;
@@ -42965,7 +43456,8 @@ h3(const T0__& y, const T1__& start, const T2__& end, const T3__& a,
       current_statement__ = 137;
       sum_lpdf = (sum_lpdf +
         stan::math::normal_lpdf<false>(
-          stan::model::rvalue(a, "a", stan::model::index_uni(n)), 0, 1));
+          stan::model::rvalue(a, "a", stan::model::index_uni(n)),
+          static_cast<double>(0), static_cast<double>(1)));
     }
     current_statement__ = 140;
     return sum_lpdf;
@@ -43008,7 +43500,8 @@ h4(const T0__& y, const T1__& start, const T2__& end, const T3__& a,
       sum_lpdf = (sum_lpdf +
         stan::math::normal_lpdf<false>(
           stan::math::to_vector(
-            stan::model::rvalue(a, "a", stan::model::index_uni(n))), 0, 1));
+            stan::model::rvalue(a, "a", stan::model::index_uni(n))),
+          static_cast<double>(0), static_cast<double>(1)));
     }
     current_statement__ = 146;
     return sum_lpdf;
@@ -43059,7 +43552,8 @@ h5(const T0__& y, const T1__& start, const T2__& end, const T3__& a,
         sum_lpdf = (sum_lpdf +
           stan::math::normal_lpdf<false>(
             stan::model::rvalue(a, "a", stan::model::index_uni(n),
-              stan::model::index_uni(m)), 0, 1));
+              stan::model::index_uni(m)), static_cast<double>(0),
+            static_cast<double>(1)));
       }
     }
     current_statement__ = 154;
@@ -43111,7 +43605,8 @@ h6(const T0__& y, const T1__& start, const T2__& end, const T3__& a,
           stan::math::normal_lpdf<false>(
             stan::math::to_vector(
               stan::model::rvalue(a, "a", stan::model::index_uni(n),
-                stan::model::index_uni(m))), 0, 1));
+                stan::model::index_uni(m))), static_cast<double>(0),
+            static_cast<double>(1)));
       }
     }
     current_statement__ = 162;
@@ -43163,7 +43658,8 @@ h7(const T0__& y, const T1__& start, const T2__& end, const T3__& a,
           stan::math::normal_lpdf<false>(
             stan::math::to_vector(
               stan::model::rvalue(a, "a", stan::model::index_uni(n),
-                stan::model::index_uni(m))), 0, 1));
+                stan::model::index_uni(m))), static_cast<double>(0),
+            static_cast<double>(1)));
       }
     }
     current_statement__ = 170;
@@ -43215,7 +43711,8 @@ h8(const T0__& y, const T1__& start, const T2__& end, const T3__& a,
           stan::math::normal_lpdf<false>(
             stan::math::to_vector(
               stan::model::rvalue(a, "a", stan::model::index_uni(n),
-                stan::model::index_uni(m))), 0, 1));
+                stan::model::index_uni(m))), static_cast<double>(0),
+            static_cast<double>(1)));
       }
     }
     current_statement__ = 178;
@@ -46185,7 +46682,7 @@ f1(const T0__& y_slice, const T1__& start, const T2__& end, std::ostream*
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 171;
-    return 0.0;
+    return stan::math::promote_scalar<local_scalar_t__>(0.0);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -46213,7 +46710,7 @@ f1a(const T0__& y_slice, const T1__& start, const T2__& end, std::ostream*
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 173;
-    return 0.0;
+    return stan::math::promote_scalar<local_scalar_t__>(0.0);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -46240,7 +46737,7 @@ f2(const T0__& y_slice, const T1__& start, const T2__& end, std::ostream*
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 175;
-    return 0.0;
+    return stan::math::promote_scalar<local_scalar_t__>(0.0);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -46267,7 +46764,7 @@ f3(const T0__& y_slice, const T1__& start, const T2__& end, std::ostream*
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 177;
-    return 0.0;
+    return stan::math::promote_scalar<local_scalar_t__>(0.0);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -46294,7 +46791,7 @@ f4(const T0__& y_slice, const T1__& start, const T2__& end, std::ostream*
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 179;
-    return 0.0;
+    return stan::math::promote_scalar<local_scalar_t__>(0.0);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -46325,7 +46822,7 @@ f5(const T0__& y_slice, const T1__& start, const T2__& end, std::ostream*
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 181;
-    return 0.0;
+    return stan::math::promote_scalar<local_scalar_t__>(0.0);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -46355,7 +46852,7 @@ f6(const T0__& y_slice, const T1__& start, const T2__& end, std::ostream*
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 183;
-    return 0.0;
+    return stan::math::promote_scalar<local_scalar_t__>(0.0);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -46385,7 +46882,7 @@ f7(const T0__& y_slice, const T1__& start, const T2__& end, std::ostream*
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 185;
-    return 0.0;
+    return stan::math::promote_scalar<local_scalar_t__>(0.0);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -46415,7 +46912,7 @@ f8(const T0__& y_slice, const T1__& start, const T2__& end, std::ostream*
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 187;
-    return 0.0;
+    return stan::math::promote_scalar<local_scalar_t__>(0.0);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -46441,7 +46938,7 @@ f9(const T0__& y_slice, const T1__& start, const T2__& end, std::ostream*
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 189;
-    return 0.0;
+    return stan::math::promote_scalar<local_scalar_t__>(0.0);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -46468,7 +46965,7 @@ f10(const T0__& y_slice, const T1__& start, const T2__& end, std::ostream*
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 191;
-    return 0.0;
+    return stan::math::promote_scalar<local_scalar_t__>(0.0);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -46498,7 +46995,7 @@ f11(const T0__& y_slice, const T1__& start, const T2__& end, std::ostream*
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 193;
-    return 0.0;
+    return stan::math::promote_scalar<local_scalar_t__>(0.0);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -46533,7 +47030,7 @@ f12(const T0__& y_slice, const T1__& start, const T2__& end, std::ostream*
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 195;
-    return 0.0;
+    return stan::math::promote_scalar<local_scalar_t__>(0.0);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -46563,7 +47060,7 @@ g1(const T0__& y_slice, const T1__& start, const T2__& end, const T3__& a,
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 197;
-    return 0.0;
+    return stan::math::promote_scalar<local_scalar_t__>(0.0);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -46595,7 +47092,7 @@ g2(const T0__& y_slice, const T1__& start, const T2__& end, const T3__&
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 199;
-    return 0.0;
+    return stan::math::promote_scalar<local_scalar_t__>(0.0);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -46627,7 +47124,7 @@ g3(const T0__& y_slice, const T1__& start, const T2__& end, const T3__&
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 201;
-    return 0.0;
+    return stan::math::promote_scalar<local_scalar_t__>(0.0);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -46659,7 +47156,7 @@ g4(const T0__& y_slice, const T1__& start, const T2__& end, const T3__&
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 203;
-    return 0.0;
+    return stan::math::promote_scalar<local_scalar_t__>(0.0);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -46692,7 +47189,7 @@ g5(const T0__& y_slice, const T1__& start, const T2__& end, const T3__& a,
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 205;
-    return 0.0;
+    return stan::math::promote_scalar<local_scalar_t__>(0.0);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -46724,7 +47221,7 @@ g6(const T0__& y_slice, const T1__& start, const T2__& end, const T3__& a,
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 207;
-    return 0.0;
+    return stan::math::promote_scalar<local_scalar_t__>(0.0);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -46756,7 +47253,7 @@ g7(const T0__& y_slice, const T1__& start, const T2__& end, const T3__& a,
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 209;
-    return 0.0;
+    return stan::math::promote_scalar<local_scalar_t__>(0.0);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -46788,7 +47285,7 @@ g8(const T0__& y_slice, const T1__& start, const T2__& end, const T3__& a,
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 211;
-    return 0.0;
+    return stan::math::promote_scalar<local_scalar_t__>(0.0);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -46824,7 +47321,7 @@ g9(const T0__& y_slice, const T1__& start, const T2__& end, const T3__& a,
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 213;
-    return 0.0;
+    return stan::math::promote_scalar<local_scalar_t__>(0.0);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -46859,7 +47356,7 @@ g10(const T0__& y_slice, const T1__& start, const T2__& end, const T3__& a,
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 215;
-    return 0.0;
+    return stan::math::promote_scalar<local_scalar_t__>(0.0);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -46894,7 +47391,7 @@ g11(const T0__& y_slice, const T1__& start, const T2__& end, const T3__& a,
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 217;
-    return 0.0;
+    return stan::math::promote_scalar<local_scalar_t__>(0.0);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -46929,7 +47426,7 @@ g12(const T0__& y_slice, const T1__& start, const T2__& end, const T3__& a,
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 219;
-    return 0.0;
+    return stan::math::promote_scalar<local_scalar_t__>(0.0);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -47367,7 +47864,7 @@ double r(std::ostream* pstream__) {
            y10, y11, y12, y14d, y1, y2, y3, y4, y15d, y5, y6, y7, y8, y16d,
            y17);
     current_statement__ = 340;
-    return 0.0;
+    return stan::math::promote_scalar<local_scalar_t__>(0.0);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -49560,7 +50057,8 @@ class reject_exit_model final : public model_base_crtp<reject_exit_model> {
       auto x = in__.template read<local_scalar_t__>();
       {
         current_statement__ = 2;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(x, 0, 1));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(x,
+                         static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 5;
         if (stan::math::logical_lt(x, 0)) {
           current_statement__ = 4;
@@ -49616,7 +50114,8 @@ class reject_exit_model final : public model_base_crtp<reject_exit_model> {
       auto x = in__.template read<local_scalar_t__>();
       {
         current_statement__ = 2;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(x, 0, 1));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(x,
+                         static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 5;
         if (stan::math::logical_lt(x, 0)) {
           current_statement__ = 4;
@@ -49929,7 +50428,8 @@ foo(const T0__& a, std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 5;
-    return std::vector<local_scalar_t__>{0.1};
+    return std::vector<local_scalar_t__>{stan::math::promote_scalar<
+                                           local_scalar_t__>(0.1)};
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -49952,7 +50452,10 @@ baz(const T0__& a, std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 7;
-    return std::forward_as_tuple(std::vector<local_scalar_t__>{0.1}, 0.2);
+    return std::forward_as_tuple(
+             std::vector<local_scalar_t__>{stan::math::promote_scalar<
+                                             local_scalar_t__>(0.1)},
+             stan::math::promote_scalar<local_scalar_t__>(0.2));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -52201,7 +52704,7 @@ double foo0_lpmf(const T0__& y, std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 1;
-    return -(5);
+    return stan::math::promote_scalar<local_scalar_t__>(-(5));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -52219,7 +52722,7 @@ double foo1_lpmf(const T0__& y, std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 3;
-    return -(5);
+    return stan::math::promote_scalar<local_scalar_t__>(-(5));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -52240,7 +52743,7 @@ foo4_lp(const T0__& y, T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream*
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 5;
-    return -(5);
+    return stan::math::promote_scalar<local_scalar_t__>(-(5));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -52259,7 +52762,7 @@ stan::return_type_t<T0__> foo2_lpdf(const T0__& y, std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 7;
-    return -(5);
+    return stan::math::promote_scalar<local_scalar_t__>(-(5));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -52278,7 +52781,7 @@ stan::return_type_t<T0__> foo3_lpdf(const T0__& y, std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 9;
-    return -(5);
+    return stan::math::promote_scalar<local_scalar_t__>(-(5));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -52300,7 +52803,7 @@ foo5_lp(const T0__& y, T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream*
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 11;
-    return -(5);
+    return stan::math::promote_scalar<local_scalar_t__>(-(5));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -54827,25 +55330,32 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
         current_statement__ = 4;
         if (t) {
           current_statement__ = 5;
-          lp_accum__.add(stan::math::student_t_lpdf<propto__>(x, 10, 0, 1));
+          lp_accum__.add(stan::math::student_t_lpdf<propto__>(x,
+                           static_cast<double>(10), static_cast<double>(0),
+                           static_cast<double>(1)));
           current_statement__ = 6;
           if (stan::math::logical_lt(x, 0)) {
             current_statement__ = 6;
             lp_accum__.add(stan::math::negative_infinity());
           } else {
             current_statement__ = 6;
-            lp_accum__.add(-(stan::math::student_t_lccdf(0, 10, 0, 1)));
+            lp_accum__.add(-(stan::math::student_t_lccdf(
+                               static_cast<double>(0),
+                               static_cast<double>(10),
+                               static_cast<double>(0), static_cast<double>(1))));
           }
         } else {
           current_statement__ = 2;
-          lp_accum__.add(stan::math::normal_lpdf<propto__>(x, 0, 1));
+          lp_accum__.add(stan::math::normal_lpdf<propto__>(x,
+                           static_cast<double>(0), static_cast<double>(1)));
           current_statement__ = 3;
           if (stan::math::logical_lt(x, 0)) {
             current_statement__ = 3;
             lp_accum__.add(stan::math::negative_infinity());
           } else {
             current_statement__ = 3;
-            lp_accum__.add(-(stan::math::normal_lccdf(0, 0, 1)));
+            lp_accum__.add(-(stan::math::normal_lccdf(static_cast<double>(0),
+                               static_cast<double>(0), static_cast<double>(1))));
           }
         }
       }
@@ -54887,25 +55397,32 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
         current_statement__ = 4;
         if (t) {
           current_statement__ = 5;
-          lp_accum__.add(stan::math::student_t_lpdf<propto__>(x, 10, 0, 1));
+          lp_accum__.add(stan::math::student_t_lpdf<propto__>(x,
+                           static_cast<double>(10), static_cast<double>(0),
+                           static_cast<double>(1)));
           current_statement__ = 6;
           if (stan::math::logical_lt(x, 0)) {
             current_statement__ = 6;
             lp_accum__.add(stan::math::negative_infinity());
           } else {
             current_statement__ = 6;
-            lp_accum__.add(-(stan::math::student_t_lccdf(0, 10, 0, 1)));
+            lp_accum__.add(-(stan::math::student_t_lccdf(
+                               static_cast<double>(0),
+                               static_cast<double>(10),
+                               static_cast<double>(0), static_cast<double>(1))));
           }
         } else {
           current_statement__ = 2;
-          lp_accum__.add(stan::math::normal_lpdf<propto__>(x, 0, 1));
+          lp_accum__.add(stan::math::normal_lpdf<propto__>(x,
+                           static_cast<double>(0), static_cast<double>(1)));
           current_statement__ = 3;
           if (stan::math::logical_lt(x, 0)) {
             current_statement__ = 3;
             lp_accum__.add(stan::math::negative_infinity());
           } else {
             current_statement__ = 3;
-            lp_accum__.add(-(stan::math::normal_lccdf(0, 0, 1)));
+            lp_accum__.add(-(stan::math::normal_lccdf(static_cast<double>(0),
+                               static_cast<double>(0), static_cast<double>(1))));
           }
         }
       }
@@ -58365,29 +58882,35 @@ class truncate_model final : public model_base_crtp<truncate_model> {
           lp__);
       {
         current_statement__ = 3;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(x, m, 1));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(x, m,
+                         static_cast<double>(1)));
         current_statement__ = 4;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(x, m, 1));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(x, m,
+                         static_cast<double>(1)));
         current_statement__ = 5;
         if (stan::math::logical_lt(x, 0.0)) {
           current_statement__ = 5;
           lp_accum__.add(stan::math::negative_infinity());
         } else {
           current_statement__ = 5;
-          lp_accum__.add(-(stan::math::normal_lccdf(0.0, m, 1)));
+          lp_accum__.add(-(stan::math::normal_lccdf(0.0, m,
+                             static_cast<double>(1))));
         }
         current_statement__ = 6;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(x, m, 1));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(x, m,
+                         static_cast<double>(1)));
         current_statement__ = 7;
         if (stan::math::logical_gt(x, 10.0)) {
           current_statement__ = 7;
           lp_accum__.add(stan::math::negative_infinity());
         } else {
           current_statement__ = 7;
-          lp_accum__.add(-(stan::math::normal_lcdf(10.0, m, 1)));
+          lp_accum__.add(-(stan::math::normal_lcdf(10.0, m,
+                             static_cast<double>(1))));
         }
         current_statement__ = 8;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(x, m, 1));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(x, m,
+                         static_cast<double>(1)));
         current_statement__ = 10;
         if (stan::math::logical_lt(x, 0.0)) {
           current_statement__ = 10;
@@ -58400,8 +58923,10 @@ class truncate_model final : public model_base_crtp<truncate_model> {
           } else {
             current_statement__ = 9;
             lp_accum__.add(-(stan::math::log_diff_exp(
-                               stan::math::normal_lcdf(10.0, m, 1),
-                               stan::math::normal_lcdf(0.0, m, 1))));
+                               stan::math::normal_lcdf(10.0, m,
+                                 static_cast<double>(1)),
+                               stan::math::normal_lcdf(0.0, m,
+                                 static_cast<double>(1)))));
           }
         }
         current_statement__ = 11;
@@ -58483,29 +59008,35 @@ class truncate_model final : public model_base_crtp<truncate_model> {
           lp__);
       {
         current_statement__ = 3;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(x, m, 1));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(x, m,
+                         static_cast<double>(1)));
         current_statement__ = 4;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(x, m, 1));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(x, m,
+                         static_cast<double>(1)));
         current_statement__ = 5;
         if (stan::math::logical_lt(x, 0.0)) {
           current_statement__ = 5;
           lp_accum__.add(stan::math::negative_infinity());
         } else {
           current_statement__ = 5;
-          lp_accum__.add(-(stan::math::normal_lccdf(0.0, m, 1)));
+          lp_accum__.add(-(stan::math::normal_lccdf(0.0, m,
+                             static_cast<double>(1))));
         }
         current_statement__ = 6;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(x, m, 1));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(x, m,
+                         static_cast<double>(1)));
         current_statement__ = 7;
         if (stan::math::logical_gt(x, 10.0)) {
           current_statement__ = 7;
           lp_accum__.add(stan::math::negative_infinity());
         } else {
           current_statement__ = 7;
-          lp_accum__.add(-(stan::math::normal_lcdf(10.0, m, 1)));
+          lp_accum__.add(-(stan::math::normal_lcdf(10.0, m,
+                             static_cast<double>(1))));
         }
         current_statement__ = 8;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(x, m, 1));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(x, m,
+                         static_cast<double>(1)));
         current_statement__ = 10;
         if (stan::math::logical_lt(x, 0.0)) {
           current_statement__ = 10;
@@ -58518,8 +59049,10 @@ class truncate_model final : public model_base_crtp<truncate_model> {
           } else {
             current_statement__ = 9;
             lp_accum__.add(-(stan::math::log_diff_exp(
-                               stan::math::normal_lcdf(10.0, m, 1),
-                               stan::math::normal_lcdf(0.0, m, 1))));
+                               stan::math::normal_lcdf(10.0, m,
+                                 static_cast<double>(1)),
+                               stan::math::normal_lcdf(0.0, m,
+                                 static_cast<double>(1)))));
           }
         }
         current_statement__ = 11;
@@ -58919,7 +59452,8 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
       auto x = in__.template read<local_scalar_t__>();
       {
         current_statement__ = 2;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(x, 0, 1));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(x,
+                         static_cast<double>(0), static_cast<double>(1)));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -58955,7 +59489,8 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
       auto x = in__.template read<local_scalar_t__>();
       {
         current_statement__ = 2;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(x, 0, 1));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(x,
+                         static_cast<double>(0), static_cast<double>(1)));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -60617,8 +61152,9 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
         }
         current_statement__ = 77;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(y,
-                         stan::math::multiply(vector_mu, 4),
-                         stan::math::add(vector_sigma, 1)));
+                         stan::math::multiply(vector_mu,
+                           static_cast<double>(4)),
+                         stan::math::add(vector_sigma, static_cast<double>(1))));
         current_statement__ = 81;
         if (stan::math::logical_lt(stan::math::min(y), L)) {
           current_statement__ = 81;
@@ -60631,11 +61167,13 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
           } else {
             Eigen::Matrix<local_scalar_t__,-1,1> sym2__;
             current_statement__ = 78;
-            stan::model::assign(sym2__, stan::math::multiply(vector_mu, 4),
+            stan::model::assign(sym2__,
+              stan::math::multiply(vector_mu, static_cast<double>(4)),
               "assigning variable sym2__");
             Eigen::Matrix<local_scalar_t__,1,-1> sym1__;
             current_statement__ = 79;
-            stan::model::assign(sym1__, stan::math::add(vector_sigma, 1),
+            stan::model::assign(sym1__,
+              stan::math::add(vector_sigma, static_cast<double>(1)),
               "assigning variable sym1__");
             current_statement__ = 80;
             for (int sym4__ = 1; sym4__ <= stan::math::size(sym2__); ++sym4__) {
@@ -61136,8 +61674,9 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
         }
         current_statement__ = 77;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(y,
-                         stan::math::multiply(vector_mu, 4),
-                         stan::math::add(vector_sigma, 1)));
+                         stan::math::multiply(vector_mu,
+                           static_cast<double>(4)),
+                         stan::math::add(vector_sigma, static_cast<double>(1))));
         current_statement__ = 81;
         if (stan::math::logical_lt(stan::math::min(y), L)) {
           current_statement__ = 81;
@@ -61150,11 +61689,13 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
           } else {
             Eigen::Matrix<local_scalar_t__,-1,1> sym2__;
             current_statement__ = 78;
-            stan::model::assign(sym2__, stan::math::multiply(vector_mu, 4),
+            stan::model::assign(sym2__,
+              stan::math::multiply(vector_mu, static_cast<double>(4)),
               "assigning variable sym2__");
             Eigen::Matrix<local_scalar_t__,1,-1> sym1__;
             current_statement__ = 79;
-            stan::model::assign(sym1__, stan::math::add(vector_sigma, 1),
+            stan::model::assign(sym1__,
+              stan::math::add(vector_sigma, static_cast<double>(1)),
               "assigning variable sym1__");
             current_statement__ = 80;
             for (int sym4__ = 1; sym4__ <= stan::math::size(sym2__); ++sym4__) {

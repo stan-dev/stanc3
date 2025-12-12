@@ -2623,7 +2623,9 @@
         (Expression (Cast Void (Var DUMMY_VAR__)))
         (TryCatch
          ((Expression (Assign (Var current_statement__) (Literal 602)))
-          (Return ((Literal 0.0))))
+          (Return
+           ((FunCall stan::math::promote_scalar ((TypeLiteral local_scalar_t__))
+             ((Literal 0.0))))))
          ((Const (Ref (TypeLiteral std::exception))) e)
          ((Expression
            (FunCall stan::lang::rethrow_located ()
@@ -2661,7 +2663,9 @@
         (Expression (Cast Void (Var DUMMY_VAR__)))
         (TryCatch
          ((Expression (Assign (Var current_statement__) (Literal 604)))
-          (Return ((Literal 1.0))))
+          (Return
+           ((FunCall stan::math::promote_scalar ((TypeLiteral local_scalar_t__))
+             ((Literal 1.0))))))
          ((Const (Ref (TypeLiteral std::exception))) e)
          ((Expression
            (FunCall stan::lang::rethrow_located ()
@@ -2705,7 +2709,9 @@
         (Expression (Cast Void (Var DUMMY_VAR__)))
         (TryCatch
          ((Expression (Assign (Var current_statement__) (Literal 606)))
-          (Return ((Literal 2.0))))
+          (Return
+           ((FunCall stan::math::promote_scalar ((TypeLiteral local_scalar_t__))
+             ((Literal 2.0))))))
          ((Const (Ref (TypeLiteral std::exception))) e)
          ((Expression
            (FunCall stan::lang::rethrow_located ()
@@ -2740,7 +2746,9 @@
         (Expression (Cast Void (Var DUMMY_VAR__)))
         (TryCatch
          ((Expression (Assign (Var current_statement__) (Literal 608)))
-          (Return ((Literal 1.0))))
+          (Return
+           ((FunCall stan::math::promote_scalar ((TypeLiteral local_scalar_t__))
+             ((Literal 1.0))))))
          ((Const (Ref (TypeLiteral std::exception))) e)
          ((Expression
            (FunCall stan::lang::rethrow_located ()
@@ -2779,7 +2787,9 @@
         (Expression (Cast Void (Var DUMMY_VAR__)))
         (TryCatch
          ((Expression (Assign (Var current_statement__) (Literal 610)))
-          (Return ((Literal 1.0))))
+          (Return
+           ((FunCall stan::math::promote_scalar ((TypeLiteral local_scalar_t__))
+             ((Literal 1.0))))))
          ((Const (Ref (TypeLiteral std::exception))) e)
          ((Expression
            (FunCall stan::lang::rethrow_located ()
@@ -2818,7 +2828,9 @@
         (Expression (Cast Void (Var DUMMY_VAR__)))
         (TryCatch
          ((Expression (Assign (Var current_statement__) (Literal 612)))
-          (Return ((Literal 1.0))))
+          (Return
+           ((FunCall stan::math::promote_scalar ((TypeLiteral local_scalar_t__))
+             ((Literal 1.0))))))
          ((Const (Ref (TypeLiteral std::exception))) e)
          ((Expression
            (FunCall stan::lang::rethrow_located ()
@@ -2901,12 +2913,14 @@
           (Expression
            (MethodCall (Var lp_accum__) add ()
             ((FunCall stan::math::normal_lpdf ((TemplateType false))
-              ((Var u) (Literal 0) (Literal 1))))))
+              ((Var u) (FunCall static_cast (Double) ((Literal 0)))
+               (FunCall static_cast (Double) ((Literal 1))))))))
           (Expression (Assign (Var current_statement__) (Literal 617)))
           (Expression
            (MethodCall (Var lp_accum__) add ()
             ((FunCall stan::math::uniform_lpdf ((TemplateType propto__))
-              ((Var u) (PMinus (Literal 100)) (Literal 100)))))))
+              ((Var u) (FunCall static_cast (Double) ((PMinus (Literal 100))))
+               (FunCall static_cast (Double) ((Literal 100)))))))))
          ((Const (Ref (TypeLiteral std::exception))) e)
          ((Expression
            (FunCall stan::lang::rethrow_located ()
@@ -3115,7 +3129,11 @@
                        (FunCall stan::model::index_uni () ((Var sym1__)))
                        (FunCall stan::model::index_uni () ((Var sym2__)))))))
                    (Expression (Assign (Var current_statement__) (Literal 664)))
-                   (Expression (Assign (Var z) (Literal 0))) Break))))))
+                   (Expression
+                    (Assign (Var z)
+                     (FunCall stan::math::promote_scalar ((TypeLiteral local_scalar_t__))
+                      ((Literal 0)))))
+                   Break))))))
              (Expression (Assign (Var current_statement__) (Literal 666)))
              (For
               ((static false) (constexpr false) (type_ Int) (name sym1__)
@@ -3176,7 +3194,11 @@
                  (Assign (Var v)
                   (Subscript (Var vs) (Parens (BinOp (Var sym1__) Subtract (Literal 1))))))
                 (Expression (Assign (Var current_statement__) (Literal 674)))
-                (Expression (Assign (Var z) (Literal 0))) Break)))
+                (Expression
+                 (Assign (Var z)
+                  (FunCall stan::math::promote_scalar ((TypeLiteral local_scalar_t__))
+                   ((Literal 0)))))
+                Break)))
              (Expression (Assign (Var current_statement__) (Literal 676)))
              (For
               ((static false) (constexpr false) (type_ Int) (name sym1__)
@@ -3222,7 +3244,11 @@
                  (Assign (Var v)
                   (Subscript (Var vs) (Parens (BinOp (Var sym1__) Subtract (Literal 1))))))
                 (Expression (Assign (Var current_statement__) (Literal 684)))
-                (Expression (Assign (Var z) (Literal 0))) Break)))
+                (Expression
+                 (Assign (Var z)
+                  (FunCall stan::math::promote_scalar ((TypeLiteral local_scalar_t__))
+                   ((Literal 0)))))
+                Break)))
              (Expression (Assign (Var current_statement__) (Literal 686)))
              (For
               ((static false) (constexpr false) (type_ Int) (name sym1__)
@@ -3649,7 +3675,9 @@
              ((MethodCall
                (Parens
                 (StreamInsertion (Constructor (Matrix Double -1 1 AoS) ((Literal 3)))
-                 ((Literal 1) (Literal 2) (Literal 3))))
+                 ((FunCall static_cast (Double) ((Literal 1)))
+                  (FunCall static_cast (Double) ((Literal 2)))
+                  (FunCall static_cast (Double) ((Literal 3))))))
                finished () ()))))))
          ((Const (Ref (TypeLiteral std::exception))) e)
          ((Expression
@@ -5716,24 +5744,78 @@
                   (StreamInsertion
                    (Constructor (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)
                     ((Literal 10)))
-                   ((Literal 1) (Literal 2) (Literal 3) (Literal 4) (Literal 5)
-                    (Literal 6) (Literal 7) (Literal 8) (Literal 9) (Literal 10))))
+                   ((FunCall stan::math::promote_scalar ((TypeLiteral local_scalar_t__))
+                     ((FunCall static_cast (Double) ((Literal 1)))))
+                    (FunCall stan::math::promote_scalar ((TypeLiteral local_scalar_t__))
+                     ((FunCall static_cast (Double) ((Literal 2)))))
+                    (FunCall stan::math::promote_scalar ((TypeLiteral local_scalar_t__))
+                     ((FunCall static_cast (Double) ((Literal 3)))))
+                    (FunCall stan::math::promote_scalar ((TypeLiteral local_scalar_t__))
+                     ((FunCall static_cast (Double) ((Literal 4)))))
+                    (FunCall stan::math::promote_scalar ((TypeLiteral local_scalar_t__))
+                     ((FunCall static_cast (Double) ((Literal 5)))))
+                    (FunCall stan::math::promote_scalar ((TypeLiteral local_scalar_t__))
+                     ((FunCall static_cast (Double) ((Literal 6)))))
+                    (FunCall stan::math::promote_scalar ((TypeLiteral local_scalar_t__))
+                     ((FunCall static_cast (Double) ((Literal 7)))))
+                    (FunCall stan::math::promote_scalar ((TypeLiteral local_scalar_t__))
+                     ((FunCall static_cast (Double) ((Literal 8)))))
+                    (FunCall stan::math::promote_scalar ((TypeLiteral local_scalar_t__))
+                     ((FunCall static_cast (Double) ((Literal 9)))))
+                    (FunCall stan::math::promote_scalar ((TypeLiteral local_scalar_t__))
+                     ((FunCall static_cast (Double) ((Literal 10))))))))
                  finished () ())
                 (MethodCall
                  (Parens
                   (StreamInsertion
                    (Constructor (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)
                     ((Literal 10)))
-                   ((Literal 1) (Literal 2) (Literal 3) (Literal 4) (Literal 5)
-                    (Literal 6) (Literal 7) (Literal 8) (Literal 9) (Literal 10))))
+                   ((FunCall stan::math::promote_scalar ((TypeLiteral local_scalar_t__))
+                     ((FunCall static_cast (Double) ((Literal 1)))))
+                    (FunCall stan::math::promote_scalar ((TypeLiteral local_scalar_t__))
+                     ((FunCall static_cast (Double) ((Literal 2)))))
+                    (FunCall stan::math::promote_scalar ((TypeLiteral local_scalar_t__))
+                     ((FunCall static_cast (Double) ((Literal 3)))))
+                    (FunCall stan::math::promote_scalar ((TypeLiteral local_scalar_t__))
+                     ((FunCall static_cast (Double) ((Literal 4)))))
+                    (FunCall stan::math::promote_scalar ((TypeLiteral local_scalar_t__))
+                     ((FunCall static_cast (Double) ((Literal 5)))))
+                    (FunCall stan::math::promote_scalar ((TypeLiteral local_scalar_t__))
+                     ((FunCall static_cast (Double) ((Literal 6)))))
+                    (FunCall stan::math::promote_scalar ((TypeLiteral local_scalar_t__))
+                     ((FunCall static_cast (Double) ((Literal 7)))))
+                    (FunCall stan::math::promote_scalar ((TypeLiteral local_scalar_t__))
+                     ((FunCall static_cast (Double) ((Literal 8)))))
+                    (FunCall stan::math::promote_scalar ((TypeLiteral local_scalar_t__))
+                     ((FunCall static_cast (Double) ((Literal 9)))))
+                    (FunCall stan::math::promote_scalar ((TypeLiteral local_scalar_t__))
+                     ((FunCall static_cast (Double) ((Literal 10))))))))
                  finished () ())
                 (MethodCall
                  (Parens
                   (StreamInsertion
                    (Constructor (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)
                     ((Literal 10)))
-                   ((Literal 1) (Literal 2) (Literal 3) (Literal 4) (Literal 5)
-                    (Literal 6) (Literal 7) (Literal 8) (Literal 9) (Literal 10))))
+                   ((FunCall stan::math::promote_scalar ((TypeLiteral local_scalar_t__))
+                     ((FunCall static_cast (Double) ((Literal 1)))))
+                    (FunCall stan::math::promote_scalar ((TypeLiteral local_scalar_t__))
+                     ((FunCall static_cast (Double) ((Literal 2)))))
+                    (FunCall stan::math::promote_scalar ((TypeLiteral local_scalar_t__))
+                     ((FunCall static_cast (Double) ((Literal 3)))))
+                    (FunCall stan::math::promote_scalar ((TypeLiteral local_scalar_t__))
+                     ((FunCall static_cast (Double) ((Literal 4)))))
+                    (FunCall stan::math::promote_scalar ((TypeLiteral local_scalar_t__))
+                     ((FunCall static_cast (Double) ((Literal 5)))))
+                    (FunCall stan::math::promote_scalar ((TypeLiteral local_scalar_t__))
+                     ((FunCall static_cast (Double) ((Literal 6)))))
+                    (FunCall stan::math::promote_scalar ((TypeLiteral local_scalar_t__))
+                     ((FunCall static_cast (Double) ((Literal 7)))))
+                    (FunCall stan::math::promote_scalar ((TypeLiteral local_scalar_t__))
+                     ((FunCall static_cast (Double) ((Literal 8)))))
+                    (FunCall stan::math::promote_scalar ((TypeLiteral local_scalar_t__))
+                     ((FunCall static_cast (Double) ((Literal 9)))))
+                    (FunCall stan::math::promote_scalar ((TypeLiteral local_scalar_t__))
+                     ((FunCall static_cast (Double) ((Literal 10))))))))
                  finished () ()))))))))
          ((Const (Ref (TypeLiteral std::exception))) e)
          ((Expression
@@ -5768,8 +5850,16 @@
              ((MethodCall
                (Parens
                 (StreamInsertion (Constructor (Matrix Double -1 1 AoS) ((Literal 10)))
-                 ((Literal 1) (Literal 2) (Literal 3) (Literal 4) (Literal 5) 
-                  (Literal 6) (Literal 7) (Literal 8) (Literal 9) (Literal 10))))
+                 ((FunCall static_cast (Double) ((Literal 1)))
+                  (FunCall static_cast (Double) ((Literal 2)))
+                  (FunCall static_cast (Double) ((Literal 3)))
+                  (FunCall static_cast (Double) ((Literal 4)))
+                  (FunCall static_cast (Double) ((Literal 5)))
+                  (FunCall static_cast (Double) ((Literal 6)))
+                  (FunCall static_cast (Double) ((Literal 7)))
+                  (FunCall static_cast (Double) ((Literal 8)))
+                  (FunCall static_cast (Double) ((Literal 9)))
+                  (FunCall static_cast (Double) ((Literal 10))))))
                finished () ()))))))
          ((Const (Ref (TypeLiteral std::exception))) e)
          ((Expression
@@ -5881,8 +5971,16 @@
                (MethodCall
                 (Parens
                  (StreamInsertion (Constructor (Matrix Double -1 1 AoS) ((Literal 10)))
-                  ((Literal 1) (Literal 2) (Literal 3) (Literal 4) (Literal 5)
-                   (Literal 6) (Literal 7) (Literal 8) (Literal 9) (Literal 10))))
+                  ((FunCall static_cast (Double) ((Literal 1)))
+                   (FunCall static_cast (Double) ((Literal 2)))
+                   (FunCall static_cast (Double) ((Literal 3)))
+                   (FunCall static_cast (Double) ((Literal 4)))
+                   (FunCall static_cast (Double) ((Literal 5)))
+                   (FunCall static_cast (Double) ((Literal 6)))
+                   (FunCall static_cast (Double) ((Literal 7)))
+                   (FunCall static_cast (Double) ((Literal 8)))
+                   (FunCall static_cast (Double) ((Literal 9)))
+                   (FunCall static_cast (Double) ((Literal 10))))))
                 finished () ())))
              (Literal "\"assigning variable l\""))))
           (Expression (Assign (Var current_statement__) (Literal 777)))
@@ -7154,28 +7252,35 @@
                 (Expression
                  (MethodCall (Var lp_accum__) add ()
                   ((FunCall stan::math::normal_lpdf ((TemplateType propto__))
-                    ((Var p_real) (Literal 0) (Literal 1))))))
+                    ((Var p_real) (FunCall static_cast (Double) ((Literal 0)))
+                     (FunCall static_cast (Double) ((Literal 1))))))))
                 (Expression (Assign (Var current_statement__) (Literal 159)))
                 (Expression
                  (MethodCall (Var lp_accum__) add ()
                   ((FunCall stan::math::normal_lpdf ((TemplateType propto__))
-                    ((Var offset_multiplier) (Literal 0) (Literal 1))))))
+                    ((Var offset_multiplier) (FunCall static_cast (Double) ((Literal 0)))
+                     (FunCall static_cast (Double) ((Literal 1))))))))
                 (Expression (Assign (Var current_statement__) (Literal 160)))
                 (Expression
                  (MethodCall (Var lp_accum__) add ()
                   ((FunCall stan::math::normal_lpdf ((TemplateType propto__))
-                    ((Var no_offset_multiplier) (Literal 0) (Literal 1))))))
+                    ((Var no_offset_multiplier)
+                     (FunCall static_cast (Double) ((Literal 0)))
+                     (FunCall static_cast (Double) ((Literal 1))))))))
                 (Expression (Assign (Var current_statement__) (Literal 161)))
                 (Expression
                  (MethodCall (Var lp_accum__) add ()
                   ((FunCall stan::math::normal_lpdf ((TemplateType propto__))
-                    ((Var offset_no_multiplier) (Literal 0) (Literal 1))))))
+                    ((Var offset_no_multiplier)
+                     (FunCall static_cast (Double) ((Literal 0)))
+                     (FunCall static_cast (Double) ((Literal 1))))))))
                 (Expression (Assign (Var current_statement__) (Literal 162)))
                 (Expression
                  (MethodCall (Var lp_accum__) add ()
                   ((FunCall stan::math::normal_lpdf ((TemplateType propto__))
-                    ((FunCall stan::math::to_vector () ((Var p_real_1d_ar))) 
-                     (Literal 0) (Literal 1))))))
+                    ((FunCall stan::math::to_vector () ((Var p_real_1d_ar)))
+                     (FunCall static_cast (Double) ((Literal 0)))
+                     (FunCall static_cast (Double) ((Literal 1))))))))
                 (Expression (Assign (Var current_statement__) (Literal 175)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name n)
@@ -7190,7 +7295,8 @@
                          ((FunCall stan::model::rvalue ()
                            ((Var p_1d_vec) (Literal "\"p_1d_vec\"")
                             (FunCall stan::model::index_uni () ((Var n)))))))
-                        (Literal 0) (Literal 1))))))
+                        (FunCall static_cast (Double) ((Literal 0)))
+                        (FunCall static_cast (Double) ((Literal 1))))))))
                    (Expression (Assign (Var current_statement__) (Literal 164)))
                    (Expression
                     (MethodCall (Var lp_accum__) add ()
@@ -7199,7 +7305,8 @@
                          ((FunCall stan::model::rvalue ()
                            ((Var p_1d_row_vec) (Literal "\"p_1d_row_vec\"")
                             (FunCall stan::model::index_uni () ((Var n)))))))
-                        (Literal 0) (Literal 1))))))
+                        (FunCall static_cast (Double) ((Literal 0)))
+                        (FunCall static_cast (Double) ((Literal 1))))))))
                    (Expression (Assign (Var current_statement__) (Literal 165)))
                    (Expression
                     (MethodCall (Var lp_accum__) add ()
@@ -7208,7 +7315,8 @@
                          ((FunCall stan::model::rvalue ()
                            ((Var p_1d_simplex) (Literal "\"p_1d_simplex\"")
                             (FunCall stan::model::index_uni () ((Var n)))))))
-                        (Literal 0) (Literal 1))))))
+                        (FunCall static_cast (Double) ((Literal 0)))
+                        (FunCall static_cast (Double) ((Literal 1))))))))
                    (Expression (Assign (Var current_statement__) (Literal 173)))
                    (For
                     ((static false) (constexpr false) (type_ Int) (name m)
@@ -7236,7 +7344,7 @@
                                 (FunCall stan::model::index_uni () ((Var n)))
                                 (FunCall stan::model::index_uni () ((Var m)))
                                 (FunCall stan::model::index_uni () ((Var k)))))
-                              (Literal 1))))))
+                              (FunCall static_cast (Double) ((Literal 1))))))))
                          (Expression (Assign (Var current_statement__) (Literal 167)))
                          (Expression
                           (MethodCall (Var lp_accum__) add ()
@@ -7252,7 +7360,7 @@
                                 (FunCall stan::model::index_uni () ((Var n)))
                                 (FunCall stan::model::index_uni () ((Var m)))
                                 (FunCall stan::model::index_uni () ((Var k)))))
-                              (Literal 1))))))
+                              (FunCall static_cast (Double) ((Literal 1))))))))
                          (Expression (Assign (Var current_statement__) (Literal 168)))
                          (Expression
                           (MethodCall (Var lp_accum__) add ()
@@ -7268,7 +7376,7 @@
                                 (FunCall stan::model::index_uni () ((Var n)))
                                 (FunCall stan::model::index_uni () ((Var m)))
                                 (FunCall stan::model::index_uni () ((Var k)))))
-                              (Literal 1))))))
+                              (FunCall static_cast (Double) ((Literal 1))))))))
                          (Expression (Assign (Var current_statement__) (Literal 169)))
                          (Expression
                           (MethodCall (Var lp_accum__) add ()
@@ -7283,7 +7391,7 @@
                                 (FunCall stan::model::index_uni () ((Var n)))
                                 (FunCall stan::model::index_uni () ((Var m)))
                                 (FunCall stan::model::index_uni () ((Var k)))))
-                              (Literal 1)))))))))))))))
+                              (FunCall static_cast (Double) ((Literal 1)))))))))))))))))
                 (Expression (Assign (Var current_statement__) (Literal 180)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name i)
@@ -7305,7 +7413,8 @@
                               ((Var p_ar_mat) (Literal "\"p_ar_mat\"")
                                (FunCall stan::model::index_uni () ((Var i)))
                                (FunCall stan::model::index_uni () ((Var j)))))))
-                           (Literal 0) (Literal 1))))))))))))
+                           (FunCall static_cast (Double) ((Literal 0)))
+                           (FunCall static_cast (Double) ((Literal 1))))))))))))))
                 (Expression (Assign (Var current_statement__) (Literal 183)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name k)
@@ -7320,37 +7429,42 @@
                          ((FunCall stan::model::rvalue ()
                            ((Var p_cfcov_33_ar) (Literal "\"p_cfcov_33_ar\"")
                             (FunCall stan::model::index_uni () ((Var k)))))))
-                        (Literal 0) (Literal 1)))))))))
+                        (FunCall static_cast (Double) ((Literal 0)))
+                        (FunCall static_cast (Double) ((Literal 1)))))))))))
                 (Expression (Assign (Var current_statement__) (Literal 184)))
                 (Expression
                  (MethodCall (Var lp_accum__) add ()
                   ((FunCall stan::math::normal_lpdf ((TemplateType propto__))
                     ((FunCall stan::math::to_vector () ((Var p_vec))) 
-                     (Var d_vec) (Literal 1))))))
+                     (Var d_vec) (FunCall static_cast (Double) ((Literal 1))))))))
                 (Expression (Assign (Var current_statement__) (Literal 185)))
                 (Expression
                  (MethodCall (Var lp_accum__) add ()
                   ((FunCall stan::math::normal_lpdf ((TemplateType propto__))
-                    ((FunCall stan::math::to_vector () ((Var p_row_vec))) 
-                     (Literal 0) (Literal 1))))))
+                    ((FunCall stan::math::to_vector () ((Var p_row_vec)))
+                     (FunCall static_cast (Double) ((Literal 0)))
+                     (FunCall static_cast (Double) ((Literal 1))))))))
                 (Expression (Assign (Var current_statement__) (Literal 186)))
                 (Expression
                  (MethodCall (Var lp_accum__) add ()
                   ((FunCall stan::math::normal_lpdf ((TemplateType propto__))
-                    ((FunCall stan::math::to_vector () ((Var p_simplex))) 
-                     (Literal 0) (Literal 1))))))
+                    ((FunCall stan::math::to_vector () ((Var p_simplex)))
+                     (FunCall static_cast (Double) ((Literal 0)))
+                     (FunCall static_cast (Double) ((Literal 1))))))))
                 (Expression (Assign (Var current_statement__) (Literal 187)))
                 (Expression
                  (MethodCall (Var lp_accum__) add ()
                   ((FunCall stan::math::normal_lpdf ((TemplateType propto__))
-                    ((FunCall stan::math::to_vector () ((Var p_cfcov_54))) 
-                     (Literal 0) (Literal 1))))))
+                    ((FunCall stan::math::to_vector () ((Var p_cfcov_54)))
+                     (FunCall static_cast (Double) ((Literal 0)))
+                     (FunCall static_cast (Double) ((Literal 1))))))))
                 (Expression (Assign (Var current_statement__) (Literal 188)))
                 (Expression
                  (MethodCall (Var lp_accum__) add ()
                   ((FunCall stan::math::normal_lpdf ((TemplateType propto__))
-                    ((FunCall stan::math::to_vector () ((Var p_cfcov_33))) 
-                     (Literal 0) (Literal 1))))))
+                    ((FunCall stan::math::to_vector () ((Var p_cfcov_33)))
+                     (FunCall static_cast (Double) ((Literal 0)))
+                     (FunCall static_cast (Double) ((Literal 1))))))))
                 (Expression (Assign (Var current_statement__) (Literal 189)))
                 (Expression
                  (MethodCall (Var lp_accum__) add ()
@@ -8111,28 +8225,35 @@
                 (Expression
                  (MethodCall (Var lp_accum__) add ()
                   ((FunCall stan::math::normal_lpdf ((TemplateType propto__))
-                    ((Var p_real) (Literal 0) (Literal 1))))))
+                    ((Var p_real) (FunCall static_cast (Double) ((Literal 0)))
+                     (FunCall static_cast (Double) ((Literal 1))))))))
                 (Expression (Assign (Var current_statement__) (Literal 159)))
                 (Expression
                  (MethodCall (Var lp_accum__) add ()
                   ((FunCall stan::math::normal_lpdf ((TemplateType propto__))
-                    ((Var offset_multiplier) (Literal 0) (Literal 1))))))
+                    ((Var offset_multiplier) (FunCall static_cast (Double) ((Literal 0)))
+                     (FunCall static_cast (Double) ((Literal 1))))))))
                 (Expression (Assign (Var current_statement__) (Literal 160)))
                 (Expression
                  (MethodCall (Var lp_accum__) add ()
                   ((FunCall stan::math::normal_lpdf ((TemplateType propto__))
-                    ((Var no_offset_multiplier) (Literal 0) (Literal 1))))))
+                    ((Var no_offset_multiplier)
+                     (FunCall static_cast (Double) ((Literal 0)))
+                     (FunCall static_cast (Double) ((Literal 1))))))))
                 (Expression (Assign (Var current_statement__) (Literal 161)))
                 (Expression
                  (MethodCall (Var lp_accum__) add ()
                   ((FunCall stan::math::normal_lpdf ((TemplateType propto__))
-                    ((Var offset_no_multiplier) (Literal 0) (Literal 1))))))
+                    ((Var offset_no_multiplier)
+                     (FunCall static_cast (Double) ((Literal 0)))
+                     (FunCall static_cast (Double) ((Literal 1))))))))
                 (Expression (Assign (Var current_statement__) (Literal 162)))
                 (Expression
                  (MethodCall (Var lp_accum__) add ()
                   ((FunCall stan::math::normal_lpdf ((TemplateType propto__))
-                    ((FunCall stan::math::to_vector () ((Var p_real_1d_ar))) 
-                     (Literal 0) (Literal 1))))))
+                    ((FunCall stan::math::to_vector () ((Var p_real_1d_ar)))
+                     (FunCall static_cast (Double) ((Literal 0)))
+                     (FunCall static_cast (Double) ((Literal 1))))))))
                 (Expression (Assign (Var current_statement__) (Literal 175)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name n)
@@ -8147,7 +8268,8 @@
                          ((FunCall stan::model::rvalue ()
                            ((Var p_1d_vec) (Literal "\"p_1d_vec\"")
                             (FunCall stan::model::index_uni () ((Var n)))))))
-                        (Literal 0) (Literal 1))))))
+                        (FunCall static_cast (Double) ((Literal 0)))
+                        (FunCall static_cast (Double) ((Literal 1))))))))
                    (Expression (Assign (Var current_statement__) (Literal 164)))
                    (Expression
                     (MethodCall (Var lp_accum__) add ()
@@ -8156,7 +8278,8 @@
                          ((FunCall stan::model::rvalue ()
                            ((Var p_1d_row_vec) (Literal "\"p_1d_row_vec\"")
                             (FunCall stan::model::index_uni () ((Var n)))))))
-                        (Literal 0) (Literal 1))))))
+                        (FunCall static_cast (Double) ((Literal 0)))
+                        (FunCall static_cast (Double) ((Literal 1))))))))
                    (Expression (Assign (Var current_statement__) (Literal 165)))
                    (Expression
                     (MethodCall (Var lp_accum__) add ()
@@ -8165,7 +8288,8 @@
                          ((FunCall stan::model::rvalue ()
                            ((Var p_1d_simplex) (Literal "\"p_1d_simplex\"")
                             (FunCall stan::model::index_uni () ((Var n)))))))
-                        (Literal 0) (Literal 1))))))
+                        (FunCall static_cast (Double) ((Literal 0)))
+                        (FunCall static_cast (Double) ((Literal 1))))))))
                    (Expression (Assign (Var current_statement__) (Literal 173)))
                    (For
                     ((static false) (constexpr false) (type_ Int) (name m)
@@ -8193,7 +8317,7 @@
                                 (FunCall stan::model::index_uni () ((Var n)))
                                 (FunCall stan::model::index_uni () ((Var m)))
                                 (FunCall stan::model::index_uni () ((Var k)))))
-                              (Literal 1))))))
+                              (FunCall static_cast (Double) ((Literal 1))))))))
                          (Expression (Assign (Var current_statement__) (Literal 167)))
                          (Expression
                           (MethodCall (Var lp_accum__) add ()
@@ -8209,7 +8333,7 @@
                                 (FunCall stan::model::index_uni () ((Var n)))
                                 (FunCall stan::model::index_uni () ((Var m)))
                                 (FunCall stan::model::index_uni () ((Var k)))))
-                              (Literal 1))))))
+                              (FunCall static_cast (Double) ((Literal 1))))))))
                          (Expression (Assign (Var current_statement__) (Literal 168)))
                          (Expression
                           (MethodCall (Var lp_accum__) add ()
@@ -8225,7 +8349,7 @@
                                 (FunCall stan::model::index_uni () ((Var n)))
                                 (FunCall stan::model::index_uni () ((Var m)))
                                 (FunCall stan::model::index_uni () ((Var k)))))
-                              (Literal 1))))))
+                              (FunCall static_cast (Double) ((Literal 1))))))))
                          (Expression (Assign (Var current_statement__) (Literal 169)))
                          (Expression
                           (MethodCall (Var lp_accum__) add ()
@@ -8240,7 +8364,7 @@
                                 (FunCall stan::model::index_uni () ((Var n)))
                                 (FunCall stan::model::index_uni () ((Var m)))
                                 (FunCall stan::model::index_uni () ((Var k)))))
-                              (Literal 1)))))))))))))))
+                              (FunCall static_cast (Double) ((Literal 1)))))))))))))))))
                 (Expression (Assign (Var current_statement__) (Literal 180)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name i)
@@ -8262,7 +8386,8 @@
                               ((Var p_ar_mat) (Literal "\"p_ar_mat\"")
                                (FunCall stan::model::index_uni () ((Var i)))
                                (FunCall stan::model::index_uni () ((Var j)))))))
-                           (Literal 0) (Literal 1))))))))))))
+                           (FunCall static_cast (Double) ((Literal 0)))
+                           (FunCall static_cast (Double) ((Literal 1))))))))))))))
                 (Expression (Assign (Var current_statement__) (Literal 183)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name k)
@@ -8277,37 +8402,42 @@
                          ((FunCall stan::model::rvalue ()
                            ((Var p_cfcov_33_ar) (Literal "\"p_cfcov_33_ar\"")
                             (FunCall stan::model::index_uni () ((Var k)))))))
-                        (Literal 0) (Literal 1)))))))))
+                        (FunCall static_cast (Double) ((Literal 0)))
+                        (FunCall static_cast (Double) ((Literal 1)))))))))))
                 (Expression (Assign (Var current_statement__) (Literal 184)))
                 (Expression
                  (MethodCall (Var lp_accum__) add ()
                   ((FunCall stan::math::normal_lpdf ((TemplateType propto__))
                     ((FunCall stan::math::to_vector () ((Var p_vec))) 
-                     (Var d_vec) (Literal 1))))))
+                     (Var d_vec) (FunCall static_cast (Double) ((Literal 1))))))))
                 (Expression (Assign (Var current_statement__) (Literal 185)))
                 (Expression
                  (MethodCall (Var lp_accum__) add ()
                   ((FunCall stan::math::normal_lpdf ((TemplateType propto__))
-                    ((FunCall stan::math::to_vector () ((Var p_row_vec))) 
-                     (Literal 0) (Literal 1))))))
+                    ((FunCall stan::math::to_vector () ((Var p_row_vec)))
+                     (FunCall static_cast (Double) ((Literal 0)))
+                     (FunCall static_cast (Double) ((Literal 1))))))))
                 (Expression (Assign (Var current_statement__) (Literal 186)))
                 (Expression
                  (MethodCall (Var lp_accum__) add ()
                   ((FunCall stan::math::normal_lpdf ((TemplateType propto__))
-                    ((FunCall stan::math::to_vector () ((Var p_simplex))) 
-                     (Literal 0) (Literal 1))))))
+                    ((FunCall stan::math::to_vector () ((Var p_simplex)))
+                     (FunCall static_cast (Double) ((Literal 0)))
+                     (FunCall static_cast (Double) ((Literal 1))))))))
                 (Expression (Assign (Var current_statement__) (Literal 187)))
                 (Expression
                  (MethodCall (Var lp_accum__) add ()
                   ((FunCall stan::math::normal_lpdf ((TemplateType propto__))
-                    ((FunCall stan::math::to_vector () ((Var p_cfcov_54))) 
-                     (Literal 0) (Literal 1))))))
+                    ((FunCall stan::math::to_vector () ((Var p_cfcov_54)))
+                     (FunCall static_cast (Double) ((Literal 0)))
+                     (FunCall static_cast (Double) ((Literal 1))))))))
                 (Expression (Assign (Var current_statement__) (Literal 188)))
                 (Expression
                  (MethodCall (Var lp_accum__) add ()
                   ((FunCall stan::math::normal_lpdf ((TemplateType propto__))
-                    ((FunCall stan::math::to_vector () ((Var p_cfcov_33))) 
-                     (Literal 0) (Literal 1))))))
+                    ((FunCall stan::math::to_vector () ((Var p_cfcov_33)))
+                     (FunCall static_cast (Double) ((Literal 0)))
+                     (FunCall static_cast (Double) ((Literal 1))))))))
                 (Expression (Assign (Var current_statement__) (Literal 189)))
                 (Expression
                  (MethodCall (Var lp_accum__) add ()
@@ -18677,7 +18807,8 @@
              ((Var td_cfcov_54)
               (FunCall stan::math::diag_matrix ()
                ((FunCall stan::math::rep_vector ()
-                 ((Literal 1) (FunCall stan::math::rows () ((Var td_cfcov_54)))))))
+                 ((FunCall static_cast (Double) ((Literal 1)))
+                  (FunCall stan::math::rows () ((Var td_cfcov_54)))))))
               (Literal "\"assigning variable td_cfcov_54\""))))
            (Expression (Assign (Var current_statement__) (Literal 348)))
            (Expression
@@ -18685,7 +18816,8 @@
              ((Var td_cfcov_33)
               (FunCall stan::math::diag_matrix ()
                ((FunCall stan::math::rep_vector ()
-                 ((Literal 1) (FunCall stan::math::rows () ((Var td_cfcov_33)))))))
+                 ((FunCall static_cast (Double) ((Literal 1)))
+                  (FunCall stan::math::rows () ((Var td_cfcov_33)))))))
               (Literal "\"assigning variable td_cfcov_33\""))))
            (Block
             ((VariableDefn
@@ -18715,7 +18847,8 @@
                   (Subscript (Var blocked_tdata_vs)
                    (Parens (BinOp (Var sym1__) Subtract (Literal 1))))))
                 (Expression (Assign (Var current_statement__) (Literal 352)))
-                (Expression (Assign (Var z) (Literal 0))))))
+                (Expression
+                 (Assign (Var z) (FunCall static_cast (Double) ((Literal 0))))))))
              (VariableDefn
               ((static false) (constexpr false) (type_ (StdVector Int)) 
                (name indices)
@@ -18758,7 +18891,7 @@
                     (Subscript (Var sym1__)
                      (Parens (BinOp (Var sym3__) Subtract (Literal 1))))))
                   (Expression (Assign (Var current_statement__) (Literal 356)))
-                  (Expression (Assign (Var z) (Var i))))))))))
+                  (Expression (Assign (Var z) (FunCall static_cast (Double) ((Var i))))))))))))
            (Expression (Assign (Var current_statement__) (Literal 358)))
            (Expression
             (FunCall stan::model::assign ()
@@ -18819,7 +18952,9 @@
            (Expression
             (FunCall stan::model::assign ()
              ((Var x_mul_ind)
-              (InitializerExpr (StdVector Double) ((Literal 1) (Literal 2)))
+              (InitializerExpr (StdVector Double)
+               ((FunCall static_cast (Double) ((Literal 1)))
+                (FunCall static_cast (Double) ((Literal 2)))))
               (Literal "\"assigning variable x_mul_ind\""))))
            (Expression (Assign (Var current_statement__) (Literal 365)))
            (Expression

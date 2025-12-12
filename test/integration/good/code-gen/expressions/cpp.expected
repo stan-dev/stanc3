@@ -680,7 +680,7 @@ foo1(const T0__& a, const T1__& b, const T2__& c, const T3__& d_arg__,
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 5;
-    return 5.0;
+    return stan::math::promote_scalar<local_scalar_t__>(5.0);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -1216,8 +1216,11 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
         (stan::math::logical_gt(stan::math::sum(a), 1) ? stan::math::eval(
                                                            stan::math::add(
                                                              stan::math::multiply(
-                                                               2, a), b)) : 
-        stan::math::eval(stan::math::multiply(2, a))), "assigning variable d");
+                                                               static_cast<
+                                                                 double>(2),
+                                                               a), b)) : 
+        stan::math::eval(stan::math::multiply(static_cast<double>(2), a))),
+        "assigning variable d");
       std::complex<local_scalar_t__> z =
         std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
       current_statement__ = 7;
@@ -1227,7 +1230,7 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
           std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
         current_statement__ = 8;
         z2 = stan::math::promote_scalar<std::complex<local_scalar_t__>>(
-               (1 ? r : 2));
+               (1 ? r : stan::math::promote_scalar<local_scalar_t__>(2)));
         current_statement__ = 9;
         z2 = (1 ? stan::math::promote_scalar<std::complex<local_scalar_t__>>(
                     0) : zp);
@@ -1287,8 +1290,11 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
         (stan::math::logical_gt(stan::math::sum(a), 1) ? stan::math::eval(
                                                            stan::math::add(
                                                              stan::math::multiply(
-                                                               2, a), b)) : 
-        stan::math::eval(stan::math::multiply(2, a))), "assigning variable d");
+                                                               static_cast<
+                                                                 double>(2),
+                                                               a), b)) : 
+        stan::math::eval(stan::math::multiply(static_cast<double>(2), a))),
+        "assigning variable d");
       std::complex<local_scalar_t__> z =
         std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
       current_statement__ = 7;
@@ -1298,7 +1304,7 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
           std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
         current_statement__ = 8;
         z2 = stan::math::promote_scalar<std::complex<local_scalar_t__>>(
-               (1 ? r : 2));
+               (1 ? r : stan::math::promote_scalar<local_scalar_t__>(2)));
         current_statement__ = 9;
         z2 = (1 ? stan::math::promote_scalar<std::complex<local_scalar_t__>>(
                     0) : zp);
@@ -1383,8 +1389,11 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
         (stan::math::logical_gt(stan::math::sum(a), 1) ? stan::math::eval(
                                                            stan::math::add(
                                                              stan::math::multiply(
-                                                               2, a), b)) : 
-        stan::math::eval(stan::math::multiply(2, a))), "assigning variable d");
+                                                               static_cast<
+                                                                 double>(2),
+                                                               a), b)) : 
+        stan::math::eval(stan::math::multiply(static_cast<double>(2), a))),
+        "assigning variable d");
       current_statement__ = 7;
       z = (1 ? stan::math::to_complex(0, 3) : stan::math::to_complex(2, 0));
       if (emit_transformed_parameters__) {
