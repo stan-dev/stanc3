@@ -6,8 +6,8 @@
 # Notably, each example program below is just that -- ONE example of a
 # program ending in that state.
 #
-# When the parser is updated, the command `dune build @update_messages` will
-# automatically update this file, leaving new placeholder messages for new states.
+# When the parser is updated, building the compiler will # automatically update
+# this file, leaving new placeholder messages for new states.
 #
 # The messages below can use formatting indicators like OCaml's format strings,
 # with the additional use of semantic tags for colors and text styling.

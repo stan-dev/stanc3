@@ -21,18 +21,20 @@
  (libraries str))
 
 (rule
- (with-stdout-to
-  parsing_errors.ml
-  (pipe-stdout
-   (run
-    menhir
-    --explain
-    --strict
-    --unused-tokens
-    %{dep:parser.mly}
-    --compile-errors
-    %{dep:parser.messages})
-   (run ./parser_messages_add_type.exe))))
+ (progn
+  (diff %{dep:parser.messages} %{dep:parser_updated_trimmed.messages})
+  (with-stdout-to
+   parsing_errors.ml
+   (pipe-stdout
+    (run
+     menhir
+     --explain
+     --strict
+     --unused-tokens
+     %{dep:parser.mly}
+     --compile-errors
+     parser.messages)
+    (run ./parser_messages_add_type.exe)))))
 
 (rule
  (with-stdout-to
@@ -61,11 +63,6 @@
   (with-stdout-to
    parser_updated_trimmed.messages
    (run ./parser_strip_redundant_state.exe))))
-
-(rule
- (alias update_messages)
- (action
-  (diff parser.messages parser_updated_trimmed.messages)))
 
 (rule
  (alias runtest)

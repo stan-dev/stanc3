@@ -74,7 +74,7 @@ If you would like to run the formatter before each commit (recommended), run
 Note: [ocamlformat] does not support [.mly] or [.mll] files used in the frontend.
 
 {3 Updating the parser error messages}
-If the parser has been edited, the command [dune build @update_messages] will add any
+If the parser has been edited, the building the compiler will halt to add any
 new error states to the [parser.messages] file. These will say
 
 [<YOUR SYNTAX ERROR MESSAGE HERE>]
