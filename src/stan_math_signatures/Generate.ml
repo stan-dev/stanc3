@@ -274,22 +274,7 @@ let distributions =
   ; (full_lpdf, "von_mises", [DVReal; DVReal; DVReal], SoA)
   ; (full_lpdf, "weibull", [DVReal; DVReal; DVReal], SoA)
   ; ([Lpdf], "wiener", [DVReal; DVReal; DVReal; DVReal; DVReal], SoA)
-    (* new wiener_lpdfs -- c++ is fully vectorized, but this style of
-       implementation in the typechecker is too expensive to enumerate, so we
-       provide only the full scalar and full vector case *)
-  ; ([Lpdf], "wiener", [DReal; DReal; DReal; DReal; DReal; DReal], AoS)
-  ; ( [Lpdf]
-    , "wiener"
-    , [DReal; DReal; DReal; DReal; DReal; DReal; DReal; DReal]
-    , AoS )
-  ; ( [Lpdf]
-    , "wiener"
-    , [DVector; DVector; DVector; DVector; DVector; DVector]
-    , AoS )
-  ; ( [Lpdf]
-    , "wiener"
-    , [DVector; DVector; DVector; DVector; DVector; DVector; DVector; DVector]
-    , AoS ); ([Lpdf], "wishart_cholesky", [DMatrix; DReal; DMatrix], SoA)
+  ; ([Lpdf], "wishart_cholesky", [DMatrix; DReal; DMatrix], SoA)
   ; ([Lpdf], "wishart", [DMatrix; DReal; DMatrix], SoA) ]
 
 let basic_vectorized = UnaryVectorized IntsToReals
@@ -2540,6 +2525,23 @@ let () =
   add_unqualified ("variance", ReturnType UReal, [UVector], SoA);
   add_unqualified ("variance", ReturnType UReal, [URowVector], SoA);
   add_unqualified ("variance", ReturnType UReal, [UMatrix], SoA);
+  (* new wiener distribution functions -- c++ is fully vectorized, but this
+     style of implementation in the typechecker is too expensive to enumerate,
+     so we provide only the full scalar and full vector cases *)
+  let build_wiener_function name args =
+    add_qualified (name, ReturnType UReal, args, AoS) in
+  let build_wiener_functions name num_args =
+    List.iter [UnsizedType.UReal; UVector] ~f:(fun t ->
+        List.iter num_args ~f:(fun n ->
+            let normal =
+              List.init n ~f:(Fn.const (UnsizedType.AutoDiffable, t)) in
+            build_wiener_function name normal;
+            (* grad precision as last argument *)
+            build_wiener_function name (normal @ [(DataOnly, UnsizedType.UReal)])))
+  in
+  build_wiener_functions "wiener_lpdf" [6; 8];
+  build_wiener_functions "wiener_lcdf_unnorm" [5; 8];
+  build_wiener_functions "wiener_lccdf_unnorm" [5; 8];
   add_unqualified
     ("wishart_cholesky_rng", ReturnType UMatrix, [UReal; UMatrix], AoS);
   add_unqualified ("wishart_rng", ReturnType UMatrix, [UReal; UMatrix], AoS);
