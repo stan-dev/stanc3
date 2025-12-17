@@ -2540,8 +2540,8 @@ let () =
             build_wiener_function name (normal @ [(DataOnly, UnsizedType.UReal)])))
   in
   build_wiener_functions "wiener_lpdf" [6; 8];
-  build_wiener_functions "wiener_lcdf_defective" [5; 8];
-  build_wiener_functions "wiener_lccdf_defective" [5; 8];
+  build_wiener_functions "wiener_lcdf_unnorm" [5; 8];
+  build_wiener_functions "wiener_lccdf_unnorm" [5; 8];
   add_unqualified
     ("wishart_cholesky_rng", ReturnType UMatrix, [UReal; UMatrix], AoS);
   add_unqualified ("wishart_rng", ReturnType UMatrix, [UReal; UMatrix], AoS);

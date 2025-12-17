@@ -454,9 +454,9 @@ let commands =
                  ; tty_colors
                  ; flags }))
 
-let exit_ok = 0
+let exit_ok = Cmd.Exit.ok
 let exit_err = 1
-let exit_ice = 125
+let exit_ice = Cmd.Exit.internal_error
 
 let info =
   let doc = "compile Stan programs to C++" in
@@ -485,7 +485,7 @@ let info =
     Cmd.Exit.
       [ info ~doc:"on success." exit_ok
       ; info ~doc:"on compilation failure." exit_err
-      ; info ~doc:"on command line parsing errors." 124
+      ; info ~doc:"on command line parsing errors." cli_error
       ; info ~doc:"on internal compiler errors. Please file a bug!" exit_ice ]
   in
   Cmd.info "%%NAME%%"
