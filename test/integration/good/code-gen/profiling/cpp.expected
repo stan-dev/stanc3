@@ -197,11 +197,14 @@ class simple_function_model final : public model_base_crtp<simple_function_model
             stan::math::profile<local_scalar_t__> profile__("priors",
               const_cast<stan::math::profile_map&>(profiles__));
             current_statement__ = 14;
-            lp_accum__.add(stan::math::gamma_lpdf<propto__>(rho, 25, 4));
+            lp_accum__.add(stan::math::gamma_lpdf<propto__>(rho,
+                             static_cast<double>(25), static_cast<double>(4)));
             current_statement__ = 15;
-            lp_accum__.add(stan::math::normal_lpdf<propto__>(alpha, 0, 2));
+            lp_accum__.add(stan::math::normal_lpdf<propto__>(alpha,
+                             static_cast<double>(0), static_cast<double>(2)));
             current_statement__ = 16;
-            lp_accum__.add(stan::math::normal_lpdf<propto__>(sigma, 0, 1));
+            lp_accum__.add(stan::math::normal_lpdf<propto__>(sigma,
+                             static_cast<double>(0), static_cast<double>(1)));
           }
           current_statement__ = 19;
           {
@@ -210,7 +213,9 @@ class simple_function_model final : public model_base_crtp<simple_function_model
               const_cast<stan::math::profile_map&>(profiles__));
             current_statement__ = 18;
             lp_accum__.add(stan::math::multi_normal_cholesky_lpdf<propto__>(
-                             y, stan::math::rep_vector(0, N), L_cov));
+                             y,
+                             stan::math::rep_vector(static_cast<double>(0), N),
+                             L_cov));
           }
         }
       }
@@ -297,11 +302,14 @@ class simple_function_model final : public model_base_crtp<simple_function_model
             stan::math::profile<local_scalar_t__> profile__("priors",
               const_cast<stan::math::profile_map&>(profiles__));
             current_statement__ = 14;
-            lp_accum__.add(stan::math::gamma_lpdf<propto__>(rho, 25, 4));
+            lp_accum__.add(stan::math::gamma_lpdf<propto__>(rho,
+                             static_cast<double>(25), static_cast<double>(4)));
             current_statement__ = 15;
-            lp_accum__.add(stan::math::normal_lpdf<propto__>(alpha, 0, 2));
+            lp_accum__.add(stan::math::normal_lpdf<propto__>(alpha,
+                             static_cast<double>(0), static_cast<double>(2)));
             current_statement__ = 16;
-            lp_accum__.add(stan::math::normal_lpdf<propto__>(sigma, 0, 1));
+            lp_accum__.add(stan::math::normal_lpdf<propto__>(sigma,
+                             static_cast<double>(0), static_cast<double>(1)));
           }
           current_statement__ = 19;
           {
@@ -310,7 +318,9 @@ class simple_function_model final : public model_base_crtp<simple_function_model
               const_cast<stan::math::profile_map&>(profiles__));
             current_statement__ = 18;
             lp_accum__.add(stan::math::multi_normal_cholesky_lpdf<propto__>(
-                             y, stan::math::rep_vector(0, N), L_cov));
+                             y,
+                             stan::math::rep_vector(static_cast<double>(0), N),
+                             L_cov));
           }
         }
       }

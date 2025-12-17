@@ -189,9 +189,9 @@ class ad_scalar_data_matrix_model final : public model_base_crtp<ad_scalar_data_
         current_statement__ = 7;
         stan::model::assign(aos_deep,
           stan::math::subtract(
-            stan::math::multiply(2,
-              stan::math::Phi(stan::math::divide(y_data, sigma))), 1),
-          "assigning variable aos_deep");
+            stan::math::multiply(static_cast<double>(2),
+              stan::math::Phi(stan::math::divide(y_data, sigma))),
+            static_cast<double>(1)), "assigning variable aos_deep");
         current_statement__ = 8;
         stan::math::validate_non_negative_index("soa_dual_rep", "N", N);
         Eigen::Matrix<local_scalar_t__,-1,1> soa_dual_rep =
@@ -209,7 +209,8 @@ class ad_scalar_data_matrix_model final : public model_base_crtp<ad_scalar_data_
         current_statement__ = 11;
         stan::model::assign(soa_data_rep,
           stan::math::add(stan::math::rep_vector(0.0, N),
-            stan::math::rep_vector(N, N)), "assigning variable soa_data_rep");
+            stan::math::rep_vector(static_cast<double>(N), N)),
+          "assigning variable soa_data_rep");
         current_statement__ = 12;
         stan::math::validate_non_negative_index("soa_mix", "N", N);
         Eigen::Matrix<local_scalar_t__,-1,1> soa_mix =
@@ -355,9 +356,9 @@ class ad_scalar_data_matrix_model final : public model_base_crtp<ad_scalar_data_
         current_statement__ = 7;
         stan::model::assign(aos_deep,
           stan::math::subtract(
-            stan::math::multiply(2,
-              stan::math::Phi(stan::math::divide(y_data, sigma))), 1),
-          "assigning variable aos_deep");
+            stan::math::multiply(static_cast<double>(2),
+              stan::math::Phi(stan::math::divide(y_data, sigma))),
+            static_cast<double>(1)), "assigning variable aos_deep");
         current_statement__ = 8;
         stan::math::validate_non_negative_index("soa_dual_rep", "N", N);
         stan::math::var_value<Eigen::Matrix<double,-1,1>> soa_dual_rep =
@@ -380,7 +381,8 @@ class ad_scalar_data_matrix_model final : public model_base_crtp<ad_scalar_data_
         current_statement__ = 11;
         stan::model::assign(soa_data_rep,
           stan::math::add(stan::math::rep_vector(0.0, N),
-            stan::math::rep_vector(N, N)), "assigning variable soa_data_rep");
+            stan::math::rep_vector(static_cast<double>(N), N)),
+          "assigning variable soa_data_rep");
         current_statement__ = 12;
         stan::math::validate_non_negative_index("soa_mix", "N", N);
         stan::math::var_value<Eigen::Matrix<double,-1,1>> soa_mix =
@@ -1822,7 +1824,7 @@ class constraints_model final : public model_base_crtp<constraints_model> {
         0);
       {
         current_statement__ = 41;
-        lp_accum__.add(stan::math::multiply(-(2),
+        lp_accum__.add(stan::math::multiply(static_cast<double>(-(2)),
                          stan::math::log(sigma_price)));
         current_statement__ = 42;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(Intercept,
@@ -1834,15 +1836,18 @@ class constraints_model final : public model_base_crtp<constraints_model> {
         lp_accum__.add(stan::math::gamma_lpdf<propto__>(sigma2,
                          sigma_prior_shape, sigma_prior_rate));
         current_statement__ = 45;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(ar, 0, .2));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(ar,
+                         static_cast<double>(0), .2));
         current_statement__ = 46;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(ma, 0, .2));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(ma,
+                         static_cast<double>(0), .2));
         current_statement__ = 47;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(h, h_i_mean,
                          h_i_sigma));
         current_statement__ = 48;
-        lp_accum__.add(stan::math::student_t_lpdf<propto__>(sigma_price, 3,
-                         1, 1));
+        lp_accum__.add(stan::math::student_t_lpdf<propto__>(sigma_price,
+                         static_cast<double>(3), static_cast<double>(1),
+                         static_cast<double>(1)));
         current_statement__ = 49;
         lp_accum__.add(stan::math::uniform_lpdf<propto__>(high_low_est,
                          diff_low_mid, diff_high_mid));
@@ -2131,7 +2136,7 @@ class constraints_model final : public model_base_crtp<constraints_model> {
         0);
       {
         current_statement__ = 41;
-        lp_accum__.add(stan::math::multiply(-(2),
+        lp_accum__.add(stan::math::multiply(static_cast<double>(-(2)),
                          stan::math::log(sigma_price)));
         current_statement__ = 42;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(Intercept,
@@ -2143,15 +2148,18 @@ class constraints_model final : public model_base_crtp<constraints_model> {
         lp_accum__.add(stan::math::gamma_lpdf<propto__>(sigma2,
                          sigma_prior_shape, sigma_prior_rate));
         current_statement__ = 45;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(ar, 0, .2));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(ar,
+                         static_cast<double>(0), .2));
         current_statement__ = 46;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(ma, 0, .2));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(ma,
+                         static_cast<double>(0), .2));
         current_statement__ = 47;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(h, h_i_mean,
                          h_i_sigma));
         current_statement__ = 48;
-        lp_accum__.add(stan::math::student_t_lpdf<propto__>(sigma_price, 3,
-                         1, 1));
+        lp_accum__.add(stan::math::student_t_lpdf<propto__>(sigma_price,
+                         static_cast<double>(3), static_cast<double>(1),
+                         static_cast<double>(1)));
         current_statement__ = 49;
         lp_accum__.add(stan::math::uniform_lpdf<propto__>(high_low_est,
                          diff_low_mid, diff_high_mid));
@@ -4582,7 +4590,7 @@ class indexing_model final : public model_base_crtp<indexing_model> {
         current_statement__ = 32;
         stan::model::assign(tp_soa_used_with_aos_in_excluded_fun,
           stan::math::multiply(p_soa_used_with_aos_in_excluded_fun,
-            stan::math::size(tp_aos_vec_v)),
+            static_cast<double>(stan::math::size(tp_aos_vec_v))),
           "assigning variable tp_soa_used_with_aos_in_excluded_fun");
         current_statement__ = 33;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(y,
@@ -4962,7 +4970,7 @@ class indexing_model final : public model_base_crtp<indexing_model> {
         current_statement__ = 32;
         stan::model::assign(tp_soa_used_with_aos_in_excluded_fun,
           stan::math::multiply(p_soa_used_with_aos_in_excluded_fun,
-            stan::math::size(tp_aos_vec_v)),
+            static_cast<double>(stan::math::size(tp_aos_vec_v))),
           "assigning variable tp_soa_used_with_aos_in_excluded_fun");
         current_statement__ = 33;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(y,
@@ -7126,8 +7134,10 @@ class reductions_allowed_model final : public model_base_crtp<reductions_allowed
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(5, 10);
       local_scalar_t__ tp_real_from_soa = DUMMY_VAR__;
       current_statement__ = 4;
-      tp_real_from_soa = (stan::math::logical_gt(5, 0) ? data_r : stan::math::sum(
-                                                                    soa_x));
+      tp_real_from_soa = (stan::math::logical_gt(5, 0) ? stan::math::promote_scalar<
+                                                           local_scalar_t__>(
+                                                           data_r) : 
+        stan::math::sum(soa_x));
       Eigen::Matrix<local_scalar_t__,-1,-1> tp_matrix_aos_from_mix =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(5, 10, DUMMY_VAR__);
       current_statement__ = 5;
@@ -7187,8 +7197,10 @@ class reductions_allowed_model final : public model_base_crtp<reductions_allowed
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(5, 10);
       local_scalar_t__ tp_real_from_soa = DUMMY_VAR__;
       current_statement__ = 4;
-      tp_real_from_soa = (stan::math::logical_gt(5, 0) ? data_r : stan::math::sum(
-                                                                    soa_x));
+      tp_real_from_soa = (stan::math::logical_gt(5, 0) ? stan::math::promote_scalar<
+                                                           local_scalar_t__>(
+                                                           data_r) : 
+        stan::math::sum(soa_x));
       Eigen::Matrix<local_scalar_t__,-1,-1> tp_matrix_aos_from_mix =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(5, 10, DUMMY_VAR__);
       current_statement__ = 5;
@@ -7272,8 +7284,10 @@ class reductions_allowed_model final : public model_base_crtp<reductions_allowed
         return ;
       }
       current_statement__ = 4;
-      tp_real_from_soa = (stan::math::logical_gt(5, 0) ? data_r : stan::math::sum(
-                                                                    soa_x));
+      tp_real_from_soa = (stan::math::logical_gt(5, 0) ? stan::math::promote_scalar<
+                                                           local_scalar_t__>(
+                                                           data_r) : 
+        stan::math::sum(soa_x));
       current_statement__ = 5;
       stan::model::assign(tp_matrix_aos_from_mix,
         (stan::math::logical_gt(stan::math::sum(soa_x), 0) ? stan::math::eval(
@@ -7796,14 +7810,15 @@ class return_types_and_udfs_demotes_model final : public model_base_crtp<return_
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10, DUMMY_VAR__);
       current_statement__ = 6;
       stan::model::assign(int_aos_mul_aos,
-        stan::math::multiply(stan::math::rows(row_soa), empty_user_func_aos),
-        "assigning variable int_aos_mul_aos");
+        stan::math::multiply(static_cast<double>(stan::math::rows(row_soa)),
+          empty_user_func_aos), "assigning variable int_aos_mul_aos");
       Eigen::Matrix<local_scalar_t__,-1,-1> mul_two_aos =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10, DUMMY_VAR__);
       current_statement__ = 7;
       stan::model::assign(mul_two_aos,
         stan::math::multiply(
-          stan::math::multiply(stan::math::cols(row_soa),
+          stan::math::multiply(
+            static_cast<double>(stan::math::cols(row_soa)),
             stan::math::transpose(int_aos_mul_aos)), user_func_aos),
         "assigning variable mul_two_aos");
     } catch (const std::exception& e) {
@@ -7864,14 +7879,15 @@ class return_types_and_udfs_demotes_model final : public model_base_crtp<return_
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10, DUMMY_VAR__);
       current_statement__ = 6;
       stan::model::assign(int_aos_mul_aos,
-        stan::math::multiply(stan::math::rows(row_soa), empty_user_func_aos),
-        "assigning variable int_aos_mul_aos");
+        stan::math::multiply(static_cast<double>(stan::math::rows(row_soa)),
+          empty_user_func_aos), "assigning variable int_aos_mul_aos");
       Eigen::Matrix<local_scalar_t__,-1,-1> mul_two_aos =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10, DUMMY_VAR__);
       current_statement__ = 7;
       stan::model::assign(mul_two_aos,
         stan::math::multiply(
-          stan::math::multiply(stan::math::cols(row_soa),
+          stan::math::multiply(
+            static_cast<double>(stan::math::cols(row_soa)),
             stan::math::transpose(int_aos_mul_aos)), user_func_aos),
         "assigning variable mul_two_aos");
     } catch (const std::exception& e) {
@@ -7956,12 +7972,13 @@ class return_types_and_udfs_demotes_model final : public model_base_crtp<return_
         "assigning variable inner_empty_user_func_aos");
       current_statement__ = 6;
       stan::model::assign(int_aos_mul_aos,
-        stan::math::multiply(stan::math::rows(row_soa), empty_user_func_aos),
-        "assigning variable int_aos_mul_aos");
+        stan::math::multiply(static_cast<double>(stan::math::rows(row_soa)),
+          empty_user_func_aos), "assigning variable int_aos_mul_aos");
       current_statement__ = 7;
       stan::model::assign(mul_two_aos,
         stan::math::multiply(
-          stan::math::multiply(stan::math::cols(row_soa),
+          stan::math::multiply(
+            static_cast<double>(stan::math::cols(row_soa)),
             stan::math::transpose(int_aos_mul_aos)), user_func_aos),
         "assigning variable mul_two_aos");
       if (emit_transformed_parameters__) {

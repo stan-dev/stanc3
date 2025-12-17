@@ -888,11 +888,11 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
       current_statement__ = 25;
       t0 = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 25;
-      t0 = 0;
+      t0 = static_cast<double>(0);
       current_statement__ = 26;
       kappa = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 26;
-      kappa = 1000000;
+      kappa = static_cast<double>(1000000);
       current_statement__ = 27;
       x_r = std::vector<double>(0, std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 28;
@@ -961,8 +961,9 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
           std::vector<local_scalar_t__>(5, DUMMY_VAR__);
         current_statement__ = 6;
         stan::model::assign(theta,
-          std::vector<local_scalar_t__>{beta, kappa, gamma, xi, delta},
-          "assigning variable theta");
+          std::vector<local_scalar_t__>{beta,
+            stan::math::promote_scalar<local_scalar_t__>(kappa), gamma, xi,
+            delta}, "assigning variable theta");
         current_statement__ = 7;
         stan::model::assign(y,
           stan::math::integrate_ode_rk45(simple_SIR_functor__(), y0, t0, t,
@@ -972,13 +973,17 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
       stan::math::check_greater_or_equal(function__, "y", y, 0);
       {
         current_statement__ = 9;
-        lp_accum__.add(stan::math::cauchy_lpdf<propto__>(beta, 0, 2.5));
+        lp_accum__.add(stan::math::cauchy_lpdf<propto__>(beta,
+                         static_cast<double>(0), 2.5));
         current_statement__ = 10;
-        lp_accum__.add(stan::math::cauchy_lpdf<propto__>(gamma, 0, 1));
+        lp_accum__.add(stan::math::cauchy_lpdf<propto__>(gamma,
+                         static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 11;
-        lp_accum__.add(stan::math::cauchy_lpdf<propto__>(xi, 0, 25));
+        lp_accum__.add(stan::math::cauchy_lpdf<propto__>(xi,
+                         static_cast<double>(0), static_cast<double>(25)));
         current_statement__ = 12;
-        lp_accum__.add(stan::math::cauchy_lpdf<propto__>(delta, 0, 1));
+        lp_accum__.add(stan::math::cauchy_lpdf<propto__>(delta,
+                         static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 13;
         lp_accum__.add(stan::math::poisson_lpmf<propto__>(
                          stan::model::rvalue(stoi_hat, "stoi_hat",
@@ -1061,8 +1066,9 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
           std::vector<local_scalar_t__>(5, DUMMY_VAR__);
         current_statement__ = 6;
         stan::model::assign(theta,
-          std::vector<local_scalar_t__>{beta, kappa, gamma, xi, delta},
-          "assigning variable theta");
+          std::vector<local_scalar_t__>{beta,
+            stan::math::promote_scalar<local_scalar_t__>(kappa), gamma, xi,
+            delta}, "assigning variable theta");
         current_statement__ = 7;
         stan::model::assign(y,
           stan::math::integrate_ode_rk45(simple_SIR_functor__(), y0, t0, t,
@@ -1072,13 +1078,17 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
       stan::math::check_greater_or_equal(function__, "y", y, 0);
       {
         current_statement__ = 9;
-        lp_accum__.add(stan::math::cauchy_lpdf<propto__>(beta, 0, 2.5));
+        lp_accum__.add(stan::math::cauchy_lpdf<propto__>(beta,
+                         static_cast<double>(0), 2.5));
         current_statement__ = 10;
-        lp_accum__.add(stan::math::cauchy_lpdf<propto__>(gamma, 0, 1));
+        lp_accum__.add(stan::math::cauchy_lpdf<propto__>(gamma,
+                         static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 11;
-        lp_accum__.add(stan::math::cauchy_lpdf<propto__>(xi, 0, 25));
+        lp_accum__.add(stan::math::cauchy_lpdf<propto__>(xi,
+                         static_cast<double>(0), static_cast<double>(25)));
         current_statement__ = 12;
-        lp_accum__.add(stan::math::cauchy_lpdf<propto__>(delta, 0, 1));
+        lp_accum__.add(stan::math::cauchy_lpdf<propto__>(delta,
+                         static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 13;
         lp_accum__.add(stan::math::poisson_lpmf<propto__>(
                          stan::model::rvalue(stoi_hat, "stoi_hat",
@@ -1181,8 +1191,9 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
           std::vector<double>(5, std::numeric_limits<double>::quiet_NaN());
         current_statement__ = 6;
         stan::model::assign(theta,
-          std::vector<local_scalar_t__>{beta, kappa, gamma, xi, delta},
-          "assigning variable theta");
+          std::vector<local_scalar_t__>{beta,
+            stan::math::promote_scalar<local_scalar_t__>(kappa), gamma, xi,
+            delta}, "assigning variable theta");
         current_statement__ = 7;
         stan::model::assign(y,
           stan::math::integrate_ode_rk45(simple_SIR_functor__(), y0, t0, t,
@@ -3851,21 +3862,26 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
           Eigen::Matrix<local_scalar_t__,-1,1>::Constant(n_state,
             DUMMY_VAR__);
         current_statement__ = 21;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(b_0, 0, 100));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(b_0,
+                         static_cast<double>(0), static_cast<double>(100)));
         current_statement__ = 22;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(b_female, 0, 100));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(b_female,
+                         static_cast<double>(0), static_cast<double>(100)));
         current_statement__ = 23;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(b_black, 0, 100));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(b_black,
+                         static_cast<double>(0), static_cast<double>(100)));
         current_statement__ = 24;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(b_female_black, 0,
-                         100));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(b_female_black,
+                         static_cast<double>(0), static_cast<double>(100)));
         current_statement__ = 25;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(b_age, 0, sigma_age));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(b_age,
+                         static_cast<double>(0), sigma_age));
         current_statement__ = 26;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(b_edu, 0, sigma_edu));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(b_edu,
+                         static_cast<double>(0), sigma_edu));
         current_statement__ = 27;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(b_region, 0,
-                         sigma_region));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(b_region,
+                         static_cast<double>(0), sigma_region));
         current_statement__ = 31;
         for (int j = 1; j <= n_age; ++j) {
           current_statement__ = 29;
@@ -3874,11 +3890,13 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
             lp_accum__.add(stan::math::normal_lpdf<propto__>(
                              stan::model::rvalue(b_age_edu, "b_age_edu",
                                stan::model::index_uni(j),
-                               stan::model::index_uni(i)), 0, sigma_age_edu));
+                               stan::model::index_uni(i)),
+                             static_cast<double>(0), sigma_age_edu));
           }
         }
         current_statement__ = 32;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(b_v_prev, 0, 100));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(b_v_prev,
+                         static_cast<double>(0), static_cast<double>(100)));
         current_statement__ = 34;
         for (int j = 1; j <= n_state; ++j) {
           current_statement__ = 33;
@@ -4024,21 +4042,26 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
           Eigen::Matrix<local_scalar_t__,-1,1>::Constant(n_state,
             DUMMY_VAR__);
         current_statement__ = 21;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(b_0, 0, 100));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(b_0,
+                         static_cast<double>(0), static_cast<double>(100)));
         current_statement__ = 22;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(b_female, 0, 100));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(b_female,
+                         static_cast<double>(0), static_cast<double>(100)));
         current_statement__ = 23;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(b_black, 0, 100));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(b_black,
+                         static_cast<double>(0), static_cast<double>(100)));
         current_statement__ = 24;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(b_female_black, 0,
-                         100));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(b_female_black,
+                         static_cast<double>(0), static_cast<double>(100)));
         current_statement__ = 25;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(b_age, 0, sigma_age));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(b_age,
+                         static_cast<double>(0), sigma_age));
         current_statement__ = 26;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(b_edu, 0, sigma_edu));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(b_edu,
+                         static_cast<double>(0), sigma_edu));
         current_statement__ = 27;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(b_region, 0,
-                         sigma_region));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(b_region,
+                         static_cast<double>(0), sigma_region));
         current_statement__ = 31;
         for (int j = 1; j <= n_age; ++j) {
           current_statement__ = 29;
@@ -4047,11 +4070,13 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
             lp_accum__.add(stan::math::normal_lpdf<propto__>(
                              stan::model::rvalue(b_age_edu, "b_age_edu",
                                stan::model::index_uni(j),
-                               stan::model::index_uni(i)), 0, sigma_age_edu));
+                               stan::model::index_uni(i)),
+                             static_cast<double>(0), sigma_age_edu));
           }
         }
         current_statement__ = 32;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(b_v_prev, 0, 100));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(b_v_prev,
+                         static_cast<double>(0), static_cast<double>(100)));
         current_statement__ = 34;
         for (int j = 1; j <= n_state; ++j) {
           current_statement__ = 33;
@@ -5119,7 +5144,7 @@ class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_exper
       current_statement__ = 2;
       z = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 2;
-      z = 1;
+      z = static_cast<double>(1);
       current_statement__ = 3;
       y = std::numeric_limits<double>::quiet_NaN();
       {
@@ -5530,11 +5555,14 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
           lp__);
       {
         current_statement__ = 4;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(sigma, 0, 2));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(sigma,
+                         static_cast<double>(0), static_cast<double>(2)));
         current_statement__ = 5;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(mu, 0, 2));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(mu,
+                         static_cast<double>(0), static_cast<double>(2)));
         current_statement__ = 6;
-        lp_accum__.add(stan::math::beta_lpdf<propto__>(theta, 5, 5));
+        lp_accum__.add(stan::math::beta_lpdf<propto__>(theta,
+                         static_cast<double>(5), static_cast<double>(5)));
         current_statement__ = 8;
         for (int n = 1; n <= N; ++n) {
           current_statement__ = 7;
@@ -5599,11 +5627,14 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
           lp__);
       {
         current_statement__ = 4;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(sigma, 0, 2));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(sigma,
+                         static_cast<double>(0), static_cast<double>(2)));
         current_statement__ = 5;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(mu, 0, 2));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(mu,
+                         static_cast<double>(0), static_cast<double>(2)));
         current_statement__ = 6;
-        lp_accum__.add(stan::math::beta_lpdf<propto__>(theta, 5, 5));
+        lp_accum__.add(stan::math::beta_lpdf<propto__>(theta,
+                         static_cast<double>(5), static_cast<double>(5)));
         current_statement__ = 8;
         for (int n = 1; n <= N; ++n) {
           current_statement__ = 7;
@@ -6809,17 +6840,23 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       }
       {
         current_statement__ = 15;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(a, 0, sigma_a));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(a,
+                         static_cast<double>(0), sigma_a));
         current_statement__ = 16;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(b, 0, sigma_b));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(b,
+                         static_cast<double>(0), sigma_b));
         current_statement__ = 17;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(c, 0, sigma_c));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(c,
+                         static_cast<double>(0), sigma_c));
         current_statement__ = 18;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(d, 0, sigma_d));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(d,
+                         static_cast<double>(0), sigma_d));
         current_statement__ = 19;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(e, 0, sigma_e));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(e,
+                         static_cast<double>(0), sigma_e));
         current_statement__ = 20;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(beta, 0, 100));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(beta,
+                         static_cast<double>(0), static_cast<double>(100)));
         current_statement__ = 21;
         lp_accum__.add(stan::math::bernoulli_logit_lpmf<propto__>(y, y_hat));
       }
@@ -6931,17 +6968,23 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       }
       {
         current_statement__ = 15;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(a, 0, sigma_a));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(a,
+                         static_cast<double>(0), sigma_a));
         current_statement__ = 16;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(b, 0, sigma_b));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(b,
+                         static_cast<double>(0), sigma_b));
         current_statement__ = 17;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(c, 0, sigma_c));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(c,
+                         static_cast<double>(0), sigma_c));
         current_statement__ = 18;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(d, 0, sigma_d));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(d,
+                         static_cast<double>(0), sigma_d));
         current_statement__ = 19;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(e, 0, sigma_e));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(e,
+                         static_cast<double>(0), sigma_e));
         current_statement__ = 20;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(beta, 0, 100));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(beta,
+                         static_cast<double>(0), static_cast<double>(100)));
         current_statement__ = 21;
         lp_accum__.add(stan::math::bernoulli_logit_lpmf<propto__>(y, y_hat));
       }
@@ -7799,7 +7842,8 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
               stan::model::rvalue(phi, "phi", stan::model::index_multi(node1)),
               stan::model::rvalue(phi, "phi", stan::model::index_multi(node2))))));
         current_statement__ = 29;
-        lp_accum__.add(stan::math::gamma_lpdf<propto__>(tau_phi, 1, 1));
+        lp_accum__.add(stan::math::gamma_lpdf<propto__>(tau_phi,
+                         static_cast<double>(1), static_cast<double>(1)));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7865,7 +7909,8 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
               stan::model::rvalue(phi, "phi", stan::model::index_multi(node1)),
               stan::model::rvalue(phi, "phi", stan::model::index_multi(node2))))));
         current_statement__ = 29;
-        lp_accum__.add(stan::math::gamma_lpdf<propto__>(tau_phi, 1, 1));
+        lp_accum__.add(stan::math::gamma_lpdf<propto__>(tau_phi,
+                         static_cast<double>(1), static_cast<double>(1)));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -8796,7 +8841,8 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       stan::math::check_less_or_equal(function__, "chi", chi, 1);
       {
         current_statement__ = 23;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(epsilon, 0, sigma));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(epsilon,
+                         static_cast<double>(0), sigma));
         current_statement__ = 32;
         for (int i = 1; i <= nind; ++i) {
           current_statement__ = 30;
@@ -8935,7 +8981,8 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       stan::math::check_less_or_equal(function__, "chi", chi, 1);
       {
         current_statement__ = 23;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(epsilon, 0, sigma));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(epsilon,
+                         static_cast<double>(0), sigma));
         current_statement__ = 32;
         for (int i = 1; i <= nind; ++i) {
           current_statement__ = 30;
@@ -10294,9 +10341,11 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       stan::math::check_less_or_equal(function__, "chi", chi, 1);
       {
         current_statement__ = 65;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(epsilon, 0, sigma));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(epsilon,
+                         static_cast<double>(0), sigma));
         current_statement__ = 66;
-        lp_accum__.add(stan::math::gamma_lpdf<propto__>(beta, 1, 1));
+        lp_accum__.add(stan::math::gamma_lpdf<propto__>(beta,
+                         static_cast<double>(1), static_cast<double>(1)));
         current_statement__ = 67;
         js_super_lp<propto__>(y, first, last, p, phi, psi, nu, chi, lp__,
           lp_accum__, pstream__);
@@ -10430,9 +10479,11 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       stan::math::check_less_or_equal(function__, "chi", chi, 1);
       {
         current_statement__ = 65;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(epsilon, 0, sigma));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(epsilon,
+                         static_cast<double>(0), sigma));
         current_statement__ = 66;
-        lp_accum__.add(stan::math::gamma_lpdf<propto__>(beta, 1, 1));
+        lp_accum__.add(stan::math::gamma_lpdf<propto__>(beta,
+                         static_cast<double>(1), static_cast<double>(1)));
         current_statement__ = 67;
         js_super_lp<propto__>(y, first, last, p, phi, psi, nu, chi, lp__,
           lp_accum__, pstream__);
@@ -14160,7 +14211,7 @@ summer(const T0__& et_arg__, std::ostream* pstream__) {
     N = stan::math::size(et);
     local_scalar_t__ running_sum = DUMMY_VAR__;
     current_statement__ = 11;
-    running_sum = 0;
+    running_sum = stan::math::promote_scalar<local_scalar_t__>(0);
     current_statement__ = 14;
     for (int n = 1; n <= N; ++n) {
       current_statement__ = 12;
@@ -15965,7 +16016,7 @@ foo(const T0__& N, const T1__& M, std::ostream* pstream__) {
   try {
     current_statement__ = 8;
     return stan::math::promote_scalar<local_scalar_t__>(
-             stan::math::rep_matrix(1, N, M));
+             stan::math::rep_matrix(static_cast<double>(1), N, M));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -17380,7 +17431,7 @@ seq_cprob(const T0__& gamma_arg__, std::ostream* pstream__) {
       Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
     local_scalar_t__ log_residual_prob = DUMMY_VAR__;
     current_statement__ = 151;
-    log_residual_prob = 0;
+    log_residual_prob = stan::math::promote_scalar<local_scalar_t__>(0);
     current_statement__ = 155;
     for (int n = 1; n <= N; ++n) {
       current_statement__ = 152;
@@ -17644,7 +17695,8 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       stan::math::check_less_or_equal(function__, "chi", chi, 1);
       {
         current_statement__ = 58;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(epsilon, 0, sigma));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(epsilon,
+                         static_cast<double>(0), sigma));
         current_statement__ = 59;
         jolly_seber_lp<propto__>(y, first, last, p, phi, gamma, chi, lp__,
           lp_accum__, pstream__);
@@ -17741,7 +17793,8 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       stan::math::check_less_or_equal(function__, "chi", chi, 1);
       {
         current_statement__ = 58;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(epsilon, 0, sigma));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(epsilon,
+                         static_cast<double>(0), sigma));
         current_statement__ = 59;
         jolly_seber_lp<propto__>(y, first, last, p, phi, gamma, chi, lp__,
           lp_accum__, pstream__);
@@ -18459,7 +18512,7 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
       current_statement__ = 2;
       z = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 2;
-      z = 1;
+      z = static_cast<double>(1);
       current_statement__ = 3;
       x = std::numeric_limits<double>::quiet_NaN();
       {
@@ -19223,7 +19276,8 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
       auto theta = in__.template read<std::vector<local_scalar_t__>>(J);
       {
         current_statement__ = 2;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(y, theta, 1));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(y, theta,
+                         static_cast<double>(1)));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -19259,7 +19313,8 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
       auto theta = in__.template read<std::vector<local_scalar_t__>>(J);
       {
         current_statement__ = 2;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(y, theta, 1));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(y, theta,
+                         static_cast<double>(1)));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -20541,7 +20596,7 @@ foo_lpdf(const T0__& x, const T1__& mu, std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 8;
-    return stan::math::normal_lpdf<propto__>(x, mu, 1);
+    return stan::math::normal_lpdf<propto__>(x, mu, static_cast<double>(1));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -22043,15 +22098,20 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       }
       {
         current_statement__ = 16;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(mu_a1, 0, 1));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(mu_a1,
+                         static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 17;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(eta1, 0, 1));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(eta1,
+                         static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 18;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(mu_a2, 0, 1));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(mu_a2,
+                         static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 19;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(eta2, 0, 1));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(eta2,
+                         static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 20;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(beta, 0, 1));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(beta,
+                         static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 21;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(y, y_hat, sigma_y));
       }
@@ -22141,15 +22201,20 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       }
       {
         current_statement__ = 16;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(mu_a1, 0, 1));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(mu_a1,
+                         static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 17;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(eta1, 0, 1));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(eta1,
+                         static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 18;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(mu_a2, 0, 1));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(mu_a2,
+                         static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 19;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(eta2, 0, 1));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(eta2,
+                         static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 20;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(beta, 0, 1));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(beta,
+                         static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 21;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(y, y_hat, sigma_y));
       }
@@ -23011,30 +23076,30 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           lp_accum__.add(2);
         }
         current_statement__ = 37;
-        x = 3;
+        x = stan::math::promote_scalar<local_scalar_t__>(3);
         current_statement__ = 38;
         lp_accum__.add(x);
         current_statement__ = 40;
         if (stan::math::logical_gt(theta, 2)) {
           current_statement__ = 39;
-          x = 2;
+          x = stan::math::promote_scalar<local_scalar_t__>(2);
         }
         current_statement__ = 41;
         lp_accum__.add(x);
         current_statement__ = 42;
-        x = 24;
+        x = stan::math::promote_scalar<local_scalar_t__>(24);
         current_statement__ = 43;
-        x = 247;
+        x = stan::math::promote_scalar<local_scalar_t__>(247);
         current_statement__ = 44;
         lp_accum__.add(x);
         current_statement__ = 45;
-        x = (24 * 24);
+        x = stan::math::promote_scalar<local_scalar_t__>((24 * 24));
         current_statement__ = 46;
         lp_accum__.add(x);
         current_statement__ = 48;
         if (stan::math::logical_gt(theta, 46)) {
           current_statement__ = 47;
-          x = (24 * 245);
+          x = stan::math::promote_scalar<local_scalar_t__>((24 * 245));
         }
         current_statement__ = 49;
         lp_accum__.add(x);
@@ -23057,18 +23122,18 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         {
           local_scalar_t__ y = DUMMY_VAR__;
           current_statement__ = 59;
-          y = 2;
+          y = stan::math::promote_scalar<local_scalar_t__>(2);
           current_statement__ = 60;
-          y = 24;
+          y = stan::math::promote_scalar<local_scalar_t__>(24);
           current_statement__ = 61;
           lp_accum__.add(y);
         }
         {
           local_scalar_t__ y = DUMMY_VAR__;
           current_statement__ = 63;
-          y = 22;
+          y = stan::math::promote_scalar<local_scalar_t__>(22);
           current_statement__ = 64;
-          y = 245;
+          y = stan::math::promote_scalar<local_scalar_t__>(245);
           current_statement__ = 65;
           lp_accum__.add(y);
         }
@@ -23146,7 +23211,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         current_statement__ = 119;
         if (stan::math::logical_gt(2, 3)) {
           current_statement__ = 118;
-          temp = (2 * 2);
+          temp = stan::math::promote_scalar<local_scalar_t__>((2 * 2));
         } else {
           current_statement__ = 117;
           if (pstream__) {
@@ -23155,12 +23220,12 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           }
         }
         current_statement__ = 120;
-        temp = (2 * 2);
+        temp = stan::math::promote_scalar<local_scalar_t__>((2 * 2));
         local_scalar_t__ temp2 = DUMMY_VAR__;
         current_statement__ = 126;
         for (int i = 2; i <= 3; ++i) {
           current_statement__ = 122;
-          temp2 = (2 * 3);
+          temp2 = stan::math::promote_scalar<local_scalar_t__>((2 * 3));
           current_statement__ = 123;
           lp_accum__.add(temp);
           current_statement__ = 124;
@@ -23168,17 +23233,17 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         }
         local_scalar_t__ dataonlyvar = DUMMY_VAR__;
         current_statement__ = 127;
-        dataonlyvar = 3;
+        dataonlyvar = stan::math::promote_scalar<local_scalar_t__>(3);
         current_statement__ = 129;
         if (stan::math::logical_gt(3, 4)) {
           current_statement__ = 128;
-          dataonlyvar = (3 * 53);
+          dataonlyvar = stan::math::promote_scalar<local_scalar_t__>((3 * 53));
         }
         current_statement__ = 130;
         lp_accum__.add(dataonlyvar);
         local_scalar_t__ paramvar = DUMMY_VAR__;
         current_statement__ = 131;
-        paramvar = 3;
+        paramvar = stan::math::promote_scalar<local_scalar_t__>(3);
         current_statement__ = 133;
         if (stan::math::logical_gt(42, 1)) {
           current_statement__ = 132;
@@ -23301,30 +23366,30 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           lp_accum__.add(2);
         }
         current_statement__ = 37;
-        x = 3;
+        x = stan::math::promote_scalar<local_scalar_t__>(3);
         current_statement__ = 38;
         lp_accum__.add(x);
         current_statement__ = 40;
         if (stan::math::logical_gt(theta, 2)) {
           current_statement__ = 39;
-          x = 2;
+          x = stan::math::promote_scalar<local_scalar_t__>(2);
         }
         current_statement__ = 41;
         lp_accum__.add(x);
         current_statement__ = 42;
-        x = 24;
+        x = stan::math::promote_scalar<local_scalar_t__>(24);
         current_statement__ = 43;
-        x = 247;
+        x = stan::math::promote_scalar<local_scalar_t__>(247);
         current_statement__ = 44;
         lp_accum__.add(x);
         current_statement__ = 45;
-        x = (24 * 24);
+        x = stan::math::promote_scalar<local_scalar_t__>((24 * 24));
         current_statement__ = 46;
         lp_accum__.add(x);
         current_statement__ = 48;
         if (stan::math::logical_gt(theta, 46)) {
           current_statement__ = 47;
-          x = (24 * 245);
+          x = stan::math::promote_scalar<local_scalar_t__>((24 * 245));
         }
         current_statement__ = 49;
         lp_accum__.add(x);
@@ -23347,18 +23412,18 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         {
           local_scalar_t__ y = DUMMY_VAR__;
           current_statement__ = 59;
-          y = 2;
+          y = stan::math::promote_scalar<local_scalar_t__>(2);
           current_statement__ = 60;
-          y = 24;
+          y = stan::math::promote_scalar<local_scalar_t__>(24);
           current_statement__ = 61;
           lp_accum__.add(y);
         }
         {
           local_scalar_t__ y = DUMMY_VAR__;
           current_statement__ = 63;
-          y = 22;
+          y = stan::math::promote_scalar<local_scalar_t__>(22);
           current_statement__ = 64;
-          y = 245;
+          y = stan::math::promote_scalar<local_scalar_t__>(245);
           current_statement__ = 65;
           lp_accum__.add(y);
         }
@@ -23436,7 +23501,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         current_statement__ = 119;
         if (stan::math::logical_gt(2, 3)) {
           current_statement__ = 118;
-          temp = (2 * 2);
+          temp = stan::math::promote_scalar<local_scalar_t__>((2 * 2));
         } else {
           current_statement__ = 117;
           if (pstream__) {
@@ -23445,12 +23510,12 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           }
         }
         current_statement__ = 120;
-        temp = (2 * 2);
+        temp = stan::math::promote_scalar<local_scalar_t__>((2 * 2));
         local_scalar_t__ temp2 = DUMMY_VAR__;
         current_statement__ = 126;
         for (int i = 2; i <= 3; ++i) {
           current_statement__ = 122;
-          temp2 = (2 * 3);
+          temp2 = stan::math::promote_scalar<local_scalar_t__>((2 * 3));
           current_statement__ = 123;
           lp_accum__.add(temp);
           current_statement__ = 124;
@@ -23458,17 +23523,17 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         }
         local_scalar_t__ dataonlyvar = DUMMY_VAR__;
         current_statement__ = 127;
-        dataonlyvar = 3;
+        dataonlyvar = stan::math::promote_scalar<local_scalar_t__>(3);
         current_statement__ = 129;
         if (stan::math::logical_gt(3, 4)) {
           current_statement__ = 128;
-          dataonlyvar = (3 * 53);
+          dataonlyvar = stan::math::promote_scalar<local_scalar_t__>((3 * 53));
         }
         current_statement__ = 130;
         lp_accum__.add(dataonlyvar);
         local_scalar_t__ paramvar = DUMMY_VAR__;
         current_statement__ = 131;
-        paramvar = 3;
+        paramvar = stan::math::promote_scalar<local_scalar_t__>(3);
         current_statement__ = 133;
         if (stan::math::logical_gt(42, 1)) {
           current_statement__ = 132;
@@ -24387,7 +24452,7 @@ double dumb(const T0__& x, std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 4;
-    return (x - 0.5);
+    return stan::math::promote_scalar<local_scalar_t__>((x - 0.5));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -25710,12 +25775,14 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       }
       {
         current_statement__ = 9;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(mu_a, 0, 1));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(mu_a,
+                         static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 10;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(a, (100 * mu_a),
                          sigma_a));
         current_statement__ = 11;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(beta, 0, 100));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(beta,
+                         static_cast<double>(0), static_cast<double>(100)));
         current_statement__ = 12;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(y, y_hat, sigma_y));
         std::complex<local_scalar_t__> z =
@@ -25802,12 +25869,14 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       }
       {
         current_statement__ = 9;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(mu_a, 0, 1));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(mu_a,
+                         static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 10;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(a, (100 * mu_a),
                          sigma_a));
         current_statement__ = 11;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(beta, 0, 100));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(beta,
+                         static_cast<double>(0), static_cast<double>(100)));
         current_statement__ = 12;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(y, y_hat, sigma_y));
         std::complex<local_scalar_t__> z =
@@ -28933,7 +29002,7 @@ class unenforce_initialize_model final : public model_base_crtp<unenforce_initia
       current_statement__ = 13;
       for (int i = 1; i <= 10; ++i) {
         current_statement__ = 11;
-        for_loop_var = 1;
+        for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -28987,7 +29056,7 @@ class unenforce_initialize_model final : public model_base_crtp<unenforce_initia
       current_statement__ = 13;
       for (int i = 1; i <= 10; ++i) {
         current_statement__ = 11;
-        for_loop_var = 1;
+        for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -29058,7 +29127,7 @@ class unenforce_initialize_model final : public model_base_crtp<unenforce_initia
       current_statement__ = 13;
       for (int i = 1; i <= 10; ++i) {
         current_statement__ = 11;
-        for_loop_var = 1;
+        for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
       }
       if (emit_transformed_parameters__) {
         out__.write(no_init);
