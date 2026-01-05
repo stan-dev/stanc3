@@ -90,9 +90,8 @@ let find_include_fs lookup_paths fname =
     | [] ->
         let message =
           let pp_list ppf l =
-            match l with
-            | [] -> Fmt.string ppf "None"
-            | _ -> Fmt.(list ~sep:comma string) ppf l in
+            if List.is_empty l then Fmt.string ppf "None"
+            else Fmt.(list ~sep:comma string) ppf l in
           Fmt.str
             "Could not find include file '%s' in specified include paths.@\n\
              @[Current include paths: %a@]"

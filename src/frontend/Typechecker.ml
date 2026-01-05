@@ -1944,10 +1944,8 @@ and verify_fundef_dist_rt loc id return_ty =
     List.exists
       ~f:(fun x -> String.is_suffix id.name ~suffix:x)
       Utils.conditioning_suffices in
-  if is_dist then
-    match return_ty with
-    | UnsizedType.ReturnType UReal -> ()
-    | _ -> Semantic_error.non_real_prob_fn_def loc return_ty |> error
+  if is_dist && return_ty <> UnsizedType.ReturnType UReal then
+    Semantic_error.non_real_prob_fn_def loc return_ty |> error
 
 and verify_pdf_fundef_first_arg_ty loc id arg_tys =
   if String.is_suffix id.name ~suffix:"_lpdf" then

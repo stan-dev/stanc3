@@ -16,5 +16,4 @@ let pp ppf = function
 
 let lub_mem_pat lst =
   let find_soa mem_pat = mem_pat = SoA in
-  let any_soa = List.exists ~f:find_soa lst in
-  match any_soa with true -> SoA | false -> AoS
+  if List.exists ~f:find_soa lst then SoA else AoS

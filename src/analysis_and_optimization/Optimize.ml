@@ -435,14 +435,14 @@ let rec inline_function_statement propto adt fim Stmt.{pattern; meta} =
             slist_concat_no_loc (d' @ s')
               (While
                  ( e
-                 , match s' with
-                   | [] -> inline_function_statement propto adt fim stmt
-                   | _ ->
-                       { pattern=
-                           Block
-                             ([inline_function_statement propto adt fim stmt]
-                             @ map_no_loc s')
-                       ; meta= Location_span.empty } ))
+                 , if List.is_empty s' then
+                     inline_function_statement propto adt fim stmt
+                   else
+                     { pattern=
+                         Block
+                           ([inline_function_statement propto adt fim stmt]
+                           @ map_no_loc s')
+                     ; meta= Location_span.empty } ))
         | For {loopvar; lower; upper; body} ->
             let d_lower, s_lower, lower =
               inline_function_expression propto adt fim lower in
@@ -455,14 +455,14 @@ let rec inline_function_statement propto adt fim Stmt.{pattern; meta} =
                  ; lower
                  ; upper
                  ; body=
-                     (match s_upper with
-                     | [] -> inline_function_statement propto adt fim body
-                     | _ ->
-                         { pattern=
-                             Block
-                               ([inline_function_statement propto adt fim body]
-                               @ map_no_loc s_upper)
-                         ; meta= Location_span.empty }) })
+                     (if List.is_empty s_upper then
+                        inline_function_statement propto adt fim body
+                      else
+                        { pattern=
+                            Block
+                              ([inline_function_statement propto adt fim body]
+                              @ map_no_loc s_upper)
+                        ; meta= Location_span.empty }) })
         | Profile (name, l) ->
             Profile
               (name, List.map l ~f:(inline_function_statement propto adt fim))

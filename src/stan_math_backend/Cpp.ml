@@ -252,18 +252,17 @@ module Stmts = struct
   let rethrow_located stmts =
     let open Expression_syntax in
     let stmts = unblock stmts in
-    match stmts with
-    | [] -> []
-    | _ ->
-        let e = Var "e" in
-        let locations_array = Var "locations_array__" in
-        let current_statement = Var "current_statement__" in
-        [ TryCatch
-            ( stmts
-            , (Types.const_ref (TypeLiteral "std::exception"), "e")
-            , [ Expression
-                  (fun_call "stan::lang::rethrow_located"
-                     [e; Subscript (locations_array, current_statement)]) ] ) ]
+    if List.is_empty stmts then []
+    else
+      let e = Var "e" in
+      let locations_array = Var "locations_array__" in
+      let current_statement = Var "current_statement__" in
+      [ TryCatch
+          ( stmts
+          , (Types.const_ref (TypeLiteral "std::exception"), "e")
+          , [ Expression
+                (fun_call "stan::lang::rethrow_located"
+                   [e; Subscript (locations_array, current_statement)]) ] ) ]
 
   let fori loopvar lower upper body =
     let init =

@@ -90,9 +90,9 @@ let rec pp ppf = function
   | UMathLibraryFunction -> Fmt.string ppf "<Stan Math function>"
 
 and pp_fun_arg ppf (ad_ty, unsized_ty) =
-  match ad_ty with
-  | DataOnly -> Fmt.pf ppf {|data %a|} pp unsized_ty
-  | _ -> pp ppf unsized_ty
+  let open Fmt in
+  let pp_data = if' (equal_autodifftype ad_ty DataOnly) (any "data ") in
+  (pp_data ++ pp) ppf unsized_ty
 
 and pp_returntype ppf = function
   | Void -> Fmt.string ppf "void"

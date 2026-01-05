@@ -1101,18 +1101,17 @@ let trans_prog ?(use_opencl = false) (p : Program.Typed.t) =
       List.map stmts ~f:trans_stmt_to_opencl
     else stmts in
   let tparam_writes_cond =
-    match tparam_writes with
-    | [] -> []
-    | _ ->
-        [ Stmt.
-            { pattern=
-                IfElse
-                  ( Expr.
-                      { pattern= Var "emit_transformed_parameters__"
-                      ; meta= Typed.Meta.empty }
-                  , {pattern= SList tparam_writes; meta= Location_span.empty}
-                  , None )
-            ; meta= Location_span.empty } ] in
+    if List.is_empty tparam_writes then []
+    else
+      [ Stmt.
+          { pattern=
+              IfElse
+                ( Expr.
+                    { pattern= Var "emit_transformed_parameters__"
+                    ; meta= Typed.Meta.empty }
+                , {pattern= SList tparam_writes; meta= Location_span.empty}
+                , None )
+          ; meta= Location_span.empty } ] in
   let generate_quantities =
     (p.generate_quantities
     |> add_reads p.output_vars param_deserializer_read
