@@ -34,9 +34,7 @@ let rec matrix_set Expr.{pattern; meta= Expr.Typed.Meta.{type_; _} as meta} =
     match pattern with
     | Var s -> Set.Poly.singleton (Dataflow_types.VVar s, meta)
     | Lit _ -> Set.Poly.empty
-    | FunApp (_, exprs) ->
-        if UnsizedType.contains_eigen_type type_ then union_recur exprs
-        else Set.Poly.empty
+    | FunApp (_, exprs) -> union_recur exprs
     | TernaryIf (_, expr2, expr3) -> union_recur [expr2; expr3]
     | Indexed (expr, _) | Promotion (expr, _, _) | TupleProjection (expr, _) ->
         matrix_set expr

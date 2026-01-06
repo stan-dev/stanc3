@@ -994,10 +994,10 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
                  intended matrix exponentiation, use%tinstead.@]"
                 (pp_indented_box Pretty_printing.pp_expression)
                 {expr; emeta}
-                (pp_indented_box_t (fun ppf ->
-                     Fmt.pf ppf "matrix_power(%a, %a)"
-                       Pretty_printing.pp_expression e1
-                       Pretty_printing.pp_expression e2)) in
+                (pp_indented_box_t
+                   (Format.dprintf "matrix_power(%a, %a)"
+                      Pretty_printing.pp_expression e1
+                      Pretty_printing.pp_expression e2)) in
             add_warning x.emeta.loc s
         | _ when Operator.is_cmp op -> (
             match le.expr with
@@ -1013,11 +1013,11 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
                       flag for stanc@]"
                      (pp_indented_box Pretty_printing.pp_expression)
                      {expr; emeta}
-                     (pp_indented_box_t (fun ppf ->
-                          Fmt.pf ppf "(%a) %a %a" pp_e le pp op pp_e re))
-                     (pp_indented_box_t (fun ppf ->
-                          Fmt.pf ppf "%a %a %a && %a %a %a" pp_e e1 pp op2 pp_e
-                            e2 pp_e e2 pp op pp_e re)))
+                     (pp_indented_box_t
+                        (Format.dprintf "(%a) %a %a" pp_e le pp op pp_e re))
+                     (pp_indented_box_t
+                        (Format.dprintf "%a %a %a && %a %a %a" pp_e e1 pp op2
+                           pp_e e2 pp_e e2 pp op pp_e re)))
             | _ -> ())
         | _ -> () in
       binop_type_warnings le re;

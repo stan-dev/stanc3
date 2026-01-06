@@ -327,9 +327,8 @@ let list_unscaled_constants (distributions_list : dist_info Set.Poly.t) :
   (* Search all distributions for unscaled values *)
   let collect_unscaled_expr (arg : compiletime_val * Expr.Typed.Meta.t) =
     match arg with
-    | Number (num, num_str), meta ->
-        if is_unscaled_value num then Set.Poly.singleton (meta.loc, num_str)
-        else Set.Poly.empty
+    | Number (num, num_str), meta when is_unscaled_value num ->
+        Set.Poly.singleton (meta.loc, num_str)
     | _ -> Set.Poly.empty in
   union_map
     ~f:(fun {args; _} ->

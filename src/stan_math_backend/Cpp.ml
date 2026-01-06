@@ -425,7 +425,7 @@ module Printing = struct
 
   open Fmt
 
-  let trailing_space (t : 'a Fmt.t) : 'a Fmt.t = fun ppf -> pf ppf "%a@ " t
+  let trailing_space (t : 'a Fmt.t) : 'a Fmt.t = Fmt.(t ++ sp)
   let pp_identifier ppf = string ppf
 
   let rec pp_type_ ppf t =
