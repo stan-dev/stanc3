@@ -256,7 +256,7 @@ let rec extract_nonderived_admatrix_types
       optimization
     - `rep_*vector` These are templated in the C++ to cast up to `Var<Matrix>`
       types
-    - `rep_matrix`. When it's only a scalar being propogated an math library
+    - `rep_matrix`. When it's only a scalar being propagated an math library
       overload can upcast to `Var<Matrix>` *)
 and extract_nonderived_admatrix_types_fun (kind : 'a Fun_kind.t)
     (exprs : Expr.Typed.t list) =

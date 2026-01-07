@@ -382,7 +382,7 @@ let rec inline_function_statement propto adt fim Stmt.{pattern; meta} =
         | Assignment (lhs, ut, e2) ->
             let e1 = Middle.Stmt.Helpers.expr_of_lvalue lhs ~meta:e2.meta in
             (* This inner e2 is wrong. We are giving the wrong type to Var x.
-               But it doens't really matter as we discard it later. *)
+               But it doesn't really matter as we discard it later. *)
             let dl1, sl1, e1 = inline_function_expression propto adt fim e1 in
             let dl2, sl2, e2 = inline_function_expression propto adt fim e2 in
             let lhs' =
@@ -1141,7 +1141,7 @@ let optimize_minimal_variables
     (Map.find_exn flowgraph_to_mir 1)
 
 (* XXX: This optimization current promotes/demotes entire tuples at once. This
-   could be signficantly better *)
+   could be significantly better *)
 let optimize_ad_levels (mir : Program.Typed.t) =
   let gen_ad_variables
       (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t)
@@ -1200,7 +1200,7 @@ let optimize_ad_levels (mir : Program.Typed.t) =
 
     This first does a simple iter over the log_prob portion of the MIR, finding
     the names of all matrices (and arrays of matrices) where either the Stan
-    math function does not support SoA or the object is single cell accesed
+    math function does not support SoA or the object is single cell accessed
     within a For or While loop. These are the initial variables given to the
     monotone framework. Then log_prob has all matrix like objects and the
     functions that use them to SoA. After that the Monotone framework is used to

@@ -42,7 +42,7 @@ let rec requires ut t =
       require "stan::is_std_vector" t
       :: requires inner_ut (TypeTrait ("stan::value_type_t", [t]))
   | UReal ->
-      (* not using stan::is_stan_scalar to explictly exclude int *)
+      (* not using stan::is_stan_scalar to explicitly exclude int *)
       [require_any ["stan::is_autodiff_scalar"; "stan::is_floating_point"] t]
   | UTuple ts ->
       RequireAllCondition

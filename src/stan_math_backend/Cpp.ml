@@ -291,7 +291,7 @@ end
 (**/**)
 
 module Decls = struct
-  (** Declarations which get re-used often in the generated model *)
+  (** Declarations which get reused often in the generated model *)
 
   let current_statement =
     VariableDefn
