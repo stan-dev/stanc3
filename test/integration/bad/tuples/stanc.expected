@@ -381,7 +381,7 @@ Syntax error in 'incomplete3.stan', line 2, column 0, parsing error:
    -------------------------------------------------
      1:  model { tuple( complex , complex ) foo,
      2:  
-         ^
+         ^ (error at end of file)
    -------------------------------------------------
 
 Ill-formed declaration. Expected a new identifier after comma in declaration.

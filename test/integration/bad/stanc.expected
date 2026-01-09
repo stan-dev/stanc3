@@ -931,7 +931,7 @@ Syntax error in 'err-expected-bracket.stan', line 4, column 0, parsing error:
      2:  }
      3:  generated quantities 
      4:  
-         ^
+         ^ (error at end of file)
    -------------------------------------------------
 
 Ill-formed block. Expected "{" after "generated quantities".
@@ -1300,7 +1300,7 @@ Syntax error in 'expect_statement_seq_close_brace.stan', line 6, column 0, parsi
      4:  model {
      5:    y ~ normal(0,1);
      6:  
-         ^
+         ^ (error at end of file)
    -------------------------------------------------
 
 Ill-formed block. Expected variable declaration, statement or "}".
@@ -1311,7 +1311,7 @@ Syntax error in 'expect_statement_seq_close_brace_2.stan', line 17, column 0, pa
     15:  
     16:  
     17:  
-         ^
+         ^ (error at end of file)
    -------------------------------------------------
 
 Ill-formed block. Expected variable declaration, statement or "}".
@@ -1335,7 +1335,7 @@ Syntax error in 'expect_statement_seq_close_brace_4.stan', line 10, column 0, pa
      8:    array[2,3] int vs;
      9:  
     10:  
-         ^
+         ^ (error at end of file)
    -------------------------------------------------
 
 Ill-formed block. Expected a statement, variable declaration, or just "}".

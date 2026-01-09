@@ -1380,7 +1380,7 @@ Syntax error in 'ill-formed-statement26.stan', line 2, column 0, parsing error:
    -------------------------------------------------
      1:  transformed data { if ( T) ; foo
      2:  
-         ^
+         ^ (error at end of file)
    -------------------------------------------------
 
 Ill-formed phrase. Expected a statement, but found a partial value before this point.
