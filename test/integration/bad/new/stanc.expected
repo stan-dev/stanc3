@@ -1379,6 +1379,7 @@ Ill-formed statement. Expected a statement after "else".
 Syntax error in 'ill-formed-statement26.stan', line 2, column 0, parsing error:
    -------------------------------------------------
      1:  transformed data { if ( T) ; foo
+     2:  
          ^
    -------------------------------------------------
 

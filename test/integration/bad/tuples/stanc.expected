@@ -380,6 +380,7 @@ Ill-formed type. Expected "," followed by further types and ")" to complete tupl
 Syntax error in 'incomplete3.stan', line 2, column 0, parsing error:
    -------------------------------------------------
      1:  model { tuple( complex , complex ) foo,
+     2:  
          ^
    -------------------------------------------------
 

@@ -15,7 +15,9 @@ let pp_context_for ppf (({line_num; _} as loc), lines) =
     style (Fmt.fmt "%6d:") ppf num in
   let get_line i =
     let line = i - 1 in
-    if line < 0 || line >= Array.length lines then None
+    (* blank line if the error is at EOF *)
+    if i = line_num && line = Array.length lines then Some ""
+    else if line < 0 || line >= Array.length lines then None
     else Some (Array.get lines line) in
   let pp_line_and_number ppf n =
     let pp ppf line = Fmt.pf ppf "%a  %s\n" pp_number n line in

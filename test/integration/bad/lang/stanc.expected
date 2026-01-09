@@ -489,6 +489,7 @@ Syntax error in 'incomplete5.stan', line 3, column 0, parsing error:
    -------------------------------------------------
      1:  transformed data {
      2:    if (2.0) ;
+     3:  
          ^
    -------------------------------------------------
 
@@ -545,6 +546,7 @@ Syntax error in 'unterminated_comment.stan', line 4, column 0, lexing error:
    -------------------------------------------------
      2:  never
      3:  ends
+     4:  
          ^
    -------------------------------------------------
 
