@@ -9,6 +9,18 @@ Syntax error in 'arg-decl-bad1.stan', line 2, column 16 to column 21, parsing er
 
 Ill-formed function argument. Expected an argument declaration (unsized and unconstrained type followed by identifier).
 [exit 1]
+  $ ../../../../../install/default/bin/stanc bad_data_modifier_decl.stan
+Syntax error in 'bad_data_modifier_decl.stan', line 3, column 2 to column 6, parsing error:
+   -------------------------------------------------
+     1:  // TODO: would be nice to specialize for this mistake
+     2:  generated quantities {
+     3:    data real x = 1;
+           ^
+     4:  }
+   -------------------------------------------------
+
+Ill-formed block. Expected variable declaration, statement or "}".
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_decl_in_functions.stan
 Syntax error in 'bad_decl_in_functions.stan', line 2, column 19 to column 20, parsing error:
    -------------------------------------------------
