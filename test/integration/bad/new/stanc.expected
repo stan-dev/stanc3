@@ -500,8 +500,7 @@ Syntax error in 'ill-formed-expression24.stan', line 1, column 19 to column 20, 
                             ^
    -------------------------------------------------
 
-Ill-formed declaration. Found a declaraction before this point.
-If it was complete, expected a ";" to complete the definition or a "," to start a new declaration of the same type.
+Ill-formed declaration. Expected a ";" to complete the definition or a "," to start a new declaration of the same type.
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-expression25.stan
 Syntax error in 'ill-formed-expression25.stan', line 1, column 17 to column 22, parsing error:

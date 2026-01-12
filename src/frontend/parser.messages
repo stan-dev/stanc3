@@ -1381,8 +1381,7 @@ program: MODELBLOCK LBRACE REAL IDENTIFIER ASSIGN IDENTIFIER TILDE
 ## In state 126, spurious reduction of production expression -> common_expression
 ##
 
-@{<light_red>Ill-formed declaration.@} Found a declaraction before this point.
-If it was complete, expected a @{<green>";"@} to complete the definition or a @{<green>","@} to start a new declaration of the same type.
+@{<light_red>Ill-formed declaration.@} Expected a @{<green>";"@} to complete the definition or a @{<green>","@} to start a new declaration of the same type.
 
 program: MODELBLOCK LBRACE REAL IDENTIFIER ASSIGN WHILE
 ##
