@@ -9,6 +9,39 @@ Syntax error in 'arg-decl-bad1.stan', line 2, column 16 to column 21, parsing er
 
 Ill-formed function argument. Expected an argument declaration (unsized and unconstrained type followed by identifier).
 [exit 1]
+  $ ../../../../../install/default/bin/stanc bad_data_modifier_decl.stan
+Syntax error in 'bad_data_modifier_decl.stan', line 3, column 2 to column 6, parsing error:
+   -------------------------------------------------
+     1:  // TODO: would be nice to specialize for this mistake
+     2:  generated quantities {
+     3:    data real x = 1;
+           ^
+     4:  }
+   -------------------------------------------------
+
+Ill-formed block. Expected variable declaration, statement or "}".
+[exit 1]
+  $ ../../../../../install/default/bin/stanc bad_decl_in_functions.stan
+Syntax error in 'bad_decl_in_functions.stan', line 2, column 19 to column 20, parsing error:
+   -------------------------------------------------
+     1:  // TODO: would be nice to specialize for this mistake
+     2:  functions { real x = 3; }
+                            ^
+   -------------------------------------------------
+
+Ill-formed function. Expected "(" after function name.
+[exit 1]
+  $ ../../../../../install/default/bin/stanc bad_multi_decl.stan
+Syntax error in 'bad_multi_decl.stan', line 2, column 21 to column 24, parsing error:
+   -------------------------------------------------
+     1:  // TODO: would be nice to specialize for this mistake
+     2:  model { real foo = 1 bar = 3; }
+                              ^
+   -------------------------------------------------
+
+Ill-formed expression. Unexpected input after the conclusion of a valid expression.
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
+[exit 1]
   $ ../../../../../install/default/bin/stanc blocks-bad1.stan
 Syntax error in 'blocks-bad1.stan', line 1, column 5 to column 10, parsing error:
    -------------------------------------------------
@@ -467,7 +500,7 @@ Syntax error in 'ill-formed-expression24.stan', line 1, column 19 to column 20, 
                             ^
    -------------------------------------------------
 
-Ill-formed statement. Expected an expression followed by ";" after "=".
+Ill-formed declaration. Expected a ";" to complete the definition or a "," to start a new declaration of the same type.
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-expression25.stan
 Syntax error in 'ill-formed-expression25.stan', line 1, column 17 to column 22, parsing error:
@@ -476,7 +509,7 @@ Syntax error in 'ill-formed-expression25.stan', line 1, column 17 to column 22, 
                           ^
    -------------------------------------------------
 
-Ill-formed statement. Expected an expression followed by ";" after "=".
+Ill-formed declaration. Expected an expression followed by ";" after "=".
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-expression28.stan
 Syntax error in 'ill-formed-expression28.stan', line 1, column 21 to column 26, parsing error:
@@ -1357,7 +1390,8 @@ Ill-formed statement. Expected a statement after "else".
 Syntax error in 'ill-formed-statement26.stan', line 2, column 0, parsing error:
    -------------------------------------------------
      1:  transformed data { if ( T) ; foo
-         ^
+     2:  
+         ^ (error at end of file)
    -------------------------------------------------
 
 Ill-formed phrase. Expected a statement, but found a partial value before this point.

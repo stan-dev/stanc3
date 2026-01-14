@@ -13,9 +13,12 @@ let pp_context_for ppf (({line_num; _} as loc), lines) =
   let pp_number ppf num =
     let style = if num = line_num then yellow else faint in
     style (Fmt.fmt "%6d:") ppf num in
+  let error_at_eof = line_num = Array.length lines + 1 in
   let get_line i =
     let line = i - 1 in
-    if line < 0 || line >= Array.length lines then None
+    (* blank line if the error is at EOF *)
+    if error_at_eof && i = line_num then Some ""
+    else if line < 0 || line >= Array.length lines then None
     else Some (Array.get lines line) in
   let pp_line_and_number ppf n =
     let pp ppf line = Fmt.pf ppf "%a  %s\n" pp_number n line in
@@ -27,7 +30,9 @@ let pp_context_for ppf (({line_num; _} as loc), lines) =
       let highlighted_line = get_line line_num |> Option.value ~default:"" in
       String.sub highlighted_line ~pos:0 ~len:col_num
       |> String.map ~f:(function '\t' -> '\t' | _ -> ' ') in
-    Fmt.pf ppf "         %s%a\n" blank_line (bold_red Fmt.char) '^' in
+    Fmt.pf ppf "         %s%a%a\n" blank_line (bold_red Fmt.char) '^'
+      (Fmt.if' error_at_eof @@ faint Fmt.string)
+      " (error at end of file)" in
   bars ppf ();
   pp_line_and_number ppf (line_num - 2);
   pp_line_and_number ppf (line_num - 1);
