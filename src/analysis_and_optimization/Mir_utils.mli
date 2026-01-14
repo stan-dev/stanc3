@@ -12,6 +12,7 @@ type bound_values =
 val trans_bounds_values : Expr.Typed.t Transformation.t -> bound_values
 val chop_dist_name : string -> string Option.t
 val top_var_declarations : Stmt.Located.t -> string Set.Poly.t
+val function_names : Program.Typed.t -> string Set.Poly.t
 
 val data_set :
      ?exclude_transformed:bool

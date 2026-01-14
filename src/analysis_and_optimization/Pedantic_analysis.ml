@@ -459,21 +459,30 @@ let non_one_priors_warnings (factor_graph : factor_graph)
 
 let uninitialized_message (vname : string) : string =
   Printf.sprintf
-    "The variable %s may not have been assigned a value before its use." vname
+    "The variable %s may not have been assigned a value before its first use."
+    vname
 
 let uninitialized_warnings (mir : Program.Typed.t) =
   let uninit_vars =
     Set.filter
       ~f:(fun (span, _) -> span <> Location_span.empty)
       (Dependence_analysis.mir_uninitialized_variables mir) in
+  let vars = String.Hash_set.create () in
+  let deduplicated =
+    Set.Poly.filter_map uninit_vars ~f:(fun (loc, var) ->
+        if Hash_set.mem vars var then None
+        else (
+          Hash_set.add vars var;
+          Some (loc, var))) in
   Set.Poly.map
     ~f:(fun (loc, vname) -> (loc, uninitialized_message vname))
-    uninit_vars
+    deduplicated
 
 let to_list warning_set =
-  Set.to_list warning_set |> List.sort ~compare:compare_warning_span |> List.rev
+  Set.to_list warning_set |> List.sort ~compare:compare_warning_span
 
-(* String-print uninitialized warnings In case a user wants only this warning *)
+(* String-print uninitialized warnings. In case a user wants only this
+   warning *)
 let warn_uninitialized mir = uninitialized_warnings mir |> to_list
 
 (* Optimization settings for constant propagation and partial evaluation *)
@@ -498,4 +507,4 @@ let warn_pedantic (mir_unopt : Program.Typed.t) =
     ; param_dependant_cf_warnings mir; param_dependant_fundef_cf_warnings mir
     ; non_one_priors_warnings factor_graph mir
     ; distribution_warnings distributions_info ]
-  |> to_list |> List.rev
+  |> to_list
