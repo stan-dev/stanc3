@@ -86,7 +86,7 @@ let return_optional_arg_types (args : Program.fun_arg_decl) =
         | UComplexRowVector | UComplexVector | UComplexMatrix ) ) ->
         [Types.base_type t]
     | _ -> [t] in
-  List.mapi args ~f:(fun i (ad, _, ty) ->
+  List.concat_mapi args ~f:(fun i (ad, _, ty) ->
       template_p (TemplateType (sprintf "T%d__" i)) (ad, ty))
 
 (** Print template arguments for C++ functions that need templates
@@ -187,19 +187,16 @@ let%expect_test "arg types tuple template" =
   T0__ |}]
 
 let lower_promoted_scalar args =
-  if List.is_empty args then Double
-  else
-    let rec promote_args_chunked args =
-      let chunk_till_empty list_tail =
-        if List.is_empty list_tail then [] else [promote_args_chunked list_tail]
-      in
-      match args with
-      | [] -> Double
-      | hd :: list_tail ->
-          TypeTrait ("stan::return_type_t", hd @ chunk_till_empty list_tail)
+  let rec promote_args_chunked args =
+    let chunk_till_empty list_tail =
+      if List.is_empty list_tail then [] else [promote_args_chunked list_tail]
     in
-    promote_args_chunked
-      List.(chunks_of ~length:5 (concat (return_optional_arg_types args)))
+    match args with
+    | [] -> Double
+    | hd :: list_tail ->
+        TypeTrait ("stan::return_type_t", hd @ chunk_till_empty list_tail) in
+  promote_args_chunked
+    (List.chunks_of ~length:5 (return_optional_arg_types args))
 
 (** Pretty-prints a function's return-type, taking into account templated
     argument promotion.*)
