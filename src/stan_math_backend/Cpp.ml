@@ -252,18 +252,17 @@ module Stmts = struct
   let rethrow_located stmts =
     let open Expression_syntax in
     let stmts = unblock stmts in
-    match stmts with
-    | [] -> []
-    | _ ->
-        let e = Var "e" in
-        let locations_array = Var "locations_array__" in
-        let current_statement = Var "current_statement__" in
-        [ TryCatch
-            ( stmts
-            , (Types.const_ref (TypeLiteral "std::exception"), "e")
-            , [ Expression
-                  (fun_call "stan::lang::rethrow_located"
-                     [e; Subscript (locations_array, current_statement)]) ] ) ]
+    if List.is_empty stmts then []
+    else
+      let e = Var "e" in
+      let locations_array = Var "locations_array__" in
+      let current_statement = Var "current_statement__" in
+      [ TryCatch
+          ( stmts
+          , (Types.const_ref (TypeLiteral "std::exception"), "e")
+          , [ Expression
+                (fun_call "stan::lang::rethrow_located"
+                   [e; Subscript (locations_array, current_statement)]) ] ) ]
 
   let fori loopvar lower upper body =
     let init =
@@ -292,7 +291,7 @@ end
 (**/**)
 
 module Decls = struct
-  (** Declarations which get re-used often in the generated model *)
+  (** Declarations which get reused often in the generated model *)
 
   let current_statement =
     VariableDefn
@@ -426,7 +425,7 @@ module Printing = struct
 
   open Fmt
 
-  let trailing_space (t : 'a Fmt.t) : 'a Fmt.t = fun ppf -> pf ppf "%a@ " t
+  let trailing_space (t : 'a Fmt.t) : 'a Fmt.t = Fmt.(t ++ sp)
   let pp_identifier ppf = string ppf
 
   let rec pp_type_ ppf t =

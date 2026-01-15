@@ -162,16 +162,13 @@ let constr_mismatch_warning (constr : var_constraint_named) (arg : arg_info)
             (Location_span.to_string loc) in
         Common.ICE.internal_compiler_error [%message arg_fail_msg] in
   match v with
-  | Param (pname, trans), meta ->
-      if transform_mismatch_constraint constr.constr trans then
-        Some (meta.loc, constr_mismatch_message name pname arg constr.name)
-      else None
-  | Number (num, num_str), meta ->
-      if value_mismatch_constraint constr.constr num then
-        Some
-          ( meta.loc
-          , constr_literal_mismatch_message name num_str arg constr.name )
-      else None
+  | Param (pname, trans), meta
+    when transform_mismatch_constraint constr.constr trans ->
+      Some (meta.loc, constr_mismatch_message name pname arg constr.name)
+  | Number (num, num_str), meta when value_mismatch_constraint constr.constr num
+    ->
+      Some
+        (meta.loc, constr_literal_mismatch_message name num_str arg constr.name)
   | _ -> None
 
 (** Distribution-specific warnings *)
@@ -228,8 +225,9 @@ let gamma_arg_dist_message : string =
 let gamma_arg_dist_warning (dist_info : dist_info) :
     (Location_span.t * string) option =
   match dist_info with
-  | {args= [_; (Number (a, _), meta); (Number (b, _), _)]; _} ->
-      if a = b && a < 1. then Some (meta.loc, gamma_arg_dist_message) else None
+  | {args= [_; (Number (a, _), meta); (Number (b, _), _)]; _}
+    when a = b && a < 1. ->
+      Some (meta.loc, gamma_arg_dist_message)
   | _ -> None
 
 (** Distribution properties table *)

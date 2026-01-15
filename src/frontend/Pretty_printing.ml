@@ -352,15 +352,16 @@ let rec pp_transformed_type ppf (st, trans) =
        |SRowVector (_, e)
        |SComplexVector e
        |SComplexRowVector e ->
-          fun ppf -> pf ppf "[%a]" pp_expression e
+          Format.dprintf "[%a]" pp_expression e
       | SMatrix (_, e1, e2) | SComplexMatrix (e1, e2) ->
-          fun ppf -> pf ppf "[%a, %a]" pp_expression e1 pp_expression e2
+          Format.dprintf "[%a, %a]" pp_expression e1 pp_expression e2
       | SArray _ | SInt | SReal | SComplex | STuple _ -> ignore in
     let cov_sizes_fmt =
       match st with
+      | SMatrix (_, e1, e2) when e1 = e2 ->
+          Format.dprintf "[%a]" pp_expression e1
       | SMatrix (_, e1, e2) ->
-          if e1 = e2 then fun ppf -> pf ppf "[%a]" pp_expression e1
-          else fun ppf -> pf ppf "[%a, %a]" pp_expression e1 pp_expression e2
+          Format.dprintf "[%a, %a]" pp_expression e1 pp_expression e2
       | _ -> ignore in
     match trans with
     | Transformation.Identity ->

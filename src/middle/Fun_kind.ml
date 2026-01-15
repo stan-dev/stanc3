@@ -12,7 +12,7 @@ type 'propto suffix =
   | FnJacobian
 [@@deriving compare, hash, fold, map, sexp, equal]
 
-let without_propto = map_suffix (function true | false -> ())
+let without_propto = map_suffix (Fn.const () : bool -> unit)
 
 type 'e t =
   | StanLib of string * bool suffix * Mem_pattern.t

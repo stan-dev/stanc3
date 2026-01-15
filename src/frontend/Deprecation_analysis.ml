@@ -118,15 +118,13 @@ let rec collect_deprecated_expr (acc : (Location_span.t * string) list)
    |FunApp ((StanLib _ | UserDefined _), {name; id_loc}, l) ->
       let w =
         match Map.find stan_lib_deprecations name with
-        | Some (rename, (major, minor)) ->
-            if expired (major, minor) then []
-            else
-              let version = string_of_int major ^ "." ^ string_of_int minor in
-              [ ( id_loc
-                , name ^ " is deprecated and will be removed in Stan " ^ version
-                  ^ ". Use " ^ rename
-                  ^ " instead. This can be automatically changed using the \
-                     canonicalize flag for stanc" ) ]
+        | Some (rename, (major, minor)) when not (expired (major, minor)) ->
+            let version = string_of_int major ^ "." ^ string_of_int minor in
+            [ ( id_loc
+              , name ^ " is deprecated and will be removed in Stan " ^ version
+                ^ ". Use " ^ rename
+                ^ " instead. This can be automatically changed using the \
+                   canonicalize flag for stanc" ) ]
         | _ -> (
             match Map.find deprecated_odes name with
             | Some (rename, (major, minor)) ->
@@ -137,10 +135,9 @@ let rec collect_deprecated_expr (acc : (Location_span.t * string) list)
                     ^ " instead. The new interface is slightly different, see: \
                        https://mc-stan.org/users/documentation/case-studies/convert_odes.html"
                   ) ]
-            | _ ->
-                if String.equal name "lkj_cov_lpdf" then
-                  [(id_loc, lkj_cov_message)]
-                else []) in
+            | _ when String.equal name "lkj_cov_lpdf" ->
+                [(id_loc, lkj_cov_message)]
+            | _ -> []) in
       acc @ w @ List.concat_map l ~f:(fun e -> collect_deprecated_expr [] e)
   | _ -> fold_expression collect_deprecated_expr acc expr
 

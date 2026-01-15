@@ -42,7 +42,7 @@ let rec requires ut t =
       require "stan::is_std_vector" t
       :: requires inner_ut (TypeTrait ("stan::value_type_t", [t]))
   | UReal ->
-      (* not using stan::is_stan_scalar to explictly exclude int *)
+      (* not using stan::is_stan_scalar to explicitly exclude int *)
       [require_any ["stan::is_autodiff_scalar"; "stan::is_floating_point"] t]
   | UTuple ts ->
       RequireAllCondition
@@ -86,7 +86,7 @@ let return_optional_arg_types (args : Program.fun_arg_decl) =
         | UComplexRowVector | UComplexVector | UComplexMatrix ) ) ->
         [Types.base_type t]
     | _ -> [t] in
-  List.mapi args ~f:(fun i (ad, _, ty) ->
+  List.concat_mapi args ~f:(fun i (ad, _, ty) ->
       template_p (TemplateType (sprintf "T%d__" i)) (ad, ty))
 
 (** Print template arguments for C++ functions that need templates
@@ -95,19 +95,18 @@ let return_optional_arg_types (args : Program.fun_arg_decl) =
     @return A list of arguments with template parameter names added. *)
 let template_parameters (args : Program.fun_arg_decl) =
   let template_p template (ad, typ) =
-    match (ad, UnsizedType.unwind_array_type typ) with
-    | UnsizedType.DataOnly, _
-      when not (UnsizedType.contains_tuple typ || UnsizedType.is_eigen_type typ)
-      ->
-        (* we can just directly print the type of DataOnly types **except** for:
+    if
+      UnsizedType.equal_autodifftype ad UnsizedType.DataOnly
+      && not (UnsizedType.contains_tuple typ || UnsizedType.is_eigen_type typ)
+    then
+      (* we can just directly print the type of DataOnly types **except** for:
 
-           - Eigen matrices (these are stored as Maps in the data block)
+         - Eigen matrices (these are stored as Maps in the data block)
 
-           - Tuples (can be constructed of various refs) *)
-        ([], [], lower_type typ (stantype_prim typ))
-    | _ ->
-        (* all other types are templated *)
-        ([template], requires typ (TemplateType template), TemplateType template)
+         - Tuples (can be constructed of various refs) *)
+      ([], [], lower_type typ (stantype_prim typ))
+    else (* all other types are templated *)
+      ([template], requires typ (TemplateType template), TemplateType template)
   in
   List.mapi args ~f:(fun i (ad, _, ty) ->
       template_p (sprintf "T%d__" i) (ad, ty))
@@ -188,20 +187,16 @@ let%expect_test "arg types tuple template" =
   T0__ |}]
 
 let lower_promoted_scalar args =
-  match args with
-  | [] -> Double
-  | _ ->
-      let rec promote_args_chunked args =
-        let chunk_till_empty list_tail =
-          match list_tail with [] -> [] | _ -> [promote_args_chunked list_tail]
-        in
-        match args with
-        | [] -> Double
-        | hd :: list_tail ->
-            TypeTrait ("stan::return_type_t", hd @ chunk_till_empty list_tail)
-      in
-      promote_args_chunked
-        List.(chunks_of ~length:5 (concat (return_optional_arg_types args)))
+  let rec promote_args_chunked args =
+    let chunk_till_empty list_tail =
+      if List.is_empty list_tail then [] else [promote_args_chunked list_tail]
+    in
+    match args with
+    | [] -> Double
+    | hd :: list_tail ->
+        TypeTrait ("stan::return_type_t", hd @ chunk_till_empty list_tail) in
+  promote_args_chunked
+    (List.chunks_of ~length:5 (return_optional_arg_types args))
 
 (** Pretty-prints a function's return-type, taking into account templated
     argument promotion.*)

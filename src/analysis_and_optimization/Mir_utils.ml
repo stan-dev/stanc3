@@ -442,8 +442,7 @@ let cleanup_empty_stmts stmts =
     match s.pattern with
     (* NB: Does not include Profile since we don't want to remove those
        blocks *)
-    | SList ls | Block ls ->
-        if List.for_all ~f:(Fn.non is_decl) ls then ls else [s]
+    | (SList ls | Block ls) when List.for_all ~f:(Fn.non is_decl) ls -> ls
     | _ -> [s] in
   let ellide_skip s = match s.pattern with Skip -> [] | _ -> [s] in
   List.map stmts ~f:(rewrite_bottom_up ~f:Fn.id ~g:cleanup_stmt)

@@ -3772,6 +3772,17 @@ model {
 }
 
 [exit 0]
+  $ ../../../../install/default/bin/stanc --auto-format jacobian_pe.stan
+functions {
+  real foo() {
+    return 1.0;
+  }
+}
+transformed parameters {
+  jacobian += foo();
+}
+
+[exit 0]
   $ ../../../../install/default/bin/stanc --auto-format keywords-else-if.stan
 parameters {
   real a;

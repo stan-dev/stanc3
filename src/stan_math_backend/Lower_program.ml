@@ -172,14 +172,13 @@ let lower_constructor
     match pattern with
     | Decl {decl_id; decl_type; _} when decl_id <> "pos__" -> (
         match decl_type with
-        | Sized st -> (
+        | Sized st ->
             Numbering.assign_loc meta
             @
-            match Set.mem data_idents decl_id with
-            | true ->
-                validate_dims ~stage:"data initialization" decl_id st
-                @ gen_assign_data decl_id st
-            | false -> gen_assign_data decl_id st)
+            if Set.mem data_idents decl_id then
+              validate_dims ~stage:"data initialization" decl_id st
+              @ gen_assign_data decl_id st
+            else gen_assign_data decl_id st
         | Unsized _ -> [])
     | _ -> lower_statement s in
   let data =

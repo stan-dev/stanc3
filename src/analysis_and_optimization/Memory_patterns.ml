@@ -34,9 +34,7 @@ let rec matrix_set Expr.{pattern; meta= Expr.Typed.Meta.{type_; _} as meta} =
     match pattern with
     | Var s -> Set.Poly.singleton (Dataflow_types.VVar s, meta)
     | Lit _ -> Set.Poly.empty
-    | FunApp (_, exprs) ->
-        if UnsizedType.contains_eigen_type type_ then union_recur exprs
-        else Set.Poly.empty
+    | FunApp (_, exprs) -> union_recur exprs
     | TernaryIf (_, expr2, expr3) -> union_recur [expr2; expr3]
     | Indexed (expr, _) | Promotion (expr, _, _) | TupleProjection (expr, _) ->
         matrix_set expr
@@ -82,20 +80,17 @@ and count_single_idx (acc : int) (idx : Expr.Typed.t Index.t) =
       within the [Index] types of the list. *)
 let rec is_uni_eigen_loop_indexing in_loop (ut : UnsizedType.t)
     (index : Expr.Typed.t Index.t list) =
-  match in_loop with
-  | false -> false
-  | true -> (
-      let contains_single_idx =
-        List.fold_left ~init:0 ~f:count_single_idx index in
-      match (ut, index) with
-      | (UnsizedType.UVector | URowVector), _ when contains_single_idx > 0 ->
-          true
-      | UMatrix, _ when contains_single_idx > 1 -> true
-      | (UArray t | UFun (_, ReturnType t, _, _)), index -> (
-          match List.tl index with
-          | Some cut_list -> is_uni_eigen_loop_indexing in_loop t cut_list
-          | None -> false)
-      | _ -> false)
+  if in_loop then
+    let contains_single_idx = List.fold_left ~init:0 ~f:count_single_idx index in
+    match (ut, index) with
+    | (UnsizedType.UVector | URowVector), _ when contains_single_idx > 0 -> true
+    | UMatrix, _ when contains_single_idx > 1 -> true
+    | (UArray t | UFun (_, ReturnType t, _, _)), index -> (
+        match List.tl index with
+        | Some cut_list -> is_uni_eigen_loop_indexing in_loop t cut_list
+        | None -> false)
+    | _ -> false
+  else false
 
 let query_stan_math_mem_pattern_support (name : string)
     (args : UnsizedType.argumentlist) =
@@ -203,16 +198,16 @@ and query_initial_demotable_funs (in_loop : bool) (stmt_linenum : int)
   | Fun_kind.StanLib (name, (_ : bool Fun_kind.suffix), _) -> (
       match name with
       | "check_matching_dims" -> acc
-      | name -> (
-          match is_fun_soa_supported name exprs with
-          | true -> Set.union acc demoted_eigen_names
-          | false ->
-              let fail_names =
-                concat_set_str (Set.inter acc top_level_eigen_names) in
-              user_warning_op SoA stmt_linenum
-                ("Function " ^ name ^ " is not supported:")
-                fail_names;
-              Set.union acc demoted_and_top_level_names))
+      | name ->
+          if is_fun_soa_supported name exprs then
+            Set.union acc demoted_eigen_names
+          else
+            let fail_names =
+              concat_set_str (Set.inter acc top_level_eigen_names) in
+            user_warning_op SoA stmt_linenum
+              ("Function " ^ name ^ " is not supported:")
+              fail_names;
+            Set.union acc demoted_and_top_level_names)
   | CompilerInternal (Internal_fun.FnMakeArray | FnMakeRowVec | FnMakeTuple) ->
       let fail_names =
         concat_set_str (Set.inter acc demoted_and_top_level_names) in
@@ -261,7 +256,7 @@ let rec extract_nonderived_admatrix_types
       optimization
     - `rep_*vector` These are templated in the C++ to cast up to `Var<Matrix>`
       types
-    - `rep_matrix`. When it's only a scalar being propogated an math library
+    - `rep_matrix`. When it's only a scalar being propagated an math library
       overload can upcast to `Var<Matrix>` *)
 and extract_nonderived_admatrix_types_fun (kind : 'a Fun_kind.t)
     (exprs : Expr.Typed.t list) =
@@ -340,12 +335,11 @@ let rec query_initial_demotable_stmt (in_loop : bool) (acc : string Set.Poly.t)
                 (fun acc -> query_initial_demotable_expr in_loop linenum ~acc)
                 x)
             idx in
-        match is_uni_eigen_loop_indexing in_loop ut idx with
-        | true ->
-            user_warning_op SoA linenum "Accessed by element in a for loop:"
-              (if Set.mem acc name then "" else name);
-            Set.add idx_list name
-        | false -> idx_list in
+        if is_uni_eigen_loop_indexing in_loop ut idx then (
+          user_warning_op SoA linenum "Accessed by element in a for loop:"
+            (if Set.mem acc name then "" else name);
+          Set.add idx_list name)
+        else idx_list in
       let rhs_demotable_names = query_expr acc rhs in
       let rhs_and_idx_demotions = Set.union idx_demotable rhs_demotable_names in
       (* RHS (1)*)
@@ -449,12 +443,11 @@ let rec query_initial_demotable_stmt (in_loop : bool) (acc : string Set.Poly.t)
         ; query_initial_demotable_stmt true acc body ]
   | Decl {decl_type= Type.Sized st; decl_id; initialize; _} ->
       let complex_name =
-        match SizedType.is_complex_type st with
-        | true ->
-            user_warning_op SoA linenum "Complex-valued types cannot be SoA:"
-              decl_id;
-            Set.Poly.singleton decl_id
-        | false -> Set.Poly.empty in
+        if SizedType.is_complex_type st then (
+          user_warning_op SoA linenum "Complex-valued types cannot be SoA:"
+            decl_id;
+          Set.Poly.singleton decl_id)
+        else Set.Poly.empty in
       let init_names =
         match initialize with
         | Assign e -> query_expr acc e
@@ -477,42 +470,35 @@ let query_demotable_stmt (aos_exits : string Set.Poly.t)
     (stmt : Stmt.Located.Non_recursive.t) : string Set.Poly.t =
   let linenum = stmt.meta.end_loc.line_num in
   match stmt.pattern with
-  | Stmt.Pattern.Assignment (lval, (_ : UnsizedType.t), (rhs : Expr.Typed.t))
-    -> (
+  | Stmt.Pattern.Assignment (lval, (_ : UnsizedType.t), (rhs : Expr.Typed.t)) ->
       let assign_name = Stmt.Helpers.lhs_variable lval in
       let all_rhs_eigen_names = query_var_eigen_names rhs in
       if Set.mem aos_exits assign_name then (
         user_warning_op SoA linenum
           "Right hand side contains only AoS expressions:" assign_name;
         Set.add all_rhs_eigen_names assign_name)
-      else
-        match is_nonzero_subset ~set:aos_exits ~subset:all_rhs_eigen_names with
-        | true ->
-            let warn =
-              Fmt.(
-                str "Right hand side contains AoS expressions (%s):"
-                  (concat_set_str (Set.inter aos_exits all_rhs_eigen_names)))
-            in
-            user_warning_op SoA linenum warn assign_name;
-            Set.add all_rhs_eigen_names assign_name
-        | false -> Set.Poly.empty)
-  | Decl {decl_id; initialize= Assign e; _} -> (
+      else if is_nonzero_subset ~set:aos_exits ~subset:all_rhs_eigen_names then (
+        let warn =
+          Fmt.(
+            str "Right hand side contains AoS expressions (%s):"
+              (concat_set_str (Set.inter aos_exits all_rhs_eigen_names))) in
+        user_warning_op SoA linenum warn assign_name;
+        Set.add all_rhs_eigen_names assign_name)
+      else Set.Poly.empty
+  | Decl {decl_id; initialize= Assign e; _} ->
       let all_rhs_eigen_names = query_var_eigen_names e in
       if Set.mem aos_exits decl_id then (
         user_warning_op SoA linenum
           "Right hand side contains only AoS expressions:" decl_id;
         Set.add all_rhs_eigen_names decl_id)
-      else
-        match is_nonzero_subset ~set:aos_exits ~subset:all_rhs_eigen_names with
-        | true ->
-            let warn =
-              Fmt.(
-                str "Right hand side contains AoS expressions (%s):"
-                  (concat_set_str (Set.inter aos_exits all_rhs_eigen_names)))
-            in
-            user_warning_op SoA linenum warn decl_id;
-            Set.add all_rhs_eigen_names decl_id
-        | false -> Set.Poly.empty)
+      else if is_nonzero_subset ~set:aos_exits ~subset:all_rhs_eigen_names then (
+        let warn =
+          Fmt.(
+            str "Right hand side contains AoS expressions (%s):"
+              (concat_set_str (Set.inter aos_exits all_rhs_eigen_names))) in
+        user_warning_op SoA linenum warn decl_id;
+        Set.add all_rhs_eigen_names decl_id)
+      else Set.Poly.empty
   (* All other statements do not need logic here *)
   | _ -> Set.Poly.empty
 

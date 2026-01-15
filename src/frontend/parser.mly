@@ -286,7 +286,7 @@ return_type:
 arg_decl:
   | od=option(DATABLOCK) ut=unsized_type id=decl_identifier
     {  grammar_logger "arg_decl" ;
-       match od with None -> (UnsizedType.AutoDiffable, ut, id) | _ -> (DataOnly, ut, id)  }
+       if Option.is_some od then (UnsizedType.DataOnly, ut, id) else (AutoDiffable, ut, id)   }
 
 unsized_type:
   | ARRAY n=unsized_dims t=basic_type

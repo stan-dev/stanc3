@@ -91,7 +91,7 @@ module Distance = struct
     else
       let suggestion, _ = loop lst (name, limit) in
       (* if [name = suggestion], that implies that nothing was found which had
-         an edit distance less than the limit (because name is the inital thing
+         an edit distance less than the limit (because name is the initial thing
          given to [loop]), so we return None *)
       if name <> suggestion then Some suggestion else None
 end

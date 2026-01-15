@@ -382,7 +382,7 @@ let rec inline_function_statement propto adt fim Stmt.{pattern; meta} =
         | Assignment (lhs, ut, e2) ->
             let e1 = Middle.Stmt.Helpers.expr_of_lvalue lhs ~meta:e2.meta in
             (* This inner e2 is wrong. We are giving the wrong type to Var x.
-               But it doens't really matter as we discard it later. *)
+               But it doesn't really matter as we discard it later. *)
             let dl1, sl1, e1 = inline_function_expression propto adt fim e1 in
             let dl2, sl2, e2 = inline_function_expression propto adt fim e2 in
             let lhs' =
@@ -435,14 +435,14 @@ let rec inline_function_statement propto adt fim Stmt.{pattern; meta} =
             slist_concat_no_loc (d' @ s')
               (While
                  ( e
-                 , match s' with
-                   | [] -> inline_function_statement propto adt fim stmt
-                   | _ ->
-                       { pattern=
-                           Block
-                             ([inline_function_statement propto adt fim stmt]
-                             @ map_no_loc s')
-                       ; meta= Location_span.empty } ))
+                 , if List.is_empty s' then
+                     inline_function_statement propto adt fim stmt
+                   else
+                     { pattern=
+                         Block
+                           ([inline_function_statement propto adt fim stmt]
+                           @ map_no_loc s')
+                     ; meta= Location_span.empty } ))
         | For {loopvar; lower; upper; body} ->
             let d_lower, s_lower, lower =
               inline_function_expression propto adt fim lower in
@@ -455,14 +455,14 @@ let rec inline_function_statement propto adt fim Stmt.{pattern; meta} =
                  ; lower
                  ; upper
                  ; body=
-                     (match s_upper with
-                     | [] -> inline_function_statement propto adt fim body
-                     | _ ->
-                         { pattern=
-                             Block
-                               ([inline_function_statement propto adt fim body]
-                               @ map_no_loc s_upper)
-                         ; meta= Location_span.empty }) })
+                     (if List.is_empty s_upper then
+                        inline_function_statement propto adt fim body
+                      else
+                        { pattern=
+                            Block
+                              ([inline_function_statement propto adt fim body]
+                              @ map_no_loc s_upper)
+                        ; meta= Location_span.empty }) })
         | Profile (name, l) ->
             Profile
               (name, List.map l ~f:(inline_function_statement propto adt fim))
@@ -601,46 +601,43 @@ let static_loop_unrolling mir =
   transform_program_blockwise mir unroll_static_loops_statement
 
 let unroll_loop_one_step_statement _ =
-  let f stmt =
+  let f stmt : (_, Stmt.Located.t) Stmt.Pattern.t =
     match stmt with
-    | Stmt.Pattern.For {loopvar; lower; upper; body} ->
-        if contains_top_break_or_continue body then stmt
-        else
-          IfElse
-            ( Expr.
-                { lower with
-                  pattern=
-                    FunApp (StanLib ("Geq__", FnPlain, AoS), [upper; lower]) }
-            , { pattern=
-                  (let body_unrolled =
-                     subst_args_stmt [loopvar] [lower]
-                       {pattern= body.pattern; meta= Location_span.empty} in
-                   let (body' : Stmt.Located.t) =
-                     { pattern=
-                         Stmt.Pattern.For
-                           { loopvar
-                           ; upper
-                           ; body
-                           ; lower=
-                               { lower with
-                                 pattern=
-                                   FunApp
-                                     ( StanLib ("Plus__", FnPlain, AoS)
-                                     , [lower; Expr.Helpers.loop_bottom] ) } }
-                     ; meta= Location_span.empty } in
-                   match body_unrolled.pattern with
-                   | Block stmts -> Block (stmts @ [body'])
-                   | _ -> Stmt.Pattern.Block [body_unrolled; body'])
-              ; meta= Location_span.empty }
-            , None )
-    | While (e, body) ->
-        if contains_top_break_or_continue body then stmt
-        else
-          IfElse
-            ( e
-            , { pattern= Block [body; {body with pattern= While (e, body)}]
-              ; meta= Location_span.empty }
-            , None )
+    | Stmt.Pattern.For {loopvar; lower; upper; body}
+      when not (contains_top_break_or_continue body) ->
+        IfElse
+          ( Expr.
+              { lower with
+                pattern= FunApp (StanLib ("Geq__", FnPlain, AoS), [upper; lower])
+              }
+          , { pattern=
+                (let body_unrolled =
+                   subst_args_stmt [loopvar] [lower]
+                     {pattern= body.pattern; meta= Location_span.empty} in
+                 let (body' : Stmt.Located.t) =
+                   { pattern=
+                       Stmt.Pattern.For
+                         { loopvar
+                         ; upper
+                         ; body
+                         ; lower=
+                             { lower with
+                               pattern=
+                                 FunApp
+                                   ( StanLib ("Plus__", FnPlain, AoS)
+                                   , [lower; Expr.Helpers.loop_bottom] ) } }
+                   ; meta= Location_span.empty } in
+                 match body_unrolled.pattern with
+                 | Block stmts -> Block (stmts @ [body'])
+                 | _ -> Stmt.Pattern.Block [body_unrolled; body'])
+            ; meta= Location_span.empty }
+          , None )
+    | While (e, body) when not (contains_top_break_or_continue body) ->
+        IfElse
+          ( e
+          , { pattern= Block [body; {body with pattern= While (e, body)}]
+            ; meta= Location_span.empty }
+          , None )
     | _ -> stmt in
   map_rec_stmt_loc f
 
@@ -1144,7 +1141,7 @@ let optimize_minimal_variables
     (Map.find_exn flowgraph_to_mir 1)
 
 (* XXX: This optimization current promotes/demotes entire tuples at once. This
-   could be signficantly better *)
+   could be significantly better *)
 let optimize_ad_levels (mir : Program.Typed.t) =
   let gen_ad_variables
       (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t)
@@ -1203,7 +1200,7 @@ let optimize_ad_levels (mir : Program.Typed.t) =
 
     This first does a simple iter over the log_prob portion of the MIR, finding
     the names of all matrices (and arrays of matrices) where either the Stan
-    math function does not support SoA or the object is single cell accesed
+    math function does not support SoA or the object is single cell accessed
     within a For or While loop. These are the initial variables given to the
     monotone framework. Then log_prob has all matrix like objects and the
     functions that use them to SoA. After that the Monotone framework is used to

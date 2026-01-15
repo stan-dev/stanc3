@@ -316,15 +316,13 @@ and lower_misc_special_math_app (f : string) (mem_pattern : Mem_pattern.t)
       | Some (UnsizedType.ReturnType t) ->
           Some
             (fun es ->
-              match List.exists ~f:is_autodiffable es with
-              | true ->
-                  Exprs.templated_fun_call (stan_namespace_qualify f)
-                    [ lower_possibly_var_decl
-                        (UnsizedType.fill_adtype_for_type AutoDiffable t)
-                        t mem_pattern ]
-                    (lower_exprs es)
-              | false ->
-                  Exprs.fun_call (stan_namespace_qualify f) (lower_exprs es))
+              if List.exists ~f:is_autodiffable es then
+                Exprs.templated_fun_call (stan_namespace_qualify f)
+                  [ lower_possibly_var_decl
+                      (UnsizedType.fill_adtype_for_type AutoDiffable t)
+                      t mem_pattern ]
+                  (lower_exprs es)
+              else Exprs.fun_call (stan_namespace_qualify f) (lower_exprs es))
       | Some Void -> None
       | None -> None)
   | _ -> None
