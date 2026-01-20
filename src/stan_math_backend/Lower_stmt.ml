@@ -279,8 +279,9 @@ let rec lower_statement Stmt.{pattern; meta} : stmt list =
       accum.@?("add", [lower_expr e]) |> wrap_e
   | JacobianPE e ->
       let accum = Var "lp_accum__" in
-      [ Stmts.if_block (Var "jacobian__")
-          (accum.@?("add", [lower_expr e]) |> wrap_e) ]
+      [ ConstexprIf
+          ( TemplateType "jacobian__"
+          , Block (accum.@?("add", [lower_expr e]) |> wrap_e) ) ]
   | NRFunApp (CompilerInternal FnPrint, args) ->
       let open Cpp.DSL in
       let pstream = Var "pstream__" in

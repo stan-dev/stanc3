@@ -228,6 +228,7 @@ type stmt =
   | ForEach of (type_ * identifier) * expr * stmt
   | While of expr * stmt
   | IfElse of expr * stmt * stmt option
+  | ConstexprIf of type_ * stmt
   | TryCatch of stmt list * (type_ * identifier) * stmt list
   | Block of stmt list
   | Return of expr option
@@ -573,6 +574,9 @@ module Printing = struct
     | While (e, s) ->
         let pp ppf () = pf ppf "while (@[%a@])" pp_expr e in
         pp_with_block pp ppf s
+    | ConstexprIf (cond, thn) ->
+        let pp_if ppf () = pf ppf "if constexpr (@[%a@])" pp_type_ cond in
+        pp_with_block pp_if ppf thn
     | IfElse (cond, thn, None) | IfElse (cond, thn, Some (Block [])) ->
         let pp_if ppf () = pf ppf "if (@[%a@])" pp_expr cond in
         pp_with_block pp_if ppf thn

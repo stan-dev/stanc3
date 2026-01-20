@@ -6530,7 +6530,7 @@ my_upper_bound_jacobian(const T0__& x, const T1__& ub, T_lp__& lp__,
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 16;
-    if (jacobian__) {
+    if constexpr (jacobian__) {
       lp_accum__.add(x);
     }
     current_statement__ = 17;
@@ -6674,7 +6674,7 @@ class jacobian_pe_model final : public model_base_crtp<jacobian_pe_model> {
         my_upper_bound_jacobian<jacobian__>(b_vec_raw, ub, lp__, lp_accum__,
           pstream__), "assigning variable bvec");
       current_statement__ = 8;
-      if (jacobian__) {
+      if constexpr (jacobian__) {
         lp_accum__.add(b_direct_raw);
       }
       local_scalar_t__ b_direct = DUMMY_VAR__;
@@ -6728,7 +6728,7 @@ class jacobian_pe_model final : public model_base_crtp<jacobian_pe_model> {
         my_upper_bound_jacobian<jacobian__>(b_vec_raw, ub, lp__, lp_accum__,
           pstream__), "assigning variable bvec");
       current_statement__ = 8;
-      if (jacobian__) {
+      if constexpr (jacobian__) {
         lp_accum__.add(b_direct_raw);
       }
       local_scalar_t__ b_direct = DUMMY_VAR__;
@@ -6803,7 +6803,7 @@ class jacobian_pe_model final : public model_base_crtp<jacobian_pe_model> {
         my_upper_bound_jacobian<jacobian__>(b_vec_raw, ub, lp__, lp_accum__,
           pstream__), "assigning variable bvec");
       current_statement__ = 8;
-      if (jacobian__) {
+      if constexpr (jacobian__) {
         lp_accum__.add(b_direct_raw);
       }
       current_statement__ = 6;
