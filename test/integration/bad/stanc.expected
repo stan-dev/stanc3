@@ -1117,6 +1117,19 @@ Semantic error in 'err-jacobian-plusequals-scope5.stan', line 8, column 11 to co
 
 The jacobian adjustment can only be applied in the transformed parameters block or in functions ending with _jacobian
 [exit 1]
+  $ ../../../../install/default/bin/stanc err-jacobian-plusequals-scope6.stan
+Semantic error in 'err-jacobian-plusequals-scope6.stan', line 11, column 11 to column 26:
+   -------------------------------------------------
+     9:  
+    10:    real bar(real x) {
+    11:      return bar_jacobian(x);
+                    ^
+    12:    }
+    13:  }
+   -------------------------------------------------
+
+The jacobian adjustment can only be applied in the transformed parameters block or in functions ending with _jacobian
+[exit 1]
   $ ../../../../install/default/bin/stanc err-minus-types.stan
 Semantic error in 'err-minus-types.stan', line 4, column 6 to column 11:
    -------------------------------------------------

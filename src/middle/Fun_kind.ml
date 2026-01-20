@@ -20,15 +20,11 @@ type 'e t =
   | UserDefined of string * bool suffix
 [@@deriving compare, sexp, hash, map, fold]
 
-(** If true, we assume _jacobian functions are "plain" functions for the
-    purposes of typechecking and warnings *)
-let jacobian_compat_mode = ref false
-
 let suffix_from_name fname =
   let is_suffix suffix = Core.String.is_suffix ~suffix fname in
   if is_suffix "_rng" then FnRng
   else if is_suffix "_lp" then FnTarget
-  else if is_suffix "_jacobian" && not !jacobian_compat_mode then FnJacobian
+  else if is_suffix "_jacobian" then FnJacobian
   else if is_suffix "_lupdf" then FnLpdf true
   else if is_suffix "_lupmf" then FnLpmf true
   else if is_suffix "_lpdf" then FnLpdf false
