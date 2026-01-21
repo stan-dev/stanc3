@@ -415,7 +415,7 @@ my_upper_bound_jacobian(const T0__& x_arg__, const T1__& ub, T_lp__& lp__,
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 25;
-    if (jacobian__) {
+    if constexpr (jacobian__) {
       lp_accum__.add(x);
     }
     current_statement__ = 26;

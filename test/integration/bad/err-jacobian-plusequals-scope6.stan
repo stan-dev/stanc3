@@ -1,9 +1,9 @@
-// existing code should continue to work
-
 functions {
 
 
   real bar_jacobian(real x) {
+    // even though this doesn't actually touch the jacobian, scoping should prevent it
+    // being called in a normal function
     return x;
   }
 

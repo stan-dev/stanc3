@@ -608,7 +608,7 @@ Warning in 'jacobian_warning_user.stan', line 5, column 2 to column 27:
   $ ../../../../../install/default/bin/stanc --warn-pedantic  lp_fun.stan
 Warning in 'lp_fun.stan', line 10, column 2 to column 13:
     Using _lp functions in transformed parameters is deprecated and will be
-    disallowed in Stan 2.39. Use an _jacobian function instead, as this
+    disallowed in Stan 2.40. Use an _jacobian function instead, as this
     allows change of variable adjustments which are conditionally enabled by
     the algorithms.
 Warning in 'lp_fun.stan', line 7, column 2 to column 9:

@@ -53,8 +53,6 @@ type context_flags_record =
   ; containing_function: function_indicator
   ; loop_depth: int }
 
-let in_function cf = cf.containing_function <> NotInFunction
-
 let in_rng_function cf =
   match cf.containing_function with
   | NonReturning FnRng | Returning (FnRng, _) -> true
@@ -444,18 +442,17 @@ let verify_fn_target_plus_equals cf loc id =
   if String.is_suffix id.name ~suffix:"_lp" then
     if cf.current_block = TParam then
       add_warning loc
+        (* resolve https://github.com/stan-dev/stanc3/issues/1482 before
+           removal *)
         "Using _lp functions in transformed parameters is deprecated and will \
-         be disallowed in Stan 2.39. Use an _jacobian function instead, as \
+         be disallowed in Stan 2.40. Use an _jacobian function instead, as \
          this allows change of variable adjustments which are conditionally \
          enabled by the algorithms."
     else if in_lp_function cf || cf.current_block = Model then ()
     else Semantic_error.target_plusequals_outside_model_or_logprob loc |> error
 
 let verify_fn_jacobian_plus_equals cf loc tenv id args =
-  if
-    String.is_suffix id.name ~suffix:"_jacobian"
-    && not !Fun_kind.jacobian_compat_mode
-  then
+  if String.is_suffix id.name ~suffix:"_jacobian" then
     if not (in_jacobian_function cf || cf.current_block = TParam) then
       Semantic_error.jacobian_plusequals_not_allowed loc |> error
     else if
@@ -476,13 +473,13 @@ let verify_fn_jacobian_plus_equals cf loc tenv id args =
 (** Rng functions cannot be used in Tp or Model and only in function defs with
     the right suffix *)
 let verify_fn_rng cf loc id =
-  if String.is_suffix id.name ~suffix:"_rng" && cf.in_toplevel_decl then
-    Semantic_error.invalid_decl_rng_fn loc |> error
-  else if
-    String.is_suffix id.name ~suffix:"_rng"
-    && ((in_function cf && not (in_rng_function cf))
-       || cf.current_block = TParam || cf.current_block = Model)
-  then Semantic_error.invalid_rng_fn loc |> error
+  if String.is_suffix id.name ~suffix:"_rng" then
+    if cf.in_toplevel_decl then Semantic_error.invalid_decl_rng_fn loc |> error
+    else if
+      not
+        (in_rng_function cf || cf.current_block = GQuant
+       || cf.current_block = TData)
+    then Semantic_error.invalid_rng_fn loc |> error
 
 (** unnormalized _lpdf/_lpmf functions can only be used in _lpdf/_lpmf/_lp udfs
     or the model block *)
@@ -2097,8 +2094,6 @@ let add_userdefined_functions tenv stmts_opt =
   match stmts_opt with
   | None -> tenv
   | Some {stmts; _} ->
-      (* TODO(2.39): Remove this workaround *)
-      Deprecation_analysis.set_jacobian_compatibility_mode stmts;
       let f tenv (s : Ast.untyped_statement) =
         match s with
         | {stmt= FunDef {returntype; funname; arguments; body}; smeta= {loc}} ->

@@ -4120,12 +4120,12 @@ model {
 
 Warning in 'lp_transformed_param.stan', line 14, column 15 to column 27:
     Using _lp functions in transformed parameters is deprecated and will be
-    disallowed in Stan 2.39. Use an _jacobian function instead, as this
+    disallowed in Stan 2.40. Use an _jacobian function instead, as this
     allows change of variable adjustments which are conditionally enabled by
     the algorithms.
 Warning in 'lp_transformed_param.stan', line 15, column 2 to column 18:
     Using _lp functions in transformed parameters is deprecated and will be
-    disallowed in Stan 2.39. Use an _jacobian function instead, as this
+    disallowed in Stan 2.40. Use an _jacobian function instead, as this
     allows change of variable adjustments which are conditionally enabled by
     the algorithms.
 [exit 0]
