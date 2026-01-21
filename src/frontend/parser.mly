@@ -258,6 +258,7 @@ reserved_word:
   | REJECT { "reject", $loc, false }
   | FATAL_ERROR { "fatal_error", $loc, false }
   | TARGET { "target", $loc, false }
+  | JACOBIAN { "jacobian", $loc, false }
   | PROFILE { "profile", $loc, false }
   | TUPLE { "tuple", $loc, true }
   | OFFSET { "offset", $loc, false }
