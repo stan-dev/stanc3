@@ -77,13 +77,16 @@ module TypeError = struct
 
   let laplace_tolerance_arg_name n =
     match n with
-    | 1 -> "first control parameter (initial guess)"
-    | 2 -> "second control parameter (tolerance)"
-    | 3 -> "third control parameter (max_num_steps)"
-    | 4 -> "fourth control parameter (hessian_block_size)"
-    | 5 -> "fifth control parameter (solver)"
-    | 6 -> "sixth control parameter (max_steps_line_search)"
-    | n -> Fmt.str "%a control parameter" (Fmt.ordinal ()) n
+    | 1 -> "first element of the control parameter tuple (initial guess)"
+    | 2 -> "second element of the control parameter tuple (tolerance)"
+    | 3 -> "third element of the control parameter tuple (max_num_steps)"
+    | 4 -> "fourth element of the control parameter tuple (hessian_block_size)"
+    | 5 -> "fifth element of the control parameter tuple (solver)"
+    | 6 ->
+        "sixth element of the control parameter tuple (max_steps_line_search)"
+    | 7 -> "seventh element of the control parameter tuple (allow_fallthrough)"
+    | n ->
+        Fmt.str "%a element of the control parameter tuple" (Fmt.ordinal ()) n
 
   let rec expected_types : UnsizedType.t Common.Nonempty_list.t Fmt.t =
     let ust = expected_style UnsizedType.pp in
@@ -230,17 +233,23 @@ module TypeError = struct
            an embedded Laplace approximation."
           quoted banned_function
     | IlltypedLaplaceTooMany (name, n_args) ->
-        Fmt.pf ppf
-          "Received %d extra %a at the end of the call to %a.@ Did you mean to \
-           call the _tol version?"
+        Fmt.pf ppf "Received %d extra %a at the end of the call to %a.@ %s"
           n_args arguments n_args quoted name
-    (* For tolerances, because these come at the end, we want to update their
-       position number accordingly, which is why these reimplement some of the
-       printing from [SignatureMismatch] *)
+          (if String.is_substring ~substring:"_tol" name then
+             "Only a single tuple of control parameters is expected."
+           else if n_args = 1 then "Did you mean to call the _tol version?"
+           else "Did you mean to call the _tol version with a tuple of these?")
+    | IlltypedLaplaceTolArgs (name, ArgNumMismatch (_, 0)) ->
+        Fmt.pf ppf
+          "Missing control parameter tuple at the end of the call to %a.@ \
+           Expected a tuple of %a arguments for the control parameters."
+          quoted name (expected_style Fmt.int)
+          (List.length Stan_math_signatures.laplace_tolerance_argument_types)
     | IlltypedLaplaceTolArgs (name, ArgNumMismatch (_, found)) ->
         Fmt.pf ppf
-          "@[<v>Received %a control %a at the end of the call to %a.@ Expected \
-           %a arguments for the control parameters instead.@]"
+          "@[<v>Received a tuple of %a control %a at the end of the call to \
+           %a.@ Expected tuple of %a arguments for the control parameters \
+           instead.@]"
           (actual_style Fmt.int) found arguments found quoted name
           (expected_style Fmt.int)
           (List.length Stan_math_signatures.laplace_tolerance_argument_types)

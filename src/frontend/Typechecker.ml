@@ -716,8 +716,10 @@ let check_function_callable_with_tuple cf tenv caller_id fname
 let verify_laplace_control_args loc id (args : typed_expression list) =
   match (String.is_substring ~substring:"_tol" id.name, args) with
   | false, [] -> ()
-  | true, _ -> (
-      let arg_tys = List.map ~f:arg_type args in
+  | true, [arg] -> (
+      let arg_tys =
+        check_texpression_is_tuple arg
+          ("Control arguments for '" ^ id.name ^ "'") in
       match
         SignatureMismatch.check_compatible_arguments_mod_conv
           Stan_math_signatures.laplace_tolerance_argument_types arg_tys
@@ -725,12 +727,22 @@ let verify_laplace_control_args loc id (args : typed_expression list) =
       | Ok _ -> ()
       | Error err ->
           let loc =
-            let which_arg = match err with ArgError (i, _) -> i | _ -> 0 in
-            List.nth args which_arg
-            |> Option.value_map ~f:(fun expr -> expr.emeta.loc) ~default:loc
-          in
+            let which_arg = match err with ArgError (i, _) -> i - 1 | _ -> 0 in
+            let elts = match arg.expr with TupleExpr elts -> elts | _ -> [] in
+            List.nth elts which_arg
+            |> Option.value_map ~f:(fun e -> e.emeta.loc) ~default:loc in
           Semantic_error.illtyped_laplace_tolerance_args loc id.name err
           |> error)
+  | true, [] ->
+      Semantic_error.illtyped_laplace_tolerance_args loc id.name
+        (SignatureMismatch.check_compatible_arguments_mod_conv
+           Stan_math_signatures.laplace_tolerance_argument_types []
+        |> Result.error |> Option.value_exn)
+      |> error
+  | true, _ :: a :: _ ->
+      Semantic_error.illtyped_laplace_extra_args a.emeta.loc id.name
+        (List.length args - 1)
+      |> error
   | false, a :: _ ->
       Semantic_error.illtyped_laplace_extra_args a.emeta.loc id.name
         (List.length args)

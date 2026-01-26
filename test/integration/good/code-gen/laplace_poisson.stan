@@ -18,7 +18,7 @@ data {
 transformed data {
     // control parameters for Laplace approximation
   real tolerance = 1e-6;
-  int max_num_steps = 100, hessian_block_size = 1, solver = 1, max_steps_line_search = 0;
+  int max_num_steps = 100, hessian_block_size = 1, solver = 1, max_steps_line_search = 0, allow_fallthrough = 1;
 }
 parameters {
   real alpha;               // intercept
@@ -37,6 +37,7 @@ model {
 }
 generated quantities {
 
-real log_lik_sum = laplace_marginal_tol(poisson_re_log_ll, (y, offsett + alpha + X*beta), cov_fun, (sigmaz, N), rep_vector(0.0, N), tolerance, max_num_steps,
-              hessian_block_size, solver, max_steps_line_search);
+real log_lik_sum = laplace_marginal_tol(poisson_re_log_ll, (y, offsett + alpha + X*beta), cov_fun, (sigmaz, N),
+              (rep_vector(0.0, N), tolerance, max_num_steps, hessian_block_size,
+               solver, max_steps_line_search, allow_fallthrough));
 }

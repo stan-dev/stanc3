@@ -37,6 +37,7 @@ transformed data {
   int hessian_block_size = 1;
   int solver = 1;
   int max_steps_line_search = 0;
+  int allow_fallthrough = 1;
 }
 parameters {
   real<lower=0> alpha;
@@ -53,9 +54,8 @@ model {
 
   target += laplace_marginal_tol(ll_function, (eta, log_ye, y),
                                  K_function, (x, n_obs, alpha, rho),
-                                 theta_0, tolerance, max_num_steps,
-                                 hessian_block_size, solver,
-                                 max_steps_line_search);
+                                (theta_0, tolerance, max_num_steps, hessian_block_size,
+                                solver, max_steps_line_search, allow_fallthrough));
 
 }
 generated quantities {
@@ -67,8 +67,7 @@ generated quantities {
                                                 (eta, log_ye, y),
                                                 K_function,
                                                 (x, n_obs, alpha, rho),
-                                                theta_0, tolerance, max_num_steps,
-                                                hessian_block_size, solver,
-                                                max_steps_line_search);
+                                                (theta_0, tolerance, max_num_steps, hessian_block_size,
+                                                solver, max_steps_line_search, allow_fallthrough));
 
 }

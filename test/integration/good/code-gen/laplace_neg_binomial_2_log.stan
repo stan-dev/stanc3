@@ -28,6 +28,7 @@ transformed data {
   int hessian_block_size = 1;
   int solver = 1;
   int max_steps_line_search = 0;
+  int allow_fallthrough = 1;
 
   vector[n_obs] prior_mean = rep_vector(0.0, n_obs);
 }
@@ -51,18 +52,19 @@ model {
               prior_mean, K_function, (x, n_obs, alpha, rho));
 
   y ~ laplace_marginal_tol_neg_binomial_2_log(y, log_ye, prior_mean, K_function,
-        (x, n_obs, alpha, rho), theta_0, tolerance, max_num_steps, hessian_block_size,
-        solver, max_steps_line_search);
+        (x, n_obs, alpha, rho),
+        (theta_0, tolerance, max_num_steps, hessian_block_size,
+        solver, max_steps_line_search, allow_fallthrough));
 
   target += laplace_marginal_tol_neg_binomial_2_log_lpmf(y | y, log_ye,
-              prior_mean, K_function, (x, n_obs, alpha, rho), theta_0, tolerance,
-              max_num_steps, hessian_block_size, solver,
-              max_steps_line_search);
+              prior_mean, K_function, (x, n_obs, alpha, rho),
+              (theta_0, tolerance, max_num_steps, hessian_block_size,
+              solver, max_steps_line_search, allow_fallthrough));
 
   target += laplace_marginal_tol_neg_binomial_2_log_lupmf(y | y, log_ye,
-              prior_mean, K_function, (x, n_obs, alpha, rho), theta_0, tolerance,
-              max_num_steps, hessian_block_size, solver,
-              max_steps_line_search);
+              prior_mean, K_function, (x, n_obs, alpha, rho),
+              (theta_0, tolerance, max_num_steps, hessian_block_size,
+              solver, max_steps_line_search, allow_fallthrough));
 }
 generated quantities {
   vector[n_obs] theta = laplace_latent_neg_binomial_2_log_rng(y, y, log_ye,
@@ -70,6 +72,7 @@ generated quantities {
 
   vector[n_obs] theta2 = laplace_latent_tol_neg_binomial_2_log_rng(y, y,
                            log_ye, prior_mean, K_function,
-                           (x, n_obs, alpha, rho), theta_0, tolerance, max_num_steps,
-                           hessian_block_size, solver, max_steps_line_search);
+                           (x, n_obs, alpha, rho),
+                          (theta_0, tolerance, max_num_steps, hessian_block_size,
+                          solver, max_steps_line_search, allow_fallthrough));
 }
