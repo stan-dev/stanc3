@@ -213,6 +213,18 @@ Syntax error in 'int.stan', line 2, column 7 to column 10, parsing error:
 
 Ill-formed identifier. Expected a new identifier but found reserved keyword "int".
 [exit 1]
+  $ ../../../../../install/default/bin/stanc jacobian.stan
+Syntax error in 'jacobian.stan', line 2, column 7 to column 15, parsing error:
+   -------------------------------------------------
+     1:  data {
+     2:    real jacobian;
+                ^
+     3:  }
+     4:  model {
+   -------------------------------------------------
+
+Ill-formed identifier. Expected a new identifier but found reserved keyword "jacobian".
+[exit 1]
   $ ../../../../../install/default/bin/stanc matrix.stan
 Syntax error in 'matrix.stan', line 2, column 7 to column 13, parsing error:
    -------------------------------------------------
@@ -401,6 +413,18 @@ Syntax error in 'sum_to_zero_vector.stan', line 2, column 7 to column 25, parsin
    -------------------------------------------------
 
 Ill-formed identifier. Expected a new identifier but found reserved keyword "sum_to_zero_vector".
+[exit 1]
+  $ ../../../../../install/default/bin/stanc target.stan
+Syntax error in 'target.stan', line 2, column 7 to column 13, parsing error:
+   -------------------------------------------------
+     1:  data {
+     2:    real target;
+                ^
+     3:  }
+     4:  model {
+   -------------------------------------------------
+
+Ill-formed identifier. Expected a new identifier but found reserved keyword "target".
 [exit 1]
   $ ../../../../../install/default/bin/stanc then.stan
 Semantic error in 'then.stan', line 2, column 7 to column 11:
