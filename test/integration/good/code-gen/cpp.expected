@@ -7112,22 +7112,22 @@ namespace laplace_bernoulli_logit_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 46> locations_array__ =
+static constexpr std::array<const char*, 47> locations_array__ =
   {" (found before start of program)",
-  " (in 'laplace_bernoulli_logit.stan', line 34, column 2 to column 22)",
-  " (in 'laplace_bernoulli_logit.stan', line 35, column 2 to column 20)",
+  " (in 'laplace_bernoulli_logit.stan', line 35, column 2 to column 22)",
   " (in 'laplace_bernoulli_logit.stan', line 36, column 2 to column 20)",
-  " (in 'laplace_bernoulli_logit.stan', line 65, column 2 to line 66, column 64)",
-  " (in 'laplace_bernoulli_logit.stan', line 68, column 2 to line 71, column 50)",
-  " (in 'laplace_bernoulli_logit.stan', line 39, column 2 to column 55)",
-  " (in 'laplace_bernoulli_logit.stan', line 40, column 2 to column 61)",
-  " (in 'laplace_bernoulli_logit.stan', line 41, column 2 to column 21)",
-  " (in 'laplace_bernoulli_logit.stan', line 43, column 2 to line 44, column 32)",
-  " (in 'laplace_bernoulli_logit.stan', line 46, column 2 to line 47, column 38)",
-  " (in 'laplace_bernoulli_logit.stan', line 49, column 2 to line 50, column 38)",
-  " (in 'laplace_bernoulli_logit.stan', line 52, column 2 to line 54, column 39)",
-  " (in 'laplace_bernoulli_logit.stan', line 56, column 2 to line 58, column 65)",
-  " (in 'laplace_bernoulli_logit.stan', line 60, column 2 to line 62, column 65)",
+  " (in 'laplace_bernoulli_logit.stan', line 37, column 2 to column 20)",
+  " (in 'laplace_bernoulli_logit.stan', line 69, column 2 to line 70, column 64)",
+  " (in 'laplace_bernoulli_logit.stan', line 72, column 2 to line 75, column 77)",
+  " (in 'laplace_bernoulli_logit.stan', line 40, column 2 to column 55)",
+  " (in 'laplace_bernoulli_logit.stan', line 41, column 2 to column 61)",
+  " (in 'laplace_bernoulli_logit.stan', line 42, column 2 to column 21)",
+  " (in 'laplace_bernoulli_logit.stan', line 44, column 2 to line 45, column 32)",
+  " (in 'laplace_bernoulli_logit.stan', line 47, column 2 to line 48, column 38)",
+  " (in 'laplace_bernoulli_logit.stan', line 50, column 2 to line 51, column 38)",
+  " (in 'laplace_bernoulli_logit.stan', line 53, column 2 to line 56, column 59)",
+  " (in 'laplace_bernoulli_logit.stan', line 58, column 2 to line 61, column 65)",
+  " (in 'laplace_bernoulli_logit.stan', line 63, column 2 to line 66, column 65)",
   " (in 'laplace_bernoulli_logit.stan', line 10, column 2 to column 12)",
   " (in 'laplace_bernoulli_logit.stan', line 11, column 2 to column 20)",
   " (in 'laplace_bernoulli_logit.stan', line 12, column 8 to column 13)",
@@ -7148,10 +7148,11 @@ static constexpr std::array<const char*, 46> locations_array__ =
   " (in 'laplace_bernoulli_logit.stan', line 26, column 2 to column 29)",
   " (in 'laplace_bernoulli_logit.stan', line 27, column 2 to column 17)",
   " (in 'laplace_bernoulli_logit.stan', line 28, column 2 to column 32)",
-  " (in 'laplace_bernoulli_logit.stan', line 30, column 11 to column 16)",
-  " (in 'laplace_bernoulli_logit.stan', line 30, column 4 to column 54)",
-  " (in 'laplace_bernoulli_logit.stan', line 65, column 9 to column 14)",
-  " (in 'laplace_bernoulli_logit.stan', line 68, column 9 to column 14)",
+  " (in 'laplace_bernoulli_logit.stan', line 29, column 2 to column 28)",
+  " (in 'laplace_bernoulli_logit.stan', line 31, column 11 to column 16)",
+  " (in 'laplace_bernoulli_logit.stan', line 31, column 4 to column 54)",
+  " (in 'laplace_bernoulli_logit.stan', line 69, column 9 to column 14)",
+  " (in 'laplace_bernoulli_logit.stan', line 72, column 9 to column 14)",
   " (in 'laplace_bernoulli_logit.stan', line 3, column 11 to column 16)",
   " (in 'laplace_bernoulli_logit.stan', line 3, column 18 to column 23)",
   " (in 'laplace_bernoulli_logit.stan', line 3, column 4 to column 60)",
@@ -7212,25 +7213,25 @@ K_function(const T0__& x, const T1__& n_obs, const T2__& alpha, const T3__&
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 39;
-    stan::math::validate_non_negative_index("K", "n_obs", n_obs);
     current_statement__ = 40;
+    stan::math::validate_non_negative_index("K", "n_obs", n_obs);
+    current_statement__ = 41;
     stan::math::validate_non_negative_index("K", "n_obs", n_obs);
     Eigen::Matrix<local_scalar_t__,-1,-1> K =
       Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(n_obs, n_obs,
         DUMMY_VAR__);
-    current_statement__ = 41;
+    current_statement__ = 42;
     stan::model::assign(K, stan::math::gp_exp_quad_cov(x, alpha, rho),
       "assigning variable K");
-    current_statement__ = 43;
+    current_statement__ = 44;
     for (int i = 1; i <= n_obs; ++i) {
-      current_statement__ = 42;
+      current_statement__ = 43;
       stan::model::assign(K,
         (stan::model::rvalue(K, "K", stan::model::index_uni(i),
            stan::model::index_uni(i)) + 1e-8), "assigning variable K",
         stan::model::index_uni(i), stan::model::index_uni(i));
     }
-    current_statement__ = 44;
+    current_statement__ = 45;
     return K;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7253,6 +7254,7 @@ class laplace_bernoulli_logit_model final : public model_base_crtp<laplace_berno
   int hessian_block_size;
   int solver;
   int max_steps_line_search;
+  int allow_fallthrough;
   Eigen::Matrix<double,-1,1> prior_mean_data__;
   Eigen::Map<Eigen::Matrix<double,-1,1>> ye{nullptr, 0};
   Eigen::Map<Eigen::Matrix<double,-1,1>> theta_0{nullptr, 0};
@@ -7401,19 +7403,23 @@ class laplace_bernoulli_logit_model final : public model_base_crtp<laplace_berno
       current_statement__ = 34;
       max_steps_line_search = 0;
       current_statement__ = 35;
-      stan::math::validate_non_negative_index("prior_mean", "n_obs", n_obs);
+      allow_fallthrough = std::numeric_limits<int>::min();
+      current_statement__ = 35;
+      allow_fallthrough = 1;
       current_statement__ = 36;
+      stan::math::validate_non_negative_index("prior_mean", "n_obs", n_obs);
+      current_statement__ = 37;
       prior_mean_data__ = Eigen::Matrix<double,-1,1>::Constant(n_obs,
                             std::numeric_limits<double>::quiet_NaN());
       new (&prior_mean)
         Eigen::Map<Eigen::Matrix<double,-1,1>>(prior_mean_data__.data(),
         n_obs);
-      current_statement__ = 36;
+      current_statement__ = 37;
       stan::model::assign(prior_mean, stan::math::rep_vector(0.0, n_obs),
         "assigning variable prior_mean");
-      current_statement__ = 37;
-      stan::math::validate_non_negative_index("theta", "n_obs", n_obs);
       current_statement__ = 38;
+      stan::math::validate_non_negative_index("theta", "n_obs", n_obs);
+      current_statement__ = 39;
       stan::math::validate_non_negative_index("theta2", "n_obs", n_obs);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7492,22 +7498,25 @@ class laplace_bernoulli_logit_model final : public model_base_crtp<laplace_berno
         lp_accum__.add(stan::math::laplace_marginal_tol_bernoulli_logit_lpmf<
                          propto__>(y, y, prior_mean, K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
-                         theta_0, tolerance, max_num_steps,
-                         hessian_block_size, solver, max_steps_line_search,
+                         std::forward_as_tuple(theta_0, tolerance,
+                           max_num_steps, hessian_block_size, solver,
+                           max_steps_line_search, allow_fallthrough),
                          pstream__));
         current_statement__ = 13;
         lp_accum__.add(stan::math::laplace_marginal_tol_bernoulli_logit_lpmf<
                          false>(y, y, prior_mean, K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
-                         theta_0, tolerance, max_num_steps,
-                         hessian_block_size, solver, max_steps_line_search,
+                         std::forward_as_tuple(theta_0, tolerance,
+                           max_num_steps, hessian_block_size, solver,
+                           max_steps_line_search, allow_fallthrough),
                          pstream__));
         current_statement__ = 14;
         lp_accum__.add(stan::math::laplace_marginal_tol_bernoulli_logit_lpmf<
                          propto__>(y, y, prior_mean, K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
-                         theta_0, tolerance, max_num_steps,
-                         hessian_block_size, solver, max_steps_line_search,
+                         std::forward_as_tuple(theta_0, tolerance,
+                           max_num_steps, hessian_block_size, solver,
+                           max_steps_line_search, allow_fallthrough),
                          pstream__));
       }
     } catch (const std::exception& e) {
@@ -7581,22 +7590,25 @@ class laplace_bernoulli_logit_model final : public model_base_crtp<laplace_berno
         lp_accum__.add(stan::math::laplace_marginal_tol_bernoulli_logit_lpmf<
                          propto__>(y, y, prior_mean, K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
-                         theta_0, tolerance, max_num_steps,
-                         hessian_block_size, solver, max_steps_line_search,
+                         std::forward_as_tuple(theta_0, tolerance,
+                           max_num_steps, hessian_block_size, solver,
+                           max_steps_line_search, allow_fallthrough),
                          pstream__));
         current_statement__ = 13;
         lp_accum__.add(stan::math::laplace_marginal_tol_bernoulli_logit_lpmf<
                          false>(y, y, prior_mean, K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
-                         theta_0, tolerance, max_num_steps,
-                         hessian_block_size, solver, max_steps_line_search,
+                         std::forward_as_tuple(theta_0, tolerance,
+                           max_num_steps, hessian_block_size, solver,
+                           max_steps_line_search, allow_fallthrough),
                          pstream__));
         current_statement__ = 14;
         lp_accum__.add(stan::math::laplace_marginal_tol_bernoulli_logit_lpmf<
                          propto__>(y, y, prior_mean, K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
-                         theta_0, tolerance, max_num_steps,
-                         hessian_block_size, solver, max_steps_line_search,
+                         std::forward_as_tuple(theta_0, tolerance,
+                           max_num_steps, hessian_block_size, solver,
+                           max_steps_line_search, allow_fallthrough),
                          pstream__));
       }
     } catch (const std::exception& e) {
@@ -7679,9 +7691,11 @@ class laplace_bernoulli_logit_model final : public model_base_crtp<laplace_berno
       stan::model::assign(theta2,
         stan::math::laplace_latent_tol_bernoulli_logit_rng(y, y, prior_mean,
           K_function_functor__(),
-          std::forward_as_tuple(x, n_obs, alpha, rho), theta_0, tolerance,
-          max_num_steps, hessian_block_size, solver, max_steps_line_search,
-          base_rng__, pstream__), "assigning variable theta2");
+          std::forward_as_tuple(x, n_obs, alpha, rho),
+          std::forward_as_tuple(theta_0, tolerance, max_num_steps,
+            hessian_block_size, solver, max_steps_line_search,
+            allow_fallthrough), base_rng__, pstream__),
+        "assigning variable theta2");
       out__.write(theta);
       out__.write(theta2);
     } catch (const std::exception& e) {
@@ -7937,18 +7951,18 @@ namespace laplace_functionals_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 44> locations_array__ =
+static constexpr std::array<const char*, 45> locations_array__ =
   {" (found before start of program)",
-  " (in 'laplace_functionals.stan', line 42, column 2 to column 22)",
-  " (in 'laplace_functionals.stan', line 43, column 2 to column 20)",
+  " (in 'laplace_functionals.stan', line 43, column 2 to column 22)",
   " (in 'laplace_functionals.stan', line 44, column 2 to column 20)",
+  " (in 'laplace_functionals.stan', line 45, column 2 to column 20)",
   " (in 'laplace_functionals.stan', line 62, column 2 to line 64, column 67)",
-  " (in 'laplace_functionals.stan', line 66, column 2 to line 72, column 71)",
-  " (in 'laplace_functionals.stan', line 47, column 2 to column 55)",
-  " (in 'laplace_functionals.stan', line 48, column 2 to column 61)",
-  " (in 'laplace_functionals.stan', line 49, column 2 to column 21)",
-  " (in 'laplace_functionals.stan', line 51, column 2 to line 52, column 65)",
-  " (in 'laplace_functionals.stan', line 54, column 2 to line 58, column 56)",
+  " (in 'laplace_functionals.stan', line 66, column 2 to line 71, column 99)",
+  " (in 'laplace_functionals.stan', line 48, column 2 to column 55)",
+  " (in 'laplace_functionals.stan', line 49, column 2 to column 61)",
+  " (in 'laplace_functionals.stan', line 50, column 2 to column 21)",
+  " (in 'laplace_functionals.stan', line 52, column 2 to line 53, column 65)",
+  " (in 'laplace_functionals.stan', line 55, column 2 to line 58, column 83)",
   " (in 'laplace_functionals.stan', line 19, column 2 to column 12)",
   " (in 'laplace_functionals.stan', line 20, column 2 to column 20)",
   " (in 'laplace_functionals.stan', line 21, column 8 to column 13)",
@@ -7971,6 +7985,7 @@ static constexpr std::array<const char*, 44> locations_array__ =
   " (in 'laplace_functionals.stan', line 37, column 2 to column 29)",
   " (in 'laplace_functionals.stan', line 38, column 2 to column 17)",
   " (in 'laplace_functionals.stan', line 39, column 2 to column 32)",
+  " (in 'laplace_functionals.stan', line 40, column 2 to column 28)",
   " (in 'laplace_functionals.stan', line 62, column 9 to column 14)",
   " (in 'laplace_functionals.stan', line 66, column 9 to column 14)",
   " (in 'laplace_functionals.stan', line 7, column 4 to column 61)",
@@ -8065,7 +8080,7 @@ ll_function(const T0__& theta_arg__, const T1__& eta, const T2__&
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 35;
+    current_statement__ = 36;
     return stan::math::neg_binomial_2_lpmf<false>(y,
              stan::math::exp(stan::math::add(log_ye, theta)), eta);
   } catch (const std::exception& e) {
@@ -8097,25 +8112,25 @@ K_function(const T0__& x, const T1__& n_obs, const T2__& alpha, const T3__&
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 37;
-    stan::math::validate_non_negative_index("K", "n_obs", n_obs);
     current_statement__ = 38;
+    stan::math::validate_non_negative_index("K", "n_obs", n_obs);
+    current_statement__ = 39;
     stan::math::validate_non_negative_index("K", "n_obs", n_obs);
     Eigen::Matrix<local_scalar_t__,-1,-1> K =
       Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(n_obs, n_obs,
         DUMMY_VAR__);
-    current_statement__ = 39;
+    current_statement__ = 40;
     stan::model::assign(K, stan::math::gp_exp_quad_cov(x, alpha, rho),
       "assigning variable K");
-    current_statement__ = 41;
+    current_statement__ = 42;
     for (int i = 1; i <= n_obs; ++i) {
-      current_statement__ = 40;
+      current_statement__ = 41;
       stan::model::assign(K,
         (stan::model::rvalue(K, "K", stan::model::index_uni(i),
            stan::model::index_uni(i)) + 1e-8), "assigning variable K",
         stan::model::index_uni(i), stan::model::index_uni(i));
     }
-    current_statement__ = 42;
+    current_statement__ = 43;
     return K;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -8139,6 +8154,7 @@ class laplace_functionals_model final : public model_base_crtp<laplace_functiona
   int hessian_block_size;
   int solver;
   int max_steps_line_search;
+  int allow_fallthrough;
   Eigen::Map<Eigen::Matrix<double,-1,1>> ye{nullptr, 0};
   Eigen::Map<Eigen::Matrix<double,-1,1>> log_ye{nullptr, 0};
   Eigen::Map<Eigen::Matrix<double,-1,1>> theta_0{nullptr, 0};
@@ -8296,8 +8312,12 @@ class laplace_functionals_model final : public model_base_crtp<laplace_functiona
       current_statement__ = 32;
       max_steps_line_search = 0;
       current_statement__ = 33;
-      stan::math::validate_non_negative_index("theta", "n_obs", n_obs);
+      allow_fallthrough = std::numeric_limits<int>::min();
+      current_statement__ = 33;
+      allow_fallthrough = 1;
       current_statement__ = 34;
+      stan::math::validate_non_negative_index("theta", "n_obs", n_obs);
+      current_statement__ = 35;
       stan::math::validate_non_negative_index("theta2", "n_obs", n_obs);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -8369,8 +8389,9 @@ class laplace_functionals_model final : public model_base_crtp<laplace_functiona
                          std::forward_as_tuple(eta, log_ye, y),
                          K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
-                         theta_0, tolerance, max_num_steps,
-                         hessian_block_size, solver, max_steps_line_search,
+                         std::forward_as_tuple(theta_0, tolerance,
+                           max_num_steps, hessian_block_size, solver,
+                           max_steps_line_search, allow_fallthrough),
                          pstream__));
       }
     } catch (const std::exception& e) {
@@ -8437,8 +8458,9 @@ class laplace_functionals_model final : public model_base_crtp<laplace_functiona
                          std::forward_as_tuple(eta, log_ye, y),
                          K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
-                         theta_0, tolerance, max_num_steps,
-                         hessian_block_size, solver, max_steps_line_search,
+                         std::forward_as_tuple(theta_0, tolerance,
+                           max_num_steps, hessian_block_size, solver,
+                           max_steps_line_search, allow_fallthrough),
                          pstream__));
       }
     } catch (const std::exception& e) {
@@ -8521,9 +8543,11 @@ class laplace_functionals_model final : public model_base_crtp<laplace_functiona
       stan::model::assign(theta2,
         stan::math::laplace_latent_tol_rng(ll_function_functor__(),
           std::forward_as_tuple(eta, log_ye, y), K_function_functor__(),
-          std::forward_as_tuple(x, n_obs, alpha, rho), theta_0, tolerance,
-          max_num_steps, hessian_block_size, solver, max_steps_line_search,
-          base_rng__, pstream__), "assigning variable theta2");
+          std::forward_as_tuple(x, n_obs, alpha, rho),
+          std::forward_as_tuple(theta_0, tolerance, max_num_steps,
+            hessian_block_size, solver, max_steps_line_search,
+            allow_fallthrough), base_rng__, pstream__),
+        "assigning variable theta2");
       out__.write(theta);
       out__.write(theta2);
     } catch (const std::exception& e) {
@@ -8779,22 +8803,22 @@ namespace laplace_neg_binomial_2_log_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 48> locations_array__ =
+static constexpr std::array<const char*, 49> locations_array__ =
   {" (found before start of program)",
-  " (in 'laplace_neg_binomial_2_log.stan', line 35, column 2 to column 22)",
-  " (in 'laplace_neg_binomial_2_log.stan', line 36, column 2 to column 20)",
+  " (in 'laplace_neg_binomial_2_log.stan', line 36, column 2 to column 22)",
   " (in 'laplace_neg_binomial_2_log.stan', line 37, column 2 to column 20)",
-  " (in 'laplace_neg_binomial_2_log.stan', line 68, column 2 to line 69, column 74)",
-  " (in 'laplace_neg_binomial_2_log.stan', line 71, column 2 to line 74, column 78)",
-  " (in 'laplace_neg_binomial_2_log.stan', line 40, column 2 to column 55)",
-  " (in 'laplace_neg_binomial_2_log.stan', line 41, column 2 to column 61)",
-  " (in 'laplace_neg_binomial_2_log.stan', line 42, column 2 to column 21)",
-  " (in 'laplace_neg_binomial_2_log.stan', line 44, column 2 to line 45, column 32)",
-  " (in 'laplace_neg_binomial_2_log.stan', line 47, column 2 to line 48, column 62)",
-  " (in 'laplace_neg_binomial_2_log.stan', line 50, column 2 to line 51, column 62)",
-  " (in 'laplace_neg_binomial_2_log.stan', line 53, column 2 to line 55, column 39)",
-  " (in 'laplace_neg_binomial_2_log.stan', line 57, column 2 to line 60, column 37)",
-  " (in 'laplace_neg_binomial_2_log.stan', line 62, column 2 to line 65, column 37)",
+  " (in 'laplace_neg_binomial_2_log.stan', line 38, column 2 to column 20)",
+  " (in 'laplace_neg_binomial_2_log.stan', line 70, column 2 to line 71, column 74)",
+  " (in 'laplace_neg_binomial_2_log.stan', line 73, column 2 to line 77, column 77)",
+  " (in 'laplace_neg_binomial_2_log.stan', line 41, column 2 to column 55)",
+  " (in 'laplace_neg_binomial_2_log.stan', line 42, column 2 to column 61)",
+  " (in 'laplace_neg_binomial_2_log.stan', line 43, column 2 to column 21)",
+  " (in 'laplace_neg_binomial_2_log.stan', line 45, column 2 to line 46, column 32)",
+  " (in 'laplace_neg_binomial_2_log.stan', line 48, column 2 to line 49, column 62)",
+  " (in 'laplace_neg_binomial_2_log.stan', line 51, column 2 to line 52, column 62)",
+  " (in 'laplace_neg_binomial_2_log.stan', line 54, column 2 to line 57, column 59)",
+  " (in 'laplace_neg_binomial_2_log.stan', line 59, column 2 to line 62, column 65)",
+  " (in 'laplace_neg_binomial_2_log.stan', line 64, column 2 to line 67, column 65)",
   " (in 'laplace_neg_binomial_2_log.stan', line 10, column 2 to column 12)",
   " (in 'laplace_neg_binomial_2_log.stan', line 11, column 2 to column 20)",
   " (in 'laplace_neg_binomial_2_log.stan', line 12, column 8 to column 13)",
@@ -8817,10 +8841,11 @@ static constexpr std::array<const char*, 48> locations_array__ =
   " (in 'laplace_neg_binomial_2_log.stan', line 28, column 2 to column 29)",
   " (in 'laplace_neg_binomial_2_log.stan', line 29, column 2 to column 17)",
   " (in 'laplace_neg_binomial_2_log.stan', line 30, column 2 to column 32)",
-  " (in 'laplace_neg_binomial_2_log.stan', line 32, column 9 to column 14)",
-  " (in 'laplace_neg_binomial_2_log.stan', line 32, column 2 to column 52)",
-  " (in 'laplace_neg_binomial_2_log.stan', line 68, column 9 to column 14)",
-  " (in 'laplace_neg_binomial_2_log.stan', line 71, column 9 to column 14)",
+  " (in 'laplace_neg_binomial_2_log.stan', line 31, column 2 to column 28)",
+  " (in 'laplace_neg_binomial_2_log.stan', line 33, column 9 to column 14)",
+  " (in 'laplace_neg_binomial_2_log.stan', line 33, column 2 to column 52)",
+  " (in 'laplace_neg_binomial_2_log.stan', line 70, column 9 to column 14)",
+  " (in 'laplace_neg_binomial_2_log.stan', line 73, column 9 to column 14)",
   " (in 'laplace_neg_binomial_2_log.stan', line 3, column 11 to column 16)",
   " (in 'laplace_neg_binomial_2_log.stan', line 3, column 18 to column 23)",
   " (in 'laplace_neg_binomial_2_log.stan', line 3, column 4 to column 60)",
@@ -8881,25 +8906,25 @@ K_function(const T0__& x, const T1__& n_obs, const T2__& alpha, const T3__&
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 41;
-    stan::math::validate_non_negative_index("K", "n_obs", n_obs);
     current_statement__ = 42;
+    stan::math::validate_non_negative_index("K", "n_obs", n_obs);
+    current_statement__ = 43;
     stan::math::validate_non_negative_index("K", "n_obs", n_obs);
     Eigen::Matrix<local_scalar_t__,-1,-1> K =
       Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(n_obs, n_obs,
         DUMMY_VAR__);
-    current_statement__ = 43;
+    current_statement__ = 44;
     stan::model::assign(K, stan::math::gp_exp_quad_cov(x, alpha, rho),
       "assigning variable K");
-    current_statement__ = 45;
+    current_statement__ = 46;
     for (int i = 1; i <= n_obs; ++i) {
-      current_statement__ = 44;
+      current_statement__ = 45;
       stan::model::assign(K,
         (stan::model::rvalue(K, "K", stan::model::index_uni(i),
            stan::model::index_uni(i)) + 1e-8), "assigning variable K",
         stan::model::index_uni(i), stan::model::index_uni(i));
     }
-    current_statement__ = 46;
+    current_statement__ = 47;
     return K;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -8923,6 +8948,7 @@ class laplace_neg_binomial_2_log_model final : public model_base_crtp<laplace_ne
   int hessian_block_size;
   int solver;
   int max_steps_line_search;
+  int allow_fallthrough;
   Eigen::Matrix<double,-1,1> prior_mean_data__;
   Eigen::Map<Eigen::Matrix<double,-1,1>> ye{nullptr, 0};
   Eigen::Map<Eigen::Matrix<double,-1,1>> log_ye{nullptr, 0};
@@ -9083,19 +9109,23 @@ class laplace_neg_binomial_2_log_model final : public model_base_crtp<laplace_ne
       current_statement__ = 36;
       max_steps_line_search = 0;
       current_statement__ = 37;
-      stan::math::validate_non_negative_index("prior_mean", "n_obs", n_obs);
+      allow_fallthrough = std::numeric_limits<int>::min();
+      current_statement__ = 37;
+      allow_fallthrough = 1;
       current_statement__ = 38;
+      stan::math::validate_non_negative_index("prior_mean", "n_obs", n_obs);
+      current_statement__ = 39;
       prior_mean_data__ = Eigen::Matrix<double,-1,1>::Constant(n_obs,
                             std::numeric_limits<double>::quiet_NaN());
       new (&prior_mean)
         Eigen::Map<Eigen::Matrix<double,-1,1>>(prior_mean_data__.data(),
         n_obs);
-      current_statement__ = 38;
+      current_statement__ = 39;
       stan::model::assign(prior_mean, stan::math::rep_vector(0.0, n_obs),
         "assigning variable prior_mean");
-      current_statement__ = 39;
-      stan::math::validate_non_negative_index("theta", "n_obs", n_obs);
       current_statement__ = 40;
+      stan::math::validate_non_negative_index("theta", "n_obs", n_obs);
+      current_statement__ = 41;
       stan::math::validate_non_negative_index("theta2", "n_obs", n_obs);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -9178,24 +9208,27 @@ class laplace_neg_binomial_2_log_model final : public model_base_crtp<laplace_ne
                          propto__>(y, y, log_ye, prior_mean,
                          K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
-                         theta_0, tolerance, max_num_steps,
-                         hessian_block_size, solver, max_steps_line_search,
+                         std::forward_as_tuple(theta_0, tolerance,
+                           max_num_steps, hessian_block_size, solver,
+                           max_steps_line_search, allow_fallthrough),
                          pstream__));
         current_statement__ = 13;
         lp_accum__.add(stan::math::laplace_marginal_tol_neg_binomial_2_log_lpmf<
                          false>(y, y, log_ye, prior_mean,
                          K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
-                         theta_0, tolerance, max_num_steps,
-                         hessian_block_size, solver, max_steps_line_search,
+                         std::forward_as_tuple(theta_0, tolerance,
+                           max_num_steps, hessian_block_size, solver,
+                           max_steps_line_search, allow_fallthrough),
                          pstream__));
         current_statement__ = 14;
         lp_accum__.add(stan::math::laplace_marginal_tol_neg_binomial_2_log_lpmf<
                          propto__>(y, y, log_ye, prior_mean,
                          K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
-                         theta_0, tolerance, max_num_steps,
-                         hessian_block_size, solver, max_steps_line_search,
+                         std::forward_as_tuple(theta_0, tolerance,
+                           max_num_steps, hessian_block_size, solver,
+                           max_steps_line_search, allow_fallthrough),
                          pstream__));
       }
     } catch (const std::exception& e) {
@@ -9273,24 +9306,27 @@ class laplace_neg_binomial_2_log_model final : public model_base_crtp<laplace_ne
                          propto__>(y, y, log_ye, prior_mean,
                          K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
-                         theta_0, tolerance, max_num_steps,
-                         hessian_block_size, solver, max_steps_line_search,
+                         std::forward_as_tuple(theta_0, tolerance,
+                           max_num_steps, hessian_block_size, solver,
+                           max_steps_line_search, allow_fallthrough),
                          pstream__));
         current_statement__ = 13;
         lp_accum__.add(stan::math::laplace_marginal_tol_neg_binomial_2_log_lpmf<
                          false>(y, y, log_ye, prior_mean,
                          K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
-                         theta_0, tolerance, max_num_steps,
-                         hessian_block_size, solver, max_steps_line_search,
+                         std::forward_as_tuple(theta_0, tolerance,
+                           max_num_steps, hessian_block_size, solver,
+                           max_steps_line_search, allow_fallthrough),
                          pstream__));
         current_statement__ = 14;
         lp_accum__.add(stan::math::laplace_marginal_tol_neg_binomial_2_log_lpmf<
                          propto__>(y, y, log_ye, prior_mean,
                          K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
-                         theta_0, tolerance, max_num_steps,
-                         hessian_block_size, solver, max_steps_line_search,
+                         std::forward_as_tuple(theta_0, tolerance,
+                           max_num_steps, hessian_block_size, solver,
+                           max_steps_line_search, allow_fallthrough),
                          pstream__));
       }
     } catch (const std::exception& e) {
@@ -9373,9 +9409,11 @@ class laplace_neg_binomial_2_log_model final : public model_base_crtp<laplace_ne
       stan::model::assign(theta2,
         stan::math::laplace_latent_tol_neg_binomial_2_log_rng(y, y, log_ye,
           prior_mean, K_function_functor__(),
-          std::forward_as_tuple(x, n_obs, alpha, rho), theta_0, tolerance,
-          max_num_steps, hessian_block_size, solver, max_steps_line_search,
-          base_rng__, pstream__), "assigning variable theta2");
+          std::forward_as_tuple(x, n_obs, alpha, rho),
+          std::forward_as_tuple(theta_0, tolerance, max_num_steps,
+            hessian_block_size, solver, max_steps_line_search,
+            allow_fallthrough), base_rng__, pstream__),
+        "assigning variable theta2");
       out__.write(theta);
       out__.write(theta2);
     } catch (const std::exception& e) {
@@ -13582,7 +13620,7 @@ static constexpr std::array<const char*, 29> locations_array__ =
   " (in 'laplace_poisson.stan', line 25, column 2 to column 17)",
   " (in 'laplace_poisson.stan', line 26, column 2 to column 14)",
   " (in 'laplace_poisson.stan', line 27, column 2 to column 23)",
-  " (in 'laplace_poisson.stan', line 40, column 0 to line 41, column 65)",
+  " (in 'laplace_poisson.stan', line 40, column 0 to line 42, column 66)",
   " (in 'laplace_poisson.stan', line 31, column 2 to column 23)",
   " (in 'laplace_poisson.stan', line 32, column 2 to column 22)",
   " (in 'laplace_poisson.stan', line 33, column 2 to column 24)",
@@ -13599,7 +13637,7 @@ static constexpr std::array<const char*, 29> locations_array__ =
   " (in 'laplace_poisson.stan', line 15, column 2 to column 20)",
   " (in 'laplace_poisson.stan', line 16, column 2 to column 27)",
   " (in 'laplace_poisson.stan', line 20, column 2 to column 24)",
-  " (in 'laplace_poisson.stan', line 21, column 2 to column 89)",
+  " (in 'laplace_poisson.stan', line 21, column 2 to column 112)",
   " (in 'laplace_poisson.stan', line 25, column 9 to column 10)",
   " (in 'laplace_poisson.stan', line 26, column 9 to column 10)",
   " (in 'laplace_poisson.stan', line 4, column 4 to column 45)",
@@ -13713,6 +13751,7 @@ class laplace_poisson_model final : public model_base_crtp<laplace_poisson_model
   int hessian_block_size;
   int solver;
   int max_steps_line_search;
+  int allow_fallthrough;
   Eigen::Map<Eigen::Matrix<double,-1,-1>> X{nullptr, 0, 0};
   Eigen::Map<Eigen::Matrix<double,-1,1>> offsett{nullptr, 0};
  public:
@@ -13833,6 +13872,10 @@ class laplace_poisson_model final : public model_base_crtp<laplace_poisson_model
       max_steps_line_search = std::numeric_limits<int>::min();
       current_statement__ = 22;
       max_steps_line_search = 0;
+      current_statement__ = 22;
+      allow_fallthrough = std::numeric_limits<int>::min();
+      current_statement__ = 22;
+      allow_fallthrough = 1;
       current_statement__ = 23;
       stan::math::validate_non_negative_index("beta", "P", P);
       current_statement__ = 24;
@@ -14030,9 +14073,9 @@ class laplace_poisson_model final : public model_base_crtp<laplace_poisson_model
                         stan::math::add(stan::math::add(offsett, alpha),
                           stan::math::multiply(X, beta))),
                       cov_fun_functor__(), std::forward_as_tuple(sigmaz, N),
-                      stan::math::rep_vector(0.0, N), tolerance,
-                      max_num_steps, hessian_block_size, solver,
-                      max_steps_line_search, pstream__);
+                      std::forward_as_tuple(stan::math::rep_vector(0.0, N),
+                        tolerance, max_num_steps, hessian_block_size, solver,
+                        max_steps_line_search, allow_fallthrough), pstream__);
       out__.write(log_lik_sum);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -14324,22 +14367,22 @@ namespace laplace_poisson_log_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 46> locations_array__ =
+static constexpr std::array<const char*, 47> locations_array__ =
   {" (found before start of program)",
-  " (in 'laplace_poisson_log.stan', line 33, column 2 to column 22)",
-  " (in 'laplace_poisson_log.stan', line 34, column 2 to column 20)",
+  " (in 'laplace_poisson_log.stan', line 34, column 2 to column 22)",
   " (in 'laplace_poisson_log.stan', line 35, column 2 to column 20)",
-  " (in 'laplace_poisson_log.stan', line 64, column 2 to line 65, column 62)",
-  " (in 'laplace_poisson_log.stan', line 67, column 2 to line 70, column 50)",
-  " (in 'laplace_poisson_log.stan', line 38, column 2 to column 55)",
-  " (in 'laplace_poisson_log.stan', line 39, column 2 to column 61)",
-  " (in 'laplace_poisson_log.stan', line 40, column 2 to column 21)",
-  " (in 'laplace_poisson_log.stan', line 42, column 2 to line 43, column 32)",
-  " (in 'laplace_poisson_log.stan', line 45, column 2 to line 46, column 38)",
-  " (in 'laplace_poisson_log.stan', line 48, column 2 to line 49, column 38)",
-  " (in 'laplace_poisson_log.stan', line 51, column 2 to line 53, column 39)",
-  " (in 'laplace_poisson_log.stan', line 55, column 2 to line 57, column 65)",
-  " (in 'laplace_poisson_log.stan', line 59, column 2 to line 61, column 65)",
+  " (in 'laplace_poisson_log.stan', line 36, column 2 to column 20)",
+  " (in 'laplace_poisson_log.stan', line 68, column 2 to line 69, column 62)",
+  " (in 'laplace_poisson_log.stan', line 71, column 2 to line 74, column 79)",
+  " (in 'laplace_poisson_log.stan', line 39, column 2 to column 55)",
+  " (in 'laplace_poisson_log.stan', line 40, column 2 to column 61)",
+  " (in 'laplace_poisson_log.stan', line 41, column 2 to column 21)",
+  " (in 'laplace_poisson_log.stan', line 43, column 2 to line 44, column 32)",
+  " (in 'laplace_poisson_log.stan', line 46, column 2 to line 47, column 38)",
+  " (in 'laplace_poisson_log.stan', line 49, column 2 to line 50, column 38)",
+  " (in 'laplace_poisson_log.stan', line 52, column 2 to line 55, column 59)",
+  " (in 'laplace_poisson_log.stan', line 57, column 2 to line 60, column 65)",
+  " (in 'laplace_poisson_log.stan', line 62, column 2 to line 65, column 65)",
   " (in 'laplace_poisson_log.stan', line 10, column 2 to column 12)",
   " (in 'laplace_poisson_log.stan', line 11, column 2 to column 20)",
   " (in 'laplace_poisson_log.stan', line 12, column 8 to column 13)",
@@ -14360,10 +14403,11 @@ static constexpr std::array<const char*, 46> locations_array__ =
   " (in 'laplace_poisson_log.stan', line 26, column 2 to column 29)",
   " (in 'laplace_poisson_log.stan', line 27, column 2 to column 17)",
   " (in 'laplace_poisson_log.stan', line 28, column 2 to column 32)",
-  " (in 'laplace_poisson_log.stan', line 30, column 9 to column 14)",
-  " (in 'laplace_poisson_log.stan', line 30, column 2 to column 52)",
-  " (in 'laplace_poisson_log.stan', line 64, column 9 to column 14)",
-  " (in 'laplace_poisson_log.stan', line 67, column 9 to column 14)",
+  " (in 'laplace_poisson_log.stan', line 29, column 2 to column 28)",
+  " (in 'laplace_poisson_log.stan', line 31, column 9 to column 14)",
+  " (in 'laplace_poisson_log.stan', line 31, column 2 to column 52)",
+  " (in 'laplace_poisson_log.stan', line 68, column 9 to column 14)",
+  " (in 'laplace_poisson_log.stan', line 71, column 9 to column 14)",
   " (in 'laplace_poisson_log.stan', line 3, column 11 to column 16)",
   " (in 'laplace_poisson_log.stan', line 3, column 18 to column 23)",
   " (in 'laplace_poisson_log.stan', line 3, column 4 to column 60)",
@@ -14424,25 +14468,25 @@ K_function(const T0__& x, const T1__& n_obs, const T2__& alpha, const T3__&
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 39;
-    stan::math::validate_non_negative_index("K", "n_obs", n_obs);
     current_statement__ = 40;
+    stan::math::validate_non_negative_index("K", "n_obs", n_obs);
+    current_statement__ = 41;
     stan::math::validate_non_negative_index("K", "n_obs", n_obs);
     Eigen::Matrix<local_scalar_t__,-1,-1> K =
       Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(n_obs, n_obs,
         DUMMY_VAR__);
-    current_statement__ = 41;
+    current_statement__ = 42;
     stan::model::assign(K, stan::math::gp_exp_quad_cov(x, alpha, rho),
       "assigning variable K");
-    current_statement__ = 43;
+    current_statement__ = 44;
     for (int i = 1; i <= n_obs; ++i) {
-      current_statement__ = 42;
+      current_statement__ = 43;
       stan::model::assign(K,
         (stan::model::rvalue(K, "K", stan::model::index_uni(i),
            stan::model::index_uni(i)) + 1e-8), "assigning variable K",
         stan::model::index_uni(i), stan::model::index_uni(i));
     }
-    current_statement__ = 44;
+    current_statement__ = 45;
     return K;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -14465,6 +14509,7 @@ class laplace_poisson_log_model final : public model_base_crtp<laplace_poisson_l
   int hessian_block_size;
   int solver;
   int max_steps_line_search;
+  int allow_fallthrough;
   Eigen::Matrix<double,-1,1> prior_mean_data__;
   Eigen::Map<Eigen::Matrix<double,-1,1>> ye{nullptr, 0};
   Eigen::Map<Eigen::Matrix<double,-1,1>> theta_0{nullptr, 0};
@@ -14613,19 +14658,23 @@ class laplace_poisson_log_model final : public model_base_crtp<laplace_poisson_l
       current_statement__ = 34;
       max_steps_line_search = 0;
       current_statement__ = 35;
-      stan::math::validate_non_negative_index("prior_mean", "n_obs", n_obs);
+      allow_fallthrough = std::numeric_limits<int>::min();
+      current_statement__ = 35;
+      allow_fallthrough = 1;
       current_statement__ = 36;
+      stan::math::validate_non_negative_index("prior_mean", "n_obs", n_obs);
+      current_statement__ = 37;
       prior_mean_data__ = Eigen::Matrix<double,-1,1>::Constant(n_obs,
                             std::numeric_limits<double>::quiet_NaN());
       new (&prior_mean)
         Eigen::Map<Eigen::Matrix<double,-1,1>>(prior_mean_data__.data(),
         n_obs);
-      current_statement__ = 36;
+      current_statement__ = 37;
       stan::model::assign(prior_mean, stan::math::rep_vector(0.0, n_obs),
         "assigning variable prior_mean");
-      current_statement__ = 37;
-      stan::math::validate_non_negative_index("theta", "n_obs", n_obs);
       current_statement__ = 38;
+      stan::math::validate_non_negative_index("theta", "n_obs", n_obs);
+      current_statement__ = 39;
       stan::math::validate_non_negative_index("theta2", "n_obs", n_obs);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -14704,22 +14753,25 @@ class laplace_poisson_log_model final : public model_base_crtp<laplace_poisson_l
         lp_accum__.add(stan::math::laplace_marginal_tol_poisson_log_lpmf<
                          propto__>(y, y, prior_mean, K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
-                         theta_0, tolerance, max_num_steps,
-                         hessian_block_size, solver, max_steps_line_search,
+                         std::forward_as_tuple(theta_0, tolerance,
+                           max_num_steps, hessian_block_size, solver,
+                           max_steps_line_search, allow_fallthrough),
                          pstream__));
         current_statement__ = 13;
         lp_accum__.add(stan::math::laplace_marginal_tol_poisson_log_lpmf<
                          false>(y, y, prior_mean, K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
-                         theta_0, tolerance, max_num_steps,
-                         hessian_block_size, solver, max_steps_line_search,
+                         std::forward_as_tuple(theta_0, tolerance,
+                           max_num_steps, hessian_block_size, solver,
+                           max_steps_line_search, allow_fallthrough),
                          pstream__));
         current_statement__ = 14;
         lp_accum__.add(stan::math::laplace_marginal_tol_poisson_log_lpmf<
                          propto__>(y, y, prior_mean, K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
-                         theta_0, tolerance, max_num_steps,
-                         hessian_block_size, solver, max_steps_line_search,
+                         std::forward_as_tuple(theta_0, tolerance,
+                           max_num_steps, hessian_block_size, solver,
+                           max_steps_line_search, allow_fallthrough),
                          pstream__));
       }
     } catch (const std::exception& e) {
@@ -14793,22 +14845,25 @@ class laplace_poisson_log_model final : public model_base_crtp<laplace_poisson_l
         lp_accum__.add(stan::math::laplace_marginal_tol_poisson_log_lpmf<
                          propto__>(y, y, prior_mean, K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
-                         theta_0, tolerance, max_num_steps,
-                         hessian_block_size, solver, max_steps_line_search,
+                         std::forward_as_tuple(theta_0, tolerance,
+                           max_num_steps, hessian_block_size, solver,
+                           max_steps_line_search, allow_fallthrough),
                          pstream__));
         current_statement__ = 13;
         lp_accum__.add(stan::math::laplace_marginal_tol_poisson_log_lpmf<
                          false>(y, y, prior_mean, K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
-                         theta_0, tolerance, max_num_steps,
-                         hessian_block_size, solver, max_steps_line_search,
+                         std::forward_as_tuple(theta_0, tolerance,
+                           max_num_steps, hessian_block_size, solver,
+                           max_steps_line_search, allow_fallthrough),
                          pstream__));
         current_statement__ = 14;
         lp_accum__.add(stan::math::laplace_marginal_tol_poisson_log_lpmf<
                          propto__>(y, y, prior_mean, K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
-                         theta_0, tolerance, max_num_steps,
-                         hessian_block_size, solver, max_steps_line_search,
+                         std::forward_as_tuple(theta_0, tolerance,
+                           max_num_steps, hessian_block_size, solver,
+                           max_steps_line_search, allow_fallthrough),
                          pstream__));
       }
     } catch (const std::exception& e) {
@@ -14891,9 +14946,11 @@ class laplace_poisson_log_model final : public model_base_crtp<laplace_poisson_l
       stan::model::assign(theta2,
         stan::math::laplace_latent_tol_poisson_log_rng(y, y, prior_mean,
           K_function_functor__(),
-          std::forward_as_tuple(x, n_obs, alpha, rho), theta_0, tolerance,
-          max_num_steps, hessian_block_size, solver, max_steps_line_search,
-          base_rng__, pstream__), "assigning variable theta2");
+          std::forward_as_tuple(x, n_obs, alpha, rho),
+          std::forward_as_tuple(theta_0, tolerance, max_num_steps,
+            hessian_block_size, solver, max_steps_line_search,
+            allow_fallthrough), base_rng__, pstream__),
+        "assigning variable theta2");
       out__.write(theta);
       out__.write(theta2);
     } catch (const std::exception& e) {

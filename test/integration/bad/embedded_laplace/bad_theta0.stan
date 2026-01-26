@@ -30,7 +30,7 @@ transformed data {
 
   // control parameters for Laplace approximation
   real tolerance = 1e-6;
-  int max_num_steps = 100, hessian_block_size = 1, solver = 1, max_steps_line_search = 0;
+  int max_num_steps = 100, hessian_block_size = 1, solver = 1, max_steps_line_search = 0, allow_fallthrough = 1;
 }
 parameters {
   real<lower=0> alpha;
@@ -39,6 +39,7 @@ parameters {
 }
 model {
   target += laplace_marginal_tol(ll_function, (eta, log_ye, y),
-                                  K_function, (x, n_obs, alpha, rho), theta_0, tolerance, max_num_steps,
-              hessian_block_size, solver, max_steps_line_search);
+                                  K_function, (x, n_obs, alpha, rho),
+        (theta_0, tolerance, max_num_steps, hessian_block_size,
+        solver, max_steps_line_search, allow_fallthrough));
 }
