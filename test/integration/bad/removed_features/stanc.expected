@@ -264,11 +264,11 @@ Syntax error in 'unreserved-array-keyword.stan', line 2, column 24 to column 29,
 Ill-formed identifier. Expected a new identifier but found reserved keyword "array".
 [exit 1]
   $ ../../../../../install/default/bin/stanc unsized-old-array.stan
-Syntax error in 'unsized-old-array.stan', line 2, column 18 to column 19, parsing error:
+Syntax error in 'unsized-old-array.stan', line 2, column 17 to column 18, parsing error:
    -------------------------------------------------
      1:  functions{
      2:    real foo(  real[,] v){
-                           ^
+                          ^
      3:      return sum(v);
      4:    }
    -------------------------------------------------
@@ -280,11 +280,11 @@ Ill-formed type. Expected an unsized type in function signature.
   https://mc-stan.org/docs/reference-manual/types.html#array-data-types.section
 [exit 1]
   $ ../../../../../install/default/bin/stanc unsized-old-array2.stan
-Syntax error in 'unsized-old-array2.stan', line 2, column 7 to column 8, parsing error:
+Syntax error in 'unsized-old-array2.stan', line 2, column 6 to column 7, parsing error:
    -------------------------------------------------
      1:  functions{
      2:    real[] foo(real v){
-                ^
+               ^
      3:      return sum(v);
      4:    }
    -------------------------------------------------

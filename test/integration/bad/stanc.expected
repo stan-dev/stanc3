@@ -608,12 +608,12 @@ Semantic error in 'decl-reuse-name.stan', line 2, column 13 to column 14:
 Identifier "x" is already in use.
 [exit 1]
   $ ../../../../install/default/bin/stanc declare-define-param-block.stan
-Syntax error in 'declare-define-param-block.stan', line 6, column 11 to column 14, parsing error:
+Syntax error in 'declare-define-param-block.stan', line 6, column 9 to column 10, parsing error:
    -------------------------------------------------
      4:  parameters {
      5:    real y;
      6:    real z = d_r;
-                    ^
+                  ^
      7:  }
      8:  model {
    -------------------------------------------------
@@ -656,12 +656,12 @@ and the right hand side has type
   array[] real
 [exit 1]
   $ ../../../../install/default/bin/stanc declare-define-var-double-3.stan
-Syntax error in 'declare-define-var-double-3.stan', line 3, column 12 to column 15, parsing error:
+Syntax error in 'declare-define-var-double-3.stan', line 3, column 10 to column 11, parsing error:
    -------------------------------------------------
      1:  data {
      2:    array[2] real a1;
      3:    real a2 = 1.0; // cannot assign in data block
-                     ^
+                   ^
      4:  }
      5:  parameters {
    -------------------------------------------------
@@ -670,12 +670,12 @@ Ill-formed declaration. Cannot assign to variables in the "data" or "parameters"
 Expected ";" after variable declaration.
 [exit 1]
   $ ../../../../install/default/bin/stanc declare-define-var-double-4.stan
-Syntax error in 'declare-define-var-double-4.stan', line 6, column 12 to column 15, parsing error:
+Syntax error in 'declare-define-var-double-4.stan', line 6, column 10 to column 11, parsing error:
    -------------------------------------------------
      4:  parameters {
      5:    real y;
      6:    real a2 = 1.0; // cannot assign in parameters block
-                     ^
+                   ^
      7:  }
      8:  model {
    -------------------------------------------------
