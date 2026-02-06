@@ -5,7 +5,7 @@ Syntax error in 'bad1.stan', line 1, column 8, parsing error:
                  ^
    -------------------------------------------------
 
-Ill-formed block. Expected variable declaration, statement or "}".
+Ill-formed block. Expected unconstrained variable declaration, statement, or "}".
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad1.stanfunctions
 Syntax error in 'bad1.stanfunctions', line 1, column 5 to column 6, parsing error:
@@ -493,7 +493,7 @@ Syntax error in 'incomplete5.stan', line 3, column 0, parsing error:
          ^ (error at end of file)
    -------------------------------------------------
 
-Ill-formed block. Expected a statement, variable declaration, or just "}".
+Ill-formed block. Expected top-level variable declaration, statement, or "}".
 [exit 1]
   $ ../../../../../install/default/bin/stanc incomplete6.stan
 Syntax error in 'incomplete6.stan', line 3, column 16 to column 21, parsing error:

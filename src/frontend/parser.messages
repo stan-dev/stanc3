@@ -1200,7 +1200,7 @@ program: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN VECTOR IDENTIFIER COMMA WHI
 ##
 
 @{<light_red>Ill-formed function argument.@} Expected an argument declaration (@{<i>@{<light_yellow>unsized@}@} and @{<i>@{<light_yellow>unconstrained@}@} type followed by identifier).
-  @{<i>For example, instead of @{<r>@{<green>"corr_matrix"@}@}, you need to use @{<r>@{<green>"matrix"@}@}.
+  @{<i>For example, this means a type like @{<r>@{<green>"matrix"@}@}, not @{<r>@{<green>"corr_matrix"@}@} or @{<r>@{<green>"matrix[3,4]"@}@}.
   See the complete table of types at:@}
   @{<light_blue>https://mc-stan.org/docs/reference-manual/types.html#variable-declaration.section@}
 
@@ -1414,8 +1414,10 @@ program: MODELBLOCK LBRACE REAL LBRACK
 ## sized_basic_type
 ##
 
-@{<light_red>Ill-formed declaration.@} Expected an identifier after sized type in local (or model block) variable declaration.
-(No transformations/constraints allowed.)
+@{<light_red>Ill-formed declaration.@} Expected an identifier after @{<light_yellow>unconstrained@} sized type in local (or model block) variable declaration.
+  @{<i>For example, this means a type like @{<r>@{<green>"matrix[3,4]"@}@}, not @{<r>@{<green>"corr_matrix"@}@}.
+  See the complete table of types at:@}
+  @{<light_blue>https://mc-stan.org/docs/reference-manual/types.html#variable-declaration.section@}
 
 program: DATABLOCK LBRACE ROWVECTOR LBRACK WHILE
 ## Concrete syntax: data { row_vector [ while
@@ -1457,12 +1459,34 @@ program: MODELBLOCK LBRACE ROWVECTOR LBRACK WHILE
 
 @{<light_red>Ill-formed type.@} Expected @{<green>"["@} @{<i>expression@} @{<green>"]"@} for row_vector size.
 
+program: TRANSFORMEDPARAMETERSBLOCK LBRACE VOID
+## Concrete syntax: transformed parameters { void
+program: TRANSFORMEDDATABLOCK LBRACE VOID
+## Concrete syntax: transformed data { void
+program: TRANSFORMEDDATABLOCK LBRACE SEMICOLON VOID
+## Concrete syntax: transformed data { ; void
+program: GENERATEDQUANTITIESBLOCK LBRACE VOID
+##
+## Concrete syntax: generated quantities { void
+##
+## Ends in an error in state: 690.
+##
+## generated_quantities_block -> GENERATEDQUANTITIESBLOCK LBRACE . list(top_vardecl_or_statement) RBRACE [ EOF ]
+##
+## The known suffix of the stack is as follows:
+## GENERATEDQUANTITIESBLOCK LBRACE
+##
+
+@{<light_red>Ill-formed block.@} Expected top-level variable declaration, statement, or @{<green>"}"@}.
+
+program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN IDENTIFIER RPAREN SEMICOLON UNREACHABLE
+## Concrete syntax: transformed data { if ( foo ) ; <<<<UNREACHABLE>>>
+program: TRANSFORMEDDATABLOCK LBRACE LBRACE VOID
+## Concrete syntax: transformed data { { void
 program: TRANSFORMEDDATABLOCK LBRACE PROFILE LPAREN STRINGLITERAL RPAREN LBRACE VOID
 ## Concrete syntax: transformed data { profile ( "hello world" ) { void
 program: MODELBLOCK LBRACE VOID
 ## Concrete syntax: model { void
-program: GENERATEDQUANTITIESBLOCK LBRACE VOID
-## Concrete syntax: generated quantities { void
 program: MODELBLOCK LBRACE SEMICOLON VOID
 ##
 ## Concrete syntax: model { ; void
@@ -1475,7 +1499,7 @@ program: MODELBLOCK LBRACE SEMICOLON VOID
 ## vardecl_or_statement
 ##
 
-@{<light_red>Ill-formed block.@} Expected variable declaration, statement or @{<green>"}"@}.
+@{<light_red>Ill-formed block.@} Expected unconstrained variable declaration, statement, or @{<green>"}"@}.
 
 program: DATABLOCK LBRACE COMPLEXVECTOR LABRACK OFFSET ASSIGN IDENTIFIER RABRACK WHILE
 ## Concrete syntax: data { complex_vector < offset = foo > while
@@ -1724,23 +1748,6 @@ program: TRANSFORMEDDATABLOCK LBRACE FOR WHILE
 
 @{<light_red>Ill-formed statement.@} Expected @{<green>"("@} after @{<green>"for"@}.
 
-program: TRANSFORMEDDATABLOCK LBRACE SEMICOLON VOID
-## Concrete syntax: transformed data { ; void
-program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN IDENTIFIER RPAREN SEMICOLON UNREACHABLE
-##
-## Concrete syntax: transformed data { if ( foo ) ; <<<<UNREACHABLE>>>
-##
-## Ends in an error in state: 391.
-##
-## nested_statement -> IF LPAREN expression RPAREN vardecl_or_statement . ELSE vardecl_or_statement [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
-## nested_statement -> IF LPAREN expression RPAREN vardecl_or_statement . [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
-##
-## The known suffix of the stack is as follows:
-## IF LPAREN expression RPAREN vardecl_or_statement
-##
-
-@{<light_red>Ill-formed block.@} Expected a statement, variable declaration, or just @{<green>"}"@}.
-
 program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN REALNUMERAL RPAREN VOID
 ##
 ## Concrete syntax: transformed data { if ( 3.1415 ) void
@@ -1829,21 +1836,6 @@ program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN WHILE
 ##
 
 @{<light_red>Ill-formed statement.@} Expected @{<green>"("@} @{<i>expression@} @{<green>")"@} for the test of the if statement.
-
-program: TRANSFORMEDDATABLOCK LBRACE LBRACE VOID
-##
-## Concrete syntax: transformed data { { void
-##
-## Ends in an error in state: 283.
-##
-## common_expression -> LBRACE . separated_nonempty_list(COMMA,expression) RBRACE [ TRANSPOSE TIMESASSIGN TIMES TILDE RBRACE RABRACK QMARK PLUSASSIGN PLUS OR NEQUALS MODULO MINUSASSIGN MINUS LEQ LDIVIDE LBRACK LABRACK IDIVIDE HAT GEQ EQUALS ELTTIMESASSIGN ELTTIMES ELTPOW ELTDIVIDEASSIGN ELTDIVIDE DOTNUMERAL DIVIDEASSIGN DIVIDE COMMA ASSIGN AND ]
-## nested_statement -> LBRACE . list(vardecl_or_statement) RBRACE [ WHILE VOID VECTOR UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PROFILE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE JACOBIAN INTNUMERAL INT IMAGNUMERAL IF IDENTIFIER FOR FATAL_ERROR EOF ELSE DOTNUMERAL COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ARRAY ]
-##
-## The known suffix of the stack is as follows:
-## LBRACE
-##
-
-@{<light_red>Ill-formed block.@} Expected a statement, variable declaration, or just @{<green>"}"@} after @{<green>"{"@}.
 
 program: TRANSFORMEDDATABLOCK LBRACE LBRACK IDENTIFIER COMMA WHILE
 ##
@@ -2865,22 +2857,6 @@ program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER ASSIGN WHILE
 
 @{<light_red>Ill-formed assignment statement.@} Expected an expression followed by @{<green>";"@} next.
 
-program: TRANSFORMEDPARAMETERSBLOCK LBRACE VOID
-## Concrete syntax: transformed parameters { void
-program: TRANSFORMEDDATABLOCK LBRACE VOID
-##
-## Concrete syntax: transformed data { void
-##
-## Ends in an error in state: 646.
-##
-## transformed_data_block -> TRANSFORMEDDATABLOCK LBRACE . list(top_vardecl_or_statement) RBRACE [ TRANSFORMEDPARAMETERSBLOCK PARAMETERSBLOCK MODELBLOCK GENERATEDQUANTITIESBLOCK EOF ]
-##
-## The known suffix of the stack is as follows:
-## TRANSFORMEDDATABLOCK LBRACE
-##
-
-@{<light_red>Ill-formed block.@} Expected a statement or top-level variable declaration.
-
 program: TRANSFORMEDDATABLOCK LBRACE WHILE LPAREN IDENTIFIER RPAREN VOID
 ##
 ## Concrete syntax: transformed data { while ( foo ) void
@@ -3184,6 +3160,23 @@ program: DATABLOCK LBRACE ARRAY LBRACK INTNUMERAL RBRACK IDENTIFIER
 
 # same as above but the type additionally cannot be constrained
 program: MODELBLOCK LBRACE ARRAY LBRACK INTNUMERAL RBRACK IDENTIFIER
+##
+## Concrete syntax: model { array [ 24 ] foo
+##
+## Ends in an error in state: 240.
+##
+## array_type(sized_basic_type) -> arr_dims . sized_basic_type [ WHILE VOID VECTOR UPPER UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER JACOBIAN INT IN IF IDENTIFIER FUNCTIONBLOCK FOR FATAL_ERROR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
+## array_type(sized_basic_type) -> arr_dims . tuple_type(sized_basic_type) [ WHILE VOID VECTOR UPPER UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER JACOBIAN INT IN IF IDENTIFIER FUNCTIONBLOCK FOR FATAL_ERROR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
+##
+## The known suffix of the stack is as follows:
+## arr_dims
+##
+
+@{<light_red>Ill-formed type.@} Expected an @{<i>@{<light_yellow>unconstrained@}@}, non-array type after @{<green>"array"@} declaration.
+  @{<i>For example, this means a type like @{<r>@{<green>"matrix"@}@}, not @{<r>@{<green>"corr_matrix"@}@}.
+  See the complete table of types at:@}
+  @{<light_blue>https://mc-stan.org/docs/reference-manual/types.html#variable-declaration.section@}
+
 ## Concrete syntax: model { array [ 24 ] foo
 functions_only: ARRAY LBRACK RBRACK WHILE
 ##
@@ -3199,7 +3192,7 @@ functions_only: ARRAY LBRACK RBRACK WHILE
 ##
 
 @{<light_red>Ill-formed type.@} Expected an @{<i>@{<light_yellow>unconstrained@}@}, non-array type after @{<green>"array"@} declaration.
-  @{<i>For example, instead of @{<r>@{<green>"corr_matrix"@}@}, you need to use @{<r>@{<green>"matrix"@}@}.
+  @{<i>For example, this means a type like @{<r>@{<green>"matrix"@}@}, not @{<r>@{<green>"corr_matrix"@}@} or @{<r>@{<green>"matrix[3,4]"@}@}.
   See the complete table of types at:@}
   @{<light_blue>https://mc-stan.org/docs/reference-manual/types.html#variable-declaration.section@}
 

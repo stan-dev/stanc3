@@ -994,7 +994,7 @@ Syntax error in 'err-if-else-double-else.stan', line 4, column 2 to column 6, pa
      6:  }
    -------------------------------------------------
 
-Ill-formed block. Expected a statement, variable declaration, or just "}".
+Ill-formed block. Expected top-level variable declaration, statement, or "}".
 [exit 1]
   $ ../../../../install/default/bin/stanc err-if-else-no-cond.stan
 Syntax error in 'err-if-else-no-cond.stan', line 3, column 6 to column 7, parsing error:
@@ -1316,7 +1316,7 @@ Syntax error in 'expect_statement_seq_close_brace.stan', line 6, column 0, parsi
          ^ (error at end of file)
    -------------------------------------------------
 
-Ill-formed block. Expected variable declaration, statement or "}".
+Ill-formed block. Expected unconstrained variable declaration, statement, or "}".
 [exit 1]
   $ ../../../../install/default/bin/stanc expect_statement_seq_close_brace_2.stan
 Syntax error in 'expect_statement_seq_close_brace_2.stan', line 17, column 0, parsing error:
@@ -1327,7 +1327,7 @@ Syntax error in 'expect_statement_seq_close_brace_2.stan', line 17, column 0, pa
          ^ (error at end of file)
    -------------------------------------------------
 
-Ill-formed block. Expected variable declaration, statement or "}".
+Ill-formed block. Expected unconstrained variable declaration, statement, or "}".
 [exit 1]
   $ ../../../../install/default/bin/stanc expect_statement_seq_close_brace_3.stan
 Syntax error in 'expect_statement_seq_close_brace_3.stan', line 8, column 0 to column 10, parsing error:
@@ -1340,7 +1340,7 @@ Syntax error in 'expect_statement_seq_close_brace_3.stan', line 8, column 0 to c
     10:  }
    -------------------------------------------------
 
-Ill-formed block. Expected a statement, variable declaration, or just "}".
+Ill-formed block. Expected top-level variable declaration, statement, or "}".
 [exit 1]
   $ ../../../../install/default/bin/stanc expect_statement_seq_close_brace_4.stan
 Syntax error in 'expect_statement_seq_close_brace_4.stan', line 10, column 0, parsing error:
@@ -1351,7 +1351,7 @@ Syntax error in 'expect_statement_seq_close_brace_4.stan', line 10, column 0, pa
          ^ (error at end of file)
    -------------------------------------------------
 
-Ill-formed block. Expected a statement, variable declaration, or just "}".
+Ill-formed block. Expected top-level variable declaration, statement, or "}".
 [exit 1]
   $ ../../../../install/default/bin/stanc experiment.stan
 Semantic error in 'experiment.stan', line 12, column 4 to column 11:
@@ -1410,7 +1410,7 @@ Syntax error in 'functions-bad0.stan', line 2, column 11 to column 15, parsing e
    -------------------------------------------------
 
 Ill-formed function argument. Expected an argument declaration (unsized and unconstrained type followed by identifier).
-  For example, instead of "corr_matrix", you need to use "matrix".
+  For example, this means a type like "matrix", not "corr_matrix" or "matrix[3,4]".
   See the complete table of types at:
   https://mc-stan.org/docs/reference-manual/types.html#variable-declaration.section
 [exit 1]
@@ -1936,8 +1936,10 @@ Syntax error in 'local_var_constraint4.stan', line 5, column 6 to column 7, pars
      7:  }
    -------------------------------------------------
 
-Ill-formed declaration. Expected an identifier after sized type in local (or model block) variable declaration.
-(No transformations/constraints allowed.)
+Ill-formed declaration. Expected an identifier after unconstrained sized type in local (or model block) variable declaration.
+  For example, this means a type like "matrix[3,4]", not "corr_matrix".
+  See the complete table of types at:
+  https://mc-stan.org/docs/reference-manual/types.html#variable-declaration.section
 [exit 1]
   $ ../../../../install/default/bin/stanc log_suffix_bad1.stan
 Semantic error in 'log_suffix_bad1.stan', line 8, column 2 to column 19:
