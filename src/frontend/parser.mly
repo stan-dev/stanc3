@@ -405,6 +405,10 @@ decl(type_rule, rhs):
          Pretty_printing.pp_transformed_type ty id.name)
       $loc(dims)
     }
+  | DATABLOCK UNREACHABLE {
+    Common.ICE.internal_compiler_error
+      [%message "the UNREACHABLE token should never be produced"]
+  }
   | ty=higher_type(type_rule)
     (* additional indirection only for better error messaging *)
     v = id_and_optional_assignment(rhs, decl_identifier) vs=option(remaining_declarations(rhs)) SEMICOLON

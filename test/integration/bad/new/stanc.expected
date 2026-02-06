@@ -131,16 +131,15 @@ Syntax error in 'bad_constrained_type_in_model2.stan', line 2, column 2 to colum
 Ill-formed block. Expected unconstrained variable declaration, statement, or "}".
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_data_modifier_decl.stan
-Syntax error in 'bad_data_modifier_decl.stan', line 3, column 2 to column 6, parsing error:
+Syntax error in 'bad_data_modifier_decl.stan', line 2, column 2 to column 6, parsing error:
    -------------------------------------------------
-     1:  // TODO: would be nice to specialize for this mistake
-     2:  generated quantities {
-     3:    data real x = 1;
+     1:  generated quantities {
+     2:    data real x = 1;
            ^
-     4:  }
+     3:  }
    -------------------------------------------------
 
-Ill-formed block. Expected top-level variable declaration, statement, or "}".
+Ill-formed declaration. The "data" specifier is only valid in function arguments, not declarations.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_decl_in_functions.stan
 Syntax error in 'bad_decl_in_functions.stan', line 2, column 19 to column 20, parsing error:
