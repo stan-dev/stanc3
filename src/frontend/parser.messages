@@ -1185,7 +1185,6 @@ program: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN RPAREN VOID
 
 @{<light_red>Ill-formed function.@} Expected either @{<green>"{"@} @{<i>statement@} @{<green>"}"@} for a function definition or @{<green>";"@} for a function forward declaration.
 
-
 functions_only: SIMPLEX WHILE
 ## Concrete syntax: simplex while
 functions_only: UNITVECTOR WHILE
