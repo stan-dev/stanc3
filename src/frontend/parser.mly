@@ -298,16 +298,11 @@ unsized_type:
   (* This is just a helper for the fact that we don't support the old array syntax any more
     It can go away at some point if it starts causing conflicts.
   *)
-  | bt=basic_type dims=unsized_dims {
-    parse_error
-      (Fmt.str
-         "@[<v 2>%@{<light_red>Ill-formed type.%@} %@{<i>It looks like you are \
-          trying to use the old array syntax.@ Please use the new syntax:%@}@ \
-          @[<h>array[%s] %a@]@]@\n"
-         (String.make (dims - 1) ',')
-         UnsizedType.pp bt)
-      $loc(dims)
-  }
+  | basic_type LBRACK UNREACHABLE
+    { (* This code will never be reached *)
+       Common.ICE.internal_compiler_error
+          [%message "the UNREACHABLE token should never be produced"]
+    }
   | bt=basic_type
     {  grammar_logger "unsized_type";
        bt
@@ -339,6 +334,23 @@ basic_type:
     {  grammar_logger "basic_type COMPLEXROWVECTOR" ; UnsizedType.UComplexRowVector }
   | COMPLEXMATRIX
     {  grammar_logger "basic_type COMPLEXMATRIX" ; UnsizedType.UComplexMatrix }
+  (* By including all the non-basic-types here, we can give better error messages *)
+  | ORDERED UNREACHABLE
+  | POSITIVEORDERED UNREACHABLE
+  | SIMPLEX UNREACHABLE
+  | UNITVECTOR UNREACHABLE
+  | SUMTOZEROVEC UNREACHABLE
+  | CHOLESKYFACTORCORR UNREACHABLE
+  | CHOLESKYFACTORCOV UNREACHABLE
+  | CORRMATRIX UNREACHABLE
+  | COVMATRIX UNREACHABLE
+  | SUMTOZEROMAT UNREACHABLE
+  | STOCHASTICCOLUMNMATRIX UNREACHABLE
+  | STOCHASTICROWMATRIX UNREACHABLE
+    { (* This code will never be reached *)
+       Common.ICE.internal_compiler_error
+          [%message "the UNREACHABLE token should never be produced"]
+    }
 
 unsized_dims:
   | LBRACK cs=list(COMMA) RBRACK
