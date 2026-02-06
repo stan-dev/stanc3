@@ -61,6 +61,19 @@ Ill-formed type. Expected an unsized and unconstrained type.
   See the complete table of types at:
   https://mc-stan.org/docs/reference-manual/types.html#variable-declaration.section
 [exit 1]
+  $ ../../../../../install/default/bin/stanc bad_constrained_type_in_fn4.stan
+Syntax error in 'bad_constrained_type_in_fn4.stan', line 3, column 14 to column 15, parsing error:
+   -------------------------------------------------
+     1:  functions{
+     2:    // TODO: would be nice to specialize for this mistake
+     3:    void foo(int<lower=0> x){
+                       ^
+     4:      print(x);
+     5:    }
+   -------------------------------------------------
+
+Ill-formed function argument. Expected an identifier after the type for the function argument name.
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_constrained_type_in_local.stan
 Syntax error in 'bad_constrained_type_in_local.stan', line 4, column 13 to column 20, parsing error:
    -------------------------------------------------
