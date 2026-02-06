@@ -209,7 +209,7 @@ Syntax error in 'bad_decl2.stan', line 2, column 13 to column 14, parsing error:
      3:  }
    -------------------------------------------------
 
-Ill-formed type. Expected non-array type after "array" declaration.
+Ill-formed type. Expected a non-array type after "array" declaration.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_decl3.stan
 Syntax error in 'bad_decl3.stan', line 3, column 28 to column 29, parsing error:

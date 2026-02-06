@@ -1410,6 +1410,9 @@ Syntax error in 'functions-bad0.stan', line 2, column 11 to column 15, parsing e
    -------------------------------------------------
 
 Ill-formed function argument. Expected an argument declaration (unsized and unconstrained type followed by identifier).
+  For example, instead of "corr_matrix", you need to use "matrix".
+  See the complete table of types at:
+  https://mc-stan.org/docs/reference-manual/types.html#variable-declaration.section
 [exit 1]
   $ ../../../../install/default/bin/stanc functions-bad1.stan
 Semantic error in 'functions-bad1.stan', line 6, column 2 to column 20:

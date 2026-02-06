@@ -1199,7 +1199,10 @@ program: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN VECTOR IDENTIFIER COMMA WHI
 ## arg_decl COMMA
 ##
 
-@{<light_red>Ill-formed function argument.@} Expected an argument declaration (unsized and unconstrained type followed by identifier).
+@{<light_red>Ill-formed function argument.@} Expected an argument declaration (@{<i>@{<light_yellow>unsized@}@} and @{<i>@{<light_yellow>unconstrained@}@} type followed by identifier).
+  @{<i>For example, instead of @{<r>@{<green>"corr_matrix"@}@}, you need to use @{<r>@{<green>"matrix"@}@}.
+  See the complete table of types at:@}
+  @{<light_blue>https://mc-stan.org/docs/reference-manual/types.html#variable-declaration.section@}
 
 program: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN VECTOR IDENTIFIER WHILE
 ##
@@ -3164,10 +3167,6 @@ program: TRANSFORMEDDATABLOCK LBRACE LPAREN IDENTIFIER COMMA WHILE
 
 @{<light_red>Ill-formed expression.@} Expected an expression or comma separated list of expressions followed by @{<green>")"@} after @{<green>"("@}.
 
-functions_only: ARRAY LBRACK RBRACK WHILE
-## Concrete syntax: array [ ] while
-program: MODELBLOCK LBRACE ARRAY LBRACK INTNUMERAL RBRACK IDENTIFIER
-## Concrete syntax: model { array [ 24 ] foo
 program: DATABLOCK LBRACE ARRAY LBRACK INTNUMERAL RBRACK IDENTIFIER
 ##
 ## Concrete syntax: data { array [ 24 ] foo
@@ -3181,7 +3180,28 @@ program: DATABLOCK LBRACE ARRAY LBRACK INTNUMERAL RBRACK IDENTIFIER
 ## arr_dims
 ##
 
-@{<light_red>Ill-formed type.@} Expected non-array type after @{<green>"array"@} declaration.
+@{<light_red>Ill-formed type.@} Expected a non-array type after @{<green>"array"@} declaration.
+
+# same as above but the type additionally cannot be constrained
+program: MODELBLOCK LBRACE ARRAY LBRACK INTNUMERAL RBRACK IDENTIFIER
+## Concrete syntax: model { array [ 24 ] foo
+functions_only: ARRAY LBRACK RBRACK WHILE
+##
+## Concrete syntax: array [ ] while
+##
+## Ends in an error in state: 19.
+##
+## unsized_type -> ARRAY unsized_dims . basic_type [ WHILE VOID VECTOR UPPER UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER JACOBIAN INT IN IF IDENTIFIER FUNCTIONBLOCK FOR FATAL_ERROR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
+## unsized_type -> ARRAY unsized_dims . TUPLE LPAREN unsized_type COMMA separated_nonempty_list(COMMA,unsized_type) RPAREN [ WHILE VOID VECTOR UPPER UNITVECTOR TUPLE TRUNCATE TARGET SUMTOZEROVEC SUMTOZEROMAT STOCHASTICROWMATRIX STOCHASTICCOLUMNMATRIX SIMPLEX RPAREN ROWVECTOR RETURN REJECT REAL PROFILE PRINT POSITIVEORDERED PARAMETERSBLOCK ORDERED OFFSET MULTIPLIER MODELBLOCK MATRIX LOWER JACOBIAN INT IN IF IDENTIFIER FUNCTIONBLOCK FOR FATAL_ERROR ELSE DATABLOCK COVMATRIX CORRMATRIX CONTINUE COMPLEXVECTOR COMPLEXROWVECTOR COMPLEXMATRIX COMPLEX COMMA CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK ARRAY ]
+##
+## The known suffix of the stack is as follows:
+## ARRAY unsized_dims
+##
+
+@{<light_red>Ill-formed type.@} Expected an @{<i>@{<light_yellow>unconstrained@}@}, non-array type after @{<green>"array"@} declaration.
+  @{<i>For example, instead of @{<r>@{<green>"corr_matrix"@}@}, you need to use @{<r>@{<green>"matrix"@}@}.
+  See the complete table of types at:@}
+  @{<light_blue>https://mc-stan.org/docs/reference-manual/types.html#variable-declaration.section@}
 
 program: DATABLOCK LBRACE ARRAY LBRACK WHILE
 ##
@@ -3236,7 +3256,7 @@ program: MODELBLOCK LBRACE COMPLEX IDENTIFIER LBRACK WHILE
 ##
 
 @{<light_red>Ill-formed declaration.@} Expected @{<green>";"@} after variable declaration.
-@{<light_yellow>It looks like you are trying to use the old array syntax.
-Please use the new syntax:@}
-https://mc-stan.org/docs/reference-manual/types.html#array-data-types.section
+  @{<i>It looks like you are trying to use the old array syntax.
+  Please use the new syntax:@}
+  @{<light_blue>https://mc-stan.org/docs/reference-manual/types.html#array-data-types.section@}
 
