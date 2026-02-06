@@ -794,7 +794,7 @@ Syntax error in 'err-bare-type-close-square.stan', line 2, column 9 to column 13
      4:  model {
    -------------------------------------------------
 
-Ill-formed type. Expected "[" (list of commas) "]" in unsized return type of function definition.
+Ill-formed type. Expected "[" (list of commas) "]" in an unsized type in a function signature.
 [exit 1]
   $ ../../../../install/default/bin/stanc err-close-block.stan
 Syntax error in 'err-close-block.stan', line 3, column 0 to column 5, parsing error:
@@ -981,7 +981,7 @@ Syntax error in 'err-fun-bare-types-int.stan', line 2, column 8 to column 9, par
      4:      return a;
    -------------------------------------------------
 
-Ill-formed type. Expected "[" (list of commas) "]" in unsized return type of function definition.
+Ill-formed type. Expected "[" (list of commas) "]" in an unsized type in a function signature.
 [exit 1]
   $ ../../../../install/default/bin/stanc err-if-else-double-else.stan
 Syntax error in 'err-if-else-double-else.stan', line 4, column 2 to column 6, parsing error:

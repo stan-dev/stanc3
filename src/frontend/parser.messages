@@ -3224,7 +3224,7 @@ functions_only: ARRAY LBRACK WHILE
 ## LBRACK
 ##
 
-@{<light_red>Ill-formed type.@} Expected @{<green>"["@} @{<i>(list of commas)@} @{<green>"]"@} in unsized return type of function definition.
+@{<light_red>Ill-formed type.@} Expected @{<green>"["@} @{<i>(list of commas)@} @{<green>"]"@} in an unsized type in a function signature.
 
 program: TRANSFORMEDDATABLOCK LBRACE COMPLEX IDENTIFIER LBRACK IDENTIFIER RPAREN
 ## Concrete syntax: transformed data { complex foo [ foo )

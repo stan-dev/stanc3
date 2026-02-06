@@ -158,6 +158,18 @@ Ill-formed declaration. Expected ";" after variable declaration.
   Please use the new syntax, see:
   https://mc-stan.org/docs/reference-manual/types.html#array-data-types.section
 [exit 1]
+  $ ../../../../../install/default/bin/stanc bad_sized_type_in_fn.stan
+Syntax error in 'bad_sized_type_in_fn.stan', line 2, column 17 to column 18, parsing error:
+   -------------------------------------------------
+     1:  functions{
+     2:    void foo(array[3] real x){
+                          ^
+     3:      print(x);
+     4:    }
+   -------------------------------------------------
+
+Ill-formed type. Expected "[" (list of commas) "]" in an unsized type in a function signature.
+[exit 1]
   $ ../../../../../install/default/bin/stanc blocks-bad1.stan
 Syntax error in 'blocks-bad1.stan', line 1, column 5 to column 10, parsing error:
    -------------------------------------------------

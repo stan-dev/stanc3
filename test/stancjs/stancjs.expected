@@ -400,9 +400,9 @@ Syntax error in 'string', line 3, column 8 to column 10, parsing error:
    -------------------------------------------------
 
 Ill-formed declaration. ";" expected after variable declaration.
-It looks like you are trying to use the old array syntax.
-Please use the new syntax:
-array[10] real y;
+  It looks like you are trying to use the old array syntax.
+  Please use the new syntax:
+  array[10] real y;
 
 Syntax error in 'string', line 3, column 8 to column 10, parsing error:
    -------------------------------------------------
@@ -415,9 +415,9 @@ Syntax error in 'string', line 3, column 8 to column 10, parsing error:
    -------------------------------------------------
 
 Ill-formed declaration. ";" expected after variable declaration.
-It looks like you are trying to use the old array syntax.
-Please use the new syntax:
-array[10] real y;
+  It looks like you are trying to use the old array syntax.
+  Please use the new syntax:
+  array[10] real y;
 
 undefined
 $ node standalone-functions.js
