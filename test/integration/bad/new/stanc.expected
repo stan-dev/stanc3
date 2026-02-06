@@ -144,6 +144,20 @@ Syntax error in 'bad_multi_decl.stan', line 2, column 21 to column 24, parsing e
 Ill-formed expression. Unexpected input after the conclusion of a valid expression.
 You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
 [exit 1]
+  $ ../../../../../install/default/bin/stanc bad_old_arr_attempt.stan
+Syntax error in 'bad_old_arr_attempt.stan', line 2, column 16 to column 21, parsing error:
+   -------------------------------------------------
+     1:  model {
+     2:    complex foo [ while
+                         ^
+     3:  }
+   -------------------------------------------------
+
+Ill-formed declaration. Expected ";" after variable declaration.
+  It looks like you are trying to use the old array syntax.
+  Please use the new syntax, see:
+  https://mc-stan.org/docs/reference-manual/types.html#array-data-types.section
+[exit 1]
   $ ../../../../../install/default/bin/stanc blocks-bad1.stan
 Syntax error in 'blocks-bad1.stan', line 1, column 5 to column 10, parsing error:
    -------------------------------------------------

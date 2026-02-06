@@ -3250,6 +3250,6 @@ program: MODELBLOCK LBRACE COMPLEX IDENTIFIER LBRACK WHILE
 
 @{<light_red>Ill-formed declaration.@} Expected @{<green>";"@} after variable declaration.
   @{<i>It looks like you are trying to use the old array syntax.
-  Please use the new syntax:@}
+  Please use the new syntax, see:@}
   @{<light_blue>https://mc-stan.org/docs/reference-manual/types.html#array-data-types.section@}
 

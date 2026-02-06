@@ -76,9 +76,9 @@ Syntax error in 'declarations.stan', line 3, column 18 to column 19, parsing err
    -------------------------------------------------
 
 Ill-formed declaration. ";" expected after variable declaration.
-It looks like you are trying to use the old array syntax.
-Please use the new syntax:
-array[1] int<lower=0> a1;
+  It looks like you are trying to use the old array syntax.
+  Please use the new syntax:
+  array[1] int<lower=0> a1;
 [exit 1]
   $ ../../../../../install/default/bin/stanc deprecated_tilde.stan
 Semantic error in 'deprecated_tilde.stan', line 12, column 6 to column 19:
@@ -247,9 +247,9 @@ Syntax error in 'removed_deprecated_syntax.stan', line 10, column 9 to column 10
    -------------------------------------------------
 
 Ill-formed declaration. ";" expected after variable declaration.
-It looks like you are trying to use the old array syntax.
-Please use the new syntax:
-array[7] real c;
+  It looks like you are trying to use the old array syntax.
+  Please use the new syntax:
+  array[7] real c;
 [exit 1]
   $ ../../../../../install/default/bin/stanc unreserved-array-keyword.stan
 Syntax error in 'unreserved-array-keyword.stan', line 2, column 24 to column 29, parsing error:
@@ -274,8 +274,8 @@ Syntax error in 'unsized-old-array.stan', line 2, column 17 to column 20, parsin
    -------------------------------------------------
 
 Ill-formed type. It looks like you are trying to use the old array syntax.
-Please use the new syntax:
-array[,] real
+  Please use the new syntax:
+  array[,] real
 [exit 1]
   $ ../../../../../install/default/bin/stanc unsized-old-array2.stan
 Syntax error in 'unsized-old-array2.stan', line 2, column 6 to column 8, parsing error:
@@ -288,6 +288,6 @@ Syntax error in 'unsized-old-array2.stan', line 2, column 6 to column 8, parsing
    -------------------------------------------------
 
 Ill-formed type. It looks like you are trying to use the old array syntax.
-Please use the new syntax:
-array[] real
+  Please use the new syntax:
+  array[] real
 [exit 1]

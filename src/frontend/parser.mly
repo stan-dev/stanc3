@@ -301,9 +301,9 @@ unsized_type:
   | bt=basic_type dims=unsized_dims {
     parse_error
       (Fmt.str
-         "%@{<light_red>Ill-formed type.%@} %@{<yellow>It looks like you are \
+         "@[<v 2>%@{<light_red>Ill-formed type.%@} %@{<i>It looks like you are \
           trying to use the old array syntax.@ Please use the new syntax:%@}@ \
-          @[<h>array[%s] %a@]@\n"
+          @[<h>array[%s] %a@]@]@\n"
          (String.make (dims - 1) ',')
          UnsizedType.pp bt)
       $loc(dims)
@@ -386,10 +386,10 @@ decl(type_rule, rhs):
     let ty = (ty, trans) in
     parse_error
       (Fmt.str
-         "%@{<light_red>Ill-formed declaration.%@} %@{<green>\";\"%@} expected \
-          after variable declaration.@ %@{<yellow>It looks like you are trying \
+         "@[<v 2>%@{<light_red>Ill-formed declaration.%@} %@{<green>\";\"%@} expected \
+          after variable declaration.@ %@{<i>It looks like you are trying \
           to use the old array syntax.@ Please use the new syntax:%@}@ @[<h>%a \
-          %s;@]@\n"
+          %s;@]@]@\n"
          Pretty_printing.pp_transformed_type ty id.name)
       $loc(dims)
     }
