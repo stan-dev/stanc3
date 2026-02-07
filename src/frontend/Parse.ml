@@ -37,7 +37,7 @@ let drive_parser parse_fun =
       let env =
         match prev with
         (* if we errored because of one of our UNREACHABLE token, use the
-           location immediately proceeding for a more informative error *)
+           location immediately preceding for a more informative error *)
         | Interp.InputNeeded prev_env
           when Interp.acceptable prev Parser.UNREACHABLE Lexing.dummy_pos ->
             prev_env

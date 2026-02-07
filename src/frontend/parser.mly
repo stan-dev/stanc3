@@ -334,23 +334,34 @@ basic_type:
     {  grammar_logger "basic_type COMPLEXROWVECTOR" ; UnsizedType.UComplexRowVector }
   | COMPLEXMATRIX
     {  grammar_logger "basic_type COMPLEXMATRIX" ; UnsizedType.UComplexMatrix }
-  (* By including all the non-basic-types here, we can give better error messages *)
-  | ORDERED UNREACHABLE
-  | POSITIVEORDERED UNREACHABLE
-  | SIMPLEX UNREACHABLE
-  | UNITVECTOR UNREACHABLE
-  | SUMTOZEROVEC UNREACHABLE
-  | CHOLESKYFACTORCORR UNREACHABLE
-  | CHOLESKYFACTORCOV UNREACHABLE
-  | CORRMATRIX UNREACHABLE
-  | COVMATRIX UNREACHABLE
-  | SUMTOZEROMAT UNREACHABLE
-  | STOCHASTICCOLUMNMATRIX UNREACHABLE
-  | STOCHASTICROWMATRIX UNREACHABLE
-    { (* This code will never be reached *)
+  | constrained_vector UNREACHABLE
+    { (* This code will never be reached. The parser state exists to make the error more specific. *)
        Common.ICE.internal_compiler_error
           [%message "the UNREACHABLE token should never be produced"]
     }
+  | constrained_matrix UNREACHABLE
+    { (* This code will never be reached. The parser state exists to make the error more specific. *)
+       Common.ICE.internal_compiler_error
+          [%message "the UNREACHABLE token should never be produced"]
+    }
+
+constrained_vector:
+  | ORDERED
+  | POSITIVEORDERED
+  | SIMPLEX
+  | UNITVECTOR
+  | SUMTOZEROVEC
+    { () }
+
+constrained_matrix:
+  | CHOLESKYFACTORCORR
+  | CHOLESKYFACTORCOV
+  | CORRMATRIX
+  | COVMATRIX
+  | SUMTOZEROMAT
+  | STOCHASTICCOLUMNMATRIX
+  | STOCHASTICROWMATRIX
+    { () }
 
 unsized_dims:
   | LBRACK cs=list(COMMA) RBRACK
