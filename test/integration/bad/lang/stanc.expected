@@ -98,6 +98,20 @@ Semantic error in 'bad4.stan', line 1, column 44 to column 48:
 
 Lower bound of for-loop must be of type int. Instead found type real.
 [exit 1]
+  $ ../../../../../install/default/bin/stanc bad4.stanfunctions
+Syntax error in 'bad4.stanfunctions', line 1, column 10 to column 11, parsing error:
+   -------------------------------------------------
+     1:  array[,,] x() {
+                   ^
+     2:      return ones_array(3, 3);
+     3:  }
+   -------------------------------------------------
+
+Ill-formed type. Expected an unconstrained, non-array type after "array" declaration.
+  For example, this means a type like "matrix", not "corr_matrix" or "matrix[3,4]".
+  See the complete table of types at:
+  https://mc-stan.org/docs/reference-manual/types.html#variable-declaration.section
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad5.stan
 Semantic error in 'bad5.stan', line 3, column 6 to column 10:
    -------------------------------------------------
@@ -236,6 +250,31 @@ Syntax error in 'bad_decl4.stan', line 2, column 10 to column 16, parsing error:
 
 Ill-formed identifier. Expected a new identifier but found reserved keyword "reject".
 [exit 1]
+  $ ../../../../../install/default/bin/stanc bad_decl5.stan
+Syntax error in 'bad_decl5.stan', line 2, column 13 to column 14, parsing error:
+   -------------------------------------------------
+     1:  model {
+     2:    array[3,3] x;
+                      ^
+     3:  }
+   -------------------------------------------------
+
+Ill-formed type. Expected an unconstrained, non-array type after "array" declaration.
+  For example, this means a type like "matrix", not "corr_matrix".
+  See the complete table of types at:
+  https://mc-stan.org/docs/reference-manual/types.html#variable-declaration.section
+[exit 1]
+  $ ../../../../../install/default/bin/stanc bad_decl6.stan
+Syntax error in 'bad_decl6.stan', line 2, column 8 to column 12, parsing error:
+   -------------------------------------------------
+     1:  model {
+     2:    array real x;
+                 ^
+     3:  }
+   -------------------------------------------------
+
+Ill-formed type. Expected "[" array sizes "]" followed by type after "array".
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_function.stan
 Semantic error in 'bad_function.stan', line 3, column 3 to column 7:
    -------------------------------------------------
@@ -259,6 +298,17 @@ Semantic error in 'bad_function2.stan', line 3, column 3 to column 7:
    -------------------------------------------------
 
 A non-returning function was expected but an undeclared identifier "y" was supplied.
+[exit 1]
+  $ ../../../../../install/default/bin/stanc bad_jacobian.stan
+Syntax error in 'bad_jacobian.stan', line 2, column 16 to column 21, parsing error:
+   -------------------------------------------------
+     1:  transformed parameters {
+     2:      jacobian += while;
+                         ^
+     3:  }
+   -------------------------------------------------
+
+Ill-formed statement. Expected an expression followed by ";" after "jacobian +=".
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_lmpf.stan
 Semantic error in 'bad_lmpf.stan', line 2, column 2 to line 4, column 3:
@@ -448,6 +498,64 @@ Syntax error in 'incomplete.stan', line 2, column 18 to column 19, parsing error
 Ill-formed expression. Found an incomplete binary expression.
 Are you missing the right hand side?
 [exit 1]
+  $ ../../../../../install/default/bin/stanc incomplete10.stan
+Syntax error in 'incomplete10.stan', line 2, column 20 to column 21, parsing error:
+   -------------------------------------------------
+     1:  transformed data {
+     2:    vector[2] foo = [ ;
+                             ^
+     3:  }
+   -------------------------------------------------
+
+Ill-formed expression. Expected a comma separated list of expressions followed by "]" after "[".
+[exit 1]
+  $ ../../../../../install/default/bin/stanc incomplete11.stan
+Syntax error in 'incomplete11.stan', line 2, column 6 to column 7, parsing error:
+   -------------------------------------------------
+     1:  model {
+     2:    real; foo;
+               ^
+     3:  }
+   -------------------------------------------------
+
+Ill-formed declaration. Expected an identifier after type in local (or model block) variable declaration.
+[exit 1]
+  $ ../../../../../install/default/bin/stanc incomplete12.stan
+Syntax error in 'incomplete12.stan', line 2, column 7 to column 8, parsing error:
+   -------------------------------------------------
+     1:  functions {
+     2:    real (int x) {
+                ^
+     3:      return x + 1.0;
+     4:    }
+   -------------------------------------------------
+
+Ill-formed function. Expected an identifier after the type.
+[exit 1]
+  $ ../../../../../install/default/bin/stanc incomplete13.stan
+Syntax error in 'incomplete13.stan', line 2, column 7 to column 8, parsing error:
+   -------------------------------------------------
+     1:  functions {
+     2:    void (int x) {
+                ^
+     3:      return x + 1.0;
+     4:    }
+   -------------------------------------------------
+
+Ill-formed function. Expected an identifier after the type.
+[exit 1]
+  $ ../../../../../install/default/bin/stanc incomplete14.stan
+Syntax error in 'incomplete14.stan', line 2, column 15 to column 16, parsing error:
+   -------------------------------------------------
+     1:  functions {
+     2:    real foo(int , real x) {
+                        ^
+     3:      return y + x;
+     4:    }
+   -------------------------------------------------
+
+Ill-formed function. Expected an identifier after the type.
+[exit 1]
   $ ../../../../../install/default/bin/stanc incomplete2.stan
 Syntax error in 'incomplete2.stan', line 2, column 15 to column 20, parsing error:
    -------------------------------------------------
@@ -506,6 +614,36 @@ Syntax error in 'incomplete6.stan', line 3, column 16 to column 21, parsing erro
    -------------------------------------------------
 
 Ill-formed expression. Expected a comma separated list of expressions, followed by "]".
+[exit 1]
+  $ ../../../../../install/default/bin/stanc incomplete7.stan
+Syntax error in 'incomplete7.stan', line 1, column 30 to column 31, parsing error:
+   -------------------------------------------------
+     1:  transformed data { foo += foo ~
+                                       ^
+   -------------------------------------------------
+
+Ill-formed compound assignment statement. Expected a ";" after the value being assigned.
+[exit 1]
+  $ ../../../../../install/default/bin/stanc incomplete8.stan
+Syntax error in 'incomplete8.stan', line 1, column 29 to column 30, parsing error:
+   -------------------------------------------------
+     1:  transformed data { foo = bar ~
+                                      ^
+   -------------------------------------------------
+
+Ill-formed assignment statement. Expected a ";" after the value being assigned.
+[exit 1]
+  $ ../../../../../install/default/bin/stanc incomplete9.stan
+Syntax error in 'incomplete9.stan', line 3, column 28 to column 33, parsing error:
+   -------------------------------------------------
+     1:  transformed data {
+     2:    vector[2] foo;
+     3:    row_vector[2] bar = -foo' while
+                                     ^
+     4:  }
+   -------------------------------------------------
+
+Ill-formed expression. Found an expression. Expected an infix or postfix operator or "["
 [exit 1]
   $ ../../../../../install/default/bin/stanc reused_name.stan
 Semantic error in 'reused_name.stan', line 4, column 14 to column 15:

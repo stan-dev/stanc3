@@ -83,18 +83,18 @@ Ill-formed type. Constrained types are not supported in local (or model block) v
   Use "vector" instead.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_constrained_type_in_local2.stan
-Syntax error in 'bad_constrained_type_in_local2.stan', line 4, column 4 to column 11, parsing error:
+Syntax error in 'bad_constrained_type_in_local2.stan', line 4, column 4 to column 24, parsing error:
    -------------------------------------------------
-     2:    simplex[2] x;
+     2:    cholesky_factor_corr[2] x;
      3:    {
-     4:      simplex[2] y = x;
+     4:      cholesky_factor_corr[2] y = x;
              ^
      5:      print(y);
      6:    }
    -------------------------------------------------
 
 Ill-formed type. Constrained types are not supported in local (or model block) variable declarations.
-  Use "vector" instead.
+  Use "matrix" instead.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_constrained_type_in_model.stan
 Syntax error in 'bad_constrained_type_in_model.stan', line 2, column 11 to column 18, parsing error:

@@ -947,6 +947,17 @@ Syntax error in 'err-expected-end-of-model.stan', line 3, column 0 to column 3, 
 
 Ill-formed program. Expected "generated quantities {" or end of file after end of model block.
 [exit 1]
+  $ ../../../../install/default/bin/stanc err-expected-end-of-tp.stan
+Syntax error in 'err-expected-end-of-tp.stan', line 4, column 0 to column 4, parsing error:
+   -------------------------------------------------
+     2:  
+     3:  }
+     4:  mdel {}
+         ^
+   -------------------------------------------------
+
+Ill-formed program. Expected "model {" or "generated quantities {" after end of transformed parameters block.
+[exit 1]
   $ ../../../../install/default/bin/stanc err-expected-generated.stan
 Syntax error in 'err-expected-generated.stan', line 3, column 0 to column 9, parsing error:
    -------------------------------------------------
