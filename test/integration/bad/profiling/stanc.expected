@@ -69,3 +69,26 @@ Syntax error in 'profile-bad6.stan', line 2, column 9 to column 16, parsing erro
 
 Ill-formed identifier. Expected a new identifier but found reserved keyword "profile".
 [exit 1]
+  $ ../../../../../install/default/bin/stanc profile-bad7.stan
+Syntax error in 'profile-bad7.stan', line 2, column 17 to column 22, parsing error:
+   -------------------------------------------------
+     1:  transformed data {
+     2:      profile ("") while
+                          ^
+     3:  }
+   -------------------------------------------------
+
+Ill-formed statement. Expected "{" to begin profile block.
+[exit 1]
+  $ ../../../../../install/default/bin/stanc profile-bad8.stan
+Syntax error in 'profile-bad8.stan', line 2, column 16 to column 17, parsing error:
+   -------------------------------------------------
+     1:  transformed data {
+     2:      profile ("" {
+                         ^
+     3:          
+     4:      }
+   -------------------------------------------------
+
+Ill-formed statement. Expected ")" after profile name.
+[exit 1]

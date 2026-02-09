@@ -11,7 +11,7 @@ let drive_parser parse_fun =
       (Preprocessor.current_buffer ())
       () in
   let success prog = {prog with Ast.comments= Preprocessor.get_comments ()} in
-  let failure error_state =
+  let failure prev error_state =
     (* see the Menhir manual for the description of error messages support *)
     let env =
       match error_state with
@@ -34,11 +34,19 @@ let drive_parser parse_fun =
           [%message
             "Failed to find error for parser error state " (state : int)] in
     let location =
+      let env =
+        match prev with
+        (* if we errored because of one of our UNREACHABLE token, use the
+           location immediately preceding for a more informative error *)
+        | Interp.InputNeeded prev_env
+          when Interp.acceptable prev Parser.UNREACHABLE Lexing.dummy_pos ->
+            prev_env
+        | _ -> env in
       Preprocessor.location_span_of_positions (Interp.positions env) in
     Syntax_error.parse_error message location in
   let startp = (Preprocessor.current_buffer ()).lex_curr_p in
   Syntax_error.try_with (fun () ->
-      Interp.loop_handle success failure input (parse_fun startp))
+      Interp.loop_handle_undo success failure input (parse_fun startp))
 
 let to_lexbuf file_or_code =
   match file_or_code with

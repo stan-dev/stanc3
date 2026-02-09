@@ -40,7 +40,7 @@ Syntax error in 'error_spread_over_files.stan', line 1, column 2 to column 3, pa
            ^
    -------------------------------------------------
 
-Ill-formed program. Expected "functions {", "transformed data {", "parameters {",
+Ill-formed program. Expected "functions {", "data {", "transformed data {", "parameters {",
 "transformed parameters {", "model {", or "generated quantities {".
 [exit 1]
   $ ../../../../install/default/bin/stanc --include-paths="../included"  incl-err.stan
@@ -51,7 +51,7 @@ Syntax error in 'incl-err.stan', line 1, column 2 to column 6, parsing error:
      2:    #include "I'm not here.stan"
    -------------------------------------------------
 
-Ill-formed program. Expected "functions {", "transformed data {", "parameters {",
+Ill-formed program. Expected "functions {", "data {", "transformed data {", "parameters {",
 "transformed parameters {", "model {", or "generated quantities {".
 [exit 1]
   $ ../../../../install/default/bin/stanc --include-paths="../included"  incl_stanc_helper.stan
@@ -62,7 +62,7 @@ Syntax error in 'incl_stanc_helper.stan', line 1, column 2 to column 6, parsing 
      2:    #include incl_stanc_helper2.stan
    -------------------------------------------------
 
-Ill-formed program. Expected "functions {", "transformed data {", "parameters {",
+Ill-formed program. Expected "functions {", "data {", "transformed data {", "parameters {",
 "transformed parameters {", "model {", or "generated quantities {".
 [exit 1]
   $ ../../../../install/default/bin/stanc --include-paths="../included"  incl_stanc_helper2.stan
@@ -73,7 +73,7 @@ Syntax error in 'incl_stanc_helper2.stan', line 1, column 2 to column 6, parsing
      2:    real x;
    -------------------------------------------------
 
-Ill-formed program. Expected "functions {", "transformed data {", "parameters {",
+Ill-formed program. Expected "functions {", "data {", "transformed data {", "parameters {",
 "transformed parameters {", "model {", or "generated quantities {".
 [exit 1]
   $ ../../../../install/default/bin/stanc --include-paths="../included"  incl_stanc_helper_error_spread_over_files.stan
@@ -84,7 +84,7 @@ Syntax error in 'incl_stanc_helper_error_spread_over_files.stan', line 1, column
      2:    int #include error_spread_over_files.stan
    -------------------------------------------------
 
-Ill-formed program. Expected "functions {", "transformed data {", "parameters {",
+Ill-formed program. Expected "functions {", "data {", "transformed data {", "parameters {",
 "transformed parameters {", "model {", or "generated quantities {".
 [exit 1]
   $ ../../../../install/default/bin/stanc --include-paths="../included"  incl_stanc_helper_include_error.stan
@@ -95,7 +95,7 @@ Syntax error in 'incl_stanc_helper_include_error.stan', line 1, column 2 to colu
      2:    #include incl-err.stan
    -------------------------------------------------
 
-Ill-formed program. Expected "functions {", "transformed data {", "parameters {",
+Ill-formed program. Expected "functions {", "data {", "transformed data {", "parameters {",
 "transformed parameters {", "model {", or "generated quantities {".
 [exit 1]
   $ ../../../../install/default/bin/stanc --include-paths="../included"  incl_stanc_helper_lex_error.stan
@@ -106,7 +106,7 @@ Syntax error in 'incl_stanc_helper_lex_error.stan', line 1, column 2 to column 6
      2:    #include lex-err.stan
    -------------------------------------------------
 
-Ill-formed program. Expected "functions {", "transformed data {", "parameters {",
+Ill-formed program. Expected "functions {", "data {", "transformed data {", "parameters {",
 "transformed parameters {", "model {", or "generated quantities {".
 [exit 1]
   $ ../../../../install/default/bin/stanc --include-paths="../included"  incl_stanc_helper_parse_error.stan
@@ -117,7 +117,7 @@ Syntax error in 'incl_stanc_helper_parse_error.stan', line 1, column 2 to column
      2:    #include parse-err.stan
    -------------------------------------------------
 
-Ill-formed program. Expected "functions {", "transformed data {", "parameters {",
+Ill-formed program. Expected "functions {", "data {", "transformed data {", "parameters {",
 "transformed parameters {", "model {", or "generated quantities {".
 [exit 1]
   $ ../../../../install/default/bin/stanc --include-paths="../included"  incl_stanc_helper_semantic_error.stan
@@ -128,7 +128,7 @@ Syntax error in 'incl_stanc_helper_semantic_error.stan', line 1, column 2 to col
      2:    #include sem-err.stan
    -------------------------------------------------
 
-Ill-formed program. Expected "functions {", "transformed data {", "parameters {",
+Ill-formed program. Expected "functions {", "data {", "transformed data {", "parameters {",
 "transformed parameters {", "model {", or "generated quantities {".
 [exit 1]
   $ ../../../../install/default/bin/stanc --include-paths="../included"  included-brackets.stan
@@ -143,7 +143,7 @@ Syntax error in 'lex-err.stan', line 1, column 2 to column 6, parsing error:
      2:    real w;$
    -------------------------------------------------
 
-Ill-formed program. Expected "functions {", "transformed data {", "parameters {",
+Ill-formed program. Expected "functions {", "data {", "transformed data {", "parameters {",
 "transformed parameters {", "model {", or "generated quantities {".
 [exit 1]
   $ ../../../../install/default/bin/stanc --include-paths="../included"  parse-err.stan
@@ -154,7 +154,7 @@ Syntax error in 'parse-err.stan', line 1, column 2 to column 6, parsing error:
      2:    real w;=;
    -------------------------------------------------
 
-Ill-formed program. Expected "functions {", "transformed data {", "parameters {",
+Ill-formed program. Expected "functions {", "data {", "transformed data {", "parameters {",
 "transformed parameters {", "model {", or "generated quantities {".
 [exit 1]
   $ ../../../../install/default/bin/stanc --include-paths="../included"  sem-err.stan
@@ -165,7 +165,7 @@ Syntax error in 'sem-err.stan', line 1, column 2 to column 6, parsing error:
      2:    int w;
    -------------------------------------------------
 
-Ill-formed program. Expected "functions {", "transformed data {", "parameters {",
+Ill-formed program. Expected "functions {", "data {", "transformed data {", "parameters {",
 "transformed parameters {", "model {", or "generated quantities {".
 [exit 1]
   $ ../../../../install/default/bin/stanc --include-paths="../included"  stanc_helper_with_bad_include_error_spread_over_files.stan

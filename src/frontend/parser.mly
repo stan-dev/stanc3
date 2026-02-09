@@ -267,6 +267,33 @@ reserved_word:
   | UPPER { "upper", $loc, false }
   | ARRAY { "array", $loc, true }
 
+(* useful for generating better messages in locations where these are not permitted *)
+%inline no_constraints:
+  | basic_type LABRACK UNREACHABLE
+    { () }
+  | constrained_vector UNREACHABLE
+    { () }
+  | constrained_matrix UNREACHABLE
+    { () }
+
+constrained_vector:
+  | ORDERED
+  | POSITIVEORDERED
+  | SIMPLEX
+  | UNITVECTOR
+  | SUMTOZEROVEC
+    { () }
+
+constrained_matrix:
+  | CHOLESKYFACTORCORR
+  | CHOLESKYFACTORCOV
+  | CORRMATRIX
+  | COVMATRIX
+  | SUMTOZEROMAT
+  | STOCHASTICCOLUMNMATRIX
+  | STOCHASTICROWMATRIX
+    { () }
+
 function_def:
   | rt=return_type name=decl_identifier LPAREN args=separated_list(COMMA, arg_decl)
     RPAREN b=statement
@@ -298,16 +325,11 @@ unsized_type:
   (* This is just a helper for the fact that we don't support the old array syntax any more
     It can go away at some point if it starts causing conflicts.
   *)
-  | bt=basic_type dims=unsized_dims {
-    parse_error
-      (Fmt.str
-         "%@{<light_red>Ill-formed type.%@} %@{<yellow>It looks like you are \
-          trying to use the old array syntax.@ Please use the new syntax:%@}@ \
-          @[<h>array[%s] %a@]@\n"
-         (String.make (dims - 1) ',')
-         UnsizedType.pp bt)
-      $loc(dims)
-  }
+  | basic_type LBRACK UNREACHABLE
+    { (* This code will never be reached *)
+       Common.ICE.internal_compiler_error
+          [%message "the UNREACHABLE token should never be produced"]
+    }
   | bt=basic_type
     {  grammar_logger "unsized_type";
        bt
@@ -339,6 +361,11 @@ basic_type:
     {  grammar_logger "basic_type COMPLEXROWVECTOR" ; UnsizedType.UComplexRowVector }
   | COMPLEXMATRIX
     {  grammar_logger "basic_type COMPLEXMATRIX" ; UnsizedType.UComplexMatrix }
+  | no_constraints
+    { (* This code will never be reached. The parser state exists to make the error more specific. *)
+       Common.ICE.internal_compiler_error
+          [%message "the UNREACHABLE token should never be produced"]
+    }
 
 unsized_dims:
   | LBRACK cs=list(COMMA) RBRACK
@@ -386,13 +413,17 @@ decl(type_rule, rhs):
     let ty = (ty, trans) in
     parse_error
       (Fmt.str
-         "%@{<light_red>Ill-formed declaration.%@} %@{<green>\";\"%@} expected \
-          after variable declaration.@ %@{<yellow>It looks like you are trying \
+         "@[<v 2>%@{<light_red>Ill-formed declaration.%@} %@{<green>\";\"%@} expected \
+          after variable declaration.@ %@{<i>It looks like you are trying \
           to use the old array syntax.@ Please use the new syntax:%@}@ @[<h>%a \
-          %s;@]@\n"
+          %s;@]@]@\n"
          Pretty_printing.pp_transformed_type ty id.name)
       $loc(dims)
     }
+  | DATABLOCK UNREACHABLE {
+    Common.ICE.internal_compiler_error
+      [%message "the UNREACHABLE token should never be produced"]
+  }
   | ty=higher_type(type_rule)
     (* additional indirection only for better error messaging *)
     v = id_and_optional_assignment(rhs, decl_identifier) vs=option(remaining_declarations(rhs)) SEMICOLON
@@ -481,6 +512,11 @@ sized_basic_type:
     { grammar_logger "COMPLEXROWVECTOR_var_type" ; (SizedType.SComplexRowVector e , Identity) }
   | COMPLEXMATRIX LBRACK e1=expression COMMA e2=expression RBRACK
     { grammar_logger "COMPLEXMATRIX_var_type" ; (SizedType.SComplexMatrix (e1, e2), Transformation.Identity) }
+  | no_constraints
+    { (* This code will never be reached. The parser state exists to make the error more specific. *)
+       Common.ICE.internal_compiler_error
+          [%message "the UNREACHABLE token should never be produced"]
+    }
 
 top_var_type:
   | INT r=range_constraint

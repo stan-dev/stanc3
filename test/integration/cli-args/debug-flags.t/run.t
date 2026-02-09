@@ -468,7 +468,7 @@ Flags not used elsewhere in the tests
            ^
      -------------------------------------------------
   
-  Ill-formed program. Expected "functions {", "transformed data {", "parameters {",
+  Ill-formed program. Expected "functions {", "data {", "transformed data {", "parameters {",
   "transformed parameters {", "model {", or "generated quantities {".
-  (Parse error state 411)
+  (Parse error state 439)
   [1]

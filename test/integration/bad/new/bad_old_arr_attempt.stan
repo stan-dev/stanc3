@@ -1,0 +1,3 @@
+model {
+  complex foo [ while
+}

@@ -1,0 +1,3 @@
+model {
+  array real x;
+}

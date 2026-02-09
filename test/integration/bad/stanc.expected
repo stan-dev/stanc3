@@ -608,12 +608,12 @@ Semantic error in 'decl-reuse-name.stan', line 2, column 13 to column 14:
 Identifier "x" is already in use.
 [exit 1]
   $ ../../../../install/default/bin/stanc declare-define-param-block.stan
-Syntax error in 'declare-define-param-block.stan', line 6, column 11 to column 14, parsing error:
+Syntax error in 'declare-define-param-block.stan', line 6, column 9 to column 10, parsing error:
    -------------------------------------------------
      4:  parameters {
      5:    real y;
      6:    real z = d_r;
-                    ^
+                  ^
      7:  }
      8:  model {
    -------------------------------------------------
@@ -656,12 +656,12 @@ and the right hand side has type
   array[] real
 [exit 1]
   $ ../../../../install/default/bin/stanc declare-define-var-double-3.stan
-Syntax error in 'declare-define-var-double-3.stan', line 3, column 12 to column 15, parsing error:
+Syntax error in 'declare-define-var-double-3.stan', line 3, column 10 to column 11, parsing error:
    -------------------------------------------------
      1:  data {
      2:    array[2] real a1;
      3:    real a2 = 1.0; // cannot assign in data block
-                     ^
+                   ^
      4:  }
      5:  parameters {
    -------------------------------------------------
@@ -670,12 +670,12 @@ Ill-formed declaration. Cannot assign to variables in the "data" or "parameters"
 Expected ";" after variable declaration.
 [exit 1]
   $ ../../../../install/default/bin/stanc declare-define-var-double-4.stan
-Syntax error in 'declare-define-var-double-4.stan', line 6, column 12 to column 15, parsing error:
+Syntax error in 'declare-define-var-double-4.stan', line 6, column 10 to column 11, parsing error:
    -------------------------------------------------
      4:  parameters {
      5:    real y;
      6:    real a2 = 1.0; // cannot assign in parameters block
-                     ^
+                   ^
      7:  }
      8:  model {
    -------------------------------------------------
@@ -794,7 +794,7 @@ Syntax error in 'err-bare-type-close-square.stan', line 2, column 9 to column 13
      4:  model {
    -------------------------------------------------
 
-Ill-formed type. Expected "[" (list of commas) "]" in unsized return type of function definition.
+Ill-formed type. Expected "[" (list of commas) "]" in an unsized type in a function signature.
 [exit 1]
   $ ../../../../install/default/bin/stanc err-close-block.stan
 Syntax error in 'err-close-block.stan', line 3, column 0 to column 5, parsing error:
@@ -947,6 +947,17 @@ Syntax error in 'err-expected-end-of-model.stan', line 3, column 0 to column 3, 
 
 Ill-formed program. Expected "generated quantities {" or end of file after end of model block.
 [exit 1]
+  $ ../../../../install/default/bin/stanc err-expected-end-of-tp.stan
+Syntax error in 'err-expected-end-of-tp.stan', line 4, column 0 to column 4, parsing error:
+   -------------------------------------------------
+     2:  
+     3:  }
+     4:  mdel {}
+         ^
+   -------------------------------------------------
+
+Ill-formed program. Expected "model {" or "generated quantities {" after end of transformed parameters block.
+[exit 1]
   $ ../../../../install/default/bin/stanc err-expected-generated.stan
 Syntax error in 'err-expected-generated.stan', line 3, column 0 to column 9, parsing error:
    -------------------------------------------------
@@ -981,7 +992,7 @@ Syntax error in 'err-fun-bare-types-int.stan', line 2, column 8 to column 9, par
      4:      return a;
    -------------------------------------------------
 
-Ill-formed type. Expected "[" (list of commas) "]" in unsized return type of function definition.
+Ill-formed type. Expected "[" (list of commas) "]" in an unsized type in a function signature.
 [exit 1]
   $ ../../../../install/default/bin/stanc err-if-else-double-else.stan
 Syntax error in 'err-if-else-double-else.stan', line 4, column 2 to column 6, parsing error:
@@ -994,7 +1005,7 @@ Syntax error in 'err-if-else-double-else.stan', line 4, column 2 to column 6, pa
      6:  }
    -------------------------------------------------
 
-Ill-formed block. Expected a statement, variable declaration, or just "}".
+Ill-formed block. Expected top-level variable declaration, statement, or "}".
 [exit 1]
   $ ../../../../install/default/bin/stanc err-if-else-no-cond.stan
 Syntax error in 'err-if-else-no-cond.stan', line 3, column 6 to column 7, parsing error:
@@ -1316,7 +1327,7 @@ Syntax error in 'expect_statement_seq_close_brace.stan', line 6, column 0, parsi
          ^ (error at end of file)
    -------------------------------------------------
 
-Ill-formed block. Expected variable declaration, statement or "}".
+Ill-formed block. Expected unconstrained variable declaration, statement, or "}".
 [exit 1]
   $ ../../../../install/default/bin/stanc expect_statement_seq_close_brace_2.stan
 Syntax error in 'expect_statement_seq_close_brace_2.stan', line 17, column 0, parsing error:
@@ -1327,7 +1338,7 @@ Syntax error in 'expect_statement_seq_close_brace_2.stan', line 17, column 0, pa
          ^ (error at end of file)
    -------------------------------------------------
 
-Ill-formed block. Expected variable declaration, statement or "}".
+Ill-formed block. Expected unconstrained variable declaration, statement, or "}".
 [exit 1]
   $ ../../../../install/default/bin/stanc expect_statement_seq_close_brace_3.stan
 Syntax error in 'expect_statement_seq_close_brace_3.stan', line 8, column 0 to column 10, parsing error:
@@ -1340,7 +1351,7 @@ Syntax error in 'expect_statement_seq_close_brace_3.stan', line 8, column 0 to c
     10:  }
    -------------------------------------------------
 
-Ill-formed block. Expected a statement, variable declaration, or just "}".
+Ill-formed block. Expected top-level variable declaration, statement, or "}".
 [exit 1]
   $ ../../../../install/default/bin/stanc expect_statement_seq_close_brace_4.stan
 Syntax error in 'expect_statement_seq_close_brace_4.stan', line 10, column 0, parsing error:
@@ -1351,7 +1362,7 @@ Syntax error in 'expect_statement_seq_close_brace_4.stan', line 10, column 0, pa
          ^ (error at end of file)
    -------------------------------------------------
 
-Ill-formed block. Expected a statement, variable declaration, or just "}".
+Ill-formed block. Expected top-level variable declaration, statement, or "}".
 [exit 1]
   $ ../../../../install/default/bin/stanc experiment.stan
 Semantic error in 'experiment.stan', line 12, column 4 to column 11:
@@ -1410,6 +1421,9 @@ Syntax error in 'functions-bad0.stan', line 2, column 11 to column 15, parsing e
    -------------------------------------------------
 
 Ill-formed function argument. Expected an argument declaration (unsized and unconstrained type followed by identifier).
+  For example, this means a type like "matrix", not "corr_matrix" or "matrix[3,4]".
+  See the complete table of types at:
+  https://mc-stan.org/docs/reference-manual/types.html#variable-declaration.section
 [exit 1]
   $ ../../../../install/default/bin/stanc functions-bad1.stan
 Semantic error in 'functions-bad1.stan', line 6, column 2 to column 20:
@@ -1894,7 +1908,7 @@ Syntax error in 'local_var_constraint.stan', line 5, column 12 to column 13, par
      7:  }
    -------------------------------------------------
 
-Ill-formed type. Expected "[" expression "]" for row_vector size.
+Ill-formed type. Did not expect "<". Constrained types are not supported in local (or model block) variable declarations.
 [exit 1]
   $ ../../../../install/default/bin/stanc local_var_constraint2.stan
 Syntax error in 'local_var_constraint2.stan', line 5, column 8 to column 9, parsing error:
@@ -1907,7 +1921,7 @@ Syntax error in 'local_var_constraint2.stan', line 5, column 8 to column 9, pars
      7:  }
    -------------------------------------------------
 
-Ill-formed type. Expected "[" expression "]" for vector size.
+Ill-formed type. Did not expect "<". Constrained types are not supported in local (or model block) variable declarations.
 [exit 1]
   $ ../../../../install/default/bin/stanc local_var_constraint3.stan
 Syntax error in 'local_var_constraint3.stan', line 5, column 8 to column 9, parsing error:
@@ -1920,7 +1934,7 @@ Syntax error in 'local_var_constraint3.stan', line 5, column 8 to column 9, pars
      7:  }
    -------------------------------------------------
 
-Ill-formed type. Expected "[" expression "," expression "]" for matrix sizes.
+Ill-formed type. Did not expect "<". Constrained types are not supported in local (or model block) variable declarations.
 [exit 1]
   $ ../../../../install/default/bin/stanc local_var_constraint4.stan
 Syntax error in 'local_var_constraint4.stan', line 5, column 6 to column 7, parsing error:
@@ -1933,8 +1947,7 @@ Syntax error in 'local_var_constraint4.stan', line 5, column 6 to column 7, pars
      7:  }
    -------------------------------------------------
 
-Ill-formed declaration. Expected an identifier after sized type in local (or model block) variable declaration.
-(No transformations/constraints allowed.)
+Ill-formed type. Did not expect "<". Constrained types are not supported in local (or model block) variable declarations.
 [exit 1]
   $ ../../../../install/default/bin/stanc log_suffix_bad1.stan
 Semantic error in 'log_suffix_bad1.stan', line 8, column 2 to column 19:

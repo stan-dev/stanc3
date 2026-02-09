@@ -8,18 +8,130 @@ Syntax error in 'arg-decl-bad1.stan', line 2, column 16 to column 21, parsing er
    -------------------------------------------------
 
 Ill-formed function argument. Expected an argument declaration (unsized and unconstrained type followed by identifier).
+  For example, this means a type like "matrix", not "corr_matrix" or "matrix[3,4]".
+  See the complete table of types at:
+  https://mc-stan.org/docs/reference-manual/types.html#variable-declaration.section
 [exit 1]
-  $ ../../../../../install/default/bin/stanc bad_data_modifier_decl.stan
-Syntax error in 'bad_data_modifier_decl.stan', line 3, column 2 to column 6, parsing error:
+  $ ../../../../../install/default/bin/stanc bad_constrained_type_in_fn copy.stan
+Usage: %%NAME%% [--help] [OPTION]… [MODEL_FILE]
+%%NAME%%: too many arguments, don't know what to do with 'copy.stan'
+[exit 124]
+  $ ../../../../../install/default/bin/stanc bad_constrained_type_in_fn.stan
+Syntax error in 'bad_constrained_type_in_fn.stan', line 2, column 19 to column 26, parsing error:
    -------------------------------------------------
-     1:  // TODO: would be nice to specialize for this mistake
-     2:  generated quantities {
-     3:    data real x = 1;
+     1:  functions{
+     2:    void foo(array[] simplex x){
+                            ^
+     3:      print(x);
+     4:    }
+   -------------------------------------------------
+
+Ill-formed type. Functions do not enforce type constraints.
+  Use "vector" instead.
+[exit 1]
+  $ ../../../../../install/default/bin/stanc bad_constrained_type_in_fn2.stan
+Syntax error in 'bad_constrained_type_in_fn2.stan', line 2, column 11 to column 18, parsing error:
+   -------------------------------------------------
+     1:  functions{
+     2:    void foo(simplex x){
+                    ^
+     3:      print(x);
+     4:    }
+   -------------------------------------------------
+
+Ill-formed type. Functions do not enforce type constraints.
+  Use "vector" instead.
+[exit 1]
+  $ ../../../../../install/default/bin/stanc bad_constrained_type_in_fn3.stan
+Syntax error in 'bad_constrained_type_in_fn3.stan', line 2, column 2 to column 9, parsing error:
+   -------------------------------------------------
+     1:  functions{
+     2:    simplex foo(){
            ^
+     3:    }
      4:  }
    -------------------------------------------------
 
-Ill-formed block. Expected variable declaration, statement or "}".
+Ill-formed type. Functions do not enforce type constraints.
+  Use "vector" instead.
+[exit 1]
+  $ ../../../../../install/default/bin/stanc bad_constrained_type_in_fn4.stan
+Syntax error in 'bad_constrained_type_in_fn4.stan', line 3, column 14 to column 15, parsing error:
+   -------------------------------------------------
+     1:  functions{
+     2:    // TODO: would be nice to specialize for this mistake
+     3:    void foo(int<lower=0> x){
+                       ^
+     4:      print(x);
+     5:    }
+   -------------------------------------------------
+
+Ill-formed type. Did not expect "<". Functions do not support type constraints.
+[exit 1]
+  $ ../../../../../install/default/bin/stanc bad_constrained_type_in_local.stan
+Syntax error in 'bad_constrained_type_in_local.stan', line 4, column 13 to column 20, parsing error:
+   -------------------------------------------------
+     2:    array[3] simplex[2] x;
+     3:    {
+     4:      array[3] simplex[2] y = x;
+                      ^
+     5:      print(y);
+     6:    }
+   -------------------------------------------------
+
+Ill-formed type. Constrained types are not supported in local (or model block) variable declarations.
+  Use "vector" instead.
+[exit 1]
+  $ ../../../../../install/default/bin/stanc bad_constrained_type_in_local2.stan
+Syntax error in 'bad_constrained_type_in_local2.stan', line 4, column 4 to column 24, parsing error:
+   -------------------------------------------------
+     2:    cholesky_factor_corr[2] x;
+     3:    {
+     4:      cholesky_factor_corr[2] y = x;
+             ^
+     5:      print(y);
+     6:    }
+   -------------------------------------------------
+
+Ill-formed type. Constrained types are not supported in local (or model block) variable declarations.
+  Use "matrix" instead.
+[exit 1]
+  $ ../../../../../install/default/bin/stanc bad_constrained_type_in_model.stan
+Syntax error in 'bad_constrained_type_in_model.stan', line 2, column 11 to column 18, parsing error:
+   -------------------------------------------------
+     1:  model {
+     2:    array[3] simplex[2] x;
+                    ^
+     3:    print(x);
+     4:  }
+   -------------------------------------------------
+
+Ill-formed type. Constrained types are not supported in local (or model block) variable declarations.
+  Use "vector" instead.
+[exit 1]
+  $ ../../../../../install/default/bin/stanc bad_constrained_type_in_model2.stan
+Syntax error in 'bad_constrained_type_in_model2.stan', line 2, column 2 to column 9, parsing error:
+   -------------------------------------------------
+     1:  model {
+     2:    simplex[2] x;
+           ^
+     3:    print(x);
+     4:  }
+   -------------------------------------------------
+
+Ill-formed type. Constrained types are not supported in local (or model block) variable declarations.
+  Use "vector" instead.
+[exit 1]
+  $ ../../../../../install/default/bin/stanc bad_data_modifier_decl.stan
+Syntax error in 'bad_data_modifier_decl.stan', line 2, column 2 to column 6, parsing error:
+   -------------------------------------------------
+     1:  generated quantities {
+     2:    data real x = 1;
+           ^
+     3:  }
+   -------------------------------------------------
+
+Ill-formed declaration. The "data" specifier is only valid in function arguments, not declarations.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_decl_in_functions.stan
 Syntax error in 'bad_decl_in_functions.stan', line 2, column 19 to column 20, parsing error:
@@ -41,6 +153,64 @@ Syntax error in 'bad_multi_decl.stan', line 2, column 21 to column 24, parsing e
 
 Ill-formed expression. Unexpected input after the conclusion of a valid expression.
 You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
+[exit 1]
+  $ ../../../../../install/default/bin/stanc bad_old_arr_attempt.stan
+Syntax error in 'bad_old_arr_attempt.stan', line 2, column 16 to column 21, parsing error:
+   -------------------------------------------------
+     1:  model {
+     2:    complex foo [ while
+                         ^
+     3:  }
+   -------------------------------------------------
+
+Ill-formed declaration. Expected ";" after variable declaration.
+  It looks like you are trying to use the old array syntax.
+  Please use the new syntax, see:
+  https://mc-stan.org/docs/reference-manual/types.html#array-data-types.section
+[exit 1]
+  $ ../../../../../install/default/bin/stanc bad_sized_type_in_fn.stan
+Syntax error in 'bad_sized_type_in_fn.stan', line 2, column 17 to column 18, parsing error:
+   -------------------------------------------------
+     1:  functions{
+     2:    void foo(array[3] real x){
+                          ^
+     3:      print(x);
+     4:    }
+   -------------------------------------------------
+
+Ill-formed type. Expected "[" (list of commas) "]" in an unsized type in a function signature.
+[exit 1]
+  $ ../../../../../install/default/bin/stanc bad_sized_type_in_fn2.stan
+Syntax error in 'bad_sized_type_in_fn2.stan', line 2, column 17 to column 18, parsing error:
+   -------------------------------------------------
+     1:  functions{
+     2:    void foo(vector[3] x){
+                          ^
+     3:      print(x);
+     4:    }
+   -------------------------------------------------
+
+Ill-formed type. Expected an unsized type in function signature.
+  For example, this means a type like "matrix", not "matrix[3,4]".
+  If you are trying to use the old array syntax, you will need to use
+  the new syntax, see:
+  https://mc-stan.org/docs/reference-manual/types.html#array-data-types.section
+[exit 1]
+  $ ../../../../../install/default/bin/stanc bad_sized_type_in_fn3.stan
+Syntax error in 'bad_sized_type_in_fn3.stan', line 2, column 8 to column 9, parsing error:
+   -------------------------------------------------
+     1:  functions{
+     2:    vector[3] foo(real x){
+                 ^
+     3:      print(x);
+     4:    }
+   -------------------------------------------------
+
+Ill-formed type. Expected an unsized type in function signature.
+  For example, this means a type like "matrix", not "matrix[3,4]".
+  If you are trying to use the old array syntax, you will need to use
+  the new syntax, see:
+  https://mc-stan.org/docs/reference-manual/types.html#array-data-types.section
 [exit 1]
   $ ../../../../../install/default/bin/stanc blocks-bad1.stan
 Syntax error in 'blocks-bad1.stan', line 1, column 5 to column 10, parsing error:
@@ -67,7 +237,7 @@ Syntax error in 'blocks-bad11.stan', line 1, column 25 to column 29, parsing err
                                   ^
    -------------------------------------------------
 
-Ill-formed block. Expected a statement or top-level variable declaration.
+Ill-formed block. Expected top-level variable declaration, statement, or "}".
 [exit 1]
   $ ../../../../../install/default/bin/stanc blocks-bad12.stan
 Syntax error in 'blocks-bad12.stan', line 1, column 23 to column 28, parsing error:
@@ -152,7 +322,7 @@ Syntax error in 'blocks-bad9.stan', line 1, column 19 to column 23, parsing erro
                             ^
    -------------------------------------------------
 
-Ill-formed block. Expected a statement or top-level variable declaration.
+Ill-formed block. Expected top-level variable declaration, statement, or "}".
 [exit 1]
   $ ../../../../../install/default/bin/stanc fatal_error-bad1.stan
 Syntax error in 'fatal_error-bad1.stan', line 1, column 48 to column 53, parsing error:
@@ -266,7 +436,8 @@ Syntax error in 'fundef-bad10.stan', line 2, column 12 to column 23, parsing err
      4:     }
    -------------------------------------------------
 
-Ill-formed function argument. Expected an argument declaration (unsized and unconstrained type followed by identifier).
+Ill-formed type. Functions do not enforce type constraints.
+  Use "matrix" instead.
 [exit 1]
   $ ../../../../../install/default/bin/stanc fundef-bad2.stan
 Syntax error in 'fundef-bad2.stan', line 1, column 23 to column 24, parsing error:
@@ -321,6 +492,9 @@ Syntax error in 'fundef-bad7.stan', line 1, column 21 to column 26, parsing erro
    -------------------------------------------------
 
 Ill-formed function argument. Expected an argument declaration (unsized and unconstrained type followed by identifier).
+  For example, this means a type like "matrix", not "corr_matrix" or "matrix[3,4]".
+  See the complete table of types at:
+  https://mc-stan.org/docs/reference-manual/types.html#variable-declaration.section
 [exit 1]
   $ ../../../../../install/default/bin/stanc fundef-bad8.stan
 Syntax error in 'fundef-bad8.stan', line 1, column 17 to column 22, parsing error:
@@ -338,7 +512,7 @@ Syntax error in 'fundef-bad9.stan', line 1, column 23 to column 27, parsing erro
                                 ^
    -------------------------------------------------
 
-Ill-formed block. Expected variable declaration, statement or "}".
+Ill-formed block. Expected top-level variable declaration, statement, or "}".
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-expression1.stan
 Syntax error in 'ill-formed-expression1.stan', line 1, column 34 to column 39, parsing error:
@@ -555,7 +729,7 @@ Syntax error in 'ill-formed-expression31.stan', line 1, column 20 to column 24, 
                              ^
    -------------------------------------------------
 
-Ill-formed block. Expected a statement, variable declaration, or just "}" after "{".
+Ill-formed block. Expected unconstrained variable declaration, statement, or "}".
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-expression32.stan
 Syntax error in 'ill-formed-expression32.stan', line 1, column 24 to column 29, parsing error:
@@ -1508,7 +1682,7 @@ Syntax error in 'immediate_error.stan', line 1, column 0 to column 5, parsing er
          ^
    -------------------------------------------------
 
-Ill-formed program. Expected "functions {", "transformed data {", "parameters {",
+Ill-formed program. Expected "functions {", "data {", "transformed data {", "parameters {",
 "transformed parameters {", "model {", or "generated quantities {".
 [exit 1]
   $ ../../../../../install/default/bin/stanc indices-bad1.stan
