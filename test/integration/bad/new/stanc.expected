@@ -26,7 +26,8 @@ Syntax error in 'bad_constrained_type_in_fn.stan', line 2, column 19 to column 2
      4:    }
    -------------------------------------------------
 
-Ill-formed type. Functions do not enforce type constraints. Use vector instead.
+Ill-formed type. Functions do not enforce type constraints.
+  Use "vector" instead.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_constrained_type_in_fn2.stan
 Syntax error in 'bad_constrained_type_in_fn2.stan', line 2, column 11 to column 18, parsing error:
@@ -38,7 +39,8 @@ Syntax error in 'bad_constrained_type_in_fn2.stan', line 2, column 11 to column 
      4:    }
    -------------------------------------------------
 
-Ill-formed type. Functions do not enforce type constraints. Use vector instead.
+Ill-formed type. Functions do not enforce type constraints.
+  Use "vector" instead.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_constrained_type_in_fn3.stan
 Syntax error in 'bad_constrained_type_in_fn3.stan', line 2, column 2 to column 9, parsing error:
@@ -50,7 +52,8 @@ Syntax error in 'bad_constrained_type_in_fn3.stan', line 2, column 2 to column 9
      4:  }
    -------------------------------------------------
 
-Ill-formed type. Functions do not enforce type constraints. Use vector instead.
+Ill-formed type. Functions do not enforce type constraints.
+  Use "vector" instead.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_constrained_type_in_fn4.stan
 Syntax error in 'bad_constrained_type_in_fn4.stan', line 3, column 14 to column 15, parsing error:
@@ -63,7 +66,7 @@ Syntax error in 'bad_constrained_type_in_fn4.stan', line 3, column 14 to column 
      5:    }
    -------------------------------------------------
 
-Ill-formed function argument. Expected an identifier after the type for the function argument name.
+Ill-formed type. Did not expect "<". Functions do not support type constraints.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_constrained_type_in_local.stan
 Syntax error in 'bad_constrained_type_in_local.stan', line 4, column 13 to column 20, parsing error:
@@ -76,10 +79,8 @@ Syntax error in 'bad_constrained_type_in_local.stan', line 4, column 13 to colum
      6:    }
    -------------------------------------------------
 
-Ill-formed type. Expected an unconstrained, non-array type after "array" declaration.
-  For example, this means a type like "matrix", not "corr_matrix".
-  See the complete table of types at:
-  https://mc-stan.org/docs/reference-manual/types.html#variable-declaration.section
+Ill-formed type. Constrained types are not supported in local (or model block) variable declarations.
+  Use "vector" instead.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_constrained_type_in_local2.stan
 Syntax error in 'bad_constrained_type_in_local2.stan', line 4, column 4 to column 11, parsing error:
@@ -92,7 +93,8 @@ Syntax error in 'bad_constrained_type_in_local2.stan', line 4, column 4 to colum
      6:    }
    -------------------------------------------------
 
-Ill-formed block. Expected unconstrained variable declaration, statement, or "}".
+Ill-formed type. Constrained types are not supported in local (or model block) variable declarations.
+  Use "vector" instead.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_constrained_type_in_model.stan
 Syntax error in 'bad_constrained_type_in_model.stan', line 2, column 11 to column 18, parsing error:
@@ -104,10 +106,8 @@ Syntax error in 'bad_constrained_type_in_model.stan', line 2, column 11 to colum
      4:  }
    -------------------------------------------------
 
-Ill-formed type. Expected an unconstrained, non-array type after "array" declaration.
-  For example, this means a type like "matrix", not "corr_matrix".
-  See the complete table of types at:
-  https://mc-stan.org/docs/reference-manual/types.html#variable-declaration.section
+Ill-formed type. Constrained types are not supported in local (or model block) variable declarations.
+  Use "vector" instead.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_constrained_type_in_model2.stan
 Syntax error in 'bad_constrained_type_in_model2.stan', line 2, column 2 to column 9, parsing error:
@@ -119,7 +119,8 @@ Syntax error in 'bad_constrained_type_in_model2.stan', line 2, column 2 to colum
      4:  }
    -------------------------------------------------
 
-Ill-formed block. Expected unconstrained variable declaration, statement, or "}".
+Ill-formed type. Constrained types are not supported in local (or model block) variable declarations.
+  Use "vector" instead.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_data_modifier_decl.stan
 Syntax error in 'bad_data_modifier_decl.stan', line 2, column 2 to column 6, parsing error:
@@ -435,7 +436,8 @@ Syntax error in 'fundef-bad10.stan', line 2, column 12 to column 23, parsing err
      4:     }
    -------------------------------------------------
 
-Ill-formed type. Functions do not enforce type constraints. Use matrix instead.
+Ill-formed type. Functions do not enforce type constraints.
+  Use "matrix" instead.
 [exit 1]
   $ ../../../../../install/default/bin/stanc fundef-bad2.stan
 Syntax error in 'fundef-bad2.stan', line 1, column 23 to column 24, parsing error:

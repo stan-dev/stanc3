@@ -1,7 +1,7 @@
 transformed data {
-  simplex[2] x;
+  cholesky_factor_corr[2] x;
   {
-    simplex[2] y = x;
+    cholesky_factor_corr[2] y = x;
     print(y);
   }
 }

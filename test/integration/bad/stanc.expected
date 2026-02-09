@@ -1897,7 +1897,7 @@ Syntax error in 'local_var_constraint.stan', line 5, column 12 to column 13, par
      7:  }
    -------------------------------------------------
 
-Ill-formed type. Expected "[" expression "]" for row_vector size.
+Ill-formed type. Did not expect "<". Constrained types are not supported in local (or model block) variable declarations.
 [exit 1]
   $ ../../../../install/default/bin/stanc local_var_constraint2.stan
 Syntax error in 'local_var_constraint2.stan', line 5, column 8 to column 9, parsing error:
@@ -1910,7 +1910,7 @@ Syntax error in 'local_var_constraint2.stan', line 5, column 8 to column 9, pars
      7:  }
    -------------------------------------------------
 
-Ill-formed type. Expected "[" expression "]" for vector size.
+Ill-formed type. Did not expect "<". Constrained types are not supported in local (or model block) variable declarations.
 [exit 1]
   $ ../../../../install/default/bin/stanc local_var_constraint3.stan
 Syntax error in 'local_var_constraint3.stan', line 5, column 8 to column 9, parsing error:
@@ -1923,7 +1923,7 @@ Syntax error in 'local_var_constraint3.stan', line 5, column 8 to column 9, pars
      7:  }
    -------------------------------------------------
 
-Ill-formed type. Expected "[" expression "," expression "]" for matrix sizes.
+Ill-formed type. Did not expect "<". Constrained types are not supported in local (or model block) variable declarations.
 [exit 1]
   $ ../../../../install/default/bin/stanc local_var_constraint4.stan
 Syntax error in 'local_var_constraint4.stan', line 5, column 6 to column 7, parsing error:
@@ -1936,10 +1936,7 @@ Syntax error in 'local_var_constraint4.stan', line 5, column 6 to column 7, pars
      7:  }
    -------------------------------------------------
 
-Ill-formed declaration. Expected an identifier after unconstrained sized type in local (or model block) variable declaration.
-  For example, this means a type like "matrix[3,4]", not "corr_matrix".
-  See the complete table of types at:
-  https://mc-stan.org/docs/reference-manual/types.html#variable-declaration.section
+Ill-formed type. Did not expect "<". Constrained types are not supported in local (or model block) variable declarations.
 [exit 1]
   $ ../../../../install/default/bin/stanc log_suffix_bad1.stan
 Semantic error in 'log_suffix_bad1.stan', line 8, column 2 to column 19:

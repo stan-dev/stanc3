@@ -267,6 +267,33 @@ reserved_word:
   | UPPER { "upper", $loc, false }
   | ARRAY { "array", $loc, true }
 
+(* useful for generating better messages in locations where these are not permitted *)
+%inline no_constraints:
+  | basic_type LABRACK UNREACHABLE
+    { () }
+  | constrained_vector UNREACHABLE
+    { () }
+  | constrained_matrix UNREACHABLE
+    { () }
+
+constrained_vector:
+  | ORDERED
+  | POSITIVEORDERED
+  | SIMPLEX
+  | UNITVECTOR
+  | SUMTOZEROVEC
+    { () }
+
+constrained_matrix:
+  | CHOLESKYFACTORCORR
+  | CHOLESKYFACTORCOV
+  | CORRMATRIX
+  | COVMATRIX
+  | SUMTOZEROMAT
+  | STOCHASTICCOLUMNMATRIX
+  | STOCHASTICROWMATRIX
+    { () }
+
 function_def:
   | rt=return_type name=decl_identifier LPAREN args=separated_list(COMMA, arg_decl)
     RPAREN b=statement
@@ -334,34 +361,11 @@ basic_type:
     {  grammar_logger "basic_type COMPLEXROWVECTOR" ; UnsizedType.UComplexRowVector }
   | COMPLEXMATRIX
     {  grammar_logger "basic_type COMPLEXMATRIX" ; UnsizedType.UComplexMatrix }
-  | constrained_vector UNREACHABLE
+  | no_constraints
     { (* This code will never be reached. The parser state exists to make the error more specific. *)
        Common.ICE.internal_compiler_error
           [%message "the UNREACHABLE token should never be produced"]
     }
-  | constrained_matrix UNREACHABLE
-    { (* This code will never be reached. The parser state exists to make the error more specific. *)
-       Common.ICE.internal_compiler_error
-          [%message "the UNREACHABLE token should never be produced"]
-    }
-
-constrained_vector:
-  | ORDERED
-  | POSITIVEORDERED
-  | SIMPLEX
-  | UNITVECTOR
-  | SUMTOZEROVEC
-    { () }
-
-constrained_matrix:
-  | CHOLESKYFACTORCORR
-  | CHOLESKYFACTORCOV
-  | CORRMATRIX
-  | COVMATRIX
-  | SUMTOZEROMAT
-  | STOCHASTICCOLUMNMATRIX
-  | STOCHASTICROWMATRIX
-    { () }
 
 unsized_dims:
   | LBRACK cs=list(COMMA) RBRACK
@@ -508,6 +512,11 @@ sized_basic_type:
     { grammar_logger "COMPLEXROWVECTOR_var_type" ; (SizedType.SComplexRowVector e , Identity) }
   | COMPLEXMATRIX LBRACK e1=expression COMMA e2=expression RBRACK
     { grammar_logger "COMPLEXMATRIX_var_type" ; (SizedType.SComplexMatrix (e1, e2), Transformation.Identity) }
+  | no_constraints
+    { (* This code will never be reached. The parser state exists to make the error more specific. *)
+       Common.ICE.internal_compiler_error
+          [%message "the UNREACHABLE token should never be produced"]
+    }
 
 top_var_type:
   | INT r=range_constraint
