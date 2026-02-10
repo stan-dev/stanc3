@@ -50,6 +50,7 @@ pipeline {
     stages {
 
         stage('Build (Linux)') {
+            environment { DOCKER_BUILDKIT = '1' }
             matrix {
                 axes {
                     axis {
