@@ -186,6 +186,20 @@ module Helpers = struct
         Some l
     | _ -> None
 
+  let transpose e =
+    let new_type =
+      match Typed.type_of e with
+      | UnsizedType.URowVector -> UnsizedType.UVector
+      | UVector -> URowVector
+      | UComplexRowVector -> UComplexVector
+      | UComplexVector -> UComplexRowVector
+      | (UMatrix | UComplexMatrix) as t -> t
+      | t ->
+          Common.ICE.internal_compiler_error
+            [%message "Cannot transpose " (t : UnsizedType.t)] in
+    let expr = unary_op Transpose e in
+    {expr with meta= {expr.meta with type_= new_type}}
+
   let loop_bottom = one
 
   let internal_funapp fn args meta =
