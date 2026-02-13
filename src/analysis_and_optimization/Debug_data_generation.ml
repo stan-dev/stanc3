@@ -85,71 +85,70 @@ let gen_num_real m t =
               (t : Expr.Typed.t Transformation.t)] in
   Random.float_range low up
 
-let rec repeat n e =
-  match n with n when n <= 0 -> [] | m -> e :: repeat (m - 1) e
+let repeat n e = List.init n ~f:(Fn.const e)
+let repeat_th n f = List.init n ~f:(fun _ -> f ())
+let random_floats n = repeat_th n (fun () -> Random.float 2.)
 
-let rec repeat_th n f =
-  match n with n when n <= 0 -> [] | m -> f () :: repeat_th (m - 1) f
+let unpack_or_repeat n (e : Expr.Typed.t) : Expr.Typed.t list =
+  match e.pattern with
+  | FunApp (CompilerInternal (FnMakeRowVec | FnMakeArray), l) -> l
+  | FunApp
+      ( StanLib ("Transpose__", FnPlain, _)
+      , [{pattern= FunApp (CompilerInternal FnMakeRowVec, l); _}] ) ->
+      l
+  | _ -> repeat n e
 
 let gen_bounded m n gen e =
-  let evaled = eval_expr m e in
-  let exprs =
-    match Expr.Helpers.try_unpack evaled with
-    | Some unpacked -> unpacked
-    | None -> List.init n ~f:(Fn.const evaled) in
+  let exprs = unpack_or_repeat n (eval_expr m e) in
   List.map ~f:gen exprs
 
 let gen_ul_bounded m n gen e1 e2 =
   let create_bounds l u =
     List.map2_exn ~f:(fun x y -> gen (Transformation.LowerUpper (x, y))) l u
   in
-  let e1 = eval_expr m e1 in
-  let es1 =
-    match Expr.Helpers.try_unpack e1 with
-    | Some unpacked -> unpacked
-    | None -> List.init n ~f:(Fn.const e1) in
-  let e2 = eval_expr m e2 in
-  let es2 =
-    match Expr.Helpers.try_unpack e2 with
-    | Some unpacked -> unpacked
-    | None -> List.init n ~f:(Fn.const e2) in
+  let es1 = unpack_or_repeat n (eval_expr m e1) in
+  let es2 = unpack_or_repeat n (eval_expr m e2) in
   create_bounds es1 es2
 
 let gen_row_vector m n t =
   match (t : Expr.Typed.t Transformation.t) with
-  | Transformation.Lower
-      ({meta= {type_= UVector | URowVector | UReal | UInt; _}; _} as e) ->
+  | Transformation.Lower e ->
       gen_bounded m n (fun x -> gen_num_real m (Lower x)) e
       |> Expr.Helpers.row_vector
-  | Upper ({meta= {type_= UVector | URowVector | UReal | UInt; _}; _} as e) ->
+  | Upper e ->
       gen_bounded m n (fun x -> gen_num_real m (Upper x)) e
       |> Expr.Helpers.row_vector
-  | LowerUpper
-      ( ({meta= {type_= UVector | URowVector | UReal | UInt; _}; _} as e1)
-      , ({meta= {type_= UVector | URowVector | UReal | UInt; _}; _} as e2) ) ->
+  | LowerUpper (e1, e2) ->
       gen_ul_bounded m n (gen_num_real m) e1 e2 |> Expr.Helpers.row_vector
   | Identity | Offset _ | Multiplier _ | OffsetMultiplier _ ->
-      Expr.Helpers.row_vector (repeat_th n (fun _ -> gen_num_real m t))
+      Expr.Helpers.row_vector (repeat_th n (fun () -> gen_num_real m t))
   | Ordered | PositiveOrdered | Simplex | UnitVector | SumToZero
    |CholeskyCorr | CholeskyCov | Correlation | Covariance | StochasticRow
-   |StochasticColumn | TupleTransformation _ | Lower _ | LowerUpper _ | Upper _
-    ->
+   |StochasticColumn | TupleTransformation _ ->
       Common.ICE.internal_compiler_error
         [%message
-          "Unknown transformation for (row) vector"
+          "Unknown transformation for row_vector"
             (t : Expr.Typed.t Transformation.t)]
+
+let sum_to_zero_floats n =
+  let l = random_floats n in
+  let sum = List.fold l ~init:0. ~f:( +. ) in
+  List.map l ~f:(fun x -> x -. (sum /. float_of_int n))
+
+let simplex_floats n =
+  let l = random_floats n in
+  let sum = List.fold l ~init:0. ~f:( +. ) in
+  List.map l ~f:(fun x -> x /. sum)
 
 let gen_vector m n t =
   let gen_ordered n =
-    let l = repeat_th n (fun _ -> Random.float 1.) in
+    let l = random_floats n in
     List.fold_map l ~init:0. ~f:(fun accum elt ->
         let elt = accum +. elt in
         (elt, elt)) in
   match t with
   | Transformation.Simplex ->
-      let l = repeat_th n (fun _ -> Random.float 1.) in
-      let sum = List.fold l ~init:0. ~f:( +. ) in
-      let l = List.map l ~f:(fun x -> x /. sum) in
+      let l = simplex_floats n in
       Expr.Helpers.vector l
   | Ordered ->
       let max, l = gen_ordered n in
@@ -159,7 +158,7 @@ let gen_vector m n t =
       let _, l = gen_ordered n in
       Expr.Helpers.vector l
   | UnitVector ->
-      let l = repeat_th n (fun _ -> Random.float 1.) in
+      let l = random_floats n in
       let sum =
         Float.sqrt
           (List.fold l ~init:0. ~f:(fun accum elt -> accum +. (elt ** 2.)))
@@ -167,17 +166,20 @@ let gen_vector m n t =
       let l = List.map l ~f:(fun x -> x /. sum) in
       Expr.Helpers.vector l
   | SumToZero ->
-      let l = repeat_th n (fun _ -> Random.float 1.) in
-      let sum = List.fold l ~init:0. ~f:( +. ) in
-      let l = List.map l ~f:(fun x -> x -. (sum /. float_of_int n)) in
+      let l = sum_to_zero_floats n in
       Expr.Helpers.vector l
-  | Identity | Offset _ | Multiplier _ | OffsetMultiplier _ | CholeskyCorr
-   |CholeskyCov | Correlation | Covariance | StochasticRow | StochasticColumn
-   |TupleTransformation _ | Lower _ | LowerUpper _ | Upper _ ->
+  | Identity | Offset _ | Multiplier _ | OffsetMultiplier _ | Lower _
+   |LowerUpper _ | Upper _ ->
       Expr.Helpers.transpose (gen_row_vector m n t)
+  | CholeskyCorr | CholeskyCov | Correlation | Covariance | StochasticRow
+   |StochasticColumn | TupleTransformation _ ->
+      Common.ICE.internal_compiler_error
+        [%message
+          "Unknown transformation for vector"
+            (t : Expr.Typed.t Transformation.t)]
 
 let gen_cov_unwrapped n =
-  let l = repeat_th (n * n) (fun _ -> Random.float 2.) in
+  let l = random_floats (n * n) in
   let l_mat = vect_to_mat l n in
   matprod l_mat (transpose l_mat)
 
@@ -195,22 +197,20 @@ let gen_diag_mat l =
 let fill_lower_triangular m =
   let fill_row i l =
     let _, tl = List.split_n l i in
-    List.init ~f:(fun _ -> Random.float 2.) i @ tl in
+    random_floats i @ tl in
   List.mapi ~f:fill_row m
 
 let pad_mat mm m n =
-  let padding_mat =
-    List.init (m - n) ~f:(fun _ -> List.init n ~f:(fun _ -> Random.float 2.))
-  in
+  let padding_mat = repeat_th (m - n) (fun () -> random_floats n) in
   wrap_real_mat (mm @ padding_mat)
 
 let gen_cov_cholesky m n =
-  let diag_mat = gen_diag_mat (List.init ~f:(fun _ -> Random.float 2.) n) in
+  let diag_mat = gen_diag_mat (random_floats n) in
   let filled_mat = fill_lower_triangular diag_mat in
   if m <= n then wrap_real_mat filled_mat else pad_mat filled_mat m n
 
 let gen_corr_cholesky_unwrapped n =
-  let diag_mat = gen_diag_mat (List.init ~f:(fun _ -> Random.float 2.) n) in
+  let diag_mat = gen_diag_mat (random_floats n) in
   let filled_mat = fill_lower_triangular diag_mat in
   let row_normalizer l =
     let row_norm =
@@ -232,11 +232,7 @@ let gen_corr_matrix n =
 let gen_sum_to_zero_matrix m n =
   (* to make each row and column sum to zero: - make each row sum to zero - add
      a new column which is - sum(rest of row) *)
-  let rows =
-    repeat_th (m - 1) (fun _ ->
-        let row = repeat_th (n - 1) (fun _ -> Random.float 2.) in
-        let row_sum = List.fold row ~init:0. ~f:( +. ) in
-        row @ [-.row_sum]) in
+  let rows = repeat_th (m - 1) (fun () -> sum_to_zero_floats n) in
   let col_sums =
     List.fold rows ~init:(repeat n 0.) ~f:(fun accum row ->
         List.map2_exn accum row ~f:( +. )) in
@@ -260,14 +256,9 @@ let gen_matrix mm m n t =
       Expr.Helpers.matrix_from_rows
         (gen_ul_bounded mm m (gen_row_vector mm n) e1 e2)
   | StochasticRow ->
-      Expr.Helpers.matrix_from_rows
-        (repeat_th m (fun () ->
-             Expr.Helpers.transpose (gen_vector mm n Simplex)))
+      Expr.Helpers.matrix (repeat_th m (fun () -> simplex_floats n))
   | StochasticColumn ->
-      Expr.Helpers.transpose
-        (Expr.Helpers.matrix_from_rows
-           (repeat_th m (fun () ->
-                Expr.Helpers.transpose (gen_vector mm n Simplex))))
+      Expr.Helpers.matrix (transpose (repeat_th n (fun () -> simplex_floats m)))
   | SumToZero -> gen_sum_to_zero_matrix m n
   | Identity | Lower _ | Upper _ | LowerUpper _ | Offset _ | Multiplier _
    |OffsetMultiplier _ ->
