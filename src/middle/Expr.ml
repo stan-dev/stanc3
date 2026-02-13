@@ -177,14 +177,19 @@ module Helpers = struct
         ; adlevel= TupleAD (List.map ~f:Typed.adlevel_of l) }
     ; pattern= FunApp (CompilerInternal FnMakeTuple, l) }
 
-  let try_unpack e =
-    match e.pattern with
-    | FunApp (CompilerInternal (FnMakeRowVec | FnMakeArray), l) -> Some l
-    | FunApp
-        ( StanLib ("Transpose__", FnPlain, _)
-        , [{pattern= FunApp (CompilerInternal FnMakeRowVec, l); _}] ) ->
-        Some l
-    | _ -> None
+  let transpose e =
+    let new_type =
+      match Typed.type_of e with
+      | UnsizedType.URowVector -> UnsizedType.UVector
+      | UVector -> URowVector
+      | UComplexRowVector -> UComplexVector
+      | UComplexVector -> UComplexRowVector
+      | (UMatrix | UComplexMatrix) as t -> t
+      | t ->
+          Common.ICE.internal_compiler_error
+            [%message "Cannot transpose " (t : UnsizedType.t)] in
+    let expr = unary_op Transpose e in
+    {expr with meta= {expr.meta with type_= new_type}}
 
   let loop_bottom = one
 

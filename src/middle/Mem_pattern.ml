@@ -8,7 +8,7 @@ open Core.Poly
     In the C++ this allows us to swap out matrix types from an
     [Eigen::Matrix<stan::math::var_value<double>, Rows, Cols>] to an
     [stan::math::var_value<Eigen::Matrix<double, Rows, Cols>>]. *)
-type t = AoS | SoA [@@deriving sexp, compare, map, hash, fold, equal]
+type t = AoS | SoA [@@deriving sexp, compare, hash, equal]
 
 let pp ppf = function
   | AoS -> Fmt.string ppf "AoS"

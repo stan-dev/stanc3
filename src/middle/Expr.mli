@@ -72,9 +72,9 @@ module Helpers : sig
   val complex_row_vector : (float * float) list -> Typed.t
   val complex_vector : (float * float) list -> Typed.t
   val complex_matrix_from_rows : Typed.t list -> Typed.t
+  val transpose : Typed.t -> Typed.t
   val array_expr : Typed.t list -> Typed.t
   val tuple_expr : Typed.t list -> Typed.t
-  val try_unpack : Typed.t -> Typed.t list option
   val loop_bottom : Typed.t
   val internal_funapp : 'a t Internal_fun.t -> 'a t list -> 'a -> 'a t
   val contains_fn_kind : ('a t Fun_kind.t -> bool) -> ?init:bool -> 'a t -> bool
