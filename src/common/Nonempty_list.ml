@@ -1,7 +1,6 @@
 open Core
 
 type 'a t = ( :: ) of 'a * 'a list
-[@@deriving compare, equal, hash, map, fold]
 
 let to_list (hd :: tl) : _ list = hd :: tl
 

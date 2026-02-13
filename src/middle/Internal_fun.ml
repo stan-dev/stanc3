@@ -61,5 +61,3 @@ let can_side_effect = function
    |FnFatalError | FnResizeToMatch | FnNaN | FnDeepCopy | FnCheck _
    |FnMakeTuple ->
       false
-
-let collect_exprs fn = fold (fun accum e -> e :: accum) [] fn
