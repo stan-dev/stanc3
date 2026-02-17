@@ -7525,6 +7525,7 @@ Display all Stan math signatures exposed in the language
   gaussian_dlm_obs_lpdf(matrix, matrix, matrix, vector, matrix, vector, matrix) => real
   gaussian_dlm_obs_lpdf(matrix, matrix, matrix, matrix, matrix, vector, matrix) => real
   generalized_inverse(matrix) => matrix
+  generate_laplace_options(vector) => tuple(vector, real, int, int, int, int, int)
   get_imag(complex) => real
   get_imag(complex_vector) => vector
   get_imag(complex_row_vector) => row_vector
