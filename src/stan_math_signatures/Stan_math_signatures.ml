@@ -208,7 +208,7 @@ let is_special_function_name name =
   || is_embedded_laplace_fn name
 
 let disallowed_second_order =
-  [ "algebra_solver"; "algebra_solver_newton"; "integrate_ode"
+  [ "algebra_solver"; "algebra_solver_newton"; "integrate_1d"; "integrate_ode"
   ; "integrate_ode_adams"; "integrate_ode_bdf"; "integrate_ode_rk45"; "map_rect"
   ; "hmm_marginal"; "hmm_hidden_state_prob" ]
   |> String.Set.of_list
