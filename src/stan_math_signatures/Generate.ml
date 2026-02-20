@@ -558,7 +558,8 @@ let add_first_arg_vector_ternary name supports_soa =
           let ty = bare_array_type (j, i) in
           add_unqualified (name, ReturnType ty, [ty; ty; ty], supports_soa);
           add_unqualified (name, ReturnType ty, [ty; ty; UReal], supports_soa);
-          add_unqualified (name, ReturnType ty, [ty; UReal; ty], supports_soa))
+          add_unqualified (name, ReturnType ty, [ty; UReal; ty], supports_soa);
+          add_unqualified (name, ReturnType ty, [ty; UReal; UReal], supports_soa))
         vectors)
     (List.range 0 8)
 
