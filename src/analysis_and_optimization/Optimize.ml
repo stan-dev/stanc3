@@ -805,7 +805,7 @@ let dead_code_elimination (mir : Program.Typed.t) =
           if List.length l' = 0 then Skip else Block l'
       | SList l ->
           let l' = List.filter ~f:(fun x -> x.pattern <> Skip) l in
-          if List.is_empty l' then Skip else SList l' in
+          SList l' in
     let dead_code_elim_stmt =
       map_rec_stmt_loc_num flowgraph_to_mir dead_code_elim_stmt_base in
     dead_code_elim_stmt (Map.find_exn flowgraph_to_mir 1) in
