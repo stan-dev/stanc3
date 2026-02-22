@@ -479,7 +479,7 @@ module ExpressionError = struct
     | TupleIndexInvalidIndex (ix_max, ix) ->
         Fmt.pf ppf
           "Tried to access index %d for a tuple of length %d.@ Only indices \
-           indices between 1 and %d are valid."
+           between 1 and %d are valid."
           ix ix_max ix_max
     | TupleIndexNotTuple ut ->
         Fmt.pf ppf "Tried to index a non-tuple type. Expression has type %a."

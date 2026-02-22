@@ -1017,7 +1017,7 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
                   (Fmt.str
                      "@[<v>Found chained comparison%aThis is interpreted \
                       as%tConsider if the intended meaning was%tinstead. You \
-                      can silence this warning by adding explicit parenthesis. \
+                      can silence this warning by adding explicit parentheses. \
                       This can be automatically changed using the canonicalize \
                       flag for stanc@]"
                      (pp_indented_box Pretty_printing.pp_expression)
