@@ -1,4 +1,5 @@
 open Core
+open Core.Poly
 module Location_span = Middle.Location_span
 module Location = Middle.Location
 
