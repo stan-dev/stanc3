@@ -799,10 +799,10 @@ let dead_code_elimination (mir : Program.Typed.t) =
           else For {loopvar; lower; upper; body}
       | Profile (name, l) ->
           let l' = List.filter ~f:(fun x -> x.pattern <> Skip) l in
-          if List.length l' = 0 then Skip else Profile (name, l')
+          if List.is_empty l' then Skip else Profile (name, l')
       | Block l ->
           let l' = List.filter ~f:(fun x -> x.pattern <> Skip) l in
-          if List.length l' = 0 then Skip else Block l'
+          if List.is_empty l' then Skip else Block l'
       | SList l ->
           let l' = List.filter ~f:(fun x -> x.pattern <> Skip) l in
           SList l' in
@@ -1023,7 +1023,7 @@ let lazy_code_motion ?(preserve_stability = false) (mir : Program.Typed.t) =
           (Map.mapi expression_map ~f:(fun ~key ~data ->
                {key with pattern= Var data})) in
       let f = expr_subst_stmt_except_initial_assign expr_map in
-      if List.length assignments_to_add_to_s = 0 then
+      if List.is_empty assignments_to_add_to_s then
         (f Stmt.{pattern= stmt; meta= Location_span.empty}).pattern
       else
         SList
