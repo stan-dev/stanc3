@@ -151,7 +151,7 @@ let opencl_trigger_restrictions =
     ; ( "uniform_lpdf"
       , [ [ (0, UnsizedType.AutoDiffable, UnsizedType.UVector)
           ; (1, UnsizedType.DataOnly, UnsizedType.UReal)
-          ; (1, UnsizedType.DataOnly, UnsizedType.UReal) ] ] ) ]
+          ; (2, UnsizedType.DataOnly, UnsizedType.UReal) ] ] ) ]
 
 let opencl_supported_functions =
   [ "bernoulli_lpmf"; "bernoulli_logit_lpmf"; "bernoulli_logit_glm_lpmf"
