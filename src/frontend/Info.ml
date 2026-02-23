@@ -19,7 +19,10 @@ let rec unsized_basetype_json t =
       `Assoc
         [ ("type", `List (List.map ~f:unsized_basetype_json internals))
         ; ("dimensions", `Int dims) ]
-  | UMathLibraryFunction | UFun _ | UArray _ -> assert false
+  | (UMathLibraryFunction | UFun _ | UArray _) as t ->
+      Common.ICE.internal_compiler_error
+        [%message
+          "Unexpected unsized type in unsized_basetype_json" (t : UnsizedType.t)]
 
 let basetype_dims t = SizedType.to_unsized t |> unsized_basetype_json
 
