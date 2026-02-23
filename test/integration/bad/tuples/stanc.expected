@@ -45,7 +45,7 @@ Semantic error in 'bad-index2.stan', line 3, column 11 to column 17:
    -------------------------------------------------
 
 Tried to access index 3 for a tuple of length 2.
-Only indices indices between 1 and 2 are valid.
+Only indices between 1 and 2 are valid.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad-index3.stan
 Semantic error in 'bad-index3.stan', line 3, column 3 to column 6:
@@ -70,7 +70,7 @@ Semantic error in 'bad-index4.stan', line 3, column 2 to column 8:
    -------------------------------------------------
 
 Tried to access index 3 for a tuple of length 2.
-Only indices indices between 1 and 2 are valid.
+Only indices between 1 and 2 are valid.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad-index5.stan
 Semantic error in 'bad-index5.stan', line 3, column 11 to column 18:

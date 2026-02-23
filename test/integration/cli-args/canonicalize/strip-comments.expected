@@ -235,7 +235,7 @@ Warning in 'parenthesize.stan', line 27, column 13 to column 22:
         (1 < 2) > 3
     Consider if the intended meaning was
         1 < 2 && 2 > 3
-    instead. You can silence this warning by adding explicit parenthesis.
+    instead. You can silence this warning by adding explicit parentheses.
     This can be automatically changed using the canonicalize flag for stanc
 Warning in 'parenthesize.stan', line 27, column 13 to column 26:
     Found chained comparison
@@ -244,7 +244,7 @@ Warning in 'parenthesize.stan', line 27, column 13 to column 26:
         (1 < 2 > 3) < 4
     Consider if the intended meaning was
         1 < 2 > 3 && 3 < 4
-    instead. You can silence this warning by adding explicit parenthesis.
+    instead. You can silence this warning by adding explicit parentheses.
     This can be automatically changed using the canonicalize flag for stanc
 [exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format --canonicalize strip-comments,braces,parentheses,deprecations squaremc.stan
