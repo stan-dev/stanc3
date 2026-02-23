@@ -1,5 +1,3 @@
-open Core
-open Core.Poly
 module Location_span = Middle.Location_span
 module Location = Middle.Location
 
@@ -15,5 +13,5 @@ let pp ?printed_filename ppf (span, message) =
   Fmt.pf ppf "@[<v4>%a%a%a@]@]" purple "Warning" maybe_loc span Fmt.text message
 
 let pp_warnings ?printed_filename ppf warnings =
-  if not (List.is_empty warnings) then
+  if not (Core.List.is_empty warnings) then
     Fmt.(pf ppf "@[<v>%a@]@\n" (list ~sep:cut (pp ?printed_filename)) warnings)
