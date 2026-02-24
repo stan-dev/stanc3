@@ -1209,6 +1209,16 @@ let () =
     , [UMatrix; UMatrix; UMatrix; UVector; UMatrix; UVector; UMatrix]
     , AoS );
   add_unqualified
+    ( "generate_laplace_options"
+    , ReturnType (UTuple [UVector; UReal; UInt; UInt; UInt; UInt; UInt])
+    , [UVector]
+    , AoS );
+  add_unqualified
+    ( "generate_laplace_options"
+    , ReturnType (UTuple [UVector; UReal; UInt; UInt; UInt; UInt; UInt])
+    , [UInt]
+    , AoS );
+  add_unqualified
     ("gp_dot_prod_cov", ReturnType UMatrix, [UArray UReal; UReal], AoS);
   add_unqualified
     ( "gp_dot_prod_cov"

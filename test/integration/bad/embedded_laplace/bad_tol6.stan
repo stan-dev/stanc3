@@ -35,6 +35,6 @@ parameters {
 }
 
 generated quantities {
-  vector[n_obs] theta = laplace_latent_tol_rng(ll_function, (eta, log_ye, y),
-                    K_function, (x, n_obs, alpha, rho), (theta_0, 1,2,3,4,5,6,7));
+  vector[n_obs] theta = laplace_latent_tol_rng(ll_function, (eta, log_ye, y), 1,
+                    K_function, (x, n_obs, alpha, rho), (theta_0, 1,2,3,4,5,6));
 }

@@ -37,7 +37,7 @@ parameters {
 
 generated quantities {
 
-vector[n_obs] theta = laplace_latent_rng(ll_function, (eta, log_ye, y));
+vector[n_obs] theta = laplace_latent_rng(ll_function, (eta, log_ye, y), 1);
 
 
 

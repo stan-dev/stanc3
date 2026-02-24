@@ -43,7 +43,7 @@ parameters {
 }
 model {
   target += laplace_marginal_tol(ll_function, (eta, log_ye, y),
-                                K_function, (x, n_obs, alpha, rho), (theta_0,
-                                eta, max_num_steps, hessian_block_size,
+                                hessian_block_size, K_function, (x, n_obs, alpha, rho), (theta_0,
+                                eta, max_num_steps,
                                 solver, max_steps_line_search, allow_fallthrough));
 }

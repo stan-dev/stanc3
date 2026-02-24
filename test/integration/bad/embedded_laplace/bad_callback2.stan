@@ -35,6 +35,6 @@ parameters {
   real<lower=0> eta;
 }
 model {
-  target += laplace_marginal(ll_function_jacobian, (eta, log_ye, y),
+  target += laplace_marginal(ll_function_jacobian, (eta, log_ye, y), 1, 
                                   K_function, (x, n_obs, alpha, rho));
 }

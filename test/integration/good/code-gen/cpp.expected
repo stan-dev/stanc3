@@ -7481,43 +7481,46 @@ class laplace_bernoulli_logit_model final : public model_base_crtp<laplace_berno
                          static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 9;
         lp_accum__.add(stan::math::laplace_marginal_bernoulli_logit_lpmf<
-                         propto__>(y, y, prior_mean, K_function_functor__(),
+                         propto__>(y, y, prior_mean, hessian_block_size,
+                         K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          pstream__));
         current_statement__ = 10;
         lp_accum__.add(stan::math::laplace_marginal_bernoulli_logit_lpmf<
-                         false>(y, y, prior_mean, K_function_functor__(),
+                         false>(y, y, prior_mean, hessian_block_size,
+                         K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          pstream__));
         current_statement__ = 11;
         lp_accum__.add(stan::math::laplace_marginal_bernoulli_logit_lpmf<
-                         propto__>(y, y, prior_mean, K_function_functor__(),
+                         propto__>(y, y, prior_mean, hessian_block_size,
+                         K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          pstream__));
         current_statement__ = 12;
         lp_accum__.add(stan::math::laplace_marginal_tol_bernoulli_logit_lpmf<
-                         propto__>(y, y, prior_mean, K_function_functor__(),
+                         propto__>(y, y, prior_mean, hessian_block_size,
+                         K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          std::forward_as_tuple(theta_0, tolerance,
-                           max_num_steps, hessian_block_size, solver,
-                           max_steps_line_search, allow_fallthrough),
-                         pstream__));
+                           max_num_steps, solver, max_steps_line_search,
+                           allow_fallthrough), pstream__));
         current_statement__ = 13;
         lp_accum__.add(stan::math::laplace_marginal_tol_bernoulli_logit_lpmf<
-                         false>(y, y, prior_mean, K_function_functor__(),
+                         false>(y, y, prior_mean, hessian_block_size,
+                         K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          std::forward_as_tuple(theta_0, tolerance,
-                           max_num_steps, hessian_block_size, solver,
-                           max_steps_line_search, allow_fallthrough),
-                         pstream__));
+                           max_num_steps, solver, max_steps_line_search,
+                           allow_fallthrough), pstream__));
         current_statement__ = 14;
         lp_accum__.add(stan::math::laplace_marginal_tol_bernoulli_logit_lpmf<
-                         propto__>(y, y, prior_mean, K_function_functor__(),
+                         propto__>(y, y, prior_mean, hessian_block_size,
+                         K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          std::forward_as_tuple(theta_0, tolerance,
-                           max_num_steps, hessian_block_size, solver,
-                           max_steps_line_search, allow_fallthrough),
-                         pstream__));
+                           max_num_steps, solver, max_steps_line_search,
+                           allow_fallthrough), pstream__));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7573,43 +7576,46 @@ class laplace_bernoulli_logit_model final : public model_base_crtp<laplace_berno
                          static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 9;
         lp_accum__.add(stan::math::laplace_marginal_bernoulli_logit_lpmf<
-                         propto__>(y, y, prior_mean, K_function_functor__(),
+                         propto__>(y, y, prior_mean, hessian_block_size,
+                         K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          pstream__));
         current_statement__ = 10;
         lp_accum__.add(stan::math::laplace_marginal_bernoulli_logit_lpmf<
-                         false>(y, y, prior_mean, K_function_functor__(),
+                         false>(y, y, prior_mean, hessian_block_size,
+                         K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          pstream__));
         current_statement__ = 11;
         lp_accum__.add(stan::math::laplace_marginal_bernoulli_logit_lpmf<
-                         propto__>(y, y, prior_mean, K_function_functor__(),
+                         propto__>(y, y, prior_mean, hessian_block_size,
+                         K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          pstream__));
         current_statement__ = 12;
         lp_accum__.add(stan::math::laplace_marginal_tol_bernoulli_logit_lpmf<
-                         propto__>(y, y, prior_mean, K_function_functor__(),
+                         propto__>(y, y, prior_mean, hessian_block_size,
+                         K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          std::forward_as_tuple(theta_0, tolerance,
-                           max_num_steps, hessian_block_size, solver,
-                           max_steps_line_search, allow_fallthrough),
-                         pstream__));
+                           max_num_steps, solver, max_steps_line_search,
+                           allow_fallthrough), pstream__));
         current_statement__ = 13;
         lp_accum__.add(stan::math::laplace_marginal_tol_bernoulli_logit_lpmf<
-                         false>(y, y, prior_mean, K_function_functor__(),
+                         false>(y, y, prior_mean, hessian_block_size,
+                         K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          std::forward_as_tuple(theta_0, tolerance,
-                           max_num_steps, hessian_block_size, solver,
-                           max_steps_line_search, allow_fallthrough),
-                         pstream__));
+                           max_num_steps, solver, max_steps_line_search,
+                           allow_fallthrough), pstream__));
         current_statement__ = 14;
         lp_accum__.add(stan::math::laplace_marginal_tol_bernoulli_logit_lpmf<
-                         propto__>(y, y, prior_mean, K_function_functor__(),
+                         propto__>(y, y, prior_mean, hessian_block_size,
+                         K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          std::forward_as_tuple(theta_0, tolerance,
-                           max_num_steps, hessian_block_size, solver,
-                           max_steps_line_search, allow_fallthrough),
-                         pstream__));
+                           max_num_steps, solver, max_steps_line_search,
+                           allow_fallthrough), pstream__));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7681,7 +7687,7 @@ class laplace_bernoulli_logit_model final : public model_base_crtp<laplace_berno
       current_statement__ = 4;
       stan::model::assign(theta,
         stan::math::laplace_latent_bernoulli_logit_rng(y, y, prior_mean,
-          K_function_functor__(),
+          hessian_block_size, K_function_functor__(),
           std::forward_as_tuple(x, n_obs, alpha, rho), base_rng__, pstream__),
         "assigning variable theta");
       Eigen::Matrix<double,-1,1> theta2 =
@@ -7690,11 +7696,10 @@ class laplace_bernoulli_logit_model final : public model_base_crtp<laplace_berno
       current_statement__ = 5;
       stan::model::assign(theta2,
         stan::math::laplace_latent_tol_bernoulli_logit_rng(y, y, prior_mean,
-          K_function_functor__(),
+          hessian_block_size, K_function_functor__(),
           std::forward_as_tuple(x, n_obs, alpha, rho),
-          std::forward_as_tuple(theta_0, tolerance, max_num_steps,
-            hessian_block_size, solver, max_steps_line_search,
-            allow_fallthrough), base_rng__, pstream__),
+          std::forward_as_tuple(theta_0, tolerance, max_num_steps, solver,
+            max_steps_line_search, allow_fallthrough), base_rng__, pstream__),
         "assigning variable theta2");
       out__.write(theta);
       out__.write(theta2);
@@ -7957,7 +7962,7 @@ static constexpr std::array<const char*, 45> locations_array__ =
   " (in 'laplace_functionals.stan', line 44, column 2 to column 20)",
   " (in 'laplace_functionals.stan', line 45, column 2 to column 20)",
   " (in 'laplace_functionals.stan', line 62, column 2 to line 64, column 67)",
-  " (in 'laplace_functionals.stan', line 66, column 2 to line 71, column 99)",
+  " (in 'laplace_functionals.stan', line 66, column 2 to line 72, column 99)",
   " (in 'laplace_functionals.stan', line 48, column 2 to column 55)",
   " (in 'laplace_functionals.stan', line 49, column 2 to column 61)",
   " (in 'laplace_functionals.stan', line 50, column 2 to column 21)",
@@ -8380,19 +8385,18 @@ class laplace_functionals_model final : public model_base_crtp<laplace_functiona
         current_statement__ = 9;
         lp_accum__.add(stan::math::laplace_marginal(ll_function_functor__(),
                          std::forward_as_tuple(eta, log_ye, y),
-                         K_function_functor__(),
+                         hessian_block_size, K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          pstream__));
         current_statement__ = 10;
         lp_accum__.add(stan::math::laplace_marginal_tol(
                          ll_function_functor__(),
                          std::forward_as_tuple(eta, log_ye, y),
-                         K_function_functor__(),
+                         hessian_block_size, K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          std::forward_as_tuple(theta_0, tolerance,
-                           max_num_steps, hessian_block_size, solver,
-                           max_steps_line_search, allow_fallthrough),
-                         pstream__));
+                           max_num_steps, solver, max_steps_line_search,
+                           allow_fallthrough), pstream__));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -8449,19 +8453,18 @@ class laplace_functionals_model final : public model_base_crtp<laplace_functiona
         current_statement__ = 9;
         lp_accum__.add(stan::math::laplace_marginal(ll_function_functor__(),
                          std::forward_as_tuple(eta, log_ye, y),
-                         K_function_functor__(),
+                         hessian_block_size, K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          pstream__));
         current_statement__ = 10;
         lp_accum__.add(stan::math::laplace_marginal_tol(
                          ll_function_functor__(),
                          std::forward_as_tuple(eta, log_ye, y),
-                         K_function_functor__(),
+                         hessian_block_size, K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          std::forward_as_tuple(theta_0, tolerance,
-                           max_num_steps, hessian_block_size, solver,
-                           max_steps_line_search, allow_fallthrough),
-                         pstream__));
+                           max_num_steps, solver, max_steps_line_search,
+                           allow_fallthrough), pstream__));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -8533,7 +8536,8 @@ class laplace_functionals_model final : public model_base_crtp<laplace_functiona
       current_statement__ = 4;
       stan::model::assign(theta,
         stan::math::laplace_latent_rng(ll_function_functor__(),
-          std::forward_as_tuple(eta, log_ye, y), K_function_functor__(),
+          std::forward_as_tuple(eta, log_ye, y), hessian_block_size,
+          K_function_functor__(),
           std::forward_as_tuple(x, n_obs, alpha, rho), base_rng__, pstream__),
         "assigning variable theta");
       Eigen::Matrix<double,-1,1> theta2 =
@@ -8542,11 +8546,11 @@ class laplace_functionals_model final : public model_base_crtp<laplace_functiona
       current_statement__ = 5;
       stan::model::assign(theta2,
         stan::math::laplace_latent_tol_rng(ll_function_functor__(),
-          std::forward_as_tuple(eta, log_ye, y), K_function_functor__(),
+          std::forward_as_tuple(eta, log_ye, y), hessian_block_size,
+          K_function_functor__(),
           std::forward_as_tuple(x, n_obs, alpha, rho),
-          std::forward_as_tuple(theta_0, tolerance, max_num_steps,
-            hessian_block_size, solver, max_steps_line_search,
-            allow_fallthrough), base_rng__, pstream__),
+          std::forward_as_tuple(theta_0, tolerance, max_num_steps, solver,
+            max_steps_line_search, allow_fallthrough), base_rng__, pstream__),
         "assigning variable theta2");
       out__.write(theta);
       out__.write(theta2);
@@ -8808,14 +8812,14 @@ static constexpr std::array<const char*, 49> locations_array__ =
   " (in 'laplace_neg_binomial_2_log.stan', line 36, column 2 to column 22)",
   " (in 'laplace_neg_binomial_2_log.stan', line 37, column 2 to column 20)",
   " (in 'laplace_neg_binomial_2_log.stan', line 38, column 2 to column 20)",
-  " (in 'laplace_neg_binomial_2_log.stan', line 70, column 2 to line 71, column 74)",
+  " (in 'laplace_neg_binomial_2_log.stan', line 70, column 2 to line 71, column 94)",
   " (in 'laplace_neg_binomial_2_log.stan', line 73, column 2 to line 77, column 77)",
   " (in 'laplace_neg_binomial_2_log.stan', line 41, column 2 to column 55)",
   " (in 'laplace_neg_binomial_2_log.stan', line 42, column 2 to column 61)",
   " (in 'laplace_neg_binomial_2_log.stan', line 43, column 2 to column 21)",
   " (in 'laplace_neg_binomial_2_log.stan', line 45, column 2 to line 46, column 32)",
-  " (in 'laplace_neg_binomial_2_log.stan', line 48, column 2 to line 49, column 62)",
-  " (in 'laplace_neg_binomial_2_log.stan', line 51, column 2 to line 52, column 62)",
+  " (in 'laplace_neg_binomial_2_log.stan', line 48, column 2 to line 49, column 82)",
+  " (in 'laplace_neg_binomial_2_log.stan', line 51, column 2 to line 52, column 82)",
   " (in 'laplace_neg_binomial_2_log.stan', line 54, column 2 to line 57, column 59)",
   " (in 'laplace_neg_binomial_2_log.stan', line 59, column 2 to line 62, column 65)",
   " (in 'laplace_neg_binomial_2_log.stan', line 64, column 2 to line 67, column 65)",
@@ -9188,48 +9192,45 @@ class laplace_neg_binomial_2_log_model final : public model_base_crtp<laplace_ne
         current_statement__ = 9;
         lp_accum__.add(stan::math::laplace_marginal_neg_binomial_2_log_lpmf<
                          propto__>(y, y, log_ye, prior_mean,
-                         K_function_functor__(),
+                         hessian_block_size, K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          pstream__));
         current_statement__ = 10;
         lp_accum__.add(stan::math::laplace_marginal_neg_binomial_2_log_lpmf<
-                         false>(y, y, log_ye, prior_mean,
+                         false>(y, y, log_ye, prior_mean, hessian_block_size,
                          K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          pstream__));
         current_statement__ = 11;
         lp_accum__.add(stan::math::laplace_marginal_neg_binomial_2_log_lpmf<
                          propto__>(y, y, log_ye, prior_mean,
-                         K_function_functor__(),
+                         hessian_block_size, K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          pstream__));
         current_statement__ = 12;
         lp_accum__.add(stan::math::laplace_marginal_tol_neg_binomial_2_log_lpmf<
                          propto__>(y, y, log_ye, prior_mean,
-                         K_function_functor__(),
+                         hessian_block_size, K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          std::forward_as_tuple(theta_0, tolerance,
-                           max_num_steps, hessian_block_size, solver,
-                           max_steps_line_search, allow_fallthrough),
-                         pstream__));
+                           max_num_steps, solver, max_steps_line_search,
+                           allow_fallthrough), pstream__));
         current_statement__ = 13;
         lp_accum__.add(stan::math::laplace_marginal_tol_neg_binomial_2_log_lpmf<
-                         false>(y, y, log_ye, prior_mean,
+                         false>(y, y, log_ye, prior_mean, hessian_block_size,
                          K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          std::forward_as_tuple(theta_0, tolerance,
-                           max_num_steps, hessian_block_size, solver,
-                           max_steps_line_search, allow_fallthrough),
-                         pstream__));
+                           max_num_steps, solver, max_steps_line_search,
+                           allow_fallthrough), pstream__));
         current_statement__ = 14;
         lp_accum__.add(stan::math::laplace_marginal_tol_neg_binomial_2_log_lpmf<
                          propto__>(y, y, log_ye, prior_mean,
-                         K_function_functor__(),
+                         hessian_block_size, K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          std::forward_as_tuple(theta_0, tolerance,
-                           max_num_steps, hessian_block_size, solver,
-                           max_steps_line_search, allow_fallthrough),
-                         pstream__));
+                           max_num_steps, solver, max_steps_line_search,
+                           allow_fallthrough), pstream__));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -9286,48 +9287,45 @@ class laplace_neg_binomial_2_log_model final : public model_base_crtp<laplace_ne
         current_statement__ = 9;
         lp_accum__.add(stan::math::laplace_marginal_neg_binomial_2_log_lpmf<
                          propto__>(y, y, log_ye, prior_mean,
-                         K_function_functor__(),
+                         hessian_block_size, K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          pstream__));
         current_statement__ = 10;
         lp_accum__.add(stan::math::laplace_marginal_neg_binomial_2_log_lpmf<
-                         false>(y, y, log_ye, prior_mean,
+                         false>(y, y, log_ye, prior_mean, hessian_block_size,
                          K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          pstream__));
         current_statement__ = 11;
         lp_accum__.add(stan::math::laplace_marginal_neg_binomial_2_log_lpmf<
                          propto__>(y, y, log_ye, prior_mean,
-                         K_function_functor__(),
+                         hessian_block_size, K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          pstream__));
         current_statement__ = 12;
         lp_accum__.add(stan::math::laplace_marginal_tol_neg_binomial_2_log_lpmf<
                          propto__>(y, y, log_ye, prior_mean,
-                         K_function_functor__(),
+                         hessian_block_size, K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          std::forward_as_tuple(theta_0, tolerance,
-                           max_num_steps, hessian_block_size, solver,
-                           max_steps_line_search, allow_fallthrough),
-                         pstream__));
+                           max_num_steps, solver, max_steps_line_search,
+                           allow_fallthrough), pstream__));
         current_statement__ = 13;
         lp_accum__.add(stan::math::laplace_marginal_tol_neg_binomial_2_log_lpmf<
-                         false>(y, y, log_ye, prior_mean,
+                         false>(y, y, log_ye, prior_mean, hessian_block_size,
                          K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          std::forward_as_tuple(theta_0, tolerance,
-                           max_num_steps, hessian_block_size, solver,
-                           max_steps_line_search, allow_fallthrough),
-                         pstream__));
+                           max_num_steps, solver, max_steps_line_search,
+                           allow_fallthrough), pstream__));
         current_statement__ = 14;
         lp_accum__.add(stan::math::laplace_marginal_tol_neg_binomial_2_log_lpmf<
                          propto__>(y, y, log_ye, prior_mean,
-                         K_function_functor__(),
+                         hessian_block_size, K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          std::forward_as_tuple(theta_0, tolerance,
-                           max_num_steps, hessian_block_size, solver,
-                           max_steps_line_search, allow_fallthrough),
-                         pstream__));
+                           max_num_steps, solver, max_steps_line_search,
+                           allow_fallthrough), pstream__));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -9399,7 +9397,7 @@ class laplace_neg_binomial_2_log_model final : public model_base_crtp<laplace_ne
       current_statement__ = 4;
       stan::model::assign(theta,
         stan::math::laplace_latent_neg_binomial_2_log_rng(y, y, log_ye,
-          prior_mean, K_function_functor__(),
+          prior_mean, hessian_block_size, K_function_functor__(),
           std::forward_as_tuple(x, n_obs, alpha, rho), base_rng__, pstream__),
         "assigning variable theta");
       Eigen::Matrix<double,-1,1> theta2 =
@@ -9408,11 +9406,10 @@ class laplace_neg_binomial_2_log_model final : public model_base_crtp<laplace_ne
       current_statement__ = 5;
       stan::model::assign(theta2,
         stan::math::laplace_latent_tol_neg_binomial_2_log_rng(y, y, log_ye,
-          prior_mean, K_function_functor__(),
+          prior_mean, hessian_block_size, K_function_functor__(),
           std::forward_as_tuple(x, n_obs, alpha, rho),
-          std::forward_as_tuple(theta_0, tolerance, max_num_steps,
-            hessian_block_size, solver, max_steps_line_search,
-            allow_fallthrough), base_rng__, pstream__),
+          std::forward_as_tuple(theta_0, tolerance, max_num_steps, solver,
+            max_steps_line_search, allow_fallthrough), base_rng__, pstream__),
         "assigning variable theta2");
       out__.write(theta);
       out__.write(theta2);
@@ -9673,7 +9670,7 @@ static constexpr std::array<const char*, 42> locations_array__ =
   {" (found before start of program)",
   " (in 'laplace_nested_tuple.stan', line 33, column 2 to column 22)",
   " (in 'laplace_nested_tuple.stan', line 34, column 2 to column 20)",
-  " (in 'laplace_nested_tuple.stan', line 47, column 2 to line 48, column 68)",
+  " (in 'laplace_nested_tuple.stan', line 47, column 2 to line 48, column 71)",
   " (in 'laplace_nested_tuple.stan', line 50, column 2 to line 52, column 56)",
   " (in 'laplace_nested_tuple.stan', line 54, column 2 to line 56, column 74)",
   " (in 'laplace_nested_tuple.stan', line 37, column 2 to line 38, column 36)",
@@ -10241,7 +10238,7 @@ class laplace_nested_tuple_model final : public model_base_crtp<laplace_nested_t
         current_statement__ = 6;
         lp_accum__.add(stan::math::laplace_marginal_neg_binomial_2_log_lpmf<
                          propto__>(y, y, ye,
-                         stan::math::rep_vector(0.0, n_obs),
+                         stan::math::rep_vector(0.0, n_obs), 1,
                          scalar_tuple_functor__(),
                          std::forward_as_tuple(x,
                            std::forward_as_tuple(n_obs,
@@ -10249,14 +10246,14 @@ class laplace_nested_tuple_model final : public model_base_crtp<laplace_nested_t
         current_statement__ = 7;
         lp_accum__.add(stan::math::laplace_marginal_neg_binomial_2_log_lpmf<
                          propto__>(y, y, ye,
-                         stan::math::rep_vector(0.0, n_obs),
+                         stan::math::rep_vector(0.0, n_obs), 1,
                          arr_vec_tuple_functor__(),
                          std::forward_as_tuple(std::forward_as_tuple(x, x),
                            n_obs, alpha, rho), pstream__));
         current_statement__ = 8;
         lp_accum__.add(stan::math::laplace_marginal_neg_binomial_2_log_lpmf<
                          propto__>(y, y, ye,
-                         stan::math::rep_vector(0.0, n_obs),
+                         stan::math::rep_vector(0.0, n_obs), 1,
                          arr_and_vec_tuple_functor__(),
                          std::forward_as_tuple(
                            std::forward_as_tuple(x,
@@ -10305,7 +10302,7 @@ class laplace_nested_tuple_model final : public model_base_crtp<laplace_nested_t
         current_statement__ = 6;
         lp_accum__.add(stan::math::laplace_marginal_neg_binomial_2_log_lpmf<
                          propto__>(y, y, ye,
-                         stan::math::rep_vector(0.0, n_obs),
+                         stan::math::rep_vector(0.0, n_obs), 1,
                          scalar_tuple_functor__(),
                          std::forward_as_tuple(x,
                            std::forward_as_tuple(n_obs,
@@ -10313,14 +10310,14 @@ class laplace_nested_tuple_model final : public model_base_crtp<laplace_nested_t
         current_statement__ = 7;
         lp_accum__.add(stan::math::laplace_marginal_neg_binomial_2_log_lpmf<
                          propto__>(y, y, ye,
-                         stan::math::rep_vector(0.0, n_obs),
+                         stan::math::rep_vector(0.0, n_obs), 1,
                          arr_vec_tuple_functor__(),
                          std::forward_as_tuple(std::forward_as_tuple(x, x),
                            n_obs, alpha, rho), pstream__));
         current_statement__ = 8;
         lp_accum__.add(stan::math::laplace_marginal_neg_binomial_2_log_lpmf<
                          propto__>(y, y, ye,
-                         stan::math::rep_vector(0.0, n_obs),
+                         stan::math::rep_vector(0.0, n_obs), 1,
                          arr_and_vec_tuple_functor__(),
                          std::forward_as_tuple(
                            std::forward_as_tuple(x,
@@ -10392,7 +10389,7 @@ class laplace_nested_tuple_model final : public model_base_crtp<laplace_nested_t
       current_statement__ = 3;
       stan::model::assign(theta,
         stan::math::laplace_latent_neg_binomial_2_log_rng(y, y, ye,
-          stan::math::rep_vector(0.0, n_obs), scalar_tuple_functor__(),
+          stan::math::rep_vector(0.0, n_obs), 1, scalar_tuple_functor__(),
           std::forward_as_tuple(x,
             std::forward_as_tuple(n_obs, std::forward_as_tuple(alpha, rho))),
           base_rng__, pstream__), "assigning variable theta");
@@ -10402,7 +10399,7 @@ class laplace_nested_tuple_model final : public model_base_crtp<laplace_nested_t
       current_statement__ = 4;
       stan::model::assign(theta2,
         stan::math::laplace_latent_neg_binomial_2_log_rng(y, y, ye,
-          stan::math::rep_vector(0.0, n_obs), arr_vec_tuple_functor__(),
+          stan::math::rep_vector(0.0, n_obs), 1, arr_vec_tuple_functor__(),
           std::forward_as_tuple(std::forward_as_tuple(x, x), n_obs, alpha,
             rho), base_rng__, pstream__), "assigning variable theta2");
       Eigen::Matrix<double,-1,1> theta3 =
@@ -10411,7 +10408,8 @@ class laplace_nested_tuple_model final : public model_base_crtp<laplace_nested_t
       current_statement__ = 5;
       stan::model::assign(theta3,
         stan::math::laplace_latent_neg_binomial_2_log_rng(y, y, ye,
-          stan::math::rep_vector(0.0, n_obs), arr_and_vec_tuple_functor__(),
+          stan::math::rep_vector(0.0, n_obs), 1,
+          arr_and_vec_tuple_functor__(),
           std::forward_as_tuple(
             std::forward_as_tuple(x, stan::math::rep_vector(rho, 10)), n_obs,
             alpha, rho), base_rng__, pstream__), "assigning variable theta3");
@@ -10678,9 +10676,9 @@ static constexpr std::array<const char*, 49> locations_array__ =
   " (in 'laplace_nested_tuple2.stan', line 50, column 2 to column 55)",
   " (in 'laplace_nested_tuple2.stan', line 51, column 2 to column 61)",
   " (in 'laplace_nested_tuple2.stan', line 52, column 2 to column 21)",
-  " (in 'laplace_nested_tuple2.stan', line 54, column 2 to line 55, column 65)",
-  " (in 'laplace_nested_tuple2.stan', line 57, column 2 to line 58, column 65)",
-  " (in 'laplace_nested_tuple2.stan', line 60, column 2 to line 61, column 65)",
+  " (in 'laplace_nested_tuple2.stan', line 54, column 2 to line 55, column 68)",
+  " (in 'laplace_nested_tuple2.stan', line 57, column 2 to line 58, column 68)",
+  " (in 'laplace_nested_tuple2.stan', line 60, column 2 to line 61, column 68)",
   " (in 'laplace_nested_tuple2.stan', line 24, column 2 to column 12)",
   " (in 'laplace_nested_tuple2.stan', line 25, column 2 to column 20)",
   " (in 'laplace_nested_tuple2.stan', line 26, column 8 to column 13)",
@@ -11329,7 +11327,7 @@ class laplace_nested_tuple2_model final : public model_base_crtp<laplace_nested_
         current_statement__ = 10;
         lp_accum__.add(stan::math::laplace_marginal(scalar_tuple_functor__(),
                          std::forward_as_tuple(
-                           std::forward_as_tuple(eta, eta), log_ye, y),
+                           std::forward_as_tuple(eta, eta), log_ye, y), 1,
                          K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          pstream__));
@@ -11337,7 +11335,7 @@ class laplace_nested_tuple2_model final : public model_base_crtp<laplace_nested_
         lp_accum__.add(stan::math::laplace_marginal(
                          arr_vec_tuple_functor__(),
                          std::forward_as_tuple(eta,
-                           std::forward_as_tuple(log_ye, y)),
+                           std::forward_as_tuple(log_ye, y)), 1,
                          K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          pstream__));
@@ -11345,7 +11343,7 @@ class laplace_nested_tuple2_model final : public model_base_crtp<laplace_nested_
         lp_accum__.add(stan::math::laplace_marginal(nested_functor__(),
                          std::forward_as_tuple(
                            std::forward_as_tuple(
-                             std::forward_as_tuple(eta, log_ye), y), eta),
+                             std::forward_as_tuple(eta, log_ye), y), eta), 1,
                          K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          pstream__));
@@ -11405,7 +11403,7 @@ class laplace_nested_tuple2_model final : public model_base_crtp<laplace_nested_
         current_statement__ = 10;
         lp_accum__.add(stan::math::laplace_marginal(scalar_tuple_functor__(),
                          std::forward_as_tuple(
-                           std::forward_as_tuple(eta, eta), log_ye, y),
+                           std::forward_as_tuple(eta, eta), log_ye, y), 1,
                          K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          pstream__));
@@ -11413,7 +11411,7 @@ class laplace_nested_tuple2_model final : public model_base_crtp<laplace_nested_
         lp_accum__.add(stan::math::laplace_marginal(
                          arr_vec_tuple_functor__(),
                          std::forward_as_tuple(eta,
-                           std::forward_as_tuple(log_ye, y)),
+                           std::forward_as_tuple(log_ye, y)), 1,
                          K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          pstream__));
@@ -11421,7 +11419,7 @@ class laplace_nested_tuple2_model final : public model_base_crtp<laplace_nested_
         lp_accum__.add(stan::math::laplace_marginal(nested_functor__(),
                          std::forward_as_tuple(
                            std::forward_as_tuple(
-                             std::forward_as_tuple(eta, log_ye), y), eta),
+                             std::forward_as_tuple(eta, log_ye), y), eta), 1,
                          K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          pstream__));
@@ -11497,7 +11495,7 @@ class laplace_nested_tuple2_model final : public model_base_crtp<laplace_nested_
       stan::model::assign(theta,
         stan::math::laplace_latent_rng(scalar_tuple_functor__(),
           std::forward_as_tuple(std::forward_as_tuple(eta, eta), log_ye, y),
-          K_function_functor__(),
+          1, K_function_functor__(),
           std::forward_as_tuple(x, n_obs, alpha, rho), base_rng__, pstream__),
         "assigning variable theta");
       Eigen::Matrix<double,-1,1> theta2 =
@@ -11506,7 +11504,7 @@ class laplace_nested_tuple2_model final : public model_base_crtp<laplace_nested_
       current_statement__ = 5;
       stan::model::assign(theta2,
         stan::math::laplace_latent_rng(arr_vec_tuple_functor__(),
-          std::forward_as_tuple(eta, std::forward_as_tuple(log_ye, y)),
+          std::forward_as_tuple(eta, std::forward_as_tuple(log_ye, y)), 1,
           K_function_functor__(),
           std::forward_as_tuple(x, n_obs, alpha, rho), base_rng__, pstream__),
         "assigning variable theta2");
@@ -11518,7 +11516,7 @@ class laplace_nested_tuple2_model final : public model_base_crtp<laplace_nested_
         stan::math::laplace_latent_rng(nested_functor__(),
           std::forward_as_tuple(
             std::forward_as_tuple(std::forward_as_tuple(eta, log_ye), y), eta),
-          K_function_functor__(),
+          1, K_function_functor__(),
           std::forward_as_tuple(x, n_obs, alpha, rho), base_rng__, pstream__),
         "assigning variable theta3");
       out__.write(theta);
@@ -12443,7 +12441,7 @@ class laplace_nested_tuple3_model final : public model_base_crtp<laplace_nested_
                                                         Eigen::Matrix<double,-1,1>>>{
                                                       std::forward_as_tuple(
                                                         eta, log_ye)}, y)},
-                           eta), K_function_functor__(),
+                           eta), 1, K_function_functor__(),
                          std::forward_as_tuple(
                            std::vector<
                              std::tuple<
@@ -12521,7 +12519,7 @@ class laplace_nested_tuple3_model final : public model_base_crtp<laplace_nested_
                                                         Eigen::Matrix<double,-1,1>>>{
                                                       std::forward_as_tuple(
                                                         eta, log_ye)}, y)},
-                           eta), K_function_functor__(),
+                           eta), 1, K_function_functor__(),
                          std::forward_as_tuple(
                            std::vector<
                              std::tuple<
@@ -12611,7 +12609,7 @@ class laplace_nested_tuple3_model final : public model_base_crtp<laplace_nested_
                                        std::tuple<double,
                                          Eigen::Matrix<double,-1,1>>>{
                                        std::forward_as_tuple(eta, log_ye)}, y)},
-            eta), K_function_functor__(),
+            eta), 1, K_function_functor__(),
           std::forward_as_tuple(
             std::vector<
               std::tuple<std::vector<Eigen::Matrix<double,-1,1>>,
@@ -13263,7 +13261,7 @@ class laplace_overload_weird_model final : public model_base_crtp<laplace_overlo
                          static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 7;
         lp_accum__.add(stan::math::laplace_marginal(my_fun_functor__(),
-                         std::forward_as_tuple(eta, log_ye, y),
+                         std::forward_as_tuple(eta, log_ye, y), 1,
                          my_fun_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          pstream__));
@@ -13322,7 +13320,7 @@ class laplace_overload_weird_model final : public model_base_crtp<laplace_overlo
                          static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 7;
         lp_accum__.add(stan::math::laplace_marginal(my_fun_functor__(),
-                         std::forward_as_tuple(eta, log_ye, y),
+                         std::forward_as_tuple(eta, log_ye, y), 1,
                          my_fun_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          pstream__));
@@ -14072,9 +14070,10 @@ class laplace_poisson_model final : public model_base_crtp<laplace_poisson_model
                       std::forward_as_tuple(y,
                         stan::math::add(stan::math::add(offsett, alpha),
                           stan::math::multiply(X, beta))),
-                      cov_fun_functor__(), std::forward_as_tuple(sigmaz, N),
+                      hessian_block_size, cov_fun_functor__(),
+                      std::forward_as_tuple(sigmaz, N),
                       std::forward_as_tuple(stan::math::rep_vector(0.0, N),
-                        tolerance, max_num_steps, hessian_block_size, solver,
+                        tolerance, max_num_steps, solver,
                         max_steps_line_search, allow_fallthrough), pstream__);
       out__.write(log_lik_sum);
     } catch (const std::exception& e) {
@@ -14372,7 +14371,7 @@ static constexpr std::array<const char*, 47> locations_array__ =
   " (in 'laplace_poisson_log.stan', line 34, column 2 to column 22)",
   " (in 'laplace_poisson_log.stan', line 35, column 2 to column 20)",
   " (in 'laplace_poisson_log.stan', line 36, column 2 to column 20)",
-  " (in 'laplace_poisson_log.stan', line 68, column 2 to line 69, column 62)",
+  " (in 'laplace_poisson_log.stan', line 68, column 2 to line 69, column 82)",
   " (in 'laplace_poisson_log.stan', line 71, column 2 to line 74, column 79)",
   " (in 'laplace_poisson_log.stan', line 39, column 2 to column 55)",
   " (in 'laplace_poisson_log.stan', line 40, column 2 to column 61)",
@@ -14736,43 +14735,46 @@ class laplace_poisson_log_model final : public model_base_crtp<laplace_poisson_l
                          static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 9;
         lp_accum__.add(stan::math::laplace_marginal_poisson_log_lpmf<
-                         propto__>(y, y, prior_mean, K_function_functor__(),
+                         propto__>(y, y, prior_mean, hessian_block_size,
+                         K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          pstream__));
         current_statement__ = 10;
         lp_accum__.add(stan::math::laplace_marginal_poisson_log_lpmf<false>(
-                         y, y, prior_mean, K_function_functor__(),
+                         y, y, prior_mean, hessian_block_size,
+                         K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          pstream__));
         current_statement__ = 11;
         lp_accum__.add(stan::math::laplace_marginal_poisson_log_lpmf<
-                         propto__>(y, y, prior_mean, K_function_functor__(),
+                         propto__>(y, y, prior_mean, hessian_block_size,
+                         K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          pstream__));
         current_statement__ = 12;
         lp_accum__.add(stan::math::laplace_marginal_tol_poisson_log_lpmf<
-                         propto__>(y, y, prior_mean, K_function_functor__(),
+                         propto__>(y, y, prior_mean, hessian_block_size,
+                         K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          std::forward_as_tuple(theta_0, tolerance,
-                           max_num_steps, hessian_block_size, solver,
-                           max_steps_line_search, allow_fallthrough),
-                         pstream__));
+                           max_num_steps, solver, max_steps_line_search,
+                           allow_fallthrough), pstream__));
         current_statement__ = 13;
         lp_accum__.add(stan::math::laplace_marginal_tol_poisson_log_lpmf<
-                         false>(y, y, prior_mean, K_function_functor__(),
+                         false>(y, y, prior_mean, hessian_block_size,
+                         K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          std::forward_as_tuple(theta_0, tolerance,
-                           max_num_steps, hessian_block_size, solver,
-                           max_steps_line_search, allow_fallthrough),
-                         pstream__));
+                           max_num_steps, solver, max_steps_line_search,
+                           allow_fallthrough), pstream__));
         current_statement__ = 14;
         lp_accum__.add(stan::math::laplace_marginal_tol_poisson_log_lpmf<
-                         propto__>(y, y, prior_mean, K_function_functor__(),
+                         propto__>(y, y, prior_mean, hessian_block_size,
+                         K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          std::forward_as_tuple(theta_0, tolerance,
-                           max_num_steps, hessian_block_size, solver,
-                           max_steps_line_search, allow_fallthrough),
-                         pstream__));
+                           max_num_steps, solver, max_steps_line_search,
+                           allow_fallthrough), pstream__));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -14828,43 +14830,46 @@ class laplace_poisson_log_model final : public model_base_crtp<laplace_poisson_l
                          static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 9;
         lp_accum__.add(stan::math::laplace_marginal_poisson_log_lpmf<
-                         propto__>(y, y, prior_mean, K_function_functor__(),
+                         propto__>(y, y, prior_mean, hessian_block_size,
+                         K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          pstream__));
         current_statement__ = 10;
         lp_accum__.add(stan::math::laplace_marginal_poisson_log_lpmf<false>(
-                         y, y, prior_mean, K_function_functor__(),
+                         y, y, prior_mean, hessian_block_size,
+                         K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          pstream__));
         current_statement__ = 11;
         lp_accum__.add(stan::math::laplace_marginal_poisson_log_lpmf<
-                         propto__>(y, y, prior_mean, K_function_functor__(),
+                         propto__>(y, y, prior_mean, hessian_block_size,
+                         K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          pstream__));
         current_statement__ = 12;
         lp_accum__.add(stan::math::laplace_marginal_tol_poisson_log_lpmf<
-                         propto__>(y, y, prior_mean, K_function_functor__(),
+                         propto__>(y, y, prior_mean, hessian_block_size,
+                         K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          std::forward_as_tuple(theta_0, tolerance,
-                           max_num_steps, hessian_block_size, solver,
-                           max_steps_line_search, allow_fallthrough),
-                         pstream__));
+                           max_num_steps, solver, max_steps_line_search,
+                           allow_fallthrough), pstream__));
         current_statement__ = 13;
         lp_accum__.add(stan::math::laplace_marginal_tol_poisson_log_lpmf<
-                         false>(y, y, prior_mean, K_function_functor__(),
+                         false>(y, y, prior_mean, hessian_block_size,
+                         K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          std::forward_as_tuple(theta_0, tolerance,
-                           max_num_steps, hessian_block_size, solver,
-                           max_steps_line_search, allow_fallthrough),
-                         pstream__));
+                           max_num_steps, solver, max_steps_line_search,
+                           allow_fallthrough), pstream__));
         current_statement__ = 14;
         lp_accum__.add(stan::math::laplace_marginal_tol_poisson_log_lpmf<
-                         propto__>(y, y, prior_mean, K_function_functor__(),
+                         propto__>(y, y, prior_mean, hessian_block_size,
+                         K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          std::forward_as_tuple(theta_0, tolerance,
-                           max_num_steps, hessian_block_size, solver,
-                           max_steps_line_search, allow_fallthrough),
-                         pstream__));
+                           max_num_steps, solver, max_steps_line_search,
+                           allow_fallthrough), pstream__));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -14936,7 +14941,7 @@ class laplace_poisson_log_model final : public model_base_crtp<laplace_poisson_l
       current_statement__ = 4;
       stan::model::assign(theta,
         stan::math::laplace_latent_poisson_log_rng(y, y, prior_mean,
-          K_function_functor__(),
+          hessian_block_size, K_function_functor__(),
           std::forward_as_tuple(x, n_obs, alpha, rho), base_rng__, pstream__),
         "assigning variable theta");
       Eigen::Matrix<double,-1,1> theta2 =
@@ -14945,11 +14950,10 @@ class laplace_poisson_log_model final : public model_base_crtp<laplace_poisson_l
       current_statement__ = 5;
       stan::model::assign(theta2,
         stan::math::laplace_latent_tol_poisson_log_rng(y, y, prior_mean,
-          K_function_functor__(),
+          hessian_block_size, K_function_functor__(),
           std::forward_as_tuple(x, n_obs, alpha, rho),
-          std::forward_as_tuple(theta_0, tolerance, max_num_steps,
-            hessian_block_size, solver, max_steps_line_search,
-            allow_fallthrough), base_rng__, pstream__),
+          std::forward_as_tuple(theta_0, tolerance, max_num_steps, solver,
+            max_steps_line_search, allow_fallthrough), base_rng__, pstream__),
         "assigning variable theta2");
       out__.write(theta);
       out__.write(theta2);
