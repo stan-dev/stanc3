@@ -46,13 +46,13 @@ model {
   alpha ~ inv_gamma(alpha_location_prior, alpha_scale_prior);
   eta ~ normal(0, 1);
 
-  target += laplace_marginal(ll_nested, ({({(eta, log_ye)}, y)}, eta),
+  target += laplace_marginal(ll_nested, ({({(eta, log_ye)}, y)}, eta), 1,
                              K_function,
                              ({(x, {(n_obs, alpha)})}, rho));
 }
 generated quantities {
   vector[n_obs] theta3 = laplace_latent_rng(ll_nested,
-                           ({({(eta, log_ye)}, y)}, eta),
+                           ({({(eta, log_ye)}, y)}, eta), 1,
                            K_function, ({(x, {(n_obs, alpha)})}, rho));
 }
 

@@ -197,8 +197,7 @@ let laplace_helper_param_types name =
 let laplace_tolerance_argument_types =
   UnsizedType.
     [ (AutoDiffable, UVector) (* theta_0 *); (DataOnly, UReal) (* tolerance *)
-    ; (DataOnly, UInt) (* max_num_steps *)
-    ; (DataOnly, UInt) (* hessian_block_size *); (DataOnly, UInt) (* solver *)
+    ; (DataOnly, UInt) (* max_num_steps *); (DataOnly, UInt) (* solver *)
     ; (DataOnly, UInt) (* max_steps_line_search *)
     ; (DataOnly, UInt) (* allow_fallthrough *) ]
 

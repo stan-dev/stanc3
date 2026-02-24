@@ -16,8 +16,9 @@ functions {
                    array[] int y) {
     // observed count
     return neg_binomial_2_lpmf(y | exp(log_ye + theta), eta) +
-        // integrate 1d is itself allowed, actually
+        // integrate 1d SHOULD be allowed,
         // see https://github.com/stan-dev/math/pull/2929
+        // but there is a bug: https://github.com/stan-dev/math/issues/3280
         integrate_1d(integrand, 0, 1, y, y, y);
   }
 
@@ -48,5 +49,5 @@ parameters {
 
 generated quantities {
   vector[n_obs] theta = laplace_latent_rng(ll_function, (eta, log_ye, y),
-                        K_function, (x, n_obs, alpha, rho));
+                        1, K_function, (x, n_obs, alpha, rho));
 }

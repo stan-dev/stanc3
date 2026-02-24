@@ -27,7 +27,6 @@ data {
 transformed data {
   vector[n_obs] log_ye = log(ye);
   vector[n_obs] theta_0 = rep_vector(0.0, n_obs); // initial guess
-
 }
 parameters {
   real<lower=0> alpha;
@@ -36,8 +35,6 @@ parameters {
 }
 
 generated quantities {
-
-  vector[n_obs] theta = laplace_latent_tol_neg_binomial_2_log_rng(y, {1}, [1.0]', [0]',
-                        1, K_function, (x, n_obs, alpha, rho));
-
+  vector[n_obs] theta = laplace_latent_tol_rng(ll_function, (eta, log_ye, y), 3i,
+                    K_function, (x, n_obs, alpha, rho), (theta_0, 1,2,4,5, 0));
 }
