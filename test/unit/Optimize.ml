@@ -1915,6 +1915,93 @@ let%expect_test "dead code elimination, nested" =
         if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
+let%expect_test "dead code elimination, real zero if (direct MIR)" =
+  (* Construct MIR directly because Stan's type checker rejects real in
+     if-conditions, but optimization passes can produce Lit(Real, "0.") there.
+     Expr.Helpers.float 0.0 produces Lit(Real, "0.") via Float.to_string. *)
+  let mir = reset_and_mir_of_string {|
+      model {}
+      |} in
+  let real_zero = Expr.Helpers.float 0.0 in
+  let print_hello =
+    Stmt.{ pattern= NRFunApp (CompilerInternal FnPrint, [Expr.Helpers.str "hello"])
+         ; meta= Location_span.empty } in
+  let print_goodbye =
+    Stmt.{ pattern= NRFunApp (CompilerInternal FnPrint, [Expr.Helpers.str "goodbye"])
+         ; meta= Location_span.empty } in
+  let mir =
+    { mir with
+      Middle.Program.log_prob=
+        [ Stmt.
+            { pattern=
+                IfElse
+                  ( real_zero
+                  , print_hello
+                  , Some print_goodbye )
+            ; meta= Location_span.empty } ] } in
+  let mir = dead_code_elimination mir in
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  [%expect
+    {|
+      log_prob {
+        FnPrint__("goodbye");
+      }
+
+
+      generate_quantities {
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
+      } |}]
+
+let%expect_test "dead code elimination, real zero while (direct MIR)" =
+  let mir = reset_and_mir_of_string {|
+      model {}
+      |} in
+  let real_zero = Expr.Helpers.float 0.0 in
+  let print_hello =
+    Stmt.{ pattern= NRFunApp (CompilerInternal FnPrint, [Expr.Helpers.str "hello"])
+         ; meta= Location_span.empty } in
+  let mir =
+    { mir with
+      Middle.Program.log_prob=
+        [ Stmt.
+            { pattern=
+                While (real_zero, print_hello)
+            ; meta= Location_span.empty } ] } in
+  let mir = dead_code_elimination mir in
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  [%expect
+    {|
+      generate_quantities {
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
+      } |}]
+
+let%expect_test "dead code elimination, real zero if no else (direct MIR)" =
+  (* Test Lit(Real, "0.") in if with no else branch *)
+  let mir = reset_and_mir_of_string {|
+      model {}
+      |} in
+  let real_zero = Expr.Helpers.float 0.0 in
+  let print_hello =
+    Stmt.{ pattern= NRFunApp (CompilerInternal FnPrint, [Expr.Helpers.str "hello"])
+         ; meta= Location_span.empty } in
+  let mir =
+    { mir with
+      Middle.Program.log_prob=
+        [ Stmt.
+            { pattern=
+                IfElse (real_zero, print_hello, None)
+            ; meta= Location_span.empty } ] } in
+  let mir = dead_code_elimination mir in
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  [%expect
+    {|
+      generate_quantities {
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
+      } |}]
+
 let%expect_test "partial evaluation" =
   let mir =
     reset_and_mir_of_string
