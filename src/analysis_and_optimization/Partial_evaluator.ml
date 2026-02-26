@@ -704,11 +704,11 @@ let rec eval_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
                     ; { pattern=
                           FunApp (StanLib ("Divide__", FnPlain, mem), [y; z])
                       ; _ } ] )
-                  when is_int 1 y && is_int 2 z ->
+                  when is_int 1 y && is_int 2 z
+                       && not
+                            (y.meta.type_ = UInt && z.meta.type_ = UInt) ->
                     let lub_mem = lub_mem_pat [mem] in
                     FunApp (StanLib ("sqrt", suffix, lub_mem), [x])
-                    (* This is wrong; if both are type UInt the exponent is
-                       rounds down to zero. *)
                 | ( "square"
                   , [{pattern= FunApp (StanLib ("sd", FnPlain, mem), [x]); _}] )
                   ->

@@ -2171,6 +2171,7 @@ model {
     target += pow(theta, 1./2.);
     target += pow(theta, 1/2.);
     target += pow(theta, 1./2);
+    target += pow(theta, 1/2);
     target += square(sd(x_vector));
     target += sqrt(2);
     target += sum(square(x_vector - y_vector));
@@ -2338,6 +2339,7 @@ model {
           target += sqrt(34.);
           target += sqrt(34.);
           target += sqrt(34.);
+          target += pow(34., 0);
           target += variance(x_vector);
           target += sqrt2();
           target += squared_distance(x_vector, y_vector);
