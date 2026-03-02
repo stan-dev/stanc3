@@ -1924,20 +1924,19 @@ let%expect_test "dead code elimination, real zero if (direct MIR)" =
       |} in
   let real_zero = Expr.Helpers.float 0.0 in
   let print_hello =
-    Stmt.{ pattern= NRFunApp (CompilerInternal FnPrint, [Expr.Helpers.str "hello"])
-         ; meta= Location_span.empty } in
+    Stmt.
+      { pattern= NRFunApp (CompilerInternal FnPrint, [Expr.Helpers.str "hello"])
+      ; meta= Location_span.empty } in
   let print_goodbye =
-    Stmt.{ pattern= NRFunApp (CompilerInternal FnPrint, [Expr.Helpers.str "goodbye"])
-         ; meta= Location_span.empty } in
+    Stmt.
+      { pattern=
+          NRFunApp (CompilerInternal FnPrint, [Expr.Helpers.str "goodbye"])
+      ; meta= Location_span.empty } in
   let mir =
     { mir with
       Middle.Program.log_prob=
         [ Stmt.
-            { pattern=
-                IfElse
-                  ( real_zero
-                  , print_hello
-                  , Some print_goodbye )
+            { pattern= IfElse (real_zero, print_hello, Some print_goodbye)
             ; meta= Location_span.empty } ] } in
   let mir = dead_code_elimination mir in
   Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
@@ -1959,15 +1958,15 @@ let%expect_test "dead code elimination, real zero while (direct MIR)" =
       |} in
   let real_zero = Expr.Helpers.float 0.0 in
   let print_hello =
-    Stmt.{ pattern= NRFunApp (CompilerInternal FnPrint, [Expr.Helpers.str "hello"])
-         ; meta= Location_span.empty } in
+    Stmt.
+      { pattern= NRFunApp (CompilerInternal FnPrint, [Expr.Helpers.str "hello"])
+      ; meta= Location_span.empty } in
   let mir =
     { mir with
       Middle.Program.log_prob=
         [ Stmt.
-            { pattern=
-                While (real_zero, print_hello)
-            ; meta= Location_span.empty } ] } in
+            {pattern= While (real_zero, print_hello); meta= Location_span.empty}
+        ] } in
   let mir = dead_code_elimination mir in
   Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
   [%expect
@@ -1984,14 +1983,14 @@ let%expect_test "dead code elimination, real zero if no else (direct MIR)" =
       |} in
   let real_zero = Expr.Helpers.float 0.0 in
   let print_hello =
-    Stmt.{ pattern= NRFunApp (CompilerInternal FnPrint, [Expr.Helpers.str "hello"])
-         ; meta= Location_span.empty } in
+    Stmt.
+      { pattern= NRFunApp (CompilerInternal FnPrint, [Expr.Helpers.str "hello"])
+      ; meta= Location_span.empty } in
   let mir =
     { mir with
       Middle.Program.log_prob=
         [ Stmt.
-            { pattern=
-                IfElse (real_zero, print_hello, None)
+            { pattern= IfElse (real_zero, print_hello, None)
             ; meta= Location_span.empty } ] } in
   let mir = dead_code_elimination mir in
   Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
