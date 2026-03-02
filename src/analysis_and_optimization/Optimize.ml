@@ -780,7 +780,7 @@ let dead_code_elimination (mir : Program.Typed.t) =
           then Skip
           else
             match e.pattern with
-            | Lit (Int, "0") | Lit (Real, "0.0") -> (
+            | _ when Partial_evaluator.is_int 0 e -> (
                 match b2 with Some x -> x.pattern | None -> Skip)
             | Lit (_, _) -> b1.pattern
             | _ -> IfElse (e, b1, b2))
@@ -788,7 +788,7 @@ let dead_code_elimination (mir : Program.Typed.t) =
           if (not (cannot_remove_expr e)) && b.pattern = Break then Skip
           else
             match e.pattern with
-            | Lit (Int, "0") | Lit (Real, "0.0") -> Skip
+            | _ when Partial_evaluator.is_int 0 e -> Skip
             | _ -> While (e, b))
       | For {loopvar; lower; upper; body} ->
           if
