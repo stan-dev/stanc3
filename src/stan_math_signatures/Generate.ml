@@ -1208,16 +1208,17 @@ let () =
     , ReturnType UReal
     , [UMatrix; UMatrix; UMatrix; UVector; UMatrix; UVector; UMatrix]
     , AoS );
-  add_unqualified
-    ( "generate_laplace_options"
-    , ReturnType (UTuple [UVector; UReal; UInt; UInt; UInt; UInt; UInt])
-    , [UVector]
-    , AoS );
-  add_unqualified
-    ( "generate_laplace_options"
-    , ReturnType (UTuple [UVector; UReal; UInt; UInt; UInt; UInt; UInt])
-    , [UInt]
-    , AoS );
+  List.iter [UnsizedType.UInt; UVector] ~f:(fun t ->
+      add_unqualified
+        ( "generate_laplace_options"
+        , ReturnType
+            (UTuple
+               [ UVector (* theta_0 *); UReal (* tolerance *)
+               ; UInt (* max_num_steps *); UInt (* solver *)
+               ; UInt (* max_steps_line_search *); UInt (* allow_fallthrough *)
+               ])
+        , [t]
+        , AoS ));
   add_unqualified
     ("gp_dot_prod_cov", ReturnType UMatrix, [UArray UReal; UReal], AoS);
   add_unqualified
