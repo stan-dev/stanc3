@@ -143,16 +143,36 @@ let fg_factor_is_prior (var : vexpr) (fac : factor * label)
   (* Check if the data is now unreachable *)
   not (fg_factor_reaches fac data fg')
 
+(** Check if a variable is the 'subject' of a target term factor.
+    For distribution functions (_lpdf/_lpmf and their unnormalized variants),
+    only the first argument is the distribution subject. A factor should only
+    be considered a potential prior for a variable if the variable appears as
+    the subject, not merely as a distribution argument.
+    For non-distribution factors, conservatively return true. *)
+let is_factor_subject (var : vexpr) (factor : factor) : bool =
+  match factor with
+  | TargetTerm {pattern= FunApp (StanLib (fname, _, _), first_arg :: _); _}
+    when String.is_suffix fname ~suffix:"_lpdf"
+         || String.is_suffix fname ~suffix:"_lpmf"
+         || String.is_suffix fname ~suffix:"_lupdf"
+         || String.is_suffix fname ~suffix:"_lupmf" ->
+      Set.mem (Set.Poly.map (expr_var_set first_arg) ~f:fst) var
+  | _ -> true
+
 (** Priors of V are neighbors of V which have no connection to any data except
     though V So for graph G and each parameter V: G' = G\V; For each neighbor F:
     Use BFS starting from F in G' and search for any data, if there is none, F
-    is a prior *)
+    is a prior.
+    Additionally, F is only a prior for V if V is the subject (first argument)
+    of a distribution factor, not merely an argument. *)
 let fg_var_priors (var : vexpr) (data : vexpr Set.Poly.t) (fg : factor_graph) :
     (factor * label) Set.Poly.t option =
   match Map.Poly.find fg.var_map var with
   | Some factors ->
       Some
-        (Set.filter factors ~f:(fun fac -> fg_factor_is_prior var fac data fg))
+        (Set.filter factors ~f:(fun ((fac, _) as fl) ->
+             is_factor_subject var fac
+             && fg_factor_is_prior var fl data fg))
   | None -> None
 
 let list_priors ?factor_graph:(fg_opt = None) (mir : Program.Typed.t) :

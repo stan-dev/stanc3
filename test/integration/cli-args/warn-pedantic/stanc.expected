@@ -12,13 +12,17 @@ Warning in 'distribution-warnings.stan', line 12, column 2 to column 31:
     provided, or the prior(s) depend on data variables. In the later case,
     this may be a false positive.
 Warning in 'distribution-warnings.stan', line 13, column 2 to column 13:
-    The parameter unb_p has 15 priors.
+    The parameter unb_p has no priors. This means either no prior is
+    provided, or the prior(s) depend on data variables. In the later case,
+    this may be a false positive.
 Warning in 'distribution-warnings.stan', line 14, column 2 to column 22:
-    The parameter pos_p has 19 priors.
+    The parameter pos_p has no priors. This means either no prior is
+    provided, or the prior(s) depend on data variables. In the later case,
+    this may be a false positive.
 Warning in 'distribution-warnings.stan', line 15, column 2 to column 32:
-    The parameter unit_p has 2 priors.
-Warning in 'distribution-warnings.stan', line 16, column 2 to column 16:
-    The parameter vec has 2 priors.
+    The parameter unit_p has no priors. This means either no prior is
+    provided, or the prior(s) depend on data variables. In the later case,
+    this may be a false positive.
 Warning in 'distribution-warnings.stan', line 17, column 2 to column 29:
     The parameter pos_vec has no priors. This means either no prior is
     provided, or the prior(s) depend on data variables. In the later case,
@@ -27,8 +31,6 @@ Warning in 'distribution-warnings.stan', line 18, column 2 to column 18:
     The parameter mat has no priors. This means either no prior is provided,
     or the prior(s) depend on data variables. In the later case, this may be
     a false positive.
-Warning in 'distribution-warnings.stan', line 19, column 2 to column 17:
-    The parameter sim has 2 priors.
 Warning in 'distribution-warnings.stan', line 20, column 2 to column 17:
     The parameter ord has no priors. This means either no prior is provided,
     or the prior(s) depend on data variables. In the later case, this may be
@@ -444,7 +446,9 @@ Warning in 'function-param-control-flow.stan', line 15, column 2 to column 26:
 Warning in 'gamma-args.stan', line 2, column 2 to column 18:
     The parameter a has 4 priors.
 Warning in 'gamma-args.stan', line 3, column 2 to column 9:
-    The parameter b has 2 priors.
+    The parameter b has no priors. This means either no prior is provided, or
+    the prior(s) depend on data variables. In the later case, this may be a
+    false positive.
 Warning in 'gamma-args.stan', line 8, column 2 to column 22:
     The parameter a is on the left-hand side of more than one tilde
     statement.
@@ -521,9 +525,9 @@ Warning in 'jacobian_false_alarm.stan', line 7, column 2 to column 20:
 Warning in 'jacobian_false_alarm.stan', line 8, column 2 to column 28:
     The parameter m has 12 priors.
 Warning in 'jacobian_false_alarm.stan', line 9, column 2 to column 9:
-    The parameter y has 9 priors.
+    The parameter y has 7 priors.
 Warning in 'jacobian_false_alarm.stan', line 10, column 2 to column 9:
-    The parameter z has 7 priors.
+    The parameter z has 6 priors.
 [exit 0]
   $ ../../../../../install/default/bin/stanc --warn-pedantic  jacobian_warning1.stan
 Warning in 'jacobian_warning1.stan', line 2, column 2 to column 9:
@@ -633,8 +637,6 @@ Warning in 'missing_priors.stan', line 8, column 2 to column 20:
   $ ../../../../../install/default/bin/stanc --warn-pedantic  multi-tilde.stan
 Warning in 'multi-tilde.stan', line 2, column 2 to column 9:
     The parameter x has 2 priors.
-Warning in 'multi-tilde.stan', line 3, column 2 to column 9:
-    The parameter y has 2 priors.
 Warning in 'multi-tilde.stan', line 6, column 2 to column 19:
     The parameter x is on the left-hand side of more than one tilde
     statement.
@@ -648,10 +650,6 @@ Warning in 'non-one-priors.stan', line 16, column 16 to column 17:
     2), but d was not constrained to be strictly positive.
 [exit 0]
   $ ../../../../../install/default/bin/stanc --warn-pedantic  non-one-priors2.stan
-Warning in 'non-one-priors2.stan', line 6, column 2 to column 9:
-    The parameter a has 3 priors.
-Warning in 'non-one-priors2.stan', line 7, column 2 to column 9:
-    The parameter b has 2 priors.
 Warning in 'non-one-priors2.stan', line 8, column 2 to column 9:
     The parameter c has no priors. This means either no prior is provided, or
     the prior(s) depend on data variables. In the later case, this may be a
@@ -673,6 +671,10 @@ Warning in 'non-one-priors2.stan', line 21, column 2 to column 19:
     statement.
 [exit 0]
   $ ../../../../../install/default/bin/stanc --warn-pedantic  param-depend-control.stan
+Warning in 'param-depend-control.stan', line 2, column 2 to column 9:
+    The parameter a has no priors. This means either no prior is provided, or
+    the prior(s) depend on data variables. In the later case, this may be a
+    false positive.
 Warning in 'param-depend-control.stan', line 8, column 2 to line 12, column 3:
     A control flow statement depends on parameter(s): a.
 Warning in 'param-depend-control.stan', line 13, column 2 to line 15, column 3:
@@ -680,9 +682,37 @@ Warning in 'param-depend-control.stan', line 13, column 2 to line 15, column 3:
 Warning in 'param-depend-control.stan', line 16, column 2 to line 18, column 3:
     A control flow statement depends on parameter(s): a.
 [exit 0]
+  $ ../../../../../install/default/bin/stanc --warn-pedantic  pedantic-prior-arg.stan
+Warning in 'pedantic-prior-arg.stan', line 6, column 16 to column 21:
+    A normal distribution is given parameter sigma as a scale parameter
+    (argument 2), but sigma was not constrained to be strictly positive.
+Warning in 'pedantic-prior-arg.stan', line 7, column 2 to column 7:
+    Parameter sigma is given a exponential distribution, which has strictly
+    positive support, but sigma was not constrained to be strictly positive.
+[exit 0]
   $ ../../../../../install/default/bin/stanc --warn-pedantic  unbounded-sigma.stan
 Warning in 'unbounded-sigma.stan', line 2, column 2 to column 9:
     The parameter x has 6 priors.
+Warning in 'unbounded-sigma.stan', line 3, column 2 to column 15:
+    The parameter sigma_a has no priors. This means either no prior is
+    provided, or the prior(s) depend on data variables. In the later case,
+    this may be a false positive.
+Warning in 'unbounded-sigma.stan', line 4, column 2 to column 24:
+    The parameter sigma_b has no priors. This means either no prior is
+    provided, or the prior(s) depend on data variables. In the later case,
+    this may be a false positive.
+Warning in 'unbounded-sigma.stan', line 5, column 2 to column 34:
+    The parameter sigma_c has no priors. This means either no prior is
+    provided, or the prior(s) depend on data variables. In the later case,
+    this may be a false positive.
+Warning in 'unbounded-sigma.stan', line 6, column 2 to column 33:
+    The parameter sigma_d has no priors. This means either no prior is
+    provided, or the prior(s) depend on data variables. In the later case,
+    this may be a false positive.
+Warning in 'unbounded-sigma.stan', line 7, column 2 to column 33:
+    The parameter sigma_e has no priors. This means either no prior is
+    provided, or the prior(s) depend on data variables. In the later case,
+    this may be a false positive.
 Warning in 'unbounded-sigma.stan', line 7, column 2 to column 33:
     Your Stan program has a parameter sigma_e with a lower and upper bound in
     its declaration. These hard constraints are not recommended, for two
@@ -705,8 +735,6 @@ Warning in 'unbounded-sigma.stan', line 12, column 17 to column 24:
     (argument 2), but sigma_c was not constrained to be strictly positive.
 [exit 0]
   $ ../../../../../install/default/bin/stanc --warn-pedantic  uniform.stan
-Warning in 'uniform.stan', line 2, column 2 to column 9:
-    The parameter a has 2 priors.
 Warning in 'uniform.stan', line 8, column 2 to column 20:
     Parameter a is given a uniform distribution. The uniform distribution is
     not recommended, for two reasons: (a) Except when there are logical or
@@ -746,8 +774,6 @@ Warning in 'unscaled.stan', line 10, column 20 to column 25:
     https://mc-stan.org/docs/stan-users-guide/efficiency-tuning.html#standardizing-predictors
 [exit 0]
   $ ../../../../../install/default/bin/stanc --warn-pedantic  unused-param.stan
-Warning in 'unused-param.stan', line 3, column 2 to column 9:
-    The parameter b has 2 priors.
 Warning in 'unused-param.stan', line 4, column 2 to column 9:
     The parameter c was declared but was not used in the density calculation.
 Warning in 'unused-param.stan', line 5, column 2 to column 9:
