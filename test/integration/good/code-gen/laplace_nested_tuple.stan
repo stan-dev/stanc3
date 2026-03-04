@@ -34,24 +34,24 @@ parameters {
   real<lower=0> rho;
 }
 model {
-  y ~ laplace_marginal_neg_binomial_2_log(y, ye, rep_vector(0.0, n_obs), scalar_tuple,
+  y ~ laplace_marginal_neg_binomial_2_log(y, ye, rep_vector(0.0, n_obs), 1, scalar_tuple,
         (x, (n_obs, (alpha, rho))));
 
-  y ~ laplace_marginal_neg_binomial_2_log(y, ye, rep_vector(0.0, n_obs), arr_vec_tuple,
+  y ~ laplace_marginal_neg_binomial_2_log(y, ye, rep_vector(0.0, n_obs), 1, arr_vec_tuple,
         ((x, x), n_obs, alpha, rho));
 
-  y ~ laplace_marginal_neg_binomial_2_log(y, ye, rep_vector(0.0, n_obs), arr_and_vec_tuple,
+  y ~ laplace_marginal_neg_binomial_2_log(y, ye, rep_vector(0.0, n_obs), 1, arr_and_vec_tuple,
         ((x, rep_vector(rho, 10)), n_obs, alpha, rho));
 }
 generated quantities {
   vector[n_obs] theta = laplace_latent_neg_binomial_2_log_rng(y, y, ye, rep_vector(0.0, n_obs),
-                          scalar_tuple, (x, (n_obs, (alpha, rho))));
+                          1, scalar_tuple, (x, (n_obs, (alpha, rho))));
 
   vector[n_obs] theta2 = laplace_latent_neg_binomial_2_log_rng(y, y, ye, rep_vector(0.0, n_obs),
-                           arr_vec_tuple,
+                           1, arr_vec_tuple,
                            ((x, x), n_obs, alpha, rho));
 
   vector[n_obs] theta3 = laplace_latent_neg_binomial_2_log_rng(y, y, ye, rep_vector(0.0, n_obs),
-                           arr_and_vec_tuple,
+                           1, arr_and_vec_tuple,
                            ((x, rep_vector(rho, 10)), n_obs, alpha, rho));
 }

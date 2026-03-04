@@ -95,6 +95,12 @@ val illtyped_laplace_generic :
 val laplace_compatibility : Location_span.t -> string -> t
 val illtyped_laplace_extra_args : Location_span.t -> string -> int -> t
 
+val illtyped_laplace_hessian_block_size_arg :
+     Location_span.t
+  -> string
+  -> (UnsizedType.autodifftype * UnsizedType.t) option
+  -> t
+
 val illtyped_laplace_tolerance_args :
   Location_span.t -> string -> SignatureMismatch.function_mismatch -> t
 
