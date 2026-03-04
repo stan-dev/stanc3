@@ -498,9 +498,8 @@ let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
     sigs pp_omitted ()
 
 let list_valid_assignmentoperator_rhs lt op =
-  let errors =
-    Stan_math_signatures.make_assignmentoperator_stan_math_signatures op in
-  List.filter_map
+  Stan_math_signatures.make_assignmentoperator_stan_math_signatures op
+  |> List.filter_map
     ~f:(fun (args, _, _, _) ->
       match args with
       | [(_, a); (_, b)] -> (

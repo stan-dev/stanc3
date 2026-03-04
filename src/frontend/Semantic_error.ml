@@ -497,7 +497,7 @@ module ExpressionError = struct
           ut
     | NotIndexable (ut, nidcs) ->
         Fmt.pf ppf
-          "Too many indices. Expression only has %a dimensions, but recieved \
+          "Too many indices. Expression only has %a dimensions, but received \
            %a indices."
           (expected_style Fmt.int)
           (UnsizedType.count_dims ut)
@@ -673,11 +673,11 @@ module StatementError = struct
         Fmt.pf ppf "Complex types do not support transformations."
     | IntegerParameter false -> Fmt.pf ppf "Parameters cannot be integers."
     | IntegerParameter true ->
-        Fmt.pf ppf "Transformed Parameters cannot be integers."
+        Fmt.pf ppf "Transformed parameters cannot be integers."
     | IllTypedAssignment (Operator.Equals, lt, rt) ->
         Fmt.pf ppf
           "@[Ill-typed assignment statement.@ Expected the right hand side to \
-           have a type matching the the destination (%a).%a@]"
+           have a type matching the destination (%a).%a@]"
           (expected_style UnsizedType.pp)
           lt found_type rt
     | IllTypedAssignment (op, lt, rt) ->
