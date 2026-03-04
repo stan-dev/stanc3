@@ -46,7 +46,7 @@ Semantic error in 'plus_equals_bad_lhs_idxs.stan', line 4, column 2 to column 8:
      5:  }
    -------------------------------------------------
 
-Too many indices. Expression only has 1 dimensions, but recieved 2 indices.
+Too many indices. Expression only has 1 dimensions, but received 2 indices.
 [exit 1]
   $ ../../../../../install/default/bin/stanc plus_equals_bad_var_lhs.stan
 Semantic error in 'plus_equals_bad_var_lhs.stan', line 3, column 4 to column 14:

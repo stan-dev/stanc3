@@ -82,7 +82,7 @@ Semantic error in 'bad-index5.stan', line 3, column 11 to column 18:
      4:  }
    -------------------------------------------------
 
-Too many indices. Expression only has 0 dimensions, but recieved 1 indices.
+Too many indices. Expression only has 0 dimensions, but received 1 indices.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_addition.stan
 Semantic error in 'bad_addition.stan', line 3, column 2 to column 9:
@@ -225,7 +225,7 @@ Semantic error in 'bad_unpack_shape.stan', line 4, column 2 to column 21:
    -------------------------------------------------
 
 Ill-typed assignment statement.
-Expected the right hand side to have a type matching the the destination (tuple(
+Expected the right hand side to have a type matching the destination (tuple(
 int, int)). Instead found type tuple(int, int, int).
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_unpack_tuple_overlap1.stan
@@ -265,7 +265,7 @@ Semantic error in 'bad_unpack_types.stan', line 4, column 2 to column 18:
    -------------------------------------------------
 
 Ill-typed assignment statement.
-Expected the right hand side to have a type matching the the destination (int).
+Expected the right hand side to have a type matching the destination (int).
 Instead found type real.
 [exit 1]
   $ ../../../../../install/default/bin/stanc empty_tuple_expr.stan

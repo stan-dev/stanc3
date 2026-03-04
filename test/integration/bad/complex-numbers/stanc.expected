@@ -9,7 +9,7 @@ Semantic error in 'assignment-wrong-way.stan', line 11, column 2 to column 9:
    -------------------------------------------------
 
 Ill-typed assignment statement.
-Expected the right hand side to have a type matching the the destination (array[] matrix).
+Expected the right hand side to have a type matching the destination (array[] matrix).
 Instead found type array[] complex_matrix.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_bounds1.stan

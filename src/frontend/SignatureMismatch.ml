@@ -499,11 +499,9 @@ let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
 
 let list_valid_assignmentoperator_rhs lt op =
   Stan_math_signatures.make_assignmentoperator_stan_math_signatures op
-  |> List.filter_map
-    ~f:(fun (args, _, _, _) ->
+  |> List.filter_map ~f:(fun (args, _, _, _) ->
       match args with
       | [(_, a); (_, b)] -> (
           match check_same_type 0 lt a with Ok _ -> Some b | Error _ -> None)
       | _ -> None)
-    errors
   |> List.dedup_and_sort ~compare:UnsizedType.compare

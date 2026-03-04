@@ -666,7 +666,7 @@ Semantic error in 'tparam_array_int.stan', line 2, column 2 to column 21:
      3:  }
    -------------------------------------------------
 
-Transformed Parameters cannot be integers.
+Transformed parameters cannot be integers.
 [exit 1]
   $ ../../../../../install/default/bin/stanc tparam_tuple_int.stan
 Semantic error in 'tparam_tuple_int.stan', line 2, column 2 to column 21:
@@ -677,7 +677,7 @@ Semantic error in 'tparam_tuple_int.stan', line 2, column 2 to column 21:
      3:  }
    -------------------------------------------------
 
-Transformed Parameters cannot be integers.
+Transformed parameters cannot be integers.
 [exit 1]
   $ ../../../../../install/default/bin/stanc unterminated_comment.stan
 Syntax error in 'unterminated_comment.stan', line 4, column 0, lexing error:

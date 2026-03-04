@@ -68,7 +68,7 @@ Semantic error in 'array_expr_bad1.stan', line 2, column 2 to column 38:
    -------------------------------------------------
 
 Ill-typed assignment statement.
-Expected the right hand side to have a type matching the the destination (array[,] real).
+Expected the right hand side to have a type matching the destination (array[,] real).
 Instead found type array[] int.
 [exit 1]
   $ ../../../../install/default/bin/stanc array_expr_bad2.stan
@@ -129,7 +129,7 @@ Semantic error in 'assign_real_to_int.stan', line 11, column 2 to column 8:
    -------------------------------------------------
 
 Ill-typed assignment statement.
-Expected the right hand side to have a type matching the the destination (int).
+Expected the right hand side to have a type matching the destination (int).
 Instead found type real.
 [exit 1]
   $ ../../../../install/default/bin/stanc assignment-to-function.stan
@@ -275,7 +275,7 @@ Semantic error in 'bad_var_assignment_type1.stan', line 4, column 2 to column 8:
    -------------------------------------------------
 
 Ill-typed assignment statement.
-Expected the right hand side to have a type matching the the destination (array[] real).
+Expected the right hand side to have a type matching the destination (array[] real).
 Instead found type vector.
 [exit 1]
   $ ../../../../install/default/bin/stanc bad_var_assignment_type2.stan
@@ -290,7 +290,7 @@ Semantic error in 'bad_var_assignment_type2.stan', line 6, column 2 to column 8:
    -------------------------------------------------
 
 Ill-typed assignment statement.
-Expected the right hand side to have a type matching the the destination (array[] real).
+Expected the right hand side to have a type matching the destination (array[] real).
 Instead found type array[,] real.
 [exit 1]
   $ ../../../../install/default/bin/stanc bad_var_assignment_vec_arr.stan
@@ -305,7 +305,7 @@ Semantic error in 'bad_var_assignment_vec_arr.stan', line 10, column 2 to column
    -------------------------------------------------
 
 Ill-typed assignment statement.
-Expected the right hand side to have a type matching the the destination (array[] real).
+Expected the right hand side to have a type matching the destination (array[] real).
 Instead found type vector.
 [exit 1]
   $ ../../../../install/default/bin/stanc bad_while.stan
@@ -481,7 +481,7 @@ Semantic error in 'complex_mat_bad.stan', line 7, column 2 to column 18:
    -------------------------------------------------
 
 Ill-typed assignment statement.
-Expected the right hand side to have a type matching the the destination (real).
+Expected the right hand side to have a type matching the destination (real).
 Instead found type complex.
 [exit 1]
   $ ../../../../install/default/bin/stanc conditional_condition_bad_1.stan
@@ -621,7 +621,7 @@ Semantic error in 'declare-define-var-double-1.stan', line 5, column 2 to column
    -------------------------------------------------
 
 Ill-typed assignment statement.
-Expected the right hand side to have a type matching the the destination (real).
+Expected the right hand side to have a type matching the destination (real).
 Instead found type array[] real.
 [exit 1]
   $ ../../../../install/default/bin/stanc declare-define-var-double-2.stan
@@ -636,7 +636,7 @@ Semantic error in 'declare-define-var-double-2.stan', line 5, column 2 to column
    -------------------------------------------------
 
 Ill-typed assignment statement.
-Expected the right hand side to have a type matching the the destination (vector).
+Expected the right hand side to have a type matching the destination (vector).
 Instead found type array[] real.
 [exit 1]
   $ ../../../../install/default/bin/stanc declare-define-var-double-3.stan
@@ -679,7 +679,7 @@ Semantic error in 'declare-define-var-int-1.stan', line 5, column 2 to column 17
    -------------------------------------------------
 
 Ill-typed assignment statement.
-Expected the right hand side to have a type matching the the destination (int).
+Expected the right hand side to have a type matching the destination (int).
 Instead found type real.
 [exit 1]
   $ ../../../../install/default/bin/stanc declare-define-var-int-2.stan
@@ -694,7 +694,7 @@ Semantic error in 'declare-define-var-int-2.stan', line 5, column 2 to column 18
    -------------------------------------------------
 
 Ill-typed assignment statement.
-Expected the right hand side to have a type matching the the destination (int).
+Expected the right hand side to have a type matching the destination (int).
 Instead found type real.
 [exit 1]
   $ ../../../../install/default/bin/stanc declare-define-var-int-3.stan
@@ -708,7 +708,7 @@ Semantic error in 'declare-define-var-int-3.stan', line 2, column 2 to column 25
    -------------------------------------------------
 
 Ill-typed assignment statement.
-Expected the right hand side to have a type matching the the destination (array[] int).
+Expected the right hand side to have a type matching the destination (array[] int).
 Instead found type int.
 [exit 1]
   $ ../../../../install/default/bin/stanc declare-define-var-int-4.stan
@@ -723,7 +723,7 @@ Semantic error in 'declare-define-var-int-4.stan', line 5, column 2 to column 17
    -------------------------------------------------
 
 Ill-typed assignment statement.
-Expected the right hand side to have a type matching the the destination (int).
+Expected the right hand side to have a type matching the destination (int).
 Instead found type array[] int.
 [exit 1]
   $ ../../../../install/default/bin/stanc declare-define-var-matrix-1.stan
@@ -738,7 +738,7 @@ Semantic error in 'declare-define-var-matrix-1.stan', line 5, column 2 to column
    -------------------------------------------------
 
 Ill-typed assignment statement.
-Expected the right hand side to have a type matching the the destination (vector).
+Expected the right hand side to have a type matching the destination (vector).
 Instead found type matrix.
 [exit 1]
   $ ../../../../install/default/bin/stanc declare-define-var-vec-1.stan
@@ -753,7 +753,7 @@ Semantic error in 'declare-define-var-vec-1.stan', line 6, column 2 to column 23
    -------------------------------------------------
 
 Ill-typed assignment statement.
-Expected the right hand side to have a type matching the the destination (vector).
+Expected the right hand side to have a type matching the destination (vector).
 Instead found type row_vector.
 [exit 1]
   $ ../../../../install/default/bin/stanc err-bare-type-close-square.stan
@@ -1996,7 +1996,7 @@ Semantic error in 'matrix_expr_bad1.stan', line 2, column 2 to column 34:
    -------------------------------------------------
 
 Ill-typed assignment statement.
-Expected the right hand side to have a type matching the the destination (matrix).
+Expected the right hand side to have a type matching the destination (matrix).
 Instead found type row_vector.
 [exit 1]
   $ ../../../../install/default/bin/stanc matrix_expr_bad2.stan
@@ -2717,7 +2717,7 @@ Semantic error in 'row_vector_expr_bad1.stan', line 4, column 2 to column 29:
    -------------------------------------------------
 
 Ill-typed assignment statement.
-Expected the right hand side to have a type matching the the destination (row_vector).
+Expected the right hand side to have a type matching the destination (row_vector).
 Instead found type matrix.
 [exit 1]
   $ ../../../../install/default/bin/stanc row_vector_expr_bad2.stan
@@ -2962,7 +2962,7 @@ Semantic error in 'too-many-indices.stan', line 4, column 16 to column 31:
      5:  }
    -------------------------------------------------
 
-Too many indices. Expression only has 3 dimensions, but recieved 4 indices.
+Too many indices. Expression only has 3 dimensions, but received 4 indices.
 [exit 1]
   $ ../../../../install/default/bin/stanc truncation-bad-type1.stan
 Semantic error in 'truncation-bad-type1.stan', line 1, column 8 to column 37:
@@ -3134,7 +3134,7 @@ Semantic error in 'validate_array_expr_bad1.stan', line 6, column 2 to column 41
    -------------------------------------------------
 
 Ill-typed assignment statement.
-Expected the right hand side to have a type matching the the destination (array[] int).
+Expected the right hand side to have a type matching the destination (array[] int).
 Instead found type array[] real.
 [exit 1]
   $ ../../../../install/default/bin/stanc validate_array_expr_bad2.stan
@@ -3149,7 +3149,7 @@ Semantic error in 'validate_array_expr_bad2.stan', line 6, column 2 to column 24
    -------------------------------------------------
 
 Ill-typed assignment statement.
-Expected the right hand side to have a type matching the the destination (array[] int).
+Expected the right hand side to have a type matching the destination (array[] int).
 Instead found type array[,] int.
 [exit 1]
   $ ../../../../install/default/bin/stanc validate_array_expr_bad3.stan
@@ -3217,7 +3217,7 @@ Semantic error in 'validate_exponentiation_bad.stan', line 7, column 2 to column
    -------------------------------------------------
 
 Ill-typed assignment statement.
-Expected the right hand side to have a type matching the the destination (int).
+Expected the right hand side to have a type matching the destination (int).
 Instead found type real.
 [exit 1]
   $ ../../../../install/default/bin/stanc validate_int_expr2_bad1.stan
