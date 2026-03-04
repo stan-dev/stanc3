@@ -735,7 +735,7 @@ Warning in 'unbounded-sigma.stan', line 12, column 17 to column 24:
     (argument 2), but sigma_c was not constrained to be strictly positive.
 [exit 0]
   $ ../../../../../install/default/bin/stanc --warn-pedantic  uniform.stan
-Warning in 'uniform.stan', line 8, column 2 to column 20:
+Warning in 'uniform.stan', line 8, column 12 to column 34:
     Parameter a is given a uniform distribution. The uniform distribution is
     not recommended, for two reasons: (a) Except when there are logical or
     physical constraints, it is very unusual for you to be sure that a
