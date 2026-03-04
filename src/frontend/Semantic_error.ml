@@ -14,6 +14,17 @@ let quoted = SignatureMismatch.quoted
 let found_type ppf =
   Fmt.pf ppf "@ Instead found type %a." (actual_style UnsizedType.pp)
 
+let rec expected_types : UnsizedType.t Common.Nonempty_list.t Fmt.t =
+  let ust = expected_style UnsizedType.pp in
+  fun ppf l ->
+    match l with
+    | [t] -> ust ppf t
+    | [t1; t2] -> Fmt.pf ppf "%a or %a" ust t1 ust t2
+    | [t1; t2; t3] -> Fmt.pf ppf "%a,@ %a,@ or %a" ust t1 ust t2 ust t3
+    | t :: ts ->
+        Fmt.pf ppf "%a,@ %a" ust t expected_types
+          (ts |> Common.Nonempty_list.of_list_exn)
+
 module TypeError = struct
   type t =
     | IncorrectReturnType of UnsizedType.t * UnsizedType.t
@@ -413,7 +424,7 @@ module IdentifierError = struct
     | ReturningFnExpectedUndeclaredIdentFound of string * string option
     | NonReturningFnExpectedUndeclaredIdentFound of string * string option
     | UnnormalizedSuffix of string
-    | DuplicateArgNames
+    | DuplicateArgNames of string
 
   let did_you_mean : string option Fmt.t =
     Fmt.option @@ fun ppf s -> Fmt.pf ppf "@ Did you mean %a?" quoted s
@@ -447,8 +458,11 @@ module IdentifierError = struct
           "Identifier %a has a _lupdf/_lupmf suffix, which is only allowed for \
            functions."
           quoted name
-    | DuplicateArgNames ->
-        Fmt.pf ppf "All function arguments must have distinct identifiers."
+    | DuplicateArgNames name ->
+        Fmt.pf ppf
+          "@[All function arguments must have distinct identifiers.@ Argument \
+           %a is duplicated.@]"
+          quoted name
 end
 
 module ExpressionError = struct
@@ -508,12 +522,15 @@ module ExpressionError = struct
     | EmptyTuple ->
         Fmt.pf ppf "Tuple expressions must contain at least one element."
     | IntTooLarge ->
-        Fmt.pf ppf "Integer literal cannot be larger than 2_147_483_647."
+        Fmt.pf ppf "Integer literal cannot be larger than %a."
+          (expected_style Fmt.string)
+          "2_147_483_647"
     | TupleIndexInvalidIndex (ix_max, ix) ->
         Fmt.pf ppf
-          "Tried to access index %d for a tuple of length %d.@ Only indices \
-           between 1 and %d are valid."
-          ix ix_max ix_max
+          "Tried to access index %a for a tuple of length %a.@ Only indices \
+           between %a and %a are valid."
+          (actual_style Fmt.int) ix (expected_style Fmt.int) ix_max
+          (expected_style Fmt.int) 1 (expected_style Fmt.int) ix_max
     | TupleIndexNotTuple ut ->
         Fmt.pf ppf "Tried to index a non-tuple type. Expression has type %a."
           (actual_style UnsizedType.pp)
@@ -524,9 +541,11 @@ module ExpressionError = struct
           ut
     | NotIndexable (ut, nidcs) ->
         Fmt.pf ppf
-          "Too many indexes, expression dimensions=%d, indexes found=%d."
+          "Too many indices. Expression only has %a dimensions, but received \
+           %a indices."
+          (expected_style Fmt.int)
           (UnsizedType.count_dims ut)
-          nidcs
+          (actual_style Fmt.int) nidcs
     | IllTypedTernaryIf (UInt, ut, _) when UnsizedType.is_fun_type ut ->
         Fmt.pf ppf "Ternary expression cannot have a function type: %a"
           (actual_style UnsizedType.pp)
@@ -593,7 +612,7 @@ module StatementError = struct
     | NonDataVariableSizeDecl
     | NonIntBounds
     | ComplexTransform
-    | TransformedParamsInt
+    | IntegerParameter of bool
     | IllTypedAssignment of Operator.t * UnsizedType.t * UnsizedType.t
 
   let pp ppf = function
@@ -605,8 +624,8 @@ module StatementError = struct
           "Cannot assign to global variable %a declared in previous blocks."
           quoted name
     | CannotAssignFunction (name, ut) ->
-        Fmt.pf ppf "Cannot assign a function type \"%a\" to variable %a."
-          (SignatureMismatch.actual_style UnsizedType.pp)
+        Fmt.pf ppf "Cannot assign a function type (%a) to variable %a."
+          (actual_style UnsizedType.pp)
           ut quoted name
     | LValueMultiIndexing ->
         Fmt.pf ppf
@@ -631,8 +650,8 @@ module StatementError = struct
           ids
     | TargetPlusEqualsOutsideModelOrLogProb ->
         Fmt.string ppf
-          "Target can only be accessed in the model block or in definitions of \
-           functions with the suffix _lp."
+          "Target can only be accessed in the model block or in functions \
+           ending with _lp."
     | JacobianPlusEqualsNotAllowed ->
         Fmt.string ppf
           "The jacobian adjustment can only be applied in the transformed \
@@ -678,12 +697,15 @@ module StatementError = struct
         Fmt.pf ppf "Continue statements may only be used in loops."
     | ExpressionReturnOutsideReturningFn ->
         Fmt.pf ppf
-          "Expression return statements may only be used inside returning \
-           function definitions."
+          "Expression return statements may only be used inside non-%a \
+           definitions."
+          (actual_style Fmt.string) "void"
     | VoidReturnOutsideNonReturningFn ->
         Fmt.pf ppf
-          "Void return statements may only be used inside non-returning \
-           function definitions."
+          "Empty return statements may only be used inside %a function \
+           definitions."
+          (expected_style Fmt.string)
+          "void"
     | NonDataVariableSizeDecl ->
         Fmt.pf ppf
           "Non-data variables are not allowed in top level size declarations."
@@ -693,22 +715,33 @@ module StatementError = struct
           UInt found_type UReal
     | ComplexTransform ->
         Fmt.pf ppf "Complex types do not support transformations."
-    | TransformedParamsInt ->
-        Fmt.pf ppf "(Transformed) Parameters cannot be integers."
+    | IntegerParameter false -> Fmt.pf ppf "Parameters cannot be integers."
+    | IntegerParameter true ->
+        Fmt.pf ppf "Transformed parameters cannot be integers."
     | IllTypedAssignment (Operator.Equals, lt, rt) ->
         Fmt.pf ppf
-          "Ill-typed arguments supplied to assignment operator =:@ @[<v2>The \
-           left hand side has type@ @[%a@]@]@ @[<v2>and the right hand side \
-           has type@ @[%a@]@]"
-          UnsizedType.pp lt UnsizedType.pp rt
+          "@[Ill-typed assignment statement.@ Expected the right hand side to \
+           have a type matching the destination (%a).%a@]"
+          (expected_style UnsizedType.pp)
+          lt found_type rt
     | IllTypedAssignment (op, lt, rt) ->
-        Fmt.pf ppf
-          "@[<v>Ill-typed arguments supplied to assignment operator %a=:@ \
-           @[<v2>The left hand side has type@ @[%a@]@]@ @[<v2>and the right \
-           hand side has type@ @[%a@]@]@ Available signatures for given \
-           lhs:@]@ %a"
-          Operator.pp op UnsizedType.pp lt UnsizedType.pp rt
-          SignatureMismatch.pp_math_lib_assignmentoperator_sigs (lt, op)
+        let pp_expected_types ppf signatures =
+          match Common.Nonempty_list.of_list signatures with
+          | None ->
+              Fmt.pf ppf
+                "There are no valid right hand sizes for the given left hand \
+                 side (%a)."
+                (actual_style UnsizedType.pp)
+                lt
+          | Some args ->
+              Fmt.pf ppf
+                "For the given left hand side (%a), expected the right hand \
+                 side to have type@ %a.%a"
+                (expected_style UnsizedType.pp)
+                lt expected_types args found_type rt in
+        let sigs = SignatureMismatch.list_valid_assignmentoperator_rhs lt op in
+        Fmt.pf ppf "@[Ill-typed assignment operator %a=.@ %a@]" Operator.pp op
+          pp_expected_types sigs
 end
 
 type err =
@@ -969,8 +1002,8 @@ let non_data_variable_size_decl loc =
 let non_int_bounds loc = (loc, StatementError StatementError.NonIntBounds)
 let complex_transform loc = (loc, StatementError StatementError.ComplexTransform)
 
-let transformed_params_int loc =
-  (loc, StatementError StatementError.TransformedParamsInt)
+let no_int_params loc transformed =
+  (loc, StatementError (StatementError.IntegerParameter transformed))
 
 let fn_overload_rt_only loc name rt1 rt2 =
   (loc, TypeError (TypeError.FuncOverloadRtOnly (name, rt1, rt2)))
@@ -994,8 +1027,8 @@ let prob_density_non_real_variate loc ut_opt =
 let prob_mass_non_int_variate loc ut_opt =
   (loc, TypeError (TypeError.ProbMassNonIntVariate ut_opt))
 
-let duplicate_arg_names loc =
-  (loc, IdentifierError IdentifierError.DuplicateArgNames)
+let duplicate_arg_names loc name =
+  (loc, IdentifierError (IdentifierError.DuplicateArgNames name))
 
 let incompatible_return_types loc =
   (loc, TypeError TypeError.IncompatibleReturnType)

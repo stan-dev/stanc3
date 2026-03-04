@@ -67,11 +67,9 @@ Semantic error in 'array_expr_bad1.stan', line 2, column 2 to column 38:
      4:  model {
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator =:
-The left hand side has type
-  array[,] real
-and the right hand side has type
-  array[] int
+Ill-typed assignment statement.
+Expected the right hand side to have a type matching the destination (array[,] real).
+Instead found type array[] int.
 [exit 1]
   $ ../../../../install/default/bin/stanc array_expr_bad2.stan
 Semantic error in 'array_expr_bad2.stan', line 2, column 40 to column 41:
@@ -96,7 +94,7 @@ Semantic error in 'assigment-to-function-stanmath.stan', line 8, column 5 to col
     10:  }
    -------------------------------------------------
 
-Cannot assign a function type "<Stan Math function>" to variable "foo".
+Cannot assign a function type (<Stan Math function>) to variable "foo".
 [exit 1]
   $ ../../../../install/default/bin/stanc assign_invalid_lhs1.stan
 Syntax error in 'assign_invalid_lhs1.stan', line 2, column 2 to column 12, parsing error:
@@ -121,7 +119,7 @@ Syntax error in 'assign_invalid_lhs2.stan', line 2, column 3 to column 21, parsi
 Ill-formed assignment. Expected an assignable value but found a general expression.
 [exit 1]
   $ ../../../../install/default/bin/stanc assign_real_to_int.stan
-Semantic error in 'assign_real_to_int.stan', line 11, column 2 to column 3:
+Semantic error in 'assign_real_to_int.stan', line 11, column 2 to column 8:
    -------------------------------------------------
      9:    real b;
     10:    b = 3.2;
@@ -130,11 +128,9 @@ Semantic error in 'assign_real_to_int.stan', line 11, column 2 to column 3:
     12:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator =:
-The left hand side has type
-  int
-and the right hand side has type
-  real
+Ill-typed assignment statement.
+Expected the right hand side to have a type matching the destination (int).
+Instead found type real.
 [exit 1]
   $ ../../../../install/default/bin/stanc assignment-to-function.stan
 Semantic error in 'assignment-to-function.stan', line 12, column 5 to column 15:
@@ -147,7 +143,7 @@ Semantic error in 'assignment-to-function.stan', line 12, column 5 to column 15:
     14:  }
    -------------------------------------------------
 
-Cannot assign a function type "(int) => real" to variable "foo".
+Cannot assign a function type ((int) => real) to variable "foo".
 [exit 1]
   $ ../../../../install/default/bin/stanc bad_fundef_returntypes1.stan
 Semantic error in 'bad_fundef_returntypes1.stan', line 3, column 4 to column 15:
@@ -268,7 +264,7 @@ Available signatures:
 (Additional signatures omitted)
 [exit 1]
   $ ../../../../install/default/bin/stanc bad_var_assignment_type1.stan
-Semantic error in 'bad_var_assignment_type1.stan', line 4, column 2 to column 3:
+Semantic error in 'bad_var_assignment_type1.stan', line 4, column 2 to column 8:
    -------------------------------------------------
      2:    vector[5] y;
      3:    array[5] real z;
@@ -278,14 +274,12 @@ Semantic error in 'bad_var_assignment_type1.stan', line 4, column 2 to column 3:
      6:  parameters {
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator =:
-The left hand side has type
-  array[] real
-and the right hand side has type
-  vector
+Ill-typed assignment statement.
+Expected the right hand side to have a type matching the destination (array[] real).
+Instead found type vector.
 [exit 1]
   $ ../../../../install/default/bin/stanc bad_var_assignment_type2.stan
-Semantic error in 'bad_var_assignment_type2.stan', line 6, column 2 to column 3:
+Semantic error in 'bad_var_assignment_type2.stan', line 6, column 2 to column 8:
    -------------------------------------------------
      4:  transformed data {
      5:    array[5] real z;
@@ -295,14 +289,12 @@ Semantic error in 'bad_var_assignment_type2.stan', line 6, column 2 to column 3:
      8:  parameters {
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator =:
-The left hand side has type
-  array[] real
-and the right hand side has type
-  array[,] real
+Ill-typed assignment statement.
+Expected the right hand side to have a type matching the destination (array[] real).
+Instead found type array[,] real.
 [exit 1]
   $ ../../../../install/default/bin/stanc bad_var_assignment_vec_arr.stan
-Semantic error in 'bad_var_assignment_vec_arr.stan', line 10, column 2 to column 4:
+Semantic error in 'bad_var_assignment_vec_arr.stan', line 10, column 2 to column 35:
    -------------------------------------------------
      8:  
      9:    a1 = tail(v, K-1) - head(v, K-1);
@@ -312,11 +304,9 @@ Semantic error in 'bad_var_assignment_vec_arr.stan', line 10, column 2 to column
     12:  parameters {
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator =:
-The left hand side has type
-  array[] real
-and the right hand side has type
-  vector
+Ill-typed assignment statement.
+Expected the right hand side to have a type matching the destination (array[] real).
+Instead found type vector.
 [exit 1]
   $ ../../../../install/default/bin/stanc bad_while.stan
 Syntax error in 'bad_while.stan', line 3, column 24 to column 25, parsing error:
@@ -490,11 +480,9 @@ Semantic error in 'complex_mat_bad.stan', line 7, column 2 to column 18:
      9:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator =:
-The left hand side has type
-  real
-and the right hand side has type
-  complex
+Ill-typed assignment statement.
+Expected the right hand side to have a type matching the destination (real).
+Instead found type complex.
 [exit 1]
   $ ../../../../install/default/bin/stanc conditional_condition_bad_1.stan
 Semantic error in 'conditional_condition_bad_1.stan', line 6, column 6 to column 7:
@@ -632,11 +620,9 @@ Semantic error in 'declare-define-var-double-1.stan', line 5, column 2 to column
      7:  parameters {
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator =:
-The left hand side has type
-  real
-and the right hand side has type
-  array[] real
+Ill-typed assignment statement.
+Expected the right hand side to have a type matching the destination (real).
+Instead found type array[] real.
 [exit 1]
   $ ../../../../install/default/bin/stanc declare-define-var-double-2.stan
 Semantic error in 'declare-define-var-double-2.stan', line 5, column 2 to column 23:
@@ -649,11 +635,9 @@ Semantic error in 'declare-define-var-double-2.stan', line 5, column 2 to column
      7:  parameters {
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator =:
-The left hand side has type
-  vector
-and the right hand side has type
-  array[] real
+Ill-typed assignment statement.
+Expected the right hand side to have a type matching the destination (vector).
+Instead found type array[] real.
 [exit 1]
   $ ../../../../install/default/bin/stanc declare-define-var-double-3.stan
 Syntax error in 'declare-define-var-double-3.stan', line 3, column 10 to column 11, parsing error:
@@ -694,11 +678,9 @@ Semantic error in 'declare-define-var-int-1.stan', line 5, column 2 to column 17
      7:  parameters {
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator =:
-The left hand side has type
-  int
-and the right hand side has type
-  real
+Ill-typed assignment statement.
+Expected the right hand side to have a type matching the destination (int).
+Instead found type real.
 [exit 1]
   $ ../../../../install/default/bin/stanc declare-define-var-int-2.stan
 Semantic error in 'declare-define-var-int-2.stan', line 5, column 2 to column 18:
@@ -711,11 +693,9 @@ Semantic error in 'declare-define-var-int-2.stan', line 5, column 2 to column 18
      7:  parameters {
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator =:
-The left hand side has type
-  int
-and the right hand side has type
-  real
+Ill-typed assignment statement.
+Expected the right hand side to have a type matching the destination (int).
+Instead found type real.
 [exit 1]
   $ ../../../../install/default/bin/stanc declare-define-var-int-3.stan
 Semantic error in 'declare-define-var-int-3.stan', line 2, column 2 to column 25:
@@ -727,11 +707,9 @@ Semantic error in 'declare-define-var-int-3.stan', line 2, column 2 to column 25
      4:  parameters {
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator =:
-The left hand side has type
-  array[] int
-and the right hand side has type
-  int
+Ill-typed assignment statement.
+Expected the right hand side to have a type matching the destination (array[] int).
+Instead found type int.
 [exit 1]
   $ ../../../../install/default/bin/stanc declare-define-var-int-4.stan
 Semantic error in 'declare-define-var-int-4.stan', line 5, column 2 to column 17:
@@ -744,11 +722,9 @@ Semantic error in 'declare-define-var-int-4.stan', line 5, column 2 to column 17
      7:  parameters {
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator =:
-The left hand side has type
-  int
-and the right hand side has type
-  array[] int
+Ill-typed assignment statement.
+Expected the right hand side to have a type matching the destination (int).
+Instead found type array[] int.
 [exit 1]
   $ ../../../../install/default/bin/stanc declare-define-var-matrix-1.stan
 Semantic error in 'declare-define-var-matrix-1.stan', line 5, column 2 to column 23:
@@ -761,11 +737,9 @@ Semantic error in 'declare-define-var-matrix-1.stan', line 5, column 2 to column
      7:  parameters {
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator =:
-The left hand side has type
-  vector
-and the right hand side has type
-  matrix
+Ill-typed assignment statement.
+Expected the right hand side to have a type matching the destination (vector).
+Instead found type matrix.
 [exit 1]
   $ ../../../../install/default/bin/stanc declare-define-var-vec-1.stan
 Semantic error in 'declare-define-var-vec-1.stan', line 6, column 2 to column 23:
@@ -778,11 +752,9 @@ Semantic error in 'declare-define-var-vec-1.stan', line 6, column 2 to column 23
      8:  parameters {
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator =:
-The left hand side has type
-  vector
-and the right hand side has type
-  row_vector
+Ill-typed assignment statement.
+Expected the right hand side to have a type matching the destination (vector).
+Instead found type row_vector.
 [exit 1]
   $ ../../../../install/default/bin/stanc err-bare-type-close-square.stan
 Syntax error in 'err-bare-type-close-square.stan', line 2, column 9 to column 13, parsing error:
@@ -1289,7 +1261,7 @@ Semantic error in 'err-target-plusequals-scope.stan', line 4, column 2 to column
      6:  model {
    -------------------------------------------------
 
-Target can only be accessed in the model block or in definitions of functions with the suffix _lp.
+Target can only be accessed in the model block or in functions ending with _lp.
 [exit 1]
   $ ../../../../install/default/bin/stanc err-transformed-params.stan
 Syntax error in 'err-transformed-params.stan', line 4, column 0 to column 11, parsing error:
@@ -1449,7 +1421,7 @@ Semantic error in 'functions-bad11.stan', line 3, column 4 to column 20:
      5:    }
    -------------------------------------------------
 
-Target can only be accessed in the model block or in definitions of functions with the suffix _lp.
+Target can only be accessed in the model block or in functions ending with _lp.
 [exit 1]
   $ ../../../../install/default/bin/stanc functions-bad12.stan
 Semantic error in 'functions-bad12.stan', line 3, column 4 to column 33:
@@ -1462,7 +1434,7 @@ Semantic error in 'functions-bad12.stan', line 3, column 4 to column 33:
      5:    }
    -------------------------------------------------
 
-Target can only be accessed in the model block or in definitions of functions with the suffix _lp.
+Target can only be accessed in the model block or in functions ending with _lp.
 [exit 1]
   $ ../../../../install/default/bin/stanc functions-bad13.stan
 Semantic error in 'functions-bad13.stan', line 3, column 4 to column 5:
@@ -1649,7 +1621,7 @@ Semantic error in 'functions-bad23.stan', line 3, column 4 to column 11:
      5:  }
    -------------------------------------------------
 
-Void return statements may only be used inside non-returning function definitions.
+Empty return statements may only be used inside void function definitions.
 [exit 1]
   $ ../../../../install/default/bin/stanc functions-bad24.stan
 Semantic error in 'functions-bad24.stan', line 3, column 4 to column 13:
@@ -1662,7 +1634,7 @@ Semantic error in 'functions-bad24.stan', line 3, column 4 to column 13:
      5:  }
    -------------------------------------------------
 
-Expression return statements may only be used inside returning function definitions.
+Expression return statements may only be used inside non-void definitions.
 [exit 1]
   $ ../../../../install/default/bin/stanc functions-bad25.stan
 Syntax error in 'functions-bad25.stan', line 5, column 2 to column 3, parsing error:
@@ -1698,7 +1670,7 @@ Semantic error in 'functions-bad27.stan', line 10, column 2 to column 20:
     11:  }
    -------------------------------------------------
 
-Target can only be accessed in the model block or in definitions of functions with the suffix _lp.
+Target can only be accessed in the model block or in functions ending with _lp.
 [exit 1]
   $ ../../../../install/default/bin/stanc functions-bad28.stan
 Semantic error in 'functions-bad28.stan', line 5, column 2 to column 8:
@@ -1809,7 +1781,7 @@ Semantic error in 'functions-bad6.stan', line 8, column 6 to column 17:
     10:  parameters {
    -------------------------------------------------
 
-Target can only be accessed in the model block or in definitions of functions with the suffix _lp.
+Target can only be accessed in the model block or in functions ending with _lp.
 [exit 1]
   $ ../../../../install/default/bin/stanc functions-bad7.stan
 Semantic error in 'functions-bad7.stan', line 14, column 6 to column 20:
@@ -1821,7 +1793,7 @@ Semantic error in 'functions-bad7.stan', line 14, column 6 to column 20:
     15:  }
    -------------------------------------------------
 
-Target can only be accessed in the model block or in definitions of functions with the suffix _lp.
+Target can only be accessed in the model block or in functions ending with _lp.
 [exit 1]
   $ ../../../../install/default/bin/stanc functions-bad8.stan
 Semantic error in 'functions-bad8.stan', line 3, column 2 to column 18:
@@ -1857,7 +1829,7 @@ Semantic error in 'get-lp-target-data.stan', line 2, column 19 to column 27:
      4:  parameters {
    -------------------------------------------------
 
-Target can only be accessed in the model block or in definitions of functions with the suffix _lp.
+Target can only be accessed in the model block or in functions ending with _lp.
 [exit 1]
   $ ../../../../install/default/bin/stanc get_lp_bad_scope1.stan
 Semantic error in 'get_lp_bad_scope1.stan', line 3, column 6 to column 14:
@@ -1870,7 +1842,7 @@ Semantic error in 'get_lp_bad_scope1.stan', line 3, column 6 to column 14:
      5:  parameters {
    -------------------------------------------------
 
-Target can only be accessed in the model block or in definitions of functions with the suffix _lp.
+Target can only be accessed in the model block or in functions ending with _lp.
 [exit 1]
   $ ../../../../install/default/bin/stanc get_lp_bad_scope2.stan
 Semantic error in 'get_lp_bad_scope2.stan', line 3, column 15 to column 23:
@@ -1883,7 +1855,7 @@ Semantic error in 'get_lp_bad_scope2.stan', line 3, column 15 to column 23:
      5:  }
    -------------------------------------------------
 
-Target can only be accessed in the model block or in definitions of functions with the suffix _lp.
+Target can only be accessed in the model block or in functions ending with _lp.
 [exit 1]
   $ ../../../../install/default/bin/stanc jacobian_pe_bad.stan
 Semantic error in 'jacobian_pe_bad.stan', line 8, column 2 to column 18:
@@ -2023,11 +1995,9 @@ Semantic error in 'matrix_expr_bad1.stan', line 2, column 2 to column 34:
      4:  model {
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator =:
-The left hand side has type
-  matrix
-and the right hand side has type
-  row_vector
+Ill-typed assignment statement.
+Expected the right hand side to have a type matching the destination (matrix).
+Instead found type row_vector.
 [exit 1]
   $ ../../../../install/default/bin/stanc matrix_expr_bad2.stan
 Semantic error in 'matrix_expr_bad2.stan', line 2, column 34 to column 35:
@@ -2746,11 +2716,9 @@ Semantic error in 'row_vector_expr_bad1.stan', line 4, column 2 to column 29:
      6:  model {
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator =:
-The left hand side has type
-  row_vector
-and the right hand side has type
-  matrix
+Ill-typed assignment statement.
+Expected the right hand side to have a type matching the destination (row_vector).
+Instead found type matrix.
 [exit 1]
   $ ../../../../install/default/bin/stanc row_vector_expr_bad2.stan
 Semantic error in 'row_vector_expr_bad2.stan', line 5, column 25 to column 26:
@@ -2994,7 +2962,7 @@ Semantic error in 'too-many-indices.stan', line 4, column 16 to column 31:
      5:  }
    -------------------------------------------------
 
-Too many indexes, expression dimensions=3, indexes found=4.
+Too many indices. Expression only has 3 dimensions, but received 4 indices.
 [exit 1]
   $ ../../../../install/default/bin/stanc truncation-bad-type1.stan
 Semantic error in 'truncation-bad-type1.stan', line 1, column 8 to column 37:
@@ -3114,7 +3082,7 @@ Semantic error in 'validate_add_var_bad2.stan', line 2, column 2 to column 8:
      4:  }
    -------------------------------------------------
 
-(Transformed) Parameters cannot be integers.
+Parameters cannot be integers.
 [exit 1]
   $ ../../../../install/default/bin/stanc validate_allow_sample_bad1.stan
 Semantic error in 'validate_allow_sample_bad1.stan', line 3, column 2 to column 18:
@@ -3127,7 +3095,7 @@ Semantic error in 'validate_allow_sample_bad1.stan', line 3, column 2 to column 
      5:  parameters {
    -------------------------------------------------
 
-Target can only be accessed in the model block or in definitions of functions with the suffix _lp.
+Target can only be accessed in the model block or in functions ending with _lp.
 [exit 1]
   $ ../../../../install/default/bin/stanc validate_allow_sample_bad2.stan
 Semantic error in 'validate_allow_sample_bad2.stan', line 6, column 2 to column 18:
@@ -3140,7 +3108,7 @@ Semantic error in 'validate_allow_sample_bad2.stan', line 6, column 2 to column 
      8:  model {
    -------------------------------------------------
 
-Target can only be accessed in the model block or in definitions of functions with the suffix _lp.
+Target can only be accessed in the model block or in functions ending with _lp.
 [exit 1]
   $ ../../../../install/default/bin/stanc validate_allow_sample_bad3.stan
 Semantic error in 'validate_allow_sample_bad3.stan', line 9, column 2 to column 18:
@@ -3152,10 +3120,10 @@ Semantic error in 'validate_allow_sample_bad3.stan', line 9, column 2 to column 
     10:  }
    -------------------------------------------------
 
-Target can only be accessed in the model block or in definitions of functions with the suffix _lp.
+Target can only be accessed in the model block or in functions ending with _lp.
 [exit 1]
   $ ../../../../install/default/bin/stanc validate_array_expr_bad1.stan
-Semantic error in 'validate_array_expr_bad1.stan', line 6, column 2 to column 9:
+Semantic error in 'validate_array_expr_bad1.stan', line 6, column 2 to column 41:
    -------------------------------------------------
      4:  model {
      5:    array[5] int int_1_a;
@@ -3165,14 +3133,12 @@ Semantic error in 'validate_array_expr_bad1.stan', line 6, column 2 to column 9:
      8:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator =:
-The left hand side has type
-  array[] int
-and the right hand side has type
-  array[] real
+Ill-typed assignment statement.
+Expected the right hand side to have a type matching the destination (array[] int).
+Instead found type array[] real.
 [exit 1]
   $ ../../../../install/default/bin/stanc validate_array_expr_bad2.stan
-Semantic error in 'validate_array_expr_bad2.stan', line 6, column 2 to column 9:
+Semantic error in 'validate_array_expr_bad2.stan', line 6, column 2 to column 24:
    -------------------------------------------------
      4:  model {
      5:    array[3] int int_1_a;
@@ -3182,11 +3148,9 @@ Semantic error in 'validate_array_expr_bad2.stan', line 6, column 2 to column 9:
      8:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator =:
-The left hand side has type
-  array[] int
-and the right hand side has type
-  array[,] int
+Ill-typed assignment statement.
+Expected the right hand side to have a type matching the destination (array[] int).
+Instead found type array[,] int.
 [exit 1]
   $ ../../../../install/default/bin/stanc validate_array_expr_bad3.stan
 Syntax error in 'validate_array_expr_bad3.stan', line 6, column 14 to column 15, parsing error:
@@ -3242,7 +3206,7 @@ Semantic error in 'validate_conditional_op_bad-2.stan', line 5, column 7 to colu
 Type mismatch in ternary expression, expression when true is: real; expression when false is: array[,] row_vector
 [exit 1]
   $ ../../../../install/default/bin/stanc validate_exponentiation_bad.stan
-Semantic error in 'validate_exponentiation_bad.stan', line 7, column 2 to column 3:
+Semantic error in 'validate_exponentiation_bad.stan', line 7, column 2 to column 12:
    -------------------------------------------------
      5:  transformed data {
      6:    int z;
@@ -3252,11 +3216,9 @@ Semantic error in 'validate_exponentiation_bad.stan', line 7, column 2 to column
      9:  parameters {
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator =:
-The left hand side has type
-  int
-and the right hand side has type
-  real
+Ill-typed assignment statement.
+Expected the right hand side to have a type matching the destination (int).
+Instead found type real.
 [exit 1]
   $ ../../../../install/default/bin/stanc validate_int_expr2_bad1.stan
 Semantic error in 'validate_int_expr2_bad1.stan', line 5, column 12 to column 15:

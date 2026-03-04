@@ -497,25 +497,11 @@ let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
     (list ~sep:cut pp_signature)
     sigs pp_omitted ()
 
-let pp_math_lib_assignmentoperator_sigs ppf (lt, op) =
-  let signatures =
-    let errors =
-      Stan_math_signatures.make_assignmentoperator_stan_math_signatures op in
-    let errors =
-      List.filter
-        ~f:(fun (args, _, _, _) ->
-          Result.is_ok (check_same_type 0 lt (snd (List.hd_exn args))))
-        errors in
-    match List.split_n errors max_n_errors with
-    | [], _ -> None
-    | errors, [] -> Some (errors, false)
-    | errors, _ -> Some (errors, true) in
-  let pp_sigs ppf (signatures, omitted) =
-    Fmt.pf ppf "@[<v>%a%a@]"
-      (Fmt.list ~sep:Fmt.cut UnsizedType.pp_math_sig)
-      signatures
-      Fmt.(if' omitted pf)
-      "@ (Additional signatures omitted)" in
-  Fmt.pf ppf "%a"
-    (Fmt.option ~none:(Fmt.any "No matching signatures") pp_sigs)
-    signatures
+let list_valid_assignmentoperator_rhs lt op =
+  Stan_math_signatures.make_assignmentoperator_stan_math_signatures op
+  |> List.filter_map ~f:(fun (args, _, _, _) ->
+      match args with
+      | [(_, a); (_, b)] -> (
+          match check_same_type 0 lt a with Ok _ -> Some b | Error _ -> None)
+      | _ -> None)
+  |> List.dedup_and_sort ~compare:UnsizedType.compare
