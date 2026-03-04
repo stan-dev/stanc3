@@ -9,7 +9,7 @@ Semantic error in 'elt_divide_equals_prim.stan', line 4, column 2 to column 10:
    -------------------------------------------------
 
 Ill-typed assignment operator ./=.
-There are no valid right hand sizes for the given left hand side (real).
+There are no valid right hand sides for the given left hand side (real).
 [exit 1]
   $ ../../../../../install/default/bin/stanc elt_times_equals_prim.stan
 Semantic error in 'elt_times_equals_prim.stan', line 4, column 2 to column 10:
@@ -22,7 +22,7 @@ Semantic error in 'elt_times_equals_prim.stan', line 4, column 2 to column 10:
    -------------------------------------------------
 
 Ill-typed assignment operator .*=.
-There are no valid right hand sizes for the given left hand side (real).
+There are no valid right hand sides for the given left hand side (real).
 [exit 1]
   $ ../../../../../install/default/bin/stanc plus_equals_bad_init.stan
 Syntax error in 'plus_equals_bad_init.stan', line 3, column 20 to column 22, parsing error:
@@ -60,7 +60,7 @@ Semantic error in 'plus_equals_bad_var_lhs.stan', line 3, column 4 to column 14:
    -------------------------------------------------
 
 Ill-typed assignment operator +=.
-There are no valid right hand sizes for the given left hand side ((real) => real).
+There are no valid right hand sides for the given left hand side ((real) => real).
 [exit 1]
   $ ../../../../../install/default/bin/stanc plus_equals_bad_var_lhs2.stan
 Semantic error in 'plus_equals_bad_var_lhs2.stan', line 6, column 2 to column 3:
@@ -98,7 +98,7 @@ Semantic error in 'plus_equals_matrix_array.stan', line 7, column 2 to column 9:
    -------------------------------------------------
 
 Ill-typed assignment operator +=.
-There are no valid right hand sizes for the given left hand side (array[] matrix).
+There are no valid right hand sides for the given left hand side (array[] matrix).
 [exit 1]
   $ ../../../../../install/default/bin/stanc plus_equals_matrix_array2.stan
 Semantic error in 'plus_equals_matrix_array2.stan', line 7, column 2 to column 17:
@@ -138,7 +138,7 @@ Semantic error in 'plus_equals_prim_array.stan', line 5, column 2 to column 9:
    -------------------------------------------------
 
 Ill-typed assignment operator +=.
-There are no valid right hand sizes for the given left hand side (array[] real).
+There are no valid right hand sides for the given left hand side (array[] real).
 [exit 1]
   $ ../../../../../install/default/bin/stanc plus_equals_row_vec_array.stan
 Semantic error in 'plus_equals_row_vec_array.stan', line 5, column 2 to column 9:
@@ -151,7 +151,7 @@ Semantic error in 'plus_equals_row_vec_array.stan', line 5, column 2 to column 9
    -------------------------------------------------
 
 Ill-typed assignment operator +=.
-There are no valid right hand sizes for the given left hand side (array[] row_vector).
+There are no valid right hand sides for the given left hand side (array[] row_vector).
 [exit 1]
   $ ../../../../../install/default/bin/stanc plus_equals_sliced.stan
 Semantic error in 'plus_equals_sliced.stan', line 6, column 4 to column 27:
@@ -207,7 +207,7 @@ Semantic error in 'plus_equals_vector_array.stan', line 5, column 2 to column 9:
    -------------------------------------------------
 
 Ill-typed assignment operator +=.
-There are no valid right hand sizes for the given left hand side (array[] vector).
+There are no valid right hand sides for the given left hand side (array[] vector).
 [exit 1]
   $ ../../../../../install/default/bin/stanc times_equals_matrix_array.stan
 Semantic error in 'times_equals_matrix_array.stan', line 5, column 2 to column 19:

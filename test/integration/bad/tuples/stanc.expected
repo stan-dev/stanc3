@@ -95,7 +95,7 @@ Semantic error in 'bad_addition.stan', line 3, column 2 to column 9:
    -------------------------------------------------
 
 Ill-typed assignment operator +=.
-There are no valid right hand sizes for the given left hand side (tuple(
+There are no valid right hand sides for the given left hand side (tuple(
 real, real)).
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_unpack_duplicates.stan

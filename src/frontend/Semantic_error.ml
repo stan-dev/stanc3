@@ -729,7 +729,7 @@ module StatementError = struct
           match Common.Nonempty_list.of_list signatures with
           | None ->
               Fmt.pf ppf
-                "There are no valid right hand sizes for the given left hand \
+                "There are no valid right hand sides for the given left hand \
                  side (%a)."
                 (actual_style UnsizedType.pp)
                 lt
