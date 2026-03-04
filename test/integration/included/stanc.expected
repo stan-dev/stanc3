@@ -177,7 +177,7 @@ Semantic error in '../included/incl_stanc_helper_error_spread_over_files.stan', 
            ^
    -------------------------------------------------
 
-(Transformed) Parameters cannot be integers.
+Parameters cannot be integers.
 [exit 1]
   $ ../../../../install/default/bin/stanc --include-paths="../included"  stanc_helper_with_bad_include_include_error.stan
 Syntax error in '../included/incl-err.stan', line 2, column 2, included from
@@ -226,7 +226,7 @@ Semantic error in '../included/sem-err.stan', line 2, column 2, included from
            ^
    -------------------------------------------------
 
-(Transformed) Parameters cannot be integers.
+Parameters cannot be integers.
 [exit 1]
   $ ../../../../install/default/bin/stanc --include-paths="../included"  stanc_helper_with_good_include.stan
 [exit 0]

@@ -82,10 +82,10 @@ Semantic error in 'bad-index5.stan', line 3, column 11 to column 18:
      4:  }
    -------------------------------------------------
 
-Too many indexes, expression dimensions=0, indexes found=1.
+Too many indices. Expression only has 0 dimensions, but recieved 1 indices.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_addition.stan
-Semantic error in 'bad_addition.stan', line 3, column 2 to column 3:
+Semantic error in 'bad_addition.stan', line 3, column 2 to column 9:
    -------------------------------------------------
      1:  model {
      2:    tuple(real, real) z;
@@ -94,13 +94,9 @@ Semantic error in 'bad_addition.stan', line 3, column 2 to column 3:
      4:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator +=:
-The left hand side has type
-  tuple(real, real)
-and the right hand side has type
-  int
-Available signatures for given lhs:
-No matching signatures
+Ill-typed assignment operator +=.
+There are no valid right hand sizes for the given left hand side (tuple(
+real, real)).
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_unpack_duplicates.stan
 Semantic error in 'bad_unpack_duplicates.stan', line 5, column 2 to column 14:
@@ -126,7 +122,7 @@ Semantic error in 'bad_unpack_fn_type.stan', line 4, column 4 to column 24:
      6:    }
    -------------------------------------------------
 
-Cannot assign a function type "() => int" to variable "foo".
+Cannot assign a function type (() => int) to variable "foo".
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_unpack_global.stan
 Semantic error in 'bad_unpack_global.stan', line 8, column 3 to column 4:
@@ -219,7 +215,7 @@ The same variable cannot be both assigned to and read from on the left hand side
   x2
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_unpack_shape.stan
-Semantic error in 'bad_unpack_shape.stan', line 4, column 2 to column 8:
+Semantic error in 'bad_unpack_shape.stan', line 4, column 2 to column 21:
    -------------------------------------------------
      2:    int x = 3;
      3:    int y = 4;
@@ -228,11 +224,9 @@ Semantic error in 'bad_unpack_shape.stan', line 4, column 2 to column 8:
      5:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator =:
-The left hand side has type
-  tuple(int, int)
-and the right hand side has type
-  tuple(int, int, int)
+Ill-typed assignment statement.
+Expected the right hand side to have a type matching the the destination (tuple(
+int, int)). Instead found type tuple(int, int, int).
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_unpack_tuple_overlap1.stan
 Semantic error in 'bad_unpack_tuple_overlap1.stan', line 3, column 2 to column 16:
@@ -261,20 +255,18 @@ The same value cannot be assigned to multiple times in one assignment:
   tup[...].1
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_unpack_types.stan
-Semantic error in 'bad_unpack_types.stan', line 4, column 6 to column 7:
+Semantic error in 'bad_unpack_types.stan', line 4, column 2 to column 18:
    -------------------------------------------------
      2:    real x = 3.0;
      3:    int y = 4;
      4:    (x, y) = (y, x);
-               ^
+           ^
      5:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator =:
-The left hand side has type
-  int
-and the right hand side has type
-  real
+Ill-typed assignment statement.
+Expected the right hand side to have a type matching the the destination (int).
+Instead found type real.
 [exit 1]
   $ ../../../../../install/default/bin/stanc empty_tuple_expr.stan
 Syntax error in 'empty_tuple_expr.stan', line 2, column 25 to column 26, parsing error:
@@ -309,7 +301,7 @@ Semantic error in 'fn-assign.stan', line 4, column 4 to column 17:
      6:    }
    -------------------------------------------------
 
-Cannot assign a function type "() => int" to variable "x".
+Cannot assign a function type (() => int) to variable "x".
 [exit 1]
   $ ../../../../../install/default/bin/stanc function-mismatch1.stan
 Semantic error in 'function-mismatch1.stan', line 8, column 2 to column 17:

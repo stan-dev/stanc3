@@ -1250,7 +1250,6 @@ let check_assignment_operator loc assop lhs rhs =
     | LTuplePack {lvals; _} ->
         UnsizedType.UTuple (List.map ~f:type_of_lvalue lvals) in
   let err lhs op rhs =
-    let loc = Ast.get_loc_lvalue_pack lhs in
     Semantic_error.illtyped_assignment loc op (type_of_lvalue lhs) rhs |> error
   in
   match assop with
@@ -1790,7 +1789,7 @@ and verify_transformed_param_ty loc cf is_global unsized_ty =
     is_global
     && (cf.current_block = Param || cf.current_block = TParam)
     && UnsizedType.contains_int unsized_ty
-  then Semantic_error.transformed_params_int loc |> error
+  then Semantic_error.no_int_params loc (cf.current_block = TParam) |> error
 
 and check_sizedtype cf tenv sizedty =
   let check e msg = check_expression_of_int_type cf tenv e msg in
@@ -1971,9 +1970,9 @@ and verify_pmf_fundef_first_arg_ty loc id arg_tys =
     | _ -> Semantic_error.prob_mass_non_int_variate loc rt |> error
 
 and verify_fundef_distinct_arg_ids loc arg_names =
-  let dup_exists l =
-    List.find_a_dup ~compare:String.compare l |> Option.is_some in
-  if dup_exists arg_names then Semantic_error.duplicate_arg_names loc |> error
+  match List.find_a_dup ~compare:String.compare arg_names with
+  | None -> ()
+  | Some dup -> Semantic_error.duplicate_arg_names loc dup |> error
 
 and verify_fundef_return_tys loc return_type body =
   if

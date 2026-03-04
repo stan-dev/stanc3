@@ -96,8 +96,8 @@ val pp_signature_mismatch :
        * bool)
   -> unit
 
-val pp_math_lib_assignmentoperator_sigs :
-  Format.formatter -> UnsizedType.t * Operator.t -> unit
+val list_valid_assignmentoperator_rhs :
+  UnsizedType.t -> Operator.t -> UnsizedType.t list
 
 val compare_errors : function_mismatch -> function_mismatch -> int
 val compare_match_results : match_result -> match_result -> int

@@ -38,7 +38,7 @@ Semantic error in 'bad11.stan', line 2, column 2 to column 12:
      4:  model {
    -------------------------------------------------
 
-(Transformed) Parameters cannot be integers.
+Parameters cannot be integers.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad12.stan
 Semantic error in 'bad12.stan', line 2, column 2 to column 6:
@@ -174,7 +174,7 @@ Semantic error in 'bad9.stan', line 5, column 3 to column 9:
      7:  }
    -------------------------------------------------
 
-(Transformed) Parameters cannot be integers.
+Parameters cannot be integers.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_bar.stan
 Semantic error in 'bad_bar.stan', line 3, column 9 to column 28:
@@ -666,7 +666,7 @@ Semantic error in 'tparam_array_int.stan', line 2, column 2 to column 21:
      3:  }
    -------------------------------------------------
 
-(Transformed) Parameters cannot be integers.
+Transformed Parameters cannot be integers.
 [exit 1]
   $ ../../../../../install/default/bin/stanc tparam_tuple_int.stan
 Semantic error in 'tparam_tuple_int.stan', line 2, column 2 to column 21:
@@ -677,7 +677,7 @@ Semantic error in 'tparam_tuple_int.stan', line 2, column 2 to column 21:
      3:  }
    -------------------------------------------------
 
-(Transformed) Parameters cannot be integers.
+Transformed Parameters cannot be integers.
 [exit 1]
   $ ../../../../../install/default/bin/stanc unterminated_comment.stan
 Syntax error in 'unterminated_comment.stan', line 4, column 0, lexing error:
