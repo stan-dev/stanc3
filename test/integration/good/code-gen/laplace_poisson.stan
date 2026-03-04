@@ -37,7 +37,7 @@ model {
 }
 generated quantities {
 
-real log_lik_sum = laplace_marginal_tol(poisson_re_log_ll, (y, offsett + alpha + X*beta), cov_fun, (sigmaz, N),
-              (rep_vector(0.0, N), tolerance, max_num_steps, hessian_block_size,
+real log_lik_sum = laplace_marginal_tol(poisson_re_log_ll, (y, offsett + alpha + X*beta), hessian_block_size, cov_fun, (sigmaz, N),
+              (rep_vector(0.0, N), tolerance, max_num_steps,
                solver, max_steps_line_search, allow_fallthrough));
 }

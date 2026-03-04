@@ -49,6 +49,8 @@ module TypeError = struct
     | IllTypedLaplaceMarginal of string * bool * UnsizedType.argumentlist
     | LaplaceCompatibilityIssue of string
     | IlltypedLaplaceTooMany of string * int
+    | IlltypedLaplaceHessianBlockSize of
+        string * (UnsizedType.autodifftype * UnsizedType.t) option
     | IlltypedLaplaceTolArgs of string * SignatureMismatch.function_mismatch
     | AmbiguousFunctionPromotion of
         string
@@ -80,13 +82,37 @@ module TypeError = struct
     | 1 -> "first element of the control parameter tuple (initial guess)"
     | 2 -> "second element of the control parameter tuple (tolerance)"
     | 3 -> "third element of the control parameter tuple (max_num_steps)"
-    | 4 -> "fourth element of the control parameter tuple (hessian_block_size)"
-    | 5 -> "fifth element of the control parameter tuple (solver)"
-    | 6 ->
-        "sixth element of the control parameter tuple (max_steps_line_search)"
-    | 7 -> "seventh element of the control parameter tuple (allow_fallthrough)"
+    | 4 -> "fourth element of the control parameter tuple (solver)"
+    | 5 ->
+        "fifth element of the control parameter tuple (max_steps_line_search)"
+    | 6 -> "sixth element of the control parameter tuple (allow_fallthrough)"
     | n ->
         Fmt.str "%a element of the control parameter tuple" (Fmt.ordinal ()) n
+
+  let generic_laplace_usage info ppf (name, supplied) =
+    let req = Stan_math_signatures.laplace_helper_param_types name in
+    let is_helper = not @@ List.is_empty req in
+    let pp_lik_args ppf =
+      if is_helper then Fmt.(list ~sep:comma UnsizedType.pp_fun_arg) ppf req
+      else Fmt.pf ppf "(vector, T_l%t) => real,@ tuple(T_l%t)" ellipsis ellipsis
+    in
+    let pp_laplace_tols ppf =
+      if String.is_substring ~substring:"_tol" name then
+        Fmt.pf ppf ", %a"
+          Fmt.(list ~sep:comma UnsizedType.pp_fun_arg)
+          Stan_math_signatures.laplace_tolerance_argument_types in
+    let pp_supplied_tys ppf =
+      if List.is_empty supplied then Fmt.nop ppf ()
+      else
+        Fmt.pf ppf "@ However, we received the types:@ @[<hov 2>(%a)@]"
+          Fmt.(list ~sep:comma UnsizedType.pp_fun_arg)
+          supplied in
+    Fmt.pf ppf
+      "@[<v>Ill-typed arguments supplied to function %a.@ The valid signature \
+       of this function is@ @[<hov 2>%s(%t,@ data int,@ (T_k%t) => matrix,@ \
+       tuple(T_k%t)%t)@]%t@ @[%a@]@]"
+      quoted name name pp_lik_args ellipsis ellipsis pp_laplace_tols
+      pp_supplied_tys info ()
 
   let rec expected_types : UnsizedType.t Common.Nonempty_list.t Fmt.t =
     let ust = expected_style UnsizedType.pp in
@@ -193,39 +219,24 @@ module TypeError = struct
           details
           Fmt.(list ~sep:comma (expected_style UnsizedType.pp_fun_arg))
           expected
-    | IllTypedLaplaceMarginal (name, early, supplied) ->
-        let req = Stan_math_signatures.laplace_helper_param_types name in
-        let is_helper = not @@ List.is_empty req in
-        let info =
-          if early then
+    | IllTypedLaplaceMarginal (name, true, supplied) ->
+        let info ppf () =
+          Fmt.text ppf
             "We were unable to start more in-depth checking. Please ensure you \
              are passing enough arguments and that the first argument is a \
-             function."
-          else
-            let n = if is_helper then List.length req else 2 in
-            Fmt.str
-              "Typechecking failed after checking the first %d arguments. \
-               Please ensure you are passing enough arguments and that the %a \
-               is a function."
-              n (Fmt.ordinal ()) (n + 1) in
-        let pp_lik_args ppf =
-          if is_helper then Fmt.(list ~sep:comma UnsizedType.pp_fun_arg) ppf req
-          else
-            Fmt.pf ppf "(vector, T_l%t) => real,@ tuple(T_l%t)" ellipsis
-              ellipsis in
-        let pp_laplace_tols ppf =
-          if String.is_substring ~substring:"_tol" name then
-            Fmt.pf ppf ", %a"
-              Fmt.(list ~sep:comma UnsizedType.pp_fun_arg)
-              Stan_math_signatures.laplace_tolerance_argument_types in
-        Fmt.pf ppf
-          "@[<v>Ill-typed arguments supplied to function %a.@ The valid \
-           signature of this function is@ @[<hov 2>%s(%t,@ vector,@ (T_k%t) => \
-           matrix,@ tuple(T_k%t)%t)@]@ However, we received the types:@ @[<hov \
-           2>(%a)@]@ @[%a@]@]"
-          quoted name name pp_lik_args ellipsis ellipsis pp_laplace_tols
-          Fmt.(list ~sep:comma UnsizedType.pp_fun_arg)
-          supplied Fmt.text info
+             function." in
+        generic_laplace_usage info ppf (name, supplied)
+    | IllTypedLaplaceMarginal (name, false, supplied) ->
+        let req = Stan_math_signatures.laplace_helper_param_types name in
+        let is_helper = not @@ List.is_empty req in
+        let info ppf () =
+          let n = (if is_helper then List.length req else 2) + 1 in
+          Fmt.pf ppf
+            "Typechecking failed after checking the first %d arguments.@ \
+             Please ensure you are passing enough arguments and that the %a is \
+             a function."
+            n (Fmt.ordinal ()) (n + 1) in
+        generic_laplace_usage info ppf (name, supplied)
     | LaplaceCompatibilityIssue banned_function ->
         Fmt.pf ppf
           "The function %a, called by this likelihood function,@ does not \
@@ -239,6 +250,28 @@ module TypeError = struct
              "Only a single tuple of control parameters is expected."
            else if n_args = 1 then "Did you mean to call the _tol version?"
            else "Did you mean to call the _tol version with a tuple of these?")
+    | IlltypedLaplaceHessianBlockSize (name, None) ->
+        let info ppf () =
+          Fmt.pf ppf
+            "@[<hov>Missing the hessian block size (data-only %a) and \
+             remaining arguments.@]"
+            (expected_style UnsizedType.pp)
+            UInt in
+        generic_laplace_usage info ppf (name, [])
+    | IlltypedLaplaceHessianBlockSize (name, Some (DataOnly, ty)) ->
+        Fmt.pf ppf
+          "@[<hov>The hessian block size argument to %a must be a data-only \
+           %a.%a@]"
+          quoted name
+          (expected_style UnsizedType.pp)
+          UInt found_type ty
+    | IlltypedLaplaceHessianBlockSize (name, Some (_, ty)) ->
+        Fmt.pf ppf
+          "@[<hov>The hessian block size argument to %a must be a data-only \
+           %a.%a@ %a@]"
+          quoted name
+          (expected_style UnsizedType.pp)
+          UInt found_type ty SignatureMismatch.data_only_msg ()
     | IlltypedLaplaceTolArgs (name, ArgNumMismatch (_, 0)) ->
         Fmt.pf ppf
           "Missing control parameter tuple at the end of the call to %a.@ \
@@ -776,6 +809,9 @@ let laplace_compatibility loc banned_function =
 
 let illtyped_laplace_extra_args loc name args =
   (loc, TypeError (TypeError.IlltypedLaplaceTooMany (name, args)))
+
+let illtyped_laplace_hessian_block_size_arg loc name arg_ty =
+  (loc, TypeError (TypeError.IlltypedLaplaceHessianBlockSize (name, arg_ty)))
 
 let illtyped_laplace_tolerance_args loc name mismatch =
   (loc, TypeError (TypeError.IlltypedLaplaceTolArgs (name, mismatch)))

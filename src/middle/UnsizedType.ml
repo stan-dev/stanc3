@@ -65,6 +65,8 @@ let rec wind_array_type = function
   | typ, 0 -> typ
   | typ, n -> wind_array_type (UArray typ, n - 1)
 
+let is_fun_type = function UFun _ | UMathLibraryFunction -> true | _ -> false
+
 let rec pp ppf = function
   | UInt -> Fmt.string ppf "int"
   | UReal -> Fmt.string ppf "real"
@@ -91,7 +93,10 @@ let rec pp ppf = function
 
 and pp_fun_arg ppf (ad_ty, unsized_ty) =
   let open Fmt in
-  let pp_data = if' (equal_autodifftype ad_ty DataOnly) (any "data ") in
+  let pp_data =
+    if'
+      (equal_autodifftype ad_ty DataOnly && not (is_fun_type unsized_ty))
+      (any "data ") in
   (pp_data ++ pp) ppf unsized_ty
 
 and pp_returntype ppf = function
@@ -235,8 +240,6 @@ let is_eigen_type ut =
    |UComplexMatrix ->
       true
   | _ -> false
-
-let is_fun_type = function UFun _ | UMathLibraryFunction -> true | _ -> false
 
 (** Detect if type contains an integer *)
 let rec contains_int ut =

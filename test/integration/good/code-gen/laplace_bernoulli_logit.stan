@@ -41,36 +41,36 @@ model {
   alpha ~ inv_gamma(alpha_location_prior, alpha_scale_prior);
   eta ~ normal(0, 1);
 
-  y ~ laplace_marginal_bernoulli_logit(y, prior_mean, K_function,
+  y ~ laplace_marginal_bernoulli_logit(y, prior_mean, hessian_block_size, K_function,
         (x, n_obs, alpha, rho));
 
-  target += laplace_marginal_bernoulli_logit_lpmf(y | y, prior_mean, K_function,
+  target += laplace_marginal_bernoulli_logit_lpmf(y | y, prior_mean, hessian_block_size, K_function,
               (x, n_obs, alpha, rho));
 
-  target += laplace_marginal_bernoulli_logit_lupmf(y | y, prior_mean, K_function,
+  target += laplace_marginal_bernoulli_logit_lupmf(y | y, prior_mean, hessian_block_size, K_function,
               (x, n_obs, alpha, rho));
 
-  y ~ laplace_marginal_tol_bernoulli_logit(y, prior_mean, K_function,
+  y ~ laplace_marginal_tol_bernoulli_logit(y, prior_mean, hessian_block_size, K_function,
         (x, n_obs, alpha, rho),
-        (theta_0, tolerance, max_num_steps, hessian_block_size,
+        (theta_0, tolerance, max_num_steps,
         solver, max_steps_line_search, allow_fallthrough));
 
-  target += laplace_marginal_tol_bernoulli_logit_lpmf(y | y, prior_mean, K_function,
+  target += laplace_marginal_tol_bernoulli_logit_lpmf(y | y, prior_mean, hessian_block_size, K_function,
               (x, n_obs, alpha, rho),
-              (theta_0, tolerance, max_num_steps, hessian_block_size,
+              (theta_0, tolerance, max_num_steps,
               solver, max_steps_line_search, allow_fallthrough));
 
-  target += laplace_marginal_tol_bernoulli_logit_lupmf(y | y, prior_mean,
+  target += laplace_marginal_tol_bernoulli_logit_lupmf(y | y, prior_mean, hessian_block_size,
               K_function, (x, n_obs, alpha, rho),
-              (theta_0, tolerance, max_num_steps, hessian_block_size,
+              (theta_0, tolerance, max_num_steps,
               solver, max_steps_line_search, allow_fallthrough));
 }
 generated quantities {
-  vector[n_obs] theta = laplace_latent_bernoulli_logit_rng(y, y, prior_mean,
+  vector[n_obs] theta = laplace_latent_bernoulli_logit_rng(y, y, prior_mean, hessian_block_size,
                             K_function, (x, n_obs, alpha, rho));
 
-  vector[n_obs] theta2 = laplace_latent_tol_bernoulli_logit_rng(y, y, prior_mean,
+  vector[n_obs] theta2 = laplace_latent_tol_bernoulli_logit_rng(y, y, prior_mean, hessian_block_size,
                            K_function, (x, n_obs, alpha, rho),
-                          (theta_0, tolerance, max_num_steps, hessian_block_size,
+                          (theta_0, tolerance, max_num_steps,
                           solver, max_steps_line_search, allow_fallthrough));
 }

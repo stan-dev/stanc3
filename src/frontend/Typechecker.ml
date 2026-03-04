@@ -864,6 +864,23 @@ and check_laplace_fn ~is_cond_dist loc cf tenv id tes =
               (UnsizedType.ReturnType UReal) in
           ([lik_fun; lik_tupl], tes)
       | _ -> generic_failure ~early:true () in
+  (* check hessian block size *)
+  let hbs_arg, rest =
+    let loc =
+      match List.last lik_args with
+      | Some e -> {e.emeta.loc with begin_loc= e.emeta.loc.end_loc}
+      | None -> loc in
+    match rest with
+    | hbs :: rest ->
+        let hbs_ty = arg_type hbs in
+        if hbs_ty <> UnsizedType.(DataOnly, UInt) then
+          Semantic_error.illtyped_laplace_hessian_block_size_arg hbs.emeta.loc
+            id.name (Some hbs_ty)
+          |> error
+        else (hbs, rest)
+    | _ ->
+        Semantic_error.illtyped_laplace_hessian_block_size_arg loc id.name None
+        |> error in
   (* Check the remaining arguments: initial guess, covariance, and tolerances *)
   match rest with
   | {expr= Variable cov_fun; _} :: cov_tupl :: control_args ->
@@ -875,7 +892,8 @@ and check_laplace_fn ~is_cond_dist loc cf tenv id tes =
          probably require two more calls to
          [check_function_callable_with_tuple] *)
       verify_laplace_control_args loc id control_args;
-      let args = lik_args @ (cov_fun_type :: cov_tupl :: control_args) in
+      let args =
+        lik_args @ (hbs_arg :: cov_fun_type :: cov_tupl :: control_args) in
       let return_type =
         if String.is_suffix id.name ~suffix:"_rng" then UnsizedType.UVector
         else UnsizedType.UReal in
