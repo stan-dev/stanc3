@@ -363,12 +363,12 @@ Available signatures:
   The 5th argument must be real but got vector
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_non_var_arg.stan
-Semantic error in 'bad_non_var_arg.stan', line 11, column 12 to column 34:
+Semantic error in 'bad_non_var_arg.stan', line 11, column 23 to column 26:
    -------------------------------------------------
      9:  }
     10:  model {
     11:    target += reduce_sum(0.0, y1, 1);
-                     ^
+                                ^
     12:  }
     13:  
    -------------------------------------------------

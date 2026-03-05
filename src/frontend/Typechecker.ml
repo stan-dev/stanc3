@@ -824,6 +824,7 @@ and check_reduce_sum ~is_cond_dist loc cf tenv id tes =
   | _ ->
       let expected_args, err =
         basic_mismatch () |> Result.error |> Option.value_exn in
+      let loc = specialize_loc ~loc err tes in
       Semantic_error.illtyped_reduce_sum loc id.name
         (List.map ~f:type_of_expr_typed tes)
         expected_args err
@@ -944,6 +945,7 @@ and check_variadic ~is_cond_dist loc cf tenv id tes =
         SignatureMismatch.check_variadic_args ~allow_lpdf:false control_args
           required_fn_args required_fn_rt (get_arg_types tes)
         |> Result.error |> Option.value_exn in
+      let loc = specialize_loc ~loc err tes in
       Semantic_error.illtyped_variadic loc id.name
         (List.map ~f:type_of_expr_typed tes)
         expected_args required_fn_rt err

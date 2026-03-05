@@ -162,12 +162,12 @@ Available signatures:
   The 10th argument must be real but got array[] real
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_non_var_arg.stan
-Semantic error in 'bad_non_var_arg.stan', line 20, column 10 to column 46:
+Semantic error in 'bad_non_var_arg.stan', line 20, column 14 to column 17:
    -------------------------------------------------
     18:  transformed parameters {
     19:    array[4] vector[3] y_hat;
     20:    y_hat = dae(0.0, yy0, yp0, t0, ts, theta, x);
-                   ^
+                       ^
     21:  }
     22:  model {
    -------------------------------------------------
