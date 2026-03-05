@@ -265,8 +265,9 @@ let list_param_dependant_fundefs_cf (mir : Program.Typed.t) :
 let list_non_one_priors (fg : factor_graph) (mir : Program.Typed.t) :
     (string * int * Location_span.t) Set.Poly.t =
   (* Use the factor graph definition of priors, which treats a neighboring
-     factor as a prior for parameter P if it has no connection to the data
-     except through P *)
+     factor as a prior for parameter P if (1) it has no connection to the data
+     except through P, and (2) for distribution factors, P is the distribution
+     subject (first argument) rather than merely a distribution argument *)
   let priors = list_priors ~factor_graph:(Some fg) mir in
   let prior_set =
     Map.Poly.fold priors ~init:Set.Poly.empty
