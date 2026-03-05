@@ -123,6 +123,24 @@ where F2 = (real, vector, vector) => vector
     but the other is
      vector
 [exit 1]
+  $ ../../../../../install/default/bin/stanc bad_non_function_arg.stan
+Semantic error in 'bad_non_function_arg.stan', line 21, column 14 to column 15:
+   -------------------------------------------------
+    19:  transformed parameters {
+    20:    array[4] vector[3] y_hat;
+    21:    y_hat = dae(g, yy0, yp0, t0, ts, theta, x);
+                       ^
+    22:  }
+    23:  model {
+   -------------------------------------------------
+
+Ill-typed arguments supplied to function "dae":
+(real, vector, vector, real, array[] real, array[] real, array[] real)
+Available signatures:
+(<F1>, vector, vector, data real, data array[] real) => vector
+where F1 = (real, vector, vector) => vector
+  The first argument must be <F1> but got real
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_non_matching_args.stan
 Semantic error in 'bad_non_matching_args.stan', line 27, column 71 to column 76:
    -------------------------------------------------
@@ -142,6 +160,24 @@ Available signatures:
 (<F1>, vector, vector, data real, data array[] real, data real, data real,
  data int, array[] real, real) => vector
   The 10th argument must be real but got array[] real
+[exit 1]
+  $ ../../../../../install/default/bin/stanc bad_non_var_arg.stan
+Semantic error in 'bad_non_var_arg.stan', line 20, column 10 to column 46:
+   -------------------------------------------------
+    18:  transformed parameters {
+    19:    array[4] vector[3] y_hat;
+    20:    y_hat = dae(0.0, yy0, yp0, t0, ts, theta, x);
+                   ^
+    21:  }
+    22:  model {
+   -------------------------------------------------
+
+Ill-typed arguments supplied to function "dae":
+(real, vector, vector, real, array[] real, array[] real, array[] real)
+Available signatures:
+(<F1>, vector, vector, data real, data array[] real) => vector
+where F1 = (real, vector, vector) => vector
+  The first argument must be <F1> but got real
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_rel_tol.stan
 Semantic error in 'bad_rel_tol.stan', line 28, column 67 to column 68:
