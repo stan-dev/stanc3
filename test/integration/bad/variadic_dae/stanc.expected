@@ -1,10 +1,10 @@
   $ ../../../../../install/default/bin/stanc bad_abs_tol.stan
-Semantic error in 'bad_abs_tol.stan', line 28, column 10 to column 66:
+Semantic error in 'bad_abs_tol.stan', line 28, column 52 to column 53:
    -------------------------------------------------
     26:  transformed parameters {
     27:    array[4] vector[3] y_hat;
     28:    y_hat = dae_tol(chem_dae, yy0, yp0, t0, ts, 0.01, a, 100, theta);
-                   ^
+                                                             ^
     29:  }
     30:  model {
    -------------------------------------------------
@@ -19,12 +19,12 @@ Available signatures:
   The 7th argument must be real but got array[] real
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_initial_derivative.stan
-Semantic error in 'bad_initial_derivative.stan', line 27, column 10 to column 70:
+Semantic error in 'bad_initial_derivative.stan', line 27, column 33 to column 36:
    -------------------------------------------------
     25:  transformed parameters {
     26:    array[4] vector[3] y_hat;
     27:    y_hat = dae_tol(chem_dae, yy0, yp0, t0, ts, 0.01, 0.001, 100, theta);
-                   ^
+                                          ^
     28:  }
     29:  model {
    -------------------------------------------------
@@ -38,12 +38,12 @@ Available signatures:
   The third argument must be vector but got real
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_initial_state.stan
-Semantic error in 'bad_initial_state.stan', line 27, column 10 to column 70:
+Semantic error in 'bad_initial_state.stan', line 27, column 28 to column 31:
    -------------------------------------------------
     25:  transformed parameters {
     26:    array[4] vector[3] y_hat;
     27:    y_hat = dae_tol(chem_dae, yy0, yp0, t0, ts, 0.01, 0.001, 100, theta);
-                   ^
+                                     ^
     28:  }
     29:  model {
    -------------------------------------------------
@@ -57,12 +57,12 @@ Available signatures:
   The second argument must be vector but got real
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_initial_time.stan
-Semantic error in 'bad_initial_time.stan', line 27, column 10 to column 70:
+Semantic error in 'bad_initial_time.stan', line 27, column 38 to column 40:
    -------------------------------------------------
     25:  transformed parameters {
     26:    array[4] vector[3] y_hat;
     27:    y_hat = dae_tol(chem_dae, yy0, yp0, t0, ts, 0.01, 0.001, 100, theta);
-                   ^
+                                               ^
     28:  }
     29:  model {
    -------------------------------------------------
@@ -76,12 +76,12 @@ Available signatures:
   The fourth argument must be real but got vector
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_max_num_steps.stan
-Semantic error in 'bad_max_num_steps.stan', line 28, column 10 to column 68:
+Semantic error in 'bad_max_num_steps.stan', line 28, column 59 to column 60:
    -------------------------------------------------
     26:  transformed parameters {
     27:    array[4] vector[3] y_hat;
     28:    y_hat = dae_tol(chem_dae, yy0, yp0, t0, ts, 0.01, 0.001, a, theta);
-                   ^
+                                                                    ^
     29:  }
     30:  model {
    -------------------------------------------------
@@ -96,12 +96,12 @@ Available signatures:
   The 8th argument must be int but got array[] real
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_no_args.stan
-Semantic error in 'bad_no_args.stan', line 27, column 10 to column 63:
+Semantic error in 'bad_no_args.stan', line 27, column 18 to column 26:
    -------------------------------------------------
     25:  transformed parameters {
     26:    array[4] vector[3] y_hat;
     27:    y_hat = dae_tol(chem_dae, yy0, yp0, t0, ts, 0.01, 0.001, 100);
-                   ^
+                           ^
     28:  }
     29:  model {
    -------------------------------------------------
@@ -123,13 +123,31 @@ where F2 = (real, vector, vector) => vector
     but the other is
      vector
 [exit 1]
+  $ ../../../../../install/default/bin/stanc bad_non_function_arg.stan
+Semantic error in 'bad_non_function_arg.stan', line 21, column 14 to column 15:
+   -------------------------------------------------
+    19:  transformed parameters {
+    20:    array[4] vector[3] y_hat;
+    21:    y_hat = dae(g, yy0, yp0, t0, ts, theta, x);
+                       ^
+    22:  }
+    23:  model {
+   -------------------------------------------------
+
+Ill-typed arguments supplied to function "dae":
+(real, vector, vector, real, array[] real, array[] real, array[] real)
+Available signatures:
+(<F1>, vector, vector, data real, data array[] real) => vector
+where F1 = (real, vector, vector) => vector
+  The first argument must be <F1> but got real
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_non_matching_args.stan
-Semantic error in 'bad_non_matching_args.stan', line 27, column 10 to column 77:
+Semantic error in 'bad_non_matching_args.stan', line 27, column 71 to column 76:
    -------------------------------------------------
     25:  transformed parameters {
     26:    array[4] vector[3] y_hat;
     27:    y_hat = dae_tol(chem_dae, yy0, yp0, t0, ts, 0.01, 0.001, 100, theta, theta);
-                   ^
+                                                                                ^
     28:  }
     29:  model {
    -------------------------------------------------
@@ -143,13 +161,31 @@ Available signatures:
  data int, array[] real, real) => vector
   The 10th argument must be real but got array[] real
 [exit 1]
+  $ ../../../../../install/default/bin/stanc bad_non_var_arg.stan
+Semantic error in 'bad_non_var_arg.stan', line 20, column 14 to column 17:
+   -------------------------------------------------
+    18:  transformed parameters {
+    19:    array[4] vector[3] y_hat;
+    20:    y_hat = dae(0.0, yy0, yp0, t0, ts, theta, x);
+                       ^
+    21:  }
+    22:  model {
+   -------------------------------------------------
+
+Ill-typed arguments supplied to function "dae":
+(real, vector, vector, real, array[] real, array[] real, array[] real)
+Available signatures:
+(<F1>, vector, vector, data real, data array[] real) => vector
+where F1 = (real, vector, vector) => vector
+  The first argument must be <F1> but got real
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_rel_tol.stan
-Semantic error in 'bad_rel_tol.stan', line 28, column 10 to column 69:
+Semantic error in 'bad_rel_tol.stan', line 28, column 67 to column 68:
    -------------------------------------------------
     26:  transformed parameters {
     27:    array[4] vector[3] y_hat;
     28:    y_hat = dae_tol(chem_dae, yy0, yp0, t0, ts, a, 0.01, 100, theta, x);
-                   ^
+                                                                            ^
     29:  }
     30:  model {
    -------------------------------------------------
@@ -164,12 +200,12 @@ Available signatures:
   Expected 9 arguments but found 10 arguments.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_time0.stan
-Semantic error in 'bad_time0.stan', line 13, column 6 to column 52:
+Semantic error in 'bad_time0.stan', line 13, column 39 to column 40:
    -------------------------------------------------
     11:  transformed parameters {
     12:    array[2] vector[3] S;
     13:    S = dae(residual, [1, 1]', [1, -1]', p, {1, 2, 3});
-               ^
+                                                ^
     14:  
     15:  }
    -------------------------------------------------
@@ -184,12 +220,12 @@ Available signatures:
   with the keyword "data".)
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_times_param.stan
-Semantic error in 'bad_times_param.stan', line 13, column 6 to column 60:
+Semantic error in 'bad_times_param.stan', line 13, column 44 to column 59:
    -------------------------------------------------
     11:  transformed parameters {
     12:    array[2] vector[3] S;
     13:    S = dae(residual, [1, 1]', [1, -1]', 0.0, {1*p, 2*p, 3*p});
-               ^
+                                                     ^
     14:  
     15:  }
    -------------------------------------------------
@@ -204,12 +240,12 @@ Available signatures:
   the keyword "data".)
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_times_tol.stan
-Semantic error in 'bad_times_tol.stan', line 27, column 10 to column 69:
+Semantic error in 'bad_times_tol.stan', line 27, column 42 to column 44:
    -------------------------------------------------
     25:  transformed parameters {
     26:    array[4] vector[3] y_hat;
     27:    y_hat = dae_tol(chem_dae, yy0, yp0, t0, ts, 0.01, 0.01, 100, theta);
-                   ^
+                                                   ^
     28:  }
     29:  model {
    -------------------------------------------------

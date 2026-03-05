@@ -239,11 +239,11 @@ Consider defining a new signature for the exact types needed or
 re-thinking existing definitions.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_forward7.stan
-Semantic error in 'bad_forward7.stan', line 2, column 12 to column 69:
+Semantic error in 'bad_forward7.stan', line 2, column 57 to column 58:
    -------------------------------------------------
      1:  model {
      2:    target += laplace_marginal_tol_neg_binomial_2_log_lpmf(1 | 1, 1, 1);
-                     ^
+                                                                  ^
      3:  }
    -------------------------------------------------
 
@@ -254,7 +254,7 @@ Expected the arguments to start with:
 (array[] int, array[] int, vector, vector)
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_forward8.stan
-Semantic error in 'bad_forward8.stan', line 2, column 2 to column 55:
+Semantic error in 'bad_forward8.stan', line 2, column 2 to column 3:
    -------------------------------------------------
      1:  model {
      2:    1 ~ laplace_marginal_tol_neg_binomial_2_log(1, 1, 1);
@@ -406,12 +406,12 @@ Received 6 extra arguments at the end of the call to "laplace_latent_rng".
 Did you mean to call the _tol version with a tuple of these?
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_tol3.stan
-Semantic error in 'bad_tol3.stan', line 39, column 57 to column 64:
+Semantic error in 'bad_tol3.stan', line 39, column 72 to column 73:
    -------------------------------------------------
     37:  generated quantities {
     38:    vector[n_obs] theta = laplace_latent_tol_rng(ll_function, (eta, log_ye, y),1,
     39:                      K_function, (x, n_obs, alpha, rho), (theta_0, 1,2,3,4));
-                                                                  ^
+                                                                                 ^
     40:  }
    -------------------------------------------------
 
@@ -448,12 +448,12 @@ The fifth element of the control parameter tuple (max_steps_line_search) to
 "laplace_latent_tol_rng" must be int. Instead found type real.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_tol6.stan
-Semantic error in 'bad_tol6.stan', line 39, column 57 to column 64:
+Semantic error in 'bad_tol6.stan', line 39, column 76 to column 77:
    -------------------------------------------------
     37:  generated quantities {
     38:    vector[n_obs] theta = laplace_latent_tol_rng(ll_function, (eta, log_ye, y), 1,
     39:                      K_function, (x, n_obs, alpha, rho), (theta_0, 1,2,3,4,5,6));
-                                                                  ^
+                                                                                     ^
     40:  }
    -------------------------------------------------
 
