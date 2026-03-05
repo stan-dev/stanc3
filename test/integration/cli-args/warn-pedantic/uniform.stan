@@ -5,7 +5,7 @@ parameters {
   real<upper=0> d;
 }
 model {
-  a ~ uniform(0, 1);
+  target += uniform_lpdf(a | 0, 1);
   1 ~ uniform(0, a);
   b ~ uniform(0, 1);
   c ~ uniform(0, 1);
