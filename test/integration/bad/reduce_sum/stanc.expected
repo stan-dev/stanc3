@@ -1,10 +1,10 @@
   $ ../../../../../install/default/bin/stanc bad_args_length_mismatch.stan
-Semantic error in 'bad_args_length_mismatch.stan', line 12, column 12 to column 42:
+Semantic error in 'bad_args_length_mismatch.stan', line 12, column 38 to column 41:
    -------------------------------------------------
     10:  
     11:  model {
     12:    target += reduce_sum(my_func, a, 1, 0.0);
-                     ^
+                                               ^
     13:  }
    -------------------------------------------------
 
@@ -16,12 +16,12 @@ Available signatures:
   Expected 5 arguments but found 4 arguments.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_args_length_mismatch2.stan
-Semantic error in 'bad_args_length_mismatch2.stan', line 12, column 12 to column 47:
+Semantic error in 'bad_args_length_mismatch2.stan', line 12, column 43 to column 46:
    -------------------------------------------------
     10:  
     11:  model {
     12:    target += reduce_sum(my_func, a, 1, 0.0, 0.0);
-                     ^
+                                                    ^
     13:  }
    -------------------------------------------------
 
@@ -33,12 +33,12 @@ Available signatures:
   Expected 4 arguments but found 5 arguments.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_args_length_mismatch2_static.stan
-Semantic error in 'bad_args_length_mismatch2_static.stan', line 12, column 12 to column 54:
+Semantic error in 'bad_args_length_mismatch2_static.stan', line 12, column 50 to column 53:
    -------------------------------------------------
     10:  
     11:  model {
     12:    target += reduce_sum_static(my_func, a, 1, 0.0, 0.0);
-                     ^
+                                                           ^
     13:  }
    -------------------------------------------------
 
@@ -50,12 +50,12 @@ Available signatures:
   Expected 4 arguments but found 5 arguments.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_args_length_mismatch_static.stan
-Semantic error in 'bad_args_length_mismatch_static.stan', line 12, column 12 to column 49:
+Semantic error in 'bad_args_length_mismatch_static.stan', line 12, column 45 to column 48:
    -------------------------------------------------
     10:  
     11:  model {
     12:    target += reduce_sum_static(my_func, a, 1, 0.0);
-                     ^
+                                                      ^
     13:  }
    -------------------------------------------------
 
@@ -67,12 +67,12 @@ Available signatures:
   Expected 5 arguments but found 4 arguments.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_fun_1.stan
-Semantic error in 'bad_fun_1.stan', line 12, column 12 to column 39:
+Semantic error in 'bad_fun_1.stan', line 12, column 23 to column 32:
    -------------------------------------------------
     10:  
     11:  model {
     12:    target += reduce_sum(my_func_0, a, 1);
-                     ^
+                                ^
     13:  }
    -------------------------------------------------
 
@@ -90,12 +90,12 @@ where F2 = (array[] real, data int, data int) => real
     One takes 2 arguments but the other takes 3 arguments.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_fun_1_static.stan
-Semantic error in 'bad_fun_1_static.stan', line 12, column 12 to column 46:
+Semantic error in 'bad_fun_1_static.stan', line 12, column 30 to column 39:
    -------------------------------------------------
     10:  
     11:  model {
     12:    target += reduce_sum_static(my_func_0, a, 1);
-                     ^
+                                       ^
     13:  }
    -------------------------------------------------
 
@@ -113,12 +113,12 @@ where F2 = (array[] real, data int, data int) => real
     One takes 2 arguments but the other takes 3 arguments.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_fun_first_arg.stan
-Semantic error in 'bad_fun_first_arg.stan', line 12, column 12 to column 42:
+Semantic error in 'bad_fun_first_arg.stan', line 12, column 23 to column 30:
    -------------------------------------------------
     10:  
     11:  model {
     12:    target += reduce_sum(my_func, a, 1, 0.0);
-                     ^
+                                ^
     13:  }
    -------------------------------------------------
 
@@ -139,12 +139,12 @@ where F2 = (array[] real, data int, data int) => real
      int
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_fun_first_arg_static.stan
-Semantic error in 'bad_fun_first_arg_static.stan', line 12, column 12 to column 49:
+Semantic error in 'bad_fun_first_arg_static.stan', line 12, column 30 to column 37:
    -------------------------------------------------
     10:  
     11:  model {
     12:    target += reduce_sum_static(my_func, a, 1, 0.0);
-                     ^
+                                       ^
     13:  }
    -------------------------------------------------
 
@@ -165,12 +165,12 @@ where F2 = (array[] real, data int, data int) => real
      int
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_fun_second_arg.stan
-Semantic error in 'bad_fun_second_arg.stan', line 12, column 12 to column 42:
+Semantic error in 'bad_fun_second_arg.stan', line 12, column 23 to column 30:
    -------------------------------------------------
     10:  
     11:  model {
     12:    target += reduce_sum(my_func, a, 1, 0.0);
-                     ^
+                                ^
     13:  }
    -------------------------------------------------
 
@@ -191,12 +191,12 @@ where F2 = (array[] real, data int, data int) => real
      int
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_fun_second_arg_static.stan
-Semantic error in 'bad_fun_second_arg_static.stan', line 12, column 12 to column 49:
+Semantic error in 'bad_fun_second_arg_static.stan', line 12, column 30 to column 37:
    -------------------------------------------------
     10:  
     11:  model {
     12:    target += reduce_sum_static(my_func, a, 1, 0.0);
-                     ^
+                                       ^
     13:  }
    -------------------------------------------------
 
@@ -217,12 +217,12 @@ where F2 = (array[] real, data int, data int) => real
      int
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_fun_slice_and_slice_dont_match.stan
-Semantic error in 'bad_fun_slice_and_slice_dont_match.stan', line 12, column 12 to column 42:
+Semantic error in 'bad_fun_slice_and_slice_dont_match.stan', line 12, column 38 to column 41:
    -------------------------------------------------
     10:  
     11:  model {
     12:    target += reduce_sum(my_func, a, 1, 0.0);
-                     ^
+                                               ^
     13:  }
    -------------------------------------------------
 
@@ -234,12 +234,12 @@ Available signatures:
   Expected 5 arguments but found 4 arguments.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_fun_slice_and_slice_dont_match_static.stan
-Semantic error in 'bad_fun_slice_and_slice_dont_match_static.stan', line 12, column 12 to column 49:
+Semantic error in 'bad_fun_slice_and_slice_dont_match_static.stan', line 12, column 45 to column 48:
    -------------------------------------------------
     10:  
     11:  model {
     12:    target += reduce_sum_static(my_func, a, 1, 0.0);
-                     ^
+                                                      ^
     13:  }
    -------------------------------------------------
 
@@ -251,12 +251,12 @@ Available signatures:
   Expected 5 arguments but found 4 arguments.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_non_matching_arg_types.stan
-Semantic error in 'bad_non_matching_arg_types.stan', line 16, column 14 to column 47:
+Semantic error in 'bad_non_matching_arg_types.stan', line 16, column 25 to column 32:
    -------------------------------------------------
     14:  
     15:  model {
     16:      target += reduce_sum(my_func, a, 1, 0.0, b);
-                       ^
+                                  ^
     17:  }
    -------------------------------------------------
 
@@ -277,12 +277,12 @@ where F2 = (array[] real, data int, data int) => real
      int
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_non_matching_arg_types2.stan
-Semantic error in 'bad_non_matching_arg_types2.stan', line 16, column 14 to column 47:
+Semantic error in 'bad_non_matching_arg_types2.stan', line 16, column 45 to column 46:
    -------------------------------------------------
     14:  
     15:  model {
     16:      target += reduce_sum(my_func, a, 1, 0.0, b);
-                       ^
+                                                      ^
     17:  }
    -------------------------------------------------
 
@@ -294,12 +294,12 @@ Available signatures:
   The 5th argument must be real but got array[] real
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_non_matching_arg_types2_static.stan
-Semantic error in 'bad_non_matching_arg_types2_static.stan', line 16, column 14 to column 54:
+Semantic error in 'bad_non_matching_arg_types2_static.stan', line 16, column 52 to column 53:
    -------------------------------------------------
     14:  
     15:  model {
     16:      target += reduce_sum_static(my_func, a, 1, 0.0, b);
-                       ^
+                                                             ^
     17:  }
    -------------------------------------------------
 
@@ -311,12 +311,12 @@ Available signatures:
   The 5th argument must be real but got array[] real
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_non_matching_arg_types3.stan
-Semantic error in 'bad_non_matching_arg_types3.stan', line 13, column 14 to column 47:
+Semantic error in 'bad_non_matching_arg_types3.stan', line 13, column 45 to column 46:
    -------------------------------------------------
     11:  
     12:  model {
     13:      target += reduce_sum(my_func, a, 1, 0.0, b);
-                       ^
+                                                      ^
     14:  }
    -------------------------------------------------
 
@@ -328,12 +328,12 @@ Available signatures:
   The 5th argument must be real but got vector
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_non_matching_arg_types3_static.stan
-Semantic error in 'bad_non_matching_arg_types3_static.stan', line 13, column 14 to column 54:
+Semantic error in 'bad_non_matching_arg_types3_static.stan', line 13, column 52 to column 53:
    -------------------------------------------------
     11:  
     12:  model {
     13:      target += reduce_sum_static(my_func, a, 1, 0.0, b);
-                       ^
+                                                             ^
     14:  }
    -------------------------------------------------
 
@@ -371,12 +371,12 @@ The second argument to reduce_sum must be an array.
 Instead found type real.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_reduce_sum_multiple.stan
-Semantic error in 'bad_reduce_sum_multiple.stan', line 27, column 18 to column 51:
+Semantic error in 'bad_reduce_sum_multiple.stan', line 27, column 46 to column 47:
    -------------------------------------------------
     25:     real p_sum_1 = reduce_sum(fun, param_y, 1);
     26:     print(y, " - ", p_sum_1);
     27:     real p_sum_2 = reduce_sum(fun, param_y, 1, y, y);
-                           ^
+                                                       ^
     28:     print(y, " -- ", p_sum_2);
     29:  }
    -------------------------------------------------
@@ -389,12 +389,12 @@ Available signatures:
   Expected 3 arguments but found 5 arguments.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_return_type.stan
-Semantic error in 'bad_return_type.stan', line 12, column 12 to column 39:
+Semantic error in 'bad_return_type.stan', line 12, column 23 to column 32:
    -------------------------------------------------
     10:  
     11:  model {
     12:    target += reduce_sum(my_func_0, a, 1);
-                     ^
+                                ^
     13:  }
    -------------------------------------------------
 
@@ -411,12 +411,12 @@ where F2 = (array[] real, data int, data int) => real
   The return types are not compatible.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_return_type_static.stan
-Semantic error in 'bad_return_type_static.stan', line 12, column 12 to column 46:
+Semantic error in 'bad_return_type_static.stan', line 12, column 30 to column 39:
    -------------------------------------------------
     10:  
     11:  model {
     12:    target += reduce_sum_static(my_func_0, a, 1);
-                     ^
+                                       ^
     13:  }
    -------------------------------------------------
 
@@ -447,12 +447,12 @@ or row_vector.
 Instead found type complex.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_suffix.stan
-Semantic error in 'bad_suffix.stan', line 27, column 12 to line 28, column 45:
+Semantic error in 'bad_suffix.stan', line 27, column 23 to column 37:
    -------------------------------------------------
     25:    beta[2] ~ normal(0, 1);
     26:  
     27:    target += reduce_sum(partial_sum_lp, n_redcards, grainsize,
-                     ^
+                                ^
     28:                         n_games, rating, beta);
     29:  }
    -------------------------------------------------

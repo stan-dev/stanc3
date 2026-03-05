@@ -713,6 +713,15 @@ let check_function_callable_with_tuple cf tenv caller_id fname
         caller_id.name fname.name required_arg_names details
       |> error
 
+let specialize_loc ~loc err (args : Ast.typed_expression list) =
+  let which_arg =
+    match err with
+    | SignatureMismatch.ArgError (i, _) -> i - 1
+    | ArgNumMismatch (expected, found) ->
+        if expected > found then found - 1 else expected in
+  List.nth args which_arg
+  |> Option.value_map ~f:(fun e -> e.emeta.loc) ~default:loc
+
 let verify_laplace_control_args loc id (args : typed_expression list) =
   match (String.is_substring ~substring:"_tol" id.name, args) with
   | false, [] -> ()
@@ -727,10 +736,8 @@ let verify_laplace_control_args loc id (args : typed_expression list) =
       | Ok _ -> ()
       | Error err ->
           let loc =
-            let which_arg = match err with ArgError (i, _) -> i - 1 | _ -> 0 in
-            let elts = match arg.expr with TupleExpr elts -> elts | _ -> [] in
-            List.nth elts which_arg
-            |> Option.value_map ~f:(fun e -> e.emeta.loc) ~default:loc in
+            specialize_loc ~loc err
+              (match arg.expr with TupleExpr elts -> elts | _ -> []) in
           Semantic_error.illtyped_laplace_tolerance_args loc id.name err
           |> error)
   | true, [] ->
@@ -809,6 +816,7 @@ and check_reduce_sum ~is_cond_dist loc cf tenv id tes =
           Semantic_error.ambiguous_function_promotion loc fname.name None ps
           |> error
       | SignatureErrors (expected_args, err) ->
+          let loc = specialize_loc ~loc err tes in
           Semantic_error.illtyped_reduce_sum loc id.name
             (List.map ~f:type_of_expr_typed tes)
             expected_args err
@@ -847,6 +855,7 @@ and check_laplace_fn ~is_cond_dist loc cf tenv id tes =
       with
       | Ok promotions -> (Promotion.promote_list for_prob promotions, rest)
       | Error err ->
+          let loc = specialize_loc ~loc err tes in
           Semantic_error.illtyped_laplace_helper_args loc id.name
             required_prob_args (SignatureMismatch.InputMismatch err)
           |> error
@@ -925,6 +934,7 @@ and check_variadic ~is_cond_dist loc cf tenv id tes =
           Semantic_error.ambiguous_function_promotion loc fname.name None ps
           |> error
       | SignatureErrors (expected_args, err) ->
+          let loc = specialize_loc ~loc err tes in
           Semantic_error.illtyped_variadic loc id.name
             (List.map ~f:type_of_expr_typed tes)
             expected_args required_fn_rt err

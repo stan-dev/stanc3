@@ -1021,12 +1021,12 @@ Ill-formed expression. Unexpected input after the conclusion of a valid expressi
 You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
 [exit 1]
   $ ../../../../install/default/bin/stanc err-jacobian-plusequals-functor.stan
-Semantic error in 'err-jacobian-plusequals-functor.stan', line 16, column 16 to column 57:
+Semantic error in 'err-jacobian-plusequals-functor.stan', line 16, column 25 to column 37:
    -------------------------------------------------
     14:    void weird_jacobian(data vector y0, data real t0, data array[] real ts,
     15:                        data real theta) {
     16:      jacobian += ode_rk45(sho_jacobian, y0, t0, ts, theta);
-                         ^
+                                  ^
     17:    }
     18:  }
    -------------------------------------------------
