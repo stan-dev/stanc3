@@ -37,14 +37,16 @@ let reserved_decl (name, loc, is_type) =
 let build_expr expr loc = {expr; emeta= {loc= location_span_of_positions loc}}
 let rec iterate_n f x = function 0 -> x | n -> iterate_n f (f x) (n - 1)
 
-let parse_tuple_slot ix_str loc =
-  match int_of_string_opt (String.drop_prefix ix_str 1) with
+let parse_tuple_slot ix_str (start, stop) =
+  let slot = String.drop_prefix ix_str 1 in
+  match int_of_string_opt slot with
   | None ->
       parse_error
         ("@[@{<light_red>Ill-formed index.@} Failed to parse integer from string \
-          @{<green>\"" ^ ix_str
+          @{<green>\"" ^ slot
        ^ "\"@} in tuple index.@ The index is likely too large.@]")
-        loc
+        (* Move start by one character to avoid pointing at the . *)
+        (Lexing.{start with pos_cnum = start.pos_cnum + 1}, stop)
   | Some ix -> ix
 
 (** Given a parsed expression, try to convert it to
