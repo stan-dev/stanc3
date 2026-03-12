@@ -6,4 +6,5 @@ let () =
        rather than at runtime using Scanf *)
     Str.replace_first (Str.regexp "let message")
       "let message: int -> Syntax_error.styled_text" code in
+  let code = Str.global_replace (Str.regexp "\\\\n") "@." code in
   print_string code

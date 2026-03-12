@@ -12,4 +12,4 @@ let pp ?printed_filename ppf (span, message) =
 
 let pp_warnings ?printed_filename ppf warnings =
   if not (Core.List.is_empty warnings) then
-    Fmt.(pf ppf "@[<v>%a@]@\n" (list ~sep:cut (pp ?printed_filename)) warnings)
+    Fmt.(pf ppf "@[<v>%a@.@]" (list ~sep:cut (pp ?printed_filename)) warnings)

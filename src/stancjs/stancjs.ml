@@ -189,7 +189,9 @@ let process_flags (flags : 'a Js.opt) includes : (flags, string) result =
               ; print_lir= is_flag_set "debug-lir"
               ; debug_generate_data= is_flag_set "debug-generate-data"
               ; debug_generate_inits= is_flag_set "debug-generate-inits"
-              ; debug_data_json= flag_val "debug-data-json" }
+              ; debug_data_json=
+                  flag_val "debug-data-json"
+                  |> Option.map ~f:(fun s -> ("debug-data-json", s)) }
           ; line_length=
               flag_val "max-line-length"
               |> Option.map ~f:int_of_string

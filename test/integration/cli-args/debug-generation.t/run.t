@@ -21,14 +21,14 @@ Output file works
 Don't provide any data
   $ stanc --debug-generate-inits debug.stan
   Error in 'debug.stan', line 8, column 10 to column 25:
-  Cannot evaluate expression: (((K + N) + 1) + x.1)
-  Supplying a --debug-data-file may help
+    Cannot evaluate expression: (((K + N) + 1) + x.1)
+    Supplying a --debug-data-file may help
   [1]
 
 Don't provide _enough_ data
   $ stanc --debug-generate-inits debug.stan --debug-data-file incomplete_data.json
   Error in 'debug.stan', line 8, column 10 to column 25:
-  Cannot evaluate expression: (((14 + N) + 1) + x.1)
+    Cannot evaluate expression: (((14 + N) + 1) + x.1)
   [1]
 
 Provide a non-existant file
@@ -39,9 +39,10 @@ Provide a non-existant file
 
 Provide an invalid JSON file
   $ stanc --debug-generate-inits debug.stan --debug-data-file bad.json
-  Error: Failed to parse data JSON for debug generation: Line 3, bytes 10-13:
-  Expected ',' or '}' but found 'a,
-  '
+  Error: Failed to parse 'bad.json' for debug generation:
+    Line 3, bytes 10-13:
+    Expected ',' or '}' but found 'a,
+    '
   [1]
 
 Provide an unreadable JSON file
@@ -56,5 +57,5 @@ Provide an unreadable JSON file
 Bad data block, cannot be partially evaluated
   $ stanc --debug-generate-data div0.stan --debug-data-file partial-div0.json
   Error in 'div0.stan', line 4, column 9 to column 16:
-  Integer division by zero
+    Integer division by zero
   [1]

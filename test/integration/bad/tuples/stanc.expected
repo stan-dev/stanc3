@@ -138,7 +138,7 @@ Semantic error in 'bad_unpack_global.stan', line 8, column 3 to column 4:
 Cannot assign to global variable "x" declared in previous blocks.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_unpack_lhs.stan
-Syntax error in 'bad_unpack_lhs.stan', line 4, column 2 to column 15, parsing error:
+Syntax error in 'bad_unpack_lhs.stan', line 4, column 2 to column 10, parsing error:
    -------------------------------------------------
      2:    int x = 3;
      3:    real y = 4.0;
@@ -320,33 +320,33 @@ Available signatures:
   The first argument must be tuple(real, real) but got tuple(int, int, int)
 [exit 1]
   $ ../../../../../install/default/bin/stanc fuzz-tuple-idx1.stan
-Syntax error in 'fuzz-tuple-idx1.stan', line 1, column 36 to column 58, parsing error:
+Syntax error in 'fuzz-tuple-idx1.stan', line 1, column 37 to column 58, parsing error:
    -------------------------------------------------
      1:  functions{void f(tuple(matrix,int)t)t.40000000000000000000
-                                             ^
+                                              ^
    -------------------------------------------------
 
-Ill-formed index. Failed to parse integer from string ".40000000000000000000" in tuple index. 
+Ill-formed index. Failed to parse integer from string ".40000000000000000000" in tuple index.
 The index is likely too large.
 [exit 1]
   $ ../../../../../install/default/bin/stanc fuzz-tuple-idx2.stan
-Syntax error in 'fuzz-tuple-idx2.stan', line 1, column 61 to column 83, parsing error:
+Syntax error in 'fuzz-tuple-idx2.stan', line 1, column 62 to column 83, parsing error:
    -------------------------------------------------
      1:  transformed data{tuple(array[0]tuple(int,array[0]real),int)x;x.10000000000000000000
-                                                                      ^
+                                                                       ^
    -------------------------------------------------
 
-Ill-formed index. Failed to parse integer from string ".10000000000000000000" in tuple index. 
+Ill-formed index. Failed to parse integer from string ".10000000000000000000" in tuple index.
 The index is likely too large.
 [exit 1]
   $ ../../../../../install/default/bin/stanc fuzz-tuple-idx3.stan
-Syntax error in 'fuzz-tuple-idx3.stan', line 1, column 45 to column 66, parsing error:
+Syntax error in 'fuzz-tuple-idx3.stan', line 1, column 46 to column 66, parsing error:
    -------------------------------------------------
      1:  transformed data{matrix[0,0]v;row_vector[0]m;m.6000000000000000000
-                                                      ^
+                                                       ^
    -------------------------------------------------
 
-Ill-formed index. Failed to parse integer from string ".6000000000000000000" in tuple index. 
+Ill-formed index. Failed to parse integer from string ".6000000000000000000" in tuple index.
 The index is likely too large.
 [exit 1]
   $ ../../../../../install/default/bin/stanc incomplete1.stan

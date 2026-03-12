@@ -39,7 +39,7 @@ and debug_settings =
   ; print_lir: bool
   ; debug_generate_data: bool
   ; debug_generate_inits: bool
-  ; debug_data_json: string option }
+  ; debug_data_json: (string * string) option }
 
 and debug_options = Off | Basic | Pretty
 
