@@ -76,12 +76,6 @@ let stanc ?tty_colors ?(debug_lex : bool = false) ?(debug_parse : bool = false)
           Driver.Flags.remove_dotstan model_file_name ^ ".hpp"
         else output_file in
       write out cpp_str
-  | Error (DebugDataError _ as e) ->
-      (* separated out to suggest the possibly-fixing flag *)
-      Errors.pp Fmt.stderr ?printed_filename e;
-      if Option.is_none flags.debug_settings.debug_data_json then
-        Fmt.pf Fmt.stderr "Supplying a --debug-data-file may help@;";
-      exit_err
   | Error e ->
       (match model_source with
       | `File _ -> Errors.pp Fmt.stderr ?printed_filename e

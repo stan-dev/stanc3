@@ -95,18 +95,19 @@ let stan2cpp model_name model (flags : Flags.t) (output : other_output -> unit)
   let* generation_context =
     match flags.debug_settings.debug_data_json with
     | None -> Ok Map.Poly.empty
-    | Some string -> (
+    | Some (ctx, contents) -> (
         try
           Ok
             (Debug_data_generation.json_to_mir
                (Ast_to_Mir.gather_declarations typed_ast.datablock)
-               (Yojson.Basic.from_string string))
+               (Yojson.Basic.from_string contents))
         with Yojson.Json_error reason ->
           Error
             (Errors.DebugDataError
                ( Location_span.empty
-               , "Failed to parse data JSON for debug generation: " ^ reason )))
-  in
+               , Fmt.str "@[<v2>Failed to parse %s for debug generation:@ %a@]"
+                   ctx Fmt.lines reason
+               , true ))) in
   let* () =
     if flags.debug_settings.debug_generate_data then
       let+ data =

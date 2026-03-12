@@ -235,7 +235,7 @@ module Debug_Options = struct
        checking." in
     Arg.(value & flag & info ["debug-ast"] ~doc ~docs)
 
-  let debug_data_json : string option Term.ret Term.t =
+  let debug_data_json : (string * string) option Term.ret Term.t =
     let doc =
       "Provide (possibly partially specified) data block values for use with \
        $(b,--debug-generate-data) or $(b,--debug-generate-inits)." in
@@ -243,7 +243,7 @@ module Debug_Options = struct
       (function
         | None -> `Ok None
         | Some file -> (
-            try `Ok (Some (In_channel.read_all file))
+            try `Ok (Some ("'" ^ file ^ "'", In_channel.read_all file))
             with _ ->
               `Error (true, "File '" ^ file ^ "' not found or cannot be opened.")
             ))

@@ -27,24 +27,26 @@ let reserved (name, loc, _) =
 let reserved_decl (name, loc, is_type) =
   if is_type then
     parse_error
-      ("@{<light_red>Ill-formed identifier.@} Found a type (@{<green>\"" ^ name
-     ^ "\"@}) where an identifier was expected.\n\
+      ("@[@{<light_red>Ill-formed identifier.@} Found a type (@{<green>\"" ^ name
+     ^ "\"@}) where an identifier was expected.@ \
         All variables declared in a comma-separated list must be of the same \
-        type.\n")
+        type.@]")
       loc
   else reserved (name, loc, is_type)
 
 let build_expr expr loc = {expr; emeta= {loc= location_span_of_positions loc}}
 let rec iterate_n f x = function 0 -> x | n -> iterate_n f (f x) (n - 1)
 
-let parse_tuple_slot ix_str loc =
-  match int_of_string_opt (String.drop_prefix ix_str 1) with
+let parse_tuple_slot ix_str (start, stop) =
+  let slot = String.drop_prefix ix_str 1 in
+  match int_of_string_opt slot with
   | None ->
       parse_error
-        ("@{<light_red>Ill-formed index.@} Failed to parse integer from string \
-          @{<green>\"" ^ ix_str
-       ^ "\"@} in tuple index. \nThe index is likely too large.\n")
-        loc
+        ("@[@{<light_red>Ill-formed index.@} Failed to parse integer from string \
+          @{<green>\"" ^ slot
+       ^ "\"@} in tuple index.@ The index is likely too large.@]")
+        (* Move start by one character to avoid pointing at the . *)
+        (Lexing.{start with pos_cnum = start.pos_cnum + 1}, stop)
   | Some ix -> ix
 
 (** Given a parsed expression, try to convert it to
@@ -55,7 +57,7 @@ let try_convert_to_lvalue expr loc =
   | None ->
       parse_error
         "@{<light_red>Ill-formed assignment.@} Expected an assignable value \
-         but found a general expression.\n"
+         but found a general expression."
         loc
 
 
@@ -683,7 +685,7 @@ common_expression:
       build_expr (TupleExpr (x_head::xs)) $loc  }
   | e=common_expression ix_str=DOTNUMERAL
     { grammar_logger "common_expression_tuple_index" ;
-      build_expr (TupleProjection (e, parse_tuple_slot ix_str $loc)) $loc
+      build_expr (TupleProjection (e, parse_tuple_slot ix_str $loc(ix_str))) $loc
     }
   | e=common_expression LBRACK indices=indexes RBRACK
     { grammar_logger "common_expression_indexed";
@@ -793,7 +795,7 @@ atomic_statement:
   | l=common_expression op=assignment_op e=expression SEMICOLON
     {  grammar_logger "assignment_statement" ;
        (* slight hack: we over-parse but only allow ids, tuples of ids, or id projections *)
-       Assignment {assign_lhs=try_convert_to_lvalue l $sloc;
+       Assignment {assign_lhs=try_convert_to_lvalue l $loc(l);
                    assign_op=op;
                    assign_rhs=e} }
   | id=identifier LPAREN args=separated_list(COMMA, expression) RPAREN SEMICOLON

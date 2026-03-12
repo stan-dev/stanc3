@@ -97,7 +97,7 @@ Semantic error in 'assigment-to-function-stanmath.stan', line 8, column 5 to col
 Cannot assign a function type (<Stan Math function>) to variable "foo".
 [exit 1]
   $ ../../../../install/default/bin/stanc assign_invalid_lhs1.stan
-Syntax error in 'assign_invalid_lhs1.stan', line 2, column 2 to column 12, parsing error:
+Syntax error in 'assign_invalid_lhs1.stan', line 2, column 2 to column 7, parsing error:
    -------------------------------------------------
      1:  model {
      2:    foo() = 1;
@@ -108,7 +108,7 @@ Syntax error in 'assign_invalid_lhs1.stan', line 2, column 2 to column 12, parsi
 Ill-formed assignment. Expected an assignable value but found a general expression.
 [exit 1]
   $ ../../../../install/default/bin/stanc assign_invalid_lhs2.stan
-Syntax error in 'assign_invalid_lhs2.stan', line 2, column 3 to column 21, parsing error:
+Syntax error in 'assign_invalid_lhs2.stan', line 2, column 3 to column 10, parsing error:
    -------------------------------------------------
      1:  generated quantities {
      2:     [x,y,z] = [1,2,3];

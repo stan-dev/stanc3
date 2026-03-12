@@ -6,7 +6,7 @@ type t =
   | FileNotFound of string
   | Syntax_error of Syntax_error.t
   | Semantic_error of Semantic_error.t
-  | DebugDataError of (Middle.Location_span.t * string)
+  | DebugDataError of (Middle.Location_span.t * string * bool)
 
 let get_context ?code Middle.Location.{filename; included_from; _} =
   Option.try_with @@ fun () ->
@@ -49,10 +49,13 @@ let pp ?printed_filename ?code ppf = function
       Fmt.pf ppf "%a in %a:@;%a@,%a@." red "Semantic error"
         (Middle.Location_span.pp ?printed_filename)
         loc_span (pp_context ?code) loc_span.begin_loc Semantic_error.pp err
-  | DebugDataError (loc, msg) ->
+  | DebugDataError (loc, msg, had_context) ->
       if Middle.Location_span.(compare loc empty = 0) then
         Fmt.pf ppf "%a: %s" red "Error" msg
       else
-        Fmt.pf ppf "@[<v>%a in %a:@ %s@;@]" red "Error"
+        Fmt.pf ppf "@[<v2>%a in %a:@ %s%a@.@]" red "Error"
           (Middle.Location_span.pp ?printed_filename)
           loc msg
+          (Fmt.if' (not had_context)
+             (Fmt.any "@ Supplying a --debug-data-file may help"))
+          ()
