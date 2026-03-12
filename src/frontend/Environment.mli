@@ -14,8 +14,11 @@ type originblock =
   | Model
   | GQuant
 
+val block_name : originblock -> string
+
 (** Information available for each variable *)
-type varinfo = {origin: originblock; global: bool; readonly: bool}
+type varinfo =
+  {origin: originblock; global: bool; readonly: bool; location: Location_span.t}
 
 type info =
   { type_: UnsizedType.t
@@ -23,7 +26,9 @@ type info =
       [ `Variable of varinfo
       | `UserDeclared of Location_span.t
       | `StanMath
-      | `UserDefined ] }
+      | `UserDefined of Location_span.t ] }
+
+val location : info -> Location_span.t option
 
 type t
 
@@ -36,10 +41,10 @@ val add :
      t
   -> string
   -> Middle.UnsizedType.t
-  -> [ `UserDeclared of Location_span.t
+  -> [ `Variable of varinfo
+     | `UserDeclared of Location_span.t
      | `StanMath
-     | `UserDefined
-     | `Variable of varinfo ]
+     | `UserDefined of Location_span.t ]
   -> t
 (** Add a new item to the type environment. Does not overwrite existing, but
     shadows *)
@@ -50,6 +55,6 @@ val set_raw : t -> string -> info list -> t
 val mem : t -> string -> bool
 val iteri : t -> (string -> info list -> unit) -> unit
 
-val nearest_ident : t -> string -> string option
+val nearest_ident : t -> string -> (string * Location_span.t option list) option
 (** The nearest identifier by edit distance, capped at edit distance 3 (if one
     exists) *)

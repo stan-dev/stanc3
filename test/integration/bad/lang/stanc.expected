@@ -49,7 +49,7 @@ Semantic error in 'bad12.stan', line 2, column 2 to column 6:
      3:  }
    -------------------------------------------------
 
-Cannot assign to global variable "beta" declared in previous blocks.
+Cannot assign to global variable "beta" declared previously in Stan Math Library.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad2.stan
 Semantic error in 'bad2.stan', line 1, column 34 to column 35:
@@ -58,7 +58,7 @@ Semantic error in 'bad2.stan', line 1, column 34 to column 35:
                                            ^
    -------------------------------------------------
 
-Cannot assign to global variable "a" declared in previous blocks.
+Cannot assign to global variable "a" declared previously in data block.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad2.stanfunctions
 Syntax error in 'bad2.stanfunctions', line 5, column 0 to column 1, parsing error:
@@ -136,7 +136,7 @@ Semantic error in 'bad6.stan', line 7, column 3 to column 4:
      9:  model {
    -------------------------------------------------
 
-Cannot assign to global variable "y" declared in previous blocks.
+Cannot assign to global variable "y" declared previously in data block.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad7.stan
 Semantic error in 'bad7.stan', line 7, column 2 to column 3:
@@ -149,7 +149,7 @@ Semantic error in 'bad7.stan', line 7, column 2 to column 3:
      9:  model { 
    -------------------------------------------------
 
-Cannot assign to global variable "y" declared in previous blocks.
+Cannot assign to global variable "y" declared previously in data block.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad8.stan
 Semantic error in 'bad8.stan', line 5, column 4 to column 5:
@@ -161,7 +161,7 @@ Semantic error in 'bad8.stan', line 5, column 4 to column 5:
      6:  }
    -------------------------------------------------
 
-Cannot assign to global variable "y" declared in previous blocks.
+Cannot assign to global variable "y" declared previously in data block.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad9.stan
 Semantic error in 'bad9.stan', line 5, column 3 to column 9:
@@ -484,7 +484,7 @@ Semantic error in 'good_all.stan', line 25, column 2 to column 3:
     27:    s = m[1,2];
    -------------------------------------------------
 
-Cannot assign to global variable "m" declared in previous blocks.
+Cannot assign to global variable "m" declared previously in data block.
 [exit 1]
   $ ../../../../../install/default/bin/stanc incomplete.stan
 Syntax error in 'incomplete.stan', line 2, column 18 to column 19, parsing error:

@@ -119,12 +119,12 @@ Syntax error in 'assign_invalid_lhs2.stan', line 2, column 3 to column 10, parsi
 Ill-formed assignment. Expected an assignable value but found a general expression.
 [exit 1]
   $ ../../../../install/default/bin/stanc assign_real_to_int.stan
-Semantic error in 'assign_real_to_int.stan', line 11, column 2 to column 8:
+Semantic error in 'assign_real_to_int.stan', line 11, column 6 to column 7:
    -------------------------------------------------
      9:    real b;
     10:    b = 3.2;
     11:    a = b;
-           ^
+               ^
     12:  }
    -------------------------------------------------
 
@@ -197,12 +197,12 @@ Semantic error in 'bad_fundef_returntypes4.stan', line 2, column 2 to line 6, co
 Function bodies must contain a return statement of correct type in every branch.
 [exit 1]
   $ ../../../../install/default/bin/stanc bad_prob_fun_suffix.stan
-Semantic error in 'bad_prob_fun_suffix.stan', line 10, column 2 to column 19:
+Semantic error in 'bad_prob_fun_suffix.stan', line 10, column 10 to column 13:
    -------------------------------------------------
      8:  }
      9:  model {
     10:    theta ~ foo(1.4);
-           ^
+                   ^
     11:  }
    -------------------------------------------------
 
@@ -264,12 +264,12 @@ Available signatures:
 (Additional signatures omitted)
 [exit 1]
   $ ../../../../install/default/bin/stanc bad_var_assignment_type1.stan
-Semantic error in 'bad_var_assignment_type1.stan', line 4, column 2 to column 8:
+Semantic error in 'bad_var_assignment_type1.stan', line 4, column 6 to column 7:
    -------------------------------------------------
      2:    vector[5] y;
      3:    array[5] real z;
      4:    z = y;
-           ^
+               ^
      5:  }
      6:  parameters {
    -------------------------------------------------
@@ -279,12 +279,12 @@ Expected the right hand side to have a type matching the destination (array[] re
 Instead found type vector.
 [exit 1]
   $ ../../../../install/default/bin/stanc bad_var_assignment_type2.stan
-Semantic error in 'bad_var_assignment_type2.stan', line 6, column 2 to column 8:
+Semantic error in 'bad_var_assignment_type2.stan', line 6, column 6 to column 7:
    -------------------------------------------------
      4:  transformed data {
      5:    array[5] real z;
      6:    z = y;
-           ^
+               ^
      7:  }
      8:  parameters {
    -------------------------------------------------
@@ -294,12 +294,12 @@ Expected the right hand side to have a type matching the destination (array[] re
 Instead found type array[,] real.
 [exit 1]
   $ ../../../../install/default/bin/stanc bad_var_assignment_vec_arr.stan
-Semantic error in 'bad_var_assignment_vec_arr.stan', line 10, column 2 to column 35:
+Semantic error in 'bad_var_assignment_vec_arr.stan', line 10, column 7 to column 34:
    -------------------------------------------------
      8:  
      9:    a1 = tail(v, K-1) - head(v, K-1);
     10:    a2 = tail(v, K-1) - head(v, K-1);
-           ^
+                ^
     11:  }
     12:  parameters {
    -------------------------------------------------
@@ -321,12 +321,12 @@ Syntax error in 'bad_while.stan', line 3, column 24 to column 25, parsing error:
 Ill-formed type. Expected "[" expression "]" for size of cholesky_factor_corr.
 [exit 1]
   $ ../../../../install/default/bin/stanc binomial_coefficient_sample.stan
-Semantic error in 'binomial_coefficient_sample.stan', line 5, column 2 to column 30:
+Semantic error in 'binomial_coefficient_sample.stan', line 5, column 6 to column 26:
    -------------------------------------------------
      3:  }
      4:  model {
      5:    y ~ binomial_coefficient(5);
-           ^
+               ^
      6:  }
    -------------------------------------------------
 
@@ -443,7 +443,7 @@ Semantic error in 'call_dist_no_suffix.stan', line 5, column 12 to column 25:
    -------------------------------------------------
 
 A returning function was expected but an undeclared identifier "std_normal" was supplied.
-Did you mean "std_normal_lpdf"?
+Did you mean "std_normal_qf"?
 [exit 1]
   $ ../../../../install/default/bin/stanc ccdf-sample.stan
 Semantic error in 'ccdf-sample.stan', line 5, column 2 to column 24:
@@ -1922,12 +1922,12 @@ Syntax error in 'local_var_constraint4.stan', line 5, column 6 to column 7, pars
 Ill-formed type. Did not expect "<". Constrained types are not supported in local (or model block) variable declarations.
 [exit 1]
   $ ../../../../install/default/bin/stanc log_suffix_bad1.stan
-Semantic error in 'log_suffix_bad1.stan', line 8, column 2 to column 19:
+Semantic error in 'log_suffix_bad1.stan', line 8, column 8 to column 13:
    -------------------------------------------------
      6:  
      7:  model {
      8:    1.5 ~ foo_t(3.4);
-           ^
+                 ^
      9:  }
    -------------------------------------------------
 
@@ -2051,12 +2051,12 @@ Semantic error in 'missing-pmf.stan', line 2, column 2 to line 4, column 3:
 Probability mass functions require integer variates (first argument).
 [exit 1]
   $ ../../../../install/default/bin/stanc multiply_sample.stan
-Semantic error in 'multiply_sample.stan', line 5, column 2 to column 18:
+Semantic error in 'multiply_sample.stan', line 5, column 6 to column 14:
    -------------------------------------------------
      3:  }
      4:  model {
      5:    y ~ multiply(3);
-           ^
+               ^
      6:  }
    -------------------------------------------------
 
@@ -2837,12 +2837,12 @@ Available signatures:
   The second argument must be int but got real
 [exit 1]
   $ ../../../../install/default/bin/stanc signature_sampling_unknown.stan
-Semantic error in 'signature_sampling_unknown.stan', line 8, column 2 to column 24:
+Semantic error in 'signature_sampling_unknown.stan', line 8, column 6 to column 16:
    -------------------------------------------------
      6:  }
      7:  model {
      8:    x ~ foo_whatev(theta);
-           ^
+               ^
      9:  }
    -------------------------------------------------
 
@@ -2850,12 +2850,12 @@ Ill-typed arguments to "~"-statement. No function "foo_whatev_lpdf" was found wh
 "foo_whatev".
 [exit 1]
   $ ../../../../install/default/bin/stanc signature_sampling_unknown2.stan
-Semantic error in 'signature_sampling_unknown2.stan', line 8, column 2 to column 24:
+Semantic error in 'signature_sampling_unknown2.stan', line 8, column 6 to column 16:
    -------------------------------------------------
      6:  }
      7:  model {
      8:    x ~ foo_whatev(theta);
-           ^
+               ^
      9:  }
    -------------------------------------------------
 
@@ -2863,12 +2863,12 @@ Ill-typed arguments to distribution statement (~). No function "foo_whatev_lpmf"
 "foo_whatev_lpdf" was found when looking for distribution "foo_whatev".
 [exit 1]
   $ ../../../../install/default/bin/stanc stanc_helper.stan
-Semantic error in 'stanc_helper.stan', line 5, column 2 to column 18:
+Semantic error in 'stanc_helper.stan', line 5, column 6 to column 11:
    -------------------------------------------------
      3:  }
      4:  model {
      5:    y ~ ormal(0, 1);
-           ^
+               ^
      6:  }
    -------------------------------------------------
 
@@ -3123,12 +3123,12 @@ Semantic error in 'validate_allow_sample_bad3.stan', line 9, column 2 to column 
 Target can only be accessed in the model block or in functions ending with _lp.
 [exit 1]
   $ ../../../../install/default/bin/stanc validate_array_expr_bad1.stan
-Semantic error in 'validate_array_expr_bad1.stan', line 6, column 2 to column 41:
+Semantic error in 'validate_array_expr_bad1.stan', line 6, column 12 to column 40:
    -------------------------------------------------
      4:  model {
      5:    array[5] int int_1_a;
      6:    int_1_a = { 1.0, 2.0, 3.0, 4.0 , 5.0 };  // type mismatch
-           ^
+                     ^
      7:    y ~ normal(0,1);
      8:  }
    -------------------------------------------------
@@ -3138,12 +3138,12 @@ Expected the right hand side to have a type matching the destination (array[] in
 Instead found type array[] real.
 [exit 1]
   $ ../../../../install/default/bin/stanc validate_array_expr_bad2.stan
-Semantic error in 'validate_array_expr_bad2.stan', line 6, column 2 to column 24:
+Semantic error in 'validate_array_expr_bad2.stan', line 6, column 12 to column 23:
    -------------------------------------------------
      4:  model {
      5:    array[3] int int_1_a;
      6:    int_1_a = { { 1*1 } };  // dim mismatch
-           ^
+                     ^
      7:    y ~ normal(0,1);
      8:  }
    -------------------------------------------------
@@ -3206,12 +3206,12 @@ Semantic error in 'validate_conditional_op_bad-2.stan', line 5, column 7 to colu
 Type mismatch in ternary expression, expression when true is: real; expression when false is: array[,] row_vector
 [exit 1]
   $ ../../../../install/default/bin/stanc validate_exponentiation_bad.stan
-Semantic error in 'validate_exponentiation_bad.stan', line 7, column 2 to column 12:
+Semantic error in 'validate_exponentiation_bad.stan', line 7, column 6 to column 11:
    -------------------------------------------------
      5:  transformed data {
      6:    int z;
      7:    z = i ^ j;  // int, int
-           ^
+               ^
      8:  }
      9:  parameters {
    -------------------------------------------------

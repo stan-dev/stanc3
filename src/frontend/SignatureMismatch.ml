@@ -77,11 +77,16 @@ and function_mismatch =
   | ArgNumMismatch of int * int
 
 type signature_error =
-  (UnsizedType.returntype * UnsizedType.argumentlist) * function_mismatch
+  (UnsizedType.returntype * UnsizedType.argumentlist * Location_span.t option)
+  * function_mismatch
 
 type ('unique, 'error) generic_match_result =
   | UniqueMatch of 'unique
-  | AmbiguousMatch of (UnsizedType.returntype * UnsizedType.argumentlist) list
+  | AmbiguousMatch of
+      (UnsizedType.returntype
+      * UnsizedType.argumentlist
+      * Location_span.t option)
+      list
   | SignatureErrors of 'error
 [@@deriving sexp]
 
@@ -89,6 +94,7 @@ type match_result =
   ( UnsizedType.returntype
     * (bool Middle.Fun_kind.suffix -> Ast.fun_kind)
     * Promotion.t list
+    * Location_span.t option
   , signature_error list * bool )
   generic_match_result
 
@@ -220,11 +226,12 @@ let check_compatible_arguments_no_promotion t1 t2 =
 let max_n_errors = 5
 
 let extract_function_types f =
+  let location = Environment.location f in
   match f with
   | Environment.{type_= UFun (args, return, _, mem); kind= `StanMath} ->
-      Some (return, args, (fun x -> Ast.StanLib x), mem)
+      Some (return, args, (fun x -> Ast.StanLib x), mem, location)
   | {type_= UFun (args, return, _, mem); _} ->
-      Some (return, args, (fun x -> UserDefined x), mem)
+      Some (return, args, (fun x -> UserDefined x), mem, location)
   | _ -> None
 
 let unique_minimum_promotion promotion_options =
@@ -251,13 +258,13 @@ let find_compatible_rt function_types args =
      here *)
   let matches, errors =
     List.partition_map function_types
-      ~f:(fun (rt, tys, funkind_constructor, _) ->
+      ~f:(fun (rt, tys, funkind_constructor, _, loc) ->
         match check_compatible_arguments 0 tys args with
-        | Ok p -> Either.First (((rt, tys), funkind_constructor), p)
-        | Error e -> Second ((rt, tys), e)) in
+        | Ok p -> Either.First (((rt, tys, loc), funkind_constructor), p)
+        | Error e -> Second ((rt, tys, loc), e)) in
   match unique_minimum_promotion matches with
-  | Ok (((rt, _), funkind_constructor), p) ->
-      UniqueMatch (rt, funkind_constructor, p)
+  | Ok (((rt, _, l), funkind_constructor), p) ->
+      UniqueMatch (rt, funkind_constructor, p, l)
   | Error (Some e) ->
       AmbiguousMatch (List.map ~f:fst e)
       (* return the return types and argument types of ambiguous matches *)
@@ -273,7 +280,7 @@ let matching_function env name args =
   let function_types =
     Environment.find env name
     |> List.filter_map ~f:extract_function_types
-    |> List.sort ~compare:(fun (ret1, _, _, _) (ret2, _, _, _) ->
+    |> List.sort ~compare:(fun (ret1, _, _, _, _) (ret2, _, _, _, _) ->
         UnsizedType.compare_returntype ret1 ret2) in
   find_compatible_rt function_types args
 
@@ -281,13 +288,13 @@ let matching_stanlib_function =
   matching_function Environment.stan_math_environment
 
 let check_variadic_args ~allow_lpdf mandatory_arg_tys mandatory_fun_arg_tys
-    fun_return args =
+    location fun_return args =
   let minimal_func_type =
     UnsizedType.UFun (mandatory_fun_arg_tys, ReturnType fun_return, FnPlain, AoS)
   in
   let minimal_args =
     (UnsizedType.AutoDiffable, minimal_func_type) :: mandatory_arg_tys in
-  let wrap_err x = Error (minimal_args, ArgError (1, x)) in
+  let wrap_err x = Error (minimal_args, ArgError (1, x), location) in
   match args with
   | ( _
     , (UnsizedType.UFun (fun_args, ReturnType return_type, suffix, _) as
@@ -315,11 +322,11 @@ let check_variadic_args ~allow_lpdf mandatory_arg_tys mandatory_fun_arg_tys
                   ((UnsizedType.AutoDiffable, func_type) :: mandatory_arg_tys)
                   @ variadic_arg_tys in
                 check_compatible_arguments 0 expected_args args
-                |> Result.map ~f:(fun x -> (func_type, x))
-                |> Result.map_error ~f:(fun x -> (expected_args, x)))
+                |> Result.map ~f:(fun x -> ((func_type, location), x))
+                |> Result.map_error ~f:(fun x -> (expected_args, x, location)))
       else wrap_func_error (SuffixMismatch (FnPlain, suffix))
   | (_, x) :: _ -> TypeMismatch (minimal_func_type, x, None) |> wrap_err
-  | [] -> Error ([], ArgNumMismatch (List.length mandatory_arg_tys, 0))
+  | [] -> Error ([], ArgNumMismatch (List.length mandatory_arg_tys, 0), location)
 
 let suffix_str = function
   | Fun_kind.FnPlain -> "a pure function"
@@ -483,7 +490,7 @@ let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
   let pp_args =
     pp_with_where ctx (fun ppf ->
         pf ppf "(@[<hov>%a@])" (list ~sep:comma (pp_unsized_type ctx))) in
-  let pp_signature ppf ((rt, args), err) =
+  let pp_signature ppf ((rt, args, _), err) =
     let fun_ty = UnsizedType.UFun (args, rt, FnPlain, AoS) in
     Fmt.pf ppf "%a@ @[<hov 2>  %a@]"
       (pp_with_where ctx (pp_fundef ctx))

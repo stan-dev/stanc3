@@ -24,16 +24,26 @@ val array_vector_rowvector_matrix_expected :
   Location_span.t -> UnsizedType.t -> t
 
 val illtyped_assignment :
-  Location_span.t -> Operator.t -> UnsizedType.t -> UnsizedType.t -> t
+     Location_span.t
+  -> Operator.t
+  -> Ast.typed_expr_meta
+  -> Ast.typed_expr_meta
+  -> t
 
 val illtyped_ternary_if :
   Location_span.t -> UnsizedType.t -> UnsizedType.t -> UnsizedType.t -> t
 
-val returning_fn_expected_nonreturning_found : Location_span.t -> string -> t
-val returning_fn_expected_nonfn_found : Location_span.t -> string -> t
+val returning_fn_expected_nonreturning_found :
+  Location_span.t -> string -> Location_span.t option -> t
+
+val returning_fn_expected_nonfn_found :
+  Location_span.t -> string -> Location_span.t option -> t
 
 val returning_fn_expected_undeclaredident_found :
-  Location_span.t -> string -> string option -> t
+     Location_span.t
+  -> string
+  -> (string * Location_span.t option list) option
+  -> t
 
 val returning_fn_expected_undeclared_dist_suffix_found :
   Location_span.t -> string * string -> t
@@ -50,13 +60,17 @@ val illtyped_reduce_sum :
   -> UnsizedType.t list
   -> UnsizedType.argumentlist
   -> SignatureMismatch.function_mismatch
+  -> Location_span.t option
   -> t
 
 val ambiguous_function_promotion :
      Location_span.t
   -> string
   -> UnsizedType.t list option
-  -> (UnsizedType.returntype * UnsizedType.argumentlist) list
+  -> (UnsizedType.returntype
+     * UnsizedType.argumentlist
+     * Location_span.t option)
+     list
   -> t
 
 val illtyped_variadic :
@@ -66,10 +80,16 @@ val illtyped_variadic :
   -> UnsizedType.argumentlist
   -> UnsizedType.t
   -> SignatureMismatch.function_mismatch
+  -> Location_span.t option
   -> t
 
 val forwarded_function_signature_error :
-  Location_span.t -> string -> string -> SignatureMismatch.details -> t
+     Location_span.t
+  -> string
+  -> string
+  -> SignatureMismatch.details
+  -> Location_span.t option
+  -> t
 
 val forwarded_function_application_error :
      Location_span.t
@@ -77,6 +97,7 @@ val forwarded_function_application_error :
   -> string
   -> string list
   -> SignatureMismatch.details
+  -> Location_span.t option
   -> t
 
 val illtyped_laplace_helper_args :
@@ -92,7 +113,7 @@ val illtyped_laplace_generic :
     function arguments are misplaced, both of which prevent us from giving a
     better message *)
 
-val laplace_compatibility : Location_span.t -> string -> t
+val laplace_compatibility : Location_span.t -> string -> Location_span.t -> t
 val illtyped_laplace_extra_args : Location_span.t -> string -> int -> t
 
 val illtyped_laplace_hessian_block_size_arg :
@@ -104,11 +125,17 @@ val illtyped_laplace_hessian_block_size_arg :
 val illtyped_laplace_tolerance_args :
   Location_span.t -> string -> SignatureMismatch.function_mismatch -> t
 
-val nonreturning_fn_expected_returning_found : Location_span.t -> string -> t
-val nonreturning_fn_expected_nonfn_found : Location_span.t -> string -> t
+val nonreturning_fn_expected_returning_found :
+  Location_span.t -> string -> Location_span.t option -> t
+
+val nonreturning_fn_expected_nonfn_found :
+  Location_span.t -> string -> Location_span.t -> t
 
 val nonreturning_fn_expected_undeclaredident_found :
-  Location_span.t -> string -> string option -> t
+     Location_span.t
+  -> string
+  -> (string * Location_span.t option list) option
+  -> t
 
 val illtyped_fn_app :
      Location_span.t
@@ -128,8 +155,14 @@ val not_indexable : Location_span.t -> UnsizedType.t -> int -> t
 val ident_is_keyword : Location_span.t -> string -> t
 val ident_is_model_name : Location_span.t -> string -> t
 val ident_is_stanmath_name : Location_span.t -> string -> t
-val ident_in_use : Location_span.t -> string -> t
-val ident_not_in_scope : Location_span.t -> string -> string option -> t
+val ident_in_use : Location_span.t -> string -> Location_span.t -> t
+
+val ident_not_in_scope :
+     Location_span.t
+  -> string
+  -> (string * Location_span.t option list) option
+  -> t
+
 val invalid_decl_rng_fn : Location_span.t -> t
 val invalid_rng_fn : Location_span.t -> t
 val invalid_unnormalized_fn : Location_span.t -> t
@@ -141,8 +174,17 @@ val not_printable : Location_span.t -> t
 val empty_array : Location_span.t -> t
 val empty_tuple : Location_span.t -> t
 val bad_int_literal : Location_span.t -> t
-val cannot_assign_to_read_only : Location_span.t -> string -> t
-val cannot_assign_to_global : Location_span.t -> string -> t
+
+val cannot_assign_to_read_only :
+  Location_span.t -> string -> Location_span.t option -> t
+
+val cannot_assign_to_global :
+     Location_span.t
+  -> string
+  -> Environment.originblock
+  -> Location_span.t option
+  -> t
+
 val cannot_assign_function : Location_span.t -> string -> UnsizedType.t -> t
 val cannot_assign_to_multiindex : Location_span.t -> t
 
@@ -163,7 +205,10 @@ val break_outside_loop : Location_span.t -> t
 val continue_outside_loop : Location_span.t -> t
 val expression_return_outside_returning_fn : Location_span.t -> t
 val void_outside_nonreturning_fn : Location_span.t -> t
-val non_data_variable_size_decl : Location_span.t -> t
+
+val non_data_variable_size_decl :
+  Location_span.t -> Environment.originblock -> Location_span.t -> t
+
 val non_int_bounds : Location_span.t -> t
 val complex_transform : Location_span.t -> t
 val no_int_params : Location_span.t -> bool -> t
@@ -173,16 +218,18 @@ val fn_overload_rt_only :
   -> string
   -> UnsizedType.returntype
   -> UnsizedType.returntype
+  -> Location_span.t option
   -> t
 
 val fn_decl_redefined :
-  Location_span.t -> string -> stan_math:bool -> UnsizedType.t -> t
+  Location_span.t -> string -> UnsizedType.t -> Location_span.t -> t
 
-val fn_decl_exists : Location_span.t -> string -> t
+val stan_math_fn_redefined : Location_span.t -> string -> UnsizedType.t -> t
+val fn_decl_exists : Location_span.t -> string -> Location_span.t -> t
 val fn_decl_without_def : Location_span.t -> string -> t
 val fn_decl_needs_block : Location_span.t -> t
 val non_real_prob_fn_def : Location_span.t -> UnsizedType.returntype -> t
 val prob_density_non_real_variate : Location_span.t -> UnsizedType.t option -> t
 val prob_mass_non_int_variate : Location_span.t -> UnsizedType.t option -> t
-val duplicate_arg_names : Location_span.t -> string -> t
+val duplicate_arg_names : Location_span.t -> Ast.identifier -> t
 val incompatible_return_types : Location_span.t -> t

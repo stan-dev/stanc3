@@ -45,20 +45,26 @@ module TypeError = struct
         * UnsizedType.t list
         * UnsizedType.argumentlist
         * SignatureMismatch.function_mismatch
+        * Location_span.t option
     | IllTypedVariadic of
         string
         * UnsizedType.t list
         * UnsizedType.argumentlist
         * SignatureMismatch.function_mismatch
         * UnsizedType.t
+        * Location_span.t option
     | IllTypedForwardedFunctionSignature of
-        string * string * SignatureMismatch.details
+        string * string * SignatureMismatch.details * Location_span.t option
     | IllTypedForwardedFunctionApp of
-        string * string * string list * SignatureMismatch.details
+        string
+        * string
+        * string list
+        * SignatureMismatch.details
+        * Location_span.t option
     | IllTypedLaplaceHelperArgs of
         string * UnsizedType.argumentlist * SignatureMismatch.details
     | IllTypedLaplaceMarginal of string * bool * UnsizedType.argumentlist
-    | LaplaceCompatibilityIssue of string
+    | LaplaceCompatibilityIssue of string * Location_span.t
     | IlltypedLaplaceTooMany of string * int
     | IlltypedLaplaceHessianBlockSize of
         string * (UnsizedType.autodifftype * UnsizedType.t) option
@@ -66,17 +72,24 @@ module TypeError = struct
     | AmbiguousFunctionPromotion of
         string
         * UnsizedType.t list option
-        * (UnsizedType.returntype * UnsizedType.argumentlist) list
-    | ReturningFnExpectedNonReturningFound of string
-    | ReturningFnExpectedNonFnFound of string
+        * (UnsizedType.returntype
+          * UnsizedType.argumentlist
+          * Location_span.t option)
+          list
+    | ReturningFnExpectedNonReturningFound of string * Location_span.t option
+    | ReturningFnExpectedNonFnFound of string * Location_span.t option
     | ReturningFnExpectedUndeclaredDistSuffixFound of string * string
     | ReturningFnExpectedWrongDistSuffixFound of string * string
-    | NonReturningFnExpectedReturningFound of string
-    | NonReturningFnExpectedNonFnFound of string
+    | NonReturningFnExpectedReturningFound of string * Location_span.t option
+    | NonReturningFnExpectedNonFnFound of string * Location_span.t
     | FuncOverloadRtOnly of
-        string * UnsizedType.returntype * UnsizedType.returntype
-    | FuncDeclRedefined of string * UnsizedType.t * bool
-    | FunDeclExists of string
+        string
+        * UnsizedType.returntype
+        * UnsizedType.returntype
+        * Location_span.t option
+    | FuncDeclRedefined of string * UnsizedType.t * Location_span.t
+    | StanMathFuncRedefined of string * UnsizedType.t
+    | FunDeclExists of string * Location_span.t
     | FunDeclNoDefn of string
     | FunDeclNeedsBlock
     | NonRealProbFunDef of UnsizedType.returntype
@@ -199,23 +212,30 @@ module TypeError = struct
           (Stan_math_signatures.reduce_sum_slice_types
          |> Common.Nonempty_list.of_list_exn)
           found_type ty
-    | IllTypedReduceSum (name, arg_tys, expected_args, error) ->
-        SignatureMismatch.pp_signature_mismatch ppf
-          (name, arg_tys, ([((ReturnType UReal, expected_args), error)], false))
-    | IllTypedVariadic (name, arg_tys, args, error, return_type) ->
+    | IllTypedReduceSum (name, arg_tys, expected_args, error, _callback_location)
+      ->
         SignatureMismatch.pp_signature_mismatch ppf
           ( name
           , arg_tys
-          , ([((UnsizedType.ReturnType return_type, args), error)], false) )
+          , ([((ReturnType UReal, expected_args, None), error)], false) )
+    | IllTypedVariadic
+        (name, arg_tys, args, error, return_type, _callback_location) ->
+        SignatureMismatch.pp_signature_mismatch ppf
+          ( name
+          , arg_tys
+          , ([((UnsizedType.ReturnType return_type, args, None), error)], false)
+          )
     | IllTypedFunctionApp (name, arg_tys, errors) ->
         SignatureMismatch.pp_signature_mismatch ppf (name, arg_tys, errors)
-    | IllTypedForwardedFunctionApp (caller, name, skipped, details) ->
+    | IllTypedForwardedFunctionApp
+        (caller, name, skipped, details, _callback_location) ->
         Fmt.pf ppf
           "Cannot call %a@ with arguments forwarded from call to@ %a:@ %a"
           quoted name quoted caller
           (SignatureMismatch.pp_mismatch_details ~skipped)
           details
-    | IllTypedForwardedFunctionSignature (caller, name, details) ->
+    | IllTypedForwardedFunctionSignature
+        (caller, name, details, _callback_location) ->
         Fmt.pf ppf
           "Function %a does not have a valid signature for use in %a:@ %a"
           quoted name quoted caller
@@ -248,7 +268,7 @@ module TypeError = struct
              a function."
             n (Fmt.ordinal ()) (n + 1) in
         generic_laplace_usage info ppf (name, supplied)
-    | LaplaceCompatibilityIssue banned_function ->
+    | LaplaceCompatibilityIssue (banned_function, _call_location) ->
         Fmt.pf ppf
           "The function %a, called by this likelihood function,@ does not \
            currently support higher-order derivatives, and@ cannot be used in \
@@ -310,7 +330,7 @@ module TypeError = struct
           (laplace_tolerance_arg_name n)
           quoted name expected_types [expected] found_type found
     | AmbiguousFunctionPromotion (name, arg_tys, signatures) ->
-        let pp_sig ppf (rt, args) =
+        let pp_sig ppf (rt, args, _) =
           Fmt.pf ppf "@[<hov>(@[<hov>%a@]) => %a@]"
             Fmt.(list ~sep:comma UnsizedType.pp_fun_arg)
             args UnsizedType.pp_returntype rt in
@@ -327,22 +347,22 @@ module TypeError = struct
           arg_tys
           (Fmt.list ~sep:Fmt.cut pp_sig)
           signatures
-    | ReturningFnExpectedNonReturningFound fn_name ->
+    | ReturningFnExpectedNonReturningFound (fn_name, _prev_decl) ->
         Fmt.pf ppf
           "A returning function was expected but a non-returning function %a \
            was supplied."
           quoted fn_name
-    | NonReturningFnExpectedReturningFound fn_name ->
+    | NonReturningFnExpectedReturningFound (fn_name, _prev_decl) ->
         Fmt.pf ppf
           "A non-returning function was expected but a returning function %a \
            was supplied."
           quoted fn_name
-    | ReturningFnExpectedNonFnFound fn_name ->
+    | ReturningFnExpectedNonFnFound (fn_name, _prev_decl) ->
         Fmt.pf ppf
           "A returning function was expected but a non-function value %a was \
            supplied."
           quoted fn_name
-    | NonReturningFnExpectedNonFnFound fn_name ->
+    | NonReturningFnExpectedNonFnFound (fn_name, _prev_decl) ->
         Fmt.pf ppf
           "A non-returning function was expected but a non-function value %a \
            was supplied."
@@ -367,17 +387,20 @@ module TypeError = struct
           (prefix ^ "_" ^ suffix)
           quoted prefix quoted
           (prefix ^ "_" ^ newsuffix)
-    | FuncOverloadRtOnly (name, _, rt') ->
+    | FuncOverloadRtOnly (name, _, rt', _prev_decl) ->
         Fmt.pf ppf
           "Function %a cannot be overloaded by return type only. Previously \
            used return type %a"
           quoted name UnsizedType.pp_returntype rt'
-    | FuncDeclRedefined (name, ut, stan_math) ->
-        Fmt.pf ppf "Function %a %s signature %a" quoted name
-          (if stan_math then "is already declared in the Stan Math library with"
-           else "has already been declared for")
-          UnsizedType.pp ut
-    | FunDeclExists name ->
+    | FuncDeclRedefined (name, ut, _prev_decl) ->
+        Fmt.pf ppf "Function %a has already been declared for signature %a"
+          quoted name UnsizedType.pp ut
+    | StanMathFuncRedefined (name, ut) ->
+        Fmt.pf ppf
+          "Function %a is already declared in the Stan Math library with \
+           signature %a"
+          quoted name UnsizedType.pp ut
+    | FunDeclExists (name, _prev_decl) ->
         Fmt.pf ppf
           "Function %a has already been declared. A definition is expected."
           quoted name
@@ -419,15 +442,18 @@ module IdentifierError = struct
     | IsKeyword of string
     | IsModelName of string
     | IsStanMathName of string
-    | InUse of string
-    | NotInScope of string * string option
-    | ReturningFnExpectedUndeclaredIdentFound of string * string option
-    | NonReturningFnExpectedUndeclaredIdentFound of string * string option
+    | InUse of string * Location_span.t
+    | NotInScope of string * (string * Location_span.t option list) option
+    | ReturningFnExpectedUndeclaredIdentFound of
+        string * (string * Location_span.t option list) option
+    | NonReturningFnExpectedUndeclaredIdentFound of
+        string * (string * Location_span.t option list) option
     | UnnormalizedSuffix of string
-    | DuplicateArgNames of string
+    | DuplicateArgNames of Ast.identifier
 
-  let did_you_mean : string option Fmt.t =
-    Fmt.option @@ fun ppf s -> Fmt.pf ppf "@ Did you mean %a?" quoted s
+  let did_you_mean : (string * 'a) option Fmt.t =
+    Fmt.option @@ Fmt.using fst
+    @@ fun ppf s -> Fmt.pf ppf "@ Did you mean %a?" quoted s
 
   let pp ppf = function
     | IsStanMathName name ->
@@ -435,7 +461,8 @@ module IdentifierError = struct
           "Identifier %a clashes with a non-overloadable Stan Math library \
            function."
           quoted name
-    | InUse name -> Fmt.pf ppf "Identifier %a is already in use." quoted name
+    | InUse (name, _prev_decl) ->
+        Fmt.pf ppf "Identifier %a is already in use." quoted name
     | IsModelName name ->
         Fmt.pf ppf "Identifier %a clashes with model name." quoted name
     | IsKeyword name ->
@@ -458,11 +485,11 @@ module IdentifierError = struct
           "Identifier %a has a _lupdf/_lupmf suffix, which is only allowed for \
            functions."
           quoted name
-    | DuplicateArgNames name ->
+    | DuplicateArgNames id ->
         Fmt.pf ppf
           "@[All function arguments must have distinct identifiers.@ Argument \
            %a is duplicated.@]"
-          quoted name
+          quoted id.name
 end
 
 module ExpressionError = struct
@@ -593,8 +620,9 @@ end
 
 module StatementError = struct
   type t =
-    | CannotAssignToReadOnly of string
-    | CannotAssignToGlobal of string
+    | CannotAssignToReadOnly of string * Location_span.t option
+    | CannotAssignToGlobal of
+        string * Environment.originblock * Location_span.t option
     | CannotAssignFunction of string * UnsizedType.t
     | LValueMultiIndexing
     | LValueTupleUnpackDuplicates of Ast.untyped_lval list
@@ -609,20 +637,22 @@ module StatementError = struct
     | ContinueOutsideLoop
     | ExpressionReturnOutsideReturningFn
     | VoidReturnOutsideNonReturningFn
-    | NonDataVariableSizeDecl
+    | NonDataVariableSizeDecl of Environment.originblock * Location_span.t
     | NonIntBounds
     | ComplexTransform
     | IntegerParameter of bool
-    | IllTypedAssignment of Operator.t * UnsizedType.t * UnsizedType.t
+    | IllTypedAssignment of
+        Operator.t * Ast.typed_expr_meta * Ast.typed_expr_meta
 
   let pp ppf = function
-    | CannotAssignToReadOnly name ->
+    | CannotAssignToReadOnly (name, _prev_decl) ->
         Fmt.pf ppf "Cannot assign to function argument or loop identifier %a."
           quoted name
-    | CannotAssignToGlobal name ->
+    | CannotAssignToGlobal (name, block, _prev_decl) ->
         Fmt.pf ppf
-          "Cannot assign to global variable %a declared in previous blocks."
+          "Cannot assign to global variable %a declared previously in %s."
           quoted name
+          (Environment.block_name block)
     | CannotAssignFunction (name, ut) ->
         Fmt.pf ppf "Cannot assign a function type (%a) to variable %a."
           (actual_style UnsizedType.pp)
@@ -706,7 +736,7 @@ module StatementError = struct
            definitions."
           (expected_style Fmt.string)
           "void"
-    | NonDataVariableSizeDecl ->
+    | NonDataVariableSizeDecl (_block, _prev_decl) ->
         Fmt.pf ppf
           "Non-data variables are not allowed in top level size declarations."
     | NonIntBounds ->
@@ -723,7 +753,7 @@ module StatementError = struct
           "@[Ill-typed assignment statement.@ Expected the right hand side to \
            have a type matching the destination (%a).%a@]"
           (expected_style UnsizedType.pp)
-          lt found_type rt
+          lt.type_ found_type rt.type_
     | IllTypedAssignment (op, lt, rt) ->
         let pp_expected_types ppf signatures =
           match Common.Nonempty_list.of_list signatures with
@@ -732,14 +762,15 @@ module StatementError = struct
                 "There are no valid right hand sides for the given left hand \
                  side (%a)."
                 (actual_style UnsizedType.pp)
-                lt
+                lt.type_
           | Some args ->
               Fmt.pf ppf
                 "For the given left hand side (%a), expected the right hand \
                  side to have type@ %a.%a"
                 (expected_style UnsizedType.pp)
-                lt expected_types args found_type rt in
-        let sigs = SignatureMismatch.list_valid_assignmentoperator_rhs lt op in
+                lt.type_ expected_types args found_type rt.type_ in
+        let sigs =
+          SignatureMismatch.list_valid_assignmentoperator_rhs lt.type_ op in
         Fmt.pf ppf "@[Ill-typed assignment operator %a=.@ %a@]" Operator.pp op
           pp_expected_types sigs
 end
@@ -802,8 +833,8 @@ let illtyped_assignment loc assignop lt rt =
 let illtyped_ternary_if loc predt lt rt =
   (loc, ExpressionError (ExpressionError.IllTypedTernaryIf (predt, lt, rt)))
 
-let returning_fn_expected_nonreturning_found loc name =
-  (loc, TypeError (TypeError.ReturningFnExpectedNonReturningFound name))
+let returning_fn_expected_nonreturning_found loc name prev =
+  (loc, TypeError (TypeError.ReturningFnExpectedNonReturningFound (name, prev)))
 
 let illtyped_reduce_sum_not_array loc ty =
   (loc, TypeError (TypeError.IllTypedReduceSumNotArray ty))
@@ -811,24 +842,28 @@ let illtyped_reduce_sum_not_array loc ty =
 let illtyped_reduce_sum_slice loc ty =
   (loc, TypeError (TypeError.IllTypedReduceSumSlice ty))
 
-let illtyped_reduce_sum loc name arg_tys args error =
-  (loc, TypeError (TypeError.IllTypedReduceSum (name, arg_tys, args, error)))
-
-let illtyped_variadic loc name arg_tys args fn_rt error =
+let illtyped_reduce_sum loc name arg_tys args error prev =
   ( loc
-  , TypeError (TypeError.IllTypedVariadic (name, arg_tys, args, error, fn_rt))
+  , TypeError (TypeError.IllTypedReduceSum (name, arg_tys, args, error, prev))
   )
 
-let forwarded_function_application_error loc caller name required_args details =
+let illtyped_variadic loc name arg_tys args fn_rt error prev =
+  ( loc
+  , TypeError
+      (TypeError.IllTypedVariadic (name, arg_tys, args, error, fn_rt, prev)) )
+
+let forwarded_function_application_error loc caller name required_args details
+    prev =
   ( loc
   , TypeError
       (TypeError.IllTypedForwardedFunctionApp
-         (caller, name, required_args, details)) )
+         (caller, name, required_args, details, prev)) )
 
-let forwarded_function_signature_error loc caller name details =
+let forwarded_function_signature_error loc caller name details prev =
   ( loc
   , TypeError
-      (TypeError.IllTypedForwardedFunctionSignature (caller, name, details)) )
+      (TypeError.IllTypedForwardedFunctionSignature (caller, name, details, prev))
+  )
 
 let illtyped_laplace_helper_args loc name lik_args details =
   ( loc
@@ -837,8 +872,10 @@ let illtyped_laplace_helper_args loc name lik_args details =
 let illtyped_laplace_generic loc name early supplied =
   (loc, TypeError (TypeError.IllTypedLaplaceMarginal (name, early, supplied)))
 
-let laplace_compatibility loc banned_function =
-  (loc, TypeError (TypeError.LaplaceCompatibilityIssue banned_function))
+let laplace_compatibility loc banned_function use_location =
+  ( loc
+  , TypeError
+      (TypeError.LaplaceCompatibilityIssue (banned_function, use_location)) )
 
 let illtyped_laplace_extra_args loc name args =
   (loc, TypeError (TypeError.IlltypedLaplaceTooMany (name, args)))
@@ -854,8 +891,8 @@ let ambiguous_function_promotion loc name arg_tys signatures =
   , TypeError (TypeError.AmbiguousFunctionPromotion (name, arg_tys, signatures))
   )
 
-let returning_fn_expected_nonfn_found loc name =
-  (loc, TypeError (TypeError.ReturningFnExpectedNonFnFound name))
+let returning_fn_expected_nonfn_found loc name prev =
+  (loc, TypeError (TypeError.ReturningFnExpectedNonFnFound (name, prev)))
 
 let returning_fn_expected_undeclaredident_found loc name sug =
   ( loc
@@ -873,11 +910,11 @@ let returning_fn_expected_wrong_dist_suffix_found loc (prefix, suffix) =
   , TypeError
       (TypeError.ReturningFnExpectedWrongDistSuffixFound (prefix, suffix)) )
 
-let nonreturning_fn_expected_returning_found loc name =
-  (loc, TypeError (TypeError.NonReturningFnExpectedReturningFound name))
+let nonreturning_fn_expected_returning_found loc name prev =
+  (loc, TypeError (TypeError.NonReturningFnExpectedReturningFound (name, prev)))
 
-let nonreturning_fn_expected_nonfn_found loc name =
-  (loc, TypeError (TypeError.NonReturningFnExpectedNonFnFound name))
+let nonreturning_fn_expected_nonfn_found loc name prev =
+  (loc, TypeError (TypeError.NonReturningFnExpectedNonFnFound (name, prev)))
 
 let nonreturning_fn_expected_undeclaredident_found loc name sug =
   ( loc
@@ -915,7 +952,8 @@ let ident_is_model_name loc name =
 let ident_is_stanmath_name loc name =
   (loc, IdentifierError (IdentifierError.IsStanMathName name))
 
-let ident_in_use loc name = (loc, IdentifierError (IdentifierError.InUse name))
+let ident_in_use loc name prev =
+  (loc, IdentifierError (IdentifierError.InUse (name, prev)))
 
 let ident_not_in_scope loc name sug =
   (loc, IdentifierError (IdentifierError.NotInScope (name, sug)))
@@ -946,11 +984,11 @@ let empty_array loc = (loc, ExpressionError ExpressionError.EmptyArray)
 let empty_tuple loc = (loc, ExpressionError ExpressionError.EmptyTuple)
 let bad_int_literal loc = (loc, ExpressionError ExpressionError.IntTooLarge)
 
-let cannot_assign_to_read_only loc name =
-  (loc, StatementError (StatementError.CannotAssignToReadOnly name))
+let cannot_assign_to_read_only loc name prev =
+  (loc, StatementError (StatementError.CannotAssignToReadOnly (name, prev)))
 
-let cannot_assign_to_global loc name =
-  (loc, StatementError (StatementError.CannotAssignToGlobal name))
+let cannot_assign_to_global loc name block prev =
+  (loc, StatementError (StatementError.CannotAssignToGlobal (name, block, prev)))
 
 let cannot_assign_function loc name ut =
   (loc, StatementError (StatementError.CannotAssignFunction (name, ut)))
@@ -996,8 +1034,8 @@ let expression_return_outside_returning_fn loc =
 let void_outside_nonreturning_fn loc =
   (loc, StatementError StatementError.VoidReturnOutsideNonReturningFn)
 
-let non_data_variable_size_decl loc =
-  (loc, StatementError StatementError.NonDataVariableSizeDecl)
+let non_data_variable_size_decl loc block prev =
+  (loc, StatementError (StatementError.NonDataVariableSizeDecl (block, prev)))
 
 let non_int_bounds loc = (loc, StatementError StatementError.NonIntBounds)
 let complex_transform loc = (loc, StatementError StatementError.ComplexTransform)
@@ -1005,13 +1043,17 @@ let complex_transform loc = (loc, StatementError StatementError.ComplexTransform
 let no_int_params loc transformed =
   (loc, StatementError (StatementError.IntegerParameter transformed))
 
-let fn_overload_rt_only loc name rt1 rt2 =
-  (loc, TypeError (TypeError.FuncOverloadRtOnly (name, rt1, rt2)))
+let fn_overload_rt_only loc name rt1 rt2 prev =
+  (loc, TypeError (TypeError.FuncOverloadRtOnly (name, rt1, rt2, prev)))
 
-let fn_decl_redefined loc name ~stan_math ut =
-  (loc, TypeError (TypeError.FuncDeclRedefined (name, ut, stan_math)))
+let fn_decl_redefined loc name ut prev =
+  (loc, TypeError (TypeError.FuncDeclRedefined (name, ut, prev)))
 
-let fn_decl_exists loc name = (loc, TypeError (TypeError.FunDeclExists name))
+let stan_math_fn_redefined loc name ut =
+  (loc, TypeError (TypeError.StanMathFuncRedefined (name, ut)))
+
+let fn_decl_exists loc name prev =
+  (loc, TypeError (TypeError.FunDeclExists (name, prev)))
 
 let fn_decl_without_def loc name =
   (loc, TypeError (TypeError.FunDeclNoDefn name))
@@ -1027,8 +1069,8 @@ let prob_density_non_real_variate loc ut_opt =
 let prob_mass_non_int_variate loc ut_opt =
   (loc, TypeError (TypeError.ProbMassNonIntVariate ut_opt))
 
-let duplicate_arg_names loc name =
-  (loc, IdentifierError (IdentifierError.DuplicateArgNames name))
+let duplicate_arg_names loc id =
+  (loc, IdentifierError (IdentifierError.DuplicateArgNames id))
 
 let incompatible_return_types loc =
   (loc, TypeError TypeError.IncompatibleReturnType)
