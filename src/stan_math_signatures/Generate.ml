@@ -275,7 +275,8 @@ let distributions =
   ; (full_lpdf, "weibull", [DVReal; DVReal; DVReal], SoA)
   ; ([Lpdf], "wiener", [DVReal; DVReal; DVReal; DVReal; DVReal], SoA)
   ; ([Lpdf], "wishart_cholesky", [DMatrix; DReal; DMatrix], SoA)
-  ; ([Lpdf], "wishart", [DMatrix; DReal; DMatrix], SoA) ]
+  ; ([Lpdf], "wishart", [DMatrix; DReal; DMatrix], SoA)
+  ; (full_lpmf, "yule_simon", [DVInt; DVReal], SoA) ]
 
 let basic_vectorized = UnaryVectorized IntsToReals
 
