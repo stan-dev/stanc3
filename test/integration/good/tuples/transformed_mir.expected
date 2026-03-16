@@ -10657,6 +10657,141 @@
  (transform_inits ()) (unconstrain_array ()) (output_vars ())
  (prog_name nested_unpacking_model) (prog_path nested_unpacking.stan))
 [exit 0]
+  $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir onepl_expr.stan
+((functions_block ()) (input_vars ()) (prepare_data ())
+ (log_prob
+  (((pattern
+     (Block
+      (((pattern
+         (NRFunApp (CompilerInternal FnPrint)
+          (((pattern
+             (FunApp (CompilerInternal FnMakeTuple)
+              (((pattern (Lit Real 3.5))
+                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+            (meta
+             ((type_ (UTuple (UReal))) (loc <opaque>) (adlevel (TupleAD (DataOnly)))))))))
+        (meta <opaque>)))))
+    (meta <opaque>))))
+ (reverse_mode_log_prob
+  (((pattern
+     (Block
+      (((pattern
+         (NRFunApp (CompilerInternal FnPrint)
+          (((pattern
+             (FunApp (CompilerInternal FnMakeTuple)
+              (((pattern (Lit Real 3.5))
+                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+            (meta
+             ((type_ (UTuple (UReal))) (loc <opaque>) (adlevel (TupleAD (DataOnly)))))))))
+        (meta <opaque>)))))
+    (meta <opaque>))))
+ (generate_quantities
+  (((pattern
+     (IfElse
+      ((pattern
+        (FunApp (StanLib PNot__ FnPlain AoS)
+         (((pattern
+            (EOr
+             ((pattern (Var emit_transformed_parameters__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+             ((pattern (Var emit_generated_quantities__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+      ((pattern (Block (((pattern (Return ())) (meta <opaque>))))) (meta <opaque>)) ()))
+    (meta <opaque>))
+   ((pattern
+     (IfElse
+      ((pattern
+        (FunApp (StanLib PNot__ FnPlain AoS)
+         (((pattern (Var emit_generated_quantities__))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+      ((pattern (Block (((pattern (Return ())) (meta <opaque>))))) (meta <opaque>)) ()))
+    (meta <opaque>))))
+ (transform_inits ()) (unconstrain_array ()) (output_vars ())
+ (prog_name onepl_expr_model) (prog_path onepl_expr.stan))
+[exit 0]
+  $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir onepl_type.stan
+((functions_block
+  (((fdrt Void) (fdname foo) (fdsuffix FnPlain)
+    (fdargs ((AutoDiffable x (UTuple (UReal)))))
+    (fdbody
+     (((pattern (Block (((pattern (Return ())) (meta <opaque>))))) (meta <opaque>))))
+    (fdloc <opaque>))))
+ (input_vars ()) (prepare_data ()) (log_prob ()) (reverse_mode_log_prob ())
+ (generate_quantities
+  (((pattern
+     (IfElse
+      ((pattern
+        (FunApp (StanLib PNot__ FnPlain AoS)
+         (((pattern
+            (EOr
+             ((pattern (Var emit_transformed_parameters__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+             ((pattern (Var emit_generated_quantities__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+      ((pattern (Block (((pattern (Return ())) (meta <opaque>))))) (meta <opaque>)) ()))
+    (meta <opaque>))
+   ((pattern
+     (IfElse
+      ((pattern
+        (FunApp (StanLib PNot__ FnPlain AoS)
+         (((pattern (Var emit_generated_quantities__))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+      ((pattern (Block (((pattern (Return ())) (meta <opaque>))))) (meta <opaque>)) ()))
+    (meta <opaque>))))
+ (transform_inits ()) (unconstrain_array ()) (output_vars ())
+ (prog_name onepl_type_model) (prog_path onepl_type.stan))
+[exit 0]
+  $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir onepl_type2.stan
+((functions_block ()) (input_vars ()) (prepare_data ())
+ (log_prob
+  (((pattern
+     (Block
+      (((pattern
+         (Decl (decl_adtype (TupleAD (AutoDiffable))) (decl_id x)
+          (decl_type (Sized (STuple (SReal)))) (initialize Default)))
+        (meta <opaque>)))))
+    (meta <opaque>))))
+ (reverse_mode_log_prob
+  (((pattern
+     (Block
+      (((pattern
+         (Decl (decl_adtype (TupleAD (AutoDiffable))) (decl_id x)
+          (decl_type (Sized (STuple (SReal)))) (initialize Default)))
+        (meta <opaque>)))))
+    (meta <opaque>))))
+ (generate_quantities
+  (((pattern
+     (IfElse
+      ((pattern
+        (FunApp (StanLib PNot__ FnPlain AoS)
+         (((pattern
+            (EOr
+             ((pattern (Var emit_transformed_parameters__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+             ((pattern (Var emit_generated_quantities__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+      ((pattern (Block (((pattern (Return ())) (meta <opaque>))))) (meta <opaque>)) ()))
+    (meta <opaque>))
+   ((pattern
+     (IfElse
+      ((pattern
+        (FunApp (StanLib PNot__ FnPlain AoS)
+         (((pattern (Var emit_generated_quantities__))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+      ((pattern (Block (((pattern (Return ())) (meta <opaque>))))) (meta <opaque>)) ()))
+    (meta <opaque>))))
+ (transform_inits ()) (unconstrain_array ()) (output_vars ())
+ (prog_name onepl_type2_model) (prog_path onepl_type2.stan))
+[exit 0]
   $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir overloading.stan
 ((functions_block
   (((fdrt (ReturnType UInt)) (fdname f) (fdsuffix FnPlain)

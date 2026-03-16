@@ -421,40 +421,6 @@ Syntax error in 'incomplete7.stan', line 2, column 20 to column 21, parsing erro
 
 Ill-formed type. Expected a comma separated list of types between "(" and ")" to declare tuple variable.
 [exit 1]
-  $ ../../../../../install/default/bin/stanc onepl_expr.stan
-Syntax error in 'onepl_expr.stan', line 2, column 13 to column 14, parsing error:
-   -------------------------------------------------
-     1:  model {
-     2:    print((3.5,));
-                      ^
-     3:  }
-   -------------------------------------------------
-
-Ill-formed expression. Expected an expression or comma separated list of expressions followed by ")" after "(".
-[exit 1]
-  $ ../../../../../install/default/bin/stanc onepl_type.stan
-Syntax error in 'onepl_type.stan', line 2, column 22 to column 23, parsing error:
-   -------------------------------------------------
-     1:  functions {
-     2:    void foo(tuple(real,) x) {
-                               ^
-     3:      return;
-     4:    }
-   -------------------------------------------------
-
-Ill-formed type. Expected a comma separated list of types between "(" and ")" to declare tuple variable.
-[exit 1]
-  $ ../../../../../install/default/bin/stanc onepl_type2.stan
-Syntax error in 'onepl_type2.stan', line 2, column 13 to column 14, parsing error:
-   -------------------------------------------------
-     1:  model {
-     2:    tuple(real,) x;
-                      ^
-     3:  }
-   -------------------------------------------------
-
-Ill-formed type. Incomplete type specification, expected further types followed by ")" to complete tuple.
-[exit 1]
   $ ../../../../../install/default/bin/stanc onepl_type_missing_comma.stan
 Syntax error in 'onepl_type_missing_comma.stan', line 2, column 12 to column 13, parsing error:
    -------------------------------------------------
