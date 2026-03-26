@@ -78,6 +78,26 @@ model {
 }
 
 [exit 0]
+  $ ../../../../../install/default/bin/stanc --auto-format onepl_expr.stan
+model {
+  print((3.5,));
+}
+
+[exit 0]
+  $ ../../../../../install/default/bin/stanc --auto-format onepl_type.stan
+functions {
+  void foo(tuple(real,) x) {
+    return;
+  }
+}
+
+[exit 0]
+  $ ../../../../../install/default/bin/stanc --auto-format onepl_type2.stan
+model {
+  tuple(real,) x;
+}
+
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format overloading.stan
 functions {
   int f(tuple(int, int, int) x) {
