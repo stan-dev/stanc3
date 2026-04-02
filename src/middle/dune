@@ -1,14 +1,9 @@
 (library
  (name middle)
  (public_name stanc.middle)
- (libraries core str fmt common re)
+ (libraries core fmt common)
  (instrumentation
   (backend bisect_ppx))
  (inline_tests)
  (preprocess
-  (pps
-   ppx_jane
-   ppx_deriving.map
-   ppx_deriving.fold
-   ppx_deriving.create
-   ppx_deriving.show)))
+  (pps ppx_jane ppx_deriving.map ppx_deriving.fold ppx_deriving.create)))

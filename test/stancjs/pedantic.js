@@ -11,26 +11,21 @@ model {
 }
 `
 var pedantic_test = stanc.stanc("pedantic", pedantic_model, ["warn-pedantic"]);
-if (pedantic_test.warnings) {
-    console.log(JSON.stringify(pedantic_test.warnings))
-}
+utils.print_warnings(pedantic_test)
+
 
 var pedantic_test = stanc.stanc("pedantic", pedantic_model);
-if (pedantic_test.warnings) {
-    console.log(JSON.stringify(pedantic_test.warnings))
-}
+utils.print_warnings(pedantic_test)
+
 var warn_uninit_model = `
-transformed data { 
+transformed data {
     real tt;
     tt = tt + 2;
 }
 `
 var warn_uninit_test = stanc.stanc("uninit", warn_uninit_model, ["warn-uninitialized"]);
-if (warn_uninit_test.warnings) {
-    console.log(JSON.stringify(warn_uninit_test.warnings))
-}
+utils.print_warnings(warn_uninit_test)
+
 
 var warn_uninit_test = stanc.stanc("uninit", warn_uninit_model);
-if (warn_uninit_test.warnings) {
-    console.log(JSON.stringify(warn_uninit_test.warnings))
-}
+utils.print_warnings(warn_uninit_test)

@@ -24,8 +24,7 @@ standard library. There are a few differences from the OCaml standard library wh
 }
 
 If for some reason you {e need} functionality from the OCaml standard library that is not available in Jane Street
-(be sure to triple check), you can use the modules [Stdlib] and [Caml] to access the built-in versions. Currently there
-is only one such usage in the compiler, to use the standard definition of [!=] in the Menhir parser.
+(be sure to triple check), you can use the module [Stdlib] to access the built-in versions.
 
 There are a few other things we gain from these libraries. The most important idea to understand is {b deriving}.
 
@@ -63,7 +62,7 @@ which will later be filled in with something like [type expr_with_meta = metadat
 
 This takes some getting used to, and also can lead to some unhelpful type signatures in editors such as
 VSCode, because abbreviations are not always used in hover-over text. For example, [Expr.Typed.t], the MIR's typed
-expression type, actually has a signature of [Expr.Typed.Meta.t Expr.Fixed.t].
+expression type, actually has a signature of [Expr.Typed.Meta.t Expr.t].
 
 {1 The [Fmt] library and pretty-printing}
 

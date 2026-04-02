@@ -18,11 +18,12 @@ type 'expr t =
       ; mem_pattern: Mem_pattern.t }
   | FnWriteParam of {unconstrain_opt: 'expr Transformation.t option; var: 'expr}
   | FnValidateSize
-  | FnValidateSizeSimplex
+  | FnValidateSizePositive
   | FnValidateSizeUnitVector
   | FnCheck of {trans: 'expr Transformation.t; var_name: string; var: 'expr}
   | FnPrint
   | FnReject
+  | FnFatalError
   | FnResizeToMatch
   | FnNaN
   | FnDeepCopy
@@ -32,7 +33,7 @@ type 'expr t =
 let to_string
     ?(expr_to_string =
       fun _ ->
-        Common.FatalError.fatal_error_msg
+        Common.ICE.internal_compiler_error
           [%message
             "Should not be parsing expression from string in function renaming"])
     x =
@@ -44,20 +45,21 @@ let pp (pp_expr : 'a Fmt.t) ppf internal =
        ~expr_to_string:(fun expr -> sexp_of_string (Fmt.str "%a" pp_expr expr))
        internal)
 
-(* Does this function call change state? Can we call it twice with the same results?
+(* Does this function call change state? Can we call it twice with the same
+   results?
 
-   E.g., FnReadDeserializer moves the deserializer forward, so calling it again has
-    different results
+   E.g., FnReadDeserializer moves the deserializer forward, so calling it again
+   has different results
 
-    Useful for optimizations
-*)
+   Useful for optimizations *)
 let can_side_effect = function
   | FnReadParam _ | FnReadData | FnReadDeserializer | FnWriteParam _
-   |FnValidateSize | FnValidateSizeSimplex | FnValidateSizeUnitVector
+   |FnValidateSize | FnValidateSizePositive | FnValidateSizeUnitVector
    |FnReadWriteEventsOpenCL _ ->
       true
   | FnLength | FnMakeArray | FnMakeRowVec | FnNegInf | FnPrint | FnReject
-   |FnResizeToMatch | FnNaN | FnDeepCopy | FnCheck _ | FnMakeTuple ->
+   |FnFatalError | FnResizeToMatch | FnNaN | FnDeepCopy | FnCheck _
+   |FnMakeTuple ->
       false
 
 let collect_exprs fn = fold (fun accum e -> e :: accum) [] fn

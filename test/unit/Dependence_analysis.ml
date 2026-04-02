@@ -39,7 +39,6 @@ let example1_program =
       |}
 
 let%expect_test "Dependency graph example" =
-  (*let deps = snd (build_predecessor_graph example1_statement_map) in*)
   let deps = log_prob_dependency_graph example1_program in
   print_s [%sexp (deps : (label, label Set.Poly.t) Map.Poly.t)];
   [%expect
@@ -53,7 +52,6 @@ let%expect_test "Dependency graph example" =
     |}]
 
 let%expect_test "Reaching defns example" =
-  (*let deps = snd (build_predecessor_graph example1_statement_map) in*)
   let deps =
     Map.Poly.map (log_prob_build_dep_info_map example1_program)
       ~f:(fun (_, x) ->
@@ -71,7 +69,6 @@ let%expect_test "Reaching defns example" =
     |}]
 
 let%expect_test "Reaching defns example" =
-  (*let deps = snd (build_predecessor_graph example1_statement_map) in*)
   let deps =
     Map.Poly.map (log_prob_build_dep_info_map example1_program)
       ~f:(fun (_, x) -> (x.reaching_defn_entry, x.reaching_defn_exit)) in
@@ -105,7 +102,6 @@ let%expect_test "Reaching defns example" =
     |}]
 
 let%expect_test "Variable dependency example" =
-  (*let deps = snd (build_predecessor_graph example1_statement_map) in*)
   let deps =
     node_vars_dependencies
       (log_prob_build_dep_info_map example1_program)
@@ -164,7 +160,6 @@ let uninitialized_var_example =
       |}
 
 let%expect_test "Uninitialized variables example" =
-  (*let deps = snd (build_predecessor_graph example1_statement_map) in*)
   let deps = mir_uninitialized_variables uninitialized_var_example in
   print_s [%sexp (deps : (Location_span.t * string) Set.Poly.t)];
   [%expect

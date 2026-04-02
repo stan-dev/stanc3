@@ -1,0 +1,18 @@
+(rule
+ (targets stanc.output)
+ (deps
+  (package stanc)
+  (:stanfiles
+   (glob_files *.stan)))
+ (action
+  (with-stdout-to
+   %{targets}
+   (run
+    %{project_root}/test/integration/run_bin_on_args.exe
+    "%{bin:stanc} --warn-uninitialized "
+    %{stanfiles}))))
+
+(rule
+ (alias runtest)
+ (action
+  (diff stanc.expected stanc.output)))

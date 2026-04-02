@@ -1,86 +1,72 @@
-(** Storing locations in the original source *)
-
 open Core
 
-(**/**)
-
-module Str = Re.Str
-
-(**/**)
-
-(** Source code locations *)
 type t = {filename: string; line_num: int; col_num: int; included_from: t option}
 [@@deriving sexp, hash]
 
-let pp_context_list ppf (lines, {line_num; col_num; _}) =
-  let advance l =
-    let front = List.hd !l in
-    match front with
-    | Some _ ->
-        l := List.tl_exn !l;
-        front
-    | None -> None in
-  let input = ref lines in
-  for _ = 1 to line_num - 3 do
-    ignore (advance input : string option)
-  done;
-  let get_line num =
-    if num > 0 then
-      match advance input with
-      | Some input -> Printf.sprintf "%6d:  %s\n" num input
-      | _ -> ""
-    else "" in
-  let line_2_before = get_line (line_num - 2) in
-  let line_before = get_line (line_num - 1) in
-  let our_line = get_line line_num in
-  let cursor_line = String.make (col_num + 9) ' ' ^ "^\n" in
-  let line_after = get_line (line_num + 1) in
-  let line_2_after = get_line (line_num + 2) in
-  Fmt.pf ppf
-    "   -------------------------------------------------\n\
-     %s%s%s%s%s%s   -------------------------------------------------\n"
-    line_2_before line_before our_line cursor_line line_after line_2_after
+let pp_context_for ppf (({line_num; _} as loc), lines) =
+  let faint pp = Fmt.(styled `Faint pp) in
+  let yellow pp = Fmt.(styled (`Fg (`Hi `Yellow)) pp) in
+  let bold_red pp = Fmt.(styled `Bold (styled (`Fg `Red) pp)) in
+  let bars =
+    faint (Fmt.any "   -------------------------------------------------\n")
+  in
+  let pp_number ppf num =
+    let style = if num = line_num then yellow else faint in
+    style (Fmt.fmt "%6d:") ppf num in
+  let get_line i =
+    let line = i - 1 in
+    if line < 0 || line >= Array.length lines then None
+    else Some (Array.get lines line) in
+  let pp_line_and_number ppf n =
+    let pp ppf line = Fmt.pf ppf "%a  %s\n" pp_number n line in
+    Fmt.option pp ppf (get_line n) in
+  let cursor_line ppf {line_num; col_num; _} =
+    let blank_line =
+      (* to get visual alignment, we copy any tabs in the line we are pointing
+         at *)
+      let highlighted_line = get_line line_num |> Option.value ~default:"" in
+      String.sub highlighted_line ~pos:0 ~len:col_num
+      |> String.map ~f:(function '\t' -> '\t' | _ -> ' ') in
+    Fmt.pf ppf "         %s%a\n" blank_line (bold_red Fmt.char) '^' in
+  bars ppf ();
+  pp_line_and_number ppf (line_num - 2);
+  pp_line_and_number ppf (line_num - 1);
+  pp_line_and_number ppf line_num;
+  cursor_line ppf loc;
+  pp_line_and_number ppf (line_num + 1);
+  pp_line_and_number ppf (line_num + 2);
+  bars ppf ()
 
-(** Turn the given location into a string holding the code of that location.
-    Code is retrieved by calling context_cb, which may do IO.
-    Exceptions in the callback or in the creation of the string
-    (possible if the context is incorrectly too short for the given location)
-    return [None] *)
-let context_to_string (context_cb : unit -> string list) (loc : t) :
-    string option =
-  Option.try_with (fun () ->
-      Fmt.to_to_string pp_context_list (context_cb (), loc))
+let empty = {filename= ""; line_num= -1; col_num= -1; included_from= None}
 
-let empty = {filename= ""; line_num= 0; col_num= 0; included_from= None}
+(** Format the location for error messaging.
 
-(**
-Format the location for error messaging.
-
-If printed_filename is passed, it replaces the highest-level name and
-leaves the filenames of included files intact.
-*)
-let rec to_string ?printed_filename ?(print_file = true) ?(print_line = true)
-    loc =
-  let open Format in
+    If printed_filename is passed, it replaces the highest-level name and leaves
+    the filenames of included files intact. *)
+let rec pp ?(print_file = true) ?(print_line = true) printed_filename ppf loc =
   let incl, filename =
     match loc.included_from with
     | Some loc2 ->
-        ( sprintf ", included from\n%s" (to_string ?printed_filename loc2)
+        ( Format.dprintf ", included from\n%a" (pp printed_filename) loc2
         , loc.filename )
-    | None -> ("", Option.value ~default:loc.filename printed_filename) in
-  let file = if print_file then sprintf "'%s', " filename else "" in
-  let line = if print_line then sprintf "line %d, " loc.line_num else "" in
-  sprintf "%s%scolumn %d%s" file line loc.col_num incl
+    | None -> (ignore, Option.value ~default:loc.filename printed_filename)
+  in
+  let file =
+    Fmt.if' print_file (fun ppf s ->
+        Fmt.pf ppf "%a, " Fmt.(styled (`Fg (`Hi `Blue)) (Fmt.fmt "'%s'")) s)
+  in
+  let line = Fmt.if' print_line (Fmt.fmt "line %d, ") in
+  Fmt.pf ppf "%a%acolumn %d%t" file filename line loc.line_num loc.col_num incl
 
 let compare loc1 loc2 =
   let rec unfold = function
     | {included_from= None; _} as loc -> [loc]
     | {included_from= Some loc1; _} as loc2 ->
         (* When pretty-printing comments it is possible to end up with multiple
-           locations at an identical point in the file when they originated in an include.
-           We artificially break this tie by pretending that included locations
-           were included from the one line down from where they truly were.
-        *)
+           locations at an identical point in the file when they originated in
+           an include. We artificially break this tie by pretending that
+           included locations were included from the one line down from where
+           they truly were. *)
         loc2 :: unfold {loc1 with line_num= loc1.line_num + 1} in
   let rec go = function
     | [], [] -> 0

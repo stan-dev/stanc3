@@ -1,79 +1,58 @@
 (** Setup of our compiler errors *)
 
 open Core
-module Str = Re.Str
-
-(** Our type of syntax error information *)
-type syntax_error =
-  | Lexing of Middle.Location.t
-  | UnexpectedEOF of Middle.Location.t
-  | Include of string * Middle.Location.t
-  | Parsing of string * Middle.Location_span.t
-
-(** Exception for Syntax Errors *)
-exception SyntaxError of syntax_error
-
-(** Exception [SemanticError (msg, loc)] indicates a semantic error with message
-    [msg], occurring in location [loc]. *)
-exception SemanticError of Semantic_error.t
 
 type t =
   | FileNotFound of string
-  | Syntax_error of syntax_error
+  | Syntax_error of Syntax_error.t
   | Semantic_error of Semantic_error.t
   | DebugDataError of (Middle.Location_span.t * string)
 
-let pp_context_with_message ?code ppf (msg, loc) =
-  let open Middle.Location in
-  let context_callback =
-    match code with
-    | Some s -> fun () -> String.split_lines s
-    | None -> fun () -> In_channel.read_lines loc.filename in
-  Fmt.pf ppf "%a@,%s" (Fmt.option Fmt.string)
-    (context_to_string context_callback loc)
-    msg
+let get_context ?code Middle.Location.{filename; included_from; _} =
+  Option.try_with @@ fun () ->
+  match (included_from, code) with
+  | None, Some code ->
+      (* If the location is not included from anywhere, and we have code
+         provided, use it *)
+      String.split_lines code
+  | _ -> (
+      (* Otherwise, by the time we are printing an error, all these files are
+         already resolved. *)
+      match !Include_files.include_provider with
+      | FileSystemPaths _ ->
+          (* So we can read directly from the filesystem *)
+          In_channel.read_lines filename
+      | InMemory m ->
+          (* Or, we know we can find it in the map *)
+          String.split_lines (Map.find_exn m filename))
 
-let pp_semantic_error ?printed_filename ?code ppf err =
-  let loc_span = Semantic_error.location err in
-  Fmt.pf ppf "Semantic error in %s:@;%a"
-    (Middle.Location_span.to_string ?printed_filename loc_span)
-    (pp_context_with_message ?code)
-    (Fmt.str "%a@." Semantic_error.pp err, loc_span.begin_loc)
+let pp_context ?code ppf loc =
+  let context =
+    get_context ?code loc
+    |> Option.map ~f:(fun lines -> (loc, Array.of_list lines)) in
+  (Fmt.option Middle.Location.pp_context_for) ppf context
 
-(** A syntax error message used when handling a SyntaxError *)
-let pp_syntax_error ?printed_filename ?code ppf = function
-  | Parsing (message, loc_span) ->
-      Fmt.pf ppf "Syntax error in %s, parsing error:@,%a"
-        (Middle.Location_span.to_string ?printed_filename loc_span)
-        (pp_context_with_message ?code)
-        (message, loc_span.begin_loc)
-  | Lexing loc ->
-      Fmt.pf ppf "Syntax error in %s, lexing error:@,%a@."
-        (Middle.Location.to_string ?printed_filename
-           {loc with col_num= loc.col_num - 1})
-        (pp_context_with_message ?code)
-        ("Invalid character found.", loc)
-  | UnexpectedEOF loc ->
-      Fmt.pf ppf "Syntax error in %s, lexing error:@,%a@."
-        (Middle.Location.to_string ?printed_filename
-           {loc with col_num= loc.col_num - 1})
-        (pp_context_with_message ?code)
-        ("Unexpected end of input", loc)
-  | Include (message, loc) ->
-      Fmt.pf ppf "Syntax error in %s, include error:@,%a@."
-        (Middle.Location.to_string loc ?printed_filename)
-        (pp_context_with_message ?code)
-        (message, loc)
+let red = Fmt.(styled `Bold (styled (`Fg `Red) string))
 
 let pp ?printed_filename ?code ppf = function
   | FileNotFound f ->
-      Fmt.pf ppf "Error: file '%s' not found or cannot be opened@." f
-  | Syntax_error e -> pp_syntax_error ?printed_filename ?code ppf e
-  | Semantic_error e -> pp_semantic_error ?printed_filename ?code ppf e
+      Fmt.pf ppf "%a: file '%s' not found or cannot be opened@." red "Error" f
+  | Syntax_error err ->
+      let loc_span = Syntax_error.location err in
+      let error_type = Syntax_error.kind err in
+      Fmt.pf ppf "%a in %a, %s:@;%a@,%a" red "Syntax error"
+        (Middle.Location_span.pp ?printed_filename)
+        loc_span error_type (pp_context ?code) loc_span.begin_loc
+        Syntax_error.pp err
+  | Semantic_error err ->
+      let loc_span = Semantic_error.location err in
+      Fmt.pf ppf "%a in %a:@;%a@,%a@." red "Semantic error"
+        (Middle.Location_span.pp ?printed_filename)
+        loc_span (pp_context ?code) loc_span.begin_loc Semantic_error.pp err
   | DebugDataError (loc, msg) ->
-      if Middle.Location_span.(loc = empty) then Fmt.pf ppf "Error: %s" msg
+      if Middle.Location_span.(compare loc empty = 0) then
+        Fmt.pf ppf "%a: %s" red "Error" msg
       else
-        let loc = Middle.Location_span.to_string ?printed_filename loc in
-        Fmt.pf ppf "@[<v>Error in %s:@ %s@;@]" loc msg
-
-let to_string = Fmt.str "%a" (pp ?printed_filename:None ?code:None)
+        Fmt.pf ppf "@[<v>%a in %a:@ %s@;@]" red "Error"
+          (Middle.Location_span.pp ?printed_filename)
+          loc msg

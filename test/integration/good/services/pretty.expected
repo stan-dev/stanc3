@@ -66,6 +66,7 @@ generated quantities {
   }
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format test_gq.stan
 parameters {
   array[2] real<lower=-10, upper=10> y;
@@ -87,6 +88,7 @@ generated quantities {
   y_rep[2] = normal_rng(y[2], 1);
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format test_gq2.stan
 parameters {
   array[2] real<lower=-10, upper=10> y;
@@ -98,6 +100,7 @@ generated quantities {
   print("no QoIs");
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format test_lp.stan
 parameters {
   array[2] real<lower=-10, upper=10> y;
@@ -114,3 +117,4 @@ generated quantities {
   real xgq = 0.007;
 }
 
+[exit 0]

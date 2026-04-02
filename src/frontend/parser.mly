@@ -1,5 +1,4 @@
 (** The parser for Stan. A Menhir file. *)
-
 %{
 open Core
 open Middle
@@ -7,33 +6,32 @@ open Ast
 open Debugging
 open Preprocessor
 
+let parse_error msg loc =
+  Syntax_error.parse_error (Scanf.format_from_string msg "") (location_span_of_positions loc)
+
 (* Takes a sized_basic_type and a list of sizes and repeatedly applies then
    SArray constructor, taking sizes off the list *)
 let reducearray (sbt, l) =
   List.fold_right l ~f:(fun z y -> SizedType.SArray (y, z)) ~init:sbt
 
 let build_id id loc =
-  grammar_logger ("identifier " ^ id) ;
+  grammar_logger ("identifier " ^ id);
   {name= id; id_loc= location_span_of_positions loc}
 
 let reserved (name, loc, _) =
-  raise
-    (Errors.SyntaxError
-       (Errors.Parsing
-          ( "Expected a new identifier but found reserved keyword '" ^ name
-            ^ "'.\n"
-          , location_span_of_positions loc ) ) )
+  parse_error
+    ("@{<light_red>Ill-formed identifier.@} Expected a new identifier but \
+      found reserved keyword @{<green>\"" ^ name ^ "\"@}.\n")
+    loc
 
 let reserved_decl (name, loc, is_type) =
   if is_type then
-    raise
-      (Errors.SyntaxError
-         (Errors.Parsing
-            ( "Found a type ('" ^ name
-              ^ "') where an identifier was expected.\n\
-                 All variables declared in a comma-separated list must be of \
-                 the same type.\n"
-            , location_span_of_positions loc ) ) )
+    parse_error
+      ("@{<light_red>Ill-formed identifier.@} Found a type (@{<green>\"" ^ name
+     ^ "\"@}) where an identifier was expected.\n\
+        All variables declared in a comma-separated list must be of the same \
+        type.\n")
+      loc
   else reserved (name, loc, is_type)
 
 let build_expr expr loc = {expr; emeta= {loc= location_span_of_positions loc}}
@@ -42,12 +40,11 @@ let rec iterate_n f x = function 0 -> x | n -> iterate_n f (f x) (n - 1)
 let parse_tuple_slot ix_str loc =
   match int_of_string_opt (String.drop_prefix ix_str 1) with
   | None ->
-      raise
-        (Errors.SyntaxError
-           (Errors.Parsing
-              ( "Failed to parse integer from string '" ^ ix_str
-                ^ "' in tuple index. \nThe index is likely too large.\n"
-              , location_span_of_positions loc ) ) )
+      parse_error
+        ("@{<light_red>Ill-formed index.@} Failed to parse integer from string \
+          @{<green>\"" ^ ix_str
+       ^ "\"@} in tuple index. \nThe index is likely too large.\n")
+        loc
   | Some ix -> ix
 
 (** Given a parsed expression, try to convert it to
@@ -56,11 +53,11 @@ let try_convert_to_lvalue expr loc =
   match Ast.lvalue_of_expr_opt expr with
   | Some l -> l
   | None ->
-    raise
-        (Errors.SyntaxError
-           (Errors.Parsing
-              ( "Expected an assignable value but found a general expression.\n"
-              , location_span_of_positions loc ) ) )
+      parse_error
+        "@{<light_red>Ill-formed assignment.@} Expected an assignable value \
+         but found a general expression.\n"
+        loc
+
 
 let nest_unsized_array basic_type n =
   iterate_n (fun t -> UnsizedType.UArray t) basic_type n
@@ -83,9 +80,12 @@ let nest_unsized_array basic_type n =
        ROWVECTOR "row_vector" ARRAY "array" TUPLE "tuple" MATRIX "matrix" ORDERED "ordered"
        COMPLEXVECTOR "complex_vector" COMPLEXROWVECTOR "complex_row_vector"
        POSITIVEORDERED "positive_ordered" SIMPLEX "simplex" UNITVECTOR "unit_vector"
-       CHOLESKYFACTORCORR "cholesky_factor_corr" CHOLESKYFACTORCOV "cholesky_factor_cov"
-       CORRMATRIX "corr_matrix" COVMATRIX "cov_matrix" COMPLEXMATRIX "complex_matrix"
+       SUMTOZEROVEC "sum_to_zero_vector" CHOLESKYFACTORCORR "cholesky_factor_corr"
+       CHOLESKYFACTORCOV "cholesky_factor_cov" CORRMATRIX "corr_matrix" COVMATRIX "cov_matrix"
+       COMPLEXMATRIX "complex_matrix" STOCHASTICCOLUMNMATRIX "column_stochastic_matrix"
+       STOCHASTICROWMATRIX "row_stochastic_matrix" SUMTOZEROMAT "sum_to_zero_matrix"
 %token LOWER "lower" UPPER "upper" OFFSET "offset" MULTIPLIER "multiplier"
+%token JACOBIAN "jacobian"
 %token <string> INTNUMERAL "24"
 %token <string> REALNUMERAL "3.1415" DOTNUMERAL ".2"
 %token <string> IMAGNUMERAL "1i"
@@ -97,9 +97,9 @@ let nest_unsized_array basic_type n =
        ELTDIVIDE "./" OR "||" AND "&&" EQUALS "==" NEQUALS "!=" LEQ "<=" GEQ ">=" TILDE "~"
 %token ASSIGN "=" PLUSASSIGN "+=" MINUSASSIGN "-=" TIMESASSIGN "*="
        DIVIDEASSIGN "/=" ELTDIVIDEASSIGN "./=" ELTTIMESASSIGN ".*="
-%token PRINT "print" REJECT "reject"
+%token PRINT "print" REJECT "reject" FATAL_ERROR "fatal_error"
 %token TRUNCATE "T"
-%token EOF ""
+%token EOF "<EOF>"
 
 (* UNREACHABLE tokens will never be produced by the lexer, so we can use them as
    "a thing that will never parse". This is useful in a few places. For example,
@@ -142,13 +142,9 @@ program:
     EOF
     {
       grammar_logger "program" ;
-      (* check for empty programs*)
-      let () =
-        match (ofb, odb, otdb, opb, otpb, omb, ogb) with
-        | None, None, None, None, None, None, None ->
-            Input_warnings.empty (location_of_position $startpos).filename
-        | _ -> ()
-      in
+      (* check for empty programs *)
+      if List.is_empty (List.filter_opt [ofb; odb; otdb; opb; otpb; omb; ogb])
+      then Input_warnings.empty ();
       { functionblock= ofb
       ; datablock= odb
       ; transformeddatablock= otdb
@@ -213,7 +209,6 @@ identifier:
   | id=IDENTIFIER { build_id id $loc }
   | TRUNCATE { build_id "T" $loc}
 
-
 decl_identifier:
   | id=identifier { id }
   | err=reserved_word { reserved err }
@@ -251,12 +246,17 @@ reserved_word:
   | POSITIVEORDERED { "positive_ordered", $loc, true }
   | SIMPLEX { "simplex", $loc, true }
   | UNITVECTOR { "unit_vector", $loc, true }
+  | SUMTOZEROVEC { "sum_to_zero_vector", $loc, true }
+  | SUMTOZEROMAT { "sum_to_zero_matrix", $loc, true }
   | CHOLESKYFACTORCORR { "cholesky_factor_corr", $loc, true }
   | CHOLESKYFACTORCOV { "cholesky_factor_cov", $loc, true }
   | CORRMATRIX { "corr_matrix", $loc, true }
   | COVMATRIX { "cov_matrix", $loc, true  }
+  | STOCHASTICCOLUMNMATRIX { "column_stochastic_matrix", $loc, true }
+  | STOCHASTICROWMATRIX { "row_stochastic_matrix", $loc, true }
   | PRINT { "print", $loc, false }
   | REJECT { "reject", $loc, false }
+  | FATAL_ERROR { "fatal_error", $loc, false }
   | TARGET { "target", $loc, false }
   | PROFILE { "profile", $loc, false }
   | TUPLE { "tuple", $loc, true }
@@ -294,6 +294,19 @@ unsized_type:
     {  grammar_logger "unsized_type";
         nest_unsized_array t n
     }
+  (* This is just a helper for the fact that we don't support the old array syntax any more
+    It can go away at some point if it starts causing conflicts.
+  *)
+  | bt=basic_type dims=unsized_dims {
+    parse_error
+      (Fmt.str
+         "%@{<light_red>Ill-formed type.%@} %@{<yellow>It looks like you are \
+          trying to use the old array syntax.@ Please use the new syntax:%@}@ \
+          @[<h>array[%s] %a@]@\n"
+         (String.make (dims - 1) ',')
+         UnsizedType.pp bt)
+      $loc(dims)
+  }
   | bt=basic_type
     {  grammar_logger "unsized_type";
        bt
@@ -334,7 +347,7 @@ unsized_dims:
 no_assign:
   | UNREACHABLE
     { (* This code will never be reached *)
-       Common.FatalError.fatal_error_msg
+       Common.ICE.internal_compiler_error
           [%message "the UNREACHABLE token should never be produced"]
     }
 
@@ -365,6 +378,20 @@ remaining_declarations(rhs):
  * identifier.
  *)
 decl(type_rule, rhs):
+  (* This is just a helper for the fact that we don't support the old array syntax any more *)
+  | ty=type_rule id=decl_identifier LBRACK dims=separated_nonempty_list(COMMA, expression) RBRACK {
+    let (ty, trans) = ty in
+    let ty = List.fold_right ~f:(fun e ty -> SizedType.SArray (ty, e)) ~init:ty dims in
+    let ty = (ty, trans) in
+    parse_error
+      (Fmt.str
+         "%@{<light_red>Ill-formed declaration.%@} %@{<green>\";\"%@} expected \
+          after variable declaration.@ %@{<yellow>It looks like you are trying \
+          to use the old array syntax.@ Please use the new syntax:%@}@ @[<h>%a \
+          %s;@]@\n"
+         Pretty_printing.pp_transformed_type ty id.name)
+      $loc(dims)
+    }
   | ty=higher_type(type_rule)
     (* additional indirection only for better error messaging *)
     v = id_and_optional_assignment(rhs, decl_identifier) vs=option(remaining_declarations(rhs)) SEMICOLON
@@ -484,6 +511,8 @@ top_var_type:
     { grammar_logger "SIMPLEX_top_var_type" ; (SVector (AoS, e), Simplex) }
   | UNITVECTOR LBRACK e=expression RBRACK
     { grammar_logger "UNITVECTOR_top_var_type" ; (SVector (AoS, e), UnitVector) }
+  | SUMTOZEROVEC LBRACK e=expression RBRACK
+    { grammar_logger "SUMTOZEROVEC_top_var_type" ; (SVector (AoS, e), SumToZero) }
   | CHOLESKYFACTORCORR LBRACK e=expression RBRACK
     {
       grammar_logger "CHOLESKYFACTORCORR_top_var_type" ;
@@ -500,6 +529,12 @@ top_var_type:
     { grammar_logger "CORRMATRIX_top_var_type" ; (SMatrix (AoS, e, e), Correlation) }
   | COVMATRIX LBRACK e=expression RBRACK
     { grammar_logger "COVMATRIX_top_var_type" ; (SizedType.SMatrix (AoS, e, e), Transformation.Covariance) }
+  | SUMTOZEROMAT LBRACK e1=expression COMMA e2=expression RBRACK
+    { grammar_logger "SUMTOZEROMAT_top_var_type" ; (SizedType.SMatrix (AoS, e1, e2), Transformation.SumToZero) }
+  | STOCHASTICCOLUMNMATRIX LBRACK e1=expression COMMA e2=expression RBRACK
+    { grammar_logger "STOCHASTICCOLUMNMATRIX_top_var_type" ; (SizedType.SMatrix (AoS, e1, e2), Transformation.StochasticColumn) }
+  | STOCHASTICROWMATRIX LBRACK e1=expression COMMA e2=expression RBRACK
+    { grammar_logger "STOCHASTICROWMATRIX_top_var_type" ; (SizedType.SMatrix (AoS, e1, e2), Transformation.StochasticRow) }
 
 type_constraint:
   | r=range_constraint
@@ -720,19 +755,22 @@ statement:
 atomic_statement:
   | l=common_expression op=assignment_op e=expression SEMICOLON
     {  grammar_logger "assignment_statement" ;
+       (* slight hack: we over-parse but only allow ids, tuples of ids, or id projections *)
        Assignment {assign_lhs=try_convert_to_lvalue l $sloc;
                    assign_op=op;
                    assign_rhs=e} }
   | id=identifier LPAREN args=separated_list(COMMA, expression) RPAREN SEMICOLON
     {  grammar_logger "funapp_statement" ; NRFunApp ((),id, args)  }
- | e=expression TILDE id=identifier LPAREN es=separated_list(COMMA, expression)
+  | e=expression TILDE id=identifier LPAREN es=separated_list(COMMA, expression)
     RPAREN ot=option(truncation) SEMICOLON
     {  grammar_logger "tilde_statement" ;
        let t = match ot with Some tt -> tt | None -> NoTruncate in
-       Tilde {arg= e; distribution= id; args= es; truncation= t  }
+       Tilde {arg= e; distribution= id; args= es; truncation= t; kind=() }
     }
   | TARGET PLUSASSIGN e=expression SEMICOLON
     {   grammar_logger "targetpe_statement" ; TargetPE e }
+  | JACOBIAN PLUSASSIGN e=expression SEMICOLON
+    {   grammar_logger "jacobianpe_statement" ; JacobianPE e }
   | BREAK SEMICOLON
     {  grammar_logger "break_statement" ; Break }
   | CONTINUE SEMICOLON
@@ -741,6 +779,8 @@ atomic_statement:
     {  grammar_logger "print_statement" ; Print l }
   | REJECT LPAREN l=printables RPAREN SEMICOLON
     {  grammar_logger "reject_statement" ; Reject l  }
+  | FATAL_ERROR LPAREN l=printables RPAREN SEMICOLON
+    {  grammar_logger "exit_statement" ; FatalError l  }
   | RETURN e=expression SEMICOLON
     {  grammar_logger "return_statement" ; Return e }
   | RETURN SEMICOLON

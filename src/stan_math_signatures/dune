@@ -1,0 +1,23 @@
+(library
+ (name stan_math_signatures)
+ (public_name stanc.stan_math_signatures)
+ (libraries core fmt common middle)
+ (instrumentation
+  (backend bisect_ppx))
+ (modules :standard \ generate)
+ (private_modules generated_signatures)
+ (inline_tests)
+ (preprocess
+  (pps ppx_jane)))
+
+(executable
+ (name generate)
+ (modules generate)
+ (preprocess
+  (pps ppx_jane ppx_deriving.show))
+ (libraries core common middle))
+
+(rule
+ (with-stdout-to
+  Generated_signatures.ml
+  (run ./generate.exe)))

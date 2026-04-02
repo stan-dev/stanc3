@@ -51,8 +51,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     // suppress unused var warning
     (void) current_statement__;
     using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
+    auto base_rng__ = stan::services::util::create_rng(random_seed__, 0);
     // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
@@ -145,18 +144,18 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ rho = DUMMY_VAR__;
       current_statement__ = 1;
-      rho = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
-              lp__);
-      local_scalar_t__ alpha = DUMMY_VAR__;
+      auto rho =
+        in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
+          lp__);
       current_statement__ = 2;
-      alpha = in__.template read_constrain_lb<local_scalar_t__,
-                jacobian__>(0, lp__);
-      local_scalar_t__ sigma = DUMMY_VAR__;
+      auto alpha =
+        in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
+          lp__);
       current_statement__ = 3;
-      sigma = in__.template read_constrain_lb<local_scalar_t__,
-                jacobian__>(0, lp__);
+      auto sigma =
+        in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
+          lp__);
       {
         current_statement__ = 4;
         stan::math::validate_non_negative_index("cov", "N", N);
@@ -198,11 +197,14 @@ class simple_function_model final : public model_base_crtp<simple_function_model
             stan::math::profile<local_scalar_t__> profile__("priors",
               const_cast<stan::math::profile_map&>(profiles__));
             current_statement__ = 14;
-            lp_accum__.add(stan::math::gamma_lpdf<propto__>(rho, 25, 4));
+            lp_accum__.add(stan::math::gamma_lpdf<propto__>(rho,
+                             static_cast<double>(25), static_cast<double>(4)));
             current_statement__ = 15;
-            lp_accum__.add(stan::math::normal_lpdf<propto__>(alpha, 0, 2));
+            lp_accum__.add(stan::math::normal_lpdf<propto__>(alpha,
+                             static_cast<double>(0), static_cast<double>(2)));
             current_statement__ = 16;
-            lp_accum__.add(stan::math::normal_lpdf<propto__>(sigma, 0, 1));
+            lp_accum__.add(stan::math::normal_lpdf<propto__>(sigma,
+                             static_cast<double>(0), static_cast<double>(1)));
           }
           current_statement__ = 19;
           {
@@ -211,7 +213,9 @@ class simple_function_model final : public model_base_crtp<simple_function_model
               const_cast<stan::math::profile_map&>(profiles__));
             current_statement__ = 18;
             lp_accum__.add(stan::math::multi_normal_cholesky_lpdf<propto__>(
-                             y, stan::math::rep_vector(0, N), L_cov));
+                             y,
+                             stan::math::rep_vector(static_cast<double>(0), N),
+                             L_cov));
           }
         }
       }
@@ -245,18 +249,18 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ rho = DUMMY_VAR__;
       current_statement__ = 1;
-      rho = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
-              lp__);
-      local_scalar_t__ alpha = DUMMY_VAR__;
+      auto rho =
+        in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
+          lp__);
       current_statement__ = 2;
-      alpha = in__.template read_constrain_lb<local_scalar_t__,
-                jacobian__>(0, lp__);
-      local_scalar_t__ sigma = DUMMY_VAR__;
+      auto alpha =
+        in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
+          lp__);
       current_statement__ = 3;
-      sigma = in__.template read_constrain_lb<local_scalar_t__,
-                jacobian__>(0, lp__);
+      auto sigma =
+        in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
+          lp__);
       {
         current_statement__ = 4;
         stan::math::validate_non_negative_index("cov", "N", N);
@@ -298,11 +302,14 @@ class simple_function_model final : public model_base_crtp<simple_function_model
             stan::math::profile<local_scalar_t__> profile__("priors",
               const_cast<stan::math::profile_map&>(profiles__));
             current_statement__ = 14;
-            lp_accum__.add(stan::math::gamma_lpdf<propto__>(rho, 25, 4));
+            lp_accum__.add(stan::math::gamma_lpdf<propto__>(rho,
+                             static_cast<double>(25), static_cast<double>(4)));
             current_statement__ = 15;
-            lp_accum__.add(stan::math::normal_lpdf<propto__>(alpha, 0, 2));
+            lp_accum__.add(stan::math::normal_lpdf<propto__>(alpha,
+                             static_cast<double>(0), static_cast<double>(2)));
             current_statement__ = 16;
-            lp_accum__.add(stan::math::normal_lpdf<propto__>(sigma, 0, 1));
+            lp_accum__.add(stan::math::normal_lpdf<propto__>(sigma,
+                             static_cast<double>(0), static_cast<double>(1)));
           }
           current_statement__ = 19;
           {
@@ -311,7 +318,9 @@ class simple_function_model final : public model_base_crtp<simple_function_model
               const_cast<stan::math::profile_map&>(profiles__));
             current_statement__ = 18;
             lp_accum__.add(stan::math::multi_normal_cholesky_lpdf<propto__>(
-                             y, stan::math::rep_vector(0, N), L_cov));
+                             y,
+                             stan::math::rep_vector(static_cast<double>(0), N),
+                             L_cov));
           }
         }
       }
@@ -356,18 +365,18 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     // suppress unused var warning
     (void) function__;
     try {
-      double rho = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 1;
-      rho = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
-              lp__);
-      double alpha = std::numeric_limits<double>::quiet_NaN();
+      auto rho =
+        in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
+          lp__);
       current_statement__ = 2;
-      alpha = in__.template read_constrain_lb<local_scalar_t__,
-                jacobian__>(0, lp__);
-      double sigma = std::numeric_limits<double>::quiet_NaN();
+      auto alpha =
+        in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
+          lp__);
       current_statement__ = 3;
-      sigma = in__.template read_constrain_lb<local_scalar_t__,
-                jacobian__>(0, lp__);
+      auto sigma =
+        in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
+          lp__);
       out__.write(rho);
       out__.write(alpha);
       out__.write(sigma);
@@ -503,9 +512,9 @@ class simple_function_model final : public model_base_crtp<simple_function_model
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = ((1 + 1) + 1);
-    const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_params__ = 1 + 1 + 1;
+    const size_t num_transformed = emit_transformed_parameters * (0U);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -520,9 +529,9 @@ class simple_function_model final : public model_base_crtp<simple_function_model
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = ((1 + 1) + 1);
-    const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_params__ = 1 + 1 + 1;
+    const size_t num_transformed = emit_transformed_parameters * (0U);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,
@@ -592,3 +601,4 @@ stan::math::profile_map& get_stan_profile_data() {
   return simple_function_model_namespace::profiles__;
 }
 #endif
+[exit 0]

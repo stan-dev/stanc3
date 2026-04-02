@@ -16,4 +16,6 @@ generated quantities {
   }
   row_vector[N] drv = rv / A;
   vector[N] dv = A \ v;
+  dv = +dv;
+  dv = -dv;
 }

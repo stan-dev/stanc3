@@ -6,14 +6,14 @@ open Middle
 
 exception Rejected of Location_span.t * string
 
-let rec is_int query Expr.Fixed.{pattern; _} =
+let rec is_int query Expr.{pattern; _} =
   match pattern with
   | Lit (Int, i) | Lit (Real, i) -> float_of_string i = float_of_int query
   | Promotion (e, _, _) -> is_int query e
   | _ -> false
 
 let apply_prefix_operator_int (op : string) i =
-  Expr.Fixed.Pattern.Lit
+  Expr.Pattern.Lit
     ( Int
     , Int.to_string
         (match op with
@@ -21,22 +21,22 @@ let apply_prefix_operator_int (op : string) i =
         | "PMinus__" -> -i
         | "PNot__" -> if i = 0 then 1 else 0
         | s ->
-            Common.FatalError.fatal_error_msg
+            Common.ICE.internal_compiler_error
               [%message "Not an int prefix operator: " s]) )
 
 let apply_prefix_operator_real (op : string) i =
-  Expr.Fixed.Pattern.Lit
+  Expr.Pattern.Lit
     ( Real
     , Float.to_string
         (match op with
         | "PPlus__" -> i
         | "PMinus__" -> -.i
         | s ->
-            Common.FatalError.fatal_error_msg
+            Common.ICE.internal_compiler_error
               [%message "Not a real prefix operator: " s]) )
 
 let apply_operator_int (op : string) i1 i2 =
-  Expr.Fixed.Pattern.Lit
+  Expr.Pattern.Lit
     ( Int
     , Int.to_string
         (match op with
@@ -52,11 +52,11 @@ let apply_operator_int (op : string) i1 i2 =
         | "Greater__" -> Bool.to_int (i1 > i2)
         | "Geq__" -> Bool.to_int (i1 >= i2)
         | s ->
-            Common.FatalError.fatal_error_msg
+            Common.ICE.internal_compiler_error
               [%message "Not an int operator: " s]) )
 
 let apply_arithmetic_operator_real (op : string) r1 r2 =
-  Expr.Fixed.Pattern.Lit
+  Expr.Pattern.Lit
     ( Real
     , Float.to_string
         (match op with
@@ -65,11 +65,11 @@ let apply_arithmetic_operator_real (op : string) r1 r2 =
         | "Times__" -> r1 *. r2
         | "Divide__" -> r1 /. r2
         | s ->
-            Common.FatalError.fatal_error_msg
+            Common.ICE.internal_compiler_error
               [%message "Not a real operator: " s]) )
 
 let apply_logical_operator_real (op : string) r1 r2 =
-  Expr.Fixed.Pattern.Lit
+  Expr.Pattern.Lit
     ( Int
     , Int.to_string
         (match op with
@@ -80,7 +80,7 @@ let apply_logical_operator_real (op : string) r1 r2 =
         | "Greater__" -> Bool.to_int (r1 > r2)
         | "Geq__" -> Bool.to_int (r1 >= r2)
         | s ->
-            Common.FatalError.fatal_error_msg
+            Common.ICE.internal_compiler_error
               [%message "Not a logical operator: " s]) )
 
 let is_multi_index = function
@@ -113,7 +113,7 @@ let rec eval_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
                        (Frontend.Typechecker.stan_math_return_type name
                           argument_types) in
               let try_partially_evaluate_stanlib e =
-                Expr.Fixed.Pattern.(
+                Expr.Pattern.(
                   match e with
                   | FunApp (StanLib (f', suffix', mem_type), l') -> (
                       match get_fun_or_op_rt_opt f' l' with
@@ -124,7 +124,8 @@ let rec eval_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
                 Mem_pattern.lub_mem_pat (List.cons mem_type lst) in
               try_partially_evaluate_stanlib
                 (match (f, l) with
-                (* TODO: deal with tilde statements and unnormalized distributions properly here *)
+                (* TODO: deal with tilde statements and unnormalized
+                   distributions properly here *)
                 | ( "bernoulli_lpmf"
                   , [ y
                     ; { pattern=
@@ -706,7 +707,8 @@ let rec eval_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
                   when is_int 1 y && is_int 2 z ->
                     let lub_mem = lub_mem_pat [mem] in
                     FunApp (StanLib ("sqrt", suffix, lub_mem), [x])
-                    (* This is wrong; if both are type UInt the exponent is rounds down to zero. *)
+                    (* This is wrong; if both are type UInt the exponent is
+                       rounds down to zero. *)
                 | ( "square"
                   , [{pattern= FunApp (StanLib ("sd", FnPlain, mem), [x]); _}] )
                   ->
@@ -788,7 +790,7 @@ let rec eval_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
                             , _ )
                       ; _ }; ({pattern= Lit (Imaginary, i); _} as im) ] ) ->
                     let im_part =
-                      Expr.Fixed.
+                      Expr.
                         { pattern= Lit (Real, i)
                         ; meta= {im.meta with type_= UReal} } in
                     FunApp
@@ -1055,18 +1057,15 @@ let rec eval_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
       | TupleProjection (e, ix) -> TupleProjection (eval_expr e, ix)
       | Indexed (e, l) ->
           (* TODO: do something clever with array and matrix expressions here?
-             Note  that we could also constant fold array sizes if we keep those around on declarations. *)
+             Note that we could also constant fold array sizes if we keep those
+             around on declarations. *)
           Indexed (eval_expr e, List.map ~f:(Index.map eval_expr) l)) }
 
 let rec simplify_index_expr pattern =
-  Expr.Fixed.(
+  Expr.(
     match pattern with
     | Pattern.Indexed
-        ( { pattern=
-              Indexed (obj, inner_indices)
-              (* , Single ({emeta= {type_= UArray UInt; _} as emeta; _} as multi)
-               *   :: inner_tl ) *)
-          ; meta }
+        ( {pattern= Indexed (obj, inner_indices); meta}
         , (Single ({meta= Expr.Typed.Meta.{type_= UInt; _}; _} as single_e) as
            single)
           :: outer_tl )
@@ -1074,7 +1073,8 @@ let rec simplify_index_expr pattern =
         match List.split_while ~f:(Fn.non is_multi_index) inner_indices with
         | inner_singles, MultiIndex first_multi :: inner_tl ->
             (* foo [arr1, ..., arrN] [i1, ..., iN] ->
-               foo [arr1[i1]] [arr[i2]] ... [arrN[iN]] *)
+             * foo [arr1[i1]] [arr[i2]] ... [arrN[iN]]
+             *)
             simplify_index_expr
               (Indexed
                  ( { pattern=
@@ -1114,7 +1114,7 @@ let rec simplify_index_expr pattern =
                    ; meta }
                  , outer_tl ))
         | inner_singles, (([] | Single _ :: _) as multis) ->
-            Common.FatalError.fatal_error_msg
+            Common.ICE.internal_compiler_error
               [%message
                 " There must be a multi-index."
                   (inner_singles : Expr.Typed.t Index.t list)
@@ -1122,35 +1122,34 @@ let rec simplify_index_expr pattern =
     | e -> e)
 
 let remove_trailing_alls_expr = function
-  | Expr.Fixed.Pattern.Indexed (obj, indices) ->
+  | Expr.Pattern.Indexed (obj, indices) ->
       (* a[2][:] -> a[2] *)
       let rec remove_trailing_alls indices =
         match List.rev indices with
         | Index.All :: tl -> remove_trailing_alls (List.rev tl)
         | _ -> indices in
-      Expr.Fixed.Pattern.Indexed (obj, remove_trailing_alls indices)
+      Expr.Pattern.Indexed (obj, remove_trailing_alls indices)
   | e -> e
 
 let rec simplify_indices_expr expr =
-  Expr.Fixed.(
+  Expr.(
     let pattern =
       expr.pattern |> remove_trailing_alls_expr |> simplify_index_expr
-      |> Expr.Fixed.Pattern.map simplify_indices_expr in
+      |> Expr.Pattern.map simplify_indices_expr in
     {expr with pattern})
 
 let try_eval_expr expr = try eval_expr expr with Rejected _ -> expr
 
 let rec eval_stmt s =
   try
-    Stmt.Fixed.
+    Stmt.
       { s with
         pattern=
           Pattern.map
             (Fn.compose eval_expr simplify_indices_expr)
             eval_stmt s.pattern }
   with Rejected (loc, m) ->
-    { Stmt.Fixed.pattern=
-        NRFunApp (CompilerInternal FnReject, [Expr.Helpers.str m])
+    { Stmt.pattern= NRFunApp (CompilerInternal FnReject, [Expr.Helpers.str m])
     ; meta= loc }
 
 let eval_prog p : Program.Typed.t = Program.map try_eval_expr eval_stmt Fn.id p

@@ -9,7 +9,7 @@ Semantic error in 'string', line 3, column 8 to column 11:
      5:  transformed data {
    -------------------------------------------------
 
-Function 'foo' is declared without specifying a definition.
+Function "foo" is declared without specifying a definition.
 
 $ node auto-format.js
 parameters {
@@ -34,6 +34,19 @@ model {
   y ~ std_normal();
 }
 
+$ node bad_inputs.js
+Failed to convert stanc.js argument 'code'!
+It had type 'object' instead of 'string'.
+Failed to convert stanc.js argument 'name'!
+It had type 'number' instead of 'string'.
+Failed to convert stanc.js argument 'flags'!
+Array.isArray returned false for value of type 'number'.
+Failed to convert stanc.js argument 'flags'!
+Array.isArray returned false for value of type 'object'.
+Failed to convert stanc.js argument 'flags'!
+Array.isArray returned false for value of type 'string'.
+Failed to convert stanc.js argument 'flags[1]'!
+It had type 'number' instead of 'string'.
 $ node basic.js
 Semantic error in 'string', line 6, column 4 to column 5:
    -------------------------------------------------
@@ -44,35 +57,59 @@ Semantic error in 'string', line 6, column 4 to column 5:
      7:  }
    -------------------------------------------------
 
-Identifier 'z' not in scope.
+Identifier "z" not in scope.
+
+With ANSI color output:
+[1m[31mSemantic error[0;1m[0m in [94m'string'[0m, line 6, column 4 to column 5:
+[2m   -------------------------------------------------
+[0m[2m     4:[0m  }
+[2m     5:[0m  model {
+[93m     6:[0m      z ~ std_normal();
+             [1m[31m^[0;1m[0m
+[2m     7:[0m  }
+[2m   -------------------------------------------------
+[0m
+Identifier [32m"z"[0m not in scope.
 
 $ node canonical.js
+functions {
+  int foo(int x) {
+    return x;
+  }
+}
 parameters {
   real y;
 }
 model {
-  if (y != 0.0) {
-    print("y is nonzero ");
-  }
-  
   y ~ normal(0, 1);
 }
 
+functions {
+  int foo(int x) {
+    return x;
+  }
+}
 parameters {
   real y;
 }
 model {
-  if (y != 0.0) 
-    print("y is nonzero ");
-  
   y ~ normal(((((((((0)))))))), 1);
 }
 
-Error in 'string', line 6, column 8: Condition of type real was disallowed in
-    Stan 2.34. Use an explicit != 0 comparison instead. This can be
-    automatically changed using the canonicalize flag for stanc
+functions {
+  int foo(int x);
+  
+  int foo(int x) {
+    return x;
+  }
+}
+parameters {
+  real y;
+}
+model {
+  y ~ normal(0, 1);
+}
 
-undefined
 $ node data-generation.js
 dim(x) = (3, 4)
 dim(y) = (5, 2, 4)
@@ -92,7 +129,7 @@ Semantic error in 'good_filename', line 6, column 4 to column 5:
      7:  }
    -------------------------------------------------
 
-Identifier 'z' not in scope.
+Identifier "z" not in scope.
 
 Semantic error in 'string', line 6, column 4 to column 5:
    -------------------------------------------------
@@ -103,7 +140,7 @@ Semantic error in 'string', line 6, column 4 to column 5:
      7:  }
    -------------------------------------------------
 
-Identifier 'z' not in scope.
+Identifier "z" not in scope.
 
 $ node functions-only.js
 real my_log1p_exp(real x) {
@@ -191,7 +228,107 @@ Syntax error in 'string', line 8, column 0 to column 5, parsing error:
     10:  }
    -------------------------------------------------
 
-Expected "generated quantities {" or end of file after end of model block.
+Ill-formed program. Expected "generated quantities {" or end of file after end of model block.
+
+$ node includes.js
+Syntax error in 'string', line 2, column 0 to column 19, include error:
+   -------------------------------------------------
+     1:  
+     2:  #include <foo.stan>
+         ^
+     3:  data {
+     4:      int a;
+   -------------------------------------------------
+
+Could not find include file 'foo.stan'.
+stanc was given information about the following files:
+None
+
+Syntax error in 'string', line 2, column 0 to column 19, include error:
+   -------------------------------------------------
+     1:  
+     2:  #include <foo.stan>
+         ^
+     3:  data {
+     4:      int a;
+   -------------------------------------------------
+
+Could not find include file 'foo.stan'.
+stanc was given information about the following files:
+bar.stan
+
+Syntax error in 'string', line 2, column 0 to column 19, include error:
+   -------------------------------------------------
+     1:  
+     2:  #include <foo.stan>
+         ^
+     3:  data {
+     4:      int a;
+   -------------------------------------------------
+
+Could not find include file 'foo.stan'.
+stanc was given information about the following files:
+./foo.stan
+
+functions {
+  int foo(real a) {
+    return 1;
+  }
+}
+data {
+  int a;
+}
+
+{
+  "inputs": { "a": { "type": "int", "dimensions": 0 } },
+  "parameters": {},
+  "transformed parameters": {},
+  "generated quantities": {},
+  "functions": [],
+  "distributions": [],
+  "included_files": [ "foo.stan" ]
+}
+model {
+  
+}
+
+model {
+  
+}
+
+model {
+  
+}
+
+Warning: stanc.js failed to parse included file mapping:
+Failed to convert stanc.js argument 'includes["baz"]'!
+It had type 'number' instead of 'string'.
+{
+  "inputs": { "a": { "type": "int", "dimensions": 0 } },
+  "parameters": {},
+  "transformed parameters": {},
+  "generated quantities": {},
+  "functions": [],
+  "distributions": [],
+  "included_files": [ "foo.stan" ]
+}
+Warning: stanc.js failed to parse included file mapping:
+Failed to convert stanc.js argument 'includes["foo.stan"]'!
+It had type 'object' instead of 'string'.
+Warning: stanc.js failed to parse included file mapping:
+Failed to convert stanc.js argument 'includes'!
+It had type 'number' instead of 'object'.
+Syntax error in 'include/b.stan', line 1, column 0, included from
+'include/a.stan', line 2, column 0, included from
+'include/b.stan', line 1, column 0, included from
+'include/a.stan', line 2, column 0, include error:
+   -------------------------------------------------
+     1:  #include <include/a.stan>
+         ^
+     2:   // comment here
+   -------------------------------------------------
+
+File include/a.stan recursively included itself.
 
 $ node info.js
 {
@@ -226,6 +363,8 @@ $ node info.js
 }
 $ node math_sigs.js
 
+$ node model_name.js
+
 $ node optimization.js
 Semantic error in 'string', line 3, column 8 to column 11:
    -------------------------------------------------
@@ -237,46 +376,61 @@ Semantic error in 'string', line 3, column 8 to column 11:
      5:  
    -------------------------------------------------
 
-Function 'foo' is declared without specifying a definition.
+Function "foo" is declared without specifying a definition.
 
 "stancflags = --use-opencl --allow-undefined"
 $ node pedantic.js
-["Warning in 'string', line 7, column 17: Argument 10000 suggests there may be\n    parameters that are not unit scale; consider rescaling with a multiplier\n    (see manual section 22.12).","Warning: The parameter k was declared but was not used in the density\n    calculation."]
-[]
-["Warning in 'string', line 4, column 9: The variable tt may not have been\n    assigned a value before its use."]
-[]
+Warning in 'string', line 4, column 1 to column 8:
+    The parameter k was declared but was not used in the density calculation.
+Warning in 'string', line 7, column 17 to column 22:
+    Argument 10000 suggests there may be parameters that are not unit scale;
+    consider rescaling with a multiplier, see:
+    https://mc-stan.org/docs/stan-users-guide/efficiency-tuning.html#standardizing-predictors
+Warning in 'string', line 4, column 9 to column 11:
+    The variable tt may not have been assigned a value before its use.
 $ node removed.js
-Syntax error in 'string', line 3, column 7 to column 8, parsing error:
+Syntax error in 'string', line 3, column 8 to column 10, parsing error:
    -------------------------------------------------
      1:  
      2:  parameters {
      3:  	real y[10];
-                ^
+         	       ^
      4:  }
      5:  model {
    -------------------------------------------------
 
-";" expected after variable declaration.
+Ill-formed declaration. ";" expected after variable declaration.
+It looks like you are trying to use the old array syntax.
+Please use the new syntax:
+array[10] real y;
 
-Syntax error in 'string', line 3, column 7 to column 8, parsing error:
+Syntax error in 'string', line 3, column 8 to column 10, parsing error:
    -------------------------------------------------
      1:  
      2:  parameters {
      3:  	real y[10];
-                ^
+         	       ^
      4:  }
      5:  model {
    -------------------------------------------------
 
-";" expected after variable declaration.
+Ill-formed declaration. ";" expected after variable declaration.
+It looks like you are trying to use the old array syntax.
+Please use the new syntax:
+array[10] real y;
 
 undefined
 $ node standalone-functions.js
 
 $ node version.js
-%%NAME%% %%VERSION%%
-%%NAME%% %%VERSION%%
-%%NAME%% %%VERSION%%
+%%NAME%%3 %%VERSION%%
+%%NAME%%3 %%VERSION%%
+%%NAME%%3 %%VERSION%%
 $ node warnings.js
-[]
-["Warning in 'string', line 10, column 11: Found int division:\n      x / w\n    Values will be rounded towards zero. If rounding is not desired you can\n    write\n    the division as\n      x * 1.0 / w\n    If rounding is intended please use the integer division operator %/%."]
+Warning in 'string', line 10, column 11 to column 12:
+    Found int division:
+        x / w
+    Values will be rounded towards zero. If rounding is not desired you can
+    write the division as
+        x * 1.0 / w
+    If rounding is intended please use the integer division operator %/%.

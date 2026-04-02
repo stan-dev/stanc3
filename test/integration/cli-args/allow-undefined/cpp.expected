@@ -18,7 +18,7 @@ struct external_map_rectable_functor__ {
                                 stan::is_vt_not_complex<T0__>,
                                 stan::is_col_vector<T1__>,
                                 stan::is_vt_not_complex<T1__>>* = nullptr>
-  Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>,
+  Eigen::Matrix<stan::return_type_t<stan::base_type_t<T0__>,
                   stan::base_type_t<T1__>>,-1,1>
   operator()(const T0__& phi, const T1__& theta, const std::vector<double>&
              x_r, const std::vector<int>& x_i, std::ostream* pstream__) const {
@@ -62,8 +62,7 @@ class external_model final : public model_base_crtp<external_model> {
     // suppress unused var warning
     (void) current_statement__;
     using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
+    auto base_rng__ = stan::services::util::create_rng(random_seed__, 0);
     // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
@@ -253,9 +252,9 @@ class external_model final : public model_base_crtp<external_model> {
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = 0;
-    const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_params__ = 0U;
+    const size_t num_transformed = emit_transformed_parameters * (0U);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -270,9 +269,9 @@ class external_model final : public model_base_crtp<external_model> {
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = 0;
-    const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_params__ = 0U;
+    const size_t num_transformed = emit_transformed_parameters * (0U);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,
@@ -343,6 +342,7 @@ stan::math::profile_map& get_stan_profile_data() {
 }
 #endif
 STAN_REGISTER_MAP_RECT(1, external_model_namespace::external_map_rectable_functor__)
-Warning in 'external.stan', line 7, column 7: Functions do not need to be
-    declared before definition; all user defined function names are always in
-    scope regardless of definition order.
+Warning in 'external.stan', line 7, column 7 to column 19:
+    Functions do not need to be declared before definition; all user defined
+    function names are always in scope regardless of definition order.
+[exit 0]

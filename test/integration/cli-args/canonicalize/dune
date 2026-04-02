@@ -7,7 +7,10 @@
  (action
   (with-outputs-to
    %{targets}
-   (run %{bin:run_bin_on_args} "%{bin:stanc} --print-canonical" %{stanfiles}))))
+   (run
+    %{project_root}/test/integration/run_bin_on_args.exe
+    "%{bin:stanc} --print-canonical"
+    %{stanfiles}))))
 
 (rule
  (targets deprecations-only.output)
@@ -19,7 +22,7 @@
   (with-outputs-to
    %{targets}
    (run
-    %{bin:run_bin_on_args}
+    %{project_root}/test/integration/run_bin_on_args.exe
     "%{bin:stanc} --auto-format --canonicalize deprecations"
     %{stanfiles}))))
 
@@ -33,7 +36,7 @@
   (with-outputs-to
    %{targets}
    (run
-    %{bin:run_bin_on_args}
+    %{project_root}/test/integration/run_bin_on_args.exe
     "%{bin:stanc} --auto-format --canonicalize braces,parentheses"
     %{stanfiles}))))
 
@@ -47,7 +50,7 @@
   (with-outputs-to
    %{targets}
    (run
-    %{bin:run_bin_on_args}
+    %{project_root}/test/integration/run_bin_on_args.exe
     "%{bin:stanc} --auto-format --canonicalize strip-comments,braces,parentheses,deprecations"
     %{stanfiles}))))
 

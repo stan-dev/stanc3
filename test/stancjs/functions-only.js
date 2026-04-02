@@ -48,7 +48,9 @@ let basic = stanc.stanc("functions_only", functions_only, ["functions-only"]);
 utils.print_error(basic)
 
 let basic_fmt = stanc.stanc("functions_only", functions_only, ["functions-only", "auto-format"]);
+utils.print_error(basic_fmt)
 utils.print_result(basic_fmt)
 
 let basic_canon = stanc.stanc("functions_only", functions_only, ["functions-only", "print-canonical"]);
+utils.print_error(basic_canon)
 utils.print_result(basic_canon)

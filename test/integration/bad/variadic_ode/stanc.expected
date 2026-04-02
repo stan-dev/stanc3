@@ -9,7 +9,7 @@ Semantic error in 'bad_abs_tol.stan', line 30, column 4 to line 32, column 24:
     32:              alpha, beta);
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'ode_bdf_tol':
+Ill-typed arguments supplied to function "ode_bdf_tol":
 (<F1>, array[] real, real, array[] real, array[] real, real, int, real, real)
 where F1 = (real, array[] real, real, real) => array[] real
 Available signatures:
@@ -24,6 +24,7 @@ where F2 = (real, vector) => vector
      array[] real
     but the other is
      vector
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_initial_state.stan
 Semantic error in 'bad_initial_state.stan', line 29, column 4 to line 31, column 24:
    -------------------------------------------------
@@ -35,7 +36,7 @@ Semantic error in 'bad_initial_state.stan', line 29, column 4 to line 31, column
     31:              alpha, beta);
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'ode_bdf_tol':
+Ill-typed arguments supplied to function "ode_bdf_tol":
 (<F1>, real, real, array[] real, real, real, int, real, real)
 where F1 = (real, array[] real, real, real) => array[] real
 Available signatures:
@@ -50,6 +51,7 @@ where F2 = (real, vector) => vector
      array[] real
     but the other is
      vector
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_initial_time.stan
 Semantic error in 'bad_initial_time.stan', line 30, column 4 to line 32, column 24:
    -------------------------------------------------
@@ -61,7 +63,7 @@ Semantic error in 'bad_initial_time.stan', line 30, column 4 to line 32, column 
     32:              alpha, beta);
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'ode_bdf_tol':
+Ill-typed arguments supplied to function "ode_bdf_tol":
 (<F1>, array[] real, vector, array[] real, real, real, int, real, real)
 where F1 = (real, array[] real, real, real) => array[] real
 Available signatures:
@@ -76,6 +78,7 @@ where F2 = (real, vector) => vector
      array[] real
     but the other is
      vector
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_max_num_steps.stan
 Semantic error in 'bad_max_num_steps.stan', line 30, column 4 to line 32, column 24:
    -------------------------------------------------
@@ -87,7 +90,7 @@ Semantic error in 'bad_max_num_steps.stan', line 30, column 4 to line 32, column
     32:              alpha, beta);
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'ode_bdf_tol':
+Ill-typed arguments supplied to function "ode_bdf_tol":
 (<F1>, array[] real, real, array[] real, real, real, array[] real, real, real)
 where F1 = (real, array[] real, real, real) => array[] real
 Available signatures:
@@ -102,6 +105,7 @@ where F2 = (real, vector) => vector
      array[] real
     but the other is
      vector
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_no_args.stan
 Semantic error in 'bad_no_args.stan', line 25, column 4 to line 26, column 28:
    -------------------------------------------------
@@ -113,7 +117,7 @@ Semantic error in 'bad_no_args.stan', line 25, column 4 to line 26, column 28:
     27:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'ode_bdf_tol':
+Ill-typed arguments supplied to function "ode_bdf_tol":
 (<F1>, array[] real, real, array[] real, real, real, int)
 where F1 = (real, array[] real) => array[] real
 Available signatures:
@@ -128,6 +132,7 @@ where F2 = (real, vector) => vector
      array[] real
     but the other is
      vector
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_non_matching_args.stan
 Semantic error in 'bad_non_matching_args.stan', line 29, column 4 to line 31, column 24:
    -------------------------------------------------
@@ -139,7 +144,7 @@ Semantic error in 'bad_non_matching_args.stan', line 29, column 4 to line 31, co
     31:              alpha, beta);
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'ode_bdf_tol':
+Ill-typed arguments supplied to function "ode_bdf_tol":
 (<F1>, array[] real, real, array[] real, real, real, int, real, real)
 where F1 = (real, array[] real, real, array[] real) => array[] real
 Available signatures:
@@ -154,6 +159,7 @@ where F2 = (real, vector) => vector
      array[] real
     but the other is
      vector
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_one_arg.stan
 Semantic error in 'bad_one_arg.stan', line 27, column 4 to line 29, column 18:
    -------------------------------------------------
@@ -165,7 +171,7 @@ Semantic error in 'bad_one_arg.stan', line 27, column 4 to line 29, column 18:
     29:              alpha);
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'ode_bdf_tol':
+Ill-typed arguments supplied to function "ode_bdf_tol":
 (<F1>, array[] real, real, array[] real, real, real, int, real)
 where F1 = (real, array[] real, real) => array[] real
 Available signatures:
@@ -180,6 +186,7 @@ where F2 = (real, vector) => vector
      array[] real
     but the other is
      vector
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_rel_tol.stan
 Semantic error in 'bad_rel_tol.stan', line 30, column 4 to line 32, column 24:
    -------------------------------------------------
@@ -191,7 +198,7 @@ Semantic error in 'bad_rel_tol.stan', line 30, column 4 to line 32, column 24:
     32:              alpha, beta);
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'ode_bdf_tol':
+Ill-typed arguments supplied to function "ode_bdf_tol":
 (<F1>, array[] real, real, array[] real, real, array[] real, int, real, real)
 where F1 = (real, array[] real, real, real) => array[] real
 Available signatures:
@@ -206,6 +213,7 @@ where F2 = (real, vector) => vector
      array[] real
     but the other is
      vector
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_times.stan
 Semantic error in 'bad_times.stan', line 30, column 4 to line 31, column 24:
    -------------------------------------------------
@@ -217,7 +225,7 @@ Semantic error in 'bad_times.stan', line 30, column 4 to line 31, column 24:
     32:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'ode_bdf':
+Ill-typed arguments supplied to function "ode_bdf":
 (<F1>, array[] real, real, array[] vector, real, real)
 where F1 = (real, array[] real, real, real) => array[] real
 Available signatures:
@@ -232,6 +240,7 @@ where F2 = (real, vector) => vector
      array[] real
     but the other is
      vector
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_times_tol.stan
 Semantic error in 'bad_times_tol.stan', line 30, column 4 to line 32, column 24:
    -------------------------------------------------
@@ -243,7 +252,7 @@ Semantic error in 'bad_times_tol.stan', line 30, column 4 to line 32, column 24:
     32:              alpha, beta);
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'ode_bdf_tol':
+Ill-typed arguments supplied to function "ode_bdf_tol":
 (<F1>, array[] real, real, array[] vector, real, real, int, real, real)
 where F1 = (real, array[] real, real, real) => array[] real
 Available signatures:
@@ -258,3 +267,4 @@ where F2 = (real, vector) => vector
      array[] real
     but the other is
      vector
+[exit 1]

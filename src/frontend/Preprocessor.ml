@@ -3,13 +3,11 @@
 open Core
 open Lexing
 open Debugging
-module Str = Re.Str
 
 let comments = Queue.create ()
 let add_comment = Queue.enqueue comments
 let get_comments () = Queue.to_list comments
 let include_stack = Stack.create ()
-let include_paths : string list ref = ref []
 let included_files : string list ref = ref []
 let size () = Stack.length include_stack
 
@@ -17,17 +15,16 @@ let locations_map : (string * Middle.Location.t option) String.Table.t =
   String.Table.create ()
 
 let new_file_start_position filename included_from =
-  (* Lexing.position does not have a field to store `included_from`
-     so we store it in a global hashmap instead and put the hashmap key
-     in `pos_fname`. The keys are arbitrary unique strings. (Filenames are
-     not good keys because the same file could be included multiple times.)
+  (* Lexing.position does not have a field to store `included_from` so we store
+     it in a global hashmap instead and put the hashmap key in `pos_fname`. The
+     keys are arbitrary unique strings. (Filenames are not good keys because the
+     same file could be included multiple times.)
 
-     Prefixing the key with NUL allows us to do a little optimization:
-     when `included_from` is None we don't need to access the hashmap and
-     can store the filename directly in `pos_fname`. Filenames never
-     begin with NUL so `location_of_position` only needs to check the
-     first character to know whether to do a hashmap lookup.
-  *)
+     Prefixing the key with NUL allows us to do a little optimization: when
+     `included_from` is None we don't need to access the hashmap and can store
+     the filename directly in `pos_fname`. Filenames never begin with NUL so
+     `location_of_position` only needs to check the first character to know
+     whether to do a hashmap lookup. *)
   if Option.is_none included_from then
     {Lexing.pos_fname= filename; pos_lnum= 1; pos_bol= 0; pos_cnum= 0}
   else
@@ -62,6 +59,10 @@ let current_buffer () =
   let buf = Stack.top_exn include_stack in
   buf
 
+let current_location () =
+  let buf = current_buffer () in
+  location_span_of_positions (Lexing.lexeme_start_p buf, Lexing.lexeme_end_p buf)
+
 let pop_buffer () = Stack.pop_exn include_stack
 
 let update_start_positions pos =
@@ -70,9 +71,8 @@ let update_start_positions pos =
 let restore_prior_lexbuf () =
   let lexbuf = pop_buffer () in
   let old_lexbuf = current_buffer () in
-  (* to get printing includes right we need to make sure that the 'start' of
-      our next token is on the following line
-  *)
+  (* to get printing includes right we need to make sure that the 'start' of our
+     next token is on the following line *)
   let old_pos =
     {old_lexbuf.lex_curr_p with pos_lnum= old_lexbuf.lex_curr_p.pos_lnum + 1}
   in
@@ -82,7 +82,9 @@ let restore_prior_lexbuf () =
   lexbuf.lex_start_p <- old_pos;
   old_lexbuf
 
-let try_open_in all_paths fname =
+let include_error msg = Syntax_error.include_error msg (current_location ())
+
+let find_include_fs lookup_paths fname =
   let rec loop paths =
     match paths with
     | [] ->
@@ -93,31 +95,40 @@ let try_open_in all_paths fname =
             | _ -> Fmt.(list ~sep:comma string) ppf l in
           Fmt.str
             "Could not find include file '%s' in specified include paths.@\n\
-             @[Current include paths: %a@]" fname pp_list all_paths in
-        raise
-          (Errors.SyntaxError
-             (Include
-                ( message
-                , location_of_position
-                    (lexeme_start_p (Stack.top_exn include_stack)) )))
+             @[Current include paths: %a@]"
+            fname pp_list lookup_paths in
+        include_error message
     | path :: rest_of_paths -> (
         try
           let full_path = path ^ "/" ^ fname in
-          (In_channel.create full_path, full_path)
+          (In_channel.create full_path |> Lexing.from_channel, full_path)
         with _ -> loop rest_of_paths) in
-  loop all_paths
+  loop lookup_paths
 
-let maybe_remove_quotes str =
-  let open String in
-  if is_prefix str ~prefix:"\"" && is_suffix str ~suffix:"\"" then
-    drop_suffix (drop_prefix str 1) 1
-  else str
+let find_include_inmemory map fname =
+  match Map.find map fname with
+  | None ->
+      let message =
+        let pp_list ppf l =
+          let keys = Map.keys l in
+          if List.is_empty keys then Fmt.string ppf "None"
+          else Fmt.(list ~sep:comma string) ppf keys in
+        Fmt.str
+          "Could not find include file '%s'.@ stanc was given information \
+           about the following files:@ %a"
+          fname pp_list map in
+      include_error message
+  | Some s -> (Lexing.from_string s, fname)
+
+let find_include fname =
+  match !Include_files.include_provider with
+  | FileSystemPaths lookup_paths -> find_include_fs lookup_paths fname
+  | InMemory map -> find_include_inmemory map fname
 
 let try_get_new_lexbuf fname =
   let lexbuf = Stack.top_exn include_stack in
-  let chan, file = try_open_in !include_paths (maybe_remove_quotes fname) in
+  let new_lexbuf, file = find_include fname in
   lexer_logger ("opened " ^ file);
-  let new_lexbuf = from_channel chan in
   new_lexbuf.lex_start_p <-
     new_file_start_position file
     @@ Some (location_of_position lexbuf.lex_start_p);
@@ -130,12 +141,10 @@ let try_get_new_lexbuf fname =
           if is_dup filename then true else go included_from in
     go included_from in
   if dup_exists (location_of_position lexbuf.lex_start_p) then
-    raise
-      (Errors.SyntaxError
-         (Include
-            ( Printf.sprintf "File %s recursively included itself." fname
-            , location_of_position (lexeme_start_p lexbuf) )));
+    include_error (Printf.sprintf "File %s recursively included itself." fname);
   Stack.push include_stack new_lexbuf;
   update_start_positions new_lexbuf.lex_curr_p;
   included_files := file :: !included_files;
   new_lexbuf
+
+let included_files () = List.rev !included_files

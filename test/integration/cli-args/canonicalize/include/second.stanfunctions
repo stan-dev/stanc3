@@ -1,0 +1,4 @@
+real bar(matrix x) {
+  print(x);
+  return sum(x);
+}

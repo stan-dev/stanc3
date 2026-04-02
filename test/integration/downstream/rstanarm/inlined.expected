@@ -37,8 +37,13 @@ functions {
    * @param z_T Vector used in the onion method for creating Cholesky factors
    * @return A vector that corresponds to theta in lme4
    */
-  vector make_theta_L(int len_theta_L, array[] int p, real dispersion,
-                      vector tau, vector scale, vector zeta, vector rho,
+  vector make_theta_L(int len_theta_L,
+                      array[] int p,
+                      real dispersion,
+                      vector tau,
+                      vector scale,
+                      vector zeta,
+                      vector rho,
                       vector z_T) {
     vector[len_theta_L] theta_L;
     int zeta_mark = 1;
@@ -159,9 +164,16 @@ functions {
    * @param p An integer array with the number variables on the LHS of each |
    * @return target()
    */
-  real decov_lp(vector z_b, vector z_T, vector rho, vector zeta, vector tau,
-                array[] real regularization, array[] real delta,
-                vector shape, int t, array[] int p) {
+  real decov_lp(vector z_b,
+                vector z_T,
+                vector rho,
+                vector zeta,
+                vector tau,
+                array[] real regularization,
+                array[] real delta,
+                vector shape,
+                int t,
+                array[] int p) {
     int pos_reg = 1;
     int pos_rho = 1;
     target += normal_lpdf(z_b | 0, 1);
@@ -179,7 +191,8 @@ functions {
           shape1[j] = 0.5 * j;
           shape2[j] = nu;
         }
-        target += beta_lpdf(rho[pos_rho : (pos_rho + p[i] - 2)] | shape1, shape2);
+        target += beta_lpdf(rho[pos_rho : (pos_rho + p[i] - 2)] | shape1,
+                            shape2);
         pos_rho += p[i] - 1;
       }
     target += gamma_lpdf(zeta | delta, 1);
@@ -204,7 +217,8 @@ functions {
     vector[K] lambda = local[1] .* sqrt(local[2]);
     real tau = global[1] * sqrt(global[2]) * global_prior_scale * error_scale;
     vector[K] lambda2 = square(lambda);
-    vector[K] lambda_tilde = sqrt(c2 * lambda2
+    vector[K] lambda_tilde = sqrt(
+                                  c2 * lambda2
                                   ./ (c2 + square(tau) * lambda2));
     return z_beta .* lambda_tilde * tau;
   }
@@ -228,7 +242,8 @@ functions {
     vector[K] eta = local[3] .* sqrt(local[4]);
     real tau = global[1] * sqrt(global[2]) * global_prior_scale * error_scale;
     vector[K] lambda_eta2 = square(lambda .* eta);
-    vector[K] lambda_tilde = sqrt(c2 * lambda_eta2
+    vector[K] lambda_tilde = sqrt(
+                                  c2 * lambda_eta2
                                   ./ (c2 + square(tau) * lambda_eta2));
     return z_beta .* lambda_tilde * tau;
   }
@@ -807,8 +822,8 @@ model {
     target += normal_lpdf(local[1] | 0, 1) - log_half;
     target += inv_gamma_lpdf(local[2] | 0.5 * prior_df, 0.5 * prior_df);
     target += normal_lpdf(global[1] | 0, 1) - log_half;
-    target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df, 0.5
-                                                                * global_prior_df);
+    target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df,
+                             0.5 * global_prior_df);
     target += inv_gamma_lpdf(caux | 0.5 * slab_df, 0.5 * slab_df);
   } else if (prior_dist == 4) {
     // hs+
@@ -820,8 +835,8 @@ model {
     // unorthodox useage of prior_scale as another df hyperparameter
     target += inv_gamma_lpdf(local[4] | 0.5 * prior_scale, 0.5 * prior_scale);
     target += normal_lpdf(global[1] | 0, 1) - log_half;
-    target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df, 0.5
-                                                                * global_prior_df);
+    target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df,
+                             0.5 * global_prior_df);
     target += inv_gamma_lpdf(caux | 0.5 * slab_df, 0.5 * slab_df);
   } else if (prior_dist == 5) {
     // laplace
@@ -841,9 +856,12 @@ model {
   // Log-prior for intercept  
   if (has_intercept == 1) {
     if (prior_dist_for_intercept == 1)  // normal
-      target += normal_lpdf(gamma | prior_mean_for_intercept, prior_scale_for_intercept);
+      target += normal_lpdf(gamma | prior_mean_for_intercept,
+                            prior_scale_for_intercept);
     else if (prior_dist_for_intercept == 2)  // student_t
-      target += student_t_lpdf(gamma | prior_df_for_intercept, prior_mean_for_intercept, prior_scale_for_intercept);
+      target += student_t_lpdf(gamma | prior_df_for_intercept,
+                               prior_mean_for_intercept,
+                               prior_scale_for_intercept);
     /* else prior_dist is 0 and nothing is added */
   }
   
@@ -947,9 +965,10 @@ generated quantities {
 }
 
 Warning in './/functions/bernoulli_likelihoods.stan', line 84, column 7, included from
-'bernoulli.stan', line 7, column 2: Functions
-    do not need to be declared before definition; all user defined function
-    names are always in scope regardless of definition order.
+'bernoulli.stan', line 7, column 2:
+    Functions do not need to be declared before definition; all user defined
+    function names are always in scope regardless of definition order.
+[exit 0]
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --canonicalize=includes --allow-undefined binomial.stan
 //    This file is part of rstanarm.
 //    Copyright (C) 2015, 2016 2017 Trustees of Columbia University
@@ -989,8 +1008,13 @@ functions {
    * @param z_T Vector used in the onion method for creating Cholesky factors
    * @return A vector that corresponds to theta in lme4
    */
-  vector make_theta_L(int len_theta_L, array[] int p, real dispersion,
-                      vector tau, vector scale, vector zeta, vector rho,
+  vector make_theta_L(int len_theta_L,
+                      array[] int p,
+                      real dispersion,
+                      vector tau,
+                      vector scale,
+                      vector zeta,
+                      vector rho,
                       vector z_T) {
     vector[len_theta_L] theta_L;
     int zeta_mark = 1;
@@ -1111,9 +1135,16 @@ functions {
    * @param p An integer array with the number variables on the LHS of each |
    * @return target()
    */
-  real decov_lp(vector z_b, vector z_T, vector rho, vector zeta, vector tau,
-                array[] real regularization, array[] real delta,
-                vector shape, int t, array[] int p) {
+  real decov_lp(vector z_b,
+                vector z_T,
+                vector rho,
+                vector zeta,
+                vector tau,
+                array[] real regularization,
+                array[] real delta,
+                vector shape,
+                int t,
+                array[] int p) {
     int pos_reg = 1;
     int pos_rho = 1;
     target += normal_lpdf(z_b | 0, 1);
@@ -1131,7 +1162,8 @@ functions {
           shape1[j] = 0.5 * j;
           shape2[j] = nu;
         }
-        target += beta_lpdf(rho[pos_rho : (pos_rho + p[i] - 2)] | shape1, shape2);
+        target += beta_lpdf(rho[pos_rho : (pos_rho + p[i] - 2)] | shape1,
+                            shape2);
         pos_rho += p[i] - 1;
       }
     target += gamma_lpdf(zeta | delta, 1);
@@ -1156,7 +1188,8 @@ functions {
     vector[K] lambda = local[1] .* sqrt(local[2]);
     real tau = global[1] * sqrt(global[2]) * global_prior_scale * error_scale;
     vector[K] lambda2 = square(lambda);
-    vector[K] lambda_tilde = sqrt(c2 * lambda2
+    vector[K] lambda_tilde = sqrt(
+                                  c2 * lambda2
                                   ./ (c2 + square(tau) * lambda2));
     return z_beta .* lambda_tilde * tau;
   }
@@ -1180,7 +1213,8 @@ functions {
     vector[K] eta = local[3] .* sqrt(local[4]);
     real tau = global[1] * sqrt(global[2]) * global_prior_scale * error_scale;
     vector[K] lambda_eta2 = square(lambda .* eta);
-    vector[K] lambda_tilde = sqrt(c2 * lambda_eta2
+    vector[K] lambda_tilde = sqrt(
+                                  c2 * lambda_eta2
                                   ./ (c2 + square(tau) * lambda_eta2));
     return z_beta .* lambda_tilde * tau;
   }
@@ -1648,8 +1682,8 @@ model {
     target += normal_lpdf(local[1] | 0, 1) - log_half;
     target += inv_gamma_lpdf(local[2] | 0.5 * prior_df, 0.5 * prior_df);
     target += normal_lpdf(global[1] | 0, 1) - log_half;
-    target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df, 0.5
-                                                                * global_prior_df);
+    target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df,
+                             0.5 * global_prior_df);
     target += inv_gamma_lpdf(caux | 0.5 * slab_df, 0.5 * slab_df);
   } else if (prior_dist == 4) {
     // hs+
@@ -1661,8 +1695,8 @@ model {
     // unorthodox useage of prior_scale as another df hyperparameter
     target += inv_gamma_lpdf(local[4] | 0.5 * prior_scale, 0.5 * prior_scale);
     target += normal_lpdf(global[1] | 0, 1) - log_half;
-    target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df, 0.5
-                                                                * global_prior_df);
+    target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df,
+                             0.5 * global_prior_df);
     target += inv_gamma_lpdf(caux | 0.5 * slab_df, 0.5 * slab_df);
   } else if (prior_dist == 5) {
     // laplace
@@ -1682,9 +1716,12 @@ model {
   // Log-prior for intercept  
   if (has_intercept == 1) {
     if (prior_dist_for_intercept == 1)  // normal
-      target += normal_lpdf(gamma | prior_mean_for_intercept, prior_scale_for_intercept);
+      target += normal_lpdf(gamma | prior_mean_for_intercept,
+                            prior_scale_for_intercept);
     else if (prior_dist_for_intercept == 2)  // student_t
-      target += student_t_lpdf(gamma | prior_df_for_intercept, prior_mean_for_intercept, prior_scale_for_intercept);
+      target += student_t_lpdf(gamma | prior_df_for_intercept,
+                               prior_mean_for_intercept,
+                               prior_scale_for_intercept);
     /* else prior_dist is 0 and nothing is added */
   }
   
@@ -1761,6 +1798,7 @@ generated quantities {
   }
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --canonicalize=includes --allow-undefined continuous.stan
 //    This file is part of rstanarm.
 //    Copyright (C) 2015, 2016 2017 Trustees of Columbia University
@@ -1800,8 +1838,13 @@ functions {
    * @param z_T Vector used in the onion method for creating Cholesky factors
    * @return A vector that corresponds to theta in lme4
    */
-  vector make_theta_L(int len_theta_L, array[] int p, real dispersion,
-                      vector tau, vector scale, vector zeta, vector rho,
+  vector make_theta_L(int len_theta_L,
+                      array[] int p,
+                      real dispersion,
+                      vector tau,
+                      vector scale,
+                      vector zeta,
+                      vector rho,
                       vector z_T) {
     vector[len_theta_L] theta_L;
     int zeta_mark = 1;
@@ -1922,9 +1965,16 @@ functions {
    * @param p An integer array with the number variables on the LHS of each |
    * @return target()
    */
-  real decov_lp(vector z_b, vector z_T, vector rho, vector zeta, vector tau,
-                array[] real regularization, array[] real delta,
-                vector shape, int t, array[] int p) {
+  real decov_lp(vector z_b,
+                vector z_T,
+                vector rho,
+                vector zeta,
+                vector tau,
+                array[] real regularization,
+                array[] real delta,
+                vector shape,
+                int t,
+                array[] int p) {
     int pos_reg = 1;
     int pos_rho = 1;
     target += normal_lpdf(z_b | 0, 1);
@@ -1942,7 +1992,8 @@ functions {
           shape1[j] = 0.5 * j;
           shape2[j] = nu;
         }
-        target += beta_lpdf(rho[pos_rho : (pos_rho + p[i] - 2)] | shape1, shape2);
+        target += beta_lpdf(rho[pos_rho : (pos_rho + p[i] - 2)] | shape1,
+                            shape2);
         pos_rho += p[i] - 1;
       }
     target += gamma_lpdf(zeta | delta, 1);
@@ -1967,7 +2018,8 @@ functions {
     vector[K] lambda = local[1] .* sqrt(local[2]);
     real tau = global[1] * sqrt(global[2]) * global_prior_scale * error_scale;
     vector[K] lambda2 = square(lambda);
-    vector[K] lambda_tilde = sqrt(c2 * lambda2
+    vector[K] lambda_tilde = sqrt(
+                                  c2 * lambda2
                                   ./ (c2 + square(tau) * lambda2));
     return z_beta .* lambda_tilde * tau;
   }
@@ -1991,7 +2043,8 @@ functions {
     vector[K] eta = local[3] .* sqrt(local[4]);
     real tau = global[1] * sqrt(global[2]) * global_prior_scale * error_scale;
     vector[K] lambda_eta2 = square(lambda .* eta);
-    vector[K] lambda_tilde = sqrt(c2 * lambda_eta2
+    vector[K] lambda_tilde = sqrt(
+                                  c2 * lambda_eta2
                                   ./ (c2 + square(tau) * lambda_eta2));
     return z_beta .* lambda_tilde * tau;
   }
@@ -2351,7 +2404,8 @@ functions {
   * @param link_phi An integer indicating the link function passed to linkinv_beta_z
   * @return A vector of log-likelihoods
   */
-  vector pw_beta_z(vector y, vector eta, vector eta_z, int link, int link_phi) {
+  vector pw_beta_z(vector y, vector eta, vector eta_z, int link,
+                   int link_phi) {
     vector[rows(y)] ll;
     vector[rows(y)] mu = linkinv_beta(eta, link); // link checked
     vector[rows(y)] mu_z = linkinv_beta_z(eta_z, link_phi); // link checked
@@ -2531,8 +2585,14 @@ functions {
   * @param b Vector that is multiplied from the left by the CSR matrix
   * @return A vector that is the product of the CSR matrix and b
   */
-  vector test_csr_matrix_times_vector(int m, int n, vector w, array[] int v,
-                                      array[] int u, vector b) {
+  vector test_csr_matrix_times_vector(
+           int m,
+           int n,
+           vector w,
+           array[] int v,
+           array[] int u,
+           vector b
+         ) {
     return csr_matrix_times_vector(m, n, w, v, u, b);
   }
 }
@@ -2992,9 +3052,8 @@ model {
       vector[N] mu_z;
       mu = linkinv_beta(eta, link);
       mu_z = linkinv_beta_z(eta_z, link_phi);
-      target += beta_lpdf(y | rows_dot_product(mu, mu_z), rows_dot_product((
-                                                                    1 - mu),
-                                                                    mu_z));
+      target += beta_lpdf(y | rows_dot_product(mu, mu_z),
+                          rows_dot_product((1 - mu), mu_z));
     }
   } else if (prior_PD == 0) {
     // weighted log-likelihoods
@@ -3036,8 +3095,8 @@ model {
     target += normal_lpdf(local[1] | 0, 1) - log_half;
     target += inv_gamma_lpdf(local[2] | 0.5 * prior_df, 0.5 * prior_df);
     target += normal_lpdf(global[1] | 0, 1) - log_half;
-    target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df, 0.5
-                                                                * global_prior_df);
+    target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df,
+                             0.5 * global_prior_df);
     target += inv_gamma_lpdf(caux | 0.5 * slab_df, 0.5 * slab_df);
   } else if (prior_dist == 4) {
     // hs+
@@ -3049,8 +3108,8 @@ model {
     // unorthodox useage of prior_scale as another df hyperparameter
     target += inv_gamma_lpdf(local[4] | 0.5 * prior_scale, 0.5 * prior_scale);
     target += normal_lpdf(global[1] | 0, 1) - log_half;
-    target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df, 0.5
-                                                                * global_prior_df);
+    target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df,
+                             0.5 * global_prior_df);
     target += inv_gamma_lpdf(caux | 0.5 * slab_df, 0.5 * slab_df);
   } else if (prior_dist == 5) {
     // laplace
@@ -3070,9 +3129,12 @@ model {
   // Log-prior for intercept  
   if (has_intercept == 1) {
     if (prior_dist_for_intercept == 1)  // normal
-      target += normal_lpdf(gamma | prior_mean_for_intercept, prior_scale_for_intercept);
+      target += normal_lpdf(gamma | prior_mean_for_intercept,
+                            prior_scale_for_intercept);
     else if (prior_dist_for_intercept == 2)  // student_t
-      target += student_t_lpdf(gamma | prior_df_for_intercept, prior_mean_for_intercept, prior_scale_for_intercept);
+      target += student_t_lpdf(gamma | prior_df_for_intercept,
+                               prior_mean_for_intercept,
+                               prior_scale_for_intercept);
     /* else prior_dist is 0 and nothing is added */
   }
   
@@ -3102,8 +3164,8 @@ model {
     target += normal_lpdf(local_z[1] | 0, 1) - log_half;
     target += inv_gamma_lpdf(local_z[2] | 0.5 * prior_df_z, 0.5 * prior_df_z);
     target += normal_lpdf(global_z[1] | 0, 1) - log_half;
-    target += inv_gamma_lpdf(global_z[2] | 0.5 * global_prior_df_z, 0.5
-                                                                    * global_prior_df_z);
+    target += inv_gamma_lpdf(global_z[2] | 0.5 * global_prior_df_z,
+                             0.5 * global_prior_df_z);
     target += inv_gamma_lpdf(caux_z | 0.5 * slab_df_z, 0.5 * slab_df_z);
   } else if (prior_dist_z == 4) {
     // hs+
@@ -3113,8 +3175,8 @@ model {
     target += inv_gamma_lpdf(local_z[2] | 0.5 * prior_df_z, 0.5 * prior_df_z);
     target += normal_lpdf(local_z[3] | 0, 1) - log_half;
     // unorthodox useage of prior_scale as another df hyperparameter
-    target += inv_gamma_lpdf(local_z[4] | 0.5 * prior_scale_z, 0.5
-                                                               * prior_scale_z);
+    target += inv_gamma_lpdf(local_z[4] | 0.5 * prior_scale_z,
+                             0.5 * prior_scale_z);
     target += normal_lpdf(global_z[1] | 0, 1) - log_half;
     target += inv_gamma_lpdf(global_z[2] | 0.5, 0.5);
     target += inv_gamma_lpdf(caux_z | 0.5 * slab_df_z, 0.5 * slab_df_z);
@@ -3136,9 +3198,12 @@ model {
   // Log-prior for intercept  
   if (has_intercept_z == 1) {
     if (prior_dist_for_intercept_z == 1)  // normal
-      target += normal_lpdf(gamma_z | prior_mean_for_intercept_z, prior_scale_for_intercept_z);
+      target += normal_lpdf(gamma_z | prior_mean_for_intercept_z,
+                            prior_scale_for_intercept_z);
     else if (prior_dist_for_intercept_z == 2)  // student_t
-      target += student_t_lpdf(gamma_z | prior_df_for_intercept_z, prior_mean_for_intercept_z, prior_scale_for_intercept_z);
+      target += student_t_lpdf(gamma_z | prior_df_for_intercept_z,
+                               prior_mean_for_intercept_z,
+                               prior_scale_for_intercept_z);
     /* else prior_dist is 0 and nothing is added */
   }
   
@@ -3303,45 +3368,46 @@ generated quantities {
 }
 
 Warning in './/functions/SSfunctions.stan', line 1, column 7, included from
-'continuous.stan', line 9, column 2: Functions
-    do not need to be declared before definition; all user defined function
-    names are always in scope regardless of definition order.
+'continuous.stan', line 9, column 2:
+    Functions do not need to be declared before definition; all user defined
+    function names are always in scope regardless of definition order.
 Warning in './/functions/SSfunctions.stan', line 2, column 7, included from
-'continuous.stan', line 9, column 2: Functions
-    do not need to be declared before definition; all user defined function
-    names are always in scope regardless of definition order.
+'continuous.stan', line 9, column 2:
+    Functions do not need to be declared before definition; all user defined
+    function names are always in scope regardless of definition order.
 Warning in './/functions/SSfunctions.stan', line 3, column 7, included from
-'continuous.stan', line 9, column 2: Functions
-    do not need to be declared before definition; all user defined function
-    names are always in scope regardless of definition order.
+'continuous.stan', line 9, column 2:
+    Functions do not need to be declared before definition; all user defined
+    function names are always in scope regardless of definition order.
 Warning in './/functions/SSfunctions.stan', line 4, column 7, included from
-'continuous.stan', line 9, column 2: Functions
-    do not need to be declared before definition; all user defined function
-    names are always in scope regardless of definition order.
+'continuous.stan', line 9, column 2:
+    Functions do not need to be declared before definition; all user defined
+    function names are always in scope regardless of definition order.
 Warning in './/functions/SSfunctions.stan', line 5, column 7, included from
-'continuous.stan', line 9, column 2: Functions
-    do not need to be declared before definition; all user defined function
-    names are always in scope regardless of definition order.
+'continuous.stan', line 9, column 2:
+    Functions do not need to be declared before definition; all user defined
+    function names are always in scope regardless of definition order.
 Warning in './/functions/SSfunctions.stan', line 6, column 7, included from
-'continuous.stan', line 9, column 2: Functions
-    do not need to be declared before definition; all user defined function
-    names are always in scope regardless of definition order.
+'continuous.stan', line 9, column 2:
+    Functions do not need to be declared before definition; all user defined
+    function names are always in scope regardless of definition order.
 Warning in './/functions/SSfunctions.stan', line 7, column 7, included from
-'continuous.stan', line 9, column 2: Functions
-    do not need to be declared before definition; all user defined function
-    names are always in scope regardless of definition order.
+'continuous.stan', line 9, column 2:
+    Functions do not need to be declared before definition; all user defined
+    function names are always in scope regardless of definition order.
 Warning in './/functions/SSfunctions.stan', line 8, column 7, included from
-'continuous.stan', line 9, column 2: Functions
-    do not need to be declared before definition; all user defined function
-    names are always in scope regardless of definition order.
+'continuous.stan', line 9, column 2:
+    Functions do not need to be declared before definition; all user defined
+    function names are always in scope regardless of definition order.
 Warning in './/functions/SSfunctions.stan', line 9, column 7, included from
-'continuous.stan', line 9, column 2: Functions
-    do not need to be declared before definition; all user defined function
-    names are always in scope regardless of definition order.
+'continuous.stan', line 9, column 2:
+    Functions do not need to be declared before definition; all user defined
+    function names are always in scope regardless of definition order.
 Warning in './/functions/SSfunctions.stan', line 10, column 7, included from
-'continuous.stan', line 9, column 2: Functions
-    do not need to be declared before definition; all user defined function
-    names are always in scope regardless of definition order.
+'continuous.stan', line 9, column 2:
+    Functions do not need to be declared before definition; all user defined
+    function names are always in scope regardless of definition order.
+[exit 0]
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --canonicalize=includes --allow-undefined count.stan
 //    This file is part of rstanarm.
 //    Copyright (C) 2015, 2016 2017 Trustees of Columbia University
@@ -3381,8 +3447,13 @@ functions {
    * @param z_T Vector used in the onion method for creating Cholesky factors
    * @return A vector that corresponds to theta in lme4
    */
-  vector make_theta_L(int len_theta_L, array[] int p, real dispersion,
-                      vector tau, vector scale, vector zeta, vector rho,
+  vector make_theta_L(int len_theta_L,
+                      array[] int p,
+                      real dispersion,
+                      vector tau,
+                      vector scale,
+                      vector zeta,
+                      vector rho,
                       vector z_T) {
     vector[len_theta_L] theta_L;
     int zeta_mark = 1;
@@ -3503,9 +3574,16 @@ functions {
    * @param p An integer array with the number variables on the LHS of each |
    * @return target()
    */
-  real decov_lp(vector z_b, vector z_T, vector rho, vector zeta, vector tau,
-                array[] real regularization, array[] real delta,
-                vector shape, int t, array[] int p) {
+  real decov_lp(vector z_b,
+                vector z_T,
+                vector rho,
+                vector zeta,
+                vector tau,
+                array[] real regularization,
+                array[] real delta,
+                vector shape,
+                int t,
+                array[] int p) {
     int pos_reg = 1;
     int pos_rho = 1;
     target += normal_lpdf(z_b | 0, 1);
@@ -3523,7 +3601,8 @@ functions {
           shape1[j] = 0.5 * j;
           shape2[j] = nu;
         }
-        target += beta_lpdf(rho[pos_rho : (pos_rho + p[i] - 2)] | shape1, shape2);
+        target += beta_lpdf(rho[pos_rho : (pos_rho + p[i] - 2)] | shape1,
+                            shape2);
         pos_rho += p[i] - 1;
       }
     target += gamma_lpdf(zeta | delta, 1);
@@ -3548,7 +3627,8 @@ functions {
     vector[K] lambda = local[1] .* sqrt(local[2]);
     real tau = global[1] * sqrt(global[2]) * global_prior_scale * error_scale;
     vector[K] lambda2 = square(lambda);
-    vector[K] lambda_tilde = sqrt(c2 * lambda2
+    vector[K] lambda_tilde = sqrt(
+                                  c2 * lambda2
                                   ./ (c2 + square(tau) * lambda2));
     return z_beta .* lambda_tilde * tau;
   }
@@ -3572,7 +3652,8 @@ functions {
     vector[K] eta = local[3] .* sqrt(local[4]);
     real tau = global[1] * sqrt(global[2]) * global_prior_scale * error_scale;
     vector[K] lambda_eta2 = square(lambda .* eta);
-    vector[K] lambda_tilde = sqrt(c2 * lambda_eta2
+    vector[K] lambda_tilde = sqrt(
+                                  c2 * lambda_eta2
                                   ./ (c2 + square(tau) * lambda_eta2));
     return z_beta .* lambda_tilde * tau;
   }
@@ -4072,8 +4153,8 @@ model {
     target += normal_lpdf(local[1] | 0, 1) - log_half;
     target += inv_gamma_lpdf(local[2] | 0.5 * prior_df, 0.5 * prior_df);
     target += normal_lpdf(global[1] | 0, 1) - log_half;
-    target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df, 0.5
-                                                                * global_prior_df);
+    target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df,
+                             0.5 * global_prior_df);
     target += inv_gamma_lpdf(caux | 0.5 * slab_df, 0.5 * slab_df);
   } else if (prior_dist == 4) {
     // hs+
@@ -4085,8 +4166,8 @@ model {
     // unorthodox useage of prior_scale as another df hyperparameter
     target += inv_gamma_lpdf(local[4] | 0.5 * prior_scale, 0.5 * prior_scale);
     target += normal_lpdf(global[1] | 0, 1) - log_half;
-    target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df, 0.5
-                                                                * global_prior_df);
+    target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df,
+                             0.5 * global_prior_df);
     target += inv_gamma_lpdf(caux | 0.5 * slab_df, 0.5 * slab_df);
   } else if (prior_dist == 5) {
     // laplace
@@ -4106,9 +4187,12 @@ model {
   // Log-prior for intercept  
   if (has_intercept == 1) {
     if (prior_dist_for_intercept == 1)  // normal
-      target += normal_lpdf(gamma | prior_mean_for_intercept, prior_scale_for_intercept);
+      target += normal_lpdf(gamma | prior_mean_for_intercept,
+                            prior_scale_for_intercept);
     else if (prior_dist_for_intercept == 2)  // student_t
-      target += student_t_lpdf(gamma | prior_df_for_intercept, prior_mean_for_intercept, prior_scale_for_intercept);
+      target += student_t_lpdf(gamma | prior_df_for_intercept,
+                               prior_mean_for_intercept,
+                               prior_scale_for_intercept);
     /* else prior_dist is 0 and nothing is added */
   }
   
@@ -4215,6 +4299,7 @@ generated quantities {
   }
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --canonicalize=includes --allow-undefined jm.stan
 //    This file is part of rstanarm.
 //    Copyright (C) 2015, 2016 2017 Trustees of Columbia University
@@ -4256,8 +4341,13 @@ functions {
    * @param z_T Vector used in the onion method for creating Cholesky factors
    * @return A vector that corresponds to theta in lme4
    */
-  vector make_theta_L(int len_theta_L, array[] int p, real dispersion,
-                      vector tau, vector scale, vector zeta, vector rho,
+  vector make_theta_L(int len_theta_L,
+                      array[] int p,
+                      real dispersion,
+                      vector tau,
+                      vector scale,
+                      vector zeta,
+                      vector rho,
                       vector z_T) {
     vector[len_theta_L] theta_L;
     int zeta_mark = 1;
@@ -4378,9 +4468,16 @@ functions {
    * @param p An integer array with the number variables on the LHS of each |
    * @return target()
    */
-  real decov_lp(vector z_b, vector z_T, vector rho, vector zeta, vector tau,
-                array[] real regularization, array[] real delta,
-                vector shape, int t, array[] int p) {
+  real decov_lp(vector z_b,
+                vector z_T,
+                vector rho,
+                vector zeta,
+                vector tau,
+                array[] real regularization,
+                array[] real delta,
+                vector shape,
+                int t,
+                array[] int p) {
     int pos_reg = 1;
     int pos_rho = 1;
     target += normal_lpdf(z_b | 0, 1);
@@ -4398,7 +4495,8 @@ functions {
           shape1[j] = 0.5 * j;
           shape2[j] = nu;
         }
-        target += beta_lpdf(rho[pos_rho : (pos_rho + p[i] - 2)] | shape1, shape2);
+        target += beta_lpdf(rho[pos_rho : (pos_rho + p[i] - 2)] | shape1,
+                            shape2);
         pos_rho += p[i] - 1;
       }
     target += gamma_lpdf(zeta | delta, 1);
@@ -4423,7 +4521,8 @@ functions {
     vector[K] lambda = local[1] .* sqrt(local[2]);
     real tau = global[1] * sqrt(global[2]) * global_prior_scale * error_scale;
     vector[K] lambda2 = square(lambda);
-    vector[K] lambda_tilde = sqrt(c2 * lambda2
+    vector[K] lambda_tilde = sqrt(
+                                  c2 * lambda2
                                   ./ (c2 + square(tau) * lambda2));
     return z_beta .* lambda_tilde * tau;
   }
@@ -4447,7 +4546,8 @@ functions {
     vector[K] eta = local[3] .* sqrt(local[4]);
     real tau = global[1] * sqrt(global[2]) * global_prior_scale * error_scale;
     vector[K] lambda_eta2 = square(lambda .* eta);
-    vector[K] lambda_tilde = sqrt(c2 * lambda_eta2
+    vector[K] lambda_tilde = sqrt(
+                                  c2 * lambda_eta2
                                   ./ (c2 + square(tau) * lambda_eta2));
     return z_beta .* lambda_tilde * tau;
   }
@@ -5027,7 +5127,8 @@ functions {
   * @param link_phi An integer indicating the link function passed to linkinv_beta_z
   * @return A vector of log-likelihoods
   */
-  vector pw_beta_z(vector y, vector eta, vector eta_z, int link, int link_phi) {
+  vector pw_beta_z(vector y, vector eta, vector eta_z, int link,
+                   int link_phi) {
     vector[rows(y)] ll;
     vector[rows(y)] mu = linkinv_beta(eta, link); // link checked
     vector[rows(y)] mu_z = linkinv_beta_z(eta_z, link_phi); // link checked
@@ -5187,12 +5288,20 @@ functions {
   *   for the prior distributions
   * @return A vector containing the population level parameters (coefficients)
   */
-  vector make_beta(vector z_beta, int prior_dist, vector prior_mean,
-                   vector prior_scale, vector prior_df,
-                   real global_prior_scale, array[] real global,
-                   array[] vector local, array[] real ool,
-                   array[] vector mix, array[] real aux, int family,
-                   real slab_scale, array[] real caux) {
+  vector make_beta(vector z_beta,
+                   int prior_dist,
+                   vector prior_mean,
+                   vector prior_scale,
+                   vector prior_df,
+                   real global_prior_scale,
+                   array[] real global,
+                   array[] vector local,
+                   array[] real ool,
+                   array[] vector mix,
+                   array[] real aux,
+                   int family,
+                   real slab_scale,
+                   array[] real caux) {
     vector[rows(z_beta)] beta;
     if (prior_dist == 0) 
       beta = z_beta;
@@ -5290,10 +5399,17 @@ functions {
   *   1 = unbounded, 2 = lower bound, 3 = upper bound)
   * @return A vector containing the linear predictor for the glmer submodel
   */
-  vector evaluate_eta(matrix X, array[] vector Z1, array[] vector Z2,
-                      array[] int Z1_id, array[] int Z2_id,
-                      array[] real gamma, vector beta, matrix b1Mat,
-                      matrix b2Mat, int b1Mat_colshift, int b2Mat_colshift,
+  vector evaluate_eta(matrix X,
+                      array[] vector Z1,
+                      array[] vector Z2,
+                      array[] int Z1_id,
+                      array[] int Z2_id,
+                      array[] real gamma,
+                      vector beta,
+                      matrix b1Mat,
+                      matrix b2Mat,
+                      int b1Mat_colshift,
+                      int b2Mat_colshift,
                       int intercept_type) {
     int N = rows(X); // num rows in design matrix
     int K = rows(beta); // num predictors
@@ -5366,9 +5482,15 @@ functions {
   *   for the prior distributions
   * @return A vector containing the population level parameters (coefficients)
   */
-  void glm_lp(vector y_real, array[] int y_integer, vector eta,
-              array[] real aux, int family, int link, real sum_log_y,
-              vector sqrt_y, vector log_y) {
+  void glm_lp(vector y_real,
+              array[] int y_integer,
+              vector eta,
+              array[] real aux,
+              int family,
+              int link,
+              real sum_log_y,
+              vector sqrt_y,
+              vector log_y) {
     if (family == 1) {
       // gaussian
       if (link == 1) 
@@ -5404,7 +5526,8 @@ functions {
       if (link == 1) 
         target += neg_binomial_2_log_lpmf(y_integer | eta, aux[1]);
       else 
-        target += neg_binomial_2_lpmf(y_integer | linkinv_count(eta, link), aux[1]);
+        target += neg_binomial_2_lpmf(y_integer | linkinv_count(eta, link),
+                    aux[1]);
     } else 
       reject("Invalid family.");
   }
@@ -5423,10 +5546,17 @@ functions {
   * @param one_over_lambda Real
   * @return nothing
   */
-  void beta_lp(vector z_beta, int prior_dist, vector prior_scale,
-               vector prior_df, real global_prior_df, array[] vector local,
-               array[] real global, array[] vector mix,
-               array[] real one_over_lambda, real slab_df, array[] real caux) {
+  void beta_lp(vector z_beta,
+               int prior_dist,
+               vector prior_scale,
+               vector prior_df,
+               real global_prior_df,
+               array[] vector local,
+               array[] real global,
+               array[] vector mix,
+               array[] real one_over_lambda,
+               real slab_df,
+               array[] real caux) {
     if (prior_dist == 1) 
       target += normal_lpdf(z_beta | 0, 1);
     else if (prior_dist == 2) 
@@ -5437,8 +5567,8 @@ functions {
       target += normal_lpdf(local[1] | 0, 1);
       target += inv_gamma_lpdf(local[2] | 0.5 * prior_df, 0.5 * prior_df);
       target += normal_lpdf(global[1] | 0, 1);
-      target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df, 0.5
-                                                                  * global_prior_df);
+      target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df,
+                               0.5 * global_prior_df);
       target += inv_gamma_lpdf(caux | 0.5 * slab_df, 0.5 * slab_df);
     } else if (prior_dist == 4) {
       // hs+
@@ -5447,11 +5577,11 @@ functions {
       target += inv_gamma_lpdf(local[2] | 0.5 * prior_df, 0.5 * prior_df);
       target += normal_lpdf(local[3] | 0, 1);
       // unorthodox useage of prior_scale as another df hyperparameter
-      target += inv_gamma_lpdf(local[4] | 0.5 * prior_scale, 0.5
-                                                             * prior_scale);
+      target += inv_gamma_lpdf(local[4] | 0.5 * prior_scale,
+                               0.5 * prior_scale);
       target += normal_lpdf(global[1] | 0, 1);
-      target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df, 0.5
-                                                                  * global_prior_df);
+      target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df,
+                               0.5 * global_prior_df);
       target += inv_gamma_lpdf(caux | 0.5 * slab_df, 0.5 * slab_df);
     } else if (prior_dist == 5) {
       // laplace
@@ -5679,10 +5809,17 @@ functions {
   *   in columns, and the individuals on the rows; the matrix is
   *   repeated (qnodes + 1) times (bounded by rows)
   */
-  matrix make_x_assoc_shared_b(vector b, array[] int l, array[] int p,
-                               array[,] int pmat, int Npat, int qnodes,
-                               array[] int which_b, int sum_size_which_b,
-                               array[] int size_which_b, int t_i, int M) {
+  matrix make_x_assoc_shared_b(vector b,
+                               array[] int l,
+                               array[] int p,
+                               array[,] int pmat,
+                               int Npat,
+                               int qnodes,
+                               array[] int which_b,
+                               int sum_size_which_b,
+                               array[] int size_which_b,
+                               int t_i,
+                               int M) {
     int prior_shift; // num. ranefs prior to subject-specific ranefs
     int start_store;
     int end_store;
@@ -5755,10 +5892,17 @@ functions {
   *   in columns, and the individuals on the rows; the matrix is
   *   repeated (qnodes + 1) times (bounded by rows)
   */
-  matrix make_x_assoc_shared_coef(vector b, vector beta, array[] int KM,
-                                  int M, int t_i, array[] int l,
-                                  array[] int p, array[,] int pmat, int Npat,
-                                  int qnodes, int sum_size_which_coef,
+  matrix make_x_assoc_shared_coef(vector b,
+                                  vector beta,
+                                  array[] int KM,
+                                  int M,
+                                  int t_i,
+                                  array[] int l,
+                                  array[] int p,
+                                  array[,] int pmat,
+                                  int Npat,
+                                  int qnodes,
+                                  int sum_size_which_coef,
                                   array[] int size_which_coef,
                                   array[] int which_coef_zindex,
                                   array[] int which_coef_xindex,
@@ -6491,7 +6635,7 @@ transformed parameters {
                      a_ool, a_mix, rep_array(1.0, 0), 0, a_slab_scale,
                      a_caux);
   e_aux = make_basehaz_coef(e_aux_unscaled, e_prior_dist_for_aux,
-                            e_prior_mean_for_aux, e_prior_scale_for_aux);
+            e_prior_mean_for_aux, e_prior_scale_for_aux);
 }
 model {
   //---- Log likelihoods for longitudinal submodels
@@ -6629,9 +6773,9 @@ model {
               if (has_grp[m] == 0) {
                 val = eta_tmp .* y_Xq_data[idx_q[m, 1] : idx_q[m, 2], sel];
               } else {
-                val = collapse_within_groups(eta_tmp
-                                             .* y_Xq_data[idx_q[m, 1] : idx_q[m, 2], sel],
-                                             grp_idx, grp_assoc);
+                val = collapse_within_groups(
+                        eta_tmp .* y_Xq_data[idx_q[m, 1] : idx_q[m, 2], sel],
+                        grp_idx, grp_assoc);
               }
               mark += 1;
               e_eta_q += a_beta[mark] * (val - a_xbar[mark]);
@@ -6776,9 +6920,10 @@ model {
               if (has_grp[m] == 0) {
                 val = dydt_eta_q .* y_Xq_data[idx_q[m, 1] : idx_q[m, 2], sel];
               } else {
-                val = collapse_within_groups(dydt_eta_q
-                                             .* y_Xq_data[idx_q[m, 1] : idx_q[m, 2], sel],
-                                             grp_idx, grp_assoc);
+                val = collapse_within_groups(
+                        dydt_eta_q
+                        .* y_Xq_data[idx_q[m, 1] : idx_q[m, 2], sel],
+                        grp_idx, grp_assoc);
               }
               mark += 1;
               e_eta_q += a_beta[mark] * (val - a_xbar[mark]);
@@ -6888,9 +7033,9 @@ model {
               if (has_grp[m] == 0) {
                 val = mu_tmp .* y_Xq_data[idx_q[m, 1] : idx_q[m, 2], sel];
               } else {
-                val = collapse_within_groups(mu_tmp
-                                             .* y_Xq_data[idx_q[m, 1] : idx_q[m, 2], sel],
-                                             grp_idx, grp_assoc);
+                val = collapse_within_groups(
+                        mu_tmp .* y_Xq_data[idx_q[m, 1] : idx_q[m, 2], sel],
+                        grp_idx, grp_assoc);
               }
               mark += 1;
               e_eta_q += a_beta[mark] * (val - a_xbar[mark]);
@@ -7134,7 +7279,8 @@ model {
       target += normal_lpdf(to_vector(z_bMat1) | 0, 1);
       // corr matrix for group factor 1
       if (bK1 > 1) 
-        target += lkj_corr_cholesky_lpdf(bCholesky1 | b1_prior_regularization);
+        target += lkj_corr_cholesky_lpdf(bCholesky1 |
+                    b1_prior_regularization);
     }
     if (bK2 > 0) {
       // sds for group factor 2
@@ -7143,7 +7289,8 @@ model {
       target += normal_lpdf(to_vector(z_bMat2) | 0, 1);
       // corr matrix for group factor 2
       if (bK2 > 1) 
-        target += lkj_corr_cholesky_lpdf(bCholesky2 | b2_prior_regularization);
+        target += lkj_corr_cholesky_lpdf(bCholesky2 |
+                    b2_prior_regularization);
     }
   }
   
@@ -7181,7 +7328,8 @@ generated quantities {
     
     // Linear predictor for submodel 1
     if (M > 0) {
-      vector[yNeta[1]] yEta1 = evaluate_mu(// linear predictor
+      vector[yNeta[1]] yEta1 = evaluate_mu(
+                                           // linear predictor
                                            evaluate_eta(yX1, y1_Z1, y1_Z2,
                                                         y1_Z1_id, y1_Z2_id,
                                                         yGamma1, yBeta1,
@@ -7198,7 +7346,8 @@ generated quantities {
       vector[yNeta[2]] yEta2;
       bMat1_colshift += bK1_len[1];
       bMat2_colshift += bK2_len[1];
-      yEta2 = evaluate_mu(evaluate_eta(yX2, y2_Z1, y2_Z2, y2_Z1_id, y2_Z2_id,
+      yEta2 = evaluate_mu(
+                          evaluate_eta(yX2, y2_Z1, y2_Z2, y2_Z1_id, y2_Z2_id,
                                        yGamma2, yBeta2, bMat1, bMat2,
                                        bMat1_colshift, bMat2_colshift,
                                        intercept_type[2]),
@@ -7211,7 +7360,8 @@ generated quantities {
       vector[yNeta[3]] yEta3;
       bMat1_colshift += bK1_len[2];
       bMat2_colshift += bK2_len[2];
-      yEta3 = evaluate_mu(evaluate_eta(yX3, y3_Z1, y3_Z2, y3_Z1_id, y3_Z2_id,
+      yEta3 = evaluate_mu(
+                          evaluate_eta(yX3, y3_Z1, y3_Z2, y3_Z1_id, y3_Z2_id,
                                        yGamma3, yBeta3, bMat1, bMat2,
                                        bMat1_colshift, bMat2_colshift,
                                        intercept_type[3]),
@@ -7234,16 +7384,22 @@ generated quantities {
   if (prior_dist_for_cov == 2 && bK1 == 1) {
     bCov1[1] = bSd1[1] * bSd1[1];
   } else if (prior_dist_for_cov == 2 && bK1 > 1) {
-    bCov1 = to_vector(quad_form_diag(multiply_lower_tri_self_transpose(
-                                     bCholesky1), bSd1))[bCov1_idx];
+    bCov1 = to_vector(
+                      quad_form_diag(
+                                     multiply_lower_tri_self_transpose(
+                                       bCholesky1),
+                                     bSd1))[bCov1_idx];
   }
   
   // Grouping factor 2
   if (prior_dist_for_cov == 2 && bK2 == 1) {
     bCov2[1] = bSd2[1] * bSd2[1];
   } else if (prior_dist_for_cov == 2 && bK2 > 1) {
-    bCov2 = to_vector(quad_form_diag(multiply_lower_tri_self_transpose(
-                                     bCholesky2), bSd2))[bCov2_idx];
+    bCov2 = to_vector(
+                      quad_form_diag(
+                                     multiply_lower_tri_self_transpose(
+                                       bCholesky2),
+                                     bSd2))[bCov2_idx];
   }
   
   // norm_const is a constant shift in log baseline hazard
@@ -7256,9 +7412,10 @@ generated quantities {
 }
 
 Warning in './/functions/bernoulli_likelihoods.stan', line 84, column 7, included from
-'jm.stan', line 8, column 0: Functions
-    do not need to be declared before definition; all user defined function
-    names are always in scope regardless of definition order.
+'jm.stan', line 8, column 0:
+    Functions do not need to be declared before definition; all user defined
+    function names are always in scope regardless of definition order.
+[exit 0]
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --canonicalize=includes --allow-undefined lm.stan
 //    This file is part of rstanarm.
 //    Copyright (C) 2015, 2016 2017 Trustees of Columbia University
@@ -7404,6 +7561,7 @@ generated quantities {
   }
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --canonicalize=includes --allow-undefined mvmer.stan
 //    This file is part of rstanarm.
 //    Copyright (C) 2015, 2016 2017 Trustees of Columbia University
@@ -7445,8 +7603,13 @@ functions {
    * @param z_T Vector used in the onion method for creating Cholesky factors
    * @return A vector that corresponds to theta in lme4
    */
-  vector make_theta_L(int len_theta_L, array[] int p, real dispersion,
-                      vector tau, vector scale, vector zeta, vector rho,
+  vector make_theta_L(int len_theta_L,
+                      array[] int p,
+                      real dispersion,
+                      vector tau,
+                      vector scale,
+                      vector zeta,
+                      vector rho,
                       vector z_T) {
     vector[len_theta_L] theta_L;
     int zeta_mark = 1;
@@ -7567,9 +7730,16 @@ functions {
    * @param p An integer array with the number variables on the LHS of each |
    * @return target()
    */
-  real decov_lp(vector z_b, vector z_T, vector rho, vector zeta, vector tau,
-                array[] real regularization, array[] real delta,
-                vector shape, int t, array[] int p) {
+  real decov_lp(vector z_b,
+                vector z_T,
+                vector rho,
+                vector zeta,
+                vector tau,
+                array[] real regularization,
+                array[] real delta,
+                vector shape,
+                int t,
+                array[] int p) {
     int pos_reg = 1;
     int pos_rho = 1;
     target += normal_lpdf(z_b | 0, 1);
@@ -7587,7 +7757,8 @@ functions {
           shape1[j] = 0.5 * j;
           shape2[j] = nu;
         }
-        target += beta_lpdf(rho[pos_rho : (pos_rho + p[i] - 2)] | shape1, shape2);
+        target += beta_lpdf(rho[pos_rho : (pos_rho + p[i] - 2)] | shape1,
+                            shape2);
         pos_rho += p[i] - 1;
       }
     target += gamma_lpdf(zeta | delta, 1);
@@ -7612,7 +7783,8 @@ functions {
     vector[K] lambda = local[1] .* sqrt(local[2]);
     real tau = global[1] * sqrt(global[2]) * global_prior_scale * error_scale;
     vector[K] lambda2 = square(lambda);
-    vector[K] lambda_tilde = sqrt(c2 * lambda2
+    vector[K] lambda_tilde = sqrt(
+                                  c2 * lambda2
                                   ./ (c2 + square(tau) * lambda2));
     return z_beta .* lambda_tilde * tau;
   }
@@ -7636,7 +7808,8 @@ functions {
     vector[K] eta = local[3] .* sqrt(local[4]);
     real tau = global[1] * sqrt(global[2]) * global_prior_scale * error_scale;
     vector[K] lambda_eta2 = square(lambda .* eta);
-    vector[K] lambda_tilde = sqrt(c2 * lambda_eta2
+    vector[K] lambda_tilde = sqrt(
+                                  c2 * lambda_eta2
                                   ./ (c2 + square(tau) * lambda_eta2));
     return z_beta .* lambda_tilde * tau;
   }
@@ -8216,7 +8389,8 @@ functions {
   * @param link_phi An integer indicating the link function passed to linkinv_beta_z
   * @return A vector of log-likelihoods
   */
-  vector pw_beta_z(vector y, vector eta, vector eta_z, int link, int link_phi) {
+  vector pw_beta_z(vector y, vector eta, vector eta_z, int link,
+                   int link_phi) {
     vector[rows(y)] ll;
     vector[rows(y)] mu = linkinv_beta(eta, link); // link checked
     vector[rows(y)] mu_z = linkinv_beta_z(eta_z, link_phi); // link checked
@@ -8376,12 +8550,20 @@ functions {
   *   for the prior distributions
   * @return A vector containing the population level parameters (coefficients)
   */
-  vector make_beta(vector z_beta, int prior_dist, vector prior_mean,
-                   vector prior_scale, vector prior_df,
-                   real global_prior_scale, array[] real global,
-                   array[] vector local, array[] real ool,
-                   array[] vector mix, array[] real aux, int family,
-                   real slab_scale, array[] real caux) {
+  vector make_beta(vector z_beta,
+                   int prior_dist,
+                   vector prior_mean,
+                   vector prior_scale,
+                   vector prior_df,
+                   real global_prior_scale,
+                   array[] real global,
+                   array[] vector local,
+                   array[] real ool,
+                   array[] vector mix,
+                   array[] real aux,
+                   int family,
+                   real slab_scale,
+                   array[] real caux) {
     vector[rows(z_beta)] beta;
     if (prior_dist == 0) 
       beta = z_beta;
@@ -8479,10 +8661,17 @@ functions {
   *   1 = unbounded, 2 = lower bound, 3 = upper bound)
   * @return A vector containing the linear predictor for the glmer submodel
   */
-  vector evaluate_eta(matrix X, array[] vector Z1, array[] vector Z2,
-                      array[] int Z1_id, array[] int Z2_id,
-                      array[] real gamma, vector beta, matrix b1Mat,
-                      matrix b2Mat, int b1Mat_colshift, int b2Mat_colshift,
+  vector evaluate_eta(matrix X,
+                      array[] vector Z1,
+                      array[] vector Z2,
+                      array[] int Z1_id,
+                      array[] int Z2_id,
+                      array[] real gamma,
+                      vector beta,
+                      matrix b1Mat,
+                      matrix b2Mat,
+                      int b1Mat_colshift,
+                      int b2Mat_colshift,
                       int intercept_type) {
     int N = rows(X); // num rows in design matrix
     int K = rows(beta); // num predictors
@@ -8555,9 +8744,15 @@ functions {
   *   for the prior distributions
   * @return A vector containing the population level parameters (coefficients)
   */
-  void glm_lp(vector y_real, array[] int y_integer, vector eta,
-              array[] real aux, int family, int link, real sum_log_y,
-              vector sqrt_y, vector log_y) {
+  void glm_lp(vector y_real,
+              array[] int y_integer,
+              vector eta,
+              array[] real aux,
+              int family,
+              int link,
+              real sum_log_y,
+              vector sqrt_y,
+              vector log_y) {
     if (family == 1) {
       // gaussian
       if (link == 1) 
@@ -8593,7 +8788,8 @@ functions {
       if (link == 1) 
         target += neg_binomial_2_log_lpmf(y_integer | eta, aux[1]);
       else 
-        target += neg_binomial_2_lpmf(y_integer | linkinv_count(eta, link), aux[1]);
+        target += neg_binomial_2_lpmf(y_integer | linkinv_count(eta, link),
+                    aux[1]);
     } else 
       reject("Invalid family.");
   }
@@ -8612,10 +8808,17 @@ functions {
   * @param one_over_lambda Real
   * @return nothing
   */
-  void beta_lp(vector z_beta, int prior_dist, vector prior_scale,
-               vector prior_df, real global_prior_df, array[] vector local,
-               array[] real global, array[] vector mix,
-               array[] real one_over_lambda, real slab_df, array[] real caux) {
+  void beta_lp(vector z_beta,
+               int prior_dist,
+               vector prior_scale,
+               vector prior_df,
+               real global_prior_df,
+               array[] vector local,
+               array[] real global,
+               array[] vector mix,
+               array[] real one_over_lambda,
+               real slab_df,
+               array[] real caux) {
     if (prior_dist == 1) 
       target += normal_lpdf(z_beta | 0, 1);
     else if (prior_dist == 2) 
@@ -8626,8 +8829,8 @@ functions {
       target += normal_lpdf(local[1] | 0, 1);
       target += inv_gamma_lpdf(local[2] | 0.5 * prior_df, 0.5 * prior_df);
       target += normal_lpdf(global[1] | 0, 1);
-      target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df, 0.5
-                                                                  * global_prior_df);
+      target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df,
+                               0.5 * global_prior_df);
       target += inv_gamma_lpdf(caux | 0.5 * slab_df, 0.5 * slab_df);
     } else if (prior_dist == 4) {
       // hs+
@@ -8636,11 +8839,11 @@ functions {
       target += inv_gamma_lpdf(local[2] | 0.5 * prior_df, 0.5 * prior_df);
       target += normal_lpdf(local[3] | 0, 1);
       // unorthodox useage of prior_scale as another df hyperparameter
-      target += inv_gamma_lpdf(local[4] | 0.5 * prior_scale, 0.5
-                                                             * prior_scale);
+      target += inv_gamma_lpdf(local[4] | 0.5 * prior_scale,
+                               0.5 * prior_scale);
       target += normal_lpdf(global[1] | 0, 1);
-      target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df, 0.5
-                                                                  * global_prior_df);
+      target += inv_gamma_lpdf(global[2] | 0.5 * global_prior_df,
+                               0.5 * global_prior_df);
       target += inv_gamma_lpdf(caux | 0.5 * slab_df, 0.5 * slab_df);
     } else if (prior_dist == 5) {
       // laplace
@@ -9220,7 +9423,8 @@ model {
       target += normal_lpdf(to_vector(z_bMat1) | 0, 1);
       // corr matrix for group factor 1
       if (bK1 > 1) 
-        target += lkj_corr_cholesky_lpdf(bCholesky1 | b1_prior_regularization);
+        target += lkj_corr_cholesky_lpdf(bCholesky1 |
+                    b1_prior_regularization);
     }
     if (bK2 > 0) {
       // sds for group factor 2
@@ -9229,7 +9433,8 @@ model {
       target += normal_lpdf(to_vector(z_bMat2) | 0, 1);
       // corr matrix for group factor 2
       if (bK2 > 1) 
-        target += lkj_corr_cholesky_lpdf(bCholesky2 | b2_prior_regularization);
+        target += lkj_corr_cholesky_lpdf(bCholesky2 |
+                    b2_prior_regularization);
     }
   }
 }
@@ -9252,7 +9457,8 @@ generated quantities {
     
     // Linear predictor for submodel 1
     if (M > 0) {
-      vector[yNeta[1]] yEta1 = evaluate_mu(// linear predictor
+      vector[yNeta[1]] yEta1 = evaluate_mu(
+                                           // linear predictor
                                            evaluate_eta(yX1, y1_Z1, y1_Z2,
                                                         y1_Z1_id, y1_Z2_id,
                                                         yGamma1, yBeta1,
@@ -9269,7 +9475,8 @@ generated quantities {
       vector[yNeta[2]] yEta2;
       bMat1_colshift += bK1_len[1];
       bMat2_colshift += bK2_len[1];
-      yEta2 = evaluate_mu(evaluate_eta(yX2, y2_Z1, y2_Z2, y2_Z1_id, y2_Z2_id,
+      yEta2 = evaluate_mu(
+                          evaluate_eta(yX2, y2_Z1, y2_Z2, y2_Z1_id, y2_Z2_id,
                                        yGamma2, yBeta2, bMat1, bMat2,
                                        bMat1_colshift, bMat2_colshift,
                                        intercept_type[2]),
@@ -9282,7 +9489,8 @@ generated quantities {
       vector[yNeta[3]] yEta3;
       bMat1_colshift += bK1_len[2];
       bMat2_colshift += bK2_len[2];
-      yEta3 = evaluate_mu(evaluate_eta(yX3, y3_Z1, y3_Z2, y3_Z1_id, y3_Z2_id,
+      yEta3 = evaluate_mu(
+                          evaluate_eta(yX3, y3_Z1, y3_Z2, y3_Z1_id, y3_Z2_id,
                                        yGamma3, yBeta3, bMat1, bMat2,
                                        bMat1_colshift, bMat2_colshift,
                                        intercept_type[3]),
@@ -9305,23 +9513,30 @@ generated quantities {
   if (prior_dist_for_cov == 2 && bK1 == 1) {
     bCov1[1] = bSd1[1] * bSd1[1];
   } else if (prior_dist_for_cov == 2 && bK1 > 1) {
-    bCov1 = to_vector(quad_form_diag(multiply_lower_tri_self_transpose(
-                                     bCholesky1), bSd1))[bCov1_idx];
+    bCov1 = to_vector(
+                      quad_form_diag(
+                                     multiply_lower_tri_self_transpose(
+                                       bCholesky1),
+                                     bSd1))[bCov1_idx];
   }
   
   // Grouping factor 2
   if (prior_dist_for_cov == 2 && bK2 == 1) {
     bCov2[1] = bSd2[1] * bSd2[1];
   } else if (prior_dist_for_cov == 2 && bK2 > 1) {
-    bCov2 = to_vector(quad_form_diag(multiply_lower_tri_self_transpose(
-                                     bCholesky2), bSd2))[bCov2_idx];
+    bCov2 = to_vector(
+                      quad_form_diag(
+                                     multiply_lower_tri_self_transpose(
+                                       bCholesky2),
+                                     bSd2))[bCov2_idx];
   }
 }
 
 Warning in './/functions/bernoulli_likelihoods.stan', line 84, column 7, included from
-'mvmer.stan', line 8, column 0: Functions
-    do not need to be declared before definition; all user defined function
-    names are always in scope regardless of definition order.
+'mvmer.stan', line 8, column 0:
+    Functions do not need to be declared before definition; all user defined
+    function names are always in scope regardless of definition order.
+[exit 0]
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --canonicalize=includes --allow-undefined polr.stan
 //    This file is part of rstanarm.
 //    Copyright (C) 2015, 2016 2017 Trustees of Columbia University
@@ -9476,9 +9691,10 @@ functions {
     else if (link == 3) 
       while (!(ystar > lower_ && ystar < upper_)) ystar = gumbel_rng(eta, 1);
     else if (link == 4) 
-      while (!(ystar > lower_ && ystar < upper_)) ystar = log(-log1m(
-                                                              uniform_rng(
-                                                              0, 1)));
+      while (!(ystar > lower_ && ystar < upper_)) ystar = log(
+                                                              -log1m(
+                                                                    uniform_rng
+                                                                    (0, 1)));
     else if (link == 5) 
       while (!(ystar > lower_ && ystar < upper_)) ystar = cauchy_rng(eta, 1);
     else 
@@ -9699,8 +9915,8 @@ generated quantities {
           ystar = draw_ystar_rng(negative_infinity(), cutpoints[1], eta[n],
                                  link);
         else if (y[n] == J) 
-          ystar = draw_ystar_rng(cutpoints[J - 1], positive_infinity(
-                                 ), eta[n], link);
+          ystar = draw_ystar_rng(cutpoints[J - 1], positive_infinity(),
+                                 eta[n], link);
         else 
           ystar = draw_ystar_rng(cutpoints[y[n] - 1], cutpoints[y[n]],
                                  eta[n], link);
@@ -9711,3 +9927,4 @@ generated quantities {
   }
 }
 
+[exit 0]

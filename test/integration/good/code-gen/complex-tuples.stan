@@ -8,6 +8,7 @@ transformed data {
   tuple(array[10] int, real) y;
   array[5] tuple(array[10] tuple(int, array[1,2,3] real), real) y2;
   x.1 = 1;
+  
   int z = (x).1;
   int b = x.1;
   real c = y2[1].1[1].2[1,1,1];

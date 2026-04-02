@@ -1,5 +1,5 @@
   $ ../../../../../install/default/bin/stanc --name=foo  8start_with_number.stan
-
+[exit 0]
   $ ../../../../../install/default/bin/stanc --name=foo  bad.stan
 Semantic error in 'bad.stan', line 3, column 6 to column 9:
    -------------------------------------------------
@@ -11,6 +11,7 @@ Semantic error in 'bad.stan', line 3, column 6 to column 9:
      5:  parameters {
    -------------------------------------------------
 
-Identifier 'foo' clashes with model name.
+Identifier "foo" clashes with model name.
+[exit 1]
   $ ../../../../../install/default/bin/stanc --name=foo  good.stan
-
+[exit 0]

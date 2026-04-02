@@ -24,8 +24,8 @@ let%expect_test "map_rec_stmt_loc" =
       |}
   in
   let f = function
-    | Stmt.Fixed.Pattern.NRFunApp (CompilerInternal FnPrint, [s]) ->
-        Stmt.Fixed.Pattern.NRFunApp (CompilerInternal FnPrint, [s; s])
+    | Stmt.Pattern.NRFunApp (CompilerInternal FnPrint, [s]) ->
+        Stmt.Pattern.NRFunApp (CompilerInternal FnPrint, [s; s])
     | x -> x in
   let mir = Program.map Fn.id (map_rec_stmt_loc f) Fn.id mir in
   Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
@@ -65,12 +65,12 @@ let%expect_test "map_rec_state_stmt_loc" =
       |}
   in
   let f i = function
-    | Stmt.Fixed.Pattern.NRFunApp (CompilerInternal FnPrint, [s]) ->
-        Stmt.Fixed.Pattern.(NRFunApp (CompilerInternal FnPrint, [s; s]), i + 1)
+    | Stmt.Pattern.NRFunApp (CompilerInternal FnPrint, [s]) ->
+        Stmt.Pattern.(NRFunApp (CompilerInternal FnPrint, [s; s]), i + 1)
     | x -> (x, i) in
   let mir_stmt, num =
     (map_rec_state_stmt_loc f 0)
-      Stmt.Fixed.{pattern= SList mir.log_prob; meta= Location_span.empty} in
+      Stmt.{pattern= SList mir.log_prob; meta= Location_span.empty} in
   let mir = {mir with log_prob= [mir_stmt]} in
   Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
   print_endline (string_of_int num);
@@ -336,7 +336,7 @@ let%expect_test "list collapsing" =
         (meta <opaque>))
        ((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id inline_g_return_sym2__)
-          (decl_type (Sized SReal)) (initialize false)))
+          (decl_type (Sized SReal)) (initialize Uninit)))
         (meta <opaque>))
        ((pattern
          (Block
@@ -463,8 +463,6 @@ let%expect_test "recursive functions" =
       } |}]
 
 let%expect_test "do not try to inline extern functions" =
-  let before = !Frontend.Typechecker.check_that_all_functions_have_definition in
-  Frontend.Typechecker.check_that_all_functions_have_definition := false;
   let mir =
     reset_and_mir_of_string
       {|
@@ -476,7 +474,6 @@ let%expect_test "do not try to inline extern functions" =
             }
             |}
   in
-  Frontend.Typechecker.check_that_all_functions_have_definition := before;
   let mir = function_inlining mir in
   Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
   [%expect
@@ -2092,8 +2089,8 @@ model {
     target += theta < phi;
     target += theta > phi;
     target += theta >= phi;
-    target += theta && phi;
-    target += theta || phi;
+    target += theta != 0 && phi != 0;
+    target += theta != 0 || phi != 0 ;
     target += bernoulli_lpmf(y_arr| inv_logit(theta + x_matrix * x_vector));
     target += bernoulli_lpmf(y_arr| inv_logit(x_matrix * x_vector + theta));
     target += bernoulli_lpmf(y_arr| inv_logit(x_matrix * x_vector));
@@ -2524,8 +2521,8 @@ let%expect_test "lazy code motion, 4" =
   in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  (* TODO: make sure that these
-     temporaries do not get assigned level DataOnly unless appropriate *)
+  (* TODO: make sure that these temporaries do not get assigned level DataOnly
+     unless appropriate *)
   Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
   [%expect
     {|
@@ -3016,8 +3013,9 @@ let%expect_test "lazy code motion, 13" =
         if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
-let%expect_test "cool example: expression propagation + partial evaluation + \
-                 lazy code motion + dead code elimination" =
+let%expect_test
+    "cool example: expression propagation + partial evaluation + lazy code \
+     motion + dead code elimination" =
   let mir =
     reset_and_mir_of_string
       {|
@@ -3077,7 +3075,7 @@ let%expect_test "block fixing" =
   let mir =
     { mir with
       Middle.Program.log_prob=
-        [ Stmt.Fixed.
+        [ Stmt.
             { pattern=
                 IfElse
                   ( Expr.Helpers.zero
@@ -3289,25 +3287,25 @@ let%expect_test "adlevel_optimization expressions" =
     {|
       (((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id w) (decl_type (Sized SReal))
-          (initialize true)))
+          (initialize Default)))
         (meta <opaque>))
        ((pattern
          (Block
           (((pattern
              (Decl (decl_adtype DataOnly) (decl_id x) (decl_type (Sized SInt))
-              (initialize true)))
+              (initialize Default)))
             (meta <opaque>))
            ((pattern
              (Decl (decl_adtype AutoDiffable) (decl_id y) (decl_type (Sized SReal))
-              (initialize true)))
+              (initialize Default)))
             (meta <opaque>))
            ((pattern
              (Decl (decl_adtype AutoDiffable) (decl_id z) (decl_type (Sized SReal))
-              (initialize true)))
+              (initialize Default)))
             (meta <opaque>))
            ((pattern
              (Decl (decl_adtype DataOnly) (decl_id z_data)
-              (decl_type (Sized SReal)) (initialize true)))
+              (decl_type (Sized SReal)) (initialize Default)))
             (meta <opaque>))
            ((pattern
              (IfElse
@@ -3469,9 +3467,9 @@ let%expect_test "adlevel_optimization 2" =
 let%expect_test "Mapping acts recursively" =
   let from = Expr.Helpers.variable "x" in
   let into = Expr.Helpers.variable "y" in
-  let unpattern p = {Stmt.Fixed.pattern= p; meta= Location_span.empty} in
+  let unpattern p = {Stmt.pattern= p; meta= Location_span.empty} in
   let s =
-    Stmt.Fixed.Pattern.NRFunApp
+    Stmt.Pattern.NRFunApp
       ( CompilerInternal (FnWriteParam {var= from; unconstrain_opt= None})
       , [from] ) in
   let m = Expr.Typed.Map.of_alist_exn [(from, into)] in

@@ -13,6 +13,7 @@ model {
   print(bar({2.3, 3}));
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format array_promotion.stan
 functions {
   void printer(array[] real x) {
@@ -49,6 +50,7 @@ model {
   print(nested(zs));
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format complex_functions.stan
 functions {
   void promote_complex_array(array[] complex zs) {
@@ -88,6 +90,7 @@ generated quantities {
   real answer = sum_weird(A);
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format newton_x_r_type.stan
 functions {
   vector algebra_system(vector y, vector theta, array[] real x_r,
@@ -118,6 +121,7 @@ model {
   dummy_parameter ~ normal(0, 1);
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format newton_x_r_type_control.stan
 functions {
   vector algebra_system(vector y, vector theta, array[] real x_r,
@@ -143,17 +147,19 @@ parameters {
 transformed parameters {
   vector[2] y_s_p;
   y_s_p = algebra_solver_newton(algebra_system, y, theta_p, x_r, x_i, 0.01,
-                                0.01, 10);
+            0.01, 10);
 }
 model {
   dummy_parameter ~ normal(0, 1);
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format propto.stan
 model {
   target += normal_lupdf(1 | {0}, 1);
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format return_position.stan
 functions {
   array[] complex foo(real a) {
@@ -172,13 +178,13 @@ transformed parameters {
   complex_vector[2] c = bar(a);
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format tilde_syntax.stan
 functions {
   real multi_wallenius_integral(real t, // Function argument
-                                real xc, array[] real theta,
-                                // parameters
-                                array[] real x_r,
-                                // data (real)
+                                real xc,
+                                array[] real theta, // parameters
+                                array[] real x_r, // data (real)
                                 array[] int x_i) {
     // data (integer)
     real Dinv = 1 / theta[1];
@@ -196,7 +202,8 @@ functions {
                             data array[] real x_r, data real tol) {
     int C = num_elements(m);
     real D = dot_product(to_row_vector(p), (m - to_vector(k[2 : C + 1])));
-    real lp = log(integrate_1d(multi_wallenius_integral, 0, 1,
+    real lp = log(
+                  integrate_1d(multi_wallenius_integral, 0, 1,
                                append_array({D}, to_array_1d(p)), x_r, k,
                                tol));
     
@@ -225,6 +232,7 @@ model {
     y[i] ~ multi_wallenius(m, probs, x_i, tol);
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format x_r_type.stan
 functions {
   vector algebra_system(vector y, vector theta, array[] real x_r,
@@ -255,6 +263,7 @@ model {
   dummy_parameter ~ normal(0, 1);
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format x_r_type_control.stan
 functions {
   vector algebra_system(vector y, vector theta, array[] real x_r,
@@ -286,3 +295,4 @@ model {
   dummy_parameter ~ normal(0, 1);
 }
 
+[exit 0]

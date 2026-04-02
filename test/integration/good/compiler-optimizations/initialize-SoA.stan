@@ -7,7 +7,7 @@ transformed parameters {
 }
 model {
   x ~ std_normal();
-  for (i in 1:3) {
+  for (i in 1 : 3) {
     arr_vec[i] ~ std_normal();
   }
 }

@@ -1,6 +1,6 @@
 data {
   int a0;
-  int a1[1];
+  int<lower=0> a1[1];
   int a2[2,3];
   array[1] int a3;
   array[2,3] int a4;

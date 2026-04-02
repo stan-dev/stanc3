@@ -1,4 +1,4 @@
-(** Types which have dimensionalities but not sizes, e.g. [array\[,,\]] *)
+(** Types which have dimensionalities but not sizes, e.g. [array[,,]] *)
 
 open Core
 open Core.Poly
@@ -15,17 +15,21 @@ type t =
   | UComplexMatrix
   | UArray of t
   | UTuple of t list
-  | UFun of argumentlist * returntype * bool Fun_kind.suffix * Mem_pattern.t
+  | UFun of signature
   | UMathLibraryFunction
-[@@deriving compare, hash, sexp]
 
 and autodifftype = DataOnly | AutoDiffable | TupleAD of autodifftype list
-[@@deriving compare, hash, sexp]
-
 and argumentlist = (autodifftype * t) list
-
 and returntype = Void | ReturnType of t
+
+and signature = argumentlist * returntype * bool Fun_kind.suffix * Mem_pattern.t
 [@@deriving compare, hash, sexp, equal]
+
+type variadic_signature =
+  { return_type: t
+  ; control_args: argumentlist
+  ; required_fn_rt: t
+  ; required_fn_args: argumentlist }
 
 let rec pp_tuple_autodifftype ppf = function
   | DataOnly -> Fmt.string ppf "data"
@@ -41,12 +45,6 @@ let pp_autodifftype ppf = function
   | DataOnly -> Fmt.string ppf "data "
   | AutoDiffable -> ()
   | tup -> pp_tuple_autodifftype ppf tup
-
-let unsized_array_depth unsized_ty =
-  let rec aux depth = function
-    | UArray ut -> aux (depth + 1) ut
-    | ut -> (ut, depth) in
-  aux 0 unsized_ty
 
 let count_dims unsized_ty =
   let rec aux dims = function
@@ -99,6 +97,8 @@ and pp_fun_arg ppf (ad_ty, unsized_ty) =
 and pp_returntype ppf = function
   | Void -> Fmt.string ppf "void"
   | ReturnType ut -> pp ppf ut
+
+let pp_math_sig ppf s = pp ppf (UFun s)
 
 (* -- Type conversion -- *)
 let rec autodifftype_can_convert at1 at2 =
@@ -165,8 +165,8 @@ let rec common_type = function
       common_type (t1, t2) |> Option.map ~f:(fun t -> UArray t)
   | UTuple ts1, UTuple ts2 ->
       (match List.zip ts1 ts2 with
-      | Ok ts -> List.map ts ~f:common_type |> Option.all
-      | Unequal_lengths -> None)
+        | Ok ts -> List.map ts ~f:common_type |> Option.all
+        | Unequal_lengths -> None)
       |> Option.map ~f:(fun ts -> UTuple ts)
   | t1, t2 when t1 = t2 -> Some t1
   | _, _ -> None
@@ -176,7 +176,7 @@ let rec common_type = function
 let rec is_autodiffable = function
   | UReal | UVector | URowVector | UMatrix -> true
   | UArray t -> is_autodiffable t
-  | _ -> false
+  | _ (* wrong? *) -> false
 
 let rec is_autodifftype possibly_adtype =
   match possibly_adtype with
@@ -210,7 +210,8 @@ let rec is_discrete_type ut =
   | UTuple ts -> List.for_all ~f:is_discrete_type ts
   | _ -> false
 
-(** Used in code generation and other places, does _not_ include tuples of ints *)
+(** Used in code generation and other places, does _not_ include tuples of ints
+*)
 let rec is_int_type ut =
   match ut with UInt -> true | UArray ut -> is_int_type ut | _ -> false
 
@@ -288,18 +289,15 @@ let rec fill_adtype_for_type ad ut =
       TupleAD (List.map2_exn ~f:fill_adtype_for_type ads ts)
   | _, UTuple ts -> TupleAD (List.map ~f:(fill_adtype_for_type ad) ts)
   | TupleAD _, _ ->
-      Common.FatalError.fatal_error_msg
+      Common.ICE.internal_compiler_error
         [%message
           "Attempting to give a non-tuple a TupleAD type"
             (ut : t)
             (ad : autodifftype)]
   | _, _ -> ad
 
-(** List all possible tuple sub-names for IO purposes.
-    E.g, the decl
-    [array[2] (int, real) foo;]
-    should yield the list [["foo.1";"foo.2"]].
-  *)
+(** List all possible tuple sub-names for IO purposes. E.g, the decl
+    [array[2] (int, real) foo;] should yield the list [["foo.1";"foo.2"]]. *)
 let enumerate_tuple_names_io name (ut : t) =
   let rec loop base ut =
     match ut with

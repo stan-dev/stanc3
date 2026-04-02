@@ -8,7 +8,8 @@ Syntax error in 'profile-bad1.stan', line 2, column 12 to column 13, parsing err
      4:      }
    -------------------------------------------------
 
-Expected profile name as string in parenthesis
+Ill-formed statement. Expected profile name as string in parenthesis
+[exit 1]
   $ ../../../../../install/default/bin/stanc profile-bad2.stan
 Syntax error in 'profile-bad2.stan', line 2, column 12 to column 13, parsing error:
    -------------------------------------------------
@@ -19,7 +20,8 @@ Syntax error in 'profile-bad2.stan', line 2, column 12 to column 13, parsing err
      4:      }
    -------------------------------------------------
 
-Expected profile name as string in parenthesis
+Ill-formed statement. Expected profile name as string in parenthesis
+[exit 1]
   $ ../../../../../install/default/bin/stanc profile-bad3.stan
 Syntax error in 'profile-bad3.stan', line 2, column 13 to column 18, parsing error:
    -------------------------------------------------
@@ -30,7 +32,8 @@ Syntax error in 'profile-bad3.stan', line 2, column 13 to column 18, parsing err
      4:      }
    -------------------------------------------------
 
-Expected profile name as string in parenthesis
+Ill-formed statement. Expected profile name as string in parenthesis
+[exit 1]
   $ ../../../../../install/default/bin/stanc profile-bad4.stan
 Syntax error in 'profile-bad4.stan', line 2, column 13 to column 18, parsing error:
    -------------------------------------------------
@@ -41,7 +44,8 @@ Syntax error in 'profile-bad4.stan', line 2, column 13 to column 18, parsing err
      4:      }
    -------------------------------------------------
 
-Expected profile name as string in parenthesis
+Ill-formed statement. Expected profile name as string in parenthesis
+[exit 1]
   $ ../../../../../install/default/bin/stanc profile-bad5.stan
 Syntax error in 'profile-bad5.stan', line 2, column 9 to column 16, parsing error:
    -------------------------------------------------
@@ -51,7 +55,8 @@ Syntax error in 'profile-bad5.stan', line 2, column 9 to column 16, parsing erro
      3:  }
    -------------------------------------------------
 
-Expected a new identifier but found reserved keyword 'profile'.
+Ill-formed identifier. Expected a new identifier but found reserved keyword "profile".
+[exit 1]
   $ ../../../../../install/default/bin/stanc profile-bad6.stan
 Syntax error in 'profile-bad6.stan', line 2, column 9 to column 16, parsing error:
    -------------------------------------------------
@@ -62,4 +67,5 @@ Syntax error in 'profile-bad6.stan', line 2, column 9 to column 16, parsing erro
      4:      }
    -------------------------------------------------
 
-Expected a new identifier but found reserved keyword 'profile'.
+Ill-formed identifier. Expected a new identifier but found reserved keyword "profile".
+[exit 1]

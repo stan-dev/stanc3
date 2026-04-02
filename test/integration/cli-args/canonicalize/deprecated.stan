@@ -29,17 +29,6 @@ parameters {
 }
 model {
 
-  if (b) {
-    x ~ normal(0, 1);
-  } else {
-    x ~ exponential(1);
-  }
-  while (0.0) {
-
-  }
-
-  int bool = !b < 2 && d || x;
-
 }
 generated quantities {
   array[2] real y0 = {1.0, 2.0};

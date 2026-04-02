@@ -65,6 +65,8 @@ transformed parameters {
   h_i_sigma[2:Nr] = rep_vector(1.0, (Nr - 1));
   h_i_mean[2:Nr] = phi * h[1:(Nr-1)] + theta * square(err[1:(Nr - 1)]);
   vector[Nr] h_sigma = exp(h * (0.5 * sigma) + (0.5 * mu)) + 0.000001;
+
+  vector[N] means_ordered = ordered_jacobian(mean_price);
 }
 
 model {

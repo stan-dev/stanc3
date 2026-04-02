@@ -11,6 +11,7 @@ _opam
 _build
 _coverage/
 *.coverage
+coverage.json
 *.merlin
 stanc.install
 

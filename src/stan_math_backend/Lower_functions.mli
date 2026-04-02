@@ -1,5 +1,5 @@
-(** Responsible for turning the Stan function's block
-into forward decls, functions, and functors in C++ *)
+(** Responsible for turning the Stan function's block into forward decls,
+    functions, and functors in C++ *)
 
 open Middle
 

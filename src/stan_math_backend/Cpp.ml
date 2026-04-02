@@ -13,10 +13,12 @@ type type_ =
   | Complex of type_
   | TemplateType of identifier
   | StdVector of type_
-      (** A std::vector. For Eigen Vectors, use [Matrix] with a row or column size of 1 *)
+      (** A std::vector. For Eigen Vectors, use [Matrix] with a row or column
+          size of 1 *)
   | Array of type_ * int
   | Tuple of type_ list
   | TypeLiteral of identifier  (** Used for things like Eigen::Index *)
+  | NonTypeTemplateInt of int
   | Matrix of type_ * int * int * Middle.Mem_pattern.t
   | Ref of type_
   | Const of type_
@@ -37,19 +39,19 @@ module Types = struct
   let bool = TypeLiteral "bool"
   let complex s = Complex s
 
-  (** An [Eigen::Matrix<s, -1, 1>]*)
+  (** An [Eigen::Matrix<s, -1, 1>] *)
   let vector ?(mem_pattern = Middle.Mem_pattern.AoS) s =
     Matrix (s, -1, 1, mem_pattern)
 
-  (** An [Eigen::Matrix<s, 1, -1>]*)
+  (** An [Eigen::Matrix<s, 1, -1>] *)
   let row_vector ?(mem_pattern = Middle.Mem_pattern.AoS) s =
     Matrix (s, 1, -1, mem_pattern)
 
-  (** An [Eigen::Matrix<s, -1, -1>]*)
+  (** An [Eigen::Matrix<s, -1, -1>] *)
   let matrix ?(mem_pattern = Middle.Mem_pattern.AoS) s =
     Matrix (s, -1, -1, mem_pattern)
 
-  (** A [std::string]*)
+  (** A [std::string] *)
   let string = TypeLiteral "std::string"
 
   let size_t = TypeLiteral "size_t"
@@ -60,8 +62,15 @@ module Types = struct
     match t with
     | Matrix _ -> TypeTrait ("Eigen::Map", [t])
     | _ ->
-        Common.FatalError.fatal_error_msg
+        Common.ICE.internal_compiler_error
           [%message "Tried to make an Eigen::Map of" (t : type_)]
+
+  let var_context = TypeLiteral "stan::io::var_context"
+  let ostream = TypeLiteral "std::ostream"
+  let base_type t = TypeTrait ("stan::base_type_t", [t])
+
+  let tuple_elt t i =
+    TypeTrait ("stan::tuple_element_t", [NonTypeTemplateInt i; t])
 end
 
 type operator =
@@ -86,18 +95,20 @@ type expr =
   | FunCall of identifier * type_ list * expr list
   | MethodCall of expr * identifier * type_ list * expr list
   | StaticMethodCall of type_ * identifier * type_ list * expr list
-  | Constructor of type_ * expr list  (** printed as [type(expr1, expr2, ...)]*)
+  | Constructor of type_ * expr list
+      (** printed as [type(expr1, expr2, ...)] *)
   | InitializerExpr of type_ * expr list
-      (** printed as [type{expr1, expr2, ...}]*)
+      (** printed as [type{expr1, expr2, ...}] *)
   | ArrayLiteral of expr list
   | TernaryIf of expr * expr * expr
   | Cast of type_ * expr
-  | Index of expr * expr
+  | Subscript of expr * expr
   | Deref of expr
   | AllocNew of type_ * expr list
   | OperatorNew of identifier * type_ * expr list
-      (** See {{:https://en.cppreference.com/w/cpp/memory/new/operator_new}operator new} for distinctions between
-          allocating and placing [new]s*)
+      (** See
+          {{:https://en.cppreference.com/w/cpp/memory/new/operator_new}operator
+           new} for distinctions between allocating and placing [new]s *)
   | Assign of expr * expr  (** NB: Not all exprs are valid lvalues! *)
   | StreamInsertion of expr * expr list  (** Corresponds to [operator<<] *)
   | BinOp of expr * operator * expr
@@ -108,9 +119,8 @@ type expr =
 module Exprs = struct
   (** Some helper values and functions *)
 
-  (** Call a method on object, wrapping it in parentheses if
-      it is not a variable
-  *)
+  (** Call a method on object, wrapping it in parentheses if it is not a
+      variable *)
   let method_call obj name templates args =
     match obj with
     | Var _ -> MethodCall (obj, name, templates, args)
@@ -118,7 +128,7 @@ module Exprs = struct
 
   let to_var s = Var s
 
-  (** Turn an OCaml string into a quoted and escaped C++ string*)
+  (** Turn an OCaml string into a quoted and escaped C++ string *)
   let literal_string s = Literal ("\"" ^ Cpp_str.escaped s ^ "\"")
 
   (** Equivalent to [std::vector<t>{e1,...,en}] *)
@@ -134,11 +144,14 @@ module Exprs = struct
   let int_min = fun_call "std::numeric_limits<int>::min" []
 
   let static_cast type_ expr = FunCall ("static_cast", [type_], [expr])
+  let tuple_get i tuple = FunCall ("std::get", [NonTypeTemplateInt i], [tuple])
 end
 
+(**/**)
+
 module Expression_syntax = struct
-  (** Some operators to make streams and method calls look more
-      like the resultant C++ *)
+  (** Some operators to make streams and method calls look more like the
+      resultant C++ *)
 
   include Exprs
 
@@ -147,39 +160,33 @@ module Expression_syntax = struct
 
   (** Method call: Call a no-argument method
 
-      E.g. [foo.bar()]
-  *)
+      E.g. [foo.bar()] *)
   let ( .@!() ) obj name = method_call obj name [] []
 
   (** Method call: Call the named method with args
 
-      E.g. [foo.bar(A1,...An)]
-  *)
+      E.g. [foo.bar(A1,...An)] *)
   let ( .@?() ) obj (name, args) = method_call obj name [] args
 
   (** Method call: Call the named method with template types and args
 
-      E.g. [foo.bar<T1,...,Tn>(A1,...An)]
-  *)
+      E.g. [foo.bar<T1,...,Tn>(A1,...An)] *)
   let ( .@<>() ) obj (name, templates, args) =
     method_call obj name templates args
 
   (** Static method call: Call the named method with no arguments.
 
-    E.g. [Foo::bar()]
-  *)
+      E.g. [Foo::bar()] *)
   let ( |::! ) ty name = StaticMethodCall (ty, name, [], [])
 
   (** Static method call: Call the named method with args
 
-    E.g. [Foo::bar(A1,...An)]
-  *)
+      E.g. [Foo::bar(A1,...An)] *)
   let ( |::? ) ty (name, args) = StaticMethodCall (ty, name, [], args)
 
   (** Static method call: Call the named method with template types and args
 
-    E.g. [Foo::bar<T1,...,Tn>(A1,...An)]
-  *)
+      E.g. [Foo::bar<T1,...,Tn>(A1,...An)] *)
   let ( |::<> ) ty (name, templates, args) =
     StaticMethodCall (ty, name, templates, args)
 
@@ -191,7 +198,13 @@ module Expression_syntax = struct
 
   (** Pun for C++ [operator*(a,b)] *)
   let ( * ) a b = BinOp (a, Multiply, b)
+
+  (* we use : in operators for assignment/creation *)
+  let ( .:{} ) typ arg = Constructor (typ, [arg])
+  let ( .:{;..} ) typ args = Constructor (typ, List.of_array args)
 end
+
+(**/**)
 
 type init =
   | Assignment of expr
@@ -228,29 +241,29 @@ type stmt =
 module Stmts = struct
   (** Helpers for common statement constructs *)
 
-  (** Wrap the list of statements in a block if it isn't a singleton block already *)
+  (** Wrap the list of statements in a block if it isn't a singleton block
+      already *)
   let block stmts = match stmts with [(Block _ as b)] -> b | _ -> Block stmts
 
   let unblock stmts = match stmts with [Block stmts] -> stmts | _ -> stmts
 
-  (** Set up the try/catch logic for throwing an exception with
-      its location set to the Stan program location. *)
+  (** Set up the try/catch logic for throwing an exception with its location set
+      to the Stan program location. *)
   let rethrow_located stmts =
+    let open Expression_syntax in
     let stmts = unblock stmts in
     match stmts with
     | [] -> []
     | _ ->
+        let e = Var "e" in
+        let locations_array = Var "locations_array__" in
+        let current_statement = Var "current_statement__" in
         [ TryCatch
             ( stmts
             , (Types.const_ref (TypeLiteral "std::exception"), "e")
             , [ Expression
-                  (FunCall
-                     ( "stan::lang::rethrow_located"
-                     , []
-                     , [ Var "e"
-                       ; Index
-                           (Var "locations_array__", Var "current_statement__")
-                       ] )) ] ) ]
+                  (fun_call "stan::lang::rethrow_located"
+                     [e; Subscript (locations_array, current_statement)]) ] ) ]
 
   let fori loopvar lower upper body =
     let init =
@@ -266,6 +279,17 @@ module Stmts = struct
   let unused s =
     [Comment "suppress unused var warning"; Expression (Cast (Void, Var s))]
 end
+
+(**/**)
+
+module Statement_syntax = struct
+  include Stmts
+
+  (** Shorthand for assignment *)
+  let ( := ) a b = Expression (Assign (Var a, b))
+end
+
+(**/**)
 
 module Decls = struct
   (** Declarations which get re-used often in the generated model *)
@@ -304,20 +328,22 @@ module Decls = struct
 end
 
 type template_parameter =
-  | Typename of string  (** The name of a template typename *)
-  | RequireAllCondition of [`Exact of string | `OneOf of string list] * type_
-      (** A C++ type trait (e.g. is_arithmetic) and the template
-          name which needs to satisfy that.
-          These are collated into one require_all_t<> *)
+  | Typename of string  (** A typename, e.g. [template <typename Foo>] *)
+  | Bool of string  (** A named boolean non-type template parameter *)
   | Require of string * string list
-  | Bool of string  (** A named boolean template type *)
+      (** A straightforward [require_...<...>] template. *)
+  | RequireAllCondition of string * type_ list
+      (** A C++ type trait (e.g. [is_arithmetic]) and the template types which
+          need to satisfy that. These are collated into one
+          [require_all_t<...>]. *)
 [@@deriving sexp]
 
 type cv_qualifiers = Const | Final | NoExcept [@@deriving sexp]
 
 type fun_defn =
   { templates_init: template_parameter list list * bool [@default [[]], false]
-        (** Double list since some functions (mainly reduce_sum functors) need two sets of templates *)
+        (** Double list since some functions (mainly reduce_sum functors) need
+            two sets of templates *)
   ; inline: bool [@default false]
   ; return_type: type_
   ; name: identifier
@@ -342,8 +368,7 @@ type directive =
   | IfNDef of string * defn list
   | MacroApply of string * string list
 
-(** The Stan model class always has a non-default constructor and
-      destructor *)
+(** The Stan model class always has a non-default constructor and destructor *)
 and class_defn =
   { class_name: identifier
   ; final: bool
@@ -380,6 +405,19 @@ let make_class_defn ~name ~public_base ?(final = true) ~private_members
 
 let make_struct_defn ~param ~name ~body () = {param; struct_name= name; body}
 
+(** A set of operators and helpers to make the OCaml code look more like the
+    resultant C++ *)
+module DSL = struct
+  (* defined this way so that the expression helpers could be used by the
+     statement code, but still importable under one name *)
+  include Expression_syntax
+  include Statement_syntax
+end
+
+(** Shorthand for a C++ comment. This one is rather harmless, so it isn't in its
+    own module *)
+let ( !// ) s = GlobalComment s
+
 (** Much like in C++, we define a translation unit as a list of definitions *)
 type program = defn list [@@deriving sexp]
 
@@ -404,6 +442,7 @@ module Printing = struct
     | Tuple subtypes ->
         pf ppf "@[<2>std::tuple<@,%a>@]" (list ~sep:comma pp_type_) subtypes
     | TypeLiteral id -> pp_identifier ppf id
+    | NonTypeTemplateInt i -> int ppf i
     | Matrix (t, i, j, mem_pattern) -> (
         match mem_pattern with
         | Middle.Mem_pattern.AoS ->
@@ -413,46 +452,38 @@ module Printing = struct
     | Const t -> pf ppf "const %a" pp_type_ t
     | Ref t -> pf ppf "%a&" pp_type_ t
     | Pointer t -> pf ppf "%a*" pp_type_ t
-    | TypeTrait (s, types) ->
-        pf ppf "@[<2>%s<%a>@]" s (list ~sep:comma pp_type_) types
+    | TypeTrait (trait, tys) -> pp_type_trait ppf (trait, tys)
 
-  let pp_requires ~default ppf requires =
-    if not (List.is_empty requires) then
-      let pp_single_require t ppf trait = pf ppf "%s<%a>" trait pp_type_ t in
-      let pp_require ppf (req, t) =
-        match req with
-        | `Exact trait -> pp_single_require t ppf trait
-        | `OneOf traits ->
-            pf ppf "stan::math::disjunction<@[%a@]>"
-              (list ~sep:comma (pp_single_require t))
-              traits in
-      pf ppf ",@ stan::require_all_t<@[%a@]>*%s"
-        (list ~sep:comma pp_require)
-        requires
-        (if default then " = nullptr" else "")
+  and pp_type_trait ppf (trait, tys) =
+    pf ppf "@[<2>%s<%a>@]" trait (list ~sep:comma pp_type_) tys
 
-  (**
-   Pretty print a list of templates as [template <parameter-list>].name
-   This function pools together [RequireAllCondition] nodes into a [require_all_t]
+  (** Pretty print a list of templates as [template <parameter-list>].name This
+      function pools together [RequireAllCondition] nodes into a [require_all_t]
   *)
   let pp_template ~default ppf template_parameters =
+    let default = if default then " = nullptr" else "" in
     let pp_basic_template ppf = function
       | `Typename name -> pf ppf "typename %s" name
       | `Bool name -> pf ppf "bool %s" name
       | `Require (requirement, args) ->
-          pf ppf "%s<%a>*%s" requirement (list ~sep:comma string) args
-            (if default then " = nullptr" else "") in
+          pf ppf "%s<%a>*%s" requirement (list ~sep:comma string) args default
+    in
+    let pp_requires ppf requires =
+      if not (List.is_empty requires) then
+        pf ppf ",@ stan::require_all_t<@[%a@]>*%s"
+          (list ~sep:comma pp_type_trait)
+          requires default in
     if not (List.is_empty template_parameters) then
       let templates, requires =
         List.partition_map template_parameters ~f:(function
-          | RequireAllCondition (trait, name) -> Second (trait, name)
+          | RequireAllCondition (trait, tys) -> Second (trait, tys)
           | Typename name -> First (`Typename name)
           | Bool name -> First (`Bool name)
           | Require (requirement, args) -> First (`Require (requirement, args)))
       in
       pf ppf "template <@[%a%a@]>@ "
         (list ~sep:comma pp_basic_template)
-        templates (pp_requires ~default) requires
+        templates pp_requires requires
 
   let pp_operator ppf = function
     | Multiply -> string ppf "*"
@@ -501,7 +532,7 @@ module Printing = struct
           (list ~sep:comma pp_expr) es
     | TernaryIf (e1, e2, e3) ->
         pf ppf "%a ? %a : %a" pp_expr e1 pp_expr e2 pp_expr e3
-    | Index (e1, e2) -> pf ppf "%a[%a]" pp_expr e1 pp_expr e2
+    | Subscript (e1, e2) -> pf ppf "%a[%a]" pp_expr e1 pp_expr e2
     | Deref e -> pf ppf "*(%a)" pp_expr e
     | Assign (e1, e2) -> pf ppf "%a = %a" pp_expr e1 pp_expr e2
     | PMinus e -> pf ppf "-(%a)" pp_expr e
@@ -568,10 +599,9 @@ module Printing = struct
 
   (** When we know a block is here, we can do better pretty-printing
 
-    @param indent: How much to indent the enclosing vbox. Usually 2, but
-      set to zero for the [else] branch of an if-else to prevent
-      over-indenting
-  *)
+      @param indent:
+        How much to indent the enclosing vbox. Usually 2, but set to zero for
+        the [else] branch of an if-else to prevent over-indenting *)
   and pp_with_block ?(indent = 2) pp_wrapper ppf = function
     | Block [] ->
         let pp ppf () = pf ppf "%a {}" pp_wrapper () in
@@ -616,13 +646,13 @@ module Printing = struct
 
   let pp_constructor ppf (name, {args; init_list; body}) =
     let pp_init ppf (id, es) = pf ppf "%s(%a)" id (list ~sep:comma pp_expr) es in
-    let pp_inits =
-      if List.length init_list = 0 then Fmt.nop
-      else fun ppf inits -> pf ppf ": @[%a@] " (list ~sep:comma pp_init) inits
-    in
+    let pp_inits ppf inits =
+      pf ppf ": @[%a@] " (list ~sep:comma pp_init) inits in
     pf ppf "@[<v 2>@[<hov 4>%s(@[%a@])@ %a@]{@,%a@]@,}" name
       (list ~sep:comma (pair ~sep:sp pp_type_ pp_identifier))
-      args pp_inits init_list (list ~sep:cut pp_stmt) body
+      args
+      (if' (not (List.is_empty init_list)) pp_inits)
+      init_list (list ~sep:cut pp_stmt) body
 
   let rec pp_directive ppf direct =
     match direct with
@@ -750,12 +780,12 @@ module Tests = struct
         std::vector<std::vector<double>>,
         const T0__& |}]
 
-  (* This shows off some of the fancy syntax OCaml lets us use,
-      like [<<] or [.@()]*)
+  (* This shows off some of the fancy syntax OCaml lets us use, like [<<] or
+     [.@()] *)
   let%expect_test "eigen init" =
-    let open Expression_syntax in
+    let open DSL in
     let open Types in
-    let vector = Constructor (row_vector Double, [Literal "3"]) in
+    let vector = (row_vector Double).:{Literal "3"} in
     let values = [Literal "1"; Var "a"; Literal "3"] in
     let e = (vector << values).@!("finished") in
     print_s [%sexp (e : expr)];
@@ -776,8 +806,8 @@ module Tests = struct
       [ make_fun_defn
           ~templates_init:
             ( [ [ Typename "T0__"
-                ; RequireAllCondition
-                    (`Exact "stan::is_foobar", TemplateType "T0__") ] ]
+                ; RequireAllCondition ("stan::is_foobar", [TemplateType "T0__"])
+                ] ]
             , true )
           ~name:"foobar" ~return_type:Void ~inline:true ()
       ; (let s =
@@ -787,8 +817,8 @@ module Tests = struct
          make_fun_defn
            ~templates_init:
              ( [ [ Typename "T0__"
-                 ; RequireAllCondition
-                     (`Exact "stan::is_foobar", TemplateType "T0__") ] ]
+                 ; RequireAllCondition ("stan::is_foobar", [TemplateType "T0__"])
+                 ] ]
              , false )
            ~name:"foobar" ~return_type:Void ~inline:true ~body:rethrow ()) ]
     in

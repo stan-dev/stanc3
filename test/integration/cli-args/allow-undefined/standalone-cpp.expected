@@ -18,7 +18,7 @@ struct external_map_rectable_functor__ {
                                 stan::is_vt_not_complex<T0__>,
                                 stan::is_col_vector<T1__>,
                                 stan::is_vt_not_complex<T1__>>* = nullptr>
-  Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>,
+  Eigen::Matrix<stan::return_type_t<stan::base_type_t<T0__>,
                   stan::base_type_t<T1__>>,-1,1>
   operator()(const T0__& phi, const T1__& theta, const std::vector<double>&
              x_r, const std::vector<int>& x_i, std::ostream* pstream__) const {
@@ -71,6 +71,7 @@ internal_fun(const std::vector<std::vector<double>>& a,
              pstream__ = nullptr) {
   return external_model_namespace::internal_fun(a, d, pstream__);
 }
-Warning in 'external.stan', line 7, column 7: Functions do not need to be
-    declared before definition; all user defined function names are always in
-    scope regardless of definition order.
+Warning in 'external.stan', line 7, column 7 to column 19:
+    Functions do not need to be declared before definition; all user defined
+    function names are always in scope regardless of definition order.
+[exit 0]

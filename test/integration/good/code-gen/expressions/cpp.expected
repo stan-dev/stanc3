@@ -5,7 +5,7 @@ namespace operators_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 20> locations_array__ =
+static constexpr std::array<const char*, 22> locations_array__ =
   {" (found before start of program)",
   " (in 'operators.stan', line 6, column 2 to column 14)",
   " (in 'operators.stan', line 7, column 2 to column 19)",
@@ -18,6 +18,8 @@ static constexpr std::array<const char*, 20> locations_array__ =
   " (in 'operators.stan', line 15, column 4 to column 10)",
   " (in 'operators.stan', line 14, column 16 to line 16, column 3)",
   " (in 'operators.stan', line 14, column 2 to line 16, column 3)",
+  " (in 'operators.stan', line 19, column 2 to column 11)",
+  " (in 'operators.stan', line 20, column 2 to column 11)",
   " (in 'operators.stan', line 2, column 2 to column 8)",
   " (in 'operators.stan', line 3, column 2 to column 9)",
   " (in 'operators.stan', line 6, column 9 to column 10)",
@@ -39,8 +41,7 @@ class operators_model final : public model_base_crtp<operators_model> {
     // suppress unused var warning
     (void) current_statement__;
     using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
+    auto base_rng__ = stan::services::util::create_rng(random_seed__, 0);
     // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
@@ -51,29 +52,29 @@ class operators_model final : public model_base_crtp<operators_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      current_statement__ = 12;
+      current_statement__ = 14;
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
-      current_statement__ = 12;
+      current_statement__ = 14;
       N = context__.vals_i("N")[(1 - 1)];
-      current_statement__ = 13;
+      current_statement__ = 15;
       context__.validate_dims("data initialization", "r", "double",
         std::vector<size_t>{});
       r = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 13;
-      r = context__.vals_r("r")[(1 - 1)];
-      current_statement__ = 14;
-      stan::math::validate_non_negative_index("v", "N", N);
       current_statement__ = 15;
-      stan::math::validate_non_negative_index("rv", "N", N);
+      r = context__.vals_r("r")[(1 - 1)];
       current_statement__ = 16;
-      stan::math::validate_non_negative_index("A", "N", N);
+      stan::math::validate_non_negative_index("v", "N", N);
       current_statement__ = 17;
-      stan::math::validate_non_negative_index("A", "N", N);
+      stan::math::validate_non_negative_index("rv", "N", N);
       current_statement__ = 18;
-      stan::math::validate_non_negative_index("drv", "N", N);
+      stan::math::validate_non_negative_index("A", "N", N);
       current_statement__ = 19;
+      stan::math::validate_non_negative_index("A", "N", N);
+      current_statement__ = 20;
+      stan::math::validate_non_negative_index("drv", "N", N);
+      current_statement__ = 21;
       stan::math::validate_non_negative_index("dv", "N", N);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -111,18 +112,13 @@ class operators_model final : public model_base_crtp<operators_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<local_scalar_t__,-1,1> v =
-        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
       current_statement__ = 1;
-      v = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
-      Eigen::Matrix<local_scalar_t__,1,-1> rv =
-        Eigen::Matrix<local_scalar_t__,1,-1>::Constant(N, DUMMY_VAR__);
+      auto v = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
       current_statement__ = 2;
-      rv = in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(N);
-      Eigen::Matrix<local_scalar_t__,-1,-1> A =
-        Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(N, N, DUMMY_VAR__);
+      auto rv = in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(N);
       current_statement__ = 3;
-      A = in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
+      auto A =
+        in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -153,18 +149,13 @@ class operators_model final : public model_base_crtp<operators_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<local_scalar_t__,-1,1> v =
-        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
       current_statement__ = 1;
-      v = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
-      Eigen::Matrix<local_scalar_t__,1,-1> rv =
-        Eigen::Matrix<local_scalar_t__,1,-1>::Constant(N, DUMMY_VAR__);
+      auto v = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
       current_statement__ = 2;
-      rv = in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(N);
-      Eigen::Matrix<local_scalar_t__,-1,-1> A =
-        Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(N, N, DUMMY_VAR__);
+      auto rv = in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(N);
       current_statement__ = 3;
-      A = in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
+      auto A =
+        in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -206,21 +197,13 @@ class operators_model final : public model_base_crtp<operators_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<double,-1,1> v =
-        Eigen::Matrix<double,-1,1>::Constant(N,
-          std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 1;
-      v = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
-      Eigen::Matrix<double,1,-1> rv =
-        Eigen::Matrix<double,1,-1>::Constant(N,
-          std::numeric_limits<double>::quiet_NaN());
+      auto v = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
       current_statement__ = 2;
-      rv = in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(N);
-      Eigen::Matrix<double,-1,-1> A =
-        Eigen::Matrix<double,-1,-1>::Constant(N, N,
-          std::numeric_limits<double>::quiet_NaN());
+      auto rv = in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(N);
       current_statement__ = 3;
-      A = in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
+      auto A =
+        in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
       out__.write(v);
       out__.write(rv);
       out__.write(A);
@@ -257,6 +240,12 @@ class operators_model final : public model_base_crtp<operators_model> {
           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 8;
       stan::model::assign(dv, stan::math::mdivide_left(A, v),
+        "assigning variable dv");
+      current_statement__ = 12;
+      stan::model::assign(dv, stan::model::deep_copy(dv),
+        "assigning variable dv");
+      current_statement__ = 13;
+      stan::model::assign(dv, stan::math::minus(stan::model::deep_copy(dv)),
         "assigning variable dv");
       out__.write(i);
       out__.write(x);
@@ -492,10 +481,10 @@ class operators_model final : public model_base_crtp<operators_model> {
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = ((N + N) + (N * N));
-    const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (((((1 + 1)
-      + 1) + N) + N));
+    const size_t num_params__ = N + N + (N * N);
+    const size_t num_transformed = emit_transformed_parameters * (0U);
+    const size_t num_gen_quantities = emit_generated_quantities * (1 + 1 + 1
+      + N + N);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -510,10 +499,10 @@ class operators_model final : public model_base_crtp<operators_model> {
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = ((N + N) + (N * N));
-    const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (((((1 + 1)
-      + 1) + N) + N));
+    const size_t num_params__ = N + N + (N * N);
+    const size_t num_transformed = emit_transformed_parameters * (0U);
+    const size_t num_gen_quantities = emit_generated_quantities * (1 + 1 + 1
+      + N + N);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,
@@ -583,6 +572,7 @@ stan::math::profile_map& get_stan_profile_data() {
   return operators_model_namespace::profiles__;
 }
 #endif
+[exit 0]
   $ ../../../../../../install/default/bin/stanc --print-cpp simple_function.stan
 // Code generated by %%NAME%% %%VERSION%%
 #include <stan/model/model_header.hpp>
@@ -606,21 +596,20 @@ static constexpr std::array<const char*, 13> locations_array__ =
   " (in 'simple_function.stan', line 11, column 37 to line 13, column 3)"};
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__, typename T5__,
-          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
-                                                      std::is_floating_point<T0__>>,
-                              std::is_integral<T1__>,
+          stan::require_all_t<stan::math::disjunction<stan::is_autodiff_scalar<T0__>,
+                                stan::is_floating_point<T0__>>,
+                              stan::is_integral<T1__>,
                               stan::is_std_vector<T2__>,
-                              stan::math::disjunction<stan::is_autodiff<
-                                                      stan::value_type_t<T2__>>,
-                                                      std::is_floating_point<
-                                                      stan::value_type_t<T2__>>>,
+                              stan::math::disjunction<stan::is_autodiff_scalar<
+                                                        stan::value_type_t<T2__>>,
+                                stan::is_floating_point<stan::value_type_t<T2__>>>,
                               stan::is_col_vector<T3__>,
                               stan::is_vt_not_complex<T3__>,
                               stan::is_eigen_matrix_dynamic<T4__>,
                               stan::is_vt_not_complex<T4__>,
                               stan::is_row_vector<T5__>,
                               stan::is_vt_not_complex<T5__>>* = nullptr>
-stan::promote_args_t<T0__, stan::base_type_t<T2__>, stan::base_type_t<T3__>,
+stan::return_type_t<T0__, stan::base_type_t<T2__>, stan::base_type_t<T3__>,
   stan::base_type_t<T4__>, stan::base_type_t<T5__>>
 foo1(const T0__& a, const T1__& b, const T2__& c, const T3__& d_arg__,
      const T4__& e_arg__, const T5__& f_arg__, std::ostream* pstream__);
@@ -633,7 +622,7 @@ template <typename T0__, typename T1__, typename T2__,
                               stan::is_std_vector<T2__>,
                               stan::is_row_vector<stan::value_type_t<T2__>>,
                               stan::is_vt_not_complex<stan::value_type_t<T2__>>>* = nullptr>
-Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>,
+Eigen::Matrix<stan::return_type_t<stan::base_type_t<T0__>,
                 stan::base_type_t<T1__>, stan::base_type_t<T2__>>,-1,1>
 foo2(const T0__& a_arg__, const T1__& b, const T2__& c, std::ostream*
      pstream__);
@@ -642,7 +631,7 @@ template <typename T0__, typename T1__,
                               stan::is_vt_not_complex<T0__>,
                               stan::is_eigen_matrix_dynamic<T1__>,
                               stan::is_vt_not_complex<T1__>>* = nullptr>
-Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>,
+Eigen::Matrix<stan::return_type_t<stan::base_type_t<T0__>,
                 stan::base_type_t<T1__>>,-1,-1>
 foo3(const T0__& a_arg__, const T1__& b_arg__, std::ostream* pstream__);
 template <typename T0__, typename T1__,
@@ -650,32 +639,30 @@ template <typename T0__, typename T1__,
                               stan::is_vt_not_complex<T0__>,
                               stan::is_eigen_matrix_dynamic<T1__>,
                               stan::is_vt_not_complex<T1__>>* = nullptr>
-Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>,
+Eigen::Matrix<stan::return_type_t<stan::base_type_t<T0__>,
                 stan::base_type_t<T1__>>,-1,-1>
 add_udf(const T0__& a_arg__, const T1__& b_arg__, std::ostream* pstream__);
 // real foo1(real, int, array[] real, vector, matrix, row_vector)
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__, typename T5__,
-          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
-                                                      std::is_floating_point<T0__>>,
-                              std::is_integral<T1__>,
+          stan::require_all_t<stan::math::disjunction<stan::is_autodiff_scalar<T0__>,
+                                stan::is_floating_point<T0__>>,
+                              stan::is_integral<T1__>,
                               stan::is_std_vector<T2__>,
-                              stan::math::disjunction<stan::is_autodiff<
-                                                      stan::value_type_t<T2__>>,
-                                                      std::is_floating_point<
-                                                      stan::value_type_t<T2__>>>,
+                              stan::math::disjunction<stan::is_autodiff_scalar<
+                                                        stan::value_type_t<T2__>>,
+                                stan::is_floating_point<stan::value_type_t<T2__>>>,
                               stan::is_col_vector<T3__>,
                               stan::is_vt_not_complex<T3__>,
                               stan::is_eigen_matrix_dynamic<T4__>,
                               stan::is_vt_not_complex<T4__>,
                               stan::is_row_vector<T5__>,
                               stan::is_vt_not_complex<T5__>>*>
-stan::promote_args_t<T0__, stan::base_type_t<T2__>, stan::base_type_t<T3__>,
+stan::return_type_t<T0__, stan::base_type_t<T2__>, stan::base_type_t<T3__>,
   stan::base_type_t<T4__>, stan::base_type_t<T5__>>
 foo1(const T0__& a, const T1__& b, const T2__& c, const T3__& d_arg__,
      const T4__& e_arg__, const T5__& f_arg__, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__,
-                             stan::base_type_t<T2__>,
+  using local_scalar_t__ = stan::return_type_t<T0__, stan::base_type_t<T2__>,
                              stan::base_type_t<T3__>,
                              stan::base_type_t<T4__>,
                              stan::base_type_t<T5__>>;
@@ -693,7 +680,7 @@ foo1(const T0__& a, const T1__& b, const T2__& c, const T3__& d_arg__,
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 5;
-    return 5.0;
+    return stan::math::promote_scalar<local_scalar_t__>(5.0);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -708,11 +695,11 @@ template <typename T0__, typename T1__, typename T2__,
                               stan::is_std_vector<T2__>,
                               stan::is_row_vector<stan::value_type_t<T2__>>,
                               stan::is_vt_not_complex<stan::value_type_t<T2__>>>*>
-Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>,
+Eigen::Matrix<stan::return_type_t<stan::base_type_t<T0__>,
                 stan::base_type_t<T1__>, stan::base_type_t<T2__>>,-1,1>
 foo2(const T0__& a_arg__, const T1__& b, const T2__& c, std::ostream*
      pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>,
+  using local_scalar_t__ = stan::return_type_t<stan::base_type_t<T0__>,
                              stan::base_type_t<T1__>,
                              stan::base_type_t<T2__>>;
   int current_statement__ = 0;
@@ -738,10 +725,10 @@ template <typename T0__, typename T1__,
                               stan::is_vt_not_complex<T0__>,
                               stan::is_eigen_matrix_dynamic<T1__>,
                               stan::is_vt_not_complex<T1__>>*>
-Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>,
+Eigen::Matrix<stan::return_type_t<stan::base_type_t<T0__>,
                 stan::base_type_t<T1__>>,-1,-1>
 foo3(const T0__& a_arg__, const T1__& b_arg__, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>,
+  using local_scalar_t__ = stan::return_type_t<stan::base_type_t<T0__>,
                              stan::base_type_t<T1__>>;
   int current_statement__ = 0;
   // suppress unused var warning
@@ -767,10 +754,10 @@ template <typename T0__, typename T1__,
                               stan::is_vt_not_complex<T0__>,
                               stan::is_eigen_matrix_dynamic<T1__>,
                               stan::is_vt_not_complex<T1__>>*>
-Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>,
+Eigen::Matrix<stan::return_type_t<stan::base_type_t<T0__>,
                 stan::base_type_t<T1__>>,-1,-1>
 add_udf(const T0__& a_arg__, const T1__& b_arg__, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>,
+  using local_scalar_t__ = stan::return_type_t<stan::base_type_t<T0__>,
                              stan::base_type_t<T1__>>;
   int current_statement__ = 0;
   // suppress unused var warning
@@ -804,8 +791,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     // suppress unused var warning
     (void) current_statement__;
     using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
+    auto base_rng__ = stan::services::util::create_rng(random_seed__, 0);
     // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
@@ -1031,9 +1017,9 @@ class simple_function_model final : public model_base_crtp<simple_function_model
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = 0;
-    const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_params__ = 0U;
+    const size_t num_transformed = emit_transformed_parameters * (0U);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -1048,9 +1034,9 @@ class simple_function_model final : public model_base_crtp<simple_function_model
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = 0;
-    const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_params__ = 0U;
+    const size_t num_transformed = emit_transformed_parameters * (0U);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,
@@ -1120,6 +1106,7 @@ stan::math::profile_map& get_stan_profile_data() {
   return simple_function_model_namespace::profiles__;
 }
 #endif
+[exit 0]
   $ ../../../../../../install/default/bin/stanc --print-cpp ternary_if.stan
 // Code generated by %%NAME%% %%VERSION%%
 #include <stan/model/model_header.hpp>
@@ -1151,8 +1138,7 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
     // suppress unused var warning
     (void) current_statement__;
     using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
+    auto base_rng__ = stan::services::util::create_rng(random_seed__, 0);
     // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
@@ -1205,21 +1191,14 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<local_scalar_t__,-1,1> a =
-        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__);
       current_statement__ = 1;
-      a = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(2);
-      Eigen::Matrix<local_scalar_t__,-1,1> b =
-        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__);
+      auto a = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(2);
       current_statement__ = 2;
-      b = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(2);
-      local_scalar_t__ r = DUMMY_VAR__;
+      auto b = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(2);
       current_statement__ = 3;
-      r = in__.template read<local_scalar_t__>();
-      std::complex<local_scalar_t__> zp =
-        std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
+      auto r = in__.template read<local_scalar_t__>();
       current_statement__ = 4;
-      zp = in__.template read<std::complex<local_scalar_t__>>();
+      auto zp = in__.template read<std::complex<local_scalar_t__>>();
       Eigen::Matrix<local_scalar_t__,-1,1> c =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__);
       current_statement__ = 5;
@@ -1237,8 +1216,11 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
         (stan::math::logical_gt(stan::math::sum(a), 1) ? stan::math::eval(
                                                            stan::math::add(
                                                              stan::math::multiply(
-                                                               2, a), b)) : 
-        stan::math::eval(stan::math::multiply(2, a))), "assigning variable d");
+                                                               static_cast<
+                                                                 double>(2),
+                                                               a), b)) : 
+        stan::math::eval(stan::math::multiply(static_cast<double>(2), a))),
+        "assigning variable d");
       std::complex<local_scalar_t__> z =
         std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
       current_statement__ = 7;
@@ -1248,7 +1230,7 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
           std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
         current_statement__ = 8;
         z2 = stan::math::promote_scalar<std::complex<local_scalar_t__>>(
-               (1 ? r : 2));
+               (1 ? r : stan::math::promote_scalar<local_scalar_t__>(2)));
         current_statement__ = 9;
         z2 = (1 ? stan::math::promote_scalar<std::complex<local_scalar_t__>>(
                     0) : zp);
@@ -1283,21 +1265,14 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<local_scalar_t__,-1,1> a =
-        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__);
       current_statement__ = 1;
-      a = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(2);
-      Eigen::Matrix<local_scalar_t__,-1,1> b =
-        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__);
+      auto a = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(2);
       current_statement__ = 2;
-      b = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(2);
-      local_scalar_t__ r = DUMMY_VAR__;
+      auto b = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(2);
       current_statement__ = 3;
-      r = in__.template read<local_scalar_t__>();
-      std::complex<local_scalar_t__> zp =
-        std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
+      auto r = in__.template read<local_scalar_t__>();
       current_statement__ = 4;
-      zp = in__.template read<std::complex<local_scalar_t__>>();
+      auto zp = in__.template read<std::complex<local_scalar_t__>>();
       Eigen::Matrix<local_scalar_t__,-1,1> c =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__);
       current_statement__ = 5;
@@ -1315,8 +1290,11 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
         (stan::math::logical_gt(stan::math::sum(a), 1) ? stan::math::eval(
                                                            stan::math::add(
                                                              stan::math::multiply(
-                                                               2, a), b)) : 
-        stan::math::eval(stan::math::multiply(2, a))), "assigning variable d");
+                                                               static_cast<
+                                                                 double>(2),
+                                                               a), b)) : 
+        stan::math::eval(stan::math::multiply(static_cast<double>(2), a))),
+        "assigning variable d");
       std::complex<local_scalar_t__> z =
         std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
       current_statement__ = 7;
@@ -1326,7 +1304,7 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
           std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
         current_statement__ = 8;
         z2 = stan::math::promote_scalar<std::complex<local_scalar_t__>>(
-               (1 ? r : 2));
+               (1 ? r : stan::math::promote_scalar<local_scalar_t__>(2)));
         current_statement__ = 9;
         z2 = (1 ? stan::math::promote_scalar<std::complex<local_scalar_t__>>(
                     0) : zp);
@@ -1372,24 +1350,14 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<double,-1,1> a =
-        Eigen::Matrix<double,-1,1>::Constant(2,
-          std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 1;
-      a = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(2);
-      Eigen::Matrix<double,-1,1> b =
-        Eigen::Matrix<double,-1,1>::Constant(2,
-          std::numeric_limits<double>::quiet_NaN());
+      auto a = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(2);
       current_statement__ = 2;
-      b = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(2);
-      double r = std::numeric_limits<double>::quiet_NaN();
+      auto b = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(2);
       current_statement__ = 3;
-      r = in__.template read<local_scalar_t__>();
-      std::complex<double> zp =
-        std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
-          std::numeric_limits<double>::quiet_NaN());
+      auto r = in__.template read<local_scalar_t__>();
       current_statement__ = 4;
-      zp = in__.template read<std::complex<local_scalar_t__>>();
+      auto zp = in__.template read<std::complex<local_scalar_t__>>();
       Eigen::Matrix<double,-1,1> c =
         Eigen::Matrix<double,-1,1>::Constant(2,
           std::numeric_limits<double>::quiet_NaN());
@@ -1421,8 +1389,11 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
         (stan::math::logical_gt(stan::math::sum(a), 1) ? stan::math::eval(
                                                            stan::math::add(
                                                              stan::math::multiply(
-                                                               2, a), b)) : 
-        stan::math::eval(stan::math::multiply(2, a))), "assigning variable d");
+                                                               static_cast<
+                                                                 double>(2),
+                                                               a), b)) : 
+        stan::math::eval(stan::math::multiply(static_cast<double>(2), a))),
+        "assigning variable d");
       current_statement__ = 7;
       z = (1 ? stan::math::to_complex(0, 3) : stan::math::to_complex(2, 0));
       if (emit_transformed_parameters__) {
@@ -1650,10 +1621,9 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (((2 + 2) + 1) + 2);
-    const size_t num_transformed = emit_transformed_parameters * (((2 + 2) +
-      2));
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_params__ = 2 + 2 + 1 + 2;
+    const size_t num_transformed = emit_transformed_parameters * (2 + 2 + 2);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -1668,10 +1638,9 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (((2 + 2) + 1) + 2);
-    const size_t num_transformed = emit_transformed_parameters * (((2 + 2) +
-      2));
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_params__ = 2 + 2 + 1 + 2;
+    const size_t num_transformed = emit_transformed_parameters * (2 + 2 + 2);
+    const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,
@@ -1741,3 +1710,4 @@ stan::math::profile_map& get_stan_profile_data() {
   return ternary_if_model_namespace::profiles__;
 }
 #endif
+[exit 0]

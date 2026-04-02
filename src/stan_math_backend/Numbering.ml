@@ -8,10 +8,11 @@ type map_rect_registration_t = (int * string) list
 let no_span_num = 0
 
 let prepare_prog (mir : Program.Typed.t) :
-    Program.Numbered.t * state_t * map_rect_registration_t =
+    Program.Numbered.t * state_t * map_rect_registration_t * bool =
   let label_locations = Queue.create () in
   let map_rect_calls = Queue.create () in
   let location_to_label = Hashtbl.create (module Location_span) in
+  let needs_mix_header = ref false in
   Queue.enqueue label_locations (no_span_num, Location_span.empty);
   Hashtbl.set location_to_label ~key:Location_span.empty ~data:no_span_num;
   (* turn locations into numbers for array printing *)
@@ -26,14 +27,14 @@ let prepare_prog (mir : Program.Typed.t) :
   let rec number_locations_stmt ({pattern; meta} : Stmt.Located.t) :
       Stmt.Numbered.t =
     let pattern =
-      Stmt.Fixed.Pattern.map number_map_rect_calls_expr number_locations_stmt
-        pattern in
+      Stmt.Pattern.map number_map_rect_calls_expr number_locations_stmt pattern
+    in
     let meta = number_meta meta in
     {meta; pattern}
   (* map_rect numbering *)
   and number_map_rect_calls_expr ({meta; pattern} : Expr.Typed.t) : Expr.Typed.t
       =
-    let pattern = Expr.Fixed.Pattern.map number_map_rect_calls_expr pattern in
+    let pattern = Expr.Pattern.map number_map_rect_calls_expr pattern in
     match pattern with
     | FunApp
         ( StanLib ("map_rect", suffix, mem_pattern)
@@ -42,10 +43,15 @@ let prepare_prog (mir : Program.Typed.t) :
         Queue.enqueue map_rect_calls
           (next_map_rect_id, f ^ Lower_expr.functor_suffix);
         let pattern =
-          Expr.Fixed.Pattern.FunApp
+          Expr.Pattern.FunApp
             ( StanLib ("map_rect", suffix, mem_pattern)
             , List.map ~f:number_map_rect_calls_expr
                 (Expr.Helpers.int next_map_rect_id :: es) ) in
+        {meta; pattern}
+    | FunApp (StanLib (name, _, _), _)
+      when (not !needs_mix_header)
+           && Stan_math_signatures.is_embedded_laplace_fn name ->
+        needs_mix_header := true;
         {meta; pattern}
     | _ -> {meta; pattern} in
   let mir =
@@ -57,7 +63,7 @@ let prepare_prog (mir : Program.Typed.t) :
          ~compare:(fun x y -> compare_int (fst x) (fst y))
          (Queue.to_list label_locations)) in
   let map_rect_calls_list = List.sort ~compare (Queue.to_list map_rect_calls) in
-  (mir, location_list, map_rect_calls_list)
+  (mir, location_list, map_rect_calls_list, !needs_mix_header)
 
 let gen_globals ?printed_filename location_list =
   let open Cpp in
@@ -65,7 +71,7 @@ let gen_globals ?printed_filename location_list =
     " (found before start of program)"
     :: (List.filter ~f:(fun x -> x <> Location_span.empty) location_list
        |> List.map ~f:(fun x ->
-              " (in " ^ Location_span.to_string ?printed_filename x ^ ")"))
+           " (in " ^ Location_span.to_string ?printed_filename x ^ ")"))
     |> List.map ~f:Exprs.literal_string in
   let location_count = List.length location_list in
   let arr_type = Types.const_char_array location_count in
@@ -79,11 +85,9 @@ let gen_globals ?printed_filename location_list =
 
 let assign_loc location_num =
   let open Cpp in
+  let open Cpp.DSL in
   if location_num = no_span_num then []
-  else
-    [ Expression
-        (Assign (Var "current_statement__", Literal (string_of_int location_num)))
-    ]
+  else ["current_statement__" := Literal (string_of_int location_num)]
 
 let register_map_rect_functors namespace map_rect_calls =
   let register_functor (i, f) =

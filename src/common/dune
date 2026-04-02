@@ -1,9 +1,8 @@
 (library
  (name common)
  (public_name stanc.common)
- (libraries core str fmt)
- (instrumentation
-  (backend bisect_ppx))
- (inline_tests)
+ (libraries core fmt)
  (preprocess
-  (pps ppx_jane ppx_deriving.map ppx_deriving.fold ppx_deriving.create)))
+  (pps ppx_jane ppx_deriving.fold ppx_deriving.map))
+ (instrumentation
+  (backend bisect_ppx)))

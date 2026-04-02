@@ -12,3 +12,4 @@ model {
   x ~ normal(0, exp(v));
 }
 
+[exit 0]

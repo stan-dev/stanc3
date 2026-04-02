@@ -19,7 +19,24 @@ let fn_renames =
   @ [ ("lmultiply", "stan::math::multiply_log")
     ; ("lchoose", "stan::math::binomial_coefficient_log")
     ; ("std_normal_qf", "stan::math::inv_Phi")
-    ; ("integrate_ode", "stan::math::integrate_ode_rk45") ]
+    ; ("integrate_ode", "stan::math::integrate_ode_rk45")
+      (* constraints -- originally internal functions, may be worth renaming
+         now *)
+    ; ("cholesky_factor_corr_jacobian", "stan::math::cholesky_corr_constrain")
+    ; ("cholesky_factor_corr_constrain", "stan::math::cholesky_corr_constrain")
+    ; ("cholesky_factor_corr_unconstrain", "stan::math::cholesky_corr_free")
+    ; ("cholesky_factor_cov_jacobian", "stan::math::cholesky_factor_constrain")
+    ; ("cholesky_factor_cov_constrain", "stan::math::cholesky_factor_constrain")
+    ; ("cholesky_factor_cov_unconstrain", "stan::math::cholesky_factor_free")
+    ; ("lower_bound_jacobian", "stan::math::lb_constrain")
+    ; ("lower_bound_constrain", "stan::math::lb_constrain")
+    ; ("lower_bound_unconstrain", "stan::math::lb_free")
+    ; ("upper_bound_jacobian", "stan::math::ub_constrain")
+    ; ("upper_bound_constrain", "stan::math::ub_constrain")
+    ; ("upper_bound_unconstrain", "stan::math::ub_free")
+    ; ("lower_upper_bound_jacobian", "stan::math::lub_constrain")
+    ; ("lower_upper_bound_constrain", "stan::math::lub_constrain")
+    ; ("lower_upper_bound_unconstrain", "stan::math::lub_free") ]
   |> String.Map.of_alist_exn
 
 let constraint_to_string = function
@@ -27,6 +44,7 @@ let constraint_to_string = function
   | PositiveOrdered -> Some "positive_ordered"
   | Simplex -> Some "simplex"
   | UnitVector -> Some "unit_vector"
+  | SumToZero -> Some "sum_to_zero"
   | CholeskyCorr -> Some "cholesky_factor_corr"
   | CholeskyCov -> Some "cholesky_factor_cov"
   | Correlation -> Some "corr_matrix"
@@ -35,9 +53,11 @@ let constraint_to_string = function
   | Upper _ -> Some "ub"
   | LowerUpper _ -> Some "lub"
   | Offset _ | Multiplier _ | OffsetMultiplier _ -> Some "offset_multiplier"
+  | StochasticRow -> Some "stochastic_row"
+  | StochasticColumn -> Some "stochastic_column"
   | Identity -> None
   | TupleTransformation _ ->
-      Common.FatalError.fatal_error_msg
+      Common.ICE.internal_compiler_error
         [%message
           "Cannot generate tuple transformation directly; should not be called"]
 
@@ -49,7 +69,7 @@ type variadic = FixedArgs | ReduceSum | VariadicHOF of int
 [@@deriving compare, hash]
 
 let functor_type hof =
-  match Hashtbl.find Stan_math_signatures.stan_math_variadic_signatures hof with
+  match Stan_math_signatures.lookup_stan_math_variadic_function hof with
   | Some {required_fn_args; _} -> VariadicHOF (List.length required_fn_args)
   | None when Stan_math_signatures.is_reduce_sum_fn hof -> ReduceSum
   | None -> FixedArgs
@@ -59,13 +79,22 @@ let functor_suffix_select = function
   | ReduceSum -> reduce_sum_functor_suffix
   | FixedArgs -> functor_suffix
 
-(* return true if the type of the expression
-   is integer, real, or complex (e.g. not a container) *)
+(* return true if the type of the expression is integer, real, or complex (e.g.
+   not a container) *)
 let is_scalar e =
   match Expr.Typed.type_of e with UInt | UReal | UComplex -> true | _ -> false
 
-let is_matrix e = Expr.Typed.type_of e = UMatrix
-let is_row_vector e = Expr.Typed.type_of e = URowVector
+(** Used to determine if [operator/] should be mdivide_right() or divide() *)
+let is_matrix e =
+  match Expr.Typed.type_of e with
+  | UMatrix | UComplexMatrix -> true
+  | _ -> false
+
+let is_row_vector e =
+  match Expr.Typed.type_of e with
+  | URowVector | UComplexRowVector -> true
+  | _ -> false
+
 let first es = List.nth_exn es 0
 let second es = List.nth_exn es 1
 let default_multiplier = 1
@@ -79,7 +108,7 @@ let transform_args = function
 let is_single_index = function Index.Single _ -> true | _ -> false
 
 let dont_need_range_check = function
-  | Index.Single Expr.Fixed.{pattern= Var id; _} -> not (Utils.is_user_ident id)
+  | Index.Single Expr.{pattern= Var id; _} -> not (Utils.is_user_ident id)
   | _ -> false
 
 let promote_adtype =
@@ -90,10 +119,12 @@ let promote_adtype =
       | _ -> accum)
     ~init:UnsizedType.DataOnly
 
-let suffix_args = function
+let suffix_args udf = function
   | Fun_kind.FnRng -> ["base_rng__"]
   | FnTarget -> ["lp__"; "lp_accum__"]
-  | FnPlain | FnLpdf _ -> []
+  | FnJacobian when udf -> ["lp__"; "lp_accum__"]
+  | FnJacobian -> ["lp__"]
+  | FnPlain | FnLpdf _ | FnLpmf _ -> []
 
 let rec stantype_prim = function
   | UnsizedType.UInt -> Int
@@ -102,9 +133,10 @@ let rec stantype_prim = function
 
 let templates udf suffix =
   match suffix with
-  | Fun_kind.FnLpdf true -> [TemplateType "propto__"]
-  | FnLpdf false -> [TemplateType "false"]
+  | Fun_kind.FnLpdf true | FnLpmf true -> [TemplateType "propto__"]
+  | FnLpdf false | FnLpmf false -> [TemplateType "false"]
   | FnTarget when udf -> [TemplateType "propto__"]
+  | FnJacobian -> [TemplateType "jacobian__"]
   | _ -> []
 
 let deserializer = Var "in__"
@@ -115,18 +147,18 @@ let rec local_scalar ut ad =
   | _, UnsizedType.DataOnly | UInt, AutoDiffable -> stantype_prim ut
   | _, AutoDiffable -> Types.local_scalar
   | _, TupleAD _ ->
-      Common.FatalError.fatal_error_msg
+      Common.ICE.internal_compiler_error
         [%message
           "Attempting to make a local scalar tuple"
             (ut : UnsizedType.t)
             (ad : UnsizedType.autodifftype)]
 
 let minus_one e =
-  let open Expression_syntax in
+  let open Cpp.DSL in
   Parens (e - Literal "1")
 
 let plus_one e =
-  let open Expression_syntax in
+  let open Cpp.DSL in
   Parens (e + Literal "1")
 
 let rec lower_type ?(mem_pattern = Mem_pattern.AoS) (t : UnsizedType.t)
@@ -144,7 +176,7 @@ let rec lower_type ?(mem_pattern = Mem_pattern.AoS) (t : UnsizedType.t)
   | UComplexRowVector -> Types.row_vector (Types.complex scalar)
   | UComplexMatrix -> Types.matrix (Types.complex scalar)
   | UMathLibraryFunction | UFun _ ->
-      Common.FatalError.fatal_error_msg
+      Common.ICE.internal_compiler_error
         [%message "Function types not implemented"]
 
 let rec lower_unsizedtype_local ?(mem_pattern = Mem_pattern.AoS) adtype ut =
@@ -154,7 +186,7 @@ let rec lower_unsizedtype_local ?(mem_pattern = Mem_pattern.AoS) adtype ut =
   | UnsizedType.TupleAD _, UnsizedType.UArray t ->
       Types.std_vector (lower_unsizedtype_local ~mem_pattern adtype t)
   | _, UnsizedType.UTuple _ | TupleAD _, _ ->
-      Common.FatalError.fatal_error_msg
+      Common.ICE.internal_compiler_error
         [%message
           "Tuple and Tuple AD type not matching!"
             (ut : UnsizedType.t)
@@ -179,7 +211,7 @@ let rec lower_possibly_var_decl adtype ut mem_pattern =
            ~f:(fun ad t -> lower_possibly_var_decl ad t mem_pattern)
            ads t_lst)
   | x, ad ->
-      Common.FatalError.fatal_error_msg
+      Common.ICE.internal_compiler_error
         [%message
           "Cannot lower" (x : UnsizedType.t) (ad : UnsizedType.autodifftype)]
 
@@ -190,13 +222,12 @@ let rec lower_logical_op op e1 e2 =
 and lower_binary_fun f es = Exprs.fun_call f (lower_exprs es)
 
 and vector_literal ?(column = false) scalar es =
-  let open Expression_syntax in
-  let fn = if column then Types.vector else Types.row_vector in
-  let constructor size =
-    Constructor (fn scalar, [Literal (string_of_int size)]) in
-  if List.is_empty es then constructor 0
+  let open Cpp.DSL in
+  let vec = if column then Types.vector scalar else Types.row_vector scalar in
+  let make_vector size = vec.:{Literal (string_of_int size)} in
+  if List.is_empty es then make_vector 0
   else
-    let vector = constructor (List.length es) in
+    let vector = make_vector (List.length es) in
     let values = lower_exprs es in
     (vector << values).@!("finished")
 
@@ -209,9 +240,9 @@ and read_data ut es =
     | UInt | UReal | UComplex | UVector | URowVector | UMatrix | UTuple _
      |UComplexMatrix | UComplexRowVector | UComplexVector | UArray _ | UFun _
      |UMathLibraryFunction ->
-        Common.FatalError.fatal_error_msg
+        Common.ICE.internal_compiler_error
           [%message "Can't ReadData of " (ut : UnsizedType.t)] in
-  let open Expression_syntax in
+  let open Cpp.DSL in
   let data_context = Var "context__" in
   data_context.@?(val_method, [lower_expr (List.hd_exn es)])
 
@@ -221,7 +252,7 @@ and lower_binary_op op fn es =
   else lower_binary_fun fn es
 
 and lower_operator_app op es_in =
-  let remove_basic_promotion (e : 'a Expr.Fixed.t) =
+  let remove_basic_promotion (e : 'a Expr.t) =
     match e.pattern with Promotion (e, _, _) when is_scalar e -> e | _ -> e
   in
   let es =
@@ -241,6 +272,8 @@ and lower_operator_app op es_in =
   | Minus -> lower_binary_op Subtract "stan::math::subtract" es
   | Times -> lower_binary_op Multiply "stan::math::multiply" es
   | Divide | IntDivide ->
+      (* XXX: This conditional is probably a sign that we need to rethink how we
+         store Operators in the MIR *)
       if
         is_matrix (second es)
         && (is_matrix (first es) || is_row_vector (first es))
@@ -255,7 +288,7 @@ and lower_operator_app op es_in =
   | Modulo -> lower_binary_fun "stan::math::modulus" es
   | LDivide -> lower_binary_fun "stan::math::mdivide_left" es
   | And | Or ->
-      Common.FatalError.fatal_error_msg
+      Common.ICE.internal_compiler_error
         [%message "And/Or should have been converted to an expression"]
   | EltTimes -> lower_binary_op Multiply "stan::math::elt_multiply" es
   | EltDivide -> lower_binary_op Divide "stan::math::elt_divide" es
@@ -277,7 +310,7 @@ and lower_misc_special_math_app (f : string) (mem_pattern : Mem_pattern.t)
           Exprs.fun_call "stan::math::get_lp" [Var "lp__"; Var "lp_accum__"])
   | "rep_matrix" | "rep_vector" | "rep_row_vector" | "append_row" | "append_col"
     when mem_pattern = Mem_pattern.SoA -> (
-      let is_autodiffable Expr.Fixed.{meta= Expr.Typed.Meta.{adlevel; _}; _} =
+      let is_autodiffable Expr.{meta= Expr.Typed.Meta.{adlevel; _}; _} =
         adlevel = UnsizedType.AutoDiffable in
       match ret_type with
       | Some (UnsizedType.ReturnType t) ->
@@ -298,16 +331,15 @@ and lower_misc_special_math_app (f : string) (mem_pattern : Mem_pattern.t)
 
 and lower_functionals fname suffix es mem_pattern =
   let contains_hof_vars = function
-    | {Expr.Fixed.pattern= Var _; meta= {Expr.Typed.Meta.type_= UFun _; _}} ->
-        true
+    | {Expr.pattern= Var _; meta= {Expr.Typed.Meta.type_= UFun _; _}} -> true
     | _ -> false in
   let is_hof_call = List.exists ~f:contains_hof_vars es in
   if not is_hof_call then None
   else
     let lower_hov es =
       let convert_hof_vars = function
-        | { Expr.Fixed.pattern= Var name
-          ; meta= {Expr.Typed.Meta.type_= UFun _; _} } as e ->
+        | {Expr.pattern= Var name; meta= {Expr.Typed.Meta.type_= UFun _; _}} as
+          e ->
             { e with
               pattern=
                 FunApp
@@ -319,14 +351,12 @@ and lower_functionals fname suffix es mem_pattern =
         | e -> e in
       let converted_es = List.map ~f:convert_hof_vars es in
       let msgs = "pstream__" |> Middle.Expr.Helpers.variable in
-      (* Here, because these signatures are written in C++ such that they
-         wanted to have optional arguments and piggyback on C++ default
-         arguments and not write the necessary overloads, we have to
-         reorder the arguments as pstream__ does not always come last
-         in a way that is specific to the function name. If you are a C++
-         developer please don't add more of these - just add the
-         overloads.
-      *)
+      (* Here, because these signatures are written in C++ such that they wanted
+         to have optional arguments and piggyback on C++ default arguments and
+         not write the necessary overloads, we have to reorder the arguments as
+         pstream__ does not always come last in a way that is specific to the
+         function name. If you are a C++ developer please don't add more of
+         these - just add the overloads. *)
       let fname, args =
         match (fname, converted_es) with
         | "algebra_solver", f :: x :: y :: dat :: datint :: tl
@@ -359,9 +389,9 @@ and lower_functionals fname suffix es mem_pattern =
             , grainsize :: container :: msgs :: tl )
         | _, _
           when Stan_math_signatures.is_stan_math_variadic_function_name fname ->
-            let Stan_math_signatures.{control_args; _} =
-              Hashtbl.find_exn
-                Stan_math_signatures.stan_math_variadic_signatures fname in
+            let UnsizedType.{control_args; _} =
+              Stan_math_signatures.lookup_stan_math_variadic_function fname
+              |> Option.value_exn in
             let hd, tl =
               List.split_n converted_es (List.length control_args + 1) in
             (fname, hd @ (msgs :: tl))
@@ -370,16 +400,26 @@ and lower_functionals fname suffix es mem_pattern =
             :: {pattern= FunApp ((UserDefined (f, _) | StanLib (f, _, _)), _); _}
             :: tl ) ->
             (Fmt.str "%s<%s, %s>" fname id f, tl @ [msgs])
-        | _, args -> (fname, args @ [msgs]) in
+        | _, args ->
+            ( fname
+            , args
+              @ (suffix_args false suffix
+                |> List.map ~f:Middle.Expr.Helpers.variable)
+              @ [msgs] ) in
       let fname = stan_namespace_qualify fname in
       let templates = templates false suffix in
-      Exprs.templated_fun_call fname templates
-        (lower_exprs ~promote_reals:true args) in
+      Exprs.templated_fun_call fname templates (lower_exprs args) in
     Some lower_hov
 
 and lower_fun_app suffix fname es mem_pattern
     (ret_type : UnsizedType.returntype option) =
   let fname = Option.value (Map.find fn_renames fname) ~default:fname in
+  let fname =
+    (* Handle systematic renaming of math's constrain and free functions *)
+    match String.rsplit2 fname ~on:'_' with
+    | Some (f, "jacobian") -> f ^ "_constrain"
+    | Some (f, "unconstrain") -> f ^ "_free"
+    | _ -> fname in
   let special_options =
     [ Option.map ~f:lower_operator_app (Operator.of_string_opt fname)
     ; lower_misc_special_math_app fname mem_pattern ret_type
@@ -390,50 +430,24 @@ and lower_fun_app suffix fname es mem_pattern
   | None ->
       let fname = stan_namespace_qualify fname in
       let templates = templates false suffix in
-      let extras = suffix_args suffix |> List.map ~f:Exprs.to_var in
+      let extras = suffix_args false suffix |> List.map ~f:Exprs.to_var in
       Exprs.templated_fun_call fname templates (lower_exprs es @ extras)
 
 and lower_user_defined_fun f suffix es =
   let extra_args =
-    suffix_args suffix @ ["pstream__"] |> List.map ~f:Exprs.to_var in
+    suffix_args true suffix @ ["pstream__"] |> List.map ~f:Exprs.to_var in
   Exprs.templated_fun_call f (templates true suffix)
-    ((lower_exprs ~promote_reals:true) es @ extra_args)
+    (lower_exprs es @ extra_args)
 
 and lower_compiler_internal ad ut f es =
-  let open Expression_syntax in
-  let gen_tuple_literal (es : Expr.Typed.t list) : expr =
-    (* we make full copies of tuples
-       due to a lack of templating sophistication
-       in function generation *)
-    let is_variable ({pattern; _} : Expr.Typed.t) =
-      match pattern with Var _ -> true | _ -> false in
-    let types =
-      List.map es ~f:(fun ({meta= {adlevel; type_; _}; _} as e) ->
-          let base_type = lower_unsizedtype_local adlevel type_ in
-          if
-            (* avoid trying to reference temporaries like the
-               result of adding two matrices *)
-            is_variable e
-            (* avoid nested tuples as references or passing a
-               reference to a pointer-sized type like double *)
-            && (not
-                  (UnsizedType.is_scalar_type type_
-                  || UnsizedType.contains_tuple type_))
-            (* Eigen types in the data block are stored as maps
-               (but normal Eigen matrices in GQ) *)
-            && not
-                 (UnsizedType.is_dataonlytype adlevel
-                 && UnsizedType.is_eigen_type type_)
-          then Types.const_ref base_type
-          else base_type) in
-    Constructor (Tuple types, lower_exprs es) in
+  let open Cpp.DSL in
   match f with
   | Internal_fun.FnMakeArray ->
       let ut =
         match ut with
         | UnsizedType.UArray ut -> ut
         | _ ->
-            Common.FatalError.fatal_error_msg
+            Common.ICE.internal_compiler_error
               [%message
                 "Array literal must have array type but found "
                   (ut : UnsizedType.t)] in
@@ -459,7 +473,7 @@ and lower_compiler_internal ad ut f es =
                 (lower_unsizedtype_local ad UComplexRowVector)
                 (lower_exprs es) ]
       | _ ->
-          Common.FatalError.fatal_error_msg
+          Common.ICE.internal_compiler_error
             [%message
               "Unexpected type for row vector literal" (ut : UnsizedType.t)])
   | FnReadData -> read_data ut es
@@ -477,8 +491,7 @@ and lower_compiler_internal ad ut f es =
                            , lower_exprs dims ))
       | Some constraint_string ->
           let constraint_args = transform_args constrain in
-          let lp =
-            Expr.Fixed.{pattern= Var "lp__"; meta= Expr.Typed.Meta.empty} in
+          let lp = Expr.{pattern= Var "lp__"; meta= Expr.Typed.Meta.empty} in
           let args = constraint_args @ [lp] @ dims in
           deserializer.@<>(( "template read_constrain_" ^ constraint_string
                            , [ lower_possibly_var_decl AutoDiffable ut
@@ -487,7 +500,7 @@ and lower_compiler_internal ad ut f es =
   | FnDeepCopy ->
       lower_fun_app Fun_kind.FnPlain "stan::model::deep_copy" es Mem_pattern.AoS
         (Some UnsizedType.Void)
-  | FnMakeTuple -> gen_tuple_literal es
+  | FnMakeTuple -> fun_call "std::forward_as_tuple" (lower_exprs es)
   | _ ->
       lower_fun_app FnPlain (Internal_fun.to_string f) es Mem_pattern.AoS
         (Some UnsizedType.Void)
@@ -510,22 +523,21 @@ and lower_indexed_simple (e : expr) idcs =
   let idx_minus_one = function
     | Index.Single e -> minus_one e
     | MultiIndex e | Between (e, _) | Upfrom e ->
-        Common.FatalError.fatal_error_msg
+        Common.ICE.internal_compiler_error
           [%message
             "No non-Single indices allowed"
               (e : expr)
               (idcs : Expr.Typed.t Index.t list)]
     | All ->
-        Common.FatalError.fatal_error_msg
+        Common.ICE.internal_compiler_error
           [%message
             "No non-Single indices allowed"
               (e : expr)
               (idcs : Expr.Typed.t Index.t list)] in
   List.fold idcs ~init:e ~f:(fun e id ->
-      Index (e, idx_minus_one (Index.map lower_expr id)))
+      Subscript (e, idx_minus_one (Index.map lower_expr id)))
 
-and lower_expr ?(promote_reals = false)
-    (Expr.Fixed.{pattern; meta} : Expr.Typed.t) : Cpp.expr =
+and lower_expr (Expr.{pattern; meta} : Expr.Typed.t) : Cpp.expr =
   let open Exprs in
   match pattern with
   | Var s -> Var s
@@ -533,14 +545,13 @@ and lower_expr ?(promote_reals = false)
   | Lit (Imaginary, s) ->
       fun_call "stan::math::to_complex" [Literal "0"; Literal s]
   | Lit ((Real | Int), s) -> Literal s
-  | Promotion (expr, UReal, _) when is_scalar expr ->
-      if promote_reals then
-        (* this can be important for e.g. templated function calls
-           where we might generate an incorrect specification for int *)
-        static_cast Cpp.Double (lower_expr expr)
-      else lower_expr expr
+  | Promotion (expr, UReal, UnsizedType.DataOnly) when is_scalar expr ->
+      (* this can be important for e.g. templated function calls where we might
+         generate an incorrect specification for int *)
+      static_cast Cpp.Double (lower_expr expr)
   | Promotion (expr, UComplex, DataOnly) when is_scalar expr ->
-      (* this is in principle a little better than promote_scalar since it is constexpr *)
+      (* this is in principle a little better than promote_scalar since it is
+         constexpr *)
       fun_call "stan::math::to_complex" [lower_expr expr; Literal "0"]
   | Promotion (expr, ut, ad) ->
       templated_fun_call "stan::math::promote_scalar"
@@ -585,23 +596,18 @@ and lower_expr ?(promote_reals = false)
         ->
           lower_indexed_simple (lower_expr e) idx
       | _ -> lower_indexed e idx (Fmt.to_to_string Expr.Typed.pp e))
-  | TupleProjection (t, ix) ->
-      templated_fun_call "std::get"
-        [TypeLiteral (string_of_int (ix - 1))]
-        [lower_expr t]
+  | TupleProjection (t, ix) -> tuple_get (ix - 1) (lower_expr t)
 
-and lower_exprs ?(promote_reals = false) =
-  List.map ~f:(lower_expr ~promote_reals)
+and lower_exprs = List.map ~f:lower_expr
 
 module Testing = struct
   (* these functions are just for testing *)
   let dummy_locate pattern =
-    Expr.(
-      Fixed.
-        { pattern
-        ; meta=
-            Typed.Meta.{type_= UInt; adlevel= DataOnly; loc= Location_span.empty}
-        })
+    Expr.
+      { pattern
+      ; meta=
+          Typed.Meta.{type_= UInt; adlevel= DataOnly; loc= Location_span.empty}
+      }
 
   let pp_unlocated e =
     Fmt.str "%a" Cpp.Printing.pp_expr (lower_expr @@ dummy_locate e)

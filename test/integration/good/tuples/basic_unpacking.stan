@@ -6,11 +6,17 @@ transformed data {
   print(x, y);
   (x, y) = (y, x);
   print(x, y);
-  (/* comment 1*/x/*comment 2*/,/*comment 3*/y/* comment 4 */)/*comment 5*/ = (y, x);
+  (/* comment 1*/x/*comment 2*/,/*comment 3*/y/* comment 4 */)/*comment 5*/ = /*comment 6*/ (/*comment 7*/y/*comment 8*/, /*comment 9*/x/*comment 10*/);
   (//comment 1
   x //comment 2
   , //comment 3
   y //comment 4
    ) // comment 5
-    = (y, x);
+    =
+    // comment 6
+     ( // comment 7
+      y // comment 8
+      , // comment 9
+      x // comment 10
+      );
 }

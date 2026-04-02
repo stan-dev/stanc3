@@ -18,9 +18,9 @@ let%expect_test "Loop test" =
       }
       |}
   in
-  let block = Stmt.Fixed.Pattern.Block mir.log_prob in
+  let block = Stmt.Pattern.Block mir.log_prob in
   let statement_map =
-    Stmt.Fixed.(
+    Stmt.(
       build_statement_map
         (fun {pattern; _} -> pattern)
         (fun {meta; _} -> meta)
@@ -30,7 +30,7 @@ let%expect_test "Loop test" =
     [%sexp
       (statement_map
         : ( label
-          , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * Location_span.t )
+          , (Expr.Typed.t, label) Stmt.Pattern.t * Location_span.t )
           Map.Poly.t)];
   print_s [%sexp (exits : label Set.Poly.t)];
   print_s [%sexp (preds : (label, label Set.Poly.t) Map.Poly.t)];
@@ -38,8 +38,8 @@ let%expect_test "Loop test" =
     {|
       ((1
         ((Block (2))
-         ((begin_loc ((filename "") (line_num 0) (col_num 0) (included_from ())))
-          (end_loc ((filename "") (line_num 0) (col_num 0) (included_from ()))))))
+         ((begin_loc ((filename "") (line_num -1) (col_num -1) (included_from ())))
+          (end_loc ((filename "") (line_num -1) (col_num -1) (included_from ()))))))
        (2
         ((Block (3))
          ((begin_loc
@@ -111,9 +111,9 @@ let%expect_test "Loop passthrough" =
         }
       |}
   in
-  let block = Stmt.Fixed.Pattern.Block mir.log_prob in
+  let block = Stmt.Pattern.Block mir.log_prob in
   let statement_map =
-    Stmt.Fixed.(
+    Stmt.(
       build_statement_map
         (fun {pattern; _} -> pattern)
         (fun {meta; _} -> meta)
@@ -160,11 +160,11 @@ let example1_program =
         }
       |}
   in
-  let block = Stmt.Fixed.Pattern.Block mir.log_prob in
-  Stmt.Fixed.{meta= Location_span.empty; pattern= block}
+  let block = Stmt.Pattern.Block mir.log_prob in
+  Stmt.{meta= Location_span.empty; pattern= block}
 
 let example1_statement_map =
-  Stmt.Fixed.(
+  Stmt.(
     build_statement_map
       (fun {pattern; _} -> pattern)
       (fun {meta; _} -> meta)
@@ -174,13 +174,13 @@ let%expect_test "Statement label map example" =
   print_s
     [%sexp
       (Map.Poly.map example1_statement_map ~f:fst
-        : (label, (Expr.Typed.t, label) Stmt.Fixed.Pattern.t) Map.Poly.t)];
+        : (label, (Expr.Typed.t, label) Stmt.Pattern.t) Map.Poly.t)];
   [%expect
     {|
       ((1 (Block (2))) (2 (Block (3 4 5)))
        (3
         (Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type (Sized SInt))
-         (initialize true)))
+         (initialize Default)))
        (4
         (Assignment ((LVariable i) ()) UInt
          ((pattern (Lit Int 0))
@@ -302,7 +302,7 @@ let%expect_test "Controlflow graph example" =
 let%test "Reconstructed recursive statement" =
   let stmt =
     build_recursive_statement
-      (fun pattern meta -> Stmt.Fixed.{pattern; meta})
+      (fun pattern meta -> Stmt.{pattern; meta})
       example1_statement_map 1 in
   stmt = example1_program
 
@@ -317,13 +317,13 @@ let example3_program =
       |}
   in
   let blocks =
-    Stmt.Fixed.(
+    Stmt.(
       Pattern.SList [{pattern= Block mir.log_prob; meta= Location_span.empty}])
   in
-  Stmt.Fixed.{meta= Location_span.empty; pattern= blocks}
+  Stmt.{meta= Location_span.empty; pattern= blocks}
 
 let example3_statement_map =
-  Stmt.Fixed.(
+  Stmt.(
     build_statement_map
       (fun {pattern; _} -> pattern)
       (fun {meta; _} -> meta)
@@ -334,18 +334,18 @@ let%expect_test "Statement label map example 3" =
     [%sexp
       (example3_statement_map
         : ( label
-          , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * Location_span.t )
+          , (Expr.Typed.t, label) Stmt.Pattern.t * Location_span.t )
           Map.Poly.t)];
   [%expect
     {|
       ((1
         ((SList (2))
-         ((begin_loc ((filename "") (line_num 0) (col_num 0) (included_from ())))
-          (end_loc ((filename "") (line_num 0) (col_num 0) (included_from ()))))))
+         ((begin_loc ((filename "") (line_num -1) (col_num -1) (included_from ())))
+          (end_loc ((filename "") (line_num -1) (col_num -1) (included_from ()))))))
        (2
         ((Block (3))
-         ((begin_loc ((filename "") (line_num 0) (col_num 0) (included_from ())))
-          (end_loc ((filename "") (line_num 0) (col_num 0) (included_from ()))))))
+         ((begin_loc ((filename "") (line_num -1) (col_num -1) (included_from ())))
+          (end_loc ((filename "") (line_num -1) (col_num -1) (included_from ()))))))
        (3
         ((Block (4 6))
          ((begin_loc
@@ -386,9 +386,9 @@ let%expect_test "Controlflow graph example 3" =
 
 let%expect_test "Predecessor graph example 3" =
   (* TODO: this is still wrong. The correct answer is
-         ((6) ((1 ()) (2 (1)) (3 (2)) (4 (3 5)) (5 (4)) (6 (5))))
-     Similarly for for-loops.
-     ) *)
+   *     ((6) ((1 ()) (2 (1)) (3 (2)) (4 (3 5)) (5 (4)) (6 (5))))
+   * Similarly for for-loops.
+   *)
   let exits, preds = build_predecessor_graph example3_statement_map in
   print_s
     [%sexp
@@ -411,13 +411,13 @@ let example4_program =
       |}
   in
   let blocks =
-    Stmt.Fixed.(
+    Stmt.(
       Pattern.SList [{pattern= Block mir.log_prob; meta= Location_span.empty}])
   in
-  Stmt.Fixed.{meta= Location_span.empty; pattern= blocks}
+  Stmt.{meta= Location_span.empty; pattern= blocks}
 
 let example4_statement_map =
-  Stmt.Fixed.(
+  Stmt.(
     build_statement_map
       (fun {pattern; _} -> pattern)
       (fun {meta; _} -> meta)
@@ -428,18 +428,18 @@ let%expect_test "Statement label map example 4" =
     [%sexp
       (example4_statement_map
         : ( label
-          , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * Location_span.t )
+          , (Expr.Typed.t, label) Stmt.Pattern.t * Location_span.t )
           Map.Poly.t)];
   [%expect
     {|
       ((1
         ((SList (2))
-         ((begin_loc ((filename "") (line_num 0) (col_num 0) (included_from ())))
-          (end_loc ((filename "") (line_num 0) (col_num 0) (included_from ()))))))
+         ((begin_loc ((filename "") (line_num -1) (col_num -1) (included_from ())))
+          (end_loc ((filename "") (line_num -1) (col_num -1) (included_from ()))))))
        (2
         ((Block (3))
-         ((begin_loc ((filename "") (line_num 0) (col_num 0) (included_from ())))
-          (end_loc ((filename "") (line_num 0) (col_num 0) (included_from ()))))))
+         ((begin_loc ((filename "") (line_num -1) (col_num -1) (included_from ())))
+          (end_loc ((filename "") (line_num -1) (col_num -1) (included_from ()))))))
        (3
         ((Block (4))
          ((begin_loc
@@ -487,10 +487,10 @@ let%expect_test "Controlflow graph example 4" =
 let%expect_test "Predecessor graph example 4" =
   let exits, preds = build_predecessor_graph example4_statement_map in
   (* TODO: this is still wrong. The correct answer is
-     ( (7) ( (1 ()) (2 (1)) (3 (2)) (4 (3 6)) (5 (4)) (6 (5)) (7 ()) ) )
-     or a very conservative approximation
-     ( (7) ( (1 ()) (2 (1)) (3 (2)) (4 (3 6 7)) (5 (4)) (6 (5)) (7 (6)) ) )
-  *)
+   * ( (7) ( (1 ()) (2 (1)) (3 (2)) (4 (3 6)) (5 (4)) (6 (5)) (7 ()) ) )
+   * or a very conservative approximation
+   * ( (7) ( (1 ()) (2 (1)) (3 (2)) (4 (3 6 7)) (5 (4)) (6 (5)) (7 (6)) ) )
+   *)
   print_s
     [%sexp
       ((exits, preds) : label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t)];
@@ -513,13 +513,13 @@ let example5_program =
       |}
   in
   let blocks =
-    Stmt.Fixed.(
+    Stmt.(
       Pattern.SList [{pattern= Block mir.log_prob; meta= Location_span.empty}])
   in
-  Stmt.Fixed.{meta= Location_span.empty; pattern= blocks}
+  Stmt.{meta= Location_span.empty; pattern= blocks}
 
 let example5_statement_map =
-  Stmt.Fixed.(
+  Stmt.(
     build_statement_map
       (fun {pattern; _} -> pattern)
       (fun {meta; _} -> meta)
@@ -530,18 +530,18 @@ let%expect_test "Statement label map example 5" =
     [%sexp
       (example5_statement_map
         : ( label
-          , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * Location_span.t )
+          , (Expr.Typed.t, label) Stmt.Pattern.t * Location_span.t )
           Map.Poly.t)];
   [%expect
     {|
       ((1
         ((SList (2))
-         ((begin_loc ((filename "") (line_num 0) (col_num 0) (included_from ())))
-          (end_loc ((filename "") (line_num 0) (col_num 0) (included_from ()))))))
+         ((begin_loc ((filename "") (line_num -1) (col_num -1) (included_from ())))
+          (end_loc ((filename "") (line_num -1) (col_num -1) (included_from ()))))))
        (2
         ((Block (3))
-         ((begin_loc ((filename "") (line_num 0) (col_num 0) (included_from ())))
-          (end_loc ((filename "") (line_num 0) (col_num 0) (included_from ()))))))
+         ((begin_loc ((filename "") (line_num -1) (col_num -1) (included_from ())))
+          (end_loc ((filename "") (line_num -1) (col_num -1) (included_from ()))))))
        (3
         ((Block (4 8))
          ((begin_loc
@@ -593,10 +593,9 @@ let%expect_test "Controlflow graph example 5" =
 
 let%expect_test "Predecessor graph example 5" =
   let exits, preds = build_predecessor_graph example5_statement_map in
-  (* TODO: this is still very very conservative (e.g. I'd hope for
-     (8) ((1 ())) (2 (1)) (3 (2)) (4 (3)) (5 (4)) (6 (5)) (7 ()) (8 (6))
-     but maybe that's too much to ask for
-     ) *)
+  (* TODO: this is still very very conservative (e.g. I'd hope for (8) ((1 ()))
+     (2 (1)) (3 (2)) (4 (3)) (5 (4)) (6 (5)) (7 ()) (8 (6)) but maybe that's too
+     much to ask for ) *)
   print_s
     [%sexp
       ((exits, preds) : label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t)];

@@ -1,6 +1,5 @@
 (executable
  (name run_js_on_args)
- (public_name run_js_on_args)
  (libraries core unix)
  (modes exe))
 
@@ -14,7 +13,7 @@
  (action
   (with-stdout-to
    %{targets}
-   (run %{bin:run_js_on_args} %{jsfiles}))))
+   (run ./run_js_on_args.exe %{jsfiles}))))
 
 (rule
  (alias runjstest)

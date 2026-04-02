@@ -35,7 +35,7 @@ let rec free_vars_expr (e : Expr.Typed.t) =
       Set.Poly.union_list (List.map ~f:free_vars_expr [e1; e2])
   | TupleProjection (e, _) -> free_vars_expr e
 
-(** Calculate the free (non-bound) variables in an index*)
+(** Calculate the free (non-bound) variables in an index *)
 and free_vars_idx (i : Expr.Typed.t Index.t) =
   match i with
   | All -> Set.Poly.empty
@@ -49,17 +49,16 @@ and free_vars_fnapp kind l =
       Set.Poly.union_list (Set.Poly.singleton f :: List.map ~f:free_vars_expr l)
   | _ -> Set.Poly.union_list arg_vars
 
-let rec free_vars_lval ((lval, idxs) : Expr.Typed.t Stmt.Fixed.Pattern.lvalue) =
+let rec free_vars_lval ((lval, idxs) : Expr.Typed.t Stmt.Pattern.lvalue) =
   let free_idx = Set.Poly.union_list (List.map ~f:free_vars_idx idxs) in
   match lval with
   | LVariable _ -> free_idx
   | LTupleProjection (e, _) -> Set.union free_idx (free_vars_lval e)
 
 (** Calculate the free (non-bound) variables in a statement *)
-let rec free_vars_stmt (s : (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t)
-    =
+let rec free_vars_stmt (s : (Expr.Typed.t, Stmt.Located.t) Stmt.Pattern.t) =
   match s with
-  | Return (Some e) | TargetPE e -> free_vars_expr e
+  | Return (Some e) | TargetPE e | JacobianPE e -> free_vars_expr e
   | Assignment (l, _, e) ->
       Set.Poly.union_list [free_vars_expr e; free_vars_lval l]
   | NRFunApp (kind, l) -> free_vars_fnapp kind l
@@ -73,16 +72,18 @@ let rec free_vars_stmt (s : (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t)
         [free_vars_expr e1; free_vars_expr e2; free_vars_stmt b.pattern]
   | Profile (_, l) | Block l | SList l ->
       Set.Poly.union_list (List.map ~f:(fun s -> free_vars_stmt s.pattern) l)
+  | Decl {initialize= Assign e; _} -> free_vars_expr e
   | Decl _ | Break | Continue | Return None | Skip -> Set.Poly.empty
 
 (** A variation on free_vars_stmt, where we do not recursively count free
-    variables in sub statements  *)
+    variables in sub statements *)
 let top_free_vars_stmt
     (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t)
-    (s : (Expr.Typed.t, int) Stmt.Fixed.Pattern.t) =
+    (s : (Expr.Typed.t, int) Stmt.Pattern.t) =
   match s with
-  | Assignment _ | Return _ | TargetPE _ | NRFunApp _ | Decl _ | Break
-   |Continue | Skip ->
+  | Decl {initialize= Assign e; _} -> free_vars_expr e
+  | Assignment _ | Return _ | TargetPE _ | JacobianPE _ | NRFunApp _ | Decl _
+   |Break | Continue | Skip ->
       free_vars_stmt
         (statement_stmt_loc_of_statement_stmt_loc_num flowgraph_to_mir s)
   | While (e, _) | IfElse (e, _, _) -> free_vars_expr e
@@ -97,8 +98,8 @@ let inverse_flowgraph_of_stmt ?(flatten_loops = false)
     * (int, Stmt.Located.Non_recursive.t) Map.Poly.t =
   let flowgraph_to_mir =
     Dataflow_utils.build_statement_map
-      (fun Stmt.Fixed.{pattern; _} -> pattern)
-      (fun Stmt.Fixed.{meta; _} -> meta)
+      (fun Stmt.{pattern; _} -> pattern)
+      (fun Stmt.{meta; _} -> meta)
       stmt in
   let initials, successors =
     Dataflow_utils.build_predecessor_graph ~flatten_loops ~blocks_after_body
@@ -118,8 +119,8 @@ let inverse_flowgraph_of_stmt ?(flatten_loops = false)
       ~f:(fun (pattern, meta) -> Stmt.Located.Non_recursive.{pattern; meta})
       flowgraph_to_mir )
 
-(** Reverse flowgraphs to be used for reverse analyses.
-    Observe that this respects the invariants listed for a FLOWGRAPH *)
+(** Reverse flowgraphs to be used for reverse analyses. Observe that this
+    respects the invariants listed for a FLOWGRAPH *)
 let reverse (type l) (module F : FLOWGRAPH with type labels = l) =
   (module struct
     type labels = F.labels
@@ -140,17 +141,14 @@ let reverse (type l) (module F : FLOWGRAPH with type labels = l) =
   end : FLOWGRAPH
     with type labels = l)
 
-(** Modify the end nodes of a flowgraph to depend on its inits
-  To force the monotone framework to run until the program never changes
-   this function modifies the input [Flowgraph] so that it's end nodes
-   depend on it's initial nodes. The inits of the reverse flowgraph are used
-   for this since we normally have both the forward and reverse flowgraphs
-   available.
-  @param l Type of the label for each flowgraph, most commonly an int
-  @param Flowgraph The flowgraph to modify
-  @param RevFlowgraph The same flowgraph as [Flowgraph] but reversed.
- *
- *)
+(** Modify the end nodes of a flowgraph to depend on its inits To force the
+    monotone framework to run until the program never changes this function
+    modifies the input [Flowgraph] so that it's end nodes depend on it's initial
+    nodes. The inits of the reverse flowgraph are used for this since we
+    normally have both the forward and reverse flowgraphs available.
+    @param l Type of the label for each flowgraph, most commonly an int
+    @param Flowgraph The flowgraph to modify
+    @param RevFlowgraph The same flowgraph as [Flowgraph] but reversed. *)
 let make_circular_flowgraph (type l)
     (module Flowgraph : FLOWGRAPH with type labels = l)
     (module RevFlowgraph : FLOWGRAPH with type labels = l) =
@@ -179,8 +177,8 @@ let forward_flowgraph_of_stmt ?(flatten_loops = false)
     inverse_flowgraph_of_stmt ~flatten_loops ~blocks_after_body stmt in
   (reverse (fst inv_flowgraph), snd inv_flowgraph)
 
-(**  The lattice of sets of some values, with the inclusion order, set union
-     and the empty set *)
+(** The lattice of sets of some values, with the inclusion order, set union and
+    the empty set *)
 let powerset_lattice (type v) (module S : INITIALTYPE with type vals = v) =
   (module struct
     type properties = S.vals Set.Poly.t
@@ -192,8 +190,8 @@ let powerset_lattice (type v) (module S : INITIALTYPE with type vals = v) =
   end : LATTICE
     with type properties = v Set.Poly.t)
 
-(**  The lattice of subsets of some set, with the inverse inclusion order,
-     set intersection and the total set *)
+(** The lattice of subsets of some set, with the inverse inclusion order, set
+    intersection and the total set *)
 let dual_powerset_lattice (type v)
     (module S : INITIALTOTALTYPE with type vals = v) =
   (module struct
@@ -229,7 +227,7 @@ let dual_powerset_lattice_expressions (initial : Expr.Typed.Set.t)
   end : LATTICE
     with type properties = Expr.Typed.Set.t)
 
-(**  Add a fresh bottom element to a lattice (possibly without bottom) *)
+(** Add a fresh bottom element to a lattice (possibly without bottom) *)
 let new_bot (type p) (module L : LATTICE_NO_BOT with type properties = p) =
   (module struct
     type properties = L.properties option
@@ -248,8 +246,8 @@ let new_bot (type p) (module L : LATTICE_NO_BOT with type properties = p) =
   end : LATTICE
     with type properties = p option)
 
-(** The lattice (without bottom) of partial functions, ordered under
-    inverse graph inclusion, with intersection *)
+(** The lattice (without bottom) of partial functions, ordered under inverse
+    graph inclusion, with intersection *)
 let dual_partial_function_lattice (type dv cv)
     (module Dom : TOTALTYPE with type vals = dv)
     (module Codom : TYPE with type vals = cv) =
@@ -272,8 +270,8 @@ let dual_partial_function_lattice (type dv cv)
   end : LATTICE_NO_BOT
     with type properties = (dv, cv) Map.Poly.t)
 
-(** The lattice of partial functions, where we add a fresh bottom element,
-   to represent an inconsistent combination of functions *)
+(** The lattice of partial functions, where we add a fresh bottom element, to
+    represent an inconsistent combination of functions *)
 let dual_partial_function_lattice_with_bot (type dv cv)
     (module Dom : TOTALTYPE with type vals = dv)
     (module Codom : TYPE with type vals = cv) =
@@ -349,7 +347,7 @@ let constant_propagation_transfer ?(preserve_stability = false)
             | Decl {decl_id= s; _} -> Map.remove m s
             | Assignment (lhs, _, _) ->
                 Map.remove m (Middle.Stmt.Helpers.lhs_variable lhs)
-            | TargetPE _
+            | TargetPE _ | JacobianPE _
              |NRFunApp (_, _)
              |Break | Continue | Return _ | Skip
              |IfElse (_, _, _)
@@ -370,8 +368,8 @@ let rec label_top_decls
       Set.Poly.union_list (List.map ~f:(label_top_decls flowgraph_to_mir) ids)
   | _ -> Set.Poly.empty
 
-(** The transfer function for an expression propagation analysis,
-    AKA forward substitution (see page 396 of Muchnick) *)
+(** The transfer function for an expression propagation analysis, AKA forward
+    substitution (see page 396 of Muchnick) *)
 let expression_propagation_transfer ?(preserve_stability = false)
     (can_side_effect_expr : Middle.Expr.Typed.t -> bool)
     (flowgraph_to_mir : (int, Middle.Stmt.Located.Non_recursive.t) Map.Poly.t) =
@@ -389,9 +387,10 @@ let expression_propagation_transfer ?(preserve_stability = false)
                 not (key = v || Set.mem (free_vars_expr data) v)) in
           Some
             (match mir_node with
-            (* TODO: we are currently only propagating constants for scalars.
-               We could do the same for matrix and array expressions if we wanted. *)
-            | Middle.Stmt.Fixed.Pattern.Assignment ((LVariable s, []), t, e) ->
+            (* TODO: we are currently only propagating constants for scalars. We
+               could do the same for matrix and array expressions if we
+               wanted. *)
+            | Middle.Stmt.Pattern.Assignment ((LVariable s, []), t, e) ->
                 let m' = kill_var m s in
                 if
                   can_side_effect_expr e
@@ -407,7 +406,7 @@ let expression_propagation_transfer ?(preserve_stability = false)
                   Set.Poly.union_list
                     (List.map ~f:(label_top_decls flowgraph_to_mir) b) in
                 Set.fold kills ~init:m ~f:kill_var
-            | TargetPE _
+            | TargetPE _ | JacobianPE _
              |NRFunApp (_, _)
              |Break | Continue | Return _ | Skip
              |IfElse (_, _, _)
@@ -441,7 +440,7 @@ let copy_propagation_transfer (globals : string Set.Poly.t)
                 if Set.mem globals assignee then expr_map
                 else
                   Map.set m' ~key:assignee
-                    ~data:Expr.Fixed.{pattern= Var assigner; meta}
+                    ~data:Expr.{pattern= Var assigner; meta}
             | Decl {decl_id= name; _} -> kill_var expr_map name
             | Assignment (lhs, _, _) ->
                 kill_var expr_map (Stmt.Helpers.lhs_variable lhs)
@@ -451,7 +450,7 @@ let copy_propagation_transfer (globals : string Set.Poly.t)
                     (List.map ~f:(label_top_decls flowgraph_to_mir) stmt_lst)
                 in
                 Set.fold kills ~init:expr_map ~f:kill_var
-            | TargetPE _
+            | TargetPE _ | JacobianPE _
              |NRFunApp (_, _)
              |Break | Continue | Return _ | Skip | SList _
              |IfElse (_, _, _)
@@ -468,12 +467,16 @@ let transfer_gen_kill p gen kill = Set.union gen (Set.diff p kill)
 (* TODO: from here *)
 
 (** Calculate the set of variables that a statement can assign to *)
-let assigned_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Fixed.Pattern.t) =
+let assigned_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Pattern.t) =
   match s with
   | Assignment (lhs, _, _) ->
       Set.Poly.singleton (Middle.Stmt.Helpers.lhs_variable lhs)
-  | TargetPE _ -> Set.Poly.singleton "target"
-  | NRFunApp ((UserDefined (_, FnTarget) | StanLib (_, FnTarget, _)), _) ->
+  | Decl {decl_id; initialize= Assign _; _} -> Set.Poly.singleton decl_id
+  | TargetPE _ | JacobianPE _ -> Set.Poly.singleton "target"
+  | NRFunApp
+      ( ( UserDefined (_, (FnTarget | FnJacobian))
+        | StanLib (_, (FnTarget | FnJacobian), _) )
+      , _ ) ->
       Set.Poly.singleton "target"
   | For {loopvar= x; _} -> Set.Poly.singleton x
   | Decl {decl_id= _; _}
@@ -485,14 +488,13 @@ let assigned_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Fixed.Pattern.t) =
       Set.Poly.empty
 
 (** Calculate the set of variables that a statement can declare *)
-let declared_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Fixed.Pattern.t) =
+let declared_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Pattern.t) =
   match s with
   | Decl {decl_id= x; _} -> Set.Poly.singleton x
   | _ -> Set.Poly.empty
 
 (** Calculate the set of variables that a statement can assign to or declare *)
-let assigned_or_declared_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Fixed.Pattern.t)
-    =
+let assigned_or_declared_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Pattern.t) =
   Set.union (assigned_vars_stmt s) (declared_vars_stmt s)
 
 (** The transfer function for a reaching definitions analysis *)
@@ -514,9 +516,12 @@ let reaching_definitions_transfer
          |Assignment ((LVariable x, []), _, _)
          |For {loopvar= x; _} ->
             Set.filter p ~f:(fun (y, _) -> y = x)
-        | TargetPE _ -> Set.filter p ~f:(fun (y, _) -> y = "target")
-        | NRFunApp ((UserDefined (_, FnTarget) | StanLib (_, FnTarget, _)), _)
-          ->
+        | TargetPE _ | JacobianPE _ ->
+            Set.filter p ~f:(fun (y, _) -> y = "target")
+        | NRFunApp
+            ( ( UserDefined (_, (FnTarget | FnJacobian))
+              | StanLib (_, (FnTarget | FnJacobian), _) )
+            , _ ) ->
             Set.filter p ~f:(fun (y, _) -> y = "target")
         | NRFunApp (_, _)
          |Break | Continue | Return _ | Skip
@@ -558,7 +563,7 @@ let live_variables_transfer (never_kill : string Set.Poly.t)
         match mir_node with
         | Assignment ((LVariable x, []), _, _) | Decl {decl_id= x; _} ->
             Set.Poly.singleton x
-        | TargetPE _
+        | TargetPE _ | JacobianPE _
          |NRFunApp (_, _)
          |Break | Continue | Return _ | Skip
          |IfElse (_, _, _)
@@ -602,7 +607,7 @@ and used_expressions_idx_help f (i : Expr.Typed.t Index.t) =
   | Between (e1, e2) -> Set.union (f e1) (f e2)
 
 let rec used_expressions_lval f
-    ((lval, idxs) : Expr.Typed.t Stmt.Fixed.Pattern.lvalue) =
+    ((lval, idxs) : Expr.Typed.t Stmt.Pattern.lvalue) =
   let used_idx =
     Expr.Typed.Set.union_list (List.map ~f:(used_expressions_idx_help f) idxs)
   in
@@ -614,9 +619,11 @@ let rec used_expressions_lval f
 let used_expressions_expr e = Expr.Typed.Set.singleton e
 
 let rec used_expressions_stmt_help f
-    (s : (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t) =
+    (s : (Expr.Typed.t, Stmt.Located.t) Stmt.Pattern.t) =
   match s with
-  | TargetPE e | Return (Some e) -> f e
+  | TargetPE e | JacobianPE e | Return (Some e) | Decl {initialize= Assign e; _}
+    ->
+      f e
   | Assignment (l, _, e) -> Set.union (f e) (used_expressions_lval f l)
   | IfElse (e, b1, Some b2) ->
       Expr.Typed.Set.union_list
@@ -647,10 +654,11 @@ let used_subexpressions_stmt =
 (** Calculate the set of expressions in a statement *)
 let used_expressions_stmt = used_expressions_stmt_help used_expressions_expr
 
-let top_used_expressions_stmt_help f
-    (s : (Expr.Typed.t, int) Stmt.Fixed.Pattern.t) =
+let top_used_expressions_stmt_help f (s : (Expr.Typed.t, int) Stmt.Pattern.t) =
   match s with
-  | TargetPE e | Return (Some e) -> f e
+  | TargetPE e | JacobianPE e | Return (Some e) | Decl {initialize= Assign e; _}
+    ->
+      f e
   | Assignment (l, _, e) -> Set.union (f e) (used_expressions_lval f l)
   | While (e, _) | IfElse (e, _, _) -> f e
   | NRFunApp (k, l) ->
@@ -669,15 +677,15 @@ let top_used_subexpressions_stmt =
 let top_used_expressions_stmt =
   top_used_expressions_stmt_help used_expressions_expr
 
-(** Calculate the subset (of p) of expressions that will need to be recomputed as a
-    consequence of evaluating the statement s (because of writes to variables performed
-    by s) *)
+(** Calculate the subset (of p) of expressions that will need to be recomputed
+    as a consequence of evaluating the statement s (because of writes to
+    variables performed by s) *)
 let killed_expressions_stmt (p : Expr.Typed.Set.t)
-    (s : (Expr.Typed.t, int) Stmt.Fixed.Pattern.t) =
+    (s : (Expr.Typed.t, int) Stmt.Pattern.t) =
   Set.filter p ~f:(fun e ->
       let free_vars = free_vars_expr e in
-      (* Note: a simple test for membership would be more efficient here,
-         but it would require us to duplicate some code. *)
+      (* Note: a simple test for membership would be more efficient here, but it
+         would require us to duplicate some code. *)
       let assigned_vars = assigned_or_declared_vars_stmt s in
       not (Set.is_empty (Set.inter free_vars assigned_vars)))
 
@@ -688,10 +696,11 @@ let used (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t) =
     ~f:(fun ~key ~data accum ->
       Map.Poly.set accum ~key ~data:(top_used_subexpressions_stmt data.pattern))
 
-(* TODO: figure out whether we will also want to reuse the computation of killed *)
+(* TODO: figure out whether we will also want to reuse the computation of
+   killed *)
 
-(** The transfer function for an anticipated expressions analysis (as a part of lazy
-    code motion) *)
+(** The transfer function for an anticipated expressions analysis (as a part of
+    lazy code motion) *)
 let anticipated_expressions_transfer
     (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t)
     (used : (int, Expr.Typed.Set.t) Map.Poly.t) =
@@ -708,15 +717,15 @@ let anticipated_expressions_transfer
     with type labels = int
      and type properties = Expr.Typed.Set.t)
 
-(** A helper function for defining transfer functions in terms of gen and kill sets
-    in an alternative way, that is used in some of the subanalyses of lazy code motion *)
+(** A helper function for defining transfer functions in terms of gen and kill
+    sets in an alternative way, that is used in some of the subanalyses of lazy
+    code motion *)
 let transfer_gen_kill_alt p gen kill = Set.diff (Set.union p gen) kill
 
-(* NOTE: we want to implement lazy code motion. Aho describes a slightly
-   more general available expression pass for that that uses the anticipated
-   expression pass.
-   QUESTION: does this give the traditional available expressions analysis if
-   anticipated expressions is empty? *)
+(* NOTE: we want to implement lazy code motion. Aho describes a slightly more
+   general available expression pass for that that uses the anticipated
+   expression pass. QUESTION: does this give the traditional available
+   expressions analysis if anticipated expressions is empty? *)
 
 (** An available expressions analysis, to be used in lazy code motion *)
 let available_expressions_transfer
@@ -746,7 +755,8 @@ let earliest
         ~data:
           (Set.diff data.exit (Map.find_exn available_expressions key).entry))
 
-(** The transfer function for a postponable expressions analysis (as a part of lazy code motion) *)
+(** The transfer function for a postponable expressions analysis (as a part of
+    lazy code motion) *)
 let postponable_expressions_transfer
     (earliest : (int, Expr.Typed.Set.t) Map.Poly.t)
     (used : (int, Expr.Typed.Set.t) Map.Poly.t) =
@@ -762,7 +772,8 @@ let postponable_expressions_transfer
     with type labels = int
      and type properties = Expr.Typed.Set.t)
 
-(** Calculates the set of expressions that can be computed at the latest at each node *)
+(** Calculates the set of expressions that can be computed at the latest at each
+    node *)
 let latest (successors : (int, int Set.Poly.t) Map.Poly.t)
     (earliest : (int, Expr.Typed.Set.t) Map.Poly.t)
     (postponable_expressions : (int, Expr.Typed.Set.t entry_exit) Map.Poly.t)
@@ -775,11 +786,12 @@ let latest (successors : (int, int Set.Poly.t) Map.Poly.t)
     Set.filter (earliest_or_postponable key) ~f:(fun e ->
         Set.mem (Map.Poly.find_exn used key) e
         || Set.exists (Map.Poly.find_exn successors key) ~f:(fun s ->
-               not (Set.mem (earliest_or_postponable s) e))) in
+            not (Set.mem (earliest_or_postponable s) e))) in
   Map.fold successors ~init:Map.Poly.empty ~f:(fun ~key ~data:_ accum ->
       Map.set accum ~key ~data:(latest key))
 
-(** The transfer function for a used-not-latest expressions analysis, as a part of lazy code motion *)
+(** The transfer function for a used-not-latest expressions analysis, as a part
+    of lazy code motion *)
 let used_not_latest_expressions_transfer
     (used : (int, Expr.Typed.Set.t) Map.Poly.t)
     (latest : (int, Expr.Typed.Set.t) Map.Poly.t) =
@@ -795,7 +807,8 @@ let used_not_latest_expressions_transfer
     with type labels = int
      and type properties = Expr.Typed.Set.t)
 
-(** The transfer function for the first forward analysis part of determining optimal ad-levels for variables *)
+(** The transfer function for the first forward analysis part of determining
+    optimal ad-levels for variables *)
 let minimal_variables_fwd_transfer
     (gen_variable :
          (int, Stmt.Located.Non_recursive.t) Map.Poly.t
@@ -812,7 +825,8 @@ let minimal_variables_fwd_transfer
       let gen = gen_variable flowgraph_to_mir l p in
       let kill =
         match mir_node with
-        (* This probably isn't necessary because Stan doesn't allow shadowing, right? *)
+        (* This probably isn't necessary because Stan doesn't allow shadowing,
+           right? *)
         | Decl {decl_id; decl_adtype= DataOnly; _} -> Set.Poly.singleton decl_id
         | _ -> Set.Poly.empty in
       transfer_gen_kill p gen kill
@@ -820,15 +834,14 @@ let minimal_variables_fwd_transfer
     with type labels = int
      and type properties = string Set.Poly.t)
 
-(** The central definition of a monotone dataflow analysis framework.
-    Given a compatible flowgraph, lattice and transfer function, we can
-    run the mfp (maximal fixed point) algorithm, which computes a maximal
-    fixed point (MFP) for the set of equations/inequalities of properties at the
-    entry and exit of each node in the flow graph, as defined by the triple.
-    Note that this gives a safe approximation to the MOP (meet over all paths)
-    solution that we would really be interested in, but which is often incomputable.
-    In case of a distributive lattice of properties, the MFP and MOP solutions coincide.
-    *)
+(** The central definition of a monotone dataflow analysis framework. Given a
+    compatible flowgraph, lattice and transfer function, we can run the mfp
+    (maximal fixed point) algorithm, which computes a maximal fixed point (MFP)
+    for the set of equations/inequalities of properties at the entry and exit of
+    each node in the flow graph, as defined by the triple. Note that this gives
+    a safe approximation to the MOP (meet over all paths) solution that we would
+    really be interested in, but which is often incomputable. In case of a
+    distributive lattice of properties, the MFP and MOP solutions coincide. *)
 let monotone_framework (type l p) (module F : FLOWGRAPH with type labels = l)
     (module L : LATTICE with type properties = p)
     (module T : TRANSFER_FUNCTION with type labels = l and type properties = p)
@@ -878,11 +891,11 @@ let monotone_framework (type l p) (module F : FLOWGRAPH with type labels = l)
      and type properties = p)
 
 let rec declared_variables_stmt
-    (s : (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t) =
+    (s : (Expr.Typed.t, Stmt.Located.t) Stmt.Pattern.t) =
   match s with
   | Decl {decl_id= x; _} -> Set.Poly.singleton x
   | Assignment (_, _, _)
-   |TargetPE _
+   |TargetPE _ | JacobianPE _
    |NRFunApp (_, _)
    |Break | Continue | Return _ | Skip ->
       Set.Poly.empty
@@ -977,11 +990,13 @@ let globals (prog : Program.Typed.t) =
     [ Set.Poly.of_list (List.map ~f:fst3 prog.output_vars)
       (* It is not strictly necessary to exclude data variables from DCE.
          However,
-         1. We don't currently check for usage of data variables in
-            corners of the MIR, such as in the sizes of parameters
-         2. There is code added in codegen that is never represented in
-            the MIR that may use data variables as if they're initialized
-      *); Set.Poly.of_list (List.map ~f:fst3 prog.input_vars)
+
+         1. We don't currently check for usage of data variables in corners of
+         the MIR, such as in the sizes of parameters
+
+         2. There is code added in codegen that is never represented in the MIR
+         that may use data variables as if they're initialized *)
+    ; Set.Poly.of_list (List.map ~f:fst3 prog.input_vars)
     ; Set.Poly.union_list (List.map ~f:var_declarations prog.prepare_data)
     ; Set.Poly.singleton "target" ]
 
@@ -996,8 +1011,8 @@ let live_variables_mfp (prog : Program.Typed.t)
     (module struct
       type vals = string
 
-      (* NOTE: global generated quantities, (transformed) parameters and target are always observable
-         so should be live. *)
+      (* NOTE: global generated quantities, (transformed) parameters and target
+         are always observable so should be live. *)
       let initial = never_kill
     end : INITIALTYPE
       with type vals = string) in
@@ -1008,8 +1023,8 @@ let live_variables_mfp (prog : Program.Typed.t)
   in
   Mf.mfp ()
 
-(** Instantiate all four instances of the monotone framework for lazy
-    code motion, reusing code between them *)
+(** Instantiate all four instances of the monotone framework for lazy code
+    motion, reusing code between them *)
 let lazy_expressions_mfp
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH with type labels = int)
     (module Rev_Flowgraph : Monotone_framework_sigs.FLOWGRAPH
@@ -1063,13 +1078,12 @@ let lazy_expressions_mfp
 
 (** Run the minimal fixed point algorithm to deduce the smallest set of
     variables that satisfy a set of conditions.
-  @param Flowgraph The set of nodes to analyze
-  @param flowgraph_to_mir Map of nodes to their actual values in the MIR
-  @param initial_variables The set of variables to start in the set
-  @param gen_variable Used in the transfer function to deduce variables
-   that should be in the set
- *
- *)
+    @param Flowgraph The set of nodes to analyze
+    @param flowgraph_to_mir Map of nodes to their actual values in the MIR
+    @param initial_variables The set of variables to start in the set
+    @param gen_variable
+      Used in the transfer function to deduce variables that should be in the
+      set *)
 let minimal_variables_mfp
     (module Circular_Fwd_Flowgraph : Monotone_framework_sigs.FLOWGRAPH
       with type labels = int)

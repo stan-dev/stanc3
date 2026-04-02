@@ -1,14 +1,16 @@
-(** Some helpers to produce nice error messages and for auto-formatting Stan programs *)
+(** Some helpers to produce nice error messages and for auto-formatting Stan
+    programs *)
 
 open Core
 open Core.Poly
 open Ast
 open Fmt
 
-(** To avoid cluttering the AST, comments are not associated with any particular AST node but instead come in a separate list.
-   The pretty printer uses the AST nodes' location metadata to insert whitespace and comments.
-   The comment list is stored in a global state that is accessed by set_comments, get_comments, and skip_comments.
- *)
+(** To avoid cluttering the AST, comments are not associated with any particular
+    AST node but instead come in a separate list. The pretty printer uses the
+    AST nodes' location metadata to insert whitespace and comments. The comment
+    list is stored in a global state that is accessed by set_comments,
+    get_comments, and skip_comments. *)
 let comments : comment_type list ref = ref []
 
 let skipped = ref []
@@ -75,26 +77,27 @@ let skip_comments loc =
   skipped :=
     !skipped
     @ List.filter_map (get_comments loc) ~f:(function
-        | `Include, l, loc ->
-            (* This prevents against bad behavior, but also really terrible but technically allowed things fail
-               For example, an if statement where the 'else' is entirely inside the include.
-               This makes the failure noisy rather than ever producing anything invalid for these. *)
-            Common.FatalError.fatal_error_msg
-              [%message
-                "Unable to format #include in this position!"
-                  (l : string list)
-                  (loc : Middle.Location_span.t)]
-        | x, s :: l, loc -> Some (x, (" ^^^:" ^ s) :: l, loc)
-        | _, [], _ -> None)
+      | `Include, l, loc ->
+          (* This prevents against bad behavior, but also really terrible but
+             technically allowed things fail For example, an if statement where
+             the 'else' is entirely inside the include. This makes the failure
+             noisy rather than ever producing anything invalid for these. *)
+          Common.ICE.internal_compiler_error
+            [%message
+              "Unable to format #include in this position!"
+                (l : string list)
+                (loc : Middle.Location_span.t)]
+      | x, s :: l, loc -> Some (x, (" ^^^:" ^ s) :: l, loc)
+      | _, [], _ -> None)
 
 let remaining_comments () =
   let x =
     !skipped
     @ List.filter_map !comments ~f:(function
-        | LineComment (a, b) -> Some (`Line, [a], b)
-        | Include (a, b) -> Some (`Include, [a], b)
-        | BlockComment (a, b) -> Some (`Block, a, b)
-        | Separator _ -> None) in
+      | LineComment (a, b) -> Some (`Line, [a], b)
+      | Include (a, b) -> Some (`Include, [a], b)
+      | BlockComment (a, b) -> Some (`Block, a, b)
+      | Separator _ -> None) in
   skipped := [];
   comments := [];
   x
@@ -162,18 +165,20 @@ let pp_spacing ?(newline = true) prev_loc next_loc ppf ls =
       skipped := [];
       Option.iter prev_loc ~f:finish
 
-let pp_comments_spacing space_before f ppf loc =
+let pp_comments_spacing ?(no_comment = Fmt.nop) ?before f ppf loc =
+  let pp_before = match before with Some f -> f | None -> Fmt.nop in
   let comments = f loc in
   if not (List.is_empty comments) then (
-    if space_before then sp ppf ();
+    pp_before ppf ();
     let rec go was_block = function
       | ((block, _, _) as comment) :: tl ->
           let is_block = match block with `Block -> true | _ -> false in
           pp_comment ppf comment;
           if not is_block then Format.pp_force_newline ppf ();
           go is_block tl
-      | [] -> if was_block && not space_before then sp ppf () in
+      | [] -> if was_block && not (Option.is_some before) then sp ppf () in
     go true comments)
+  else no_comment ppf ()
 
 let comma_no_break = any ", "
 
@@ -190,25 +195,36 @@ let pp_returntype ppf = function
 let pp_identifier ppf id = string ppf id.name
 let pp_operator = Middle.Operator.pp
 
+(** For long function names, we let the indent of the arguments be ragged under
+    the name, otherwise we align it under the "(" *)
+let pp_start_funapp ppf id =
+  let long = String.length id.name > 16 in
+  pf ppf "%a%a%a"
+    (if' long Format.pp_open_box)
+    2 pp_identifier id
+    (if' (not long) Format.pp_open_box)
+    1
+
 let pp_list_of pp (loc_of : 'a -> Middle.Location_span.t) ppf
     (es, {Middle.Location_span.end_loc; begin_loc}) =
   let rec go expr more =
     match more with
     | next :: rest ->
-        pp ppf expr;
         let next_loc = (loc_of next).begin_loc in
-        pp_comments_spacing true get_comments_until_separator ppf next_loc;
-        comma ppf ();
-        pp_comments_spacing false get_comments ppf next_loc;
+        pf ppf "%a%a,%a" pp expr
+          (pp_comments_spacing ~before:sp get_comments_until_separator)
+          next_loc
+          (pp_comments_spacing ~no_comment:sp ~before:(any " ") get_comments)
+          next_loc;
         go next rest
     | [] -> pp ppf expr in
   skip_comments begin_loc;
   (match es with
   | [] -> ()
   | e :: es ->
-      pp_comments_spacing false get_comments ppf (loc_of e).begin_loc;
+      pp_comments_spacing get_comments ppf (loc_of e).begin_loc;
       go e es);
-  pp_comments_spacing true get_comments ppf end_loc
+  pp_comments_spacing ~before:(any " ") get_comments ppf end_loc
 
 let rec pp_index ppf = function
   | All -> pf ppf " : "
@@ -226,24 +242,24 @@ and pp_expression ppf ({expr= e_content; emeta= {loc; _}} : untyped_expression)
       let then_loc = e2.emeta.loc.begin_loc in
       let else_loc = e3.emeta.loc.begin_loc in
       pf ppf "@[%a@ %a? %a%a@ %a: %a%a@]" pp_expression e1
-        (pp_comments_spacing false get_comments_until_separator)
+        (pp_comments_spacing get_comments_until_separator)
         then_loc
-        (pp_comments_spacing false get_comments)
+        (pp_comments_spacing get_comments)
         then_loc pp_expression e2
-        (pp_comments_spacing false get_comments_until_separator)
+        (pp_comments_spacing get_comments_until_separator)
         else_loc
-        (pp_comments_spacing false get_comments)
+        (pp_comments_spacing get_comments)
         else_loc pp_expression e3
   | BinOp (e1, op, e2) ->
       let next_loc = e2.emeta.loc.begin_loc in
       pf ppf "@[%a@ %a%a %a%a@]" pp_expression e1
-        (pp_comments_spacing false get_comments_until_separator)
+        (pp_comments_spacing get_comments_until_separator)
         next_loc pp_operator op
-        (pp_comments_spacing false get_comments)
+        (pp_comments_spacing get_comments)
         next_loc pp_expression e2
   | PrefixOp (op, e) ->
       pf ppf "%a%a%a"
-        (pp_comments_spacing false get_comments)
+        (pp_comments_spacing get_comments)
         e.emeta.loc.begin_loc pp_operator op pp_expression e
   | PostfixOp (e, op) -> pf ppf "%a%a" pp_expression e pp_operator op
   | Variable id -> pp_identifier ppf id
@@ -251,36 +267,36 @@ and pp_expression ppf ({expr= e_content; emeta= {loc; _}} : untyped_expression)
   | RealNumeral r -> string ppf r
   | ImagNumeral z -> pf ppf "%si" z
   | FunApp (_, id, es) ->
-      pf ppf "%a(@[%a)@]" pp_identifier id pp_list_of_expression (es, loc)
+      pf ppf "%a(@,%a)@]" pp_start_funapp id pp_list_of_expression (es, loc)
   | CondDistApp (_, id, es) -> (
       match es with
       | [] ->
-          Common.FatalError.fatal_error_msg
+          Common.ICE.internal_compiler_error
             [%message "CondDistApp with no arguments: " id.name]
       | [e] ->
-          pf ppf "@[<h>%a(%a%a)@]" pp_identifier id pp_expression e
-            (pp_comments_spacing true get_comments)
+          pf ppf "%a(@,%a%a)@]" pp_start_funapp id pp_expression e
+            (pp_comments_spacing ~before:sp get_comments)
             loc.end_loc
       | e :: es' ->
           let begin_loc =
             List.hd es'
             |> Option.map ~f:(fun e -> e.emeta.loc.begin_loc)
             |> Option.value ~default:loc.end_loc in
-          pf ppf "@[<h>%a(%a%a | %a%a)@]" pp_identifier id pp_expression e
-            (pp_comments_spacing true get_comments_until_separator)
+          pf ppf "%a(@,%a%a |@ %a%a)@]" pp_start_funapp id pp_expression e
+            (pp_comments_spacing ~before:sp get_comments_until_separator)
             begin_loc
-            (pp_comments_spacing false get_comments)
+            (pp_comments_spacing get_comments)
             begin_loc pp_list_of_expression (es', loc))
   | GetTarget -> pf ppf "target()"
   | ArrayExpr es -> pf ppf "{@[%a}@]" pp_list_of_expression (es, loc)
   | RowVectorExpr es -> pf ppf "[@[%a]@]" pp_list_of_expression (es, loc)
   | Paren e -> pf ppf "(%a)" pp_expression e
-  | Promotion (e, _, _) -> pp_expression ppf e
   | Indexed (e, l) -> pf ppf "%a[%a]" pp_expression e pp_list_of_indices l
   | TupleProjection (e, i) -> pf ppf "%a.%d" pp_expression e i
   | TupleExpr es ->
-      pf ppf "(@[%a%s@])" pp_list_of_expression (es, loc)
+      pf ppf "(@[<hv>%a%s@])" pp_list_of_expression (es, loc)
         (if List.length es = 1 then "," else "")
+  | Promotion _ -> .
 
 and pp_list_of_expression ppf es =
   let loc_of (x : untyped_expression) = x.emeta.loc in
@@ -320,9 +336,11 @@ let pp_bracketed_transform ppf = function
   | Multiplier e -> pf ppf "<@[multiplier=%a@]>" pp_expression e
   | OffsetMultiplier (e1, e2) ->
       pf ppf "<@[offset=%a,@ multiplier=%a@]>" pp_expression e1 pp_expression e2
-  | Identity | Ordered | PositiveOrdered | Simplex | UnitVector | CholeskyCorr
-   |CholeskyCov | Correlation | Covariance | TupleTransformation _
-  (* tuple transformations are handled in pp_transformed_type *) ->
+  | Identity | Ordered | PositiveOrdered | Simplex | UnitVector | SumToZero
+   |CholeskyCorr | CholeskyCov | Correlation | Covariance
+   |TupleTransformation _ | StochasticColumn
+   |StochasticRow (* tuple transformations are handled in pp_transformed_type *)
+    ->
       ()
 
 let rec pp_transformed_type ppf (st, trans) =
@@ -334,36 +352,40 @@ let rec pp_transformed_type ppf (st, trans) =
        |SRowVector (_, e)
        |SComplexVector e
        |SComplexRowVector e ->
-          const (fun ppf -> pf ppf "[%a]" pp_expression) e
+          fun ppf -> pf ppf "[%a]" pp_expression e
       | SMatrix (_, e1, e2) | SComplexMatrix (e1, e2) ->
-          const (fun ppf -> pf ppf "[%a, %a]" pp_expression e1 pp_expression) e2
-      | SArray _ | SInt | SReal | SComplex | STuple _ -> nop in
+          fun ppf -> pf ppf "[%a, %a]" pp_expression e1 pp_expression e2
+      | SArray _ | SInt | SReal | SComplex | STuple _ -> ignore in
     let cov_sizes_fmt =
       match st with
       | SMatrix (_, e1, e2) ->
-          if e1 = e2 then const (fun ppf -> pf ppf "[%a]" pp_expression) e1
-          else
-            const
-              (fun ppf -> pf ppf "[%a, %a]" pp_expression e1 pp_expression)
-              e2
-      | _ -> nop in
+          if e1 = e2 then fun ppf -> pf ppf "[%a]" pp_expression e1
+          else fun ppf -> pf ppf "[%a, %a]" pp_expression e1 pp_expression e2
+      | _ -> ignore in
     match trans with
     | Transformation.Identity ->
         pf ppf "%a" (Middle.SizedType.pp pp_expression) st
     | Lower _ | Upper _ | LowerUpper _ | Offset _ | Multiplier _
      |OffsetMultiplier _ ->
-        pf ppf "%a%a%a" pp_unsizedtype (SizedType.to_unsized st)
-          pp_bracketed_transform trans sizes_fmt ()
-    | Ordered -> pf ppf "ordered%a" sizes_fmt ()
-    | PositiveOrdered -> pf ppf "positive_ordered%a" sizes_fmt ()
-    | Simplex -> pf ppf "simplex%a" sizes_fmt ()
-    | UnitVector -> pf ppf "unit_vector%a" sizes_fmt ()
-    | CholeskyCorr -> pf ppf "cholesky_factor_corr%a" cov_sizes_fmt ()
-    | CholeskyCov -> pf ppf "cholesky_factor_cov%a" cov_sizes_fmt ()
-    | Correlation -> pf ppf "corr_matrix%a" cov_sizes_fmt ()
-    | Covariance -> pf ppf "cov_matrix%a" cov_sizes_fmt ()
+        pf ppf "%a%a%t" pp_unsizedtype (SizedType.to_unsized st)
+          pp_bracketed_transform trans sizes_fmt
+    | Ordered -> pf ppf "ordered%t" sizes_fmt
+    | PositiveOrdered -> pf ppf "positive_ordered%t" sizes_fmt
+    | Simplex -> pf ppf "simplex%t" sizes_fmt
+    | UnitVector -> pf ppf "unit_vector%t" sizes_fmt
+    | SumToZero ->
+        let ty_str =
+          match st with SizedType.SMatrix _ -> "matrix" | _ -> "vector" in
+        pf ppf "sum_to_zero_%s%t" ty_str sizes_fmt
+    | CholeskyCorr -> pf ppf "cholesky_factor_corr%t" cov_sizes_fmt
+    | CholeskyCov -> pf ppf "cholesky_factor_cov%t" cov_sizes_fmt
+    | Correlation -> pf ppf "corr_matrix%t" cov_sizes_fmt
+    | Covariance -> pf ppf "cov_matrix%t" cov_sizes_fmt
+    | StochasticColumn -> pf ppf "column_stochastic_matrix%t" sizes_fmt
+    | StochasticRow -> pf ppf "row_stochastic_matrix%t" sizes_fmt
     | TupleTransformation transforms ->
         (* NB this calls the top-level function to handle internal arrays etc *)
+        (* it isn't perfect with comment placement currently *)
         let transTypes = Middle.Utils.zip_stuple_trans_exn st transforms in
         pf ppf "tuple(@[%a%s@])"
           (list ~sep:comma pp_transformed_type)
@@ -390,10 +412,9 @@ let rec pp_indent_unless_block ppf ((s : untyped_statement), loc) =
       pp_spacing (Some loc) (Some begin_loc) ppf (get_comments begin_loc);
       (indented_box pp_statement) ppf s
 
-(** This function helps write chained if-then-else-if-... blocks
- correctly. Without it, each IfThenElse would trigger a new
- vbox in front of the if, adding spaces for each level of IfThenElse.
- *)
+(** This function helps write chained if-then-else-if-... blocks correctly.
+    Without it, each IfThenElse would trigger a new vbox in front of the if,
+    adding spaces for each level of IfThenElse. *)
 and pp_recursive_ifthenelse ppf (s, loc) =
   match s.stmt with
   | IfThenElse (e, s, None) ->
@@ -407,7 +428,7 @@ and pp_recursive_ifthenelse ppf (s, loc) =
       pp_spacing ~newline (Some loc) (Some loc) ppf
         (get_comments_until_separator s2.smeta.loc.begin_loc);
       pf ppf "else %a%a"
-        (pp_comments_spacing false get_comments)
+        (pp_comments_spacing get_comments)
         s2.smeta.loc.begin_loc pp_recursive_ifthenelse
         (s2, {loc with line_num= loc.line_num + 1})
   | _ -> pp_indent_unless_block ppf (s, loc)
@@ -419,10 +440,11 @@ and pp_statement ppf ({stmt= s_content; smeta= {loc}} as ss : untyped_statement)
       pf ppf "@[<h>%a %a %a;@]" pp_lvalue l pp_assignmentoperator assop
         pp_expression e
   | NRFunApp (_, id, es) ->
-      pf ppf "%a(@[%a);@]" pp_identifier id pp_list_of_expression (es, loc)
+      pf ppf "%a(@,%a);@]" pp_start_funapp id pp_list_of_expression (es, loc)
   | TargetPE e -> pf ppf "target += %a;" pp_expression e
-  | Tilde {arg= e; distribution= id; args= es; truncation= t} ->
-      pf ppf "%a ~ %a(@[%a)@]%a;" pp_expression e pp_identifier id
+  | JacobianPE e -> pf ppf "jacobian += %a;" pp_expression e
+  | Tilde {arg= e; distribution= id; args= es; truncation= t; kind= _} ->
+      pf ppf "%a ~ %a(@,%a)@]%a;" pp_expression e pp_start_funapp id
         pp_list_of_expression (es, loc) pp_truncation t
   | Break -> pf ppf "break;"
   | Continue -> pf ppf "continue;"
@@ -430,6 +452,7 @@ and pp_statement ppf ({stmt= s_content; smeta= {loc}} as ss : untyped_statement)
   | ReturnVoid -> pf ppf "return;"
   | Print ps -> pf ppf "print(%a);" pp_list_of_printables ps
   | Reject ps -> pf ppf "reject(%a);" pp_list_of_printables ps
+  | FatalError ps -> pf ppf "fatal_error(%a);" pp_list_of_printables ps
   | Skip -> pf ppf ";"
   | IfThenElse (_, _, _) ->
       (vbox pp_recursive_ifthenelse) ppf (ss, ss.smeta.loc.begin_loc)
@@ -452,18 +475,36 @@ and pp_statement ppf ({stmt= s_content; smeta= {loc}} as ss : untyped_statement)
           (option (fun ppf e -> pf ppf " = %a" pp_expression e))
           initial_value in
       pf ppf "@[<h>%a %a;@]" pp_transformed_type (pst, trans)
-        (list ~sep:comma pp_var) variables
-  | FunDef {returntype= rt; funname= id; arguments= args; body= b} -> (
-      let loc_of (_, _, id) = id.id_loc in
-      pf ppf "%a %a(%a" pp_returntype rt pp_identifier id
-        (box (pp_list_of pp_args loc_of))
-        (args, {loc with end_loc= b.smeta.loc.begin_loc});
-      match b with
-      | {stmt= Skip; _} -> pf ppf ");"
-      | b -> pf ppf ") %a" pp_statement b)
-
-and pp_args ppf (at, ut, id) =
-  pf ppf "%a%a %a" pp_autodifftype at pp_unsizedtype ut pp_identifier id
+        (pp_list_of pp_var (fun v -> v.identifier.id_loc))
+        (variables, loc)
+  | FunDef {returntype= rt; funname= id; arguments= args; body= b} ->
+      let pp_args ppf =
+        let loc_of (_, _, id) = id.id_loc in
+        let pp_arg ppf (at, ut, id) =
+          pf ppf "%a%a %a" pp_autodifftype at pp_unsizedtype ut pp_identifier id
+        in
+        (pp_list_of pp_arg loc_of) ppf
+          (args, {loc with end_loc= b.smeta.loc.begin_loc}) in
+      let pp_body ppf =
+        match b with
+        | {stmt= Skip; _} -> char ppf ';'
+        | _ -> pf ppf " %a" pp_statement b in
+      (* similar to [pp_start_funapp]: - if a name is long, start the box early
+         in the name - if there are a lot of args, or a long name, display them
+         one-per-line *)
+      let max_line_length = Format.pp_get_margin ppf () in
+      (* these values are picked heuristically so they look decent on the
+         default line-length, where they work out to 26+ characters being a
+         'long' name, and 8+ args being 'many' arguments *)
+      let long = String.length id.name > max_line_length / 3 in
+      let many_args = List.length args > max_line_length / 10 in
+      if long then
+        pf ppf "@[%a@ @]@[@[<hv 2>%a(@,%t@]@,)@]%t" pp_returntype rt
+          pp_identifier id pp_args pp_body
+      else
+        pf ppf "@[%a@ @]%a(%a%t)@]%t" pp_returntype rt pp_identifier id
+          (if many_args then Format.pp_open_hvbox else Format.pp_open_box)
+          0 pp_args pp_body
 
 and pp_list_of_statements ppf (l, xloc) =
   let rec pp_head ppf ls =
@@ -485,83 +526,5 @@ and pp_list_of_statements ppf (l, xloc) =
     | [] -> pp_spacing (Some loc) None ppf (get_comments xloc.end_loc) in
   (vbox pp_head) ppf l
 
-let pp_bare_block ppf {stmts; xloc} =
-  (hbox (box pp_list_of_statements)) ppf (stmts, xloc)
-
-let pp_block block_name ppf {stmts; xloc} =
-  pf ppf "%s {@,%a@,}@," block_name
-    (indented_box pp_list_of_statements)
-    (stmts, xloc)
-
-let rec pp_block_list ppf = function
-  | (name, {stmts; xloc}) :: tl ->
-      if should_skip xloc.end_loc then pp_block_list ppf tl
-      else (
-        pp_spacing None (Some xloc.begin_loc) ppf (get_comments xloc.begin_loc);
-        pp_block name ppf {stmts; xloc};
-        pp_block_list ppf tl)
-  | [] -> pp_spacing None None ppf (remaining_comments ())
-
-let pp_program ~bare_functions ~line_length ~inline_includes ~strip_comments ppf
-    { functionblock= bf
-    ; datablock= bd
-    ; transformeddatablock= btd
-    ; parametersblock= bp
-    ; transformedparametersblock= btp
-    ; modelblock= bm
-    ; generatedquantitiesblock= bgq
-    ; comments } =
-  Format.pp_set_margin ppf line_length;
-  set_comments ~inline_includes ~strip_comments comments;
-  print_included := inline_includes;
-  Format.pp_open_vbox ppf 0;
-  if bare_functions then pp_bare_block ppf @@ Option.value_exn bf
-  else
-    let blocks =
-      List.filter_map
-        ~f:(fun (name, block_opt) ->
-          Option.map ~f:(fun b -> (name, b)) block_opt)
-        [ ("functions", bf); ("data", bd); ("transformed data", btd)
-        ; ("parameters", bp); ("transformed parameters", btp); ("model", bm)
-        ; ("generated quantities", bgq) ] in
-    pp_block_list ppf blocks
-
-let check_correctness ?(bare_functions = false) prog pretty =
-  let result_ast =
-    let res, (_ : Warnings.t list) =
-      if bare_functions then
-        Parse.parse_string Parser.Incremental.functions_only pretty
-      else Parse.parse_string Parser.Incremental.program pretty in
-    match res with
-    | Ok prog -> prog
-    | Error e ->
-        let error = Errors.to_string e in
-        Common.FatalError.fatal_error_msg
-          [%message
-            "Pretty-printed program failed to parse" error
-              (prog : Ast.untyped_program)
-              pretty] in
-  if compare_untyped_program prog result_ast <> 0 then
-    Common.FatalError.fatal_error_msg
-      [%message
-        "Pretty-printed program does match the original!"
-          (prog : Ast.untyped_program)
-          (result_ast : Ast.untyped_program)]
-
 let pp_typed_expression ppf e =
   pp_expression ppf (untyped_expression_of_typed_expression e)
-
-let pretty_print_program ?(bare_functions = false) ?(line_length = 78)
-    ?(inline_includes = false) ?(strip_comments = false) p =
-  let result =
-    str "%a"
-      (pp_program ~bare_functions ~line_length ~inline_includes ~strip_comments)
-      p in
-  check_correctness ~bare_functions p result;
-  result
-
-let pretty_print_typed_program ?(bare_functions = false) ?(line_length = 78)
-    ?(inline_includes = false) ?(strip_comments = false) p =
-  pretty_print_program ~bare_functions ~line_length ~inline_includes
-    ~strip_comments
-    (untyped_program_of_typed_program p)

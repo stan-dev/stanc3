@@ -1,3 +1,5 @@
 #!/bin/bash
-cd `git rev-parse --show-toplevel`
+set -e
+cd "$(git rev-parse --show-toplevel)" || exit
 dune runtest src test/unit && make format
+curl -X POST -F "jenkinsfile=<Jenkinsfile" "https://jenkins.flatironinstitute.org/pipeline-model-converter/validate" 2>/dev/null | tee /dev/tty | grep "Jenkinsfile successfully validated." -q

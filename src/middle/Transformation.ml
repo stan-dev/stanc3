@@ -2,8 +2,8 @@ open Core
 
 (** Transformations (constraints) for global variable declarations *)
 
-(** Types of transformations. Polymorphic type is filled
-in with an expression fixed-point, e.g. {!type:Frontend.Ast.typed_expression} *)
+(** Types of transformations. Polymorphic type is filled in with an expression
+    fixed-point, e.g. {!type:Frontend.Ast.typed_expression} *)
 type 'e t =
   | Identity
   | Lower of 'e
@@ -16,10 +16,13 @@ type 'e t =
   | PositiveOrdered
   | Simplex
   | UnitVector
+  | SumToZero
   | CholeskyCorr
   | CholeskyCov
   | Correlation
   | Covariance
+  | StochasticRow
+  | StochasticColumn
   | TupleTransformation of 'e t list
 [@@deriving sexp, compare, map, hash, fold]
 

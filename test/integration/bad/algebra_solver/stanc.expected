@@ -9,7 +9,7 @@ Semantic error in 'bad_data_qualifer.stan', line 31, column 10 to column 76:
     33:  
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'solve_newton':
+Ill-typed arguments supplied to function "solve_newton":
 (<F1>, vector, vector, array[] real, array[] real, real, real, int)
 where F1 = (data vector, vector, array[] real, array[] int) => vector
 Available signatures:
@@ -21,6 +21,7 @@ where F2 = (vector) => vector
    (data vector, vector, array[] real, array[] int) => vector
   These are not compatible because:
     The first argument has an incompatible data-qualifier.
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_fun_type.stan
 Semantic error in 'bad_fun_type.stan', line 31, column 10 to column 62:
    -------------------------------------------------
@@ -32,7 +33,7 @@ Semantic error in 'bad_fun_type.stan', line 31, column 10 to column 62:
     33:  
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'algebra_solver':
+Ill-typed arguments supplied to function "algebra_solver":
 (<F1>, vector, vector, array[] real, array[] int)
 where F1 = (array[] real, vector, array[] real, array[] int) => vector
 Available signatures:
@@ -50,6 +51,7 @@ where F2 = (vector, vector, data array[] real, data array[] int) => vector
 (<F2>, vector, vector, data array[] real, data array[] int, data real,
  data real, data real) => vector
   Expected 8 arguments but found 5 arguments.
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_fun_type_control.stan
 Semantic error in 'bad_fun_type_control.stan', line 31, column 10 to column 78:
    -------------------------------------------------
@@ -61,7 +63,7 @@ Semantic error in 'bad_fun_type_control.stan', line 31, column 10 to column 78:
     33:  
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'algebra_solver':
+Ill-typed arguments supplied to function "algebra_solver":
 (<F1>, vector, vector, array[] real, array[] int, real, real, int)
 where F1 = (array[] real, vector, array[] real, array[] int) => vector
 Available signatures:
@@ -79,6 +81,7 @@ where F2 = (vector, vector, data array[] real, data array[] int) => vector
      vector
 (<F2>, vector, vector, data array[] real, data array[] int) => vector
   Expected 5 arguments but found 8 arguments.
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_newton_fun_type_control.stan
 Semantic error in 'bad_newton_fun_type_control.stan', line 31, column 10 to column 85:
    -------------------------------------------------
@@ -90,7 +93,7 @@ Semantic error in 'bad_newton_fun_type_control.stan', line 31, column 10 to colu
     33:  
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'algebra_solver_newton':
+Ill-typed arguments supplied to function "algebra_solver_newton":
 (<F1>, vector, vector, array[] real, array[] int, real, real, int)
 where F1 = (array[] real, vector, array[] real, array[] int) => vector
 Available signatures:
@@ -108,6 +111,7 @@ where F2 = (vector, vector, data array[] real, data array[] int) => vector
      vector
 (<F2>, vector, vector, data array[] real, data array[] int) => vector
   Expected 5 arguments but found 8 arguments.
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_newton_x_i_type.stan
 Semantic error in 'bad_newton_x_i_type.stan', line 31, column 10 to column 69:
    -------------------------------------------------
@@ -119,7 +123,7 @@ Semantic error in 'bad_newton_x_i_type.stan', line 31, column 10 to column 69:
     33:  
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'algebra_solver_newton':
+Ill-typed arguments supplied to function "algebra_solver_newton":
 (<F1>, vector, vector, array[] real, array[] real)
 where F1 = (vector, vector, array[] real, array[] int) => vector
 Available signatures:
@@ -129,6 +133,7 @@ where F2 = (vector, vector, data array[] real, data array[] int) => vector
 (<F2>, vector, vector, data array[] real, data array[] int, data real,
  data real, data real) => vector
   Expected 8 arguments but found 5 arguments.
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_newton_x_i_type_control.stan
 Semantic error in 'bad_newton_x_i_type_control.stan', line 31, column 10 to column 85:
    -------------------------------------------------
@@ -140,7 +145,7 @@ Semantic error in 'bad_newton_x_i_type_control.stan', line 31, column 10 to colu
     33:  
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'algebra_solver_newton':
+Ill-typed arguments supplied to function "algebra_solver_newton":
 (<F1>, vector, vector, array[] real, array[] real, real, real, int)
 where F1 = (vector, vector, array[] real, array[] int) => vector
 Available signatures:
@@ -150,6 +155,7 @@ where F2 = (vector, vector, data array[] real, data array[] int) => vector
   The 5th argument must be array[] int but got array[] real
 (<F2>, vector, vector, data array[] real, data array[] int) => vector
   Expected 5 arguments but found 8 arguments.
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_newton_x_r_var_type.stan
 Semantic error in 'bad_newton_x_r_var_type.stan', line 31, column 10 to column 71:
    -------------------------------------------------
@@ -161,7 +167,7 @@ Semantic error in 'bad_newton_x_r_var_type.stan', line 31, column 10 to column 7
     33:  
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'algebra_solver_newton':
+Ill-typed arguments supplied to function "algebra_solver_newton":
 (<F1>, vector, vector, array[] real, array[] int)
 where F1 = (vector, vector, array[] real, array[] int) => vector
 Available signatures:
@@ -169,10 +175,11 @@ Available signatures:
 where F2 = (vector, vector, data array[] real, data array[] int) => vector
   The fourth argument must be data-only. (Local variables are assumed to
   depend on parameters; same goes for function inputs unless they are marked
-  with the keyword 'data'.)
+  with the keyword "data".)
 (<F2>, vector, vector, data array[] real, data array[] int, data real,
  data real, data real) => vector
   Expected 8 arguments but found 5 arguments.
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_newton_x_r_var_type_control.stan
 Semantic error in 'bad_newton_x_r_var_type_control.stan', line 31, column 10 to column 87:
    -------------------------------------------------
@@ -184,7 +191,7 @@ Semantic error in 'bad_newton_x_r_var_type_control.stan', line 31, column 10 to 
     33:  
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'algebra_solver_newton':
+Ill-typed arguments supplied to function "algebra_solver_newton":
 (<F1>, vector, vector, array[] real, array[] int, real, real, int)
 where F1 = (vector, vector, array[] real, array[] int) => vector
 Available signatures:
@@ -193,9 +200,10 @@ Available signatures:
 where F2 = (vector, vector, data array[] real, data array[] int) => vector
   The fourth argument must be data-only. (Local variables are assumed to
   depend on parameters; same goes for function inputs unless they are marked
-  with the keyword 'data'.)
+  with the keyword "data".)
 (<F2>, vector, vector, data array[] real, data array[] int) => vector
   Expected 5 arguments but found 8 arguments.
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_newton_y_type.stan
 Semantic error in 'bad_newton_y_type.stan', line 31, column 10 to column 69:
    -------------------------------------------------
@@ -207,7 +215,7 @@ Semantic error in 'bad_newton_y_type.stan', line 31, column 10 to column 69:
     33:  
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'algebra_solver_newton':
+Ill-typed arguments supplied to function "algebra_solver_newton":
 (<F1>, real, vector, array[] real, array[] int)
 where F1 = (array[] real, vector, array[] real, array[] int) => vector
 Available signatures:
@@ -225,6 +233,7 @@ where F2 = (vector, vector, data array[] real, data array[] int) => vector
 (<F2>, vector, vector, data array[] real, data array[] int, data real,
  data real, data real) => vector
   Expected 8 arguments but found 5 arguments.
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_newton_y_type_control.stan
 Semantic error in 'bad_newton_y_type_control.stan', line 31, column 10 to column 85:
    -------------------------------------------------
@@ -236,7 +245,7 @@ Semantic error in 'bad_newton_y_type_control.stan', line 31, column 10 to column
     33:  
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'algebra_solver_newton':
+Ill-typed arguments supplied to function "algebra_solver_newton":
 (<F1>, real, vector, array[] real, array[] int, real, real, int)
 where F1 = (array[] real, vector, array[] real, array[] int) => vector
 Available signatures:
@@ -254,6 +263,7 @@ where F2 = (vector, vector, data array[] real, data array[] int) => vector
      vector
 (<F2>, vector, vector, data array[] real, data array[] int) => vector
   Expected 5 arguments but found 8 arguments.
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_solve_newton_arguments_number.stan
 Semantic error in 'bad_solve_newton_arguments_number.stan', line 31, column 10 to column 65:
    -------------------------------------------------
@@ -265,7 +275,7 @@ Semantic error in 'bad_solve_newton_arguments_number.stan', line 31, column 10 t
     33:  
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'solve_newton':
+Ill-typed arguments supplied to function "solve_newton":
 (<F1>, vector, real, array[] real, array[] int, array[] int)
 where F1 = (array[] real, vector, array[] real, array[] int) => vector
 Available signatures:
@@ -280,6 +290,7 @@ where F2 = (vector) => vector
      array[] real
     but the other is
      vector
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_solve_newton_arguments_type.stan
 Semantic error in 'bad_solve_newton_arguments_type.stan', line 31, column 10 to column 60:
    -------------------------------------------------
@@ -291,7 +302,7 @@ Semantic error in 'bad_solve_newton_arguments_type.stan', line 31, column 10 to 
     33:  
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'solve_newton':
+Ill-typed arguments supplied to function "solve_newton":
 (<F1>, vector, real, array[] int, array[] int)
 where F1 = (array[] real, vector, array[] real, array[] int) => vector
 Available signatures:
@@ -306,6 +317,45 @@ where F2 = (vector) => vector
      array[] real
     but the other is
      vector
+[exit 1]
+  $ ../../../../../install/default/bin/stanc bad_solve_newton_lpdf.stan
+Semantic error in 'bad_solve_newton_lpdf.stan', line 28, column 12 to column 65:
+   -------------------------------------------------
+    26:    vector[2] theta_p;
+    27:  
+    28:    theta_p = solve_newton(algebra_system_lpdf, x, y, dat, dat_int);
+                     ^
+    29:  
+    30:  }
+   -------------------------------------------------
+
+Ill-typed arguments supplied to function "solve_newton":
+(<F1>, vector, vector, array[] real, array[] int)
+where F1 = (vector, vector, array[] real, array[] int) => real
+Available signatures:
+(<F2>, vector) => vector
+where F2 = (vector) => vector
+  The first argument must be a pure function but got a probability density function. These function types are not compatible.
+[exit 1]
+  $ ../../../../../install/default/bin/stanc bad_solve_newton_lpmf.stan
+Semantic error in 'bad_solve_newton_lpmf.stan', line 28, column 12 to column 65:
+   -------------------------------------------------
+    26:    vector[2] theta_p;
+    27:  
+    28:    theta_p = solve_newton(algebra_system_lpmf, x, y, dat, dat_int);
+                     ^
+    29:  
+    30:  }
+   -------------------------------------------------
+
+Ill-typed arguments supplied to function "solve_newton":
+(<F1>, vector, vector, array[] real, array[] int)
+where F1 = (array[] int, vector, array[] real, array[] int) => real
+Available signatures:
+(<F2>, vector) => vector
+where F2 = (vector) => vector
+  The first argument must be a pure function but got a probability mass function. These function types are not compatible.
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_solve_newton_tol_arguments_number.stan
 Semantic error in 'bad_solve_newton_tol_arguments_number.stan', line 34, column 10 to line 35, column 50:
    -------------------------------------------------
@@ -317,7 +367,7 @@ Semantic error in 'bad_solve_newton_tol_arguments_number.stan', line 34, column 
     36:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'solve_newton_tol':
+Ill-typed arguments supplied to function "solve_newton_tol":
 (<F1>, vector, real, real, int, real, array[] real, array[] int, array[] int)
 where F1 = (array[] real, vector, array[] real, array[] int) => vector
 Available signatures:
@@ -332,6 +382,7 @@ where F2 = (vector) => vector
      array[] real
     but the other is
      vector
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_solve_newton_tol_arguments_type.stan
 Semantic error in 'bad_solve_newton_tol_arguments_type.stan', line 34, column 10 to line 35, column 52:
    -------------------------------------------------
@@ -343,7 +394,7 @@ Semantic error in 'bad_solve_newton_tol_arguments_type.stan', line 34, column 10
     36:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'solve_newton':
+Ill-typed arguments supplied to function "solve_newton":
 (<F1>, vector, real, real, int, real, array[] int, array[] int)
 where F1 = (array[] real, vector, array[] real, array[] int) => vector
 Available signatures:
@@ -358,6 +409,7 @@ where F2 = (vector) => vector
      array[] real
     but the other is
      vector
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_solve_powell_arguments_number.stan
 Semantic error in 'bad_solve_powell_arguments_number.stan', line 31, column 10 to column 65:
    -------------------------------------------------
@@ -369,7 +421,7 @@ Semantic error in 'bad_solve_powell_arguments_number.stan', line 31, column 10 t
     33:  
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'solve_powell':
+Ill-typed arguments supplied to function "solve_powell":
 (<F1>, vector, real, array[] real, array[] int, array[] int)
 where F1 = (array[] real, vector, array[] real, array[] int) => vector
 Available signatures:
@@ -384,6 +436,7 @@ where F2 = (vector) => vector
      array[] real
     but the other is
      vector
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_solve_powell_arguments_type.stan
 Semantic error in 'bad_solve_powell_arguments_type.stan', line 31, column 10 to column 60:
    -------------------------------------------------
@@ -395,7 +448,7 @@ Semantic error in 'bad_solve_powell_arguments_type.stan', line 31, column 10 to 
     33:  
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'solve_powell':
+Ill-typed arguments supplied to function "solve_powell":
 (<F1>, vector, real, array[] int, array[] int)
 where F1 = (array[] real, vector, array[] real, array[] int) => vector
 Available signatures:
@@ -410,6 +463,7 @@ where F2 = (vector) => vector
      array[] real
     but the other is
      vector
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_solve_powell_tol_arguments_number.stan
 Semantic error in 'bad_solve_powell_tol_arguments_number.stan', line 34, column 10 to line 35, column 50:
    -------------------------------------------------
@@ -421,7 +475,7 @@ Semantic error in 'bad_solve_powell_tol_arguments_number.stan', line 34, column 
     36:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'solve_powell_tol':
+Ill-typed arguments supplied to function "solve_powell_tol":
 (<F1>, vector, real, real, int, real, array[] real, array[] int, array[] int)
 where F1 = (array[] real, vector, array[] real, array[] int) => vector
 Available signatures:
@@ -436,6 +490,7 @@ where F2 = (vector) => vector
      array[] real
     but the other is
      vector
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_solve_powell_tol_arguments_type.stan
 Semantic error in 'bad_solve_powell_tol_arguments_type.stan', line 34, column 10 to line 35, column 41:
    -------------------------------------------------
@@ -447,7 +502,7 @@ Semantic error in 'bad_solve_powell_tol_arguments_type.stan', line 34, column 10
     36:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'solve_powell':
+Ill-typed arguments supplied to function "solve_powell":
 (<F1>, vector, real, real, int, real, array[] int, array[] int)
 where F1 = (array[] real, vector, array[] real, array[] int) => vector
 Available signatures:
@@ -462,6 +517,7 @@ where F2 = (vector) => vector
      array[] real
     but the other is
      vector
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_theta_type.stan
 Semantic error in 'bad_theta_type.stan', line 31, column 10 to column 62:
    -------------------------------------------------
@@ -473,7 +529,7 @@ Semantic error in 'bad_theta_type.stan', line 31, column 10 to column 62:
     33:  
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'algebra_solver':
+Ill-typed arguments supplied to function "algebra_solver":
 (<F1>, vector, real, array[] real, array[] int)
 where F1 = (array[] real, vector, array[] real, array[] int) => vector
 Available signatures:
@@ -491,6 +547,7 @@ where F2 = (vector, vector, data array[] real, data array[] int) => vector
 (<F2>, vector, vector, data array[] real, data array[] int, data real,
  data real, data real) => vector
   Expected 8 arguments but found 5 arguments.
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_theta_type_control.stan
 Semantic error in 'bad_theta_type_control.stan', line 31, column 10 to column 78:
    -------------------------------------------------
@@ -502,7 +559,7 @@ Semantic error in 'bad_theta_type_control.stan', line 31, column 10 to column 78
     33:  
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'algebra_solver':
+Ill-typed arguments supplied to function "algebra_solver":
 (<F1>, vector, real, array[] real, array[] int, real, real, int)
 where F1 = (array[] real, vector, array[] real, array[] int) => vector
 Available signatures:
@@ -520,6 +577,7 @@ where F2 = (vector, vector, data array[] real, data array[] int) => vector
      vector
 (<F2>, vector, vector, data array[] real, data array[] int) => vector
   Expected 5 arguments but found 8 arguments.
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_x_i_type.stan
 Semantic error in 'bad_x_i_type.stan', line 31, column 10 to column 62:
    -------------------------------------------------
@@ -531,7 +589,7 @@ Semantic error in 'bad_x_i_type.stan', line 31, column 10 to column 62:
     33:  
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'algebra_solver':
+Ill-typed arguments supplied to function "algebra_solver":
 (<F1>, vector, vector, array[] real, array[] real)
 where F1 = (vector, vector, array[] real, array[] int) => vector
 Available signatures:
@@ -541,6 +599,7 @@ where F2 = (vector, vector, data array[] real, data array[] int) => vector
 (<F2>, vector, vector, data array[] real, data array[] int, data real,
  data real, data real) => vector
   Expected 8 arguments but found 5 arguments.
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_x_i_type_control.stan
 Semantic error in 'bad_x_i_type_control.stan', line 31, column 10 to column 78:
    -------------------------------------------------
@@ -552,7 +611,7 @@ Semantic error in 'bad_x_i_type_control.stan', line 31, column 10 to column 78:
     33:  
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'algebra_solver':
+Ill-typed arguments supplied to function "algebra_solver":
 (<F1>, vector, vector, array[] real, array[] real, real, real, int)
 where F1 = (vector, vector, array[] real, array[] int) => vector
 Available signatures:
@@ -562,6 +621,7 @@ where F2 = (vector, vector, data array[] real, data array[] int) => vector
   The 5th argument must be array[] int but got array[] real
 (<F2>, vector, vector, data array[] real, data array[] int) => vector
   Expected 5 arguments but found 8 arguments.
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_x_r_var_type.stan
 Semantic error in 'bad_x_r_var_type.stan', line 31, column 10 to column 64:
    -------------------------------------------------
@@ -573,7 +633,7 @@ Semantic error in 'bad_x_r_var_type.stan', line 31, column 10 to column 64:
     33:  
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'algebra_solver':
+Ill-typed arguments supplied to function "algebra_solver":
 (<F1>, vector, vector, array[] real, array[] int)
 where F1 = (vector, vector, array[] real, array[] int) => vector
 Available signatures:
@@ -581,10 +641,11 @@ Available signatures:
 where F2 = (vector, vector, data array[] real, data array[] int) => vector
   The fourth argument must be data-only. (Local variables are assumed to
   depend on parameters; same goes for function inputs unless they are marked
-  with the keyword 'data'.)
+  with the keyword "data".)
 (<F2>, vector, vector, data array[] real, data array[] int, data real,
  data real, data real) => vector
   Expected 8 arguments but found 5 arguments.
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_x_r_var_type_control.stan
 Semantic error in 'bad_x_r_var_type_control.stan', line 31, column 10 to column 80:
    -------------------------------------------------
@@ -596,7 +657,7 @@ Semantic error in 'bad_x_r_var_type_control.stan', line 31, column 10 to column 
     33:  
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'algebra_solver':
+Ill-typed arguments supplied to function "algebra_solver":
 (<F1>, vector, vector, array[] real, array[] int, real, real, int)
 where F1 = (vector, vector, array[] real, array[] int) => vector
 Available signatures:
@@ -605,9 +666,10 @@ Available signatures:
 where F2 = (vector, vector, data array[] real, data array[] int) => vector
   The fourth argument must be data-only. (Local variables are assumed to
   depend on parameters; same goes for function inputs unless they are marked
-  with the keyword 'data'.)
+  with the keyword "data".)
 (<F2>, vector, vector, data array[] real, data array[] int) => vector
   Expected 5 arguments but found 8 arguments.
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_y_type.stan
 Semantic error in 'bad_y_type.stan', line 31, column 10 to column 62:
    -------------------------------------------------
@@ -619,7 +681,7 @@ Semantic error in 'bad_y_type.stan', line 31, column 10 to column 62:
     33:  
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'algebra_solver':
+Ill-typed arguments supplied to function "algebra_solver":
 (<F1>, real, vector, array[] real, array[] int)
 where F1 = (array[] real, vector, array[] real, array[] int) => vector
 Available signatures:
@@ -637,6 +699,7 @@ where F2 = (vector, vector, data array[] real, data array[] int) => vector
 (<F2>, vector, vector, data array[] real, data array[] int, data real,
  data real, data real) => vector
   Expected 8 arguments but found 5 arguments.
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_y_type_control.stan
 Semantic error in 'bad_y_type_control.stan', line 31, column 10 to column 78:
    -------------------------------------------------
@@ -648,7 +711,7 @@ Semantic error in 'bad_y_type_control.stan', line 31, column 10 to column 78:
     33:  
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'algebra_solver':
+Ill-typed arguments supplied to function "algebra_solver":
 (<F1>, real, vector, array[] real, array[] int, real, real, int)
 where F1 = (array[] real, vector, array[] real, array[] int) => vector
 Available signatures:
@@ -666,3 +729,4 @@ where F2 = (vector, vector, data array[] real, data array[] int) => vector
      vector
 (<F2>, vector, vector, data array[] real, data array[] int) => vector
   Expected 5 arguments but found 8 arguments.
+[exit 1]

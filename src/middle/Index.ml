@@ -17,24 +17,25 @@ let pp pp_e ppf = function
   | Between (lower, upper) -> Fmt.pf ppf "%a:%a" pp_e lower pp_e upper
 
 let pp_indices pp_e ppf indices =
-  Fmt.pf ppf {|@[%a@]|}
-    (if List.is_empty indices then fun _ _ -> ()
-     else Fmt.(list (pp pp_e) ~sep:comma |> brackets))
-    indices
+  let open Fmt in
+  box
+    (if' (not @@ List.is_empty indices) (brackets @@ list (pp pp_e) ~sep:comma))
+    ppf indices
 
 let bounds = function
   | All -> []
   | Single e | Upfrom e | MultiIndex e -> [e]
   | Between (e1, e2) -> [e1; e2]
 
-(**
- Apply an op over the [Index] types inner expressions.
- @param default Value to return for [All]
- @param merge Function taking in lhs and rhs of [Between] and
- merging their result.
- @param op a functor to run with inputs of inner exprs
- @param ind the Index.t to
- *)
+let every_index_is_all lst =
+  List.for_all lst ~f:(function All -> true | _ -> false)
+
+(** Apply an op over the [Index] types inner expressions.
+    @param default Value to return for [All]
+    @param merge
+      Function taking in lhs and rhs of [Between] and merging their result.
+    @param op a functor to run with inputs of inner exprs
+    @param ind the Index.t to *)
 let apply ~default ~merge op (ind : 'a t) =
   match ind with
   | All -> default

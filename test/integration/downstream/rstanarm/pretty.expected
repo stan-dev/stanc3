@@ -201,9 +201,10 @@ generated quantities {
 }
 
 Warning in './/functions/bernoulli_likelihoods.stan', line 84, column 7, included from
-'bernoulli.stan', line 7, column 2: Functions
-    do not need to be declared before definition; all user defined function
-    names are always in scope regardless of definition order.
+'bernoulli.stan', line 7, column 2:
+    Functions do not need to be declared before definition; all user defined
+    function names are always in scope regardless of definition order.
+[exit 0]
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined binomial.stan
 #include /pre/Columbia_copyright.stan
 #include /pre/license.stan
@@ -336,6 +337,7 @@ generated quantities {
   }
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined continuous.stan
 #include /pre/Columbia_copyright.stan
 #include /pre/license.stan
@@ -358,8 +360,14 @@ functions {
   * @param b Vector that is multiplied from the left by the CSR matrix
   * @return A vector that is the product of the CSR matrix and b
   */
-  vector test_csr_matrix_times_vector(int m, int n, vector w, array[] int v,
-                                      array[] int u, vector b) {
+  vector test_csr_matrix_times_vector(
+           int m,
+           int n,
+           vector w,
+           array[] int v,
+           array[] int u,
+           vector b
+         ) {
     return csr_matrix_times_vector(m, n, w, v, u, b);
   }
 }
@@ -547,9 +555,8 @@ model {
       vector[N] mu_z;
       mu = linkinv_beta(eta, link);
       mu_z = linkinv_beta_z(eta_z, link_phi);
-      target += beta_lpdf(y | rows_dot_product(mu, mu_z), rows_dot_product((
-                                                                    1 - mu),
-                                                                    mu_z));
+      target += beta_lpdf(y | rows_dot_product(mu, mu_z),
+                          rows_dot_product((1 - mu), mu_z));
     }
   } else if (prior_PD == 0) {
     // weighted log-likelihoods
@@ -716,45 +723,46 @@ generated quantities {
 }
 
 Warning in './/functions/SSfunctions.stan', line 1, column 7, included from
-'continuous.stan', line 9, column 2: Functions
-    do not need to be declared before definition; all user defined function
-    names are always in scope regardless of definition order.
+'continuous.stan', line 9, column 2:
+    Functions do not need to be declared before definition; all user defined
+    function names are always in scope regardless of definition order.
 Warning in './/functions/SSfunctions.stan', line 2, column 7, included from
-'continuous.stan', line 9, column 2: Functions
-    do not need to be declared before definition; all user defined function
-    names are always in scope regardless of definition order.
+'continuous.stan', line 9, column 2:
+    Functions do not need to be declared before definition; all user defined
+    function names are always in scope regardless of definition order.
 Warning in './/functions/SSfunctions.stan', line 3, column 7, included from
-'continuous.stan', line 9, column 2: Functions
-    do not need to be declared before definition; all user defined function
-    names are always in scope regardless of definition order.
+'continuous.stan', line 9, column 2:
+    Functions do not need to be declared before definition; all user defined
+    function names are always in scope regardless of definition order.
 Warning in './/functions/SSfunctions.stan', line 4, column 7, included from
-'continuous.stan', line 9, column 2: Functions
-    do not need to be declared before definition; all user defined function
-    names are always in scope regardless of definition order.
+'continuous.stan', line 9, column 2:
+    Functions do not need to be declared before definition; all user defined
+    function names are always in scope regardless of definition order.
 Warning in './/functions/SSfunctions.stan', line 5, column 7, included from
-'continuous.stan', line 9, column 2: Functions
-    do not need to be declared before definition; all user defined function
-    names are always in scope regardless of definition order.
+'continuous.stan', line 9, column 2:
+    Functions do not need to be declared before definition; all user defined
+    function names are always in scope regardless of definition order.
 Warning in './/functions/SSfunctions.stan', line 6, column 7, included from
-'continuous.stan', line 9, column 2: Functions
-    do not need to be declared before definition; all user defined function
-    names are always in scope regardless of definition order.
+'continuous.stan', line 9, column 2:
+    Functions do not need to be declared before definition; all user defined
+    function names are always in scope regardless of definition order.
 Warning in './/functions/SSfunctions.stan', line 7, column 7, included from
-'continuous.stan', line 9, column 2: Functions
-    do not need to be declared before definition; all user defined function
-    names are always in scope regardless of definition order.
+'continuous.stan', line 9, column 2:
+    Functions do not need to be declared before definition; all user defined
+    function names are always in scope regardless of definition order.
 Warning in './/functions/SSfunctions.stan', line 8, column 7, included from
-'continuous.stan', line 9, column 2: Functions
-    do not need to be declared before definition; all user defined function
-    names are always in scope regardless of definition order.
+'continuous.stan', line 9, column 2:
+    Functions do not need to be declared before definition; all user defined
+    function names are always in scope regardless of definition order.
 Warning in './/functions/SSfunctions.stan', line 9, column 7, included from
-'continuous.stan', line 9, column 2: Functions
-    do not need to be declared before definition; all user defined function
-    names are always in scope regardless of definition order.
+'continuous.stan', line 9, column 2:
+    Functions do not need to be declared before definition; all user defined
+    function names are always in scope regardless of definition order.
 Warning in './/functions/SSfunctions.stan', line 10, column 7, included from
-'continuous.stan', line 9, column 2: Functions
-    do not need to be declared before definition; all user defined function
-    names are always in scope regardless of definition order.
+'continuous.stan', line 9, column 2:
+    Functions do not need to be declared before definition; all user defined
+    function names are always in scope regardless of definition order.
+[exit 0]
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined count.stan
 #include /pre/Columbia_copyright.stan
 #include /pre/license.stan
@@ -967,6 +975,7 @@ generated quantities {
   }
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined jm.stan
 #include /pre/Columbia_copyright.stan
 #include /pre/Brilleman_copyright.stan
@@ -1063,7 +1072,7 @@ transformed parameters {
                      a_ool, a_mix, rep_array(1.0, 0), 0, a_slab_scale,
                      a_caux);
   e_aux = make_basehaz_coef(e_aux_unscaled, e_prior_dist_for_aux,
-                            e_prior_mean_for_aux, e_prior_scale_for_aux);
+            e_prior_mean_for_aux, e_prior_scale_for_aux);
 }
 model {
   //---- Log likelihoods for longitudinal submodels
@@ -1125,9 +1134,10 @@ generated quantities {
 }
 
 Warning in './/functions/bernoulli_likelihoods.stan', line 84, column 7, included from
-'jm.stan', line 8, column 0: Functions
-    do not need to be declared before definition; all user defined function
-    names are always in scope regardless of definition order.
+'jm.stan', line 8, column 0:
+    Functions do not need to be declared before definition; all user defined
+    function names are always in scope regardless of definition order.
+[exit 0]
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined lm.stan
 #include /pre/Columbia_copyright.stan
 #include /pre/license.stan
@@ -1258,6 +1268,7 @@ generated quantities {
   }
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined mvmer.stan
 #include /pre/Columbia_copyright.stan
 #include /pre/Brilleman_copyright.stan
@@ -1325,9 +1336,10 @@ generated quantities {
 }
 
 Warning in './/functions/bernoulli_likelihoods.stan', line 84, column 7, included from
-'mvmer.stan', line 8, column 0: Functions
-    do not need to be declared before definition; all user defined function
-    names are always in scope regardless of definition order.
+'mvmer.stan', line 8, column 0:
+    Functions do not need to be declared before definition; all user defined
+    function names are always in scope regardless of definition order.
+[exit 0]
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined polr.stan
 #include /pre/Columbia_copyright.stan
 #include /pre/license.stan
@@ -1467,9 +1479,10 @@ functions {
     else if (link == 3) 
       while (!(ystar > lower_ && ystar < upper_)) ystar = gumbel_rng(eta, 1);
     else if (link == 4) 
-      while (!(ystar > lower_ && ystar < upper_)) ystar = log(-log1m(
-                                                              uniform_rng(
-                                                              0, 1)));
+      while (!(ystar > lower_ && ystar < upper_)) ystar = log(
+                                                              -log1m(
+                                                                    uniform_rng
+                                                                    (0, 1)));
     else if (link == 5) 
       while (!(ystar > lower_ && ystar < upper_)) ystar = cauchy_rng(eta, 1);
     else 
@@ -1621,8 +1634,8 @@ generated quantities {
           ystar = draw_ystar_rng(negative_infinity(), cutpoints[1], eta[n],
                                  link);
         else if (y[n] == J) 
-          ystar = draw_ystar_rng(cutpoints[J - 1], positive_infinity(
-                                 ), eta[n], link);
+          ystar = draw_ystar_rng(cutpoints[J - 1], positive_infinity(),
+                                 eta[n], link);
         else 
           ystar = draw_ystar_rng(cutpoints[y[n] - 1], cutpoints[y[n]],
                                  eta[n], link);
@@ -1633,3 +1646,4 @@ generated quantities {
   }
 }
 
+[exit 0]

@@ -45,5 +45,10 @@ functions {
   array[,,] complex array_fun(array[,,] complex a) {
     return a;
   }
+
+  vector my_upper_bound_jacobian(vector x, real ub) {
+    jacobian += x;
+    return ub - exp(x);
+  }
 }
 

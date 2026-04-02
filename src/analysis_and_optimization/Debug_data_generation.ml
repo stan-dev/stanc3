@@ -16,14 +16,14 @@ let dotproduct xs ys =
 let matprod x y =
   let y_T = transpose y in
   if List.length x <> List.length y_T then
-    Common.FatalError.fatal_error_msg
+    Common.ICE.internal_compiler_error
       [%message "Matrix multiplication dim. mismatch"]
   else List.map ~f:(fun row -> List.map ~f:(dotproduct row) y_T) x
 
 let rec vect_to_mat l m =
   let len = List.length l in
   if len % m <> 0 then
-    Common.FatalError.fatal_error_msg
+    Common.ICE.internal_compiler_error
       [%message "The length has to be a whole multiple of the partition size"]
   else if len = m then [l]
   else
@@ -128,7 +128,7 @@ let gen_vector m n t =
   match t with
   | Transformation.Simplex ->
       let l = repeat_th n (fun _ -> Random.float 1.) in
-      let sum = List.fold l ~init:0. ~f:(fun accum elt -> accum +. elt) in
+      let sum = List.fold l ~init:0. ~f:( +. ) in
       let l = List.map l ~f:(fun x -> x /. sum) in
       Expr.Helpers.vector l
   | Ordered ->
@@ -194,10 +194,6 @@ let gen_corr_cholesky_unwrapped n =
   List.map ~f:row_normalizer filled_mat
 
 let gen_corr_cholesky n = wrap_real_mat (gen_corr_cholesky_unwrapped n)
-
-(* let gen_identity_matrix m n =
-   let id_mat = gen_diag_mat (List.init ~f:(fun _ -> 1.) n) in
-   if m <= n then wrap_real_mat id_mat else pad_mat id_mat m n *)
 
 let gen_cov_matrix n =
   let cov = gen_cov_unwrapped n in
@@ -327,7 +323,7 @@ let json_to_mir (decls : (Expr.Typed.t SizedType.t * 'a * string) list)
     | `Assoc l, UTuple ts ->
         l
         |> List.sort ~compare:(fun (x, _) (y, _) ->
-               Int.compare (int_of_string x) (int_of_string y))
+            Int.compare (int_of_string x) (int_of_string y))
         |> List.map2_exn ~f:(fun typ_ (_, json) -> create_expr typ_ json) ts
         |> Option.all
         |> Option.map ~f:(fun l -> Expr.Helpers.tuple_expr l)
@@ -339,13 +335,13 @@ let json_to_mir (decls : (Expr.Typed.t SizedType.t * 'a * string) list)
   List.filter_map decls ~f:(fun (st, _, name) ->
       Map.find map name
       |> Option.bind ~f:(fun value ->
-             create_expr (SizedType.to_unsized st) value)
+          create_expr (SizedType.to_unsized st) value)
       |> Option.map ~f:(fun value -> (name, value)))
   |> Map.Poly.of_alist_reduce ~f:Fn.const
 
 let generate_json_entries (name, expr) : string * t =
   let rec expr_to_json e : t =
-    match e.Expr.Fixed.pattern with
+    match e.Expr.pattern with
     | Lit (Real, s) when String.is_suffix s ~suffix:"." -> `Floatlit (s ^ "0")
     | Lit (Int, s) -> `Intlit s
     | Lit (Real, s) -> `Floatlit s
@@ -377,4 +373,5 @@ let gen_values_json_exn ?(new_only = false) ?(context = Map.Poly.empty) decls =
 
 let gen_values_json ?(new_only = false) ?(context = Map.Poly.empty) decls =
   try Ok (gen_values_json_exn ~new_only ~context decls)
-  with Partial_evaluator.Rejected (loc, msg) -> Error (loc, msg)
+  with Partial_evaluator.Rejected (loc, msg) ->
+    Error (Frontend.Errors.DebugDataError (loc, msg))

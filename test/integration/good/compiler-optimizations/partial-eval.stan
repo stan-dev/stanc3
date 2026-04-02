@@ -28,8 +28,10 @@ model {
 
   complex z = 3 + 4 + 5i;
   print(z);
-  z = 4i + 5;
+  z = 4i + +5;
   target += get_real(z);
+
+  print(!0 && !1);
 
 }
 

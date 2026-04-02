@@ -1,12 +1,12 @@
-(** Abstract syntax tree for Stan. Defined with the
-  'two-level types' pattern, where the variant types are not
-  directly recursive, but rather parametric in some other type.
+(** Abstract syntax tree for Stan. Defined with the 'two-level types' pattern,
+    where the variant types are not directly recursive, but rather parametric in
+    some other type.
 
-  This type ends up being substituted for the fixpoint of the recursive
-  type itself including metadata. So instead of recursively referencing
-  [expression] you would instead reference type parameter ['e], which will
-  later be filled in with something like [type expr_with_meta = metadata expression]
-*)
+    This type ends up being substituted for the fixpoint of the recursive type
+    itself including metadata. So instead of recursively referencing
+    [expression] you would instead reference type parameter ['e], which will
+    later be filled in with something like
+    [type expr_with_meta = metadata expression] *)
 
 open Core
 open Middle
@@ -33,7 +33,7 @@ type fun_kind =
 
 (** Expression shapes (used for both typed and untyped expressions, where we
     substitute untyped_expression or typed_expression for 'e *)
-type ('e, 'f) expression =
+type ('e, 'f, 'p) expression =
   | TernaryIf of 'e * 'e * 'e
   | BinOp of 'e * Operator.t * 'e
   | PrefixOp of Operator.t * 'e
@@ -44,7 +44,7 @@ type ('e, 'f) expression =
   | ImagNumeral of string
   | FunApp of 'f * identifier * 'e list
   | CondDistApp of 'f * identifier * 'e list
-  | Promotion of 'e * UnsizedType.t * UnsizedType.autodifftype
+  | Promotion of 'e * 'p
   | GetTarget
   | ArrayExpr of 'e list
   | RowVectorExpr of 'e list
@@ -54,31 +54,32 @@ type ('e, 'f) expression =
   | TupleExpr of 'e list
 [@@deriving sexp, hash, compare, map, fold]
 
-type ('m, 'f) expr_with = {expr: (('m, 'f) expr_with, 'f) expression; emeta: 'm}
-[@@deriving sexp, compare, map, hash, fold]
+type ('m, 'f, 'p) expr_with =
+  {expr: (('m, 'f, 'p) expr_with, 'f, 'p) expression; emeta: 'm}
+[@@deriving sexp, compare, hash]
 
 (** Untyped expressions, which have location_spans as meta-data *)
 type located_meta = {loc: (Location_span.t[@sexp.opaque] [@compare.ignore])}
-[@@deriving sexp, compare, map, hash, fold]
+[@@deriving sexp, compare, hash]
 
-type untyped_expression = (located_meta, unit) expr_with
-[@@deriving sexp, compare, map, hash, fold]
+type untyped_expression = (located_meta, unit, Core.Nothing.t) expr_with
+[@@deriving sexp, compare, hash]
 
-(** Typed expressions also have meta-data after type checking: a location_span, as well as a type
-    and an origin block (lub of the origin blocks of the identifiers in it) *)
+(** Typed expressions also have meta-data after type checking: a location_span,
+    as well as a type and an origin block (lub of the origin blocks of the
+    identifiers in it) *)
 type typed_expr_meta =
   { loc: (Location_span.t[@sexp.opaque] [@compare.ignore])
   ; ad_level: UnsizedType.autodifftype
   ; type_: UnsizedType.t }
-[@@deriving sexp, compare, map, hash, fold]
+[@@deriving sexp, compare, hash]
 
-type typed_expression = (typed_expr_meta, fun_kind) expr_with
-[@@deriving sexp, compare, map, hash, fold]
-
-let mk_untyped_expression ~expr ~loc = {expr; emeta= {loc}}
-
-let mk_typed_expression ~expr ~loc ~type_ ~ad_level =
-  {expr; emeta= {loc; type_; ad_level}}
+type typed_expression =
+  ( typed_expr_meta
+  , fun_kind
+  , UnsizedType.t * UnsizedType.autodifftype )
+  expr_with
+[@@deriving sexp, compare, hash]
 
 let expr_loc_lub exprs =
   match List.map ~f:(fun e -> e.emeta.loc) exprs with
@@ -116,7 +117,7 @@ type 'l lvalue_pack =
   | LValue of 'l
   | LTuplePack of
       { lvals: 'l lvalue_pack list
-      ; loc: Location_span.t [@sexp.opaque] [@compare.ignore] }
+      ; loc: (Location_span.t[@sexp.opaque] [@compare.ignore]) }
 [@@deriving sexp, hash, compare, map, fold]
 
 type ('e, 'm) lval_with = {lval: (('e, 'm) lval_with, 'e) lvalue; lmeta: 'm}
@@ -135,17 +136,19 @@ type typed_lval_pack = typed_lval lvalue_pack [@@deriving sexp, compare]
 type 'e variable = {identifier: identifier; initial_value: 'e option}
 [@@deriving sexp, hash, compare, map, fold]
 
-(** Statement shapes, where we substitute untyped_expression and untyped_statement
-    for 'e and 's respectively to get untyped_statement and typed_expression and
-    typed_statement to get typed_statement    *)
+(** Statement shapes, where we substitute untyped_expression and
+    untyped_statement for 'e and 's respectively to get untyped_statement and
+    typed_expression and typed_statement to get typed_statement *)
 type ('e, 's, 'l, 'f) statement =
   | Assignment of
       {assign_lhs: 'l lvalue_pack; assign_op: assignmentoperator; assign_rhs: 'e}
   | NRFunApp of 'f * identifier * 'e list
   | TargetPE of 'e
+  | JacobianPE of 'e
   | Tilde of
       { arg: 'e
       ; distribution: identifier
+      ; kind: 'f
       ; args: 'e list
       ; truncation: 'e truncation }
   | Break
@@ -154,6 +157,7 @@ type ('e, 's, 'l, 'f) statement =
   | ReturnVoid
   | Print of 'e printable list
   | Reject of 'e printable list
+  | FatalError of 'e printable list
   | Skip
   | IfThenElse of 'e * 's * 's option
   | While of 'e * 's
@@ -181,11 +185,14 @@ type ('e, 's, 'l, 'f) statement =
 
 (** Statement return types which we will decorate statements with during type
     checking:
-    - [Complete] corresponds to statements that exit the function (return or error) in every branch
-    - [Incomplete] corresponds to statements which pass control flow to following statements in at least some branches
-    - [NonlocalControlFlow] is simila to [Incomplete] but specifically used when breaks are present in loops.
-      Normally, an infinite loop with [Incomplete] return type is fine (and considered [Complete]),
-      since it either returns or diverges. However, in the presence of break statements, control flow
+    - [Complete] corresponds to statements that exit the function (return or
+      error) in every branch
+    - [Incomplete] corresponds to statements which pass control flow to
+      following statements in at least some branches
+    - [NonlocalControlFlow] is simila to [Incomplete] but specifically used when
+      breaks are present in loops. Normally, an infinite loop with [Incomplete]
+      return type is fine (and considered [Complete]), since it either returns
+      or diverges. However, in the presence of break statements, control flow
       may jump to the end of the loop. *)
 type statement_returntype =
   | Incomplete
@@ -195,47 +202,50 @@ type statement_returntype =
 
 type ('e, 'm, 'l, 'f) statement_with =
   {stmt: ('e, ('e, 'm, 'l, 'f) statement_with, 'l, 'f) statement; smeta: 'm}
-[@@deriving sexp, compare, map, hash, fold]
+[@@deriving sexp, compare, hash]
 
 (** Untyped statements, which have location_spans as meta-data *)
 type untyped_statement =
   (untyped_expression, located_meta, untyped_lval, unit) statement_with
-[@@deriving sexp, compare, map, hash]
+[@@deriving sexp, compare, hash]
 
 let mk_untyped_statement ~stmt ~loc : untyped_statement = {stmt; smeta= {loc}}
 
 type stmt_typed_located_meta =
   { loc: (Middle.Location_span.t[@sexp.opaque] [@compare.ignore])
   ; return_type: statement_returntype }
-[@@deriving sexp, compare, map, hash]
+[@@deriving sexp, compare, hash]
 
-(** Typed statements also have meta-data after type checking: a location_span, as well as a statement returntype
-    to check that function bodies have the right return type*)
+(** Typed statements also have meta-data after type checking: a location_span,
+    as well as a statement returntype to check that function bodies have the
+    right return type *)
 type typed_statement =
   ( typed_expression
   , stmt_typed_located_meta
   , typed_lval
   , fun_kind )
   statement_with
-[@@deriving sexp, compare, map, hash]
+[@@deriving sexp, compare, hash]
 
 let mk_typed_statement ~stmt ~loc ~return_type =
   {stmt; smeta= {loc; return_type}}
 
-(** Program shapes, where we obtain types of programs if we substitute typed or untyped
-    statements for 's *)
-type 's block = {stmts: 's list; xloc: Middle.Location_span.t [@ignore]}
+(** Program shapes, where we obtain types of programs if we substitute typed or
+    untyped statements for 's *)
+type 's block =
+  {stmts: 's list; xloc: (Location_span.t[@sexp.opaque] [@compare.ignore])}
+[@@deriving sexp, hash, compare, map, fold]
 
-and comment_type =
-  | LineComment of string * Middle.Location_span.t
-  | Include of string * Middle.Location_span.t
-  | BlockComment of string list * Middle.Location_span.t
-  | Separator of Middle.Location.t
-      (** Separator records the location of items like commas, operators, and keywords
-          which don't have location information stored in the AST
-          but are useful for placing comments in pretty printing *)
+type comment_type =
+  | LineComment of string * Location_span.t
+  | Include of string * Location_span.t
+  | BlockComment of string list * Location_span.t
+  | Separator of Location.t
+      (** Separator records the location of items like commas, operators, and
+          keywords which don't have location information stored in the AST but
+          are useful for placing comments in pretty printing *)
 
-and 's program =
+type 's program =
   { functionblock: 's block option
   ; datablock: 's block option
   ; transformeddatablock: 's block option
@@ -243,16 +253,16 @@ and 's program =
   ; transformedparametersblock: 's block option
   ; modelblock: 's block option
   ; generatedquantitiesblock: 's block option
-  ; comments: (comment_type list[@sexp.opaque] [@ignore]) }
+  ; comments: (comment_type list[@sexp.opaque] [@compare.ignore]) }
 [@@deriving sexp, hash, compare, map, fold]
 
 let get_stmts = Option.value_map ~default:[] ~f:(fun x -> x.stmts)
 
 (** Untyped programs (before type checking) *)
-type untyped_program = untyped_statement program [@@deriving sexp, compare, map]
+type untyped_program = untyped_statement program [@@deriving sexp, compare]
 
 (** Typed programs (after type checking) *)
-type typed_program = typed_statement program [@@deriving sexp, compare, map]
+type typed_program = typed_statement program [@@deriving sexp, compare]
 
 (*========================== Helper functions ===============================*)
 
@@ -260,11 +270,13 @@ type typed_program = typed_statement program [@@deriving sexp, compare, map]
 let rec untyped_expression_of_typed_expression
     ({expr; emeta} : typed_expression) : untyped_expression =
   match expr with
-  | Promotion (e, _, _) -> untyped_expression_of_typed_expression e
+  | Promotion (e, _) -> untyped_expression_of_typed_expression e
   | _ ->
       { expr=
-          map_expression untyped_expression_of_typed_expression
-            (fun _ -> ())
+          map_expression untyped_expression_of_typed_expression ignore
+            (fun _ ->
+              Common.ICE.internal_compiler_error
+                [%message "Promotion snuck through!"])
             expr
       ; emeta= {loc= emeta.loc} }
 
@@ -295,6 +307,22 @@ let rec untyped_statement_of_typed_statement {stmt; smeta} =
 let untyped_program_of_typed_program : typed_program -> untyped_program =
   map_program untyped_statement_of_typed_statement
 
+(** in practice, we never want to fold over the FnKind or Promotion types so we
+    shadow the [@@derived] fold_expression *)
+
+let fold_expression f acc e = fold_expression f Fn.const Fn.const acc e
+let fold_lval_with f acc lval = fold_lval_with f Fn.const acc lval
+let fold_statement f g h acc s = fold_statement f g h Fn.const acc s
+
+(** similarly for map *)
+
+let map_expression f e = map_expression f Fn.id Fn.id e
+let map_lval_with f lval = map_lval_with f Fn.id lval
+let map_statement f g h s = map_statement f g h Fn.id s
+
+let mk_typed_expression ~expr ~loc ~type_ ~ad_level =
+  {expr; emeta= {loc; type_; ad_level}}
+
 let rec expr_of_lvalue {lval; lmeta} =
   { expr=
       (match lval with
@@ -306,7 +334,7 @@ let rec expr_of_lvalue {lval; lmeta} =
 let rec extract_ids {expr; _} =
   match expr with
   | Variable id -> [id]
-  | Promotion (e, _, _)
+  | Promotion (e, _)
    |Indexed (e, _)
    |Paren e
    |TupleProjection (e, _)
@@ -325,22 +353,26 @@ let rec extract_ids {expr; _} =
   | IntNumeral _ | RealNumeral _ | ImagNumeral _ | GetTarget -> []
 
 let rec lvalue_of_expr_opt ({expr; emeta} : untyped_expression) =
+  let open Common.Let_syntax.Option in
   let rec base_lvalue {expr; emeta} =
-    let lval_opt =
+    let+ lval =
       match expr with
       | Variable s -> Some (LVariable s)
       | Indexed (l, i) ->
-          Option.map (base_lvalue l) ~f:(fun lv -> LIndexed (lv, i))
+          let+ lv = base_lvalue l in
+          LIndexed (lv, i)
       | TupleProjection (l, i) ->
-          Option.map (base_lvalue l) ~f:(fun lv -> LTupleProjection (lv, i))
+          let+ lv = base_lvalue l in
+          LTupleProjection (lv, i)
       | _ -> None in
-    Option.map lval_opt ~f:(fun lval -> {lval; lmeta= emeta}) in
+    {lval; lmeta= emeta} in
   match expr with
   | TupleExpr l ->
-      List.map ~f:lvalue_of_expr_opt l
-      |> Option.all
-      |> Option.map ~f:(fun lvals -> LTuplePack {lvals; loc= emeta.loc})
-  | _ -> base_lvalue {expr; emeta} |> Option.map ~f:(fun l -> LValue l)
+      let+ lvals = List.map ~f:lvalue_of_expr_opt l |> Option.all in
+      LTuplePack {lvals; loc= emeta.loc}
+  | _ ->
+      let+ l = base_lvalue {expr; emeta} in
+      LValue l
 
 let type_of_arguments :
        (UnsizedType.autodifftype * UnsizedType.t * 'a) list
@@ -351,13 +383,13 @@ let get_loc_lvalue_pack lhs =
   match lhs with
   | LValue ({lmeta= {loc; _}; _} : typed_lval) | LTuplePack {loc; _} -> loc
 
-(* XXX: the parser produces inaccurate locations: smeta.loc.begin_loc is the last
-        token before the current statement and all the whitespace between two statements
-        appears as if it were part of the second statement.
-        get_first_loc tries to skip the leading whitespace and approximate the location
-        of the first token in the statement.
-    TODO: See if $sloc works better than $loc for this
-*)
+(* XXX: the parser produces inaccurate locations: smeta.loc.begin_loc is the
+   last token before the current statement and all the whitespace between two
+   statements appears as if it were part of the second statement. get_first_loc
+   tries to skip the leading whitespace and approximate the location of the
+   first token in the statement.
+
+   TODO: See if $sloc works better than $loc for this *)
 
 let get_loc_dt (t : untyped_expression SizedType.t) =
   match t with
@@ -389,10 +421,11 @@ let get_first_loc (s : untyped_statement) =
    |ForEach (id, _, _)
    |FunDef {funname= id; _} ->
       id.id_loc.begin_loc
-  | TargetPE e | Return e | IfThenElse (e, _, _) | While (e, _) ->
+  | TargetPE e | JacobianPE e | Return e | IfThenElse (e, _, _) | While (e, _)
+    ->
       e.emeta.loc.begin_loc
   | Assignment _ | Profile _ | Block _ | Tilde _ | Break | Continue
-   |ReturnVoid | Print _ | Reject _ | Skip ->
+   |ReturnVoid | Print _ | Reject _ | FatalError _ | Skip ->
       s.smeta.loc.begin_loc
   | VarDecl {decl_type; transformation; variables; _} -> (
       match get_loc_dt decl_type with

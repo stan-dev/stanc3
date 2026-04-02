@@ -3,26 +3,24 @@ open Middle
 open Dataflow_types
 open Dataflow_utils
 open Mir_utils
-
-(*open Dataflow_utils*)
 open Dependence_analysis
 
 type factor =
   | TargetTerm of Expr.Typed.t
   | Reject
   | LPFunction of (string * Expr.Typed.t list)
-[@@deriving sexp, hash, compare]
+[@@deriving sexp]
 
 type factor_graph =
   { factor_map: (factor * label, vexpr Set.Poly.t) Map.Poly.t
   ; var_map: (vexpr, (factor * label) Set.Poly.t) Map.Poly.t }
-[@@deriving sexp, compare]
+[@@deriving sexp]
 
 let extract_factors_statement stmt =
   match stmt with
-  | Stmt.Fixed.Pattern.TargetPE e ->
+  | Stmt.Pattern.TargetPE e | JacobianPE e ->
       List.map (summation_terms e) ~f:(fun x -> TargetTerm x)
-  | NRFunApp (CompilerInternal FnReject, _) -> [Reject]
+  | NRFunApp (CompilerInternal (FnReject | FnFatalError), _) -> [Reject]
   | NRFunApp ((UserDefined (s, FnTarget) | StanLib (s, FnTarget, _)), args) ->
       [LPFunction (s, args)]
   | Assignment (_, _, _)
@@ -38,8 +36,7 @@ let rec extract_factors statement_map label =
   let stmt, _ = Map.Poly.find_exn statement_map label in
   let this_stmt =
     List.map (extract_factors_statement stmt) ~f:(fun x -> (label, x)) in
-  Stmt.Fixed.Pattern.fold
-    (fun s _ -> s)
+  Stmt.Pattern.fold Fn.const
     (fun state label -> List.append state (extract_factors statement_map label))
     this_stmt stmt
 
@@ -60,7 +57,7 @@ let factor_var_dependencies statement_map blockers (label, factor) =
   Set.union dep_vars rhs
 
 (** Helper function to generate the factor graph adjacency map representation
-   from a factor-adjacency list *)
+    from a factor-adjacency list *)
 let build_adjacency_maps (factors : (label * factor * vexpr Set.Poly.t) List.t)
     : factor_graph =
   let factor_map =
@@ -76,11 +73,11 @@ let build_adjacency_maps (factors : (label * factor * vexpr Set.Poly.t) List.t)
              (Set.to_list vars))) in
   {factor_map; var_map}
 
-let fg_remove_fac (fac : factor * cf_state) (fg : factor_graph) : factor_graph =
+let fg_remove_fac (fg : factor_graph) (fac : factor * cf_state) : factor_graph =
   let factor_map = Map.Poly.remove fg.factor_map fac in
   {fg with factor_map}
 
-let fg_remove_var (var : vexpr) (fg : factor_graph) : factor_graph =
+let fg_remove_var (fg : factor_graph) (var : vexpr) : factor_graph =
   let factor_map =
     Map.Poly.map fg.factor_map ~f:(fun vars -> Set.remove vars var) in
   let var_map = Map.Poly.remove fg.var_map var in
@@ -90,9 +87,8 @@ let remove_touching vars fg =
   let facs =
     union_map vars ~f:(fun v ->
         Option.value ~default:Set.Poly.empty (Map.Poly.find fg.var_map v)) in
-  let without_vars = Set.fold ~f:(fun g v -> fg_remove_var v g) ~init:fg vars in
-  let without_facs =
-    Set.fold ~f:(fun g f -> fg_remove_fac f g) ~init:without_vars facs in
+  let without_vars = Set.fold ~f:fg_remove_var ~init:fg vars in
+  let without_facs = Set.fold ~f:fg_remove_fac ~init:without_vars facs in
   without_facs
 
 (** Build a factor graph from prog.log_prob using dependency analysis *)
@@ -116,8 +112,8 @@ let prog_factor_graph ?(exclude_data_facs : bool = false) prog : factor_graph =
     remove_touching (Set.Poly.map ~f:(fun v -> VVar v) data_vars) fg
   else fg
 
-(** BFS on 'fg' with initial frontier 'starts' and terminating at any
-   element of 'goals' *)
+(** BFS on 'fg' with initial frontier 'starts' and terminating at any element of
+    'goals' *)
 let fg_reaches (starts : vexpr Set.Poly.t) (goals : vexpr Set.Poly.t)
     (fg : factor_graph) : bool =
   let vneighbors v =
@@ -143,17 +139,14 @@ let fg_factor_reaches (start : factor * label) (goals : vexpr Set.Poly.t)
 let fg_factor_is_prior (var : vexpr) (fac : factor * label)
     (data : vexpr Set.Poly.t) (fg : factor_graph) : bool =
   (* build G'=G\V *)
-  let fg' = fg_remove_var var fg in
+  let fg' = fg_remove_var fg var in
   (* Check if the data is now unreachable *)
   not (fg_factor_reaches fac data fg')
 
-(** Priors of V are neighbors of V which have no connection to any data except though V
-   So for graph G and each parameter V:
-     G' = G\V;
-     For each neighbor F:
-       Use BFS starting from F in G' and search for any data,
-           if there is none, F is a prior
-*)
+(** Priors of V are neighbors of V which have no connection to any data except
+    though V So for graph G and each parameter V: G' = G\V; For each neighbor F:
+    Use BFS starting from F in G' and search for any data, if there is none, F
+    is a prior *)
 let fg_var_priors (var : vexpr) (data : vexpr Set.Poly.t) (fg : factor_graph) :
     (factor * label) Set.Poly.t option =
   match Map.Poly.find fg.var_map var with
@@ -163,20 +156,19 @@ let fg_var_priors (var : vexpr) (data : vexpr Set.Poly.t) (fg : factor_graph) :
   | None -> None
 
 let list_priors ?factor_graph:(fg_opt = None) (mir : Program.Typed.t) :
-    (vexpr, (factor * label) Set.Poly.t option) Map.Poly.t =
+    (vexpr, (factor * label) Set.Poly.t option * Location_span.t) Map.Poly.t =
   let fg = Option.value ~default:(prog_factor_graph mir) fg_opt in
-  let params = Set.Poly.map ~f:(fun v -> VVar v) (parameter_names_set mir) in
+  let params =
+    Set.Poly.map ~f:(fun (v, _, loc) -> (VVar v, loc)) (parameter_set mir) in
   let data = Set.Poly.map ~f:(fun v -> VVar v) (data_set mir) in
   let likely_sizes =
     Set.diff data
       (Set.Poly.map ~f:(fun v -> VVar v) (data_set ~exclude_ints:true mir))
   in
-  let fg' =
-    Set.fold ~init:fg
-      ~f:(fun fg likely_size -> fg_remove_var likely_size fg)
-      likely_sizes in
-  (* for each param, apply fg_var_priors and collect results in a map*)
-  generate_map params ~f:(fun p -> fg_var_priors p data fg')
+  let fg' = Set.fold ~init:fg ~f:fg_remove_var likely_sizes in
+  (* for each param, apply fg_var_priors and collect results in a map *)
+  Set.fold params ~init:Map.Poly.empty ~f:(fun m (p, loc) ->
+      Map.Poly.add_exn m ~key:p ~data:(fg_var_priors p data fg', loc))
 
 let string_of_factor (factor : factor) : string =
   match factor with
@@ -187,7 +179,7 @@ let string_of_factor (factor : factor) : string =
 let string_of_vexpr (vexpr : vexpr) : string = match vexpr with VVar s -> s
 
 (** Utility to print a factor graph to the Graphviz dot language for
-   visualization *)
+    visualization *)
 let factor_graph_to_dot (fg : factor_graph) : string =
   let factors = Map.Poly.to_alist ~key_order:`Decreasing fg.factor_map in
   let names =

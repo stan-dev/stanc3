@@ -1,2 +1,4 @@
   $ ../../../../install/default/bin/stanc notfound.stan
-Error: file 'notfound.stan' not found or cannot be opened
+Usage: %%NAME%% [--help] [OPTION]… [MODEL_FILE]
+%%NAME%%: MODEL_FILE argument: no 'notfound.stan' file
+[exit 124]

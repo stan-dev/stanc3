@@ -1,12 +1,13 @@
-(lang dune 2.8)
-
-(using menhir 2.0)
+(lang dune 3.5)
 
 (name stanc)
 
-(cram enable)
+(source
+ (github stan-dev/stanc3))
 
-(generate_opam_files true)
+(license BSD-3-Clause)
+
+(documentation https://mc-stan.org/stanc3/stanc/)
 
 (package
  (name stanc)
@@ -21,15 +22,24 @@
   (ppx_deriving
    (= 5.2.1))
   (fmt
-   (= 0.9.0))
+   (= 0.11.0))
   (yojson
+   (= 2.1.0))
+  (cmdliner
    (= 2.1.0))
   (ocamlformat
    (and
     :with-test
-    (= 0.26.1)))
+    (= 0.28.1)))
   (bisect_ppx :with-test)
   (merlin :with-test)
   (utop :with-test)
-  (ocp-indent :with-test)
   (patdiff :with-test)))
+
+(cram enable)
+
+(generate_opam_files true)
+
+(using menhir 2.0)
+
+(using directory-targets 0.1)

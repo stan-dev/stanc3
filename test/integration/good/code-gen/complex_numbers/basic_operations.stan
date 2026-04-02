@@ -49,6 +49,11 @@ generated quantities {
   gq_c_matrix = vec * crowvec;
   gq_c_matrix = cvec * rowvec;
 
+  // matrix-matrix division
+  gq_c_matrix = cmat / cmat;
+  gq_c_matrix = cmat / mat;
+  gq_c_matrix = mat / cmat;
+
   complex_vector[N] gq_c_vector = crowvec';
   // matrix-vector products
   gq_c_vector = cmat * cvec;
@@ -112,6 +117,11 @@ generated quantities {
   gq_c_rowvector = rowvec - crowvec;
   gq_c_rowvector = -crowvec;
   gq_c_rowvector = -rowvec;
+
+  // rowvector-matrix division
+  gq_c_rowvector = crowvec / cmat;
+  gq_c_rowvector = crowvec / mat;
+  gq_c_rowvector = rowvec / cmat;
 
   complex gq_c;
   // rowvector-vector multiply

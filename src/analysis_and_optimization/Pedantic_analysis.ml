@@ -12,22 +12,26 @@ open Pedantic_dist_warnings
 
 type warning_span = Location_span.t * string [@@deriving compare]
 
-(*********************
-   Pattern collection functions
- ********************)
+(********************* Pattern collection functions ********************)
 
 let list_unused_params (factor_graph : factor_graph) (mir : Program.Typed.t) :
-    string Set.Poly.t =
+    (string * Location_span.t) Set.Poly.t =
   (* Build a factor graph of the program, check for missing parameters *)
-  let params = parameter_names_set ~include_transformed:false mir in
+  let param_info = parameter_set ~include_transformed:false mir in
+  let params = Set.Poly.map ~f:fst3 param_info in
   let used_params =
     Set.Poly.map
       ~f:(fun (VVar v) -> v)
       (Set.Poly.of_list (Map.Poly.keys factor_graph.var_map)) in
-  Set.diff params used_params
+  let unused = Set.diff params used_params in
+  Set.Poly.filter_map
+    ~f:(fun (pname, _, loc) ->
+      if Set.mem unused pname then Some (pname, loc) else None)
+    param_info
 
 let list_hard_constrained (mir : Program.Typed.t) :
-    (string * [`HardConstraint | `NonsenseConstraint]) Set.Poly.t =
+    (string * [`HardConstraint | `NonsenseConstraint] * Location_span.t)
+    Set.Poly.t =
   (* Iterate through all parameters' transformations for hard constraints *)
   let constrained (e : bound_values) =
     match e with
@@ -37,9 +41,9 @@ let list_hard_constrained (mir : Program.Typed.t) :
     | {lower= `Lit _; upper= `Lit _} -> Some `HardConstraint
     | _ -> None in
   Set.Poly.filter_map
-    ~f:(fun (name, trans) ->
+    ~f:(fun (name, trans, loc) ->
       Option.map
-        ~f:(fun c -> (name, c))
+        ~f:(fun c -> (name, c, loc))
         (constrained (trans_bounds_values trans)))
     (parameter_set mir)
 
@@ -49,24 +53,22 @@ let list_multi_tildes (mir : Program.Typed.t) :
   let collect_tilde_stmt (stmt : Stmt.Located.t) :
       (string, Location_span.t Set.Poly.t) Map.Poly.t =
     match stmt.pattern with
-    | Stmt.Fixed.Pattern.TargetPE
-        {pattern= Expr.Fixed.Pattern.FunApp (_, {pattern= Var vname; _} :: _); _}
-      ->
+    | Stmt.Pattern.TargetPE
+        {pattern= Expr.Pattern.FunApp (_, {pattern= Var vname; _} :: _); _} ->
         Map.Poly.singleton vname (Set.Poly.singleton stmt.meta)
     | _ -> Map.Poly.empty in
   let tildes =
     fold_stmts
       ~take_stmt:(fun m s -> merge_set_maps m (collect_tilde_stmt s))
-      ~take_expr:(fun m _ -> m)
-      ~init:Map.Poly.empty mir.log_prob in
+      ~take_expr:Fn.const ~init:Map.Poly.empty mir.log_prob in
   (* Filter for parameters assigned more than one distribution *)
   let multi_tildes = Map.Poly.filter ~f:(fun s -> Set.length s <> 1) tildes in
   Map.fold ~init:Set.Poly.empty
     ~f:(fun ~key ~data s -> Set.add s (key, data))
     multi_tildes
 
-(**  Collect statements of the form "target += Dist(param, ...)" where param
-  has possibly been transformed non-linearly *)
+(** Collect statements of the form "target += Dist(param, ...)" where param has
+    possibly been transformed non-linearly *)
 let list_possible_nonlinear (mir : Program.Typed.t) : Location_span.t Set.Poly.t
     =
   (* These functions are linear if all of their arguments are *)
@@ -80,13 +82,11 @@ let list_possible_nonlinear (mir : Program.Typed.t) : Location_span.t Set.Poly.t
       ; "to_row_vector"; "to_matrix"; "to_array_1d"; "to_array_2d"; "transpose"
       ]
     |> String.Set.of_list in
-  (* A simple check of linearity of an expression.
-     allow_var is used for expressions like a*b, where at most one
-     of a and b can be a variable
-  *)
-  let rec is_linear allow_var Expr.Fixed.{pattern; _} =
+  (* A simple check of linearity of an expression. allow_var is used for
+     expressions like a*b, where at most one of a and b can be a variable *)
+  let rec is_linear allow_var Expr.{pattern; _} =
     match pattern with
-    | Expr.Fixed.Pattern.Var _ -> allow_var
+    | Expr.Pattern.Var _ -> allow_var
     | Lit _ -> true
     | Indexed (e, _) | Promotion (e, _, _) -> is_linear allow_var e
     | TernaryIf (e1, e2, e3) ->
@@ -97,7 +97,7 @@ let list_possible_nonlinear (mir : Program.Typed.t) : Location_span.t Set.Poly.t
     | FunApp (CompilerInternal (FnMakeArray | FnMakeRowVec), args) ->
         List.for_all ~f:(is_linear allow_var) args
     | _ -> false
-  and is_linear_function allow_var name (args : 'a Expr.Fixed.t list) =
+  and is_linear_function allow_var name (args : 'a Expr.t list) =
     match (name, args) with
     | _, _ when Set.mem linear_fnames name ->
         List.for_all ~f:(is_linear allow_var) args
@@ -108,8 +108,8 @@ let list_possible_nonlinear (mir : Program.Typed.t) : Location_span.t Set.Poly.t
         (is_linear allow_var a && is_linear false b)
         || (is_linear false a && is_linear allow_var b)
     | "fma", [a; b; c] ->
-        (* Similar to above.
-           Partial evaluation can create fmas where the user wrote Times *)
+        (* Similar to above. Partial evaluation can create fmas where the user
+           wrote Times *)
         is_linear allow_var c
         && ((is_linear allow_var a && is_linear false b)
            || (is_linear false a && is_linear allow_var b))
@@ -117,10 +117,12 @@ let list_possible_nonlinear (mir : Program.Typed.t) : Location_span.t Set.Poly.t
   let maybe_nonlinear_tilde (stmt : Stmt.Located.t) =
     match stmt.pattern with
     (* a ~ foo(...) gets translated to target += foo_lpdf(a, ...) *)
-    | Stmt.Fixed.Pattern.TargetPE
+    | Stmt.Pattern.TargetPE
         { pattern=
-            Expr.Fixed.Pattern.FunApp
-              ((StanLib (_, FnLpdf _, _) | UserDefined (_, FnLpdf _)), e :: _)
+            Expr.Pattern.FunApp
+              ( ( StanLib (_, (FnLpdf _ | FnLpmf _), _)
+                | UserDefined (_, (FnLpdf _ | FnLpmf _)) )
+              , e :: _ )
         ; _ }
       when not (is_linear true e) ->
         Set.Poly.singleton stmt.meta
@@ -128,8 +130,7 @@ let list_possible_nonlinear (mir : Program.Typed.t) : Location_span.t Set.Poly.t
   let bad_tildes =
     fold_stmts
       ~take_stmt:(fun m s -> Set.union m (maybe_nonlinear_tilde s))
-      ~take_expr:(fun m _ -> m)
-      ~init:Set.Poly.empty mir.log_prob in
+      ~take_expr:Fn.const ~init:Set.Poly.empty mir.log_prob in
   bad_tildes
 
 (* Find all of the targets which are dependencies for a given label *)
@@ -155,9 +156,8 @@ let var_deps info_map label ?expr:(expr_opt : Expr.Typed.t option = None)
 
 let list_target_dependant_cf
     (info_map :
-      ( label
-      , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * node_dep_info )
-      Map.Poly.t) (targets : string Set.Poly.t) :
+      (label, (Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) Map.Poly.t)
+    (targets : string Set.Poly.t) :
     (Location_span.t * string Set.Poly.t) Set.Poly.t =
   (* Find all the control flow nodes *)
   let cf_labels =
@@ -203,21 +203,18 @@ let list_arg_dependant_fundef_cf (mir : Program.Typed.t)
 let expr_collect_exprs (expr : Expr.Typed.t) ~f : 'a Set.Poly.t =
   let collect_expr s (expr : Expr.Typed.t) =
     match f expr with Some a -> Set.add s a | _ -> s in
-  fold_expr ~init:Set.Poly.empty ~take_expr:(fun s e -> collect_expr s e) expr
+  fold_expr ~init:Set.Poly.empty ~take_expr:collect_expr expr
 
 let stmts_collect_exprs (stmts : Stmt.Located.t List.t) ~f : 'a Set.Poly.t =
   let collect_expr s (expr : Expr.Typed.t) =
     match f expr with Some a -> Set.add s a | _ -> s in
-  fold_stmts ~init:Set.Poly.empty
-    ~take_stmt:(fun s _ -> s)
-    ~take_expr:(fun s e -> collect_expr s e)
+  fold_stmts ~init:Set.Poly.empty ~take_stmt:Fn.const ~take_expr:collect_expr
     stmts
 
 let list_param_dependant_fundef_cf (mir : Program.Typed.t)
     (info_map :
-      ( label
-      , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * node_dep_info )
-      Map.Poly.t) (fun_def : 'a Program.fun_def) :
+      (label, (Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) Map.Poly.t)
+    (fun_def : 'a Program.fun_def) :
     (Location_span.t * string Set.Poly.t * string * Location_span.t) Set.Poly.t
     =
   let dep_args = list_arg_dependant_fundef_cf mir fun_def in
@@ -230,20 +227,19 @@ let list_param_dependant_fundef_cf (mir : Program.Typed.t)
                    union_map (stmt_rhs stmt) ~f:(fun rhs_expr ->
                        expr_collect_exprs rhs_expr ~f:(fun rhs_subexpr ->
                            match rhs_subexpr.pattern with
-                           | Expr.Fixed.Pattern.FunApp
-                               (UserDefined (fname, _), _)
+                           | Expr.Pattern.FunApp (UserDefined (fname, _), _)
                              when fname = fun_def.fdname ->
                                Some (rhs_subexpr, label)
                            | _ -> None)) in
                  if Set.is_empty funapps then None else Some funapps)))) in
   let arg_exprs (fcall_expr : Expr.Typed.t) =
     match fcall_expr with
-    | {pattern= Expr.Fixed.Pattern.FunApp (UserDefined (fname, _), arg_exprs); _}
+    | {pattern= Expr.Pattern.FunApp (UserDefined (fname, _), arg_exprs); _}
       when fname = fun_def.fdname ->
         Set.Poly.map dep_args ~f:(fun (loc, ix, arg_name) ->
             (loc, List.nth_exn arg_exprs ix, arg_name))
     | _ ->
-        Common.FatalError.fatal_error_msg
+        Common.ICE.internal_compiler_error
           [%message
             "In finding searching for parameter dependent function arguments, \
              mismatched function."] in
@@ -267,30 +263,31 @@ let list_param_dependant_fundefs_cf (mir : Program.Typed.t) :
           (fun_def.fdname, cf_loc, deps, arg_name, arg_loc)))
 
 let list_non_one_priors (fg : factor_graph) (mir : Program.Typed.t) :
-    (string * int) Set.Poly.t =
+    (string * int * Location_span.t) Set.Poly.t =
   (* Use the factor graph definition of priors, which treats a neighboring
      factor as a prior for parameter P if it has no connection to the data
      except through P *)
   let priors = list_priors ~factor_graph:(Some fg) mir in
   let prior_set =
     Map.Poly.fold priors ~init:Set.Poly.empty
-      ~f:(fun ~key:(VVar v) ~data:factors_opt s ->
+      ~f:(fun ~key:(VVar v) ~data:(factors_opt, loc) s ->
         Option.value_map factors_opt ~default:s ~f:(fun factors ->
-            Set.add s (v, Set.length factors))) in
+            Set.add s (v, Set.length factors, loc))) in
   (* Return only multi-prior parameters *)
-  Set.filter prior_set ~f:(fun (_, n) -> n <> 1)
+  Set.filter prior_set ~f:(fun (_, n, _) -> n <> 1)
 
 (* Collect useful information about an expression that's available at
    compile-time into a convenient form. *)
 let compiletime_value_of_expr
-    (params : (string * Expr.Typed.t Transformation.t) Set.Poly.t)
+    (params :
+      (string * Expr.Typed.t Transformation.t * Location_span.t) Set.Poly.t)
     (data : string Set.Poly.t) (expr : Expr.Typed.t) :
     compiletime_val * Expr.Typed.Meta.t =
   let v =
     match expr with
     | {pattern= Var pname; _} -> (
-        match Set.find params ~f:(fun (name, _) -> name = pname) with
-        | Some (name, trans) -> Param (name, trans)
+        match Set.find params ~f:(fun (name, _, _) -> name = pname) with
+        | Some (name, trans, _) -> Param (name, trans)
         | None -> (
             match Set.find data ~f:(fun name -> name = pname) with
             | Some name -> Data name
@@ -302,12 +299,12 @@ let compiletime_value_of_expr
 
 (* Scrape all distributions from the program by searching for their function
    names and function type, and wrangle some useful data about them, like the
-   nature of their first argument
-*)
+   nature of their first argument *)
 let list_distributions (mir : Program.Typed.t) : dist_info Set.Poly.t =
   let take_dist (expr : Expr.Typed.t) =
     match expr.pattern with
-    | Expr.Fixed.Pattern.FunApp (StanLib (fname, FnLpdf true, _), arg_exprs) ->
+    | Expr.Pattern.FunApp
+        (StanLib (fname, (FnLpdf true | FnLpmf true), _), arg_exprs) ->
         let fname = chop_dist_name fname |> Option.value_exn in
         let params = parameter_set mir in
         let data = data_set mir in
@@ -339,14 +336,13 @@ let list_unscaled_constants (distributions_list : dist_info Set.Poly.t) :
       Set.Poly.union_list (List.map ~f:collect_unscaled_expr args))
     distributions_list
 
-(*********************
-   Printing functions
- ********************)
+(********************* Printing functions ********************)
 
 let unscaled_constants_message (name : string) : string =
   Printf.sprintf
     "Argument %s suggests there may be parameters that are not unit scale; \
-     consider rescaling with a multiplier (see manual section 22.12)."
+     consider rescaling with a multiplier, see: \
+     https://mc-stan.org/docs/stan-users-guide/efficiency-tuning.html#standardizing-predictors"
     name
 
 let unscaled_constants_warnings (distributions_list : dist_info Set.Poly.t) =
@@ -376,11 +372,10 @@ let hard_constrained_message (pname : string) : string =
 let hard_constrained_warnings (mir : Program.Typed.t) =
   let pnames = list_hard_constrained mir in
   Set.Poly.map
-    ~f:(fun (pname, c) ->
+    ~f:(fun (pname, c, loc) ->
       match c with
-      | `HardConstraint -> (Location_span.empty, hard_constrained_message pname)
-      | `NonsenseConstraint ->
-          (Location_span.empty, nonsense_constrained_message pname))
+      | `HardConstraint -> (loc, hard_constrained_message pname)
+      | `NonsenseConstraint -> (loc, nonsense_constrained_message pname))
     pnames
 
 let maybe_jacobian_adjustment_warnings (mir : Program.Typed.t) =
@@ -388,10 +383,12 @@ let maybe_jacobian_adjustment_warnings (mir : Program.Typed.t) =
   Set.Poly.map
     ~f:(fun loc ->
       ( loc
-      , "Left-hand side of sampling statement (~) may contain a non-linear \
+      , "Left-hand side of distribution statement (~) may contain a non-linear \
          transform of a parameter or local variable. If it does, you need to \
          include a target += statement with the log absolute determinant of \
-         the Jacobian of the transform." ))
+         the Jacobian of the transform. You could also consider defining a \
+         transformed parameter and using jacobian += in the transformed \
+         parameters block." ))
     locations
 
 let multi_tildes_message (vname : string) : string =
@@ -442,7 +439,7 @@ let unused_params_message (pname : string) : string =
 let unused_params_warnings (factor_graph : factor_graph) (mir : Program.Typed.t)
     =
   Set.Poly.map
-    ~f:(fun pname -> (Location_span.empty, unused_params_message pname))
+    ~f:(fun (pname, loc) -> (loc, unused_params_message pname))
     (list_unused_params factor_graph mir)
 
 let non_one_priors_message (pname : string) (n : int) : string =
@@ -457,7 +454,7 @@ let non_one_priors_message (pname : string) (n : int) : string =
 let non_one_priors_warnings (factor_graph : factor_graph)
     (mir : Program.Typed.t) =
   Set.Poly.map
-    ~f:(fun (pname, n) -> (Location_span.empty, non_one_priors_message pname n))
+    ~f:(fun (pname, n, loc) -> (loc, non_one_priors_message pname n))
     (list_non_one_priors factor_graph mir)
 
 let uninitialized_message (vname : string) : string =
@@ -476,8 +473,7 @@ let uninitialized_warnings (mir : Program.Typed.t) =
 let to_list warning_set =
   Set.to_list warning_set |> List.sort ~compare:compare_warning_span |> List.rev
 
-(* String-print uninitialized warnings
-   In case a user wants only this warning *)
+(* String-print uninitialized warnings In case a user wants only this warning *)
 let warn_uninitialized mir = uninitialized_warnings mir |> to_list
 
 (* Optimization settings for constant propagation and partial evaluation *)
@@ -502,4 +498,4 @@ let warn_pedantic (mir_unopt : Program.Typed.t) =
     ; param_dependant_cf_warnings mir; param_dependant_fundef_cf_warnings mir
     ; non_one_priors_warnings factor_graph mir
     ; distribution_warnings distributions_info ]
-  |> to_list
+  |> to_list |> List.rev

@@ -10,10 +10,7 @@
 (* Boilerplate for getting line numbers for errors *)
   let incr_linenum lexbuf =
     lexer_pos_logger lexbuf.lex_curr_p;
-    let pos = lexbuf.lex_curr_p in
-    lexbuf.lex_curr_p <- { pos with
-      pos_lnum = pos.pos_lnum + 1;
-      pos_bol = pos.pos_cnum } ;
+    Lexing.new_line lexbuf;
     update_start_positions lexbuf.lex_curr_p
 
   (* Store comments *)
@@ -133,17 +130,22 @@ rule token = parse
                                 Parser.POSITIVEORDERED }
   | "simplex"                 { lexer_logger "simplex" ; Parser.SIMPLEX }
   | "unit_vector"             { lexer_logger "unit_vector" ; Parser.UNITVECTOR }
+  | "sum_to_zero_vector"      { lexer_logger "sum_to_zero_vector" ; Parser.SUMTOZEROVEC }
+  | "sum_to_zero_matrix"      { lexer_logger "sum_to_zero_matrix" ; Parser.SUMTOZEROMAT }
   | "cholesky_factor_corr"    { lexer_logger "cholesky_factor_corr" ;
                                 Parser.CHOLESKYFACTORCORR }
   | "cholesky_factor_cov"     { lexer_logger "cholesky_factor_cov" ;
                                 Parser.CHOLESKYFACTORCOV }
   | "corr_matrix"             { lexer_logger "corr_matrix" ; Parser.CORRMATRIX }
   | "cov_matrix"              { lexer_logger "cov_matrix" ; Parser.COVMATRIX }
+  | "column_stochastic_matrix"{ lexer_logger "column_stochastic_matrix" ; Parser.STOCHASTICCOLUMNMATRIX }
+  | "row_stochastic_matrix"   { lexer_logger "row_stochastic_matrix" ; Parser.STOCHASTICROWMATRIX }
 (* Transformation keywords *)
   | "lower"                   { lexer_logger "lower" ; Parser.LOWER }
   | "upper"                   { lexer_logger "upper" ; Parser.UPPER }
   | "offset"                  { lexer_logger "offset" ; Parser.OFFSET }
   | "multiplier"              { lexer_logger "multiplier" ; Parser.MULTIPLIER }
+  | "jacobian"                { lexer_logger "jacobian" ; Parser.JACOBIAN }
 (* Operators *)
   | '?'                       { lexer_logger "?" ; add_separator lexbuf ; Parser.QMARK }
   | ':'                       { lexer_logger ":" ; Parser.COLON }
@@ -178,6 +180,7 @@ rule token = parse
 (* Effects *)
   | "print"                   { lexer_logger "print" ; Parser.PRINT }
   | "reject"                  { lexer_logger "reject" ; Parser.REJECT }
+  | "fatal_error"             { lexer_logger "fatal_error" ; Parser.FATAL_ERROR }
   | 'T'                       { lexer_logger "T" ; Parser.TRUNCATE } (* TODO: this is a hack; we should change to something like truncate and make it a reserved keyword *)
 (* Constants and identifiers *)
   | integer_constant as i     { lexer_logger ("int_constant " ^ i) ;
@@ -189,7 +192,7 @@ rule token = parse
                                 Parser.DOTNUMERAL (lexeme lexbuf) }
   | imag_constant as z        { lexer_logger ("imag_constant " ^ z) ;
                                 Parser.IMAGNUMERAL (lexeme lexbuf) }
-  | "target"                  { lexer_logger "target" ; Parser.TARGET } 
+  | "target"                  { lexer_logger "target" ; Parser.TARGET }
   | string_literal as s       { lexer_logger ("string_literal " ^ s) ;
                                 Parser.STRINGLITERAL (lexeme lexbuf) }
   | identifier as id          { lexer_logger ("identifier " ^ id) ;
@@ -203,11 +206,7 @@ rule token = parse
                                   let old_lexbuf = restore_prior_lexbuf () in
                                   token old_lexbuf }
 
-  | _                         { raise (Errors.SyntaxError
-                                        (Errors.Lexing
-                                          (location_of_position
-                                            (lexeme_start_p
-                                              (current_buffer ()))))) }
+  | _                         { Syntax_error.unexpected_character (current_location ()) }
 
 (* Multi-line comment terminated by "*/" *)
 and multiline_comment state = parse
@@ -215,9 +214,7 @@ and multiline_comment state = parse
                let lines = (Buffer.contents buffer) :: lines in
                add_multi_comment pos (List.rev lines) lexbuf.lex_curr_p;
                update_start_positions lexbuf.lex_curr_p }
-  | eof      { raise (Errors.SyntaxError
-                      (Errors.UnexpectedEOF
-                        (location_of_position lexbuf.lex_curr_p))) }
+  | eof      { Syntax_error.unexpected_eof (current_location ()) }
   | newline  { incr_linenum lexbuf;
                let ((pos, lines), buffer) = state in
                let lines = (Buffer.contents buffer) :: lines in
