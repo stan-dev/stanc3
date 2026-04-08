@@ -97,6 +97,64 @@ model {
   y ~ normal(0, 1);
 }
 
+$ node check.js
+{
+  "errors": [],
+  "warnings": [
+    {
+      "severity": "warning",
+      "message": "The variable x may not have been assigned a value before its first use.",
+      "notes": [],
+      "labels": [
+        {
+          "range": {
+            "source": "string",
+            "start": {
+              "line": 7,
+              "column": 19
+            },
+            "end": {
+              "line": 7,
+              "column": 20
+            }
+          },
+          "priority": "primary",
+          "message": "The variable x may not have been assigned a value before its first use."
+        }
+      ]
+    }
+  ]
+}
+{
+  "errors": [
+    {
+      "severity": "error",
+      "message": "Identifier \"z\" not in scope.",
+      "notes": [],
+      "labels": [
+        {
+          "range": {
+            "source": "string",
+            "start": {
+              "line": 6,
+              "column": 5
+            },
+            "end": {
+              "line": 6,
+              "column": 6
+            }
+          },
+          "priority": "primary",
+          "message": "Identifier \"z\" not in scope."
+        }
+      ]
+    }
+  ],
+  "warnings": []
+}
+Error expected:
+Failed to convert stanc.js argument 'name'!
+It had type 'object' instead of 'string'.
 $ node data-generation.js
 dim(x) = (3, 4)
 dim(y) = (5, 2, 4)
@@ -120,6 +178,29 @@ error: Identifier "z" not in scope.
   6 │      z ~ std_normal();
     │      ^ Identifier "z" not in scope.
   7 │  }
+
+$ node format.js
+parameters {
+  real y;
+}
+transformed parameters {
+  print("this line is much, much, much ", "too long", " to print on one line");
+}
+model {
+  y ~ std_normal();
+}
+
+parameters {
+  real y;
+}
+transformed parameters {
+  print("this line is much, much, much ",
+        "too long",
+        " to print on one line");
+}
+model {
+  y ~ std_normal();
+}
 
 $ node functions-only.js
 real my_log1p_exp(real x) {
@@ -257,8 +338,8 @@ model {
   
 }
 
-Warning: stanc.js failed to parse included file mapping:
-Failed to convert stanc.js argument 'includes["baz"]'!
+warning: stanc.js failed to parse included file mapping:
+  Failed to convert stanc.js argument 'includes["baz"]'!
 It had type 'number' instead of 'string'.
 {
   "inputs": { "a": { "type": "int", "dimensions": 0 } },
@@ -269,11 +350,11 @@ It had type 'number' instead of 'string'.
   "distributions": [],
   "included_files": [ "foo.stan" ]
 }
-Warning: stanc.js failed to parse included file mapping:
-Failed to convert stanc.js argument 'includes["foo.stan"]'!
+warning: stanc.js failed to parse included file mapping:
+  Failed to convert stanc.js argument 'includes["foo.stan"]'!
 It had type 'object' instead of 'string'.
-Warning: stanc.js failed to parse included file mapping:
-Failed to convert stanc.js argument 'includes'!
+warning: stanc.js failed to parse included file mapping:
+  Failed to convert stanc.js argument 'includes'!
 It had type 'number' instead of 'object'.
 error: File 'include/b.stan' recursively included itself.
 
@@ -335,13 +416,10 @@ error: Function "foo" is declared without specifying a definition.
 "stancflags = --use-opencl --allow-undefined"
 $ node pedantic.js
 string:4:2: warning: The parameter k was declared but was not used in the density calculation.
-
 string:7:18: warning: Argument 10000 suggests there may be parameters that are not unit scale;
   consider rescaling with a multiplier, see:
   https://mc-stan.org/docs/stan-users-guide/efficiency-tuning.html#standardizing-predictors
-
 string:4:10: warning: The variable tt may not have been assigned a value before its first use.
-
 $ node removed.js
 error: Syntax error: Ill-formed declaration.
     ┌─ string:3:9
@@ -379,4 +457,3 @@ string:10:12: warning: Found int division:
   the division as
       x * 1.0 / w
   If rounding is intended please use the integer division operator %/%.
-
