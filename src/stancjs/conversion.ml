@@ -179,6 +179,10 @@ let js_of_warnings warnings =
   warnings |> List.map ~f:Js.string |> Array.of_list |> Js.array
 
 let wrap_error ~warnings e =
+  (* NB: The "0" entry is due to a historical mistake that led the first entry
+     always being a 0 (this element is a 'tag' used by jsoo internally, but was
+     not meant to be exposed to the user). For backward compatibility with
+     existing consumers of stanc.js we have to keep this behavior. *)
   let errors = [| Js.string "0"; Js.string e |] |> Js.array in
   object%js
     val result = Js.undefined [@@optdef]
