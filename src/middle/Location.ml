@@ -79,3 +79,6 @@ let compare loc1 loc2 =
           let x = Int.compare hd1.col_num hd2.col_num in
           if x <> 0 then x else go (tl1, tl2) in
   go (List.rev (unfold loc1), List.rev (unfold loc2))
+
+let rec initial_file_loc loc =
+  match loc.included_from with None -> loc | Some l -> initial_file_loc l
