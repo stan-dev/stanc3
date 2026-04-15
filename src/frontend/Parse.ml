@@ -7,9 +7,13 @@ module Interp = Parser.MenhirInterpreter
 
 let drive_parser parse_fun =
   let input () =
-    Interp.lexer_lexbuf_to_supplier Lexer.token
-      (Preprocessor.current_buffer ())
-      () in
+    let token = Lexer.token (Preprocessor.current_buffer ()) in
+    let lexbuf =
+      (* Lexer.token can modify the state of the preprocessor, so we ask for the
+         current lexbuf again now *)
+      Preprocessor.current_buffer () in
+    let startp = lexbuf.Lexing.lex_start_p and endp = lexbuf.Lexing.lex_curr_p in
+    (token, startp, endp) in
   let success prog = {prog with Ast.comments= Preprocessor.get_comments ()} in
   let failure prev error_state =
     (* see the Menhir manual for the description of error messages support *)

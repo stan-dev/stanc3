@@ -14,7 +14,7 @@ let size () = Stack.length include_stack
 let locations_map : (string * Middle.Location.t option) String.Table.t =
   String.Table.create ()
 
-let new_file_start_position filename included_from =
+let new_file_start_position buf filename included_from =
   (* Lexing.position does not have a field to store `included_from` so we store
      it in a global hashmap instead and put the hashmap key in `pos_fname`. The
      keys are arbitrary unique strings. (Filenames are not good keys because the
@@ -25,12 +25,15 @@ let new_file_start_position filename included_from =
      the filename directly in `pos_fname`. Filenames never begin with NUL so
      `location_of_position` only needs to check the first character to know
      whether to do a hashmap lookup. *)
-  if Option.is_none included_from then
-    {Lexing.pos_fname= filename; pos_lnum= 1; pos_bol= 0; pos_cnum= 0}
-  else
-    let key = "\u{0}" ^ string_of_int (Hashtbl.length locations_map) in
-    Hashtbl.add_exn locations_map ~key ~data:(filename, included_from);
-    {Lexing.pos_fname= key; pos_lnum= 1; pos_bol= 0; pos_cnum= 0}
+  let pos =
+    if Option.is_none included_from then
+      {Lexing.pos_fname= filename; pos_lnum= 1; pos_bol= 0; pos_cnum= 0}
+    else
+      let key = "\u{0}" ^ string_of_int (Hashtbl.length locations_map) in
+      Hashtbl.add_exn locations_map ~key ~data:(filename, included_from);
+      {Lexing.pos_fname= key; pos_lnum= 1; pos_bol= 0; pos_cnum= 0} in
+  buf.lex_start_p <- pos;
+  buf.lex_curr_p <- pos
 
 let location_of_position {Lexing.pos_fname; pos_lnum; pos_cnum; pos_bol} =
   let filename, included_from =
@@ -43,8 +46,15 @@ let location_of_position {Lexing.pos_fname; pos_lnum; pos_cnum; pos_bol} =
   ; included_from }
 
 let location_span_of_positions (start_pos, end_pos) : Middle.Location_span.t =
-  { begin_loc= location_of_position start_pos
-  ; end_loc= location_of_position end_pos }
+  let begin_loc =
+    lexer_logger "start locating:";
+    lexer_pos_logger start_pos;
+    location_of_position start_pos in
+  let end_loc =
+    lexer_logger "end locating:";
+    lexer_pos_logger end_pos;
+    location_of_position end_pos in
+  {begin_loc; end_loc}
 
 let init buf filename =
   Hashtbl.clear locations_map;
@@ -52,8 +62,7 @@ let init buf filename =
   included_files := [];
   Stack.clear include_stack;
   Stack.push include_stack buf;
-  buf.lex_start_p <- new_file_start_position filename None;
-  buf.lex_curr_p <- buf.lex_start_p
+  new_file_start_position buf filename None
 
 let current_buffer () =
   let buf = Stack.top_exn include_stack in
@@ -65,21 +74,11 @@ let current_location () =
 
 let pop_buffer () = Stack.pop_exn include_stack
 
-let update_start_positions pos =
-  Stack.iter ~f:(fun lexbuf -> lexbuf.lex_start_p <- pos) include_stack
-
 let restore_prior_lexbuf () =
-  let lexbuf = pop_buffer () in
+  ignore (pop_buffer ());
   let old_lexbuf = current_buffer () in
-  (* to get printing includes right we need to make sure that the 'start' of our
-     next token is on the following line *)
-  let old_pos =
-    {old_lexbuf.lex_curr_p with pos_lnum= old_lexbuf.lex_curr_p.pos_lnum + 1}
-  in
   lexer_logger "Switching to older lexbuf";
   lexer_pos_logger old_lexbuf.lex_curr_p;
-  lexbuf.lex_curr_p <- old_pos;
-  lexbuf.lex_start_p <- old_pos;
   old_lexbuf
 
 let include_error msg = Syntax_error.include_error msg (current_location ())
@@ -125,13 +124,12 @@ let find_include fname =
   | InMemory map -> find_include_inmemory map fname
 
 let try_get_new_lexbuf fname =
-  let lexbuf = Stack.top_exn include_stack in
+  let prior_loc =
+    let lexbuf = Stack.top_exn include_stack in
+    location_of_position lexbuf.lex_start_p in
   let new_lexbuf, file = find_include fname in
   lexer_logger ("opened " ^ file);
-  new_lexbuf.lex_start_p <-
-    new_file_start_position file
-    @@ Some (location_of_position lexbuf.lex_start_p);
-  new_lexbuf.lex_curr_p <- new_lexbuf.lex_start_p;
+  new_file_start_position new_lexbuf file (Some prior_loc);
   let dup_exists {Middle.Location.filename; included_from; _} =
     let is_dup = String.equal filename in
     let rec go = function
@@ -139,10 +137,9 @@ let try_get_new_lexbuf fname =
       | Some {Middle.Location.filename; included_from; _} ->
           if is_dup filename then true else go included_from in
     go included_from in
-  if dup_exists (location_of_position lexbuf.lex_start_p) then
+  if dup_exists prior_loc then
     include_error (Printf.sprintf "File %s recursively included itself." fname);
   Stack.push include_stack new_lexbuf;
-  update_start_positions new_lexbuf.lex_curr_p;
   included_files := file :: !included_files;
   new_lexbuf
 

@@ -8212,15 +8212,10 @@ generated quantities {
 functions {
   #include /functions/common_functions.stan
   #include /functions/bernoulli_likelihoods.stan
-  
   #include /functions/binomial_likelihoods.stan
-  
   #include /functions/continuous_likelihoods.stan
-  
   #include /functions/count_likelihoods.stan
-  
   #include /functions/mvmer_functions.stan
-  
   #include /functions/jm_functions.stan
 }
 data {
@@ -8288,7 +8283,6 @@ model {
   }
   
   #include /model/priors_mvmer.stan
-  
   beta_lp(e_z_beta, e_prior_dist, e_prior_scale, e_prior_df,
           e_global_prior_df, e_local, e_global, e_mix, e_ool, e_slab_df,
           e_caux);
@@ -8437,13 +8431,9 @@ generated quantities {
 functions {
   #include /functions/common_functions.stan
   #include /functions/bernoulli_likelihoods.stan
-  
   #include /functions/binomial_likelihoods.stan
-  
   #include /functions/continuous_likelihoods.stan
-  
   #include /functions/count_likelihoods.stan
-  
   #include /functions/mvmer_functions.stan
 }
 data {

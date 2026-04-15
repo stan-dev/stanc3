@@ -8,13 +8,18 @@ void foo(real x) {
 [exit 0]
   $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. b.stanfunctions
 #include a.stanfunctions //include other functions
-
 // line comment b
 /*weird block b*/
 void bar(real y) {
   return;
 }
 // another line comment b
+[exit 0]
+  $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. blocks-issue-1614.stan
+#include functions.stan
+// comment 1
+// comment 2
+#include data.stan
 [exit 0]
   $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. c.stanfunctions
 /**
@@ -28,8 +33,22 @@ int baz(real z) {
   // trailing coment in c
 }
 [exit 0]
+  $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. data.stan
+data {
+  int N;
+}
+
+[exit 0]
   $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. first.stanfunctions
 #include second.stanfunctions
+[exit 0]
+  $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. functions.stan
+functions {
+  real foo() {
+    return 1.0;
+  }
+}
+
 [exit 0]
   $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. main.stan
 functions {
@@ -40,6 +59,7 @@ data {
   /* ... declarations ... */
 }
 #include tdata.stan
+
 model {
   x ~ bernoulli(0);
   if (1) {

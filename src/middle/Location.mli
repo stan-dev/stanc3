@@ -15,3 +15,7 @@ val pp :
 
 val pp_context_for : (t * string Array.t) Fmt.t
 (* Prints the text surrounding the provided location [t] from the given array *)
+
+val initial_file_loc : t -> t
+(** Returns the position this location lives at in the first (i.e.,
+    non-included) file *)
