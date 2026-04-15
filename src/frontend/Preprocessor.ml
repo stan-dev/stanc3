@@ -43,8 +43,15 @@ let location_of_position {Lexing.pos_fname; pos_lnum; pos_cnum; pos_bol} =
   ; included_from }
 
 let location_span_of_positions (start_pos, end_pos) : Middle.Location_span.t =
-  { begin_loc= location_of_position start_pos
-  ; end_loc= location_of_position end_pos }
+  let begin_loc =
+    lexer_logger "start locating:";
+    lexer_pos_logger start_pos;
+    location_of_position start_pos in
+  let end_loc =
+    lexer_logger "end locating:";
+    lexer_pos_logger end_pos;
+    location_of_position end_pos in
+  {begin_loc; end_loc}
 
 let init buf filename =
   Hashtbl.clear locations_map;
@@ -69,17 +76,10 @@ let update_start_positions pos =
   Stack.iter ~f:(fun lexbuf -> lexbuf.lex_start_p <- pos) include_stack
 
 let restore_prior_lexbuf () =
-  let lexbuf = pop_buffer () in
+  ignore (pop_buffer ());
   let old_lexbuf = current_buffer () in
-  (* to get printing includes right we need to make sure that the 'start' of our
-     next token is on the following line *)
-  let old_pos =
-    {old_lexbuf.lex_curr_p with pos_lnum= old_lexbuf.lex_curr_p.pos_lnum + 1}
-  in
   lexer_logger "Switching to older lexbuf";
   lexer_pos_logger old_lexbuf.lex_curr_p;
-  lexbuf.lex_curr_p <- old_pos;
-  lexbuf.lex_start_p <- old_pos;
   old_lexbuf
 
 let include_error msg = Syntax_error.include_error msg (current_location ())

@@ -1504,8 +1504,10 @@ data {
   vector[num_non_zero] w; // non-zero elements in the implicit Z matrix
   array[num_non_zero] int<lower=0, upper=q - 1> v; // column indices for w
   array[t > 0 ? N + 1 : 0] int<lower=0, upper=rows(w) + 1> u; // where the non-zeros start in each row
-  int<lower=0, upper=1> special_case; // is the only term (1|group)
+  int<lower=0, upper=1> special_case;
 }
+// is the only term (1|group)
+
 transformed data {
   real aux = not_a_number();
   array[special_case ? t : 0, N] int<lower=1> V = make_V(N,
@@ -3924,8 +3926,10 @@ data {
   vector[num_non_zero] w; // non-zero elements in the implicit Z matrix
   array[num_non_zero] int<lower=0, upper=q - 1> v; // column indices for w
   array[t > 0 ? N + 1 : 0] int<lower=0, upper=rows(w) + 1> u; // where the non-zeros start in each row
-  int<lower=0, upper=1> special_case; // is the only term (1|group)
+  int<lower=0, upper=1> special_case;
 }
+// is the only term (1|group)
+
 transformed data {
   real poisson_max = pow(2.0, 30.0);
   array[special_case ? t : 0, N] int<lower=1> V = make_V(N,
@@ -6683,9 +6687,8 @@ model {
              sqrt_y3, log_y3);
   }
   
+  //---- Log likelihood for event submodel (GK quadrature)
   {
-    //---- Log likelihood for event submodel (GK quadrature)
-    
     vector[nrow_e_Xq] e_eta_q; // eta for event submodel (at event and quad times)
     
     // Event submodel: linear predictor at event and quad times

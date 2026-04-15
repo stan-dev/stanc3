@@ -1078,9 +1078,8 @@ model {
   //---- Log likelihoods for longitudinal submodels
   #include /model/mvmer_lp.stan
   
+  //---- Log likelihood for event submodel (GK quadrature)
   {
-    //---- Log likelihood for event submodel (GK quadrature)
-    
     vector[nrow_e_Xq] e_eta_q; // eta for event submodel (at event and quad times)
     
     // Event submodel: linear predictor at event and quad times

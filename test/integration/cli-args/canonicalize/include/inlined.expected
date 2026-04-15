@@ -29,9 +29,9 @@ functions {
   }
 }
 // comment 1
+// comment 2
+
 data {
-  // comment 2
-  
   int N;
 }
 
