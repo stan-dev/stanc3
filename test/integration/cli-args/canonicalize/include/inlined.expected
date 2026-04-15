@@ -22,6 +22,20 @@ void bar(real y) {
 }
 // another line comment b
 [exit 0]
+  $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. --canonicalize=includes blocks-issue-1614.stan
+functions {
+  real foo() {
+    return 1.0;
+  }
+}
+// comment 1
+data {
+  // comment 2
+  
+  int N;
+}
+
+[exit 0]
   $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. --canonicalize=includes c.stanfunctions
 /**
   A documentation comment
@@ -34,11 +48,25 @@ int baz(real z) {
   // trailing coment in c
 }
 [exit 0]
+  $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. --canonicalize=includes data.stan
+data {
+  int N;
+}
+
+[exit 0]
   $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. --canonicalize=includes first.stanfunctions
 real bar(matrix x) {
   print(x);
   return sum(x);
 }
+[exit 0]
+  $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. --canonicalize=includes functions.stan
+functions {
+  real foo() {
+    return 1.0;
+  }
+}
+
 [exit 0]
   $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. --canonicalize=includes main.stan
 functions {
