@@ -111,6 +111,9 @@ let should_skip (loc : Middle.Location.t) =
 
 let pp_space newline ppf (prev_loc, begin_loc) =
   let open Middle.Location in
+  let prev_loc =
+    if should_skip prev_loc then prev_loc.included_from |> Option.value_exn
+    else prev_loc in
   if should_skip begin_loc then ()
   else if
     prev_loc.filename <> begin_loc.filename

@@ -28,7 +28,8 @@ let pp_context_for ppf (({line_num; _} as loc), lines) =
       (* to get visual alignment, we copy any tabs in the line we are pointing
          at *)
       let highlighted_line = get_line line_num |> Option.value ~default:"" in
-      String.sub highlighted_line ~pos:0 ~len:col_num
+      let len = Int.min col_num (String.length highlighted_line) in
+      String.sub highlighted_line ~pos:0 ~len
       |> String.map ~f:(function '\t' -> '\t' | _ -> ' ') in
     Fmt.pf ppf "         %s%a%a\n" blank_line (bold_red Fmt.char) '^'
       (Fmt.if' error_at_eof @@ faint Fmt.string)
@@ -66,13 +67,7 @@ let rec pp ?(print_file = true) ?(print_line = true) printed_filename ppf loc =
 let compare loc1 loc2 =
   let rec unfold = function
     | {included_from= None; _} as loc -> [loc]
-    | {included_from= Some loc1; _} as loc2 ->
-        (* When pretty-printing comments it is possible to end up with multiple
-           locations at an identical point in the file when they originated in
-           an include. We artificially break this tie by pretending that
-           included locations were included from the one line down from where
-           they truly were. *)
-        loc2 :: unfold {loc1 with line_num= loc1.line_num + 1} in
+    | {included_from= Some loc1; _} as loc2 -> loc2 :: unfold loc1 in
   let rec go = function
     | [], [] -> 0
     | [], _ -> -1

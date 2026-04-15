@@ -8,7 +8,6 @@ void foo(real x) {
 [exit 0]
   $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. b.stanfunctions
 #include a.stanfunctions //include other functions
-
 // line comment b
 /*weird block b*/
 void bar(real y) {
