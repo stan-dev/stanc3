@@ -10,8 +10,7 @@
 (* Boilerplate for getting line numbers for errors *)
   let incr_linenum lexbuf =
     lexer_pos_logger lexbuf.lex_curr_p;
-    Lexing.new_line lexbuf;
-    update_start_positions lexbuf.lex_curr_p
+    Lexing.new_line lexbuf
 
   (* Store comments *)
   let add_line_comment (begin_pos, buffer) end_pos =
@@ -212,8 +211,7 @@ rule token = parse
 and multiline_comment state = parse
   | "*/"     { let ((pos, lines), buffer) = state in
                let lines = (Buffer.contents buffer) :: lines in
-               add_multi_comment pos (List.rev lines) lexbuf.lex_curr_p;
-               update_start_positions lexbuf.lex_curr_p }
+               add_multi_comment pos (List.rev lines) lexbuf.lex_curr_p }
   | eof      { Syntax_error.unexpected_eof (current_location ()) }
   | newline  { incr_linenum lexbuf;
                let ((pos, lines), buffer) = state in
@@ -225,7 +223,7 @@ and multiline_comment state = parse
 (* Single-line comment terminated by a newline *)
 and singleline_comment state = parse
   | newline  { add_line_comment state lexbuf.lex_curr_p ; incr_linenum lexbuf }
-  | eof      { add_line_comment state lexbuf.lex_curr_p ; update_start_positions lexbuf.lex_curr_p }
+  | eof      { add_line_comment state lexbuf.lex_curr_p }
   | _        { Buffer.add_string (snd state) (lexeme lexbuf) ; singleline_comment state lexbuf }
 
 {
