@@ -9,10 +9,10 @@ let invoke_driver model_name model flags =
     Return.with_return @@ fun return ->
     let output_callback : Driver.Entry.other_output -> unit = function
       | Warnings w -> warnings := !warnings @ w
+      | Info i -> return (Ok (Yojson.Basic.pretty_to_string i))
       | Formatted s
        |DebugOutput s
        |Memory_patterns s
-       |Info s
        |Version s
        |Generated s ->
           (* stanc.js will only ever return one output, so we break out
@@ -87,6 +87,7 @@ let format_model name code flags includes =
   let driver_flags =
     { driver_flags with
       auto_format= true
+    ; allow_undefined= true
     ; debug_settings= Driver.Flags.default.debug_settings } in
   let warnings = ref [] in
   let run () =
@@ -113,6 +114,44 @@ let format_model name code flags includes =
     val warnings = json_of_diagnostics warnings
   end
 
+let model_info name code flags includes =
+  let includes = get_includes includes in
+  let {name; code; driver_flags; color_output= _} =
+    process_flags name code flags includes |> res_or_throw in
+  let driver_flags =
+    { driver_flags with
+      info= true
+    ; allow_undefined= true
+    ; debug_settings= Driver.Flags.default.debug_settings } in
+  let warnings = ref [] in
+  let run () =
+    let res =
+      Return.with_return @@ fun return ->
+      let output : Driver.Entry.other_output -> unit = function
+        | Warnings w -> warnings := !warnings @ w
+        | Info i -> return (Ok i)
+        | _ -> () in
+      let _ = Driver.Entry.stan2cpp name (`Code code) driver_flags output in
+      (* impossible, but needed for typing *)
+      return (Ok `Null) in
+    res in
+  let result = Common.ICE.with_exn_message run |> res_or_throw in
+  let printed_filename = driver_flags.filename_in_msg in
+  let warnings =
+    List.map ~f:(Warnings.to_grace ?printed_filename ~code) !warnings in
+  let info, errors =
+    match result with
+    | Ok info -> (Js.def (js_of_yojson info), [])
+    | Error e -> (Js.undefined, [Errors.to_grace ?printed_filename ~code e])
+  in
+  object%js
+    val info = info [@@optdef]
+    val errors = json_of_diagnostics errors
+    val warnings = json_of_diagnostics warnings
+  end
+
+let version () = Js.string Driver.Entry.version
+
 let dump_stan_math_signatures () =
   Js.string @@ Fmt.str "%a" Stan_math_signatures.pretty_print_all_math_sigs ()
 
@@ -121,10 +160,16 @@ let dump_stan_math_distributions () =
   @@ Fmt.str "%a" Stan_math_signatures.pretty_print_all_math_distributions ()
 
 let () =
-  Js.export "dump_stan_math_signatures"
-    (Js.Unsafe.callback dump_stan_math_signatures);
-  Js.export "dump_stan_math_distributions"
-    (Js.Unsafe.callback dump_stan_math_distributions);
+  (* the stanc function is roughly equivalent to the full CLI *)
   Js.export "stanc" (Js.Unsafe.callback stan2cpp_wrapped);
+  Js.export "dump_stan_math_signatures"
+    (Js.wrap_callback dump_stan_math_signatures);
+  Js.export "dump_stan_math_distributions"
+    (Js.wrap_callback dump_stan_math_distributions);
+  (* these functions are all cut-down versions of stanc above, with different
+     default behavior and easier-to-use return types (e.g., errors are
+     represented as an object, rather than text) *)
   Js.export "check_model" (Js.Unsafe.callback check_model);
-  Js.export "format_model" (Js.Unsafe.callback format_model)
+  Js.export "format_model" (Js.Unsafe.callback format_model);
+  Js.export "model_info" (Js.Unsafe.callback model_info);
+  Js.export "version" (Js.wrap_callback version)

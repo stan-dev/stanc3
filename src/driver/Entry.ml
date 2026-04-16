@@ -34,7 +34,7 @@ type other_output =
   | Formatted of string
   | DebugOutput of string
   | Memory_patterns of string
-  | Info of string
+  | Info of Yojson.Basic.t
   | Version of string
   | Generated of string
   | Warnings of Warnings.t list

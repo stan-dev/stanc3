@@ -47,5 +47,7 @@ val wrap_result :
   -> (string, Frontend.Errors.t) result
   -> stancReturn Js.t
 
+val js_of_yojson : Yojson.Basic.t -> Js.Unsafe.any
+
 val json_of_diagnostics :
   'a Grace.Diagnostic.t list -> Js.Unsafe.any Js.js_array Js.t

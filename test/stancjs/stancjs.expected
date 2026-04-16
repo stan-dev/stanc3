@@ -326,6 +326,26 @@ data {
   "distributions": [],
   "included_files": [ "foo.stan" ]
 }
+{
+  "info": {
+    "inputs": {
+      "a": {
+        "type": "int",
+        "dimensions": 0
+      }
+    },
+    "parameters": {},
+    "transformed parameters": {},
+    "generated quantities": {},
+    "functions": [],
+    "distributions": [],
+    "included_files": [
+      "foo.stan"
+    ]
+  },
+  "errors": [],
+  "warnings": []
+}
 model {
   
 }
@@ -447,6 +467,7 @@ undefined
 $ node standalone-functions.js
 
 $ node version.js
+%%NAME%%3 %%VERSION%%
 %%NAME%%3 %%VERSION%%
 %%NAME%%3 %%VERSION%%
 %%NAME%%3 %%VERSION%%

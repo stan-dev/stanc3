@@ -1,6 +1,8 @@
 var stanc = require('../../src/stancjs/stancjs.bc.js');
 var utils = require("./utils/utils.js");
 
+console.log(stanc.version())
+
 let version = stanc.stanc("version-test", "", ["version"]);
 utils.print_result(version)
 

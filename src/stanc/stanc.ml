@@ -34,7 +34,7 @@ let print_or_write_and_exit output_file data =
 
 let output_callback break output_file printed_filename code :
     Driver.Entry.other_output -> unit = function
-  | Info s -> break (print_and_exit s)
+  | Info i -> break (print_and_exit (Yojson.Basic.pretty_to_string i))
   | Version s ->
       (* note: in practice, handled by Cmdliner for this driver *)
       break (print_and_exit (s ^ " (" ^ Sys.os_type ^ ")"))
