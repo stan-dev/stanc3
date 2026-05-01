@@ -7,7 +7,7 @@ set -e
 eval $(opam env)
 
 # Add windows repository
-opam repository add windows http://github.com/ocaml-cross/opam-cross-windows.git
+opam repository add windows http://github.com/ocaml-cross/opam-cross-windows.git#opam-2.5.1-compat
 
 # Request the compiler to be built with flambda optimizers
 opam install -y conf-flambda-windows

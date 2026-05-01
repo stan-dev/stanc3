@@ -4,7 +4,7 @@
 set -e
 
 # The following command installs the latest opam on *nix systems.
-bash -c "sh <(curl -fsSL https://opam.ocaml.org/install.sh) --version 2.5.0"
+bash -c "sh <(curl -fsSL https://opam.ocaml.org/install.sh)"
 
 # Initialize opam
 opam init --bare --disable-sandboxing
