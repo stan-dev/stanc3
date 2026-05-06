@@ -337,6 +337,7 @@ let math_sigs =
   ; ([basic_vectorized], "std_normal_qf", [DDeepVectorized], SoA)
     (* std_normal_qf is an alias for inv_Phi *)
   ; ([basic_vectorized], "std_normal_log_qf", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "student_t_qf", [DVReal; DVReal; DVReal; DVReal], SoA)
   ; ([basic_vectorized], "step", [DReal], AoS)
   ; ([basic_vectorized], "tan", [DDeepVectorized], SoA)
   ; ([basic_vectorized], "tanh", [DDeepVectorized], SoA)
