@@ -2515,6 +2515,7 @@ let () =
     ("to_vector", ReturnType UComplexVector, [UArray UComplex], AoS);
   add_unqualified ("trace", ReturnType UReal, [UMatrix], SoA);
   add_unqualified ("trace", ReturnType UComplex, [UComplexMatrix], AoS);
+  add_unqualified ("trace_dot", ReturnType UReal, [UMatrix; UMatrix], SoA);
   add_unqualified
     ("trace_gen_quad_form", ReturnType UReal, [UMatrix; UMatrix; UMatrix], SoA);
   add_unqualified ("trace_quad_form", ReturnType UReal, [UMatrix; UVector], SoA);
