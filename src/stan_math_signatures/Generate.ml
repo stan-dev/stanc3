@@ -2709,8 +2709,8 @@ let unmarshal_hashtbl s : 'a Core.String.Table.t =
   Printf.printf
     {|
 let stan_math_signatures :
-    Middle.UnsizedType.signature list Core.String.Table.t =
-  unmarshal_hashtbl %S |}
+    Middle.UnsizedType.signature list Core.String.Table.t Lazy.t=
+  lazy (unmarshal_hashtbl %S) |}
     (marshal_hashtbl stan_math_signatures);
   Printf.printf
     {|

@@ -32,7 +32,7 @@ val location : info -> Location_span.t option
 
 type t
 
-val stan_math_environment : t
+val stan_math_environment : t Lazy.t
 (** A type environment which contains the Stan math library functions *)
 
 val find : t -> string -> info list

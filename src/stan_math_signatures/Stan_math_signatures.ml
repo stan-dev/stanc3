@@ -19,10 +19,13 @@ let distributions = Generated_signatures.distributions
 
 let is_stan_math_function_name name =
   let name = Utils.stdlib_distribution_name name in
-  Hashtbl.mem stan_math_signatures name
+  Hashtbl.mem (Lazy.force stan_math_signatures) name
 
-let lookup_stan_math_function = Hashtbl.find_multi stan_math_signatures
-let get_stan_math_signatures_alist () = Hashtbl.to_alist stan_math_signatures
+let lookup_stan_math_function name =
+  Hashtbl.find_multi (Lazy.force stan_math_signatures) name
+
+let get_stan_math_signatures_alist () =
+  Hashtbl.to_alist (Lazy.force stan_math_signatures)
 
 let is_stan_math_variadic_function_name =
   Hashtbl.mem stan_math_variadic_signatures
@@ -65,7 +68,7 @@ let int_divide_type =
 
 let get_sigs name =
   let name = Utils.stdlib_distribution_name name in
-  Hashtbl.find_multi stan_math_signatures name
+  Hashtbl.find_multi (Lazy.force stan_math_signatures) name
   |> List.sort ~compare:UnsizedType.compare_signature
 
 let make_assignmentoperator_stan_math_signatures assop =
@@ -132,7 +135,8 @@ let pretty_print_all_math_sigs ppf () =
       (List.map ~f:(fun t -> (name, t)) (get_sigs name)) in
   pf ppf "@[<v>%a@]"
     (list ~sep:cut pp_sigs_for_name)
-    (List.sort ~compare:String.compare (Hashtbl.keys stan_math_signatures))
+    (List.sort ~compare:String.compare
+       (Hashtbl.keys (Lazy.force stan_math_signatures)))
 
 let pretty_print_all_math_distributions ppf () =
   let open Fmt in
