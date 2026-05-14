@@ -24,8 +24,7 @@ let is_stan_math_function_name name =
 let lookup_stan_math_function name =
   Hashtbl.find_multi (Lazy.force stan_math_signatures) name
 
-let get_stan_math_signatures_alist () =
-  Hashtbl.to_alist (Lazy.force stan_math_signatures)
+let signatures_alist = Lazy.map stan_math_signatures ~f:Hashtbl.to_alist
 
 let is_stan_math_variadic_function_name =
   Hashtbl.mem stan_math_variadic_signatures
