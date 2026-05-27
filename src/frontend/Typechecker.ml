@@ -1386,12 +1386,6 @@ let lvalues_written_to lv =
   |> List.map ~f:Ast.untyped_lvalue_of_typed_lvalue
 
 let variables_accessed_in lv =
-  let exprs_in_index = function
-    | All -> []
-    | Single e -> [e]
-    | Upfrom e -> [e]
-    | Downfrom e -> [e]
-    | Between (e1, e2) -> [e1; e2] in
   (* We only care about values being read inside the lvalue here, which means
      only the expressions inside of LIndexed *)
   let rec extract_indices lv =

@@ -331,11 +331,17 @@ let rec expr_of_lvalue {lval; lmeta} =
       | LTupleProjection (l, i) -> TupleProjection (expr_of_lvalue l, i))
   ; emeta= lmeta }
 
+let exprs_in_index = function
+  | All -> []
+  | Single e -> [e]
+  | Upfrom e -> [e]
+  | Downfrom e -> [e]
+  | Between (e1, e2) -> [e1; e2]
+
 let rec extract_ids {expr; _} =
   match expr with
   | Variable id -> [id]
   | Promotion (e, _)
-   |Indexed (e, _)
    |Paren e
    |TupleProjection (e, _)
    |PrefixOp (_, e)
@@ -350,6 +356,9 @@ let rec extract_ids {expr; _} =
    |CondDistApp (_, _, es)
    |FunApp (_, _, es) ->
       List.concat_map ~f:extract_ids es
+  | Indexed (lv, ind) ->
+      List.concat_map ~f:extract_ids
+        (lv :: List.concat_map ~f:exprs_in_index ind)
   | IntNumeral _ | RealNumeral _ | ImagNumeral _ | GetTarget -> []
 
 let rec lvalue_of_expr_opt ({expr; emeta} : untyped_expression) =
