@@ -57,6 +57,19 @@ Semantic error in 'array-read-write-assign.stan', line 3, column 0 to column 7:
 The same variable cannot be both assigned to and read from on the left hand side of an assignment:
   x
 [exit 1]
+  $ ../../../../install/default/bin/stanc array-read-write-assign2.stan
+Semantic error in 'array-read-write-assign2.stan', line 4, column 0 to column 10:
+   -------------------------------------------------
+     2:  array[2] int n = {1, 2};
+     3:  array[2] int x = {1,2};
+     4:  x[n[x[1]]] = 2;
+         ^
+     5:  }
+   -------------------------------------------------
+
+The same variable cannot be both assigned to and read from on the left hand side of an assignment:
+  x
+[exit 1]
   $ ../../../../install/default/bin/stanc array_expr_bad1.stan
 Semantic error in 'array_expr_bad1.stan', line 2, column 2 to column 38:
    -------------------------------------------------

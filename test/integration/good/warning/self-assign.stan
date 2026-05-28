@@ -29,4 +29,8 @@ model {
   // no warnings
   real foo2 = 3;
   foo = (foo, foo2).2;
+
+  array[2] int n;
+  //line 35: should warn
+  int k = n[k];
 }

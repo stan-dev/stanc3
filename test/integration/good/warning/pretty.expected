@@ -612,6 +612,10 @@ model {
   // no warnings
   real foo2 = 3;
   foo = (foo, foo2).2;
+  
+  array[2] int n;
+  //line 35: should warn
+  int k = n[k];
 }
 
 Warning in 'self-assign.stan', line 4, column 2 to column 12:
@@ -629,6 +633,9 @@ Warning in 'self-assign.stan', line 15, column 2 to column 14:
 Warning in 'self-assign.stan', line 22, column 2 to column 16:
     Assignment of variable to itself.
 Warning in 'self-assign.stan', line 24, column 2 to column 41:
+    Assignment of variable to itself during declaration. This is almost
+    certainly a bug.
+Warning in 'self-assign.stan', line 35, column 2 to column 15:
     Assignment of variable to itself during declaration. This is almost
     certainly a bug.
 [exit 0]
