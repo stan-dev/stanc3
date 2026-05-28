@@ -2228,7 +2228,7 @@ let check_program_exn ~allow_undefined_functions
   warnings := [];
   requires_higher_order_autodiff := [];
   (* create a new type environment which has only stan-math functions *)
-  let tenv = Env.stan_math_environment in
+  let tenv = Lazy.force Env.stan_math_environment in
   let tenv = add_userdefined_functions tenv fb in
   let tenv, typed_fb = check_toplevel_block Functions tenv fb in
   verify_functions_have_defn ~allow_undefined_functions tenv typed_fb;

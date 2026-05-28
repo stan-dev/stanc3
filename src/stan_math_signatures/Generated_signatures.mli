@@ -6,7 +6,7 @@
 open Core
 open Middle
 
-val stan_math_signatures : UnsizedType.signature list String.Table.t
+val stan_math_signatures : UnsizedType.signature list String.Table.t Lazy.t
 
 val stan_math_variadic_signatures :
   UnsizedType.variadic_signature String.Table.t

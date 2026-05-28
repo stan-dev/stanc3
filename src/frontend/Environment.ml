@@ -43,14 +43,12 @@ let location = function
 type t = info list String.Map.t
 
 let stan_math_environment =
-  let functions =
-    Stan_math_signatures.get_stan_math_signatures_alist ()
-    |> List.map ~f:(fun (key, values) ->
-        ( key
-        , List.map values ~f:(fun s ->
-              {type_= UnsizedType.UFun s; kind= `StanMath}) ))
-    |> String.Map.of_alist_exn in
-  functions
+  Lazy.map Stan_math_signatures.signatures_alist ~f:(fun signatures ->
+      List.map signatures ~f:(fun (key, values) ->
+          ( key
+          , List.map values ~f:(fun s ->
+                {type_= UnsizedType.UFun s; kind= `StanMath}) ))
+      |> String.Map.of_alist_exn)
 
 let add env name type_ kind = Map.add_multi env ~key:name ~data:{type_; kind}
 let set_raw env key data = Map.set env ~key ~data
