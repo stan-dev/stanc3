@@ -11129,6 +11129,9 @@ Display all Stan math signatures exposed in the language
   log_rising_factorial(array[,,,,,,,] real, real) => array[,,,,,,,] real
   log_rising_factorial(array[,,,,,,,] real, array[,,,,,,,] real) => array[,,,,,,,] real
   log_softmax(vector) => vector
+  log_softmax(row_vector) => row_vector
+  log_softmax(array[] vector) => array[] vector
+  log_softmax(array[] row_vector) => array[] row_vector
   log_sum_exp(int, int) => real
   log_sum_exp(int, real) => real
   log_sum_exp(int, vector) => vector
@@ -19777,6 +19780,9 @@ Display all Stan math signatures exposed in the language
   skew_normal_rng(array[] real, array[] real, array[] int) => array[] real
   skew_normal_rng(array[] real, array[] real, array[] real) => array[] real
   softmax(vector) => vector
+  softmax(row_vector) => row_vector
+  softmax(array[] vector) => array[] vector
+  softmax(array[] row_vector) => array[] row_vector
   sort_asc(vector) => vector
   sort_asc(row_vector) => row_vector
   sort_asc(array[] int) => array[] int

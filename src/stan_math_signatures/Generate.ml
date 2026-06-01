@@ -322,6 +322,7 @@ let math_sigs =
   ; ([basic_vectorized], "log1p_exp", [DDeepVectorized], SoA)
   ; ([basic_vectorized], "log2", [DDeepVectorized], SoA)
   ; ([basic_vectorized], "log_inv_logit", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "log_softmax", [DVectors], SoA)
   ; ([basic_vectorized], "logit", [DDeepVectorized], SoA)
   ; ([UnaryVectorized SameAsArg], "minus", [DDeepVectorized], SoA)
   ; ([UnaryVectorized SameAsArg], "minus", [DDeepComplexVectorized], SoA)
@@ -330,6 +331,7 @@ let math_sigs =
   ; ([basic_vectorized], "round", [DDeepVectorized], AoS)
   ; ([basic_vectorized], "sin", [DDeepVectorized], SoA)
   ; ([basic_vectorized], "sinh", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "softmax", [DVectors], SoA)
   ; ([basic_vectorized], "sqrt", [DDeepVectorized], SoA)
   ; ([basic_vectorized], "square", [DDeepVectorized], SoA)
     (* TODO: Eventually will want to move _qf to be part of the distribution
@@ -1591,7 +1593,6 @@ let () =
     (List.tl_exn vector_types);
   add_binary_vec "log_modified_bessel_first_kind" AoS;
   add_binary_vec "log_rising_factorial" AoS;
-  add_unqualified ("log_softmax", ReturnType UVector, [UVector], SoA);
   add_unqualified ("log_sum_exp", ReturnType UReal, [UArray UReal], SoA);
   add_unqualified ("log_sum_exp", ReturnType UReal, [UVector], SoA);
   add_unqualified ("log_sum_exp", ReturnType UReal, [URowVector], SoA);
@@ -2240,7 +2241,6 @@ let () =
   List.iter
     ~f:(fun t -> add_unqualified ("size", ReturnType UInt, [t], SoA))
     bare_types;
-  add_unqualified ("softmax", ReturnType UVector, [UVector], SoA);
   add_unqualified ("sort_asc", ReturnType (UArray UInt), [UArray UInt], AoS);
   add_unqualified ("sort_asc", ReturnType (UArray UReal), [UArray UReal], AoS);
   add_unqualified ("sort_asc", ReturnType UVector, [UVector], AoS);
