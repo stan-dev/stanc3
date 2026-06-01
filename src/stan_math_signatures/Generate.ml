@@ -2681,6 +2681,40 @@ let () =
         ; (DataOnly, UInt) ]
     ~required_fn_rt:UnsizedType.UVector
     ~required_fn_args:[UnsizedType.(AutoDiffable, UVector)]
+    ();
+  (* variadic versions of integrate_1d *)
+  add_variadic_fn "integrate_1d_gauss_kronrod" ~return_type:UnsizedType.UReal
+    ~control_args:
+      UnsizedType.
+        [(* interval a, b *) (AutoDiffable, UReal); (AutoDiffable, UReal)]
+    ~required_fn_rt:UnsizedType.UReal
+    ~required_fn_args:
+      UnsizedType.[(* x, xc *) (AutoDiffable, UReal); (AutoDiffable, UReal)]
+    ();
+  add_variadic_fn "integrate_1d_double_exponential"
+    ~return_type:UnsizedType.UReal
+    ~control_args:UnsizedType.[(AutoDiffable, UReal); (AutoDiffable, UReal)]
+    ~required_fn_rt:UnsizedType.UReal
+    ~required_fn_args:UnsizedType.[(AutoDiffable, UReal); (AutoDiffable, UReal)]
+    ();
+  (* _tol version accept rel_tol, abs_tol, and max_depth/max_refinements *)
+  add_variadic_fn "integrate_1d_double_exponential_tol"
+    ~return_type:UnsizedType.UReal
+    ~control_args:
+      UnsizedType.
+        [ (AutoDiffable, UReal); (AutoDiffable, UReal); (DataOnly, UReal)
+        ; (DataOnly, UReal); (DataOnly, UInt) ]
+    ~required_fn_rt:UnsizedType.UReal
+    ~required_fn_args:UnsizedType.[(AutoDiffable, UReal); (AutoDiffable, UReal)]
+    ();
+  add_variadic_fn "integrate_1d_gauss_kronrod_tol"
+    ~return_type:UnsizedType.UReal
+    ~control_args:
+      UnsizedType.
+        [ (AutoDiffable, UReal); (AutoDiffable, UReal); (DataOnly, UReal)
+        ; (DataOnly, UReal); (DataOnly, UInt) ]
+    ~required_fn_rt:UnsizedType.UReal
+    ~required_fn_args:UnsizedType.[(AutoDiffable, UReal); (AutoDiffable, UReal)]
     ()
 
 (** Print a module definition to [file] that contains the signatures computed
