@@ -1363,7 +1363,7 @@ Semantic error in 'experiment.stan', line 12, column 4 to column 11:
 A non-returning function was expected but a returning function "foo" was supplied.
 [exit 1]
   $ ../../../../install/default/bin/stanc fun-return-typ3.stan
-Semantic error in 'fun-return-typ3.stan', line 2, column 13 to column 24:
+Syntax error in 'fun-return-typ3.stan', line 2, column 13 to column 19, parsing error:
    -------------------------------------------------
      1:  functions {
      2:    real foo() reject("");
@@ -1371,7 +1371,7 @@ Semantic error in 'fun-return-typ3.stan', line 2, column 13 to column 24:
      3:  }
    -------------------------------------------------
 
-Function definitions must be wrapped in curly braces.
+Ill-formed function. Expected either "{" statement "}" for a function definition or ";" for a function forward declaration.
 [exit 1]
   $ ../../../../install/default/bin/stanc fun-return-type1.stan
 Semantic error in 'fun-return-type1.stan', line 2, column 59 to column 70:

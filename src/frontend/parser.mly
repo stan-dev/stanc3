@@ -296,14 +296,20 @@ constrained_matrix:
   | STOCHASTICROWMATRIX
     { () }
 
-function_def:
+
+%inline function_start:
   | rt=return_type name=decl_identifier LPAREN args=separated_list(COMMA, arg_decl)
-    RPAREN b=statement
+    RPAREN
+    { (rt, name, args) }
+
+function_def:
+  | fn=function_start body=located_statement(semi_statement)
+  | fn=function_start body=located_statement(block_statement)
     {
       grammar_logger "function_def" ;
-      {stmt=FunDef {returntype = rt; funname = name;
-                           arguments = args; body=b;};
-       smeta={loc=location_span_of_positions $loc}
+      let (returntype, funname, arguments) = fn in
+      { stmt = FunDef { returntype; funname; arguments; body }
+      ; smeta = { loc = location_span_of_positions $sloc}
       }
     }
 
@@ -488,12 +494,7 @@ top_var_decl_no_assign:
     { grammar_logger "top_var_decl_no_assign" ;
       d_fn ~is_global:true
     }
-  | SEMICOLON
-    { grammar_logger "top_var_decl_no_assign_skip";
-      { stmt= Skip
-      ; smeta= { loc= location_span_of_positions $loc }
-      }
-    }
+  | s=located_statement(semi_statement ) { s }
 
 sized_basic_type:
   | INT
@@ -778,17 +779,20 @@ printables:
   | p1=printables COMMA p2=printables
     { grammar_logger "printables" ; p1 @ p2 }
 
+%inline located_statement(stmt_rule):
+  | stmt=stmt_rule
+    { { stmt; smeta = { loc = location_span_of_positions $sloc} } }
+
+
 (* statements *)
 statement:
-  | s=atomic_statement
-    {  grammar_logger "atomic_statement" ;
-       {stmt= s;
-        smeta= { loc=location_span_of_positions $sloc} }
+  | s=located_statement(atomic_statement)
+    { grammar_logger "atomic_statement" ;
+      s
     }
-  | s=nested_statement
-    {  grammar_logger "nested_statement" ;
-       {stmt= s;
-        smeta={loc = location_span_of_positions $sloc} }
+  | s=located_statement(nested_statement)
+    { grammar_logger "nested_statement" ;
+      s
     }
 
 atomic_statement:
@@ -824,6 +828,9 @@ atomic_statement:
     {  grammar_logger "return_statement" ; Return e }
   | RETURN SEMICOLON
     {  grammar_logger "return_nothing_statement" ; ReturnVoid }
+  | s=semi_statement { s }
+
+%inline semi_statement:
   | SEMICOLON
     {  grammar_logger "skip" ; Skip }
 
@@ -877,8 +884,11 @@ nested_statement:
     {  grammar_logger "foreach_statement" ; ForEach (id, e, s) }
   | PROFILE LPAREN st=string_literal RPAREN LBRACE l=list(vardecl_or_statement) RBRACE
     {  grammar_logger "profile_statement" ; Profile (st, l) }
-  | LBRACE l=list(vardecl_or_statement)  RBRACE
-    {  grammar_logger "block_statement" ; Block l } (* NOTE: I am choosing to allow mixing of statements and var_decls *)
+ | b=block_statement { b }
+
+%inline block_statement:
+  | LBRACE l=list(vardecl_or_statement) RBRACE
+    {  grammar_logger "block_statement" ; Block l }
 
 (* statement or var decls *)
 vardecl_or_statement:

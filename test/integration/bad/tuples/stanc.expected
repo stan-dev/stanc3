@@ -320,10 +320,10 @@ Available signatures:
   The first argument must be tuple(real, real) but got tuple(int, int, int)
 [exit 1]
   $ ../../../../../install/default/bin/stanc fuzz-tuple-idx1.stan
-Syntax error in 'fuzz-tuple-idx1.stan', line 1, column 38 to column 58, parsing error:
+Syntax error in 'fuzz-tuple-idx1.stan', line 1, column 39 to column 59, parsing error:
    -------------------------------------------------
-     1:  functions{void f(tuple(matrix,int)t)t.40000000000000000000
-                                               ^
+     1:  functions{void f(tuple(matrix,int)t){t.40000000000000000000}
+                                                ^
    -------------------------------------------------
 
 Ill-formed index. Failed to parse integer from string "40000000000000000000" in tuple index.
