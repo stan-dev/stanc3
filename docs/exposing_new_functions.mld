@@ -145,7 +145,7 @@ This final argument determines the C++ code generation of the function, as the
 list. Ensure that the C++ for the function is calling it accordingly. It is best
 to consult an existing example of how these are done before proceeding.
 
-Other functions, such as [reduce_sum] or the laplace marginal functions, are not
+Other functions, such as [reduce_sum] or the [laplace_marginal] and [laplace_latent] functions, are not
 "nice". These are not added to this list, and are instead treated as special case in the [Typechecker] module in the frontend folder.
 
 {1 Testing}
