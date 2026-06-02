@@ -1,35 +1,33 @@
   $ stanc --filename-in-msg=foo.stan --include-paths=.  filename_error.stan
-Semantic error in 'foo.stan', line 3, column 17 to column 18:
-   -------------------------------------------------
-     1:  transformed data {
-     2:      real p;
-     3:      real q = p + a;
-                          ^
-     4:  }
-   -------------------------------------------------
-
-Identifier "a" not in scope.
+error: Identifier "a" not in scope.
+    ┌─ foo.stan:3:18
+  2 │      real p;
+  3 │      real q = p + a;
+    │                   ^ Identifier "a" not in scope.
+  4 │  }
 [exit 1]
   $ stanc --filename-in-msg=foo.stan --include-paths=.  filename_syntax_error.stan
-Syntax error in 'foo.stan', line 2, column 4 to column 5, parsing error:
-   -------------------------------------------------
-     1:  model {
-     2:  rea x = 3;
-             ^
-   -------------------------------------------------
-
-Ill-formed phrase. Expected a statement, but found a partial value before this point.
-Did you mean for this to be the start of an assignment or "~"-statement?
+error: Syntax error: Ill-formed phrase.
+    ┌─ foo.stan:2:5
+  1 │  model {
+  2 │  rea x = 3;
+    │      ^ here.
+  3 │  
+    = Expected a statement, but found a partial value before this point.
+      Did you mean for this to be the start of an assignment or "~"-statement?
 [exit 1]
   $ stanc --filename-in-msg=foo.stan --include-paths=.  includes.stan
-Syntax error in './filename_syntax_error.stan', line 2, column 4, included from
-'foo.stan', line 6, column 0, parsing error:
-   -------------------------------------------------
-     1:  model {
-     2:  rea x = 3;
-             ^
-   -------------------------------------------------
-
-Ill-formed phrase. Expected a statement, but found a partial value before this point.
-Did you mean for this to be the start of an assignment or "~"-statement?
+error: Syntax error: Ill-formed phrase.
+    ┌─ ./filename_syntax_error.stan:2:5
+  1 │  model {
+  2 │  rea x = 3;
+    │      ^ here.
+  3 │  
+    ┌─ foo.stan:6:1
+  5 │  
+  6 │  #include "filename_syntax_error.stan"
+    │  -------- file './filename_syntax_error.stan' included here
+  7 │  
+    = Expected a statement, but found a partial value before this point.
+      Did you mean for this to be the start of an assignment or "~"-statement?
 [exit 1]

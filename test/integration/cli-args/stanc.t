@@ -260,7 +260,7 @@ Error when unreadable file is passed
   $ touch unreadable.stan
   $ chmod -r unreadable.stan
   $ stanc unreadable.stan
-  Error: file 'unreadable.stan' not found or cannot be opened
+  error: file 'unreadable.stan' not found or cannot be opened
   [1]
   $ rm unreadable.stan
 
@@ -272,13 +272,12 @@ Can read from stdin
   
 Filename is set to stdin when reading from stdin
   $ echo 'parameters {real y}' | stanc -
-  Syntax error in 'stdin', line 1, column 18 to column 19, parsing error:
-     -------------------------------------------------
-       1:  parameters {real y}
-                             ^
-     -------------------------------------------------
-  
-  Ill-formed declaration. Expected ";" after variable declaration.
+  error: Syntax error: Ill-formed declaration.
+      ┌─ stdin:1:19
+    1 │  parameters {real y}
+      │                    ^ here.
+    2 │  
+      = Expected ";" after variable declaration.
   [1]
 
 Flags can be passed multiple times

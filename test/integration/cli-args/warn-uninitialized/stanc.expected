@@ -1,16 +1,8 @@
   $ stanc --warn-uninitialized  simple.stan
-Warning in 'simple.stan', line 18, column 11 to column 12:
-    The variable q may not have been assigned a value before its first use.
-Warning in 'simple.stan', line 24, column 14 to column 15:
-    The variable p may not have been assigned a value before its first use.
-Warning in 'simple.stan', line 32, column 2 to column 7:
-    The variable theta may not have been assigned a value before its first
-    use.
-Warning in 'simple.stan', line 32, column 17 to column 21:
-    The variable zero may not have been assigned a value before its first
-    use.
-Warning in 'simple.stan', line 42, column 24 to column 25:
-    The variable g may not have been assigned a value before its first use.
-Warning in 'simple.stan', line 42, column 28 to column 29:
-    The variable h may not have been assigned a value before its first use.
+simple.stan:18:12: warning: The variable q may not have been assigned a value before its first use.
+simple.stan:24:15: warning: The variable p may not have been assigned a value before its first use.
+simple.stan:32:3: warning: The variable theta may not have been assigned a value before its first use.
+simple.stan:32:18: warning: The variable zero may not have been assigned a value before its first use.
+simple.stan:42:25: warning: The variable g may not have been assigned a value before its first use.
+simple.stan:42:29: warning: The variable h may not have been assigned a value before its first use.
 [exit 0]

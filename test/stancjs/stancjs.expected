@@ -1,15 +1,10 @@
 $ node allow-undefined.js
-Semantic error in 'string', line 3, column 8 to column 11:
-   -------------------------------------------------
-     1:  
-     2:  functions {
-     3:      int foo(real a);
-                 ^
-     4:  }
-     5:  transformed data {
-   -------------------------------------------------
-
-Function "foo" is declared without specifying a definition.
+error: Function "foo" is declared without specifying a definition.
+    ┌─ string:3:9
+  2 │  functions {
+  3 │      int foo(real a);
+    │          ^^^ Function "foo" is declared without specifying a definition.
+  4 │  }
 
 $ node auto-format.js
 parameters {
@@ -48,28 +43,20 @@ Array.isArray returned false for value of type 'string'.
 Failed to convert stanc.js argument 'flags[1]'!
 It had type 'number' instead of 'string'.
 $ node basic.js
-Semantic error in 'string', line 6, column 4 to column 5:
-   -------------------------------------------------
-     4:  }
-     5:  model {
-     6:      z ~ std_normal();
-             ^
-     7:  }
-   -------------------------------------------------
-
-Identifier "z" not in scope.
+error: Identifier "z" not in scope.
+    ┌─ string:6:5
+  5 │  model {
+  6 │      z ~ std_normal();
+    │      ^ Identifier "z" not in scope.
+  7 │  }
 
 With ANSI color output:
-[1m[31mSemantic error[0;1m[0m in [94m'string'[0m, line 6, column 4 to column 5:
-[2m   -------------------------------------------------
-[0m[2m     4:[0m  }
-[2m     5:[0m  model {
-[93m     6:[0m      z ~ std_normal();
-             [1m[31m^[0;1m[0m
-[2m     7:[0m  }
-[2m   -------------------------------------------------
-[0m
-Identifier [32m"z"[0m not in scope.
+[1m[91merror[0;1m[0m[1m[91m[0;1m[0m: [1mIdentifier [32m"z"[0;1m not in scope.[0m
+    [0m[2m┌─[0m[0m string:6:5
+[33m  5[0m [0m[2m│[0m[0m  model {
+[33m  6[0m [0m[2m│[0m[0m      [31mz[0m ~ std_normal();
+    [0m[2m│[0m[0m      [31m^[0m [31m[0mIdentifier [32m"z"[0m not in scope.[0;31m[0m
+[33m  7[0m [0m[2m│[0m[0m  }
 
 $ node canonical.js
 functions {
@@ -120,27 +107,19 @@ dim(p) = (4, 3)
 $ node debug.js
 
 $ node filename.js
-Semantic error in 'good_filename', line 6, column 4 to column 5:
-   -------------------------------------------------
-     4:  }
-     5:  model {
-     6:      z ~ std_normal();
-             ^
-     7:  }
-   -------------------------------------------------
+error: Identifier "z" not in scope.
+    ┌─ good_filename:6:5
+  5 │  model {
+  6 │      z ~ std_normal();
+    │      ^ Identifier "z" not in scope.
+  7 │  }
 
-Identifier "z" not in scope.
-
-Semantic error in 'string', line 6, column 4 to column 5:
-   -------------------------------------------------
-     4:  }
-     5:  model {
-     6:      z ~ std_normal();
-             ^
-     7:  }
-   -------------------------------------------------
-
-Identifier "z" not in scope.
+error: Identifier "z" not in scope.
+    ┌─ string:6:5
+  5 │  model {
+  6 │      z ~ std_normal();
+    │      ^ Identifier "z" not in scope.
+  7 │  }
 
 $ node functions-only.js
 real my_log1p_exp(real x) {
@@ -218,57 +197,35 @@ real test_lpdf(real a, real b) {
   return normal_lpdf(a | b, 1);
 }
 $ node good_after_bad.js
-Syntax error in 'string', line 8, column 0 to column 5, parsing error:
-   -------------------------------------------------
-     6:      y ~ std_normal();
-     7:  }
-     8:  model {
-         ^
-     9:      y ~ std_normal();
-    10:  }
-   -------------------------------------------------
-
-Ill-formed program. Expected "generated quantities {" or end of file after end of model block.
+error: Syntax error: Ill-formed program.
+    ┌─ string:8:1
+  7 │  }
+  8 │  model {
+    │  ^^^^^ here.
+  9 │      y ~ std_normal();
+    = Expected "generated quantities {" or end of file after end of model block.
 
 $ node includes.js
-Syntax error in 'string', line 2, column 0 to column 19, include error:
-   -------------------------------------------------
-     1:  
-     2:  #include <foo.stan>
-         ^
-     3:  data {
-     4:      int a;
-   -------------------------------------------------
+error: Could not find include file 'foo.stan'.
 
-Could not find include file 'foo.stan'.
-stanc was given information about the following files:
-None
+    ┌─ string:2:1
+  2 │  #include <foo.stan>
+    │  ^^^^^^^^^^^^^^^^^^^ here.
+    = stanc was given information about the following files: None
 
-Syntax error in 'string', line 2, column 0 to column 19, include error:
-   -------------------------------------------------
-     1:  
-     2:  #include <foo.stan>
-         ^
-     3:  data {
-     4:      int a;
-   -------------------------------------------------
+error: Could not find include file 'foo.stan'.
 
-Could not find include file 'foo.stan'.
-stanc was given information about the following files:
-bar.stan
+    ┌─ string:2:1
+  2 │  #include <foo.stan>
+    │  ^^^^^^^^^^^^^^^^^^^ here.
+    = stanc was given information about the following files: bar.stan
 
-Syntax error in 'string', line 2, column 0 to column 19, include error:
-   -------------------------------------------------
-     1:  
-     2:  #include <foo.stan>
-         ^
-     3:  data {
-     4:      int a;
-   -------------------------------------------------
+error: Could not find include file 'foo.stan'.
 
-Could not find include file 'foo.stan'.
-stanc was given information about the following files:
-./foo.stan
+    ┌─ string:2:1
+  2 │  #include <foo.stan>
+    │  ^^^^^^^^^^^^^^^^^^^ here.
+    = stanc was given information about the following files: ./foo.stan
 
 functions {
   int foo(real a) {
@@ -318,17 +275,22 @@ It had type 'object' instead of 'string'.
 Warning: stanc.js failed to parse included file mapping:
 Failed to convert stanc.js argument 'includes'!
 It had type 'number' instead of 'object'.
-Syntax error in 'include/b.stan', line 1, column 0, included from
-'include/a.stan', line 2, column 0, included from
-'include/b.stan', line 1, column 0, included from
-'include/a.stan', line 2, column 0, include error:
-   -------------------------------------------------
-     1:  #include <include/a.stan>
-         ^
-     2:   // comment here
-   -------------------------------------------------
+error: File 'include/a.stan' recursively included itself.
 
-File include/a.stan recursively included itself.
+    ┌─ include/a.stan:2:1
+  1 │  // comment here
+  2 │  #include <include/b.stan>
+    │  --------
+    │  │
+    │  file 'include/b.stan' included here
+    │  file 'include/b.stan' included here
+    ┌─ include/b.stan:1:1
+  1 │  #include <include/a.stan>
+    │  ^^^^^^^^^^^^^^^^^^^^^^^^^
+    │  │                        
+    │  here.
+    │  file 'include/a.stan' included here
+  2 │   // comment here
 
 $ node info.js
 {
@@ -366,58 +328,45 @@ $ node math_sigs.js
 $ node model_name.js
 
 $ node optimization.js
-Semantic error in 'string', line 3, column 8 to column 11:
-   -------------------------------------------------
-     1:  
-     2:  functions {
-     3:      int foo(real a);
-                 ^
-     4:  }
-     5:  
-   -------------------------------------------------
-
-Function "foo" is declared without specifying a definition.
+error: Function "foo" is declared without specifying a definition.
+    ┌─ string:3:9
+  2 │  functions {
+  3 │      int foo(real a);
+    │          ^^^ Function "foo" is declared without specifying a definition.
+  4 │  }
 
 "stancflags = --use-opencl --allow-undefined"
 $ node pedantic.js
-Warning in 'string', line 4, column 1 to column 8:
-    The parameter k was declared but was not used in the density calculation.
-Warning in 'string', line 7, column 17 to column 22:
-    Argument 10000 suggests there may be parameters that are not unit scale;
-    consider rescaling with a multiplier, see:
-    https://mc-stan.org/docs/stan-users-guide/efficiency-tuning.html#standardizing-predictors
-Warning in 'string', line 4, column 9 to column 11:
-    The variable tt may not have been assigned a value before its first use.
+string:4:2: warning: The parameter k was declared but was not used in the density calculation.
+
+string:7:18: warning: Argument 10000 suggests there may be parameters that are not unit scale;
+  consider rescaling with a multiplier, see:
+  https://mc-stan.org/docs/stan-users-guide/efficiency-tuning.html#standardizing-predictors
+
+string:4:10: warning: The variable tt may not have been assigned a value before its first use.
+
 $ node removed.js
-Syntax error in 'string', line 3, column 8 to column 10, parsing error:
-   -------------------------------------------------
-     1:  
-     2:  parameters {
-     3:  	real y[10];
-         	       ^
-     4:  }
-     5:  model {
-   -------------------------------------------------
+error: Syntax error: Ill-formed declaration.
+    ┌─ string:3:9
+  2 │  parameters {
+  3 │   real y[10];
+    │          ^^ here.
+  4 │  }
+    = ";" expected after variable declaration.
+        It looks like you are trying to use the old array syntax.
+        Please use the new syntax:
+        array[10] real y;
 
-Ill-formed declaration. ";" expected after variable declaration.
-  It looks like you are trying to use the old array syntax.
-  Please use the new syntax:
-  array[10] real y;
-
-Syntax error in 'string', line 3, column 8 to column 10, parsing error:
-   -------------------------------------------------
-     1:  
-     2:  parameters {
-     3:  	real y[10];
-         	       ^
-     4:  }
-     5:  model {
-   -------------------------------------------------
-
-Ill-formed declaration. ";" expected after variable declaration.
-  It looks like you are trying to use the old array syntax.
-  Please use the new syntax:
-  array[10] real y;
+error: Syntax error: Ill-formed declaration.
+    ┌─ string:3:9
+  2 │  parameters {
+  3 │   real y[10];
+    │          ^^ here.
+  4 │  }
+    = ";" expected after variable declaration.
+        It looks like you are trying to use the old array syntax.
+        Please use the new syntax:
+        array[10] real y;
 
 undefined
 $ node standalone-functions.js
@@ -427,10 +376,10 @@ $ node version.js
 %%NAME%%3 %%VERSION%%
 %%NAME%%3 %%VERSION%%
 $ node warnings.js
-Warning in 'string', line 10, column 11 to column 12:
-    Found int division:
-        x / w
-    Values will be rounded towards zero. If rounding is not desired you can
-    write the division as
-        x * 1.0 / w
-    If rounding is intended please use the integer division operator %/%.
+string:10:12: warning: Found int division:
+      x / w
+  Values will be rounded towards zero. If rounding is not desired you can write
+  the division as
+      x * 1.0 / w
+  If rounding is intended please use the integer division operator %/%.
+

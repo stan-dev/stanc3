@@ -442,9 +442,11 @@ let%expect_test "Priors complex example" =
         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
       15)))
    ((begin_loc
-     ((filename string) (line_num 7) (col_num 10) (included_from ())))
+     ((filename string) (line_num 7) (col_num 10) (byte_num 93)
+      (included_from ())))
     (end_loc
-     ((filename string) (line_num 7) (col_num 17) (included_from ()))))))
+     ((filename string) (line_num 7) (col_num 17) (byte_num 100)
+      (included_from ()))))))
  ((VVar b)
   (((((TargetTerm
        ((pattern
@@ -477,31 +479,41 @@ let%expect_test "Priors complex example" =
         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
       13)))
    ((begin_loc
-     ((filename string) (line_num 8) (col_num 10) (included_from ())))
+     ((filename string) (line_num 8) (col_num 10) (byte_num 111)
+      (included_from ())))
     (end_loc
-     ((filename string) (line_num 8) (col_num 17) (included_from ()))))))
+     ((filename string) (line_num 8) (col_num 17) (byte_num 118)
+      (included_from ()))))))
  ((VVar c)
   ((())
    ((begin_loc
-     ((filename string) (line_num 9) (col_num 10) (included_from ())))
+     ((filename string) (line_num 9) (col_num 10) (byte_num 129)
+      (included_from ())))
     (end_loc
-     ((filename string) (line_num 9) (col_num 17) (included_from ()))))))
+     ((filename string) (line_num 9) (col_num 17) (byte_num 136)
+      (included_from ()))))))
  ((VVar d)
   ((())
    ((begin_loc
-     ((filename string) (line_num 10) (col_num 10) (included_from ())))
+     ((filename string) (line_num 10) (col_num 10) (byte_num 147)
+      (included_from ())))
     (end_loc
-     ((filename string) (line_num 10) (col_num 17) (included_from ()))))))
+     ((filename string) (line_num 10) (col_num 17) (byte_num 154)
+      (included_from ()))))))
  ((VVar e)
   ((())
    ((begin_loc
-     ((filename string) (line_num 11) (col_num 10) (included_from ())))
+     ((filename string) (line_num 11) (col_num 10) (byte_num 165)
+      (included_from ())))
     (end_loc
-     ((filename string) (line_num 11) (col_num 17) (included_from ()))))))
+     ((filename string) (line_num 11) (col_num 17) (byte_num 172)
+      (included_from ()))))))
  ((VVar f)
   ((())
    ((begin_loc
-     ((filename string) (line_num 12) (col_num 10) (included_from ())))
+     ((filename string) (line_num 12) (col_num 10) (byte_num 183)
+      (included_from ())))
     (end_loc
-     ((filename string) (line_num 12) (col_num 17) (included_from ())))))))
+     ((filename string) (line_num 12) (col_num 17) (byte_num 190)
+      (included_from ())))))))
     |}]

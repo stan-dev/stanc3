@@ -1,739 +1,683 @@
   $ stanc autodiff_incompatibility1.stan
-Semantic error in 'autodiff_incompatibility1.stan', line 56, column 29 to column 40:
-   -------------------------------------------------
-    54:  model {
-    55:  
-    56:    target += laplace_marginal(ll_function, (eta, log_ye, y), 1,
-                                      ^
-    57:                                    K_function, (x, n_obs, alpha, rho));
-    58:  }
-   -------------------------------------------------
-
-The function "algebra_solver", called by this likelihood function,
-does not currently support higher-order derivatives, and
-cannot be used in an embedded Laplace approximation.
+error: Incompatible function used in embedded Laplace approximation.
+    ┌─ autodiff_incompatibility1.stan:56:30
+ 14 │      if (0) {
+ 15 │        vector[1] t = algebra_solver(algebra_system, [1]', [1]', {0.1}, {2});
+    │                      -------------- Call to incompatible function occurs here.
+ 16 │      }
+    ⋯  
+ 55 │  
+ 56 │    target += laplace_marginal(ll_function, (eta, log_ye, y), 1,
+    │                               ^^^^^^^^^^^ This likelihood function calls the function 
+    │                                           "algebra_solver",
+    │                                           which does not currently support higher-order derivatives and
+    │                                           cannot be used in an embedded Laplace approximation.
+ 57 │                                    K_function, (x, n_obs, alpha, rho));
 [exit 1]
   $ stanc autodiff_incompatibility2.stan
-Semantic error in 'autodiff_incompatibility2.stan', line 59, column 43 to column 54:
-   -------------------------------------------------
-    57:  
-    58:  generated quantities {
-    59:    vector[n_obs] theta = laplace_latent_rng(ll_function, (eta, log_ye, y),
-                                                    ^
-    60:                          1, K_function, (x, n_obs, alpha, rho));
-    61:  }
-   -------------------------------------------------
-
-The function "ode_rk45", called by this likelihood function,
-does not currently support higher-order derivatives, and
-cannot be used in an embedded Laplace approximation.
+error: Incompatible function used in embedded Laplace approximation.
+    ┌─ autodiff_incompatibility2.stan:59:44
+ 18 │      if (0) {
+ 19 │        array[1] vector[3] y = ode_rk45(sir, [1.0]', 1.0, {1.0}, .5, .5, 10);
+    │                               -------- Call to incompatible function occurs here.
+ 20 │      }
+    ⋯  
+ 58 │  generated quantities {
+ 59 │    vector[n_obs] theta = laplace_latent_rng(ll_function, (eta, log_ye, y),
+    │                                             ^^^^^^^^^^^ This likelihood function calls the function 
+    │                                                         "ode_rk45",
+    │                                                         which does not currently support higher-order derivatives and
+    │                                                         cannot be used in an embedded Laplace approximation.
+ 60 │                          1, K_function, (x, n_obs, alpha, rho));
 [exit 1]
   $ stanc autodiff_incompatibility3.stan
-Semantic error in 'autodiff_incompatibility3.stan', line 51, column 43 to column 54:
-   -------------------------------------------------
-    49:  
-    50:  generated quantities {
-    51:    vector[n_obs] theta = laplace_latent_rng(ll_function, (eta, log_ye, y),
-                                                    ^
-    52:                          1, K_function, (x, n_obs, alpha, rho));
-    53:  }
-   -------------------------------------------------
-
-The function "reduce_sum", called by this likelihood function,
-does not currently support higher-order derivatives, and
-cannot be used in an embedded Laplace approximation.
+error: Incompatible function used in embedded Laplace approximation.
+    ┌─ autodiff_incompatibility3.stan:51:44
+ 10 │      if (0) {
+ 11 │        print(reduce_sum(f_lpdf, {1.2}, 1));
+    │              ---------- Call to incompatible function occurs here.
+ 12 │      }
+    ⋯  
+ 50 │  generated quantities {
+ 51 │    vector[n_obs] theta = laplace_latent_rng(ll_function, (eta, log_ye, y),
+    │                                             ^^^^^^^^^^^ This likelihood function calls the function 
+    │                                                         "reduce_sum",
+    │                                                         which does not currently support higher-order derivatives and
+    │                                                         cannot be used in an embedded Laplace approximation.
+ 52 │                          1, K_function, (x, n_obs, alpha, rho));
 [exit 1]
   $ stanc autodiff_incompatibility4.stan
-Semantic error in 'autodiff_incompatibility4.stan', line 51, column 43 to column 54:
-   -------------------------------------------------
-    49:  
-    50:  generated quantities {
-    51:    vector[n_obs] theta = laplace_latent_rng(ll_function, (eta, log_ye, y),
-                                                    ^
-    52:                          1, K_function, (x, n_obs, alpha, rho));
-    53:  }
-   -------------------------------------------------
-
-The function "integrate_1d", called by this likelihood function,
-does not currently support higher-order derivatives, and
-cannot be used in an embedded Laplace approximation.
+error: Incompatible function used in embedded Laplace approximation.
+    ┌─ autodiff_incompatibility4.stan:51:44
+ 21 │          // but there is a bug: https://github.com/stan-dev/math/issues/3280
+ 22 │          integrate_1d(integrand, 0, 1, y, y, y);
+    │          ------------ Call to incompatible function occurs here.
+ 23 │    }
+    ⋯  
+ 50 │  generated quantities {
+ 51 │    vector[n_obs] theta = laplace_latent_rng(ll_function, (eta, log_ye, y),
+    │                                             ^^^^^^^^^^^ This likelihood function calls the function 
+    │                                                         "integrate_1d",
+    │                                                         which does not currently support higher-order derivatives and
+    │                                                         cannot be used in an embedded Laplace approximation.
+ 52 │                          1, K_function, (x, n_obs, alpha, rho));
 [exit 1]
   $ stanc autodiff_incompatibility5.stan
-Semantic error in 'autodiff_incompatibility5.stan', line 54, column 43 to column 54:
-   -------------------------------------------------
-    52:  
-    53:  generated quantities {
-    54:    vector[n_obs] theta = laplace_latent_rng(ll_function, (eta, log_ye, y),
-                                                    ^
-    55:                          1, K_function, (x, n_obs, alpha, rho));
-    56:  }
-   -------------------------------------------------
-
-The function "algebra_solver", called by this likelihood function,
-does not currently support higher-order derivatives, and
-cannot be used in an embedded Laplace approximation.
+error: Incompatible function used in embedded Laplace approximation.
+    ┌─ autodiff_incompatibility5.stan:54:44
+ 13 │      array[3] real dat = {eta, 0.2, 0.3};
+ 14 │      dat[cols(algebra_solver(algebra_system, [eta]', [1]', {0.1}, {2}))] = 0.0;
+    │               -------------- Call to incompatible function occurs here.
+ 15 │  
+    ⋯  
+ 53 │  generated quantities {
+ 54 │    vector[n_obs] theta = laplace_latent_rng(ll_function, (eta, log_ye, y),
+    │                                             ^^^^^^^^^^^ This likelihood function calls the function 
+    │                                                         "algebra_solver",
+    │                                                         which does not currently support higher-order derivatives and
+    │                                                         cannot be used in an embedded Laplace approximation.
+ 55 │                          1, K_function, (x, n_obs, alpha, rho));
 [exit 1]
   $ stanc bad_callback1.stan
-Semantic error in 'bad_callback1.stan', line 36, column 29 to column 40:
-   -------------------------------------------------
-    34:  }
-    35:  model {
-    36:    target += laplace_marginal(ll_function, (eta, log_ye, y), 1, 
-                                      ^
-    37:                                    K_function, (x, n_obs, alpha, rho));
-    38:  }
-   -------------------------------------------------
-
-Function "ll_function" does not have a valid signature for use in "laplace_marginal":
-Expected function returning real but got function returning void.
+error: Invalid signature for forwarded function "ll_function" in "laplace_marginal".
+    ┌─ bad_callback1.stan:36:30
+  2 │    // specify negative binomial likelihood with mean offset
+  3 │    void ll_function(vector theta, // latent Gaussian
+    │         ----------- Callback defined here.
+  4 │                     real eta,
+    ⋯  
+ 35 │  model {
+ 36 │    target += laplace_marginal(ll_function, (eta, log_ye, y), 1, 
+    │                               ^^^^^^^^^^^ Function "ll_function" does not have a valid signature for use in 
+    │                                           "laplace_marginal"
+ 37 │                                    K_function, (x, n_obs, alpha, rho));
+    = Expected function returning real but got function returning void.
 [exit 1]
   $ stanc bad_callback2.stan
-Semantic error in 'bad_callback2.stan', line 38, column 29 to column 49:
-   -------------------------------------------------
-    36:  }
-    37:  model {
-    38:    target += laplace_marginal(ll_function_jacobian, (eta, log_ye, y), 1, 
-                                      ^
-    39:                                    K_function, (x, n_obs, alpha, rho));
-    40:  }
-   -------------------------------------------------
-
-Function "ll_function_jacobian" does not have a valid signature for use in 
-"laplace_marginal":
-Expected a pure function but got a _jacobian function.
+error: Invalid signature for forwarded function "ll_function_jacobian" in "laplace_marginal".
+    ┌─ bad_callback2.stan:38:30
+  2 │    // specify negative binomial likelihood with mean offset
+  3 │    real ll_function_jacobian(vector theta, // latent Gaussian
+    │         -------------------- Callback defined here.
+  4 │                     real eta,
+    ⋯  
+ 37 │  model {
+ 38 │    target += laplace_marginal(ll_function_jacobian, (eta, log_ye, y), 1, 
+    │                               ^^^^^^^^^^^^^^^^^^^^ Function "ll_function_jacobian" does not have a valid signature for use in 
+    │                                                    "laplace_marginal"
+ 39 │                                    K_function, (x, n_obs, alpha, rho));
+    = Expected a pure function but got a _jacobian function.
 [exit 1]
   $ stanc bad_callback3.stan
-Semantic error in 'bad_callback3.stan', line 28, column 29 to column 40:
-   -------------------------------------------------
-    26:  model {
-    27:    real ll_function;
-    28:    target += laplace_marginal(ll_function, (eta, log_ye, y), 1, 
-                                      ^
-    29:                                    K_function, (x, n_obs, alpha, rho));
-    30:  }
-   -------------------------------------------------
-
-A returning function was expected but a non-function value "ll_function" was supplied.
+error: A returning function was expected but a non-function value "ll_function" was supplied.
+    ┌─ bad_callback3.stan:28:30
+ 26 │  model {
+ 27 │    real ll_function;
+    │         ----------- Variable was declared here.
+ 28 │    target += laplace_marginal(ll_function, (eta, log_ye, y), 1, 
+    │                               ^^^^^^^^^^^ A returning function was expected but a non-function value 
+    │                                           "ll_function" was supplied.
+ 29 │                                    K_function, (x, n_obs, alpha, rho));
 [exit 1]
   $ stanc bad_callback4.stan
-Semantic error in 'bad_callback4.stan', line 37, column 29 to column 40:
-   -------------------------------------------------
-    35:  model {
-    36:  
-    37:    target += laplace_marginal(ll_function, (eta, log_ye, y), 1,
-                                      ^
-    38:                                    K_function, (x, n_obs, alpha, rho));
-    39:  }
-   -------------------------------------------------
-
-Function "ll_function" does not have a valid signature for use in "laplace_marginal":
-The first argument is marked data-only. (Local variables are assumed to
-depend on parameters; same goes for function inputs unless they are marked
-with the keyword "data".)
+error: Invalid signature for forwarded function "ll_function" in "laplace_marginal".
+    ┌─ bad_callback4.stan:37:30
+  2 │    // specify negative binomial likelihood with mean offset
+  3 │    real ll_function(data vector theta, // latent Gaussian
+    │         ----------- Callback defined here.
+  4 │                     real eta,
+    ⋯  
+ 36 │  
+ 37 │    target += laplace_marginal(ll_function, (eta, log_ye, y), 1,
+    │                               ^^^^^^^^^^^ Function "ll_function" does not have a valid signature for use in 
+    │                                           "laplace_marginal"
+ 38 │                                    K_function, (x, n_obs, alpha, rho));
+    = The first argument is marked data-only.
+      (Local variables are assumed to depend on parameters; same goes for
+      function inputs unless they are marked with the keyword "data".)
 [exit 1]
   $ stanc bad_callback5.stan
-Semantic error in 'bad_callback5.stan', line 37, column 29 to column 40:
-   -------------------------------------------------
-    35:  }
-    36:  model {
-    37:    target += laplace_marginal(ll_function, (eta, log_ye, y), 1,
-                                      ^
-    38:                                    K_function, (x, n_obs, alpha, rho));
-    39:  }
-   -------------------------------------------------
-
-Function "ll_function" does not have a valid signature for use in "laplace_marginal":
-The first argument must be vector but got complex_vector.
+error: Invalid signature for forwarded function "ll_function" in "laplace_marginal".
+    ┌─ bad_callback5.stan:37:30
+  2 │    // specify negative binomial likelihood with mean offset
+  3 │    real ll_function(complex_vector theta, // latent Gaussian
+    │         ----------- Callback defined here.
+  4 │                     real eta,
+    ⋯  
+ 36 │  model {
+ 37 │    target += laplace_marginal(ll_function, (eta, log_ye, y), 1,
+    │                               ^^^^^^^^^^^ Function "ll_function" does not have a valid signature for use in 
+    │                                           "laplace_marginal"
+ 38 │                                    K_function, (x, n_obs, alpha, rho));
+    = The first argument must be vector but got complex_vector.
 [exit 1]
   $ stanc bad_forward1.stan
-Semantic error in 'bad_forward1.stan', line 37, column 42 to column 47:
-   -------------------------------------------------
-    35:  model {
-    36:  
-    37:    target += laplace_marginal(ll_function, {2.0},
-                                                   ^
-    38:                                   1, K_function, (x, n_obs, alpha, rho));
-    39:  }
-   -------------------------------------------------
-
-Forwarded arguments to 'll_function' in call to 'laplace_marginal' must be a tuple.
-Instead found type array[] real.
+error: Forwarded arguments to 'll_function' in call to 'laplace_marginal' must be a tuple. Instead found type array[] real.
+    ┌─ bad_forward1.stan:37:43
+ 36 │  
+ 37 │    target += laplace_marginal(ll_function, {2.0},
+    │                                            ^^^^^ Forwarded arguments to 'll_function' in call to 'laplace_marginal' must be a tuple.
+    │                                                  Instead found type array[] real.
+ 38 │                                   1, K_function, (x, n_obs, alpha, rho));
 [exit 1]
   $ stanc bad_forward2.stan
-Semantic error in 'bad_forward2.stan', line 37, column 42 to column 58:
-   -------------------------------------------------
-    35:  model {
-    36:  
-    37:    target += laplace_marginal(ll_function, (eta, y, log_ye),
-                                                   ^
-    38:                                   1, K_function, (x, n_obs, alpha, rho));
-    39:  }
-   -------------------------------------------------
-
-Cannot call "ll_function" with arguments forwarded from call to
-"laplace_marginal":
-The second argument (excluding the latent gaussian vector argument) must be
-vector but got array[] int.
+error: Ill-typed arguments forwarded to "ll_function" in "laplace_marginal".
+    ┌─ bad_forward2.stan:37:43
+  2 │    // specify negative binomial likelihood with mean offset
+  3 │    real ll_function(vector theta, // latent Gaussian
+    │         ----------- Callback defined here.
+  4 │                     real eta,
+    ⋯  
+ 36 │  
+ 37 │    target += laplace_marginal(ll_function, (eta, y, log_ye),
+    │                                            ^^^^^^^^^^^^^^^^ Cannot call "ll_function"
+    │                                                             with arguments forwarded from
+    │                                                             call to "laplace_marginal"
+ 38 │                                   1, K_function, (x, n_obs, alpha, rho));
+    = The second argument (excluding the latent gaussian vector argument) must be
+      vector but got array[] int.
 [exit 1]
   $ stanc bad_forward3.stan
-Semantic error in 'bad_forward3.stan', line 36, column 42 to column 50:
-   -------------------------------------------------
-    34:  }
-    35:  model {
-    36:    target += laplace_marginal(ll_function, (eta, y),
-                                                   ^
-    37:                                    1, K_function, (x, n_obs, alpha, rho));
-    38:  }
-   -------------------------------------------------
-
-Cannot call "ll_function" with arguments forwarded from call to
-"laplace_marginal":
-Expected 3 arguments (excluding the latent gaussian vector argument)
-but got 2 arguments.
+error: Ill-typed arguments forwarded to "ll_function" in "laplace_marginal".
+    ┌─ bad_forward3.stan:36:43
+  2 │    // specify negative binomial likelihood with mean offset
+  3 │    real ll_function(vector theta, // latent Gaussian
+    │         ----------- Callback defined here.
+  4 │                     real eta,
+    ⋯  
+ 35 │  model {
+ 36 │    target += laplace_marginal(ll_function, (eta, y),
+    │                                            ^^^^^^^^ Cannot call "ll_function"
+    │                                                     with arguments forwarded from
+    │                                                     call to "laplace_marginal"
+ 37 │                                    1, K_function, (x, n_obs, alpha, rho));
+    = Expected 3 arguments (excluding the latent gaussian vector argument)
+      but got 2 arguments.
 [exit 1]
   $ stanc bad_forward4.stan
-Semantic error in 'bad_forward4.stan', line 37, column 49 to column 74:
-   -------------------------------------------------
-    35:  model {
-    36:    target += laplace_marginal(ll_function, (eta, log_ye, y),
-    37:                                    1, K_function, (x, alpha, rho, rho, rho));
-                                                          ^
-    38:  }
-   -------------------------------------------------
-
-Cannot call "K_function" with arguments forwarded from call to
-"laplace_marginal":
-Expected 4 arguments but got 5 arguments.
+error: Ill-typed arguments forwarded to "K_function" in "laplace_marginal".
+    ┌─ bad_forward4.stan:37:50
+ 11 │    // specify covariance function
+ 12 │    matrix K_function(array[] vector x, int n_obs, real alpha, real rho) {
+    │           ---------- Callback defined here.
+ 13 │      matrix[n_obs, n_obs] K = gp_exp_quad_cov(x, alpha, rho);
+    ⋯  
+ 36 │    target += laplace_marginal(ll_function, (eta, log_ye, y),
+ 37 │                                    1, K_function, (x, alpha, rho, rho, rho));
+    │                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^ Cannot call "K_function"
+    │                                                                             with arguments forwarded from
+    │                                                                             call to "laplace_marginal"
+ 38 │  }
+    = Expected 4 arguments but got 5 arguments.
 [exit 1]
   $ stanc bad_forward5.stan
-Semantic error in 'bad_forward5.stan', line 38, column 35 to column 59:
-   -------------------------------------------------
-    36:  generated quantities {
-    37:    vector[n_obs] theta = laplace_latent_rng(ll_function, (eta, log_ye, y),
-    38:                      1, K_function, (x, n_obs, alpha, {rho}));
-                                            ^
-    39:  }
-   -------------------------------------------------
-
-Cannot call "K_function" with arguments forwarded from call to
-"laplace_latent_rng":
-The fourth argument must be real but got array[] real.
+error: Ill-typed arguments forwarded to "K_function" in "laplace_latent_rng".
+    ┌─ bad_forward5.stan:38:36
+ 11 │    // specify covariance function
+ 12 │    matrix K_function(array[] vector x, int n_obs, real alpha, real rho) {
+    │           ---------- Callback defined here.
+ 13 │      matrix[n_obs, n_obs] K = gp_exp_quad_cov(x, alpha, rho);
+    ⋯  
+ 37 │    vector[n_obs] theta = laplace_latent_rng(ll_function, (eta, log_ye, y),
+ 38 │                      1, K_function, (x, n_obs, alpha, {rho}));
+    │                                     ^^^^^^^^^^^^^^^^^^^^^^^^ Cannot call "K_function"
+    │                                                              with arguments forwarded from
+    │                                                              call to "laplace_latent_rng"
+ 39 │  }
+    = The fourth argument must be real but got array[] real.
 [exit 1]
   $ stanc bad_forward6.stan
-Semantic error in 'bad_forward6.stan', line 49, column 43 to column 54:
-   -------------------------------------------------
-    47:  
-    48:  generated quantities {
-    49:    vector[n_obs] theta = laplace_latent_rng(ll_function, (1,1, log_ye, y),
-                                                    ^
-    50:                      1, K_function, (x, n_obs, alpha, rho));
-    51:  }
-   -------------------------------------------------
-
-No unique minimum promotion found for function "ll_function".
-Overloaded functions must not have multiple equally valid promotion paths.
-This function has several:
-(vector, int, real, vector, array[] int) => real
-(vector, real, int, vector, array[] int) => real
-Consider defining a new signature for the exact types needed or
-re-thinking existing definitions.
+error: No unique minimum promotion found for function "ll_function".
+    ┌─ bad_forward6.stan:49:44
+  2 │    // specify negative binomial likelihood with mean offset
+  3 │    real ll_function(vector theta, // latent Gaussian
+    │         ----------- Function defined here.
+  4 │                     real phi,
+    ⋯  
+ 12 │    // specify negative binomial likelihood with mean offset
+ 13 │    real ll_function(vector theta, // latent Gaussian
+    │         ----------- Function defined here.
+ 14 │                     int phi,
+    ⋯  
+ 48 │  generated quantities {
+ 49 │    vector[n_obs] theta = laplace_latent_rng(ll_function, (1,1, log_ye, y),
+    │                                             ^^^^^^^^^^^ No unique minimum promotion found for function 
+    │                                                         "ll_function".
+ 50 │                      1, K_function, (x, n_obs, alpha, rho));
+    = Overloaded functions must not have multiple equally valid promotion paths.
+      This function has several:
+      (vector, int, real, vector, array[] int) => real
+      (vector, real, int, vector, array[] int) => real
+    = Consider defining a new signature for the exact types needed or
+      re-thinking
+      existing definitions.
 [exit 1]
   $ stanc bad_forward7.stan
-Semantic error in 'bad_forward7.stan', line 2, column 57 to column 58:
-   -------------------------------------------------
-     1:  model {
-     2:    target += laplace_marginal_tol_neg_binomial_2_log_lpmf(1 | 1, 1, 1);
-                                                                  ^
-     3:  }
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function "laplace_marginal_tol_neg_binomial_2_log_lpmf"
-for the likelihood:
-The first argument must be array[] int but got int.
-Expected the arguments to start with:
-(array[] int, array[] int, vector, vector)
+error: Ill-typed arguments supplied to "laplace_marginal_tol_neg_binomial_2_log_lpmf".
+    ┌─ bad_forward7.stan:2:58
+  1 │  model {
+  2 │    target += laplace_marginal_tol_neg_binomial_2_log_lpmf(1 | 1, 1, 1);
+    │                                                           ^ Ill-typed arguments supplied to function 
+    │                                                             "laplace_marginal_tol_neg_binomial_2_log_lpmf"
+    │                                                             for the likelihood
+  3 │  }
+    = Expected the arguments to start with:
+      (The first argument must be array[] int but got int.) array[] int,
+      array[] int,
+      vector,
+      vector
 [exit 1]
   $ stanc bad_forward8.stan
-Semantic error in 'bad_forward8.stan', line 2, column 2 to column 3:
-   -------------------------------------------------
-     1:  model {
-     2:    1 ~ laplace_marginal_tol_neg_binomial_2_log(1, 1, 1);
-           ^
-     3:  }
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function "laplace_marginal_tol_neg_binomial_2_log_lupmf"
-for the likelihood:
-The first argument must be array[] int but got int.
-Expected the arguments to start with:
-(array[] int, array[] int, vector, vector)
+error: Ill-typed arguments supplied to "laplace_marginal_tol_neg_binomial_2_log_lupmf".
+    ┌─ bad_forward8.stan:2:3
+  1 │  model {
+  2 │    1 ~ laplace_marginal_tol_neg_binomial_2_log(1, 1, 1);
+    │    ^ Ill-typed arguments supplied to function "laplace_marginal_tol_neg_binomial_2_log_lupmf"
+    │      for the likelihood
+  3 │  }
+    = Expected the arguments to start with:
+      (The first argument must be array[] int but got int.) array[] int,
+      array[] int,
+      vector,
+      vector
 [exit 1]
   $ stanc bad_forward9.stan
-Semantic error in 'bad_forward9.stan', line 37, column 34 to column 56:
-   -------------------------------------------------
-    35:  model {
-    36:    target += laplace_marginal(ll_function, (eta, log_ye, y),
-    37:                     1, K_function, (x, n_obs, alpha, rho));
-                                           ^
-    38:  }
-   -------------------------------------------------
-
-Cannot call "K_function" with arguments forwarded from call to
-"laplace_marginal":
-The fourth argument is marked data-only. (Local variables are assumed to
-depend on parameters; same goes for function inputs unless they are marked
-with the keyword "data".)
+error: Ill-typed arguments forwarded to "K_function" in "laplace_marginal".
+    ┌─ bad_forward9.stan:37:35
+ 11 │    // specify covariance function
+ 12 │    matrix K_function(array[] vector x, int n_obs, real alpha, data real rho) {
+    │           ---------- Callback defined here.
+ 13 │      matrix[n_obs, n_obs] K = gp_exp_quad_cov(x, alpha, rho);
+    ⋯  
+ 36 │    target += laplace_marginal(ll_function, (eta, log_ye, y),
+ 37 │                     1, K_function, (x, n_obs, alpha, rho));
+    │                                    ^^^^^^^^^^^^^^^^^^^^^^ Cannot call "K_function"
+    │                                                           with arguments forwarded from
+    │                                                           call to "laplace_marginal"
+ 38 │  }
+    = The fourth argument is marked data-only.
+      (Local variables are assumed to depend on parameters; same goes for
+      function inputs unless they are marked with the keyword "data".)
 [exit 1]
   $ stanc bad_hessian_block_size1.stan
-Semantic error in 'bad_hessian_block_size1.stan', line 38, column 78 to column 80:
-   -------------------------------------------------
-    36:  
-    37:  generated quantities {
-    38:    vector[n_obs] theta = laplace_latent_tol_rng(ll_function, (eta, log_ye, y), 3i,
-                                                                                       ^
-    39:                      K_function, (x, n_obs, alpha, rho), (theta_0, 1,2,4,5, 0));
-    40:  }
-   -------------------------------------------------
-
-The hessian block size argument to "laplace_latent_tol_rng" must be a data-only int.
-Instead found type complex.
+error: The hessian block size argument to "laplace_latent_tol_rng" must be a data-only int. Instead found type complex.
+    ┌─ bad_hessian_block_size1.stan:38:79
+ 37 │  generated quantities {
+ 38 │    vector[n_obs] theta = laplace_latent_tol_rng(ll_function, (eta, log_ye, y), 3i,
+    │                                                                                ^^ The hessian block size argument to 
+    │                                                                                   "laplace_latent_tol_rng" must be a data-only int.
+    │                                                                                   Instead found type complex.
+ 39 │                      K_function, (x, n_obs, alpha, rho), (theta_0, 1,2,4,5, 0));
 [exit 1]
   $ stanc bad_hessian_block_size2.stan
-Semantic error in 'bad_hessian_block_size2.stan', line 38, column 60 to column 63:
-   -------------------------------------------------
-    36:  
-    37:  model {
-    38:    target += laplace_marginal(ll_function, (eta, log_ye, y), eta,
-                                                                     ^
-    39:                      K_function, (x, n_obs, alpha, rho));
-    40:  }
-   -------------------------------------------------
-
-The hessian block size argument to "laplace_marginal" must be a data-only int.
-Instead found type real. (Local variables are assumed to depend on
-parameters; same goes for function inputs unless they are marked with the
-keyword "data".)
+error: The hessian block size argument to "laplace_marginal" must be a data-only int. Instead found type real. (Local variables are assumed to depend on parameters; same goes for function inputs unless they are marked with the keyword "data".)
+    ┌─ bad_hessian_block_size2.stan:38:61
+ 37 │  model {
+ 38 │    target += laplace_marginal(ll_function, (eta, log_ye, y), eta,
+    │                                                              ^^^ The hessian block size argument to 
+    │                                                                  "laplace_marginal" must be a data-only int.
+    │                                                                  Instead found type real.
+    │                                                                  (Local variables are
+    │                                                                  assumed to depend on
+    │                                                                  parameters; same goes
+    │                                                                  for function inputs
+    │                                                                  unless they are marked
+    │                                                                  with the keyword
+    │                                                                  "data".)
+ 39 │                      K_function, (x, n_obs, alpha, rho));
 [exit 1]
   $ stanc bad_overload.stan
-Semantic error in 'bad_overload.stan', line 2, column 7 to column 51:
-   -------------------------------------------------
-     1:  functions {
-     2:    real laplace_marginal_tol_neg_binomial_2_log_lpmf(int y) {
-                ^
-     3:      return 1.0;
-     4:    }
-   -------------------------------------------------
-
-Identifier "laplace_marginal_tol_neg_binomial_2_log_lpmf" clashes with a non-overloadable Stan Math library function.
+error: Identifier "laplace_marginal_tol_neg_binomial_2_log_lpmf" clashes with a non-overloadable Stan Math library function.
+    ┌─ bad_overload.stan:2:8
+  1 │  functions {
+  2 │    real laplace_marginal_tol_neg_binomial_2_log_lpmf(int y) {
+    │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Identifier "laplace_marginal_tol_neg_binomial_2_log_lpmf" clashes with a non-overloadable Stan Math library function.
+  3 │      return 1.0;
 [exit 1]
   $ stanc bad_solve_cov.stan
-Semantic error in 'bad_solve_cov.stan', line 39, column 52 to column 57:
-   -------------------------------------------------
-    37:     tuple(vector[n_obs], matrix[n_obs, n_obs]) mean_chol
-    38:        = laplace_latent_solve(ll_function, (1.0, log_ye, y), 1,
-    39:                               K_function, (x, n_obs, alpha, rho));
-                                                             ^
-    40:  }
-   -------------------------------------------------
-
-All arguments to "laplace_latent_solve" must be a data-only
-if used outside the generated quantities block. (Local variables are assumed
-to depend on parameters; same goes for function inputs unless they are marked
-with the keyword "data".)
+error: Ill-typed arguments supplied to "laplace_latent_solve".
+    ┌─ bad_solve_cov.stan:39:53
+ 38 │        = laplace_latent_solve(ll_function, (1.0, log_ye, y), 1,
+ 39 │                               K_function, (x, n_obs, alpha, rho));
+    │                                                      ^^^^^ All arguments to "laplace_latent_solve" must be a data-only
+    │                                                            if used outside the generated quantities
+    │                                                            block.]
+ 40 │  }
+    = (Local variables are assumed to depend on parameters; same goes for
+      function inputs unless they are marked with the keyword "data".)
 [exit 1]
   $ stanc bad_solve_lik.stan
-Semantic error in 'bad_solve_lik.stan', line 38, column 43 to column 46:
-   -------------------------------------------------
-    36:     // laplace_latent_solve is only callable in Generated Quantities block
-    37:     tuple(vector[n_obs], matrix[n_obs, n_obs]) mean_chol
-    38:        = laplace_latent_solve(ll_function, (eta, log_ye, y), 1,
-                                                    ^
-    39:                               K_function, (x, n_obs, alpha, rho));
-    40:  }
-   -------------------------------------------------
-
-All arguments to "laplace_latent_solve" must be a data-only
-if used outside the generated quantities block. (Local variables are assumed
-to depend on parameters; same goes for function inputs unless they are marked
-with the keyword "data".)
+error: Ill-typed arguments supplied to "laplace_latent_solve".
+    ┌─ bad_solve_lik.stan:38:44
+ 37 │     tuple(vector[n_obs], matrix[n_obs, n_obs]) mean_chol
+ 38 │        = laplace_latent_solve(ll_function, (eta, log_ye, y), 1,
+    │                                             ^^^ All arguments to "laplace_latent_solve" must be a data-only
+    │                                                 if used outside the generated quantities
+    │                                                 block.]
+ 39 │                               K_function, (x, n_obs, alpha, rho));
+    = (Local variables are assumed to depend on parameters; same goes for
+      function inputs unless they are marked with the keyword "data".)
 [exit 1]
   $ stanc bad_solve_tol.stan
-Semantic error in 'bad_solve_tol.stan', line 38, column 8 to line 39, column 56:
-   -------------------------------------------------
-    36:    // _tol variant requires a trailing control-parameter tuple
-    37:    tuple(vector[n_obs], matrix[n_obs, n_obs]) mean_chol
-    38:        = laplace_latent_solve_tol(ll_function, (eta, log_ye, y), 1, K_function,
-                 ^
-    39:                                   (x, n_obs, alpha, rho));
-    40:  }
-   -------------------------------------------------
-
-Missing control parameter tuple at the end of the call to "laplace_latent_solve_tol".
-Expected a tuple of 6 arguments for the control parameters.
+error: Ill-typed arguments supplied to "laplace_latent_solve_tol".
+    ┌─ bad_solve_tol.stan:38:9
+ 37 │      tuple(vector[n_obs], matrix[n_obs, n_obs]) mean_chol
+ 38 │          = laplace_latent_solve_tol(ll_function, (eta, log_ye, y), 1, K_function,
+    │ ╭──────────^
+ 39 │ │                                   (x, n_obs, alpha, rho));
+    │ ╰─────────────────────────────────────────────────────────^ Missing control parameter tuple at the end of the call to "laplace_latent_solve_tol".
+    │                                                             Expected a tuple of 6 arguments for the control parameters.
+ 40 │    }
 [exit 1]
   $ stanc bad_theta0.stan
-Semantic error in 'bad_theta0.stan', line 43, column 9 to column 16:
-   -------------------------------------------------
-    41:    target += laplace_marginal_tol(ll_function, (eta, log_ye, y),
-    42:                                   hessian_block_size, K_function, (x, n_obs, alpha, rho),
-    43:          (theta_0, tolerance, max_num_steps,
-                  ^
-    44:          solver, max_steps_line_search, allow_fallthrough));
-    45:  }
-   -------------------------------------------------
-
-The first element of the control parameter tuple (initial guess) to "laplace_marginal_tol"
-must be vector. Instead found type array[] real.
+error: The first element of the control parameter tuple (initial guess) to "laplace_marginal_tol" must be vector. Instead found type array[] real.
+    ┌─ bad_theta0.stan:43:10
+ 42 │                                   hessian_block_size, K_function, (x, n_obs, alpha, rho),
+ 43 │          (theta_0, tolerance, max_num_steps,
+    │           ^^^^^^^ The first element of the control parameter tuple (initial guess) to 
+    │                   "laplace_marginal_tol" must be vector.
+    │                   Instead found type array[] real.
+ 44 │          solver, max_steps_line_search, allow_fallthrough));
 [exit 1]
   $ stanc bad_tol0.stan
-Semantic error in 'bad_tol0.stan', line 40, column 59 to column 66:
-   -------------------------------------------------
-    38:  generated quantities {
-    39:    vector[n_obs] theta = laplace_latent_rng(ll_function, (eta, log_ye, y),
-    40:                      1, K_function, (x, n_obs, alpha, rho), theta_0);
-                                                                    ^
-    41:  }
-   -------------------------------------------------
-
-Received 1 extra argument at the end of the call to "laplace_latent_rng".
-Did you mean to call the _tol version?
+error: Ill-typed arguments supplied to "laplace_latent_rng".
+    ┌─ bad_tol0.stan:40:60
+ 39 │    vector[n_obs] theta = laplace_latent_rng(ll_function, (eta, log_ye, y),
+ 40 │                      1, K_function, (x, n_obs, alpha, rho), theta_0);
+    │                                                             ^^^^^^^ Received 1 extra argument at the end of the call to 
+    │                                                                     "laplace_latent_rng".
+    │                                                                     Did you mean to call the _tol version?
+ 41 │  }
 [exit 1]
   $ stanc bad_tol1.stan
-Semantic error in 'bad_tol1.stan', line 40, column 56 to column 63:
-   -------------------------------------------------
-    38:  generated quantities {
-    39:    vector[n_obs] theta = laplace_latent_rng(ll_function, (eta, log_ye, y), 1,
-    40:                      K_function, (x, n_obs, alpha, rho), theta_0, 1);
-                                                                 ^
-    41:  }
-   -------------------------------------------------
-
-Received 2 extra arguments at the end of the call to "laplace_latent_rng".
-Did you mean to call the _tol version with a tuple of these?
+error: Ill-typed arguments supplied to "laplace_latent_rng".
+    ┌─ bad_tol1.stan:40:57
+ 39 │    vector[n_obs] theta = laplace_latent_rng(ll_function, (eta, log_ye, y), 1,
+ 40 │                      K_function, (x, n_obs, alpha, rho), theta_0, 1);
+    │                                                          ^^^^^^^ Received 2 extra arguments at the end of the call to 
+    │                                                                  "laplace_latent_rng".
+    │                                                                  Did you mean to call the _tol version with a tuple of these?
+ 41 │  }
 [exit 1]
   $ stanc bad_tol10.stan
-Semantic error in 'bad_tol10.stan', line 39, column 74 to column 77:
-   -------------------------------------------------
-    37:  generated quantities {
-    38:    vector[n_obs] theta = laplace_latent_tol_rng(ll_function, (eta, log_ye, y), 1,
-    39:                      K_function, (x, n_obs, alpha, rho), (theta_0, 1,2,3,4,0.1));
-                                                                                   ^
-    40:  }
-   -------------------------------------------------
-
-The sixth element of the control parameter tuple (allow_fallthrough) to 
-"laplace_latent_tol_rng" must be int. Instead found type real.
+error: The sixth element of the control parameter tuple (allow_fallthrough) to "laplace_latent_tol_rng" must be int. Instead found type real.
+    ┌─ bad_tol10.stan:39:75
+ 38 │    vector[n_obs] theta = laplace_latent_tol_rng(ll_function, (eta, log_ye, y), 1,
+ 39 │                      K_function, (x, n_obs, alpha, rho), (theta_0, 1,2,3,4,0.1));
+    │                                                                            ^^^ The sixth element of the control parameter tuple (allow_fallthrough) to 
+    │                                                                                "laplace_latent_tol_rng"
+    │                                                                                must be int.
+    │                                                                                Instead found type real.
+ 40 │  }
 [exit 1]
   $ stanc bad_tol11.stan
-Semantic error in 'bad_tol11.stan', line 39, column 80 to column 81:
-   -------------------------------------------------
-    37:  generated quantities {
-    38:    vector[n_obs] theta = laplace_latent_tol_rng(ll_function, (eta, log_ye, y),
-    39:                     1,  K_function, (x, n_obs, alpha, rho), (theta_0, 1,2,3,4,0),1);
-                                                                                         ^
-    40:  }
-   -------------------------------------------------
-
-Received 1 extra argument at the end of the call to "laplace_latent_tol_rng".
-Only a single tuple of control parameters is expected.
+error: Ill-typed arguments supplied to "laplace_latent_tol_rng".
+    ┌─ bad_tol11.stan:39:81
+ 38 │    vector[n_obs] theta = laplace_latent_tol_rng(ll_function, (eta, log_ye, y),
+ 39 │                     1,  K_function, (x, n_obs, alpha, rho), (theta_0, 1,2,3,4,0),1);
+    │                                                                                  ^ Received 1 extra argument at the end of the call to 
+    │                                                                                    "laplace_latent_tol_rng".
+    │                                                                                    Only a single tuple of control parameters is expected.
+ 40 │  }
 [exit 1]
   $ stanc bad_tol2.stan
-Semantic error in 'bad_tol2.stan', line 39, column 56 to column 63:
-   -------------------------------------------------
-    37:  generated quantities {
-    38:    vector[n_obs] theta = laplace_latent_rng(ll_function, (eta, log_ye, y), 1,
-    39:                      K_function, (x, n_obs, alpha, rho), theta_0, 1,2,3,4,5);
-                                                                 ^
-    40:  }
-   -------------------------------------------------
-
-Received 6 extra arguments at the end of the call to "laplace_latent_rng".
-Did you mean to call the _tol version with a tuple of these?
+error: Ill-typed arguments supplied to "laplace_latent_rng".
+    ┌─ bad_tol2.stan:39:57
+ 38 │    vector[n_obs] theta = laplace_latent_rng(ll_function, (eta, log_ye, y), 1,
+ 39 │                      K_function, (x, n_obs, alpha, rho), theta_0, 1,2,3,4,5);
+    │                                                          ^^^^^^^ Received 6 extra arguments at the end of the call to 
+    │                                                                  "laplace_latent_rng".
+    │                                                                  Did you mean to call the _tol version with a tuple of these?
+ 40 │  }
 [exit 1]
   $ stanc bad_tol3.stan
-Semantic error in 'bad_tol3.stan', line 39, column 72 to column 73:
-   -------------------------------------------------
-    37:  generated quantities {
-    38:    vector[n_obs] theta = laplace_latent_tol_rng(ll_function, (eta, log_ye, y),1,
-    39:                      K_function, (x, n_obs, alpha, rho), (theta_0, 1,2,3,4));
-                                                                                 ^
-    40:  }
-   -------------------------------------------------
-
-Received a tuple of 5 control arguments at the end of the call to "laplace_latent_tol_rng".
-Expected tuple of 6 arguments for the control parameters instead.
+error: Ill-typed arguments supplied to "laplace_latent_tol_rng".
+    ┌─ bad_tol3.stan:39:73
+ 38 │    vector[n_obs] theta = laplace_latent_tol_rng(ll_function, (eta, log_ye, y),1,
+ 39 │                      K_function, (x, n_obs, alpha, rho), (theta_0, 1,2,3,4));
+    │                                                                          ^ Received a tuple of 5 control arguments at the end of the call to 
+    │                                                                            "laplace_latent_tol_rng".
+    │                                                                            Expected tuple of 6 arguments for the control parameters instead.
+ 40 │  }
 [exit 1]
   $ stanc bad_tol4.stan
-Semantic error in 'bad_tol4.stan', line 47, column 32 to column 35:
-   -------------------------------------------------
-    45:    target += laplace_marginal_tol(ll_function, (eta, log_ye, y),
-    46:                                  hessian_block_size, K_function, (x, n_obs, alpha, rho), (theta_0,
-    47:                                  eta, max_num_steps,
-                                         ^
-    48:                                  solver, max_steps_line_search, allow_fallthrough));
-    49:  }
-   -------------------------------------------------
-
-The control parameters to "laplace_marginal_tol" must all be data-only,
-but the second element of the control parameter tuple (tolerance) here is not.
-(Local variables are assumed to depend on parameters; same goes for function
-inputs unless they are marked with the keyword "data".)
+error: Ill-typed arguments supplied to "laplace_marginal_tol".
+    ┌─ bad_tol4.stan:47:33
+ 46 │                                  hessian_block_size, K_function, (x, n_obs, alpha, rho), (theta_0,
+ 47 │                                  eta, max_num_steps,
+    │                                  ^^^ The control parameters to "laplace_marginal_tol"
+    │                                      must all be data-only,
+    │                                      but the second element of the control parameter tuple (tolerance) here is not.
+ 48 │                                  solver, max_steps_line_search, allow_fallthrough));
+    = (Local variables are assumed to depend on parameters; same goes for
+      function inputs unless they are marked with the keyword "data".)
 [exit 1]
   $ stanc bad_tol5.stan
-Semantic error in 'bad_tol5.stan', line 39, column 72 to column 75:
-   -------------------------------------------------
-    37:  generated quantities {
-    38:    vector[n_obs] theta = laplace_latent_tol_rng(ll_function, (eta, log_ye, y),1,
-    39:                      K_function, (x, n_obs, alpha, rho), (theta_0, 1,2,3,4.5,0));
-                                                                                 ^
-    40:  }
-   -------------------------------------------------
-
-The fifth element of the control parameter tuple (max_steps_line_search) to 
-"laplace_latent_tol_rng" must be int. Instead found type real.
+error: The fifth element of the control parameter tuple (max_steps_line_search) to "laplace_latent_tol_rng" must be int. Instead found type real.
+    ┌─ bad_tol5.stan:39:73
+ 38 │    vector[n_obs] theta = laplace_latent_tol_rng(ll_function, (eta, log_ye, y),1,
+ 39 │                      K_function, (x, n_obs, alpha, rho), (theta_0, 1,2,3,4.5,0));
+    │                                                                          ^^^ The fifth element of the control parameter tuple (max_steps_line_search) to 
+    │                                                                              "laplace_latent_tol_rng"
+    │                                                                              must be int.
+    │                                                                              Instead found type real.
+ 40 │  }
 [exit 1]
   $ stanc bad_tol6.stan
-Semantic error in 'bad_tol6.stan', line 39, column 76 to column 77:
-   -------------------------------------------------
-    37:  generated quantities {
-    38:    vector[n_obs] theta = laplace_latent_tol_rng(ll_function, (eta, log_ye, y), 1,
-    39:                      K_function, (x, n_obs, alpha, rho), (theta_0, 1,2,3,4,5,6));
-                                                                                     ^
-    40:  }
-   -------------------------------------------------
-
-Received a tuple of 7 control arguments at the end of the call to "laplace_latent_tol_rng".
-Expected tuple of 6 arguments for the control parameters instead.
+error: Ill-typed arguments supplied to "laplace_latent_tol_rng".
+    ┌─ bad_tol6.stan:39:77
+ 38 │    vector[n_obs] theta = laplace_latent_tol_rng(ll_function, (eta, log_ye, y), 1,
+ 39 │                      K_function, (x, n_obs, alpha, rho), (theta_0, 1,2,3,4,5,6));
+    │                                                                              ^ Received a tuple of 7 control arguments at the end of the call to 
+    │                                                                                "laplace_latent_tol_rng".
+    │                                                                                Expected tuple of 6 arguments for the control parameters instead.
+ 40 │  }
 [exit 1]
   $ stanc bad_tol7.stan
-Semantic error in 'bad_tol7.stan', line 39, column 71 to column 74:
-   -------------------------------------------------
-    37:  generated quantities {
-    38:    vector[n_obs] theta = laplace_latent_tol_rng(ll_function, (eta, log_ye, y), 1,
-    39:                       K_function, (x, n_obs, alpha, rho), (theta_0, 1,2,3.4,5,0));
-                                                                                ^
-    40:  }
-   -------------------------------------------------
-
-The fourth element of the control parameter tuple (solver) to "laplace_latent_tol_rng"
-must be int. Instead found type real.
+error: The fourth element of the control parameter tuple (solver) to "laplace_latent_tol_rng" must be int. Instead found type real.
+    ┌─ bad_tol7.stan:39:72
+ 38 │    vector[n_obs] theta = laplace_latent_tol_rng(ll_function, (eta, log_ye, y), 1,
+ 39 │                       K_function, (x, n_obs, alpha, rho), (theta_0, 1,2,3.4,5,0));
+    │                                                                         ^^^ The fourth element of the control parameter tuple (solver) to 
+    │                                                                             "laplace_latent_tol_rng"
+    │                                                                             must be int.
+    │                                                                             Instead found type real.
+ 40 │  }
 [exit 1]
   $ stanc bad_tol9.stan
-Semantic error in 'bad_tol9.stan', line 39, column 68 to column 71:
-   -------------------------------------------------
-    37:  generated quantities {
-    38:    vector[n_obs] theta = laplace_latent_tol_rng(ll_function, (eta, log_ye, y),1,
-    39:                      K_function, (x, n_obs, alpha, rho), (theta_0, 1,{2},4,5,0));
-                                                                             ^
-    40:  }
-   -------------------------------------------------
-
-The third element of the control parameter tuple (max_num_steps) to "laplace_latent_tol_rng"
-must be int. Instead found type array[] int.
+error: The third element of the control parameter tuple (max_num_steps) to "laplace_latent_tol_rng" must be int. Instead found type array[] int.
+    ┌─ bad_tol9.stan:39:69
+ 38 │    vector[n_obs] theta = laplace_latent_tol_rng(ll_function, (eta, log_ye, y),1,
+ 39 │                      K_function, (x, n_obs, alpha, rho), (theta_0, 1,{2},4,5,0));
+    │                                                                      ^^^ The third element of the control parameter tuple (max_num_steps) to 
+    │                                                                          "laplace_latent_tol_rng"
+    │                                                                          must be int.
+    │                                                                          Instead found type array[] int.
+ 40 │  }
 [exit 1]
   $ stanc missing_args1.stan
-Semantic error in 'missing_args1.stan', line 2, column 12 to column 30:
-   -------------------------------------------------
-     1:  model {
-     2:    target += laplace_marginal();
-                     ^
-     3:  }
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function "laplace_marginal".
-The valid signature of this function is
-laplace_marginal((vector, T_l...) => real, tuple(T_l...), data int,
-  (T_k...) => matrix, tuple(T_k...))
-We were unable to start more in-depth checking. Please ensure you are passing
-enough arguments and that the first argument is a function.
+error: Ill-typed arguments supplied to "laplace_marginal".
+    ┌─ missing_args1.stan:2:13
+  1 │  model {
+  2 │    target += laplace_marginal();
+    │              ^^^^^^^^^^^^^^^^^^ The valid signature of this function is
+    │                                 laplace_marginal((vector, T_l...) => real,
+    │                                   tuple(T_l...), data int, (T_k...) => matrix,
+    │                                   tuple(T_k...))@]
+  3 │  }
+    = We were unable to start more in-depth checking. Please ensure you
+      are passing enough arguments and that the first argument is
+      a function.
 [exit 1]
   $ stanc missing_args10.stan
-Semantic error in 'missing_args10.stan', line 40, column 70:
-   -------------------------------------------------
-    38:  generated quantities {
-    39:  
-    40:  vector[n_obs] theta = laplace_latent_rng(ll_function, (eta, log_ye, y));
-                                                                               ^
-    41:  
-    42:  
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function "laplace_latent_rng".
-The valid signature of this function is
-laplace_latent_rng((vector, T_l...) => real, tuple(T_l...), data int,
-  (T_k...) => matrix, tuple(T_k...))
-Missing the hessian block size (data-only int) and remaining arguments.
+error: Ill-typed arguments supplied to "laplace_latent_rng".
+    ┌─ missing_args10.stan:40:71
+ 39 │  
+ 40 │  vector[n_obs] theta = laplace_latent_rng(ll_function, (eta, log_ye, y));
+    │                                                                        ^ The valid signature of this function is
+    │                                                                         laplace_latent_rng((vector, T_l...) => real,
+    │                                                                           tuple(T_l...),
+    │                                                                           data int,
+    │                                                                           (T_k...) => matrix,
+    │                                                                           tuple(T_k...))@]
+ 41 │  
+    = Missing the hessian block size (data-only int) and remaining arguments.
 [exit 1]
   $ stanc missing_args11.stan
-Semantic error in 'missing_args11.stan', line 18, column 84:
-   -------------------------------------------------
-    16:  generated quantities {
-    17:  
-    18:    vector[n_obs] theta = laplace_latent_neg_binomial_2_log_rng(y, {1}, [1.0]', [0.0]'
-                                                                                             ^
-    19:                        );
-    20:  
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function "laplace_latent_neg_binomial_2_log_rng".
-The valid signature of this function is
-laplace_latent_neg_binomial_2_log_rng(array[] int, array[] int, vector,
-  vector, data int, (T_k...) => matrix, tuple(T_k...))
-Missing the hessian block size (data-only int) and remaining arguments.
+error: Ill-typed arguments supplied to "laplace_latent_neg_binomial_2_log_rng".
+    ┌─ missing_args11.stan:18:85
+ 17 │  
+ 18 │    vector[n_obs] theta = laplace_latent_neg_binomial_2_log_rng(y, {1}, [1.0]', [0.0]'
+    │                                                                                      ^ The valid signature of this function is
+    │                                                                                       laplace_latent_neg_binomial_2_log_rng(array[] int,
+    │                                                                                         array[] int, vector,
+    │                                                                                         vector, data int,
+    │                                                                                         (T_k...) => matrix,
+    │                                                                                         tuple(T_k...))@]
+ 19 │                        );
+    = Missing the hessian block size (data-only int) and remaining arguments.
 [exit 1]
   $ stanc missing_args12.stan
-Semantic error in 'missing_args12.stan', line 2, column 64:
-   -------------------------------------------------
-     1:  model {
-     2:    target += laplace_marginal_tol_poisson_log_lpmf({1}, {1}, [0]');
-                                                                         ^
-     3:  }
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function "laplace_marginal_tol_poisson_log_lpmf".
-The valid signature of this function is
-laplace_marginal_tol_poisson_log_lpmf(array[] int, array[] int, vector,
-  data int, (T_k...) => matrix, tuple(T_k...), vector, data real, data int,
-  data int, data int, data int)
-Missing the hessian block size (data-only int) and remaining arguments.
+error: Ill-typed arguments supplied to "laplace_marginal_tol_poisson_log_lpmf".
+    ┌─ missing_args12.stan:2:65
+  1 │  model {
+  2 │    target += laplace_marginal_tol_poisson_log_lpmf({1}, {1}, [0]');
+    │                                                                  ^ The valid signature of this function is
+    │                                                                   laplace_marginal_tol_poisson_log_lpmf(array[] int,
+    │                                                                     array[] int, vector,
+    │                                                                     data int,
+    │                                                                     (T_k...) => matrix,
+    │                                                                     tuple(T_k...), vector,
+    │                                                                     data real, data int,
+    │                                                                     data int, data int,
+    │                                                                     data int)@]
+  3 │  }
+    = Missing the hessian block size (data-only int) and remaining arguments.
 [exit 1]
   $ stanc missing_args2.stan
-Semantic error in 'missing_args2.stan', line 2, column 12 to column 34:
-   -------------------------------------------------
-     1:  model {
-     2:    target += laplace_marginal_tol();
-                     ^
-     3:  }
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function "laplace_marginal_tol".
-The valid signature of this function is
-laplace_marginal_tol((vector, T_l...) => real, tuple(T_l...), data int,
-  (T_k...) => matrix, tuple(T_k...), vector, data real, data int, data int,
-  data int, data int)
-We were unable to start more in-depth checking. Please ensure you are passing
-enough arguments and that the first argument is a function.
+error: Ill-typed arguments supplied to "laplace_marginal_tol".
+    ┌─ missing_args2.stan:2:13
+  1 │  model {
+  2 │    target += laplace_marginal_tol();
+    │              ^^^^^^^^^^^^^^^^^^^^^^ The valid signature of this function is
+    │                                     laplace_marginal_tol((vector, T_l...) => real,
+    │                                       tuple(T_l...), data int,
+    │                                       (T_k...) => matrix,
+    │                                       tuple(T_k...), vector, data real,
+    │                                       data int, data int, data int, data int)@]
+  3 │  }
+    = We were unable to start more in-depth checking. Please ensure you
+      are passing enough arguments and that the first argument is
+      a function.
 [exit 1]
   $ stanc missing_args3.stan
-Semantic error in 'missing_args3.stan', line 2, column 12 to column 58:
-   -------------------------------------------------
-     1:  model {
-     2:    target += laplace_marginal_tol_neg_binomial_2_log_lpmf();
-                     ^
-     3:  }
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function "laplace_marginal_tol_neg_binomial_2_log_lpmf"
-for the likelihood:
-Expected 4 arguments but got 0 arguments.
-Expected the arguments to start with:
-(array[] int, array[] int, vector, vector)
+error: Ill-typed arguments supplied to "laplace_marginal_tol_neg_binomial_2_log_lpmf".
+    ┌─ missing_args3.stan:2:13
+  1 │  model {
+  2 │    target += laplace_marginal_tol_neg_binomial_2_log_lpmf();
+    │              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Ill-typed arguments supplied to function 
+    │                                                             "laplace_marginal_tol_neg_binomial_2_log_lpmf"
+    │                                                             for the likelihood
+  3 │  }
+    = Expected the arguments to start with:
+      (Expected 4 arguments but got 0 arguments.) array[] int,
+      array[] int,
+      vector,
+      vector
 [exit 1]
   $ stanc missing_args4.stan
-Semantic error in 'missing_args4.stan', line 29, column 58:
-   -------------------------------------------------
-    27:  }
-    28:  model {
-    29:    target += laplace_marginal(ll_function, (eta, log_ye, y));
-                                                                   ^
-    30:  
-    31:  }
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function "laplace_marginal".
-The valid signature of this function is
-laplace_marginal((vector, T_l...) => real, tuple(T_l...), data int,
-  (T_k...) => matrix, tuple(T_k...))
-Missing the hessian block size (data-only int) and remaining arguments.
+error: Ill-typed arguments supplied to "laplace_marginal".
+    ┌─ missing_args4.stan:29:59
+ 28 │  model {
+ 29 │    target += laplace_marginal(ll_function, (eta, log_ye, y));
+    │                                                            ^ The valid signature of this function is
+    │                                                             laplace_marginal((vector, T_l...) => real,
+    │                                                               tuple(T_l...),
+    │                                                               data int,
+    │                                                               (T_k...) => matrix,
+    │                                                               tuple(T_k...))@]
+ 30 │  
+    = Missing the hessian block size (data-only int) and remaining arguments.
 [exit 1]
   $ stanc missing_args5.stan
-Semantic error in 'missing_args5.stan', line 3, column 20 to column 40:
-   -------------------------------------------------
-     1:  
-     2:  generated quantities {
-     3:    vector[2] theta = laplace_latent_rng();
-                             ^
-     4:  }
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function "laplace_latent_rng".
-The valid signature of this function is
-laplace_latent_rng((vector, T_l...) => real, tuple(T_l...), data int,
-  (T_k...) => matrix, tuple(T_k...))
-We were unable to start more in-depth checking. Please ensure you are passing
-enough arguments and that the first argument is a function.
+error: Ill-typed arguments supplied to "laplace_latent_rng".
+    ┌─ missing_args5.stan:3:21
+  2 │  generated quantities {
+  3 │    vector[2] theta = laplace_latent_rng();
+    │                      ^^^^^^^^^^^^^^^^^^^^ The valid signature of this function is
+    │                                           laplace_latent_rng((vector, T_l...) => real,
+    │                                             tuple(T_l...), data int,
+    │                                             (T_k...) => matrix, tuple(T_k...))@]
+  4 │  }
+    = We were unable to start more in-depth checking. Please ensure you
+      are passing enough arguments and that the first argument is
+      a function.
 [exit 1]
   $ stanc missing_args6.stan
-Semantic error in 'missing_args6.stan', line 40, column 22 to column 74:
-   -------------------------------------------------
-    38:  generated quantities {
-    39:  
-    40:  vector[n_obs] theta = laplace_latent_rng(ll_function, (eta, log_ye, y), 1);
-                               ^
-    41:  
-    42:  
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function "laplace_latent_rng".
-The valid signature of this function is
-laplace_latent_rng((vector, T_l...) => real, tuple(T_l...), data int,
-  (T_k...) => matrix, tuple(T_k...))
-However, we received the types:
-((vector, real, vector, array[] int) => real,
-  tuple(real, vector, array[] int), data int)
-Typechecking failed after checking the first 3 arguments.
-Please ensure you are passing enough arguments and that the 4th is a function.
+error: Ill-typed arguments supplied to "laplace_latent_rng".
+    ┌─ missing_args6.stan:40:23
+ 39 │  
+ 40 │  vector[n_obs] theta = laplace_latent_rng(ll_function, (eta, log_ye, y), 1);
+    │                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ The valid signature of this function is
+    │                                                                             laplace_latent_rng((vector, T_l...) => real,
+    │                                                                               tuple(T_l...),
+    │                                                                               data int,
+    │                                                                               (T_k...) => matrix,
+    │                                                                               tuple(T_k...))
+    │                                                                             However, we received the types:
+    │                                                                             ((vector, real, vector, array[] int) => real,
+    │                                                                               tuple(real, vector,
+    │                                                                                     array[] int),
+    │                                                                               data int)@]
+ 41 │  
+    = Typechecking failed after checking the first 3 arguments.
+      Please ensure you are passing enough arguments and that the 4th is a function.
 [exit 1]
   $ stanc missing_args7.stan
-Semantic error in 'missing_args7.stan', line 18, column 24 to line 19, column 23:
-   -------------------------------------------------
-    16:  generated quantities {
-    17:  
-    18:    vector[n_obs] theta = laplace_latent_neg_binomial_2_log_rng(y, {1}, [1.0]', [0.0]', 1
-                                 ^
-    19:                        );
-    20:  
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function "laplace_latent_neg_binomial_2_log_rng".
-The valid signature of this function is
-laplace_latent_neg_binomial_2_log_rng(array[] int, array[] int, vector,
-  vector, data int, (T_k...) => matrix, tuple(T_k...))
-However, we received the types:
-(data array[] int, data array[] int, data vector, data vector, data int)
-Typechecking failed after checking the first 5 arguments.
-Please ensure you are passing enough arguments and that the 6th is a function.
+error: Ill-typed arguments supplied to "laplace_latent_neg_binomial_2_log_rng".
+    ┌─ missing_args7.stan:18:25
+ 17 │    
+ 18 │      vector[n_obs] theta = laplace_latent_neg_binomial_2_log_rng(y, {1}, [1.0]', [0.0]', 1
+    │ ╭──────────────────────────^
+ 19 │ │                        );
+    │ ╰────────────────────────^ The valid signature of this function is
+    │                            laplace_latent_neg_binomial_2_log_rng(array[] int, array[] int, vector, vector, data int, (T_k...) => matrix, tuple(T_k...))
+    │                            However, we received the types:
+    │                            (data array[] int, data array[] int, data vector, data vector, data int)@]
+ 20 │    
+    = Typechecking failed after checking the first 5 arguments.
+      Please ensure you are passing enough arguments and that the 6th is a function.
 [exit 1]
   $ stanc missing_args8.stan
-Semantic error in 'missing_args8.stan', line 2, column 12 to column 68:
-   -------------------------------------------------
-     1:  model {
-     2:    target += laplace_marginal_tol_poisson_log_lpmf({1}, {1}, [0]', 1);
-                     ^
-     3:  }
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function "laplace_marginal_tol_poisson_log_lpmf".
-The valid signature of this function is
-laplace_marginal_tol_poisson_log_lpmf(array[] int, array[] int, vector,
-  data int, (T_k...) => matrix, tuple(T_k...), vector, data real, data int,
-  data int, data int, data int)
-However, we received the types:
-(data array[] int, data array[] int, data vector, data int)
-Typechecking failed after checking the first 4 arguments.
-Please ensure you are passing enough arguments and that the 5th is a function.
+error: Ill-typed arguments supplied to "laplace_marginal_tol_poisson_log_lpmf".
+    ┌─ missing_args8.stan:2:13
+  1 │  model {
+  2 │    target += laplace_marginal_tol_poisson_log_lpmf({1}, {1}, [0]', 1);
+    │              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ The valid signature of this function is
+    │                                                                       laplace_marginal_tol_poisson_log_lpmf(array[] int,
+    │                                                                         array[] int, vector,
+    │                                                                         data int,
+    │                                                                         (T_k...) => matrix,
+    │                                                                         tuple(T_k...), vector,
+    │                                                                         data real, data int,
+    │                                                                         data int, data int,
+    │                                                                         data int)
+    │                                                                       However, we received the types:
+    │                                                                       (data array[] int,
+    │                                                                         data array[] int,
+    │                                                                         data vector, data int)@]
+  3 │  }
+    = Typechecking failed after checking the first 4 arguments.
+      Please ensure you are passing enough arguments and that the 5th is a function.
 [exit 1]
   $ stanc missing_args9.stan
-Semantic error in 'missing_args9.stan', line 40, column 24 to line 41, column 62:
-   -------------------------------------------------
-    38:  generated quantities {
-    39:  
-    40:    vector[n_obs] theta = laplace_latent_tol_neg_binomial_2_log_rng(y, {1}, [1.0]', [0]',
-                                 ^
-    41:                          1, K_function, (x, n_obs, alpha, rho));
-    42:  
-   -------------------------------------------------
-
-Missing control parameter tuple at the end of the call to "laplace_latent_tol_neg_binomial_2_log_rng".
-Expected a tuple of 6 arguments for the control parameters.
+error: Ill-typed arguments supplied to "laplace_latent_tol_neg_binomial_2_log_rng".
+    ┌─ missing_args9.stan:40:25
+ 39 │    
+ 40 │      vector[n_obs] theta = laplace_latent_tol_neg_binomial_2_log_rng(y, {1}, [1.0]', [0]',
+    │ ╭──────────────────────────^
+ 41 │ │                          1, K_function, (x, n_obs, alpha, rho));
+    │ ╰───────────────────────────────────────────────────────────────^ Missing control parameter tuple at the end of the call to "laplace_latent_tol_neg_binomial_2_log_rng".
+    │                                                                   Expected a tuple of 6 arguments for the control parameters.
+ 42 │    
 [exit 1]

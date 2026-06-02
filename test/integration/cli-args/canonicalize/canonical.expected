@@ -192,8 +192,7 @@ generated quantities {
                                    x_r, x_i);
 }
 
-Warning in 'deprecated.stan', line 24, column 2 to column 26:
-    Assignment of variable to itself.
+deprecated.stan:24:3: warning: Assignment of variable to itself.
 [exit 0]
   $ stanc --print-canonical funs.stanfunctions
 // comment test comment
@@ -240,24 +239,22 @@ model {
   t.2 = (3, 4).1;
 }
 
-Warning in 'parenthesize.stan', line 27, column 13 to column 22:
-    Found chained comparison
-        1 < 2 > 3
-    This is interpreted as
-        (1 < 2) > 3
-    Consider if the intended meaning was
-        1 < 2 && 2 > 3
-    instead. You can silence this warning by adding explicit parentheses.
-    This can be automatically changed using the canonicalize flag for stanc
-Warning in 'parenthesize.stan', line 27, column 13 to column 26:
-    Found chained comparison
-        1 < 2 > 3 < 4
-    This is interpreted as
-        (1 < 2 > 3) < 4
-    Consider if the intended meaning was
-        1 < 2 > 3 && 3 < 4
-    instead. You can silence this warning by adding explicit parentheses.
-    This can be automatically changed using the canonicalize flag for stanc
+parenthesize.stan:27:14: warning: Found chained comparison
+      1 < 2 > 3
+  This is interpreted as
+      (1 < 2) > 3
+  Consider if the intended meaning was
+      1 < 2 && 2 > 3
+  instead. You can silence this warning by adding explicit parentheses. This
+  can be automatically changed using the canonicalize flag for stanc
+parenthesize.stan:27:14: warning: Found chained comparison
+      1 < 2 > 3 < 4
+  This is interpreted as
+      (1 < 2 > 3) < 4
+  Consider if the intended meaning was
+      1 < 2 > 3 && 3 < 4
+  instead. You can silence this warning by adding explicit parentheses. This
+  can be automatically changed using the canonicalize flag for stanc
 [exit 0]
   $ stanc --print-canonical squaremc.stan
 /*

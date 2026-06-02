@@ -1,300 +1,217 @@
   $ stanc abs-deprecate.stan
-Semantic error in 'abs-deprecate.stan', line 3, column 7 to column 17:
-   -------------------------------------------------
-     1:  transformed data {
-     2:    real mu;
-     3:    mu = fabs(-1.2);
-                ^
-     4:  }
-     5:  parameters {
-   -------------------------------------------------
-
-A returning function was expected but an undeclared identifier "fabs" was supplied.
-Did you mean "abs"?
+error: A returning function was expected but an undeclared identifier "fabs" was supplied.
+    ┌─ abs-deprecate.stan:3:8
+  2 │    real mu;
+  3 │    mu = fabs(-1.2);
+    │         ^^^^^^^^^^ A returning function was expected but an undeclared identifier 
+    │                    "fabs" was supplied.
+  4 │  }
+    = Did you mean "abs"?
 [exit 1]
   $ stanc binomial_coefficient_log.stan
-Semantic error in 'binomial_coefficient_log.stan', line 12, column 26 to column 66:
-   -------------------------------------------------
-    10:    real transformed_data_real;
-    11:  
-    12:    transformed_data_real = binomial_coefficient_log(d_real, r_real);
-                                   ^
-    13:    transformed_data_real = binomial_coefficient_log(d_int, r_real);
-    14:    transformed_data_real = binomial_coefficient_log(d_real, d_int);
-   -------------------------------------------------
-
-A returning function was expected but an undeclared identifier "binomial_coefficient_log" was supplied.
+error: A returning function was expected but an undeclared identifier "binomial_coefficient_log" was supplied.
+    ┌─ binomial_coefficient_log.stan:12:27
+ 11 │  
+ 12 │    transformed_data_real = binomial_coefficient_log(d_real, r_real);
+    │                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ A returning function was expected but an undeclared identifier 
+    │                                                                     "binomial_coefficient_log" was supplied.
+ 13 │    transformed_data_real = binomial_coefficient_log(d_int, r_real);
 [exit 1]
   $ stanc cdf_conditioning.stan
-Semantic error in 'cdf_conditioning.stan', line 7, column 12 to column 28:
-   -------------------------------------------------
-     5:  }
-     6:  model {
-     7:    target += foo_cdf(1, 2, 3);
-                     ^
-     8:  }
-   -------------------------------------------------
-
-Probability functions with suffixes _lpdf, _lupdf, _lpmf, _lupmf, _cdf, _lcdf
-and _lccdf, require a vertical bar (|) between the first two
-arguments.
+error: Conditioning required for function.
+    ┌─ cdf_conditioning.stan:7:13
+  6 │  model {
+  7 │    target += foo_cdf(1, 2, 3);
+    │              ^^^^^^^^^^^^^^^^ Probability functions with suffixes _lpdf,
+    │                               _lupdf, _lpmf, _lupmf, _cdf, _lcdf, and _lccdf,
+    │                               require a vertical bar ("|") between the first
+    │                               two arguments.
+  8 │  }
 [exit 1]
   $ stanc cov_exp_quad.stan
-Semantic error in 'cov_exp_quad.stan', line 17, column 28 to column 65:
-   -------------------------------------------------
-    15:    matrix[d_int_1, d_int_1] transformed_data_matrix;
-    16:  
-    17:    transformed_data_matrix = cov_exp_quad(d_arr_1, d_sigma, d_len);
-                                     ^
-    18:    transformed_data_matrix = cov_exp_quad(d_arr_1, d_arr_2, d_sigma, d_len);
-    19:    transformed_data_matrix = cov_exp_quad(d_vec_1, d_sigma, d_len);
-   -------------------------------------------------
-
-A returning function was expected but an undeclared identifier "cov_exp_quad" was supplied.
+error: A returning function was expected but an undeclared identifier "cov_exp_quad" was supplied.
+    ┌─ cov_exp_quad.stan:17:29
+ 16 │  
+ 17 │    transformed_data_matrix = cov_exp_quad(d_arr_1, d_sigma, d_len);
+    │                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ A returning function was expected but an undeclared identifier 
+    │                                                                    "cov_exp_quad" was supplied.
+ 18 │    transformed_data_matrix = cov_exp_quad(d_arr_1, d_arr_2, d_sigma, d_len);
 [exit 1]
   $ stanc decl.stan
-Syntax error in 'decl.stan', line 2, column 7 to column 12, parsing error:
-   -------------------------------------------------
-     1:  data {
-     2:     int array[5]; // this is terrible
-                ^
-     3:     array[5] int array2;
-     4:  }
-   -------------------------------------------------
-
-Ill-formed identifier. Expected a new identifier but found reserved keyword "array".
+error: Syntax error: Ill-formed identifier.
+    ┌─ decl.stan:2:8
+  1 │  data {
+  2 │     int array[5]; // this is terrible
+    │         ^^^^^ here.
+  3 │     array[5] int array2;
+    = Expected a new identifier but found reserved keyword "array".
 [exit 1]
   $ stanc declarations.stan
-Syntax error in 'declarations.stan', line 3, column 18 to column 19, parsing error:
-   -------------------------------------------------
-     1:  data {
-     2:    int a0;
-     3:    int<lower=0> a1[1];
-                           ^
-     4:    int a2[2,3];
-     5:    array[1] int a3;
-   -------------------------------------------------
-
-Ill-formed declaration. ";" expected after variable declaration.
-  It looks like you are trying to use the old array syntax.
-  Please use the new syntax:
-  array[1] int<lower=0> a1;
+error: Syntax error: Ill-formed declaration.
+    ┌─ declarations.stan:3:19
+  2 │    int a0;
+  3 │    int<lower=0> a1[1];
+    │                    ^ here.
+  4 │    int a2[2,3];
+    = ";" expected after variable declaration.
+        It looks like you are trying to use the old array syntax.
+        Please use the new syntax:
+        array[1] int<lower=0> a1;
 [exit 1]
   $ stanc deprecated_tilde.stan
-Semantic error in 'deprecated_tilde.stan', line 12, column 6 to column 19:
-   -------------------------------------------------
-    10:  
-    11:  model {
-    12:    1 ~ test_log_lpmf(2.5);
-               ^
-    13:    1.2 ~ test_log_lpdf(2.5);
-    14:  }
-   -------------------------------------------------
-
-~ statement should refer to a distribution without its "_lpdf/_lupdf" or "_lpmf/_lupmf" suffix.
-For example, "target += normal_lpdf(y, 0, 1)" should become "y ~ normal(0, 1)."
+error: ~ statement should refer to a distribution without its "_lpdf/_lupdf" or "_lpmf/_lupmf" suffix.
+    ┌─ deprecated_tilde.stan:12:7
+ 11 │  model {
+ 12 │    1 ~ test_log_lpmf(2.5);
+    │        ^^^^^^^^^^^^^ ~ statement should refer to a distribution without its "_lpdf/_lupdf" or "_lpmf/_lupmf" suffix.
+ 13 │    1.2 ~ test_log_lpdf(2.5);
+    = For example, "y ~ normal_lpdf(0, 1)" should become "y ~ normal(0, 1)".
 [exit 1]
   $ stanc duplicate-warns.stan
-Semantic error in 'duplicate-warns.stan', line 4, column 2 to column 24:
-   -------------------------------------------------
-     2:    real foo;
-     3:    foo = 1;
-     4:    increment_log_prob(0);
-           ^
-     5:    foo = get_lp();
-     6:    foo = multiply_log(1, 1);
-   -------------------------------------------------
-
-A non-returning function was expected but an undeclared identifier "increment_log_prob" was supplied.
+error: A non-returning function was expected but an undeclared identifier "increment_log_prob" was supplied.
+    ┌─ duplicate-warns.stan:4:3
+  3 │    foo = 1;
+  4 │    increment_log_prob(0);
+    │    ^^^^^^^^^^^^^^^^^^^^^^ A non-returning function was expected but an undeclared identifier 
+    │                           "increment_log_prob" was supplied.
+  5 │    foo = get_lp();
 [exit 1]
   $ stanc get-lp-deprecate.stan
-Semantic error in 'get-lp-deprecate.stan', line 5, column 19 to column 27:
-   -------------------------------------------------
-     3:  }
-     4:  model {
-     5:    print("target=", get_lp());
-                            ^
-     6:    y ~ normal(0, 1);
-     7:  }
-   -------------------------------------------------
-
-A returning function was expected but an undeclared identifier "get_lp" was supplied.
+error: A returning function was expected but an undeclared identifier "get_lp" was supplied.
+    ┌─ get-lp-deprecate.stan:5:20
+  4 │  model {
+  5 │    print("target=", get_lp());
+    │                     ^^^^^^^^ A returning function was expected but an undeclared identifier 
+    │                              "get_lp" was supplied.
+  6 │    y ~ normal(0, 1);
 [exit 1]
   $ stanc get_lp_target.stan
-Semantic error in 'get_lp_target.stan', line 6, column 21 to column 29:
-   -------------------------------------------------
-     4:  transformed parameters {
-     5:    print("target = ", target());
-     6:    print("get_lp = ", get_lp());
-                              ^
-     7:  }
-     8:  model {
-   -------------------------------------------------
-
-A returning function was expected but an undeclared identifier "get_lp" was supplied.
+error: A returning function was expected but an undeclared identifier "get_lp" was supplied.
+    ┌─ get_lp_target.stan:6:22
+  5 │    print("target = ", target());
+  6 │    print("get_lp = ", get_lp());
+    │                       ^^^^^^^^ A returning function was expected but an undeclared identifier 
+    │                                "get_lp" was supplied.
+  7 │  }
 [exit 1]
   $ stanc identifiers.stan
-Syntax error in 'identifiers.stan', line 2, column 6 to column 11, parsing error:
-   -------------------------------------------------
-     1:  data {
-     2:    int upper;
-               ^
-     3:    int lower;
-     4:    int multiplier;
-   -------------------------------------------------
-
-Ill-formed identifier. Expected a new identifier but found reserved keyword "upper".
+error: Syntax error: Ill-formed identifier.
+    ┌─ identifiers.stan:2:7
+  1 │  data {
+  2 │    int upper;
+    │        ^^^^^ here.
+  3 │    int lower;
+    = Expected a new identifier but found reserved keyword "upper".
 [exit 1]
   $ stanc if_else.stan
-Semantic error in 'if_else.stan', line 9, column 26 to column 54:
-   -------------------------------------------------
-     7:    real transformed_data_real;
-     8:  
-     9:    transformed_data_real = if_else(d_int, d_int, d_int);
-                                   ^
-    10:    transformed_data_real = if_else(d_int, d_int, d_real);
-    11:    transformed_data_real = if_else(d_int, d_real, d_real);
-   -------------------------------------------------
-
-A returning function was expected but an undeclared identifier "if_else" was supplied.
-Did you mean "inverse"?
+error: A returning function was expected but an undeclared identifier "if_else" was supplied.
+    ┌─ if_else.stan:9:27
+  8 │  
+  9 │    transformed_data_real = if_else(d_int, d_int, d_int);
+    │                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ A returning function was expected but an undeclared identifier 
+    │                                                         "if_else" was supplied.
+ 10 │    transformed_data_real = if_else(d_int, d_int, d_real);
+    = Did you mean "inverse"?
 [exit 1]
   $ stanc increment_log_prob.stan
-Semantic error in 'increment_log_prob.stan', line 42, column 2 to column 24:
-   -------------------------------------------------
-    40:  }
-    41:  model {
-    42:    increment_log_prob(n);
-           ^
-    43:    increment_log_prob(nn);
-    44:    increment_log_prob(nnn);
-   -------------------------------------------------
-
-A non-returning function was expected but an undeclared identifier "increment_log_prob" was supplied.
+error: A non-returning function was expected but an undeclared identifier "increment_log_prob" was supplied.
+    ┌─ increment_log_prob.stan:42:3
+ 41 │  model {
+ 42 │    increment_log_prob(n);
+    │    ^^^^^^^^^^^^^^^^^^^^^^ A non-returning function was expected but an undeclared identifier 
+    │                           "increment_log_prob" was supplied.
+ 43 │    increment_log_prob(nn);
 [exit 1]
   $ stanc lvalue_multiindex.stan
-Semantic error in 'lvalue_multiindex.stan', line 6, column 3 to column 10:
-   -------------------------------------------------
-     4:  transformed data {
-     5:     matrix[5,5] y;
-     6:     y[:][:] = x[1][:][:];
-            ^
-     7:     y[:][1] = x[1][:][2];
-     8:     array[5] matrix[5,5] z;
-   -------------------------------------------------
-
-Left hand side of an assignment cannot have nested multi-indexing.
+error: Left hand side of an assignment cannot have nested multi-indexing.
+    ┌─ lvalue_multiindex.stan:6:4
+  5 │     matrix[5,5] y;
+  6 │     y[:][:] = x[1][:][:];
+    │     ^^^^^^^ Left hand side of an assignment cannot have nested multi-indexing.
+  7 │     y[:][1] = x[1][:][2];
 [exit 1]
   $ stanc multiply_log.stan
-Semantic error in 'multiply_log.stan', line 11, column 26 to column 54:
-   -------------------------------------------------
-     9:    real transformed_data_real;
-    10:  
-    11:    transformed_data_real = multiply_log(d_real, r_real);
-                                   ^
-    12:    transformed_data_real = multiply_log(d_int, r_real);
-    13:    transformed_data_real = multiply_log(d_real, d_int);
-   -------------------------------------------------
-
-A returning function was expected but an undeclared identifier "multiply_log" was supplied.
-Did you mean "multiply"?
+error: A returning function was expected but an undeclared identifier "multiply_log" was supplied.
+    ┌─ multiply_log.stan:11:27
+ 10 │  
+ 11 │    transformed_data_real = multiply_log(d_real, r_real);
+    │                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ A returning function was expected but an undeclared identifier 
+    │                                                         "multiply_log" was supplied.
+ 12 │    transformed_data_real = multiply_log(d_int, r_real);
+    = Did you mean "multiply"?
 [exit 1]
   $ stanc old-log-funs.stan
-Semantic error in 'old-log-funs.stan', line 3, column 6 to column 24:
-   -------------------------------------------------
-     1:  transformed data {
-     2:    real x;
-     3:    x = multiply_log(x, x);  // should raise deprecation warning
-               ^
-     4:    x = binomial_coefficient_log(x, x);  // ditto
-     5:    x = lmultiply(x, x);  // new function is OK
-   -------------------------------------------------
-
-A returning function was expected but an undeclared identifier "multiply_log" was supplied.
-Did you mean "multiply"?
+error: A returning function was expected but an undeclared identifier "multiply_log" was supplied.
+    ┌─ old-log-funs.stan:3:7
+  2 │    real x;
+  3 │    x = multiply_log(x, x);  // should raise deprecation warning
+    │        ^^^^^^^^^^^^^^^^^^ A returning function was expected but an undeclared identifier 
+    │                           "multiply_log" was supplied.
+  4 │    x = binomial_coefficient_log(x, x);  // ditto
+    = Did you mean "multiply"?
 [exit 1]
   $ stanc pound-comment-deprecated.stan
-Syntax error in 'pound-comment-deprecated.stan', line 2, column 2 to column 3, lexing error:
-   -------------------------------------------------
-     1:  data {
-     2:    # hey, this is the old way to do things, should raise warning
-           ^
-     3:    int N;
-     4:  }
-   -------------------------------------------------
+error: Invalid character found.
 
-Invalid character found.
+    ┌─ pound-comment-deprecated.stan:2:3
+  1 │  data {
+  2 │    # hey, this is the old way to do things, should raise warning
+    │    ^ here.
+  3 │    int N;
 [exit 1]
   $ stanc real-bools.stan
-Semantic error in 'real-bools.stan', line 6, column 9 to column 10:
-   -------------------------------------------------
-     4:    array[5] real xyz;
-     5:  
-     6:    while (z) {
-                  ^
-     7:      // real as boolean value
-     8:      if (1.0) {
-   -------------------------------------------------
-
-Condition in while-loop must be of type int. Instead found type real.
+error: Condition in while-loop must be of type int. Instead found type real.
+    ┌─ real-bools.stan:6:10
+  5 │  
+  6 │    while (z) {
+    │           ^ Condition in while-loop must be of type int.
+    │             Instead found type real.
+  7 │      // real as boolean value
 [exit 1]
   $ stanc removed_deprecated_syntax.stan
-Syntax error in 'removed_deprecated_syntax.stan', line 10, column 9 to column 10, parsing error:
-   -------------------------------------------------
-     8:    real a;
-     9:    vector[3] b;
-    10:    real c[7];
-                  ^
-    11:    real d[8, 9];
-    12:  }
-   -------------------------------------------------
-
-Ill-formed declaration. ";" expected after variable declaration.
-  It looks like you are trying to use the old array syntax.
-  Please use the new syntax:
-  array[7] real c;
+error: Syntax error: Ill-formed declaration.
+    ┌─ removed_deprecated_syntax.stan:10:10
+  9 │    vector[3] b;
+ 10 │    real c[7];
+    │           ^ here.
+ 11 │    real d[8, 9];
+    = ";" expected after variable declaration.
+        It looks like you are trying to use the old array syntax.
+        Please use the new syntax:
+        array[7] real c;
 [exit 1]
   $ stanc unreserved-array-keyword.stan
-Syntax error in 'unreserved-array-keyword.stan', line 2, column 24 to column 29, parsing error:
-   -------------------------------------------------
-     1:  functions {
-     2:    real f(array[,,] real array) { return array[1,2,3]; }
-                                 ^
-     3:  }
-     4:  
-   -------------------------------------------------
-
-Ill-formed identifier. Expected a new identifier but found reserved keyword "array".
+error: Syntax error: Ill-formed identifier.
+    ┌─ unreserved-array-keyword.stan:2:25
+  1 │  functions {
+  2 │    real f(array[,,] real array) { return array[1,2,3]; }
+    │                          ^^^^^ here.
+  3 │  }
+    = Expected a new identifier but found reserved keyword "array".
 [exit 1]
   $ stanc unsized-old-array.stan
-Syntax error in 'unsized-old-array.stan', line 2, column 17 to column 18, parsing error:
-   -------------------------------------------------
-     1:  functions{
-     2:    real foo(  real[,] v){
-                          ^
-     3:      return sum(v);
-     4:    }
-   -------------------------------------------------
-
-Ill-formed type. Expected an unsized type in function signature.
-  For example, this means a type like "matrix", not "matrix[3,4]".
-  If you are trying to use the old array syntax, you will need to use
-  the new syntax, see:
-  https://mc-stan.org/docs/reference-manual/types.html#array-data-types.section
+error: Syntax error: Ill-formed type.
+    ┌─ unsized-old-array.stan:2:18
+  1 │  functions{
+  2 │    real foo(  real[,] v){
+    │                   ^ here.
+  3 │      return sum(v);
+    = Expected an unsized type in function signature.
+        For example, this means a type like "matrix", not "matrix[3,4]".
+        If you are trying to use the old array syntax, you will need to use
+        the new syntax, see:
+        https://mc-stan.org/docs/reference-manual/types.html#array-data-types.section
 [exit 1]
   $ stanc unsized-old-array2.stan
-Syntax error in 'unsized-old-array2.stan', line 2, column 6 to column 7, parsing error:
-   -------------------------------------------------
-     1:  functions{
-     2:    real[] foo(real v){
-               ^
-     3:      return sum(v);
-     4:    }
-   -------------------------------------------------
-
-Ill-formed type. Expected an unsized type in function signature.
-  For example, this means a type like "matrix", not "matrix[3,4]".
-  If you are trying to use the old array syntax, you will need to use
-  the new syntax, see:
-  https://mc-stan.org/docs/reference-manual/types.html#array-data-types.section
+error: Syntax error: Ill-formed type.
+    ┌─ unsized-old-array2.stan:2:7
+  1 │  functions{
+  2 │    real[] foo(real v){
+    │        ^ here.
+  3 │      return sum(v);
+    = Expected an unsized type in function signature.
+        For example, this means a type like "matrix", not "matrix[3,4]".
+        If you are trying to use the old array syntax, you will need to use
+        the new syntax, see:
+        https://mc-stan.org/docs/reference-manual/types.html#array-data-types.section
 [exit 1]

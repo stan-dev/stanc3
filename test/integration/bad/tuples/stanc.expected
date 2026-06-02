@@ -1,482 +1,392 @@
   $ stanc array_literal_mismatch.stan
-Semantic error in 'array_literal_mismatch.stan', line 2, column 43 to column 52:
-   -------------------------------------------------
-     1:  transformed data {
-     2:    array[2] tuple(real, real) x = {(1, 2) , (3, 4, 5)};
-                                                    ^
-     3:  }
-   -------------------------------------------------
-
-Array expression must have entries of consistent type. Expected tuple(
-int, int) but found tuple(int, int, int).
+error: Inconsistent types in array expression.
+    ┌─ array_literal_mismatch.stan:2:44
+  1 │  transformed data {
+  2 │    array[2] tuple(real, real) x = {(1, 2) , (3, 4, 5)};
+    │                                             ^^^^^^^^^ Array expression must have entries of consistent type.
+    │                                                       Expected tuple(int, int) but found 
+    │                                                       tuple(int, int, int).
+  3 │  }
 [exit 1]
   $ stanc bad-arg.stan
-Syntax error in 'bad-arg.stan', line 2, column 23 to column 27, parsing error:
-   -------------------------------------------------
-     1:  functions {
-     2:    void foo(tuple(real, data real) x) {
-                                ^
-     3:      print(x.1);
-     4:    }
-   -------------------------------------------------
-
-Ill-formed type. Expected a comma separated list of types between "(" and ")" to declare tuple variable.
+error: Syntax error: Ill-formed type.
+    ┌─ bad-arg.stan:2:24
+  1 │  functions {
+  2 │    void foo(tuple(real, data real) x) {
+    │                         ^^^^ here.
+  3 │      print(x.1);
+    = Expected a comma separated list of types between "(" and ")" to declare tuple variable.
 [exit 1]
   $ stanc bad-index1.stan
-Semantic error in 'bad-index1.stan', line 3, column 9 to column 12:
-   -------------------------------------------------
-     1:  transformed data {
-     2:     real x = 3.4;
-     3:     print(x.1);
-                  ^
-     4:  }
-   -------------------------------------------------
-
-Tried to index a non-tuple type. Expression has type real.
+error: Tried to index a non-tuple type.
+    ┌─ bad-index1.stan:3:10
+  2 │     real x = 3.4;
+  3 │     print(x.1);
+    │           ^^^ Expression has type real.
+  4 │  }
 [exit 1]
   $ stanc bad-index2.stan
-Semantic error in 'bad-index2.stan', line 3, column 11 to column 17:
-   -------------------------------------------------
-     1:  transformed data {
-     2:    tuple(real, real) pair = (3.14, 34.2);
-     3:    real x = pair.3;
-                    ^
-     4:  }
-   -------------------------------------------------
-
-Tried to access index 3 for a tuple of length 2.
-Only indices between 1 and 2 are valid.
+error: Invalid tuple index.
+    ┌─ bad-index2.stan:3:12
+  2 │    tuple(real, real) pair = (3.14, 34.2);
+  3 │    real x = pair.3;
+    │             ^^^^^^ Tried to access index 3 for a tuple of length 2.
+    │                    Only indices between 1 and 2 are valid.
+  4 │  }
 [exit 1]
   $ stanc bad-index3.stan
-Semantic error in 'bad-index3.stan', line 3, column 3 to column 6:
-   -------------------------------------------------
-     1:  transformed data {
-     2:     real x = 3.14;
-     3:     x.1 = 6.28;
-            ^
-     4:  }
-   -------------------------------------------------
-
-Tried to index a non-tuple type. Expression has type real.
+error: Tried to index a non-tuple type.
+    ┌─ bad-index3.stan:3:4
+  2 │     real x = 3.14;
+  3 │     x.1 = 6.28;
+    │     ^^^ Expression has type real.
+  4 │  }
 [exit 1]
   $ stanc bad-index4.stan
-Semantic error in 'bad-index4.stan', line 3, column 2 to column 8:
-   -------------------------------------------------
-     1:  transformed data {
-     2:    tuple(real, real) pair = (3.14, 34.2);
-     3:    pair.3 = 6.28;
-           ^
-     4:  }
-   -------------------------------------------------
-
-Tried to access index 3 for a tuple of length 2.
-Only indices between 1 and 2 are valid.
+error: Invalid tuple index.
+    ┌─ bad-index4.stan:3:3
+  2 │    tuple(real, real) pair = (3.14, 34.2);
+  3 │    pair.3 = 6.28;
+    │    ^^^^^^ Tried to access index 3 for a tuple of length 2.
+    │           Only indices between 1 and 2 are valid.
+  4 │  }
 [exit 1]
   $ stanc bad-index5.stan
-Semantic error in 'bad-index5.stan', line 3, column 11 to column 18:
-   -------------------------------------------------
-     1:  transformed data {
-     2:    tuple(real, real) pair = (3.14, 34.2);
-     3:    real x = pair[1];
-                    ^
-     4:  }
-   -------------------------------------------------
-
-Too many indices. Expression only has 0 dimensions, but received 1 indices.
+error: Too many indices. Expression only has 0 dimensions, but received 1 indices.
+    ┌─ bad-index5.stan:3:12
+  2 │    tuple(real, real) pair = (3.14, 34.2);
+  3 │    real x = pair[1];
+    │             ^^^^^^^ Too many indices. Expression only has 0 dimensions, but received 1 indices.
+  4 │  }
 [exit 1]
   $ stanc bad_addition.stan
-Semantic error in 'bad_addition.stan', line 3, column 7 to column 8:
-   -------------------------------------------------
-     1:  model {
-     2:    tuple(real, real) z;
-     3:    z += 1;
-                ^
-     4:  }
-   -------------------------------------------------
-
-Ill-typed assignment operator +=.
-There are no valid right hand sides for the given left hand side (tuple(
-real, real)).
+error: Ill-typed compound assignment statement.
+    ┌─ bad_addition.stan:3:8
+  2 │    tuple(real, real) z;
+  3 │    z += 1;
+    │    -    ^ Ill-typed assignment operator +=.
+    │    │
+    │    Left hand side has type tuple(real, real).
+  4 │  }
+    = There are no valid right hand side types for the given left hand side.
 [exit 1]
   $ stanc bad_unpack_duplicates.stan
-Semantic error in 'bad_unpack_duplicates.stan', line 5, column 2 to column 14:
-   -------------------------------------------------
-     3:    int y = 4;
-     4:  
-     5:    (x, y, x, y) = (y, x, y, x);
-           ^
-     6:  }
-   -------------------------------------------------
-
-The same value cannot be assigned to multiple times in one assignment:
-  x, y
+error: Ill-typed assignment statement.
+    ┌─ bad_unpack_duplicates.stan:5:3
+  4 │  
+  5 │    (x, y, x, y) = (y, x, y, x);
+    │    ^^^^^^^^^^^^ The same value cannot be assigned to multiple times in one assignment:
+    │                   x, y
+  6 │  }
 [exit 1]
   $ stanc bad_unpack_fn_type.stan
-Semantic error in 'bad_unpack_fn_type.stan', line 4, column 4 to column 24:
-   -------------------------------------------------
-     2:    int foo() {
-     3:      int x;
-     4:      (foo, x) = (foo, 1);
-             ^
-     5:      return x;
-     6:    }
-   -------------------------------------------------
-
-Cannot assign a function type (() => int) to variable "foo".
+error: Cannot assign a function to a variable.
+    ┌─ bad_unpack_fn_type.stan:4:5
+  3 │      int x;
+  4 │      (foo, x) = (foo, 1);
+    │      ^^^^^^^^^^^^^^^^^^^^ Function type (() => int) cannot be assigned to variable 
+    │                           "foo".
+  5 │      return x;
 [exit 1]
   $ stanc bad_unpack_global.stan
-Semantic error in 'bad_unpack_global.stan', line 8, column 3 to column 4:
-   -------------------------------------------------
-     6:     int y;
-     7:  
-     8:    (x,y) = (1,2);
-            ^
-     9:  
-    10:  }
-   -------------------------------------------------
-
-Cannot assign to global variable "x" declared previously in data block.
+error: Cannot assign to global variable.
+    ┌─ bad_unpack_global.stan:8:4
+  1 │  data {
+  2 │    int x;
+    │        - Variable was declared in data block here.
+  3 │  }
+    ⋯  
+  7 │  
+  8 │    (x,y) = (1,2);
+    │     ^ "x" was declared in a previous block and cannot be assigned to.
+  9 │  
 [exit 1]
   $ stanc bad_unpack_lhs.stan
-Syntax error in 'bad_unpack_lhs.stan', line 4, column 2 to column 10, parsing error:
-   -------------------------------------------------
-     2:    int x = 3;
-     3:    real y = 4.0;
-     4:    (x, y).1 = 2; // allowing this feels very silly and would complicate implementation
-           ^
-     5:  }
-   -------------------------------------------------
-
-Ill-formed assignment. Expected an assignable value but found a general expression.
+error: Syntax error: Ill-formed assignment.
+    ┌─ bad_unpack_lhs.stan:4:3
+  3 │    real y = 4.0;
+  4 │    (x, y).1 = 2; // allowing this feels very silly and would complicate implementation
+    │    ^^^^^^^^ here.
+  5 │  }
+    = Expected an assignable value but found a general expression.
 [exit 1]
   $ stanc bad_unpack_overlap1.stan
-Semantic error in 'bad_unpack_overlap1.stan', line 9, column 2 to column 30:
-   -------------------------------------------------
-     7:    // we disallow this because it's not obvious if unique
-     8:    // locations are being assigned to
-     9:    (x_flat[ : 3], x_flat[3 : ]) = x;
-           ^
-    10:  }
-   -------------------------------------------------
-
-The same value cannot be assigned to multiple times in one assignment:
-  x_flat[...]
+error: Ill-typed assignment statement.
+    ┌─ bad_unpack_overlap1.stan:9:3
+  8 │    // locations are being assigned to
+  9 │    (x_flat[ : 3], x_flat[3 : ]) = x;
+    │    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ The same value cannot be assigned to multiple times in one assignment:
+    │                                   x_flat[...]
+ 10 │  }
 [exit 1]
   $ stanc bad_unpack_overlap2.stan
-Semantic error in 'bad_unpack_overlap2.stan', line 4, column 2 to column 22:
-   -------------------------------------------------
-     2:    int i = 1, j = 1;
-     3:    array[1] tuple(int, int) tup;
-     4:    (tup[i].1, tup[j].1) = (1, 2);
-           ^
-     5:  }
-   -------------------------------------------------
-
-The same value cannot be assigned to multiple times in one assignment:
-  tup[...].1
+error: Ill-typed assignment statement.
+    ┌─ bad_unpack_overlap2.stan:4:3
+  3 │    array[1] tuple(int, int) tup;
+  4 │    (tup[i].1, tup[j].1) = (1, 2);
+    │    ^^^^^^^^^^^^^^^^^^^^ The same value cannot be assigned to multiple times in one assignment:
+    │                           tup[...].1
+  5 │  }
 [exit 1]
   $ stanc bad_unpack_read_write.stan
-Semantic error in 'bad_unpack_read_write.stan', line 4, column 2 to column 11:
-   -------------------------------------------------
-     2:    int x = 1;
-     3:    vector[2] y = [1, 1]';
-     4:    (x, y[x]) = (2, 2);
-           ^
-     5:  }
-   -------------------------------------------------
-
-The same variable cannot be both assigned to and read from on the left hand side of an assignment:
-  x
+error: Ill-typed assignment statement.
+    ┌─ bad_unpack_read_write.stan:4:3
+  3 │    vector[2] y = [1, 1]';
+  4 │    (x, y[x]) = (2, 2);
+    │    ^^^^^^^^^ The same variable cannot be both assigned to and read from on the left hand side of an assignment:
+    │                x
+  5 │  }
 [exit 1]
   $ stanc bad_unpack_read_write2.stan
-Semantic error in 'bad_unpack_read_write2.stan', line 4, column 2 to column 15:
-   -------------------------------------------------
-     2:    tuple(int,int) x2 = (1,1);
-     3:    vector[2] y = [1, 1]';
-     4:    (x2, y[x2.1]) = ((1,1), 2);
-           ^
-     5:  }
-   -------------------------------------------------
-
-The same variable cannot be both assigned to and read from on the left hand side of an assignment:
-  x2
+error: Ill-typed assignment statement.
+    ┌─ bad_unpack_read_write2.stan:4:3
+  3 │    vector[2] y = [1, 1]';
+  4 │    (x2, y[x2.1]) = ((1,1), 2);
+    │    ^^^^^^^^^^^^^ The same variable cannot be both assigned to and read from on the left hand side of an assignment:
+    │                    x2
+  5 │  }
 [exit 1]
   $ stanc bad_unpack_read_write3.stan
-Semantic error in 'bad_unpack_read_write3.stan', line 6, column 2 to column 17:
-   -------------------------------------------------
-     4:    // one could imagine allowing this case,
-     5:    // but it is both an edge case and very complicated to do so
-     6:    (x2.1, y[x2.2]) = (2, 2);
-           ^
-     7:  }
-   -------------------------------------------------
-
-The same variable cannot be both assigned to and read from on the left hand side of an assignment:
-  x2
+error: Ill-typed assignment statement.
+    ┌─ bad_unpack_read_write3.stan:6:3
+  5 │    // but it is both an edge case and very complicated to do so
+  6 │    (x2.1, y[x2.2]) = (2, 2);
+    │    ^^^^^^^^^^^^^^^ The same variable cannot be both assigned to and read from on the left hand side of an assignment:
+    │                      x2
+  7 │  }
 [exit 1]
   $ stanc bad_unpack_shape.stan
-Semantic error in 'bad_unpack_shape.stan', line 4, column 11 to column 20:
-   -------------------------------------------------
-     2:    int x = 3;
-     3:    int y = 4;
-     4:    (x, y) = (y, x, x);
-                    ^
-     5:  }
-   -------------------------------------------------
-
-Ill-typed assignment statement.
-Expected the right hand side to have a type matching the destination (tuple(
-int, int)). Instead found type tuple(int, int, int).
+error: Ill-typed assignment statement.
+    ┌─ bad_unpack_shape.stan:4:12
+  3 │    int y = 4;
+  4 │    (x, y) = (y, x, x);
+    │    ------   ^^^^^^^^^ Expected the right hand side to have a type matching the destination.
+    │    │                  Instead found type tuple(int, int, int).
+    │    │
+    │    Left hand side has type tuple(int, int).
+  5 │  }
 [exit 1]
   $ stanc bad_unpack_tuple_overlap1.stan
-Semantic error in 'bad_unpack_tuple_overlap1.stan', line 3, column 2 to column 16:
-   -------------------------------------------------
-     1:  model {
-     2:    tuple(real, tuple(int, real)) tup;
-     3:    (tup.2.2, tup) = (1.5, (2.3, (4,5.5)));
-           ^
-     4:  }
-   -------------------------------------------------
-
-The same value cannot be assigned to multiple times in one assignment:
-  tup.2.2
+error: Ill-typed assignment statement.
+    ┌─ bad_unpack_tuple_overlap1.stan:3:3
+  2 │    tuple(real, tuple(int, real)) tup;
+  3 │    (tup.2.2, tup) = (1.5, (2.3, (4,5.5)));
+    │    ^^^^^^^^^^^^^^ The same value cannot be assigned to multiple times in one assignment:
+    │                     tup.2.2
+  4 │  }
 [exit 1]
   $ stanc bad_unpack_tuple_overlap2.stan
-Semantic error in 'bad_unpack_tuple_overlap2.stan', line 3, column 2 to column 17:
-   -------------------------------------------------
-     1:  generated quantities {
-     2:    array[1] tuple(int, int) tup;
-     3:    (tup, tup[1].1) = ({(1, 2)}, 3);
-           ^
-     4:  }
-   -------------------------------------------------
-
-The same value cannot be assigned to multiple times in one assignment:
-  tup[...].1
+error: Ill-typed assignment statement.
+    ┌─ bad_unpack_tuple_overlap2.stan:3:3
+  2 │    array[1] tuple(int, int) tup;
+  3 │    (tup, tup[1].1) = ({(1, 2)}, 3);
+    │    ^^^^^^^^^^^^^^^ The same value cannot be assigned to multiple times in one assignment:
+    │                      tup[...].1
+  4 │  }
 [exit 1]
   $ stanc bad_unpack_types.stan
-Semantic error in 'bad_unpack_types.stan', line 4, column 11 to column 17:
-   -------------------------------------------------
-     2:    real x = 3.0;
-     3:    int y = 4;
-     4:    (x, y) = (y, x);
-                    ^
-     5:  }
-   -------------------------------------------------
-
-Ill-typed assignment statement.
-Expected the right hand side to have a type matching the destination (int).
-Instead found type real.
+error: Ill-typed assignment statement.
+    ┌─ bad_unpack_types.stan:4:12
+  3 │    int y = 4;
+  4 │    (x, y) = (y, x);
+    │        -    ^^^^^^ Expected the right hand side to have a type matching the destination.
+    │        │           Instead found type real.
+    │        │
+    │        Left hand side has type int.
+  5 │  }
 [exit 1]
   $ stanc empty_tuple_expr.stan
-Syntax error in 'empty_tuple_expr.stan', line 2, column 25 to column 26, parsing error:
-   -------------------------------------------------
-     1:  model {
-     2:    tuple(real, real) y = ();
-                                  ^
-     3:  }
-   -------------------------------------------------
-
-Ill-formed expression. Expected an expression or comma separated list of expressions followed by ")" after "(".
+error: Syntax error: Ill-formed expression.
+    ┌─ empty_tuple_expr.stan:2:26
+  1 │  model {
+  2 │    tuple(real, real) y = ();
+    │                           ^ here.
+  3 │  }
+    = Expected an expression or comma separated list of expressions followed by ")" after "(".
 [exit 1]
   $ stanc empty_tuple_type.stan
-Syntax error in 'empty_tuple_type.stan', line 2, column 8 to column 9, parsing error:
-   -------------------------------------------------
-     1:  model {
-     2:    tuple() y = ();
-                 ^
-     3:  }
-   -------------------------------------------------
-
-Ill-formed type. Expected a comma separated list of types between "(" and ")" to declare tuple variable.
+error: Syntax error: Ill-formed type.
+    ┌─ empty_tuple_type.stan:2:9
+  1 │  model {
+  2 │    tuple() y = ();
+    │          ^ here.
+  3 │  }
+    = Expected a comma separated list of types between "(" and ")" to declare tuple variable.
 [exit 1]
   $ stanc fn-assign.stan
-Semantic error in 'fn-assign.stan', line 4, column 4 to column 17:
-   -------------------------------------------------
-     2:    int foo() {
-     3:      tuple(real, int) x;
-     4:      x = (foo, 1);
-             ^
-     5:      return x.2;
-     6:    }
-   -------------------------------------------------
-
-Cannot assign a function type (() => int) to variable "x".
+error: Cannot assign a function to a variable.
+    ┌─ fn-assign.stan:4:5
+  3 │      tuple(real, int) x;
+  4 │      x = (foo, 1);
+    │      ^^^^^^^^^^^^^ Function type (() => int) cannot be assigned to variable "x".
+  5 │      return x.2;
 [exit 1]
   $ stanc function-mismatch1.stan
-Semantic error in 'function-mismatch1.stan', line 8, column 2 to column 17:
-   -------------------------------------------------
-     6:  
-     7:  model {
-     8:    foo((1, 2, 3));
-           ^
-     9:  }
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function "foo":
-(tuple(int, int, int))
-Available signatures:
-(tuple(real, real)) => void
-  The first argument must be tuple(real, real) but got tuple(int, int, int)
+error: Ill-typed arguments supplied to function "foo".
+    ┌─ function-mismatch1.stan:8:3
+  1 │  functions {
+  2 │    void foo(tuple(real, real) x) {
+    │         --- Function defined here.
+  3 │      print(x.1);
+    ⋯  
+  7 │  model {
+  8 │    foo((1, 2, 3));
+    │    ^^^^^^^^^^^^^^^ Function called here.
+  9 │  }
+    = Supplied arguments:
+      (tuple(int, int, int))
+    = Available signatures:
+      (tuple(real, real)) => void
+        The first argument must be
+         tuple(real, real)
+        but got
+         tuple(int, int, int)
 [exit 1]
   $ stanc fuzz-tuple-idx1.stan
-Syntax error in 'fuzz-tuple-idx1.stan', line 1, column 39 to column 59, parsing error:
-   -------------------------------------------------
-     1:  functions{void f(tuple(matrix,int)t){t.40000000000000000000}
-                                                ^
-   -------------------------------------------------
-
-Ill-formed index. Failed to parse integer from string "40000000000000000000" in tuple index.
-The index is likely too large.
+error: Syntax error: Ill-formed index.
+    ┌─ fuzz-tuple-idx1.stan:1:40
+  1 │  functions{void f(tuple(matrix,int)t){t.40000000000000000000}
+    │                                         ^^^^^^^^^^^^^^^^^^^^ here.
+  2 │  
+    = Failed to parse integer from string "40000000000000000000" in tuple index.
+      The index is likely too large.
 [exit 1]
   $ stanc fuzz-tuple-idx2.stan
-Syntax error in 'fuzz-tuple-idx2.stan', line 1, column 63 to column 83, parsing error:
-   -------------------------------------------------
-     1:  transformed data{tuple(array[0]tuple(int,array[0]real),int)x;x.10000000000000000000
-                                                                        ^
-   -------------------------------------------------
-
-Ill-formed index. Failed to parse integer from string "10000000000000000000" in tuple index.
-The index is likely too large.
+error: Syntax error: Ill-formed index.
+    ┌─ fuzz-tuple-idx2.stan:1:64
+  1 │  transformed data{tuple(array[0]tuple(int,array[0]real),int)x;x.10000000000000000000
+    │                                                                 ^^^^^^^^^^^^^^^^^^^^ here.
+    = Failed to parse integer from string "10000000000000000000" in tuple index.
+      The index is likely too large.
 [exit 1]
   $ stanc fuzz-tuple-idx3.stan
-Syntax error in 'fuzz-tuple-idx3.stan', line 1, column 47 to column 66, parsing error:
-   -------------------------------------------------
-     1:  transformed data{matrix[0,0]v;row_vector[0]m;m.6000000000000000000
-                                                        ^
-   -------------------------------------------------
-
-Ill-formed index. Failed to parse integer from string "6000000000000000000" in tuple index.
-The index is likely too large.
+error: Syntax error: Ill-formed index.
+    ┌─ fuzz-tuple-idx3.stan:1:48
+  1 │  transformed data{matrix[0,0]v;row_vector[0]m;m.6000000000000000000
+    │                                                 ^^^^^^^^^^^^^^^^^^^ here.
+    = Failed to parse integer from string "6000000000000000000" in tuple index.
+      The index is likely too large.
 [exit 1]
   $ stanc incomplete1.stan
-Syntax error in 'incomplete1.stan', line 2, column 30 to column 35, parsing error:
-   -------------------------------------------------
-     1:  data {
-     2:    tuple( array [ foo ] real , while
-                                       ^
-   -------------------------------------------------
-
-Ill-formed type. Incomplete type specification, expected further types followed by ")" to complete tuple.
+error: Syntax error: Ill-formed type.
+    ┌─ incomplete1.stan:2:31
+  1 │  data {
+  2 │    tuple( array [ foo ] real , while
+    │                                ^^^^^ here.
+  3 │  
+    = Incomplete type specification, expected further types followed by ")" to complete tuple.
 [exit 1]
   $ stanc incomplete2.stan
-Syntax error in 'incomplete2.stan', line 1, column 33 to column 36, parsing error:
-   -------------------------------------------------
-     1:  data { tuple( array [ foo ] real foo
-                                          ^
-   -------------------------------------------------
-
-Ill-formed type. Expected "," followed by further types and ")" to complete tuple.
+error: Syntax error: Ill-formed type.
+    ┌─ incomplete2.stan:1:34
+  1 │  data { tuple( array [ foo ] real foo
+    │                                   ^^^ here.
+  2 │  
+    = Expected "," followed by further types and ")" to complete tuple.
 [exit 1]
   $ stanc incomplete3.stan
-Syntax error in 'incomplete3.stan', line 2, column 0, parsing error:
-   -------------------------------------------------
-     1:  model { tuple( complex , complex ) foo,
-     2:  
-         ^ (error at end of file)
-   -------------------------------------------------
-
-Ill-formed declaration. Expected a new identifier after comma in declaration.
-All variables declared must be of the same type, and any initializing assignment must follow the identifier before the next comma.
+error: Syntax error: Ill-formed declaration.
+    ┌─ incomplete3.stan:2:1
+  1 │  model { tuple( complex , complex ) foo,
+  2 │  
+    │  ^ here.
+    = Expected a new identifier after comma in declaration.
+      All variables declared must be of the same type, and any initializing assignment must follow the identifier before the next comma.
 [exit 1]
   $ stanc incomplete4.stan
-Syntax error in 'incomplete4.stan', line 2, column 45 to column 50, parsing error:
-   -------------------------------------------------
-     1:  data {
-     2:      tuple( real , tuple( complex , complex ) while
-                                                      ^
-   -------------------------------------------------
-
-Ill-formed type. Expected either ")" or "," followed by
-further types and ")" to complete tuple.
+error: Syntax error: Ill-formed type.
+    ┌─ incomplete4.stan:2:46
+  1 │  data {
+  2 │      tuple( real , tuple( complex , complex ) while
+    │                                               ^^^^^ here.
+  3 │  
+    = Expected either ")" or "," followed by
+      further types and ")" to complete tuple.
 [exit 1]
   $ stanc incomplete5.stan
-Syntax error in 'incomplete5.stan', line 1, column 14 to column 19, parsing error:
-   -------------------------------------------------
-     1:  data { tuple( while
-                       ^
-   -------------------------------------------------
-
-Ill-formed type. Expected a comma separated list of types between "(" and ")" to declare tuple variable.
+error: Syntax error: Ill-formed type.
+    ┌─ incomplete5.stan:1:15
+  1 │  data { tuple( while
+    │                ^^^^^ here.
+  2 │  
+    = Expected a comma separated list of types between "(" and ")" to declare tuple variable.
 [exit 1]
   $ stanc incomplete6.stan
-Syntax error in 'incomplete6.stan', line 2, column 30 to column 31, parsing error:
-   -------------------------------------------------
-     1:  transformed data {
-     2:    tuple(real, int) x = (3.5, 4;
-                                       ^
-   -------------------------------------------------
-
-Ill-formed expression. Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
+error: Syntax error: Ill-formed expression.
+    ┌─ incomplete6.stan:2:31
+  1 │  transformed data {
+  2 │    tuple(real, int) x = (3.5, 4;
+    │                                ^ here.
+  3 │  
+    = Unexpected input after the conclusion of a valid expression.
+      You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
 [exit 1]
   $ stanc incomplete7.stan
-Syntax error in 'incomplete7.stan', line 2, column 20 to column 21, parsing error:
-   -------------------------------------------------
-     1:  functions {
-     2:     tuple(real, int, ) foo()
-                             ^
-     3:  }
-   -------------------------------------------------
-
-Ill-formed type. Expected a comma separated list of types between "(" and ")" to declare tuple variable.
+error: Syntax error: Ill-formed type.
+    ┌─ incomplete7.stan:2:21
+  1 │  functions {
+  2 │     tuple(real, int, ) foo()
+    │                      ^ here.
+  3 │  }
+    = Expected a comma separated list of types between "(" and ")" to declare tuple variable.
 [exit 1]
   $ stanc onepl_type_missing_comma.stan
-Syntax error in 'onepl_type_missing_comma.stan', line 2, column 12 to column 13, parsing error:
-   -------------------------------------------------
-     1:  model {
-     2:    tuple(real) y = (1,);
-                     ^
-     3:  }
-   -------------------------------------------------
-
-Ill-formed type. Expected "," followed by further types and ")" to complete tuple.
+error: Syntax error: Ill-formed type.
+    ┌─ onepl_type_missing_comma.stan:2:13
+  1 │  model {
+  2 │    tuple(real) y = (1,);
+    │              ^ here.
+  3 │  }
+    = Expected "," followed by further types and ")" to complete tuple.
 [exit 1]
   $ stanc tuple-dataonly-ad.stan
-Semantic error in 'tuple-dataonly-ad.stan', line 13, column 12 to column 19:
-   -------------------------------------------------
-    11:  
-    12:  model {
-    13:    target += foo(ps);
-                     ^
-    14:  }
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function "foo":
-(tuple(real, real))
-Available signatures:
-(data tuple(real, real)) => real
-  The first argument must be data-only. (Local variables are assumed to
-  depend on parameters; same goes for function inputs unless they are marked
-  with the keyword "data".)
+error: Ill-typed arguments supplied to function "foo".
+    ┌─ tuple-dataonly-ad.stan:13:13
+  2 │  functions {
+  3 │    real foo(data tuple(real, real) x){
+    │         --- Function defined here.
+  4 │      return x.1;
+    ⋯  
+ 12 │  model {
+ 13 │    target += foo(ps);
+    │              ^^^^^^^ Function called here.
+ 14 │  }
+    = Supplied arguments:
+      (tuple(real, real))
+    = Available signatures:
+      (data tuple(real, real)) => real
+        The first argument must be data-only.
+        (Local variables are assumed to depend on parameters; same goes for
+        function inputs unless they are marked with the keyword "data".)
 [exit 1]
   $ stanc tuple-dataonly-ad2.stan
-Semantic error in 'tuple-dataonly-ad2.stan', line 17, column 12 to column 24:
-   -------------------------------------------------
-    15:  
-    16:  model {
-    17:    target += foo((x1,x2));
-                     ^
-    18:  }
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function "foo":
-(tuple(real, real))
-Available signatures:
-(data tuple(real, real)) => real
-  The first argument must be data-only. (Local variables are assumed to
-  depend on parameters; same goes for function inputs unless they are marked
-  with the keyword "data".)
+error: Ill-typed arguments supplied to function "foo".
+    ┌─ tuple-dataonly-ad2.stan:17:13
+  2 │  functions {
+  3 │    real foo(data tuple(real, real) x){
+    │         --- Function defined here.
+  4 │      return x.1;
+    ⋯  
+ 16 │  model {
+ 17 │    target += foo((x1,x2));
+    │              ^^^^^^^^^^^^ Function called here.
+ 18 │  }
+    = Supplied arguments:
+      (tuple(real, real))
+    = Available signatures:
+      (data tuple(real, real)) => real
+        The first argument must be data-only.
+        (Local variables are assumed to depend on parameters; same goes for
+        function inputs unless they are marked with the keyword "data".)
 [exit 1]
   $ stanc tuple_ternary.stan
-Semantic error in 'tuple_ternary.stan', line 2, column 25 to column 47:
-   -------------------------------------------------
-     1:  transformed data {
-     2:     tuple(real, real) x = 1 ? (1, 2) : (3, 4, 5);
-                                  ^
-     3:  }
-   -------------------------------------------------
-
-Type mismatch in ternary expression, expression when true is: tuple(int, int); expression when false is: tuple(
-int, int, int)
+error: Type mismatch in ternary expression.
+    ┌─ tuple_ternary.stan:2:26
+  1 │  transformed data {
+  2 │     tuple(real, real) x = 1 ? (1, 2) : (3, 4, 5);
+    │                           ^^^^^^^^^^^^^^^^^^^^^^ Expression when true is:
+    │                                                    tuple(int, int);
+    │                                                  Expression when false is:
+    │                                                    tuple(int, int, int)
+  3 │  }
 [exit 1]
