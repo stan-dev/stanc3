@@ -2152,27 +2152,6 @@ and check_statement (cf : context_flags_record) (tenv : Env.t)
   | FunDef {returntype; funname; arguments; body} ->
       check_fundef loc cf tenv returntype funname arguments body
 
-let verify_fun_def_body_in_block = function
-  | {stmt= FunDef {body= {stmt= Block _; _}; _}; _}
-   |{stmt= FunDef {body= {stmt= Skip; _}; _}; _} ->
-      ()
-  | {stmt= FunDef {body= {stmt= _; smeta}; _}; _} ->
-      Semantic_error.fn_decl_needs_block smeta.loc |> error
-  | _ -> ()
-
-let verify_functions_have_defn ~allow_undefined_functions tenv
-    function_block_stmts_opt =
-  let error_on_undefined name funs =
-    List.iter (List.rev funs) ~f:(fun f ->
-        match f with
-        | Env.{kind= `UserDeclared loc; _} ->
-            Semantic_error.fn_decl_without_def loc name |> error
-        | _ -> ()) in
-  if not allow_undefined_functions then Env.iteri tenv error_on_undefined;
-  match function_block_stmts_opt with
-  | Some {stmts= []; _} | None -> ()
-  | Some {stmts= ls; _} -> List.iter ~f:verify_fun_def_body_in_block ls
-
 let add_userdefined_functions tenv stmts_opt =
   match stmts_opt with
   | None -> tenv
@@ -2205,6 +2184,18 @@ let check_toplevel_block block tenv stmts_opt =
       (tenv', Some {stmts; xloc})
   | None -> (tenv, None)
 
+let check_functions_block ~allow_undefined_functions tenv stmts_opt =
+  let tenv = add_userdefined_functions tenv stmts_opt in
+  let _, typed_fb = check_toplevel_block Functions tenv stmts_opt in
+  let error_on_undefined name funs =
+    List.iter (List.rev funs) ~f:(fun f ->
+        match f with
+        | Env.{kind= `UserDeclared loc; _} ->
+            Semantic_error.fn_decl_without_def loc name |> error
+        | _ -> ()) in
+  if not allow_undefined_functions then Env.iteri tenv error_on_undefined;
+  (tenv, typed_fb)
+
 let verify_correctness_invariant (ast : untyped_program)
     (decorated_ast : typed_program) =
   let detyped = untyped_program_of_typed_program decorated_ast in
@@ -2229,9 +2220,8 @@ let check_program_exn ~allow_undefined_functions
   requires_higher_order_autodiff := [];
   (* create a new type environment which has only stan-math functions *)
   let tenv = Lazy.force Env.stan_math_environment in
-  let tenv = add_userdefined_functions tenv fb in
-  let tenv, typed_fb = check_toplevel_block Functions tenv fb in
-  verify_functions_have_defn ~allow_undefined_functions tenv typed_fb;
+  let tenv, typed_fb =
+    check_functions_block ~allow_undefined_functions tenv fb in
   let tenv, typed_db = check_toplevel_block Data tenv db in
   let tenv, typed_tdb = check_toplevel_block TData tenv tdb in
   let tenv, typed_pb = check_toplevel_block Param tenv pb in

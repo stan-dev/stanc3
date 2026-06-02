@@ -777,7 +777,7 @@ Syntax error in 'ill-formed-expression31.stan', line 1, column 20 to column 24, 
                              ^
    -------------------------------------------------
 
-Ill-formed block. Expected unconstrained variable declaration, statement, or "}".
+Ill-formed phrase. Expected either a list of statements followed by a "}" for a block, or a list of expressions expressions followed by a "}" for an array literal.
 [exit 1]
   $ ../../../../../install/default/bin/stanc ill-formed-expression32.stan
 Syntax error in 'ill-formed-expression32.stan', line 1, column 24 to column 29, parsing error:

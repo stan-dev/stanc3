@@ -601,7 +601,7 @@ Syntax error in 'incomplete5.stan', line 3, column 0, parsing error:
          ^ (error at end of file)
    -------------------------------------------------
 
-Ill-formed block. Expected top-level variable declaration, statement, or "}".
+Ill-formed statement. Expected "else", a statement, or "}" to end the block.
 [exit 1]
   $ ../../../../../install/default/bin/stanc incomplete6.stan
 Syntax error in 'incomplete6.stan', line 3, column 16 to column 21, parsing error:

@@ -91,7 +91,6 @@ module TypeError = struct
     | StanMathFuncRedefined of string * UnsizedType.t
     | FunDeclExists of string * Location_span.t
     | FunDeclNoDefn of string
-    | FunDeclNeedsBlock
     | NonRealProbFunDef of UnsizedType.returntype
     | ProbDensityNonRealVariate of UnsizedType.t option
     | ProbMassNonIntVariate of UnsizedType.t option
@@ -407,8 +406,6 @@ module TypeError = struct
     | FunDeclNoDefn name ->
         Fmt.pf ppf "Function %a is declared without specifying a definition."
           quoted name
-    | FunDeclNeedsBlock ->
-        Fmt.pf ppf "Function definitions must be wrapped in curly braces."
     | NonRealProbFunDef Void ->
         Fmt.pf ppf
           "@[Real return type required for probability functions ending in \
@@ -1067,8 +1064,6 @@ let fn_decl_exists loc name original_loc =
 
 let fn_decl_without_def loc name =
   (loc, TypeError (TypeError.FunDeclNoDefn name))
-
-let fn_decl_needs_block loc = (loc, TypeError TypeError.FunDeclNeedsBlock)
 
 let non_real_prob_fn_def loc rt =
   (loc, TypeError (TypeError.NonRealProbFunDef rt))
