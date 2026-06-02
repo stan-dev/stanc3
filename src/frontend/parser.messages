@@ -1900,7 +1900,7 @@ program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN IDENTIFIER RPAREN SEMICOLON VOID
 ## IF LPAREN expression RPAREN vardecl_or_statement
 ##
 
-@{<light_red>Ill-formed statement.@} Expected @{<green>"else"@}, a statement, or  @{<green>"}"@} to end the block.
+@{<light_red>Ill-formed statement.@} Expected @{<green>"else"@}, a statement, or @{<green>"}"@} to end the block.
 
 program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN IDENTIFIER LPAREN RPAREN TILDE
 ##
