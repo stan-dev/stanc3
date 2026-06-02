@@ -37,7 +37,9 @@ let stan2cpp_wrapped name code flags includes : stancReturn Js.t =
       let warnings =
         include_reader_warnings
         @ List.map
-            ~f:(str_color ~color_output "%a" (Warnings.pp ?printed_filename))
+            ~f:
+              (str_color ~color_output "%a"
+                 (Warnings.pp ~code ?printed_filename))
             warnings in
       wrap_result ?printed_filename ~color_output ~code result ~warnings
   | Error non_compilation_error (* either an ICE or malformed JS input *) ->
