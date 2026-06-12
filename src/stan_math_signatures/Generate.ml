@@ -89,6 +89,7 @@ type fkind =
   | Cdf
   | Ccdf
   | UnaryVectorized of return_behavior
+  | MultiVectorized
 [@@deriving show {with_path= false}]
 
 let is_primitive = function
@@ -156,7 +157,7 @@ let mk_declarative_sig (fnkinds, name, args, mem_pattern) =
     | Rng -> ["_rng"]
     | Cdf -> ["_cdf"; "_lcdf"]
     | Ccdf -> ["_lccdf"]
-    | UnaryVectorized _ -> [""] in
+    | UnaryVectorized _ | MultiVectorized -> [""] in
   let add_ints = function DVReal -> DIntAndReals | x -> x in
   let all_expanded args = all_combinations (List.map ~f:expand_arg args) in
   let promoted_dim = function
@@ -170,6 +171,9 @@ let mk_declarative_sig (fnkinds, name, args, mem_pattern) =
         ReturnType (ints_to_real (List.hd_exn args))
     | UnaryVectorized ComplexToReals ->
         ReturnType (complex_to_real (List.hd_exn args))
+    | MultiVectorized ->
+        if List.for_all ~f:UnsizedType.is_scalar_type args then ReturnType UReal
+        else ReturnType UVector
     | _ -> ReturnType UReal in
   let create_from_fk_args fk arglists =
     List.concat_map arglists ~f:(fun args ->
@@ -339,6 +343,7 @@ let math_sigs =
   ; ([basic_vectorized], "std_normal_qf", [DDeepVectorized], SoA)
     (* std_normal_qf is an alias for inv_Phi *)
   ; ([basic_vectorized], "std_normal_log_qf", [DDeepVectorized], SoA)
+  ; ([MultiVectorized], "student_t_qf", [DVReal; DVReal; DVReal; DVReal], SoA)
   ; ([basic_vectorized], "step", [DReal], AoS)
   ; ([basic_vectorized], "tan", [DDeepVectorized], SoA)
   ; ([basic_vectorized], "tanh", [DDeepVectorized], SoA)
