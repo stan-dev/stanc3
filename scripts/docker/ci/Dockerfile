@@ -3,8 +3,8 @@ FROM ubuntu:jammy
 
 USER root
 
-ARG PUID
-ARG PGID
+ARG PUID=1000
+ARG PGID=1000
 
 # Set the opam root
 ENV OPAMROOT=/usr/local/opam
@@ -45,23 +45,23 @@ ENV DEBIAN_FRONTEND=noninteractive
 # OCaml setup
 
 # Copy our script and install ocaml + init
-COPY ./scripts/install_opam.sh ./
+COPY install_opam.sh ./
 RUN printf "\n" | bash -x install_opam.sh
 
 # Install and initialize ocaml
-COPY ./scripts/install_ocaml.sh ./
+COPY install_ocaml.sh ./
 RUN opam update; printf "\n" | bash -x install_ocaml.sh "stanc"
 
 # Install build dependencies
-COPY ./scripts/install_build_deps_windows.sh ./
+COPY install_build_deps_windows.sh ./
 RUN opam update; bash -x install_build_deps_windows.sh
 
 # Install Javascript dev environment (js_of_ocaml 5.9.1)
-COPY ./scripts/install_js_deps.sh ./
+COPY install_js_deps.sh ./
 RUN opam update; bash -x install_js_deps.sh
 
 # Install dev dependencies
-COPY ./scripts/install_ci_deps.sh ./
+COPY install_ci_deps.sh ./
 RUN opam update; bash -x install_ci_deps.sh
 
 # Specify our entrypoint

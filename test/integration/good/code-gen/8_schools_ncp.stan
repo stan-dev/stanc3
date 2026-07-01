@@ -17,4 +17,3 @@ model {
   theta_tilde ~ normal(0, 1);
   y ~ normal(theta, sigma);
 }
-

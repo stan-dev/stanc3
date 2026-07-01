@@ -3,8 +3,8 @@ LABEL distro_style="apk"
 #Switch to root user so we can install apk packages
 USER root
 
-ARG PUID
-ARG PGID
+ARG PUID=1000
+ARG PGID=1000
 
 RUN addgroup -g ${PGID} jenkins && \
     adduser -D -u ${PUID} -G jenkins jenkins
@@ -20,5 +20,5 @@ RUN opam switch create 4.14.1
 RUN opam switch 4.14.1
 RUN eval $(opam env)
 
-COPY ./scripts/install_build_deps.sh ./
+COPY install_build_deps.sh ./
 RUN opam update; bash -x install_build_deps.sh
