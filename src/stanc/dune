@@ -8,6 +8,7 @@
   (backend bisect_ppx))
  (modules Stanc CLI)
  (public_name stanc)
+ (package stanc)
  (preprocess
   (pps ppx_jane)))
 
@@ -21,5 +22,6 @@
 
 (install
  (section share_root)
+ (package stanc)
  (dirs
   (cmdliner-support/share as .)))

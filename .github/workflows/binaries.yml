@@ -4,7 +4,7 @@ on:
   workflow_dispatch: {}
 
 env:
-  OCAML_VERSION: 4.14.1
+  OCAML_VERSION: 5.5.0
 
 jobs:
   build:
@@ -30,7 +30,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Download older SDK
         if: matrix.sdk != ''
@@ -48,11 +48,13 @@ jobs:
           ocaml-compiler: ${{ env.OCAML_VERSION }}
           dune-cache: ${{ matrix.name != 'macos-x86_64' }}
 
-      - if: matrix.name == 'macos-x86_64'
+      - name: install dune
         run: |
-          opam repository add archive git+https://github.com/ocaml/opam-repository-archive
           opam update
-          opam pin -y dune 3.6.1 --no-action
+          opam install -y dune
+        env:
+           SDKROOT: ""
+           MACOSX_DEPLOYMENT_TARGET: ""
 
       - run: bash -x scripts/install_build_deps.sh
 
@@ -62,7 +64,7 @@ jobs:
       - run: mv _build/default/src/stanc/stanc.exe ${{ matrix.name }}-stanc
 
       - name: Upload ${{ matrix.name }} stanc
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ matrix.name }}-stanc
           path: ${{ matrix.name }}-stanc
@@ -74,7 +76,7 @@ jobs:
 
     steps:
       - name: Download artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           merge-multiple: true
 
@@ -85,7 +87,7 @@ jobs:
           lipo -archs macos-stanc
 
       - name: Upload macos-stanc
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: macos-stanc
           path: macos-stanc
@@ -96,7 +98,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Install cross-compiler
         run: sudo apt-get update; sudo apt-get install -y gcc-mingw-w64-x86-64 gcc-mingw-w64-i686
@@ -121,7 +123,7 @@ jobs:
       - run: mv _build/default.windows/src/stanc/stanc.exe windows-stanc
 
       - name: Upload Windows stanc
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: windows-stanc
           path: windows-stanc
@@ -132,7 +134,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Use OCaml ${{ env.OCAML_VERSION }}
         uses: ocaml/setup-ocaml@v3
@@ -149,7 +151,7 @@ jobs:
       - run: mv _build/default/src/stancjs/stancjs.bc.js stanc.js
 
       - name: Upload stanc.js
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: stanc.js
           path: stanc.js
@@ -165,7 +167,7 @@ jobs:
             name: ubuntu
           - os: macos-latest
             name: macos
-          - os: macos-13
+          - os: macos-14
             name: macos
           - os: windows-latest
             name: windows
@@ -176,7 +178,7 @@ jobs:
 
     steps:
       - name: Download artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: ${{ matrix.name }}-stanc
 
