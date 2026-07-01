@@ -1,4 +1,4 @@
-  $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. a.stanfunctions
+  $ stanc --auto-format --include-paths=. a.stanfunctions
 // line comment a
 /*weird block a*/
 void foo(real x) {
@@ -6,7 +6,7 @@ void foo(real x) {
 }
 // another line comment a
 [exit 0]
-  $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. b.stanfunctions
+  $ stanc --auto-format --include-paths=. b.stanfunctions
 #include a.stanfunctions //include other functions
 // line comment b
 /*weird block b*/
@@ -15,13 +15,13 @@ void bar(real y) {
 }
 // another line comment b
 [exit 0]
-  $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. blocks-issue-1614.stan
+  $ stanc --auto-format --include-paths=. blocks-issue-1614.stan
 #include functions.stan
 // comment 1
 // comment 2
 #include data.stan
 [exit 0]
-  $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. c.stanfunctions
+  $ stanc --auto-format --include-paths=. c.stanfunctions
 /**
   A documentation comment
 */
@@ -33,16 +33,16 @@ int baz(real z) {
   // trailing coment in c
 }
 [exit 0]
-  $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. data.stan
+  $ stanc --auto-format --include-paths=. data.stan
 data {
   int N;
 }
 
 [exit 0]
-  $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. first.stanfunctions
+  $ stanc --auto-format --include-paths=. first.stanfunctions
 #include second.stanfunctions
 [exit 0]
-  $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. functions.stan
+  $ stanc --auto-format --include-paths=. functions.stan
 functions {
   real foo() {
     return 1.0;
@@ -50,7 +50,7 @@ functions {
 }
 
 [exit 0]
-  $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. main.stan
+  $ stanc --auto-format --include-paths=. main.stan
 functions {
   #include b.stanfunctions
   #include c.stanfunctions
@@ -82,7 +82,7 @@ generated quantities {
 }
 
 [exit 0]
-  $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. main2.stan
+  $ stanc --auto-format --include-paths=. main2.stan
 functions {
   void foo(data array[,] real x) {
     print(x);
@@ -94,13 +94,13 @@ functions {
 }
 
 [exit 0]
-  $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. second.stanfunctions
+  $ stanc --auto-format --include-paths=. second.stanfunctions
 real bar(matrix x) {
   print(x);
   return sum(x);
 }
 [exit 0]
-  $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. tdata.stan
+  $ stanc --auto-format --include-paths=. tdata.stan
 // I'm in another file!
 
 transformed data {

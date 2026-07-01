@@ -1,4 +1,4 @@
-  $ ../../../../../install/default/bin/stanc --auto-format x_in_xs_function_block_1.stan
+  $ stanc --auto-format x_in_xs_function_block_1.stan
 functions {
   int foo(int a) {
     array[2] int vs;
@@ -16,7 +16,7 @@ model {
 }
 
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --auto-format x_in_xs_function_block_2.stan
+  $ stanc --auto-format x_in_xs_function_block_2.stan
 functions {
   int foo(int a) {
     array[2] int vs;
@@ -34,7 +34,7 @@ model {
 }
 
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --auto-format x_in_xs_function_block_3.stan
+  $ stanc --auto-format x_in_xs_function_block_3.stan
 functions {
   int foo(int a) {
     array[2, 3] int vs;

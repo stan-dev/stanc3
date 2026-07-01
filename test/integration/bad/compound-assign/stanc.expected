@@ -1,4 +1,4 @@
-  $ ../../../../../install/default/bin/stanc elt_divide_equals_prim.stan
+  $ stanc elt_divide_equals_prim.stan
 Semantic error in 'elt_divide_equals_prim.stan', line 4, column 8 to column 9:
    -------------------------------------------------
      2:    real x;
@@ -11,7 +11,7 @@ Semantic error in 'elt_divide_equals_prim.stan', line 4, column 8 to column 9:
 Ill-typed assignment operator ./=.
 There are no valid right hand sides for the given left hand side (real).
 [exit 1]
-  $ ../../../../../install/default/bin/stanc elt_times_equals_prim.stan
+  $ stanc elt_times_equals_prim.stan
 Semantic error in 'elt_times_equals_prim.stan', line 4, column 8 to column 9:
    -------------------------------------------------
      2:    real x;
@@ -24,7 +24,7 @@ Semantic error in 'elt_times_equals_prim.stan', line 4, column 8 to column 9:
 Ill-typed assignment operator .*=.
 There are no valid right hand sides for the given left hand side (real).
 [exit 1]
-  $ ../../../../../install/default/bin/stanc plus_equals_bad_init.stan
+  $ stanc plus_equals_bad_init.stan
 Syntax error in 'plus_equals_bad_init.stan', line 3, column 20 to column 22, parsing error:
    -------------------------------------------------
      1:  generated quantities {
@@ -36,7 +36,7 @@ Syntax error in 'plus_equals_bad_init.stan', line 3, column 20 to column 22, par
 
 Ill-formed declaration. Expected ";" or plain assignment after variable declaration.
 [exit 1]
-  $ ../../../../../install/default/bin/stanc plus_equals_bad_lhs_idxs.stan
+  $ stanc plus_equals_bad_lhs_idxs.stan
 Semantic error in 'plus_equals_bad_lhs_idxs.stan', line 4, column 2 to column 8:
    -------------------------------------------------
      2:    vector[3] x;
@@ -48,7 +48,7 @@ Semantic error in 'plus_equals_bad_lhs_idxs.stan', line 4, column 2 to column 8:
 
 Too many indices. Expression only has 1 dimensions, but received 2 indices.
 [exit 1]
-  $ ../../../../../install/default/bin/stanc plus_equals_bad_var_lhs.stan
+  $ stanc plus_equals_bad_var_lhs.stan
 Semantic error in 'plus_equals_bad_var_lhs.stan', line 3, column 11 to column 13:
    -------------------------------------------------
      1:  functions {
@@ -62,7 +62,7 @@ Semantic error in 'plus_equals_bad_var_lhs.stan', line 3, column 11 to column 13
 Ill-typed assignment operator +=.
 There are no valid right hand sides for the given left hand side ((real) => real).
 [exit 1]
-  $ ../../../../../install/default/bin/stanc plus_equals_bad_var_lhs2.stan
+  $ stanc plus_equals_bad_var_lhs2.stan
 Semantic error in 'plus_equals_bad_var_lhs2.stan', line 6, column 2 to column 3:
    -------------------------------------------------
      4:  generated quantities {
@@ -74,7 +74,7 @@ Semantic error in 'plus_equals_bad_var_lhs2.stan', line 6, column 2 to column 3:
 
 Cannot assign to global variable "x" declared previously in transformed data block.
 [exit 1]
-  $ ../../../../../install/default/bin/stanc plus_equals_bad_var_rhs.stan
+  $ stanc plus_equals_bad_var_rhs.stan
 Semantic error in 'plus_equals_bad_var_rhs.stan', line 4, column 11 to column 13:
    -------------------------------------------------
      2:    void foo(real a1) {
@@ -87,7 +87,7 @@ Semantic error in 'plus_equals_bad_var_rhs.stan', line 4, column 11 to column 13
 
 Identifier "a2" not in scope. Did you mean "a1"?
 [exit 1]
-  $ ../../../../../install/default/bin/stanc plus_equals_matrix_array.stan
+  $ stanc plus_equals_matrix_array.stan
 Semantic error in 'plus_equals_matrix_array.stan', line 7, column 7 to column 8:
    -------------------------------------------------
      5:    x[3,1] += y[3,1];
@@ -100,7 +100,7 @@ Semantic error in 'plus_equals_matrix_array.stan', line 7, column 7 to column 8:
 Ill-typed assignment operator +=.
 There are no valid right hand sides for the given left hand side (array[] matrix).
 [exit 1]
-  $ ../../../../../install/default/bin/stanc plus_equals_matrix_array2.stan
+  $ stanc plus_equals_matrix_array2.stan
 Semantic error in 'plus_equals_matrix_array2.stan', line 7, column 10 to column 16:
    -------------------------------------------------
      5:    x[3,1] += y[3,1];
@@ -114,7 +114,7 @@ Ill-typed assignment operator +=.
 For the given left hand side (matrix), expected the right hand side to have type
 int, real, or matrix. Instead found type row_vector.
 [exit 1]
-  $ ../../../../../install/default/bin/stanc plus_equals_matrix_shape_mismatch.stan
+  $ stanc plus_equals_matrix_shape_mismatch.stan
 Syntax error in 'plus_equals_matrix_shape_mismatch.stan', line 4, column 10 to column 11, parsing error:
    -------------------------------------------------
      2:  generated quantities {
@@ -127,7 +127,7 @@ Syntax error in 'plus_equals_matrix_shape_mismatch.stan', line 4, column 10 to c
 
 Ill-formed type. Expected "[" expression "]" for vector size.
 [exit 1]
-  $ ../../../../../install/default/bin/stanc plus_equals_prim_array.stan
+  $ stanc plus_equals_prim_array.stan
 Semantic error in 'plus_equals_prim_array.stan', line 5, column 7 to column 8:
    -------------------------------------------------
      3:    array[3] real y = {4.0, 5.0, 6.0};
@@ -140,7 +140,7 @@ Semantic error in 'plus_equals_prim_array.stan', line 5, column 7 to column 8:
 Ill-typed assignment operator +=.
 There are no valid right hand sides for the given left hand side (array[] real).
 [exit 1]
-  $ ../../../../../install/default/bin/stanc plus_equals_row_vec_array.stan
+  $ stanc plus_equals_row_vec_array.stan
 Semantic error in 'plus_equals_row_vec_array.stan', line 5, column 7 to column 8:
    -------------------------------------------------
      3:    array[3] row_vector[2] y = {[1,2], [3,4], [5,6]};
@@ -153,7 +153,7 @@ Semantic error in 'plus_equals_row_vec_array.stan', line 5, column 7 to column 8
 Ill-typed assignment operator +=.
 There are no valid right hand sides for the given left hand side (array[] row_vector).
 [exit 1]
-  $ ../../../../../install/default/bin/stanc plus_equals_sliced.stan
+  $ stanc plus_equals_sliced.stan
 Semantic error in 'plus_equals_sliced.stan', line 6, column 15 to column 26:
    -------------------------------------------------
      4:      matrix[2, 2] aa;
@@ -168,7 +168,7 @@ Ill-typed assignment operator +=.
 For the given left hand side (vector), expected the right hand side to have type
 int, real, or vector. Instead found type matrix.
 [exit 1]
-  $ ../../../../../install/default/bin/stanc plus_equals_type_mismatch.stan
+  $ stanc plus_equals_type_mismatch.stan
 Semantic error in 'plus_equals_type_mismatch.stan', line 4, column 7 to column 8:
    -------------------------------------------------
      2:    int x = 5;
@@ -182,7 +182,7 @@ Ill-typed assignment operator +=.
 For the given left hand side (int), expected the right hand side to have type
 int. Instead found type real.
 [exit 1]
-  $ ../../../../../install/default/bin/stanc plus_equals_type_mismatch2.stan
+  $ stanc plus_equals_type_mismatch2.stan
 Semantic error in 'plus_equals_type_mismatch2.stan', line 4, column 7 to column 8:
    -------------------------------------------------
      2:    real x;
@@ -196,7 +196,7 @@ Ill-typed assignment operator +=.
 For the given left hand side (real), expected the right hand side to have type
 int or real. Instead found type vector.
 [exit 1]
-  $ ../../../../../install/default/bin/stanc plus_equals_vector_array.stan
+  $ stanc plus_equals_vector_array.stan
 Semantic error in 'plus_equals_vector_array.stan', line 5, column 7 to column 8:
    -------------------------------------------------
      3:    array[3] vector[2] y = {[1,2]', [3,4]', [5,6]'};
@@ -209,7 +209,7 @@ Semantic error in 'plus_equals_vector_array.stan', line 5, column 7 to column 8:
 Ill-typed assignment operator +=.
 There are no valid right hand sides for the given left hand side (array[] vector).
 [exit 1]
-  $ ../../../../../install/default/bin/stanc times_equals_matrix_array.stan
+  $ stanc times_equals_matrix_array.stan
 Semantic error in 'times_equals_matrix_array.stan', line 5, column 12 to column 18:
    -------------------------------------------------
      3:    array[3] matrix[2,2] y = {[[4, 5], [6, 7]], [[4, 5], [6, 7]], [[4, 5], [6, 7]]};

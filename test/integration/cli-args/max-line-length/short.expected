@@ -1,4 +1,4 @@
-  $ ../../../../../install/default/bin/stanc --auto-format --max-line-length=40 mother.stan
+  $ stanc --auto-format --max-line-length=40 mother.stan
 // gen_test_mother1
 // tests functions from current impelmentation:
 //      generate_functions(prog.function_decl_defs_, o);

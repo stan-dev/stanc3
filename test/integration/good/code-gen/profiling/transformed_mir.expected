@@ -1,4 +1,4 @@
-  $ ../../../../../../install/default/bin/stanc --debug-transformed-mir simple_function.stan
+  $ stanc --debug-transformed-mir simple_function.stan
 ((functions_block ())
  (input_vars
   ((N <opaque> SInt)

@@ -1,4 +1,4 @@
-  $ ../../../../../install/default/bin/stanc --auto-format arK.stan
+  $ stanc --auto-format arK.stan
 data {
   int<lower=0> K;
   int<lower=0> T;
@@ -26,7 +26,7 @@ model {
 }
 
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --auto-format arma.stan
+  $ stanc --auto-format arma.stan
 // ARMA(1, 1)
 
 data {
@@ -59,7 +59,7 @@ model {
 }
 
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --auto-format eight_schools.stan
+  $ stanc --auto-format eight_schools.stan
 data {
   int<lower=0> J;
   array[J] real y;
@@ -83,7 +83,7 @@ model {
 }
 
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --auto-format garch.stan
+  $ stanc --auto-format garch.stan
 data {
   int<lower=0> T;
   array[T] real y;
@@ -107,7 +107,7 @@ model {
 }
 
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --auto-format gen_gp_data.stan
+  $ stanc --auto-format gen_gp_data.stan
 transformed data {
   real rho = 5.5;
   real alpha = 3;
@@ -138,7 +138,7 @@ generated quantities {
 }
 
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --auto-format gp_pois_regr.stan
+  $ stanc --auto-format gp_pois_regr.stan
 data {
   int<lower=1> N;
   array[N] real x;
@@ -167,7 +167,7 @@ model {
 }
 
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --auto-format gp_regr.stan
+  $ stanc --auto-format gp_regr.stan
 data {
   int<lower=1> N;
   array[N] real x;
@@ -191,7 +191,7 @@ model {
 }
 
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --auto-format irt_2pl.stan
+  $ stanc --auto-format irt_2pl.stan
 data {
   int<lower=0> I;
   int<lower=0> J;
@@ -224,7 +224,7 @@ model {
 }
 
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --auto-format low_dim_corr_gauss.stan
+  $ stanc --auto-format low_dim_corr_gauss.stan
 transformed data {
   vector[2] mu;
   real sigma1;
@@ -266,7 +266,7 @@ generated quantities {
 }
 
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --auto-format low_dim_gauss_mix.stan
+  $ stanc --auto-format low_dim_gauss_mix.stan
 data {
   int<lower=0> N;
   vector[N] y;
@@ -286,7 +286,7 @@ model {
 }
 
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --auto-format low_dim_gauss_mix_collapse.stan
+  $ stanc --auto-format low_dim_gauss_mix_collapse.stan
 data {
   int<lower=0> N;
   vector[N] y;
@@ -306,7 +306,7 @@ model {
 }
 
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --auto-format one_comp_mm_elim_abs.stan
+  $ stanc --auto-format one_comp_mm_elim_abs.stan
 functions {
   array[] real one_comp_mm_elim_abs(real t, array[] real y,
                                     array[] real theta, array[] real x_r,
@@ -381,7 +381,7 @@ Warning in 'one_comp_mm_elim_abs.stan', line 49, column 8 to column 25:
     ode_bdf instead. The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --auto-format sim_one_comp_mm_elim_abs.stan
+  $ stanc --auto-format sim_one_comp_mm_elim_abs.stan
 functions {
   array[] real one_comp_mm_elim_abs(real t, array[] real y,
                                     array[] real theta, array[] real x_r,
@@ -447,7 +447,7 @@ Warning in 'sim_one_comp_mm_elim_abs.stan', line 55, column 6 to column 23:
     ode_bdf instead. The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --auto-format sir.stan
+  $ stanc --auto-format sir.stan
 // Simple SIR model inspired by the presentation in
 // http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3380087/pdf/nihms372789.pdf
 

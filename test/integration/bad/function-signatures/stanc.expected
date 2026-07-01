@@ -1,4 +1,4 @@
-  $ ../../../../../install/default/bin/stanc duplicate-args.stan
+  $ stanc duplicate-args.stan
 Semantic error in 'duplicate-args.stan', line 2, column 2 to line 4, column 3:
    -------------------------------------------------
      1:  functions {
@@ -11,7 +11,7 @@ Semantic error in 'duplicate-args.stan', line 2, column 2 to line 4, column 3:
 All function arguments must have distinct identifiers.
 Argument "bar" is duplicated.
 [exit 1]
-  $ ../../../../../install/default/bin/stanc falling_factorial.stan
+  $ stanc falling_factorial.stan
 Semantic error in 'falling_factorial.stan', line 7, column 26 to column 59:
    -------------------------------------------------
      5:  transformed data {
@@ -37,7 +37,7 @@ Available signatures:
   The second argument must be array[,,,] int but got real
 (Additional signatures omitted)
 [exit 1]
-  $ ../../../../../install/default/bin/stanc rising_factorial.stan
+  $ stanc rising_factorial.stan
 Semantic error in 'rising_factorial.stan', line 7, column 28 to column 60:
    -------------------------------------------------
      5:  transformed parameters {
