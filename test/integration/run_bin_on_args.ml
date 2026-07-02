@@ -23,5 +23,15 @@ let () =
   let dirs = Array.(sub args ~pos:2 ~len:(length args - 2)) in
   Array.stable_sort ~compare:String.compare dirs;
   Array.iter dirs ~f:(fun arg ->
+      let arg = String.chop_prefix_if_exists arg ~prefix:"./" in
       let cmd = binary ^ " " ^ arg in
-      Printf.printf "  $ %s\n%s\n" cmd (run_capturing_output cmd))
+      let short_cmd =
+        (* when displaying the command in the output file, we clean up the
+           binary name *)
+        let binary =
+          String.split_on_chars binary ~on:['/'] |> List.rev |> List.hd_exn
+        in
+        let binary =
+          String.substr_replace_first binary ~pattern:".exe" ~with_:"" in
+        binary ^ " " ^ arg in
+      Printf.printf "  $ %s\n%s\n" short_cmd (run_capturing_output cmd))

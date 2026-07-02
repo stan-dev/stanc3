@@ -76,7 +76,7 @@ catchError {
       buildBinary(null)
 
       if (runRemainingStages) {
-        runPod(tag: 'ci', cpus: 1) {
+        runPod(tag: 'ci', cpus: 4) {
           stage("Code formatting") {
             sh """
                 eval \$(opam env)
@@ -153,13 +153,6 @@ catchError {
                   sh """
                       ./runPerformanceTests.py -j\$PARALLEL --runs=0 $args ${testsPath}
                   """
-                  /* xunit([GoogleTest(
-                      deleteOutputFiles: false,
-                      failIfNotNew: true,
-                      pattern: 'performance.xml',
-                      skipNoTestFiles: false,
-                      stopProcessingIfError: false)
-                  ]) */
                 }
 
                 if (!params.skip_compile) {
@@ -202,13 +195,6 @@ catchError {
                   ''' : '''
                       CXX="$CXX" ./compare-compilers.sh "--tests-file all.tests --num-samples=10 -j$PARALLEL" "$(readlink -f ../bin/linux-stanc)"
                   '''
-                  /* xunit([GoogleTest(
-                      deleteOutputFiles: false,
-                      failIfNotNew: true,
-                      pattern: 'performance.xml',
-                      skipNoTestFiles: false,
-                      stopProcessingIfError: false)
-                  ]) */
                   archiveArtifacts 'performance.xml'
                 }
 

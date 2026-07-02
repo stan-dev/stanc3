@@ -1,4 +1,4 @@
-  $ ../../../../../install/default/bin/stanc --auto-format domain_fail.stan
+  $ stanc --auto-format domain_fail.stan
 parameters {
   real<lower=0> x;
 }
@@ -7,7 +7,7 @@ model {
 }
 
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --auto-format valid.stan
+  $ stanc --auto-format valid.stan
 parameters {
   real x;
 }

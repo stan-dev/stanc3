@@ -1,4 +1,4 @@
-  $ ../../../../../install/default/bin/stanc bad_abs_tol.stan
+  $ stanc bad_abs_tol.stan
 Semantic error in 'bad_abs_tol.stan', line 28, column 52 to column 53:
    -------------------------------------------------
     26:  transformed parameters {
@@ -18,7 +18,7 @@ Available signatures:
  data int, array[] real) => vector
   The 7th argument must be real but got array[] real
 [exit 1]
-  $ ../../../../../install/default/bin/stanc bad_initial_derivative.stan
+  $ stanc bad_initial_derivative.stan
 Semantic error in 'bad_initial_derivative.stan', line 27, column 33 to column 36:
    -------------------------------------------------
     25:  transformed parameters {
@@ -37,7 +37,7 @@ Available signatures:
  data int, array[] real) => vector
   The third argument must be vector but got real
 [exit 1]
-  $ ../../../../../install/default/bin/stanc bad_initial_state.stan
+  $ stanc bad_initial_state.stan
 Semantic error in 'bad_initial_state.stan', line 27, column 28 to column 31:
    -------------------------------------------------
     25:  transformed parameters {
@@ -56,7 +56,7 @@ Available signatures:
  data int, array[] real) => vector
   The second argument must be vector but got real
 [exit 1]
-  $ ../../../../../install/default/bin/stanc bad_initial_time.stan
+  $ stanc bad_initial_time.stan
 Semantic error in 'bad_initial_time.stan', line 27, column 38 to column 40:
    -------------------------------------------------
     25:  transformed parameters {
@@ -75,7 +75,7 @@ Available signatures:
  data int, array[] real) => vector
   The fourth argument must be real but got vector
 [exit 1]
-  $ ../../../../../install/default/bin/stanc bad_max_num_steps.stan
+  $ stanc bad_max_num_steps.stan
 Semantic error in 'bad_max_num_steps.stan', line 28, column 59 to column 60:
    -------------------------------------------------
     26:  transformed parameters {
@@ -95,7 +95,7 @@ Available signatures:
  data int, array[] real) => vector
   The 8th argument must be int but got array[] real
 [exit 1]
-  $ ../../../../../install/default/bin/stanc bad_no_args.stan
+  $ stanc bad_no_args.stan
 Semantic error in 'bad_no_args.stan', line 27, column 18 to column 26:
    -------------------------------------------------
     25:  transformed parameters {
@@ -123,7 +123,7 @@ where F2 = (real, vector, vector) => vector
     but the other is
      vector
 [exit 1]
-  $ ../../../../../install/default/bin/stanc bad_non_function_arg.stan
+  $ stanc bad_non_function_arg.stan
 Semantic error in 'bad_non_function_arg.stan', line 21, column 14 to column 15:
    -------------------------------------------------
     19:  transformed parameters {
@@ -141,7 +141,7 @@ Available signatures:
 where F1 = (real, vector, vector) => vector
   The first argument must be <F1> but got real
 [exit 1]
-  $ ../../../../../install/default/bin/stanc bad_non_matching_args.stan
+  $ stanc bad_non_matching_args.stan
 Semantic error in 'bad_non_matching_args.stan', line 27, column 71 to column 76:
    -------------------------------------------------
     25:  transformed parameters {
@@ -161,7 +161,7 @@ Available signatures:
  data int, array[] real, real) => vector
   The 10th argument must be real but got array[] real
 [exit 1]
-  $ ../../../../../install/default/bin/stanc bad_non_var_arg.stan
+  $ stanc bad_non_var_arg.stan
 Semantic error in 'bad_non_var_arg.stan', line 20, column 14 to column 17:
    -------------------------------------------------
     18:  transformed parameters {
@@ -179,7 +179,7 @@ Available signatures:
 where F1 = (real, vector, vector) => vector
   The first argument must be <F1> but got real
 [exit 1]
-  $ ../../../../../install/default/bin/stanc bad_rel_tol.stan
+  $ stanc bad_rel_tol.stan
 Semantic error in 'bad_rel_tol.stan', line 28, column 67 to column 68:
    -------------------------------------------------
     26:  transformed parameters {
@@ -199,7 +199,7 @@ Available signatures:
  data int, array[] real) => vector
   Expected 9 arguments but found 10 arguments.
 [exit 1]
-  $ ../../../../../install/default/bin/stanc bad_time0.stan
+  $ stanc bad_time0.stan
 Semantic error in 'bad_time0.stan', line 13, column 39 to column 40:
    -------------------------------------------------
     11:  transformed parameters {
@@ -219,7 +219,7 @@ Available signatures:
   depend on parameters; same goes for function inputs unless they are marked
   with the keyword "data".)
 [exit 1]
-  $ ../../../../../install/default/bin/stanc bad_times_param.stan
+  $ stanc bad_times_param.stan
 Semantic error in 'bad_times_param.stan', line 13, column 44 to column 59:
    -------------------------------------------------
     11:  transformed parameters {
@@ -239,7 +239,7 @@ Available signatures:
   on parameters; same goes for function inputs unless they are marked with
   the keyword "data".)
 [exit 1]
-  $ ../../../../../install/default/bin/stanc bad_times_tol.stan
+  $ stanc bad_times_tol.stan
 Semantic error in 'bad_times_tol.stan', line 27, column 42 to column 44:
    -------------------------------------------------
     25:  transformed parameters {

@@ -1,4 +1,4 @@
-  $ ../../../../../install/default/bin/stanc --auto-format ode_adams_test_model.stan
+  $ stanc --auto-format ode_adams_test_model.stan
 functions {
   vector f_0_arg(real t, vector z) {
     return z;
@@ -269,7 +269,7 @@ generated quantities {
 }
 
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --auto-format ode_adams_tol_test_model.stan
+  $ stanc --auto-format ode_adams_tol_test_model.stan
 functions {
   vector f_0_arg(real t, vector z) {
     return z;
@@ -572,7 +572,7 @@ generated quantities {
 }
 
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --auto-format ode_adjoint_test_model.stan
+  $ stanc --auto-format ode_adjoint_test_model.stan
 functions {
   vector f_0_arg(real t, vector z) {
     return z;
@@ -629,7 +629,7 @@ model {
 }
 
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --auto-format ode_bdf_test_model.stan
+  $ stanc --auto-format ode_bdf_test_model.stan
 functions {
   vector f_0_arg(real t, vector z) {
     return z;
@@ -897,7 +897,7 @@ generated quantities {
 }
 
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --auto-format ode_bdf_tol_test_model.stan
+  $ stanc --auto-format ode_bdf_tol_test_model.stan
 functions {
   vector f_0_arg(real t, vector z) {
     return z;
@@ -1197,7 +1197,7 @@ generated quantities {
 }
 
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --auto-format ode_ckrk_test_model.stan
+  $ stanc --auto-format ode_ckrk_test_model.stan
 functions {
   vector f_0_arg(real t, vector z) {
     return z;
@@ -1465,7 +1465,7 @@ generated quantities {
 }
 
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --auto-format ode_ckrk_tol_test_model.stan
+  $ stanc --auto-format ode_ckrk_tol_test_model.stan
 functions {
   vector f_0_arg(real t, vector z) {
     return z;
@@ -1765,7 +1765,7 @@ generated quantities {
 }
 
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --auto-format ode_rk45_test_model.stan
+  $ stanc --auto-format ode_rk45_test_model.stan
 functions {
   vector f_0_arg(real t, vector z) {
     return z;
@@ -2033,7 +2033,7 @@ generated quantities {
 }
 
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --auto-format ode_rk45_tol_test_model.stan
+  $ stanc --auto-format ode_rk45_tol_test_model.stan
 functions {
   vector f_0_arg(real t, vector z) {
     return z;

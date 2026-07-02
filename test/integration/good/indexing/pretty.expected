@@ -1,4 +1,4 @@
-  $ ../../../../../install/default/bin/stanc --auto-format good-empty-omni.stan
+  $ stanc --auto-format good-empty-omni.stan
 /**
  * Check all possible legal indexing for assignment statements (left
  * side) and indexed expressions (right side).
@@ -842,7 +842,7 @@ model {
 }
 
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --auto-format good-ints.stan
+  $ stanc --auto-format good-ints.stan
 /**
  * Check all possible legal indexing for assignment statements (left
  * side) and indexed expressions (right side).
@@ -1686,7 +1686,7 @@ model {
 }
 
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --auto-format good-lb.stan
+  $ stanc --auto-format good-lb.stan
 /**
  * Check all possible legal indexing for assignment statements (left
  * side) and indexed expressions (right side).
@@ -2528,7 +2528,7 @@ model {
 }
 
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --auto-format good-lub.stan
+  $ stanc --auto-format good-lub.stan
 /**
  * Check all possible legal indexing for assignment statements (left
  * side) and indexed expressions (right side).
@@ -3394,7 +3394,7 @@ model {
 }
 
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --auto-format good-omni.stan
+  $ stanc --auto-format good-omni.stan
 /**
  * Check all possible legal indexing for assignment statements (left
  * side) and indexed expressions (right side).
@@ -4238,7 +4238,7 @@ model {
 }
 
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --auto-format good-omni2.stan
+  $ stanc --auto-format good-omni2.stan
 /**
  * Check all possible legal indexing for assignment statements (left
  * side) and indexed expressions (right side).
@@ -5082,7 +5082,7 @@ model {
 }
 
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --auto-format good-omni3.stan
+  $ stanc --auto-format good-omni3.stan
 /**
  * Check all possible legal indexing for assignment statements (left
  * side) and indexed expressions (right side).
@@ -5926,7 +5926,7 @@ model {
 }
 
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --auto-format good-ub.stan
+  $ stanc --auto-format good-ub.stan
 /**
  * Check all possible legal indexing for assignment statements (left
  * side) and indexed expressions (right side).

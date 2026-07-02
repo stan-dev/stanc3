@@ -1,4 +1,4 @@
-  $ ../../../../../install/default/bin/stanc --auto-format index_expr.stan
+  $ stanc --auto-format index_expr.stan
 functions {
   void foo(int N) {
     array[4] int c;
@@ -11,7 +11,7 @@ model {
 }
 
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --auto-format matrix_expr_terms.stan
+  $ stanc --auto-format matrix_expr_terms.stan
 functions {
   matrix foo() {
     matrix[3, 2] result = [[1, 2], [3, 4], [5, 6]];
@@ -66,7 +66,7 @@ generated quantities {
 }
 
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --auto-format row_vector_expr_terms.stan
+  $ stanc --auto-format row_vector_expr_terms.stan
 functions {
   vector foo(int d) {
     vector[3] result = [10.1, 11 * 3.0, d]';
@@ -116,7 +116,7 @@ generated quantities {
 }
 
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --auto-format vec_expr_big.stan
+  $ stanc --auto-format vec_expr_big.stan
 transformed data {
   real x = 12;
   row_vector[100] a = [1.0, 2.0, 3.0, x, x, x, 7, 8, 9.0, 10, 1.0, 2.0, 3.0,

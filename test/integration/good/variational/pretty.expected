@@ -1,4 +1,4 @@
-  $ ../../../../../install/default/bin/stanc --auto-format eta_should_be_big.stan
+  $ stanc --auto-format eta_should_be_big.stan
 transformed data {
   array[2] vector[2] y;
   vector[2] mu0;
@@ -29,7 +29,7 @@ model {
 }
 
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --auto-format eta_should_be_small.stan
+  $ stanc --auto-format eta_should_be_small.stan
 transformed data {
   array[2] vector[2] y;
   vector[2] mu0;
@@ -60,7 +60,7 @@ model {
 }
 
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --auto-format eta_should_fail.stan
+  $ stanc --auto-format eta_should_fail.stan
 transformed data {
   vector[2] y;
   matrix[2, 2] sigma;
@@ -81,7 +81,7 @@ model {
 }
 
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --auto-format gradient_warn.stan
+  $ stanc --auto-format gradient_warn.stan
 data {
   int N;
   vector[N] p;
@@ -102,7 +102,7 @@ model {
 }
 
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --auto-format hier_logistic.stan
+  $ stanc --auto-format hier_logistic.stan
 data {
   int N;
   array[N] int ids;
@@ -129,7 +129,7 @@ model {
 }
 
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --auto-format hier_logistic_cp.stan
+  $ stanc --auto-format hier_logistic_cp.stan
 data {
   int N;
   array[N] int ids;
@@ -159,7 +159,7 @@ model {
 }
 
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --auto-format multivariate_no_constraint.stan
+  $ stanc --auto-format multivariate_no_constraint.stan
 transformed data {
   array[2] vector[2] y;
   vector[2] mu0;
@@ -190,7 +190,7 @@ model {
 }
 
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --auto-format multivariate_with_constraint.stan
+  $ stanc --auto-format multivariate_with_constraint.stan
 transformed data {
   array[2] vector[2] y;
   vector[2] mu0;
@@ -221,7 +221,7 @@ model {
 }
 
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --auto-format univariate_no_constraint.stan
+  $ stanc --auto-format univariate_no_constraint.stan
 transformed data {
   array[2] real y;
   real mu0;
@@ -244,7 +244,7 @@ model {
 }
 
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --auto-format univariate_with_constraint.stan
+  $ stanc --auto-format univariate_with_constraint.stan
 transformed data {
   array[2] real y;
   real mu0;

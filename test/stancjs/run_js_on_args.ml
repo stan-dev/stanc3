@@ -14,5 +14,6 @@ let () =
   let files = Array.(sub args ~pos:1 ~len:(length args - 1)) in
   Array.stable_sort ~compare:String.compare files;
   Array.iter files ~f:(fun arg ->
+      let arg = String.chop_prefix_if_exists arg ~prefix:"./" in
       let cmd = "node " ^ arg in
       Printf.printf "$ %s\n%s\n" cmd (run_capturing_output cmd))
