@@ -9,7 +9,7 @@ properties([
     booleanParam(name:"skip_math_func_expr", defaultValue: false, description:"Skip math functions expressions test"),
     booleanParam(name:"skip_ocaml_tests", defaultValue: false, description:"Skip ocaml tests"),
     booleanParam(name:"build_multiarch", defaultValue: false, description:"Build multiarch images even when not on 'master'"),
-    booleanParam(name:"build_all", defaultValue: false, description:"Force building all steps"),
+    booleanParam(name:"test_binaries", defaultValue: false, description:"Build and archive all binaries"),
 
     string(defaultValue: 'develop', name: 'cmdstan_pr',
            description: "CmdStan PR to test against. Will check out this PR in the downstream Stan repo."),
@@ -41,12 +41,12 @@ catchError {
       context: 'scripts',
       dockerfile: 'docker/ci/Dockerfile',
       prep: {
-        def srcChanged = params.build_all || filesChanged("src/")
-        runExpressionTests = params.build_all || filesChanged('test/integration/signatures/stan_math_signatures.t')
-        runCompileTests = params.build_all || filesChanged('test/integration/good/')
+        def srcChanged = filesChanged("src/")
+        runExpressionTests = filesChanged('test/integration/signatures/stan_math_signatures.t')
+        runCompileTests = filesChanged('test/integration/good/')
         runRemainingStages = runCompileTests || srcChanged || filesChanged('test/stancjs/')
         runCompileTestsAtO1 = runCompileTests && filesChanged('test/integration/good/compiler-optimizations')
-        runRebuildingBinaries = srcChanged || filesChanged('Jenkinsfile')
+        runRebuildingBinaries = params.test_binaries || srcChanged || filesChanged('Jenkinsfile')
         return null
       })
 
@@ -353,7 +353,7 @@ catchError {
         }
       }
       
-      if (runRebuildingBinaries && (env.TAG_NAME || env.BRANCH_NAME == "master" || params.build_multiarch)) {
+      if (params.test_binaries || runRebuildingBinaries && (env.TAG_NAME || env.BRANCH_NAME == "master" || params.build_multiarch)) {
         stage('Build other architectures') {
           def archs = [
             'arm64':   'arm64',
@@ -373,10 +373,9 @@ catchError {
         }
       }
 
-      if (runRemainingStages && runRebuildingBinaries && (env.TAG_NAME || env.BRANCH_NAME == "master")) {
+      if (params.test_binaries || runRemainingStages && runRebuildingBinaries && (env.TAG_NAME || env.BRANCH_NAME == "master")) {
         runPod(tag: 'ci') {
           stage("Release tag and publish binaries") {
-            def tagName = env.TAG_NAME ?: env.BRANCH_NAME == 'master' ? 'nightly' : 'unknown'
             unstash 'windows-exe'
             unstash 'linux-exe'
             unstash 'mac-exe'
@@ -391,28 +390,33 @@ catchError {
             dir("bin") {
               unstash 'shell-support'
             }
-            retry(3) {
-              withCredentials([usernamePassword(usernameVariable: 'GITHUB_USER', passwordVariable: 'GITHUB_TOKEN', credentialsId: 'stan-github')]) {
-                sh """
-                    gh release delete $tagName ${tagName == 'nightly' ? '--cleanup-tag' : ''} -y || true
-                    gh release create $tagName --latest --target master --notes "\$(git log --pretty=format:'nightly: %h %s' -n 1)" ./bin/*
-                """
-              }
+            if (params.test_binaries) {
+              archiveArtifacts 'bin/*'
+            } else {
+              def tagName = env.TAG_NAME ?: env.BRANCH_NAME == 'master' ? 'nightly' : 'unknown'
+              retry(3) {
+                withCredentials([usernamePassword(usernameVariable: 'GITHUB_USER', passwordVariable: 'GITHUB_TOKEN', credentialsId: 'stan-github')]) {
+                  sh """
+                      gh release delete $tagName ${tagName == 'nightly' ? '--cleanup-tag' : ''} -y || true
+                      gh release create $tagName --latest --target master --notes "\$(git log --pretty=format:'nightly: %h %s' -n 1)" ./bin/*
+                  """
+                }
 
-              // Update stanc.js in StanHeaders
-              dir('rstan') {
-                def branch = "develop"
-                def scm = scmGit(
-                  branches: [[name: "refs/heads/$branch"]],
-                  userRemoteConfigs: [[credentialsId: 'stan-github', url: 'https://github.com/stan-dev/rstan.git']])
-                checkout(scm: scm, changelog: false, poll: false)
-                sh """
-                  rm StanHeaders/inst/stanc.js
-                  cp ../bin/stanc.js StanHeaders/inst/stanc.js
-                  git add StanHeaders/inst/stanc.js
-                  git commit -m "Update stanc.js to ${tagName}" --author="\$GIT_AUTHOR_NAME <\$GIT_AUTHOR_EMAIL>"
-                """
-                gitPush(gitScm: scm, targetBranch: branch, targetRepo: 'origin')
+                // Update stanc.js in StanHeaders
+                dir('rstan') {
+                  def branch = "develop"
+                  def scm = scmGit(
+                    branches: [[name: "refs/heads/$branch"]],
+                    userRemoteConfigs: [[credentialsId: 'stan-github', url: 'https://github.com/stan-dev/rstan.git']])
+                  checkout(scm: scm, changelog: false, poll: false)
+                  sh """
+                    rm StanHeaders/inst/stanc.js
+                    cp ../bin/stanc.js StanHeaders/inst/stanc.js
+                    git add StanHeaders/inst/stanc.js
+                    git commit -m "Update stanc.js to ${tagName}" --author="\$GIT_AUTHOR_NAME <\$GIT_AUTHOR_EMAIL>"
+                  """
+                  gitPush(gitScm: scm, targetBranch: branch, targetRepo: 'origin')
+                }
               }
             }
           }
