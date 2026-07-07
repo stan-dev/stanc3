@@ -25495,27 +25495,27 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
             "assigning variable p_multi_ret_vec", stan::model::index_uni(1));
           pos__ = 2;
           {
-            stan::model::assign(p_multi_ret_vec,
-              p_multi_ret_vec_flat__[(pos__ - 1)],
-              "assigning variable p_multi_ret_vec", stan::model::index_uni(2));
+            stan::model::assign(p_multi_ret_vec, p_multi_ret_vec_flat__[(pos__
+              - 1)], "assigning variable p_multi_ret_vec",
+              stan::model::index_uni(2));
             pos__ = (pos__ + 1);
           }
           {
-            stan::model::assign(p_multi_ret_vec,
-              p_multi_ret_vec_flat__[(pos__ - 1)],
-              "assigning variable p_multi_ret_vec", stan::model::index_uni(3));
+            stan::model::assign(p_multi_ret_vec, p_multi_ret_vec_flat__[(pos__
+              - 1)], "assigning variable p_multi_ret_vec",
+              stan::model::index_uni(3));
             pos__ = (pos__ + 1);
           }
           {
-            stan::model::assign(p_multi_ret_vec,
-              p_multi_ret_vec_flat__[(pos__ - 1)],
-              "assigning variable p_multi_ret_vec", stan::model::index_uni(4));
+            stan::model::assign(p_multi_ret_vec, p_multi_ret_vec_flat__[(pos__
+              - 1)], "assigning variable p_multi_ret_vec",
+              stan::model::index_uni(4));
             pos__ = (pos__ + 1);
           }
           {
-            stan::model::assign(p_multi_ret_vec,
-              p_multi_ret_vec_flat__[(pos__ - 1)],
-              "assigning variable p_multi_ret_vec", stan::model::index_uni(5));
+            stan::model::assign(p_multi_ret_vec, p_multi_ret_vec_flat__[(pos__
+              - 1)], "assigning variable p_multi_ret_vec",
+              stan::model::index_uni(5));
           }
         }
       }

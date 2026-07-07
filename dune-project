@@ -14,27 +14,27 @@
  (synopsis "The Stan compiler and utilities")
  (depends
   (ocaml
-   (= 4.14.1))
+   (= 5.5.0))
   (core
-   (= v0.16.1))
+   (= v0.17.2))
   (menhir
-   (= 20230608))
+   (= 20260209))
   (ppx_deriving
-   (= 5.2.1))
+   (= 6.1.1))
   (fmt
    (= 0.11.0))
   (yojson
-   (= 2.1.0))
+   (= 3.0.0))
   (cmdliner
-   (= 2.1.0))
+   (= 2.1.1))
   (ocamlformat
    (and
-    :with-test
+    :with-dev-setup
     (= 0.28.1)))
-  (bisect_ppx :with-test)
-  (merlin :with-test)
-  (utop :with-test)
-  (patdiff :with-test)))
+  (bisect_ppx :with-dev-setup)
+  (ocaml-lsp-server :with-dev-setup)
+  (odoc :with-doc)
+  (sherlodoc :with-doc)))
 
 (cram enable)
 

@@ -31,7 +31,7 @@ def runCompileTestsAtO1 = false
 catchError {
   withEnv([
     'CXX=clang++-6.0',
-    'MACOS_SWITCH=stanc3-cmdliner2.1.0',
+    'MACOS_SWITCH=stanc3-ocaml5.5',
     'GIT_AUTHOR_NAME=Stan Jenkins',
     'GIT_AUTHOR_EMAIL=mc.stanislaw@gmail.com',
     'GIT_COMMITTER_NAME=Stan Jenkins',
@@ -249,21 +249,34 @@ catchError {
                   checkout scm
                   withEnv([
                     'SDKROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX10.11.sdk',
-                    'MACOSX_DEPLOYMENT_TARGET=10.11'
+                     'MACOSX_DEPLOYMENT_TARGET=10.11'
                   ]) {
-                    sh '''
-                        export PATH=$BREW/bin:$PATH
-                        bash -x scripts/install_ocaml.sh "$MACOS_SWITCH"
-                        eval $(opam env --switch="$MACOS_SWITCH" --set-switch)
-                        opam repository add archive git+https://github.com/ocaml/opam-repository-archive
-                        opam switch list
-                        opam update -y || true
-                        opam pin -y dune 3.6.1 --no-action
-                        bash -x scripts/install_build_deps.sh
-                        dune subst
-                        dune build --profile=release
-                    '''
-                  }
+                   sh '''
+                       export PATH=/Users/jenkins/brew/bin:$PATH
+                       bash -x scripts/install_ocaml.sh "$MACOS_SWITCH"
+                       opam switch list
+                   '''
+                   }
+                 // dune can't be built with the older SDK
+                 sh '''
+                     export PATH=/Users/jenkins/brew/bin:$PATH
+                     eval $(opam env --switch="$MACOS_SWITCH" --set-switch)
+                     opam update
+                     opam install dune
+                 '''
+                  withEnv([
+                    'SDKROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX10.11.sdk',
+                     'MACOSX_DEPLOYMENT_TARGET=10.11'
+                  ]) {
+                   sh '''
+                       export PATH=/Users/jenkins/brew/bin:$PATH
+                       eval $(opam env --switch="$MACOS_SWITCH" --set-switch)
+                       opam update
+                       bash -x scripts/install_build_deps.sh
+                       dune subst
+                       dune build --root=. --profile=release
+                   '''
+                   }
                   sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/mac-x86-stanc"
                   stash name:'mac-x86-exe', includes:'bin/mac-x86-stanc'
                 }
@@ -352,7 +365,7 @@ catchError {
           }
         }
       }
-      
+
       if (params.test_binaries || runRebuildingBinaries && (env.TAG_NAME || env.BRANCH_NAME == "master" || params.build_multiarch)) {
         stage('Build other architectures') {
           def archs = [
