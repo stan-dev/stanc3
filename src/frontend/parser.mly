@@ -336,7 +336,7 @@ unsized_type:
   | basic_type LBRACK UNREACHABLE
     { (* This code will never be reached *)
        Common.ICE.internal_compiler_error
-          [%message "the UNREACHABLE token should never be produced"]
+          [%message "the UNREACHABLE token should never be produced"] [@coverage off]
     }
   | bt=basic_type
     {  grammar_logger "unsized_type";
@@ -372,7 +372,7 @@ basic_type:
   | no_constraints
     { (* This code will never be reached. The parser state exists to make the error more specific. *)
        Common.ICE.internal_compiler_error
-          [%message "the UNREACHABLE token should never be produced"]
+          [%message "the UNREACHABLE token should never be produced"] [@coverage off]
     }
 
 unsized_dims:
@@ -384,7 +384,7 @@ no_assign:
   | UNREACHABLE
     { (* This code will never be reached *)
        Common.ICE.internal_compiler_error
-          [%message "the UNREACHABLE token should never be produced"]
+          [%message "the UNREACHABLE token should never be produced"] [@coverage off]
     }
 
 optional_assignment(rhs):
@@ -430,7 +430,7 @@ decl(type_rule, rhs):
     }
   | DATABLOCK UNREACHABLE {
     Common.ICE.internal_compiler_error
-      [%message "the UNREACHABLE token should never be produced"]
+      [%message "the UNREACHABLE token should never be produced"] [@coverage off]
   }
   | ty=higher_type(type_rule)
     (* additional indirection only for better error messaging *)
@@ -518,7 +518,7 @@ sized_basic_type:
   | no_constraints
     { (* This code will never be reached. The parser state exists to make the error more specific. *)
        Common.ICE.internal_compiler_error
-          [%message "the UNREACHABLE token should never be produced"]
+          [%message "the UNREACHABLE token should never be produced"] [@coverage off]
     }
 
 top_var_type:

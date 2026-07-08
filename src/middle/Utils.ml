@@ -65,7 +65,7 @@ let tuple_trans_exn = function
       Common.ICE.internal_compiler_error
         [%message
           "Expected TupleTransformation but got"
-            (t : Expr.Typed.t Transformation.t)]
+            (t : Expr.Typed.t Transformation.t)] [@coverage off]
 
 let zip_stuple_trans_exn pst tms =
   let rec tuple_subtypes pst =
@@ -75,7 +75,7 @@ let zip_stuple_trans_exn pst tms =
     | _ ->
         Common.ICE.internal_compiler_error
           [%message "Internal error: expected Tuple with TupleTransformation"]
-  in
+        [@coverage off] in
   let psts = tuple_subtypes pst in
   List.zip_exn psts tms
 
@@ -87,6 +87,6 @@ let zip_utuple_trans_exn pst tms =
     | _ ->
         Common.ICE.internal_compiler_error
           [%message "Internal error: expected Tuple with TupleTransformation"]
-  in
+        [@coverage off] in
   let psts = tuple_psts pst in
   List.zip_exn psts tms

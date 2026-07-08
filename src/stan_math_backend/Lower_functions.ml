@@ -52,6 +52,7 @@ let rec requires ut t =
       Common.ICE.internal_compiler_error
         [%message
           "Cannot formulate require templates for type " (ut : UnsizedType.t)]
+      [@coverage off]
 
 (** Identify the templates which need to be considered in the return type of the
     function (i.e., the scalar types) *)
@@ -79,7 +80,7 @@ let return_optional_arg_types (args : Program.fun_arg_decl) =
                  unwrapped scalar is not tuple"
                   (typ : UnsizedType.t)
                   (internal : UnsizedType.t)
-                  (ad : UnsizedType.autodifftype)])
+                  (ad : UnsizedType.autodifftype)] [@coverage off])
     | UnsizedType.DataOnly, ut when not (UnsizedType.is_eigen_type ut) -> []
     | ( _
       , ( UnsizedType.UArray _ | UComplex | UVector | URowVector | UMatrix

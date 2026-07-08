@@ -59,21 +59,21 @@ let rec promote_unsized_type (typ : UnsizedType.t)
           "Failed to promote type, unexpected type:"
             (prom : t)
             (typ : UnsizedType.t)
-            (ad : UnsizedType.autodifftype)]
+            (ad : UnsizedType.autodifftype)] [@coverage off]
   | TuplePromotion _, _, _ ->
       Common.ICE.internal_compiler_error
         [%message
           "Found Tuple Promotion for a non-tuple type:"
             (prom : t)
             (typ : UnsizedType.t)
-            (ad : UnsizedType.autodifftype)]
+            (ad : UnsizedType.autodifftype)] [@coverage off]
   | _, _, TupleAD _ ->
       Common.ICE.internal_compiler_error
         [%message
           "Found Tuple Autodiff in promotion for a non-tuple type:"
             (prom : t)
             (typ : UnsizedType.t)
-            (ad : UnsizedType.autodifftype)]
+            (ad : UnsizedType.autodifftype)] [@coverage off]
   | _, _, _ -> (typ, ad)
 
 let promote_inner (exp : Ast.typed_expression) prom =
@@ -122,7 +122,7 @@ let promote_inner (exp : Ast.typed_expression) prom =
             [%message
               "Tuple promotion on non-tuple"
                 (exp : Ast.typed_expression)
-                (prom : t)])
+                (prom : t)] [@coverage off])
   | _ -> exp
 
 let rec promote (exp : Ast.typed_expression) prom =
@@ -212,14 +212,14 @@ let rec get_type_promotion_exn (ad_requested, ty_requested)
               (ad_current : UnsizedType.autodifftype)
               "cannot be promoted to "
               (ty_requested : UnsizedType.t)
-              (ad_requested : UnsizedType.autodifftype)]
+              (ad_requested : UnsizedType.autodifftype)] [@coverage off]
   else
     Common.ICE.internal_compiler_error
       [%message
         "Tried to get promotion of incompatible autodifftypes!"
           (ad_current : UnsizedType.autodifftype)
           "cannot be promoted to "
-          (ad_requested : UnsizedType.autodifftype)]
+          (ad_requested : UnsizedType.autodifftype)] [@coverage off]
 
 (** Calculate the "cost"/number of promotions performed. Used to disambiguate
     function signatures *)

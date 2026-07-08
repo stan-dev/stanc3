@@ -22,7 +22,7 @@ let apply_prefix_operator_int (op : string) i =
         | "PNot__" -> if i = 0 then 1 else 0
         | s ->
             Common.ICE.internal_compiler_error
-              [%message "Not an int prefix operator: " s]) )
+              [%message "Not an int prefix operator: " s] [@coverage off]) )
 
 let apply_prefix_operator_real (op : string) i =
   Expr.Pattern.Lit
@@ -33,7 +33,7 @@ let apply_prefix_operator_real (op : string) i =
         | "PMinus__" -> -.i
         | s ->
             Common.ICE.internal_compiler_error
-              [%message "Not a real prefix operator: " s]) )
+              [%message "Not a real prefix operator: " s] [@coverage off]) )
 
 let apply_operator_int (op : string) i1 i2 =
   Expr.Pattern.Lit
@@ -53,7 +53,7 @@ let apply_operator_int (op : string) i1 i2 =
         | "Geq__" -> Bool.to_int (i1 >= i2)
         | s ->
             Common.ICE.internal_compiler_error
-              [%message "Not an int operator: " s]) )
+              [%message "Not an int operator: " s] [@coverage off]) )
 
 let apply_arithmetic_operator_real (op : string) r1 r2 =
   Expr.Pattern.Lit
@@ -66,7 +66,7 @@ let apply_arithmetic_operator_real (op : string) r1 r2 =
         | "Divide__" -> r1 /. r2
         | s ->
             Common.ICE.internal_compiler_error
-              [%message "Not a real operator: " s]) )
+              [%message "Not a real operator: " s] [@coverage off]) )
 
 let apply_logical_operator_real (op : string) r1 r2 =
   Expr.Pattern.Lit
@@ -81,7 +81,7 @@ let apply_logical_operator_real (op : string) r1 r2 =
         | "Geq__" -> Bool.to_int (r1 >= r2)
         | s ->
             Common.ICE.internal_compiler_error
-              [%message "Not a logical operator: " s]) )
+              [%message "Not a logical operator: " s] [@coverage off]) )
 
 let is_multi_index = function
   | Index.MultiIndex _ | Upfrom _ | Between _ | All -> true
@@ -1117,7 +1117,7 @@ let rec simplify_index_expr pattern =
               [%message
                 " There must be a multi-index."
                   (inner_singles : Expr.Typed.t Index.t list)
-                  (multis : Expr.Typed.t Index.t list)])
+                  (multis : Expr.Typed.t Index.t list)] [@coverage off])
     | e -> e)
 
 let remove_trailing_alls_expr = function

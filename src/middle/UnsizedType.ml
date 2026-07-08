@@ -296,7 +296,7 @@ let rec fill_adtype_for_type ad ut =
         [%message
           "Attempting to give a non-tuple a TupleAD type"
             (ut : t)
-            (ad : autodifftype)]
+            (ad : autodifftype)] [@coverage off]
   | _, _ -> ad
 
 (** List all possible tuple sub-names for IO purposes. E.g, the decl

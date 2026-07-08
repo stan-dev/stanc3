@@ -187,7 +187,8 @@ module Helpers = struct
       | (UMatrix | UComplexMatrix) as t -> t
       | t ->
           Common.ICE.internal_compiler_error
-            [%message "Cannot transpose " (t : UnsizedType.t)] in
+            [%message "Cannot transpose " (t : UnsizedType.t)] [@coverage off]
+    in
     let expr = unary_op Transpose e in
     {expr with meta= {expr.meta with type_= new_type}}
 
@@ -236,7 +237,7 @@ module Helpers = struct
         UComplex
     | _ ->
         ICE.internal_compiler_error
-          [%message "Can't index" (ut : UnsizedType.t)]
+          [%message "Can't index" (ut : UnsizedType.t)] [@coverage off]
 
   (** [add_index expression index] returns an expression that (additionally)
       indexes into the input [expression] by [index].*)
@@ -249,7 +250,8 @@ module Helpers = struct
       | Indexed (e, indices) -> Indexed (e, indices @ [i])
       | _ ->
           ICE.internal_compiler_error
-            [%message "Expected Var or Indexed but found " (e : Typed.t)] in
+            [%message "Expected Var or Indexed but found " (e : Typed.t)]
+          [@coverage off] in
     {meta; pattern}
 
   (** [add_tuple_index expression index] returns an expression that
@@ -265,7 +267,7 @@ module Helpers = struct
             [%message
               "Internal error: Attempted to apply tuple index to a non-tuple \
                type:"
-                (t : UnsizedType.t)] in
+                (t : UnsizedType.t)] [@coverage off] in
     let meta = Typed.Meta.{e.meta with type_= mtype} in
     let pattern = Pattern.TupleProjection (e, i) in
     {meta; pattern}

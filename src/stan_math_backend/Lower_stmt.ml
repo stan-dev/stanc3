@@ -16,9 +16,10 @@ let check_to_string = function
   | LowerUpper _ ->
       Common.ICE.internal_compiler_error
         [%message "LowerUpper is really two other checks tied together"]
+      [@coverage off]
   | Offset _ | Multiplier _ | OffsetMultiplier _ ->
       Common.ICE.internal_compiler_error
-        [%message "Offset and multiplier don't have a check"]
+        [%message "Offset and multiplier don't have a check"] [@coverage off]
   | t -> constraint_to_string t
 
 let math_fn_translations = function
@@ -94,7 +95,7 @@ let rec initialize_value st adtype =
         [%message
           "Mismatch between Tuple type and Tuple AD in code gen"
             (st : Expr.Typed.t SizedType.t)
-            (adtype : UnsizedType.autodifftype)]
+            (adtype : UnsizedType.autodifftype)] [@coverage off]
 
 (** Initialize an object of a given size.*)
 let lower_assign_sized st adtype (initialize : 'a Stmt.Pattern.decl_init) =
@@ -169,6 +170,7 @@ let rec lower_nonrange_lvalue lvalue =
   | _, _ ->
       Common.ICE.internal_compiler_error
         [%message "Multi-index must be the last (rightmost) index."]
+      [@coverage off]
 
 and lower_nonrange_lbase = function
   | Stmt.Pattern.LVariable v -> Var v
