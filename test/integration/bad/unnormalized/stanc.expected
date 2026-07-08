@@ -176,9 +176,7 @@ Semantic error in 'not_in_scope.stan', line 2, column 22 to column 31:
      3:  }
    -------------------------------------------------
 
-Unnormalized probability functions such as "foo_lupdf" can
-only be used in the model block or in user-defined functions with names
-ending in _lpdf or _lpmf. Did you mean "foo_lpdf"?
+Identifier "foo_lupdf" not in scope.
 [exit 1]
   $ stanc udf_lupdf.stan
 Semantic error in 'udf_lupdf.stan', line 2, column 9 to column 18:

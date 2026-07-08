@@ -277,33 +277,34 @@ let verify_unnormalized cf loc id =
   then Semantic_error.invalid_unnormalized_fn loc id.name |> error
 
 let check_id cf loc tenv id =
+  let (value :: _) =
+    Env.find tenv (Utils.stdlib_distribution_name id.name)
+    |> Common.Nonempty_list.of_list
+    |> Option.value_or_thunk ~default:(fun () ->
+        Semantic_error.ident_not_in_scope loc id.name
+          (Env.nearest_ident tenv id.name)
+        |> error) in
   verify_unnormalized cf loc id;
-  match Env.find tenv (Utils.stdlib_distribution_name id.name) with
-  | [] ->
-      Semantic_error.ident_not_in_scope loc id.name
-        (Env.nearest_ident tenv id.name)
-      |> error
-  | {kind= `StanMath; _} :: _ ->
+  match value with
+  | {kind= `StanMath; _} ->
       ( calculate_autodifftype cf MathLibrary UMathLibraryFunction
       , UnsizedType.UMathLibraryFunction )
   | { kind=
         `Variable
           {origin= (Param | TParam | GQuant) as origin; location= prev; _}
     ; _ }
-    :: _
     when cf.in_toplevel_decl ->
       Semantic_error.non_data_variable_size_decl loc origin prev |> error
-  | {kind= `Variable {origin; _}; type_; _} :: _ ->
+  | {kind= `Variable {origin; _}; type_; _} ->
       (calculate_autodifftype cf origin type_, type_)
   | { kind= `UserDefined _ | `UserDeclared _
     ; type_= UFun (args, rt, (FnLpdf _ | FnLpmf _), mem_pattern)
-    ; _ }
-    :: _ ->
+    ; _ } ->
       let type_ =
         UnsizedType.UFun
           (args, rt, Fun_kind.suffix_from_name id.name, mem_pattern) in
       (calculate_autodifftype cf Functions type_, type_)
-  | {kind= `UserDefined _ | `UserDeclared _; type_; _} :: _ ->
+  | {kind= `UserDefined _ | `UserDeclared _; type_; _} ->
       (calculate_autodifftype cf Functions type_, type_)
 
 let check_variable cf loc tenv id =
