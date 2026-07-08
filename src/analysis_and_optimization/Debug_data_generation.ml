@@ -17,7 +17,7 @@ let matprod x y =
   let y_T = transpose y in
   if List.length x <> List.length y_T then
     Common.ICE.internal_compiler_error
-      [%message "Matrix multiplication dim. mismatch"]
+      [%message "Matrix multiplication dim. mismatch"] [@coverage off]
   else List.map ~f:(fun row -> List.map ~f:(dotproduct row) y_T) x
 
 let rec vect_to_mat l m =
@@ -25,6 +25,7 @@ let rec vect_to_mat l m =
   if len % m <> 0 then
     Common.ICE.internal_compiler_error
       [%message "The length has to be a whole multiple of the partition size"]
+    [@coverage off]
   else if len = m then [l]
   else
     let hd, tl = List.split_n l m in
@@ -63,7 +64,7 @@ let gen_num_int m t =
         Common.ICE.internal_compiler_error
           [%message
             "Unknown transformation for int" (t : Expr.Typed.t Transformation.t)]
-  in
+        [@coverage off] in
   let low = if low = 0 && up <> 1 then low + 1 else low in
   Random.int (up - low + 1) + low
 
@@ -82,7 +83,7 @@ let gen_num_real m t =
         Common.ICE.internal_compiler_error
           [%message
             "Unknown transformation for real"
-              (t : Expr.Typed.t Transformation.t)] in
+              (t : Expr.Typed.t Transformation.t)] [@coverage off] in
   Random.float_range low up
 
 let repeat n e = List.init n ~f:(Fn.const e)
@@ -128,7 +129,7 @@ let gen_row_vector m n t =
       Common.ICE.internal_compiler_error
         [%message
           "Unknown transformation for row_vector"
-            (t : Expr.Typed.t Transformation.t)]
+            (t : Expr.Typed.t Transformation.t)] [@coverage off]
 
 let sum_to_zero_floats n =
   let l = random_floats n in
@@ -176,7 +177,7 @@ let gen_vector m n t =
       Common.ICE.internal_compiler_error
         [%message
           "Unknown transformation for vector"
-            (t : Expr.Typed.t Transformation.t)]
+            (t : Expr.Typed.t Transformation.t)] [@coverage off]
 
 let gen_cov_unwrapped n =
   let l = random_floats (n * n) in
@@ -268,7 +269,7 @@ let gen_matrix mm m n t =
       Common.ICE.internal_compiler_error
         [%message
           "Unknown transformation for matrix"
-            (t : Expr.Typed.t Transformation.t)]
+            (t : Expr.Typed.t Transformation.t)] [@coverage off]
 
 let gen_complex_unwrapped () =
   ( gen_num_real Map.Poly.empty Transformation.Identity

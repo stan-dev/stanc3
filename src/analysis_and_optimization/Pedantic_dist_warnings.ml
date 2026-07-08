@@ -160,7 +160,8 @@ let constr_mismatch_warning (constr : var_constraint_named) (arg : arg_info)
         let arg_fail_msg =
           Printf.sprintf "Distribution %s at %s expects more arguments." name
             (Location_span.to_string loc) in
-        Common.ICE.internal_compiler_error [%message arg_fail_msg] in
+        (Common.ICE.internal_compiler_error [%message arg_fail_msg]
+         [@coverage off]) in
   match v with
   | Param (pname, trans), meta
     when transform_mismatch_constraint constr.constr trans ->

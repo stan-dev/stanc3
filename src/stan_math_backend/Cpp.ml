@@ -64,6 +64,7 @@ module Types = struct
     | _ ->
         Common.ICE.internal_compiler_error
           [%message "Tried to make an Eigen::Map of" (t : type_)]
+        [@coverage off]
 
   let var_context = TypeLiteral "stan::io::var_context"
   let ostream = TypeLiteral "std::ostream"

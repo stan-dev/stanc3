@@ -275,8 +275,8 @@ let rec untyped_expression_of_typed_expression
       { expr=
           map_expression untyped_expression_of_typed_expression ignore
             (fun _ ->
-              Common.ICE.internal_compiler_error
-                [%message "Promotion snuck through!"])
+              (Common.ICE.internal_compiler_error
+                 [%message "Promotion snuck through!"] [@coverage off]))
             expr
       ; emeta= {loc= emeta.loc} }
 

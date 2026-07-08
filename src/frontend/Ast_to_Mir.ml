@@ -86,7 +86,8 @@ and trans_idx = function
       | UArray _ -> MultiIndex (trans_expr e)
       | _ ->
           Common.ICE.internal_compiler_error
-            [%message "Expecting int or array" (e.emeta.type_ : UnsizedType.t)])
+            [%message "Expecting int or array" (e.emeta.type_ : UnsizedType.t)]
+          [@coverage off])
 
 and trans_exprs exprs = List.map ~f:trans_expr exprs
 
@@ -320,7 +321,7 @@ let rec shrink_helper (f : size_change) f_d2 st =
           [%message
             "To shrink a vector, the first argument must be a univariate \
              function "
-              (st : Expr.Typed.t SizedType.t)] in
+              (st : Expr.Typed.t SizedType.t)] [@coverage off] in
   match st with
   | SizedType.SArray (t, d) -> SizedType.SArray (shrink_helper f f_d2 t, d)
   | SVector (mem_pattern, d) -> SVector (mem_pattern, f_assert_univariate d)
@@ -335,6 +336,7 @@ let rec shrink_helper (f : size_change) f_d2 st =
       Common.ICE.internal_compiler_error
         [%message
           "Expecting SVector or SMatrix, got " (st : Expr.Typed.t SizedType.t)]
+      [@coverage off]
 
 let rec transform_sizedtype transformation sizedtype =
   (* Functions for computing the new sizetype after some transformation *)
@@ -513,6 +515,7 @@ let unwrap_block_or_skip = function
   | x ->
       Common.ICE.internal_compiler_error
         [%message "Expecting a block or skip, not" (x : Stmt.Located.t list)]
+      [@coverage off]
 
 let index_tuple (e : Ast.typed_expression) i =
   let emeta =
@@ -526,7 +529,7 @@ let index_tuple (e : Ast.typed_expression) i =
         Common.ICE.internal_compiler_error
           [%message
             "Attempted to index into a non-tuple during lowering"
-              (e : Ast.typed_expression)] in
+              (e : Ast.typed_expression)] [@coverage off] in
   Ast.{expr= TupleProjection (e, i + 1); emeta}
 
 let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
@@ -558,7 +561,7 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
               [%message
                 "Impossible: tilde with non-distribution after typechecking"
                   (distribution : Ast.identifier)
-                  (kind : Ast.fun_kind)] in
+                  (kind : Ast.fun_kind)] [@coverage off] in
       let name = distribution.name ^ sfx in
       let add_dist =
         let adlevel =
@@ -633,6 +636,7 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
       Common.ICE.internal_compiler_error
         [%message
           "Found function definition statement outside of function block"]
+      [@coverage off]
   | Ast.VarDecl {decl_type; transformation; variables; is_global= _} ->
       List.concat_map
         ~f:(fun {identifier; initial_value} ->
@@ -743,6 +747,7 @@ let trans_fun_def ud_dists (ts : Ast.typed_statement) =
   | _ ->
       Common.ICE.internal_compiler_error
         [%message "Found non-function definition statement in function block"]
+      [@coverage off]
 
 let get_block block prog =
   match block with

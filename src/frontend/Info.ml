@@ -23,6 +23,7 @@ let rec unsized_basetype_json t =
       Common.ICE.internal_compiler_error
         [%message
           "Unexpected unsized type in unsized_basetype_json" (t : UnsizedType.t)]
+      [@coverage off]
 
 let basetype_dims t = SizedType.to_unsized t |> unsized_basetype_json
 

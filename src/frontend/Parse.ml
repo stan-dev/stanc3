@@ -22,7 +22,8 @@ let drive_parser parse_fun =
       | Interp.HandlingError env -> env
       | _ ->
           Common.ICE.internal_compiler_error
-            [%message "Parser failed but is not in an error state "] in
+            [%message "Parser failed but is not in an error state "]
+          [@coverage off] in
     let message =
       let state = Interp.current_state_number env in
       try
@@ -36,7 +37,8 @@ let drive_parser parse_fun =
       with _ ->
         Common.ICE.internal_compiler_error
           [%message
-            "Failed to find error for parser error state " (state : int)] in
+            "Failed to find error for parser error state " (state : int)]
+        [@coverage off] in
     let location =
       let env =
         match prev with

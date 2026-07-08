@@ -226,7 +226,7 @@ let vexpr_of_expr_exn Expr.{pattern; _} =
   | Var s -> VVar s
   | _ ->
       Common.ICE.internal_compiler_error
-        [%message "Non-var expression found, but var expected"]
+        [%message "Non-var expression found, but var expected"] [@coverage off]
 
 (** See interface file *)
 let rec expr_var_set Expr.{pattern; meta} =
@@ -284,6 +284,7 @@ let expr_assigned_var Expr.{pattern; _} =
   | _ ->
       Common.ICE.internal_compiler_error
         [%message "Unimplemented: analysis of assigning to non-var"]
+      [@coverage off]
 
 (** See interface file *)
 let rec summation_terms (Expr.{pattern; _} as rhs) =
@@ -483,7 +484,7 @@ let unsafe_unsized_to_sized_type (rt : Expr.Typed.t Type.t) =
               [%message
                 ("return type of a function was a void user defined function \
                   or math library function."
-                  : string)] in
+                  : string)] [@coverage off] in
       Type.Sized (to_sized ut)
 
 let%expect_test "cleanup" =

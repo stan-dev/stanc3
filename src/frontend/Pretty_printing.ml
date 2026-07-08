@@ -86,7 +86,7 @@ let skip_comments loc =
             [%message
               "Unable to format #include in this position!"
                 (l : string list)
-                (loc : Middle.Location_span.t)]
+                (loc : Middle.Location_span.t)] [@coverage off]
       | x, s :: l, loc -> Some (x, (" ^^^:" ^ s) :: l, loc)
       | _, [], _ -> None)
 
@@ -275,7 +275,7 @@ and pp_expression ppf ({expr= e_content; emeta= {loc; _}} : untyped_expression)
       match es with
       | [] ->
           Common.ICE.internal_compiler_error
-            [%message "CondDistApp with no arguments: " id.name]
+            [%message "CondDistApp with no arguments: " id.name] [@coverage off]
       | [e] ->
           pf ppf "%a(@,%a%a)@]" pp_start_funapp id pp_expression e
             (pp_comments_spacing ~before:sp get_comments)

@@ -63,7 +63,7 @@ let lower_map_decl (vident, ut) : defn =
       Common.ICE.internal_compiler_error
         [%message
           "Error during Map data construction for " vident " of type "
-            (x : UnsizedType.t)]
+            (x : UnsizedType.t)] [@coverage off]
 
 let rec top_level_decls Stmt.{pattern; _} =
   match pattern with

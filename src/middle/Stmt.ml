@@ -235,6 +235,7 @@ module Helpers = struct
     | UMathLibraryFunction | UFun _ | UTuple _ ->
         ICE.internal_compiler_error
           [%message "Can't iterate over " (iteratee : Expr.Typed.t)]
+        [@coverage off]
 
   let contains_fn_kind is_fn_kind ?(init = false) stmt =
     let rec aux accu {pattern; _} =

@@ -11,7 +11,7 @@ let of_list : _ list -> _ t option = function
 let of_list_exn : _ list -> _ t = function
   | [] ->
       ICE.internal_compiler_error
-        [%message "Nonempty_list.of_list_exn: empty list"]
+        [%message "Nonempty_list.of_list_exn: empty list"] [@coverage off]
   | hd :: tl -> hd :: tl
 
 (** [@@deriving sexp] doesn't like this type, so we do it manually *)

@@ -60,6 +60,7 @@ let constraint_to_string = function
       Common.ICE.internal_compiler_error
         [%message
           "Cannot generate tuple transformation directly; should not be called"]
+      [@coverage off]
 
 let functor_suffix = "_functor__"
 let reduce_sum_functor_suffix = "_rsfunctor__"
@@ -151,7 +152,7 @@ let rec local_scalar ut ad =
         [%message
           "Attempting to make a local scalar tuple"
             (ut : UnsizedType.t)
-            (ad : UnsizedType.autodifftype)]
+            (ad : UnsizedType.autodifftype)] [@coverage off]
 
 let minus_one e =
   let open Cpp.DSL in
@@ -177,7 +178,7 @@ let rec lower_type ?(mem_pattern = Mem_pattern.AoS) (t : UnsizedType.t)
   | UComplexMatrix -> Types.matrix (Types.complex scalar)
   | UMathLibraryFunction | UFun _ ->
       Common.ICE.internal_compiler_error
-        [%message "Function types not implemented"]
+        [%message "Function types not implemented"] [@coverage off]
 
 let rec lower_unsizedtype_local ?(mem_pattern = Mem_pattern.AoS) adtype ut =
   match (adtype, ut) with
@@ -190,7 +191,7 @@ let rec lower_unsizedtype_local ?(mem_pattern = Mem_pattern.AoS) adtype ut =
         [%message
           "Tuple and Tuple AD type not matching!"
             (ut : UnsizedType.t)
-            (adtype : UnsizedType.autodifftype)]
+            (adtype : UnsizedType.autodifftype)] [@coverage off]
   | _, _ ->
       let s = local_scalar ut adtype in
       lower_type ~mem_pattern ut s
@@ -214,6 +215,7 @@ let rec lower_possibly_var_decl adtype ut mem_pattern =
       Common.ICE.internal_compiler_error
         [%message
           "Cannot lower" (x : UnsizedType.t) (ad : UnsizedType.autodifftype)]
+      [@coverage off]
 
 let rec lower_logical_op op e1 e2 =
   let prim e = Exprs.fun_call "stan::math::primitive_value" [lower_expr e] in
@@ -241,7 +243,8 @@ and read_data ut es =
      |UComplexMatrix | UComplexRowVector | UComplexVector | UArray _ | UFun _
      |UMathLibraryFunction ->
         Common.ICE.internal_compiler_error
-          [%message "Can't ReadData of " (ut : UnsizedType.t)] in
+          [%message "Can't ReadData of " (ut : UnsizedType.t)] [@coverage off]
+  in
   let open Cpp.DSL in
   let data_context = Var "context__" in
   data_context.@?(val_method, [lower_expr (List.hd_exn es)])
@@ -290,6 +293,7 @@ and lower_operator_app op es_in =
   | And | Or ->
       Common.ICE.internal_compiler_error
         [%message "And/Or should have been converted to an expression"]
+      [@coverage off]
   | EltTimes -> lower_binary_op Multiply "stan::math::elt_multiply" es
   | EltDivide -> lower_binary_op Divide "stan::math::elt_divide" es
   | Pow -> lower_binary_fun "stan::math::pow" es
@@ -448,7 +452,7 @@ and lower_compiler_internal ad ut f es =
             Common.ICE.internal_compiler_error
               [%message
                 "Array literal must have array type but found "
-                  (ut : UnsizedType.t)] in
+                  (ut : UnsizedType.t)] [@coverage off] in
       Exprs.std_vector_init_expr
         (lower_unsizedtype_local ad ut)
         (lower_exprs es)
@@ -473,7 +477,8 @@ and lower_compiler_internal ad ut f es =
       | _ ->
           Common.ICE.internal_compiler_error
             [%message
-              "Unexpected type for row vector literal" (ut : UnsizedType.t)])
+              "Unexpected type for row vector literal" (ut : UnsizedType.t)]
+          [@coverage off])
   | FnReadData -> read_data ut es
   | FnReadDeserializer ->
       deserializer.@<>(( "read"
@@ -520,18 +525,18 @@ and lower_indexed e indices pretty =
 and lower_indexed_simple (e : expr) idcs =
   let idx_minus_one = function
     | Index.Single e -> minus_one e
-    | MultiIndex e | Between (e, _) | Upfrom e ->
+    | MultiIndex e | Between (e, _) | Upfrom e -> (
         Common.ICE.internal_compiler_error
           [%message
             "No non-Single indices allowed"
               (e : expr)
-              (idcs : Expr.Typed.t Index.t list)]
-    | All ->
+              (idcs : Expr.Typed.t Index.t list)] [@coverage off])
+    | All -> (
         Common.ICE.internal_compiler_error
           [%message
             "No non-Single indices allowed"
               (e : expr)
-              (idcs : Expr.Typed.t Index.t list)] in
+              (idcs : Expr.Typed.t Index.t list)] [@coverage off]) in
   List.fold idcs ~init:e ~f:(fun e id ->
       Subscript (e, idx_minus_one (Index.map lower_expr id)))
 

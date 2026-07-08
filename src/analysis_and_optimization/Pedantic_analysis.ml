@@ -242,7 +242,7 @@ let list_param_dependant_fundef_cf (mir : Program.Typed.t)
         Common.ICE.internal_compiler_error
           [%message
             "In finding searching for parameter dependent function arguments, \
-             mismatched function."] in
+             mismatched function."] [@coverage off] in
   let arg_param_deps label arg_expr =
     var_deps info_map ~expr:(Some arg_expr) label (parameter_names_set mir)
   in

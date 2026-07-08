@@ -73,7 +73,7 @@ let rec get_dims_io st =
       Common.ICE.internal_compiler_error
         [%message
           "Tried to get IO dims of a tuple, which is not rectangular"
-            (st : Expr.Typed.t t)]
+            (st : Expr.Typed.t t)] [@coverage off]
 
 let rec io_size st =
   let two = Expr.Helpers.int 2 in

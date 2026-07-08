@@ -611,7 +611,7 @@ let make_function_variable cf loc id = function
       Common.ICE.internal_compiler_error
         [%message
           "Attempting to create function variable out of "
-            (type_ : UnsizedType.t)]
+            (type_ : UnsizedType.t)] [@coverage off]
 
 (** Check that the functions in the list [requires_higher_order_autodiff] cannot
     {b transitively} call stan math functions that don't have second derivative
@@ -1130,12 +1130,12 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
               Common.ICE.internal_compiler_error
                 [%message
                   "Error in internal representation: tuple types don't match AD"]
-          )
+              [@coverage off])
       | UTuple _, ad ->
           Common.ICE.internal_compiler_error
             [%message
               "Error in internal representation: tuple doesn't have tupleAD"
-                (ad : UnsizedType.autodifftype)]
+                (ad : UnsizedType.autodifftype)] [@coverage off]
       | _, _ ->
           Semantic_error.tuple_index_not_tuple emeta.loc te.emeta.type_ |> error
       )
@@ -1466,7 +1466,7 @@ let rec check_lvalue cf tenv {lval; lmeta= ({loc} : located_meta)} =
               Common.ICE.internal_compiler_error
                 [%message
                   "Error in internal representation: tuple types don't match AD"]
-          )
+              [@coverage off])
       | _, _ ->
           Semantic_error.tuple_index_not_tuple loc tlval.lmeta.type_ |> error)
   | LIndexed (lval, idcs) ->
@@ -1560,7 +1560,7 @@ let check_tilde_distribution loc cf tenv id arguments =
             Common.ICE.internal_compiler_error
               [%message
                 "Typechecking a laplace marginal did not return a distribution "
-                  (fn_expr : Ast.typed_expression)]
+                  (fn_expr : Ast.typed_expression)] [@coverage off]
       else
         (* Otherwise, the function is non existent *)
         Semantic_error.invalid_tilde_no_such_dist id.id_loc name
@@ -2086,7 +2086,8 @@ and check_fundef loc cf tenv return_ty id args body =
         | AutoDiffable, ut -> (Param, ut)
         | TupleAD _, _ ->
             Common.ICE.internal_compiler_error
-              [%message "TupleAD in function definition, this is unexpected!"])
+              [%message "TupleAD in function definition, this is unexpected!"]
+            [@coverage off])
       arg_types in
   let tenv_body =
     List.fold2_exn arg_identifiers arg_types_internal ~init:tenv
@@ -2201,7 +2202,7 @@ let verify_correctness_invariant (ast : untyped_program)
       [%message
         "Type checked AST does not match original AST. "
           (detyped : untyped_program)
-          (ast : untyped_program)]
+          (ast : untyped_program)] [@coverage off]
 
 let check_program_exn ~allow_undefined_functions
     ({ functionblock= fb
