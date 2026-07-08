@@ -426,7 +426,7 @@ catchError {
                     rm StanHeaders/inst/stanc.js
                     cp ../bin/stanc.js StanHeaders/inst/stanc.js
                     git add StanHeaders/inst/stanc.js
-                    git commit -m "Update stanc.js to ${tagName}" --author="\$GIT_AUTHOR_NAME <\$GIT_AUTHOR_EMAIL>"
+                    git commit --allow-empty -m "Update stanc.js to ${tagName}" --author="\$GIT_AUTHOR_NAME <\$GIT_AUTHOR_EMAIL>"
                   """
                   gitPush(gitScm: scm, targetBranch: branch, targetRepo: 'origin')
                 }
