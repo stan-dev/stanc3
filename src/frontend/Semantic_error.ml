@@ -493,7 +493,7 @@ module ExpressionError = struct
   type t =
     | InvalidSizeDeclRng
     | InvalidRngFunction
-    | InvalidUnnormalizedFunction
+    | InvalidUnnormalizedFunction of string
     | InvalidUnnormalizedUDF of string
     | ConditionalNotationNotAllowed
     | ConditioningRequired
@@ -519,11 +519,13 @@ module ExpressionError = struct
           "Random number generators are only allowed in transformed data \
            block, generated quantities block or user-defined functions with \
            names ending in _rng."
-    | InvalidUnnormalizedFunction ->
-        Fmt.text ppf
-          "Functions with names ending in _lupdf and _lupmf can only be used \
-           in the model block or user-defined functions with names ending in \
-           _lpdf or _lpmf."
+    | InvalidUnnormalizedFunction name ->
+        Fmt.pf ppf
+          "@[Unnormalized probability functions such as %a can@ only be used \
+           in the model block or in user-defined functions with names@ ending \
+           in _lpdf or _lpmf.@ Did you mean %a?@]"
+          quoted name quoted
+          (Utils.normalized_name name)
     | InvalidUnnormalizedUDF fname ->
         Fmt.pf ppf
           "@[%a is an invalid user-defined function name.@ User-defined \
@@ -970,8 +972,8 @@ let invalid_decl_rng_fn loc =
 let invalid_rng_fn loc =
   (loc, ExpressionError ExpressionError.InvalidRngFunction)
 
-let invalid_unnormalized_fn loc =
-  (loc, ExpressionError ExpressionError.InvalidUnnormalizedFunction)
+let invalid_unnormalized_fn loc name =
+  (loc, ExpressionError (ExpressionError.InvalidUnnormalizedFunction name))
 
 let udf_is_unnormalized_fn loc name =
   (loc, ExpressionError (ExpressionError.InvalidUnnormalizedUDF name))

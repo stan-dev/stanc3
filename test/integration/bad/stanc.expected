@@ -1958,9 +1958,9 @@ Semantic error in 'log_suffix_bad2.stan', line 3, column 12 to column 41:
      5:  }
    -------------------------------------------------
 
-Functions with names ending in _lupdf and _lupmf can only be used in the
-model block or user-defined functions with names ending in _lpdf or
-_lpmf.
+Unnormalized probability functions such as "normal_lupdf" can
+only be used in the model block or in user-defined functions with names
+ending in _lpdf or _lpmf. Did you mean "normal_lpdf"?
 [exit 1]
   $ stanc lp-error.stan
 Semantic error in 'lp-error.stan', line 5, column 2 to column 6:
