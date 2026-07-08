@@ -268,7 +268,16 @@ let check_postfixop loc op te =
         ~ad_level:te.emeta.ad_level ~type_ ~loc
   | _ -> Semantic_error.illtyped_postfix_op loc op te.emeta.type_ |> error
 
+(** unnormalized _lpdf/_lpmf functions can only be used in _lpdf/_lpmf/_lp udfs
+    or the model block *)
+let verify_unnormalized cf loc id =
+  if
+    Utils.is_unnormalized_distribution id.name
+    && not (in_udf_distribution cf || cf.current_block = Model)
+  then Semantic_error.invalid_unnormalized_fn loc id.name |> error
+
 let check_id cf loc tenv id =
+  verify_unnormalized cf loc id;
   match Env.find tenv (Utils.stdlib_distribution_name id.name) with
   | [] ->
       Semantic_error.ident_not_in_scope loc id.name
@@ -284,12 +293,6 @@ let check_id cf loc tenv id =
     :: _
     when cf.in_toplevel_decl ->
       Semantic_error.non_data_variable_size_decl loc origin prev |> error
-  | _ :: _
-    when Utils.is_unnormalized_distribution id.name
-         && not
-              ((in_udf_distribution cf || in_lp_function cf)
-              || cf.current_block = Model) ->
-      Semantic_error.invalid_unnormalized_fn loc |> error
   | {kind= `Variable {origin; _}; type_; _} :: _ ->
       (calculate_autodifftype cf origin type_, type_)
   | { kind= `UserDefined _ | `UserDeclared _
@@ -491,14 +494,6 @@ let verify_fn_rng cf loc id =
         (in_rng_function cf || cf.current_block = GQuant
        || cf.current_block = TData)
     then Semantic_error.invalid_rng_fn loc |> error
-
-(** unnormalized _lpdf/_lpmf functions can only be used in _lpdf/_lpmf/_lp udfs
-    or the model block *)
-let verify_unnormalized cf loc id =
-  if
-    Utils.is_unnormalized_distribution id.name
-    && not (in_udf_distribution cf || cf.current_block = Model)
-  then Semantic_error.invalid_unnormalized_fn loc |> error
 
 let mk_fun_app ~is_cond_dist ~loc kind name args ~type_ : Ast.typed_expression =
   let fn =
