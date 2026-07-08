@@ -52,7 +52,7 @@ catchError {
 
     if (runRebuildingBinaries || runRemainingStages) {
       def buildBinary = { arch ->
-        runPod(tag: arch ?: 'static', emulation: !!arch) {
+        runPod(tag: arch ?: 'static', emulation: !!arch, cpus: 2) {
           stage("Build ${arch ?: 'Linux'} binary") {
             sh '''
                 eval $(opam env)
@@ -345,7 +345,7 @@ catchError {
               }
             }
           }, linux: {
-            runPod(tag: 'ci') {
+            runPod(tag: 'ci', cpus: 2) {
               stage("Build stanc.js") {
                 sh '''
                     eval $(opam env)
@@ -360,8 +360,7 @@ catchError {
               stage("Generate shell support files") {
                 sh '''
                     eval $(opam env)
-                    dune subst
-                    dune build --profile=release
+                    dune build
                     cmdliner install tool-support --standalone-completion "./_build/default/src/stanc/stanc.exe:stanc" shell-support/
                     cd shell-support
                     zip -r ../shell-support-files.zip *
@@ -372,7 +371,6 @@ catchError {
               stage("Build Windows binary") {
                 sh '''
                     eval $(opam env)
-                    dune subst
                     dune build -x windows --profile=release
                     mkdir -p bin && mv _build/default.windows/src/stanc/stanc.exe bin/windows-stanc
                     chmod +w bin/windows-stanc && strip bin/windows-stanc
@@ -400,7 +398,7 @@ catchError {
               buildArgs: "--platform=linux/$platform"
             ]
           }, checkout: true)
-          parallel(arches.collectEntries{arch, platform -> [arch, buildBinary(arch)]})
+          parallel(archs.collectEntries{arch, platform -> [arch, { buildBinary(arch) }]})
         }
       }
 
