@@ -52,12 +52,12 @@ catchError {
 
     if (runRebuildingBinaries || runRemainingStages) {
       def buildBinary = { arch ->
-        runPod(tag: arch ?: 'static', emulation: !!arch) {
+        runPod(tag: arch ?: 'static', emulation: !!arch, cpus: 2) {
           stage("Build ${arch ?: 'Linux'} binary") {
             sh '''
                 eval $(opam env)
                 dune subst
-                dune build --profile static
+                dune build --profile static -j$PARALLEL
             '''
             def label = arch ? "-$arch" : ""
             def bin = "bin/linux$label-stanc"
@@ -113,8 +113,55 @@ catchError {
       }
 
       stage("CmdStan & Math tests") {
+        def runPerformanceTests = { String testsPath, String stancFlags ->
+          dir('cmdstan') {
+            def local = """\
+              CXX=$CXX
+              O=0
+              CXXFLAGS+=-Wall
+            """
+            if (stancFlags) local += """
+              STANCFLAGS=$stancFlags
+            """
+            writeFile(file: "make/local", text: local.stripIndent())
+            sh '''
+                make clean-all
+                make -j$PARALLEL build
+            '''
+          }
+
+          def args = params.run_slow_perf_tests ? "--no-ignore-models" : ""
+          sh """
+              ./runPerformanceTests.py -j\$PARALLEL --runs=0 $args ${testsPath}
+          """
+        }
+        def endToEnd = { optimize ->
+          sh '''
+              git show HEAD --stat
+              echo "example-models/regression_tests/mother.stan" > all.tests
+          '''
+          if (optimize) sh '''
+              cat optimizer.tests >> all.tests
+              echo "" >> all.tests
+            '''
+          sh '''
+              cat known_good_perf_all.tests >> all.tests
+              echo "" >> all.tests
+              cat shotgun_perf_all.tests >> all.tests
+              cat all.tests
+              echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
+              echo "PRECOMPILED_HEADERS=false" >> cmdstan/make/local
+              cd cmdstan; make clean-all; git show HEAD --stat; cd ..
+          '''
+          sh optimize ? '''
+              CXX="$CXX" ./compare-optimizer.sh "--tests-file all.tests --num-samples=10 -j$PARALLEL" "--O1" "$(readlink -f ../bin/linux-stanc)"
+          ''' : '''
+              CXX="$CXX" ./compare-compilers.sh "--tests-file all.tests --num-samples=10 -j$PARALLEL" "$(readlink -f ../bin/linux-stanc)"
+          '''
+          archiveArtifacts 'performance.xml'
+        }
         parallel compile: {
-          if (runCompileTests) {
+          if (runCompileTests && !params.skip_compile) {
             runPod(image: 'stanorg/ci:gpu', cpus: 16, memory: "64Gi") {
               unstash 'linux-exe'
               dir('performance-tests-cmdstan') {
@@ -132,70 +179,11 @@ catchError {
                     cp ../bin/linux-stanc cmdstan/bin/linux-stanc
                 """
 
-                def runPerformanceTests = { String testsPath, String stancFlags ->
-                  dir('cmdstan') {
-                    def local = """\
-                      CXX=$CXX
-                      O=0
-                      CXXFLAGS+=-Wall
-                    """
-                    if (stancFlags) local += """
-                      STANCFLAGS=$stancFlags
-                    """
-                    writeFile(file: "make/local", text: local.stripIndent())
-                    sh '''
-                        make clean-all
-                        make -j$PARALLEL build
-                    '''
-                  }
-
-                  def args = params.run_slow_perf_tests ? "--no-ignore-models" : ""
-                  sh """
-                      ./runPerformanceTests.py -j\$PARALLEL --runs=0 $args ${testsPath}
-                  """
+                stage("Compile tests - good") {
+                  runPerformanceTests("../test/integration/good", params.stanc_flags)
                 }
-
-                if (!params.skip_compile) {
-                  stage("Compile tests - good") {
-                    runPerformanceTests("../test/integration/good", params.stanc_flags)
-                  }
-                  stage("Compile tests - example-models") {
-                    runPerformanceTests("example-models", params.stanc_flags)
-                  }
-                }
-                if (runCompileTestsAtO1 && !params.skip_compile_O1) {
-                  stage("Compile tests - good at O=1") {
-                    runPerformanceTests("../test/integration/good", "--O1")
-                  }
-                  stage("Compile tests - example-models at O=1") {
-                    runPerformanceTests("example-models", "--O1")
-                  }
-                }
-
-                def endToEnd = { optimize ->
-                  sh '''
-                      git show HEAD --stat
-                      echo "example-models/regression_tests/mother.stan" > all.tests
-                  '''
-                  if (optimize) sh '''
-                      cat optimizer.tests >> all.tests
-                      echo "" >> all.tests
-                    '''
-                  sh '''
-                      cat known_good_perf_all.tests >> all.tests
-                      echo "" >> all.tests
-                      cat shotgun_perf_all.tests >> all.tests
-                      cat all.tests
-                      echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
-                      echo "PRECOMPILED_HEADERS=false" >> cmdstan/make/local
-                      cd cmdstan; make clean-all; git show HEAD --stat; cd ..
-                  '''
-                  sh optimize ? '''
-                      CXX="$CXX" ./compare-optimizer.sh "--tests-file all.tests --num-samples=10 -j$PARALLEL" "--O1" "$(readlink -f ../bin/linux-stanc)"
-                  ''' : '''
-                      CXX="$CXX" ./compare-compilers.sh "--tests-file all.tests --num-samples=10 -j$PARALLEL" "$(readlink -f ../bin/linux-stanc)"
-                  '''
-                  archiveArtifacts 'performance.xml'
+                stage("Compile tests - example-models") {
+                  runPerformanceTests("example-models", params.stanc_flags)
                 }
 
                 if (!params.skip_end_to_end) {
@@ -203,7 +191,37 @@ catchError {
                     endToEnd(false)
                   }
                 }
-                if (runCompileTestsAtO1 && !params.skip_end_to_end) {
+              }
+            }
+          }
+        }, compileAtO1: {
+          if (runCompileTestsAtO1 && !params.skip_compile_O1) {
+            runPod(image: 'stanorg/ci:gpu', cpus: 16, memory: "64Gi") {
+              unstash 'linux-exe'
+              dir('performance-tests-cmdstan') {
+                checkout scmGit(
+                  userRemoteConfigs: [[url: 'https://github.com/stan-dev/performance-tests-cmdstan']],
+                  branches: [[name: 'refs/heads/master']],
+                  extensions: [
+                    cloneOption(noTags: true, shallow: true, depth: 50),
+                    submodule(shallow: true, depth: 8, recursiveSubmodules: true)])
+                checkoutPR("cmdstan", params.cmdstan_pr)
+                checkoutPR("cmdstan/stan", params.stan_pr)
+                checkoutPR("cmdstan/stan/lib/stan_math", params.math_pr)
+                sh """
+                    mkdir cmdstan/bin
+                    cp ../bin/linux-stanc cmdstan/bin/linux-stanc
+                """
+
+
+                stage("Compile tests - good at O=1") {
+                  runPerformanceTests("../test/integration/good", "--O1")
+                }
+                stage("Compile tests - example-models at O=1") {
+                  runPerformanceTests("example-models", "--O1")
+                }
+
+                if (!params.skip_end_to_end) {
                   stage("Model end-to-end tests at O=1") {
                     endToEnd(true)
                   }
@@ -274,7 +292,7 @@ catchError {
                        opam update
                        bash -x scripts/install_build_deps.sh
                        dune subst
-                       dune build --root=. --profile=release
+                       dune build --profile=release
                    '''
                    }
                   sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/mac-x86-stanc"
@@ -327,14 +345,14 @@ catchError {
               }
             }
           }, linux: {
-            runPod(tag: 'ci') {
+            runPod(tag: 'ci', cpus: 2) {
               stage("Build stanc.js") {
                 sh '''
                     eval $(opam env)
                     dune subst
-                    dune build --profile release src/stancjs
+                    dune build --profile release src/stancjs -j$PARALLEL
                     mkdir -p bin && mv `find _build -name stancjs.bc.js` bin/stanc.js
-                    dune build --force --profile=dev src/stancjs
+                    dune build --force --profile=dev src/stancjs -j$PARALLEL
                     mv `find _build -name stancjs.bc.js` bin/stanc-pretty.js
                 '''
                 stash name:'js-exe', includes:'bin/stanc.js,bin/stanc-pretty.js'
@@ -342,8 +360,7 @@ catchError {
               stage("Generate shell support files") {
                 sh '''
                     eval $(opam env)
-                    dune subst
-                    dune build --profile=release
+                    dune build -j$PARALLEL
                     cmdliner install tool-support --standalone-completion "./_build/default/src/stanc/stanc.exe:stanc" shell-support/
                     cd shell-support
                     zip -r ../shell-support-files.zip *
@@ -354,35 +371,34 @@ catchError {
               stage("Build Windows binary") {
                 sh '''
                     eval $(opam env)
-                    dune subst
-                    dune build -x windows --profile=release
+                    dune build -x windows --profile=release -j$PARALLEL
                     mkdir -p bin && mv _build/default.windows/src/stanc/stanc.exe bin/windows-stanc
                     chmod +w bin/windows-stanc && strip bin/windows-stanc
                 '''
                 stash name:'windows-exe', includes:'bin/windows-stanc'
               }
             }
+          }, multiarch: {
+            if (params.test_binaries || params.build_multiarch || env.TAG_NAME || env.BRANCH_NAME == "master") {
+              stage('Build other architectures') {
+                def archs = [
+                  'arm64':   'arm64',
+                  'ppc64el': 'ppc64le',
+                  's390x':   's390x',
+                  'armhf':   'arm/v7',
+                  'armel':   'arm/v6'
+                ]
+                buildImages(archs.collect { arch, platform ->
+                  [ tag: arch,
+                   context: 'scripts',
+                   dockerfile: 'docker/static-builder/Dockerfile',
+                   buildArgs: "--platform=linux/$platform"
+                  ]
+                }, checkout: true)
+                parallel(archs.collectEntries{arch, platform -> [arch, { buildBinary(arch) }]})
+              }
+            }
           }
-        }
-      }
-
-      if (params.test_binaries || runRebuildingBinaries && (env.TAG_NAME || env.BRANCH_NAME == "master" || params.build_multiarch)) {
-        stage('Build other architectures') {
-          def archs = [
-            'arm64':   'arm64',
-            'ppc64el': 'ppc64le',
-            's390x':   's390x',
-            'armhf':   'arm/v7',
-            'armel':   'arm/v6'
-          ]
-          buildImages(archs.collect { arch, platform ->
-            [ tag: arch,
-              context: 'scripts',
-              dockerfile: 'docker/static-builder/Dockerfile',
-              buildArgs: "--platform=linux/$platform"
-            ]
-          }, checkout: true)
-          archs.each { arch, platform -> buildBinary(arch) }
         }
       }
 
@@ -426,7 +442,7 @@ catchError {
                     rm StanHeaders/inst/stanc.js
                     cp ../bin/stanc.js StanHeaders/inst/stanc.js
                     git add StanHeaders/inst/stanc.js
-                    git commit -m "Update stanc.js to ${tagName}" --author="\$GIT_AUTHOR_NAME <\$GIT_AUTHOR_EMAIL>"
+                    git commit --allow-empty -m "Update stanc.js to ${tagName}" --author="\$GIT_AUTHOR_NAME <\$GIT_AUTHOR_EMAIL>"
                   """
                   gitPush(gitScm: scm, targetBranch: branch, targetRepo: 'origin')
                 }
