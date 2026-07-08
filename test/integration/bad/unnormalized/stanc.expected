@@ -167,6 +167,19 @@ Unnormalized probability functions such as "poisson_lupmf" can
 only be used in the model block or in user-defined functions with names
 ending in _lpdf or _lpmf. Did you mean "poisson_lpmf"?
 [exit 1]
+  $ stanc not_in_scope.stan
+Semantic error in 'not_in_scope.stan', line 2, column 22 to column 31:
+   -------------------------------------------------
+     1:  generated quantities {
+     2:    real x = reduce_sum(foo_lupdf, blah, blah);
+                               ^
+     3:  }
+   -------------------------------------------------
+
+Unnormalized probability functions such as "foo_lupdf" can
+only be used in the model block or in user-defined functions with names
+ending in _lpdf or _lpmf. Did you mean "foo_lpdf"?
+[exit 1]
   $ stanc udf_lupdf.stan
 Semantic error in 'udf_lupdf.stan', line 2, column 9 to column 18:
    -------------------------------------------------
