@@ -57,7 +57,7 @@ catchError {
             sh '''
                 eval $(opam env)
                 dune subst
-                dune build --profile static
+                dune build --profile static -j$PARALLEL
             '''
             def label = arch ? "-$arch" : ""
             def bin = "bin/linux$label-stanc"
@@ -292,7 +292,7 @@ catchError {
                        opam update
                        bash -x scripts/install_build_deps.sh
                        dune subst
-                       dune build --root=. --profile=release
+                       dune build --profile=release
                    '''
                    }
                   sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/mac-x86-stanc"
@@ -350,9 +350,9 @@ catchError {
                 sh '''
                     eval $(opam env)
                     dune subst
-                    dune build --profile release src/stancjs
+                    dune build --profile release src/stancjs -j$PARALLEL
                     mkdir -p bin && mv `find _build -name stancjs.bc.js` bin/stanc.js
-                    dune build --force --profile=dev src/stancjs
+                    dune build --force --profile=dev src/stancjs -j$PARALLEL
                     mv `find _build -name stancjs.bc.js` bin/stanc-pretty.js
                 '''
                 stash name:'js-exe', includes:'bin/stanc.js,bin/stanc-pretty.js'
@@ -360,7 +360,7 @@ catchError {
               stage("Generate shell support files") {
                 sh '''
                     eval $(opam env)
-                    dune build
+                    dune build -j$PARALLEL
                     cmdliner install tool-support --standalone-completion "./_build/default/src/stanc/stanc.exe:stanc" shell-support/
                     cd shell-support
                     zip -r ../shell-support-files.zip *
@@ -371,34 +371,34 @@ catchError {
               stage("Build Windows binary") {
                 sh '''
                     eval $(opam env)
-                    dune build -x windows --profile=release
+                    dune build -x windows --profile=release -j$PARALLEL
                     mkdir -p bin && mv _build/default.windows/src/stanc/stanc.exe bin/windows-stanc
                     chmod +w bin/windows-stanc && strip bin/windows-stanc
                 '''
                 stash name:'windows-exe', includes:'bin/windows-stanc'
               }
             }
+          }, multiarch: {
+            if (params.test_binaries || params.build_multiarch || env.TAG_NAME || env.BRANCH_NAME == "master") {
+              stage('Build other architectures') {
+                def archs = [
+                  'arm64':   'arm64',
+                  'ppc64el': 'ppc64le',
+                  's390x':   's390x',
+                  'armhf':   'arm/v7',
+                  'armel':   'arm/v6'
+                ]
+                buildImages(archs.collect { arch, platform ->
+                  [ tag: arch,
+                   context: 'scripts',
+                   dockerfile: 'docker/static-builder/Dockerfile',
+                   buildArgs: "--platform=linux/$platform"
+                  ]
+                }, checkout: true)
+                parallel(archs.collectEntries{arch, platform -> [arch, { buildBinary(arch) }]})
+              }
+            }
           }
-        }
-      }
-
-      if (params.test_binaries || runRebuildingBinaries && (env.TAG_NAME || env.BRANCH_NAME == "master" || params.build_multiarch)) {
-        stage('Build other architectures') {
-          def archs = [
-            'arm64':   'arm64',
-            'ppc64el': 'ppc64le',
-            's390x':   's390x',
-            'armhf':   'arm/v7',
-            'armel':   'arm/v6'
-          ]
-          buildImages(archs.collect { arch, platform ->
-            [ tag: arch,
-              context: 'scripts',
-              dockerfile: 'docker/static-builder/Dockerfile',
-              buildArgs: "--platform=linux/$platform"
-            ]
-          }, checkout: true)
-          parallel(archs.collectEntries{arch, platform -> [arch, { buildBinary(arch) }]})
         }
       }
 
