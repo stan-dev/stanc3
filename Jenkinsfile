@@ -113,8 +113,55 @@ catchError {
       }
 
       stage("CmdStan & Math tests") {
+        def runPerformanceTests = { String testsPath, String stancFlags ->
+          dir('cmdstan') {
+            def local = """\
+              CXX=$CXX
+              O=0
+              CXXFLAGS+=-Wall
+            """
+            if (stancFlags) local += """
+              STANCFLAGS=$stancFlags
+            """
+            writeFile(file: "make/local", text: local.stripIndent())
+            sh '''
+                make clean-all
+                make -j$PARALLEL build
+            '''
+          }
+
+          def args = params.run_slow_perf_tests ? "--no-ignore-models" : ""
+          sh """
+              ./runPerformanceTests.py -j\$PARALLEL --runs=0 $args ${testsPath}
+          """
+        }
+        def endToEnd = { optimize ->
+          sh '''
+              git show HEAD --stat
+              echo "example-models/regression_tests/mother.stan" > all.tests
+          '''
+          if (optimize) sh '''
+              cat optimizer.tests >> all.tests
+              echo "" >> all.tests
+            '''
+          sh '''
+              cat known_good_perf_all.tests >> all.tests
+              echo "" >> all.tests
+              cat shotgun_perf_all.tests >> all.tests
+              cat all.tests
+              echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
+              echo "PRECOMPILED_HEADERS=false" >> cmdstan/make/local
+              cd cmdstan; make clean-all; git show HEAD --stat; cd ..
+          '''
+          sh optimize ? '''
+              CXX="$CXX" ./compare-optimizer.sh "--tests-file all.tests --num-samples=10 -j$PARALLEL" "--O1" "$(readlink -f ../bin/linux-stanc)"
+          ''' : '''
+              CXX="$CXX" ./compare-compilers.sh "--tests-file all.tests --num-samples=10 -j$PARALLEL" "$(readlink -f ../bin/linux-stanc)"
+          '''
+          archiveArtifacts 'performance.xml'
+        }
         parallel compile: {
-          if (runCompileTests) {
+          if (runCompileTests && !params.skip_compile) {
             runPod(image: 'stanorg/ci:gpu', cpus: 16, memory: "64Gi") {
               unstash 'linux-exe'
               dir('performance-tests-cmdstan') {
@@ -132,70 +179,11 @@ catchError {
                     cp ../bin/linux-stanc cmdstan/bin/linux-stanc
                 """
 
-                def runPerformanceTests = { String testsPath, String stancFlags ->
-                  dir('cmdstan') {
-                    def local = """\
-                      CXX=$CXX
-                      O=0
-                      CXXFLAGS+=-Wall
-                    """
-                    if (stancFlags) local += """
-                      STANCFLAGS=$stancFlags
-                    """
-                    writeFile(file: "make/local", text: local.stripIndent())
-                    sh '''
-                        make clean-all
-                        make -j$PARALLEL build
-                    '''
-                  }
-
-                  def args = params.run_slow_perf_tests ? "--no-ignore-models" : ""
-                  sh """
-                      ./runPerformanceTests.py -j\$PARALLEL --runs=0 $args ${testsPath}
-                  """
+                stage("Compile tests - good") {
+                  runPerformanceTests("../test/integration/good", params.stanc_flags)
                 }
-
-                if (!params.skip_compile) {
-                  stage("Compile tests - good") {
-                    runPerformanceTests("../test/integration/good", params.stanc_flags)
-                  }
-                  stage("Compile tests - example-models") {
-                    runPerformanceTests("example-models", params.stanc_flags)
-                  }
-                }
-                if (runCompileTestsAtO1 && !params.skip_compile_O1) {
-                  stage("Compile tests - good at O=1") {
-                    runPerformanceTests("../test/integration/good", "--O1")
-                  }
-                  stage("Compile tests - example-models at O=1") {
-                    runPerformanceTests("example-models", "--O1")
-                  }
-                }
-
-                def endToEnd = { optimize ->
-                  sh '''
-                      git show HEAD --stat
-                      echo "example-models/regression_tests/mother.stan" > all.tests
-                  '''
-                  if (optimize) sh '''
-                      cat optimizer.tests >> all.tests
-                      echo "" >> all.tests
-                    '''
-                  sh '''
-                      cat known_good_perf_all.tests >> all.tests
-                      echo "" >> all.tests
-                      cat shotgun_perf_all.tests >> all.tests
-                      cat all.tests
-                      echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
-                      echo "PRECOMPILED_HEADERS=false" >> cmdstan/make/local
-                      cd cmdstan; make clean-all; git show HEAD --stat; cd ..
-                  '''
-                  sh optimize ? '''
-                      CXX="$CXX" ./compare-optimizer.sh "--tests-file all.tests --num-samples=10 -j$PARALLEL" "--O1" "$(readlink -f ../bin/linux-stanc)"
-                  ''' : '''
-                      CXX="$CXX" ./compare-compilers.sh "--tests-file all.tests --num-samples=10 -j$PARALLEL" "$(readlink -f ../bin/linux-stanc)"
-                  '''
-                  archiveArtifacts 'performance.xml'
+                stage("Compile tests - example-models") {
+                  runPerformanceTests("example-models", params.stanc_flags)
                 }
 
                 if (!params.skip_end_to_end) {
@@ -203,7 +191,37 @@ catchError {
                     endToEnd(false)
                   }
                 }
-                if (runCompileTestsAtO1 && !params.skip_end_to_end) {
+              }
+            }
+          }
+        }, compileAtO1: {
+          if (runCompileTestsAtO1 && !params.skip_compile_O1) {
+            runPod(image: 'stanorg/ci:gpu', cpus: 16, memory: "64Gi") {
+              unstash 'linux-exe'
+              dir('performance-tests-cmdstan') {
+                checkout scmGit(
+                  userRemoteConfigs: [[url: 'https://github.com/stan-dev/performance-tests-cmdstan']],
+                  branches: [[name: 'refs/heads/master']],
+                  extensions: [
+                    cloneOption(noTags: true, shallow: true, depth: 50),
+                    submodule(shallow: true, depth: 8, recursiveSubmodules: true)])
+                checkoutPR("cmdstan", params.cmdstan_pr)
+                checkoutPR("cmdstan/stan", params.stan_pr)
+                checkoutPR("cmdstan/stan/lib/stan_math", params.math_pr)
+                sh """
+                    mkdir cmdstan/bin
+                    cp ../bin/linux-stanc cmdstan/bin/linux-stanc
+                """
+
+
+                stage("Compile tests - good at O=1") {
+                  runPerformanceTests("../test/integration/good", "--O1")
+                }
+                stage("Compile tests - example-models at O=1") {
+                  runPerformanceTests("example-models", "--O1")
+                }
+
+                if (!params.skip_end_to_end) {
                   stage("Model end-to-end tests at O=1") {
                     endToEnd(true)
                   }
@@ -382,7 +400,7 @@ catchError {
               buildArgs: "--platform=linux/$platform"
             ]
           }, checkout: true)
-          archs.each { arch, platform -> buildBinary(arch) }
+          parallel(arches.collectEntries{arch, platform -> [arch, buildBinary(arch)]})
         }
       }
 
