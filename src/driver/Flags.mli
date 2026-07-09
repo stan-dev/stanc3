@@ -51,6 +51,3 @@ val get_optimization_settings :
 val set_backend_args_list : string list -> unit
 (** This is a helper function to set the [model_compile_info] method of the
     generated C++ to contain a copy of the (relevant) compiler flags *)
-
-val remove_dotstan : string -> string
-(** Strip '.stan' or '.stanfunctions' from a filename *)

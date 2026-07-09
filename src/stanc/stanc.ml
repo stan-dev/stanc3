@@ -53,7 +53,7 @@ let stanc ?tty_colors ?(debug_lex : bool = false) ?(debug_parse : bool = false)
   Debugging.grammar_logging := debug_parse;
   (* if we only have functions, always compile as standalone *)
   let flags =
-    if String.is_suffix model_file ~suffix:".stanfunctions" then
+    if Common.Files.is_stanfunctions model_file then
       {flags with standalone_functions= true; functions_only= true}
     else flags in
   let model_file_name, model_source, printed_filename =
@@ -73,7 +73,7 @@ let stanc ?tty_colors ?(debug_lex : bool = false) ?(debug_parse : bool = false)
       if print_cpp then print_endline cpp_str;
       let out =
         if String.equal output_file "" then
-          Driver.Flags.remove_dotstan model_file_name ^ ".hpp"
+          Common.Files.remove_dotstan model_file_name ^ ".hpp"
         else output_file in
       write out cpp_str
   | Error e ->

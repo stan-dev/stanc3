@@ -82,9 +82,3 @@ let set_backend_args_list flags =
     flags |> List.filter ~f:sans_model_and_hpp_paths |> String.concat ~sep:" "
   in
   Stan_math_backend.Lower_program.stanc_args_to_print := stanc_args_to_print
-
-let remove_dotstan s =
-  Option.first_some
-    (String.chop_suffix ~suffix:".stanfunctions" s)
-    (String.chop_suffix ~suffix:".stan" s)
-  |> Option.value ~default:s
