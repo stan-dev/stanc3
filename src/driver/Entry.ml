@@ -20,8 +20,8 @@ let set_model_name model_name =
           else match c with '-' -> "_" | _ -> "x" ^ Int.to_string (to_int c)))
   in
   let model_name_munged =
-    Flags.remove_dotstan List.(hd_exn (rev (String.split model_name ~on:'/')))
-  in
+    Common.Files.remove_dotstan
+      List.(hd_exn (rev (String.split model_name ~on:'/'))) in
   if String.equal model_name model_name_munged then
     (* model name was not file-like, so we leave as is (e.g. from --name
        argument) *)

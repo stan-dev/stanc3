@@ -127,19 +127,21 @@ let try_get_new_lexbuf fname =
   let prior_loc =
     let lexbuf = Stack.top_exn include_stack in
     location_of_position lexbuf.lex_start_p in
-  let new_lexbuf, file = find_include fname in
   let new_lexbuf =
-    if
-      String.is_suffix ~suffix:".stanfunctions" file
-      && List.mem !included_files file ~equal:String.equal
-    then (
-      lexer_logger ("ignoring duplicated include  " ^ file);
-      Lexing.from_string "")
-    else (
-      lexer_logger ("opened " ^ file);
-      included_files := file :: !included_files;
-      new_lexbuf) in
-  new_file_start_position new_lexbuf file (Some prior_loc);
+    let buf, file = find_include fname in
+    let buf =
+      if
+        Common.Files.is_stanfunctions file
+        && List.mem !included_files file ~equal:String.equal
+      then (
+        lexer_logger ("ignoring duplicated include  " ^ file);
+        Lexing.from_string "")
+      else (
+        lexer_logger ("opened " ^ file);
+        included_files := file :: !included_files;
+        buf) in
+    new_file_start_position buf file (Some prior_loc);
+    buf in
   let dup_exists {Middle.Location.filename; included_from; _} =
     let is_dup = String.equal filename in
     let rec go = function
