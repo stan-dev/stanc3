@@ -1,5 +1,6 @@
-(** This module shadows [core] from Jane Street with a more lightweight version
-    that only depends on Base, Sexplib0, and Stdio. *)
+(** This module is intended to be a drop-in replacement for our previous use of
+    [core] from Jane Street. This lightweight module only depends on Base,
+    Sexplib0, and Stdio. *)
 
 include Base
 include Stdio

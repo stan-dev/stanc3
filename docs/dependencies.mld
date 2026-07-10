@@ -12,7 +12,7 @@ These are automatically installed through the [scripts/install_ocaml.sh] and
 
 - OCaml 5.5.0
 - Dune 3.5+
-- {{:https://v3.ocaml.org/p/base/latest/doc/index.html}Base} v0.17.0 (a standard library replacement/supplement)
+- {{:https://ocaml.org/p/base/v0.17.3/doc/index.html}Base} v0.17.3 (a standard library replacement)
 - {{:http://gallium.inria.fr/~fpottier/menhir/manual.html}Menhir} 20260209 (a parser generator and parsing library)
 - {{:https://github.com/ocaml-ppx/ppx_deriving}ppx_deriving} 6.1.1 (a tool for generating boilerplate code)
 - {{:https://erratique.ch/software/fmt}fmt} 0.11.0 (a library for pretty-printing of formatted text)
