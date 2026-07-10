@@ -309,7 +309,7 @@ module Helpers = struct
     match lval with
     | LVariable name, _ -> name
     | LTupleProjection (sub_lval, num), _ ->
-        get_lhs_name sub_lval ^ "." ^ string_of_int num
+        get_lhs_name sub_lval ^ "." ^ Int.to_string num
 
   (* Copied from AST's version in AST.ml *)
   let rec lvalue_of_expr_opt (expr : 'e Expr.t) :

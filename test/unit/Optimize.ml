@@ -73,7 +73,7 @@ let%expect_test "map_rec_state_stmt_loc" =
       Stmt.{pattern= SList mir.log_prob; meta= Location_span.empty} in
   let mir = {mir with log_prob= [mir_stmt]} in
   Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
-  print_endline (string_of_int num);
+  print_endline (Int.to_string num);
   [%expect
     {|
       log_prob {

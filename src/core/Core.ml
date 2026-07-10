@@ -89,12 +89,6 @@ module Obj = Stdlib.Obj
 
 let ( ^^ ) = Stdlib.( ^^ )
 let ( ** ) = Stdlib.( ** )
-let string_of_int = Stdlib.string_of_int
-let int_of_string = Stdlib.int_of_string
-let int_of_string_opt = Stdlib.int_of_string_opt
-let float_of_string = Stdlib.float_of_string
-let float_of_string_opt = Stdlib.float_of_string_opt
-let float_of_int = Stdlib.float_of_int
 let exit = Stdlib.exit
 
 type ('a, 'b) result = ('a, 'b) Stdlib.result

@@ -24,7 +24,7 @@ let print_mfp to_string (mfp : (int, 'a entry_exit) Map.Poly.t)
     [%sexp (s : Stmt.Located.Non_recursive.t)] |> Sexp.to_string_hum in
   Map.iteri mfp ~f:(fun ~key ~data ->
       print_endline
-        (string_of_int key ^ ":\n "
+        (Int.to_string key ^ ":\n "
         ^ print_stmt (Map.Poly.find_exn flowgraph_to_mir key)
         ^ ":\n " ^ print_set data.entry ^ " \t-> " ^ print_set data.exit))
 

@@ -49,7 +49,7 @@ let rec collect_deprecated_expr (acc : (Location_span.t * string) list)
       let w =
         match Map.find stan_lib_deprecations name with
         | Some (rename, (major, minor)) when not (expired (major, minor)) ->
-            let version = string_of_int major ^ "." ^ string_of_int minor in
+            let version = Int.to_string major ^ "." ^ Int.to_string minor in
             [ ( id_loc
               , name ^ " is deprecated and will be removed in Stan " ^ version
                 ^ ". Use " ^ rename
@@ -58,7 +58,7 @@ let rec collect_deprecated_expr (acc : (Location_span.t * string) list)
         | _ -> (
             match Map.find deprecated_odes name with
             | Some (rename, (major, minor)) ->
-                let version = string_of_int major ^ "." ^ string_of_int minor in
+                let version = Int.to_string major ^ "." ^ Int.to_string minor in
                 [ ( id_loc
                   , name ^ " is deprecated and will be removed in Stan "
                     ^ version ^ ". Use " ^ rename

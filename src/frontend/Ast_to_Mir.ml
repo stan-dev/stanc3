@@ -428,7 +428,7 @@ let rec check_decl var decl_type' decl_trans smeta adlevel =
 
 let check_sizedtype name st =
   let check x = function
-    | {Expr.pattern= Lit (Int, i); _} when float_of_string i >= 0. -> []
+    | {Expr.pattern= Lit (Int, i); _} when Float.of_string i >= 0. -> []
     | n ->
         [ Stmt.Helpers.internal_nrfunapp FnValidateSize
             Expr.Helpers.
@@ -762,7 +762,7 @@ let rec trans_sizedtype_decl declc tr name st =
         [str name; str (Fmt.str "%a" Pretty_printing.pp_typed_expression x); n]
       n.meta.loc in
   let grab_size fn n = function
-    | Ast.{expr= IntNumeral i; _} as s when float_of_string i >= 2. ->
+    | Ast.{expr= IntNumeral i; _} as s when Float.of_string i >= 2. ->
         ([], trans_expr s)
     | Ast.({expr= IntNumeral _; _} | {expr= Variable _; _}) as s ->
         let e = trans_expr s in
@@ -857,7 +857,7 @@ let rec trans_sizedtype_decl declc tr name st =
                (List.zip_exn subtypes Utils.(tuple_trans_exn tr))
                ~f:(fun ix (st, trans) ->
                  trans_sizedtype_decl declc trans
-                   (name ^ former_array_indices ^ "." ^ string_of_int (ix + 1))
+                   (name ^ former_array_indices ^ "." ^ Int.to_string (ix + 1))
                    st)) in
         (List.concat stmts, SizedType.STuple subtypes') in
   go 1 st

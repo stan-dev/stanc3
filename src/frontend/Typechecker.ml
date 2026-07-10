@@ -1082,7 +1082,7 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
       verify_identifier id;
       check_variable cf loc tenv id
   | IntNumeral s -> (
-      match float_of_string_opt s with
+      match Float.of_string_opt s with
       | Some i when i < 2_147_483_648.0 ->
           mk_typed_expression ~expr:(IntNumeral s) ~ad_level:DataOnly
             ~type_:UInt ~loc

@@ -306,7 +306,7 @@ let enumerate_tuple_names_io name (ut : t) =
     match ut with
     | UTuple ts ->
         List.concat_mapi ts ~f:(fun i t ->
-            loop (base ^ "." ^ string_of_int (i + 1)) t)
+            loop (base ^ "." ^ Int.to_string (i + 1)) t)
     | UArray _ when contains_tuple ut ->
         let scalar, _ = unwind_array_type ut in
         loop base scalar

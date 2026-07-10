@@ -31,7 +31,7 @@ let drive_parser parse_fun =
         ^^
         if !Debugging.grammar_logging then
           Scanf.format_from_string
-            ("(Parse error state " ^ string_of_int state ^ ")\n")
+            ("(Parse error state " ^ Int.to_string state ^ ")\n")
             ""
         else ""
       with _ ->

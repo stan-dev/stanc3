@@ -24,7 +24,7 @@ let rec num_expr_value (v : Expr.Typed.t) : (float * string) option =
   (* internal type promotions should be ignored *)
   | {pattern= Pattern.Promotion (e, _, _); _} -> num_expr_value e
   | {pattern= Pattern.Lit ((Real | Int), str); _} ->
-      Some (float_of_string str, str)
+      Some (Float.of_string str, str)
   | {pattern= Pattern.FunApp (StanLib ("PMinus__", FnPlain, _), [v]); _} -> (
       match num_expr_value v with
       | Some (v, s) -> Some (-.v, "-" ^ s)

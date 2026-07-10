@@ -94,7 +94,7 @@ module Typed = struct
 end
 
 module Helpers = struct
-  let int i = {meta= Typed.Meta.empty; pattern= Lit (Int, string_of_int i)}
+  let int i = {meta= Typed.Meta.empty; pattern= Lit (Int, Int.to_string i)}
 
   let float i =
     { meta= {Typed.Meta.empty with type_= UReal}
