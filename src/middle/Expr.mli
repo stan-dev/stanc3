@@ -41,17 +41,13 @@ module Typed : sig
 
   type nonrec t = (Meta.t[@compare.ignore]) t [@@deriving hash, sexp, compare]
 
+  val equal : t -> t -> bool
   val type_of : t -> UnsizedType.t
   val adlevel_of : t -> UnsizedType.autodifftype
   val fun_arg : t -> UnsizedType.autodifftype * UnsizedType.t
   val pp : t Fmt.t
 
   include Core.Comparator.S with type t := t
-
-  include
-    Core.Comparable.S
-      with type t := t
-       and type comparator_witness := comparator_witness
 end
 
 module Helpers : sig

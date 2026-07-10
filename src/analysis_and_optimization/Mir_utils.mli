@@ -160,12 +160,12 @@ val name_subst_stmt :
     provided Map. *)
 
 val expr_subst_expr :
-  Expr.Typed.t Expr.Typed.Map.t -> Expr.Typed.t -> Expr.Typed.t
+  Expr.Typed.t Map.M(Expr.Typed).t -> Expr.Typed.t -> Expr.Typed.t
 (** Substitute subexpressions in an expression according to the provided Map,
     trying to match on larger subexpressions before smaller ones. *)
 
 val expr_subst_stmt_base :
-     Expr.Typed.t Expr.Typed.Map.t
+     Expr.Typed.t Map.M(Expr.Typed).t
   -> (Expr.Typed.t, 'a) Stmt.Pattern.t
   -> (Expr.Typed.t, 'a) Stmt.Pattern.t
 (** Substitute subexpressions occurring at the top level in statements according

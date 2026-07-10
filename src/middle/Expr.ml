@@ -73,6 +73,7 @@ module Typed = struct
 
   type t = (Meta.t[@compare.ignore]) Fixed.t [@@deriving hash, sexp, compare]
 
+  let equal t1 t2 = compare t1 t2 = 0
   let type_of {meta= Meta.{type_; _}; _} = type_
   let adlevel_of {meta= Meta.{adlevel; _}; _} = adlevel
   let fun_arg {meta= Meta.{type_; adlevel; _}; _} = (adlevel, type_)
@@ -90,15 +91,6 @@ module Typed = struct
   end)
 
   include Comparator
-
-  include Comparable.Make_using_comparator (struct
-    type nonrec t = t
-
-    let sexp_of_t = sexp_of_t
-    let t_of_sexp = t_of_sexp
-
-    include Comparator
-  end)
 end
 
 module Helpers = struct

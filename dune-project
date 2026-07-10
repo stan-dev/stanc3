@@ -15,8 +15,10 @@
  (depends
   (ocaml
    (= 5.5.0))
-  (core
-   (= v0.17.2))
+  (base
+   (= v0.17.3))
+  (stdio
+   (= v0.17.0))
   (menhir
    (= 20260209))
   (ppx_deriving

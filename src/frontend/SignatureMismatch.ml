@@ -1,7 +1,6 @@
 open Core
 open Core.Poly
 open Middle
-module TypeMap = Core.Map.Make_using_comparator (UnsizedType)
 
 let set ctx key data = ctx := Map.set !ctx ~key ~data
 
@@ -358,7 +357,7 @@ let quoted = Fmt.styled (`Fg `Green) Fmt.(quote string)
 
 let pp_mismatch_details ~skipped ppf details =
   let open Fmt in
-  let ctx = ref TypeMap.empty in
+  let ctx = ref (Map.empty (module UnsizedType)) in
   let n_skipped = List.length skipped in
   let pp_excluded_message =
     Fmt.if' (n_skipped > 0)
@@ -410,7 +409,7 @@ let pp_mismatch_details ~skipped ppf details =
 
 let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
   let open Fmt in
-  let ctx = ref TypeMap.empty in
+  let ctx = ref (Map.empty (module UnsizedType)) in
   let rec pp_explain_rec ppf = function
     | ArgError (n, DataOnlyError) ->
         pf ppf "@[<hov>The@ %s@ argument%a@]" (index_str n) text

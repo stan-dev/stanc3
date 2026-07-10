@@ -967,7 +967,8 @@ let lazy_code_motion ?(preserve_stability = false) (mir : Program.Typed.t) =
       in
       Set.fold
         (Monotone_framework.used_expressions_stmt s.pattern)
-        ~init:Expr.Typed.Map.empty ~f:collect_expressions in
+        ~init:(Map.empty (module Expr.Typed))
+        ~f:collect_expressions in
     (* TODO: it'd be more efficient to just not accumulate constants in the
        static analysis *)
     let declarations_list =

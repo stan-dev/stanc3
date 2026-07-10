@@ -14,7 +14,7 @@ type factor =
 type factor_graph =
   { factor_map: (factor * label, vexpr Set.Poly.t) Map.Poly.t
   ; var_map: (vexpr, (factor * label) Set.Poly.t) Map.Poly.t }
-[@@deriving sexp]
+[@@deriving sexp_of]
 
 let extract_factors_statement stmt =
   match stmt with

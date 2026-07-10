@@ -1,11 +1,3 @@
-# rust
-/rust/target
-/bindgen_test/target
-**/*.rs.bk
-Cargo.lock
-math_iface/gen/*
-*.a
-
 # ocaml
 _opam
 _build
@@ -39,5 +31,4 @@ test/*.log
 # .hpp files in test folder
 test/**/*.hpp
 
-# .omir files in test folder
-test/**/*.omir
+compile_flags.txt

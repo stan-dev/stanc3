@@ -333,7 +333,6 @@ include Comparable.Make_using_comparator (struct
   type nonrec t = t
 
   let sexp_of_t = sexp_of_t
-  let t_of_sexp = t_of_sexp
 
   include Comparator
 end)
