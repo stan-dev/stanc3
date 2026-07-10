@@ -1,4 +1,4 @@
-open! Core
+open! Base
 
 let warnings = ref []
 let init () = warnings := []

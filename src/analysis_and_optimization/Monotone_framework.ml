@@ -1,7 +1,8 @@
 (** The common elements of a monotone framework *)
 
-open Core
-open Core.Poly
+open Base
+open Common.Poly_containers
+open Base.Poly
 open Monotone_framework_sigs
 open Mir_utils
 open Middle
@@ -15,8 +16,8 @@ let print_mfp to_string (mfp : (int, 'a entry_exit) Map.Poly.t)
   let print_stmt s =
     [%sexp (s : Stmt.Located.Non_recursive.t)] |> Sexp.to_string_hum in
   Map.iteri mfp ~f:(fun ~key ~data ->
-      print_endline
-        (string_of_int key ^ ":\n "
+      Stdio.print_endline
+        (Int.to_string key ^ ":\n "
         ^ print_stmt (Map.Poly.find_exn flowgraph_to_mir key)
         ^ ":\n " ^ print_set data.entry ^ " \t-> " ^ print_set data.exit))
 
@@ -129,7 +130,8 @@ let reverse (type l) (module F : FLOWGRAPH with type labels = l) =
     let compare = F.compare
     let hash = F.hash
     let sexp_of_t = F.sexp_of_t
-    let initials = Set.of_map_keys (Map.filter F.successors ~f:Set.is_empty)
+    let initials =
+      Set.Poly.of_list (Map.keys (Map.filter F.successors ~f:Set.is_empty))
 
     let successors =
       Map.fold F.successors
@@ -925,8 +927,8 @@ let propagation_mfp (prog : Program.Typed.t)
 
       let total =
         Set.Poly.union_list
-          [ Set.Poly.of_list (List.map ~f:fst3 prog.input_vars)
-          ; Set.Poly.of_list (List.map ~f:fst3 prog.output_vars)
+          [ Set.Poly.of_list (List.map ~f:(fun (x, _, _) -> x) prog.input_vars)
+          ; Set.Poly.of_list (List.map ~f:(fun (x, _, _) -> x) prog.output_vars)
           ; declared_variables_stmt
               (stmt_loc_of_stmt_loc_num flowgraph_to_mir mir).pattern ]
     end : TOTALTYPE
@@ -953,8 +955,8 @@ let reaching_definitions_mfp (mir : Program.Typed.t)
 
       let initial =
         Set.Poly.union_list
-          [ Set.Poly.of_list (List.map ~f:fst3 mir.input_vars)
-          ; Set.Poly.of_list (List.map ~f:fst3 mir.output_vars) ]
+          [ Set.Poly.of_list (List.map ~f:(fun (x, _, _) -> x) mir.input_vars)
+          ; Set.Poly.of_list (List.map ~f:(fun (x, _, _) -> x) mir.output_vars) ]
     end : INITIALTYPE
       with type vals = string) in
   let labels =
@@ -987,7 +989,7 @@ let initialized_vars_mfp (total : string Set.Poly.t)
 
 let globals (prog : Program.Typed.t) =
   Set.Poly.union_list
-    [ Set.Poly.of_list (List.map ~f:fst3 prog.output_vars)
+    [ Set.Poly.of_list (List.map ~f:(fun (x, _, _) -> x) prog.output_vars)
       (* It is not strictly necessary to exclude data variables from DCE.
          However,
 
@@ -996,7 +998,7 @@ let globals (prog : Program.Typed.t) =
 
          2. There is code added in codegen that is never represented in the MIR
          that may use data variables as if they're initialized *)
-    ; Set.Poly.of_list (List.map ~f:fst3 prog.input_vars)
+    ; Set.Poly.of_list (List.map ~f:(fun (x, _, _) -> x) prog.input_vars)
     ; Set.Poly.union_list (List.map ~f:var_declarations prog.prepare_data)
     ; Set.Poly.singleton "target" ]
 

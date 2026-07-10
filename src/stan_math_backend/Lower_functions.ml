@@ -1,4 +1,4 @@
-open Core
+open Base
 open Middle
 open Lower_expr
 open Lower_stmt
@@ -88,7 +88,7 @@ let return_optional_arg_types (args : Program.fun_arg_decl) =
         [Types.base_type t]
     | _ -> [t] in
   List.concat_mapi args ~f:(fun i (ad, _, ty) ->
-      template_p (TemplateType (sprintf "T%d__" i)) (ad, ty))
+      template_p (TemplateType (Printf.sprintf "T%d__" i)) (ad, ty))
 
 (** Print template arguments for C++ functions that need templates
     @param args
@@ -110,12 +110,12 @@ let template_parameters (args : Program.fun_arg_decl) =
       ([template], requires typ (TemplateType template), TemplateType template)
   in
   List.mapi args ~f:(fun i (ad, _, ty) ->
-      template_p (sprintf "T%d__" i) (ad, ty))
+      template_p (Printf.sprintf "T%d__" i) (ad, ty))
 
 let%expect_test "arg types templated correctly" =
   [(AutoDiffable, "xreal", UReal); (AutoDiffable, "yint", UInt)]
-  |> template_parameters |> List.map ~f:fst3 |> List.concat
-  |> String.concat ~sep:"," |> print_endline;
+  |> template_parameters |> List.map ~f:(fun (x, _, _) -> x) |> List.concat
+  |> String.concat ~sep:"," |> Stdio.print_endline;
   [%expect {| T0__,T1__ |}]
 
 let%expect_test "arg types tuple template" =
@@ -124,11 +124,11 @@ let%expect_test "arg types tuple template" =
       , "xreal"
       , UTuple [UReal; UMatrix; UInt] ) ]
     |> template_parameters |> List.unzip3 in
-  templates |> List.concat |> String.concat ~sep:"," |> print_endline;
-  reqs |> List.concat |> List.sexp_of_t sexp_of_template_parameter |> print_s;
+  templates |> List.concat |> String.concat ~sep:"," |> Stdio.print_endline;
+  reqs |> List.concat |> List.sexp_of_t sexp_of_template_parameter |> Stdio.print_s;
   type_
   |> Fmt.to_to_string (Fmt.list ~sep:Fmt.comma Cpp.Printing.pp_type_)
-  |> print_endline;
+  |> Stdio.print_endline;
   [%expect
     {|
     T0__
@@ -156,11 +156,11 @@ let%expect_test "arg types tuple template" =
   let templates, reqs, type_ =
     [(AutoDiffable, "xreal", UArray (UTuple [UArray UInt; UMatrix]))]
     |> template_parameters |> List.unzip3 in
-  templates |> List.concat |> String.concat ~sep:"," |> print_endline;
-  reqs |> List.concat |> List.sexp_of_t sexp_of_template_parameter |> print_s;
+  templates |> List.concat |> String.concat ~sep:"," |> Stdio.print_endline;
+  reqs |> List.concat |> List.sexp_of_t sexp_of_template_parameter |> Stdio.print_s;
   type_
   |> Fmt.to_to_string (Fmt.list ~sep:Fmt.comma Cpp.Printing.pp_type_)
-  |> print_endline;
+  |> Stdio.print_endline;
   [%expect
     {|
   T0__
@@ -365,12 +365,12 @@ let get_functor_requirements (p : Program.Numbered.t) =
   let rec find_functors_stmt accum stmt =
     Stmt.(Pattern.fold find_functors_expr find_functors_stmt accum stmt.pattern)
   in
-  Program.fold find_functors_expr find_functors_stmt Fn.const String.Map.empty p
+  Program.fold find_functors_expr find_functors_stmt Fn.const (Map.empty (module String)) p
 
 let collect_functors_functions (p : Program.Numbered.t) : defn list =
   let functor_required = get_functor_requirements p in
   (* overloaded functions generate only one functor struct per name *)
-  let structs = String.Table.create () in
+  let structs = Hashtbl.create (module String) in
   let register_functors (d : _ Program.fun_def) =
     let functors =
       Map.find_multi functor_required d.fdname
@@ -460,7 +460,7 @@ module Testing = struct
         |> Some
     ; fdloc= Location_span.empty }
     |> str "@[<v>%a" pp_fun_def_test
-    |> print_endline;
+    |> Stdio.print_endline;
     [%expect
       {|
     template <typename T0__, typename T1__,
@@ -521,7 +521,7 @@ module Testing = struct
         |> Some
     ; fdloc= Location_span.empty }
     |> str "@[<v>%a" pp_fun_def_test
-    |> print_endline;
+    |> Stdio.print_endline;
     [%expect
       {|
     template <typename T0__, typename T1__, typename T2__, typename T3__,

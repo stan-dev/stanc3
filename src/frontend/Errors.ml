@@ -1,6 +1,6 @@
 (** Setup of our compiler errors *)
 
-open Core
+open Base
 
 type t =
   | FileNotFound of string
@@ -21,7 +21,7 @@ let get_context ?code Middle.Location.{filename; included_from; _} =
       match !Include_files.include_provider with
       | FileSystemPaths _ ->
           (* So we can read directly from the filesystem *)
-          In_channel.read_lines filename
+          Stdio.In_channel.read_lines filename
       | InMemory m ->
           (* Or, we know we can find it in the map *)
           String.split_lines (Map.find_exn m filename))

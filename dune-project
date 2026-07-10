@@ -15,8 +15,24 @@
  (depends
   (ocaml
    (= 5.5.0))
-  (core
-   (= v0.17.2))
+  (base
+   (= v0.17.3))
+  (stdio
+   (= v0.17.0))
+  (sexplib0
+   (= v0.17.0))
+  (ppx_base
+   (= v0.17.0))
+  (ppx_pipebang
+   (= v0.17.0))
+  (ppx_sexp_message
+   (= v0.17.0))
+  (ppx_sexp_value
+   (= v0.17.0))
+  (ppx_expect
+   (= v0.17.3))
+  (ppx_inline_test
+   (= v0.17.1))
   (menhir
    (= 20260209))
   (ppx_deriving

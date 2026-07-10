@@ -1,13 +1,18 @@
 (** The parser for Stan. A Menhir file. *)
 %{
-open Core
+open Base
+
+(* Menhir-generated code uses [Obj] directly; rebind it to avoid Base's
+   deprecation alert on the stdlib module *)
+module Obj = Stdlib.Obj
+
 open Middle
 open Ast
 open Debugging
 open Preprocessor
 
 let parse_error msg loc =
-  Syntax_error.parse_error (Scanf.format_from_string msg "") (location_span_of_positions loc)
+  Syntax_error.parse_error (Stdlib.Scanf.format_from_string msg "") (location_span_of_positions loc)
 
 (* Takes a sized_basic_type and a list of sizes and repeatedly applies then
    SArray constructor, taking sizes off the list *)
@@ -39,7 +44,7 @@ let rec iterate_n f x = function 0 -> x | n -> iterate_n f (f x) (n - 1)
 
 let parse_tuple_slot ix_str (start, stop) =
   let slot = String.drop_prefix ix_str 1 in
-  match int_of_string_opt slot with
+  match Stdlib.int_of_string_opt slot with
   | None ->
       parse_error
         ("@[@{<light_red>Ill-formed index.@} Failed to parse integer from string \

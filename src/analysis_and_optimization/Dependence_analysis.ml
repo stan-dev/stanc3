@@ -1,5 +1,5 @@
-open Core
-open Core.Poly
+open Base
+open Base.Poly
 open Middle
 open Dataflow_types
 open Mir_utils
@@ -160,7 +160,7 @@ let mir_uninitialized_variables (mir : Program.Typed.t) :
   let globals = Set.union function_names (Set.Poly.of_list flag_variables) in
   let parameters =
     Set.Poly.of_list
-      (List.map ~f:fst3
+      (List.map ~f:(fun (x, _, _) -> x)
          (List.filter
             ~f:(fun (_, _, {out_block; _}) -> out_block = Parameters)
             mir.output_vars)) in

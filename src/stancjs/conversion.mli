@@ -1,7 +1,7 @@
 open Js_of_ocaml
 
 val get_includes_lenient :
-  'a Js.t Js.opt -> string Core.String.Map.t * string list
+  'a Js.t Js.opt -> string Base.Map.M(Base.String).t * string list
 (** Converts from a [{ [s:string]:string }] JS object type to an OCaml map, with
     warnings for bad input. *)
 
@@ -12,12 +12,12 @@ val process_flags :
      Js.js_string Js.t
   -> Js.js_string Js.t
   -> Js.js_string Js.t Js.js_array Js.t Js.opt
-  -> string Core.String.Map.t
-  -> (flags, string) result
+  -> string Base.Map.M(Base.String).t
+  -> (flags, string) Result.t
 (** Turn function inputs into a [Driver.Flags.t] *)
 
 val str_color :
-  color_output:bool -> ('a, Format.formatter, unit, string) format4 -> 'a
+  color_output:bool -> ('a, Stdlib.Format.formatter, unit, string) format4 -> 'a
 (** similar to [Fmt.str_like] but directly sets style rendering rather than
     copying from another ppf *)
 
@@ -34,5 +34,5 @@ val wrap_result :
   -> code:string
   -> color_output:bool
   -> warnings:string list
-  -> (string, Frontend.Errors.t) result
+  -> (string, Frontend.Errors.t) Result.t
   -> stancReturn Js.t

@@ -1,4 +1,4 @@
-open Core
+open Base
 open Common
 
 module Pattern = struct
@@ -309,7 +309,7 @@ module Helpers = struct
     match lval with
     | LVariable name, _ -> name
     | LTupleProjection (sub_lval, num), _ ->
-        get_lhs_name sub_lval ^ "." ^ string_of_int num
+        get_lhs_name sub_lval ^ "." ^ Int.to_string num
 
   (* Copied from AST's version in AST.ml *)
   let rec lvalue_of_expr_opt (expr : 'e Expr.t) :
@@ -388,10 +388,10 @@ module Helpers = struct
             ((LTupleProjection (lvariable "x", 3), [Index.Single 4]), 5)
         , [] ) ] in
     let pp = Fmt.(list ~sep:comma (Pattern.pp_lvalue int)) in
-    Fmt.(str "Before: @[<hov>%a@]" pp) lvals |> print_endline;
+    Fmt.(str "Before: @[<hov>%a@]" pp) lvals |> Stdio.print_endline;
     List.map ~f:lvalue_base_reference lvals
     |> Fmt.(str "After: @[<hov>%a@]" pp)
-    |> print_endline;
+    |> Stdio.print_endline;
     [%expect
       {|
       Before: x[1, 2, 3], x.1, x.2[3], x.3[4].5

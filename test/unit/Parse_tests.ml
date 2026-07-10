@@ -1,4 +1,4 @@
-open Core
+open Base
 open Frontend
 
 let print_ast_of_string code =
@@ -6,7 +6,7 @@ let print_ast_of_string code =
     Test_utils.untyped_ast_of_string code
     |> Result.map_error ~f:(Test_utils.error_to_string ~code)
     |> Result.ok_or_failwith in
-  print_s [%sexp (ast : Ast.untyped_program)]
+  Stdio.print_s [%sexp (ast : Ast.untyped_program)]
 
 (* TESTS *)
 let%expect_test "parse conditional" =

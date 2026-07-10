@@ -1,7 +1,7 @@
 (** Code for optimization passes on the MIR *)
 
-open Core
-open Core.Poly
+open Base
+open Base.Poly
 open Common
 open Middle
 open Mir_utils
@@ -80,7 +80,7 @@ let gen_inline_var (name : string) (id_var : string) =
   Gensym.generate ~prefix:("inline_" ^ name ^ "_" ^ id_var ^ "_") ()
 
 let replace_fresh_local_vars (fname : string) stmt =
-  let f (m : (string, string) Core.Map.Poly.t) = function
+  let f (m : (string, string) Base.Map.Poly.t) = function
     | Stmt.Pattern.Decl {decl_adtype; decl_type; decl_id; initialize} ->
         let new_name =
           match Map.Poly.find m decl_id with
@@ -509,7 +509,7 @@ let function_inlining (mir : Program.Typed.t) =
   (* We add only the functions with a single definition to the inline map.
      Overloaded functions cannot be inlined. *)
   let can_inline =
-    List.fold mir.functions_block ~init:String.Map.empty
+    List.fold mir.functions_block ~init:(Map.empty (module String))
       ~f:(fun accum Program.{fdname; _} ->
         Map.update accum fdname
           ~f:(Option.value_map ~default:true ~f:(fun _ -> false))) in
@@ -1117,7 +1117,7 @@ let optimize_minimal_variables
     ~(update_expr : string Set.Poly.t -> Expr.Typed.t -> Expr.Typed.t)
     ~(update_stmt :
           (Expr.Typed.t, (Expr.Typed.Meta.t, 'a) Stmt.t) Stmt.Pattern.t
-       -> string Core.Set.Poly.t
+       -> string Base.Set.Poly.t
        -> (Expr.Typed.t, (Expr.Typed.Meta.t, 'a) Stmt.t) Stmt.Pattern.t)
     ~(extra_variables : string -> string Set.Poly.t)
     ~(initial_variables : string Set.Poly.t) (stmt : Stmt.Located.t) =

@@ -41,17 +41,32 @@ module Typed : sig
 
   type nonrec t = (Meta.t[@compare.ignore]) t [@@deriving hash, sexp, compare]
 
+  val equal : t -> t -> bool
   val type_of : t -> UnsizedType.t
   val adlevel_of : t -> UnsizedType.autodifftype
   val fun_arg : t -> UnsizedType.autodifftype * UnsizedType.t
   val pp : t Fmt.t
 
-  include Core.Comparator.S with type t := t
+  include Base.Comparator.S with type t := t
 
-  include
-    Core.Comparable.S
-      with type t := t
-       and type comparator_witness := comparator_witness
+  (** [Set] and [Map] modules specialized to this type, replacing the ones
+      previously provided by [Core.Comparable.S] *)
+  module Set : sig
+    type expr := t
+    type nonrec t = (expr, comparator_witness) Base.Set.t
+
+    val empty : t
+    val singleton : expr -> t
+    val union_list : t list -> t
+  end
+
+  module Map : sig
+    type expr := t
+    type 'v t = (expr, 'v, comparator_witness) Base.Map.t
+
+    val empty : 'v t
+    val of_alist_exn : (expr * 'v) list -> 'v t
+  end
 end
 
 module Helpers : sig

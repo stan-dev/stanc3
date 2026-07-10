@@ -1,4 +1,4 @@
-open Core
+open Base
 open Middle
 open Dataflow_types
 
@@ -116,7 +116,7 @@ val index_var_set :
 (** The set of variables in an index. For use in RHS sets, not LHS assignment
     sets, except in a target term *)
 
-val expr_var_names_set : Expr.Typed.t -> string Core.Set.Poly.t
+val expr_var_names_set : Expr.Typed.t -> string Base.Set.Poly.t
 (** Return the names of the variables in an expression. *)
 
 val stmt_rhs : (Expr.Typed.t, 's) Stmt.Pattern.t -> Expr.Typed.t Set.Poly.t

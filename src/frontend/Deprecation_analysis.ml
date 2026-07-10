@@ -1,4 +1,4 @@
-open Core
+open Base
 open Ast
 open Middle
 
@@ -8,12 +8,12 @@ let expired (major, minor) =
   let removal_major, removal_minor = current_removal_version in
   removal_major > major || (removal_major = major && removal_minor >= minor)
 
-let deprecated_functions = String.Map.of_alist_exn []
+let deprecated_functions = Map.of_alist_exn (module String) []
 let stan_lib_deprecations = deprecated_functions
 
 (* TODO deprecate other pre-variadics like algebra_solver? *)
 let deprecated_odes =
-  String.Map.of_alist_exn
+  Map.of_alist_exn (module String)
     [ ("integrate_ode", ("ode_rk45", (3, 0)))
     ; ("integrate_ode_rk45", ("ode_rk45", (3, 0)))
     ; ("integrate_ode_bdf", ("ode_bdf", (3, 0)))
@@ -49,7 +49,7 @@ let rec collect_deprecated_expr (acc : (Location_span.t * string) list)
       let w =
         match Map.find stan_lib_deprecations name with
         | Some (rename, (major, minor)) when not (expired (major, minor)) ->
-            let version = string_of_int major ^ "." ^ string_of_int minor in
+            let version = Int.to_string major ^ "." ^ Int.to_string minor in
             [ ( id_loc
               , name ^ " is deprecated and will be removed in Stan " ^ version
                 ^ ". Use " ^ rename
@@ -58,7 +58,7 @@ let rec collect_deprecated_expr (acc : (Location_span.t * string) list)
         | _ -> (
             match Map.find deprecated_odes name with
             | Some (rename, (major, minor)) ->
-                let version = string_of_int major ^ "." ^ string_of_int minor in
+                let version = Int.to_string major ^ "." ^ Int.to_string minor in
                 [ ( id_loc
                   , name ^ " is deprecated and will be removed in Stan "
                     ^ version ^ ". Use " ^ rename

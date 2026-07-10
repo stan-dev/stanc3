@@ -3,7 +3,8 @@
 
     [let x : _ Nonempty_list.t = [1;2;3]]
 
-    In Core v0.18, we can replace this with [Core.Nonempty_list] *)
+    (Core, but not Base, provides an equivalent [Nonempty_list] since
+    v0.18) *)
 
 type 'a t = ( :: ) of 'a * 'a list [@@deriving sexp]
 

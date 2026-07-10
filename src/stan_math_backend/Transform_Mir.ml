@@ -1,5 +1,5 @@
-open Core
-open Core.Poly
+open Base
+open Base.Poly
 open Middle
 open Mangle
 
@@ -36,7 +36,7 @@ let rec change_kwrds_stmts s =
 (** A list of functions which return an Eigen block expression *)
 let eigen_block_expr_fns =
   ["head"; "tail"; "segment"; "col"; "row"; "block"; "sub_row"; "sub_col"]
-  |> String.Set.of_list
+  |> Set.of_list (module String)
 
 (** Eval indexed eigen types in UDF calls to prevent infinite template expansion
     if the call is recursive
@@ -52,7 +52,7 @@ let eigen_block_expr_fns =
     and this algorithm is O(n^3) so it's important to track only the function
     calls that really can propagate eigen templates. *)
 let break_eigen_cycles functions_block =
-  let callgraph = String.Table.create () in
+  let callgraph = Hashtbl.create (module String) in
   let eval_eigen_cycles fun_args calls (f : _ Program.fun_def) =
     let open Expr in
     let rec is_potentially_recursive = function
@@ -110,10 +110,10 @@ let break_eigen_cycles functions_block =
     let fun_args =
       List.filter_map fdargs ~f:(fun (_, n, t) ->
           if UnsizedType.is_eigen_type t then Some n else None)
-      |> String.Set.of_list in
+      |> Set.of_list (module String) in
     if Set.is_empty fun_args then fd
     else
-      let calls = String.Hash_set.create () in
+      let calls = Hash_set.create (module String) in
       let fndef = eval_eigen_cycles fun_args calls fd in
       if not (Hash_set.is_empty calls) then (
         (* update [callgraph] with the call paths going through the current
@@ -126,7 +126,7 @@ let break_eigen_cycles functions_block =
   List.map ~f:break_cycles functions_block
 
 let opencl_trigger_restrictions =
-  String.Map.of_alist_exn
+  Map.of_alist_exn (module String)
     [ ( "bernoulli_lpmf"
       , [ [ (0, UnsizedType.DataOnly, UnsizedType.UArray UnsizedType.UInt)
           ; (1, UnsizedType.DataOnly, UnsizedType.UReal) ] ] )
@@ -167,7 +167,7 @@ let opencl_supported_functions =
   ; "scaled_inv_chi_square_lpdf"; "skew_normal_lpdf"; "std_normal_lpdf"
   ; "student_t_lpdf"; "uniform_lpdf"; "weibull_lpdf"; "binomial_logit_lpmf"
   ; "binomial_logit_glm_lpmf" ]
-  |> String.Set.of_list
+  |> Set.of_list (module String)
 
 let opencl_suffix = "_opencl__"
 
@@ -292,7 +292,7 @@ let rec var_context_read_inside_tuple enclosing_tuple_name origin_type
           subtypes in
       let enclosing_names =
         List.mapi
-          ~f:(fun i _ -> enclosing_tuple_name ^ "." ^ string_of_int (i + 1))
+          ~f:(fun i _ -> enclosing_tuple_name ^ "." ^ Int.to_string (i + 1))
           subtypes in
       List.map2_exn
         ~f:(fun name projection ->
@@ -306,7 +306,7 @@ let rec var_context_read_inside_tuple enclosing_tuple_name origin_type
         | STuple subtypes ->
             ( List.mapi
                 ~f:(fun i _ ->
-                  enclosing_tuple_name ^ "." ^ string_of_int (i + 1))
+                  enclosing_tuple_name ^ "." ^ Int.to_string (i + 1))
                 subtypes
             , subtypes )
         | _ -> ([], []) in
@@ -502,7 +502,7 @@ let rec var_context_read_internal
         match tupl with
         | STuple subtypes ->
             ( List.mapi
-                ~f:(fun i _ -> decl_id ^ "." ^ string_of_int (i + 1))
+                ~f:(fun i _ -> decl_id ^ "." ^ Int.to_string (i + 1))
                 subtypes
             , subtypes )
         | _ -> (* impossible by above pattern patch *) ([], []) in
@@ -756,7 +756,7 @@ let%expect_test "Flatten slists" =
             |> s ]
         |> s ]
       |> flatten_slists_list) in
-  print_s [%sexp (stmt : (unit, unit) Stmt.t list)];
+  Stdio.print_s [%sexp (stmt : (unit, unit) Stmt.t list)];
   [%expect
     {|
     (((pattern
@@ -769,7 +769,7 @@ let%expect_test "Flatten slists" =
 
 let add_reads vars mkread stmts =
   let vars = List.map ~f:(fun (id, l, outvar) -> (id, (l, outvar))) vars in
-  let var_names = String.Map.of_alist_exn vars in
+  let var_names = Map.of_alist_exn (module String) vars in
   let add_read_to_decl (Stmt.{pattern; _} as stmt) =
     match pattern with
     | Decl ({decl_id; _} as decl_rec) when Map.mem var_names decl_id -> (
@@ -978,14 +978,14 @@ let is_opencl_var = String.is_suffix ~suffix:opencl_suffix
 let rec collect_vars_expr is_target accum Expr.{pattern; _} =
   Set.union accum
     (match pattern with
-    | Var s when is_target s -> String.Set.of_list [s]
-    | x -> Expr.Pattern.fold (collect_vars_expr is_target) String.Set.empty x)
+    | Var s when is_target s -> Set.of_list (module String) [s]
+    | x -> Expr.Pattern.fold (collect_vars_expr is_target) (Set.empty (module String)) x)
 
 let collect_opencl_vars s =
   let rec go accum s =
     Stmt.(Pattern.fold (collect_vars_expr is_opencl_var) go accum s.pattern)
   in
-  go String.Set.empty s
+  go (Set.empty (module String)) s
 
 let%expect_test "collect vars expr" =
   let mkvar s = Expr.{pattern= Var s; meta= Typed.Meta.empty} in
@@ -995,12 +995,12 @@ let%expect_test "collect vars expr" =
       { pattern= FunApp (StanLib ("print", FnPlain, AoS), args)
       ; meta= Typed.Meta.empty } in
   Stmt.{pattern= TargetPE fnapp; meta= Location_span.empty}
-  |> collect_opencl_vars |> String.Set.sexp_of_t |> print_s;
+  |> collect_opencl_vars |> [%sexp_of: Set.M(String).t] |> Stdio.print_s;
   [%expect {| (w_opencl__ x_opencl__) |}]
 
 let%expect_test "insert before" =
   let l = [1; 2; 3; 4; 5; 6] |> insert_before (( = ) 6) [999] in
-  [%sexp (l : int list)] |> print_s;
+  [%sexp (l : int list)] |> Stdio.print_s;
   [%expect {| (1 2 3 4 5 999 6) |}]
 
 let map_prog_stmt_lists f (p : ('a, 'b, 'c) Program.t) =
@@ -1124,7 +1124,7 @@ let trans_prog ?(use_opencl = false) (p : Program.Typed.t) =
     |> add_reads p.output_vars param_deserializer_read
     |> translate_to_open_cl in
   let opencl_vars =
-    String.Set.union_list
+    Set.union_list (module String)
       (List.concat_map
          ~f:(List.map ~f:collect_opencl_vars)
          [log_prob; generate_quantities])

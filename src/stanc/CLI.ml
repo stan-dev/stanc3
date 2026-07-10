@@ -1,4 +1,4 @@
-open Core
+open Base
 open Frontend
 open Cmdliner
 
@@ -38,7 +38,7 @@ module Options = struct
         | 0 -> false
         | 1 -> true
         | _ ->
-            Printf.eprintf
+            Stdio.eprintf
               "Warning: Duplicated flag '--%s' ignored, consider updating your \
                call to stanc!"
               name;
@@ -243,7 +243,7 @@ module Debug_Options = struct
       (function
         | None -> `Ok None
         | Some file -> (
-            try `Ok (Some ("'" ^ file ^ "'", In_channel.read_all file))
+            try `Ok (Some ("'" ^ file ^ "'", Stdio.In_channel.read_all file))
             with _ ->
               `Error (true, "File '" ^ file ^ "' not found or cannot be opened.")
             ))

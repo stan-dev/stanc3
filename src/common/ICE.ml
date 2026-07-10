@@ -1,8 +1,8 @@
 (** Internal compiler errors *)
 
-open Core
+open Base
 
-(** An alias of [Core.raise_s]. This used to do more processing, for now it is
+(** An alias of [Base.raise_s]. This used to do more processing, for now it is
     preserved just as a nicer marker in the code *)
 let internal_compiler_error = raise_s
 
@@ -13,7 +13,8 @@ let with_exn_message f =
   try Ok (f ())
   with e ->
     let bt =
-      if Printexc.backtrace_status () then Printexc.get_backtrace ()
+      if Backtrace.Exn.am_recording () then
+        Backtrace.to_string (Backtrace.Exn.most_recent ())
       else "Backtrace missing." in
     Error
       (Fmt.str

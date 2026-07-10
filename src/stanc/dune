@@ -3,14 +3,22 @@
  (modes
   (byte c)
   (best exe))
- (libraries core fmt cmdliner fmt.cli fmt.tty driver stan_math_signatures)
+ (libraries
+  base
+  stdio
+  fmt
+  cmdliner
+  fmt.cli
+  fmt.tty
+  driver
+  stan_math_signatures)
  (instrumentation
   (backend bisect_ppx))
  (modules Stanc CLI)
  (public_name stanc)
  (package stanc)
  (preprocess
-  (pps ppx_jane)))
+  (pps ppx_base ppx_pipebang ppx_sexp_message ppx_sexp_value)))
 
 (rule
  (target

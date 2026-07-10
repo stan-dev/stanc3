@@ -1,7 +1,7 @@
 (** Lowering of Stan statements to C++ *)
 
-open Core
-open Core.Poly
+open Base
+open Base.Poly
 open Middle
 open Cpp
 open Lower_expr
@@ -359,7 +359,7 @@ module Testing = struct
       (lower_assign_sized
          (SArray (SArray (SMatrix (AoS, int 2, int 3), int 4), int 5))
          DataOnly Stmt.Pattern.Uninit)
-    |> print_endline;
+    |> Stdio.print_endline;
     [%expect {| |}]
 
   let%expect_test "set size mat array" =
@@ -369,7 +369,7 @@ module Testing = struct
       (lower_assign_sized
          (SArray (SArray (SMatrix (AoS, int 2, int 3), int 4), int 5))
          DataOnly Stmt.Pattern.Default)
-    |> print_endline;
+    |> Stdio.print_endline;
     [%expect
       {|
     std::vector<std::vector<Eigen::Matrix<double,-1,-1>>>(5,

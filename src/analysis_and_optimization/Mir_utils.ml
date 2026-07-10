@@ -1,5 +1,5 @@
-open Core
-open Core.Poly
+open Base
+open Base.Poly
 open Middle
 open Middle.Program
 open Middle.Expr
@@ -24,7 +24,7 @@ let rec num_expr_value (v : Expr.Typed.t) : (float * string) option =
   (* internal type promotions should be ignored *)
   | {pattern= Pattern.Promotion (e, _, _); _} -> num_expr_value e
   | {pattern= Pattern.Lit ((Real | Int), str); _} ->
-      Some (float_of_string str, str)
+      Some (Float.of_string str, str)
   | {pattern= Pattern.FunApp (StanLib ("PMinus__", FnPlain, _), [v]); _} -> (
       match num_expr_value v with
       | Some (v, s) -> Some (-.v, "-" ^ s)
@@ -78,7 +78,7 @@ let data_set ?(exclude_transformed = false) ?(exclude_ints = false)
   (* Possibly remove ints from the data set *)
   let filtered_data =
     let remove_ints = Set.filter ~f:(fun (_, _, st) -> st <> SizedType.SInt) in
-    Set.Poly.map ~f:fst3 ((if exclude_ints then remove_ints else Fn.id) data)
+    Set.Poly.map ~f:(fun (x, _, _) -> x) ((if exclude_ints then remove_ints else Fn.id) data)
   in
   (* Transformed data are declarations in prepare_data but excluding data *)
   if exclude_transformed then filtered_data
@@ -87,7 +87,7 @@ let data_set ?(exclude_transformed = false) ?(exclude_ints = false)
       Set.diff
         (Set.Poly.union_list
            (List.map ~f:top_var_declarations mir.prepare_data))
-        (Set.Poly.map ~f:fst3 data) in
+        (Set.Poly.map ~f:(fun (x, _, _) -> x) data) in
     Set.union trans_data filtered_data
 
 let parameter_set ?(include_transformed = false) (mir : Program.Typed.t) =
@@ -102,7 +102,7 @@ let parameter_set ?(include_transformed = false) (mir : Program.Typed.t) =
        mir.output_vars)
 
 let parameter_names_set ?(include_transformed = false) (mir : Program.Typed.t) =
-  Set.Poly.map ~f:fst3 (parameter_set ~include_transformed mir)
+  Set.Poly.map ~f:(fun (x, _, _) -> x) (parameter_set ~include_transformed mir)
 
 let rec var_declarations Stmt.{pattern; _} : string Set.Poly.t =
   match pattern with
@@ -271,7 +271,7 @@ let stmt_rhs stmt =
    |Break | Continue | Skip | Decl _ | Profile _ | Block _ | SList _ ->
       Set.Poly.empty
 
-let union_map (set : ('a, 'c) Set_intf.Set.t) ~(f : 'a -> 'b Set.Poly.t) =
+let union_map (set : ('a, 'c) Set.t) ~(f : 'a -> 'b Set.Poly.t) =
   Set.fold set ~init:Set.Poly.empty ~f:(fun s a -> Set.union s (f a))
 
 let stmt_rhs_var_set stmt = union_map (stmt_rhs stmt) ~f:expr_var_set
@@ -495,6 +495,6 @@ let%expect_test "cleanup" =
   let body = Block [Skip |> swrap] |> swrap in
   let s = For {loopvar= "i"; lower= loop_bottom; upper= loop_bottom; body} in
   let res = [s |> swrap] |> cleanup_empty_stmts in
-  [%sexp (res : Stmt.Located.t list)] |> print_s;
+  [%sexp (res : Stmt.Located.t list)] |> Stdio.print_s;
   [%expect {|
     () |}]

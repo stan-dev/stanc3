@@ -1,6 +1,6 @@
 (** Types which have a concrete size associated, e.g. [vector[n]] *)
 
-open Core
+open Base
 
 type 'a t =
   | SInt
@@ -161,7 +161,7 @@ let%expect_test "dims" =
              ( SMatrix
                  (Mem_pattern.AoS, Expr.Helpers.str "x", Expr.Helpers.str "y")
              , Expr.Helpers.str "z" ))))
-  |> print_endline;
+  |> Stdio.print_endline;
   [%expect {| z, x, y |}]
 
 let rec contains_tuple st =
@@ -242,5 +242,5 @@ let%expect_test "dims" =
   let sclr, dims = get_array_dims st in
   let st2 = build_sarray dims sclr in
   let open Fmt in
-  pf stdout "%a = %a" (pp Expr.Typed.pp) st (pp Expr.Typed.pp) st2;
+  pf Fmt.stdout "%a = %a" (pp Expr.Typed.pp) st (pp Expr.Typed.pp) st2;
   [%expect {| array[array[real, N], 1] = array[array[real, N], 1] |}]

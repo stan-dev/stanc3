@@ -1,7 +1,7 @@
 (** Lowering of Stan expressions to C++ *)
 
-open Core
-open Core.Poly
+open Base
+open Base.Poly
 open Middle
 open Cpp
 
@@ -37,7 +37,7 @@ let fn_renames =
     ; ("lower_upper_bound_jacobian", "stan::math::lub_constrain")
     ; ("lower_upper_bound_constrain", "stan::math::lub_constrain")
     ; ("lower_upper_bound_unconstrain", "stan::math::lub_free") ]
-  |> String.Map.of_alist_exn
+  |> Map.of_alist_exn (module String)
 
 let constraint_to_string = function
   | Transformation.Ordered -> Some "ordered"
@@ -64,7 +64,7 @@ let constraint_to_string = function
 
 let functor_suffix = "_functor__"
 let reduce_sum_functor_suffix = "_rsfunctor__"
-let variadic_functor_suffix x = sprintf "_variadic%d_functor__" x
+let variadic_functor_suffix x = Printf.sprintf "_variadic%d_functor__" x
 
 type variadic = FixedArgs | ReduceSum | VariadicHOF of int
 [@@deriving compare, hash]
@@ -226,7 +226,7 @@ and lower_binary_fun f es = Exprs.fun_call f (lower_exprs es)
 and vector_literal ?(column = false) scalar es =
   let open Cpp.DSL in
   let vec = if column then Types.vector scalar else Types.row_vector scalar in
-  let make_vector size = vec.:{Literal (string_of_int size)} in
+  let make_vector size = vec.:{Literal (Int.to_string size)} in
   if List.is_empty es then make_vector 0
   else
     let vector = make_vector (List.length es) in
@@ -616,34 +616,34 @@ module Testing = struct
     Fmt.str "%a" Cpp.Printing.pp_expr (lower_expr @@ dummy_locate e)
 
   let%expect_test "pp_expr1" =
-    printf "%s" (pp_unlocated (Var "a"));
+    Stdio.printf "%s" (pp_unlocated (Var "a"));
     [%expect {| a |}]
 
   let%expect_test "pp_expr2" =
-    printf "%s" (pp_unlocated (Lit (Str, "b")));
+    Stdio.printf "%s" (pp_unlocated (Lit (Str, "b")));
     [%expect {| "b" |}]
 
   let%expect_test "pp_expr3" =
-    printf "%s" (pp_unlocated (Lit (Int, "112")));
+    Stdio.printf "%s" (pp_unlocated (Lit (Int, "112")));
     [%expect {| 112 |}]
 
   let%expect_test "pp_expr4" =
-    printf "%s" (pp_unlocated (Lit (Int, "112")));
+    Stdio.printf "%s" (pp_unlocated (Lit (Int, "112")));
     [%expect {| 112 |}]
 
   let%expect_test "pp_expr5" =
-    printf "%s" (pp_unlocated (FunApp (StanLib ("pi", FnPlain, AoS), [])));
+    Stdio.printf "%s" (pp_unlocated (FunApp (StanLib ("pi", FnPlain, AoS), [])));
     [%expect {| stan::math::pi() |}]
 
   let%expect_test "pp_expr6" =
-    printf "%s"
+    Stdio.printf "%s"
       (pp_unlocated
          (FunApp
             (StanLib ("sqrt", FnPlain, AoS), [dummy_locate (Lit (Int, "123"))])));
     [%expect {| stan::math::sqrt(123) |}]
 
   let%expect_test "pp_expr7" =
-    printf "%s"
+    Stdio.printf "%s"
       (pp_unlocated
          (FunApp
             ( StanLib ("atan", FnPlain, AoS)
@@ -652,7 +652,7 @@ module Testing = struct
     [%expect {| stan::math::atan(123, 1.2) |}]
 
   let%expect_test "pp_expr9" =
-    printf "%s"
+    Stdio.printf "%s"
       (pp_unlocated
          (TernaryIf
             ( dummy_locate (Lit (Int, "1"))
@@ -661,11 +661,11 @@ module Testing = struct
     [%expect {| (1 ? 1.2 : 2.3) |}]
 
   let%expect_test "pp_expr10" =
-    printf "%s" (pp_unlocated (Indexed (dummy_locate (Var "a"), [All])));
+    Stdio.printf "%s" (pp_unlocated (Indexed (dummy_locate (Var "a"), [All])));
     [%expect {| stan::model::rvalue(a, "a", stan::model::index_omni()) |}]
 
   let%expect_test "pp_expr11" =
-    printf "%s"
+    Stdio.printf "%s"
       (pp_unlocated
          (FunApp
             ( UserDefined ("poisson_rng", FnRng)
@@ -673,9 +673,9 @@ module Testing = struct
     [%expect {| poisson_rng(123, base_rng__, pstream__) |}]
 
   let%expect_test "pp_expr12" =
-    printf "%s\n"
+    Stdio.printf "%s\n"
       (Fmt.str "%a" Cpp.Printing.pp_expr (vector_literal Cpp.Double []));
-    printf "%s"
+    Stdio.printf "%s"
       (Fmt.str "%a" Cpp.Printing.pp_expr
          (vector_literal ~column:true Cpp.Double []));
     [%expect

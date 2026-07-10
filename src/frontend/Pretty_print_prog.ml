@@ -1,5 +1,5 @@
-open Core
-open Core.Poly
+open Base
+open Base.Poly
 open Ast
 open Fmt
 open Pretty_printing
@@ -31,10 +31,10 @@ let pp_program ~bare_functions ~line_length ~inline_includes ~strip_comments ppf
     ; modelblock= bm
     ; generatedquantitiesblock= bgq
     ; comments } =
-  Format.pp_set_margin ppf line_length;
+  Stdlib.Format.pp_set_margin ppf line_length;
   set_comments ~inline_includes ~strip_comments comments;
   print_included := inline_includes;
-  Format.pp_open_vbox ppf 0;
+  Stdlib.Format.pp_open_vbox ppf 0;
   if bare_functions then pp_bare_block ppf @@ Option.value_exn bf
   else
     let blocks =

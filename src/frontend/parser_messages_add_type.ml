@@ -1,5 +1,5 @@
 let () =
-  let code = In_channel.input_all In_channel.stdin in
+  let code = Stdio.In_channel.input_all Stdio.In_channel.stdin in
   let code =
     (* we modify the code to give it a type annotation. This forces the compiler
        to check the validitiy of our messages as Format strings at compile time,
@@ -9,4 +9,4 @@ let () =
   (* Strict newlines ('\n') can break things in formatting, we replace them with
      break hints *)
   let code = Str.global_replace (Str.regexp {|\\n|}) "@." code in
-  print_string code
+  Stdio.print_string code

@@ -2,7 +2,7 @@ open Middle
 
 type t
 
-val pp : Format.formatter -> t -> unit
+val pp : Stdlib.Format.formatter -> t -> unit
 val location : t -> Location_span.t
 val invalid_return : Location_span.t -> UnsizedType.t -> UnsizedType.t -> t
 

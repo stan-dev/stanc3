@@ -1,4 +1,4 @@
-open Core
+open Base
 open Middle
 
 let rec sizedtype_to_json (st : Expr.Typed.t SizedType.t) : Yojson.Basic.t =
@@ -31,7 +31,7 @@ let rec sizedtype_to_json (st : Expr.Typed.t SizedType.t) : Yojson.Basic.t =
   | STuple subtypes ->
       `Assoc
         [ ("name", `String "tuple")
-        ; ("num_elements", `String (string_of_int (List.length subtypes)))
+        ; ("num_elements", `String (Int.to_string (List.length subtypes)))
         ; ("element_types", `List (List.map ~f:sizedtype_to_json subtypes)) ]
 
 let out_var_json (name, st, block) : Yojson.Basic.t =
@@ -44,7 +44,7 @@ let%expect_test "outvar to json pretty" =
   let var x = {Expr.pattern= Var x; meta= Expr.Typed.Meta.empty} in
   (* the following is equivalent to: parameters { vector[N] var_one[K]; } *)
   ("var_one", SArray (SVector (Mem_pattern.AoS, var "N"), var "K"), Parameters)
-  |> out_var_json |> Yojson.Basic.pretty_to_string |> print_endline;
+  |> out_var_json |> Yojson.Basic.pretty_to_string |> Stdio.print_endline;
   [%expect
     {|
   {
@@ -77,7 +77,7 @@ let%expect_test "outvar to json" =
   [ ( "var_one"
     , SizedType.SArray (SVector (AoS, var "N"), var "K")
     , Program.Parameters ) ]
-  |> out_var_interpolated_json_str |> print_endline;
+  |> out_var_interpolated_json_str |> Stdio.print_endline;
   [%expect
     {|
     "[{\"name\":\"var_one\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(K) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}},\"block\":\"parameters\"}]" |}]

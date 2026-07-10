@@ -1,14 +1,14 @@
 (* A partial evaluator for use in static analysis and optimization *)
 
-open Core
-open Core.Poly
+open Base
+open Base.Poly
 open Middle
 
 exception Rejected of Location_span.t * string
 
 let rec is_int query Expr.{pattern; _} =
   match pattern with
-  | Lit (Int, i) | Lit (Real, i) -> float_of_string i = float_of_int query
+  | Lit (Int, i) | Lit (Real, i) -> Float.of_string i = Float.of_int query
   | Promotion (e, _, _) -> is_int query e
   | _ -> false
 

@@ -1,6 +1,6 @@
-open Core
+open Base
 
-type styled_text = (unit, Format.formatter, unit) format
+type styled_text = (unit, Stdlib.Format.formatter, unit) format
 
 (** Our type of syntax error information *)
 type err = Lexing | UnexpectedEOF | Include of string | Parsing of styled_text
@@ -16,7 +16,7 @@ let kind (_, err) =
   | Include _ -> "include error"
 
 (** Sets up the semantic tag machinery
-    (https://ocaml.org/manual/api/Format.html#tags) to print ANSI escape codes
+    (https://ocaml.org/manual/api/Stdlib.Format.html#tags) to print ANSI escape codes
     for formatting *)
 let pp_styled_text : styled_text Fmt.t =
  fun ppf format_string ->
@@ -61,8 +61,8 @@ let pp_styled_text : styled_text Fmt.t =
         |> List.take_while ~f:(String.( <> ) "0")
         |> List.rev in
       let escs = String.concat ~sep:";" ("0" :: styles_until_reset) in
-      sprintf "\027[%sm" escs in
-    Format.
+      Printf.sprintf "\027[%sm" escs in
+    Stdlib.Format.
       { former with
         mark_open_stag=
           (function
@@ -82,17 +82,17 @@ let pp_styled_text : styled_text Fmt.t =
   match Fmt.style_renderer ppf with
   | `None -> Fmt.pf ppf format_string
   | `Ansi_tty ->
-      let former = Format.pp_get_formatter_stag_functions ppf () in
-      let marks = Format.pp_get_mark_tags ppf () in
-      Format.pp_set_formatter_stag_functions ppf (ansi_stags former);
-      Format.pp_set_mark_tags ppf true;
-      Fun.protect
-        (fun () ->
+      let former = Stdlib.Format.pp_get_formatter_stag_functions ppf () in
+      let marks = Stdlib.Format.pp_get_mark_tags ppf () in
+      Stdlib.Format.pp_set_formatter_stag_functions ppf (ansi_stags former);
+      Stdlib.Format.pp_set_mark_tags ppf true;
+      Exn.protect
+        ~f:(fun () ->
           Fmt.pf ppf format_string;
           Fmt.flush ppf ())
         ~finally:(fun () ->
-          Format.pp_set_formatter_stag_functions ppf former;
-          Format.pp_set_mark_tags ppf marks)
+          Stdlib.Format.pp_set_formatter_stag_functions ppf former;
+          Stdlib.Format.pp_set_mark_tags ppf marks)
 
 let pp ppf (_, err) =
   match err with
@@ -127,7 +127,7 @@ module Tests = struct
        want@}!@}" in
     Fmt.set_style_renderer Fmt.stdout `None;
     pp_styled_text Fmt.stdout s;
-    Format.pp_print_newline Fmt.stdout ();
+    Stdlib.Format.pp_print_newline Fmt.stdout ();
     Fmt.set_style_renderer Fmt.stdout `Ansi_tty;
     pp_styled_text Fmt.stdout s;
     [%expect
@@ -172,7 +172,7 @@ module Tests = struct
     in
     Fmt.set_style_renderer Fmt.stdout `None;
     pp_styled_text Fmt.stdout s;
-    Format.pp_print_newline Fmt.stdout ();
+    Stdlib.Format.pp_print_newline Fmt.stdout ();
     Fmt.set_style_renderer Fmt.stdout `Ansi_tty;
     pp_styled_text Fmt.stdout s;
     [%expect

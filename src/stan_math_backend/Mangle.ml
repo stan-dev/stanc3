@@ -8,7 +8,7 @@
     NB: the use of a leading _ is essential, because the lexer won't allow this
     in a user-created variable. *)
 
-open Core
+open Base
 
 let kwrds_prefix = "_stan_"
 let remove_prefix s = String.chop_prefix_if_exists ~prefix:kwrds_prefix s
@@ -16,7 +16,7 @@ let prepend_kwrd x = kwrds_prefix ^ x
 
 let cpp_kwrds =
   (* C++ keywords that are not stan keywords *)
-  String.Set.of_list
+  Set.of_list (module String)
     ([ "alignas"; "alignof"; "and"; "and_eq"; "asm"; "bitand"; "bitor"; "bool"
      ; "case"; "catch"; "char"; "char16_t"; "char32_t"; "class"; "compl"
      ; "const"; "constexpr"; "const_cast"; "decltype"; "default"; "delete"; "do"

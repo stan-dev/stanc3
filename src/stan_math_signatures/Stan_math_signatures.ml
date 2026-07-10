@@ -1,7 +1,7 @@
 (** The signatures of the Stan Math library, which are used for type checking *)
-open Core
+open Base
 
-open Core.Poly
+open Base.Poly
 open Middle
 
 (** The [Generated_signatures] module is produced by the [Generate.ml]
@@ -71,7 +71,7 @@ let make_assignmentoperator_stan_math_signatures assop =
     | assop -> operator_to_stan_math_fns assop)
   |> List.concat_map ~f:get_sigs
   |> List.concat_map ~f:(function
-    | [(ad1, lhs); (ad2, rhs)], ReturnType rtype, _, _
+    | [(ad1, lhs); (ad2, rhs)], UnsizedType.ReturnType rtype, _, _
       when rtype = lhs
            && not
                 ((assop = Operator.EltTimes || assop = Operator.EltDivide)
@@ -119,7 +119,7 @@ let string_operator_to_stan_math_fns str =
 
 let pretty_print_all_math_sigs ppf () =
   let open Fmt in
-  Format.pp_set_margin ppf 180;
+  Stdlib.Format.pp_set_margin ppf 180;
   let pp_sig ppf (name, (args, rt, _, _)) =
     pf ppf "%s(@[<h>%a@]) => %a" name
       (list ~sep:comma UnsizedType.pp)
@@ -164,7 +164,7 @@ let embedded_laplace_functions =
   ; "laplace_latent_neg_binomial_2_log_rng"
   ; "laplace_latent_tol_neg_binomial_2_log_rng"
   ; "laplace_latent_poisson_log_rng"; "laplace_latent_tol_poisson_log_rng" ]
-  |> String.Set.of_list
+  |> Set.of_list (module String)
 
 let is_embedded_laplace_fn name =
   Set.mem embedded_laplace_functions (Utils.stdlib_distribution_name name)
@@ -179,7 +179,7 @@ let laplace_helper_lik_args =
   ; ( "poisson_log"
     , [ (AutoDiffable, UArray UInt); (AutoDiffable, UArray UInt)
       ; (AutoDiffable, UVector) ] ) ]
-  |> String.Map.of_alist_exn
+  |> Map.of_alist_exn (module String)
 
 let laplace_helper_param_types name =
   let without_prefix =
@@ -208,7 +208,7 @@ let disallowed_second_order =
   [ "algebra_solver"; "algebra_solver_newton"; "integrate_1d"; "integrate_ode"
   ; "integrate_ode_adams"; "integrate_ode_bdf"; "integrate_ode_rk45"; "map_rect"
   ; "hmm_marginal"; "hmm_hidden_state_prob" ]
-  |> String.Set.of_list
+  |> Set.of_list (module String)
 
 let lacks_higher_order_autodiff name =
   Set.mem disallowed_second_order name || is_special_function_name name

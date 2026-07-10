@@ -1,7 +1,7 @@
 (** Types which have dimensionalities but not sizes, e.g. [array[,,]] *)
 
-open Core
-open Core.Poly
+open Base
+open Base.Poly
 
 type t =
   | UInt
@@ -142,19 +142,19 @@ let lub_ad_type xs =
 let%expect_test "lub_ad_type1" =
   let ads = [DataOnly; DataOnly; DataOnly; AutoDiffable] in
   let lub = lub_ad_type ads in
-  print_s [%sexp (lub : autodifftype option)];
+  Stdio.print_s [%sexp (lub : autodifftype option)];
   [%expect "(AutoDiffable)"]
 
 let%expect_test "lub_ad_type2" =
   let ads = [DataOnly; DataOnly; DataOnly] in
   let lub = lub_ad_type ads in
-  print_s [%sexp (lub : autodifftype option)];
+  Stdio.print_s [%sexp (lub : autodifftype option)];
   [%expect "(DataOnly)"]
 
 let%expect_test "lub_ad_type3" =
   let ads = [AutoDiffable; DataOnly; DataOnly; DataOnly] in
   let lub = lub_ad_type ads in
-  print_s [%sexp (lub : autodifftype option)];
+  Stdio.print_s [%sexp (lub : autodifftype option)];
   [%expect "(AutoDiffable)"]
 
 (** Given two types find the minimal type both can convert to *)
@@ -306,7 +306,7 @@ let enumerate_tuple_names_io name (ut : t) =
     match ut with
     | UTuple ts ->
         List.concat_mapi ts ~f:(fun i t ->
-            loop (base ^ "." ^ string_of_int (i + 1)) t)
+            loop (base ^ "." ^ Int.to_string (i + 1)) t)
     | UArray _ when contains_tuple ut ->
         let scalar, _ = unwind_array_type ut in
         loop base scalar
@@ -316,7 +316,7 @@ let enumerate_tuple_names_io name (ut : t) =
 let%expect_test "tuple names" =
   let t = UArray (UTuple [UInt; UArray (UTuple [UReal; UComplex]); UVector]) in
   let res = enumerate_tuple_names_io "foo" t in
-  [%sexp (res : string list)] |> print_s;
+  [%sexp (res : string list)] |> Stdio.print_s;
   [%expect {|
       (foo.1 foo.2.1 foo.2.2 foo.3) |}]
 
@@ -333,7 +333,6 @@ include Comparable.Make_using_comparator (struct
   type nonrec t = t
 
   let sexp_of_t = sexp_of_t
-  let t_of_sexp = t_of_sexp
 
   include Comparator
 end)

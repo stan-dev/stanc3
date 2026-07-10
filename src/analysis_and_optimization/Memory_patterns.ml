@@ -1,5 +1,5 @@
-open Core
-open Core.Poly
+open Base
+open Base.Poly
 open Middle
 
 type demotion = int * Mem_pattern.t * string [@@deriving compare]
@@ -606,7 +606,7 @@ and modify_expr ?force_demotion:(force = false)
     @param modifiable_set The name of the variable we are searching for. *)
 let rec modify_stmt_pattern
     (pattern : (Expr.Typed.t, Stmt.Located.t) Stmt.Pattern.t)
-    (modifiable_set : string Core.Set.Poly.t) =
+    (modifiable_set : string Base.Set.Poly.t) =
   let mod_expr force = modify_expr ~force_demotion:force modifiable_set in
   let mod_stmt stmt = modify_stmt stmt modifiable_set in
   match pattern with

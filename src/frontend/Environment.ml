@@ -1,5 +1,5 @@
-open Core
-open Core.Poly
+open Base
+open Base.Poly
 open Middle
 
 type originblock =
@@ -40,7 +40,7 @@ let location = function
       Some location
   | {kind= `StanMath; _} -> None
 
-type t = info list String.Map.t
+type t = info list Map.M(String).t
 
 let stan_math_environment =
   Lazy.map Stan_math_signatures.signatures_alist ~f:(fun signatures ->
@@ -48,7 +48,7 @@ let stan_math_environment =
           ( key
           , List.map values ~f:(fun s ->
                 {type_= UnsizedType.UFun s; kind= `StanMath}) ))
-      |> String.Map.of_alist_exn)
+      |> Map.of_alist_exn (module String))
 
 let add env name type_ kind = Map.add_multi env ~key:name ~data:{type_; kind}
 let set_raw env key data = Map.set env ~key ~data

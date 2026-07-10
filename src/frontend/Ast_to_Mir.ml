@@ -1,5 +1,5 @@
-open Core
-open Core.Poly
+open Base
+open Base.Poly
 open Middle
 
 let trans_fn_kind kind name =
@@ -22,11 +22,11 @@ let drop_leading_zeros s =
 let format_number s = s |> without_underscores |> drop_leading_zeros
 
 let%expect_test "format_number0" =
-  format_number "0_000." |> print_endline;
+  format_number "0_000." |> Stdio.print_endline;
   [%expect "0."]
 
 let%expect_test "format_number1" =
-  format_number ".123_456" |> print_endline;
+  format_number ".123_456" |> Stdio.print_endline;
   [%expect ".123456"]
 
 let rec op_to_funapp op args type_ =
@@ -428,7 +428,7 @@ let rec check_decl var decl_type' decl_trans smeta adlevel =
 
 let check_sizedtype name st =
   let check x = function
-    | {Expr.pattern= Lit (Int, i); _} when float_of_string i >= 0. -> []
+    | {Expr.pattern= Lit (Int, i); _} when Float.of_string i >= 0. -> []
     | n ->
         [ Stmt.Helpers.internal_nrfunapp FnValidateSize
             Expr.Helpers.
@@ -762,7 +762,7 @@ let rec trans_sizedtype_decl declc tr name st =
         [str name; str (Fmt.str "%a" Pretty_printing.pp_typed_expression x); n]
       n.meta.loc in
   let grab_size fn n = function
-    | Ast.{expr= IntNumeral i; _} as s when float_of_string i >= 2. ->
+    | Ast.{expr= IntNumeral i; _} as s when Float.of_string i >= 2. ->
         ([], trans_expr s)
     | Ast.({expr= IntNumeral _; _} | {expr= Variable _; _}) as s ->
         let e = trans_expr s in
@@ -857,7 +857,7 @@ let rec trans_sizedtype_decl declc tr name st =
                (List.zip_exn subtypes Utils.(tuple_trans_exn tr))
                ~f:(fun ix (st, trans) ->
                  trans_sizedtype_decl declc trans
-                   (name ^ former_array_indices ^ "." ^ string_of_int (ix + 1))
+                   (name ^ former_array_indices ^ "." ^ Int.to_string (ix + 1))
                    st)) in
         (List.concat stmts, SizedType.STuple subtypes') in
   go 1 st
@@ -988,7 +988,8 @@ let trans_prog filename (p : Ast.typed_program) : Program.Typed.t =
     | hd :: _ -> [{pattern= Block modelb; meta= hd.meta}] in
   let txparam_decls, txparam_checks, txparam_stmts =
     txparam_gq
-    |> List.partition3_map ~f:(function
+    |> List.partition3_map ~f:(fun (s : Stmt.Located.t) ->
+      match s with
       | {pattern= Decl _; _} as d -> `Fst d
       | s when stmt_contains_check s -> `Snd s
       | s -> `Trd s) in

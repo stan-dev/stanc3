@@ -1,4 +1,4 @@
-open Core
+open Base
 open Frontend
 open Conversion
 open Js_of_ocaml

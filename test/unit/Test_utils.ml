@@ -1,5 +1,5 @@
 open Frontend
-open Core
+open Base
 
 let untyped_ast_of_string s =
   let res, warnings = Parse.parse_program (`Code s) in

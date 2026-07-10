@@ -1,6 +1,6 @@
 (** Defines the core of the MIR *)
 
-open Core
+open Base
 
 type fun_arg_decl = (UnsizedType.autodifftype * string * UnsizedType.t) list
 [@@deriving sexp, hash, map]
@@ -122,7 +122,7 @@ let pp pp_e pp_s ppf
     ; transform_inits
     ; output_vars
     ; _ } =
-  Format.open_vbox 0;
+  Stdlib.Format.open_vbox 0;
   pp_functions_block (pp_fun_def pp_s) ppf functions_block;
   Fmt.cut ppf ();
   pp_input_vars pp_e ppf input_vars;
@@ -138,7 +138,7 @@ let pp pp_e pp_s ppf
   pp_transform_inits pp_s ppf transform_inits;
   Fmt.cut ppf ();
   pp_output_vars pp_e ppf output_vars;
-  Format.close_box ()
+  Stdlib.Format.close_box ()
 
 (** Programs with typed expressions and locations *)
 module Typed = struct
@@ -148,7 +148,7 @@ module Typed = struct
 
   let sexp_of_t : t -> Sexp.t =
     sexp_of_t Expr.Typed.sexp_of_t Stmt.Located.sexp_of_t
-      Sexplib.Conv.sexp_of_opaque
+      Sexplib0.Sexp_conv.sexp_of_opaque
 end
 
 module Numbered = struct

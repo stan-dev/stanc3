@@ -1,5 +1,6 @@
 open Analysis_and_optimization.Factor_graph
-open Core
+open Base
+open Common.Poly_containers
 open Analysis_and_optimization.Dataflow_types
 
 let reject_example =
@@ -42,7 +43,7 @@ let reject_example =
 
 let%expect_test "Factor graph reject example" =
   let deps = prog_factor_graph reject_example in
-  print_s [%sexp (deps : factor_graph)];
+  Stdio.print_s [%sexp (deps : factor_graph)];
   [%expect
     {|
       ((factor_map
@@ -90,7 +91,7 @@ let complex_example =
 
 let%expect_test "Factor graph complex example" =
   let deps = prog_factor_graph complex_example in
-  print_s [%sexp (deps : factor_graph)];
+  Stdio.print_s [%sexp (deps : factor_graph)];
   [%expect
     {|
 ((factor_map
@@ -383,7 +384,7 @@ let complex_example =
 
 let%expect_test "Priors complex example" =
   let priors = list_priors complex_example in
-  print_s
+  Stdio.print_s
     [%sexp
       (priors
         : ( vexpr

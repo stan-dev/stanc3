@@ -1,4 +1,4 @@
-open Core
+open Base
 open Middle
 
 type type_mismatch = private
@@ -37,20 +37,20 @@ type match_result =
   generic_match_result
 
 val check_of_same_type_mod_conv :
-  UnsizedType.t -> UnsizedType.t -> (Promotion.t, type_mismatch) result
+  UnsizedType.t -> UnsizedType.t -> (Promotion.t, type_mismatch) Result.t
 
 val check_compatible_arguments_mod_conv :
      UnsizedType.argumentlist
   -> UnsizedType.argumentlist
-  -> (Promotion.t list, function_mismatch) result
+  -> (Promotion.t list, function_mismatch) Result.t
 
 val check_compatible_arguments_no_promotion :
      UnsizedType.argumentlist
   -> UnsizedType.argumentlist
-  -> (unit, function_mismatch) result
+  -> (unit, function_mismatch) Result.t
 
 val unique_minimum_promotion :
-  ('a * Promotion.t list) list -> ('a * Promotion.t list, 'a list option) result
+  ('a * Promotion.t list) list -> ('a * Promotion.t list, 'a list option) Result.t
 
 val matching_function :
   Environment.t -> string -> UnsizedType.argumentlist -> match_result
@@ -71,7 +71,7 @@ val check_variadic_args :
   -> UnsizedType.argumentlist
   -> ( (UnsizedType.t * Location_span.t option) * Promotion.t list
      , UnsizedType.argumentlist * function_mismatch * Location_span.t option )
-     result
+     Result.t
 (** Check variadic function arguments. If a match is found, returns [Ok] of the
     function type and a list of promotions (see [promote]) If none is found,
     returns [Error] of the list of args and a function_mismatch. *)
@@ -91,10 +91,10 @@ val quoted : string Fmt.t
 (** Formatter for quoting a string *)
 
 val pp_mismatch_details :
-  skipped:string list -> Format.formatter -> details -> unit
+  skipped:string list -> Stdlib.Format.formatter -> details -> unit
 
 val pp_signature_mismatch :
-     Format.formatter
+     Stdlib.Format.formatter
   -> string * UnsizedType.t list * (signature_error list * bool)
   -> unit
 

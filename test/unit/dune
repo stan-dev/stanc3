@@ -1,7 +1,8 @@
 (library
  (name unit_tests)
  (libraries
-  core
+  common
+  base
   fmt
   frontend
   stan_math_backend
@@ -9,4 +10,10 @@
   analysis_and_optimization)
  (inline_tests)
  (preprocess
-  (pps ppx_jane)))
+  (pps
+   ppx_base
+   ppx_pipebang
+   ppx_sexp_message
+   ppx_sexp_value
+   ppx_expect
+   ppx_inline_test)))

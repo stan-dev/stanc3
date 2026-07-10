@@ -1,16 +1,16 @@
 module Caml_unix = Unix
-open Core
+open Base
 
 let string_of_status = function
-  | Caml_unix.WEXITED i -> sprintf "[exit %n]" i
-  | WSIGNALED i -> sprintf "[signal %n]" i
-  | WSTOPPED i -> sprintf "[stopped %n]" i
+  | Caml_unix.WEXITED i -> Printf.sprintf "[exit %n]" i
+  | WSIGNALED i -> Printf.sprintf "[signal %n]" i
+  | WSTOPPED i -> Printf.sprintf "[stopped %n]" i
 
 let run_capturing_output cmd =
   let noflags = Array.create ~len:0 "" in
   let stdout, stdin, stderr = Caml_unix.open_process_full cmd noflags in
   let chns = [stdout; stderr] in
-  let out = List.map ~f:In_channel.input_lines chns |> List.concat in
+  let out = List.map ~f:Stdio.In_channel.input_lines chns |> List.concat in
   let status =
     string_of_status (Caml_unix.close_process_full (stdout, stdin, stderr))
   in
@@ -34,4 +34,4 @@ let () =
         let binary =
           String.substr_replace_first binary ~pattern:".exe" ~with_:"" in
         binary ^ " " ^ arg in
-      Printf.printf "  $ %s\n%s\n" short_cmd (run_capturing_output cmd))
+      Stdio.printf "  $ %s\n%s\n" short_cmd (run_capturing_output cmd))

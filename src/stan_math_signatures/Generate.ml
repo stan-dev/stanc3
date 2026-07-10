@@ -6,7 +6,7 @@
     combinations, so now it is done by the build system and just stored in the
     binary using the [Marshal] library. *)
 
-open Core
+open Base
 open Middle
 
 (** The "dimensionality" (bad name?) is supposed to help us represent the
@@ -99,14 +99,14 @@ let is_primitive = function
 
 (** The signatures hash table *)
 let (stan_math_signatures : (string, UnsizedType.signature list) Hashtbl.t) =
-  String.Table.create ()
+  Hashtbl.create (module String)
 
 (** The variadic signatures hash table
 
     These functions cannot be overloaded. *)
 let (stan_math_variadic_signatures :
       (string, UnsizedType.variadic_signature) Hashtbl.t) =
-  String.Table.create ()
+  Hashtbl.create (module String)
 
 (* XXX The correct word here isn't combination - what is it? *)
 let all_combinations xx =
@@ -115,7 +115,7 @@ let all_combinations xx =
           List.map ~f:(fun arg -> arg :: acc) x))
 
 let missing_math_functions =
-  String.Set.of_list ["beta_proportion_cdf"; "loglogistic_lcdf"]
+  Set.of_list (module String) ["beta_proportion_cdf"; "loglogistic_lcdf"]
 
 let rng_return_type t lt =
   if List.for_all ~f:is_primitive lt then t else UnsizedType.UArray t
@@ -419,12 +419,12 @@ let add_binary_vec name supports_soa =
     ~scalars:[UInt; UReal] name supports_soa
 
 let add_binary_vec_real_real name supports_soa =
-  add_binary_vec_general ~return_fn:Fun.id
+  add_binary_vec_general ~return_fn:Fn.id
     ~vectors:[UArray UReal; UVector; URowVector; UMatrix]
     ~scalars:[UReal] name supports_soa
 
 let add_binary_vec_complex_complex name supports_soa =
-  add_binary_vec_general ~return_fn:Fun.id
+  add_binary_vec_general ~return_fn:Fn.id
     ~vectors:[UArray UComplex; UComplexVector; UComplexRowVector; UComplexMatrix]
     ~scalars:[UComplex] name supports_soa
 
@@ -2618,7 +2618,7 @@ let variadic_dae_mandatory_fun_args =
 let variadic_ode_adjoint_fn = "ode_adjoint_tol_ctl"
 
 let variadic_ode_nonadjoint_fns =
-  String.Set.of_list
+  Set.of_list (module String)
     [ "ode_bdf_tol"; "ode_rk45_tol"; "ode_adams_tol"; "ode_bdf"; "ode_rk45"
     ; "ode_adams"; "ode_ckrk"; "ode_ckrk_tol" ]
 
@@ -2725,42 +2725,42 @@ let () =
 (** Print a module definition to [file] that contains the signatures computed
     above *)
 let generate_module () =
-  let marshal e = Marshal.to_string e [] in
-  (* Core's Hashtbl cannot be safely Marshal'd, so we round trip through an
+  let marshal e = Stdlib.Marshal.to_string e [] in
+  (* Base's Hashtbl cannot be safely Marshal'd, so we round trip through an
      associative list *)
-  let marshal_hashtbl (type value) (t : value String.Table.t) =
+  let marshal_hashtbl (type value) (t : (string, value) Hashtbl.t) =
     marshal (Hashtbl.to_alist t) in
   let distributions_simplified =
     distributions
     |> List.map ~f:(fun (kind, name, _, _) ->
         (name, List.map ~f:(Fn.compose String.lowercase show_fkind) kind))
       (* combine any common keys *)
-    |> String.Map.of_alist_reduce ~f:(fun v1 v2 ->
+    |> Map.of_alist_reduce (module String) ~f:(fun v1 v2 ->
         v1 @ v2 |> Set.Poly.of_list |> Set.to_list)
     |> Map.to_alist in
-  Printf.printf
+  Stdio.printf
     {|
-let unmarshal s = Marshal.from_string s 0
-let unmarshal_hashtbl s : 'a Core.String.Table.t =
-  unmarshal s |> Core.String.Table.of_alist_exn |};
-  Printf.printf
+let unmarshal s = Stdlib.Marshal.from_string s 0
+let unmarshal_hashtbl s : (string, 'a) Base.Hashtbl.t =
+  unmarshal s |> Base.Hashtbl.of_alist_exn (module Base.String) |};
+  Stdio.printf
     {|
 let stan_math_signatures :
-    Middle.UnsizedType.signature list Core.String.Table.t Lazy.t=
+    (string, Middle.UnsizedType.signature list) Base.Hashtbl.t Lazy.t=
   lazy (fst @@ Gc.ramp_up @@
         fun () -> unmarshal_hashtbl %S) |}
     (marshal_hashtbl stan_math_signatures);
-  Printf.printf
+  Stdio.printf
     {|
 let stan_math_variadic_signatures :
-    Middle.UnsizedType.variadic_signature Core.String.Table.t =
+    (string, Middle.UnsizedType.variadic_signature) Base.Hashtbl.t =
   unmarshal_hashtbl %S |}
     (marshal_hashtbl stan_math_variadic_signatures);
-  Printf.printf
+  Stdio.printf
     {|
 let distributions : (string * string list) list = unmarshal %S |}
     (marshal distributions_simplified);
-  Printf.eprintf
+  Stdio.eprintf
     "Generated signatures for %d functions, %d distributions, and %d variadic \
      functions.\n"
     (Hashtbl.length stan_math_signatures)

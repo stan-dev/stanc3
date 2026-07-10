@@ -1,8 +1,14 @@
 (library
  (name common)
  (public_name stanc.common)
- (libraries core fmt)
+ (libraries base stdio fmt)
  (preprocess
-  (pps ppx_jane ppx_deriving.fold ppx_deriving.map))
+  (pps
+   ppx_base
+   ppx_pipebang
+   ppx_sexp_message
+   ppx_sexp_value
+   ppx_deriving.fold
+   ppx_deriving.map))
  (instrumentation
   (backend bisect_ppx)))

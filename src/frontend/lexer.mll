@@ -1,8 +1,8 @@
 (** The lexer that will feed into the parser. An OCamllex file. *)
 
 {
-  module Stack = Core.Stack
-  module Queue = Core.Queue
+  module Stack = Base.Stack
+  module Queue = Base.Queue
   open Lexing
   open Debugging
   open Preprocessor

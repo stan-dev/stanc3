@@ -1,6 +1,6 @@
 (** Utilities for Stan's built in operators *)
 
-open Core
+open Base
 
 type t =
   | Plus
@@ -59,7 +59,7 @@ let to_string x = Sexp.to_string (sexp_of_t x) ^ "__"
 
 let of_string_opt x =
   try
-    String.chop_suffix_exn ~suffix:"__" x |> Sexp.of_string |> t_of_sexp |> Some
+    Some (t_of_sexp (Sexp.Atom (String.chop_suffix_exn ~suffix:"__" x)))
   with
-  | Sexplib.Conv.Of_sexp_error _ -> None
+  | Sexplib0.Sexp_conv.Of_sexp_error _ -> None
   | Invalid_argument _ -> None

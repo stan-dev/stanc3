@@ -1,4 +1,4 @@
-open Core
+open Base
 open Common
 
 module Pattern = struct
@@ -73,36 +73,51 @@ module Typed = struct
 
   type t = (Meta.t[@compare.ignore]) Fixed.t [@@deriving hash, sexp, compare]
 
+  let equal t1 t2 = compare t1 t2 = 0
+
   let type_of {meta= Meta.{type_; _}; _} = type_
   let adlevel_of {meta= Meta.{adlevel; _}; _} = adlevel
   let fun_arg {meta= Meta.{type_; adlevel; _}; _} = (adlevel, type_)
   let pp = pp
 
   (** Since the type [t] is now concrete (i.e. not a type _constructor_) we can
-      construct a [Comparable.S] giving us [Map] and [Set] specialized to the
-      type. *)
+      construct [Map] and [Set] modules specialized to the type. *)
 
-  module Comparator = Comparator.Make (struct
+  module Cmp = struct
     type nonrec t = t
 
     let compare = compare
     let sexp_of_t = sexp_of_t
-  end)
 
-  include Comparator
+    include Comparator.Make (struct
+      type nonrec t = t
 
-  include Comparable.Make_using_comparator (struct
-    type nonrec t = t
+      let compare = compare
+      let sexp_of_t = sexp_of_t
+    end)
+  end
 
-    let sexp_of_t = sexp_of_t
-    let t_of_sexp = t_of_sexp
+  include (
+    Cmp : Comparator.S with type t := t and type comparator_witness = Cmp.comparator_witness)
 
-    include Comparator
-  end)
+  module Set = struct
+    type t = Set.M(Cmp).t
+
+    let empty = Set.empty (module Cmp)
+    let singleton = Set.singleton (module Cmp)
+    let union_list = Set.union_list (module Cmp)
+  end
+
+  module Map = struct
+    type 'v t = 'v Map.M(Cmp).t
+
+    let empty = Map.empty (module Cmp)
+    let of_alist_exn l = Map.of_alist_exn (module Cmp) l
+  end
 end
 
 module Helpers = struct
-  let int i = {meta= Typed.Meta.empty; pattern= Lit (Int, string_of_int i)}
+  let int i = {meta= Typed.Meta.empty; pattern= Lit (Int, Int.to_string i)}
 
   let float i =
     { meta= {Typed.Meta.empty with type_= UReal}
@@ -290,7 +305,7 @@ module Helpers = struct
       , [Upfrom loop_bottom; Single loop_bottom; Single loop_bottom] ) ]
     |> List.map ~f:(fun (ut, idx) -> infer_type_of_indexed ut idx)
     |> Fmt.(str "@[<hov>%a@]" (list ~sep:comma UnsizedType.pp))
-    |> print_endline;
+    |> Stdio.print_endline;
     [%expect
       {|
       vector, array[] matrix, matrix, array[] vector, real, array[] real |}]

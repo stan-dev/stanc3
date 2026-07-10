@@ -1,4 +1,4 @@
-open Core
+open! Base
 open Frontend
 open Test_utils
 
@@ -11,7 +11,7 @@ transformed data {
 }
 |}
   |> typed_ast_of_string_exn |> Pretty_print_prog.pretty_print_typed_program
-  |> print_endline;
+  |> Stdio.print_endline;
   [%expect
     {|
     transformed data {

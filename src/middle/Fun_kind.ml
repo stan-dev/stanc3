@@ -1,7 +1,7 @@
 (** Types for function kinds, e.g. [StanLib] or [UserDefined], and function
     suffix types, e.g. [foo_ldfp], [bar_lp] *)
 
-open Core
+open Base
 
 type 'propto suffix =
   | FnPlain
@@ -21,7 +21,7 @@ type 'e t =
 [@@deriving compare, sexp, hash, map, fold]
 
 let suffix_from_name fname =
-  let is_suffix suffix = Core.String.is_suffix ~suffix fname in
+  let is_suffix suffix = Base.String.is_suffix ~suffix fname in
   if is_suffix "_rng" then FnRng
   else if is_suffix "_lp" then FnTarget
   else if is_suffix "_jacobian" then FnJacobian

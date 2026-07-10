@@ -1,7 +1,7 @@
 (** Some complicated stuff to get the custom syntax errors out of Menhir's
     Incremental API *)
 
-open Core
+open Base
 open Common.Let_syntax.Result
 module Interp = Parser.MenhirInterpreter
 
@@ -27,13 +27,13 @@ let drive_parser parse_fun =
     let message =
       let state = Interp.current_state_number env in
       try
-        Parsing_errors.message state
-        ^^
-        if !Debugging.grammar_logging then
-          Scanf.format_from_string
-            ("(Parse error state " ^ string_of_int state ^ ")\n")
-            ""
-        else ""
+        Stdlib.( ^^ )
+          (Parsing_errors.message state)
+          (if !Debugging.grammar_logging then
+             Stdlib.Scanf.format_from_string
+               ("(Parse error state " ^ Int.to_string state ^ ")\n")
+               ""
+           else "")
       with _ ->
         Common.ICE.internal_compiler_error
           [%message
@@ -58,7 +58,7 @@ let to_lexbuf file_or_code =
   match file_or_code with
   | `File path ->
       let+ chan =
-        try Ok (In_channel.create path)
+        try Ok (Stdio.In_channel.create path)
         with _ -> Error (Errors.FileNotFound path) in
       (Lexing.from_channel chan, path)
   | `Code code -> Ok (Lexing.from_string code, "string")

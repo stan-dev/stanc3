@@ -13,8 +13,8 @@
     including stan math functions. This is a functional map, meaning it is
     handled immutably. *)
 
-open Core
-open Core.Poly
+open Base
+open Base.Poly
 open Middle
 open Ast
 module Env = Environment
@@ -231,7 +231,7 @@ let assignmentoperator_stan_math_return_type assop arg_tys =
         operator_stan_math_return_type assop arg_tys |> Option.map ~f:fst
     | _ -> None)
   |> Option.bind ~f:(function
-    | ReturnType rtype
+    | UnsizedType.ReturnType rtype
       when rtype = snd (List.hd_exn arg_tys)
            && not
                 ((assop = Operator.EltTimes || assop = Operator.EltDivide)
@@ -627,7 +627,7 @@ let verify_second_order_derivative_compatibility (ast : typed_program) =
           when String.equal name fn_name ->
             b
         | _ -> []) in
-  let rec check_fun (visited : String.Set.t) {name= fn_name; id_loc} =
+  let rec check_fun (visited : Set.M(String).t) {name= fn_name; id_loc} =
     if Set.mem visited fn_name then visited
     else
       let rec check_expr seen = function
@@ -654,7 +654,7 @@ let verify_second_order_derivative_compatibility (ast : typed_program) =
       let visited' = Set.add visited fn_name in
       List.fold ~f:check_stmt ~init:visited' (get_function_bodies fn_name) in
   ignore
-    (List.fold ~f:check_fun ~init:String.Set.empty
+    (List.fold ~f:check_fun ~init:(Set.empty (module String))
        !requires_higher_order_autodiff)
 
 (** Currently only used by the laplace functions, this checks that a function in
@@ -1049,7 +1049,7 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
                 (pp_indented_box Pretty_printing.pp_expression)
                 {expr; emeta}
                 (pp_indented_box_t
-                   (Format.dprintf "matrix_power(%a, %a)"
+                   (Stdlib.Format.dprintf "matrix_power(%a, %a)"
                       Pretty_printing.pp_expression e1
                       Pretty_printing.pp_expression e2)) in
             add_warning x.emeta.loc s
@@ -1068,9 +1068,9 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
                      (pp_indented_box Pretty_printing.pp_expression)
                      {expr; emeta}
                      (pp_indented_box_t
-                        (Format.dprintf "(%a) %a %a" pp_e le pp op pp_e re))
+                        (Stdlib.Format.dprintf "(%a) %a %a" pp_e le pp op pp_e re))
                      (pp_indented_box_t
-                        (Format.dprintf "%a %a %a && %a %a %a" pp_e e1 pp op2
+                        (Stdlib.Format.dprintf "%a %a %a && %a %a %a" pp_e e1 pp op2
                            pp_e e2 pp_e e2 pp op pp_e re)))
             | _ -> ())
         | _ -> () in
@@ -1082,7 +1082,7 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
       verify_identifier id;
       check_variable cf loc tenv id
   | IntNumeral s -> (
-      match float_of_string_opt s with
+      match Stdlib.float_of_string_opt s with
       | Some i when i < 2_147_483_648.0 ->
           mk_typed_expression ~expr:(IntNumeral s) ~ad_level:DataOnly
             ~type_:UInt ~loc
@@ -1386,18 +1386,18 @@ let variables_accessed_in lv =
      only the expressions inside of LIndexed *)
   let rec extract_indices lv =
     match lv.lval with
-    | LVariable _ -> String.Set.empty
+    | LVariable _ -> (Set.empty (module String))
     | LTupleProjection (lv, _) -> extract_indices lv
     | LIndexed (lv, es) ->
         List.concat_map ~f:exprs_in_index es
         |> List.concat_map ~f:extract_ids
         |> List.map ~f:(fun {name; _} -> name)
-        |> String.Set.of_list
+        |> Set.of_list (module String)
         |> Set.union (extract_indices lv) in
   let rec extract_indices_pack lv =
     match lv with
     | LTuplePack {lvals; _} ->
-        String.Set.union_list (List.map ~f:extract_indices_pack lvals)
+        Set.union_list (module String) (List.map ~f:extract_indices_pack lvals)
     | LValue lv -> extract_indices lv in
   extract_indices_pack lv
 
@@ -1421,7 +1421,7 @@ let verify_lvalue_unique (lv : Ast.typed_lval_pack) =
      much less refined than the above and forbids some cases that would be
      harmless, but this is also in general a very weird thing to try to do, so I
      think that is acceptable *)
-  let all_variables = List.map ~f:name_of_lval all_lvals |> String.Set.of_list in
+  let all_variables = List.map ~f:name_of_lval all_lvals |> Set.of_list (module String) in
   let accessed_lvals = variables_accessed_in lv in
   match Set.inter accessed_lvals all_variables |> Set.to_list with
   | [] -> ()

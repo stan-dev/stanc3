@@ -1,4 +1,4 @@
-open Core
+open Base
 
 type t = {begin_loc: Location.t; end_loc: Location.t}
 [@@deriving sexp, hash, compare]

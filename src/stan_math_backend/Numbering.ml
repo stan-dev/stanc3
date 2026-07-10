@@ -1,5 +1,5 @@
-open Core
-open Core.Poly
+open Base
+open Base.Poly
 open Middle
 
 type state_t = Location_span.t list
@@ -87,12 +87,12 @@ let assign_loc location_num =
   let open Cpp in
   let open Cpp.DSL in
   if location_num = no_span_num then []
-  else ["current_statement__" := Literal (string_of_int location_num)]
+  else ["current_statement__" := Literal (Int.to_string location_num)]
 
 let register_map_rect_functors namespace map_rect_calls =
   let register_functor (i, f) =
     Cpp.Preprocessor
       (MacroApply
-         ("STAN_REGISTER_MAP_RECT", [string_of_int i; namespace ^ "::" ^ f]))
+         ("STAN_REGISTER_MAP_RECT", [Int.to_string i; namespace ^ "::" ^ f]))
   in
   List.map ~f:register_functor map_rect_calls

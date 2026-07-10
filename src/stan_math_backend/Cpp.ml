@@ -1,6 +1,6 @@
 (** A set of data types representing the C++ we generate *)
 
-open Core
+open Base
 
 type identifier = string [@@deriving sexp]
 
@@ -776,7 +776,7 @@ module Tests = struct
       [ matrix (complex local_scalar); const_char_array 43
       ; std_vector ~dims:2 Double; const_ref (TemplateType "T0__") ] in
     let open Fmt in
-    pf stdout "@[<v>%a@]" (list ~sep:comma Printing.pp_type_) ts;
+    pf Fmt.stdout "@[<v>%a@]" (list ~sep:comma Printing.pp_type_) ts;
     [%expect
       {|
         Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>,
@@ -792,8 +792,8 @@ module Tests = struct
     let vector = (row_vector Double).:{Literal "3"} in
     let values = [Literal "1"; Var "a"; Literal "3"] in
     let e = (vector << values).@!("finished") in
-    print_s [%sexp (e : expr)];
-    print_endline "";
+    Stdio.print_s [%sexp (e : expr)];
+    Stdio.print_endline "";
     Printing.pp_expr Fmt.stdout e;
     [%expect
       {|
@@ -827,7 +827,7 @@ module Tests = struct
            ~name:"foobar" ~return_type:Void ~inline:true ~body:rethrow ()) ]
     in
     let open Fmt in
-    pf stdout "@[<v>%a@]" (list ~sep:cut Printing.pp_fun_defn) funs;
+    pf Fmt.stdout "@[<v>%a@]" (list ~sep:cut Printing.pp_fun_defn) funs;
     [%expect
       {|
               template <typename T0__,

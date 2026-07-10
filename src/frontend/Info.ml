@@ -1,4 +1,4 @@
-open Core
+open Base
 open Ast
 open Middle
 open Yojson.Basic
@@ -83,7 +83,7 @@ let function_calls_json p =
   let funs, distrs =
     fold_program
       (get_function_calls_stmt ud_dists)
-      (String.Set.empty, String.Set.empty)
+      ((Set.empty (module String)), (Set.empty (module String)))
       p in
   let set_to_List s =
     `List (Set.to_list s |> List.map ~f:(fun str -> `String str)) in

@@ -1,6 +1,6 @@
 (** Preprocessor for handling include directives *)
 
-open Core
+open Base
 open Lexing
 open Debugging
 
@@ -11,8 +11,8 @@ let include_stack = Stack.create ()
 let included_files : string list ref = ref []
 let size () = Stack.length include_stack
 
-let locations_map : (string * Middle.Location.t option) String.Table.t =
-  String.Table.create ()
+let locations_map : (string, string * Middle.Location.t option) Hashtbl.t =
+  Hashtbl.create (module String)
 
 let new_file_start_position buf filename included_from =
   (* Lexing.position does not have a field to store `included_from` so we store
@@ -29,7 +29,7 @@ let new_file_start_position buf filename included_from =
     if Option.is_none included_from then
       {Lexing.pos_fname= filename; pos_lnum= 1; pos_bol= 0; pos_cnum= 0}
     else
-      let key = "\u{0}" ^ string_of_int (Hashtbl.length locations_map) in
+      let key = "\u{0}" ^ Int.to_string (Hashtbl.length locations_map) in
       Hashtbl.add_exn locations_map ~key ~data:(filename, included_from);
       {Lexing.pos_fname= key; pos_lnum= 1; pos_bol= 0; pos_cnum= 0} in
   buf.lex_start_p <- pos;
@@ -99,7 +99,7 @@ let find_include_fs lookup_paths fname =
     | path :: rest_of_paths -> (
         try
           let full_path = path ^ "/" ^ fname in
-          (In_channel.create full_path |> Lexing.from_channel, full_path)
+          (Stdio.In_channel.create full_path |> Lexing.from_channel, full_path)
         with _ -> loop rest_of_paths) in
   loop lookup_paths
 

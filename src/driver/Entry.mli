@@ -3,7 +3,7 @@
 open Frontend
 
 (** Either the C++ a model compiled to, or an error *)
-type compilation_result = (string, Errors.t) result
+type compilation_result = (string, Errors.t) Result.t
 
 (** The type of all non-C++-code outputs from the compiler *)
 type other_output =

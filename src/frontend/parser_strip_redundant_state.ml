@@ -17,7 +17,7 @@ let strip_redundant_parser_states content =
   Str.global_replace pattern "\\1\n\\3\n\\5" content
 
 let strip_lines content =
-  let open Core.String in
+  let open Base.String in
   split_lines content |> List.map rstrip |> concat_lines
 
 let rec strip_until_fixed content =
@@ -25,6 +25,6 @@ let rec strip_until_fixed content =
   if String.equal content stripped then stripped else strip_until_fixed stripped
 
 let () =
-  let content = In_channel.input_all In_channel.stdin in
+  let content = Stdio.In_channel.input_all Stdio.In_channel.stdin in
   let result = strip_until_fixed content |> strip_lines in
-  print_string result
+  Stdio.print_string result

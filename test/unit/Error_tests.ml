@@ -1,11 +1,11 @@
-open Core
+open Base
 open Common
 
 let%expect_test "with_exn_message" =
-  Printexc.record_backtrace false;
+  Backtrace.Exn.set_recording false;
   ICE.with_exn_message (fun () -> failwith "oops!")
-  |> Result.error |> Option.value_exn |> print_endline;
-  Printexc.record_backtrace true;
+  |> Result.error |> Option.value_exn |> Stdio.print_endline;
+  Backtrace.Exn.set_recording true;
   [%expect
     {|
     Internal compiler error:
@@ -22,18 +22,18 @@ let%expect_test "backtrace indirect test" =
   |> Result.error |> Option.value_exn
   |> fun s ->
     if String.is_substring ~substring:"Called from Common" s then
-      print_endline "Backtrace found in message"
-    else print_endline "FAILED TO FIND BACKTRACE" );
+      Stdio.print_endline "Backtrace found in message"
+    else Stdio.print_endline "FAILED TO FIND BACKTRACE" );
   [%expect {| Backtrace found in message |}]
 
 let%expect_test "ICE triggered" =
-  Printexc.record_backtrace false;
+  Backtrace.Exn.set_recording false;
   ICE.with_exn_message (fun () ->
       Middle.(
         Expr.Helpers.infer_type_of_indexed UnsizedType.UReal
           [Index.Single Expr.Helpers.loop_bottom]))
-  |> Result.error |> Option.value_exn |> print_endline;
-  Printexc.record_backtrace true;
+  |> Result.error |> Option.value_exn |> Stdio.print_endline;
+  Backtrace.Exn.set_recording true;
   [%expect
     {|
     Internal compiler error:

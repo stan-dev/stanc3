@@ -1,4 +1,4 @@
-open Core
+open Base
 
 type t = {filename: string; line_num: int; col_num: int; included_from: t option}
 [@@deriving sexp, hash]
@@ -53,7 +53,7 @@ let rec pp ?(print_file = true) ?(print_line = true) printed_filename ppf loc =
   let incl, filename =
     match loc.included_from with
     | Some loc2 ->
-        ( Format.dprintf ", included from\n%a" (pp printed_filename) loc2
+        ( Stdlib.Format.dprintf ", included from\n%a" (pp printed_filename) loc2
         , loc.filename )
     | None -> (ignore, Option.value ~default:loc.filename printed_filename)
   in

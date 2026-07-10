@@ -18,7 +18,7 @@ open Ast
 val check_program :
      ?allow_undefined_functions:bool
   -> untyped_program
-  -> (typed_program * Warnings.t list, Semantic_error.t) result
+  -> (typed_program * Warnings.t list, Semantic_error.t) Result.t
 (** Type check a Stan program, returning a typed program and warnings or an
     error. When [allow_undefined_functions] is set to [true], the typechecker
     will not check that all functions have a definition. *)

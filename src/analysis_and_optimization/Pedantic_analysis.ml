@@ -1,5 +1,5 @@
-open Core
-open Core.Poly
+open Base
+open Base.Poly
 open Optimize
 open Middle
 open Middle.Program
@@ -18,7 +18,7 @@ let list_unused_params (factor_graph : factor_graph) (mir : Program.Typed.t) :
     (string * Location_span.t) Set.Poly.t =
   (* Build a factor graph of the program, check for missing parameters *)
   let param_info = parameter_set ~include_transformed:false mir in
-  let params = Set.Poly.map ~f:fst3 param_info in
+  let params = Set.Poly.map ~f:(fun (x, _, _) -> x) param_info in
   let used_params =
     Set.Poly.map
       ~f:(fun (VVar v) -> v)
@@ -81,7 +81,7 @@ let list_possible_nonlinear (mir : Program.Typed.t) : Location_span.t Set.Poly.t
       ; "positive_infinity"; "segment"; "subtract"; "sum"; "to_vector"
       ; "to_row_vector"; "to_matrix"; "to_array_1d"; "to_array_2d"; "transpose"
       ]
-    |> String.Set.of_list in
+    |> Set.of_list (module String) in
   (* A simple check of linearity of an expression. allow_var is used for
      expressions like a*b, where at most one of a and b can be a variable *)
   let rec is_linear allow_var Expr.{pattern; _} =
@@ -466,7 +466,7 @@ let uninitialized_warnings (mir : Program.Typed.t) =
     Set.filter
       ~f:(fun (span, _) -> span <> Location_span.empty)
       (Dependence_analysis.mir_uninitialized_variables mir) in
-  let vars = String.Hash_set.create () in
+  let vars = Hash_set.create (module String) in
   let deduplicated =
     Set.Poly.filter_map uninit_vars ~f:(fun (loc, var) ->
         if Hash_set.mem vars var then None

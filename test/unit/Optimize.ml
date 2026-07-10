@@ -1,4 +1,4 @@
-open Core
+open Base
 open Analysis_and_optimization.Optimize
 open Middle
 open Common
@@ -28,7 +28,7 @@ let%expect_test "map_rec_stmt_loc" =
         Stmt.Pattern.NRFunApp (CompilerInternal FnPrint, [s; s])
     | x -> x in
   let mir = Program.map Fn.id (map_rec_stmt_loc f) Fn.id mir in
-  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> Stdio.print_endline;
   [%expect
     {|
       log_prob {
@@ -72,8 +72,8 @@ let%expect_test "map_rec_state_stmt_loc" =
     (map_rec_state_stmt_loc f 0)
       Stmt.{pattern= SList mir.log_prob; meta= Location_span.empty} in
   let mir = {mir with log_prob= [mir_stmt]} in
-  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
-  print_endline (string_of_int num);
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> Stdio.print_endline;
+  Stdio.print_endline (Int.to_string num);
   [%expect
     {|
       log_prob {
@@ -118,7 +118,7 @@ let%expect_test "inline functions" =
       |}
   in
   let mir = function_inlining mir in
-  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> Stdio.print_endline;
   [%expect
     {|
       functions {
@@ -180,7 +180,7 @@ let%expect_test "inline functions 2" =
       |}
   in
   let mir = function_inlining mir in
-  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> Stdio.print_endline;
   [%expect
     {|
       functions {
@@ -234,7 +234,7 @@ let%expect_test "list collapsing" =
   in
   let mir = function_inlining mir in
   let mir = list_collapsing mir in
-  print_s [%sexp (mir : Middle.Program.Typed.t)];
+  Stdio.print_s [%sexp (mir : Middle.Program.Typed.t)];
   [%expect
     {|
 ((functions_block
@@ -415,7 +415,7 @@ let%expect_test "recursive functions" =
       |}
   in
   let mir = function_inlining mir in
-  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> Stdio.print_endline;
   [%expect
     {|
       functions {
@@ -475,7 +475,7 @@ let%expect_test "do not try to inline extern functions" =
             |}
   in
   let mir = function_inlining mir in
-  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> Stdio.print_endline;
   [%expect
     {|
             functions {
@@ -519,7 +519,7 @@ let%expect_test "inline function in for loop" =
       |}
   in
   let mir = function_inlining mir in
-  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> Stdio.print_endline;
   [%expect
     {|
       functions {
@@ -594,7 +594,7 @@ let%expect_test "inline function in for loop 2" =
       |}
   in
   let mir = function_inlining mir in
-  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> Stdio.print_endline;
   [%expect
     {|
       functions {
@@ -677,7 +677,7 @@ let%expect_test "inline function in while loop" =
       |}
   in
   let mir = function_inlining mir in
-  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> Stdio.print_endline;
   [%expect
     {|
       functions {
@@ -743,7 +743,7 @@ let%expect_test "inline function in if then else" =
       |}
   in
   let mir = function_inlining mir in
-  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> Stdio.print_endline;
   [%expect
     {|
       functions {
@@ -809,7 +809,7 @@ let%expect_test "inline function in ternary if " =
       |}
   in
   let mir = function_inlining mir in
-  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> Stdio.print_endline;
   [%expect
     {|
       functions {
@@ -888,7 +888,7 @@ let%expect_test "inline function multiple returns " =
       |}
   in
   let mir = function_inlining mir in
-  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> Stdio.print_endline;
   [%expect
     {|
       functions {
@@ -951,7 +951,7 @@ let%expect_test "inline function indices " =
       |}
   in
   let mir = function_inlining mir in
-  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> Stdio.print_endline;
   [%expect
     {|
       functions {
@@ -1008,7 +1008,7 @@ let%expect_test "inline function and " =
   in
   (* TODO: these declarations are still in the wrong place *)
   let mir = function_inlining mir in
-  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> Stdio.print_endline;
   [%expect
     {|
       functions {
@@ -1065,7 +1065,7 @@ let%expect_test "inline function or " =
       |}
   in
   let mir = function_inlining mir in
-  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> Stdio.print_endline;
   [%expect
     {|
       functions {
@@ -1117,7 +1117,7 @@ let%expect_test "unroll nested loop" =
       |}
   in
   let mir = static_loop_unrolling mir in
-  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> Stdio.print_endline;
   [%expect
     {|
       log_prob {
@@ -1159,7 +1159,7 @@ let%expect_test "unroll nested loop 2" =
       |}
   in
   let mir = static_loop_unrolling mir in
-  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> Stdio.print_endline;
   [%expect
     {|
       log_prob {
@@ -1356,7 +1356,7 @@ let%expect_test "unroll nested loop 3" =
       |}
   in
   let mir = static_loop_unrolling mir in
-  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> Stdio.print_endline;
   [%expect
     {|
       log_prob {
@@ -1452,7 +1452,7 @@ let%expect_test "unroll nested loop with break" =
       |}
   in
   let mir = static_loop_unrolling mir in
-  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> Stdio.print_endline;
   [%expect
     {|
       log_prob {
@@ -1496,7 +1496,7 @@ let%expect_test "constant propagation" =
       |}
   in
   let mir = constant_propagation mir in
-  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> Stdio.print_endline;
   [%expect
     {|
     prepare_data {
@@ -1541,7 +1541,7 @@ let%expect_test "constant propagation, local scope" =
       |}
   in
   let mir = constant_propagation mir in
-  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> Stdio.print_endline;
   [%expect
     {|
     prepare_data {
@@ -1588,7 +1588,7 @@ let%expect_test "constant propagation, model block local scope" =
       |}
   in
   let mir = constant_propagation mir in
-  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> Stdio.print_endline;
   [%expect
     {|
     log_prob {
@@ -1634,7 +1634,7 @@ let%expect_test "expression propagation" =
       |}
   in
   let mir = expression_propagation mir in
-  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> Stdio.print_endline;
   [%expect
     {|
       prepare_data {
@@ -1674,7 +1674,7 @@ let%expect_test "copy propagation" =
       |}
   in
   let mir = copy_propagation mir in
-  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> Stdio.print_endline;
   [%expect
     {|
       log_prob {
@@ -1715,7 +1715,7 @@ let%expect_test "dead code elimination" =
       |}
   in
   let mir = dead_code_elimination mir in
-  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> Stdio.print_endline;
   [%expect
     {|
       prepare_data {
@@ -1757,7 +1757,7 @@ let%expect_test "dead code elimination decl" =
       |}
   in
   let mir = dead_code_elimination mir in
-  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> Stdio.print_endline;
   [%expect
     {|
       log_prob {
@@ -1788,7 +1788,7 @@ let%expect_test "dead code elimination, for loop" =
       |}
   in
   let mir = dead_code_elimination mir in
-  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> Stdio.print_endline;
   [%expect
     {|
       log_prob {
@@ -1820,7 +1820,7 @@ let%expect_test "dead code elimination, while loop" =
       |}
   in
   let mir = dead_code_elimination mir in
-  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> Stdio.print_endline;
   [%expect
     {|
       log_prob {
@@ -1863,7 +1863,7 @@ let%expect_test "dead code elimination, if then" =
       |}
   in
   let mir = dead_code_elimination mir in
-  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> Stdio.print_endline;
   [%expect
     {|
       log_prob {
@@ -1899,7 +1899,7 @@ let%expect_test "dead code elimination, nested" =
       |}
   in
   let mir = dead_code_elimination mir in
-  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> Stdio.print_endline;
   [%expect
     {|
       log_prob {
@@ -1939,7 +1939,7 @@ let%expect_test "dead code elimination, real zero if (direct MIR)" =
             { pattern= IfElse (real_zero, print_hello, Some print_goodbye)
             ; meta= Location_span.empty } ] } in
   let mir = dead_code_elimination mir in
-  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> Stdio.print_endline;
   [%expect
     {|
       log_prob {
@@ -1968,7 +1968,7 @@ let%expect_test "dead code elimination, real zero while (direct MIR)" =
             {pattern= While (real_zero, print_hello); meta= Location_span.empty}
         ] } in
   let mir = dead_code_elimination mir in
-  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> Stdio.print_endline;
   [%expect
     {|
       generate_quantities {
@@ -1993,7 +1993,7 @@ let%expect_test "dead code elimination, real zero if no else (direct MIR)" =
             { pattern= IfElse (real_zero, print_hello, None)
             ; meta= Location_span.empty } ] } in
   let mir = dead_code_elimination mir in
-  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> Stdio.print_endline;
   [%expect
     {|
       generate_quantities {
@@ -2016,7 +2016,7 @@ let%expect_test "partial evaluation" =
       |}
   in
   let mir = partial_evaluation mir in
-  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> Stdio.print_endline;
   [%expect
     {|
       log_prob {
@@ -2045,7 +2045,7 @@ let%expect_test "partial evaluate reject" =
       }
       |} in
   let mir = partial_evaluation mir in
-  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> Stdio.print_endline;
   [%expect
     {|
       log_prob {
@@ -2076,7 +2076,7 @@ let%expect_test "try partially evaluate" =
       |}
   in
   let mir = partial_evaluation mir in
-  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> Stdio.print_endline;
   [%expect
     {|
       log_prob {
@@ -2109,7 +2109,7 @@ let%expect_test "partially evaluate with equality check" =
       |}
   in
   let mir = partial_evaluation mir in
-  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> Stdio.print_endline;
   [%expect
     {|
       log_prob {
@@ -2292,7 +2292,7 @@ model {
   in
   let mir = constant_propagation mir in
   let mir = partial_evaluation mir in
-  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> Stdio.print_endline;
   [%expect
     {|
       log_prob {
@@ -2497,7 +2497,7 @@ let%expect_test "lazy code motion" =
   in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> Stdio.print_endline;
   [%expect
     {|
     log_prob {
@@ -2530,7 +2530,7 @@ let%expect_test "lazy code motion, 2" =
   in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> Stdio.print_endline;
   [%expect
     {|
       log_prob {
@@ -2563,7 +2563,7 @@ let%expect_test "lazy code motion, 3" =
   in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> Stdio.print_endline;
   [%expect
     {|
       log_prob {
@@ -2611,7 +2611,7 @@ let%expect_test "lazy code motion, 4" =
   let mir = list_collapsing mir in
   (* TODO: make sure that these temporaries do not get assigned level DataOnly
      unless appropriate *)
-  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> Stdio.print_endline;
   [%expect
     {|
       log_prob {
@@ -2674,7 +2674,7 @@ let%expect_test "lazy code motion, 5" =
   in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> Stdio.print_endline;
   [%expect
     {|
       log_prob {
@@ -2732,7 +2732,7 @@ let%expect_test "lazy code motion, 6" =
   in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> Stdio.print_endline;
   [%expect
     {|
       log_prob {
@@ -2787,7 +2787,7 @@ let%expect_test "lazy code motion, 7" =
   in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> Stdio.print_endline;
   [%expect
     {|
       log_prob {
@@ -2847,7 +2847,7 @@ let%expect_test "lazy code motion, 8, _lp functions not optimized" =
   in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> Stdio.print_endline;
   [%expect
     {|
       functions {
@@ -2897,7 +2897,7 @@ let%expect_test "lazy code motion, 9" =
   in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> Stdio.print_endline;
   [%expect
     {|
       log_prob {
@@ -2931,7 +2931,7 @@ let%expect_test "lazy code motion, 10" =
   in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> Stdio.print_endline;
   [%expect
     {|
       log_prob {
@@ -2971,7 +2971,7 @@ let%expect_test "lazy code motion, 11" =
   in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> Stdio.print_endline;
   [%expect
     {|
       log_prob {
@@ -3011,7 +3011,7 @@ let%expect_test "lazy code motion, 12" =
   in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> Stdio.print_endline;
   [%expect
     {|
       log_prob {
@@ -3056,7 +3056,7 @@ let%expect_test "lazy code motion, 13" =
   let mir = one_step_loop_unrolling mir in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> Stdio.print_endline;
   [%expect
     {|
       log_prob {
@@ -3124,7 +3124,7 @@ let%expect_test
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
   let mir = dead_code_elimination mir in
-  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> Stdio.print_endline;
   [%expect
     {|
       log_prob {
@@ -3175,7 +3175,7 @@ let%expect_test "block fixing" =
                   , None )
             ; meta= Location_span.empty } ] } in
   let mir = block_fixing mir in
-  print_s [%sexp (mir : Program.Typed.t)];
+  Stdio.print_s [%sexp (mir : Program.Typed.t)];
   [%expect
     {|
       ((functions_block ()) (input_vars ()) (prepare_data ())
@@ -3233,7 +3233,7 @@ let%expect_test "one-step loop unrolling" =
       |}
   in
   let mir = one_step_loop_unrolling mir in
-  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> Stdio.print_endline;
   [%expect
     {|
       prepare_data {
@@ -3301,7 +3301,7 @@ let%expect_test "adlevel_optimization" =
       |}
   in
   let mir = optimize_ad_levels mir in
-  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> Stdio.print_endline;
   [%expect
     {|
       log_prob {
@@ -3370,7 +3370,7 @@ let%expect_test "adlevel_optimization expressions" =
       |}
   in
   let mir = optimize_ad_levels mir in
-  print_s [%sexp (mir.log_prob : Stmt.Located.t list)];
+  Stdio.print_s [%sexp (mir.log_prob : Stmt.Located.t list)];
   [%expect
     {|
       (((pattern
@@ -3506,7 +3506,7 @@ let%expect_test "adlevel_optimization 2" =
       |}
   in
   let mir = optimize_ad_levels mir in
-  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> Stdio.print_endline;
   [%expect
     {|
       log_prob {
@@ -3562,5 +3562,5 @@ let%expect_test "Mapping acts recursively" =
       , [from] ) in
   let m = Expr.Typed.Map.of_alist_exn [(from, into)] in
   let s' = expr_subst_stmt_base m s in
-  Fmt.str "@[<v>%a@]" Stmt.Located.pp (unpattern s') |> print_endline;
+  Fmt.str "@[<v>%a@]" Stmt.Located.pp (unpattern s') |> Stdio.print_endline;
   [%expect {| (FnWriteParam(unconstrain_opt())(var y))__(y); |}]

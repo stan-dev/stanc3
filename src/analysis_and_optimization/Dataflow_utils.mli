@@ -1,4 +1,4 @@
-open Core
+open Base
 open Middle
 open Dataflow_types
 

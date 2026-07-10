@@ -1,4 +1,4 @@
-open Core
+open Base
 open Frontend
 open Stan_math_backend
 open Analysis_and_optimization
@@ -7,10 +7,10 @@ open Middle
 let version = "%%NAME%%3 %%VERSION%%"
 
 let fmt_sexp s =
-  let ppf = Format.str_formatter in
-  Format.pp_set_margin ppf 90;
+  let ppf = Stdlib.Format.str_formatter in
+  Stdlib.Format.pp_set_margin ppf 90;
   Sexp.pp_hum ppf s;
-  Format.flush_str_formatter ()
+  Stdlib.Format.flush_str_formatter ()
 
 let set_model_name model_name =
   let mangle =
@@ -45,7 +45,7 @@ type other_output =
   | Generated of string
   | Warnings of Warnings.t list
 
-type compilation_result = (string, Errors.t) result
+type compilation_result = (string, Errors.t) Result.t
 
 let debug_output_mir output mir = function
   | Flags.Off -> ()

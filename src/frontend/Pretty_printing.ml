@@ -1,8 +1,8 @@
 (** Some helpers to produce nice error messages and for auto-formatting Stan
     programs *)
 
-open Core
-open Core.Poly
+open Base
+open Base.Poly
 open Ast
 open Fmt
 
@@ -177,7 +177,7 @@ let pp_comments_spacing ?(no_comment = Fmt.nop) ?before f ppf loc =
       | ((block, _, _) as comment) :: tl ->
           let is_block = match block with `Block -> true | _ -> false in
           pp_comment ppf comment;
-          if not is_block then Format.pp_force_newline ppf ();
+          if not is_block then Stdlib.Format.pp_force_newline ppf ();
           go is_block tl
       | [] -> if was_block && not (Option.is_some before) then sp ppf () in
     go true comments)
@@ -203,9 +203,9 @@ let pp_operator = Middle.Operator.pp
 let pp_start_funapp ppf id =
   let long = String.length id.name > 16 in
   pf ppf "%a%a%a"
-    (if' long Format.pp_open_box)
+    (if' long Stdlib.Format.pp_open_box)
     2 pp_identifier id
-    (if' (not long) Format.pp_open_box)
+    (if' (not long) Stdlib.Format.pp_open_box)
     1
 
 let pp_list_of pp (loc_of : 'a -> Middle.Location_span.t) ppf
@@ -283,7 +283,8 @@ and pp_expression ppf ({expr= e_content; emeta= {loc; _}} : untyped_expression)
       | e :: es' ->
           let begin_loc =
             List.hd es'
-            |> Option.map ~f:(fun e -> e.emeta.loc.begin_loc)
+            |> Option.map ~f:(fun (e : untyped_expression) ->
+                e.emeta.loc.begin_loc)
             |> Option.value ~default:loc.end_loc in
           pf ppf "%a(@,%a%a |@ %a%a)@]" pp_start_funapp id pp_expression e
             (pp_comments_spacing ~before:sp get_comments_until_separator)
@@ -355,16 +356,16 @@ let rec pp_transformed_type ppf (st, trans) =
        |SRowVector (_, e)
        |SComplexVector e
        |SComplexRowVector e ->
-          Format.dprintf "[%a]" pp_expression e
+          Stdlib.Format.dprintf "[%a]" pp_expression e
       | SMatrix (_, e1, e2) | SComplexMatrix (e1, e2) ->
-          Format.dprintf "[%a, %a]" pp_expression e1 pp_expression e2
+          Stdlib.Format.dprintf "[%a, %a]" pp_expression e1 pp_expression e2
       | SArray _ | SInt | SReal | SComplex | STuple _ -> ignore in
     let cov_sizes_fmt =
       match st with
       | SMatrix (_, e1, e2) when e1 = e2 ->
-          Format.dprintf "[%a]" pp_expression e1
+          Stdlib.Format.dprintf "[%a]" pp_expression e1
       | SMatrix (_, e1, e2) ->
-          Format.dprintf "[%a, %a]" pp_expression e1 pp_expression e2
+          Stdlib.Format.dprintf "[%a, %a]" pp_expression e1 pp_expression e2
       | _ -> ignore in
     match trans with
     | Transformation.Identity ->
@@ -496,7 +497,7 @@ and pp_statement ppf ({stmt= s_content; smeta= {loc}} as ss : untyped_statement)
       (* similar to [pp_start_funapp]: - if a name is long, start the box early
          in the name - if there are a lot of args, or a long name, display them
          one-per-line *)
-      let max_line_length = Format.pp_get_margin ppf () in
+      let max_line_length = Stdlib.Format.pp_get_margin ppf () in
       (* these values are picked heuristically so they look decent on the
          default line-length, where they work out to 26+ characters being a
          'long' name, and 8+ args being 'many' arguments *)
@@ -507,7 +508,7 @@ and pp_statement ppf ({stmt= s_content; smeta= {loc}} as ss : untyped_statement)
           pp_identifier id pp_args pp_body
       else
         pf ppf "@[%a@ @]%a(%a%t)@]%t" pp_returntype rt pp_identifier id
-          (if many_args then Format.pp_open_hvbox else Format.pp_open_box)
+          (if many_args then Stdlib.Format.pp_open_hvbox else Stdlib.Format.pp_open_box)
           0 pp_args pp_body
 
 and pp_list_of_statements ppf (l, xloc) =

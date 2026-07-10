@@ -1,4 +1,4 @@
-open Core
+open Base
 open Middle
 
 (* The following categories (type, identifier, expression, statement) are fairly

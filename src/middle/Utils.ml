@@ -1,6 +1,6 @@
 (** Utilities, primarily surrounding distribution names and suffixes *)
 
-open Core
+open Base
 
 let option_or_else ~if_none x = Option.first_some x if_none
 
@@ -52,10 +52,10 @@ let normalized_name name =
   | x -> x
 
 let%expect_test "unnormalized name mangling" =
-  stdlib_distribution_name "bernoulli_logit_lupmf" |> print_string;
-  stdlib_distribution_name "normal_lupdf" |> ( ^ ) "; " |> print_string;
-  stdlib_distribution_name "normal_lpdf" |> ( ^ ) "; " |> print_string;
-  stdlib_distribution_name "normal" |> ( ^ ) "; " |> print_string;
+  stdlib_distribution_name "bernoulli_logit_lupmf" |> Stdio.print_string;
+  stdlib_distribution_name "normal_lupdf" |> ( ^ ) "; " |> Stdio.print_string;
+  stdlib_distribution_name "normal_lpdf" |> ( ^ ) "; " |> Stdio.print_string;
+  stdlib_distribution_name "normal" |> ( ^ ) "; " |> Stdio.print_string;
   [%expect {| bernoulli_logit_lpmf; normal_lpdf; normal_lpdf; normal |}]
 
 (* Utilities for using Tuples and Transformations together *)

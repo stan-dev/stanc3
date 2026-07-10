@@ -1,4 +1,4 @@
-open Core
+open Base
 open Frontend
 open Js_of_ocaml
 
@@ -28,13 +28,13 @@ let checked_to_array ~name value =
          (Js.typeof value |> Js.to_string))
   else Ok (Js.to_array value)
 
-let get_includes_lenient includes : string String.Map.t * string list =
+let get_includes_lenient includes : string Map.M(String).t * string list =
   let open Common.Let_syntax.Result in
   let map, warnings =
     match Js.Opt.to_option includes with
-    | None -> (String.Map.empty, [] (* normal use: argument not supplied *))
+    | None -> ((Map.empty (module String)), [] (* normal use: argument not supplied *))
     | Some includes when not (typecheck includes "object") ->
-        ( String.Map.empty
+        ( (Map.empty (module String))
         , [bad_arg_message ~name:"includes" ~expected:"object" includes] )
     | Some includes ->
         let keys = Js.object_keys includes |> Js.to_array |> List.of_array in
@@ -47,7 +47,7 @@ let get_includes_lenient includes : string String.Map.t * string list =
           (k_str, value_str) in
         let alist, warnings = List.map keys ~f:lookup |> List.partition_result in
         ( (* JS objects cannot have duplicate keys *)
-          String.Map.of_alist_exn alist
+          Map.of_alist_exn (module String) alist
         , warnings ) in
   ( map
   , List.map
@@ -60,7 +60,7 @@ type flags =
   {name: string; code: string; driver_flags: Driver.Flags.t; color_output: bool}
 
 let process_flags name code (flags : 'a Js.opt) includes :
-    (flags, string) result =
+    (flags, string) Result.t =
   let open Common.Let_syntax.Result in
   let* name = checked_to_string ~name:"name" name in
   let* code = checked_to_string ~name:"code" code in
@@ -72,7 +72,7 @@ let process_flags name code (flags : 'a Js.opt) includes :
         let+ ocaml_flags =
           let open Result in
           Array.mapi flags_array ~f:(fun i v ->
-              checked_to_string ~name:("flags[" ^ string_of_int i ^ "]") v)
+              checked_to_string ~name:("flags[" ^ Int.to_string i ^ "]") v)
           |> Array.to_list |> Result.all >>| Array.of_list in
         Driver.Flags.set_backend_args_list
           (ocaml_flags |> Array.to_list |> List.map ~f:(fun o -> "--" ^ o));
@@ -134,7 +134,7 @@ let process_flags name code (flags : 'a Js.opt) includes :
                   |> Option.map ~f:(fun s -> ("debug-data-json", s)) }
           ; line_length=
               flag_val "max-line-length"
-              |> Option.map ~f:int_of_string
+              |> Option.map ~f:Int.of_string
               |> Option.value ~default:78
           ; canonicalizer_settings=
               (if is_flag_set "print-canonical" then Canonicalize.legacy
@@ -160,14 +160,14 @@ let process_flags name code (flags : 'a Js.opt) includes :
 
 let str_color ~color_output =
   let buf = Buffer.create 64 in
-  let ppf = Format.formatter_of_buffer buf in
+  let ppf = Stdlib.Format.formatter_of_buffer buf in
   Fmt.set_style_renderer ppf (if color_output then `Ansi_tty else `None);
   let flush ppf =
-    Format.pp_print_flush ppf ();
+    Stdlib.Format.pp_print_flush ppf ();
     let s = Buffer.contents buf in
     Buffer.reset buf;
     s in
-  Format.kfprintf flush ppf
+  Stdlib.Format.kfprintf flush ppf
 
 class type stancReturn = object
   method result : Js.js_string Js.t Js.optdef_prop

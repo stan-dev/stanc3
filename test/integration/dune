@@ -1,6 +1,6 @@
 (executable
  (name run_bin_on_args)
- (libraries core unix))
+ (libraries base stdio unix))
 
 (cram
  (applies_to :whole_subtree)

@@ -1,11 +1,11 @@
 module Caml_unix = Unix
-open Core
+open Base
 
 let run_capturing_output cmd =
   let env = [| "PATH=" ^ (Sys.getenv "PATH" |> Option.value ~default:"") |] in
   let stdout, stdin, stderr = Caml_unix.open_process_full cmd env in
   let chns = [stdout; stderr] in
-  let out = List.map ~f:In_channel.input_lines chns in
+  let out = List.map ~f:Stdio.In_channel.input_lines chns in
   ignore (Caml_unix.close_process_full (stdout, stdin, stderr));
   String.concat ~sep:"\n" (List.concat out)
 
@@ -16,4 +16,4 @@ let () =
   Array.iter files ~f:(fun arg ->
       let arg = String.chop_prefix_if_exists arg ~prefix:"./" in
       let cmd = "node " ^ arg in
-      Printf.printf "$ %s\n%s\n" cmd (run_capturing_output cmd))
+      Stdio.printf "$ %s\n%s\n" cmd (run_capturing_output cmd))

@@ -1,4 +1,4 @@
-open Core
+open Base
 
 (** Transformations (constraints) for global variable declarations *)
 

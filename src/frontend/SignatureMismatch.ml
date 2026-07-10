@@ -1,7 +1,6 @@
-open Core
-open Core.Poly
+open Base
+open Base.Poly
 open Middle
-module TypeMap = Core.Map.Make_using_comparator (UnsizedType)
 
 let set ctx key data = ctx := Map.set !ctx ~key ~data
 
@@ -153,7 +152,7 @@ let%expect_test "compare_matches" =
     [ UniqueMatch (); AmbiguousMatch []; SignatureErrors ([], ()); UniqueMatch ()
     ; AmbiguousMatch []; SignatureErrors ([()], ()) ] in
   let matches = List.sort matches ~compare:compare_match_results in
-  print_s [%sexp (matches : (unit, unit list * unit) generic_match_result list)];
+  Stdio.print_s [%sexp (matches : (unit, unit list * unit) generic_match_result list)];
   [%expect
     "\n\
     \    ((UniqueMatch ()) (UniqueMatch ()) (AmbiguousMatch ()) \
@@ -202,7 +201,7 @@ let rec check_same_type depth t1 t2 =
   | t1, t2 -> Error (TypeMismatch (t1, t2, None))
 
 and check_compatible_arguments depth typs args2 :
-    (Promotion.t list, function_mismatch) result =
+    (Promotion.t list, function_mismatch) Result.t =
   match List.zip typs args2 with
   | List.Or_unequal_lengths.Unequal_lengths ->
       Error (ArgNumMismatch (List.length typs, List.length args2))
@@ -358,7 +357,7 @@ let quoted = Fmt.styled (`Fg `Green) Fmt.(quote string)
 
 let pp_mismatch_details ~skipped ppf details =
   let open Fmt in
-  let ctx = ref TypeMap.empty in
+  let ctx = ref (Map.empty (module UnsizedType)) in
   let n_skipped = List.length skipped in
   let pp_excluded_message =
     Fmt.if' (n_skipped > 0)
@@ -410,7 +409,7 @@ let pp_mismatch_details ~skipped ppf details =
 
 let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
   let open Fmt in
-  let ctx = ref TypeMap.empty in
+  let ctx = ref (Map.empty (module UnsizedType)) in
   let rec pp_explain_rec ppf = function
     | ArgError (n, DataOnlyError) ->
         pf ppf "@[<hov>The@ %s@ argument%a@]" (index_str n) text

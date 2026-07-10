@@ -8,7 +8,7 @@
     later be filled in with something like
     [type expr_with_meta = metadata expression] *)
 
-open Core
+open Base
 open Middle
 
 (** Our type for identifiers, on which we record a location *)
@@ -62,7 +62,7 @@ type ('m, 'f, 'p) expr_with =
 type located_meta = {loc: (Location_span.t[@sexp.opaque] [@compare.ignore])}
 [@@deriving sexp, compare, hash]
 
-type untyped_expression = (located_meta, unit, Core.Nothing.t) expr_with
+type untyped_expression = (located_meta, unit, Base.Nothing.t) expr_with
 [@@deriving sexp, compare, hash]
 
 (** Typed expressions also have meta-data after type checking: a location_span,

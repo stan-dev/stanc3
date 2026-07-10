@@ -1,5 +1,5 @@
 open Analysis_and_optimization
-open Core
+open Base
 open Frontend
 open Debug_data_generation
 
@@ -20,7 +20,7 @@ let%expect_test "whole program data generation check" =
       |}
   in
   let str = print_data_prog ast in
-  print_string str;
+  Stdio.print_string str;
   [%expect
     {|
     {
@@ -58,7 +58,7 @@ let%expect_test "whole program data generation check" =
       |}
   in
   let str = print_data_prog ast in
-  print_string str;
+  Stdio.print_string str;
   [%expect
     {|
     {
@@ -108,7 +108,7 @@ let%expect_test "whole program data generation check" =
       |}
   in
   let str = print_data_prog ast in
-  print_string str;
+  Stdio.print_string str;
   [%expect
     {|
     {
@@ -150,7 +150,7 @@ let%expect_test "whole program data generation check" =
       |}
   in
   let str = print_data_prog ast in
-  print_string str;
+  Stdio.print_string str;
   [%expect
     {|
     {
@@ -329,7 +329,7 @@ let%expect_test "whole program data generation check" =
       |}
   in
   let str = print_data_prog ast in
-  print_string str;
+  Stdio.print_string str;
   [%expect
     {|
     {
@@ -729,7 +729,7 @@ let%expect_test "whole program data generation check" =
       |}
   in
   let str = print_data_prog ast in
-  print_string str;
+  Stdio.print_string str;
   [%expect
     {|
     {
@@ -862,7 +862,7 @@ let%expect_test "whole program data generation check" =
       |}
   in
   let str = print_data_prog ast in
-  print_string str;
+  Stdio.print_string str;
   [%expect
     {| { "K": 4, "N": 1, "player1": [ 2 ], "player0": [ 3 ], "y": [ 1 ] } |}]
 
@@ -880,7 +880,7 @@ let%expect_test "Complex numbers program" =
       |}
   in
   let str = print_data_prog ast in
-  print_string str;
+  Stdio.print_string str;
   [%expect
     {|
     {
@@ -927,7 +927,7 @@ let%expect_test "Tuples program" =
       |}
   in
   let str = print_data_prog ast in
-  print_string str;
+  Stdio.print_string str;
   [%expect
     {|
     {

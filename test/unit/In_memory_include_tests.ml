@@ -1,11 +1,11 @@
-open Core
+open Base
 open Frontend
 
 let print_ast_or_error code =
   let () =
     match Test_utils.untyped_ast_of_string code with
-    | Result.Error e -> print_endline @@ Test_utils.error_to_string ~code e
-    | Result.Ok ast -> print_s [%sexp (ast : Ast.untyped_program)] in
+    | Result.Error e -> Stdio.print_endline @@ Test_utils.error_to_string ~code e
+    | Result.Ok ast -> Stdio.print_s [%sexp (ast : Ast.untyped_program)] in
   (* reset *) Include_files.include_provider := FileSystemPaths []
 
 let include_model = {|
@@ -17,7 +17,7 @@ data {
 
 (* TESTS *)
 let%expect_test "no includes" =
-  Include_files.include_provider := InMemory String.Map.empty;
+  Include_files.include_provider := InMemory (Map.empty (module String));
   print_ast_or_error include_model;
   [%expect
     {|
@@ -36,7 +36,7 @@ let%expect_test "no includes" =
 
 let%expect_test "wrong include" =
   Include_files.include_provider :=
-    InMemory (String.Map.of_alist_exn [("bar.stan", "functions { }")]);
+    InMemory (Map.of_alist_exn (module String) [("bar.stan", "functions { }")]);
   print_ast_or_error include_model;
   [%expect
     {|
@@ -66,7 +66,7 @@ let b = {|
 let%expect_test "recursive include" =
   Include_files.include_provider :=
     InMemory
-      (String.Map.of_alist_exn [("include/a.stan", a); ("include/b.stan", b)]);
+      (Map.of_alist_exn (module String) [("include/a.stan", a); ("include/b.stan", b)]);
   print_ast_or_error a;
   [%expect
     {|
@@ -93,7 +93,7 @@ functions {
 
 let%expect_test "good include" =
   Include_files.include_provider :=
-    InMemory (String.Map.of_alist_exn [("foo.stan", foo)]);
+    InMemory (Map.of_alist_exn (module String) [("foo.stan", foo)]);
   print_ast_or_error include_model;
   [%expect
     {|

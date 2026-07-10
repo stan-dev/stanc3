@@ -1,5 +1,5 @@
-open Core
-open Core.Poly
+open Base
+open Base.Poly
 open Middle
 open Lower_expr
 open Lower_stmt
@@ -167,7 +167,7 @@ let lower_constructor
     @ Stmts.unused "base_rng__"
     @ gen_function__ prog_name prog_name
     @ Decls.dummy_var in
-  let data_idents = List.map ~f:fst3 input_vars |> String.Set.of_list in
+  let data_idents = List.map ~f:(fun (x, _, _) -> x) input_vars |> Set.of_list (module String) in
   let lower_data (Stmt.{pattern; meta} as s) =
     match pattern with
     | Decl {decl_id; decl_type; _} when decl_id <> "pos__" -> (
@@ -477,7 +477,7 @@ let rec gen_param_names ?(outer_idcs = []) (decl_id, st) =
     | SizedType.STuple subtypes ->
         let idxes_subtypes =
           List.mapi
-            ~f:(fun i typ -> ((`Tuple, string_of_int (i + 1)), (name, typ)))
+            ~f:(fun i typ -> ((`Tuple, Int.to_string (i + 1)), (name, typ)))
             subtypes in
         List.concat_map
           ~f:(fun (idx, sub) -> gen_param_names ~outer_idcs:(idcs @ [idx]) sub)
@@ -886,7 +886,7 @@ module Testing = struct
   let%expect_test "model public basics" =
     model_public_basics "foobar"
     |> str "%a" Cpp.Printing.pp_program
-    |> print_endline;
+    |> Stdio.print_endline;
     [%expect
       {|
       inline std::string model_name() const final {
@@ -900,7 +900,7 @@ module Testing = struct
   let%expect_test "boilerplate" =
     new_model_boilerplate "foobar"
     |> str "%a" Cpp.Printing.pp_program
-    |> print_endline;
+    |> Stdio.print_endline;
     [%expect
       {|
         using stan_model = foobar_namespace::foobar;
@@ -921,7 +921,7 @@ module Testing = struct
     gen_param_names
       ("foo", SizedType.SArray (SComplex, Middle.Expr.Helpers.variable "N"))
     |> str "@[<v>%a" (list ~sep:cut Cpp.Printing.pp_stmt)
-    |> print_endline;
+    |> Stdio.print_endline;
     [%expect
       {|
           for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
@@ -938,7 +938,7 @@ module Testing = struct
           STuple [SInt; SArray (SReal, Middle.Expr.Helpers.variable "nested")])
       )
     |> str "@[<v>%a" (list ~sep:cut Cpp.Printing.pp_stmt)
-    |> print_endline;
+    |> Stdio.print_endline;
     [%expect
       {|
       param_names__.emplace_back(std::string() + "tuple" + ':' + std::to_string(1));
@@ -956,7 +956,7 @@ module Testing = struct
                 [SInt; SArray (SReal, Middle.Expr.Helpers.variable "nested")]
             , Middle.Expr.Helpers.variable "N" )) )
     |> str "@[<v>%a" (list ~sep:cut Cpp.Printing.pp_stmt)
-    |> print_endline;
+    |> Stdio.print_endline;
     [%expect
       {|
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {

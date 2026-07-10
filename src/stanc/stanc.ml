@@ -1,5 +1,5 @@
 (** stanc console application *)
-open Core
+open Base
 
 open Frontend
 
@@ -7,24 +7,24 @@ let exit_ok = CLI.exit_ok
 let exit_err = CLI.exit_err
 
 let dump_math_sigs () =
-  Stan_math_signatures.pretty_print_all_math_sigs Format.std_formatter ();
+  Stan_math_signatures.pretty_print_all_math_sigs Stdlib.Format.std_formatter ();
   exit_ok
 
 let dump_math_dists () =
-  Stan_math_signatures.pretty_print_all_math_distributions Format.std_formatter
+  Stan_math_signatures.pretty_print_all_math_distributions Stdlib.Format.std_formatter
     ();
   exit_ok
 
 let write filename data =
   try
-    Out_channel.write_all filename ~data;
+    Stdio.Out_channel.write_all filename ~data;
     exit_ok
   with Sys_error msg ->
     Fmt.epr "Error writing to file '%s': %s@." filename msg;
     exit_err
 
 let print_and_exit data =
-  print_endline data;
+  Stdio.print_endline data;
   exit_ok
 
 let print_or_write_and_exit output_file data =
@@ -42,7 +42,7 @@ let output_callback break output_file printed_filename :
       break (print_or_write_and_exit output_file s)
   | DebugOutput s | Memory_patterns s ->
       (* historically, these flags didn't prevent you from continuing *)
-      print_string s
+      Stdio.print_string s
   | Warnings ws -> Warnings.pp_warnings Fmt.stderr ?printed_filename ws
 
 let stanc ?tty_colors ?(debug_lex : bool = false) ?(debug_parse : bool = false)
@@ -59,7 +59,7 @@ let stanc ?tty_colors ?(debug_lex : bool = false) ?(debug_parse : bool = false)
   let model_file_name, model_source, printed_filename =
     if String.equal model_file "-" then
       ( "stdin"
-      , `Code (In_channel.input_all In_channel.stdin)
+      , `Code (Stdio.In_channel.input_all Stdio.In_channel.stdin)
       , Option.first_some flags.filename_in_msg (Some "stdin") )
     else (model_file, `File model_file, flags.filename_in_msg) in
   With_return.with_return @@ fun {return} ->
@@ -70,7 +70,7 @@ let stanc ?tty_colors ?(debug_lex : bool = false) ?(debug_parse : bool = false)
       (output_callback return output_file printed_filename)
   with
   | Ok cpp_str ->
-      if print_cpp then print_endline cpp_str;
+      if print_cpp then Stdio.print_endline cpp_str;
       let out =
         if String.equal output_file "" then
           Common.Files.remove_dotstan model_file_name ^ ".hpp"
@@ -105,8 +105,8 @@ let dispatch_commands args =
   match Common.ICE.with_exn_message go with
   | Ok code -> code
   | Error internal_error ->
-      Out_channel.output_string stderr internal_error;
-      Out_channel.flush stderr;
+      Stdio.Out_channel.output_string Stdio.stderr internal_error;
+      Stdio.Out_channel.flush Stdio.stderr;
       CLI.exit_ice
 
 let main () =
@@ -125,4 +125,4 @@ let main () =
     | s -> s);
   Cmd.eval' ~argv ~catch:false stanc_cmd
 
-let () = if !Sys.interactive then () else exit (main ())
+let () = if !Sys.interactive then () else Stdlib.exit (main ())
