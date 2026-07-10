@@ -148,7 +148,7 @@ module Typed = struct
 
   let sexp_of_t : t -> Sexp.t =
     sexp_of_t Expr.Typed.sexp_of_t Stmt.Located.sexp_of_t
-      Sexplib.Conv.sexp_of_opaque
+      Sexplib0.Sexp_conv.sexp_of_opaque
 end
 
 module Numbered = struct
