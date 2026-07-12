@@ -8,13 +8,13 @@
  (private_modules generated_signatures)
  (inline_tests)
  (preprocess
-  (pps ppx_jane)))
+  (pps ppx_inline_test ppx_pipebang)))
 
 (executable
  (name generate)
  (modules generate)
  (preprocess
-  (pps ppx_jane ppx_deriving.show))
+  (pps ppx_deriving.show))
  (libraries core common middle))
 
 (rule

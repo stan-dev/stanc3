@@ -72,7 +72,7 @@ let process_flags name code (flags : 'a Js.opt) includes :
         let+ ocaml_flags =
           let open Result in
           Array.mapi flags_array ~f:(fun i v ->
-              checked_to_string ~name:("flags[" ^ string_of_int i ^ "]") v)
+              checked_to_string ~name:("flags[" ^ Int.to_string i ^ "]") v)
           |> Array.to_list |> Result.all >>| Array.of_list in
         Driver.Flags.set_backend_args_list
           (ocaml_flags |> Array.to_list |> List.map ~f:(fun o -> "--" ^ o));
@@ -134,7 +134,7 @@ let process_flags name code (flags : 'a Js.opt) includes :
                   |> Option.map ~f:(fun s -> ("debug-data-json", s)) }
           ; line_length=
               flag_val "max-line-length"
-              |> Option.map ~f:int_of_string
+              |> Option.map ~f:Int.of_string
               |> Option.value ~default:78
           ; canonicalizer_settings=
               (if is_flag_set "print-canonical" then Canonicalize.legacy

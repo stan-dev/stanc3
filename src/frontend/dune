@@ -7,7 +7,16 @@
  (modules :standard \ parser_messages_add_type parser_strip_redundant_state)
  (inline_tests)
  (preprocess
-  (pps ppx_jane ppx_deriving.fold ppx_deriving.map)))
+  (pps
+   ppx_hash
+   ppx_compare
+   ppx_sexp_conv
+   ppx_pipebang
+   ppx_expect
+   ppx_sexp_value
+   ppx_sexp_message
+   ppx_deriving.fold
+   ppx_deriving.map)))
 
 (ocamllex lexer)
 

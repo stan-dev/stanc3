@@ -39,7 +39,7 @@ let rec iterate_n f x = function 0 -> x | n -> iterate_n f (f x) (n - 1)
 
 let parse_tuple_slot ix_str (start, stop) =
   let slot = String.drop_prefix ix_str 1 in
-  match int_of_string_opt slot with
+  match Int.of_string_opt slot with
   | None ->
       parse_error
         ("@[@{<light_red>Ill-formed index.@} Failed to parse integer from string \

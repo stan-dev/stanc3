@@ -73,7 +73,7 @@ let%expect_test "map_rec_state_stmt_loc" =
       Stmt.{pattern= SList mir.log_prob; meta= Location_span.empty} in
   let mir = {mir with log_prob= [mir_stmt]} in
   Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
-  print_endline (string_of_int num);
+  print_endline (Int.to_string num);
   [%expect
     {|
       log_prob {
@@ -3560,7 +3560,7 @@ let%expect_test "Mapping acts recursively" =
     Stmt.Pattern.NRFunApp
       ( CompilerInternal (FnWriteParam {var= from; unconstrain_opt= None})
       , [from] ) in
-  let m = Expr.Typed.Map.of_alist_exn [(from, into)] in
+  let m = Map.of_alist_exn (module Expr.Typed) [(from, into)] in
   let s' = expr_subst_stmt_base m s in
   Fmt.str "@[<v>%a@]" Stmt.Located.pp (unpattern s') |> print_endline;
   [%expect {| (FnWriteParam(unconstrain_opt())(var y))__(y); |}]

@@ -134,7 +134,7 @@ let gen_row_vector m n t =
 let sum_to_zero_floats n =
   let l = random_floats n in
   let sum = List.fold l ~init:0. ~f:( +. ) in
-  List.map l ~f:(fun x -> x -. (sum /. float_of_int n))
+  List.map l ~f:(fun x -> x -. (sum /. Float.of_int n))
 
 let simplex_floats n =
   let l = random_floats n in
@@ -337,9 +337,9 @@ open Yojson
 let json_to_mir (decls : (Expr.Typed.t SizedType.t * 'a * string) list)
     (json : Yojson.Basic.t) =
   let rec create_expr (type_ : UnsizedType.t) (json : Basic.t) =
-    let as_float = function `Int i -> float_of_int i | `Float f -> f in
+    let as_float = function `Int i -> Float.of_int i | `Float f -> f in
     let try_float = function
-      | `Int i -> Some (float_of_int i)
+      | `Int i -> Some (Float.of_int i)
       | `Float f -> Some f
       | _ -> None in
     let try_complex = function
@@ -371,7 +371,7 @@ let json_to_mir (decls : (Expr.Typed.t SizedType.t * 'a * string) list)
     | `Assoc l, UTuple ts ->
         l
         |> List.sort ~compare:(fun (x, _) (y, _) ->
-            Int.compare (int_of_string x) (int_of_string y))
+            Int.compare (Int.of_string x) (Int.of_string y))
         |> List.map2_exn ~f:(fun typ_ (_, json) -> create_expr typ_ json) ts
         |> Option.all
         |> Option.map ~f:(fun l -> Expr.Helpers.tuple_expr l)
@@ -398,7 +398,7 @@ let generate_json_entries (name, expr) : string * t =
         `List (List.map ~f:expr_to_json l)
     | FunApp (CompilerInternal FnMakeTuple, l) ->
         `Assoc
-          (List.mapi ~f:(fun i t -> (string_of_int (i + 1), expr_to_json t)) l)
+          (List.mapi ~f:(fun i t -> (Int.to_string (i + 1), expr_to_json t)) l)
     | FunApp (StanLib (transpose, _, _), [e])
       when String.equal transpose (Operator.to_string Transpose) ->
         expr_to_json e

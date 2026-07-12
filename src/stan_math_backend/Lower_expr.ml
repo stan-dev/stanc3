@@ -226,7 +226,7 @@ and lower_binary_fun f es = Exprs.fun_call f (lower_exprs es)
 and vector_literal ?(column = false) scalar es =
   let open Cpp.DSL in
   let vec = if column then Types.vector scalar else Types.row_vector scalar in
-  let make_vector size = vec.:{Literal (string_of_int size)} in
+  let make_vector size = vec.:{Literal (Int.to_string size)} in
   if List.is_empty es then make_vector 0
   else
     let vector = make_vector (List.length es) in

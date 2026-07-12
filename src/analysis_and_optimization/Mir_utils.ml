@@ -24,7 +24,7 @@ let rec num_expr_value (v : Expr.Typed.t) : (float * string) option =
   (* internal type promotions should be ignored *)
   | {pattern= Pattern.Promotion (e, _, _); _} -> num_expr_value e
   | {pattern= Pattern.Lit ((Real | Int), str); _} ->
-      Some (float_of_string str, str)
+      Some (Float.of_string str, str)
   | {pattern= Pattern.FunApp (StanLib ("PMinus__", FnPlain, _), [v]); _} -> (
       match num_expr_value v with
       | Some (v, s) -> Some (-.v, "-" ^ s)
@@ -271,7 +271,7 @@ let stmt_rhs stmt =
    |Break | Continue | Skip | Decl _ | Profile _ | Block _ | SList _ ->
       Set.Poly.empty
 
-let union_map (set : ('a, 'c) Set_intf.Set.t) ~(f : 'a -> 'b Set.Poly.t) =
+let union_map (set : ('a, 'c) Set.t) ~(f : 'a -> 'b Set.Poly.t) =
   Set.fold set ~init:Set.Poly.empty ~f:(fun s a -> Set.union s (f a))
 
 let stmt_rhs_var_set stmt = union_map (stmt_rhs stmt) ~f:expr_var_set

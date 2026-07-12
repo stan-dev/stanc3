@@ -31,7 +31,7 @@ let rec sizedtype_to_json (st : Expr.Typed.t SizedType.t) : Yojson.Basic.t =
   | STuple subtypes ->
       `Assoc
         [ ("name", `String "tuple")
-        ; ("num_elements", `String (string_of_int (List.length subtypes)))
+        ; ("num_elements", `String (Int.to_string (List.length subtypes)))
         ; ("element_types", `List (List.map ~f:sizedtype_to_json subtypes)) ]
 
 let out_var_json (name, st, block) : Yojson.Basic.t =

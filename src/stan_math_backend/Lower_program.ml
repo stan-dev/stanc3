@@ -477,7 +477,7 @@ let rec gen_param_names ?(outer_idcs = []) (decl_id, st) =
     | SizedType.STuple subtypes ->
         let idxes_subtypes =
           List.mapi
-            ~f:(fun i typ -> ((`Tuple, string_of_int (i + 1)), (name, typ)))
+            ~f:(fun i typ -> ((`Tuple, Int.to_string (i + 1)), (name, typ)))
             subtypes in
         List.concat_map
           ~f:(fun (idx, sub) -> gen_param_names ~outer_idcs:(idcs @ [idx]) sub)

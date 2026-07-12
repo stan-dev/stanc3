@@ -6,6 +6,14 @@ open Monotone_framework_sigs
 open Mir_utils
 open Middle
 
+module Expr_set = struct
+  type t = Set.M(Expr.Typed).t
+
+  let empty = Set.empty (module Expr.Typed)
+  let singleton = Set.singleton (module Expr.Typed)
+  let union_list = Set.union_list (module Expr.Typed)
+end
+
 (** Debugging tool to print out MFP sets **)
 let print_mfp to_string (mfp : (int, 'a entry_exit) Map.Poly.t)
     (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t) : unit =
@@ -16,7 +24,7 @@ let print_mfp to_string (mfp : (int, 'a entry_exit) Map.Poly.t)
     [%sexp (s : Stmt.Located.Non_recursive.t)] |> Sexp.to_string_hum in
   Map.iteri mfp ~f:(fun ~key ~data ->
       print_endline
-        (string_of_int key ^ ":\n "
+        (Int.to_string key ^ ":\n "
         ^ print_stmt (Map.Poly.find_exn flowgraph_to_mir key)
         ^ ":\n " ^ print_set data.entry ^ " \t-> " ^ print_set data.exit))
 
@@ -204,28 +212,28 @@ let dual_powerset_lattice (type v)
   end : LATTICE
     with type properties = v Set.Poly.t)
 
-let powerset_lattice_expressions (initial : Expr.Typed.Set.t) =
+let powerset_lattice_expressions (initial : Expr_set.t) =
   (module struct
-    type properties = Expr.Typed.Set.t
+    type properties = Expr_set.t
 
-    let bottom = Expr.Typed.Set.empty
+    let bottom = Expr_set.empty
     let lub s1 s2 = Set.union s1 s2
     let leq s1 s2 = Set.is_subset s1 ~of_:s2
     let initial = initial
   end : LATTICE
-    with type properties = Expr.Typed.Set.t)
+    with type properties = Expr_set.t)
 
-let dual_powerset_lattice_expressions (initial : Expr.Typed.Set.t)
-    (total : Expr.Typed.Set.t) =
+let dual_powerset_lattice_expressions (initial : Expr_set.t)
+    (total : Expr_set.t) =
   (module struct
-    type properties = Expr.Typed.Set.t
+    type properties = Expr_set.t
 
     let bottom = total
     let lub s1 s2 = Set.inter s1 s2
     let leq s1 s2 = Set.is_subset s2 ~of_:s1
     let initial = initial
   end : LATTICE
-    with type properties = Expr.Typed.Set.t)
+    with type properties = Expr_set.t)
 
 (** Add a fresh bottom element to a lattice (possibly without bottom) *)
 let new_bot (type p) (module L : LATTICE_NO_BOT with type properties = p) =
@@ -578,45 +586,43 @@ let live_variables_transfer (never_kill : string Set.Poly.t)
 
 (** Calculate the set of sub-expressions of an expression *)
 let rec used_subexpressions_expr (e : Expr.Typed.t) =
-  Set.union
-    (Expr.Typed.Set.singleton e)
+  Set.union (Expr_set.singleton e)
     (match e.pattern with
-    | Var _ | Lit (_, _) -> Expr.Typed.Set.empty
+    | Var _ | Lit (_, _) -> Expr_set.empty
     | Promotion (expr, _, _) -> used_subexpressions_expr expr
     | FunApp (k, l) ->
-        Expr.Typed.Set.union_list
+        Expr_set.union_list
           (List.map ~f:used_subexpressions_expr (l @ Fun_kind.collect_exprs k))
     | TernaryIf (e1, e2, e3) ->
-        Expr.Typed.Set.union_list
+        Expr_set.union_list
           [ used_subexpressions_expr e1; used_subexpressions_expr e2
           ; used_subexpressions_expr e3 ]
     | Indexed (e, l) ->
-        Expr.Typed.Set.union_list
+        Expr_set.union_list
           (used_subexpressions_expr e
           :: List.map ~f:(used_expressions_idx_help used_subexpressions_expr) l
           )
     | TupleProjection (e, _) -> used_subexpressions_expr e
     | EAnd (e1, e2) | EOr (e1, e2) ->
-        Expr.Typed.Set.union_list
+        Expr_set.union_list
           [used_subexpressions_expr e1; used_subexpressions_expr e2])
 
 and used_expressions_idx_help f (i : Expr.Typed.t Index.t) =
   match i with
-  | All -> Expr.Typed.Set.empty
+  | All -> Expr_set.empty
   | Single e | Upfrom e | MultiIndex e -> f e
   | Between (e1, e2) -> Set.union (f e1) (f e2)
 
 let rec used_expressions_lval f
     ((lval, idxs) : Expr.Typed.t Stmt.Pattern.lvalue) =
   let used_idx =
-    Expr.Typed.Set.union_list (List.map ~f:(used_expressions_idx_help f) idxs)
-  in
+    Expr_set.union_list (List.map ~f:(used_expressions_idx_help f) idxs) in
   match lval with
   | LVariable _ -> used_idx
   | LTupleProjection (e, _) -> Set.union used_idx (used_expressions_lval f e)
 
 (** Calculate the set of expressions of an expression *)
-let used_expressions_expr e = Expr.Typed.Set.singleton e
+let used_expressions_expr e = Expr_set.singleton e
 
 let rec used_expressions_stmt_help f
     (s : (Expr.Typed.t, Stmt.Located.t) Stmt.Pattern.t) =
@@ -626,25 +632,25 @@ let rec used_expressions_stmt_help f
       f e
   | Assignment (l, _, e) -> Set.union (f e) (used_expressions_lval f l)
   | IfElse (e, b1, Some b2) ->
-      Expr.Typed.Set.union_list
+      Expr_set.union_list
         [ f e; used_expressions_stmt_help f b1.pattern
         ; used_expressions_stmt_help f b2.pattern ]
   | NRFunApp (k, l) ->
-      Expr.Typed.Set.union_list (List.map ~f (l @ Fun_kind.collect_exprs k))
-  | Decl _ | Return None | Break | Continue | Skip -> Expr.Typed.Set.empty
+      Expr_set.union_list (List.map ~f (l @ Fun_kind.collect_exprs k))
+  | Decl _ | Return None | Break | Continue | Skip -> Expr_set.empty
   | IfElse (e, b, None) | While (e, b) ->
       Set.union (f e) (used_expressions_stmt_help f b.pattern)
   | For {lower= e1; upper= e2; body= b; loopvar= s} ->
-      Expr.Typed.Set.union_list
+      Expr_set.union_list
         [ f e1; f e2; used_expressions_stmt_help f b.pattern
-        ; Expr.Typed.Set.singleton
+        ; Expr_set.singleton
             { pattern= Var s
             ; meta=
                 Expr.Typed.Meta.
                   {type_= UInt; adlevel= DataOnly; loc= Location_span.empty} }
         ]
   | Profile (_, l) | Block l | SList l ->
-      Expr.Typed.Set.union_list
+      Expr_set.union_list
         (List.map ~f:(fun s -> used_expressions_stmt_help f s.pattern) l)
 
 (** Calculate the set of sub-expressions in a statement *)
@@ -662,12 +668,12 @@ let top_used_expressions_stmt_help f (s : (Expr.Typed.t, int) Stmt.Pattern.t) =
   | Assignment (l, _, e) -> Set.union (f e) (used_expressions_lval f l)
   | While (e, _) | IfElse (e, _, _) -> f e
   | NRFunApp (k, l) ->
-      Expr.Typed.Set.union_list (List.map ~f (l @ Fun_kind.collect_exprs k))
+      Expr_set.union_list (List.map ~f (l @ Fun_kind.collect_exprs k))
   | Profile _ | Block _ | SList _ | Decl _
    |Return None
    |Break | Continue | Skip ->
-      Expr.Typed.Set.empty
-  | For {lower= e1; upper= e2; _} -> Expr.Typed.Set.union_list [f e1; f e2]
+      Expr_set.empty
+  | For {lower= e1; upper= e2; _} -> Expr_set.union_list [f e1; f e2]
 
 (** Calculate the set of sub-expressions at the top level in a statement *)
 let top_used_subexpressions_stmt =
@@ -680,7 +686,7 @@ let top_used_expressions_stmt =
 (** Calculate the subset (of p) of expressions that will need to be recomputed
     as a consequence of evaluating the statement s (because of writes to
     variables performed by s) *)
-let killed_expressions_stmt (p : Expr.Typed.Set.t)
+let killed_expressions_stmt (p : Expr_set.t)
     (s : (Expr.Typed.t, int) Stmt.Pattern.t) =
   Set.filter p ~f:(fun e ->
       let free_vars = free_vars_expr e in
@@ -703,10 +709,10 @@ let used (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t) =
     lazy code motion) *)
 let anticipated_expressions_transfer
     (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t)
-    (used : (int, Expr.Typed.Set.t) Map.Poly.t) =
+    (used : (int, Expr_set.t) Map.Poly.t) =
   (module struct
     type labels = int
-    type properties = Expr.Typed.Set.t
+    type properties = Expr_set.t
 
     let transfer_function l p =
       let mir_node = (Map.find_exn flowgraph_to_mir l).pattern in
@@ -715,7 +721,7 @@ let anticipated_expressions_transfer
       transfer_gen_kill p gen kill
   end : TRANSFER_FUNCTION
     with type labels = int
-     and type properties = Expr.Typed.Set.t)
+     and type properties = Expr_set.t)
 
 (** A helper function for defining transfer functions in terms of gen and kill
     sets in an alternative way, that is used in some of the subanalyses of lazy
@@ -730,10 +736,10 @@ let transfer_gen_kill_alt p gen kill = Set.diff (Set.union p gen) kill
 (** An available expressions analysis, to be used in lazy code motion *)
 let available_expressions_transfer
     (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t)
-    (anticipated_expressions : (int, Expr.Typed.Set.t entry_exit) Map.Poly.t) =
+    (anticipated_expressions : (int, Expr_set.t entry_exit) Map.Poly.t) =
   (module struct
     type labels = int
-    type properties = Expr.Typed.Set.t
+    type properties = Expr_set.t
 
     let transfer_function l p =
       let mir_node = (Map.find_exn flowgraph_to_mir l).pattern in
@@ -742,13 +748,12 @@ let available_expressions_transfer
       transfer_gen_kill_alt p gen kill
   end : TRANSFER_FUNCTION
     with type labels = int
-     and type properties = Expr.Typed.Set.t)
+     and type properties = Expr_set.t)
 
 (** Calculates the set of expressions that can be calculated for the first time
     at each node in the flow graph *)
-let earliest
-    (anticipated_expressions : (int, Expr.Typed.Set.t entry_exit) Map.Poly.t)
-    (available_expressions : (int, Expr.Typed.Set.t entry_exit) Map.Poly.t) =
+let earliest (anticipated_expressions : (int, Expr_set.t entry_exit) Map.Poly.t)
+    (available_expressions : (int, Expr_set.t entry_exit) Map.Poly.t) =
   Map.fold anticipated_expressions ~init:Map.Poly.empty
     ~f:(fun ~key ~data accum ->
       Map.set accum ~key
@@ -757,12 +762,11 @@ let earliest
 
 (** The transfer function for a postponable expressions analysis (as a part of
     lazy code motion) *)
-let postponable_expressions_transfer
-    (earliest : (int, Expr.Typed.Set.t) Map.Poly.t)
-    (used : (int, Expr.Typed.Set.t) Map.Poly.t) =
+let postponable_expressions_transfer (earliest : (int, Expr_set.t) Map.Poly.t)
+    (used : (int, Expr_set.t) Map.Poly.t) =
   (module struct
     type labels = int
-    type properties = Expr.Typed.Set.t
+    type properties = Expr_set.t
 
     let transfer_function l p =
       let gen = Map.find_exn earliest l in
@@ -770,14 +774,14 @@ let postponable_expressions_transfer
       transfer_gen_kill_alt p gen kill
   end : TRANSFER_FUNCTION
     with type labels = int
-     and type properties = Expr.Typed.Set.t)
+     and type properties = Expr_set.t)
 
 (** Calculates the set of expressions that can be computed at the latest at each
     node *)
 let latest (successors : (int, int Set.Poly.t) Map.Poly.t)
-    (earliest : (int, Expr.Typed.Set.t) Map.Poly.t)
-    (postponable_expressions : (int, Expr.Typed.Set.t entry_exit) Map.Poly.t)
-    (used : (int, Expr.Typed.Set.t) Map.Poly.t) =
+    (earliest : (int, Expr_set.t) Map.Poly.t)
+    (postponable_expressions : (int, Expr_set.t entry_exit) Map.Poly.t)
+    (used : (int, Expr_set.t) Map.Poly.t) =
   let earliest_or_postponable key =
     Set.union
       (Map.Poly.find_exn earliest key)
@@ -792,12 +796,11 @@ let latest (successors : (int, int Set.Poly.t) Map.Poly.t)
 
 (** The transfer function for a used-not-latest expressions analysis, as a part
     of lazy code motion *)
-let used_not_latest_expressions_transfer
-    (used : (int, Expr.Typed.Set.t) Map.Poly.t)
-    (latest : (int, Expr.Typed.Set.t) Map.Poly.t) =
+let used_not_latest_expressions_transfer (used : (int, Expr_set.t) Map.Poly.t)
+    (latest : (int, Expr_set.t) Map.Poly.t) =
   (module struct
     type labels = int
-    type properties = Expr.Typed.Set.t
+    type properties = Expr_set.t
 
     let transfer_function l p =
       let gen = Map.find_exn used l in
@@ -805,7 +808,7 @@ let used_not_latest_expressions_transfer
       transfer_gen_kill_alt p gen kill
   end : TRANSFER_FUNCTION
     with type labels = int
-     and type properties = Expr.Typed.Set.t)
+     and type properties = Expr_set.t)
 
 (** The transfer function for the first forward analysis part of determining
     optimal ad-levels for variables *)
@@ -1038,8 +1041,8 @@ let lazy_expressions_mfp
   (* TODO: this could probably be done in a nicer way *)
   let used_expr = used flowgraph_to_mir in
   let (module Lattice1) =
-    dual_powerset_lattice_expressions Expr.Typed.Set.empty all_expressions in
-  let (module Lattice2) = powerset_lattice_expressions Expr.Typed.Set.empty in
+    dual_powerset_lattice_expressions Expr_set.empty all_expressions in
+  let (module Lattice2) = powerset_lattice_expressions Expr_set.empty in
   let (module Transfer1) =
     anticipated_expressions_transfer flowgraph_to_mir used_expr in
   let (module Mf1) =

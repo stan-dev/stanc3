@@ -29,7 +29,7 @@ let new_file_start_position buf filename included_from =
     if Option.is_none included_from then
       {Lexing.pos_fname= filename; pos_lnum= 1; pos_bol= 0; pos_cnum= 0}
     else
-      let key = "\u{0}" ^ string_of_int (Hashtbl.length locations_map) in
+      let key = "\u{0}" ^ Int.to_string (Hashtbl.length locations_map) in
       Hashtbl.add_exn locations_map ~key ~data:(filename, included_from);
       {Lexing.pos_fname= key; pos_lnum= 1; pos_bol= 0; pos_cnum= 0} in
   buf.lex_start_p <- pos;

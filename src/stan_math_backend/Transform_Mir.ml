@@ -292,7 +292,7 @@ let rec var_context_read_inside_tuple enclosing_tuple_name origin_type
           subtypes in
       let enclosing_names =
         List.mapi
-          ~f:(fun i _ -> enclosing_tuple_name ^ "." ^ string_of_int (i + 1))
+          ~f:(fun i _ -> enclosing_tuple_name ^ "." ^ Int.to_string (i + 1))
           subtypes in
       List.map2_exn
         ~f:(fun name projection ->
@@ -306,7 +306,7 @@ let rec var_context_read_inside_tuple enclosing_tuple_name origin_type
         | STuple subtypes ->
             ( List.mapi
                 ~f:(fun i _ ->
-                  enclosing_tuple_name ^ "." ^ string_of_int (i + 1))
+                  enclosing_tuple_name ^ "." ^ Int.to_string (i + 1))
                 subtypes
             , subtypes )
         | _ -> ([], []) in
@@ -502,7 +502,7 @@ let rec var_context_read_internal
         match tupl with
         | STuple subtypes ->
             ( List.mapi
-                ~f:(fun i _ -> decl_id ^ "." ^ string_of_int (i + 1))
+                ~f:(fun i _ -> decl_id ^ "." ^ Int.to_string (i + 1))
                 subtypes
             , subtypes )
         | _ -> (* impossible by above pattern patch *) ([], []) in

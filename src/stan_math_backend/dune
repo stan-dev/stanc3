@@ -14,4 +14,12 @@
   numbering)
  (inline_tests)
  (preprocess
-  (pps ppx_jane ppx_deriving.make)))
+  (pps
+   ppx_compare
+   ppx_sexp_conv
+   ppx_hash
+   ppx_pipebang
+   ppx_expect
+   ppx_sexp_value
+   ppx_sexp_message
+   ppx_deriving.make)))

@@ -8,7 +8,7 @@ exception Rejected of Location_span.t * string
 
 let rec is_int query Expr.{pattern; _} =
   match pattern with
-  | Lit (Int, i) | Lit (Real, i) -> float_of_string i = float_of_int query
+  | Lit (Int, i) | Lit (Real, i) -> Float.of_string i = Float.of_int query
   | Promotion (e, _, _) -> is_int query e
   | _ -> false
 

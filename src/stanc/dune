@@ -8,9 +8,7 @@
   (backend bisect_ppx))
  (modules Stanc CLI)
  (public_name stanc)
- (package stanc)
- (preprocess
-  (pps ppx_jane)))
+ (package stanc))
 
 (rule
  (target
