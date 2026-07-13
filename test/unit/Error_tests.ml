@@ -9,11 +9,12 @@ let%expect_test "with_exn_message" =
   [%expect
     {|
     Internal compiler error:
-    (Failure oops!)
+    oops!
     Backtrace missing.
 
     This should never happen. Please file a bug at %PKG_ISSUES%
-    and include this message and the model that caused this issue. |}]
+    and include this message and the model that caused this issue.
+    |}]
 
 (* expect_tests warn against directly including a backtrace for fragility
    reasons *)
@@ -37,8 +38,9 @@ let%expect_test "ICE triggered" =
   [%expect
     {|
     Internal compiler error:
-    ("Can't index" (ut UReal))
+    Can't index real
     Backtrace missing.
 
     This should never happen. Please file a bug at %PKG_ISSUES%
-    and include this message and the model that caused this issue. |}]
+    and include this message and the model that caused this issue.
+    |}]

@@ -1,4 +1,4 @@
-open Core
+open StdLabels
 
 type t =
   { optimization_level: Analysis_and_optimization.Optimize.optimization_level
@@ -75,9 +75,9 @@ let set_backend_args_list flags =
   let sans_model_and_hpp_paths x =
     not
       String.(
-        is_suffix ~suffix:".stan" x
-        && not (is_prefix ~prefix:"--filename-in-msg" x)
-        || is_prefix ~prefix:"--o" x) in
+        ends_with ~suffix:".stan" x
+        && not (starts_with ~prefix:"--filename-in-msg" x)
+        || starts_with ~prefix:"--o" x) in
   let stanc_args_to_print =
     flags |> List.filter ~f:sans_model_and_hpp_paths |> String.concat ~sep:" "
   in

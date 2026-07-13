@@ -82,11 +82,11 @@ let skip_comments loc =
              technically allowed things fail For example, an if statement where
              the 'else' is entirely inside the include. This makes the failure
              noisy rather than ever producing anything invalid for these. *)
-          Common.ICE.internal_compiler_error
-            [%message
-              "Unable to format #include in this position!"
-                (l : string list)
-                (loc : Middle.Location_span.t)] [@coverage off]
+          Common.ICE.(
+            internal_errorf
+              "Unable to format #include in this position! Lines: %t Loc: %t"
+              [Fmt.list Fmt.string $ l; Middle.Location_span.pp $ loc])
+          [@coverage off]
       | x, s :: l, loc -> Some (x, (" ^^^:" ^ s) :: l, loc)
       | _, [], _ -> None)
 
@@ -274,8 +274,8 @@ and pp_expression ppf ({expr= e_content; emeta= {loc; _}} : untyped_expression)
   | CondDistApp (_, id, es) -> (
       match es with
       | [] ->
-          Common.ICE.internal_compiler_error
-            [%message "CondDistApp with no arguments: " id.name] [@coverage off]
+          Common.ICE.internal_errorf "CondDistApp with no arguments: %s"
+            [id.name] [@coverage off]
       | [e] ->
           pf ppf "%a(@,%a%a)@]" pp_start_funapp id pp_expression e
             (pp_comments_spacing ~before:sp get_comments)

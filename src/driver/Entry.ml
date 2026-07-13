@@ -50,7 +50,7 @@ type compilation_result = (string, Errors.t) result
 let debug_output_mir output mir = function
   | Flags.Off -> ()
   | Basic ->
-      output (DebugOutput (fmt_sexp [%sexp (mir : Middle.Program.Typed.t)]))
+      output (DebugOutput (fmt_sexp (Middle.Program.Typed.sexp_of_t mir)))
   | Pretty -> output (DebugOutput (Fmt.str "%a" Program.Typed.pp mir))
 
 let stan2cpp model_name model (flags : Flags.t) (output : other_output -> unit)
@@ -64,13 +64,13 @@ let stan2cpp model_name model (flags : Flags.t) (output : other_output -> unit)
   output (Warnings parser_warnings);
   let* ast in
   if flags.debug_settings.print_ast then
-    output (DebugOutput (fmt_sexp [%sexp (ast : Ast.untyped_program)]));
+    output (DebugOutput (fmt_sexp (Ast.sexp_of_untyped_program ast)));
   let* typed_ast, type_warnings =
     Typechecker.check_program ~allow_undefined_functions:flags.allow_undefined
       ast
     |> Result.map_error ~f:(fun e -> Errors.Semantic_error e) in
   if flags.debug_settings.print_typed_ast then
-    output (DebugOutput (fmt_sexp [%sexp (typed_ast : Ast.typed_program)]));
+    output (DebugOutput (fmt_sexp (Ast.sexp_of_typed_program typed_ast)));
   output (Warnings type_warnings);
   if flags.info then output (Info (Info.info typed_ast));
   let deprecation_warnings =
@@ -141,5 +141,5 @@ let stan2cpp model_name model (flags : Flags.t) (output : other_output -> unit)
       ~standalone_functions:(flags.functions_only || flags.standalone_functions)
       ?printed_filename:flags.filename_in_msg opt_mir in
   if flags.debug_settings.print_lir then
-    output (DebugOutput (fmt_sexp [%sexp (cpp : Cpp.program)]));
+    output (DebugOutput (fmt_sexp (Cpp.sexp_of_program cpp)));
   Fmt.(to_to_string Cpp.Printing.pp_program) cpp

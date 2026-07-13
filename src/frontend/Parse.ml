@@ -1,7 +1,6 @@
 (** Some complicated stuff to get the custom syntax errors out of Menhir's
     Incremental API *)
 
-open Core
 open Stdlib.Result.Syntax
 module Interp = Parser.MenhirInterpreter
 
@@ -21,8 +20,7 @@ let drive_parser parse_fun =
       match error_state with
       | Interp.HandlingError env -> env
       | _ ->
-          Common.ICE.internal_compiler_error
-            [%message "Parser failed but is not in an error state "]
+          Common.ICE.internal_error "Parser failed but is not in an error state"
           [@coverage off] in
     let message =
       let state = Interp.current_state_number env in
@@ -35,10 +33,8 @@ let drive_parser parse_fun =
             ""
         else ""
       with _ ->
-        Common.ICE.internal_compiler_error
-          [%message
-            "Failed to find error for parser error state " (state : int)]
-        [@coverage off] in
+        Common.ICE.internal_errorf "Failed to find error for parser state %d"
+          [state] [@coverage off] in
     let location =
       let env =
         match prev with
@@ -70,8 +66,8 @@ let parse parse_fun file_or_code =
   let result =
     let* lexbuf, name = to_lexbuf file_or_code in
     Preprocessor.init lexbuf name;
-    drive_parser parse_fun
-    |> Result.map_error ~f:(fun e -> Errors.Syntax_error e) in
+    drive_parser parse_fun |> Result.map_error (fun e -> Errors.Syntax_error e)
+  in
   (result, Input_warnings.collect ())
 
 let parse_stanfunctions file_or_code =

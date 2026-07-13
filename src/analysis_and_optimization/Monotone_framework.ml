@@ -14,20 +14,6 @@ module Expr_set = struct
   let union_list = Set.union_list (module Expr.Typed)
 end
 
-(** Debugging tool to print out MFP sets **)
-let print_mfp to_string (mfp : (int, 'a entry_exit) Map.Poly.t)
-    (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t) : unit =
-  let print_set s =
-    [%sexp (Set.Poly.map ~f:to_string s : string Set.Poly.t)]
-    |> Sexp.to_string_hum in
-  let print_stmt s =
-    [%sexp (s : Stmt.Located.Non_recursive.t)] |> Sexp.to_string_hum in
-  Map.iteri mfp ~f:(fun ~key ~data ->
-      print_endline
-        (Int.to_string key ^ ":\n "
-        ^ print_stmt (Map.Poly.find_exn flowgraph_to_mir key)
-        ^ ":\n " ^ print_set data.entry ^ " \t-> " ^ print_set data.exit))
-
 (** Calculate the free (non-bound) variables in an expression *)
 let rec free_vars_expr (e : Expr.Typed.t) =
   match e.pattern with

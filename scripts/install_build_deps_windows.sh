@@ -17,6 +17,6 @@ opam install -y base.v0.17.3 base-windows.v0.17.3 menhir.20260209 menhir-windows
      fmt-windows.0.11.0 yojson.3.0.0 yojson-windows.3.0.0 cmdliner.2.1.1 cmdliner-windows.2.1.1\
      ppx_deriving.6.1.1 ppx_deriving-windows.6.1.1 ppx_hash ppx_hash-windows ppx_compare ppx_compare-windows ppx_sexp_conv\
      ppx_sexp_conv-windows ppx_expect ppx_expect-windows ppx_inline_test ppx_inline_test-windows ppx_pipebang\
-     ppx_pipebang-windows ppx_sexp_value ppx_sexp_value-windows ppx_sexp_message ppx_sexp_message-windows
+     ppx_pipebang-windows ppx_sexp_value ppx_sexp_value-windows
 
 eval $(opam env)

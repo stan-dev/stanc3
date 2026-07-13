@@ -49,10 +49,9 @@ let rec requires ut t =
         ("stan::is_tuple_of_size", [t; NonTypeTemplateInt (List.length ts)])
       :: List.concat_mapi ts ~f:(fun i ty -> requires ty (Types.tuple_elt t i))
   | UMathLibraryFunction | UFun _ ->
-      Common.ICE.internal_compiler_error
-        [%message
-          "Cannot formulate require templates for type " (ut : UnsizedType.t)]
-      [@coverage off]
+      Common.ICE.(
+        internal_errorf "Cannot formulate require templates for type %t"
+          [UnsizedType.pp $ ut]) [@coverage off]
 
 (** Identify the templates which need to be considered in the return type of the
     function (i.e., the scalar types) *)
@@ -74,13 +73,12 @@ let return_optional_arg_types (args : Program.fun_arg_decl) =
             let templates = List.concat temps in
             templates
         | _ ->
-            Common.ICE.internal_compiler_error
-              [%message
-                "Impossible: type passes UnsizedType.contains_tuple but \
-                 unwrapped scalar is not tuple"
-                  (typ : UnsizedType.t)
-                  (internal : UnsizedType.t)
-                  (ad : UnsizedType.autodifftype)] [@coverage off])
+            Common.ICE.(
+              internal_errorf
+                "Impossible: type %t passes UnsizedType.contains_tuple but \
+                 unwrapped scalar %t is not tuple %t"
+                UnsizedType.[pp $ typ; pp $ internal; pp_autodifftype $ ad])
+            [@coverage off])
     | UnsizedType.DataOnly, ut when not (UnsizedType.is_eigen_type ut) -> []
     | ( _
       , ( UnsizedType.UArray _ | UComplex | UVector | URowVector | UMatrix
