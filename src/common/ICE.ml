@@ -1,4 +1,4 @@
-let internal_error = failwith
+let internal_error s = failwith s
 let internal_errorf s a = failwith (Format.lasprintf s a)
 let ( $ ) pp x ppf = pp ppf x
 
