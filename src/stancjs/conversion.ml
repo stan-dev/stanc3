@@ -29,7 +29,7 @@ let checked_to_array ~name value =
   else Ok (Js.to_array value)
 
 let get_includes_lenient includes : string String.Map.t * string list =
-  let open Common.Let_syntax.Result in
+  let open Stdlib.Result.Syntax in
   let map, warnings =
     match Js.Opt.to_option includes with
     | None -> (String.Map.empty, [] (* normal use: argument not supplied *))
@@ -61,7 +61,7 @@ type flags =
 
 let process_flags name code (flags : 'a Js.opt) includes :
     (flags, string) result =
-  let open Common.Let_syntax.Result in
+  let open Stdlib.Result.Syntax in
   let* name = checked_to_string ~name:"name" name in
   let* code = checked_to_string ~name:"code" code in
   let+ flags =

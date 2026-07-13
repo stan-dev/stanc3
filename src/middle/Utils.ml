@@ -2,8 +2,6 @@
 
 open Core
 
-let option_or_else ~if_none x = Option.first_some x if_none
-
 (** Name mangling helper functions for distributions *)
 let unnormalized_suffices = ["_lupdf"; "_lupmf"]
 

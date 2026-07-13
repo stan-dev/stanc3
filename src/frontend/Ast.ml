@@ -362,7 +362,7 @@ let rec extract_ids {expr; _} =
   | IntNumeral _ | RealNumeral _ | ImagNumeral _ | GetTarget -> []
 
 let rec lvalue_of_expr_opt ({expr; emeta} : untyped_expression) =
-  let open Common.Let_syntax.Option in
+  let open Stdlib.Option.Syntax in
   let rec base_lvalue {expr; emeta} =
     let+ lval =
       match expr with

@@ -243,7 +243,11 @@ module Debug_Options = struct
       (function
         | None -> `Ok None
         | Some file -> (
-            try `Ok (Some ("'" ^ file ^ "'", In_channel.read_all file))
+            try
+              `Ok
+                (Some
+                   ( "'" ^ file ^ "'"
+                   , In_channel.with_open_bin file In_channel.input_all ))
             with _ ->
               `Error (true, "File '" ^ file ^ "' not found or cannot be opened.")
             ))

@@ -55,7 +55,7 @@ let debug_output_mir output mir = function
 
 let stan2cpp model_name model (flags : Flags.t) (output : other_output -> unit)
     : compilation_result =
-  let open Common.Let_syntax.Result in
+  let open Stdlib.Result.Syntax in
   reset_mutable_states model_name flags;
   if flags.version then output (Version (Fmt.str "%s" version));
   let ast, parser_warnings =

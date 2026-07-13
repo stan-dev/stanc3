@@ -616,34 +616,34 @@ module Testing = struct
     Fmt.str "%a" Cpp.Printing.pp_expr (lower_expr @@ dummy_locate e)
 
   let%expect_test "pp_expr1" =
-    printf "%s" (pp_unlocated (Var "a"));
+    print_string (pp_unlocated (Var "a"));
     [%expect {| a |}]
 
   let%expect_test "pp_expr2" =
-    printf "%s" (pp_unlocated (Lit (Str, "b")));
+    print_string (pp_unlocated (Lit (Str, "b")));
     [%expect {| "b" |}]
 
   let%expect_test "pp_expr3" =
-    printf "%s" (pp_unlocated (Lit (Int, "112")));
+    print_string (pp_unlocated (Lit (Int, "112")));
     [%expect {| 112 |}]
 
   let%expect_test "pp_expr4" =
-    printf "%s" (pp_unlocated (Lit (Int, "112")));
+    print_string (pp_unlocated (Lit (Int, "112")));
     [%expect {| 112 |}]
 
   let%expect_test "pp_expr5" =
-    printf "%s" (pp_unlocated (FunApp (StanLib ("pi", FnPlain, AoS), [])));
+    print_string (pp_unlocated (FunApp (StanLib ("pi", FnPlain, AoS), [])));
     [%expect {| stan::math::pi() |}]
 
   let%expect_test "pp_expr6" =
-    printf "%s"
+    print_string
       (pp_unlocated
          (FunApp
             (StanLib ("sqrt", FnPlain, AoS), [dummy_locate (Lit (Int, "123"))])));
     [%expect {| stan::math::sqrt(123) |}]
 
   let%expect_test "pp_expr7" =
-    printf "%s"
+    print_string
       (pp_unlocated
          (FunApp
             ( StanLib ("atan", FnPlain, AoS)
@@ -652,7 +652,7 @@ module Testing = struct
     [%expect {| stan::math::atan(123, 1.2) |}]
 
   let%expect_test "pp_expr9" =
-    printf "%s"
+    print_string
       (pp_unlocated
          (TernaryIf
             ( dummy_locate (Lit (Int, "1"))
@@ -661,11 +661,11 @@ module Testing = struct
     [%expect {| (1 ? 1.2 : 2.3) |}]
 
   let%expect_test "pp_expr10" =
-    printf "%s" (pp_unlocated (Indexed (dummy_locate (Var "a"), [All])));
+    print_string (pp_unlocated (Indexed (dummy_locate (Var "a"), [All])));
     [%expect {| stan::model::rvalue(a, "a", stan::model::index_omni()) |}]
 
   let%expect_test "pp_expr11" =
-    printf "%s"
+    print_string
       (pp_unlocated
          (FunApp
             ( UserDefined ("poisson_rng", FnRng)
@@ -673,9 +673,9 @@ module Testing = struct
     [%expect {| poisson_rng(123, base_rng__, pstream__) |}]
 
   let%expect_test "pp_expr12" =
-    printf "%s\n"
+    print_endline
       (Fmt.str "%a" Cpp.Printing.pp_expr (vector_literal Cpp.Double []));
-    printf "%s"
+    print_string
       (Fmt.str "%a" Cpp.Printing.pp_expr
          (vector_literal ~column:true Cpp.Double []));
     [%expect

@@ -17,7 +17,8 @@ let dump_math_dists () =
 
 let write filename data =
   try
-    Out_channel.write_all filename ~data;
+    ( Out_channel.with_open_bin filename @@ fun oc ->
+      Out_channel.output_string oc data );
     exit_ok
   with Sys_error msg ->
     Fmt.epr "Error writing to file '%s': %s@." filename msg;
@@ -105,8 +106,8 @@ let dispatch_commands args =
   match Common.ICE.with_exn_message go with
   | Ok code -> code
   | Error internal_error ->
-      Out_channel.output_string stderr internal_error;
-      Out_channel.flush stderr;
+      Out_channel.output_string Out_channel.stderr internal_error;
+      Out_channel.flush Out_channel.stderr;
       CLI.exit_ice
 
 let main () =
