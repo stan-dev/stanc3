@@ -157,6 +157,7 @@ Semantic error in 'if_else.stan', line 9, column 26 to column 54:
    -------------------------------------------------
 
 A returning function was expected but an undeclared identifier "if_else" was supplied.
+Did you mean "inverse"?
 [exit 1]
   $ stanc increment_log_prob.stan
 Semantic error in 'increment_log_prob.stan', line 42, column 2 to column 24:

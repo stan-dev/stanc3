@@ -681,8 +681,7 @@ let check_function_callable_with_tuple cf tenv caller_id fname
         else if sfx <> FnPlain then
           Error
             (`FnRequirementsError
-               ( SuffixMismatch (FnPlain, Fun_kind.forget_normalization sfx)
-               , location ))
+               (SuffixMismatch (FnPlain, Fun_kind.without_propto sfx), location))
         else
           let no_prom_args, _ =
             List.split_n args (List.length required_arg_types) in
@@ -2098,8 +2097,7 @@ and check_fundef loc cf tenv return_ty id args body =
           (`Variable {origin; readonly= true; global= false; location= id.id_loc}))
   in
   let context =
-    let kind =
-      Fun_kind.suffix_from_name id.name |> Fun_kind.forget_normalization in
+    let kind = Fun_kind.suffix_from_name id.name |> Fun_kind.without_propto in
     { cf with
       containing_function=
         UnsizedType.returntype_to_type_opt return_ty

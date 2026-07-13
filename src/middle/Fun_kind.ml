@@ -31,15 +31,6 @@ let suffix_from_name fname =
   else if is_suffix "_lpmf" then FnLpmf false
   else FnPlain
 
-let forget_normalization suffix =
-  match suffix with
-  | FnLpdf _ -> FnLpdf ()
-  | FnLpmf _ -> FnLpmf ()
-  | FnPlain -> FnPlain
-  | FnRng -> FnRng
-  | FnTarget -> FnTarget
-  | FnJacobian -> FnJacobian
-
 let with_unnormalized_suffix (name : string) =
   Option.first_some
     (String.chop_suffix ~suffix:"_lpdf" name

@@ -60,7 +60,13 @@ let nearest_ident env name =
   let open Stdlib.Option.Syntax in
   let max_dist s =
     let length = String.length s in
-    if length < 2 then 0 else if length < 10 then 2 else 4 in
+    let length =
+      (* Special case: if a function is a *_lpdf, for example, don't give it
+         extra typo leeway to avoid some poor suggestions *)
+      if Fun_kind.suffix_from_name s <> FnPlain then
+        String.length (fst @@ String.rsplit2_exn ~on:'_' s)
+      else length in
+    Int.min (length / 2) 5 in
   let iter f = Map.iter_keys ~f env in
   let suggestions = Stdlib.String.spellcheck ~max_dist iter name in
   let other_suffixes =
