@@ -17,7 +17,7 @@ let dump_math_dists () =
 
 let write filename data =
   try
-    ( Out_channel.with_open_text filename @@ fun oc ->
+    ( Out_channel.with_open_bin filename @@ fun oc ->
       Out_channel.output_string oc data );
     exit_ok
   with Sys_error msg ->

@@ -58,7 +58,7 @@ let to_lexbuf file_or_code =
   match file_or_code with
   | `File path ->
       let+ chan =
-        try Ok (In_channel.open_text path)
+        try Ok (In_channel.open_bin path)
         with _ -> Error (Errors.FileNotFound path) in
       let lexbuf = Lexing.from_channel chan in
       Stdlib.Gc.finalise (fun _ -> In_channel.close_noerr chan) lexbuf;

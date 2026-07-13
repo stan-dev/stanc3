@@ -247,7 +247,7 @@ module Debug_Options = struct
               `Ok
                 (Some
                    ( "'" ^ file ^ "'"
-                   , In_channel.with_open_text file In_channel.input_all ))
+                   , In_channel.with_open_bin file In_channel.input_all ))
             with _ ->
               `Error (true, "File '" ^ file ^ "' not found or cannot be opened.")
             ))

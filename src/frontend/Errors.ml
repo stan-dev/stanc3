@@ -21,7 +21,7 @@ let get_context ?code Middle.Location.{filename; included_from; _} =
       match !Include_files.include_provider with
       | FileSystemPaths _ ->
           (* So we can read directly from the filesystem *)
-          In_channel.with_open_text filename In_channel.input_lines
+          In_channel.with_open_bin filename In_channel.input_lines
       | InMemory m ->
           (* Or, we know we can find it in the map *)
           String.split_lines (Map.find_exn m filename))
