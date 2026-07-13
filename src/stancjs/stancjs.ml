@@ -25,7 +25,7 @@ let invoke_driver model_name model flags =
 let stan2cpp_wrapped name code flags includes : stancReturn Js.t =
   let includes, include_reader_warnings = get_includes_lenient includes in
   let compilation_result =
-    let open Common.Let_syntax.Result in
+    let open Stdlib.Result.Syntax in
     let* {name; code; driver_flags; color_output} =
       process_flags name code flags includes in
     let+ result, warnings =

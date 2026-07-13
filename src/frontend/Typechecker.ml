@@ -672,7 +672,7 @@ let check_function_callable_with_tuple cf tenv caller_id fname
     match info with
     | Env.{type_= UnsizedType.UFun (args, return_type, sfx, _) as fn_type; _} ->
         let open SignatureMismatch in
-        let open Common.Let_syntax.Result in
+        let open Stdlib.Result.Syntax in
         if return_type <> required_fn_return_type then
           Error
             (`FnRequirementsError

@@ -2,7 +2,7 @@
     Incremental API *)
 
 open Core
-open Common.Let_syntax.Result
+open Stdlib.Result.Syntax
 module Interp = Parser.MenhirInterpreter
 
 let drive_parser parse_fun =
