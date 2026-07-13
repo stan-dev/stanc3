@@ -1,9 +1,8 @@
 (** This module is intended to be a drop-in replacement for our previous use of
-    [core] from Jane Street. This lightweight module only depends on Base,
-    Sexplib0, and Stdio. *)
+    [core] from Jane Street. This lightweight module only depends on Base and
+    Sexplib0. *)
 
 include Base
-include Stdio
 
 (** We make a few modules look more like their Core equivalents *)
 
@@ -77,6 +76,7 @@ end
 
 let fst3 (v, _, _) = v
 let sprintf = Printf.sprintf
+let print_s s = Stdlib.print_endline (Sexplib0.Sexp.to_string_hum s)
 
 (** Finally, we re-export a bunch of stuff from Stdlib that Base shadowed *)
 
@@ -91,5 +91,7 @@ module Obj = Stdlib.Obj
 let ( ^^ ) = Stdlib.( ^^ )
 let ( ** ) = Stdlib.( ** )
 let exit = Stdlib.exit
+let print_endline = Stdlib.print_endline
+let print_string = Stdlib.print_string
 
 type ('a, 'b) result = ('a, 'b) Stdlib.result

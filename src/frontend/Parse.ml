@@ -58,9 +58,11 @@ let to_lexbuf file_or_code =
   match file_or_code with
   | `File path ->
       let+ chan =
-        try Ok (In_channel.create path)
+        try Ok (In_channel.open_text path)
         with _ -> Error (Errors.FileNotFound path) in
-      (Lexing.from_channel chan, path)
+      let lexbuf = Lexing.from_channel chan in
+      Stdlib.Gc.finalise (fun _ -> In_channel.close_noerr chan) lexbuf;
+      (lexbuf, path)
   | `Code code -> Ok (Lexing.from_string code, "string")
 
 let parse parse_fun file_or_code =

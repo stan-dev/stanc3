@@ -99,7 +99,10 @@ let find_include_fs lookup_paths fname =
     | path :: rest_of_paths -> (
         try
           let full_path = path ^ "/" ^ fname in
-          (In_channel.create full_path |> Lexing.from_channel, full_path)
+          let ic = In_channel.open_text full_path in
+          let lexbuf = Lexing.from_channel ic in
+          Stdlib.Gc.finalise (fun _ -> In_channel.close_noerr ic) lexbuf;
+          (lexbuf, full_path)
         with _ -> loop rest_of_paths) in
   loop lookup_paths
 
