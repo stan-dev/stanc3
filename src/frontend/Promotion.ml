@@ -12,7 +12,7 @@ type t =
   | IntToComplex
   | RealToComplex
   | TuplePromotion of t list
-[@@deriving sexp]
+[@@deriving sexp, show]
 
 (** Our promotion nodes only store the scalar type to promote, e.g to promote a
     [tuple(array int)] to a [tuple(array real)], we store [tuple(real)], not
@@ -54,26 +54,21 @@ let rec promote_unsized_type (typ : UnsizedType.t)
       (UnsizedType.promote_container typ UComplex, AutoDiffable)
   | NoPromotion, _, _ -> (typ, ad)
   | (IntToReal | ToVar | ToComplexVar | IntToComplex), _, _ ->
-      Common.ICE.internal_compiler_error
-        [%message
-          "Failed to promote type, unexpected type:"
-            (prom : t)
-            (typ : UnsizedType.t)
-            (ad : UnsizedType.autodifftype)] [@coverage off]
+      Common.ICE.(
+        internal_errorf "Failed to promote type with %s, unexpected type: %t %t"
+          UnsizedType.[show prom; pp $ typ; pp_autodifftype $ ad])
+      [@coverage off]
   | TuplePromotion _, _, _ ->
-      Common.ICE.internal_compiler_error
-        [%message
-          "Found Tuple Promotion for a non-tuple type:"
-            (prom : t)
-            (typ : UnsizedType.t)
-            (ad : UnsizedType.autodifftype)] [@coverage off]
+      Common.ICE.(
+        internal_errorf "Found Tuple Promotion %s for a non-tuple type: %t %t"
+          UnsizedType.[show prom; pp $ typ; pp_autodifftype $ ad])
+      [@coverage off]
   | _, _, TupleAD _ ->
-      Common.ICE.internal_compiler_error
-        [%message
-          "Found Tuple Autodiff in promotion for a non-tuple type:"
-            (prom : t)
-            (typ : UnsizedType.t)
-            (ad : UnsizedType.autodifftype)] [@coverage off]
+      Common.ICE.(
+        internal_errorf
+          "Found Tuple Autodiff in promotion %s for a non-tuple type: %t %t"
+          UnsizedType.[show prom; pp $ typ; pp_autodifftype $ ad])
+      [@coverage off]
   | _, _, _ -> (typ, ad)
 
 let promote_inner (exp : Ast.typed_expression) prom =
@@ -118,11 +113,10 @@ let promote_inner (exp : Ast.typed_expression) prom =
           { expr= Promotion (exp, (prom_type, ad_level))
           ; emeta= {emeta with type_; ad_level} }
       | _ ->
-          Common.ICE.internal_compiler_error
-            [%message
-              "Tuple promotion on non-tuple"
-                (exp : Ast.typed_expression)
-                (prom : t)] [@coverage off])
+          Common.ICE.(
+            internal_errorf "Tuple promotion %s for a non-tuple: %t"
+              [show prom; Pretty_printing.pp_typed_expression $ exp])
+          [@coverage off])
   | _ -> exp
 
 let rec promote (exp : Ast.typed_expression) prom =
@@ -205,21 +199,21 @@ let rec get_type_promotion_exn (ad_requested, ty_requested)
     | UInt, UInt -> NoPromotion
     | t1, t2 when t1 = t2 && ad_requested = ad_current -> NoPromotion
     | _, _ ->
-        Common.ICE.internal_compiler_error
-          [%message
-            "Tried to get promotion of mismatched types!"
-              (ty_current : UnsizedType.t)
-              (ad_current : UnsizedType.autodifftype)
-              "cannot be promoted to "
-              (ty_requested : UnsizedType.t)
-              (ad_requested : UnsizedType.autodifftype)] [@coverage off]
+        Common.ICE.(
+          internal_errorf
+            "Tried to get promotion of mismatched types! %t %t cannot be \
+             promoted to %t %t"
+            UnsizedType.
+              [ pp $ ty_current; pp_autodifftype $ ad_current; pp $ ty_requested
+              ; pp_autodifftype $ ad_requested ]) [@coverage off]
   else
-    Common.ICE.internal_compiler_error
-      [%message
-        "Tried to get promotion of incompatible autodifftypes!"
-          (ad_current : UnsizedType.autodifftype)
-          "cannot be promoted to "
-          (ad_requested : UnsizedType.autodifftype)] [@coverage off]
+    Common.ICE.(
+      internal_errorf
+        "Tried to get promotion of incompatible autodifftypes! %t cannot be \
+         promoted to %t"
+        UnsizedType.
+          [pp_autodifftype $ ad_current; pp_autodifftype $ ad_requested])
+    [@coverage off]
 
 (** Calculate the "cost"/number of promotions performed. Used to disambiguate
     function signatures *)

@@ -3,22 +3,23 @@ open Common
 
 let%expect_test "with_exn_message" =
   Printexc.record_backtrace false;
-  ICE.with_exn_message (fun () -> failwith "oops!")
+  ICE.with_exn_message (fun () -> ICE.internal_error "oops!")
   |> Result.error |> Option.value_exn |> print_endline;
   Printexc.record_backtrace true;
   [%expect
     {|
     Internal compiler error:
-    (Failure oops!)
+    oops!
     Backtrace missing.
 
     This should never happen. Please file a bug at %PKG_ISSUES%
-    and include this message and the model that caused this issue. |}]
+    and include this message and the model that caused this issue.
+    |}]
 
 (* expect_tests warn against directly including a backtrace for fragility
    reasons *)
 let%expect_test "backtrace indirect test" =
-  ( ICE.with_exn_message (fun () -> failwith "oops!")
+  ( ICE.with_exn_message (fun () -> assert false)
   |> Result.error |> Option.value_exn
   |> fun s ->
     if String.is_substring ~substring:"Called from Common" s then
@@ -37,8 +38,9 @@ let%expect_test "ICE triggered" =
   [%expect
     {|
     Internal compiler error:
-    ("Can't index" (ut UReal))
+    Can't index real
     Backtrace missing.
 
     This should never happen. Please file a bug at %PKG_ISSUES%
-    and include this message and the model that caused this issue. |}]
+    and include this message and the model that caused this issue.
+    |}]

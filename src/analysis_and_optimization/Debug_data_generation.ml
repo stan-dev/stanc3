@@ -16,15 +16,15 @@ let dotproduct xs ys =
 let matprod x y =
   let y_T = transpose y in
   if List.length x <> List.length y_T then
-    Common.ICE.internal_compiler_error
-      [%message "Matrix multiplication dim. mismatch"] [@coverage off]
+    Common.ICE.internal_error "Matrix multiplication dim. mismatch"
+    [@coverage off]
   else List.map ~f:(fun row -> List.map ~f:(dotproduct row) y_T) x
 
 let rec vect_to_mat l m =
   let len = List.length l in
   if len % m <> 0 then
-    Common.ICE.internal_compiler_error
-      [%message "The length has to be a whole multiple of the partition size"]
+    Common.ICE.internal_error
+      "The length has to be a whole multiple of the partition size"
     [@coverage off]
   else if len = m then [l]
   else
@@ -48,6 +48,7 @@ let unwrap_num_exn m e =
         (Fmt.str "Cannot evaluate expression: %a" Expr.Typed.pp e)
 
 let unwrap_int_exn m e = Int.of_float (unwrap_num_exn m e)
+let dprint_transform t ppf = Transformation.pp Expr.Typed.pp ppf t
 
 let gen_num_int m t =
   let def_low, diff = (2, 4) in
@@ -61,10 +62,8 @@ let gen_num_int m t =
      |CholeskyCorr | CholeskyCov | Correlation | Covariance | StochasticRow
      |StochasticColumn | TupleTransformation _ | Offset _ | Multiplier _
      |OffsetMultiplier _ ->
-        Common.ICE.internal_compiler_error
-          [%message
-            "Unknown transformation for int" (t : Expr.Typed.t Transformation.t)]
-        [@coverage off] in
+        Common.ICE.internal_errorf "Unknown transformation for int: %t"
+          [dprint_transform t] [@coverage off] in
   let low = if low = 0 && up <> 1 then low + 1 else low in
   Random.int (up - low + 1) + low
 
@@ -80,10 +79,8 @@ let gen_num_real m t =
     | Ordered | PositiveOrdered | Simplex | UnitVector | SumToZero
      |CholeskyCorr | CholeskyCov | Correlation | Covariance | StochasticRow
      |StochasticColumn | TupleTransformation _ ->
-        Common.ICE.internal_compiler_error
-          [%message
-            "Unknown transformation for real"
-              (t : Expr.Typed.t Transformation.t)] [@coverage off] in
+        Common.ICE.internal_errorf "Unknown transformation for real: %t"
+          [dprint_transform t] [@coverage off] in
   Random.float_range low up
 
 let repeat n e = List.init n ~f:(Fn.const e)
@@ -126,10 +123,8 @@ let gen_row_vector m n t =
   | Ordered | PositiveOrdered | Simplex | UnitVector | SumToZero
    |CholeskyCorr | CholeskyCov | Correlation | Covariance | StochasticRow
    |StochasticColumn | TupleTransformation _ ->
-      Common.ICE.internal_compiler_error
-        [%message
-          "Unknown transformation for row_vector"
-            (t : Expr.Typed.t Transformation.t)] [@coverage off]
+      Common.ICE.internal_errorf "Unknown transformation for row_vector: %t"
+        [dprint_transform t] [@coverage off]
 
 let sum_to_zero_floats n =
   let l = random_floats n in
@@ -174,10 +169,8 @@ let gen_vector m n t =
       Expr.Helpers.transpose (gen_row_vector m n t)
   | CholeskyCorr | CholeskyCov | Correlation | Covariance | StochasticRow
    |StochasticColumn | TupleTransformation _ ->
-      Common.ICE.internal_compiler_error
-        [%message
-          "Unknown transformation for vector"
-            (t : Expr.Typed.t Transformation.t)] [@coverage off]
+      Common.ICE.internal_errorf "Unknown transformation for vector: %t"
+        [dprint_transform t] [@coverage off]
 
 let gen_cov_unwrapped n =
   let l = random_floats (n * n) in
@@ -266,10 +259,8 @@ let gen_matrix mm m n t =
       Expr.Helpers.matrix_from_rows
         (repeat_th m (fun () -> gen_row_vector mm n t))
   | Ordered | PositiveOrdered | Simplex | UnitVector | TupleTransformation _ ->
-      Common.ICE.internal_compiler_error
-        [%message
-          "Unknown transformation for matrix"
-            (t : Expr.Typed.t Transformation.t)] [@coverage off]
+      Common.ICE.internal_errorf "Unknown transformation for matrix: %t"
+        [dprint_transform t] [@coverage off]
 
 let gen_complex_unwrapped () =
   ( gen_num_real Map.Poly.empty Transformation.Identity

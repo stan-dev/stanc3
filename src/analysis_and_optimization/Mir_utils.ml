@@ -225,8 +225,8 @@ let vexpr_of_expr_exn Expr.{pattern; _} =
   match pattern with
   | Var s -> VVar s
   | _ ->
-      Common.ICE.internal_compiler_error
-        [%message "Non-var expression found, but var expected"] [@coverage off]
+      Common.ICE.internal_error "Non-var expression found, but var expected"
+      [@coverage off]
 
 (** See interface file *)
 let rec expr_var_set Expr.{pattern; meta} =
@@ -282,9 +282,8 @@ let expr_assigned_var Expr.{pattern; _} =
   | Var s -> VVar s
   | Indexed ({pattern= Var s; _}, _) -> VVar s
   | _ ->
-      Common.ICE.internal_compiler_error
-        [%message "Unimplemented: analysis of assigning to non-var"]
-      [@coverage off]
+      Common.ICE.internal_error
+        "Unimplemented: analysis of assigning to non-var" [@coverage off]
 
 (** See interface file *)
 let rec summation_terms (Expr.{pattern; _} as rhs) =
@@ -480,11 +479,9 @@ let unsafe_unsized_to_sized_type (rt : Expr.Typed.t Type.t) =
         | UTuple ts -> STuple (List.map ~f:to_sized ts)
         | UFun (_, UnsizedType.ReturnType inner_ut, _, _) -> to_sized inner_ut
         | UFun (_, Void, _, _) | UMathLibraryFunction ->
-            Common.ICE.internal_compiler_error
-              [%message
-                ("return type of a function was a void user defined function \
-                  or math library function."
-                  : string)] [@coverage off] in
+            Common.ICE.internal_error
+              "return type of a function was a void user defined function or \
+               math library function." [@coverage off] in
       Type.Sized (to_sized ut)
 
 let%expect_test "cleanup" =
@@ -495,6 +492,5 @@ let%expect_test "cleanup" =
   let body = Block [Skip |> swrap] |> swrap in
   let s = For {loopvar= "i"; lower= loop_bottom; upper= loop_bottom; body} in
   let res = [s |> swrap] |> cleanup_empty_stmts in
-  [%sexp (res : Stmt.Located.t list)] |> print_s;
-  [%expect {|
-    () |}]
+  Fmt.list Stmt.Located.pp Format.std_formatter res;
+  [%expect {| |}]

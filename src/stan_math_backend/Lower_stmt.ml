@@ -14,12 +14,11 @@ let check_to_string = function
   | Upper _ -> Some "less_or_equal"
   | CholeskyCov -> Some "cholesky_factor"
   | LowerUpper _ ->
-      Common.ICE.internal_compiler_error
-        [%message "LowerUpper is really two other checks tied together"]
-      [@coverage off]
+      Common.ICE.internal_error
+        "LowerUpper is really two other checks tied together" [@coverage off]
   | Offset _ | Multiplier _ | OffsetMultiplier _ ->
-      Common.ICE.internal_compiler_error
-        [%message "Offset and multiplier don't have a check"] [@coverage off]
+      Common.ICE.internal_error "Offset and multiplier don't have a check"
+      [@coverage off]
   | t -> constraint_to_string t
 
 let math_fn_translations = function
@@ -91,11 +90,11 @@ let rec initialize_value st adtype =
       let tupl = lower_st st adtype in
       InitializerExpr (tupl, List.map2_exn ~f:initialize_value subts ads)
   | _, STuple _ | TupleAD _, _ ->
-      Common.ICE.internal_compiler_error
-        [%message
-          "Mismatch between Tuple type and Tuple AD in code gen"
-            (st : Expr.Typed.t SizedType.t)
-            (adtype : UnsizedType.autodifftype)] [@coverage off]
+      Common.ICE.(
+        internal_errorf
+          "Mismatch between Tuple type %t and Tuple AD %t in code gen"
+          [SizedType.pp Expr.Typed.pp $ st; UnsizedType.pp_autodifftype $ adtype])
+      [@coverage off]
 
 (** Initialize an object of a given size.*)
 let lower_assign_sized st adtype (initialize : 'a Stmt.Pattern.decl_init) =
@@ -168,9 +167,8 @@ let rec lower_nonrange_lvalue lvalue =
   | lv, idcs when List.for_all ~f:is_single_index idcs ->
       lower_indexed_simple (lower_nonrange_lbase lv) idcs
   | _, _ ->
-      Common.ICE.internal_compiler_error
-        [%message "Multi-index must be the last (rightmost) index."]
-      [@coverage off]
+      Common.ICE.internal_error
+        "Multi-index must be the last (rightmost) index." [@coverage off]
 
 and lower_nonrange_lbase = function
   | Stmt.Pattern.LVariable v -> Var v

@@ -14,8 +14,8 @@
    ppx_pipebang
    ppx_expect
    ppx_sexp_value
-   ppx_sexp_message
    ppx_deriving.fold
+   ppx_deriving.show
    ppx_deriving.map)))
 
 (ocamllex lexer)

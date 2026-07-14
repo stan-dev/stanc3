@@ -34,7 +34,6 @@
   ppx_inline_test
   ppx_pipebang
   ppx_sexp_value
-  ppx_sexp_message
   (ocamlformat
    (and
     :with-dev-setup

@@ -21,5 +21,5 @@
    ppx_pipebang
    ppx_expect
    ppx_sexp_value
-   ppx_sexp_message
-   ppx_deriving.make)))
+   ppx_deriving.make
+   ppx_deriving.show)))

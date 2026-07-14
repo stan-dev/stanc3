@@ -33,9 +33,8 @@ type 'expr t =
 let to_string
     ?(expr_to_string =
       fun _ ->
-        (Common.ICE.internal_compiler_error
-           [%message
-             "Should not be parsing expression from string in function renaming"]
+        (Common.ICE.internal_error
+           "Should not be parsing expression from string in function renaming"
          [@coverage off])) x =
   Sexp.to_string (sexp_of_t expr_to_string x) ^ "__"
 

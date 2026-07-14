@@ -60,10 +60,9 @@ let lower_map_decl (vident, ut) : defn =
   | UComplexRowVector -> eigen_map_def (row_vector (complex scalar)) 1
   | UComplexVector -> eigen_map_def (vector (complex scalar)) 1
   | x ->
-      Common.ICE.internal_compiler_error
-        [%message
-          "Error during Map data construction for " vident " of type "
-            (x : UnsizedType.t)] [@coverage off]
+      Common.ICE.(
+        internal_errorf "Error during Map data construction for %s of type %t"
+          [vident; UnsizedType.pp $ x]) [@coverage off]
 
 let rec top_level_decls Stmt.{pattern; _} =
   match pattern with

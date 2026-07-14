@@ -56,17 +56,16 @@ let check_correctness ?(bare_functions = false) prog pretty =
     | Error e ->
         let error =
           Fmt.str "%a" (Errors.pp ?printed_filename:None ~code:pretty) e in
-        (Common.ICE.internal_compiler_error
-           [%message
-             "Pretty-printed program failed to parse" error
-               (prog : Ast.untyped_program)
-               pretty] [@coverage off]) in
+        (Common.ICE.internal_errorf
+           "Pretty-printed program failed to parse!@\nError %s@\n%s@\n%s"
+           [ error; Ast.sexp_of_untyped_program prog |> Sexp.to_string_hum
+           ; pretty ] [@coverage off]) in
   if compare_untyped_program prog result_ast <> 0 then
-    Common.ICE.internal_compiler_error
-      [%message
-        "Pretty-printed program does match the original!"
-          (prog : Ast.untyped_program)
-          (result_ast : Ast.untyped_program)] [@coverage off]
+    Common.ICE.internal_errorf
+      "Pretty-printed program does not match the original!@\n%s@\n%s"
+      [ Ast.sexp_of_untyped_program prog |> Sexp.to_string_hum
+      ; Ast.sexp_of_untyped_program result_ast |> Sexp.to_string_hum ]
+    [@coverage off]
 
 let pretty_print_program ?(bare_functions = false) ?(line_length = 78)
     ?(inline_includes = false) ?(strip_comments = false) p =

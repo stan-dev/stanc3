@@ -12,4 +12,4 @@
   (backend bisect_ppx))
  (inline_tests)
  (preprocess
-  (pps ppx_inline_test ppx_sexp_value)))
+  (pps ppx_inline_test)))

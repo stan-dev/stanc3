@@ -2,7 +2,7 @@
 
 open Core
 
-type identifier = string [@@deriving sexp]
+type identifier = string [@@deriving sexp, show]
 
 (** C++ types *)
 type type_ =
@@ -25,7 +25,7 @@ type type_ =
   | Pointer of type_
   | TypeTrait of identifier * type_ list
       (** e.g. stan::promote_scalar, stan:base_type *)
-[@@deriving sexp]
+[@@deriving sexp, show]
 
 module Types = struct
   (** Helpers for constructing types *)
@@ -62,8 +62,8 @@ module Types = struct
     match t with
     | Matrix _ -> TypeTrait ("Eigen::Map", [t])
     | _ ->
-        Common.ICE.internal_compiler_error
-          [%message "Tried to make an Eigen::Map of" (t : type_)]
+        Common.ICE.(
+          internal_errorf "Tried to make an Eigen::Map of %s" [show_type_ t])
         [@coverage off]
 
   let var_context = TypeLiteral "stan::io::var_context"

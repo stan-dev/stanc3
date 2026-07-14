@@ -60,10 +60,9 @@ let%expect_test "unnormalized name mangling" =
 let tuple_trans_exn = function
   | Transformation.TupleTransformation transforms -> transforms
   | t ->
-      Common.ICE.internal_compiler_error
-        [%message
-          "Expected TupleTransformation but got"
-            (t : Expr.Typed.t Transformation.t)] [@coverage off]
+      Common.ICE.(
+        internal_errorf "Expected TupleTransformation but got %t"
+          [Transformation.pp Expr.Typed.pp $ t]) [@coverage off]
 
 let zip_stuple_trans_exn pst tms =
   let rec tuple_subtypes pst =
@@ -71,8 +70,8 @@ let zip_stuple_trans_exn pst tms =
     | SizedType.STuple subtypes -> subtypes
     | SArray (st, _) -> tuple_subtypes st
     | _ ->
-        Common.ICE.internal_compiler_error
-          [%message "Internal error: expected Tuple with TupleTransformation"]
+        Common.ICE.internal_error
+          "Internal error: expected Tuple with TupleTransformation"
         [@coverage off] in
   let psts = tuple_subtypes pst in
   List.zip_exn psts tms
@@ -83,8 +82,8 @@ let zip_utuple_trans_exn pst tms =
     | UnsizedType.UTuple uts -> uts
     | UArray ut -> tuple_psts ut
     | _ ->
-        Common.ICE.internal_compiler_error
-          [%message "Internal error: expected Tuple with TupleTransformation"]
+        Common.ICE.internal_error
+          "Internal error: expected Tuple with TupleTransformation"
         [@coverage off] in
   let psts = tuple_psts pst in
   List.zip_exn psts tms

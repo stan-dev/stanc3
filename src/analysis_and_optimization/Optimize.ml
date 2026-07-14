@@ -39,8 +39,8 @@ let transform_program (mir : Program.Typed.t)
       ; reverse_mode_log_prob= reverse_mode_log_prob'
       ; generate_quantities= generate_quantities' }
   | _ ->
-      ICE.internal_compiler_error
-        [%message "Something went wrong with program transformation packing!"]
+      ICE.internal_error
+        "Something went wrong with program transformation packing!"
       [@coverage off]
 
 (** Apply the transformation to each function body and to each program block
@@ -53,8 +53,8 @@ let transform_program_blockwise (mir : Program.Typed.t)
     match transform fd {pattern= SList s; meta= Location_span.empty} with
     | {pattern= SList l; _} -> l
     | _ ->
-        ICE.internal_compiler_error
-          [%message "Something went wrong with program transformation packing!"]
+        ICE.internal_error
+          "Something went wrong with program transformation packing!"
         [@coverage off] in
   let transformed_functions =
     List.map mir.functions_block ~f:(fun fs ->
@@ -158,17 +158,13 @@ let handle_early_returns (fname : string) opt_var stmt =
         | Some name, Some e ->
             Assignment (Stmt.Helpers.lvariable name, Expr.Typed.type_of e, e)
         | Some _, None ->
-            ICE.internal_compiler_error
-              [%message
-                ("Function should return a value but found an empty return \
-                  statement."
-                  : string)] [@coverage off]
+            ICE.internal_error
+              "Function should return a value but found an empty return \
+               statement." [@coverage off]
         | None, Some _ ->
-            ICE.internal_compiler_error
-              [%message
-                ("Expected a void function but found a non-empty return \
-                  statement."
-                  : string)] [@coverage off])
+            ICE.internal_error
+              "Expected a void function but found a non-empty return statement."
+            [@coverage off])
     | Stmt.Pattern.For _ as loop when num_returns > 1 ->
         Stmt.Pattern.SList
           [ Stmt.{pattern= loop; meta= Location_span.empty}
@@ -1235,8 +1231,8 @@ let optimize_soa (mir : Program.Typed.t) =
     match transform {pattern= SList s; meta= Location_span.empty} with
     | {pattern= SList (l : Stmt.Located.t list); _} -> l
     | _ ->
-        ICE.internal_compiler_error
-          [%message "Something went wrong with program transformation packing!"]
+        ICE.internal_error
+          "Something went wrong with program transformation packing!"
         [@coverage off] in
   {mir with reverse_mode_log_prob= transform' mir.reverse_mode_log_prob}
 
