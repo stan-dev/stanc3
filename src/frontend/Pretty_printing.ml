@@ -83,9 +83,8 @@ let skip_comments loc =
              the 'else' is entirely inside the include. This makes the failure
              noisy rather than ever producing anything invalid for these. *)
           Common.ICE.(
-            internal_errorf
-              "Unable to format #include in this position! Lines: %t Loc: %t"
-              [Fmt.list Fmt.string $ l; Middle.Location_span.pp $ loc])
+            internal_errorf "%t: Unable to format #include of %t!"
+              [Middle.Location_span.pp $ loc; Fmt.list Fmt.string $ l])
           [@coverage off]
       | x, s :: l, loc -> Some (x, (" ^^^:" ^ s) :: l, loc)
       | _, [], _ -> None)

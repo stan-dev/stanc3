@@ -57,7 +57,7 @@ let check_correctness ?(bare_functions = false) prog pretty =
         let error =
           Fmt.str "%a" (Errors.pp ?printed_filename:None ~code:pretty) e in
         (Common.ICE.internal_errorf
-           "Pretty-printed program failed to parse! Error %s@\n%s@\n%s"
+           "Pretty-printed program failed to parse!@\nError %s@\n%s@\n%s"
            [ error; Ast.sexp_of_untyped_program prog |> Sexp.to_string_hum
            ; pretty ] [@coverage off]) in
   if compare_untyped_program prog result_ast <> 0 then
