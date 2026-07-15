@@ -735,9 +735,12 @@ module StatementError = struct
            definitions."
           (expected_style Fmt.string)
           "void"
-    | NonDataVariableSizeDecl (_block, _prev_decl) ->
+    | NonDataVariableSizeDecl (block, _prev_decl) ->
         Fmt.pf ppf
-          "Non-data variables are not allowed in top level size declarations."
+          "Top level variable sizes must be variables from the (transformed) \
+           data block or functions thereof, but this variable was declared in \
+           the %s."
+          (Environment.block_name block)
     | NonIntBounds ->
         Fmt.pf ppf "@[Bounds of integer variable must be of type %a.%a@]"
           (expected_style UnsizedType.pp)
