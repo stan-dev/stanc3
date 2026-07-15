@@ -835,6 +835,7 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
       current_statement__ = 17;
       context__.validate_dims("data initialization", "N_t", "int",
         std::vector<size_t>{});
+      N_t = std::numeric_limits<int>::min();
       current_statement__ = 17;
       N_t = context__.vals_i("N_t")[(1 - 1)];
       current_statement__ = 17;
@@ -1990,6 +1991,7 @@ class copy_prop_profile_model final : public model_base_crtp<copy_prop_profile_m
       current_statement__ = 16;
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
+      N = std::numeric_limits<int>::min();
       current_statement__ = 16;
       N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 16;
@@ -2678,6 +2680,7 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
       current_statement__ = 37;
       context__.validate_dims("data initialization", "nind", "int",
         std::vector<size_t>{});
+      nind = std::numeric_limits<int>::min();
       current_statement__ = 37;
       nind = context__.vals_i("nind")[(1 - 1)];
       current_statement__ = 37;
@@ -2685,6 +2688,7 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
       current_statement__ = 38;
       context__.validate_dims("data initialization", "n_occasions", "int",
         std::vector<size_t>{});
+      n_occasions = std::numeric_limits<int>::min();
       current_statement__ = 38;
       n_occasions = context__.vals_i("n_occasions")[(1 - 1)];
       current_statement__ = 38;
@@ -2721,6 +2725,7 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
       current_statement__ = 42;
       context__.validate_dims("data initialization", "max_age", "int",
         std::vector<size_t>{});
+      max_age = std::numeric_limits<int>::min();
       current_statement__ = 42;
       max_age = context__.vals_i("max_age")[(1 - 1)];
       current_statement__ = 42;
@@ -3755,6 +3760,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       current_statement__ = 39;
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
+      N = std::numeric_limits<int>::min();
       current_statement__ = 39;
       N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 39;
@@ -3762,6 +3768,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       current_statement__ = 40;
       context__.validate_dims("data initialization", "n_age", "int",
         std::vector<size_t>{});
+      n_age = std::numeric_limits<int>::min();
       current_statement__ = 40;
       n_age = context__.vals_i("n_age")[(1 - 1)];
       current_statement__ = 40;
@@ -3769,6 +3776,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       current_statement__ = 41;
       context__.validate_dims("data initialization", "n_edu", "int",
         std::vector<size_t>{});
+      n_edu = std::numeric_limits<int>::min();
       current_statement__ = 41;
       n_edu = context__.vals_i("n_edu")[(1 - 1)];
       current_statement__ = 41;
@@ -3776,6 +3784,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       current_statement__ = 42;
       context__.validate_dims("data initialization", "n_region", "int",
         std::vector<size_t>{});
+      n_region = std::numeric_limits<int>::min();
       current_statement__ = 42;
       n_region = context__.vals_i("n_region")[(1 - 1)];
       current_statement__ = 42;
@@ -3783,6 +3792,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       current_statement__ = 43;
       context__.validate_dims("data initialization", "n_state", "int",
         std::vector<size_t>{});
+      n_state = std::numeric_limits<int>::min();
       current_statement__ = 43;
       n_state = context__.vals_i("n_state")[(1 - 1)];
       current_statement__ = 43;
@@ -4948,6 +4958,7 @@ class expr_prop_experiment_model final : public model_base_crtp<expr_prop_experi
       current_statement__ = 1;
       context__.validate_dims("data initialization", "j", "int",
         std::vector<size_t>{});
+      j = std::numeric_limits<int>::min();
       current_statement__ = 1;
       j = context__.vals_i("j")[(1 - 1)];
       current_statement__ = 2;
@@ -5285,6 +5296,7 @@ class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_exper
       current_statement__ = 1;
       context__.validate_dims("data initialization", "j", "int",
         std::vector<size_t>{});
+      j = std::numeric_limits<int>::min();
       current_statement__ = 1;
       j = context__.vals_i("j")[(1 - 1)];
       current_statement__ = 2;
@@ -5626,6 +5638,7 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
       current_statement__ = 9;
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
+      N = std::numeric_limits<int>::min();
       current_statement__ = 9;
       N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 9;
@@ -6155,6 +6168,7 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
       current_statement__ = 6;
       context__.validate_dims("data initialization", "J", "int",
         std::vector<size_t>{});
+      J = std::numeric_limits<int>::min();
       current_statement__ = 6;
       J = context__.vals_i("J")[(1 - 1)];
       current_statement__ = 6;
@@ -6662,6 +6676,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       current_statement__ = 22;
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
+      N = std::numeric_limits<int>::min();
       current_statement__ = 22;
       N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 22;
@@ -6669,6 +6684,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       current_statement__ = 23;
       context__.validate_dims("data initialization", "n_age", "int",
         std::vector<size_t>{});
+      n_age = std::numeric_limits<int>::min();
       current_statement__ = 23;
       n_age = context__.vals_i("n_age")[(1 - 1)];
       current_statement__ = 23;
@@ -6676,6 +6692,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       current_statement__ = 24;
       context__.validate_dims("data initialization", "n_age_edu", "int",
         std::vector<size_t>{});
+      n_age_edu = std::numeric_limits<int>::min();
       current_statement__ = 24;
       n_age_edu = context__.vals_i("n_age_edu")[(1 - 1)];
       current_statement__ = 24;
@@ -6684,6 +6701,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       current_statement__ = 25;
       context__.validate_dims("data initialization", "n_edu", "int",
         std::vector<size_t>{});
+      n_edu = std::numeric_limits<int>::min();
       current_statement__ = 25;
       n_edu = context__.vals_i("n_edu")[(1 - 1)];
       current_statement__ = 25;
@@ -6691,6 +6709,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       current_statement__ = 26;
       context__.validate_dims("data initialization", "n_region_full", "int",
         std::vector<size_t>{});
+      n_region_full = std::numeric_limits<int>::min();
       current_statement__ = 26;
       n_region_full = context__.vals_i("n_region_full")[(1 - 1)];
       current_statement__ = 26;
@@ -6699,6 +6718,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       current_statement__ = 27;
       context__.validate_dims("data initialization", "n_state", "int",
         std::vector<size_t>{});
+      n_state = std::numeric_limits<int>::min();
       current_statement__ = 27;
       n_state = context__.vals_i("n_state")[(1 - 1)];
       current_statement__ = 27;
@@ -7846,6 +7866,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       current_statement__ = 30;
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
+      N = std::numeric_limits<int>::min();
       current_statement__ = 30;
       N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 30;
@@ -7853,6 +7874,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       current_statement__ = 31;
       context__.validate_dims("data initialization", "N_edges", "int",
         std::vector<size_t>{});
+      N_edges = std::numeric_limits<int>::min();
       current_statement__ = 31;
       N_edges = context__.vals_i("N_edges")[(1 - 1)];
       current_statement__ = 31;
@@ -8787,6 +8809,7 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       current_statement__ = 46;
       context__.validate_dims("data initialization", "nind", "int",
         std::vector<size_t>{});
+      nind = std::numeric_limits<int>::min();
       current_statement__ = 46;
       nind = context__.vals_i("nind")[(1 - 1)];
       current_statement__ = 46;
@@ -8794,6 +8817,7 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       current_statement__ = 47;
       context__.validate_dims("data initialization", "n_occasions", "int",
         std::vector<size_t>{});
+      n_occasions = std::numeric_limits<int>::min();
       current_statement__ = 47;
       n_occasions = context__.vals_i("n_occasions")[(1 - 1)];
       current_statement__ = 47;
@@ -10419,6 +10443,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       current_statement__ = 119;
       context__.validate_dims("data initialization", "M", "int",
         std::vector<size_t>{});
+      M = std::numeric_limits<int>::min();
       current_statement__ = 119;
       M = context__.vals_i("M")[(1 - 1)];
       current_statement__ = 119;
@@ -10426,6 +10451,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       current_statement__ = 120;
       context__.validate_dims("data initialization", "n_occasions", "int",
         std::vector<size_t>{});
+      n_occasions = std::numeric_limits<int>::min();
       current_statement__ = 120;
       n_occasions = context__.vals_i("n_occasions")[(1 - 1)];
       current_statement__ = 120;
@@ -12309,6 +12335,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       current_statement__ = 22;
       context__.validate_dims("data initialization", "K", "int",
         std::vector<size_t>{});
+      K = std::numeric_limits<int>::min();
       current_statement__ = 22;
       K = context__.vals_i("K")[(1 - 1)];
       current_statement__ = 22;
@@ -12316,6 +12343,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       current_statement__ = 23;
       context__.validate_dims("data initialization", "I", "int",
         std::vector<size_t>{});
+      I = std::numeric_limits<int>::min();
       current_statement__ = 23;
       I = context__.vals_i("I")[(1 - 1)];
       current_statement__ = 23;
@@ -12323,6 +12351,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       current_statement__ = 24;
       context__.validate_dims("data initialization", "J", "int",
         std::vector<size_t>{});
+      J = std::numeric_limits<int>::min();
       current_statement__ = 24;
       J = context__.vals_i("J")[(1 - 1)];
       current_statement__ = 24;
@@ -13050,6 +13079,7 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       current_statement__ = 12;
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
+      N = std::numeric_limits<int>::min();
       current_statement__ = 12;
       N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 12;
@@ -13057,6 +13087,7 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       current_statement__ = 13;
       context__.validate_dims("data initialization", "N_edges", "int",
         std::vector<size_t>{});
+      N_edges = std::numeric_limits<int>::min();
       current_statement__ = 13;
       N_edges = context__.vals_i("N_edges")[(1 - 1)];
       current_statement__ = 13;
@@ -13944,6 +13975,7 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
       current_statement__ = 37;
       context__.validate_dims("data initialization", "nind", "int",
         std::vector<size_t>{});
+      nind = std::numeric_limits<int>::min();
       current_statement__ = 37;
       nind = context__.vals_i("nind")[(1 - 1)];
       current_statement__ = 37;
@@ -13951,6 +13983,7 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
       current_statement__ = 38;
       context__.validate_dims("data initialization", "n_occasions", "int",
         std::vector<size_t>{});
+      n_occasions = std::numeric_limits<int>::min();
       current_statement__ = 38;
       n_occasions = context__.vals_i("n_occasions")[(1 - 1)];
       current_statement__ = 38;
@@ -13987,6 +14020,7 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
       current_statement__ = 42;
       context__.validate_dims("data initialization", "max_age", "int",
         std::vector<size_t>{});
+      max_age = std::numeric_limits<int>::min();
       current_statement__ = 42;
       max_age = context__.vals_i("max_age")[(1 - 1)];
       current_statement__ = 42;
@@ -15449,6 +15483,7 @@ class function_in_function_loops_model final : public model_base_crtp<function_i
       current_statement__ = 12;
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
+      N = std::numeric_limits<int>::min();
       current_statement__ = 12;
       N = context__.vals_i("N")[(1 - 1)];
     } catch (const std::exception& e) {
@@ -17786,6 +17821,7 @@ class inliner_same_names_model final : public model_base_crtp<inliner_same_names
       current_statement__ = 6;
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
+      N = std::numeric_limits<int>::min();
       current_statement__ = 6;
       N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 7;
@@ -18835,6 +18871,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       current_statement__ = 119;
       context__.validate_dims("data initialization", "M", "int",
         std::vector<size_t>{});
+      M = std::numeric_limits<int>::min();
       current_statement__ = 119;
       M = context__.vals_i("M")[(1 - 1)];
       current_statement__ = 119;
@@ -18842,6 +18879,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       current_statement__ = 120;
       context__.validate_dims("data initialization", "n_occasions", "int",
         std::vector<size_t>{});
+      n_occasions = std::numeric_limits<int>::min();
       current_statement__ = 120;
       n_occasions = context__.vals_i("n_occasions")[(1 - 1)];
       current_statement__ = 120;
@@ -20594,6 +20632,7 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
       current_statement__ = 1;
       context__.validate_dims("data initialization", "j", "int",
         std::vector<size_t>{});
+      j = std::numeric_limits<int>::min();
       current_statement__ = 1;
       j = context__.vals_i("j")[(1 - 1)];
       current_statement__ = 2;
@@ -21306,6 +21345,7 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
       current_statement__ = 3;
       context__.validate_dims("data initialization", "J", "int",
         std::vector<size_t>{});
+      J = std::numeric_limits<int>::min();
       current_statement__ = 3;
       J = context__.vals_i("J")[(1 - 1)];
       current_statement__ = 3;
@@ -21907,6 +21947,7 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
       current_statement__ = 37;
       context__.validate_dims("data initialization", "nind", "int",
         std::vector<size_t>{});
+      nind = std::numeric_limits<int>::min();
       current_statement__ = 37;
       nind = context__.vals_i("nind")[(1 - 1)];
       current_statement__ = 37;
@@ -21914,6 +21955,7 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
       current_statement__ = 38;
       context__.validate_dims("data initialization", "n_occasions", "int",
         std::vector<size_t>{});
+      n_occasions = std::numeric_limits<int>::min();
       current_statement__ = 38;
       n_occasions = context__.vals_i("n_occasions")[(1 - 1)];
       current_statement__ = 38;
@@ -22921,6 +22963,7 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
       current_statement__ = 8;
       context__.validate_dims("data initialization", "n", "int",
         std::vector<size_t>{});
+      n = std::numeric_limits<int>::min();
       current_statement__ = 8;
       n = context__.vals_i("n")[(1 - 1)];
     } catch (const std::exception& e) {
@@ -23456,6 +23499,7 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
       current_statement__ = 34;
       context__.validate_dims("data initialization", "R", "int",
         std::vector<size_t>{});
+      R = std::numeric_limits<int>::min();
       current_statement__ = 34;
       R = context__.vals_i("R")[(1 - 1)];
       current_statement__ = 34;
@@ -23463,6 +23507,7 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
       current_statement__ = 35;
       context__.validate_dims("data initialization", "T", "int",
         std::vector<size_t>{});
+      T = std::numeric_limits<int>::min();
       current_statement__ = 35;
       T = context__.vals_i("T")[(1 - 1)];
       current_statement__ = 35;
@@ -24222,6 +24267,7 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       current_statement__ = 22;
       context__.validate_dims("data initialization", "J", "int",
         std::vector<size_t>{});
+      J = std::numeric_limits<int>::min();
       current_statement__ = 22;
       J = context__.vals_i("J")[(1 - 1)];
       current_statement__ = 22;
@@ -24229,6 +24275,7 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       current_statement__ = 23;
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
+      N = std::numeric_limits<int>::min();
       current_statement__ = 23;
       N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 23;
@@ -26377,11 +26424,13 @@ class overload_tilde_stanlib_model final : public model_base_crtp<overload_tilde
       current_statement__ = 4;
       context__.validate_dims("data initialization", "y", "int",
         std::vector<size_t>{});
+      y = std::numeric_limits<int>::min();
       current_statement__ = 4;
       y = context__.vals_i("y")[(1 - 1)];
       current_statement__ = 5;
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
+      N = std::numeric_limits<int>::min();
       current_statement__ = 5;
       N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 6;
@@ -27944,6 +27993,7 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       current_statement__ = 17;
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
+      N = std::numeric_limits<int>::min();
       current_statement__ = 17;
       N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 17;
@@ -27951,6 +28001,7 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       current_statement__ = 18;
       context__.validate_dims("data initialization", "n_pair", "int",
         std::vector<size_t>{});
+      n_pair = std::numeric_limits<int>::min();
       current_statement__ = 18;
       n_pair = context__.vals_i("n_pair")[(1 - 1)];
       current_statement__ = 18;
@@ -29575,6 +29626,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       current_statement__ = 18;
       context__.validate_dims("data initialization", "I", "int",
         std::vector<size_t>{});
+      I = std::numeric_limits<int>::min();
       current_statement__ = 18;
       I = context__.vals_i("I")[(1 - 1)];
       current_statement__ = 18;

@@ -182,7 +182,7 @@ let lower_constructor
             @
             if Set.mem data_idents decl_id then
               validate_dims ~stage:"data initialization" decl_id st
-              @ gen_assign_data decl_id st initialize
+              @ gen_assign_data decl_id st Default
             else gen_assign_data decl_id st initialize
         | Unsized _ -> [])
     | _ -> lower_statement s in
