@@ -1,3 +1,4 @@
+
 data {
   int<lower=0> N;
   int<lower=0> n_pair;
@@ -34,4 +35,3 @@ model {
   print(!0 && !1);
 
 }
-
