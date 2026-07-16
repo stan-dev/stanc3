@@ -109,13 +109,13 @@ let rec validate_dims ~stage name st =
 
 let gen_assign_data decl_id st init =
   let open Cpp.DSL in
+  let underlying_variable, init =
+    match st with
+    | SizedType.SVector _ | SRowVector _ | SMatrix _ | SComplexVector _
+     |SComplexRowVector _ | SComplexMatrix _ ->
+        (decl_id ^ "_data__", Stmt.Pattern.Default)
+    | SInt | SReal | SComplex | SArray _ | STuple _ -> (decl_id, init) in
   let initialize =
-    let underlying_variable =
-      match st with
-      | SizedType.SVector _ | SRowVector _ | SMatrix _ | SComplexVector _
-       |SComplexRowVector _ | SComplexMatrix _ ->
-          decl_id ^ "_data__"
-      | SInt | SReal | SComplex | SArray _ | STuple _ -> decl_id in
     let open Stdlib.Option.Syntax in
     let+ value =
       lower_assign_sized st
@@ -129,7 +129,7 @@ let gen_assign_data decl_id st init =
      |SRowVector (_, d)
      |SComplexVector d
      |SComplexRowVector d ->
-        let data = Var (decl_id ^ "_data__") in
+        let data = Var underlying_variable in
         Some
           (Expression
              (OperatorNew
@@ -137,7 +137,7 @@ let gen_assign_data decl_id st init =
                 , Types.eigen_map (lower_st st DataOnly)
                 , [data.@!("data"); lower_expr d] )))
     | SMatrix (_, d1, d2) | SComplexMatrix (d1, d2) ->
-        let data = Var (decl_id ^ "_data__") in
+        let data = Var underlying_variable in
         Some
           (Expression
              (OperatorNew
@@ -182,7 +182,7 @@ let lower_constructor
             @
             if Set.mem data_idents decl_id then
               validate_dims ~stage:"data initialization" decl_id st
-              @ gen_assign_data decl_id st Default
+              @ gen_assign_data decl_id st initialize
             else gen_assign_data decl_id st initialize
         | Unsized _ -> [])
     | _ -> lower_statement s in
