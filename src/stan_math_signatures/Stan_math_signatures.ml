@@ -153,8 +153,9 @@ let is_reduce_sum_fn f =
 
 let embedded_laplace_functions =
   [ (* general fns *) "laplace_marginal"; "laplace_marginal_tol"
-  ; "laplace_latent_rng"; "laplace_latent_tol_rng"; (* "helpers" *)
-    "laplace_marginal_bernoulli_logit_lpmf"
+  ; "laplace_latent_rng"; "laplace_latent_tol_rng"
+  ; "laplace_latent_solve"; "laplace_latent_solve_tol"
+  ; (* "helpers" *) "laplace_marginal_bernoulli_logit_lpmf"
   ; "laplace_marginal_tol_bernoulli_logit_lpmf"
   ; "laplace_marginal_neg_binomial_2_log_lpmf"
   ; "laplace_marginal_tol_neg_binomial_2_log_lpmf"

@@ -919,6 +919,8 @@ and check_laplace_fn ~is_cond_dist loc cf tenv id tes =
         lik_args @ (hbs_arg :: cov_fun_type :: cov_tupl :: control_args) in
       let return_type =
         if String.is_suffix id.name ~suffix:"_rng" then UnsizedType.UVector
+        else if String.is_substring id.name ~substring:"_solve" then
+          UnsizedType.UTuple [UVector; UMatrix]
         else UnsizedType.UReal in
       mk_fun_app ~is_cond_dist ~loc
         (StanLib (Fun_kind.suffix_from_name id.name))
