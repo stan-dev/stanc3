@@ -326,6 +326,35 @@ Semantic error in 'bad_overload.stan', line 2, column 7 to column 51:
 
 Identifier "laplace_marginal_tol_neg_binomial_2_log_lpmf" clashes with a non-overloadable Stan Math library function.
 [exit 1]
+  $ stanc bad_solve_return.stan
+Semantic error in 'bad_solve_return.stan', line 37, column 2 to line 38, column 81:
+   -------------------------------------------------
+    35:  generated quantities {
+    36:    // laplace_latent_solve returns tuple(vector, matrix), not vector
+    37:    vector[n_obs] theta = laplace_latent_solve(ll_function, (eta, log_ye, y), 1,
+           ^
+    38:                                               K_function, (x, n_obs, alpha, rho));
+    39:  }
+   -------------------------------------------------
+
+Ill-typed assignment statement.
+Expected the right hand side to have a type matching the destination (vector).
+Instead found type tuple(vector, matrix).
+[exit 1]
+  $ stanc bad_solve_tol.stan
+Semantic error in 'bad_solve_tol.stan', line 38, column 8 to line 39, column 56:
+   -------------------------------------------------
+    36:    // _tol variant requires a trailing control-parameter tuple
+    37:    tuple(vector[n_obs], matrix[n_obs, n_obs]) mean_chol
+    38:        = laplace_latent_solve_tol(ll_function, (eta, log_ye, y), 1, K_function,
+                 ^
+    39:                                   (x, n_obs, alpha, rho));
+    40:  }
+   -------------------------------------------------
+
+Missing control parameter tuple at the end of the call to "laplace_latent_solve_tol".
+Expected a tuple of 6 arguments for the control parameters.
+[exit 1]
   $ stanc bad_theta0.stan
 Semantic error in 'bad_theta0.stan', line 43, column 9 to column 16:
    -------------------------------------------------
