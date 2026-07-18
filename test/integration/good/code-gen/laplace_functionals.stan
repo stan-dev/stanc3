@@ -57,17 +57,6 @@ model {
                                 (theta_0, tolerance, max_num_steps,
                                 solver, max_steps_line_search, allow_fallthrough));
 
-  tuple(vector[n_obs], matrix[n_obs, n_obs]) mean_chol
-      = laplace_latent_solve(ll_function, (eta, log_ye, y), hessian_block_size,
-                             K_function, (x, n_obs, alpha, rho));
-
-  tuple(vector[n_obs], matrix[n_obs, n_obs]) mean_chol_tol
-      = laplace_latent_solve_tol(ll_function, (eta, log_ye, y),
-                                 hessian_block_size, K_function,
-                                 (x, n_obs, alpha, rho),
-                                 (theta_0, tolerance, max_num_steps, solver,
-                                  max_steps_line_search, allow_fallthrough));
-
 }
 generated quantities {
   vector[n_obs] theta = laplace_latent_rng(ll_function, (eta, log_ye, y),
@@ -82,8 +71,15 @@ generated quantities {
                                                 (theta_0, tolerance, max_num_steps,
                                                 solver, max_steps_line_search, allow_fallthrough));
 
-  tuple(vector[n_obs], matrix[n_obs, n_obs]) mean_chol_genquan
+  tuple(vector[n_obs], matrix[n_obs, n_obs]) mean_chol
       = laplace_latent_solve(ll_function, (eta, log_ye, y), hessian_block_size,
                              K_function, (x, n_obs, alpha, rho));
+
+  tuple(vector[n_obs], matrix[n_obs, n_obs]) mean_chol_tol
+      = laplace_latent_solve_tol(ll_function, (eta, log_ye, y),
+                                 hessian_block_size, K_function,
+                                 (x, n_obs, alpha, rho),
+                                 (theta_0, tolerance, max_num_steps, solver,
+                                  max_steps_line_search, allow_fallthrough));
 
 }
