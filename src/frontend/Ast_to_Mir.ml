@@ -779,10 +779,7 @@ let rec trans_sizedtype_decl declc tr name st =
                 { decl_type= Sized SInt
                 ; decl_id
                 ; decl_adtype= DataOnly
-                ; initialize= Default }
-          ; meta= e.meta.loc } in
-        let assign =
-          { Stmt.pattern= Assignment (Stmt.Helpers.lvariable decl_id, UInt, e)
+                ; initialize= Assign e }
           ; meta= e.meta.loc } in
         let var =
           Expr.
@@ -792,7 +789,7 @@ let rec trans_sizedtype_decl declc tr name st =
                   { type_= s.Ast.emeta.Ast.type_
                   ; adlevel= s.emeta.ad_level
                   ; loc= s.emeta.loc } } in
-        ([decl; assign; check fn s var], var) in
+        ([decl; check fn s var], var) in
   let rec go n = function
     | SizedType.(SInt | SReal | SComplex) as t -> ([], t)
     | SVector (mem_pattern, s) ->

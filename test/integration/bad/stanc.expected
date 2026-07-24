@@ -3647,7 +3647,7 @@ Semantic error in 'var-decl-bad-1.stan', line 3, column 13 to column 14:
      5:  model {
    -------------------------------------------------
 
-Non-data variables are not allowed in top level size declarations.
+Top level variable sizes must be variables from the (transformed) data block or functions thereof, but this variable was declared in the parameters block.
 [exit 1]
   $ stanc var-decl-bad-2.stan
 Semantic error in 'var-decl-bad-2.stan', line 3, column 8 to column 22:
