@@ -11,26 +11,26 @@ let include_stack = Stack.create ()
 let included_files : string list ref = ref []
 let size () = Stack.length include_stack
 
-let locations_map : (string * Middle.Location.t option) String.Table.t =
-  String.Table.create ()
+let locations_map : (string * Middle.Location.t option) Dynarray.t =
+  Dynarray.create ()
 
 let new_file_start_position buf filename included_from =
   (* Lexing.position does not have a field to store `included_from` so we store
-     it in a global hashmap instead and put the hashmap key in `pos_fname`. The
-     keys are arbitrary unique strings. (Filenames are not good keys because the
-     same file could be included multiple times.)
+     it in a global array and put the key in `pos_fname`. The keys simply count
+     up. (Filenames are not good keys because the same file could be included
+     multiple times.)
 
      Prefixing the key with NUL allows us to do a little optimization: when
-     `included_from` is None we don't need to access the hashmap and can store
-     the filename directly in `pos_fname`. Filenames never begin with NUL so
+     `included_from` is None we don't need to access the array and can store the
+     filename directly in `pos_fname`. Filenames never begin with NUL so
      `location_of_position` only needs to check the first character to know
-     whether to do a hashmap lookup. *)
+     whether to do a lookup. *)
   let pos =
     if Option.is_none included_from then
       {Lexing.pos_fname= filename; pos_lnum= 1; pos_bol= 0; pos_cnum= 0}
     else
-      let key = "\u{0}" ^ Int.to_string (Hashtbl.length locations_map) in
-      Hashtbl.add_exn locations_map ~key ~data:(filename, included_from);
+      let key = "\u{0}" ^ Int.to_string (Dynarray.length locations_map) in
+      Dynarray.add_last locations_map (filename, included_from);
       {Lexing.pos_fname= key; pos_lnum= 1; pos_bol= 0; pos_cnum= 0} in
   buf.lex_start_p <- pos;
   buf.lex_curr_p <- pos
@@ -38,7 +38,7 @@ let new_file_start_position buf filename included_from =
 let location_of_position {Lexing.pos_fname; pos_lnum; pos_cnum; pos_bol} =
   let filename, included_from =
     if Char.equal (String.get pos_fname 0) (Char.of_string "\u{0}") then
-      Hashtbl.find_exn locations_map pos_fname
+      Dynarray.get locations_map (Int.of_string (String.subo ~pos:1 pos_fname))
     else (pos_fname, None) in
   { Middle.Location.line_num= pos_lnum
   ; col_num= pos_cnum - pos_bol
@@ -57,7 +57,7 @@ let location_span_of_positions (start_pos, end_pos) : Middle.Location_span.t =
   {begin_loc; end_loc}
 
 let init buf filename =
-  Hashtbl.clear locations_map;
+  Dynarray.clear locations_map;
   Queue.clear comments;
   included_files := [];
   Stack.clear include_stack;
