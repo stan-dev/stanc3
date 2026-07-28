@@ -1,7 +1,7 @@
 open Core
 
 type t = {filename: string; line_num: int; col_num: int; included_from: t option}
-[@@deriving sexp, hash]
+[@@deriving sexp]
 
 let pp_context_for ppf (({line_num; _} as loc), lines) =
   let faint pp = Fmt.(styled `Faint pp) in

@@ -3,7 +3,7 @@
 open Core
 
 type fun_arg_decl = (UnsizedType.autodifftype * string * UnsizedType.t) list
-[@@deriving sexp, hash, map]
+[@@deriving sexp, map]
 
 type 'a fun_def =
   { fdrt: UnsizedType.returntype
@@ -14,17 +14,17 @@ type 'a fun_def =
         (* If fdbody is None, this is an external function declaration (forward
            decls are removed during AST lowering) *)
   ; fdloc: (Location_span.t[@sexp.opaque] [@compare.ignore]) }
-[@@deriving compare, hash, sexp, map, fold]
+[@@deriving compare, sexp, map, fold]
 
 type io_block = Parameters | TransformedParameters | GeneratedQuantities
-[@@deriving sexp, hash]
+[@@deriving sexp]
 
 type 'e outvar =
   { out_unconstrained_st: 'e SizedType.t
   ; out_constrained_st: 'e SizedType.t
   ; out_block: io_block
   ; out_trans: 'e Transformation.t }
-[@@deriving sexp, map, hash, fold]
+[@@deriving sexp, map, fold]
 
 type ('a, 'b, 'm) t =
   { functions_block: 'b fun_def list

@@ -22,16 +22,16 @@ module Pattern = struct
         ; decl_id: string
         ; decl_type: 'a Type.t
         ; initialize: 'a decl_init }
-  [@@deriving sexp, hash, map, fold, compare]
+  [@@deriving sexp, map, fold, compare]
 
   and 'e lvalue = 'e lbase * 'e Index.t list
-  [@@deriving sexp, hash, map, compare, fold]
+  [@@deriving sexp, map, compare, fold]
 
   and 'e lbase = LVariable of string | LTupleProjection of 'e lvalue * int
-  [@@deriving sexp, hash, map, compare, fold]
+  [@@deriving sexp, map, compare, fold]
 
   and 'a decl_init = Uninit | Default | Assign of 'a
-  [@@deriving sexp, hash, map, fold, compare]
+  [@@deriving sexp, map, fold, compare]
 
   let rec pp_lvalue pp_e ppf (lbase, idcs) =
     match lbase with
@@ -82,7 +82,7 @@ end
 module Fixed = struct
   (** Fixed-point of statements *)
   type ('a, 'b) t = {pattern: ('a Expr.t, ('a, 'b) t) Pattern.t; meta: 'b}
-  [@@deriving compare, hash, sexp]
+  [@@deriving compare, sexp]
 end
 
 include Fixed
@@ -101,13 +101,13 @@ let rec rewrite_bottom_up ~f ~g t =
 module Located = struct
   module Meta = struct
     type t = (Location_span.t[@sexp.opaque] [@compare.ignore])
-    [@@deriving compare, sexp, hash]
+    [@@deriving compare, sexp]
 
     let empty = Location_span.empty
   end
 
   type t = (Expr.Typed.Meta.t, (Meta.t[@sexp.opaque] [@compare.ignore])) Fixed.t
-  [@@deriving compare, sexp, hash]
+  [@@deriving compare, sexp]
 
   let pp = pp
 
@@ -121,21 +121,20 @@ module Located = struct
     type t =
       { pattern: (Expr.Typed.t, int) Pattern.t
       ; meta: (Meta.t[@sexp.opaque] [@compare.ignore]) }
-    [@@deriving compare, sexp, hash]
+    [@@deriving compare, sexp]
   end
 end
 
 module Numbered = struct
   module Meta = struct
-    type t = (int[@sexp.opaque] [@compare.ignore])
-    [@@deriving compare, sexp, hash]
+    type t = (int[@sexp.opaque] [@compare.ignore]) [@@deriving compare, sexp]
 
     let empty = 0
     let from_int (i : int) : t = i
   end
 
   type t = (Expr.Typed.Meta.t, (Meta.t[@sexp.opaque] [@compare.ignore])) Fixed.t
-  [@@deriving compare, sexp, hash]
+  [@@deriving compare, sexp]
 
   let pp = pp
 end

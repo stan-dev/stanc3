@@ -1,7 +1,6 @@
 (** Delimited locations in source code *)
 
-type t = {begin_loc: Location.t; end_loc: Location.t}
-[@@deriving sexp, hash, compare]
+type t = {begin_loc: Location.t; end_loc: Location.t} [@@deriving sexp, compare]
 
 val empty : t
 val merge : t -> t -> t

@@ -26,7 +26,7 @@ type t =
   | Geq
   | PNot
   | Transpose
-[@@deriving sexp, hash, compare]
+[@@deriving sexp, compare]
 
 let is_cmp = function
   | Equals | NEquals | Less | Leq | Greater | Geq -> true

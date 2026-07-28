@@ -21,22 +21,22 @@ module Pattern : sig
         ; decl_id: string
         ; decl_type: 'a Type.t
         ; initialize: 'a decl_init }
-  [@@deriving sexp, hash, compare, map, fold]
+  [@@deriving sexp, compare, map, fold]
 
   and 'e lvalue = 'e lbase * 'e Index.t list
-  [@@deriving sexp, hash, map, compare, fold]
+  [@@deriving sexp, map, compare, fold]
 
   and 'e lbase = LVariable of string | LTupleProjection of 'e lvalue * int
-  [@@deriving sexp, hash, map, compare, fold]
+  [@@deriving sexp, map, compare, fold]
 
   and 'a decl_init = Uninit | Default | Assign of 'a
-  [@@deriving sexp, hash, map, fold, compare]
+  [@@deriving sexp, map, fold, compare]
 end
 
 (** The "two-level" type for statements in the MIR. This corresponds to what the
     AST calls [Frontend.Ast.statement_with] *)
 type ('a, 'b) t = {pattern: ('a Expr.t, ('a, 'b) t) Pattern.t; meta: 'b}
-[@@deriving compare, hash, sexp]
+[@@deriving compare, sexp]
 
 val pp : ('a, 'b) t Fmt.t
 
@@ -57,14 +57,14 @@ val rewrite_bottom_up :
 module Located : sig
   module Meta : sig
     type t = (Location_span.t[@sexp.opaque] [@compare.ignore])
-    [@@deriving compare, sexp, hash]
+    [@@deriving compare, sexp]
 
     val empty : t
   end
 
   type nonrec t =
     (Expr.Typed.Meta.t, (Meta.t[@sexp.opaque] [@compare.ignore])) t
-  [@@deriving compare, sexp, hash]
+  [@@deriving compare, sexp]
 
   val pp : t Fmt.t
 
@@ -72,14 +72,13 @@ module Located : sig
     type t =
       { pattern: (Expr.Typed.t, int) Pattern.t
       ; meta: (Meta.t[@sexp.opaque] [@compare.ignore]) }
-    [@@deriving compare, sexp, hash]
+    [@@deriving compare, sexp]
   end
 end
 
 module Numbered : sig
   module Meta : sig
-    type t = (int[@sexp.opaque] [@compare.ignore])
-    [@@deriving compare, sexp, hash]
+    type t = (int[@sexp.opaque] [@compare.ignore]) [@@deriving compare, sexp]
 
     val empty : t
     val from_int : int -> t
@@ -87,7 +86,7 @@ module Numbered : sig
 
   type nonrec t =
     (Expr.Typed.Meta.t, (Meta.t[@sexp.opaque] [@compare.ignore])) t
-  [@@deriving compare, sexp, hash]
+  [@@deriving compare, sexp]
 
   val pp : t Fmt.t
 end

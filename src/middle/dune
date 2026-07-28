@@ -9,7 +9,6 @@
   (pps
    ppx_compare
    ppx_sexp_conv
-   ppx_hash
    ppx_expect
    ppx_sexp_value
    ppx_deriving.map

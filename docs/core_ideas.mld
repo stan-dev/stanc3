@@ -34,7 +34,7 @@ If you look at a type declaration of something like [Ast.typed_expression], you'
 
 {[
 type typed_expression = (typed_expr_meta, fun_kind) expr_with
-[@@deriving sexp, compare, map, hash, fold]
+[@@deriving sexp, compare, map, fold]
 ]}
 
 When using an editor that supports code completion, you may notice that the [Ast] module suggests functions
