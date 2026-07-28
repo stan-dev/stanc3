@@ -87,6 +87,7 @@ module Marshal = Stdlib.Marshal
 module Printf = Stdlib.Printf
 module Scanf = Stdlib.Scanf
 module Obj = Stdlib.Obj
+module Dynarray = Stdlib.Dynarray
 
 let ( ^^ ) = Stdlib.( ^^ )
 let ( ** ) = Stdlib.( ** )
