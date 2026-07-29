@@ -8,7 +8,7 @@ type 'a t =
   | Upfrom of 'a
   | Between of 'a * 'a
   | MultiIndex of 'a
-[@@deriving sexp, map, compare, fold]
+[@@deriving sexp_of, map, compare, fold]
 
 let pp pp_e ppf = function
   | All -> Fmt.char ppf ':'

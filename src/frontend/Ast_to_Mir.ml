@@ -243,7 +243,7 @@ let trans_printables mloc (ps : Ast.typed_expression Ast.printable list) =
 
 (** These types signal the context for a declaration during statement
     translation. They are only interpreted by trans_decl.*)
-type transform_action = Check | Constrain | IgnoreTransform [@@deriving sexp]
+type transform_action = Check | Constrain | IgnoreTransform
 
 type decl_context =
   {transform_action: transform_action; dadlevel: UnsizedType.autodifftype}

@@ -2,7 +2,7 @@
 
 open Core
 
-type identifier = string [@@deriving sexp, show]
+type identifier = string [@@deriving sexp_of]
 
 (** C++ types *)
 type type_ =
@@ -11,21 +11,22 @@ type type_ =
   | Int
   | Double
   | Complex of type_
-  | TemplateType of identifier
+  | TemplateType of identifier [@printer Fmt.string]
   | StdVector of type_
       (** A std::vector. For Eigen Vectors, use [Matrix] with a row or column
           size of 1 *)
   | Array of type_ * int
   | Tuple of type_ list
-  | TypeLiteral of identifier  (** Used for things like Eigen::Index *)
+  | TypeLiteral of identifier [@printer Fmt.string]
+      (** Used for things like Eigen::Index *)
   | NonTypeTemplateInt of int
   | Matrix of type_ * int * int * Middle.Mem_pattern.t
   | Ref of type_
   | Const of type_
   | Pointer of type_
-  | TypeTrait of identifier * type_ list
+  | TypeTrait of (identifier[@printer Fmt.string]) * type_ list
       (** e.g. stan::promote_scalar, stan:base_type *)
-[@@deriving sexp, show]
+[@@deriving sexp_of, show]
 
 module Types = struct
   (** Helpers for constructing types *)
@@ -86,7 +87,7 @@ type operator =
   | Gthn
   | And
   | Or
-[@@deriving sexp]
+[@@deriving sexp_of]
 
 type expr =
   | Literal of string  (** printed as-is *)
@@ -115,7 +116,7 @@ type expr =
   | BinOp of expr * operator * expr
   | PMinus of expr
   | Increment of expr
-[@@deriving sexp]
+[@@deriving sexp_of]
 
 module Exprs = struct
   (** Some helper values and functions *)
@@ -212,7 +213,7 @@ type init =
   | Construction of expr list
   | InitializerList of expr list
   | Uninitialized
-[@@deriving sexp]
+[@@deriving sexp_of]
 
 type variable_defn =
   { static: bool [@default false]
@@ -220,7 +221,7 @@ type variable_defn =
   ; type_: type_
   ; name: identifier
   ; init: init [@default Uninitialized] }
-[@@deriving make, sexp]
+[@@deriving make, sexp_of]
 
 type stmt =
   | Expression of expr
@@ -238,7 +239,7 @@ type stmt =
   | Continue
   | Using of string * type_ option
   | Comment of string
-[@@deriving sexp]
+[@@deriving sexp_of]
 
 module Stmts = struct
   (** Helpers for common statement constructs *)
@@ -337,9 +338,9 @@ type template_parameter =
       (** A C++ type trait (e.g. [is_arithmetic]) and the template types which
           need to satisfy that. These are collated into one
           [require_all_t<...>]. *)
-[@@deriving sexp]
+[@@deriving sexp_of]
 
-type cv_qualifiers = Const | Final | NoExcept [@@deriving sexp]
+type cv_qualifiers = Const | Final | NoExcept [@@deriving sexp_of]
 
 type fun_defn =
   { templates_init: template_parameter list list * bool [@default [[]], false]
@@ -351,7 +352,7 @@ type fun_defn =
   ; args: (type_ * string) list
   ; cv_qualifiers: cv_qualifiers list [@default []]
   ; body: stmt list option }
-[@@deriving make, sexp]
+[@@deriving make, sexp_of]
 
 let split_fun_decl_defn (fn : fun_defn) =
   ( {fn with body= None}
@@ -361,7 +362,7 @@ type constructor =
   { args: (type_ * string) list
   ; init_list: (identifier * expr list) list
   ; body: stmt list }
-[@@deriving make, sexp]
+[@@deriving make, sexp_of]
 
 (** Incomplete list of C++ preprocessor directives *)
 type directive =
@@ -391,7 +392,7 @@ and defn =
   | GlobalUsing of string * type_ option
   | Namespace of identifier * defn list
   | Preprocessor of directive
-[@@deriving sexp]
+[@@deriving sexp_of]
 
 (* can't be derivided since it is simultaneously declared with non-records *)
 let make_class_defn ~name ~public_base ?(final = true) ~private_members
@@ -420,7 +421,7 @@ end
 let ( !// ) s = GlobalComment s
 
 (** Much like in C++, we define a translation unit as a list of definitions *)
-type program = defn list [@@deriving sexp]
+type program = defn list [@@deriving sexp_of]
 
 module Printing = struct
   (** Pretty-printing of the C++ type *)

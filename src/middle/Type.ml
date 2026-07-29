@@ -1,7 +1,7 @@
 (** A type which unifies [SizedTypes] and [UnsizedTypes] for declarations *)
 
 type 'a t = Sized of 'a SizedType.t | Unsized of UnsizedType.t
-[@@deriving sexp, compare, map, fold]
+[@@deriving sexp_of, map, fold]
 
 let pp pp_e ppf = function
   | Sized st -> SizedType.pp pp_e ppf st

@@ -2,7 +2,7 @@ open Core
 open Common
 
 module Pattern = struct
-  type litType = Int | Real | Imaginary | Str [@@deriving sexp, compare]
+  type litType = Int | Real | Imaginary | Str [@@deriving sexp_of, compare]
 
   type 'a t =
     | Var of string
@@ -14,7 +14,7 @@ module Pattern = struct
     | Indexed of 'a * 'a Index.t list
     | Promotion of 'a * UnsizedType.t * UnsizedType.autodifftype
     | TupleProjection of 'a * int
-  [@@deriving sexp, map, compare, fold]
+  [@@deriving sexp_of, map, compare, fold]
 
   let pp pp_e ppf = function
     | Var varname -> Fmt.string ppf varname
@@ -45,7 +45,7 @@ end
     module name, since [ppx_deriving] does not support the [nonrec] keyword *)
 module Fixed = struct
   (** Fixed-point of MIR expressions *)
-  type 'a t = {pattern: 'a t Pattern.t; meta: 'a} [@@deriving compare, sexp]
+  type 'a t = {pattern: 'a t Pattern.t; meta: 'a} [@@deriving compare, sexp_of]
 end
 
 include Fixed
@@ -61,16 +61,16 @@ module Typed = struct
   module Meta = struct
     type t =
       { type_: UnsizedType.t
-      ; loc: (Location_span.t[@sexp.opaque] [@compare.ignore])
+      ; loc: (Location_span.t[@sexp.opaque])
       ; adlevel: UnsizedType.autodifftype }
-    [@@deriving compare, create, sexp]
+    [@@deriving create, sexp_of]
 
     let empty =
       create ~type_:UnsizedType.UInt ~adlevel:UnsizedType.DataOnly
         ~loc:Location_span.empty ()
   end
 
-  type t = (Meta.t[@compare.ignore]) Fixed.t [@@deriving sexp, compare]
+  type t = (Meta.t[@compare.ignore]) Fixed.t [@@deriving sexp_of, compare]
 
   let equal t1 t2 = compare t1 t2 = 0
   let type_of {meta= Meta.{type_; _}; _} = type_

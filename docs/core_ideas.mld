@@ -34,7 +34,7 @@ If you look at a type declaration of something like [Ast.typed_expression], you'
 
 {[
 type typed_expression = (typed_expr_meta, fun_kind) expr_with
-[@@deriving sexp, compare, map, fold]
+[@@deriving sexp_of, compare, map, fold]
 ]}
 
 When using an editor that supports code completion, you may notice that the [Ast] module suggests functions
@@ -42,8 +42,9 @@ which are not defined in the actual source text. This is because these functions
 {{:https://github.com/ocaml-ppx/ppx_deriving}[ppx_deriving]}.The above syntax [[@@deriving ...]] indicates which
 functions we would like to be generated.
 
-These are very helpful - if a type derives [hash], it can automatically be used as keys in Jane Street's hash tables, and
-a type which derives [sexp] can be serialized to Lisp-style S-Expressions. Most of our major types derive at least one function.
+These are very helpful - if a type derives [compare], it provides a comparison function which allows for use in sorting functions or
+Map types, and a type which derives [sexp_of] can be serialized to Lisp-style S-Expressions.
+Most of our major types derive at least one function.
 
 {1 "Two Level Types"}
 

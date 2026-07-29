@@ -1,6 +1,7 @@
 open Core
 
-type t = {begin_loc: Location.t; end_loc: Location.t} [@@deriving sexp, compare]
+type t = {begin_loc: Location.t; end_loc: Location.t}
+[@@deriving sexp_of, compare]
 
 let empty = {begin_loc= Location.empty; end_loc= Location.empty}
 let merge left right = {begin_loc= left.begin_loc; end_loc= right.end_loc}
