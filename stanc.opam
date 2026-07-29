@@ -20,7 +20,7 @@ depends: [
   "ppx_inline_test"
   "ppx_pipebang"
   "ppx_sexp_value"
-  "ocamlformat" {with-dev-setup & = "0.28.1"}
+  "ocamlformat" {with-dev-setup & = "0.29.0"}
   "menhirformat" {with-dev-setup}
   "bisect_ppx" {with-dev-setup}
   "ocaml-lsp-server" {with-dev-setup}
