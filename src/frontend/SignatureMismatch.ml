@@ -87,7 +87,7 @@ type ('unique, 'error) generic_match_result =
       * Location_span.t option)
       list
   | SignatureErrors of 'error
-[@@deriving sexp]
+[@@deriving sexp_of]
 
 type match_result =
   ( UnsizedType.returntype

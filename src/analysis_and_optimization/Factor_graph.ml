@@ -9,7 +9,7 @@ type factor =
   | TargetTerm of Expr.Typed.t
   | Reject
   | LPFunction of (string * Expr.Typed.t list)
-[@@deriving sexp]
+[@@deriving sexp_of]
 
 type factor_graph =
   { factor_map: (factor * label, vexpr Set.Poly.t) Map.Poly.t

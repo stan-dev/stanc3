@@ -28,7 +28,7 @@ type 'expr t =
   | FnNaN
   | FnDeepCopy
   | FnReadWriteEventsOpenCL of string
-[@@deriving sexp, compare, map, fold]
+[@@deriving sexp_of, compare, map, fold]
 
 let to_string
     ?(expr_to_string =

@@ -2,7 +2,7 @@
 
 (** Source code locations *)
 type t = {filename: string; line_num: int; col_num: int; included_from: t option}
-[@@deriving sexp]
+[@@deriving sexp_of]
 
 val compare : t -> t -> int
 val empty : t
