@@ -23,7 +23,7 @@ and argumentlist = (autodifftype * t) list
 and returntype = Void | ReturnType of t
 
 and signature = argumentlist * returntype * bool Fun_kind.suffix * Mem_pattern.t
-[@@deriving compare, hash, sexp, equal]
+[@@deriving compare, sexp, equal]
 
 type variadic_signature =
   { return_type: t

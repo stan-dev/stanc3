@@ -24,7 +24,7 @@ type 'e t =
   | StochasticRow
   | StochasticColumn
   | TupleTransformation of 'e t list
-[@@deriving sexp, compare, map, hash, fold, show]
+[@@deriving sexp, compare, map, fold, show]
 
 let rec has_check = function
   | Identity | Offset _ | Multiplier _ | OffsetMultiplier _ -> false

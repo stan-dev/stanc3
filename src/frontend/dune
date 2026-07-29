@@ -8,7 +8,6 @@
  (inline_tests)
  (preprocess
   (pps
-   ppx_hash
    ppx_compare
    ppx_sexp_conv
    ppx_pipebang

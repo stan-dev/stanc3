@@ -27,7 +27,6 @@
    (= 2.1.1))
   (ppx_deriving
    (= 6.1.1))
-  ppx_hash
   ppx_compare
   ppx_sexp_conv
   ppx_expect

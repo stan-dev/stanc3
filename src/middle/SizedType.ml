@@ -14,7 +14,7 @@ type 'a t =
   | SComplexMatrix of 'a * 'a
   | SArray of 'a t * 'a
   | STuple of 'a t list
-[@@deriving sexp, compare, map, hash, fold]
+[@@deriving sexp, compare, map, fold]
 
 let rec pp pp_e ppf = function
   | SInt -> Fmt.string ppf "int"
