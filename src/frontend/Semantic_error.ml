@@ -491,6 +491,7 @@ end
 
 module ExpressionError = struct
   type t =
+    | InvalidLaplaceLatentSolveFunction
     | InvalidSizeDeclRng
     | InvalidRngFunction
     | InvalidUnnormalizedFunction of string
@@ -510,6 +511,10 @@ module ExpressionError = struct
     | IllTypedPostfixOperator of Operator.t * UnsizedType.t
 
   let pp ppf = function
+    | InvalidLaplaceLatentSolveFunction ->
+        Fmt.text ppf
+          "Functions laplace_latent_solve and laplace_latent_solve_tol are only \
+          allowed in the generated quantities block."
     | InvalidSizeDeclRng ->
         Fmt.pf ppf
           "Random number generators are not allowed in top level size \
@@ -968,6 +973,9 @@ let ident_has_unnormalized_suffix loc name =
 
 let invalid_decl_rng_fn loc =
   (loc, ExpressionError ExpressionError.InvalidSizeDeclRng)
+
+let invalid_laplace_latent_solve_fn loc =
+  (loc, ExpressionError ExpressionError.InvalidLaplaceLatentSolveFunction)
 
 let invalid_rng_fn loc =
   (loc, ExpressionError ExpressionError.InvalidRngFunction)

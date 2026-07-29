@@ -326,6 +326,21 @@ Semantic error in 'bad_overload.stan', line 2, column 7 to column 51:
 
 Identifier "laplace_marginal_tol_neg_binomial_2_log_lpmf" clashes with a non-overloadable Stan Math library function.
 [exit 1]
+  $ stanc bad_solve_model.stan
+Semantic error in 'bad_solve_model.stan', line 38, column 8 to line 39, column 64:
+   -------------------------------------------------
+    36:     // laplace_latent_solve is only callable in Generated Quantities block
+    37:     tuple(vector[n_obs], matrix[n_obs, n_obs]) mean_chol
+    38:        = laplace_latent_solve(ll_function, (eta, log_ye, y), 1,
+                 ^
+    39:                               K_function, (x, n_obs, alpha, rho));
+    40:  }
+   -------------------------------------------------
+
+Functions laplace_latent_solve and laplace_latent_solve_tol are only allowed
+in the generated quantities
+block.
+[exit 1]
   $ stanc bad_solve_return.stan
 Semantic error in 'bad_solve_return.stan', line 37, column 2 to line 38, column 81:
    -------------------------------------------------

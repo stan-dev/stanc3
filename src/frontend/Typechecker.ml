@@ -496,6 +496,16 @@ let verify_fn_rng cf loc id =
        || cf.current_block = TData)
     then Semantic_error.invalid_rng_fn loc |> error
 
+let is_laplace_latent_solve name =
+  Stan_math_signatures.is_embedded_laplace_fn name
+  && String.is_substring name ~substring:"_solve"
+
+(** Laplace latent solve can only be used in Generated Quantities block. *)
+let verify_laplace_latent_solve cf loc id =
+  if is_laplace_latent_solve id.name then
+    if cf.current_block <> GQuant then
+      Semantic_error.invalid_laplace_latent_solve_fn loc |> error
+
 let mk_fun_app ~is_cond_dist ~loc kind name args ~type_ : Ast.typed_expression =
   let fn =
     if is_cond_dist then CondDistApp (kind, name, args)
@@ -975,6 +985,7 @@ and check_funapp loc cf tenv ~is_cond_dist id (es : Ast.typed_expression list) =
   verify_fn_target_plus_equals cf loc id;
   verify_fn_jacobian_plus_equals cf loc tenv id es;
   verify_fn_rng cf loc id;
+  verify_laplace_latent_solve cf loc id;
   verify_unnormalized cf loc id;
   res
 
