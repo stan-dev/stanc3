@@ -341,21 +341,6 @@ Functions laplace_latent_solve and laplace_latent_solve_tol are only allowed
 in the generated quantities
 block.
 [exit 1]
-  $ stanc bad_solve_return.stan
-Semantic error in 'bad_solve_return.stan', line 37, column 2 to line 38, column 81:
-   -------------------------------------------------
-    35:  generated quantities {
-    36:    // laplace_latent_solve returns tuple(vector, matrix), not vector
-    37:    vector[n_obs] theta = laplace_latent_solve(ll_function, (eta, log_ye, y), 1,
-           ^
-    38:                                               K_function, (x, n_obs, alpha, rho));
-    39:  }
-   -------------------------------------------------
-
-Ill-typed assignment statement.
-Expected the right hand side to have a type matching the destination (vector).
-Instead found type tuple(vector, matrix).
-[exit 1]
   $ stanc bad_solve_tol.stan
 Semantic error in 'bad_solve_tol.stan', line 38, column 8 to line 39, column 56:
    -------------------------------------------------
