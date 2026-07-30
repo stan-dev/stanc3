@@ -36,7 +36,7 @@
   (ocamlformat
    (and
     :with-dev-setup
-    (= 0.28.1)))
+    (= 0.29.0)))
    (menhirformat
     :with-dev-setup)
   (bisect_ppx :with-dev-setup)

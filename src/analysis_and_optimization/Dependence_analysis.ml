@@ -109,8 +109,8 @@ let mir_reaching_definitions (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
       {entry= to_rd_set entry; exit= to_rd_set exit})
 
 let all_labels
-    (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH with type labels = int)
-    : int Set.Poly.t =
+    (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
+      with type labels = int) : int Set.Poly.t =
   let step set =
     Set.union set
       (union_map set ~f:(fun l -> Map.Poly.find_exn Flowgraph.successors l))
