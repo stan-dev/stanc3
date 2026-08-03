@@ -4,29 +4,30 @@ This is not meant to be tutorial on the OCaml language itself, but rather on som
 features and libraries of Stanc3 which may not be familiar to developers who do have
 some OCaml exposure.
 
-{1 The Jane Street standard library}
+{1 Labeled standard library}
 
-We use Jane Street's {{:https://ocaml.janestreet.com/ocaml-core/v0.14/doc/core/index.html}Core}
-standard library. There are a few differences from the OCaml standard library which are instantly noticeable:
+We have a module called [Std] which is used throughout the code base.
+This is built on the OCaml standard library, but with a few differences:
 
 {ul
 {- Most higher-order functions such as  [List.map] take a {i named} function argument.
 
   This means a call like [List.map square [1;2;3]] will look like [List.map ~f:square [1;2;3]].}
 
-{- Core defaults to safe operations which return {i options} rather than possibly erring.
+{- A few operations are renamed.
 
   In "normal" OCaml, [List.hd] has type ['a list -> 'a].
   A call [List.hd []] will throw an exception.
-  By contrast, in the Jane Street libraries, the same function has type ['a list -> 'a option].
+  By contrast, in [Std], the same function has type ['a list -> 'a option].
 
-  Usually, a function with the suffix [_exn] recovers the original signature, e.g. [List.hd_exn : 'a list -> 'a ].}
+  When we have overriden the standard name, a function with the suffix [_exn] recovers the original
+  signature, e.g. [List.hd_exn : 'a list -> 'a ].}
 }
 
-If for some reason you {e need} functionality from the OCaml standard library that is not available in Jane Street
-(be sure to triple check), you can use the module [Stdlib] to access the built-in versions.
+If for some reason you {e need} functionality from the OCaml standard library that is not available from
+our re-exports, you can use the module [Stdlib] to access the built-in versions.
 
-There are a few other things we gain from these libraries. The most important idea to understand is {b deriving}.
+Another difference between our code base and 'normal' OCaml is our use of of {b deriving}.
 
 {2 Deriving functions}
 

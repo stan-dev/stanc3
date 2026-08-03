@@ -1,6 +1,0 @@
-(library
- (name core)
- (public_name stanc.core)
- (libraries base sexplib0)
- (instrumentation
-  (backend bisect_ppx)))
