@@ -24,7 +24,7 @@ let get_context ?code Middle.Location.{filename; included_from; _} =
           In_channel.with_open_bin filename In_channel.input_lines
       | InMemory m ->
           (* Or, we know we can find it in the map *)
-          String.split_lines (Map.find_exn m filename))
+          String.split_lines (Std.String.Map.find filename m))
 
 let pp_context ?code ppf loc =
   let context =

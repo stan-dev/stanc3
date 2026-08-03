@@ -1,5 +1,5 @@
 (** stanc console application *)
-open Core
+open Std
 
 open Frontend
 
@@ -63,7 +63,7 @@ let stanc ?tty_colors ?(debug_lex : bool = false) ?(debug_parse : bool = false)
       , `Code (In_channel.input_all In_channel.stdin)
       , Option.first_some flags.filename_in_msg (Some "stdin") )
     else (model_file, `File model_file, flags.filename_in_msg) in
-  With_return.with_return @@ fun {return} ->
+  Return.with_return @@ fun return ->
   match
     Driver.Entry.stan2cpp
       (Option.value ~default:model_file_name name)
@@ -113,7 +113,7 @@ let dispatch_commands args =
 let main () =
   let open Cmdliner in
   let stanc_cmd = Cmd.make CLI.info (Term.map dispatch_commands CLI.commands) in
-  let argv = Sys.get_argv () in
+  let argv = Sys.argv in
   Driver.Flags.set_backend_args_list
     (* remove executable itself from list before passing *)
     (argv |> Array.to_list |> List.tl_exn);
@@ -121,7 +121,7 @@ let main () =
   Array.map_inplace argv ~f:(function
     | "--O" -> "--O1"
     | "--o" -> "-o" (* legacy shorthand for --output *)
-    | s when String.is_prefix s ~prefix:"--o=" ->
+    | s when String.starts_with s ~prefix:"--o=" ->
         "-o" ^ String.chop_prefix_exn s ~prefix:"--o="
     | s -> s);
   Cmd.eval' ~argv ~catch:false stanc_cmd

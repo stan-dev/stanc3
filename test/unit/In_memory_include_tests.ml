@@ -17,7 +17,7 @@ data {
 
 (* TESTS *)
 let%expect_test "no includes" =
-  Include_files.include_provider := InMemory String.Map.empty;
+  Include_files.include_provider := InMemory Std.String.Map.empty;
   print_ast_or_error include_model;
   [%expect
     {|
@@ -36,7 +36,7 @@ let%expect_test "no includes" =
 
 let%expect_test "wrong include" =
   Include_files.include_provider :=
-    InMemory (String.Map.of_alist_exn [("bar.stan", "functions { }")]);
+    InMemory (Std.String.Map.of_list [("bar.stan", "functions { }")]);
   print_ast_or_error include_model;
   [%expect
     {|
@@ -66,7 +66,7 @@ let b = {|
 let%expect_test "recursive include" =
   Include_files.include_provider :=
     InMemory
-      (String.Map.of_alist_exn [("include/a.stan", a); ("include/b.stan", b)]);
+      (Std.String.Map.of_list [("include/a.stan", a); ("include/b.stan", b)]);
   print_ast_or_error a;
   [%expect
     {|
@@ -93,7 +93,7 @@ functions {
 
 let%expect_test "good include" =
   Include_files.include_provider :=
-    InMemory (String.Map.of_alist_exn [("foo.stan", foo)]);
+    InMemory (Std.String.Map.of_list [("foo.stan", foo)]);
   print_ast_or_error include_model;
   [%expect
     {|

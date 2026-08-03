@@ -3,6 +3,7 @@
 
 (** New modules *)
 
+module Return = Return
 module Nonempty_list = Nonempty_list
 
 (** OCaml Stdlib with labeled functions *)
@@ -15,6 +16,8 @@ include MoreLabels
 module Option = struct
   include Option
 
+  (* annoyingly, stdlabels doesn't affect options *)
+  let map ~f o = map f o
   let first_some a b = Option.blend Fun.const a b
   let value_map ~f ~default = function Some e -> f e | None -> default
 end
@@ -38,6 +41,8 @@ module String = struct
   let chop_suffix_if_exists ~suffix s =
     chop_suffix ~suffix s |> Option.value ~default:s
 
+  let chop_suffix_exn ~suffix s = chop_suffix ~suffix s |> Option.get
+
   let chop_prefix ~prefix s =
     if starts_with ~prefix s then Some (drop_first (length prefix) s) else None
 
@@ -48,6 +53,13 @@ module String = struct
 
   module Map = Map.Make (String)
   module Set = Set.Make (String)
+end
+
+module Int = struct
+  include Int
+
+  let of_string = int_of_string
+  let of_string_opt = int_of_string_opt
 end
 
 module Hashtbl = struct
@@ -68,4 +80,19 @@ module Hashtbl = struct
   let find_all = `Removed_unsavory_hashtable_apis
   let find_and_replace = `Removed_unsavory_hashtable_apis
   let replace = `Removed_unsavory_hashtable_apis
+end
+
+module Result = struct
+  include Result
+
+  let map ~f r = map f r
+  let to_either = function Ok l -> Either.Left l | Error r -> Either.Right r
+
+  let all rs =
+    let rec loop acc rs =
+      match rs with
+      | [] -> Ok (List.rev acc)
+      | Ok r :: rs -> loop (r :: acc) rs
+      | Error e :: _ -> Error e in
+    loop [] rs
 end
