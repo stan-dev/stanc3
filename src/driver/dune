@@ -2,7 +2,7 @@
  (name driver)
  (public_name stanc.driver)
  (libraries
-  core
+  std
   fmt
   frontend
   middle

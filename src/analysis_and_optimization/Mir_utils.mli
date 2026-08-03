@@ -142,6 +142,10 @@ val subst_expr :
   (string, Expr.Typed.t) Map.Poly.t -> Expr.Typed.t -> Expr.Typed.t
 (** Substitute variables in an expression according to the provided Map. *)
 
+val subst_expr_std :
+  Expr.Typed.t Std.String.Map.t -> Expr.Typed.t -> Expr.Typed.t
+(** Substitute variables in an expression according to the provided Map. *)
+
 val subst_stmt_base :
      (string, Expr.Typed.t) Map.Poly.t
   -> (Expr.Typed.t, 'a) Stmt.Pattern.t

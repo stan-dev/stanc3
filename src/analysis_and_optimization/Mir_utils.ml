@@ -320,10 +320,14 @@ let name_map m (e : Expr.Typed.t) =
 
 let name_subst_stmt m = fn_subst_stmt (name_map m)
 
+let var_map_std m (e : Expr.Typed.t) =
+  match e.pattern with Var s -> Std.String.Map.find_opt s m | _ -> None
+
 let var_map m (e : Expr.Typed.t) =
   match e.pattern with Var s -> Map.find m s | _ -> None
 
 let subst_expr m e = fn_subst_expr (var_map m) e
+let subst_expr_std m e = fn_subst_expr (var_map_std m) e
 let subst_idx m = Index.map (subst_expr m)
 let subst_stmt_base m = fn_subst_stmt_base_helper (subst_expr m) (subst_idx m)
 let subst_stmt m = map_rec_stmt_loc (subst_stmt_base m)

@@ -18,7 +18,17 @@ module Option = struct
 
   (* annoyingly, stdlabels doesn't affect options *)
   let map ~f o = map f o
+  let bind o ~f = bind o f
   let first_some a b = Option.blend Fun.const a b
+
+  let all os =
+    let rec loop acc os =
+      match os with
+      | [] -> Some (List.rev acc)
+      | Some o :: os -> loop (o :: acc) os
+      | None :: _ -> None in
+    loop [] os
+
   let value_map ~f ~default = function Some e -> f e | None -> default
 end
 
@@ -30,6 +40,16 @@ module List = struct
   let tl_exn = tl
   let tl = function _ :: l -> Some l | _ -> None
   let range start stop = List.init ~len:(stop - start) ~f:(fun i -> start + i)
+
+  let split_n lst n =
+    if n <= 0 then ([], lst)
+    else
+      let rec loop acc n l =
+        match l with
+        | [] -> (lst, [])
+        | e :: rem ->
+            if n = 0 then (rev acc, l) else loop (e :: acc) (n - 1) rem in
+      loop [] n lst
 end
 
 module String = struct
@@ -50,6 +70,10 @@ module String = struct
     chop_prefix ~prefix s |> Option.value ~default:s
 
   let chop_prefix_exn ~prefix s = chop_prefix ~prefix s |> Option.get
+
+  let concat_map ~f s =
+    fold_left ~f:(fun acc c -> f c :: acc) ~init:[] s
+    |> List.rev |> String.concat
 
   module Map = Map.Make (String)
   module Set = Set.Make (String)
@@ -86,6 +110,7 @@ module Result = struct
   include Result
 
   let map ~f r = map f r
+  let map_error ~f r = map_error f r
   let to_either = function Ok l -> Either.Left l | Error r -> Either.Right r
 
   let all rs =
