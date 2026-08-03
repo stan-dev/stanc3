@@ -1,5 +1,4 @@
-open Core
-open Core.Poly
+open Std
 open Middle
 open Middle.Program
 open Middle.Expr
@@ -17,7 +16,7 @@ let fold_stmts ~take_expr ~take_stmt ~(init : 'c)
       (fun a e -> fold_expr ~take_expr ~init:(take_expr a e) e)
       (fun a s -> fold_stmt (take_stmt a s) s)
       state stmt.pattern in
-  List.fold ~f:(fun a s -> fold_stmt (take_stmt a s) s) ~init stmts
+  List.fold_left ~f:(fun a s -> fold_stmt (take_stmt a s) s) ~init stmts
 
 let rec num_expr_value (v : Expr.Typed.t) : (float * string) option =
   match v with
@@ -57,7 +56,7 @@ let trans_bounds_values (trans : Expr.Typed.t Transformation.t) : bound_values =
 
 let chop_dist_name (fname : string) : string Option.t =
   (* Slightly inefficient, would be better to short-circuit *)
-  List.fold ~init:None ~f:Option.first_some
+  List.fold_left ~init:None ~f:Option.first_some
     (List.map
        ~f:(fun suffix -> String.chop_suffix ~suffix fname)
        Middle.Utils.distribution_suffices)
@@ -77,18 +76,19 @@ let data_set ?(exclude_transformed = false) ?(exclude_ints = false)
   let data = Set.Poly.of_list mir.input_vars in
   (* Possibly remove ints from the data set *)
   let filtered_data =
-    let remove_ints = Set.filter ~f:(fun (_, _, st) -> st <> SizedType.SInt) in
-    Set.Poly.map ~f:fst3 ((if exclude_ints then remove_ints else Fn.id) data)
+    let remove_ints =
+      Set.Poly.filter ~f:(fun (_, _, st) -> st <> SizedType.SInt) in
+    Set.Poly.map ~f:fst3 ((if exclude_ints then remove_ints else Fun.id) data)
   in
   (* Transformed data are declarations in prepare_data but excluding data *)
   if exclude_transformed then filtered_data
   else
     let trans_data =
-      Set.diff
+      Set.Poly.diff
         (Set.Poly.union_list
            (List.map ~f:top_var_declarations mir.prepare_data))
         (Set.Poly.map ~f:fst3 data) in
-    Set.union trans_data filtered_data
+    Set.Poly.union trans_data filtered_data
 
 let parameter_set ?(include_transformed = false) (mir : Program.Typed.t) =
   Set.Poly.of_list
@@ -109,7 +109,7 @@ let rec var_declarations Stmt.{pattern; _} : string Set.Poly.t =
   | Decl {decl_id; _} -> Set.Poly.singleton decl_id
   | IfElse (_, s, None) | While (_, s) | For {body= s; _} -> var_declarations s
   | IfElse (_, s1, Some s2) ->
-      Set.union (var_declarations s1) (var_declarations s2)
+      Set.Poly.union (var_declarations s1) (var_declarations s2)
   | Block slist | SList slist | Profile (_, slist) ->
       Set.Poly.union_list (List.map ~f:var_declarations slist)
   | _ -> Set.Poly.empty
@@ -130,11 +130,11 @@ let map_rec_expr_state f state e =
 
 let rec map_rec_stmt_loc f stmt =
   let recurse = map_rec_stmt_loc f in
-  Stmt.{stmt with pattern= f (Pattern.map Fn.id recurse stmt.pattern)}
+  Stmt.{stmt with pattern= f (Pattern.map Fun.id recurse stmt.pattern)}
 
 let rec top_down_map_rec_stmt_loc f stmt =
   let recurse = top_down_map_rec_stmt_loc f in
-  Stmt.{stmt with pattern= Pattern.map Fn.id recurse (f stmt.pattern)}
+  Stmt.{stmt with pattern= Pattern.map Fun.id recurse (f stmt.pattern)}
 
 let map_rec_state_stmt_loc f state stmt =
   let cur_state = ref state in
@@ -149,15 +149,14 @@ let map_rec_state_stmt_loc f state stmt =
 let map_rec_stmt_loc_num flowgraph_to_mir f s =
   let rec map_rec_stmt_loc_num' (cur_node : int)
       (stmt : Stmt.Located.Non_recursive.t) =
-    let find_node i = Map.find_exn flowgraph_to_mir i in
+    let find_node i = LabelMap.find i flowgraph_to_mir in
     let recurse i = map_rec_stmt_loc_num' i (find_node i) in
     Stmt.
-      { pattern= f cur_node (Pattern.map Fn.id recurse stmt.pattern)
+      { pattern= f cur_node (Pattern.map Fun.id recurse stmt.pattern)
       ; meta= stmt.meta } in
   map_rec_stmt_loc_num' 1 s
 
 let stmt_loc_of_stmt_loc_num flowgraph_to_mir s =
-  (* (flowgraph_to_mir : (int, stmt_loc_num) Map.Poly.t) (s : stmt_loc_num) = *)
   map_rec_stmt_loc_num flowgraph_to_mir (fun _ s' -> s') s
 
 let statement_stmt_loc_of_statement_stmt_loc_num flowgraph_to_mir pattern =
@@ -167,7 +166,7 @@ let statement_stmt_loc_of_statement_stmt_loc_num flowgraph_to_mir pattern =
 
 (** Forgetful function from numbered to unnumbered programs *)
 let unnumbered_prog_of_numbered_prog flowgraph_to_mir p =
-  Program.map (stmt_loc_of_stmt_loc_num flowgraph_to_mir) p Fn.id
+  Program.map (stmt_loc_of_stmt_loc_num flowgraph_to_mir) p Fun.id
 
 (** See interface file *)
 let fwd_traverse_statement stmt ~init ~f =
@@ -248,7 +247,7 @@ and index_var_set ix =
   | Single expr -> expr_var_set expr
   | Upfrom expr -> expr_var_set expr
   | Between (expr1, expr2) ->
-      Set.union (expr_var_set expr1) (expr_var_set expr2)
+      Set.Poly.union (expr_var_set expr1) (expr_var_set expr2)
   | MultiIndex expr -> expr_var_set expr
 
 let expr_var_names_set expr =
@@ -271,10 +270,8 @@ let stmt_rhs stmt =
    |Break | Continue | Skip | Decl _ | Profile _ | Block _ | SList _ ->
       Set.Poly.empty
 
-let union_map (set : ('a, 'c) Set.t) ~(f : 'a -> 'b Set.Poly.t) =
-  Set.fold set ~init:Set.Poly.empty ~f:(fun s a -> Set.union s (f a))
-
-let stmt_rhs_var_set stmt = union_map (stmt_rhs stmt) ~f:expr_var_set
+let stmt_rhs_var_set stmt = Set.Poly.union_map (stmt_rhs stmt) ~f:expr_var_set
+let stmt_rhs_names_set s = Set.Poly.map ~f:fst (stmt_rhs_var_set s)
 
 (** See interface file *)
 let expr_assigned_var Expr.{pattern; _} =
@@ -313,25 +310,21 @@ let fn_subst_stmt m = map_rec_stmt_loc (fn_subst_stmt_base m)
 let name_map m (e : Expr.Typed.t) =
   match e.pattern with
   | Var s -> (
-      match Map.Poly.find m s with
+      match String.Map.find_opt s m with
       | Some s' -> Some {e with pattern= Var s'}
       | None -> None)
   | _ -> None
 
 let name_subst_stmt m = fn_subst_stmt (name_map m)
 
-let var_map_std m (e : Expr.Typed.t) =
-  match e.pattern with Var s -> Std.String.Map.find_opt s m | _ -> None
-
 let var_map m (e : Expr.Typed.t) =
-  match e.pattern with Var s -> Map.find m s | _ -> None
+  match e.pattern with Var s -> String.Map.find_opt s m | _ -> None
 
 let subst_expr m e = fn_subst_expr (var_map m) e
-let subst_expr_std m e = fn_subst_expr (var_map_std m) e
 let subst_idx m = Index.map (subst_expr m)
 let subst_stmt_base m = fn_subst_stmt_base_helper (subst_expr m) (subst_idx m)
 let subst_stmt m = map_rec_stmt_loc (subst_stmt_base m)
-let expr_map m (e : Expr.Typed.t) = Map.find m e
+let expr_map m (e : Expr.Typed.t) = ExprMap.find_opt e m
 let expr_subst_expr m e = fn_subst_expr (expr_map m) e
 let expr_subst_idx m = Index.map (expr_subst_expr m)
 
@@ -345,22 +338,21 @@ let rec expr_depth Expr.{pattern; _} =
       let l = args @ Fun_kind.collect_exprs kind in
       1
       + Option.value ~default:0
-          (List.max_elt ~compare:compare_int (List.map ~f:expr_depth l))
+          (List.max_elt ~cmp:Int.compare (List.map ~f:expr_depth l))
   | TernaryIf (e1, e2, e3) ->
       1
       + Option.value ~default:0
-          (List.max_elt ~compare:compare_int
-             (List.map ~f:expr_depth [e1; e2; e3]))
+          (List.max_elt ~cmp:Int.compare (List.map ~f:expr_depth [e1; e2; e3]))
   | Indexed (e, l) ->
       1
       + max (expr_depth e)
           (Option.value ~default:0
-             (List.max_elt ~compare:compare_int (List.map ~f:idx_depth l)))
+             (List.max_elt ~cmp:Int.compare (List.map ~f:idx_depth l)))
   | Promotion (expr, _, _) -> 1 + expr_depth expr
   | EAnd (e1, e2) | EOr (e1, e2) ->
       1
       + Option.value ~default:0
-          (List.max_elt ~compare:compare_int (List.map ~f:expr_depth [e1; e2]))
+          (List.max_elt ~cmp:Int.compare (List.map ~f:expr_depth [e1; e2]))
   | TupleProjection (e, _) -> 1 + expr_depth e
 
 and idx_depth i =
@@ -380,7 +372,7 @@ let rec update_expr_ad_levels autodiffable_variables (Expr.{pattern; _} as e) =
     UnsizedType.fill_adtype_for_type base Expr.Typed.Meta.(e.meta.type_) in
   match pattern with
   | Var x ->
-      if Set.mem autodiffable_variables x then e
+      if Set.Poly.mem x autodiffable_variables then e
       else
         let adlevel =
           UnsizedType.fill_adtype_for_type DataOnly
@@ -446,10 +438,10 @@ let cleanup_empty_stmts stmts =
     match s.pattern with
     (* NB: Does not include Profile since we don't want to remove those
        blocks *)
-    | (SList ls | Block ls) when List.for_all ~f:(Fn.non is_decl) ls -> ls
+    | (SList ls | Block ls) when List.for_all ~f:(Fun.negate is_decl) ls -> ls
     | _ -> [s] in
   let ellide_skip s = match s.pattern with Skip -> [] | _ -> [s] in
-  List.map stmts ~f:(rewrite_bottom_up ~f:Fn.id ~g:cleanup_stmt)
+  List.map stmts ~f:(rewrite_bottom_up ~f:Fun.id ~g:cleanup_stmt)
   |> List.concat_map ~f:flatten_block
   |> List.concat_map ~f:ellide_skip
 

@@ -1,7 +1,6 @@
 (* A partial evaluator for use in static analysis and optimization *)
 
-open Core
-open Core.Poly
+open Std
 open Middle
 
 exception Rejected of Location_span.t * string
@@ -44,7 +43,7 @@ let apply_operator_int (op : string) i1 i2 =
         | "Minus__" -> i1 - i2
         | "Times__" -> i1 * i2
         | "Divide__" | "IntDivide__" -> i1 / i2
-        | "Modulo__" -> i1 % i2
+        | "Modulo__" -> Int.rem i1 i2
         | "Equals__" -> Bool.to_int (i1 = i2)
         | "NEquals__" -> Bool.to_int (i1 <> i2)
         | "Less__" -> Bool.to_int (i1 < i2)
@@ -1052,7 +1051,7 @@ let rec eval_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
           | e1', e2' -> EOr (e1', e2'))
       | TupleProjection
           ({pattern= FunApp (CompilerInternal FnMakeTuple, ts); _}, ix) ->
-          (List.nth_exn ts (ix - 1)).pattern
+          (List.nth ts (ix - 1)).pattern
       | TupleProjection (e, ix) -> TupleProjection (eval_expr e, ix)
       | Indexed (e, l) ->
           (* TODO: do something clever with array and matrix expressions here?
@@ -1069,7 +1068,10 @@ let rec simplify_index_expr pattern =
            single)
           :: outer_tl )
       when List.exists ~f:is_multi_index inner_indices -> (
-        match List.split_while ~f:(Fn.non is_multi_index) inner_indices with
+        let idx =
+          List.find_index ~f:is_multi_index inner_indices
+          |> Option.value ~default:(List.length inner_indices) in
+        match List.split_n inner_indices idx with
         | inner_singles, MultiIndex first_multi :: inner_tl ->
             (* foo [arr1, ..., arrN] [i1, ..., iN] ->
              * foo [arr1[i1]] [arr[i2]] ... [arrN[iN]]
@@ -1145,10 +1147,10 @@ let rec eval_stmt s =
       { s with
         pattern=
           Pattern.map
-            (Fn.compose eval_expr simplify_indices_expr)
+            (Fun.compose eval_expr simplify_indices_expr)
             eval_stmt s.pattern }
   with Rejected (loc, m) ->
     { Stmt.pattern= NRFunApp (CompilerInternal FnReject, [Expr.Helpers.str m])
     ; meta= loc }
 
-let eval_prog p : Program.Typed.t = Program.map try_eval_expr eval_stmt Fn.id p
+let eval_prog p : Program.Typed.t = Program.map try_eval_expr eval_stmt Fun.id p

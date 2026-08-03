@@ -1,18 +1,14 @@
-open Core
+open Std
 open Middle
 open Dataflow_types
-
-val union_maps_left :
-  ('a, 'b) Map.Poly.t -> ('a, 'b) Map.Poly.t -> ('a, 'b) Map.Poly.t
-(** Union maps, preserving the left element in a collision *)
 
 val build_cf_graphs :
      ?flatten_loops:bool
   -> ?blocks_after_body:bool
-  -> (label, (Expr.Typed.t, label) Stmt.Pattern.t * 'm) Map.Poly.t
+  -> ((Expr.Typed.t, label) Stmt.Pattern.t * 'm) LabelMap.t
   -> label Set.Poly.t
-     * (label, label Set.Poly.t) Map.Poly.t
-     * (label, label Set.Poly.t) Map.Poly.t
+     * label Set.Poly.t LabelMap.t
+     * label Set.Poly.t LabelMap.t
 (** Simultaneously builds the controlflow parent graph, the predecessor graph
     and the exit set of a statement. It's advantageous to build them together
     because they both rely on some of the same Break, Continue and Return
@@ -25,8 +21,8 @@ val build_cf_graphs :
     - (controlflow parent graph) is the return value of build_cf_graph *)
 
 val build_cf_graph :
-     (label, (Expr.Typed.t, label) Stmt.Pattern.t * 'm) Map.Poly.t
-  -> (label, label Set.Poly.t) Map.Poly.t
+     ((Expr.Typed.t, label) Stmt.Pattern.t * 'm) LabelMap.t
+  -> label Set.Poly.t LabelMap.t
 (** Building the controlflow graph requires a traversal with state that includes
     continues, breaks, returns and the controlflow graph accumulator. The
     traversal should be a branching traversal with set unions rather than a
@@ -36,8 +32,8 @@ val build_cf_graph :
 val build_predecessor_graph :
      ?flatten_loops:bool
   -> ?blocks_after_body:bool
-  -> (label, (Expr.Typed.t, label) Stmt.Pattern.t * 'm) Map.Poly.t
-  -> label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t
+  -> ((Expr.Typed.t, label) Stmt.Pattern.t * 'm) LabelMap.t
+  -> label Set.Poly.t * label Set.Poly.t LabelMap.t
 (** Building the predecessor graph requires a traversal with state that includes
     the current previous nodes and the predecessor graph accumulator. Special
     cases are made for loops, because they should include the body exits as
@@ -47,7 +43,7 @@ val build_predecessor_graph :
 
 val build_recursive_statement :
      (('e, 's) Stmt.Pattern.t -> 'm -> 's)
-  -> (label, ('e, label) Stmt.Pattern.t * 'm) Map.Poly.t
+  -> (('e, label) Stmt.Pattern.t * 'm) LabelMap.t
   -> label
   -> 's
 (** Build a fixed-point data type representation of a statement given a
@@ -57,9 +53,8 @@ val is_ctrl_flow : ('a, 'b) Stmt.Pattern.t -> bool
 (** Check if the statement controls the execution of its substatements. *)
 
 val merge_set_maps :
-     ('a, 'b Set.Poly.t) Map.Poly.t
-  -> ('a, 'b Set.Poly.t) Map.Poly.t
-  -> ('a, 'b Set.Poly.t) Map.Poly.t
+  (module M : Map.S)
+  -> 'b Set.Poly.t M.t -> 'b Set.Poly.t M.t -> 'b Set.Poly.t M.t
 (** Merge two maps whose values are sets, and union the sets when there's a
     collision. *)
 
@@ -67,7 +62,7 @@ val build_statement_map :
      ('s -> ('e, 's) Stmt.Pattern.t)
   -> ('s -> 'm)
   -> 's
-  -> (label, ('e, label) Stmt.Pattern.t * 'm) Map.Poly.t
+  -> (('e, label) Stmt.Pattern.t * 'm) LabelMap.t
 (** The statement map is built by traversing substatements recursively to
     replace substatements with their labels while building up the substatements'
     statement maps. Then, the result is the union of the substatement maps with

@@ -765,7 +765,8 @@ let%expect_test "Flatten slists" =
            (While ((pattern (Var hi)) (meta ()))
             ((pattern (Block (((pattern Break) (meta ()))))) (meta ()))))
           (meta ())))))
-      (meta ()))) |}]
+      (meta ())))
+    |}]
 
 let add_reads vars mkread stmts =
   let vars = List.map ~f:(fun (id, l, outvar) -> (id, (l, outvar))) vars in

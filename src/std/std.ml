@@ -51,6 +51,12 @@ module List = struct
       | e :: l -> if cmp e m < 0 then loop e l else loop m l in
     match l with [] -> None | e :: l -> Some (loop e l)
 
+  let max_elt ~cmp l =
+    let rec loop m = function
+      | [] -> m
+      | e :: l -> if cmp e m > 0 then loop e l else loop m l in
+    match l with [] -> None | e :: l -> Some (loop e l)
+
   let split_n l n =
     let tl = ref [] in
     let[@tail_mod_cons] rec aux l n =
@@ -140,6 +146,8 @@ module Set = struct
 
     let union_list = List.fold_left ~f:union ~init:empty
   end
+
+  module Poly = PolySet
 end
 
 module Map = struct
@@ -221,6 +229,8 @@ module Int = struct
 
   let of_string = int_of_string
   let of_string_opt = int_of_string_opt
+
+  module Map = Map.Make (Int)
 end
 
 module Hashtbl = struct
@@ -283,7 +293,11 @@ module Sexp_conv = struct
   let sexp_of_string = sexp_of_string
   let sexp_of_bool = sexp_of_bool
   let sexp_of_unit = sexp_of_unit
-  let print_s = Format.kasprintf print_endline "%a" Sexplib0.Sexp.pp_hum
+
+  let print_s s =
+    output_string stdout (Sexplib0.Sexp.to_string_hum s);
+    output_char stdout '\n';
+    flush stdout
 end
 
 module Compare = struct

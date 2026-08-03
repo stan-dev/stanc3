@@ -1,4 +1,4 @@
-open Core
+open Std
 open Middle
 open Dataflow_types
 
@@ -28,7 +28,7 @@ type node_dep_info =
   ; meta: Location_span.t }
 
 val node_immediate_dependencies :
-     (label, (Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) Map.Poly.t
+     ((Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) LabelMap.t
   -> ?blockers:vexpr Set.Poly.t
   -> label
   -> label Set.Poly.t
@@ -37,14 +37,14 @@ val node_immediate_dependencies :
     flow parents and the reachable definitions of RHS variables. *)
 
 val node_dependencies :
-     (label, (Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) Map.Poly.t
+     ((Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) LabelMap.t
   -> label
   -> label Set.Poly.t
 (** Given dependency information for each node, find all of the dependencies of
     a single node. *)
 
 val node_vars_dependencies :
-     (label, (Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) Map.Poly.t
+     ((Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) LabelMap.t
   -> ?blockers:vexpr Set.Poly.t
   -> vexpr Set.Poly.t
   -> label
@@ -57,27 +57,26 @@ val node_vars_dependencies :
 val build_dep_info_map :
      Program.Typed.t
   -> Stmt.Located.t
-  -> (label, (Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) Map.Poly.t
+  -> ((Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) LabelMap.t
 (** Build the dependency information for each node in the log_prob section of a
     program *)
 
 val log_prob_build_dep_info_map :
      Program.Typed.t
-  -> (label, (Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) Map.Poly.t
+  -> ((Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) LabelMap.t
 (** Build the dependency information for each node in the log_prob section of a
     program *)
 
 val all_node_dependencies :
-     (label, (Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) Map.Poly.t
-  -> (label, label Set.Poly.t) Map.Poly.t
+     ((Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) LabelMap.t
+  -> label Set.Poly.t LabelMap.t
 (** Given dependency information for each node, find all of the dependencies of
     all nodes, effectively building the dependency graph.
 
     This is more efficient than calling node_dependencies on each node
     individually. *)
 
-val log_prob_dependency_graph :
-  Program.Typed.t -> (label, label Set.Poly.t) Map.Poly.t
+val log_prob_dependency_graph : Program.Typed.t -> label Set.Poly.t LabelMap.t
 (** Build the dependency graph for the log_prob section of a program, where
     labels correspond to the labels built by statement_map. *)
 

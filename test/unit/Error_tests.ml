@@ -1,10 +1,10 @@
-open Core
+open Std
 open Common
 
 let%expect_test "with_exn_message" =
   Printexc.record_backtrace false;
   ICE.with_exn_message (fun () -> ICE.internal_error "oops!")
-  |> Result.error |> Option.value_exn |> print_endline;
+  |> Result.get_error |> print_endline;
   Printexc.record_backtrace true;
   [%expect
     {|
@@ -19,10 +19,8 @@ let%expect_test "with_exn_message" =
 (* expect_tests warn against directly including a backtrace for fragility
    reasons *)
 let%expect_test "backtrace indirect test" =
-  ( ICE.with_exn_message (fun () -> assert false)
-  |> Result.error |> Option.value_exn
-  |> fun s ->
-    if String.is_substring ~substring:"Called from Common" s then
+  ( ICE.with_exn_message (fun () -> assert false) |> Result.get_error |> fun s ->
+    if String.includes ~affix:"Called from Common" s then
       print_endline "Backtrace found in message"
     else print_endline "FAILED TO FIND BACKTRACE" );
   [%expect {| Backtrace found in message |}]
@@ -33,7 +31,7 @@ let%expect_test "ICE triggered" =
       Middle.(
         Expr.Helpers.infer_type_of_indexed UnsizedType.UReal
           [Index.Single Expr.Helpers.loop_bottom]))
-  |> Result.error |> Option.value_exn |> print_endline;
+  |> Result.get_error |> print_endline;
   Printexc.record_backtrace true;
   [%expect
     {|

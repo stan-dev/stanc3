@@ -1,4 +1,3 @@
-open Core
 open Analysis_and_optimization
 
 let print_tdata Middle.Program.{prepare_data; _} =

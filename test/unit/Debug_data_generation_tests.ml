@@ -1,12 +1,12 @@
 open Analysis_and_optimization
-open Core
+open Std
 open Frontend
 open Debug_data_generation
 
 let print_data_prog ast =
-  Stdlib.Random.set_state (Stdlib.Random.State.make [| 111; 222; 333 |]);
+  Random.set_state (Random.State.make [| 111; 222; 333 |]);
   gen_values_json (Ast_to_Mir.gather_declarations ast.Ast.datablock)
-  |> Result.ok |> Option.value_exn
+  |> Result.get_ok
 
 let%expect_test "whole program data generation check" =
   let ast =
