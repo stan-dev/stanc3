@@ -1,5 +1,5 @@
-open Core
-open Core.Poly
+open Std
+open Std.Sexp_conv
 module UnsizedType = Middle.UnsizedType
 
 (** Type to represent promotions in the typechecker. This can be used to return
@@ -34,13 +34,12 @@ let rec promote_unsized_type (typ : UnsizedType.t)
   | IntToComplex, UInt, _ | RealToComplex, UReal, _ -> (UComplex, ad)
   | TuplePromotion proms, UTuple types, TupleAD ads ->
       let typs, ads =
-        List.unzip @@ List.map3_exn ~f:promote_unsized_type types ads proms
-      in
+        List.split @@ List.map3 ~f:promote_unsized_type types ads proms in
       (UTuple typs, TupleAD ads)
   | TuplePromotion proms, UTuple types, ad ->
       let types', ads =
-        List.unzip
-        @@ List.map2_exn
+        List.split
+        @@ List.map2
              ~f:(fun ty proms -> promote_unsized_type ty ad proms)
              types proms in
       (UTuple types', TupleAD ads)
@@ -147,7 +146,7 @@ let rec promote (exp : Ast.typed_expression) prom =
   | TupleExpr es -> (
       match prom with
       | TuplePromotion sub_promotions ->
-          let promoted_exprs = List.map2_exn ~f:promote es sub_promotions in
+          let promoted_exprs = List.map2 ~f:promote es sub_promotions in
           let type_ =
             UnsizedType.UTuple
               (List.map ~f:(fun e -> e.emeta.type_) promoted_exprs) in
@@ -159,7 +158,7 @@ let rec promote (exp : Ast.typed_expression) prom =
       | _ -> exp)
   | _ -> promote_inner exp prom
 
-let promote_list es promotions = List.map2_exn es promotions ~f:promote
+let promote_list es promotions = List.map2 es promotions ~f:promote
 
 (** Get the promotion needed to make the second type into the first. Types NEED
     to have previously been checked to be promotable or else a fatal error will
@@ -192,7 +191,7 @@ let rec get_type_promotion_exn (ad_requested, ty_requested)
         get_type_promotion_exn (ad_requested, nt1) (ad_current, nt2)
     | UTuple ts1, UTuple ts2 ->
         TuplePromotion
-          (List.map2_exn
+          (List.map2
              ~f:(fun t1 t2 ->
                get_type_promotion_exn (ad_requested, t1) (ad_current, t2))
              ts1 ts2)
@@ -223,4 +222,6 @@ let rec promotion_cost p =
   | RealToComplex | IntToReal -> 1
   | IntToComplex -> 2
   | TuplePromotion sub_promotions ->
-      List.sum (module Int) ~f:promotion_cost sub_promotions
+      List.fold_left ~init:0
+        ~f:(fun acc i -> acc + promotion_cost i)
+        sub_promotions

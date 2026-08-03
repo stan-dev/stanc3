@@ -1,5 +1,4 @@
-open Core
-open Core.Poly
+open Std
 open Ast
 open Fmt
 open Pretty_printing
@@ -35,7 +34,7 @@ let pp_program ~bare_functions ~line_length ~inline_includes ~strip_comments ppf
   set_comments ~inline_includes ~strip_comments comments;
   print_included := inline_includes;
   Format.pp_open_vbox ppf 0;
-  if bare_functions then pp_bare_block ppf @@ Option.value_exn bf
+  if bare_functions then pp_bare_block ppf @@ Option.get bf
   else
     let blocks =
       List.filter_map
@@ -58,13 +57,14 @@ let check_correctness ?(bare_functions = false) prog pretty =
           Fmt.str "%a" (Errors.pp ?printed_filename:None ~code:pretty) e in
         (Common.ICE.internal_errorf
            "Pretty-printed program failed to parse!@\nError %s@\n%s@\n%s"
-           [ error; Ast.sexp_of_untyped_program prog |> Sexp.to_string_hum
+           [ error
+           ; Ast.sexp_of_untyped_program prog |> Sexplib0.Sexp.to_string_hum
            ; pretty ] [@coverage off]) in
   if compare_untyped_program prog result_ast <> 0 then
     Common.ICE.internal_errorf
       "Pretty-printed program does not match the original!@\n%s@\n%s"
-      [ Ast.sexp_of_untyped_program prog |> Sexp.to_string_hum
-      ; Ast.sexp_of_untyped_program result_ast |> Sexp.to_string_hum ]
+      [ Ast.sexp_of_untyped_program prog |> Sexplib0.Sexp.to_string_hum
+      ; Ast.sexp_of_untyped_program result_ast |> Sexplib0.Sexp.to_string_hum ]
     [@coverage off]
 
 let pretty_print_program ?(bare_functions = false) ?(line_length = 78)

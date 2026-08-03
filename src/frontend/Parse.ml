@@ -1,7 +1,7 @@
 (** Some complicated stuff to get the custom syntax errors out of Menhir's
     Incremental API *)
 
-open Stdlib.Result.Syntax
+open Result.Syntax
 module Interp = Parser.MenhirInterpreter
 
 let drive_parser parse_fun =
@@ -57,7 +57,7 @@ let to_lexbuf file_or_code =
         try Ok (In_channel.open_bin path)
         with _ -> Error (Errors.FileNotFound path) in
       let lexbuf = Lexing.from_channel chan in
-      Stdlib.Gc.finalise (fun _ -> In_channel.close_noerr chan) lexbuf;
+      Gc.finalise (fun _ -> In_channel.close_noerr chan) lexbuf;
       (lexbuf, path)
   | `Code code -> Ok (Lexing.from_string code, "string")
 

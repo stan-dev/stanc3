@@ -1,4 +1,3 @@
-open Core
 open Middle
 
 type type_mismatch = private

@@ -2,6 +2,8 @@
     For messages that are used by multiple different parser states, all of the
     comment lines except for the 'concrete syntax' line are elided. *)
 
+open Std
+
 let strip_redundant_parser_states content =
   let pattern =
     (* match comment blocks between two input sentences *)
@@ -16,9 +18,16 @@ let strip_redundant_parser_states content =
   (* preserve only the input sentences and the "Concrete Syntax" line *)
   Str.global_replace pattern "\\1\n\\3\n\\5" content
 
+let rec rtrim s =
+  if s = "" then s
+  else
+    match String.get s (String.length s - 1) with
+    | ' ' | '\n' | '\r' -> rtrim (String.drop_last 1 s)
+    | _ -> s
+
 let strip_lines content =
-  let open Core.String in
-  split_lines content |> List.map rstrip |> concat_lines
+  String.split_all ~sep:"\n" content
+  |> List.map ~f:rtrim |> String.concat ~sep:"\n"
 
 let rec strip_until_fixed content =
   let stripped = strip_redundant_parser_states content in

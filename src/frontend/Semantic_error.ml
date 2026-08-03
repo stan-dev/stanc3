@@ -1,4 +1,4 @@
-open Core
+open Std
 open Middle
 
 (* The following categories (type, identifier, expression, statement) are fairly
@@ -14,7 +14,7 @@ let quoted = SignatureMismatch.quoted
 let found_type ppf =
   Fmt.pf ppf "@ Instead found type %a." (actual_style UnsizedType.pp)
 
-let rec expected_types : UnsizedType.t Std.Nonempty_list.t Fmt.t =
+let rec expected_types : UnsizedType.t Nonempty_list.t Fmt.t =
   let ust = expected_style UnsizedType.pp in
   fun ppf l ->
     match l with
@@ -23,7 +23,7 @@ let rec expected_types : UnsizedType.t Std.Nonempty_list.t Fmt.t =
     | [t1; t2; t3] -> Fmt.pf ppf "%a,@ %a,@ or %a" ust t1 ust t2 ust t3
     | t :: ts ->
         Fmt.pf ppf "%a,@ %a" ust t expected_types
-          (ts |> Std.Nonempty_list.of_list_exn)
+          (ts |> Nonempty_list.of_list_exn)
 
 module TypeError = struct
   type t =
@@ -121,7 +121,7 @@ module TypeError = struct
       else Fmt.pf ppf "(vector, T_l%t) => real,@ tuple(T_l%t)" ellipsis ellipsis
     in
     let pp_laplace_tols ppf =
-      if String.is_substring ~substring:"_tol" name then
+      if String.includes ~affix:"_tol" name then
         Fmt.pf ppf ", %a"
           Fmt.(list ~sep:comma UnsizedType.pp_fun_arg)
           Stan_math_signatures.laplace_tolerance_argument_types in
@@ -138,7 +138,7 @@ module TypeError = struct
       quoted name name pp_lik_args ellipsis ellipsis pp_laplace_tols
       pp_supplied_tys info ()
 
-  let rec expected_types : UnsizedType.t Std.Nonempty_list.t Fmt.t =
+  let rec expected_types : UnsizedType.t Nonempty_list.t Fmt.t =
     let ust = expected_style UnsizedType.pp in
     fun ppf l ->
       match l with
@@ -147,7 +147,7 @@ module TypeError = struct
       | [t1; t2; t3] -> Fmt.pf ppf "%a,@ %a,@ or %a" ust t1 ust t2 ust t3
       | t :: ts ->
           Fmt.pf ppf "%a,@ %a" ust t expected_types
-            (ts |> Std.Nonempty_list.of_list_exn)
+            (ts |> Nonempty_list.of_list_exn)
 
   let pp ppf = function
     | IncorrectReturnType (t1, t2) ->
@@ -210,7 +210,7 @@ module TypeError = struct
         Fmt.pf ppf "The inner type in reduce_sum array must be %a.%a"
           expected_types
           (Stan_math_signatures.reduce_sum_slice_types
-         |> Std.Nonempty_list.of_list_exn)
+         |> Nonempty_list.of_list_exn)
           found_type ty
     | IllTypedReduceSum (name, arg_tys, expected_args, error, _callback_location)
       ->
@@ -277,7 +277,7 @@ module TypeError = struct
     | IlltypedLaplaceTooMany (name, n_args) ->
         Fmt.pf ppf "Received %d extra %a at the end of the call to %a.@ %s"
           n_args arguments n_args quoted name
-          (if String.is_substring ~substring:"_tol" name then
+          (if String.includes ~affix:"_tol" name then
              "Only a single tuple of control parameters is expected."
            else if n_args = 1 then "Did you mean to call the _tol version?"
            else "Did you mean to call the _tol version with a tuple of these?")
@@ -764,7 +764,7 @@ module StatementError = struct
           lt.type_ found_type rt.type_
     | IllTypedAssignment (op, lt, rt) ->
         let pp_expected_types ppf signatures =
-          match Std.Nonempty_list.of_list signatures with
+          match Nonempty_list.of_list signatures with
           | None ->
               Fmt.pf ppf
                 "There are no valid right hand sides for the given left hand \

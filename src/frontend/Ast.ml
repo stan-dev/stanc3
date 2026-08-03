@@ -8,7 +8,9 @@
     later be filled in with something like
     [type expr_with_meta = metadata expression] *)
 
-open Core
+open Std
+open Std.Compare
+open Std.Sexp_conv
 open Middle
 
 (** Our type for identifiers, on which we record a location *)
@@ -62,7 +64,7 @@ type ('m, 'f, 'p) expr_with =
 type located_meta = {loc: (Location_span.t[@sexp.opaque] [@compare.ignore])}
 [@@deriving sexp_of, compare]
 
-type untyped_expression = (located_meta, unit, Core.Nothing.t) expr_with
+type untyped_expression = (located_meta, unit, Nothing.t) expr_with
 [@@deriving sexp_of, compare]
 
 (** Typed expressions also have meta-data after type checking: a location_span,
@@ -85,7 +87,7 @@ let expr_loc_lub exprs =
   match List.map ~f:(fun e -> e.emeta.loc) exprs with
   | [] -> Location_span.empty
   | [hd] -> hd
-  | x1 :: tl -> List.fold ~init:x1 ~f:Location_span.merge tl
+  | x1 :: tl -> List.fold_left ~init:x1 ~f:Location_span.merge tl
 
 (** Least upper bound of expression autodiff types *)
 let expr_ad_lub exprs =
@@ -256,7 +258,7 @@ type 's program =
   ; comments: (comment_type list[@sexp.opaque] [@compare.ignore]) }
 [@@deriving sexp_of, compare, map, fold]
 
-let get_stmts = Option.value_map ~default:[] ~f:(fun x -> x.stmts)
+let get_stmts b = Option.value_map ~default:[] ~f:(fun x -> x.stmts) b
 
 (** Untyped programs (before type checking) *)
 type untyped_program = untyped_statement program [@@deriving sexp_of, compare]
@@ -310,15 +312,15 @@ let untyped_program_of_typed_program : typed_program -> untyped_program =
 (** in practice, we never want to fold over the FnKind or Promotion types so we
     shadow the [@@derived] fold_expression *)
 
-let fold_expression f acc e = fold_expression f Fn.const Fn.const acc e
-let fold_lval_with f acc lval = fold_lval_with f Fn.const acc lval
-let fold_statement f g h acc s = fold_statement f g h Fn.const acc s
+let fold_expression f acc e = fold_expression f Fun.const Fun.const acc e
+let fold_lval_with f acc lval = fold_lval_with f Fun.const acc lval
+let fold_statement f g h acc s = fold_statement f g h Fun.const acc s
 
 (** similarly for map *)
 
-let map_expression f e = map_expression f Fn.id Fn.id e
-let map_lval_with f lval = map_lval_with f Fn.id lval
-let map_statement f g h s = map_statement f g h Fn.id s
+let map_expression f e = map_expression f Fun.id Fun.id e
+let map_lval_with f lval = map_lval_with f Fun.id lval
+let map_statement f g h s = map_statement f g h Fun.id s
 
 let mk_typed_expression ~expr ~loc ~type_ ~ad_level =
   {expr; emeta= {loc; type_; ad_level}}
@@ -362,7 +364,7 @@ let rec extract_ids {expr; _} =
   | IntNumeral _ | RealNumeral _ | ImagNumeral _ | GetTarget -> []
 
 let rec lvalue_of_expr_opt ({expr; emeta} : untyped_expression) =
-  let open Stdlib.Option.Syntax in
+  let open Option.Syntax in
   let rec base_lvalue {expr; emeta} =
     let+ lval =
       match expr with
@@ -383,10 +385,9 @@ let rec lvalue_of_expr_opt ({expr; emeta} : untyped_expression) =
       let+ l = base_lvalue {expr; emeta} in
       LValue l
 
-let type_of_arguments :
-       (UnsizedType.autodifftype * UnsizedType.t * 'a) list
-    -> UnsizedType.argumentlist =
-  List.map ~f:(fun (a, t, _) -> (a, t))
+let type_of_arguments (l : (UnsizedType.autodifftype * UnsizedType.t * 'a) list)
+    : UnsizedType.argumentlist =
+  List.map ~f:(fun (a, t, _) -> (a, t)) l
 
 let get_loc_lvalue_pack lhs =
   match lhs with

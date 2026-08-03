@@ -19,7 +19,7 @@ let lookup_stan_math_function name =
   Hashtbl.find_multi (Lazy.force stan_math_signatures) name
 
 let signatures_alist =
-  Lazy.map (Fun.compose List.of_seq Hashtbl.to_seq) stan_math_signatures
+  Lazy.map stan_math_signatures ~f:(Fun.compose List.of_seq Hashtbl.to_seq)
 
 let is_stan_math_variadic_function_name =
   Hashtbl.mem stan_math_variadic_signatures
