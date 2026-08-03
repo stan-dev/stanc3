@@ -1,7 +1,8 @@
 (** Types which have dimensionalities but not sizes, e.g. [array[,,]] *)
 
-open Core
-open Core.Poly
+open Std
+open Std.Compare
+open Std.Sexp_conv
 
 type t =
   | UInt
@@ -111,8 +112,8 @@ let rec autodifftype_can_convert at1 at2 =
   | DataOnly, AutoDiffable -> false
   | TupleAD ads1, TupleAD ads2 -> (
       match List.for_all2 ads1 ads2 ~f:autodifftype_can_convert with
-      | Ok x -> x
-      | Unequal_lengths -> false)
+      | x -> x
+      | exception Invalid_argument _ -> false)
   | DataOnly, TupleAD ads ->
       List.for_all ads ~f:(autodifftype_can_convert DataOnly)
   | _, _ -> true
@@ -127,17 +128,13 @@ let any_autodiff xs = List.exists xs ~f:has_autodiff
 let lub_ad_type xs =
   let rec common_ad t1 t2 =
     match (t1, t2) with
-    | DataOnly, ad | ad, DataOnly -> Ok ad
-    | AutoDiffable, AutoDiffable -> Ok AutoDiffable
-    | TupleAD ads1, TupleAD ads2 -> (
-        match List.map2 ads1 ads2 ~f:common_ad with
-        | Ok ads -> ads |> Result.all |> Result.map ~f:(fun ads -> TupleAD ads)
-        | Unequal_lengths -> Error ())
+    | DataOnly, ad | ad, DataOnly -> ad
+    | AutoDiffable, AutoDiffable -> AutoDiffable
+    | TupleAD ads1, TupleAD ads2 -> TupleAD (List.map2 ads1 ads2 ~f:common_ad)
     | TupleAD ads, AutoDiffable | AutoDiffable, TupleAD ads ->
-        List.map ads ~f:(common_ad AutoDiffable)
-        |> Result.all
-        |> Result.map ~f:(fun ads -> TupleAD ads) in
-  List.fold_result ~init:DataOnly ~f:common_ad xs |> Result.ok
+        TupleAD (List.map ads ~f:(common_ad AutoDiffable)) in
+  try Some (List.fold_left ~init:DataOnly ~f:common_ad xs)
+  with Invalid_argument _ -> None
 
 let%expect_test "lub_ad_type1" =
   let ads = [DataOnly; DataOnly; DataOnly; AutoDiffable] in
@@ -169,9 +166,9 @@ let rec common_type = function
   | UArray t1, UArray t2 ->
       common_type (t1, t2) |> Option.map ~f:(fun t -> UArray t)
   | UTuple ts1, UTuple ts2 ->
-      (match List.zip ts1 ts2 with
-        | Ok ts -> List.map ts ~f:common_type |> Option.all
-        | Unequal_lengths -> None)
+      (match List.combine ts1 ts2 with
+        | ts -> List.map ts ~f:common_type |> Option.all
+        | exception Invalid_argument _ -> None)
       |> Option.map ~f:(fun ts -> UTuple ts)
   | t1, t2 when t1 = t2 -> Some t1
   | _, _ -> None
@@ -288,8 +285,7 @@ let rec is_indexing_matrix = function
 let rec fill_adtype_for_type ad ut =
   match (ad, ut) with
   | _, UArray t -> fill_adtype_for_type ad t
-  | TupleAD ads, UTuple ts ->
-      TupleAD (List.map2_exn ~f:fill_adtype_for_type ads ts)
+  | TupleAD ads, UTuple ts -> TupleAD (List.map2 ~f:fill_adtype_for_type ads ts)
   | _, UTuple ts -> TupleAD (List.map ~f:(fill_adtype_for_type ad) ts)
   | TupleAD _, _ ->
       Common.ICE.(
@@ -318,20 +314,3 @@ let%expect_test "tuple names" =
   [%sexp (res : string list)] |> print_s;
   [%expect {|
       (foo.1 foo.2.1 foo.2.2 foo.3) |}]
-
-module Comparator = Comparator.Make (struct
-  type nonrec t = t
-
-  let compare = compare
-  let sexp_of_t = sexp_of_t
-end)
-
-include Comparator
-
-include Comparable.Make_using_comparator (struct
-  type nonrec t = t
-
-  let sexp_of_t = sexp_of_t
-
-  include Comparator
-end)

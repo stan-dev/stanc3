@@ -233,6 +233,16 @@ module Int = struct
   module Map = Map.Make (Int)
 end
 
+module Float = struct
+  include Float
+
+  let to_string f =
+    let candidate = Printf.sprintf "%.15g" f in
+    valid_float_lexem
+      (if Float.of_string candidate = f then candidate
+       else Printf.sprintf "%.17g" f)
+end
+
 module Hashtbl = struct
   include Hashtbl
 
@@ -279,6 +289,7 @@ end
 (** Pervasive free functions *)
 
 let fst3 (x, _, _) = x
+let string_of_float = Float.to_string
 
 (** Useful for [@@deriving] derivers *)
 

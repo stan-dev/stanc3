@@ -1,4 +1,5 @@
-open Core
+open Std
+open Std.Sexp_conv
 
 type t = {filename: string; line_num: int; col_num: int; included_from: t option}
 [@@deriving sexp_of]

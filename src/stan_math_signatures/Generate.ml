@@ -2739,8 +2739,7 @@ let generate_module () =
     |> List.fold_left ~init:String.Map.empty ~f:(fun acc elt ->
         String.Map.union
           ~f:(fun _ v1 v2 ->
-            v1 @ v2 |> Core.Set.Poly.of_list |> Core.Set.Poly.to_list
-            |> Option.some)
+            v1 @ v2 |> Set.Poly.of_list |> Set.Poly.to_list |> Option.some)
           acc (String.Map.of_list [elt]))
     |> String.Map.to_list in
   Printf.printf

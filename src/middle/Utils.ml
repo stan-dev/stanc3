@@ -1,6 +1,6 @@
 (** Utilities, primarily surrounding distribution names and suffixes *)
 
-open Core
+open Std
 
 (** Name mangling helper functions for distributions *)
 let unnormalized_suffices = ["_lupdf"; "_lupmf"]
@@ -15,7 +15,7 @@ let cumulative_distribution_suffices = ["cdf"; "lcdf"; "lccdf"]
 let cumulative_distribution_suffices_w_rng =
   cumulative_distribution_suffices @ ["rng"]
 
-let is_user_ident = Fn.non (String.is_suffix ~suffix:"__")
+let is_user_ident = Fun.negate (String.ends_with ~suffix:"__")
 
 let unnormalized_suffix = function
   | "_lpdf" -> "_lupdf"
@@ -23,16 +23,16 @@ let unnormalized_suffix = function
   | x -> x
 
 let split_distribution_suffix (name : string) : (string * string) option =
-  String.rsplit2 ~on:'_' name
+  String.split_last ~sep:"_" name
 
 let is_distribution_name s =
   List.exists
-    ~f:(fun suffix -> String.is_suffix s ~suffix)
+    ~f:(fun suffix -> String.ends_with s ~suffix)
     (distribution_suffices @ unnormalized_suffices)
 
 let is_unnormalized_distribution s =
   List.exists
-    ~f:(fun suffix -> String.is_suffix s ~suffix)
+    ~f:(fun suffix -> String.ends_with s ~suffix)
     unnormalized_suffices
 
 let replace_unnormalized_suffix suffix ~name =
@@ -42,7 +42,7 @@ let replace_unnormalized_suffix suffix ~name =
 
 let stdlib_distribution_name s =
   List.map ~f:(replace_unnormalized_suffix ~name:s) distribution_suffices
-  |> List.filter_opt |> List.hd |> Option.value ~default:s
+  |> List.filter_map ~f:Fun.id |> List.hd |> Option.value ~default:s
 
 let normalized_name name =
   match name with
@@ -74,7 +74,7 @@ let zip_stuple_trans_exn pst tms =
           "Internal error: expected Tuple with TupleTransformation"
         [@coverage off] in
   let psts = tuple_subtypes pst in
-  List.zip_exn psts tms
+  List.combine psts tms
 
 let zip_utuple_trans_exn pst tms =
   let rec tuple_psts pst =
@@ -86,4 +86,4 @@ let zip_utuple_trans_exn pst tms =
           "Internal error: expected Tuple with TupleTransformation"
         [@coverage off] in
   let psts = tuple_psts pst in
-  List.zip_exn psts tms
+  List.combine psts tms

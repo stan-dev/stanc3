@@ -1,4 +1,6 @@
-open Core
+open Std
+open Std.Compare
+open Std.Sexp_conv
 open Common
 
 module Pattern = struct
@@ -23,7 +25,7 @@ module Pattern = struct
     | FunApp (StanLib (name, FnPlain, _), [lhs; rhs])
       when Option.is_some (Operator.of_string_opt name) ->
         Fmt.pf ppf "(%a %a %a)" pp_e lhs Operator.pp
-          (Option.value_exn (Operator.of_string_opt name))
+          (Option.get (Operator.of_string_opt name))
           pp_e rhs
     | FunApp (fun_kind, args) ->
         Fmt.pf ppf "%a(@[<hov>%a@])" (Fun_kind.pp pp_e) fun_kind
@@ -81,15 +83,6 @@ module Typed = struct
   (** Since the type [t] is now concrete (i.e. not a type _constructor_) we can
       construct a [Comparable.S] giving us [Map] and [Set] specialized to the
       type. *)
-
-  module Comparator = Comparator.Make (struct
-    type nonrec t = t
-
-    let compare = compare
-    let sexp_of_t = sexp_of_t
-  end)
-
-  include Comparator
 end
 
 module Helpers = struct
@@ -122,7 +115,9 @@ module Helpers = struct
     match es with
     | [] -> default
     | head :: rest ->
-        List.fold ~init:head ~f:(fun accum next -> binop accum op next) rest
+        List.fold_left ~init:head
+          ~f:(fun accum next -> binop accum op next)
+          rest
 
   let row_vector l =
     { meta= {Typed.Meta.empty with type_= URowVector}
@@ -251,7 +246,7 @@ module Helpers = struct
   let add_tuple_index e i =
     let mtype =
       match Typed.(type_of e) with
-      | UTuple ts -> List.nth_exn ts (i - 1)
+      | UTuple ts -> List.nth ts (i - 1)
       | t ->
           ICE.(
             internal_errorf

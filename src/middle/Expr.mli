@@ -46,8 +46,6 @@ module Typed : sig
   val adlevel_of : t -> UnsizedType.autodifftype
   val fun_arg : t -> UnsizedType.autodifftype * UnsizedType.t
   val pp : t Fmt.t
-
-  include Core.Comparator.S with type t := t
 end
 
 module Helpers : sig
