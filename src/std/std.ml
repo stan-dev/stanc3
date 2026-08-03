@@ -6,6 +6,7 @@
 module Return = Return
 module Nonempty_list = Nonempty_list
 module Nothing = Nothing
+module Hash_set = Hash_set
 
 (** OCaml Stdlib with labeled functions *)
 
@@ -59,6 +60,15 @@ module List = struct
         | e :: rem ->
             if n = 0 then (rev acc, l) else loop (e :: acc) (n - 1) rem in
       loop [] n lst
+
+  let chunks_of l ~length =
+    let rec aux length acc l =
+      match l with
+      | [] -> rev acc
+      | _ :: _ ->
+          let chunk, l = split_n l length in
+          aux length (chunk :: acc) l in
+    aux length [] l
 
   let[@tail_mod_cons] rec map3 ~f l1 l2 l3 =
     match (l1, l2, l3) with

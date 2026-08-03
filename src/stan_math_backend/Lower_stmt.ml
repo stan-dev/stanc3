@@ -1,7 +1,6 @@
 (** Lowering of Stan statements to C++ *)
 
-open Core
-open Core.Poly
+open Std
 open Middle
 open Cpp
 open Lower_expr
@@ -88,7 +87,7 @@ let rec initialize_value st adtype =
       var_arr.:{lower_expr d; initialize_value t adtype}
   | TupleAD ads, STuple subts ->
       let tupl = lower_st st adtype in
-      InitializerExpr (tupl, List.map2_exn ~f:initialize_value subts ads)
+      InitializerExpr (tupl, List.map2 ~f:initialize_value subts ads)
   | _, STuple _ | TupleAD _, _ ->
       Common.ICE.(
         internal_errorf
@@ -331,8 +330,8 @@ let rec lower_statement Stmt.{pattern; meta} : stmt list =
       [ IfElse
           ( lower_bool_expr cond
           , Stmts.block (lower_statement ifbranch)
-          , Option.map ~f:(Fn.compose Stmts.block lower_statement) elsebranch )
-      ]
+          , Option.map ~f:(Fun.compose Stmts.block lower_statement) elsebranch
+          ) ]
   | While (cond, body) ->
       [While (lower_bool_expr cond, Stmts.block (lower_statement body))]
   | For {loopvar; lower; upper; body} ->
@@ -347,7 +346,7 @@ let rec lower_statement Stmt.{pattern; meta} : stmt list =
       [lower_decl decl_id decl_type decl_adtype initialize]
   | Profile (name, ls) -> [lower_profile name (lower_statements ls)]
 
-and lower_statements = List.concat_map ~f:lower_statement
+and lower_statements stmts = List.concat_map ~f:lower_statement stmts
 
 module Testing = struct
   let%expect_test "set size mat array" =

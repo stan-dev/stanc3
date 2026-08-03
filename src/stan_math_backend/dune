@@ -1,7 +1,7 @@
 (library
  (name stan_math_backend)
  (public_name stanc.stan_math_backend)
- (libraries core fmt yojson middle stan_math_signatures)
+ (libraries std fmt yojson middle stan_math_signatures)
  (instrumentation
   (backend bisect_ppx))
  (private_modules
@@ -15,9 +15,7 @@
  (inline_tests)
  (preprocess
   (pps
-   ppx_compare
    ppx_sexp_conv
-   ppx_pipebang
    ppx_expect
    ppx_sexp_value
    ppx_deriving.make

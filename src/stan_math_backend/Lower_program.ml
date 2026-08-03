@@ -1,5 +1,4 @@
-open Core
-open Core.Poly
+open Std
 open Middle
 open Lower_expr
 open Lower_stmt
@@ -48,7 +47,8 @@ let lower_map_decl (vident, ut) : defn =
       (make_variable_defn ~type_:(Types.eigen_map t) ~name:vident
          ~init:
            (InitializerList
-              (Literal "nullptr" :: List.init ndims ~f:(fun _ -> Literal "0")))
+              (Literal "nullptr"
+              :: List.init ~len:ndims ~f:(fun _ -> Literal "0")))
          ()) in
   let scalar = local_scalar ut DataOnly in
   let open Types in
@@ -82,14 +82,14 @@ let lower_model_private {Program.prepare_data; _} =
   @ List.map ~f:lower_map_decl eigen_map_decls
 
 let rec validate_dims ~stage name st =
-  if String.is_suffix ~suffix:"__" name then []
+  if String.ends_with ~suffix:"__" name then []
   else if SizedType.contains_tuple st then
     (* We know tuples are given as flattened names containing "." in
        var_contexts *)
     let names =
       UnsizedType.enumerate_tuple_names_io name (SizedType.to_unsized st) in
     let subtypes = SizedType.flatten_tuple_io st in
-    List.map2_exn ~f:(validate_dims ~stage) names subtypes |> List.concat
+    List.map2 ~f:(validate_dims ~stage) names subtypes |> List.concat
   else
     let open Cpp.DSL in
     let vector args =
@@ -116,7 +116,7 @@ let gen_assign_data decl_id st init =
         (decl_id ^ "_data__", Stmt.Pattern.Default)
     | SInt | SReal | SComplex | SArray _ | STuple _ -> (decl_id, init) in
   let initialize =
-    let open Stdlib.Option.Syntax in
+    let open Option.Syntax in
     let+ value =
       lower_assign_sized st
         (UnsizedType.fill_adtype_for_type UnsizedType.DataOnly
@@ -145,12 +145,12 @@ let gen_assign_data decl_id st init =
                 , Types.eigen_map (lower_st st DataOnly)
                 , [data.@!("data"); lower_expr d1; lower_expr d2] )))
     | SInt | SReal | SComplex | SArray (_, _) | STuple _ -> None in
-  List.filter_opt [initialize; placement_new]
+  List.filter_map ~f:Fun.id [initialize; placement_new]
 
 let sum_expr_sizes es =
-  match lower_exprs es |> List.reduce ~f:Cpp.DSL.( + ) with
-  | None -> Literal "0U"
-  | Some e -> e
+  match lower_exprs es with
+  | [] -> Literal "0U"
+  | init :: rest -> List.fold_left ~init ~f:Cpp.DSL.( + ) rest
 
 let lower_constructor
     {Program.prog_name; input_vars; prepare_data; output_vars; _} =
@@ -180,7 +180,7 @@ let lower_constructor
         | Sized st ->
             Numbering.assign_loc meta
             @
-            if Set.mem data_idents decl_id then
+            if String.Set.mem decl_id data_idents then
               validate_dims ~stage:"data initialization" decl_id st
               @ gen_assign_data decl_id st initialize
             else gen_assign_data decl_id st initialize
@@ -469,7 +469,7 @@ let emplace_name_stmt name idcs =
   Expression
     param_names__.@?(( "emplace_back"
                      , [ null_string
-                         + List.fold ~init:(literal_string name)
+                         + List.fold_left ~init:(literal_string name)
                              ~f:(fun acc (typ, idx) ->
                                acc + sep typ + to_string idx)
                              idcs ] ))

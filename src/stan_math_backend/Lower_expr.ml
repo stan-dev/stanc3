@@ -1,12 +1,11 @@
 (** Lowering of Stan expressions to C++ *)
 
-open Core
-open Core.Poly
+open Std
 open Middle
 open Cpp
 
 let stan_namespace_qualify f =
-  if String.is_suffix ~suffix:"functor__" f || String.contains f ':' then f
+  if String.ends_with ~suffix:"functor__" f || String.contains f ':' then f
   else "stan::math::" ^ f
 
 let fn_renames =
@@ -37,7 +36,7 @@ let fn_renames =
     ; ("lower_upper_bound_jacobian", "stan::math::lub_constrain")
     ; ("lower_upper_bound_constrain", "stan::math::lub_constrain")
     ; ("lower_upper_bound_unconstrain", "stan::math::lub_free") ]
-  |> String.Map.of_alist_exn
+  |> String.Map.of_list
 
 let constraint_to_string = function
   | Transformation.Ordered -> Some "ordered"
@@ -63,10 +62,9 @@ let constraint_to_string = function
 
 let functor_suffix = "_functor__"
 let reduce_sum_functor_suffix = "_rsfunctor__"
-let variadic_functor_suffix x = sprintf "_variadic%d_functor__" x
+let variadic_functor_suffix x = Fmt.str "_variadic%d_functor__" x
 
 type variadic = FixedArgs | ReduceSum | VariadicHOF of int
-[@@deriving compare]
 
 let functor_type hof =
   match Stan_math_signatures.lookup_stan_math_variadic_function hof with
@@ -95,8 +93,8 @@ let is_row_vector e =
   | URowVector | UComplexRowVector -> true
   | _ -> false
 
-let first es = List.nth_exn es 0
-let second es = List.nth_exn es 1
+let first es = List.nth es 0
+let second es = List.nth es 1
 let default_multiplier = 1
 let default_offset = 0
 
@@ -112,10 +110,10 @@ let dont_need_range_check = function
   | _ -> false
 
 let promote_adtype =
-  List.fold
+  List.fold_left
     ~f:(fun accum expr ->
       match Expr.Typed.adlevel_of expr with
-      | AutoDiffable -> AutoDiffable
+      | AutoDiffable -> UnsizedType.AutoDiffable
       | _ -> accum)
     ~init:UnsizedType.DataOnly
 
@@ -179,7 +177,7 @@ let rec lower_type ?(mem_pattern = Mem_pattern.AoS) (t : UnsizedType.t)
 let rec lower_unsizedtype_local ?(mem_pattern = Mem_pattern.AoS) adtype ut =
   match (adtype, ut) with
   | UnsizedType.TupleAD ads, UnsizedType.UTuple ts ->
-      Tuple (List.map2_exn ~f:(lower_unsizedtype_local ~mem_pattern) ads ts)
+      Tuple (List.map2 ~f:(lower_unsizedtype_local ~mem_pattern) ads ts)
   | UnsizedType.TupleAD _, UnsizedType.UArray t ->
       Types.std_vector (lower_unsizedtype_local ~mem_pattern adtype t)
   | _, UnsizedType.UTuple _ | TupleAD _, _ ->
@@ -202,7 +200,7 @@ let rec lower_possibly_var_decl adtype ut mem_pattern =
   | (UReal | UInt | UComplex), _ -> lower_unsizedtype_local adtype ut
   | UTuple t_lst, TupleAD ads ->
       Tuple
-        (List.map2_exn
+        (List.map2
            ~f:(fun ad t -> lower_possibly_var_decl ad t mem_pattern)
            ads t_lst)
   | x, ad ->
@@ -385,7 +383,7 @@ and lower_functionals fname suffix es mem_pattern =
           when Stan_math_signatures.is_stan_math_variadic_function_name fname ->
             let UnsizedType.{control_args; _} =
               Stan_math_signatures.lookup_stan_math_variadic_function fname
-              |> Option.value_exn in
+              |> Option.get in
             let hd, tl =
               List.split_n converted_es (List.length control_args + 1) in
             (fname, hd @ (msgs :: tl))
@@ -407,10 +405,11 @@ and lower_functionals fname suffix es mem_pattern =
 
 and lower_fun_app suffix fname es mem_pattern
     (ret_type : UnsizedType.returntype option) =
-  let fname = Option.value (Map.find fn_renames fname) ~default:fname in
+  let fname =
+    Option.value (String.Map.find_opt fname fn_renames) ~default:fname in
   let fname =
     (* Handle systematic renaming of math's constrain and free functions *)
-    match String.rsplit2 fname ~on:'_' with
+    match String.split_last fname ~sep:"_" with
     | Some (f, "jacobian") -> f ^ "_constrain"
     | Some (f, "unconstrain") -> f ^ "_free"
     | _ -> fname in
@@ -418,7 +417,7 @@ and lower_fun_app suffix fname es mem_pattern
     [ Option.map ~f:lower_operator_app (Operator.of_string_opt fname)
     ; lower_misc_special_math_app fname mem_pattern ret_type
     ; lower_functionals fname suffix es mem_pattern ]
-    |> List.filter_opt |> List.hd in
+    |> List.filter_map ~f:Fun.id |> List.hd in
   match special_options with
   | Some s -> s es
   | None ->
@@ -525,7 +524,7 @@ and lower_indexed_simple (e : expr) idcs =
           internal_errorf "No non-Single indices allowed %t %t"
             [Cpp.Printing.pp_expr $ e; Fmt.list (Index.pp Expr.Typed.pp) $ idcs])
         [@coverage off]) in
-  List.fold idcs ~init:e ~f:(fun e id ->
+  List.fold_left idcs ~init:e ~f:(fun e id ->
       Subscript (e, idx_minus_one (Index.map lower_expr id)))
 
 and lower_expr (Expr.{pattern; meta} : Expr.Typed.t) : Cpp.expr =
@@ -589,7 +588,7 @@ and lower_expr (Expr.{pattern; meta} : Expr.Typed.t) : Cpp.expr =
       | _ -> lower_indexed e idx (Fmt.to_to_string Expr.Typed.pp e))
   | TupleProjection (t, ix) -> tuple_get (ix - 1) (lower_expr t)
 
-and lower_exprs = List.map ~f:lower_expr
+and lower_exprs es = List.map ~f:lower_expr es
 
 module Testing = struct
   (* these functions are just for testing *)

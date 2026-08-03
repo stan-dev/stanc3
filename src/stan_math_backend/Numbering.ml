@@ -1,5 +1,4 @@
-open StdLabels
-open MoreLabels
+open Std
 open Middle
 
 type state_t = Location_span.t list
@@ -14,7 +13,7 @@ let prepare_prog (mir : Program.Typed.t) :
   let location_to_label = Hashtbl.create 64 in
   let needs_mix_header = ref false in
   Queue.push (no_span_num, Location_span.empty) label_locations;
-  Hashtbl.replace location_to_label ~key:Location_span.empty ~data:no_span_num;
+  Hashtbl.add location_to_label ~key:Location_span.empty ~data:no_span_num;
   (* turn locations into numbers for array printing *)
   let number_meta meta =
     match Hashtbl.find_opt location_to_label meta with
@@ -22,7 +21,7 @@ let prepare_prog (mir : Program.Typed.t) :
     | None ->
         let new_label = Queue.length label_locations in
         Queue.push (new_label, meta) label_locations;
-        Hashtbl.replace location_to_label ~key:meta ~data:new_label;
+        Hashtbl.add location_to_label ~key:meta ~data:new_label;
         new_label in
   let rec number_locations_stmt ({pattern; meta} : Stmt.Located.t) :
       Stmt.Numbered.t =

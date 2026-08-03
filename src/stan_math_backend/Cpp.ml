@@ -1,6 +1,7 @@
 (** A set of data types representing the C++ we generate *)
 
-open Core
+open Std
+open Std.Sexp_conv
 
 type identifier = string [@@deriving sexp_of]
 
@@ -203,7 +204,7 @@ module Expression_syntax = struct
 
   (* we use : in operators for assignment/creation *)
   let ( .:{} ) typ arg = Constructor (typ, [arg])
-  let ( .:{;..} ) typ args = Constructor (typ, List.of_array args)
+  let ( .:{;..} ) typ args = Constructor (typ, Array.to_list args)
 end
 
 (**/**)
@@ -478,10 +479,10 @@ module Printing = struct
     if not (List.is_empty template_parameters) then
       let templates, requires =
         List.partition_map template_parameters ~f:(function
-          | RequireAllCondition (trait, tys) -> Second (trait, tys)
-          | Typename name -> First (`Typename name)
-          | Bool name -> First (`Bool name)
-          | Require (requirement, args) -> First (`Require (requirement, args)))
+          | RequireAllCondition (trait, tys) -> Either.Right (trait, tys)
+          | Typename name -> Left (`Typename name)
+          | Bool name -> Left (`Bool name)
+          | Require (requirement, args) -> Left (`Require (requirement, args)))
       in
       pf ppf "template <@[%a%a@]>@ "
         (list ~sep:comma pp_basic_template)

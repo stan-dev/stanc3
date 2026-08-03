@@ -8,7 +8,7 @@
     NB: the use of a leading _ is essential, because the lexer won't allow this
     in a user-created variable. *)
 
-open Core
+open Std
 
 let kwrds_prefix = "_stan_"
 let remove_prefix s = String.chop_prefix_if_exists ~prefix:kwrds_prefix s
@@ -38,4 +38,5 @@ let cpp_kwrds =
        ambiguity (usually the [Comparator] named concept is the issue) *)
     ["clamp"; "max"; "min"; "minmax"])
 
-let add_prefix_to_kwrds s = if Set.mem cpp_kwrds s then prepend_kwrd s else s
+let add_prefix_to_kwrds s =
+  if String.Set.mem s cpp_kwrds then prepend_kwrd s else s
