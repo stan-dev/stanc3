@@ -15,8 +15,6 @@
  (depends
   (ocaml
    (= 5.5.0))
-  (base
-   (= v0.17.3))
   (menhir
    (= 20260209))
   (fmt
@@ -29,9 +27,8 @@
    (= 6.1.1))
   ppx_compare
   ppx_sexp_conv
-  ppx_expect
-  ppx_inline_test
-  ppx_pipebang
+  ppx_expect_nobase
+  ppx_inline_test_nobase
   ppx_sexp_value
   (ocamlformat
    (and

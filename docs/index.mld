@@ -50,6 +50,7 @@ All contributions must follow the {{:https://github.com/stan-dev/stan/wiki/AI-Co
 The major code sections of the compiler are as follows (these are links):
 
 {!modules:
+Std
 Driver
 Frontend
 Middle

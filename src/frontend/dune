@@ -10,7 +10,7 @@
   (pps
    ppx_compare
    ppx_sexp_conv
-   ppx_expect
+   ppx_expect_nobase
    ppx_sexp_value
    ppx_deriving.fold
    ppx_deriving.show

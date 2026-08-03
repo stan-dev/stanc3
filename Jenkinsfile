@@ -31,7 +31,7 @@ def runCompileTestsAtO1 = false
 catchError {
   withEnv([
     'CXX=clang++-6.0',
-    'MACOS_SWITCH=stanc3-ocaml5.5',
+    'MACOS_SWITCH=stanc3-ocaml5.5-nobase',
     'GIT_AUTHOR_NAME=Stan Jenkins',
     'GIT_AUTHOR_EMAIL=mc.stanislaw@gmail.com',
     'GIT_COMMITTER_NAME=Stan Jenkins',
@@ -280,7 +280,7 @@ catchError {
                      export PATH=/Users/jenkins/brew/bin:$PATH
                      eval $(opam env --switch="$MACOS_SWITCH" --set-switch)
                      opam update
-                     opam install dune
+                     opam install -y dune dune-build-info
                  '''
                   withEnv([
                     'SDKROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX10.11.sdk',
