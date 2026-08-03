@@ -280,7 +280,7 @@ let check_id cf tenv id =
   let loc = id.id_loc in
   let (value :: _) =
     Env.find tenv (Utils.stdlib_distribution_name id.name)
-    |> Common.Nonempty_list.of_list
+    |> Std.Nonempty_list.of_list
     |> Option.value_or_thunk ~default:(fun () ->
         Semantic_error.ident_not_in_scope loc id.name
           (Env.nearest_ident tenv id.name)

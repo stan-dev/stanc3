@@ -1,0 +1,6 @@
+(library
+ (name std)
+ (public_name stanc.std)
+ (libraries sexplib0)
+ (instrumentation
+  (backend bisect_ppx)))
