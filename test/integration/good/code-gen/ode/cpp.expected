@@ -70,6 +70,17 @@ template <typename T0__, typename T1__, typename T2__, typename T3__,
 Eigen::Matrix<stan::return_type_t<T0__, stan::base_type_t<T1__>, T3__>,-1,1>
 f_2_arg(const T0__& t, const T1__& z_arg__, const T2__& b, const T3__& a,
         std::ostream* pstream__);
+struct f_0_arg_variadic2_functor__ {
+  template <typename T0__, typename T1__,
+            stan::require_all_t<stan::math::disjunction<stan::is_autodiff_scalar<T0__>,
+                                  stan::is_floating_point<T0__>>,
+                                stan::is_col_vector<T1__>,
+                                stan::is_vt_not_complex<T1__>>* = nullptr>
+  Eigen::Matrix<stan::return_type_t<T0__, stan::base_type_t<T1__>>,-1,1>
+  operator()(const T0__& t, const T1__& z, std::ostream* pstream__) const {
+    return f_0_arg(t, z, pstream__);
+  }
+};
 struct f_1_arg_variadic2_functor__ {
   template <typename T0__, typename T1__, typename T2__,
             stan::require_all_t<stan::math::disjunction<stan::is_autodiff_scalar<T0__>,
@@ -97,17 +108,6 @@ struct f_2_arg_variadic2_functor__ {
   operator()(const T0__& t, const T1__& z, std::ostream* pstream__,
              const T2__& b, const T3__& a) const {
     return f_2_arg(t, z, b, a, pstream__);
-  }
-};
-struct f_0_arg_variadic2_functor__ {
-  template <typename T0__, typename T1__,
-            stan::require_all_t<stan::math::disjunction<stan::is_autodiff_scalar<T0__>,
-                                  stan::is_floating_point<T0__>>,
-                                stan::is_col_vector<T1__>,
-                                stan::is_vt_not_complex<T1__>>* = nullptr>
-  Eigen::Matrix<stan::return_type_t<T0__, stan::base_type_t<T1__>>,-1,1>
-  operator()(const T0__& t, const T1__& z, std::ostream* pstream__) const {
-    return f_0_arg(t, z, pstream__);
   }
 };
 // vector f_0_arg(real, vector)
