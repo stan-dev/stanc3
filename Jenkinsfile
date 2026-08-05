@@ -10,6 +10,7 @@ properties([
     booleanParam(name:"skip_ocaml_tests", defaultValue: false, description:"Skip ocaml tests"),
     booleanParam(name:"build_multiarch", defaultValue: false, description:"Build multiarch images even when not on 'master'"),
     booleanParam(name:"test_binaries", defaultValue: false, description:"Build and archive all binaries"),
+    booleanParam(name:"run_all", defaultValue: false, description:"Pretend all files changed"),
 
     string(defaultValue: 'develop', name: 'cmdstan_pr',
            description: "CmdStan PR to test against. Will check out this PR in the downstream Stan repo."),
@@ -41,11 +42,11 @@ catchError {
       context: 'scripts',
       dockerfile: 'docker/ci/Dockerfile',
       prep: {
-        def srcChanged = filesChanged("src/")
-        runExpressionTests = filesChanged('test/integration/signatures/stan_math_signatures.t')
-        runCompileTests = filesChanged('test/integration/good/')
+        def srcChanged = params.run_all || filesChanged("src/")
+        runExpressionTests = params.run_all || filesChanged('test/integration/signatures/stan_math_signatures.t')
+        runCompileTests = params.run_all || filesChanged('test/integration/good/')
         runRemainingStages = runCompileTests || srcChanged || filesChanged('test/stancjs/')
-        runCompileTestsAtO1 = runCompileTests && filesChanged('test/integration/good/compiler-optimizations')
+        runCompileTestsAtO1 = params.run_all || runCompileTests && filesChanged('test/integration/good/compiler-optimizations')
         runRebuildingBinaries = params.test_binaries || srcChanged || filesChanged('Jenkinsfile')
         return null
       })
@@ -248,8 +249,10 @@ catchError {
                       echo "CXX=${env.CXX} -Werror " >> make/local
                   """
                   withEnv(['PATH+TBB=./lib/tbb']) {
-                      try { sh './runTests.py -j$PARALLEL test/expressions' }
-                      finally { junit 'test/**/*.xml' }
+                    catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+                      sh './runTests.py -j$PARALLEL test/expressions'
+                    }
+                    junit 'test/**/*.xml'
                   }
                 }
               }
