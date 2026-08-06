@@ -16,8 +16,7 @@ depends: [
   "ppx_compare"
   "ppx_sexp_conv"
   "ppx_expect_nobase"
-  "ppx_inline_test_nobase"
-  "ppx_sexp_value"
+  "ppx_sexp_value" {with-test}
   "ocamlformat" {with-dev-setup & = "0.29.0"}
   "menhirformat" {with-dev-setup}
   "bisect_ppx" {with-dev-setup}

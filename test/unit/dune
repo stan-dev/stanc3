@@ -9,4 +9,4 @@
   analysis_and_optimization)
  (inline_tests)
  (preprocess
-  (pps ppx_expect_nobase ppx_inline_test_nobase ppx_sexp_value)))
+  (pps ppx_expect_nobase ppx_sexp_value)))

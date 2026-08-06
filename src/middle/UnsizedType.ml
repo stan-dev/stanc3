@@ -139,19 +139,19 @@ let lub_ad_type xs =
 let%expect_test "lub_ad_type1" =
   let ads = [DataOnly; DataOnly; DataOnly; AutoDiffable] in
   let lub = lub_ad_type ads in
-  print_s [%sexp (lub : autodifftype option)];
+  print_s (sexp_of_option sexp_of_autodifftype lub);
   [%expect "(AutoDiffable)"]
 
 let%expect_test "lub_ad_type2" =
   let ads = [DataOnly; DataOnly; DataOnly] in
   let lub = lub_ad_type ads in
-  print_s [%sexp (lub : autodifftype option)];
+  print_s (sexp_of_option sexp_of_autodifftype lub);
   [%expect "(DataOnly)"]
 
 let%expect_test "lub_ad_type3" =
   let ads = [AutoDiffable; DataOnly; DataOnly; DataOnly] in
   let lub = lub_ad_type ads in
-  print_s [%sexp (lub : autodifftype option)];
+  print_s (sexp_of_option sexp_of_autodifftype lub);
   [%expect "(AutoDiffable)"]
 
 (** Given two types find the minimal type both can convert to *)
@@ -311,6 +311,6 @@ let enumerate_tuple_names_io name (ut : t) =
 let%expect_test "tuple names" =
   let t = UArray (UTuple [UInt; UArray (UTuple [UReal; UComplex]); UVector]) in
   let res = enumerate_tuple_names_io "foo" t in
-  [%sexp (res : string list)] |> print_s;
+  print_s (sexp_of_list sexp_of_string res);
   [%expect {|
       (foo.1 foo.2.1 foo.2.2 foo.3) |}]

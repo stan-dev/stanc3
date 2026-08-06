@@ -794,7 +794,7 @@ module Tests = struct
     let vector = (row_vector Double).:{Literal "3"} in
     let values = [Literal "1"; Var "a"; Literal "3"] in
     let e = (vector << values).@!("finished") in
-    print_s [%sexp (e : expr)];
+    print_s (sexp_of_expr e);
     print_endline "";
     Printing.pp_expr Fmt.stdout e;
     [%expect

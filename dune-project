@@ -28,8 +28,7 @@
   ppx_compare
   ppx_sexp_conv
   ppx_expect_nobase
-  ppx_inline_test_nobase
-  ppx_sexp_value
+  (ppx_sexp_value :with-test)
   (ocamlformat
    (and
     :with-dev-setup

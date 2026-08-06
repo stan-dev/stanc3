@@ -756,7 +756,7 @@ let%expect_test "Flatten slists" =
         |> s ]
       |> flatten_slists_list) in
   let open Sexp_conv in
-  print_s [%sexp (stmt : (unit, unit) Stmt.t list)];
+  print_s (sexp_of_list (Stmt.sexp_of_t sexp_of_unit sexp_of_unit) stmt);
   [%expect
     {|
     (((pattern
@@ -1005,7 +1005,7 @@ let%expect_test "collect vars expr" =
 let%expect_test "insert before" =
   let l = [1; 2; 3; 4; 5; 6] |> insert_before (( = ) 6) [999] in
   let open Sexp_conv in
-  [%sexp (l : int list)] |> print_s;
+  print_s (sexp_of_list sexp_of_int l);
   [%expect {| (1 2 3 4 5 999 6) |}]
 
 let map_prog_stmt_lists f (p : ('a, 'b, 'c) Program.t) =

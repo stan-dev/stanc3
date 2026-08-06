@@ -5,10 +5,7 @@
  (instrumentation
   (backend bisect_ppx))
  (modules :standard \ generate)
- (private_modules generated_signatures)
- (inline_tests)
- (preprocess
-  (pps ppx_inline_test_nobase)))
+ (private_modules generated_signatures))
 
 (executable
  (name generate)
