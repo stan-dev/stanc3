@@ -337,7 +337,7 @@ Semantic error in 'bad_solve_cov.stan', line 39, column 52 to column 57:
    -------------------------------------------------
 
 Arguments to laplace_latent_solve and laplace_latent_solve_tol must be data
-when used outside the generated quantities
+if used outside the generated quantities
 block.
 [exit 1]
   $ stanc bad_solve_lik.stan
@@ -352,7 +352,7 @@ Semantic error in 'bad_solve_lik.stan', line 38, column 43 to column 46:
    -------------------------------------------------
 
 Arguments to laplace_latent_solve and laplace_latent_solve_tol must be data
-when used outside the generated quantities
+if used outside the generated quantities
 block.
 [exit 1]
   $ stanc bad_solve_tol.stan
