@@ -69,6 +69,7 @@ module TypeError = struct
     | IlltypedLaplaceHessianBlockSize of
         string * (UnsizedType.autodifftype * UnsizedType.t) option
     | IlltypedLaplaceTolArgs of string * SignatureMismatch.function_mismatch
+    | IlltypedLaplaceLatentSolveArgs of string
     | AmbiguousFunctionPromotion of
         string
         * UnsizedType.t list option
@@ -328,6 +329,11 @@ module TypeError = struct
         Fmt.pf ppf "@[<hov>The %s to %a@ must be@ %a.%a@]"
           (laplace_tolerance_arg_name n)
           quoted name expected_types [expected] found_type found
+    | IlltypedLaplaceLatentSolveArgs name ->
+        Fmt.pf ppf
+          "@[<hov>All arguments to %a must be a data-only@ if used outside the \
+           generated quantities@ block.@ %a@]"
+          quoted name SignatureMismatch.data_only_msg ()
     | AmbiguousFunctionPromotion (name, arg_tys, signatures) ->
         let pp_sig ppf (rt, args, _) =
           Fmt.pf ppf "@[<hov>(@[<hov>%a@]) => %a@]"
@@ -891,6 +897,9 @@ let illtyped_laplace_hessian_block_size_arg loc name arg_ty =
 
 let illtyped_laplace_tolerance_args loc name mismatch =
   (loc, TypeError (TypeError.IlltypedLaplaceTolArgs (name, mismatch)))
+
+let illtyped_laplace_latent_solve_args loc name =
+  (loc, TypeError (TypeError.IlltypedLaplaceLatentSolveArgs name))
 
 let ambiguous_function_promotion loc name arg_tys signatures =
   ( loc

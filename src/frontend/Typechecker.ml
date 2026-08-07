@@ -497,6 +497,10 @@ let verify_fn_rng cf loc id =
        || cf.current_block = TData)
     then Semantic_error.invalid_rng_fn loc |> error
 
+let is_laplace_latent_solve name =
+  Stan_math_signatures.is_embedded_laplace_fn name
+  && String.is_substring name ~substring:"_solve"
+
 let mk_fun_app ~is_cond_dist ~loc kind name args ~type_ : Ast.typed_expression =
   let fn =
     if is_cond_dist then CondDistApp (kind, name, args)
@@ -877,6 +881,15 @@ and check_laplace_fn ~is_cond_dist loc cf tenv id tes =
     else
       (* likelihood callback check *)
       match tes with
+      | _ :: {emeta= {ad_level; loc; _}; expr} :: _
+        when is_laplace_latent_solve id.name
+             && UnsizedType.is_autodifftype ad_level ->
+          let es = match expr with TupleExpr es -> es | _ -> [] in
+          let loc =
+            List.find_map es ~f:(fun {emeta= {loc; ad_level; _}; _} ->
+                Option.some_if (UnsizedType.is_autodifftype ad_level) loc)
+            |> Option.value ~default:loc in
+          Semantic_error.illtyped_laplace_latent_solve_args loc id.name |> error
       | {expr= Variable lik_fun; _} :: lik_tupl :: tes ->
           let lik_fun, lik_tupl =
             (* adds the function name to the global list that is checked
@@ -907,6 +920,15 @@ and check_laplace_fn ~is_cond_dist loc cf tenv id tes =
         |> error in
   (* Check the remaining arguments: initial guess, covariance, and tolerances *)
   match rest with
+  | _ :: {emeta= {ad_level; loc; _}; expr} :: _
+    when is_laplace_latent_solve id.name && UnsizedType.is_autodifftype ad_level
+    ->
+      let es = match expr with TupleExpr es -> es | _ -> [] in
+      let loc =
+        List.find_map es ~f:(fun {emeta= {loc; ad_level; _}; _} ->
+            Option.some_if (UnsizedType.is_autodifftype ad_level) loc)
+        |> Option.value ~default:loc in
+      Semantic_error.illtyped_laplace_latent_solve_args loc id.name |> error
   | {expr= Variable cov_fun; _} :: cov_tupl :: control_args ->
       let cov_fun_type, cov_tupl =
         check_function_callable_with_tuple cf tenv id cov_fun cov_tupl
@@ -920,6 +942,8 @@ and check_laplace_fn ~is_cond_dist loc cf tenv id tes =
         lik_args @ (hbs_arg :: cov_fun_type :: cov_tupl :: control_args) in
       let return_type =
         if String.is_suffix id.name ~suffix:"_rng" then UnsizedType.UVector
+        else if String.is_substring id.name ~substring:"_solve" then
+          UnsizedType.UTuple [UVector; UMatrix]
         else UnsizedType.UReal in
       mk_fun_app ~is_cond_dist ~loc
         (StanLib (Fun_kind.suffix_from_name id.name))

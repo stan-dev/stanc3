@@ -326,6 +326,51 @@ Semantic error in 'bad_overload.stan', line 2, column 7 to column 51:
 
 Identifier "laplace_marginal_tol_neg_binomial_2_log_lpmf" clashes with a non-overloadable Stan Math library function.
 [exit 1]
+  $ stanc bad_solve_cov.stan
+Semantic error in 'bad_solve_cov.stan', line 39, column 52 to column 57:
+   -------------------------------------------------
+    37:     tuple(vector[n_obs], matrix[n_obs, n_obs]) mean_chol
+    38:        = laplace_latent_solve(ll_function, (1.0, log_ye, y), 1,
+    39:                               K_function, (x, n_obs, alpha, rho));
+                                                             ^
+    40:  }
+   -------------------------------------------------
+
+All arguments to "laplace_latent_solve" must be a data-only
+if used outside the generated quantities block. (Local variables are assumed
+to depend on parameters; same goes for function inputs unless they are marked
+with the keyword "data".)
+[exit 1]
+  $ stanc bad_solve_lik.stan
+Semantic error in 'bad_solve_lik.stan', line 38, column 43 to column 46:
+   -------------------------------------------------
+    36:     // laplace_latent_solve is only callable in Generated Quantities block
+    37:     tuple(vector[n_obs], matrix[n_obs, n_obs]) mean_chol
+    38:        = laplace_latent_solve(ll_function, (eta, log_ye, y), 1,
+                                                    ^
+    39:                               K_function, (x, n_obs, alpha, rho));
+    40:  }
+   -------------------------------------------------
+
+All arguments to "laplace_latent_solve" must be a data-only
+if used outside the generated quantities block. (Local variables are assumed
+to depend on parameters; same goes for function inputs unless they are marked
+with the keyword "data".)
+[exit 1]
+  $ stanc bad_solve_tol.stan
+Semantic error in 'bad_solve_tol.stan', line 38, column 8 to line 39, column 56:
+   -------------------------------------------------
+    36:    // _tol variant requires a trailing control-parameter tuple
+    37:    tuple(vector[n_obs], matrix[n_obs, n_obs]) mean_chol
+    38:        = laplace_latent_solve_tol(ll_function, (eta, log_ye, y), 1, K_function,
+                 ^
+    39:                                   (x, n_obs, alpha, rho));
+    40:  }
+   -------------------------------------------------
+
+Missing control parameter tuple at the end of the call to "laplace_latent_solve_tol".
+Expected a tuple of 6 arguments for the control parameters.
+[exit 1]
   $ stanc bad_theta0.stan
 Semantic error in 'bad_theta0.stan', line 43, column 9 to column 16:
    -------------------------------------------------

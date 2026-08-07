@@ -125,6 +125,8 @@ val illtyped_laplace_hessian_block_size_arg :
 val illtyped_laplace_tolerance_args :
   Location_span.t -> string -> SignatureMismatch.function_mismatch -> t
 
+val illtyped_laplace_latent_solve_args : Location_span.t -> string -> t
+
 val nonreturning_fn_expected_returning_found :
   Location_span.t -> string -> Location_span.t option -> t
 
