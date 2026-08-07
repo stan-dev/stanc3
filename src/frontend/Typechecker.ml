@@ -500,12 +500,6 @@ let is_laplace_latent_solve name =
   Stan_math_signatures.is_embedded_laplace_fn name
   && String.is_substring name ~substring:"_solve"
 
-(** Laplace latent solve can only be used in Generated Quantities block. *)
-let verify_laplace_latent_solve cf loc id =
-  if is_laplace_latent_solve id.name then
-    if cf.current_block <> GQuant then
-      Semantic_error.invalid_laplace_latent_solve_fn loc |> error
-
 let mk_fun_app ~is_cond_dist ~loc kind name args ~type_ : Ast.typed_expression =
   let fn =
     if is_cond_dist then CondDistApp (kind, name, args)
@@ -886,6 +880,13 @@ and check_laplace_fn ~is_cond_dist loc cf tenv id tes =
     else
       (* likelihood callback check *)
       match tes with
+      | _ :: {emeta={ad_level; loc; _}; expr} :: _
+        when is_laplace_latent_solve id.name && UnsizedType.is_autodifftype ad_level ->
+          let es = match expr with | TupleExpr es -> es | _ -> [] in
+          let loc = List.find_map es ~f:(fun {emeta={loc;ad_level;_};_} ->
+            Option.some_if (UnsizedType.is_autodifftype ad_level) loc)
+            |> Option.value ~default:loc in
+          Semantic_error.invalid_laplace_latent_solve_fn loc |> error
       | {expr= Variable lik_fun; _} :: lik_tupl :: tes ->
           let lik_fun, lik_tupl =
             (* adds the function name to the global list that is checked
@@ -916,6 +917,13 @@ and check_laplace_fn ~is_cond_dist loc cf tenv id tes =
         |> error in
   (* Check the remaining arguments: initial guess, covariance, and tolerances *)
   match rest with
+  | _ :: {emeta={ad_level; loc; _}; expr} :: _
+    when is_laplace_latent_solve id.name && UnsizedType.is_autodifftype ad_level ->
+      let es = match expr with | TupleExpr es -> es | _ -> [] in
+      let loc = List.find_map es ~f:(fun {emeta={loc;ad_level;_};_} ->
+        Option.some_if (UnsizedType.is_autodifftype ad_level) loc)
+        |> Option.value ~default:loc in
+      Semantic_error.invalid_laplace_latent_solve_fn loc |> error
   | {expr= Variable cov_fun; _} :: cov_tupl :: control_args ->
       let cov_fun_type, cov_tupl =
         check_function_callable_with_tuple cf tenv id cov_fun cov_tupl
@@ -985,7 +993,6 @@ and check_funapp loc cf tenv ~is_cond_dist id (es : Ast.typed_expression list) =
   verify_fn_target_plus_equals cf loc id;
   verify_fn_jacobian_plus_equals cf loc tenv id es;
   verify_fn_rng cf loc id;
-  verify_laplace_latent_solve cf loc id;
   verify_unnormalized cf loc id;
   res
 
