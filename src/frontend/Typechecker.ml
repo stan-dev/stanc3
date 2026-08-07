@@ -889,7 +889,7 @@ and check_laplace_fn ~is_cond_dist loc cf tenv id tes =
             List.find_map es ~f:(fun {emeta= {loc; ad_level; _}; _} ->
                 Option.some_if (UnsizedType.is_autodifftype ad_level) loc)
             |> Option.value ~default:loc in
-          Semantic_error.invalid_laplace_latent_solve_fn loc |> error
+          Semantic_error.illtyped_laplace_latent_solve_args loc id.name |> error
       | {expr= Variable lik_fun; _} :: lik_tupl :: tes ->
           let lik_fun, lik_tupl =
             (* adds the function name to the global list that is checked
@@ -928,7 +928,7 @@ and check_laplace_fn ~is_cond_dist loc cf tenv id tes =
         List.find_map es ~f:(fun {emeta= {loc; ad_level; _}; _} ->
             Option.some_if (UnsizedType.is_autodifftype ad_level) loc)
         |> Option.value ~default:loc in
-      Semantic_error.invalid_laplace_latent_solve_fn loc |> error
+      Semantic_error.illtyped_laplace_latent_solve_args loc id.name |> error
   | {expr= Variable cov_fun; _} :: cov_tupl :: control_args ->
       let cov_fun_type, cov_tupl =
         check_function_callable_with_tuple cf tenv id cov_fun cov_tupl

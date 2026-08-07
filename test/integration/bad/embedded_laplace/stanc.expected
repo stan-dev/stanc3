@@ -336,9 +336,10 @@ Semantic error in 'bad_solve_cov.stan', line 39, column 52 to column 57:
     40:  }
    -------------------------------------------------
 
-Arguments to laplace_latent_solve and laplace_latent_solve_tol must be data
-if used outside the generated quantities
-block.
+All arguments to "laplace_latent_solve" must be a data-only
+if used outside the generated quantities block. (Local variables are assumed
+to depend on parameters; same goes for function inputs unless they are marked
+with the keyword "data".)
 [exit 1]
   $ stanc bad_solve_lik.stan
 Semantic error in 'bad_solve_lik.stan', line 38, column 43 to column 46:
@@ -351,9 +352,10 @@ Semantic error in 'bad_solve_lik.stan', line 38, column 43 to column 46:
     40:  }
    -------------------------------------------------
 
-Arguments to laplace_latent_solve and laplace_latent_solve_tol must be data
-if used outside the generated quantities
-block.
+All arguments to "laplace_latent_solve" must be a data-only
+if used outside the generated quantities block. (Local variables are assumed
+to depend on parameters; same goes for function inputs unless they are marked
+with the keyword "data".)
 [exit 1]
   $ stanc bad_solve_tol.stan
 Semantic error in 'bad_solve_tol.stan', line 38, column 8 to line 39, column 56:
