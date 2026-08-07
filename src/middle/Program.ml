@@ -3,7 +3,6 @@
 open Core
 
 type fun_arg_decl = (UnsizedType.autodifftype * string * UnsizedType.t) list
-[@@deriving sexp, hash, map]
 
 type 'a fun_def =
   { fdrt: UnsizedType.returntype
@@ -13,18 +12,18 @@ type 'a fun_def =
   ; fdbody: 'a option
         (* If fdbody is None, this is an external function declaration (forward
            decls are removed during AST lowering) *)
-  ; fdloc: (Location_span.t[@sexp.opaque] [@compare.ignore]) }
-[@@deriving compare, hash, sexp, map, fold]
+  ; fdloc: (Location_span.t[@sexp.opaque]) }
+[@@deriving sexp_of, map, fold]
 
 type io_block = Parameters | TransformedParameters | GeneratedQuantities
-[@@deriving sexp, hash]
+[@@deriving sexp_of]
 
 type 'e outvar =
   { out_unconstrained_st: 'e SizedType.t
   ; out_constrained_st: 'e SizedType.t
   ; out_block: io_block
   ; out_trans: 'e Transformation.t }
-[@@deriving sexp, map, hash, fold]
+[@@deriving sexp_of, map, fold]
 
 type ('a, 'b, 'm) t =
   { functions_block: 'b fun_def list
@@ -49,7 +48,7 @@ type ('a, 'b, 'm) t =
   ; output_vars: (string * 'm * 'a outvar) list
   ; prog_name: string
   ; prog_path: string }
-[@@deriving sexp, map, fold]
+[@@deriving sexp_of, map, fold]
 
 (* -- Pretty printers -- *)
 let pp_fun_arg_decl ppf (autodifftype, name, unsizedtype) =

@@ -107,40 +107,45 @@ let rec validate_dims ~stage name st =
                    ; vector (SizedType.get_dims_io st) ] )) in
     [Expression validate]
 
-let gen_assign_data decl_id st =
-  let lower_placement_new decl_id st =
-    let open Cpp.DSL in
+let gen_assign_data decl_id st init =
+  let open Cpp.DSL in
+  let underlying_variable, init =
+    match st with
+    | SizedType.SVector _ | SRowVector _ | SMatrix _ | SComplexVector _
+     |SComplexRowVector _ | SComplexMatrix _ ->
+        (decl_id ^ "_data__", Stmt.Pattern.Default)
+    | SInt | SReal | SComplex | SArray _ | STuple _ -> (decl_id, init) in
+  let initialize =
+    let open Stdlib.Option.Syntax in
+    let+ value =
+      lower_assign_sized st
+        (UnsizedType.fill_adtype_for_type UnsizedType.DataOnly
+           (SizedType.to_unsized st))
+        init in
+    underlying_variable := value in
+  let placement_new =
     match st with
     | SizedType.SVector (_, d)
      |SRowVector (_, d)
      |SComplexVector d
      |SComplexRowVector d ->
-        let data = Var (decl_id ^ "_data__") in
-        [ Expression
-            (OperatorNew
-               ( decl_id
-               , Types.eigen_map (lower_st st DataOnly)
-               , [data.@!("data"); lower_expr d] )) ]
+        let data = Var underlying_variable in
+        Some
+          (Expression
+             (OperatorNew
+                ( decl_id
+                , Types.eigen_map (lower_st st DataOnly)
+                , [data.@!("data"); lower_expr d] )))
     | SMatrix (_, d1, d2) | SComplexMatrix (d1, d2) ->
-        let data = Var (decl_id ^ "_data__") in
-        [ Expression
-            (OperatorNew
-               ( decl_id
-               , Types.eigen_map (lower_st st DataOnly)
-               , [data.@!("data"); lower_expr d1; lower_expr d2] )) ]
-    | _ -> [] in
-  let underlying_variable decl_id st =
-    match st with
-    | SizedType.SVector _ | SRowVector _ | SMatrix _ | SComplexVector _
-     |SComplexRowVector _ | SComplexMatrix _ ->
-        decl_id ^ "_data__"
-    | SInt | SReal | SComplex | SArray _ | STuple _ -> decl_id in
-  Cpp.DSL.(
-    underlying_variable decl_id st
-    := initialize_value st
-         (UnsizedType.fill_adtype_for_type UnsizedType.DataOnly
-            (SizedType.to_unsized st)))
-  :: lower_placement_new decl_id st
+        let data = Var underlying_variable in
+        Some
+          (Expression
+             (OperatorNew
+                ( decl_id
+                , Types.eigen_map (lower_st st DataOnly)
+                , [data.@!("data"); lower_expr d1; lower_expr d2] )))
+    | SInt | SReal | SComplex | SArray (_, _) | STuple _ -> None in
+  List.filter_opt [initialize; placement_new]
 
 let sum_expr_sizes es =
   match lower_exprs es |> List.reduce ~f:Cpp.DSL.( + ) with
@@ -169,15 +174,16 @@ let lower_constructor
   let data_idents = List.map ~f:fst3 input_vars |> String.Set.of_list in
   let lower_data (Stmt.{pattern; meta} as s) =
     match pattern with
-    | Decl {decl_id; decl_type; _} when decl_id <> "pos__" -> (
+    | Decl {decl_id; decl_type; initialize; decl_adtype= _}
+      when decl_id <> "pos__" -> (
         match decl_type with
         | Sized st ->
             Numbering.assign_loc meta
             @
             if Set.mem data_idents decl_id then
               validate_dims ~stage:"data initialization" decl_id st
-              @ gen_assign_data decl_id st
-            else gen_assign_data decl_id st
+              @ gen_assign_data decl_id st initialize
+            else gen_assign_data decl_id st initialize
         | Unsized _ -> [])
     | _ -> lower_statement s in
   let data =

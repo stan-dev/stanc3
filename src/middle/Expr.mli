@@ -1,7 +1,7 @@
 (** MIR types and modules corresponding to the expressions of the language *)
 
 module Pattern : sig
-  type litType = Int | Real | Imaginary | Str [@@deriving sexp, hash, compare]
+  type litType = Int | Real | Imaginary | Str [@@deriving sexp_of, compare]
 
   type 'a t =
     | Var of string
@@ -13,12 +13,12 @@ module Pattern : sig
     | Indexed of 'a * 'a Index.t list
     | Promotion of 'a * UnsizedType.t * UnsizedType.autodifftype
     | TupleProjection of 'a * int
-  [@@deriving sexp, hash, compare, map, fold]
+  [@@deriving sexp_of, compare, map, fold]
 end
 
 (** The "two-level" type for statements in the MIR. This corresponds to what the
     AST calls [Frontend.Ast.expr_with] *)
-type 'a t = {pattern: 'a t Pattern.t; meta: 'a} [@@deriving compare, hash, sexp]
+type 'a t = {pattern: 'a t Pattern.t; meta: 'a} [@@deriving compare, sexp_of]
 
 val pp : 'a t Fmt.t
 
@@ -32,14 +32,14 @@ module Typed : sig
   module Meta : sig
     type t =
       { type_: UnsizedType.t
-      ; loc: Location_span.t [@sexp.opaque] [@compare.ignore]
+      ; loc: (Location_span.t[@sexp.opaque])
       ; adlevel: UnsizedType.autodifftype }
-    [@@deriving compare, create, sexp, hash]
+    [@@deriving create, sexp_of]
 
     val empty : t
   end
 
-  type nonrec t = (Meta.t[@compare.ignore]) t [@@deriving hash, sexp, compare]
+  type nonrec t = (Meta.t[@compare.ignore]) t [@@deriving sexp_of, compare]
 
   val equal : t -> t -> bool
   val type_of : t -> UnsizedType.t

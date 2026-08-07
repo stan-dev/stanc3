@@ -12,7 +12,7 @@ type t =
   | IntToComplex
   | RealToComplex
   | TuplePromotion of t list
-[@@deriving sexp, show]
+[@@deriving sexp_of, show]
 
 (** Our promotion nodes only store the scalar type to promote, e.g to promote a
     [tuple(array int)] to a [tuple(array real)], we store [tuple(real)], not

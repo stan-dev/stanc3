@@ -22,16 +22,15 @@ module Pattern = struct
         ; decl_id: string
         ; decl_type: 'a Type.t
         ; initialize: 'a decl_init }
-  [@@deriving sexp, hash, map, fold, compare]
+  [@@deriving sexp_of, map, fold]
 
-  and 'e lvalue = 'e lbase * 'e Index.t list
-  [@@deriving sexp, hash, map, compare, fold]
+  and 'e lvalue = 'e lbase * 'e Index.t list [@@deriving sexp_of, map, fold]
 
   and 'e lbase = LVariable of string | LTupleProjection of 'e lvalue * int
-  [@@deriving sexp, hash, map, compare, fold]
+  [@@deriving sexp_of, map, fold]
 
   and 'a decl_init = Uninit | Default | Assign of 'a
-  [@@deriving sexp, hash, map, fold, compare]
+  [@@deriving sexp_of, map, fold]
 
   let rec pp_lvalue pp_e ppf (lbase, idcs) =
     match lbase with
@@ -82,7 +81,7 @@ end
 module Fixed = struct
   (** Fixed-point of statements *)
   type ('a, 'b) t = {pattern: ('a Expr.t, ('a, 'b) t) Pattern.t; meta: 'b}
-  [@@deriving compare, hash, sexp]
+  [@@deriving sexp_of]
 end
 
 include Fixed
@@ -100,14 +99,13 @@ let rec rewrite_bottom_up ~f ~g t =
 (** Statements with location information and types for contained expressions *)
 module Located = struct
   module Meta = struct
-    type t = (Location_span.t[@sexp.opaque] [@compare.ignore])
-    [@@deriving compare, sexp, hash]
+    type t = Location_span.t
 
     let empty = Location_span.empty
   end
 
-  type t = (Expr.Typed.Meta.t, (Meta.t[@sexp.opaque] [@compare.ignore])) Fixed.t
-  [@@deriving compare, sexp, hash]
+  type t = (Expr.Typed.Meta.t, (Meta.t[@sexp.opaque])) Fixed.t
+  [@@deriving sexp_of]
 
   let pp = pp
 
@@ -118,24 +116,19 @@ module Located = struct
       subterms. My feeling is that ultimately we want to use the recursive type
       directly and rely on OCaml for sharing *)
   module Non_recursive = struct
-    type t =
-      { pattern: (Expr.Typed.t, int) Pattern.t
-      ; meta: (Meta.t[@sexp.opaque] [@compare.ignore]) }
-    [@@deriving compare, sexp, hash]
+    type t = {pattern: (Expr.Typed.t, int) Pattern.t; meta: Meta.t}
   end
 end
 
 module Numbered = struct
   module Meta = struct
-    type t = (int[@sexp.opaque] [@compare.ignore])
-    [@@deriving compare, sexp, hash]
+    type t = int
 
     let empty = 0
     let from_int (i : int) : t = i
   end
 
-  type t = (Expr.Typed.Meta.t, (Meta.t[@sexp.opaque] [@compare.ignore])) Fixed.t
-  [@@deriving compare, sexp, hash]
+  type t = (Expr.Typed.Meta.t, Meta.t) Fixed.t
 
   let pp = pp
 end

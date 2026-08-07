@@ -243,7 +243,7 @@ let trans_printables mloc (ps : Ast.typed_expression Ast.printable list) =
 
 (** These types signal the context for a declaration during statement
     translation. They are only interpreted by trans_decl.*)
-type transform_action = Check | Constrain | IgnoreTransform [@@deriving sexp]
+type transform_action = Check | Constrain | IgnoreTransform
 
 type decl_context =
   {transform_action: transform_action; dadlevel: UnsizedType.autodifftype}
@@ -779,10 +779,7 @@ let rec trans_sizedtype_decl declc tr name st =
                 { decl_type= Sized SInt
                 ; decl_id
                 ; decl_adtype= DataOnly
-                ; initialize= Default }
-          ; meta= e.meta.loc } in
-        let assign =
-          { Stmt.pattern= Assignment (Stmt.Helpers.lvariable decl_id, UInt, e)
+                ; initialize= Assign e }
           ; meta= e.meta.loc } in
         let var =
           Expr.
@@ -792,7 +789,7 @@ let rec trans_sizedtype_decl declc tr name st =
                   { type_= s.Ast.emeta.Ast.type_
                   ; adlevel= s.emeta.ad_level
                   ; loc= s.emeta.loc } } in
-        ([decl; assign; check fn s var], var) in
+        ([decl; check fn s var], var) in
   let rec go n = function
     | SizedType.(SInt | SReal | SComplex) as t -> ([], t)
     | SVector (mem_pattern, s) ->

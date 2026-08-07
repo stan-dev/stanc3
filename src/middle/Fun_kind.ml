@@ -10,7 +10,7 @@ type 'propto suffix =
   | FnLpmf of 'propto
   | FnTarget
   | FnJacobian
-[@@deriving compare, hash, map, sexp, equal]
+[@@deriving compare, map, sexp_of, equal]
 
 let without_propto = map_suffix (Fn.const () : bool -> unit)
 
@@ -18,7 +18,7 @@ type 'e t =
   | StanLib of string * bool suffix * Mem_pattern.t
   | CompilerInternal of 'e Internal_fun.t
   | UserDefined of string * bool suffix
-[@@deriving compare, sexp, hash, map, fold]
+[@@deriving compare, sexp_of, map, fold]
 
 let suffix_from_name fname =
   let is_suffix suffix = Core.String.is_suffix ~suffix fname in

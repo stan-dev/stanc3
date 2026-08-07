@@ -389,7 +389,12 @@ let collect_functors_functions (p : Program.Numbered.t) : defn list =
           let decl, defn = Cpp.split_fun_decl_defn fn in
           Some (FunDef decl, [signature_comment d; FunDef defn]))
     |> List.unzip in
-  let structs = Hashtbl.data structs |> List.map ~f:(fun s -> Struct s) in
+  let structs =
+    Hashtbl.data structs
+    |> List.stable_sort
+         ~compare:(fun {struct_name; _} {struct_name= struct_name2; _} ->
+           String.compare struct_name struct_name2)
+    |> List.map ~f:(fun s -> Struct s) in
   fun_decls @ structs @ List.concat fun_defns
 
 let lower_standalone_fun_def namespace_fun

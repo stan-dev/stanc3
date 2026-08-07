@@ -66,7 +66,7 @@ let reduce_sum_functor_suffix = "_rsfunctor__"
 let variadic_functor_suffix x = sprintf "_variadic%d_functor__" x
 
 type variadic = FixedArgs | ReduceSum | VariadicHOF of int
-[@@deriving compare, hash]
+[@@deriving compare]
 
 let functor_type hof =
   match Stan_math_signatures.lookup_stan_math_variadic_function hof with

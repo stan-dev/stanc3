@@ -27,7 +27,6 @@
    (= 2.1.1))
   (ppx_deriving
    (= 6.1.1))
-  ppx_hash
   ppx_compare
   ppx_sexp_conv
   ppx_expect
@@ -37,7 +36,7 @@
   (ocamlformat
    (and
     :with-dev-setup
-    (= 0.28.1)))
+    (= 0.29.0)))
    (menhirformat
     :with-dev-setup)
   (bisect_ppx :with-dev-setup)

@@ -929,16 +929,12 @@ class builtin_constraint_model final : public model_base_crtp<builtin_constraint
       current_statement__ = 8;
       stan::math::check_greater_or_equal(function__, "K", K, 1);
       current_statement__ = 9;
-      beta_raw_1dim__ = std::numeric_limits<int>::min();
-      current_statement__ = 9;
       beta_raw_1dim__ = (K - 1);
       current_statement__ = 9;
       stan::math::validate_non_negative_index("beta_raw", "K - 1",
         beta_raw_1dim__);
       current_statement__ = 10;
       stan::math::validate_non_negative_index("beta", "K", K);
-      current_statement__ = 11;
-      beta_recovered_1dim__ = std::numeric_limits<int>::min();
       current_statement__ = 11;
       beta_recovered_1dim__ = (K - 1);
       current_statement__ = 11;
@@ -8042,22 +8038,6 @@ template <typename T0__, typename T1__, typename T2__, typename T3__,
 Eigen::Matrix<stan::return_type_t<stan::base_type_t<T0__>, T2__, T3__>,-1,-1>
 K_function(const T0__& x, const T1__& n_obs, const T2__& alpha, const T3__&
            rho, std::ostream* pstream__);
-struct ll_function_functor__ {
-  template <typename T0__, typename T1__, typename T2__, typename T3__,
-            stan::require_all_t<stan::is_col_vector<T0__>,
-                                stan::is_vt_not_complex<T0__>,
-                                stan::math::disjunction<stan::is_autodiff_scalar<T1__>,
-                                  stan::is_floating_point<T1__>>,
-                                stan::is_col_vector<T2__>,
-                                stan::is_vt_not_complex<T2__>,
-                                stan::is_std_vector<T3__>,
-                                stan::is_integral<stan::value_type_t<T3__>>>* = nullptr>
-  stan::return_type_t<stan::base_type_t<T0__>, T1__, stan::base_type_t<T2__>>
-  operator()(const T0__& theta, const T1__& eta, const T2__& log_ye,
-             const T3__& y, std::ostream* pstream__) const {
-    return ll_function(theta, eta, log_ye, y, pstream__);
-  }
-};
 struct K_function_functor__ {
   template <typename T0__, typename T1__, typename T2__, typename T3__,
             stan::require_all_t<stan::is_std_vector<T0__>,
@@ -8072,6 +8052,22 @@ struct K_function_functor__ {
   operator()(const T0__& x, const T1__& n_obs, const T2__& alpha, const T3__&
              rho, std::ostream* pstream__) const {
     return K_function(x, n_obs, alpha, rho, pstream__);
+  }
+};
+struct ll_function_functor__ {
+  template <typename T0__, typename T1__, typename T2__, typename T3__,
+            stan::require_all_t<stan::is_col_vector<T0__>,
+                                stan::is_vt_not_complex<T0__>,
+                                stan::math::disjunction<stan::is_autodiff_scalar<T1__>,
+                                  stan::is_floating_point<T1__>>,
+                                stan::is_col_vector<T2__>,
+                                stan::is_vt_not_complex<T2__>,
+                                stan::is_std_vector<T3__>,
+                                stan::is_integral<stan::value_type_t<T3__>>>* = nullptr>
+  stan::return_type_t<stan::base_type_t<T0__>, T1__, stan::base_type_t<T2__>>
+  operator()(const T0__& theta, const T1__& eta, const T2__& log_ye,
+             const T3__& y, std::ostream* pstream__) const {
+    return ll_function(theta, eta, log_ye, y, pstream__);
   }
 };
 // real ll_function(vector, real, vector, array[] int)
@@ -9998,6 +9994,35 @@ Eigen::Matrix<stan::return_type_t<stan::base_type_t<stan::tuple_element_t<0,
                 T3__>,-1,-1>
 arr_and_vec_tuple(const T0__& x, const T1__& n_obs, const T2__& alpha,
                   const T3__& rho, std::ostream* pstream__);
+struct arr_and_vec_tuple_functor__ {
+  template <typename T0__, typename T1__, typename T2__, typename T3__,
+            stan::require_all_t<stan::is_tuple_of_size<T0__, 2>,
+                                stan::is_std_vector<stan::tuple_element_t<0,
+                                                      T0__>>,
+                                stan::is_col_vector<stan::value_type_t<
+                                                      stan::tuple_element_t<0,
+                                                        T0__>>>,
+                                stan::is_vt_not_complex<stan::value_type_t<
+                                                          stan::tuple_element_t<0,
+                                                            T0__>>>,
+                                stan::is_col_vector<stan::tuple_element_t<1,
+                                                      T0__>>,
+                                stan::is_vt_not_complex<stan::tuple_element_t<1,
+                                                          T0__>>,
+                                stan::is_integral<T1__>,
+                                stan::math::disjunction<stan::is_autodiff_scalar<T2__>,
+                                  stan::is_floating_point<T2__>>,
+                                stan::math::disjunction<stan::is_autodiff_scalar<T3__>,
+                                  stan::is_floating_point<T3__>>>* = nullptr>
+  Eigen::Matrix<stan::return_type_t<stan::base_type_t<stan::tuple_element_t<0,
+                                                        T0__>>,
+                  stan::base_type_t<stan::tuple_element_t<1, T0__>>, T2__,
+                  T3__>,-1,-1>
+  operator()(const T0__& x, const T1__& n_obs, const T2__& alpha, const T3__&
+             rho, std::ostream* pstream__) const {
+    return arr_and_vec_tuple(x, n_obs, alpha, rho, pstream__);
+  }
+};
 struct arr_vec_tuple_functor__ {
   template <typename T0__, typename T1__, typename T2__, typename T3__,
             stan::require_all_t<stan::is_tuple_of_size<T0__, 2>,
@@ -10029,35 +10054,6 @@ struct arr_vec_tuple_functor__ {
   operator()(const T0__& x, const T1__& n_obs, const T2__& alpha, const T3__&
              rho, std::ostream* pstream__) const {
     return arr_vec_tuple(x, n_obs, alpha, rho, pstream__);
-  }
-};
-struct arr_and_vec_tuple_functor__ {
-  template <typename T0__, typename T1__, typename T2__, typename T3__,
-            stan::require_all_t<stan::is_tuple_of_size<T0__, 2>,
-                                stan::is_std_vector<stan::tuple_element_t<0,
-                                                      T0__>>,
-                                stan::is_col_vector<stan::value_type_t<
-                                                      stan::tuple_element_t<0,
-                                                        T0__>>>,
-                                stan::is_vt_not_complex<stan::value_type_t<
-                                                          stan::tuple_element_t<0,
-                                                            T0__>>>,
-                                stan::is_col_vector<stan::tuple_element_t<1,
-                                                      T0__>>,
-                                stan::is_vt_not_complex<stan::tuple_element_t<1,
-                                                          T0__>>,
-                                stan::is_integral<T1__>,
-                                stan::math::disjunction<stan::is_autodiff_scalar<T2__>,
-                                  stan::is_floating_point<T2__>>,
-                                stan::math::disjunction<stan::is_autodiff_scalar<T3__>,
-                                  stan::is_floating_point<T3__>>>* = nullptr>
-  Eigen::Matrix<stan::return_type_t<stan::base_type_t<stan::tuple_element_t<0,
-                                                        T0__>>,
-                  stan::base_type_t<stan::tuple_element_t<1, T0__>>, T2__,
-                  T3__>,-1,-1>
-  operator()(const T0__& x, const T1__& n_obs, const T2__& alpha, const T3__&
-             rho, std::ostream* pstream__) const {
-    return arr_and_vec_tuple(x, n_obs, alpha, rho, pstream__);
   }
 };
 struct scalar_tuple_functor__ {
@@ -11006,6 +11002,22 @@ template <typename T0__, typename T1__, typename T2__, typename T3__,
 Eigen::Matrix<stan::return_type_t<stan::base_type_t<T0__>, T2__, T3__>,-1,-1>
 K_function(const T0__& x, const T1__& n_obs, const T2__& alpha, const T3__&
            rho, std::ostream* pstream__);
+struct K_function_functor__ {
+  template <typename T0__, typename T1__, typename T2__, typename T3__,
+            stan::require_all_t<stan::is_std_vector<T0__>,
+                                stan::is_col_vector<stan::value_type_t<T0__>>,
+                                stan::is_vt_not_complex<stan::value_type_t<T0__>>,
+                                stan::is_integral<T1__>,
+                                stan::math::disjunction<stan::is_autodiff_scalar<T2__>,
+                                  stan::is_floating_point<T2__>>,
+                                stan::math::disjunction<stan::is_autodiff_scalar<T3__>,
+                                  stan::is_floating_point<T3__>>>* = nullptr>
+  Eigen::Matrix<stan::return_type_t<stan::base_type_t<T0__>, T2__, T3__>,-1,-1>
+  operator()(const T0__& x, const T1__& n_obs, const T2__& alpha, const T3__&
+             rho, std::ostream* pstream__) const {
+    return K_function(x, n_obs, alpha, rho, pstream__);
+  }
+};
 struct arr_vec_tuple_functor__ {
   template <typename T0__, typename T1__, typename T2__,
             stan::require_all_t<stan::is_col_vector<T0__>,
@@ -11027,33 +11039,6 @@ struct arr_vec_tuple_functor__ {
   operator()(const T0__& theta, const T1__& eta, const T2__& p, std::ostream*
              pstream__) const {
     return arr_vec_tuple(theta, eta, p, pstream__);
-  }
-};
-struct scalar_tuple_functor__ {
-  template <typename T0__, typename T1__, typename T2__, typename T3__,
-            stan::require_all_t<stan::is_col_vector<T0__>,
-                                stan::is_vt_not_complex<T0__>,
-                                stan::is_tuple_of_size<T1__, 2>,
-                                stan::math::disjunction<stan::is_autodiff_scalar<
-                                                          stan::tuple_element_t<0,
-                                                            T1__>>,
-                                  stan::is_floating_point<stan::tuple_element_t<0,
-                                                            T1__>>>,
-                                stan::math::disjunction<stan::is_autodiff_scalar<
-                                                          stan::tuple_element_t<1,
-                                                            T1__>>,
-                                  stan::is_floating_point<stan::tuple_element_t<1,
-                                                            T1__>>>,
-                                stan::is_col_vector<T2__>,
-                                stan::is_vt_not_complex<T2__>,
-                                stan::is_std_vector<T3__>,
-                                stan::is_integral<stan::value_type_t<T3__>>>* = nullptr>
-  stan::return_type_t<stan::base_type_t<T0__>,
-    stan::tuple_element_t<0, T1__>, stan::tuple_element_t<1, T1__>,
-    stan::base_type_t<T2__>>
-  operator()(const T0__& theta, const T1__& eta, const T2__& log_ye,
-             const T3__& y, std::ostream* pstream__) const {
-    return scalar_tuple(theta, eta, log_ye, y, pstream__);
   }
 };
 struct nested_functor__ {
@@ -11094,20 +11079,31 @@ struct nested_functor__ {
     return nested(theta, p, unused, pstream__);
   }
 };
-struct K_function_functor__ {
+struct scalar_tuple_functor__ {
   template <typename T0__, typename T1__, typename T2__, typename T3__,
-            stan::require_all_t<stan::is_std_vector<T0__>,
-                                stan::is_col_vector<stan::value_type_t<T0__>>,
-                                stan::is_vt_not_complex<stan::value_type_t<T0__>>,
-                                stan::is_integral<T1__>,
-                                stan::math::disjunction<stan::is_autodiff_scalar<T2__>,
-                                  stan::is_floating_point<T2__>>,
-                                stan::math::disjunction<stan::is_autodiff_scalar<T3__>,
-                                  stan::is_floating_point<T3__>>>* = nullptr>
-  Eigen::Matrix<stan::return_type_t<stan::base_type_t<T0__>, T2__, T3__>,-1,-1>
-  operator()(const T0__& x, const T1__& n_obs, const T2__& alpha, const T3__&
-             rho, std::ostream* pstream__) const {
-    return K_function(x, n_obs, alpha, rho, pstream__);
+            stan::require_all_t<stan::is_col_vector<T0__>,
+                                stan::is_vt_not_complex<T0__>,
+                                stan::is_tuple_of_size<T1__, 2>,
+                                stan::math::disjunction<stan::is_autodiff_scalar<
+                                                          stan::tuple_element_t<0,
+                                                            T1__>>,
+                                  stan::is_floating_point<stan::tuple_element_t<0,
+                                                            T1__>>>,
+                                stan::math::disjunction<stan::is_autodiff_scalar<
+                                                          stan::tuple_element_t<1,
+                                                            T1__>>,
+                                  stan::is_floating_point<stan::tuple_element_t<1,
+                                                            T1__>>>,
+                                stan::is_col_vector<T2__>,
+                                stan::is_vt_not_complex<T2__>,
+                                stan::is_std_vector<T3__>,
+                                stan::is_integral<stan::value_type_t<T3__>>>* = nullptr>
+  stan::return_type_t<stan::base_type_t<T0__>,
+    stan::tuple_element_t<0, T1__>, stan::tuple_element_t<1, T1__>,
+    stan::base_type_t<T2__>>
+  operator()(const T0__& theta, const T1__& eta, const T2__& log_ye,
+             const T3__& y, std::ostream* pstream__) const {
+    return scalar_tuple(theta, eta, log_ye, y, pstream__);
   }
 };
 // real scalar_tuple(vector, tuple(real, real), vector, array[] int)
@@ -12115,6 +12111,50 @@ Eigen::Matrix<stan::return_type_t<stan::base_type_t<stan::tuple_element_t<0,
                                       stan::base_type_t<T0__>>>>,
                 T1__>,-1,-1>
 K_function(const T0__& p, const T1__& rho, std::ostream* pstream__);
+struct K_function_functor__ {
+  template <typename T0__, typename T1__,
+            stan::require_all_t<stan::is_std_vector<T0__>,
+                                stan::is_tuple_of_size<stan::value_type_t<T0__>,
+                                  2>,
+                                stan::is_std_vector<stan::tuple_element_t<0,
+                                                      stan::value_type_t<T0__>>>,
+                                stan::is_col_vector<stan::value_type_t<
+                                                      stan::tuple_element_t<0,
+                                                        stan::value_type_t<T0__>>>>,
+                                stan::is_vt_not_complex<stan::value_type_t<
+                                                          stan::tuple_element_t<0,
+                                                            stan::value_type_t<T0__>>>>,
+                                stan::is_std_vector<stan::tuple_element_t<1,
+                                                      stan::value_type_t<T0__>>>,
+                                stan::is_tuple_of_size<stan::value_type_t<
+                                                         stan::tuple_element_t<1,
+                                                           stan::value_type_t<T0__>>>,
+                                  2>,
+                                stan::is_integral<stan::tuple_element_t<0,
+                                                    stan::value_type_t<
+                                                      stan::tuple_element_t<1,
+                                                        stan::value_type_t<T0__>>>>>,
+                                stan::math::disjunction<stan::is_autodiff_scalar<
+                                                          stan::tuple_element_t<1,
+                                                            stan::value_type_t<
+                                                              stan::tuple_element_t<1,
+                                                                stan::value_type_t<T0__>>>>>,
+                                  stan::is_floating_point<stan::tuple_element_t<1,
+                                                            stan::value_type_t<
+                                                              stan::tuple_element_t<1,
+                                                                stan::value_type_t<T0__>>>>>>,
+                                stan::math::disjunction<stan::is_autodiff_scalar<T1__>,
+                                  stan::is_floating_point<T1__>>>* = nullptr>
+  Eigen::Matrix<stan::return_type_t<stan::base_type_t<stan::tuple_element_t<0,
+                                                        stan::base_type_t<T0__>>>,
+                  stan::tuple_element_t<1,
+                    stan::base_type_t<stan::tuple_element_t<1,
+                                        stan::base_type_t<T0__>>>>,
+                  T1__>,-1,-1>
+  operator()(const T0__& p, const T1__& rho, std::ostream* pstream__) const {
+    return K_function(p, rho, pstream__);
+  }
+};
 struct ll_nested_functor__ {
   template <typename T0__, typename T1__, typename T2__,
             stan::require_all_t<stan::is_col_vector<T0__>,
@@ -12162,50 +12202,6 @@ struct ll_nested_functor__ {
   operator()(const T0__& theta, const T1__& p, const T2__& unused,
              std::ostream* pstream__) const {
     return ll_nested(theta, p, unused, pstream__);
-  }
-};
-struct K_function_functor__ {
-  template <typename T0__, typename T1__,
-            stan::require_all_t<stan::is_std_vector<T0__>,
-                                stan::is_tuple_of_size<stan::value_type_t<T0__>,
-                                  2>,
-                                stan::is_std_vector<stan::tuple_element_t<0,
-                                                      stan::value_type_t<T0__>>>,
-                                stan::is_col_vector<stan::value_type_t<
-                                                      stan::tuple_element_t<0,
-                                                        stan::value_type_t<T0__>>>>,
-                                stan::is_vt_not_complex<stan::value_type_t<
-                                                          stan::tuple_element_t<0,
-                                                            stan::value_type_t<T0__>>>>,
-                                stan::is_std_vector<stan::tuple_element_t<1,
-                                                      stan::value_type_t<T0__>>>,
-                                stan::is_tuple_of_size<stan::value_type_t<
-                                                         stan::tuple_element_t<1,
-                                                           stan::value_type_t<T0__>>>,
-                                  2>,
-                                stan::is_integral<stan::tuple_element_t<0,
-                                                    stan::value_type_t<
-                                                      stan::tuple_element_t<1,
-                                                        stan::value_type_t<T0__>>>>>,
-                                stan::math::disjunction<stan::is_autodiff_scalar<
-                                                          stan::tuple_element_t<1,
-                                                            stan::value_type_t<
-                                                              stan::tuple_element_t<1,
-                                                                stan::value_type_t<T0__>>>>>,
-                                  stan::is_floating_point<stan::tuple_element_t<1,
-                                                            stan::value_type_t<
-                                                              stan::tuple_element_t<1,
-                                                                stan::value_type_t<T0__>>>>>>,
-                                stan::math::disjunction<stan::is_autodiff_scalar<T1__>,
-                                  stan::is_floating_point<T1__>>>* = nullptr>
-  Eigen::Matrix<stan::return_type_t<stan::base_type_t<stan::tuple_element_t<0,
-                                                        stan::base_type_t<T0__>>>,
-                  stan::tuple_element_t<1,
-                    stan::base_type_t<stan::tuple_element_t<1,
-                                        stan::base_type_t<T0__>>>>,
-                  T1__>,-1,-1>
-  operator()(const T0__& p, const T1__& rho, std::ostream* pstream__) const {
-    return K_function(p, rho, pstream__);
   }
 };
 /* real
@@ -13136,6 +13132,16 @@ template <typename T0__,
                               stan::is_vt_not_complex<stan::value_type_t<T0__>>>* = nullptr>
 Eigen::Matrix<stan::return_type_t<stan::base_type_t<T0__>>,-1,-1>
 K_function(const T0__& x, std::ostream* pstream__);
+struct K_function_functor__ {
+  template <typename T0__,
+            stan::require_all_t<stan::is_std_vector<T0__>,
+                                stan::is_col_vector<stan::value_type_t<T0__>>,
+                                stan::is_vt_not_complex<stan::value_type_t<T0__>>>* = nullptr>
+  Eigen::Matrix<stan::return_type_t<stan::base_type_t<T0__>>,-1,-1>
+  operator()(const T0__& x, std::ostream* pstream__) const {
+    return K_function(x, pstream__);
+  }
+};
 struct ll_function_functor__ {
   template <typename T0__, typename T1__, typename T2__, typename T3__,
             stan::require_all_t<stan::is_col_vector<T0__>,
@@ -13150,16 +13156,6 @@ struct ll_function_functor__ {
   operator()(const T0__& theta, const T1__& eta, const T2__& log_ye,
              const T3__& y, std::ostream* pstream__) const {
     return ll_function(theta, eta, log_ye, y, pstream__);
-  }
-};
-struct K_function_functor__ {
-  template <typename T0__,
-            stan::require_all_t<stan::is_std_vector<T0__>,
-                                stan::is_col_vector<stan::value_type_t<T0__>>,
-                                stan::is_vt_not_complex<stan::value_type_t<T0__>>>* = nullptr>
-  Eigen::Matrix<stan::return_type_t<stan::base_type_t<T0__>>,-1,-1>
-  operator()(const T0__& x, std::ostream* pstream__) const {
-    return K_function(x, pstream__);
   }
 };
 // real ll_function(vector, real, vector, array[] int)
@@ -14697,6 +14693,15 @@ template <typename T0__,
                                 stan::is_floating_point<T0__>>>* = nullptr>
 Eigen::Matrix<stan::return_type_t<T0__>,-1,-1>
 cov_fun(const T0__& sigma, const int& N, std::ostream* pstream__);
+struct cov_fun_functor__ {
+  template <typename T0__,
+            stan::require_all_t<stan::math::disjunction<stan::is_autodiff_scalar<T0__>,
+                                  stan::is_floating_point<T0__>>>* = nullptr>
+  Eigen::Matrix<stan::return_type_t<T0__>,-1,-1>
+  operator()(const T0__& sigma, const int& N, std::ostream* pstream__) const {
+    return cov_fun(sigma, N, pstream__);
+  }
+};
 struct poisson_re_log_ll_functor__ {
   template <typename T0__, typename T1__, typename T2__,
             stan::require_all_t<stan::is_col_vector<T0__>,
@@ -14709,15 +14714,6 @@ struct poisson_re_log_ll_functor__ {
   operator()(const T0__& theta, const T1__& y, const T2__& mu, std::ostream*
              pstream__) const {
     return poisson_re_log_ll(theta, y, mu, pstream__);
-  }
-};
-struct cov_fun_functor__ {
-  template <typename T0__,
-            stan::require_all_t<stan::math::disjunction<stan::is_autodiff_scalar<T0__>,
-                                  stan::is_floating_point<T0__>>>* = nullptr>
-  Eigen::Matrix<stan::return_type_t<T0__>,-1,-1>
-  operator()(const T0__& sigma, const int& N, std::ostream* pstream__) const {
-    return cov_fun(sigma, N, pstream__);
   }
 };
 // real poisson_re_log_ll(vector, array[] int, vector)
@@ -27193,7 +27189,7 @@ Eigen::Matrix<stan::return_type_t<stan::base_type_t<T0__>,
                 stan::base_type_t<T1__>, stan::base_type_t<T2__>>,-1,1>
 algebra_system(const T0__& x_arg__, const T1__& y_arg__, const T2__& dat,
                const T3__& dat_int, std::ostream* pstream__);
-struct goo_functor__ {
+struct algebra_system_functor__ {
   template <typename T0__, typename T1__, typename T2__, typename T3__,
             stan::require_all_t<stan::is_col_vector<T0__>,
                                 stan::is_vt_not_complex<T0__>,
@@ -27207,9 +27203,9 @@ struct goo_functor__ {
                                 stan::is_integral<stan::value_type_t<T3__>>>* = nullptr>
   Eigen::Matrix<stan::return_type_t<stan::base_type_t<T0__>,
                   stan::base_type_t<T1__>, stan::base_type_t<T2__>>,-1,1>
-  operator()(const T0__& shared_params, const T1__& job_params, const T2__&
-             data_r, const T3__& data_i, std::ostream* pstream__) const {
-    return goo(shared_params, job_params, data_r, data_i, pstream__);
+  operator()(const T0__& x, const T1__& y, const T2__& dat, const T3__&
+             dat_int, std::ostream* pstream__) const {
+    return algebra_system(x, y, dat, dat_int, pstream__);
   }
 };
 struct foo_functor__ {
@@ -27229,6 +27225,25 @@ struct foo_functor__ {
   operator()(const T0__& shared_params, const T1__& job_params, const T2__&
              data_r, const T3__& data_i, std::ostream* pstream__) const {
     return foo(shared_params, job_params, data_r, data_i, pstream__);
+  }
+};
+struct goo_functor__ {
+  template <typename T0__, typename T1__, typename T2__, typename T3__,
+            stan::require_all_t<stan::is_col_vector<T0__>,
+                                stan::is_vt_not_complex<T0__>,
+                                stan::is_col_vector<T1__>,
+                                stan::is_vt_not_complex<T1__>,
+                                stan::is_std_vector<T2__>,
+                                stan::math::disjunction<stan::is_autodiff_scalar<
+                                                          stan::value_type_t<T2__>>,
+                                  stan::is_floating_point<stan::value_type_t<T2__>>>,
+                                stan::is_std_vector<T3__>,
+                                stan::is_integral<stan::value_type_t<T3__>>>* = nullptr>
+  Eigen::Matrix<stan::return_type_t<stan::base_type_t<T0__>,
+                  stan::base_type_t<T1__>, stan::base_type_t<T2__>>,-1,1>
+  operator()(const T0__& shared_params, const T1__& job_params, const T2__&
+             data_r, const T3__& data_i, std::ostream* pstream__) const {
+    return goo(shared_params, job_params, data_r, data_i, pstream__);
   }
 };
 struct integrand_functor__ {
@@ -27253,25 +27268,6 @@ struct integrand_functor__ {
   operator()(const T0__& x, const T1__& xc, const T2__& theta, const T3__&
              x_r, const T4__& x_i, std::ostream* pstream__) const {
     return integrand(x, xc, theta, x_r, x_i, pstream__);
-  }
-};
-struct algebra_system_functor__ {
-  template <typename T0__, typename T1__, typename T2__, typename T3__,
-            stan::require_all_t<stan::is_col_vector<T0__>,
-                                stan::is_vt_not_complex<T0__>,
-                                stan::is_col_vector<T1__>,
-                                stan::is_vt_not_complex<T1__>,
-                                stan::is_std_vector<T2__>,
-                                stan::math::disjunction<stan::is_autodiff_scalar<
-                                                          stan::value_type_t<T2__>>,
-                                  stan::is_floating_point<stan::value_type_t<T2__>>>,
-                                stan::is_std_vector<T3__>,
-                                stan::is_integral<stan::value_type_t<T3__>>>* = nullptr>
-  Eigen::Matrix<stan::return_type_t<stan::base_type_t<T0__>,
-                  stan::base_type_t<T1__>, stan::base_type_t<T2__>>,-1,1>
-  operator()(const T0__& x, const T1__& y, const T2__& dat, const T3__&
-             dat_int, std::ostream* pstream__) const {
-    return algebra_system(x, y, dat, dat_int, pstream__);
   }
 };
 struct sho_functor__ {
@@ -42473,22 +42469,19 @@ template <bool propto__, typename T0__, typename T1__, typename T2__,
 stan::return_type_t<stan::base_type_t<T0__>>
 foo_lpdf(const T0__& y_slice, const T1__& start, const T2__& end,
          std::ostream* pstream__);
-struct h_rsfunctor__ {
-  template <typename T0__, typename T1__, typename T2__, typename T3__,
+template <bool propto__>
+struct foo_lpdf_rsfunctor__ {
+  template <typename T0__, typename T1__, typename T2__,
             stan::require_all_t<stan::is_std_vector<T0__>,
                                 stan::math::disjunction<stan::is_autodiff_scalar<
                                                           stan::value_type_t<T0__>>,
                                   stan::is_floating_point<stan::value_type_t<T0__>>>,
                                 stan::is_integral<T1__>,
-                                stan::is_integral<T2__>,
-                                stan::is_std_vector<T3__>,
-                                stan::math::disjunction<stan::is_autodiff_scalar<
-                                                          stan::value_type_t<T3__>>,
-                                  stan::is_floating_point<stan::value_type_t<T3__>>>>* = nullptr>
-  stan::return_type_t<stan::base_type_t<T0__>, stan::base_type_t<T3__>>
+                                stan::is_integral<T2__>>* = nullptr>
+  stan::return_type_t<stan::base_type_t<T0__>>
   operator()(const T0__& y_slice, const T1__& start, const T2__& end,
-             std::ostream* pstream__, const T3__& a) const {
-    return h(y_slice, (start + 1), (end + 1), a, pstream__);
+             std::ostream* pstream__) const {
+    return foo_lpdf<propto__>(y_slice, (start + 1), (end + 1), pstream__);
   }
 };
 struct g_rsfunctor__ {
@@ -42505,19 +42498,22 @@ struct g_rsfunctor__ {
     return g(y_slice, (start + 1), (end + 1), pstream__);
   }
 };
-template <bool propto__>
-struct foo_lpdf_rsfunctor__ {
-  template <typename T0__, typename T1__, typename T2__,
+struct h_rsfunctor__ {
+  template <typename T0__, typename T1__, typename T2__, typename T3__,
             stan::require_all_t<stan::is_std_vector<T0__>,
                                 stan::math::disjunction<stan::is_autodiff_scalar<
                                                           stan::value_type_t<T0__>>,
                                   stan::is_floating_point<stan::value_type_t<T0__>>>,
                                 stan::is_integral<T1__>,
-                                stan::is_integral<T2__>>* = nullptr>
-  stan::return_type_t<stan::base_type_t<T0__>>
+                                stan::is_integral<T2__>,
+                                stan::is_std_vector<T3__>,
+                                stan::math::disjunction<stan::is_autodiff_scalar<
+                                                          stan::value_type_t<T3__>>,
+                                  stan::is_floating_point<stan::value_type_t<T3__>>>>* = nullptr>
+  stan::return_type_t<stan::base_type_t<T0__>, stan::base_type_t<T3__>>
   operator()(const T0__& y_slice, const T1__& start, const T2__& end,
-             std::ostream* pstream__) const {
-    return foo_lpdf<propto__>(y_slice, (start + 1), (end + 1), pstream__);
+             std::ostream* pstream__, const T3__& a) const {
+    return h(y_slice, (start + 1), (end + 1), a, pstream__);
   }
 };
 // real g(array[] real, int, int)
@@ -43453,25 +43449,122 @@ template <typename T0__, typename T1__, typename T2__, typename T3__,
 stan::return_type_t<stan::base_type_t<T0__>, stan::base_type_t<T3__>>
 h8(const T0__& y, const T1__& start, const T2__& end, const T3__& a,
    std::ostream* pstream__);
-struct h5_rsfunctor__ {
-  template <typename T0__, typename T1__, typename T2__, typename T3__,
+struct g1_rsfunctor__ {
+  template <typename T0__, typename T1__, typename T2__,
             stan::require_all_t<stan::is_std_vector<T0__>,
                                 stan::math::disjunction<stan::is_autodiff_scalar<
                                                           stan::value_type_t<T0__>>,
                                   stan::is_floating_point<stan::value_type_t<T0__>>>,
                                 stan::is_integral<T1__>,
-                                stan::is_integral<T2__>,
-                                stan::is_std_vector<T3__>,
-                                stan::is_std_vector<stan::value_type_t<T3__>>,
+                                stan::is_integral<T2__>>* = nullptr>
+  stan::return_type_t<stan::base_type_t<T0__>>
+  operator()(const T0__& y_slice, const T1__& start, const T2__& end,
+             std::ostream* pstream__) const {
+    return g1(y_slice, (start + 1), (end + 1), pstream__);
+  }
+};
+struct g2_rsfunctor__ {
+  template <typename T0__, typename T1__, typename T2__,
+            stan::require_all_t<stan::is_std_vector<T0__>,
+                                stan::is_col_vector<stan::value_type_t<T0__>>,
+                                stan::is_vt_not_complex<stan::value_type_t<T0__>>,
+                                stan::is_integral<T1__>,
+                                stan::is_integral<T2__>>* = nullptr>
+  stan::return_type_t<stan::base_type_t<T0__>>
+  operator()(const T0__& y_slice, const T1__& start, const T2__& end,
+             std::ostream* pstream__) const {
+    return g2(y_slice, (start + 1), (end + 1), pstream__);
+  }
+};
+struct g3_rsfunctor__ {
+  template <typename T0__, typename T1__, typename T2__,
+            stan::require_all_t<stan::is_std_vector<T0__>,
+                                stan::is_row_vector<stan::value_type_t<T0__>>,
+                                stan::is_vt_not_complex<stan::value_type_t<T0__>>,
+                                stan::is_integral<T1__>,
+                                stan::is_integral<T2__>>* = nullptr>
+  stan::return_type_t<stan::base_type_t<T0__>>
+  operator()(const T0__& y_slice, const T1__& start, const T2__& end,
+             std::ostream* pstream__) const {
+    return g3(y_slice, (start + 1), (end + 1), pstream__);
+  }
+};
+struct g4_rsfunctor__ {
+  template <typename T0__, typename T1__, typename T2__,
+            stan::require_all_t<stan::is_std_vector<T0__>,
+                                stan::is_eigen_matrix_dynamic<stan::value_type_t<T0__>>,
+                                stan::is_vt_not_complex<stan::value_type_t<T0__>>,
+                                stan::is_integral<T1__>,
+                                stan::is_integral<T2__>>* = nullptr>
+  stan::return_type_t<stan::base_type_t<T0__>>
+  operator()(const T0__& y_slice, const T1__& start, const T2__& end,
+             std::ostream* pstream__) const {
+    return g4(y_slice, (start + 1), (end + 1), pstream__);
+  }
+};
+struct g5_rsfunctor__ {
+  template <typename T0__, typename T1__, typename T2__,
+            stan::require_all_t<stan::is_std_vector<T0__>,
+                                stan::is_std_vector<stan::value_type_t<T0__>>,
                                 stan::math::disjunction<stan::is_autodiff_scalar<
                                                           stan::value_type_t<
-                                                            stan::value_type_t<T3__>>>,
+                                                            stan::value_type_t<T0__>>>,
                                   stan::is_floating_point<stan::value_type_t<
-                                                            stan::value_type_t<T3__>>>>>* = nullptr>
-  stan::return_type_t<stan::base_type_t<T0__>, stan::base_type_t<T3__>>
-  operator()(const T0__& y, const T1__& start, const T2__& end, std::ostream*
-             pstream__, const T3__& a) const {
-    return h5(y, (start + 1), (end + 1), a, pstream__);
+                                                            stan::value_type_t<T0__>>>>,
+                                stan::is_integral<T1__>,
+                                stan::is_integral<T2__>>* = nullptr>
+  stan::return_type_t<stan::base_type_t<T0__>>
+  operator()(const T0__& y_slice, const T1__& start, const T2__& end,
+             std::ostream* pstream__) const {
+    return g5(y_slice, (start + 1), (end + 1), pstream__);
+  }
+};
+struct g6_rsfunctor__ {
+  template <typename T0__, typename T1__, typename T2__,
+            stan::require_all_t<stan::is_std_vector<T0__>,
+                                stan::is_std_vector<stan::value_type_t<T0__>>,
+                                stan::is_col_vector<stan::value_type_t<
+                                                      stan::value_type_t<T0__>>>,
+                                stan::is_vt_not_complex<stan::value_type_t<
+                                                          stan::value_type_t<T0__>>>,
+                                stan::is_integral<T1__>,
+                                stan::is_integral<T2__>>* = nullptr>
+  stan::return_type_t<stan::base_type_t<T0__>>
+  operator()(const T0__& y_slice, const T1__& start, const T2__& end,
+             std::ostream* pstream__) const {
+    return g6(y_slice, (start + 1), (end + 1), pstream__);
+  }
+};
+struct g7_rsfunctor__ {
+  template <typename T0__, typename T1__, typename T2__,
+            stan::require_all_t<stan::is_std_vector<T0__>,
+                                stan::is_std_vector<stan::value_type_t<T0__>>,
+                                stan::is_row_vector<stan::value_type_t<
+                                                      stan::value_type_t<T0__>>>,
+                                stan::is_vt_not_complex<stan::value_type_t<
+                                                          stan::value_type_t<T0__>>>,
+                                stan::is_integral<T1__>,
+                                stan::is_integral<T2__>>* = nullptr>
+  stan::return_type_t<stan::base_type_t<T0__>>
+  operator()(const T0__& y_slice, const T1__& start, const T2__& end,
+             std::ostream* pstream__) const {
+    return g7(y_slice, (start + 1), (end + 1), pstream__);
+  }
+};
+struct g8_rsfunctor__ {
+  template <typename T0__, typename T1__, typename T2__,
+            stan::require_all_t<stan::is_std_vector<T0__>,
+                                stan::is_std_vector<stan::value_type_t<T0__>>,
+                                stan::is_eigen_matrix_dynamic<stan::value_type_t<
+                                                                stan::value_type_t<T0__>>>,
+                                stan::is_vt_not_complex<stan::value_type_t<
+                                                          stan::value_type_t<T0__>>>,
+                                stan::is_integral<T1__>,
+                                stan::is_integral<T2__>>* = nullptr>
+  stan::return_type_t<stan::base_type_t<T0__>>
+  operator()(const T0__& y_slice, const T1__& start, const T2__& end,
+             std::ostream* pstream__) const {
+    return g8(y_slice, (start + 1), (end + 1), pstream__);
   }
 };
 struct h1_rsfunctor__ {
@@ -43492,20 +43585,7 @@ struct h1_rsfunctor__ {
     return h1(y, (start + 1), (end + 1), a, pstream__);
   }
 };
-struct g3_rsfunctor__ {
-  template <typename T0__, typename T1__, typename T2__,
-            stan::require_all_t<stan::is_std_vector<T0__>,
-                                stan::is_row_vector<stan::value_type_t<T0__>>,
-                                stan::is_vt_not_complex<stan::value_type_t<T0__>>,
-                                stan::is_integral<T1__>,
-                                stan::is_integral<T2__>>* = nullptr>
-  stan::return_type_t<stan::base_type_t<T0__>>
-  operator()(const T0__& y_slice, const T1__& start, const T2__& end,
-             std::ostream* pstream__) const {
-    return g3(y_slice, (start + 1), (end + 1), pstream__);
-  }
-};
-struct h7_rsfunctor__ {
+struct h2_rsfunctor__ {
   template <typename T0__, typename T1__, typename T2__, typename T3__,
             stan::require_all_t<stan::is_std_vector<T0__>,
                                 stan::math::disjunction<stan::is_autodiff_scalar<
@@ -43514,15 +43594,12 @@ struct h7_rsfunctor__ {
                                 stan::is_integral<T1__>,
                                 stan::is_integral<T2__>,
                                 stan::is_std_vector<T3__>,
-                                stan::is_std_vector<stan::value_type_t<T3__>>,
-                                stan::is_row_vector<stan::value_type_t<
-                                                      stan::value_type_t<T3__>>>,
-                                stan::is_vt_not_complex<stan::value_type_t<
-                                                          stan::value_type_t<T3__>>>>* = nullptr>
+                                stan::is_col_vector<stan::value_type_t<T3__>>,
+                                stan::is_vt_not_complex<stan::value_type_t<T3__>>>* = nullptr>
   stan::return_type_t<stan::base_type_t<T0__>, stan::base_type_t<T3__>>
   operator()(const T0__& y, const T1__& start, const T2__& end, std::ostream*
              pstream__, const T3__& a) const {
-    return h7(y, (start + 1), (end + 1), a, pstream__);
+    return h2(y, (start + 1), (end + 1), a, pstream__);
   }
 };
 struct h3_rsfunctor__ {
@@ -43542,101 +43619,6 @@ struct h3_rsfunctor__ {
     return h3(y, (start + 1), (end + 1), a, pstream__);
   }
 };
-struct g2_rsfunctor__ {
-  template <typename T0__, typename T1__, typename T2__,
-            stan::require_all_t<stan::is_std_vector<T0__>,
-                                stan::is_col_vector<stan::value_type_t<T0__>>,
-                                stan::is_vt_not_complex<stan::value_type_t<T0__>>,
-                                stan::is_integral<T1__>,
-                                stan::is_integral<T2__>>* = nullptr>
-  stan::return_type_t<stan::base_type_t<T0__>>
-  operator()(const T0__& y_slice, const T1__& start, const T2__& end,
-             std::ostream* pstream__) const {
-    return g2(y_slice, (start + 1), (end + 1), pstream__);
-  }
-};
-struct g8_rsfunctor__ {
-  template <typename T0__, typename T1__, typename T2__,
-            stan::require_all_t<stan::is_std_vector<T0__>,
-                                stan::is_std_vector<stan::value_type_t<T0__>>,
-                                stan::is_eigen_matrix_dynamic<stan::value_type_t<
-                                                                stan::value_type_t<T0__>>>,
-                                stan::is_vt_not_complex<stan::value_type_t<
-                                                          stan::value_type_t<T0__>>>,
-                                stan::is_integral<T1__>,
-                                stan::is_integral<T2__>>* = nullptr>
-  stan::return_type_t<stan::base_type_t<T0__>>
-  operator()(const T0__& y_slice, const T1__& start, const T2__& end,
-             std::ostream* pstream__) const {
-    return g8(y_slice, (start + 1), (end + 1), pstream__);
-  }
-};
-struct h2_rsfunctor__ {
-  template <typename T0__, typename T1__, typename T2__, typename T3__,
-            stan::require_all_t<stan::is_std_vector<T0__>,
-                                stan::math::disjunction<stan::is_autodiff_scalar<
-                                                          stan::value_type_t<T0__>>,
-                                  stan::is_floating_point<stan::value_type_t<T0__>>>,
-                                stan::is_integral<T1__>,
-                                stan::is_integral<T2__>,
-                                stan::is_std_vector<T3__>,
-                                stan::is_col_vector<stan::value_type_t<T3__>>,
-                                stan::is_vt_not_complex<stan::value_type_t<T3__>>>* = nullptr>
-  stan::return_type_t<stan::base_type_t<T0__>, stan::base_type_t<T3__>>
-  operator()(const T0__& y, const T1__& start, const T2__& end, std::ostream*
-             pstream__, const T3__& a) const {
-    return h2(y, (start + 1), (end + 1), a, pstream__);
-  }
-};
-struct h8_rsfunctor__ {
-  template <typename T0__, typename T1__, typename T2__, typename T3__,
-            stan::require_all_t<stan::is_std_vector<T0__>,
-                                stan::math::disjunction<stan::is_autodiff_scalar<
-                                                          stan::value_type_t<T0__>>,
-                                  stan::is_floating_point<stan::value_type_t<T0__>>>,
-                                stan::is_integral<T1__>,
-                                stan::is_integral<T2__>,
-                                stan::is_std_vector<T3__>,
-                                stan::is_std_vector<stan::value_type_t<T3__>>,
-                                stan::is_eigen_matrix_dynamic<stan::value_type_t<
-                                                                stan::value_type_t<T3__>>>,
-                                stan::is_vt_not_complex<stan::value_type_t<
-                                                          stan::value_type_t<T3__>>>>* = nullptr>
-  stan::return_type_t<stan::base_type_t<T0__>, stan::base_type_t<T3__>>
-  operator()(const T0__& y, const T1__& start, const T2__& end, std::ostream*
-             pstream__, const T3__& a) const {
-    return h8(y, (start + 1), (end + 1), a, pstream__);
-  }
-};
-struct g7_rsfunctor__ {
-  template <typename T0__, typename T1__, typename T2__,
-            stan::require_all_t<stan::is_std_vector<T0__>,
-                                stan::is_std_vector<stan::value_type_t<T0__>>,
-                                stan::is_row_vector<stan::value_type_t<
-                                                      stan::value_type_t<T0__>>>,
-                                stan::is_vt_not_complex<stan::value_type_t<
-                                                          stan::value_type_t<T0__>>>,
-                                stan::is_integral<T1__>,
-                                stan::is_integral<T2__>>* = nullptr>
-  stan::return_type_t<stan::base_type_t<T0__>>
-  operator()(const T0__& y_slice, const T1__& start, const T2__& end,
-             std::ostream* pstream__) const {
-    return g7(y_slice, (start + 1), (end + 1), pstream__);
-  }
-};
-struct g4_rsfunctor__ {
-  template <typename T0__, typename T1__, typename T2__,
-            stan::require_all_t<stan::is_std_vector<T0__>,
-                                stan::is_eigen_matrix_dynamic<stan::value_type_t<T0__>>,
-                                stan::is_vt_not_complex<stan::value_type_t<T0__>>,
-                                stan::is_integral<T1__>,
-                                stan::is_integral<T2__>>* = nullptr>
-  stan::return_type_t<stan::base_type_t<T0__>>
-  operator()(const T0__& y_slice, const T1__& start, const T2__& end,
-             std::ostream* pstream__) const {
-    return g4(y_slice, (start + 1), (end + 1), pstream__);
-  }
-};
 struct h4_rsfunctor__ {
   template <typename T0__, typename T1__, typename T2__, typename T3__,
             stan::require_all_t<stan::is_std_vector<T0__>,
@@ -43654,37 +43636,25 @@ struct h4_rsfunctor__ {
     return h4(y, (start + 1), (end + 1), a, pstream__);
   }
 };
-struct g6_rsfunctor__ {
-  template <typename T0__, typename T1__, typename T2__,
+struct h5_rsfunctor__ {
+  template <typename T0__, typename T1__, typename T2__, typename T3__,
             stan::require_all_t<stan::is_std_vector<T0__>,
-                                stan::is_std_vector<stan::value_type_t<T0__>>,
-                                stan::is_col_vector<stan::value_type_t<
-                                                      stan::value_type_t<T0__>>>,
-                                stan::is_vt_not_complex<stan::value_type_t<
-                                                          stan::value_type_t<T0__>>>,
+                                stan::math::disjunction<stan::is_autodiff_scalar<
+                                                          stan::value_type_t<T0__>>,
+                                  stan::is_floating_point<stan::value_type_t<T0__>>>,
                                 stan::is_integral<T1__>,
-                                stan::is_integral<T2__>>* = nullptr>
-  stan::return_type_t<stan::base_type_t<T0__>>
-  operator()(const T0__& y_slice, const T1__& start, const T2__& end,
-             std::ostream* pstream__) const {
-    return g6(y_slice, (start + 1), (end + 1), pstream__);
-  }
-};
-struct g5_rsfunctor__ {
-  template <typename T0__, typename T1__, typename T2__,
-            stan::require_all_t<stan::is_std_vector<T0__>,
-                                stan::is_std_vector<stan::value_type_t<T0__>>,
+                                stan::is_integral<T2__>,
+                                stan::is_std_vector<T3__>,
+                                stan::is_std_vector<stan::value_type_t<T3__>>,
                                 stan::math::disjunction<stan::is_autodiff_scalar<
                                                           stan::value_type_t<
-                                                            stan::value_type_t<T0__>>>,
+                                                            stan::value_type_t<T3__>>>,
                                   stan::is_floating_point<stan::value_type_t<
-                                                            stan::value_type_t<T0__>>>>,
-                                stan::is_integral<T1__>,
-                                stan::is_integral<T2__>>* = nullptr>
-  stan::return_type_t<stan::base_type_t<T0__>>
-  operator()(const T0__& y_slice, const T1__& start, const T2__& end,
-             std::ostream* pstream__) const {
-    return g5(y_slice, (start + 1), (end + 1), pstream__);
+                                                            stan::value_type_t<T3__>>>>>* = nullptr>
+  stan::return_type_t<stan::base_type_t<T0__>, stan::base_type_t<T3__>>
+  operator()(const T0__& y, const T1__& start, const T2__& end, std::ostream*
+             pstream__, const T3__& a) const {
+    return h5(y, (start + 1), (end + 1), a, pstream__);
   }
 };
 struct h6_rsfunctor__ {
@@ -43707,18 +43677,44 @@ struct h6_rsfunctor__ {
     return h6(y, (start + 1), (end + 1), a, pstream__);
   }
 };
-struct g1_rsfunctor__ {
-  template <typename T0__, typename T1__, typename T2__,
+struct h7_rsfunctor__ {
+  template <typename T0__, typename T1__, typename T2__, typename T3__,
             stan::require_all_t<stan::is_std_vector<T0__>,
                                 stan::math::disjunction<stan::is_autodiff_scalar<
                                                           stan::value_type_t<T0__>>,
                                   stan::is_floating_point<stan::value_type_t<T0__>>>,
                                 stan::is_integral<T1__>,
-                                stan::is_integral<T2__>>* = nullptr>
-  stan::return_type_t<stan::base_type_t<T0__>>
-  operator()(const T0__& y_slice, const T1__& start, const T2__& end,
-             std::ostream* pstream__) const {
-    return g1(y_slice, (start + 1), (end + 1), pstream__);
+                                stan::is_integral<T2__>,
+                                stan::is_std_vector<T3__>,
+                                stan::is_std_vector<stan::value_type_t<T3__>>,
+                                stan::is_row_vector<stan::value_type_t<
+                                                      stan::value_type_t<T3__>>>,
+                                stan::is_vt_not_complex<stan::value_type_t<
+                                                          stan::value_type_t<T3__>>>>* = nullptr>
+  stan::return_type_t<stan::base_type_t<T0__>, stan::base_type_t<T3__>>
+  operator()(const T0__& y, const T1__& start, const T2__& end, std::ostream*
+             pstream__, const T3__& a) const {
+    return h7(y, (start + 1), (end + 1), a, pstream__);
+  }
+};
+struct h8_rsfunctor__ {
+  template <typename T0__, typename T1__, typename T2__, typename T3__,
+            stan::require_all_t<stan::is_std_vector<T0__>,
+                                stan::math::disjunction<stan::is_autodiff_scalar<
+                                                          stan::value_type_t<T0__>>,
+                                  stan::is_floating_point<stan::value_type_t<T0__>>>,
+                                stan::is_integral<T1__>,
+                                stan::is_integral<T2__>,
+                                stan::is_std_vector<T3__>,
+                                stan::is_std_vector<stan::value_type_t<T3__>>,
+                                stan::is_eigen_matrix_dynamic<stan::value_type_t<
+                                                                stan::value_type_t<T3__>>>,
+                                stan::is_vt_not_complex<stan::value_type_t<
+                                                          stan::value_type_t<T3__>>>>* = nullptr>
+  stan::return_type_t<stan::base_type_t<T0__>, stan::base_type_t<T3__>>
+  operator()(const T0__& y, const T1__& start, const T2__& end, std::ostream*
+             pstream__, const T3__& a) const {
+    return h8(y, (start + 1), (end + 1), a, pstream__);
   }
 };
 // real g1(array[] real, int, int)
@@ -46867,6 +46863,20 @@ s(const T0__& y_slice, const T1__& start, const T2__& end, const T3__& a,
   const T16__& n, const T17__& o, const T18__& p, const T19__& q,
   std::ostream* pstream__);
 double r(std::ostream* pstream__);
+struct f10_rsfunctor__ {
+  template <typename T0__, typename T1__, typename T2__,
+            stan::require_all_t<stan::is_std_vector<T0__>,
+                                stan::is_std_vector<stan::value_type_t<T0__>>,
+                                stan::is_integral<stan::value_type_t<
+                                                    stan::value_type_t<T0__>>>,
+                                stan::is_integral<T1__>,
+                                stan::is_integral<T2__>>* = nullptr>
+  double
+  operator()(const T0__& y_slice, const T1__& start, const T2__& end,
+             std::ostream* pstream__) const {
+    return f10(y_slice, (start + 1), (end + 1), pstream__);
+  }
+};
 struct f11_rsfunctor__ {
   template <typename T0__, typename T1__, typename T2__,
             stan::require_all_t<stan::is_std_vector<T0__>,
@@ -46882,193 +46892,6 @@ struct f11_rsfunctor__ {
   operator()(const T0__& y_slice, const T1__& start, const T2__& end,
              std::ostream* pstream__) const {
     return f11(y_slice, (start + 1), (end + 1), pstream__);
-  }
-};
-struct f10_rsfunctor__ {
-  template <typename T0__, typename T1__, typename T2__,
-            stan::require_all_t<stan::is_std_vector<T0__>,
-                                stan::is_std_vector<stan::value_type_t<T0__>>,
-                                stan::is_integral<stan::value_type_t<
-                                                    stan::value_type_t<T0__>>>,
-                                stan::is_integral<T1__>,
-                                stan::is_integral<T2__>>* = nullptr>
-  double
-  operator()(const T0__& y_slice, const T1__& start, const T2__& end,
-             std::ostream* pstream__) const {
-    return f10(y_slice, (start + 1), (end + 1), pstream__);
-  }
-};
-struct g8_rsfunctor__ {
-  template <typename T0__, typename T1__, typename T2__, typename T3__,
-            stan::require_all_t<stan::is_std_vector<T0__>,
-                                stan::math::disjunction<stan::is_autodiff_scalar<
-                                                          stan::value_type_t<T0__>>,
-                                  stan::is_floating_point<stan::value_type_t<T0__>>>,
-                                stan::is_integral<T1__>,
-                                stan::is_integral<T2__>,
-                                stan::is_std_vector<T3__>,
-                                stan::is_eigen_matrix_dynamic<stan::value_type_t<T3__>>,
-                                stan::is_vt_not_complex<stan::value_type_t<T3__>>>* = nullptr>
-  stan::return_type_t<stan::base_type_t<T0__>, stan::base_type_t<T3__>>
-  operator()(const T0__& y_slice, const T1__& start, const T2__& end,
-             std::ostream* pstream__, const T3__& a) const {
-    return g8(y_slice, (start + 1), (end + 1), a, pstream__);
-  }
-};
-struct g7_rsfunctor__ {
-  template <typename T0__, typename T1__, typename T2__, typename T3__,
-            stan::require_all_t<stan::is_std_vector<T0__>,
-                                stan::math::disjunction<stan::is_autodiff_scalar<
-                                                          stan::value_type_t<T0__>>,
-                                  stan::is_floating_point<stan::value_type_t<T0__>>>,
-                                stan::is_integral<T1__>,
-                                stan::is_integral<T2__>,
-                                stan::is_std_vector<T3__>,
-                                stan::is_row_vector<stan::value_type_t<T3__>>,
-                                stan::is_vt_not_complex<stan::value_type_t<T3__>>>* = nullptr>
-  stan::return_type_t<stan::base_type_t<T0__>, stan::base_type_t<T3__>>
-  operator()(const T0__& y_slice, const T1__& start, const T2__& end,
-             std::ostream* pstream__, const T3__& a) const {
-    return g7(y_slice, (start + 1), (end + 1), a, pstream__);
-  }
-};
-struct g4_rsfunctor__ {
-  template <typename T0__, typename T1__, typename T2__, typename T3__,
-            stan::require_all_t<stan::is_std_vector<T0__>,
-                                stan::math::disjunction<stan::is_autodiff_scalar<
-                                                          stan::value_type_t<T0__>>,
-                                  stan::is_floating_point<stan::value_type_t<T0__>>>,
-                                stan::is_integral<T1__>,
-                                stan::is_integral<T2__>,
-                                stan::is_eigen_matrix_dynamic<T3__>,
-                                stan::is_vt_not_complex<T3__>>* = nullptr>
-  stan::return_type_t<stan::base_type_t<T0__>, stan::base_type_t<T3__>>
-  operator()(const T0__& y_slice, const T1__& start, const T2__& end,
-             std::ostream* pstream__, const T3__& a) const {
-    return g4(y_slice, (start + 1), (end + 1), a, pstream__);
-  }
-};
-struct g6_rsfunctor__ {
-  template <typename T0__, typename T1__, typename T2__, typename T3__,
-            stan::require_all_t<stan::is_std_vector<T0__>,
-                                stan::math::disjunction<stan::is_autodiff_scalar<
-                                                          stan::value_type_t<T0__>>,
-                                  stan::is_floating_point<stan::value_type_t<T0__>>>,
-                                stan::is_integral<T1__>,
-                                stan::is_integral<T2__>,
-                                stan::is_std_vector<T3__>,
-                                stan::is_col_vector<stan::value_type_t<T3__>>,
-                                stan::is_vt_not_complex<stan::value_type_t<T3__>>>* = nullptr>
-  stan::return_type_t<stan::base_type_t<T0__>, stan::base_type_t<T3__>>
-  operator()(const T0__& y_slice, const T1__& start, const T2__& end,
-             std::ostream* pstream__, const T3__& a) const {
-    return g6(y_slice, (start + 1), (end + 1), a, pstream__);
-  }
-};
-struct g11_rsfunctor__ {
-  template <typename T0__, typename T1__, typename T2__, typename T3__,
-            stan::require_all_t<stan::is_std_vector<T0__>,
-                                stan::math::disjunction<stan::is_autodiff_scalar<
-                                                          stan::value_type_t<T0__>>,
-                                  stan::is_floating_point<stan::value_type_t<T0__>>>,
-                                stan::is_integral<T1__>,
-                                stan::is_integral<T2__>,
-                                stan::is_std_vector<T3__>,
-                                stan::is_std_vector<stan::value_type_t<T3__>>,
-                                stan::is_row_vector<stan::value_type_t<
-                                                      stan::value_type_t<T3__>>>,
-                                stan::is_vt_not_complex<stan::value_type_t<
-                                                          stan::value_type_t<T3__>>>>* = nullptr>
-  stan::return_type_t<stan::base_type_t<T0__>, stan::base_type_t<T3__>>
-  operator()(const T0__& y_slice, const T1__& start, const T2__& end,
-             std::ostream* pstream__, const T3__& a) const {
-    return g11(y_slice, (start + 1), (end + 1), a, pstream__);
-  }
-};
-struct f5_rsfunctor__ {
-  template <typename T0__, typename T1__, typename T2__,
-            stan::require_all_t<stan::is_std_vector<T0__>,
-                                stan::is_std_vector<stan::value_type_t<T0__>>,
-                                stan::math::disjunction<stan::is_autodiff_scalar<
-                                                          stan::value_type_t<
-                                                            stan::value_type_t<T0__>>>,
-                                  stan::is_floating_point<stan::value_type_t<
-                                                            stan::value_type_t<T0__>>>>,
-                                stan::is_integral<T1__>,
-                                stan::is_integral<T2__>>* = nullptr>
-  stan::return_type_t<stan::base_type_t<T0__>>
-  operator()(const T0__& y_slice, const T1__& start, const T2__& end,
-             std::ostream* pstream__) const {
-    return f5(y_slice, (start + 1), (end + 1), pstream__);
-  }
-};
-struct f1_rsfunctor__ {
-  template <typename T0__, typename T1__, typename T2__,
-            stan::require_all_t<stan::is_std_vector<T0__>,
-                                stan::math::disjunction<stan::is_autodiff_scalar<
-                                                          stan::value_type_t<T0__>>,
-                                  stan::is_floating_point<stan::value_type_t<T0__>>>,
-                                stan::is_integral<T1__>,
-                                stan::is_integral<T2__>>* = nullptr>
-  stan::return_type_t<stan::base_type_t<T0__>>
-  operator()(const T0__& y_slice, const T1__& start, const T2__& end,
-             std::ostream* pstream__) const {
-    return f1(y_slice, (start + 1), (end + 1), pstream__);
-  }
-};
-struct g5_rsfunctor__ {
-  template <typename T0__, typename T1__, typename T2__, typename T3__,
-            stan::require_all_t<stan::is_std_vector<T0__>,
-                                stan::math::disjunction<stan::is_autodiff_scalar<
-                                                          stan::value_type_t<T0__>>,
-                                  stan::is_floating_point<stan::value_type_t<T0__>>>,
-                                stan::is_integral<T1__>,
-                                stan::is_integral<T2__>,
-                                stan::is_std_vector<T3__>,
-                                stan::math::disjunction<stan::is_autodiff_scalar<
-                                                          stan::value_type_t<T3__>>,
-                                  stan::is_floating_point<stan::value_type_t<T3__>>>>* = nullptr>
-  stan::return_type_t<stan::base_type_t<T0__>, stan::base_type_t<T3__>>
-  operator()(const T0__& y_slice, const T1__& start, const T2__& end,
-             std::ostream* pstream__, const T3__& a) const {
-    return g5(y_slice, (start + 1), (end + 1), a, pstream__);
-  }
-};
-struct g9_rsfunctor__ {
-  template <typename T0__, typename T1__, typename T2__, typename T3__,
-            stan::require_all_t<stan::is_std_vector<T0__>,
-                                stan::math::disjunction<stan::is_autodiff_scalar<
-                                                          stan::value_type_t<T0__>>,
-                                  stan::is_floating_point<stan::value_type_t<T0__>>>,
-                                stan::is_integral<T1__>,
-                                stan::is_integral<T2__>,
-                                stan::is_std_vector<T3__>,
-                                stan::is_std_vector<stan::value_type_t<T3__>>,
-                                stan::math::disjunction<stan::is_autodiff_scalar<
-                                                          stan::value_type_t<
-                                                            stan::value_type_t<T3__>>>,
-                                  stan::is_floating_point<stan::value_type_t<
-                                                            stan::value_type_t<T3__>>>>>* = nullptr>
-  stan::return_type_t<stan::base_type_t<T0__>, stan::base_type_t<T3__>>
-  operator()(const T0__& y_slice, const T1__& start, const T2__& end,
-             std::ostream* pstream__, const T3__& a) const {
-    return g9(y_slice, (start + 1), (end + 1), a, pstream__);
-  }
-};
-struct g1_rsfunctor__ {
-  template <typename T0__, typename T1__, typename T2__, typename T3__,
-            stan::require_all_t<stan::is_std_vector<T0__>,
-                                stan::math::disjunction<stan::is_autodiff_scalar<
-                                                          stan::value_type_t<T0__>>,
-                                  stan::is_floating_point<stan::value_type_t<T0__>>>,
-                                stan::is_integral<T1__>,
-                                stan::is_integral<T2__>,
-                                stan::math::disjunction<stan::is_autodiff_scalar<T3__>,
-                                  stan::is_floating_point<T3__>>>* = nullptr>
-  stan::return_type_t<stan::base_type_t<T0__>, T3__>
-  operator()(const T0__& y_slice, const T1__& start, const T2__& end,
-             std::ostream* pstream__, const T3__& a) const {
-    return g1(y_slice, (start + 1), (end + 1), a, pstream__);
   }
 };
 struct f12_rsfunctor__ {
@@ -47092,20 +46915,45 @@ struct f12_rsfunctor__ {
     return f12(y_slice, (start + 1), (end + 1), pstream__);
   }
 };
-struct g3_rsfunctor__ {
-  template <typename T0__, typename T1__, typename T2__, typename T3__,
+struct f1_rsfunctor__ {
+  template <typename T0__, typename T1__, typename T2__,
             stan::require_all_t<stan::is_std_vector<T0__>,
                                 stan::math::disjunction<stan::is_autodiff_scalar<
                                                           stan::value_type_t<T0__>>,
                                   stan::is_floating_point<stan::value_type_t<T0__>>>,
                                 stan::is_integral<T1__>,
-                                stan::is_integral<T2__>,
-                                stan::is_row_vector<T3__>,
-                                stan::is_vt_not_complex<T3__>>* = nullptr>
-  stan::return_type_t<stan::base_type_t<T0__>, stan::base_type_t<T3__>>
+                                stan::is_integral<T2__>>* = nullptr>
+  stan::return_type_t<stan::base_type_t<T0__>>
   operator()(const T0__& y_slice, const T1__& start, const T2__& end,
-             std::ostream* pstream__, const T3__& a) const {
-    return g3(y_slice, (start + 1), (end + 1), a, pstream__);
+             std::ostream* pstream__) const {
+    return f1(y_slice, (start + 1), (end + 1), pstream__);
+  }
+};
+struct f1a_rsfunctor__ {
+  template <typename T0__, typename T1__, typename T2__,
+            stan::require_all_t<stan::is_std_vector<T0__>,
+                                stan::math::disjunction<stan::is_autodiff_scalar<
+                                                          stan::value_type_t<T0__>>,
+                                  stan::is_floating_point<stan::value_type_t<T0__>>>,
+                                stan::is_integral<T1__>,
+                                stan::is_integral<T2__>>* = nullptr>
+  stan::return_type_t<stan::base_type_t<T0__>>
+  operator()(const T0__& y_slice, const T1__& start, const T2__& end,
+             std::ostream* pstream__) const {
+    return f1a(y_slice, (start + 1), (end + 1), pstream__);
+  }
+};
+struct f2_rsfunctor__ {
+  template <typename T0__, typename T1__, typename T2__,
+            stan::require_all_t<stan::is_std_vector<T0__>,
+                                stan::is_col_vector<stan::value_type_t<T0__>>,
+                                stan::is_vt_not_complex<stan::value_type_t<T0__>>,
+                                stan::is_integral<T1__>,
+                                stan::is_integral<T2__>>* = nullptr>
+  stan::return_type_t<stan::base_type_t<T0__>>
+  operator()(const T0__& y_slice, const T1__& start, const T2__& end,
+             std::ostream* pstream__) const {
+    return f2(y_slice, (start + 1), (end + 1), pstream__);
   }
 };
 struct f3_rsfunctor__ {
@@ -47121,17 +46969,34 @@ struct f3_rsfunctor__ {
     return f3(y_slice, (start + 1), (end + 1), pstream__);
   }
 };
-struct f2_rsfunctor__ {
+struct f4_rsfunctor__ {
   template <typename T0__, typename T1__, typename T2__,
             stan::require_all_t<stan::is_std_vector<T0__>,
-                                stan::is_col_vector<stan::value_type_t<T0__>>,
+                                stan::is_eigen_matrix_dynamic<stan::value_type_t<T0__>>,
                                 stan::is_vt_not_complex<stan::value_type_t<T0__>>,
                                 stan::is_integral<T1__>,
                                 stan::is_integral<T2__>>* = nullptr>
   stan::return_type_t<stan::base_type_t<T0__>>
   operator()(const T0__& y_slice, const T1__& start, const T2__& end,
              std::ostream* pstream__) const {
-    return f2(y_slice, (start + 1), (end + 1), pstream__);
+    return f4(y_slice, (start + 1), (end + 1), pstream__);
+  }
+};
+struct f5_rsfunctor__ {
+  template <typename T0__, typename T1__, typename T2__,
+            stan::require_all_t<stan::is_std_vector<T0__>,
+                                stan::is_std_vector<stan::value_type_t<T0__>>,
+                                stan::math::disjunction<stan::is_autodiff_scalar<
+                                                          stan::value_type_t<
+                                                            stan::value_type_t<T0__>>>,
+                                  stan::is_floating_point<stan::value_type_t<
+                                                            stan::value_type_t<T0__>>>>,
+                                stan::is_integral<T1__>,
+                                stan::is_integral<T2__>>* = nullptr>
+  stan::return_type_t<stan::base_type_t<T0__>>
+  operator()(const T0__& y_slice, const T1__& start, const T2__& end,
+             std::ostream* pstream__) const {
+    return f5(y_slice, (start + 1), (end + 1), pstream__);
   }
 };
 struct f6_rsfunctor__ {
@@ -47150,20 +47015,48 @@ struct f6_rsfunctor__ {
     return f6(y_slice, (start + 1), (end + 1), pstream__);
   }
 };
-struct g2_rsfunctor__ {
-  template <typename T0__, typename T1__, typename T2__, typename T3__,
+struct f7_rsfunctor__ {
+  template <typename T0__, typename T1__, typename T2__,
             stan::require_all_t<stan::is_std_vector<T0__>,
-                                stan::math::disjunction<stan::is_autodiff_scalar<
-                                                          stan::value_type_t<T0__>>,
-                                  stan::is_floating_point<stan::value_type_t<T0__>>>,
+                                stan::is_std_vector<stan::value_type_t<T0__>>,
+                                stan::is_row_vector<stan::value_type_t<
+                                                      stan::value_type_t<T0__>>>,
+                                stan::is_vt_not_complex<stan::value_type_t<
+                                                          stan::value_type_t<T0__>>>,
                                 stan::is_integral<T1__>,
-                                stan::is_integral<T2__>,
-                                stan::is_col_vector<T3__>,
-                                stan::is_vt_not_complex<T3__>>* = nullptr>
-  stan::return_type_t<stan::base_type_t<T0__>, stan::base_type_t<T3__>>
+                                stan::is_integral<T2__>>* = nullptr>
+  stan::return_type_t<stan::base_type_t<T0__>>
   operator()(const T0__& y_slice, const T1__& start, const T2__& end,
-             std::ostream* pstream__, const T3__& a) const {
-    return g2(y_slice, (start + 1), (end + 1), a, pstream__);
+             std::ostream* pstream__) const {
+    return f7(y_slice, (start + 1), (end + 1), pstream__);
+  }
+};
+struct f8_rsfunctor__ {
+  template <typename T0__, typename T1__, typename T2__,
+            stan::require_all_t<stan::is_std_vector<T0__>,
+                                stan::is_std_vector<stan::value_type_t<T0__>>,
+                                stan::is_eigen_matrix_dynamic<stan::value_type_t<
+                                                                stan::value_type_t<T0__>>>,
+                                stan::is_vt_not_complex<stan::value_type_t<
+                                                          stan::value_type_t<T0__>>>,
+                                stan::is_integral<T1__>,
+                                stan::is_integral<T2__>>* = nullptr>
+  stan::return_type_t<stan::base_type_t<T0__>>
+  operator()(const T0__& y_slice, const T1__& start, const T2__& end,
+             std::ostream* pstream__) const {
+    return f8(y_slice, (start + 1), (end + 1), pstream__);
+  }
+};
+struct f9_rsfunctor__ {
+  template <typename T0__, typename T1__, typename T2__,
+            stan::require_all_t<stan::is_std_vector<T0__>,
+                                stan::is_integral<stan::value_type_t<T0__>>,
+                                stan::is_integral<T1__>,
+                                stan::is_integral<T2__>>* = nullptr>
+  double
+  operator()(const T0__& y_slice, const T1__& start, const T2__& end,
+             std::ostream* pstream__) const {
+    return f9(y_slice, (start + 1), (end + 1), pstream__);
   }
 };
 struct g10_rsfunctor__ {
@@ -47186,20 +47079,24 @@ struct g10_rsfunctor__ {
     return g10(y_slice, (start + 1), (end + 1), a, pstream__);
   }
 };
-struct f8_rsfunctor__ {
-  template <typename T0__, typename T1__, typename T2__,
+struct g11_rsfunctor__ {
+  template <typename T0__, typename T1__, typename T2__, typename T3__,
             stan::require_all_t<stan::is_std_vector<T0__>,
-                                stan::is_std_vector<stan::value_type_t<T0__>>,
-                                stan::is_eigen_matrix_dynamic<stan::value_type_t<
-                                                                stan::value_type_t<T0__>>>,
-                                stan::is_vt_not_complex<stan::value_type_t<
-                                                          stan::value_type_t<T0__>>>,
+                                stan::math::disjunction<stan::is_autodiff_scalar<
+                                                          stan::value_type_t<T0__>>,
+                                  stan::is_floating_point<stan::value_type_t<T0__>>>,
                                 stan::is_integral<T1__>,
-                                stan::is_integral<T2__>>* = nullptr>
-  stan::return_type_t<stan::base_type_t<T0__>>
+                                stan::is_integral<T2__>,
+                                stan::is_std_vector<T3__>,
+                                stan::is_std_vector<stan::value_type_t<T3__>>,
+                                stan::is_row_vector<stan::value_type_t<
+                                                      stan::value_type_t<T3__>>>,
+                                stan::is_vt_not_complex<stan::value_type_t<
+                                                          stan::value_type_t<T3__>>>>* = nullptr>
+  stan::return_type_t<stan::base_type_t<T0__>, stan::base_type_t<T3__>>
   operator()(const T0__& y_slice, const T1__& start, const T2__& end,
-             std::ostream* pstream__) const {
-    return f8(y_slice, (start + 1), (end + 1), pstream__);
+             std::ostream* pstream__, const T3__& a) const {
+    return g11(y_slice, (start + 1), (end + 1), a, pstream__);
   }
 };
 struct g12_rsfunctor__ {
@@ -47222,29 +47119,158 @@ struct g12_rsfunctor__ {
     return g12(y_slice, (start + 1), (end + 1), a, pstream__);
   }
 };
-struct f9_rsfunctor__ {
-  template <typename T0__, typename T1__, typename T2__,
+struct g1_rsfunctor__ {
+  template <typename T0__, typename T1__, typename T2__, typename T3__,
             stan::require_all_t<stan::is_std_vector<T0__>,
-                                stan::is_integral<stan::value_type_t<T0__>>,
+                                stan::math::disjunction<stan::is_autodiff_scalar<
+                                                          stan::value_type_t<T0__>>,
+                                  stan::is_floating_point<stan::value_type_t<T0__>>>,
                                 stan::is_integral<T1__>,
-                                stan::is_integral<T2__>>* = nullptr>
-  double
+                                stan::is_integral<T2__>,
+                                stan::math::disjunction<stan::is_autodiff_scalar<T3__>,
+                                  stan::is_floating_point<T3__>>>* = nullptr>
+  stan::return_type_t<stan::base_type_t<T0__>, T3__>
   operator()(const T0__& y_slice, const T1__& start, const T2__& end,
-             std::ostream* pstream__) const {
-    return f9(y_slice, (start + 1), (end + 1), pstream__);
+             std::ostream* pstream__, const T3__& a) const {
+    return g1(y_slice, (start + 1), (end + 1), a, pstream__);
   }
 };
-struct f4_rsfunctor__ {
-  template <typename T0__, typename T1__, typename T2__,
+struct g2_rsfunctor__ {
+  template <typename T0__, typename T1__, typename T2__, typename T3__,
             stan::require_all_t<stan::is_std_vector<T0__>,
-                                stan::is_eigen_matrix_dynamic<stan::value_type_t<T0__>>,
-                                stan::is_vt_not_complex<stan::value_type_t<T0__>>,
+                                stan::math::disjunction<stan::is_autodiff_scalar<
+                                                          stan::value_type_t<T0__>>,
+                                  stan::is_floating_point<stan::value_type_t<T0__>>>,
                                 stan::is_integral<T1__>,
-                                stan::is_integral<T2__>>* = nullptr>
-  stan::return_type_t<stan::base_type_t<T0__>>
+                                stan::is_integral<T2__>,
+                                stan::is_col_vector<T3__>,
+                                stan::is_vt_not_complex<T3__>>* = nullptr>
+  stan::return_type_t<stan::base_type_t<T0__>, stan::base_type_t<T3__>>
   operator()(const T0__& y_slice, const T1__& start, const T2__& end,
-             std::ostream* pstream__) const {
-    return f4(y_slice, (start + 1), (end + 1), pstream__);
+             std::ostream* pstream__, const T3__& a) const {
+    return g2(y_slice, (start + 1), (end + 1), a, pstream__);
+  }
+};
+struct g3_rsfunctor__ {
+  template <typename T0__, typename T1__, typename T2__, typename T3__,
+            stan::require_all_t<stan::is_std_vector<T0__>,
+                                stan::math::disjunction<stan::is_autodiff_scalar<
+                                                          stan::value_type_t<T0__>>,
+                                  stan::is_floating_point<stan::value_type_t<T0__>>>,
+                                stan::is_integral<T1__>,
+                                stan::is_integral<T2__>,
+                                stan::is_row_vector<T3__>,
+                                stan::is_vt_not_complex<T3__>>* = nullptr>
+  stan::return_type_t<stan::base_type_t<T0__>, stan::base_type_t<T3__>>
+  operator()(const T0__& y_slice, const T1__& start, const T2__& end,
+             std::ostream* pstream__, const T3__& a) const {
+    return g3(y_slice, (start + 1), (end + 1), a, pstream__);
+  }
+};
+struct g4_rsfunctor__ {
+  template <typename T0__, typename T1__, typename T2__, typename T3__,
+            stan::require_all_t<stan::is_std_vector<T0__>,
+                                stan::math::disjunction<stan::is_autodiff_scalar<
+                                                          stan::value_type_t<T0__>>,
+                                  stan::is_floating_point<stan::value_type_t<T0__>>>,
+                                stan::is_integral<T1__>,
+                                stan::is_integral<T2__>,
+                                stan::is_eigen_matrix_dynamic<T3__>,
+                                stan::is_vt_not_complex<T3__>>* = nullptr>
+  stan::return_type_t<stan::base_type_t<T0__>, stan::base_type_t<T3__>>
+  operator()(const T0__& y_slice, const T1__& start, const T2__& end,
+             std::ostream* pstream__, const T3__& a) const {
+    return g4(y_slice, (start + 1), (end + 1), a, pstream__);
+  }
+};
+struct g5_rsfunctor__ {
+  template <typename T0__, typename T1__, typename T2__, typename T3__,
+            stan::require_all_t<stan::is_std_vector<T0__>,
+                                stan::math::disjunction<stan::is_autodiff_scalar<
+                                                          stan::value_type_t<T0__>>,
+                                  stan::is_floating_point<stan::value_type_t<T0__>>>,
+                                stan::is_integral<T1__>,
+                                stan::is_integral<T2__>,
+                                stan::is_std_vector<T3__>,
+                                stan::math::disjunction<stan::is_autodiff_scalar<
+                                                          stan::value_type_t<T3__>>,
+                                  stan::is_floating_point<stan::value_type_t<T3__>>>>* = nullptr>
+  stan::return_type_t<stan::base_type_t<T0__>, stan::base_type_t<T3__>>
+  operator()(const T0__& y_slice, const T1__& start, const T2__& end,
+             std::ostream* pstream__, const T3__& a) const {
+    return g5(y_slice, (start + 1), (end + 1), a, pstream__);
+  }
+};
+struct g6_rsfunctor__ {
+  template <typename T0__, typename T1__, typename T2__, typename T3__,
+            stan::require_all_t<stan::is_std_vector<T0__>,
+                                stan::math::disjunction<stan::is_autodiff_scalar<
+                                                          stan::value_type_t<T0__>>,
+                                  stan::is_floating_point<stan::value_type_t<T0__>>>,
+                                stan::is_integral<T1__>,
+                                stan::is_integral<T2__>,
+                                stan::is_std_vector<T3__>,
+                                stan::is_col_vector<stan::value_type_t<T3__>>,
+                                stan::is_vt_not_complex<stan::value_type_t<T3__>>>* = nullptr>
+  stan::return_type_t<stan::base_type_t<T0__>, stan::base_type_t<T3__>>
+  operator()(const T0__& y_slice, const T1__& start, const T2__& end,
+             std::ostream* pstream__, const T3__& a) const {
+    return g6(y_slice, (start + 1), (end + 1), a, pstream__);
+  }
+};
+struct g7_rsfunctor__ {
+  template <typename T0__, typename T1__, typename T2__, typename T3__,
+            stan::require_all_t<stan::is_std_vector<T0__>,
+                                stan::math::disjunction<stan::is_autodiff_scalar<
+                                                          stan::value_type_t<T0__>>,
+                                  stan::is_floating_point<stan::value_type_t<T0__>>>,
+                                stan::is_integral<T1__>,
+                                stan::is_integral<T2__>,
+                                stan::is_std_vector<T3__>,
+                                stan::is_row_vector<stan::value_type_t<T3__>>,
+                                stan::is_vt_not_complex<stan::value_type_t<T3__>>>* = nullptr>
+  stan::return_type_t<stan::base_type_t<T0__>, stan::base_type_t<T3__>>
+  operator()(const T0__& y_slice, const T1__& start, const T2__& end,
+             std::ostream* pstream__, const T3__& a) const {
+    return g7(y_slice, (start + 1), (end + 1), a, pstream__);
+  }
+};
+struct g8_rsfunctor__ {
+  template <typename T0__, typename T1__, typename T2__, typename T3__,
+            stan::require_all_t<stan::is_std_vector<T0__>,
+                                stan::math::disjunction<stan::is_autodiff_scalar<
+                                                          stan::value_type_t<T0__>>,
+                                  stan::is_floating_point<stan::value_type_t<T0__>>>,
+                                stan::is_integral<T1__>,
+                                stan::is_integral<T2__>,
+                                stan::is_std_vector<T3__>,
+                                stan::is_eigen_matrix_dynamic<stan::value_type_t<T3__>>,
+                                stan::is_vt_not_complex<stan::value_type_t<T3__>>>* = nullptr>
+  stan::return_type_t<stan::base_type_t<T0__>, stan::base_type_t<T3__>>
+  operator()(const T0__& y_slice, const T1__& start, const T2__& end,
+             std::ostream* pstream__, const T3__& a) const {
+    return g8(y_slice, (start + 1), (end + 1), a, pstream__);
+  }
+};
+struct g9_rsfunctor__ {
+  template <typename T0__, typename T1__, typename T2__, typename T3__,
+            stan::require_all_t<stan::is_std_vector<T0__>,
+                                stan::math::disjunction<stan::is_autodiff_scalar<
+                                                          stan::value_type_t<T0__>>,
+                                  stan::is_floating_point<stan::value_type_t<T0__>>>,
+                                stan::is_integral<T1__>,
+                                stan::is_integral<T2__>,
+                                stan::is_std_vector<T3__>,
+                                stan::is_std_vector<stan::value_type_t<T3__>>,
+                                stan::math::disjunction<stan::is_autodiff_scalar<
+                                                          stan::value_type_t<
+                                                            stan::value_type_t<T3__>>>,
+                                  stan::is_floating_point<stan::value_type_t<
+                                                            stan::value_type_t<T3__>>>>>* = nullptr>
+  stan::return_type_t<stan::base_type_t<T0__>, stan::base_type_t<T3__>>
+  operator()(const T0__& y_slice, const T1__& start, const T2__& end,
+             std::ostream* pstream__, const T3__& a) const {
+    return g9(y_slice, (start + 1), (end + 1), a, pstream__);
   }
 };
 struct s_rsfunctor__ {
@@ -47345,36 +47371,6 @@ struct s_rsfunctor__ {
              const T17__& o, const T18__& p, const T19__& q) const {
     return s(y_slice, (start + 1), (end + 1), a, b, c, d, e, f, g, h, i, j,
              k, l, m, n, o, p, q, pstream__);
-  }
-};
-struct f7_rsfunctor__ {
-  template <typename T0__, typename T1__, typename T2__,
-            stan::require_all_t<stan::is_std_vector<T0__>,
-                                stan::is_std_vector<stan::value_type_t<T0__>>,
-                                stan::is_row_vector<stan::value_type_t<
-                                                      stan::value_type_t<T0__>>>,
-                                stan::is_vt_not_complex<stan::value_type_t<
-                                                          stan::value_type_t<T0__>>>,
-                                stan::is_integral<T1__>,
-                                stan::is_integral<T2__>>* = nullptr>
-  stan::return_type_t<stan::base_type_t<T0__>>
-  operator()(const T0__& y_slice, const T1__& start, const T2__& end,
-             std::ostream* pstream__) const {
-    return f7(y_slice, (start + 1), (end + 1), pstream__);
-  }
-};
-struct f1a_rsfunctor__ {
-  template <typename T0__, typename T1__, typename T2__,
-            stan::require_all_t<stan::is_std_vector<T0__>,
-                                stan::math::disjunction<stan::is_autodiff_scalar<
-                                                          stan::value_type_t<T0__>>,
-                                  stan::is_floating_point<stan::value_type_t<T0__>>>,
-                                stan::is_integral<T1__>,
-                                stan::is_integral<T2__>>* = nullptr>
-  stan::return_type_t<stan::base_type_t<T0__>>
-  operator()(const T0__& y_slice, const T1__& start, const T2__& end,
-             std::ostream* pstream__) const {
-    return f1a(y_slice, (start + 1), (end + 1), pstream__);
   }
 };
 // real f1(array[] real, int, int)
@@ -52109,8 +52105,6 @@ class shadowing_model final : public model_base_crtp<shadowing_model> {
       current_statement__ = 48;
       stan::math::validate_non_negative_index("called", "1", 1);
       current_statement__ = 49;
-      result_1dim__ = std::numeric_limits<int>::min();
-      current_statement__ = 49;
       result_1dim__ = stan::math::num_elements(x);
       current_statement__ = 49;
       stan::math::validate_non_negative_index("result", "num_elements(x)",
@@ -55010,15 +55004,11 @@ class sum_to_zero_model final : public model_base_crtp<sum_to_zero_model> {
       current_statement__ = 25;
       stan::math::validate_positive_index("p_stzm", "N", N);
       current_statement__ = 26;
-      p_stzm_2dim__ = std::numeric_limits<int>::min();
-      current_statement__ = 26;
       p_stzm_2dim__ = (N + 1);
       current_statement__ = 26;
       stan::math::validate_positive_index("p_stzm", "N + 1", p_stzm_2dim__);
       current_statement__ = 27;
       stan::math::validate_positive_index("p_astzm", "N", N);
-      current_statement__ = 28;
-      p_astzm_4dim__ = std::numeric_limits<int>::min();
       current_statement__ = 28;
       p_astzm_4dim__ = (N + 1);
       current_statement__ = 28;

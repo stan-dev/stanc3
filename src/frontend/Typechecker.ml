@@ -276,7 +276,8 @@ let verify_unnormalized cf loc id =
     && not (in_udf_distribution cf || cf.current_block = Model)
   then Semantic_error.invalid_unnormalized_fn loc id.name |> error
 
-let check_id cf loc tenv id =
+let check_id cf tenv id =
+  let loc = id.id_loc in
   let (value :: _) =
     Env.find tenv (Utils.stdlib_distribution_name id.name)
     |> Common.Nonempty_list.of_list
@@ -308,7 +309,7 @@ let check_id cf loc tenv id =
       (calculate_autodifftype cf Functions type_, type_)
 
 let check_variable cf loc tenv id =
-  let ad_level, type_ = check_id cf loc tenv id in
+  let ad_level, type_ = check_id cf tenv id in
   mk_typed_expression ~expr:(Variable id) ~ad_level ~type_ ~loc
 
 let get_consistent_types type_ es =
@@ -1470,7 +1471,7 @@ let rec check_lvalue cf tenv {lval; lmeta= ({loc} : located_meta)} =
   | LVariable id ->
       verify_identifier id;
       verify_assignable_id id.id_loc cf tenv id;
-      let ad_level, type_ = check_id cf loc tenv id in
+      let ad_level, type_ = check_id cf tenv id in
       {lval= LVariable id; lmeta= {ad_level; type_; loc}}
   | LTupleProjection (lval, idx) -> (
       let tlval = (check_lvalue cf tenv) lval in
