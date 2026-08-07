@@ -880,11 +880,13 @@ and check_laplace_fn ~is_cond_dist loc cf tenv id tes =
     else
       (* likelihood callback check *)
       match tes with
-      | _ :: {emeta={ad_level; loc; _}; expr} :: _
-        when is_laplace_latent_solve id.name && UnsizedType.is_autodifftype ad_level ->
-          let es = match expr with | TupleExpr es -> es | _ -> [] in
-          let loc = List.find_map es ~f:(fun {emeta={loc;ad_level;_};_} ->
-            Option.some_if (UnsizedType.is_autodifftype ad_level) loc)
+      | _ :: {emeta= {ad_level; loc; _}; expr} :: _
+        when is_laplace_latent_solve id.name
+             && UnsizedType.is_autodifftype ad_level ->
+          let es = match expr with TupleExpr es -> es | _ -> [] in
+          let loc =
+            List.find_map es ~f:(fun {emeta= {loc; ad_level; _}; _} ->
+                Option.some_if (UnsizedType.is_autodifftype ad_level) loc)
             |> Option.value ~default:loc in
           Semantic_error.invalid_laplace_latent_solve_fn loc |> error
       | {expr= Variable lik_fun; _} :: lik_tupl :: tes ->
@@ -917,11 +919,13 @@ and check_laplace_fn ~is_cond_dist loc cf tenv id tes =
         |> error in
   (* Check the remaining arguments: initial guess, covariance, and tolerances *)
   match rest with
-  | _ :: {emeta={ad_level; loc; _}; expr} :: _
-    when is_laplace_latent_solve id.name && UnsizedType.is_autodifftype ad_level ->
-      let es = match expr with | TupleExpr es -> es | _ -> [] in
-      let loc = List.find_map es ~f:(fun {emeta={loc;ad_level;_};_} ->
-        Option.some_if (UnsizedType.is_autodifftype ad_level) loc)
+  | _ :: {emeta= {ad_level; loc; _}; expr} :: _
+    when is_laplace_latent_solve id.name && UnsizedType.is_autodifftype ad_level
+    ->
+      let es = match expr with TupleExpr es -> es | _ -> [] in
+      let loc =
+        List.find_map es ~f:(fun {emeta= {loc; ad_level; _}; _} ->
+            Option.some_if (UnsizedType.is_autodifftype ad_level) loc)
         |> Option.value ~default:loc in
       Semantic_error.invalid_laplace_latent_solve_fn loc |> error
   | {expr= Variable cov_fun; _} :: cov_tupl :: control_args ->

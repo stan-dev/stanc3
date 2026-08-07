@@ -513,8 +513,8 @@ module ExpressionError = struct
   let pp ppf = function
     | InvalidLaplaceLatentSolveFunction ->
         Fmt.text ppf
-          "Arguments to laplace_latent_solve and laplace_latent_solve_tol \
-           must be data if used outside the generated quantities block."
+          "Arguments to laplace_latent_solve and laplace_latent_solve_tol must \
+           be data if used outside the generated quantities block."
     | InvalidSizeDeclRng ->
         Fmt.pf ppf
           "Random number generators are not allowed in top level size \
