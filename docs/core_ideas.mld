@@ -27,7 +27,7 @@ This is built on the OCaml standard library, but with a few differences:
 If for some reason you {e need} functionality from the OCaml standard library that is not available from
 our re-exports, you can use the module [Stdlib] to access the built-in versions.
 
-Another difference between our code base and 'normal' OCaml is our use of of {b deriving}.
+Another difference between our code base and 'normal' OCaml is our use of {b deriving}.
 
 {2 Deriving functions}
 
