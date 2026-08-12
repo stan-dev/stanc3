@@ -7,8 +7,8 @@ let trans_fn_kind kind name =
   | Ast.StanLib suffix -> Fun_kind.StanLib (fname, suffix, AoS)
   | UserDefined suffix -> UserDefined (fname, suffix)
 
-let without_underscores =
-  String.concat_map ~sep:"" ~f:(function '_' -> "" | c -> String.of_char c)
+let without_underscores s =
+  String.split_on_char ~sep:'_' s |> String.concat ~sep:""
 
 let drop_leading_zeros s =
   match String.find_first_index (fun c -> c <> '0') s with
