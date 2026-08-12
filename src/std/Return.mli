@@ -1,3 +1,3 @@
 (** Early returns *)
 
-val with_return : 'a 'b. (('a -> 'b) -> 'a) -> 'a
+val with_return : 'a. (('b. 'a -> 'b) -> 'a) -> 'a

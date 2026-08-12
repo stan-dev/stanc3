@@ -1,8 +1,8 @@
-let with_return : 'a 'b. (('a -> 'b) -> 'a) -> 'a =
- fun (type a) f ->
+let with_return (type a) (f : ('b. a -> 'b) -> a) =
   let live = ref true in
   let exception Return of a in
-  let return r =
+  let return : 'b. a -> 'b =
+   fun r ->
     if !live then raise_notrace (Return r)
     else failwith "Called return outside of with_return scope!" in
   try
