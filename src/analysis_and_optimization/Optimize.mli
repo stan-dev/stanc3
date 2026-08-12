@@ -14,6 +14,11 @@ val one_step_loop_unrolling : Program.Typed.t -> Program.Typed.t
 (** Unroll all loops for one iteration, as long as they do not contain break or
     continue statements in their body at the top level *)
 
+val vectorize_loops : Program.Typed.t -> Program.Typed.t
+(** Rewrite loops whose body is a single scalar density statement into the
+    equivalent vectorized density call, when one exists in the Stan Math
+    signatures *)
+
 val list_collapsing : Program.Typed.t -> Program.Typed.t
 (** Remove redundant SList constructors from the Mir that might have been
     introduced by other optimizations *)
@@ -68,6 +73,7 @@ type optimization_settings =
   { function_inlining: bool
   ; static_loop_unrolling: bool
   ; one_step_loop_unrolling: bool
+  ; vectorize_loops: bool
   ; list_collapsing: bool
   ; block_fixing: bool
   ; allow_uninitialized_decls: bool

@@ -641,6 +641,135 @@ let unroll_loop_one_step_statement _ =
 let one_step_loop_unrolling mir =
   transform_program_blockwise mir unroll_loop_one_step_statement
 
+(* Loops whose body is a single scalar density statement become the vectorized
+   density Stan Math already provides: [for (n in 1:N) target +=
+   normal_lpdf(y[n] | mu[n], sigma)] becomes [target += normal_lpdf(y | mu,
+   sigma)]. Both forms sum the same terms; the vectorized call shares
+   subcomputations across elements (e.g. log(sigma) once) and allocates O(1)
+   autodiff nodes instead of O(N). Tilde statements are already this shape in
+   the MIR, and their proportionality flag rides along in the function suffix.
+
+   Every argument must either be a scalar invariant in the loop variable or be
+   exactly [x[n]]; an [x[n]] argument becomes the slice [x[lower:upper]], or [x]
+   alone when the range provably spans the declaration. Requiring at least one
+   loop-varying argument keeps a loop of N identical terms from collapsing to
+   one, and requiring invariants to be scalars keeps a container the loop sums
+   over every iteration from being zipped elementwise instead (both rewrites
+   would typecheck; neither is what the loop computed). The rewritten call must
+   typecheck against the Stan Math signatures or the loop is left alone, so the
+   signature table decides which densities vectorize; user-defined densities
+   never do. *)
+let vectorize_loops (mir : Program.Typed.t) =
+  let outer_size = function
+    | SizedType.SVector (_, d)
+     |SRowVector (_, d)
+     |SMatrix (_, d, _)
+     |SArray (_, d) ->
+        Some d
+    | SInt | SReal | SComplex | SComplexVector _ | SComplexRowVector _
+     |SComplexMatrix _ | STuple _ ->
+        None in
+  (* Outer sizes that stay true wherever the variable appears: data and
+     parameters cannot be assigned to or shadowed, and parameters are
+     re-materialized at exactly their declared size. Local and transformed-data
+     containers can be overwritten whole, possibly at another size, so they are
+     only ever sliced explicitly, which needs no size knowledge. *)
+  let trusted_sizes =
+    List.filter_map mir.input_vars ~f:(fun (name, _, st) ->
+        Option.map (outer_size st) ~f:(fun d -> (name, d)))
+    @ List.filter_map mir.output_vars ~f:(fun (name, _, ov) ->
+        match ov.out_block with
+        | Parameters ->
+            Option.map (outer_size ov.out_constrained_st) ~f:(fun d ->
+                (name, d))
+        | TransformedParameters | GeneratedQuantities -> None)
+    |> String.Map.of_alist_exn in
+  let slice sizes ~lower ~upper (base : Expr.Typed.t) =
+    let full_range =
+      Expr.Typed.equal lower Expr.Helpers.loop_bottom
+      &&
+      match base.pattern with
+      | Var v -> Option.exists (Map.find sizes v) ~f:(Expr.Typed.equal upper)
+      | _ -> false in
+    if full_range then base
+    else
+      let type_ =
+        Expr.Helpers.infer_type_of_indexed (Expr.Typed.type_of base)
+          [Between (lower, upper)] in
+      Expr.
+        { pattern= Indexed (base, [Index.Between (lower, upper)])
+        ; meta= {base.meta with type_} } in
+  let classify_arg ~loopvar (arg : Expr.Typed.t) =
+    if not (Set.mem (expr_var_names_set arg) loopvar) then
+      (* Only scalar invariants broadcast. An invariant container argument is
+         summed over anew by every iteration of the scalar loop, but the
+         vectorized call would zip it against the sliced arguments elementwise
+         and both forms typecheck, so this must be ruled out here. *)
+      match Expr.Typed.type_of arg with
+      | UInt | UReal | UComplex -> Some (`Invariant arg)
+      | _ -> None
+    else
+      match arg.pattern with
+      | Indexed (({pattern= Var _; _} as base), [Single {pattern= Var v; _}])
+        when v = loopvar ->
+          Some (`Sliced base)
+      | _ -> None in
+  let vectorize_for sizes ~loopvar ~lower ~upper (body : Stmt.Located.t) =
+    let open Stdlib.Option.Syntax in
+    let* stmt =
+      match body.Stmt.pattern with
+      | Block [s] | SList [s] -> Some s
+      | TargetPE _ -> Some body
+      | _ -> None in
+    let* e, name, suffix, mem, args =
+      match stmt.Stmt.pattern with
+      | TargetPE
+          ({ pattern=
+               FunApp
+                 (StanLib (name, ((FnLpdf _ | FnLpmf _) as suffix), mem), args)
+           ; _ } as e) ->
+          Some (e, name, suffix, mem, args)
+      | _ -> None in
+    let* classified = List.map args ~f:(classify_arg ~loopvar) |> Option.all in
+    let* () =
+      Option.some_if
+        (List.exists classified ~f:(function
+          | `Sliced _ -> true
+          | `Invariant _ -> false))
+        () in
+    let args' =
+      List.map classified ~f:(function
+        | `Invariant arg -> arg
+        | `Sliced base -> slice sizes ~lower ~upper base) in
+    let* () =
+      match
+        Frontend.Typechecker.stan_math_return_type name
+          (List.map ~f:Expr.Typed.fun_arg args')
+      with
+      | Some (ReturnType UReal) -> Some ()
+      | _ -> None in
+    let adlevel =
+      if UnsizedType.any_autodiff (List.map ~f:Expr.Typed.adlevel_of args') then
+        UnsizedType.AutoDiffable
+      else DataOnly in
+    Some
+      (Stmt.Pattern.TargetPE
+         Expr.
+           { pattern= FunApp (StanLib (name, suffix, mem), args')
+           ; meta= {e.meta with adlevel} }) in
+  let vectorize_statement sizes = function
+    | Stmt.Pattern.For {loopvar; lower; upper; body} as s ->
+        Option.value
+          (vectorize_for sizes ~loopvar ~lower ~upper body)
+          ~default:s
+    | s -> s in
+  (* A function argument may share its name with a data variable while having an
+     unrelated size, so function bodies trust nothing. *)
+  transform_program_blockwise mir (fun fd ->
+      let sizes =
+        match fd with Some _ -> String.Map.empty | None -> trusted_sizes in
+      top_down_map_rec_stmt_loc (vectorize_statement sizes))
+
 let collapse_lists_statement _ =
   let rec collapse_lists l =
     match l with
@@ -1242,6 +1371,7 @@ type optimization_settings =
   { function_inlining: bool
   ; static_loop_unrolling: bool
   ; one_step_loop_unrolling: bool
+  ; vectorize_loops: bool
   ; list_collapsing: bool
   ; block_fixing: bool
   ; allow_uninitialized_decls: bool
@@ -1259,6 +1389,7 @@ let settings_const b =
   { function_inlining= b
   ; static_loop_unrolling= b
   ; one_step_loop_unrolling= b
+  ; vectorize_loops= b
   ; list_collapsing= b
   ; block_fixing= b
   ; allow_uninitialized_decls= b
@@ -1284,6 +1415,7 @@ let level_optimizations (lvl : optimization_level) : optimization_settings =
       { function_inlining= true
       ; static_loop_unrolling= false
       ; one_step_loop_unrolling= false
+      ; vectorize_loops= false
       ; list_collapsing= true
       ; block_fixing= true
       ; constant_propagation= true
@@ -1315,6 +1447,11 @@ let optimization_suite ?(settings = all_optimizations) mir =
     ; (constant_propagation ~preserve_stability, settings.constant_propagation)
       (* Book: Dead-code elimination *)
     ; (dead_code_elimination, settings.dead_code_elimination)
+      (* Vectorization consumes whole loops, so it must see them intact: before
+         one-step unrolling peels a first iteration, and before
+         partial_evaluation so the vectorized densities it emits can fuse
+         further (e.g. into GLM primitives). *)
+    ; (vectorize_loops, settings.vectorize_loops)
       (* Matthijs: Before lazy code motion to get loop-invariant code motion *)
     ; (one_step_loop_unrolling, settings.one_step_loop_unrolling)
       (* Matthjis: expression_propagation < partial_evaluation *)

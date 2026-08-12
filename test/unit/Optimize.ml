@@ -3564,3 +3564,299 @@ let%expect_test "Mapping acts recursively" =
   let s' = expr_subst_stmt_base m s in
   Fmt.str "@[<v>%a@]" Stmt.Located.pp (unpattern s') |> print_endline;
   [%expect {| (FnWriteParam(unconstrain_opt())(var y))__(y); |}]
+
+(* ---- loop vectorization ---- *)
+
+let print_vectorized s =
+  let mir = vectorize_loops (reset_and_mir_of_string s) in
+  Fmt.str "@[<v>%a@]" (Fmt.list ~sep:Fmt.cut Stmt.Located.pp) mir.log_prob
+  |> print_endline
+
+let%expect_test "vectorize: full-range density loop becomes one density" =
+  print_vectorized
+    {|
+      data {
+        int<lower=0> N;
+        vector[N] x;
+        vector[N] y;
+      }
+      parameters {
+        real alpha;
+        real beta;
+        real<lower=0> sigma;
+      }
+      model {
+        vector[N] mu = alpha + beta * x;
+        for (n in 1 : N) {
+          target += normal_lpdf(y[n] | mu[n], sigma);
+        }
+      }
+      |};
+  [%expect
+    {|
+    real alpha;
+    real beta;
+    real sigma;
+    {
+      FnValidateSize__("mu", "N", N);
+      vector[N] mu;
+      mu = (alpha + (beta * x));
+      target += normal_lpdf(y, mu[1:N], sigma);
+    }
+    |}]
+
+let%expect_test "vectorize: tilde keeps its propto suffix" =
+  print_vectorized
+    {|
+      data {
+        int<lower=0> N;
+        vector[N] y;
+      }
+      parameters {
+        vector[N] mu;
+        real<lower=0> sigma;
+      }
+      model {
+        for (n in 1 : N) {
+          y[n] ~ normal(mu[n], sigma);
+        }
+      }
+      |};
+  [%expect
+    {|
+    vector[N] mu;
+    real sigma;
+    {
+      target += normal_lupdf(y, mu, sigma);
+    }
+    |}]
+
+let%expect_test "vectorize: partial range slices instead of bailing" =
+  print_vectorized
+    {|
+      data {
+        int<lower=0> N;
+        vector[N] y;
+      }
+      parameters {
+        real mu;
+        real<lower=0> sigma;
+      }
+      model {
+        for (n in 3 : N) {
+          target += normal_lpdf(y[n] | mu, sigma);
+        }
+      }
+      |};
+  [%expect
+    {|
+    real mu;
+    real sigma;
+    {
+      target += normal_lpdf(y[3:N], mu, sigma);
+    }
+    |}]
+
+let%expect_test "vectorize: lpmf over an int outcome array" =
+  print_vectorized
+    {|
+      data {
+        int<lower=0> N;
+        array[N] int<lower=0, upper=1> y;
+      }
+      parameters {
+        vector[N] eta;
+      }
+      model {
+        for (n in 1 : N) {
+          y[n] ~ bernoulli_logit(eta[n]);
+        }
+      }
+      |};
+  [%expect
+    {|
+    vector[N] eta;
+    {
+      target += bernoulli_logit_lupmf(y, eta);
+    }
+    |}]
+
+let%expect_test "vectorize bail: no argument varies with the loop variable" =
+  (* Collapsing this loop would compute one lp term where the target owes N of
+     them. *)
+  print_vectorized
+    {|
+      data {
+        int<lower=0> N;
+      }
+      parameters {
+        real mu;
+        real<lower=0> sigma;
+      }
+      model {
+        for (n in 1 : N) {
+          target += normal_lpdf(0.5 | mu, sigma);
+        }
+      }
+      |};
+  [%expect
+    {|
+    real mu;
+    real sigma;
+    {
+      for(n in 1:N) {
+        target += normal_lpdf(0.5, mu, sigma);
+      }
+    }
+    |}]
+
+let%expect_test "vectorize bail: loop variable used as a value" =
+  print_vectorized
+    {|
+      data {
+        int<lower=0> N;
+        vector[N] y;
+      }
+      parameters {
+        real<lower=0> sigma;
+      }
+      model {
+        for (n in 1 : N) {
+          target += normal_lpdf(y[n] | n, sigma);
+        }
+      }
+      |};
+  [%expect
+    {|
+    real sigma;
+    {
+      for(n in 1:N) {
+        target += normal_lpdf(y[n], promote(n, real, data), sigma);
+      }
+    }
+    |}]
+
+let%expect_test "vectorize bail: truncation lowers to a multi-statement body" =
+  print_vectorized
+    {|
+      data {
+        int<lower=0> N;
+        vector[N] y;
+      }
+      parameters {
+        real mu;
+        real<lower=0> sigma;
+      }
+      model {
+        for (n in 1 : N) {
+          y[n] ~ normal(mu, sigma) T[0, ];
+        }
+      }
+      |};
+  [%expect
+    {|
+    real mu;
+    real sigma;
+    {
+      for(n in 1:N) {
+        target += normal_lupdf(y[n], mu, sigma);
+        if((y[n] < 0)) target += FnNegInf__(); else target += PMinus__(normal_lccdf(
+                                                                       promote(
+                                                                       0, real,
+                                                                       data), mu,
+                                                                       sigma));
+      }
+    }
+    |}]
+
+let%expect_test "vectorize bail: user-defined densities are not vectorized" =
+  print_vectorized
+    {|
+      functions {
+        real foo_lpdf(real y, real mu) {
+          return -square(y - mu);
+        }
+      }
+      data {
+        int<lower=0> N;
+        vector[N] y;
+      }
+      parameters {
+        real mu;
+      }
+      model {
+        for (n in 1 : N) {
+          y[n] ~ foo(mu);
+        }
+      }
+      |};
+  [%expect
+    {|
+    real mu;
+    {
+      for(n in 1:N) {
+        target += foo_lupdf(y[n], mu);
+      }
+    }
+    |}]
+
+let%expect_test "vectorize bail: indirect indexing (vectorized in a later PR)" =
+  print_vectorized
+    {|
+      data {
+        int<lower=0> N;
+        int<lower=1> J;
+        array[N] int<lower=1, upper=J> county;
+        vector[N] y;
+      }
+      parameters {
+        vector[J] alpha;
+        real<lower=0> sigma;
+      }
+      model {
+        for (n in 1 : N) {
+          target += normal_lpdf(y[n] | alpha[county[n]], sigma);
+        }
+      }
+      |};
+  [%expect
+    {|
+    vector[J] alpha;
+    real sigma;
+    {
+      for(n in 1:N) {
+        target += normal_lpdf(y[n], alpha[county[n]], sigma);
+      }
+    }
+    |}]
+
+let%expect_test "vectorize bail: invariant container argument" =
+  (* Each scalar iteration sums over all of mu; the vectorized call would zip mu
+     against y elementwise. Both typecheck, so the classifier must refuse
+     non-scalar invariants. *)
+  print_vectorized
+    {|
+      data {
+        int<lower=0> N;
+        vector[N] y;
+      }
+      parameters {
+        vector[N] mu;
+        real<lower=0> sigma;
+      }
+      model {
+        for (n in 1 : N) {
+          y[n] ~ normal(mu, sigma);
+        }
+      }
+      |};
+  [%expect
+    {|
+    vector[N] mu;
+    real sigma;
+    {
+      for(n in 1:N) {
+        target += normal_lupdf(y[n], mu, sigma);
+      }
+    }
+    |}]
