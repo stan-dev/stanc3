@@ -18,12 +18,8 @@ let strip_redundant_parser_states content =
   (* preserve only the input sentences and the "Concrete Syntax" line *)
   Str.global_replace pattern "\\1\n\\3\n\\5" content
 
-let rec rtrim s =
-  if s = "" then s
-  else
-    match String.get s (String.length s - 1) with
-    | ' ' | '\n' | '\r' -> rtrim (String.drop_last 1 s)
-    | _ -> s
+let rtrim =
+  String.drop_last_while (function ' ' | '\n' | '\r' -> true | _ -> false)
 
 let strip_lines content =
   String.split_all ~sep:"\n" content
