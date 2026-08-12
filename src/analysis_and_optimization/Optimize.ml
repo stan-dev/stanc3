@@ -671,64 +671,123 @@ let cannot_duplicate_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
 let cannot_remove_expr (e : Expr.Typed.t) = expr_any can_side_effect_top_expr e
 
 (* Rewrites e.g. [for (n in 1:N) target += normal_lpdf(y[n] | mu[n], sigma)] to
-   [target += normal_lpdf(y | mu, sigma)]. Tilde statements have the same MIR
-   shape, and the proportionality flag is part of the function suffix, so they
-   are covered too.
+   [target += normal_lpdf(y | mu, sigma)], and [for (n in 1:N) mu[n] = alpha +
+   beta * x[n]] to [mu[1:N] = alpha + beta * x]. Tilde statements have the same
+   MIR shape as target increments, so they are covered too.
 
-   Every argument must be a side-effect-free scalar that is invariant in the
-   loop variable, or exactly [x[n]]. An [x[n]] argument becomes the slice
-   [x[lower:upper]], or [x] alone when the range provably spans the declaration.
-   At least one argument must vary with the loop.
-
-   The rewritten is typechecked against the Stan Math signatures so that the
-   signature table determines which densities vectorize. *)
+   An expression widens when every loop-varying node is [x[n]], [x[idx[n]]], or
+   a StanLib application of widened children that re-typechecks at a container
+   return type, with operators retrying as their elementwise variant. [x[n]]
+   becomes [x[lower:upper]], or [x] alone when the range provably spans the
+   declaration. Loops that do not match are left unchanged. *)
 let vectorize_loops (mir : Program.Typed.t) =
   let outer_size st = List.hd (SizedType.get_dims st) in
-  let trusted_sizes =
-    List.filter_map mir.input_vars ~f:(fun (name, _, st) ->
-        Option.map (outer_size st) ~f:(fun d -> (name, d)))
+  let global_env =
+    List.map mir.input_vars ~f:(fun (name, _, st) ->
+        (name, (SizedType.to_unsized st, outer_size st)))
     @ List.filter_map mir.output_vars ~f:(fun (name, _, ov) ->
         match ov.Program.out_block with
         | GeneratedQuantities -> None
         | Parameters | TransformedParameters ->
-            Option.map (outer_size ov.out_constrained_st) ~f:(fun d ->
-                (name, d)))
+            let st = ov.out_constrained_st in
+            Some (name, (SizedType.to_unsized st, outer_size st)))
     @ List.filter_map mir.prepare_data ~f:(fun stmt ->
         match stmt.Stmt.pattern with
         | Decl {decl_id; decl_type= Type.Sized st; _} ->
-            Option.map (outer_size st) ~f:(fun d -> (decl_id, d))
+            Some (decl_id, (SizedType.to_unsized st, outer_size st))
         | _ -> None)
     |> String.Map.of_list in
-  let spans_declaration sizes ~lower ~upper (base : Expr.Typed.t) =
+  let track_decl env = function
+    | Stmt.Pattern.Decl {decl_id; decl_type; _} ->
+        let size =
+          match decl_type with
+          | Type.Sized st -> outer_size st
+          | Unsized _ -> None in
+        String.Map.add env ~key:decl_id ~data:(Type.to_unsized decl_type, size)
+    | _ -> env in
+  let spans_declaration env ~lower ~upper (base : Expr.Typed.t) =
     Expr.Typed.equal lower Expr.Helpers.loop_bottom
     &&
     match base.pattern with
     | Var v ->
-        Option.exists (Expr.Typed.equal upper) (String.Map.find_opt v sizes)
+        Option.exists
+          (fun (_, size) -> Option.exists (Expr.Typed.equal upper) size)
+          (String.Map.find_opt v env)
     | _ -> false in
-  let vectorize_arg sizes ~loopvar ~lower ~upper (arg : Expr.Typed.t) =
-    match arg with
-    | { pattern=
-          Indexed (({pattern= Var _; _} as base), [Single {pattern= Var v; _}])
-      ; _ }
-      when v = loopvar ->
-        Some
-          (`Sliced
-             (if spans_declaration sizes ~lower ~upper base then base
-              else
-                Expr.Helpers.add_int_index base (Index.Between (lower, upper))))
-    | {meta= {type_= UInt | UReal | UComplex; _}; _}
-      when (not (Set.Poly.mem loopvar (expr_var_names_set arg)))
-           && not (cannot_remove_expr arg) ->
-        Some (`Invariant arg)
+  let slice env ~lower ~upper (base : Expr.Typed.t) =
+    if spans_declaration env ~lower ~upper base then base
+    else Expr.Helpers.add_int_index base (Index.Between (lower, upper)) in
+  let return_type name args =
+    let arg_types = List.map ~f:Expr.Typed.fun_arg args in
+    match Operator.of_string_opt name with
+    | Some op ->
+        Option.map
+          (Frontend.Typechecker.operator_stan_math_return_type op arg_types)
+          ~f:fst
+    | None -> Frontend.Typechecker.stan_math_return_type name arg_types in
+  let adlevel_over args =
+    if UnsizedType.any_autodiff (List.map ~f:Expr.Typed.adlevel_of args) then
+      UnsizedType.AutoDiffable
+    else DataOnly in
+  let varies_with loopvar e = Set.Poly.mem loopvar (expr_var_names_set e) in
+  let elt_variant name =
+    match Operator.of_string_opt name with
+    | Some Times -> Some (Operator.to_string EltTimes)
+    | Some Divide -> Some (Operator.to_string EltDivide)
+    | Some Pow -> Some (Operator.to_string EltPow)
     | _ -> None in
-  let vectorize_for sizes ~loopvar ~lower ~upper (body : Stmt.Located.t) =
+  let widen env ~loopvar ~lower ~upper rhs =
     let open Stdlib.Option.Syntax in
-    let* stmt =
-      match body.Stmt.pattern with
-      | Block [s] | SList [s] -> Some s
-      | TargetPE _ -> Some body
-      | _ -> None in
+    let rec go (e : Expr.Typed.t) =
+      if not (varies_with loopvar e) then
+        if cannot_remove_expr e then None else Some e
+      else
+        let scalar_lane =
+          match Expr.Typed.type_of e with UInt | UReal -> true | _ -> false
+        in
+        match e.pattern with
+        | Indexed (({pattern= Var _; _} as base), [Single {pattern= Var v; _}])
+          when v = loopvar && scalar_lane ->
+            Some (slice env ~lower ~upper base)
+        | Indexed
+            ( ({pattern= Var _; _} as base)
+            , [ Single
+                  { pattern=
+                      Indexed
+                        ( ({pattern= Var _; _} as idx)
+                        , [Single {pattern= Var v; _}] )
+                  ; _ } ] )
+          when v = loopvar && scalar_lane ->
+            Some
+              (Expr.Helpers.add_int_index base
+                 (Index.MultiIndex (slice env ~lower ~upper idx)))
+        | FunApp (StanLib (name, FnPlain, mem), args) when scalar_lane ->
+            let* args' = List.map args ~f:go |> Option.all in
+            let widened name' =
+              match return_type name' args' with
+              | Some (ReturnType ((UVector | URowVector | UArray _) as t)) ->
+                  Some (name', t)
+              | _ -> None in
+            let* name', type_ =
+              match widened name with
+              | Some r -> Some r
+              | None -> (
+                  match elt_variant name with
+                  | Some name' -> widened name'
+                  | None -> None) in
+            Some
+              Expr.
+                { pattern= FunApp (StanLib (name', FnPlain, mem), args')
+                ; meta= {e.meta with type_; adlevel= adlevel_over args'} }
+        | _ -> None in
+    go rhs in
+  let singleton (body : Stmt.Located.t) =
+    match body.Stmt.pattern with
+    | Block [s] | SList [s] -> Some s
+    | Assignment _ | TargetPE _ -> Some body
+    | _ -> None in
+  let vectorize_density env ~loopvar ~lower ~upper stmt =
+    let open Stdlib.Option.Syntax in
     let* e, name, suffix, mem, args =
       match stmt.Stmt.pattern with
       | TargetPE
@@ -738,43 +797,81 @@ let vectorize_loops (mir : Program.Typed.t) =
            ; _ } as e) ->
           Some (e, name, suffix, mem, args)
       | _ -> None in
-    let* classified =
-      List.map args ~f:(vectorize_arg sizes ~loopvar ~lower ~upper)
+    let* () = Option.some_if (List.exists args ~f:(varies_with loopvar)) () in
+    let* args' =
+      List.map args ~f:(fun arg ->
+          if not (varies_with loopvar arg) then
+            match Expr.Typed.type_of arg with
+            | (UInt | UReal | UComplex) when not (cannot_remove_expr arg) ->
+                Some arg
+            | _ -> None
+          else widen env ~loopvar ~lower ~upper arg)
       |> Option.all in
     let* () =
-      Option.some_if
-        (List.exists classified ~f:(function
-          | `Sliced _ -> true
-          | `Invariant _ -> false))
-        () in
-    let args' =
-      List.map classified ~f:(function `Invariant e | `Sliced e -> e) in
-    let* () =
-      match
-        Frontend.Typechecker.stan_math_return_type name
-          (List.map ~f:Expr.Typed.fun_arg args')
-      with
+      match return_type name args' with
       | Some (ReturnType UReal) -> Some ()
       | _ -> None in
-    let adlevel =
-      if UnsizedType.any_autodiff (List.map ~f:Expr.Typed.adlevel_of args') then
-        UnsizedType.AutoDiffable
-      else DataOnly in
     Some
       (Stmt.Pattern.TargetPE
          Expr.
            { pattern= FunApp (StanLib (name, suffix, mem), args')
-           ; meta= {e.meta with adlevel} }) in
-  let vectorize_statement sizes = function
-    | Stmt.Pattern.For {loopvar; lower; upper; body} as s ->
-        Option.value
-          (vectorize_for sizes ~loopvar ~lower ~upper body)
-          ~default:s
-    | s -> s in
+           ; meta= {e.meta with adlevel= adlevel_over args'} }) in
+  let vectorize_assign env ~loopvar ~lower ~upper stmt =
+    let open Stdlib.Option.Syntax in
+    let* v, rhs =
+      match stmt.Stmt.pattern with
+      | Assignment ((LVariable v, [Single {pattern= Var i; _}]), _, rhs)
+        when i = loopvar ->
+          Some (v, rhs)
+      | _ -> None in
+    (* The generated for statement re-evaluates its bounds every iteration. *)
+    let reads_v e = Set.Poly.mem v (expr_var_names_set e) in
+    let* () =
+      Option.some_if
+        ((not (reads_v rhs)) && (not (reads_v lower)) && not (reads_v upper))
+        () in
+    let* () = Option.some_if (varies_with loopvar rhs) () in
+    let* rhs' = widen env ~loopvar ~lower ~upper rhs in
+    let* v_type, _ = String.Map.find_opt v env in
+    let* () =
+      Option.some_if (UnsizedType.equal v_type (Expr.Typed.type_of rhs')) ()
+    in
+    Some
+      (Stmt.Pattern.Assignment
+         ( (LVariable v, [Index.Between (lower, upper)])
+         , Expr.Typed.type_of rhs'
+         , rhs' )) in
+  let vectorize_for env ~loopvar ~lower ~upper body =
+    let open Stdlib.Option.Syntax in
+    let* stmt = singleton body in
+    match vectorize_density env ~loopvar ~lower ~upper stmt with
+    | Some p -> Some p
+    | None -> vectorize_assign env ~loopvar ~lower ~upper stmt in
+  let rec go env (stmt : Stmt.Located.t) =
+    match stmt.pattern with
+    | Block stmts -> {stmt with pattern= Block (go_list env stmts)}
+    | SList stmts -> {stmt with pattern= SList (go_list env stmts)}
+    | For {loopvar; lower; upper; body} -> (
+        match vectorize_for env ~loopvar ~lower ~upper body with
+        | Some pattern -> {stmt with pattern}
+        | None ->
+            {stmt with pattern= For {loopvar; lower; upper; body= go env body}})
+    | pattern -> {stmt with pattern= Stmt.Pattern.map Fun.id (go env) pattern}
+  and go_list env stmts =
+    List.rev
+      (snd
+         (List.fold_left stmts ~init:(env, []) ~f:(fun (env, acc) s ->
+              let env = track_decl env s.Stmt.pattern in
+              (env, go env s :: acc)))) in
   transform_program_blockwise mir (fun fd ->
-      let sizes =
-        match fd with Some _ -> String.Map.empty | None -> trusted_sizes in
-      top_down_map_rec_stmt_loc (vectorize_statement sizes))
+      let env =
+        match fd with
+        | Some f ->
+            List.fold_left f.Program.fdargs ~init:String.Map.empty
+              ~f:(fun env (_, name, type_) ->
+                String.Map.add env ~key:name ~data:(type_, None))
+        | None -> global_env in
+      go env)
 
 let collapse_lists_statement _ =
   let rec collapse_lists l =
