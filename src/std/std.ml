@@ -51,24 +51,21 @@ module List = struct
       | e :: l -> if cmp e m < 0 then loop e l else loop m l in
     match l with [] -> None | e :: l -> Some (loop e l)
 
-  let split_n lst n =
-    if n <= 0 then ([], lst)
-    else
-      let rec loop acc n l =
-        match l with
-        | [] -> (lst, [])
-        | e :: rem ->
-            if n = 0 then (rev acc, l) else loop (e :: acc) (n - 1) rem in
-      loop [] n lst
+  let split_n l n =
+    let tl = ref [] in
+    let[@tail_mod_cons] rec aux l n =
+      if n <= 0 then (
+        tl := l;
+        [])
+      else match l with [] -> [] | hd :: tl -> hd :: aux tl (n - 1) in
+    let x = aux l n in
+    (x, !tl)
 
-  let chunks_of l ~length =
-    let rec aux length acc l =
-      match l with
-      | [] -> rev acc
-      | _ :: _ ->
-          let chunk, l = split_n l length in
-          aux length (chunk :: acc) l in
-    aux length [] l
+  let[@tail_mod_cons] rec chunks_of l ~length =
+    if List.is_empty l then []
+    else
+      let chunk, l = split_n l length in
+      chunk :: chunks_of l ~length
 
   let[@tail_mod_cons] rec map3 ~f l1 l2 l3 =
     match (l1, l2, l3) with
@@ -76,7 +73,15 @@ module List = struct
     | x1 :: l1, x2 :: l2, x3 :: l3 -> f x1 x2 x3 :: map3 l1 l2 l3 ~f
     | _, _, _ -> raise (Invalid_argument "List.map3: unequal lengths")
 
-  let concat_mapi ~f l = mapi ~f l |> concat
+  let concat_mapi ~f l =
+    let[@tail_mod_cons] rec concat_mapi f i = function
+      | [] -> []
+      | x :: xs -> prepend_concat_mapi (f i x) f (i + 1) xs
+    and[@tail_mod_cons] prepend_concat_mapi ys f i xs =
+      match ys with
+      | [] -> concat_mapi f i xs
+      | y :: ys -> y :: prepend_concat_mapi ys f i xs in
+    concat_mapi f 0 l
 
   let rec split3 = function
     | [] -> ([], [], [])
