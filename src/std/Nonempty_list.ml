@@ -5,6 +5,5 @@ let of_list : _ list -> _ t option = function
   | hd :: tl -> Some (hd :: tl)
 
 let of_list_exn : _ list -> _ t = function
-  | [] ->
-      ICE.internal_error "Nonempty_list.of_list_exn: empty list" [@coverage off]
+  | [] -> raise (Invalid_argument "Nonempty_list.of_list_exn: empty list")
   | hd :: tl -> hd :: tl

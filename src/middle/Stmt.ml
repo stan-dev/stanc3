@@ -1,4 +1,5 @@
-open Core
+open Std
+open Std.Sexp_conv
 open Common
 
 module Pattern = struct
@@ -306,7 +307,7 @@ module Helpers = struct
   (* Copied from AST's version in AST.ml *)
   let rec lvalue_of_expr_opt (expr : 'e Expr.t) :
       'e Expr.t Pattern.lvalue option =
-    let open Stdlib.Option.Syntax in
+    let open Option.Syntax in
     let lbase_of_expr_opt (expr : 'e Expr.t) =
       match expr.pattern with
       | Var s -> Some (Pattern.LVariable s)

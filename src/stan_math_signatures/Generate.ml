@@ -6,7 +6,7 @@
     combinations, so now it is done by the build system and just stored in the
     binary using the [Marshal] library. *)
 
-open Core
+open Std
 open Middle
 
 (** The "dimensionality" (bad name?) is supposed to help us represent the
@@ -99,14 +99,14 @@ let is_primitive = function
 
 (** The signatures hash table *)
 let (stan_math_signatures : (string, UnsizedType.signature list) Hashtbl.t) =
-  String.Table.create ()
+  Hashtbl.create 512
 
 (** The variadic signatures hash table
 
     These functions cannot be overloaded. *)
 let (stan_math_variadic_signatures :
       (string, UnsizedType.variadic_signature) Hashtbl.t) =
-  String.Table.create ()
+  Hashtbl.create 32
 
 (* XXX The correct word here isn't combination - what is it? *)
 let all_combinations xx =
@@ -189,7 +189,8 @@ let mk_declarative_sig (fnkinds, name, args, mem_pattern) =
             (name, find_rt rt args Rng, args, mem_pattern))
     | fk -> create_from_fk_args fk (all_expanded args) in
   List.concat_map fnkinds ~f:add_fnkind
-  |> List.filter ~f:(fun (n, _, _, _) -> not (Set.mem missing_math_functions n))
+  |> List.filter ~f:(fun (n, _, _, _) ->
+      not (String.Set.mem n missing_math_functions))
   |> List.map ~f:(fun (n, rt, args, support_soa) ->
       ( n
       , rt
@@ -2551,9 +2552,9 @@ let () =
     add_qualified (name, ReturnType UReal, args, AoS) in
   let build_wiener_functions name num_args =
     List.iter [UnsizedType.UReal; UVector] ~f:(fun t ->
-        List.iter num_args ~f:(fun n ->
+        List.iter num_args ~f:(fun len ->
             let normal =
-              List.init n ~f:(Fn.const (UnsizedType.AutoDiffable, t)) in
+              List.init ~len ~f:(Fun.const (UnsizedType.AutoDiffable, t)) in
             build_wiener_function name normal;
             (* grad precision as last argument *)
             build_wiener_function name (normal @ [(DataOnly, UnsizedType.UReal)])))
@@ -2630,7 +2631,7 @@ let add_variadic_fn name ~return_type ?control_args ~required_fn_rt
     ?required_fn_args () =
   let control_args = Option.value control_args ~default:[] in
   let required_fn_args = Option.value required_fn_args ~default:[] in
-  Hashtbl.add_exn stan_math_variadic_signatures ~key:name
+  Hashtbl.add stan_math_variadic_signatures ~key:name
     ~data:
       UnsizedType.{return_type; control_args; required_fn_rt; required_fn_args}
 
@@ -2648,12 +2649,12 @@ let () =
   let add_ode name =
     add_variadic_fn name ~return_type:variadic_ode_return_type
       ~control_args:
-        (if String.is_suffix name ~suffix:ode_tolerances_suffix then
+        (if String.ends_with name ~suffix:ode_tolerances_suffix then
            variadic_ode_mandatory_arg_types @ variadic_ode_tol_arg_types
          else variadic_ode_mandatory_arg_types)
       ~required_fn_rt:variadic_ode_fun_return_type
       ~required_fn_args:variadic_ode_mandatory_fun_args () in
-  Set.iter ~f:add_ode variadic_ode_nonadjoint_fns;
+  String.Set.iter ~f:add_ode variadic_ode_nonadjoint_fns;
   (* Adjoint ODE function *)
   add_variadic_fn variadic_ode_adjoint_fn ~return_type:variadic_ode_return_type
     ~control_args:
@@ -2728,32 +2729,36 @@ let generate_module () =
   let marshal e = Marshal.to_string e [] in
   (* Core's Hashtbl cannot be safely Marshal'd, so we round trip through an
      associative list *)
-  let marshal_hashtbl (type value) (t : value String.Table.t) =
-    marshal (Hashtbl.to_alist t) in
+  let marshal_hashtbl (type value) (t : (string, value) Hashtbl.t) =
+    marshal (Hashtbl.to_seq t |> List.of_seq) in
   let distributions_simplified =
     distributions
     |> List.map ~f:(fun (kind, name, _, _) ->
-        (name, List.map ~f:(Fn.compose String.lowercase show_fkind) kind))
+        (name, List.map ~f:(Fun.compose String.lowercase_ascii show_fkind) kind))
       (* combine any common keys *)
-    |> String.Map.of_alist_reduce ~f:(fun v1 v2 ->
-        v1 @ v2 |> Set.Poly.of_list |> Set.to_list)
-    |> Map.to_alist in
+    |> List.fold_left ~init:String.Map.empty ~f:(fun acc elt ->
+        String.Map.union
+          ~f:(fun _ v1 v2 ->
+            v1 @ v2 |> Set.Poly.of_list |> Set.Poly.to_list |> Option.some)
+          acc (String.Map.of_list [elt]))
+    |> String.Map.to_list in
   Printf.printf
     {|
+open Std
 let unmarshal s = Marshal.from_string s 0
-let unmarshal_hashtbl s : 'a Core.String.Table.t =
-  unmarshal s |> Core.String.Table.of_alist_exn |};
+let unmarshal_hashtbl s : (string, 'a) Hashtbl.t =
+  unmarshal s |> List.to_seq |> Hashtbl.of_seq |};
   Printf.printf
     {|
 let stan_math_signatures :
-    Middle.UnsizedType.signature list Core.String.Table.t Lazy.t=
+    (string, Middle.UnsizedType.signature list) Hashtbl.t Lazy.t=
   lazy (fst @@ Gc.ramp_up @@
         fun () -> unmarshal_hashtbl %S) |}
     (marshal_hashtbl stan_math_signatures);
   Printf.printf
     {|
 let stan_math_variadic_signatures :
-    Middle.UnsizedType.variadic_signature Core.String.Table.t =
+    (string, Middle.UnsizedType.variadic_signature) Hashtbl.t =
   unmarshal_hashtbl %S |}
     (marshal_hashtbl stan_math_variadic_signatures);
   Printf.printf

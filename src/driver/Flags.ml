@@ -1,4 +1,4 @@
-open StdLabels
+open Std
 
 type t =
   { optimization_level: Analysis_and_optimization.Optimize.optimization_level

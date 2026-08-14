@@ -1,4 +1,4 @@
-open Core
+open Std
 open Ast
 open Deprecation_analysis
 
@@ -101,7 +101,7 @@ let rec blocks_stmt ({stmt; smeta} : typed_statement) : typed_statement =
         IfThenElse (e, stmt_to_block s1, Option.map ~f:stmt_to_block s2)
     | For ({loop_body; _} as f) ->
         For {f with loop_body= stmt_to_block loop_body}
-    | _ -> map_statement Fn.id blocks_stmt Fn.id stmt in
+    | _ -> map_statement Fun.id blocks_stmt Fun.id stmt in
   {stmt; smeta}
 
 let canonicalize_program program settings : typed_program =

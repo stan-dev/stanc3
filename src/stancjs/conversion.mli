@@ -1,7 +1,7 @@
+open Std
 open Js_of_ocaml
 
-val get_includes_lenient :
-  'a Js.t Js.opt -> string Core.String.Map.t * string list
+val get_includes_lenient : 'a Js.t Js.opt -> string String.Map.t * string list
 (** Converts from a [{ [s:string]:string }] JS object type to an OCaml map, with
     warnings for bad input. *)
 
@@ -12,7 +12,7 @@ val process_flags :
      Js.js_string Js.t
   -> Js.js_string Js.t
   -> Js.js_string Js.t Js.js_array Js.t Js.opt
-  -> string Core.String.Map.t
+  -> string String.Map.t
   -> (flags, string) result
 (** Turn function inputs into a [Driver.Flags.t] *)
 

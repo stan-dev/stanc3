@@ -1,4 +1,5 @@
-open Core
+open Std
+open Std.Sexp_conv
 
 (***********************************)
 (* Basic datatypes                 *)
@@ -21,3 +22,12 @@ type reaching_defn = vexpr * label [@@deriving sexp_of]
     This isn't included in the traversal_state because it only flows downward
     through the tree, not across and up like everything else *)
 type cf_state = label
+
+module LabelMap = struct
+  include Int.Map
+
+  let sexp_of_t f t = sexp_of_list (sexp_of_pair sexp_of_int f) (to_list t)
+end
+
+module ExprSet = Set.Make (Middle.Expr.Typed)
+module ExprMap = Map.Make (Middle.Expr.Typed)

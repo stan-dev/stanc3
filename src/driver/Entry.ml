@@ -1,4 +1,4 @@
-open Core
+open Std
 open Frontend
 open Stan_math_backend
 open Analysis_and_optimization
@@ -9,19 +9,18 @@ let version = "%%NAME%%3 %%VERSION%%"
 let fmt_sexp s =
   let ppf = Format.str_formatter in
   Format.pp_set_margin ppf 90;
-  Sexp.pp_hum ppf s;
+  Sexplib0.Sexp.pp_hum ppf s;
   Format.flush_str_formatter ()
 
 let set_model_name model_name =
   let mangle =
-    String.concat_map ~f:(fun c ->
-        Char.(
-          if is_alphanum c || c = '_' then to_string c
-          else match c with '-' -> "_" | _ -> "x" ^ Int.to_string (to_int c)))
+    String.concat_map ~sep:"" ~f:(fun c ->
+        if Char.Ascii.is_alphanum c || c = '_' then String.of_char c
+        else match c with '-' -> "_" | _ -> "x" ^ Int.to_string (Char.code c))
   in
   let model_name_munged =
     Common.Files.remove_dotstan
-      List.(hd_exn (rev (String.split model_name ~on:'/'))) in
+      List.(hd_exn (rev (String.split_on_char model_name ~sep:'/'))) in
   if String.equal model_name model_name_munged then
     (* model name was not file-like, so we leave as is (e.g. from --name
        argument) *)
@@ -55,7 +54,7 @@ let debug_output_mir output mir = function
 
 let stan2cpp model_name model (flags : Flags.t) (output : other_output -> unit)
     : compilation_result =
-  let open Stdlib.Result.Syntax in
+  let open Result.Syntax in
   reset_mutable_states model_name flags;
   if flags.version then output (Version (Fmt.str "%s" version));
   let ast, parser_warnings =
@@ -94,7 +93,7 @@ let stan2cpp model_name model (flags : Flags.t) (output : other_output -> unit)
   debug_output_mir output mir flags.debug_settings.print_mir;
   let* generation_context =
     match flags.debug_settings.debug_data_json with
-    | None -> Ok Map.Poly.empty
+    | None -> Ok String.Map.empty
     | Some (ctx, contents) -> (
         try
           Ok

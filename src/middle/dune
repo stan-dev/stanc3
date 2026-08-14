@@ -1,7 +1,7 @@
 (library
  (name middle)
  (public_name stanc.middle)
- (libraries core fmt common)
+ (libraries std fmt common)
  (instrumentation
   (backend bisect_ppx))
  (inline_tests)
@@ -9,8 +9,7 @@
   (pps
    ppx_compare
    ppx_sexp_conv
-   ppx_expect
-   ppx_sexp_value
+   ppx_expect_nobase
    ppx_deriving.map
    ppx_deriving.fold
    ppx_deriving.create

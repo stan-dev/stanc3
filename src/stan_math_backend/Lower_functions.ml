@@ -1,4 +1,4 @@
-open Core
+open Std
 open Middle
 open Lower_expr
 open Lower_stmt
@@ -86,7 +86,7 @@ let return_optional_arg_types (args : Program.fun_arg_decl) =
         [Types.base_type t]
     | _ -> [t] in
   List.concat_mapi args ~f:(fun i (ad, _, ty) ->
-      template_p (TemplateType (sprintf "T%d__" i)) (ad, ty))
+      template_p (TemplateType (Fmt.str "T%d__" i)) (ad, ty))
 
 (** Print template arguments for C++ functions that need templates
     @param args
@@ -108,7 +108,7 @@ let template_parameters (args : Program.fun_arg_decl) =
       ([template], requires typ (TemplateType template), TemplateType template)
   in
   List.mapi args ~f:(fun i (ad, _, ty) ->
-      template_p (sprintf "T%d__" i) (ad, ty))
+      template_p (Fmt.str "T%d__" i) (ad, ty))
 
 let%expect_test "arg types templated correctly" =
   [(AutoDiffable, "xreal", UReal); (AutoDiffable, "yint", UInt)]
@@ -121,9 +121,10 @@ let%expect_test "arg types tuple template" =
     [ ( TupleAD [AutoDiffable; AutoDiffable; DataOnly]
       , "xreal"
       , UTuple [UReal; UMatrix; UInt] ) ]
-    |> template_parameters |> List.unzip3 in
+    |> template_parameters |> List.split3 in
+  let open Std.Sexp_conv in
   templates |> List.concat |> String.concat ~sep:"," |> print_endline;
-  reqs |> List.concat |> List.sexp_of_t sexp_of_template_parameter |> print_s;
+  reqs |> List.concat |> sexp_of_list sexp_of_template_parameter |> print_s;
   type_
   |> Fmt.to_to_string (Fmt.list ~sep:Fmt.comma Cpp.Printing.pp_type_)
   |> print_endline;
@@ -153,9 +154,10 @@ let%expect_test "arg types tuple template" =
 let%expect_test "arg types tuple template" =
   let templates, reqs, type_ =
     [(AutoDiffable, "xreal", UArray (UTuple [UArray UInt; UMatrix]))]
-    |> template_parameters |> List.unzip3 in
+    |> template_parameters |> List.split3 in
+  let open Std.Sexp_conv in
   templates |> List.concat |> String.concat ~sep:"," |> print_endline;
-  reqs |> List.concat |> List.sexp_of_t sexp_of_template_parameter |> print_s;
+  reqs |> List.concat |> sexp_of_list sexp_of_template_parameter |> print_s;
   type_
   |> Fmt.to_to_string (Fmt.list ~sep:Fmt.comma Cpp.Printing.pp_type_)
   |> print_endline;
@@ -229,10 +231,10 @@ let templates_and_args (is_possibly_eigen_expr : bool)
     (fdargs : Program.fun_arg_decl) :
     string list * template_parameter list * (type_ * string) list =
   let arg_type_templates, require_arg_templates, arg_types =
-    template_parameters fdargs |> List.unzip3 in
+    template_parameters fdargs |> List.split3 in
   ( List.concat arg_type_templates
   , List.concat require_arg_templates
-  , List.map2_exn ~f:(lower_arg ~is_possibly_eigen_expr) arg_types fdargs )
+  , List.map2 ~f:(lower_arg ~is_possibly_eigen_expr) arg_types fdargs )
 
 (** Prints boilerplate at start of function. Body of function wrapped in a `try`
     block. *)
@@ -255,7 +257,7 @@ let lower_fun_body fdargs fdsuffix fdbody =
 let mk_extra_args templates args =
   List.map
     ~f:(fun (t, v) -> (Ref (TemplateType t), v))
-    (List.zip_exn templates args)
+    (List.combine templates args)
 
 let lower_args extra_templates extra args variadic =
   let args, variadic_args =
@@ -354,25 +356,26 @@ let get_functor_requirements (p : Program.Numbered.t) =
         let f accum = function
           | { pattern= Var name
             ; meta= {Expr.Typed.Meta.type_= UnsizedType.UFun _; _} } ->
-              Map.add_multi accum
+              String.Map.add_to_list accum
                 ~key:(Utils.stdlib_distribution_name name)
                 ~data:(Lower_expr.functor_type hof)
           | e -> find_functors_expr accum e in
-        List.fold ~init ~f args
+        List.fold_left ~init ~f args
     | {pattern; _} -> Pattern.fold find_functors_expr init pattern in
   let rec find_functors_stmt accum stmt =
     Stmt.(Pattern.fold find_functors_expr find_functors_stmt accum stmt.pattern)
   in
-  Program.fold find_functors_expr find_functors_stmt Fn.const String.Map.empty p
+  Program.fold find_functors_expr find_functors_stmt Fun.const String.Map.empty
+    p
 
 let collect_functors_functions (p : Program.Numbered.t) : defn list =
   let functor_required = get_functor_requirements p in
   (* overloaded functions generate only one functor struct per name *)
-  let structs = String.Table.create () in
+  let structs = Hashtbl.create ~random:false 32 in
   let register_functors (d : _ Program.fun_def) =
     let functors =
-      Map.find_multi functor_required d.fdname
-      |> List.dedup_and_sort ~compare:compare_variadic in
+      String.Map.find_multi d.fdname functor_required
+      |> List.sort_uniq ~cmp:Stdlib.compare in
     let fn, st = lower_fun_def functors d in
     List.iter st ~f:(fun s ->
         (* Side effecting, collates functor structs *)
@@ -388,11 +391,12 @@ let collect_functors_functions (p : Program.Numbered.t) : defn list =
         else
           let decl, defn = Cpp.split_fun_decl_defn fn in
           Some (FunDef decl, [signature_comment d; FunDef defn]))
-    |> List.unzip in
+    |> List.split in
   let structs =
-    Hashtbl.data structs
+    Hashtbl.to_seq_values structs
+    |> List.of_seq
     |> List.stable_sort
-         ~compare:(fun {struct_name; _} {struct_name= struct_name2; _} ->
+         ~cmp:(fun {struct_name; _} {struct_name= struct_name2; _} ->
            String.compare struct_name struct_name2)
     |> List.map ~f:(fun s -> Struct s) in
   fun_decls @ structs @ List.concat fun_defns
@@ -459,8 +463,9 @@ module Testing = struct
              @@ FunApp
                   ( StanLib ("add", FnPlain, AoS)
                   , [w @@ Var "x"; w @@ Lit (Int, "1")] )))
-        |> with_no_loc |> List.return |> Stmt.Pattern.Block |> with_no_loc
-        |> Some
+        |> with_no_loc |> List.singleton
+        |> (fun b -> Stmt.Pattern.Block b)
+        |> with_no_loc |> Option.some
     ; fdloc= Location_span.empty }
     |> str "@[<v>%a" pp_fun_def_test
     |> print_endline;
@@ -520,8 +525,9 @@ module Testing = struct
              @@ FunApp
                   ( StanLib ("add", FnPlain, AoS)
                   , [w @@ Var "x"; w @@ Lit (Int, "1")] )))
-        |> with_no_loc |> List.return |> Stmt.Pattern.Block |> with_no_loc
-        |> Some
+        |> with_no_loc |> List.singleton
+        |> (fun b -> Stmt.Pattern.Block b)
+        |> with_no_loc |> Option.some
     ; fdloc= Location_span.empty }
     |> str "@[<v>%a" pp_fun_def_test
     |> print_endline;

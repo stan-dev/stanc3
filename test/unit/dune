@@ -1,7 +1,7 @@
 (library
  (name unit_tests)
  (libraries
-  core
+  std
   fmt
   frontend
   stan_math_backend
@@ -9,4 +9,4 @@
   analysis_and_optimization)
  (inline_tests)
  (preprocess
-  (pps ppx_expect ppx_inline_test ppx_sexp_value)))
+  (pps ppx_expect_nobase ppx_sexp_value)))

@@ -1,6 +1,7 @@
 (** Language functions defined internally by the compiler *)
 
-open Core
+open Std.Compare
+open Std.Sexp_conv
 
 type 'expr t =
   | FnLength
@@ -36,7 +37,7 @@ let to_string
         (Common.ICE.internal_error
            "Should not be parsing expression from string in function renaming"
          [@coverage off])) x =
-  Sexp.to_string (sexp_of_t expr_to_string x) ^ "__"
+  Sexplib0.Sexp.to_string (sexp_of_t expr_to_string x) ^ "__"
 
 let pp (pp_expr : 'a Fmt.t) ppf internal =
   Fmt.string ppf

@@ -1,6 +1,6 @@
 (executable
  (name stancjs)
- (libraries core fmt js_of_ocaml driver stan_math_signatures)
+ (libraries std fmt js_of_ocaml driver stan_math_signatures)
  (modules Stancjs Conversion)
  (preprocess
   (pps js_of_ocaml-ppx))

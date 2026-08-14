@@ -1,6 +1,6 @@
 (** The parser for Stan. A Menhir file. *)
 %{
-  open Core
+  open Std
   open Middle
   open Ast
   open Debugging
@@ -42,7 +42,7 @@
   let rec iterate_n f x = function 0 -> x | n -> iterate_n f (f x) (n - 1)
 
   let parse_tuple_slot ix_str (start, stop) =
-    let slot = String.drop_prefix ix_str 1 in
+    let slot = String.drop_first 1 ix_str in
     match Int.of_string_opt slot with
     | None ->
         parse_error
@@ -162,8 +162,10 @@ program:
     {
       grammar_logger "program";
       (* check for empty programs *)
-      if List.is_empty (List.filter_opt [ ofb; odb; otdb; opb; otpb; omb; ogb ]) then
-        Input_warnings.empty ();
+      if
+        List.is_empty
+          (List.filter_map ~f:Fun.id [ ofb; odb; otdb; opb; otpb; omb; ogb ])
+      then Input_warnings.empty ();
       {
         functionblock = ofb;
         datablock = odb;
@@ -536,7 +538,7 @@ tuple_type(type_rule):
     {
       grammar_logger "tuple_type";
       let ts = head :: rest in
-      let types, trans = List.unzip ts in
+      let types, trans = List.split ts in
       (SizedType.STuple types, Transformation.TupleTransformation trans)
     }
 
@@ -823,7 +825,7 @@ common_expression:
   | z = IMAGNUMERAL
     {
       grammar_logger ("imagnumeral " ^ z);
-      build_expr (ImagNumeral (String.drop_suffix z 1)) $loc
+      build_expr (ImagNumeral (String.drop_last 1 z)) $loc
     }
   | LBRACE xs = separated_nonempty_list(COMMA, expression) RBRACE
     {
@@ -843,7 +845,7 @@ common_expression:
         if
           List.length args = 1
           && List.exists
-               ~f:(fun x -> String.is_suffix ~suffix:x id.name)
+               ~f:(fun x -> String.ends_with ~suffix:x id.name)
                Utils.conditioning_suffices
         then CondDistApp ((), id, args)
         else FunApp ((), id, args)

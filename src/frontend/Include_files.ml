@@ -1,4 +1,4 @@
-open Core
+open Std
 
 type t = FileSystemPaths of string list | InMemory of string String.Map.t
 

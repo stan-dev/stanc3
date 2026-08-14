@@ -1,10 +1,10 @@
 (** Code for optimization passes on the MIR *)
 
-open Core
-open Core.Poly
+open Std
 open Common
 open Middle
 open Mir_utils
+open Dataflow_types
 
 (** Apply the transformation to each function body and to the rest of the
     program as one block. *)
@@ -22,7 +22,7 @@ let transform_program (mir : Program.Typed.t)
   let transformed_prog_body = transform packed_prog_body in
   let transformed_functions =
     List.map mir.functions_block ~f:(fun fs ->
-        {fs with fdbody= Option.map ~f:transform fs.fdbody}) in
+        Program.{fs with fdbody= Option.map ~f:transform fs.fdbody}) in
   match transformed_prog_body with
   | { pattern=
         SList
@@ -58,7 +58,8 @@ let transform_program_blockwise (mir : Program.Typed.t)
         [@coverage off] in
   let transformed_functions =
     List.map mir.functions_block ~f:(fun fs ->
-        {fs with fdbody= Option.map ~f:(transform (Some fs)) fs.fdbody}) in
+        Program.{fs with fdbody= Option.map ~f:(transform (Some fs)) fs.fdbody})
+  in
   { mir with
     functions_block= transformed_functions
   ; prepare_data= transform' None mir.prepare_data
@@ -80,40 +81,40 @@ let gen_inline_var (name : string) (id_var : string) =
   Gensym.generate ~prefix:("inline_" ^ name ^ "_" ^ id_var ^ "_") ()
 
 let replace_fresh_local_vars (fname : string) stmt =
-  let f (m : (string, string) Core.Map.Poly.t) = function
+  let f (m : string String.Map.t) = function
     | Stmt.Pattern.Decl {decl_adtype; decl_type; decl_id; initialize} ->
         let new_name =
-          match Map.Poly.find m decl_id with
+          match String.Map.find_opt decl_id m with
           | Some existing -> existing
           | None -> gen_inline_var fname decl_id in
         ( Stmt.Pattern.Decl
             {decl_adtype; decl_id= new_name; decl_type; initialize}
-        , Map.Poly.set m ~key:decl_id ~data:new_name )
+        , String.Map.add m ~key:decl_id ~data:new_name )
     | Stmt.Pattern.For {loopvar; lower; upper; body} ->
         let new_name =
-          match Map.Poly.find m loopvar with
+          match String.Map.find_opt loopvar m with
           | Some existing -> existing
           | None -> gen_inline_var fname loopvar in
         ( Stmt.Pattern.For {loopvar= new_name; lower; upper; body}
-        , Map.Poly.set m ~key:loopvar ~data:new_name )
+        , String.Map.add m ~key:loopvar ~data:new_name )
     | Assignment (lhs, type_, e) ->
         let update_name var_name =
-          match Map.Poly.find m var_name with
+          match String.Map.find_opt var_name m with
           | None -> var_name
           | Some var_name' -> var_name' in
         let lhs' = Middle.Stmt.Helpers.map_lhs_variable ~f:update_name lhs in
         (Stmt.Pattern.Assignment (lhs', type_, e), m)
     | x -> (x, m) in
-  let s, m = map_rec_state_stmt_loc f Map.Poly.empty stmt in
+  let s, m = map_rec_state_stmt_loc f String.Map.empty stmt in
   name_subst_stmt m s
 
 let subst_args_stmt args es =
-  let m = Map.Poly.of_alist_exn (List.zip_exn args es) in
+  let m = String.Map.of_list (List.combine args es) in
   subst_stmt m
 
 (** Count the number of returns that happen in a statement *)
 let rec count_returns Stmt.{pattern; _} : int =
-  Stmt.Pattern.fold Fn.const
+  Stmt.Pattern.fold Fun.const
     (fun acc -> function
       | Stmt.{pattern= Return _; _} -> acc + 1
       | stmt -> acc + count_returns stmt)
@@ -275,7 +276,7 @@ let rec inline_function_expression propto adt fim (Expr.{pattern; _} as e) =
           )
       | UserDefined (fname, suffix) -> (
           let suffix, fname' = compute_suffix_and_name propto suffix fname in
-          match Map.find fim fname' with
+          match String.Map.find_opt fname' fim with
           | None ->
               ( d_list
               , s_list
@@ -289,7 +290,7 @@ let rec inline_function_expression propto adt fim (Expr.{pattern; _} as e) =
               let d_list2, s_list2, (e : Expr.Typed.t) =
                 let decl_type =
                   Option.map ~f:Mir_utils.unsafe_unsized_to_sized_type rt
-                  |> Option.value_exn in
+                  |> Option.get in
                 ( [ Stmt.Pattern.Decl
                       { decl_adtype=
                           UnsizedType.fill_adtype_for_type adt
@@ -383,11 +384,12 @@ let rec inline_function_statement propto adt fim Stmt.{pattern; meta} =
             let dl1, sl1, e1 = inline_function_expression propto adt fim e1 in
             let dl2, sl2, e2 = inline_function_expression propto adt fim e2 in
             let lhs' =
-              Option.value_exn
-                (Middle.Stmt.Helpers.lvalue_of_expr_opt e1)
-                ~message:
-                  "Internal error in inline optimization: lhs could not be \
-                   converted round-trip to expression" in
+              match Middle.Stmt.Helpers.lvalue_of_expr_opt e1 with
+              | Some x -> x
+              | None ->
+                  ICE.internal_error
+                    "Internal error in inline optimization: lhs could not be \
+                     converted round-trip to expression" [@coverage off] in
             slist_concat_no_loc
               (dl2 @ dl1 @ sl2 @ sl1)
               (Assignment (lhs', ut, e2))
@@ -405,7 +407,7 @@ let rec inline_function_statement propto adt fim Stmt.{pattern; meta} =
               (match kind with
               | CompilerInternal _ | StanLib _ -> NRFunApp (kind, es)
               | UserDefined (s, _) -> (
-                  match Map.find fim s with
+                  match String.Map.find_opt s fim with
                   | None -> NRFunApp (kind, es)
                   | Some (_, args, b) ->
                       let b = replace_fresh_local_vars s b in
@@ -489,29 +491,28 @@ let create_function_inline_map adt l =
           , List.map ~f:(fun (_, name, _) -> name) fdargs
           , inline_function_statement propto adt accum fdbody ) in
         match Middle.Fun_kind.with_unnormalized_suffix fdname with
-        | None -> (
+        | None ->
             let data = create_data true in
-            match Map.add accum ~key:fdname ~data with
-            | `Ok m -> m
-            | `Duplicate -> accum)
+            if String.Map.mem fdname accum then accum
+            else String.Map.add accum ~key:fdname ~data
         | Some fdname' ->
             let data = create_data false in
             let data' = create_data true in
-            let m = Map.Poly.of_alist_exn [(fdname, data); (fdname', data')] in
-            Map.merge_skewed accum m ~combine:(fun ~key:_ f _ -> f)) in
-  List.fold l ~init:Map.Poly.empty ~f
+            let m = String.Map.of_list [(fdname, data); (fdname', data')] in
+            String.Map.union accum m ~f:(fun _ v1 _ -> Some v1)) in
+  List.fold_left l ~init:String.Map.empty ~f
 
 let function_inlining (mir : Program.Typed.t) =
   (* We add only the functions with a single definition to the inline map.
      Overloaded functions cannot be inlined. *)
   let can_inline =
-    List.fold mir.functions_block ~init:String.Map.empty
+    List.fold_left mir.functions_block ~init:String.Map.empty
       ~f:(fun accum Program.{fdname; _} ->
-        Map.update accum fdname
-          ~f:(Option.value_map ~default:true ~f:(fun _ -> false))) in
+        String.Map.update accum ~key:fdname ~f:(fun o ->
+            Some (Option.value_map o ~default:true ~f:(fun _ -> false)))) in
   let inlineable_functions =
     List.filter mir.functions_block ~f:(fun Program.{fdname; _} ->
-        Map.find_exn can_inline fdname) in
+        String.Map.find fdname can_inline) in
   let dataonly_inline_map =
     create_function_inline_map UnsizedType.DataOnly inlineable_functions in
   let autodiff_inline_map =
@@ -582,7 +583,7 @@ let unroll_static_loops_statement _ =
                             { type_= UInt
                             ; loc= Location_span.empty
                             ; adlevel= DataOnly } })
-                  (List.range ~start:`inclusive ~stop:`inclusive low up) in
+                  (List.range low (up + 1)) in
               let stmts =
                 List.map
                   ~f:(fun i ->
@@ -658,11 +659,10 @@ let list_collapsing (mir : Program.Typed.t) =
 
 let propagation
     (propagation_transfer :
-         (int, Stmt.Located.Non_recursive.t) Map.Poly.t
+         Stmt.Located.Non_recursive.t LabelMap.t
       -> (module Monotone_framework_sigs.TRANSFER_FUNCTION
             with type labels = int
-             and type properties =
-               (string, Middle.Expr.Typed.t) Map.Poly.t option))
+             and type properties = Middle.Expr.Typed.t String.Map.t option))
     (mir : Program.Typed.t) =
   let transform stmt =
     let flowgraph, flowgraph_to_mir =
@@ -675,9 +675,9 @@ let propagation
     let propagate_stmt =
       map_rec_stmt_loc_num flowgraph_to_mir (fun i ->
           subst_stmt_base
-            (Option.value ~default:Map.Poly.empty (Map.find_exn values i).entry))
-    in
-    propagate_stmt (Map.find_exn flowgraph_to_mir 1) in
+            (Option.value ~default:String.Map.empty
+               (LabelMap.find i values).entry)) in
+    propagate_stmt (LabelMap.find 1 flowgraph_to_mir) in
   transform_program mir transform
 
 let constant_propagation ?(preserve_stability = false) =
@@ -744,11 +744,11 @@ let dead_code_elimination (mir : Program.Typed.t) =
       (* NOTE: entry in the reverse flowgraph, so exit in the forward
          flowgraph *)
       let live_variables_s =
-        (Map.find_exn live_variables i).Monotone_framework_sigs.entry in
+        (LabelMap.find i live_variables).Monotone_framework_sigs.entry in
       match stmt with
       | Stmt.Pattern.Assignment (lhs, _, rhs) ->
           if
-            Set.mem live_variables_s (Middle.Stmt.Helpers.lhs_variable lhs)
+            Set.Poly.mem (Middle.Stmt.Helpers.lhs_variable lhs) live_variables_s
             || cannot_remove_expr rhs
             || List.exists
                  ~f:(idx_any cannot_remove_expr)
@@ -760,7 +760,8 @@ let dead_code_elimination (mir : Program.Typed.t) =
             due to side effects. *)
       (* TODO: maybe we should revisit that. *)
       | Decl ({decl_id; initialize= Assign e; _} as decl) ->
-          if Set.mem live_variables_s decl_id || cannot_remove_expr e then stmt
+          if Set.Poly.mem decl_id live_variables_s || cannot_remove_expr e then
+            stmt
           else Decl {decl with initialize= Uninit}
       | Decl _ | TargetPE _ | JacobianPE _
        |NRFunApp (_, _)
@@ -795,17 +796,17 @@ let dead_code_elimination (mir : Program.Typed.t) =
           then Skip
           else For {loopvar; lower; upper; body}
       | Profile (name, l) ->
-          let l' = List.filter ~f:(fun x -> x.pattern <> Skip) l in
+          let l' = List.filter ~f:(fun x -> x.Stmt.pattern <> Skip) l in
           if List.is_empty l' then Skip else Profile (name, l')
       | Block l ->
-          let l' = List.filter ~f:(fun x -> x.pattern <> Skip) l in
+          let l' = List.filter ~f:(fun x -> x.Stmt.pattern <> Skip) l in
           if List.is_empty l' then Skip else Block l'
       | SList l ->
-          let l' = List.filter ~f:(fun x -> x.pattern <> Skip) l in
+          let l' = List.filter ~f:(fun x -> x.Stmt.pattern <> Skip) l in
           SList l' in
     let dead_code_elim_stmt =
       map_rec_stmt_loc_num flowgraph_to_mir dead_code_elim_stmt_base in
-    dead_code_elim_stmt (Map.find_exn flowgraph_to_mir 1) in
+    dead_code_elim_stmt (LabelMap.find 1 flowgraph_to_mir) in
   transform_program mir transform
 
 let partial_evaluation = Partial_evaluator.eval_prog
@@ -819,7 +820,7 @@ let rec find_assignment_idx (name : string) Stmt.{pattern; _} =
       let idx_lst = Stmt.Helpers.lhs_indices lval in
       if
         name = assign_name
-        && (not (Set.mem (expr_var_names_set rhs) assign_name))
+        && (not (Set.Poly.mem assign_name (expr_var_names_set rhs)))
         && not
              (rhs.meta.adlevel = UnsizedType.DataOnly
              && UnsizedType.is_array lhs_ut)
@@ -882,7 +883,7 @@ let transform_mir_blocks (mir : Program.Typed.t)
   let transformed_functions =
     List.map mir.functions_block ~f:(fun fs ->
         let new_body =
-          match fs.fdbody with
+          match fs.Program.fdbody with
           | Some (Stmt.{pattern= SList lst; _} as stmt) ->
               Some {stmt with pattern= SList (transformer lst)}
           | Some (Stmt.{pattern= Block lst; _} as stmt) ->
@@ -959,16 +960,17 @@ let lazy_code_motion ?(preserve_stability = false) (mir : Program.Typed.t) =
         | _ when cannot_duplicate_expr ~preserve_stability e ->
             (* Immovable expressions might have movable subexpressions *)
             Expr.Pattern.fold collect_expressions accum e.pattern
-        | _ -> Map.set accum ~key:e ~data:(Gensym.generate ~prefix:"lcm_" ())
+        | _ ->
+            ExprMap.add accum ~key:e ~data:(Gensym.generate ~prefix:"lcm_" ())
       in
-      Set.fold
+      ExprSet.fold
         (Monotone_framework.used_expressions_stmt s.pattern)
-        ~init:(Map.empty (module Expr.Typed))
-        ~f:collect_expressions in
+        ~init:ExprMap.empty
+        ~f:(Fun.flip collect_expressions) in
     (* TODO: it'd be more efficient to just not accumulate constants in the
        static analysis *)
     let declarations_list =
-      Map.fold expression_map ~init:[] ~f:(fun ~key ~data accum ->
+      ExprMap.fold expression_map ~init:[] ~f:(fun ~key ~data accum ->
           Stmt.
             { pattern=
                 Pattern.Decl
@@ -980,15 +982,15 @@ let lazy_code_motion ?(preserve_stability = false) (mir : Program.Typed.t) =
           :: accum) in
     let lazy_code_motion_base i stmt =
       let latest_and_used_after_i =
-        Set.inter
-          (Map.find_exn latest_expr i)
-          (Map.find_exn used_not_latest_expressions_mfp i).entry in
+        ExprSet.inter
+          (LabelMap.find i latest_expr)
+          (LabelMap.find i used_not_latest_expressions_mfp).entry in
       let to_assign_in_s =
         latest_and_used_after_i
-        |> Set.filter ~f:(fun x -> Map.mem expression_map x)
-        |> Set.to_list
-        |> List.sort ~compare:(fun e e' ->
-            compare_int (expr_depth e) (expr_depth e')) in
+        |> ExprSet.filter ~f:(fun x -> ExprMap.mem x expression_map)
+        |> ExprSet.to_list
+        |> List.sort ~cmp:(fun e e' ->
+            Int.compare (expr_depth e) (expr_depth e')) in
       (* TODO: is this sort doing anything or are they already stored in the
          right order by chance? It appears to not do anything. *)
       let assignments_to_add_to_s =
@@ -997,7 +999,7 @@ let lazy_code_motion ?(preserve_stability = false) (mir : Program.Typed.t) =
             Stmt.
               { pattern=
                   Assignment
-                    ( Stmt.Helpers.lvariable (Map.find_exn expression_map e)
+                    ( Stmt.Helpers.lvariable (ExprMap.find e expression_map)
                     , e.meta.type_
                     , e )
               ; meta= Location_span.empty })
@@ -1007,18 +1009,19 @@ let lazy_code_motion ?(preserve_stability = false) (mir : Program.Typed.t) =
           match stmt with
           | Stmt.Pattern.Assignment ((LVariable x, []), _, e')
            |Decl {decl_id= x; initialize= Assign e'; _}
-            when Map.mem m e'
+            when ExprMap.mem e' m
                  && Expr.Typed.equal {e' with pattern= Var x}
-                      (Map.find_exn m e') ->
-              expr_subst_stmt_base (Map.remove m e') stmt
+                      (ExprMap.find e' m) ->
+              expr_subst_stmt_base (ExprMap.remove e' m) stmt
           | _ -> expr_subst_stmt_base m stmt in
         map_rec_stmt_loc f in
       let expr_map =
-        Map.filter_keys
-          ~f:(fun key ->
-            Set.mem latest_and_used_after_i key
-            || Set.mem (Map.find_exn used_not_latest_expressions_mfp i).exit key)
-          (Map.mapi expression_map ~f:(fun ~key ~data ->
+        ExprMap.filter
+          ~f:(fun key _ ->
+            ExprSet.mem key latest_and_used_after_i
+            || ExprSet.mem key
+                 (LabelMap.find i used_not_latest_expressions_mfp).exit)
+          (ExprMap.mapi expression_map ~f:(fun key data ->
                {key with pattern= Var data})) in
       let f = expr_subst_stmt_except_initial_assign expr_map in
       if List.is_empty assignments_to_add_to_s then
@@ -1034,7 +1037,7 @@ let lazy_code_motion ?(preserve_stability = false) (mir : Program.Typed.t) =
       { pattern=
           SList
             (declarations_list
-            @ [lazy_code_motion_stmt (Map.find_exn flowgraph_to_mir 1)])
+            @ [lazy_code_motion_stmt (LabelMap.find 1 flowgraph_to_mir)])
       ; meta= Location_span.empty } in
   let cleanup =
     let cleanup_base (stmt : (Expr.Typed.t, Stmt.Located.t) Stmt.Pattern.t) :
@@ -1107,14 +1110,14 @@ let block_fixing mir =
     @param stmt the MIR statement to optimize. *)
 let optimize_minimal_variables
     ~(gen_variables :
-          (int, Stmt.Located.Non_recursive.t) Map.Poly.t
+          Stmt.Located.Non_recursive.t LabelMap.t
        -> int
        -> string Set.Poly.t
        -> string Set.Poly.t)
     ~(update_expr : string Set.Poly.t -> Expr.Typed.t -> Expr.Typed.t)
     ~(update_stmt :
           (Expr.Typed.t, (Expr.Typed.Meta.t, 'a) Stmt.t) Stmt.Pattern.t
-       -> string Core.Set.Poly.t
+       -> string Set.Poly.t
        -> (Expr.Typed.t, (Expr.Typed.Meta.t, 'a) Stmt.t) Stmt.Pattern.t)
     ~(extra_variables : string -> string Set.Poly.t)
     ~(initial_variables : string Set.Poly.t) (stmt : Stmt.Located.t) =
@@ -1129,22 +1132,22 @@ let optimize_minimal_variables
       flowgraph_to_mir initial_variables gen_variables in
   let optimize_min_vars_stmt_base i stmt_pattern =
     let variable_set =
-      let exits = (Map.find_exn mfp_variables i).exit in
-      Set.union exits (union_map exits ~f:extra_variables) in
+      let exits = (LabelMap.find i mfp_variables).exit in
+      Set.Poly.union exits (Set.Poly.union_map exits ~f:extra_variables) in
     let stmt_val =
       Stmt.Pattern.map (update_expr variable_set) (fun x -> x) stmt_pattern
     in
     update_stmt stmt_val variable_set in
   map_rec_stmt_loc_num flowgraph_to_mir optimize_min_vars_stmt_base
-    (Map.find_exn flowgraph_to_mir 1)
+    (LabelMap.find 1 flowgraph_to_mir)
 
 (* XXX: This optimization current promotes/demotes entire tuples at once. This
    could be significantly better *)
 let optimize_ad_levels (mir : Program.Typed.t) =
   let gen_ad_variables
-      (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t)
-      (l : int) (ad_variables : string Set.Poly.t) =
-    let mir_node = (Map.find_exn flowgraph_to_mir l).pattern in
+      (flowgraph_to_mir : Stmt.Located.Non_recursive.t LabelMap.t) (l : int)
+      (ad_variables : string Set.Poly.t) =
+    let mir_node = (LabelMap.find l flowgraph_to_mir).pattern in
     match mir_node with
     | Assignment (lval, _, e)
       when UnsizedType.is_autodifftype
@@ -1161,7 +1164,7 @@ let optimize_ad_levels (mir : Program.Typed.t) =
     match (fundef_opt : Stmt.Located.t Program.fun_def option) with
     | None -> global_initial_ad_variables
     | Some {fdargs; _} ->
-        Set.union global_initial_ad_variables
+        Set.Poly.union global_initial_ad_variables
           (Set.Poly.of_list
              (List.filter_map fdargs ~f:(fun (_, name, ut) ->
                   if UnsizedType.is_autodiffable ut then Some name else None)))
@@ -1170,14 +1173,14 @@ let optimize_ad_levels (mir : Program.Typed.t) =
   let update_stmt stmt_pattern variable_set =
     match stmt_pattern with
     | Stmt.Pattern.Decl ({decl_id; decl_type; _} as decl)
-      when Set.mem variable_set decl_id ->
+      when Set.Poly.mem decl_id variable_set ->
         Stmt.Pattern.Decl
           { decl with
             decl_adtype=
               UnsizedType.fill_adtype_for_type UnsizedType.AutoDiffable
                 (Type.to_unsized decl_type) }
     | Decl ({decl_id; decl_type; _} as decl)
-      when not (Set.mem variable_set decl_id) ->
+      when not (Set.Poly.mem decl_id variable_set) ->
         Decl
           { decl with
             decl_adtype=
@@ -1209,12 +1212,12 @@ let optimize_ad_levels (mir : Program.Typed.t) =
     @param mir: The program's whole MIR. *)
 let optimize_soa (mir : Program.Typed.t) =
   let gen_aos_variables
-      (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t)
-      (l : int) (aos_variables : string Set.Poly.t) =
-    let mir_node mir_idx = Map.find_exn flowgraph_to_mir mir_idx in
+      (flowgraph_to_mir : Stmt.Located.Non_recursive.t LabelMap.t) (l : int)
+      (aos_variables : string Set.Poly.t) =
+    let mir_node mir_idx = LabelMap.find mir_idx flowgraph_to_mir in
     Memory_patterns.query_demotable_stmt aos_variables (mir_node l) in
   let initial_variables =
-    List.fold ~init:Set.Poly.empty
+    List.fold_left ~init:Set.Poly.empty
       ~f:(Memory_patterns.query_initial_demotable_stmt false)
       mir.reverse_mode_log_prob in
   let mod_exprs aos_exits mod_expr =
@@ -1347,4 +1350,4 @@ let optimization_suite ?(settings = all_optimizations) mir =
   let optimizations =
     List.filter_map maybe_optimizations ~f:(fun (fn, flag) ->
         if flag then Some fn else None) in
-  List.fold optimizations ~init:mir ~f:Fn.( |> )
+  List.fold_left optimizations ~init:mir ~f:( |> )

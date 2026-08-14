@@ -1,4 +1,4 @@
-open Core
+open Std
 open Ast
 open Middle
 open Yojson.Basic
@@ -47,22 +47,22 @@ let block_info_json name block : t =
 let rec get_function_calls_expr (funs, distrs) expr =
   let acc =
     match expr.expr with
-    | FunApp (StanLib _, f, _) -> (Set.add funs f.name, distrs)
-    | CondDistApp (StanLib _, f, _) -> (funs, Set.add distrs f.name)
+    | FunApp (StanLib _, f, _) -> (String.Set.add f.name funs, distrs)
+    | CondDistApp (StanLib _, f, _) -> (funs, String.Set.add f.name distrs)
     | _ -> (funs, distrs) in
   fold_expression get_function_calls_expr acc expr.expr
 
 let rec get_function_calls_stmt ud_dists (funs, distrs) stmt =
   let acc =
     match stmt.stmt with
-    | NRFunApp (StanLib _, f, _) -> (Set.add funs f.name, distrs)
-    | Print _ -> (Set.add funs "print", distrs)
-    | Reject _ -> (Set.add funs "reject", distrs)
-    | FatalError _ -> (Set.add funs "fatal_error", distrs)
+    | NRFunApp (StanLib _, f, _) -> (String.Set.add f.name funs, distrs)
+    | Print _ -> (String.Set.add "print" funs, distrs)
+    | Reject _ -> (String.Set.add "reject" funs, distrs)
+    | FatalError _ -> (String.Set.add "fatal_error" funs, distrs)
     | Tilde {distribution; kind= StanLib (FnLpdf _); _} ->
-        (funs, Set.add distrs (distribution.name ^ "_lupdf"))
+        (funs, String.Set.add (distribution.name ^ "_lupdf") distrs)
     | Tilde {distribution; kind= StanLib (FnLpmf _); _} ->
-        (funs, Set.add distrs (distribution.name ^ "_lupmf"))
+        (funs, String.Set.add (distribution.name ^ "_lupmf") distrs)
     | _ -> (funs, distrs) in
   fold_statement get_function_calls_expr
     (get_function_calls_stmt ud_dists)
@@ -85,7 +85,7 @@ let function_calls_json p =
       (String.Set.empty, String.Set.empty)
       p in
   let set_to_List s =
-    `List (Set.to_list s |> List.map ~f:(fun str -> `String str)) in
+    `List (String.Set.to_list s |> List.map ~f:(fun str -> `String str)) in
   `Assoc [("functions", set_to_List funs); ("distributions", set_to_List distrs)]
 
 let includes_json () =
@@ -96,7 +96,7 @@ let includes_json () =
           |> List.map ~f:(fun str -> `String str)) ) ]
 
 let info_json ast =
-  List.fold ~f:Util.combine ~init:(`Assoc [])
+  List.fold_left ~f:Util.combine ~init:(`Assoc [])
     [ block_info_json "inputs" ast.datablock
     ; block_info_json "parameters" ast.parametersblock
     ; block_info_json "transformed parameters" ast.transformedparametersblock

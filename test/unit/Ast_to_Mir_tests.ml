@@ -1,5 +1,5 @@
 open Middle
-open Core
+open Std.Sexp_conv
 
 let%expect_test "Operator-assign example" =
   Test_utils.mir_of_string

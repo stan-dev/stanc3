@@ -1,7 +1,9 @@
 (** The API for a monotone framework, as described in 2.3-2.4 of Nielson,
     Nielson, and Hankin or 9.3 of Aho et al.. This gives a modular way of
     implementing many static analyses. *)
-open Core
+
+open Std
+open Dataflow_types
 
 (** The API for a flowgraph, needed for the mfp algorithm in the monotone
     framework. Assumed invariants: successors contains all graph nodes as keys
@@ -9,10 +11,8 @@ open Core
 module type FLOWGRAPH = sig
   type labels
 
-  include Base__.Hashtbl_intf.Key.S with type t = labels
-
   val initials : labels Set.Poly.t
-  val successors : (labels, labels Set.Poly.t) Map.Poly.t
+  val successors : labels Set.Poly.t LabelMap.t
 end
 
 (** The minimal data we need to use a type in forming a lattice of various kinds
@@ -82,8 +82,7 @@ type 'a entry_exit = {entry: 'a; exit: 'a}
     graph. The analysis performed is always a forward analysis. For a reverse
     analysis, supply the reverse flow graph.*)
 module type MONOTONE_FRAMEWORK = sig
-  type labels
   type properties
 
-  val mfp : unit -> (labels, properties entry_exit) Map.Poly.t
+  val mfp : unit -> properties entry_exit LabelMap.t
 end

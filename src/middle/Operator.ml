@@ -1,6 +1,6 @@
 (** Utilities for Stan's built in operators *)
 
-open Core
+open Std
 
 type t =
   | Plus
@@ -58,12 +58,16 @@ let pp ppf = function
   | PNot -> Fmt.pf ppf "!"
   | Transpose -> Fmt.pf ppf "'"
 
+open Sexplib0
+
 let to_string x = Sexp.to_string (sexp_of_t x) ^ "__"
 
 let of_string_opt x =
+  let open Option.Syntax in
   try
-    String.chop_suffix_exn ~suffix:"__" x
-    |> Sexp.of_string |> t_of_sexp |> Option.some
+    let+ ssexp = String.chop_suffix ~suffix:"__" x in
+    let sexp = Sexp_conv.sexp_of_string ssexp in
+    t_of_sexp sexp
   with
-  | Sexp.Of_sexp_error _ -> None
+  | Sexp_conv.Of_sexp_error _ -> None
   | Invalid_argument _ -> None

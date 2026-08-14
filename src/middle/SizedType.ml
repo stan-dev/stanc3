@@ -1,6 +1,8 @@
 (** Types which have a concrete size associated, e.g. [vector[n]] *)
 
-open Core
+open Std
+open Std.Compare
+open Std.Sexp_conv
 
 type 'a t =
   | SInt

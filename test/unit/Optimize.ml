@@ -1,8 +1,10 @@
-open Core
+open Std
+open Std.Sexp_conv
 open Analysis_and_optimization.Optimize
 open Middle
 open Common
 open Analysis_and_optimization.Mir_utils
+open Analysis_and_optimization.Dataflow_types
 
 let reset_and_mir_of_string s =
   Gensym.reset_danger_use_cautiously ();
@@ -27,7 +29,7 @@ let%expect_test "map_rec_stmt_loc" =
     | Stmt.Pattern.NRFunApp (CompilerInternal FnPrint, [s]) ->
         Stmt.Pattern.NRFunApp (CompilerInternal FnPrint, [s; s])
     | x -> x in
-  let mir = Program.map Fn.id (map_rec_stmt_loc f) Fn.id mir in
+  let mir = Program.map Fun.id (map_rec_stmt_loc f) Fun.id mir in
   Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
   [%expect
     {|
@@ -3560,7 +3562,7 @@ let%expect_test "Mapping acts recursively" =
     Stmt.Pattern.NRFunApp
       ( CompilerInternal (FnWriteParam {var= from; unconstrain_opt= None})
       , [from] ) in
-  let m = Map.of_alist_exn (module Expr.Typed) [(from, into)] in
+  let m = ExprMap.of_list [(from, into)] in
   let s' = expr_subst_stmt_base m s in
   Fmt.str "@[<v>%a@]" Stmt.Located.pp (unpattern s') |> print_endline;
   [%expect {| (FnWriteParam(unconstrain_opt())(var y))__(y); |}]

@@ -1,5 +1,4 @@
-open Core
-open Core.Poly
+open Std
 
 (** This type represents whether or not an autodiff type can be represented as
     an Array of Structs (AoS) or as a Struct of Arrays. This applies to

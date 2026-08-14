@@ -21,9 +21,9 @@ RUN mkdir -p -m 755 /etc/apt/keyrings && wget -qO- https://cli.github.com/packag
     && apt update \
     && apt install gh -y
 
-# opam
-RUN bash -c "printf '\n' | sh <(curl -fsSL https://opam.ocaml.org/install.sh)"
 
+# opam
+RUN bash -c "printf '\n' | sh <(curl -fsSL https://opam.ocaml.org/install.sh) "
 
 USER ubuntu
 WORKDIR /home/ubuntu

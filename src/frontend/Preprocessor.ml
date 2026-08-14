@@ -1,5 +1,6 @@
 (** Preprocessor for handling include directives *)
 
+open Std
 open Lexing
 open Debugging
 
@@ -110,11 +111,11 @@ let find_include_fs lookup_paths fname =
   loop lookup_paths
 
 let find_include_inmemory map fname =
-  match Core.Map.find map fname with
+  match String.Map.find_opt fname map with
   | None ->
       let message =
         let pp_list ppf l =
-          let keys = Core.Map.keys l in
+          let keys = String.Map.to_list l |> List.map ~f:fst in
           if List.is_empty keys then Fmt.string ppf "None"
           else Fmt.(list ~sep:comma string) ppf keys in
         Fmt.str
@@ -136,7 +137,8 @@ let try_get_new_lexbuf fname =
   let new_lexbuf =
     let buf, file = find_include fname in
     let buf =
-      if Common.Files.is_stanfunctions file && List.mem file !included_files
+      if
+        Common.Files.is_stanfunctions file && List.mem ~set:!included_files file
       then (
         lexer_logger ("ignoring duplicated include  " ^ file);
         Lexing.from_string "")

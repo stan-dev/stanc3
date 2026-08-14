@@ -1,4 +1,6 @@
-open Core
+open Std
+open Std.Compare
+open Std.Sexp_conv
 
 (** Transformations (constraints) for global variable declarations *)
 

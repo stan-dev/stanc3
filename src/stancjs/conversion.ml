@@ -1,4 +1,4 @@
-open Core
+open Std
 open Frontend
 open Js_of_ocaml
 
@@ -29,7 +29,7 @@ let checked_to_array ~name value =
   else Ok (Js.to_array value)
 
 let get_includes_lenient includes : string String.Map.t * string list =
-  let open Stdlib.Result.Syntax in
+  let open Result.Syntax in
   let map, warnings =
     match Js.Opt.to_option includes with
     | None -> (String.Map.empty, [] (* normal use: argument not supplied *))
@@ -37,7 +37,9 @@ let get_includes_lenient includes : string String.Map.t * string list =
         ( String.Map.empty
         , [bad_arg_message ~name:"includes" ~expected:"object" includes] )
     | Some includes ->
-        let keys = Js.object_keys includes |> Js.to_array |> List.of_array in
+        let keys =
+          Js.object_keys includes |> Js.to_array |> Array.to_seq |> List.of_seq
+        in
         let lookup k =
           let value_js = Js.Unsafe.get includes k in
           let k_str = Js.to_string k in
@@ -45,9 +47,11 @@ let get_includes_lenient includes : string String.Map.t * string list =
             checked_to_string ~name:("includes[\"" ^ k_str ^ "\"]") value_js
           in
           (k_str, value_str) in
-        let alist, warnings = List.map keys ~f:lookup |> List.partition_result in
+        let alist, warnings =
+          List.map keys ~f:lookup |> List.partition_map ~f:Result.to_either
+        in
         ( (* JS objects cannot have duplicate keys *)
-          String.Map.of_alist_exn alist
+          String.Map.of_list alist
         , warnings ) in
   ( map
   , List.map
@@ -61,7 +65,7 @@ type flags =
 
 let process_flags name code (flags : 'a Js.opt) includes :
     (flags, string) result =
-  let open Stdlib.Result.Syntax in
+  let open Result.Syntax in
   let* name = checked_to_string ~name:"name" name in
   let* code = checked_to_string ~name:"code" code in
   let+ flags =
@@ -70,10 +74,10 @@ let process_flags name code (flags : 'a Js.opt) includes :
     | Some flags ->
         let* flags_array = checked_to_array ~name:"flags" flags in
         let+ ocaml_flags =
-          let open Result in
           Array.mapi flags_array ~f:(fun i v ->
               checked_to_string ~name:("flags[" ^ Int.to_string i ^ "]") v)
-          |> Array.to_list |> Result.all >>| Array.of_list in
+          |> Array.to_list |> Result.all
+          |> Result.map ~f:Array.of_list in
         Driver.Flags.set_backend_args_list
           (ocaml_flags |> Array.to_list |> List.map ~f:(fun o -> "--" ^ o));
         Some ocaml_flags in
@@ -86,7 +90,7 @@ let process_flags name code (flags : 'a Js.opt) includes :
             include_source= Include_files.InMemory includes }
       ; color_output= false }
   | Some flags ->
-      let is_flag_set flag = Array.mem ~equal:String.equal flags flag in
+      let is_flag_set flag = Array.mem ~set:flags flag in
       let flag_val flag =
         let prefix = flag ^ "=" in
         Array.find_map flags ~f:(String.chop_prefix ~prefix) in
@@ -143,7 +147,7 @@ let process_flags name code (flags : 'a Js.opt) includes :
                  | None -> Canonicalize.none
                  | Some s ->
                      let parse settings s =
-                       match String.lowercase s with
+                       match String.lowercase_ascii s with
                        | "deprecations" ->
                            Canonicalize.{settings with deprecations= true}
                        | "parentheses" -> {settings with parentheses= true}
@@ -151,8 +155,8 @@ let process_flags name code (flags : 'a Js.opt) includes :
                        | "strip-comments" -> {settings with strip_comments= true}
                        | "includes" -> {settings with inline_includes= true}
                        | _ -> settings in
-                     List.fold ~f:parse ~init:Canonicalize.none
-                       (String.split ~on:',' s))
+                     List.fold_left ~f:parse ~init:Canonicalize.none
+                       (String.split_all ~sep:"," s))
           ; warn_pedantic= is_flag_set "warn-pedantic"
           ; warn_uninitialized= is_flag_set "warn-uninitialized"
           ; filename_in_msg= flag_val "filename-in-msg" }

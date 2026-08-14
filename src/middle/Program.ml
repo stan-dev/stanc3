@@ -1,6 +1,6 @@
 (** Defines the core of the MIR *)
 
-open Core
+open Std.Sexp_conv
 
 type fun_arg_decl = (UnsizedType.autodifftype * string * UnsizedType.t) list
 
@@ -145,9 +145,8 @@ module Typed = struct
 
   let pp ppf x = pp Expr.Typed.pp Stmt.Located.pp ppf x
 
-  let sexp_of_t : t -> Sexp.t =
-    sexp_of_t Expr.Typed.sexp_of_t Stmt.Located.sexp_of_t
-      Sexplib0.Sexp_conv.sexp_of_opaque
+  let sexp_of_t : t -> Sexplib0.Sexp.t =
+    sexp_of_t Expr.Typed.sexp_of_t Stmt.Located.sexp_of_t sexp_of_opaque
 end
 
 module Numbered = struct
