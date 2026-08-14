@@ -2,7 +2,8 @@ let internal_error s = failwith s
 let internal_errorf s a = failwith (Format.lasprintf s a)
 let ( $ ) pp x ppf = pp ppf x
 
-let with_exn_message f =
+let with_exn_message ?(backtraces = true) f =
+  Printexc.record_backtrace backtraces;
   try Ok (f ())
   with e ->
     let bt =
