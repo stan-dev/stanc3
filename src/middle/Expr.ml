@@ -206,17 +206,17 @@ module Helpers = struct
   let rec infer_type_of_indexed ut indices =
     match (ut, indices) with
     | _, [] -> ut
-    | _, [Index.All] | _, [Upfrom _] | _, [Between _] -> ut
+    | _, [Index.All] | _, [Upfrom _] | _, [Between _] | _, [MultiIndex _] -> ut
     | UnsizedType.UMatrix, [All; Single _]
      |UMatrix, [Upfrom _; Single _]
      |UMatrix, [Between _; Single _]
-     |UMatrix, [MultiIndex _]
+     |UMatrix, [MultiIndex _; Single _]
      |UMatrix, [Single _] ->
         UVector
     | UComplexMatrix, [All; Single _]
      |UComplexMatrix, [Upfrom _; Single _]
      |UComplexMatrix, [Between _; Single _]
-     |UComplexMatrix, [MultiIndex _]
+     |UComplexMatrix, [MultiIndex _; Single _]
      |UComplexMatrix, [Single _] ->
         UComplexVector
     | UArray t, Single _ :: tl -> infer_type_of_indexed t tl
@@ -277,11 +277,19 @@ module Helpers = struct
     ; ( UArray UMatrix
       , [Single loop_bottom; Single loop_bottom; Single loop_bottom] )
     ; ( UArray UMatrix
-      , [Upfrom loop_bottom; Single loop_bottom; Single loop_bottom] ) ]
+      , [Upfrom loop_bottom; Single loop_bottom; Single loop_bottom] )
+    ; (UVector, [MultiIndex (variable "idx")])
+    ; (URowVector, [MultiIndex (variable "idx")])
+    ; (UMatrix, [MultiIndex (variable "idx")])
+    ; (UMatrix, [MultiIndex (variable "idx"); Single loop_bottom])
+    ; (UArray UVector, [MultiIndex (variable "idx")])
+    ; (UArray UVector, [Single loop_bottom; MultiIndex (variable "idx")]) ]
     |> List.map ~f:(fun (ut, idx) -> infer_type_of_indexed ut idx)
     |> Fmt.(str "@[<hov>%a@]" (list ~sep:comma UnsizedType.pp))
     |> print_endline;
     [%expect
       {|
-      vector, array[] matrix, matrix, array[] vector, real, array[] real |}]
+      vector, array[] matrix, matrix, array[] vector, real, array[] real, vector,
+      row_vector, matrix, vector, array[] vector, vector
+      |}]
 end
