@@ -698,7 +698,14 @@ let vectorize_loops (mir : Program.Typed.t) =
     List.filter_map mir.input_vars ~f:(fun (name, _, st) ->
         Option.map (outer_size st) ~f:(fun d -> (name, d)))
     @ List.filter_map mir.output_vars ~f:(fun (name, _, ov) ->
-        Option.map (outer_size ov.out_constrained_st) ~f:(fun d -> (name, d)))
+        (* A generated quantity is not in scope in the model block, so a model
+           local may legally reuse its name at another size. Parameter and
+           transformed parameter names cannot be reused. *)
+        match ov.out_block with
+        | GeneratedQuantities -> None
+        | Parameters | TransformedParameters ->
+            Option.map (outer_size ov.out_constrained_st) ~f:(fun d ->
+                (name, d)))
     @ List.filter_map mir.prepare_data ~f:(fun stmt ->
         match stmt.Stmt.pattern with
         | Decl {decl_id; decl_type= Type.Sized st; _} ->

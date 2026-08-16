@@ -4014,3 +4014,28 @@ let%expect_test "vectorize: loops inside function bodies" =
       target += total_lupdf(y, mu, sigma);
     }
     |}]
+
+let%expect_test "vectorize: generated quantity names are not trusted sizes" =
+  (* A generated quantity is not in scope in the model block, so a model local
+     may reuse its name at another size. The local x has three elements and the
+     loop covers two, so the slice form is required. *)
+  print_vectorized
+    {|
+      model {
+        vector[3] x = rep_vector(1.0, 3);
+        for (i in 1 : 2) {
+          x[i] ~ std_normal();
+        }
+      }
+      generated quantities {
+        vector[2] x;
+      }
+      |};
+  [%expect
+    {|
+    {
+      vector[3] x;
+      x = rep_vector(1.0, 3);
+      target += std_normal_lupdf(x[1:2]);
+    }
+    |}]
