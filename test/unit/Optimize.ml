@@ -3685,8 +3685,7 @@ let%expect_test "vectorize: lpmf over an int outcome array" =
     |}]
 
 let%expect_test "vectorize bail: no argument varies with the loop variable" =
-  (* Collapsing this loop would compute one lp term where the target owes N of
-     them. *)
+  (* Collapsing this loop would add one lp term to the target instead of N. *)
   print_vectorized
     {|
       data {
@@ -3839,9 +3838,9 @@ let%expect_test "vectorize bail: indirect indexing (vectorized in a later PR)" =
     |}]
 
 let%expect_test "vectorize bail: invariant container argument" =
-  (* Each scalar iteration sums over all of mu; the vectorized call would zip mu
+  (* Each iteration sums over all of mu. The vectorized call would zip mu
      against y elementwise. Both typecheck, so the classifier must refuse
-     non-scalar invariants. *)
+     container invariants. *)
   print_vectorized
     {|
       data {
@@ -3870,8 +3869,8 @@ let%expect_test "vectorize bail: invariant container argument" =
     |}]
 
 let%expect_test "vectorize bail: side-effecting invariant argument" =
-  (* Vectorizing drops the invariant argument's evaluation count from N to one,
-     which a _lp call would observe in the target. *)
+  (* The rewrite would evaluate the invariant argument once instead of N times,
+     and a _lp call changes the target each time. *)
   print_vectorized
     {|
       functions {
@@ -3910,9 +3909,8 @@ let%expect_test "vectorize bail: side-effecting invariant argument" =
     |}]
 
 let%expect_test "vectorize: transformed data sizes are trusted" =
-  (* Declared sizes are runtime invariants (whole-variable assignments are
-     size-checked), so a transformed data vector spanning the range appears
-     bare. *)
+  (* Declared sizes never change at runtime, so a transformed data vector
+     spanning the range appears bare. *)
   print_vectorized
     {|
       data {
@@ -3942,9 +3940,9 @@ let%expect_test "vectorize: transformed data sizes are trusted" =
     |}]
 
 let%expect_test "vectorize bail: no vectorized signature (matrix rows)" =
-  (* Each iteration is a valid scalar statement over a row_vector, but the
-     sliced argument is a matrix and normal_lpdf has no matrix signature, so the
-     final re-typecheck rejects the rewrite. *)
+  (* Each iteration is a valid scalar statement over a row_vector. The sliced
+     argument is a matrix and normal_lpdf has no matrix signature, so the final
+     re-typecheck rejects the rewrite. *)
   print_vectorized
     {|
       data {

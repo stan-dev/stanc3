@@ -641,8 +641,8 @@ let unroll_loop_one_step_statement _ =
 let one_step_loop_unrolling mir =
   transform_program_blockwise mir unroll_loop_one_step_statement
 
-(** Whether [pred] holds for any subexpression, looking inside indices too. Used
-    through [cannot_duplicate_expr] and [cannot_remove_expr] to keep
+(** Whether [pred] holds for any subexpression, including inside indices.
+    [cannot_duplicate_expr] and [cannot_remove_expr] use this to keep
     optimizations away from expressions whose evaluation count matters. *)
 let rec expr_any pred (e : Expr.Typed.t) =
   match e.pattern with
@@ -672,30 +672,28 @@ let cannot_duplicate_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
 
 let cannot_remove_expr (e : Expr.Typed.t) = expr_any can_side_effect_top_expr e
 
-(* Loops whose body is a single scalar density statement become the vectorized
-   density Stan Math already provides: [for (n in 1:N) target +=
-   normal_lpdf(y[n] | mu[n], sigma)] becomes [target += normal_lpdf(y | mu,
-   sigma)]. Both forms sum the same terms; the vectorized call shares
-   subcomputations across elements (e.g. log(sigma) once) and allocates O(1)
-   autodiff nodes instead of O(N). Tilde statements are already this shape in
-   the MIR, and their proportionality flag rides along in the function suffix.
+(* Rewrites [for (n in 1:N) target += normal_lpdf(y[n] | mu[n], sigma)] to
+   [target += normal_lpdf(y | mu, sigma)]. Both forms sum the same terms. The
+   vectorized call computes shared subexpressions like log(sigma) once and
+   allocates O(1) autodiff nodes instead of O(N). Tilde statements have the same
+   MIR shape, and the proportionality flag is part of the function suffix, so
+   they are covered too.
 
-   Every argument must either be a side-effect-free scalar invariant in the loop
-   variable or be exactly [x[n]]; an [x[n]] argument becomes the slice
+   Every argument must be a side-effect-free scalar that is invariant in the
+   loop variable, or exactly [x[n]]. An [x[n]] argument becomes the slice
    [x[lower:upper]], or [x] alone when the range provably spans the declaration.
-   Requiring at least one loop-varying argument keeps a loop of N identical
-   terms from collapsing to one, and requiring invariants to be scalars keeps a
-   container the loop sums over every iteration from being zipped elementwise
-   instead (both rewrites would typecheck; neither is what the loop computed).
-   The rewritten call must typecheck against the Stan Math signatures or the
-   loop is left alone, so the signature table decides which densities vectorize;
-   user-defined densities never do. *)
+   At least one argument must vary with the loop. Without that rule, a loop of N
+   identical terms would collapse to one term. Invariants must be scalars. An
+   invariant container is summed over by every iteration of the loop, but the
+   vectorized call would zip it against the other arguments elementwise, and
+   both forms typecheck. The rewritten call must typecheck against the Stan Math
+   signatures or the loop is left alone. That makes the signature table the list
+   of which densities vectorize. User-defined densities never do. *)
 let vectorize_loops (mir : Program.Typed.t) =
   let outer_size st = List.hd (SizedType.get_dims st) in
-  (* Declared outer sizes are runtime invariants: whole-variable assignments are
-     size-checked (stan::model::assign rejects mismatched shapes), and nothing
-     else can resize, so a name's declared size holds wherever the name
-     appears. *)
+  (* Declared outer sizes never change at runtime. Whole-variable assignments
+     are size-checked by stan::model::assign, and nothing else can resize. So a
+     declared size holds wherever the name appears. *)
   let trusted_sizes =
     List.filter_map mir.input_vars ~f:(fun (name, _, st) ->
         Option.map (outer_size st) ~f:(fun d -> (name, d)))
@@ -725,11 +723,11 @@ let vectorize_loops (mir : Program.Typed.t) =
              (if spans_declaration sizes ~lower ~upper base then base
               else
                 Expr.Helpers.add_int_index base (Index.Between (lower, upper))))
-    (* Only scalar invariants broadcast: an invariant container argument is
-       summed over anew by every iteration of the scalar loop, but the
-       vectorized call would zip it against the sliced arguments elementwise,
-       and both forms typecheck. The evaluation count also drops from N to one,
-       which side-effecting arguments (_lp calls) would observe. *)
+    (* Invariants must be scalars. An invariant container is summed over by
+       every iteration of the loop, but the vectorized call would zip it against
+       the sliced arguments elementwise, and both forms typecheck. They must
+       also be free of side effects. The rewrite evaluates them once instead of
+       N times, which an _lp call would observe. *)
     | {meta= {type_= UInt | UReal | UComplex; _}; _}
       when (not (Set.mem (expr_var_names_set arg) loopvar))
            && not (cannot_remove_expr arg) ->
@@ -1440,10 +1438,10 @@ let optimization_suite ?(settings = all_optimizations) mir =
     ; (constant_propagation ~preserve_stability, settings.constant_propagation)
       (* Book: Dead-code elimination *)
     ; (dead_code_elimination, settings.dead_code_elimination)
-      (* Vectorization consumes whole loops, so it must see them intact: before
-         one-step unrolling peels a first iteration, and before
-         partial_evaluation so the vectorized densities it emits can fuse
-         further (e.g. into GLM primitives). *)
+      (* Vectorization needs the loops intact, so it runs before one-step
+         unrolling peels a first iteration. It also runs before
+         partial_evaluation so the vectorized densities can fuse further, for
+         example into the GLM functions. *)
     ; (vectorize_loops, settings.vectorize_loops)
       (* Matthijs: Before lazy code motion to get loop-invariant code motion *)
     ; (one_step_loop_unrolling, settings.one_step_loop_unrolling)
