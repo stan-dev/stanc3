@@ -3569,6 +3569,9 @@ let%expect_test "Mapping acts recursively" =
 
 let print_vectorized s =
   let mir = vectorize_loops (reset_and_mir_of_string s) in
+  List.iter mir.functions_block ~f:(fun fd ->
+      Fmt.str "@[<v>%a@]" (Program.pp_fun_def Stmt.Located.pp) fd
+      |> print_endline);
   Fmt.str "@[<v>%a@]" (Fmt.list ~sep:Fmt.cut Stmt.Located.pp) mir.log_prob
   |> print_endline
 
@@ -3792,6 +3795,11 @@ let%expect_test "vectorize bail: user-defined densities are not vectorized" =
       |};
   [%expect
     {|
+    real foo_lpdf(real y, real mu) {
+      {
+        return PMinus__(square((y - mu)));
+      }
+    }
     real mu;
     {
       for(n in 1:N) {
@@ -3887,6 +3895,12 @@ let%expect_test "vectorize bail: side-effecting invariant argument" =
       |};
   [%expect
     {|
+    real bump_lp(real x) {
+      {
+        target += x;
+        return x;
+      }
+    }
     real sigma;
     {
       for(n in 1:N) {
@@ -3924,5 +3938,81 @@ let%expect_test "vectorize: transformed data sizes are trusted" =
     real sigma;
     {
       target += normal_lpdf(w, mu, sigma);
+    }
+    |}]
+
+let%expect_test "vectorize bail: no vectorized signature (matrix rows)" =
+  (* Each iteration is a valid scalar statement over a row_vector, but the
+     sliced argument is a matrix and normal_lpdf has no matrix signature, so the
+     final re-typecheck rejects the rewrite. *)
+  print_vectorized
+    {|
+      data {
+        int<lower=0> N;
+        matrix[N, 2] m;
+      }
+      parameters {
+        real mu;
+        real<lower=0> sigma;
+      }
+      model {
+        for (n in 1 : N) {
+          target += normal_lpdf(m[n] | mu, sigma);
+        }
+      }
+      |};
+  [%expect
+    {|
+    real mu;
+    real sigma;
+    {
+      for(n in 1:N) {
+        target += normal_lpdf(m[n], mu, sigma);
+      }
+    }
+    |}]
+
+let%expect_test "vectorize: loops inside function bodies" =
+  (* Function bodies see only their own arguments, so the slice form is emitted,
+     never a bare name. *)
+  print_vectorized
+    {|
+      functions {
+        real total_lpdf(vector y, real mu, real sigma) {
+          real lp = 0;
+          for (n in 1 : num_elements(y)) {
+            lp += normal_lpdf(y[n] | mu, sigma);
+          }
+          return lp;
+        }
+      }
+      data {
+        int<lower=0> N;
+        vector[N] y;
+      }
+      parameters {
+        real mu;
+        real<lower=0> sigma;
+      }
+      model {
+        y ~ total(mu, sigma);
+      }
+      |};
+  [%expect
+    {|
+    real total_lpdf(vector y, real mu, real sigma) {
+      {
+        real lp;
+        lp = promote(0, real, var);
+        for(n in 1:num_elements(y)) {
+          lp = (lp + normal_lpdf(y[n], mu, sigma));
+        }
+        return lp;
+      }
+    }
+    real mu;
+    real sigma;
+    {
+      target += total_lupdf(y, mu, sigma);
     }
     |}]
