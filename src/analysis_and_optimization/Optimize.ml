@@ -688,15 +688,7 @@ let cannot_remove_expr (e : Expr.Typed.t) = expr_any can_side_effect_top_expr e
    loop is left alone, so the signature table decides which densities vectorize;
    user-defined densities never do. *)
 let vectorize_loops (mir : Program.Typed.t) =
-  let outer_size = function
-    | SizedType.SVector (_, d)
-     |SRowVector (_, d)
-     |SMatrix (_, d, _)
-     |SArray (_, d) ->
-        Some d
-    | SInt | SReal | SComplex | SComplexVector _ | SComplexRowVector _
-     |SComplexMatrix _ | STuple _ ->
-        None in
+  let outer_size st = List.hd (SizedType.get_dims st) in
   (* Declared outer sizes are runtime invariants: whole-variable assignments are
      size-checked (stan::model::assign rejects mismatched shapes), and nothing
      else can resize, so a name's declared size holds wherever the name
