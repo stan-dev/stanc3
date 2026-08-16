@@ -215,14 +215,13 @@ module Helpers = struct
         URowVector
     | UComplexMatrix, [Single _; (All | Upfrom _ | Between _ | MultiIndex _)] ->
         UComplexRowVector
-    | ( UMatrix
-      , ([(All | Upfrom _ | Between _ | MultiIndex _); Single _] | [Single _]) )
-      ->
+    | UMatrix, [(All | Upfrom _ | Between _ | MultiIndex _); Single _] ->
         UVector
-    | ( UComplexMatrix
-      , ([(All | Upfrom _ | Between _ | MultiIndex _); Single _] | [Single _]) )
-      ->
+    | UComplexMatrix, [(All | Upfrom _ | Between _ | MultiIndex _); Single _] ->
         UComplexVector
+    (* A single index selects a row: [x[1]] is [x[1, : ]]. *)
+    | UMatrix, [Single _] -> URowVector
+    | UComplexMatrix, [Single _] -> UComplexRowVector
     | UArray t, Single _ :: tl -> infer_type_of_indexed t tl
     | UArray t, (All | Upfrom _ | Between _ | MultiIndex _) :: tl ->
         UArray (infer_type_of_indexed t tl)
@@ -300,7 +299,8 @@ module Helpers = struct
     |> print_endline;
     [%expect
       {|
-      vector, array[] matrix, matrix, array[] vector, real, array[] real, vector,
-      row_vector, matrix, vector, array[] vector, vector, row_vector, matrix
+      row_vector, array[] matrix, matrix, array[] row_vector, real, array[] real,
+      vector, row_vector, matrix, vector, array[] vector, vector, row_vector,
+      matrix
       |}]
 end

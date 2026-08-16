@@ -665,7 +665,7 @@
                                        (meta
                                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
                                   (meta
-                                   ((type_ UVector) (loc <opaque>)
+                                   ((type_ URowVector) (loc <opaque>)
                                     (adlevel AutoDiffable)))))))
                               (meta ((type_ UInt) (loc <opaque>) (adlevel AutoDiffable)))))
                             (body
@@ -752,7 +752,7 @@
                                        (meta
                                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
                                   (meta
-                                   ((type_ UVector) (loc <opaque>)
+                                   ((type_ URowVector) (loc <opaque>)
                                     (adlevel AutoDiffable)))))))
                               (meta ((type_ UInt) (loc <opaque>) (adlevel AutoDiffable)))))
                             (body
