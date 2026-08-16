@@ -641,6 +641,9 @@ let unroll_loop_one_step_statement _ =
 let one_step_loop_unrolling mir =
   transform_program_blockwise mir unroll_loop_one_step_statement
 
+(** Whether [pred] holds for any subexpression, looking inside indices too. Used
+    through [cannot_duplicate_expr] and [cannot_remove_expr] to keep
+    optimizations away from expressions whose evaluation count matters. *)
 let rec expr_any pred (e : Expr.Typed.t) =
   match e.pattern with
   | Indexed (e, is) -> expr_any pred e || List.exists ~f:(idx_any pred) is
