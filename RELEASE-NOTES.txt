@@ -1,14 +1,6 @@
 STANC3 RELEASE NOTES
 ======================================================================
 
-Next release
-======================================================================
-
- - New optimization `vectorize_loops` (enabled at `--Oexperimental`): loops
-   whose body is a single scalar density statement are rewritten to the
-   vectorized density call, e.g. `for (n in 1:N) y[n] ~ normal(mu[n], sigma);`
-   becomes `y ~ normal(mu, sigma);`.
-
 v2.39.0 (19 May 2026)
 ======================================================================
 

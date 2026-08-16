@@ -3860,3 +3860,67 @@ let%expect_test "vectorize bail: invariant container argument" =
       }
     }
     |}]
+
+let%expect_test "vectorize bail: side-effecting invariant argument" =
+  (* Vectorizing drops the invariant argument's evaluation count from N to
+     one, which a _lp call would observe in the target. *)
+  print_vectorized
+    {|
+      functions {
+        real bump_lp(real x) {
+          target += x;
+          return x;
+        }
+      }
+      data {
+        int<lower=0> N;
+        vector[N] y;
+      }
+      parameters {
+        real<lower=0> sigma;
+      }
+      model {
+        for (n in 1 : N) {
+          target += normal_lpdf(y[n] | bump_lp(sigma), sigma);
+        }
+      }
+      |};
+  [%expect {|
+    real sigma;
+    {
+      for(n in 1:N) {
+        target += normal_lpdf(y[n], bump_lp(sigma), sigma);
+      }
+    }
+    |}]
+
+let%expect_test "vectorize: transformed data sizes are trusted" =
+  (* Declared sizes are runtime invariants (whole-variable assignments are
+     size-checked), so a transformed data vector spanning the range appears
+     bare. *)
+  print_vectorized
+    {|
+      data {
+        int<lower=0> N;
+      }
+      transformed data {
+        vector[N] w;
+        w = rep_vector(1.5, N);
+      }
+      parameters {
+        real mu;
+        real<lower=0> sigma;
+      }
+      model {
+        for (n in 1 : N) {
+          target += normal_lpdf(w[n] | mu, sigma);
+        }
+      }
+      |};
+  [%expect {|
+    real mu;
+    real sigma;
+    {
+      target += normal_lpdf(w, mu, sigma);
+    }
+    |}]

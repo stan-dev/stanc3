@@ -641,6 +641,34 @@ let unroll_loop_one_step_statement _ =
 let one_step_loop_unrolling mir =
   transform_program_blockwise mir unroll_loop_one_step_statement
 
+let rec expr_any pred (e : Expr.Typed.t) =
+  match e.pattern with
+  | Indexed (e, is) -> expr_any pred e || List.exists ~f:(idx_any pred) is
+  | _ -> pred e || Expr.Pattern.fold (accum_any pred) false e.pattern
+
+and idx_any pred (i : Expr.Typed.t Index.t) =
+  Index.fold (accum_any pred) false i
+
+and accum_any pred b e = b || expr_any pred e
+
+let can_side_effect_top_expr (e : Expr.Typed.t) =
+  match e.pattern with
+  | FunApp ((UserDefined (_, FnTarget) | StanLib (_, FnTarget, _)), _) -> true
+  | FunApp (CompilerInternal internal_fn, _) ->
+      Internal_fun.can_side_effect internal_fn
+  | _ -> false
+
+let cannot_duplicate_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
+  let pred e =
+    can_side_effect_top_expr e
+    || (match e.pattern with
+      | FunApp ((UserDefined (_, FnRng) | StanLib (_, FnRng, _)), _) -> true
+      | _ -> false)
+    || (preserve_stability && UnsizedType.is_autodiffable e.meta.type_) in
+  expr_any pred e
+
+let cannot_remove_expr (e : Expr.Typed.t) = expr_any can_side_effect_top_expr e
+
 (* Loops whose body is a single scalar density statement become the vectorized
    density Stan Math already provides: [for (n in 1:N) target +=
    normal_lpdf(y[n] | mu[n], sigma)] becomes [target += normal_lpdf(y | mu,
@@ -649,16 +677,16 @@ let one_step_loop_unrolling mir =
    autodiff nodes instead of O(N). Tilde statements are already this shape in
    the MIR, and their proportionality flag rides along in the function suffix.
 
-   Every argument must either be a scalar invariant in the loop variable or be
-   exactly [x[n]]; an [x[n]] argument becomes the slice [x[lower:upper]], or [x]
-   alone when the range provably spans the declaration. Requiring at least one
-   loop-varying argument keeps a loop of N identical terms from collapsing to
-   one, and requiring invariants to be scalars keeps a container the loop sums
-   over every iteration from being zipped elementwise instead (both rewrites
-   would typecheck; neither is what the loop computed). The rewritten call must
-   typecheck against the Stan Math signatures or the loop is left alone, so the
-   signature table decides which densities vectorize; user-defined densities
-   never do. *)
+   Every argument must either be a side-effect-free scalar invariant in the loop
+   variable or be exactly [x[n]]; an [x[n]] argument becomes the slice
+   [x[lower:upper]], or [x] alone when the range provably spans the declaration.
+   Requiring at least one loop-varying argument keeps a loop of N identical
+   terms from collapsing to one, and requiring invariants to be scalars keeps a
+   container the loop sums over every iteration from being zipped elementwise
+   instead (both rewrites would typecheck; neither is what the loop computed).
+   The rewritten call must typecheck against the Stan Math signatures or the
+   loop is left alone, so the signature table decides which densities vectorize;
+   user-defined densities never do. *)
 let vectorize_loops (mir : Program.Typed.t) =
   let outer_size = function
     | SizedType.SVector (_, d)
@@ -669,51 +697,49 @@ let vectorize_loops (mir : Program.Typed.t) =
     | SInt | SReal | SComplex | SComplexVector _ | SComplexRowVector _
      |SComplexMatrix _ | STuple _ ->
         None in
-  (* Outer sizes that stay true wherever the variable appears: data and
-     parameters cannot be assigned to or shadowed, and parameters are
-     re-materialized at exactly their declared size. Local and transformed-data
-     containers can be overwritten whole, possibly at another size, so they are
-     only ever sliced explicitly, which needs no size knowledge. *)
+  (* Declared outer sizes are runtime invariants: whole-variable assignments are
+     size-checked (stan::model::assign rejects mismatched shapes), and nothing
+     else can resize, so a name's declared size holds wherever the name
+     appears. *)
   let trusted_sizes =
     List.filter_map mir.input_vars ~f:(fun (name, _, st) ->
         Option.map (outer_size st) ~f:(fun d -> (name, d)))
     @ List.filter_map mir.output_vars ~f:(fun (name, _, ov) ->
-        match ov.out_block with
-        | Parameters ->
-            Option.map (outer_size ov.out_constrained_st) ~f:(fun d ->
-                (name, d))
-        | TransformedParameters | GeneratedQuantities -> None)
-    |> String.Map.of_alist_exn in
-  let slice sizes ~lower ~upper (base : Expr.Typed.t) =
-    let full_range =
-      Expr.Typed.equal lower Expr.Helpers.loop_bottom
-      &&
-      match base.pattern with
-      | Var v -> Option.exists (Map.find sizes v) ~f:(Expr.Typed.equal upper)
-      | _ -> false in
-    if full_range then base
-    else
-      let type_ =
-        Expr.Helpers.infer_type_of_indexed (Expr.Typed.type_of base)
-          [Between (lower, upper)] in
-      Expr.
-        { pattern= Indexed (base, [Index.Between (lower, upper)])
-        ; meta= {base.meta with type_} } in
-  let classify_arg ~loopvar (arg : Expr.Typed.t) =
-    if not (Set.mem (expr_var_names_set arg) loopvar) then
-      (* Only scalar invariants broadcast. An invariant container argument is
-         summed over anew by every iteration of the scalar loop, but the
-         vectorized call would zip it against the sliced arguments elementwise
-         and both forms typecheck, so this must be ruled out here. *)
-      match Expr.Typed.type_of arg with
-      | UInt | UReal | UComplex -> Some (`Invariant arg)
-      | _ -> None
-    else
-      match arg.pattern with
-      | Indexed (({pattern= Var _; _} as base), [Single {pattern= Var v; _}])
-        when v = loopvar ->
-          Some (`Sliced base)
-      | _ -> None in
+        Option.map (outer_size ov.out_constrained_st) ~f:(fun d -> (name, d)))
+    @ List.filter_map mir.prepare_data ~f:(fun stmt ->
+        match stmt.Stmt.pattern with
+        | Decl {decl_id; decl_type= Type.Sized st; _} ->
+            Option.map (outer_size st) ~f:(fun d -> (decl_id, d))
+        | _ -> None)
+    (* prepare_data re-declares the data variables, at the same sizes. *)
+    |> String.Map.of_alist_reduce ~f:(fun first _ -> first) in
+  let spans_declaration sizes ~lower ~upper (base : Expr.Typed.t) =
+    Expr.Typed.equal lower Expr.Helpers.loop_bottom
+    &&
+    match base.pattern with
+    | Var v -> Option.exists (Map.find sizes v) ~f:(Expr.Typed.equal upper)
+    | _ -> false in
+  let vectorize_arg sizes ~loopvar ~lower ~upper (arg : Expr.Typed.t) =
+    match arg with
+    | { pattern=
+          Indexed (({pattern= Var _; _} as base), [Single {pattern= Var v; _}])
+      ; _ }
+      when v = loopvar ->
+        Some
+          (`Sliced
+             (if spans_declaration sizes ~lower ~upper base then base
+              else
+                Expr.Helpers.add_int_index base (Index.Between (lower, upper))))
+    (* Only scalar invariants broadcast: an invariant container argument is
+       summed over anew by every iteration of the scalar loop, but the
+       vectorized call would zip it against the sliced arguments elementwise,
+       and both forms typecheck. The evaluation count also drops from N to one,
+       which side-effecting arguments (_lp calls) would observe. *)
+    | {meta= {type_= UInt | UReal | UComplex; _}; _}
+      when (not (Set.mem (expr_var_names_set arg) loopvar))
+           && not (cannot_remove_expr arg) ->
+        Some (`Invariant arg)
+    | _ -> None in
   let vectorize_for sizes ~loopvar ~lower ~upper (body : Stmt.Located.t) =
     let open Stdlib.Option.Syntax in
     let* stmt =
@@ -730,7 +756,9 @@ let vectorize_loops (mir : Program.Typed.t) =
            ; _ } as e) ->
           Some (e, name, suffix, mem, args)
       | _ -> None in
-    let* classified = List.map args ~f:(classify_arg ~loopvar) |> Option.all in
+    let* classified =
+      List.map args ~f:(vectorize_arg sizes ~loopvar ~lower ~upper)
+      |> Option.all in
     let* () =
       Option.some_if
         (List.exists classified ~f:(function
@@ -738,9 +766,7 @@ let vectorize_loops (mir : Program.Typed.t) =
           | `Invariant _ -> false))
         () in
     let args' =
-      List.map classified ~f:(function
-        | `Invariant arg -> arg
-        | `Sliced base -> slice sizes ~lower ~upper base) in
+      List.map classified ~f:(function `Invariant e | `Sliced e -> e) in
     let* () =
       match
         Frontend.Typechecker.stan_math_return_type name
@@ -812,34 +838,6 @@ let propagation
 let constant_propagation ?(preserve_stability = false) =
   propagation
     (Monotone_framework.constant_propagation_transfer ~preserve_stability)
-
-let rec expr_any pred (e : Expr.Typed.t) =
-  match e.pattern with
-  | Indexed (e, is) -> expr_any pred e || List.exists ~f:(idx_any pred) is
-  | _ -> pred e || Expr.Pattern.fold (accum_any pred) false e.pattern
-
-and idx_any pred (i : Expr.Typed.t Index.t) =
-  Index.fold (accum_any pred) false i
-
-and accum_any pred b e = b || expr_any pred e
-
-let can_side_effect_top_expr (e : Expr.Typed.t) =
-  match e.pattern with
-  | FunApp ((UserDefined (_, FnTarget) | StanLib (_, FnTarget, _)), _) -> true
-  | FunApp (CompilerInternal internal_fn, _) ->
-      Internal_fun.can_side_effect internal_fn
-  | _ -> false
-
-let cannot_duplicate_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
-  let pred e =
-    can_side_effect_top_expr e
-    || (match e.pattern with
-      | FunApp ((UserDefined (_, FnRng) | StanLib (_, FnRng, _)), _) -> true
-      | _ -> false)
-    || (preserve_stability && UnsizedType.is_autodiffable e.meta.type_) in
-  expr_any pred e
-
-let cannot_remove_expr (e : Expr.Typed.t) = expr_any can_side_effect_top_expr e
 
 let expression_propagation ?(preserve_stability = false) mir =
   propagation
