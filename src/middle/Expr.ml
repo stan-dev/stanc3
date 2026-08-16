@@ -207,26 +207,34 @@ module Helpers = struct
     match (ut, indices) with
     | _, [] -> ut
     | _, [Index.All] | _, [Upfrom _] | _, [Between _] | _, [MultiIndex _] -> ut
-    | UnsizedType.UMatrix, [All; Single _]
-     |UMatrix, [Upfrom _; Single _]
-     |UMatrix, [Between _; Single _]
-     |UMatrix, [MultiIndex _; Single _]
-     |UMatrix, [Single _] ->
+    | ( (UnsizedType.UMatrix | UComplexMatrix)
+      , [ (All | Upfrom _ | Between _ | MultiIndex _)
+        ; (All | Upfrom _ | Between _ | MultiIndex _) ] ) ->
+        ut
+    | UMatrix, [Single _; (All | Upfrom _ | Between _ | MultiIndex _)] ->
+        URowVector
+    | UComplexMatrix, [Single _; (All | Upfrom _ | Between _ | MultiIndex _)] ->
+        UComplexRowVector
+    | ( UMatrix
+      , ([(All | Upfrom _ | Between _ | MultiIndex _); Single _] | [Single _]) )
+      ->
         UVector
-    | UComplexMatrix, [All; Single _]
-     |UComplexMatrix, [Upfrom _; Single _]
-     |UComplexMatrix, [Between _; Single _]
-     |UComplexMatrix, [MultiIndex _; Single _]
-     |UComplexMatrix, [Single _] ->
+    | ( UComplexMatrix
+      , ([(All | Upfrom _ | Between _ | MultiIndex _); Single _] | [Single _]) )
+      ->
         UComplexVector
     | UArray t, Single _ :: tl -> infer_type_of_indexed t tl
-    | UArray t, _ :: tl -> UArray (infer_type_of_indexed t tl)
-    | UMatrix, [Single _; Single _] | UVector, [_] | URowVector, [_] -> UReal
+    | UArray t, (All | Upfrom _ | Between _ | MultiIndex _) :: tl ->
+        UArray (infer_type_of_indexed t tl)
+    | UMatrix, [Single _; Single _] | (UVector | URowVector), [Single _] ->
+        UReal
     | UComplexMatrix, [Single _; Single _]
-     |UComplexVector, [_]
-     |UComplexRowVector, [_] ->
+     |(UComplexVector | UComplexRowVector), [Single _] ->
         UComplex
-    | _ ->
+    | ( (UInt | UReal | UComplex | UTuple _ | UFun _ | UMathLibraryFunction)
+      , _ :: _ )
+     |(UVector | URowVector | UComplexVector | UComplexRowVector), _ :: _ :: _
+     |(UMatrix | UComplexMatrix), _ :: _ :: _ :: _ ->
         ICE.(internal_errorf "Can't index %t" [UnsizedType.pp $ ut])
         [@coverage off]
 
@@ -283,13 +291,16 @@ module Helpers = struct
     ; (UMatrix, [MultiIndex (variable "idx")])
     ; (UMatrix, [MultiIndex (variable "idx"); Single loop_bottom])
     ; (UArray UVector, [MultiIndex (variable "idx")])
-    ; (UArray UVector, [Single loop_bottom; MultiIndex (variable "idx")]) ]
+    ; (UArray UVector, [Single loop_bottom; MultiIndex (variable "idx")])
+    ; (UMatrix, [Single loop_bottom; Between (loop_bottom, loop_bottom)])
+    ; ( UMatrix
+      , [Between (loop_bottom, loop_bottom); MultiIndex (variable "idx")] ) ]
     |> List.map ~f:(fun (ut, idx) -> infer_type_of_indexed ut idx)
     |> Fmt.(str "@[<hov>%a@]" (list ~sep:comma UnsizedType.pp))
     |> print_endline;
     [%expect
       {|
       vector, array[] matrix, matrix, array[] vector, real, array[] real, vector,
-      row_vector, matrix, vector, array[] vector, vector
+      row_vector, matrix, vector, array[] vector, vector, row_vector, matrix
       |}]
 end
