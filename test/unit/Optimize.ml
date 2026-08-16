@@ -3862,8 +3862,8 @@ let%expect_test "vectorize bail: invariant container argument" =
     |}]
 
 let%expect_test "vectorize bail: side-effecting invariant argument" =
-  (* Vectorizing drops the invariant argument's evaluation count from N to
-     one, which a _lp call would observe in the target. *)
+  (* Vectorizing drops the invariant argument's evaluation count from N to one,
+     which a _lp call would observe in the target. *)
   print_vectorized
     {|
       functions {
@@ -3885,7 +3885,8 @@ let%expect_test "vectorize bail: side-effecting invariant argument" =
         }
       }
       |};
-  [%expect {|
+  [%expect
+    {|
     real sigma;
     {
       for(n in 1:N) {
@@ -3917,7 +3918,8 @@ let%expect_test "vectorize: transformed data sizes are trusted" =
         }
       }
       |};
-  [%expect {|
+  [%expect
+    {|
     real mu;
     real sigma;
     {
