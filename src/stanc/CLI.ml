@@ -321,6 +321,11 @@ module Debug_Options = struct
        it." in
     debug_basic_or_pretty ~doc "debug-transformed-mir"
 
+  let debug_print_factor_graph =
+    let doc = "For debugging purposes: print a conservative over-approximation \
+    of the factor graph for the model(s) implemented in the Stan program." in
+    Arg.(value & flag & info ["debug-print-factor-graph"] ~doc ~docs)
+
   let force_soa =
     let doc =
       "Debugging features. Valid values: $(b,-fsoa) to force on the Struct of \
@@ -370,7 +375,8 @@ module Conversion = struct
     and+ print_lir = debug_lir
     and+ debug_generate_data
     and+ debug_generate_inits
-    and+ debug_data_json = Term.ret debug_data_json in
+    and+ debug_data_json = Term.ret debug_data_json
+    and+ debug_print_factor_graph = debug_print_factor_graph in
     Driver.Flags.
       { print_ast
       ; print_typed_ast
@@ -382,7 +388,8 @@ module Conversion = struct
       ; print_lir
       ; debug_generate_data
       ; debug_generate_inits
-      ; debug_data_json }
+      ; debug_data_json
+      ; debug_print_factor_graph }
 
   let flags : Driver.Flags.t Term.t =
     let open Options in
