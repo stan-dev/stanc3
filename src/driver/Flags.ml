@@ -28,7 +28,8 @@ and debug_settings =
   ; print_lir: bool
   ; debug_generate_data: bool
   ; debug_generate_inits: bool
-  ; debug_data_json: (string * string) option }
+  ; debug_data_json: (string * string) option
+  ; debug_print_factor_graph: bool }
 
 and debug_options = Off | Basic | Pretty
 
@@ -63,7 +64,8 @@ let default =
       ; print_lir= false
       ; debug_generate_data= false
       ; debug_generate_inits= false
-      ; debug_data_json= None }
+      ; debug_data_json= None
+      ; debug_print_factor_graph= false }
   ; line_length= 78
   ; canonicalizer_settings= Frontend.Canonicalize.none
   ; warn_pedantic= false
