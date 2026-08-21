@@ -673,35 +673,24 @@ let cannot_duplicate_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
 
 let cannot_remove_expr (e : Expr.Typed.t) = expr_any can_side_effect_top_expr e
 
-(* Rewrites [for (n in 1:N) target += normal_lpdf(y[n] | mu[n], sigma)] to
-   [target += normal_lpdf(y | mu, sigma)]. Both forms sum the same terms. The
-   vectorized call computes shared subexpressions like log(sigma) once and
-   allocates O(1) autodiff nodes instead of O(N). Tilde statements have the same
-   MIR shape, and the proportionality flag is part of the function suffix, so
-   they are covered too.
+(* Rewrites e.g. [for (n in 1:N) target += normal_lpdf(y[n] | mu[n], sigma)] to
+   [target += normal_lpdf(y | mu, sigma)]. Tilde statements have the same MIR
+   shape, and the proportionality flag is part of the function suffix, so they
+   are covered too.
 
    Every argument must be a side-effect-free scalar that is invariant in the
    loop variable, or exactly [x[n]]. An [x[n]] argument becomes the slice
    [x[lower:upper]], or [x] alone when the range provably spans the declaration.
-   At least one argument must vary with the loop. Without that rule, a loop of N
-   identical terms would collapse to one term. Invariants must be scalars. An
-   invariant container is summed over by every iteration of the loop, but the
-   vectorized call would zip it against the other arguments elementwise, and
-   both forms typecheck. The rewritten call must typecheck against the Stan Math
-   signatures or the loop is left alone. That makes the signature table the list
-   of which densities vectorize. User-defined densities never do. *)
+   At least one argument must vary with the loop.
+
+   The rewritten is typechecked against the Stan Math signatures so that the
+   signature table determines which densities vectorize. *)
 let vectorize_loops (mir : Program.Typed.t) =
   let outer_size st = List.hd (SizedType.get_dims st) in
-  (* Declared outer sizes never change at runtime. Whole-variable assignments
-     are size-checked by stan::model::assign, and nothing else can resize. So a
-     declared size holds wherever the name appears. *)
   let trusted_sizes =
     List.filter_map mir.input_vars ~f:(fun (name, _, st) ->
         Option.map (outer_size st) ~f:(fun d -> (name, d)))
     @ List.filter_map mir.output_vars ~f:(fun (name, _, ov) ->
-        (* A generated quantity is not in scope in the model block, so a model
-           local may legally reuse its name at another size. Parameter and
-           transformed parameter names cannot be reused. *)
         match ov.Program.out_block with
         | GeneratedQuantities -> None
         | Parameters | TransformedParameters ->
@@ -712,7 +701,6 @@ let vectorize_loops (mir : Program.Typed.t) =
         | Decl {decl_id; decl_type= Type.Sized st; _} ->
             Option.map (outer_size st) ~f:(fun d -> (decl_id, d))
         | _ -> None)
-    (* prepare_data re-declares the data variables, at the same sizes. *)
     |> String.Map.of_list in
   let spans_declaration sizes ~lower ~upper (base : Expr.Typed.t) =
     Expr.Typed.equal lower Expr.Helpers.loop_bottom
@@ -732,11 +720,6 @@ let vectorize_loops (mir : Program.Typed.t) =
              (if spans_declaration sizes ~lower ~upper base then base
               else
                 Expr.Helpers.add_int_index base (Index.Between (lower, upper))))
-    (* Invariants must be scalars. An invariant container is summed over by
-       every iteration of the loop, but the vectorized call would zip it against
-       the sliced arguments elementwise, and both forms typecheck. They must
-       also be free of side effects. The rewrite evaluates them once instead of
-       N times, which an _lp call would observe. *)
     | {meta= {type_= UInt | UReal | UComplex; _}; _}
       when (not (Set.Poly.mem loopvar (expr_var_names_set arg)))
            && not (cannot_remove_expr arg) ->
@@ -791,8 +774,6 @@ let vectorize_loops (mir : Program.Typed.t) =
           (vectorize_for sizes ~loopvar ~lower ~upper body)
           ~default:s
     | s -> s in
-  (* A function argument may share its name with a data variable while having an
-     unrelated size, so function bodies trust nothing. *)
   transform_program_blockwise mir (fun fd ->
       let sizes =
         match fd with Some _ -> String.Map.empty | None -> trusted_sizes in
