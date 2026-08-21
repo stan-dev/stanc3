@@ -702,7 +702,7 @@ let vectorize_loops (mir : Program.Typed.t) =
         (* A generated quantity is not in scope in the model block, so a model
            local may legally reuse its name at another size. Parameter and
            transformed parameter names cannot be reused. *)
-        match ov.out_block with
+        match ov.Program.out_block with
         | GeneratedQuantities -> None
         | Parameters | TransformedParameters ->
             Option.map (outer_size ov.out_constrained_st) ~f:(fun d ->
@@ -713,12 +713,13 @@ let vectorize_loops (mir : Program.Typed.t) =
             Option.map (outer_size st) ~f:(fun d -> (decl_id, d))
         | _ -> None)
     (* prepare_data re-declares the data variables, at the same sizes. *)
-    |> String.Map.of_alist_reduce ~f:(fun first _ -> first) in
+    |> String.Map.of_list in
   let spans_declaration sizes ~lower ~upper (base : Expr.Typed.t) =
     Expr.Typed.equal lower Expr.Helpers.loop_bottom
     &&
     match base.pattern with
-    | Var v -> Option.exists (Map.find sizes v) ~f:(Expr.Typed.equal upper)
+    | Var v ->
+        Option.exists (Expr.Typed.equal upper) (String.Map.find_opt v sizes)
     | _ -> false in
   let vectorize_arg sizes ~loopvar ~lower ~upper (arg : Expr.Typed.t) =
     match arg with
@@ -737,7 +738,7 @@ let vectorize_loops (mir : Program.Typed.t) =
        also be free of side effects. The rewrite evaluates them once instead of
        N times, which an _lp call would observe. *)
     | {meta= {type_= UInt | UReal | UComplex; _}; _}
-      when (not (Set.mem (expr_var_names_set arg) loopvar))
+      when (not (Set.Poly.mem loopvar (expr_var_names_set arg)))
            && not (cannot_remove_expr arg) ->
         Some (`Invariant arg)
     | _ -> None in
