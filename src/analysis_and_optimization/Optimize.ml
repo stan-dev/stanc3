@@ -642,9 +642,6 @@ let unroll_loop_one_step_statement _ =
 let one_step_loop_unrolling mir =
   transform_program_blockwise mir unroll_loop_one_step_statement
 
-(** Whether [pred] holds for any subexpression, including inside indices.
-    [cannot_duplicate_expr] and [cannot_remove_expr] use this to keep
-    optimizations away from expressions whose evaluation count matters. *)
 let rec expr_any pred (e : Expr.Typed.t) =
   match e.pattern with
   | Indexed (e, is) -> expr_any pred e || List.exists ~f:(idx_any pred) is
@@ -1431,9 +1428,7 @@ let optimization_suite ?(settings = all_optimizations) mir =
       (* Book: Dead-code elimination *)
     ; (dead_code_elimination, settings.dead_code_elimination)
       (* Vectorization needs the loops intact, so it runs before one-step
-         unrolling peels a first iteration. It also runs before
-         partial_evaluation so the vectorized densities can fuse further, for
-         example into the GLM functions. *)
+         unrolling. *)
     ; (vectorize_loops, settings.vectorize_loops)
       (* Matthijs: Before lazy code motion to get loop-invariant code motion *)
     ; (one_step_loop_unrolling, settings.one_step_loop_unrolling)
