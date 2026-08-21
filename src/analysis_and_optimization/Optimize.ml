@@ -642,161 +642,6 @@ let unroll_loop_one_step_statement _ =
 let one_step_loop_unrolling mir =
   transform_program_blockwise mir unroll_loop_one_step_statement
 
-(** Whether [pred] holds for any subexpression, including inside indices.
-    [cannot_duplicate_expr] and [cannot_remove_expr] use this to keep
-    optimizations away from expressions whose evaluation count matters. *)
-let rec expr_any pred (e : Expr.Typed.t) =
-  match e.pattern with
-  | Indexed (e, is) -> expr_any pred e || List.exists ~f:(idx_any pred) is
-  | _ -> pred e || Expr.Pattern.fold (accum_any pred) false e.pattern
-
-and idx_any pred (i : Expr.Typed.t Index.t) =
-  Index.fold (accum_any pred) false i
-
-and accum_any pred b e = b || expr_any pred e
-
-let can_side_effect_top_expr (e : Expr.Typed.t) =
-  match e.pattern with
-  | FunApp ((UserDefined (_, FnTarget) | StanLib (_, FnTarget, _)), _) -> true
-  | FunApp (CompilerInternal internal_fn, _) ->
-      Internal_fun.can_side_effect internal_fn
-  | _ -> false
-
-let cannot_duplicate_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
-  let pred e =
-    can_side_effect_top_expr e
-    || (match e.pattern with
-      | FunApp ((UserDefined (_, FnRng) | StanLib (_, FnRng, _)), _) -> true
-      | _ -> false)
-    || (preserve_stability && UnsizedType.is_autodiffable e.meta.type_) in
-  expr_any pred e
-
-let cannot_remove_expr (e : Expr.Typed.t) = expr_any can_side_effect_top_expr e
-
-(* Rewrites [for (n in 1:N) target += normal_lpdf(y[n] | mu[n], sigma)] to
-   [target += normal_lpdf(y | mu, sigma)]. Both forms sum the same terms. The
-   vectorized call computes shared subexpressions like log(sigma) once and
-   allocates O(1) autodiff nodes instead of O(N). Tilde statements have the same
-   MIR shape, and the proportionality flag is part of the function suffix, so
-   they are covered too.
-
-   Every argument must be a side-effect-free scalar that is invariant in the
-   loop variable, or exactly [x[n]]. An [x[n]] argument becomes the slice
-   [x[lower:upper]], or [x] alone when the range provably spans the declaration.
-   At least one argument must vary with the loop. Without that rule, a loop of N
-   identical terms would collapse to one term. Invariants must be scalars. An
-   invariant container is summed over by every iteration of the loop, but the
-   vectorized call would zip it against the other arguments elementwise, and
-   both forms typecheck. The rewritten call must typecheck against the Stan Math
-   signatures or the loop is left alone. That makes the signature table the list
-   of which densities vectorize. User-defined densities never do. *)
-let vectorize_loops (mir : Program.Typed.t) =
-  let outer_size st = List.hd (SizedType.get_dims st) in
-  (* Declared outer sizes never change at runtime. Whole-variable assignments
-     are size-checked by stan::model::assign, and nothing else can resize. So a
-     declared size holds wherever the name appears. *)
-  let trusted_sizes =
-    List.filter_map mir.input_vars ~f:(fun (name, _, st) ->
-        Option.map (outer_size st) ~f:(fun d -> (name, d)))
-    @ List.filter_map mir.output_vars ~f:(fun (name, _, ov) ->
-        (* A generated quantity is not in scope in the model block, so a model
-           local may legally reuse its name at another size. Parameter and
-           transformed parameter names cannot be reused. *)
-        match ov.out_block with
-        | GeneratedQuantities -> None
-        | Parameters | TransformedParameters ->
-            Option.map (outer_size ov.out_constrained_st) ~f:(fun d ->
-                (name, d)))
-    @ List.filter_map mir.prepare_data ~f:(fun stmt ->
-        match stmt.Stmt.pattern with
-        | Decl {decl_id; decl_type= Type.Sized st; _} ->
-            Option.map (outer_size st) ~f:(fun d -> (decl_id, d))
-        | _ -> None)
-    (* prepare_data re-declares the data variables, at the same sizes. *)
-    |> String.Map.of_alist_reduce ~f:(fun first _ -> first) in
-  let spans_declaration sizes ~lower ~upper (base : Expr.Typed.t) =
-    Expr.Typed.equal lower Expr.Helpers.loop_bottom
-    &&
-    match base.pattern with
-    | Var v -> Option.exists (Map.find sizes v) ~f:(Expr.Typed.equal upper)
-    | _ -> false in
-  let vectorize_arg sizes ~loopvar ~lower ~upper (arg : Expr.Typed.t) =
-    match arg with
-    | { pattern=
-          Indexed (({pattern= Var _; _} as base), [Single {pattern= Var v; _}])
-      ; _ }
-      when v = loopvar ->
-        Some
-          (`Sliced
-             (if spans_declaration sizes ~lower ~upper base then base
-              else
-                Expr.Helpers.add_int_index base (Index.Between (lower, upper))))
-    (* Invariants must be scalars. An invariant container is summed over by
-       every iteration of the loop, but the vectorized call would zip it against
-       the sliced arguments elementwise, and both forms typecheck. They must
-       also be free of side effects. The rewrite evaluates them once instead of
-       N times, which an _lp call would observe. *)
-    | {meta= {type_= UInt | UReal | UComplex; _}; _}
-      when (not (Set.mem (expr_var_names_set arg) loopvar))
-           && not (cannot_remove_expr arg) ->
-        Some (`Invariant arg)
-    | _ -> None in
-  let vectorize_for sizes ~loopvar ~lower ~upper (body : Stmt.Located.t) =
-    let open Stdlib.Option.Syntax in
-    let* stmt =
-      match body.Stmt.pattern with
-      | Block [s] | SList [s] -> Some s
-      | TargetPE _ -> Some body
-      | _ -> None in
-    let* e, name, suffix, mem, args =
-      match stmt.Stmt.pattern with
-      | TargetPE
-          ({ pattern=
-               FunApp
-                 (StanLib (name, ((FnLpdf _ | FnLpmf _) as suffix), mem), args)
-           ; _ } as e) ->
-          Some (e, name, suffix, mem, args)
-      | _ -> None in
-    let* classified =
-      List.map args ~f:(vectorize_arg sizes ~loopvar ~lower ~upper)
-      |> Option.all in
-    let* () =
-      Option.some_if
-        (List.exists classified ~f:(function
-          | `Sliced _ -> true
-          | `Invariant _ -> false))
-        () in
-    let args' =
-      List.map classified ~f:(function `Invariant e | `Sliced e -> e) in
-    let* () =
-      match
-        Frontend.Typechecker.stan_math_return_type name
-          (List.map ~f:Expr.Typed.fun_arg args')
-      with
-      | Some (ReturnType UReal) -> Some ()
-      | _ -> None in
-    let adlevel =
-      if UnsizedType.any_autodiff (List.map ~f:Expr.Typed.adlevel_of args') then
-        UnsizedType.AutoDiffable
-      else DataOnly in
-    Some
-      (Stmt.Pattern.TargetPE
-         Expr.
-           { pattern= FunApp (StanLib (name, suffix, mem), args')
-           ; meta= {e.meta with adlevel} }) in
-  let vectorize_statement sizes = function
-    | Stmt.Pattern.For {loopvar; lower; upper; body} as s ->
-        Option.value
-          (vectorize_for sizes ~loopvar ~lower ~upper body)
-          ~default:s
-    | s -> s in
-  (* A function argument may share its name with a data variable while having an
-     unrelated size, so function bodies trust nothing. *)
-  transform_program_blockwise mir (fun fd ->
-      let sizes =
-        match fd with Some _ -> String.Map.empty | None -> trusted_sizes in
-      top_down_map_rec_stmt_loc (vectorize_statement sizes))
-
 let collapse_lists_statement _ =
   let rec collapse_lists l =
     match l with
@@ -838,6 +683,34 @@ let propagation
 let constant_propagation ?(preserve_stability = false) =
   propagation
     (Monotone_framework.constant_propagation_transfer ~preserve_stability)
+
+let rec expr_any pred (e : Expr.Typed.t) =
+  match e.pattern with
+  | Indexed (e, is) -> expr_any pred e || List.exists ~f:(idx_any pred) is
+  | _ -> pred e || Expr.Pattern.fold (accum_any pred) false e.pattern
+
+and idx_any pred (i : Expr.Typed.t Index.t) =
+  Index.fold (accum_any pred) false i
+
+and accum_any pred b e = b || expr_any pred e
+
+let can_side_effect_top_expr (e : Expr.Typed.t) =
+  match e.pattern with
+  | FunApp ((UserDefined (_, FnTarget) | StanLib (_, FnTarget, _)), _) -> true
+  | FunApp (CompilerInternal internal_fn, _) ->
+      Internal_fun.can_side_effect internal_fn
+  | _ -> false
+
+let cannot_duplicate_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
+  let pred e =
+    can_side_effect_top_expr e
+    || (match e.pattern with
+      | FunApp ((UserDefined (_, FnRng) | StanLib (_, FnRng, _)), _) -> true
+      | _ -> false)
+    || (preserve_stability && UnsizedType.is_autodiffable e.meta.type_) in
+  expr_any pred e
+
+let cannot_remove_expr (e : Expr.Typed.t) = expr_any can_side_effect_top_expr e
 
 let expression_propagation ?(preserve_stability = false) mir =
   propagation
@@ -1372,7 +1245,6 @@ type optimization_settings =
   { function_inlining: bool
   ; static_loop_unrolling: bool
   ; one_step_loop_unrolling: bool
-  ; vectorize_loops: bool
   ; list_collapsing: bool
   ; block_fixing: bool
   ; allow_uninitialized_decls: bool
@@ -1390,7 +1262,6 @@ let settings_const b =
   { function_inlining= b
   ; static_loop_unrolling= b
   ; one_step_loop_unrolling= b
-  ; vectorize_loops= b
   ; list_collapsing= b
   ; block_fixing= b
   ; allow_uninitialized_decls= b
@@ -1416,7 +1287,6 @@ let level_optimizations (lvl : optimization_level) : optimization_settings =
       { function_inlining= true
       ; static_loop_unrolling= false
       ; one_step_loop_unrolling= false
-      ; vectorize_loops= false
       ; list_collapsing= true
       ; block_fixing= true
       ; constant_propagation= true
@@ -1448,11 +1318,6 @@ let optimization_suite ?(settings = all_optimizations) mir =
     ; (constant_propagation ~preserve_stability, settings.constant_propagation)
       (* Book: Dead-code elimination *)
     ; (dead_code_elimination, settings.dead_code_elimination)
-      (* Vectorization needs the loops intact, so it runs before one-step
-         unrolling peels a first iteration. It also runs before
-         partial_evaluation so the vectorized densities can fuse further, for
-         example into the GLM functions. *)
-    ; (vectorize_loops, settings.vectorize_loops)
       (* Matthijs: Before lazy code motion to get loop-invariant code motion *)
     ; (one_step_loop_unrolling, settings.one_step_loop_unrolling)
       (* Matthjis: expression_propagation < partial_evaluation *)
