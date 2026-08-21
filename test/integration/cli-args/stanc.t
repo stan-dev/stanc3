@@ -178,6 +178,10 @@ Show help
          --debug-parse
              For debugging purposes: print the parser actions.
   
+         --debug-print-factor-graph
+             For debugging purposes: print a conservative over-approximation of
+             the factor graph for the model(s) implemented in the Stan program.
+  
          --debug-transformed-mir
              For debugging purposes: print the MIR after the backend has
              transformed it.
