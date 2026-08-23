@@ -19,6 +19,12 @@ val vectorize_loops : Program.Typed.t -> Program.Typed.t
     vectorized density call, when the Stan Math signatures have one. Loops that
     do not match are left unchanged *)
 
+val fuse_eigendecompose : Program.Typed.t -> Program.Typed.t
+(** Rewrite an adjacent pair of assignments of [eigenvectors_sym(A)] and
+    [eigenvalues_sym(A)] with structurally identical, side-effect-free
+    arguments into a single [eigendecompose_sym] call destructured into the
+    two original variables. Non-matching pairs are left unchanged *)
+
 val list_collapsing : Program.Typed.t -> Program.Typed.t
 (** Remove redundant SList constructors from the Mir that might have been
     introduced by other optimizations *)
@@ -74,6 +80,7 @@ type optimization_settings =
   ; static_loop_unrolling: bool
   ; one_step_loop_unrolling: bool
   ; vectorize_loops: bool
+  ; fuse_eigendecompose: bool
   ; list_collapsing: bool
   ; block_fixing: bool
   ; allow_uninitialized_decls: bool

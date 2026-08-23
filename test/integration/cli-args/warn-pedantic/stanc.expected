@@ -430,6 +430,15 @@ Warning in 'distribution_bounds.stan', line 10, column 2 to column 3:
     Parameter c is given a lognormal distribution, which has strictly
     positive support, but c was not constrained to be strictly positive.
 [exit 0]
+  $ stanc --warn-pedantic  eigh-pair.stan
+Warning in 'eigh-pair.stan', line 10, column 23 to column 24:
+    The same argument is passed to both eigenvectors_sym and eigenvalues_sym.
+    Each call performs a full eigendecomposition of its argument; consider
+    computing both results from a single decomposition, e.g. tuple(matrix,
+    vector) e = eigendecompose_sym(A); with the eigenvectors in e.1 and the
+    eigenvalues in e.2. Compiling with --O1 or higher fuses adjacent pairs
+    like this automatically.
+[exit 0]
   $ stanc --warn-pedantic  function-param-control-flow.stan
 Warning in 'function-param-control-flow.stan', line 3, column 4 to line 7, column 5:
     A control flow statement inside function func depends on argument b. At

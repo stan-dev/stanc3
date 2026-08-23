@@ -488,6 +488,40 @@ let uninitialized_warnings (mir : Program.Typed.t) =
     ~f:(fun (loc, vname) -> (loc, uninitialized_message vname))
     deduplicated
 
+(* The eigenvectors_sym/eigenvalues_sym pair on the same argument: each call
+   runs its own full eigendecomposition, while the combined
+   eigendecompose_sym primitive computes both from a single solver. *)
+let eigh_pair_message : string =
+  "The same argument is passed to both eigenvectors_sym and eigenvalues_sym. \
+   Each call performs a full eigendecomposition of its argument; consider \
+   computing both results from a single decomposition, e.g. \
+   tuple(matrix, vector) e = eigendecompose_sym(A); with the eigenvectors in \
+   e.1 and the eigenvalues in e.2. Compiling with --O1 or higher fuses \
+   adjacent pairs like this automatically."
+
+let eigh_pair_warnings (mir : Program.Typed.t) : warning_span Set.Poly.t =
+  let unmergeable_call =
+    Expr.Helpers.contains_fn_kind
+      (function
+        | UserDefined _ | StanLib (_, (FnTarget | FnRng), _) -> true
+        | _ -> false)
+      ~init:false in
+  let stmts =
+    List.append mir.log_prob
+      (List.filter_map ~f:(fun f -> f.fdbody) mir.functions_block) in
+  let take_eigh name (expr : Expr.Typed.t) =
+    match expr.pattern with
+    | Expr.Pattern.FunApp (StanLib (n, _, _), [arg])
+      when String.equal n name && not (unmergeable_call arg) ->
+        Some arg
+    | _ -> None in
+  let vec_args = stmts_collect_exprs stmts ~f:(take_eigh "eigenvectors_sym") in
+  let val_args = stmts_collect_exprs stmts ~f:(take_eigh "eigenvalues_sym") in
+  Set.Poly.filter_map vec_args ~f:(fun arg ->
+      if Set.Poly.exists val_args ~f:(Expr.Typed.equal arg) then
+        Some (arg.meta.loc, eigh_pair_message)
+      else None)
+
 let to_list warning_set =
   Set.Poly.to_list warning_set |> List.sort ~cmp:Stdlib.compare
 
@@ -516,5 +550,6 @@ let warn_pedantic (mir_unopt : Program.Typed.t) =
     ; hard_constrained_warnings mir; unused_params_warnings factor_graph mir
     ; param_dependant_cf_warnings mir; param_dependant_fundef_cf_warnings mir
     ; non_one_priors_warnings factor_graph mir
+    ; eigh_pair_warnings mir
     ; distribution_warnings distributions_info ]
   |> to_list

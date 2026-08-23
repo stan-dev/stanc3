@@ -776,6 +776,200 @@ let vectorize_loops (mir : Program.Typed.t) =
         match fd with Some _ -> String.Map.empty | None -> trusted_sizes in
       top_down_map_rec_stmt_loc (vectorize_statement sizes))
 
+(* Rewrites e.g. [Q = eigenvectors_sym(A); R = eigenvalues_sym(A)] (in either
+   order) to [(matrix, vector) ed = eigendecompose_sym(A); Q = ed.1; R = ed.2].
+   Both reverse-mode primitives construct their own full SelfAdjointEigenSolver
+   of the argument, so a program that uses both on the same argument runs two
+   eigendecompositions per gradient evaluation where a single one would
+   suffice; the combined [eigendecompose_sym] primitive computes both results
+   from one solver. This transformation is numerically neutral: the two
+   callbacks of the original pair and the single callback of the combined
+   primitive accumulate the same terms, in the same order, into the same
+   zero-initialized operand adjoint.
+
+   Only adjacent assignments of the full results of both functions to plain
+   variables are fused, and only when the two argument expressions are
+   structurally identical and free of side effects (no target, RNG,
+   printing, or user-defined function calls, since the fused form evaluates
+   the shared argument once instead of twice). *)
+let fuse_eigendecompose (mir : Program.Typed.t) =
+  (* Match [eigenvectors_sym(A)] / [eigenvalues_sym(A)] calls, including the
+     case where the call result is promoted (e.g. assigned to a
+     [complex_matrix] variable). Returns the argument expression plus, for the
+     promoted case, the promotion's metadata (its outer type, the promoted
+     scalar kind, and its autodiff level) so the fused projections can be
+     re-promoted. *)
+  let eigh_arg name (e : Expr.Typed.t) =
+    match e.pattern with
+    | FunApp (StanLib (n, FnPlain, _), [a]) when String.equal n name ->
+        Some (a, None)
+    | Promotion
+        ( { pattern= FunApp (StanLib (n, FnPlain, _), [a]); _ }
+        , promoted_ut
+        , promoted_ad )
+      when String.equal n name ->
+        Some (a, Some (e.meta, promoted_ut, promoted_ad))
+    | _ -> None in
+  let contains_user_defined_fn (e : Expr.Typed.t) =
+    expr_any
+      (fun sub ->
+        match sub.pattern with FunApp (UserDefined _, _) -> true | _ -> false)
+      e in
+  (* Map from variable names to their sized declarations; used to give the
+     fused tuple declaration the same dimensions as the two assigned
+     variables. *)
+  let rec add_decl_sizes m (Stmt.{pattern; _} as s) =
+    let m =
+      match pattern with
+      | Stmt.Pattern.Decl {decl_id; decl_type= Type.Sized st; _} ->
+          String.Map.add m ~key:decl_id ~data:st
+      | _ -> m in
+    Stmt.Pattern.fold (fun m _ -> m) add_decl_sizes m s.pattern in
+  let full_var_assignment (Stmt.{pattern; meta} as _s) =
+    match pattern with
+    | Stmt.Pattern.Assignment ((LVariable v, []), _, rhs) -> Some (v, rhs, meta)
+    | _ -> None in
+  let try_fuse decls s1 s2 =
+    let open Option.Syntax in
+    let* v1, rhs1, meta1 = full_var_assignment s1 in
+    let* v2, rhs2, _ = full_var_assignment s2 in
+    let* vec_var, val_var, a, vec_target_ut, val_target_ut, promotion =
+      let promoted_eq p1 p2 =
+        match (p1, p2) with
+        | None, None -> true
+        | Some (_, ut1, ad1), Some (_, ut2, ad2) ->
+            ut1 = ut2 && ad1 = ad2
+        | _ -> false in
+      match (eigh_arg "eigenvectors_sym" rhs1, eigh_arg "eigenvalues_sym" rhs2) with
+      | Some (vec_arg, promo1), Some (val_arg, promo2)
+        when Expr.Typed.equal vec_arg val_arg && promoted_eq promo1 promo2 ->
+          Some
+            ( v1
+            , v2
+            , vec_arg
+            , Expr.Typed.type_of rhs1
+            , Expr.Typed.type_of rhs2
+            , promo1 )
+      | _ -> (
+          match (eigh_arg "eigenvalues_sym" rhs1, eigh_arg "eigenvectors_sym" rhs2) with
+          | Some (val_arg, promo1), Some (vec_arg, promo2)
+            when Expr.Typed.equal vec_arg val_arg && promoted_eq promo1 promo2 ->
+              Some
+                ( v2
+                , v1
+                , vec_arg
+                , Expr.Typed.type_of rhs2
+                , Expr.Typed.type_of rhs1
+                , promo2 )
+          | _ -> None) in
+    let* () =
+      Option.some_if
+        (not (String.equal vec_var val_var))
+        () in
+    let arg_vars = expr_var_names_set a in
+    let* () =
+      Option.some_if
+        (not (Set.Poly.mem vec_var arg_vars || Set.Poly.mem val_var arg_vars))
+        () in
+    let* () =
+      Option.some_if
+        (not (cannot_duplicate_expr a || contains_user_defined_fn a))
+        () in
+    (* The decomposition's component types follow from the argument's type;
+       the assignment targets may additionally promote them (complex case). *)
+    let vec_inner_ut, val_inner_ut =
+      match Expr.Typed.type_of a with
+      | UnsizedType.UComplexMatrix ->
+          (UnsizedType.UComplexMatrix, UnsizedType.UComplexVector)
+      | _ -> (UnsizedType.UMatrix, UnsizedType.UVector) in
+    let tuple_ut = UnsizedType.UTuple [vec_inner_ut; val_inner_ut] in
+    let adlevel = Expr.Typed.adlevel_of rhs1 in
+    let tuple_decl_type =
+      match
+        ( vec_inner_ut
+        , String.Map.find_opt vec_var decls
+        , String.Map.find_opt val_var decls )
+      with
+      | ( UnsizedType.UMatrix
+        , Some (SizedType.SMatrix (mp, d1, d2))
+        , Some (SizedType.SVector (_, dv)) ) ->
+          Type.Sized
+            (SizedType.STuple
+               [SizedType.SMatrix (mp, d1, d2); SizedType.SVector (mp, dv)])
+      | ( UnsizedType.UComplexMatrix
+        , Some (SizedType.SComplexMatrix (d1, d2))
+        , Some (SizedType.SComplexVector dv) ) ->
+          Type.Sized
+            (SizedType.STuple
+               [SizedType.SComplexMatrix (d1, d2); SizedType.SComplexVector dv])
+      | _ -> Type.Unsized tuple_ut in
+    let ed = Gensym.generate ~prefix:"eigh_fused" () in
+    let mk pattern = Stmt.{pattern; meta= meta1} in
+    let decl_st =
+      mk
+        (Stmt.Pattern.Decl
+           { decl_adtype= UnsizedType.fill_adtype_for_type adlevel tuple_ut
+           ; decl_id= ed
+           ; decl_type= tuple_decl_type
+           ; initialize= Default }) in
+    let ed_var =
+      Expr.{pattern= Var ed; meta= {a.meta with type_= tuple_ut; adlevel}} in
+    let decompose_st =
+      mk
+        (Stmt.Pattern.Assignment
+           ( Stmt.Helpers.lvariable ed
+           , tuple_ut
+           , Expr.
+               { pattern=
+                   FunApp (StanLib ("eigendecompose_sym", FnPlain, AoS), [a])
+               ; meta= {a.meta with type_= tuple_ut; adlevel} } )) in
+    let projection_st var i inner_ut target_ut =
+      let proj =
+        Expr.
+          { pattern= TupleProjection (ed_var, i)
+          ; meta= {a.meta with type_= inner_ut; adlevel} } in
+      let rhs =
+        match promotion with
+        | Some (pmeta, promoted_ut, promoted_ad) ->
+            Expr.{pattern= Promotion (proj, promoted_ut, promoted_ad); meta= pmeta}
+        | None -> proj in
+      mk (Stmt.Pattern.Assignment (Stmt.Helpers.lvariable var, target_ut, rhs)) in
+    Some
+      [ decl_st
+      ; decompose_st
+      ; projection_st vec_var 1 vec_inner_ut vec_target_ut
+      ; projection_st val_var 2 val_inner_ut val_target_ut ] in
+  let rec fuse_statement decls (Stmt.{pattern; _} as s) =
+    let pattern =
+      match pattern with
+      | Stmt.Pattern.Block stmts ->
+          Stmt.Pattern.Block (fuse_list decls stmts)
+      | Stmt.Pattern.SList stmts ->
+          Stmt.Pattern.SList (fuse_list decls stmts)
+      | Stmt.Pattern.IfElse (e, st, sf) ->
+          Stmt.Pattern.IfElse
+            (e, fuse_statement decls st, Option.map ~f:(fuse_statement decls) sf)
+      | Stmt.Pattern.While (e, body) ->
+          Stmt.Pattern.While (e, fuse_statement decls body)
+      | Stmt.Pattern.For {loopvar; lower; upper; body} ->
+          Stmt.Pattern.For
+            {loopvar; lower; upper; body= fuse_statement decls body}
+      | Stmt.Pattern.Profile (name, stmts) ->
+          Stmt.Pattern.Profile (name, List.map ~f:(fuse_statement decls) stmts)
+      | unchanged -> unchanged in
+    {s with pattern}
+  and fuse_list decls stmts =
+    match stmts with
+    | s1 :: s2 :: rest -> (
+        match try_fuse decls s1 s2 with
+        | Some replacement -> replacement @ fuse_list decls rest
+        | None -> fuse_statement decls s1 :: fuse_list decls (s2 :: rest))
+    | [s1] -> [fuse_statement decls s1]
+    | [] -> [] in
+  transform_program_blockwise mir (fun _ stmt ->
+      let decls = add_decl_sizes String.Map.empty stmt in
+      fuse_statement decls stmt)
+
 let collapse_lists_statement _ =
   let rec collapse_lists l =
     match l with
@@ -1352,6 +1546,7 @@ type optimization_settings =
   ; static_loop_unrolling: bool
   ; one_step_loop_unrolling: bool
   ; vectorize_loops: bool
+  ; fuse_eigendecompose: bool
   ; list_collapsing: bool
   ; block_fixing: bool
   ; allow_uninitialized_decls: bool
@@ -1370,6 +1565,7 @@ let settings_const b =
   ; static_loop_unrolling= b
   ; one_step_loop_unrolling= b
   ; vectorize_loops= b
+  ; fuse_eigendecompose= b
   ; list_collapsing= b
   ; block_fixing= b
   ; allow_uninitialized_decls= b
@@ -1396,6 +1592,7 @@ let level_optimizations (lvl : optimization_level) : optimization_settings =
       ; static_loop_unrolling= false
       ; one_step_loop_unrolling= false
       ; vectorize_loops= false
+      ; fuse_eigendecompose= true
       ; list_collapsing= true
       ; block_fixing= true
       ; constant_propagation= true
@@ -1420,8 +1617,12 @@ let optimization_suite ?(settings = all_optimizations) mir =
       (function_inlining, settings.function_inlining)
       (* Book: Sparse conditional constant propagation *)
     ; (constant_propagation ~preserve_stability, settings.constant_propagation)
-      (* Book section C *)
-      (* Book: Local and global copy propagation *)
+    (* Book section C *)
+    (* Fusing the eigenvectors_sym/eigenvalues_sym pair early, right after
+       inlining, lets the propagation and dead-code passes below clean up
+       around the introduced tuple. *)
+    ; (fuse_eigendecompose, settings.fuse_eigendecompose)
+    (* Book: Local and global copy propagation *)
     ; (copy_propagation, settings.copy_propagation)
       (* Book: Sparse conditional constant propagation *)
     ; (constant_propagation ~preserve_stability, settings.constant_propagation)
