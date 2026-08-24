@@ -577,6 +577,17 @@ Flags not used elsewhere in the tests
     parameters real theta; //real
   }
 
+  $ stanc basic.stan --debug-print-factor-graph
+  graph {
+  "bernoulli_lupmf(y, theta)" [shape=box]
+  "beta_lupdf(theta, promote(1, real, data), promote(1, real, data))" [shape=box]
+  theta
+  y
+  "bernoulli_lupmf(y, theta)" -- theta
+  "bernoulli_lupmf(y, theta)" -- y
+  "beta_lupdf(theta, promote(1, real, data), promote(1, real, data))" -- theta
+  }
+
   $ stanc parse_error.stan --debug-parse
   Syntax error in 'parse_error.stan', line 1, column 0 to column 5, parsing error:
      -------------------------------------------------
