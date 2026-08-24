@@ -1,12 +1,11 @@
 (** Lowering of Stan expressions to C++ *)
 
-open Core
-open Core.Poly
+open Std
 open Middle
 open Cpp
 
 let stan_namespace_qualify f =
-  if String.is_suffix ~suffix:"functor__" f || String.contains f ':' then f
+  if String.ends_with ~suffix:"functor__" f || String.contains f ':' then f
   else "stan::math::" ^ f
 
 let fn_renames =
@@ -37,7 +36,7 @@ let fn_renames =
     ; ("lower_upper_bound_jacobian", "stan::math::lub_constrain")
     ; ("lower_upper_bound_constrain", "stan::math::lub_constrain")
     ; ("lower_upper_bound_unconstrain", "stan::math::lub_free") ]
-  |> String.Map.of_alist_exn
+  |> String.Map.of_list
 
 let constraint_to_string = function
   | Transformation.Ordered -> Some "ordered"
@@ -57,16 +56,15 @@ let constraint_to_string = function
   | StochasticColumn -> Some "stochastic_column"
   | Identity -> None
   | TupleTransformation _ ->
-      Common.ICE.internal_compiler_error
-        [%message
-          "Cannot generate tuple transformation directly; should not be called"]
+      Common.ICE.internal_error
+        "Cannot generate tuple transformation directly; should not be called"
+      [@coverage off]
 
 let functor_suffix = "_functor__"
 let reduce_sum_functor_suffix = "_rsfunctor__"
-let variadic_functor_suffix x = sprintf "_variadic%d_functor__" x
+let variadic_functor_suffix x = Fmt.str "_variadic%d_functor__" x
 
 type variadic = FixedArgs | ReduceSum | VariadicHOF of int
-[@@deriving compare, hash]
 
 let functor_type hof =
   match Stan_math_signatures.lookup_stan_math_variadic_function hof with
@@ -95,8 +93,8 @@ let is_row_vector e =
   | URowVector | UComplexRowVector -> true
   | _ -> false
 
-let first es = List.nth_exn es 0
-let second es = List.nth_exn es 1
+let first es = List.nth es 0
+let second es = List.nth es 1
 let default_multiplier = 1
 let default_offset = 0
 
@@ -112,10 +110,10 @@ let dont_need_range_check = function
   | _ -> false
 
 let promote_adtype =
-  List.fold
+  List.fold_left
     ~f:(fun accum expr ->
       match Expr.Typed.adlevel_of expr with
-      | AutoDiffable -> AutoDiffable
+      | AutoDiffable -> UnsizedType.AutoDiffable
       | _ -> accum)
     ~init:UnsizedType.DataOnly
 
@@ -147,11 +145,9 @@ let rec local_scalar ut ad =
   | _, UnsizedType.DataOnly | UInt, AutoDiffable -> stantype_prim ut
   | _, AutoDiffable -> Types.local_scalar
   | _, TupleAD _ ->
-      Common.ICE.internal_compiler_error
-        [%message
-          "Attempting to make a local scalar tuple"
-            (ut : UnsizedType.t)
-            (ad : UnsizedType.autodifftype)]
+      Common.ICE.(
+        internal_errorf "Attempting to make a local scalar tuple: type %t ad %t"
+          UnsizedType.[pp $ ut; pp_autodifftype $ ad]) [@coverage off]
 
 let minus_one e =
   let open Cpp.DSL in
@@ -176,21 +172,18 @@ let rec lower_type ?(mem_pattern = Mem_pattern.AoS) (t : UnsizedType.t)
   | UComplexRowVector -> Types.row_vector (Types.complex scalar)
   | UComplexMatrix -> Types.matrix (Types.complex scalar)
   | UMathLibraryFunction | UFun _ ->
-      Common.ICE.internal_compiler_error
-        [%message "Function types not implemented"]
+      Common.ICE.internal_error "Function types not implemented" [@coverage off]
 
 let rec lower_unsizedtype_local ?(mem_pattern = Mem_pattern.AoS) adtype ut =
   match (adtype, ut) with
   | UnsizedType.TupleAD ads, UnsizedType.UTuple ts ->
-      Tuple (List.map2_exn ~f:(lower_unsizedtype_local ~mem_pattern) ads ts)
+      Tuple (List.map2 ~f:(lower_unsizedtype_local ~mem_pattern) ads ts)
   | UnsizedType.TupleAD _, UnsizedType.UArray t ->
       Types.std_vector (lower_unsizedtype_local ~mem_pattern adtype t)
   | _, UnsizedType.UTuple _ | TupleAD _, _ ->
-      Common.ICE.internal_compiler_error
-        [%message
-          "Tuple and Tuple AD type not matching!"
-            (ut : UnsizedType.t)
-            (adtype : UnsizedType.autodifftype)]
+      Common.ICE.(
+        internal_errorf "Tuple %t and Tuple AD type %t not matching!"
+          UnsizedType.[pp $ ut; pp_autodifftype $ adtype]) [@coverage off]
   | _, _ ->
       let s = local_scalar ut adtype in
       lower_type ~mem_pattern ut s
@@ -207,13 +200,13 @@ let rec lower_possibly_var_decl adtype ut mem_pattern =
   | (UReal | UInt | UComplex), _ -> lower_unsizedtype_local adtype ut
   | UTuple t_lst, TupleAD ads ->
       Tuple
-        (List.map2_exn
+        (List.map2
            ~f:(fun ad t -> lower_possibly_var_decl ad t mem_pattern)
            ads t_lst)
   | x, ad ->
-      Common.ICE.internal_compiler_error
-        [%message
-          "Cannot lower" (x : UnsizedType.t) (ad : UnsizedType.autodifftype)]
+      Common.ICE.(
+        internal_errorf "Cannot lower %t %t"
+          UnsizedType.[pp $ x; pp_autodifftype $ ad]) [@coverage off]
 
 let rec lower_logical_op op e1 e2 =
   let prim e = Exprs.fun_call "stan::math::primitive_value" [lower_expr e] in
@@ -224,7 +217,7 @@ and lower_binary_fun f es = Exprs.fun_call f (lower_exprs es)
 and vector_literal ?(column = false) scalar es =
   let open Cpp.DSL in
   let vec = if column then Types.vector scalar else Types.row_vector scalar in
-  let make_vector size = vec.:{Literal (string_of_int size)} in
+  let make_vector size = vec.:{Literal (Int.to_string size)} in
   if List.is_empty es then make_vector 0
   else
     let vector = make_vector (List.length es) in
@@ -240,8 +233,9 @@ and read_data ut es =
     | UInt | UReal | UComplex | UVector | URowVector | UMatrix | UTuple _
      |UComplexMatrix | UComplexRowVector | UComplexVector | UArray _ | UFun _
      |UMathLibraryFunction ->
-        Common.ICE.internal_compiler_error
-          [%message "Can't ReadData of " (ut : UnsizedType.t)] in
+        Common.ICE.(
+          internal_errorf "Can't ReadData of %t" [UnsizedType.pp $ ut])
+        [@coverage off] in
   let open Cpp.DSL in
   let data_context = Var "context__" in
   data_context.@?(val_method, [lower_expr (List.hd_exn es)])
@@ -288,8 +282,8 @@ and lower_operator_app op es_in =
   | Modulo -> lower_binary_fun "stan::math::modulus" es
   | LDivide -> lower_binary_fun "stan::math::mdivide_left" es
   | And | Or ->
-      Common.ICE.internal_compiler_error
-        [%message "And/Or should have been converted to an expression"]
+      Common.ICE.internal_error
+        "And/Or should have been converted to an expression" [@coverage off]
   | EltTimes -> lower_binary_op Multiply "stan::math::elt_multiply" es
   | EltDivide -> lower_binary_op Divide "stan::math::elt_divide" es
   | Pow -> lower_binary_fun "stan::math::pow" es
@@ -389,7 +383,7 @@ and lower_functionals fname suffix es mem_pattern =
           when Stan_math_signatures.is_stan_math_variadic_function_name fname ->
             let UnsizedType.{control_args; _} =
               Stan_math_signatures.lookup_stan_math_variadic_function fname
-              |> Option.value_exn in
+              |> Option.get in
             let hd, tl =
               List.split_n converted_es (List.length control_args + 1) in
             (fname, hd @ (msgs :: tl))
@@ -411,10 +405,11 @@ and lower_functionals fname suffix es mem_pattern =
 
 and lower_fun_app suffix fname es mem_pattern
     (ret_type : UnsizedType.returntype option) =
-  let fname = Option.value (Map.find fn_renames fname) ~default:fname in
+  let fname =
+    Option.value (String.Map.find_opt fname fn_renames) ~default:fname in
   let fname =
     (* Handle systematic renaming of math's constrain and free functions *)
-    match String.rsplit2 fname ~on:'_' with
+    match String.split_last fname ~sep:"_" with
     | Some (f, "jacobian") -> f ^ "_constrain"
     | Some (f, "unconstrain") -> f ^ "_free"
     | _ -> fname in
@@ -422,7 +417,7 @@ and lower_fun_app suffix fname es mem_pattern
     [ Option.map ~f:lower_operator_app (Operator.of_string_opt fname)
     ; lower_misc_special_math_app fname mem_pattern ret_type
     ; lower_functionals fname suffix es mem_pattern ]
-    |> List.filter_opt |> List.hd in
+    |> List.filter_map ~f:Fun.id |> List.hd in
   match special_options with
   | Some s -> s es
   | None ->
@@ -445,10 +440,9 @@ and lower_compiler_internal ad ut f es =
         match ut with
         | UnsizedType.UArray ut -> ut
         | _ ->
-            Common.ICE.internal_compiler_error
-              [%message
-                "Array literal must have array type but found "
-                  (ut : UnsizedType.t)] in
+            Common.ICE.(
+              internal_errorf "Array literal must have array type but found %t"
+                [UnsizedType.pp $ ut]) [@coverage off] in
       Exprs.std_vector_init_expr
         (lower_unsizedtype_local ad ut)
         (lower_exprs es)
@@ -471,9 +465,9 @@ and lower_compiler_internal ad ut f es =
                 (lower_unsizedtype_local ad UComplexRowVector)
                 (lower_exprs es) ]
       | _ ->
-          Common.ICE.internal_compiler_error
-            [%message
-              "Unexpected type for row vector literal" (ut : UnsizedType.t)])
+          Common.ICE.(
+            internal_errorf "Unexpected type for row vector literal %t"
+              [UnsizedType.pp $ ut]) [@coverage off])
   | FnReadData -> read_data ut es
   | FnReadDeserializer ->
       deserializer.@<>(( "read"
@@ -520,19 +514,17 @@ and lower_indexed e indices pretty =
 and lower_indexed_simple (e : expr) idcs =
   let idx_minus_one = function
     | Index.Single e -> minus_one e
-    | MultiIndex e | Between (e, _) | Upfrom e ->
-        Common.ICE.internal_compiler_error
-          [%message
-            "No non-Single indices allowed"
-              (e : expr)
-              (idcs : Expr.Typed.t Index.t list)]
-    | All ->
-        Common.ICE.internal_compiler_error
-          [%message
-            "No non-Single indices allowed"
-              (e : expr)
-              (idcs : Expr.Typed.t Index.t list)] in
-  List.fold idcs ~init:e ~f:(fun e id ->
+    | MultiIndex e | Between (e, _) | Upfrom e -> (
+        Common.ICE.(
+          internal_errorf "No non-Single indices allowed %t %t"
+            [Cpp.Printing.pp_expr $ e; Fmt.list (Index.pp Expr.Typed.pp) $ idcs])
+        [@coverage off])
+    | All -> (
+        Common.ICE.(
+          internal_errorf "No non-Single indices allowed %t %t"
+            [Cpp.Printing.pp_expr $ e; Fmt.list (Index.pp Expr.Typed.pp) $ idcs])
+        [@coverage off]) in
+  List.fold_left idcs ~init:e ~f:(fun e id ->
       Subscript (e, idx_minus_one (Index.map lower_expr id)))
 
 and lower_expr (Expr.{pattern; meta} : Expr.Typed.t) : Cpp.expr =
@@ -596,7 +588,7 @@ and lower_expr (Expr.{pattern; meta} : Expr.Typed.t) : Cpp.expr =
       | _ -> lower_indexed e idx (Fmt.to_to_string Expr.Typed.pp e))
   | TupleProjection (t, ix) -> tuple_get (ix - 1) (lower_expr t)
 
-and lower_exprs = List.map ~f:lower_expr
+and lower_exprs es = List.map ~f:lower_expr es
 
 module Testing = struct
   (* these functions are just for testing *)
@@ -611,34 +603,34 @@ module Testing = struct
     Fmt.str "%a" Cpp.Printing.pp_expr (lower_expr @@ dummy_locate e)
 
   let%expect_test "pp_expr1" =
-    printf "%s" (pp_unlocated (Var "a"));
+    print_string (pp_unlocated (Var "a"));
     [%expect {| a |}]
 
   let%expect_test "pp_expr2" =
-    printf "%s" (pp_unlocated (Lit (Str, "b")));
+    print_string (pp_unlocated (Lit (Str, "b")));
     [%expect {| "b" |}]
 
   let%expect_test "pp_expr3" =
-    printf "%s" (pp_unlocated (Lit (Int, "112")));
+    print_string (pp_unlocated (Lit (Int, "112")));
     [%expect {| 112 |}]
 
   let%expect_test "pp_expr4" =
-    printf "%s" (pp_unlocated (Lit (Int, "112")));
+    print_string (pp_unlocated (Lit (Int, "112")));
     [%expect {| 112 |}]
 
   let%expect_test "pp_expr5" =
-    printf "%s" (pp_unlocated (FunApp (StanLib ("pi", FnPlain, AoS), [])));
+    print_string (pp_unlocated (FunApp (StanLib ("pi", FnPlain, AoS), [])));
     [%expect {| stan::math::pi() |}]
 
   let%expect_test "pp_expr6" =
-    printf "%s"
+    print_string
       (pp_unlocated
          (FunApp
             (StanLib ("sqrt", FnPlain, AoS), [dummy_locate (Lit (Int, "123"))])));
     [%expect {| stan::math::sqrt(123) |}]
 
   let%expect_test "pp_expr7" =
-    printf "%s"
+    print_string
       (pp_unlocated
          (FunApp
             ( StanLib ("atan", FnPlain, AoS)
@@ -647,7 +639,7 @@ module Testing = struct
     [%expect {| stan::math::atan(123, 1.2) |}]
 
   let%expect_test "pp_expr9" =
-    printf "%s"
+    print_string
       (pp_unlocated
          (TernaryIf
             ( dummy_locate (Lit (Int, "1"))
@@ -656,11 +648,11 @@ module Testing = struct
     [%expect {| (1 ? 1.2 : 2.3) |}]
 
   let%expect_test "pp_expr10" =
-    printf "%s" (pp_unlocated (Indexed (dummy_locate (Var "a"), [All])));
+    print_string (pp_unlocated (Indexed (dummy_locate (Var "a"), [All])));
     [%expect {| stan::model::rvalue(a, "a", stan::model::index_omni()) |}]
 
   let%expect_test "pp_expr11" =
-    printf "%s"
+    print_string
       (pp_unlocated
          (FunApp
             ( UserDefined ("poisson_rng", FnRng)
@@ -668,9 +660,9 @@ module Testing = struct
     [%expect {| poisson_rng(123, base_rng__, pstream__) |}]
 
   let%expect_test "pp_expr12" =
-    printf "%s\n"
+    print_endline
       (Fmt.str "%a" Cpp.Printing.pp_expr (vector_literal Cpp.Double []));
-    printf "%s"
+    print_string
       (Fmt.str "%a" Cpp.Printing.pp_expr
          (vector_literal ~column:true Cpp.Double []));
     [%expect

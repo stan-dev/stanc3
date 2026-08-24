@@ -1,5 +1,4 @@
-open Core
-open Core.Poly
+open Std
 open Middle
 
 let trans_fn_kind kind name =
@@ -8,14 +7,15 @@ let trans_fn_kind kind name =
   | Ast.StanLib suffix -> Fun_kind.StanLib (fname, suffix, AoS)
   | UserDefined suffix -> UserDefined (fname, suffix)
 
-let without_underscores = String.filter ~f:(( <> ) '_')
+let without_underscores s =
+  String.split_on_char ~sep:'_' s |> String.concat ~sep:""
 
 let drop_leading_zeros s =
-  match String.lfindi ~f:(fun _ c -> c <> '0') s with
+  match String.find_first_index (fun c -> c <> '0') s with
   | Some p when p > 0 -> (
       match s.[p] with
-      | 'e' | 'E' | '.' -> String.drop_prefix s (p - 1)
-      | _ -> String.drop_prefix s p)
+      | 'e' | 'E' | '.' -> String.drop_first (p - 1) s
+      | _ -> String.drop_first p s)
   | Some _ -> s
   | None -> "0"
 
@@ -32,7 +32,7 @@ let%expect_test "format_number1" =
 let rec op_to_funapp op args type_ =
   let loc = Ast.expr_loc_lub args in
   let adlevel =
-    Ast.expr_ad_lub args |> Option.value_exn
+    Ast.expr_ad_lub args |> Option.get
     (* correctness inherited from typechecking *) in
   Expr.
     { pattern=
@@ -85,8 +85,9 @@ and trans_idx = function
       | UInt -> Single (trans_expr e)
       | UArray _ -> MultiIndex (trans_expr e)
       | _ ->
-          Common.ICE.internal_compiler_error
-            [%message "Expecting int or array" (e.emeta.type_ : UnsizedType.t)])
+          Common.ICE.(
+            internal_errorf "Expecting int or array, got %t"
+              [UnsizedType.pp $ e.emeta.type_]) [@coverage off])
 
 and trans_exprs exprs = List.map ~f:trans_expr exprs
 
@@ -107,7 +108,7 @@ let truncate_dist ud_dists (id : Ast.identifier)
   let ccdf_suffix = "_lccdf" in
   let find_function_info sfx =
     let name = id.name ^ sfx in
-    match List.find ~f:(fun (n, _) -> String.equal name n) ud_dists with
+    match List.find_opt ~f:(fun (n, _) -> String.equal name n) ud_dists with
     | Some (name, tp) -> (Ast.UserDefined FnPlain, name, tp)
     | None ->
         ( Ast.StanLib FnPlain
@@ -190,21 +191,21 @@ let truncate_dist ud_dists (id : Ast.identifier)
           ; funapp ub.meta fk fn (inclusive_bound tp lb :: args) ] in
       let statement =
         match
-          List.findi
-            ~f:(fun (_ : int) (e : Ast.typed_expression) ->
+          List.find_index
+            ~f:(fun (e : Ast.typed_expression) ->
               UnsizedType.is_container e.emeta.type_)
             ast_args
         with
         (* If any of the arguments (besides the data) are vectors, need to
            generate a loop This can go away if
            https://github.com/stan-dev/stan/issues/1154 is implemented *)
-        | Some (i, _) ->
+        | Some i ->
             let ast_args = trans_exprs ast_args in
             (* avoid recomputing in each iteration of the loop *)
             let temp_decls, ast_args, symbol_reset =
               Stmt.Helpers.temp_vars ast_args in
             let bound =
-              let e = List.nth_exn ast_args i in
+              let e = List.nth ast_args i in
               Expr.Helpers.internal_funapp FnLength [e]
                 {e.meta with type_= UnsizedType.UInt} in
             let bodyfn (idx : Expr.Typed.t) =
@@ -226,7 +227,7 @@ let truncate_dist ud_dists (id : Ast.identifier)
 
 let unquote s =
   if s.[0] = '"' && s.[String.length s - 1] = '"' then
-    String.drop_suffix (String.drop_prefix s 1) 1
+    String.drop_last 1 (String.drop_first 1 s)
   else s
 
 let trans_printables mloc (ps : Ast.typed_expression Ast.printable list) =
@@ -242,7 +243,7 @@ let trans_printables mloc (ps : Ast.typed_expression Ast.printable list) =
 
 (** These types signal the context for a declaration during statement
     translation. They are only interpreted by trans_decl.*)
-type transform_action = Check | Constrain | IgnoreTransform [@@deriving sexp]
+type transform_action = Check | Constrain | IgnoreTransform
 
 type decl_context =
   {transform_action: transform_action; dadlevel: UnsizedType.autodifftype}
@@ -316,11 +317,11 @@ let rec shrink_helper (f : size_change) f_d2 st =
     match f with
     | Univariate f -> f d
     | Multivariate _ ->
-        Common.ICE.internal_compiler_error
-          [%message
+        Common.ICE.(
+          internal_errorf
             "To shrink a vector, the first argument must be a univariate \
-             function "
-              (st : Expr.Typed.t SizedType.t)] in
+             function, got: %t"
+            [SizedType.pp Expr.Typed.pp $ st]) [@coverage off] in
   match st with
   | SizedType.SArray (t, d) -> SizedType.SArray (shrink_helper f f_d2 t, d)
   | SVector (mem_pattern, d) -> SVector (mem_pattern, f_assert_univariate d)
@@ -332,15 +333,15 @@ let rec shrink_helper (f : size_change) f_d2 st =
       | Multivariate f -> SVector (mem_pattern, f d1 d2))
   | SInt | SReal | SComplex | STuple _ | SComplexRowVector _
    |SComplexVector _ | SComplexMatrix _ ->
-      Common.ICE.internal_compiler_error
-        [%message
-          "Expecting SVector or SMatrix, got " (st : Expr.Typed.t SizedType.t)]
+      Common.ICE.(
+        internal_errorf "Expecting SVector or SMatrix, got %t"
+          [SizedType.pp Expr.Typed.pp $ st]) [@coverage off]
 
 let rec transform_sizedtype transformation sizedtype =
   (* Functions for computing the new sizetype after some transformation *)
   let shrink_eigen_mat f st =
     (* Matrices become vectors, with size computed by [f] *)
-    shrink_helper (Multivariate f) Fn.id st in
+    shrink_helper (Multivariate f) Fun.id st in
   let shrink_eigen_vec f st =
     (* Matrices are mapped to vectors, only depending on their first dimension
        for sizing *)
@@ -369,8 +370,8 @@ let rec transform_sizedtype transformation sizedtype =
            (List.map subtypes_transforms ~f:(fun (st, trans) ->
                 transform_sizedtype trans st)))
   | SumToZero -> shrink_eigen minus_one minus_one sizedtype
-  | Simplex | StochasticColumn -> shrink_eigen minus_one Fn.id sizedtype
-  | StochasticRow -> shrink_eigen Fn.id minus_one sizedtype
+  | Simplex | StochasticColumn -> shrink_eigen minus_one Fun.id sizedtype
+  | StochasticRow -> shrink_eigen Fun.id minus_one sizedtype
   | CholeskyCorr | Correlation -> shrink_eigen_vec k_choose_2 sizedtype
   | Covariance ->
       shrink_eigen_vec
@@ -407,7 +408,7 @@ let rec check_decl var decl_type' decl_trans smeta adlevel =
         [ Stmt.Helpers.mk_nested_for (List.rev dims)
             (fun loopvars ->
               let var =
-                List.fold ~f:Expr.Helpers.add_int_index ~init:var
+                List.fold_left ~f:Expr.Helpers.add_int_index ~init:var
                   (List.map ~f:(fun e -> Index.Single e) (List.rev loopvars))
               in
               Stmt.
@@ -426,7 +427,7 @@ let rec check_decl var decl_type' decl_trans smeta adlevel =
 
 let check_sizedtype name st =
   let check x = function
-    | {Expr.pattern= Lit (Int, i); _} when float_of_string i >= 0. -> []
+    | {Expr.pattern= Lit (Int, i); _} when Float.of_string i >= 0. -> []
     | n ->
         [ Stmt.Helpers.internal_nrfunapp FnValidateSize
             Expr.Helpers.
@@ -460,7 +461,7 @@ let check_sizedtype name st =
         let ll, t = sizedtype t in
         (check s e @ ll, SizedType.SArray (t, e))
     | STuple subtypes ->
-        let checks, subtypes = List.unzip (List.map ~f:sizedtype subtypes) in
+        let checks, subtypes = List.split (List.map ~f:sizedtype subtypes) in
         (List.concat checks, STuple subtypes) in
   let ll, st = sizedtype st in
   (ll, Type.Sized st)
@@ -511,22 +512,20 @@ let unwrap_block_or_skip = function
   | [({Stmt.pattern= Block _; _} as b)] -> Some b
   | [{pattern= Skip; _}] -> None
   | x ->
-      Common.ICE.internal_compiler_error
-        [%message "Expecting a block or skip, not" (x : Stmt.Located.t list)]
+      Common.ICE.(
+        internal_errorf "Expecting a block or skip, not %t"
+          [Fmt.list Stmt.Located.pp $ x]) [@coverage off]
 
 let index_tuple (e : Ast.typed_expression) i =
   let emeta =
     match (e.emeta.type_, e.emeta.ad_level) with
     | UnsizedType.UTuple ts, UnsizedType.TupleAD ads ->
-        Ast.
-          { type_= List.nth_exn ts i
-          ; ad_level= List.nth_exn ads i
-          ; loc= e.emeta.loc }
+        Ast.{type_= List.nth ts i; ad_level= List.nth ads i; loc= e.emeta.loc}
     | _ ->
-        Common.ICE.internal_compiler_error
-          [%message
-            "Attempted to index into a non-tuple during lowering"
-              (e : Ast.typed_expression)] in
+        Common.ICE.(
+          internal_errorf
+            "Attempted to index into a non-tuple %t during lowering"
+            [Pretty_printing.pp_typed_expression $ e]) [@coverage off] in
   Ast.{expr= TupleProjection (e, i + 1); emeta}
 
 let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
@@ -554,17 +553,20 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
         | UserDefined (FnLpdf _) | StanLib (FnLpdf _) -> "_lpdf"
         | UserDefined (FnLpmf _) | StanLib (FnLpmf _) -> "_lpmf"
         | _ ->
-            Common.ICE.internal_compiler_error
-              [%message
-                "Impossible: tilde with non-distribution after typechecking"
-                  (distribution : Ast.identifier)
-                  (kind : Ast.fun_kind)] in
+            Common.ICE.internal_errorf
+              "Impossible: tilde with non-distribution after typechecking, \
+               dist %s kind %s"
+              [ distribution.name
+              ; Ast.sexp_of_fun_kind kind |> Sexplib0.Sexp.to_string_hum ]
+            [@coverage off] in
       let name = distribution.name ^ sfx in
       let add_dist =
         let adlevel =
           if
             UnsizedType.any_autodiff
-              (List.map ~f:(fun x -> x.emeta.ad_level) (arg :: args))
+              (List.map
+                 ~f:(fun (x : Ast.typed_expression) -> x.emeta.ad_level)
+                 (arg :: args))
           then UnsizedType.AutoDiffable
           else DataOnly in
         Stmt.Pattern.TargetPE
@@ -630,12 +632,12 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
           ; meta= smeta } in
       Stmt.Helpers.[ensure_var (for_each bodyfn) iteratee' smeta]
   | Ast.FunDef _ ->
-      Common.ICE.internal_compiler_error
-        [%message
-          "Found function definition statement outside of function block"]
+      Common.ICE.internal_error
+        "Found function definition statement outside of function block"
+      [@coverage off]
   | Ast.VarDecl {decl_type; transformation; variables; is_global= _} ->
       List.concat_map
-        ~f:(fun {identifier; initial_value} ->
+        ~f:(fun Ast.{identifier; initial_value} ->
           let transform = Transformation.map trans_expr transformation in
           let decl_id = identifier.Ast.name in
           let size_checks, dt = check_sizedtype decl_id decl_type in
@@ -741,8 +743,9 @@ let trans_fun_def ud_dists (ts : Ast.typed_statement) =
               |> unwrap_block_or_skip
           ; fdloc= ts.smeta.loc } ]
   | _ ->
-      Common.ICE.internal_compiler_error
-        [%message "Found non-function definition statement in function block"]
+      Common.ICE.internal_error
+        "Found non-function definition statement in function block"
+      [@coverage off]
 
 let get_block block prog =
   match block with
@@ -757,7 +760,7 @@ let rec trans_sizedtype_decl declc tr name st =
         [str name; str (Fmt.str "%a" Pretty_printing.pp_typed_expression x); n]
       n.meta.loc in
   let grab_size fn n = function
-    | Ast.{expr= IntNumeral i; _} as s when float_of_string i >= 2. ->
+    | Ast.{expr= IntNumeral i; _} as s when Float.of_string i >= 2. ->
         ([], trans_expr s)
     | Ast.({expr= IntNumeral _; _} | {expr= Variable _; _}) as s ->
         let e = trans_expr s in
@@ -766,8 +769,8 @@ let rec trans_sizedtype_decl declc tr name st =
         let e = trans_expr s in
         let decl_name =
           name
-          |> String.substr_replace_all ~pattern:"[]" ~with_:"_brack"
-          |> String.substr_replace_all ~pattern:"." ~with_:"_dot" in
+          |> String.replace_all ~sub:"[]" ~by:"_brack"
+          |> String.replace_all ~sub:"." ~by:"_dot" in
         let decl_id = Fmt.str "%s_%ddim__" decl_name n in
         let decl =
           { Stmt.pattern=
@@ -775,10 +778,7 @@ let rec trans_sizedtype_decl declc tr name st =
                 { decl_type= Sized SInt
                 ; decl_id
                 ; decl_adtype= DataOnly
-                ; initialize= Default }
-          ; meta= e.meta.loc } in
-        let assign =
-          { Stmt.pattern= Assignment (Stmt.Helpers.lvariable decl_id, UInt, e)
+                ; initialize= Assign e }
           ; meta= e.meta.loc } in
         let var =
           Expr.
@@ -788,7 +788,7 @@ let rec trans_sizedtype_decl declc tr name st =
                   { type_= s.Ast.emeta.Ast.type_
                   ; adlevel= s.emeta.ad_level
                   ; loc= s.emeta.loc } } in
-        ([decl; assign; check fn s var], var) in
+        ([decl; check fn s var], var) in
   let rec go n = function
     | SizedType.(SInt | SReal | SComplex) as t -> ([], t)
     | SVector (mem_pattern, s) ->
@@ -845,14 +845,15 @@ let rec trans_sizedtype_decl declc tr name st =
         (l @ ll, SizedType.SArray (t, s))
     | STuple subtypes ->
         let former_array_indices =
-          String.concat (List.init (n - 1) ~f:(fun _ -> "[]")) in
+          String.concat ~sep:"" (List.init ~len:(n - 1) ~f:(fun _ -> "[]"))
+        in
         let stmts, subtypes' =
-          List.unzip
+          List.split
             (List.mapi
-               (List.zip_exn subtypes Utils.(tuple_trans_exn tr))
+               (List.combine subtypes Utils.(tuple_trans_exn tr))
                ~f:(fun ix (st, trans) ->
                  trans_sizedtype_decl declc trans
-                   (name ^ former_array_indices ^ "." ^ string_of_int (ix + 1))
+                   (name ^ former_array_indices ^ "." ^ Int.to_string (ix + 1))
                    st)) in
         (List.concat stmts, SizedType.STuple subtypes') in
   go 1 st
@@ -864,9 +865,9 @@ let trans_block ud_dists declc block prog =
           VarDecl {decl_type= type_; variables; transformation; is_global= true}
       ; smeta } ->
         let outvars, sizes, stmts =
-          List.unzip3
+          List.split3
           @@ List.map
-               ~f:(fun {identifier; initial_value} ->
+               ~f:(fun Ast.{identifier; initial_value} ->
                  let decl_id = identifier.Ast.name in
                  let transform = Transformation.map trans_expr transformation in
                  let size, type_ =
@@ -899,15 +900,16 @@ let stmt_contains_check stmt =
   Stmt.Helpers.contains_fn_kind is_check stmt
 
 let migrate_checks_to_end_of_block stmts =
-  let checks, not_checks = List.partition_tf ~f:stmt_contains_check stmts in
+  let checks, not_checks = List.partition ~f:stmt_contains_check stmts in
   not_checks @ checks
 
 let gather_declarations (b : Ast.typed_statement Ast.block option) =
   let data = Ast.get_stmts b in
   List.concat_map data ~f:(function
-    | {stmt= VarDecl {decl_type= sizedtype; transformation; variables; _}; _} ->
+    | Ast.{stmt= VarDecl {decl_type= sizedtype; transformation; variables; _}; _}
+      ->
         List.map
-          ~f:(fun {identifier; _} ->
+          ~f:(fun Ast.{identifier; _} ->
             ( SizedType.map trans_expr sizedtype
             , Transformation.map trans_expr transformation
             , identifier.name ))
@@ -931,7 +933,7 @@ let trans_prog filename (p : Ast.typed_program) : Program.Typed.t =
     match s.Ast.stmt with
     | Ast.VarDecl {decl_type= st; variables; transformation; _} ->
         List.map
-          ~f:(fun {identifier; _} ->
+          ~f:(fun Ast.{identifier; _} ->
             ( identifier.name
             , trans_sizedtype st
             , transformation
@@ -984,7 +986,7 @@ let trans_prog filename (p : Ast.typed_program) : Program.Typed.t =
   let txparam_decls, txparam_checks, txparam_stmts =
     txparam_gq
     |> List.partition3_map ~f:(function
-      | {pattern= Decl _; _} as d -> `Fst d
+      | Stmt.{pattern= Decl _; _} as d -> `Fst d
       | s when stmt_contains_check s -> `Snd s
       | s -> `Trd s) in
   let compiler_if_return cond =
@@ -1009,8 +1011,10 @@ let trans_prog filename (p : Ast.typed_program) : Program.Typed.t =
     @ txparam_checks @ gq_early_return
     @ migrate_checks_to_end_of_block gq_stmts in
   let normalize_prog_name prog_name =
-    if String.length prog_name > 0 && not (Char.is_alpha prog_name.[0]) then
-      "_" ^ prog_name
+    if
+      String.length prog_name > 0
+      && match prog_name.[0] with 'a' .. 'z' | 'A' .. 'Z' -> false | _ -> true
+    then "_" ^ prog_name
     else prog_name in
   { functions_block= map (trans_fun_def ud_dists) functionblock
   ; input_vars

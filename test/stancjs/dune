@@ -1,6 +1,6 @@
 (executable
  (name run_js_on_args)
- (libraries core unix)
+ (libraries std unix)
  (modes exe))
 
 (rule

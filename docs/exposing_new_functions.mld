@@ -126,15 +126,27 @@ For example, the following line defines the signature [add(real, matrix) => matr
 Functions such as the ODE integrators or [reduce_sum], which take in user-functions and a variable-length
 list of arguments, are {b NOT} added to this list.
 
-"Nice" variadic functions are added to the hashtable [Stan_math_signatures.stan_math_variadic_signatures].
+"Nice" variadic functions are added to the hashtable [Generate.stan_math_variadic_signatures] using
+the function [add_variadic_fn name ~return_type ?control_args ~required_fn_rt ?required_fn_args ()].
 This is probably sufficient for most variadic functions, e.g. all the ODE solvers and DAE solvers are done
 via this method.
-[reduce_sum] is not "nice", since it is both variadic and {e polymorphic}, requiring certain arguments to have the same
-(but {e not predetermined}) type. Therefore, [reduce_sum] is treated as special case in the [Typechecker]
-module in the frontend folder.
 
-Note that higher-order functions also usually require changes to the C++ code generation to work properly.
-It is best to consult an existing example of how these are done before proceeding.
+The arguments are perhaps clearest to understand by example. [return_type] is
+the return type of the variadic function itself, e.g.
+[UArray UVector] for the variadic ODES. [control_args] is a list of arguments
+that come after the callback but before the arguments to the function. These
+tend to be initializations, or tolerances. [required_fn_rt] is what the user
+callback must return, e.g. [UVector] for the ODE system function. Finally,
+[required_fn_args] is the arguments that the callback must accept first, such as
+the time and state for ODE system functions.
+
+This final argument determines the C++ code generation of the function, as the
+`std::ostream*` argument will come immediately after the required_fn_args in the
+list. Ensure that the C++ for the function is calling it accordingly. It is best
+to consult an existing example of how these are done before proceeding.
+
+Other functions, such as [reduce_sum] or the [laplace_marginal] and [laplace_latent] functions, are not
+"nice". These are not added to this list, and are instead treated as special case in the [Typechecker] module in the frontend folder.
 
 {1 Testing}
 

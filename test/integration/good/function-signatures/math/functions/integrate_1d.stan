@@ -14,7 +14,6 @@ parameters {
 model {
   real y = integrate_1d(integrand, 0, 1, x, x_r, x_i);
   real z = integrate_1d(integrand, 0, 1, x, x_r, x_i, 1e-8);
-  
+
   x ~ normal(y + z, 1.0);
 }
-

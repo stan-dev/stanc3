@@ -44,11 +44,13 @@ to a new developer.
   {{:https://ocaml.github.io/odoc/index.html}odoc}, or the Stan user-facing documentation
   at {{:https://github.com/stan-dev/docs}stan-dev/docs}.
 
+All contributions must follow the {{:https://github.com/stan-dev/stan/wiki/AI-Contribution-Policy}Stan AI Contribution Policy}.
 
 {1 Modules}
 The major code sections of the compiler are as follows (these are links):
 
 {!modules:
+Std
 Driver
 Frontend
 Middle
@@ -63,4 +65,3 @@ These are related in the following architecture diagram
 {%html: <img src="https://github.com/stan-dev/stanc3/raw/master/docs/img/architecture.png"/> %}
 
 We additionally use several {{!page-dependencies} outside dependencies}.
-

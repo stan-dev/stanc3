@@ -1,27 +1,32 @@
-module Caml_unix = Unix
-open Core
+open Std
 
 let string_of_status = function
-  | Caml_unix.WEXITED i -> sprintf "[exit %n]" i
-  | WSIGNALED i -> sprintf "[signal %n]" i
-  | WSTOPPED i -> sprintf "[stopped %n]" i
+  | Unix.WEXITED i -> Printf.sprintf "[exit %n]" i
+  | WSIGNALED i -> Printf.sprintf "[signal %n]" i
+  | WSTOPPED i -> Printf.sprintf "[stopped %n]" i
 
 let run_capturing_output cmd =
-  let noflags = Array.create ~len:0 "" in
-  let stdout, stdin, stderr = Caml_unix.open_process_full cmd noflags in
+  let noflags = Array.make 0 "" in
+  let stdout, stdin, stderr = Unix.open_process_full cmd noflags in
   let chns = [stdout; stderr] in
   let out = List.map ~f:In_channel.input_lines chns |> List.concat in
   let status =
-    string_of_status (Caml_unix.close_process_full (stdout, stdin, stderr))
-  in
+    string_of_status (Unix.close_process_full (stdout, stdin, stderr)) in
   let out = out @ [status] in
   String.concat ~sep:"\n" out
 
 let () =
-  let args = Sys.get_argv () in
+  let args = Sys.argv in
   let binary = args.(1) in
   let dirs = Array.(sub args ~pos:2 ~len:(length args - 2)) in
-  Array.stable_sort ~compare:String.compare dirs;
+  Array.stable_sort ~cmp:String.compare dirs;
   Array.iter dirs ~f:(fun arg ->
+      let arg = String.chop_prefix_if_exists arg ~prefix:"./" in
       let cmd = binary ^ " " ^ arg in
-      Printf.printf "  $ %s\n%s\n" cmd (run_capturing_output cmd))
+      let short_cmd =
+        (* when displaying the command in the output file, we clean up the
+           binary name *)
+        let binary = String.split_last ~sep:"/" binary |> Option.get |> snd in
+        let binary = String.replace_first binary ~sub:".exe" ~by:"" in
+        binary ^ " " ^ arg in
+      Printf.printf "  $ %s\n%s\n" short_cmd (run_capturing_output cmd))

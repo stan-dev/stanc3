@@ -1,4 +1,4 @@
-  $ ../../../../../install/default/bin/stanc completely_undefined1.stan
+  $ stanc completely_undefined1.stan
 Semantic error in 'completely_undefined1.stan', line 2, column 12 to column 23:
    -------------------------------------------------
      1:  model {
@@ -9,7 +9,7 @@ Semantic error in 'completely_undefined1.stan', line 2, column 12 to column 23:
 
 A returning function was expected but an undeclared identifier "foo_lpdf" was supplied.
 [exit 1]
-  $ ../../../../../install/default/bin/stanc completely_undefined2.stan
+  $ stanc completely_undefined2.stan
 Semantic error in 'completely_undefined2.stan', line 5, column 12 to column 23:
    -------------------------------------------------
      3:  }
@@ -21,7 +21,7 @@ Semantic error in 'completely_undefined2.stan', line 5, column 12 to column 23:
 
 Function "foo_lpdf" is not implemented for distribution "foo", use "foo_lpmf" instead.
 [exit 1]
-  $ ../../../../../install/default/bin/stanc lpmf_lpdf_replacement1.stan
+  $ stanc lpmf_lpdf_replacement1.stan
 Semantic error in 'lpmf_lpdf_replacement1.stan', line 5, column 14 to column 34:
    -------------------------------------------------
      3:  model {  
@@ -34,7 +34,7 @@ Semantic error in 'lpmf_lpdf_replacement1.stan', line 5, column 14 to column 34:
 Function "binomial_lpdf" is not implemented for distribution "binomial", use 
 "binomial_lpmf" instead.
 [exit 1]
-  $ ../../../../../install/default/bin/stanc lpmf_lpdf_replacement2.stan
+  $ stanc lpmf_lpdf_replacement2.stan
 Semantic error in 'lpmf_lpdf_replacement2.stan', line 5, column 14 to column 32:
    -------------------------------------------------
      3:  model {  
@@ -47,7 +47,7 @@ Semantic error in 'lpmf_lpdf_replacement2.stan', line 5, column 14 to column 32:
 Function "normal_lpmf" is not implemented for distribution "normal", use 
 "normal_lpdf" instead.
 [exit 1]
-  $ ../../../../../install/default/bin/stanc lpmf_lpdf_replacement3.stan
+  $ stanc lpmf_lpdf_replacement3.stan
 Semantic error in 'lpmf_lpdf_replacement3.stan', line 5, column 14 to column 35:
    -------------------------------------------------
      3:  model {
@@ -60,7 +60,7 @@ Semantic error in 'lpmf_lpdf_replacement3.stan', line 5, column 14 to column 35:
 Function "binomial_lupdf" is not implemented for distribution "binomial", use 
 "binomial_lupmf" instead.
 [exit 1]
-  $ ../../../../../install/default/bin/stanc no_rng_suffix.stan
+  $ stanc no_rng_suffix.stan
 Semantic error in 'no_rng_suffix.stan', line 2, column 12 to column 55:
    -------------------------------------------------
      1:  generated quantities {
@@ -72,7 +72,7 @@ Semantic error in 'no_rng_suffix.stan', line 2, column 12 to column 55:
 Function "multi_gp_cholesky_rng" is not implemented for distribution 
 "multi_gp_cholesky".
 [exit 1]
-  $ ../../../../../install/default/bin/stanc non_existing_distribution_suffix1.stan
+  $ stanc non_existing_distribution_suffix1.stan
 Semantic error in 'non_existing_distribution_suffix1.stan', line 4, column 14 to column 39:
    -------------------------------------------------
      2:  }
@@ -84,7 +84,7 @@ Semantic error in 'non_existing_distribution_suffix1.stan', line 4, column 14 to
 
 Function "binomial_logit_cdf" is not implemented for distribution "binomial_logit".
 [exit 1]
-  $ ../../../../../install/default/bin/stanc non_existing_distribution_suffix2.stan
+  $ stanc non_existing_distribution_suffix2.stan
 Semantic error in 'non_existing_distribution_suffix2.stan', line 4, column 14 to column 40:
    -------------------------------------------------
      2:  }
@@ -96,7 +96,7 @@ Semantic error in 'non_existing_distribution_suffix2.stan', line 4, column 14 to
 
 Function "binomial_logit_lcdf" is not implemented for distribution "binomial_logit".
 [exit 1]
-  $ ../../../../../install/default/bin/stanc non_existing_distribution_suffix3.stan
+  $ stanc non_existing_distribution_suffix3.stan
 Semantic error in 'non_existing_distribution_suffix3.stan', line 4, column 14 to column 41:
    -------------------------------------------------
      2:  }
@@ -108,7 +108,7 @@ Semantic error in 'non_existing_distribution_suffix3.stan', line 4, column 14 to
 
 Function "binomial_logit_lccdf" is not implemented for distribution "binomial_logit".
 [exit 1]
-  $ ../../../../../install/default/bin/stanc non_existing_distribution_suffix4.stan
+  $ stanc non_existing_distribution_suffix4.stan
 Semantic error in 'non_existing_distribution_suffix4.stan', line 4, column 14 to column 41:
    -------------------------------------------------
      2:  }
@@ -120,7 +120,7 @@ Semantic error in 'non_existing_distribution_suffix4.stan', line 4, column 14 to
 
 A returning function was expected but an undeclared identifier "von_mises_notasuffix" was supplied.
 [exit 1]
-  $ ../../../../../install/default/bin/stanc removed_suffix.stan
+  $ stanc removed_suffix.stan
 Semantic error in 'removed_suffix.stan', line 4, column 14 to column 45:
    -------------------------------------------------
      2:  }
@@ -132,7 +132,7 @@ Semantic error in 'removed_suffix.stan', line 4, column 14 to column 45:
 
 A returning function was expected but an undeclared identifier "binomial_logit_ccdf_log" was supplied.
 [exit 1]
-  $ ../../../../../install/default/bin/stanc user_defined.stan
+  $ stanc user_defined.stan
 Semantic error in 'user_defined.stan', line 7, column 13 to column 27:
    -------------------------------------------------
      5:  }
@@ -144,7 +144,7 @@ Semantic error in 'user_defined.stan', line 7, column 13 to column 27:
 
 Function "bar_lpmf" is not implemented for distribution "bar", use "bar_lpdf" instead.
 [exit 1]
-  $ ../../../../../install/default/bin/stanc user_defined_no_cdf.stan
+  $ stanc user_defined_no_cdf.stan
 Semantic error in 'user_defined_no_cdf.stan', line 7, column 14 to column 29:
    -------------------------------------------------
      5:  }
@@ -157,7 +157,7 @@ Semantic error in 'user_defined_no_cdf.stan', line 7, column 14 to column 29:
 A returning function was expected but an undeclared identifier "bar_lcdf" was supplied.
 Did you mean "bar_lpdf"?
 [exit 1]
-  $ ../../../../../install/default/bin/stanc user_defined_no_rng.stan
+  $ stanc user_defined_no_rng.stan
 Semantic error in 'user_defined_no_rng.stan', line 7, column 12 to column 23:
    -------------------------------------------------
      5:  }
@@ -169,7 +169,7 @@ Semantic error in 'user_defined_no_rng.stan', line 7, column 12 to column 23:
 
 A returning function was expected but an undeclared identifier "bar_rng" was supplied.
 [exit 1]
-  $ ../../../../../install/default/bin/stanc user_defined_unnormalized.stan
+  $ stanc user_defined_unnormalized.stan
 Semantic error in 'user_defined_unnormalized.stan', line 7, column 13 to column 28:
    -------------------------------------------------
      5:  }

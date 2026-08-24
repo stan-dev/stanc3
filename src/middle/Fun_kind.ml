@@ -1,7 +1,9 @@
 (** Types for function kinds, e.g. [StanLib] or [UserDefined], and function
     suffix types, e.g. [foo_ldfp], [bar_lp] *)
 
-open Core
+open Std
+open Std.Compare
+open Std.Sexp_conv
 
 type 'propto suffix =
   | FnPlain
@@ -10,18 +12,18 @@ type 'propto suffix =
   | FnLpmf of 'propto
   | FnTarget
   | FnJacobian
-[@@deriving compare, hash, map, sexp, equal]
+[@@deriving compare, map, sexp_of, equal]
 
-let without_propto = map_suffix (Fn.const () : bool -> unit)
+let without_propto = map_suffix (Fun.const () : bool -> unit)
 
 type 'e t =
   | StanLib of string * bool suffix * Mem_pattern.t
   | CompilerInternal of 'e Internal_fun.t
   | UserDefined of string * bool suffix
-[@@deriving compare, sexp, hash, map, fold]
+[@@deriving compare, sexp_of, map, fold]
 
 let suffix_from_name fname =
-  let is_suffix suffix = Core.String.is_suffix ~suffix fname in
+  let is_suffix suffix = String.ends_with ~suffix fname in
   if is_suffix "_rng" then FnRng
   else if is_suffix "_lp" then FnTarget
   else if is_suffix "_jacobian" then FnJacobian
@@ -30,15 +32,6 @@ let suffix_from_name fname =
   else if is_suffix "_lpdf" then FnLpdf false
   else if is_suffix "_lpmf" then FnLpmf false
   else FnPlain
-
-let forget_normalization suffix =
-  match suffix with
-  | FnLpdf _ -> FnLpdf ()
-  | FnLpmf _ -> FnLpmf ()
-  | FnPlain -> FnPlain
-  | FnRng -> FnRng
-  | FnTarget -> FnTarget
-  | FnJacobian -> FnJacobian
 
 let with_unnormalized_suffix (name : string) =
   Option.first_some

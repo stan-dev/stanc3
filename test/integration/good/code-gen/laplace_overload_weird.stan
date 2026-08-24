@@ -46,7 +46,7 @@ model {
   alpha ~ inv_gamma(alpha_location_prior, alpha_scale_prior);
   eta ~ normal(0, 1);
 
-  target += laplace_marginal(my_fun, (eta, log_ye, y), 
+  target += laplace_marginal(my_fun, (eta, log_ye, y), 1,
                              my_fun, (x, n_obs, alpha, rho));
 
 }

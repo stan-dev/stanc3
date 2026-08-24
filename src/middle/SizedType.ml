@@ -1,6 +1,8 @@
 (** Types which have a concrete size associated, e.g. [vector[n]] *)
 
-open Core
+open Std
+open Std.Compare
+open Std.Sexp_conv
 
 type 'a t =
   | SInt
@@ -14,7 +16,7 @@ type 'a t =
   | SComplexMatrix of 'a * 'a
   | SArray of 'a t * 'a
   | STuple of 'a t list
-[@@deriving sexp, compare, map, hash, fold]
+[@@deriving sexp_of, compare, map, fold]
 
 let rec pp pp_e ppf = function
   | SInt -> Fmt.string ppf "int"
@@ -70,10 +72,10 @@ let rec get_dims_io st =
   | SComplexMatrix (dim1, dim2) -> [dim1; dim2; two]
   | SArray (t, dim) -> dim :: get_dims_io t
   | STuple _ ->
-      Common.ICE.internal_compiler_error
-        [%message
-          "Tried to get IO dims of a tuple, which is not rectangular"
-            (st : Expr.Typed.t t)]
+      Common.ICE.(
+        internal_errorf
+          "Tried to get IO dims of a tuple, which is not rectangular: %t"
+          [pp Expr.Typed.pp $ st]) [@coverage off]
 
 let rec io_size st =
   let two = Expr.Helpers.int 2 in

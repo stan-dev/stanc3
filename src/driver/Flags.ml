@@ -1,4 +1,4 @@
-open Core
+open Std
 
 type t =
   { optimization_level: Analysis_and_optimization.Optimize.optimization_level
@@ -28,7 +28,7 @@ and debug_settings =
   ; print_lir: bool
   ; debug_generate_data: bool
   ; debug_generate_inits: bool
-  ; debug_data_json: string option }
+  ; debug_data_json: (string * string) option }
 
 and debug_options = Off | Basic | Pretty
 
@@ -75,16 +75,10 @@ let set_backend_args_list flags =
   let sans_model_and_hpp_paths x =
     not
       String.(
-        is_suffix ~suffix:".stan" x
-        && not (is_prefix ~prefix:"--filename-in-msg" x)
-        || is_prefix ~prefix:"--o" x) in
+        ends_with ~suffix:".stan" x
+        && not (starts_with ~prefix:"--filename-in-msg" x)
+        || starts_with ~prefix:"--o" x) in
   let stanc_args_to_print =
     flags |> List.filter ~f:sans_model_and_hpp_paths |> String.concat ~sep:" "
   in
   Stan_math_backend.Lower_program.stanc_args_to_print := stanc_args_to_print
-
-let remove_dotstan s =
-  Option.first_some
-    (String.chop_suffix ~suffix:".stanfunctions" s)
-    (String.chop_suffix ~suffix:".stan" s)
-  |> Option.value ~default:s

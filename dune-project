@@ -1,4 +1,4 @@
-(lang dune 3.5)
+(lang dune 3.12)
 
 (name stanc)
 
@@ -14,32 +14,55 @@
  (synopsis "The Stan compiler and utilities")
  (depends
   (ocaml
-   (= 4.14.1))
-  (core
-   (= v0.16.1))
+   (= 5.5.0))
   (menhir
-   (= 20230608))
-  (ppx_deriving
-   (= 5.2.1))
+   (= 20260209))
   (fmt
    (= 0.11.0))
   (yojson
-   (= 2.1.0))
+   (= 3.0.0))
   (cmdliner
-   (= 2.1.0))
+   (= 2.1.1))
+  (ppx_deriving
+   (= 6.1.1))
+  ppx_compare
+  ppx_sexp_conv
+  ppx_expect_nobase
+  (ppx_sexp_value :with-test)
   (ocamlformat
    (and
-    :with-test
-    (= 0.28.1)))
-  (bisect_ppx :with-test)
-  (merlin :with-test)
-  (utop :with-test)
-  (patdiff :with-test)))
+    :with-dev-setup
+    (= 0.29.0)))
+   (menhirformat
+    :with-dev-setup)
+  (bisect_ppx :with-dev-setup)
+  (ocaml-lsp-server :with-dev-setup)
+  (menhir-lsp :with-dev-setup)
+  (odoc :with-doc)
+  (sherlodoc :with-doc)))
 
 (cram enable)
 
 (generate_opam_files true)
 
 (using menhir 2.0)
+
+(dialect
+ (name menhir)
+ (implementation
+  (extension mly)
+  (format
+   (setenv
+    PATH "%{env:PATH=''}"
+    (run menhirformat --indent-once %{input-file})))))
+
+(dialect
+ (name ocamllex)
+ (implementation
+  (extension mll)
+  (format
+   (setenv
+    PATH "%{env:PATH=''}"
+    (run menhirformat --indent-once %{input-file})))))
 
 (using directory-targets 0.1)

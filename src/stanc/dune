@@ -3,13 +3,12 @@
  (modes
   (byte c)
   (best exe))
- (libraries core fmt cmdliner fmt.cli fmt.tty driver stan_math_signatures)
+ (libraries std fmt cmdliner fmt.cli fmt.tty driver stan_math_signatures)
  (instrumentation
   (backend bisect_ppx))
  (modules Stanc CLI)
  (public_name stanc)
- (preprocess
-  (pps ppx_jane)))
+ (package stanc))
 
 (rule
  (target
@@ -21,5 +20,6 @@
 
 (install
  (section share_root)
+ (package stanc)
  (dirs
   (cmdliner-support/share as .)))

@@ -1,40 +1,42 @@
-open Core
+open Std
 open Ast
 open Middle
 
-let current_removal_version = (2, 35)
+let current_removal_version = (2, 40)
 
 let expired (major, minor) =
   let removal_major, removal_minor = current_removal_version in
   removal_major > major || (removal_major = major && removal_minor >= minor)
 
-let deprecated_functions = String.Map.of_alist_exn []
+let deprecated_functions = String.Map.of_list []
 let stan_lib_deprecations = deprecated_functions
 
 (* TODO deprecate other pre-variadics like algebra_solver? *)
 let deprecated_odes =
-  String.Map.of_alist_exn
+  String.Map.of_list
     [ ("integrate_ode", ("ode_rk45", (3, 0)))
     ; ("integrate_ode_rk45", ("ode_rk45", (3, 0)))
     ; ("integrate_ode_bdf", ("ode_bdf", (3, 0)))
     ; ("integrate_ode_adams", ("ode_adams", (3, 0))) ]
 
 let rename_deprecated map name =
-  Map.find map name |> Option.map ~f:fst |> Option.value ~default:name
+  String.Map.find_opt name map
+  |> Option.map ~f:fst |> Option.value ~default:name
 
 let userdef_functions program =
   match program.functionblock with
-  | None -> Hash_set.Poly.create ()
+  | None -> Hashtbl.create 0
   | Some {stmts; _} ->
       List.filter_map stmts ~f:(function
         | {stmt= FunDef {body= {stmt= Skip; _}; _}; _} -> None
         | {stmt= FunDef {funname; arguments; _}; _} ->
             Some (funname.name, Ast.type_of_arguments arguments)
         | _ -> None)
-      |> Hash_set.Poly.of_list
+      |> List.map ~f:(fun x -> (x, ()))
+      |> List.to_seq |> Hashtbl.of_seq
 
 let is_redundant_forwarddecl fundefs funname arguments =
-  Hash_set.mem fundefs (funname.name, Ast.type_of_arguments arguments)
+  Hashtbl.mem fundefs (funname.name, Ast.type_of_arguments arguments)
 
 let lkj_cov_message =
   "lkj_cov is deprecated and will be removed in Stan 3.0. Use lkj_corr with an \
@@ -47,18 +49,18 @@ let rec collect_deprecated_expr (acc : (Location_span.t * string) list)
   | CondDistApp ((StanLib _ | UserDefined _), {name; id_loc}, l)
    |FunApp ((StanLib _ | UserDefined _), {name; id_loc}, l) ->
       let w =
-        match Map.find stan_lib_deprecations name with
+        match String.Map.find_opt name stan_lib_deprecations with
         | Some (rename, (major, minor)) when not (expired (major, minor)) ->
-            let version = string_of_int major ^ "." ^ string_of_int minor in
+            let version = Int.to_string major ^ "." ^ Int.to_string minor in
             [ ( id_loc
               , name ^ " is deprecated and will be removed in Stan " ^ version
                 ^ ". Use " ^ rename
                 ^ " instead. This can be automatically changed using the \
                    canonicalize flag for stanc" ) ]
         | _ -> (
-            match Map.find deprecated_odes name with
+            match String.Map.find_opt name deprecated_odes with
             | Some (rename, (major, minor)) ->
-                let version = string_of_int major ^ "." ^ string_of_int minor in
+                let version = Int.to_string major ^ "." ^ Int.to_string minor in
                 [ ( id_loc
                   , name ^ " is deprecated and will be removed in Stan "
                     ^ version ^ ". Use " ^ rename

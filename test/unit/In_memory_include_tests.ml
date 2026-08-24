@@ -1,4 +1,5 @@
-open Core
+open Std
+open Std.Sexp_conv
 open Frontend
 
 let print_ast_or_error code =
@@ -36,7 +37,7 @@ let%expect_test "no includes" =
 
 let%expect_test "wrong include" =
   Include_files.include_provider :=
-    InMemory (String.Map.of_alist_exn [("bar.stan", "functions { }")]);
+    InMemory (String.Map.of_list [("bar.stan", "functions { }")]);
   print_ast_or_error include_model;
   [%expect
     {|
@@ -65,8 +66,7 @@ let b = {|
 
 let%expect_test "recursive include" =
   Include_files.include_provider :=
-    InMemory
-      (String.Map.of_alist_exn [("include/a.stan", a); ("include/b.stan", b)]);
+    InMemory (String.Map.of_list [("include/a.stan", a); ("include/b.stan", b)]);
   print_ast_or_error a;
   [%expect
     {|
@@ -93,7 +93,7 @@ functions {
 
 let%expect_test "good include" =
   Include_files.include_provider :=
-    InMemory (String.Map.of_alist_exn [("foo.stan", foo)]);
+    InMemory (String.Map.of_list [("foo.stan", foo)]);
   print_ast_or_error include_model;
   [%expect
     {|

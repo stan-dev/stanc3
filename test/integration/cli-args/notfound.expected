@@ -1,4 +1,4 @@
-  $ ../../../../install/default/bin/stanc notfound.stan
+  $ stanc notfound.stan
 Usage: %%NAME%% [--help] [OPTION]… [MODEL_FILE]
 %%NAME%%: MODEL_FILE argument: no 'notfound.stan' file
 [exit 124]

@@ -1,4 +1,4 @@
-open Core
+open Std
 open Frontend
 open Stan_math_backend
 open Analysis_and_optimization
@@ -9,19 +9,18 @@ let version = "%%NAME%%3 %%VERSION%%"
 let fmt_sexp s =
   let ppf = Format.str_formatter in
   Format.pp_set_margin ppf 90;
-  Sexp.pp_hum ppf s;
+  Sexplib0.Sexp.pp_hum ppf s;
   Format.flush_str_formatter ()
 
 let set_model_name model_name =
   let mangle =
-    String.concat_map ~f:(fun c ->
-        Char.(
-          if is_alphanum c || c = '_' then to_string c
-          else match c with '-' -> "_" | _ -> "x" ^ Int.to_string (to_int c)))
+    String.concat_map ~sep:"" ~f:(fun c ->
+        if Char.Ascii.is_alphanum c || c = '_' then String.of_char c
+        else match c with '-' -> "_" | _ -> "x" ^ Int.to_string (Char.code c))
   in
   let model_name_munged =
-    Flags.remove_dotstan List.(hd_exn (rev (String.split model_name ~on:'/')))
-  in
+    Common.Files.remove_dotstan
+      List.(hd_exn (rev (String.split_on_char model_name ~sep:'/'))) in
   if String.equal model_name model_name_munged then
     (* model name was not file-like, so we leave as is (e.g. from --name
        argument) *)
@@ -50,12 +49,12 @@ type compilation_result = (string, Errors.t) result
 let debug_output_mir output mir = function
   | Flags.Off -> ()
   | Basic ->
-      output (DebugOutput (fmt_sexp [%sexp (mir : Middle.Program.Typed.t)]))
+      output (DebugOutput (fmt_sexp (Middle.Program.Typed.sexp_of_t mir)))
   | Pretty -> output (DebugOutput (Fmt.str "%a" Program.Typed.pp mir))
 
 let stan2cpp model_name model (flags : Flags.t) (output : other_output -> unit)
     : compilation_result =
-  let open Common.Let_syntax.Result in
+  let open Result.Syntax in
   reset_mutable_states model_name flags;
   if flags.version then output (Version (Fmt.str "%s" version));
   let ast, parser_warnings =
@@ -64,13 +63,13 @@ let stan2cpp model_name model (flags : Flags.t) (output : other_output -> unit)
   output (Warnings parser_warnings);
   let* ast in
   if flags.debug_settings.print_ast then
-    output (DebugOutput (fmt_sexp [%sexp (ast : Ast.untyped_program)]));
+    output (DebugOutput (fmt_sexp (Ast.sexp_of_untyped_program ast)));
   let* typed_ast, type_warnings =
     Typechecker.check_program ~allow_undefined_functions:flags.allow_undefined
       ast
     |> Result.map_error ~f:(fun e -> Errors.Semantic_error e) in
   if flags.debug_settings.print_typed_ast then
-    output (DebugOutput (fmt_sexp [%sexp (typed_ast : Ast.typed_program)]));
+    output (DebugOutput (fmt_sexp (Ast.sexp_of_typed_program typed_ast)));
   output (Warnings type_warnings);
   if flags.info then output (Info (Info.info typed_ast));
   let deprecation_warnings =
@@ -94,19 +93,20 @@ let stan2cpp model_name model (flags : Flags.t) (output : other_output -> unit)
   debug_output_mir output mir flags.debug_settings.print_mir;
   let* generation_context =
     match flags.debug_settings.debug_data_json with
-    | None -> Ok Map.Poly.empty
-    | Some string -> (
+    | None -> Ok String.Map.empty
+    | Some (ctx, contents) -> (
         try
           Ok
             (Debug_data_generation.json_to_mir
                (Ast_to_Mir.gather_declarations typed_ast.datablock)
-               (Yojson.Basic.from_string string))
+               (Yojson.Basic.from_string contents))
         with Yojson.Json_error reason ->
           Error
             (Errors.DebugDataError
                ( Location_span.empty
-               , "Failed to parse data JSON for debug generation: " ^ reason )))
-  in
+               , Fmt.str "@[<v2>Failed to parse %s for debug generation:@ %a@]"
+                   ctx Fmt.lines reason
+               , true ))) in
   let* () =
     if flags.debug_settings.debug_generate_data then
       let+ data =
@@ -140,5 +140,5 @@ let stan2cpp model_name model (flags : Flags.t) (output : other_output -> unit)
       ~standalone_functions:(flags.functions_only || flags.standalone_functions)
       ?printed_filename:flags.filename_in_msg opt_mir in
   if flags.debug_settings.print_lir then
-    output (DebugOutput (fmt_sexp [%sexp (cpp : Cpp.program)]));
+    output (DebugOutput (fmt_sexp (Cpp.sexp_of_program cpp)));
   Fmt.(to_to_string Cpp.Printing.pp_program) cpp

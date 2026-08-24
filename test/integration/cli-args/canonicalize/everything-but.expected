@@ -1,4 +1,4 @@
-  $ ../../../../../install/default/bin/stanc --auto-format --canonicalize braces,parentheses blocks.stan
+  $ stanc --auto-format --canonicalize braces,parentheses blocks.stan
 data {
   int N;
   vector[N] y;
@@ -149,7 +149,7 @@ model {
 }
 
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --auto-format --canonicalize braces,parentheses deprecated.stan
+  $ stanc --auto-format --canonicalize braces,parentheses deprecated.stan
 functions {
   array[] real sho(real t, array[] real y, array[] real theta,
                    array[] real x, array[] int x_int);
@@ -216,7 +216,7 @@ Warning in 'deprecated.stan', line 39, column 32 to column 51:
     ode_adams instead. The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --auto-format --canonicalize braces,parentheses funs.stanfunctions
+  $ stanc --auto-format --canonicalize braces,parentheses funs.stanfunctions
 // comment test comment
 void test(int x, int y) {
   print(x, y);
@@ -226,7 +226,7 @@ real return_lp() {
   return target();
 }
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --auto-format --canonicalize braces,parentheses parenthesize.stan
+  $ stanc --auto-format --canonicalize braces,parentheses parenthesize.stan
 transformed data {
   int N = 12;
   real b = 1.5;
@@ -280,7 +280,7 @@ Warning in 'parenthesize.stan', line 27, column 13 to column 26:
     instead. You can silence this warning by adding explicit parentheses.
     This can be automatically changed using the canonicalize flag for stanc
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --auto-format --canonicalize braces,parentheses squaremc.stan
+  $ stanc --auto-format --canonicalize braces,parentheses squaremc.stan
 /*
  * BUGS Volume 3, funshapes, square minus circle
  * http://www.openbugs.net/Examples/Funshapes.html

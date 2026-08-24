@@ -1,7 +1,8 @@
 (** Types which have dimensionalities but not sizes, e.g. [array[,,]] *)
 
-open Core
-open Core.Poly
+open Std
+open Std.Compare
+open Std.Sexp_conv
 
 type t =
   | UInt
@@ -23,7 +24,7 @@ and argumentlist = (autodifftype * t) list
 and returntype = Void | ReturnType of t
 
 and signature = argumentlist * returntype * bool Fun_kind.suffix * Mem_pattern.t
-[@@deriving compare, hash, sexp, equal]
+[@@deriving compare, sexp_of, equal]
 
 type variadic_signature =
   { return_type: t
@@ -65,6 +66,8 @@ let rec wind_array_type = function
   | typ, 0 -> typ
   | typ, n -> wind_array_type (UArray typ, n - 1)
 
+let is_fun_type = function UFun _ | UMathLibraryFunction -> true | _ -> false
+
 let rec pp ppf = function
   | UInt -> Fmt.string ppf "int"
   | UReal -> Fmt.string ppf "real"
@@ -91,7 +94,10 @@ let rec pp ppf = function
 
 and pp_fun_arg ppf (ad_ty, unsized_ty) =
   let open Fmt in
-  let pp_data = if' (equal_autodifftype ad_ty DataOnly) (any "data ") in
+  let pp_data =
+    if'
+      (equal_autodifftype ad_ty DataOnly && not (is_fun_type unsized_ty))
+      (any "data ") in
   (pp_data ++ pp) ppf unsized_ty
 
 and pp_returntype ppf = function
@@ -106,8 +112,8 @@ let rec autodifftype_can_convert at1 at2 =
   | DataOnly, AutoDiffable -> false
   | TupleAD ads1, TupleAD ads2 -> (
       match List.for_all2 ads1 ads2 ~f:autodifftype_can_convert with
-      | Ok x -> x
-      | Unequal_lengths -> false)
+      | x -> x
+      | exception Invalid_argument _ -> false)
   | DataOnly, TupleAD ads ->
       List.for_all ads ~f:(autodifftype_can_convert DataOnly)
   | _, _ -> true
@@ -122,34 +128,30 @@ let any_autodiff xs = List.exists xs ~f:has_autodiff
 let lub_ad_type xs =
   let rec common_ad t1 t2 =
     match (t1, t2) with
-    | DataOnly, ad | ad, DataOnly -> Ok ad
-    | AutoDiffable, AutoDiffable -> Ok AutoDiffable
-    | TupleAD ads1, TupleAD ads2 -> (
-        match List.map2 ads1 ads2 ~f:common_ad with
-        | Ok ads -> ads |> Result.all |> Result.map ~f:(fun ads -> TupleAD ads)
-        | Unequal_lengths -> Error ())
+    | DataOnly, ad | ad, DataOnly -> ad
+    | AutoDiffable, AutoDiffable -> AutoDiffable
+    | TupleAD ads1, TupleAD ads2 -> TupleAD (List.map2 ads1 ads2 ~f:common_ad)
     | TupleAD ads, AutoDiffable | AutoDiffable, TupleAD ads ->
-        List.map ads ~f:(common_ad AutoDiffable)
-        |> Result.all
-        |> Result.map ~f:(fun ads -> TupleAD ads) in
-  List.fold_result ~init:DataOnly ~f:common_ad xs |> Result.ok
+        TupleAD (List.map ads ~f:(common_ad AutoDiffable)) in
+  try Some (List.fold_left ~init:DataOnly ~f:common_ad xs)
+  with Invalid_argument _ -> None
 
 let%expect_test "lub_ad_type1" =
   let ads = [DataOnly; DataOnly; DataOnly; AutoDiffable] in
   let lub = lub_ad_type ads in
-  print_s [%sexp (lub : autodifftype option)];
+  print_s (sexp_of_option sexp_of_autodifftype lub);
   [%expect "(AutoDiffable)"]
 
 let%expect_test "lub_ad_type2" =
   let ads = [DataOnly; DataOnly; DataOnly] in
   let lub = lub_ad_type ads in
-  print_s [%sexp (lub : autodifftype option)];
+  print_s (sexp_of_option sexp_of_autodifftype lub);
   [%expect "(DataOnly)"]
 
 let%expect_test "lub_ad_type3" =
   let ads = [AutoDiffable; DataOnly; DataOnly; DataOnly] in
   let lub = lub_ad_type ads in
-  print_s [%sexp (lub : autodifftype option)];
+  print_s (sexp_of_option sexp_of_autodifftype lub);
   [%expect "(AutoDiffable)"]
 
 (** Given two types find the minimal type both can convert to *)
@@ -164,9 +166,9 @@ let rec common_type = function
   | UArray t1, UArray t2 ->
       common_type (t1, t2) |> Option.map ~f:(fun t -> UArray t)
   | UTuple ts1, UTuple ts2 ->
-      (match List.zip ts1 ts2 with
-        | Ok ts -> List.map ts ~f:common_type |> Option.all
-        | Unequal_lengths -> None)
+      (match List.combine ts1 ts2 with
+        | ts -> List.map ts ~f:common_type |> Option.all
+        | exception Invalid_argument _ -> None)
       |> Option.map ~f:(fun ts -> UTuple ts)
   | t1, t2 when t1 = t2 -> Some t1
   | _, _ -> None
@@ -236,8 +238,6 @@ let is_eigen_type ut =
       true
   | _ -> false
 
-let is_fun_type = function UFun _ | UMathLibraryFunction -> true | _ -> false
-
 (** Detect if type contains an integer *)
 let rec contains_int ut =
   match ut with
@@ -285,15 +285,13 @@ let rec is_indexing_matrix = function
 let rec fill_adtype_for_type ad ut =
   match (ad, ut) with
   | _, UArray t -> fill_adtype_for_type ad t
-  | TupleAD ads, UTuple ts ->
-      TupleAD (List.map2_exn ~f:fill_adtype_for_type ads ts)
+  | TupleAD ads, UTuple ts -> TupleAD (List.map2 ~f:fill_adtype_for_type ads ts)
   | _, UTuple ts -> TupleAD (List.map ~f:(fill_adtype_for_type ad) ts)
   | TupleAD _, _ ->
-      Common.ICE.internal_compiler_error
-        [%message
-          "Attempting to give a non-tuple a TupleAD type"
-            (ut : t)
-            (ad : autodifftype)]
+      Common.ICE.(
+        internal_errorf
+          "Attempting to give a non-tuple a TupleAD type: type %t ad %t"
+          [pp $ ut; pp_autodifftype $ ad]) [@coverage off]
   | _, _ -> ad
 
 (** List all possible tuple sub-names for IO purposes. E.g, the decl
@@ -303,7 +301,7 @@ let enumerate_tuple_names_io name (ut : t) =
     match ut with
     | UTuple ts ->
         List.concat_mapi ts ~f:(fun i t ->
-            loop (base ^ "." ^ string_of_int (i + 1)) t)
+            loop (base ^ "." ^ Int.to_string (i + 1)) t)
     | UArray _ when contains_tuple ut ->
         let scalar, _ = unwind_array_type ut in
         loop base scalar
@@ -313,24 +311,6 @@ let enumerate_tuple_names_io name (ut : t) =
 let%expect_test "tuple names" =
   let t = UArray (UTuple [UInt; UArray (UTuple [UReal; UComplex]); UVector]) in
   let res = enumerate_tuple_names_io "foo" t in
-  [%sexp (res : string list)] |> print_s;
+  print_s (sexp_of_list sexp_of_string res);
   [%expect {|
       (foo.1 foo.2.1 foo.2.2 foo.3) |}]
-
-module Comparator = Comparator.Make (struct
-  type nonrec t = t
-
-  let compare = compare
-  let sexp_of_t = sexp_of_t
-end)
-
-include Comparator
-
-include Comparable.Make_using_comparator (struct
-  type nonrec t = t
-
-  let sexp_of_t = sexp_of_t
-  let t_of_sexp = t_of_sexp
-
-  include Comparator
-end)

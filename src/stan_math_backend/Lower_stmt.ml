@@ -1,7 +1,6 @@
 (** Lowering of Stan statements to C++ *)
 
-open Core
-open Core.Poly
+open Std
 open Middle
 open Cpp
 open Lower_expr
@@ -14,11 +13,11 @@ let check_to_string = function
   | Upper _ -> Some "less_or_equal"
   | CholeskyCov -> Some "cholesky_factor"
   | LowerUpper _ ->
-      Common.ICE.internal_compiler_error
-        [%message "LowerUpper is really two other checks tied together"]
+      Common.ICE.internal_error
+        "LowerUpper is really two other checks tied together" [@coverage off]
   | Offset _ | Multiplier _ | OffsetMultiplier _ ->
-      Common.ICE.internal_compiler_error
-        [%message "Offset and multiplier don't have a check"]
+      Common.ICE.internal_error "Offset and multiplier don't have a check"
+      [@coverage off]
   | t -> constraint_to_string t
 
 let math_fn_translations = function
@@ -88,13 +87,13 @@ let rec initialize_value st adtype =
       var_arr.:{lower_expr d; initialize_value t adtype}
   | TupleAD ads, STuple subts ->
       let tupl = lower_st st adtype in
-      InitializerExpr (tupl, List.map2_exn ~f:initialize_value subts ads)
+      InitializerExpr (tupl, List.map2 ~f:initialize_value subts ads)
   | _, STuple _ | TupleAD _, _ ->
-      Common.ICE.internal_compiler_error
-        [%message
-          "Mismatch between Tuple type and Tuple AD in code gen"
-            (st : Expr.Typed.t SizedType.t)
-            (adtype : UnsizedType.autodifftype)]
+      Common.ICE.(
+        internal_errorf
+          "Mismatch between Tuple type %t and Tuple AD %t in code gen"
+          [SizedType.pp Expr.Typed.pp $ st; UnsizedType.pp_autodifftype $ adtype])
+      [@coverage off]
 
 (** Initialize an object of a given size.*)
 let lower_assign_sized st adtype (initialize : 'a Stmt.Pattern.decl_init) =
@@ -167,8 +166,8 @@ let rec lower_nonrange_lvalue lvalue =
   | lv, idcs when List.for_all ~f:is_single_index idcs ->
       lower_indexed_simple (lower_nonrange_lbase lv) idcs
   | _, _ ->
-      Common.ICE.internal_compiler_error
-        [%message "Multi-index must be the last (rightmost) index."]
+      Common.ICE.internal_error
+        "Multi-index must be the last (rightmost) index." [@coverage off]
 
 and lower_nonrange_lbase = function
   | Stmt.Pattern.LVariable v -> Var v
@@ -331,8 +330,8 @@ let rec lower_statement Stmt.{pattern; meta} : stmt list =
       [ IfElse
           ( lower_bool_expr cond
           , Stmts.block (lower_statement ifbranch)
-          , Option.map ~f:(Fn.compose Stmts.block lower_statement) elsebranch )
-      ]
+          , Option.map ~f:(Fun.compose Stmts.block lower_statement) elsebranch
+          ) ]
   | While (cond, body) ->
       [While (lower_bool_expr cond, Stmts.block (lower_statement body))]
   | For {loopvar; lower; upper; body} ->
@@ -347,7 +346,7 @@ let rec lower_statement Stmt.{pattern; meta} : stmt list =
       [lower_decl decl_id decl_type decl_adtype initialize]
   | Profile (name, ls) -> [lower_profile name (lower_statements ls)]
 
-and lower_statements = List.concat_map ~f:lower_statement
+and lower_statements stmts = List.concat_map ~f:lower_statement stmts
 
 module Testing = struct
   let%expect_test "set size mat array" =

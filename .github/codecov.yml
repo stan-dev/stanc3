@@ -1,7 +1,7 @@
 codecov:
   require_ci_to_pass: false
   ci:
-    - jenkins.flatironinstitute.org
+    - jenkins-new.flatironinstitute.org
 
 coverage:
   status:

@@ -1,4 +1,4 @@
-  $ ../../../../../../../install/default/bin/stanc --auto-format command.stan
+  $ stanc --auto-format command.stan
 data {
   real y;
 }
@@ -10,7 +10,7 @@ model {
 }
 
 [exit 0]
-  $ ../../../../../../../install/default/bin/stanc --auto-format gauss.stan
+  $ stanc --auto-format gauss.stan
 parameters {
   real x;
 }

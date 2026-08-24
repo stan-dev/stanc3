@@ -1,4 +1,6 @@
-open Core
+open Std
+open Std.Compare
+open Std.Sexp_conv
 
 (** Transformations (constraints) for global variable declarations *)
 
@@ -24,7 +26,7 @@ type 'e t =
   | StochasticRow
   | StochasticColumn
   | TupleTransformation of 'e t list
-[@@deriving sexp, compare, map, hash, fold]
+[@@deriving sexp_of, compare, map, fold, show]
 
 let rec has_check = function
   | Identity | Offset _ | Multiplier _ | OffsetMultiplier _ -> false

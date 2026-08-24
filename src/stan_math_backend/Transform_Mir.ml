@@ -1,5 +1,4 @@
-open Core
-open Core.Poly
+open Std
 open Middle
 open Mangle
 
@@ -30,7 +29,7 @@ let rec change_kwrds_stmts s =
           { e with
             loopvar= add_prefix_to_kwrds e.loopvar
           ; body= change_kwrds_stmts e.body }
-    | x -> map Fn.id change_kwrds_stmts x in
+    | x -> map Fun.id change_kwrds_stmts x in
   {s with pattern}
 
 (** A list of functions which return an Eigen block expression *)
@@ -52,19 +51,20 @@ let eigen_block_expr_fns =
     and this algorithm is O(n^3) so it's important to track only the function
     calls that really can propagate eigen templates. *)
 let break_eigen_cycles functions_block =
-  let callgraph = String.Table.create () in
+  let callgraph = Hashtbl.create (List.length functions_block) in
   let eval_eigen_cycles fun_args calls (f : _ Program.fun_def) =
     let open Expr in
     let rec is_potentially_recursive = function
-      | {pattern= Var name; _} -> Set.mem fun_args name
+      | {pattern= Var name; _} -> String.Set.mem name fun_args
       | {pattern= Indexed (e, _); _} -> is_potentially_recursive e
       | {pattern= FunApp (StanLib (fname, _, _), e :: _); _} ->
-          Set.mem eigen_block_expr_fns fname && is_potentially_recursive e
+          String.Set.mem fname eigen_block_expr_fns
+          && is_potentially_recursive e
       | _ -> false in
     let rec map_args name args =
       let args = List.map ~f:rewrite_expr args in
       let can_recurse, eval_args =
-        List.fold_map ~init:false
+        List.fold_left_map ~init:false
           ~f:(fun is_rec e ->
             if is_potentially_recursive e then
               ( true
@@ -75,7 +75,7 @@ let break_eigen_cycles functions_block =
       if not can_recurse then args
       else if name = f.fdname then eval_args
       else
-        match Hashtbl.find callgraph name with
+        match Hashtbl.find_opt callgraph name with
         | Some nested when Hash_set.mem nested f.fdname -> eval_args
         | Some nested ->
             (* [calls] records all functions reachable from the current
@@ -111,22 +111,23 @@ let break_eigen_cycles functions_block =
       List.filter_map fdargs ~f:(fun (_, n, t) ->
           if UnsizedType.is_eigen_type t then Some n else None)
       |> String.Set.of_list in
-    if Set.is_empty fun_args then fd
+    if String.Set.is_empty fun_args then fd
     else
-      let calls = String.Hash_set.create () in
+      let calls = Hash_set.create 16 in
       let fndef = eval_eigen_cycles fun_args calls fd in
       if not (Hash_set.is_empty calls) then (
         (* update [callgraph] with the call paths going through the current
            function *)
-        Hashtbl.map_inplace callgraph ~f:(fun x ->
-            if Hash_set.mem x fdname then Hash_set.union calls x else x);
+        Hashtbl.filter_map_inplace callgraph ~f:(fun ~key:_ ~data:x ->
+            if Hash_set.mem x fdname then Some (Hash_set.union calls x)
+            else Some x);
         Hashtbl.update callgraph fdname
           ~f:(Option.value_map ~f:(Hash_set.union calls) ~default:calls));
       fndef in
   List.map ~f:break_cycles functions_block
 
 let opencl_trigger_restrictions =
-  String.Map.of_alist_exn
+  String.Map.of_list
     [ ( "bernoulli_lpmf"
       , [ [ (0, UnsizedType.DataOnly, UnsizedType.UArray UnsizedType.UInt)
           ; (1, UnsizedType.DataOnly, UnsizedType.UReal) ] ] )
@@ -175,14 +176,14 @@ let to_matrix_cl e =
   Expr.{e with pattern= FunApp (StanLib ("to_matrix_cl", FnPlain, AoS), [e])}
 
 let rec switch_expr_to_opencl available_cl_vars (Expr.{pattern; _} as e) =
-  let is_avail = List.mem available_cl_vars ~equal:( = ) in
+  let is_avail = List.mem ~set:available_cl_vars in
   let to_cl (Expr.{pattern; meta= {Expr.Typed.Meta.type_; _}} as e) =
     match (pattern, type_) with
     | Var s, _ when is_avail s -> Expr.{e with pattern= Var (s ^ opencl_suffix)}
     | _, UnsizedType.(UInt | UReal) -> e
     | _, _ -> to_matrix_cl e in
   let check_type args (i, ad, t) =
-    let arg = List.nth_exn args i in
+    let arg = List.nth args i in
     Expr.Typed.type_of arg = t
     && UnsizedType.autodifftype_can_convert (Expr.Typed.adlevel_of arg) ad in
   let is_restricted args = List.exists ~f:(List.for_all ~f:(check_type args)) in
@@ -190,11 +191,11 @@ let rec switch_expr_to_opencl available_cl_vars (Expr.{pattern; _} as e) =
     match req_args with
     | Some x when is_restricted args x -> args
     | None | Some _ -> List.map args ~f:to_cl in
-  let is_fn_opencl_supported f = Set.mem opencl_supported_functions f in
+  let is_fn_opencl_supported f = String.Set.mem f opencl_supported_functions in
   match pattern with
   | FunApp (StanLib (f, sfx, mem_pattern), args) when is_fn_opencl_supported f
     ->
-      let trigger = Map.find opencl_trigger_restrictions f in
+      let trigger = String.Map.find_opt f opencl_trigger_restrictions in
       { e with
         pattern=
           FunApp (StanLib (f, sfx, mem_pattern), maybe_map_args args trigger) }
@@ -216,9 +217,7 @@ let meta_from_sizedtype st =
     type_
   ; adlevel= UnsizedType.fill_adtype_for_type DataOnly type_ }
 
-let munge_tuple_name name =
-  String.substr_replace_all ~pattern:"." ~with_:"_dot_" name
-
+let munge_tuple_name name = String.replace_all ~sub:"." ~by:"_dot_" name
 let make_tuple_temp name = munge_tuple_name name ^ "_temp__"
 
 (** This function is essentially copied from [var_context_read], but rather than
@@ -292,9 +291,9 @@ let rec var_context_read_inside_tuple enclosing_tuple_name origin_type
           subtypes in
       let enclosing_names =
         List.mapi
-          ~f:(fun i _ -> enclosing_tuple_name ^ "." ^ string_of_int (i + 1))
+          ~f:(fun i _ -> enclosing_tuple_name ^ "." ^ Int.to_string (i + 1))
           subtypes in
-      List.map2_exn
+      List.map2
         ~f:(fun name projection ->
           var_context_read_inside_tuple name origin_type projection)
         enclosing_names elements
@@ -306,12 +305,12 @@ let rec var_context_read_inside_tuple enclosing_tuple_name origin_type
         | STuple subtypes ->
             ( List.mapi
                 ~f:(fun i _ ->
-                  enclosing_tuple_name ^ "." ^ string_of_int (i + 1))
+                  enclosing_tuple_name ^ "." ^ Int.to_string (i + 1))
                 subtypes
             , subtypes )
         | _ -> ([], []) in
       let temps =
-        List.map2_exn
+        List.map2
           ~f:(fun name t ->
             Stmt.Pattern.Decl
               { decl_adtype=
@@ -333,7 +332,7 @@ let rec var_context_read_inside_tuple enclosing_tuple_name origin_type
               ( assign_lval
               , unsized
               , Expr.Helpers.tuple_expr
-                  (List.map2_exn
+                  (List.map2
                      ~f:(fun n st ->
                        Expr.
                          { pattern= Var (make_tuple_temp n)
@@ -346,7 +345,7 @@ let rec var_context_read_inside_tuple enclosing_tuple_name origin_type
                 { meta= smeta
                 ; pattern=
                     SList
-                      ((List.map2_exn
+                      ((List.map2
                           ~f:(fun io_name st ->
                             let temp_name = make_tuple_temp io_name in
                             var_context_read_inside_tuple io_name
@@ -467,7 +466,7 @@ let rec var_context_read_internal
             (SizedType.to_unsized tupl) in
         let flat_vars = List.map ~f:flat_name flat_io_names in
         let flat_types = SizedType.flatten_tuple_io tupl in
-        List.map3_exn
+        List.map3
           ~f:(fun variable_name io_name st ->
             let typ = SizedType.to_unsized st in
             let scalar_type = UnsizedType.internal_scalar typ in
@@ -502,12 +501,12 @@ let rec var_context_read_internal
         match tupl with
         | STuple subtypes ->
             ( List.mapi
-                ~f:(fun i _ -> decl_id ^ "." ^ string_of_int (i + 1))
+                ~f:(fun i _ -> decl_id ^ "." ^ Int.to_string (i + 1))
                 subtypes
             , subtypes )
         | _ -> (* impossible by above pattern patch *) ([], []) in
       let temps =
-        List.map2_exn
+        List.map2
           ~f:(fun name t ->
             Stmt.Pattern.Decl
               { decl_adtype=
@@ -529,7 +528,7 @@ let rec var_context_read_internal
               ( assign_lval
               , unsized
               , Expr.Helpers.tuple_expr
-                  (List.map2_exn
+                  (List.map2
                      ~f:(fun n st ->
                        Expr.
                          { pattern= Var (make_tuple_temp n)
@@ -539,7 +538,7 @@ let rec var_context_read_internal
         [ Stmt.Helpers.mk_nested_for (List.rev dims)
             (fun loopvars ->
               SList
-                ((List.map2_exn
+                ((List.map2
                     ~f:(fun io_name st ->
                       let temp_name = make_tuple_temp io_name in
                       var_context_read_inside_tuple io_name
@@ -680,7 +679,7 @@ let param_deserializer_read
               ~f:(fun iter (st, trans) ->
                 ((Stmt.Pattern.LTupleProjection (lval, iter + 1), []), st, trans))
               subtys in
-          (List.concat_map ~f:(Fn.compose fst read_stmt) sub_sts, None)
+          (List.concat_map ~f:(Fun.compose fst read_stmt) sub_sts, None)
       | _ -> (
           let read = basic_read (cst, out_trans) in
           ( [ Stmt.
@@ -696,8 +695,8 @@ let param_deserializer_read
 
 let escape_name str =
   str
-  |> String.substr_replace_all ~pattern:"." ~with_:"_"
-  |> String.substr_replace_all ~pattern:"-" ~with_:"_"
+  |> String.replace_all ~sub:"." ~by:"_"
+  |> String.replace_all ~sub:"-" ~by:"_"
 
 (** Make sure that all if-while-and-for bodies are safely wrapped in a block in
     such a way that we can insert a location update before. The blocks make sure
@@ -714,11 +713,11 @@ let rec ensure_body_in_block (Stmt.{pattern; _} as stmt) =
   let ensure_body_in_block_base pattern =
     Stmt.Pattern.(
       match pattern with
-      | IfElse (_, _, _) | While (_, _) | For _ -> map Fn.id in_block pattern
+      | IfElse (_, _, _) | While (_, _) | For _ -> map Fun.id in_block pattern
       | _ -> pattern) in
   let pattern =
     ensure_body_in_block_base
-      Stmt.(Pattern.map Fn.id ensure_body_in_block pattern) in
+      Stmt.(Pattern.map Fun.id ensure_body_in_block pattern) in
   {stmt with pattern}
 
 let rec flatten_slists_list ls =
@@ -731,9 +730,9 @@ let rec flatten_slists_list ls =
         | Block ls ->
             Pattern.Block
               (List.concat_map
-                 ~f:(Fn.compose flatten_slist flatten_slists_stmt)
+                 ~f:(Fun.compose flatten_slist flatten_slists_stmt)
                  ls)
-        | pattern -> Pattern.map Fn.id flatten_slists_stmt pattern) in
+        | pattern -> Pattern.map Fun.id flatten_slists_stmt pattern) in
     {stmt with pattern} in
   List.concat_map ls ~f:(fun stmt ->
       Stmt.(
@@ -756,7 +755,8 @@ let%expect_test "Flatten slists" =
             |> s ]
         |> s ]
       |> flatten_slists_list) in
-  print_s [%sexp (stmt : (unit, unit) Stmt.t list)];
+  let open Sexp_conv in
+  print_s (sexp_of_list (Stmt.sexp_of_t sexp_of_unit sexp_of_unit) stmt);
   [%expect
     {|
     (((pattern
@@ -765,15 +765,16 @@ let%expect_test "Flatten slists" =
            (While ((pattern (Var hi)) (meta ()))
             ((pattern (Block (((pattern Break) (meta ()))))) (meta ()))))
           (meta ())))))
-      (meta ()))) |}]
+      (meta ())))
+    |}]
 
 let add_reads vars mkread stmts =
   let vars = List.map ~f:(fun (id, l, outvar) -> (id, (l, outvar))) vars in
-  let var_names = String.Map.of_alist_exn vars in
+  let var_names = String.Map.of_list vars in
   let add_read_to_decl (Stmt.{pattern; _} as stmt) =
     match pattern with
-    | Decl ({decl_id; _} as decl_rec) when Map.mem var_names decl_id -> (
-        let loc, out = Map.find_exn var_names decl_id in
+    | Decl ({decl_id; _} as decl_rec) when String.Map.mem decl_id var_names -> (
+        let loc, out = String.Map.find decl_id var_names in
         let param_reader, op_assign =
           mkread (Stmt.Helpers.lvariable decl_id, loc, out) in
         match op_assign with
@@ -794,7 +795,7 @@ let param_serializer_write ?(unconstrain = false)
           subtypes
           |> List.mapi ~f:(fun iter x ->
               (Expr.Helpers.add_tuple_index var (iter + 1), x))
-          |> List.map2_exn ~f:(fun t (v, st) -> (v, st, t)) transforms in
+          |> List.map2 ~f:(fun t (v, st) -> (v, st, t)) transforms in
         List.concat_map ~f:write tuple_elements
     | true, SArray _, TupleTransformation _ ->
         let tupl, array_dims = SizedType.get_array_dims st in
@@ -805,7 +806,7 @@ let param_serializer_write ?(unconstrain = false)
                 ; pattern=
                     SList
                       (write
-                         ( List.fold ~f:Expr.Helpers.add_int_index ~init:var
+                         ( List.fold_left ~f:Expr.Helpers.add_int_index ~init:var
                              (List.map
                                 ~f:(fun e -> Index.Single e)
                                 (List.rev loopvars))
@@ -852,7 +853,7 @@ let param_unconstrained_serializer_write
                 ; pattern=
                     SList
                       (write
-                         ( List.fold ~f:Expr.Helpers.add_int_index ~init:var
+                         ( List.fold_left ~f:Expr.Helpers.add_int_index ~init:var
                              (List.map
                                 ~f:(fun e -> Index.Single e)
                                 (List.rev loopvars))
@@ -973,10 +974,10 @@ let rec insert_before f to_insert = function
       if f hd then to_insert @ (hd :: tl)
       else hd :: insert_before f to_insert tl
 
-let is_opencl_var = String.is_suffix ~suffix:opencl_suffix
+let is_opencl_var = String.ends_with ~suffix:opencl_suffix
 
 let rec collect_vars_expr is_target accum Expr.{pattern; _} =
-  Set.union accum
+  String.Set.union accum
     (match pattern with
     | Var s when is_target s -> String.Set.of_list [s]
     | x -> Expr.Pattern.fold (collect_vars_expr is_target) String.Set.empty x)
@@ -994,13 +995,17 @@ let%expect_test "collect vars expr" =
     Expr.
       { pattern= FunApp (StanLib ("print", FnPlain, AoS), args)
       ; meta= Typed.Meta.empty } in
+  let open Sexp_conv in
   Stmt.{pattern= TargetPE fnapp; meta= Location_span.empty}
-  |> collect_opencl_vars |> String.Set.sexp_of_t |> print_s;
+  |> collect_opencl_vars |> String.Set.to_list
+  |> sexp_of_list sexp_of_string
+  |> print_s;
   [%expect {| (w_opencl__ x_opencl__) |}]
 
 let%expect_test "insert before" =
   let l = [1; 2; 3; 4; 5; 6] |> insert_before (( = ) 6) [999] in
-  [%sexp (l : int list)] |> print_s;
+  let open Sexp_conv in
+  print_s (sexp_of_list sexp_of_int l);
   [%expect {| (1 2 3 4 5 999 6) |}]
 
 let map_prog_stmt_lists f (p : ('a, 'b, 'c) Program.t) =
@@ -1029,8 +1034,8 @@ let trans_prog ?(use_opencl = false) (p : Program.Typed.t) =
         output_vars= List.map ~f:rename_inout p.output_vars
       ; input_vars= List.map ~f:rename_inout p.input_vars
       ; functions_block= List.map ~f:rename_func p.functions_block }
-      |> map translate_funapps_and_kwrds map_stmt Fn.id
-      |> map Fn.id change_kwrds_stmts Fn.id) in
+      |> map translate_funapps_and_kwrds map_stmt Fun.id
+      |> map Fun.id change_kwrds_stmts Fun.id) in
   let p = {p with functions_block= break_eigen_cycles p.functions_block} in
   let init_pos =
     [ Stmt.Pattern.Decl
@@ -1058,11 +1063,11 @@ let trans_prog ?(use_opencl = false) (p : Program.Typed.t) =
     else stmts in
   let param_writes, tparam_writes, gq_writes =
     List.map p.output_vars ~f:param_unconstrained_serializer_write
-    |> List.map2_exn p.output_vars ~f:(fun (_, meta, outvar) writes ->
+    |> List.map2 p.output_vars ~f:(fun (_, meta, outvar) writes ->
         (outvar.Program.out_block, Stmt.{pattern= SList writes; meta}))
     |> List.partition3_map ~f:(fun (b, x) ->
         match b with
-        | Parameters -> `Fst x
+        | Program.Parameters -> `Fst x
         | TransformedParameters -> `Snd x
         | GeneratedQuantities -> `Trd x) in
   let tparam_start stmt =
@@ -1128,7 +1133,7 @@ let trans_prog ?(use_opencl = false) (p : Program.Typed.t) =
       (List.concat_map
          ~f:(List.map ~f:collect_opencl_vars)
          [log_prob; generate_quantities])
-    |> Set.to_list in
+    |> String.Set.to_list in
   let maybe_add_opencl_events_clear =
     let event_clear_stmt x =
       Stmt.
@@ -1141,7 +1146,7 @@ let trans_prog ?(use_opencl = false) (p : Program.Typed.t) =
           String.chop_suffix_exn ~suffix:opencl_suffix vident in
         let type_of_input_var =
           match
-            List.find
+            List.find_opt
               ~f:(fun (s, _, _) -> String.equal s vident_sans_opencl)
               p.input_vars
           with
@@ -1185,5 +1190,5 @@ let trans_prog ?(use_opencl = false) (p : Program.Typed.t) =
     ; generate_quantities } in
   Program.(
     p
-    |> map Fn.id ensure_body_in_block Fn.id
+    |> map Fun.id ensure_body_in_block Fun.id
     |> map_prog_stmt_lists flatten_slists_list)

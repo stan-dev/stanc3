@@ -1,5 +1,5 @@
-version=0.28.1
-ocaml-version=4.14
+version=0.29.0
+ocaml-version=5.5
 # loosely re-creates the now-removed "compact" profile
 break-separators=before
 break-before-in=auto
@@ -14,3 +14,4 @@ space-around-variants=false
 sequence-blank-line=compact
 parse-docstrings=true
 wrap-comments=true
+letop-punning=always

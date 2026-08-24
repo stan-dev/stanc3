@@ -1,4 +1,4 @@
-  $ ../../../../install/default/bin/stanc --auto-format prophet.stan
+  $ stanc --auto-format prophet.stan
 // Copyright (c) 2017-present, Facebook, Inc. All rights reserved.
 functions {
   array[,] real get_changepoint_matrix(array[] real t, array[] real t_change,

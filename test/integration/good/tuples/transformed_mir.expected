@@ -1,4 +1,4 @@
-  $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir arrays-tuples-nested.stan
+  $ stanc -fsoa --debug-optimized-mir arrays-tuples-nested.stan
 ((functions_block ())
  (input_vars
   ((basic <opaque>
@@ -9695,7 +9695,7 @@
         (TupleTransformation (Identity (TupleTransformation (Identity Identity)))))))))))
  (prog_name arrays_tuples_nested_model) (prog_path arrays-tuples-nested.stan))
 [exit 0]
-  $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir basic_unpacking.stan
+  $ stanc -fsoa --debug-optimized-mir basic_unpacking.stan
 ((functions_block ()) (input_vars ())
  (prepare_data
   (((pattern
@@ -9915,7 +9915,7 @@
  (transform_inits ()) (unconstrain_array ()) (output_vars ())
  (prog_name basic_unpacking_model) (prog_path basic_unpacking.stan))
 [exit 0]
-  $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir infer_tuple_ad.stan
+  $ stanc -fsoa --debug-optimized-mir infer_tuple_ad.stan
 ((functions_block ()) (input_vars ()) (prepare_data ())
  (log_prob
   (((pattern
@@ -10143,7 +10143,7 @@
      (out_trans Identity)))))
  (prog_name infer_tuple_ad_model) (prog_path infer_tuple_ad.stan))
 [exit 0]
-  $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir nested_unpacking.stan
+  $ stanc -fsoa --debug-optimized-mir nested_unpacking.stan
 ((functions_block ())
  (input_vars
   ((complicated <opaque>
@@ -10657,7 +10657,142 @@
  (transform_inits ()) (unconstrain_array ()) (output_vars ())
  (prog_name nested_unpacking_model) (prog_path nested_unpacking.stan))
 [exit 0]
-  $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir overloading.stan
+  $ stanc -fsoa --debug-optimized-mir onepl_expr.stan
+((functions_block ()) (input_vars ()) (prepare_data ())
+ (log_prob
+  (((pattern
+     (Block
+      (((pattern
+         (NRFunApp (CompilerInternal FnPrint)
+          (((pattern
+             (FunApp (CompilerInternal FnMakeTuple)
+              (((pattern (Lit Real 3.5))
+                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+            (meta
+             ((type_ (UTuple (UReal))) (loc <opaque>) (adlevel (TupleAD (DataOnly)))))))))
+        (meta <opaque>)))))
+    (meta <opaque>))))
+ (reverse_mode_log_prob
+  (((pattern
+     (Block
+      (((pattern
+         (NRFunApp (CompilerInternal FnPrint)
+          (((pattern
+             (FunApp (CompilerInternal FnMakeTuple)
+              (((pattern (Lit Real 3.5))
+                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+            (meta
+             ((type_ (UTuple (UReal))) (loc <opaque>) (adlevel (TupleAD (DataOnly)))))))))
+        (meta <opaque>)))))
+    (meta <opaque>))))
+ (generate_quantities
+  (((pattern
+     (IfElse
+      ((pattern
+        (FunApp (StanLib PNot__ FnPlain AoS)
+         (((pattern
+            (EOr
+             ((pattern (Var emit_transformed_parameters__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+             ((pattern (Var emit_generated_quantities__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+      ((pattern (Block (((pattern (Return ())) (meta <opaque>))))) (meta <opaque>)) ()))
+    (meta <opaque>))
+   ((pattern
+     (IfElse
+      ((pattern
+        (FunApp (StanLib PNot__ FnPlain AoS)
+         (((pattern (Var emit_generated_quantities__))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+      ((pattern (Block (((pattern (Return ())) (meta <opaque>))))) (meta <opaque>)) ()))
+    (meta <opaque>))))
+ (transform_inits ()) (unconstrain_array ()) (output_vars ())
+ (prog_name onepl_expr_model) (prog_path onepl_expr.stan))
+[exit 0]
+  $ stanc -fsoa --debug-optimized-mir onepl_type.stan
+((functions_block
+  (((fdrt Void) (fdname foo) (fdsuffix FnPlain)
+    (fdargs ((AutoDiffable x (UTuple (UReal)))))
+    (fdbody
+     (((pattern (Block (((pattern (Return ())) (meta <opaque>))))) (meta <opaque>))))
+    (fdloc <opaque>))))
+ (input_vars ()) (prepare_data ()) (log_prob ()) (reverse_mode_log_prob ())
+ (generate_quantities
+  (((pattern
+     (IfElse
+      ((pattern
+        (FunApp (StanLib PNot__ FnPlain AoS)
+         (((pattern
+            (EOr
+             ((pattern (Var emit_transformed_parameters__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+             ((pattern (Var emit_generated_quantities__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+      ((pattern (Block (((pattern (Return ())) (meta <opaque>))))) (meta <opaque>)) ()))
+    (meta <opaque>))
+   ((pattern
+     (IfElse
+      ((pattern
+        (FunApp (StanLib PNot__ FnPlain AoS)
+         (((pattern (Var emit_generated_quantities__))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+      ((pattern (Block (((pattern (Return ())) (meta <opaque>))))) (meta <opaque>)) ()))
+    (meta <opaque>))))
+ (transform_inits ()) (unconstrain_array ()) (output_vars ())
+ (prog_name onepl_type_model) (prog_path onepl_type.stan))
+[exit 0]
+  $ stanc -fsoa --debug-optimized-mir onepl_type2.stan
+((functions_block ()) (input_vars ()) (prepare_data ())
+ (log_prob
+  (((pattern
+     (Block
+      (((pattern
+         (Decl (decl_adtype (TupleAD (AutoDiffable))) (decl_id x)
+          (decl_type (Sized (STuple (SReal)))) (initialize Default)))
+        (meta <opaque>)))))
+    (meta <opaque>))))
+ (reverse_mode_log_prob
+  (((pattern
+     (Block
+      (((pattern
+         (Decl (decl_adtype (TupleAD (AutoDiffable))) (decl_id x)
+          (decl_type (Sized (STuple (SReal)))) (initialize Default)))
+        (meta <opaque>)))))
+    (meta <opaque>))))
+ (generate_quantities
+  (((pattern
+     (IfElse
+      ((pattern
+        (FunApp (StanLib PNot__ FnPlain AoS)
+         (((pattern
+            (EOr
+             ((pattern (Var emit_transformed_parameters__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+             ((pattern (Var emit_generated_quantities__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+      ((pattern (Block (((pattern (Return ())) (meta <opaque>))))) (meta <opaque>)) ()))
+    (meta <opaque>))
+   ((pattern
+     (IfElse
+      ((pattern
+        (FunApp (StanLib PNot__ FnPlain AoS)
+         (((pattern (Var emit_generated_quantities__))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+      ((pattern (Block (((pattern (Return ())) (meta <opaque>))))) (meta <opaque>)) ()))
+    (meta <opaque>))))
+ (transform_inits ()) (unconstrain_array ()) (output_vars ())
+ (prog_name onepl_type2_model) (prog_path onepl_type2.stan))
+[exit 0]
+  $ stanc -fsoa --debug-optimized-mir overloading.stan
 ((functions_block
   (((fdrt (ReturnType UInt)) (fdname f) (fdsuffix FnPlain)
     (fdargs ((AutoDiffable x (UTuple (UInt UInt UInt)))))
@@ -10814,7 +10949,7 @@
  (transform_inits ()) (unconstrain_array ()) (output_vars ())
  (prog_name overloading_model) (prog_path overloading.stan))
 [exit 0]
-  $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir qr_unpack.stan
+  $ stanc -fsoa --debug-optimized-mir qr_unpack.stan
 ((functions_block ()) (input_vars ((N <opaque> SInt) (M <opaque> SInt)))
  (prepare_data
   (((pattern
@@ -11350,7 +11485,7 @@
      (out_block Parameters) (out_trans Identity)))))
  (prog_name qr_unpack_model) (prog_path qr_unpack.stan))
 [exit 0]
-  $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir reconstruct.stan
+  $ stanc -fsoa --debug-optimized-mir reconstruct.stan
 ((functions_block
   (((fdrt Void) (fdname do_something_reconstruct) (fdsuffix FnPlain)
     (fdargs ((DataOnly indices (UArray UInt)) (DataOnly mem UVector)))
@@ -11402,7 +11537,7 @@
  (transform_inits ()) (unconstrain_array ()) (output_vars ())
  (prog_name reconstruct_model) (prog_path reconstruct.stan))
 [exit 0]
-  $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir simple.stan
+  $ stanc -fsoa --debug-optimized-mir simple.stan
 ((functions_block ()) (input_vars ())
  (prepare_data
   (((pattern
@@ -11467,7 +11602,7 @@
  (transform_inits ()) (unconstrain_array ()) (output_vars ()) (prog_name simple_model)
  (prog_path simple.stan))
 [exit 0]
-  $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir simple2.stan
+  $ stanc -fsoa --debug-optimized-mir simple2.stan
 ((functions_block ()) (input_vars ())
  (prepare_data
   (((pattern
@@ -11550,7 +11685,7 @@
  (transform_inits ()) (unconstrain_array ()) (output_vars ()) (prog_name simple2_model)
  (prog_path simple2.stan))
 [exit 0]
-  $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir simple3.stan
+  $ stanc -fsoa --debug-optimized-mir simple3.stan
 ((functions_block ()) (input_vars ())
  (prepare_data
   (((pattern
@@ -11653,7 +11788,7 @@
  (transform_inits ()) (unconstrain_array ()) (output_vars ()) (prog_name simple3_model)
  (prog_path simple3.stan))
 [exit 0]
-  $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir tuple-constraints-data.stan
+  $ stanc -fsoa --debug-optimized-mir tuple-constraints-data.stan
 ((functions_block ())
  (input_vars
   ((y <opaque> (STuple (SInt (STuple (SReal SInt)))))
@@ -12339,7 +12474,7 @@
  (transform_inits ()) (unconstrain_array ()) (output_vars ())
  (prog_name tuple_constraints_data_model) (prog_path tuple-constraints-data.stan))
 [exit 0]
-  $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir tuple-constraints-params.stan
+  $ stanc -fsoa --debug-optimized-mir tuple-constraints-params.stan
 ((functions_block
   (((fdrt (ReturnType (UTuple (UReal UReal)))) (fdname foo) (fdsuffix FnPlain)
     (fdargs ())
@@ -12416,17 +12551,18 @@
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id complicated_brack_dot2_1dim__)
-      (decl_type (Sized SInt)) (initialize Default)))
-    (meta <opaque>))
-   ((pattern
-     (Assignment ((LVariable complicated_brack_dot2_1dim__) ()) UInt
-      ((pattern
-        (TernaryIf
-         ((pattern (Var indicator))
-          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-         ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-         ((pattern (Lit Int 0)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+      (decl_type (Sized SInt))
+      (initialize
+       (Assign
+        ((pattern
+          (TernaryIf
+           ((pattern (Var indicator))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+           ((pattern (Lit Int 3))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+           ((pattern (Lit Int 0))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
@@ -15568,7 +15704,7 @@
        (Identity (TupleTransformation (Identity Simplex CholeskyCov)))))))))
  (prog_name tuple_constraints_params_model) (prog_path tuple-constraints-params.stan))
 [exit 0]
-  $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir tuple-dataonly.stan
+  $ stanc -fsoa --debug-optimized-mir tuple-dataonly.stan
 ((functions_block
   (((fdrt (ReturnType UReal)) (fdname foo) (fdsuffix FnPlain)
     (fdargs ((DataOnly x (UTuple (UReal UReal)))))
@@ -16257,7 +16393,7 @@
  (transform_inits ()) (unconstrain_array ()) (output_vars ())
  (prog_name tuple_dataonly_model) (prog_path tuple-dataonly.stan))
 [exit 0]
-  $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir tuple-dataonly2.stan
+  $ stanc -fsoa --debug-optimized-mir tuple-dataonly2.stan
 ((functions_block
   (((fdrt (ReturnType UReal)) (fdname tuple_tester) (fdsuffix FnPlain)
     (fdargs ((DataOnly x (UTuple ((UArray UReal) UInt)))))
@@ -16359,7 +16495,7 @@
  (transform_inits ()) (unconstrain_array ()) (output_vars ())
  (prog_name tuple_dataonly2_model) (prog_path tuple-dataonly2.stan))
 [exit 0]
-  $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir tuple-foreach.stan
+  $ stanc -fsoa --debug-optimized-mir tuple-foreach.stan
 ((functions_block ()) (input_vars ())
  (prepare_data
   (((pattern
@@ -16446,7 +16582,7 @@
  (transform_inits ()) (unconstrain_array ()) (output_vars ())
  (prog_name tuple_foreach_model) (prog_path tuple-foreach.stan))
 [exit 0]
-  $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir tuple-full.stan
+  $ stanc -fsoa --debug-optimized-mir tuple-full.stan
 ((functions_block ())
  (input_vars
   ((ds <opaque>
@@ -17034,7 +17170,7 @@
          ((pattern (Lit Int 0)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))))))
  (prog_name tuple_full_model) (prog_path tuple-full.stan))
 [exit 0]
-  $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir tuple-ix-assign.stan
+  $ stanc -fsoa --debug-optimized-mir tuple-ix-assign.stan
 ((functions_block ()) (input_vars ())
  (prepare_data
   (((pattern
@@ -17081,7 +17217,7 @@
  (transform_inits ()) (unconstrain_array ()) (output_vars ())
  (prog_name tuple_ix_assign_model) (prog_path tuple-ix-assign.stan))
 [exit 0]
-  $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir tuple-ix-assign2.stan
+  $ stanc -fsoa --debug-optimized-mir tuple-ix-assign2.stan
 ((functions_block ()) (input_vars ())
  (prepare_data
   (((pattern
@@ -17139,7 +17275,7 @@
  (transform_inits ()) (unconstrain_array ()) (output_vars ())
  (prog_name tuple_ix_assign2_model) (prog_path tuple-ix-assign2.stan))
 [exit 0]
-  $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir tuple-ix-assign3.stan
+  $ stanc -fsoa --debug-optimized-mir tuple-ix-assign3.stan
 ((functions_block ()) (input_vars ())
  (prepare_data
   (((pattern
@@ -17198,7 +17334,7 @@
  (transform_inits ()) (unconstrain_array ()) (output_vars ())
  (prog_name tuple_ix_assign3_model) (prog_path tuple-ix-assign3.stan))
 [exit 0]
-  $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir tuple-ix-assign4.stan
+  $ stanc -fsoa --debug-optimized-mir tuple-ix-assign4.stan
 ((functions_block ()) (input_vars ())
  (prepare_data
   (((pattern
@@ -17266,7 +17402,7 @@
  (transform_inits ()) (unconstrain_array ()) (output_vars ())
  (prog_name tuple_ix_assign4_model) (prog_path tuple-ix-assign4.stan))
 [exit 0]
-  $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir tuple-nested-param.stan
+  $ stanc -fsoa --debug-optimized-mir tuple-nested-param.stan
 ((functions_block ()) (input_vars ()) (prepare_data ())
  (log_prob
   (((pattern
@@ -17996,7 +18132,7 @@
       (TupleTransformation (Identity (TupleTransformation (Identity Identity)))))))))
  (prog_name tuple_nested_param_model) (prog_path tuple-nested-param.stan))
 [exit 0]
-  $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir tuple-params.stan
+  $ stanc -fsoa --debug-optimized-mir tuple-params.stan
 ((functions_block ()) (input_vars ()) (prepare_data ())
  (log_prob
   (((pattern
@@ -18258,7 +18394,7 @@
          ((pattern (Lit Int 0)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))))))
  (prog_name tuple_params_model) (prog_path tuple-params.stan))
 [exit 0]
-  $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir tuple-promotion.stan
+  $ stanc -fsoa --debug-optimized-mir tuple-promotion.stan
 ((functions_block
   (((fdrt (ReturnType UReal)) (fdname dummy) (fdsuffix FnPlain)
     (fdargs ((AutoDiffable test (UTuple ((UArray UReal) (UArray UReal))))))
@@ -19848,7 +19984,7 @@
      (out_trans (TupleTransformation (Identity Identity)))))))
  (prog_name tuple_promotion_model) (prog_path tuple-promotion.stan))
 [exit 0]
-  $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir tuple-templating.stan
+  $ stanc -fsoa --debug-optimized-mir tuple-templating.stan
 ((functions_block
   (((fdrt Void) (fdname foo) (fdsuffix FnPlain)
     (fdargs ((AutoDiffable test (UTuple (UMatrix UInt)))))
@@ -20461,7 +20597,7 @@
      (out_block GeneratedQuantities) (out_trans Identity)))))
  (prog_name tuple_templating_model) (prog_path tuple-templating.stan))
 [exit 0]
-  $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir tuple_copying.stan
+  $ stanc -fsoa --debug-optimized-mir tuple_copying.stan
 ((functions_block
   (((fdrt Void) (fdname f) (fdsuffix FnPlain)
     (fdargs ((AutoDiffable x (UTuple (UMatrix UMatrix)))))
@@ -21587,7 +21723,7 @@
      (out_block Parameters) (out_trans Identity)))))
  (prog_name tuple_copying_model) (prog_path tuple_copying.stan))
 [exit 0]
-  $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir tuple_exprs.stan
+  $ stanc -fsoa --debug-optimized-mir tuple_exprs.stan
 ((functions_block ()) (input_vars ()) (prepare_data ()) (log_prob ())
  (reverse_mode_log_prob ())
  (generate_quantities
@@ -21756,7 +21892,7 @@
      (out_block GeneratedQuantities) (out_trans Identity)))))
  (prog_name tuple_exprs_model) (prog_path tuple_exprs.stan))
 [exit 0]
-  $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir tuple_hof.stan
+  $ stanc -fsoa --debug-optimized-mir tuple_hof.stan
 ((functions_block
   (((fdrt (ReturnType UReal)) (fdname fun) (fdsuffix FnPlain)
     (fdargs
@@ -22168,7 +22304,7 @@
      (out_block TransformedParameters) (out_trans Identity)))))
  (prog_name tuple_hof_model) (prog_path tuple_hof.stan))
 [exit 0]
-  $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir tuple_lpdf.stan
+  $ stanc -fsoa --debug-optimized-mir tuple_lpdf.stan
 ((functions_block
   (((fdrt (ReturnType UReal)) (fdname foo_lpdf) (fdsuffix (FnLpdf ()))
     (fdargs
@@ -22284,7 +22420,7 @@
  (transform_inits ()) (unconstrain_array ()) (output_vars ())
  (prog_name tuple_lpdf_model) (prog_path tuple_lpdf.stan))
 [exit 0]
-  $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir tuple_lpdf2.stan
+  $ stanc -fsoa --debug-optimized-mir tuple_lpdf2.stan
 ((functions_block
   (((fdrt (ReturnType UReal)) (fdname foo_lpdf) (fdsuffix (FnLpdf ()))
     (fdargs ((AutoDiffable x (UTuple (UReal UInt)))))
@@ -22368,7 +22504,7 @@
  (transform_inits ()) (unconstrain_array ()) (output_vars ())
  (prog_name tuple_lpdf2_model) (prog_path tuple_lpdf2.stan))
 [exit 0]
-  $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir tuple_lpmf.stan
+  $ stanc -fsoa --debug-optimized-mir tuple_lpmf.stan
 ((functions_block
   (((fdrt (ReturnType UReal)) (fdname foo_lpmf) (fdsuffix (FnLpmf ()))
     (fdargs ((AutoDiffable x (UTuple (UInt UInt))) (AutoDiffable y UReal)))
@@ -22482,7 +22618,7 @@
  (transform_inits ()) (unconstrain_array ()) (output_vars ())
  (prog_name tuple_lpmf_model) (prog_path tuple_lpmf.stan))
 [exit 0]
-  $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir tuple_temporary.stan
+  $ stanc -fsoa --debug-optimized-mir tuple_temporary.stan
 ((functions_block ()) (input_vars ())
  (prepare_data
   (((pattern
@@ -22730,7 +22866,7 @@
      (out_trans (TupleTransformation (Identity Identity)))))))
  (prog_name tuple_temporary_model) (prog_path tuple_temporary.stan))
 [exit 0]
-  $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir unpack_promote.stan
+  $ stanc -fsoa --debug-optimized-mir unpack_promote.stan
 ((functions_block ())
  (input_vars
   ((N <opaque> SInt)

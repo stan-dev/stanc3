@@ -52,24 +52,24 @@ model {
   eta ~ normal(0, 1);
 
   target += laplace_marginal(scalar_tuple, ((eta, eta), log_ye, y),
-                             K_function, (x, n_obs, alpha, rho));
+                             1, K_function, (x, n_obs, alpha, rho));
 
   target += laplace_marginal(arr_vec_tuple, (eta, (log_ye, y)),
-                             K_function, (x, n_obs, alpha, rho));
+                             1, K_function, (x, n_obs, alpha, rho));
 
   target += laplace_marginal(nested, (((eta, log_ye), y), eta),
-                             K_function, (x, n_obs, alpha, rho));
+                             1, K_function, (x, n_obs, alpha, rho));
 }
 generated quantities {
   vector[n_obs] theta = laplace_latent_rng(scalar_tuple,
-                          ((eta, eta), log_ye, y), K_function,
+                          ((eta, eta), log_ye, y), 1, K_function,
                           (x, n_obs, alpha, rho));
 
   vector[n_obs] theta2 = laplace_latent_rng(arr_vec_tuple,
-                           (eta, (log_ye, y)), K_function,
+                           (eta, (log_ye, y)), 1, K_function,
                            (x, n_obs, alpha, rho));
 
   vector[n_obs] theta3 = laplace_latent_rng(nested,
-                           (((eta, log_ye), y), eta), K_function,
+                           (((eta, log_ye), y), eta), 1, K_function,
                            (x, n_obs, alpha, rho));
 }

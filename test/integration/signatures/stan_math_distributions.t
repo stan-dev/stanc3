@@ -72,3 +72,4 @@ Display all Stan math distributions exposed in the language
   wiener: lpdf
   wishart: lpdf
   wishart_cholesky: lpdf
+  yule_simon: lpmf, rng, ccdf, cdf

@@ -1,5 +1,4 @@
-open Core
-open Core.Poly
+open Std
 
 (** This type represents whether or not an autodiff type can be represented as
     an Array of Structs (AoS) or as a Struct of Arrays. This applies to
@@ -8,7 +7,7 @@ open Core.Poly
     In the C++ this allows us to swap out matrix types from an
     [Eigen::Matrix<stan::math::var_value<double>, Rows, Cols>] to an
     [stan::math::var_value<Eigen::Matrix<double, Rows, Cols>>]. *)
-type t = AoS | SoA [@@deriving sexp, compare, hash, equal]
+type t = AoS | SoA [@@deriving sexp_of, compare, equal]
 
 let pp ppf = function
   | AoS -> Fmt.string ppf "AoS"

@@ -14,19 +14,39 @@ Flags not used elsewhere in the tests
   Lexer: =
   Lexer: int_constant 0
   Lexer: >
+  Lexer: start locating:
+  {fname=basic.stan; line=2}
+  Lexer: end locating:
+  {fname=basic.stan; line=2}
   Lexer: space
   Lexer: identifier N
   {fname=basic.stan; line=2}
   Lexer: ;
+  Lexer: start locating:
+  {fname=basic.stan; line=2}
+  Lexer: end locating:
+  {fname=basic.stan; line=2}
   Lexer: newline
   {fname=basic.stan; line=2}
   Lexer: space
   Lexer: space
   Lexer: array
+  Lexer: start locating:
+  {fname=basic.stan; line=2}
+  Lexer: end locating:
+  {fname=basic.stan; line=2}
   Lexer: [
   Lexer: identifier N
   {fname=basic.stan; line=3}
   Lexer: ]
+  Lexer: start locating:
+  {fname=basic.stan; line=3}
+  Lexer: end locating:
+  {fname=basic.stan; line=3}
+  Lexer: start locating:
+  {fname=basic.stan; line=3}
+  Lexer: end locating:
+  {fname=basic.stan; line=3}
   Lexer: space
   Lexer: int
   Lexer: <
@@ -34,21 +54,41 @@ Flags not used elsewhere in the tests
   Lexer: =
   Lexer: int_constant 0
   Lexer: ,
+  Lexer: start locating:
+  {fname=basic.stan; line=3}
+  Lexer: end locating:
+  {fname=basic.stan; line=3}
   Lexer: space
   Lexer: upper
   Lexer: =
   Lexer: int_constant 1
   Lexer: >
+  Lexer: start locating:
+  {fname=basic.stan; line=3}
+  Lexer: end locating:
+  {fname=basic.stan; line=3}
   Lexer: space
   Lexer: identifier y
   {fname=basic.stan; line=3}
   Lexer: ;
+  Lexer: start locating:
+  {fname=basic.stan; line=3}
+  Lexer: end locating:
+  {fname=basic.stan; line=3}
   Lexer: newline
   {fname=basic.stan; line=3}
   Lexer: }
+  Lexer: start locating:
+  {fname=basic.stan; line=3}
+  Lexer: end locating:
+  {fname=basic.stan; line=3}
   Lexer: newline
   {fname=basic.stan; line=4}
   Lexer: parameters
+  Lexer: start locating:
+  {fname=basic.stan; line=1}
+  Lexer: end locating:
+  {fname=basic.stan; line=4}
   Lexer: space
   Lexer: {
   Lexer: newline
@@ -61,21 +101,41 @@ Flags not used elsewhere in the tests
   Lexer: =
   Lexer: int_constant 0
   Lexer: ,
+  Lexer: start locating:
+  {fname=basic.stan; line=6}
+  Lexer: end locating:
+  {fname=basic.stan; line=6}
   Lexer: space
   Lexer: upper
   Lexer: =
   Lexer: int_constant 1
   Lexer: >
+  Lexer: start locating:
+  {fname=basic.stan; line=6}
+  Lexer: end locating:
+  {fname=basic.stan; line=6}
   Lexer: space
   Lexer: identifier theta
   {fname=basic.stan; line=6}
   Lexer: ;
+  Lexer: start locating:
+  {fname=basic.stan; line=6}
+  Lexer: end locating:
+  {fname=basic.stan; line=6}
   Lexer: newline
   {fname=basic.stan; line=6}
   Lexer: }
+  Lexer: start locating:
+  {fname=basic.stan; line=6}
+  Lexer: end locating:
+  {fname=basic.stan; line=6}
   Lexer: newline
   {fname=basic.stan; line=7}
   Lexer: model
+  Lexer: start locating:
+  {fname=basic.stan; line=5}
+  Lexer: end locating:
+  {fname=basic.stan; line=7}
   Lexer: space
   Lexer: {
   Lexer: newline
@@ -86,39 +146,95 @@ Flags not used elsewhere in the tests
   {fname=basic.stan; line=9}
   Lexer: space
   Lexer: ~
+  Lexer: start locating:
+  {fname=basic.stan; line=9}
+  Lexer: end locating:
+  {fname=basic.stan; line=9}
+  Lexer: start locating:
+  {fname=basic.stan; line=9}
+  Lexer: end locating:
+  {fname=basic.stan; line=9}
   Lexer: space
   Lexer: identifier beta
   {fname=basic.stan; line=9}
   Lexer: (
+  Lexer: start locating:
+  {fname=basic.stan; line=9}
+  Lexer: end locating:
+  {fname=basic.stan; line=9}
   Lexer: int_constant 1
   Lexer: ,
+  Lexer: start locating:
+  {fname=basic.stan; line=9}
+  Lexer: end locating:
+  {fname=basic.stan; line=9}
   Lexer: space
   Lexer: int_constant 1
   Lexer: )
+  Lexer: start locating:
+  {fname=basic.stan; line=9}
+  Lexer: end locating:
+  {fname=basic.stan; line=9}
   Lexer: ;
   Lexer: space
   Lexer: single comment
+  Lexer: start locating:
+  {fname=basic.stan; line=9}
+  Lexer: end locating:
+  {fname=basic.stan; line=9}
   {fname=basic.stan; line=9}
   Lexer: space
   Lexer: space
   Lexer: identifier y
   {fname=basic.stan; line=10}
+  Lexer: start locating:
+  {fname=basic.stan; line=9}
+  Lexer: end locating:
+  {fname=basic.stan; line=9}
   Lexer: space
   Lexer: ~
+  Lexer: start locating:
+  {fname=basic.stan; line=10}
+  Lexer: end locating:
+  {fname=basic.stan; line=10}
+  Lexer: start locating:
+  {fname=basic.stan; line=10}
+  Lexer: end locating:
+  {fname=basic.stan; line=10}
   Lexer: space
   Lexer: identifier bernoulli
   {fname=basic.stan; line=10}
   Lexer: (
+  Lexer: start locating:
+  {fname=basic.stan; line=10}
+  Lexer: end locating:
+  {fname=basic.stan; line=10}
   Lexer: identifier theta
   {fname=basic.stan; line=10}
   Lexer: )
+  Lexer: start locating:
+  {fname=basic.stan; line=10}
+  Lexer: end locating:
+  {fname=basic.stan; line=10}
+  Lexer: start locating:
+  {fname=basic.stan; line=10}
+  Lexer: end locating:
+  {fname=basic.stan; line=10}
   Lexer: ;
   Lexer: newline
   {fname=basic.stan; line=10}
   Lexer: }
+  Lexer: start locating:
+  {fname=basic.stan; line=10}
+  Lexer: end locating:
+  {fname=basic.stan; line=10}
   Lexer: newline
   {fname=basic.stan; line=11}
   Lexer: eof
+  Lexer: start locating:
+  {fname=basic.stan; line=8}
+  Lexer: end locating:
+  {fname=basic.stan; line=11}
 
   $ stanc basic.stan --debug-parse
   Parser: intnumeral 0
@@ -470,5 +586,5 @@ Flags not used elsewhere in the tests
   
   Ill-formed program. Expected "functions {", "data {", "transformed data {", "parameters {",
   "transformed parameters {", "model {", or "generated quantities {".
-  (Parse error state 439)
+  (Parse error state 444)
   [1]

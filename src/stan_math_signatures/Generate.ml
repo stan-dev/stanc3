@@ -6,7 +6,7 @@
     combinations, so now it is done by the build system and just stored in the
     binary using the [Marshal] library. *)
 
-open Core
+open Std
 open Middle
 
 (** The "dimensionality" (bad name?) is supposed to help us represent the
@@ -89,6 +89,7 @@ type fkind =
   | Cdf
   | Ccdf
   | UnaryVectorized of return_behavior
+  | MultiVectorized
 [@@deriving show {with_path= false}]
 
 let is_primitive = function
@@ -98,14 +99,14 @@ let is_primitive = function
 
 (** The signatures hash table *)
 let (stan_math_signatures : (string, UnsizedType.signature list) Hashtbl.t) =
-  String.Table.create ()
+  Hashtbl.create 512
 
 (** The variadic signatures hash table
 
     These functions cannot be overloaded. *)
 let (stan_math_variadic_signatures :
       (string, UnsizedType.variadic_signature) Hashtbl.t) =
-  String.Table.create ()
+  Hashtbl.create 32
 
 (* XXX The correct word here isn't combination - what is it? *)
 let all_combinations xx =
@@ -156,7 +157,7 @@ let mk_declarative_sig (fnkinds, name, args, mem_pattern) =
     | Rng -> ["_rng"]
     | Cdf -> ["_cdf"; "_lcdf"]
     | Ccdf -> ["_lccdf"]
-    | UnaryVectorized _ -> [""] in
+    | UnaryVectorized _ | MultiVectorized -> [""] in
   let add_ints = function DVReal -> DIntAndReals | x -> x in
   let all_expanded args = all_combinations (List.map ~f:expand_arg args) in
   let promoted_dim = function
@@ -170,6 +171,9 @@ let mk_declarative_sig (fnkinds, name, args, mem_pattern) =
         ReturnType (ints_to_real (List.hd_exn args))
     | UnaryVectorized ComplexToReals ->
         ReturnType (complex_to_real (List.hd_exn args))
+    | MultiVectorized ->
+        if List.for_all ~f:UnsizedType.is_scalar_type args then ReturnType UReal
+        else ReturnType UVector
     | _ -> ReturnType UReal in
   let create_from_fk_args fk arglists =
     List.concat_map arglists ~f:(fun args ->
@@ -185,7 +189,8 @@ let mk_declarative_sig (fnkinds, name, args, mem_pattern) =
             (name, find_rt rt args Rng, args, mem_pattern))
     | fk -> create_from_fk_args fk (all_expanded args) in
   List.concat_map fnkinds ~f:add_fnkind
-  |> List.filter ~f:(fun (n, _, _, _) -> not (Set.mem missing_math_functions n))
+  |> List.filter ~f:(fun (n, _, _, _) ->
+      not (String.Set.mem n missing_math_functions))
   |> List.map ~f:(fun (n, rt, args, support_soa) ->
       ( n
       , rt
@@ -275,7 +280,8 @@ let distributions =
   ; (full_lpdf, "weibull", [DVReal; DVReal; DVReal], SoA)
   ; ([Lpdf], "wiener", [DVReal; DVReal; DVReal; DVReal; DVReal], SoA)
   ; ([Lpdf], "wishart_cholesky", [DMatrix; DReal; DMatrix], SoA)
-  ; ([Lpdf], "wishart", [DMatrix; DReal; DMatrix], SoA) ]
+  ; ([Lpdf], "wishart", [DMatrix; DReal; DMatrix], SoA)
+  ; (full_lpmf, "yule_simon", [DVInt; DVReal], SoA) ]
 
 let basic_vectorized = UnaryVectorized IntsToReals
 
@@ -321,6 +327,7 @@ let math_sigs =
   ; ([basic_vectorized], "log1p_exp", [DDeepVectorized], SoA)
   ; ([basic_vectorized], "log2", [DDeepVectorized], SoA)
   ; ([basic_vectorized], "log_inv_logit", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "log_softmax", [DVectors], SoA)
   ; ([basic_vectorized], "logit", [DDeepVectorized], SoA)
   ; ([UnaryVectorized SameAsArg], "minus", [DDeepVectorized], SoA)
   ; ([UnaryVectorized SameAsArg], "minus", [DDeepComplexVectorized], SoA)
@@ -329,6 +336,7 @@ let math_sigs =
   ; ([basic_vectorized], "round", [DDeepVectorized], AoS)
   ; ([basic_vectorized], "sin", [DDeepVectorized], SoA)
   ; ([basic_vectorized], "sinh", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "softmax", [DVectors], SoA)
   ; ([basic_vectorized], "sqrt", [DDeepVectorized], SoA)
   ; ([basic_vectorized], "square", [DDeepVectorized], SoA)
     (* TODO: Eventually will want to move _qf to be part of the distribution
@@ -336,6 +344,7 @@ let math_sigs =
   ; ([basic_vectorized], "std_normal_qf", [DDeepVectorized], SoA)
     (* std_normal_qf is an alias for inv_Phi *)
   ; ([basic_vectorized], "std_normal_log_qf", [DDeepVectorized], SoA)
+  ; ([MultiVectorized], "student_t_qf", [DVReal; DVReal; DVReal; DVReal], SoA)
   ; ([basic_vectorized], "step", [DReal], AoS)
   ; ([basic_vectorized], "tan", [DDeepVectorized], SoA)
   ; ([basic_vectorized], "tanh", [DDeepVectorized], SoA)
@@ -1208,6 +1217,17 @@ let () =
     , ReturnType UReal
     , [UMatrix; UMatrix; UMatrix; UVector; UMatrix; UVector; UMatrix]
     , AoS );
+  List.iter [UnsizedType.UInt; UVector] ~f:(fun t ->
+      add_unqualified
+        ( "generate_laplace_options"
+        , ReturnType
+            (UTuple
+               [ UVector (* theta_0 *); UReal (* tolerance *)
+               ; UInt (* max_num_steps *); UInt (* solver *)
+               ; UInt (* max_steps_line_search *); UInt (* allow_fallthrough *)
+               ])
+        , [t]
+        , AoS ));
   add_unqualified
     ("gp_dot_prod_cov", ReturnType UMatrix, [UArray UReal; UReal], AoS);
   add_unqualified
@@ -1579,7 +1599,6 @@ let () =
     (List.tl_exn vector_types);
   add_binary_vec "log_modified_bessel_first_kind" AoS;
   add_binary_vec "log_rising_factorial" AoS;
-  add_unqualified ("log_softmax", ReturnType UVector, [UVector], SoA);
   add_unqualified ("log_sum_exp", ReturnType UReal, [UArray UReal], SoA);
   add_unqualified ("log_sum_exp", ReturnType UReal, [UVector], SoA);
   add_unqualified ("log_sum_exp", ReturnType UReal, [URowVector], SoA);
@@ -2228,7 +2247,6 @@ let () =
   List.iter
     ~f:(fun t -> add_unqualified ("size", ReturnType UInt, [t], SoA))
     bare_types;
-  add_unqualified ("softmax", ReturnType UVector, [UVector], SoA);
   add_unqualified ("sort_asc", ReturnType (UArray UInt), [UArray UInt], AoS);
   add_unqualified ("sort_asc", ReturnType (UArray UReal), [UArray UReal], AoS);
   add_unqualified ("sort_asc", ReturnType UVector, [UVector], AoS);
@@ -2503,6 +2521,7 @@ let () =
     ("to_vector", ReturnType UComplexVector, [UArray UComplex], AoS);
   add_unqualified ("trace", ReturnType UReal, [UMatrix], SoA);
   add_unqualified ("trace", ReturnType UComplex, [UComplexMatrix], AoS);
+  add_unqualified ("trace_dot", ReturnType UReal, [UMatrix; UMatrix], SoA);
   add_unqualified
     ("trace_gen_quad_form", ReturnType UReal, [UMatrix; UMatrix; UMatrix], SoA);
   add_unqualified ("trace_quad_form", ReturnType UReal, [UMatrix; UVector], SoA);
@@ -2533,9 +2552,9 @@ let () =
     add_qualified (name, ReturnType UReal, args, AoS) in
   let build_wiener_functions name num_args =
     List.iter [UnsizedType.UReal; UVector] ~f:(fun t ->
-        List.iter num_args ~f:(fun n ->
+        List.iter num_args ~f:(fun len ->
             let normal =
-              List.init n ~f:(Fn.const (UnsizedType.AutoDiffable, t)) in
+              List.init ~len ~f:(Fun.const (UnsizedType.AutoDiffable, t)) in
             build_wiener_function name normal;
             (* grad precision as last argument *)
             build_wiener_function name (normal @ [(DataOnly, UnsizedType.UReal)])))
@@ -2612,7 +2631,7 @@ let add_variadic_fn name ~return_type ?control_args ~required_fn_rt
     ?required_fn_args () =
   let control_args = Option.value control_args ~default:[] in
   let required_fn_args = Option.value required_fn_args ~default:[] in
-  Hashtbl.add_exn stan_math_variadic_signatures ~key:name
+  Hashtbl.add stan_math_variadic_signatures ~key:name
     ~data:
       UnsizedType.{return_type; control_args; required_fn_rt; required_fn_args}
 
@@ -2630,12 +2649,12 @@ let () =
   let add_ode name =
     add_variadic_fn name ~return_type:variadic_ode_return_type
       ~control_args:
-        (if String.is_suffix name ~suffix:ode_tolerances_suffix then
+        (if String.ends_with name ~suffix:ode_tolerances_suffix then
            variadic_ode_mandatory_arg_types @ variadic_ode_tol_arg_types
          else variadic_ode_mandatory_arg_types)
       ~required_fn_rt:variadic_ode_fun_return_type
       ~required_fn_args:variadic_ode_mandatory_fun_args () in
-  Set.iter ~f:add_ode variadic_ode_nonadjoint_fns;
+  String.Set.iter ~f:add_ode variadic_ode_nonadjoint_fns;
   (* Adjoint ODE function *)
   add_variadic_fn variadic_ode_adjoint_fn ~return_type:variadic_ode_return_type
     ~control_args:
@@ -2668,6 +2687,40 @@ let () =
         ; (DataOnly, UInt) ]
     ~required_fn_rt:UnsizedType.UVector
     ~required_fn_args:[UnsizedType.(AutoDiffable, UVector)]
+    ();
+  (* variadic versions of integrate_1d *)
+  add_variadic_fn "integrate_1d_gauss_kronrod" ~return_type:UnsizedType.UReal
+    ~control_args:
+      UnsizedType.
+        [(* interval a, b *) (AutoDiffable, UReal); (AutoDiffable, UReal)]
+    ~required_fn_rt:UnsizedType.UReal
+    ~required_fn_args:
+      UnsizedType.[(* x, xc *) (AutoDiffable, UReal); (AutoDiffable, UReal)]
+    ();
+  add_variadic_fn "integrate_1d_double_exponential"
+    ~return_type:UnsizedType.UReal
+    ~control_args:UnsizedType.[(AutoDiffable, UReal); (AutoDiffable, UReal)]
+    ~required_fn_rt:UnsizedType.UReal
+    ~required_fn_args:UnsizedType.[(AutoDiffable, UReal); (AutoDiffable, UReal)]
+    ();
+  (* _tol version accept rel_tol, abs_tol, and max_depth/max_refinements *)
+  add_variadic_fn "integrate_1d_double_exponential_tol"
+    ~return_type:UnsizedType.UReal
+    ~control_args:
+      UnsizedType.
+        [ (AutoDiffable, UReal); (AutoDiffable, UReal); (DataOnly, UReal)
+        ; (DataOnly, UReal); (DataOnly, UInt) ]
+    ~required_fn_rt:UnsizedType.UReal
+    ~required_fn_args:UnsizedType.[(AutoDiffable, UReal); (AutoDiffable, UReal)]
+    ();
+  add_variadic_fn "integrate_1d_gauss_kronrod_tol"
+    ~return_type:UnsizedType.UReal
+    ~control_args:
+      UnsizedType.
+        [ (AutoDiffable, UReal); (AutoDiffable, UReal); (DataOnly, UReal)
+        ; (DataOnly, UReal); (DataOnly, UInt) ]
+    ~required_fn_rt:UnsizedType.UReal
+    ~required_fn_args:UnsizedType.[(AutoDiffable, UReal); (AutoDiffable, UReal)]
     ()
 
 (** Print a module definition to [file] that contains the signatures computed
@@ -2676,33 +2729,36 @@ let generate_module () =
   let marshal e = Marshal.to_string e [] in
   (* Core's Hashtbl cannot be safely Marshal'd, so we round trip through an
      associative list *)
-  let marshal_hashtbl (type value) (t : value String.Table.t) =
-    marshal (Hashtbl.to_alist t) in
+  let marshal_hashtbl (type value) (t : (string, value) Hashtbl.t) =
+    marshal (Hashtbl.to_seq t |> List.of_seq) in
   let distributions_simplified =
     distributions
     |> List.map ~f:(fun (kind, name, _, _) ->
-        (name, List.map ~f:(Fn.compose String.lowercase show_fkind) kind))
+        (name, List.map ~f:(Fun.compose String.lowercase_ascii show_fkind) kind))
       (* combine any common keys *)
-    |> String.Map.of_alist_reduce ~f:(fun v1 v2 ->
-        v1 @ v2 |> Set.Poly.of_list |> Set.to_list)
-    |> Map.to_alist in
-  (* TODO: in OCaml 5.4+, use GC.ramp_up to avoid performance regressions. See
-     https://github.com/ocaml/ocaml/issues/13300 *)
+    |> List.fold_left ~init:String.Map.empty ~f:(fun acc elt ->
+        String.Map.union
+          ~f:(fun _ v1 v2 ->
+            v1 @ v2 |> Set.Poly.of_list |> Set.Poly.to_list |> Option.some)
+          acc (String.Map.of_list [elt]))
+    |> String.Map.to_list in
   Printf.printf
     {|
+open Std
 let unmarshal s = Marshal.from_string s 0
-let unmarshal_hashtbl s : 'a Core.String.Table.t =
-  unmarshal s |> Core.String.Table.of_alist_exn |};
+let unmarshal_hashtbl s : (string, 'a) Hashtbl.t =
+  unmarshal s |> List.to_seq |> Hashtbl.of_seq |};
   Printf.printf
     {|
 let stan_math_signatures :
-    Middle.UnsizedType.signature list Core.String.Table.t =
-  unmarshal_hashtbl %S |}
+    (string, Middle.UnsizedType.signature list) Hashtbl.t Lazy.t=
+  lazy (fst @@ Gc.ramp_up @@
+        fun () -> unmarshal_hashtbl %S) |}
     (marshal_hashtbl stan_math_signatures);
   Printf.printf
     {|
 let stan_math_variadic_signatures :
-    Middle.UnsizedType.variadic_signature Core.String.Table.t =
+    (string, Middle.UnsizedType.variadic_signature) Hashtbl.t =
   unmarshal_hashtbl %S |}
     (marshal_hashtbl stan_math_variadic_signatures);
   Printf.printf

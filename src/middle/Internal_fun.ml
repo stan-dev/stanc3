@@ -1,6 +1,7 @@
 (** Language functions defined internally by the compiler *)
 
-open Core
+open Std.Compare
+open Std.Sexp_conv
 
 type 'expr t =
   | FnLength
@@ -28,16 +29,15 @@ type 'expr t =
   | FnNaN
   | FnDeepCopy
   | FnReadWriteEventsOpenCL of string
-[@@deriving sexp, hash, compare, map, fold]
+[@@deriving sexp_of, compare, map, fold]
 
 let to_string
     ?(expr_to_string =
       fun _ ->
-        Common.ICE.internal_compiler_error
-          [%message
-            "Should not be parsing expression from string in function renaming"])
-    x =
-  Sexp.to_string (sexp_of_t expr_to_string x) ^ "__"
+        (Common.ICE.internal_error
+           "Should not be parsing expression from string in function renaming"
+         [@coverage off])) x =
+  Sexplib0.Sexp.to_string (sexp_of_t expr_to_string x) ^ "__"
 
 let pp (pp_expr : 'a Fmt.t) ppf internal =
   Fmt.string ppf

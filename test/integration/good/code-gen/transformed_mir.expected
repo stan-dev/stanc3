@@ -1,4 +1,4 @@
-  $ ../../../../../install/default/bin/stanc --debug-transformed-mir mother.stan
+  $ stanc --debug-transformed-mir mother.stan
 ((functions_block
   (((fdrt (ReturnType UInt)) (fdname foo) (fdsuffix FnPlain)
     (fdargs ((AutoDiffable n UInt)))
@@ -678,7 +678,7 @@
                                        (meta
                                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
                                   (meta
-                                   ((type_ UVector) (loc <opaque>)
+                                   ((type_ URowVector) (loc <opaque>)
                                     (adlevel AutoDiffable)))))))
                               (meta ((type_ UInt) (loc <opaque>) (adlevel AutoDiffable)))))
                             (body
@@ -765,7 +765,7 @@
                                        (meta
                                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
                                   (meta
-                                   ((type_ UVector) (loc <opaque>)
+                                   ((type_ URowVector) (loc <opaque>)
                                     (adlevel AutoDiffable)))))))
                               (meta ((type_ UInt) (loc <opaque>) (adlevel AutoDiffable)))))
                             (body

@@ -1,40 +1,30 @@
-  $ ../../../../../install/default/bin/stanc elt_divide_equals_prim.stan
-Semantic error in 'elt_divide_equals_prim.stan', line 4, column 2 to column 3:
+  $ stanc elt_divide_equals_prim.stan
+Semantic error in 'elt_divide_equals_prim.stan', line 4, column 8 to column 9:
    -------------------------------------------------
      2:    real x;
      3:    real y;
      4:    x ./= y;
-           ^
+                 ^
      5:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator ./=:
-The left hand side has type
-  real
-and the right hand side has type
-  real
-Available signatures for given lhs:
-No matching signatures
+Ill-typed assignment operator ./=.
+There are no valid right hand sides for the given left hand side (real).
 [exit 1]
-  $ ../../../../../install/default/bin/stanc elt_times_equals_prim.stan
-Semantic error in 'elt_times_equals_prim.stan', line 4, column 2 to column 3:
+  $ stanc elt_times_equals_prim.stan
+Semantic error in 'elt_times_equals_prim.stan', line 4, column 8 to column 9:
    -------------------------------------------------
      2:    real x;
      3:    real y;
      4:    x .*= y;
-           ^
+                 ^
      5:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator .*=:
-The left hand side has type
-  real
-and the right hand side has type
-  real
-Available signatures for given lhs:
-No matching signatures
+Ill-typed assignment operator .*=.
+There are no valid right hand sides for the given left hand side (real).
 [exit 1]
-  $ ../../../../../install/default/bin/stanc plus_equals_bad_init.stan
+  $ stanc plus_equals_bad_init.stan
 Syntax error in 'plus_equals_bad_init.stan', line 3, column 20 to column 22, parsing error:
    -------------------------------------------------
      1:  generated quantities {
@@ -46,7 +36,7 @@ Syntax error in 'plus_equals_bad_init.stan', line 3, column 20 to column 22, par
 
 Ill-formed declaration. Expected ";" or plain assignment after variable declaration.
 [exit 1]
-  $ ../../../../../install/default/bin/stanc plus_equals_bad_lhs_idxs.stan
+  $ stanc plus_equals_bad_lhs_idxs.stan
 Semantic error in 'plus_equals_bad_lhs_idxs.stan', line 4, column 2 to column 8:
    -------------------------------------------------
      2:    vector[3] x;
@@ -56,28 +46,23 @@ Semantic error in 'plus_equals_bad_lhs_idxs.stan', line 4, column 2 to column 8:
      5:  }
    -------------------------------------------------
 
-Too many indexes, expression dimensions=1, indexes found=2.
+Too many indices. Expression only has 1 dimensions, but received 2 indices.
 [exit 1]
-  $ ../../../../../install/default/bin/stanc plus_equals_bad_var_lhs.stan
-Semantic error in 'plus_equals_bad_var_lhs.stan', line 3, column 4 to column 7:
+  $ stanc plus_equals_bad_var_lhs.stan
+Semantic error in 'plus_equals_bad_var_lhs.stan', line 3, column 11 to column 13:
    -------------------------------------------------
      1:  functions {
      2:    real foo(real a1) {
      3:      foo += a1;
-             ^
+                    ^
      4:      return foo;
      5:    }
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator +=:
-The left hand side has type
-  (real) => real
-and the right hand side has type
-  real
-Available signatures for given lhs:
-No matching signatures
+Ill-typed assignment operator +=.
+There are no valid right hand sides for the given left hand side ((real) => real).
 [exit 1]
-  $ ../../../../../install/default/bin/stanc plus_equals_bad_var_lhs2.stan
+  $ stanc plus_equals_bad_var_lhs2.stan
 Semantic error in 'plus_equals_bad_var_lhs2.stan', line 6, column 2 to column 3:
    -------------------------------------------------
      4:  generated quantities {
@@ -87,9 +72,9 @@ Semantic error in 'plus_equals_bad_var_lhs2.stan', line 6, column 2 to column 3:
      7:  }
    -------------------------------------------------
 
-Cannot assign to global variable "x" declared in previous blocks.
+Cannot assign to global variable "x" declared previously in transformed data block.
 [exit 1]
-  $ ../../../../../install/default/bin/stanc plus_equals_bad_var_rhs.stan
+  $ stanc plus_equals_bad_var_rhs.stan
 Semantic error in 'plus_equals_bad_var_rhs.stan', line 4, column 11 to column 13:
    -------------------------------------------------
      2:    void foo(real a1) {
@@ -102,45 +87,34 @@ Semantic error in 'plus_equals_bad_var_rhs.stan', line 4, column 11 to column 13
 
 Identifier "a2" not in scope. Did you mean "a1"?
 [exit 1]
-  $ ../../../../../install/default/bin/stanc plus_equals_matrix_array.stan
-Semantic error in 'plus_equals_matrix_array.stan', line 7, column 2 to column 3:
+  $ stanc plus_equals_matrix_array.stan
+Semantic error in 'plus_equals_matrix_array.stan', line 7, column 7 to column 8:
    -------------------------------------------------
      5:    x[3,1] += y[3,1];
      6:    x[3,1,1] += y[3,1,1];
      7:    x += y;
-           ^
+                ^
      8:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator +=:
-The left hand side has type
-  array[] matrix
-and the right hand side has type
-  array[] matrix
-Available signatures for given lhs:
-No matching signatures
+Ill-typed assignment operator +=.
+There are no valid right hand sides for the given left hand side (array[] matrix).
 [exit 1]
-  $ ../../../../../install/default/bin/stanc plus_equals_matrix_array2.stan
-Semantic error in 'plus_equals_matrix_array2.stan', line 7, column 2 to column 6:
+  $ stanc plus_equals_matrix_array2.stan
+Semantic error in 'plus_equals_matrix_array2.stan', line 7, column 10 to column 16:
    -------------------------------------------------
      5:    x[3,1] += y[3,1];
      6:    x[3,1,1] += y[3,1,1];
      7:    x[3] += y[3,1];
-           ^
+                   ^
      8:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator +=:
-The left hand side has type
-  matrix
-and the right hand side has type
-  row_vector
-Available signatures for given lhs:
-(matrix, int) => void
-(matrix, real) => void
-(matrix, matrix) => void
+Ill-typed assignment operator +=.
+For the given left hand side (matrix), expected the right hand side to have type
+int, real, or matrix. Instead found type row_vector.
 [exit 1]
-  $ ../../../../../install/default/bin/stanc plus_equals_matrix_shape_mismatch.stan
+  $ stanc plus_equals_matrix_shape_mismatch.stan
 Syntax error in 'plus_equals_matrix_shape_mismatch.stan', line 4, column 10 to column 11, parsing error:
    -------------------------------------------------
      2:  generated quantities {
@@ -153,137 +127,100 @@ Syntax error in 'plus_equals_matrix_shape_mismatch.stan', line 4, column 10 to c
 
 Ill-formed type. Expected "[" expression "]" for vector size.
 [exit 1]
-  $ ../../../../../install/default/bin/stanc plus_equals_prim_array.stan
-Semantic error in 'plus_equals_prim_array.stan', line 5, column 2 to column 3:
+  $ stanc plus_equals_prim_array.stan
+Semantic error in 'plus_equals_prim_array.stan', line 5, column 7 to column 8:
    -------------------------------------------------
      3:    array[3] real y = {4.0, 5.0, 6.0};
      4:    x[1] += y[1];
      5:    x += y;
-           ^
+                ^
      6:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator +=:
-The left hand side has type
-  array[] real
-and the right hand side has type
-  array[] real
-Available signatures for given lhs:
-No matching signatures
+Ill-typed assignment operator +=.
+There are no valid right hand sides for the given left hand side (array[] real).
 [exit 1]
-  $ ../../../../../install/default/bin/stanc plus_equals_row_vec_array.stan
-Semantic error in 'plus_equals_row_vec_array.stan', line 5, column 2 to column 3:
+  $ stanc plus_equals_row_vec_array.stan
+Semantic error in 'plus_equals_row_vec_array.stan', line 5, column 7 to column 8:
    -------------------------------------------------
      3:    array[3] row_vector[2] y = {[1,2], [3,4], [5,6]};
      4:    x[1] += y[1];
      5:    x += y;
-           ^
+                ^
      6:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator +=:
-The left hand side has type
-  array[] row_vector
-and the right hand side has type
-  array[] row_vector
-Available signatures for given lhs:
-No matching signatures
+Ill-typed assignment operator +=.
+There are no valid right hand sides for the given left hand side (array[] row_vector).
 [exit 1]
-  $ ../../../../../install/default/bin/stanc plus_equals_sliced.stan
-Semantic error in 'plus_equals_sliced.stan', line 6, column 4 to column 11:
+  $ stanc plus_equals_sliced.stan
+Semantic error in 'plus_equals_sliced.stan', line 6, column 15 to column 26:
    -------------------------------------------------
      4:      matrix[2, 2] aa;
      5:      matrix[3, 4] bb;
      6:      aa[J,1] += bb[1:2,1:2];
-             ^
+                        ^
      7:    }
      8:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator +=:
-The left hand side has type
-  vector
-and the right hand side has type
-  matrix
-Available signatures for given lhs:
-(vector, int) => void
-(vector, real) => void
-(vector, vector) => void
+Ill-typed assignment operator +=.
+For the given left hand side (vector), expected the right hand side to have type
+int, real, or vector. Instead found type matrix.
 [exit 1]
-  $ ../../../../../install/default/bin/stanc plus_equals_type_mismatch.stan
-Semantic error in 'plus_equals_type_mismatch.stan', line 4, column 2 to column 3:
+  $ stanc plus_equals_type_mismatch.stan
+Semantic error in 'plus_equals_type_mismatch.stan', line 4, column 7 to column 8:
    -------------------------------------------------
      2:    int x = 5;
      3:    real y;
      4:    x += y;
-           ^
+                ^
      5:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator +=:
-The left hand side has type
-  int
-and the right hand side has type
-  real
-Available signatures for given lhs:
-(int, int) => void
+Ill-typed assignment operator +=.
+For the given left hand side (int), expected the right hand side to have type
+int. Instead found type real.
 [exit 1]
-  $ ../../../../../install/default/bin/stanc plus_equals_type_mismatch2.stan
-Semantic error in 'plus_equals_type_mismatch2.stan', line 4, column 2 to column 3:
+  $ stanc plus_equals_type_mismatch2.stan
+Semantic error in 'plus_equals_type_mismatch2.stan', line 4, column 7 to column 8:
    -------------------------------------------------
      2:    real x;
      3:    vector[2] y = [1.0, 2.0]';
      4:    x += y;
-           ^
+                ^
      5:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator +=:
-The left hand side has type
-  real
-and the right hand side has type
-  vector
-Available signatures for given lhs:
-(int, int) => void
-(real, int) => void
-(real, real) => void
+Ill-typed assignment operator +=.
+For the given left hand side (real), expected the right hand side to have type
+int or real. Instead found type vector.
 [exit 1]
-  $ ../../../../../install/default/bin/stanc plus_equals_vector_array.stan
-Semantic error in 'plus_equals_vector_array.stan', line 5, column 2 to column 3:
+  $ stanc plus_equals_vector_array.stan
+Semantic error in 'plus_equals_vector_array.stan', line 5, column 7 to column 8:
    -------------------------------------------------
      3:    array[3] vector[2] y = {[1,2]', [3,4]', [5,6]'};
      4:    x[1] += y[1];
      5:    x += y;
-           ^
+                ^
      6:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator +=:
-The left hand side has type
-  array[] vector
-and the right hand side has type
-  array[] vector
-Available signatures for given lhs:
-No matching signatures
+Ill-typed assignment operator +=.
+There are no valid right hand sides for the given left hand side (array[] vector).
 [exit 1]
-  $ ../../../../../install/default/bin/stanc times_equals_matrix_array.stan
-Semantic error in 'times_equals_matrix_array.stan', line 5, column 2 to column 8:
+  $ stanc times_equals_matrix_array.stan
+Semantic error in 'times_equals_matrix_array.stan', line 5, column 12 to column 18:
    -------------------------------------------------
      3:    array[3] matrix[2,2] y = {[[4, 5], [6, 7]], [[4, 5], [6, 7]], [[4, 5], [6, 7]]};
      4:    x[3] *= y[3];
      5:    x[3,1] *= y[3,1];
-           ^
+                     ^
      6:    x[3,1,1] *= y[3,1,1];
      7:    x *= y;
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator *=:
-The left hand side has type
-  row_vector
-and the right hand side has type
-  row_vector
-Available signatures for given lhs:
-(row_vector, int) => void
-(row_vector, real) => void
-(row_vector, matrix) => void
+Ill-typed assignment operator *=.
+For the given left hand side (row_vector), expected the right hand side to have type
+int, real, or matrix. Instead found type row_vector.
 [exit 1]

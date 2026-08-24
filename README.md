@@ -6,7 +6,7 @@ can be found on the [releases page](https://github.com/stan-dev/stanc3/releases)
 
 Since version 2.26, this has been the default compiler for Stan.
 
-[![Build Status](https://jenkins.flatironinstitute.org/job/Stan/job/Stanc3/job/master/badge/icon?style=flat-square)](https://jenkins.flatironinstitute.org/job/Stan/job/Stanc3/job/master/) [![codecov](https://codecov.io/gh/stan-dev/stanc3/branch/master/graph/badge.svg?token=tt76nVXoht)](https://codecov.io/gh/stan-dev/stanc3)
+[![Build Status](https://jenkins-new.flatironinstitute.org/buildStatus/icon?job=CCM%2FStan%2Fstanc3%2Fmaster&style=flat-square)](http://jenkins-new.flatironinstitute.org/job/CCM/job/Stan/job/stanc3/job/master/) [![codecov](https://codecov.io/gh/stan-dev/stanc3/branch/master/graph/badge.svg?token=tt76nVXoht)](https://codecov.io/gh/stan-dev/stanc3)
 
 ## Documentation
 

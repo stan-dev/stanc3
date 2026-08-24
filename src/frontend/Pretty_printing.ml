@@ -1,8 +1,7 @@
 (** Some helpers to produce nice error messages and for auto-formatting Stan
     programs *)
 
-open Core
-open Core.Poly
+open Std
 open Ast
 open Fmt
 
@@ -82,11 +81,10 @@ let skip_comments loc =
              technically allowed things fail For example, an if statement where
              the 'else' is entirely inside the include. This makes the failure
              noisy rather than ever producing anything invalid for these. *)
-          Common.ICE.internal_compiler_error
-            [%message
-              "Unable to format #include in this position!"
-                (l : string list)
-                (loc : Middle.Location_span.t)]
+          Common.ICE.(
+            internal_errorf "%t: Unable to format #include of %t!"
+              [Middle.Location_span.pp $ loc; Fmt.list Fmt.string $ l])
+          [@coverage off]
       | x, s :: l, loc -> Some (x, (" ^^^:" ^ s) :: l, loc)
       | _, [], _ -> None)
 
@@ -111,6 +109,9 @@ let should_skip (loc : Middle.Location.t) =
 
 let pp_space newline ppf (prev_loc, begin_loc) =
   let open Middle.Location in
+  let prev_loc =
+    if should_skip prev_loc then Middle.Location.initial_file_loc prev_loc
+    else prev_loc in
   if should_skip begin_loc then ()
   else if
     prev_loc.filename <> begin_loc.filename
@@ -124,11 +125,11 @@ let pp_comment ppf
   let trim init lines =
     let init = max init 0 in
     let padding =
-      List.fold lines ~init ~f:(fun m x ->
-          match String.lfindi ~f:(fun _ c -> c <> ' ') x with
+      List.fold_left lines ~init ~f:(fun m x ->
+          match String.find_last_index (fun c -> c <> ' ') x with
           | None -> m
           | Some x -> min m x) in
-    List.map lines ~f:(fun x -> String.drop_prefix x padding) in
+    List.map lines ~f:(fun x -> String.drop_first padding x) in
   let trim_tail col_num lines =
     match lines with [] -> [] | hd :: tl -> hd :: trim (col_num - 2) tl in
   match style with
@@ -140,9 +141,10 @@ let pp_spacing ?(newline = true) prev_loc next_loc ppf ls =
   let newline =
     newline
     ||
-    match List.last ls with
+    match List.nth_opt ls (List.length ls - 1) with
     | Some ((`Line | `Include), _, _) -> true
-    | _ -> false in
+    | _ -> false
+    | exception _ -> false in
   let rec recurse prev_loc = function
     | ((_, _, {Middle.Location_span.begin_loc; end_loc}) as hd) :: tl ->
         pp_space false ppf (prev_loc, begin_loc);
@@ -271,17 +273,17 @@ and pp_expression ppf ({expr= e_content; emeta= {loc; _}} : untyped_expression)
   | CondDistApp (_, id, es) -> (
       match es with
       | [] ->
-          Common.ICE.internal_compiler_error
-            [%message "CondDistApp with no arguments: " id.name]
+          Common.ICE.internal_errorf "CondDistApp with no arguments: %s"
+            [id.name] [@coverage off]
       | [e] ->
           pf ppf "%a(@,%a%a)@]" pp_start_funapp id pp_expression e
             (pp_comments_spacing ~before:sp get_comments)
             loc.end_loc
       | e :: es' ->
           let begin_loc =
-            List.hd es'
-            |> Option.map ~f:(fun e -> e.emeta.loc.begin_loc)
-            |> Option.value ~default:loc.end_loc in
+            Option.value_map
+              ~f:(fun (e : Ast.untyped_expression) -> e.emeta.loc.begin_loc)
+              ~default:loc.end_loc (List.hd es') in
           pf ppf "%a(@,%a%a |@ %a%a)@]" pp_start_funapp id pp_expression e
             (pp_comments_spacing ~before:sp get_comments_until_separator)
             begin_loc
@@ -397,7 +399,7 @@ let rec pp_transformed_type ppf (st, trans) =
   | Middle.SizedType.SArray _ ->
       let ty, ixs = Middle.SizedType.get_array_dims st in
       let ({emeta= {loc= {end_loc; _}; _}; _} : untyped_expression) =
-        List.last_exn ixs in
+        List.nth ixs (List.length ixs - 1) in
       let ({emeta= {loc= {begin_loc; _}; _}; _} : untyped_expression) =
         List.hd_exn ixs in
       pf ppf "array[@[%a@]]@ %a" pp_list_of_expression

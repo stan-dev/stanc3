@@ -1,4 +1,4 @@
-  $ ../../../../../install/default/bin/stanc array_literal_mismatch.stan
+  $ stanc array_literal_mismatch.stan
 Semantic error in 'array_literal_mismatch.stan', line 2, column 43 to column 52:
    -------------------------------------------------
      1:  transformed data {
@@ -10,7 +10,7 @@ Semantic error in 'array_literal_mismatch.stan', line 2, column 43 to column 52:
 Array expression must have entries of consistent type. Expected tuple(
 int, int) but found tuple(int, int, int).
 [exit 1]
-  $ ../../../../../install/default/bin/stanc bad-arg.stan
+  $ stanc bad-arg.stan
 Syntax error in 'bad-arg.stan', line 2, column 23 to column 27, parsing error:
    -------------------------------------------------
      1:  functions {
@@ -22,7 +22,7 @@ Syntax error in 'bad-arg.stan', line 2, column 23 to column 27, parsing error:
 
 Ill-formed type. Expected a comma separated list of types between "(" and ")" to declare tuple variable.
 [exit 1]
-  $ ../../../../../install/default/bin/stanc bad-index1.stan
+  $ stanc bad-index1.stan
 Semantic error in 'bad-index1.stan', line 3, column 9 to column 12:
    -------------------------------------------------
      1:  transformed data {
@@ -34,7 +34,7 @@ Semantic error in 'bad-index1.stan', line 3, column 9 to column 12:
 
 Tried to index a non-tuple type. Expression has type real.
 [exit 1]
-  $ ../../../../../install/default/bin/stanc bad-index2.stan
+  $ stanc bad-index2.stan
 Semantic error in 'bad-index2.stan', line 3, column 11 to column 17:
    -------------------------------------------------
      1:  transformed data {
@@ -47,7 +47,7 @@ Semantic error in 'bad-index2.stan', line 3, column 11 to column 17:
 Tried to access index 3 for a tuple of length 2.
 Only indices between 1 and 2 are valid.
 [exit 1]
-  $ ../../../../../install/default/bin/stanc bad-index3.stan
+  $ stanc bad-index3.stan
 Semantic error in 'bad-index3.stan', line 3, column 3 to column 6:
    -------------------------------------------------
      1:  transformed data {
@@ -59,7 +59,7 @@ Semantic error in 'bad-index3.stan', line 3, column 3 to column 6:
 
 Tried to index a non-tuple type. Expression has type real.
 [exit 1]
-  $ ../../../../../install/default/bin/stanc bad-index4.stan
+  $ stanc bad-index4.stan
 Semantic error in 'bad-index4.stan', line 3, column 2 to column 8:
    -------------------------------------------------
      1:  transformed data {
@@ -72,7 +72,7 @@ Semantic error in 'bad-index4.stan', line 3, column 2 to column 8:
 Tried to access index 3 for a tuple of length 2.
 Only indices between 1 and 2 are valid.
 [exit 1]
-  $ ../../../../../install/default/bin/stanc bad-index5.stan
+  $ stanc bad-index5.stan
 Semantic error in 'bad-index5.stan', line 3, column 11 to column 18:
    -------------------------------------------------
      1:  transformed data {
@@ -82,27 +82,23 @@ Semantic error in 'bad-index5.stan', line 3, column 11 to column 18:
      4:  }
    -------------------------------------------------
 
-Too many indexes, expression dimensions=0, indexes found=1.
+Too many indices. Expression only has 0 dimensions, but received 1 indices.
 [exit 1]
-  $ ../../../../../install/default/bin/stanc bad_addition.stan
-Semantic error in 'bad_addition.stan', line 3, column 2 to column 3:
+  $ stanc bad_addition.stan
+Semantic error in 'bad_addition.stan', line 3, column 7 to column 8:
    -------------------------------------------------
      1:  model {
      2:    tuple(real, real) z;
      3:    z += 1;
-           ^
+                ^
      4:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator +=:
-The left hand side has type
-  tuple(real, real)
-and the right hand side has type
-  int
-Available signatures for given lhs:
-No matching signatures
+Ill-typed assignment operator +=.
+There are no valid right hand sides for the given left hand side (tuple(
+real, real)).
 [exit 1]
-  $ ../../../../../install/default/bin/stanc bad_unpack_duplicates.stan
+  $ stanc bad_unpack_duplicates.stan
 Semantic error in 'bad_unpack_duplicates.stan', line 5, column 2 to column 14:
    -------------------------------------------------
      3:    int y = 4;
@@ -115,7 +111,7 @@ Semantic error in 'bad_unpack_duplicates.stan', line 5, column 2 to column 14:
 The same value cannot be assigned to multiple times in one assignment:
   x, y
 [exit 1]
-  $ ../../../../../install/default/bin/stanc bad_unpack_fn_type.stan
+  $ stanc bad_unpack_fn_type.stan
 Semantic error in 'bad_unpack_fn_type.stan', line 4, column 4 to column 24:
    -------------------------------------------------
      2:    int foo() {
@@ -126,9 +122,9 @@ Semantic error in 'bad_unpack_fn_type.stan', line 4, column 4 to column 24:
      6:    }
    -------------------------------------------------
 
-Cannot assign a function type "() => int" to variable "foo".
+Cannot assign a function type (() => int) to variable "foo".
 [exit 1]
-  $ ../../../../../install/default/bin/stanc bad_unpack_global.stan
+  $ stanc bad_unpack_global.stan
 Semantic error in 'bad_unpack_global.stan', line 8, column 3 to column 4:
    -------------------------------------------------
      6:     int y;
@@ -139,10 +135,10 @@ Semantic error in 'bad_unpack_global.stan', line 8, column 3 to column 4:
     10:  }
    -------------------------------------------------
 
-Cannot assign to global variable "x" declared in previous blocks.
+Cannot assign to global variable "x" declared previously in data block.
 [exit 1]
-  $ ../../../../../install/default/bin/stanc bad_unpack_lhs.stan
-Syntax error in 'bad_unpack_lhs.stan', line 4, column 2 to column 15, parsing error:
+  $ stanc bad_unpack_lhs.stan
+Syntax error in 'bad_unpack_lhs.stan', line 4, column 2 to column 10, parsing error:
    -------------------------------------------------
      2:    int x = 3;
      3:    real y = 4.0;
@@ -153,7 +149,7 @@ Syntax error in 'bad_unpack_lhs.stan', line 4, column 2 to column 15, parsing er
 
 Ill-formed assignment. Expected an assignable value but found a general expression.
 [exit 1]
-  $ ../../../../../install/default/bin/stanc bad_unpack_overlap1.stan
+  $ stanc bad_unpack_overlap1.stan
 Semantic error in 'bad_unpack_overlap1.stan', line 9, column 2 to column 30:
    -------------------------------------------------
      7:    // we disallow this because it's not obvious if unique
@@ -166,7 +162,7 @@ Semantic error in 'bad_unpack_overlap1.stan', line 9, column 2 to column 30:
 The same value cannot be assigned to multiple times in one assignment:
   x_flat[...]
 [exit 1]
-  $ ../../../../../install/default/bin/stanc bad_unpack_overlap2.stan
+  $ stanc bad_unpack_overlap2.stan
 Semantic error in 'bad_unpack_overlap2.stan', line 4, column 2 to column 22:
    -------------------------------------------------
      2:    int i = 1, j = 1;
@@ -179,7 +175,7 @@ Semantic error in 'bad_unpack_overlap2.stan', line 4, column 2 to column 22:
 The same value cannot be assigned to multiple times in one assignment:
   tup[...].1
 [exit 1]
-  $ ../../../../../install/default/bin/stanc bad_unpack_read_write.stan
+  $ stanc bad_unpack_read_write.stan
 Semantic error in 'bad_unpack_read_write.stan', line 4, column 2 to column 11:
    -------------------------------------------------
      2:    int x = 1;
@@ -192,7 +188,7 @@ Semantic error in 'bad_unpack_read_write.stan', line 4, column 2 to column 11:
 The same variable cannot be both assigned to and read from on the left hand side of an assignment:
   x
 [exit 1]
-  $ ../../../../../install/default/bin/stanc bad_unpack_read_write2.stan
+  $ stanc bad_unpack_read_write2.stan
 Semantic error in 'bad_unpack_read_write2.stan', line 4, column 2 to column 15:
    -------------------------------------------------
      2:    tuple(int,int) x2 = (1,1);
@@ -205,7 +201,7 @@ Semantic error in 'bad_unpack_read_write2.stan', line 4, column 2 to column 15:
 The same variable cannot be both assigned to and read from on the left hand side of an assignment:
   x2
 [exit 1]
-  $ ../../../../../install/default/bin/stanc bad_unpack_read_write3.stan
+  $ stanc bad_unpack_read_write3.stan
 Semantic error in 'bad_unpack_read_write3.stan', line 6, column 2 to column 17:
    -------------------------------------------------
      4:    // one could imagine allowing this case,
@@ -218,23 +214,21 @@ Semantic error in 'bad_unpack_read_write3.stan', line 6, column 2 to column 17:
 The same variable cannot be both assigned to and read from on the left hand side of an assignment:
   x2
 [exit 1]
-  $ ../../../../../install/default/bin/stanc bad_unpack_shape.stan
-Semantic error in 'bad_unpack_shape.stan', line 4, column 2 to column 8:
+  $ stanc bad_unpack_shape.stan
+Semantic error in 'bad_unpack_shape.stan', line 4, column 11 to column 20:
    -------------------------------------------------
      2:    int x = 3;
      3:    int y = 4;
      4:    (x, y) = (y, x, x);
-           ^
+                    ^
      5:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator =:
-The left hand side has type
-  tuple(int, int)
-and the right hand side has type
-  tuple(int, int, int)
+Ill-typed assignment statement.
+Expected the right hand side to have a type matching the destination (tuple(
+int, int)). Instead found type tuple(int, int, int).
 [exit 1]
-  $ ../../../../../install/default/bin/stanc bad_unpack_tuple_overlap1.stan
+  $ stanc bad_unpack_tuple_overlap1.stan
 Semantic error in 'bad_unpack_tuple_overlap1.stan', line 3, column 2 to column 16:
    -------------------------------------------------
      1:  model {
@@ -247,7 +241,7 @@ Semantic error in 'bad_unpack_tuple_overlap1.stan', line 3, column 2 to column 1
 The same value cannot be assigned to multiple times in one assignment:
   tup.2.2
 [exit 1]
-  $ ../../../../../install/default/bin/stanc bad_unpack_tuple_overlap2.stan
+  $ stanc bad_unpack_tuple_overlap2.stan
 Semantic error in 'bad_unpack_tuple_overlap2.stan', line 3, column 2 to column 17:
    -------------------------------------------------
      1:  generated quantities {
@@ -260,23 +254,21 @@ Semantic error in 'bad_unpack_tuple_overlap2.stan', line 3, column 2 to column 1
 The same value cannot be assigned to multiple times in one assignment:
   tup[...].1
 [exit 1]
-  $ ../../../../../install/default/bin/stanc bad_unpack_types.stan
-Semantic error in 'bad_unpack_types.stan', line 4, column 6 to column 7:
+  $ stanc bad_unpack_types.stan
+Semantic error in 'bad_unpack_types.stan', line 4, column 11 to column 17:
    -------------------------------------------------
      2:    real x = 3.0;
      3:    int y = 4;
      4:    (x, y) = (y, x);
-               ^
+                    ^
      5:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator =:
-The left hand side has type
-  int
-and the right hand side has type
-  real
+Ill-typed assignment statement.
+Expected the right hand side to have a type matching the destination (int).
+Instead found type real.
 [exit 1]
-  $ ../../../../../install/default/bin/stanc empty_tuple_expr.stan
+  $ stanc empty_tuple_expr.stan
 Syntax error in 'empty_tuple_expr.stan', line 2, column 25 to column 26, parsing error:
    -------------------------------------------------
      1:  model {
@@ -287,7 +279,7 @@ Syntax error in 'empty_tuple_expr.stan', line 2, column 25 to column 26, parsing
 
 Ill-formed expression. Expected an expression or comma separated list of expressions followed by ")" after "(".
 [exit 1]
-  $ ../../../../../install/default/bin/stanc empty_tuple_type.stan
+  $ stanc empty_tuple_type.stan
 Syntax error in 'empty_tuple_type.stan', line 2, column 8 to column 9, parsing error:
    -------------------------------------------------
      1:  model {
@@ -298,7 +290,7 @@ Syntax error in 'empty_tuple_type.stan', line 2, column 8 to column 9, parsing e
 
 Ill-formed type. Expected a comma separated list of types between "(" and ")" to declare tuple variable.
 [exit 1]
-  $ ../../../../../install/default/bin/stanc fn-assign.stan
+  $ stanc fn-assign.stan
 Semantic error in 'fn-assign.stan', line 4, column 4 to column 17:
    -------------------------------------------------
      2:    int foo() {
@@ -309,9 +301,9 @@ Semantic error in 'fn-assign.stan', line 4, column 4 to column 17:
      6:    }
    -------------------------------------------------
 
-Cannot assign a function type "() => int" to variable "x".
+Cannot assign a function type (() => int) to variable "x".
 [exit 1]
-  $ ../../../../../install/default/bin/stanc function-mismatch1.stan
+  $ stanc function-mismatch1.stan
 Semantic error in 'function-mismatch1.stan', line 8, column 2 to column 17:
    -------------------------------------------------
      6:  
@@ -327,37 +319,37 @@ Available signatures:
 (tuple(real, real)) => void
   The first argument must be tuple(real, real) but got tuple(int, int, int)
 [exit 1]
-  $ ../../../../../install/default/bin/stanc fuzz-tuple-idx1.stan
-Syntax error in 'fuzz-tuple-idx1.stan', line 1, column 36 to column 58, parsing error:
+  $ stanc fuzz-tuple-idx1.stan
+Syntax error in 'fuzz-tuple-idx1.stan', line 1, column 39 to column 59, parsing error:
    -------------------------------------------------
-     1:  functions{void f(tuple(matrix,int)t)t.40000000000000000000
-                                             ^
+     1:  functions{void f(tuple(matrix,int)t){t.40000000000000000000}
+                                                ^
    -------------------------------------------------
 
-Ill-formed index. Failed to parse integer from string ".40000000000000000000" in tuple index. 
+Ill-formed index. Failed to parse integer from string "40000000000000000000" in tuple index.
 The index is likely too large.
 [exit 1]
-  $ ../../../../../install/default/bin/stanc fuzz-tuple-idx2.stan
-Syntax error in 'fuzz-tuple-idx2.stan', line 1, column 61 to column 83, parsing error:
+  $ stanc fuzz-tuple-idx2.stan
+Syntax error in 'fuzz-tuple-idx2.stan', line 1, column 63 to column 83, parsing error:
    -------------------------------------------------
      1:  transformed data{tuple(array[0]tuple(int,array[0]real),int)x;x.10000000000000000000
-                                                                      ^
+                                                                        ^
    -------------------------------------------------
 
-Ill-formed index. Failed to parse integer from string ".10000000000000000000" in tuple index. 
+Ill-formed index. Failed to parse integer from string "10000000000000000000" in tuple index.
 The index is likely too large.
 [exit 1]
-  $ ../../../../../install/default/bin/stanc fuzz-tuple-idx3.stan
-Syntax error in 'fuzz-tuple-idx3.stan', line 1, column 45 to column 66, parsing error:
+  $ stanc fuzz-tuple-idx3.stan
+Syntax error in 'fuzz-tuple-idx3.stan', line 1, column 47 to column 66, parsing error:
    -------------------------------------------------
      1:  transformed data{matrix[0,0]v;row_vector[0]m;m.6000000000000000000
-                                                      ^
+                                                        ^
    -------------------------------------------------
 
-Ill-formed index. Failed to parse integer from string ".6000000000000000000" in tuple index. 
+Ill-formed index. Failed to parse integer from string "6000000000000000000" in tuple index.
 The index is likely too large.
 [exit 1]
-  $ ../../../../../install/default/bin/stanc incomplete1.stan
+  $ stanc incomplete1.stan
 Syntax error in 'incomplete1.stan', line 2, column 30 to column 35, parsing error:
    -------------------------------------------------
      1:  data {
@@ -367,7 +359,7 @@ Syntax error in 'incomplete1.stan', line 2, column 30 to column 35, parsing erro
 
 Ill-formed type. Incomplete type specification, expected further types followed by ")" to complete tuple.
 [exit 1]
-  $ ../../../../../install/default/bin/stanc incomplete2.stan
+  $ stanc incomplete2.stan
 Syntax error in 'incomplete2.stan', line 1, column 33 to column 36, parsing error:
    -------------------------------------------------
      1:  data { tuple( array [ foo ] real foo
@@ -376,7 +368,7 @@ Syntax error in 'incomplete2.stan', line 1, column 33 to column 36, parsing erro
 
 Ill-formed type. Expected "," followed by further types and ")" to complete tuple.
 [exit 1]
-  $ ../../../../../install/default/bin/stanc incomplete3.stan
+  $ stanc incomplete3.stan
 Syntax error in 'incomplete3.stan', line 2, column 0, parsing error:
    -------------------------------------------------
      1:  model { tuple( complex , complex ) foo,
@@ -387,7 +379,7 @@ Syntax error in 'incomplete3.stan', line 2, column 0, parsing error:
 Ill-formed declaration. Expected a new identifier after comma in declaration.
 All variables declared must be of the same type, and any initializing assignment must follow the identifier before the next comma.
 [exit 1]
-  $ ../../../../../install/default/bin/stanc incomplete4.stan
+  $ stanc incomplete4.stan
 Syntax error in 'incomplete4.stan', line 2, column 45 to column 50, parsing error:
    -------------------------------------------------
      1:  data {
@@ -398,7 +390,7 @@ Syntax error in 'incomplete4.stan', line 2, column 45 to column 50, parsing erro
 Ill-formed type. Expected either ")" or "," followed by
 further types and ")" to complete tuple.
 [exit 1]
-  $ ../../../../../install/default/bin/stanc incomplete5.stan
+  $ stanc incomplete5.stan
 Syntax error in 'incomplete5.stan', line 1, column 14 to column 19, parsing error:
    -------------------------------------------------
      1:  data { tuple( while
@@ -407,7 +399,7 @@ Syntax error in 'incomplete5.stan', line 1, column 14 to column 19, parsing erro
 
 Ill-formed type. Expected a comma separated list of types between "(" and ")" to declare tuple variable.
 [exit 1]
-  $ ../../../../../install/default/bin/stanc incomplete6.stan
+  $ stanc incomplete6.stan
 Syntax error in 'incomplete6.stan', line 2, column 30 to column 31, parsing error:
    -------------------------------------------------
      1:  transformed data {
@@ -418,7 +410,7 @@ Syntax error in 'incomplete6.stan', line 2, column 30 to column 31, parsing erro
 Ill-formed expression. Unexpected input after the conclusion of a valid expression.
 You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
 [exit 1]
-  $ ../../../../../install/default/bin/stanc incomplete7.stan
+  $ stanc incomplete7.stan
 Syntax error in 'incomplete7.stan', line 2, column 20 to column 21, parsing error:
    -------------------------------------------------
      1:  functions {
@@ -429,41 +421,7 @@ Syntax error in 'incomplete7.stan', line 2, column 20 to column 21, parsing erro
 
 Ill-formed type. Expected a comma separated list of types between "(" and ")" to declare tuple variable.
 [exit 1]
-  $ ../../../../../install/default/bin/stanc onepl_expr.stan
-Syntax error in 'onepl_expr.stan', line 2, column 13 to column 14, parsing error:
-   -------------------------------------------------
-     1:  model {
-     2:    print((3.5,));
-                      ^
-     3:  }
-   -------------------------------------------------
-
-Ill-formed expression. Expected an expression or comma separated list of expressions followed by ")" after "(".
-[exit 1]
-  $ ../../../../../install/default/bin/stanc onepl_type.stan
-Syntax error in 'onepl_type.stan', line 2, column 22 to column 23, parsing error:
-   -------------------------------------------------
-     1:  functions {
-     2:    void foo(tuple(real,) x) {
-                               ^
-     3:      return;
-     4:    }
-   -------------------------------------------------
-
-Ill-formed type. Expected a comma separated list of types between "(" and ")" to declare tuple variable.
-[exit 1]
-  $ ../../../../../install/default/bin/stanc onepl_type2.stan
-Syntax error in 'onepl_type2.stan', line 2, column 13 to column 14, parsing error:
-   -------------------------------------------------
-     1:  model {
-     2:    tuple(real,) x;
-                      ^
-     3:  }
-   -------------------------------------------------
-
-Ill-formed type. Incomplete type specification, expected further types followed by ")" to complete tuple.
-[exit 1]
-  $ ../../../../../install/default/bin/stanc onepl_type_missing_comma.stan
+  $ stanc onepl_type_missing_comma.stan
 Syntax error in 'onepl_type_missing_comma.stan', line 2, column 12 to column 13, parsing error:
    -------------------------------------------------
      1:  model {
@@ -474,7 +432,7 @@ Syntax error in 'onepl_type_missing_comma.stan', line 2, column 12 to column 13,
 
 Ill-formed type. Expected "," followed by further types and ")" to complete tuple.
 [exit 1]
-  $ ../../../../../install/default/bin/stanc tuple-dataonly-ad.stan
+  $ stanc tuple-dataonly-ad.stan
 Semantic error in 'tuple-dataonly-ad.stan', line 13, column 12 to column 19:
    -------------------------------------------------
     11:  
@@ -492,7 +450,7 @@ Available signatures:
   depend on parameters; same goes for function inputs unless they are marked
   with the keyword "data".)
 [exit 1]
-  $ ../../../../../install/default/bin/stanc tuple-dataonly-ad2.stan
+  $ stanc tuple-dataonly-ad2.stan
 Semantic error in 'tuple-dataonly-ad2.stan', line 17, column 12 to column 24:
    -------------------------------------------------
     15:  
@@ -510,7 +468,7 @@ Available signatures:
   depend on parameters; same goes for function inputs unless they are marked
   with the keyword "data".)
 [exit 1]
-  $ ../../../../../install/default/bin/stanc tuple_ternary.stan
+  $ stanc tuple_ternary.stan
 Semantic error in 'tuple_ternary.stan', line 2, column 25 to column 47:
    -------------------------------------------------
      1:  transformed data {

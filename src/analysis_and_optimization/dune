@@ -1,10 +1,10 @@
 (library
  (name analysis_and_optimization)
  (public_name stanc.analysis)
- (libraries core middle yojson frontend stan_math_signatures)
+ (libraries std middle yojson frontend stan_math_signatures)
  (instrumentation
   (backend bisect_ppx))
  (inline_tests)
  (modules_without_implementation monotone_framework_sigs)
  (preprocess
-  (pps ppx_jane)))
+  (pps ppx_compare ppx_sexp_conv ppx_expect_nobase)))

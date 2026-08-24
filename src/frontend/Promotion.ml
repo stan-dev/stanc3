@@ -1,5 +1,5 @@
-open Core
-open Core.Poly
+open Std
+open Std.Sexp_conv
 module UnsizedType = Middle.UnsizedType
 
 (** Type to represent promotions in the typechecker. This can be used to return
@@ -12,7 +12,7 @@ type t =
   | IntToComplex
   | RealToComplex
   | TuplePromotion of t list
-[@@deriving sexp]
+[@@deriving sexp_of, show]
 
 (** Our promotion nodes only store the scalar type to promote, e.g to promote a
     [tuple(array int)] to a [tuple(array real)], we store [tuple(real)], not
@@ -34,13 +34,12 @@ let rec promote_unsized_type (typ : UnsizedType.t)
   | IntToComplex, UInt, _ | RealToComplex, UReal, _ -> (UComplex, ad)
   | TuplePromotion proms, UTuple types, TupleAD ads ->
       let typs, ads =
-        List.unzip @@ List.map3_exn ~f:promote_unsized_type types ads proms
-      in
+        List.split @@ List.map3 ~f:promote_unsized_type types ads proms in
       (UTuple typs, TupleAD ads)
   | TuplePromotion proms, UTuple types, ad ->
       let types', ads =
-        List.unzip
-        @@ List.map2_exn
+        List.split
+        @@ List.map2
              ~f:(fun ty proms -> promote_unsized_type ty ad proms)
              types proms in
       (UTuple types', TupleAD ads)
@@ -54,26 +53,21 @@ let rec promote_unsized_type (typ : UnsizedType.t)
       (UnsizedType.promote_container typ UComplex, AutoDiffable)
   | NoPromotion, _, _ -> (typ, ad)
   | (IntToReal | ToVar | ToComplexVar | IntToComplex), _, _ ->
-      Common.ICE.internal_compiler_error
-        [%message
-          "Failed to promote type, unexpected type:"
-            (prom : t)
-            (typ : UnsizedType.t)
-            (ad : UnsizedType.autodifftype)]
+      Common.ICE.(
+        internal_errorf "Failed to promote type with %s, unexpected type: %t %t"
+          UnsizedType.[show prom; pp $ typ; pp_autodifftype $ ad])
+      [@coverage off]
   | TuplePromotion _, _, _ ->
-      Common.ICE.internal_compiler_error
-        [%message
-          "Found Tuple Promotion for a non-tuple type:"
-            (prom : t)
-            (typ : UnsizedType.t)
-            (ad : UnsizedType.autodifftype)]
+      Common.ICE.(
+        internal_errorf "Found Tuple Promotion %s for a non-tuple type: %t %t"
+          UnsizedType.[show prom; pp $ typ; pp_autodifftype $ ad])
+      [@coverage off]
   | _, _, TupleAD _ ->
-      Common.ICE.internal_compiler_error
-        [%message
-          "Found Tuple Autodiff in promotion for a non-tuple type:"
-            (prom : t)
-            (typ : UnsizedType.t)
-            (ad : UnsizedType.autodifftype)]
+      Common.ICE.(
+        internal_errorf
+          "Found Tuple Autodiff in promotion %s for a non-tuple type: %t %t"
+          UnsizedType.[show prom; pp $ typ; pp_autodifftype $ ad])
+      [@coverage off]
   | _, _, _ -> (typ, ad)
 
 let promote_inner (exp : Ast.typed_expression) prom =
@@ -118,11 +112,10 @@ let promote_inner (exp : Ast.typed_expression) prom =
           { expr= Promotion (exp, (prom_type, ad_level))
           ; emeta= {emeta with type_; ad_level} }
       | _ ->
-          Common.ICE.internal_compiler_error
-            [%message
-              "Tuple promotion on non-tuple"
-                (exp : Ast.typed_expression)
-                (prom : t)])
+          Common.ICE.(
+            internal_errorf "Tuple promotion %s for a non-tuple: %t"
+              [show prom; Pretty_printing.pp_typed_expression $ exp])
+          [@coverage off])
   | _ -> exp
 
 let rec promote (exp : Ast.typed_expression) prom =
@@ -153,7 +146,7 @@ let rec promote (exp : Ast.typed_expression) prom =
   | TupleExpr es -> (
       match prom with
       | TuplePromotion sub_promotions ->
-          let promoted_exprs = List.map2_exn ~f:promote es sub_promotions in
+          let promoted_exprs = List.map2 ~f:promote es sub_promotions in
           let type_ =
             UnsizedType.UTuple
               (List.map ~f:(fun e -> e.emeta.type_) promoted_exprs) in
@@ -165,7 +158,7 @@ let rec promote (exp : Ast.typed_expression) prom =
       | _ -> exp)
   | _ -> promote_inner exp prom
 
-let promote_list es promotions = List.map2_exn es promotions ~f:promote
+let promote_list es promotions = List.map2 es promotions ~f:promote
 
 (** Get the promotion needed to make the second type into the first. Types NEED
     to have previously been checked to be promotable or else a fatal error will
@@ -198,28 +191,28 @@ let rec get_type_promotion_exn (ad_requested, ty_requested)
         get_type_promotion_exn (ad_requested, nt1) (ad_current, nt2)
     | UTuple ts1, UTuple ts2 ->
         TuplePromotion
-          (List.map2_exn
+          (List.map2
              ~f:(fun t1 t2 ->
                get_type_promotion_exn (ad_requested, t1) (ad_current, t2))
              ts1 ts2)
     | UInt, UInt -> NoPromotion
     | t1, t2 when t1 = t2 && ad_requested = ad_current -> NoPromotion
     | _, _ ->
-        Common.ICE.internal_compiler_error
-          [%message
-            "Tried to get promotion of mismatched types!"
-              (ty_current : UnsizedType.t)
-              (ad_current : UnsizedType.autodifftype)
-              "cannot be promoted to "
-              (ty_requested : UnsizedType.t)
-              (ad_requested : UnsizedType.autodifftype)]
+        Common.ICE.(
+          internal_errorf
+            "Tried to get promotion of mismatched types! %t %t cannot be \
+             promoted to %t %t"
+            UnsizedType.
+              [ pp $ ty_current; pp_autodifftype $ ad_current; pp $ ty_requested
+              ; pp_autodifftype $ ad_requested ]) [@coverage off]
   else
-    Common.ICE.internal_compiler_error
-      [%message
-        "Tried to get promotion of incompatible autodifftypes!"
-          (ad_current : UnsizedType.autodifftype)
-          "cannot be promoted to "
-          (ad_requested : UnsizedType.autodifftype)]
+    Common.ICE.(
+      internal_errorf
+        "Tried to get promotion of incompatible autodifftypes! %t cannot be \
+         promoted to %t"
+        UnsizedType.
+          [pp_autodifftype $ ad_current; pp_autodifftype $ ad_requested])
+    [@coverage off]
 
 (** Calculate the "cost"/number of promotions performed. Used to disambiguate
     function signatures *)
@@ -229,4 +222,6 @@ let rec promotion_cost p =
   | RealToComplex | IntToReal -> 1
   | IntToComplex -> 2
   | TuplePromotion sub_promotions ->
-      List.sum (module Int) ~f:promotion_cost sub_promotions
+      List.fold_left ~init:0
+        ~f:(fun acc i -> acc + promotion_cost i)
+        sub_promotions

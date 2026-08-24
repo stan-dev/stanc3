@@ -1,14 +1,13 @@
 (* A partial evaluator for use in static analysis and optimization *)
 
-open Core
-open Core.Poly
+open Std
 open Middle
 
 exception Rejected of Location_span.t * string
 
 let rec is_int query Expr.{pattern; _} =
   match pattern with
-  | Lit (Int, i) | Lit (Real, i) -> float_of_string i = float_of_int query
+  | Lit (Int, i) | Lit (Real, i) -> Float.of_string i = Float.of_int query
   | Promotion (e, _, _) -> is_int query e
   | _ -> false
 
@@ -21,8 +20,8 @@ let apply_prefix_operator_int (op : string) i =
         | "PMinus__" -> -i
         | "PNot__" -> if i = 0 then 1 else 0
         | s ->
-            Common.ICE.internal_compiler_error
-              [%message "Not an int prefix operator: " s]) )
+            Common.ICE.internal_errorf "Not an int prefix operator: %s" [s]
+            [@coverage off]) )
 
 let apply_prefix_operator_real (op : string) i =
   Expr.Pattern.Lit
@@ -32,8 +31,8 @@ let apply_prefix_operator_real (op : string) i =
         | "PPlus__" -> i
         | "PMinus__" -> -.i
         | s ->
-            Common.ICE.internal_compiler_error
-              [%message "Not a real prefix operator: " s]) )
+            Common.ICE.internal_errorf "Not a real prefix operator: %s" [s]
+            [@coverage off]) )
 
 let apply_operator_int (op : string) i1 i2 =
   Expr.Pattern.Lit
@@ -44,7 +43,7 @@ let apply_operator_int (op : string) i1 i2 =
         | "Minus__" -> i1 - i2
         | "Times__" -> i1 * i2
         | "Divide__" | "IntDivide__" -> i1 / i2
-        | "Modulo__" -> i1 % i2
+        | "Modulo__" -> Int.rem i1 i2
         | "Equals__" -> Bool.to_int (i1 = i2)
         | "NEquals__" -> Bool.to_int (i1 <> i2)
         | "Less__" -> Bool.to_int (i1 < i2)
@@ -52,8 +51,8 @@ let apply_operator_int (op : string) i1 i2 =
         | "Greater__" -> Bool.to_int (i1 > i2)
         | "Geq__" -> Bool.to_int (i1 >= i2)
         | s ->
-            Common.ICE.internal_compiler_error
-              [%message "Not an int operator: " s]) )
+            Common.ICE.internal_errorf "Not an int operator: %s" [s]
+            [@coverage off]) )
 
 let apply_arithmetic_operator_real (op : string) r1 r2 =
   Expr.Pattern.Lit
@@ -65,8 +64,8 @@ let apply_arithmetic_operator_real (op : string) r1 r2 =
         | "Times__" -> r1 *. r2
         | "Divide__" -> r1 /. r2
         | s ->
-            Common.ICE.internal_compiler_error
-              [%message "Not a real operator: " s]) )
+            Common.ICE.internal_errorf "Not a real operator: %s" [s]
+            [@coverage off]) )
 
 let apply_logical_operator_real (op : string) r1 r2 =
   Expr.Pattern.Lit
@@ -80,8 +79,8 @@ let apply_logical_operator_real (op : string) r1 r2 =
         | "Greater__" -> Bool.to_int (r1 > r2)
         | "Geq__" -> Bool.to_int (r1 >= r2)
         | s ->
-            Common.ICE.internal_compiler_error
-              [%message "Not a logical operator: " s]) )
+            Common.ICE.internal_errorf "Not a logical operator: %s" [s]
+            [@coverage off]) )
 
 let is_multi_index = function
   | Index.MultiIndex _ | Upfrom _ | Between _ | All -> true
@@ -1052,7 +1051,7 @@ let rec eval_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
           | e1', e2' -> EOr (e1', e2'))
       | TupleProjection
           ({pattern= FunApp (CompilerInternal FnMakeTuple, ts); _}, ix) ->
-          (List.nth_exn ts (ix - 1)).pattern
+          (List.nth ts (ix - 1)).pattern
       | TupleProjection (e, ix) -> TupleProjection (eval_expr e, ix)
       | Indexed (e, l) ->
           (* TODO: do something clever with array and matrix expressions here?
@@ -1069,7 +1068,10 @@ let rec simplify_index_expr pattern =
            single)
           :: outer_tl )
       when List.exists ~f:is_multi_index inner_indices -> (
-        match List.split_while ~f:(Fn.non is_multi_index) inner_indices with
+        let idx =
+          List.find_index ~f:is_multi_index inner_indices
+          |> Option.value ~default:(List.length inner_indices) in
+        match List.split_n inner_indices idx with
         | inner_singles, MultiIndex first_multi :: inner_tl ->
             (* foo [arr1, ..., arrN] [i1, ..., iN] ->
              * foo [arr1[i1]] [arr[i2]] ... [arrN[iN]]
@@ -1113,11 +1115,11 @@ let rec simplify_index_expr pattern =
                    ; meta }
                  , outer_tl ))
         | inner_singles, (([] | Single _ :: _) as multis) ->
-            Common.ICE.internal_compiler_error
-              [%message
-                " There must be a multi-index."
-                  (inner_singles : Expr.Typed.t Index.t list)
-                  (multis : Expr.Typed.t Index.t list)])
+            Common.ICE.(
+              let pp = Fmt.list (Index.pp Expr.Typed.pp) in
+              internal_errorf
+                "There must be a multi-index. singles %t multis %t "
+                [pp $ inner_singles; pp $ multis]) [@coverage off])
     | e -> e)
 
 let remove_trailing_alls_expr = function
@@ -1145,10 +1147,10 @@ let rec eval_stmt s =
       { s with
         pattern=
           Pattern.map
-            (Fn.compose eval_expr simplify_indices_expr)
+            (Fun.compose eval_expr simplify_indices_expr)
             eval_stmt s.pattern }
   with Rejected (loc, m) ->
     { Stmt.pattern= NRFunApp (CompilerInternal FnReject, [Expr.Helpers.str m])
     ; meta= loc }
 
-let eval_prog p : Program.Typed.t = Program.map try_eval_expr eval_stmt Fn.id p
+let eval_prog p : Program.Typed.t = Program.map try_eval_expr eval_stmt Fun.id p

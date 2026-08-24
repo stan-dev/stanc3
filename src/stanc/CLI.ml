@@ -1,4 +1,4 @@
-open Core
+open Std
 open Frontend
 open Cmdliner
 
@@ -55,21 +55,21 @@ module Options = struct
   let case_insensitive_enum_list ?(sep = ',') sl =
     let open Arg in
     let base = list ~sep @@ enum sl in
-    let parser = Fn.compose (Conv.parser base) String.lowercase in
+    let parser = Fun.compose (Conv.parser base) String.lowercase_ascii in
     let completion =
       let func _ctx ~token =
-        let token = String.lowercase token in
+        let token = String.lowercase_ascii token in
         let prefix_complete name =
           (* complete prefixes of valid names after the final separator *)
-          match String.rsplit2 ~on:sep token with
-          | None when String.is_prefix ~prefix:token name ->
+          match String.split_last ~sep:(String.of_char sep) token with
+          | None when String.starts_with ~prefix:token name ->
               Some (Completion.string name)
           | Some (prev, last)
-            when String.is_prefix ~prefix:last name
-                 && not (String.is_substring ~substring:name prev) ->
+            when String.starts_with ~prefix:last name
+                 && not (String.includes ~affix:name prev) ->
               Some (Completion.string (prev ^ String.of_char sep ^ name))
           | _ -> None in
-        Ok (List.filter_map ~f:(Fn.compose prefix_complete fst) sl) in
+        Ok (List.filter_map ~f:(Fun.compose prefix_complete fst) sl) in
       Completion.make func in
     Conv.of_conv ~completion ~parser base
 
@@ -102,7 +102,7 @@ module Options = struct
       | `Includes -> {settings with inline_includes= true}
       | `Strip_comments -> {settings with strip_comments= true} in
     Term.map
-      (List.fold ~f:fold_canonicalize_options ~init:Canonicalize.none)
+      (List.fold_left ~f:fold_canonicalize_options ~init:Canonicalize.none)
       Arg.(
         multi_opt_all (case_insensitive_enum_list flags)
         & info ["canonicalize"] ~doc ~docv:"OPTIONS")
@@ -235,7 +235,7 @@ module Debug_Options = struct
        checking." in
     Arg.(value & flag & info ["debug-ast"] ~doc ~docs)
 
-  let debug_data_json : string option Term.ret Term.t =
+  let debug_data_json : (string * string) option Term.ret Term.t =
     let doc =
       "Provide (possibly partially specified) data block values for use with \
        $(b,--debug-generate-data) or $(b,--debug-generate-inits)." in
@@ -243,7 +243,11 @@ module Debug_Options = struct
       (function
         | None -> `Ok None
         | Some file -> (
-            try `Ok (Some (In_channel.read_all file))
+            try
+              `Ok
+                (Some
+                   ( "'" ^ file ^ "'"
+                   , In_channel.with_open_bin file In_channel.input_all ))
             with _ ->
               `Error (true, "File '" ^ file ^ "' not found or cannot be opened.")
             ))
@@ -290,8 +294,7 @@ module Debug_Options = struct
 
   (** helper for paired args like --debug-mir and --debug-mir-pretty *)
   let debug_basic_or_pretty ~doc flag_name : Driver.Flags.debug_options Term.t =
-    let doc_pretty =
-      String.substr_replace_all ~pattern:"print" ~with_:"pretty-print" doc in
+    let doc_pretty = String.replace_all ~sub:"print" ~by:"pretty-print" doc in
     Arg.(
       value
       & vflag Driver.Flags.Off

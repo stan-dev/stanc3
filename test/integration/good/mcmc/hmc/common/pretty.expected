@@ -1,4 +1,4 @@
-  $ ../../../../../../../install/default/bin/stanc --auto-format gauss.stan
+  $ stanc --auto-format gauss.stan
 parameters {
   real x;
 }
@@ -7,7 +7,7 @@ model {
 }
 
 [exit 0]
-  $ ../../../../../../../install/default/bin/stanc --auto-format gauss3D.stan
+  $ stanc --auto-format gauss3D.stan
 parameters {
   array[3] real x;
 }

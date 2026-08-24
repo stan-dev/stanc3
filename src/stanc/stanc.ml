@@ -1,5 +1,5 @@
 (** stanc console application *)
-open Core
+open Std
 
 open Frontend
 
@@ -17,7 +17,8 @@ let dump_math_dists () =
 
 let write filename data =
   try
-    Out_channel.write_all filename ~data;
+    ( Out_channel.with_open_bin filename @@ fun oc ->
+      Out_channel.output_string oc data );
     exit_ok
   with Sys_error msg ->
     Fmt.epr "Error writing to file '%s': %s@." filename msg;
@@ -53,7 +54,7 @@ let stanc ?tty_colors ?(debug_lex : bool = false) ?(debug_parse : bool = false)
   Debugging.grammar_logging := debug_parse;
   (* if we only have functions, always compile as standalone *)
   let flags =
-    if String.is_suffix model_file ~suffix:".stanfunctions" then
+    if Common.Files.is_stanfunctions model_file then
       {flags with standalone_functions= true; functions_only= true}
     else flags in
   let model_file_name, model_source, printed_filename =
@@ -62,7 +63,7 @@ let stanc ?tty_colors ?(debug_lex : bool = false) ?(debug_parse : bool = false)
       , `Code (In_channel.input_all In_channel.stdin)
       , Option.first_some flags.filename_in_msg (Some "stdin") )
     else (model_file, `File model_file, flags.filename_in_msg) in
-  With_return.with_return @@ fun {return} ->
+  Return.with_return @@ fun return ->
   match
     Driver.Entry.stan2cpp
       (Option.value ~default:model_file_name name)
@@ -73,15 +74,9 @@ let stanc ?tty_colors ?(debug_lex : bool = false) ?(debug_parse : bool = false)
       if print_cpp then print_endline cpp_str;
       let out =
         if String.equal output_file "" then
-          Driver.Flags.remove_dotstan model_file_name ^ ".hpp"
+          Common.Files.remove_dotstan model_file_name ^ ".hpp"
         else output_file in
       write out cpp_str
-  | Error (DebugDataError _ as e) ->
-      (* separated out to suggest the possibly-fixing flag *)
-      Errors.pp Fmt.stderr ?printed_filename e;
-      if Option.is_none flags.debug_settings.debug_data_json then
-        Fmt.pf Fmt.stderr "Supplying a --debug-data-file may help@;";
-      exit_err
   | Error e ->
       (match model_source with
       | `File _ -> Errors.pp Fmt.stderr ?printed_filename e
@@ -111,14 +106,14 @@ let dispatch_commands args =
   match Common.ICE.with_exn_message go with
   | Ok code -> code
   | Error internal_error ->
-      Out_channel.output_string stderr internal_error;
-      Out_channel.flush stderr;
+      Out_channel.output_string Out_channel.stderr internal_error;
+      Out_channel.flush Out_channel.stderr;
       CLI.exit_ice
 
 let main () =
   let open Cmdliner in
   let stanc_cmd = Cmd.make CLI.info (Term.map dispatch_commands CLI.commands) in
-  let argv = Sys.get_argv () in
+  let argv = Sys.argv in
   Driver.Flags.set_backend_args_list
     (* remove executable itself from list before passing *)
     (argv |> Array.to_list |> List.tl_exn);
@@ -126,7 +121,7 @@ let main () =
   Array.map_inplace argv ~f:(function
     | "--O" -> "--O1"
     | "--o" -> "-o" (* legacy shorthand for --output *)
-    | s when String.is_prefix s ~prefix:"--o=" ->
+    | s when String.starts_with s ~prefix:"--o=" ->
         "-o" ^ String.chop_prefix_exn s ~prefix:"--o="
     | s -> s);
   Cmd.eval' ~argv ~catch:false stanc_cmd

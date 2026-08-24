@@ -1,8 +1,10 @@
-open Core
+open Std
+open Std.Compare
+open Std.Sexp_conv
 open Common
 
 module Pattern = struct
-  type litType = Int | Real | Imaginary | Str [@@deriving sexp, hash, compare]
+  type litType = Int | Real | Imaginary | Str [@@deriving sexp_of, compare]
 
   type 'a t =
     | Var of string
@@ -14,7 +16,7 @@ module Pattern = struct
     | Indexed of 'a * 'a Index.t list
     | Promotion of 'a * UnsizedType.t * UnsizedType.autodifftype
     | TupleProjection of 'a * int
-  [@@deriving sexp, hash, map, compare, fold]
+  [@@deriving sexp_of, map, compare, fold]
 
   let pp pp_e ppf = function
     | Var varname -> Fmt.string ppf varname
@@ -23,7 +25,7 @@ module Pattern = struct
     | FunApp (StanLib (name, FnPlain, _), [lhs; rhs])
       when Option.is_some (Operator.of_string_opt name) ->
         Fmt.pf ppf "(%a %a %a)" pp_e lhs Operator.pp
-          (Option.value_exn (Operator.of_string_opt name))
+          (Option.get (Operator.of_string_opt name))
           pp_e rhs
     | FunApp (fun_kind, args) ->
         Fmt.pf ppf "%a(@[<hov>%a@])" (Fun_kind.pp pp_e) fun_kind
@@ -45,8 +47,7 @@ end
     module name, since [ppx_deriving] does not support the [nonrec] keyword *)
 module Fixed = struct
   (** Fixed-point of MIR expressions *)
-  type 'a t = {pattern: 'a t Pattern.t; meta: 'a}
-  [@@deriving compare, hash, sexp]
+  type 'a t = {pattern: 'a t Pattern.t; meta: 'a} [@@deriving compare, sexp_of]
 end
 
 include Fixed
@@ -62,17 +63,18 @@ module Typed = struct
   module Meta = struct
     type t =
       { type_: UnsizedType.t
-      ; loc: (Location_span.t[@sexp.opaque] [@compare.ignore])
+      ; loc: (Location_span.t[@sexp.opaque])
       ; adlevel: UnsizedType.autodifftype }
-    [@@deriving compare, create, sexp, hash]
+    [@@deriving create, sexp_of]
 
     let empty =
       create ~type_:UnsizedType.UInt ~adlevel:UnsizedType.DataOnly
         ~loc:Location_span.empty ()
   end
 
-  type t = (Meta.t[@compare.ignore]) Fixed.t [@@deriving hash, sexp, compare]
+  type t = (Meta.t[@compare.ignore]) Fixed.t [@@deriving sexp_of, compare]
 
+  let equal t1 t2 = compare t1 t2 = 0
   let type_of {meta= Meta.{type_; _}; _} = type_
   let adlevel_of {meta= Meta.{adlevel; _}; _} = adlevel
   let fun_arg {meta= Meta.{type_; adlevel; _}; _} = (adlevel, type_)
@@ -81,28 +83,10 @@ module Typed = struct
   (** Since the type [t] is now concrete (i.e. not a type _constructor_) we can
       construct a [Comparable.S] giving us [Map] and [Set] specialized to the
       type. *)
-
-  module Comparator = Comparator.Make (struct
-    type nonrec t = t
-
-    let compare = compare
-    let sexp_of_t = sexp_of_t
-  end)
-
-  include Comparator
-
-  include Comparable.Make_using_comparator (struct
-    type nonrec t = t
-
-    let sexp_of_t = sexp_of_t
-    let t_of_sexp = t_of_sexp
-
-    include Comparator
-  end)
 end
 
 module Helpers = struct
-  let int i = {meta= Typed.Meta.empty; pattern= Lit (Int, string_of_int i)}
+  let int i = {meta= Typed.Meta.empty; pattern= Lit (Int, Int.to_string i)}
 
   let float i =
     { meta= {Typed.Meta.empty with type_= UReal}
@@ -131,7 +115,9 @@ module Helpers = struct
     match es with
     | [] -> default
     | head :: rest ->
-        List.fold ~init:head ~f:(fun accum next -> binop accum op next) rest
+        List.fold_left ~init:head
+          ~f:(fun accum next -> binop accum op next)
+          rest
 
   let row_vector l =
     { meta= {Typed.Meta.empty with type_= URowVector}
@@ -186,8 +172,9 @@ module Helpers = struct
       | UComplexVector -> UComplexRowVector
       | (UMatrix | UComplexMatrix) as t -> t
       | t ->
-          Common.ICE.internal_compiler_error
-            [%message "Cannot transpose " (t : UnsizedType.t)] in
+          Common.ICE.(
+            internal_errorf "Cannot transpose %t" [UnsizedType.pp $ t])
+          [@coverage off] in
     let expr = unary_op Transpose e in
     {expr with meta= {expr.meta with type_= new_type}}
 
@@ -214,29 +201,36 @@ module Helpers = struct
   let rec infer_type_of_indexed ut indices =
     match (ut, indices) with
     | _, [] -> ut
-    | _, [Index.All] | _, [Upfrom _] | _, [Between _] -> ut
-    | UnsizedType.UMatrix, [All; Single _]
-     |UMatrix, [Upfrom _; Single _]
-     |UMatrix, [Between _; Single _]
-     |UMatrix, [MultiIndex _]
-     |UMatrix, [Single _] ->
+    | _, [Index.All] | _, [Upfrom _] | _, [Between _] | _, [MultiIndex _] -> ut
+    | ( (UnsizedType.UMatrix | UComplexMatrix)
+      , [ (All | Upfrom _ | Between _ | MultiIndex _)
+        ; (All | Upfrom _ | Between _ | MultiIndex _) ] ) ->
+        ut
+    | UMatrix, [Single _; (All | Upfrom _ | Between _ | MultiIndex _)] ->
+        URowVector
+    | UComplexMatrix, [Single _; (All | Upfrom _ | Between _ | MultiIndex _)] ->
+        UComplexRowVector
+    | UMatrix, [(All | Upfrom _ | Between _ | MultiIndex _); Single _] ->
         UVector
-    | UComplexMatrix, [All; Single _]
-     |UComplexMatrix, [Upfrom _; Single _]
-     |UComplexMatrix, [Between _; Single _]
-     |UComplexMatrix, [MultiIndex _]
-     |UComplexMatrix, [Single _] ->
+    | UComplexMatrix, [(All | Upfrom _ | Between _ | MultiIndex _); Single _] ->
         UComplexVector
+    (* A single index selects a row: [x[1]] is [x[1, : ]]. *)
+    | UMatrix, [Single _] -> URowVector
+    | UComplexMatrix, [Single _] -> UComplexRowVector
     | UArray t, Single _ :: tl -> infer_type_of_indexed t tl
-    | UArray t, _ :: tl -> UArray (infer_type_of_indexed t tl)
-    | UMatrix, [Single _; Single _] | UVector, [_] | URowVector, [_] -> UReal
+    | UArray t, (All | Upfrom _ | Between _ | MultiIndex _) :: tl ->
+        UArray (infer_type_of_indexed t tl)
+    | UMatrix, [Single _; Single _] | (UVector | URowVector), [Single _] ->
+        UReal
     | UComplexMatrix, [Single _; Single _]
-     |UComplexVector, [_]
-     |UComplexRowVector, [_] ->
+     |(UComplexVector | UComplexRowVector), [Single _] ->
         UComplex
-    | _ ->
-        ICE.internal_compiler_error
-          [%message "Can't index" (ut : UnsizedType.t)]
+    | ( (UInt | UReal | UComplex | UTuple _ | UFun _ | UMathLibraryFunction)
+      , _ :: _ )
+     |(UVector | URowVector | UComplexVector | UComplexRowVector), _ :: _ :: _
+     |(UMatrix | UComplexMatrix), _ :: _ :: _ :: _ ->
+        ICE.(internal_errorf "Can't index %t" [UnsizedType.pp $ ut])
+        [@coverage off]
 
   (** [add_index expression index] returns an expression that (additionally)
       indexes into the input [expression] by [index].*)
@@ -248,8 +242,8 @@ module Helpers = struct
       | Var _ | TupleProjection _ -> Pattern.Indexed (e, [i])
       | Indexed (e, indices) -> Indexed (e, indices @ [i])
       | _ ->
-          ICE.internal_compiler_error
-            [%message "Expected Var or Indexed but found " (e : Typed.t)] in
+          ICE.(internal_errorf "Expected Var or Indexed but found %t" [pp $ e])
+          [@coverage off] in
     {meta; pattern}
 
   (** [add_tuple_index expression index] returns an expression that
@@ -259,13 +253,13 @@ module Helpers = struct
   let add_tuple_index e i =
     let mtype =
       match Typed.(type_of e) with
-      | UTuple ts -> List.nth_exn ts (i - 1)
+      | UTuple ts -> List.nth ts (i - 1)
       | t ->
-          ICE.internal_compiler_error
-            [%message
+          ICE.(
+            internal_errorf
               "Internal error: Attempted to apply tuple index to a non-tuple \
-               type:"
-                (t : UnsizedType.t)] in
+               type: %t"
+              [UnsizedType.pp $ t]) [@coverage off] in
     let meta = Typed.Meta.{e.meta with type_= mtype} in
     let pattern = Pattern.TupleProjection (e, i) in
     {meta; pattern}
@@ -285,11 +279,23 @@ module Helpers = struct
     ; ( UArray UMatrix
       , [Single loop_bottom; Single loop_bottom; Single loop_bottom] )
     ; ( UArray UMatrix
-      , [Upfrom loop_bottom; Single loop_bottom; Single loop_bottom] ) ]
+      , [Upfrom loop_bottom; Single loop_bottom; Single loop_bottom] )
+    ; (UVector, [MultiIndex (variable "idx")])
+    ; (URowVector, [MultiIndex (variable "idx")])
+    ; (UMatrix, [MultiIndex (variable "idx")])
+    ; (UMatrix, [MultiIndex (variable "idx"); Single loop_bottom])
+    ; (UArray UVector, [MultiIndex (variable "idx")])
+    ; (UArray UVector, [Single loop_bottom; MultiIndex (variable "idx")])
+    ; (UMatrix, [Single loop_bottom; Between (loop_bottom, loop_bottom)])
+    ; ( UMatrix
+      , [Between (loop_bottom, loop_bottom); MultiIndex (variable "idx")] ) ]
     |> List.map ~f:(fun (ut, idx) -> infer_type_of_indexed ut idx)
     |> Fmt.(str "@[<hov>%a@]" (list ~sep:comma UnsizedType.pp))
     |> print_endline;
     [%expect
       {|
-      vector, array[] matrix, matrix, array[] vector, real, array[] real |}]
+      row_vector, array[] matrix, matrix, array[] row_vector, real, array[] real,
+      vector, row_vector, matrix, vector, array[] vector, vector, row_vector,
+      matrix
+      |}]
 end

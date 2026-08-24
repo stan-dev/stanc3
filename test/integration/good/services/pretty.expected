@@ -1,4 +1,4 @@
-  $ ../../../../../install/default/bin/stanc --auto-format bym2_offset_only.stan
+  $ stanc --auto-format bym2_offset_only.stan
 data {
   int<lower=0> N;
   int<lower=0> N_edges;
@@ -67,7 +67,7 @@ generated quantities {
 }
 
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --auto-format test_gq.stan
+  $ stanc --auto-format test_gq.stan
 parameters {
   array[2] real<lower=-10, upper=10> y;
 }
@@ -89,7 +89,7 @@ generated quantities {
 }
 
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --auto-format test_gq2.stan
+  $ stanc --auto-format test_gq2.stan
 parameters {
   array[2] real<lower=-10, upper=10> y;
 }
@@ -101,7 +101,7 @@ generated quantities {
 }
 
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --auto-format test_lp.stan
+  $ stanc --auto-format test_lp.stan
 parameters {
   array[2] real<lower=-10, upper=10> y;
 }

@@ -1,10 +1,10 @@
-  $ ../../../../../install/default/bin/stanc bad_abs_tol.stan
-Semantic error in 'bad_abs_tol.stan', line 30, column 4 to line 32, column 24:
+  $ stanc bad_abs_tol.stan
+Semantic error in 'bad_abs_tol.stan', line 30, column 16 to column 21:
    -------------------------------------------------
     28:  transformed parameters {
     29:    array[N, 2] real z
     30:    = ode_bdf_tol(dz_dt, z_init, 0.0, ts,
-             ^
+                         ^
     31:              a, 1e-3, 500,
     32:              alpha, beta);
    -------------------------------------------------
@@ -25,13 +25,13 @@ where F2 = (real, vector) => vector
     but the other is
      vector
 [exit 1]
-  $ ../../../../../install/default/bin/stanc bad_initial_state.stan
-Semantic error in 'bad_initial_state.stan', line 29, column 4 to line 31, column 24:
+  $ stanc bad_initial_state.stan
+Semantic error in 'bad_initial_state.stan', line 29, column 16 to column 21:
    -------------------------------------------------
     27:  transformed parameters {
     28:    array[N, 2] real z
     29:    = ode_bdf_tol(dz_dt, z_init, 0.0, ts,
-             ^
+                         ^
     30:              1e-5, 1e-3, 500,
     31:              alpha, beta);
    -------------------------------------------------
@@ -52,13 +52,13 @@ where F2 = (real, vector) => vector
     but the other is
      vector
 [exit 1]
-  $ ../../../../../install/default/bin/stanc bad_initial_time.stan
-Semantic error in 'bad_initial_time.stan', line 30, column 4 to line 32, column 24:
+  $ stanc bad_initial_time.stan
+Semantic error in 'bad_initial_time.stan', line 30, column 16 to column 21:
    -------------------------------------------------
     28:  transformed parameters {
     29:    array[N, 2] real z
     30:    = ode_bdf_tol(dz_dt, z_init, t, ts,
-             ^
+                         ^
     31:              1e-5, 1e-3, 500,
     32:              alpha, beta);
    -------------------------------------------------
@@ -79,13 +79,13 @@ where F2 = (real, vector) => vector
     but the other is
      vector
 [exit 1]
-  $ ../../../../../install/default/bin/stanc bad_max_num_steps.stan
-Semantic error in 'bad_max_num_steps.stan', line 30, column 4 to line 32, column 24:
+  $ stanc bad_max_num_steps.stan
+Semantic error in 'bad_max_num_steps.stan', line 30, column 16 to column 21:
    -------------------------------------------------
     28:  transformed parameters {
     29:    array[N, 2] real z
     30:    = ode_bdf_tol(dz_dt, z_init, 0.0, ts,
-             ^
+                         ^
     31:              1e-5, 1e-3, a,
     32:              alpha, beta);
    -------------------------------------------------
@@ -106,13 +106,13 @@ where F2 = (real, vector) => vector
     but the other is
      vector
 [exit 1]
-  $ ../../../../../install/default/bin/stanc bad_no_args.stan
-Semantic error in 'bad_no_args.stan', line 25, column 4 to line 26, column 28:
+  $ stanc bad_no_args.stan
+Semantic error in 'bad_no_args.stan', line 25, column 16 to column 21:
    -------------------------------------------------
     23:  transformed parameters {
     24:    array[N, 2] real z
     25:    = ode_bdf_tol(dz_dt, z_init, 0.0, ts,
-             ^
+                         ^
     26:              1e-5, 1e-3, 500);
     27:  }
    -------------------------------------------------
@@ -133,13 +133,13 @@ where F2 = (real, vector) => vector
     but the other is
      vector
 [exit 1]
-  $ ../../../../../install/default/bin/stanc bad_non_matching_args.stan
-Semantic error in 'bad_non_matching_args.stan', line 29, column 4 to line 31, column 24:
+  $ stanc bad_non_matching_args.stan
+Semantic error in 'bad_non_matching_args.stan', line 29, column 16 to column 21:
    -------------------------------------------------
     27:  transformed parameters {
     28:    array[N, 2] real z
     29:    = ode_bdf_tol(dz_dt, z_init, 0.0, ts,
-             ^
+                         ^
     30:              1e-5, 1e-3, 500,
     31:              alpha, beta);
    -------------------------------------------------
@@ -160,13 +160,13 @@ where F2 = (real, vector) => vector
     but the other is
      vector
 [exit 1]
-  $ ../../../../../install/default/bin/stanc bad_one_arg.stan
-Semantic error in 'bad_one_arg.stan', line 27, column 4 to line 29, column 18:
+  $ stanc bad_one_arg.stan
+Semantic error in 'bad_one_arg.stan', line 27, column 16 to column 21:
    -------------------------------------------------
     25:  transformed parameters {
     26:    array[N, 2] real z
     27:    = ode_bdf_tol(dz_dt, z_init, 0.0, ts,
-             ^
+                         ^
     28:              1e-5, 1e-3, 500,
     29:              alpha);
    -------------------------------------------------
@@ -187,13 +187,13 @@ where F2 = (real, vector) => vector
     but the other is
      vector
 [exit 1]
-  $ ../../../../../install/default/bin/stanc bad_rel_tol.stan
-Semantic error in 'bad_rel_tol.stan', line 30, column 4 to line 32, column 24:
+  $ stanc bad_rel_tol.stan
+Semantic error in 'bad_rel_tol.stan', line 30, column 16 to column 21:
    -------------------------------------------------
     28:  transformed parameters {
     29:    array[N, 2] real z
     30:    = ode_bdf_tol(dz_dt, z_init, 0.0, ts,
-             ^
+                         ^
     31:              1e-5, a, 500,
     32:              alpha, beta);
    -------------------------------------------------
@@ -214,13 +214,13 @@ where F2 = (real, vector) => vector
     but the other is
      vector
 [exit 1]
-  $ ../../../../../install/default/bin/stanc bad_times.stan
-Semantic error in 'bad_times.stan', line 30, column 4 to line 31, column 24:
+  $ stanc bad_times.stan
+Semantic error in 'bad_times.stan', line 30, column 12 to column 17:
    -------------------------------------------------
     28:  transformed parameters {
     29:    array[N, 2] real z
     30:    = ode_bdf(dz_dt, z_init, 0.0, ts,
-             ^
+                     ^
     31:              alpha, beta);
     32:  }
    -------------------------------------------------
@@ -241,13 +241,13 @@ where F2 = (real, vector) => vector
     but the other is
      vector
 [exit 1]
-  $ ../../../../../install/default/bin/stanc bad_times_tol.stan
-Semantic error in 'bad_times_tol.stan', line 30, column 4 to line 32, column 24:
+  $ stanc bad_times_tol.stan
+Semantic error in 'bad_times_tol.stan', line 30, column 16 to column 21:
    -------------------------------------------------
     28:  transformed parameters {
     29:    array[N, 2] real z
     30:    = ode_bdf_tol(dz_dt, z_init, 0.0, ts,
-             ^
+                         ^
     31:              1e-5, 1e-3, 500,
     32:              alpha, beta);
    -------------------------------------------------

@@ -1,5 +1,3 @@
-open! Core
-
 let warnings = ref []
 let init () = warnings := []
 let collect () = List.rev !warnings

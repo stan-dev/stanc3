@@ -111,6 +111,12 @@ My process was to assign each phase from the book to an optimization that we hav
    to get loop-invariant code motion
 ** DONE constant_propagation < static_loop_unrolling
    to create opportunities for unrolling statically-sized loops
+** DONE vectorize_loops < one_step_loop_unrolling, static_loop_unrolling
+   vectorization consumes whole loops, so it must run before anything peels or
+   unrolls them
+** DONE vectorize_loops < partial_evaluation
+   so the vectorized density calls it emits can be further fused, e.g. into
+   the GLM primitives
 ** DONE X < list_collapsing if X introduces redundant nesting of SList-structures
    Unsure which optimizations create SLists, but list_collapsing is near the end
 ** DONE everything < block_fixing

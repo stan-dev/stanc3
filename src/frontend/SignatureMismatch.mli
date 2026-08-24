@@ -1,4 +1,3 @@
-open Core
 open Middle
 
 type type_mismatch = private
@@ -15,11 +14,16 @@ and function_mismatch = private
   | ArgNumMismatch of int * int
 
 type signature_error =
-  (UnsizedType.returntype * UnsizedType.argumentlist) * function_mismatch
+  (UnsizedType.returntype * UnsizedType.argumentlist * Location_span.t option)
+  * function_mismatch
 
 type ('unique, 'error) generic_match_result =
   | UniqueMatch of 'unique
-  | AmbiguousMatch of (UnsizedType.returntype * UnsizedType.argumentlist) list
+  | AmbiguousMatch of
+      (UnsizedType.returntype
+      * UnsizedType.argumentlist
+      * Location_span.t option)
+      list
   | SignatureErrors of 'error
 
 (** The match result for general (non-variadic) functions *)
@@ -27,6 +31,7 @@ type match_result =
   ( UnsizedType.returntype
     * (bool Middle.Fun_kind.suffix -> Ast.fun_kind)
     * Promotion.t list
+    * Location_span.t option
   , signature_error list * bool )
   generic_match_result
 
@@ -60,10 +65,11 @@ val check_variadic_args :
      allow_lpdf:bool
   -> UnsizedType.argumentlist
   -> UnsizedType.argumentlist
+  -> Location_span.t option
   -> UnsizedType.t
   -> UnsizedType.argumentlist
-  -> ( UnsizedType.t * Promotion.t list
-     , UnsizedType.argumentlist * function_mismatch )
+  -> ( (UnsizedType.t * Location_span.t option) * Promotion.t list
+     , UnsizedType.argumentlist * function_mismatch * Location_span.t option )
      result
 (** Check variadic function arguments. If a match is found, returns [Ok] of the
     function type and a list of promotions (see [promote]) If none is found,
@@ -88,16 +94,11 @@ val pp_mismatch_details :
 
 val pp_signature_mismatch :
      Format.formatter
-  -> string
-     * UnsizedType.t list
-     * (((UnsizedType.returntype * UnsizedType.argumentlist)
-        * function_mismatch)
-        list
-       * bool)
+  -> string * UnsizedType.t list * (signature_error list * bool)
   -> unit
 
-val pp_math_lib_assignmentoperator_sigs :
-  Format.formatter -> UnsizedType.t * Operator.t -> unit
+val list_valid_assignmentoperator_rhs :
+  UnsizedType.t -> Operator.t -> UnsizedType.t list
 
 val compare_errors : function_mismatch -> function_mismatch -> int
 val compare_match_results : match_result -> match_result -> int

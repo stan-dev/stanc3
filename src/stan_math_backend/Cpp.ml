@@ -1,8 +1,9 @@
 (** A set of data types representing the C++ we generate *)
 
-open Core
+open Std
+open Std.Sexp_conv
 
-type identifier = string [@@deriving sexp]
+type identifier = string [@@deriving sexp_of]
 
 (** C++ types *)
 type type_ =
@@ -11,21 +12,22 @@ type type_ =
   | Int
   | Double
   | Complex of type_
-  | TemplateType of identifier
+  | TemplateType of identifier [@printer Fmt.string]
   | StdVector of type_
       (** A std::vector. For Eigen Vectors, use [Matrix] with a row or column
           size of 1 *)
   | Array of type_ * int
   | Tuple of type_ list
-  | TypeLiteral of identifier  (** Used for things like Eigen::Index *)
+  | TypeLiteral of identifier [@printer Fmt.string]
+      (** Used for things like Eigen::Index *)
   | NonTypeTemplateInt of int
   | Matrix of type_ * int * int * Middle.Mem_pattern.t
   | Ref of type_
   | Const of type_
   | Pointer of type_
-  | TypeTrait of identifier * type_ list
+  | TypeTrait of (identifier[@printer Fmt.string]) * type_ list
       (** e.g. stan::promote_scalar, stan:base_type *)
-[@@deriving sexp]
+[@@deriving sexp_of, show]
 
 module Types = struct
   (** Helpers for constructing types *)
@@ -62,8 +64,9 @@ module Types = struct
     match t with
     | Matrix _ -> TypeTrait ("Eigen::Map", [t])
     | _ ->
-        Common.ICE.internal_compiler_error
-          [%message "Tried to make an Eigen::Map of" (t : type_)]
+        Common.ICE.(
+          internal_errorf "Tried to make an Eigen::Map of %s" [show_type_ t])
+        [@coverage off]
 
   let var_context = TypeLiteral "stan::io::var_context"
   let ostream = TypeLiteral "std::ostream"
@@ -85,7 +88,7 @@ type operator =
   | Gthn
   | And
   | Or
-[@@deriving sexp]
+[@@deriving sexp_of]
 
 type expr =
   | Literal of string  (** printed as-is *)
@@ -114,7 +117,7 @@ type expr =
   | BinOp of expr * operator * expr
   | PMinus of expr
   | Increment of expr
-[@@deriving sexp]
+[@@deriving sexp_of]
 
 module Exprs = struct
   (** Some helper values and functions *)
@@ -201,7 +204,7 @@ module Expression_syntax = struct
 
   (* we use : in operators for assignment/creation *)
   let ( .:{} ) typ arg = Constructor (typ, [arg])
-  let ( .:{;..} ) typ args = Constructor (typ, List.of_array args)
+  let ( .:{;..} ) typ args = Constructor (typ, Array.to_list args)
 end
 
 (**/**)
@@ -211,7 +214,7 @@ type init =
   | Construction of expr list
   | InitializerList of expr list
   | Uninitialized
-[@@deriving sexp]
+[@@deriving sexp_of]
 
 type variable_defn =
   { static: bool [@default false]
@@ -219,7 +222,7 @@ type variable_defn =
   ; type_: type_
   ; name: identifier
   ; init: init [@default Uninitialized] }
-[@@deriving make, sexp]
+[@@deriving make, sexp_of]
 
 type stmt =
   | Expression of expr
@@ -237,7 +240,7 @@ type stmt =
   | Continue
   | Using of string * type_ option
   | Comment of string
-[@@deriving sexp]
+[@@deriving sexp_of]
 
 module Stmts = struct
   (** Helpers for common statement constructs *)
@@ -336,9 +339,9 @@ type template_parameter =
       (** A C++ type trait (e.g. [is_arithmetic]) and the template types which
           need to satisfy that. These are collated into one
           [require_all_t<...>]. *)
-[@@deriving sexp]
+[@@deriving sexp_of]
 
-type cv_qualifiers = Const | Final | NoExcept [@@deriving sexp]
+type cv_qualifiers = Const | Final | NoExcept [@@deriving sexp_of]
 
 type fun_defn =
   { templates_init: template_parameter list list * bool [@default [[]], false]
@@ -350,7 +353,7 @@ type fun_defn =
   ; args: (type_ * string) list
   ; cv_qualifiers: cv_qualifiers list [@default []]
   ; body: stmt list option }
-[@@deriving make, sexp]
+[@@deriving make, sexp_of]
 
 let split_fun_decl_defn (fn : fun_defn) =
   ( {fn with body= None}
@@ -360,7 +363,7 @@ type constructor =
   { args: (type_ * string) list
   ; init_list: (identifier * expr list) list
   ; body: stmt list }
-[@@deriving make, sexp]
+[@@deriving make, sexp_of]
 
 (** Incomplete list of C++ preprocessor directives *)
 type directive =
@@ -390,7 +393,7 @@ and defn =
   | GlobalUsing of string * type_ option
   | Namespace of identifier * defn list
   | Preprocessor of directive
-[@@deriving sexp]
+[@@deriving sexp_of]
 
 (* can't be derivided since it is simultaneously declared with non-records *)
 let make_class_defn ~name ~public_base ?(final = true) ~private_members
@@ -419,7 +422,7 @@ end
 let ( !// ) s = GlobalComment s
 
 (** Much like in C++, we define a translation unit as a list of definitions *)
-type program = defn list [@@deriving sexp]
+type program = defn list [@@deriving sexp_of]
 
 module Printing = struct
   (** Pretty-printing of the C++ type *)
@@ -476,10 +479,10 @@ module Printing = struct
     if not (List.is_empty template_parameters) then
       let templates, requires =
         List.partition_map template_parameters ~f:(function
-          | RequireAllCondition (trait, tys) -> Second (trait, tys)
-          | Typename name -> First (`Typename name)
-          | Bool name -> First (`Bool name)
-          | Require (requirement, args) -> First (`Require (requirement, args)))
+          | RequireAllCondition (trait, tys) -> Either.Right (trait, tys)
+          | Typename name -> Left (`Typename name)
+          | Bool name -> Left (`Bool name)
+          | Require (requirement, args) -> Left (`Require (requirement, args)))
       in
       pf ppf "template <@[%a%a@]>@ "
         (list ~sep:comma pp_basic_template)
@@ -791,7 +794,7 @@ module Tests = struct
     let vector = (row_vector Double).:{Literal "3"} in
     let values = [Literal "1"; Var "a"; Literal "3"] in
     let e = (vector << values).@!("finished") in
-    print_s [%sexp (e : expr)];
+    print_s (sexp_of_expr e);
     print_endline "";
     Printing.pp_expr Fmt.stdout e;
     [%expect

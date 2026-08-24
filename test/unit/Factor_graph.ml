@@ -1,5 +1,6 @@
 open Analysis_and_optimization.Factor_graph
-open Core
+open Std
+open Std.Sexp_conv
 open Analysis_and_optimization.Dataflow_types
 
 let reject_example =
@@ -386,9 +387,8 @@ let%expect_test "Priors complex example" =
   print_s
     [%sexp
       (priors
-        : ( vexpr
-          , (factor * label) Set.Poly.t option * Middle.Location_span.t )
-          Map.Poly.t)];
+        : ((factor * label) Set.Poly.t option * Middle.Location_span.t)
+          VExprMap.t)];
   [%expect
     {|
 (((VVar a)

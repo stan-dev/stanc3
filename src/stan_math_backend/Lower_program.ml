@@ -1,5 +1,4 @@
-open Core
-open Core.Poly
+open Std
 open Middle
 open Lower_expr
 open Lower_stmt
@@ -48,7 +47,8 @@ let lower_map_decl (vident, ut) : defn =
       (make_variable_defn ~type_:(Types.eigen_map t) ~name:vident
          ~init:
            (InitializerList
-              (Literal "nullptr" :: List.init ndims ~f:(fun _ -> Literal "0")))
+              (Literal "nullptr"
+              :: List.init ~len:ndims ~f:(fun _ -> Literal "0")))
          ()) in
   let scalar = local_scalar ut DataOnly in
   let open Types in
@@ -60,10 +60,9 @@ let lower_map_decl (vident, ut) : defn =
   | UComplexRowVector -> eigen_map_def (row_vector (complex scalar)) 1
   | UComplexVector -> eigen_map_def (vector (complex scalar)) 1
   | x ->
-      Common.ICE.internal_compiler_error
-        [%message
-          "Error during Map data construction for " vident " of type "
-            (x : UnsizedType.t)]
+      Common.ICE.(
+        internal_errorf "Error during Map data construction for %s of type %t"
+          [vident; UnsizedType.pp $ x]) [@coverage off]
 
 let rec top_level_decls Stmt.{pattern; _} =
   match pattern with
@@ -83,14 +82,14 @@ let lower_model_private {Program.prepare_data; _} =
   @ List.map ~f:lower_map_decl eigen_map_decls
 
 let rec validate_dims ~stage name st =
-  if String.is_suffix ~suffix:"__" name then []
+  if String.ends_with ~suffix:"__" name then []
   else if SizedType.contains_tuple st then
     (* We know tuples are given as flattened names containing "." in
        var_contexts *)
     let names =
       UnsizedType.enumerate_tuple_names_io name (SizedType.to_unsized st) in
     let subtypes = SizedType.flatten_tuple_io st in
-    List.map2_exn ~f:(validate_dims ~stage) names subtypes |> List.concat
+    List.map2 ~f:(validate_dims ~stage) names subtypes |> List.concat
   else
     let open Cpp.DSL in
     let vector args =
@@ -108,45 +107,50 @@ let rec validate_dims ~stage name st =
                    ; vector (SizedType.get_dims_io st) ] )) in
     [Expression validate]
 
-let gen_assign_data decl_id st =
-  let lower_placement_new decl_id st =
-    let open Cpp.DSL in
+let gen_assign_data decl_id st init =
+  let open Cpp.DSL in
+  let underlying_variable, init =
+    match st with
+    | SizedType.SVector _ | SRowVector _ | SMatrix _ | SComplexVector _
+     |SComplexRowVector _ | SComplexMatrix _ ->
+        (decl_id ^ "_data__", Stmt.Pattern.Default)
+    | SInt | SReal | SComplex | SArray _ | STuple _ -> (decl_id, init) in
+  let initialize =
+    let open Option.Syntax in
+    let+ value =
+      lower_assign_sized st
+        (UnsizedType.fill_adtype_for_type UnsizedType.DataOnly
+           (SizedType.to_unsized st))
+        init in
+    underlying_variable := value in
+  let placement_new =
     match st with
     | SizedType.SVector (_, d)
      |SRowVector (_, d)
      |SComplexVector d
      |SComplexRowVector d ->
-        let data = Var (decl_id ^ "_data__") in
-        [ Expression
-            (OperatorNew
-               ( decl_id
-               , Types.eigen_map (lower_st st DataOnly)
-               , [data.@!("data"); lower_expr d] )) ]
+        let data = Var underlying_variable in
+        Some
+          (Expression
+             (OperatorNew
+                ( decl_id
+                , Types.eigen_map (lower_st st DataOnly)
+                , [data.@!("data"); lower_expr d] )))
     | SMatrix (_, d1, d2) | SComplexMatrix (d1, d2) ->
-        let data = Var (decl_id ^ "_data__") in
-        [ Expression
-            (OperatorNew
-               ( decl_id
-               , Types.eigen_map (lower_st st DataOnly)
-               , [data.@!("data"); lower_expr d1; lower_expr d2] )) ]
-    | _ -> [] in
-  let underlying_variable decl_id st =
-    match st with
-    | SizedType.SVector _ | SRowVector _ | SMatrix _ | SComplexVector _
-     |SComplexRowVector _ | SComplexMatrix _ ->
-        decl_id ^ "_data__"
-    | SInt | SReal | SComplex | SArray _ | STuple _ -> decl_id in
-  Cpp.DSL.(
-    underlying_variable decl_id st
-    := initialize_value st
-         (UnsizedType.fill_adtype_for_type UnsizedType.DataOnly
-            (SizedType.to_unsized st)))
-  :: lower_placement_new decl_id st
+        let data = Var underlying_variable in
+        Some
+          (Expression
+             (OperatorNew
+                ( decl_id
+                , Types.eigen_map (lower_st st DataOnly)
+                , [data.@!("data"); lower_expr d1; lower_expr d2] )))
+    | SInt | SReal | SComplex | SArray (_, _) | STuple _ -> None in
+  List.filter_map ~f:Fun.id [initialize; placement_new]
 
 let sum_expr_sizes es =
-  match lower_exprs es |> List.reduce ~f:Cpp.DSL.( + ) with
-  | None -> Literal "0U"
-  | Some e -> e
+  match lower_exprs es with
+  | [] -> Literal "0U"
+  | init :: rest -> List.fold_left ~init ~f:Cpp.DSL.( + ) rest
 
 let lower_constructor
     {Program.prog_name; input_vars; prepare_data; output_vars; _} =
@@ -170,15 +174,16 @@ let lower_constructor
   let data_idents = List.map ~f:fst3 input_vars |> String.Set.of_list in
   let lower_data (Stmt.{pattern; meta} as s) =
     match pattern with
-    | Decl {decl_id; decl_type; _} when decl_id <> "pos__" -> (
+    | Decl {decl_id; decl_type; initialize; decl_adtype= _}
+      when decl_id <> "pos__" -> (
         match decl_type with
         | Sized st ->
             Numbering.assign_loc meta
             @
-            if Set.mem data_idents decl_id then
+            if String.Set.mem decl_id data_idents then
               validate_dims ~stage:"data initialization" decl_id st
-              @ gen_assign_data decl_id st
-            else gen_assign_data decl_id st
+              @ gen_assign_data decl_id st initialize
+            else gen_assign_data decl_id st initialize
         | Unsized _ -> [])
     | _ -> lower_statement s in
   let data =
@@ -464,7 +469,7 @@ let emplace_name_stmt name idcs =
   Expression
     param_names__.@?(( "emplace_back"
                      , [ null_string
-                         + List.fold ~init:(literal_string name)
+                         + List.fold_left ~init:(literal_string name)
                              ~f:(fun acc (typ, idx) ->
                                acc + sep typ + to_string idx)
                              idcs ] ))
@@ -477,7 +482,7 @@ let rec gen_param_names ?(outer_idcs = []) (decl_id, st) =
     | SizedType.STuple subtypes ->
         let idxes_subtypes =
           List.mapi
-            ~f:(fun i typ -> ((`Tuple, string_of_int (i + 1)), (name, typ)))
+            ~f:(fun i typ -> ((`Tuple, Int.to_string (i + 1)), (name, typ)))
             subtypes in
         List.concat_map
           ~f:(fun (idx, sub) -> gen_param_names ~outer_idcs:(idcs @ [idx]) sub)

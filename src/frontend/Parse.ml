@@ -1,15 +1,18 @@
 (** Some complicated stuff to get the custom syntax errors out of Menhir's
     Incremental API *)
 
-open Core
-open Common.Let_syntax.Result
+open Result.Syntax
 module Interp = Parser.MenhirInterpreter
 
 let drive_parser parse_fun =
   let input () =
-    Interp.lexer_lexbuf_to_supplier Lexer.token
-      (Preprocessor.current_buffer ())
-      () in
+    let token = Lexer.token (Preprocessor.current_buffer ()) in
+    let lexbuf =
+      (* Lexer.token can modify the state of the preprocessor, so we ask for the
+         current lexbuf again now *)
+      Preprocessor.current_buffer () in
+    let startp = lexbuf.Lexing.lex_start_p and endp = lexbuf.Lexing.lex_curr_p in
+    (token, startp, endp) in
   let success prog = {prog with Ast.comments= Preprocessor.get_comments ()} in
   let failure prev error_state =
     (* see the Menhir manual for the description of error messages support *)
@@ -17,8 +20,8 @@ let drive_parser parse_fun =
       match error_state with
       | Interp.HandlingError env -> env
       | _ ->
-          Common.ICE.internal_compiler_error
-            [%message "Parser failed but is not in an error state "] in
+          Common.ICE.internal_error "Parser failed but is not in an error state"
+          [@coverage off] in
     let message =
       let state = Interp.current_state_number env in
       try
@@ -26,13 +29,12 @@ let drive_parser parse_fun =
         ^^
         if !Debugging.grammar_logging then
           Scanf.format_from_string
-            ("(Parse error state " ^ string_of_int state ^ ")\n")
+            ("(Parse error state " ^ Int.to_string state ^ ")\n")
             ""
         else ""
       with _ ->
-        Common.ICE.internal_compiler_error
-          [%message
-            "Failed to find error for parser error state " (state : int)] in
+        Common.ICE.internal_errorf "Failed to find error for parser state %d"
+          [state] [@coverage off] in
     let location =
       let env =
         match prev with
@@ -52,9 +54,11 @@ let to_lexbuf file_or_code =
   match file_or_code with
   | `File path ->
       let+ chan =
-        try Ok (In_channel.create path)
+        try Ok (In_channel.open_bin path)
         with _ -> Error (Errors.FileNotFound path) in
-      (Lexing.from_channel chan, path)
+      let lexbuf = Lexing.from_channel chan in
+      Gc.finalise (fun _ -> In_channel.close_noerr chan) lexbuf;
+      (lexbuf, path)
   | `Code code -> Ok (Lexing.from_string code, "string")
 
 let parse parse_fun file_or_code =
@@ -62,8 +66,8 @@ let parse parse_fun file_or_code =
   let result =
     let* lexbuf, name = to_lexbuf file_or_code in
     Preprocessor.init lexbuf name;
-    drive_parser parse_fun
-    |> Result.map_error ~f:(fun e -> Errors.Syntax_error e) in
+    drive_parser parse_fun |> Result.map_error (fun e -> Errors.Syntax_error e)
+  in
   (result, Input_warnings.collect ())
 
 let parse_stanfunctions file_or_code =

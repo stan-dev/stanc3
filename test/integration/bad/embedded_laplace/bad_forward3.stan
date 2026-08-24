@@ -34,5 +34,5 @@ parameters {
 }
 model {
   target += laplace_marginal(ll_function, (eta, y),
-                                  K_function, (x, n_obs, alpha, rho));
+                                  1, K_function, (x, n_obs, alpha, rho));
 }

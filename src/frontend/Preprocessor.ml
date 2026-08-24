@@ -1,41 +1,48 @@
 (** Preprocessor for handling include directives *)
 
-open Core
+open Std
 open Lexing
 open Debugging
 
 let comments = Queue.create ()
-let add_comment = Queue.enqueue comments
-let get_comments () = Queue.to_list comments
+let add_comment c = Queue.push c comments
+let get_comments () = Queue.to_seq comments |> List.of_seq
 let include_stack = Stack.create ()
 let included_files : string list ref = ref []
 let size () = Stack.length include_stack
 
-let locations_map : (string * Middle.Location.t option) String.Table.t =
-  String.Table.create ()
+let locations_map : (string * Middle.Location.t option) Dynarray.t =
+  Dynarray.create ()
 
-let new_file_start_position filename included_from =
+let new_file_start_position buf filename included_from =
   (* Lexing.position does not have a field to store `included_from` so we store
-     it in a global hashmap instead and put the hashmap key in `pos_fname`. The
-     keys are arbitrary unique strings. (Filenames are not good keys because the
-     same file could be included multiple times.)
+     it in a global array and put its index in `pos_fname`.
 
      Prefixing the key with NUL allows us to do a little optimization: when
-     `included_from` is None we don't need to access the hashmap and can store
-     the filename directly in `pos_fname`. Filenames never begin with NUL so
+     `included_from` is None we don't need to access the array and can store the
+     filename directly in `pos_fname`. Filenames never begin with NUL so
      `location_of_position` only needs to check the first character to know
-     whether to do a hashmap lookup. *)
-  if Option.is_none included_from then
-    {Lexing.pos_fname= filename; pos_lnum= 1; pos_bol= 0; pos_cnum= 0}
-  else
-    let key = "\u{0}" ^ string_of_int (Hashtbl.length locations_map) in
-    Hashtbl.add_exn locations_map ~key ~data:(filename, included_from);
-    {Lexing.pos_fname= key; pos_lnum= 1; pos_bol= 0; pos_cnum= 0}
+     whether to do a lookup. *)
+  let pos =
+    if Option.is_none included_from then
+      {Lexing.pos_fname= filename; pos_lnum= 1; pos_bol= 0; pos_cnum= 0}
+    else
+      let encode i =
+        let buf = Bytes.create 5 in
+        Bytes.set buf 0 Char.Ascii.min;
+        Bytes.set_int32_ne buf 1 (Int32.of_int i);
+        Bytes.to_string buf in
+      let key = encode (Dynarray.length locations_map) in
+      Dynarray.add_last locations_map (filename, included_from);
+      {Lexing.pos_fname= key; pos_lnum= 1; pos_bol= 0; pos_cnum= 0} in
+  buf.lex_start_p <- pos;
+  buf.lex_curr_p <- pos
 
 let location_of_position {Lexing.pos_fname; pos_lnum; pos_cnum; pos_bol} =
   let filename, included_from =
-    if Char.equal (String.get pos_fname 0) (Char.of_string "\u{0}") then
-      Hashtbl.find_exn locations_map pos_fname
+    if Char.equal (String.get pos_fname 0) Char.Ascii.min then
+      let decode s = Int32.to_int (Bytes.get_int32_ne (Bytes.of_string s) 1) in
+      Dynarray.get locations_map (decode pos_fname)
     else (pos_fname, None) in
   { Middle.Location.line_num= pos_lnum
   ; col_num= pos_cnum - pos_bol
@@ -43,43 +50,39 @@ let location_of_position {Lexing.pos_fname; pos_lnum; pos_cnum; pos_bol} =
   ; included_from }
 
 let location_span_of_positions (start_pos, end_pos) : Middle.Location_span.t =
-  { begin_loc= location_of_position start_pos
-  ; end_loc= location_of_position end_pos }
+  let begin_loc =
+    lexer_logger "start locating:";
+    lexer_pos_logger start_pos;
+    location_of_position start_pos in
+  let end_loc =
+    lexer_logger "end locating:";
+    lexer_pos_logger end_pos;
+    location_of_position end_pos in
+  {begin_loc; end_loc}
 
 let init buf filename =
-  Hashtbl.clear locations_map;
+  Dynarray.clear locations_map;
   Queue.clear comments;
   included_files := [];
   Stack.clear include_stack;
-  Stack.push include_stack buf;
-  buf.lex_start_p <- new_file_start_position filename None;
-  buf.lex_curr_p <- buf.lex_start_p
+  Stack.push buf include_stack;
+  new_file_start_position buf filename None
 
 let current_buffer () =
-  let buf = Stack.top_exn include_stack in
+  let buf = Stack.top include_stack in
   buf
 
 let current_location () =
   let buf = current_buffer () in
   location_span_of_positions (Lexing.lexeme_start_p buf, Lexing.lexeme_end_p buf)
 
-let pop_buffer () = Stack.pop_exn include_stack
-
-let update_start_positions pos =
-  Stack.iter ~f:(fun lexbuf -> lexbuf.lex_start_p <- pos) include_stack
+let pop_buffer () = Stack.pop include_stack
 
 let restore_prior_lexbuf () =
-  let lexbuf = pop_buffer () in
+  ignore (pop_buffer ());
   let old_lexbuf = current_buffer () in
-  (* to get printing includes right we need to make sure that the 'start' of our
-     next token is on the following line *)
-  let old_pos =
-    {old_lexbuf.lex_curr_p with pos_lnum= old_lexbuf.lex_curr_p.pos_lnum + 1}
-  in
   lexer_logger "Switching to older lexbuf";
   lexer_pos_logger old_lexbuf.lex_curr_p;
-  lexbuf.lex_curr_p <- old_pos;
-  lexbuf.lex_start_p <- old_pos;
   old_lexbuf
 
 let include_error msg = Syntax_error.include_error msg (current_location ())
@@ -100,16 +103,19 @@ let find_include_fs lookup_paths fname =
     | path :: rest_of_paths -> (
         try
           let full_path = path ^ "/" ^ fname in
-          (In_channel.create full_path |> Lexing.from_channel, full_path)
+          let ic = In_channel.open_bin full_path in
+          let lexbuf = Lexing.from_channel ic in
+          Gc.finalise (fun _ -> In_channel.close_noerr ic) lexbuf;
+          (lexbuf, full_path)
         with _ -> loop rest_of_paths) in
   loop lookup_paths
 
 let find_include_inmemory map fname =
-  match Map.find map fname with
+  match String.Map.find_opt fname map with
   | None ->
       let message =
         let pp_list ppf l =
-          let keys = Map.keys l in
+          let keys = String.Map.to_list l |> List.map ~f:fst in
           if List.is_empty keys then Fmt.string ppf "None"
           else Fmt.(list ~sep:comma string) ppf keys in
         Fmt.str
@@ -125,13 +131,23 @@ let find_include fname =
   | InMemory map -> find_include_inmemory map fname
 
 let try_get_new_lexbuf fname =
-  let lexbuf = Stack.top_exn include_stack in
-  let new_lexbuf, file = find_include fname in
-  lexer_logger ("opened " ^ file);
-  new_lexbuf.lex_start_p <-
-    new_file_start_position file
-    @@ Some (location_of_position lexbuf.lex_start_p);
-  new_lexbuf.lex_curr_p <- new_lexbuf.lex_start_p;
+  let prior_loc =
+    let lexbuf = Stack.top include_stack in
+    location_of_position lexbuf.lex_start_p in
+  let new_lexbuf =
+    let buf, file = find_include fname in
+    let buf =
+      if
+        Common.Files.is_stanfunctions file && List.mem ~set:!included_files file
+      then (
+        lexer_logger ("ignoring duplicated include  " ^ file);
+        Lexing.from_string "")
+      else (
+        lexer_logger ("opened " ^ file);
+        included_files := file :: !included_files;
+        buf) in
+    new_file_start_position buf file (Some prior_loc);
+    buf in
   let dup_exists {Middle.Location.filename; included_from; _} =
     let is_dup = String.equal filename in
     let rec go = function
@@ -139,11 +155,9 @@ let try_get_new_lexbuf fname =
       | Some {Middle.Location.filename; included_from; _} ->
           if is_dup filename then true else go included_from in
     go included_from in
-  if dup_exists (location_of_position lexbuf.lex_start_p) then
+  if dup_exists prior_loc then
     include_error (Printf.sprintf "File %s recursively included itself." fname);
-  Stack.push include_stack new_lexbuf;
-  update_start_positions new_lexbuf.lex_curr_p;
-  included_files := file :: !included_files;
+  Stack.push new_lexbuf include_stack;
   new_lexbuf
 
 let included_files () = List.rev !included_files

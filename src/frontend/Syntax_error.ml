@@ -1,4 +1,4 @@
-open Core
+open Std
 
 type styled_text = (unit, Format.formatter, unit) format
 
@@ -22,7 +22,7 @@ let pp_styled_text : styled_text Fmt.t =
  fun ppf format_string ->
   let ansi_stags former =
     let str_to_esc_seq styling =
-      match String.lowercase styling with
+      match String.lowercase_ascii styling with
       | "b" | "bold" -> Some "1"
       | "i" | "italic" -> Some "3"
       | "u" | "underline" -> Some "4"
@@ -57,11 +57,11 @@ let pp_styled_text : styled_text Fmt.t =
     let styles = Stack.create () in
     let print_current_styles () =
       let styles_until_reset =
-        Stack.to_list styles
-        |> List.take_while ~f:(String.( <> ) "0")
-        |> List.rev in
+        Stack.to_seq styles
+        |> Seq.take_while (Fun.negate @@ String.equal "0")
+        |> List.of_seq |> List.rev in
       let escs = String.concat ~sep:";" ("0" :: styles_until_reset) in
-      sprintf "\027[%sm" escs in
+      Printf.sprintf "\027[%sm" escs in
     Format.
       { former with
         mark_open_stag=
@@ -69,7 +69,7 @@ let pp_styled_text : styled_text Fmt.t =
           | String_tag s -> (
               match str_to_esc_seq s with
               | Some eseq ->
-                  Stack.push styles eseq;
+                  Stack.push eseq styles;
                   print_current_styles ()
               | None -> former.mark_open_stag (String_tag s))
           | stag -> former.mark_open_stag stag)

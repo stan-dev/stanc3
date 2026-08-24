@@ -1,5 +1,4 @@
-open Core
-open Core.Poly
+open Std
 open Middle
 open Mir_utils
 
@@ -154,13 +153,12 @@ let constr_literal_mismatch_message (dist_name : string) (num_str : string)
 let constr_mismatch_warning (constr : var_constraint_named) (arg : arg_info)
     ({args; name; loc} : dist_info) : (Location_span.t * string) option =
   let v =
-    match List.nth args (arg_number arg) with
+    match List.nth_opt args (arg_number arg) with
     | Some v -> v
     | None ->
-        let arg_fail_msg =
-          Printf.sprintf "Distribution %s at %s expects more arguments." name
-            (Location_span.to_string loc) in
-        Common.ICE.internal_compiler_error [%message arg_fail_msg] in
+        Common.ICE.(
+          internal_errorf "Distribution %s at %t expects more arguments."
+            [name; Location_span.pp $ loc]) [@coverage off] in
   match v with
   | Param (pname, trans), meta
     when transform_mismatch_constraint constr.constr trans ->
@@ -466,6 +464,6 @@ let distribution_warning (dist_info : dist_info) :
 (** Generate the distribution warnings for a program *)
 let distribution_warnings (distributions_list : dist_info Set.Poly.t) :
     (Location_span.t * string) Set.Poly.t =
-  union_map
+  Set.Poly.union_map
     ~f:(fun dist_info -> Set.Poly.of_list (distribution_warning dist_info))
     distributions_list

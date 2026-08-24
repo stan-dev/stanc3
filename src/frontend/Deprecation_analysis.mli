@@ -1,7 +1,7 @@
 (** Utilities for emitting deprecation warnings and finding proper replacements
     for deprecated features *)
 
-open Core
+open Std
 open Ast
 
 val expired : int * int -> bool

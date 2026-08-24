@@ -1,4 +1,4 @@
-  $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined bernoulli.stan
+  $ stanc --include-paths="." --auto-format --allow-undefined bernoulli.stan
 #include /pre/Columbia_copyright.stan
 #include /pre/license.stan
 
@@ -205,7 +205,7 @@ Warning in './/functions/bernoulli_likelihoods.stan', line 84, column 7, include
     Functions do not need to be declared before definition; all user defined
     function names are always in scope regardless of definition order.
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined binomial.stan
+  $ stanc --include-paths="." --auto-format --allow-undefined binomial.stan
 #include /pre/Columbia_copyright.stan
 #include /pre/license.stan
 
@@ -338,7 +338,7 @@ generated quantities {
 }
 
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined continuous.stan
+  $ stanc --include-paths="." --auto-format --allow-undefined continuous.stan
 #include /pre/Columbia_copyright.stan
 #include /pre/license.stan
 
@@ -763,7 +763,7 @@ Warning in './/functions/SSfunctions.stan', line 10, column 7, included from
     Functions do not need to be declared before definition; all user defined
     function names are always in scope regardless of definition order.
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined count.stan
+  $ stanc --include-paths="." --auto-format --allow-undefined count.stan
 #include /pre/Columbia_copyright.stan
 #include /pre/license.stan
 
@@ -976,7 +976,7 @@ generated quantities {
 }
 
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined jm.stan
+  $ stanc --include-paths="." --auto-format --allow-undefined jm.stan
 #include /pre/Columbia_copyright.stan
 #include /pre/Brilleman_copyright.stan
 #include /pre/license.stan
@@ -985,15 +985,10 @@ generated quantities {
 functions {
   #include /functions/common_functions.stan
   #include /functions/bernoulli_likelihoods.stan
-  
   #include /functions/binomial_likelihoods.stan
-  
   #include /functions/continuous_likelihoods.stan
-  
   #include /functions/count_likelihoods.stan
-  
   #include /functions/mvmer_functions.stan
-  
   #include /functions/jm_functions.stan
 }
 data {
@@ -1026,7 +1021,6 @@ data {
   //   e_global_prior_{scale,df}
   #include /data/hyperparameters_mvmer.stan
   #include /data/hyperparameters_event.stan
-  
   // declares: a_prior_{mean,scale,df}, a_global_prior_{scale,df}
   #include /data/hyperparameters_assoc.stan
 }
@@ -1061,7 +1055,6 @@ transformed parameters {
   // declares and defines: yBeta{1,2,3}, yAux{1,2,3}, yAuxMaximum,
   //   theta_L, bMat{1,2}
   #include /tparameters/tparameters_mvmer.stan
-  
   //---- Parameters for event submodel
   e_beta = make_beta(e_z_beta, e_prior_dist, e_prior_mean, e_prior_scale,
                      e_prior_df, e_global_prior_scale, e_global, e_local,
@@ -1078,9 +1071,8 @@ model {
   //---- Log likelihoods for longitudinal submodels
   #include /model/mvmer_lp.stan
   
+  //---- Log likelihood for event submodel (GK quadrature)
   {
-    //---- Log likelihood for event submodel (GK quadrature)
-    
     vector[nrow_e_Xq] e_eta_q; // eta for event submodel (at event and quad times)
     
     // Event submodel: linear predictor at event and quad times
@@ -1104,7 +1096,6 @@ model {
   //---- Log priors
   // increments target with mvmer priors
   #include /model/priors_mvmer.stan
-  
   beta_lp(e_z_beta, e_prior_dist, e_prior_scale, e_prior_df,
           e_global_prior_df, e_local, e_global, e_mix, e_ool, e_slab_df,
           e_caux);
@@ -1138,7 +1129,7 @@ Warning in './/functions/bernoulli_likelihoods.stan', line 84, column 7, include
     Functions do not need to be declared before definition; all user defined
     function names are always in scope regardless of definition order.
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined lm.stan
+  $ stanc --include-paths="." --auto-format --allow-undefined lm.stan
 #include /pre/Columbia_copyright.stan
 #include /pre/license.stan
 
@@ -1269,7 +1260,7 @@ generated quantities {
 }
 
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined mvmer.stan
+  $ stanc --include-paths="." --auto-format --allow-undefined mvmer.stan
 #include /pre/Columbia_copyright.stan
 #include /pre/Brilleman_copyright.stan
 #include /pre/license.stan
@@ -1278,13 +1269,9 @@ generated quantities {
 functions {
   #include /functions/common_functions.stan
   #include /functions/bernoulli_likelihoods.stan
-  
   #include /functions/binomial_likelihoods.stan
-  
   #include /functions/continuous_likelihoods.stan
-  
   #include /functions/count_likelihoods.stan
-  
   #include /functions/mvmer_functions.stan
 }
 data {
@@ -1340,7 +1327,7 @@ Warning in './/functions/bernoulli_likelihoods.stan', line 84, column 7, include
     Functions do not need to be declared before definition; all user defined
     function names are always in scope regardless of definition order.
 [exit 0]
-  $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined polr.stan
+  $ stanc --include-paths="." --auto-format --allow-undefined polr.stan
 #include /pre/Columbia_copyright.stan
 #include /pre/license.stan
 

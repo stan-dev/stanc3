@@ -8,13 +8,15 @@
     later be filled in with something like
     [type expr_with_meta = metadata expression] *)
 
-open Core
+open Std
+open Std.Compare
+open Std.Sexp_conv
 open Middle
 
 (** Our type for identifiers, on which we record a location *)
 type identifier =
   {name: string; id_loc: (Location_span.t[@sexp.opaque] [@compare.ignore])}
-[@@deriving sexp, hash, compare]
+[@@deriving sexp_of, compare]
 
 (** Indices for array access *)
 type 'e index =
@@ -23,13 +25,13 @@ type 'e index =
   | Upfrom of 'e
   | Downfrom of 'e
   | Between of 'e * 'e
-[@@deriving sexp, hash, compare, map, fold]
+[@@deriving sexp_of, compare, map, fold]
 
 (** Front-end function kinds *)
 type fun_kind =
   | StanLib of bool Fun_kind.suffix
   | UserDefined of bool Fun_kind.suffix
-[@@deriving compare, sexp, hash]
+[@@deriving compare, sexp_of]
 
 (** Expression shapes (used for both typed and untyped expressions, where we
     substitute untyped_expression or typed_expression for 'e *)
@@ -52,40 +54,40 @@ type ('e, 'f, 'p) expression =
   | Indexed of 'e * 'e index list
   | TupleProjection of 'e * int
   | TupleExpr of 'e list
-[@@deriving sexp, hash, compare, map, fold]
+[@@deriving sexp_of, compare, map, fold]
 
 type ('m, 'f, 'p) expr_with =
   {expr: (('m, 'f, 'p) expr_with, 'f, 'p) expression; emeta: 'm}
-[@@deriving sexp, compare, hash]
+[@@deriving sexp_of, compare]
 
 (** Untyped expressions, which have location_spans as meta-data *)
 type located_meta = {loc: (Location_span.t[@sexp.opaque] [@compare.ignore])}
-[@@deriving sexp, compare, hash]
+[@@deriving sexp_of, compare]
 
-type untyped_expression = (located_meta, unit, Core.Nothing.t) expr_with
-[@@deriving sexp, compare, hash]
+type untyped_expression = (located_meta, unit, Nothing.t) expr_with
+[@@deriving sexp_of, compare]
 
 (** Typed expressions also have meta-data after type checking: a location_span,
     as well as a type and an origin block (lub of the origin blocks of the
     identifiers in it) *)
 type typed_expr_meta =
-  { loc: (Location_span.t[@sexp.opaque] [@compare.ignore])
+  { loc: (Location_span.t[@sexp.opaque])
   ; ad_level: UnsizedType.autodifftype
   ; type_: UnsizedType.t }
-[@@deriving sexp, compare, hash]
+[@@deriving sexp_of]
 
 type typed_expression =
   ( typed_expr_meta
   , fun_kind
   , UnsizedType.t * UnsizedType.autodifftype )
   expr_with
-[@@deriving sexp, compare, hash]
+[@@deriving sexp_of]
 
 let expr_loc_lub exprs =
   match List.map ~f:(fun e -> e.emeta.loc) exprs with
   | [] -> Location_span.empty
   | [hd] -> hd
-  | x1 :: tl -> List.fold ~init:x1 ~f:Location_span.merge tl
+  | x1 :: tl -> List.fold_left ~init:x1 ~f:Location_span.merge tl
 
 (** Least upper bound of expression autodiff types *)
 let expr_ad_lub exprs =
@@ -93,7 +95,7 @@ let expr_ad_lub exprs =
 
 (** Assignment operators *)
 type assignmentoperator = Assign | OperatorAssign of Operator.t
-[@@deriving sexp, hash, compare]
+[@@deriving sexp_of, compare]
 
 (** Truncations *)
 type 'e truncation =
@@ -101,40 +103,40 @@ type 'e truncation =
   | TruncateUpFrom of 'e
   | TruncateDownFrom of 'e
   | TruncateBetween of 'e * 'e
-[@@deriving sexp, hash, compare, map, fold]
+[@@deriving sexp_of, compare, map, fold]
 
 (** Things that can be printed *)
 type 'e printable = PString of string | PExpr of 'e
-[@@deriving sexp, compare, map, hash, fold]
+[@@deriving sexp_of, compare, map, fold]
 
 type ('l, 'e) lvalue =
   | LVariable of identifier
   | LIndexed of 'l * 'e index list
   | LTupleProjection of 'l * int
-[@@deriving sexp, hash, compare, map, fold]
+[@@deriving sexp_of, compare, map, fold]
 
 type 'l lvalue_pack =
   | LValue of 'l
   | LTuplePack of
       { lvals: 'l lvalue_pack list
       ; loc: (Location_span.t[@sexp.opaque] [@compare.ignore]) }
-[@@deriving sexp, hash, compare, map, fold]
+[@@deriving sexp_of, compare, map, fold]
 
 type ('e, 'm) lval_with = {lval: (('e, 'm) lval_with, 'e) lvalue; lmeta: 'm}
-[@@deriving sexp, hash, compare, map, fold]
+[@@deriving sexp_of, compare, map, fold]
 
 type untyped_lval = (untyped_expression, located_meta) lval_with
-[@@deriving sexp, hash, compare, map, fold]
+[@@deriving sexp_of, compare, map, fold]
 
-type untyped_lval_pack = untyped_lval lvalue_pack [@@deriving sexp, compare]
+type untyped_lval_pack = untyped_lval lvalue_pack [@@deriving sexp_of, compare]
 
 type typed_lval = (typed_expression, typed_expr_meta) lval_with
-[@@deriving sexp, hash, compare, map, fold]
+[@@deriving sexp_of, map, fold]
 
-type typed_lval_pack = typed_lval lvalue_pack [@@deriving sexp, compare]
+type typed_lval_pack = typed_lval lvalue_pack [@@deriving sexp_of]
 
 type 'e variable = {identifier: identifier; initial_value: 'e option}
-[@@deriving sexp, hash, compare, map, fold]
+[@@deriving sexp_of, compare, map, fold]
 
 (** Statement shapes, where we substitute untyped_expression and
     untyped_statement for 'e and 's respectively to get untyped_statement and
@@ -181,7 +183,7 @@ type ('e, 's, 'l, 'f) statement =
           (Middle.UnsizedType.autodifftype * Middle.UnsizedType.t * identifier)
           list
       ; body: 's }
-[@@deriving sexp, hash, compare, map, fold]
+[@@deriving sexp_of, compare, map, fold]
 
 (** Statement return types which we will decorate statements with during type
     checking:
@@ -198,23 +200,23 @@ type statement_returntype =
   | Incomplete
   | NonlocalControlFlow (* is any break present *)
   | Complete
-[@@deriving sexp, hash, compare]
+[@@deriving sexp_of]
 
 type ('e, 'm, 'l, 'f) statement_with =
   {stmt: ('e, ('e, 'm, 'l, 'f) statement_with, 'l, 'f) statement; smeta: 'm}
-[@@deriving sexp, compare, hash]
+[@@deriving sexp_of, compare]
 
 (** Untyped statements, which have location_spans as meta-data *)
 type untyped_statement =
   (untyped_expression, located_meta, untyped_lval, unit) statement_with
-[@@deriving sexp, compare, hash]
+[@@deriving sexp_of, compare]
 
 let mk_untyped_statement ~stmt ~loc : untyped_statement = {stmt; smeta= {loc}}
 
 type stmt_typed_located_meta =
-  { loc: (Middle.Location_span.t[@sexp.opaque] [@compare.ignore])
+  { loc: (Middle.Location_span.t[@sexp.opaque])
   ; return_type: statement_returntype }
-[@@deriving sexp, compare, hash]
+[@@deriving sexp_of]
 
 (** Typed statements also have meta-data after type checking: a location_span,
     as well as a statement returntype to check that function bodies have the
@@ -225,7 +227,7 @@ type typed_statement =
   , typed_lval
   , fun_kind )
   statement_with
-[@@deriving sexp, compare, hash]
+[@@deriving sexp_of]
 
 let mk_typed_statement ~stmt ~loc ~return_type =
   {stmt; smeta= {loc; return_type}}
@@ -234,7 +236,7 @@ let mk_typed_statement ~stmt ~loc ~return_type =
     untyped statements for 's *)
 type 's block =
   {stmts: 's list; xloc: (Location_span.t[@sexp.opaque] [@compare.ignore])}
-[@@deriving sexp, hash, compare, map, fold]
+[@@deriving sexp_of, compare, map, fold]
 
 type comment_type =
   | LineComment of string * Location_span.t
@@ -254,15 +256,15 @@ type 's program =
   ; modelblock: 's block option
   ; generatedquantitiesblock: 's block option
   ; comments: (comment_type list[@sexp.opaque] [@compare.ignore]) }
-[@@deriving sexp, hash, compare, map, fold]
+[@@deriving sexp_of, compare, map, fold]
 
-let get_stmts = Option.value_map ~default:[] ~f:(fun x -> x.stmts)
+let get_stmts b = Option.value_map ~default:[] ~f:(fun x -> x.stmts) b
 
 (** Untyped programs (before type checking) *)
-type untyped_program = untyped_statement program [@@deriving sexp, compare]
+type untyped_program = untyped_statement program [@@deriving sexp_of, compare]
 
 (** Typed programs (after type checking) *)
-type typed_program = typed_statement program [@@deriving sexp, compare]
+type typed_program = typed_statement program [@@deriving sexp_of]
 
 (*========================== Helper functions ===============================*)
 
@@ -275,8 +277,8 @@ let rec untyped_expression_of_typed_expression
       { expr=
           map_expression untyped_expression_of_typed_expression ignore
             (fun _ ->
-              Common.ICE.internal_compiler_error
-                [%message "Promotion snuck through!"])
+              (Common.ICE.internal_error "Promotion snuck through!"
+               [@coverage off]))
             expr
       ; emeta= {loc= emeta.loc} }
 
@@ -310,15 +312,15 @@ let untyped_program_of_typed_program : typed_program -> untyped_program =
 (** in practice, we never want to fold over the FnKind or Promotion types so we
     shadow the [@@derived] fold_expression *)
 
-let fold_expression f acc e = fold_expression f Fn.const Fn.const acc e
-let fold_lval_with f acc lval = fold_lval_with f Fn.const acc lval
-let fold_statement f g h acc s = fold_statement f g h Fn.const acc s
+let fold_expression f acc e = fold_expression f Fun.const Fun.const acc e
+let fold_lval_with f acc lval = fold_lval_with f Fun.const acc lval
+let fold_statement f g h acc s = fold_statement f g h Fun.const acc s
 
 (** similarly for map *)
 
-let map_expression f e = map_expression f Fn.id Fn.id e
-let map_lval_with f lval = map_lval_with f Fn.id lval
-let map_statement f g h s = map_statement f g h Fn.id s
+let map_expression f e = map_expression f Fun.id Fun.id e
+let map_lval_with f lval = map_lval_with f Fun.id lval
+let map_statement f g h s = map_statement f g h Fun.id s
 
 let mk_typed_expression ~expr ~loc ~type_ ~ad_level =
   {expr; emeta= {loc; type_; ad_level}}
@@ -331,11 +333,17 @@ let rec expr_of_lvalue {lval; lmeta} =
       | LTupleProjection (l, i) -> TupleProjection (expr_of_lvalue l, i))
   ; emeta= lmeta }
 
+let exprs_in_index = function
+  | All -> []
+  | Single e -> [e]
+  | Upfrom e -> [e]
+  | Downfrom e -> [e]
+  | Between (e1, e2) -> [e1; e2]
+
 let rec extract_ids {expr; _} =
   match expr with
   | Variable id -> [id]
   | Promotion (e, _)
-   |Indexed (e, _)
    |Paren e
    |TupleProjection (e, _)
    |PrefixOp (_, e)
@@ -350,10 +358,13 @@ let rec extract_ids {expr; _} =
    |CondDistApp (_, _, es)
    |FunApp (_, _, es) ->
       List.concat_map ~f:extract_ids es
+  | Indexed (lv, ind) ->
+      List.concat_map ~f:extract_ids
+        (lv :: List.concat_map ~f:exprs_in_index ind)
   | IntNumeral _ | RealNumeral _ | ImagNumeral _ | GetTarget -> []
 
 let rec lvalue_of_expr_opt ({expr; emeta} : untyped_expression) =
-  let open Common.Let_syntax.Option in
+  let open Option.Syntax in
   let rec base_lvalue {expr; emeta} =
     let+ lval =
       match expr with
@@ -374,10 +385,9 @@ let rec lvalue_of_expr_opt ({expr; emeta} : untyped_expression) =
       let+ l = base_lvalue {expr; emeta} in
       LValue l
 
-let type_of_arguments :
-       (UnsizedType.autodifftype * UnsizedType.t * 'a) list
-    -> UnsizedType.argumentlist =
-  List.map ~f:(fun (a, t, _) -> (a, t))
+let type_of_arguments (l : (UnsizedType.autodifftype * UnsizedType.t * 'a) list)
+    : UnsizedType.argumentlist =
+  List.map ~f:(fun (a, t, _) -> (a, t)) l
 
 let get_loc_lvalue_pack lhs =
   match lhs with
