@@ -3893,7 +3893,7 @@ let%expect_test "vectorize: assignment loop with a gather (radon_county)" =
     {
       FnValidateSize__("y_hat", "N", N);
       vector[N] y_hat;
-      y_hat[1:N] = a[county];
+      y_hat[:] = a[county];
       target += normal_lupdf(y, y_hat, sigma);
     }
     |}]
@@ -3931,8 +3931,8 @@ let%expect_test "vectorize: assignment loop widens arithmetic" =
       vector[N] mu;
       FnValidateSize__("v", "N", N);
       vector[N] v;
-      mu[1:N] = (alpha + (beta * x));
-      v[1:N] = ((x .* w) ./ mu);
+      mu[:] = (alpha + (beta * x));
+      v[:] = ((x .* w) ./ mu);
       target += normal_lpdf(v, mu, promote(1, real, data));
     }
     |}]
@@ -3961,7 +3961,7 @@ let%expect_test "vectorize: assignment loop widens vectorized functions" =
     {
       FnValidateSize__("v", "N", N);
       vector[N] v;
-      v[1:N] = (exp(x) + sqrt(square(u)));
+      v[:] = (exp(x) + sqrt(square(u)));
       target += normal_lpdf(v, promote(0, real, data), promote(1, real, data));
     }
     |}]
@@ -4190,7 +4190,7 @@ let%expect_test "vectorize: array target takes an array right-hand side" =
     {
       FnValidateSize__("v", "N", N);
       array[real, N] v;
-      v[1:N] = exp(x);
+      v[:] = exp(x);
       target += normal_lpdf(v, promote(0, real, data), sigma);
     }
     |}]
@@ -4425,7 +4425,7 @@ let%expect_test "vectorize: elementwise power" =
     {
       FnValidateSize__("v", "N", N);
       vector[N] v;
-      v[1:N] = (x ^ w);
+      v[:] = (x ^ w);
       target += normal_lpdf(v, promote(0, real, data), sigma);
     }
     |}]
@@ -4454,7 +4454,7 @@ let%expect_test "vectorize: row_vector lanes" =
     {
       FnValidateSize__("v", "N", N);
       row_vector[N] v;
-      v[1:N] = (r * promote(2, real, data));
+      v[:] = (r * promote(2, real, data));
       target += normal_lpdf(v, promote(0, real, data), sigma);
     }
     |}]

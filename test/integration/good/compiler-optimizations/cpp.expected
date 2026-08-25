@@ -7510,8 +7510,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
           stan::math::fma(b_v_prev, v_prev,
             stan::model::rvalue(b_region, "b_region",
               stan::model::index_multi(region))),
-          "assigning variable b_state_hat",
-          stan::model::index_min_max(1, n_state));
+          "assigning variable b_state_hat");
         current_statement__ = 34;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(b_hat, b_state_hat,
                          sigma_state));
@@ -7782,8 +7781,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
           stan::math::fma(b_v_prev, v_prev,
             stan::model::rvalue(b_region, "b_region",
               stan::model::index_multi(region))),
-          "assigning variable b_state_hat",
-          stan::model::index_min_max(1, n_state));
+          "assigning variable b_state_hat");
         current_statement__ = 34;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(b_hat, b_state_hat,
                          sigma_state));
@@ -10711,8 +10709,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       auto sigma_e =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0,
           100, lp__);
-      Eigen::Matrix<local_scalar_t__,-1,1> y_hat =
-        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
+      Eigen::Matrix<local_scalar_t__,-1,1> y_hat;
       current_statement__ = 13;
       stan::model::assign(y_hat,
         stan::math::add(
@@ -10740,7 +10737,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
               stan::model::rvalue(c, "c", stan::model::index_multi(age_edu))),
             stan::model::rvalue(d, "d", stan::model::index_multi(state))),
           stan::model::rvalue(e, "e", stan::model::index_multi(region_full))),
-        "assigning variable y_hat", stan::model::index_min_max(1, N));
+        "assigning variable y_hat");
       {
         current_statement__ = 14;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(a,
@@ -10845,10 +10842,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       auto sigma_e =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0,
           100, lp__);
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> y_hat =
-        stan::math::var_value<Eigen::Matrix<double,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(N,
-                                                            std::numeric_limits<double>::quiet_NaN(
-                                                              )));
+      stan::math::var_value<Eigen::Matrix<double,-1,1>> y_hat;
       current_statement__ = 13;
       stan::model::assign(y_hat,
         stan::math::add(
@@ -10876,7 +10870,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
               stan::model::rvalue(c, "c", stan::model::index_multi(age_edu))),
             stan::model::rvalue(d, "d", stan::model::index_multi(state))),
           stan::model::rvalue(e, "e", stan::model::index_multi(region_full))),
-        "assigning variable y_hat", stan::model::index_min_max(1, N));
+        "assigning variable y_hat");
       {
         current_statement__ = 14;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(a,
@@ -11027,7 +11021,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
               stan::model::rvalue(c, "c", stan::model::index_multi(age_edu))),
             stan::model::rvalue(d, "d", stan::model::index_multi(state))),
           stan::model::rvalue(e, "e", stan::model::index_multi(region_full))),
-        "assigning variable y_hat", stan::model::index_min_max(1, N));
+        "assigning variable y_hat");
       if (emit_transformed_parameters__) {
         out__.write(y_hat);
       }
@@ -35294,8 +35288,7 @@ class off_small_model final : public model_base_crtp<off_small_model> {
             stan::model::index_multi(person)), time,
           stan::math::fma(stan::math::multiply(beta, time), treatment,
             stan::model::rvalue(lcm_sym23__, "lcm_sym23__",
-              stan::model::index_multi(person)))),
-        "assigning variable y_hat", stan::model::index_min_max(1, N));
+              stan::model::index_multi(person)))), "assigning variable y_hat");
       {
         current_statement__ = 13;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(mu_a1,
@@ -35408,8 +35401,7 @@ class off_small_model final : public model_base_crtp<off_small_model> {
             stan::model::index_multi(person)), time,
           stan::math::fma(stan::math::multiply(beta, time), treatment,
             stan::model::rvalue(lcm_sym14__, "lcm_sym14__",
-              stan::model::index_multi(person)))),
-        "assigning variable y_hat", stan::model::index_min_max(1, N));
+              stan::model::index_multi(person)))), "assigning variable y_hat");
       {
         current_statement__ = 13;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(mu_a1,
@@ -35535,8 +35527,7 @@ class off_small_model final : public model_base_crtp<off_small_model> {
             stan::model::index_multi(person)), time,
           stan::math::fma(stan::math::multiply(beta, time), treatment,
             stan::model::rvalue(lcm_sym11__, "lcm_sym11__",
-              stan::model::index_multi(person)))),
-        "assigning variable y_hat", stan::model::index_min_max(1, N));
+              stan::model::index_multi(person)))), "assigning variable y_hat");
       if (emit_transformed_parameters__) {
         out__.write(lcm_sym11__);
         out__.write(lcm_sym9__);
@@ -39569,8 +39560,7 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       auto sigma_y =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0,
           100, lp__);
-      Eigen::Matrix<local_scalar_t__,-1,1> y_hat =
-        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
+      Eigen::Matrix<local_scalar_t__,-1,1> y_hat;
       current_statement__ = 7;
       stan::model::assign(y_hat,
         stan::math::fma(
@@ -39580,7 +39570,7 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
             stan::model::rvalue(beta, "beta", stan::model::index_uni(1)),
             treatment,
             stan::model::rvalue(a, "a", stan::model::index_multi(pair)))),
-        "assigning variable y_hat", stan::model::index_min_max(1, N));
+        "assigning variable y_hat");
       {
         current_statement__ = 8;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(mu_a,
@@ -39666,10 +39656,7 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       auto sigma_y =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0,
           100, lp__);
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> y_hat =
-        stan::math::var_value<Eigen::Matrix<double,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(N,
-                                                            std::numeric_limits<double>::quiet_NaN(
-                                                              )));
+      stan::math::var_value<Eigen::Matrix<double,-1,1>> y_hat;
       current_statement__ = 7;
       stan::model::assign(y_hat,
         stan::math::fma(
@@ -39679,7 +39666,7 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
             stan::model::rvalue(beta, "beta", stan::model::index_uni(1)),
             treatment,
             stan::model::rvalue(a, "a", stan::model::index_multi(pair)))),
-        "assigning variable y_hat", stan::model::index_min_max(1, N));
+        "assigning variable y_hat");
       {
         current_statement__ = 8;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(mu_a,
@@ -39790,7 +39777,7 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
             stan::model::rvalue(beta, "beta", stan::model::index_uni(1)),
             treatment,
             stan::model::rvalue(a, "a", stan::model::index_multi(pair)))),
-        "assigning variable y_hat", stan::model::index_min_max(1, N));
+        "assigning variable y_hat");
       if (emit_transformed_parameters__) {
         out__.write(y_hat);
       }
@@ -48786,13 +48773,13 @@ class vectorize_loops_model final : public model_base_crtp<vectorize_loops_model
           Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
         current_statement__ = 10;
         stan::model::assign(mu, stan::math::fma(beta, x, alpha),
-          "assigning variable mu", stan::model::index_min_max(1, N));
+          "assigning variable mu");
         current_statement__ = 11;
         stan::model::assign(shrunk,
           stan::math::add(
             stan::model::rvalue(a, "a", stan::model::index_multi(county)),
             stan::math::divide(mu, static_cast<double>(2))),
-          "assigning variable shrunk", stan::model::index_min_max(1, N));
+          "assigning variable shrunk");
         current_statement__ = 12;
         lp_accum__.add(stan::math::normal_lpdf<false>(y, mu, sigma));
         current_statement__ = 13;
@@ -48874,13 +48861,13 @@ class vectorize_loops_model final : public model_base_crtp<vectorize_loops_model
                                                                 )));
         current_statement__ = 10;
         stan::model::assign(mu, stan::math::fma(beta, x, alpha),
-          "assigning variable mu", stan::model::index_min_max(1, N));
+          "assigning variable mu");
         current_statement__ = 11;
         stan::model::assign(shrunk,
           stan::math::add(
             stan::model::rvalue(a, "a", stan::model::index_multi(county)),
             stan::math::divide(mu, static_cast<double>(2))),
-          "assigning variable shrunk", stan::model::index_min_max(1, N));
+          "assigning variable shrunk");
         current_statement__ = 12;
         lp_accum__.add(stan::math::normal_lpdf<false>(y, mu, sigma));
         current_statement__ = 13;

@@ -835,11 +835,17 @@ let vectorize_loops (mir : Program.Typed.t) =
     let* () =
       Option.some_if (UnsizedType.equal v_type (Expr.Typed.type_of rhs')) ()
     in
+    let lhs_index =
+      if
+        Expr.Typed.equal lower Expr.Helpers.loop_bottom
+        && Option.exists
+             (fun (_, size) -> Option.exists (Expr.Typed.equal upper) size)
+             (String.Map.find_opt v env)
+      then Index.All
+      else Index.Between (lower, upper) in
     Some
       (Stmt.Pattern.Assignment
-         ( (LVariable v, [Index.Between (lower, upper)])
-         , Expr.Typed.type_of rhs'
-         , rhs' )) in
+         ((LVariable v, [lhs_index]), Expr.Typed.type_of rhs', rhs')) in
   let vectorize_for env ~loopvar ~lower ~upper body =
     let open Stdlib.Option.Syntax in
     let* stmt = singleton body in
