@@ -734,7 +734,6 @@ let vectorize_loops (mir : Program.Typed.t) =
     match Operator.of_string_opt name with
     | Some Times -> Some (Operator.to_string EltTimes)
     | Some Divide -> Some (Operator.to_string EltDivide)
-    | Some Pow -> Some (Operator.to_string EltPow)
     | _ -> None in
   let widen env ~loopvar ~lower ~upper rhs =
     let open Stdlib.Option.Syntax in

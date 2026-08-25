@@ -4399,3 +4399,105 @@ let%expect_test "vectorize: generated quantity names are not trusted sizes" =
       target += std_normal_lupdf(x[1:2]);
     }
     |}]
+
+let%expect_test "vectorize: elementwise power" =
+  print_vectorized
+    {|
+      data {
+        int<lower=0> N;
+        vector[N] x;
+        vector[N] w;
+      }
+      parameters {
+        real<lower=0> sigma;
+      }
+      model {
+        vector[N] v;
+        for (n in 1 : N) {
+          v[n] = x[n] ^ w[n];
+        }
+        target += normal_lpdf(v | 0, sigma);
+      }
+      |};
+  [%expect
+    {|
+    real sigma;
+    {
+      FnValidateSize__("v", "N", N);
+      vector[N] v;
+      v[1:N] = (x ^ w);
+      target += normal_lpdf(v, promote(0, real, data), sigma);
+    }
+    |}]
+
+let%expect_test "vectorize: row_vector lanes" =
+  print_vectorized
+    {|
+      data {
+        int<lower=0> N;
+        row_vector[N] r;
+      }
+      parameters {
+        real<lower=0> sigma;
+      }
+      model {
+        row_vector[N] v;
+        for (n in 1 : N) {
+          v[n] = r[n] * 2;
+        }
+        target += normal_lpdf(v | 0, sigma);
+      }
+      |};
+  [%expect
+    {|
+    real sigma;
+    {
+      FnValidateSize__("v", "N", N);
+      row_vector[N] v;
+      v[1:N] = (r * promote(2, real, data));
+      target += normal_lpdf(v, promote(0, real, data), sigma);
+    }
+    |}]
+
+let%expect_test "vectorize bail: side effect inside an assignment" =
+  print_vectorized
+    {|
+      functions {
+        real bump_lp(real x) {
+          target += x;
+          return x;
+        }
+      }
+      data {
+        int<lower=0> N;
+        vector[N] x;
+      }
+      parameters {
+        real<lower=0> sigma;
+      }
+      model {
+        vector[N] v;
+        for (n in 1 : N) {
+          v[n] = x[n] + bump_lp(sigma);
+        }
+        target += normal_lpdf(v | 0, sigma);
+      }
+      |};
+  [%expect
+    {|
+    real bump_lp(real x) {
+      {
+        target += x;
+        return x;
+      }
+    }
+    real sigma;
+    {
+      FnValidateSize__("v", "N", N);
+      vector[N] v;
+      for(n in 1:N) {
+        v[n] = (x[n] + bump_lp(sigma));
+      }
+      target += normal_lpdf(v, promote(0, real, data), sigma);
+    }
+    |}]
