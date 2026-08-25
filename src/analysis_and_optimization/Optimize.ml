@@ -720,11 +720,15 @@ let vectorize_loops (mir : Program.Typed.t) =
     | Some Divide -> Some (Operator.to_string EltDivide)
     | Some Pow -> Some (Operator.to_string EltPow)
     | _ -> None in
-  let widen sizes ~loopvar ~lower ~upper rhs =
+  let mentions_written written e =
+    not (Set.Poly.is_empty (Set.Poly.inter written (expr_var_names_set e)))
+  in
+  let widen sizes ~written ~loopvar ~lower ~upper rhs =
     let open Option.Syntax in
     let rec widen_expr (e : Expr.Typed.t) =
       if not (varies_with loopvar e) then
-        if cannot_duplicate_expr e then None else Some e
+        if cannot_duplicate_expr e || mentions_written written e then None
+        else Some e
       else if not (UnsizedType.is_scalar_type (Expr.Typed.type_of e)) then None
       else
         match e.pattern with
@@ -732,14 +736,16 @@ let vectorize_loops (mir : Program.Typed.t) =
           when v = loopvar ->
             Some (slice sizes ~lower ~upper base)
         | Indexed
-            ( ({pattern= Var _; _} as base)
+            ( ({pattern= Var b; _} as base)
             , [ Single
                   { pattern=
                       Indexed
-                        ( ({pattern= Var _; _} as idx)
+                        ( ({pattern= Var i; _} as idx)
                         , [Single {pattern= Var v; _}] )
                   ; _ } ] )
-          when v = loopvar ->
+          when v = loopvar
+               && (not (Set.Poly.mem b written))
+               && not (Set.Poly.mem i written) ->
             Some
               (Expr.Helpers.add_int_index base
                  (Index.MultiIndex (slice sizes ~lower ~upper idx)))
@@ -768,7 +774,7 @@ let vectorize_loops (mir : Program.Typed.t) =
     | Block (_ :: _ as stmts) | SList (_ :: _ as stmts) -> Some stmts
     | Assignment _ | TargetPE _ | Profile _ -> Some [body]
     | _ -> None in
-  let vectorize_density sizes ~loopvar ~lower ~upper stmt =
+  let vectorize_density sizes ~written ~loopvar ~lower ~upper stmt =
     let open Option.Syntax in
     let* e, name, suffix, mem, args =
       match stmt.Stmt.pattern with
@@ -784,10 +790,12 @@ let vectorize_loops (mir : Program.Typed.t) =
       List.map args ~f:(fun arg ->
           if not (varies_with loopvar arg) then
             match Expr.Typed.type_of arg with
-            | (UInt | UReal | UComplex) when not (cannot_duplicate_expr arg) ->
+            | (UInt | UReal | UComplex)
+              when (not (cannot_duplicate_expr arg))
+                   && not (mentions_written written arg) ->
                 Some arg
             | _ -> None
-          else widen sizes ~loopvar ~lower ~upper arg)
+          else widen sizes ~written ~loopvar ~lower ~upper arg)
       |> Option.all in
     match return_type name args' with
     | Some (ReturnType UReal) ->
@@ -797,7 +805,7 @@ let vectorize_loops (mir : Program.Typed.t) =
                { pattern= FunApp (StanLib (name, suffix, mem), args')
                ; meta= {e.meta with adlevel= adlevel_over args'} })
     | _ -> None in
-  let vectorize_assign sizes ~loopvar ~lower ~upper stmt =
+  let vectorize_assign sizes ~written ~loopvar ~lower ~upper stmt =
     let open Option.Syntax in
     (* The generated for statement re-evaluates its bounds every iteration. *)
     let* v, v_type, rhs =
@@ -807,7 +815,7 @@ let vectorize_loops (mir : Program.Typed.t) =
              && not (List.exists ~f:(varies_with v) [rhs; lower; upper]) ->
           Some (v, v_type, rhs)
       | _ -> None in
-    let* rhs' = widen sizes ~loopvar ~lower ~upper rhs in
+    let* rhs' = widen sizes ~written ~loopvar ~lower ~upper rhs in
     let lhs_index =
       if
         Expr.Typed.equal lower Expr.Helpers.loop_bottom
@@ -817,19 +825,22 @@ let vectorize_loops (mir : Program.Typed.t) =
     Option.some_if
       (UnsizedType.equal v_type (Expr.Typed.type_of rhs'))
       (Stmt.Pattern.Assignment ((LVariable v, [lhs_index]), v_type, rhs')) in
-  let rec vectorize_statement sizes ~loopvar ~lower ~upper stmt =
+  let rec vectorize_statement sizes ~written ~loopvar ~lower ~upper stmt =
     let open Option.Syntax in
     match stmt.Stmt.pattern with
-    | TargetPE _ -> vectorize_density sizes ~loopvar ~lower ~upper stmt
-    | Assignment _ -> vectorize_assign sizes ~loopvar ~lower ~upper stmt
+    | TargetPE _ -> vectorize_density sizes ~written ~loopvar ~lower ~upper stmt
+    | Assignment _ ->
+        vectorize_assign sizes ~written ~loopvar ~lower ~upper stmt
     | Profile (name, stmts) ->
-        let* stmts' = vectorize_all sizes ~loopvar ~lower ~upper stmts in
+        let* stmts' =
+          vectorize_all sizes ~written ~loopvar ~lower ~upper stmts in
         Some (Stmt.Pattern.Profile (name, stmts'))
     | _ -> None
-  and vectorize_all sizes ~loopvar ~lower ~upper stmts =
+  and vectorize_all sizes ~written ~loopvar ~lower ~upper stmts =
     let open Option.Syntax in
     let* patterns =
-      List.map stmts ~f:(vectorize_statement sizes ~loopvar ~lower ~upper)
+      List.map stmts
+        ~f:(vectorize_statement sizes ~written ~loopvar ~lower ~upper)
       |> Option.all in
     Some
       (List.map2 stmts patterns ~f:(fun (stmt : Stmt.Located.t) pattern ->
@@ -842,26 +853,82 @@ let vectorize_loops (mir : Program.Typed.t) =
         | Assignment (lhs, _, _) -> Stmt.Helpers.lhs_variable lhs :: names
         | _ -> names)
       ~init:[] [stmt] in
-  let read_names stmt =
-    fold_stmts
-      ~take_expr:(fun names e -> Set.Poly.union names (expr_var_names_set e))
-      ~take_stmt:(fun names _ -> names)
-      ~init:Set.Poly.empty [stmt] in
-  let statements_do_not_interfere stmts =
-    let written_set =
-      Set.Poly.of_list (List.concat_map stmts ~f:written_names) in
-    let read_set =
-      List.fold_left stmts ~init:Set.Poly.empty ~f:(fun reads stmt ->
-          Set.Poly.union reads (read_names stmt)) in
-    Set.Poly.is_empty (Set.Poly.inter written_set read_set) in
-  let vectorize_for sizes ~loopvar ~lower ~upper body =
+  let assigns_var name (stmt : Stmt.Located.t) =
+    match stmt.pattern with
+    | Assignment (lhs, _, _) -> Stmt.Helpers.lhs_variable lhs = name
+    | _ -> false in
+  let inlinable v decl_type e rest =
+    UnsizedType.is_scalar_type (Type.to_unsized decl_type)
+    && (not (cannot_duplicate_expr e))
+    && Set.Poly.for_all
+         ~f:(fun name -> not (List.exists rest ~f:(assigns_var name)))
+         (Set.Poly.add v (expr_var_names_set e)) in
+  (* [real mu = e;] substitutes into the rest of the body, as long as nothing
+     later reassigns mu or writes what e reads. *)
+  let inline_temps stmts =
+    let rec inline_statements substitution kept stmts =
+      match stmts with
+      | [] -> List.rev kept
+      | {Stmt.pattern= Decl {decl_id; decl_type; initialize= Default; _}; _}
+        :: {Stmt.pattern= Assignment ((LVariable v, []), _, e); _}
+        :: rest
+        when v = decl_id
+             && inlinable v decl_type (subst_expr substitution e) rest ->
+          inline_statements
+            (String.Map.add substitution ~key:v
+               ~data:(subst_expr substitution e))
+            kept rest
+      | stmt :: rest ->
+          inline_statements substitution
+            (subst_stmt substitution stmt :: kept)
+            rest in
+    inline_statements String.Map.empty [] stmts in
+  let rec only_adds_to_target (stmt : Stmt.Located.t) =
+    match stmt.pattern with
+    | TargetPE _ -> true
+    | IfElse (_, a, b) ->
+        only_adds_to_target a
+        && Option.fold ~none:true ~some:only_adds_to_target b
+    | Block stmts | SList stmts -> List.for_all stmts ~f:only_adds_to_target
+    | _ -> false in
+  let vectorize_for sizes ~loopvar ~lower ~upper (body : Stmt.Located.t) =
     let open Option.Syntax in
     let* stmts = loop_body_statements body in
-    let* stmts' =
-      if statements_do_not_interfere stmts then
-        vectorize_all sizes ~loopvar ~lower ~upper stmts
-      else None in
-    Some (Stmt.Pattern.SList stmts') in
+    let* stmts =
+      match inline_temps stmts with [] -> None | stmts -> Some stmts in
+    (* Anything the body writes is only safe to read at the loop index. An
+       invariant subtree or a gather would see a container the loop has filled
+       in part, whichever statement wrote it. *)
+    let written = Set.Poly.of_list (List.concat_map stmts ~f:written_names) in
+    match vectorize_all sizes ~written ~loopvar ~lower ~upper stmts with
+    | Some stmts' -> Some (Stmt.Pattern.SList stmts')
+    | None when List.for_all stmts ~f:only_adds_to_target -> (
+        (* Target increments commute, so the ones that vectorize move out and
+           the rest keep the loop. This splits a truncated tilde into its
+           density term and the bounds check. *)
+        let vectorized, residual =
+          List.fold_left stmts ~init:([], [])
+            ~f:(fun (vectorized, residual) (stmt : Stmt.Located.t) ->
+              match
+                vectorize_statement sizes ~written ~loopvar ~lower ~upper stmt
+              with
+              | Some pattern -> ({stmt with pattern} :: vectorized, residual)
+              | None -> (vectorized, stmt :: residual)) in
+        match vectorized with
+        | [] -> None
+        | _ ->
+            Some
+              (Stmt.Pattern.SList
+                 (List.rev vectorized
+                 @ [ { body with
+                       pattern=
+                         For
+                           { loopvar
+                           ; lower
+                           ; upper
+                           ; body= {body with pattern= Block (List.rev residual)}
+                           } } ])))
+    | None -> None in
   let assigned_names stmt = Set.Poly.of_list (written_names stmt) in
   let invalidate_sizes sizes assigned =
     String.Map.filter sizes ~f:(fun _ size ->

@@ -17,7 +17,9 @@ val one_step_loop_unrolling : Program.Typed.t -> Program.Typed.t
 val vectorize_loops : Program.Typed.t -> Program.Typed.t
 (** Rewrite a loop whose body is scalar density statements and elementwise
     assignments into the vectorized statements, when the Stan Math signatures
-    have them. Loops that do not match are left unchanged *)
+    have them. Scalar temporaries in the body are inlined first. A body that
+    only adds to the target keeps whatever does not vectorize in a residual
+    loop. Loops that do not match are left unchanged *)
 
 val list_collapsing : Program.Typed.t -> Program.Typed.t
 (** Remove redundant SList constructors from the Mir that might have been
