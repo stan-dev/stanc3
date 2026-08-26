@@ -20,13 +20,10 @@ let%expect_test "stan2mir returns transformed and optimized MIR" =
 
 let%expect_test "stan2mir reports frontend errors" =
   let code = "model { target += missing; }" in
-  match
-    Driver.Entry.stan2mir "entry_test_model" (`Code code) Driver.Flags.default
-      (fun _ -> ())
-  with
-  | Ok _ -> print_endline "unexpected success"
-  | Error error ->
-      print_endline (Test_utils.error_to_string ~code error);
+  match compile_mir code Driver.Flags.default with
+  | _ -> print_endline "unexpected success"
+  | exception Failure error ->
+      print_endline error;
       [%expect
         {|
         Semantic error in 'string', line 1, column 18 to column 25:
