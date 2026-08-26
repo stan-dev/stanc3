@@ -45,6 +45,7 @@ type other_output =
   | Warnings of Warnings.t list
 
 type compilation_result = (string, Errors.t) result
+type mir_compilation_result = (Program.Typed.t, Errors.t) result
 
 let debug_output_mir output mir = function
   | Flags.Off -> ()
@@ -52,8 +53,8 @@ let debug_output_mir output mir = function
       output (DebugOutput (fmt_sexp (Middle.Program.Typed.sexp_of_t mir)))
   | Pretty -> output (DebugOutput (Fmt.str "%a" Program.Typed.pp mir))
 
-let stan2cpp model_name model (flags : Flags.t) (output : other_output -> unit)
-    : compilation_result =
+let stan2mir model_name model (flags : Flags.t) (output : other_output -> unit)
+    : mir_compilation_result =
   let open Result.Syntax in
   reset_mutable_states model_name flags;
   if flags.version then output (Version (Fmt.str "%s" version));
@@ -138,6 +139,12 @@ let stan2cpp model_name model (flags : Flags.t) (output : other_output -> unit)
             Fmt.(list string)
             (Memory_patterns.get_warnings ())));
   debug_output_mir output opt_mir flags.debug_settings.print_optimized_mir;
+  opt_mir
+
+let stan2cpp model_name model (flags : Flags.t) (output : other_output -> unit)
+    : compilation_result =
+  let open Result.Syntax in
+  let+ opt_mir = stan2mir model_name model flags output in
   let cpp =
     Lower_program.lower_program
       ~standalone_functions:(flags.functions_only || flags.standalone_functions)
