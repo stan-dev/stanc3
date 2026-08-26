@@ -4,6 +4,7 @@
   std
   fmt
   frontend
+  driver
   stan_math_backend
   middle
   analysis_and_optimization)
