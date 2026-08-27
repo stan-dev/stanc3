@@ -672,7 +672,7 @@ let cannot_remove_expr (e : Expr.Typed.t) = expr_any can_side_effect_top_expr e
 
 (* Rewrites e.g. [for (n in 1:N) target += normal_lpdf(y[n] | mu[n], sigma)] to
    [target += normal_lpdf(y | mu, sigma)], and [for (n in 1:N) mu[n] = alpha +
-   beta * x[n]] to [mu[1:N] = alpha + beta * x]. Tilde statements have the same
+   beta * x[n]] to [mu[:] = alpha + beta * x]. Tilde statements have the same
    MIR shape as target increments, so they are covered too.
 
    An expression widens when every loop-varying node is [x[n]], [x[idx[n]]], or
@@ -682,40 +682,24 @@ let cannot_remove_expr (e : Expr.Typed.t) = expr_any can_side_effect_top_expr e
    declaration. Loops that do not match are left unchanged. *)
 let vectorize_loops (mir : Program.Typed.t) =
   let outer_size st = List.hd (SizedType.get_dims st) in
-  let global_env =
-    List.map mir.input_vars ~f:(fun (name, _, st) ->
-        (name, (SizedType.to_unsized st, outer_size st)))
-    @ List.filter_map mir.output_vars ~f:(fun (name, _, ov) ->
-        match ov.Program.out_block with
-        | GeneratedQuantities -> None
-        | Parameters | TransformedParameters ->
-            let st = ov.out_constrained_st in
-            Some (name, (SizedType.to_unsized st, outer_size st)))
-    @ List.filter_map mir.prepare_data ~f:(fun stmt ->
-        match stmt.Stmt.pattern with
-        | Decl {decl_id; decl_type= Type.Sized st; _} ->
-            Some (decl_id, (SizedType.to_unsized st, outer_size st))
-        | _ -> None)
-    |> String.Map.of_list in
-  let track_decl env = function
+  let track_decl sizes = function
     | Stmt.Pattern.Decl {decl_id; decl_type; _} ->
-        let size =
-          match decl_type with
+        Option.value_map
+          (match decl_type with
           | Type.Sized st -> outer_size st
-          | Unsized _ -> None in
-        String.Map.add env ~key:decl_id ~data:(Type.to_unsized decl_type, size)
-    | _ -> env in
-  let spans_declaration env ~lower ~upper (base : Expr.Typed.t) =
+          | Unsized _ -> None)
+          ~default:(String.Map.remove decl_id sizes)
+          ~f:(fun size -> String.Map.add sizes ~key:decl_id ~data:size)
+    | _ -> sizes in
+  let spans_declaration sizes ~lower ~upper (base : Expr.Typed.t) =
     Expr.Typed.equal lower Expr.Helpers.loop_bottom
     &&
     match base.pattern with
     | Var v ->
-        Option.exists
-          (fun (_, size) -> Option.exists (Expr.Typed.equal upper) size)
-          (String.Map.find_opt v env)
+        Option.exists (Expr.Typed.equal upper) (String.Map.find_opt v sizes)
     | _ -> false in
-  let slice env ~lower ~upper (base : Expr.Typed.t) =
-    if spans_declaration env ~lower ~upper base then base
+  let slice sizes ~lower ~upper (base : Expr.Typed.t) =
+    if spans_declaration sizes ~lower ~upper base then base
     else Expr.Helpers.add_int_index base (Index.Between (lower, upper)) in
   let return_type name args =
     let arg_types = List.map ~f:Expr.Typed.fun_arg args in
@@ -735,11 +719,11 @@ let vectorize_loops (mir : Program.Typed.t) =
     | Some Times -> Some (Operator.to_string EltTimes)
     | Some Divide -> Some (Operator.to_string EltDivide)
     | _ -> None in
-  let widen env ~loopvar ~lower ~upper rhs =
+  let widen sizes ~loopvar ~lower ~upper rhs =
     let open Stdlib.Option.Syntax in
-    let rec go (e : Expr.Typed.t) =
+    let rec widen_expr (e : Expr.Typed.t) =
       if not (varies_with loopvar e) then
-        if cannot_remove_expr e then None else Some e
+        if cannot_duplicate_expr e then None else Some e
       else
         let scalar_lane =
           match Expr.Typed.type_of e with UInt | UReal -> true | _ -> false
@@ -747,7 +731,7 @@ let vectorize_loops (mir : Program.Typed.t) =
         match e.pattern with
         | Indexed (({pattern= Var _; _} as base), [Single {pattern= Var v; _}])
           when v = loopvar && scalar_lane ->
-            Some (slice env ~lower ~upper base)
+            Some (slice sizes ~lower ~upper base)
         | Indexed
             ( ({pattern= Var _; _} as base)
             , [ Single
@@ -759,9 +743,9 @@ let vectorize_loops (mir : Program.Typed.t) =
           when v = loopvar && scalar_lane ->
             Some
               (Expr.Helpers.add_int_index base
-                 (Index.MultiIndex (slice env ~lower ~upper idx)))
+                 (Index.MultiIndex (slice sizes ~lower ~upper idx)))
         | FunApp (StanLib (name, FnPlain, mem), args) when scalar_lane ->
-            let* args' = List.map args ~f:go |> Option.all in
+            let* args' = List.map args ~f:widen_expr |> Option.all in
             let widened name' =
               match return_type name' args' with
               | Some (ReturnType ((UVector | URowVector | UArray _) as t)) ->
@@ -779,13 +763,13 @@ let vectorize_loops (mir : Program.Typed.t) =
                 { pattern= FunApp (StanLib (name', FnPlain, mem), args')
                 ; meta= {e.meta with type_; adlevel= adlevel_over args'} }
         | _ -> None in
-    go rhs in
-  let singleton (body : Stmt.Located.t) =
+    widen_expr rhs in
+  let loop_body_statements (body : Stmt.Located.t) =
     match body.Stmt.pattern with
-    | Block [s] | SList [s] -> Some s
-    | Assignment _ | TargetPE _ -> Some body
+    | Block stmts | SList stmts -> Some stmts
+    | Assignment _ | TargetPE _ -> Some [body]
     | _ -> None in
-  let vectorize_density env ~loopvar ~lower ~upper stmt =
+  let vectorize_density sizes ~loopvar ~lower ~upper stmt =
     let open Stdlib.Option.Syntax in
     let* e, name, suffix, mem, args =
       match stmt.Stmt.pattern with
@@ -801,10 +785,10 @@ let vectorize_loops (mir : Program.Typed.t) =
       List.map args ~f:(fun arg ->
           if not (varies_with loopvar arg) then
             match Expr.Typed.type_of arg with
-            | (UInt | UReal | UComplex) when not (cannot_remove_expr arg) ->
+            | (UInt | UReal | UComplex) when not (cannot_duplicate_expr arg) ->
                 Some arg
             | _ -> None
-          else widen env ~loopvar ~lower ~upper arg)
+          else widen sizes ~loopvar ~lower ~upper arg)
       |> Option.all in
     let* () =
       match return_type name args' with
@@ -815,13 +799,13 @@ let vectorize_loops (mir : Program.Typed.t) =
          Expr.
            { pattern= FunApp (StanLib (name, suffix, mem), args')
            ; meta= {e.meta with adlevel= adlevel_over args'} }) in
-  let vectorize_assign env ~loopvar ~lower ~upper stmt =
+  let vectorize_assign sizes ~loopvar ~lower ~upper stmt =
     let open Stdlib.Option.Syntax in
-    let* v, rhs =
+    let* v, v_type, rhs =
       match stmt.Stmt.pattern with
-      | Assignment ((LVariable v, [Single {pattern= Var i; _}]), _, rhs)
+      | Assignment ((LVariable v, [Single {pattern= Var i; _}]), v_type, rhs)
         when i = loopvar ->
-          Some (v, rhs)
+          Some (v, v_type, rhs)
       | _ -> None in
     (* The generated for statement re-evaluates its bounds every iteration. *)
     let reads_v e = Set.Poly.mem v (expr_var_names_set e) in
@@ -830,53 +814,106 @@ let vectorize_loops (mir : Program.Typed.t) =
         ((not (reads_v rhs)) && (not (reads_v lower)) && not (reads_v upper))
         () in
     let* () = Option.some_if (varies_with loopvar rhs) () in
-    let* rhs' = widen env ~loopvar ~lower ~upper rhs in
-    let* v_type, _ = String.Map.find_opt v env in
+    let* rhs' = widen sizes ~loopvar ~lower ~upper rhs in
     let* () =
       Option.some_if (UnsizedType.equal v_type (Expr.Typed.type_of rhs')) ()
     in
     let lhs_index =
       if
         Expr.Typed.equal lower Expr.Helpers.loop_bottom
-        && Option.exists
-             (fun (_, size) -> Option.exists (Expr.Typed.equal upper) size)
-             (String.Map.find_opt v env)
+        && Option.exists (Expr.Typed.equal upper) (String.Map.find_opt v sizes)
       then Index.All
       else Index.Between (lower, upper) in
-    Some
-      (Stmt.Pattern.Assignment
-         ((LVariable v, [lhs_index]), Expr.Typed.type_of rhs', rhs')) in
-  let vectorize_for env ~loopvar ~lower ~upper body =
+    Some (Stmt.Pattern.Assignment ((LVariable v, [lhs_index]), v_type, rhs'))
+  in
+  let vectorize_statement sizes ~loopvar ~lower ~upper stmt =
+    match stmt.Stmt.pattern with
+    | TargetPE _ -> vectorize_density sizes ~loopvar ~lower ~upper stmt
+    | Assignment _ -> vectorize_assign sizes ~loopvar ~lower ~upper stmt
+    | _ -> None in
+  let statements_do_not_interfere stmts =
+    let assigned =
+      List.filter_map stmts ~f:(fun stmt ->
+          match stmt.Stmt.pattern with
+          | Assignment (lhs, _, _) -> Some (Stmt.Helpers.lhs_variable lhs)
+          | TargetPE _ -> Some "target"
+          | _ -> None) in
+    let assigned_set = Set.Poly.of_list assigned in
+    let read_set =
+      List.fold_left stmts ~init:Set.Poly.empty ~f:(fun reads stmt ->
+          Set.Poly.fold (stmt_rhs stmt.Stmt.pattern) ~init:reads
+            ~f:(fun expr reads ->
+              Set.Poly.union reads (expr_var_names_set expr))) in
+    List.length assigned = Set.Poly.cardinal assigned_set
+    && Set.Poly.is_empty (Set.Poly.inter assigned_set read_set) in
+  let vectorize_for sizes ~loopvar ~lower ~upper body =
     let open Stdlib.Option.Syntax in
-    let* stmt = singleton body in
-    match vectorize_density env ~loopvar ~lower ~upper stmt with
-    | Some p -> Some p
-    | None -> vectorize_assign env ~loopvar ~lower ~upper stmt in
-  let rec go env (stmt : Stmt.Located.t) =
+    let* stmts = loop_body_statements body in
+    let* () = Option.some_if (not (List.is_empty stmts)) () in
+    let* () = Option.some_if (statements_do_not_interfere stmts) () in
+    let* patterns =
+      List.map stmts ~f:(vectorize_statement sizes ~loopvar ~lower ~upper)
+      |> Option.all in
+    match
+      List.map2 stmts patterns ~f:(fun (stmt : Stmt.Located.t) pattern ->
+          {stmt with pattern})
+    with
+    | [stmt] -> Some stmt.Stmt.pattern
+    | stmts -> Some (Stmt.Pattern.SList stmts) in
+  let assigned_names stmt =
+    fold_stmts
+      ~take_expr:(fun names _ -> names)
+      ~take_stmt:(fun names stmt ->
+        match stmt.Stmt.pattern with
+        | Assignment (lhs, _, _) ->
+            Set.Poly.add (Stmt.Helpers.lhs_variable lhs) names
+        | _ -> names)
+      ~init:Set.Poly.empty [stmt] in
+  let invalidate_sizes sizes assigned =
+    String.Map.filter sizes ~f:(fun _ size ->
+        Set.Poly.is_empty (Set.Poly.inter assigned (expr_var_names_set size)))
+  in
+  let rec rewrite_statement sizes (stmt : Stmt.Located.t) =
     match stmt.pattern with
-    | Block stmts -> {stmt with pattern= Block (go_list env stmts)}
-    | SList stmts -> {stmt with pattern= SList (go_list env stmts)}
+    | Block stmts ->
+        let stmts', _ = rewrite_sequence sizes stmts in
+        let stmt' = {stmt with pattern= Block stmts'} in
+        (stmt', invalidate_sizes sizes (assigned_names stmt'))
+    | SList stmts ->
+        let stmts', sizes' = rewrite_sequence sizes stmts in
+        ({stmt with pattern= SList stmts'}, sizes')
+    | Profile (name, stmts) ->
+        let stmts', _ = rewrite_sequence sizes stmts in
+        let stmt' = {stmt with pattern= Profile (name, stmts')} in
+        (stmt', invalidate_sizes sizes (assigned_names stmt'))
     | For {loopvar; lower; upper; body} -> (
-        match vectorize_for env ~loopvar ~lower ~upper body with
-        | Some pattern -> {stmt with pattern}
+        match vectorize_for sizes ~loopvar ~lower ~upper body with
+        | Some pattern ->
+            let stmt' = {stmt with pattern} in
+            (stmt', invalidate_sizes sizes (assigned_names stmt'))
         | None ->
-            {stmt with pattern= For {loopvar; lower; upper; body= go env body}})
-    | pattern -> {stmt with pattern= Stmt.Pattern.map Fun.id (go env) pattern}
-  and go_list env stmts =
-    List.rev
-      (snd
-         (List.fold_left stmts ~init:(env, []) ~f:(fun (env, acc) s ->
-              let env = track_decl env s.Stmt.pattern in
-              (env, go env s :: acc)))) in
-  transform_program_blockwise mir (fun fd ->
-      let env =
-        match fd with
-        | Some f ->
-            List.fold_left f.Program.fdargs ~init:String.Map.empty
-              ~f:(fun env (_, name, type_) ->
-                String.Map.add env ~key:name ~data:(type_, None))
-        | None -> global_env in
-      go env)
+            let body', _ = rewrite_statement sizes body in
+            let stmt' =
+              {stmt with pattern= For {loopvar; lower; upper; body= body'}}
+            in
+            (stmt', invalidate_sizes sizes (assigned_names stmt')))
+    | Decl _ -> (stmt, track_decl sizes stmt.pattern)
+    | pattern ->
+        let stmt' =
+          { stmt with
+            pattern=
+              Stmt.Pattern.map Fun.id
+                (fun child -> fst (rewrite_statement sizes child))
+                pattern } in
+        (stmt', invalidate_sizes sizes (assigned_names stmt'))
+  and rewrite_sequence sizes stmts =
+    let sizes', stmts' =
+      List.fold_left stmts ~init:(sizes, []) ~f:(fun (sizes, rewritten) stmt ->
+          let stmt', sizes' = rewrite_statement sizes stmt in
+          (sizes', stmt' :: rewritten)) in
+    (List.rev stmts', sizes') in
+  transform_program mir (fun stmt ->
+      fst (rewrite_statement String.Map.empty stmt))
 
 let collapse_lists_statement _ =
   let rec collapse_lists l =

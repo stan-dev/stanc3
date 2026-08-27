@@ -4501,3 +4501,136 @@ let%expect_test "vectorize bail: side effect inside an assignment" =
       target += normal_lpdf(v, promote(0, real, data), sigma);
     }
     |}]
+
+let%expect_test "vectorize: reassigned size keeps the required rhs slice" =
+  print_vectorized
+    {|
+      data {
+        int<lower=1> N;
+        vector[N] x;
+      }
+      model {
+        int M = N;
+        vector[M] y = x;
+        M = N - 1;
+        vector[M] z;
+        for (i in 1 : M) {
+          z[i] = y[i];
+        }
+        print(z);
+      }
+      |};
+  [%expect
+    {|
+    {
+      int M;
+      M = N;
+      FnValidateSize__("y", "M", M);
+      vector[M] y;
+      y = x;
+      M = (N - 1);
+      FnValidateSize__("z", "M", M);
+      vector[M] z;
+      z[:] = y[1:M];
+      FnPrint__(z);
+    }
+    |}]
+
+let%expect_test "vectorize bail: rng inside an assignment" =
+  print_vectorized
+    {|
+      functions {
+        real draw_sum_rng(vector x) {
+          vector[num_elements(x)] draws;
+          for (n in 1 : num_elements(x)) {
+            draws[n] = x[n] + normal_rng(0, 1);
+          }
+          return sum(draws);
+        }
+      }
+      model {}
+      |};
+  [%expect
+    {|
+    real draw_sum_rng(vector x) {
+      {
+        FnValidateSize__("draws", "num_elements(x)", num_elements(x));
+        vector[num_elements(x)] draws;
+        for(n in 1:num_elements(x)) {
+          draws[n] = (x[n] + normal_rng(0, 1));
+        }
+        return sum(draws);
+      }
+    }
+    |}]
+
+let%expect_test "vectorize: independent statements in one loop" =
+  print_vectorized
+    {|
+      data {
+        int<lower=0> N;
+        vector[N] x;
+        vector[N] y;
+      }
+      parameters {
+        real alpha;
+      }
+      model {
+        vector[N] v;
+        vector[N] w;
+        for (n in 1 : N) {
+          v[n] = x[n] + alpha;
+          w[n] = y[n] * 2;
+        }
+        target += normal_lpdf(v | w, 1);
+      }
+      |};
+  [%expect
+    {|
+    real alpha;
+    {
+      FnValidateSize__("v", "N", N);
+      vector[N] v;
+      FnValidateSize__("w", "N", N);
+      vector[N] w;
+      v[:] = (x + alpha);
+      w[:] = (y * promote(2, real, data));
+      target += normal_lpdf(v, w, promote(1, real, data));
+    }
+    |}]
+
+let%expect_test "vectorize bail: statements in one loop interfere" =
+  print_vectorized
+    {|
+      data {
+        int<lower=0> N;
+        vector[N] x;
+      }
+      parameters {
+        real alpha;
+      }
+      model {
+        vector[N] v;
+        vector[N] w;
+        for (n in 1 : N) {
+          v[n] = x[n] + alpha;
+          w[n] = v[n] * 2;
+        }
+        target += normal_lpdf(v | w, 1);
+      }
+      |};
+  [%expect
+    {|
+    real alpha;
+    {
+      FnValidateSize__("v", "N", N);
+      vector[N] v;
+      FnValidateSize__("w", "N", N);
+      vector[N] w;
+      for(n in 1:N) {
+        v[n] = (x[n] + alpha);
+        w[n] = (v[n] * promote(2, real, data));
+      }
+      target += normal_lpdf(v, w, promote(1, real, data));
+    }
+    |}]
