@@ -238,8 +238,9 @@ let dual_partial_function_lattice (type cv)
       String.Map.filter ~f s1
 
     let leq s1 s2 =
-      String.Map.fold s2 ~init:true ~f:(fun ~key ~data leq ->
-          leq && String.Map.find_opt key s1 = Some data)
+      String.Map.for_all
+        ~f:(fun key data -> String.Map.find_opt key s1 = Some data)
+        s2
 
     let initial = String.Map.empty
   end : LATTICE_NO_BOT
