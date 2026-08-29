@@ -3,34 +3,11 @@ open Middle
 open Dataflow_types
 open Mir_utils
 
-(** Union maps, preserving the left element in a collision *)
-let union_maps_left (module M : Map.S) (m1 : 'a M.t) (m2 : 'a M.t) : 'a M.t =
-  M.union ~f:(fun _ v1 _ -> Some v1) m1 m2
-
 (** Merge two maps whose values are sets, and union the sets when there's a
     collision. *)
 let merge_set_maps (module M : Map.S) m1 m2 =
   let merge_map_elems _ e1 e2 = Some (Set.Poly.union e1 e2) in
   M.union ~f:merge_map_elems m1 m2
-
-(** Like a forward traversal, but branches accumulate two different states that
-    are recombined with join. *)
-let branching_traverse_statement stmt ~join ~init ~f =
-  Stmt.Pattern.(
-    match stmt with
-    | IfElse (pred, then_s, else_s_opt) ->
-        let s', c = f init then_s in
-        Option.value_map else_s_opt
-          ~default:(join s' init, IfElse (pred, c, None))
-          ~f:(fun else_s ->
-            let s'', c' = f init else_s in
-            (join s' s'', IfElse (pred, c, Some c')))
-    | _ as s -> fwd_traverse_statement s ~init ~f)
-
-(** Like a branching traversal, but doesn't return an updated statement. *)
-let branching_fold_statement stmt ~join ~init ~f =
-  fst
-    (branching_traverse_statement stmt ~join ~init ~f:(fun s a -> (f s a, ())))
 
 (** See interface file *)
 let build_statement_map extract metadata stmt =
@@ -41,10 +18,7 @@ let build_statement_map extract metadata stmt =
     let (next_label'', map), built =
       fwd_traverse_statement (extract stmt) ~init:(next_label', map) ~f in
     ( ( next_label''
-      , union_maps_left
-          (module LabelMap)
-          map
-          (LabelMap.singleton this_label (built, metadata stmt)) )
+      , LabelMap.add map ~key:this_label ~data:(built, metadata stmt) )
     , this_label ) in
   let (_, map), _ = build_statement_map_rec 1 LabelMap.empty stmt in
   map
@@ -109,9 +83,6 @@ let build_cf_graphs ?(flatten_loops = false) ?(blocks_after_body = true)
     let stmt, _ = LabelMap.find label statement_map in
     (* Only control flow nodes should pass themselves down as parents *)
     let child_cf = if is_ctrl_flow stmt then Some label else cf_parent in
-    let join (state1, map1) (state2, map2) =
-      (join_cf_states state1 state2, union_maps_left (module LabelMap) map1 map2)
-    in
     (* This node is the parent of substatements, unless this is a Block, which
        is visited after substatements *)
     let substmt_preds =
@@ -119,10 +90,28 @@ let build_cf_graphs ?(flatten_loops = false) ?(blocks_after_body = true)
       | (Block _ | Profile _) when blocks_after_body -> in_state.exits
       | _ -> Set.Poly.singleton label in
     (* The accumulated state after traversing substatements *)
+    let child_init = {in_state with exits= substmt_preds} in
     let substmt_state_unlooped, substmt_map =
-      branching_fold_statement stmt ~join
-        ~init:({in_state with exits= substmt_preds}, in_map)
-        ~f:(build_cf_graph_rec child_cf) in
+      match stmt with
+      | IfElse (_, then_s, else_s_opt) ->
+          let then_state, after_then_map =
+            build_cf_graph_rec child_cf (child_init, in_map) then_s in
+          Option.value_map else_s_opt
+            ~default:(join_cf_states then_state child_init, after_then_map)
+            ~f:(fun else_s ->
+              (* The control-flow state starts from the same point on both
+                 branches. The graph map is only an accumulator of uniquely
+                 labelled nodes, so carry it through the branches instead of
+                 persistently unioning two maps that share the whole prefix. *)
+              let else_state, after_both_map =
+                build_cf_graph_rec child_cf (child_init, after_then_map) else_s
+              in
+              (join_cf_states then_state else_state, after_both_map))
+      | _ ->
+          fst
+            (fwd_traverse_statement stmt ~init:(child_init, in_map)
+               ~f:(fun state child ->
+                 (build_cf_graph_rec child_cf state child, ()))) in
     (* If the statement is a loop, we need to include the loop body exits as
        predecessors of the loop *)
     let substmt_state, predecessors =
