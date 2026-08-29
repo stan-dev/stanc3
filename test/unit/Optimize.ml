@@ -4634,3 +4634,68 @@ let%expect_test "vectorize bail: statements in one loop interfere" =
       target += normal_lpdf(v, w, promote(1, real, data));
     }
     |}]
+
+let%expect_test "vectorize: statements inside a profile block" =
+  print_vectorized
+    {|
+      data {
+        int<lower=0> N;
+        vector[N] x;
+        vector[N] y;
+      }
+      parameters {
+        real<lower=0> sigma;
+      }
+      model {
+        for (n in 1 : N) {
+          profile("lik") {
+            target += normal_lpdf(y[n] | x[n], sigma);
+          }
+        }
+      }
+      |};
+  [%expect
+    {|
+    real sigma;
+    {
+      profile("lik"){
+        target += normal_lpdf(y, x, sigma);
+      }
+    }
+    |}]
+
+let%expect_test "vectorize bail: a profile block hides an interfering write" =
+  print_vectorized
+    {|
+      data {
+        int<lower=0> N;
+        vector[N] x;
+        vector[N] y;
+      }
+      parameters {
+        real<lower=0> sigma;
+      }
+      model {
+        vector[N] v;
+        for (n in 1 : N) {
+          profile("mu") {
+            v[n] = x[n] + 1;
+          }
+          target += normal_lpdf(y[n] | v[n], sigma);
+        }
+      }
+      |};
+  [%expect
+    {|
+    real sigma;
+    {
+      FnValidateSize__("v", "N", N);
+      vector[N] v;
+      for(n in 1:N) {
+        profile("mu"){
+          v[n] = (x[n] + promote(1, real, data));
+        }
+        target += normal_lpdf(y[n], v[n], sigma);
+      }
+    }
+    |}]
