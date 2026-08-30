@@ -30,6 +30,13 @@ module Pattern : sig
 
   and 'a decl_init = Uninit | Default | Assign of 'a
   [@@deriving sexp_of, map, fold]
+
+  val fold_map :
+       ('a -> 'b -> 'a)
+    -> ('a -> 'c -> 'a * 'd)
+    -> 'a
+    -> ('b, 'c) t
+    -> 'a * ('b, 'd) t
 end
 
 (** The "two-level" type for statements in the MIR. This corresponds to what the

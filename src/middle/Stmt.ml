@@ -33,6 +33,34 @@ module Pattern = struct
   and 'a decl_init = Uninit | Default | Assign of 'a
   [@@deriving sexp_of, map, fold]
 
+  let fold_map f_expr f_stmt acc = function
+    | ( Assignment _ | TargetPE _ | JacobianPE _ | NRFunApp _ | Break | Continue
+      | Return _ | Skip | Decl _ ) as s ->
+        (fold f_expr Fun.const acc s, s)
+    | IfElse (cond, thn, None) ->
+        let acc, thn = f_stmt (f_expr acc cond) thn in
+        (acc, IfElse (cond, thn, None))
+    | IfElse (cond, thn, Some els) ->
+        let acc, thn = f_stmt (f_expr acc cond) thn in
+        let acc, els = f_stmt acc els in
+        (acc, IfElse (cond, thn, Some els))
+    | While (cond, body) ->
+        let acc, body = f_stmt (f_expr acc cond) body in
+        (acc, While (cond, body))
+    | For {loopvar; lower; upper; body} ->
+        let acc = f_expr (f_expr acc lower) upper in
+        let acc, body = f_stmt acc body in
+        (acc, For {loopvar; lower; upper; body})
+    | Profile (name, stmts) ->
+        let acc, stmts = List.fold_left_map ~f:f_stmt ~init:acc stmts in
+        (acc, Profile (name, stmts))
+    | Block stmts ->
+        let acc, stmts = List.fold_left_map ~f:f_stmt ~init:acc stmts in
+        (acc, Block stmts)
+    | SList stmts ->
+        let acc, stmts = List.fold_left_map ~f:f_stmt ~init:acc stmts in
+        (acc, SList stmts)
+
   let rec pp_lvalue pp_e ppf (lbase, idcs) =
     match lbase with
     | LVariable v -> Fmt.pf ppf "%s%a" v (Index.pp_indices pp_e) idcs

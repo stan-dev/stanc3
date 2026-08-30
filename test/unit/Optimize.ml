@@ -3762,8 +3762,8 @@ let%expect_test "vectorize bail: truncation lowers to a multi-statement body" =
     real mu;
     real sigma;
     {
+      target += normal_lupdf(y, mu, sigma);
       for(n in 1:N) {
-        target += normal_lupdf(y[n], mu, sigma);
         if((y[n] < 0)) target += FnNegInf__(); else target += PMinus__(normal_lccdf(
                                                                        promote(
                                                                        0, real,
@@ -4129,9 +4129,7 @@ let%expect_test "vectorize bail: doubly indirect indexing" =
     vector[J] alpha;
     real sigma;
     {
-      for(n in 1:N) {
-        target += normal_lpdf(y[n], alpha[county[site[n]]], sigma);
-      }
+      target += normal_lpdf(y, alpha[county[site]], sigma);
     }
     |}]
 
