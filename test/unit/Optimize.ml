@@ -4635,6 +4635,38 @@ let%expect_test "vectorize bail: statements in one loop interfere" =
     }
     |}]
 
+let%expect_test "vectorize: two writes to one container keep their order" =
+  print_vectorized
+    {|
+      data {
+        int<lower=0> N;
+        vector[N] x;
+        vector[N] y;
+      }
+      parameters {
+        real<lower=0> sigma;
+      }
+      model {
+        vector[N] v;
+        for (n in 1 : N) {
+          v[n] = x[n];
+          v[n] = y[n] * 2;
+        }
+        target += normal_lpdf(v | 0, sigma);
+      }
+      |};
+  [%expect
+    {|
+    real sigma;
+    {
+      FnValidateSize__("v", "N", N);
+      vector[N] v;
+      v[:] = x;
+      v[:] = (y * promote(2, real, data));
+      target += normal_lpdf(v, promote(0, real, data), sigma);
+    }
+    |}]
+
 let%expect_test "vectorize: statements inside a profile block" =
   print_vectorized
     {|
@@ -4697,5 +4729,31 @@ let%expect_test "vectorize bail: a profile block hides an interfering write" =
         }
         target += normal_lpdf(y[n], v[n], sigma);
       }
+    }
+    |}]
+
+let%expect_test "vectorize: two statements in one loop" =
+  print_vectorized
+    {|
+      data {
+        int<lower=0> N;
+        vector[N] y;
+      }
+      parameters {
+        vector[N] x;
+      }
+      model {
+        for (i in 1 : N) {
+          x[i] ~ std_normal();
+          y[i] ~ normal(x[i], 1);
+        }
+      }
+      |};
+  [%expect
+    {|
+    vector[N] x;
+    {
+      target += std_normal_lupdf(x);
+      target += normal_lupdf(y, x, promote(1, real, data));
     }
     |}]

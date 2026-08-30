@@ -840,7 +840,6 @@ let vectorize_loops (mir : Program.Typed.t) =
       ~take_stmt:(fun names (stmt : Stmt.Located.t) ->
         match stmt.pattern with
         | Assignment (lhs, _, _) -> Stmt.Helpers.lhs_variable lhs :: names
-        | TargetPE _ -> "target" :: names
         | _ -> names)
       ~init:[] [stmt] in
   let read_names stmt =
@@ -849,13 +848,12 @@ let vectorize_loops (mir : Program.Typed.t) =
       ~take_stmt:(fun names _ -> names)
       ~init:Set.Poly.empty [stmt] in
   let statements_do_not_interfere stmts =
-    let written = List.concat_map stmts ~f:written_names in
-    let written_set = Set.Poly.of_list written in
+    let written_set =
+      Set.Poly.of_list (List.concat_map stmts ~f:written_names) in
     let read_set =
       List.fold_left stmts ~init:Set.Poly.empty ~f:(fun reads stmt ->
           Set.Poly.union reads (read_names stmt)) in
-    List.length written = Set.Poly.cardinal written_set
-    && Set.Poly.is_empty (Set.Poly.inter written_set read_set) in
+    Set.Poly.is_empty (Set.Poly.inter written_set read_set) in
   let vectorize_for sizes ~loopvar ~lower ~upper body =
     let open Option.Syntax in
     let* stmts = loop_body_statements body in
