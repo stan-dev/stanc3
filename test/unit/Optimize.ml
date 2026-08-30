@@ -3686,7 +3686,7 @@ let%expect_test "vectorize: lpmf over an int outcome array" =
     }
     |}]
 
-let%expect_test "vectorize bail: no argument varies with the loop variable" =
+let%expect_test "vectorize: no argument varies with the loop variable" =
   (* Collapsing this loop would add one lp term to the target instead of N. *)
   print_vectorized
     {|
@@ -3708,9 +3708,7 @@ let%expect_test "vectorize bail: no argument varies with the loop variable" =
     real mu;
     real sigma;
     {
-      for(n in 1:N) {
-        target += normal_lpdf(0.5, mu, sigma);
-      }
+      target += ((N - 0) * normal_lpdf(0.5, mu, sigma));
     }
     |}]
 
@@ -3740,7 +3738,7 @@ let%expect_test "vectorize bail: loop variable used as a value" =
     }
     |}]
 
-let%expect_test "vectorize bail: truncation lowers to a multi-statement body" =
+let%expect_test "vectorize: truncation lowers to a multi-statement body" =
   print_vectorized
     {|
       data {
@@ -4104,7 +4102,7 @@ let%expect_test "vectorize bail: mixed lane containers under an operator" =
     }
     |}]
 
-let%expect_test "vectorize bail: doubly indirect indexing" =
+let%expect_test "vectorize: doubly indirect indexing" =
   print_vectorized
     {|
       data {
@@ -4695,5 +4693,31 @@ let%expect_test "vectorize bail: a profile block hides an interfering write" =
         }
         target += normal_lpdf(y[n], v[n], sigma);
       }
+    }
+    |}]
+
+let%expect_test "vectorize: two statements in one loop" =
+  print_vectorized
+    {|
+      data {
+        int<lower=0> N;
+        vector[N] y;
+      }
+      parameters {
+        vector[N] x;
+      }
+      model {
+        for (i in 1 : N) {
+          x[i] ~ std_normal();
+          y[i] ~ normal(x[i], 1);
+        }
+      }
+      |};
+  [%expect
+    {|
+    vector[N] x;
+    {
+      target += std_normal_lupdf(x);
+      target += normal_lupdf(y, x, promote(1, real, data));
     }
     |}]

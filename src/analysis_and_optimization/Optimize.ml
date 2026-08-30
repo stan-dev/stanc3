@@ -779,7 +779,17 @@ let vectorized_for (meta : Stmt.Located.Meta.t) (conflict_info : conflicts)
             | `None -> (false, None))
           |> fun (inv, ls) -> (inv, Option.all ls)
         with
-        | true, _ | _, None -> dont_vectorize
+        | _, None -> dont_vectorize
+        | true, Some args ->
+            let funapp =
+              {e with pattern= FunApp (StanLib (name, suffix, mem), args)} in
+            ( TargetPE
+                Expr.Helpers.(
+                  binop
+                    (binop upper Minus (binop lower Minus loop_bottom))
+                    Times funapp)
+              |> swrap_vec
+            , None )
         | false, Some args -> (
             match stan_math_return_type name args with
             | Some (ReturnType UReal) ->
