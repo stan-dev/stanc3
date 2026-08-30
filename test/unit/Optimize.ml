@@ -3570,7 +3570,7 @@ let%expect_test "Mapping acts recursively" =
 (* ---- loop vectorization ---- *)
 
 let print_vectorized s =
-  let mir = vectorize_loops (reset_and_mir_of_string s) in
+  let mir = vectorize_loops (reset_and_mir_of_string s) |> partial_evaluation in
   List.iter mir.functions_block ~f:(fun fd ->
       Fmt.str "@[<v>%a@]" (Program.pp_fun_def Stmt.Located.pp) fd
       |> print_endline);
@@ -3605,7 +3605,7 @@ let%expect_test "vectorize: full-range density loop becomes one density" =
     {
       FnValidateSize__("mu", "N", N);
       vector[N] mu;
-      mu = (alpha + (beta * x));
+      mu = fma(beta, x, alpha);
       target += normal_lpdf(y, mu, sigma);
     }
     |}]
@@ -3658,7 +3658,7 @@ let%expect_test "vectorize: partial range slices instead of bailing" =
     real mu;
     real sigma;
     {
-      target += normal_lpdf(y[3:N], mu, sigma);
+      target += normal_lpdf(y[3:], mu, sigma);
     }
     |}]
 
@@ -3861,7 +3861,7 @@ let%expect_test "vectorize: partial-range gather slices the index array" =
     vector[J] alpha;
     real sigma;
     {
-      target += normal_lpdf(y[2:N], alpha[county[2:N]], sigma);
+      target += normal_lpdf(y[2:], alpha[county[2:]], sigma);
     }
     |}]
 
@@ -3931,7 +3931,7 @@ let%expect_test "vectorize: assignment loop widens arithmetic" =
       vector[N] mu;
       FnValidateSize__("v", "N", N);
       vector[N] v;
-      mu[:] = (alpha + (beta * x));
+      mu[:] = fma(beta, x, alpha);
       v[:] = ((x .* w) ./ mu);
       target += normal_lpdf(v, mu, promote(1, real, data));
     }

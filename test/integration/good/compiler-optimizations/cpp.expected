@@ -20066,11 +20066,9 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       local_scalar_t__ sigma_phi = DUMMY_VAR__;
       lcm_sym16__ = stan::math::inv_sqrt(tau_phi);
       sigma_phi = lcm_sym16__;
-      Eigen::Matrix<local_scalar_t__,-1,1> phi =
-        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
+      Eigen::Matrix<local_scalar_t__,-1,1> phi;
       current_statement__ = 9;
-      stan::model::assign(phi, phi_std_raw, "assigning variable phi",
-        stan::model::index_min_max(1, N));
+      stan::model::assign(phi, phi_std_raw, "assigning variable phi");
       current_statement__ = 10;
       stan::model::assign(phi,
         stan::math::multiply(stan::model::deep_copy(phi), lcm_sym16__),
@@ -20140,13 +20138,9 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       local_scalar_t__ sigma_phi = DUMMY_VAR__;
       lcm_sym13__ = stan::math::inv_sqrt(tau_phi);
       sigma_phi = lcm_sym13__;
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> phi =
-        stan::math::var_value<Eigen::Matrix<double,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(N,
-                                                            std::numeric_limits<double>::quiet_NaN(
-                                                              )));
+      stan::math::var_value<Eigen::Matrix<double,-1,1>> phi;
       current_statement__ = 9;
-      stan::model::assign(phi, phi_std_raw, "assigning variable phi",
-        stan::model::index_min_max(1, N));
+      stan::model::assign(phi, phi_std_raw, "assigning variable phi");
       current_statement__ = 10;
       stan::model::assign(phi,
         stan::math::multiply(stan::model::deep_copy(phi), lcm_sym13__),
@@ -20241,8 +20235,7 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       lcm_sym10__ = stan::math::inv_sqrt(tau_phi);
       sigma_phi = lcm_sym10__;
       current_statement__ = 9;
-      stan::model::assign(phi, phi_std_raw, "assigning variable phi",
-        stan::model::index_min_max(1, N));
+      stan::model::assign(phi, phi_std_raw, "assigning variable phi");
       current_statement__ = 10;
       stan::model::assign(phi,
         stan::math::multiply(stan::model::deep_copy(phi), lcm_sym10__),
@@ -24138,9 +24131,7 @@ class initialize_SoA_model final : public model_base_crtp<initialize_SoA_model> 
           std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>(3, 4);
       Eigen::Matrix<local_scalar_t__,-1,1> x =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(3, DUMMY_VAR__);
-      stan::model::assign(lcm_sym20__,
-        stan::model::rvalue(y, "y", stan::model::index_min_max(1, 3)),
-        "assigning variable lcm_sym20__");
+      stan::model::assign(lcm_sym20__, y, "assigning variable lcm_sym20__");
       stan::model::assign(x, lcm_sym20__, "assigning variable x");
       {
         current_statement__ = 4;
@@ -24211,9 +24202,7 @@ class initialize_SoA_model final : public model_base_crtp<initialize_SoA_model> 
         stan::math::var_value<Eigen::Matrix<double,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(3,
                                                             std::numeric_limits<double>::quiet_NaN(
                                                               )));
-      stan::model::assign(lcm_sym16__,
-        stan::model::rvalue(y, "y", stan::model::index_min_max(1, 3)),
-        "assigning variable lcm_sym16__");
+      stan::model::assign(lcm_sym16__, y, "assigning variable lcm_sym16__");
       stan::model::assign(x, lcm_sym16__, "assigning variable x");
       {
         current_statement__ = 4;
@@ -24358,9 +24347,7 @@ class initialize_SoA_model final : public model_base_crtp<initialize_SoA_model> 
             stan::math::primitive_value(emit_generated_quantities__)))) {
         return ;
       }
-      stan::model::assign(lcm_sym12__,
-        stan::model::rvalue(y, "y", stan::model::index_min_max(1, 3)),
-        "assigning variable lcm_sym12__");
+      stan::model::assign(lcm_sym12__, y, "assigning variable lcm_sym12__");
       stan::model::assign(x, lcm_sym12__, "assigning variable x");
       if (emit_transformed_parameters__) {
         out__.write(lcm_sym12__);
@@ -48866,7 +48853,7 @@ class vectorize_loops_model final : public model_base_crtp<vectorize_loops_model
         current_statement__ = 18;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(
                          stan::model::rvalue(y, "y",
-                           stan::model::index_min_max(3, N)), alpha, sigma));
+                           stan::model::index_min(3)), alpha, sigma));
         current_statement__ = 19;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(y,
                          stan::model::rvalue(a, "a",
@@ -49040,7 +49027,7 @@ class vectorize_loops_model final : public model_base_crtp<vectorize_loops_model
         current_statement__ = 18;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(
                          stan::model::rvalue(y, "y",
-                           stan::model::index_min_max(3, N)), alpha, sigma));
+                           stan::model::index_min(3)), alpha, sigma));
         current_statement__ = 19;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(y,
                          stan::model::rvalue(a, "a",
