@@ -1019,18 +1019,21 @@ let rec eval_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
                     | _ -> FunApp (kind, l))
                 | _ -> FunApp (kind, l)))
       | TernaryIf (e1, e2, e3) -> (
-          match
-            ( eval_expr ~preserve_stability e1
-            , eval_expr ~preserve_stability e2
-            , eval_expr ~preserve_stability e3 )
-          with
-          | x, _, e3' when is_int 0 x -> e3'.pattern
-          | {pattern= Lit (Int, _); _}, e2', _ -> e2'.pattern
-          | e1', e2', e3' -> TernaryIf (e1', e2', e3'))
+          match eval_expr ~preserve_stability e1 with
+          | x when is_int 0 x -> (eval_expr ~preserve_stability e3).pattern
+          | {pattern= Lit (Int, _); _} ->
+              (eval_expr ~preserve_stability e2).pattern
+          | e1' ->
+              TernaryIf
+                ( e1'
+                , try_eval_expr ~preserve_stability e2
+                , try_eval_expr ~preserve_stability e3 ))
       | EAnd (e1, e2) -> (
           match
-            (eval_expr ~preserve_stability e1, eval_expr ~preserve_stability e2)
+            ( eval_expr ~preserve_stability e1
+            , try_eval_expr ~preserve_stability e2 )
           with
+          | x, _ when is_int 0 x -> x.pattern
           | {pattern= Lit (Int, s1); _}, {pattern= Lit (Int, s2); _} ->
               let i1, i2 = (Int.of_string s1, Int.of_string s2) in
               Lit (Int, Int.to_string (Bool.to_int (i1 <> 0 && i2 <> 0)))
@@ -1040,8 +1043,10 @@ let rec eval_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
           | e1', e2' -> EAnd (e1', e2'))
       | EOr (e1, e2) -> (
           match
-            (eval_expr ~preserve_stability e1, eval_expr ~preserve_stability e2)
+            ( eval_expr ~preserve_stability e1
+            , try_eval_expr ~preserve_stability e2 )
           with
+          | x, _ when is_int 1 x -> x.pattern
           | {pattern= Lit (Int, s1); _}, {pattern= Lit (Int, s2); _} ->
               let i1, i2 = (Int.of_string s1, Int.of_string s2) in
               Lit (Int, Int.to_string (Bool.to_int (i1 <> 0 || i2 <> 0)))
@@ -1058,6 +1063,9 @@ let rec eval_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
              Note that we could also constant fold array sizes if we keep those
              around on declarations. *)
           Indexed (eval_expr e, List.map ~f:(Index.map eval_expr) l)) }
+
+and try_eval_expr ?(preserve_stability = false) expr =
+  try eval_expr ~preserve_stability expr with Rejected _ -> expr
 
 let rec simplify_index_expr pattern =
   Expr.(
@@ -1138,8 +1146,6 @@ let rec simplify_indices_expr expr =
       expr.pattern |> remove_trailing_alls_expr |> simplify_index_expr
       |> Expr.Pattern.map simplify_indices_expr in
     {expr with pattern})
-
-let try_eval_expr expr = try eval_expr expr with Rejected _ -> expr
 
 let rec eval_stmt s =
   try
