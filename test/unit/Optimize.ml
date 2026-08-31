@@ -4721,3 +4721,149 @@ let%expect_test "vectorize: two statements in one loop" =
       target += normal_lupdf(y, x, promote(1, real, data));
     }
     |}]
+
+let%expect_test "vectorize bail: strange loops" =
+  print_vectorized
+    {|
+      data {
+        int<lower=0> N;
+        int<lower=0> M;
+        vector[N] x;
+        row_vector[N] y;
+        array[N] real z;
+      }
+      model {
+        vector[N] a;
+        row_vector[N] b;
+        array[N] real c;
+        for (i in 1 : N) {
+          vector[M] g;
+          x[i] ~ std_normal();
+          for (j in 1 : M) {
+            g[j] = x[j];
+          }
+          for (k in 1:M) {
+            g[k] ~ std_normal();
+            if (1) {
+              break;
+            } else {
+              continue;
+            }
+          }
+          a[i] = exp(x[i]);
+          int m = M;
+          for (k in 1:m) {
+            exp(g[k]) ~ std_normal();
+          }
+          for (k in 1 : m) {
+            g[k] ~ std_normal();
+            m -= 1;
+          }
+        }
+        for (i in 1 : N) {
+          while (1) break;
+          b[i] = exp(y[i]);
+        }
+        for (i in 1 : N) {
+          x[i] ~ std_normal();
+          print(target());
+          c[i] = z[i];
+        }
+      }
+      |};
+  [%expect
+    {|
+    {
+      FnValidateSize__("a", "N", N);
+      vector[N] a;
+      FnValidateSize__("b", "N", N);
+      row_vector[N] b;
+      FnValidateSize__("c", "N", N);
+      array[real, N] c;
+      target += std_normal_lupdf(x);
+      a[:] = exp(x);
+      for(i in 1:N) {
+        FnValidateSize__("g", "M", M);
+        vector[M] g;
+        g[:] = x[1:M];
+        for(k in 1:M) {
+          target += std_normal_lupdf(g[k]);
+          if(1) {
+            break;
+          } else {
+            continue;
+          }
+        }
+        int m;
+        m = M;
+        target += std_normal_lupdf(exp(g[1:m]));
+        for(k in 1:m) {
+          target += std_normal_lupdf(g[k]);
+          m = (m - 1);
+        }
+      }
+      b[:] = exp(y);
+      for(i in 1:N) {
+        while(1) break;
+      }
+      c[:] = z;
+      for(i in 1:N) {
+        target += std_normal_lupdf(x[i]);
+        FnPrint__(target());
+      }
+    }
+    |}]
+
+let%expect_test "vectorize bail: rng bounds" =
+  print_vectorized
+    {|
+      functions {
+        void loops_rng(int N, vector a) {
+          vector[N] x;
+          vector[poisson_rng(10)] w;
+          for (i in 1 : N) {
+            x[i] = a[i];
+            vector[10] y;
+            for (k in 1 : poisson_rng(5)) {
+              y[k] = x[k];
+            }
+          }
+          for (i in 1 : size(w)) {
+            w[i] = a[i];
+          }
+          for (i in 1 : poisson_rng(10)) {
+            x[i] = exp(a[i]);
+          }
+          for (i in poisson_rng(10) : N) {
+            x[i] = a[i];
+          }
+        }
+      }
+      |};
+  [%expect
+    {|
+    void loops_rng(int N, vector a) {
+      {
+        FnValidateSize__("x", "N", N);
+        vector[N] x;
+        FnValidateSize__("w", "poisson_rng(10)", poisson_rng(10));
+        vector[poisson_rng(10)] w;
+        for(i in 1:N) {
+          x[i] = a[i];
+          vector[10] y;
+          for(k in 1:poisson_rng(5)) {
+            y[k] = x[k];
+          }
+        }
+        for(i in 1:size(w)) {
+          w[i] = a[i];
+        }
+        for(i in 1:poisson_rng(10)) {
+          x[i] = exp(a[i]);
+        }
+        for(i in poisson_rng(10):N) {
+          x[i] = a[i];
+        }
+      }
+    }
+    |}]
