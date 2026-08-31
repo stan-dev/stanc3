@@ -256,7 +256,7 @@ let rec eval_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
                 | ( "categorical_lpmf"
                   , [ y
                     ; { pattern=
-                          FunApp (StanLib ("inv_logit", FnPlain, mem), [alpha])
+                          FunApp (StanLib ("softmax", FnPlain, mem), [alpha])
                       ; _ } ] ) ->
                     FunApp
                       ( StanLib
@@ -264,7 +264,7 @@ let rec eval_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
                       , [y; alpha] )
                 | ( "categorical_rng"
                   , [ { pattern=
-                          FunApp (StanLib ("inv_logit", FnPlain, mem), [alpha])
+                          FunApp (StanLib ("softmax", FnPlain, mem), [alpha])
                       ; _ } ] ) ->
                     FunApp
                       ( StanLib
