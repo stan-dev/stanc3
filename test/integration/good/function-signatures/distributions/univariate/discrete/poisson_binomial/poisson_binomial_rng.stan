@@ -11,12 +11,11 @@ transformed data {
   int td_int;
   vector[d_int] td_vector;
   row_vector[d_int] td_row_vector;
-  array[d_int] int td_int_array_1d;
   array[d_int] real td_real_array_1d;
 
-  td_int_array_1d = poisson_binomial_rng(d_real_array_1d);
-  td_int_array_1d = poisson_binomial_rng(d_row_vector);
-  td_int_array_1d = poisson_binomial_rng(d_vector);
+  td_int = poisson_binomial_rng(d_real_array_1d);
+  td_int = poisson_binomial_rng(d_row_vector);
+  td_int = poisson_binomial_rng(d_vector);
 }
 
 parameters {
@@ -31,14 +30,13 @@ generated quantities {
   int gq_int;
   vector[d_int] gq_vector;
   row_vector[d_int] gq_row_vector;
-  array[d_int] int gq_int_array_1d;
   array[d_int] real gq_real_array_1d;
 
-  gq_int_array_1d = poisson_binomial_rng(d_real_array_1d);
-  gq_int_array_1d = poisson_binomial_rng(d_row_vector);
-  gq_int_array_1d = poisson_binomial_rng(d_vector);
-  gq_int_array_1d = poisson_binomial_rng(p_real_array_1d);
-  gq_int_array_1d = poisson_binomial_rng(p_row_vector);
-  gq_int_array_1d = poisson_binomial_rng(p_vector);
+  gq_int = poisson_binomial_rng(d_real_array_1d);
+  gq_int = poisson_binomial_rng(d_row_vector);
+  gq_int = poisson_binomial_rng(d_vector);
+  gq_int = poisson_binomial_rng(p_real_array_1d);
+  gq_int = poisson_binomial_rng(p_row_vector);
+  gq_int = poisson_binomial_rng(p_vector);
 }
 

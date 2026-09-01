@@ -16016,9 +16016,9 @@ Display all Stan math signatures exposed in the language
   poisson_binomial_lpmf(array[] int, vector) => real
   poisson_binomial_lpmf(array[] int, row_vector) => real
   poisson_binomial_lpmf(array[] int, array[] real) => real
-  poisson_binomial_rng(vector) => array[] int
-  poisson_binomial_rng(row_vector) => array[] int
-  poisson_binomial_rng(array[] real) => array[] int
+  poisson_binomial_rng(vector) => int
+  poisson_binomial_rng(row_vector) => int
+  poisson_binomial_rng(array[] real) => int
   poisson_cdf(int, real) => real
   poisson_cdf(int, vector) => real
   poisson_cdf(int, row_vector) => real
