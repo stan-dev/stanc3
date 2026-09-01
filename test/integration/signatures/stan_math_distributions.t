@@ -58,6 +58,7 @@ Display all Stan math distributions exposed in the language
   pareto: lpdf, rng, ccdf, cdf
   pareto_type_2: lpdf, rng, ccdf, cdf
   poisson: lpmf, rng, ccdf, cdf
+  poisson_binomial: lpmf, rng, ccdf, cdf
   poisson_log: lpmf, rng
   poisson_log_glm: lpmf
   rayleigh: lpdf, rng, ccdf, cdf

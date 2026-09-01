@@ -25,6 +25,7 @@ type dimensionality =
   | DVInt
   (* Vectorizable real *)
   | DVReal
+  | DVReals
   | DVComplex
   (* DEPRECATED; vectorizable ints or reals *)
   | DIntAndReals
@@ -63,6 +64,7 @@ let rec expand_arg = function
   | DIntArray -> [UArray UInt]
   | DVInt -> [UInt; UArray UInt]
   | DVReal -> [UReal; UArray UReal; UVector; URowVector]
+  | DVReals -> List.tl_exn (expand_arg DVReal)
   | DVComplex -> [UComplex; UArray UComplex; UComplexVector; UComplexRowVector]
   | DIntAndReals -> expand_arg DVReal @ expand_arg DVInt
   | DVectors -> [UVector; UArray UVector; URowVector; UArray URowVector]
@@ -267,6 +269,7 @@ let distributions =
   ; (full_lpdf, "pareto", [DVReal; DVReal; DVReal], SoA)
   ; (full_lpdf, "pareto_type_2", [DVReal; DVReal; DVReal; DVReal], SoA)
   ; (full_lpmf, "poisson", [DVInt; DVReal], SoA)
+  ; (full_lpmf, "poisson_binomial", [DVInt; DVReals], AoS)
   ; ([Lpmf; Rng], "poisson_log", [DVInt; DVReal], SoA)
   ; ([Lpmf], "poisson_log_glm", [DVInt; DMatrix; DReal; DVector], SoA)
   ; (full_lpdf, "rayleigh", [DVReal; DVReal], SoA)
