@@ -425,46 +425,122 @@ let rec check_decl var decl_type' decl_trans smeta adlevel =
       [check_id var]
   | _ -> []
 
-let check_sizedtype name st =
-  let check x = function
-    | {Expr.pattern= Lit (Int, i); _} when Float.of_string i >= 0. -> []
-    | n ->
-        [ Stmt.Helpers.internal_nrfunapp FnValidateSize
-            Expr.Helpers.
-              [ str name
-              ; str (Fmt.str "%a" Pretty_printing.pp_typed_expression x); n ]
-            n.meta.loc ] in
-  let rec sizedtype = function
+let rec check_transformed_sizedtype transform_action tr name st =
+  let validate_dim_expr fn n e =
+    let check te =
+      [ Stmt.Helpers.internal_nrfunapp fn
+          Expr.Helpers.
+            [ str name; str (Fmt.str "%a" Pretty_printing.pp_typed_expression e)
+            ; te ]
+          te.meta.loc ] in
+    match (fn, e) with
+    | Internal_fun.FnValidateSize, Ast.{expr= IntNumeral i; _}
+      when Float.of_string i >= 0. ->
+        ([], trans_expr e)
+    | FnValidateSizePositive, {expr= IntNumeral i; _}
+      when Float.of_string i >= 1. ->
+        ([], trans_expr e)
+    | FnValidateSizeUnitVector, {expr= IntNumeral i; _}
+      when Float.of_string i >= 2. ->
+        ([], trans_expr e)
+    | _, ({expr= IntNumeral _; _} | {expr= Variable _; _}) ->
+        let e = trans_expr e in
+        (check e, e)
+    | _ ->
+        let te = trans_expr e in
+        let decl_name =
+          name
+          |> String.replace_all ~sub:"[]" ~by:"_brack"
+          |> String.replace_all ~sub:"." ~by:"_dot" in
+        let decl_id = Fmt.str "%s_%ddim__" decl_name n in
+        let decl =
+          { Stmt.pattern=
+              Decl
+                { decl_type= Sized SInt
+                ; decl_id
+                ; decl_adtype= DataOnly
+                ; initialize= Assign te }
+          ; meta= te.meta.loc } in
+        let var =
+          Expr.
+            { pattern= Var decl_id
+            ; meta=
+                Typed.Meta.
+                  { type_= e.Ast.emeta.type_
+                  ; adlevel= e.emeta.ad_level
+                  ; loc= e.emeta.loc } } in
+        (decl :: check var, var) in
+  let rec go n = function
     | SizedType.(SInt | SReal | SComplex) as t -> ([], t)
     | SVector (mem_pattern, s) ->
-        let e = trans_expr s in
-        (check s e, SizedType.SVector (mem_pattern, e))
+        let fn =
+          match (transform_action, tr) with
+          | Constrain, (Transformation.Simplex | SumToZero) ->
+              Internal_fun.FnValidateSizePositive
+          | Constrain, UnitVector -> FnValidateSizeUnitVector
+          | _ -> FnValidateSize in
+        let l, s = validate_dim_expr fn n s in
+        (l, SizedType.SVector (mem_pattern, s))
     | SRowVector (mem_pattern, s) ->
-        let e = trans_expr s in
-        (check s e, SizedType.SRowVector (mem_pattern, e))
-    | SMatrix (mem_pattern, r, c) ->
-        let er = trans_expr r in
-        let ec = trans_expr c in
-        (check r er @ check c ec, SizedType.SMatrix (mem_pattern, er, ec))
-    | SComplexVector s ->
-        let e = trans_expr s in
-        (check s e, SizedType.SComplexVector e)
+        let l, s = validate_dim_expr FnValidateSize n s in
+        (l, SizedType.SRowVector (mem_pattern, s))
     | SComplexRowVector s ->
-        let e = trans_expr s in
-        (check s e, SizedType.SComplexRowVector e)
+        let l, s = validate_dim_expr FnValidateSize n s in
+        (l, SizedType.SComplexRowVector s)
+    | SComplexVector s ->
+        let l, s = validate_dim_expr FnValidateSize n s in
+        (l, SizedType.SComplexVector s)
+    | SMatrix (mem_pattern, r, c) ->
+        let fn1, fn2 =
+          match (transform_action, tr) with
+          | Constrain, Transformation.SumToZero ->
+              ( Internal_fun.FnValidateSizePositive
+              , Internal_fun.FnValidateSizePositive )
+          | Constrain, StochasticColumn ->
+              (FnValidateSizePositive, FnValidateSize)
+          | Constrain, StochasticRow -> (FnValidateSize, FnValidateSizePositive)
+          | _ -> (FnValidateSize, FnValidateSize) in
+        let l1, r = validate_dim_expr fn1 n r in
+        let l2, c = validate_dim_expr fn2 (n + 1) c in
+        let cf_cov =
+          match (transform_action, tr) with
+          | Constrain, CholeskyCov ->
+              [ { Stmt.pattern=
+                    NRFunApp
+                      ( StanLib ("check_greater_or_equal", FnPlain, AoS)
+                      , Expr.Helpers.
+                          [ str ("cholesky_factor_cov " ^ name)
+                          ; str
+                              "num rows (must be greater or equal to num cols)"
+                          ; r; c ] )
+                ; meta= r.Expr.meta.Expr.Typed.Meta.loc } ]
+          | _ -> [] in
+        (l1 @ l2 @ cf_cov, SizedType.SMatrix (mem_pattern, r, c))
     | SComplexMatrix (r, c) ->
-        let er = trans_expr r in
-        let ec = trans_expr c in
-        (check r er @ check c ec, SizedType.SComplexMatrix (er, ec))
+        let l1, r = validate_dim_expr FnValidateSize n r in
+        let l2, c = validate_dim_expr FnValidateSize (n + 1) c in
+        (l1 @ l2, SizedType.SComplexMatrix (r, c))
     | SArray (t, s) ->
-        let e = trans_expr s in
-        let ll, t = sizedtype t in
-        (check s e @ ll, SizedType.SArray (t, e))
+        let l, s = validate_dim_expr FnValidateSize n s in
+        let ll, t = go (n + 1) t in
+        (l @ ll, SizedType.SArray (t, s))
     | STuple subtypes ->
-        let checks, subtypes = List.split (List.map ~f:sizedtype subtypes) in
-        (List.concat checks, STuple subtypes) in
-  let ll, st = sizedtype st in
-  (ll, Type.Sized st)
+        let former_array_indices =
+          String.concat ~sep:"" (List.init ~len:(n - 1) ~f:(fun _ -> "[]"))
+        in
+        let stmts, subtypes' =
+          List.split
+            (List.mapi
+               Utils.(zip_subtypes_tuple_trans_exn subtypes tr)
+               ~f:(fun ix (st, trans) ->
+                 check_transformed_sizedtype transform_action trans
+                   (name ^ former_array_indices ^ "." ^ Int.to_string (ix + 1))
+                   st)) in
+        (List.concat stmts, SizedType.STuple subtypes') in
+  go 1 st
+
+let check_sizedtype name st =
+  check_transformed_sizedtype IgnoreTransform Transformation.Identity name st
 
 (* The statements that constrain and check a variable, given its context *)
 let var_constrain_check_stmts dconstrain loc adlevel decl_id decl_var trans
@@ -642,8 +718,8 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
           let decl_id = identifier.Ast.name in
           let size_checks, dt = check_sizedtype decl_id decl_type in
           size_checks
-          @ create_decl_with_assign decl_id declc dt initial_value transform
-              smeta)
+          @ create_decl_with_assign decl_id declc (Type.Sized dt) initial_value
+              transform smeta)
         variables
   | Ast.Block stmts -> Block (List.concat_map ~f:trans_stmt stmts) |> swrap
   | Ast.Profile (name, stmts) ->
@@ -753,111 +829,6 @@ let get_block block prog =
   | TransformedParameters -> prog.transformedparametersblock
   | GeneratedQuantities -> prog.generatedquantitiesblock
 
-let rec trans_sizedtype_decl declc tr name st =
-  let check fn x n =
-    Stmt.Helpers.internal_nrfunapp fn
-      Expr.Helpers.
-        [str name; str (Fmt.str "%a" Pretty_printing.pp_typed_expression x); n]
-      n.meta.loc in
-  let grab_size fn n = function
-    | Ast.{expr= IntNumeral i; _} as s when Float.of_string i >= 2. ->
-        ([], trans_expr s)
-    | Ast.({expr= IntNumeral _; _} | {expr= Variable _; _}) as s ->
-        let e = trans_expr s in
-        ([check fn s e], e)
-    | s ->
-        let e = trans_expr s in
-        let decl_name =
-          name
-          |> String.replace_all ~sub:"[]" ~by:"_brack"
-          |> String.replace_all ~sub:"." ~by:"_dot" in
-        let decl_id = Fmt.str "%s_%ddim__" decl_name n in
-        let decl =
-          { Stmt.pattern=
-              Decl
-                { decl_type= Sized SInt
-                ; decl_id
-                ; decl_adtype= DataOnly
-                ; initialize= Assign e }
-          ; meta= e.meta.loc } in
-        let var =
-          Expr.
-            { pattern= Var decl_id
-            ; meta=
-                Typed.Meta.
-                  { type_= s.Ast.emeta.Ast.type_
-                  ; adlevel= s.emeta.ad_level
-                  ; loc= s.emeta.loc } } in
-        ([decl; check fn s var], var) in
-  let rec go n = function
-    | SizedType.(SInt | SReal | SComplex) as t -> ([], t)
-    | SVector (mem_pattern, s) ->
-        let fn =
-          match (declc.transform_action, tr) with
-          | Constrain, (Transformation.Simplex | SumToZero) ->
-              Internal_fun.FnValidateSizePositive
-          | Constrain, UnitVector -> FnValidateSizeUnitVector
-          | _ -> FnValidateSize in
-        let l, s = grab_size fn n s in
-        (l, SizedType.SVector (mem_pattern, s))
-    | SRowVector (mem_pattern, s) ->
-        let l, s = grab_size FnValidateSize n s in
-        (l, SizedType.SRowVector (mem_pattern, s))
-    | SComplexRowVector s ->
-        let l, s = grab_size FnValidateSize n s in
-        (l, SizedType.SComplexRowVector s)
-    | SComplexVector s ->
-        let l, s = grab_size FnValidateSize n s in
-        (l, SizedType.SComplexVector s)
-    | SMatrix (mem_pattern, r, c) ->
-        let fn1, fn2 =
-          match (declc.transform_action, tr) with
-          | Constrain, Transformation.SumToZero ->
-              ( Internal_fun.FnValidateSizePositive
-              , Internal_fun.FnValidateSizePositive )
-          | Constrain, StochasticColumn ->
-              (FnValidateSizePositive, FnValidateSize)
-          | Constrain, StochasticRow -> (FnValidateSize, FnValidateSizePositive)
-          | _ -> (FnValidateSize, FnValidateSize) in
-        let l1, r = grab_size fn1 n r in
-        let l2, c = grab_size fn2 (n + 1) c in
-        let cf_cov =
-          match (declc.transform_action, tr) with
-          | Constrain, CholeskyCov ->
-              [ { Stmt.pattern=
-                    NRFunApp
-                      ( StanLib ("check_greater_or_equal", FnPlain, AoS)
-                      , Expr.Helpers.
-                          [ str ("cholesky_factor_cov " ^ name)
-                          ; str
-                              "num rows (must be greater or equal to num cols)"
-                          ; r; c ] )
-                ; meta= r.Expr.meta.Expr.Typed.Meta.loc } ]
-          | _ -> [] in
-        (l1 @ l2 @ cf_cov, SizedType.SMatrix (mem_pattern, r, c))
-    | SComplexMatrix (r, c) ->
-        let l1, r = grab_size FnValidateSize n r in
-        let l2, c = grab_size FnValidateSize (n + 1) c in
-        (l1 @ l2, SizedType.SComplexMatrix (r, c))
-    | SArray (t, s) ->
-        let l, s = grab_size FnValidateSize n s in
-        let ll, t = go (n + 1) t in
-        (l @ ll, SizedType.SArray (t, s))
-    | STuple subtypes ->
-        let former_array_indices =
-          String.concat ~sep:"" (List.init ~len:(n - 1) ~f:(fun _ -> "[]"))
-        in
-        let stmts, subtypes' =
-          List.split
-            (List.mapi
-               (List.combine subtypes Utils.(tuple_trans_exn tr))
-               ~f:(fun ix (st, trans) ->
-                 trans_sizedtype_decl declc trans
-                   (name ^ former_array_indices ^ "." ^ Int.to_string (ix + 1))
-                   st)) in
-        (List.concat stmts, SizedType.STuple subtypes') in
-  go 1 st
-
 let trans_block ud_dists declc block prog =
   let f stmt (accum1, accum2, accum3) =
     match stmt with
@@ -871,8 +842,8 @@ let trans_block ud_dists declc block prog =
                  let decl_id = identifier.Ast.name in
                  let transform = Transformation.map trans_expr transformation in
                  let size, type_ =
-                   trans_sizedtype_decl declc transform identifier.name type_
-                 in
+                   check_transformed_sizedtype declc.transform_action transform
+                     identifier.name type_ in
                  let outvar =
                    ( decl_id
                    , smeta.Ast.loc

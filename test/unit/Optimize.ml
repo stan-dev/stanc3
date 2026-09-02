@@ -4549,8 +4549,9 @@ let%expect_test "vectorize bail: rng inside an assignment" =
     {|
     real draw_sum_rng(vector x) {
       {
-        FnValidateSize__("draws", "num_elements(x)", num_elements(x));
-        vector[num_elements(x)] draws;
+        data int draws_1dim__ = num_elements(x);
+        FnValidateSize__("draws", "num_elements(x)", draws_1dim__);
+        vector[draws_1dim__] draws;
         for(n in 1:num_elements(x)) {
           draws[n] = (x[n] + normal_rng(0, 1));
         }
@@ -4877,8 +4878,9 @@ let%expect_test "vectorize bail: rng bounds" =
       {
         FnValidateSize__("x", "N", N);
         vector[N] x;
-        FnValidateSize__("w", "poisson_rng(10)", poisson_rng(10));
-        vector[poisson_rng(10)] w;
+        data int w_1dim__ = poisson_rng(10);
+        FnValidateSize__("w", "poisson_rng(10)", w_1dim__);
+        vector[w_1dim__] w;
         for(i in 1:N) {
           x[i] = a[i];
           vector[10] y;
@@ -4938,9 +4940,10 @@ let%expect_test "vectorize: multiple indexing" =
     array[row_vector[N], N] z;
     {
       FnValidateSize__("a", "N", N);
-      FnValidateSize__("a", "size([target()])", size(FnMakeRowVec__(target())));
+      data int a_2dim__ = size(FnMakeRowVec__(target()));
+      FnValidateSize__("a", "size([target()])", a_2dim__);
       FnValidateSize__("a", "N", N);
-      array[array[array[int, N], size(FnMakeRowVec__(target()))], N] a;
+      array[array[array[int, N], a_2dim__], N] a;
       FnValidateSize__("w1", "N", N);
       FnValidateSize__("w1", "N", N);
       matrix[N, N] w1;

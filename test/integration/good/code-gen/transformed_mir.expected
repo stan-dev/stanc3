@@ -1416,16 +1416,33 @@
      (((pattern
         (Block
          (((pattern
+            (Decl (decl_adtype DataOnly) (decl_id o_1dim__) (decl_type (Sized SInt))
+             (initialize
+              (Assign
+               ((pattern
+                 (FunApp (StanLib rows FnPlain AoS)
+                  (((pattern (Var mat))
+                    (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+           (meta <opaque>))
+          ((pattern
             (NRFunApp (CompilerInternal FnValidateSize)
              (((pattern (Lit Str o))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
               ((pattern (Lit Str "rows(mat)"))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-              ((pattern
-                (FunApp (StanLib rows FnPlain AoS)
-                 (((pattern (Var mat))
-                   (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
+              ((pattern (Var o_1dim__))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta <opaque>))
+          ((pattern
+            (Decl (decl_adtype DataOnly) (decl_id o_2dim__) (decl_type (Sized SInt))
+             (initialize
+              (Assign
+               ((pattern
+                 (FunApp (StanLib cols FnPlain AoS)
+                  (((pattern (Var mat))
+                    (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
            (meta <opaque>))
           ((pattern
             (NRFunApp (CompilerInternal FnValidateSize)
@@ -1433,10 +1450,7 @@
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
               ((pattern (Lit Str "cols(mat)"))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-              ((pattern
-                (FunApp (StanLib cols FnPlain AoS)
-                 (((pattern (Var mat))
-                   (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
+              ((pattern (Var o_2dim__))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
            (meta <opaque>))
           ((pattern
@@ -1444,15 +1458,9 @@
              (decl_type
               (Sized
                (SMatrix AoS
-                ((pattern
-                  (FunApp (StanLib rows FnPlain AoS)
-                   (((pattern (Var mat))
-                     (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
+                ((pattern (Var o_1dim__))
                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                ((pattern
-                  (FunApp (StanLib cols FnPlain AoS)
-                   (((pattern (Var mat))
-                     (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
+                ((pattern (Var o_2dim__))
                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
              (initialize Default)))
            (meta <opaque>))
