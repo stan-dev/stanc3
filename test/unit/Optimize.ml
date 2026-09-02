@@ -3687,7 +3687,6 @@ let%expect_test "vectorize: lpmf over an int outcome array" =
     |}]
 
 let%expect_test "vectorize: no argument varies with the loop variable" =
-  (* Collapsing this loop would add one lp term to the target instead of N. *)
   print_vectorized
     {|
       data {
@@ -4742,14 +4741,6 @@ let%expect_test "vectorize bail: strange loops" =
           for (j in 1 : M) {
             g[j] = x[j];
           }
-          for (k in 1:M) {
-            g[k] ~ std_normal();
-            if (1) {
-              break;
-            } else {
-              continue;
-            }
-          }
           a[i] = exp(x[i]);
           int m = M;
           for (k in 1:m) {
@@ -4759,10 +4750,6 @@ let%expect_test "vectorize bail: strange loops" =
             g[k] ~ std_normal();
             m -= 1;
           }
-        }
-        for (i in 1 : N) {
-          while (1) break;
-          b[i] = exp(y[i]);
         }
         for (i in 1 : N) {
           x[i] ~ std_normal();
@@ -4789,14 +4776,6 @@ let%expect_test "vectorize bail: strange loops" =
         FnValidateSize__("g", "M", M);
         vector[M] g;
         g[:] = x[1:M];
-        for(k in 1:M) {
-          target += std_normal_lupdf(g[k]);
-          if(1) {
-            break;
-          } else {
-            continue;
-          }
-        }
         int m;
         m = M;
         target += std_normal_lupdf(exp(g[1:m]));
@@ -4805,10 +4784,6 @@ let%expect_test "vectorize bail: strange loops" =
           m = (m - 1);
         }
       }
-      b[:] = exp(y);
-      for(i in 1:N) {
-        while(1) break;
-      }
       c[:] = z;
       for(i in 1:N) {
         target += std_normal_lupdf(x[i]);
@@ -4816,6 +4791,53 @@ let%expect_test "vectorize bail: strange loops" =
           target += std_normal_lupdf(y[i]);
           FnPrint__(target());
         }
+      }
+    }
+    |}]
+
+let%expect_test "vectorize bail: break and continue" =
+  print_vectorized
+    {|
+      data {
+        int<lower=0> N;
+        vector[N] x;
+      }
+      model {
+        for (k in 1 : N) {
+          x[k] ~ std_normal();
+          if (x[k] < 0) {
+            break;
+          }
+        }
+        for (i in 1:N) {
+          if (x[i] < 0) continue;
+          x[i] ~ std_normal();
+        }
+        vector[N] b;
+        for (i in 1 : N) {
+          while (1) break;
+          b[i] = exp(x[i]);
+        }
+      }
+      |};
+  [%expect
+    {|
+    {
+      for(k in 1:N) {
+        target += std_normal_lupdf(x[k]);
+        if((x[k] < 0)) {
+          break;
+        }
+      }
+      for(i in 1:N) {
+        if((x[i] < 0)) continue;
+        target += std_normal_lupdf(x[i]);
+      }
+      FnValidateSize__("b", "N", N);
+      vector[N] b;
+      b[:] = exp(x);
+      for(i in 1:N) {
+        while(1) break;
       }
     }
     |}]

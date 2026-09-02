@@ -102,7 +102,7 @@ let replace_fresh_local_vars (fname : string) stmt =
           match String.Map.find_opt var_name m with
           | None -> var_name
           | Some var_name' -> var_name' in
-        let lhs' = Middle.Stmt.Helpers.map_lhs_variable ~f:update_name lhs in
+        let lhs' = Stmt.Helpers.map_lhs_variable ~f:update_name lhs in
         (Stmt.Pattern.Assignment (lhs', type_, e), m)
     | x -> (x, m) in
   let s, m = map_rec_state_stmt_loc f String.Map.empty stmt in
@@ -289,8 +289,8 @@ let rec inline_function_expression propto adt fim (Expr.{pattern; _} as e) =
                 handle_early_returns fname (Some inline_return_name) in
               let d_list2, s_list2, (e : Expr.Typed.t) =
                 let decl_type =
-                  Option.map ~f:Mir_utils.unsafe_unsized_to_sized_type rt
-                  |> Option.get in
+                  Option.map ~f:unsafe_unsized_to_sized_type rt |> Option.get
+                in
                 ( [ Stmt.Pattern.Decl
                       { decl_adtype=
                           UnsizedType.fill_adtype_for_type adt
@@ -378,13 +378,13 @@ let rec inline_function_statement propto adt fim Stmt.{pattern; meta} =
     { pattern=
         (match pattern with
         | Assignment (lhs, ut, e2) ->
-            let e1 = Middle.Stmt.Helpers.expr_of_lvalue lhs ~meta:e2.meta in
+            let e1 = Stmt.Helpers.expr_of_lvalue lhs ~meta:e2.meta in
             (* This inner e2 is wrong. We are giving the wrong type to Var x.
                But it doesn't really matter as we discard it later. *)
             let dl1, sl1, e1 = inline_function_expression propto adt fim e1 in
             let dl2, sl2, e2 = inline_function_expression propto adt fim e2 in
             let lhs' =
-              match Middle.Stmt.Helpers.lvalue_of_expr_opt e1 with
+              match Stmt.Helpers.lvalue_of_expr_opt e1 with
               | Some x -> x
               | None ->
                   ICE.internal_error
@@ -490,7 +490,7 @@ let create_function_inline_map adt l =
               (UnsizedType.returntype_to_type_opt fdrt)
           , List.map ~f:(fun (_, name, _) -> name) fdargs
           , inline_function_statement propto adt accum fdbody ) in
-        match Middle.Fun_kind.with_unnormalized_suffix fdname with
+        match Fun_kind.with_unnormalized_suffix fdname with
         | None ->
             let data = create_data true in
             if String.Map.mem fdname accum then accum
@@ -642,8 +642,7 @@ let unroll_loop_one_step_statement _ =
 let one_step_loop_unrolling mir =
   transform_program_blockwise mir unroll_loop_one_step_statement
 
-let can_duplicate_expr e = not (Mir_utils.cannot_duplicate_expr e)
-let cannot_remove_expr = Mir_utils.cannot_remove_expr
+let can_duplicate_expr e = not (cannot_duplicate_expr e)
 
 let elementwise_function name =
   match Operator.of_string_opt name with
@@ -653,7 +652,7 @@ let elementwise_function name =
   | _ -> None
 
 let expr_reads_target =
-  Mir_utils.expr_any (function
+  expr_any (function
     | { pattern=
           FunApp ((UserDefined (_, FnTarget) | StanLib (_, FnTarget, _)), _)
       ; _ } ->
@@ -682,14 +681,11 @@ let merge_info (loop : conflicts) {target; reads; writes; _} =
   ; conflicts= Set.Poly.union loop.conflicts (Set.Poly.inter loop.writes writes)
   }
 
-let stan_math_return_type name args =
-  let arg_types = List.map ~f:Expr.Typed.fun_arg args in
-  match Operator.of_string_opt name with
-  | Some op ->
-      Option.map
-        (Frontend.Typechecker.operator_stan_math_return_type op arg_types)
-        ~f:fst
-  | None -> Frontend.Typechecker.stan_math_return_type name arg_types
+type 'a vector_state =
+  | Scalar of 'a (* contains only loop-invariant scalars *)
+  | Widened of 'a (* something has been vectorized *)
+  | Error
+[@@deriving map]
 
 let vectorized_for (meta : Stmt.Located.Meta.t) (conflict_info : conflicts)
     loopvar lower upper body : Stmt.Located.t =
@@ -702,66 +698,67 @@ let vectorized_for (meta : Stmt.Located.Meta.t) (conflict_info : conflicts)
     (* this function is only called in context where we have already checked
        can_vectorize_expr e *)
     not (Set.Poly.mem loopvar (expr_var_names_set e)) in
-  let rec widen (e : Expr.Typed.t) =
+  let rec widen (e : Expr.Typed.t) : Expr.Typed.t vector_state =
     match e.meta.type_ with
-    | (UInt | UReal | UComplex) when is_loop_invariant_expr e -> `Invariant e
+    | (UInt | UReal | UComplex) when is_loop_invariant_expr e -> Scalar e
     | UInt | UReal -> widen_inner e
-    | _ -> `None
+    | _ -> Error
   and widen_inner e =
     match e.pattern with
     | Indexed (base, idcs) when is_loop_invariant_expr base -> (
         match widen_indices idcs with
-        | None -> `None
+        | None -> Error
         | Some idcs' ->
             let type_ =
               Expr.Helpers.infer_type_of_indexed base.meta.type_ idcs' in
-            `Widened
+            Widened
               {Expr.pattern= Indexed (base, idcs'); meta= {e.meta with type_}})
     | FunApp (StanLib (name, FnPlain, mem), args) -> (
         match widen_all args with
-        | None -> `None
-        | Some args' -> (
+        | Error -> Error
+        | Scalar args' | Widened args' -> (
             let make_funcall name =
-              match stan_math_return_type name args' with
+              match Partial_evaluator.stan_math_return_type name args' with
               | Some
                   (ReturnType
                      ((UVector | URowVector | UArray (UInt | UReal)) as type_))
                 ->
-                  `Widened
+                  Widened
                     Expr.
                       { pattern= FunApp (StanLib (name, FnPlain, mem), args')
                       ; meta= {e.meta with type_} }
-              | _ -> `None in
+              | _ -> Error in
             match (make_funcall name, elementwise_function name) with
-            | `None, Some name -> make_funcall name
+            | Error, Some name -> make_funcall name
             | e, _ -> e))
-    | _ -> `None
+    | _ -> Error
   and widen_all es =
     (* functions allow widening any and all inputs*)
     List.map ~f:widen es
-    |> List.map ~f:(function
-      | `Widened e | `Invariant e -> Some e
-      | `None -> None)
-    |> Option.all
+    |> List.fold_left ~init:(Scalar []) ~f:(fun acc e ->
+        match (acc, e) with
+        | Scalar ls, Scalar e -> Scalar (e :: ls)
+        | (Scalar ls | Widened ls), (Scalar e | Widened e) -> Widened (e :: ls)
+        | _ -> Error)
+    |> map_vector_state List.rev
   and widen_indices idxs =
     (* must widen exactly one index while all others are invariant scalars *)
-    List.fold_left idxs ~init:(`Scalar []) ~f:(fun acc i ->
+    List.fold_left idxs ~init:(Scalar []) ~f:(fun acc i ->
         match (acc, i) with
-        | `Wide ls, Index.Single e when is_loop_invariant_expr e ->
-            `Wide (Index.Single e :: ls)
-        | `Scalar ls, Single e when is_loop_invariant_expr e ->
-            `Scalar (Index.Single e :: ls)
-        | `Scalar ls, Single {Expr.pattern= Var i; _}
-          when String.equal i loopvar ->
-            `Wide (Between (lower, upper) :: ls)
-        | `Scalar ls, Single e -> (
+        | Widened ls, Index.Single e when is_loop_invariant_expr e ->
+            Widened (Index.Single e :: ls)
+        | Scalar ls, Single {Expr.pattern= Var i; _} when String.equal i loopvar
+          ->
+            Widened (Between (lower, upper) :: ls)
+        | Scalar ls, Single e -> (
             match widen e with
-            | `Widened e -> `Wide (MultiIndex e :: ls)
-            | _ -> `Error)
-        | (`Scalar _ | `Wide _ | `Error), _ -> `Error)
+            | Widened e' -> Widened (MultiIndex e' :: ls)
+            | Scalar e -> Scalar (Single e :: ls)
+            | Error -> Error)
+        | _ -> Error)
     |> function
-    | `Scalar _ | `Error -> None
-    | `Wide ls -> Some (List.rev ls) in
+    | Widened ls -> Some (List.rev ls)
+    | _ -> None in
   let rec collect acc Stmt.{pattern; meta} =
     let dont_vectorize = (acc, Some Stmt.{pattern; meta}) in
     let swrap_vec pattern = Stmt.{pattern; meta} :: acc in
@@ -793,28 +790,19 @@ let vectorized_for (meta : Stmt.Located.Meta.t) (conflict_info : conflicts)
                (StanLib (name, ((FnLpdf _ | FnLpmf _) as suffix), mem), args)
          ; _ } as e)
       when (not conflict_info.target) && can_vectorize_expr e -> (
-        match
-          List.map ~f:widen args
-          |> List.fold_left_map ~init:true ~f:(fun invariant -> function
-            | `Invariant e -> (invariant, Some e)
-            | `Widened e -> (false, Some e)
-            | `None -> (false, None))
-          |> fun (inv, ls) -> (inv, Option.all ls)
-        with
-        | _, None -> dont_vectorize
-        | true, Some args' ->
+        match widen_all args with
+        | Error -> dont_vectorize
+        | Scalar args' ->
             let funapp =
               {e with pattern= FunApp (StanLib (name, suffix, mem), args')}
             in
             ( TargetPE
                 Expr.Helpers.(
-                  binop
-                    (binop upper Minus (binop lower Minus loop_bottom))
-                    Times funapp)
+                  binop (binop upper Minus (binop lower Minus one)) Times funapp)
               |> swrap_vec
             , None )
-        | false, Some args'' -> (
-            match stan_math_return_type name args'' with
+        | Widened args'' -> (
+            match Partial_evaluator.stan_math_return_type name args'' with
             | Some (ReturnType UReal) ->
                 ( TargetPE
                     { e with
@@ -828,7 +816,7 @@ let vectorized_for (meta : Stmt.Located.Meta.t) (conflict_info : conflicts)
            && List.for_all idcs
                 ~f:(Index.fold (fun a e -> a && can_vectorize_expr e) true) -> (
         match (widen_indices idcs, widen value) with
-        | Some idcs', `Widened e
+        | Some idcs', Widened e
           when UnsizedType.equal e.meta.type_
                  (Expr.Helpers.infer_type_of_indexed vtype idcs') ->
             (Assignment ((LVariable var, idcs'), vtype, e) |> swrap_vec, None)
@@ -920,7 +908,7 @@ let propagation
          Stmt.Located.Non_recursive.t LabelMap.t
       -> (module Monotone_framework_sigs.TRANSFER_FUNCTION
             with type labels = int
-             and type properties = Middle.Expr.Typed.t String.Map.t option))
+             and type properties = Expr.Typed.t String.Map.t option))
     (mir : Program.Typed.t) =
   let transform stmt =
     let flowgraph, flowgraph_to_mir =
@@ -945,7 +933,7 @@ let constant_propagation ?(preserve_stability = false) =
 let expression_propagation ?(preserve_stability = false) mir =
   propagation
     (Monotone_framework.expression_propagation_transfer ~preserve_stability
-       (Mir_utils.cannot_duplicate_expr ~preserve_stability))
+       (cannot_duplicate_expr ~preserve_stability))
     mir
 
 let copy_propagation mir =
@@ -978,11 +966,11 @@ let dead_code_elimination (mir : Program.Typed.t) =
       match stmt with
       | Stmt.Pattern.Assignment (lhs, _, rhs) ->
           if
-            Set.Poly.mem (Middle.Stmt.Helpers.lhs_variable lhs) live_variables_s
+            Set.Poly.mem (Stmt.Helpers.lhs_variable lhs) live_variables_s
             || cannot_remove_expr rhs
             || List.exists
-                 ~f:(Mir_utils.idx_any cannot_remove_expr)
-                 (Middle.Stmt.Helpers.lhs_indices lhs)
+                 ~f:(idx_any cannot_remove_expr)
+                 (Stmt.Helpers.lhs_indices lhs)
           then stmt
           else Skip
       (* NOTE: we never get rid of declarations as we might not be able to
@@ -1453,9 +1441,7 @@ let optimize_soa (mir : Program.Typed.t) =
       ~f:(Memory_patterns.query_initial_demotable_stmt false)
       mir.reverse_mode_log_prob in
   let mod_exprs aos_exits mod_expr =
-    Mir_utils.map_rec_expr
-      (Memory_patterns.modify_expr_pattern aos_exits)
-      mod_expr in
+    map_rec_expr (Memory_patterns.modify_expr_pattern aos_exits) mod_expr in
   let modify_stmt_patt stmt_pattern variable_set =
     Memory_patterns.modify_stmt_pattern stmt_pattern variable_set in
   let transform stmt =

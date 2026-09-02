@@ -82,6 +82,15 @@ let apply_logical_operator_real (op : string) r1 r2 =
             Common.ICE.internal_errorf "Not a logical operator: %s" [s]
             [@coverage off]) )
 
+let stan_math_return_type name args =
+  let arg_types = List.map ~f:Expr.Typed.fun_arg args in
+  match Operator.of_string_opt name with
+  | Some op ->
+      Option.map
+        (Frontend.Typechecker.operator_stan_math_return_type op arg_types)
+        ~f:fst
+  | None -> Frontend.Typechecker.stan_math_return_type name arg_types
+
 let is_multi_index = function
   | Index.MultiIndex _ | Upfrom _ | Between _ | All -> true
   | Single _ -> false
@@ -98,24 +107,11 @@ let rec eval_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
           match kind with
           | UserDefined _ | CompilerInternal _ -> FunApp (kind, l)
           | StanLib (f, suffix, mem_type) ->
-              let get_fun_or_op_rt_opt name l' =
-                let argument_types =
-                  List.map ~f:(fun x -> Expr.Typed.(adlevel_of x, type_of x)) l'
-                in
-                Operator.of_string_opt name
-                |> Option.value_map
-                     ~f:(fun op ->
-                       Frontend.Typechecker.operator_stan_math_return_type op
-                         argument_types
-                       |> Option.map ~f:fst)
-                     ~default:
-                       (Frontend.Typechecker.stan_math_return_type name
-                          argument_types) in
               let try_partially_evaluate_stanlib e =
                 Expr.Pattern.(
                   match e with
                   | FunApp (StanLib (f', suffix', mem_type), l') -> (
-                      match get_fun_or_op_rt_opt f' l' with
+                      match stan_math_return_type f' l' with
                       | Some _ -> FunApp (StanLib (f', suffix', mem_type), l')
                       | None -> FunApp (StanLib (f, suffix, mem_type), l))
                   | e -> e) in
