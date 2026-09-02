@@ -10,8 +10,8 @@ Display all Stan math distributions exposed in the language
   binomial: lpmf, rng, ccdf, cdf
   binomial_logit: lpmf
   binomial_logit_glm: lpmf
-  categorical: lpmf
-  categorical_logit: lpmf
+  categorical: lpmf, rng
+  categorical_logit: lpmf, rng
   categorical_logit_glm: lpmf
   cauchy: lpdf, rng, ccdf, cdf
   chi_square: lpdf, rng, ccdf, cdf
@@ -29,8 +29,8 @@ Display all Stan math distributions exposed in the language
   hypergeometric: lpmf, rng
   inv_chi_square: lpdf, rng, ccdf, cdf
   inv_gamma: lpdf, rng, ccdf, cdf
-  inv_wishart: lpdf
-  inv_wishart_cholesky: lpdf
+  inv_wishart: lpdf, rng
+  inv_wishart_cholesky: lpdf, rng
   lkj_corr: lpdf
   lkj_corr_cholesky: lpdf
   lkj_cov: lpdf
@@ -52,12 +52,13 @@ Display all Stan math distributions exposed in the language
   neg_binomial_2_log_glm: lpmf
   normal: lpdf, rng, ccdf, cdf
   normal_id_glm: lpdf
-  ordered_logistic: lpmf
+  ordered_logistic: lpmf, rng
   ordered_logistic_glm: lpmf
-  ordered_probit: lpmf
+  ordered_probit: lpmf, rng
   pareto: lpdf, rng, ccdf, cdf
   pareto_type_2: lpdf, rng, ccdf, cdf
   poisson: lpmf, rng, ccdf, cdf
+  poisson_binomial: lpmf, rng, ccdf, cdf
   poisson_log: lpmf, rng
   poisson_log_glm: lpmf
   rayleigh: lpdf, rng, ccdf, cdf
@@ -70,6 +71,6 @@ Display all Stan math distributions exposed in the language
   von_mises: lpdf, rng, ccdf, cdf
   weibull: lpdf, rng, ccdf, cdf
   wiener: lpdf
-  wishart: lpdf
-  wishart_cholesky: lpdf
+  wishart: lpdf, rng
+  wishart_cholesky: lpdf, rng
   yule_simon: lpmf, rng, ccdf, cdf
