@@ -9427,17 +9427,10 @@ namespace tuple_test_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 10> locations_array__ =
+static constexpr std::array<const char*, 3> locations_array__ =
   {" (found before start of program)",
   " (in 'tuple_test.stan', line 3, column 4 to column 61)",
-  " (in 'tuple_test.stan', line 6, column 4 to column 28)",
-  " (in 'tuple_test.stan', line 3, column 16 to column 17)",
-  " (in 'tuple_test.stan', line 3, column 26 to column 27)",
-  " (in 'tuple_test.stan', line 3, column 28 to column 29)",
-  " (in 'tuple_test.stan', line 3, column 39 to column 40)",
-  " (in 'tuple_test.stan', line 3, column 52 to column 53)",
-  " (in 'tuple_test.stan', line 6, column 11 to column 12)",
-  " (in 'tuple_test.stan', line 6, column 13 to column 14)"};
+  " (in 'tuple_test.stan', line 6, column 4 to column 28)"};
 class tuple_test_model final : public model_base_crtp<tuple_test_model> {
  private:
   
@@ -9460,24 +9453,6 @@ class tuple_test_model final : public model_base_crtp<tuple_test_model> {
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      current_statement__ = 3;
-      stan::math::validate_non_negative_index("xx.1", "1", 1);
-      current_statement__ = 4;
-      stan::math::validate_non_negative_index("xx.1", "1", 1);
-      current_statement__ = 5;
-      stan::math::validate_non_negative_index("xx.1", "1", 1);
-      current_statement__ = 6;
-      stan::math::validate_non_negative_index("xx.2", "1", 1);
-      current_statement__ = 7;
-      stan::math::validate_non_negative_index("xx.3", "1", 1);
-      current_statement__ = 8;
-      stan::math::validate_non_negative_index("x", "1", 1);
-      current_statement__ = 9;
-      stan::math::validate_non_negative_index("x", "1", 1);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
     num_params_r__ = (((1 * (1 * 1)) + (1 * 2)) + (1 * 3));
   }
   inline std::string model_name() const final {

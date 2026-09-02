@@ -206,11 +206,13 @@ my_vector_mul_by_5(const T0__& x_arg__, std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 7;
+    int result_1dim__ = stan::math::num_elements(x);
+    current_statement__ = 7;
     stan::math::validate_non_negative_index("result", "num_elements(x)",
-      stan::math::num_elements(x));
+      result_1dim__);
     Eigen::Matrix<local_scalar_t__,-1,1> result =
-      Eigen::Matrix<local_scalar_t__,-1,1>::Constant(stan::math::num_elements(
-                                                       x), DUMMY_VAR__);
+      Eigen::Matrix<local_scalar_t__,-1,1>::Constant(result_1dim__,
+        DUMMY_VAR__);
     current_statement__ = 8;
     stan::model::assign(result, stan::math::multiply(x, 5.0),
       "assigning variable result");
@@ -660,11 +662,13 @@ my_vector_mul_by_5(const T0__& x_arg__, std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 7;
+    int result_1dim__ = stan::math::num_elements(x);
+    current_statement__ = 7;
     stan::math::validate_non_negative_index("result", "num_elements(x)",
-      stan::math::num_elements(x));
+      result_1dim__);
     Eigen::Matrix<local_scalar_t__,-1,1> result =
-      Eigen::Matrix<local_scalar_t__,-1,1>::Constant(stan::math::num_elements(
-                                                       x), DUMMY_VAR__);
+      Eigen::Matrix<local_scalar_t__,-1,1>::Constant(result_1dim__,
+        DUMMY_VAR__);
     current_statement__ = 8;
     stan::model::assign(result, stan::math::multiply(x, 5.0),
       "assigning variable result");

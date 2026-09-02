@@ -64,6 +64,14 @@ let tuple_trans_exn = function
         internal_errorf "Expected TupleTransformation but got %t"
           [Transformation.pp Expr.Typed.pp $ t]) [@coverage off]
 
+let zip_subtypes_tuple_trans_exn sts trans =
+  match trans with
+  | Transformation.Identity ->
+      List.map ~f:(fun s -> (s, Transformation.Identity)) sts
+  | _ ->
+      let tms = tuple_trans_exn trans in
+      List.combine sts tms
+
 let zip_stuple_trans_exn pst tms =
   let rec tuple_subtypes pst =
     match pst with

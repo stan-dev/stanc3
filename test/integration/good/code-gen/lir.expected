@@ -3850,15 +3850,21 @@
         (Expression (Cast Void (Var DUMMY_VAR__)))
         (TryCatch
          ((Expression (Assign (Var current_statement__) (Literal 729)))
+          (VariableDefn
+           ((static false) (constexpr false) (type_ Int) (name o_1dim__)
+            (init (Assignment (FunCall stan::math::rows () ((Var mat)))))))
+          (Expression (Assign (Var current_statement__) (Literal 729)))
           (Expression
            (FunCall stan::math::validate_non_negative_index ()
-            ((Literal "\"o\"") (Literal "\"rows(mat)\"")
-             (FunCall stan::math::rows () ((Var mat))))))
+            ((Literal "\"o\"") (Literal "\"rows(mat)\"") (Var o_1dim__))))
+          (Expression (Assign (Var current_statement__) (Literal 730)))
+          (VariableDefn
+           ((static false) (constexpr false) (type_ Int) (name o_2dim__)
+            (init (Assignment (FunCall stan::math::cols () ((Var mat)))))))
           (Expression (Assign (Var current_statement__) (Literal 730)))
           (Expression
            (FunCall stan::math::validate_non_negative_index ()
-            ((Literal "\"o\"") (Literal "\"cols(mat)\"")
-             (FunCall stan::math::cols () ((Var mat))))))
+            ((Literal "\"o\"") (Literal "\"cols(mat)\"") (Var o_2dim__))))
           (VariableDefn
            ((static false) (constexpr false)
             (type_ (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)) 
@@ -3866,9 +3872,7 @@
             (init
              (Assignment
               (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)
-               Constant ()
-               ((FunCall stan::math::rows () ((Var mat)))
-                (FunCall stan::math::cols () ((Var mat))) (Var DUMMY_VAR__)))))))
+               Constant () ((Var o_1dim__) (Var o_2dim__) (Var DUMMY_VAR__)))))))
           (Expression (Assign (Var current_statement__) (Literal 732)))
           (Expression
            (FunCall stan::model::assign ()

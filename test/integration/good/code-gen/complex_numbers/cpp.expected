@@ -6996,7 +6996,7 @@ namespace complex_scalar_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 428> locations_array__ =
+static constexpr std::array<const char*, 426> locations_array__ =
   {" (found before start of program)",
   " (in 'complex_scalar.stan', line 111, column 2 to column 11)",
   " (in 'complex_scalar.stan', line 112, column 2 to column 20)",
@@ -7401,8 +7401,6 @@ static constexpr std::array<const char*, 428> locations_array__ =
   " (in 'complex_scalar.stan', line 106, column 2 to column 35)",
   " (in 'complex_scalar.stan', line 107, column 2 to column 35)",
   " (in 'complex_scalar.stan', line 108, column 2 to column 51)",
-  " (in 'complex_scalar.stan', line 265, column 8 to column 9)",
-  " (in 'complex_scalar.stan', line 266, column 8 to column 9)",
   " (in 'complex_scalar.stan', line 3, column 4 to column 24)",
   " (in 'complex_scalar.stan', line 2, column 16 to line 4, column 3)",
   " (in 'complex_scalar.stan', line 6, column 4 to column 15)",
@@ -7516,7 +7514,7 @@ std::complex<double> foo(std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 406;
+    current_statement__ = 404;
     return stan::math::promote_scalar<std::complex<local_scalar_t__>>(
              stan::math::to_complex());
   } catch (const std::exception& e) {
@@ -7542,7 +7540,7 @@ foo1(const T0__& z, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 408;
+    current_statement__ = 406;
     return stan::math::promote_scalar<local_scalar_t__>(1.0);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7565,7 +7563,7 @@ foo2(const T0__& r, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 410;
+    current_statement__ = 408;
     return stan::math::to_complex(r);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7590,7 +7588,7 @@ foo3(const T0__& z, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 412;
+    current_statement__ = 410;
     return z;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7609,7 +7607,7 @@ std::vector<std::complex<double>> foo4(std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 414;
+    current_statement__ = 412;
     return std::vector<std::complex<local_scalar_t__>>{stan::math::promote_scalar<
                                                          std::complex<local_scalar_t__>>(
                                                          stan::math::to_complex(
@@ -7642,7 +7640,7 @@ foo5(const T0__& z, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 416;
+    current_statement__ = 414;
     return stan::math::promote_scalar<local_scalar_t__>(1.0);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7665,7 +7663,7 @@ foo6(const T0__& r, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 418;
+    current_statement__ = 416;
     return std::vector<std::complex<local_scalar_t__>>{stan::math::to_complex(
                                                          r),
              stan::math::to_complex(r, r)};
@@ -7695,7 +7693,7 @@ foo7(const T0__& z, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 420;
+    current_statement__ = 418;
     return z;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7726,7 +7724,7 @@ foo8(const T0__& z, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 422;
+    current_statement__ = 420;
     return stan::math::promote_scalar<local_scalar_t__>(1.0);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7749,7 +7747,7 @@ foo9(const T0__& r, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 424;
+    current_statement__ = 422;
     return std::vector<std::vector<std::complex<local_scalar_t__>>>{std::vector<
                                                                     std::complex<local_scalar_t__>>{
                                                                     stan::math::to_complex(
@@ -7791,7 +7789,7 @@ foo10(const T0__& z, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 426;
+    current_statement__ = 424;
     return z;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -8074,10 +8072,6 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
       stan::model::assign(td_complex_array_2d,
         foo10(stan::model::deep_copy(td_complex_array_2d), pstream__),
         "assigning variable td_complex_array_2d");
-      current_statement__ = 404;
-      stan::math::validate_non_negative_index("i_arr", "0", 0);
-      current_statement__ = 405;
-      stan::math::validate_non_negative_index("i_arr_1", "1", 1);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }

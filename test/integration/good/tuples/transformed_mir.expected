@@ -21985,7 +21985,7 @@
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
-      (((pattern (Lit Str data_m))
+      (((pattern (Lit Str data_m.2))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Str N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -22619,45 +22619,8 @@
  (prog_name tuple_lpmf_model) (prog_path tuple_lpmf.stan))
 [exit 0]
   $ stanc -fsoa --debug-optimized-mir tuple_temporary.stan
-((functions_block ()) (input_vars ())
- (prepare_data
-  (((pattern
-     (NRFunApp (CompilerInternal FnValidateSize)
-      (((pattern (Lit Str m)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-       ((pattern (Lit Str 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-       ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-    (meta <opaque>))
-   ((pattern
-     (NRFunApp (CompilerInternal FnValidateSize)
-      (((pattern (Lit Str m)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-       ((pattern (Lit Str 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-       ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-    (meta <opaque>))
-   ((pattern
-     (NRFunApp (CompilerInternal FnValidateSize)
-      (((pattern (Lit Str t.2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-       ((pattern (Lit Str 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-       ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-    (meta <opaque>))
-   ((pattern
-     (NRFunApp (CompilerInternal FnValidateSize)
-      (((pattern (Lit Str t.2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-       ((pattern (Lit Str 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-       ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-    (meta <opaque>))
-   ((pattern
-     (NRFunApp (CompilerInternal FnValidateSize)
-      (((pattern (Lit Str s.2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-       ((pattern (Lit Str 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-       ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-    (meta <opaque>))
-   ((pattern
-     (NRFunApp (CompilerInternal FnValidateSize)
-      (((pattern (Lit Str s.2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-       ((pattern (Lit Str 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-       ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-    (meta <opaque>))))
- (log_prob ()) (reverse_mode_log_prob ())
+((functions_block ()) (input_vars ()) (prepare_data ()) (log_prob ())
+ (reverse_mode_log_prob ())
  (generate_quantities
   (((pattern
      (IfElse
@@ -23009,13 +22972,13 @@
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
-      (((pattern (Lit Str td)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+      (((pattern (Lit Str td.1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Str N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
-      (((pattern (Lit Str td)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+      (((pattern (Lit Str td.2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Str N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
@@ -23357,7 +23320,7 @@
         (meta <opaque>))
        ((pattern
          (NRFunApp (CompilerInternal FnValidateSize)
-          (((pattern (Lit Str tup))
+          (((pattern (Lit Str tup.1))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
            ((pattern (Lit Str N))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -23729,7 +23692,7 @@
         (meta <opaque>))
        ((pattern
          (NRFunApp (CompilerInternal FnValidateSize)
-          (((pattern (Lit Str tup))
+          (((pattern (Lit Str tup.1))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
            ((pattern (Lit Str N))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
