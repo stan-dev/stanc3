@@ -5,41 +5,6 @@ open Middle
 
 exception Rejected of Location_span.t * string
 
-let rec expr_any pred (e : Expr.Typed.t) =
-  match e.pattern with
-  | Indexed (e, is) -> expr_any pred e || List.exists ~f:(idx_any pred) is
-  | _ -> pred e || Expr.Pattern.fold (accum_any pred) false e.pattern
-
-and idx_any pred (i : Expr.Typed.t Index.t) =
-  Index.fold (accum_any pred) false i
-
-and accum_any pred b e = b || expr_any pred e
-
-let can_side_effect_top_expr (e : Expr.Typed.t) =
-  (* the only StanLib FnTarget function is target() which has no side effects
-     but can return a different result every time *)
-  match e.pattern with
-  | FunApp
-      ( (UserDefined (_, (FnTarget | FnJacobian)) | StanLib (_, FnJacobian, _))
-      , _ ) ->
-      true
-  | FunApp (CompilerInternal internal_fn, _) ->
-      Internal_fun.can_side_effect internal_fn
-  | _ -> false
-
-let cannot_duplicate_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
-  let pred e =
-    can_side_effect_top_expr e
-    || (match e.pattern with
-      | FunApp ((UserDefined (_, FnRng) | StanLib (_, (FnRng | FnTarget), _)), _)
-        ->
-          true
-      | _ -> false)
-    || (preserve_stability && UnsizedType.is_autodiffable e.meta.type_) in
-  expr_any pred e
-
-let cannot_remove_expr (e : Expr.Typed.t) = expr_any can_side_effect_top_expr e
-
 let rec is_int query Expr.{pattern; _} =
   match pattern with
   | Lit (Int, i) | Lit (Real, i) -> Float.of_string i = Float.of_int query
@@ -1210,8 +1175,8 @@ let add_known_size (info : declsize_info) (name : string)
     (sizes : Expr.Typed.t list) : declsize_info =
   let sizes =
     sizes
-    |> List.map ~f:(fun d -> if cannot_duplicate_expr d then None else Some d)
-  in
+    |> List.map ~f:(fun d ->
+        if Mir_utils.cannot_duplicate_expr d then None else Some d) in
   if List.exists ~f:Option.is_some sizes then
     let deps =
       List.filter_mapi sizes ~f:(fun i -> function

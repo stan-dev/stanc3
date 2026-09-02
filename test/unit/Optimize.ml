@@ -4766,7 +4766,10 @@ let%expect_test "vectorize bail: strange loops" =
         }
         for (i in 1 : N) {
           x[i] ~ std_normal();
-          print(target());
+          for (j in 1 : N) {
+            y[i] ~ std_normal();
+            print(target());
+          }
           c[i] = z[i];
         }
       }
@@ -4809,7 +4812,10 @@ let%expect_test "vectorize bail: strange loops" =
       c[:] = z;
       for(i in 1:N) {
         target += std_normal_lupdf(x[i]);
-        FnPrint__(target());
+        for(j in 1:N) {
+          target += std_normal_lupdf(y[i]);
+          FnPrint__(target());
+        }
       }
     }
     |}]
@@ -4824,6 +4830,9 @@ let%expect_test "vectorize bail: rng bounds" =
           for (i in 1 : N) {
             x[i] = a[i];
             vector[10] y;
+            for (k in poisson_rng(5) : 10) {
+              y[k] = x[k];
+            }
             for (k in 1 : poisson_rng(5)) {
               y[k] = x[k];
             }
@@ -4851,6 +4860,9 @@ let%expect_test "vectorize bail: rng bounds" =
         for(i in 1:N) {
           x[i] = a[i];
           vector[10] y;
+          for(k in poisson_rng(5):10) {
+            y[k] = x[k];
+          }
           for(k in 1:poisson_rng(5)) {
             y[k] = x[k];
           }
@@ -4863,6 +4875,71 @@ let%expect_test "vectorize bail: rng bounds" =
         }
         for(i in poisson_rng(10):N) {
           x[i] = a[i];
+        }
+      }
+    }
+    |}]
+
+let%expect_test "vectorize: multiple indexing" =
+  print_vectorized
+    {|
+      data {
+        int<lower=0> N;
+        array[N] int x;
+      }
+      parameters {
+        array[N] vector[N] y;
+        array[N] row_vector[N] z;
+      }
+      model {
+        array[N,size([target()]),N] int a;
+        matrix[N,N] w1;
+        matrix[N,N] w2;
+        matrix[N,N] w3;
+        matrix[N,N] w4;
+        for (i in 1 : N) {
+          a[i,1,1] = x[i];
+          y[i,x[i]] ~ std_normal();
+          for (j in 1 : N) {
+            w1[i,j] = y[i,j];
+            w2[j,i] = y[i,j];
+            w3[i,j] = z[i,j];
+            w4[j,i] = z[i,j];
+            y[i,i] ~ std_normal();
+          }
+        }
+      }
+      |};
+  [%expect
+    {|
+    array[vector[N], N] y;
+    array[row_vector[N], N] z;
+    {
+      FnValidateSize__("a", "N", N);
+      FnValidateSize__("a", "size([target()])", size(FnMakeRowVec__(target())));
+      FnValidateSize__("a", "N", N);
+      array[array[array[int, N], size(FnMakeRowVec__(target()))], N] a;
+      FnValidateSize__("w1", "N", N);
+      FnValidateSize__("w1", "N", N);
+      matrix[N, N] w1;
+      FnValidateSize__("w2", "N", N);
+      FnValidateSize__("w2", "N", N);
+      matrix[N, N] w2;
+      FnValidateSize__("w3", "N", N);
+      FnValidateSize__("w3", "N", N);
+      matrix[N, N] w3;
+      FnValidateSize__("w4", "N", N);
+      FnValidateSize__("w4", "N", N);
+      matrix[N, N] w4;
+      a[:, 1, 1] = x;
+      for(i in 1:N) {
+        target += std_normal_lupdf(y[i, x[i]]);
+        w2[:, i] = y[i];
+        w3[i, :] = z[i];
+        target += ((N - 0) * std_normal_lupdf(y[i, i]));
+        for(j in 1:N) {
+          w1[i, j] = y[i, j];
+          w4[j, i] = z[i, j];
         }
       }
     }
