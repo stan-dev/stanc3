@@ -877,15 +877,11 @@ and vectorize_stmt_inner outer_info Stmt.{pattern; meta} :
       (loop_info, {pattern; meta})
 
 (* Rewrites e.g. [for (n in 1:N) target += normal_lpdf(y[n] | mu[n], sigma)] to
-   [target += normal_lpdf(y | mu, sigma)], and [for (n in 1:N) mu[n] = alpha +
-   beta * x[n]] to [mu[:] = alpha + beta * x]. Tilde statements have the same
-   MIR shape as target increments, so they are covered too.
-
-   An expression widens when every loop-varying node is [x[n]], [x[idx[n]]], or
-   a StanLib application of widened children that re-typechecks at a container
-   return type, with operators retrying as their elementwise variant. [x[n]]
-   becomes [x[lower:upper]], or [x] alone when the range provably spans the
-   declaration. Loops that do not match are left unchanged. *)
+   [target += normal_lpdf(y[1:N] | mu[1:N], sigma)], and [for (n in 1:N) mu[n] =
+   alpha + beta * x[n]] to [mu[1:N] = alpha + beta * x[1:N]]. Widening applies
+   to all StanLib functions that re-typecheck at a container return type, with
+   the operators [*] and [/] replaced by their elementwise variants [.*] and
+   [./] if necessary. *)
 let vectorize_loops = Program.map Fun.id vectorize_stmt Fun.id
 
 let collapse_lists_statement _ =
