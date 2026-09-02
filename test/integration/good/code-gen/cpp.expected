@@ -6555,10 +6555,12 @@ my_upper_bound_jacobian(const T0__& x_arg__, const T1__& ub, T_lp__& lp__,
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 19;
+    int result_1dim__ = stan::math::size(x);
+    current_statement__ = 19;
     stan::math::validate_non_negative_index("result", "size(x)",
-      stan::math::size(x));
+      result_1dim__);
     Eigen::Matrix<local_scalar_t__,-1,1> result =
-      Eigen::Matrix<local_scalar_t__,-1,1>::Constant(stan::math::size(x),
+      Eigen::Matrix<local_scalar_t__,-1,1>::Constant(result_1dim__,
         DUMMY_VAR__);
     current_statement__ = 23;
     for (int n = 1; n <= stan::math::size(x); ++n) {
@@ -8425,11 +8427,11 @@ class laplace_functionals_model final : public model_base_crtp<laplace_functiona
                            max_num_steps, solver, max_steps_line_search,
                            allow_fallthrough), pstream__));
         current_statement__ = 13;
-        stan::math::validate_non_negative_index("mean_chol", "n_obs", n_obs);
+        stan::math::validate_non_negative_index("mean_chol.1", "n_obs", n_obs);
         current_statement__ = 14;
-        stan::math::validate_non_negative_index("mean_chol", "n_obs", n_obs);
+        stan::math::validate_non_negative_index("mean_chol.2", "n_obs", n_obs);
         current_statement__ = 15;
-        stan::math::validate_non_negative_index("mean_chol", "n_obs", n_obs);
+        stan::math::validate_non_negative_index("mean_chol.2", "n_obs", n_obs);
         std::tuple<Eigen::Matrix<local_scalar_t__,-1,1>,
           Eigen::Matrix<local_scalar_t__,-1,-1>> mean_chol =
           std::tuple<Eigen::Matrix<local_scalar_t__,-1,1>,
@@ -8445,13 +8447,13 @@ class laplace_functionals_model final : public model_base_crtp<laplace_functiona
             std::forward_as_tuple(x, n_obs, 1.0, 1.0), pstream__),
           "assigning variable mean_chol");
         current_statement__ = 17;
-        stan::math::validate_non_negative_index("mean_chol_tol", "n_obs",
+        stan::math::validate_non_negative_index("mean_chol_tol.1", "n_obs",
           n_obs);
         current_statement__ = 18;
-        stan::math::validate_non_negative_index("mean_chol_tol", "n_obs",
+        stan::math::validate_non_negative_index("mean_chol_tol.2", "n_obs",
           n_obs);
         current_statement__ = 19;
-        stan::math::validate_non_negative_index("mean_chol_tol", "n_obs",
+        stan::math::validate_non_negative_index("mean_chol_tol.2", "n_obs",
           n_obs);
         std::tuple<Eigen::Matrix<local_scalar_t__,-1,1>,
           Eigen::Matrix<local_scalar_t__,-1,-1>> mean_chol_tol =
@@ -8538,11 +8540,11 @@ class laplace_functionals_model final : public model_base_crtp<laplace_functiona
                            max_num_steps, solver, max_steps_line_search,
                            allow_fallthrough), pstream__));
         current_statement__ = 13;
-        stan::math::validate_non_negative_index("mean_chol", "n_obs", n_obs);
+        stan::math::validate_non_negative_index("mean_chol.1", "n_obs", n_obs);
         current_statement__ = 14;
-        stan::math::validate_non_negative_index("mean_chol", "n_obs", n_obs);
+        stan::math::validate_non_negative_index("mean_chol.2", "n_obs", n_obs);
         current_statement__ = 15;
-        stan::math::validate_non_negative_index("mean_chol", "n_obs", n_obs);
+        stan::math::validate_non_negative_index("mean_chol.2", "n_obs", n_obs);
         std::tuple<Eigen::Matrix<local_scalar_t__,-1,1>,
           Eigen::Matrix<local_scalar_t__,-1,-1>> mean_chol =
           std::tuple<Eigen::Matrix<local_scalar_t__,-1,1>,
@@ -8558,13 +8560,13 @@ class laplace_functionals_model final : public model_base_crtp<laplace_functiona
             std::forward_as_tuple(x, n_obs, 1.0, 1.0), pstream__),
           "assigning variable mean_chol");
         current_statement__ = 17;
-        stan::math::validate_non_negative_index("mean_chol_tol", "n_obs",
+        stan::math::validate_non_negative_index("mean_chol_tol.1", "n_obs",
           n_obs);
         current_statement__ = 18;
-        stan::math::validate_non_negative_index("mean_chol_tol", "n_obs",
+        stan::math::validate_non_negative_index("mean_chol_tol.2", "n_obs",
           n_obs);
         current_statement__ = 19;
-        stan::math::validate_non_negative_index("mean_chol_tol", "n_obs",
+        stan::math::validate_non_negative_index("mean_chol_tol.2", "n_obs",
           n_obs);
         std::tuple<Eigen::Matrix<local_scalar_t__,-1,1>,
           Eigen::Matrix<local_scalar_t__,-1,-1>> mean_chol_tol =
@@ -10133,12 +10135,16 @@ scalar_tuple(const T0__& x, const T1__& p, std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 21;
-    stan::math::validate_non_negative_index("K", "p.1", std::get<0>(p));
+    int K_1dim__ = std::get<0>(p);
+    current_statement__ = 21;
+    stan::math::validate_non_negative_index("K", "p.1", K_1dim__);
     current_statement__ = 22;
-    stan::math::validate_non_negative_index("K", "p.1", std::get<0>(p));
+    int K_2dim__ = std::get<0>(p);
+    current_statement__ = 22;
+    stan::math::validate_non_negative_index("K", "p.1", K_2dim__);
     Eigen::Matrix<local_scalar_t__,-1,-1> K =
-      Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(std::get<0>(p),
-        std::get<0>(p), DUMMY_VAR__);
+      Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(K_1dim__, K_2dim__,
+        DUMMY_VAR__);
     current_statement__ = 23;
     stan::model::assign(K,
       stan::math::gp_exp_quad_cov(x, std::get<0>(std::get<1>(p)),
@@ -12351,33 +12357,24 @@ K_function(const T0__& p, const T1__& rho, std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 32;
-    stan::math::validate_non_negative_index("K", "p[1].2[1].1",
+    int K_1dim__ =
       std::get<0>(
         stan::model::rvalue(
           std::get<1>(stan::model::rvalue(p, "p", stan::model::index_uni(1))),
-          "p[1].2", stan::model::index_uni(1))));
+          "p[1].2", stan::model::index_uni(1)));
+    current_statement__ = 32;
+    stan::math::validate_non_negative_index("K", "p[1].2[1].1", K_1dim__);
     current_statement__ = 33;
-    stan::math::validate_non_negative_index("K", "p[1].2[1].1",
+    int K_2dim__ =
       std::get<0>(
         stan::model::rvalue(
           std::get<1>(stan::model::rvalue(p, "p", stan::model::index_uni(1))),
-          "p[1].2", stan::model::index_uni(1))));
+          "p[1].2", stan::model::index_uni(1)));
+    current_statement__ = 33;
+    stan::math::validate_non_negative_index("K", "p[1].2[1].1", K_2dim__);
     Eigen::Matrix<local_scalar_t__,-1,-1> K =
-      Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(std::get<0>(
-                                                        stan::model::rvalue(
-                                                          std::get<1>(
-                                                            stan::model::rvalue(
-                                                              p, "p",
-                                                              stan::model::index_uni(
-                                                                1))),
-                                                          "p[1].2",
-                                                          stan::model::index_uni(
-                                                            1))),
-        std::get<0>(
-          stan::model::rvalue(
-            std::get<1>(
-              stan::model::rvalue(p, "p", stan::model::index_uni(1))),
-            "p[1].2", stan::model::index_uni(1))), DUMMY_VAR__);
+      Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(K_1dim__, K_2dim__,
+        DUMMY_VAR__);
     current_statement__ = 34;
     stan::model::assign(K,
       stan::math::gp_exp_quad_cov(
@@ -19252,14 +19249,16 @@ covsqrt2corsqrt(const T0__& mat_arg__, const T1__& invert, std::ostream*
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 729;
-    stan::math::validate_non_negative_index("o", "rows(mat)",
-      stan::math::rows(mat));
+    int o_1dim__ = stan::math::rows(mat);
+    current_statement__ = 729;
+    stan::math::validate_non_negative_index("o", "rows(mat)", o_1dim__);
     current_statement__ = 730;
-    stan::math::validate_non_negative_index("o", "cols(mat)",
-      stan::math::cols(mat));
+    int o_2dim__ = stan::math::cols(mat);
+    current_statement__ = 730;
+    stan::math::validate_non_negative_index("o", "cols(mat)", o_2dim__);
     Eigen::Matrix<local_scalar_t__,-1,-1> o =
-      Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(stan::math::rows(mat),
-        stan::math::cols(mat), DUMMY_VAR__);
+      Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(o_1dim__, o_2dim__,
+        DUMMY_VAR__);
     current_statement__ = 732;
     stan::model::assign(o, mat, "assigning variable o");
     current_statement__ = 733;
@@ -26937,7 +26936,7 @@ namespace motherHOF_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 158> locations_array__ =
+static constexpr std::array<const char*, 156> locations_array__ =
   {" (found before start of program)",
   " (in 'motherHOF.stan', line 48, column 2 to column 21)",
   " (in 'motherHOF.stan', line 49, column 2 to column 24)",
@@ -27075,8 +27074,6 @@ static constexpr std::array<const char*, 158> locations_array__ =
   " (in 'motherHOF.stan', line 43, column 2 to column 34)",
   " (in 'motherHOF.stan', line 44, column 2 to column 26)",
   " (in 'motherHOF.stan', line 45, column 2 to column 25)",
-  " (in 'motherHOF.stan', line 49, column 8 to column 9)",
-  " (in 'motherHOF.stan', line 50, column 8 to column 9)",
   " (in 'motherHOF.stan', line 157, column 8 to column 9)",
   " (in 'motherHOF.stan', line 4, column 4 to column 23)",
   " (in 'motherHOF.stan', line 5, column 4 to column 19)",
@@ -27336,17 +27333,17 @@ sho(const T0__& t, const T1__& y, const T2__& theta, const T3__& x,
   try {
     std::vector<local_scalar_t__> dydt =
       std::vector<local_scalar_t__>(2, DUMMY_VAR__);
-    current_statement__ = 141;
+    current_statement__ = 139;
     stan::model::assign(dydt,
       stan::model::rvalue(y, "y", stan::model::index_uni(2)),
       "assigning variable dydt", stan::model::index_uni(1));
-    current_statement__ = 142;
+    current_statement__ = 140;
     stan::model::assign(dydt,
       (-(stan::model::rvalue(y, "y", stan::model::index_uni(1))) -
       (stan::model::rvalue(theta, "theta", stan::model::index_uni(1)) *
       stan::model::rvalue(y, "y", stan::model::index_uni(2)))),
       "assigning variable dydt", stan::model::index_uni(2));
-    current_statement__ = 143;
+    current_statement__ = 141;
     return dydt;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -27386,7 +27383,7 @@ integrand(const T0__& x, const T1__& xc, const T2__& theta, const T3__& x_r,
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 145;
+    current_statement__ = 143;
     return stan::math::promote_scalar<local_scalar_t__>(0.0);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -27423,7 +27420,7 @@ foo(const T0__& shared_params_arg__, const T1__& job_params_arg__,
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 147;
+    current_statement__ = 145;
     return stan::math::promote_scalar<local_scalar_t__>(
              (Eigen::Matrix<double,-1,1>(3) << static_cast<double>(1),
                                               static_cast<double>(2),
@@ -27463,7 +27460,7 @@ goo(const T0__& shared_params_arg__, const T1__& job_params_arg__,
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 149;
+    current_statement__ = 147;
     return stan::math::promote_scalar<local_scalar_t__>(
              (Eigen::Matrix<double,-1,1>(3) << static_cast<double>(4),
                                               static_cast<double>(5),
@@ -27489,7 +27486,7 @@ map_rectfake(const T0__& x, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 151;
+    current_statement__ = 149;
     return (2 * x);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -27528,17 +27525,17 @@ algebra_system(const T0__& x_arg__, const T1__& y_arg__, const T2__& dat,
   try {
     Eigen::Matrix<local_scalar_t__,-1,1> f_x =
       Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__);
-    current_statement__ = 154;
+    current_statement__ = 152;
     stan::model::assign(f_x,
       (stan::model::rvalue(x, "x", stan::model::index_uni(1)) -
       stan::model::rvalue(y, "y", stan::model::index_uni(1))),
       "assigning variable f_x", stan::model::index_uni(1));
-    current_statement__ = 155;
+    current_statement__ = 153;
     stan::model::assign(f_x,
       (stan::model::rvalue(x, "x", stan::model::index_uni(2)) -
       stan::model::rvalue(y, "y", stan::model::index_uni(2))),
       "assigning variable f_x", stan::model::index_uni(2));
-    current_statement__ = 156;
+    current_statement__ = 154;
     return f_x;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -27723,10 +27720,6 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
         }
       }
       current_statement__ = 137;
-      stan::math::validate_non_negative_index("theta_p", "1", 1);
-      current_statement__ = 138;
-      stan::math::validate_non_negative_index("x_p", "1", 1);
-      current_statement__ = 139;
       stan::math::validate_non_negative_index("y_hat", "T", T);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -51601,12 +51594,11 @@ loops_rng(const T0__& a_arg__, RNG& base_rng__, std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 1;
-    stan::math::validate_non_negative_index("w", "poisson_rng(10)",
-      stan::math::poisson_rng(10, base_rng__));
+    int w_1dim__ = stan::math::poisson_rng(10, base_rng__);
+    current_statement__ = 1;
+    stan::math::validate_non_negative_index("w", "poisson_rng(10)", w_1dim__);
     Eigen::Matrix<local_scalar_t__,-1,1> w =
-      Eigen::Matrix<local_scalar_t__,-1,1>::Constant(stan::math::poisson_rng(
-                                                       10, base_rng__),
-        DUMMY_VAR__);
+      Eigen::Matrix<local_scalar_t__,-1,1>::Constant(w_1dim__, DUMMY_VAR__);
     current_statement__ = 5;
     for (int i = 1; i <= stan::math::size(w); ++i) {
       current_statement__ = 3;
@@ -52296,7 +52288,7 @@ namespace shadowing_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 53> locations_array__ =
+static constexpr std::array<const char*, 52> locations_array__ =
   {" (found before start of program)",
   " (in 'shadowing.stan', line 14, column 2 to column 9)",
   " (in 'shadowing.stan', line 15, column 2 to column 10)",
@@ -52345,7 +52337,6 @@ static constexpr std::array<const char*, 53> locations_array__ =
   " (in 'shadowing.stan', line 75, column 2 to line 77, column 3)",
   " (in 'shadowing.stan', line 80, column 2 to column 23)",
   " (in 'shadowing.stan', line 10, column 3 to column 15)",
-  " (in 'shadowing.stan', line 70, column 8 to column 9)",
   " (in 'shadowing.stan', line 73, column 9 to column 24)",
   " (in 'shadowing.stan', line 3, column 4 to column 30)",
   " (in 'shadowing.stan', line 5, column 4 to column 14)",
@@ -52400,10 +52391,10 @@ rhs(const T0__& t, const T1__& y_arg__, const T2__& alpha, std::ostream*
   try {
     Eigen::Matrix<local_scalar_t__,-1,1> yp =
       Eigen::Matrix<local_scalar_t__,-1,1>::Constant(1, DUMMY_VAR__);
-    current_statement__ = 50;
+    current_statement__ = 49;
     stan::model::assign(yp, stan::math::multiply(-(alpha), y),
       "assigning variable yp");
-    current_statement__ = 51;
+    current_statement__ = 50;
     return yp;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -52454,10 +52445,8 @@ class shadowing_model final : public model_base_crtp<shadowing_model> {
         }
       }
       current_statement__ = 48;
-      stan::math::validate_non_negative_index("called", "1", 1);
-      current_statement__ = 49;
       result_1dim__ = stan::math::num_elements(x);
-      current_statement__ = 49;
+      current_statement__ = 48;
       stan::math::validate_non_negative_index("result", "num_elements(x)",
         result_1dim__);
     } catch (const std::exception& e) {

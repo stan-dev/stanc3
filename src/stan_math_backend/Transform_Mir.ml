@@ -671,9 +671,8 @@ let param_deserializer_read
                                  , out_trans )))) })
                 smeta ]
           , None )
-      | SizedType.STuple _ ->
-          let subtys =
-            Utils.(zip_stuple_trans_exn cst (tuple_trans_exn out_trans)) in
+      | SizedType.STuple sts ->
+          let subtys = Utils.(zip_subtypes_tuple_trans_exn sts out_trans) in
           let sub_sts =
             List.mapi
               ~f:(fun iter (st, trans) ->

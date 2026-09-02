@@ -15985,7 +15985,7 @@ class tuple_hof_model final : public model_base_crtp<tuple_hof_model> {
       current_statement__ = 5;
       data_y = context__.vals_r("data_y");
       current_statement__ = 6;
-      stan::math::validate_non_negative_index("data_m", "N", N);
+      stan::math::validate_non_negative_index("data_m.2", "N", N);
       current_statement__ = 7;
       context__.validate_dims("data initialization", "data_m.1", "double",
         std::vector<size_t>{});
@@ -17469,17 +17469,11 @@ namespace tuple_temporary_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 10> locations_array__ =
+static constexpr std::array<const char*, 4> locations_array__ =
   {" (found before start of program)",
   " (in 'tuple_temporary.stan', line 2, column 2 to column 27)",
   " (in 'tuple_temporary.stan', line 4, column 2 to column 47)",
-  " (in 'tuple_temporary.stan', line 6, column 2 to column 41)",
-  " (in 'tuple_temporary.stan', line 2, column 9 to column 10)",
-  " (in 'tuple_temporary.stan', line 2, column 12 to column 13)",
-  " (in 'tuple_temporary.stan', line 4, column 21 to column 22)",
-  " (in 'tuple_temporary.stan', line 4, column 24 to column 25)",
-  " (in 'tuple_temporary.stan', line 6, column 21 to column 22)",
-  " (in 'tuple_temporary.stan', line 6, column 24 to column 25)"};
+  " (in 'tuple_temporary.stan', line 6, column 2 to column 41)"};
 class tuple_temporary_model final : public model_base_crtp<tuple_temporary_model> {
  private:
   
@@ -17502,22 +17496,6 @@ class tuple_temporary_model final : public model_base_crtp<tuple_temporary_model
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      current_statement__ = 4;
-      stan::math::validate_non_negative_index("m", "1", 1);
-      current_statement__ = 5;
-      stan::math::validate_non_negative_index("m", "1", 1);
-      current_statement__ = 6;
-      stan::math::validate_non_negative_index("t.2", "1", 1);
-      current_statement__ = 7;
-      stan::math::validate_non_negative_index("t.2", "1", 1);
-      current_statement__ = 8;
-      stan::math::validate_non_negative_index("s.2", "1", 1);
-      current_statement__ = 9;
-      stan::math::validate_non_negative_index("s.2", "1", 1);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
     num_params_r__ = 0U;
   }
   inline std::string model_name() const final {
@@ -17991,9 +17969,9 @@ class unpack_promote_model final : public model_base_crtp<unpack_promote_model> 
       current_statement__ = 27;
       y = context__.vals_i("y");
       current_statement__ = 28;
-      stan::math::validate_non_negative_index("td", "N", N);
+      stan::math::validate_non_negative_index("td.1", "N", N);
       current_statement__ = 29;
-      stan::math::validate_non_negative_index("td", "N", N);
+      stan::math::validate_non_negative_index("td.2", "N", N);
       current_statement__ = 30;
       td = std::tuple<std::vector<int>, Eigen::Matrix<double,-1,1>>{std::vector<
                                                                     int>(N,
@@ -18132,7 +18110,7 @@ class unpack_promote_model final : public model_base_crtp<unpack_promote_model> 
           *(pstream__) << std::endl;
         }
         current_statement__ = 18;
-        stan::math::validate_non_negative_index("tup", "N", N);
+        stan::math::validate_non_negative_index("tup.1", "N", N);
         std::tuple<Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>, int>
           tup =
           std::tuple<Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>, int>{
@@ -18277,7 +18255,7 @@ class unpack_promote_model final : public model_base_crtp<unpack_promote_model> 
           *(pstream__) << std::endl;
         }
         current_statement__ = 18;
-        stan::math::validate_non_negative_index("tup", "N", N);
+        stan::math::validate_non_negative_index("tup.1", "N", N);
         std::tuple<Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>, int>
           tup =
           std::tuple<Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>, int>{

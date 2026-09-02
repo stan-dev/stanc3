@@ -2673,6 +2673,7 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
   int n_occasions;
   std::vector<std::vector<int>> y;
   int max_age;
+  int x_2dim__;
   std::vector<std::vector<int>> x;
   int n_occ_minus_1;
   std::vector<int> first;
@@ -2755,15 +2756,16 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
       current_statement__ = 32;
       stan::math::validate_non_negative_index("x", "nind", nind);
       current_statement__ = 33;
+      x_2dim__ = (n_occasions - 1);
+      current_statement__ = 33;
       stan::math::validate_non_negative_index("x", "n_occasions - 1",
-        (n_occasions - 1));
+        x_2dim__);
       current_statement__ = 34;
       context__.validate_dims("data initialization", "x", "int",
         std::vector<size_t>{static_cast<size_t>(nind),
-          static_cast<size_t>((n_occasions - 1))});
+          static_cast<size_t>(x_2dim__)});
       x = std::vector<std::vector<int>>(nind,
-            std::vector<int>((n_occasions - 1),
-              std::numeric_limits<int>::min()));
+            std::vector<int>(x_2dim__, std::numeric_limits<int>::min()));
       {
         std::vector<int> x_flat__;
         current_statement__ = 34;
@@ -9902,13 +9904,12 @@ js_super_lp(const T0__& y, const T1__& first, const T2__& last, const T3__&
                              stan::model::index_uni(1)))));
         } else {
           current_statement__ = 137;
-          stan::math::validate_non_negative_index("lp", "first[i]",
-            stan::model::rvalue(first, "first", stan::model::index_uni(i)));
+          int lp_1dim__ =
+            stan::model::rvalue(first, "first", stan::model::index_uni(i));
+          current_statement__ = 137;
+          stan::math::validate_non_negative_index("lp", "first[i]", lp_1dim__);
           Eigen::Matrix<local_scalar_t__,-1,1> lp =
-            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(stan::model::rvalue(
-                                                             first, "first",
-                                                             stan::model::index_uni(
-                                                               i)),
+            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(lp_1dim__,
               DUMMY_VAR__);
           current_statement__ = 139;
           stan::model::assign(lp,
@@ -10014,10 +10015,12 @@ js_super_lp(const T0__& y, const T1__& first, const T2__& last, const T3__&
                                stan::model::index_uni(i))))));
       } else {
         current_statement__ = 128;
+        int lp_1dim__ = (n_occasions + 1);
+        current_statement__ = 128;
         stan::math::validate_non_negative_index("lp", "n_occasions + 1",
-          (n_occasions + 1));
+          lp_1dim__);
         Eigen::Matrix<local_scalar_t__,-1,1> lp =
-          Eigen::Matrix<local_scalar_t__,-1,1>::Constant((n_occasions + 1),
+          Eigen::Matrix<local_scalar_t__,-1,1>::Constant(lp_1dim__,
             DUMMY_VAR__);
         current_statement__ = 130;
         stan::model::assign(lp, (((stan::math::bernoulli_lpmf<false>(1, psi)
@@ -12895,6 +12898,7 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
   int n_occasions;
   std::vector<std::vector<int>> y;
   int max_age;
+  int x_2dim__;
   std::vector<std::vector<int>> x;
   int n_occ_minus_1;
   std::vector<int> first;
@@ -12977,15 +12981,16 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
       current_statement__ = 32;
       stan::math::validate_non_negative_index("x", "nind", nind);
       current_statement__ = 33;
+      x_2dim__ = (n_occasions - 1);
+      current_statement__ = 33;
       stan::math::validate_non_negative_index("x", "n_occasions - 1",
-        (n_occasions - 1));
+        x_2dim__);
       current_statement__ = 34;
       context__.validate_dims("data initialization", "x", "int",
         std::vector<size_t>{static_cast<size_t>(nind),
-          static_cast<size_t>((n_occasions - 1))});
+          static_cast<size_t>(x_2dim__)});
       x = std::vector<std::vector<int>>(nind,
-            std::vector<int>((n_occasions - 1),
-              std::numeric_limits<int>::min()));
+            std::vector<int>(x_2dim__, std::numeric_limits<int>::min()));
       {
         std::vector<int> x_flat__;
         current_statement__ = 34;
@@ -17238,13 +17243,12 @@ jolly_seber_lp(const T0__& y, const T1__& first, const T2__& last,
                              stan::model::index_uni(1)))));
         } else {
           current_statement__ = 127;
-          stan::math::validate_non_negative_index("lp", "first[i]",
-            stan::model::rvalue(first, "first", stan::model::index_uni(i)));
+          int lp_1dim__ =
+            stan::model::rvalue(first, "first", stan::model::index_uni(i));
+          current_statement__ = 127;
+          stan::math::validate_non_negative_index("lp", "first[i]", lp_1dim__);
           Eigen::Matrix<local_scalar_t__,-1,1> lp =
-            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(stan::model::rvalue(
-                                                             first, "first",
-                                                             stan::model::index_uni(
-                                                               i)),
+            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(lp_1dim__,
               DUMMY_VAR__);
           current_statement__ = 129;
           stan::model::assign(lp,
@@ -17352,10 +17356,12 @@ jolly_seber_lp(const T0__& y, const T1__& first, const T2__& last,
                                stan::model::index_uni(i))))));
       } else {
         current_statement__ = 119;
+        int lp_1dim__ = (n_occasions + 1);
+        current_statement__ = 119;
         stan::math::validate_non_negative_index("lp", "n_occasions + 1",
-          (n_occasions + 1));
+          lp_1dim__);
         Eigen::Matrix<local_scalar_t__,-1,1> lp =
-          Eigen::Matrix<local_scalar_t__,-1,1>::Constant((n_occasions + 1),
+          Eigen::Matrix<local_scalar_t__,-1,1>::Constant(lp_1dim__,
             DUMMY_VAR__);
         current_statement__ = 121;
         stan::model::assign(lp,
