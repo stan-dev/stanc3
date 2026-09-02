@@ -2195,8 +2195,8 @@ model {
     target += bernoulli_lupmf(y_arr| inv_logit(x_vector));
     target += binomial_lpmf(y_arr| j, inv_logit(x_vector));
     target += binomial_lupmf(y_arr| j, inv_logit(x_vector));
-    target += categorical_lpmf(y_arr| inv_logit(x_vector));
-    target += categorical_lupmf(y_arr| inv_logit(x_vector));
+    target += categorical_lpmf(y_arr| softmax(x_vector));
+    target += categorical_lupmf(y_arr| softmax(x_vector));
     target += columns_dot_product(x_matrix, x_matrix);
     target += dot_product(x_vector, x_vector);
     target += inv(sqrt(x_vector));

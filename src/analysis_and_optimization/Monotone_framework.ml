@@ -238,11 +238,9 @@ let dual_partial_function_lattice (type cv)
       String.Map.filter ~f s1
 
     let leq s1 s2 =
-      Set.Poly.for_all Dom.total ~f:(fun k ->
-          match (String.Map.find_opt k s1, String.Map.find_opt k s2) with
-          | Some x, Some y -> x = y
-          | Some _, None | None, None -> true
-          | None, Some _ -> false)
+      String.Map.for_all
+        ~f:(fun key data -> String.Map.find_opt key s1 = Some data)
+        s2
 
     let initial = String.Map.empty
   end : LATTICE_NO_BOT
