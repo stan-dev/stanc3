@@ -82,6 +82,15 @@ let apply_logical_operator_real (op : string) r1 r2 =
             Common.ICE.internal_errorf "Not a logical operator: %s" [s]
             [@coverage off]) )
 
+let stan_math_return_type name args =
+  let arg_types = List.map ~f:Expr.Typed.fun_arg args in
+  match Operator.of_string_opt name with
+  | Some op ->
+      Option.map
+        (Frontend.Typechecker.operator_stan_math_return_type op arg_types)
+        ~f:fst
+  | None -> Frontend.Typechecker.stan_math_return_type name arg_types
+
 let is_multi_index = function
   | Index.MultiIndex _ | Upfrom _ | Between _ | All -> true
   | Single _ -> false
@@ -98,24 +107,11 @@ let rec eval_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
           match kind with
           | UserDefined _ | CompilerInternal _ -> FunApp (kind, l)
           | StanLib (f, suffix, mem_type) ->
-              let get_fun_or_op_rt_opt name l' =
-                let argument_types =
-                  List.map ~f:(fun x -> Expr.Typed.(adlevel_of x, type_of x)) l'
-                in
-                Operator.of_string_opt name
-                |> Option.value_map
-                     ~f:(fun op ->
-                       Frontend.Typechecker.operator_stan_math_return_type op
-                         argument_types
-                       |> Option.map ~f:fst)
-                     ~default:
-                       (Frontend.Typechecker.stan_math_return_type name
-                          argument_types) in
               let try_partially_evaluate_stanlib e =
                 Expr.Pattern.(
                   match e with
                   | FunApp (StanLib (f', suffix', mem_type), l') -> (
-                      match get_fun_or_op_rt_opt f' l' with
+                      match stan_math_return_type f' l' with
                       | Some _ -> FunApp (StanLib (f', suffix', mem_type), l')
                       | None -> FunApp (StanLib (f, suffix, mem_type), l))
                   | e -> e) in
@@ -1130,6 +1126,25 @@ let rec simplify_index_expr pattern =
                 [pp $ inner_singles; pp $ multis]) [@coverage off])
     | e -> e)
 
+let expand_indices name known_sizes indices =
+  (match String.Map.find_opt name known_sizes with
+    | None -> indices
+    | Some s ->
+        List.mapi indices ~f:(fun i idx ->
+            match (Array.get s i, idx) with
+            | Some s, Index.Between (l, u) when Expr.Typed.equal s u ->
+                Index.Upfrom l
+            | _ -> idx))
+  |> List.map ~f:(function
+    | Index.Upfrom n when Expr.Typed.equal n Expr.Helpers.loop_bottom ->
+        Index.All
+    | i -> i)
+
+let expand_indices_expr known_sizes = function
+  | Expr.Pattern.Indexed (({Expr.pattern= Var name; _} as obj), indices) ->
+      Expr.Pattern.Indexed (obj, expand_indices name known_sizes indices)
+  | e -> e
+
 let remove_trailing_alls_expr = function
   | Expr.Pattern.Indexed (obj, indices) ->
       (* a[2][:] -> a[2] *)
@@ -1140,23 +1155,113 @@ let remove_trailing_alls_expr = function
       Expr.Pattern.Indexed (obj, remove_trailing_alls indices)
   | e -> e
 
-let rec simplify_indices_expr expr =
+let rec simplify_indices_expr known_sizes expr =
   Expr.(
     let pattern =
-      expr.pattern |> remove_trailing_alls_expr |> simplify_index_expr
-      |> Expr.Pattern.map simplify_indices_expr in
+      expr.pattern
+      |> expand_indices_expr known_sizes
+      |> remove_trailing_alls_expr |> simplify_index_expr
+      |> Expr.Pattern.map (simplify_indices_expr known_sizes) in
     {expr with pattern})
 
-let rec eval_stmt s =
-  try
-    Stmt.
-      { s with
-        pattern=
-          Pattern.map
-            (Fun.compose eval_expr simplify_indices_expr)
-            eval_stmt s.pattern }
-  with Rejected (loc, m) ->
-    { Stmt.pattern= NRFunApp (CompilerInternal FnReject, [Expr.Helpers.str m])
-    ; meta= loc }
+type declsize_info =
+  { known_sizes: Expr.Typed.t option Array.t String.Map.t
+  ; deps: (string * int) list String.Map.t }
 
-let eval_prog p : Program.Typed.t = Program.map try_eval_expr eval_stmt Fun.id p
+let empty_sizes = {known_sizes= String.Map.empty; deps= String.Map.empty}
+
+let copy_context (info : declsize_info) : declsize_info =
+  {info with known_sizes= String.Map.map info.known_sizes ~f:Array.copy}
+
+let add_known_size (info : declsize_info) (name : string)
+    (sizes : Expr.Typed.t list) : declsize_info =
+  let sizes =
+    sizes
+    |> List.map ~f:(fun d ->
+        if Mir_utils.cannot_duplicate_expr d then None else Some d) in
+  if List.exists ~f:Option.is_some sizes then
+    let deps =
+      List.filter_mapi sizes ~f:(fun i -> function
+        | None -> None
+        | Some d -> Some (i, Mir_utils.expr_var_names_set d))
+      |> List.fold_left ~init:info.deps ~f:(fun init (i, names) ->
+          Set.Poly.fold names ~init ~f:(fun key ->
+              String.Map.update ~key ~f:(fun l ->
+                  Some ((name, i) :: Option.value l ~default:[])))) in
+    { known_sizes=
+        String.Map.add info.known_sizes ~key:name ~data:(Array.of_list sizes)
+    ; deps }
+  else info
+
+let erase_lval (info : declsize_info) lval =
+  { info with
+    deps=
+      String.Map.update info.deps ~key:(Stmt.Helpers.lhs_variable lval)
+        ~f:(fun l ->
+          Option.iter l ~f:(fun l ->
+              List.iter l ~f:(fun (name, i) ->
+                  Option.iter (String.Map.find_opt name info.known_sizes)
+                    ~f:(fun a -> Array.set a i None)));
+          None) }
+
+let rec erase_stmt (info : declsize_info) = function
+  | {Stmt.pattern= Assignment (lval, _, _); _} -> erase_lval info lval
+  | {pattern; _} -> Stmt.Pattern.fold Fun.const erase_stmt info pattern
+
+let rec eval_stmt info Stmt.{pattern; meta} =
+  let expr = Fun.compose eval_expr (simplify_indices_expr info.known_sizes) in
+  let stmts init = List.fold_left_map ~init ~f:eval_stmt in
+  let swrap pattern = Stmt.{pattern; meta} in
+  try
+    match pattern with
+    | Decl {decl_adtype; decl_id; decl_type= Type.Sized st; initialize} ->
+        let st = SizedType.map expr st in
+        let initialize = Stmt.Pattern.map_decl_init expr initialize in
+        ( add_known_size info decl_id (SizedType.get_dims st)
+        , Decl {decl_adtype; decl_id; decl_type= Type.Sized st; initialize}
+          |> swrap )
+    | Assignment ((LVariable name, indices), type_, value) ->
+        let indices =
+          List.map indices ~f:(Index.map expr)
+          |> expand_indices name info.known_sizes in
+        let lval = (Stmt.Pattern.LVariable name, indices) in
+        let value = expr value in
+        (erase_lval info lval, Assignment (lval, type_, value) |> swrap)
+    | Assignment (lval, type_, value) ->
+        let lval = Stmt.Pattern.map_lvalue expr lval in
+        let value = expr value in
+        (erase_lval info lval, Assignment (lval, type_, value) |> swrap)
+    | SList s ->
+        let info, s = stmts info s in
+        (info, SList s |> swrap)
+    | Block s ->
+        let _, s = stmts info s in
+        (info, Block s |> swrap)
+    | Profile (name, s) ->
+        let _, s = stmts info s in
+        (info, Profile (name, s) |> swrap)
+    | For {loopvar; lower; upper; body} ->
+        let lower = expr lower in
+        let info = erase_stmt info body in
+        let upper = expr upper in
+        let info, body = eval_stmt info body in
+        (info, For {loopvar; lower; upper; body} |> swrap)
+    | While (cond, body) ->
+        let info, body = eval_stmt (erase_stmt info body) body in
+        (info, While (expr cond, body) |> swrap)
+    | IfElse (cond, thn, None) ->
+        let cond = expr cond in
+        let info, thn = eval_stmt info thn in
+        (info, IfElse (cond, thn, None) |> swrap)
+    | IfElse (cond, thn, Some els) ->
+        let cond = expr cond in
+        let _, thn = eval_stmt (copy_context info) thn in
+        let info, els = eval_stmt info els in
+        (erase_stmt info thn, IfElse (cond, thn, Some els) |> swrap)
+    | other -> (info, Stmt.Pattern.map expr Fun.id other |> swrap)
+  with Rejected (loc, m) ->
+    ( info
+    , { pattern= NRFunApp (CompilerInternal FnReject, [Expr.Helpers.str m])
+      ; meta= loc } )
+
+let eval_stmt s = eval_stmt empty_sizes s |> snd

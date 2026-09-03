@@ -15,9 +15,9 @@ val one_step_loop_unrolling : Program.Typed.t -> Program.Typed.t
     continue statements in their body at the top level *)
 
 val vectorize_loops : Program.Typed.t -> Program.Typed.t
-(** Rewrite a loop whose body is a single scalar density statement into the
-    vectorized density call, when the Stan Math signatures have one. Loops that
-    do not match are left unchanged *)
+(** Rewrite a loop whose body is scalar density statements and elementwise
+    assignments into the vectorized statements, when the Stan Math signatures
+    have them. Loops that do not match are left unchanged *)
 
 val list_collapsing : Program.Typed.t -> Program.Typed.t
 (** Remove redundant SList constructors from the Mir that might have been
