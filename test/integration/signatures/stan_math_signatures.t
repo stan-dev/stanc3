@@ -21962,9 +21962,11 @@ Display all Stan math signatures exposed in the language
   to_matrix(array[] int, int, int, int) => matrix
   to_matrix(array[] real, int, int) => matrix
   to_matrix(array[] real, int, int, int) => matrix
+  to_matrix(array[] vector) => matrix
   to_matrix(array[] complex, int, int) => complex_matrix
   to_matrix(array[] complex, int, int, int) => complex_matrix
   to_matrix(array[] row_vector) => matrix
+  to_matrix(array[] complex_vector) => complex_matrix
   to_matrix(array[] complex_row_vector) => complex_matrix
   to_matrix(array[,] int) => matrix
   to_matrix(array[,] real) => matrix
@@ -21978,6 +21980,8 @@ Display all Stan math signatures exposed in the language
   to_row_vector(array[] int) => row_vector
   to_row_vector(array[] real) => row_vector
   to_row_vector(array[] complex) => complex_row_vector
+  to_row_vector_array(matrix) => array[] row_vector
+  to_row_vector_array(complex_matrix) => array[] complex_row_vector
   to_vector(vector) => vector
   to_vector(row_vector) => vector
   to_vector(matrix) => vector
@@ -21987,6 +21991,8 @@ Display all Stan math signatures exposed in the language
   to_vector(array[] int) => vector
   to_vector(array[] real) => vector
   to_vector(array[] complex) => complex_vector
+  to_vector_array(matrix) => array[] vector
+  to_vector_array(complex_matrix) => array[] complex_vector
   trace(matrix) => real
   trace(complex_matrix) => complex
   trace_dot(matrix, matrix) => real

@@ -2440,6 +2440,7 @@ let () =
   add_unqualified
     ("to_matrix", ReturnType UMatrix, [UMatrix; UInt; UInt; UInt], AoS);
   add_unqualified ("to_matrix", ReturnType UMatrix, [UVector], AoS);
+  add_unqualified ("to_matrix", ReturnType UMatrix, [UArray UVector], AoS);
   add_unqualified ("to_matrix", ReturnType UMatrix, [UVector; UInt; UInt], AoS);
   add_unqualified
     ("to_matrix", ReturnType UMatrix, [UVector; UInt; UInt; UInt], AoS);
@@ -2470,6 +2471,8 @@ let () =
     , [UComplexMatrix; UInt; UInt; UInt]
     , AoS );
   add_unqualified ("to_matrix", ReturnType UComplexMatrix, [UComplexVector], AoS);
+  add_unqualified
+    ("to_matrix", ReturnType UComplexMatrix, [UArray UComplexVector], AoS);
   add_unqualified
     ("to_matrix", ReturnType UComplexMatrix, [UComplexVector; UInt; UInt], AoS);
   add_unqualified
@@ -2516,6 +2519,13 @@ let () =
     ("to_row_vector", ReturnType UComplexRowVector, [UComplexRowVector], AoS);
   add_unqualified
     ("to_row_vector", ReturnType UComplexRowVector, [UArray UComplex], AoS);
+  add_unqualified
+    ("to_row_vector_array", ReturnType (UArray URowVector), [UMatrix], AoS);
+  add_unqualified
+    ( "to_row_vector_array"
+    , ReturnType (UArray UComplexRowVector)
+    , [UComplexMatrix]
+    , AoS );
   add_unqualified ("to_vector", ReturnType UVector, [UMatrix], SoA);
   add_unqualified ("to_vector", ReturnType UVector, [UVector], SoA);
   add_unqualified ("to_vector", ReturnType UVector, [URowVector], SoA);
@@ -2527,6 +2537,13 @@ let () =
     ("to_vector", ReturnType UComplexVector, [UComplexRowVector], AoS);
   add_unqualified
     ("to_vector", ReturnType UComplexVector, [UArray UComplex], AoS);
+  add_unqualified
+    ("to_vector_array", ReturnType (UArray UVector), [UMatrix], AoS);
+  add_unqualified
+    ( "to_vector_array"
+    , ReturnType (UArray UComplexVector)
+    , [UComplexMatrix]
+    , AoS );
   add_unqualified ("trace", ReturnType UReal, [UMatrix], SoA);
   add_unqualified ("trace", ReturnType UComplex, [UComplexMatrix], AoS);
   add_unqualified ("trace_dot", ReturnType UReal, [UMatrix; UMatrix], SoA);
