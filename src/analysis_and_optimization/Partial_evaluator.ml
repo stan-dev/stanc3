@@ -110,6 +110,9 @@ let rec eval_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
               let try_partially_evaluate_stanlib e =
                 Expr.Pattern.(
                   match e with
+                  | FunApp (StanLib (f', _, _), l')
+                    when String.equal f f' && l == l' ->
+                      e
                   | FunApp (StanLib (f', suffix', mem_type), l') -> (
                       match stan_math_return_type f' l' with
                       | Some _ -> FunApp (StanLib (f', suffix', mem_type), l')
