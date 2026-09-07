@@ -20,6 +20,7 @@ type dimensionality =
   | DReal
   | DVector
   | DMatrix
+  | DRealOrVector
   | DEigenTypes
   | DIntArray
   (* Vectorizable int *)
@@ -62,6 +63,7 @@ let rec expand_arg = function
   | DReal -> [UReal]
   | DVector -> [UVector]
   | DMatrix -> [UMatrix]
+  | DRealOrVector -> [UReal; UVector]
   | DEigenTypes -> [UMatrix; UVector; URowVector]
   | DIntArray -> [UArray UInt]
   | DVInt -> [UInt; UArray UInt]
@@ -272,25 +274,9 @@ let distributions =
     , "neg_binomial_2_log_glm"
     , [DVInt; DMatrix; DReal; DVector; DReal]
     , SoA ); (full_lpdf, "normal", [DVReal; DVReal; DVReal], SoA)
-  ; ([Lpdf], "normal_id_glm", [DVector; DEigenTypes; DReal; DVector; DReal], SoA)
   ; ( [Lpdf]
     , "normal_id_glm"
-    , [DVector; DEigenTypes; DVector; DVector; DReal]
-    , SoA )
-  ; ( [Lpdf]
-    , "normal_id_glm"
-    , [DVector; DEigenTypes; DReal; DVector; DVector]
-    , SoA )
-  ; ( [Lpdf]
-    , "normal_id_glm"
-    , [DVector; DEigenTypes; DVector; DVector; DVector]
-    , SoA )
-  ; ([Lpdf], "normal_id_glm", [DReal; DEigenTypes; DReal; DVector; DReal], SoA)
-  ; ([Lpdf], "normal_id_glm", [DReal; DEigenTypes; DVector; DVector; DReal], SoA)
-  ; ([Lpdf], "normal_id_glm", [DReal; DEigenTypes; DReal; DVector; DVector], SoA)
-  ; ( [Lpdf]
-    , "normal_id_glm"
-    , [DReal; DEigenTypes; DVector; DVector; DVector]
+    , [DRealOrVector; DEigenTypes; DRealOrVector; DVector; DRealOrVector]
     , SoA )
   ; ([Lpmf; Rng (Literal UInt)], "ordered_logistic", [DInt; DReal; DVector], SoA)
   ; ([Lpmf], "ordered_logistic_glm", [DVInt; DMatrix; DVector; DVector], SoA)
