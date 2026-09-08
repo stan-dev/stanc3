@@ -706,11 +706,11 @@ let escape_name str =
   let can_start_identifier = function
     | 'a' .. 'z' | 'A' .. 'Z' | '_' -> true
     | _ -> false in
-  let valid_start =
-    if String.length only_ascii > 0 && not (can_start_identifier only_ascii.[0])
-    then "_" ^ only_ascii
+  let valid =
+    if String.is_empty only_ascii then "_model"
+    else if not (can_start_identifier only_ascii.[0]) then "_" ^ only_ascii
     else only_ascii in
-  valid_start
+  valid
 
 (** Make sure that all if-while-and-for bodies are safely wrapped in a block in
     such a way that we can insert a location update before. The blocks make sure

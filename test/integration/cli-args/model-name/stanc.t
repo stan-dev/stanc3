@@ -20,4 +20,8 @@ Name is c++ reserved word
   $ stanc --name=class añd.stan
   $ grep "class " añd.hpp
   class _stan_class final : public model_base_crtp<_stan_class> {
+Empty name
+  $ stanc --name="" añd.stan
+  $ grep "class " añd.hpp
+  class _model final : public model_base_crtp<_model> {
   $ rm añd.hpp añd.stan
