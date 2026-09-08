@@ -693,24 +693,24 @@ let param_deserializer_read
     read_stmt (decl_id_lval, cst, out_trans)
 
 let escape_name str =
-  let valid_start =
-    if
-      String.length str > 0
-      && match str.[0] with 'a' .. 'z' | 'A' .. 'Z' -> false | _ -> true
-    then "_" ^ str
-    else str in
-  let no_breaks =
-    valid_start
-    |> String.replace_all ~sub:"." ~by:"_"
-    |> String.replace_all ~sub:"-" ~by:"_" in
-  let no_keywords = add_prefix_to_kwrds no_breaks in
+  let no_keywords = add_prefix_to_kwrds str in
   let only_ascii =
     String.concat_map ~sep:""
       ~f:(fun c ->
         if Char.Ascii.is_alphanum c || c = '_' then String.of_char c
-        else match c with '-' -> "_" | _ -> "x" ^ Int.to_string (Char.code c))
+        else
+          match c with
+          | '-' | '.' -> "_"
+          | _ -> "x" ^ Int.to_string (Char.code c))
       no_keywords in
-  only_ascii
+  let can_start_identifier = function
+    | 'a' .. 'z' | 'A' .. 'Z' | '_' -> true
+    | _ -> false in
+  let valid_start =
+    if String.length only_ascii > 0 && not (can_start_identifier only_ascii.[0])
+    then "_" ^ only_ascii
+    else only_ascii in
+  valid_start
 
 (** Make sure that all if-while-and-for bodies are safely wrapped in a block in
     such a way that we can insert a location update before. The blocks make sure

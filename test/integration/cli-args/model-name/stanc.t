@@ -12,6 +12,10 @@ Name argument with dash
   $ stanc --name="a-d" añd.stan
   $ grep "namespace a" añd.hpp
   namespace a_d_namespace {
+Name argument with dot
+  $ stanc --name="A.D" añd.stan
+  $ grep "namespace A" añd.hpp
+  namespace A_D_namespace {
 Name is c++ reserved word
   $ stanc --name=class añd.stan
   $ grep "class " añd.hpp
