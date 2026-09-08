@@ -107,17 +107,15 @@ let rec eval_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
           match kind with
           | UserDefined _ | CompilerInternal _ -> FunApp (kind, l)
           | StanLib (f, suffix, mem_type) ->
-              let try_partially_evaluate_stanlib e =
+              let try_partially_evaluate_stanlib e' =
                 Expr.Pattern.(
-                  match e with
+                  match e' with
                   | FunApp (StanLib (f', _, _), l')
-                    when String.equal f f' && l == l' ->
-                      e
-                  | FunApp (StanLib (f', suffix', mem_type), l') -> (
+                    when not (String.equal f f' && l == l') -> (
                       match stan_math_return_type f' l' with
-                      | Some _ -> FunApp (StanLib (f', suffix', mem_type), l')
-                      | None -> FunApp (StanLib (f, suffix, mem_type), l))
-                  | e -> e) in
+                      | Some _ -> e'
+                      | None -> e.pattern)
+                  | _ -> e') in
               let lub_mem_pat lst =
                 Mem_pattern.lub_mem_pat (List.cons mem_type lst) in
               try_partially_evaluate_stanlib
