@@ -693,9 +693,24 @@ let param_deserializer_read
     read_stmt (decl_id_lval, cst, out_trans)
 
 let escape_name str =
-  str
-  |> String.replace_all ~sub:"." ~by:"_"
-  |> String.replace_all ~sub:"-" ~by:"_"
+  let valid_start =
+    if
+      String.length str > 0
+      && match str.[0] with 'a' .. 'z' | 'A' .. 'Z' -> false | _ -> true
+    then "_" ^ str
+    else str in
+  let no_breaks =
+    valid_start
+    |> String.replace_all ~sub:"." ~by:"_"
+    |> String.replace_all ~sub:"-" ~by:"_" in
+  let no_keywords = add_prefix_to_kwrds no_breaks in
+  let only_ascii =
+    String.concat_map ~sep:""
+      ~f:(fun c ->
+        if Char.Ascii.is_alphanum c || c = '_' then String.of_char c
+        else match c with '-' -> "_" | _ -> "x" ^ Int.to_string (Char.code c))
+      no_keywords in
+  only_ascii
 
 (** Make sure that all if-while-and-for bodies are safely wrapped in a block in
     such a way that we can insert a location update before. The blocks make sure
@@ -1030,8 +1045,7 @@ let trans_prog ?(use_opencl = false) (p : Program.Typed.t) =
   let p =
     Program.(
       { p with
-        prog_name= add_prefix_to_kwrds p.prog_name
-      ; output_vars= List.map ~f:rename_inout p.output_vars
+        output_vars= List.map ~f:rename_inout p.output_vars
       ; input_vars= List.map ~f:rename_inout p.input_vars
       ; functions_block= List.map ~f:rename_func p.functions_block }
       |> map translate_funapps_and_kwrds map_stmt Fun.id
