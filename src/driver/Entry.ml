@@ -13,22 +13,17 @@ let fmt_sexp s =
   Format.flush_str_formatter ()
 
 let set_model_name model_name =
-  let mangle =
-    String.concat_map ~sep:"" ~f:(fun c ->
-        if Char.Ascii.is_alphanum c || c = '_' then String.of_char c
-        else match c with '-' -> "_" | _ -> "x" ^ Int.to_string (Char.code c))
-  in
   let model_name_munged =
     Common.Files.remove_dotstan
       List.(hd_exn (rev (String.split_on_char model_name ~sep:'/'))) in
   if String.equal model_name model_name_munged then
     (* model name was not file-like, so we leave as is (e.g. from --name
        argument) *)
-    Typechecker.model_name := mangle model_name
+    Typechecker.model_name := model_name
   else
     (* model name was a file-like thing, so we add _model to match existing
        behavior *)
-    Typechecker.model_name := mangle (model_name_munged ^ "_model")
+    Typechecker.model_name := model_name_munged ^ "_model"
 
 let reset_mutable_states model_name (flags : Flags.t) =
   Common.Gensym.reset_danger_use_cautiously ();

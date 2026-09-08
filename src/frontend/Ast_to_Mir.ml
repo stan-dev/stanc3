@@ -981,12 +981,6 @@ let trans_prog filename (p : Ast.typed_program) : Program.Typed.t =
     param_gq @ txparam_decls @ tparam_early_return @ txparam_stmts
     @ txparam_checks @ gq_early_return
     @ migrate_checks_to_end_of_block gq_stmts in
-  let normalize_prog_name prog_name =
-    if
-      String.length prog_name > 0
-      && match prog_name.[0] with 'a' .. 'z' | 'A' .. 'Z' -> false | _ -> true
-    then "_" ^ prog_name
-    else prog_name in
   { functions_block= map (trans_fun_def ud_dists) functionblock
   ; input_vars
   ; prepare_data
@@ -996,5 +990,5 @@ let trans_prog filename (p : Ast.typed_program) : Program.Typed.t =
   ; transform_inits
   ; unconstrain_array
   ; output_vars
-  ; prog_name= normalize_prog_name !Typechecker.model_name
+  ; prog_name= !Typechecker.model_name
   ; prog_path= filename }
