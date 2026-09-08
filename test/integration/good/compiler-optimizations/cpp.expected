@@ -43611,9 +43611,10 @@ namespace rng_for_loop_bound_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 13> locations_array__ =
+static constexpr std::array<const char*, 14> locations_array__ =
   {" (found before start of program)",
   " (in 'rng-for-loop-bound.stan', line 3, column 4 to column 17)",
+  " (in 'rng-for-loop-bound.stan', line 4, column 14 to column 29)",
   " (in 'rng-for-loop-bound.stan', line 5, column 6 to column 30)",
   " (in 'rng-for-loop-bound.stan', line 4, column 36 to line 6, column 5)",
   " (in 'rng-for-loop-bound.stan', line 4, column 4 to line 6, column 5)",
@@ -43653,21 +43654,25 @@ loops_rng(const T0__& a_arg__, RNG& base_rng__, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    double lcm_sym2__;
+    double lcm_sym4__;
+    int lcm_sym2__;
+    int lcm_sym1__;
     {
       double sum;
       sum = stan::math::promote_scalar<local_scalar_t__>(0);
-      current_statement__ = 4;
-      if (stan::math::logical_gte(40, stan::math::poisson_rng(10, base_rng__))) {
+      {
         current_statement__ = 2;
-        sum = (0 + stan::math::std_normal_rng(base_rng__));
-        for (int i = (stan::math::poisson_rng(10, base_rng__) + 1); i <=
-             40; ++i) {
-          current_statement__ = 2;
-          sum = (sum + stan::math::std_normal_rng(base_rng__));
+        int _i_lower = stan::math::poisson_rng(10, base_rng__);
+        if (stan::math::logical_gte(40, _i_lower)) {
+          lcm_sym2__ = (_i_lower + 1);
+          sum = (0 + stan::math::std_normal_rng(base_rng__));
+          for (int i = lcm_sym2__; i <= 40; ++i) {
+            current_statement__ = 3;
+            sum = (sum + stan::math::std_normal_rng(base_rng__));
+          }
         }
       }
-      current_statement__ = 5;
+      current_statement__ = 6;
       return sum;
     }
   } catch (const std::exception& e) {
@@ -43692,20 +43697,20 @@ loops2_rng(const T0__& a_arg__, RNG& base_rng__, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    double lcm_sym4__;
+    double lcm_sym6__;
     {
       double sum;
       sum = stan::math::promote_scalar<local_scalar_t__>(0);
-      current_statement__ = 10;
+      current_statement__ = 11;
       if (stan::math::logical_gte(stan::math::poisson_rng(10, base_rng__), 0)) {
-        current_statement__ = 8;
+        current_statement__ = 9;
         sum = (0 + stan::math::std_normal_rng(base_rng__));
         for (int i = 1; i <= stan::math::poisson_rng(10, base_rng__); ++i) {
-          current_statement__ = 8;
+          current_statement__ = 9;
           sum = (sum + stan::math::std_normal_rng(base_rng__));
         }
       }
-      current_statement__ = 11;
+      current_statement__ = 12;
       return sum;
     }
   } catch (const std::exception& e) {
@@ -43830,8 +43835,8 @@ class rng_for_loop_bound_model final : public model_base_crtp<rng_for_loop_bound
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm_sym6__;
-      int lcm_sym5__;
+      int lcm_sym8__;
+      int lcm_sym7__;
       if (stan::math::logical_negation(
             (stan::math::primitive_value(emit_transformed_parameters__) ||
             stan::math::primitive_value(emit_generated_quantities__)))) {
