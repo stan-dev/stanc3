@@ -602,34 +602,51 @@ let unroll_loop_one_step_statement _ =
   let f stmt : (_, Stmt.Located.t) Stmt.Pattern.t =
     match stmt with
     | Stmt.Pattern.For {loopvar; lower; upper; body}
-      when not (contains_top_break_or_continue body) ->
-        IfElse
-          ( Expr.
-              { lower with
-                pattern= FunApp (StanLib ("Geq__", FnPlain, AoS), [upper; lower])
-              }
-          , { pattern=
-                (let body_unrolled =
-                   subst_args_stmt [loopvar] [lower]
-                     {pattern= body.pattern; meta= Location_span.empty} in
-                 let (body' : Stmt.Located.t) =
-                   { pattern=
-                       Stmt.Pattern.For
-                         { loopvar
-                         ; upper
-                         ; body
-                         ; lower=
-                             { lower with
-                               pattern=
-                                 FunApp
-                                   ( StanLib ("Plus__", FnPlain, AoS)
-                                   , [lower; Expr.Helpers.loop_bottom] ) } }
-                   ; meta= Location_span.empty } in
-                 match body_unrolled.pattern with
-                 | Block stmts -> Block (stmts @ [body'])
-                 | _ -> Stmt.Pattern.Block [body_unrolled; body'])
-            ; meta= Location_span.empty }
-          , None )
+      when not (contains_top_break_or_continue body) -> (
+        let lower, lower_decl =
+          if cannot_duplicate_expr lower then
+            let lower_name = "_" ^ loopvar ^ "_lower" in
+            ( Expr.Helpers.variable lower_name
+            , [ { Stmt.pattern=
+                    Decl
+                      { decl_adtype= DataOnly
+                      ; decl_id= lower_name
+                      ; decl_type= Sized SInt
+                      ; initialize= Assign lower }
+                ; meta= lower.meta.loc } ] )
+          else (lower, []) in
+        let unrolled =
+          Stmt.Pattern.IfElse
+            ( Expr.
+                { lower with
+                  pattern=
+                    FunApp (StanLib ("Geq__", FnPlain, AoS), [upper; lower]) }
+            , { Stmt.pattern=
+                  (let body_unrolled =
+                     subst_args_stmt [loopvar] [lower]
+                       {pattern= body.pattern; meta= Location_span.empty} in
+                   let (body' : Stmt.Located.t) =
+                     { pattern=
+                         Stmt.Pattern.For
+                           { loopvar
+                           ; upper
+                           ; body
+                           ; lower=
+                               { lower with
+                                 pattern=
+                                   FunApp
+                                     ( StanLib ("Plus__", FnPlain, AoS)
+                                     , [lower; Expr.Helpers.loop_bottom] ) } }
+                     ; meta= Location_span.empty } in
+                   match body_unrolled.pattern with
+                   | Block stmts -> Block (stmts @ [body'])
+                   | _ -> Stmt.Pattern.Block [body_unrolled; body'])
+              ; meta= Location_span.empty }
+            , None ) in
+        match lower_decl with
+        | [] -> unrolled
+        | decls ->
+            Block (decls @ [{pattern= unrolled; meta= Location_span.empty}]))
     | While (e, body) when not (contains_top_break_or_continue body) ->
         IfElse
           ( e
