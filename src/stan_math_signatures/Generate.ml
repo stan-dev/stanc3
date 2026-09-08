@@ -20,6 +20,8 @@ type dimensionality =
   | DReal
   | DVector
   | DMatrix
+  | DRealOrVector
+  | DEigenTypes
   | DIntArray
   (* Vectorizable int *)
   | DVInt
@@ -61,6 +63,8 @@ let rec expand_arg = function
   | DReal -> [UReal]
   | DVector -> [UVector]
   | DMatrix -> [UMatrix]
+  | DRealOrVector -> [UReal; UVector]
+  | DEigenTypes -> [UMatrix; UVector; URowVector]
   | DIntArray -> [UArray UInt]
   | DVInt -> [UInt; UArray UInt]
   | DVReal -> [UReal; UArray UReal; UVector; URowVector]
@@ -270,7 +274,10 @@ let distributions =
     , "neg_binomial_2_log_glm"
     , [DVInt; DMatrix; DReal; DVector; DReal]
     , SoA ); (full_lpdf, "normal", [DVReal; DVReal; DVReal], SoA)
-  ; ([Lpdf], "normal_id_glm", [DVector; DMatrix; DReal; DVector; DReal], SoA)
+  ; ( [Lpdf]
+    , "normal_id_glm"
+    , [DRealOrVector; DEigenTypes; DRealOrVector; DVector; DRealOrVector]
+    , SoA )
   ; ([Lpmf; Rng (Literal UInt)], "ordered_logistic", [DInt; DReal; DVector], SoA)
   ; ([Lpmf], "ordered_logistic_glm", [DVInt; DMatrix; DVector; DVector], SoA)
   ; ([Lpmf; Rng (Literal UInt)], "ordered_probit", [DInt; DReal; DVector], SoA)
@@ -1862,61 +1869,6 @@ let () =
   add_unqualified ("norm2", ReturnType UReal, [UArray UReal], SoA);
   add_unqualified ("norm2", ReturnType UReal, [UVector], SoA);
   add_unqualified ("norm2", ReturnType UReal, [URowVector], SoA);
-  add_unqualified
-    ( "normal_id_glm_lpdf"
-    , ReturnType UReal
-    , [UVector; UMatrix; UVector; UVector; UReal]
-    , SoA );
-  add_unqualified
-    ( "normal_id_glm_lpdf"
-    , ReturnType UReal
-    , [UReal; UMatrix; UReal; UVector; UReal]
-    , SoA );
-  add_unqualified
-    ( "normal_id_glm_lpdf"
-    , ReturnType UReal
-    , [UReal; UMatrix; UVector; UVector; UReal]
-    , SoA );
-  add_unqualified
-    ( "normal_id_glm_lpdf"
-    , ReturnType UReal
-    , [UReal; UMatrix; UReal; UVector; UVector]
-    , SoA );
-  add_unqualified
-    ( "normal_id_glm_lpdf"
-    , ReturnType UReal
-    , [UReal; UMatrix; UVector; UVector; UVector]
-    , SoA );
-  add_unqualified
-    ( "normal_id_glm_lpdf"
-    , ReturnType UReal
-    , [UVector; URowVector; UReal; UVector; UVector]
-    , SoA );
-  add_unqualified
-    ( "normal_id_glm_lpdf"
-    , ReturnType UReal
-    , [UVector; URowVector; UVector; UVector; UReal]
-    , SoA );
-  add_unqualified
-    ( "normal_id_glm_lpdf"
-    , ReturnType UReal
-    , [UVector; URowVector; UVector; UVector; UVector]
-    , SoA );
-  add_unqualified
-    ( "normal_id_glm_lpdf"
-    , ReturnType UReal
-    , [UVector; URowVector; UReal; UVector; UReal]
-    , SoA );
-  add_unqualified
-    ( "normal_id_glm_lpdf"
-    , ReturnType UReal
-    , [UVector; UMatrix; UReal; UVector; UVector]
-    , SoA );
-  add_unqualified
-    ( "normal_id_glm_lpdf"
-    , ReturnType UReal
-    , [UVector; UMatrix; UVector; UVector; UVector]
-    , SoA );
   add_nullary "not_a_number";
   add_unqualified ("num_elements", ReturnType UInt, [UMatrix], SoA);
   add_unqualified ("num_elements", ReturnType UInt, [UVector], SoA);
