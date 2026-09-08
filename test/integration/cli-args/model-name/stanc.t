@@ -15,5 +15,5 @@ Name argument with dash
 Name is c++ reserved word
   $ stanc --name=class añd.stan
   $ grep "class " añd.hpp
-  class class final : public model_base_crtp<class> {
+  class _stan_class final : public model_base_crtp<_stan_class> {
   $ rm añd.hpp añd.stan

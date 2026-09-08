@@ -1030,7 +1030,8 @@ let trans_prog ?(use_opencl = false) (p : Program.Typed.t) =
   let p =
     Program.(
       { p with
-        output_vars= List.map ~f:rename_inout p.output_vars
+        prog_name= add_prefix_to_kwrds p.prog_name
+      ; output_vars= List.map ~f:rename_inout p.output_vars
       ; input_vars= List.map ~f:rename_inout p.input_vars
       ; functions_block= List.map ~f:rename_func p.functions_block }
       |> map translate_funapps_and_kwrds map_stmt Fun.id
