@@ -8,6 +8,7 @@ eval $(opam env)
 
 # Add windows repository
 opam repository add windows http://github.com/ocaml-cross/opam-cross-windows.git
+opam update
 
 # Install the compiler
 opam pin add -y ocaml-windows 5.5.1
