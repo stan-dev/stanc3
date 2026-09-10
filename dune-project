@@ -14,7 +14,7 @@
  (synopsis "The Stan compiler and utilities")
  (depends
   (ocaml
-   (= 5.5.0))
+   (= 5.5.1))
   (menhir
    (= 20260209))
   (fmt

@@ -10,7 +10,7 @@ for {!xcomp}, these versions are exactly pinned.
 These are automatically installed through the [scripts/install_ocaml.sh] and
 [scripts/install_build_deps.sh] scripts provided in the stanc3 repository.
 
-- OCaml 5.5.0
+- OCaml 5.5.1
 - Dune 3.5+
 - {{:http://gallium.inria.fr/~fpottier/menhir/manual.html}Menhir} 20260209 (a parser generator and parsing library)
 - {{:https://github.com/ocaml-ppx/ppx_deriving}ppx_deriving} 6.1.1 (a tool for generating boilerplate code)
