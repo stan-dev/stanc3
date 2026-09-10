@@ -10,7 +10,7 @@ USER jenkins
 
 # Init opam, create and switch to 5.5.1, update shell environment
 RUN opam init --disable-sandboxing --bare -y
-RUN opam switch create 5.5.1 ocaml-base-compiler.5.5.1 -y
+RUN opam update && opam switch create 5.5.1 ocaml-base-compiler.5.5.1 -y
 RUN opam switch 5.5.1
 RUN eval $(opam env)
 
