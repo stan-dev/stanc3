@@ -41,7 +41,7 @@ RUN opam update; printf "\n" | bash -x install_ocaml.sh "stanc"
 COPY install_build_deps_windows.sh ./
 RUN opam update; bash -x install_build_deps_windows.sh
 
-# Install Javascript dev environment (js_of_ocaml 6.4.0)
+# Install Javascript dev environment (js_of_ocaml 6.4.1)
 COPY install_js_deps.sh ./
 RUN opam update; bash -x install_js_deps.sh
 
