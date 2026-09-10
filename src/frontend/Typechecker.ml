@@ -794,26 +794,21 @@ let rec check_fn ~is_cond_dist loc cf tenv id (tes : Ast.typed_expression list)
     fourth, and fifth arguments must agree, which is too complicated to be
     captured declaratively. *)
 and check_reduce_sum ~is_cond_dist loc cf tenv id tes =
+  let check slice loc arg_types =
+    let UnsizedType.{control_args; required_fn_args; required_fn_rt; _} =
+      Stan_math_signatures.reduce_sum_signature slice in
+    SignatureMismatch.check_variadic_args ~allow_lpdf:true control_args
+      required_fn_args loc required_fn_rt arg_types in
   let basic_mismatch () =
-    let mandatory_args =
-      UnsizedType.[(AutoDiffable, UArray UReal); (AutoDiffable, UInt)] in
-    let mandatory_fun_args =
-      UnsizedType.
-        [(AutoDiffable, UArray UReal); (DataOnly, UInt); (DataOnly, UInt)] in
-    SignatureMismatch.check_variadic_args ~allow_lpdf:true mandatory_args
-      mandatory_fun_args None UReal (get_arg_types tes) in
+    check (AutoDiffable, UArray UReal) None (get_arg_types tes) in
   let matching remaining_es fn =
     match fn with
     | Env.{type_= UnsizedType.UFun (sliced_arg_fun :: _, _, _, _) as ftype; _}
       ->
-        let mandatory_args = [sliced_arg_fun; (AutoDiffable, UInt)] in
-        let mandatory_fun_args =
-          [sliced_arg_fun; (DataOnly, UInt); (DataOnly, UInt)] in
         let arg_types =
           (calculate_autodifftype cf Functions ftype, ftype)
           :: get_arg_types remaining_es in
-        SignatureMismatch.check_variadic_args ~allow_lpdf:true mandatory_args
-          mandatory_fun_args (Env.location fn) UReal arg_types
+        check sliced_arg_fun (Env.location fn) arg_types
     | _ -> basic_mismatch () in
   match tes with
   | {expr= Variable fname; _}

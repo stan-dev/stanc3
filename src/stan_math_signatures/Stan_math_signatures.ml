@@ -117,21 +117,6 @@ let string_operator_to_stan_math_fns str =
   | "Transpose__" -> "transpose"
   | _ -> str
 
-let pretty_print_all_math_sigs ppf () =
-  let open Fmt in
-  Format.pp_set_margin ppf 180;
-  let pp_sig ppf (name, (args, rt, _, _)) =
-    pf ppf "%s(@[<h>%a@]) => %a" name
-      (list ~sep:comma UnsizedType.pp)
-      (List.map ~f:snd args) UnsizedType.pp_returntype rt in
-  let pp_sigs_for_name ppf name =
-    (list ~sep:cut pp_sig) ppf
-      (List.map ~f:(fun t -> (name, t)) (get_sigs name)) in
-  pf ppf "@[<v>%a@]"
-    (list ~sep:cut pp_sigs_for_name)
-    (List.sort ~cmp:String.compare
-       (List.of_seq (Hashtbl.to_seq_keys (Lazy.force stan_math_signatures))))
-
 let pretty_print_all_math_distributions ppf () =
   let open Fmt in
   let pp_dist ppf (name, kinds) =
@@ -148,8 +133,14 @@ let pretty_print_math_lib_operator_sigs op =
 let reduce_sum_slice_types =
   UnsizedType.[UReal; UInt; UMatrix; UVector; URowVector]
 
-let is_reduce_sum_fn f =
-  String.equal f "reduce_sum" || String.equal f "reduce_sum_static"
+let reduce_sum_fns = String.Set.of_list ["reduce_sum"; "reduce_sum_static"]
+let is_reduce_sum_fn name = String.Set.mem name reduce_sum_fns
+
+let reduce_sum_signature slice : UnsizedType.variadic_signature =
+  { return_type= UReal
+  ; control_args= [slice; (AutoDiffable, UInt)]
+  ; required_fn_rt= UReal
+  ; required_fn_args= [slice; (DataOnly, UInt); (DataOnly, UInt)] }
 
 let embedded_laplace_functions =
   [ (* general fns *) "laplace_marginal"; "laplace_marginal_tol"
@@ -216,3 +207,54 @@ let disallowed_second_order =
 
 let lacks_higher_order_autodiff name =
   String.Set.mem name disallowed_second_order || is_special_function_name name
+
+let pretty_print_all_math_sigs ppf () =
+  let open Fmt in
+  Format.pp_set_margin ppf 180;
+  let pp_args = list ~sep:comma UnsizedType.pp in
+  let pp_sig name ppf (args, rt, _, _) =
+    pf ppf "%s(@[<h>%a@]) => %a" name pp_args (List.map ~f:snd args)
+      UnsizedType.pp_returntype rt in
+  let pp_variadic_sig name ppf
+      UnsizedType.{return_type; control_args; required_fn_rt; required_fn_args}
+      =
+    pf ppf "%s(@[<h>function(%a, ...) => %a, %a, ...@]) => %a" name
+      (list ~sep:comma UnsizedType.pp_fun_arg)
+      required_fn_args UnsizedType.pp required_fn_rt pp_args
+      (List.map ~f:snd control_args)
+      UnsizedType.pp return_type in
+  let pp_laplace_sig name ppf =
+    let pp_likelihood ppf =
+      match laplace_helper_param_types name with
+      | [] -> string ppf "function(vector, ...) => real, tuple(...)"
+      | args -> pp_args ppf (List.map ~f:snd args) in
+    let pp_tolerances ppf =
+      if String.includes ~affix:"_tol" name then
+        pf ppf ", %a" UnsizedType.pp
+          (UTuple (List.map ~f:snd laplace_tolerance_argument_types)) in
+    let return_type =
+      if String.ends_with ~suffix:"_rng" name then "vector"
+      else if String.includes ~affix:"_solve" name then "tuple(vector, matrix)"
+      else "real" in
+    pf ppf "%s(@[<h>%t, int, function(...) => matrix, tuple(...)%t@]) => %s"
+      name pp_likelihood pp_tolerances return_type in
+  let pp_sigs_for_name ppf name =
+    match lookup_stan_math_variadic_function name with
+    | Some sig_ -> pp_variadic_sig name ppf sig_
+    | None when is_reduce_sum_fn name ->
+        let sigs =
+          List.concat_map (List.range 1 8) ~f:(fun depth ->
+              List.map reduce_sum_slice_types ~f:(fun t ->
+                  reduce_sum_signature
+                    (AutoDiffable, UnsizedType.wind_array_type (t, depth))))
+        in
+        (list ~sep:cut (pp_variadic_sig name)) ppf sigs
+    | None when is_embedded_laplace_fn name -> pp_laplace_sig name ppf
+    | None -> (list ~sep:cut (pp_sig name)) ppf (get_sigs name) in
+  let names =
+    List.of_seq (Hashtbl.to_seq_keys (Lazy.force stan_math_signatures))
+    @ List.of_seq (Hashtbl.to_seq_keys stan_math_variadic_signatures)
+    @ String.Set.to_list reduce_sum_fns
+    @ String.Set.to_list embedded_laplace_functions
+    |> List.sort ~cmp:String.compare in
+  pf ppf "@[<v>%a@]" (list ~sep:cut pp_sigs_for_name) names
