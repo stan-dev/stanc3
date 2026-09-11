@@ -28,7 +28,7 @@ def runRemainingStages = false
 def runCompileTests = false
 def runRebuildingBinaries = false
 def runCompileTestsAtO1 = false
-def cxximage = "stanorg:ci/v1"
+def cxximage = 'stanorg/ci:v1'
 
 catchError {
   withEnv([
