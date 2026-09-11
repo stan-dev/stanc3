@@ -652,6 +652,12 @@ class ad_scalar_data_matrix_model final : public model_base_crtp<ad_scalar_data_
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -1066,6 +1072,12 @@ class complex_fails_model final : public model_base_crtp<complex_fails_model> {
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"A_p\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"A_complex_tp\",\"type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"}]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -3075,6 +3087,15 @@ class constraints_model final : public model_base_crtp<constraints_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"high_low_est\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"b\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(K) + "},\"block\":\"parameters\"},{\"name\":\"h\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"parameters\"},{\"name\":\"ar\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"parameters\"},{\"name\":\"ma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi_beta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma2\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"Intercept\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mean_price\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"sigma_price\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"upper_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"lower_upper_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"row_vec_lower_upper_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"offset_mult_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"ordered_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"unit_vec_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"pos_ordered_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"corr_matrix_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(((N * (N - 1)) /2)) + "},\"block\":\"parameters\"},{\"name\":\"cov_matrix_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string((N + ((N * (N - 1)) /2))) + "},\"block\":\"parameters\"},{\"name\":\"chol_fac_cov_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(((((K * (K - 1)) / 2) + K) + ((K - K) *K))) + "},\"block\":\"parameters\"},{\"name\":\"chol_fac_corr_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(((K * (K - 1)) /2)) + "},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"prices\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"prices_diff\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"mu\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"err\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"h_i_mean\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"h_i_sigma\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"h_sigma\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"means_ordered\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"Nr\"";
+    json_stream << ":";
+    json_stream << std::to_string(Nr);
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -3716,6 +3737,12 @@ class deep_dependence_model final : public model_base_crtp<deep_dependence_model
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"X_p\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"X_tp1\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"X_tp2\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"X_tp3\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"X_tp4\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"X_tp5\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"X_tp6\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"X_tp7\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"}]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -5856,6 +5883,12 @@ class indexing_model final : public model_base_crtp<indexing_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"p_soa_vec_v\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_mat\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_arr_vec_v\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(10) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}},\"block\":\"parameters\"},{\"name\":\"p_soa_mat_uni_col_idx\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_vec_uni_idx\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_loop_mat_uni_col_idx\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_lhs_loop_mul\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_rhs_loop_mul\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_used_with_aos_in_excluded_fun\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_loop_mat_multi_uni_uni_idx\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_vec_v_assign_to_aos\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_vec_v_tp_fails_func\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_loop_vec_v_uni_idx\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_fail_assign_from_top_idx\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_loop_mat_uni_uni_idx\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_mat\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_mat_pass_func_outer_single_indexed1\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_mat_pass_func_outer_single_indexed2\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_mat_fail_uni_uni_idx1\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_mat_fail_uni_uni_idx2\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"tp_real_from_aos\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"tp_aos_vec_v\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_soa_single_idx_uninit\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_aos_fail_func_vec_v\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_aos_fail_assign_from_top_idx\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"transformed_parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -6359,6 +6392,12 @@ class indexing2_model final : public model_base_crtp<indexing2_model> {
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"p_aos_loop_single_idx\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(10) + "},\"block\":\"parameters\"}]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -7002,6 +7041,12 @@ class reductions_allowed_model final : public model_base_crtp<reductions_allowed
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"soa_x\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(5) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"aos_x\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(5) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"aos_y\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(5) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"tp_real_from_soa\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"tp_matrix_aos_from_mix\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(5) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_matrix_from_udf_reduced_soa\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(5) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"}]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -7662,6 +7707,12 @@ class return_types_and_udfs_demotes_model final : public model_base_crtp<return_
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"row_soa\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"udf_input_aos\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"user_func_aos\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"empty_user_func_aos\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"inner_empty_user_func_aos\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"int_aos_mul_aos\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"mul_two_aos\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -8163,6 +8214,12 @@ class single_indexing_model final : public model_base_crtp<single_indexing_model
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"aos_p\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"soa_p\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"tp_real_from_soa\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"}]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -8697,6 +8754,12 @@ class tp_reused_model final : public model_base_crtp<tp_reused_model> {
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"first_pass_soa_x\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(5) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"aos_x\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(5) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"tp_matrix_aos\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(5) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"}]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -9254,6 +9317,12 @@ class tuple_test_model final : public model_base_crtp<tuple_test_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"xx\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"3\",\"element_types\":[{\"name\":\"array\",\"length\":" + std::to_string(1) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(1) + ",\"cols\":" + std::to_string(1) + "}},{\"name\":\"matrix\",\"rows\":" + std::to_string(1) + ",\"cols\":" + std::to_string(2) + "},{\"name\":\"matrix\",\"rows\":" + std::to_string(1) + ",\"cols\":" + std::to_string(3) + "}]},\"block\":\"parameters\"},{\"name\":\"x\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(1) + ",\"cols\":" + std::to_string(1) + "},\"block\":\"transformed_parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -9716,6 +9785,12 @@ class tuple_test2_model final : public model_base_crtp<tuple_test2_model> {
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"m1\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(3) + ",\"cols\":" + std::to_string(3) + "},\"block\":\"parameters\"},{\"name\":\"m2\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(3) + ",\"cols\":" + std::to_string(3) + "},\"block\":\"parameters\"}]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void

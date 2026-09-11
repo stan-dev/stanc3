@@ -2210,6 +2210,93 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"alpha_v\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(k) + "},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(k) + "},\"block\":\"parameters\"},{\"name\":\"cuts\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(k) + "},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"X_p\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(n) + ",\"cols\":" + std::to_string(k) + "},\"block\":\"parameters\"},{\"name\":\"beta_m\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(n) + ",\"cols\":" + std::to_string(k) + "},\"block\":\"parameters\"},{\"name\":\"X_rv_p\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n) + "},\"block\":\"parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"k_td\"";
+    json_stream << ":";
+    json_stream << std::to_string(k_td);
+    json_stream << ",\n";
+    json_stream << "\"n_td\"";
+    json_stream << ":";
+    json_stream << std::to_string(n_td);
+    json_stream << ",\n";
+    json_stream << "\"X_d_td\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "[";
+      for (int sym2__ = 1; sym2__ <= n; ++sym2__) {
+        if (sym2__ > 1) {
+          json_stream << ",";
+        }
+        json_stream <<
+                      std::to_string(
+                        stan::model::rvalue(X_d_td, "X_d_td",
+                          stan::model::index_uni(sym1__),
+                          stan::model::index_uni(sym2__)));
+      }
+      json_stream << "]";
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"y_v_d_td\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(y_v_d_td[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"X_rv_d_td\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(X_rv_d_td[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"y_vi_d_td\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(y_vi_d_td[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"y2_vi_d_td\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(y2_vi_d_td[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"y_s_d_td\"";
+    json_stream << ":";
+    json_stream << std::to_string(y_s_d_td);
+    json_stream << ",\n";
+    json_stream << "\"y_r_d_td\"";
+    json_stream << ":";
+    json_stream << std::to_string(y_r_d_td);
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
