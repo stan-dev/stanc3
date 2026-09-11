@@ -589,6 +589,26 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"alpha0\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha1\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha2\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha12\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"tau\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(I) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(K) + "}},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"K\"";
+    json_stream << ":";
+    json_stream << std::to_string(K);
+    json_stream << ",\n";
+    json_stream << "\"x1x2\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int idx1__ = 1; idx1__ <= I; ++idx1__) {
+      if (idx1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(x1x2[(idx1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,

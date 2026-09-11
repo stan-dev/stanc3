@@ -270,6 +270,12 @@ class self_assign_model final : public model_base_crtp<self_assign_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"i\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"x\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"int\"}]},\"block\":\"generated_quantities\"},{\"name\":\"r\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(20) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"generated_quantities\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,

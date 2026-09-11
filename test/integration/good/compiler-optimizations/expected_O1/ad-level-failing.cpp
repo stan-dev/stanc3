@@ -724,6 +724,41 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"beta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"gamma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"xi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"delta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"y\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N_t) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"transformed_parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"t0\"";
+    json_stream << ":";
+    json_stream << std::to_string(t0);
+    json_stream << ",\n";
+    json_stream << "\"kappa\"";
+    json_stream << ":";
+    json_stream << std::to_string(kappa);
+    json_stream << ",\n";
+    json_stream << "\"x_r\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int idx1__ = 1; idx1__ <= 0; ++idx1__) {
+      if (idx1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(x_r[(idx1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"x_i\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int idx1__ = 1; idx1__ <= 0; ++idx1__) {
+      if (idx1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(x_i[(idx1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,

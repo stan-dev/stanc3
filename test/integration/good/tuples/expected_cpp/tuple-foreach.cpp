@@ -221,6 +221,30 @@ class tuple_foreach_model final : public model_base_crtp<tuple_foreach_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"arr\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int idx1__ = 1; idx1__ <= 100; ++idx1__) {
+      if (idx1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "{";
+      json_stream << "\"1\"";
+      json_stream << ":";
+      json_stream << std::to_string(std::get<0>(arr[(idx1__ - 1)]));
+      json_stream << ",\n";
+      json_stream << "\"2\"";
+      json_stream << ":";
+      json_stream << std::to_string(std::get<1>(arr[(idx1__ - 1)]));
+      json_stream << "}";
+    }
+    json_stream << "]";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,

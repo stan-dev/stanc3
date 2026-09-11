@@ -706,6 +706,69 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"y\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"y0\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"t0\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"times\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"z\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(M) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}},\"block\":\"transformed_parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"rel_tol_f\"";
+    json_stream << ":";
+    json_stream << std::to_string(rel_tol_f);
+    json_stream << ",\n";
+    json_stream << "\"abs_tol_f\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int idx1__ = 1; idx1__ <= N; ++idx1__) {
+      if (idx1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(abs_tol_f[(idx1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"rel_tol_b\"";
+    json_stream << ":";
+    json_stream << std::to_string(rel_tol_b);
+    json_stream << ",\n";
+    json_stream << "\"abs_tol_b\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int idx1__ = 1; idx1__ <= N; ++idx1__) {
+      if (idx1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(abs_tol_b[(idx1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"rel_tol_q\"";
+    json_stream << ":";
+    json_stream << std::to_string(rel_tol_q);
+    json_stream << ",\n";
+    json_stream << "\"abs_tol_q\"";
+    json_stream << ":";
+    json_stream << std::to_string(abs_tol_q);
+    json_stream << ",\n";
+    json_stream << "\"max_num_steps\"";
+    json_stream << ":";
+    json_stream << std::to_string(max_num_steps);
+    json_stream << ",\n";
+    json_stream << "\"num_checkpoints\"";
+    json_stream << ":";
+    json_stream << std::to_string(num_checkpoints);
+    json_stream << ",\n";
+    json_stream << "\"interpolation_polynomial\"";
+    json_stream << ":";
+    json_stream << std::to_string(interpolation_polynomial);
+    json_stream << ",\n";
+    json_stream << "\"solver_f\"";
+    json_stream << ":";
+    json_stream << std::to_string(solver_f);
+    json_stream << ",\n";
+    json_stream << "\"solver_b\"";
+    json_stream << ":";
+    json_stream << std::to_string(solver_b);
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,

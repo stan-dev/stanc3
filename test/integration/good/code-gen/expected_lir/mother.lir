@@ -15401,6 +15401,1181 @@
              ((Constructor (TypeLiteral std::string)
                ((Literal
                  "\"[{\\\"name\\\":\\\"p_real\\\",\\\"type\\\":{\\\"name\\\":\\\"real\\\"},\\\"block\\\":\\\"parameters\\\"},{\\\"name\\\":\\\"p_upper\\\",\\\"type\\\":{\\\"name\\\":\\\"real\\\"},\\\"block\\\":\\\"parameters\\\"},{\\\"name\\\":\\\"p_lower\\\",\\\"type\\\":{\\\"name\\\":\\\"real\\\"},\\\"block\\\":\\\"parameters\\\"},{\\\"name\\\":\\\"offset_multiplier\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(5) + \",\\\"element_type\\\":{\\\"name\\\":\\\"real\\\"}},\\\"block\\\":\\\"parameters\\\"},{\\\"name\\\":\\\"no_offset_multiplier\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(5) + \",\\\"element_type\\\":{\\\"name\\\":\\\"real\\\"}},\\\"block\\\":\\\"parameters\\\"},{\\\"name\\\":\\\"offset_no_multiplier\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(5) + \",\\\"element_type\\\":{\\\"name\\\":\\\"real\\\"}},\\\"block\\\":\\\"parameters\\\"},{\\\"name\\\":\\\"p_real_1d_ar\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(N) + \",\\\"element_type\\\":{\\\"name\\\":\\\"real\\\"}},\\\"block\\\":\\\"parameters\\\"},{\\\"name\\\":\\\"p_real_3d_ar\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(N) + \",\\\"element_type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(M) + \",\\\"element_type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(K) + \",\\\"element_type\\\":{\\\"name\\\":\\\"real\\\"}}}},\\\"block\\\":\\\"parameters\\\"},{\\\"name\\\":\\\"p_vec\\\",\\\"type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(N) + \"},\\\"block\\\":\\\"parameters\\\"},{\\\"name\\\":\\\"p_1d_vec\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(N) + \",\\\"element_type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(N) + \"}},\\\"block\\\":\\\"parameters\\\"},{\\\"name\\\":\\\"p_3d_vec\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(N) + \",\\\"element_type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(M) + \",\\\"element_type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(K) + \",\\\"element_type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(N) + \"}}}},\\\"block\\\":\\\"parameters\\\"},{\\\"name\\\":\\\"p_row_vec\\\",\\\"type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(N) + \"},\\\"block\\\":\\\"parameters\\\"},{\\\"name\\\":\\\"p_1d_row_vec\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(N) + \",\\\"element_type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(N) + \"}},\\\"block\\\":\\\"parameters\\\"},{\\\"name\\\":\\\"p_3d_row_vec\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(N) + \",\\\"element_type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(M) + \",\\\"element_type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(K) + \",\\\"element_type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(N) + \"}}}},\\\"block\\\":\\\"parameters\\\"},{\\\"name\\\":\\\"p_mat\\\",\\\"type\\\":{\\\"name\\\":\\\"matrix\\\",\\\"rows\\\":\" + std::to_string(5) + \",\\\"cols\\\":\" + std::to_string(4) + \"},\\\"block\\\":\\\"parameters\\\"},{\\\"name\\\":\\\"p_ar_mat\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(4) + \",\\\"element_type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(5) + \",\\\"element_type\\\":{\\\"name\\\":\\\"matrix\\\",\\\"rows\\\":\" + std::to_string(2) + \",\\\"cols\\\":\" + std::to_string(3) + \"}}},\\\"block\\\":\\\"parameters\\\"},{\\\"name\\\":\\\"p_simplex\\\",\\\"type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string((N -1)) + \"},\\\"block\\\":\\\"parameters\\\"},{\\\"name\\\":\\\"p_1d_simplex\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(N) + \",\\\"element_type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string((N -1)) + \"}},\\\"block\\\":\\\"parameters\\\"},{\\\"name\\\":\\\"p_3d_simplex\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(N) + \",\\\"element_type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(M) + \",\\\"element_type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(K) + \",\\\"element_type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string((N -1)) + \"}}}},\\\"block\\\":\\\"parameters\\\"},{\\\"name\\\":\\\"p_cfcov_54\\\",\\\"type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) *4))) + \"},\\\"block\\\":\\\"parameters\\\"},{\\\"name\\\":\\\"p_cfcov_33\\\",\\\"type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) *3))) + \"},\\\"block\\\":\\\"parameters\\\"},{\\\"name\\\":\\\"p_cfcov_33_ar\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(K) + \",\\\"element_type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) *3))) + \"}},\\\"block\\\":\\\"parameters\\\"},{\\\"name\\\":\\\"x_p\\\",\\\"type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(2) + \"},\\\"block\\\":\\\"parameters\\\"},{\\\"name\\\":\\\"y_p\\\",\\\"type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(2) + \"},\\\"block\\\":\\\"parameters\\\"},{\\\"name\\\":\\\"tp_real_1d_ar\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(N) + \",\\\"element_type\\\":{\\\"name\\\":\\\"real\\\"}},\\\"block\\\":\\\"transformed_parameters\\\"},{\\\"name\\\":\\\"tp_real_3d_ar\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(N) + \",\\\"element_type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(M) + \",\\\"element_type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(K) + \",\\\"element_type\\\":{\\\"name\\\":\\\"real\\\"}}}},\\\"block\\\":\\\"transformed_parameters\\\"},{\\\"name\\\":\\\"tp_vec\\\",\\\"type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(N) + \"},\\\"block\\\":\\\"transformed_parameters\\\"},{\\\"name\\\":\\\"tp_1d_vec\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(N) + \",\\\"element_type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(N) + \"}},\\\"block\\\":\\\"transformed_parameters\\\"},{\\\"name\\\":\\\"tp_3d_vec\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(N) + \",\\\"element_type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(M) + \",\\\"element_type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(K) + \",\\\"element_type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(N) + \"}}}},\\\"block\\\":\\\"transformed_parameters\\\"},{\\\"name\\\":\\\"tp_row_vec\\\",\\\"type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(N) + \"},\\\"block\\\":\\\"transformed_parameters\\\"},{\\\"name\\\":\\\"tp_1d_row_vec\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(N) + \",\\\"element_type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(N) + \"}},\\\"block\\\":\\\"transformed_parameters\\\"},{\\\"name\\\":\\\"tp_3d_row_vec\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(N) + \",\\\"element_type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(M) + \",\\\"element_type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(K) + \",\\\"element_type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(N) + \"}}}},\\\"block\\\":\\\"transformed_parameters\\\"},{\\\"name\\\":\\\"tp_mat\\\",\\\"type\\\":{\\\"name\\\":\\\"matrix\\\",\\\"rows\\\":\" + std::to_string(5) + \",\\\"cols\\\":\" + std::to_string(4) + \"},\\\"block\\\":\\\"transformed_parameters\\\"},{\\\"name\\\":\\\"tp_ar_mat\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(4) + \",\\\"element_type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(5) + \",\\\"element_type\\\":{\\\"name\\\":\\\"matrix\\\",\\\"rows\\\":\" + std::to_string(2) + \",\\\"cols\\\":\" + std::to_string(3) + \"}}},\\\"block\\\":\\\"transformed_parameters\\\"},{\\\"name\\\":\\\"tp_simplex\\\",\\\"type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string((N -1)) + \"},\\\"block\\\":\\\"transformed_parameters\\\"},{\\\"name\\\":\\\"tp_1d_simplex\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(N) + \",\\\"element_type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string((N -1)) + \"}},\\\"block\\\":\\\"transformed_parameters\\\"},{\\\"name\\\":\\\"tp_3d_simplex\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(N) + \",\\\"element_type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(M) + \",\\\"element_type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(K) + \",\\\"element_type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string((N -1)) + \"}}}},\\\"block\\\":\\\"transformed_parameters\\\"},{\\\"name\\\":\\\"tp_cfcov_54\\\",\\\"type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) *4))) + \"},\\\"block\\\":\\\"transformed_parameters\\\"},{\\\"name\\\":\\\"tp_cfcov_33\\\",\\\"type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) *3))) + \"},\\\"block\\\":\\\"transformed_parameters\\\"},{\\\"name\\\":\\\"tp_cfcov_33_ar\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(K) + \",\\\"element_type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) *3))) + \"}},\\\"block\\\":\\\"transformed_parameters\\\"},{\\\"name\\\":\\\"theta_p\\\",\\\"type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(2) + \"},\\\"block\\\":\\\"transformed_parameters\\\"},{\\\"name\\\":\\\"tp_real\\\",\\\"type\\\":{\\\"name\\\":\\\"real\\\"},\\\"block\\\":\\\"transformed_parameters\\\"},{\\\"name\\\":\\\"gq_r1\\\",\\\"type\\\":{\\\"name\\\":\\\"real\\\"},\\\"block\\\":\\\"generated_quantities\\\"},{\\\"name\\\":\\\"gq_r2\\\",\\\"type\\\":{\\\"name\\\":\\\"real\\\"},\\\"block\\\":\\\"generated_quantities\\\"},{\\\"name\\\":\\\"gq_real_1d_ar\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(N) + \",\\\"element_type\\\":{\\\"name\\\":\\\"real\\\"}},\\\"block\\\":\\\"generated_quantities\\\"},{\\\"name\\\":\\\"gq_real_3d_ar\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(N) + \",\\\"element_type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(M) + \",\\\"element_type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(K) + \",\\\"element_type\\\":{\\\"name\\\":\\\"real\\\"}}}},\\\"block\\\":\\\"generated_quantities\\\"},{\\\"name\\\":\\\"gq_vec\\\",\\\"type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(N) + \"},\\\"block\\\":\\\"generated_quantities\\\"},{\\\"name\\\":\\\"gq_1d_vec\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(N) + \",\\\"element_type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(N) + \"}},\\\"block\\\":\\\"generated_quantities\\\"},{\\\"name\\\":\\\"gq_3d_vec\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(N) + \",\\\"element_type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(M) + \",\\\"element_type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(K) + \",\\\"element_type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(N) + \"}}}},\\\"block\\\":\\\"generated_quantities\\\"},{\\\"name\\\":\\\"gq_row_vec\\\",\\\"type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(N) + \"},\\\"block\\\":\\\"generated_quantities\\\"},{\\\"name\\\":\\\"gq_1d_row_vec\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(N) + \",\\\"element_type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(N) + \"}},\\\"block\\\":\\\"generated_quantities\\\"},{\\\"name\\\":\\\"gq_3d_row_vec\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(N) + \",\\\"element_type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(M) + \",\\\"element_type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(K) + \",\\\"element_type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(N) + \"}}}},\\\"block\\\":\\\"generated_quantities\\\"},{\\\"name\\\":\\\"gq_ar_mat\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(4) + \",\\\"element_type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(5) + \",\\\"element_type\\\":{\\\"name\\\":\\\"matrix\\\",\\\"rows\\\":\" + std::to_string(2) + \",\\\"cols\\\":\" + std::to_string(3) + \"}}},\\\"block\\\":\\\"generated_quantities\\\"},{\\\"name\\\":\\\"gq_simplex\\\",\\\"type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string((N -1)) + \"},\\\"block\\\":\\\"generated_quantities\\\"},{\\\"name\\\":\\\"gq_1d_simplex\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(N) + \",\\\"element_type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string((N -1)) + \"}},\\\"block\\\":\\\"generated_quantities\\\"},{\\\"name\\\":\\\"gq_3d_simplex\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(N) + \",\\\"element_type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(M) + \",\\\"element_type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(K) + \",\\\"element_type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string((N -1)) + \"}}}},\\\"block\\\":\\\"generated_quantities\\\"},{\\\"name\\\":\\\"gq_cfcov_54\\\",\\\"type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) *4))) + \"},\\\"block\\\":\\\"generated_quantities\\\"},{\\\"name\\\":\\\"gq_cfcov_33\\\",\\\"type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) *3))) + \"},\\\"block\\\":\\\"generated_quantities\\\"},{\\\"name\\\":\\\"gq_cfcov_33_ar\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(K) + \",\\\"element_type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) *3))) + \"}},\\\"block\\\":\\\"generated_quantities\\\"},{\\\"name\\\":\\\"indices\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(3) + \",\\\"element_type\\\":{\\\"name\\\":\\\"int\\\"}},\\\"block\\\":\\\"generated_quantities\\\"},{\\\"name\\\":\\\"indexing_mat\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(5) + \",\\\"element_type\\\":{\\\"name\\\":\\\"matrix\\\",\\\"rows\\\":\" + std::to_string(3) + \",\\\"cols\\\":\" + std::to_string(4) + \"}},\\\"block\\\":\\\"generated_quantities\\\"},{\\\"name\\\":\\\"idx_res1\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(3) + \",\\\"element_type\\\":{\\\"name\\\":\\\"matrix\\\",\\\"rows\\\":\" + std::to_string(3) + \",\\\"cols\\\":\" + std::to_string(4) + \"}},\\\"block\\\":\\\"generated_quantities\\\"},{\\\"name\\\":\\\"idx_res2\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(5) + \",\\\"element_type\\\":{\\\"name\\\":\\\"matrix\\\",\\\"rows\\\":\" + std::to_string(3) + \",\\\"cols\\\":\" + std::to_string(4) + \"}},\\\"block\\\":\\\"generated_quantities\\\"},{\\\"name\\\":\\\"idx_res3\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(3) + \",\\\"element_type\\\":{\\\"name\\\":\\\"matrix\\\",\\\"rows\\\":\" + std::to_string(3) + \",\\\"cols\\\":\" + std::to_string(3) + \"}},\\\"block\\\":\\\"generated_quantities\\\"},{\\\"name\\\":\\\"idx_res11\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(3) + \",\\\"element_type\\\":{\\\"name\\\":\\\"matrix\\\",\\\"rows\\\":\" + std::to_string(3) + \",\\\"cols\\\":\" + std::to_string(4) + \"}},\\\"block\\\":\\\"generated_quantities\\\"},{\\\"name\\\":\\\"idx_res21\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(5) + \",\\\"element_type\\\":{\\\"name\\\":\\\"matrix\\\",\\\"rows\\\":\" + std::to_string(3) + \",\\\"cols\\\":\" + std::to_string(4) + \"}},\\\"block\\\":\\\"generated_quantities\\\"},{\\\"name\\\":\\\"idx_res31\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(3) + \",\\\"element_type\\\":{\\\"name\\\":\\\"matrix\\\",\\\"rows\\\":\" + std::to_string(3) + \",\\\"cols\\\":\" + std::to_string(3) + \"}},\\\"block\\\":\\\"generated_quantities\\\"},{\\\"name\\\":\\\"idx_res4\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(3) + \",\\\"element_type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(4) + \"}},\\\"block\\\":\\\"generated_quantities\\\"},{\\\"name\\\":\\\"idx_res5\\\",\\\"type\\\":{\\\"name\\\":\\\"array\\\",\\\"length\\\":\" + std::to_string(2) + \",\\\"element_type\\\":{\\\"name\\\":\\\"vector\\\",\\\"length\\\":\" + std::to_string(2) + \"}},\\\"block\\\":\\\"generated_quantities\\\"}]\""))))))))))
+       (FunDef
+        ((templates_init ((()) false)) (inline true)
+         (return_type (TypeLiteral std::string)) (name get_transformed_data_json)
+         (args ()) (cv_qualifiers (Const))
+         (body
+          (((VariableDefn
+             ((static false) (constexpr false) (type_ (TypeLiteral std::stringstream))
+              (name json_stream) (init Uninitialized)))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"{\""))))
+            (Expression
+             (StreamInsertion (Var json_stream) ((Literal "\"\\\"td_int\\\"\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
+            (Expression
+             (StreamInsertion (Var json_stream)
+              ((FunCall std::to_string () ((Var td_int))))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+            (Expression
+             (StreamInsertion (Var json_stream) ((Literal "\"\\\"td_1d\\\"\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+            (For
+             ((static false) (constexpr false) (type_ Int) (name idx1__)
+              (init (Assignment (Literal 1))))
+             (BinOp (Var idx1__) LEq (Var N)) (Increment (Var idx1__))
+             (Block
+              ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
+                (Block
+                 ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                ())
+               (Expression
+                (StreamInsertion (Var json_stream)
+                 ((FunCall std::to_string ()
+                   ((Subscript (Var td_1d)
+                     (Parens (BinOp (Var idx1__) Subtract (Literal 1))))))))))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+            (Expression
+             (StreamInsertion (Var json_stream) ((Literal "\"\\\"td_1dk\\\"\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+            (For
+             ((static false) (constexpr false) (type_ Int) (name idx1__)
+              (init (Assignment (Literal 1))))
+             (BinOp (Var idx1__) LEq (Var M)) (Increment (Var idx1__))
+             (Block
+              ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
+                (Block
+                 ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                ())
+               (Expression
+                (StreamInsertion (Var json_stream)
+                 ((FunCall std::to_string ()
+                   ((Subscript (Var td_1dk)
+                     (Parens (BinOp (Var idx1__) Subtract (Literal 1))))))))))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+            (Expression
+             (StreamInsertion (Var json_stream) ((Literal "\"\\\"td_a\\\"\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
+            (Expression
+             (StreamInsertion (Var json_stream)
+              ((FunCall std::to_string () ((Var td_a))))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+            (Expression
+             (StreamInsertion (Var json_stream) ((Literal "\"\\\"td_b\\\"\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
+            (Expression
+             (StreamInsertion (Var json_stream)
+              ((FunCall std::to_string () ((Var td_b))))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+            (Expression
+             (StreamInsertion (Var json_stream) ((Literal "\"\\\"td_c\\\"\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
+            (Expression
+             (StreamInsertion (Var json_stream)
+              ((FunCall std::to_string () ((Var td_c))))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+            (Expression
+             (StreamInsertion (Var json_stream) ((Literal "\"\\\"td_ar_mat\\\"\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+            (For
+             ((static false) (constexpr false) (type_ Int) (name idx1__)
+              (init (Assignment (Literal 1))))
+             (BinOp (Var idx1__) LEq (Literal 4)) (Increment (Var idx1__))
+             (Block
+              ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
+                (Block
+                 ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                ())
+               (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+               (For
+                ((static false) (constexpr false) (type_ Int) (name idx2__)
+                 (init (Assignment (Literal 1))))
+                (BinOp (Var idx2__) LEq (Literal 5)) (Increment (Var idx2__))
+                (Block
+                 ((IfElse (BinOp (Var idx2__) Gthn (Literal 1))
+                   (Block
+                    ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                   ())
+                  (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+                  (For
+                   ((static false) (constexpr false) (type_ Int) (name idx3__)
+                    (init (Assignment (Literal 1))))
+                   (BinOp (Var idx3__) LEq (Literal 3)) (Increment (Var idx3__))
+                   (Block
+                    ((IfElse (BinOp (Var idx3__) Gthn (Literal 1))
+                      (Block
+                       ((Expression
+                         (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                      ())
+                     (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+                     (For
+                      ((static false) (constexpr false) (type_ Int) (name idx4__)
+                       (init (Assignment (Literal 1))))
+                      (BinOp (Var idx4__) LEq (Literal 2)) (Increment (Var idx4__))
+                      (Block
+                       ((IfElse (BinOp (Var idx4__) Gthn (Literal 1))
+                         (Block
+                          ((Expression
+                            (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                         ())
+                        (Expression
+                         (StreamInsertion (Var json_stream)
+                          ((FunCall std::to_string ()
+                            ((FunCall stan::model::rvalue ()
+                              ((Var td_ar_mat) (Literal "\"td_ar_mat\"")
+                               (FunCall stan::model::index_uni () ((Var idx1__)))
+                               (FunCall stan::model::index_uni () ((Var idx2__)))
+                               (FunCall stan::model::index_uni () ((Var idx3__)))
+                               (FunCall stan::model::index_uni () ((Var idx4__)))))))))))))
+                     (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
+                  (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
+               (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+            (Expression
+             (StreamInsertion (Var json_stream) ((Literal "\"\\\"td_simplex\\\"\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+            (For
+             ((static false) (constexpr false) (type_ Int) (name idx1__)
+              (init (Assignment (Literal 1))))
+             (BinOp (Var idx1__) LEq (Var N)) (Increment (Var idx1__))
+             (Block
+              ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
+                (Block
+                 ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                ())
+               (Expression
+                (StreamInsertion (Var json_stream)
+                 ((FunCall std::to_string ()
+                   ((Subscript (Var td_simplex)
+                     (Parens (BinOp (Var idx1__) Subtract (Literal 1))))))))))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+            (Expression
+             (StreamInsertion (Var json_stream) ((Literal "\"\\\"td_1d_simplex\\\"\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+            (For
+             ((static false) (constexpr false) (type_ Int) (name idx1__)
+              (init (Assignment (Literal 1))))
+             (BinOp (Var idx1__) LEq (Var N)) (Increment (Var idx1__))
+             (Block
+              ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
+                (Block
+                 ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                ())
+               (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+               (For
+                ((static false) (constexpr false) (type_ Int) (name idx2__)
+                 (init (Assignment (Literal 1))))
+                (BinOp (Var idx2__) LEq (Var N)) (Increment (Var idx2__))
+                (Block
+                 ((IfElse (BinOp (Var idx2__) Gthn (Literal 1))
+                   (Block
+                    ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                   ())
+                  (Expression
+                   (StreamInsertion (Var json_stream)
+                    ((FunCall std::to_string ()
+                      ((Subscript
+                        (Subscript (Var td_1d_simplex)
+                         (Parens (BinOp (Var idx1__) Subtract (Literal 1))))
+                        (Parens (BinOp (Var idx2__) Subtract (Literal 1))))))))))))
+               (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+            (Expression
+             (StreamInsertion (Var json_stream) ((Literal "\"\\\"td_3d_simplex\\\"\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+            (For
+             ((static false) (constexpr false) (type_ Int) (name idx1__)
+              (init (Assignment (Literal 1))))
+             (BinOp (Var idx1__) LEq (Var N)) (Increment (Var idx1__))
+             (Block
+              ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
+                (Block
+                 ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                ())
+               (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+               (For
+                ((static false) (constexpr false) (type_ Int) (name idx2__)
+                 (init (Assignment (Literal 1))))
+                (BinOp (Var idx2__) LEq (Var M)) (Increment (Var idx2__))
+                (Block
+                 ((IfElse (BinOp (Var idx2__) Gthn (Literal 1))
+                   (Block
+                    ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                   ())
+                  (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+                  (For
+                   ((static false) (constexpr false) (type_ Int) (name idx3__)
+                    (init (Assignment (Literal 1))))
+                   (BinOp (Var idx3__) LEq (Var K)) (Increment (Var idx3__))
+                   (Block
+                    ((IfElse (BinOp (Var idx3__) Gthn (Literal 1))
+                      (Block
+                       ((Expression
+                         (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                      ())
+                     (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+                     (For
+                      ((static false) (constexpr false) (type_ Int) (name idx4__)
+                       (init (Assignment (Literal 1))))
+                      (BinOp (Var idx4__) LEq (Var N)) (Increment (Var idx4__))
+                      (Block
+                       ((IfElse (BinOp (Var idx4__) Gthn (Literal 1))
+                         (Block
+                          ((Expression
+                            (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                         ())
+                        (Expression
+                         (StreamInsertion (Var json_stream)
+                          ((FunCall std::to_string ()
+                            ((Subscript
+                              (Subscript
+                               (Subscript
+                                (Subscript (Var td_3d_simplex)
+                                 (Parens (BinOp (Var idx1__) Subtract (Literal 1))))
+                                (Parens (BinOp (Var idx2__) Subtract (Literal 1))))
+                               (Parens (BinOp (Var idx3__) Subtract (Literal 1))))
+                              (Parens (BinOp (Var idx4__) Subtract (Literal 1))))))))))))
+                     (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
+                  (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
+               (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+            (Expression
+             (StreamInsertion (Var json_stream) ((Literal "\"\\\"td_cfcov_54\\\"\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+            (For
+             ((static false) (constexpr false) (type_ Int) (name idx1__)
+              (init (Assignment (Literal 1))))
+             (BinOp (Var idx1__) LEq (Literal 5)) (Increment (Var idx1__))
+             (Block
+              ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
+                (Block
+                 ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                ())
+               (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+               (For
+                ((static false) (constexpr false) (type_ Int) (name idx2__)
+                 (init (Assignment (Literal 1))))
+                (BinOp (Var idx2__) LEq (Literal 5)) (Increment (Var idx2__))
+                (Block
+                 ((IfElse (BinOp (Var idx2__) Gthn (Literal 1))
+                   (Block
+                    ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                   ())
+                  (Expression
+                   (StreamInsertion (Var json_stream)
+                    ((FunCall std::to_string ()
+                      ((FunCall stan::model::rvalue ()
+                        ((Var td_cfcov_54) (Literal "\"td_cfcov_54\"")
+                         (FunCall stan::model::index_uni () ((Var idx1__)))
+                         (FunCall stan::model::index_uni () ((Var idx2__)))))))))))))
+               (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+            (Expression
+             (StreamInsertion (Var json_stream) ((Literal "\"\\\"td_cfcov_33\\\"\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+            (For
+             ((static false) (constexpr false) (type_ Int) (name idx1__)
+              (init (Assignment (Literal 1))))
+             (BinOp (Var idx1__) LEq (Literal 3)) (Increment (Var idx1__))
+             (Block
+              ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
+                (Block
+                 ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                ())
+               (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+               (For
+                ((static false) (constexpr false) (type_ Int) (name idx2__)
+                 (init (Assignment (Literal 1))))
+                (BinOp (Var idx2__) LEq (Literal 3)) (Increment (Var idx2__))
+                (Block
+                 ((IfElse (BinOp (Var idx2__) Gthn (Literal 1))
+                   (Block
+                    ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                   ())
+                  (Expression
+                   (StreamInsertion (Var json_stream)
+                    ((FunCall std::to_string ()
+                      ((FunCall stan::model::rvalue ()
+                        ((Var td_cfcov_33) (Literal "\"td_cfcov_33\"")
+                         (FunCall stan::model::index_uni () ((Var idx1__)))
+                         (FunCall stan::model::index_uni () ((Var idx2__)))))))))))))
+               (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"\\\"x\\\"\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+            (For
+             ((static false) (constexpr false) (type_ Int) (name idx1__)
+              (init (Assignment (Literal 1))))
+             (BinOp (Var idx1__) LEq (Literal 2)) (Increment (Var idx1__))
+             (Block
+              ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
+                (Block
+                 ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                ())
+               (Expression
+                (StreamInsertion (Var json_stream)
+                 ((FunCall std::to_string ()
+                   ((Subscript (Var x)
+                     (Parens (BinOp (Var idx1__) Subtract (Literal 1))))))))))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"\\\"y\\\"\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+            (For
+             ((static false) (constexpr false) (type_ Int) (name idx1__)
+              (init (Assignment (Literal 1))))
+             (BinOp (Var idx1__) LEq (Literal 2)) (Increment (Var idx1__))
+             (Block
+              ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
+                (Block
+                 ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                ())
+               (Expression
+                (StreamInsertion (Var json_stream)
+                 ((FunCall std::to_string ()
+                   ((Subscript (Var y)
+                     (Parens (BinOp (Var idx1__) Subtract (Literal 1))))))))))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+            (Expression
+             (StreamInsertion (Var json_stream) ((Literal "\"\\\"dat\\\"\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+            (For
+             ((static false) (constexpr false) (type_ Int) (name idx1__)
+              (init (Assignment (Literal 1))))
+             (BinOp (Var idx1__) LEq (Literal 0)) (Increment (Var idx1__))
+             (Block
+              ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
+                (Block
+                 ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                ())
+               (Expression
+                (StreamInsertion (Var json_stream)
+                 ((FunCall std::to_string ()
+                   ((Subscript (Var dat)
+                     (Parens (BinOp (Var idx1__) Subtract (Literal 1))))))))))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+            (Expression
+             (StreamInsertion (Var json_stream) ((Literal "\"\\\"dat_int\\\"\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+            (For
+             ((static false) (constexpr false) (type_ Int) (name idx1__)
+              (init (Assignment (Literal 1))))
+             (BinOp (Var idx1__) LEq (Literal 0)) (Increment (Var idx1__))
+             (Block
+              ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
+                (Block
+                 ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                ())
+               (Expression
+                (StreamInsertion (Var json_stream)
+                 ((FunCall std::to_string ()
+                   ((Subscript (Var dat_int)
+                     (Parens (BinOp (Var idx1__) Subtract (Literal 1))))))))))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+            (Expression
+             (StreamInsertion (Var json_stream) ((Literal "\"\\\"x_r\\\"\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+            (For
+             ((static false) (constexpr false) (type_ Int) (name idx1__)
+              (init (Assignment (Literal 1))))
+             (BinOp (Var idx1__) LEq (Literal 0)) (Increment (Var idx1__))
+             (Block
+              ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
+                (Block
+                 ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                ())
+               (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+               (For
+                ((static false) (constexpr false) (type_ Int) (name idx2__)
+                 (init (Assignment (Literal 1))))
+                (BinOp (Var idx2__) LEq (Literal 0)) (Increment (Var idx2__))
+                (Block
+                 ((IfElse (BinOp (Var idx2__) Gthn (Literal 1))
+                   (Block
+                    ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                   ())
+                  (Expression
+                   (StreamInsertion (Var json_stream)
+                    ((FunCall std::to_string ()
+                      ((Subscript
+                        (Subscript (Var x_r)
+                         (Parens (BinOp (Var idx1__) Subtract (Literal 1))))
+                        (Parens (BinOp (Var idx2__) Subtract (Literal 1))))))))))))
+               (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+            (Expression
+             (StreamInsertion (Var json_stream) ((Literal "\"\\\"x_i\\\"\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+            (For
+             ((static false) (constexpr false) (type_ Int) (name idx1__)
+              (init (Assignment (Literal 1))))
+             (BinOp (Var idx1__) LEq (Literal 0)) (Increment (Var idx1__))
+             (Block
+              ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
+                (Block
+                 ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                ())
+               (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+               (For
+                ((static false) (constexpr false) (type_ Int) (name idx2__)
+                 (init (Assignment (Literal 1))))
+                (BinOp (Var idx2__) LEq (Literal 0)) (Increment (Var idx2__))
+                (Block
+                 ((IfElse (BinOp (Var idx2__) Gthn (Literal 1))
+                   (Block
+                    ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                   ())
+                  (Expression
+                   (StreamInsertion (Var json_stream)
+                    ((FunCall std::to_string ()
+                      ((Subscript
+                        (Subscript (Var x_i)
+                         (Parens (BinOp (Var idx1__) Subtract (Literal 1))))
+                        (Parens (BinOp (Var idx2__) Subtract (Literal 1))))))))))))
+               (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+            (Expression
+             (StreamInsertion (Var json_stream) ((Literal "\"\\\"arr_mul_ind\\\"\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+            (For
+             ((static false) (constexpr false) (type_ Int) (name idx1__)
+              (init (Assignment (Literal 1))))
+             (BinOp (Var idx1__) LEq (Literal 2)) (Increment (Var idx1__))
+             (Block
+              ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
+                (Block
+                 ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                ())
+               (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+               (For
+                ((static false) (constexpr false) (type_ Int) (name idx2__)
+                 (init (Assignment (Literal 1))))
+                (BinOp (Var idx2__) LEq (Literal 2)) (Increment (Var idx2__))
+                (Block
+                 ((IfElse (BinOp (Var idx2__) Gthn (Literal 1))
+                   (Block
+                    ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                   ())
+                  (Expression
+                   (StreamInsertion (Var json_stream)
+                    ((FunCall std::to_string ()
+                      ((Subscript
+                        (Subscript (Var arr_mul_ind)
+                         (Parens (BinOp (Var idx1__) Subtract (Literal 1))))
+                        (Parens (BinOp (Var idx2__) Subtract (Literal 1))))))))))))
+               (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+            (Expression
+             (StreamInsertion (Var json_stream) ((Literal "\"\\\"x_mul_ind\\\"\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+            (For
+             ((static false) (constexpr false) (type_ Int) (name idx1__)
+              (init (Assignment (Literal 1))))
+             (BinOp (Var idx1__) LEq (Literal 2)) (Increment (Var idx1__))
+             (Block
+              ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
+                (Block
+                 ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                ())
+               (Expression
+                (StreamInsertion (Var json_stream)
+                 ((FunCall std::to_string ()
+                   ((Subscript (Var x_mul_ind)
+                     (Parens (BinOp (Var idx1__) Subtract (Literal 1))))))))))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+            (Expression
+             (StreamInsertion (Var json_stream)
+              ((Literal "\"\\\"transformed_data_real\\\"\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
+            (Expression
+             (StreamInsertion (Var json_stream)
+              ((FunCall std::to_string () ((Var transformed_data_real))))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+            (Expression
+             (StreamInsertion (Var json_stream)
+              ((Literal "\"\\\"transformed_data_real_array\\\"\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+            (For
+             ((static false) (constexpr false) (type_ Int) (name idx1__)
+              (init (Assignment (Literal 1))))
+             (BinOp (Var idx1__) LEq (Var d_int)) (Increment (Var idx1__))
+             (Block
+              ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
+                (Block
+                 ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                ())
+               (Expression
+                (StreamInsertion (Var json_stream)
+                 ((FunCall std::to_string ()
+                   ((Subscript (Var transformed_data_real_array)
+                     (Parens (BinOp (Var idx1__) Subtract (Literal 1))))))))))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+            (Expression
+             (StreamInsertion (Var json_stream)
+              ((Literal "\"\\\"transformed_data_real_array_2d\\\"\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+            (For
+             ((static false) (constexpr false) (type_ Int) (name idx1__)
+              (init (Assignment (Literal 1))))
+             (BinOp (Var idx1__) LEq (Var d_int)) (Increment (Var idx1__))
+             (Block
+              ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
+                (Block
+                 ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                ())
+               (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+               (For
+                ((static false) (constexpr false) (type_ Int) (name idx2__)
+                 (init (Assignment (Literal 1))))
+                (BinOp (Var idx2__) LEq (Literal 2)) (Increment (Var idx2__))
+                (Block
+                 ((IfElse (BinOp (Var idx2__) Gthn (Literal 1))
+                   (Block
+                    ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                   ())
+                  (Expression
+                   (StreamInsertion (Var json_stream)
+                    ((FunCall std::to_string ()
+                      ((Subscript
+                        (Subscript (Var transformed_data_real_array_2d)
+                         (Parens (BinOp (Var idx1__) Subtract (Literal 1))))
+                        (Parens (BinOp (Var idx2__) Subtract (Literal 1))))))))))))
+               (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+            (Expression
+             (StreamInsertion (Var json_stream)
+              ((Literal "\"\\\"transformed_data_real_array_3d\\\"\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+            (For
+             ((static false) (constexpr false) (type_ Int) (name idx1__)
+              (init (Assignment (Literal 1))))
+             (BinOp (Var idx1__) LEq (Var d_int)) (Increment (Var idx1__))
+             (Block
+              ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
+                (Block
+                 ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                ())
+               (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+               (For
+                ((static false) (constexpr false) (type_ Int) (name idx2__)
+                 (init (Assignment (Literal 1))))
+                (BinOp (Var idx2__) LEq (Literal 2)) (Increment (Var idx2__))
+                (Block
+                 ((IfElse (BinOp (Var idx2__) Gthn (Literal 1))
+                   (Block
+                    ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                   ())
+                  (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+                  (For
+                   ((static false) (constexpr false) (type_ Int) (name idx3__)
+                    (init (Assignment (Literal 1))))
+                   (BinOp (Var idx3__) LEq (Literal 3)) (Increment (Var idx3__))
+                   (Block
+                    ((IfElse (BinOp (Var idx3__) Gthn (Literal 1))
+                      (Block
+                       ((Expression
+                         (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                      ())
+                     (Expression
+                      (StreamInsertion (Var json_stream)
+                       ((FunCall std::to_string ()
+                         ((Subscript
+                           (Subscript
+                            (Subscript (Var transformed_data_real_array_3d)
+                             (Parens (BinOp (Var idx1__) Subtract (Literal 1))))
+                            (Parens (BinOp (Var idx2__) Subtract (Literal 1))))
+                           (Parens (BinOp (Var idx3__) Subtract (Literal 1))))))))))))
+                  (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
+               (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+            (Expression
+             (StreamInsertion (Var json_stream)
+              ((Literal "\"\\\"transformed_data_matrix\\\"\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+            (For
+             ((static false) (constexpr false) (type_ Int) (name idx1__)
+              (init (Assignment (Literal 1))))
+             (BinOp (Var idx1__) LEq (Var d_int)) (Increment (Var idx1__))
+             (Block
+              ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
+                (Block
+                 ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                ())
+               (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+               (For
+                ((static false) (constexpr false) (type_ Int) (name idx2__)
+                 (init (Assignment (Literal 1))))
+                (BinOp (Var idx2__) LEq (Var d_int)) (Increment (Var idx2__))
+                (Block
+                 ((IfElse (BinOp (Var idx2__) Gthn (Literal 1))
+                   (Block
+                    ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                   ())
+                  (Expression
+                   (StreamInsertion (Var json_stream)
+                    ((FunCall std::to_string ()
+                      ((FunCall stan::model::rvalue ()
+                        ((Var transformed_data_matrix)
+                         (Literal "\"transformed_data_matrix\"")
+                         (FunCall stan::model::index_uni () ((Var idx1__)))
+                         (FunCall stan::model::index_uni () ((Var idx2__)))))))))))))
+               (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+            (Expression
+             (StreamInsertion (Var json_stream)
+              ((Literal "\"\\\"transformed_data_matrix_array\\\"\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+            (For
+             ((static false) (constexpr false) (type_ Int) (name idx1__)
+              (init (Assignment (Literal 1))))
+             (BinOp (Var idx1__) LEq (Var d_int)) (Increment (Var idx1__))
+             (Block
+              ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
+                (Block
+                 ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                ())
+               (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+               (For
+                ((static false) (constexpr false) (type_ Int) (name idx2__)
+                 (init (Assignment (Literal 1))))
+                (BinOp (Var idx2__) LEq (Var d_int)) (Increment (Var idx2__))
+                (Block
+                 ((IfElse (BinOp (Var idx2__) Gthn (Literal 1))
+                   (Block
+                    ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                   ())
+                  (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+                  (For
+                   ((static false) (constexpr false) (type_ Int) (name idx3__)
+                    (init (Assignment (Literal 1))))
+                   (BinOp (Var idx3__) LEq (Var d_int)) (Increment (Var idx3__))
+                   (Block
+                    ((IfElse (BinOp (Var idx3__) Gthn (Literal 1))
+                      (Block
+                       ((Expression
+                         (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                      ())
+                     (Expression
+                      (StreamInsertion (Var json_stream)
+                       ((FunCall std::to_string ()
+                         ((FunCall stan::model::rvalue ()
+                           ((Var transformed_data_matrix_array)
+                            (Literal "\"transformed_data_matrix_array\"")
+                            (FunCall stan::model::index_uni () ((Var idx1__)))
+                            (FunCall stan::model::index_uni () ((Var idx2__)))
+                            (FunCall stan::model::index_uni () ((Var idx3__)))))))))))))
+                  (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
+               (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+            (Expression
+             (StreamInsertion (Var json_stream)
+              ((Literal "\"\\\"transformed_data_matrix_array_2d\\\"\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+            (For
+             ((static false) (constexpr false) (type_ Int) (name idx1__)
+              (init (Assignment (Literal 1))))
+             (BinOp (Var idx1__) LEq (Var d_int)) (Increment (Var idx1__))
+             (Block
+              ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
+                (Block
+                 ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                ())
+               (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+               (For
+                ((static false) (constexpr false) (type_ Int) (name idx2__)
+                 (init (Assignment (Literal 1))))
+                (BinOp (Var idx2__) LEq (Literal 2)) (Increment (Var idx2__))
+                (Block
+                 ((IfElse (BinOp (Var idx2__) Gthn (Literal 1))
+                   (Block
+                    ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                   ())
+                  (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+                  (For
+                   ((static false) (constexpr false) (type_ Int) (name idx3__)
+                    (init (Assignment (Literal 1))))
+                   (BinOp (Var idx3__) LEq (Var d_int)) (Increment (Var idx3__))
+                   (Block
+                    ((IfElse (BinOp (Var idx3__) Gthn (Literal 1))
+                      (Block
+                       ((Expression
+                         (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                      ())
+                     (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+                     (For
+                      ((static false) (constexpr false) (type_ Int) (name idx4__)
+                       (init (Assignment (Literal 1))))
+                      (BinOp (Var idx4__) LEq (Var d_int)) (Increment (Var idx4__))
+                      (Block
+                       ((IfElse (BinOp (Var idx4__) Gthn (Literal 1))
+                         (Block
+                          ((Expression
+                            (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                         ())
+                        (Expression
+                         (StreamInsertion (Var json_stream)
+                          ((FunCall std::to_string ()
+                            ((FunCall stan::model::rvalue ()
+                              ((Var transformed_data_matrix_array_2d)
+                               (Literal "\"transformed_data_matrix_array_2d\"")
+                               (FunCall stan::model::index_uni () ((Var idx1__)))
+                               (FunCall stan::model::index_uni () ((Var idx2__)))
+                               (FunCall stan::model::index_uni () ((Var idx3__)))
+                               (FunCall stan::model::index_uni () ((Var idx4__)))))))))))))
+                     (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
+                  (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
+               (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+            (Expression
+             (StreamInsertion (Var json_stream)
+              ((Literal "\"\\\"transformed_data_matrix_array_3d\\\"\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+            (For
+             ((static false) (constexpr false) (type_ Int) (name idx1__)
+              (init (Assignment (Literal 1))))
+             (BinOp (Var idx1__) LEq (Var d_int)) (Increment (Var idx1__))
+             (Block
+              ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
+                (Block
+                 ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                ())
+               (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+               (For
+                ((static false) (constexpr false) (type_ Int) (name idx2__)
+                 (init (Assignment (Literal 1))))
+                (BinOp (Var idx2__) LEq (Literal 2)) (Increment (Var idx2__))
+                (Block
+                 ((IfElse (BinOp (Var idx2__) Gthn (Literal 1))
+                   (Block
+                    ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                   ())
+                  (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+                  (For
+                   ((static false) (constexpr false) (type_ Int) (name idx3__)
+                    (init (Assignment (Literal 1))))
+                   (BinOp (Var idx3__) LEq (Literal 3)) (Increment (Var idx3__))
+                   (Block
+                    ((IfElse (BinOp (Var idx3__) Gthn (Literal 1))
+                      (Block
+                       ((Expression
+                         (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                      ())
+                     (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+                     (For
+                      ((static false) (constexpr false) (type_ Int) (name idx4__)
+                       (init (Assignment (Literal 1))))
+                      (BinOp (Var idx4__) LEq (Var d_int)) (Increment (Var idx4__))
+                      (Block
+                       ((IfElse (BinOp (Var idx4__) Gthn (Literal 1))
+                         (Block
+                          ((Expression
+                            (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                         ())
+                        (Expression
+                         (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+                        (For
+                         ((static false) (constexpr false) (type_ Int) 
+                          (name idx5__) (init (Assignment (Literal 1))))
+                         (BinOp (Var idx5__) LEq (Var d_int)) (Increment (Var idx5__))
+                         (Block
+                          ((IfElse (BinOp (Var idx5__) Gthn (Literal 1))
+                            (Block
+                             ((Expression
+                               (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                            ())
+                           (Expression
+                            (StreamInsertion (Var json_stream)
+                             ((FunCall std::to_string ()
+                               ((FunCall stan::model::rvalue ()
+                                 ((Var transformed_data_matrix_array_3d)
+                                  (Literal "\"transformed_data_matrix_array_3d\"")
+                                  (FunCall stan::model::index_uni () ((Var idx1__)))
+                                  (FunCall stan::model::index_uni () ((Var idx2__)))
+                                  (FunCall stan::model::index_uni () ((Var idx3__)))
+                                  (FunCall stan::model::index_uni () ((Var idx4__)))
+                                  (FunCall stan::model::index_uni () ((Var idx5__)))))))))))))
+                        (Expression
+                         (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
+                     (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
+                  (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
+               (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+            (Expression
+             (StreamInsertion (Var json_stream)
+              ((Literal "\"\\\"transformed_data_vector\\\"\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+            (For
+             ((static false) (constexpr false) (type_ Int) (name idx1__)
+              (init (Assignment (Literal 1))))
+             (BinOp (Var idx1__) LEq (Var d_int)) (Increment (Var idx1__))
+             (Block
+              ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
+                (Block
+                 ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                ())
+               (Expression
+                (StreamInsertion (Var json_stream)
+                 ((FunCall std::to_string ()
+                   ((Subscript (Var transformed_data_vector)
+                     (Parens (BinOp (Var idx1__) Subtract (Literal 1))))))))))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+            (Expression
+             (StreamInsertion (Var json_stream)
+              ((Literal "\"\\\"transformed_data_vector_array\\\"\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+            (For
+             ((static false) (constexpr false) (type_ Int) (name idx1__)
+              (init (Assignment (Literal 1))))
+             (BinOp (Var idx1__) LEq (Var d_int)) (Increment (Var idx1__))
+             (Block
+              ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
+                (Block
+                 ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                ())
+               (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+               (For
+                ((static false) (constexpr false) (type_ Int) (name idx2__)
+                 (init (Assignment (Literal 1))))
+                (BinOp (Var idx2__) LEq (Var d_int)) (Increment (Var idx2__))
+                (Block
+                 ((IfElse (BinOp (Var idx2__) Gthn (Literal 1))
+                   (Block
+                    ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                   ())
+                  (Expression
+                   (StreamInsertion (Var json_stream)
+                    ((FunCall std::to_string ()
+                      ((Subscript
+                        (Subscript (Var transformed_data_vector_array)
+                         (Parens (BinOp (Var idx1__) Subtract (Literal 1))))
+                        (Parens (BinOp (Var idx2__) Subtract (Literal 1))))))))))))
+               (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+            (Expression
+             (StreamInsertion (Var json_stream)
+              ((Literal "\"\\\"transformed_data_vector_array_2d\\\"\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+            (For
+             ((static false) (constexpr false) (type_ Int) (name idx1__)
+              (init (Assignment (Literal 1))))
+             (BinOp (Var idx1__) LEq (Var d_int)) (Increment (Var idx1__))
+             (Block
+              ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
+                (Block
+                 ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                ())
+               (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+               (For
+                ((static false) (constexpr false) (type_ Int) (name idx2__)
+                 (init (Assignment (Literal 1))))
+                (BinOp (Var idx2__) LEq (Literal 2)) (Increment (Var idx2__))
+                (Block
+                 ((IfElse (BinOp (Var idx2__) Gthn (Literal 1))
+                   (Block
+                    ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                   ())
+                  (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+                  (For
+                   ((static false) (constexpr false) (type_ Int) (name idx3__)
+                    (init (Assignment (Literal 1))))
+                   (BinOp (Var idx3__) LEq (Var d_int)) (Increment (Var idx3__))
+                   (Block
+                    ((IfElse (BinOp (Var idx3__) Gthn (Literal 1))
+                      (Block
+                       ((Expression
+                         (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                      ())
+                     (Expression
+                      (StreamInsertion (Var json_stream)
+                       ((FunCall std::to_string ()
+                         ((Subscript
+                           (Subscript
+                            (Subscript (Var transformed_data_vector_array_2d)
+                             (Parens (BinOp (Var idx1__) Subtract (Literal 1))))
+                            (Parens (BinOp (Var idx2__) Subtract (Literal 1))))
+                           (Parens (BinOp (Var idx3__) Subtract (Literal 1))))))))))))
+                  (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
+               (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+            (Expression
+             (StreamInsertion (Var json_stream)
+              ((Literal "\"\\\"transformed_data_vector_array_3d\\\"\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+            (For
+             ((static false) (constexpr false) (type_ Int) (name idx1__)
+              (init (Assignment (Literal 1))))
+             (BinOp (Var idx1__) LEq (Var d_int)) (Increment (Var idx1__))
+             (Block
+              ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
+                (Block
+                 ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                ())
+               (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+               (For
+                ((static false) (constexpr false) (type_ Int) (name idx2__)
+                 (init (Assignment (Literal 1))))
+                (BinOp (Var idx2__) LEq (Literal 2)) (Increment (Var idx2__))
+                (Block
+                 ((IfElse (BinOp (Var idx2__) Gthn (Literal 1))
+                   (Block
+                    ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                   ())
+                  (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+                  (For
+                   ((static false) (constexpr false) (type_ Int) (name idx3__)
+                    (init (Assignment (Literal 1))))
+                   (BinOp (Var idx3__) LEq (Literal 3)) (Increment (Var idx3__))
+                   (Block
+                    ((IfElse (BinOp (Var idx3__) Gthn (Literal 1))
+                      (Block
+                       ((Expression
+                         (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                      ())
+                     (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+                     (For
+                      ((static false) (constexpr false) (type_ Int) (name idx4__)
+                       (init (Assignment (Literal 1))))
+                      (BinOp (Var idx4__) LEq (Var d_int)) (Increment (Var idx4__))
+                      (Block
+                       ((IfElse (BinOp (Var idx4__) Gthn (Literal 1))
+                         (Block
+                          ((Expression
+                            (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                         ())
+                        (Expression
+                         (StreamInsertion (Var json_stream)
+                          ((FunCall std::to_string ()
+                            ((Subscript
+                              (Subscript
+                               (Subscript
+                                (Subscript (Var transformed_data_vector_array_3d)
+                                 (Parens (BinOp (Var idx1__) Subtract (Literal 1))))
+                                (Parens (BinOp (Var idx2__) Subtract (Literal 1))))
+                               (Parens (BinOp (Var idx3__) Subtract (Literal 1))))
+                              (Parens (BinOp (Var idx4__) Subtract (Literal 1))))))))))))
+                     (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
+                  (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
+               (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+            (Expression
+             (StreamInsertion (Var json_stream)
+              ((Literal "\"\\\"transformed_data_row_vector\\\"\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+            (For
+             ((static false) (constexpr false) (type_ Int) (name idx1__)
+              (init (Assignment (Literal 1))))
+             (BinOp (Var idx1__) LEq (Var d_int)) (Increment (Var idx1__))
+             (Block
+              ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
+                (Block
+                 ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                ())
+               (Expression
+                (StreamInsertion (Var json_stream)
+                 ((FunCall std::to_string ()
+                   ((Subscript (Var transformed_data_row_vector)
+                     (Parens (BinOp (Var idx1__) Subtract (Literal 1))))))))))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+            (Expression
+             (StreamInsertion (Var json_stream)
+              ((Literal "\"\\\"transformed_data_row_vector_array\\\"\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+            (For
+             ((static false) (constexpr false) (type_ Int) (name idx1__)
+              (init (Assignment (Literal 1))))
+             (BinOp (Var idx1__) LEq (Var d_int)) (Increment (Var idx1__))
+             (Block
+              ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
+                (Block
+                 ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                ())
+               (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+               (For
+                ((static false) (constexpr false) (type_ Int) (name idx2__)
+                 (init (Assignment (Literal 1))))
+                (BinOp (Var idx2__) LEq (Var d_int)) (Increment (Var idx2__))
+                (Block
+                 ((IfElse (BinOp (Var idx2__) Gthn (Literal 1))
+                   (Block
+                    ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                   ())
+                  (Expression
+                   (StreamInsertion (Var json_stream)
+                    ((FunCall std::to_string ()
+                      ((Subscript
+                        (Subscript (Var transformed_data_row_vector_array)
+                         (Parens (BinOp (Var idx1__) Subtract (Literal 1))))
+                        (Parens (BinOp (Var idx2__) Subtract (Literal 1))))))))))))
+               (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+            (Expression
+             (StreamInsertion (Var json_stream)
+              ((Literal "\"\\\"transformed_data_row_vector_array_2d\\\"\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+            (For
+             ((static false) (constexpr false) (type_ Int) (name idx1__)
+              (init (Assignment (Literal 1))))
+             (BinOp (Var idx1__) LEq (Var d_int)) (Increment (Var idx1__))
+             (Block
+              ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
+                (Block
+                 ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                ())
+               (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+               (For
+                ((static false) (constexpr false) (type_ Int) (name idx2__)
+                 (init (Assignment (Literal 1))))
+                (BinOp (Var idx2__) LEq (Literal 2)) (Increment (Var idx2__))
+                (Block
+                 ((IfElse (BinOp (Var idx2__) Gthn (Literal 1))
+                   (Block
+                    ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                   ())
+                  (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+                  (For
+                   ((static false) (constexpr false) (type_ Int) (name idx3__)
+                    (init (Assignment (Literal 1))))
+                   (BinOp (Var idx3__) LEq (Var d_int)) (Increment (Var idx3__))
+                   (Block
+                    ((IfElse (BinOp (Var idx3__) Gthn (Literal 1))
+                      (Block
+                       ((Expression
+                         (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                      ())
+                     (Expression
+                      (StreamInsertion (Var json_stream)
+                       ((FunCall std::to_string ()
+                         ((Subscript
+                           (Subscript
+                            (Subscript (Var transformed_data_row_vector_array_2d)
+                             (Parens (BinOp (Var idx1__) Subtract (Literal 1))))
+                            (Parens (BinOp (Var idx2__) Subtract (Literal 1))))
+                           (Parens (BinOp (Var idx3__) Subtract (Literal 1))))))))))))
+                  (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
+               (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\",\\n\""))))
+            (Expression
+             (StreamInsertion (Var json_stream)
+              ((Literal "\"\\\"transformed_data_row_vector_array_3d\\\"\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\":\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+            (For
+             ((static false) (constexpr false) (type_ Int) (name idx1__)
+              (init (Assignment (Literal 1))))
+             (BinOp (Var idx1__) LEq (Var d_int)) (Increment (Var idx1__))
+             (Block
+              ((IfElse (BinOp (Var idx1__) Gthn (Literal 1))
+                (Block
+                 ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                ())
+               (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+               (For
+                ((static false) (constexpr false) (type_ Int) (name idx2__)
+                 (init (Assignment (Literal 1))))
+                (BinOp (Var idx2__) LEq (Literal 2)) (Increment (Var idx2__))
+                (Block
+                 ((IfElse (BinOp (Var idx2__) Gthn (Literal 1))
+                   (Block
+                    ((Expression (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                   ())
+                  (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+                  (For
+                   ((static false) (constexpr false) (type_ Int) (name idx3__)
+                    (init (Assignment (Literal 1))))
+                   (BinOp (Var idx3__) LEq (Literal 3)) (Increment (Var idx3__))
+                   (Block
+                    ((IfElse (BinOp (Var idx3__) Gthn (Literal 1))
+                      (Block
+                       ((Expression
+                         (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                      ())
+                     (Expression (StreamInsertion (Var json_stream) ((Literal "\"[\""))))
+                     (For
+                      ((static false) (constexpr false) (type_ Int) (name idx4__)
+                       (init (Assignment (Literal 1))))
+                      (BinOp (Var idx4__) LEq (Var d_int)) (Increment (Var idx4__))
+                      (Block
+                       ((IfElse (BinOp (Var idx4__) Gthn (Literal 1))
+                         (Block
+                          ((Expression
+                            (StreamInsertion (Var json_stream) ((Literal "\",\""))))))
+                         ())
+                        (Expression
+                         (StreamInsertion (Var json_stream)
+                          ((FunCall std::to_string ()
+                            ((Subscript
+                              (Subscript
+                               (Subscript
+                                (Subscript (Var transformed_data_row_vector_array_3d)
+                                 (Parens (BinOp (Var idx1__) Subtract (Literal 1))))
+                                (Parens (BinOp (Var idx2__) Subtract (Literal 1))))
+                               (Parens (BinOp (Var idx3__) Subtract (Literal 1))))
+                              (Parens (BinOp (Var idx4__) Subtract (Literal 1))))))))))))
+                     (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
+                  (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
+               (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\"")))))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"]\""))))
+            (Expression (StreamInsertion (Var json_stream) ((Literal "\"}\""))))
+            (Return ((MethodCall (Var json_stream) str () ()))))))))
        (GlobalComment "Begin method overload boilerplate")
        (FunDef
         ((templates_init ((((Typename RNG))) false)) (inline true) (return_type Void)

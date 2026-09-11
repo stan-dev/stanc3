@@ -232,6 +232,39 @@ class simple3_model final : public model_base_crtp<simple3_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"x\"";
+    json_stream << ":";
+    json_stream << "{";
+    json_stream << "\"1\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int idx1__ = 1; idx1__ <= 2; ++idx1__) {
+      if (idx1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "[";
+      for (int idx2__ = 1; idx2__ <= 3; ++idx2__) {
+        if (idx2__ > 1) {
+          json_stream << ",";
+        }
+        json_stream <<
+                      std::to_string(std::get<0>(x)[(idx1__ - 1)][(idx2__ -
+                        1)]);
+      }
+      json_stream << "]";
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"2\"";
+    json_stream << ":";
+    json_stream << std::to_string(std::get<1>(x));
+    json_stream << "}";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,

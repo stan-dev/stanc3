@@ -215,6 +215,19 @@ class filename_good_model final : public model_base_crtp<filename_good_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"p\"";
+    json_stream << ":";
+    json_stream << std::to_string(p);
+    json_stream << ",\n";
+    json_stream << "\"q\"";
+    json_stream << ":";
+    json_stream << std::to_string(q);
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,

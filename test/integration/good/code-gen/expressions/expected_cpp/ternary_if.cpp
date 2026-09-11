@@ -487,6 +487,12 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"a\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"parameters\"},{\"name\":\"b\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"parameters\"},{\"name\":\"r\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"zp\",\"type\":{\"name\":\"complex\"},\"block\":\"parameters\"},{\"name\":\"c\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"d\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"z\",\"type\":{\"name\":\"complex\"},\"block\":\"transformed_parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,

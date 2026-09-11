@@ -18,11 +18,7 @@ module Pattern = struct
     | Profile of string * 'b list
     | Block of 'b list
     | SList of 'b list
-    | Decl of
-        { decl_adtype: UnsizedType.autodifftype
-        ; decl_id: string
-        ; decl_type: 'a Type.t
-        ; initialize: 'a decl_init }
+    | Decl of 'a decl_info
   [@@deriving sexp_of, map, fold]
 
   and 'e lvalue = 'e lbase * 'e Index.t list [@@deriving sexp_of, map, fold]
@@ -31,6 +27,12 @@ module Pattern = struct
   [@@deriving sexp_of, map, fold]
 
   and 'a decl_init = Uninit | Default | Assign of 'a
+
+  and 'a decl_info =
+    { decl_adtype: UnsizedType.autodifftype
+    ; decl_id: string
+    ; decl_type: 'a Type.t
+    ; initialize: 'a decl_init }
   [@@deriving sexp_of, map, fold]
 
   let fold_map f_expr f_stmt acc = function
@@ -325,6 +327,12 @@ module Helpers = struct
     match lhs with
     | LVariable v, _ -> v
     | LTupleProjection (lv, _), _ -> lhs_variable lv
+
+  let decl_variable Pattern.{decl_id; decl_type; decl_adtype; initialize= _} =
+    let v = Expr.Helpers.variable decl_id in
+    { v with
+      meta= {v.meta with type_= Type.to_unsized decl_type; adlevel= decl_adtype}
+    }
 
   (* Reduce an lvalue down to its "base reference", which is a variable with
      maximum tuple indices after it. For example: x[1,2][3] -> x x.1[1,2].2[3].3

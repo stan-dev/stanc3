@@ -2751,6 +2751,26 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"a8\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "}}},\"block\":\"parameters\"},{\"name\":\"a7\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}}},\"block\":\"parameters\"},{\"name\":\"a6\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}}},\"block\":\"parameters\"},{\"name\":\"a5\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"parameters\"},{\"name\":\"a4\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "}},\"block\":\"parameters\"},{\"name\":\"a3\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}},\"block\":\"parameters\"},{\"name\":\"a2\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}},\"block\":\"parameters\"},{\"name\":\"a1\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"y8\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "}}},\"block\":\"parameters\"},{\"name\":\"y7\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}}},\"block\":\"parameters\"},{\"name\":\"y6\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}}},\"block\":\"parameters\"},{\"name\":\"y5\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"parameters\"},{\"name\":\"y4\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "}},\"block\":\"parameters\"},{\"name\":\"y3\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}},\"block\":\"parameters\"},{\"name\":\"y2\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}},\"block\":\"parameters\"},{\"name\":\"y1\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"N\"";
+    json_stream << ":";
+    json_stream << std::to_string(N);
+    json_stream << ",\n";
+    json_stream << "\"x\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int idx1__ = 1; idx1__ <= N; ++idx1__) {
+      if (idx1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(x[(idx1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,

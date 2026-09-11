@@ -101,16 +101,18 @@
  (input_vars ((d <opaque> (STuple (SReal SReal)))))
  (prepare_data
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
-      (initialize Default)))
+     (Decl
+      ((decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
+       (initialize Default))))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable pos__) ()) UInt
       ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id d)
-      (decl_type (Sized (STuple (SReal SReal)))) (initialize Default)))
+     (Decl
+      ((decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id d)
+       (decl_type (Sized (STuple (SReal SReal)))) (initialize Default))))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -126,12 +128,13 @@
           (adlevel (TupleAD (DataOnly DataOnly)))))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id d2)
-      (decl_type
-       (Sized
-        (SArray (STuple (SReal SReal))
-         ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+     (Decl
+      ((decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id d2)
+       (decl_type
+        (Sized
+         (SArray (STuple (SReal SReal))
+          ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (initialize Default))))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable d2) ()) (UArray (UTuple (UReal UReal)))
@@ -162,13 +165,14 @@
          (adlevel (TupleAD (DataOnly DataOnly))))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id m)
-      (decl_type
-       (Sized
-        (SMatrix AoS
-         ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-         ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+     (Decl
+      ((decl_adtype DataOnly) (decl_id m)
+       (decl_type
+        (Sized
+         (SMatrix AoS
+          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (initialize Default))))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable m) ()) UMatrix
@@ -186,15 +190,18 @@
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id m2)
-      (decl_type
-       (Sized
-        (SArray
-         (SMatrix AoS
-          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-         ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+     (Decl
+      ((decl_adtype DataOnly) (decl_id m2)
+       (decl_type
+        (Sized
+         (SArray
+          (SMatrix AoS
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (initialize Default))))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable m2) ()) (UArray UMatrix)
@@ -204,20 +211,21 @@
        (meta ((type_ (UArray UMatrix)) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id x)
-      (decl_type
-       (Sized
-        (STuple
-         ((SArray
-           (SMatrix AoS
-            ((pattern (Lit Int 1))
-             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+     (Decl
+      ((decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id x)
+       (decl_type
+        (Sized
+         (STuple
+          ((SArray
+            (SMatrix AoS
+             ((pattern (Lit Int 1))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+             ((pattern (Lit Int 1))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
             ((pattern (Lit Int 1))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-           ((pattern (Lit Int 1))
-            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-          SReal))))
-      (initialize Default)))
+           SReal))))
+       (initialize Default))))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable x) ()) (UTuple ((UArray UMatrix) UReal))
@@ -238,22 +246,23 @@
          (adlevel (TupleAD (DataOnly DataOnly))))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id x2)
-      (decl_type
-       (Sized
-        (SArray
-         (STuple
-          ((SArray
-            (SMatrix AoS
-             ((pattern (Lit Int 1))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+     (Decl
+      ((decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id x2)
+       (decl_type
+        (Sized
+         (SArray
+          (STuple
+           ((SArray
+             (SMatrix AoS
+              ((pattern (Lit Int 1))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+              ((pattern (Lit Int 1))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
              ((pattern (Lit Int 1))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-            ((pattern (Lit Int 1))
-             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-           SReal))
-         ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+            SReal))
+          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (initialize Default))))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable x2) ()) (UArray (UTuple ((UArray UMatrix) UReal)))
