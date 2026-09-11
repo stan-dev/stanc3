@@ -162,7 +162,8 @@ catchError {
           '''
           archiveArtifacts 'performance.xml'
         }
-        parallel compile: {
+        parallel failFast:true,
+          compile: {
           if (runCompileTests && !params.skip_compile) {
             runPod(image: cxximage, cpus: 16, memory: "64Gi") {
               unstash 'linux-exe'
