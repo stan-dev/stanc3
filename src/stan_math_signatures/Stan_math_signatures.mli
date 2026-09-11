@@ -36,6 +36,11 @@ val distributions : (string * string list) list
 
 val operator_to_stan_math_fns : Operator.t -> string list
 val string_operator_to_stan_math_fns : string -> string
+
+val normalize_fn_name : string -> string
+(** Map an operator name (e.g. [Plus__]) or a [_lupdf]/[_lupmf] distribution
+    name to the Stan Math function name used as a key in the signature table. *)
+
 val pretty_print_math_lib_operator_sigs : Operator.t -> string list
 
 val make_assignmentoperator_stan_math_signatures :

@@ -256,6 +256,11 @@ let rec contains_eigen_type ut =
   | UArray t | UFun (_, ReturnType t, _, _) -> contains_eigen_type t
   | UTuple ts -> List.exists ~f:contains_eigen_type ts
 
+(** Whether a function argument (as returned by [Expr.Typed.fun_arg]) is an
+    autodiffable type containing an Eigen matrix. *)
+let is_autodiffable_eigen ((adlevel, type_) : autodifftype * t) : bool =
+  is_autodifftype adlevel && contains_eigen_type type_
+
 let rec is_container ut =
   match ut with
   | UVector | URowVector | UMatrix | UArray _ | UTuple _ | UComplexRowVector

@@ -117,6 +117,9 @@ let string_operator_to_stan_math_fns str =
   | "Transpose__" -> "transpose"
   | _ -> str
 
+let normalize_fn_name name =
+  string_operator_to_stan_math_fns (Utils.stdlib_distribution_name name)
+
 let pretty_print_all_math_sigs ppf () =
   let open Fmt in
   Format.pp_set_margin ppf 180;

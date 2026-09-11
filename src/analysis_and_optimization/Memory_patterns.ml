@@ -40,15 +40,12 @@ let rec matrix_set Expr.{pattern; meta= Expr.Typed.Meta.{type_; _} as meta} =
     | EAnd (expr1, expr2) | EOr (expr1, expr2) -> union_recur [expr1; expr2]
   else Set.Poly.empty
 
-(** Whether an expression's metadata denotes an autodiffable Eigen type. *)
-let is_ad_eigen_meta Expr.Typed.Meta.{adlevel; type_; _} =
-  UnsizedType.is_autodifftype adlevel && UnsizedType.contains_eigen_type type_
-
 (** Return a set of all types containing autodiffable Eigen matrices in an
     expression. *)
 let query_var_eigen_names (expr : Expr.Typed.t) : string Set.Poly.t =
-  let get_expr_eigen_names (Dataflow_types.VVar s, meta) =
-    Option.some_if (is_ad_eigen_meta meta) s in
+  let get_expr_eigen_names
+      (Dataflow_types.VVar s, Expr.Typed.Meta.{adlevel; type_; _}) =
+    Option.some_if (UnsizedType.is_autodiffable_eigen (adlevel, type_)) s in
   Set.Poly.of_list
     (List.filter_map ~f:get_expr_eigen_names
        (Set.Poly.to_list (matrix_set expr)))
@@ -92,18 +89,12 @@ let rec is_uni_eigen_loop_indexing in_loop (ut : UnsizedType.t)
     | _ -> false
   else false
 
-(** Map an operator or [_lupdf]/[_lupmf] name to the Stan Math function name
-    used in the signature tables. *)
-let stan_math_fn_name (name : string) : string =
-  Stan_math_signatures.string_operator_to_stan_math_fns
-    (Utils.stdlib_distribution_name name)
-
 let query_stan_math_mem_pattern_support (name : string)
     (args : UnsizedType.argumentlist) =
   let open Stan_math_signatures in
   if is_special_function_name name then false
   else
-    let namematches = lookup_stan_math_function (stan_math_fn_name name) in
+    let namematches = lookup_stan_math_function (normalize_fn_name name) in
     let filteredmatches =
       List.filter
         ~f:(fun (x, _, _, _) ->
@@ -124,7 +115,8 @@ let is_fun_soa_supported name exprs =
     unchanged; [multiply] is instead rewritten to [elt_multiply], since
     [rep_matrix(a, N, N) * X] is a matrix product. Every promoted form must have
     a [var_value<Matrix>] overload in Stan Math. Keys are post-normalization,
-    i.e. operators are mapped through [stan_math_fn_name]. *)
+    i.e. operators are mapped through [Stan_math_signatures.normalize_fn_name].
+*)
 let scalar_broadcast_fns : string String.Map.t =
   String.Map.of_list
     [ ("fma", "fma"); ("beta", "beta"); ("lmultiply", "lmultiply")
@@ -143,38 +135,29 @@ let is_data_eigen_var = function
       true
   | _ -> false
 
-(** The SoA [rep_*] call filling a matrix of [v]'s shape with the autodiffable
-    scalar [s]. *)
-let rep_like (v : Expr.Typed.t) (s : Expr.Typed.t) : Expr.Typed.t =
-  let dim fn = Expr.Helpers.stanlib_funapp fn [v] {v.meta with type_= UInt} in
-  let rep_fn, dims =
-    match v.meta.type_ with
-    | URowVector -> ("rep_row_vector", [dim "cols"])
-    | UMatrix -> ("rep_matrix", [dim "rows"; dim "cols"])
-    | _ -> ("rep_vector", [dim "rows"]) in
-  Expr.Helpers.stanlib_funapp ~mem_pattern:SoA rep_fn (s :: dims)
-    {s.meta with type_= v.meta.type_}
-
 (** Try to promote the first autodiffable scalar argument of the elementwise
-    broadcast function [name] to an autodiffable [rep_*] matrix (see [rep_like])
-    so that the call can return a SoA matrix. Returns the function to call on
-    the promoted arguments (from [scalar_broadcast_fns]) together with those
-    arguments. Returns [None] when [name] is not in [scalar_broadcast_fns], when
-    some argument is already an autodiffable matrix, when no data-only eigen
-    [Var] or autodiffable scalar argument exists, or when Stan Math has no SoA
-    signature for the promoted call. *)
+    broadcast function [name] to an autodiffable SoA [rep_*] matrix (see
+    [Expr.Helpers.rep_like]) so that the call can return a SoA matrix. Returns
+    the function to call on the promoted arguments (from [scalar_broadcast_fns])
+    together with those arguments. Returns [None] when [name] is not in
+    [scalar_broadcast_fns], when some argument is already an autodiffable
+    matrix, when no data-only eigen [Var] or autodiffable scalar argument
+    exists, or when Stan Math has no SoA signature for the promoted call. *)
 let promote_scalar_args (name : string) (exprs : Expr.Typed.t list) :
     (string * Expr.Typed.t list) option =
   let is_ad_scalar e = Expr.Typed.fun_arg e = (UnsizedType.AutoDiffable, UReal)
-  and is_ad_eigen (e : Expr.Typed.t) = is_ad_eigen_meta e.meta in
+  and is_ad_eigen e = UnsizedType.is_autodiffable_eigen (Expr.Typed.fun_arg e) in
   match
-    ( String.Map.find_opt (stan_math_fn_name name) scalar_broadcast_fns
+    ( String.Map.find_opt
+        (Stan_math_signatures.normalize_fn_name name)
+        scalar_broadcast_fns
     , List.find_opt exprs ~f:is_data_eigen_var )
   with
   | Some name', Some size_src when not (List.exists exprs ~f:is_ad_eigen) ->
+      let rep = Expr.Helpers.rep_like ~mem_pattern:SoA size_src in
       let rec promote_first = function
         | [] -> None
-        | e :: rest when is_ad_scalar e -> Some (rep_like size_src e :: rest)
+        | e :: rest when is_ad_scalar e -> Some (rep e :: rest)
         | e :: rest -> Option.map (promote_first rest) ~f:(List.cons e) in
       Option.bind (promote_first exprs) ~f:(fun exprs' ->
           Option.some_if (is_fun_soa_supported name' exprs') (name', exprs'))
@@ -303,8 +286,8 @@ and query_initial_demotable_funs (in_loop : bool) (stmt_linenum : int)
       [modify_expr_pattern] would force AoS anyway: ternary branches and the
       arguments of functions without SoA support. *)
 let rec extract_nonderived_admatrix_types ~promote
-    Expr.{pattern; meta= Expr.Typed.Meta.{adlevel; type_; _} as meta} =
-  if is_ad_eigen_meta meta then
+    Expr.{pattern; meta= Expr.Typed.Meta.{adlevel; type_; _}} =
+  if UnsizedType.is_autodiffable_eigen (adlevel, type_) then
     match pattern with
     | FunApp (kind, (exprs : Expr.Typed.t list)) ->
         extract_nonderived_admatrix_types_fun ~promote kind exprs

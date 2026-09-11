@@ -186,6 +186,16 @@ module Helpers = struct
   let stanlib_funapp ?(mem_pattern = Mem_pattern.AoS) name args meta =
     {meta; pattern= FunApp (StanLib (name, FnPlain, mem_pattern), args)}
 
+  let rep_like ?mem_pattern (like : Typed.t) (fill : Typed.t) : Typed.t =
+    let dim fn = stanlib_funapp fn [like] {like.meta with type_= UInt} in
+    let rep_fn, dims =
+      match Typed.type_of like with
+      | URowVector -> ("rep_row_vector", [dim "cols"])
+      | UMatrix -> ("rep_matrix", [dim "rows"; dim "cols"])
+      | _ -> ("rep_vector", [dim "rows"]) in
+    stanlib_funapp ?mem_pattern rep_fn (fill :: dims)
+      {fill.meta with type_= Typed.type_of like}
+
   let contains_fn_kind is_fn_kind ?(init = false) e =
     let rec aux accu {pattern; _} =
       accu
