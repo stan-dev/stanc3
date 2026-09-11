@@ -163,7 +163,7 @@ catchError {
         }
         parallel compile: {
           if (runCompileTests && !params.skip_compile) {
-            runPod(image: 'stanorg/ci:gpu', cpus: 16, memory: "64Gi") {
+            runPod(image: 'stanorg/ci:v1', cpus: 16, memory: "64Gi") {
               unstash 'linux-exe'
               dir('performance-tests-cmdstan') {
                 checkout scmGit(
@@ -197,7 +197,7 @@ catchError {
           }
         }, compileAtO1: {
           if (runCompileTestsAtO1 && !params.skip_compile_O1) {
-            runPod(image: 'stanorg/ci:gpu', cpus: 16, memory: "64Gi") {
+            runPod(image: 'stanorg/ci:v1', cpus: 16, memory: "64Gi") {
               unstash 'linux-exe'
               dir('performance-tests-cmdstan') {
                 checkout scmGit(
