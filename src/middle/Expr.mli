@@ -71,6 +71,11 @@ module Helpers : sig
   val tuple_expr : Typed.t list -> Typed.t
   val loop_bottom : Typed.t
   val internal_funapp : 'a t Internal_fun.t -> 'a t list -> 'a -> 'a t
+
+  val stanlib_funapp :
+    ?mem_pattern:Mem_pattern.t -> string -> 'a t list -> 'a -> 'a t
+  (** Build a plain (non-suffixed) Stan Math library call. *)
+
   val contains_fn_kind : ('a t Fun_kind.t -> bool) -> ?init:bool -> 'a t -> bool
   val infer_type_of_indexed : UnsizedType.t -> 'a Index.t list -> UnsizedType.t
   val add_int_index : Typed.t -> Typed.t Index.t -> Typed.t

@@ -183,6 +183,9 @@ module Helpers = struct
   let internal_funapp fn args meta =
     {meta; pattern= FunApp (CompilerInternal fn, args)}
 
+  let stanlib_funapp ?(mem_pattern = Mem_pattern.AoS) name args meta =
+    {meta; pattern= FunApp (StanLib (name, FnPlain, mem_pattern), args)}
+
   let contains_fn_kind is_fn_kind ?(init = false) e =
     let rec aux accu {pattern; _} =
       accu

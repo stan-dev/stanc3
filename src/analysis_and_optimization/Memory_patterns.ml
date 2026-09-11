@@ -40,16 +40,15 @@ let rec matrix_set Expr.{pattern; meta= Expr.Typed.Meta.{type_; _} as meta} =
     | EAnd (expr1, expr2) | EOr (expr1, expr2) -> union_recur [expr1; expr2]
   else Set.Poly.empty
 
+(** Whether an expression's metadata denotes an autodiffable Eigen type. *)
+let is_ad_eigen_meta Expr.Typed.Meta.{adlevel; type_; _} =
+  UnsizedType.is_autodifftype adlevel && UnsizedType.contains_eigen_type type_
+
 (** Return a set of all types containing autodiffable Eigen matrices in an
     expression. *)
 let query_var_eigen_names (expr : Expr.Typed.t) : string Set.Poly.t =
-  let get_expr_eigen_names
-      (Dataflow_types.VVar s, Expr.Typed.Meta.{adlevel; type_; _}) =
-    if
-      UnsizedType.contains_eigen_type type_
-      && UnsizedType.is_autodifftype adlevel
-    then Some s
-    else None in
+  let get_expr_eigen_names (Dataflow_types.VVar s, meta) =
+    Option.some_if (is_ad_eigen_meta meta) s in
   Set.Poly.of_list
     (List.filter_map ~f:get_expr_eigen_names
        (Set.Poly.to_list (matrix_set expr)))
@@ -93,15 +92,18 @@ let rec is_uni_eigen_loop_indexing in_loop (ut : UnsizedType.t)
     | _ -> false
   else false
 
+(** Map an operator or [_lupdf]/[_lupmf] name to the Stan Math function name
+    used in the signature tables. *)
+let stan_math_fn_name (name : string) : string =
+  Stan_math_signatures.string_operator_to_stan_math_fns
+    (Utils.stdlib_distribution_name name)
+
 let query_stan_math_mem_pattern_support (name : string)
     (args : UnsizedType.argumentlist) =
   let open Stan_math_signatures in
   if is_special_function_name name then false
   else
-    let name =
-      string_operator_to_stan_math_fns (Utils.stdlib_distribution_name name)
-    in
-    let namematches = lookup_stan_math_function name in
+    let namematches = lookup_stan_math_function (stan_math_fn_name name) in
     let filteredmatches =
       List.filter
         ~f:(fun (x, _, _, _) ->
@@ -115,6 +117,68 @@ let query_stan_math_mem_pattern_support (name : string)
 let is_fun_soa_supported name exprs =
   let fun_args = List.map ~f:Expr.Typed.fun_arg exprs in
   query_stan_math_mem_pattern_support name fun_args
+
+(** Elementwise broadcast functions, mapped to the function called after an
+    autodiffable scalar argument has been promoted to a [rep_*] matrix. For most
+    entries [f(scalar, M)] equals [f(rep_*(scalar, dims M), M)] so the name is
+    unchanged; [multiply] is instead rewritten to [elt_multiply], since
+    [rep_matrix(a, N, N) * X] is a matrix product. Every promoted form must have
+    a [var_value<Matrix>] overload in Stan Math. Keys are post-normalization,
+    i.e. operators are mapped through [stan_math_fn_name]. *)
+let scalar_broadcast_fns : string String.Map.t =
+  String.Map.of_list
+    [ ("fma", "fma"); ("beta", "beta"); ("lmultiply", "lmultiply")
+    ; ("add", "add"); ("subtract", "subtract"); ("elt_multiply", "elt_multiply")
+    ; ("elt_divide", "elt_divide"); ("multiply", "elt_multiply") ]
+
+(** A data-only eigen [Var]. Promotion takes its size from such an argument; it
+    is restricted to [Var] so that [rows]/[cols] never re-evaluate an arbitrary
+    expression. *)
+let is_data_eigen_var = function
+  | Expr.
+      { pattern= Var _
+      ; meta=
+          Expr.Typed.Meta.
+            {adlevel= DataOnly; type_= UVector | URowVector | UMatrix; _} } ->
+      true
+  | _ -> false
+
+(** The SoA [rep_*] call filling a matrix of [v]'s shape with the autodiffable
+    scalar [s]. *)
+let rep_like (v : Expr.Typed.t) (s : Expr.Typed.t) : Expr.Typed.t =
+  let dim fn = Expr.Helpers.stanlib_funapp fn [v] {v.meta with type_= UInt} in
+  let rep_fn, dims =
+    match v.meta.type_ with
+    | URowVector -> ("rep_row_vector", [dim "cols"])
+    | UMatrix -> ("rep_matrix", [dim "rows"; dim "cols"])
+    | _ -> ("rep_vector", [dim "rows"]) in
+  Expr.Helpers.stanlib_funapp ~mem_pattern:SoA rep_fn (s :: dims)
+    {s.meta with type_= v.meta.type_}
+
+(** Try to promote the first autodiffable scalar argument of the elementwise
+    broadcast function [name] to an autodiffable [rep_*] matrix (see [rep_like])
+    so that the call can return a SoA matrix. Returns the function to call on
+    the promoted arguments (from [scalar_broadcast_fns]) together with those
+    arguments. Returns [None] when [name] is not in [scalar_broadcast_fns], when
+    some argument is already an autodiffable matrix, when no data-only eigen
+    [Var] or autodiffable scalar argument exists, or when Stan Math has no SoA
+    signature for the promoted call. *)
+let promote_scalar_args (name : string) (exprs : Expr.Typed.t list) :
+    (string * Expr.Typed.t list) option =
+  let is_ad_scalar e = Expr.Typed.fun_arg e = (UnsizedType.AutoDiffable, UReal)
+  and is_ad_eigen (e : Expr.Typed.t) = is_ad_eigen_meta e.meta in
+  match
+    ( String.Map.find_opt (stan_math_fn_name name) scalar_broadcast_fns
+    , List.find_opt exprs ~f:is_data_eigen_var )
+  with
+  | Some name', Some size_src when not (List.exists exprs ~f:is_ad_eigen) ->
+      let rec promote_first = function
+        | [] -> None
+        | e :: rest when is_ad_scalar e -> Some (rep_like size_src e :: rest)
+        | e :: rest -> Option.map (promote_first rest) ~f:(List.cons e) in
+      Option.bind (promote_first exprs) ~f:(fun exprs' ->
+          Option.some_if (is_fun_soa_supported name' exprs') (name', exprs'))
+  | _ -> None
 
 (** Query to find the initial set of objects that cannot be SoA. This is mostly
     recursing over expressions, with the exceptions being functions and indexing
@@ -230,27 +294,32 @@ and query_initial_demotable_funs (in_loop : bool) (stmt_linenum : int)
     continues until
     + A non-autodiffable type is found
     + An autodiffable scalar is found
-    + A `Var` type is found that is an autodiffable matrix *)
-let rec extract_nonderived_admatrix_types
-    Expr.{pattern; meta= Expr.Typed.Meta.{adlevel; type_; _}} =
-  if
-    UnsizedType.is_autodifftype adlevel && UnsizedType.contains_eigen_type type_
-  then
+    + A `Var` type is found that is an autodiffable matrix
+
+    @param promote
+      Whether the surrounding context can end up SoA. When true, a StanLib call
+      is summarized as if [promote_scalar_args] had been applied; the MIR itself
+      is only rewritten later by [promote_scalars_stmt]. It is cleared where
+      [modify_expr_pattern] would force AoS anyway: ternary branches and the
+      arguments of functions without SoA support. *)
+let rec extract_nonderived_admatrix_types ~promote
+    Expr.{pattern; meta= Expr.Typed.Meta.{adlevel; type_; _} as meta} =
+  if is_ad_eigen_meta meta then
     match pattern with
     | FunApp (kind, (exprs : Expr.Typed.t list)) ->
-        extract_nonderived_admatrix_types_fun kind exprs
+        extract_nonderived_admatrix_types_fun ~promote kind exprs
     | Indexed (expr, _) | Promotion (expr, _, _) | TupleProjection (expr, _) ->
-        extract_nonderived_admatrix_types expr
+        extract_nonderived_admatrix_types ~promote expr
     | Var (_ : string) | Lit ((_ : Expr.Pattern.litType), (_ : string)) ->
         [(adlevel, type_)]
     | TernaryIf (_, texpr, fexpr) ->
         List.concat
-          [ extract_nonderived_admatrix_types texpr
-          ; extract_nonderived_admatrix_types fexpr ]
+          [ extract_nonderived_admatrix_types ~promote:false texpr
+          ; extract_nonderived_admatrix_types ~promote:false fexpr ]
     | EAnd (lhs, rhs) | EOr (lhs, rhs) ->
         List.concat
-          [ extract_nonderived_admatrix_types lhs
-          ; extract_nonderived_admatrix_types rhs ]
+          [ extract_nonderived_admatrix_types ~promote lhs
+          ; extract_nonderived_admatrix_types ~promote rhs ]
   else [(adlevel, type_)]
 
 (** Recurse through functions to find nonderived ad matrix types. Special cases
@@ -260,8 +329,12 @@ let rec extract_nonderived_admatrix_types
     - `rep_*vector` These are templated in the C++ to cast up to `Var<Matrix>`
       types
     - `rep_matrix`. When it's only a scalar being propagated an math library
-      overload can upcast to `Var<Matrix>` *)
-and extract_nonderived_admatrix_types_fun (kind : 'a Fun_kind.t)
+      overload can upcast to `Var<Matrix>`
+    - Any other function is first passed through [promote_scalar_args] (when
+      [promote] is true) so that e.g. `fma(ad_scalar, data_vector, ad_scalar)`
+      is summarized as `fma(rep_vector(ad_scalar, rows(data_vector)),
+      data_vector, ad_scalar)`, which contains an autodiffable matrix. *)
+and extract_nonderived_admatrix_types_fun ~promote (kind : 'a Fun_kind.t)
     (exprs : Expr.Typed.t list) =
   match kind with
   | Fun_kind.StanLib (name, (_ : bool Fun_kind.suffix), _) -> (
@@ -274,7 +347,15 @@ and extract_nonderived_admatrix_types_fun (kind : 'a Fun_kind.t)
              | [(_, UnsizedType.UReal); _; _] -> true
              | _ -> false ->
           [(UnsizedType.AutoDiffable, UnsizedType.UMatrix)]
-      | _ -> List.concat_map ~f:extract_nonderived_admatrix_types exprs)
+      | _ ->
+          let promote = promote && is_fun_soa_supported name exprs in
+          let exprs =
+            if promote then
+              Option.value_map
+                (promote_scalar_args name exprs)
+                ~f:snd ~default:exprs
+            else exprs in
+          List.concat_map ~f:(extract_nonderived_admatrix_types ~promote) exprs)
   (* While not "true", we need to tell the optimizer these are danger
      functions *)
   | CompilerInternal Internal_fun.FnMakeArray ->
@@ -303,8 +384,11 @@ let contains_at_least_one_ad_matrix_or_all_data
     + A single cell of the LHS is being assigned within a loop.
     + The top level expression on the RHS is a combination of only data matrices
       and scalar types. Operations on data matrix and scalar values in Stan math
-      will return a AoS matrix. We currently have no way to tell Stan math to
-      return a SoA matrix.
+      will return a AoS matrix. The exception is an elementwise broadcast
+      function whose autodiffable scalar can be promoted to a [rep_*] call (see
+      [promote_scalar_args]); such an RHS is treated as if the promotion had
+      been made, and the promotion is applied later by [promote_scalars_stmt] if
+      the LHS ends up SoA.
     + None of the RHS's functions are able to accept SoA matrices and the rhs is
       not an internal compiler function.
 
@@ -364,7 +448,7 @@ let rec query_initial_demotable_stmt (in_loop : bool) (acc : string Set.Poly.t)
             | true, UnsizedType.AutoDiffable ->
                 not
                   (contains_at_least_one_ad_matrix_or_all_data
-                     (extract_nonderived_admatrix_types rhs))
+                     (extract_nonderived_admatrix_types ~promote:true rhs))
             | _ -> false in
           (* LHS (3) rhs unsupported function *)
           let non_supported_func_name =
@@ -737,6 +821,30 @@ let rec modify_stmt_pattern
 and modify_stmt (Stmt.{pattern; _} as stmt) (modifiable_set : string Set.Poly.t)
     =
   {stmt with pattern= modify_stmt_pattern pattern modifiable_set}
+
+(** Final promotion pass. After the SoA/AoS decision has been made and every
+    StanLib call carries its final [Mem_pattern] tag, insert [rep_*] wrappers
+    (via [promote_scalar_args], possibly renaming the call, e.g. [multiply] to
+    [elt_multiply]) into calls tagged SoA. Calls tagged AoS are left exactly as
+    written, so a rejected promotion never modifies the program. This runs after
+    [modify_kind], so the tags on the inserted [rep_*] (SoA) and [rows]/[cols]
+    (AoS) calls are final. *)
+let promote_scalars_expr_pattern (pattern : Expr.Typed.t Expr.Pattern.t) :
+    Expr.Typed.t Expr.Pattern.t =
+  match pattern with
+  | FunApp (StanLib (name, sfx, SoA), exprs) -> (
+      match promote_scalar_args name exprs with
+      | Some (name', exprs') -> FunApp (StanLib (name', sfx, SoA), exprs')
+      | None -> pattern)
+  | _ -> pattern
+
+let promote_scalars_stmt (stmt : Stmt.Located.t) : Stmt.Located.t =
+  Mir_utils.map_rec_stmt_loc
+    (fun pattern ->
+      Stmt.Pattern.map
+        (Mir_utils.map_rec_expr promote_scalars_expr_pattern)
+        Fun.id pattern)
+    stmt
 
 let collect_mem_pattern_variables stmts =
   let take_stmt acc = function
