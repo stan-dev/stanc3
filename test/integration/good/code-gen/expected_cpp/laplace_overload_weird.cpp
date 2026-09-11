@@ -631,6 +631,42 @@ class laplace_overload_weird_model final : public model_base_crtp<laplace_overlo
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"rho\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"eta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"log_ye\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int idx1__ = 1; idx1__ <= n_obs; ++idx1__) {
+      if (idx1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(log_ye[(idx1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"tolerance\"";
+    json_stream << ":";
+    json_stream << std::to_string(tolerance);
+    json_stream << ",\n";
+    json_stream << "\"max_num_steps\"";
+    json_stream << ":";
+    json_stream << std::to_string(max_num_steps);
+    json_stream << ",\n";
+    json_stream << "\"hessian_block_size\"";
+    json_stream << ":";
+    json_stream << std::to_string(hessian_block_size);
+    json_stream << ",\n";
+    json_stream << "\"solver\"";
+    json_stream << ":";
+    json_stream << std::to_string(solver);
+    json_stream << ",\n";
+    json_stream << "\"max_steps_line_search\"";
+    json_stream << ":";
+    json_stream << std::to_string(max_steps_line_search);
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,

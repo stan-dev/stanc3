@@ -554,6 +554,166 @@ class tuple_dataonly_model final : public model_base_crtp<tuple_dataonly_model> 
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"d2\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int idx1__ = 1; idx1__ <= 2; ++idx1__) {
+      if (idx1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "{";
+      json_stream << "\"1\"";
+      json_stream << ":";
+      json_stream << std::to_string(std::get<0>(d2[(idx1__ - 1)]));
+      json_stream << ",\n";
+      json_stream << "\"2\"";
+      json_stream << ":";
+      json_stream << std::to_string(std::get<1>(d2[(idx1__ - 1)]));
+      json_stream << "}";
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"m\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int idx1__ = 1; idx1__ <= 1; ++idx1__) {
+      if (idx1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "[";
+      for (int idx2__ = 1; idx2__ <= 1; ++idx2__) {
+        if (idx2__ > 1) {
+          json_stream << ",";
+        }
+        json_stream <<
+                      std::to_string(
+                        stan::model::rvalue(m, "m",
+                          stan::model::index_uni(idx1__),
+                          stan::model::index_uni(idx2__)));
+      }
+      json_stream << "]";
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"m2\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int idx1__ = 1; idx1__ <= 1; ++idx1__) {
+      if (idx1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "[";
+      for (int idx2__ = 1; idx2__ <= 1; ++idx2__) {
+        if (idx2__ > 1) {
+          json_stream << ",";
+        }
+        json_stream << "[";
+        for (int idx3__ = 1; idx3__ <= 1; ++idx3__) {
+          if (idx3__ > 1) {
+            json_stream << ",";
+          }
+          json_stream <<
+                        std::to_string(
+                          stan::model::rvalue(m2, "m2",
+                            stan::model::index_uni(idx1__),
+                            stan::model::index_uni(idx2__),
+                            stan::model::index_uni(idx3__)));
+        }
+        json_stream << "]";
+      }
+      json_stream << "]";
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"x\"";
+    json_stream << ":";
+    json_stream << "{";
+    json_stream << "\"1\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int idx1__ = 1; idx1__ <= 1; ++idx1__) {
+      if (idx1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "[";
+      for (int idx2__ = 1; idx2__ <= 1; ++idx2__) {
+        if (idx2__ > 1) {
+          json_stream << ",";
+        }
+        json_stream << "[";
+        for (int idx3__ = 1; idx3__ <= 1; ++idx3__) {
+          if (idx3__ > 1) {
+            json_stream << ",";
+          }
+          json_stream <<
+                        std::to_string(
+                          stan::model::rvalue(std::get<0>(x), "x.1",
+                            stan::model::index_uni(idx1__),
+                            stan::model::index_uni(idx2__),
+                            stan::model::index_uni(idx3__)));
+        }
+        json_stream << "]";
+      }
+      json_stream << "]";
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"2\"";
+    json_stream << ":";
+    json_stream << std::to_string(std::get<1>(x));
+    json_stream << "}";
+    json_stream << ",\n";
+    json_stream << "\"x2\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int idx1__ = 1; idx1__ <= 1; ++idx1__) {
+      if (idx1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "{";
+      json_stream << "\"1\"";
+      json_stream << ":";
+      json_stream << "[";
+      for (int idx2__ = 1; idx2__ <= 1; ++idx2__) {
+        if (idx2__ > 1) {
+          json_stream << ",";
+        }
+        json_stream << "[";
+        for (int idx3__ = 1; idx3__ <= 1; ++idx3__) {
+          if (idx3__ > 1) {
+            json_stream << ",";
+          }
+          json_stream << "[";
+          for (int idx4__ = 1; idx4__ <= 1; ++idx4__) {
+            if (idx4__ > 1) {
+              json_stream << ",";
+            }
+            json_stream <<
+                          std::to_string(
+                            stan::model::rvalue(
+                              std::get<0>(x2[(idx1__ - 1)]), "x2[idx1__].1",
+                              stan::model::index_uni(idx2__),
+                              stan::model::index_uni(idx3__),
+                              stan::model::index_uni(idx4__)));
+          }
+          json_stream << "]";
+        }
+        json_stream << "]";
+      }
+      json_stream << "]";
+      json_stream << ",\n";
+      json_stream << "\"2\"";
+      json_stream << ":";
+      json_stream << std::to_string(std::get<1>(x2[(idx1__ - 1)]));
+      json_stream << "}";
+    }
+    json_stream << "]";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,

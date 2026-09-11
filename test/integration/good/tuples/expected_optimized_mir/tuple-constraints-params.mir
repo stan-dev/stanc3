@@ -30,8 +30,9 @@
  (input_vars ((indicator <opaque> SInt)))
  (prepare_data
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id indicator) (decl_type (Sized SInt))
-      (initialize Default)))
+     (Decl
+      ((decl_adtype DataOnly) (decl_id indicator) (decl_type (Sized SInt))
+       (initialize Default))))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -69,19 +70,20 @@
       (((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id complicated_brack_dot2_1dim__)
-      (decl_type (Sized SInt))
-      (initialize
-       (Assign
-        ((pattern
-          (TernaryIf
-           ((pattern (Var indicator))
-            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-           ((pattern (Lit Int 3))
-            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-           ((pattern (Lit Int 0))
-            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+     (Decl
+      ((decl_adtype DataOnly) (decl_id complicated_brack_dot2_1dim__)
+       (decl_type (Sized SInt))
+       (initialize
+        (Assign
+         ((pattern
+           (TernaryIf
+            ((pattern (Var indicator))
+             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+            ((pattern (Lit Int 3))
+             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+            ((pattern (Lit Int 0))
+             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
@@ -103,8 +105,9 @@
     (meta <opaque>))))
  (log_prob
   (((pattern
-     (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id ps)
-      (decl_type (Sized (STuple (SReal SReal)))) (initialize Default)))
+     (Decl
+      ((decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id ps)
+       (decl_type (Sized (STuple (SReal SReal)))) (initialize Default))))
     (meta <opaque>))
    ((pattern
      (Assignment ((LTupleProjection ((LVariable ps) ()) 1) ()) UReal
@@ -135,19 +138,21 @@
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id ps2)
-      (decl_type
-       (Sized
-        (SArray
+     (Decl
+      ((decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id ps2)
+       (decl_type
+        (Sized
          (SArray
-          (STuple
-           (SReal
-            (SVector AoS
-             ((pattern (Lit Int 4))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-         ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+          (SArray
+           (STuple
+            (SReal
+             (SVector AoS
+              ((pattern (Lit Int 4))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+           ((pattern (Lit Int 2))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (initialize Default))))
     (meta <opaque>))
    ((pattern
      (For (loopvar idx1__)
@@ -223,60 +228,61 @@
         (meta <opaque>)))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id t) (decl_type (Sized SReal))
-      (initialize
-       (Assign
-        ((pattern
-          (FunApp
-           (CompilerInternal
-            (FnReadParam
-             (constrain
-              (LowerUpper
-               ((pattern
-                 (TupleProjection
-                  ((pattern (FunApp (UserDefined foo FnPlain) ()))
-                   (meta
-                    ((type_ (UTuple (UReal UReal))) (loc <opaque>)
-                     (adlevel (TupleAD (DataOnly DataOnly))))))
-                  1))
-                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
-               ((pattern
-                 (TupleProjection
-                  ((pattern (Var ps))
-                   (meta
-                    ((type_ (UTuple (UReal UReal))) (loc <opaque>)
-                     (adlevel (TupleAD (AutoDiffable AutoDiffable))))))
-                  2))
-                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
-             (dims ()) (mem_pattern AoS)))
-           ()))
-         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
+     (Decl
+      ((decl_adtype AutoDiffable) (decl_id t) (decl_type (Sized SReal))
+       (initialize
+        (Assign
+         ((pattern
+           (FunApp
+            (CompilerInternal
+             (FnReadParam
+              (constrain
+               (LowerUpper
+                ((pattern
+                  (TupleProjection
+                   ((pattern (FunApp (UserDefined foo FnPlain) ()))
+                    (meta
+                     ((type_ (UTuple (UReal UReal))) (loc <opaque>)
+                      (adlevel (TupleAD (DataOnly DataOnly))))))
+                   1))
+                 (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                ((pattern
+                  (TupleProjection
+                   ((pattern (Var ps))
+                    (meta
+                     ((type_ (UTuple (UReal UReal))) (loc <opaque>)
+                      (adlevel (TupleAD (AutoDiffable AutoDiffable))))))
+                   2))
+                 (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+              (dims ()) (mem_pattern AoS)))
+            ()))
+          (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))))
     (meta <opaque>))
    ((pattern
      (Decl
-      (decl_adtype
-       (TupleAD (AutoDiffable (TupleAD (AutoDiffable AutoDiffable AutoDiffable)))))
-      (decl_id complicated)
-      (decl_type
-       (Sized
-        (SArray
-         (STuple
-          (SReal
-           (SArray
-            (STuple
-             (SReal
-              (SVector AoS
-               ((pattern (Lit Int 5))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-              (SMatrix AoS
-               ((pattern (Lit Int 5))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-               ((pattern (Lit Int 4))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-            ((pattern (Var complicated_brack_dot2_1dim__))
-             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-         ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      ((decl_adtype
+        (TupleAD (AutoDiffable (TupleAD (AutoDiffable AutoDiffable AutoDiffable)))))
+       (decl_id complicated)
+       (decl_type
+        (Sized
+         (SArray
+          (STuple
+           (SReal
+            (SArray
+             (STuple
+              (SReal
+               (SVector AoS
+                ((pattern (Lit Int 5))
+                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+               (SMatrix AoS
+                ((pattern (Lit Int 5))
+                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                ((pattern (Lit Int 4))
+                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+             ((pattern (Var complicated_brack_dot2_1dim__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (initialize Default))))
     (meta <opaque>))
    ((pattern
      (For (loopvar idx1__)
@@ -397,8 +403,9 @@
     (meta <opaque>))))
  (reverse_mode_log_prob
   (((pattern
-     (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id ps)
-      (decl_type (Sized (STuple (SReal SReal)))) (initialize Default)))
+     (Decl
+      ((decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id ps)
+       (decl_type (Sized (STuple (SReal SReal)))) (initialize Default))))
     (meta <opaque>))
    ((pattern
      (Assignment ((LTupleProjection ((LVariable ps) ()) 1) ()) UReal
@@ -429,19 +436,21 @@
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id ps2)
-      (decl_type
-       (Sized
-        (SArray
+     (Decl
+      ((decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id ps2)
+       (decl_type
+        (Sized
          (SArray
-          (STuple
-           (SReal
-            (SVector AoS
-             ((pattern (Lit Int 4))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-         ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+          (SArray
+           (STuple
+            (SReal
+             (SVector AoS
+              ((pattern (Lit Int 4))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+           ((pattern (Lit Int 2))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (initialize Default))))
     (meta <opaque>))
    ((pattern
      (For (loopvar idx1__)
@@ -517,60 +526,61 @@
         (meta <opaque>)))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id t) (decl_type (Sized SReal))
-      (initialize
-       (Assign
-        ((pattern
-          (FunApp
-           (CompilerInternal
-            (FnReadParam
-             (constrain
-              (LowerUpper
-               ((pattern
-                 (TupleProjection
-                  ((pattern (FunApp (UserDefined foo FnPlain) ()))
-                   (meta
-                    ((type_ (UTuple (UReal UReal))) (loc <opaque>)
-                     (adlevel (TupleAD (DataOnly DataOnly))))))
-                  1))
-                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
-               ((pattern
-                 (TupleProjection
-                  ((pattern (Var ps))
-                   (meta
-                    ((type_ (UTuple (UReal UReal))) (loc <opaque>)
-                     (adlevel (TupleAD (AutoDiffable AutoDiffable))))))
-                  2))
-                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
-             (dims ()) (mem_pattern SoA)))
-           ()))
-         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
+     (Decl
+      ((decl_adtype AutoDiffable) (decl_id t) (decl_type (Sized SReal))
+       (initialize
+        (Assign
+         ((pattern
+           (FunApp
+            (CompilerInternal
+             (FnReadParam
+              (constrain
+               (LowerUpper
+                ((pattern
+                  (TupleProjection
+                   ((pattern (FunApp (UserDefined foo FnPlain) ()))
+                    (meta
+                     ((type_ (UTuple (UReal UReal))) (loc <opaque>)
+                      (adlevel (TupleAD (DataOnly DataOnly))))))
+                   1))
+                 (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                ((pattern
+                  (TupleProjection
+                   ((pattern (Var ps))
+                    (meta
+                     ((type_ (UTuple (UReal UReal))) (loc <opaque>)
+                      (adlevel (TupleAD (AutoDiffable AutoDiffable))))))
+                   2))
+                 (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+              (dims ()) (mem_pattern SoA)))
+            ()))
+          (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))))
     (meta <opaque>))
    ((pattern
      (Decl
-      (decl_adtype
-       (TupleAD (AutoDiffable (TupleAD (AutoDiffable AutoDiffable AutoDiffable)))))
-      (decl_id complicated)
-      (decl_type
-       (Sized
-        (SArray
-         (STuple
-          (SReal
-           (SArray
-            (STuple
-             (SReal
-              (SVector AoS
-               ((pattern (Lit Int 5))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-              (SMatrix AoS
-               ((pattern (Lit Int 5))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-               ((pattern (Lit Int 4))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-            ((pattern (Var complicated_brack_dot2_1dim__))
-             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-         ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      ((decl_adtype
+        (TupleAD (AutoDiffable (TupleAD (AutoDiffable AutoDiffable AutoDiffable)))))
+       (decl_id complicated)
+       (decl_type
+        (Sized
+         (SArray
+          (STuple
+           (SReal
+            (SArray
+             (STuple
+              (SReal
+               (SVector AoS
+                ((pattern (Lit Int 5))
+                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+               (SMatrix AoS
+                ((pattern (Lit Int 5))
+                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                ((pattern (Lit Int 4))
+                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+             ((pattern (Var complicated_brack_dot2_1dim__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (initialize Default))))
     (meta <opaque>))
    ((pattern
      (For (loopvar idx1__)
@@ -691,8 +701,9 @@
     (meta <opaque>))))
  (generate_quantities
   (((pattern
-     (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id ps)
-      (decl_type (Sized (STuple (SReal SReal)))) (initialize Default)))
+     (Decl
+      ((decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id ps)
+       (decl_type (Sized (STuple (SReal SReal)))) (initialize Default))))
     (meta <opaque>))
    ((pattern
      (Assignment ((LTupleProjection ((LVariable ps) ()) 1) ()) UReal
@@ -723,19 +734,21 @@
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id ps2)
-      (decl_type
-       (Sized
-        (SArray
+     (Decl
+      ((decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id ps2)
+       (decl_type
+        (Sized
          (SArray
-          (STuple
-           (SReal
-            (SVector AoS
-             ((pattern (Lit Int 4))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-         ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+          (SArray
+           (STuple
+            (SReal
+             (SVector AoS
+              ((pattern (Lit Int 4))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+           ((pattern (Lit Int 2))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (initialize Default))))
     (meta <opaque>))
    ((pattern
      (For (loopvar idx1__)
@@ -811,58 +824,60 @@
         (meta <opaque>)))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id t) (decl_type (Sized SReal))
-      (initialize
-       (Assign
-        ((pattern
-          (FunApp
-           (CompilerInternal
-            (FnReadParam
-             (constrain
-              (LowerUpper
-               ((pattern
-                 (TupleProjection
-                  ((pattern (FunApp (UserDefined foo FnPlain) ()))
-                   (meta
-                    ((type_ (UTuple (UReal UReal))) (loc <opaque>)
-                     (adlevel (TupleAD (DataOnly DataOnly))))))
-                  1))
-                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
-               ((pattern
-                 (TupleProjection
-                  ((pattern (Var ps))
-                   (meta
-                    ((type_ (UTuple (UReal UReal))) (loc <opaque>)
-                     (adlevel (TupleAD (AutoDiffable AutoDiffable))))))
-                  2))
-                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
-             (dims ()) (mem_pattern AoS)))
-           ()))
-         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
+     (Decl
+      ((decl_adtype DataOnly) (decl_id t) (decl_type (Sized SReal))
+       (initialize
+        (Assign
+         ((pattern
+           (FunApp
+            (CompilerInternal
+             (FnReadParam
+              (constrain
+               (LowerUpper
+                ((pattern
+                  (TupleProjection
+                   ((pattern (FunApp (UserDefined foo FnPlain) ()))
+                    (meta
+                     ((type_ (UTuple (UReal UReal))) (loc <opaque>)
+                      (adlevel (TupleAD (DataOnly DataOnly))))))
+                   1))
+                 (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                ((pattern
+                  (TupleProjection
+                   ((pattern (Var ps))
+                    (meta
+                     ((type_ (UTuple (UReal UReal))) (loc <opaque>)
+                      (adlevel (TupleAD (AutoDiffable AutoDiffable))))))
+                   2))
+                 (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+              (dims ()) (mem_pattern AoS)))
+            ()))
+          (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype (TupleAD (DataOnly (TupleAD (DataOnly DataOnly DataOnly)))))
-      (decl_id complicated)
-      (decl_type
-       (Sized
-        (SArray
-         (STuple
-          (SReal
-           (SArray
-            (STuple
-             (SReal
-              (SVector AoS
-               ((pattern (Lit Int 5))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-              (SMatrix AoS
-               ((pattern (Lit Int 5))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-               ((pattern (Lit Int 4))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-            ((pattern (Var complicated_brack_dot2_1dim__))
-             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-         ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+     (Decl
+      ((decl_adtype (TupleAD (DataOnly (TupleAD (DataOnly DataOnly DataOnly)))))
+       (decl_id complicated)
+       (decl_type
+        (Sized
+         (SArray
+          (STuple
+           (SReal
+            (SArray
+             (STuple
+              (SReal
+               (SVector AoS
+                ((pattern (Lit Int 5))
+                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+               (SMatrix AoS
+                ((pattern (Lit Int 5))
+                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                ((pattern (Lit Int 4))
+                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+             ((pattern (Var complicated_brack_dot2_1dim__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (initialize Default))))
     (meta <opaque>))
    ((pattern
      (For (loopvar idx1__)
@@ -1332,16 +1347,18 @@
     (meta <opaque>))))
  (transform_inits
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
-      (initialize Default)))
+     (Decl
+      ((decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
+       (initialize Default))))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable pos__) ()) UInt
       ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id ps)
-      (decl_type (Sized (STuple (SReal SReal)))) (initialize Default)))
+     (Decl
+      ((decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id ps)
+       (decl_type (Sized (STuple (SReal SReal)))) (initialize Default))))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -1395,19 +1412,21 @@
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id ps2)
-      (decl_type
-       (Sized
-        (SArray
+     (Decl
+      ((decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id ps2)
+       (decl_type
+        (Sized
          (SArray
-          (STuple
-           (SReal
-            (SVector AoS
-             ((pattern (Lit Int 4))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-         ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+          (SArray
+           (STuple
+            (SReal
+             (SVector AoS
+              ((pattern (Lit Int 4))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+           ((pattern (Lit Int 2))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (initialize Default))))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -1503,8 +1522,9 @@
         (meta <opaque>)))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id t) (decl_type (Sized SReal))
-      (initialize Default)))
+     (Decl
+      ((decl_adtype AutoDiffable) (decl_id t) (decl_type (Sized SReal))
+       (initialize Default))))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -1541,29 +1561,29 @@
     (meta <opaque>))
    ((pattern
      (Decl
-      (decl_adtype
-       (TupleAD (AutoDiffable (TupleAD (AutoDiffable AutoDiffable AutoDiffable)))))
-      (decl_id complicated)
-      (decl_type
-       (Sized
-        (SArray
-         (STuple
-          (SReal
-           (SArray
-            (STuple
-             (SReal
-              (SVector AoS
-               ((pattern (Lit Int 5))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-              (SMatrix AoS
-               ((pattern (Lit Int 5))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-               ((pattern (Lit Int 4))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-            ((pattern (Var complicated_brack_dot2_1dim__))
-             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-         ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      ((decl_adtype
+        (TupleAD (AutoDiffable (TupleAD (AutoDiffable AutoDiffable AutoDiffable)))))
+       (decl_id complicated)
+       (decl_type
+        (Sized
+         (SArray
+          (STuple
+           (SReal
+            (SArray
+             (STuple
+              (SReal
+               (SVector AoS
+                ((pattern (Lit Int 5))
+                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+               (SMatrix AoS
+                ((pattern (Lit Int 5))
+                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                ((pattern (Lit Int 4))
+                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+             ((pattern (Var complicated_brack_dot2_1dim__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (initialize Default))))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -1794,8 +1814,9 @@
     (meta <opaque>))))
  (unconstrain_array
   (((pattern
-     (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id ps)
-      (decl_type (Sized (STuple (SReal SReal)))) (initialize Default)))
+     (Decl
+      ((decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id ps)
+       (decl_type (Sized (STuple (SReal SReal)))) (initialize Default))))
     (meta <opaque>))
    ((pattern
      (Assignment ((LTupleProjection ((LVariable ps) ()) 1) ()) UReal
@@ -1846,19 +1867,21 @@
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id ps2)
-      (decl_type
-       (Sized
-        (SArray
+     (Decl
+      ((decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id ps2)
+       (decl_type
+        (Sized
          (SArray
-          (STuple
-           (SReal
-            (SVector AoS
-             ((pattern (Lit Int 4))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-         ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+          (SArray
+           (STuple
+            (SReal
+             (SVector AoS
+              ((pattern (Lit Int 4))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+           ((pattern (Lit Int 2))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (initialize Default))))
     (meta <opaque>))
    ((pattern
      (For (loopvar idx1__)
@@ -2000,8 +2023,9 @@
         (meta <opaque>)))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id t) (decl_type (Sized SReal))
-      (initialize Default)))
+     (Decl
+      ((decl_adtype AutoDiffable) (decl_id t) (decl_type (Sized SReal))
+       (initialize Default))))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable t) ()) UReal
@@ -2036,29 +2060,29 @@
     (meta <opaque>))
    ((pattern
      (Decl
-      (decl_adtype
-       (TupleAD (AutoDiffable (TupleAD (AutoDiffable AutoDiffable AutoDiffable)))))
-      (decl_id complicated)
-      (decl_type
-       (Sized
-        (SArray
-         (STuple
-          (SReal
-           (SArray
-            (STuple
-             (SReal
-              (SVector AoS
-               ((pattern (Lit Int 5))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-              (SMatrix AoS
-               ((pattern (Lit Int 5))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-               ((pattern (Lit Int 4))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-            ((pattern (Var complicated_brack_dot2_1dim__))
-             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-         ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      ((decl_adtype
+        (TupleAD (AutoDiffable (TupleAD (AutoDiffable AutoDiffable AutoDiffable)))))
+       (decl_id complicated)
+       (decl_type
+        (Sized
+         (SArray
+          (STuple
+           (SReal
+            (SArray
+             (STuple
+              (SReal
+               (SVector AoS
+                ((pattern (Lit Int 5))
+                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+               (SMatrix AoS
+                ((pattern (Lit Int 5))
+                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                ((pattern (Lit Int 4))
+                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+             ((pattern (Var complicated_brack_dot2_1dim__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (initialize Default))))
     (meta <opaque>))
    ((pattern
      (For (loopvar idx1__)

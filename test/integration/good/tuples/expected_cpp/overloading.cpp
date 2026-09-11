@@ -342,6 +342,51 @@ class overloading_model final : public model_base_crtp<overloading_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"x3\"";
+    json_stream << ":";
+    json_stream << "{";
+    json_stream << "\"1\"";
+    json_stream << ":";
+    json_stream << std::to_string(std::get<0>(x3));
+    json_stream << ",\n";
+    json_stream << "\"2\"";
+    json_stream << ":";
+    json_stream << std::to_string(std::get<1>(x3));
+    json_stream << ",\n";
+    json_stream << "\"3\"";
+    json_stream << ":";
+    json_stream << std::to_string(std::get<2>(x3));
+    json_stream << "}";
+    json_stream << ",\n";
+    json_stream << "\"x2\"";
+    json_stream << ":";
+    json_stream << "{";
+    json_stream << "\"1\"";
+    json_stream << ":";
+    json_stream << std::to_string(std::get<0>(x2));
+    json_stream << ",\n";
+    json_stream << "\"2\"";
+    json_stream << ":";
+    json_stream << std::to_string(std::get<1>(x2));
+    json_stream << "}";
+    json_stream << ",\n";
+    json_stream << "\"y3\"";
+    json_stream << ":";
+    json_stream << std::to_string(y3);
+    json_stream << ",\n";
+    json_stream << "\"y2\"";
+    json_stream << ":";
+    json_stream << std::to_string(y2);
+    json_stream << ",\n";
+    json_stream << "\"y4\"";
+    json_stream << ":";
+    json_stream << std::to_string(y4);
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,

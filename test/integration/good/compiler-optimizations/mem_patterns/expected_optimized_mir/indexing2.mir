@@ -11,8 +11,8 @@ Optimization hazard warning (Line 9): SoA warning: Right hand side contains only
      ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
  (prepare_data
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id N) (decl_type (Sized SInt))
-      (initialize Default)))
+     (Decl
+      ((decl_adtype DataOnly) (decl_id N) (decl_type (Sized SInt)) (initialize Default))))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -22,8 +22,8 @@ Optimization hazard warning (Line 9): SoA warning: Right hand side contains only
        ((pattern (Lit Str N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id M) (decl_type (Sized SInt))
-      (initialize Default)))
+     (Decl
+      ((decl_adtype DataOnly) (decl_id M) (decl_type (Sized SInt)) (initialize Default))))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -39,12 +39,13 @@ Optimization hazard warning (Line 9): SoA warning: Right hand side contains only
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id Idx)
-      (decl_type
-       (Sized
-        (SArray SInt
-         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+     (Decl
+      ((decl_adtype DataOnly) (decl_id Idx)
+       (decl_type
+        (Sized
+         (SArray SInt
+          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (initialize Default))))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -57,34 +58,37 @@ Optimization hazard warning (Line 9): SoA warning: Right hand side contains only
     (meta <opaque>))))
  (log_prob
   (((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id alpha) (decl_type (Sized SReal))
-      (initialize
-       (Assign
-        ((pattern
-          (FunApp
-           (CompilerInternal
-            (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
-           ()))
-         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
+     (Decl
+      ((decl_adtype AutoDiffable) (decl_id alpha) (decl_type (Sized SReal))
+       (initialize
+        (Assign
+         ((pattern
+           (FunApp
+            (CompilerInternal
+             (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
+            ()))
+          (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id p_aos_loop_single_idx)
-      (decl_type
-       (Sized
-        (SVector AoS
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize
-       (Assign
-        ((pattern
-          (FunApp
-           (CompilerInternal
-            (FnReadParam (constrain Identity)
-             (dims
-              (((pattern (Lit Int 10))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-             (mem_pattern AoS)))
-           ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+     (Decl
+      ((decl_adtype AutoDiffable) (decl_id p_aos_loop_single_idx)
+       (decl_type
+        (Sized
+         (SVector AoS
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (initialize
+        (Assign
+         ((pattern
+           (FunApp
+            (CompilerInternal
+             (FnReadParam (constrain Identity)
+              (dims
+               (((pattern (Lit Int 10))
+                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+              (mem_pattern AoS)))
+            ()))
+          (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))))
     (meta <opaque>))
    ((pattern
      (Block
@@ -97,12 +101,13 @@ Optimization hazard warning (Line 9): SoA warning: Right hand side contains only
            ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
         (meta <opaque>))
        ((pattern
-         (Decl (decl_adtype AutoDiffable) (decl_id tp_soa_multi_idx_assign_in_loop)
-          (decl_type
-           (Sized
-            (SVector AoS
-             ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+         (Decl
+          ((decl_adtype AutoDiffable) (decl_id tp_soa_multi_idx_assign_in_loop)
+           (decl_type
+            (Sized
+             (SVector AoS
+              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+           (initialize Default))))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable tp_soa_multi_idx_assign_in_loop) ()) UVector
@@ -151,12 +156,13 @@ Optimization hazard warning (Line 9): SoA warning: Right hand side contains only
            ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
         (meta <opaque>))
        ((pattern
-         (Decl (decl_adtype AutoDiffable) (decl_id tp_soa_single_idx_in_upfrom_idx)
-          (decl_type
-           (Sized
-            (SVector AoS
-             ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+         (Decl
+          ((decl_adtype AutoDiffable) (decl_id tp_soa_single_idx_in_upfrom_idx)
+           (decl_type
+            (Sized
+             (SVector AoS
+              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+           (initialize Default))))
         (meta <opaque>))
        ((pattern
          (For (loopvar i)
@@ -192,34 +198,37 @@ Optimization hazard warning (Line 9): SoA warning: Right hand side contains only
     (meta <opaque>))))
  (reverse_mode_log_prob
   (((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id alpha) (decl_type (Sized SReal))
-      (initialize
-       (Assign
-        ((pattern
-          (FunApp
-           (CompilerInternal
-            (FnReadParam (constrain Identity) (dims ()) (mem_pattern SoA)))
-           ()))
-         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
+     (Decl
+      ((decl_adtype AutoDiffable) (decl_id alpha) (decl_type (Sized SReal))
+       (initialize
+        (Assign
+         ((pattern
+           (FunApp
+            (CompilerInternal
+             (FnReadParam (constrain Identity) (dims ()) (mem_pattern SoA)))
+            ()))
+          (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id p_aos_loop_single_idx)
-      (decl_type
-       (Sized
-        (SVector AoS
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize
-       (Assign
-        ((pattern
-          (FunApp
-           (CompilerInternal
-            (FnReadParam (constrain Identity)
-             (dims
-              (((pattern (Lit Int 10))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-             (mem_pattern AoS)))
-           ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+     (Decl
+      ((decl_adtype AutoDiffable) (decl_id p_aos_loop_single_idx)
+       (decl_type
+        (Sized
+         (SVector AoS
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (initialize
+        (Assign
+         ((pattern
+           (FunApp
+            (CompilerInternal
+             (FnReadParam (constrain Identity)
+              (dims
+               (((pattern (Lit Int 10))
+                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+              (mem_pattern AoS)))
+            ()))
+          (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))))
     (meta <opaque>))
    ((pattern
      (Block
@@ -232,12 +241,13 @@ Optimization hazard warning (Line 9): SoA warning: Right hand side contains only
            ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
         (meta <opaque>))
        ((pattern
-         (Decl (decl_adtype AutoDiffable) (decl_id tp_soa_multi_idx_assign_in_loop)
-          (decl_type
-           (Sized
-            (SVector SoA
-             ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+         (Decl
+          ((decl_adtype AutoDiffable) (decl_id tp_soa_multi_idx_assign_in_loop)
+           (decl_type
+            (Sized
+             (SVector SoA
+              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+           (initialize Default))))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable tp_soa_multi_idx_assign_in_loop) ()) UVector
@@ -286,12 +296,13 @@ Optimization hazard warning (Line 9): SoA warning: Right hand side contains only
            ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
         (meta <opaque>))
        ((pattern
-         (Decl (decl_adtype AutoDiffable) (decl_id tp_soa_single_idx_in_upfrom_idx)
-          (decl_type
-           (Sized
-            (SVector SoA
-             ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+         (Decl
+          ((decl_adtype AutoDiffable) (decl_id tp_soa_single_idx_in_upfrom_idx)
+           (decl_type
+            (Sized
+             (SVector SoA
+              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+           (initialize Default))))
         (meta <opaque>))
        ((pattern
          (For (loopvar i)
@@ -327,34 +338,37 @@ Optimization hazard warning (Line 9): SoA warning: Right hand side contains only
     (meta <opaque>))))
  (generate_quantities
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id alpha) (decl_type (Sized SReal))
-      (initialize
-       (Assign
-        ((pattern
-          (FunApp
-           (CompilerInternal
-            (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
-           ()))
-         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
+     (Decl
+      ((decl_adtype DataOnly) (decl_id alpha) (decl_type (Sized SReal))
+       (initialize
+        (Assign
+         ((pattern
+           (FunApp
+            (CompilerInternal
+             (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
+            ()))
+          (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id p_aos_loop_single_idx)
-      (decl_type
-       (Sized
-        (SVector AoS
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize
-       (Assign
-        ((pattern
-          (FunApp
-           (CompilerInternal
-            (FnReadParam (constrain Identity)
-             (dims
-              (((pattern (Lit Int 10))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-             (mem_pattern AoS)))
-           ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+     (Decl
+      ((decl_adtype DataOnly) (decl_id p_aos_loop_single_idx)
+       (decl_type
+        (Sized
+         (SVector AoS
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (initialize
+        (Assign
+         ((pattern
+           (FunApp
+            (CompilerInternal
+             (FnReadParam (constrain Identity)
+              (dims
+               (((pattern (Lit Int 10))
+                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+              (mem_pattern AoS)))
+            ()))
+          (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))))
     (meta <opaque>))
    ((pattern
      (NRFunApp
@@ -398,16 +412,18 @@ Optimization hazard warning (Line 9): SoA warning: Right hand side contains only
     (meta <opaque>))))
  (transform_inits
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
-      (initialize Default)))
+     (Decl
+      ((decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
+       (initialize Default))))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable pos__) ()) UInt
       ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id alpha) (decl_type (Sized SReal))
-      (initialize Default)))
+     (Decl
+      ((decl_adtype AutoDiffable) (decl_id alpha) (decl_type (Sized SReal))
+       (initialize Default))))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -426,12 +442,14 @@ Optimization hazard warning (Line 9): SoA warning: Right hand side contains only
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id p_aos_loop_single_idx)
-      (decl_type
-       (Sized
-        (SVector AoS
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+     (Decl
+      ((decl_adtype AutoDiffable) (decl_id p_aos_loop_single_idx)
+       (decl_type
+        (Sized
+         (SVector AoS
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (initialize Default))))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -453,8 +471,9 @@ Optimization hazard warning (Line 9): SoA warning: Right hand side contains only
     (meta <opaque>))))
  (unconstrain_array
   (((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id alpha) (decl_type (Sized SReal))
-      (initialize Default)))
+     (Decl
+      ((decl_adtype AutoDiffable) (decl_id alpha) (decl_type (Sized SReal))
+       (initialize Default))))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable alpha) ()) UReal
@@ -470,12 +489,14 @@ Optimization hazard warning (Line 9): SoA warning: Right hand side contains only
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id p_aos_loop_single_idx)
-      (decl_type
-       (Sized
-        (SVector AoS
-         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+     (Decl
+      ((decl_adtype AutoDiffable) (decl_id p_aos_loop_single_idx)
+       (decl_type
+        (Sized
+         (SVector AoS
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (initialize Default))))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable p_aos_loop_single_idx) ()) UVector

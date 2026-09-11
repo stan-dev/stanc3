@@ -457,6 +457,12 @@ class tuple_test_model final : public model_base_crtp<tuple_test_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"xx\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"3\",\"element_types\":[{\"name\":\"array\",\"length\":" + std::to_string(1) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(1) + ",\"cols\":" + std::to_string(1) + "}},{\"name\":\"matrix\",\"rows\":" + std::to_string(1) + ",\"cols\":" + std::to_string(2) + "},{\"name\":\"matrix\",\"rows\":" + std::to_string(1) + ",\"cols\":" + std::to_string(3) + "}]},\"block\":\"parameters\"},{\"name\":\"x\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(1) + ",\"cols\":" + std::to_string(1) + "},\"block\":\"transformed_parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,

@@ -2,16 +2,16 @@
 ((functions_block ()) (input_vars ())
  (prepare_data
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id x) (decl_type (Sized SInt))
-      (initialize Default)))
+     (Decl
+      ((decl_adtype DataOnly) (decl_id x) (decl_type (Sized SInt)) (initialize Default))))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable x) ()) UInt
       ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id y) (decl_type (Sized SInt))
-      (initialize Default)))
+     (Decl
+      ((decl_adtype DataOnly) (decl_id y) (decl_type (Sized SInt)) (initialize Default))))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable y) ()) UInt
@@ -25,8 +25,9 @@
    ((pattern
      (Block
       (((pattern
-         (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id unpack1__)
-          (decl_type (Unsized (UTuple (UInt UInt)))) (initialize Uninit)))
+         (Decl
+          ((decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id unpack1__)
+           (decl_type (Unsized (UTuple (UInt UInt)))) (initialize Uninit))))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable unpack1__) ()) (UTuple (UInt UInt))
@@ -71,8 +72,9 @@
    ((pattern
      (Block
       (((pattern
-         (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id unpack1__)
-          (decl_type (Unsized (UTuple (UInt UInt)))) (initialize Uninit)))
+         (Decl
+          ((decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id unpack1__)
+           (decl_type (Unsized (UTuple (UInt UInt)))) (initialize Uninit))))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable unpack1__) ()) (UTuple (UInt UInt))
@@ -115,8 +117,9 @@
    ((pattern
      (Block
       (((pattern
-         (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id unpack1__)
-          (decl_type (Unsized (UTuple (UInt UInt)))) (initialize Uninit)))
+         (Decl
+          ((decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id unpack1__)
+           (decl_type (Unsized (UTuple (UInt UInt)))) (initialize Uninit))))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable unpack1__) ()) (UTuple (UInt UInt))
@@ -154,8 +157,9 @@
    ((pattern
      (Block
       (((pattern
-         (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id unpack1__)
-          (decl_type (Unsized (UTuple (UInt UInt)))) (initialize Uninit)))
+         (Decl
+          ((decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id unpack1__)
+           (decl_type (Unsized (UTuple (UInt UInt)))) (initialize Uninit))))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable unpack1__) ()) (UTuple (UInt UInt))

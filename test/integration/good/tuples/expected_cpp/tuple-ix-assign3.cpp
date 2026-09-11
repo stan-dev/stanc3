@@ -216,6 +216,30 @@ class tuple_ix_assign3_model final : public model_base_crtp<tuple_ix_assign3_mod
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"x\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int idx1__ = 1; idx1__ <= 10; ++idx1__) {
+      if (idx1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "{";
+      json_stream << "\"1\"";
+      json_stream << ":";
+      json_stream << std::to_string(std::get<0>(x[(idx1__ - 1)]));
+      json_stream << ",\n";
+      json_stream << "\"2\"";
+      json_stream << ":";
+      json_stream << std::to_string(std::get<1>(x[(idx1__ - 1)]));
+      json_stream << "}";
+    }
+    json_stream << "]";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,

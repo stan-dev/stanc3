@@ -26,13 +26,14 @@
       ((pattern (Block (((pattern (Return ())) (meta <opaque>))))) (meta <opaque>)) ()))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id m)
-      (decl_type
-       (Sized
-        (SMatrix AoS
-         ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-         ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+     (Decl
+      ((decl_adtype DataOnly) (decl_id m)
+       (decl_type
+        (Sized
+         (SMatrix AoS
+          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (initialize Default))))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable m) ()) UMatrix
@@ -46,17 +47,18 @@
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id t)
-      (decl_type
-       (Sized
-        (STuple
-         (SReal
-          (SMatrix AoS
-           ((pattern (Lit Int 1))
-            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-           ((pattern (Lit Int 1))
-            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
-      (initialize Default)))
+     (Decl
+      ((decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id t)
+       (decl_type
+        (Sized
+         (STuple
+          (SReal
+           (SMatrix AoS
+            ((pattern (Lit Int 1))
+             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+            ((pattern (Lit Int 1))
+             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
+       (initialize Default))))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable t) ()) (UTuple (UReal UMatrix))
@@ -76,17 +78,18 @@
          (adlevel (TupleAD (DataOnly DataOnly))))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id s)
-      (decl_type
-       (Sized
-        (STuple
-         (SReal
-          (SMatrix AoS
-           ((pattern (Lit Int 1))
-            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-           ((pattern (Lit Int 1))
-            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
-      (initialize Default)))
+     (Decl
+      ((decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id s)
+       (decl_type
+        (Sized
+         (STuple
+          (SReal
+           (SMatrix AoS
+            ((pattern (Lit Int 1))
+             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+            ((pattern (Lit Int 1))
+             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
+       (initialize Default))))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable s) ()) (UTuple (UReal UMatrix))

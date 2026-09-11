@@ -2903,6 +2903,74 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"p_r\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"p_complex\",\"type\":{\"name\":\"complex\"},\"block\":\"parameters\"},{\"name\":\"p_complex_array\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex\"}},\"block\":\"parameters\"},{\"name\":\"p_complex_array_2d\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"complex\"}}},\"block\":\"parameters\"},{\"name\":\"tp_r\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"tp_complex\",\"type\":{\"name\":\"complex\"},\"block\":\"transformed_parameters\"},{\"name\":\"tp_complex_array\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex\"}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_complex_array_2d\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"complex\"}}},\"block\":\"transformed_parameters\"},{\"name\":\"gq_i\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"gq_r\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"gq_complex\",\"type\":{\"name\":\"complex\"},\"block\":\"generated_quantities\"},{\"name\":\"gq_complex_array\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex\"}},\"block\":\"generated_quantities\"},{\"name\":\"gq_complex_array_2d\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"complex\"}}},\"block\":\"generated_quantities\"},{\"name\":\"z\",\"type\":{\"name\":\"complex\"},\"block\":\"generated_quantities\"},{\"name\":\"y\",\"type\":{\"name\":\"complex\"},\"block\":\"generated_quantities\"},{\"name\":\"i_arr\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(0) + ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"},{\"name\":\"i_arr_1\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(1) + ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"},{\"name\":\"zi\",\"type\":{\"name\":\"complex\"},\"block\":\"generated_quantities\"},{\"name\":\"yi\",\"type\":{\"name\":\"complex\"},\"block\":\"generated_quantities\"},{\"name\":\"x\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"td_i\"";
+    json_stream << ":";
+    json_stream << std::to_string(td_i);
+    json_stream << ",\n";
+    json_stream << "\"td_r\"";
+    json_stream << ":";
+    json_stream << std::to_string(td_r);
+    json_stream << ",\n";
+    json_stream << "\"td_complex\"";
+    json_stream << ":";
+    json_stream << "[";
+    json_stream << std::to_string(stan::math::get_real(td_complex));
+    json_stream << ",";
+    json_stream << std::to_string(stan::math::get_imag(td_complex));
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"td_complex_array\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int idx1__ = 1; idx1__ <= 2; ++idx1__) {
+      if (idx1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "[";
+      json_stream <<
+                    std::to_string(
+                      stan::math::get_real(td_complex_array[(idx1__ - 1)]));
+      json_stream << ",";
+      json_stream <<
+                    std::to_string(
+                      stan::math::get_imag(td_complex_array[(idx1__ - 1)]));
+      json_stream << "]";
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"td_complex_array_2d\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int idx1__ = 1; idx1__ <= 2; ++idx1__) {
+      if (idx1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "[";
+      for (int idx2__ = 1; idx2__ <= 3; ++idx2__) {
+        if (idx2__ > 1) {
+          json_stream << ",";
+        }
+        json_stream << "[";
+        json_stream <<
+                      std::to_string(
+                        stan::math::get_real(td_complex_array_2d[(idx1__ -
+                          1)][(idx2__ - 1)]));
+        json_stream << ",";
+        json_stream <<
+                      std::to_string(
+                        stan::math::get_imag(td_complex_array_2d[(idx1__ -
+                          1)][(idx2__ - 1)]));
+        json_stream << "]";
+      }
+      json_stream << "]";
+    }
+    json_stream << "]";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
