@@ -28,10 +28,11 @@ def runRemainingStages = false
 def runCompileTests = false
 def runRebuildingBinaries = false
 def runCompileTestsAtO1 = false
+def cxximage = 'stanorg/ci:v1'
 
 catchError {
   withEnv([
-    'CXX=clang++-6.0',
+    'CXX=clang++-7',
     'MACOS_SWITCH=stanc3-ocaml5.5-nobase',
     'GIT_AUTHOR_NAME=Stan Jenkins',
     'GIT_AUTHOR_EMAIL=mc.stanislaw@gmail.com',
@@ -161,9 +162,10 @@ catchError {
           '''
           archiveArtifacts 'performance.xml'
         }
-        parallel compile: {
+        parallel failFast:true,
+          compile: {
           if (runCompileTests && !params.skip_compile) {
-            runPod(image: 'stanorg/ci:gpu', cpus: 16, memory: "64Gi") {
+            runPod(image: cxximage, cpus: 16, memory: "64Gi") {
               unstash 'linux-exe'
               dir('performance-tests-cmdstan') {
                 checkout scmGit(
@@ -197,7 +199,7 @@ catchError {
           }
         }, compileAtO1: {
           if (runCompileTestsAtO1 && !params.skip_compile_O1) {
-            runPod(image: 'stanorg/ci:gpu', cpus: 16, memory: "64Gi") {
+            runPod(image: cxximage, cpus: 16, memory: "64Gi") {
               unstash 'linux-exe'
               dir('performance-tests-cmdstan') {
                 checkout scmGit(
@@ -232,7 +234,7 @@ catchError {
           }
         }, math: {
           if (runRemainingStages && runExpressionTests && !params.skip_math_func_expr) {
-            runPod(image: 'stanorg/ci:gpu', cpus: 8, memory: '64Gi') {
+            runPod(image: cxximage, cpus: 8, memory: '64Gi') {
               stage('Math functions expressions test') {
                 unstash 'linux-exe'
                 dir('math') {
