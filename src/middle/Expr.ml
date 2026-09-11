@@ -187,7 +187,9 @@ module Helpers = struct
     {meta; pattern= FunApp (StanLib (name, FnPlain, mem_pattern), args)}
 
   let rep_like ?mem_pattern (like : Typed.t) (fill : Typed.t) : Typed.t =
-    let dim fn = stanlib_funapp fn [like] {like.meta with type_= UInt} in
+    let dim fn =
+      stanlib_funapp fn [like]
+        {like.meta with type_= UInt; adlevel= UnsizedType.DataOnly} in
     let rep_fn, dims =
       match Typed.type_of like with
       | URowVector -> ("rep_row_vector", [dim "cols"])

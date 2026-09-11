@@ -1442,7 +1442,7 @@ let optimize_ad_levels (mir : Program.Typed.t) =
     demoted to AoS as well as updating functions and objects after these
     assignment passes that then also need to be AoS.
 
-    Finally, [Memory_patterns.promote_scalars_stmt] inserts [rep_*] wrappers
+    Finally, [Memory_patterns.promote_scalars_stmts] inserts [rep_*] wrappers
     around autodiffable scalar arguments of elementwise broadcast functions
     (e.g. [fma(ad_scalar, data_vector, ad_scalar)]) whose final tag is SoA. The
     initial analysis already summarized those calls as if promoted, so a call
@@ -1477,8 +1477,8 @@ let optimize_soa (mir : Program.Typed.t) =
         [@coverage off] in
   { mir with
     reverse_mode_log_prob=
-      transform' mir.reverse_mode_log_prob
-      |> List.map ~f:Memory_patterns.promote_scalars_stmt }
+      Memory_patterns.promote_scalars_stmts
+        (transform' mir.reverse_mode_log_prob) }
 
 (* Apparently you need to completely copy/paste type definitions between ml and
    mli files?*)
