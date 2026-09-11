@@ -31,7 +31,7 @@ def runCompileTestsAtO1 = false
 
 catchError {
   withEnv([
-    'CXX=clang++-6.0',
+    'CXX=clang++-7',
     'MACOS_SWITCH=stanc3-ocaml5.5-nobase',
     'GIT_AUTHOR_NAME=Stan Jenkins',
     'GIT_AUTHOR_EMAIL=mc.stanislaw@gmail.com',
