@@ -43,7 +43,10 @@ module List = struct
   let hd = function i :: _ -> Some i | _ -> None
   let tl_exn = tl
   let tl = function _ :: l -> Some l | _ -> None
-  let range start stop = List.init ~len:(stop - start) ~f:(fun i -> start + i)
+
+  let range start stop =
+    let len = stop - start in
+    if len <= 0 then [] else List.init ~len ~f:(fun i -> start + i)
 
   let min_elt ~cmp l =
     let rec loop m = function
