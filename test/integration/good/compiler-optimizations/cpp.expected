@@ -23616,8 +23616,7 @@ class function_in_function_loops_model final : public model_base_crtp<function_i
           int inline_summer_N_sym16__ = std::numeric_limits<int>::min();
           lcm_sym42__ = stan::math::size(lcm_sym41__);
           double inline_summer_running_sum_sym17__;
-          inline_summer_running_sum_sym17__ = stan::math::promote_scalar<
-                                                local_scalar_t__>(0);
+          inline_summer_running_sum_sym17__ = static_cast<double>(0);
           current_statement__ = 9;
           if (stan::math::logical_gte(lcm_sym42__, 1)) {
             double inline_summer_inline_do_something_return_sym4___sym18__;
@@ -23713,8 +23712,7 @@ class function_in_function_loops_model final : public model_base_crtp<function_i
           int inline_summer_N_sym8__ = std::numeric_limits<int>::min();
           lcm_sym34__ = stan::math::size(lcm_sym33__);
           double inline_summer_running_sum_sym9__;
-          inline_summer_running_sum_sym9__ = stan::math::promote_scalar<
-                                               local_scalar_t__>(0);
+          inline_summer_running_sum_sym9__ = static_cast<double>(0);
           current_statement__ = 9;
           if (stan::math::logical_gte(lcm_sym34__, 1)) {
             double inline_summer_inline_do_something_return_sym4___sym10__;
@@ -36765,25 +36763,25 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           current_statement__ = 32;
           lp_accum__.add(2);
         }
-        x = stan::math::promote_scalar<local_scalar_t__>(3);
+        x = static_cast<double>(3);
         current_statement__ = 35;
         lp_accum__.add(stan::math::promote_scalar<local_scalar_t__>(3));
         current_statement__ = 37;
         if (stan::math::logical_gt(theta, 2)) {
           current_statement__ = 36;
-          x = stan::math::promote_scalar<local_scalar_t__>(2);
+          x = static_cast<double>(2);
         }
         current_statement__ = 38;
         lp_accum__.add(x);
         current_statement__ = 39;
         lp_accum__.add(stan::math::promote_scalar<local_scalar_t__>(247));
-        x = stan::math::promote_scalar<local_scalar_t__>(576);
+        x = static_cast<double>(576);
         current_statement__ = 40;
         lp_accum__.add(stan::math::promote_scalar<local_scalar_t__>(576));
         lcm_sym98__ = stan::math::logical_gt(theta, 46);
         if (lcm_sym98__) {
           current_statement__ = 41;
-          x = stan::math::promote_scalar<local_scalar_t__>(5880);
+          x = static_cast<double>(5880);
         }
         current_statement__ = 42;
         lp_accum__.add(x);
@@ -36898,7 +36896,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         }
         double dataonlyvar;
         current_statement__ = 80;
-        dataonlyvar = stan::math::promote_scalar<local_scalar_t__>(3);
+        dataonlyvar = static_cast<double>(3);
         current_statement__ = 81;
         lp_accum__.add(dataonlyvar);
         local_scalar_t__ paramvar = DUMMY_VAR__;
@@ -37302,25 +37300,25 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           current_statement__ = 32;
           lp_accum__.add(2);
         }
-        x = stan::math::promote_scalar<local_scalar_t__>(3);
+        x = static_cast<double>(3);
         current_statement__ = 35;
         lp_accum__.add(stan::math::promote_scalar<local_scalar_t__>(3));
         current_statement__ = 37;
         if (stan::math::logical_gt(theta, 2)) {
           current_statement__ = 36;
-          x = stan::math::promote_scalar<local_scalar_t__>(2);
+          x = static_cast<double>(2);
         }
         current_statement__ = 38;
         lp_accum__.add(x);
         current_statement__ = 39;
         lp_accum__.add(stan::math::promote_scalar<local_scalar_t__>(247));
-        x = stan::math::promote_scalar<local_scalar_t__>(576);
+        x = static_cast<double>(576);
         current_statement__ = 40;
         lp_accum__.add(stan::math::promote_scalar<local_scalar_t__>(576));
         lcm_sym74__ = stan::math::logical_gt(theta, 46);
         if (lcm_sym74__) {
           current_statement__ = 41;
-          x = stan::math::promote_scalar<local_scalar_t__>(5880);
+          x = static_cast<double>(5880);
         }
         current_statement__ = 42;
         lp_accum__.add(x);
@@ -37435,7 +37433,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         }
         double dataonlyvar;
         current_statement__ = 80;
-        dataonlyvar = stan::math::promote_scalar<local_scalar_t__>(3);
+        dataonlyvar = static_cast<double>(3);
         current_statement__ = 81;
         lp_accum__.add(dataonlyvar);
         local_scalar_t__ paramvar = DUMMY_VAR__;
@@ -44019,7 +44017,7 @@ loops_rng(const T0__& a_arg__, RNG& base_rng__, std::ostream* pstream__) {
     int lcm_sym1__;
     {
       double sum;
-      sum = stan::math::promote_scalar<local_scalar_t__>(0);
+      sum = static_cast<double>(0);
       {
         current_statement__ = 2;
         int _i_lower = stan::math::poisson_rng(10, base_rng__);
@@ -44060,7 +44058,7 @@ loops2_rng(const T0__& a_arg__, RNG& base_rng__, std::ostream* pstream__) {
     double lcm_sym6__;
     {
       double sum;
-      sum = stan::math::promote_scalar<local_scalar_t__>(0);
+      sum = static_cast<double>(0);
       current_statement__ = 11;
       if (stan::math::logical_gte(stan::math::poisson_rng(10, base_rng__), 0)) {
         current_statement__ = 9;
@@ -47637,42 +47635,42 @@ class unenforce_initialize_model final : public model_base_crtp<unenforce_initia
       }
       double for_loop_var = std::numeric_limits<double>::quiet_NaN();
       {
-        for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
+        for_loop_var = static_cast<double>(1);
         {
           current_statement__ = 10;
-          for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
+          for_loop_var = static_cast<double>(1);
         }
         {
           current_statement__ = 10;
-          for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
+          for_loop_var = static_cast<double>(1);
         }
         {
           current_statement__ = 10;
-          for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
+          for_loop_var = static_cast<double>(1);
         }
         {
           current_statement__ = 10;
-          for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
+          for_loop_var = static_cast<double>(1);
         }
         {
           current_statement__ = 10;
-          for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
+          for_loop_var = static_cast<double>(1);
         }
         {
           current_statement__ = 10;
-          for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
+          for_loop_var = static_cast<double>(1);
         }
         {
           current_statement__ = 10;
-          for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
+          for_loop_var = static_cast<double>(1);
         }
         {
           current_statement__ = 10;
-          for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
+          for_loop_var = static_cast<double>(1);
         }
         {
           current_statement__ = 10;
-          for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
+          for_loop_var = static_cast<double>(1);
         }
       }
     } catch (const std::exception& e) {
@@ -47727,42 +47725,42 @@ class unenforce_initialize_model final : public model_base_crtp<unenforce_initia
       }
       double for_loop_var = std::numeric_limits<double>::quiet_NaN();
       {
-        for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
+        for_loop_var = static_cast<double>(1);
         {
           current_statement__ = 10;
-          for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
+          for_loop_var = static_cast<double>(1);
         }
         {
           current_statement__ = 10;
-          for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
+          for_loop_var = static_cast<double>(1);
         }
         {
           current_statement__ = 10;
-          for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
+          for_loop_var = static_cast<double>(1);
         }
         {
           current_statement__ = 10;
-          for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
+          for_loop_var = static_cast<double>(1);
         }
         {
           current_statement__ = 10;
-          for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
+          for_loop_var = static_cast<double>(1);
         }
         {
           current_statement__ = 10;
-          for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
+          for_loop_var = static_cast<double>(1);
         }
         {
           current_statement__ = 10;
-          for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
+          for_loop_var = static_cast<double>(1);
         }
         {
           current_statement__ = 10;
-          for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
+          for_loop_var = static_cast<double>(1);
         }
         {
           current_statement__ = 10;
-          for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
+          for_loop_var = static_cast<double>(1);
         }
       }
     } catch (const std::exception& e) {
@@ -47836,42 +47834,42 @@ class unenforce_initialize_model final : public model_base_crtp<unenforce_initia
         no_init_if = 1.0;
       }
       {
-        for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
+        for_loop_var = static_cast<double>(1);
         {
           current_statement__ = 10;
-          for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
+          for_loop_var = static_cast<double>(1);
         }
         {
           current_statement__ = 10;
-          for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
+          for_loop_var = static_cast<double>(1);
         }
         {
           current_statement__ = 10;
-          for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
+          for_loop_var = static_cast<double>(1);
         }
         {
           current_statement__ = 10;
-          for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
+          for_loop_var = static_cast<double>(1);
         }
         {
           current_statement__ = 10;
-          for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
+          for_loop_var = static_cast<double>(1);
         }
         {
           current_statement__ = 10;
-          for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
+          for_loop_var = static_cast<double>(1);
         }
         {
           current_statement__ = 10;
-          for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
+          for_loop_var = static_cast<double>(1);
         }
         {
           current_statement__ = 10;
-          for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
+          for_loop_var = static_cast<double>(1);
         }
         {
           current_statement__ = 10;
-          for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
+          for_loop_var = static_cast<double>(1);
         }
       }
       if (emit_transformed_parameters__) {

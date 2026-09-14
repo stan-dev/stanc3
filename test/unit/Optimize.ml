@@ -3315,7 +3315,7 @@ let%expect_test "adlevel_optimization" =
           data real z_data;
           if((1 > 2)) y = (y + promote(x, real, data)); else y = (y + w);
           if((2 > 1)) z = y;
-          if((3 > 1)) z_data = promote(x, real, var);
+          if((3 > 1)) z_data = promote(x, real, data);
           FnPrint__(z);
           FnPrint__(z_data);
         }
@@ -3332,7 +3332,7 @@ let%expect_test "adlevel_optimization" =
           data real z_data;
           if((1 > 2)) y = (y + promote(x, real, data)); else y = (y + w);
           if((2 > 1)) z = y;
-          if((3 > 1)) z_data = promote(x, real, var);
+          if((3 > 1)) z_data = promote(x, real, data);
           FnPrint__(z);
           FnPrint__(z_data);
         }
@@ -3462,7 +3462,7 @@ let%expect_test "adlevel_optimization expressions" =
                    (Promotion
                     ((pattern (Var x))
                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                    UReal AutoDiffable))
+                    UReal DataOnly))
                   (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
                (meta <opaque>))
               ()))
@@ -3514,7 +3514,7 @@ let%expect_test "adlevel_optimization 2" =
       log_prob {
         real w;
         data real w_trans;
-        w_trans = promote(1, real, var);
+        w_trans = promote(1, real, data);
         {
           data int x;
           array[real, 2] y;
@@ -3522,7 +3522,7 @@ let%expect_test "adlevel_optimization 2" =
           data real z_data;
           if((1 > 2)) y[1] = (y[1] + promote(x, real, data)); else y[2] = (y[2] + w);
           if((2 > 1)) z = y[1];
-          if((3 > 1)) z_data = promote(x, real, var);
+          if((3 > 1)) z_data = promote(x, real, data);
           FnPrint__(z);
           FnPrint__(z_data);
         }
@@ -3533,7 +3533,7 @@ let%expect_test "adlevel_optimization 2" =
         data real w;
         data real w_trans;
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
-        w_trans = promote(1, real, var);
+        w_trans = promote(1, real, data);
         {
           data int x;
           data array[real, 2] y;
@@ -3541,7 +3541,7 @@ let%expect_test "adlevel_optimization 2" =
           data real z_data;
           if((1 > 2)) y[1] = (y[1] + promote(x, real, data)); else y[2] = (y[2] + w);
           if((2 > 1)) z = y[1];
-          if((3 > 1)) z_data = promote(x, real, var);
+          if((3 > 1)) z_data = promote(x, real, data);
           FnPrint__(z);
           FnPrint__(z_data);
         }
