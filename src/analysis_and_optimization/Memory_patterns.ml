@@ -654,24 +654,13 @@ let rec modify_stmt_pattern
                           (FnReadParam {read_param with mem_pattern= SoA})
                       , List.map ~f:(mod_expr false) args ) } }
   | Stmt.Pattern.Decl ({decl_id; decl_type; initialize; _} as decl) ->
-      let was_unsized =
-        (* Unsized decls are only ever created by previous optimizations like
-           lazy code motion *)
-        match decl_type with
-        | Type.Unsized _ -> true
-        | _ -> false in
-      let sized_type =
-        match Mir_utils.unsafe_unsized_to_sized_type decl_type with
-        | Type.Sized st -> st
-        | _ -> assert false in
-      let decl_type =
-        if SizedType.has_mem_pattern sized_type then
-          let mem =
-            if Set.Poly.mem decl_id modifiable_set then Mem_pattern.AoS else SoA
-          in
-          Type.Sized (SizedType.modify_sizedtype_mem mem sized_type)
-        else decl_type in
       let initialize =
+        let was_unsized =
+          (* Unsized decls are only ever created by previous optimizations like
+             lazy code motion *)
+          match decl_type with
+          | Type.Unsized _ -> true
+          | _ -> false in
         if was_unsized then Stmt.Pattern.Uninit
         else if Set.Poly.mem decl_id modifiable_set then
           match initialize with
@@ -679,6 +668,14 @@ let rec modify_stmt_pattern
           | Default -> Default
           | Uninit -> Uninit
         else initialize in
+      let decl_type =
+        let sized_type = Mir_utils.unsafe_unsized_to_sized_type decl_type in
+        if SizedType.has_mem_pattern sized_type then
+          let mem =
+            if Set.Poly.mem decl_id modifiable_set then Mem_pattern.AoS else SoA
+          in
+          Type.Sized (SizedType.modify_sizedtype_mem mem sized_type)
+        else decl_type in
       Decl {decl with decl_type; initialize}
   | NRFunApp (kind, (exprs : Expr.Typed.t list)) ->
       let kind', exprs' = modify_kind modifiable_set kind exprs in
