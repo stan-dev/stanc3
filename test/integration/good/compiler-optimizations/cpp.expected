@@ -45573,10 +45573,10 @@ class tuple_adlevels_model final : public model_base_crtp<tuple_adlevels_model> 
         stan::math::stan_print(pstream__,
           std::vector<
             std::tuple<local_scalar_t__,
-              std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>>>{std::forward_as_tuple(
-                                                                    w,
-                                                                    std::vector<
-                                                                    Eigen::Matrix<double,-1,-1>>{x})});
+              std::vector<Eigen::Matrix<double,-1,-1>>>>{std::forward_as_tuple(
+                                                           w,
+                                                           std::vector<
+                                                             Eigen::Matrix<double,-1,-1>>{x})});
         *(pstream__) << std::endl;
       }
     } catch (const std::exception& e) {
@@ -45619,10 +45619,10 @@ class tuple_adlevels_model final : public model_base_crtp<tuple_adlevels_model> 
         stan::math::stan_print(pstream__,
           std::vector<
             std::tuple<local_scalar_t__,
-              std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>>>{std::forward_as_tuple(
-                                                                    w,
-                                                                    std::vector<
-                                                                    Eigen::Matrix<double,-1,-1>>{x})});
+              std::vector<Eigen::Matrix<double,-1,-1>>>>{std::forward_as_tuple(
+                                                           w,
+                                                           std::vector<
+                                                             Eigen::Matrix<double,-1,-1>>{x})});
         *(pstream__) << std::endl;
       }
     } catch (const std::exception& e) {
