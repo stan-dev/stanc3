@@ -149,7 +149,10 @@ module Helpers : sig
 
   val lvariable : string -> 'e Pattern.lvalue
   val lvalue_of_expr_opt : 'e Expr.t -> 'e Expr.t Pattern.lvalue option
+
   val expr_of_lvalue : 'e Expr.t Pattern.lvalue -> meta:'e -> 'e Expr.t
+  (** Warning: the type of the top-level expr is as provided in meta, but any
+      internal types will likely be incorrect in this function *)
 
   val map_lhs_variable :
     f:(string -> string) -> 'e Pattern.lvalue -> 'e Pattern.lvalue

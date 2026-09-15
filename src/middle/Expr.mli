@@ -76,4 +76,5 @@ module Helpers : sig
   val add_int_index : Typed.t -> Typed.t Index.t -> Typed.t
   val add_tuple_index : Typed.t -> int -> Typed.t
   val collect_indices : 'a t -> 'a t Index.t list
+  val compare_ignore_meta : 'a t -> 'a t -> int
 end
