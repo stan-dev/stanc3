@@ -59,132 +59,170 @@ prepare_data {
 
 log_prob {
   {
-    FnValidateSize__("a", "N", N);
-    vector[N] a;
-    a = a0;
-    real t;
-    t = promote(0, real, var);
-    real x;
-    x = promote(0, real, var);
     {
+      FnValidateSize__("a1", "N", N);
+      vector[N] a1;
+      a1 = a0;
       for(n in 1:N) {
-        real s;
-        s = (b[n] + (c[n] * d[n]));
-        a[n] = (s * s);
+        real s1;
+        s1 = (b[n] + (c[n] * d[n]));
+        a1[n] = (s1 * s1);
       }
+      target += sum(a1);
     }
     {
+      FnValidateSize__("a2", "N", N);
+      vector[N] a2;
+      a2 = a0;
+      real t2;
+      t2 = promote(0, real, var);
       for(n in 1:N) {
-        real s;
-        s = (b[n] * c[n]);
-        a[n] = (s + t);
-        t = s;
+        real s2;
+        s2 = (b[n] * c[n]);
+        a2[n] = (s2 + t2);
+        t2 = s2;
       }
-    }
-    for(n in 1:N) {
-      a[n] = ((b[n] + x) * 0.5);
-      x = b[n];
+      target += (sum(a2) + t2);
     }
     {
-      real s;
-      s = promote(0, real, var);
-      FnValidateSize__("b2", "N", N);
-      vector[N] b2;
-      b2 = b;
+      FnValidateSize__("a3", "N", N);
+      vector[N] a3;
+      a3 = a0;
+      real x3;
+      x3 = promote(0, real, var);
       for(n in 1:N) {
-        if((a[n] > 0)) {
-          s = (d[n] * d[n]);
+        a3[n] = ((b[n] + x3) * 0.5);
+        x3 = b[n];
+      }
+      target += (sum(a3) + x3);
+    }
+    {
+      real s4;
+      s4 = promote(0, real, var);
+      FnValidateSize__("b4", "N", N);
+      vector[N] b4;
+      b4 = b;
+      for(n in 1:N) {
+        if((a0[n] > 0)) {
+          s4 = (d[n] * d[n]);
         }
-        b2[n] = ((s * c[n]) + d[n]);
+        b4[n] = ((s4 * c[n]) + d[n]);
       }
-      target += sum(b2);
+      target += sum(b4);
     }
     {
-      FnValidateSize__("c2", "N", N);
-      vector[N] c2;
-      c2 = c;
+      FnValidateSize__("a5", "N", N);
+      vector[N] a5;
+      a5 = a0;
+      FnValidateSize__("c5", "N", N);
+      vector[N] c5;
+      c5 = c;
+      real t5;
+      t5 = promote(0, real, var);
       for(n in 2:N) {
-        t = (a[n] + b[n]);
-        a[n] = (t + c2[(n - 1)]);
-        t = (c2[n] * d[n]);
-        c2[n] = t;
+        t5 = (a5[n] + b[n]);
+        a5[n] = (t5 + c5[(n - 1)]);
+        t5 = (c5[n] * d[n]);
+        c5[n] = t5;
       }
-      target += sum(c2);
+      target += (sum(a5) + sum(c5));
     }
     {
-      real s;
-      s = promote(0, real, var);
+      FnValidateSize__("a6", "N", N);
+      vector[N] a6;
+      a6 = a0;
+      real s6;
+      s6 = promote(0, real, var);
       for(n in 1:N) {
-        s = (s + 2);
-        a[n] = (s * b[n]);
+        s6 = (s6 + 2);
+        a6[n] = (s6 * b[n]);
       }
+      target += sum(a6);
     }
-    target += sum(a);
   } }
 
 rev_log_prob {
   {
-    FnValidateSize__("a", "N", N);
-    vector[N] a;
-    a = a0;
-    real t;
-    t = promote(0, real, var);
-    real x;
-    x = promote(0, real, var);
     {
+      FnValidateSize__("a1", "N", N);
+      vector[N] a1;
+      a1 = a0;
       for(n in 1:N) {
-        real s;
-        s = (b[n] + (c[n] * d[n]));
-        a[n] = (s * s);
+        real s1;
+        s1 = (b[n] + (c[n] * d[n]));
+        a1[n] = (s1 * s1);
       }
+      target += sum(a1);
     }
     {
+      FnValidateSize__("a2", "N", N);
+      vector[N] a2;
+      a2 = a0;
+      real t2;
+      t2 = promote(0, real, var);
       for(n in 1:N) {
-        real s;
-        s = (b[n] * c[n]);
-        a[n] = (s + t);
-        t = s;
+        real s2;
+        s2 = (b[n] * c[n]);
+        a2[n] = (s2 + t2);
+        t2 = s2;
       }
-    }
-    for(n in 1:N) {
-      a[n] = ((b[n] + x) * 0.5);
-      x = b[n];
+      target += (sum(a2) + t2);
     }
     {
-      real s;
-      s = promote(0, real, var);
-      FnValidateSize__("b2", "N", N);
-      vector[N] b2;
-      b2 = b;
+      FnValidateSize__("a3", "N", N);
+      vector[N] a3;
+      a3 = a0;
+      real x3;
+      x3 = promote(0, real, var);
       for(n in 1:N) {
-        if((a[n] > 0)) {
-          s = (d[n] * d[n]);
+        a3[n] = ((b[n] + x3) * 0.5);
+        x3 = b[n];
+      }
+      target += (sum(a3) + x3);
+    }
+    {
+      real s4;
+      s4 = promote(0, real, var);
+      FnValidateSize__("b4", "N", N);
+      vector[N] b4;
+      b4 = b;
+      for(n in 1:N) {
+        if((a0[n] > 0)) {
+          s4 = (d[n] * d[n]);
         }
-        b2[n] = ((s * c[n]) + d[n]);
+        b4[n] = ((s4 * c[n]) + d[n]);
       }
-      target += sum(b2);
+      target += sum(b4);
     }
     {
-      FnValidateSize__("c2", "N", N);
-      vector[N] c2;
-      c2 = c;
+      FnValidateSize__("a5", "N", N);
+      vector[N] a5;
+      a5 = a0;
+      FnValidateSize__("c5", "N", N);
+      vector[N] c5;
+      c5 = c;
+      real t5;
+      t5 = promote(0, real, var);
       for(n in 2:N) {
-        t = (a[n] + b[n]);
-        a[n] = (t + c2[(n - 1)]);
-        t = (c2[n] * d[n]);
-        c2[n] = t;
+        t5 = (a5[n] + b[n]);
+        a5[n] = (t5 + c5[(n - 1)]);
+        t5 = (c5[n] * d[n]);
+        c5[n] = t5;
       }
-      target += sum(c2);
+      target += (sum(a5) + sum(c5));
     }
     {
-      real s;
-      s = promote(0, real, var);
+      FnValidateSize__("a6", "N", N);
+      vector[N] a6;
+      a6 = a0;
+      real s6;
+      s6 = promote(0, real, var);
       for(n in 1:N) {
-        s = (s + 2);
-        a[n] = (s * b[n]);
+        s6 = (s6 + 2);
+        a6[n] = (s6 * b[n]);
       }
+      target += sum(a6);
     }
-    target += sum(a);
   } }
 
 generate_quantities {

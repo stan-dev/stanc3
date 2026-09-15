@@ -4,6 +4,9 @@
 // `Varying` subscript, but it can only create a dependence when the gathered
 // variable is also written in the loop; here it never is, so every loop is a
 // vector statement (multi-index gather/scatter).
+// Each example sits in its own block, and every local it writes carries the
+// example number as a suffix (a2 belongs to example 2) so the generated MIR
+// and C++ can be matched to the example.
 data {
   int<lower=1> N;
   array[N] int<lower=1, upper=N> ip;
@@ -18,17 +21,19 @@ parameters {
   real<lower=0> sigma;
 }
 model {
-  vector[N] a = a0;
-
-  // TSVC s4112 (Indirect Addressing), UoB-HPC/TSVC_2 src/tsvc.c
+  // 1. TSVC s4112 (Indirect Addressing), UoB-HPC/TSVC_2 src/tsvc.c
   // C: a[i] += b[ip[i]] * s;
   // intent: indirect addressing, gather; vectorizable
   // graph: `b` read-only: no edge   emitted: vec
-  for (n in 1 : N) {
-    a[n] = a[n] + b[ip[n]] * s;
+  {
+    vector[N] a1 = a0;
+    for (n in 1 : N) {
+      a1[n] = a1[n] + b[ip[n]] * s;
+    }
+    target += sum(a1);
   }
 
-  // TSVC s4113 (Indirect Addressing), UoB-HPC/TSVC_2 src/tsvc.c
+  // 2. TSVC s4113 (Indirect Addressing), UoB-HPC/TSVC_2 src/tsvc.c
   // C: a[ip[i]] = b[ip[i]] + c[i];
   // intent: indirect addressing, scatter and gather; vectorizable
   // graph: `a2` written only, never read: no edge
@@ -42,25 +47,25 @@ model {
     target += sum(a2);
   }
 
-  // TSVC s4115 (Indirect Addressing), UoB-HPC/TSVC_2 src/tsvc.c
+  // 3. TSVC s4115 (Indirect Addressing), UoB-HPC/TSVC_2 src/tsvc.c
   // C: sum += a[i] * b[ip[i]];   (sparse dot product, written as a density)
   // intent: indirect addressing, reduction
   // graph: reduction: no edge   emitted: vec
-  for (n in 1 : N) {
-    target += normal_lpdf(a_data[n] | b[ip[n]], sigma);
+  {
+    for (n in 1 : N) {
+      target += normal_lpdf(a_data[n] | b[ip[n]], sigma);
+    }
   }
 
-  // TSVC s491 (Indirect Addressing), UoB-HPC/TSVC_2 src/tsvc.c
+  // 4. TSVC s491 (Indirect Addressing), UoB-HPC/TSVC_2 src/tsvc.c
   // C: a[ip[i]] = b[i] + c[i] * d[i];
   // intent: indirect addressing, scatter; vectorizable
   // graph: no edge   emitted: vec
   {
-    vector[N] a3 = a0;
+    vector[N] a4 = a0;
     for (n in 1 : N) {
-      a3[ip[n]] = b[n] + c[n] .* d[n];
+      a4[ip[n]] = b[n] + c[n] .* d[n];
     }
-    target += sum(a3);
+    target += sum(a4);
   }
-
-  target += sum(a);
 }

@@ -1,173 +1,173 @@
   $ stanc -fvectorize-loops --debug-loop-vectorization design_examples.stan
-loop at 'design_examples.stan', line 35, column 4 to line 39, column 5  (n in 1:N)
-  S0  muj[n] = (alpha[county_idx[n]] + (log_uppm[n] * beta[1]));   hoisted
-  S1  mu[n] = (muj[n] + (floor_measure[n] * beta[2]));   hoisted
-  S2  target += normal_lpdf(log_radon[n], mu[n], sigma_y);   hoisted
-  edges: S0 -> S1 muj {=} d=0 (true); S1 -> S2 mu {=} d=0 (true)
+loop at 'design_examples.stan', line 36, column 4 to line 40, column 5  (n in 1:N)
+  S0  muj1[n] = (alpha[county_idx[n]] + (log_uppm[n] * beta[1]));   hoisted
+  S1  mu1[n] = (muj1[n] + (floor_measure[n] * beta[2]));   hoisted
+  S2  target += normal_lpdf(log_radon[n], mu1[n], sigma_y);   hoisted
+  edges: S0 -> S1 muj1 {=} d=0 (true); S1 -> S2 mu1 {=} d=0 (true)
   blocks: [S0] [S1] [S2]
 
-loop at 'design_examples.stan', line 48, column 4 to line 51, column 5  (n in 1:N)
-  S0  mu[n] = (v[n] + promote(1, real, data));   hoisted
-  S1  v[n] = x[n];   hoisted
-  edges: S0 -> S1 v {=} d=0 (anti)
+loop at 'design_examples.stan', line 49, column 4 to line 52, column 5  (n in 1:N)
+  S0  mu2[n] = (v2[n] + promote(1, real, data));   hoisted
+  S1  v2[n] = x[n];   hoisted
+  edges: S0 -> S1 v2 {=} d=0 (anti)
   blocks: [S0] [S1]
 
-loop at 'design_examples.stan', line 59, column 4 to line 62, column 5  (n in 1:N)
-  S0  mu[n] = (promote(2, real, data) * x[n]);   hoisted
-  S1  FnPrint__(mu[n]);   sequential: has effects (print, reject or a user-defined function call)
-  edges: S0 -> S1 mu {=} d=0 (true)
+loop at 'design_examples.stan', line 60, column 4 to line 63, column 5  (n in 1:N)
+  S0  mu3[n] = (promote(2, real, data) * x[n]);   hoisted
+  S1  FnPrint__(mu3[n]);   sequential: has effects (print, reject or a user-defined function call)
+  edges: S0 -> S1 mu3 {=} d=0 (true)
   blocks: [S0] [S1]
 
-loop at 'design_examples.stan', line 70, column 4 to line 73, column 5  (n in 1:N)
-  S0  FnPrint__(v[n]);   sequential: has effects (print, reject or a user-defined function call)
-  S1  v[n] = x[n];   hoisted
-  edges: S0 -> S1 v {=} d=0 (anti)
+loop at 'design_examples.stan', line 71, column 4 to line 74, column 5  (n in 1:N)
+  S0  FnPrint__(v4[n]);   sequential: has effects (print, reject or a user-defined function call)
+  S1  v4[n] = x[n];   hoisted
+  edges: S0 -> S1 v4 {=} d=0 (anti)
   blocks: [S0] [S1]
 
-loop at 'design_examples.stan', line 82, column 4 to line 86, column 5  (n in 1:N)
-  S0  FnPrint__(v[n]);   sequential: in a dependence cycle with S1 S2
-  S1  v[n] = x[n];   sequential: in a dependence cycle with S0 S2
-  S2  FnPrint__(v[n]);   sequential: in a dependence cycle with S0 S1
-  edges: S0 -> S1 v {=} d=0 (anti); S0 -> S2 (effects); S1 -> S2 v {=} d=0 (true); S2 -> S0 (effects)
+loop at 'design_examples.stan', line 83, column 4 to line 87, column 5  (n in 1:N)
+  S0  FnPrint__(v5[n]);   sequential: in a dependence cycle with S1 S2
+  S1  v5[n] = x[n];   sequential: in a dependence cycle with S0 S2
+  S2  FnPrint__(v5[n]);   sequential: in a dependence cycle with S0 S1
+  edges: S0 -> S1 v5 {=} d=0 (anti); S0 -> S2 (effects); S1 -> S2 v5 {=} d=0 (true); S2 -> S0 (effects)
   blocks: [S0 S1 S2]cyclic
 
-loop at 'design_examples.stan', line 94, column 4 to line 96, column 5  (n in 2:N)
-  S0  v[n] = (v[(n - 1)] + u[n]);   sequential: recurrence, S0 -> S0 v {<} d=1 (true)
-  edges: S0 -> S0 v {<} d=1 (true)
+loop at 'design_examples.stan', line 95, column 4 to line 97, column 5  (n in 2:N)
+  S0  v6[n] = (v6[(n - 1)] + u[n]);   sequential: recurrence, S0 -> S0 v6 {<} d=1 (true)
+  edges: S0 -> S0 v6 {<} d=1 (true)
   blocks: [S0]cyclic
 
-loop at 'design_examples.stan', line 106, column 4 to line 109, column 5  (n in 2:N)
-  S0  v[n] = x[n];   hoisted
-  S1  y[n] = v[(n - 1)];   hoisted
-  edges: S0 -> S1 v {<} d=1 (true)
+loop at 'design_examples.stan', line 107, column 4 to line 110, column 5  (n in 2:N)
+  S0  v7[n] = x[n];   hoisted
+  S1  y7[n] = v7[(n - 1)];   hoisted
+  edges: S0 -> S1 v7 {<} d=1 (true)
   blocks: [S0] [S1]
 
-loop at 'design_examples.stan', line 117, column 4 to line 120, column 5  (n in 1:N)
-  S0  real t;   sequential: in a dependence cycle with S1 S2
-  S1  t = (promote(2, real, data) * x[n]);   sequential: in a dependence cycle with S0 S2
-  S2  mu[n] = (t + promote(1, real, data));   sequential: in a dependence cycle with S0 S1
-  edges: S0 -> S1 t {<,=,>} (output); S0 -> S2 t {<,=,>} (true); S1 -> S0 t {<,=,>} (output); S1 -> S2 t {<,=,>} (true); S2 -> S0 t {<,=,>} (anti); S2 -> S1 t {<,=,>} (anti)
+loop at 'design_examples.stan', line 118, column 4 to line 121, column 5  (n in 1:N)
+  S0  real t8;   sequential: in a dependence cycle with S1 S2
+  S1  t8 = (promote(2, real, data) * x[n]);   sequential: in a dependence cycle with S0 S2
+  S2  mu8[n] = (t8 + promote(1, real, data));   sequential: in a dependence cycle with S0 S1
+  edges: S0 -> S1 t8 {<,=,>} (output); S0 -> S2 t8 {<,=,>} (true); S1 -> S0 t8 {<,=,>} (output); S1 -> S2 t8 {<,=,>} (true); S2 -> S0 t8 {<,=,>} (anti); S2 -> S1 t8 {<,=,>} (anti)
   blocks: [S0 S1 S2]cyclic
 
-loop at 'design_examples.stan', line 128, column 4 to line 131, column 5  (n in 1:N)
-  S0  v[n] = x[n];   sequential: in a dependence cycle with S1
-  S1  target += sum(v);   sequential: in a dependence cycle with S0
-  edges: S0 -> S1 v {<,=,>} (true); S1 -> S0 v {<,=,>} (anti)
+loop at 'design_examples.stan', line 129, column 4 to line 132, column 5  (n in 1:N)
+  S0  v9a[n] = x[n];   sequential: in a dependence cycle with S1
+  S1  target += sum(v9a);   sequential: in a dependence cycle with S0
+  edges: S0 -> S1 v9a {<,=,>} (true); S1 -> S0 v9a {<,=,>} (anti)
   blocks: [S0 S1]cyclic
 
-loop at 'design_examples.stan', line 138, column 4 to line 141, column 5  (n in 1:N)
-  S0  v[idx[n]] = x[n];   sequential: in a dependence cycle with S1
-  S1  y[n] = v[idx[n]];   sequential: in a dependence cycle with S0
-  edges: S0 -> S1 v {<,=,>} (true); S1 -> S0 v {<,=,>} (anti)
+loop at 'design_examples.stan', line 139, column 4 to line 142, column 5  (n in 1:N)
+  S0  v9b[idx[n]] = x[n];   sequential: in a dependence cycle with S1
+  S1  y9b[n] = v9b[idx[n]];   sequential: in a dependence cycle with S0
+  edges: S0 -> S1 v9b {<,=,>} (true); S1 -> S0 v9b {<,=,>} (anti)
   blocks: [S0 S1]cyclic
 
-loop at 'design_examples.stan', line 148, column 4 to line 152, column 5  (n in 1:N)
-  S0  vector[2] t;   sequential: in a dependence cycle with S1 S2
-  S1  t[1] = x[n];   sequential: in a dependence cycle with S0 S2
-  S2  y[n] = t[1];   sequential: in a dependence cycle with S0 S1
-  edges: S0 -> S1 t {<,=,>} (output); S0 -> S2 t {<,=,>} (true); S1 -> S0 t {<,=,>} (output); S1 -> S2 t {<,=,>} (true); S2 -> S0 t {<,=,>} (anti); S2 -> S1 t {<,=,>} (anti)
+loop at 'design_examples.stan', line 149, column 4 to line 153, column 5  (n in 1:N)
+  S0  vector[2] t9c;   sequential: in a dependence cycle with S1 S2
+  S1  t9c[1] = x[n];   sequential: in a dependence cycle with S0 S2
+  S2  y9c[n] = t9c[1];   sequential: in a dependence cycle with S0 S1
+  edges: S0 -> S1 t9c {<,=,>} (output); S0 -> S2 t9c {<,=,>} (true); S1 -> S0 t9c {<,=,>} (output); S1 -> S2 t9c {<,=,>} (true); S2 -> S0 t9c {<,=,>} (anti); S2 -> S1 t9c {<,=,>} (anti)
   blocks: [S0 S1 S2]cyclic
 
-loop at 'design_examples.stan', line 161, column 4 to line 164, column 5  (n in 1:N)
-  S0  v[n, 1] = x[n];   hoisted
-  S1  w[n] = v[n, 2];   hoisted
+loop at 'design_examples.stan', line 162, column 4 to line 165, column 5  (n in 1:N)
+  S0  v10[n, 1] = x[n];   hoisted
+  S1  w10[n] = v10[n, 2];   hoisted
   edges: none
   blocks: [S0] [S1]
 
-loop at 'design_examples.stan', line 173, column 4 to line 175, column 5  (n in 1:(N - 1))
-  S0  a[n] = (a[(n + 1)] + promote(1, real, data));   hoisted
+loop at 'design_examples.stan', line 174, column 4 to line 176, column 5  (n in 1:(N - 1))
+  S0  a11[n] = (a11[(n + 1)] + promote(1, real, data));   hoisted
   edges: none
   blocks: [S0]
 
-loop at 'design_examples.stan', line 185, column 4 to line 188, column 5  (n in 1:N)
-  S0  v[(n + k)] = x[n];   hoisted
-  S1  y[n] = (v[(n + k)] * promote(2, real, data));   hoisted
-  edges: S0 -> S1 v {=} d=0 (true)
+loop at 'design_examples.stan', line 186, column 4 to line 189, column 5  (n in 1:N)
+  S0  v12[(n + k)] = x[n];   hoisted
+  S1  y12[n] = (v12[(n + k)] * promote(2, real, data));   hoisted
+  edges: S0 -> S1 v12 {=} d=0 (true)
   blocks: [S0] [S1]
 
-loop at 'design_examples.stan', line 35, column 4 to line 39, column 5  (n in 1:N)
-  S0  muj[n] = (alpha[county_idx[n]] + (log_uppm[n] * beta[1]));   hoisted
-  S1  mu[n] = (muj[n] + (floor_measure[n] * beta[2]));   hoisted
-  S2  target += normal_lpdf(log_radon[n], mu[n], sigma_y);   hoisted
-  edges: S0 -> S1 muj {=} d=0 (true); S1 -> S2 mu {=} d=0 (true)
+loop at 'design_examples.stan', line 36, column 4 to line 40, column 5  (n in 1:N)
+  S0  muj1[n] = (alpha[county_idx[n]] + (log_uppm[n] * beta[1]));   hoisted
+  S1  mu1[n] = (muj1[n] + (floor_measure[n] * beta[2]));   hoisted
+  S2  target += normal_lpdf(log_radon[n], mu1[n], sigma_y);   hoisted
+  edges: S0 -> S1 muj1 {=} d=0 (true); S1 -> S2 mu1 {=} d=0 (true)
   blocks: [S0] [S1] [S2]
 
-loop at 'design_examples.stan', line 48, column 4 to line 51, column 5  (n in 1:N)
-  S0  mu[n] = (v[n] + promote(1, real, data));   hoisted
-  S1  v[n] = x[n];   hoisted
-  edges: S0 -> S1 v {=} d=0 (anti)
+loop at 'design_examples.stan', line 49, column 4 to line 52, column 5  (n in 1:N)
+  S0  mu2[n] = (v2[n] + promote(1, real, data));   hoisted
+  S1  v2[n] = x[n];   hoisted
+  edges: S0 -> S1 v2 {=} d=0 (anti)
   blocks: [S0] [S1]
 
-loop at 'design_examples.stan', line 59, column 4 to line 62, column 5  (n in 1:N)
-  S0  mu[n] = (promote(2, real, data) * x[n]);   hoisted
-  S1  FnPrint__(mu[n]);   sequential: has effects (print, reject or a user-defined function call)
-  edges: S0 -> S1 mu {=} d=0 (true)
+loop at 'design_examples.stan', line 60, column 4 to line 63, column 5  (n in 1:N)
+  S0  mu3[n] = (promote(2, real, data) * x[n]);   hoisted
+  S1  FnPrint__(mu3[n]);   sequential: has effects (print, reject or a user-defined function call)
+  edges: S0 -> S1 mu3 {=} d=0 (true)
   blocks: [S0] [S1]
 
-loop at 'design_examples.stan', line 70, column 4 to line 73, column 5  (n in 1:N)
-  S0  FnPrint__(v[n]);   sequential: has effects (print, reject or a user-defined function call)
-  S1  v[n] = x[n];   hoisted
-  edges: S0 -> S1 v {=} d=0 (anti)
+loop at 'design_examples.stan', line 71, column 4 to line 74, column 5  (n in 1:N)
+  S0  FnPrint__(v4[n]);   sequential: has effects (print, reject or a user-defined function call)
+  S1  v4[n] = x[n];   hoisted
+  edges: S0 -> S1 v4 {=} d=0 (anti)
   blocks: [S0] [S1]
 
-loop at 'design_examples.stan', line 82, column 4 to line 86, column 5  (n in 1:N)
-  S0  FnPrint__(v[n]);   sequential: in a dependence cycle with S1 S2
-  S1  v[n] = x[n];   sequential: in a dependence cycle with S0 S2
-  S2  FnPrint__(v[n]);   sequential: in a dependence cycle with S0 S1
-  edges: S0 -> S1 v {=} d=0 (anti); S0 -> S2 (effects); S1 -> S2 v {=} d=0 (true); S2 -> S0 (effects)
+loop at 'design_examples.stan', line 83, column 4 to line 87, column 5  (n in 1:N)
+  S0  FnPrint__(v5[n]);   sequential: in a dependence cycle with S1 S2
+  S1  v5[n] = x[n];   sequential: in a dependence cycle with S0 S2
+  S2  FnPrint__(v5[n]);   sequential: in a dependence cycle with S0 S1
+  edges: S0 -> S1 v5 {=} d=0 (anti); S0 -> S2 (effects); S1 -> S2 v5 {=} d=0 (true); S2 -> S0 (effects)
   blocks: [S0 S1 S2]cyclic
 
-loop at 'design_examples.stan', line 94, column 4 to line 96, column 5  (n in 2:N)
-  S0  v[n] = (v[(n - 1)] + u[n]);   sequential: recurrence, S0 -> S0 v {<} d=1 (true)
-  edges: S0 -> S0 v {<} d=1 (true)
+loop at 'design_examples.stan', line 95, column 4 to line 97, column 5  (n in 2:N)
+  S0  v6[n] = (v6[(n - 1)] + u[n]);   sequential: recurrence, S0 -> S0 v6 {<} d=1 (true)
+  edges: S0 -> S0 v6 {<} d=1 (true)
   blocks: [S0]cyclic
 
-loop at 'design_examples.stan', line 106, column 4 to line 109, column 5  (n in 2:N)
-  S0  v[n] = x[n];   hoisted
-  S1  y[n] = v[(n - 1)];   hoisted
-  edges: S0 -> S1 v {<} d=1 (true)
+loop at 'design_examples.stan', line 107, column 4 to line 110, column 5  (n in 2:N)
+  S0  v7[n] = x[n];   hoisted
+  S1  y7[n] = v7[(n - 1)];   hoisted
+  edges: S0 -> S1 v7 {<} d=1 (true)
   blocks: [S0] [S1]
 
-loop at 'design_examples.stan', line 117, column 4 to line 120, column 5  (n in 1:N)
-  S0  real t;   sequential: in a dependence cycle with S1 S2
-  S1  t = (promote(2, real, data) * x[n]);   sequential: in a dependence cycle with S0 S2
-  S2  mu[n] = (t + promote(1, real, data));   sequential: in a dependence cycle with S0 S1
-  edges: S0 -> S1 t {<,=,>} (output); S0 -> S2 t {<,=,>} (true); S1 -> S0 t {<,=,>} (output); S1 -> S2 t {<,=,>} (true); S2 -> S0 t {<,=,>} (anti); S2 -> S1 t {<,=,>} (anti)
+loop at 'design_examples.stan', line 118, column 4 to line 121, column 5  (n in 1:N)
+  S0  real t8;   sequential: in a dependence cycle with S1 S2
+  S1  t8 = (promote(2, real, data) * x[n]);   sequential: in a dependence cycle with S0 S2
+  S2  mu8[n] = (t8 + promote(1, real, data));   sequential: in a dependence cycle with S0 S1
+  edges: S0 -> S1 t8 {<,=,>} (output); S0 -> S2 t8 {<,=,>} (true); S1 -> S0 t8 {<,=,>} (output); S1 -> S2 t8 {<,=,>} (true); S2 -> S0 t8 {<,=,>} (anti); S2 -> S1 t8 {<,=,>} (anti)
   blocks: [S0 S1 S2]cyclic
 
-loop at 'design_examples.stan', line 128, column 4 to line 131, column 5  (n in 1:N)
-  S0  v[n] = x[n];   sequential: in a dependence cycle with S1
-  S1  target += sum(v);   sequential: in a dependence cycle with S0
-  edges: S0 -> S1 v {<,=,>} (true); S1 -> S0 v {<,=,>} (anti)
+loop at 'design_examples.stan', line 129, column 4 to line 132, column 5  (n in 1:N)
+  S0  v9a[n] = x[n];   sequential: in a dependence cycle with S1
+  S1  target += sum(v9a);   sequential: in a dependence cycle with S0
+  edges: S0 -> S1 v9a {<,=,>} (true); S1 -> S0 v9a {<,=,>} (anti)
   blocks: [S0 S1]cyclic
 
-loop at 'design_examples.stan', line 138, column 4 to line 141, column 5  (n in 1:N)
-  S0  v[idx[n]] = x[n];   sequential: in a dependence cycle with S1
-  S1  y[n] = v[idx[n]];   sequential: in a dependence cycle with S0
-  edges: S0 -> S1 v {<,=,>} (true); S1 -> S0 v {<,=,>} (anti)
+loop at 'design_examples.stan', line 139, column 4 to line 142, column 5  (n in 1:N)
+  S0  v9b[idx[n]] = x[n];   sequential: in a dependence cycle with S1
+  S1  y9b[n] = v9b[idx[n]];   sequential: in a dependence cycle with S0
+  edges: S0 -> S1 v9b {<,=,>} (true); S1 -> S0 v9b {<,=,>} (anti)
   blocks: [S0 S1]cyclic
 
-loop at 'design_examples.stan', line 148, column 4 to line 152, column 5  (n in 1:N)
-  S0  vector[2] t;   sequential: in a dependence cycle with S1 S2
-  S1  t[1] = x[n];   sequential: in a dependence cycle with S0 S2
-  S2  y[n] = t[1];   sequential: in a dependence cycle with S0 S1
-  edges: S0 -> S1 t {<,=,>} (output); S0 -> S2 t {<,=,>} (true); S1 -> S0 t {<,=,>} (output); S1 -> S2 t {<,=,>} (true); S2 -> S0 t {<,=,>} (anti); S2 -> S1 t {<,=,>} (anti)
+loop at 'design_examples.stan', line 149, column 4 to line 153, column 5  (n in 1:N)
+  S0  vector[2] t9c;   sequential: in a dependence cycle with S1 S2
+  S1  t9c[1] = x[n];   sequential: in a dependence cycle with S0 S2
+  S2  y9c[n] = t9c[1];   sequential: in a dependence cycle with S0 S1
+  edges: S0 -> S1 t9c {<,=,>} (output); S0 -> S2 t9c {<,=,>} (true); S1 -> S0 t9c {<,=,>} (output); S1 -> S2 t9c {<,=,>} (true); S2 -> S0 t9c {<,=,>} (anti); S2 -> S1 t9c {<,=,>} (anti)
   blocks: [S0 S1 S2]cyclic
 
-loop at 'design_examples.stan', line 161, column 4 to line 164, column 5  (n in 1:N)
-  S0  v[n, 1] = x[n];   hoisted
-  S1  w[n] = v[n, 2];   hoisted
+loop at 'design_examples.stan', line 162, column 4 to line 165, column 5  (n in 1:N)
+  S0  v10[n, 1] = x[n];   hoisted
+  S1  w10[n] = v10[n, 2];   hoisted
   edges: none
   blocks: [S0] [S1]
 
-loop at 'design_examples.stan', line 173, column 4 to line 175, column 5  (n in 1:(N - 1))
-  S0  a[n] = (a[(n + 1)] + promote(1, real, data));   hoisted
+loop at 'design_examples.stan', line 174, column 4 to line 176, column 5  (n in 1:(N - 1))
+  S0  a11[n] = (a11[(n + 1)] + promote(1, real, data));   hoisted
   edges: none
   blocks: [S0]
 
-loop at 'design_examples.stan', line 185, column 4 to line 188, column 5  (n in 1:N)
-  S0  v[(n + k)] = x[n];   hoisted
-  S1  y[n] = (v[(n + k)] * promote(2, real, data));   hoisted
-  edges: S0 -> S1 v {=} d=0 (true)
+loop at 'design_examples.stan', line 186, column 4 to line 189, column 5  (n in 1:N)
+  S0  v12[(n + k)] = x[n];   hoisted
+  S1  y12[n] = (v12[(n + k)] * promote(2, real, data));   hoisted
+  edges: S0 -> S1 v12 {=} d=0 (true)
   blocks: [S0] [S1]
 [exit 0]

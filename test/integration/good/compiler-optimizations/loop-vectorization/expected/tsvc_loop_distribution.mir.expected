@@ -73,64 +73,64 @@ prepare_data {
 log_prob {
   {
     {
-      FnValidateSize__("a", "N", N);
-      vector[N] a;
-      a = a0;
-      FnValidateSize__("b", "N", N);
-      vector[N] b;
-      b = b0;
-      a[2:N] = (a[2:N] + (c[2:N] .* d[2:N]));
-      for(n in 2:N) b[n] = ((b[(n - 1)] + a[n]) + d[n]);
-      target += sum(a);
-      target += sum(b);
+      FnValidateSize__("a1", "N", N);
+      vector[N] a1;
+      a1 = a0;
+      FnValidateSize__("b1", "N", N);
+      vector[N] b1;
+      b1 = b0;
+      a1[2:N] = (a1[2:N] + (c[2:N] .* d[2:N]));
+      for(n in 2:N) b1[n] = ((b1[(n - 1)] + a1[n]) + d[n]);
+      target += sum(a1);
+      target += sum(b1);
     }
     {
-      FnValidateSize__("a", "N", N);
-      vector[N] a;
-      a = a0;
-      FnValidateSize__("b", "N", N);
-      vector[N] b;
-      b = b0;
-      FnValidateSize__("e", "N", N);
-      vector[N] e;
-      e = e0;
-      for(n in 2:N) e[n] = (e[(n - 1)] * e[(n - 1)]);
-      a[2:N] = (a[2:N] + (b[2:N] .* c[2:N]));
-      a[2:N] = (a[2:N] - (b[2:N] .* c[2:N]));
-      target += sum(a);
-      target += sum(e);
+      FnValidateSize__("a2", "N", N);
+      vector[N] a2;
+      a2 = a0;
+      FnValidateSize__("b2", "N", N);
+      vector[N] b2;
+      b2 = b0;
+      FnValidateSize__("e2", "N", N);
+      vector[N] e2;
+      e2 = e0;
+      for(n in 2:N) e2[n] = (e2[(n - 1)] * e2[(n - 1)]);
+      a2[2:N] = (a2[2:N] + (b2[2:N] .* c[2:N]));
+      a2[2:N] = (a2[2:N] - (b2[2:N] .* c[2:N]));
+      target += sum(a2);
+      target += sum(e2);
     }
   } }
 
 rev_log_prob {
   {
     {
-      FnValidateSize__("a", "N", N);
-      vector[N] a;
-      a = a0;
-      FnValidateSize__("b", "N", N);
-      vector[N] b;
-      b = b0;
-      a[2:N] = (a[2:N] + (c[2:N] .* d[2:N]));
-      for(n in 2:N) b[n] = ((b[(n - 1)] + a[n]) + d[n]);
-      target += sum(a);
-      target += sum(b);
+      FnValidateSize__("a1", "N", N);
+      vector[N] a1;
+      a1 = a0;
+      FnValidateSize__("b1", "N", N);
+      vector[N] b1;
+      b1 = b0;
+      a1[2:N] = (a1[2:N] + (c[2:N] .* d[2:N]));
+      for(n in 2:N) b1[n] = ((b1[(n - 1)] + a1[n]) + d[n]);
+      target += sum(a1);
+      target += sum(b1);
     }
     {
-      FnValidateSize__("a", "N", N);
-      vector[N] a;
-      a = a0;
-      FnValidateSize__("b", "N", N);
-      vector[N] b;
-      b = b0;
-      FnValidateSize__("e", "N", N);
-      vector[N] e;
-      e = e0;
-      for(n in 2:N) e[n] = (e[(n - 1)] * e[(n - 1)]);
-      a[2:N] = (a[2:N] + (b[2:N] .* c[2:N]));
-      a[2:N] = (a[2:N] - (b[2:N] .* c[2:N]));
-      target += sum(a);
-      target += sum(e);
+      FnValidateSize__("a2", "N", N);
+      vector[N] a2;
+      a2 = a0;
+      FnValidateSize__("b2", "N", N);
+      vector[N] b2;
+      b2 = b0;
+      FnValidateSize__("e2", "N", N);
+      vector[N] e2;
+      e2 = e0;
+      for(n in 2:N) e2[n] = (e2[(n - 1)] * e2[(n - 1)]);
+      a2[2:N] = (a2[2:N] + (b2[2:N] .* c[2:N]));
+      a2[2:N] = (a2[2:N] - (b2[2:N] .* c[2:N]));
+      target += sum(a2);
+      target += sum(e2);
     }
   } }
 

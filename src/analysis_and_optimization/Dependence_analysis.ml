@@ -269,11 +269,11 @@ let node_accesses_map
          |Block _ | SList _ | Decl _ ->
             enclosing_loop parent) in
   LabelMap.mapi statement_map ~f:(fun label (pattern, _) ->
-      let loopvar, written =
+      let loopvar, written_vars =
         match enclosing_loop label with
         | Some (loopvar, for_label) -> (loopvar, subtree_written for_label)
         | None -> ("", Set.Poly.empty) in
-      Loop_dependence.accesses_of_pattern ~loopvar ~written ~label
+      Loop_dependence.accesses_of_pattern ~loopvar ~written_vars ~label
         ~sub:(fun _ -> [])
         pattern)
 

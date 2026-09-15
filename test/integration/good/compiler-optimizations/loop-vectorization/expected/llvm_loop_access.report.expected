@@ -1,69 +1,69 @@
   $ stanc -fvectorize-loops --debug-loop-vectorization llvm_loop_access.stan
-loop at 'llvm_loop_access.stan', line 26, column 2 to line 29, column 3  (n in 1:N)
-  S0  a[(n + 8)] = (b[n] + promote(2, real, data));   hoisted
-  S1  c[n] = (a[n] * promote(2, real, data));   hoisted
-  edges: S0 -> S1 a {<} d=8 (true)
+loop at 'llvm_loop_access.stan', line 29, column 4 to line 32, column 5  (n in 1:N)
+  S0  a1[(n + 8)] = (b[n] + promote(2, real, data));   hoisted
+  S1  c1[n] = (a1[n] * promote(2, real, data));   hoisted
+  edges: S0 -> S1 a1 {<} d=8 (true)
   blocks: [S0] [S1]
 
-loop at 'llvm_loop_access.stan', line 36, column 2 to line 40, column 3  (n in 1:N)
-  S0  a[(n + 1)] = (b[n] + promote(1, real, data));   hoisted
-  S1  a[n] = (b[n] + promote(2, real, data));   hoisted
-  S2  c[n] = (a[n] * promote(2, real, data));   hoisted
-  edges: S0 -> S1 a {<} d=1 (output); S0 -> S2 a {<} d=1 (true); S1 -> S2 a {=} d=0 (true)
+loop at 'llvm_loop_access.stan', line 44, column 4 to line 48, column 5  (n in 1:N)
+  S0  a2[(n + 1)] = (b[n] + promote(1, real, data));   hoisted
+  S1  a2[n] = (b[n] + promote(2, real, data));   hoisted
+  S2  c2[n] = (a2[n] * promote(2, real, data));   hoisted
+  edges: S0 -> S1 a2 {<} d=1 (output); S0 -> S2 a2 {<} d=1 (true); S1 -> S2 a2 {=} d=0 (true)
   blocks: [S0] [S1] [S2]
 
-loop at 'llvm_loop_access.stan', line 47, column 2 to line 50, column 3  (n in 1:N)
-  S0  a[idx[n]] = b[n];   sequential: in a dependence cycle with S1
-  S1  c[n] = a[idx[n]];   sequential: in a dependence cycle with S0
-  edges: S0 -> S1 a {<,=,>} (true); S1 -> S0 a {<,=,>} (anti)
+loop at 'llvm_loop_access.stan', line 60, column 4 to line 63, column 5  (n in 1:N)
+  S0  a3[idx[n]] = b[n];   sequential: in a dependence cycle with S1
+  S1  c3[n] = a3[idx[n]];   sequential: in a dependence cycle with S0
+  edges: S0 -> S1 a3 {<,=,>} (true); S1 -> S0 a3 {<,=,>} (anti)
   blocks: [S0 S1]cyclic
 
-loop at 'llvm_loop_access.stan', line 61, column 6 to line 63, column 7  (j in 1:J)
-  S0  v[i] = (w[j] + v[i]);   sequential: recurrence, S0 -> S0 v {<,=,>} (true)
-  edges: S0 -> S0 v {<,=,>} (true)
+loop at 'llvm_loop_access.stan', line 77, column 6 to line 79, column 7  (j in 1:J)
+  S0  v4[i] = (w[j] + v4[i]);   sequential: recurrence, S0 -> S0 v4 {<,=,>} (true)
+  edges: S0 -> S0 v4 {<,=,>} (true)
   blocks: [S0]cyclic
 
-loop at 'llvm_loop_access.stan', line 60, column 4 to line 64, column 5  (i in 1:N)
-  S0  for(j in 1:J) { v[i] = (w[j] + v[i]); }   sequential: recurrence, S0 -> S0 j {<,=,>} (true)
+loop at 'llvm_loop_access.stan', line 76, column 4 to line 80, column 5  (i in 1:N)
+  S0  for(j in 1:J) { v4[i] = (w[j] + v4[i]); }   sequential: recurrence, S0 -> S0 j {<,=,>} (true)
   edges: S0 -> S0 j {<,=,>} (true)
   blocks: [S0]cyclic
 
-loop at 'llvm_loop_access.stan', line 74, column 2 to line 76, column 3  (n in 1:N)
-  S0  a[(n + 4)] = (a[n] * promote(2, real, data));   sequential: recurrence, S0 -> S0 a {<} d=4 (true)
-  edges: S0 -> S0 a {<} d=4 (true)
+loop at 'llvm_loop_access.stan', line 92, column 4 to line 94, column 5  (n in 1:N)
+  S0  a5[(n + 4)] = (a5[n] * promote(2, real, data));   sequential: recurrence, S0 -> S0 a5 {<} d=4 (true)
+  edges: S0 -> S0 a5 {<} d=4 (true)
   blocks: [S0]cyclic
 
-loop at 'llvm_loop_access.stan', line 26, column 2 to line 29, column 3  (n in 1:N)
-  S0  a[(n + 8)] = (b[n] + promote(2, real, data));   hoisted
-  S1  c[n] = (a[n] * promote(2, real, data));   hoisted
-  edges: S0 -> S1 a {<} d=8 (true)
+loop at 'llvm_loop_access.stan', line 29, column 4 to line 32, column 5  (n in 1:N)
+  S0  a1[(n + 8)] = (b[n] + promote(2, real, data));   hoisted
+  S1  c1[n] = (a1[n] * promote(2, real, data));   hoisted
+  edges: S0 -> S1 a1 {<} d=8 (true)
   blocks: [S0] [S1]
 
-loop at 'llvm_loop_access.stan', line 36, column 2 to line 40, column 3  (n in 1:N)
-  S0  a[(n + 1)] = (b[n] + promote(1, real, data));   hoisted
-  S1  a[n] = (b[n] + promote(2, real, data));   hoisted
-  S2  c[n] = (a[n] * promote(2, real, data));   hoisted
-  edges: S0 -> S1 a {<} d=1 (output); S0 -> S2 a {<} d=1 (true); S1 -> S2 a {=} d=0 (true)
+loop at 'llvm_loop_access.stan', line 44, column 4 to line 48, column 5  (n in 1:N)
+  S0  a2[(n + 1)] = (b[n] + promote(1, real, data));   hoisted
+  S1  a2[n] = (b[n] + promote(2, real, data));   hoisted
+  S2  c2[n] = (a2[n] * promote(2, real, data));   hoisted
+  edges: S0 -> S1 a2 {<} d=1 (output); S0 -> S2 a2 {<} d=1 (true); S1 -> S2 a2 {=} d=0 (true)
   blocks: [S0] [S1] [S2]
 
-loop at 'llvm_loop_access.stan', line 47, column 2 to line 50, column 3  (n in 1:N)
-  S0  a[idx[n]] = b[n];   sequential: in a dependence cycle with S1
-  S1  c[n] = a[idx[n]];   sequential: in a dependence cycle with S0
-  edges: S0 -> S1 a {<,=,>} (true); S1 -> S0 a {<,=,>} (anti)
+loop at 'llvm_loop_access.stan', line 60, column 4 to line 63, column 5  (n in 1:N)
+  S0  a3[idx[n]] = b[n];   sequential: in a dependence cycle with S1
+  S1  c3[n] = a3[idx[n]];   sequential: in a dependence cycle with S0
+  edges: S0 -> S1 a3 {<,=,>} (true); S1 -> S0 a3 {<,=,>} (anti)
   blocks: [S0 S1]cyclic
 
-loop at 'llvm_loop_access.stan', line 61, column 6 to line 63, column 7  (j in 1:J)
-  S0  v[i] = (w[j] + v[i]);   sequential: recurrence, S0 -> S0 v {<,=,>} (true)
-  edges: S0 -> S0 v {<,=,>} (true)
+loop at 'llvm_loop_access.stan', line 77, column 6 to line 79, column 7  (j in 1:J)
+  S0  v4[i] = (w[j] + v4[i]);   sequential: recurrence, S0 -> S0 v4 {<,=,>} (true)
+  edges: S0 -> S0 v4 {<,=,>} (true)
   blocks: [S0]cyclic
 
-loop at 'llvm_loop_access.stan', line 60, column 4 to line 64, column 5  (i in 1:N)
-  S0  for(j in 1:J) { v[i] = (w[j] + v[i]); }   sequential: recurrence, S0 -> S0 j {<,=,>} (true)
+loop at 'llvm_loop_access.stan', line 76, column 4 to line 80, column 5  (i in 1:N)
+  S0  for(j in 1:J) { v4[i] = (w[j] + v4[i]); }   sequential: recurrence, S0 -> S0 j {<,=,>} (true)
   edges: S0 -> S0 j {<,=,>} (true)
   blocks: [S0]cyclic
 
-loop at 'llvm_loop_access.stan', line 74, column 2 to line 76, column 3  (n in 1:N)
-  S0  a[(n + 4)] = (a[n] * promote(2, real, data));   sequential: recurrence, S0 -> S0 a {<} d=4 (true)
-  edges: S0 -> S0 a {<} d=4 (true)
+loop at 'llvm_loop_access.stan', line 92, column 4 to line 94, column 5  (n in 1:N)
+  S0  a5[(n + 4)] = (a5[n] * promote(2, real, data));   sequential: recurrence, S0 -> S0 a5 {<} d=4 (true)
+  edges: S0 -> S0 a5 {<} d=4 (true)
   blocks: [S0]cyclic
 [exit 0]

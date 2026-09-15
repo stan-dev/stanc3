@@ -46,68 +46,114 @@ prepare_data {
 log_prob {
   real mu = (FnReadParam(constrain Identity)(dims())(mem_pattern AoS))__();
   {
-    data int a_1dim__ = (N + 8);
-    FnValidateSize__("a", "N + 8", a_1dim__);
-    vector[a_1dim__] a;
-    FnValidateSize__("c", "N", N);
-    vector[N] c;
-    a[(1 + 8):(N + 8)] = (b[1:N] + promote(2, real, data));
-    c[1:N] = (a[1:N] * promote(2, real, data));
-    a[(1 + 1):(N + 1)] = (b[1:N] + promote(1, real, data));
-    a[1:N] = (b[1:N] + promote(2, real, data));
-    c[1:N] = (a[1:N] * promote(2, real, data));
-    for(n in 1:N) {
-      a[idx[n]] = b[n];
-      c[n] = a[idx[n]];
+    {
+      data int a1_1dim__ = (N + 8);
+      FnValidateSize__("a1", "N + 8", a1_1dim__);
+      vector[a1_1dim__] a1;
+      FnValidateSize__("c1", "N", N);
+      vector[N] c1;
+      a1[(1 + 8):(N + 8)] = (b[1:N] + promote(2, real, data));
+      c1[1:N] = (a1[1:N] * promote(2, real, data));
+      target += (sum(a1) + sum(c1));
     }
     {
-      FnValidateSize__("v", "N", N);
-      vector[N] v;
+      data int a2_1dim__ = (N + 1);
+      FnValidateSize__("a2", "N + 1", a2_1dim__);
+      vector[a2_1dim__] a2;
+      FnValidateSize__("c2", "N", N);
+      vector[N] c2;
+      a2[(1 + 1):(N + 1)] = (b[1:N] + promote(1, real, data));
+      a2[1:N] = (b[1:N] + promote(2, real, data));
+      c2[1:N] = (a2[1:N] * promote(2, real, data));
+      target += (sum(a2) + sum(c2));
+    }
+    {
+      FnValidateSize__("a3", "N", N);
+      vector[N] a3;
+      FnValidateSize__("c3", "N", N);
+      vector[N] c3;
+      for(n in 1:N) {
+        a3[idx[n]] = b[n];
+        c3[n] = a3[idx[n]];
+      }
+      target += (sum(a3) + sum(c3));
+    }
+    {
+      FnValidateSize__("v4", "N", N);
+      vector[N] v4;
       for(i in 1:N) {
         for(j in 1:J) {
-          v[i] = (w[j] + v[i]);
+          v4[i] = (w[j] + v4[i]);
         }
       }
-      target += sum(v);
+      target += sum(v4);
     }
-    for(n in 1:N) {
-      a[(n + 4)] = (a[n] * promote(2, real, data));
+    {
+      data int a5_1dim__ = (N + 4);
+      FnValidateSize__("a5", "N + 4", a5_1dim__);
+      vector[a5_1dim__] a5;
+      for(n in 1:N) {
+        a5[(n + 4)] = (a5[n] * promote(2, real, data));
+      }
+      target += sum(a5);
     }
-    target += (sum(a) + sum(c));
     target += normal_lupdf(mu, promote(0, real, data), promote(1, real, data));
   } }
 
 rev_log_prob {
   real mu = (FnReadParam(constrain Identity)(dims())(mem_pattern AoS))__();
   {
-    data int a_1dim__ = (N + 8);
-    FnValidateSize__("a", "N + 8", a_1dim__);
-    vector[a_1dim__] a;
-    FnValidateSize__("c", "N", N);
-    vector[N] c;
-    a[(1 + 8):(N + 8)] = (b[1:N] + promote(2, real, data));
-    c[1:N] = (a[1:N] * promote(2, real, data));
-    a[(1 + 1):(N + 1)] = (b[1:N] + promote(1, real, data));
-    a[1:N] = (b[1:N] + promote(2, real, data));
-    c[1:N] = (a[1:N] * promote(2, real, data));
-    for(n in 1:N) {
-      a[idx[n]] = b[n];
-      c[n] = a[idx[n]];
+    {
+      data int a1_1dim__ = (N + 8);
+      FnValidateSize__("a1", "N + 8", a1_1dim__);
+      vector[a1_1dim__] a1;
+      FnValidateSize__("c1", "N", N);
+      vector[N] c1;
+      a1[(1 + 8):(N + 8)] = (b[1:N] + promote(2, real, data));
+      c1[1:N] = (a1[1:N] * promote(2, real, data));
+      target += (sum(a1) + sum(c1));
     }
     {
-      FnValidateSize__("v", "N", N);
-      vector[N] v;
+      data int a2_1dim__ = (N + 1);
+      FnValidateSize__("a2", "N + 1", a2_1dim__);
+      vector[a2_1dim__] a2;
+      FnValidateSize__("c2", "N", N);
+      vector[N] c2;
+      a2[(1 + 1):(N + 1)] = (b[1:N] + promote(1, real, data));
+      a2[1:N] = (b[1:N] + promote(2, real, data));
+      c2[1:N] = (a2[1:N] * promote(2, real, data));
+      target += (sum(a2) + sum(c2));
+    }
+    {
+      FnValidateSize__("a3", "N", N);
+      vector[N] a3;
+      FnValidateSize__("c3", "N", N);
+      vector[N] c3;
+      for(n in 1:N) {
+        a3[idx[n]] = b[n];
+        c3[n] = a3[idx[n]];
+      }
+      target += (sum(a3) + sum(c3));
+    }
+    {
+      FnValidateSize__("v4", "N", N);
+      vector[N] v4;
       for(i in 1:N) {
         for(j in 1:J) {
-          v[i] = (w[j] + v[i]);
+          v4[i] = (w[j] + v4[i]);
         }
       }
-      target += sum(v);
+      target += sum(v4);
     }
-    for(n in 1:N) {
-      a[(n + 4)] = (a[n] * promote(2, real, data));
+    {
+      data int a5_1dim__ = (N + 4);
+      FnValidateSize__("a5", "N + 4", a5_1dim__);
+      vector[a5_1dim__] a5;
+      for(n in 1:N) {
+        a5[(n + 4)] = (a5[n] * promote(2, real, data));
+      }
+      target += sum(a5);
     }
-    target += (sum(a) + sum(c));
     target += normal_lupdf(mu, promote(0, real, data), promote(1, real, data));
   } }
 

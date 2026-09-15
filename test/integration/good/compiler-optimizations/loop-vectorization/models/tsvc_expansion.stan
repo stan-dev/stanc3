@@ -3,7 +3,9 @@
 // Maleki et al. 2011). Every loop here carries a dependence through a scalar
 // written in the body, so the whole-variable access (subs = []) is confused
 // and the loop must stay sequential until scalar expansion is implemented.
-// Each loop sits in its own block because Stan forbids shadowing `s`.
+// Each example sits in its own block, and every local it writes carries the
+// example number as a suffix (s3 belongs to example 3) so the generated MIR
+// and C++ can be matched to the example.
 data {
   int<lower=1> N;
   vector[N] a0;
@@ -12,82 +14,90 @@ data {
   vector[N] d;
 }
 model {
-  vector[N] a = a0;
-  real t = 0;
-  real x = 0;
-
-  // TSVC s251 (Expansion), UoB-HPC/TSVC_2 src/tsvc.c
+  // 1. TSVC s251 (Expansion), UoB-HPC/TSVC_2 src/tsvc.c
   // C: s = b[i] + c[i] * d[i]; a[i] = s * s;
   // intent: scalar expansion; vectorizable after expansion
-  // graph: `s` confused (subs = [])   emitted: seq (roadmap item 2)
+  // graph: `s1` confused (subs = [])   emitted: seq (roadmap item 2)
   {
+    vector[N] a1 = a0;
     for (n in 1 : N) {
-      real s = b[n] + c[n] * d[n];
-      a[n] = s * s;
+      real s1 = b[n] + c[n] * d[n];
+      a1[n] = s1 * s1;
     }
+    target += sum(a1);
   }
 
-  // TSVC s252 (Expansion), UoB-HPC/TSVC_2 src/tsvc.c
+  // 2. TSVC s252 (Expansion), UoB-HPC/TSVC_2 src/tsvc.c
   // C: s = b[i] * c[i]; a[i] = s + t; t = s;
   // intent: loop with ambiguous scalar temporary
   // graph: confused   emitted: seq
   {
+    vector[N] a2 = a0;
+    real t2 = 0;
     for (n in 1 : N) {
-      real s = b[n] * c[n];
-      a[n] = s + t;
-      t = s;
+      real s2 = b[n] * c[n];
+      a2[n] = s2 + t2;
+      t2 = s2;
     }
+    target += sum(a2) + t2;
   }
 
-  // TSVC s254 (Expansion), UoB-HPC/TSVC_2 src/tsvc.c
+  // 3. TSVC s254 (Expansion), UoB-HPC/TSVC_2 src/tsvc.c
   // C: a[i] = (b[i] + x) * 0.5; x = b[i];
   // intent: carry-around variable
   // graph: confused   emitted: seq
-  for (n in 1 : N) {
-    a[n] = (b[n] + x) * 0.5;
-    x = b[n];
+  {
+    vector[N] a3 = a0;
+    real x3 = 0;
+    for (n in 1 : N) {
+      a3[n] = (b[n] + x3) * 0.5;
+      x3 = b[n];
+    }
+    target += sum(a3) + x3;
   }
 
-  // TSVC s258 (Expansion), UoB-HPC/TSVC_2 src/tsvc.c
+  // 4. TSVC s258 (Expansion), UoB-HPC/TSVC_2 src/tsvc.c
   // C: if (a[i] > 0.) s = d[i] * d[i]; b[i] = s * c[i] + d[i];
   // intent: wrap-around scalar under an if
-  // graph: `IfElse` leaf + `s` confused   emitted: seq
+  // graph: `IfElse` leaf + `s4` confused   emitted: seq
   {
-    real s = 0;
-    vector[N] b2 = b;
+    real s4 = 0;
+    vector[N] b4 = b;
     for (n in 1 : N) {
-      if (a[n] > 0) s = d[n] * d[n];
-      b2[n] = s * c[n] + d[n];
+      if (a0[n] > 0) s4 = d[n] * d[n];
+      b4[n] = s4 * c[n] + d[n];
     }
-    target += sum(b2);
+    target += sum(b4);
   }
 
-  // TSVC s261 (Expansion), UoB-HPC/TSVC_2 src/tsvc.c
+  // 5. TSVC s261 (Expansion), UoB-HPC/TSVC_2 src/tsvc.c
   // C: t = a[i] + b[i]; a[i] = t + c[i-1]; t = c[i] * d[i]; c[i] = t;
   // intent: scalar renaming
   // graph: confused   emitted: seq
   {
-    vector[N] c2 = c;
+    vector[N] a5 = a0;
+    vector[N] c5 = c;
+    real t5 = 0;
     for (n in 2 : N) {
-      t = a[n] + b[n];
-      a[n] = t + c2[n - 1];
-      t = c2[n] * d[n];
-      c2[n] = t;
+      t5 = a5[n] + b[n];
+      a5[n] = t5 + c5[n - 1];
+      t5 = c5[n] * d[n];
+      c5[n] = t5;
     }
-    target += sum(c2);
+    target += sum(a5) + sum(c5);
   }
 
-  // TSVC s453 (Expansion / induction variable), UoB-HPC/TSVC_2 src/tsvc.c
+  // 6. TSVC s453 (Expansion / induction variable), UoB-HPC/TSVC_2 src/tsvc.c
   // C: s += 2.; a[i] = s * b[i];
   // intent: induction variable recognition
   // graph: confused   emitted: seq
   {
-    real s = 0;
+    vector[N] a6 = a0;
+    real s6 = 0;
     for (n in 1 : N) {
-      s += 2;
-      a[n] = s * b[n];
+      s6 += 2;
+      a6[n] = s6 * b[n];
     }
+    target += sum(a6);
   }
-
-  target += sum(a);
 }

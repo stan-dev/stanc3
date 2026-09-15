@@ -7,37 +7,37 @@ using namespace stan::math;
 stan::math::profile_map profiles__;
 static constexpr std::array<const char*, 32> locations_array__ =
   {" (found before start of program)",
-  " (in 'tsvc_statement_reordering.stan', line 22, column 11 to column 16)",
-  " (in 'tsvc_statement_reordering.stan', line 22, column 4 to column 25)",
-  " (in 'tsvc_statement_reordering.stan', line 23, column 11 to column 16)",
-  " (in 'tsvc_statement_reordering.stan', line 23, column 4 to column 25)",
-  " (in 'tsvc_statement_reordering.stan', line 26, column 6 to column 37)",
-  " (in 'tsvc_statement_reordering.stan', line 25, column 6 to column 37)",
-  " (in 'tsvc_statement_reordering.stan', line 24, column 4 to line 27, column 5)",
-  " (in 'tsvc_statement_reordering.stan', line 28, column 4 to column 21)",
-  " (in 'tsvc_statement_reordering.stan', line 29, column 4 to column 21)",
-  " (in 'tsvc_statement_reordering.stan', line 21, column 2 to line 30, column 3)",
-  " (in 'tsvc_statement_reordering.stan', line 39, column 11 to column 16)",
-  " (in 'tsvc_statement_reordering.stan', line 39, column 4 to column 25)",
-  " (in 'tsvc_statement_reordering.stan', line 40, column 11 to column 16)",
-  " (in 'tsvc_statement_reordering.stan', line 40, column 4 to column 25)",
-  " (in 'tsvc_statement_reordering.stan', line 43, column 6 to column 37)",
-  " (in 'tsvc_statement_reordering.stan', line 42, column 6 to column 26)",
-  " (in 'tsvc_statement_reordering.stan', line 41, column 4 to line 44, column 5)",
-  " (in 'tsvc_statement_reordering.stan', line 45, column 4 to column 21)",
-  " (in 'tsvc_statement_reordering.stan', line 46, column 4 to column 21)",
-  " (in 'tsvc_statement_reordering.stan', line 38, column 2 to line 47, column 3)",
-  " (in 'tsvc_statement_reordering.stan', line 7, column 2 to column 17)",
-  " (in 'tsvc_statement_reordering.stan', line 8, column 9 to column 14)",
-  " (in 'tsvc_statement_reordering.stan', line 8, column 2 to column 19)",
-  " (in 'tsvc_statement_reordering.stan', line 9, column 9 to column 14)",
-  " (in 'tsvc_statement_reordering.stan', line 9, column 2 to column 19)",
-  " (in 'tsvc_statement_reordering.stan', line 10, column 9 to column 10)",
-  " (in 'tsvc_statement_reordering.stan', line 10, column 2 to column 14)",
-  " (in 'tsvc_statement_reordering.stan', line 11, column 9 to column 10)",
-  " (in 'tsvc_statement_reordering.stan', line 11, column 2 to column 14)",
+  " (in 'tsvc_statement_reordering.stan', line 24, column 11 to column 16)",
+  " (in 'tsvc_statement_reordering.stan', line 24, column 4 to column 26)",
+  " (in 'tsvc_statement_reordering.stan', line 25, column 11 to column 16)",
+  " (in 'tsvc_statement_reordering.stan', line 25, column 4 to column 26)",
+  " (in 'tsvc_statement_reordering.stan', line 28, column 6 to column 39)",
+  " (in 'tsvc_statement_reordering.stan', line 27, column 6 to column 39)",
+  " (in 'tsvc_statement_reordering.stan', line 26, column 4 to line 29, column 5)",
+  " (in 'tsvc_statement_reordering.stan', line 30, column 4 to column 22)",
+  " (in 'tsvc_statement_reordering.stan', line 31, column 4 to column 22)",
+  " (in 'tsvc_statement_reordering.stan', line 23, column 2 to line 32, column 3)",
+  " (in 'tsvc_statement_reordering.stan', line 41, column 11 to column 16)",
+  " (in 'tsvc_statement_reordering.stan', line 41, column 4 to column 26)",
+  " (in 'tsvc_statement_reordering.stan', line 42, column 11 to column 16)",
+  " (in 'tsvc_statement_reordering.stan', line 42, column 4 to column 26)",
+  " (in 'tsvc_statement_reordering.stan', line 45, column 6 to column 40)",
+  " (in 'tsvc_statement_reordering.stan', line 44, column 6 to column 28)",
+  " (in 'tsvc_statement_reordering.stan', line 43, column 4 to line 46, column 5)",
+  " (in 'tsvc_statement_reordering.stan', line 47, column 4 to column 22)",
+  " (in 'tsvc_statement_reordering.stan', line 48, column 4 to column 22)",
+  " (in 'tsvc_statement_reordering.stan', line 40, column 2 to line 49, column 3)",
+  " (in 'tsvc_statement_reordering.stan', line 9, column 2 to column 17)",
+  " (in 'tsvc_statement_reordering.stan', line 10, column 9 to column 14)",
+  " (in 'tsvc_statement_reordering.stan', line 10, column 2 to column 19)",
+  " (in 'tsvc_statement_reordering.stan', line 11, column 9 to column 14)",
+  " (in 'tsvc_statement_reordering.stan', line 11, column 2 to column 19)",
   " (in 'tsvc_statement_reordering.stan', line 12, column 9 to column 10)",
-  " (in 'tsvc_statement_reordering.stan', line 12, column 2 to column 14)"};
+  " (in 'tsvc_statement_reordering.stan', line 12, column 2 to column 14)",
+  " (in 'tsvc_statement_reordering.stan', line 13, column 9 to column 10)",
+  " (in 'tsvc_statement_reordering.stan', line 13, column 2 to column 14)",
+  " (in 'tsvc_statement_reordering.stan', line 14, column 9 to column 10)",
+  " (in 'tsvc_statement_reordering.stan', line 14, column 2 to column 14)"};
 class tsvc_statement_reordering_model final : public model_base_crtp<tsvc_statement_reordering_model> {
  private:
   int N;
@@ -223,91 +223,91 @@ class tsvc_statement_reordering_model final : public model_base_crtp<tsvc_statem
     try {
       {
         current_statement__ = 1;
-        int a_1dim__ = (N + 1);
+        int a1_1dim__ = (N + 1);
         current_statement__ = 1;
-        stan::math::validate_non_negative_index("a", "N + 1", a_1dim__);
-        Eigen::Matrix<local_scalar_t__,-1,1> a =
-          Eigen::Matrix<local_scalar_t__,-1,1>::Constant(a_1dim__,
+        stan::math::validate_non_negative_index("a1", "N + 1", a1_1dim__);
+        Eigen::Matrix<local_scalar_t__,-1,1> a1 =
+          Eigen::Matrix<local_scalar_t__,-1,1>::Constant(a1_1dim__,
             DUMMY_VAR__);
         current_statement__ = 2;
-        stan::model::assign(a, a0, "assigning variable a");
+        stan::model::assign(a1, a0, "assigning variable a1");
         current_statement__ = 3;
-        int b_1dim__ = (N + 1);
+        int b1_1dim__ = (N + 1);
         current_statement__ = 3;
-        stan::math::validate_non_negative_index("b", "N + 1", b_1dim__);
-        Eigen::Matrix<local_scalar_t__,-1,1> b =
-          Eigen::Matrix<local_scalar_t__,-1,1>::Constant(b_1dim__,
+        stan::math::validate_non_negative_index("b1", "N + 1", b1_1dim__);
+        Eigen::Matrix<local_scalar_t__,-1,1> b1 =
+          Eigen::Matrix<local_scalar_t__,-1,1>::Constant(b1_1dim__,
             DUMMY_VAR__);
         current_statement__ = 4;
-        stan::model::assign(b, b0, "assigning variable b");
+        stan::model::assign(b1, b0, "assigning variable b1");
         current_statement__ = 5;
-        stan::model::assign(b,
+        stan::model::assign(b1,
           stan::math::subtract(
             stan::model::deep_copy(
-              stan::model::rvalue(b, "b",
+              stan::model::rvalue(b1, "b1",
                 stan::model::index_min_max((2 + 1), ((N - 1) + 1)))),
             stan::math::elt_multiply(
               stan::model::rvalue(e, "e",
                 stan::model::index_min_max(2, (N - 1))),
               stan::model::rvalue(d, "d",
                 stan::model::index_min_max(2, (N - 1))))),
-          "assigning variable b", stan::model::index_min_max(2, (N - 1)));
+          "assigning variable b1", stan::model::index_min_max(2, (N - 1)));
         current_statement__ = 6;
-        stan::model::assign(a,
+        stan::model::assign(a1,
           stan::math::add(
-            stan::model::rvalue(b, "b",
+            stan::model::rvalue(b1, "b1",
               stan::model::index_min_max((2 - 1), ((N - 1) - 1))),
             stan::math::elt_multiply(
               stan::model::rvalue(c, "c",
                 stan::model::index_min_max(2, (N - 1))),
               stan::model::rvalue(d, "d",
                 stan::model::index_min_max(2, (N - 1))))),
-          "assigning variable a", stan::model::index_min_max(2, (N - 1)));
+          "assigning variable a1", stan::model::index_min_max(2, (N - 1)));
         current_statement__ = 8;
-        lp_accum__.add(stan::math::sum(a));
+        lp_accum__.add(stan::math::sum(a1));
         current_statement__ = 9;
-        lp_accum__.add(stan::math::sum(b));
+        lp_accum__.add(stan::math::sum(b1));
       }
       {
         current_statement__ = 11;
-        int a_1dim__ = (N + 1);
+        int a2_1dim__ = (N + 1);
         current_statement__ = 11;
-        stan::math::validate_non_negative_index("a", "N + 1", a_1dim__);
-        Eigen::Matrix<local_scalar_t__,-1,1> a =
-          Eigen::Matrix<local_scalar_t__,-1,1>::Constant(a_1dim__,
+        stan::math::validate_non_negative_index("a2", "N + 1", a2_1dim__);
+        Eigen::Matrix<local_scalar_t__,-1,1> a2 =
+          Eigen::Matrix<local_scalar_t__,-1,1>::Constant(a2_1dim__,
             DUMMY_VAR__);
         current_statement__ = 12;
-        stan::model::assign(a, a0, "assigning variable a");
+        stan::model::assign(a2, a0, "assigning variable a2");
         current_statement__ = 13;
-        int b_1dim__ = (N + 1);
+        int b2_1dim__ = (N + 1);
         current_statement__ = 13;
-        stan::math::validate_non_negative_index("b", "N + 1", b_1dim__);
-        Eigen::Matrix<local_scalar_t__,-1,1> b =
-          Eigen::Matrix<local_scalar_t__,-1,1>::Constant(b_1dim__,
+        stan::math::validate_non_negative_index("b2", "N + 1", b2_1dim__);
+        Eigen::Matrix<local_scalar_t__,-1,1> b2 =
+          Eigen::Matrix<local_scalar_t__,-1,1>::Constant(b2_1dim__,
             DUMMY_VAR__);
         current_statement__ = 14;
-        stan::model::assign(b, b0, "assigning variable b");
+        stan::model::assign(b2, b0, "assigning variable b2");
         current_statement__ = 15;
-        stan::model::assign(b,
+        stan::model::assign(b2,
           stan::math::add(
             stan::model::deep_copy(
-              stan::model::rvalue(b, "b", stan::model::index_min_max(1, N))),
+              stan::model::rvalue(b2, "b2", stan::model::index_min_max(1, N))),
             stan::math::elt_multiply(
-              stan::model::rvalue(a, "a",
+              stan::model::rvalue(a2, "a2",
                 stan::model::index_min_max((1 + 1), (N + 1))),
               stan::model::rvalue(d, "d", stan::model::index_min_max(1, N)))),
-          "assigning variable b", stan::model::index_min_max(1, N));
+          "assigning variable b2", stan::model::index_min_max(1, N));
         current_statement__ = 16;
-        stan::model::assign(a,
+        stan::model::assign(a2,
           stan::math::elt_multiply(
             stan::model::deep_copy(
-              stan::model::rvalue(a, "a", stan::model::index_min_max(1, N))),
+              stan::model::rvalue(a2, "a2", stan::model::index_min_max(1, N))),
             stan::model::rvalue(c, "c", stan::model::index_min_max(1, N))),
-          "assigning variable a", stan::model::index_min_max(1, N));
+          "assigning variable a2", stan::model::index_min_max(1, N));
         current_statement__ = 18;
-        lp_accum__.add(stan::math::sum(a));
+        lp_accum__.add(stan::math::sum(a2));
         current_statement__ = 19;
-        lp_accum__.add(stan::math::sum(b));
+        lp_accum__.add(stan::math::sum(b2));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -341,95 +341,95 @@ class tsvc_statement_reordering_model final : public model_base_crtp<tsvc_statem
     try {
       {
         current_statement__ = 1;
-        int a_1dim__ = (N + 1);
+        int a1_1dim__ = (N + 1);
         current_statement__ = 1;
-        stan::math::validate_non_negative_index("a", "N + 1", a_1dim__);
-        stan::math::var_value<Eigen::Matrix<double,-1,1>> a =
-          stan::math::var_value<Eigen::Matrix<double,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(a_1dim__,
+        stan::math::validate_non_negative_index("a1", "N + 1", a1_1dim__);
+        stan::math::var_value<Eigen::Matrix<double,-1,1>> a1 =
+          stan::math::var_value<Eigen::Matrix<double,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(a1_1dim__,
                                                               std::numeric_limits<double>::quiet_NaN(
                                                                 )));
         current_statement__ = 2;
-        stan::model::assign(a, a0, "assigning variable a");
+        stan::model::assign(a1, a0, "assigning variable a1");
         current_statement__ = 3;
-        int b_1dim__ = (N + 1);
+        int b1_1dim__ = (N + 1);
         current_statement__ = 3;
-        stan::math::validate_non_negative_index("b", "N + 1", b_1dim__);
-        stan::math::var_value<Eigen::Matrix<double,-1,1>> b =
-          stan::math::var_value<Eigen::Matrix<double,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(b_1dim__,
+        stan::math::validate_non_negative_index("b1", "N + 1", b1_1dim__);
+        stan::math::var_value<Eigen::Matrix<double,-1,1>> b1 =
+          stan::math::var_value<Eigen::Matrix<double,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(b1_1dim__,
                                                               std::numeric_limits<double>::quiet_NaN(
                                                                 )));
         current_statement__ = 4;
-        stan::model::assign(b, b0, "assigning variable b");
+        stan::model::assign(b1, b0, "assigning variable b1");
         current_statement__ = 5;
-        stan::model::assign(b,
+        stan::model::assign(b1,
           stan::math::subtract(
             stan::model::deep_copy(
-              stan::model::rvalue(b, "b",
+              stan::model::rvalue(b1, "b1",
                 stan::model::index_min_max((2 + 1), ((N - 1) + 1)))),
             stan::math::elt_multiply(
               stan::model::rvalue(e, "e",
                 stan::model::index_min_max(2, (N - 1))),
               stan::model::rvalue(d, "d",
                 stan::model::index_min_max(2, (N - 1))))),
-          "assigning variable b", stan::model::index_min_max(2, (N - 1)));
+          "assigning variable b1", stan::model::index_min_max(2, (N - 1)));
         current_statement__ = 6;
-        stan::model::assign(a,
+        stan::model::assign(a1,
           stan::math::add(
-            stan::model::rvalue(b, "b",
+            stan::model::rvalue(b1, "b1",
               stan::model::index_min_max((2 - 1), ((N - 1) - 1))),
             stan::math::elt_multiply(
               stan::model::rvalue(c, "c",
                 stan::model::index_min_max(2, (N - 1))),
               stan::model::rvalue(d, "d",
                 stan::model::index_min_max(2, (N - 1))))),
-          "assigning variable a", stan::model::index_min_max(2, (N - 1)));
+          "assigning variable a1", stan::model::index_min_max(2, (N - 1)));
         current_statement__ = 8;
-        lp_accum__.add(stan::math::sum(a));
+        lp_accum__.add(stan::math::sum(a1));
         current_statement__ = 9;
-        lp_accum__.add(stan::math::sum(b));
+        lp_accum__.add(stan::math::sum(b1));
       }
       {
         current_statement__ = 11;
-        int a_1dim__ = (N + 1);
+        int a2_1dim__ = (N + 1);
         current_statement__ = 11;
-        stan::math::validate_non_negative_index("a", "N + 1", a_1dim__);
-        stan::math::var_value<Eigen::Matrix<double,-1,1>> a =
-          stan::math::var_value<Eigen::Matrix<double,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(a_1dim__,
+        stan::math::validate_non_negative_index("a2", "N + 1", a2_1dim__);
+        stan::math::var_value<Eigen::Matrix<double,-1,1>> a2 =
+          stan::math::var_value<Eigen::Matrix<double,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(a2_1dim__,
                                                               std::numeric_limits<double>::quiet_NaN(
                                                                 )));
         current_statement__ = 12;
-        stan::model::assign(a, a0, "assigning variable a");
+        stan::model::assign(a2, a0, "assigning variable a2");
         current_statement__ = 13;
-        int b_1dim__ = (N + 1);
+        int b2_1dim__ = (N + 1);
         current_statement__ = 13;
-        stan::math::validate_non_negative_index("b", "N + 1", b_1dim__);
-        stan::math::var_value<Eigen::Matrix<double,-1,1>> b =
-          stan::math::var_value<Eigen::Matrix<double,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(b_1dim__,
+        stan::math::validate_non_negative_index("b2", "N + 1", b2_1dim__);
+        stan::math::var_value<Eigen::Matrix<double,-1,1>> b2 =
+          stan::math::var_value<Eigen::Matrix<double,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(b2_1dim__,
                                                               std::numeric_limits<double>::quiet_NaN(
                                                                 )));
         current_statement__ = 14;
-        stan::model::assign(b, b0, "assigning variable b");
+        stan::model::assign(b2, b0, "assigning variable b2");
         current_statement__ = 15;
-        stan::model::assign(b,
+        stan::model::assign(b2,
           stan::math::add(
             stan::model::deep_copy(
-              stan::model::rvalue(b, "b", stan::model::index_min_max(1, N))),
+              stan::model::rvalue(b2, "b2", stan::model::index_min_max(1, N))),
             stan::math::elt_multiply(
-              stan::model::rvalue(a, "a",
+              stan::model::rvalue(a2, "a2",
                 stan::model::index_min_max((1 + 1), (N + 1))),
               stan::model::rvalue(d, "d", stan::model::index_min_max(1, N)))),
-          "assigning variable b", stan::model::index_min_max(1, N));
+          "assigning variable b2", stan::model::index_min_max(1, N));
         current_statement__ = 16;
-        stan::model::assign(a,
+        stan::model::assign(a2,
           stan::math::elt_multiply(
             stan::model::deep_copy(
-              stan::model::rvalue(a, "a", stan::model::index_min_max(1, N))),
+              stan::model::rvalue(a2, "a2", stan::model::index_min_max(1, N))),
             stan::model::rvalue(c, "c", stan::model::index_min_max(1, N))),
-          "assigning variable a", stan::model::index_min_max(1, N));
+          "assigning variable a2", stan::model::index_min_max(1, N));
         current_statement__ = 18;
-        lp_accum__.add(stan::math::sum(a));
+        lp_accum__.add(stan::math::sum(a2));
         current_statement__ = 19;
-        lp_accum__.add(stan::math::sum(b));
+        lp_accum__.add(stan::math::sum(b2));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);

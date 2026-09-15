@@ -74,180 +74,180 @@ prepare_data {
 log_prob {
   {
     {
-      data int a_1dim__ = (N + 1);
-      FnValidateSize__("a", "N + 1", a_1dim__);
-      vector[a_1dim__] a;
-      a = a0;
-      FnValidateSize__("b", "N", N);
-      vector[N] b;
-      b = b0;
-      FnValidateSize__("d", "N", N);
-      vector[N] d;
-      d = d0;
+      data int a1_1dim__ = (N + 1);
+      FnValidateSize__("a1", "N + 1", a1_1dim__);
+      vector[a1_1dim__] a1;
+      a1 = a0;
+      FnValidateSize__("b1", "N", N);
+      vector[N] b1;
+      b1 = b0;
+      FnValidateSize__("d1", "N", N);
+      vector[N] d1;
+      d1 = d0;
       for(n in 1:N) {
-        a[n] = ((b[n] .* c[n]) .* d[n]);
-        b[n] = ((a[n] .* a[(n + 1)]) .* d[n]);
+        a1[n] = ((b1[n] .* c[n]) .* d1[n]);
+        b1[n] = ((a1[n] .* a1[(n + 1)]) .* d1[n]);
       }
-      target += sum(a);
-      target += sum(b);
+      target += sum(a1);
+      target += sum(b1);
     }
     {
-      data int a_1dim__ = (N + 1);
-      FnValidateSize__("a", "N + 1", a_1dim__);
-      vector[a_1dim__] a;
-      a = a0;
-      FnValidateSize__("b", "N", N);
-      vector[N] b;
-      b = b0;
-      FnValidateSize__("d", "N", N);
-      vector[N] d;
-      d = d0;
+      data int a2_1dim__ = (N + 1);
+      FnValidateSize__("a2", "N + 1", a2_1dim__);
+      vector[a2_1dim__] a2;
+      a2 = a0;
+      FnValidateSize__("b2", "N", N);
+      vector[N] b2;
+      b2 = b0;
+      FnValidateSize__("d2", "N", N);
+      vector[N] d2;
+      d2 = d0;
       for(n in 1:N) {
-        a[n] = (b[n] + (c[n] .* d[n]));
-        b[n] = (a[n] + (d[n] .* e[n]));
-        a[n] = (b[n] + (a[(n + 1)] .* d[n]));
+        a2[n] = (b2[n] + (c[n] .* d2[n]));
+        b2[n] = (a2[n] + (d2[n] .* e[n]));
+        a2[n] = (b2[n] + (a2[(n + 1)] .* d2[n]));
       }
-      target += sum(a);
-      target += sum(b);
+      target += sum(a2);
+      target += sum(b2);
     }
     {
-      data int a_1dim__ = (N + 1);
-      FnValidateSize__("a", "N + 1", a_1dim__);
-      vector[a_1dim__] a;
-      a = a0;
-      FnValidateSize__("b", "N", N);
-      vector[N] b;
-      b = b0;
-      FnValidateSize__("d", "N", N);
-      vector[N] d;
-      d = d0;
+      data int a3_1dim__ = (N + 1);
+      FnValidateSize__("a3", "N + 1", a3_1dim__);
+      vector[a3_1dim__] a3;
+      a3 = a0;
+      FnValidateSize__("b3", "N", N);
+      vector[N] b3;
+      b3 = b0;
+      FnValidateSize__("d3", "N", N);
+      vector[N] d3;
+      d3 = d0;
       for(n in 1:N) {
-        a[n] = (b[n] + (c[n] .* d[n]));
-        b[n] = (c[n] + b[n]);
-        a[(n + 1)] = (b[n] + (a[(n + 1)] .* d[n]));
+        a3[n] = (b3[n] + (c[n] .* d3[n]));
+        b3[n] = (c[n] + b3[n]);
+        a3[(n + 1)] = (b3[n] + (a3[(n + 1)] .* d3[n]));
       }
-      target += sum(a);
-      target += sum(b);
+      target += sum(a3);
+      target += sum(b3);
     }
     {
-      data int a_1dim__ = (N + 1);
-      FnValidateSize__("a", "N + 1", a_1dim__);
-      vector[a_1dim__] a;
-      a = a0;
-      FnValidateSize__("b", "N", N);
-      vector[N] b;
-      b = b0;
-      FnValidateSize__("d", "N", N);
-      vector[N] d;
-      d = d0;
+      data int a4_1dim__ = (N + 1);
+      FnValidateSize__("a4", "N + 1", a4_1dim__);
+      vector[a4_1dim__] a4;
+      a4 = a0;
+      FnValidateSize__("b4", "N", N);
+      vector[N] b4;
+      b4 = b0;
+      FnValidateSize__("d4", "N", N);
+      vector[N] d4;
+      d4 = d0;
       for(n in 1:N) {
-        a[n] = (b[n] + (c[n] .* c[n]));
-        d[n] = (a[n] + a[(n + 1)]);
+        a4[n] = (b4[n] + (c[n] .* c[n]));
+        d4[n] = (a4[n] + a4[(n + 1)]);
       }
-      target += sum(a);
-      target += sum(d);
+      target += sum(a4);
+      target += sum(d4);
     }
     {
-      data int a_1dim__ = (N + 1);
-      FnValidateSize__("a", "N + 1", a_1dim__);
-      vector[a_1dim__] a;
-      a = a0;
-      FnValidateSize__("b", "N", N);
-      vector[N] b;
-      b = b0;
-      a[(1 + 1):(N + 1)] = (b[1:N] + e[1:N]);
-      a[1:N] = (b[1:N] + c[1:N]);
-      target += sum(a);
+      data int a5_1dim__ = (N + 1);
+      FnValidateSize__("a5", "N + 1", a5_1dim__);
+      vector[a5_1dim__] a5;
+      a5 = a0;
+      FnValidateSize__("b5", "N", N);
+      vector[N] b5;
+      b5 = b0;
+      a5[(1 + 1):(N + 1)] = (b5[1:N] + e[1:N]);
+      a5[1:N] = (b5[1:N] + c[1:N]);
+      target += sum(a5);
     }
   } }
 
 rev_log_prob {
   {
     {
-      data int a_1dim__ = (N + 1);
-      FnValidateSize__("a", "N + 1", a_1dim__);
-      vector[a_1dim__] a;
-      a = a0;
-      FnValidateSize__("b", "N", N);
-      vector[N] b;
-      b = b0;
-      FnValidateSize__("d", "N", N);
-      vector[N] d;
-      d = d0;
+      data int a1_1dim__ = (N + 1);
+      FnValidateSize__("a1", "N + 1", a1_1dim__);
+      vector[a1_1dim__] a1;
+      a1 = a0;
+      FnValidateSize__("b1", "N", N);
+      vector[N] b1;
+      b1 = b0;
+      FnValidateSize__("d1", "N", N);
+      vector[N] d1;
+      d1 = d0;
       for(n in 1:N) {
-        a[n] = ((b[n] .* c[n]) .* d[n]);
-        b[n] = ((a[n] .* a[(n + 1)]) .* d[n]);
+        a1[n] = ((b1[n] .* c[n]) .* d1[n]);
+        b1[n] = ((a1[n] .* a1[(n + 1)]) .* d1[n]);
       }
-      target += sum(a);
-      target += sum(b);
+      target += sum(a1);
+      target += sum(b1);
     }
     {
-      data int a_1dim__ = (N + 1);
-      FnValidateSize__("a", "N + 1", a_1dim__);
-      vector[a_1dim__] a;
-      a = a0;
-      FnValidateSize__("b", "N", N);
-      vector[N] b;
-      b = b0;
-      FnValidateSize__("d", "N", N);
-      vector[N] d;
-      d = d0;
+      data int a2_1dim__ = (N + 1);
+      FnValidateSize__("a2", "N + 1", a2_1dim__);
+      vector[a2_1dim__] a2;
+      a2 = a0;
+      FnValidateSize__("b2", "N", N);
+      vector[N] b2;
+      b2 = b0;
+      FnValidateSize__("d2", "N", N);
+      vector[N] d2;
+      d2 = d0;
       for(n in 1:N) {
-        a[n] = (b[n] + (c[n] .* d[n]));
-        b[n] = (a[n] + (d[n] .* e[n]));
-        a[n] = (b[n] + (a[(n + 1)] .* d[n]));
+        a2[n] = (b2[n] + (c[n] .* d2[n]));
+        b2[n] = (a2[n] + (d2[n] .* e[n]));
+        a2[n] = (b2[n] + (a2[(n + 1)] .* d2[n]));
       }
-      target += sum(a);
-      target += sum(b);
+      target += sum(a2);
+      target += sum(b2);
     }
     {
-      data int a_1dim__ = (N + 1);
-      FnValidateSize__("a", "N + 1", a_1dim__);
-      vector[a_1dim__] a;
-      a = a0;
-      FnValidateSize__("b", "N", N);
-      vector[N] b;
-      b = b0;
-      FnValidateSize__("d", "N", N);
-      vector[N] d;
-      d = d0;
+      data int a3_1dim__ = (N + 1);
+      FnValidateSize__("a3", "N + 1", a3_1dim__);
+      vector[a3_1dim__] a3;
+      a3 = a0;
+      FnValidateSize__("b3", "N", N);
+      vector[N] b3;
+      b3 = b0;
+      FnValidateSize__("d3", "N", N);
+      vector[N] d3;
+      d3 = d0;
       for(n in 1:N) {
-        a[n] = (b[n] + (c[n] .* d[n]));
-        b[n] = (c[n] + b[n]);
-        a[(n + 1)] = (b[n] + (a[(n + 1)] .* d[n]));
+        a3[n] = (b3[n] + (c[n] .* d3[n]));
+        b3[n] = (c[n] + b3[n]);
+        a3[(n + 1)] = (b3[n] + (a3[(n + 1)] .* d3[n]));
       }
-      target += sum(a);
-      target += sum(b);
+      target += sum(a3);
+      target += sum(b3);
     }
     {
-      data int a_1dim__ = (N + 1);
-      FnValidateSize__("a", "N + 1", a_1dim__);
-      vector[a_1dim__] a;
-      a = a0;
-      FnValidateSize__("b", "N", N);
-      vector[N] b;
-      b = b0;
-      FnValidateSize__("d", "N", N);
-      vector[N] d;
-      d = d0;
+      data int a4_1dim__ = (N + 1);
+      FnValidateSize__("a4", "N + 1", a4_1dim__);
+      vector[a4_1dim__] a4;
+      a4 = a0;
+      FnValidateSize__("b4", "N", N);
+      vector[N] b4;
+      b4 = b0;
+      FnValidateSize__("d4", "N", N);
+      vector[N] d4;
+      d4 = d0;
       for(n in 1:N) {
-        a[n] = (b[n] + (c[n] .* c[n]));
-        d[n] = (a[n] + a[(n + 1)]);
+        a4[n] = (b4[n] + (c[n] .* c[n]));
+        d4[n] = (a4[n] + a4[(n + 1)]);
       }
-      target += sum(a);
-      target += sum(d);
+      target += sum(a4);
+      target += sum(d4);
     }
     {
-      data int a_1dim__ = (N + 1);
-      FnValidateSize__("a", "N + 1", a_1dim__);
-      vector[a_1dim__] a;
-      a = a0;
-      FnValidateSize__("b", "N", N);
-      vector[N] b;
-      b = b0;
-      a[(1 + 1):(N + 1)] = (b[1:N] + e[1:N]);
-      a[1:N] = (b[1:N] + c[1:N]);
-      target += sum(a);
+      data int a5_1dim__ = (N + 1);
+      FnValidateSize__("a5", "N + 1", a5_1dim__);
+      vector[a5_1dim__] a5;
+      a5 = a0;
+      FnValidateSize__("b5", "N", N);
+      vector[N] b5;
+      b5 = b0;
+      a5[(1 + 1):(N + 1)] = (b5[1:N] + e[1:N]);
+      a5[1:N] = (b5[1:N] + c[1:N]);
+      target += sum(a5);
     }
   } }
 

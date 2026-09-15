@@ -30,17 +30,17 @@ let one_line pp x =
 
 let print_loop_accesses prog =
   let loopvar, body = first_for_in_log_prob (Test_utils.mir_of_string prog) in
-  let written = Stmt.Helpers.assigned_or_declared_variables body in
+  let written_vars = Stmt.Helpers.assigned_or_declared_variables body in
   Fmt.pr "loopvar: %s@.written: %a@." loopvar
     Fmt.(list ~sep:(any ", ") string)
-    (Set.Poly.to_list written);
+    (Set.Poly.to_list written_vars);
   let leaves = match body.pattern with Block l | SList l -> l | _ -> [body] in
   List.iteri leaves ~f:(fun i (s : Stmt.Located.t) ->
       Fmt.pr "%d: %s@.   %s@." i
         (one_line Stmt.Located.pp s)
         (one_line
            Fmt.(list ~sep:(any ", ") pp_access)
-           (stmt_accesses ~loopvar ~written ~label:i s.pattern)))
+           (stmt_accesses ~loopvar ~written_vars ~label:i s.pattern)))
 
 let%expect_test "classify_subscript: affine, invariant and varying indices" =
   print_loop_accesses

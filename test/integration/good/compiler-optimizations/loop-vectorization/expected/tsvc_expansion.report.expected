@@ -1,83 +1,83 @@
   $ stanc -fvectorize-loops --debug-loop-vectorization tsvc_expansion.stan
-loop at 'tsvc_expansion.stan', line 24, column 4 to line 27, column 5  (n in 1:N)
-  S0  real s;   sequential: in a dependence cycle with S1 S2
-  S1  s = (b[n] + (c[n] * d[n]));   sequential: in a dependence cycle with S0 S2
-  S2  a[n] = (s * s);   sequential: in a dependence cycle with S0 S1
-  edges: S0 -> S1 s {<,=,>} (output); S0 -> S2 s {<,=,>} (true); S1 -> S0 s {<,=,>} (output); S1 -> S2 s {<,=,>} (true); S2 -> S0 s {<,=,>} (anti); S2 -> S1 s {<,=,>} (anti)
+loop at 'tsvc_expansion.stan', line 23, column 4 to line 26, column 5  (n in 1:N)
+  S0  real s1;   sequential: in a dependence cycle with S1 S2
+  S1  s1 = (b[n] + (c[n] * d[n]));   sequential: in a dependence cycle with S0 S2
+  S2  a1[n] = (s1 * s1);   sequential: in a dependence cycle with S0 S1
+  edges: S0 -> S1 s1 {<,=,>} (output); S0 -> S2 s1 {<,=,>} (true); S1 -> S0 s1 {<,=,>} (output); S1 -> S2 s1 {<,=,>} (true); S2 -> S0 s1 {<,=,>} (anti); S2 -> S1 s1 {<,=,>} (anti)
   blocks: [S0 S1 S2]cyclic
 
-loop at 'tsvc_expansion.stan', line 35, column 4 to line 39, column 5  (n in 1:N)
-  S0  real s;   sequential: in a dependence cycle with S1 S2 S3
-  S1  s = (b[n] * c[n]);   sequential: in a dependence cycle with S0 S2 S3
-  S2  a[n] = (s + t);   sequential: in a dependence cycle with S0 S1 S3
-  S3  t = s;   sequential: in a dependence cycle with S0 S1 S2
-  edges: S0 -> S1 s {<,=,>} (output); S0 -> S2 s {<,=,>} (true); S0 -> S3 s {<,=,>} (true); S1 -> S0 s {<,=,>} (output); S1 -> S2 s {<,=,>} (true); S1 -> S3 s {<,=,>} (true); S2 -> S0 s {<,=,>} (anti); S2 -> S1 s {<,=,>} (anti); S2 -> S3 t {<,=,>} (anti); S3 -> S0 s {<,=,>} (anti); S3 -> S1 s {<,=,>} (anti); S3 -> S2 t {<,=,>} (true)
+loop at 'tsvc_expansion.stan', line 37, column 4 to line 41, column 5  (n in 1:N)
+  S0  real s2;   sequential: in a dependence cycle with S1 S2 S3
+  S1  s2 = (b[n] * c[n]);   sequential: in a dependence cycle with S0 S2 S3
+  S2  a2[n] = (s2 + t2);   sequential: in a dependence cycle with S0 S1 S3
+  S3  t2 = s2;   sequential: in a dependence cycle with S0 S1 S2
+  edges: S0 -> S1 s2 {<,=,>} (output); S0 -> S2 s2 {<,=,>} (true); S0 -> S3 s2 {<,=,>} (true); S1 -> S0 s2 {<,=,>} (output); S1 -> S2 s2 {<,=,>} (true); S1 -> S3 s2 {<,=,>} (true); S2 -> S0 s2 {<,=,>} (anti); S2 -> S1 s2 {<,=,>} (anti); S2 -> S3 t2 {<,=,>} (anti); S3 -> S0 s2 {<,=,>} (anti); S3 -> S1 s2 {<,=,>} (anti); S3 -> S2 t2 {<,=,>} (true)
   blocks: [S0 S1 S2 S3]cyclic
 
-loop at 'tsvc_expansion.stan', line 46, column 2 to line 49, column 3  (n in 1:N)
-  S0  a[n] = ((b[n] + x) * 0.5);   sequential: in a dependence cycle with S1
-  S1  x = b[n];   sequential: in a dependence cycle with S0
-  edges: S0 -> S1 x {<,=,>} (anti); S1 -> S0 x {<,=,>} (true)
+loop at 'tsvc_expansion.stan', line 52, column 4 to line 55, column 5  (n in 1:N)
+  S0  a3[n] = ((b[n] + x3) * 0.5);   sequential: in a dependence cycle with S1
+  S1  x3 = b[n];   sequential: in a dependence cycle with S0
+  edges: S0 -> S1 x3 {<,=,>} (anti); S1 -> S0 x3 {<,=,>} (true)
   blocks: [S0 S1]cyclic
 
-loop at 'tsvc_expansion.stan', line 58, column 4 to line 61, column 5  (n in 1:N)
-  S0  if((a[n] > 0)) { s = (d[n] * d[n]); }   sequential: in a dependence cycle with S1
-  S1  b2[n] = ((s * c[n]) + d[n]);   sequential: in a dependence cycle with S0
-  edges: S0 -> S1 s {<,=,>} (true); S1 -> S0 s {<,=,>} (anti)
+loop at 'tsvc_expansion.stan', line 66, column 4 to line 69, column 5  (n in 1:N)
+  S0  if((a0[n] > 0)) { s4 = (d[n] * d[n]); }   sequential: in a dependence cycle with S1
+  S1  b4[n] = ((s4 * c[n]) + d[n]);   sequential: in a dependence cycle with S0
+  edges: S0 -> S1 s4 {<,=,>} (true); S1 -> S0 s4 {<,=,>} (anti)
   blocks: [S0 S1]cyclic
 
-loop at 'tsvc_expansion.stan', line 71, column 4 to line 76, column 5  (n in 2:N)
-  S0  t = (a[n] + b[n]);   sequential: in a dependence cycle with S1 S2 S3
-  S1  a[n] = (t + c2[(n - 1)]);   sequential: in a dependence cycle with S0 S2 S3
-  S2  t = (c2[n] * d[n]);   sequential: in a dependence cycle with S0 S1 S3
-  S3  c2[n] = t;   sequential: in a dependence cycle with S0 S1 S2
-  edges: S0 -> S1 a {=} d=0 (anti); S0 -> S1 t {<,=,>} (true); S0 -> S2 t {<,=,>} (output); S0 -> S3 t {<,=,>} (true); S1 -> S0 t {<,=,>} (anti); S1 -> S2 t {<,=,>} (anti); S2 -> S0 t {<,=,>} (output); S2 -> S1 t {<,=,>} (true); S2 -> S3 c2 {=} d=0 (anti); S2 -> S3 t {<,=,>} (true); S3 -> S0 t {<,=,>} (anti); S3 -> S1 c2 {>} d=-1 (true); S3 -> S2 t {<,=,>} (anti)
+loop at 'tsvc_expansion.stan', line 81, column 4 to line 86, column 5  (n in 2:N)
+  S0  t5 = (a5[n] + b[n]);   sequential: in a dependence cycle with S1 S2 S3
+  S1  a5[n] = (t5 + c5[(n - 1)]);   sequential: in a dependence cycle with S0 S2 S3
+  S2  t5 = (c5[n] * d[n]);   sequential: in a dependence cycle with S0 S1 S3
+  S3  c5[n] = t5;   sequential: in a dependence cycle with S0 S1 S2
+  edges: S0 -> S1 a5 {=} d=0 (anti); S0 -> S1 t5 {<,=,>} (true); S0 -> S2 t5 {<,=,>} (output); S0 -> S3 t5 {<,=,>} (true); S1 -> S0 t5 {<,=,>} (anti); S1 -> S2 t5 {<,=,>} (anti); S2 -> S0 t5 {<,=,>} (output); S2 -> S1 t5 {<,=,>} (true); S2 -> S3 c5 {=} d=0 (anti); S2 -> S3 t5 {<,=,>} (true); S3 -> S0 t5 {<,=,>} (anti); S3 -> S1 c5 {>} d=-1 (true); S3 -> S2 t5 {<,=,>} (anti)
   blocks: [S0 S1 S2 S3]cyclic
 
-loop at 'tsvc_expansion.stan', line 86, column 4 to line 89, column 5  (n in 1:N)
-  S0  s = (s + 2);   sequential: in a dependence cycle with S1
-  S1  a[n] = (s * b[n]);   sequential: in a dependence cycle with S0
-  edges: S0 -> S0 s {<,=,>} (true); S0 -> S1 s {<,=,>} (true); S1 -> S0 s {<,=,>} (anti)
+loop at 'tsvc_expansion.stan', line 97, column 4 to line 100, column 5  (n in 1:N)
+  S0  s6 = (s6 + 2);   sequential: in a dependence cycle with S1
+  S1  a6[n] = (s6 * b[n]);   sequential: in a dependence cycle with S0
+  edges: S0 -> S0 s6 {<,=,>} (true); S0 -> S1 s6 {<,=,>} (true); S1 -> S0 s6 {<,=,>} (anti)
   blocks: [S0 S1]cyclic
 
-loop at 'tsvc_expansion.stan', line 24, column 4 to line 27, column 5  (n in 1:N)
-  S0  real s;   sequential: in a dependence cycle with S1 S2
-  S1  s = (b[n] + (c[n] * d[n]));   sequential: in a dependence cycle with S0 S2
-  S2  a[n] = (s * s);   sequential: in a dependence cycle with S0 S1
-  edges: S0 -> S1 s {<,=,>} (output); S0 -> S2 s {<,=,>} (true); S1 -> S0 s {<,=,>} (output); S1 -> S2 s {<,=,>} (true); S2 -> S0 s {<,=,>} (anti); S2 -> S1 s {<,=,>} (anti)
+loop at 'tsvc_expansion.stan', line 23, column 4 to line 26, column 5  (n in 1:N)
+  S0  real s1;   sequential: in a dependence cycle with S1 S2
+  S1  s1 = (b[n] + (c[n] * d[n]));   sequential: in a dependence cycle with S0 S2
+  S2  a1[n] = (s1 * s1);   sequential: in a dependence cycle with S0 S1
+  edges: S0 -> S1 s1 {<,=,>} (output); S0 -> S2 s1 {<,=,>} (true); S1 -> S0 s1 {<,=,>} (output); S1 -> S2 s1 {<,=,>} (true); S2 -> S0 s1 {<,=,>} (anti); S2 -> S1 s1 {<,=,>} (anti)
   blocks: [S0 S1 S2]cyclic
 
-loop at 'tsvc_expansion.stan', line 35, column 4 to line 39, column 5  (n in 1:N)
-  S0  real s;   sequential: in a dependence cycle with S1 S2 S3
-  S1  s = (b[n] * c[n]);   sequential: in a dependence cycle with S0 S2 S3
-  S2  a[n] = (s + t);   sequential: in a dependence cycle with S0 S1 S3
-  S3  t = s;   sequential: in a dependence cycle with S0 S1 S2
-  edges: S0 -> S1 s {<,=,>} (output); S0 -> S2 s {<,=,>} (true); S0 -> S3 s {<,=,>} (true); S1 -> S0 s {<,=,>} (output); S1 -> S2 s {<,=,>} (true); S1 -> S3 s {<,=,>} (true); S2 -> S0 s {<,=,>} (anti); S2 -> S1 s {<,=,>} (anti); S2 -> S3 t {<,=,>} (anti); S3 -> S0 s {<,=,>} (anti); S3 -> S1 s {<,=,>} (anti); S3 -> S2 t {<,=,>} (true)
+loop at 'tsvc_expansion.stan', line 37, column 4 to line 41, column 5  (n in 1:N)
+  S0  real s2;   sequential: in a dependence cycle with S1 S2 S3
+  S1  s2 = (b[n] * c[n]);   sequential: in a dependence cycle with S0 S2 S3
+  S2  a2[n] = (s2 + t2);   sequential: in a dependence cycle with S0 S1 S3
+  S3  t2 = s2;   sequential: in a dependence cycle with S0 S1 S2
+  edges: S0 -> S1 s2 {<,=,>} (output); S0 -> S2 s2 {<,=,>} (true); S0 -> S3 s2 {<,=,>} (true); S1 -> S0 s2 {<,=,>} (output); S1 -> S2 s2 {<,=,>} (true); S1 -> S3 s2 {<,=,>} (true); S2 -> S0 s2 {<,=,>} (anti); S2 -> S1 s2 {<,=,>} (anti); S2 -> S3 t2 {<,=,>} (anti); S3 -> S0 s2 {<,=,>} (anti); S3 -> S1 s2 {<,=,>} (anti); S3 -> S2 t2 {<,=,>} (true)
   blocks: [S0 S1 S2 S3]cyclic
 
-loop at 'tsvc_expansion.stan', line 46, column 2 to line 49, column 3  (n in 1:N)
-  S0  a[n] = ((b[n] + x) * 0.5);   sequential: in a dependence cycle with S1
-  S1  x = b[n];   sequential: in a dependence cycle with S0
-  edges: S0 -> S1 x {<,=,>} (anti); S1 -> S0 x {<,=,>} (true)
+loop at 'tsvc_expansion.stan', line 52, column 4 to line 55, column 5  (n in 1:N)
+  S0  a3[n] = ((b[n] + x3) * 0.5);   sequential: in a dependence cycle with S1
+  S1  x3 = b[n];   sequential: in a dependence cycle with S0
+  edges: S0 -> S1 x3 {<,=,>} (anti); S1 -> S0 x3 {<,=,>} (true)
   blocks: [S0 S1]cyclic
 
-loop at 'tsvc_expansion.stan', line 58, column 4 to line 61, column 5  (n in 1:N)
-  S0  if((a[n] > 0)) { s = (d[n] * d[n]); }   sequential: in a dependence cycle with S1
-  S1  b2[n] = ((s * c[n]) + d[n]);   sequential: in a dependence cycle with S0
-  edges: S0 -> S1 s {<,=,>} (true); S1 -> S0 s {<,=,>} (anti)
+loop at 'tsvc_expansion.stan', line 66, column 4 to line 69, column 5  (n in 1:N)
+  S0  if((a0[n] > 0)) { s4 = (d[n] * d[n]); }   sequential: in a dependence cycle with S1
+  S1  b4[n] = ((s4 * c[n]) + d[n]);   sequential: in a dependence cycle with S0
+  edges: S0 -> S1 s4 {<,=,>} (true); S1 -> S0 s4 {<,=,>} (anti)
   blocks: [S0 S1]cyclic
 
-loop at 'tsvc_expansion.stan', line 71, column 4 to line 76, column 5  (n in 2:N)
-  S0  t = (a[n] + b[n]);   sequential: in a dependence cycle with S1 S2 S3
-  S1  a[n] = (t + c2[(n - 1)]);   sequential: in a dependence cycle with S0 S2 S3
-  S2  t = (c2[n] * d[n]);   sequential: in a dependence cycle with S0 S1 S3
-  S3  c2[n] = t;   sequential: in a dependence cycle with S0 S1 S2
-  edges: S0 -> S1 a {=} d=0 (anti); S0 -> S1 t {<,=,>} (true); S0 -> S2 t {<,=,>} (output); S0 -> S3 t {<,=,>} (true); S1 -> S0 t {<,=,>} (anti); S1 -> S2 t {<,=,>} (anti); S2 -> S0 t {<,=,>} (output); S2 -> S1 t {<,=,>} (true); S2 -> S3 c2 {=} d=0 (anti); S2 -> S3 t {<,=,>} (true); S3 -> S0 t {<,=,>} (anti); S3 -> S1 c2 {>} d=-1 (true); S3 -> S2 t {<,=,>} (anti)
+loop at 'tsvc_expansion.stan', line 81, column 4 to line 86, column 5  (n in 2:N)
+  S0  t5 = (a5[n] + b[n]);   sequential: in a dependence cycle with S1 S2 S3
+  S1  a5[n] = (t5 + c5[(n - 1)]);   sequential: in a dependence cycle with S0 S2 S3
+  S2  t5 = (c5[n] * d[n]);   sequential: in a dependence cycle with S0 S1 S3
+  S3  c5[n] = t5;   sequential: in a dependence cycle with S0 S1 S2
+  edges: S0 -> S1 a5 {=} d=0 (anti); S0 -> S1 t5 {<,=,>} (true); S0 -> S2 t5 {<,=,>} (output); S0 -> S3 t5 {<,=,>} (true); S1 -> S0 t5 {<,=,>} (anti); S1 -> S2 t5 {<,=,>} (anti); S2 -> S0 t5 {<,=,>} (output); S2 -> S1 t5 {<,=,>} (true); S2 -> S3 c5 {=} d=0 (anti); S2 -> S3 t5 {<,=,>} (true); S3 -> S0 t5 {<,=,>} (anti); S3 -> S1 c5 {>} d=-1 (true); S3 -> S2 t5 {<,=,>} (anti)
   blocks: [S0 S1 S2 S3]cyclic
 
-loop at 'tsvc_expansion.stan', line 86, column 4 to line 89, column 5  (n in 1:N)
-  S0  s = (s + 2);   sequential: in a dependence cycle with S1
-  S1  a[n] = (s * b[n]);   sequential: in a dependence cycle with S0
-  edges: S0 -> S0 s {<,=,>} (true); S0 -> S1 s {<,=,>} (true); S1 -> S0 s {<,=,>} (anti)
+loop at 'tsvc_expansion.stan', line 97, column 4 to line 100, column 5  (n in 1:N)
+  S0  s6 = (s6 + 2);   sequential: in a dependence cycle with S1
+  S1  a6[n] = (s6 * b[n]);   sequential: in a dependence cycle with S0
+  edges: S0 -> S0 s6 {<,=,>} (true); S0 -> S1 s6 {<,=,>} (true); S1 -> S0 s6 {<,=,>} (anti)
   blocks: [S0 S1]cyclic
 [exit 0]

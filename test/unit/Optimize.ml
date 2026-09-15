@@ -3646,6 +3646,7 @@ let print_vectorized s =
 (** The [--debug-loop-vectorization] report for every loop of a program. *)
 let print_loop_reports s =
   let _ = vectorize_loops (reset_and_mir_of_string s) in
+  let open Analysis_and_optimization.Loop_vectorize in
   Fmt.pr "%a@." Fmt.(list ~sep:cut pp_loop_report) (loop_reports ())
 
 let%expect_test "vectorize report: radon and a recurrence (design 7.13)" =

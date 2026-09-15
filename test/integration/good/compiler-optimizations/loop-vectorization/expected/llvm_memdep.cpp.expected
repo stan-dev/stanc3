@@ -5,28 +5,41 @@ namespace llvm_memdep_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 21> locations_array__ =
+static constexpr std::array<const char*, 34> locations_array__ =
   {" (found before start of program)",
-  " (in 'llvm_memdep.stan', line 8, column 2 to column 10)",
-  " (in 'llvm_memdep.stan', line 11, column 9 to column 14)",
-  " (in 'llvm_memdep.stan', line 11, column 2 to column 18)",
-  " (in 'llvm_memdep.stan', line 12, column 9 to column 10)",
-  " (in 'llvm_memdep.stan', line 12, column 2 to column 14)",
-  " (in 'llvm_memdep.stan', line 13, column 2 to column 16)",
-  " (in 'llvm_memdep.stan', line 21, column 4 to column 24)",
-  " (in 'llvm_memdep.stan', line 30, column 4 to column 24)",
-  " (in 'llvm_memdep.stan', line 29, column 19 to line 31, column 3)",
-  " (in 'llvm_memdep.stan', line 29, column 2 to line 31, column 3)",
-  " (in 'llvm_memdep.stan', line 40, column 4 to column 24)",
-  " (in 'llvm_memdep.stan', line 39, column 19 to line 41, column 3)",
-  " (in 'llvm_memdep.stan', line 39, column 2 to line 41, column 3)",
-  " (in 'llvm_memdep.stan', line 49, column 4 to column 16)",
-  " (in 'llvm_memdep.stan', line 50, column 4 to column 16)",
-  " (in 'llvm_memdep.stan', line 48, column 19 to line 51, column 3)",
-  " (in 'llvm_memdep.stan', line 48, column 2 to line 51, column 3)",
-  " (in 'llvm_memdep.stan', line 53, column 2 to column 35)",
-  " (in 'llvm_memdep.stan', line 54, column 2 to column 20)",
-  " (in 'llvm_memdep.stan', line 5, column 2 to column 17)"};
+  " (in 'llvm_memdep.stan', line 11, column 2 to column 10)",
+  " (in 'llvm_memdep.stan', line 20, column 11 to column 16)",
+  " (in 'llvm_memdep.stan', line 20, column 4 to column 21)",
+  " (in 'llvm_memdep.stan', line 22, column 6 to column 28)",
+  " (in 'llvm_memdep.stan', line 24, column 4 to column 22)",
+  " (in 'llvm_memdep.stan', line 19, column 2 to line 25, column 3)",
+  " (in 'llvm_memdep.stan', line 33, column 11 to column 16)",
+  " (in 'llvm_memdep.stan', line 33, column 4 to column 21)",
+  " (in 'llvm_memdep.stan', line 35, column 6 to column 28)",
+  " (in 'llvm_memdep.stan', line 34, column 21 to line 36, column 5)",
+  " (in 'llvm_memdep.stan', line 34, column 4 to line 36, column 5)",
+  " (in 'llvm_memdep.stan', line 37, column 4 to column 22)",
+  " (in 'llvm_memdep.stan', line 32, column 2 to line 38, column 3)",
+  " (in 'llvm_memdep.stan', line 47, column 11 to column 16)",
+  " (in 'llvm_memdep.stan', line 47, column 4 to column 21)",
+  " (in 'llvm_memdep.stan', line 49, column 6 to column 28)",
+  " (in 'llvm_memdep.stan', line 48, column 21 to line 50, column 5)",
+  " (in 'llvm_memdep.stan', line 48, column 4 to line 50, column 5)",
+  " (in 'llvm_memdep.stan', line 51, column 4 to column 22)",
+  " (in 'llvm_memdep.stan', line 46, column 2 to line 52, column 3)",
+  " (in 'llvm_memdep.stan', line 60, column 11 to column 12)",
+  " (in 'llvm_memdep.stan', line 60, column 4 to column 17)",
+  " (in 'llvm_memdep.stan', line 61, column 11 to column 12)",
+  " (in 'llvm_memdep.stan', line 61, column 4 to column 17)",
+  " (in 'llvm_memdep.stan', line 62, column 4 to column 19)",
+  " (in 'llvm_memdep.stan', line 64, column 6 to column 20)",
+  " (in 'llvm_memdep.stan', line 65, column 6 to column 20)",
+  " (in 'llvm_memdep.stan', line 63, column 21 to line 66, column 5)",
+  " (in 'llvm_memdep.stan', line 63, column 4 to line 66, column 5)",
+  " (in 'llvm_memdep.stan', line 67, column 4 to column 30)",
+  " (in 'llvm_memdep.stan', line 59, column 2 to line 68, column 3)",
+  " (in 'llvm_memdep.stan', line 70, column 2 to column 20)",
+  " (in 'llvm_memdep.stan', line 8, column 2 to column 17)"};
 class llvm_memdep_model final : public model_base_crtp<llvm_memdep_model> {
  private:
   int N;
@@ -50,13 +63,13 @@ class llvm_memdep_model final : public model_base_crtp<llvm_memdep_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      current_statement__ = 20;
+      current_statement__ = 33;
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
-      current_statement__ = 20;
+      current_statement__ = 33;
       N = context__.vals_i("N")[(1 - 1)];
-      current_statement__ = 20;
+      current_statement__ = 33;
       stan::math::check_greater_or_equal(function__, "N", N, 1);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -97,53 +110,85 @@ class llvm_memdep_model final : public model_base_crtp<llvm_memdep_model> {
       current_statement__ = 1;
       auto mu = in__.template read<local_scalar_t__>();
       {
-        current_statement__ = 2;
-        int a_1dim__ = (N + 2);
-        current_statement__ = 2;
-        stan::math::validate_non_negative_index("a", "N + 2", a_1dim__);
-        Eigen::Matrix<local_scalar_t__,-1,1> a =
-          Eigen::Matrix<local_scalar_t__,-1,1>::Constant(a_1dim__,
-            DUMMY_VAR__);
-        current_statement__ = 4;
-        stan::math::validate_non_negative_index("b", "N", N);
-        Eigen::Matrix<local_scalar_t__,-1,1> b =
-          Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-        local_scalar_t__ prev = DUMMY_VAR__;
-        current_statement__ = 6;
-        prev = stan::math::promote_scalar<local_scalar_t__>(0);
-        current_statement__ = 7;
-        stan::model::assign(a,
-          stan::math::add(
-            stan::model::deep_copy(
-              stan::model::rvalue(a, "a",
-                stan::model::index_min_max((1 + 1), (N + 1)))),
-            static_cast<double>(1)), "assigning variable a",
-          stan::model::index_min_max(1, N));
-        current_statement__ = 10;
-        for (int n = 1; n <= N; ++n) {
-          current_statement__ = 8;
-          stan::model::assign(a,
-            (stan::model::rvalue(a, "a", stan::model::index_uni(n)) + 1),
-            "assigning variable a", stan::model::index_uni((n + 1)));
+        {
+          current_statement__ = 2;
+          int a1_1dim__ = (N + 1);
+          current_statement__ = 2;
+          stan::math::validate_non_negative_index("a1", "N + 1", a1_1dim__);
+          Eigen::Matrix<local_scalar_t__,-1,1> a1 =
+            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(a1_1dim__,
+              DUMMY_VAR__);
+          current_statement__ = 4;
+          stan::model::assign(a1,
+            stan::math::add(
+              stan::model::deep_copy(
+                stan::model::rvalue(a1, "a1",
+                  stan::model::index_min_max((1 + 1), (N + 1)))),
+              static_cast<double>(1)), "assigning variable a1",
+            stan::model::index_min_max(1, N));
+          current_statement__ = 5;
+          lp_accum__.add(stan::math::sum(a1));
         }
-        current_statement__ = 13;
-        for (int n = 1; n <= N; ++n) {
+        {
+          current_statement__ = 7;
+          int a2_1dim__ = (N + 1);
+          current_statement__ = 7;
+          stan::math::validate_non_negative_index("a2", "N + 1", a2_1dim__);
+          Eigen::Matrix<local_scalar_t__,-1,1> a2 =
+            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(a2_1dim__,
+              DUMMY_VAR__);
           current_statement__ = 11;
-          stan::model::assign(a,
-            (stan::model::rvalue(a, "a", stan::model::index_uni(n)) + 1),
-            "assigning variable a", stan::model::index_uni((n + 2)));
+          for (int n = 1; n <= N; ++n) {
+            current_statement__ = 9;
+            stan::model::assign(a2,
+              (stan::model::rvalue(a2, "a2", stan::model::index_uni(n)) + 1),
+              "assigning variable a2", stan::model::index_uni((n + 1)));
+          }
+          current_statement__ = 12;
+          lp_accum__.add(stan::math::sum(a2));
         }
-        current_statement__ = 17;
-        for (int n = 1; n <= N; ++n) {
+        {
           current_statement__ = 14;
-          stan::model::assign(b, prev, "assigning variable b",
-            stan::model::index_uni(n));
-          current_statement__ = 15;
-          prev = stan::model::rvalue(a, "a", stan::model::index_uni(n));
+          int a3_1dim__ = (N + 2);
+          current_statement__ = 14;
+          stan::math::validate_non_negative_index("a3", "N + 2", a3_1dim__);
+          Eigen::Matrix<local_scalar_t__,-1,1> a3 =
+            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(a3_1dim__,
+              DUMMY_VAR__);
+          current_statement__ = 18;
+          for (int n = 1; n <= N; ++n) {
+            current_statement__ = 16;
+            stan::model::assign(a3,
+              (stan::model::rvalue(a3, "a3", stan::model::index_uni(n)) + 1),
+              "assigning variable a3", stan::model::index_uni((n + 2)));
+          }
+          current_statement__ = 19;
+          lp_accum__.add(stan::math::sum(a3));
         }
-        current_statement__ = 18;
-        lp_accum__.add(((stan::math::sum(a) + stan::math::sum(b)) + prev));
-        current_statement__ = 19;
+        {
+          current_statement__ = 21;
+          stan::math::validate_non_negative_index("a4", "N", N);
+          Eigen::Matrix<local_scalar_t__,-1,1> a4 =
+            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
+          current_statement__ = 23;
+          stan::math::validate_non_negative_index("b4", "N", N);
+          Eigen::Matrix<local_scalar_t__,-1,1> b4 =
+            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
+          local_scalar_t__ prev4 = DUMMY_VAR__;
+          current_statement__ = 25;
+          prev4 = stan::math::promote_scalar<local_scalar_t__>(0);
+          current_statement__ = 29;
+          for (int n = 1; n <= N; ++n) {
+            current_statement__ = 26;
+            stan::model::assign(b4, prev4, "assigning variable b4",
+              stan::model::index_uni(n));
+            current_statement__ = 27;
+            prev4 = stan::model::rvalue(a4, "a4", stan::model::index_uni(n));
+          }
+          current_statement__ = 30;
+          lp_accum__.add((stan::math::sum(b4) + prev4));
+        }
+        current_statement__ = 32;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(mu,
                          static_cast<double>(0), static_cast<double>(1)));
       }
@@ -180,53 +225,86 @@ class llvm_memdep_model final : public model_base_crtp<llvm_memdep_model> {
       current_statement__ = 1;
       auto mu = in__.template read<local_scalar_t__>();
       {
-        current_statement__ = 2;
-        int a_1dim__ = (N + 2);
-        current_statement__ = 2;
-        stan::math::validate_non_negative_index("a", "N + 2", a_1dim__);
-        Eigen::Matrix<local_scalar_t__,-1,1> a =
-          Eigen::Matrix<local_scalar_t__,-1,1>::Constant(a_1dim__,
-            DUMMY_VAR__);
-        current_statement__ = 4;
-        stan::math::validate_non_negative_index("b", "N", N);
-        Eigen::Matrix<local_scalar_t__,-1,1> b =
-          Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-        local_scalar_t__ prev = DUMMY_VAR__;
-        current_statement__ = 6;
-        prev = stan::math::promote_scalar<local_scalar_t__>(0);
-        current_statement__ = 7;
-        stan::model::assign(a,
-          stan::math::add(
-            stan::model::deep_copy(
-              stan::model::rvalue(a, "a",
-                stan::model::index_min_max((1 + 1), (N + 1)))),
-            static_cast<double>(1)), "assigning variable a",
-          stan::model::index_min_max(1, N));
-        current_statement__ = 10;
-        for (int n = 1; n <= N; ++n) {
-          current_statement__ = 8;
-          stan::model::assign(a,
-            (stan::model::rvalue(a, "a", stan::model::index_uni(n)) + 1),
-            "assigning variable a", stan::model::index_uni((n + 1)));
+        {
+          current_statement__ = 2;
+          int a1_1dim__ = (N + 1);
+          current_statement__ = 2;
+          stan::math::validate_non_negative_index("a1", "N + 1", a1_1dim__);
+          stan::math::var_value<Eigen::Matrix<double,-1,1>> a1 =
+            stan::math::var_value<Eigen::Matrix<double,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(a1_1dim__,
+                                                                std::numeric_limits<double>::quiet_NaN(
+                                                                  )));
+          current_statement__ = 4;
+          stan::model::assign(a1,
+            stan::math::add(
+              stan::model::deep_copy(
+                stan::model::rvalue(a1, "a1",
+                  stan::model::index_min_max((1 + 1), (N + 1)))),
+              static_cast<double>(1)), "assigning variable a1",
+            stan::model::index_min_max(1, N));
+          current_statement__ = 5;
+          lp_accum__.add(stan::math::sum(a1));
         }
-        current_statement__ = 13;
-        for (int n = 1; n <= N; ++n) {
+        {
+          current_statement__ = 7;
+          int a2_1dim__ = (N + 1);
+          current_statement__ = 7;
+          stan::math::validate_non_negative_index("a2", "N + 1", a2_1dim__);
+          Eigen::Matrix<local_scalar_t__,-1,1> a2 =
+            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(a2_1dim__,
+              DUMMY_VAR__);
           current_statement__ = 11;
-          stan::model::assign(a,
-            (stan::model::rvalue(a, "a", stan::model::index_uni(n)) + 1),
-            "assigning variable a", stan::model::index_uni((n + 2)));
+          for (int n = 1; n <= N; ++n) {
+            current_statement__ = 9;
+            stan::model::assign(a2,
+              (stan::model::rvalue(a2, "a2", stan::model::index_uni(n)) + 1),
+              "assigning variable a2", stan::model::index_uni((n + 1)));
+          }
+          current_statement__ = 12;
+          lp_accum__.add(stan::math::sum(a2));
         }
-        current_statement__ = 17;
-        for (int n = 1; n <= N; ++n) {
+        {
           current_statement__ = 14;
-          stan::model::assign(b, prev, "assigning variable b",
-            stan::model::index_uni(n));
-          current_statement__ = 15;
-          prev = stan::model::rvalue(a, "a", stan::model::index_uni(n));
+          int a3_1dim__ = (N + 2);
+          current_statement__ = 14;
+          stan::math::validate_non_negative_index("a3", "N + 2", a3_1dim__);
+          Eigen::Matrix<local_scalar_t__,-1,1> a3 =
+            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(a3_1dim__,
+              DUMMY_VAR__);
+          current_statement__ = 18;
+          for (int n = 1; n <= N; ++n) {
+            current_statement__ = 16;
+            stan::model::assign(a3,
+              (stan::model::rvalue(a3, "a3", stan::model::index_uni(n)) + 1),
+              "assigning variable a3", stan::model::index_uni((n + 2)));
+          }
+          current_statement__ = 19;
+          lp_accum__.add(stan::math::sum(a3));
         }
-        current_statement__ = 18;
-        lp_accum__.add(((stan::math::sum(a) + stan::math::sum(b)) + prev));
-        current_statement__ = 19;
+        {
+          current_statement__ = 21;
+          stan::math::validate_non_negative_index("a4", "N", N);
+          Eigen::Matrix<local_scalar_t__,-1,1> a4 =
+            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
+          current_statement__ = 23;
+          stan::math::validate_non_negative_index("b4", "N", N);
+          Eigen::Matrix<local_scalar_t__,-1,1> b4 =
+            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
+          local_scalar_t__ prev4 = DUMMY_VAR__;
+          current_statement__ = 25;
+          prev4 = stan::math::promote_scalar<local_scalar_t__>(0);
+          current_statement__ = 29;
+          for (int n = 1; n <= N; ++n) {
+            current_statement__ = 26;
+            stan::model::assign(b4, prev4, "assigning variable b4",
+              stan::model::index_uni(n));
+            current_statement__ = 27;
+            prev4 = stan::model::rvalue(a4, "a4", stan::model::index_uni(n));
+          }
+          current_statement__ = 30;
+          lp_accum__.add((stan::math::sum(b4) + prev4));
+        }
+        current_statement__ = 32;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(mu,
                          static_cast<double>(0), static_cast<double>(1)));
       }

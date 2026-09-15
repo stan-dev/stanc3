@@ -5,38 +5,40 @@ namespace tsvc_indirect_addressing_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 31> locations_array__ =
+static constexpr std::array<const char*, 33> locations_array__ =
   {" (found before start of program)",
-  " (in 'tsvc_indirect_addressing.stan', line 18, column 2 to column 22)",
-  " (in 'tsvc_indirect_addressing.stan', line 21, column 9 to column 10)",
-  " (in 'tsvc_indirect_addressing.stan', line 21, column 2 to column 19)",
-  " (in 'tsvc_indirect_addressing.stan', line 28, column 4 to column 31)",
-  " (in 'tsvc_indirect_addressing.stan', line 38, column 11 to column 12)",
-  " (in 'tsvc_indirect_addressing.stan', line 38, column 4 to column 22)",
-  " (in 'tsvc_indirect_addressing.stan', line 40, column 6 to column 34)",
-  " (in 'tsvc_indirect_addressing.stan', line 42, column 4 to column 22)",
-  " (in 'tsvc_indirect_addressing.stan', line 37, column 2 to line 43, column 3)",
-  " (in 'tsvc_indirect_addressing.stan', line 50, column 4 to column 55)",
-  " (in 'tsvc_indirect_addressing.stan', line 58, column 11 to column 12)",
-  " (in 'tsvc_indirect_addressing.stan', line 58, column 4 to column 22)",
-  " (in 'tsvc_indirect_addressing.stan', line 60, column 6 to column 38)",
-  " (in 'tsvc_indirect_addressing.stan', line 62, column 4 to column 22)",
-  " (in 'tsvc_indirect_addressing.stan', line 57, column 2 to line 63, column 3)",
-  " (in 'tsvc_indirect_addressing.stan', line 65, column 2 to column 19)",
-  " (in 'tsvc_indirect_addressing.stan', line 8, column 2 to column 17)",
-  " (in 'tsvc_indirect_addressing.stan', line 9, column 8 to column 9)",
-  " (in 'tsvc_indirect_addressing.stan', line 9, column 2 to column 36)",
-  " (in 'tsvc_indirect_addressing.stan', line 10, column 9 to column 10)",
-  " (in 'tsvc_indirect_addressing.stan', line 10, column 2 to column 15)",
-  " (in 'tsvc_indirect_addressing.stan', line 11, column 9 to column 10)",
-  " (in 'tsvc_indirect_addressing.stan', line 11, column 2 to column 14)",
-  " (in 'tsvc_indirect_addressing.stan', line 12, column 9 to column 10)",
-  " (in 'tsvc_indirect_addressing.stan', line 12, column 2 to column 14)",
+  " (in 'tsvc_indirect_addressing.stan', line 21, column 2 to column 22)",
+  " (in 'tsvc_indirect_addressing.stan', line 29, column 11 to column 12)",
+  " (in 'tsvc_indirect_addressing.stan', line 29, column 4 to column 22)",
+  " (in 'tsvc_indirect_addressing.stan', line 31, column 6 to column 35)",
+  " (in 'tsvc_indirect_addressing.stan', line 33, column 4 to column 22)",
+  " (in 'tsvc_indirect_addressing.stan', line 28, column 2 to line 34, column 3)",
+  " (in 'tsvc_indirect_addressing.stan', line 43, column 11 to column 12)",
+  " (in 'tsvc_indirect_addressing.stan', line 43, column 4 to column 22)",
+  " (in 'tsvc_indirect_addressing.stan', line 45, column 6 to column 34)",
+  " (in 'tsvc_indirect_addressing.stan', line 47, column 4 to column 22)",
+  " (in 'tsvc_indirect_addressing.stan', line 42, column 2 to line 48, column 3)",
+  " (in 'tsvc_indirect_addressing.stan', line 56, column 6 to column 57)",
+  " (in 'tsvc_indirect_addressing.stan', line 54, column 2 to line 58, column 3)",
+  " (in 'tsvc_indirect_addressing.stan', line 65, column 11 to column 12)",
+  " (in 'tsvc_indirect_addressing.stan', line 65, column 4 to column 22)",
+  " (in 'tsvc_indirect_addressing.stan', line 67, column 6 to column 38)",
+  " (in 'tsvc_indirect_addressing.stan', line 69, column 4 to column 22)",
+  " (in 'tsvc_indirect_addressing.stan', line 64, column 2 to line 70, column 3)",
+  " (in 'tsvc_indirect_addressing.stan', line 11, column 2 to column 17)",
+  " (in 'tsvc_indirect_addressing.stan', line 12, column 8 to column 9)",
+  " (in 'tsvc_indirect_addressing.stan', line 12, column 2 to column 36)",
   " (in 'tsvc_indirect_addressing.stan', line 13, column 9 to column 10)",
-  " (in 'tsvc_indirect_addressing.stan', line 13, column 2 to column 14)",
-  " (in 'tsvc_indirect_addressing.stan', line 14, column 2 to column 9)",
+  " (in 'tsvc_indirect_addressing.stan', line 13, column 2 to column 15)",
+  " (in 'tsvc_indirect_addressing.stan', line 14, column 9 to column 10)",
+  " (in 'tsvc_indirect_addressing.stan', line 14, column 2 to column 14)",
   " (in 'tsvc_indirect_addressing.stan', line 15, column 9 to column 10)",
-  " (in 'tsvc_indirect_addressing.stan', line 15, column 2 to column 19)"};
+  " (in 'tsvc_indirect_addressing.stan', line 15, column 2 to column 14)",
+  " (in 'tsvc_indirect_addressing.stan', line 16, column 9 to column 10)",
+  " (in 'tsvc_indirect_addressing.stan', line 16, column 2 to column 14)",
+  " (in 'tsvc_indirect_addressing.stan', line 17, column 2 to column 9)",
+  " (in 'tsvc_indirect_addressing.stan', line 18, column 9 to column 10)",
+  " (in 'tsvc_indirect_addressing.stan', line 18, column 2 to column 19)"};
 class tsvc_indirect_addressing_model final : public model_base_crtp<tsvc_indirect_addressing_model> {
  private:
   int N;
@@ -75,29 +77,29 @@ class tsvc_indirect_addressing_model final : public model_base_crtp<tsvc_indirec
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-      current_statement__ = 17;
+      current_statement__ = 19;
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
-      current_statement__ = 17;
-      N = context__.vals_i("N")[(1 - 1)];
-      current_statement__ = 17;
-      stan::math::check_greater_or_equal(function__, "N", N, 1);
-      current_statement__ = 18;
-      stan::math::validate_non_negative_index("ip", "N", N);
       current_statement__ = 19;
+      N = context__.vals_i("N")[(1 - 1)];
+      current_statement__ = 19;
+      stan::math::check_greater_or_equal(function__, "N", N, 1);
+      current_statement__ = 20;
+      stan::math::validate_non_negative_index("ip", "N", N);
+      current_statement__ = 21;
       context__.validate_dims("data initialization", "ip", "int",
         std::vector<size_t>{static_cast<size_t>(N)});
       ip = std::vector<int>(N, std::numeric_limits<int>::min());
-      current_statement__ = 19;
-      ip = context__.vals_i("ip");
-      current_statement__ = 19;
-      stan::math::check_greater_or_equal(function__, "ip", ip, 1);
-      current_statement__ = 19;
-      stan::math::check_less_or_equal(function__, "ip", ip, N);
-      current_statement__ = 20;
-      stan::math::validate_non_negative_index("a0", "N", N);
       current_statement__ = 21;
+      ip = context__.vals_i("ip");
+      current_statement__ = 21;
+      stan::math::check_greater_or_equal(function__, "ip", ip, 1);
+      current_statement__ = 21;
+      stan::math::check_less_or_equal(function__, "ip", ip, N);
+      current_statement__ = 22;
+      stan::math::validate_non_negative_index("a0", "N", N);
+      current_statement__ = 23;
       context__.validate_dims("data initialization", "a0", "double",
         std::vector<size_t>{static_cast<size_t>(N)});
       a0_data__ = Eigen::Matrix<double,-1,1>::Constant(N,
@@ -105,7 +107,7 @@ class tsvc_indirect_addressing_model final : public model_base_crtp<tsvc_indirec
       new (&a0) Eigen::Map<Eigen::Matrix<double,-1,1>>(a0_data__.data(), N);
       {
         std::vector<local_scalar_t__> a0_flat__;
-        current_statement__ = 21;
+        current_statement__ = 23;
         a0_flat__ = context__.vals_r("a0");
         pos__ = 1;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
@@ -114,9 +116,9 @@ class tsvc_indirect_addressing_model final : public model_base_crtp<tsvc_indirec
           pos__ = (pos__ + 1);
         }
       }
-      current_statement__ = 22;
+      current_statement__ = 24;
       stan::math::validate_non_negative_index("b", "N", N);
-      current_statement__ = 23;
+      current_statement__ = 25;
       context__.validate_dims("data initialization", "b", "double",
         std::vector<size_t>{static_cast<size_t>(N)});
       b_data__ = Eigen::Matrix<double,-1,1>::Constant(N,
@@ -124,7 +126,7 @@ class tsvc_indirect_addressing_model final : public model_base_crtp<tsvc_indirec
       new (&b) Eigen::Map<Eigen::Matrix<double,-1,1>>(b_data__.data(), N);
       {
         std::vector<local_scalar_t__> b_flat__;
-        current_statement__ = 23;
+        current_statement__ = 25;
         b_flat__ = context__.vals_r("b");
         pos__ = 1;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
@@ -133,9 +135,9 @@ class tsvc_indirect_addressing_model final : public model_base_crtp<tsvc_indirec
           pos__ = (pos__ + 1);
         }
       }
-      current_statement__ = 24;
+      current_statement__ = 26;
       stan::math::validate_non_negative_index("c", "N", N);
-      current_statement__ = 25;
+      current_statement__ = 27;
       context__.validate_dims("data initialization", "c", "double",
         std::vector<size_t>{static_cast<size_t>(N)});
       c_data__ = Eigen::Matrix<double,-1,1>::Constant(N,
@@ -143,7 +145,7 @@ class tsvc_indirect_addressing_model final : public model_base_crtp<tsvc_indirec
       new (&c) Eigen::Map<Eigen::Matrix<double,-1,1>>(c_data__.data(), N);
       {
         std::vector<local_scalar_t__> c_flat__;
-        current_statement__ = 25;
+        current_statement__ = 27;
         c_flat__ = context__.vals_r("c");
         pos__ = 1;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
@@ -152,9 +154,9 @@ class tsvc_indirect_addressing_model final : public model_base_crtp<tsvc_indirec
           pos__ = (pos__ + 1);
         }
       }
-      current_statement__ = 26;
+      current_statement__ = 28;
       stan::math::validate_non_negative_index("d", "N", N);
-      current_statement__ = 27;
+      current_statement__ = 29;
       context__.validate_dims("data initialization", "d", "double",
         std::vector<size_t>{static_cast<size_t>(N)});
       d_data__ = Eigen::Matrix<double,-1,1>::Constant(N,
@@ -162,7 +164,7 @@ class tsvc_indirect_addressing_model final : public model_base_crtp<tsvc_indirec
       new (&d) Eigen::Map<Eigen::Matrix<double,-1,1>>(d_data__.data(), N);
       {
         std::vector<local_scalar_t__> d_flat__;
-        current_statement__ = 27;
+        current_statement__ = 29;
         d_flat__ = context__.vals_r("d");
         pos__ = 1;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
@@ -171,15 +173,15 @@ class tsvc_indirect_addressing_model final : public model_base_crtp<tsvc_indirec
           pos__ = (pos__ + 1);
         }
       }
-      current_statement__ = 28;
+      current_statement__ = 30;
       context__.validate_dims("data initialization", "s", "double",
         std::vector<size_t>{});
       s = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 28;
-      s = context__.vals_r("s")[(1 - 1)];
-      current_statement__ = 29;
-      stan::math::validate_non_negative_index("a_data", "N", N);
       current_statement__ = 30;
+      s = context__.vals_r("s")[(1 - 1)];
+      current_statement__ = 31;
+      stan::math::validate_non_negative_index("a_data", "N", N);
+      current_statement__ = 32;
       context__.validate_dims("data initialization", "a_data", "double",
         std::vector<size_t>{static_cast<size_t>(N)});
       a_data_data__ = Eigen::Matrix<double,-1,1>::Constant(N,
@@ -188,7 +190,7 @@ class tsvc_indirect_addressing_model final : public model_base_crtp<tsvc_indirec
         Eigen::Map<Eigen::Matrix<double,-1,1>>(a_data_data__.data(), N);
       {
         std::vector<local_scalar_t__> a_data_flat__;
-        current_statement__ = 30;
+        current_statement__ = 32;
         a_data_flat__ = context__.vals_r("a_data");
         pos__ = 1;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
@@ -238,31 +240,36 @@ class tsvc_indirect_addressing_model final : public model_base_crtp<tsvc_indirec
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
       {
-        current_statement__ = 2;
-        stan::math::validate_non_negative_index("a", "N", N);
-        Eigen::Matrix<local_scalar_t__,-1,1> a =
-          Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-        current_statement__ = 3;
-        stan::model::assign(a, a0, "assigning variable a");
-        current_statement__ = 4;
-        stan::model::assign(a,
-          stan::math::add(
-            stan::model::deep_copy(
-              stan::model::rvalue(a, "a", stan::model::index_min_max(1, N))),
-            stan::math::multiply(
-              stan::model::rvalue(b, "b",
-                stan::model::index_multi(
-                  stan::model::rvalue(ip, "ip",
-                    stan::model::index_min_max(1, N)))), s)),
-          "assigning variable a", stan::model::index_min_max(1, N));
         {
+          current_statement__ = 2;
+          stan::math::validate_non_negative_index("a1", "N", N);
+          Eigen::Matrix<local_scalar_t__,-1,1> a1 =
+            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
+          current_statement__ = 3;
+          stan::model::assign(a1, a0, "assigning variable a1");
+          current_statement__ = 4;
+          stan::model::assign(a1,
+            stan::math::add(
+              stan::model::deep_copy(
+                stan::model::rvalue(a1, "a1",
+                  stan::model::index_min_max(1, N))),
+              stan::math::multiply(
+                stan::model::rvalue(b, "b",
+                  stan::model::index_multi(
+                    stan::model::rvalue(ip, "ip",
+                      stan::model::index_min_max(1, N)))), s)),
+            "assigning variable a1", stan::model::index_min_max(1, N));
           current_statement__ = 5;
+          lp_accum__.add(stan::math::sum(a1));
+        }
+        {
+          current_statement__ = 7;
           stan::math::validate_non_negative_index("a2", "N", N);
           Eigen::Matrix<local_scalar_t__,-1,1> a2 =
             Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-          current_statement__ = 6;
+          current_statement__ = 8;
           stan::model::assign(a2, a0, "assigning variable a2");
-          current_statement__ = 7;
+          current_statement__ = 9;
           stan::model::assign(a2,
             stan::math::add(
               stan::model::rvalue(b, "b",
@@ -273,39 +280,39 @@ class tsvc_indirect_addressing_model final : public model_base_crtp<tsvc_indirec
             "assigning variable a2",
             stan::model::index_multi(
               stan::model::rvalue(ip, "ip", stan::model::index_min_max(1, N))));
-          current_statement__ = 8;
+          current_statement__ = 10;
           lp_accum__.add(stan::math::sum(a2));
         }
-        current_statement__ = 10;
-        lp_accum__.add(stan::math::normal_lpdf<false>(
-                         stan::model::rvalue(a_data, "a_data",
-                           stan::model::index_min_max(1, N)),
-                         stan::model::rvalue(b, "b",
-                           stan::model::index_multi(
-                             stan::model::rvalue(ip, "ip",
-                               stan::model::index_min_max(1, N)))), sigma));
         {
-          current_statement__ = 11;
-          stan::math::validate_non_negative_index("a3", "N", N);
-          Eigen::Matrix<local_scalar_t__,-1,1> a3 =
-            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
           current_statement__ = 12;
-          stan::model::assign(a3, a0, "assigning variable a3");
-          current_statement__ = 13;
-          stan::model::assign(a3,
+          lp_accum__.add(stan::math::normal_lpdf<false>(
+                           stan::model::rvalue(a_data, "a_data",
+                             stan::model::index_min_max(1, N)),
+                           stan::model::rvalue(b, "b",
+                             stan::model::index_multi(
+                               stan::model::rvalue(ip, "ip",
+                                 stan::model::index_min_max(1, N)))), sigma));
+        }
+        {
+          current_statement__ = 14;
+          stan::math::validate_non_negative_index("a4", "N", N);
+          Eigen::Matrix<local_scalar_t__,-1,1> a4 =
+            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
+          current_statement__ = 15;
+          stan::model::assign(a4, a0, "assigning variable a4");
+          current_statement__ = 16;
+          stan::model::assign(a4,
             stan::math::add(
               stan::model::rvalue(b, "b", stan::model::index_min_max(1, N)),
               stan::math::elt_multiply(
                 stan::model::rvalue(c, "c", stan::model::index_min_max(1, N)),
                 stan::model::rvalue(d, "d", stan::model::index_min_max(1, N)))),
-            "assigning variable a3",
+            "assigning variable a4",
             stan::model::index_multi(
               stan::model::rvalue(ip, "ip", stan::model::index_min_max(1, N))));
-          current_statement__ = 14;
-          lp_accum__.add(stan::math::sum(a3));
+          current_statement__ = 17;
+          lp_accum__.add(stan::math::sum(a4));
         }
-        current_statement__ = 16;
-        lp_accum__.add(stan::math::sum(a));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -342,35 +349,40 @@ class tsvc_indirect_addressing_model final : public model_base_crtp<tsvc_indirec
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
       {
-        current_statement__ = 2;
-        stan::math::validate_non_negative_index("a", "N", N);
-        stan::math::var_value<Eigen::Matrix<double,-1,1>> a =
-          stan::math::var_value<Eigen::Matrix<double,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(N,
-                                                              std::numeric_limits<double>::quiet_NaN(
-                                                                )));
-        current_statement__ = 3;
-        stan::model::assign(a, a0, "assigning variable a");
-        current_statement__ = 4;
-        stan::model::assign(a,
-          stan::math::add(
-            stan::model::deep_copy(
-              stan::model::rvalue(a, "a", stan::model::index_min_max(1, N))),
-            stan::math::multiply(
-              stan::model::rvalue(b, "b",
-                stan::model::index_multi(
-                  stan::model::rvalue(ip, "ip",
-                    stan::model::index_min_max(1, N)))), s)),
-          "assigning variable a", stan::model::index_min_max(1, N));
         {
+          current_statement__ = 2;
+          stan::math::validate_non_negative_index("a1", "N", N);
+          stan::math::var_value<Eigen::Matrix<double,-1,1>> a1 =
+            stan::math::var_value<Eigen::Matrix<double,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(N,
+                                                                std::numeric_limits<double>::quiet_NaN(
+                                                                  )));
+          current_statement__ = 3;
+          stan::model::assign(a1, a0, "assigning variable a1");
+          current_statement__ = 4;
+          stan::model::assign(a1,
+            stan::math::add(
+              stan::model::deep_copy(
+                stan::model::rvalue(a1, "a1",
+                  stan::model::index_min_max(1, N))),
+              stan::math::multiply(
+                stan::model::rvalue(b, "b",
+                  stan::model::index_multi(
+                    stan::model::rvalue(ip, "ip",
+                      stan::model::index_min_max(1, N)))), s)),
+            "assigning variable a1", stan::model::index_min_max(1, N));
           current_statement__ = 5;
+          lp_accum__.add(stan::math::sum(a1));
+        }
+        {
+          current_statement__ = 7;
           stan::math::validate_non_negative_index("a2", "N", N);
           stan::math::var_value<Eigen::Matrix<double,-1,1>> a2 =
             stan::math::var_value<Eigen::Matrix<double,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(N,
                                                                 std::numeric_limits<double>::quiet_NaN(
                                                                   )));
-          current_statement__ = 6;
+          current_statement__ = 8;
           stan::model::assign(a2, a0, "assigning variable a2");
-          current_statement__ = 7;
+          current_statement__ = 9;
           stan::model::assign(a2,
             stan::math::add(
               stan::model::rvalue(b, "b",
@@ -381,41 +393,41 @@ class tsvc_indirect_addressing_model final : public model_base_crtp<tsvc_indirec
             "assigning variable a2",
             stan::model::index_multi(
               stan::model::rvalue(ip, "ip", stan::model::index_min_max(1, N))));
-          current_statement__ = 8;
+          current_statement__ = 10;
           lp_accum__.add(stan::math::sum(a2));
         }
-        current_statement__ = 10;
-        lp_accum__.add(stan::math::normal_lpdf<false>(
-                         stan::model::rvalue(a_data, "a_data",
-                           stan::model::index_min_max(1, N)),
-                         stan::model::rvalue(b, "b",
-                           stan::model::index_multi(
-                             stan::model::rvalue(ip, "ip",
-                               stan::model::index_min_max(1, N)))), sigma));
         {
-          current_statement__ = 11;
-          stan::math::validate_non_negative_index("a3", "N", N);
-          stan::math::var_value<Eigen::Matrix<double,-1,1>> a3 =
+          current_statement__ = 12;
+          lp_accum__.add(stan::math::normal_lpdf<false>(
+                           stan::model::rvalue(a_data, "a_data",
+                             stan::model::index_min_max(1, N)),
+                           stan::model::rvalue(b, "b",
+                             stan::model::index_multi(
+                               stan::model::rvalue(ip, "ip",
+                                 stan::model::index_min_max(1, N)))), sigma));
+        }
+        {
+          current_statement__ = 14;
+          stan::math::validate_non_negative_index("a4", "N", N);
+          stan::math::var_value<Eigen::Matrix<double,-1,1>> a4 =
             stan::math::var_value<Eigen::Matrix<double,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(N,
                                                                 std::numeric_limits<double>::quiet_NaN(
                                                                   )));
-          current_statement__ = 12;
-          stan::model::assign(a3, a0, "assigning variable a3");
-          current_statement__ = 13;
-          stan::model::assign(a3,
+          current_statement__ = 15;
+          stan::model::assign(a4, a0, "assigning variable a4");
+          current_statement__ = 16;
+          stan::model::assign(a4,
             stan::math::add(
               stan::model::rvalue(b, "b", stan::model::index_min_max(1, N)),
               stan::math::elt_multiply(
                 stan::model::rvalue(c, "c", stan::model::index_min_max(1, N)),
                 stan::model::rvalue(d, "d", stan::model::index_min_max(1, N)))),
-            "assigning variable a3",
+            "assigning variable a4",
             stan::model::index_multi(
               stan::model::rvalue(ip, "ip", stan::model::index_min_max(1, N))));
-          current_statement__ = 14;
-          lp_accum__.add(stan::math::sum(a3));
+          current_statement__ = 17;
+          lp_accum__.add(stan::math::sum(a4));
         }
-        current_statement__ = 16;
-        lp_accum__.add(stan::math::sum(a));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);

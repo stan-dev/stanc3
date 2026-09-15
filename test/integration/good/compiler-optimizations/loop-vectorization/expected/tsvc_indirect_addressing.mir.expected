@@ -84,10 +84,13 @@ log_prob {
     sigma = (FnReadParam(constrain(Lower 0))(dims())(mem_pattern AoS))__(
     );
   {
-    FnValidateSize__("a", "N", N);
-    vector[N] a;
-    a = a0;
-    a[1:N] = (a[1:N] + (b[ip[1:N]] * s));
+    {
+      FnValidateSize__("a1", "N", N);
+      vector[N] a1;
+      a1 = a0;
+      a1[1:N] = (a1[1:N] + (b[ip[1:N]] * s));
+      target += sum(a1);
+    }
     {
       FnValidateSize__("a2", "N", N);
       vector[N] a2;
@@ -95,15 +98,16 @@ log_prob {
       a2[ip[1:N]] = (b[ip[1:N]] + c[1:N]);
       target += sum(a2);
     }
-    target += normal_lpdf(a_data[1:N], b[ip[1:N]], sigma);
     {
-      FnValidateSize__("a3", "N", N);
-      vector[N] a3;
-      a3 = a0;
-      a3[ip[1:N]] = (b[1:N] + (c[1:N] .* d[1:N]));
-      target += sum(a3);
+      target += normal_lpdf(a_data[1:N], b[ip[1:N]], sigma);
     }
-    target += sum(a);
+    {
+      FnValidateSize__("a4", "N", N);
+      vector[N] a4;
+      a4 = a0;
+      a4[ip[1:N]] = (b[1:N] + (c[1:N] .* d[1:N]));
+      target += sum(a4);
+    }
   } }
 
 rev_log_prob {
@@ -111,10 +115,13 @@ rev_log_prob {
     sigma = (FnReadParam(constrain(Lower 0))(dims())(mem_pattern AoS))__(
     );
   {
-    FnValidateSize__("a", "N", N);
-    vector[N] a;
-    a = a0;
-    a[1:N] = (a[1:N] + (b[ip[1:N]] * s));
+    {
+      FnValidateSize__("a1", "N", N);
+      vector[N] a1;
+      a1 = a0;
+      a1[1:N] = (a1[1:N] + (b[ip[1:N]] * s));
+      target += sum(a1);
+    }
     {
       FnValidateSize__("a2", "N", N);
       vector[N] a2;
@@ -122,15 +129,16 @@ rev_log_prob {
       a2[ip[1:N]] = (b[ip[1:N]] + c[1:N]);
       target += sum(a2);
     }
-    target += normal_lpdf(a_data[1:N], b[ip[1:N]], sigma);
     {
-      FnValidateSize__("a3", "N", N);
-      vector[N] a3;
-      a3 = a0;
-      a3[ip[1:N]] = (b[1:N] + (c[1:N] .* d[1:N]));
-      target += sum(a3);
+      target += normal_lpdf(a_data[1:N], b[ip[1:N]], sigma);
     }
-    target += sum(a);
+    {
+      FnValidateSize__("a4", "N", N);
+      vector[N] a4;
+      a4 = a0;
+      a4[ip[1:N]] = (b[1:N] + (c[1:N] .* d[1:N]));
+      target += sum(a4);
+    }
   } }
 
 generate_quantities {

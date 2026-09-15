@@ -127,138 +127,138 @@ log_prob {
     );
   {
     {
-      FnValidateSize__("mu", "N", N);
-      vector[N] mu;
-      FnValidateSize__("muj", "N", N);
-      vector[N] muj;
-      muj[1:N] = (alpha[county_idx[1:N]] + (log_uppm[1:N] * beta[1]));
-      mu[1:N] = (muj[1:N] + (floor_measure[1:N] * beta[2]));
-      target += normal_lpdf(log_radon[1:N], mu[1:N], sigma_y);
+      FnValidateSize__("mu1", "N", N);
+      vector[N] mu1;
+      FnValidateSize__("muj1", "N", N);
+      vector[N] muj1;
+      muj1[1:N] = (alpha[county_idx[1:N]] + (log_uppm[1:N] * beta[1]));
+      mu1[1:N] = (muj1[1:N] + (floor_measure[1:N] * beta[2]));
+      target += normal_lpdf(log_radon[1:N], mu1[1:N], sigma_y);
     }
     {
-      FnValidateSize__("mu", "N", N);
-      vector[N] mu;
-      FnValidateSize__("v", "N", N);
-      vector[N] v;
-      v = v0;
-      mu[1:N] = (v[1:N] + promote(1, real, data));
-      v[1:N] = x[1:N];
-      target += (sum(mu) + sum(v));
+      FnValidateSize__("mu2", "N", N);
+      vector[N] mu2;
+      FnValidateSize__("v2", "N", N);
+      vector[N] v2;
+      v2 = v0;
+      mu2[1:N] = (v2[1:N] + promote(1, real, data));
+      v2[1:N] = x[1:N];
+      target += (sum(mu2) + sum(v2));
     }
     {
-      FnValidateSize__("mu", "N", N);
-      vector[N] mu;
-      mu[1:N] = (promote(2, real, data) * x[1:N]);
-      for(n in 1:N) FnPrint__(mu[n]);
-      target += sum(mu);
+      FnValidateSize__("mu3", "N", N);
+      vector[N] mu3;
+      mu3[1:N] = (promote(2, real, data) * x[1:N]);
+      for(n in 1:N) FnPrint__(mu3[n]);
+      target += sum(mu3);
     }
     {
-      FnValidateSize__("v", "N", N);
-      vector[N] v;
-      v = v0;
-      for(n in 1:N) FnPrint__(v[n]);
-      v[1:N] = x[1:N];
-      target += sum(v);
+      FnValidateSize__("v4", "N", N);
+      vector[N] v4;
+      v4 = v0;
+      for(n in 1:N) FnPrint__(v4[n]);
+      v4[1:N] = x[1:N];
+      target += sum(v4);
     }
     {
-      FnValidateSize__("v", "N", N);
-      vector[N] v;
-      v = v0;
+      FnValidateSize__("v5", "N", N);
+      vector[N] v5;
+      v5 = v0;
       for(n in 1:N) {
-        FnPrint__(v[n]);
-        v[n] = x[n];
-        FnPrint__(v[n]);
+        FnPrint__(v5[n]);
+        v5[n] = x[n];
+        FnPrint__(v5[n]);
       }
-      target += sum(v);
+      target += sum(v5);
     }
     {
-      FnValidateSize__("v", "N", N);
-      vector[N] v;
-      v = v0;
+      FnValidateSize__("v6", "N", N);
+      vector[N] v6;
+      v6 = v0;
       for(n in 2:N) {
-        v[n] = (v[(n - 1)] + u[n]);
+        v6[n] = (v6[(n - 1)] + u[n]);
       }
-      target += sum(v);
+      target += sum(v6);
     }
     {
-      FnValidateSize__("v", "N", N);
-      vector[N] v;
-      v = v0;
-      FnValidateSize__("y", "N", N);
-      vector[N] y;
-      y = v0;
-      v[2:N] = x[2:N];
-      y[2:N] = v[(2 - 1):(N - 1)];
-      target += (sum(v) + sum(y));
+      FnValidateSize__("v7", "N", N);
+      vector[N] v7;
+      v7 = v0;
+      FnValidateSize__("y7", "N", N);
+      vector[N] y7;
+      y7 = v0;
+      v7[2:N] = x[2:N];
+      y7[2:N] = v7[(2 - 1):(N - 1)];
+      target += (sum(v7) + sum(y7));
     }
     {
-      FnValidateSize__("mu", "N", N);
-      vector[N] mu;
+      FnValidateSize__("mu8", "N", N);
+      vector[N] mu8;
       for(n in 1:N) {
-        real t;
-        t = (promote(2, real, data) * x[n]);
-        mu[n] = (t + promote(1, real, data));
+        real t8;
+        t8 = (promote(2, real, data) * x[n]);
+        mu8[n] = (t8 + promote(1, real, data));
       }
-      target += sum(mu);
+      target += sum(mu8);
     }
     {
-      FnValidateSize__("v", "N", N);
-      vector[N] v;
-      v = v0;
+      FnValidateSize__("v9a", "N", N);
+      vector[N] v9a;
+      v9a = v0;
       for(n in 1:N) {
-        v[n] = x[n];
-        target += sum(v);
+        v9a[n] = x[n];
+        target += sum(v9a);
       }
     }
     {
-      FnValidateSize__("v", "N", N);
-      vector[N] v;
-      v = v0;
-      FnValidateSize__("y", "N", N);
-      vector[N] y;
+      FnValidateSize__("v9b", "N", N);
+      vector[N] v9b;
+      v9b = v0;
+      FnValidateSize__("y9b", "N", N);
+      vector[N] y9b;
       for(n in 1:N) {
-        v[idx[n]] = x[n];
-        y[n] = v[idx[n]];
+        v9b[idx[n]] = x[n];
+        y9b[n] = v9b[idx[n]];
       }
-      target += (sum(v) + sum(y));
+      target += (sum(v9b) + sum(y9b));
     }
     {
-      FnValidateSize__("y", "N", N);
-      vector[N] y;
+      FnValidateSize__("y9c", "N", N);
+      vector[N] y9c;
       for(n in 1:N) {
-        vector[2] t;
-        t[1] = x[n];
-        y[n] = t[1];
+        vector[2] t9c;
+        t9c[1] = x[n];
+        y9c[n] = t9c[1];
       }
-      target += sum(y);
+      target += sum(y9c);
     }
     {
-      FnValidateSize__("v", "N", N);
-      matrix[N, 2] v;
-      v = rep_matrix(promote(0, real, data), N, 2);
-      FnValidateSize__("w", "N", N);
-      vector[N] w;
-      v[1:N, 1] = x[1:N];
-      w[1:N] = v[1:N, 2];
-      target += (sum(v) + sum(w));
+      FnValidateSize__("v10", "N", N);
+      matrix[N, 2] v10;
+      v10 = rep_matrix(promote(0, real, data), N, 2);
+      FnValidateSize__("w10", "N", N);
+      vector[N] w10;
+      v10[1:N, 1] = x[1:N];
+      w10[1:N] = v10[1:N, 2];
+      target += (sum(v10) + sum(w10));
     }
     {
-      FnValidateSize__("a", "N", N);
-      vector[N] a;
-      a = a0;
-      a[1:(N - 1)] = (a[(1 + 1):((N - 1) + 1)] + promote(1, real, data));
-      target += sum(a);
+      FnValidateSize__("a11", "N", N);
+      vector[N] a11;
+      a11 = a0;
+      a11[1:(N - 1)] = (a11[(1 + 1):((N - 1) + 1)] + promote(1, real, data));
+      target += sum(a11);
     }
     {
-      data int v_1dim__ = (N + k);
-      FnValidateSize__("v", "N + k", v_1dim__);
-      vector[v_1dim__] v;
-      v = rep_vector(promote(0, real, data), (N + k));
-      FnValidateSize__("y", "N", N);
-      vector[N] y;
-      v[(1 + k):(N + k)] = x[1:N];
-      y[1:N] = (v[(1 + k):(N + k)] * promote(2, real, data));
-      target += (sum(v) + sum(y));
+      data int v12_1dim__ = (N + k);
+      FnValidateSize__("v12", "N + k", v12_1dim__);
+      vector[v12_1dim__] v12;
+      v12 = rep_vector(promote(0, real, data), (N + k));
+      FnValidateSize__("y12", "N", N);
+      vector[N] y12;
+      v12[(1 + k):(N + k)] = x[1:N];
+      y12[1:N] = (v12[(1 + k):(N + k)] * promote(2, real, data));
+      target += (sum(v12) + sum(y12));
     }
   } }
 
@@ -274,138 +274,138 @@ rev_log_prob {
     );
   {
     {
-      FnValidateSize__("mu", "N", N);
-      vector[N] mu;
-      FnValidateSize__("muj", "N", N);
-      vector[N] muj;
-      muj[1:N] = (alpha[county_idx[1:N]] + (log_uppm[1:N] * beta[1]));
-      mu[1:N] = (muj[1:N] + (floor_measure[1:N] * beta[2]));
-      target += normal_lpdf(log_radon[1:N], mu[1:N], sigma_y);
+      FnValidateSize__("mu1", "N", N);
+      vector[N] mu1;
+      FnValidateSize__("muj1", "N", N);
+      vector[N] muj1;
+      muj1[1:N] = (alpha[county_idx[1:N]] + (log_uppm[1:N] * beta[1]));
+      mu1[1:N] = (muj1[1:N] + (floor_measure[1:N] * beta[2]));
+      target += normal_lpdf(log_radon[1:N], mu1[1:N], sigma_y);
     }
     {
-      FnValidateSize__("mu", "N", N);
-      vector[N] mu;
-      FnValidateSize__("v", "N", N);
-      vector[N] v;
-      v = v0;
-      mu[1:N] = (v[1:N] + promote(1, real, data));
-      v[1:N] = x[1:N];
-      target += (sum(mu) + sum(v));
+      FnValidateSize__("mu2", "N", N);
+      vector[N] mu2;
+      FnValidateSize__("v2", "N", N);
+      vector[N] v2;
+      v2 = v0;
+      mu2[1:N] = (v2[1:N] + promote(1, real, data));
+      v2[1:N] = x[1:N];
+      target += (sum(mu2) + sum(v2));
     }
     {
-      FnValidateSize__("mu", "N", N);
-      vector[N] mu;
-      mu[1:N] = (promote(2, real, data) * x[1:N]);
-      for(n in 1:N) FnPrint__(mu[n]);
-      target += sum(mu);
+      FnValidateSize__("mu3", "N", N);
+      vector[N] mu3;
+      mu3[1:N] = (promote(2, real, data) * x[1:N]);
+      for(n in 1:N) FnPrint__(mu3[n]);
+      target += sum(mu3);
     }
     {
-      FnValidateSize__("v", "N", N);
-      vector[N] v;
-      v = v0;
-      for(n in 1:N) FnPrint__(v[n]);
-      v[1:N] = x[1:N];
-      target += sum(v);
+      FnValidateSize__("v4", "N", N);
+      vector[N] v4;
+      v4 = v0;
+      for(n in 1:N) FnPrint__(v4[n]);
+      v4[1:N] = x[1:N];
+      target += sum(v4);
     }
     {
-      FnValidateSize__("v", "N", N);
-      vector[N] v;
-      v = v0;
+      FnValidateSize__("v5", "N", N);
+      vector[N] v5;
+      v5 = v0;
       for(n in 1:N) {
-        FnPrint__(v[n]);
-        v[n] = x[n];
-        FnPrint__(v[n]);
+        FnPrint__(v5[n]);
+        v5[n] = x[n];
+        FnPrint__(v5[n]);
       }
-      target += sum(v);
+      target += sum(v5);
     }
     {
-      FnValidateSize__("v", "N", N);
-      vector[N] v;
-      v = v0;
+      FnValidateSize__("v6", "N", N);
+      vector[N] v6;
+      v6 = v0;
       for(n in 2:N) {
-        v[n] = (v[(n - 1)] + u[n]);
+        v6[n] = (v6[(n - 1)] + u[n]);
       }
-      target += sum(v);
+      target += sum(v6);
     }
     {
-      FnValidateSize__("v", "N", N);
-      vector[N] v;
-      v = v0;
-      FnValidateSize__("y", "N", N);
-      vector[N] y;
-      y = v0;
-      v[2:N] = x[2:N];
-      y[2:N] = v[(2 - 1):(N - 1)];
-      target += (sum(v) + sum(y));
+      FnValidateSize__("v7", "N", N);
+      vector[N] v7;
+      v7 = v0;
+      FnValidateSize__("y7", "N", N);
+      vector[N] y7;
+      y7 = v0;
+      v7[2:N] = x[2:N];
+      y7[2:N] = v7[(2 - 1):(N - 1)];
+      target += (sum(v7) + sum(y7));
     }
     {
-      FnValidateSize__("mu", "N", N);
-      vector[N] mu;
+      FnValidateSize__("mu8", "N", N);
+      vector[N] mu8;
       for(n in 1:N) {
-        real t;
-        t = (promote(2, real, data) * x[n]);
-        mu[n] = (t + promote(1, real, data));
+        real t8;
+        t8 = (promote(2, real, data) * x[n]);
+        mu8[n] = (t8 + promote(1, real, data));
       }
-      target += sum(mu);
+      target += sum(mu8);
     }
     {
-      FnValidateSize__("v", "N", N);
-      vector[N] v;
-      v = v0;
+      FnValidateSize__("v9a", "N", N);
+      vector[N] v9a;
+      v9a = v0;
       for(n in 1:N) {
-        v[n] = x[n];
-        target += sum(v);
+        v9a[n] = x[n];
+        target += sum(v9a);
       }
     }
     {
-      FnValidateSize__("v", "N", N);
-      vector[N] v;
-      v = v0;
-      FnValidateSize__("y", "N", N);
-      vector[N] y;
+      FnValidateSize__("v9b", "N", N);
+      vector[N] v9b;
+      v9b = v0;
+      FnValidateSize__("y9b", "N", N);
+      vector[N] y9b;
       for(n in 1:N) {
-        v[idx[n]] = x[n];
-        y[n] = v[idx[n]];
+        v9b[idx[n]] = x[n];
+        y9b[n] = v9b[idx[n]];
       }
-      target += (sum(v) + sum(y));
+      target += (sum(v9b) + sum(y9b));
     }
     {
-      FnValidateSize__("y", "N", N);
-      vector[N] y;
+      FnValidateSize__("y9c", "N", N);
+      vector[N] y9c;
       for(n in 1:N) {
-        vector[2] t;
-        t[1] = x[n];
-        y[n] = t[1];
+        vector[2] t9c;
+        t9c[1] = x[n];
+        y9c[n] = t9c[1];
       }
-      target += sum(y);
+      target += sum(y9c);
     }
     {
-      FnValidateSize__("v", "N", N);
-      matrix[N, 2] v;
-      v = rep_matrix(promote(0, real, data), N, 2);
-      FnValidateSize__("w", "N", N);
-      vector[N] w;
-      v[1:N, 1] = x[1:N];
-      w[1:N] = v[1:N, 2];
-      target += (sum(v) + sum(w));
+      FnValidateSize__("v10", "N", N);
+      matrix[N, 2] v10;
+      v10 = rep_matrix(promote(0, real, data), N, 2);
+      FnValidateSize__("w10", "N", N);
+      vector[N] w10;
+      v10[1:N, 1] = x[1:N];
+      w10[1:N] = v10[1:N, 2];
+      target += (sum(v10) + sum(w10));
     }
     {
-      FnValidateSize__("a", "N", N);
-      vector[N] a;
-      a = a0;
-      a[1:(N - 1)] = (a[(1 + 1):((N - 1) + 1)] + promote(1, real, data));
-      target += sum(a);
+      FnValidateSize__("a11", "N", N);
+      vector[N] a11;
+      a11 = a0;
+      a11[1:(N - 1)] = (a11[(1 + 1):((N - 1) + 1)] + promote(1, real, data));
+      target += sum(a11);
     }
     {
-      data int v_1dim__ = (N + k);
-      FnValidateSize__("v", "N + k", v_1dim__);
-      vector[v_1dim__] v;
-      v = rep_vector(promote(0, real, data), (N + k));
-      FnValidateSize__("y", "N", N);
-      vector[N] y;
-      v[(1 + k):(N + k)] = x[1:N];
-      y[1:N] = (v[(1 + k):(N + k)] * promote(2, real, data));
-      target += (sum(v) + sum(y));
+      data int v12_1dim__ = (N + k);
+      FnValidateSize__("v12", "N + k", v12_1dim__);
+      vector[v12_1dim__] v12;
+      v12 = rep_vector(promote(0, real, data), (N + k));
+      FnValidateSize__("y12", "N", N);
+      vector[N] y12;
+      v12[(1 + k):(N + k)] = x[1:N];
+      y12[1:N] = (v12[(1 + k):(N + k)] * promote(2, real, data));
+      target += (sum(v12) + sum(y12));
     }
   } }
 

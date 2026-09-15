@@ -72,50 +72,72 @@ prepare_data {
 
 log_prob {
   {
-    FnValidateSize__("a", "N", N);
-    vector[N] a;
-    a = a0;
-    for(n in 2:N) {
-      a[n] = (a[n] + (a[(n - 1)] * b[n]));
-    }
-    for(n in 3:N) {
-      a[n] = ((a[n] + (a[(n - 1)] * b[n])) + (a[(n - 2)] * c[n]));
+    {
+      FnValidateSize__("a1", "N", N);
+      vector[N] a1;
+      a1 = a0;
+      for(n in 2:N) {
+        a1[n] = (a1[n] + (a1[(n - 1)] * b[n]));
+      }
+      target += sum(a1);
     }
     {
-      FnValidateSize__("b2", "N", N);
-      vector[N] b2;
-      b2 = b;
-      for(n in 2:N) {
-        a[n] = (b2[(n - 1)] + (c[n] * d[n]));
-        b2[n] = (a[n] + (c[n] * e[n]));
+      FnValidateSize__("a2", "N", N);
+      vector[N] a2;
+      a2 = a0;
+      for(n in 3:N) {
+        a2[n] = ((a2[n] + (a2[(n - 1)] * b[n])) + (a2[(n - 2)] * c[n]));
       }
-      target += sum(b2);
+      target += sum(a2);
     }
-    target += sum(a);
+    {
+      FnValidateSize__("a3", "N", N);
+      vector[N] a3;
+      a3 = a0;
+      FnValidateSize__("b3", "N", N);
+      vector[N] b3;
+      b3 = b;
+      for(n in 2:N) {
+        a3[n] = (b3[(n - 1)] + (c[n] * d[n]));
+        b3[n] = (a3[n] + (c[n] * e[n]));
+      }
+      target += (sum(a3) + sum(b3));
+    }
   } }
 
 rev_log_prob {
   {
-    FnValidateSize__("a", "N", N);
-    vector[N] a;
-    a = a0;
-    for(n in 2:N) {
-      a[n] = (a[n] + (a[(n - 1)] * b[n]));
-    }
-    for(n in 3:N) {
-      a[n] = ((a[n] + (a[(n - 1)] * b[n])) + (a[(n - 2)] * c[n]));
+    {
+      FnValidateSize__("a1", "N", N);
+      vector[N] a1;
+      a1 = a0;
+      for(n in 2:N) {
+        a1[n] = (a1[n] + (a1[(n - 1)] * b[n]));
+      }
+      target += sum(a1);
     }
     {
-      FnValidateSize__("b2", "N", N);
-      vector[N] b2;
-      b2 = b;
-      for(n in 2:N) {
-        a[n] = (b2[(n - 1)] + (c[n] * d[n]));
-        b2[n] = (a[n] + (c[n] * e[n]));
+      FnValidateSize__("a2", "N", N);
+      vector[N] a2;
+      a2 = a0;
+      for(n in 3:N) {
+        a2[n] = ((a2[n] + (a2[(n - 1)] * b[n])) + (a2[(n - 2)] * c[n]));
       }
-      target += sum(b2);
+      target += sum(a2);
     }
-    target += sum(a);
+    {
+      FnValidateSize__("a3", "N", N);
+      vector[N] a3;
+      a3 = a0;
+      FnValidateSize__("b3", "N", N);
+      vector[N] b3;
+      b3 = b;
+      for(n in 2:N) {
+        a3[n] = (b3[(n - 1)] + (c[n] * d[n]));
+        b3[n] = (a3[n] + (c[n] * e[n]));
+      }
+      target += (sum(a3) + sum(b3));
+    }
   } }
 
 generate_quantities {

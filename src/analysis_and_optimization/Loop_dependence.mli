@@ -15,7 +15,7 @@ open Dataflow_types
 
 val accesses_of_pattern :
      loopvar:string
-  -> written:string Set.Poly.t
+  -> written_vars:string Set.Poly.t
   -> label:label
   -> sub:('s -> access list)
   -> (Expr.Typed.t, 's) Stmt.Pattern.t
@@ -26,14 +26,14 @@ val accesses_of_pattern :
 
 val classify_subscript :
      loopvar:string
-  -> written:string Set.Poly.t
+  -> written_vars:string Set.Poly.t
   -> Expr.Typed.t Index.t
   -> subscript
 (** How one index position varies with the loop over [loopvar]. *)
 
 val stmt_accesses :
      loopvar:string
-  -> written:string Set.Poly.t
+  -> written_vars:string Set.Poly.t
   -> label:label
   -> (Expr.Typed.t, Stmt.Located.t) Stmt.Pattern.t
   -> access list

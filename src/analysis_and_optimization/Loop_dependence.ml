@@ -1,8 +1,8 @@
 (** Data dependence analysis for one loop level: the access model (L1), the
     dependence test (L2) and the loop dependence graph with its pi-blocks (L3)
-    of design-docs/active/vectorize-loop-fission.md. [Optimize.vectorize_loops]
-    is the client for code generation; [Dependence_analysis] uses the access
-    model to refine reaching-definition edges. *)
+    of design-docs/active/vectorize-loop-fission.md. [Loop_vectorize] is the
+    client for code generation; [Dependence_analysis] uses the access model to
+    refine reaching-definition edges. *)
 
 open Std
 open Middle
@@ -29,15 +29,19 @@ let int_literal (e : Expr.Typed.t) =
 let linear_const const : linear = {const; terms= []}
 let linear_zero = linear_const 0
 
+(** [e] as one opaque symbolic term. *)
+let linear_symbol e : linear = {const= 0; terms= [(1, e)]}
+
 (** Merge equal terms, drop zero coefficients, sort. *)
 let linear_normalize ({const; terms} : linear) : linear =
+  (* [acc] holds the merged terms seen so far, most recent first *)
+  let merge_into acc (c, e) =
+    match acc with
+    | (c', e') :: rest when Expr.Typed.compare e e' = 0 -> (c + c', e') :: rest
+    | [] | (_, _) :: _ -> (c, e) :: acc in
   let terms =
     List.sort terms ~cmp:(fun (_, e1) (_, e2) -> Expr.Typed.compare e1 e2)
-    |> List.fold_left ~init:[] ~f:(fun acc (c, e) ->
-        match acc with
-        | (c', e') :: rest when Expr.Typed.compare e e' = 0 ->
-            (c + c', e') :: rest
-        | _ -> (c, e) :: acc)
+    |> List.fold_left ~init:[] ~f:merge_into
     |> List.filter ~f:(fun (c, _) -> c <> 0)
     |> List.rev in
   {const; terms}
@@ -50,7 +54,6 @@ let linear_add (a : linear) (b : linear) : linear =
   linear_normalize {const= a.const + b.const; terms= a.terms @ b.terms}
 
 let linear_sub a b = linear_add a (linear_scale (-1) b)
-let linear_is_const ({terms; _} : linear) = List.is_empty terms
 
 (** [Some (op, args)] when [e] applies a built-in operator. The MIR stores
     operators as [StanLib] calls named by [Operator.to_string]; this view is the
@@ -80,8 +83,7 @@ let rec linear_form ~loopvar ~invariant (e : Expr.Typed.t) :
   let open Option.Syntax in
   let recur = linear_form ~loopvar ~invariant in
   (* [e] as one opaque symbolic term, if it is loop-invariant at all *)
-  let symbolic () =
-    if invariant e then Some (0, {const= 0; terms= [(1, e)]}) else None in
+  let symbolic () = if invariant e then Some (0, linear_symbol e) else None in
   match e.pattern with
   | Var v when String.equal v loopvar -> Some (1, linear_zero)
   | Lit (Int, s) -> (
@@ -125,9 +127,27 @@ let rec linear_form ~loopvar ~invariant (e : Expr.Typed.t) :
    |TernaryIf _ | EAnd _ | EOr _ | Indexed _ | TupleProjection _ ->
       symbolic ()
 
+(** [e] mentions one of [vars]. *)
+let mentions vars (e : Expr.Typed.t) =
+  not (Set.Poly.disjoint (expr_var_names_set e) vars)
+
+(** The loop variable sits under another index somewhere in [e], as in [idx[n]].
+*)
+let rec is_gather ~loopvar (e : Expr.Typed.t) =
+  match e.pattern with
+  | Indexed (_, idcs) ->
+      List.exists
+        (List.concat_map idcs ~f:Index.bounds)
+        ~f:(mentions (Set.Poly.singleton loopvar))
+  | Var _ | Lit _ -> false
+  | FunApp _ | TernaryIf _ | EAnd _ | EOr _ | Promotion _ | TupleProjection _ ->
+      Expr.Pattern.fold
+        (fun acc e -> acc || is_gather ~loopvar e)
+        false e.pattern
+
 (** Classify one index position of a reference with respect to the loop over
-    [loopvar]. [written] is the set of names assigned or declared anywhere in
-    the loop body, including inner loop variables
+    [loopvar]. [written_vars] is the set of names assigned or declared anywhere
+    in the loop body, including inner loop variables
     ([Stmt.Helpers.assigned_or_declared_variables body]).
 
     A [Single] index is put in linear form [coeff * loopvar + offset] by
@@ -135,39 +155,53 @@ let rec linear_form ~loopvar ~invariant (e : Expr.Typed.t) :
     interpret (a data variable [k], a call [f(k)], ...) becomes a symbolic term
     of [offset]. [coeff <> 0] gives [Affine], [coeff = 0] gives [Invariant].
     Otherwise the result is [Varying] with the reason the debug report prints:
-    [Written] if the index mentions a name in [written] (an inner loop variable,
-    a body scalar), [Gather] if the loop variable sits under another index
-    ([idx[n]]), [Nonlinear] otherwise ([n * k], [n * n]); [All], [Upfrom] and
-    [Between] are [Slice] and [MultiIndex] is [Multi_index]. *)
-let classify_subscript ~loopvar ~written (idx : Expr.Typed.t Index.t) :
+    [Written] if the index mentions a name in [written_vars] (an inner loop
+    variable, a body scalar), [Gather] if the loop variable sits under another
+    index ([idx[n]]), [Nonlinear] otherwise ([n * k], [n * n]); [All], [Upfrom]
+    and [Between] are [Slice] and [MultiIndex] is [Multi_index]. *)
+let classify_subscript ~loopvar ~written_vars (idx : Expr.Typed.t Index.t) :
     subscript =
-  let invariant (e : Expr.Typed.t) =
-    let names = expr_var_names_set e in
-    (not (Set.Poly.mem loopvar names)) && Set.Poly.disjoint names written in
-  let mentions_written (e : Expr.Typed.t) =
-    not (Set.Poly.disjoint (expr_var_names_set e) written) in
-  let rec is_gather (e : Expr.Typed.t) =
-    match e.pattern with
-    | Indexed (_, idcs) ->
-        List.exists idcs ~f:(fun idx ->
-            List.exists (Index.bounds idx) ~f:(fun b ->
-                Set.Poly.mem loopvar (expr_var_names_set b)))
-    | Var _ | Lit _ -> false
-    | FunApp _ | TernaryIf _ | EAnd _ | EOr _ | Promotion _ | TupleProjection _
-      ->
-        Expr.Pattern.fold (fun acc e -> acc || is_gather e) false e.pattern
-  in
   match idx with
+  | MultiIndex _ -> Varying Multi_index
+  | All | Upfrom _ | Between _ -> Varying Slice
   | Single e -> (
+      let invariant e = not (mentions (Set.Poly.add loopvar written_vars) e) in
       match linear_form ~loopvar ~invariant e with
       | Some (0, offset) -> Invariant offset
       | Some (coeff, offset) -> Affine {coeff; offset}
-      | None ->
-          if mentions_written e then Varying Written
-          else if is_gather e then Varying Gather
-          else Varying Nonlinear)
-  | MultiIndex _ -> Varying Multi_index
-  | All | Upfrom _ | Between _ -> Varying Slice
+      | None when mentions written_vars e -> Varying Written
+      | None when is_gather ~loopvar e -> Varying Gather
+      | None -> Varying Nonlinear)
+
+(** {2 Accesses} *)
+
+let read ~label var subs = {var; subs; is_write= false; label}
+let write ~label var subs = {var; subs; is_write= true; label}
+let index_bounds idcs = List.concat_map idcs ~f:Index.bounds
+
+(** Every reference an expression reads, in evaluation order. A reference
+    [v[idcs]] is one access with classified subscripts followed by the reads
+    inside its indices; a [target()] call reads ["target"], the running sum.
+    Reads of [loopvar] itself are not recorded: it is defined by the loop
+    header, so it can never carry a dependence. *)
+let rec expr_reads ~loopvar ~written_vars ~label (e : Expr.Typed.t) :
+    access list =
+  let reads = expr_reads ~loopvar ~written_vars ~label in
+  let reads_all es = List.concat_map es ~f:reads in
+  match e.pattern with
+  | Var v when String.equal v loopvar -> []
+  | Var v -> [read ~label v []]
+  | Lit _ -> []
+  | Indexed ({pattern= Var v; _}, idcs) ->
+      let subs = List.map idcs ~f:(classify_subscript ~loopvar ~written_vars) in
+      read ~label v subs :: reads_all (index_bounds idcs)
+  | Indexed (base, idcs) -> reads base @ reads_all (index_bounds idcs)
+  | FunApp ((StanLib (_, FnTarget, _) | UserDefined (_, FnTarget)), args) ->
+      read ~label "target" [] :: reads_all args
+  | FunApp (kind, args) -> reads_all (Fun_kind.collect_exprs kind @ args)
+  | TernaryIf (a, b, c) -> reads_all [a; b; c]
+  | EAnd (a, b) | EOr (a, b) -> reads_all [a; b]
+  | Promotion (e, _, _) | TupleProjection (e, _) -> reads e
 
 (** Every reference in a statement and its substatements, in evaluation order,
     as [access]es of the loop over [loopvar]. An [Assignment] to [v] yields a
@@ -175,143 +209,123 @@ let classify_subscript ~loopvar ~written (idx : Expr.Typed.t Index.t) :
     [subs = [Varying Nonlinear]]) after the reads of its indices and right-hand
     side; a [Decl] yields a write with [subs = []]; an inner [For] yields a
     write to its own loop variable with [subs = []]. [TargetPE] and [JacobianPE]
-    are writes to ["target"] and a [target()] call is a read of it;
-    [loop_dependence_graph] ignores the write/write pairs unless some statement
-    reads [target()], because the increments form a reduction whose order is
-    unobservable until then (design §7.4). Reads of [loopvar] itself are not
-    recorded: it is defined by the loop header, so it can never carry a
-    dependence. *)
-let accesses_of_pattern ~loopvar ~written ~label ~(sub : 's -> access list)
+    are writes to ["target"]; [loop_dependence_graph] ignores the write/write
+    pairs unless some statement reads [target()], because the increments form a
+    reduction whose order is unobservable until then (design §7.4). [sub] gives
+    the accesses of a substatement. *)
+let accesses_of_pattern ~loopvar ~written_vars ~label ~(sub : 's -> access list)
     (stmt : (Expr.Typed.t, 's) Stmt.Pattern.t) : access list =
-  let mk var subs is_write = {var; subs; is_write; label} in
-  let classify = classify_subscript ~loopvar ~written in
-  let rec expr_reads (e : Expr.Typed.t) : access list =
-    match e.pattern with
-    | Var v when String.equal v loopvar -> []
-    | Var v -> [mk v [] false]
-    | Lit _ -> []
-    | Indexed ({pattern= Var v; _}, idcs) ->
-        mk v (List.map idcs ~f:classify) false :: index_reads idcs
-    | Indexed (base, idcs) -> expr_reads base @ index_reads idcs
-    | FunApp ((StanLib (_, FnTarget, _) | UserDefined (_, FnTarget)), args) ->
-        (* [target()] observes the running sum *)
-        mk "target" [] false :: List.concat_map args ~f:expr_reads
-    | FunApp (kind, args) ->
-        List.concat_map (Fun_kind.collect_exprs kind @ args) ~f:expr_reads
-    | TernaryIf (a, b, c) -> List.concat_map [a; b; c] ~f:expr_reads
-    | EAnd (a, b) | EOr (a, b) -> expr_reads a @ expr_reads b
-    | Promotion (e, _, _) | TupleProjection (e, _) -> expr_reads e
-  and index_reads idcs =
-    List.concat_map idcs ~f:(fun idx ->
-        List.concat_map (Index.bounds idx) ~f:expr_reads) in
-  let stmt_reads_writes (s : (Expr.Typed.t, 's) Stmt.Pattern.t) : access list =
-    match s with
-    | Assignment ((LVariable v, idcs), _, rhs) ->
-        index_reads idcs @ expr_reads rhs
-        @ [mk v (List.map idcs ~f:classify) true]
-    | Assignment (((LTupleProjection _, _) as lhs), _, rhs) ->
-        index_reads (Stmt.Helpers.lhs_indices lhs)
-        @ expr_reads rhs
-        @ [mk (Stmt.Helpers.lhs_variable lhs) [Varying Nonlinear] true]
-    | Decl {decl_id; initialize= Assign e; _} ->
-        expr_reads e @ [mk decl_id [] true]
-    | Decl {decl_id; _} -> [mk decl_id [] true]
-    | TargetPE e | JacobianPE e -> expr_reads e @ [mk "target" [] true]
-    | Return (Some e) -> expr_reads e
-    | NRFunApp (kind, args) ->
-        List.concat_map (Fun_kind.collect_exprs kind @ args) ~f:expr_reads
-    | IfElse (cond, s1, s2) ->
-        expr_reads cond @ sub s1 @ Option.value_map s2 ~default:[] ~f:sub
-    | While (cond, body) -> expr_reads cond @ sub body
-    | For {loopvar= inner; lower; upper; body} ->
-        (mk inner [] true :: expr_reads lower) @ expr_reads upper @ sub body
-    | Profile (_, stmts) | Block stmts | SList stmts ->
-        List.concat_map stmts ~f:sub
-    | Break | Continue | Skip | Return None -> [] in
-  stmt_reads_writes stmt
+  let reads = expr_reads ~loopvar ~written_vars ~label in
+  let reads_all es = List.concat_map es ~f:reads in
+  let write = write ~label in
+  match stmt with
+  | Assignment ((LVariable v, idcs), _, rhs) ->
+      let subs = List.map idcs ~f:(classify_subscript ~loopvar ~written_vars) in
+      reads_all (index_bounds idcs) @ reads rhs @ [write v subs]
+  | Assignment (((LTupleProjection _, _) as lhs), _, rhs) ->
+      reads_all (index_bounds (Stmt.Helpers.lhs_indices lhs))
+      @ reads rhs
+      @ [write (Stmt.Helpers.lhs_variable lhs) [Varying Nonlinear]]
+  | Decl {decl_id; initialize= Assign e; _} -> reads e @ [write decl_id []]
+  | Decl {decl_id; _} -> [write decl_id []]
+  | TargetPE e | JacobianPE e -> reads e @ [write "target" []]
+  | Return (Some e) -> reads e
+  | NRFunApp (kind, args) -> reads_all (Fun_kind.collect_exprs kind @ args)
+  | IfElse (cond, s1, s2) ->
+      reads cond @ sub s1 @ Option.value_map s2 ~default:[] ~f:sub
+  | While (cond, body) -> reads cond @ sub body
+  | For {loopvar= inner; lower; upper; body} ->
+      (write inner [] :: reads_all [lower; upper]) @ sub body
+  | Profile (_, stmts) | Block stmts | SList stmts ->
+      List.concat_map stmts ~f:sub
+  | Break | Continue | Skip | Return None -> []
 
-let rec stmt_accesses ~loopvar ~written ~label
+let rec stmt_accesses ~loopvar ~written_vars ~label
     (stmt : (Expr.Typed.t, Stmt.Located.t) Stmt.Pattern.t) : access list =
-  accesses_of_pattern ~loopvar ~written ~label stmt
+  accesses_of_pattern ~loopvar ~written_vars ~label stmt
     ~sub:(fun (s : Stmt.Located.t) ->
-      stmt_accesses ~loopvar ~written ~label s.pattern)
+      stmt_accesses ~loopvar ~written_vars ~label s.pattern)
 
 (** {2 Dependence test} *)
 
 let all_directions = Set.Poly.of_list [Lt; Eq; Gt]
 let confused = Dependent {directions= all_directions; distance= None}
 
+(** The dependence whose only direction is that of the known distance [d]. *)
+let dependence_at_distance d =
+  let direction = if d = 0 then Eq else if d > 0 then Lt else Gt in
+  Dependent {directions= Set.Poly.singleton direction; distance= Some d}
+
 (** The dependence between one subscript position of two accesses. *)
 let subscript_dependence (a : subscript) (b : subscript) : dependence =
   match (a, b) with
-  | Affine {coeff= c1; offset= o1}, Affine {coeff= c2; offset= o2}
-    when c1 = c2 && linear_is_const (linear_sub o1 o2) ->
+  | Affine {coeff= c1; offset= o1}, Affine {coeff= c2; offset= o2} when c1 = c2
+    -> (
       (* strong SIV (Goff, Kennedy and Tseng 1991 §3; LLVM [strongSIVtest]):
          [c*i1 + o1 = c*i2 + o2] iff [i2 - i1 = (o1 - o2) / c]. Identical
          symbolic terms have cancelled in the subtraction. *)
-      let num : int = (linear_sub o1 o2).const in
-      if num mod c1 <> 0 then Independent
-      else
-        let d = num / c1 in
-        let directions =
-          if d = 0 then Set.Poly.singleton Eq
-          else if d > 0 then Set.Poly.singleton Lt
-          else Set.Poly.singleton Gt in
-        Dependent {directions; distance= Some d}
-  | Invariant o1, Invariant o2 when linear_is_const (linear_sub o1 o2) ->
+      match linear_sub o1 o2 with
+      | {const; terms= []} ->
+          if const mod c1 <> 0 then Independent
+          else dependence_at_distance (const / c1)
+      | {terms= _ :: _; _} -> confused)
+  | Invariant o1, Invariant o2 -> (
       (* ZIV: same symbols, so the elements differ iff the constants do *)
-      if (linear_sub o1 o2).const <> 0 then Independent else confused
+      match linear_sub o1 o2 with
+      | {const; terms= []} -> if const <> 0 then Independent else confused
+      | {terms= _ :: _; _} -> confused)
   | Affine _, Affine _
    |Affine _, Invariant _
    |Invariant _, Affine _
-   |Invariant _, Invariant _
-   |Varying _, _
-   |_, Varying _ ->
+   |Varying _, (Affine _ | Invariant _ | Varying _)
+   |(Affine _ | Invariant _), Varying _ ->
       confused
 
-(** The dependence between two accesses to the same variable, at least one of
-    them a write. Each subscript position is tested by [subscript_dependence]
-    and the positions are merged as separable subscripts (Kennedy and Allen):
-    any [Independent] position, two known distances that differ, or an empty
-    intersection of direction sets gives [Independent]; otherwise the direction
-    sets are intersected and the common distance is kept. Accesses with
-    different numbers of positions ([v[n]] vs [v[n, k]]) and two whole-variable
-    accesses ([subs = []]) are confused. Symmetric up to swapping [Lt] and [Gt]
-    and negating the distance. *)
-let access_dependence (a : access) (b : access) : dependence =
-  let merge acc pos =
-    match (acc, pos) with
-    | Independent, _ | _, Independent -> Independent
-    | ( Dependent {directions= d1; distance= dist1}
-      , Dependent {directions= d2; distance= dist2} ) -> (
-        let directions = Set.Poly.inter d1 d2 in
+(** Merge the dependences of two subscript positions as separable subscripts
+    (Kennedy and Allen): any [Independent] position, two known distances that
+    differ, or an empty intersection of direction sets gives [Independent];
+    otherwise the direction sets are intersected and the common distance kept.
+*)
+let merge_positions (a : dependence) (b : dependence) : dependence =
+  match (a, b) with
+  | Independent, (Independent | Dependent _) | Dependent _, Independent ->
+      Independent
+  | ( Dependent {directions= d1; distance= dist1}
+    , Dependent {directions= d2; distance= dist2} ) ->
+      let directions = Set.Poly.inter d1 d2 in
+      let distances_differ =
         match (dist1, dist2) with
-        | Some x, Some y when x <> y -> Independent
-        | _ when Set.Poly.is_empty directions -> Independent
-        | _ -> Dependent {directions; distance= Option.first_some dist1 dist2})
-  in
+        | Some x, Some y -> x <> y
+        | Some _, None | None, Some _ | None, None -> false in
+      if distances_differ || Set.Poly.is_empty directions then Independent
+      else Dependent {directions; distance= Option.first_some dist1 dist2}
+
+(** The dependence between two accesses to the same variable, at least one of
+    them a write: each subscript position is tested by [subscript_dependence]
+    and the positions are combined by [merge_positions]. Accesses with different
+    numbers of positions ([v[n]] vs [v[n, k]]) and two whole-variable accesses
+    ([subs = []]) are confused. Symmetric up to swapping [Lt] and [Gt] and
+    negating the distance. *)
+let access_dependence (a : access) (b : access) : dependence =
   if List.length a.subs <> List.length b.subs then confused
   else
     List.fold_left2 a.subs b.subs ~init:confused ~f:(fun acc x y ->
-        merge acc (subscript_dependence x y))
+        merge_positions acc (subscript_dependence x y))
 
 (** {2 Printers} *)
 
 (** [k+1], [+k-2*m+1] ...; with [leading], the first item has no leading [+] and
     a bare constant is printed even when it is [0]. *)
 let pp_linear ~leading ppf ({const; terms} : linear) =
-  let first = ref leading in
-  let sign c =
-    let s = if c < 0 then "-" else if !first then "" else "+" in
-    first := false;
-    s in
-  List.iter terms ~f:(fun (c, e) ->
-      let s = sign c in
+  let sign ~first c = if c < 0 then "-" else if first then "" else "+" in
+  List.iteri terms ~f:(fun i (c, e) ->
+      let s = sign ~first:(leading && i = 0) c in
       match abs c with
       | 1 -> Fmt.pf ppf "%s%a" s Expr.Typed.pp e
       | c -> Fmt.pf ppf "%s%d*%a" s c Expr.Typed.pp e);
-  if const <> 0 || (leading && List.is_empty terms) then
-    Fmt.pf ppf "%s%d" (sign const) (abs const)
+  let no_terms = List.is_empty terms in
+  if const <> 0 || (leading && no_terms) then
+    Fmt.pf ppf "%s%d" (sign ~first:(leading && no_terms) const) (abs const)
 
 let pp_varying_kind ppf = function
   | Slice -> Fmt.string ppf "slice"
@@ -398,11 +412,92 @@ let flip_dependence = function
               | Eq -> Eq)
         ; distance= Option.map distance ~f:(fun d -> -d) }
 
+let has_direction dir = function
+  | Independent -> false
+  | Dependent {directions; _} -> Set.Poly.mem dir directions
+
+(** Two reads never form an edge; callers pair a write with another access. *)
 let dep_kind ~src_is_write ~dst_is_write =
   match (src_is_write, dst_is_write) with
   | true, true -> Output
   | true, false -> True_dep
-  | false, _ -> Anti
+  | false, true | false, false -> Anti
+
+(** The edge from access [src] in node [src_pos] to access [dst] in node
+    [dst_pos]. *)
+let edge ~src_pos ~dst_pos (src : access) (dst : access) dep : loop_edge =
+  { src= src_pos
+  ; dst= dst_pos
+  ; var= src.var
+  ; kind= dep_kind ~src_is_write:src.is_write ~dst_is_write:dst.is_write
+  ; dep }
+
+(** Edges between two different nodes, [a] lexically before [b], for each pair
+    of [related] accesses [x] in [a] and [y] in [b]: [Eq] or [Lt] gives an edge
+    from [a] to [b], [Gt] one from [b] to [a]. *)
+let cross_edges ~related (a : loop_node) (b : loop_node) =
+  List.concat_map a.accesses ~f:(fun x ->
+      List.concat_map b.accesses ~f:(fun y ->
+          if not (related x y) then []
+          else
+            let dep = access_dependence x y in
+            let forward =
+              if has_direction Eq dep || has_direction Lt dep then
+                [edge ~src_pos:a.pos ~dst_pos:b.pos x y dep]
+              else [] in
+            let backward =
+              if has_direction Gt dep then
+                [edge ~src_pos:b.pos ~dst_pos:a.pos y x dep]
+              else [] in
+            forward @ backward))
+
+(** A self-edge of node [pos] from the access of the earlier iteration to the
+    access of the later one, unless the pair is a pure anti-dependence, i.e. the
+    earlier access is the read ([a[n] = a[n+1] + 1]; GCC's "dependence distance
+    negative", LLVM's [memdep.ll] [f1_vec]). *)
+let recurrence_edge pos ~earlier ~later dep =
+  let pure_anti = (not earlier.is_write) && later.is_write in
+  if pure_anti then [] else [edge ~src_pos:pos ~dst_pos:pos earlier later dep]
+
+let rec unordered_pairs = function
+  | [] -> []
+  | x :: rest -> List.map rest ~f:(fun y -> (x, y)) @ unordered_pairs rest
+
+(** Self-edges of one node from every pair of [related] accesses. The edge's
+    dependence is expressed from the earlier iteration's access, so a recurrence
+    always prints as [{<} d=k] with [k > 0]. *)
+let self_edges ~related (a : loop_node) =
+  List.concat_map (unordered_pairs a.accesses) ~f:(fun (x, y) ->
+      if not (related x y) then []
+      else
+        let dep = access_dependence x y in
+        let later_y =
+          if has_direction Lt dep then
+            recurrence_edge a.pos ~earlier:x ~later:y dep
+          else [] in
+        let later_x =
+          if has_direction Gt dep then
+            recurrence_edge a.pos ~earlier:y ~later:x (flip_dependence dep)
+          else [] in
+        later_y @ later_x)
+
+(** Two effectful statements get edges both ways. *)
+let effect_edges (a : loop_node) (b : loop_node) =
+  if a.effects && b.effects then
+    [ {src= a.pos; dst= b.pos; var= ""; kind= Effects; dep= confused}
+    ; {src= b.pos; dst= a.pos; var= ""; kind= Effects; dep= confused} ]
+  else []
+
+(** One edge per [(src, dst, var, kind)], the first found, sorted by that key.
+*)
+let dedup_edges (edges : loop_edge list) =
+  let key (e : loop_edge) = (e.src, e.dst, e.var, e.kind) in
+  let keep (seen, kept) e =
+    if Set.Poly.mem (key e) seen then (seen, kept)
+    else (Set.Poly.add (key e) seen, e :: kept) in
+  List.fold_left edges ~init:(Set.Poly.empty, []) ~f:keep
+  |> snd
+  |> List.sort ~cmp:(fun e1 e2 -> compare (key e1) (key e2))
 
 (** The dependence graph of one loop level (§7.5). Nodes are the [loop_leaves]
     of [body]; for every pair of accesses to the same variable with at least one
@@ -414,24 +509,20 @@ let dep_kind ~src_is_write ~dst_is_write =
     - [Lt] (the earlier statement's access happens in an earlier iteration): an
       edge from the earlier to the later statement; [Gt]: the reverse;
     - within one statement, [Lt] or [Gt] is a recurrence (self-edge) unless the
-      pair is a pure anti-dependence, i.e. the earlier-iteration access is the
-      read ([a[n] = a[n+1] + 1]; GCC's "dependence distance negative", LLVM's
-      [memdep.ll] [f1_vec]);
+      pair is a pure anti-dependence;
     - two effectful statements get edges both ways. Every edge is oriented so
       that its source executes no later than its sink in the original loop,
       which is what makes emitting the pi-blocks in a topological order legal
       (Fundamental Theorem of Dependence). *)
 let loop_dependence_graph ~loopvar (body : Stmt.Located.t) :
     loop_dependence_graph =
-  let written = Stmt.Helpers.assigned_or_declared_variables body in
-  let nodes =
-    loop_leaves body
-    |> List.mapi ~f:(fun pos (stmt : Stmt.Located.t) ->
-        { pos
-        ; stmt
-        ; accesses= stmt_accesses ~loopvar ~written ~label:pos stmt.pattern
-        ; effects= stmt_has_effects stmt })
-    |> Array.of_list in
+  let written_vars = Stmt.Helpers.assigned_or_declared_variables body in
+  let node pos (stmt : Stmt.Located.t) : loop_node =
+    { pos
+    ; stmt
+    ; accesses= stmt_accesses ~loopvar ~written_vars ~label:pos stmt.pattern
+    ; effects= stmt_has_effects stmt } in
+  let nodes = loop_leaves body |> List.mapi ~f:node |> Array.of_list in
   (* [target +=] increments commute, so they carry no dependence among
      themselves unless a statement observes the running sum with [target()];
      then every increment and every read are kept in order. *)
@@ -439,156 +530,62 @@ let loop_dependence_graph ~loopvar (body : Stmt.Located.t) :
     Array.exists nodes ~f:(fun (node : loop_node) ->
         List.exists node.accesses ~f:(fun (a : access) ->
             String.equal a.var "target" && not a.is_write)) in
-  let same_var_with_write (x : access) (y : access) =
+  let related (x : access) (y : access) =
     String.equal x.var y.var && (x.is_write || y.is_write)
     && (target_observed || not (String.equal x.var "target")) in
-  let has dir (dep : dependence) =
-    match dep with
-    | Independent -> false
-    | Dependent {directions; _} -> Set.Poly.mem dir directions in
-  (* [a] is lexically before [b]; [x] in [a], [y] in [b] *)
-  let cross_edges (a : loop_node) (b : loop_node) =
-    List.concat_map a.accesses ~f:(fun x ->
-        List.concat_map b.accesses ~f:(fun y ->
-            if not (same_var_with_write x y) then []
-            else
-              let dep = access_dependence x y in
-              let fwd =
-                if has Eq dep || has Lt dep then
-                  [ { src= a.pos
-                    ; dst= b.pos
-                    ; var= x.var
-                    ; kind=
-                        dep_kind ~src_is_write:x.is_write
-                          ~dst_is_write:y.is_write
-                    ; dep } ]
-                else [] in
-              let bwd =
-                if has Gt dep then
-                  [ { src= b.pos
-                    ; dst= a.pos
-                    ; var= x.var
-                    ; kind=
-                        dep_kind ~src_is_write:y.is_write
-                          ~dst_is_write:x.is_write
-                    ; dep } ]
-                else [] in
-              fwd @ bwd)) in
-  let self_edges (a : loop_node) =
-    let rec pairs = function
-      | [] -> []
-      | x :: rest -> List.map rest ~f:(fun y -> (x, y)) @ pairs rest in
-    List.concat_map (pairs a.accesses) ~f:(fun (x, y) ->
-        if not (same_var_with_write x y) then []
-        else
-          let dep = access_dependence x y in
-          (* [earlier] is the access of the earlier iteration; the edge's
-             dependence is expressed from it, so a recurrence always prints as
-             [{<} d=k] with [k > 0] *)
-          let recurrence ~earlier ~later ~dep =
-            let pure_anti = (not earlier.is_write) && later.is_write in
-            if pure_anti then []
-            else
-              [ { src= a.pos
-                ; dst= a.pos
-                ; var= x.var
-                ; kind=
-                    dep_kind ~src_is_write:earlier.is_write
-                      ~dst_is_write:later.is_write
-                ; dep } ] in
-          (if has Lt dep then recurrence ~earlier:x ~later:y ~dep else [])
-          @
-          if has Gt dep then
-            recurrence ~earlier:y ~later:x ~dep:(flip_dependence dep)
-          else []) in
-  let effect_edges (a : loop_node) (b : loop_node) =
-    if a.effects && b.effects then
-      [ {src= a.pos; dst= b.pos; var= ""; kind= Effects; dep= confused}
-      ; {src= b.pos; dst= a.pos; var= ""; kind= Effects; dep= confused} ]
-    else [] in
-  let n = Array.length nodes in
-  let edges = ref [] in
-  for i = 0 to n - 1 do
-    edges := self_edges nodes.(i) @ !edges;
-    for j = i + 1 to n - 1 do
-      edges :=
-        cross_edges nodes.(i) nodes.(j)
-        @ effect_edges nodes.(i) nodes.(j)
-        @ !edges
-    done
-  done;
-  (* one edge per (src, dst, var, kind): the first found *)
-  let key (e : loop_edge) = (e.src, e.dst, e.var, e.kind) in
+  let positions = List.range 0 (Array.length nodes) in
   let edges =
-    List.fold_left (List.rev !edges) ~init:[] ~f:(fun acc e ->
-        if List.exists acc ~f:(fun e' -> key e' = key e) then acc else e :: acc)
-    |> List.sort ~cmp:(fun e1 e2 -> compare (key e1) (key e2)) in
-  {nodes; edges}
+    List.concat_map positions ~f:(fun i ->
+        self_edges ~related nodes.(i)
+        @ List.concat_map
+            (List.filter positions ~f:(fun j -> j > i))
+            ~f:(fun j ->
+              cross_edges ~related nodes.(i) nodes.(j)
+              @ effect_edges nodes.(i) nodes.(j))) in
+  {nodes; edges= dedup_edges edges}
+
+(** The nodes reachable from [v] by one or more edges. *)
+let reachable ~succs v =
+  let rec visit seen w =
+    if Set.Poly.mem w seen then seen
+    else List.fold_left (succs w) ~init:(Set.Poly.add w seen) ~f:visit in
+  List.fold_left (succs v) ~init:Set.Poly.empty ~f:visit
 
 (** The pi-blocks of a graph (Allen and Kennedy 1987 §5.2): its strongly
-    connected components (Tarjan), each listing its nodes in lexical order, in a
+    connected components, each listing its nodes in lexical order, in a
     topological order of the condensation with ties broken by the smallest
-    lexical position (Kahn's algorithm with a min-position priority). A body
-    with only forward edges therefore comes back in original order. *)
+    lexical position. A body with only forward edges therefore comes back in
+    original order. Two nodes share a component iff each reaches the other; a
+    component is ready to be emitted once no component still waiting has an edge
+    into it. *)
 let pi_blocks (g : loop_dependence_graph) : int list list =
-  let n = Array.length g.nodes in
-  let succs = Array.make n [] in
-  List.iter g.edges ~f:(fun e ->
-      if e.src <> e.dst then succs.(e.src) <- e.dst :: succs.(e.src));
-  (* Tarjan's strongly connected components *)
-  let index = Array.make n (-1) and low = Array.make n 0 in
-  let on_stack = Array.make n false in
-  let stack = ref [] and counter = ref 0 and comps = ref [] in
-  let rec strongconnect v =
-    index.(v) <- !counter;
-    low.(v) <- !counter;
-    incr counter;
-    stack := v :: !stack;
-    on_stack.(v) <- true;
-    List.iter succs.(v) ~f:(fun w ->
-        if index.(w) < 0 then (
-          strongconnect w;
-          low.(v) <- min low.(v) low.(w))
-        else if on_stack.(w) then low.(v) <- min low.(v) index.(w));
-    if low.(v) = index.(v) then
-      let rec pop acc =
-        match !stack with
-        | w :: rest ->
-            stack := rest;
-            on_stack.(w) <- false;
-            if w = v then w :: acc else pop (w :: acc)
-        | [] -> acc in
-      comps := List.sort (pop []) ~cmp:Int.compare :: !comps in
-  for v = 0 to n - 1 do
-    if index.(v) < 0 then strongconnect v
-  done;
-  (* condensation, then Kahn with a min-position priority *)
-  let comps = Array.of_list !comps in
-  let m = Array.length comps in
-  let comp_of = Array.make n 0 in
-  Array.iteri comps ~f:(fun c members ->
-      List.iter members ~f:(fun v -> comp_of.(v) <- c));
-  let indeg = Array.make m 0 and csucc = Array.make m [] in
-  List.iter g.edges ~f:(fun e ->
-      let a = comp_of.(e.src) and b = comp_of.(e.dst) in
-      if a <> b && not (List.exists csucc.(a) ~f:(fun c -> c = b)) then (
-        csucc.(a) <- b :: csucc.(a);
-        indeg.(b) <- indeg.(b) + 1));
-  let first_pos c = match comps.(c) with v :: _ -> v | [] -> max_int in
-  let rec kahn ready acc =
-    match ready with
-    | [] -> List.rev acc
-    | c0 :: rest ->
-        let c =
-          List.fold_left rest ~init:c0 ~f:(fun best c ->
-              if first_pos c < first_pos best then c else best) in
-        let ready = List.filter ready ~f:(fun c' -> c' <> c) in
-        let ready =
-          List.fold_left csucc.(c) ~init:ready ~f:(fun r b ->
-              indeg.(b) <- indeg.(b) - 1;
-              if indeg.(b) = 0 then b :: r else r) in
-        kahn ready (comps.(c) :: acc) in
-  kahn (List.filter (List.init ~len:m ~f:Fun.id) ~f:(fun c -> indeg.(c) = 0)) []
+  let positions = List.range 0 (Array.length g.nodes) in
+  let succs v =
+    List.filter_map g.edges ~f:(fun e ->
+        Option.some_if (e.src = v && e.dst <> v) e.dst) in
+  let reach = Array.init (Array.length g.nodes) ~f:(reachable ~succs) in
+  let mutually_reachable v w =
+    v = w || (Set.Poly.mem w reach.(v) && Set.Poly.mem v reach.(w)) in
+  (* one component per smallest member, members in lexical order *)
+  let components =
+    List.filter_map positions ~f:(fun v ->
+        let members = List.filter positions ~f:(mutually_reachable v) in
+        Option.some_if (List.hd members = Some v) members) in
+  let has_edge_into b a =
+    List.exists g.edges ~f:(fun e ->
+        List.mem e.src ~set:a && List.mem e.dst ~set:b) in
+  let first_pos c = List.hd c |> Option.value ~default:max_int in
+  let rec emit waiting =
+    let ready =
+      List.filter waiting ~f:(fun b ->
+          List.for_all waiting ~f:(fun a -> a = b || not (has_edge_into b a)))
+    in
+    match
+      List.min_elt ready ~cmp:(fun a b -> compare (first_pos a) (first_pos b))
+    with
+    | None -> []
+    | Some c -> c :: emit (List.filter waiting ~f:(fun c' -> c' <> c)) in
+  emit components
 
 (** A pi-block is cyclic iff it has more than one node or a self-edge; a cyclic
     block must stay a sequential loop. *)
@@ -600,20 +597,19 @@ let is_cyclic (g : loop_dependence_graph) (block : int list) : bool =
 
 (** {2 Printers for the graph} *)
 
+(** A statement on one line, truncated, for the report. *)
 let pp_stmt_one_line ppf (s : Stmt.Located.t) =
-  let b = Buffer.create 64 in
-  let fmt = Format.formatter_of_buffer b in
-  Format.pp_set_margin fmt 100_000;
-  Stmt.Located.pp fmt s;
-  Format.pp_print_flush fmt ();
-  let str =
-    Buffer.contents b
-    |> String.split_on_char ~sep:'\n'
+  let unbroken =
+    Format.asprintf "%t" (fun ppf ->
+        Format.pp_set_margin ppf 100_000;
+        Stmt.Located.pp ppf s) in
+  let one_line =
+    String.split_on_char ~sep:'\n' unbroken
     |> List.map ~f:String.trim |> String.concat ~sep:" " in
   let limit = 96 in
-  if String.length str > limit then
-    Fmt.pf ppf "%s..." (String.sub str ~pos:0 ~len:limit)
-  else Fmt.string ppf str
+  if String.length one_line > limit then
+    Fmt.pf ppf "%s..." (String.sub one_line ~pos:0 ~len:limit)
+  else Fmt.string ppf one_line
 
 let pp_dep_kind ppf = function
   | True_dep -> Fmt.string ppf "true"
