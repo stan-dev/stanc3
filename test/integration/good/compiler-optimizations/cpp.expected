@@ -777,12 +777,12 @@ class ad_level_deep_dependence_model final : public model_base_crtp<ad_level_dee
     // suppress unused var warning
     (void) function__;
     try {
-      stan::math::var_value<Eigen::Matrix<double,-1,-1>> lcm_sym17__;
-      stan::math::var_value<Eigen::Matrix<double,-1,-1>> lcm_sym16__;
-      stan::math::var_value<Eigen::Matrix<double,-1,-1>> lcm_sym15__;
-      stan::math::var_value<Eigen::Matrix<double,-1,-1>> lcm_sym14__;
-      stan::math::var_value<Eigen::Matrix<double,-1,-1>> lcm_sym13__;
-      stan::math::var_value<Eigen::Matrix<double,-1,-1>> lcm_sym12__;
+      Eigen::Matrix<double,-1,-1> lcm_sym17__;
+      Eigen::Matrix<double,-1,-1> lcm_sym16__;
+      Eigen::Matrix<double,-1,-1> lcm_sym15__;
+      Eigen::Matrix<double,-1,-1> lcm_sym14__;
+      Eigen::Matrix<double,-1,-1> lcm_sym13__;
+      Eigen::Matrix<double,-1,-1> lcm_sym12__;
       current_statement__ = 1;
       auto X_p =
         in__.template read<
@@ -3532,8 +3532,8 @@ class ad_levels_deep_model final : public model_base_crtp<ad_levels_deep_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      stan::math::var_value<Eigen::Matrix<double,-1,-1>> lcm_sym9__;
-      stan::math::var_value<Eigen::Matrix<double,-1,-1>> lcm_sym8__;
+      Eigen::Matrix<double,-1,-1> lcm_sym9__;
+      Eigen::Matrix<double,-1,-1> lcm_sym8__;
       current_statement__ = 1;
       auto X_p =
         in__.template read<
@@ -7619,7 +7619,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       double lcm_sym24__;
       double lcm_sym23__;
       double lcm_sym22__;
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> lcm_sym21__;
+      Eigen::Matrix<double,-1,1> lcm_sym21__;
       double lcm_sym20__;
       int lcm_sym19__;
       int lcm_sym18__;
@@ -11106,7 +11106,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       double lcm_sym25__;
       double lcm_sym24__;
       double lcm_sym23__;
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> lcm_sym22__;
+      Eigen::Matrix<double,-1,1> lcm_sym22__;
       current_statement__ = 1;
       auto a =
         in__.template read<
@@ -12167,7 +12167,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       local_scalar_t__ lcm_sym21__;
       double lcm_sym20__;
       double lcm_sym19__;
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> lcm_sym18__;
+      Eigen::Matrix<double,-1,1> lcm_sym18__;
       double lcm_sym17__;
       int lcm_sym16__;
       current_statement__ = 1;
@@ -19371,10 +19371,10 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       double lcm_sym40__;
       double lcm_sym39__;
       double lcm_sym38__;
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> lcm_sym37__;
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> lcm_sym36__;
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> lcm_sym35__;
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> lcm_sym34__;
+      Eigen::Matrix<double,-1,1> lcm_sym37__;
+      Eigen::Matrix<double,-1,1> lcm_sym36__;
+      Eigen::Matrix<double,-1,1> lcm_sym35__;
+      Eigen::Matrix<double,-1,1> lcm_sym34__;
       int lcm_sym33__;
       int lcm_sym32__;
       int lcm_sym31__;
@@ -20393,7 +20393,7 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
     try {
       local_scalar_t__ lcm_sym13__;
       double lcm_sym12__;
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> lcm_sym11__;
+      Eigen::Matrix<double,-1,1> lcm_sym11__;
       current_statement__ = 1;
       auto beta0 = in__.template read<local_scalar_t__>();
       current_statement__ = 2;
@@ -23691,7 +23691,7 @@ class function_in_function_loops_model final : public model_base_crtp<function_i
       double lcm_sym36__;
       double lcm_sym35__;
       int lcm_sym34__;
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> lcm_sym33__;
+      Eigen::Matrix<double,-1,1> lcm_sym33__;
       double lcm_sym32__;
       double lcm_sym31__;
       int lcm_sym30__;
@@ -35575,7 +35575,7 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       double lcm_sym16__;
       double lcm_sym15__;
       stan::math::var_value<Eigen::Matrix<double,-1,1>> lcm_sym14__;
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> lcm_sym13__;
+      Eigen::Matrix<double,-1,1> lcm_sym13__;
       stan::math::var_value<Eigen::Matrix<double,-1,1>> lcm_sym12__;
       current_statement__ = 1;
       auto beta = in__.template read<local_scalar_t__>();
@@ -40204,7 +40204,7 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       double lcm_sym13__;
       double lcm_sym12__;
       double lcm_sym11__;
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> lcm_sym10__;
+      Eigen::Matrix<double,-1,1> lcm_sym10__;
       current_statement__ = 1;
       auto a =
         in__.template read<
@@ -47515,8 +47515,7 @@ class unenforce_initialize_should_fail_model final : public model_base_crtp<unen
     (void) function__;
     try {
       double lcm_sym17__;
-      std::vector<stan::math::var_value<Eigen::Matrix<double,-1,1>>>
-        lcm_sym16__;
+      std::vector<Eigen::Matrix<double,-1,1>> lcm_sym16__;
       double lcm_sym15__;
       double lcm_sym14__;
       double lcm_sym13__;
@@ -49621,15 +49620,15 @@ class vectorize_loops_model final : public model_base_crtp<vectorize_loops_model
       double lcm_sym23__;
       double lcm_sym22__;
       double lcm_sym21__;
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> lcm_sym20__;
+      Eigen::Matrix<double,-1,1> lcm_sym20__;
       double lcm_sym19__;
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> lcm_sym18__;
+      Eigen::Matrix<double,-1,1> lcm_sym18__;
       double lcm_sym17__;
       double lcm_sym16__;
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> lcm_sym15__;
+      Eigen::Matrix<double,-1,1> lcm_sym15__;
       double lcm_sym14__;
       double lcm_sym13__;
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> lcm_sym12__;
+      Eigen::Matrix<double,-1,1> lcm_sym12__;
       int lcm_sym11__;
       int lcm_sym10__;
       current_statement__ = 1;
