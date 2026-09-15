@@ -1,26 +1,26 @@
-// Scalar reductions: the red model for roadmap item 5 of
-// design-docs/active/vectorize-loop-fission.md (§7.9, §7.9.4). A loop-carried
-// scalar whose every access in the body is an increment `s += e` (MIR
-// `s = s + e`, `e` free of `s`) commutes like `target +=` and becomes one
-// vector statement `s += sum(e)`; a density operand reuses the `target`
-// widening, an invariant operand becomes `count * e`.
-// Today every increment stays sequential: the accumulator has `subs = []`,
-// so its read and write give a confused self edge `{<,=,>}` and the statement
-// is reported as a recurrence (only example 6 hoists anything, its plain
-// assignment). The expected files pin that baseline; when item 5 lands,
-// examples 1-7 must become vector statements, example 8 must split, and
-// examples 9-14 must stay unchanged. The functions-block loop of example 1 is
-// reported after the model-block loops.
+// Scalar reductions, roadmap item 5 of
+// design-docs/active/vectorize-loop-fission.md (§7.4, §7.9). A scalar whose
+// every access in the loop body is an increment `s += e` (MIR `s = s + e`,
+// `e` free of `s`) is an accumulator: its increments commute like `target +=`,
+// so they carry no dependence edge and each becomes one vector statement
+// `s += sum(e over the loop)`. A density operand reuses the `target` widening,
+// an invariant operand becomes `count * e`. Reals are summed in a different
+// order than the loop, the reassociation Stan already accepts for `target`.
+// Any other access to the scalar (a read elsewhere, an operand that mentions
+// it, a declaration in the body) gives the increment a confused edge `{<,=,>}`
+// that keeps the loop sequential; an increment nested in an `if` still
+// commutes, but the if statement itself is not widened.
 // Each example sits in its own block, and every local it writes carries the
 // example number as a suffix (s3 belongs to example 3) so the generated MIR
-// and C++ can be matched to the example. Examples are ordered by the outcome
-// item 5 is expected to produce: fully vectorized, then partially vectorized,
-// then loops the pass must leave unchanged.
+// and C++ can be matched to the example. Examples are ordered by outcome:
+// fully vectorized loops first, then partially vectorized loops, then loops
+// the pass leaves unchanged. The functions-block loop of example 1 is
+// reported after the model-block loops.
 functions {
   // 1. Accumulation into a function local, the shape of most user-defined
   // densities. Runs inside the functions block; the pass visits it through
   // Program.map.
-  // After item 5: lp1 += normal_lpdf(y[1:num_elements(y)] | mu[1:...], sigma)
+  // Emitted: lp1 += normal_lpdf(y[1:num_elements(y)] | mu[1:...], sigma)
   real normal_loop1_lpdf(vector y, vector mu, real sigma) {
     real lp1 = 0;
     for (n in 1 : num_elements(y)) {
@@ -45,7 +45,7 @@ parameters {
   real<lower=0> sigma;
 }
 model {
-  // ---- Fully vectorized once item 5 lands ----
+  // ---- Fully vectorized: every statement becomes a vector statement ----
 
   // 1. (see the functions block) called on a parameter vector.
   {
@@ -54,7 +54,7 @@ model {
   }
 
   // 2. Density accumulated into a model-block local, then added to target.
-  // After item 5: lp2 += normal_lpdf(y | alpha + beta * x, sigma)
+  // Emitted: lp2 += normal_lpdf(y | alpha + beta * x, sigma)
   {
     real lp2 = 0;
     for (n in 1 : N) {
@@ -64,7 +64,7 @@ model {
   }
 
   // 3. Plain sum.
-  // After item 5: total3 += sum(a[1:N])
+  // Emitted: total3 += sum(a[1:N])
   {
     real total3 = 0;
     for (n in 1 : N) {
@@ -74,7 +74,7 @@ model {
   }
 
   // 4. Dot product written as a loop.
-  // After item 5: dot4 += sum(a[1:N] .* b[1:N])  (dot_product by a later
+  // Emitted: dot4 += sum(a[1:N] .* b[1:N])  (dot_product by a later
   // partial-evaluator rule)
   {
     real dot4 = 0;
@@ -85,7 +85,8 @@ model {
   }
 
   // 5. Invariant increment: an integer counter.
-  // After item 5: count5 += (N - (1 - 1))  (the iteration count)
+  // Emitted: count5 += (N - (1 - 1)) * 1  (the iteration count times the
+  // invariant operand, as for an all-invariant density)
   {
     int count5 = 0;
     for (n in 1 : N) {
@@ -96,9 +97,8 @@ model {
 
   // 6. Two increments of the same accumulator next to a hoistable
   // assignment; S1->S2 {Eq}, the increments carry no edge between them.
-  // Today: mu6 hoists, the two increments stay in a loop (partial).
-  // After item 5: mu6[1:N] = alpha + beta * x; s6 += sum(mu6[1:N]);
-  //               s6 += sum(w[1:N])
+  // Emitted: mu6[1:N] = alpha + beta * x; s6 += sum(mu6[1:N]);
+  //          s6 += sum(w[1:N])
   {
     vector[N] mu6;
     real s6 = 0;
@@ -111,7 +111,7 @@ model {
   }
 
   // 7. Decrement (`s -= e` is `s = s - e`).
-  // After item 5: neg7 -= sum(a[1:N])
+  // Emitted: neg7 -= sum(a[1:N])
   {
     real neg7 = 0;
     for (n in 1 : N) {
@@ -120,12 +120,12 @@ model {
     target += neg7;
   }
 
-  // ---- Partially vectorized once item 5 lands ----
+  // ---- Partially vectorized: some statements hoist, others stay in a loop ----
 
   // 8. Reduction over a recurrence's output: S1 self {Lt, 1} stays a loop,
   // S1->S2 {Eq} lets S2 follow it as a vector statement.
-  // After item 5: for (n in 2:N) v8[n] = v8[n - 1] + w[n];
-  //               s8 += sum(v8[2:N])
+  // Emitted: for (n in 2:N) v8[n] = v8[n - 1] + w[n];
+  //          s8 += sum(v8[2:N])
   {
     vector[N] v8 = w;
     real s8 = 0;
@@ -136,7 +136,7 @@ model {
     target += sum(v8) + s8;
   }
 
-  // ---- Left unchanged: not a reduction ----
+  // ---- Left unchanged: not a reduction, so the self edge stays ----
 
   // 9. The running sum is observed by another statement (the analogue of
   // reading target() in the body): every access stays ordered.
@@ -159,7 +159,8 @@ model {
     target += s10;
   }
 
-  // 11. Increment under an if: an `IfElse` leaf (item 6), not a reduction.
+  // 11. Increment under an if: the increment commutes (no edge), but the
+  // `IfElse` leaf is refused as an if statement (item 6), so the loop stays.
   {
     real s11 = 0;
     for (n in 1 : N) {

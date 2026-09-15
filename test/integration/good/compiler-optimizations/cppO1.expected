@@ -4899,12 +4899,10 @@ namespace empty_loop_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 6> locations_array__ =
+static constexpr std::array<const char*, 4> locations_array__ =
   {" (found before start of program)",
   " (in 'empty-loop.stan', line 2, column 2 to column 9)",
   " (in 'empty-loop.stan', line 5, column 2 to column 13)",
-  " (in 'empty-loop.stan', line 7, column 4 to column 11)",
-  " (in 'empty-loop.stan', line 6, column 2 to line 7, column 11)",
   " (in 'empty-loop.stan', line 8, column 2 to column 19)"};
 class empty_loop_model final : public model_base_crtp<empty_loop_model> {
  private:
@@ -4964,15 +4962,8 @@ class empty_loop_model final : public model_base_crtp<empty_loop_model> {
       current_statement__ = 1;
       auto y = in__.template read<local_scalar_t__>();
       {
-        local_scalar_t__ x;
-        current_statement__ = 2;
-        x = stan::math::promote_scalar<local_scalar_t__>(0);
-        current_statement__ = 4;
-        for (int i = 1; i <= 0; ++i) {
-          current_statement__ = 3;
-          x = (x + 1);
-        }
-        current_statement__ = 5;
+        local_scalar_t__ x = DUMMY_VAR__;
+        current_statement__ = 3;
         lp_accum__.add(stan::math::std_normal_lpdf<propto__>(y));
       }
     } catch (const std::exception& e) {
@@ -5008,15 +4999,8 @@ class empty_loop_model final : public model_base_crtp<empty_loop_model> {
       current_statement__ = 1;
       auto y = in__.template read<local_scalar_t__>();
       {
-        local_scalar_t__ x;
-        current_statement__ = 2;
-        x = stan::math::promote_scalar<local_scalar_t__>(0);
-        current_statement__ = 4;
-        for (int i = 1; i <= 0; ++i) {
-          current_statement__ = 3;
-          x = (x + 1);
-        }
-        current_statement__ = 5;
+        local_scalar_t__ x = DUMMY_VAR__;
+        current_statement__ = 3;
         lp_accum__.add(stan::math::std_normal_lpdf<propto__>(y));
       }
     } catch (const std::exception& e) {
@@ -21261,13 +21245,11 @@ namespace lcm_experiment2_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 9> locations_array__ =
+static constexpr std::array<const char*, 7> locations_array__ =
   {" (found before start of program)",
   " (in 'lcm-experiment2.stan', line 2, column 2 to column 9)",
   " (in 'lcm-experiment2.stan', line 5, column 2 to column 18)",
   " (in 'lcm-experiment2.stan', line 7, column 4 to column 11)",
-  " (in 'lcm-experiment2.stan', line 6, column 17 to line 8, column 3)",
-  " (in 'lcm-experiment2.stan', line 6, column 2 to line 8, column 3)",
   " (in 'lcm-experiment2.stan', line 10, column 4 to column 11)",
   " (in 'lcm-experiment2.stan', line 9, column 2 to line 10, column 11)",
   " (in 'lcm-experiment2.stan', line 11, column 2 to column 14)"};
@@ -21332,16 +21314,13 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
         local_scalar_t__ y;
         current_statement__ = 2;
         y = stan::math::log(x);
-        current_statement__ = 5;
-        for (int j = 1; j <= 1; ++j) {
-          current_statement__ = 3;
-          y = (y + 1);
-        }
+        current_statement__ = 3;
+        y = (y + 1);
         {
-          current_statement__ = 6;
+          current_statement__ = 4;
           y = (y + 1);
         }
-        current_statement__ = 8;
+        current_statement__ = 6;
         lp_accum__.add(y);
       }
     } catch (const std::exception& e) {
@@ -21380,16 +21359,13 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
         local_scalar_t__ y;
         current_statement__ = 2;
         y = stan::math::log(x);
-        current_statement__ = 5;
-        for (int j = 1; j <= 1; ++j) {
-          current_statement__ = 3;
-          y = (y + 1);
-        }
+        current_statement__ = 3;
+        y = (y + 1);
         {
-          current_statement__ = 6;
+          current_statement__ = 4;
           y = (y + 1);
         }
-        current_statement__ = 8;
+        current_statement__ = 6;
         lp_accum__.add(y);
       }
     } catch (const std::exception& e) {

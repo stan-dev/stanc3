@@ -76,40 +76,40 @@ model {
     target += sum(ma3) + sum(md3);
   }
 
+  // 4. LLVM LoopDistribute/outside-use.ll
+  // C: for (i = 0; i < N; i++) { A[i+1] = A[i] * B[i]; sum += C[i]; }
+  // LLVM: distributed, the sum reduction merged by a phi.
+  // Design: S1 self {Lt, 1}; total4 is an accumulator (reduction, section
+  // 7.9 item 5), so S2 carries no edge.
+  // Emitted: S1 seq, then vec total4 += sum(d[1:N]).
+  {
+    vector[N + 1] a4;
+    real total4 = 0;
+    for (n in 1 : N) {
+      a4[n + 1] = a4[n] * b[n];
+      total4 += d[n];
+    }
+    target += sum(a4) + total4;
+  }
+
   // ---- Left unchanged: no statement can be hoisted ----
 
-  // 4. LLVM LoopDistribute/program-order.ll
+  // 5. LLVM LoopDistribute/program-order.ll
   // C: for (i = 0; i < N; i++) { d = D[i]; A[i+1] = A[i] * B[i]; C[i] = d * E[i]; }
   // LLVM: not distributed ("does not allow us to reorder memory
   // operations").
-  // Design: S1<->S3 confused (scalar dd4), S2 self; blocks {S1, S3}, {S2}
+  // Design: S1<->S3 confused (scalar dd5), S2 self; blocks {S1, S3}, {S2}
   // fuse.
   // Emitted: loop unchanged.
   {
-    vector[N + 1] a4;
-    vector[N] c4;
-    for (n in 1 : N) {
-      real dd4 = D[n];
-      a4[n + 1] = a4[n] * b[n];
-      c4[n] = dd4 * e[n];
-    }
-    target += sum(a4) + sum(c4);
-  }
-
-  // 5. LLVM LoopDistribute/outside-use.ll
-  // C: for (i = 0; i < N; i++) { A[i+1] = A[i] * B[i]; sum += C[i]; }
-  // LLVM: distributed, the sum reduction merged by a phi.
-  // Design: S2 self confused (total5 has subs = []); scalar reductions are
-  // not recognised (only target += is, section 7.4).
-  // Emitted: loop unchanged.
-  {
     vector[N + 1] a5;
-    real total5 = 0;
+    vector[N] c5;
     for (n in 1 : N) {
+      real dd5 = D[n];
       a5[n + 1] = a5[n] * b[n];
-      total5 += d[n];
+      c5[n] = dd5 * e[n];
     }
-    target += sum(a5) + total5;
+    target += sum(a5) + sum(c5);
   }
 
   mu ~ normal(0, 1);

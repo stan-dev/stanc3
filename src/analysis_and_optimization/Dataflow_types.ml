@@ -69,10 +69,22 @@ type subscript =
           [a:b], [:], or a [MultiIndex]. *)
 [@@deriving sexp_of, compare]
 
+(** How a reference touches its variable. An [Increment] is [s += e] with [e]
+    free of [s] ([target += e] included): it reads and writes [s], and two
+    increments of the same variable commute (design §7.4). *)
+type access_kind = Read | Write | Increment [@@deriving sexp_of, compare]
+
 (** One reference to a variable inside a loop body. A whole-variable reference
-    ([v], or a [Decl] of [v]) has [subs = []]. *)
-type access = {var: string; subs: subscript list; is_write: bool; label: label}
+    ([v], a [Decl] of [v], an increment of [v]) has [subs = []]. *)
+type access =
+  {var: string; subs: subscript list; kind: access_kind; label: label}
 [@@deriving sexp_of, compare]
+
+let access_reads (a : access) =
+  match a.kind with Read | Increment -> true | Write -> false
+
+let access_writes (a : access) =
+  match a.kind with Write | Increment -> true | Read -> false
 
 (** Relation between the iteration of the first access and the iteration of the
     second: [Lt] means the first access happens in an earlier iteration. *)

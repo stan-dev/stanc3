@@ -86,10 +86,12 @@ let%expect_test "stmt_accesses: declarations, target, effects and nesting" =
       parameters { real mu; }
       model {
         vector[N] v;
+        real acc = 0;
         for (n in 1:N) {
           real t = 2 * x[n];
           vector[2] u;
           v[n] = t + w[n];
+          acc += x[n] * w[n];
           target += normal_lpdf(x[n] | v[n], mu);
           if (v[n] > 0) print(v[n]); else v[n] = sum(v);
           while (v[n] < 0) v[n] = 0;
@@ -99,7 +101,7 @@ let%expect_test "stmt_accesses: declarations, target, effects and nesting" =
   [%expect
     {|
     loopvar: n
-    written: t, u, v
+    written: acc, t, u, v
     0: real t;
        W t
     1: t = (promote(2, real, data) * x[n]);
@@ -108,11 +110,13 @@ let%expect_test "stmt_accesses: declarations, target, effects and nesting" =
        W u
     3: v[n] = (t + w[n]);
        R t, R w[i], W v[i]
-    4: target += normal_lpdf(x[n], v[n], mu);
-       R x[i], R v[i], R mu, W target
-    5: if((v[n] > 0)) FnPrint__(v[n]); else v[n] = sum(v);
+    4: acc = (acc + (x[n] * w[n]));
+       R x[i], R w[i], += acc
+    5: target += normal_lpdf(x[n], v[n], mu);
+       R x[i], R v[i], R mu, += target
+    6: if((v[n] > 0)) FnPrint__(v[n]); else v[n] = sum(v);
        R v[i], R v[i], R v, W v[i]
-    6: while((v[n] < 0)) v[n] = promote(0, real, var);
+    7: while((v[n] < 0)) v[n] = promote(0, real, var);
        R v[i], W v[i]
     |}]
 
@@ -317,8 +321,8 @@ let aff ?(coeff = 1) ?(terms = []) const = Affine {coeff; offset= {const; terms}
 let inv ?(terms = []) const = Invariant {const; terms}
 let k = [(1, Expr.Helpers.variable "k")]
 let m = [(1, Expr.Helpers.variable "m")]
-let w subs = {var= "v"; subs; is_write= true; label= 0}
-let r subs = {var= "v"; subs; is_write= false; label= 1}
+let w subs = {var= "v"; subs; kind= Write; label= 0}
+let r subs = {var= "v"; subs; kind= Read; label= 1}
 
 let dep a b =
   Fmt.pr "%a  /  %a  ->  %a@." pp_access a pp_access b pp_dependence
@@ -398,4 +402,46 @@ let%expect_test "access_dependence: merging separable positions" =
     W v[i+1, i]  /  R v[i, ?slice]  ->  {<} d=1
     W v[i, 1]  /  R v[i, 1]  ->  {=} d=0
     W v[i+1, i+1]  /  R v[i, i]  ->  {<} d=1
+    |}]
+
+let%expect_test "loop graph: scalar reductions" =
+  print_loop_graphs
+    {|
+      data { int N; vector[N] a; vector[N] b; vector[N] y; real sigma; }
+      parameters { real mu; }
+      model {
+        real s = 0; real lp = 0; real t = 0; real u = 1; vector[N] z; int c = 0;
+        for (n in 1:N) { s += a[n]; s += b[n]; }
+        for (n in 1:N) { lp += normal_lpdf(y[n] | mu, sigma); c += 1; }
+        for (n in 1:N) { t += a[n]; z[n] = t; }
+        for (n in 1:N) { u = u + u * a[n]; }
+        for (n in 1:N) { target += normal_lpdf(y[n] | mu, sigma); s += target(); }
+      }
+    |};
+  [%expect
+    {|
+    loop (n in 1:N)
+    S0  s = (s + a[n]);
+    S1  s = (s + b[n]);
+    edges: none
+    blocks: [S0] [S1]
+    loop (n in 1:N)
+    S0  lp = (lp + normal_lpdf(y[n], mu, sigma));
+    S1  c = (c + 1);
+    edges: none
+    blocks: [S0] [S1]
+    loop (n in 1:N)
+    S0  t = (t + a[n]);
+    S1  z[n] = t;
+    edges: S0 -> S1 t {<,=,>} (true); S1 -> S0 t {<,=,>} (anti)
+    blocks: [S0 S1]cyclic
+    loop (n in 1:N)
+    S0  u = (u + (u * a[n]));
+    edges: S0 -> S0 u {<,=,>} (true)
+    blocks: [S0]cyclic
+    loop (n in 1:N)
+    S0  target += normal_lpdf(y[n], mu, sigma);
+    S1  s = (s + target());
+    edges: S0 -> S1 target {<,=,>} (true); S1 -> S0 target {<,=,>} (anti)
+    blocks: [S0 S1]cyclic
     |}]

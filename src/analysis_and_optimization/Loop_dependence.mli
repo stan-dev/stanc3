@@ -53,6 +53,14 @@ val pp_dependence : dependence Fmt.t
 val loop_leaves : Stmt.Located.t -> Stmt.Located.t list
 val stmt_has_effects : Stmt.Located.t -> bool
 
+(** [s = s + e], [s = e + s] or [s = s - e] for a scalar [s], with [e] free of
+    [s]: the MIR of [s += e] and [s -= e]. *)
+type increment =
+  {var: string; accumulator: Expr.Typed.t; op: Operator.t; operand: Expr.Typed.t}
+
+val increment_shape : (Expr.Typed.t, 's) Stmt.Pattern.t -> increment option
+(** The increment a statement performs, if it has that shape (design §7.4). *)
+
 val loop_dependence_graph :
   loopvar:string -> Stmt.Located.t -> loop_dependence_graph
 

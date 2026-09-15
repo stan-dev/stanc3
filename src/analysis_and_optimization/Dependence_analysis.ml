@@ -41,14 +41,14 @@ let refined_reaching_defn_lookup
   let defs = reaching_defn_lookup info.reaching_defn_entry (VVar v) in
   let reads =
     List.filter info.accesses ~f:(fun a ->
-        (not a.is_write) && String.equal a.var v) in
+        access_reads a && String.equal a.var v) in
   Set.Poly.filter defs ~f:(fun def_label ->
       match LabelMap.find_opt def_label statement_map with
       | None -> true
       | Some (_, def_info) -> (
           let writes =
             List.filter def_info.accesses ~f:(fun a ->
-                a.is_write && String.equal a.var v) in
+                access_writes a && String.equal a.var v) in
           match (writes, reads) with
           | [], _ | _, [] -> true
           | writes, reads ->

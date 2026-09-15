@@ -159,27 +159,25 @@ log_prob {
       data int a4_1dim__ = (N + 1);
       FnValidateSize__("a4", "N + 1", a4_1dim__);
       vector[a4_1dim__] a4;
-      FnValidateSize__("c4", "N", N);
-      vector[N] c4;
-      for(n in 1:N) {
-        real dd4;
-        dd4 = D[n];
-        a4[(n + 1)] = (a4[n] * b[n]);
-        c4[n] = (dd4 * e[n]);
-      }
-      target += (sum(a4) + sum(c4));
+      real total4;
+      total4 = promote(0, real, var);
+      for(n in 1:N) a4[(n + 1)] = (a4[n] * b[n]);
+      total4 = (total4 + sum(d[1:N]));
+      target += (sum(a4) + total4);
     }
     {
       data int a5_1dim__ = (N + 1);
       FnValidateSize__("a5", "N + 1", a5_1dim__);
       vector[a5_1dim__] a5;
-      real total5;
-      total5 = promote(0, real, var);
+      FnValidateSize__("c5", "N", N);
+      vector[N] c5;
       for(n in 1:N) {
+        real dd5;
+        dd5 = D[n];
         a5[(n + 1)] = (a5[n] * b[n]);
-        total5 = (total5 + d[n]);
+        c5[n] = (dd5 * e[n]);
       }
-      target += (sum(a5) + total5);
+      target += (sum(a5) + sum(c5));
     }
     target += normal_lupdf(mu, promote(0, real, data), promote(1, real, data));
   } }
@@ -221,27 +219,25 @@ rev_log_prob {
       data int a4_1dim__ = (N + 1);
       FnValidateSize__("a4", "N + 1", a4_1dim__);
       vector[a4_1dim__] a4;
-      FnValidateSize__("c4", "N", N);
-      vector[N] c4;
-      for(n in 1:N) {
-        real dd4;
-        dd4 = D[n];
-        a4[(n + 1)] = (a4[n] * b[n]);
-        c4[n] = (dd4 * e[n]);
-      }
-      target += (sum(a4) + sum(c4));
+      real total4;
+      total4 = promote(0, real, var);
+      for(n in 1:N) a4[(n + 1)] = (a4[n] * b[n]);
+      total4 = (total4 + sum(d[1:N]));
+      target += (sum(a4) + total4);
     }
     {
       data int a5_1dim__ = (N + 1);
       FnValidateSize__("a5", "N + 1", a5_1dim__);
       vector[a5_1dim__] a5;
-      real total5;
-      total5 = promote(0, real, var);
+      FnValidateSize__("c5", "N", N);
+      vector[N] c5;
       for(n in 1:N) {
+        real dd5;
+        dd5 = D[n];
         a5[(n + 1)] = (a5[n] * b[n]);
-        total5 = (total5 + d[n]);
+        c5[n] = (dd5 * e[n]);
       }
-      target += (sum(a5) + total5);
+      target += (sum(a5) + sum(c5));
     }
     target += normal_lupdf(mu, promote(0, real, data), promote(1, real, data));
   } }

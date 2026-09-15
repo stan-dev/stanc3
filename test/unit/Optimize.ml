@@ -4469,9 +4469,7 @@ let%expect_test "vectorize: loops inside function bodies" =
       {
         real lp;
         lp = promote(0, real, var);
-        for(n in 1:num_elements(y)) {
-          lp = (lp + normal_lpdf(y[n], mu, sigma));
-        }
+        lp = (lp + normal_lpdf(y[1:num_elements(y)], mu, sigma));
         return lp;
       }
     }

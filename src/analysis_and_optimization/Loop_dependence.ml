@@ -173,10 +173,53 @@ let classify_subscript ~loopvar ~written_vars (idx : Expr.Typed.t Index.t) :
       | None when is_gather ~loopvar e -> Varying Gather
       | None -> Varying Nonlinear)
 
+(** {2 Increments (design §7.4)} *)
+
+(** [s = s + e], [s = e + s] or [s = s - e] for a scalar [s] assigned as a
+    whole, with [e] free of [s]: the MIR of [s += e] and [s -= e]. [accumulator]
+    is the typed [Var s]. *)
+type increment =
+  {var: string; accumulator: Expr.Typed.t; op: Operator.t; operand: Expr.Typed.t}
+
+let is_var name (e : Expr.Typed.t) =
+  match e.pattern with
+  | Var v -> String.equal v name
+  | Lit _ | FunApp _ | TernaryIf _ | EAnd _ | EOr _ | Indexed _ | Promotion _
+   |TupleProjection _ ->
+      false
+
+(** The increment a statement performs, if it has that shape. [u = u + u * a[n]]
+    is not one: its operand reads the accumulator, so it is a recurrence. *)
+let increment_shape (stmt : (Expr.Typed.t, 's) Stmt.Pattern.t) :
+    increment option =
+  match stmt with
+  | Assignment ((LVariable var, []), (UInt | UReal), rhs) -> (
+      let increment accumulator op operand =
+        Option.some_if
+          (not (mentions (Set.Poly.singleton var) operand))
+          {var; accumulator; op; operand} in
+      match operator_app rhs with
+      | Some (((Plus | Minus) as op), [a; b]) when is_var var a ->
+          increment a op b
+      | Some (Plus, [a; b]) when is_var var b -> increment b Plus a
+      | Some ((Plus | Minus), _)
+       |Some
+          ( ( PPlus | PMinus | Times | Divide | IntDivide | Modulo | LDivide
+            | EltTimes | EltDivide | Pow | EltPow | Or | And | Equals | NEquals
+            | Less | Leq | Greater | Geq | PNot | Transpose )
+          , _ )
+       |None ->
+          None)
+  | Assignment _ | TargetPE _ | JacobianPE _ | NRFunApp _ | Break | Continue
+   |Return _ | Skip | IfElse _ | While _ | For _ | Profile _ | Block _
+   |SList _ | Decl _ ->
+      None
+
 (** {2 Accesses} *)
 
-let read ~label var subs = {var; subs; is_write= false; label}
-let write ~label var subs = {var; subs; is_write= true; label}
+let read ~label var subs = {var; subs; kind= Read; label}
+let write ~label var subs = {var; subs; kind= Write; label}
+let increment ~label var = {var; subs= []; kind= Increment; label}
 let index_bounds idcs = List.concat_map idcs ~f:Index.bounds
 
 (** Every reference an expression reads, in evaluation order. A reference
@@ -208,27 +251,32 @@ let rec expr_reads ~loopvar ~written_vars ~label (e : Expr.Typed.t) :
     write to [v] (an [LTupleProjection] base is a write with
     [subs = [Varying Nonlinear]]) after the reads of its indices and right-hand
     side; a [Decl] yields a write with [subs = []]; an inner [For] yields a
-    write to its own loop variable with [subs = []]. [TargetPE] and [JacobianPE]
-    are writes to ["target"]; [loop_dependence_graph] ignores the write/write
-    pairs unless some statement reads [target()], because the increments form a
-    reduction whose order is unobservable until then (design §7.4). [sub] gives
-    the accesses of a substatement. *)
+    write to its own loop variable with [subs = []]. An assignment with
+    [increment_shape], and [TargetPE] and [JacobianPE], yield one [Increment]
+    access to the accumulator after the reads of the operand: the accumulator's
+    own read and write are the increment (design §7.4). [sub] gives the accesses
+    of a substatement. *)
 let accesses_of_pattern ~loopvar ~written_vars ~label ~(sub : 's -> access list)
     (stmt : (Expr.Typed.t, 's) Stmt.Pattern.t) : access list =
   let reads = expr_reads ~loopvar ~written_vars ~label in
   let reads_all es = List.concat_map es ~f:reads in
   let write = write ~label in
+  let increment = increment ~label in
   match stmt with
-  | Assignment ((LVariable v, idcs), _, rhs) ->
-      let subs = List.map idcs ~f:(classify_subscript ~loopvar ~written_vars) in
-      reads_all (index_bounds idcs) @ reads rhs @ [write v subs]
+  | Assignment ((LVariable v, idcs), _, rhs) -> (
+      match increment_shape stmt with
+      | Some {operand; _} -> reads operand @ [increment v]
+      | None ->
+          let subs =
+            List.map idcs ~f:(classify_subscript ~loopvar ~written_vars) in
+          reads_all (index_bounds idcs) @ reads rhs @ [write v subs])
   | Assignment (((LTupleProjection _, _) as lhs), _, rhs) ->
       reads_all (index_bounds (Stmt.Helpers.lhs_indices lhs))
       @ reads rhs
       @ [write (Stmt.Helpers.lhs_variable lhs) [Varying Nonlinear]]
   | Decl {decl_id; initialize= Assign e; _} -> reads e @ [write decl_id []]
   | Decl {decl_id; _} -> [write decl_id []]
-  | TargetPE e | JacobianPE e -> reads e @ [write "target" []]
+  | TargetPE e | JacobianPE e -> reads e @ [increment "target"]
   | Return (Some e) -> reads e
   | NRFunApp (kind, args) -> reads_all (Fun_kind.collect_exprs kind @ args)
   | IfElse (cond, s1, s2) ->
@@ -346,9 +394,11 @@ let pp_subscript ppf = function
       pp_linear ~leading:false ppf offset
   | Varying kind -> Fmt.pf ppf "?%a" pp_varying_kind kind
 
-(** [W v[i+1]], [R v]. *)
-let pp_access ppf {var; subs; is_write; _} =
-  Fmt.pf ppf "%s %s" (if is_write then "W" else "R") var;
+(** [W v[i+1]], [R v], [+= s]. *)
+let pp_access ppf {var; subs; kind; _} =
+  Fmt.pf ppf "%s %s"
+    (match kind with Write -> "W" | Read -> "R" | Increment -> "+=")
+    var;
   if not (List.is_empty subs) then
     Fmt.pf ppf "[%a]" Fmt.(list ~sep:(any ", ") pp_subscript) subs
 
@@ -416,7 +466,8 @@ let has_direction dir = function
   | Independent -> false
   | Dependent {directions; _} -> Set.Poly.mem dir directions
 
-(** Two reads never form an edge; callers pair a write with another access. *)
+(** Two reads never form an edge; callers pair a write with another access. An
+    increment counts as a write. *)
 let dep_kind ~src_is_write ~dst_is_write =
   match (src_is_write, dst_is_write) with
   | true, true -> Output
@@ -429,8 +480,22 @@ let edge ~src_pos ~dst_pos (src : access) (dst : access) dep : loop_edge =
   { src= src_pos
   ; dst= dst_pos
   ; var= src.var
-  ; kind= dep_kind ~src_is_write:src.is_write ~dst_is_write:dst.is_write
+  ; kind=
+      dep_kind ~src_is_write:(access_writes src)
+        ~dst_is_write:(access_writes dst)
   ; dep }
+
+(** Two accesses to the same variable that must keep their order: at least one
+    writes, and they are not two increments, which commute ([s += a; s += b]
+    gives the same [s] in any order, design §7.4). *)
+let related (x : access) (y : access) =
+  String.equal x.var y.var
+  && (access_writes x || access_writes y)
+  &&
+  match (x.kind, y.kind) with
+  | Increment, Increment -> false
+  | (Read | Write), (Read | Write | Increment) | Increment, (Read | Write) ->
+      true
 
 (** Edges between two different nodes, [a] lexically before [b], for each pair
     of [related] accesses [x] in [a] and [y] in [b]: [Eq] or [Lt] gives an edge
@@ -456,7 +521,7 @@ let cross_edges ~related (a : loop_node) (b : loop_node) =
     earlier access is the read ([a[n] = a[n+1] + 1]; GCC's "dependence distance
     negative", LLVM's [memdep.ll] [f1_vec]). *)
 let recurrence_edge pos ~earlier ~later dep =
-  let pure_anti = (not earlier.is_write) && later.is_write in
+  let pure_anti = (not (access_writes earlier)) && access_writes later in
   if pure_anti then [] else [edge ~src_pos:pos ~dst_pos:pos earlier later dep]
 
 let rec unordered_pairs = function
@@ -510,6 +575,9 @@ let dedup_edges (edges : loop_edge list) =
       edge from the earlier to the later statement; [Gt]: the reverse;
     - within one statement, [Lt] or [Gt] is a recurrence (self-edge) unless the
       pair is a pure anti-dependence;
+    - two increments of the same accumulator are not [related]: they commute, so
+      a scalar the body only ever increments ([target] included) gets no edge at
+      all, while any other access to it orders everything again;
     - two effectful statements get edges both ways. Every edge is oriented so
       that its source executes no later than its sink in the original loop,
       which is what makes emitting the pi-blocks in a topological order legal
@@ -523,16 +591,6 @@ let loop_dependence_graph ~loopvar (body : Stmt.Located.t) :
     ; accesses= stmt_accesses ~loopvar ~written_vars ~label:pos stmt.pattern
     ; effects= stmt_has_effects stmt } in
   let nodes = loop_leaves body |> List.mapi ~f:node |> Array.of_list in
-  (* [target +=] increments commute, so they carry no dependence among
-     themselves unless a statement observes the running sum with [target()];
-     then every increment and every read are kept in order. *)
-  let target_observed =
-    Array.exists nodes ~f:(fun (node : loop_node) ->
-        List.exists node.accesses ~f:(fun (a : access) ->
-            String.equal a.var "target" && not a.is_write)) in
-  let related (x : access) (y : access) =
-    String.equal x.var y.var && (x.is_write || y.is_write)
-    && (target_observed || not (String.equal x.var "target")) in
   let positions = List.range 0 (Array.length nodes) in
   let edges =
     List.concat_map positions ~f:(fun i ->

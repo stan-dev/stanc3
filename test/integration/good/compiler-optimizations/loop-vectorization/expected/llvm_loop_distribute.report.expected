@@ -22,19 +22,19 @@ loop at 'llvm_loop_distribute.stan', line 70, column 4 to line 75, column 5  (i 
   edges: S0 -> S0 j {<,=,>} (true)
   blocks: [S0]cyclic [S1]
 
-loop at 'llvm_loop_distribute.stan', line 91, column 4 to line 95, column 5  (n in 1:N)
-  S0  real dd4;   sequential: in a dependence cycle with S1 S3
-  S1  dd4 = D[n];   sequential: in a dependence cycle with S0 S3
-  S2  a4[(n + 1)] = (a4[n] * b[n]);   sequential: recurrence, S2 -> S2 a4 {<} d=1 (true)
-  S3  c4[n] = (dd4 * e[n]);   sequential: in a dependence cycle with S0 S1
-  edges: S0 -> S1 dd4 {<,=,>} (output); S0 -> S3 dd4 {<,=,>} (true); S1 -> S0 dd4 {<,=,>} (output); S1 -> S3 dd4 {<,=,>} (true); S2 -> S2 a4 {<} d=1 (true); S3 -> S0 dd4 {<,=,>} (anti); S3 -> S1 dd4 {<,=,>} (anti)
-  blocks: [S0 S1 S3]cyclic [S2]cyclic
+loop at 'llvm_loop_distribute.stan', line 88, column 4 to line 91, column 5  (n in 1:N)
+  S0  a4[(n + 1)] = (a4[n] * b[n]);   sequential: recurrence, S0 -> S0 a4 {<} d=1 (true)
+  S1  total4 = (total4 + d[n]);   hoisted: reduction of total4
+  edges: S0 -> S0 a4 {<} d=1 (true)
+  blocks: [S0]cyclic [S1]
 
-loop at 'llvm_loop_distribute.stan', line 108, column 4 to line 111, column 5  (n in 1:N)
-  S0  a5[(n + 1)] = (a5[n] * b[n]);   sequential: recurrence, S0 -> S0 a5 {<} d=1 (true)
-  S1  total5 = (total5 + d[n]);   sequential: recurrence, S1 -> S1 total5 {<,=,>} (true)
-  edges: S0 -> S0 a5 {<} d=1 (true); S1 -> S1 total5 {<,=,>} (true)
-  blocks: [S0]cyclic [S1]cyclic
+loop at 'llvm_loop_distribute.stan', line 107, column 4 to line 111, column 5  (n in 1:N)
+  S0  real dd5;   sequential: in a dependence cycle with S1 S3
+  S1  dd5 = D[n];   sequential: in a dependence cycle with S0 S3
+  S2  a5[(n + 1)] = (a5[n] * b[n]);   sequential: recurrence, S2 -> S2 a5 {<} d=1 (true)
+  S3  c5[n] = (dd5 * e[n]);   sequential: in a dependence cycle with S0 S1
+  edges: S0 -> S1 dd5 {<,=,>} (output); S0 -> S3 dd5 {<,=,>} (true); S1 -> S0 dd5 {<,=,>} (output); S1 -> S3 dd5 {<,=,>} (true); S2 -> S2 a5 {<} d=1 (true); S3 -> S0 dd5 {<,=,>} (anti); S3 -> S1 dd5 {<,=,>} (anti)
+  blocks: [S0 S1 S3]cyclic [S2]cyclic
 
 loop at 'llvm_loop_distribute.stan', line 36, column 4 to line 38, column 5  (n in 1:N)
   S0  a1[n] = (b[n] * d[n]);   hoisted
@@ -59,17 +59,17 @@ loop at 'llvm_loop_distribute.stan', line 70, column 4 to line 75, column 5  (i 
   edges: S0 -> S0 j {<,=,>} (true)
   blocks: [S0]cyclic [S1]
 
-loop at 'llvm_loop_distribute.stan', line 91, column 4 to line 95, column 5  (n in 1:N)
-  S0  real dd4;   sequential: in a dependence cycle with S1 S3
-  S1  dd4 = D[n];   sequential: in a dependence cycle with S0 S3
-  S2  a4[(n + 1)] = (a4[n] * b[n]);   sequential: recurrence, S2 -> S2 a4 {<} d=1 (true)
-  S3  c4[n] = (dd4 * e[n]);   sequential: in a dependence cycle with S0 S1
-  edges: S0 -> S1 dd4 {<,=,>} (output); S0 -> S3 dd4 {<,=,>} (true); S1 -> S0 dd4 {<,=,>} (output); S1 -> S3 dd4 {<,=,>} (true); S2 -> S2 a4 {<} d=1 (true); S3 -> S0 dd4 {<,=,>} (anti); S3 -> S1 dd4 {<,=,>} (anti)
-  blocks: [S0 S1 S3]cyclic [S2]cyclic
+loop at 'llvm_loop_distribute.stan', line 88, column 4 to line 91, column 5  (n in 1:N)
+  S0  a4[(n + 1)] = (a4[n] * b[n]);   sequential: recurrence, S0 -> S0 a4 {<} d=1 (true)
+  S1  total4 = (total4 + d[n]);   hoisted: reduction of total4
+  edges: S0 -> S0 a4 {<} d=1 (true)
+  blocks: [S0]cyclic [S1]
 
-loop at 'llvm_loop_distribute.stan', line 108, column 4 to line 111, column 5  (n in 1:N)
-  S0  a5[(n + 1)] = (a5[n] * b[n]);   sequential: recurrence, S0 -> S0 a5 {<} d=1 (true)
-  S1  total5 = (total5 + d[n]);   sequential: recurrence, S1 -> S1 total5 {<,=,>} (true)
-  edges: S0 -> S0 a5 {<} d=1 (true); S1 -> S1 total5 {<,=,>} (true)
-  blocks: [S0]cyclic [S1]cyclic
+loop at 'llvm_loop_distribute.stan', line 107, column 4 to line 111, column 5  (n in 1:N)
+  S0  real dd5;   sequential: in a dependence cycle with S1 S3
+  S1  dd5 = D[n];   sequential: in a dependence cycle with S0 S3
+  S2  a5[(n + 1)] = (a5[n] * b[n]);   sequential: recurrence, S2 -> S2 a5 {<} d=1 (true)
+  S3  c5[n] = (dd5 * e[n]);   sequential: in a dependence cycle with S0 S1
+  edges: S0 -> S1 dd5 {<,=,>} (output); S0 -> S3 dd5 {<,=,>} (true); S1 -> S0 dd5 {<,=,>} (output); S1 -> S3 dd5 {<,=,>} (true); S2 -> S2 a5 {<} d=1 (true); S3 -> S0 dd5 {<,=,>} (anti); S3 -> S1 dd5 {<,=,>} (anti)
+  blocks: [S0 S1 S3]cyclic [S2]cyclic
 [exit 0]

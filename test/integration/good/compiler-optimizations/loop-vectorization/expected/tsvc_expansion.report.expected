@@ -37,7 +37,7 @@ loop at 'tsvc_expansion.stan', line 84, column 4 to line 89, column 5  (n in 2:N
 loop at 'tsvc_expansion.stan', line 100, column 4 to line 103, column 5  (n in 1:N)
   S0  s6 = (s6 + 2);   sequential: in a dependence cycle with S1
   S1  a6[n] = (s6 * b[n]);   sequential: in a dependence cycle with S0
-  edges: S0 -> S0 s6 {<,=,>} (true); S0 -> S1 s6 {<,=,>} (true); S1 -> S0 s6 {<,=,>} (anti)
+  edges: S0 -> S1 s6 {<,=,>} (true); S1 -> S0 s6 {<,=,>} (anti)
   blocks: [S0 S1]cyclic
 
 loop at 'tsvc_expansion.stan', line 26, column 4 to line 29, column 5  (n in 1:N)
@@ -78,6 +78,6 @@ loop at 'tsvc_expansion.stan', line 84, column 4 to line 89, column 5  (n in 2:N
 loop at 'tsvc_expansion.stan', line 100, column 4 to line 103, column 5  (n in 1:N)
   S0  s6 = (s6 + 2);   sequential: in a dependence cycle with S1
   S1  a6[n] = (s6 * b[n]);   sequential: in a dependence cycle with S0
-  edges: S0 -> S0 s6 {<,=,>} (true); S0 -> S1 s6 {<,=,>} (true); S1 -> S0 s6 {<,=,>} (anti)
+  edges: S0 -> S1 s6 {<,=,>} (true); S1 -> S0 s6 {<,=,>} (anti)
   blocks: [S0 S1]cyclic
 [exit 0]

@@ -4,9 +4,8 @@ functions {
     {
       real lp1;
       lp1 = promote(0, real, var);
-      for(n in 1:num_elements(y)) {
-        lp1 = (lp1 + normal_lpdf(y[n], mu[n], sigma));
-      }
+      lp1 = (lp1 + normal_lpdf(y[1:num_elements(y)], mu[1:num_elements(y)],
+                               sigma));
       return lp1;
     }
   } }
@@ -119,33 +118,25 @@ log_prob {
     {
       real lp2;
       lp2 = promote(0, real, var);
-      for(n in 1:N) {
-        lp2 = (lp2 + normal_lpdf(y[n], (alpha + (beta * x[n])), sigma));
-      }
+      lp2 = (lp2 + normal_lpdf(y[1:N], (alpha + (beta * x[1:N])), sigma));
       target += lp2;
     }
     {
       real total3;
       total3 = promote(0, real, var);
-      for(n in 1:N) {
-        total3 = (total3 + a[n]);
-      }
+      total3 = (total3 + sum(a[1:N]));
       target += total3;
     }
     {
       real dot4;
       dot4 = promote(0, real, var);
-      for(n in 1:N) {
-        dot4 = (dot4 + (a[n] * b[n]));
-      }
+      dot4 = (dot4 + sum((a[1:N] .* b[1:N])));
       target += (dot4 * alpha);
     }
     {
       int count5;
       count5 = 0;
-      for(n in 1:N) {
-        count5 = (count5 + 1);
-      }
+      count5 = (count5 + ((N - (1 - 1)) * 1));
       target += (promote(count5, real, data) * alpha);
     }
     {
@@ -154,18 +145,14 @@ log_prob {
       real s6;
       s6 = promote(0, real, var);
       mu6[1:N] = (alpha + (beta * x[1:N]));
-      for(n in 1:N) {
-        s6 = (s6 + mu6[n]);
-        s6 = (s6 + w[n]);
-      }
+      s6 = (s6 + sum(mu6[1:N]));
+      s6 = (s6 + sum(w[1:N]));
       target += s6;
     }
     {
       real neg7;
       neg7 = promote(0, real, var);
-      for(n in 1:N) {
-        neg7 = (neg7 - a[n]);
-      }
+      neg7 = (neg7 - sum(a[1:N]));
       target += neg7;
     }
     {
@@ -174,10 +161,8 @@ log_prob {
       v8 = w;
       real s8;
       s8 = promote(0, real, var);
-      for(n in 2:N) {
-        v8[n] = (v8[(n - 1)] + w[n]);
-        s8 = (s8 + v8[n]);
-      }
+      for(n in 2:N) v8[n] = (v8[(n - 1)] + w[n]);
+      s8 = (s8 + sum(v8[2:N]));
       target += (sum(v8) + s8);
     }
     {
@@ -254,33 +239,25 @@ rev_log_prob {
     {
       real lp2;
       lp2 = promote(0, real, var);
-      for(n in 1:N) {
-        lp2 = (lp2 + normal_lpdf(y[n], (alpha + (beta * x[n])), sigma));
-      }
+      lp2 = (lp2 + normal_lpdf(y[1:N], (alpha + (beta * x[1:N])), sigma));
       target += lp2;
     }
     {
       real total3;
       total3 = promote(0, real, var);
-      for(n in 1:N) {
-        total3 = (total3 + a[n]);
-      }
+      total3 = (total3 + sum(a[1:N]));
       target += total3;
     }
     {
       real dot4;
       dot4 = promote(0, real, var);
-      for(n in 1:N) {
-        dot4 = (dot4 + (a[n] * b[n]));
-      }
+      dot4 = (dot4 + sum((a[1:N] .* b[1:N])));
       target += (dot4 * alpha);
     }
     {
       int count5;
       count5 = 0;
-      for(n in 1:N) {
-        count5 = (count5 + 1);
-      }
+      count5 = (count5 + ((N - (1 - 1)) * 1));
       target += (promote(count5, real, data) * alpha);
     }
     {
@@ -289,18 +266,14 @@ rev_log_prob {
       real s6;
       s6 = promote(0, real, var);
       mu6[1:N] = (alpha + (beta * x[1:N]));
-      for(n in 1:N) {
-        s6 = (s6 + mu6[n]);
-        s6 = (s6 + w[n]);
-      }
+      s6 = (s6 + sum(mu6[1:N]));
+      s6 = (s6 + sum(w[1:N]));
       target += s6;
     }
     {
       real neg7;
       neg7 = promote(0, real, var);
-      for(n in 1:N) {
-        neg7 = (neg7 - a[n]);
-      }
+      neg7 = (neg7 - sum(a[1:N]));
       target += neg7;
     }
     {
@@ -309,10 +282,8 @@ rev_log_prob {
       v8 = w;
       real s8;
       s8 = promote(0, real, var);
-      for(n in 2:N) {
-        v8[n] = (v8[(n - 1)] + w[n]);
-        s8 = (s8 + v8[n]);
-      }
+      for(n in 2:N) v8[n] = (v8[(n - 1)] + w[n]);
+      s8 = (s8 + sum(v8[2:N]));
       target += (sum(v8) + s8);
     }
     {

@@ -12,6 +12,7 @@ val vectorize_loops : Program.Typed.t -> Program.Typed.t
 (** Why one leaf statement of a loop was or was not hoisted. *)
 type hoist_outcome =
   | Hoisted
+  | Reduced of string  (** hoisted as [s += sum(...)] for the accumulator [s] *)
   | Recurrence of Dataflow_types.loop_edge  (** true/output self-edge *)
   | In_cycle of int list  (** the other members of its pi-block *)
   | Effectful  (** print, reject or a user-defined function call *)

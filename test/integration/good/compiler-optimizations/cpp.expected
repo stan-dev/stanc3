@@ -8505,10 +8505,9 @@ class empty_loop_model final : public model_base_crtp<empty_loop_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm_sym10__;
-      double lcm_sym9__;
       double lcm_sym8__;
       double lcm_sym7__;
+      double lcm_sym6__;
       current_statement__ = 1;
       auto y = in__.template read<local_scalar_t__>();
       {
@@ -8546,7 +8545,6 @@ class empty_loop_model final : public model_base_crtp<empty_loop_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm_sym6__;
       double lcm_sym5__;
       double lcm_sym4__;
       double lcm_sym3__;
@@ -30709,12 +30707,10 @@ namespace lcm_experiment2_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 8> locations_array__ =
+static constexpr std::array<const char*, 6> locations_array__ =
   {" (found before start of program)",
   " (in 'lcm-experiment2.stan', line 2, column 2 to column 9)",
   " (in 'lcm-experiment2.stan', line 5, column 2 to column 18)",
-  " (in 'lcm-experiment2.stan', line 7, column 4 to column 11)",
-  " (in 'lcm-experiment2.stan', line 6, column 2 to line 8, column 3)",
   " (in 'lcm-experiment2.stan', line 10, column 4 to column 11)",
   " (in 'lcm-experiment2.stan', line 9, column 2 to line 10, column 11)",
   " (in 'lcm-experiment2.stan', line 11, column 2 to column 14)"};
@@ -30774,22 +30770,19 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
     (void) function__;
     try {
       local_scalar_t__ lcm_sym8__;
-      double lcm_sym7__;
+      local_scalar_t__ lcm_sym7__;
       double lcm_sym6__;
       current_statement__ = 1;
       auto x = in__.template read<local_scalar_t__>();
       {
         local_scalar_t__ y = DUMMY_VAR__;
         lcm_sym8__ = stan::math::log(x);
+        lcm_sym7__ = (lcm_sym8__ + 1);
         {
           current_statement__ = 3;
-          y = (lcm_sym8__ + 1);
+          y = (lcm_sym7__ + 1);
         }
-        {
-          current_statement__ = 5;
-          y = (y + 1);
-        }
-        current_statement__ = 7;
+        current_statement__ = 5;
         lp_accum__.add(y);
       }
     } catch (const std::exception& e) {
@@ -30823,22 +30816,19 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
     (void) function__;
     try {
       local_scalar_t__ lcm_sym5__;
-      double lcm_sym4__;
+      local_scalar_t__ lcm_sym4__;
       double lcm_sym3__;
       current_statement__ = 1;
       auto x = in__.template read<local_scalar_t__>();
       {
         local_scalar_t__ y = DUMMY_VAR__;
         lcm_sym5__ = stan::math::log(x);
+        lcm_sym4__ = (lcm_sym5__ + 1);
         {
           current_statement__ = 3;
-          y = (lcm_sym5__ + 1);
+          y = (lcm_sym4__ + 1);
         }
-        {
-          current_statement__ = 5;
-          y = (y + 1);
-        }
-        current_statement__ = 7;
+        current_statement__ = 5;
         lp_accum__.add(y);
       }
     } catch (const std::exception& e) {

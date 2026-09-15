@@ -11,6 +11,8 @@
       ==>  target += normal_lpdf(y[1:N] | mu[1:N], sigma);
     for (n in 1:N) mu[n] = alpha + beta * x[n];
       ==>  mu[1:N] = alpha + beta * x[1:N];
+    for (n in 1:N) lp += normal_lpdf(y[n] | mu[n], sigma);
+      ==>  lp += normal_lpdf(y[1:N] | mu[1:N], sigma);
     v}
     A statement that cannot be rewritten stays in a loop, and the pass may still
     hoist the statements around it. For that to be legal the emitted statements
@@ -47,8 +49,13 @@
     [Loop_dependence.loop_dependence_graph], whose edges are the true, anti,
     output and effect dependences between them, and [Loop_dependence.pi_blocks]
     returns the strongly connected components of that graph in a topological
-    order. Each component is passed to [decide], which is where a statement
-    earns its [hoist_outcome]:
+    order. An increment [s += e] whose operand does not read [s]
+    ([Loop_dependence.increment_shape]), [target += e] included, is a single
+    [Increment] access; two increments of the same variable commute and carry no
+    edge, so a scalar the body only ever increments has no self-edge, while any
+    other access to it (a read elsewhere, a declaration in the body) orders
+    everything again. Each component is passed to [decide], which is where a
+    statement earns its [hoist_outcome]:
     - several statements in one component form a dependence cycle and stay
       sequential ([In_cycle]);
     - a single statement with an edge to itself is a recurrence and stays
@@ -56,7 +63,8 @@
     - a single statement with effects, such as [print], stays sequential
       ([Effectful]);
     - otherwise [Widen.stmt] tries to rewrite it; [Ok] gives a [Vectorized]
-      block ([Hoisted]) and [Error reason] a [Sequential] one ([Not_widened]).
+      block ([Hoisted], or [Reduced] for an accumulator's increment) and
+      [Error reason] a [Sequential] one ([Not_widened]).
 
     {2 4. Rewriting one statement: module [Widen]}
 
@@ -83,6 +91,10 @@
     - [density] handles [target += f(args)]: when every argument is invariant
       the increment is multiplied by [iteration_count], otherwise the density is
       applied once to the widened arguments;
+    - [reduction] handles [s += e] for an accumulator [s]: the operand is summed
+      over the loop by [summed_operand] (a density through [density], an
+      invariant operand times [iteration_count], anything else widened and
+      wrapped in [sum]) and added once;
     - [assignment] handles [v[idcs] = rhs] and checks that the widened
       right-hand side has exactly the type of the assigned slice;
     - [stmt_exn] dispatches on the statement kind, recursing into [Profile],
@@ -132,6 +144,7 @@ let iteration_count ({lower; upper; _} : loop) =
 (** Why one leaf statement was or was not hoisted. *)
 type hoist_outcome =
   | Hoisted
+  | Reduced of string
   | Recurrence of loop_edge
   | In_cycle of int list
   | Effectful
@@ -168,6 +181,7 @@ let pp_positions ppf ps =
 
 let pp_hoist_outcome ppf = function
   | Hoisted -> Fmt.string ppf "hoisted"
+  | Reduced var -> Fmt.pf ppf "hoisted: reduction of %s" var
   | Recurrence e ->
       Fmt.pf ppf "sequential: recurrence, %a" Loop_dependence.pp_loop_edge e
   | In_cycle others ->
@@ -398,6 +412,72 @@ module Widen = struct
       | Some _ | None ->
           refused "density %s has no signature for (%a)" name pp_arg_types args
 
+  (** [f(args)] for a density [f]. *)
+  let density_call (e : Expr.Typed.t) =
+    match e.pattern with
+    | FunApp
+        (StanLib (name, ((FnLpdf _ | FnLpmf _) as suffix), mem_pattern), args)
+      ->
+        Some (name, suffix, mem_pattern, args)
+    | FunApp
+        ( ( StanLib (_, (FnPlain | FnRng | FnTarget | FnJacobian), _)
+          | UserDefined _ | CompilerInternal _ )
+        , _ )
+     |Var _ | Lit _ | TernaryIf _ | EAnd _ | EOr _ | Indexed _ | Promotion _
+     |TupleProjection _ ->
+        None
+
+  let contains_density =
+    Expr.Helpers.contains_fn_kind (function
+      | StanLib (_, (FnLpdf _ | FnLpmf _), _)
+       |UserDefined (_, (FnLpdf _ | FnLpmf _)) ->
+          true
+      | StanLib _ | UserDefined _ | CompilerInternal _ -> false)
+
+  (** The sum over the loop of an increment's operand: a density is applied once
+      to its widened arguments ([density]); an invariant operand is added
+      [iteration_count] times; anything else widens to a container and is
+      wrapped in [sum]. A density mixed into a larger operand is refused: the
+      density already sums over the slice while the other terms widen to a
+      container, so summing the whole would count the density once per element.
+  *)
+  let summed_operand ctx (operand : Expr.Typed.t) : Expr.Typed.t =
+    match density_call operand with
+    | Some (name, suffix, mem_pattern, args) ->
+        density ctx operand name suffix mem_pattern args
+    | None when is_invariant ctx operand ->
+        (* [int * operand] has the operand's scalar type and autodiff level *)
+        { (Expr.Helpers.binop (iteration_count ctx.loop) Times operand) with
+          meta= operand.meta }
+    | None when contains_density operand ->
+        refused "the increment mixes a density with other terms"
+    | None -> (
+        let widened = expr ctx operand in
+        match Partial_evaluator.stan_math_return_type "sum" [widened] with
+        | Some (ReturnType type_) ->
+            { pattern= FunApp (StanLib ("sum", FnPlain, AoS), [widened])
+            ; meta= {operand.meta with type_} }
+        | Some Void | None ->
+            refused "no Stan Math signature for sum(%a)" pp_arg_types [widened])
+
+  (** [s += e] as one statement, [s += sum of e]. Legal because the statement
+      reached widening: any other access to [s] in the loop (a read elsewhere, a
+      declaration, an operand mentioning [s]) would have given it an edge and
+      kept it sequential, and the remaining increments of [s] commute. *)
+  let reduction ctx var_type
+      ({var; accumulator; op; operand} : Loop_dependence.increment)
+      (rhs : Expr.Typed.t) =
+    if cannot_duplicate_expr operand then
+      refused "the increment has side effects or draws random numbers";
+    let summed = summed_operand ctx operand in
+    let rhs =
+      { rhs with
+        pattern=
+          FunApp
+            ( StanLib (Operator.to_string op, FnPlain, AoS)
+            , [accumulator; summed] ) } in
+    Stmt.Pattern.Assignment ((LVariable var, []), var_type, rhs)
+
   (** [var[idcs] = rhs]: the varying index becomes a slice and [rhs] must widen
       to exactly that slice's type. *)
   let assignment ctx var idcs var_type rhs =
@@ -438,8 +518,10 @@ module Widen = struct
       | TargetPE {pattern= FunApp (UserDefined (name, _), _); _} ->
           refused "user-defined density %s has no container signature" name
       | TargetPE _ -> refused "target increment is not a density call"
-      | Assignment ((LVariable var, idcs), var_type, rhs) ->
-          assignment ctx var idcs var_type rhs
+      | Assignment ((LVariable var, idcs), var_type, rhs) -> (
+          match Loop_dependence.increment_shape s.pattern with
+          | Some increment -> reduction ctx var_type increment rhs
+          | None -> assignment ctx var idcs var_type rhs)
       | Assignment ((LTupleProjection _, _), _, _) ->
           refused "assignment to a tuple projection"
       | (Profile _ | Block _ | SList _) as compound ->
@@ -477,11 +559,17 @@ type pi_block =
 let members = function Vectorized {pos; _} -> [pos] | Sequential ps -> ps
 let is_vectorized = function Vectorized _ -> true | Sequential _ -> false
 
+(** [Reduced s] for an increment of [s], [Hoisted] otherwise. *)
+let hoisted (stmt : Stmt.Located.t) =
+  match Loop_dependence.increment_shape stmt.pattern with
+  | Some {var; _} -> Reduced var
+  | None -> Hoisted
+
 (** Decide one strongly connected component [scc] of statement positions. A
     single statement is vectorized when it has no self-dependence, no effects,
     and widens; several statements form a dependence cycle and stay sequential.
 *)
-let decide ctx (graph : loop_dependence_graph) scc :
+let decide (ctx : Widen.context) (graph : loop_dependence_graph) scc :
     pi_block * (int * hoist_outcome) list =
   match scc with
   | [pos] when Loop_dependence.is_cyclic graph scc ->
@@ -495,8 +583,9 @@ let decide ctx (graph : loop_dependence_graph) scc :
   | [pos] when graph.nodes.(pos).effects ->
       (Sequential [pos], [(pos, Effectful)])
   | [pos] -> (
-      match Widen.stmt ctx graph.nodes.(pos).stmt with
-      | Ok stmt -> (Vectorized {pos; stmt}, [(pos, Hoisted)])
+      let original = graph.nodes.(pos).stmt in
+      match Widen.stmt ctx original with
+      | Ok stmt -> (Vectorized {pos; stmt}, [(pos, hoisted original)])
       | Error reason -> (Sequential [pos], [(pos, Not_widened reason)]))
   | cycle ->
       let others pos = List.filter cycle ~f:(fun q -> q <> pos) in
@@ -557,9 +646,8 @@ let rewrite_by_pi_blocks (loop : loop) ~written_vars : Stmt.Located.t =
   let graph =
     Loop_dependence.loop_dependence_graph ~loopvar:loop.loopvar loop.body in
   let sccs = Loop_dependence.pi_blocks graph in
-  let pi_blocks, outcomes =
-    List.map sccs ~f:(decide Widen.{loop; written_vars} graph) |> List.split
-  in
+  let ctx = Widen.{loop; written_vars} in
+  let pi_blocks, outcomes = List.map sccs ~f:(decide ctx graph) |> List.split in
   record_report loop
     (Analyzed {graph; blocks= sccs; outcomes= List.concat outcomes});
   if not (List.exists pi_blocks ~f:is_vectorized) then for_of_loop loop
