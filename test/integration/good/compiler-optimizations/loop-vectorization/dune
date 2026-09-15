@@ -1,44 +1,40 @@
 ; Loop-vectorization corpus: loops from the GCC, LLVM and TSVC test suites
-; (design-docs/active/vectorize-loop-fission.md §7.8.2, §13.3).
+; and the design examples (design-docs/active/vectorize-loop-fission.md
+; §7.8, §13.3). For every models/model.stan, three files are pinned in
+; expected/:
+;   model.mir.expected     the vectorize_loops pass alone (-fvectorize-loops on
+;                          top of O0, so raw [1:N] slices survive)
+;   model.cpp.expected     its interaction with the SoA pass
+;   model.report.expected  the --debug-loop-vectorization report: graph,
+;                          pi-blocks and one outcome per statement
+; The rules are generated at build time from the .stan files by
+; test/integration/gen_expected_rules.ml, so no model name is listed
+; anywhere: drop a .stan file into models/, touch its three files in
+; expected/, and run `dune runtest` then `dune promote`.
 ;
-; mir.expected shows the vectorize_loops pass alone (-fvectorize-loops on top
-; of O0, so raw [1:N] slices survive: no partial evaluation runs).
-; cpp.expected shows its interaction with the SoA pass.
+; Layout: dune loads rules per directory, and a directory that includes
+; generated rules may not be an ancestor of the directory whose files they are
+; generated from (rule-loading cycle). So models/, rules/ and expected/ are
+; siblings, defined from this file.
 
-(rule
- (targets mir.output)
- (deps
-  (package stanc)
-  (:stanfiles
-   (glob_files *.stan)))
- (action
-  (with-stdout-to
-   %{targets}
-   (run
-    %{project_root}/test/integration/run_bin_on_args.exe
-    "%{bin:stanc} -fvectorize-loops --debug-optimized-mir-pretty"
-    %{stanfiles}))))
+(subdir
+ rules
+ (rule
+  (targets dune.inc)
+  (deps
+   (:stanfiles
+    (glob_files ../models/*.stan)))
+  (action
+   (with-stdout-to
+    %{targets}
+    (run
+     %{project_root}/test/integration/gen_expected_rules.exe
+     "mir:-fvectorize-loops --debug-optimized-mir-pretty"
+     "cpp:-fvectorize-loops -fsoa --print-cpp"
+     "report:-fvectorize-loops --debug-loop-vectorization"
+     --
+     %{stanfiles})))))
 
-(rule
- (alias runtest)
- (action
-  (diff mir.expected mir.output)))
-
-(rule
- (targets cpp.output)
- (deps
-  (package stanc)
-  (:stanfiles
-   (glob_files *.stan)))
- (action
-  (with-stdout-to
-   %{targets}
-   (run
-    %{project_root}/test/integration/run_bin_on_args.exe
-    "%{bin:stanc} -fvectorize-loops -fsoa --print-cpp"
-    %{stanfiles}))))
-
-(rule
- (alias runtest)
- (action
-  (diff cpp.expected cpp.output)))
+(subdir
+ expected
+ (dynamic_include ../rules/dune.inc))

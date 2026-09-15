@@ -24,6 +24,7 @@ and debug_settings =
   ; print_transformed_mir: debug_options
   ; print_optimized_mir: debug_options
   ; print_mem_patterns: bool
+  ; print_loop_vectorization: bool
   ; force_soa: bool option
   ; force_vectorize_loops: bool option
   ; print_lir: bool
@@ -67,6 +68,7 @@ let default =
       ; print_transformed_mir= Off
       ; print_optimized_mir= Off
       ; print_mem_patterns= false
+      ; print_loop_vectorization= false
       ; force_soa= None
       ; force_vectorize_loops= None
       ; print_lir= false

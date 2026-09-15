@@ -1,0 +1,27 @@
+  $ stanc -fvectorize-loops --debug-loop-vectorization tsvc_loop_distribution.stan
+loop at 'tsvc_loop_distribution.stan', line 25, column 4 to line 28, column 5  (n in 2:N)
+  S0  a[n] = (a[n] + (c[n] .* d[n]));   hoisted
+  S1  b[n] = ((b[(n - 1)] + a[n]) + d[n]);   sequential: recurrence, S1 -> S1 b {<} d=1 (true)
+  edges: S0 -> S1 a {=} d=0 (true); S1 -> S1 b {<} d=1 (true)
+  blocks: [S0] [S1]cyclic
+
+loop at 'tsvc_loop_distribution.stan', line 42, column 4 to line 46, column 5  (n in 2:N)
+  S0  a[n] = (a[n] + (b[n] .* c[n]));   hoisted
+  S1  e[n] = (e[(n - 1)] * e[(n - 1)]);   sequential: recurrence, S1 -> S1 e {<} d=1 (true)
+  S2  a[n] = (a[n] - (b[n] .* c[n]));   hoisted
+  edges: S0 -> S2 a {=} d=0 (true); S0 -> S2 a {=} d=0 (anti); S0 -> S2 a {=} d=0 (output); S1 -> S1 e {<} d=1 (true)
+  blocks: [S0] [S1]cyclic [S2]
+
+loop at 'tsvc_loop_distribution.stan', line 25, column 4 to line 28, column 5  (n in 2:N)
+  S0  a[n] = (a[n] + (c[n] .* d[n]));   hoisted
+  S1  b[n] = ((b[(n - 1)] + a[n]) + d[n]);   sequential: recurrence, S1 -> S1 b {<} d=1 (true)
+  edges: S0 -> S1 a {=} d=0 (true); S1 -> S1 b {<} d=1 (true)
+  blocks: [S0] [S1]cyclic
+
+loop at 'tsvc_loop_distribution.stan', line 42, column 4 to line 46, column 5  (n in 2:N)
+  S0  a[n] = (a[n] + (b[n] .* c[n]));   hoisted
+  S1  e[n] = (e[(n - 1)] * e[(n - 1)]);   sequential: recurrence, S1 -> S1 e {<} d=1 (true)
+  S2  a[n] = (a[n] - (b[n] .* c[n]));   hoisted
+  edges: S0 -> S2 a {=} d=0 (true); S0 -> S2 a {=} d=0 (anti); S0 -> S2 a {=} d=0 (output); S1 -> S1 e {<} d=1 (true)
+  blocks: [S0] [S1]cyclic [S2]
+[exit 0]

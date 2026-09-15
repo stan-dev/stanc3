@@ -1,0 +1,262 @@
+  $ stanc -fvectorize-loops --debug-optimized-mir-pretty tsvc_node_splitting.stan
+
+input_vars {
+  int N;
+  vector[(N + 1)] a0;
+  vector[N] b0;
+  vector[N] d0;
+  vector[N] c;
+  vector[N] e; }
+
+prepare_data {
+  data int pos__;
+  pos__ = 1;
+  data int N;
+  N = FnReadData__("N")[1];
+  (FnCheck(trans(Lower 2))(var_name N)(var N))__(2);
+  data int a0_1dim__ = (N + 1);
+  FnValidateSize__("a0", "N + 1", a0_1dim__);
+  data vector[a0_1dim__] a0;
+  {
+    array[] real a0_flat__;
+    a0_flat__ = FnReadData__("a0");
+    pos__ = 1;
+    for(sym1__ in 1:(N + 1)) {
+      a0[sym1__] = a0_flat__[pos__];
+      pos__ = (pos__ + 1);
+    }
+  }
+  FnValidateSize__("b0", "N", N);
+  data vector[N] b0;
+  {
+    array[] real b0_flat__;
+    b0_flat__ = FnReadData__("b0");
+    pos__ = 1;
+    for(sym1__ in 1:N) {
+      b0[sym1__] = b0_flat__[pos__];
+      pos__ = (pos__ + 1);
+    }
+  }
+  FnValidateSize__("d0", "N", N);
+  data vector[N] d0;
+  {
+    array[] real d0_flat__;
+    d0_flat__ = FnReadData__("d0");
+    pos__ = 1;
+    for(sym1__ in 1:N) {
+      d0[sym1__] = d0_flat__[pos__];
+      pos__ = (pos__ + 1);
+    }
+  }
+  FnValidateSize__("c", "N", N);
+  data vector[N] c;
+  {
+    array[] real c_flat__;
+    c_flat__ = FnReadData__("c");
+    pos__ = 1;
+    for(sym1__ in 1:N) {
+      c[sym1__] = c_flat__[pos__];
+      pos__ = (pos__ + 1);
+    }
+  }
+  FnValidateSize__("e", "N", N);
+  data vector[N] e;
+  {
+    array[] real e_flat__;
+    e_flat__ = FnReadData__("e");
+    pos__ = 1;
+    for(sym1__ in 1:N) {
+      e[sym1__] = e_flat__[pos__];
+      pos__ = (pos__ + 1);
+    }
+  } }
+
+log_prob {
+  {
+    {
+      data int a_1dim__ = (N + 1);
+      FnValidateSize__("a", "N + 1", a_1dim__);
+      vector[a_1dim__] a;
+      a = a0;
+      FnValidateSize__("b", "N", N);
+      vector[N] b;
+      b = b0;
+      FnValidateSize__("d", "N", N);
+      vector[N] d;
+      d = d0;
+      for(n in 1:N) {
+        a[n] = ((b[n] .* c[n]) .* d[n]);
+        b[n] = ((a[n] .* a[(n + 1)]) .* d[n]);
+      }
+      target += sum(a);
+      target += sum(b);
+    }
+    {
+      data int a_1dim__ = (N + 1);
+      FnValidateSize__("a", "N + 1", a_1dim__);
+      vector[a_1dim__] a;
+      a = a0;
+      FnValidateSize__("b", "N", N);
+      vector[N] b;
+      b = b0;
+      FnValidateSize__("d", "N", N);
+      vector[N] d;
+      d = d0;
+      for(n in 1:N) {
+        a[n] = (b[n] + (c[n] .* d[n]));
+        b[n] = (a[n] + (d[n] .* e[n]));
+        a[n] = (b[n] + (a[(n + 1)] .* d[n]));
+      }
+      target += sum(a);
+      target += sum(b);
+    }
+    {
+      data int a_1dim__ = (N + 1);
+      FnValidateSize__("a", "N + 1", a_1dim__);
+      vector[a_1dim__] a;
+      a = a0;
+      FnValidateSize__("b", "N", N);
+      vector[N] b;
+      b = b0;
+      FnValidateSize__("d", "N", N);
+      vector[N] d;
+      d = d0;
+      for(n in 1:N) {
+        a[n] = (b[n] + (c[n] .* d[n]));
+        b[n] = (c[n] + b[n]);
+        a[(n + 1)] = (b[n] + (a[(n + 1)] .* d[n]));
+      }
+      target += sum(a);
+      target += sum(b);
+    }
+    {
+      data int a_1dim__ = (N + 1);
+      FnValidateSize__("a", "N + 1", a_1dim__);
+      vector[a_1dim__] a;
+      a = a0;
+      FnValidateSize__("b", "N", N);
+      vector[N] b;
+      b = b0;
+      FnValidateSize__("d", "N", N);
+      vector[N] d;
+      d = d0;
+      for(n in 1:N) {
+        a[n] = (b[n] + (c[n] .* c[n]));
+        d[n] = (a[n] + a[(n + 1)]);
+      }
+      target += sum(a);
+      target += sum(d);
+    }
+    {
+      data int a_1dim__ = (N + 1);
+      FnValidateSize__("a", "N + 1", a_1dim__);
+      vector[a_1dim__] a;
+      a = a0;
+      FnValidateSize__("b", "N", N);
+      vector[N] b;
+      b = b0;
+      a[(1 + 1):(N + 1)] = (b[1:N] + e[1:N]);
+      a[1:N] = (b[1:N] + c[1:N]);
+      target += sum(a);
+    }
+  } }
+
+rev_log_prob {
+  {
+    {
+      data int a_1dim__ = (N + 1);
+      FnValidateSize__("a", "N + 1", a_1dim__);
+      vector[a_1dim__] a;
+      a = a0;
+      FnValidateSize__("b", "N", N);
+      vector[N] b;
+      b = b0;
+      FnValidateSize__("d", "N", N);
+      vector[N] d;
+      d = d0;
+      for(n in 1:N) {
+        a[n] = ((b[n] .* c[n]) .* d[n]);
+        b[n] = ((a[n] .* a[(n + 1)]) .* d[n]);
+      }
+      target += sum(a);
+      target += sum(b);
+    }
+    {
+      data int a_1dim__ = (N + 1);
+      FnValidateSize__("a", "N + 1", a_1dim__);
+      vector[a_1dim__] a;
+      a = a0;
+      FnValidateSize__("b", "N", N);
+      vector[N] b;
+      b = b0;
+      FnValidateSize__("d", "N", N);
+      vector[N] d;
+      d = d0;
+      for(n in 1:N) {
+        a[n] = (b[n] + (c[n] .* d[n]));
+        b[n] = (a[n] + (d[n] .* e[n]));
+        a[n] = (b[n] + (a[(n + 1)] .* d[n]));
+      }
+      target += sum(a);
+      target += sum(b);
+    }
+    {
+      data int a_1dim__ = (N + 1);
+      FnValidateSize__("a", "N + 1", a_1dim__);
+      vector[a_1dim__] a;
+      a = a0;
+      FnValidateSize__("b", "N", N);
+      vector[N] b;
+      b = b0;
+      FnValidateSize__("d", "N", N);
+      vector[N] d;
+      d = d0;
+      for(n in 1:N) {
+        a[n] = (b[n] + (c[n] .* d[n]));
+        b[n] = (c[n] + b[n]);
+        a[(n + 1)] = (b[n] + (a[(n + 1)] .* d[n]));
+      }
+      target += sum(a);
+      target += sum(b);
+    }
+    {
+      data int a_1dim__ = (N + 1);
+      FnValidateSize__("a", "N + 1", a_1dim__);
+      vector[a_1dim__] a;
+      a = a0;
+      FnValidateSize__("b", "N", N);
+      vector[N] b;
+      b = b0;
+      FnValidateSize__("d", "N", N);
+      vector[N] d;
+      d = d0;
+      for(n in 1:N) {
+        a[n] = (b[n] + (c[n] .* c[n]));
+        d[n] = (a[n] + a[(n + 1)]);
+      }
+      target += sum(a);
+      target += sum(d);
+    }
+    {
+      data int a_1dim__ = (N + 1);
+      FnValidateSize__("a", "N + 1", a_1dim__);
+      vector[a_1dim__] a;
+      a = a0;
+      FnValidateSize__("b", "N", N);
+      vector[N] b;
+      b = b0;
+      a[(1 + 1):(N + 1)] = (b[1:N] + e[1:N]);
+      a[1:N] = (b[1:N] + c[1:N]);
+      target += sum(a);
+    }
+  } }
+
+generate_quantities {
+  if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(PNot__(emit_generated_quantities__)) {
+    return;
+  } }
+
+[exit 0]

@@ -1,0 +1,41 @@
+  $ stanc -fvectorize-loops --debug-loop-vectorization tsvc_indirect_addressing.stan
+loop at 'tsvc_indirect_addressing.stan', line 27, column 2 to line 29, column 3  (n in 1:N)
+  S0  a[n] = (a[n] + (b[ip[n]] * s));   hoisted
+  edges: none
+  blocks: [S0]
+
+loop at 'tsvc_indirect_addressing.stan', line 39, column 4 to line 41, column 5  (n in 1:N)
+  S0  a2[ip[n]] = (b[ip[n]] + c[n]);   hoisted
+  edges: none
+  blocks: [S0]
+
+loop at 'tsvc_indirect_addressing.stan', line 49, column 2 to line 51, column 3  (n in 1:N)
+  S0  target += normal_lpdf(a_data[n], b[ip[n]], sigma);   hoisted
+  edges: none
+  blocks: [S0]
+
+loop at 'tsvc_indirect_addressing.stan', line 59, column 4 to line 61, column 5  (n in 1:N)
+  S0  a3[ip[n]] = (b[n] + (c[n] .* d[n]));   hoisted
+  edges: none
+  blocks: [S0]
+
+loop at 'tsvc_indirect_addressing.stan', line 27, column 2 to line 29, column 3  (n in 1:N)
+  S0  a[n] = (a[n] + (b[ip[n]] * s));   hoisted
+  edges: none
+  blocks: [S0]
+
+loop at 'tsvc_indirect_addressing.stan', line 39, column 4 to line 41, column 5  (n in 1:N)
+  S0  a2[ip[n]] = (b[ip[n]] + c[n]);   hoisted
+  edges: none
+  blocks: [S0]
+
+loop at 'tsvc_indirect_addressing.stan', line 49, column 2 to line 51, column 3  (n in 1:N)
+  S0  target += normal_lpdf(a_data[n], b[ip[n]], sigma);   hoisted
+  edges: none
+  blocks: [S0]
+
+loop at 'tsvc_indirect_addressing.stan', line 59, column 4 to line 61, column 5  (n in 1:N)
+  S0  a3[ip[n]] = (b[n] + (c[n] .* d[n]));   hoisted
+  edges: none
+  blocks: [S0]
+[exit 0]

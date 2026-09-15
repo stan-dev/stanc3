@@ -1,0 +1,105 @@
+  $ stanc -fvectorize-loops --debug-optimized-mir-pretty gcc_vect_depend.stan
+input_vars {
+  int N;
+  vector[N] x;
+  vector[N] z; }
+
+prepare_data {
+  data int pos__;
+  pos__ = 1;
+  data int N;
+  N = FnReadData__("N")[1];
+  (FnCheck(trans(Lower 1))(var_name N)(var N))__(1);
+  FnValidateSize__("x", "N", N);
+  data vector[N] x;
+  {
+    array[] real x_flat__;
+    x_flat__ = FnReadData__("x");
+    pos__ = 1;
+    for(sym1__ in 1:N) {
+      x[sym1__] = x_flat__[pos__];
+      pos__ = (pos__ + 1);
+    }
+  }
+  FnValidateSize__("z", "N", N);
+  data vector[N] z;
+  {
+    array[] real z_flat__;
+    z_flat__ = FnReadData__("z");
+    pos__ = 1;
+    for(sym1__ in 1:N) {
+      z[sym1__] = z_flat__[pos__];
+      pos__ = (pos__ + 1);
+    }
+  } }
+
+log_prob {
+  real mu = (FnReadParam(constrain Identity)(dims())(mem_pattern AoS))__();
+  {
+    data int ia_1dim__ = (N + 1);
+    FnValidateSize__("ia", "N + 1", ia_1dim__);
+    vector[ia_1dim__] ia;
+    data int ib_1dim__ = (N + 1);
+    FnValidateSize__("ib", "N + 1", ib_1dim__);
+    vector[ib_1dim__] ib;
+    ia[(1 + 1):(N + 1)] = x[1:N];
+    ib[1:N] = ia[1:N];
+    ib[1:N] = ia[(1 + 1):(N + 1)];
+    ia[1:N] = x[1:N];
+    ia[(1 + 1):(N + 1)] = x[1:N];
+    ia[1:N] = z[1:N];
+    ia[(1 + 1):(N + 1)] = z[1:N];
+    ia[1:N] = x[1:N];
+    for(n in 1:N) {
+      ia[(n + 1)] = (ia[n] * promote(4, real, data));
+    }
+    ib[1:N] = (ib[(1 + 1):(N + 1)] * promote(4, real, data));
+    target += (sum(ia) + sum(ib));
+    target += normal_lupdf(mu, promote(0, real, data), promote(1, real, data));
+  } }
+
+rev_log_prob {
+  real mu = (FnReadParam(constrain Identity)(dims())(mem_pattern AoS))__();
+  {
+    data int ia_1dim__ = (N + 1);
+    FnValidateSize__("ia", "N + 1", ia_1dim__);
+    vector[ia_1dim__] ia;
+    data int ib_1dim__ = (N + 1);
+    FnValidateSize__("ib", "N + 1", ib_1dim__);
+    vector[ib_1dim__] ib;
+    ia[(1 + 1):(N + 1)] = x[1:N];
+    ib[1:N] = ia[1:N];
+    ib[1:N] = ia[(1 + 1):(N + 1)];
+    ia[1:N] = x[1:N];
+    ia[(1 + 1):(N + 1)] = x[1:N];
+    ia[1:N] = z[1:N];
+    ia[(1 + 1):(N + 1)] = z[1:N];
+    ia[1:N] = x[1:N];
+    for(n in 1:N) {
+      ia[(n + 1)] = (ia[n] * promote(4, real, data));
+    }
+    ib[1:N] = (ib[(1 + 1):(N + 1)] * promote(4, real, data));
+    target += (sum(ia) + sum(ib));
+    target += normal_lupdf(mu, promote(0, real, data), promote(1, real, data));
+  } }
+
+generate_quantities {
+  data real
+    mu = (FnReadParam(constrain Identity)(dims())(mem_pattern AoS))__(
+    );
+  (FnWriteParam(unconstrain_opt())(var mu))__();
+  if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(PNot__(emit_generated_quantities__)) {
+    return;
+  } }
+
+transform_inits {
+  real mu;
+  mu = FnReadData__("mu")[1];
+  (FnWriteParam(unconstrain_opt(Identity))(var mu))__(); }
+output_vars {
+  parameters real mu; //real
+}
+[exit 0]

@@ -17,7 +17,34 @@ val one_step_loop_unrolling : Program.Typed.t -> Program.Typed.t
 val vectorize_loops : Program.Typed.t -> Program.Typed.t
 (** Rewrite a loop whose body is scalar density statements and elementwise
     assignments into the vectorized statements, when the Stan Math signatures
-    have them. Loops that do not match are left unchanged *)
+    have them. Statements that a dependence keeps in the loop stay in a
+    sequential loop emitted in dependence order. Loops that do not match are
+    left unchanged *)
+
+(** Why one leaf statement of a loop was or was not hoisted
+    ([--debug-loop-vectorization]). *)
+type hoist_outcome =
+  | Hoisted
+  | Recurrence of Dataflow_types.loop_edge  (** true/output self-edge *)
+  | In_cycle of int list  (** the other members of its pi-block *)
+  | Effectful  (** print, reject or a user-defined function call *)
+  | Not_widened of string  (** the reason widening refused *)
+  | Loop_bail of string  (** break/continue, or a loop bound written *)
+
+type loop_report =
+  { loc: Location_span.t
+  ; loopvar: string
+  ; lower: Expr.Typed.t
+  ; upper: Expr.Typed.t
+  ; graph: Dataflow_types.loop_dependence_graph
+  ; blocks: int list list
+  ; outcomes: (int * hoist_outcome) list }
+
+val loop_reports : unit -> loop_report list
+(** The reports collected by the last [vectorize_loops] run, in program order.
+*)
+
+val pp_loop_report : loop_report Fmt.t
 
 val list_collapsing : Program.Typed.t -> Program.Typed.t
 (** Remove redundant SList constructors from the Mir that might have been

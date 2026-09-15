@@ -1,0 +1,69 @@
+  $ stanc -fvectorize-loops --debug-loop-vectorization tsvc_control_flow.stan
+loop at 'tsvc_control_flow.stan', line 29, column 2 to line 31, column 3  (n in 1:N)
+  S0  if((b[n] > 0)) { a[n] = (a[n] + (b[n] * c[n])); }   sequential: if statement (no if-conversion)
+  edges: none
+  blocks: [S0]
+
+loop at 'tsvc_control_flow.stan', line 37, column 2 to line 41, column 3  (n in 1:N)
+  S0  if((d[n] < 0)) { a[n] = (a[n] + (b[n] * c[n])); } else { if((d[n] == 0)) { a[n] = (a[n] + (b[n] ...   sequential: if statement (no if-conversion)
+  edges: none
+  blocks: [S0]
+
+loop at 'tsvc_control_flow.stan', line 47, column 2 to line 49, column 3  (n in 1:N)
+  S0  a[n] = (b[n] + (c[n] * promote((n + 1), real, data)));   sequential: loop variable n is used as a value
+  edges: none
+  blocks: [S0]
+
+loop at 'tsvc_control_flow.stan', line 57, column 2 to line 61, column 3  (n in 1:N)
+  S0  x[n] = (b[n] + (d[n] * d[n]));   hoisted
+  S1  foo();   sequential: has effects (print, reject or a user-defined function call)
+  S2  b[n] = (c[n] + (d[n] * e[n]));   hoisted
+  edges: S0 -> S2 b {=} d=0 (anti)
+  blocks: [S0] [S1] [S2]
+
+loop at 'tsvc_control_flow.stan', line 67, column 2 to line 70, column 3  (n in 1:N)
+  S0  if((d[n] < 0)) { FnReject__("neg"); }   sequential: has effects (print, reject or a user-defined function call)
+  S1  a[n] = (a[n] + (b[n] .* c[n]));   hoisted
+  edges: none
+  blocks: [S0] [S1]
+
+loop at 'tsvc_control_flow.stan', line 76, column 2 to line 79, column 3  (n in 1:N)
+  S0  a[n] = (a[n] + (b[n] .* c[n]));   loop left alone: break or continue in the loop body
+  S1  if((c[n] > b[n])) { break; }   loop left alone: break or continue in the loop body
+  edges: none
+  blocks: [S0] [S1]
+
+loop at 'tsvc_control_flow.stan', line 29, column 2 to line 31, column 3  (n in 1:N)
+  S0  if((b[n] > 0)) { a[n] = (a[n] + (b[n] * c[n])); }   sequential: if statement (no if-conversion)
+  edges: none
+  blocks: [S0]
+
+loop at 'tsvc_control_flow.stan', line 37, column 2 to line 41, column 3  (n in 1:N)
+  S0  if((d[n] < 0)) { a[n] = (a[n] + (b[n] * c[n])); } else { if((d[n] == 0)) { a[n] = (a[n] + (b[n] ...   sequential: if statement (no if-conversion)
+  edges: none
+  blocks: [S0]
+
+loop at 'tsvc_control_flow.stan', line 47, column 2 to line 49, column 3  (n in 1:N)
+  S0  a[n] = (b[n] + (c[n] * promote((n + 1), real, data)));   sequential: loop variable n is used as a value
+  edges: none
+  blocks: [S0]
+
+loop at 'tsvc_control_flow.stan', line 57, column 2 to line 61, column 3  (n in 1:N)
+  S0  x[n] = (b[n] + (d[n] * d[n]));   hoisted
+  S1  foo();   sequential: has effects (print, reject or a user-defined function call)
+  S2  b[n] = (c[n] + (d[n] * e[n]));   hoisted
+  edges: S0 -> S2 b {=} d=0 (anti)
+  blocks: [S0] [S1] [S2]
+
+loop at 'tsvc_control_flow.stan', line 67, column 2 to line 70, column 3  (n in 1:N)
+  S0  if((d[n] < 0)) { FnReject__("neg"); }   sequential: has effects (print, reject or a user-defined function call)
+  S1  a[n] = (a[n] + (b[n] .* c[n]));   hoisted
+  edges: none
+  blocks: [S0] [S1]
+
+loop at 'tsvc_control_flow.stan', line 76, column 2 to line 79, column 3  (n in 1:N)
+  S0  a[n] = (a[n] + (b[n] .* c[n]));   loop left alone: break or continue in the loop body
+  S1  if((c[n] > b[n])) { break; }   loop left alone: break or continue in the loop body
+  edges: none
+  blocks: [S0] [S1]
+[exit 0]

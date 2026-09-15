@@ -34,6 +34,7 @@ type other_output =
   | Formatted of string
   | DebugOutput of string
   | Memory_patterns of string
+  | Loop_vectorization of string
   | Info of string
   | Version of string
   | Generated of string
@@ -133,6 +134,12 @@ let stan2mir model_name model (flags : Flags.t) (output : other_output -> unit)
             (* TODO should be better associated with the names from above? *)
             Fmt.(list string)
             (Memory_patterns.get_warnings ())));
+  if flags.debug_settings.print_loop_vectorization then
+    output
+      (Loop_vectorization
+         (Fmt.str "%a"
+            Fmt.(list ~sep:cut Optimize.pp_loop_report)
+            (Optimize.loop_reports ())));
   debug_output_mir output opt_mir flags.debug_settings.print_optimized_mir;
   opt_mir
 

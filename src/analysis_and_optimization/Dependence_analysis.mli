@@ -25,16 +25,20 @@ type node_dep_info =
   ; parents: label Set.Poly.t
   ; reaching_defn_entry: reaching_defn Set.Poly.t
   ; reaching_defn_exit: reaching_defn Set.Poly.t
+  ; accesses: access list
   ; meta: Location_span.t }
 
 val node_immediate_dependencies :
      ((Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) LabelMap.t
   -> ?blockers:vexpr Set.Poly.t
+  -> ?refine:bool
   -> label
   -> label Set.Poly.t
 (** Given dependency information for each node, find the 'immediate'
     dependencies of a node, where 'immediate' means the first-degree control
-    flow parents and the reachable definitions of RHS variables. *)
+    flow parents and the reachable definitions of RHS variables. With [refine]
+    (default [false]) definitions whose subscripts can never name an element the
+    node reads are dropped; see the definition. *)
 
 val node_dependencies :
      ((Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) LabelMap.t
@@ -68,7 +72,8 @@ val log_prob_build_dep_info_map :
     program *)
 
 val all_node_dependencies :
-     ((Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) LabelMap.t
+     ?refine:bool
+  -> ((Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) LabelMap.t
   -> label Set.Poly.t LabelMap.t
 (** Given dependency information for each node, find all of the dependencies of
     all nodes, effectively building the dependency graph.
@@ -86,32 +91,3 @@ val mir_uninitialized_variables :
   Program.Typed.t -> (Location_span.t * string) Set.Poly.t
 (** Produce a list of uninitialized variables and their label locations, from
     the flowgraph starting at the given statement *)
-
-(** {1 Loop access model and dependence test}
-
-    Data dependence analysis for one loop level (Kennedy and Allen,
-    {i Optimizing Compilers for Modern Architectures} ch. 2-3; Goff, Kennedy and
-    Tseng, PLDI 1991). See [design-docs/active/vectorize-loop-fission.md]
-    §7.3-7.4. The documentation of each function is on its definition. *)
-
-val classify_subscript :
-     loopvar:string
-  -> written:string Set.Poly.t
-  -> Expr.Typed.t Index.t
-  -> subscript
-(** How one index position varies with the loop over [loopvar]. *)
-
-val stmt_accesses :
-     loopvar:string
-  -> written:string Set.Poly.t
-  -> label:label
-  -> (Expr.Typed.t, Stmt.Located.t) Stmt.Pattern.t
-  -> access list
-(** Every read and write in a statement, in evaluation order. *)
-
-val access_dependence : access -> access -> dependence
-(** The dependence between two accesses to the same variable. *)
-
-val pp_subscript : subscript Fmt.t
-val pp_access : access Fmt.t
-val pp_dependence : dependence Fmt.t

@@ -1,0 +1,79 @@
+  $ stanc -fvectorize-loops --debug-optimized-mir-pretty llvm_memdep.stan
+input_vars {
+  int N; }
+
+prepare_data {
+  data int N;
+  N = FnReadData__("N")[1];
+  (FnCheck(trans(Lower 1))(var_name N)(var N))__(1); }
+
+log_prob {
+  real mu = (FnReadParam(constrain Identity)(dims())(mem_pattern AoS))__();
+  {
+    data int a_1dim__ = (N + 2);
+    FnValidateSize__("a", "N + 2", a_1dim__);
+    vector[a_1dim__] a;
+    FnValidateSize__("b", "N", N);
+    vector[N] b;
+    real prev;
+    prev = promote(0, real, var);
+    a[1:N] = (a[(1 + 1):(N + 1)] + promote(1, real, data));
+    for(n in 1:N) {
+      a[(n + 1)] = (a[n] + promote(1, real, data));
+    }
+    for(n in 1:N) {
+      a[(n + 2)] = (a[n] + promote(1, real, data));
+    }
+    for(n in 1:N) {
+      b[n] = prev;
+      prev = a[n];
+    }
+    target += ((sum(a) + sum(b)) + prev);
+    target += normal_lupdf(mu, promote(0, real, data), promote(1, real, data));
+  } }
+
+rev_log_prob {
+  real mu = (FnReadParam(constrain Identity)(dims())(mem_pattern AoS))__();
+  {
+    data int a_1dim__ = (N + 2);
+    FnValidateSize__("a", "N + 2", a_1dim__);
+    vector[a_1dim__] a;
+    FnValidateSize__("b", "N", N);
+    vector[N] b;
+    real prev;
+    prev = promote(0, real, var);
+    a[1:N] = (a[(1 + 1):(N + 1)] + promote(1, real, data));
+    for(n in 1:N) {
+      a[(n + 1)] = (a[n] + promote(1, real, data));
+    }
+    for(n in 1:N) {
+      a[(n + 2)] = (a[n] + promote(1, real, data));
+    }
+    for(n in 1:N) {
+      b[n] = prev;
+      prev = a[n];
+    }
+    target += ((sum(a) + sum(b)) + prev);
+    target += normal_lupdf(mu, promote(0, real, data), promote(1, real, data));
+  } }
+
+generate_quantities {
+  data real
+    mu = (FnReadParam(constrain Identity)(dims())(mem_pattern AoS))__(
+    );
+  (FnWriteParam(unconstrain_opt())(var mu))__();
+  if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(PNot__(emit_generated_quantities__)) {
+    return;
+  } }
+
+transform_inits {
+  real mu;
+  mu = FnReadData__("mu")[1];
+  (FnWriteParam(unconstrain_opt(Identity))(var mu))__(); }
+output_vars {
+  parameters real mu; //real
+}
+[exit 0]

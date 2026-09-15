@@ -89,6 +89,28 @@ type dependence =
           "confused" answer. *)
 [@@deriving sexp_of]
 
+(** Classification of a dependence edge by the kinds of its two accesses
+    (Kennedy and Allen §2.2): [True_dep] write then read, [Anti] read then
+    write, [Output] write then write, [Effects] the ordering edge between two
+    effectful statements. *)
+type dep_kind = True_dep | Anti | Output | Effects
+[@@deriving sexp_of, compare]
+
+(** One leaf statement of a loop body. *)
+type loop_node =
+  { pos: int  (** lexical position in the body *)
+  ; stmt: Middle.Stmt.Located.t
+  ; accesses: access list
+  ; effects: bool  (** prints, rejects or calls a user-defined function *) }
+
+(** [src] must execute before [dst]. [dep] is the dependence of the pair of
+    accesses that created the edge, with directions relative to the lexical
+    order of the two statements (not to [src]/[dst]). *)
+type loop_edge =
+  {src: int; dst: int; var: string; kind: dep_kind; dep: dependence}
+
+type loop_dependence_graph = {nodes: loop_node array; edges: loop_edge list}
+
 (** The most recently nested control flow (block start, if/then, or loop)
 
     This isn't included in the traversal_state because it only flows downward

@@ -1,0 +1,198 @@
+  $ stanc -fvectorize-loops --debug-optimized-mir-pretty tsvc_expansion.stan
+input_vars {
+  int N;
+  vector[N] a0;
+  vector[N] b;
+  vector[N] c;
+  vector[N] d; }
+
+prepare_data {
+  data int pos__;
+  pos__ = 1;
+  data int N;
+  N = FnReadData__("N")[1];
+  (FnCheck(trans(Lower 1))(var_name N)(var N))__(1);
+  FnValidateSize__("a0", "N", N);
+  data vector[N] a0;
+  {
+    array[] real a0_flat__;
+    a0_flat__ = FnReadData__("a0");
+    pos__ = 1;
+    for(sym1__ in 1:N) {
+      a0[sym1__] = a0_flat__[pos__];
+      pos__ = (pos__ + 1);
+    }
+  }
+  FnValidateSize__("b", "N", N);
+  data vector[N] b;
+  {
+    array[] real b_flat__;
+    b_flat__ = FnReadData__("b");
+    pos__ = 1;
+    for(sym1__ in 1:N) {
+      b[sym1__] = b_flat__[pos__];
+      pos__ = (pos__ + 1);
+    }
+  }
+  FnValidateSize__("c", "N", N);
+  data vector[N] c;
+  {
+    array[] real c_flat__;
+    c_flat__ = FnReadData__("c");
+    pos__ = 1;
+    for(sym1__ in 1:N) {
+      c[sym1__] = c_flat__[pos__];
+      pos__ = (pos__ + 1);
+    }
+  }
+  FnValidateSize__("d", "N", N);
+  data vector[N] d;
+  {
+    array[] real d_flat__;
+    d_flat__ = FnReadData__("d");
+    pos__ = 1;
+    for(sym1__ in 1:N) {
+      d[sym1__] = d_flat__[pos__];
+      pos__ = (pos__ + 1);
+    }
+  } }
+
+log_prob {
+  {
+    FnValidateSize__("a", "N", N);
+    vector[N] a;
+    a = a0;
+    real t;
+    t = promote(0, real, var);
+    real x;
+    x = promote(0, real, var);
+    {
+      for(n in 1:N) {
+        real s;
+        s = (b[n] + (c[n] * d[n]));
+        a[n] = (s * s);
+      }
+    }
+    {
+      for(n in 1:N) {
+        real s;
+        s = (b[n] * c[n]);
+        a[n] = (s + t);
+        t = s;
+      }
+    }
+    for(n in 1:N) {
+      a[n] = ((b[n] + x) * 0.5);
+      x = b[n];
+    }
+    {
+      real s;
+      s = promote(0, real, var);
+      FnValidateSize__("b2", "N", N);
+      vector[N] b2;
+      b2 = b;
+      for(n in 1:N) {
+        if((a[n] > 0)) {
+          s = (d[n] * d[n]);
+        }
+        b2[n] = ((s * c[n]) + d[n]);
+      }
+      target += sum(b2);
+    }
+    {
+      FnValidateSize__("c2", "N", N);
+      vector[N] c2;
+      c2 = c;
+      for(n in 2:N) {
+        t = (a[n] + b[n]);
+        a[n] = (t + c2[(n - 1)]);
+        t = (c2[n] * d[n]);
+        c2[n] = t;
+      }
+      target += sum(c2);
+    }
+    {
+      real s;
+      s = promote(0, real, var);
+      for(n in 1:N) {
+        s = (s + 2);
+        a[n] = (s * b[n]);
+      }
+    }
+    target += sum(a);
+  } }
+
+rev_log_prob {
+  {
+    FnValidateSize__("a", "N", N);
+    vector[N] a;
+    a = a0;
+    real t;
+    t = promote(0, real, var);
+    real x;
+    x = promote(0, real, var);
+    {
+      for(n in 1:N) {
+        real s;
+        s = (b[n] + (c[n] * d[n]));
+        a[n] = (s * s);
+      }
+    }
+    {
+      for(n in 1:N) {
+        real s;
+        s = (b[n] * c[n]);
+        a[n] = (s + t);
+        t = s;
+      }
+    }
+    for(n in 1:N) {
+      a[n] = ((b[n] + x) * 0.5);
+      x = b[n];
+    }
+    {
+      real s;
+      s = promote(0, real, var);
+      FnValidateSize__("b2", "N", N);
+      vector[N] b2;
+      b2 = b;
+      for(n in 1:N) {
+        if((a[n] > 0)) {
+          s = (d[n] * d[n]);
+        }
+        b2[n] = ((s * c[n]) + d[n]);
+      }
+      target += sum(b2);
+    }
+    {
+      FnValidateSize__("c2", "N", N);
+      vector[N] c2;
+      c2 = c;
+      for(n in 2:N) {
+        t = (a[n] + b[n]);
+        a[n] = (t + c2[(n - 1)]);
+        t = (c2[n] * d[n]);
+        c2[n] = t;
+      }
+      target += sum(c2);
+    }
+    {
+      real s;
+      s = promote(0, real, var);
+      for(n in 1:N) {
+        s = (s + 2);
+        a[n] = (s * b[n]);
+      }
+    }
+    target += sum(a);
+  } }
+
+generate_quantities {
+  if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(PNot__(emit_generated_quantities__)) {
+    return;
+  } }
+
+[exit 0]

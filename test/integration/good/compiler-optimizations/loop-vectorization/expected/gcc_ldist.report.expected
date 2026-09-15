@@ -1,0 +1,67 @@
+  $ stanc -fvectorize-loops --debug-loop-vectorization gcc_ldist.stan
+loop at 'gcc_ldist.stan', line 33, column 2 to line 38, column 3  (n in 1:N)
+  S0  mya[n] = ((ia[n] .* oxa[n]) + (ib[n] .* oxb[n]));   hoisted
+  S1  myb[n] = ((PMinus__(ia[n]) .* oxb[n]) + (ib[n] .* oxa[n]));   hoisted
+  S2  oya[n] = (mya[n] / promote(1024, real, data));   hoisted
+  S3  oyb[n] = (myb[n] / promote(1024, real, data));   hoisted
+  edges: S0 -> S2 mya {=} d=0 (true); S1 -> S3 myb {=} d=0 (true)
+  blocks: [S0] [S1] [S2] [S3]
+
+loop at 'gcc_ldist.stan', line 49, column 4 to line 52, column 5  (n in 2:N)
+  S0  a[n] = (a[n] + c[n]);   hoisted
+  S1  b[n] = (a[(n - 1)] + promote(1, real, data));   hoisted
+  edges: S0 -> S1 a {<} d=1 (true)
+  blocks: [S0] [S1]
+
+loop at 'gcc_ldist.stan', line 69, column 4 to line 74, column 5  (n in 3:N)
+  S0  a[n] = promote((k * n), real, var);   sequential: in a dependence cycle with S1 S2
+  S1  b[n] = (a[(n - 2)] + promote(k, real, data));   sequential: in a dependence cycle with S0 S2
+  S2  cc[n] = (b[n] + a[(n + 1)]);   sequential: in a dependence cycle with S0 S1
+  S3  d[n] = ((cc[(n - 1)] + promote(k, real, data)) + promote(n, real, data));   sequential: loop variable n is used as a value
+  edges: S0 -> S1 a {<} d=2 (true); S1 -> S2 b {=} d=0 (true); S2 -> S0 a {>} d=-1 (anti); S2 -> S3 cc {<} d=1 (true)
+  blocks: [S0 S1 S2]cyclic [S3]
+
+loop at 'gcc_ldist.stan', line 89, column 6 to line 92, column 7  (j in 2:J)
+  S0  a[j] = promote((k * i), real, var);   sequential: right-hand side is loop-invariant (would need a broadcast)
+  S1  b[i, j] = (a[(j - 1)] + promote(k, real, data));   sequential: right-hand side widens to vector but the assigned slice is row_vector
+  edges: S0 -> S1 a {<} d=1 (true)
+  blocks: [S0] [S1]
+
+loop at 'gcc_ldist.stan', line 88, column 4 to line 93, column 5  (i in 1:N)
+  S0  for(j in 2:J) { a[j] = promote((k * i), real, var); b[i, j] = (a[(j - 1)] + promote(k, real, dat...   sequential: recurrence, S0 -> S0 a {<,=,>} (true)
+  edges: S0 -> S0 a {<,=,>} (true); S0 -> S0 j {<,=,>} (true)
+  blocks: [S0]cyclic
+
+loop at 'gcc_ldist.stan', line 33, column 2 to line 38, column 3  (n in 1:N)
+  S0  mya[n] = ((ia[n] .* oxa[n]) + (ib[n] .* oxb[n]));   hoisted
+  S1  myb[n] = ((PMinus__(ia[n]) .* oxb[n]) + (ib[n] .* oxa[n]));   hoisted
+  S2  oya[n] = (mya[n] / promote(1024, real, data));   hoisted
+  S3  oyb[n] = (myb[n] / promote(1024, real, data));   hoisted
+  edges: S0 -> S2 mya {=} d=0 (true); S1 -> S3 myb {=} d=0 (true)
+  blocks: [S0] [S1] [S2] [S3]
+
+loop at 'gcc_ldist.stan', line 49, column 4 to line 52, column 5  (n in 2:N)
+  S0  a[n] = (a[n] + c[n]);   hoisted
+  S1  b[n] = (a[(n - 1)] + promote(1, real, data));   hoisted
+  edges: S0 -> S1 a {<} d=1 (true)
+  blocks: [S0] [S1]
+
+loop at 'gcc_ldist.stan', line 69, column 4 to line 74, column 5  (n in 3:N)
+  S0  a[n] = promote((k * n), real, var);   sequential: in a dependence cycle with S1 S2
+  S1  b[n] = (a[(n - 2)] + promote(k, real, data));   sequential: in a dependence cycle with S0 S2
+  S2  cc[n] = (b[n] + a[(n + 1)]);   sequential: in a dependence cycle with S0 S1
+  S3  d[n] = ((cc[(n - 1)] + promote(k, real, data)) + promote(n, real, data));   sequential: loop variable n is used as a value
+  edges: S0 -> S1 a {<} d=2 (true); S1 -> S2 b {=} d=0 (true); S2 -> S0 a {>} d=-1 (anti); S2 -> S3 cc {<} d=1 (true)
+  blocks: [S0 S1 S2]cyclic [S3]
+
+loop at 'gcc_ldist.stan', line 89, column 6 to line 92, column 7  (j in 2:J)
+  S0  a[j] = promote((k * i), real, var);   sequential: right-hand side is loop-invariant (would need a broadcast)
+  S1  b[i, j] = (a[(j - 1)] + promote(k, real, data));   sequential: right-hand side widens to vector but the assigned slice is row_vector
+  edges: S0 -> S1 a {<} d=1 (true)
+  blocks: [S0] [S1]
+
+loop at 'gcc_ldist.stan', line 88, column 4 to line 93, column 5  (i in 1:N)
+  S0  for(j in 2:J) { a[j] = promote((k * i), real, var); b[i, j] = (a[(j - 1)] + promote(k, real, dat...   sequential: recurrence, S0 -> S0 a {<,=,>} (true)
+  edges: S0 -> S0 a {<,=,>} (true); S0 -> S0 j {<,=,>} (true)
+  blocks: [S0]cyclic
+[exit 0]

@@ -1,0 +1,69 @@
+  $ stanc -fvectorize-loops --debug-loop-vectorization gcc_vect_depend.stan
+loop at 'gcc_vect_depend.stan', line 23, column 2 to line 26, column 3  (n in 1:N)
+  S0  ia[(n + 1)] = x[n];   hoisted
+  S1  ib[n] = ia[n];   hoisted
+  edges: S0 -> S1 ia {<} d=1 (true)
+  blocks: [S0] [S1]
+
+loop at 'gcc_vect_depend.stan', line 34, column 2 to line 37, column 3  (n in 1:N)
+  S0  ia[n] = x[n];   hoisted
+  S1  ib[n] = ia[(n + 1)];   hoisted
+  edges: S1 -> S0 ia {>} d=-1 (anti)
+  blocks: [S1] [S0]
+
+loop at 'gcc_vect_depend.stan', line 44, column 2 to line 47, column 3  (n in 1:N)
+  S0  ia[(n + 1)] = x[n];   hoisted
+  S1  ia[n] = z[n];   hoisted
+  edges: S0 -> S1 ia {<} d=1 (output)
+  blocks: [S0] [S1]
+
+loop at 'gcc_vect_depend.stan', line 54, column 2 to line 57, column 3  (n in 1:N)
+  S0  ia[n] = x[n];   hoisted
+  S1  ia[(n + 1)] = z[n];   hoisted
+  edges: S1 -> S0 ia {>} d=-1 (output)
+  blocks: [S1] [S0]
+
+loop at 'gcc_vect_depend.stan', line 64, column 2 to line 66, column 3  (n in 1:N)
+  S0  ia[(n + 1)] = (ia[n] * promote(4, real, data));   sequential: recurrence, S0 -> S0 ia {<} d=1 (true)
+  edges: S0 -> S0 ia {<} d=1 (true)
+  blocks: [S0]cyclic
+
+loop at 'gcc_vect_depend.stan', line 74, column 2 to line 76, column 3  (n in 1:N)
+  S0  ib[n] = (ib[(n + 1)] * promote(4, real, data));   hoisted
+  edges: none
+  blocks: [S0]
+
+loop at 'gcc_vect_depend.stan', line 23, column 2 to line 26, column 3  (n in 1:N)
+  S0  ia[(n + 1)] = x[n];   hoisted
+  S1  ib[n] = ia[n];   hoisted
+  edges: S0 -> S1 ia {<} d=1 (true)
+  blocks: [S0] [S1]
+
+loop at 'gcc_vect_depend.stan', line 34, column 2 to line 37, column 3  (n in 1:N)
+  S0  ia[n] = x[n];   hoisted
+  S1  ib[n] = ia[(n + 1)];   hoisted
+  edges: S1 -> S0 ia {>} d=-1 (anti)
+  blocks: [S1] [S0]
+
+loop at 'gcc_vect_depend.stan', line 44, column 2 to line 47, column 3  (n in 1:N)
+  S0  ia[(n + 1)] = x[n];   hoisted
+  S1  ia[n] = z[n];   hoisted
+  edges: S0 -> S1 ia {<} d=1 (output)
+  blocks: [S0] [S1]
+
+loop at 'gcc_vect_depend.stan', line 54, column 2 to line 57, column 3  (n in 1:N)
+  S0  ia[n] = x[n];   hoisted
+  S1  ia[(n + 1)] = z[n];   hoisted
+  edges: S1 -> S0 ia {>} d=-1 (output)
+  blocks: [S1] [S0]
+
+loop at 'gcc_vect_depend.stan', line 64, column 2 to line 66, column 3  (n in 1:N)
+  S0  ia[(n + 1)] = (ia[n] * promote(4, real, data));   sequential: recurrence, S0 -> S0 ia {<} d=1 (true)
+  edges: S0 -> S0 ia {<} d=1 (true)
+  blocks: [S0]cyclic
+
+loop at 'gcc_vect_depend.stan', line 74, column 2 to line 76, column 3  (n in 1:N)
+  S0  ib[n] = (ib[(n + 1)] * promote(4, real, data));   hoisted
+  edges: none
+  blocks: [S0]
+[exit 0]

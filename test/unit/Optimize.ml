@@ -3643,6 +3643,55 @@ let print_vectorized s =
   Fmt.str "@[<v>%a@]" (Fmt.list ~sep:Fmt.cut Stmt.Located.pp) mir.log_prob
   |> print_endline
 
+(** The [--debug-loop-vectorization] report for every loop of a program. *)
+let print_loop_reports s =
+  let _ = vectorize_loops (reset_and_mir_of_string s) in
+  Fmt.pr "%a@." Fmt.(list ~sep:cut pp_loop_report) (loop_reports ())
+
+let%expect_test "vectorize report: radon and a recurrence (design 7.13)" =
+  print_loop_reports
+    {|
+      data {
+        int N; int J;
+        array[N] int<lower=1, upper=J> county_idx;
+        vector[N] log_uppm; vector[N] floor_measure; vector[N] log_radon;
+        vector[N] u;
+      }
+      parameters { vector[J] alpha; vector[2] beta; real<lower=0> sigma_y; }
+      model {
+        vector[N] mu; vector[N] muj; vector[N] v;
+        for (n in 1:N) {
+          muj[n] = alpha[county_idx[n]] + log_uppm[n] * beta[1];
+          mu[n] = muj[n] + floor_measure[n] * beta[2];
+          target += normal_lpdf(log_radon[n] | mu[n], sigma_y);
+        }
+        for (n in 2:N) v[n] = v[n - 1] + u[n];
+        for (n in 1:N) { real t = u[n]; v[n] = t; print(v[n]); }
+      }
+    |};
+  [%expect
+    {|
+    loop at 'string', line 11, column 8 to line 15, column 9  (n in 1:N)
+      S0  muj[n] = (alpha[county_idx[n]] + (log_uppm[n] * beta[1]));   hoisted
+      S1  mu[n] = (muj[n] + (floor_measure[n] * beta[2]));   hoisted
+      S2  target += normal_lpdf(log_radon[n], mu[n], sigma_y);   hoisted
+      edges: S0 -> S1 muj {=} d=0 (true); S1 -> S2 mu {=} d=0 (true)
+      blocks: [S0] [S1] [S2]
+
+    loop at 'string', line 16, column 8 to column 46  (n in 2:N)
+      S0  v[n] = (v[(n - 1)] + u[n]);   sequential: recurrence, S0 -> S0 v {<} d=1 (true)
+      edges: S0 -> S0 v {<} d=1 (true)
+      blocks: [S0]cyclic
+
+    loop at 'string', line 17, column 8 to column 64  (n in 1:N)
+      S0  real t;   sequential: in a dependence cycle with S1 S2
+      S1  t = u[n];   sequential: in a dependence cycle with S0 S2
+      S2  v[n] = t;   sequential: in a dependence cycle with S0 S1
+      S3  FnPrint__(v[n]);   sequential: has effects (print, reject or a user-defined function call)
+      edges: S0 -> S1 t {<,=,>} (output); S0 -> S2 t {<,=,>} (true); S1 -> S0 t {<,=,>} (output); S1 -> S2 t {<,=,>} (true); S2 -> S0 t {<,=,>} (anti); S2 -> S1 t {<,=,>} (anti); S2 -> S3 v {=} d=0 (true)
+      blocks: [S0 S1 S2]cyclic [S3]
+    |}]
+
 let%expect_test "vectorize: full-range density loop becomes one density" =
   print_vectorized
     {|
@@ -3825,14 +3874,12 @@ let%expect_test "vectorize: truncation lowers to a multi-statement body" =
     real mu;
     real sigma;
     {
+      for(n in 1:N) if((y[n] < 0)) target += FnNegInf__(); else target += PMinus__(normal_lccdf(
+                                                                        promote(
+                                                                        0, real,
+                                                                        data),
+                                                                        mu, sigma));
       target += normal_lupdf(y, mu, sigma);
-      for(n in 1:N) {
-        if((y[n] < 0)) target += FnNegInf__(); else target += PMinus__(normal_lccdf(
-                                                                       promote(
-                                                                       0, real,
-                                                                       data), mu,
-                                                                       sigma));
-      }
     }
     |}]
 
@@ -4094,7 +4141,7 @@ let%expect_test "vectorize bail: density value assigned, not summed" =
     }
     |}]
 
-let%expect_test "vectorize bail: offset index and invariant rhs" =
+let%expect_test "vectorize: offset index widens; invariant rhs stays a loop" =
   print_vectorized
     {|
       data {
@@ -4127,9 +4174,7 @@ let%expect_test "vectorize bail: offset index and invariant rhs" =
       for(n in 1:N) {
         v[n] = alpha;
       }
-      for(n in 2:N) {
-        w[n] = x[(n - 1)];
-      }
+      w[2:] = x[1:(N - 1)];
       target += normal_lpdf(v, w, promote(1, real, data));
     }
     |}]
@@ -4661,7 +4706,7 @@ let%expect_test "vectorize: independent statements in one loop" =
     }
     |}]
 
-let%expect_test "vectorize bail: statements in one loop interfere" =
+let%expect_test "vectorize: dependent statements in one loop hoist in order" =
   print_vectorized
     {|
       data {
@@ -4689,10 +4734,8 @@ let%expect_test "vectorize bail: statements in one loop interfere" =
       vector[N] v;
       FnValidateSize__("w", "N", N);
       vector[N] w;
-      for(n in 1:N) {
-        v[n] = (x[n] + alpha);
-        w[n] = (v[n] * promote(2, real, data));
-      }
+      v[:] = (x + alpha);
+      w[:] = (v * promote(2, real, data));
       target += normal_lpdf(v, w, promote(1, real, data));
     }
     |}]
@@ -4726,7 +4769,7 @@ let%expect_test "vectorize: statements inside a profile block" =
     }
     |}]
 
-let%expect_test "vectorize bail: a profile block hides an interfering write" =
+let%expect_test "vectorize: a profile block with a same-iteration dependence" =
   print_vectorized
     {|
       data {
@@ -4753,12 +4796,10 @@ let%expect_test "vectorize bail: a profile block hides an interfering write" =
     {
       FnValidateSize__("v", "N", N);
       vector[N] v;
-      for(n in 1:N) {
-        profile("mu"){
-          v[n] = (x[n] + promote(1, real, data));
-        }
-        target += normal_lpdf(y[n], v[n], sigma);
+      profile("mu"){
+        v[:] = (x + promote(1, real, data));
       }
+      target += normal_lpdf(y, v, sigma);
     }
     |}]
 
@@ -4837,8 +4878,6 @@ let%expect_test "vectorize bail: strange loops" =
       row_vector[N] b;
       FnValidateSize__("c", "N", N);
       array[real, N] c;
-      target += std_normal_lupdf(x);
-      a[:] = exp(x);
       for(i in 1:N) {
         FnValidateSize__("g", "M", M);
         vector[M] g;
@@ -4851,7 +4890,8 @@ let%expect_test "vectorize bail: strange loops" =
           m = (m - 1);
         }
       }
-      c[:] = z;
+      target += std_normal_lupdf(x);
+      a[:] = exp(x);
       for(i in 1:N) {
         target += std_normal_lupdf(x[i]);
         for(j in 1:N) {
@@ -4859,6 +4899,7 @@ let%expect_test "vectorize bail: strange loops" =
           FnPrint__(target());
         }
       }
+      c[:] = z;
     }
     |}]
 
@@ -4902,10 +4943,8 @@ let%expect_test "vectorize bail: break and continue" =
       }
       FnValidateSize__("b", "N", N);
       vector[N] b;
+      for(i in 1:N) while(1) break;
       b[:] = exp(x);
-      for(i in 1:N) {
-        while(1) break;
-      }
     }
     |}]
 
@@ -5022,16 +5061,16 @@ let%expect_test "vectorize: multiple indexing" =
       FnValidateSize__("w4", "N", N);
       FnValidateSize__("w4", "N", N);
       matrix[N, N] w4;
-      a[:, 1, 1] = x;
       for(i in 1:N) {
         target += std_normal_lupdf(y[i, x[i]]);
-        w2[:, i] = y[i];
-        w3[i, :] = z[i];
-        target += ((N - 0) * std_normal_lupdf(y[i, i]));
         for(j in 1:N) {
           w1[i, j] = y[i, j];
           w4[j, i] = z[i, j];
         }
+        w2[:, i] = y[i];
+        w3[i, :] = z[i];
+        target += ((N - 0) * std_normal_lupdf(y[i, i]));
       }
+      a[:, 1, 1] = x;
     }
     |}]

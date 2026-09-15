@@ -1,0 +1,33 @@
+  $ stanc -fvectorize-loops --debug-loop-vectorization tsvc_recurrences.stan
+loop at 'tsvc_recurrences.stan', line 21, column 2 to line 23, column 3  (n in 2:N)
+  S0  a[n] = (a[n] + (a[(n - 1)] * b[n]));   sequential: recurrence, S0 -> S0 a {<} d=1 (true)
+  edges: S0 -> S0 a {<} d=1 (true)
+  blocks: [S0]cyclic
+
+loop at 'tsvc_recurrences.stan', line 29, column 2 to line 31, column 3  (n in 3:N)
+  S0  a[n] = ((a[n] + (a[(n - 1)] * b[n])) + (a[(n - 2)] * c[n]));   sequential: recurrence, S0 -> S0 a {<} d=2 (true)
+  edges: S0 -> S0 a {<} d=2 (true)
+  blocks: [S0]cyclic
+
+loop at 'tsvc_recurrences.stan', line 39, column 4 to line 42, column 5  (n in 2:N)
+  S0  a[n] = (b2[(n - 1)] + (c[n] * d[n]));   sequential: in a dependence cycle with S1
+  S1  b2[n] = (a[n] + (c[n] * e[n]));   sequential: in a dependence cycle with S0
+  edges: S0 -> S1 a {=} d=0 (true); S1 -> S0 b2 {>} d=-1 (true)
+  blocks: [S0 S1]cyclic
+
+loop at 'tsvc_recurrences.stan', line 21, column 2 to line 23, column 3  (n in 2:N)
+  S0  a[n] = (a[n] + (a[(n - 1)] * b[n]));   sequential: recurrence, S0 -> S0 a {<} d=1 (true)
+  edges: S0 -> S0 a {<} d=1 (true)
+  blocks: [S0]cyclic
+
+loop at 'tsvc_recurrences.stan', line 29, column 2 to line 31, column 3  (n in 3:N)
+  S0  a[n] = ((a[n] + (a[(n - 1)] * b[n])) + (a[(n - 2)] * c[n]));   sequential: recurrence, S0 -> S0 a {<} d=2 (true)
+  edges: S0 -> S0 a {<} d=2 (true)
+  blocks: [S0]cyclic
+
+loop at 'tsvc_recurrences.stan', line 39, column 4 to line 42, column 5  (n in 2:N)
+  S0  a[n] = (b2[(n - 1)] + (c[n] * d[n]));   sequential: in a dependence cycle with S1
+  S1  b2[n] = (a[n] + (c[n] * e[n]));   sequential: in a dependence cycle with S0
+  edges: S0 -> S1 a {=} d=0 (true); S1 -> S0 b2 {>} d=-1 (true)
+  blocks: [S0 S1]cyclic
+[exit 0]
