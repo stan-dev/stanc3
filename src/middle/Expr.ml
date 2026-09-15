@@ -252,15 +252,26 @@ module Helpers = struct
       a tuple type. *)
   let add_tuple_index e i =
     let mtype =
-      match Typed.(type_of e) with
+      match Typed.type_of e with
       | UTuple ts -> List.nth ts (i - 1)
       | t ->
           ICE.(
             internal_errorf
-              "Internal error: Attempted to apply tuple index to a non-tuple \
-               type: %t"
-              [UnsizedType.pp $ t]) [@coverage off] in
-    let meta = Typed.Meta.{e.meta with type_= mtype} in
+              "Internal error: Attempted to apply tuple index to an expression \
+               %t with non-tuple type: %t"
+              [Typed.pp $ e; UnsizedType.pp $ t]) [@coverage off] in
+    let adlevel =
+      match Typed.adlevel_of e with
+      | TupleAD ts -> List.nth ts (i - 1)
+      | t ->
+          (* UnsizedType.fill_adtype_for_type t mtype *)
+          ICE.(
+            internal_errorf
+              "Internal error: Attempted to apply tuple index to an expression \
+               %t with type %t but non-tuple adtype: %t"
+              [ Typed.pp $ e; UnsizedType.pp $ Typed.type_of e
+              ; UnsizedType.pp_autodifftype $ t ]) [@coverage off] in
+    let meta = Typed.Meta.{e.meta with type_= mtype; adlevel} in
     let pattern = Pattern.TupleProjection (e, i) in
     {meta; pattern}
 

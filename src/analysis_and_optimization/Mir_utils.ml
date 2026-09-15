@@ -450,8 +450,7 @@ let rec update_expr_ad_levels autodiffable_variables (Expr.{pattern; _} as e) =
          include tuple.1 but not tuple.2 In the mean time, what's the most
          conservative? Make the whole thing AD when any part is? *)
       let e' = update_expr_ad_levels autodiffable_variables e in
-      { pattern= TupleProjection (e', ix)
-      ; meta= {e.meta with adlevel= e'.meta.adlevel} }
+      Expr.Helpers.add_tuple_index e' ix
 
 and update_idx_ad_levels autodiffable_variables =
   Index.map (update_expr_ad_levels autodiffable_variables)

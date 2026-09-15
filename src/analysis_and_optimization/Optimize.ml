@@ -1429,7 +1429,7 @@ let optimize_ad_levels (mir : Program.Typed.t) =
       when (not (Set.Poly.mem (Stmt.Helpers.lhs_variable lval) variable_set))
            && UnsizedType.has_autodiff ad ->
         (* When a variable has been downcast, we need to remove any promotions
-           it was going to recieve or else C++ compilation will fail *)
+           it was going to receive or else C++ compilation will fail *)
         Assignment
           ( lval
           , ty
