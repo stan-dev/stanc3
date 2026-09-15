@@ -5,7 +5,8 @@
 // and the loop must stay sequential until scalar expansion is implemented.
 // Each example sits in its own block, and every local it writes carries the
 // example number as a suffix (s3 belongs to example 3) so the generated MIR
-// and C++ can be matched to the example.
+// and C++ can be matched to the example. Every loop here is left unchanged
+// by the pass.
 data {
   int<lower=1> N;
   vector[N] a0;
@@ -14,6 +15,8 @@ data {
   vector[N] d;
 }
 model {
+  // ---- Left unchanged: no statement can be hoisted ----
+
   // 1. TSVC s251 (Expansion), UoB-HPC/TSVC_2 src/tsvc.c
   // C: s = b[i] + c[i] * d[i]; a[i] = s * s;
   // intent: scalar expansion; vectorizable after expansion

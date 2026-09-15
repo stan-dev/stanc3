@@ -1,75 +1,75 @@
   $ stanc -fvectorize-loops --debug-loop-vectorization llvm_loop_distribute.stan
-loop at 'llvm_loop_distribute.stan', line 32, column 4 to line 35, column 5  (n in 1:N)
-  S0  a1[(n + 1)] = (a1[n] * b[n]);   sequential: recurrence, S0 -> S0 a1 {<} d=1 (true)
-  S1  c1[n] = (d[n] .* e[n]);   hoisted
-  edges: S0 -> S0 a1 {<} d=1 (true)
-  blocks: [S0]cyclic [S1]
-
-loop at 'llvm_loop_distribute.stan', line 49, column 4 to line 53, column 5  (n in 1:N)
-  S0  real dd2;   sequential: in a dependence cycle with S1 S3
-  S1  dd2 = D[n];   sequential: in a dependence cycle with S0 S3
-  S2  a2[(n + 1)] = (a2[n] * b[n]);   sequential: recurrence, S2 -> S2 a2 {<} d=1 (true)
-  S3  c2[n] = (dd2 * e[n]);   sequential: in a dependence cycle with S0 S1
-  edges: S0 -> S1 dd2 {<,=,>} (output); S0 -> S3 dd2 {<,=,>} (true); S1 -> S0 dd2 {<,=,>} (output); S1 -> S3 dd2 {<,=,>} (true); S2 -> S2 a2 {<} d=1 (true); S3 -> S0 dd2 {<,=,>} (anti); S3 -> S1 dd2 {<,=,>} (anti)
-  blocks: [S0 S1 S3]cyclic [S2]cyclic
-
-loop at 'llvm_loop_distribute.stan', line 66, column 4 to line 69, column 5  (n in 1:N)
-  S0  a3[(n + 1)] = (a3[n] * b[n]);   sequential: recurrence, S0 -> S0 a3 {<} d=1 (true)
-  S1  total3 = (total3 + d[n]);   sequential: recurrence, S1 -> S1 total3 {<,=,>} (true)
-  edges: S0 -> S0 a3 {<} d=1 (true); S1 -> S1 total3 {<,=,>} (true)
-  blocks: [S0]cyclic [S1]cyclic
-
-loop at 'llvm_loop_distribute.stan', line 83, column 6 to line 86, column 7  (j in 1:J)
-  S0  ma4[i, (j + 1)] = ((ma4[i, j] + mb[i, j]) + mc[i, j]);   sequential: recurrence, S0 -> S0 ma4 {<} d=1 (true)
-  S1  md4[i, j] = (me[i, j] * mf[i, j]);   hoisted
-  edges: S0 -> S0 ma4 {<} d=1 (true)
-  blocks: [S0]cyclic [S1]
-
-loop at 'llvm_loop_distribute.stan', line 82, column 4 to line 87, column 5  (i in 1:N)
-  S0  for(j in 1:J) ma4[i, (j + 1)] = ((ma4[i, j] + mb[i, j]) + mc[i, j]);   sequential: recurrence, S0 -> S0 j {<,=,>} (true)
-  S1  md4[i, 1:J] = (me[i, 1:J] .* mf[i, 1:J]);   sequential: index 1:J is already a slice
-  edges: S0 -> S0 j {<,=,>} (true)
-  blocks: [S0]cyclic [S1]
-
-loop at 'llvm_loop_distribute.stan', line 99, column 4 to line 101, column 5  (n in 1:N)
-  S0  a5[n] = (b[n] * d[n]);   hoisted
+loop at 'llvm_loop_distribute.stan', line 36, column 4 to line 38, column 5  (n in 1:N)
+  S0  a1[n] = (b[n] * d[n]);   hoisted
   edges: none
   blocks: [S0]
 
-loop at 'llvm_loop_distribute.stan', line 32, column 4 to line 35, column 5  (n in 1:N)
-  S0  a1[(n + 1)] = (a1[n] * b[n]);   sequential: recurrence, S0 -> S0 a1 {<} d=1 (true)
-  S1  c1[n] = (d[n] .* e[n]);   hoisted
-  edges: S0 -> S0 a1 {<} d=1 (true)
+loop at 'llvm_loop_distribute.stan', line 52, column 4 to line 55, column 5  (n in 1:N)
+  S0  a2[(n + 1)] = (a2[n] * b[n]);   sequential: recurrence, S0 -> S0 a2 {<} d=1 (true)
+  S1  c2[n] = (d[n] .* e[n]);   hoisted
+  edges: S0 -> S0 a2 {<} d=1 (true)
   blocks: [S0]cyclic [S1]
 
-loop at 'llvm_loop_distribute.stan', line 49, column 4 to line 53, column 5  (n in 1:N)
-  S0  real dd2;   sequential: in a dependence cycle with S1 S3
-  S1  dd2 = D[n];   sequential: in a dependence cycle with S0 S3
-  S2  a2[(n + 1)] = (a2[n] * b[n]);   sequential: recurrence, S2 -> S2 a2 {<} d=1 (true)
-  S3  c2[n] = (dd2 * e[n]);   sequential: in a dependence cycle with S0 S1
-  edges: S0 -> S1 dd2 {<,=,>} (output); S0 -> S3 dd2 {<,=,>} (true); S1 -> S0 dd2 {<,=,>} (output); S1 -> S3 dd2 {<,=,>} (true); S2 -> S2 a2 {<} d=1 (true); S3 -> S0 dd2 {<,=,>} (anti); S3 -> S1 dd2 {<,=,>} (anti)
-  blocks: [S0 S1 S3]cyclic [S2]cyclic
-
-loop at 'llvm_loop_distribute.stan', line 66, column 4 to line 69, column 5  (n in 1:N)
-  S0  a3[(n + 1)] = (a3[n] * b[n]);   sequential: recurrence, S0 -> S0 a3 {<} d=1 (true)
-  S1  total3 = (total3 + d[n]);   sequential: recurrence, S1 -> S1 total3 {<,=,>} (true)
-  edges: S0 -> S0 a3 {<} d=1 (true); S1 -> S1 total3 {<,=,>} (true)
-  blocks: [S0]cyclic [S1]cyclic
-
-loop at 'llvm_loop_distribute.stan', line 83, column 6 to line 86, column 7  (j in 1:J)
-  S0  ma4[i, (j + 1)] = ((ma4[i, j] + mb[i, j]) + mc[i, j]);   sequential: recurrence, S0 -> S0 ma4 {<} d=1 (true)
-  S1  md4[i, j] = (me[i, j] * mf[i, j]);   hoisted
-  edges: S0 -> S0 ma4 {<} d=1 (true)
+loop at 'llvm_loop_distribute.stan', line 71, column 6 to line 74, column 7  (j in 1:J)
+  S0  ma3[i, (j + 1)] = ((ma3[i, j] + mb[i, j]) + mc[i, j]);   sequential: recurrence, S0 -> S0 ma3 {<} d=1 (true)
+  S1  md3[i, j] = (me[i, j] * mf[i, j]);   hoisted
+  edges: S0 -> S0 ma3 {<} d=1 (true)
   blocks: [S0]cyclic [S1]
 
-loop at 'llvm_loop_distribute.stan', line 82, column 4 to line 87, column 5  (i in 1:N)
-  S0  for(j in 1:J) ma4[i, (j + 1)] = ((ma4[i, j] + mb[i, j]) + mc[i, j]);   sequential: recurrence, S0 -> S0 j {<,=,>} (true)
-  S1  md4[i, 1:J] = (me[i, 1:J] .* mf[i, 1:J]);   sequential: index 1:J is already a slice
+loop at 'llvm_loop_distribute.stan', line 70, column 4 to line 75, column 5  (i in 1:N)
+  S0  for(j in 1:J) ma3[i, (j + 1)] = ((ma3[i, j] + mb[i, j]) + mc[i, j]);   sequential: recurrence, S0 -> S0 j {<,=,>} (true)
+  S1  md3[i, 1:J] = (me[i, 1:J] .* mf[i, 1:J]);   sequential: index 1:J is already a slice
   edges: S0 -> S0 j {<,=,>} (true)
   blocks: [S0]cyclic [S1]
 
-loop at 'llvm_loop_distribute.stan', line 99, column 4 to line 101, column 5  (n in 1:N)
-  S0  a5[n] = (b[n] * d[n]);   hoisted
+loop at 'llvm_loop_distribute.stan', line 91, column 4 to line 95, column 5  (n in 1:N)
+  S0  real dd4;   sequential: in a dependence cycle with S1 S3
+  S1  dd4 = D[n];   sequential: in a dependence cycle with S0 S3
+  S2  a4[(n + 1)] = (a4[n] * b[n]);   sequential: recurrence, S2 -> S2 a4 {<} d=1 (true)
+  S3  c4[n] = (dd4 * e[n]);   sequential: in a dependence cycle with S0 S1
+  edges: S0 -> S1 dd4 {<,=,>} (output); S0 -> S3 dd4 {<,=,>} (true); S1 -> S0 dd4 {<,=,>} (output); S1 -> S3 dd4 {<,=,>} (true); S2 -> S2 a4 {<} d=1 (true); S3 -> S0 dd4 {<,=,>} (anti); S3 -> S1 dd4 {<,=,>} (anti)
+  blocks: [S0 S1 S3]cyclic [S2]cyclic
+
+loop at 'llvm_loop_distribute.stan', line 108, column 4 to line 111, column 5  (n in 1:N)
+  S0  a5[(n + 1)] = (a5[n] * b[n]);   sequential: recurrence, S0 -> S0 a5 {<} d=1 (true)
+  S1  total5 = (total5 + d[n]);   sequential: recurrence, S1 -> S1 total5 {<,=,>} (true)
+  edges: S0 -> S0 a5 {<} d=1 (true); S1 -> S1 total5 {<,=,>} (true)
+  blocks: [S0]cyclic [S1]cyclic
+
+loop at 'llvm_loop_distribute.stan', line 36, column 4 to line 38, column 5  (n in 1:N)
+  S0  a1[n] = (b[n] * d[n]);   hoisted
   edges: none
   blocks: [S0]
+
+loop at 'llvm_loop_distribute.stan', line 52, column 4 to line 55, column 5  (n in 1:N)
+  S0  a2[(n + 1)] = (a2[n] * b[n]);   sequential: recurrence, S0 -> S0 a2 {<} d=1 (true)
+  S1  c2[n] = (d[n] .* e[n]);   hoisted
+  edges: S0 -> S0 a2 {<} d=1 (true)
+  blocks: [S0]cyclic [S1]
+
+loop at 'llvm_loop_distribute.stan', line 71, column 6 to line 74, column 7  (j in 1:J)
+  S0  ma3[i, (j + 1)] = ((ma3[i, j] + mb[i, j]) + mc[i, j]);   sequential: recurrence, S0 -> S0 ma3 {<} d=1 (true)
+  S1  md3[i, j] = (me[i, j] * mf[i, j]);   hoisted
+  edges: S0 -> S0 ma3 {<} d=1 (true)
+  blocks: [S0]cyclic [S1]
+
+loop at 'llvm_loop_distribute.stan', line 70, column 4 to line 75, column 5  (i in 1:N)
+  S0  for(j in 1:J) ma3[i, (j + 1)] = ((ma3[i, j] + mb[i, j]) + mc[i, j]);   sequential: recurrence, S0 -> S0 j {<,=,>} (true)
+  S1  md3[i, 1:J] = (me[i, 1:J] .* mf[i, 1:J]);   sequential: index 1:J is already a slice
+  edges: S0 -> S0 j {<,=,>} (true)
+  blocks: [S0]cyclic [S1]
+
+loop at 'llvm_loop_distribute.stan', line 91, column 4 to line 95, column 5  (n in 1:N)
+  S0  real dd4;   sequential: in a dependence cycle with S1 S3
+  S1  dd4 = D[n];   sequential: in a dependence cycle with S0 S3
+  S2  a4[(n + 1)] = (a4[n] * b[n]);   sequential: recurrence, S2 -> S2 a4 {<} d=1 (true)
+  S3  c4[n] = (dd4 * e[n]);   sequential: in a dependence cycle with S0 S1
+  edges: S0 -> S1 dd4 {<,=,>} (output); S0 -> S3 dd4 {<,=,>} (true); S1 -> S0 dd4 {<,=,>} (output); S1 -> S3 dd4 {<,=,>} (true); S2 -> S2 a4 {<} d=1 (true); S3 -> S0 dd4 {<,=,>} (anti); S3 -> S1 dd4 {<,=,>} (anti)
+  blocks: [S0 S1 S3]cyclic [S2]cyclic
+
+loop at 'llvm_loop_distribute.stan', line 108, column 4 to line 111, column 5  (n in 1:N)
+  S0  a5[(n + 1)] = (a5[n] * b[n]);   sequential: recurrence, S0 -> S0 a5 {<} d=1 (true)
+  S1  total5 = (total5 + d[n]);   sequential: recurrence, S1 -> S1 total5 {<,=,>} (true)
+  edges: S0 -> S0 a5 {<} d=1 (true); S1 -> S1 total5 {<,=,>} (true)
+  blocks: [S0]cyclic [S1]cyclic
 [exit 0]

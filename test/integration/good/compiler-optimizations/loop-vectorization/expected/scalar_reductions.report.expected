@@ -1,0 +1,145 @@
+  $ stanc -fvectorize-loops --debug-loop-vectorization scalar_reductions.stan
+loop at 'scalar_reductions.stan', line 60, column 4 to line 62, column 5  (n in 1:N)
+  S0  lp2 = (lp2 + normal_lpdf(y[n], (alpha + (beta * x[n])), sigma));   sequential: recurrence, S0 -> S0 lp2 {<,=,>} (true)
+  edges: S0 -> S0 lp2 {<,=,>} (true)
+  blocks: [S0]cyclic
+
+loop at 'scalar_reductions.stan', line 70, column 4 to line 72, column 5  (n in 1:N)
+  S0  total3 = (total3 + a[n]);   sequential: recurrence, S0 -> S0 total3 {<,=,>} (true)
+  edges: S0 -> S0 total3 {<,=,>} (true)
+  blocks: [S0]cyclic
+
+loop at 'scalar_reductions.stan', line 81, column 4 to line 83, column 5  (n in 1:N)
+  S0  dot4 = (dot4 + (a[n] * b[n]));   sequential: recurrence, S0 -> S0 dot4 {<,=,>} (true)
+  edges: S0 -> S0 dot4 {<,=,>} (true)
+  blocks: [S0]cyclic
+
+loop at 'scalar_reductions.stan', line 91, column 4 to line 93, column 5  (n in 1:N)
+  S0  count5 = (count5 + 1);   sequential: recurrence, S0 -> S0 count5 {<,=,>} (true)
+  edges: S0 -> S0 count5 {<,=,>} (true)
+  blocks: [S0]cyclic
+
+loop at 'scalar_reductions.stan', line 105, column 4 to line 109, column 5  (n in 1:N)
+  S0  mu6[n] = (alpha + (beta * x[n]));   hoisted
+  S1  s6 = (s6 + mu6[n]);   sequential: in a dependence cycle with S2
+  S2  s6 = (s6 + w[n]);   sequential: in a dependence cycle with S1
+  edges: S0 -> S1 mu6 {=} d=0 (true); S1 -> S1 s6 {<,=,>} (true); S1 -> S2 s6 {<,=,>} (true); S1 -> S2 s6 {<,=,>} (anti); S1 -> S2 s6 {<,=,>} (output); S2 -> S1 s6 {<,=,>} (true); S2 -> S1 s6 {<,=,>} (anti); S2 -> S1 s6 {<,=,>} (output); S2 -> S2 s6 {<,=,>} (true)
+  blocks: [S0] [S1 S2]cyclic
+
+loop at 'scalar_reductions.stan', line 117, column 4 to line 119, column 5  (n in 1:N)
+  S0  neg7 = (neg7 - a[n]);   sequential: recurrence, S0 -> S0 neg7 {<,=,>} (true)
+  edges: S0 -> S0 neg7 {<,=,>} (true)
+  blocks: [S0]cyclic
+
+loop at 'scalar_reductions.stan', line 132, column 4 to line 135, column 5  (n in 2:N)
+  S0  v8[n] = (v8[(n - 1)] + w[n]);   sequential: recurrence, S0 -> S0 v8 {<} d=1 (true)
+  S1  s8 = (s8 + v8[n]);   sequential: recurrence, S1 -> S1 s8 {<,=,>} (true)
+  edges: S0 -> S0 v8 {<} d=1 (true); S0 -> S1 v8 {=} d=0 (true); S1 -> S1 s8 {<,=,>} (true)
+  blocks: [S0]cyclic [S1]cyclic
+
+loop at 'scalar_reductions.stan', line 146, column 4 to line 149, column 5  (n in 1:N)
+  S0  s9 = (s9 + a[n]);   sequential: in a dependence cycle with S1
+  S1  z9[n] = s9;   sequential: in a dependence cycle with S0
+  edges: S0 -> S0 s9 {<,=,>} (true); S0 -> S1 s9 {<,=,>} (true); S1 -> S0 s9 {<,=,>} (anti)
+  blocks: [S0 S1]cyclic
+
+loop at 'scalar_reductions.stan', line 156, column 4 to line 158, column 5  (n in 1:N)
+  S0  s10 = (s10 + (s10 * a[n]));   sequential: recurrence, S0 -> S0 s10 {<,=,>} (true)
+  edges: S0 -> S0 s10 {<,=,>} (true)
+  blocks: [S0]cyclic
+
+loop at 'scalar_reductions.stan', line 165, column 4 to line 167, column 5  (n in 1:N)
+  S0  if((a[n] > 0)) { s11 = (s11 + a[n]); }   sequential: recurrence, S0 -> S0 s11 {<,=,>} (true)
+  edges: S0 -> S0 s11 {<,=,>} (true)
+  blocks: [S0]cyclic
+
+loop at 'scalar_reductions.stan', line 175, column 4 to line 177, column 5  (n in 1:N)
+  S0  lp12 = (lp12 + (normal_lpdf(y[n], alpha, sigma) + log(w[n])));   sequential: recurrence, S0 -> S0 lp12 {<,=,>} (true)
+  edges: S0 -> S0 lp12 {<,=,>} (true)
+  blocks: [S0]cyclic
+
+loop at 'scalar_reductions.stan', line 184, column 4 to line 186, column 5  (n in 1:N)
+  S0  acc13 = (acc13 + rows[n]);   sequential: recurrence, S0 -> S0 acc13 {<,=,>} (true)
+  edges: S0 -> S0 acc13 {<,=,>} (true)
+  blocks: [S0]cyclic
+
+loop at 'scalar_reductions.stan', line 193, column 4 to line 195, column 5  (n in 1:N)
+  S0  prod14 = (prod14 * a[n]);   sequential: recurrence, S0 -> S0 prod14 {<,=,>} (true)
+  edges: S0 -> S0 prod14 {<,=,>} (true)
+  blocks: [S0]cyclic
+
+loop at 'scalar_reductions.stan', line 60, column 4 to line 62, column 5  (n in 1:N)
+  S0  lp2 = (lp2 + normal_lpdf(y[n], (alpha + (beta * x[n])), sigma));   sequential: recurrence, S0 -> S0 lp2 {<,=,>} (true)
+  edges: S0 -> S0 lp2 {<,=,>} (true)
+  blocks: [S0]cyclic
+
+loop at 'scalar_reductions.stan', line 70, column 4 to line 72, column 5  (n in 1:N)
+  S0  total3 = (total3 + a[n]);   sequential: recurrence, S0 -> S0 total3 {<,=,>} (true)
+  edges: S0 -> S0 total3 {<,=,>} (true)
+  blocks: [S0]cyclic
+
+loop at 'scalar_reductions.stan', line 81, column 4 to line 83, column 5  (n in 1:N)
+  S0  dot4 = (dot4 + (a[n] * b[n]));   sequential: recurrence, S0 -> S0 dot4 {<,=,>} (true)
+  edges: S0 -> S0 dot4 {<,=,>} (true)
+  blocks: [S0]cyclic
+
+loop at 'scalar_reductions.stan', line 91, column 4 to line 93, column 5  (n in 1:N)
+  S0  count5 = (count5 + 1);   sequential: recurrence, S0 -> S0 count5 {<,=,>} (true)
+  edges: S0 -> S0 count5 {<,=,>} (true)
+  blocks: [S0]cyclic
+
+loop at 'scalar_reductions.stan', line 105, column 4 to line 109, column 5  (n in 1:N)
+  S0  mu6[n] = (alpha + (beta * x[n]));   hoisted
+  S1  s6 = (s6 + mu6[n]);   sequential: in a dependence cycle with S2
+  S2  s6 = (s6 + w[n]);   sequential: in a dependence cycle with S1
+  edges: S0 -> S1 mu6 {=} d=0 (true); S1 -> S1 s6 {<,=,>} (true); S1 -> S2 s6 {<,=,>} (true); S1 -> S2 s6 {<,=,>} (anti); S1 -> S2 s6 {<,=,>} (output); S2 -> S1 s6 {<,=,>} (true); S2 -> S1 s6 {<,=,>} (anti); S2 -> S1 s6 {<,=,>} (output); S2 -> S2 s6 {<,=,>} (true)
+  blocks: [S0] [S1 S2]cyclic
+
+loop at 'scalar_reductions.stan', line 117, column 4 to line 119, column 5  (n in 1:N)
+  S0  neg7 = (neg7 - a[n]);   sequential: recurrence, S0 -> S0 neg7 {<,=,>} (true)
+  edges: S0 -> S0 neg7 {<,=,>} (true)
+  blocks: [S0]cyclic
+
+loop at 'scalar_reductions.stan', line 132, column 4 to line 135, column 5  (n in 2:N)
+  S0  v8[n] = (v8[(n - 1)] + w[n]);   sequential: recurrence, S0 -> S0 v8 {<} d=1 (true)
+  S1  s8 = (s8 + v8[n]);   sequential: recurrence, S1 -> S1 s8 {<,=,>} (true)
+  edges: S0 -> S0 v8 {<} d=1 (true); S0 -> S1 v8 {=} d=0 (true); S1 -> S1 s8 {<,=,>} (true)
+  blocks: [S0]cyclic [S1]cyclic
+
+loop at 'scalar_reductions.stan', line 146, column 4 to line 149, column 5  (n in 1:N)
+  S0  s9 = (s9 + a[n]);   sequential: in a dependence cycle with S1
+  S1  z9[n] = s9;   sequential: in a dependence cycle with S0
+  edges: S0 -> S0 s9 {<,=,>} (true); S0 -> S1 s9 {<,=,>} (true); S1 -> S0 s9 {<,=,>} (anti)
+  blocks: [S0 S1]cyclic
+
+loop at 'scalar_reductions.stan', line 156, column 4 to line 158, column 5  (n in 1:N)
+  S0  s10 = (s10 + (s10 * a[n]));   sequential: recurrence, S0 -> S0 s10 {<,=,>} (true)
+  edges: S0 -> S0 s10 {<,=,>} (true)
+  blocks: [S0]cyclic
+
+loop at 'scalar_reductions.stan', line 165, column 4 to line 167, column 5  (n in 1:N)
+  S0  if((a[n] > 0)) { s11 = (s11 + a[n]); }   sequential: recurrence, S0 -> S0 s11 {<,=,>} (true)
+  edges: S0 -> S0 s11 {<,=,>} (true)
+  blocks: [S0]cyclic
+
+loop at 'scalar_reductions.stan', line 175, column 4 to line 177, column 5  (n in 1:N)
+  S0  lp12 = (lp12 + (normal_lpdf(y[n], alpha, sigma) + log(w[n])));   sequential: recurrence, S0 -> S0 lp12 {<,=,>} (true)
+  edges: S0 -> S0 lp12 {<,=,>} (true)
+  blocks: [S0]cyclic
+
+loop at 'scalar_reductions.stan', line 184, column 4 to line 186, column 5  (n in 1:N)
+  S0  acc13 = (acc13 + rows[n]);   sequential: recurrence, S0 -> S0 acc13 {<,=,>} (true)
+  edges: S0 -> S0 acc13 {<,=,>} (true)
+  blocks: [S0]cyclic
+
+loop at 'scalar_reductions.stan', line 193, column 4 to line 195, column 5  (n in 1:N)
+  S0  prod14 = (prod14 * a[n]);   sequential: recurrence, S0 -> S0 prod14 {<,=,>} (true)
+  edges: S0 -> S0 prod14 {<,=,>} (true)
+  blocks: [S0]cyclic
+
+loop at 'scalar_reductions.stan', line 26, column 4 to line 28, column 5  (n in 1:num_elements(
+y))
+  S0  lp1 = (lp1 + normal_lpdf(y[n], mu[n], sigma));   sequential: recurrence, S0 -> S0 lp1 {<,=,>} (true)
+  edges: S0 -> S0 lp1 {<,=,>} (true)
+  blocks: [S0]cyclic
+[exit 0]

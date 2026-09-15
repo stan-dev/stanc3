@@ -6,7 +6,8 @@
 // vector statement (multi-index gather/scatter).
 // Each example sits in its own block, and every local it writes carries the
 // example number as a suffix (a2 belongs to example 2) so the generated MIR
-// and C++ can be matched to the example.
+// and C++ can be matched to the example. Every loop here is fully
+// vectorized.
 data {
   int<lower=1> N;
   array[N] int<lower=1, upper=N> ip;
@@ -21,6 +22,8 @@ parameters {
   real<lower=0> sigma;
 }
 model {
+  // ---- Fully vectorized: every statement becomes a vector statement ----
+
   // 1. TSVC s4112 (Indirect Addressing), UoB-HPC/TSVC_2 src/tsvc.c
   // C: a[i] += b[ip[i]] * s;
   // intent: indirect addressing, gather; vectorizable

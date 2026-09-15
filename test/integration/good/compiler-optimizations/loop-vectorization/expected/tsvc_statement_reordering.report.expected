@@ -1,23 +1,23 @@
   $ stanc -fvectorize-loops --debug-loop-vectorization tsvc_statement_reordering.stan
-loop at 'tsvc_statement_reordering.stan', line 26, column 4 to line 29, column 5  (n in 2:(N - 1))
+loop at 'tsvc_statement_reordering.stan', line 29, column 4 to line 32, column 5  (n in 2:(N - 1))
   S0  a1[n] = (b1[(n - 1)] + (c[n] .* d[n]));   hoisted
   S1  b1[n] = (b1[(n + 1)] - (e[n] .* d[n]));   hoisted
   edges: S1 -> S0 b1 {>} d=-1 (true)
   blocks: [S1] [S0]
 
-loop at 'tsvc_statement_reordering.stan', line 43, column 4 to line 46, column 5  (n in 1:N)
+loop at 'tsvc_statement_reordering.stan', line 46, column 4 to line 49, column 5  (n in 1:N)
   S0  a2[n] = (a2[n] .* c[n]);   hoisted
   S1  b2[n] = (b2[n] + (a2[(n + 1)] .* d[n]));   hoisted
   edges: S1 -> S0 a2 {>} d=-1 (anti)
   blocks: [S1] [S0]
 
-loop at 'tsvc_statement_reordering.stan', line 26, column 4 to line 29, column 5  (n in 2:(N - 1))
+loop at 'tsvc_statement_reordering.stan', line 29, column 4 to line 32, column 5  (n in 2:(N - 1))
   S0  a1[n] = (b1[(n - 1)] + (c[n] .* d[n]));   hoisted
   S1  b1[n] = (b1[(n + 1)] - (e[n] .* d[n]));   hoisted
   edges: S1 -> S0 b1 {>} d=-1 (true)
   blocks: [S1] [S0]
 
-loop at 'tsvc_statement_reordering.stan', line 43, column 4 to line 46, column 5  (n in 1:N)
+loop at 'tsvc_statement_reordering.stan', line 46, column 4 to line 49, column 5  (n in 1:N)
   S0  a2[n] = (a2[n] .* c[n]);   hoisted
   S1  b2[n] = (b2[n] + (a2[(n + 1)] .* d[n]));   hoisted
   edges: S1 -> S0 a2 {>} d=-1 (anti)

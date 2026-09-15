@@ -6,7 +6,7 @@
 // variable, so `b` is a local wherever it is written). Each example sits in
 // its own block, and every local it writes carries the example number as a
 // suffix (a2 belongs to example 2) so the generated MIR and C++ can be
-// matched to the example.
+// matched to the example. Every loop here is partially vectorized.
 data {
   int<lower=2> N;
   vector[N] a0;
@@ -16,6 +16,8 @@ data {
   vector[N] d;
 }
 model {
+  // ---- Partially vectorized: some statements hoist, others stay in a loop ----
+
   // 1. TSVC s221 (LoopDistribution), UoB-HPC/TSVC_2 src/tsvc.c
   // C: for (int i = 1; i < LEN_1D; i++) { a[i] += c[i] * d[i]; b[i] = b[i - 1] + a[i] + d[i]; }
   // Intent: partially recursive loop.

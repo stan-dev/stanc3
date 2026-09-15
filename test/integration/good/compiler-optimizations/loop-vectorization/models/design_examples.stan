@@ -4,6 +4,9 @@
 // in a sequential loop. Each example sits in its own block, and every local
 // it writes carries the example number as a suffix (v5 belongs to example 5)
 // so the generated MIR and C++ can be matched to the example.
+// Examples keep the numbers of section 7.8.1 but are grouped by outcome:
+// fully vectorized loops first, then partially vectorized loops, then loops
+// the pass leaves unchanged.
 data {
   int<lower=2> N;
   int<lower=1> J;
@@ -24,6 +27,8 @@ parameters {
   real<lower=0> sigma_y;
 }
 model {
+  // ---- Fully vectorized: every statement becomes a vector statement ----
+
   // 1. Radon: every dependence is {Eq}. Three vector statements, no loop.
   // edges: a->b {Eq}, b->c {Eq}. alpha, county_idx, log_uppm, ... are
   // read-only: no edges.
@@ -53,6 +58,57 @@ model {
     target += sum(mu2) + sum(v2);
   }
 
+  // 7. Carried but acyclic: a->b {Lt}, distance 1. Legal to distribute, and
+  // offset widening (section 7.6) expresses it.
+  // => v7[2:N] = x[2:N];  y7[2:N] = v7[1:(N-1)];   (order forced by a->b)
+  {
+    vector[N] v7 = v0;
+    vector[N] y7 = v0;
+    for (n in 2 : N) {
+      v7[n] = x[n];
+      y7[n] = v7[n - 1];
+    }
+    target += sum(v7) + sum(y7);
+  }
+
+  // 10. Distinct literal positions: Independent, both hoist.
+  // => v10[:, 1] = x;  w10[:] = v10[:, 2];
+  {
+    matrix[N, 2] v10 = rep_matrix(0, N, 2);
+    vector[N] w10;
+    for (n in 1 : N) {
+      v10[n, 1] = x[n];
+      w10[n] = v10[n, 2];
+    }
+    target += sum(v10) + sum(w10);
+  }
+
+  // 11. Self anti-dependence: read of a later iteration's element. No edge.
+  // => a11[1:(N-1)] = a11[2:N] + 1;   (deep_copy on the right-hand side makes
+  //    it safe, section 7.11)
+  {
+    vector[N] a11 = a0;
+    for (n in 1 : (N - 1)) {
+      a11[n] = a11[n + 1] + 1;
+    }
+    target += sum(a11);
+  }
+
+  // 12. Symbolic offset (k data): both subscripts are Affine {1; {0; [k]}},
+  // the symbols cancel, a->b {Eq}. Widening shifts the range by k.
+  // => v12[(1 + k):(N + k)] = x;  y12[:] = v12[(1 + k):(N + k)] * 2;
+  {
+    vector[N + k] v12 = rep_vector(0, N + k);
+    vector[N] y12;
+    for (n in 1 : N) {
+      v12[n + k] = x[n];
+      y12[n] = v12[n + k] * 2;
+    }
+    target += sum(v12) + sum(y12);
+  }
+
+  // ---- Partially vectorized: some statements hoist, others stay in a loop ----
+
   // 3. Sequential statement reads a hoisted write: a->b {Eq}, loop after.
   // => mu3[:] = 2 * x;  for (n in 1:N) print(mu3[n]);
   {
@@ -75,6 +131,8 @@ model {
     target += sum(v4);
   }
 
+  // ---- Left unchanged: no statement can be hoisted ----
+
   // 5. Both directions through effects: a<->c (effects), a->b, b->c: one
   // strongly connected component.
   // => unchanged
@@ -96,19 +154,6 @@ model {
       v6[n] = v6[n - 1] + u[n];
     }
     target += sum(v6);
-  }
-
-  // 7. Carried but acyclic: a->b {Lt}, distance 1. Legal to distribute, and
-  // offset widening (section 7.6) expresses it.
-  // => v7[2:N] = x[2:N];  y7[2:N] = v7[1:(N-1)];   (order forced by a->b)
-  {
-    vector[N] v7 = v0;
-    vector[N] y7 = v0;
-    for (n in 2 : N) {
-      v7[n] = x[n];
-      y7[n] = v7[n - 1];
-    }
-    target += sum(v7) + sum(y7);
   }
 
   // 8. Scalar temporary: t8 has subs = [], so a<->b {Lt,Eq,Gt}: one SCC.
@@ -152,41 +197,5 @@ model {
       y9c[n] = t9c[1];
     }
     target += sum(y9c);
-  }
-
-  // 10. Distinct literal positions: Independent, both hoist.
-  // => v10[:, 1] = x;  w10[:] = v10[:, 2];
-  {
-    matrix[N, 2] v10 = rep_matrix(0, N, 2);
-    vector[N] w10;
-    for (n in 1 : N) {
-      v10[n, 1] = x[n];
-      w10[n] = v10[n, 2];
-    }
-    target += sum(v10) + sum(w10);
-  }
-
-  // 11. Self anti-dependence: read of a later iteration's element. No edge.
-  // => a11[1:(N-1)] = a11[2:N] + 1;   (deep_copy on the right-hand side makes
-  //    it safe, section 7.11)
-  {
-    vector[N] a11 = a0;
-    for (n in 1 : (N - 1)) {
-      a11[n] = a11[n + 1] + 1;
-    }
-    target += sum(a11);
-  }
-
-  // 12. Symbolic offset (k data): both subscripts are Affine {1; {0; [k]}},
-  // the symbols cancel, a->b {Eq}. Widening shifts the range by k.
-  // => v12[(1 + k):(N + k)] = x;  y12[:] = v12[(1 + k):(N + k)] * 2;
-  {
-    vector[N + k] v12 = rep_vector(0, N + k);
-    vector[N] y12;
-    for (n in 1 : N) {
-      v12[n + k] = x[n];
-      y12[n] = v12[n + k] * 2;
-    }
-    target += sum(v12) + sum(y12);
   }
 }

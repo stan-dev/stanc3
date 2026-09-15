@@ -1,62 +1,62 @@
   $ stanc -fvectorize-loops --debug-loop-vectorization tsvc_linear_dependence.stan
-loop at 'tsvc_linear_dependence.stan', line 23, column 4 to line 25, column 5  (n in 1:N)
+loop at 'tsvc_linear_dependence.stan', line 26, column 4 to line 28, column 5  (n in 1:N)
   S0  a1[(n + 1)] = (a1[n] + b[n]);   sequential: recurrence, S0 -> S0 a1 {<} d=1 (true)
   edges: S0 -> S0 a1 {<} d=1 (true)
   blocks: [S0]cyclic
 
-loop at 'tsvc_linear_dependence.stan', line 36, column 4 to line 38, column 5  (n in 2:N)
+loop at 'tsvc_linear_dependence.stan', line 39, column 4 to line 41, column 5  (n in 2:N)
   S0  a2[n] = (a2[1] + b[n]);   sequential: recurrence, S0 -> S0 a2 {<,=,>} (true)
   edges: S0 -> S0 a2 {<,=,>} (true)
   blocks: [S0]cyclic
 
-loop at 'tsvc_linear_dependence.stan', line 48, column 4 to line 50, column 5  (n in 1:N)
+loop at 'tsvc_linear_dependence.stan', line 51, column 4 to line 53, column 5  (n in 1:N)
   S0  a3[n] = (a3[(N %/% 2)] + b[n]);   sequential: recurrence, S0 -> S0 a3 {<,=,>} (true)
   edges: S0 -> S0 a3 {<,=,>} (true)
   blocks: [S0]cyclic
 
-loop at 'tsvc_linear_dependence.stan', line 60, column 4 to line 62, column 5  (n in 1:N)
+loop at 'tsvc_linear_dependence.stan', line 63, column 4 to line 65, column 5  (n in 1:N)
   S0  a4[n] = a4[1];   sequential: recurrence, S0 -> S0 a4 {<,=,>} (true)
   edges: S0 -> S0 a4 {<,=,>} (true)
   blocks: [S0]cyclic
 
-loop at 'tsvc_linear_dependence.stan', line 73, column 4 to line 76, column 5  (n in 1:(N - 1))
+loop at 'tsvc_linear_dependence.stan', line 76, column 4 to line 79, column 5  (n in 1:(N - 1))
   S0  a5[n] = (a5[j5] + b[n]);   sequential: in a dependence cycle with S1
   S1  j5 = (j5 + 1);   sequential: in a dependence cycle with S0
   edges: S0 -> S0 a5 {<,=,>} (true); S0 -> S1 j5 {<,=,>} (anti); S1 -> S0 j5 {<,=,>} (true); S1 -> S1 j5 {<,=,>} (true)
   blocks: [S0 S1]cyclic
 
-loop at 'tsvc_linear_dependence.stan', line 88, column 4 to line 90, column 5  (n in 1:N)
+loop at 'tsvc_linear_dependence.stan', line 91, column 4 to line 93, column 5  (n in 1:N)
   S0  a6[n] = (a6[(n + k)] + b[n]);   sequential: recurrence, S0 -> S0 a6 {<,=,>} (true)
   edges: S0 -> S0 a6 {<,=,>} (true)
   blocks: [S0]cyclic
 
-loop at 'tsvc_linear_dependence.stan', line 23, column 4 to line 25, column 5  (n in 1:N)
+loop at 'tsvc_linear_dependence.stan', line 26, column 4 to line 28, column 5  (n in 1:N)
   S0  a1[(n + 1)] = (a1[n] + b[n]);   sequential: recurrence, S0 -> S0 a1 {<} d=1 (true)
   edges: S0 -> S0 a1 {<} d=1 (true)
   blocks: [S0]cyclic
 
-loop at 'tsvc_linear_dependence.stan', line 36, column 4 to line 38, column 5  (n in 2:N)
+loop at 'tsvc_linear_dependence.stan', line 39, column 4 to line 41, column 5  (n in 2:N)
   S0  a2[n] = (a2[1] + b[n]);   sequential: recurrence, S0 -> S0 a2 {<,=,>} (true)
   edges: S0 -> S0 a2 {<,=,>} (true)
   blocks: [S0]cyclic
 
-loop at 'tsvc_linear_dependence.stan', line 48, column 4 to line 50, column 5  (n in 1:N)
+loop at 'tsvc_linear_dependence.stan', line 51, column 4 to line 53, column 5  (n in 1:N)
   S0  a3[n] = (a3[(N %/% 2)] + b[n]);   sequential: recurrence, S0 -> S0 a3 {<,=,>} (true)
   edges: S0 -> S0 a3 {<,=,>} (true)
   blocks: [S0]cyclic
 
-loop at 'tsvc_linear_dependence.stan', line 60, column 4 to line 62, column 5  (n in 1:N)
+loop at 'tsvc_linear_dependence.stan', line 63, column 4 to line 65, column 5  (n in 1:N)
   S0  a4[n] = a4[1];   sequential: recurrence, S0 -> S0 a4 {<,=,>} (true)
   edges: S0 -> S0 a4 {<,=,>} (true)
   blocks: [S0]cyclic
 
-loop at 'tsvc_linear_dependence.stan', line 73, column 4 to line 76, column 5  (n in 1:(N - 1))
+loop at 'tsvc_linear_dependence.stan', line 76, column 4 to line 79, column 5  (n in 1:(N - 1))
   S0  a5[n] = (a5[j5] + b[n]);   sequential: in a dependence cycle with S1
   S1  j5 = (j5 + 1);   sequential: in a dependence cycle with S0
   edges: S0 -> S0 a5 {<,=,>} (true); S0 -> S1 j5 {<,=,>} (anti); S1 -> S0 j5 {<,=,>} (true); S1 -> S1 j5 {<,=,>} (true)
   blocks: [S0 S1]cyclic
 
-loop at 'tsvc_linear_dependence.stan', line 88, column 4 to line 90, column 5  (n in 1:N)
+loop at 'tsvc_linear_dependence.stan', line 91, column 4 to line 93, column 5  (n in 1:N)
   S0  a6[n] = (a6[(n + k)] + b[n]);   sequential: recurrence, S0 -> S0 a6 {<,=,>} (true)
   edges: S0 -> S0 a6 {<,=,>} (true)
   blocks: [S0]cyclic

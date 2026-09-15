@@ -1,31 +1,31 @@
   $ stanc -fvectorize-loops --debug-loop-vectorization tsvc_recurrences.stan
-loop at 'tsvc_recurrences.stan', line 24, column 4 to line 26, column 5  (n in 2:N)
+loop at 'tsvc_recurrences.stan', line 27, column 4 to line 29, column 5  (n in 2:N)
   S0  a1[n] = (a1[n] + (a1[(n - 1)] * b[n]));   sequential: recurrence, S0 -> S0 a1 {<} d=1 (true)
   edges: S0 -> S0 a1 {<} d=1 (true)
   blocks: [S0]cyclic
 
-loop at 'tsvc_recurrences.stan', line 36, column 4 to line 38, column 5  (n in 3:N)
+loop at 'tsvc_recurrences.stan', line 39, column 4 to line 41, column 5  (n in 3:N)
   S0  a2[n] = ((a2[n] + (a2[(n - 1)] * b[n])) + (a2[(n - 2)] * c[n]));   sequential: recurrence, S0 -> S0 a2 {<} d=1 (true)
   edges: S0 -> S0 a2 {<} d=1 (true)
   blocks: [S0]cyclic
 
-loop at 'tsvc_recurrences.stan', line 49, column 4 to line 52, column 5  (n in 2:N)
+loop at 'tsvc_recurrences.stan', line 52, column 4 to line 55, column 5  (n in 2:N)
   S0  a3[n] = (b3[(n - 1)] + (c[n] * d[n]));   sequential: in a dependence cycle with S1
   S1  b3[n] = (a3[n] + (c[n] * e[n]));   sequential: in a dependence cycle with S0
   edges: S0 -> S1 a3 {=} d=0 (true); S1 -> S0 b3 {>} d=-1 (true)
   blocks: [S0 S1]cyclic
 
-loop at 'tsvc_recurrences.stan', line 24, column 4 to line 26, column 5  (n in 2:N)
+loop at 'tsvc_recurrences.stan', line 27, column 4 to line 29, column 5  (n in 2:N)
   S0  a1[n] = (a1[n] + (a1[(n - 1)] * b[n]));   sequential: recurrence, S0 -> S0 a1 {<} d=1 (true)
   edges: S0 -> S0 a1 {<} d=1 (true)
   blocks: [S0]cyclic
 
-loop at 'tsvc_recurrences.stan', line 36, column 4 to line 38, column 5  (n in 3:N)
+loop at 'tsvc_recurrences.stan', line 39, column 4 to line 41, column 5  (n in 3:N)
   S0  a2[n] = ((a2[n] + (a2[(n - 1)] * b[n])) + (a2[(n - 2)] * c[n]));   sequential: recurrence, S0 -> S0 a2 {<} d=1 (true)
   edges: S0 -> S0 a2 {<} d=1 (true)
   blocks: [S0]cyclic
 
-loop at 'tsvc_recurrences.stan', line 49, column 4 to line 52, column 5  (n in 2:N)
+loop at 'tsvc_recurrences.stan', line 52, column 4 to line 55, column 5  (n in 2:N)
   S0  a3[n] = (b3[(n - 1)] + (c[n] * d[n]));   sequential: in a dependence cycle with S1
   S1  b3[n] = (a3[n] + (c[n] * e[n]));   sequential: in a dependence cycle with S0
   edges: S0 -> S1 a3 {=} d=0 (true); S1 -> S0 b3 {>} d=-1 (true)

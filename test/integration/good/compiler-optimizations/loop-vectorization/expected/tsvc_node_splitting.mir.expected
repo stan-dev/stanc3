@@ -81,15 +81,9 @@ log_prob {
       FnValidateSize__("b1", "N", N);
       vector[N] b1;
       b1 = b0;
-      FnValidateSize__("d1", "N", N);
-      vector[N] d1;
-      d1 = d0;
-      for(n in 1:N) {
-        a1[n] = ((b1[n] .* c[n]) .* d1[n]);
-        b1[n] = ((a1[n] .* a1[(n + 1)]) .* d1[n]);
-      }
+      a1[(1 + 1):(N + 1)] = (b1[1:N] + e[1:N]);
+      a1[1:N] = (b1[1:N] + c[1:N]);
       target += sum(a1);
-      target += sum(b1);
     }
     {
       data int a2_1dim__ = (N + 1);
@@ -103,9 +97,8 @@ log_prob {
       vector[N] d2;
       d2 = d0;
       for(n in 1:N) {
-        a2[n] = (b2[n] + (c[n] .* d2[n]));
-        b2[n] = (a2[n] + (d2[n] .* e[n]));
-        a2[n] = (b2[n] + (a2[(n + 1)] .* d2[n]));
+        a2[n] = ((b2[n] .* c[n]) .* d2[n]);
+        b2[n] = ((a2[n] .* a2[(n + 1)]) .* d2[n]);
       }
       target += sum(a2);
       target += sum(b2);
@@ -123,8 +116,8 @@ log_prob {
       d3 = d0;
       for(n in 1:N) {
         a3[n] = (b3[n] + (c[n] .* d3[n]));
-        b3[n] = (c[n] + b3[n]);
-        a3[(n + 1)] = (b3[n] + (a3[(n + 1)] .* d3[n]));
+        b3[n] = (a3[n] + (d3[n] .* e[n]));
+        a3[n] = (b3[n] + (a3[(n + 1)] .* d3[n]));
       }
       target += sum(a3);
       target += sum(b3);
@@ -141,11 +134,12 @@ log_prob {
       vector[N] d4;
       d4 = d0;
       for(n in 1:N) {
-        a4[n] = (b4[n] + (c[n] .* c[n]));
-        d4[n] = (a4[n] + a4[(n + 1)]);
+        a4[n] = (b4[n] + (c[n] .* d4[n]));
+        b4[n] = (c[n] + b4[n]);
+        a4[(n + 1)] = (b4[n] + (a4[(n + 1)] .* d4[n]));
       }
       target += sum(a4);
-      target += sum(d4);
+      target += sum(b4);
     }
     {
       data int a5_1dim__ = (N + 1);
@@ -155,9 +149,15 @@ log_prob {
       FnValidateSize__("b5", "N", N);
       vector[N] b5;
       b5 = b0;
-      a5[(1 + 1):(N + 1)] = (b5[1:N] + e[1:N]);
-      a5[1:N] = (b5[1:N] + c[1:N]);
+      FnValidateSize__("d5", "N", N);
+      vector[N] d5;
+      d5 = d0;
+      for(n in 1:N) {
+        a5[n] = (b5[n] + (c[n] .* c[n]));
+        d5[n] = (a5[n] + a5[(n + 1)]);
+      }
       target += sum(a5);
+      target += sum(d5);
     }
   } }
 
@@ -171,15 +171,9 @@ rev_log_prob {
       FnValidateSize__("b1", "N", N);
       vector[N] b1;
       b1 = b0;
-      FnValidateSize__("d1", "N", N);
-      vector[N] d1;
-      d1 = d0;
-      for(n in 1:N) {
-        a1[n] = ((b1[n] .* c[n]) .* d1[n]);
-        b1[n] = ((a1[n] .* a1[(n + 1)]) .* d1[n]);
-      }
+      a1[(1 + 1):(N + 1)] = (b1[1:N] + e[1:N]);
+      a1[1:N] = (b1[1:N] + c[1:N]);
       target += sum(a1);
-      target += sum(b1);
     }
     {
       data int a2_1dim__ = (N + 1);
@@ -193,9 +187,8 @@ rev_log_prob {
       vector[N] d2;
       d2 = d0;
       for(n in 1:N) {
-        a2[n] = (b2[n] + (c[n] .* d2[n]));
-        b2[n] = (a2[n] + (d2[n] .* e[n]));
-        a2[n] = (b2[n] + (a2[(n + 1)] .* d2[n]));
+        a2[n] = ((b2[n] .* c[n]) .* d2[n]);
+        b2[n] = ((a2[n] .* a2[(n + 1)]) .* d2[n]);
       }
       target += sum(a2);
       target += sum(b2);
@@ -213,8 +206,8 @@ rev_log_prob {
       d3 = d0;
       for(n in 1:N) {
         a3[n] = (b3[n] + (c[n] .* d3[n]));
-        b3[n] = (c[n] + b3[n]);
-        a3[(n + 1)] = (b3[n] + (a3[(n + 1)] .* d3[n]));
+        b3[n] = (a3[n] + (d3[n] .* e[n]));
+        a3[n] = (b3[n] + (a3[(n + 1)] .* d3[n]));
       }
       target += sum(a3);
       target += sum(b3);
@@ -231,11 +224,12 @@ rev_log_prob {
       vector[N] d4;
       d4 = d0;
       for(n in 1:N) {
-        a4[n] = (b4[n] + (c[n] .* c[n]));
-        d4[n] = (a4[n] + a4[(n + 1)]);
+        a4[n] = (b4[n] + (c[n] .* d4[n]));
+        b4[n] = (c[n] + b4[n]);
+        a4[(n + 1)] = (b4[n] + (a4[(n + 1)] .* d4[n]));
       }
       target += sum(a4);
-      target += sum(d4);
+      target += sum(b4);
     }
     {
       data int a5_1dim__ = (N + 1);
@@ -245,9 +239,15 @@ rev_log_prob {
       FnValidateSize__("b5", "N", N);
       vector[N] b5;
       b5 = b0;
-      a5[(1 + 1):(N + 1)] = (b5[1:N] + e[1:N]);
-      a5[1:N] = (b5[1:N] + c[1:N]);
+      FnValidateSize__("d5", "N", N);
+      vector[N] d5;
+      d5 = d0;
+      for(n in 1:N) {
+        a5[n] = (b5[n] + (c[n] .* c[n]));
+        d5[n] = (a5[n] + a5[(n + 1)]);
+      }
       target += sum(a5);
+      target += sum(d5);
     }
   } }
 

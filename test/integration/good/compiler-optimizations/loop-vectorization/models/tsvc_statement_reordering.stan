@@ -4,7 +4,8 @@
 // subscript is in range. Written variables are model-block locals
 // initialised from data. Each example sits in its own block, and every local
 // it writes carries the example number as a suffix (a2 belongs to example 2)
-// so the generated MIR and C++ can be matched to the example.
+// so the generated MIR and C++ can be matched to the example. Every loop here
+// is fully vectorized.
 data {
   int<lower=3> N;
   vector[N + 1] a0;
@@ -14,6 +15,8 @@ data {
   vector[N] e;
 }
 model {
+  // ---- Fully vectorized: every statement becomes a vector statement ----
+
   // 1. TSVC s211 (StatementReordering), UoB-HPC/TSVC_2 src/tsvc.c
   // C: for (int i = 1; i < LEN_1D-1; i++) { a[i] = b[i - 1] + c[i] * d[i]; b[i] = b[i + 1] - e[i] * d[i]; }
   // Intent: vectorizable after statement reordering.

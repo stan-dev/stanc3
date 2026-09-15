@@ -146,6 +146,45 @@ log_prob {
       target += (sum(mu2) + sum(v2));
     }
     {
+      FnValidateSize__("v7", "N", N);
+      vector[N] v7;
+      v7 = v0;
+      FnValidateSize__("y7", "N", N);
+      vector[N] y7;
+      y7 = v0;
+      v7[2:N] = x[2:N];
+      y7[2:N] = v7[(2 - 1):(N - 1)];
+      target += (sum(v7) + sum(y7));
+    }
+    {
+      FnValidateSize__("v10", "N", N);
+      matrix[N, 2] v10;
+      v10 = rep_matrix(promote(0, real, data), N, 2);
+      FnValidateSize__("w10", "N", N);
+      vector[N] w10;
+      v10[1:N, 1] = x[1:N];
+      w10[1:N] = v10[1:N, 2];
+      target += (sum(v10) + sum(w10));
+    }
+    {
+      FnValidateSize__("a11", "N", N);
+      vector[N] a11;
+      a11 = a0;
+      a11[1:(N - 1)] = (a11[(1 + 1):((N - 1) + 1)] + promote(1, real, data));
+      target += sum(a11);
+    }
+    {
+      data int v12_1dim__ = (N + k);
+      FnValidateSize__("v12", "N + k", v12_1dim__);
+      vector[v12_1dim__] v12;
+      v12 = rep_vector(promote(0, real, data), (N + k));
+      FnValidateSize__("y12", "N", N);
+      vector[N] y12;
+      v12[(1 + k):(N + k)] = x[1:N];
+      y12[1:N] = (v12[(1 + k):(N + k)] * promote(2, real, data));
+      target += (sum(v12) + sum(y12));
+    }
+    {
       FnValidateSize__("mu3", "N", N);
       vector[N] mu3;
       mu3[1:N] = (promote(2, real, data) * x[1:N]);
@@ -179,17 +218,6 @@ log_prob {
         v6[n] = (v6[(n - 1)] + u[n]);
       }
       target += sum(v6);
-    }
-    {
-      FnValidateSize__("v7", "N", N);
-      vector[N] v7;
-      v7 = v0;
-      FnValidateSize__("y7", "N", N);
-      vector[N] y7;
-      y7 = v0;
-      v7[2:N] = x[2:N];
-      y7[2:N] = v7[(2 - 1):(N - 1)];
-      target += (sum(v7) + sum(y7));
     }
     {
       FnValidateSize__("mu8", "N", N);
@@ -231,34 +259,6 @@ log_prob {
         y9c[n] = t9c[1];
       }
       target += sum(y9c);
-    }
-    {
-      FnValidateSize__("v10", "N", N);
-      matrix[N, 2] v10;
-      v10 = rep_matrix(promote(0, real, data), N, 2);
-      FnValidateSize__("w10", "N", N);
-      vector[N] w10;
-      v10[1:N, 1] = x[1:N];
-      w10[1:N] = v10[1:N, 2];
-      target += (sum(v10) + sum(w10));
-    }
-    {
-      FnValidateSize__("a11", "N", N);
-      vector[N] a11;
-      a11 = a0;
-      a11[1:(N - 1)] = (a11[(1 + 1):((N - 1) + 1)] + promote(1, real, data));
-      target += sum(a11);
-    }
-    {
-      data int v12_1dim__ = (N + k);
-      FnValidateSize__("v12", "N + k", v12_1dim__);
-      vector[v12_1dim__] v12;
-      v12 = rep_vector(promote(0, real, data), (N + k));
-      FnValidateSize__("y12", "N", N);
-      vector[N] y12;
-      v12[(1 + k):(N + k)] = x[1:N];
-      y12[1:N] = (v12[(1 + k):(N + k)] * promote(2, real, data));
-      target += (sum(v12) + sum(y12));
     }
   } }
 
@@ -293,6 +293,45 @@ rev_log_prob {
       target += (sum(mu2) + sum(v2));
     }
     {
+      FnValidateSize__("v7", "N", N);
+      vector[N] v7;
+      v7 = v0;
+      FnValidateSize__("y7", "N", N);
+      vector[N] y7;
+      y7 = v0;
+      v7[2:N] = x[2:N];
+      y7[2:N] = v7[(2 - 1):(N - 1)];
+      target += (sum(v7) + sum(y7));
+    }
+    {
+      FnValidateSize__("v10", "N", N);
+      matrix[N, 2] v10;
+      v10 = rep_matrix(promote(0, real, data), N, 2);
+      FnValidateSize__("w10", "N", N);
+      vector[N] w10;
+      v10[1:N, 1] = x[1:N];
+      w10[1:N] = v10[1:N, 2];
+      target += (sum(v10) + sum(w10));
+    }
+    {
+      FnValidateSize__("a11", "N", N);
+      vector[N] a11;
+      a11 = a0;
+      a11[1:(N - 1)] = (a11[(1 + 1):((N - 1) + 1)] + promote(1, real, data));
+      target += sum(a11);
+    }
+    {
+      data int v12_1dim__ = (N + k);
+      FnValidateSize__("v12", "N + k", v12_1dim__);
+      vector[v12_1dim__] v12;
+      v12 = rep_vector(promote(0, real, data), (N + k));
+      FnValidateSize__("y12", "N", N);
+      vector[N] y12;
+      v12[(1 + k):(N + k)] = x[1:N];
+      y12[1:N] = (v12[(1 + k):(N + k)] * promote(2, real, data));
+      target += (sum(v12) + sum(y12));
+    }
+    {
       FnValidateSize__("mu3", "N", N);
       vector[N] mu3;
       mu3[1:N] = (promote(2, real, data) * x[1:N]);
@@ -326,17 +365,6 @@ rev_log_prob {
         v6[n] = (v6[(n - 1)] + u[n]);
       }
       target += sum(v6);
-    }
-    {
-      FnValidateSize__("v7", "N", N);
-      vector[N] v7;
-      v7 = v0;
-      FnValidateSize__("y7", "N", N);
-      vector[N] y7;
-      y7 = v0;
-      v7[2:N] = x[2:N];
-      y7[2:N] = v7[(2 - 1):(N - 1)];
-      target += (sum(v7) + sum(y7));
     }
     {
       FnValidateSize__("mu8", "N", N);
@@ -378,34 +406,6 @@ rev_log_prob {
         y9c[n] = t9c[1];
       }
       target += sum(y9c);
-    }
-    {
-      FnValidateSize__("v10", "N", N);
-      matrix[N, 2] v10;
-      v10 = rep_matrix(promote(0, real, data), N, 2);
-      FnValidateSize__("w10", "N", N);
-      vector[N] w10;
-      v10[1:N, 1] = x[1:N];
-      w10[1:N] = v10[1:N, 2];
-      target += (sum(v10) + sum(w10));
-    }
-    {
-      FnValidateSize__("a11", "N", N);
-      vector[N] a11;
-      a11 = a0;
-      a11[1:(N - 1)] = (a11[(1 + 1):((N - 1) + 1)] + promote(1, real, data));
-      target += sum(a11);
-    }
-    {
-      data int v12_1dim__ = (N + k);
-      FnValidateSize__("v12", "N + k", v12_1dim__);
-      vector[v12_1dim__] v12;
-      v12 = rep_vector(promote(0, real, data), (N + k));
-      FnValidateSize__("y12", "N", N);
-      vector[N] y12;
-      v12[(1 + k):(N + k)] = x[1:N];
-      y12[1:N] = (v12[(1 + k):(N + k)] * promote(2, real, data));
-      target += (sum(v12) + sum(y12));
     }
   } }
 

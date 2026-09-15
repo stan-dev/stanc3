@@ -1,69 +1,69 @@
   $ stanc -fvectorize-loops --debug-loop-vectorization gcc_vect_depend.stan
-loop at 'gcc_vect_depend.stan', line 26, column 4 to line 29, column 5  (n in 1:N)
+loop at 'gcc_vect_depend.stan', line 29, column 4 to line 32, column 5  (n in 1:N)
   S0  ia1[(n + 1)] = x[n];   hoisted
   S1  ib1[n] = ia1[n];   hoisted
   edges: S0 -> S1 ia1 {<} d=1 (true)
   blocks: [S0] [S1]
 
-loop at 'gcc_vect_depend.stan', line 42, column 4 to line 45, column 5  (n in 1:N)
+loop at 'gcc_vect_depend.stan', line 45, column 4 to line 48, column 5  (n in 1:N)
   S0  ia2[n] = x[n];   hoisted
   S1  ib2[n] = ia2[(n + 1)];   hoisted
   edges: S1 -> S0 ia2 {>} d=-1 (anti)
   blocks: [S1] [S0]
 
-loop at 'gcc_vect_depend.stan', line 56, column 4 to line 59, column 5  (n in 1:N)
+loop at 'gcc_vect_depend.stan', line 59, column 4 to line 62, column 5  (n in 1:N)
   S0  ia3[(n + 1)] = x[n];   hoisted
   S1  ia3[n] = z[n];   hoisted
   edges: S0 -> S1 ia3 {<} d=1 (output)
   blocks: [S0] [S1]
 
-loop at 'gcc_vect_depend.stan', line 70, column 4 to line 73, column 5  (n in 1:N)
+loop at 'gcc_vect_depend.stan', line 73, column 4 to line 76, column 5  (n in 1:N)
   S0  ia4[n] = x[n];   hoisted
   S1  ia4[(n + 1)] = z[n];   hoisted
   edges: S1 -> S0 ia4 {>} d=-1 (output)
   blocks: [S1] [S0]
 
-loop at 'gcc_vect_depend.stan', line 84, column 4 to line 86, column 5  (n in 1:N)
-  S0  ia5[(n + 1)] = (ia5[n] * promote(4, real, data));   sequential: recurrence, S0 -> S0 ia5 {<} d=1 (true)
-  edges: S0 -> S0 ia5 {<} d=1 (true)
-  blocks: [S0]cyclic
-
-loop at 'gcc_vect_depend.stan', line 98, column 4 to line 100, column 5  (n in 1:N)
-  S0  ib6[n] = (ib6[(n + 1)] * promote(4, real, data));   hoisted
+loop at 'gcc_vect_depend.stan', line 88, column 4 to line 90, column 5  (n in 1:N)
+  S0  ib5[n] = (ib5[(n + 1)] * promote(4, real, data));   hoisted
   edges: none
   blocks: [S0]
 
-loop at 'gcc_vect_depend.stan', line 26, column 4 to line 29, column 5  (n in 1:N)
+loop at 'gcc_vect_depend.stan', line 103, column 4 to line 105, column 5  (n in 1:N)
+  S0  ia6[(n + 1)] = (ia6[n] * promote(4, real, data));   sequential: recurrence, S0 -> S0 ia6 {<} d=1 (true)
+  edges: S0 -> S0 ia6 {<} d=1 (true)
+  blocks: [S0]cyclic
+
+loop at 'gcc_vect_depend.stan', line 29, column 4 to line 32, column 5  (n in 1:N)
   S0  ia1[(n + 1)] = x[n];   hoisted
   S1  ib1[n] = ia1[n];   hoisted
   edges: S0 -> S1 ia1 {<} d=1 (true)
   blocks: [S0] [S1]
 
-loop at 'gcc_vect_depend.stan', line 42, column 4 to line 45, column 5  (n in 1:N)
+loop at 'gcc_vect_depend.stan', line 45, column 4 to line 48, column 5  (n in 1:N)
   S0  ia2[n] = x[n];   hoisted
   S1  ib2[n] = ia2[(n + 1)];   hoisted
   edges: S1 -> S0 ia2 {>} d=-1 (anti)
   blocks: [S1] [S0]
 
-loop at 'gcc_vect_depend.stan', line 56, column 4 to line 59, column 5  (n in 1:N)
+loop at 'gcc_vect_depend.stan', line 59, column 4 to line 62, column 5  (n in 1:N)
   S0  ia3[(n + 1)] = x[n];   hoisted
   S1  ia3[n] = z[n];   hoisted
   edges: S0 -> S1 ia3 {<} d=1 (output)
   blocks: [S0] [S1]
 
-loop at 'gcc_vect_depend.stan', line 70, column 4 to line 73, column 5  (n in 1:N)
+loop at 'gcc_vect_depend.stan', line 73, column 4 to line 76, column 5  (n in 1:N)
   S0  ia4[n] = x[n];   hoisted
   S1  ia4[(n + 1)] = z[n];   hoisted
   edges: S1 -> S0 ia4 {>} d=-1 (output)
   blocks: [S1] [S0]
 
-loop at 'gcc_vect_depend.stan', line 84, column 4 to line 86, column 5  (n in 1:N)
-  S0  ia5[(n + 1)] = (ia5[n] * promote(4, real, data));   sequential: recurrence, S0 -> S0 ia5 {<} d=1 (true)
-  edges: S0 -> S0 ia5 {<} d=1 (true)
-  blocks: [S0]cyclic
-
-loop at 'gcc_vect_depend.stan', line 98, column 4 to line 100, column 5  (n in 1:N)
-  S0  ib6[n] = (ib6[(n + 1)] * promote(4, real, data));   hoisted
+loop at 'gcc_vect_depend.stan', line 88, column 4 to line 90, column 5  (n in 1:N)
+  S0  ib5[n] = (ib5[(n + 1)] * promote(4, real, data));   hoisted
   edges: none
   blocks: [S0]
+
+loop at 'gcc_vect_depend.stan', line 103, column 4 to line 105, column 5  (n in 1:N)
+  S0  ia6[(n + 1)] = (ia6[n] * promote(4, real, data));   sequential: recurrence, S0 -> S0 ia6 {<} d=1 (true)
+  edges: S0 -> S0 ia6 {<} d=1 (true)
+  blocks: [S0]cyclic
 [exit 0]

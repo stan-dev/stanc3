@@ -7,145 +7,145 @@ using namespace stan::math;
 stan::math::profile_map profiles__;
 static constexpr std::array<const char*, 140> locations_array__ =
   {" (found before start of program)",
-  " (in 'design_examples.stan', line 22, column 2 to column 18)",
-  " (in 'design_examples.stan', line 23, column 2 to column 17)",
-  " (in 'design_examples.stan', line 24, column 2 to column 24)",
-  " (in 'design_examples.stan', line 34, column 11 to column 12)",
-  " (in 'design_examples.stan', line 34, column 4 to column 18)",
-  " (in 'design_examples.stan', line 35, column 11 to column 12)",
-  " (in 'design_examples.stan', line 35, column 4 to column 19)",
-  " (in 'design_examples.stan', line 37, column 6 to column 61)",
-  " (in 'design_examples.stan', line 38, column 6 to column 52)",
-  " (in 'design_examples.stan', line 39, column 6 to column 60)",
-  " (in 'design_examples.stan', line 36, column 4 to line 40, column 5)",
-  " (in 'design_examples.stan', line 33, column 2 to line 41, column 3)",
-  " (in 'design_examples.stan', line 47, column 11 to column 12)",
-  " (in 'design_examples.stan', line 47, column 4 to column 18)",
-  " (in 'design_examples.stan', line 48, column 11 to column 12)",
-  " (in 'design_examples.stan', line 48, column 4 to column 22)",
-  " (in 'design_examples.stan', line 50, column 6 to column 25)",
-  " (in 'design_examples.stan', line 51, column 6 to column 19)",
-  " (in 'design_examples.stan', line 49, column 4 to line 52, column 5)",
-  " (in 'design_examples.stan', line 53, column 4 to column 33)",
-  " (in 'design_examples.stan', line 46, column 2 to line 54, column 3)",
-  " (in 'design_examples.stan', line 59, column 11 to column 12)",
-  " (in 'design_examples.stan', line 59, column 4 to column 18)",
-  " (in 'design_examples.stan', line 61, column 6 to column 24)",
-  " (in 'design_examples.stan', line 62, column 6 to column 20)",
-  " (in 'design_examples.stan', line 60, column 4 to line 63, column 5)",
-  " (in 'design_examples.stan', line 64, column 4 to column 23)",
-  " (in 'design_examples.stan', line 58, column 2 to line 65, column 3)",
-  " (in 'design_examples.stan', line 70, column 11 to column 12)",
-  " (in 'design_examples.stan', line 70, column 4 to column 22)",
-  " (in 'design_examples.stan', line 72, column 6 to column 19)",
-  " (in 'design_examples.stan', line 71, column 4 to line 74, column 5)",
-  " (in 'design_examples.stan', line 73, column 6 to column 19)",
-  " (in 'design_examples.stan', line 75, column 4 to column 22)",
-  " (in 'design_examples.stan', line 69, column 2 to line 76, column 3)",
-  " (in 'design_examples.stan', line 82, column 11 to column 12)",
-  " (in 'design_examples.stan', line 82, column 4 to column 22)",
-  " (in 'design_examples.stan', line 84, column 6 to column 19)",
-  " (in 'design_examples.stan', line 85, column 6 to column 19)",
-  " (in 'design_examples.stan', line 86, column 6 to column 19)",
-  " (in 'design_examples.stan', line 83, column 21 to line 87, column 5)",
-  " (in 'design_examples.stan', line 83, column 4 to line 87, column 5)",
-  " (in 'design_examples.stan', line 88, column 4 to column 22)",
-  " (in 'design_examples.stan', line 81, column 2 to line 89, column 3)",
-  " (in 'design_examples.stan', line 94, column 11 to column 12)",
-  " (in 'design_examples.stan', line 94, column 4 to column 22)",
-  " (in 'design_examples.stan', line 96, column 6 to column 31)",
-  " (in 'design_examples.stan', line 95, column 21 to line 97, column 5)",
-  " (in 'design_examples.stan', line 95, column 4 to line 97, column 5)",
-  " (in 'design_examples.stan', line 98, column 4 to column 22)",
-  " (in 'design_examples.stan', line 93, column 2 to line 99, column 3)",
-  " (in 'design_examples.stan', line 105, column 11 to column 12)",
-  " (in 'design_examples.stan', line 105, column 4 to column 22)",
-  " (in 'design_examples.stan', line 106, column 11 to column 12)",
-  " (in 'design_examples.stan', line 106, column 4 to column 22)",
-  " (in 'design_examples.stan', line 108, column 6 to column 19)",
-  " (in 'design_examples.stan', line 109, column 6 to column 24)",
-  " (in 'design_examples.stan', line 107, column 4 to line 110, column 5)",
-  " (in 'design_examples.stan', line 111, column 4 to column 32)",
-  " (in 'design_examples.stan', line 104, column 2 to line 112, column 3)",
-  " (in 'design_examples.stan', line 117, column 11 to column 12)",
-  " (in 'design_examples.stan', line 117, column 4 to column 18)",
-  " (in 'design_examples.stan', line 119, column 6 to column 25)",
-  " (in 'design_examples.stan', line 120, column 6 to column 22)",
-  " (in 'design_examples.stan', line 118, column 21 to line 121, column 5)",
-  " (in 'design_examples.stan', line 118, column 4 to line 121, column 5)",
-  " (in 'design_examples.stan', line 122, column 4 to column 23)",
-  " (in 'design_examples.stan', line 116, column 2 to line 123, column 3)",
-  " (in 'design_examples.stan', line 128, column 11 to column 12)",
-  " (in 'design_examples.stan', line 128, column 4 to column 23)",
-  " (in 'design_examples.stan', line 130, column 6 to column 20)",
-  " (in 'design_examples.stan', line 131, column 6 to column 25)",
-  " (in 'design_examples.stan', line 129, column 21 to line 132, column 5)",
-  " (in 'design_examples.stan', line 129, column 4 to line 132, column 5)",
-  " (in 'design_examples.stan', line 127, column 2 to line 133, column 3)",
-  " (in 'design_examples.stan', line 137, column 11 to column 12)",
-  " (in 'design_examples.stan', line 137, column 4 to column 23)",
-  " (in 'design_examples.stan', line 138, column 11 to column 12)",
-  " (in 'design_examples.stan', line 138, column 4 to column 18)",
-  " (in 'design_examples.stan', line 140, column 6 to column 25)",
-  " (in 'design_examples.stan', line 141, column 6 to column 27)",
-  " (in 'design_examples.stan', line 139, column 21 to line 142, column 5)",
-  " (in 'design_examples.stan', line 139, column 4 to line 142, column 5)",
-  " (in 'design_examples.stan', line 143, column 4 to column 34)",
-  " (in 'design_examples.stan', line 136, column 2 to line 144, column 3)",
-  " (in 'design_examples.stan', line 148, column 11 to column 12)",
-  " (in 'design_examples.stan', line 148, column 4 to column 18)",
-  " (in 'design_examples.stan', line 150, column 6 to column 20)",
-  " (in 'design_examples.stan', line 151, column 6 to column 20)",
-  " (in 'design_examples.stan', line 152, column 6 to column 22)",
-  " (in 'design_examples.stan', line 149, column 21 to line 153, column 5)",
-  " (in 'design_examples.stan', line 149, column 4 to line 153, column 5)",
-  " (in 'design_examples.stan', line 154, column 4 to column 23)",
-  " (in 'design_examples.stan', line 147, column 2 to line 155, column 3)",
-  " (in 'design_examples.stan', line 160, column 11 to column 12)",
-  " (in 'design_examples.stan', line 160, column 4 to column 43)",
-  " (in 'design_examples.stan', line 161, column 11 to column 12)",
-  " (in 'design_examples.stan', line 161, column 4 to column 18)",
-  " (in 'design_examples.stan', line 163, column 6 to column 23)",
+  " (in 'design_examples.stan', line 25, column 2 to column 18)",
+  " (in 'design_examples.stan', line 26, column 2 to column 17)",
+  " (in 'design_examples.stan', line 27, column 2 to column 24)",
+  " (in 'design_examples.stan', line 39, column 11 to column 12)",
+  " (in 'design_examples.stan', line 39, column 4 to column 18)",
+  " (in 'design_examples.stan', line 40, column 11 to column 12)",
+  " (in 'design_examples.stan', line 40, column 4 to column 19)",
+  " (in 'design_examples.stan', line 42, column 6 to column 61)",
+  " (in 'design_examples.stan', line 43, column 6 to column 52)",
+  " (in 'design_examples.stan', line 44, column 6 to column 60)",
+  " (in 'design_examples.stan', line 41, column 4 to line 45, column 5)",
+  " (in 'design_examples.stan', line 38, column 2 to line 46, column 3)",
+  " (in 'design_examples.stan', line 52, column 11 to column 12)",
+  " (in 'design_examples.stan', line 52, column 4 to column 18)",
+  " (in 'design_examples.stan', line 53, column 11 to column 12)",
+  " (in 'design_examples.stan', line 53, column 4 to column 22)",
+  " (in 'design_examples.stan', line 55, column 6 to column 25)",
+  " (in 'design_examples.stan', line 56, column 6 to column 19)",
+  " (in 'design_examples.stan', line 54, column 4 to line 57, column 5)",
+  " (in 'design_examples.stan', line 58, column 4 to column 33)",
+  " (in 'design_examples.stan', line 51, column 2 to line 59, column 3)",
+  " (in 'design_examples.stan', line 65, column 11 to column 12)",
+  " (in 'design_examples.stan', line 65, column 4 to column 22)",
+  " (in 'design_examples.stan', line 66, column 11 to column 12)",
+  " (in 'design_examples.stan', line 66, column 4 to column 22)",
+  " (in 'design_examples.stan', line 68, column 6 to column 19)",
+  " (in 'design_examples.stan', line 69, column 6 to column 24)",
+  " (in 'design_examples.stan', line 67, column 4 to line 70, column 5)",
+  " (in 'design_examples.stan', line 71, column 4 to column 32)",
+  " (in 'design_examples.stan', line 64, column 2 to line 72, column 3)",
+  " (in 'design_examples.stan', line 77, column 11 to column 12)",
+  " (in 'design_examples.stan', line 77, column 4 to column 43)",
+  " (in 'design_examples.stan', line 78, column 11 to column 12)",
+  " (in 'design_examples.stan', line 78, column 4 to column 18)",
+  " (in 'design_examples.stan', line 80, column 6 to column 23)",
+  " (in 'design_examples.stan', line 81, column 6 to column 25)",
+  " (in 'design_examples.stan', line 79, column 4 to line 82, column 5)",
+  " (in 'design_examples.stan', line 83, column 4 to column 34)",
+  " (in 'design_examples.stan', line 76, column 2 to line 84, column 3)",
+  " (in 'design_examples.stan', line 90, column 11 to column 12)",
+  " (in 'design_examples.stan', line 90, column 4 to column 23)",
+  " (in 'design_examples.stan', line 92, column 6 to column 30)",
+  " (in 'design_examples.stan', line 94, column 4 to column 23)",
+  " (in 'design_examples.stan', line 89, column 2 to line 95, column 3)",
+  " (in 'design_examples.stan', line 101, column 11 to column 16)",
+  " (in 'design_examples.stan', line 101, column 4 to column 45)",
+  " (in 'design_examples.stan', line 102, column 11 to column 12)",
+  " (in 'design_examples.stan', line 102, column 4 to column 18)",
+  " (in 'design_examples.stan', line 104, column 6 to column 24)",
+  " (in 'design_examples.stan', line 105, column 6 to column 30)",
+  " (in 'design_examples.stan', line 103, column 4 to line 106, column 5)",
+  " (in 'design_examples.stan', line 107, column 4 to column 34)",
+  " (in 'design_examples.stan', line 100, column 2 to line 108, column 3)",
+  " (in 'design_examples.stan', line 115, column 11 to column 12)",
+  " (in 'design_examples.stan', line 115, column 4 to column 18)",
+  " (in 'design_examples.stan', line 117, column 6 to column 24)",
+  " (in 'design_examples.stan', line 118, column 6 to column 20)",
+  " (in 'design_examples.stan', line 116, column 4 to line 119, column 5)",
+  " (in 'design_examples.stan', line 120, column 4 to column 23)",
+  " (in 'design_examples.stan', line 114, column 2 to line 121, column 3)",
+  " (in 'design_examples.stan', line 126, column 11 to column 12)",
+  " (in 'design_examples.stan', line 126, column 4 to column 22)",
+  " (in 'design_examples.stan', line 128, column 6 to column 19)",
+  " (in 'design_examples.stan', line 127, column 4 to line 130, column 5)",
+  " (in 'design_examples.stan', line 129, column 6 to column 19)",
+  " (in 'design_examples.stan', line 131, column 4 to column 22)",
+  " (in 'design_examples.stan', line 125, column 2 to line 132, column 3)",
+  " (in 'design_examples.stan', line 140, column 11 to column 12)",
+  " (in 'design_examples.stan', line 140, column 4 to column 22)",
+  " (in 'design_examples.stan', line 142, column 6 to column 19)",
+  " (in 'design_examples.stan', line 143, column 6 to column 19)",
+  " (in 'design_examples.stan', line 144, column 6 to column 19)",
+  " (in 'design_examples.stan', line 141, column 21 to line 145, column 5)",
+  " (in 'design_examples.stan', line 141, column 4 to line 145, column 5)",
+  " (in 'design_examples.stan', line 146, column 4 to column 22)",
+  " (in 'design_examples.stan', line 139, column 2 to line 147, column 3)",
+  " (in 'design_examples.stan', line 152, column 11 to column 12)",
+  " (in 'design_examples.stan', line 152, column 4 to column 22)",
+  " (in 'design_examples.stan', line 154, column 6 to column 31)",
+  " (in 'design_examples.stan', line 153, column 21 to line 155, column 5)",
+  " (in 'design_examples.stan', line 153, column 4 to line 155, column 5)",
+  " (in 'design_examples.stan', line 156, column 4 to column 22)",
+  " (in 'design_examples.stan', line 151, column 2 to line 157, column 3)",
+  " (in 'design_examples.stan', line 162, column 11 to column 12)",
+  " (in 'design_examples.stan', line 162, column 4 to column 18)",
   " (in 'design_examples.stan', line 164, column 6 to column 25)",
-  " (in 'design_examples.stan', line 162, column 4 to line 165, column 5)",
-  " (in 'design_examples.stan', line 166, column 4 to column 34)",
-  " (in 'design_examples.stan', line 159, column 2 to line 167, column 3)",
+  " (in 'design_examples.stan', line 165, column 6 to column 22)",
+  " (in 'design_examples.stan', line 163, column 21 to line 166, column 5)",
+  " (in 'design_examples.stan', line 163, column 4 to line 166, column 5)",
+  " (in 'design_examples.stan', line 167, column 4 to column 23)",
+  " (in 'design_examples.stan', line 161, column 2 to line 168, column 3)",
   " (in 'design_examples.stan', line 173, column 11 to column 12)",
   " (in 'design_examples.stan', line 173, column 4 to column 23)",
-  " (in 'design_examples.stan', line 175, column 6 to column 30)",
-  " (in 'design_examples.stan', line 177, column 4 to column 23)",
+  " (in 'design_examples.stan', line 175, column 6 to column 20)",
+  " (in 'design_examples.stan', line 176, column 6 to column 25)",
+  " (in 'design_examples.stan', line 174, column 21 to line 177, column 5)",
+  " (in 'design_examples.stan', line 174, column 4 to line 177, column 5)",
   " (in 'design_examples.stan', line 172, column 2 to line 178, column 3)",
-  " (in 'design_examples.stan', line 184, column 11 to column 16)",
-  " (in 'design_examples.stan', line 184, column 4 to column 45)",
-  " (in 'design_examples.stan', line 185, column 11 to column 12)",
-  " (in 'design_examples.stan', line 185, column 4 to column 18)",
-  " (in 'design_examples.stan', line 187, column 6 to column 24)",
-  " (in 'design_examples.stan', line 188, column 6 to column 30)",
-  " (in 'design_examples.stan', line 186, column 4 to line 189, column 5)",
-  " (in 'design_examples.stan', line 190, column 4 to column 34)",
-  " (in 'design_examples.stan', line 183, column 2 to line 191, column 3)",
-  " (in 'design_examples.stan', line 8, column 2 to column 17)",
-  " (in 'design_examples.stan', line 9, column 2 to column 17)",
-  " (in 'design_examples.stan', line 10, column 2 to column 17)",
-  " (in 'design_examples.stan', line 11, column 8 to column 9)",
-  " (in 'design_examples.stan', line 11, column 2 to column 44)",
-  " (in 'design_examples.stan', line 12, column 8 to column 9)",
-  " (in 'design_examples.stan', line 12, column 2 to column 37)",
-  " (in 'design_examples.stan', line 13, column 9 to column 10)",
-  " (in 'design_examples.stan', line 13, column 2 to column 21)",
-  " (in 'design_examples.stan', line 14, column 9 to column 10)",
-  " (in 'design_examples.stan', line 14, column 2 to column 26)",
-  " (in 'design_examples.stan', line 15, column 9 to column 10)",
-  " (in 'design_examples.stan', line 15, column 2 to column 22)",
+  " (in 'design_examples.stan', line 182, column 11 to column 12)",
+  " (in 'design_examples.stan', line 182, column 4 to column 23)",
+  " (in 'design_examples.stan', line 183, column 11 to column 12)",
+  " (in 'design_examples.stan', line 183, column 4 to column 18)",
+  " (in 'design_examples.stan', line 185, column 6 to column 25)",
+  " (in 'design_examples.stan', line 186, column 6 to column 27)",
+  " (in 'design_examples.stan', line 184, column 21 to line 187, column 5)",
+  " (in 'design_examples.stan', line 184, column 4 to line 187, column 5)",
+  " (in 'design_examples.stan', line 188, column 4 to column 34)",
+  " (in 'design_examples.stan', line 181, column 2 to line 189, column 3)",
+  " (in 'design_examples.stan', line 193, column 11 to column 12)",
+  " (in 'design_examples.stan', line 193, column 4 to column 18)",
+  " (in 'design_examples.stan', line 195, column 6 to column 20)",
+  " (in 'design_examples.stan', line 196, column 6 to column 20)",
+  " (in 'design_examples.stan', line 197, column 6 to column 22)",
+  " (in 'design_examples.stan', line 194, column 21 to line 198, column 5)",
+  " (in 'design_examples.stan', line 194, column 4 to line 198, column 5)",
+  " (in 'design_examples.stan', line 199, column 4 to column 23)",
+  " (in 'design_examples.stan', line 192, column 2 to line 200, column 3)",
+  " (in 'design_examples.stan', line 11, column 2 to column 17)",
+  " (in 'design_examples.stan', line 12, column 2 to column 17)",
+  " (in 'design_examples.stan', line 13, column 2 to column 17)",
+  " (in 'design_examples.stan', line 14, column 8 to column 9)",
+  " (in 'design_examples.stan', line 14, column 2 to column 44)",
+  " (in 'design_examples.stan', line 15, column 8 to column 9)",
+  " (in 'design_examples.stan', line 15, column 2 to column 37)",
   " (in 'design_examples.stan', line 16, column 9 to column 10)",
-  " (in 'design_examples.stan', line 16, column 2 to column 14)",
+  " (in 'design_examples.stan', line 16, column 2 to column 21)",
   " (in 'design_examples.stan', line 17, column 9 to column 10)",
-  " (in 'design_examples.stan', line 17, column 2 to column 14)",
+  " (in 'design_examples.stan', line 17, column 2 to column 26)",
   " (in 'design_examples.stan', line 18, column 9 to column 10)",
-  " (in 'design_examples.stan', line 18, column 2 to column 15)",
+  " (in 'design_examples.stan', line 18, column 2 to column 22)",
   " (in 'design_examples.stan', line 19, column 9 to column 10)",
-  " (in 'design_examples.stan', line 19, column 2 to column 15)",
-  " (in 'design_examples.stan', line 22, column 9 to column 10)"};
+  " (in 'design_examples.stan', line 19, column 2 to column 14)",
+  " (in 'design_examples.stan', line 20, column 9 to column 10)",
+  " (in 'design_examples.stan', line 20, column 2 to column 14)",
+  " (in 'design_examples.stan', line 21, column 9 to column 10)",
+  " (in 'design_examples.stan', line 21, column 2 to column 15)",
+  " (in 'design_examples.stan', line 22, column 9 to column 10)",
+  " (in 'design_examples.stan', line 22, column 2 to column 15)",
+  " (in 'design_examples.stan', line 25, column 9 to column 10)"};
 class design_examples_model final : public model_base_crtp<design_examples_model> {
  private:
   int N;
@@ -488,241 +488,64 @@ class design_examples_model final : public model_base_crtp<design_examples_model
         }
         {
           current_statement__ = 22;
-          stan::math::validate_non_negative_index("mu3", "N", N);
-          Eigen::Matrix<local_scalar_t__,-1,1> mu3 =
-            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-          current_statement__ = 24;
-          stan::model::assign(mu3,
-            stan::math::multiply(static_cast<double>(2),
-              stan::model::rvalue(x, "x", stan::model::index_min_max(1, N))),
-            "assigning variable mu3", stan::model::index_min_max(1, N));
-          current_statement__ = 26;
-          for (int n = 1; n <= N; ++n) {
-            current_statement__ = 25;
-            if (pstream__) {
-              stan::math::stan_print(pstream__,
-                stan::model::rvalue(mu3, "mu3", stan::model::index_uni(n)));
-              *(pstream__) << std::endl;
-            }
-          }
-          current_statement__ = 27;
-          lp_accum__.add(stan::math::sum(mu3));
-        }
-        {
-          current_statement__ = 29;
-          stan::math::validate_non_negative_index("v4", "N", N);
-          Eigen::Matrix<local_scalar_t__,-1,1> v4 =
-            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-          current_statement__ = 30;
-          stan::model::assign(v4, v0, "assigning variable v4");
-          current_statement__ = 32;
-          for (int n = 1; n <= N; ++n) {
-            current_statement__ = 31;
-            if (pstream__) {
-              stan::math::stan_print(pstream__,
-                stan::model::rvalue(v4, "v4", stan::model::index_uni(n)));
-              *(pstream__) << std::endl;
-            }
-          }
-          current_statement__ = 33;
-          stan::model::assign(v4,
-            stan::model::rvalue(x, "x", stan::model::index_min_max(1, N)),
-            "assigning variable v4", stan::model::index_min_max(1, N));
-          current_statement__ = 34;
-          lp_accum__.add(stan::math::sum(v4));
-        }
-        {
-          current_statement__ = 36;
-          stan::math::validate_non_negative_index("v5", "N", N);
-          Eigen::Matrix<local_scalar_t__,-1,1> v5 =
-            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-          current_statement__ = 37;
-          stan::model::assign(v5, v0, "assigning variable v5");
-          current_statement__ = 42;
-          for (int n = 1; n <= N; ++n) {
-            current_statement__ = 38;
-            if (pstream__) {
-              stan::math::stan_print(pstream__,
-                stan::model::rvalue(v5, "v5", stan::model::index_uni(n)));
-              *(pstream__) << std::endl;
-            }
-            current_statement__ = 39;
-            stan::model::assign(v5,
-              stan::model::rvalue(x, "x", stan::model::index_uni(n)),
-              "assigning variable v5", stan::model::index_uni(n));
-            current_statement__ = 40;
-            if (pstream__) {
-              stan::math::stan_print(pstream__,
-                stan::model::rvalue(v5, "v5", stan::model::index_uni(n)));
-              *(pstream__) << std::endl;
-            }
-          }
-          current_statement__ = 43;
-          lp_accum__.add(stan::math::sum(v5));
-        }
-        {
-          current_statement__ = 45;
-          stan::math::validate_non_negative_index("v6", "N", N);
-          Eigen::Matrix<local_scalar_t__,-1,1> v6 =
-            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-          current_statement__ = 46;
-          stan::model::assign(v6, v0, "assigning variable v6");
-          current_statement__ = 49;
-          for (int n = 2; n <= N; ++n) {
-            current_statement__ = 47;
-            stan::model::assign(v6,
-              (stan::model::rvalue(v6, "v6", stan::model::index_uni((n - 1)))
-              + stan::model::rvalue(u, "u", stan::model::index_uni(n))),
-              "assigning variable v6", stan::model::index_uni(n));
-          }
-          current_statement__ = 50;
-          lp_accum__.add(stan::math::sum(v6));
-        }
-        {
-          current_statement__ = 52;
           stan::math::validate_non_negative_index("v7", "N", N);
           Eigen::Matrix<local_scalar_t__,-1,1> v7 =
             Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-          current_statement__ = 53;
+          current_statement__ = 23;
           stan::model::assign(v7, v0, "assigning variable v7");
-          current_statement__ = 54;
+          current_statement__ = 24;
           stan::math::validate_non_negative_index("y7", "N", N);
           Eigen::Matrix<local_scalar_t__,-1,1> y7 =
             Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-          current_statement__ = 55;
+          current_statement__ = 25;
           stan::model::assign(y7, v0, "assigning variable y7");
-          current_statement__ = 56;
+          current_statement__ = 26;
           stan::model::assign(v7,
             stan::model::rvalue(x, "x", stan::model::index_min_max(2, N)),
             "assigning variable v7", stan::model::index_min_max(2, N));
-          current_statement__ = 57;
+          current_statement__ = 27;
           stan::model::assign(y7,
             stan::model::rvalue(v7, "v7",
               stan::model::index_min_max((2 - 1), (N - 1))),
             "assigning variable y7", stan::model::index_min_max(2, N));
-          current_statement__ = 59;
+          current_statement__ = 29;
           lp_accum__.add((stan::math::sum(v7) + stan::math::sum(y7)));
         }
         {
-          current_statement__ = 61;
-          stan::math::validate_non_negative_index("mu8", "N", N);
-          Eigen::Matrix<local_scalar_t__,-1,1> mu8 =
-            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-          current_statement__ = 66;
-          for (int n = 1; n <= N; ++n) {
-            local_scalar_t__ t8 = DUMMY_VAR__;
-            current_statement__ = 63;
-            t8 = (2 *
-              stan::model::rvalue(x, "x", stan::model::index_uni(n)));
-            current_statement__ = 64;
-            stan::model::assign(mu8, (t8 + 1), "assigning variable mu8",
-              stan::model::index_uni(n));
-          }
-          current_statement__ = 67;
-          lp_accum__.add(stan::math::sum(mu8));
-        }
-        {
-          current_statement__ = 69;
-          stan::math::validate_non_negative_index("v9a", "N", N);
-          Eigen::Matrix<local_scalar_t__,-1,1> v9a =
-            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-          current_statement__ = 70;
-          stan::model::assign(v9a, v0, "assigning variable v9a");
-          current_statement__ = 74;
-          for (int n = 1; n <= N; ++n) {
-            current_statement__ = 71;
-            stan::model::assign(v9a,
-              stan::model::rvalue(x, "x", stan::model::index_uni(n)),
-              "assigning variable v9a", stan::model::index_uni(n));
-            current_statement__ = 72;
-            lp_accum__.add(stan::math::sum(v9a));
-          }
-        }
-        {
-          current_statement__ = 76;
-          stan::math::validate_non_negative_index("v9b", "N", N);
-          Eigen::Matrix<local_scalar_t__,-1,1> v9b =
-            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-          current_statement__ = 77;
-          stan::model::assign(v9b, v0, "assigning variable v9b");
-          current_statement__ = 78;
-          stan::math::validate_non_negative_index("y9b", "N", N);
-          Eigen::Matrix<local_scalar_t__,-1,1> y9b =
-            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-          current_statement__ = 83;
-          for (int n = 1; n <= N; ++n) {
-            current_statement__ = 80;
-            stan::model::assign(v9b,
-              stan::model::rvalue(x, "x", stan::model::index_uni(n)),
-              "assigning variable v9b",
-              stan::model::index_uni(
-                stan::model::rvalue(idx, "idx", stan::model::index_uni(n))));
-            current_statement__ = 81;
-            stan::model::assign(y9b,
-              stan::model::rvalue(v9b, "v9b",
-                stan::model::index_uni(
-                  stan::model::rvalue(idx, "idx", stan::model::index_uni(n)))),
-              "assigning variable y9b", stan::model::index_uni(n));
-          }
-          current_statement__ = 84;
-          lp_accum__.add((stan::math::sum(v9b) + stan::math::sum(y9b)));
-        }
-        {
-          current_statement__ = 86;
-          stan::math::validate_non_negative_index("y9c", "N", N);
-          Eigen::Matrix<local_scalar_t__,-1,1> y9c =
-            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-          current_statement__ = 92;
-          for (int n = 1; n <= N; ++n) {
-            Eigen::Matrix<local_scalar_t__,-1,1> t9c =
-              Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__);
-            current_statement__ = 89;
-            stan::model::assign(t9c,
-              stan::model::rvalue(x, "x", stan::model::index_uni(n)),
-              "assigning variable t9c", stan::model::index_uni(1));
-            current_statement__ = 90;
-            stan::model::assign(y9c,
-              stan::model::rvalue(t9c, "t9c", stan::model::index_uni(1)),
-              "assigning variable y9c", stan::model::index_uni(n));
-          }
-          current_statement__ = 93;
-          lp_accum__.add(stan::math::sum(y9c));
-        }
-        {
-          current_statement__ = 95;
+          current_statement__ = 31;
           stan::math::validate_non_negative_index("v10", "N", N);
           Eigen::Matrix<local_scalar_t__,-1,-1> v10 =
             Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(N, 2,
               DUMMY_VAR__);
-          current_statement__ = 96;
+          current_statement__ = 32;
           stan::model::assign(v10,
             stan::math::rep_matrix(static_cast<double>(0), N, 2),
             "assigning variable v10");
-          current_statement__ = 97;
+          current_statement__ = 33;
           stan::math::validate_non_negative_index("w10", "N", N);
           Eigen::Matrix<local_scalar_t__,-1,1> w10 =
             Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-          current_statement__ = 99;
+          current_statement__ = 35;
           stan::model::assign(v10,
             stan::model::rvalue(x, "x", stan::model::index_min_max(1, N)),
             "assigning variable v10", stan::model::index_min_max(1, N),
             stan::model::index_uni(1));
-          current_statement__ = 100;
+          current_statement__ = 36;
           stan::model::assign(w10,
             stan::model::rvalue(v10, "v10", stan::model::index_min_max(1, N),
               stan::model::index_uni(2)), "assigning variable w10",
             stan::model::index_min_max(1, N));
-          current_statement__ = 102;
+          current_statement__ = 38;
           lp_accum__.add((stan::math::sum(v10) + stan::math::sum(w10)));
         }
         {
-          current_statement__ = 104;
+          current_statement__ = 40;
           stan::math::validate_non_negative_index("a11", "N", N);
           Eigen::Matrix<local_scalar_t__,-1,1> a11 =
             Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-          current_statement__ = 105;
+          current_statement__ = 41;
           stan::model::assign(a11, a0, "assigning variable a11");
-          current_statement__ = 106;
+          current_statement__ = 42;
           stan::model::assign(a11,
             stan::math::add(
               stan::model::deep_copy(
@@ -730,39 +553,216 @@ class design_examples_model final : public model_base_crtp<design_examples_model
                   stan::model::index_min_max((1 + 1), ((N - 1) + 1)))),
               static_cast<double>(1)), "assigning variable a11",
             stan::model::index_min_max(1, (N - 1)));
-          current_statement__ = 107;
+          current_statement__ = 43;
           lp_accum__.add(stan::math::sum(a11));
         }
         {
-          current_statement__ = 109;
+          current_statement__ = 45;
           int v12_1dim__ = (N + k);
-          current_statement__ = 109;
+          current_statement__ = 45;
           stan::math::validate_non_negative_index("v12", "N + k", v12_1dim__);
           Eigen::Matrix<local_scalar_t__,-1,1> v12 =
             Eigen::Matrix<local_scalar_t__,-1,1>::Constant(v12_1dim__,
               DUMMY_VAR__);
-          current_statement__ = 110;
+          current_statement__ = 46;
           stan::model::assign(v12,
             stan::math::rep_vector(static_cast<double>(0), (N + k)),
             "assigning variable v12");
-          current_statement__ = 111;
+          current_statement__ = 47;
           stan::math::validate_non_negative_index("y12", "N", N);
           Eigen::Matrix<local_scalar_t__,-1,1> y12 =
             Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-          current_statement__ = 113;
+          current_statement__ = 49;
           stan::model::assign(v12,
             stan::model::rvalue(x, "x", stan::model::index_min_max(1, N)),
             "assigning variable v12",
             stan::model::index_min_max((1 + k), (N + k)));
-          current_statement__ = 114;
+          current_statement__ = 50;
           stan::model::assign(y12,
             stan::math::multiply(
               stan::model::rvalue(v12, "v12",
                 stan::model::index_min_max((1 + k), (N + k))),
               static_cast<double>(2)), "assigning variable y12",
             stan::model::index_min_max(1, N));
-          current_statement__ = 116;
+          current_statement__ = 52;
           lp_accum__.add((stan::math::sum(v12) + stan::math::sum(y12)));
+        }
+        {
+          current_statement__ = 54;
+          stan::math::validate_non_negative_index("mu3", "N", N);
+          Eigen::Matrix<local_scalar_t__,-1,1> mu3 =
+            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
+          current_statement__ = 56;
+          stan::model::assign(mu3,
+            stan::math::multiply(static_cast<double>(2),
+              stan::model::rvalue(x, "x", stan::model::index_min_max(1, N))),
+            "assigning variable mu3", stan::model::index_min_max(1, N));
+          current_statement__ = 58;
+          for (int n = 1; n <= N; ++n) {
+            current_statement__ = 57;
+            if (pstream__) {
+              stan::math::stan_print(pstream__,
+                stan::model::rvalue(mu3, "mu3", stan::model::index_uni(n)));
+              *(pstream__) << std::endl;
+            }
+          }
+          current_statement__ = 59;
+          lp_accum__.add(stan::math::sum(mu3));
+        }
+        {
+          current_statement__ = 61;
+          stan::math::validate_non_negative_index("v4", "N", N);
+          Eigen::Matrix<local_scalar_t__,-1,1> v4 =
+            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
+          current_statement__ = 62;
+          stan::model::assign(v4, v0, "assigning variable v4");
+          current_statement__ = 64;
+          for (int n = 1; n <= N; ++n) {
+            current_statement__ = 63;
+            if (pstream__) {
+              stan::math::stan_print(pstream__,
+                stan::model::rvalue(v4, "v4", stan::model::index_uni(n)));
+              *(pstream__) << std::endl;
+            }
+          }
+          current_statement__ = 65;
+          stan::model::assign(v4,
+            stan::model::rvalue(x, "x", stan::model::index_min_max(1, N)),
+            "assigning variable v4", stan::model::index_min_max(1, N));
+          current_statement__ = 66;
+          lp_accum__.add(stan::math::sum(v4));
+        }
+        {
+          current_statement__ = 68;
+          stan::math::validate_non_negative_index("v5", "N", N);
+          Eigen::Matrix<local_scalar_t__,-1,1> v5 =
+            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
+          current_statement__ = 69;
+          stan::model::assign(v5, v0, "assigning variable v5");
+          current_statement__ = 74;
+          for (int n = 1; n <= N; ++n) {
+            current_statement__ = 70;
+            if (pstream__) {
+              stan::math::stan_print(pstream__,
+                stan::model::rvalue(v5, "v5", stan::model::index_uni(n)));
+              *(pstream__) << std::endl;
+            }
+            current_statement__ = 71;
+            stan::model::assign(v5,
+              stan::model::rvalue(x, "x", stan::model::index_uni(n)),
+              "assigning variable v5", stan::model::index_uni(n));
+            current_statement__ = 72;
+            if (pstream__) {
+              stan::math::stan_print(pstream__,
+                stan::model::rvalue(v5, "v5", stan::model::index_uni(n)));
+              *(pstream__) << std::endl;
+            }
+          }
+          current_statement__ = 75;
+          lp_accum__.add(stan::math::sum(v5));
+        }
+        {
+          current_statement__ = 77;
+          stan::math::validate_non_negative_index("v6", "N", N);
+          Eigen::Matrix<local_scalar_t__,-1,1> v6 =
+            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
+          current_statement__ = 78;
+          stan::model::assign(v6, v0, "assigning variable v6");
+          current_statement__ = 81;
+          for (int n = 2; n <= N; ++n) {
+            current_statement__ = 79;
+            stan::model::assign(v6,
+              (stan::model::rvalue(v6, "v6", stan::model::index_uni((n - 1)))
+              + stan::model::rvalue(u, "u", stan::model::index_uni(n))),
+              "assigning variable v6", stan::model::index_uni(n));
+          }
+          current_statement__ = 82;
+          lp_accum__.add(stan::math::sum(v6));
+        }
+        {
+          current_statement__ = 84;
+          stan::math::validate_non_negative_index("mu8", "N", N);
+          Eigen::Matrix<local_scalar_t__,-1,1> mu8 =
+            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
+          current_statement__ = 89;
+          for (int n = 1; n <= N; ++n) {
+            local_scalar_t__ t8 = DUMMY_VAR__;
+            current_statement__ = 86;
+            t8 = (2 *
+              stan::model::rvalue(x, "x", stan::model::index_uni(n)));
+            current_statement__ = 87;
+            stan::model::assign(mu8, (t8 + 1), "assigning variable mu8",
+              stan::model::index_uni(n));
+          }
+          current_statement__ = 90;
+          lp_accum__.add(stan::math::sum(mu8));
+        }
+        {
+          current_statement__ = 92;
+          stan::math::validate_non_negative_index("v9a", "N", N);
+          Eigen::Matrix<local_scalar_t__,-1,1> v9a =
+            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
+          current_statement__ = 93;
+          stan::model::assign(v9a, v0, "assigning variable v9a");
+          current_statement__ = 97;
+          for (int n = 1; n <= N; ++n) {
+            current_statement__ = 94;
+            stan::model::assign(v9a,
+              stan::model::rvalue(x, "x", stan::model::index_uni(n)),
+              "assigning variable v9a", stan::model::index_uni(n));
+            current_statement__ = 95;
+            lp_accum__.add(stan::math::sum(v9a));
+          }
+        }
+        {
+          current_statement__ = 99;
+          stan::math::validate_non_negative_index("v9b", "N", N);
+          Eigen::Matrix<local_scalar_t__,-1,1> v9b =
+            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
+          current_statement__ = 100;
+          stan::model::assign(v9b, v0, "assigning variable v9b");
+          current_statement__ = 101;
+          stan::math::validate_non_negative_index("y9b", "N", N);
+          Eigen::Matrix<local_scalar_t__,-1,1> y9b =
+            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
+          current_statement__ = 106;
+          for (int n = 1; n <= N; ++n) {
+            current_statement__ = 103;
+            stan::model::assign(v9b,
+              stan::model::rvalue(x, "x", stan::model::index_uni(n)),
+              "assigning variable v9b",
+              stan::model::index_uni(
+                stan::model::rvalue(idx, "idx", stan::model::index_uni(n))));
+            current_statement__ = 104;
+            stan::model::assign(y9b,
+              stan::model::rvalue(v9b, "v9b",
+                stan::model::index_uni(
+                  stan::model::rvalue(idx, "idx", stan::model::index_uni(n)))),
+              "assigning variable y9b", stan::model::index_uni(n));
+          }
+          current_statement__ = 107;
+          lp_accum__.add((stan::math::sum(v9b) + stan::math::sum(y9b)));
+        }
+        {
+          current_statement__ = 109;
+          stan::math::validate_non_negative_index("y9c", "N", N);
+          Eigen::Matrix<local_scalar_t__,-1,1> y9c =
+            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
+          current_statement__ = 115;
+          for (int n = 1; n <= N; ++n) {
+            Eigen::Matrix<local_scalar_t__,-1,1> t9c =
+              Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__);
+            current_statement__ = 112;
+            stan::model::assign(t9c,
+              stan::model::rvalue(x, "x", stan::model::index_uni(n)),
+              "assigning variable t9c", stan::model::index_uni(1));
+            current_statement__ = 113;
+            stan::model::assign(y9c,
+              stan::model::rvalue(t9c, "t9c", stan::model::index_uni(1)),
+              "assigning variable y9c", stan::model::index_uni(n));
+          }
+          current_statement__ = 116;
+          lp_accum__.add(stan::math::sum(y9c));
         }
       }
     } catch (const std::exception& e) {
@@ -876,249 +876,70 @@ class design_examples_model final : public model_base_crtp<design_examples_model
         }
         {
           current_statement__ = 22;
-          stan::math::validate_non_negative_index("mu3", "N", N);
-          stan::math::var_value<Eigen::Matrix<double,-1,1>> mu3 =
-            stan::math::var_value<Eigen::Matrix<double,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(N,
-                                                                std::numeric_limits<double>::quiet_NaN(
-                                                                  )));
-          current_statement__ = 24;
-          stan::model::assign(mu3,
-            stan::math::multiply(static_cast<double>(2),
-              stan::model::rvalue(x, "x", stan::model::index_min_max(1, N))),
-            "assigning variable mu3", stan::model::index_min_max(1, N));
-          current_statement__ = 26;
-          for (int n = 1; n <= N; ++n) {
-            current_statement__ = 25;
-            if (pstream__) {
-              stan::math::stan_print(pstream__,
-                stan::model::rvalue(mu3, "mu3", stan::model::index_uni(n)));
-              *(pstream__) << std::endl;
-            }
-          }
-          current_statement__ = 27;
-          lp_accum__.add(stan::math::sum(mu3));
-        }
-        {
-          current_statement__ = 29;
-          stan::math::validate_non_negative_index("v4", "N", N);
-          Eigen::Matrix<local_scalar_t__,-1,1> v4 =
-            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-          current_statement__ = 30;
-          stan::model::assign(v4, v0, "assigning variable v4");
-          current_statement__ = 32;
-          for (int n = 1; n <= N; ++n) {
-            current_statement__ = 31;
-            if (pstream__) {
-              stan::math::stan_print(pstream__,
-                stan::model::rvalue(v4, "v4", stan::model::index_uni(n)));
-              *(pstream__) << std::endl;
-            }
-          }
-          current_statement__ = 33;
-          stan::model::assign(v4,
-            stan::model::rvalue(x, "x", stan::model::index_min_max(1, N)),
-            "assigning variable v4", stan::model::index_min_max(1, N));
-          current_statement__ = 34;
-          lp_accum__.add(stan::math::sum(v4));
-        }
-        {
-          current_statement__ = 36;
-          stan::math::validate_non_negative_index("v5", "N", N);
-          Eigen::Matrix<local_scalar_t__,-1,1> v5 =
-            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-          current_statement__ = 37;
-          stan::model::assign(v5, v0, "assigning variable v5");
-          current_statement__ = 42;
-          for (int n = 1; n <= N; ++n) {
-            current_statement__ = 38;
-            if (pstream__) {
-              stan::math::stan_print(pstream__,
-                stan::model::rvalue(v5, "v5", stan::model::index_uni(n)));
-              *(pstream__) << std::endl;
-            }
-            current_statement__ = 39;
-            stan::model::assign(v5,
-              stan::model::rvalue(x, "x", stan::model::index_uni(n)),
-              "assigning variable v5", stan::model::index_uni(n));
-            current_statement__ = 40;
-            if (pstream__) {
-              stan::math::stan_print(pstream__,
-                stan::model::rvalue(v5, "v5", stan::model::index_uni(n)));
-              *(pstream__) << std::endl;
-            }
-          }
-          current_statement__ = 43;
-          lp_accum__.add(stan::math::sum(v5));
-        }
-        {
-          current_statement__ = 45;
-          stan::math::validate_non_negative_index("v6", "N", N);
-          Eigen::Matrix<local_scalar_t__,-1,1> v6 =
-            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-          current_statement__ = 46;
-          stan::model::assign(v6, v0, "assigning variable v6");
-          current_statement__ = 49;
-          for (int n = 2; n <= N; ++n) {
-            current_statement__ = 47;
-            stan::model::assign(v6,
-              (stan::model::rvalue(v6, "v6", stan::model::index_uni((n - 1)))
-              + stan::model::rvalue(u, "u", stan::model::index_uni(n))),
-              "assigning variable v6", stan::model::index_uni(n));
-          }
-          current_statement__ = 50;
-          lp_accum__.add(stan::math::sum(v6));
-        }
-        {
-          current_statement__ = 52;
           stan::math::validate_non_negative_index("v7", "N", N);
           Eigen::Matrix<local_scalar_t__,-1,1> v7 =
             Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-          current_statement__ = 53;
+          current_statement__ = 23;
           stan::model::assign(v7, v0, "assigning variable v7");
-          current_statement__ = 54;
+          current_statement__ = 24;
           stan::math::validate_non_negative_index("y7", "N", N);
           Eigen::Matrix<local_scalar_t__,-1,1> y7 =
             Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-          current_statement__ = 55;
+          current_statement__ = 25;
           stan::model::assign(y7, v0, "assigning variable y7");
-          current_statement__ = 56;
+          current_statement__ = 26;
           stan::model::assign(v7,
             stan::model::rvalue(x, "x", stan::model::index_min_max(2, N)),
             "assigning variable v7", stan::model::index_min_max(2, N));
-          current_statement__ = 57;
+          current_statement__ = 27;
           stan::model::assign(y7,
             stan::model::rvalue(v7, "v7",
               stan::model::index_min_max((2 - 1), (N - 1))),
             "assigning variable y7", stan::model::index_min_max(2, N));
-          current_statement__ = 59;
+          current_statement__ = 29;
           lp_accum__.add((stan::math::sum(v7) + stan::math::sum(y7)));
         }
         {
-          current_statement__ = 61;
-          stan::math::validate_non_negative_index("mu8", "N", N);
-          Eigen::Matrix<local_scalar_t__,-1,1> mu8 =
-            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-          current_statement__ = 66;
-          for (int n = 1; n <= N; ++n) {
-            local_scalar_t__ t8 = DUMMY_VAR__;
-            current_statement__ = 63;
-            t8 = (2 *
-              stan::model::rvalue(x, "x", stan::model::index_uni(n)));
-            current_statement__ = 64;
-            stan::model::assign(mu8, (t8 + 1), "assigning variable mu8",
-              stan::model::index_uni(n));
-          }
-          current_statement__ = 67;
-          lp_accum__.add(stan::math::sum(mu8));
-        }
-        {
-          current_statement__ = 69;
-          stan::math::validate_non_negative_index("v9a", "N", N);
-          Eigen::Matrix<local_scalar_t__,-1,1> v9a =
-            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-          current_statement__ = 70;
-          stan::model::assign(v9a, v0, "assigning variable v9a");
-          current_statement__ = 74;
-          for (int n = 1; n <= N; ++n) {
-            current_statement__ = 71;
-            stan::model::assign(v9a,
-              stan::model::rvalue(x, "x", stan::model::index_uni(n)),
-              "assigning variable v9a", stan::model::index_uni(n));
-            current_statement__ = 72;
-            lp_accum__.add(stan::math::sum(v9a));
-          }
-        }
-        {
-          current_statement__ = 76;
-          stan::math::validate_non_negative_index("v9b", "N", N);
-          Eigen::Matrix<local_scalar_t__,-1,1> v9b =
-            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-          current_statement__ = 77;
-          stan::model::assign(v9b, v0, "assigning variable v9b");
-          current_statement__ = 78;
-          stan::math::validate_non_negative_index("y9b", "N", N);
-          Eigen::Matrix<local_scalar_t__,-1,1> y9b =
-            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-          current_statement__ = 83;
-          for (int n = 1; n <= N; ++n) {
-            current_statement__ = 80;
-            stan::model::assign(v9b,
-              stan::model::rvalue(x, "x", stan::model::index_uni(n)),
-              "assigning variable v9b",
-              stan::model::index_uni(
-                stan::model::rvalue(idx, "idx", stan::model::index_uni(n))));
-            current_statement__ = 81;
-            stan::model::assign(y9b,
-              stan::model::rvalue(v9b, "v9b",
-                stan::model::index_uni(
-                  stan::model::rvalue(idx, "idx", stan::model::index_uni(n)))),
-              "assigning variable y9b", stan::model::index_uni(n));
-          }
-          current_statement__ = 84;
-          lp_accum__.add((stan::math::sum(v9b) + stan::math::sum(y9b)));
-        }
-        {
-          current_statement__ = 86;
-          stan::math::validate_non_negative_index("y9c", "N", N);
-          Eigen::Matrix<local_scalar_t__,-1,1> y9c =
-            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-          current_statement__ = 92;
-          for (int n = 1; n <= N; ++n) {
-            Eigen::Matrix<local_scalar_t__,-1,1> t9c =
-              Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__);
-            current_statement__ = 89;
-            stan::model::assign(t9c,
-              stan::model::rvalue(x, "x", stan::model::index_uni(n)),
-              "assigning variable t9c", stan::model::index_uni(1));
-            current_statement__ = 90;
-            stan::model::assign(y9c,
-              stan::model::rvalue(t9c, "t9c", stan::model::index_uni(1)),
-              "assigning variable y9c", stan::model::index_uni(n));
-          }
-          current_statement__ = 93;
-          lp_accum__.add(stan::math::sum(y9c));
-        }
-        {
-          current_statement__ = 95;
+          current_statement__ = 31;
           stan::math::validate_non_negative_index("v10", "N", N);
           stan::math::var_value<Eigen::Matrix<double,-1,-1>> v10 =
             stan::math::var_value<Eigen::Matrix<double,-1,-1>>(Eigen::Matrix<double,-1,-1>::Constant(N,
                                                                  2,
                                                                  std::numeric_limits<double>::quiet_NaN(
                                                                    )));
-          current_statement__ = 96;
+          current_statement__ = 32;
           stan::model::assign(v10,
             stan::math::rep_matrix(static_cast<double>(0), N, 2),
             "assigning variable v10");
-          current_statement__ = 97;
+          current_statement__ = 33;
           stan::math::validate_non_negative_index("w10", "N", N);
           stan::math::var_value<Eigen::Matrix<double,-1,1>> w10 =
             stan::math::var_value<Eigen::Matrix<double,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(N,
                                                                 std::numeric_limits<double>::quiet_NaN(
                                                                   )));
-          current_statement__ = 99;
+          current_statement__ = 35;
           stan::model::assign(v10,
             stan::model::rvalue(x, "x", stan::model::index_min_max(1, N)),
             "assigning variable v10", stan::model::index_min_max(1, N),
             stan::model::index_uni(1));
-          current_statement__ = 100;
+          current_statement__ = 36;
           stan::model::assign(w10,
             stan::model::rvalue(v10, "v10", stan::model::index_min_max(1, N),
               stan::model::index_uni(2)), "assigning variable w10",
             stan::model::index_min_max(1, N));
-          current_statement__ = 102;
+          current_statement__ = 38;
           lp_accum__.add((stan::math::sum(v10) + stan::math::sum(w10)));
         }
         {
-          current_statement__ = 104;
+          current_statement__ = 40;
           stan::math::validate_non_negative_index("a11", "N", N);
           stan::math::var_value<Eigen::Matrix<double,-1,1>> a11 =
             stan::math::var_value<Eigen::Matrix<double,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(N,
                                                                 std::numeric_limits<double>::quiet_NaN(
                                                                   )));
-          current_statement__ = 105;
+          current_statement__ = 41;
           stan::model::assign(a11, a0, "assigning variable a11");
-          current_statement__ = 106;
+          current_statement__ = 42;
           stan::model::assign(a11,
             stan::math::add(
               stan::model::deep_copy(
@@ -1126,42 +947,221 @@ class design_examples_model final : public model_base_crtp<design_examples_model
                   stan::model::index_min_max((1 + 1), ((N - 1) + 1)))),
               static_cast<double>(1)), "assigning variable a11",
             stan::model::index_min_max(1, (N - 1)));
-          current_statement__ = 107;
+          current_statement__ = 43;
           lp_accum__.add(stan::math::sum(a11));
         }
         {
-          current_statement__ = 109;
+          current_statement__ = 45;
           int v12_1dim__ = (N + k);
-          current_statement__ = 109;
+          current_statement__ = 45;
           stan::math::validate_non_negative_index("v12", "N + k", v12_1dim__);
           stan::math::var_value<Eigen::Matrix<double,-1,1>> v12 =
             stan::math::var_value<Eigen::Matrix<double,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(v12_1dim__,
                                                                 std::numeric_limits<double>::quiet_NaN(
                                                                   )));
-          current_statement__ = 110;
+          current_statement__ = 46;
           stan::model::assign(v12,
             stan::math::rep_vector(static_cast<double>(0), (N + k)),
             "assigning variable v12");
-          current_statement__ = 111;
+          current_statement__ = 47;
           stan::math::validate_non_negative_index("y12", "N", N);
           stan::math::var_value<Eigen::Matrix<double,-1,1>> y12 =
             stan::math::var_value<Eigen::Matrix<double,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(N,
                                                                 std::numeric_limits<double>::quiet_NaN(
                                                                   )));
-          current_statement__ = 113;
+          current_statement__ = 49;
           stan::model::assign(v12,
             stan::model::rvalue(x, "x", stan::model::index_min_max(1, N)),
             "assigning variable v12",
             stan::model::index_min_max((1 + k), (N + k)));
-          current_statement__ = 114;
+          current_statement__ = 50;
           stan::model::assign(y12,
             stan::math::multiply(
               stan::model::rvalue(v12, "v12",
                 stan::model::index_min_max((1 + k), (N + k))),
               static_cast<double>(2)), "assigning variable y12",
             stan::model::index_min_max(1, N));
-          current_statement__ = 116;
+          current_statement__ = 52;
           lp_accum__.add((stan::math::sum(v12) + stan::math::sum(y12)));
+        }
+        {
+          current_statement__ = 54;
+          stan::math::validate_non_negative_index("mu3", "N", N);
+          stan::math::var_value<Eigen::Matrix<double,-1,1>> mu3 =
+            stan::math::var_value<Eigen::Matrix<double,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(N,
+                                                                std::numeric_limits<double>::quiet_NaN(
+                                                                  )));
+          current_statement__ = 56;
+          stan::model::assign(mu3,
+            stan::math::multiply(static_cast<double>(2),
+              stan::model::rvalue(x, "x", stan::model::index_min_max(1, N))),
+            "assigning variable mu3", stan::model::index_min_max(1, N));
+          current_statement__ = 58;
+          for (int n = 1; n <= N; ++n) {
+            current_statement__ = 57;
+            if (pstream__) {
+              stan::math::stan_print(pstream__,
+                stan::model::rvalue(mu3, "mu3", stan::model::index_uni(n)));
+              *(pstream__) << std::endl;
+            }
+          }
+          current_statement__ = 59;
+          lp_accum__.add(stan::math::sum(mu3));
+        }
+        {
+          current_statement__ = 61;
+          stan::math::validate_non_negative_index("v4", "N", N);
+          Eigen::Matrix<local_scalar_t__,-1,1> v4 =
+            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
+          current_statement__ = 62;
+          stan::model::assign(v4, v0, "assigning variable v4");
+          current_statement__ = 64;
+          for (int n = 1; n <= N; ++n) {
+            current_statement__ = 63;
+            if (pstream__) {
+              stan::math::stan_print(pstream__,
+                stan::model::rvalue(v4, "v4", stan::model::index_uni(n)));
+              *(pstream__) << std::endl;
+            }
+          }
+          current_statement__ = 65;
+          stan::model::assign(v4,
+            stan::model::rvalue(x, "x", stan::model::index_min_max(1, N)),
+            "assigning variable v4", stan::model::index_min_max(1, N));
+          current_statement__ = 66;
+          lp_accum__.add(stan::math::sum(v4));
+        }
+        {
+          current_statement__ = 68;
+          stan::math::validate_non_negative_index("v5", "N", N);
+          Eigen::Matrix<local_scalar_t__,-1,1> v5 =
+            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
+          current_statement__ = 69;
+          stan::model::assign(v5, v0, "assigning variable v5");
+          current_statement__ = 74;
+          for (int n = 1; n <= N; ++n) {
+            current_statement__ = 70;
+            if (pstream__) {
+              stan::math::stan_print(pstream__,
+                stan::model::rvalue(v5, "v5", stan::model::index_uni(n)));
+              *(pstream__) << std::endl;
+            }
+            current_statement__ = 71;
+            stan::model::assign(v5,
+              stan::model::rvalue(x, "x", stan::model::index_uni(n)),
+              "assigning variable v5", stan::model::index_uni(n));
+            current_statement__ = 72;
+            if (pstream__) {
+              stan::math::stan_print(pstream__,
+                stan::model::rvalue(v5, "v5", stan::model::index_uni(n)));
+              *(pstream__) << std::endl;
+            }
+          }
+          current_statement__ = 75;
+          lp_accum__.add(stan::math::sum(v5));
+        }
+        {
+          current_statement__ = 77;
+          stan::math::validate_non_negative_index("v6", "N", N);
+          Eigen::Matrix<local_scalar_t__,-1,1> v6 =
+            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
+          current_statement__ = 78;
+          stan::model::assign(v6, v0, "assigning variable v6");
+          current_statement__ = 81;
+          for (int n = 2; n <= N; ++n) {
+            current_statement__ = 79;
+            stan::model::assign(v6,
+              (stan::model::rvalue(v6, "v6", stan::model::index_uni((n - 1)))
+              + stan::model::rvalue(u, "u", stan::model::index_uni(n))),
+              "assigning variable v6", stan::model::index_uni(n));
+          }
+          current_statement__ = 82;
+          lp_accum__.add(stan::math::sum(v6));
+        }
+        {
+          current_statement__ = 84;
+          stan::math::validate_non_negative_index("mu8", "N", N);
+          Eigen::Matrix<local_scalar_t__,-1,1> mu8 =
+            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
+          current_statement__ = 89;
+          for (int n = 1; n <= N; ++n) {
+            local_scalar_t__ t8 = DUMMY_VAR__;
+            current_statement__ = 86;
+            t8 = (2 *
+              stan::model::rvalue(x, "x", stan::model::index_uni(n)));
+            current_statement__ = 87;
+            stan::model::assign(mu8, (t8 + 1), "assigning variable mu8",
+              stan::model::index_uni(n));
+          }
+          current_statement__ = 90;
+          lp_accum__.add(stan::math::sum(mu8));
+        }
+        {
+          current_statement__ = 92;
+          stan::math::validate_non_negative_index("v9a", "N", N);
+          Eigen::Matrix<local_scalar_t__,-1,1> v9a =
+            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
+          current_statement__ = 93;
+          stan::model::assign(v9a, v0, "assigning variable v9a");
+          current_statement__ = 97;
+          for (int n = 1; n <= N; ++n) {
+            current_statement__ = 94;
+            stan::model::assign(v9a,
+              stan::model::rvalue(x, "x", stan::model::index_uni(n)),
+              "assigning variable v9a", stan::model::index_uni(n));
+            current_statement__ = 95;
+            lp_accum__.add(stan::math::sum(v9a));
+          }
+        }
+        {
+          current_statement__ = 99;
+          stan::math::validate_non_negative_index("v9b", "N", N);
+          Eigen::Matrix<local_scalar_t__,-1,1> v9b =
+            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
+          current_statement__ = 100;
+          stan::model::assign(v9b, v0, "assigning variable v9b");
+          current_statement__ = 101;
+          stan::math::validate_non_negative_index("y9b", "N", N);
+          Eigen::Matrix<local_scalar_t__,-1,1> y9b =
+            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
+          current_statement__ = 106;
+          for (int n = 1; n <= N; ++n) {
+            current_statement__ = 103;
+            stan::model::assign(v9b,
+              stan::model::rvalue(x, "x", stan::model::index_uni(n)),
+              "assigning variable v9b",
+              stan::model::index_uni(
+                stan::model::rvalue(idx, "idx", stan::model::index_uni(n))));
+            current_statement__ = 104;
+            stan::model::assign(y9b,
+              stan::model::rvalue(v9b, "v9b",
+                stan::model::index_uni(
+                  stan::model::rvalue(idx, "idx", stan::model::index_uni(n)))),
+              "assigning variable y9b", stan::model::index_uni(n));
+          }
+          current_statement__ = 107;
+          lp_accum__.add((stan::math::sum(v9b) + stan::math::sum(y9b)));
+        }
+        {
+          current_statement__ = 109;
+          stan::math::validate_non_negative_index("y9c", "N", N);
+          Eigen::Matrix<local_scalar_t__,-1,1> y9c =
+            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
+          current_statement__ = 115;
+          for (int n = 1; n <= N; ++n) {
+            Eigen::Matrix<local_scalar_t__,-1,1> t9c =
+              Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__);
+            current_statement__ = 112;
+            stan::model::assign(t9c,
+              stan::model::rvalue(x, "x", stan::model::index_uni(n)),
+              "assigning variable t9c", stan::model::index_uni(1));
+            current_statement__ = 113;
+            stan::model::assign(y9c,
+              stan::model::rvalue(t9c, "t9c", stan::model::index_uni(1)),
+              "assigning variable y9c", stan::model::index_uni(n));
+          }
+          current_statement__ = 116;
+          lp_accum__.add(stan::math::sum(y9c));
         }
       }
     } catch (const std::exception& e) {

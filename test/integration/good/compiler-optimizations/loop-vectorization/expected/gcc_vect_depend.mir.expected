@@ -75,20 +75,20 @@ log_prob {
       target += sum(ia4);
     }
     {
-      data int ia5_1dim__ = (N + 1);
-      FnValidateSize__("ia5", "N + 1", ia5_1dim__);
-      vector[ia5_1dim__] ia5;
-      for(n in 1:N) {
-        ia5[(n + 1)] = (ia5[n] * promote(4, real, data));
-      }
-      target += sum(ia5);
+      data int ib5_1dim__ = (N + 1);
+      FnValidateSize__("ib5", "N + 1", ib5_1dim__);
+      vector[ib5_1dim__] ib5;
+      ib5[1:N] = (ib5[(1 + 1):(N + 1)] * promote(4, real, data));
+      target += sum(ib5);
     }
     {
-      data int ib6_1dim__ = (N + 1);
-      FnValidateSize__("ib6", "N + 1", ib6_1dim__);
-      vector[ib6_1dim__] ib6;
-      ib6[1:N] = (ib6[(1 + 1):(N + 1)] * promote(4, real, data));
-      target += sum(ib6);
+      data int ia6_1dim__ = (N + 1);
+      FnValidateSize__("ia6", "N + 1", ia6_1dim__);
+      vector[ia6_1dim__] ia6;
+      for(n in 1:N) {
+        ia6[(n + 1)] = (ia6[n] * promote(4, real, data));
+      }
+      target += sum(ia6);
     }
     target += normal_lupdf(mu, promote(0, real, data), promote(1, real, data));
   } }
@@ -135,20 +135,20 @@ rev_log_prob {
       target += sum(ia4);
     }
     {
-      data int ia5_1dim__ = (N + 1);
-      FnValidateSize__("ia5", "N + 1", ia5_1dim__);
-      vector[ia5_1dim__] ia5;
-      for(n in 1:N) {
-        ia5[(n + 1)] = (ia5[n] * promote(4, real, data));
-      }
-      target += sum(ia5);
+      data int ib5_1dim__ = (N + 1);
+      FnValidateSize__("ib5", "N + 1", ib5_1dim__);
+      vector[ib5_1dim__] ib5;
+      ib5[1:N] = (ib5[(1 + 1):(N + 1)] * promote(4, real, data));
+      target += sum(ib5);
     }
     {
-      data int ib6_1dim__ = (N + 1);
-      FnValidateSize__("ib6", "N + 1", ib6_1dim__);
-      vector[ib6_1dim__] ib6;
-      ib6[1:N] = (ib6[(1 + 1):(N + 1)] * promote(4, real, data));
-      target += sum(ib6);
+      data int ia6_1dim__ = (N + 1);
+      FnValidateSize__("ia6", "N + 1", ia6_1dim__);
+      vector[ia6_1dim__] ia6;
+      for(n in 1:N) {
+        ia6[(n + 1)] = (ia6[n] * promote(4, real, data));
+      }
+      target += sum(ia6);
     }
     target += normal_lupdf(mu, promote(0, real, data), promote(1, real, data));
   } }

@@ -6,7 +6,8 @@
 // See design-docs/active/vectorize-loop-fission.md section 7.8.2.
 // Each example sits in its own block, and every local it writes carries the
 // example number as a suffix (a3 belongs to example 3) so the generated MIR
-// and C++ can be matched to the example.
+// and C++ can be matched to the example. Examples are ordered by outcome:
+// fully vectorized loops first, then loops the pass leaves unchanged.
 data {
   int<lower=1> N;
   int<lower=1> J;
@@ -21,6 +22,8 @@ parameters {
   real mu;
 }
 model {
+  // ---- Fully vectorized: every statement becomes a vector statement ----
+
   // 1. GCC gcc.dg/tree-ssa/ldist-1.c
   // C: for (i = 0; i < N; i++) { mya[i] = ia[i]*oxa[i] + ib[i]*oxb[i];
   //      myb[i] = -ia[i]*oxb[i] + ib[i]*oxa[i];
@@ -57,6 +60,8 @@ model {
     target += sum(a2) + sum(b2);
   }
 
+  // ---- Left unchanged: no statement can be hoisted ----
+
   // 3. GCC gcc.dg/tree-ssa/ldist-3.c
   // C: for (i = 2; i < N-1; i++) { a[i] = k * i; b[i] = a[i-2] + k;
   //      c[i] = b[i] + a[i+1]; d[i] = c[i-1] + k + i; }
@@ -84,8 +89,9 @@ model {
   //      { a[j] = k * i; b[i][j] = a[j-1] + k; }
   // GCC: not distributed.
   // Design (inner loop over j): true dependence S1->S2 {Lt, 1}.
-  // Emitted: S1 seq (invariant right-hand side), then
-  // vec b4[i, 2:J] = a4[1:(J-1)] + k.
+  // Emitted: inner loop over j is partially vectorized, S1 seq (invariant
+  // right-hand side), then vec b4[i, 2:J] = a4[1:(J-1)] + k; the outer loop
+  // over i is left unchanged (its body carries a recurrence through a4).
   {
     vector[J] a4;
     matrix[N, J] b4;

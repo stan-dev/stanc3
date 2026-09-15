@@ -7,57 +7,57 @@ using namespace stan::math;
 stan::math::profile_map profiles__;
 static constexpr std::array<const char*, 52> locations_array__ =
   {" (found before start of program)",
-  " (in 'gcc_vect_depend.stan', line 15, column 2 to column 10)",
-  " (in 'gcc_vect_depend.stan', line 24, column 11 to column 16)",
-  " (in 'gcc_vect_depend.stan', line 24, column 4 to column 22)",
-  " (in 'gcc_vect_depend.stan', line 25, column 11 to column 16)",
-  " (in 'gcc_vect_depend.stan', line 25, column 4 to column 22)",
-  " (in 'gcc_vect_depend.stan', line 27, column 6 to column 24)",
-  " (in 'gcc_vect_depend.stan', line 28, column 6 to column 22)",
-  " (in 'gcc_vect_depend.stan', line 26, column 4 to line 29, column 5)",
-  " (in 'gcc_vect_depend.stan', line 30, column 4 to column 34)",
-  " (in 'gcc_vect_depend.stan', line 23, column 2 to line 31, column 3)",
-  " (in 'gcc_vect_depend.stan', line 40, column 11 to column 16)",
-  " (in 'gcc_vect_depend.stan', line 40, column 4 to column 22)",
-  " (in 'gcc_vect_depend.stan', line 41, column 11 to column 16)",
-  " (in 'gcc_vect_depend.stan', line 41, column 4 to column 22)",
-  " (in 'gcc_vect_depend.stan', line 44, column 6 to column 26)",
-  " (in 'gcc_vect_depend.stan', line 43, column 6 to column 20)",
-  " (in 'gcc_vect_depend.stan', line 42, column 4 to line 45, column 5)",
-  " (in 'gcc_vect_depend.stan', line 46, column 4 to column 34)",
-  " (in 'gcc_vect_depend.stan', line 39, column 2 to line 47, column 3)",
-  " (in 'gcc_vect_depend.stan', line 55, column 11 to column 16)",
-  " (in 'gcc_vect_depend.stan', line 55, column 4 to column 22)",
-  " (in 'gcc_vect_depend.stan', line 57, column 6 to column 24)",
-  " (in 'gcc_vect_depend.stan', line 58, column 6 to column 20)",
-  " (in 'gcc_vect_depend.stan', line 56, column 4 to line 59, column 5)",
-  " (in 'gcc_vect_depend.stan', line 60, column 4 to column 23)",
-  " (in 'gcc_vect_depend.stan', line 54, column 2 to line 61, column 3)",
-  " (in 'gcc_vect_depend.stan', line 69, column 11 to column 16)",
-  " (in 'gcc_vect_depend.stan', line 69, column 4 to column 22)",
-  " (in 'gcc_vect_depend.stan', line 72, column 6 to column 24)",
-  " (in 'gcc_vect_depend.stan', line 71, column 6 to column 20)",
-  " (in 'gcc_vect_depend.stan', line 70, column 4 to line 73, column 5)",
-  " (in 'gcc_vect_depend.stan', line 74, column 4 to column 23)",
-  " (in 'gcc_vect_depend.stan', line 68, column 2 to line 75, column 3)",
-  " (in 'gcc_vect_depend.stan', line 83, column 11 to column 16)",
-  " (in 'gcc_vect_depend.stan', line 83, column 4 to column 22)",
-  " (in 'gcc_vect_depend.stan', line 85, column 6 to column 30)",
-  " (in 'gcc_vect_depend.stan', line 84, column 21 to line 86, column 5)",
-  " (in 'gcc_vect_depend.stan', line 84, column 4 to line 86, column 5)",
-  " (in 'gcc_vect_depend.stan', line 87, column 4 to column 23)",
-  " (in 'gcc_vect_depend.stan', line 82, column 2 to line 88, column 3)",
-  " (in 'gcc_vect_depend.stan', line 97, column 11 to column 16)",
-  " (in 'gcc_vect_depend.stan', line 97, column 4 to column 22)",
-  " (in 'gcc_vect_depend.stan', line 99, column 6 to column 30)",
-  " (in 'gcc_vect_depend.stan', line 101, column 4 to column 23)",
-  " (in 'gcc_vect_depend.stan', line 96, column 2 to line 102, column 3)",
-  " (in 'gcc_vect_depend.stan', line 104, column 2 to column 20)",
-  " (in 'gcc_vect_depend.stan', line 10, column 2 to column 17)",
-  " (in 'gcc_vect_depend.stan', line 11, column 9 to column 10)",
-  " (in 'gcc_vect_depend.stan', line 11, column 2 to column 14)",
+  " (in 'gcc_vect_depend.stan', line 16, column 2 to column 10)",
+  " (in 'gcc_vect_depend.stan', line 27, column 11 to column 16)",
+  " (in 'gcc_vect_depend.stan', line 27, column 4 to column 22)",
+  " (in 'gcc_vect_depend.stan', line 28, column 11 to column 16)",
+  " (in 'gcc_vect_depend.stan', line 28, column 4 to column 22)",
+  " (in 'gcc_vect_depend.stan', line 30, column 6 to column 24)",
+  " (in 'gcc_vect_depend.stan', line 31, column 6 to column 22)",
+  " (in 'gcc_vect_depend.stan', line 29, column 4 to line 32, column 5)",
+  " (in 'gcc_vect_depend.stan', line 33, column 4 to column 34)",
+  " (in 'gcc_vect_depend.stan', line 26, column 2 to line 34, column 3)",
+  " (in 'gcc_vect_depend.stan', line 43, column 11 to column 16)",
+  " (in 'gcc_vect_depend.stan', line 43, column 4 to column 22)",
+  " (in 'gcc_vect_depend.stan', line 44, column 11 to column 16)",
+  " (in 'gcc_vect_depend.stan', line 44, column 4 to column 22)",
+  " (in 'gcc_vect_depend.stan', line 47, column 6 to column 26)",
+  " (in 'gcc_vect_depend.stan', line 46, column 6 to column 20)",
+  " (in 'gcc_vect_depend.stan', line 45, column 4 to line 48, column 5)",
+  " (in 'gcc_vect_depend.stan', line 49, column 4 to column 34)",
+  " (in 'gcc_vect_depend.stan', line 42, column 2 to line 50, column 3)",
+  " (in 'gcc_vect_depend.stan', line 58, column 11 to column 16)",
+  " (in 'gcc_vect_depend.stan', line 58, column 4 to column 22)",
+  " (in 'gcc_vect_depend.stan', line 60, column 6 to column 24)",
+  " (in 'gcc_vect_depend.stan', line 61, column 6 to column 20)",
+  " (in 'gcc_vect_depend.stan', line 59, column 4 to line 62, column 5)",
+  " (in 'gcc_vect_depend.stan', line 63, column 4 to column 23)",
+  " (in 'gcc_vect_depend.stan', line 57, column 2 to line 64, column 3)",
+  " (in 'gcc_vect_depend.stan', line 72, column 11 to column 16)",
+  " (in 'gcc_vect_depend.stan', line 72, column 4 to column 22)",
+  " (in 'gcc_vect_depend.stan', line 75, column 6 to column 24)",
+  " (in 'gcc_vect_depend.stan', line 74, column 6 to column 20)",
+  " (in 'gcc_vect_depend.stan', line 73, column 4 to line 76, column 5)",
+  " (in 'gcc_vect_depend.stan', line 77, column 4 to column 23)",
+  " (in 'gcc_vect_depend.stan', line 71, column 2 to line 78, column 3)",
+  " (in 'gcc_vect_depend.stan', line 87, column 11 to column 16)",
+  " (in 'gcc_vect_depend.stan', line 87, column 4 to column 22)",
+  " (in 'gcc_vect_depend.stan', line 89, column 6 to column 30)",
+  " (in 'gcc_vect_depend.stan', line 91, column 4 to column 23)",
+  " (in 'gcc_vect_depend.stan', line 86, column 2 to line 92, column 3)",
+  " (in 'gcc_vect_depend.stan', line 102, column 11 to column 16)",
+  " (in 'gcc_vect_depend.stan', line 102, column 4 to column 22)",
+  " (in 'gcc_vect_depend.stan', line 104, column 6 to column 30)",
+  " (in 'gcc_vect_depend.stan', line 103, column 21 to line 105, column 5)",
+  " (in 'gcc_vect_depend.stan', line 103, column 4 to line 105, column 5)",
+  " (in 'gcc_vect_depend.stan', line 106, column 4 to column 23)",
+  " (in 'gcc_vect_depend.stan', line 101, column 2 to line 107, column 3)",
+  " (in 'gcc_vect_depend.stan', line 109, column 2 to column 20)",
+  " (in 'gcc_vect_depend.stan', line 11, column 2 to column 17)",
   " (in 'gcc_vect_depend.stan', line 12, column 9 to column 10)",
-  " (in 'gcc_vect_depend.stan', line 12, column 2 to column 14)"};
+  " (in 'gcc_vect_depend.stan', line 12, column 2 to column 14)",
+  " (in 'gcc_vect_depend.stan', line 13, column 9 to column 10)",
+  " (in 'gcc_vect_depend.stan', line 13, column 2 to column 14)"};
 class gcc_vect_depend_model final : public model_base_crtp<gcc_vect_depend_model> {
  private:
   int N;
@@ -268,40 +268,40 @@ class gcc_vect_depend_model final : public model_base_crtp<gcc_vect_depend_model
         }
         {
           current_statement__ = 34;
-          int ia5_1dim__ = (N + 1);
+          int ib5_1dim__ = (N + 1);
           current_statement__ = 34;
-          stan::math::validate_non_negative_index("ia5", "N + 1", ia5_1dim__);
-          Eigen::Matrix<local_scalar_t__,-1,1> ia5 =
-            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(ia5_1dim__,
+          stan::math::validate_non_negative_index("ib5", "N + 1", ib5_1dim__);
+          Eigen::Matrix<local_scalar_t__,-1,1> ib5 =
+            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(ib5_1dim__,
               DUMMY_VAR__);
-          current_statement__ = 38;
-          for (int n = 1; n <= N; ++n) {
-            current_statement__ = 36;
-            stan::model::assign(ia5,
-              (stan::model::rvalue(ia5, "ia5", stan::model::index_uni(n)) *
-              4), "assigning variable ia5", stan::model::index_uni((n + 1)));
-          }
-          current_statement__ = 39;
-          lp_accum__.add(stan::math::sum(ia5));
-        }
-        {
-          current_statement__ = 41;
-          int ib6_1dim__ = (N + 1);
-          current_statement__ = 41;
-          stan::math::validate_non_negative_index("ib6", "N + 1", ib6_1dim__);
-          Eigen::Matrix<local_scalar_t__,-1,1> ib6 =
-            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(ib6_1dim__,
-              DUMMY_VAR__);
-          current_statement__ = 43;
-          stan::model::assign(ib6,
+          current_statement__ = 36;
+          stan::model::assign(ib5,
             stan::math::multiply(
               stan::model::deep_copy(
-                stan::model::rvalue(ib6, "ib6",
+                stan::model::rvalue(ib5, "ib5",
                   stan::model::index_min_max((1 + 1), (N + 1)))),
-              static_cast<double>(4)), "assigning variable ib6",
+              static_cast<double>(4)), "assigning variable ib5",
             stan::model::index_min_max(1, N));
+          current_statement__ = 37;
+          lp_accum__.add(stan::math::sum(ib5));
+        }
+        {
+          current_statement__ = 39;
+          int ia6_1dim__ = (N + 1);
+          current_statement__ = 39;
+          stan::math::validate_non_negative_index("ia6", "N + 1", ia6_1dim__);
+          Eigen::Matrix<local_scalar_t__,-1,1> ia6 =
+            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(ia6_1dim__,
+              DUMMY_VAR__);
+          current_statement__ = 43;
+          for (int n = 1; n <= N; ++n) {
+            current_statement__ = 41;
+            stan::model::assign(ia6,
+              (stan::model::rvalue(ia6, "ia6", stan::model::index_uni(n)) *
+              4), "assigning variable ia6", stan::model::index_uni((n + 1)));
+          }
           current_statement__ = 44;
-          lp_accum__.add(stan::math::sum(ib6));
+          lp_accum__.add(stan::math::sum(ia6));
         }
         current_statement__ = 46;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(mu,
@@ -442,41 +442,41 @@ class gcc_vect_depend_model final : public model_base_crtp<gcc_vect_depend_model
         }
         {
           current_statement__ = 34;
-          int ia5_1dim__ = (N + 1);
+          int ib5_1dim__ = (N + 1);
           current_statement__ = 34;
-          stan::math::validate_non_negative_index("ia5", "N + 1", ia5_1dim__);
-          Eigen::Matrix<local_scalar_t__,-1,1> ia5 =
-            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(ia5_1dim__,
-              DUMMY_VAR__);
-          current_statement__ = 38;
-          for (int n = 1; n <= N; ++n) {
-            current_statement__ = 36;
-            stan::model::assign(ia5,
-              (stan::model::rvalue(ia5, "ia5", stan::model::index_uni(n)) *
-              4), "assigning variable ia5", stan::model::index_uni((n + 1)));
-          }
-          current_statement__ = 39;
-          lp_accum__.add(stan::math::sum(ia5));
-        }
-        {
-          current_statement__ = 41;
-          int ib6_1dim__ = (N + 1);
-          current_statement__ = 41;
-          stan::math::validate_non_negative_index("ib6", "N + 1", ib6_1dim__);
-          stan::math::var_value<Eigen::Matrix<double,-1,1>> ib6 =
-            stan::math::var_value<Eigen::Matrix<double,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(ib6_1dim__,
+          stan::math::validate_non_negative_index("ib5", "N + 1", ib5_1dim__);
+          stan::math::var_value<Eigen::Matrix<double,-1,1>> ib5 =
+            stan::math::var_value<Eigen::Matrix<double,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(ib5_1dim__,
                                                                 std::numeric_limits<double>::quiet_NaN(
                                                                   )));
-          current_statement__ = 43;
-          stan::model::assign(ib6,
+          current_statement__ = 36;
+          stan::model::assign(ib5,
             stan::math::multiply(
               stan::model::deep_copy(
-                stan::model::rvalue(ib6, "ib6",
+                stan::model::rvalue(ib5, "ib5",
                   stan::model::index_min_max((1 + 1), (N + 1)))),
-              static_cast<double>(4)), "assigning variable ib6",
+              static_cast<double>(4)), "assigning variable ib5",
             stan::model::index_min_max(1, N));
+          current_statement__ = 37;
+          lp_accum__.add(stan::math::sum(ib5));
+        }
+        {
+          current_statement__ = 39;
+          int ia6_1dim__ = (N + 1);
+          current_statement__ = 39;
+          stan::math::validate_non_negative_index("ia6", "N + 1", ia6_1dim__);
+          Eigen::Matrix<local_scalar_t__,-1,1> ia6 =
+            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(ia6_1dim__,
+              DUMMY_VAR__);
+          current_statement__ = 43;
+          for (int n = 1; n <= N; ++n) {
+            current_statement__ = 41;
+            stan::model::assign(ia6,
+              (stan::model::rvalue(ia6, "ia6", stan::model::index_uni(n)) *
+              4), "assigning variable ia6", stan::model::index_uni((n + 1)));
+          }
           current_statement__ = 44;
-          lp_accum__.add(stan::math::sum(ib6));
+          lp_accum__.add(stan::math::sum(ia6));
         }
         current_statement__ = 46;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(mu,

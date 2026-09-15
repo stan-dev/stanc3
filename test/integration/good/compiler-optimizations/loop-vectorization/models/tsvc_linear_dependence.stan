@@ -5,6 +5,7 @@
 // locals initialised from data. Each example sits in its own block, and
 // every local it writes carries the example number as a suffix (a3 belongs
 // to example 3) so the generated MIR and C++ can be matched to the example.
+// Every loop here is left unchanged by the pass.
 data {
   int<lower=2> N;
   int<lower=0> k;
@@ -13,6 +14,8 @@ data {
   vector[N] b;
 }
 model {
+  // ---- Left unchanged: no statement can be hoisted ----
+
   // 1. TSVC s112 (LinearDependence), UoB-HPC/TSVC_2 src/tsvc.c
   // C: for (int i = LEN_1D - 2; i >= 0; i--) a[i+1] = a[i] + b[i];
   // Intent: vectorizable only by loop reversal.

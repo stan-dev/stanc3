@@ -5,7 +5,8 @@
 // loop must appear unchanged in mir.expected.
 // Each example sits in its own block, and every local it writes carries the
 // example number as a suffix (a3 belongs to example 3) so the generated MIR
-// and C++ can be matched to the example.
+// and C++ can be matched to the example. Every loop here is left unchanged
+// by the pass.
 data {
   int<lower=3> N;
   vector[N] a0;
@@ -15,6 +16,8 @@ data {
   vector[N] e;
 }
 model {
+  // ---- Left unchanged: no statement can be hoisted ----
+
   // 1. TSVC s321 (Recurrences), UoB-HPC/TSVC_2 src/tsvc.c
   // C: a[i] += a[i-1] * b[i];
   // intent: first order linear recurrence; not vectorizable

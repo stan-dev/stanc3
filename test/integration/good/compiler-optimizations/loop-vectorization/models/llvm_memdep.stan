@@ -3,7 +3,8 @@
 // See design-docs/active/vectorize-loop-fission.md section 7.8.2.
 // Each example sits in its own block, and every local it writes carries the
 // example number as a suffix (a3 belongs to example 3) so the generated MIR
-// and C++ can be matched to the example.
+// and C++ can be matched to the example. Examples are ordered by outcome:
+// fully vectorized loops first, then loops the pass leaves unchanged.
 data {
   int<lower=1> N;
 }
@@ -11,6 +12,8 @@ parameters {
   real mu;
 }
 model {
+  // ---- Fully vectorized: every statement becomes a vector statement ----
+
   // 1. LLVM LoopVectorize/memdep.ll f1_vec
   // C: for (i = 0; i < N; i++) A[i] = A[i+1] + 1;
   // LLVM: vectorized ("no plausible dependence").
@@ -23,6 +26,8 @@ model {
     }
     target += sum(a1);
   }
+
+  // ---- Left unchanged: no statement can be hoisted ----
 
   // 2. LLVM LoopVectorize/memdep.ll f2_novec
   // C: for (i = 0; i < N; i++) A[i+1] = A[i] + 1;

@@ -6,7 +6,8 @@
 // See design-docs/active/vectorize-loop-fission.md section 7.8.2.
 // Each example sits in its own block, and every local it writes carries the
 // example number as a suffix (a3 belongs to example 3) so the generated MIR
-// and C++ can be matched to the example.
+// and C++ can be matched to the example. Examples are ordered by outcome:
+// fully vectorized loops first, then loops the pass leaves unchanged.
 data {
   int<lower=1> N;
   int<lower=1> J;
@@ -18,6 +19,8 @@ parameters {
   real mu;
 }
 model {
+  // ---- Fully vectorized: every statement becomes a vector statement ----
+
   // 1. LLVM LoopAccessAnalysis/forward-loop-carried.ll
   // C: for (i = 0; i < N; i++) { A[i+8] = B[i] + 2; C[i] = A[i] * 2; }
   // LLVM: Forward dependence, "Memory dependences are safe".
@@ -48,6 +51,8 @@ model {
     }
     target += sum(a2) + sum(c2);
   }
+
+  // ---- Left unchanged: no statement can be hoisted ----
 
   // 3. LLVM LoopAccessAnalysis/loops-with-indirect-reads-and-writes.ll
   // C: for (i = 0; i < N; i++) { A[idx[i]] = B[i]; C[i] = A[idx[i]]; }
