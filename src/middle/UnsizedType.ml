@@ -176,9 +176,12 @@ let rec common_type = function
 (* -- Helpers -- *)
 
 let rec is_autodiffable = function
-  | UReal | UVector | URowVector | UMatrix -> true
+  | UReal | UVector | URowVector | UMatrix | UComplex | UComplexVector
+   |UComplexRowVector | UComplexMatrix ->
+      true
   | UArray t -> is_autodiffable t
-  | _ (* wrong? *) -> false
+  | UTuple ts -> List.exists ~f:is_autodiffable ts
+  | UInt | UFun _ | UMathLibraryFunction -> false
 
 let rec is_autodifftype possibly_adtype =
   match possibly_adtype with

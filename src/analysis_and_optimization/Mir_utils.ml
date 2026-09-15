@@ -398,13 +398,8 @@ and idx_depth i =
 
 let rec update_expr_ad_levels autodiffable_variables (Expr.{pattern; _} as e) =
   let max_adlevel l =
-    let base =
-      if
-        List.exists l ~f:(fun x ->
-            UnsizedType.is_autodifftype @@ Expr.Typed.adlevel_of x)
-      then UnsizedType.AutoDiffable
-      else DataOnly in
-    UnsizedType.fill_adtype_for_type base Expr.Typed.Meta.(e.meta.type_) in
+    UnsizedType.lub_ad_type (List.map ~f:Expr.Typed.adlevel_of l) |> Option.get
+  in
   match pattern with
   | Var x ->
       if Set.Poly.mem x autodiffable_variables then e
@@ -414,6 +409,12 @@ let rec update_expr_ad_levels autodiffable_variables (Expr.{pattern; _} as e) =
             Expr.Typed.Meta.(e.meta.type_) in
         {e with meta= {e.meta with adlevel}}
   | Lit (_, _) -> {e with meta= {e.meta with adlevel= DataOnly}}
+  | FunApp (CompilerInternal FnMakeTuple, l) ->
+      let l = List.map ~f:(update_expr_ad_levels autodiffable_variables) l in
+      { pattern= FunApp (CompilerInternal FnMakeTuple, l)
+      ; meta=
+          {e.meta with adlevel= TupleAD (List.map ~f:Expr.Typed.adlevel_of l)}
+      }
   | FunApp (kind, l) ->
       let kind' =
         Fun_kind.map (update_expr_ad_levels autodiffable_variables) kind in
