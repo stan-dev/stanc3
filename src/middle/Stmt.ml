@@ -247,11 +247,7 @@ module Helpers = struct
     | UMatrix | UComplexMatrix ->
         let emeta = iteratee.meta in
         let emeta' = {emeta with Expr.Typed.Meta.type_= UInt} in
-        let rows =
-          Expr.
-            { meta= emeta'
-            ; pattern= FunApp (StanLib ("rows", FnPlain, AoS), [iteratee]) }
-        in
+        let rows = Expr.Helpers.stanlib_funapp "rows" [iteratee] emeta' in
         mk_for_iteratee rows (fun e -> for_each bodyfn e smeta) iteratee smeta
     | UArray _ -> mk_for_iteratee (len iteratee) bodyfn iteratee smeta
     | UMathLibraryFunction | UFun _ | UTuple _ ->
