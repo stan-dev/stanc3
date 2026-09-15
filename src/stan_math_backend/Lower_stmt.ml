@@ -225,10 +225,8 @@ let rec lower_statement Stmt.{pattern; meta} : stmt list =
   @
   match pattern with
   | Assignment (((_, []) as l), _, e)
-    when Expr.Helpers.compare_ignore_meta
-           (Stmt.Helpers.expr_of_lvalue l ~meta:e.meta)
-           e
-         = 0 ->
+    when Expr.Typed.compare (Stmt.Helpers.expr_of_lvalue l ~meta:e.meta) e = 0
+    ->
       (* self-assign is a no-op *)
       [ Comment
           ("self-assignment omitted: " ^ (Fmt.to_to_string Expr.Typed.pp) e) ]

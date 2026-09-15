@@ -10511,20 +10511,8 @@
                  DataOnly)))
               (decl_id sym1__)
               (decl_type
-               (Sized
-                (STuple
-                 ((SArray SReal
-                   ((pattern (Lit Int 0))
-                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-                  (STuple
-                   (SReal
-                    (SVector AoS
-                     ((pattern (Lit Int 0))
-                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-                    (SArray SReal
-                     ((pattern (Lit Int 0))
-                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-                  SInt))))
+               (Unsized
+                (UTuple ((UArray UReal) (UTuple (UReal UVector (UArray UReal))) UInt))))
               (initialize Uninit)))
             (meta <opaque>))
            ((pattern
@@ -10562,16 +10550,7 @@
               (((pattern
                  (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable AutoDiffable)))
                   (decl_id sym2__)
-                  (decl_type
-                   (Sized
-                    (STuple
-                     (SReal
-                      (SVector AoS
-                       ((pattern (Lit Int 0))
-                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-                      (SArray SReal
-                       ((pattern (Lit Int 0))
-                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
+                  (decl_type (Unsized (UTuple (UReal UVector (UArray UReal)))))
                   (initialize Uninit)))
                 (meta <opaque>))
                ((pattern
@@ -11257,20 +11236,7 @@
          (Block
           (((pattern
              (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) 
-              (decl_id sym1__)
-              (decl_type
-               (Sized
-                (STuple
-                 ((SMatrix AoS
-                   ((pattern (Lit Int 0))
-                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                   ((pattern (Lit Int 0))
-                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-                  (SMatrix AoS
-                   ((pattern (Lit Int 0))
-                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                   ((pattern (Lit Int 0))
-                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
+              (decl_id sym1__) (decl_type (Unsized (UTuple (UMatrix UMatrix))))
               (initialize Uninit)))
             (meta <opaque>))
            ((pattern

@@ -180,6 +180,4 @@ val update_expr_ad_levels : string Set.Poly.t -> Expr.Typed.t -> Expr.Typed.t
     making the variables in the first argument autodiffable *)
 
 val cleanup_empty_stmts : ('e, 's) Stmt.t list -> ('e, 's) Stmt.t list
-
-val unsafe_unsized_to_sized_type :
-  Expr.Typed.t Type.t -> Expr.Typed.t SizedType.t
+val unsafe_unsized_to_sized_type : Expr.Typed.t Type.t -> Expr.Typed.t Type.t

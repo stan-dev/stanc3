@@ -777,12 +777,12 @@ class ad_level_deep_dependence_model final : public model_base_crtp<ad_level_dee
     // suppress unused var warning
     (void) function__;
     try {
-      stan::math::var_value<Eigen::Matrix<double,-1,-1>> lcm_sym17__;
-      stan::math::var_value<Eigen::Matrix<double,-1,-1>> lcm_sym16__;
-      stan::math::var_value<Eigen::Matrix<double,-1,-1>> lcm_sym15__;
-      stan::math::var_value<Eigen::Matrix<double,-1,-1>> lcm_sym14__;
-      stan::math::var_value<Eigen::Matrix<double,-1,-1>> lcm_sym13__;
-      stan::math::var_value<Eigen::Matrix<double,-1,-1>> lcm_sym12__;
+      Eigen::Matrix<double,-1,-1> lcm_sym17__;
+      Eigen::Matrix<double,-1,-1> lcm_sym16__;
+      Eigen::Matrix<double,-1,-1> lcm_sym15__;
+      Eigen::Matrix<double,-1,-1> lcm_sym14__;
+      Eigen::Matrix<double,-1,-1> lcm_sym13__;
+      Eigen::Matrix<double,-1,-1> lcm_sym12__;
       current_statement__ = 1;
       auto X_p =
         in__.template read<
@@ -790,37 +790,37 @@ class ad_level_deep_dependence_model final : public model_base_crtp<ad_level_dee
       stan::math::var_value<Eigen::Matrix<double,-1,-1>> X_tp1;
       current_statement__ = 2;
       stan::model::assign(X_tp1, X_d, "assigning variable X_tp1");
-      Eigen::Matrix<double,-1,-1> X_tp2 =
+      stan::math::var_value<Eigen::Matrix<double,-1,-1>> X_tp2 =
         Eigen::Matrix<double,-1,-1>::Constant(10, 10,
           std::numeric_limits<double>::quiet_NaN());
       stan::model::assign(lcm_sym12__, stan::math::exp(X_d),
         "assigning variable lcm_sym12__");
       stan::model::assign(X_tp2, lcm_sym12__, "assigning variable X_tp2");
-      Eigen::Matrix<double,-1,-1> X_tp3 =
+      stan::math::var_value<Eigen::Matrix<double,-1,-1>> X_tp3 =
         Eigen::Matrix<double,-1,-1>::Constant(10, 10,
           std::numeric_limits<double>::quiet_NaN());
       stan::model::assign(lcm_sym13__, stan::math::exp(lcm_sym12__),
         "assigning variable lcm_sym13__");
       stan::model::assign(X_tp3, lcm_sym13__, "assigning variable X_tp3");
-      Eigen::Matrix<double,-1,-1> X_tp4 =
+      stan::math::var_value<Eigen::Matrix<double,-1,-1>> X_tp4 =
         Eigen::Matrix<double,-1,-1>::Constant(10, 10,
           std::numeric_limits<double>::quiet_NaN());
       stan::model::assign(lcm_sym14__, stan::math::exp(lcm_sym13__),
         "assigning variable lcm_sym14__");
       stan::model::assign(X_tp4, lcm_sym14__, "assigning variable X_tp4");
-      Eigen::Matrix<double,-1,-1> X_tp5 =
+      stan::math::var_value<Eigen::Matrix<double,-1,-1>> X_tp5 =
         Eigen::Matrix<double,-1,-1>::Constant(10, 10,
           std::numeric_limits<double>::quiet_NaN());
       stan::model::assign(lcm_sym15__, stan::math::exp(lcm_sym14__),
         "assigning variable lcm_sym15__");
       stan::model::assign(X_tp5, lcm_sym15__, "assigning variable X_tp5");
-      Eigen::Matrix<double,-1,-1> X_tp6 =
+      stan::math::var_value<Eigen::Matrix<double,-1,-1>> X_tp6 =
         Eigen::Matrix<double,-1,-1>::Constant(10, 10,
           std::numeric_limits<double>::quiet_NaN());
       stan::model::assign(lcm_sym16__, stan::math::exp(lcm_sym15__),
         "assigning variable lcm_sym16__");
       stan::model::assign(X_tp6, lcm_sym16__, "assigning variable X_tp6");
-      Eigen::Matrix<double,-1,-1> X_tp7;
+      stan::math::var_value<Eigen::Matrix<double,-1,-1>> X_tp7;
       current_statement__ = 8;
       stan::model::assign(X_tp7, stan::math::exp(lcm_sym16__),
         "assigning variable X_tp7");
@@ -3532,8 +3532,8 @@ class ad_levels_deep_model final : public model_base_crtp<ad_levels_deep_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      stan::math::var_value<Eigen::Matrix<double,-1,-1>> lcm_sym9__;
-      stan::math::var_value<Eigen::Matrix<double,-1,-1>> lcm_sym8__;
+      Eigen::Matrix<double,-1,-1> lcm_sym9__;
+      Eigen::Matrix<double,-1,-1> lcm_sym8__;
       current_statement__ = 1;
       auto X_p =
         in__.template read<
@@ -3546,7 +3546,7 @@ class ad_levels_deep_model final : public model_base_crtp<ad_levels_deep_model> 
       stan::model::assign(lcm_sym8__, stan::math::exp(X_data),
         "assigning variable lcm_sym8__");
       stan::model::assign(X_tp1, lcm_sym8__, "assigning variable X_tp1");
-      Eigen::Matrix<double,-1,-1> X_tp2;
+      stan::math::var_value<Eigen::Matrix<double,-1,-1>> X_tp2;
       current_statement__ = 3;
       stan::model::assign(X_tp2, stan::math::exp(lcm_sym8__),
         "assigning variable X_tp2");
@@ -4654,7 +4654,7 @@ class copy_prop_profile_model final : public model_base_crtp<copy_prop_profile_m
       {
         current_statement__ = 2;
         stan::math::validate_non_negative_index("vec", "N", N);
-        Eigen::Matrix<double,1,-1> vec =
+        stan::math::var_value<Eigen::Matrix<double,1,-1>> vec =
           Eigen::Matrix<double,1,-1>::Constant(N,
             std::numeric_limits<double>::quiet_NaN());
         current_statement__ = 6;
@@ -4663,7 +4663,7 @@ class copy_prop_profile_model final : public model_base_crtp<copy_prop_profile_m
             const_cast<stan::math::profile_map&>(profiles__));
           current_statement__ = 4;
           stan::math::validate_non_negative_index("vec2", "N", N);
-          Eigen::Matrix<double,1,-1> vec2 =
+          stan::math::var_value<Eigen::Matrix<double,1,-1>> vec2 =
             Eigen::Matrix<double,1,-1>::Constant(N,
               std::numeric_limits<double>::quiet_NaN());
           stan::model::assign(lcm_sym7__, stan::math::columns_dot_self(X),
@@ -4673,13 +4673,13 @@ class copy_prop_profile_model final : public model_base_crtp<copy_prop_profile_m
         lp_accum__.add(lcm_sym8__);
         current_statement__ = 7;
         stan::math::validate_non_negative_index("vec3", "N", N);
-        Eigen::Matrix<double,1,-1> vec3 =
+        stan::math::var_value<Eigen::Matrix<double,1,-1>> vec3 =
           Eigen::Matrix<double,1,-1>::Constant(N,
             std::numeric_limits<double>::quiet_NaN());
         {
           current_statement__ = 9;
           stan::math::validate_non_negative_index("vec4", "N", N);
-          Eigen::Matrix<double,1,-1> vec4 =
+          stan::math::var_value<Eigen::Matrix<double,1,-1>> vec4 =
             Eigen::Matrix<double,1,-1>::Constant(N,
               std::numeric_limits<double>::quiet_NaN());
         }
@@ -7619,7 +7619,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       double lcm_sym24__;
       double lcm_sym23__;
       double lcm_sym22__;
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> lcm_sym21__;
+      Eigen::Matrix<double,-1,1> lcm_sym21__;
       double lcm_sym20__;
       int lcm_sym19__;
       int lcm_sym18__;
@@ -11106,7 +11106,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       double lcm_sym25__;
       double lcm_sym24__;
       double lcm_sym23__;
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> lcm_sym22__;
+      Eigen::Matrix<double,-1,1> lcm_sym22__;
       current_statement__ = 1;
       auto a =
         in__.template read<
@@ -12167,7 +12167,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       local_scalar_t__ lcm_sym21__;
       double lcm_sym20__;
       double lcm_sym19__;
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> lcm_sym18__;
+      Eigen::Matrix<double,-1,1> lcm_sym18__;
       double lcm_sym17__;
       int lcm_sym16__;
       current_statement__ = 1;
@@ -17241,7 +17241,8 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
           current_statement__ = 81;
           stan::math::validate_non_negative_index("qnu", "n_occasions",
             lcm_sym258__);
-          Eigen::Matrix<double,-1,1> inline_js_super_lp_qnu_sym25__ =
+          stan::math::var_value<Eigen::Matrix<double,-1,1>>
+            inline_js_super_lp_qnu_sym25__ =
             Eigen::Matrix<double,-1,1>::Constant(lcm_sym258__,
               std::numeric_limits<double>::quiet_NaN());
           stan::model::assign(lcm_sym201__, stan::math::subtract(1.0, nu),
@@ -17251,7 +17252,8 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
             current_statement__ = 83;
             stan::math::validate_non_negative_index("qp", "n_occasions",
               lcm_sym258__);
-            Eigen::Matrix<double,-1,1> inline_js_super_lp_qp_sym26__ =
+            stan::math::var_value<Eigen::Matrix<double,-1,1>>
+              inline_js_super_lp_qp_sym26__ =
               Eigen::Matrix<double,-1,1>::Constant(lcm_sym258__,
                 std::numeric_limits<double>::quiet_NaN());
             stan::model::assign(lcm_sym203__,
@@ -17501,7 +17503,8 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
               current_statement__ = 83;
               stan::math::validate_non_negative_index("qp", "n_occasions",
                 lcm_sym258__);
-              Eigen::Matrix<double,-1,1> inline_js_super_lp_qp_sym26__ =
+              stan::math::var_value<Eigen::Matrix<double,-1,1>>
+                inline_js_super_lp_qp_sym26__ =
                 Eigen::Matrix<double,-1,1>::Constant(lcm_sym258__,
                   std::numeric_limits<double>::quiet_NaN());
               stan::model::assign(lcm_sym202__,
@@ -19365,16 +19368,16 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
     (void) function__;
     try {
       double lcm_sym44__;
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> lcm_sym43__;
+      Eigen::Matrix<local_scalar_t__,-1,1> lcm_sym43__;
       double lcm_sym42__;
       double lcm_sym41__;
       double lcm_sym40__;
       double lcm_sym39__;
       double lcm_sym38__;
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> lcm_sym37__;
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> lcm_sym36__;
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> lcm_sym35__;
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> lcm_sym34__;
+      Eigen::Matrix<double,-1,1> lcm_sym37__;
+      Eigen::Matrix<double,-1,1> lcm_sym36__;
+      Eigen::Matrix<double,-1,1> lcm_sym35__;
+      Eigen::Matrix<double,-1,1> lcm_sym34__;
       int lcm_sym33__;
       int lcm_sym32__;
       int lcm_sym31__;
@@ -20393,7 +20396,7 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
     try {
       local_scalar_t__ lcm_sym13__;
       double lcm_sym12__;
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> lcm_sym11__;
+      Eigen::Matrix<double,-1,1> lcm_sym11__;
       current_statement__ = 1;
       auto beta0 = in__.template read<local_scalar_t__>();
       current_statement__ = 2;
@@ -23613,7 +23616,8 @@ class function_in_function_loops_model final : public model_base_crtp<function_i
           int inline_summer_N_sym16__ = std::numeric_limits<int>::min();
           lcm_sym42__ = stan::math::size(lcm_sym41__);
           double inline_summer_running_sum_sym17__;
-          inline_summer_running_sum_sym17__ = static_cast<double>(0);
+          inline_summer_running_sum_sym17__ = stan::math::promote_scalar<
+                                                local_scalar_t__>(0);
           current_statement__ = 9;
           if (stan::math::logical_gte(lcm_sym42__, 1)) {
             double inline_summer_inline_do_something_return_sym4___sym18__;
@@ -23691,14 +23695,14 @@ class function_in_function_loops_model final : public model_base_crtp<function_i
       double lcm_sym36__;
       double lcm_sym35__;
       int lcm_sym34__;
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> lcm_sym33__;
+      Eigen::Matrix<double,-1,1> lcm_sym33__;
       double lcm_sym32__;
       double lcm_sym31__;
       int lcm_sym30__;
       {
         current_statement__ = 1;
         stan::math::validate_non_negative_index("eta", "N", N);
-        Eigen::Matrix<double,-1,1> eta =
+        stan::math::var_value<Eigen::Matrix<double,-1,1>> eta =
           Eigen::Matrix<double,-1,1>::Constant(N,
             std::numeric_limits<double>::quiet_NaN());
         stan::model::assign(lcm_sym33__, stan::math::rep_vector(0.0, N),
@@ -23709,7 +23713,8 @@ class function_in_function_loops_model final : public model_base_crtp<function_i
           int inline_summer_N_sym8__ = std::numeric_limits<int>::min();
           lcm_sym34__ = stan::math::size(lcm_sym33__);
           double inline_summer_running_sum_sym9__;
-          inline_summer_running_sum_sym9__ = static_cast<double>(0);
+          inline_summer_running_sum_sym9__ = stan::math::promote_scalar<
+                                               local_scalar_t__>(0);
           current_statement__ = 9;
           if (stan::math::logical_gte(lcm_sym34__, 1)) {
             double inline_summer_inline_do_something_return_sym4___sym10__;
@@ -24466,7 +24471,7 @@ class initialize_SoA_model final : public model_base_crtp<initialize_SoA_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> lcm_sym16__;
+      Eigen::Matrix<local_scalar_t__,-1,1> lcm_sym16__;
       double lcm_sym15__;
       double lcm_sym14__;
       double lcm_sym13__;
@@ -25223,7 +25228,8 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
         stan::math::var_value<Eigen::Matrix<double,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(5,
                                                             std::numeric_limits<double>::quiet_NaN(
                                                               )));
-      Eigen::Matrix<double,-1,1> inline_single_ret_fun_return_sym7__;
+      stan::math::var_value<Eigen::Matrix<double,-1,1>>
+        inline_single_ret_fun_return_sym7__;
       stan::model::assign(tp_single_ret_vec, p_single_ret_vec,
         "assigning variable tp_single_ret_vec");
       stan::math::var_value<Eigen::Matrix<double,-1,1>> tp_multi_ret_vec =
@@ -25236,7 +25242,8 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
         std::numeric_limits<int>::min();
       for (int inline_multi_ret_fun_iterator_sym12__ = 1; inline_multi_ret_fun_iterator_sym12__
            <= 1; ++inline_multi_ret_fun_iterator_sym12__) {
-        Eigen::Matrix<double,-1,1> inline_multi_ret_fun_B_sym10__ =
+        stan::math::var_value<Eigen::Matrix<double,-1,1>>
+          inline_multi_ret_fun_B_sym10__ =
           Eigen::Matrix<double,-1,1>::Constant(5,
             std::numeric_limits<double>::quiet_NaN());
         current_statement__ = 8;
@@ -26276,19 +26283,21 @@ class inliner_same_names_model final : public model_base_crtp<inliner_same_names
     (void) function__;
     try {
       int lcm_sym17__;
-      Eigen::Matrix<double,-1,1> R =
+      stan::math::var_value<Eigen::Matrix<double,-1,1>> R =
         Eigen::Matrix<double,-1,1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<double,-1,1> out =
+      stan::math::var_value<Eigen::Matrix<double,-1,1>> out =
         Eigen::Matrix<double,-1,1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<double,-1,1> inline_foo_return_sym5__;
+      stan::math::var_value<Eigen::Matrix<double,-1,1>>
+        inline_foo_return_sym5__;
       {
         int inline_foo_ot_sym6__ = std::numeric_limits<int>::min();
         lcm_sym17__ = stan::math::num_elements(R);
         current_statement__ = 4;
         stan::math::validate_non_negative_index("R", "ot", lcm_sym17__);
-        Eigen::Matrix<double,-1,1> inline_foo_R_sym7__ =
+        stan::math::var_value<Eigen::Matrix<double,-1,1>>
+          inline_foo_R_sym7__ =
           Eigen::Matrix<double,-1,1>::Constant(stan::math::num_elements(R),
             std::numeric_limits<double>::quiet_NaN());
       }
@@ -26615,8 +26624,8 @@ static constexpr std::array<const char*, 146> locations_array__ =
   " (in 'inlining-fail2.stan', line 150, column 11 to column 12)",
   " (in 'inlining-fail2.stan', line 150, column 4 to column 24)",
   " (in 'inlining-fail2.stan', line 151, column 4 to column 31)",
-  " (in 'inlining-fail2.stan', line 154, column 6 to column 55)",
   " (in 'inlining-fail2.stan', line 155, column 6 to column 64)",
+  " (in 'inlining-fail2.stan', line 154, column 6 to column 55)",
   " (in 'inlining-fail2.stan', line 153, column 21 to line 156, column 5)",
   " (in 'inlining-fail2.stan', line 153, column 4 to line 156, column 5)",
   " (in 'inlining-fail2.stan', line 157, column 4 to column 26)",
@@ -27573,23 +27582,23 @@ seq_cprob(const T0__& gamma_arg__, std::ostream* pstream__) {
       local_scalar_t__ log_residual_prob = DUMMY_VAR__;
       current_statement__ = 50;
       if (stan::math::logical_gte(lcm_sym132__, 1)) {
-        current_statement__ = 47;
+        current_statement__ = 48;
         stan::model::assign(log_cprob,
           (stan::math::log(
              stan::model::rvalue(gamma, "gamma", stan::model::index_uni(1)))
           + 0), "assigning variable log_cprob", stan::model::index_uni(1));
-        current_statement__ = 48;
+        current_statement__ = 47;
         log_residual_prob = (0 +
           stan::math::log1m(
             stan::model::rvalue(gamma, "gamma", stan::model::index_uni(1))));
         for (int n = 2; n <= lcm_sym132__; ++n) {
-          current_statement__ = 47;
+          current_statement__ = 48;
           stan::model::assign(log_cprob,
             (stan::math::log(
                stan::model::rvalue(gamma, "gamma", stan::model::index_uni(n)))
             + log_residual_prob), "assigning variable log_cprob",
             stan::model::index_uni(n));
-          current_statement__ = 48;
+          current_statement__ = 47;
           log_residual_prob = (log_residual_prob +
             stan::math::log1m(
               stan::model::rvalue(gamma, "gamma", stan::model::index_uni(n))));
@@ -29023,7 +29032,8 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
           current_statement__ = 80;
           stan::math::validate_non_negative_index("qgamma", "n_occasions",
             lcm_sym272__);
-          Eigen::Matrix<double,-1,1> inline_jolly_seber_lp_qgamma_sym31__ =
+          stan::math::var_value<Eigen::Matrix<double,-1,1>>
+            inline_jolly_seber_lp_qgamma_sym31__ =
             Eigen::Matrix<double,-1,1>::Constant(lcm_sym272__,
               std::numeric_limits<double>::quiet_NaN());
           stan::model::assign(lcm_sym219__, stan::math::subtract(1.0, gamma),
@@ -29033,7 +29043,8 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
             current_statement__ = 82;
             stan::math::validate_non_negative_index("qp", "n_occasions",
               lcm_sym272__);
-            Eigen::Matrix<double,-1,1> inline_jolly_seber_lp_qp_sym32__ =
+            stan::math::var_value<Eigen::Matrix<double,-1,1>>
+              inline_jolly_seber_lp_qp_sym32__ =
               Eigen::Matrix<double,-1,1>::Constant(lcm_sym272__,
                 std::numeric_limits<double>::quiet_NaN());
             stan::model::assign(lcm_sym221__,
@@ -29285,7 +29296,8 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
               current_statement__ = 82;
               stan::math::validate_non_negative_index("qp", "n_occasions",
                 lcm_sym272__);
-              Eigen::Matrix<double,-1,1> inline_jolly_seber_lp_qp_sym32__ =
+              stan::math::var_value<Eigen::Matrix<double,-1,1>>
+                inline_jolly_seber_lp_qp_sym32__ =
                 Eigen::Matrix<double,-1,1>::Constant(lcm_sym272__,
                   std::numeric_limits<double>::quiet_NaN());
               stan::model::assign(lcm_sym220__,
@@ -30049,26 +30061,24 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
             std::numeric_limits<double>::quiet_NaN();
           current_statement__ = 50;
           if (stan::math::logical_gte(lcm_sym186__, 1)) {
-            current_statement__ = 47;
+            lcm_sym171__ = stan::model::rvalue(gamma, "gamma",
+                             stan::model::index_uni(1));
             stan::model::assign(inline_seq_cprob_log_cprob_sym12__,
-              (stan::math::log(
-                 stan::model::rvalue(gamma, "gamma",
-                   stan::model::index_uni(1))) + 0),
+              (stan::math::log(lcm_sym171__) + 0),
               "assigning variable inline_seq_cprob_log_cprob_sym12__",
               stan::model::index_uni(1));
-            current_statement__ = 48;
+            current_statement__ = 47;
             inline_seq_cprob_log_residual_prob_sym13__ = (0 +
-              stan::math::log1m(
-                stan::model::rvalue(gamma, "gamma", stan::model::index_uni(1))));
+              stan::math::log1m(lcm_sym171__));
             for (int inline_seq_cprob_n_sym14__ = 2; inline_seq_cprob_n_sym14__
                  <= lcm_sym186__; ++inline_seq_cprob_n_sym14__) {
-              current_statement__ = 47;
+              current_statement__ = 48;
               stan::model::assign(inline_seq_cprob_log_cprob_sym12__,
                 (stan::math::log(gamma[(inline_seq_cprob_n_sym14__ - 1)]) +
                 inline_seq_cprob_log_residual_prob_sym13__),
                 "assigning variable inline_seq_cprob_log_cprob_sym12__",
                 stan::model::index_uni(inline_seq_cprob_n_sym14__));
-              current_statement__ = 48;
+              current_statement__ = 47;
               inline_seq_cprob_log_residual_prob_sym13__ = (inline_seq_cprob_log_residual_prob_sym13__
                 +
                 stan::math::log1m(gamma[(inline_seq_cprob_n_sym14__ - 1)]));
@@ -35574,9 +35584,9 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       double lcm_sym17__;
       double lcm_sym16__;
       double lcm_sym15__;
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> lcm_sym14__;
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> lcm_sym13__;
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> lcm_sym12__;
+      Eigen::Matrix<local_scalar_t__,-1,1> lcm_sym14__;
+      Eigen::Matrix<double,-1,1> lcm_sym13__;
+      Eigen::Matrix<local_scalar_t__,-1,1> lcm_sym12__;
       current_statement__ = 1;
       auto beta = in__.template read<local_scalar_t__>();
       current_statement__ = 2;
@@ -36755,25 +36765,25 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           current_statement__ = 32;
           lp_accum__.add(2);
         }
-        x = static_cast<double>(3);
+        x = stan::math::promote_scalar<local_scalar_t__>(3);
         current_statement__ = 35;
         lp_accum__.add(stan::math::promote_scalar<local_scalar_t__>(3));
         current_statement__ = 37;
         if (stan::math::logical_gt(theta, 2)) {
           current_statement__ = 36;
-          x = static_cast<double>(2);
+          x = stan::math::promote_scalar<local_scalar_t__>(2);
         }
         current_statement__ = 38;
         lp_accum__.add(x);
         current_statement__ = 39;
         lp_accum__.add(stan::math::promote_scalar<local_scalar_t__>(247));
-        x = static_cast<double>(576);
+        x = stan::math::promote_scalar<local_scalar_t__>(576);
         current_statement__ = 40;
         lp_accum__.add(stan::math::promote_scalar<local_scalar_t__>(576));
         lcm_sym98__ = stan::math::logical_gt(theta, 46);
         if (lcm_sym98__) {
           current_statement__ = 41;
-          x = static_cast<double>(5880);
+          x = stan::math::promote_scalar<local_scalar_t__>(5880);
         }
         current_statement__ = 42;
         lp_accum__.add(x);
@@ -36888,7 +36898,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         }
         double dataonlyvar;
         current_statement__ = 80;
-        dataonlyvar = static_cast<double>(3);
+        dataonlyvar = stan::math::promote_scalar<local_scalar_t__>(3);
         current_statement__ = 81;
         lp_accum__.add(dataonlyvar);
         local_scalar_t__ paramvar = DUMMY_VAR__;
@@ -37292,25 +37302,25 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           current_statement__ = 32;
           lp_accum__.add(2);
         }
-        x = static_cast<double>(3);
+        x = stan::math::promote_scalar<local_scalar_t__>(3);
         current_statement__ = 35;
         lp_accum__.add(stan::math::promote_scalar<local_scalar_t__>(3));
         current_statement__ = 37;
         if (stan::math::logical_gt(theta, 2)) {
           current_statement__ = 36;
-          x = static_cast<double>(2);
+          x = stan::math::promote_scalar<local_scalar_t__>(2);
         }
         current_statement__ = 38;
         lp_accum__.add(x);
         current_statement__ = 39;
         lp_accum__.add(stan::math::promote_scalar<local_scalar_t__>(247));
-        x = static_cast<double>(576);
+        x = stan::math::promote_scalar<local_scalar_t__>(576);
         current_statement__ = 40;
         lp_accum__.add(stan::math::promote_scalar<local_scalar_t__>(576));
         lcm_sym74__ = stan::math::logical_gt(theta, 46);
         if (lcm_sym74__) {
           current_statement__ = 41;
-          x = static_cast<double>(5880);
+          x = stan::math::promote_scalar<local_scalar_t__>(5880);
         }
         current_statement__ = 42;
         lp_accum__.add(x);
@@ -37425,7 +37435,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         }
         double dataonlyvar;
         current_statement__ = 80;
-        dataonlyvar = static_cast<double>(3);
+        dataonlyvar = stan::math::promote_scalar<local_scalar_t__>(3);
         current_statement__ = 81;
         lp_accum__.add(dataonlyvar);
         local_scalar_t__ paramvar = DUMMY_VAR__;
@@ -40204,7 +40214,7 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       double lcm_sym13__;
       double lcm_sym12__;
       double lcm_sym11__;
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> lcm_sym10__;
+      Eigen::Matrix<double,-1,1> lcm_sym10__;
       current_statement__ = 1;
       auto a =
         in__.template read<
@@ -42069,8 +42079,8 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
     // suppress unused var warning
     (void) function__;
     try {
-      stan::math::var_value<Eigen::Matrix<double,-1,-1>> lcm_sym10__;
-      stan::math::var_value<Eigen::Matrix<double,-1,-1>> lcm_sym9__;
+      Eigen::Matrix<local_scalar_t__,-1,-1> lcm_sym10__;
+      Eigen::Matrix<local_scalar_t__,-1,-1> lcm_sym9__;
       double lcm_sym8__;
       current_statement__ = 1;
       auto m2 =
@@ -42081,7 +42091,7 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
         in__.template read<
           stan::math::var_value<Eigen::Matrix<double,-1,-1>>>(10, 10);
       {
-        Eigen::Matrix<double,-1,-1> m5 =
+        stan::math::var_value<Eigen::Matrix<double,-1,-1>> m5 =
           Eigen::Matrix<double,-1,-1>::Constant(10, 10,
             std::numeric_limits<double>::quiet_NaN());
         stan::model::assign(lcm_sym9__,
@@ -42091,12 +42101,12 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
                 stan::model::rvalue(m3, "m3", stan::model::index_multi(idx),
                   stan::model::index_multi(idy)))), m4),
           "assigning variable lcm_sym9__");
-        Eigen::Matrix<double,-1,-1> m6 =
+        stan::math::var_value<Eigen::Matrix<double,-1,-1>> m6 =
           Eigen::Matrix<double,-1,-1>::Constant(10, 10,
             std::numeric_limits<double>::quiet_NaN());
         stan::model::assign(lcm_sym10__, stan::math::fma(m1, m2, m4),
           "assigning variable lcm_sym10__");
-        Eigen::Matrix<double,-1,-1> m7 =
+        stan::math::var_value<Eigen::Matrix<double,-1,-1>> m7 =
           Eigen::Matrix<double,-1,-1>::Constant(10, 10,
             std::numeric_limits<double>::quiet_NaN());
         current_statement__ = 6;
@@ -44009,7 +44019,7 @@ loops_rng(const T0__& a_arg__, RNG& base_rng__, std::ostream* pstream__) {
     int lcm_sym1__;
     {
       double sum;
-      sum = static_cast<double>(0);
+      sum = stan::math::promote_scalar<local_scalar_t__>(0);
       {
         current_statement__ = 2;
         int _i_lower = stan::math::poisson_rng(10, base_rng__);
@@ -44050,7 +44060,7 @@ loops2_rng(const T0__& a_arg__, RNG& base_rng__, std::ostream* pstream__) {
     double lcm_sym6__;
     {
       double sum;
-      sum = static_cast<double>(0);
+      sum = stan::math::promote_scalar<local_scalar_t__>(0);
       current_statement__ = 11;
       if (stan::math::logical_gte(stan::math::poisson_rng(10, base_rng__), 0)) {
         current_statement__ = 9;
@@ -45386,485 +45396,6 @@ new_model(stan::io::var_context& data_context, unsigned int seed,
 }
 stan::math::profile_map& get_stan_profile_data() {
   return stalled1_failure_model_namespace::profiles__;
-}
-#endif
-[exit 0]
-  $ stanc --Oexperimental --print-cpp tuple-adlevels.stan
-// Code generated by %%NAME%% %%VERSION%%
-#include <stan/model/model_header.hpp>
-namespace tuple_adlevels_model_namespace {
-using stan::model::model_base_crtp;
-using namespace stan::math;
-stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 4> locations_array__ =
-  {" (found before start of program)",
-  " (in 'tuple-adlevels.stan', line 5, column 2 to column 9)",
-  " (in 'tuple-adlevels.stan', line 8, column 2 to column 20)",
-  " (in 'tuple-adlevels.stan', line 2, column 2 to column 17)"};
-class tuple_adlevels_model final : public model_base_crtp<tuple_adlevels_model> {
- private:
-  double lcm_sym8__;
-  double lcm_sym7__;
-  int lcm_sym6__;
-  Eigen::Matrix<double,-1,-1> x_data__;
-  Eigen::Map<Eigen::Matrix<double,-1,-1>> x{nullptr, 0, 0};
- public:
-  ~tuple_adlevels_model() {}
-  tuple_adlevels_model(stan::io::var_context& context__, unsigned int
-                       random_seed__ = 0, std::ostream* pstream__ = nullptr)
-      : model_base_crtp(0) {
-    int current_statement__ = 0;
-    // suppress unused var warning
-    (void) current_statement__;
-    using local_scalar_t__ = double;
-    auto base_rng__ = stan::services::util::create_rng(random_seed__, 0);
-    // suppress unused var warning
-    (void) base_rng__;
-    static constexpr const char* function__ =
-      "tuple_adlevels_model_namespace::tuple_adlevels_model";
-    // suppress unused var warning
-    (void) function__;
-    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // suppress unused var warning
-    (void) DUMMY_VAR__;
-    try {
-      int pos__;
-      pos__ = 1;
-      current_statement__ = 3;
-      context__.validate_dims("data initialization", "x", "double",
-        std::vector<size_t>{static_cast<size_t>(3), static_cast<size_t>(4)});
-      x_data__ = Eigen::Matrix<double,-1,-1>::Constant(3, 4,
-                   std::numeric_limits<double>::quiet_NaN());
-      new (&x) Eigen::Map<Eigen::Matrix<double,-1,-1>>(x_data__.data(), 3, 4);
-      {
-        std::vector<double> x_flat__;
-        current_statement__ = 3;
-        x_flat__ = context__.vals_r("x");
-        pos__ = 1;
-        {
-          {
-            stan::model::assign(x,
-              stan::model::rvalue(x_flat__, "x_flat__",
-                stan::model::index_uni(1)), "assigning variable x",
-              stan::model::index_uni(1), stan::model::index_uni(1));
-            pos__ = 2;
-            {
-              stan::model::assign(x, x_flat__[(pos__ - 1)],
-                "assigning variable x", stan::model::index_uni(2),
-                stan::model::index_uni(1));
-              pos__ = (pos__ + 1);
-            }
-            {
-              stan::model::assign(x, x_flat__[(pos__ - 1)],
-                "assigning variable x", stan::model::index_uni(3),
-                stan::model::index_uni(1));
-              pos__ = (pos__ + 1);
-            }
-          }
-          {
-            stan::model::assign(x, x_flat__[(pos__ - 1)],
-              "assigning variable x", stan::model::index_uni(1),
-              stan::model::index_uni(2));
-            pos__ = (pos__ + 1);
-            {
-              stan::model::assign(x, x_flat__[(pos__ - 1)],
-                "assigning variable x", stan::model::index_uni(2),
-                stan::model::index_uni(2));
-              pos__ = (pos__ + 1);
-            }
-            {
-              stan::model::assign(x, x_flat__[(pos__ - 1)],
-                "assigning variable x", stan::model::index_uni(3),
-                stan::model::index_uni(2));
-              pos__ = (pos__ + 1);
-            }
-          }
-          {
-            stan::model::assign(x, x_flat__[(pos__ - 1)],
-              "assigning variable x", stan::model::index_uni(1),
-              stan::model::index_uni(3));
-            pos__ = (pos__ + 1);
-            {
-              stan::model::assign(x, x_flat__[(pos__ - 1)],
-                "assigning variable x", stan::model::index_uni(2),
-                stan::model::index_uni(3));
-              pos__ = (pos__ + 1);
-            }
-            {
-              stan::model::assign(x, x_flat__[(pos__ - 1)],
-                "assigning variable x", stan::model::index_uni(3),
-                stan::model::index_uni(3));
-              pos__ = (pos__ + 1);
-            }
-          }
-          {
-            stan::model::assign(x, x_flat__[(pos__ - 1)],
-              "assigning variable x", stan::model::index_uni(1),
-              stan::model::index_uni(4));
-            pos__ = (pos__ + 1);
-            {
-              stan::model::assign(x, x_flat__[(pos__ - 1)],
-                "assigning variable x", stan::model::index_uni(2),
-                stan::model::index_uni(4));
-              pos__ = (pos__ + 1);
-            }
-            {
-              stan::model::assign(x, x_flat__[(pos__ - 1)],
-                "assigning variable x", stan::model::index_uni(3),
-                stan::model::index_uni(4));
-              pos__ = (pos__ + 1);
-            }
-          }
-        }
-      }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
-    num_params_r__ = 1;
-  }
-  inline std::string model_name() const final {
-    return "tuple_adlevels_model";
-  }
-  inline std::vector<std::string> model_compile_info() const noexcept {
-    return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%",
-             "stancflags = --Oexperimental --print-cpp"};
-  }
-  // Base log prob
-  template <bool propto__, bool jacobian__, typename VecR, typename VecI,
-            stan::require_vector_like_t<VecR>* = nullptr,
-            stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
-            stan::require_not_st_var<VecR>* = nullptr>
-  inline stan::scalar_type_t<VecR>
-  log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
-                pstream__ = nullptr) const {
-    using T__ = stan::scalar_type_t<VecR>;
-    using local_scalar_t__ = T__;
-    T__ lp__(0.0);
-    stan::math::accumulator<T__> lp_accum__;
-    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
-    int current_statement__ = 0;
-    // suppress unused var warning
-    (void) current_statement__;
-    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // suppress unused var warning
-    (void) DUMMY_VAR__;
-    static constexpr const char* function__ =
-      "tuple_adlevels_model_namespace::log_prob";
-    // suppress unused var warning
-    (void) function__;
-    try {
-      std::vector<
-        std::tuple<double, std::vector<Eigen::Matrix<double,-1,-1>>>>
-        lcm_sym5__;
-      current_statement__ = 1;
-      auto w = in__.template read<local_scalar_t__>();
-      current_statement__ = 2;
-      if (pstream__) {
-        stan::math::stan_print(pstream__,
-          std::vector<
-            std::tuple<local_scalar_t__,
-              std::vector<Eigen::Matrix<double,-1,-1>>>>{std::forward_as_tuple(
-                                                           w,
-                                                           std::vector<
-                                                             Eigen::Matrix<double,-1,-1>>{x})});
-        *(pstream__) << std::endl;
-      }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
-    lp_accum__.add(lp__);
-    return lp_accum__.sum();
-  }
-  // Reverse mode autodiff log prob
-  template <bool propto__, bool jacobian__, typename VecR, typename VecI,
-            stan::require_vector_like_t<VecR>* = nullptr,
-            stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
-            stan::require_st_var<VecR>* = nullptr>
-  inline stan::scalar_type_t<VecR>
-  log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
-                pstream__ = nullptr) const {
-    using T__ = stan::scalar_type_t<VecR>;
-    using local_scalar_t__ = T__;
-    T__ lp__(0.0);
-    stan::math::accumulator<T__> lp_accum__;
-    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
-    int current_statement__ = 0;
-    // suppress unused var warning
-    (void) current_statement__;
-    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // suppress unused var warning
-    (void) DUMMY_VAR__;
-    static constexpr const char* function__ =
-      "tuple_adlevels_model_namespace::log_prob";
-    // suppress unused var warning
-    (void) function__;
-    try {
-      std::vector<
-        std::tuple<double, std::vector<Eigen::Matrix<double,-1,-1>>>>
-        lcm_sym4__;
-      current_statement__ = 1;
-      auto w = in__.template read<local_scalar_t__>();
-      current_statement__ = 2;
-      if (pstream__) {
-        stan::math::stan_print(pstream__,
-          std::vector<
-            std::tuple<local_scalar_t__,
-              std::vector<Eigen::Matrix<double,-1,-1>>>>{std::forward_as_tuple(
-                                                           w,
-                                                           std::vector<
-                                                             Eigen::Matrix<double,-1,-1>>{x})});
-        *(pstream__) << std::endl;
-      }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
-    lp_accum__.add(lp__);
-    return lp_accum__.sum();
-  }
-  template <typename RNG, typename VecR, typename VecI, typename VecVar,
-            stan::require_vector_like_vt<std::is_floating_point,
-            VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral,
-            VecI>* = nullptr, stan::require_vector_vt<std::is_floating_point,
-            VecVar>* = nullptr>
-  inline void
-  write_array_impl(RNG& base_rng__, VecR& params_r__, VecI& params_i__,
-                   VecVar& vars__, const bool
-                   emit_transformed_parameters__ = true, const bool
-                   emit_generated_quantities__ = true, std::ostream*
-                   pstream__ = nullptr) const {
-    using local_scalar_t__ = double;
-    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
-    stan::io::serializer<local_scalar_t__> out__(vars__);
-    static constexpr bool propto__ = true;
-    // suppress unused var warning
-    (void) propto__;
-    double lp__ = 0.0;
-    // suppress unused var warning
-    (void) lp__;
-    int current_statement__ = 0;
-    // suppress unused var warning
-    (void) current_statement__;
-    stan::math::accumulator<double> lp_accum__;
-    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // suppress unused var warning
-    (void) DUMMY_VAR__;
-    constexpr bool jacobian__ = false;
-    // suppress unused var warning
-    (void) jacobian__;
-    static constexpr const char* function__ =
-      "tuple_adlevels_model_namespace::write_array";
-    // suppress unused var warning
-    (void) function__;
-    try {
-      std::vector<
-        std::tuple<double, std::vector<Eigen::Matrix<double,-1,-1>>>>
-        lcm_sym3__;
-      int lcm_sym2__;
-      int lcm_sym1__;
-      current_statement__ = 1;
-      auto w = in__.template read<local_scalar_t__>();
-      out__.write(w);
-      if (stan::math::logical_negation(
-            (stan::math::primitive_value(emit_transformed_parameters__) ||
-            stan::math::primitive_value(emit_generated_quantities__)))) {
-        return ;
-      }
-      current_statement__ = 2;
-      if (pstream__) {
-        stan::math::stan_print(pstream__,
-          std::vector<
-            std::tuple<double, std::vector<Eigen::Matrix<double,-1,-1>>>>{
-            std::forward_as_tuple(w,
-              std::vector<Eigen::Matrix<double,-1,-1>>{x})});
-        *(pstream__) << std::endl;
-      }
-      if (stan::math::logical_negation(emit_generated_quantities__)) {
-        return ;
-      }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
-  }
-  template <typename VecVar, typename VecI,
-            stan::require_vector_t<VecVar>* = nullptr,
-            stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
-  inline void
-  unconstrain_array_impl(const VecVar& params_r__, const VecI& params_i__,
-                         VecVar& vars__, std::ostream* pstream__ = nullptr) const {
-    using local_scalar_t__ = double;
-    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
-    stan::io::serializer<local_scalar_t__> out__(vars__);
-    int current_statement__ = 0;
-    // suppress unused var warning
-    (void) current_statement__;
-    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // suppress unused var warning
-    (void) DUMMY_VAR__;
-    try {
-      local_scalar_t__ w;
-      current_statement__ = 1;
-      w = in__.read<local_scalar_t__>();
-      out__.write(w);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
-  }
-  template <typename VecVar, stan::require_vector_t<VecVar>* = nullptr>
-  inline void
-  transform_inits_impl(const stan::io::var_context& context__, VecVar&
-                       vars__, std::ostream* pstream__ = nullptr) const {
-    using local_scalar_t__ = double;
-    stan::io::serializer<local_scalar_t__> out__(vars__);
-    int current_statement__ = 0;
-    // suppress unused var warning
-    (void) current_statement__;
-    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // suppress unused var warning
-    (void) DUMMY_VAR__;
-    try {
-      current_statement__ = 1;
-      context__.validate_dims("parameter initialization", "w", "double",
-        std::vector<size_t>{});
-      local_scalar_t__ w;
-      current_statement__ = 1;
-      w = context__.vals_r("w")[(1 - 1)];
-      out__.write(w);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
-  }
-  inline void
-  get_param_names(std::vector<std::string>& names__, const bool
-                  emit_transformed_parameters__ = true, const bool
-                  emit_generated_quantities__ = true) const {
-    names__ = std::vector<std::string>{"w"};
-    if (emit_transformed_parameters__) {}
-    if (emit_generated_quantities__) {}
-  }
-  inline void
-  get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
-           emit_transformed_parameters__ = true, const bool
-           emit_generated_quantities__ = true) const {
-    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{}};
-    if (emit_transformed_parameters__) {}
-    if (emit_generated_quantities__) {}
-  }
-  inline void
-  constrained_param_names(std::vector<std::string>& param_names__, bool
-                          emit_transformed_parameters__ = true, bool
-                          emit_generated_quantities__ = true) const final {
-    param_names__.emplace_back(std::string() + "w");
-    if (emit_transformed_parameters__) {}
-    if (emit_generated_quantities__) {}
-  }
-  inline void
-  unconstrained_param_names(std::vector<std::string>& param_names__, bool
-                            emit_transformed_parameters__ = true, bool
-                            emit_generated_quantities__ = true) const final {
-    param_names__.emplace_back(std::string() + "w");
-    if (emit_transformed_parameters__) {}
-    if (emit_generated_quantities__) {}
-  }
-  inline std::string get_constrained_sizedtypes() const {
-    return std::string("[{\"name\":\"w\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]");
-  }
-  inline std::string get_unconstrained_sizedtypes() const {
-    return std::string("[{\"name\":\"w\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]");
-  }
-  // Begin method overload boilerplate
-  template <typename RNG> inline void
-  write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
-              Eigen::Matrix<double,-1,1>& vars, const bool
-              emit_transformed_parameters = true, const bool
-              emit_generated_quantities = true, std::ostream*
-              pstream = nullptr) const {
-    const size_t num_params__ = 1;
-    const size_t num_transformed = emit_transformed_parameters * (0U);
-    const size_t num_gen_quantities = emit_generated_quantities * (0U);
-    const size_t num_to_write = num_params__ + num_transformed +
-      num_gen_quantities;
-    std::vector<int> params_i;
-    vars = Eigen::Matrix<double,-1,1>::Constant(num_to_write,
-             std::numeric_limits<double>::quiet_NaN());
-    write_array_impl(base_rng, params_r, params_i, vars,
-      emit_transformed_parameters, emit_generated_quantities, pstream);
-  }
-  template <typename RNG> inline void
-  write_array(RNG& base_rng, std::vector<double>& params_r, std::vector<int>&
-              params_i, std::vector<double>& vars, bool
-              emit_transformed_parameters = true, bool
-              emit_generated_quantities = true, std::ostream*
-              pstream = nullptr) const {
-    const size_t num_params__ = 1;
-    const size_t num_transformed = emit_transformed_parameters * (0U);
-    const size_t num_gen_quantities = emit_generated_quantities * (0U);
-    const size_t num_to_write = num_params__ + num_transformed +
-      num_gen_quantities;
-    vars = std::vector<double>(num_to_write,
-             std::numeric_limits<double>::quiet_NaN());
-    write_array_impl(base_rng, params_r, params_i, vars,
-      emit_transformed_parameters, emit_generated_quantities, pstream);
-  }
-  template <bool propto__, bool jacobian__, typename T_> inline T_
-  log_prob(Eigen::Matrix<T_,-1,1>& params_r, std::ostream* pstream = nullptr) const {
-    Eigen::Matrix<int,-1,1> params_i;
-    return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
-  }
-  template <bool propto__, bool jacobian__, typename T_> inline T_
-  log_prob(std::vector<T_>& params_r, std::vector<int>& params_i,
-           std::ostream* pstream = nullptr) const {
-    return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
-  }
-  inline void
-  transform_inits(const stan::io::var_context& context,
-                  Eigen::Matrix<double,-1,1>& params_r, std::ostream*
-                  pstream = nullptr) const final {
-    std::vector<double> params_r_vec(params_r.size());
-    std::vector<int> params_i;
-    transform_inits(context, params_i, params_r_vec, pstream);
-    params_r = Eigen::Map<Eigen::Matrix<double,-1,1>>(params_r_vec.data(),
-                 params_r_vec.size());
-  }
-  inline void
-  transform_inits(const stan::io::var_context& context, std::vector<int>&
-                  params_i, std::vector<double>& vars, std::ostream*
-                  pstream__ = nullptr) const {
-    vars.resize(num_params_r__);
-    transform_inits_impl(context, vars, pstream__);
-  }
-  inline void
-  unconstrain_array(const std::vector<double>& params_constrained,
-                    std::vector<double>& params_unconstrained, std::ostream*
-                    pstream = nullptr) const {
-    const std::vector<int> params_i;
-    params_unconstrained = std::vector<double>(num_params_r__,
-                             std::numeric_limits<double>::quiet_NaN());
-    unconstrain_array_impl(params_constrained, params_i,
-      params_unconstrained, pstream);
-  }
-  inline void
-  unconstrain_array(const Eigen::Matrix<double,-1,1>& params_constrained,
-                    Eigen::Matrix<double,-1,1>& params_unconstrained,
-                    std::ostream* pstream = nullptr) const {
-    const std::vector<int> params_i;
-    params_unconstrained = Eigen::Matrix<double,-1,1>::Constant(num_params_r__,
-                             std::numeric_limits<double>::quiet_NaN());
-    unconstrain_array_impl(params_constrained, params_i,
-      params_unconstrained, pstream);
-  }
-};
-}
-using stan_model = tuple_adlevels_model_namespace::tuple_adlevels_model;
-#ifndef USING_R
-// Boilerplate
-stan::model::model_base&
-new_model(stan::io::var_context& data_context, unsigned int seed,
-          std::ostream* msg_stream) {
-  stan_model* m = new stan_model(data_context, seed, msg_stream);
-  return *m;
-}
-stan::math::profile_map& get_stan_profile_data() {
-  return tuple_adlevels_model_namespace::profiles__;
 }
 #endif
 [exit 0]
@@ -47515,15 +47046,14 @@ class unenforce_initialize_should_fail_model final : public model_base_crtp<unen
     (void) function__;
     try {
       double lcm_sym17__;
-      std::vector<stan::math::var_value<Eigen::Matrix<double,-1,1>>>
-        lcm_sym16__;
+      std::vector<Eigen::Matrix<double,-1,1>> lcm_sym16__;
       double lcm_sym15__;
       double lcm_sym14__;
       double lcm_sym13__;
       double lcm_sym12__;
       current_statement__ = 1;
       auto param = in__.template read<local_scalar_t__>();
-      std::vector<Eigen::Matrix<double,-1,1>> local =
+      std::vector<stan::math::var_value<Eigen::Matrix<double,-1,1>>> local =
         std::vector<Eigen::Matrix<double,-1,1>>(2,
           Eigen::Matrix<double,-1,1>::Constant(5,
             std::numeric_limits<double>::quiet_NaN()));
@@ -48107,42 +47637,42 @@ class unenforce_initialize_model final : public model_base_crtp<unenforce_initia
       }
       double for_loop_var = std::numeric_limits<double>::quiet_NaN();
       {
-        for_loop_var = static_cast<double>(1);
+        for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
         {
           current_statement__ = 10;
-          for_loop_var = static_cast<double>(1);
+          for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
         }
         {
           current_statement__ = 10;
-          for_loop_var = static_cast<double>(1);
+          for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
         }
         {
           current_statement__ = 10;
-          for_loop_var = static_cast<double>(1);
+          for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
         }
         {
           current_statement__ = 10;
-          for_loop_var = static_cast<double>(1);
+          for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
         }
         {
           current_statement__ = 10;
-          for_loop_var = static_cast<double>(1);
+          for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
         }
         {
           current_statement__ = 10;
-          for_loop_var = static_cast<double>(1);
+          for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
         }
         {
           current_statement__ = 10;
-          for_loop_var = static_cast<double>(1);
+          for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
         }
         {
           current_statement__ = 10;
-          for_loop_var = static_cast<double>(1);
+          for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
         }
         {
           current_statement__ = 10;
-          for_loop_var = static_cast<double>(1);
+          for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
         }
       }
     } catch (const std::exception& e) {
@@ -48197,42 +47727,42 @@ class unenforce_initialize_model final : public model_base_crtp<unenforce_initia
       }
       double for_loop_var = std::numeric_limits<double>::quiet_NaN();
       {
-        for_loop_var = static_cast<double>(1);
+        for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
         {
           current_statement__ = 10;
-          for_loop_var = static_cast<double>(1);
+          for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
         }
         {
           current_statement__ = 10;
-          for_loop_var = static_cast<double>(1);
+          for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
         }
         {
           current_statement__ = 10;
-          for_loop_var = static_cast<double>(1);
+          for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
         }
         {
           current_statement__ = 10;
-          for_loop_var = static_cast<double>(1);
+          for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
         }
         {
           current_statement__ = 10;
-          for_loop_var = static_cast<double>(1);
+          for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
         }
         {
           current_statement__ = 10;
-          for_loop_var = static_cast<double>(1);
+          for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
         }
         {
           current_statement__ = 10;
-          for_loop_var = static_cast<double>(1);
+          for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
         }
         {
           current_statement__ = 10;
-          for_loop_var = static_cast<double>(1);
+          for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
         }
         {
           current_statement__ = 10;
-          for_loop_var = static_cast<double>(1);
+          for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
         }
       }
     } catch (const std::exception& e) {
@@ -48306,42 +47836,42 @@ class unenforce_initialize_model final : public model_base_crtp<unenforce_initia
         no_init_if = 1.0;
       }
       {
-        for_loop_var = static_cast<double>(1);
+        for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
         {
           current_statement__ = 10;
-          for_loop_var = static_cast<double>(1);
+          for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
         }
         {
           current_statement__ = 10;
-          for_loop_var = static_cast<double>(1);
+          for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
         }
         {
           current_statement__ = 10;
-          for_loop_var = static_cast<double>(1);
+          for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
         }
         {
           current_statement__ = 10;
-          for_loop_var = static_cast<double>(1);
+          for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
         }
         {
           current_statement__ = 10;
-          for_loop_var = static_cast<double>(1);
+          for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
         }
         {
           current_statement__ = 10;
-          for_loop_var = static_cast<double>(1);
+          for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
         }
         {
           current_statement__ = 10;
-          for_loop_var = static_cast<double>(1);
+          for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
         }
         {
           current_statement__ = 10;
-          for_loop_var = static_cast<double>(1);
+          for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
         }
         {
           current_statement__ = 10;
-          for_loop_var = static_cast<double>(1);
+          for_loop_var = stan::math::promote_scalar<local_scalar_t__>(1);
         }
       }
       if (emit_transformed_parameters__) {
@@ -49621,15 +49151,15 @@ class vectorize_loops_model final : public model_base_crtp<vectorize_loops_model
       double lcm_sym23__;
       double lcm_sym22__;
       double lcm_sym21__;
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> lcm_sym20__;
+      Eigen::Matrix<double,-1,1> lcm_sym20__;
       double lcm_sym19__;
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> lcm_sym18__;
+      Eigen::Matrix<double,-1,1> lcm_sym18__;
       double lcm_sym17__;
       double lcm_sym16__;
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> lcm_sym15__;
+      Eigen::Matrix<double,-1,1> lcm_sym15__;
       double lcm_sym14__;
       double lcm_sym13__;
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> lcm_sym12__;
+      Eigen::Matrix<double,-1,1> lcm_sym12__;
       int lcm_sym11__;
       int lcm_sym10__;
       current_statement__ = 1;

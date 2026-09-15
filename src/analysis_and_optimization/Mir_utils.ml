@@ -398,8 +398,13 @@ and idx_depth i =
 
 let rec update_expr_ad_levels autodiffable_variables (Expr.{pattern; _} as e) =
   let max_adlevel l =
-    UnsizedType.lub_ad_type (List.map ~f:Expr.Typed.adlevel_of l) |> Option.get
-  in
+    let base =
+      if
+        List.exists l ~f:(fun x ->
+            UnsizedType.is_autodifftype @@ Expr.Typed.adlevel_of x)
+      then UnsizedType.AutoDiffable
+      else DataOnly in
+    UnsizedType.fill_adtype_for_type base Expr.Typed.Meta.(e.meta.type_) in
   match pattern with
   | Var x ->
       if Set.Poly.mem x autodiffable_variables then e
@@ -409,12 +414,6 @@ let rec update_expr_ad_levels autodiffable_variables (Expr.{pattern; _} as e) =
             Expr.Typed.Meta.(e.meta.type_) in
         {e with meta= {e.meta with adlevel}}
   | Lit (_, _) -> {e with meta= {e.meta with adlevel= DataOnly}}
-  | FunApp (CompilerInternal FnMakeTuple, l) ->
-      let l = List.map ~f:(update_expr_ad_levels autodiffable_variables) l in
-      { pattern= FunApp (CompilerInternal FnMakeTuple, l)
-      ; meta=
-          {e.meta with adlevel= TupleAD (List.map ~f:Expr.Typed.adlevel_of l)}
-      }
   | FunApp (kind, l) ->
       let kind' =
         Fun_kind.map (update_expr_ad_levels autodiffable_variables) kind in
@@ -492,7 +491,7 @@ let cleanup_empty_stmts stmts =
     this type should have initialize set to false. *)
 let unsafe_unsized_to_sized_type (rt : Expr.Typed.t Type.t) =
   match rt with
-  | Type.Sized ret_type -> ret_type
+  | Type.Sized _ as ret_type -> ret_type
   | Unsized ut ->
       let rec to_sized a =
         match a with
@@ -514,7 +513,7 @@ let unsafe_unsized_to_sized_type (rt : Expr.Typed.t Type.t) =
             Common.ICE.internal_error
               "return type of a function was a void user defined function or \
                math library function." [@coverage off] in
-      to_sized ut
+      Type.Sized (to_sized ut)
 
 let%expect_test "cleanup" =
   let open Expr.Helpers in

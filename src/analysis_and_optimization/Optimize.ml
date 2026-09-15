@@ -289,9 +289,8 @@ let rec inline_function_expression propto adt fim (Expr.{pattern; _} as e) =
                 handle_early_returns fname (Some inline_return_name) in
               let d_list2, s_list2, (e : Expr.Typed.t) =
                 let decl_type =
-                  Option.map ~f:unsafe_unsized_to_sized_type rt
-                  |> Option.map ~f:(fun s -> Type.Sized s)
-                  |> Option.get in
+                  Option.map ~f:unsafe_unsized_to_sized_type rt |> Option.get
+                in
                 ( [ Stmt.Pattern.Decl
                       { decl_adtype=
                           UnsizedType.fill_adtype_for_type adt
@@ -1415,28 +1414,11 @@ let optimize_ad_levels (mir : Program.Typed.t) =
                 (Type.to_unsized decl_type) }
     | Decl ({decl_id; decl_type; _} as decl)
       when not (Set.Poly.mem decl_id variable_set) ->
-        let decl_type =
-          match decl_type with
-          | Sized st -> Type.Sized (SizedType.demote_sizedtype_mem st)
-          | u -> u in
         Decl
           { decl with
-            decl_type
-          ; decl_adtype=
+            decl_adtype=
               UnsizedType.fill_adtype_for_type UnsizedType.DataOnly
                 (Type.to_unsized decl_type) }
-    | Assignment (lval, ty, ({Expr.pattern= Promotion (e, ut, ad); _} as prom))
-      when (not (Set.Poly.mem (Stmt.Helpers.lhs_variable lval) variable_set))
-           && UnsizedType.has_autodiff ad ->
-        (* When a variable has been downcast, we need to remove any promotions
-           it was going to recieve or else C++ compilation will fail *)
-        Assignment
-          ( lval
-          , ty
-          , { prom with
-              pattern=
-                Promotion (e, ut, UnsizedType.fill_adtype_for_type DataOnly ty)
-            } )
     | s -> s in
   let transform fundef_opt stmt =
     optimize_minimal_variables ~gen_variables:gen_ad_variables
@@ -1595,8 +1577,8 @@ let optimization_suite ?(settings = all_optimizations) mir =
       (* Book: Machine idioms and instruction combining *)
     ; (list_collapsing, settings.list_collapsing)
       (* Book: Machine idioms and instruction combining *)
-    ; (optimize_soa, settings.optimize_soa)
     ; (optimize_ad_levels, settings.optimize_ad_levels)
+    ; (optimize_soa, settings.optimize_soa)
       (* Remove decls immediately assigned to *)
     ; (allow_uninitialized_decls, settings.allow_uninitialized_decls)
       (* Book: Machine idioms and instruction combining *)

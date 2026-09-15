@@ -3103,72 +3103,6 @@ let%expect_test "lazy code motion, 13" =
         if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
-let%expect_test "lazy code motion name reuse" =
-  let mir =
-    reset_and_mir_of_string
-      {|
-      model {
-        {
-          array[2, 3] int vs;
-          for (v in vs) {
-          }
-        }
-
-        {
-          matrix[2, 3] vs;
-          for (v in vs) {
-          }
-        }
-      } |}
-  in
-  let mir = lazy_code_motion mir in
-  let mir = list_collapsing mir in
-  let mir = block_fixing mir in
-  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
-  [%expect
-    {|
-    log_prob {
-      data array[] int lcm_sym7__;
-      real lcm_sym6__;
-      int lcm_sym5__;
-      data int lcm_sym4__;
-      int lcm_sym3__;
-      {
-        {
-          array[array[int, 3], 2] vs;
-          for(sym1__ in 1:FnLength__(vs)) {
-            {
-              data array[] int v;
-              v = vs[sym1__];
-            }
-          }
-        }
-        {
-          matrix[2, 3] vs;
-          for(sym1__ in 1:rows(vs)) {
-            lcm_sym5__ = FnLength__(vs[sym1__]);
-            {
-              for(sym2__ in 1:lcm_sym5__) {
-                {
-                  real v;
-                  v = vs[sym1__, sym2__];
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-
-
-    generate_quantities {
-      data int lcm_sym2__;
-      data int lcm_sym1__;
-      if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
-      if(PNot__(emit_generated_quantities__)) return;
-    }
-    |}]
-
 let%expect_test
     "cool example: expression propagation + partial evaluation + lazy code \
      motion + dead code elimination" =
@@ -3381,7 +3315,7 @@ let%expect_test "adlevel_optimization" =
           data real z_data;
           if((1 > 2)) y = (y + promote(x, real, data)); else y = (y + w);
           if((2 > 1)) z = y;
-          if((3 > 1)) z_data = promote(x, real, data);
+          if((3 > 1)) z_data = promote(x, real, var);
           FnPrint__(z);
           FnPrint__(z_data);
         }
@@ -3398,7 +3332,7 @@ let%expect_test "adlevel_optimization" =
           data real z_data;
           if((1 > 2)) y = (y + promote(x, real, data)); else y = (y + w);
           if((2 > 1)) z = y;
-          if((3 > 1)) z_data = promote(x, real, data);
+          if((3 > 1)) z_data = promote(x, real, var);
           FnPrint__(z);
           FnPrint__(z_data);
         }
@@ -3528,7 +3462,7 @@ let%expect_test "adlevel_optimization expressions" =
                    (Promotion
                     ((pattern (Var x))
                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                    UReal DataOnly))
+                    UReal AutoDiffable))
                   (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
                (meta <opaque>))
               ()))
@@ -3580,7 +3514,7 @@ let%expect_test "adlevel_optimization 2" =
       log_prob {
         real w;
         data real w_trans;
-        w_trans = promote(1, real, data);
+        w_trans = promote(1, real, var);
         {
           data int x;
           array[real, 2] y;
@@ -3588,7 +3522,7 @@ let%expect_test "adlevel_optimization 2" =
           data real z_data;
           if((1 > 2)) y[1] = (y[1] + promote(x, real, data)); else y[2] = (y[2] + w);
           if((2 > 1)) z = y[1];
-          if((3 > 1)) z_data = promote(x, real, data);
+          if((3 > 1)) z_data = promote(x, real, var);
           FnPrint__(z);
           FnPrint__(z_data);
         }
@@ -3599,7 +3533,7 @@ let%expect_test "adlevel_optimization 2" =
         data real w;
         data real w_trans;
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
-        w_trans = promote(1, real, data);
+        w_trans = promote(1, real, var);
         {
           data int x;
           data array[real, 2] y;
@@ -3607,7 +3541,7 @@ let%expect_test "adlevel_optimization 2" =
           data real z_data;
           if((1 > 2)) y[1] = (y[1] + promote(x, real, data)); else y[2] = (y[2] + w);
           if((2 > 1)) z = y[1];
-          if((3 > 1)) z_data = promote(x, real, data);
+          if((3 > 1)) z_data = promote(x, real, var);
           FnPrint__(z);
           FnPrint__(z_data);
         }

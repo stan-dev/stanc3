@@ -63,16 +63,16 @@ module Typed = struct
   module Meta = struct
     type t =
       { type_: UnsizedType.t
-      ; loc: (Location_span.t[@sexp.opaque] [@compare.ignore])
+      ; loc: (Location_span.t[@sexp.opaque])
       ; adlevel: UnsizedType.autodifftype }
-    [@@deriving create, sexp_of, compare]
+    [@@deriving create, sexp_of]
 
     let empty =
       create ~type_:UnsizedType.UInt ~adlevel:UnsizedType.DataOnly
         ~loc:Location_span.empty ()
   end
 
-  type t = Meta.t Fixed.t [@@deriving sexp_of, compare]
+  type t = (Meta.t[@compare.ignore]) Fixed.t [@@deriving sexp_of, compare]
 
   let equal t1 t2 = compare t1 t2 = 0
   let type_of {meta= Meta.{type_; _}; _} = type_
@@ -269,8 +269,6 @@ module Helpers = struct
     match pattern with
     | Indexed (obj, indices) -> collect_indices obj @ indices
     | _ -> []
-
-  let compare_ignore_meta e1 e2 = compare (fun _ _ -> 0) e1 e2
 
   let%expect_test "infer type of indexed" =
     [ ( UnsizedType.UArray UMatrix
