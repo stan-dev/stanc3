@@ -1424,6 +1424,18 @@ let optimize_ad_levels (mir : Program.Typed.t) =
           ; decl_adtype=
               UnsizedType.fill_adtype_for_type UnsizedType.DataOnly
                 (Type.to_unsized decl_type) }
+    | Assignment (lval, ty, ({Expr.pattern= Promotion (e, ut, ad); _} as prom))
+      when (not (Set.Poly.mem (Stmt.Helpers.lhs_variable lval) variable_set))
+           && UnsizedType.has_autodiff ad ->
+        (* When a variable has been downcast, we need to remove any promotions
+           it was going to recieve or else C++ compilation will fail *)
+        Assignment
+          ( lval
+          , ty
+          , { prom with
+              pattern=
+                Promotion (e, ut, UnsizedType.fill_adtype_for_type DataOnly ty)
+            } )
     | s -> s in
   let transform fundef_opt stmt =
     optimize_minimal_variables ~gen_variables:gen_ad_variables
