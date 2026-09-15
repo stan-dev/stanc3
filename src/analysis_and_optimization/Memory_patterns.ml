@@ -653,24 +653,30 @@ let rec modify_stmt_pattern
                       ( CompilerInternal
                           (FnReadParam {read_param with mem_pattern= SoA})
                       , List.map ~f:(mod_expr false) args ) } }
-  | Stmt.Pattern.Decl
-      ({decl_id; decl_type= Type.Sized sized_type; initialize; _} as decl) ->
-      if Set.Poly.mem decl_id modifiable_set then
-        let init_expr =
+  | Stmt.Pattern.Decl ({decl_id; decl_type; initialize; _} as decl) ->
+      let initialize =
+        let was_unsized =
+          (* Unsized decls are only ever created by previous optimizations like
+             lazy code motion *)
+          match decl_type with
+          | Type.Unsized _ -> true
+          | _ -> false in
+        if was_unsized then Stmt.Pattern.Uninit
+        else if Set.Poly.mem decl_id modifiable_set then
           match initialize with
-          | Stmt.Pattern.Assign e -> Stmt.Pattern.Assign (mod_expr false e)
+          | Stmt.Pattern.Assign e -> Assign (mod_expr false e)
           | Default -> Default
-          | Uninit -> Uninit in
-        Stmt.Pattern.Decl
-          { decl with
-            decl_type=
-              Type.Sized (SizedType.modify_sizedtype_mem AoS sized_type)
-          ; initialize= init_expr }
-      else
-        Decl
-          { decl with
-            decl_type=
-              Type.Sized (SizedType.modify_sizedtype_mem SoA sized_type) }
+          | Uninit -> Uninit
+        else initialize in
+      let decl_type =
+        let sized_type = Mir_utils.unsafe_unsized_to_sized_type decl_type in
+        if SizedType.has_mem_pattern sized_type then
+          let mem =
+            if Set.Poly.mem decl_id modifiable_set then Mem_pattern.AoS else SoA
+          in
+          Type.Sized (SizedType.modify_sizedtype_mem mem sized_type)
+        else decl_type in
+      Decl {decl with decl_type; initialize}
   | NRFunApp (kind, (exprs : Expr.Typed.t list)) ->
       let kind', exprs' = modify_kind modifiable_set kind exprs in
       NRFunApp (kind', exprs')
@@ -726,7 +732,7 @@ let rec modify_stmt_pattern
   | Profile ((p_name : string), stmt) ->
       Profile (p_name, List.map ~f:mod_stmt stmt)
   | While (predicate, body) -> While ((mod_expr false) predicate, mod_stmt body)
-  | Skip | Break | Continue | Decl _ -> pattern
+  | Skip | Break | Continue -> pattern
 
 (** Modify statement patterns in the MIR from AoS <-> SoA and vice versa
     @param mem_pattern

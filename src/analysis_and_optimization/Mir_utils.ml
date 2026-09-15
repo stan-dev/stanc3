@@ -492,7 +492,7 @@ let cleanup_empty_stmts stmts =
     this type should have initialize set to false. *)
 let unsafe_unsized_to_sized_type (rt : Expr.Typed.t Type.t) =
   match rt with
-  | Type.Sized _ as ret_type -> ret_type
+  | Type.Sized ret_type -> ret_type
   | Unsized ut ->
       let rec to_sized a =
         match a with
@@ -514,7 +514,7 @@ let unsafe_unsized_to_sized_type (rt : Expr.Typed.t Type.t) =
             Common.ICE.internal_error
               "return type of a function was a void user defined function or \
                math library function." [@coverage off] in
-      Type.Sized (to_sized ut)
+      to_sized ut
 
 let%expect_test "cleanup" =
   let open Expr.Helpers in

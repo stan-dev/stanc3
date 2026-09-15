@@ -289,8 +289,9 @@ let rec inline_function_expression propto adt fim (Expr.{pattern; _} as e) =
                 handle_early_returns fname (Some inline_return_name) in
               let d_list2, s_list2, (e : Expr.Typed.t) =
                 let decl_type =
-                  Option.map ~f:unsafe_unsized_to_sized_type rt |> Option.get
-                in
+                  Option.map ~f:unsafe_unsized_to_sized_type rt
+                  |> Option.map ~f:(fun s -> Type.Sized s)
+                  |> Option.get in
                 ( [ Stmt.Pattern.Decl
                       { decl_adtype=
                           UnsizedType.fill_adtype_for_type adt
