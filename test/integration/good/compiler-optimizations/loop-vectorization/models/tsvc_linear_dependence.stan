@@ -1,0 +1,96 @@
+// TSVC "LinearDependence" loops (Callahan, Dongarra and Levine 1988;
+// Maleki et al. 2011), from UoB-HPC/TSVC_2 src/tsvc.c. Each loop is
+// translated to 1-based Stan with the loop variable `n`; array sizes are
+// chosen so every subscript is in range. Written variables are model-block
+// locals initialised from data. Each example sits in its own block, and
+// every local it writes carries the example number as a suffix (a3 belongs
+// to example 3) so the generated MIR and C++ can be matched to the example.
+// Every loop here is left unchanged by the pass.
+data {
+  int<lower=2> N;
+  int<lower=0> k;
+  vector[N + 1] a0;
+  vector[N + k] a0k;
+  vector[N] b;
+}
+model {
+  // ---- Left unchanged: no statement can be hoisted ----
+
+  // 1. TSVC s112 (LinearDependence), UoB-HPC/TSVC_2 src/tsvc.c
+  // C: for (int i = LEN_1D - 2; i >= 0; i--) a[i+1] = a[i] + b[i];
+  // Intent: vectorizable only by loop reversal.
+  // Design: true self-dependence {Lt, distance 1}: recurrence -> seq
+  // (loop unchanged).
+  {
+    vector[N + 1] a1 = a0;
+    for (n in 1 : N) {
+      a1[n + 1] = a1[n] + b[n];
+    }
+    target += sum(a1);
+  }
+
+  // 2. TSVC s113 (LinearDependence), UoB-HPC/TSVC_2 src/tsvc.c
+  // C: for (int i = 1; i < LEN_1D; i++) a[i] = a[0] + b[i];
+  // Intent: vectorizable (a[1] is never written by the loop).
+  // Design: Affine vs Invariant subscript: confused -> seq (conservative;
+  // weak-zero SIV test is roadmap item 3).
+  {
+    vector[N + 1] a2 = a0;
+    for (n in 2 : N) {
+      a2[n] = a2[1] + b[n];
+    }
+    target += sum(a2);
+  }
+
+  // 3. TSVC s1113 (LinearDependence), UoB-HPC/TSVC_2 src/tsvc.c
+  // C: for (int i = 0; i < LEN_1D; i++) a[i] = a[LEN_1D/2] + b[i];
+  // Intent: one real dependence at n = N/2: not vectorizable as a whole.
+  // Design: confused -> seq (correct).
+  {
+    vector[N + 1] a3 = a0;
+    for (n in 1 : N) {
+      a3[n] = a3[N %/% 2] + b[n];
+    }
+    target += sum(a3);
+  }
+
+  // 4. TSVC s293 (LinearDependence), UoB-HPC/TSVC_2 src/tsvc.c
+  // C: for (int i = 0; i < LEN_1D; i++) a[i] = a[0];
+  // Intent: actual dependence cycle through a[0].
+  // Design: confused -> seq (correct; contrast s113).
+  {
+    vector[N + 1] a4 = a0;
+    for (n in 1 : N) {
+      a4[n] = a4[1];
+    }
+    target += sum(a4);
+  }
+
+  // 5. TSVC s121 (InductionVariable), UoB-HPC/TSVC_2 src/tsvc.c
+  // C: j = 1; for (int i = 0; i < LEN_1D-1; i++) { j++; a[i] = a[j] + b[i]; }
+  // Intent: induction variable ambiguity.
+  // Design: j5 is written in the body, so a5[j5] is Varying -> seq.
+  {
+    vector[N + 1] a5 = a0;
+    int j5 = 1;
+    for (n in 1 : (N - 1)) {
+      a5[n] = a5[j5] + b[n];
+      j5 += 1;
+    }
+    target += sum(a5);
+  }
+
+  // 6. TSVC s431 (Symbolics), UoB-HPC/TSVC_2 src/tsvc.c
+  // C: int k = 2*inc_1d - 1; for (int i = 0; i < LEN_1D; i++) a[i] = a[i+k] + b[i];
+  // Intent: needs the value of k to decide.
+  // Design: a6[n] vs a6[n + k]: the offsets differ by the symbol k, so the
+  // pair is confused -> seq (correct). Contrast design example 12, where
+  // both sides carry the same k and the symbols cancel.
+  {
+    vector[N + k] a6 = a0k;
+    for (n in 1 : N) {
+      a6[n] = a6[n + k] + b[n];
+    }
+    target += sum(a6);
+  }
+}

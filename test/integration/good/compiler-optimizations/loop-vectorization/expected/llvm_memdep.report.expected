@@ -1,0 +1,43 @@
+  $ stanc -fvectorize-loops --debug-loop-vectorization llvm_memdep.stan
+loop at 'llvm_memdep.stan', line 24, column 4 to line 26, column 5  (n in 1:N)
+  S0  a1[n] = (a1[(n + 1)] + promote(1, real, data));   hoisted
+  edges: none
+  blocks: [S0]
+
+loop at 'llvm_memdep.stan', line 39, column 4 to line 41, column 5  (n in 1:N)
+  S0  a2[(n + 1)] = (a2[n] + promote(1, real, data));   sequential: recurrence, S0 -> S0 a2 {<} d=1 (true)
+  edges: S0 -> S0 a2 {<} d=1 (true)
+  blocks: [S0]cyclic
+
+loop at 'llvm_memdep.stan', line 53, column 4 to line 55, column 5  (n in 1:N)
+  S0  a3[(n + 2)] = (a3[n] + promote(1, real, data));   sequential: recurrence, S0 -> S0 a3 {<} d=2 (true)
+  edges: S0 -> S0 a3 {<} d=2 (true)
+  blocks: [S0]cyclic
+
+loop at 'llvm_memdep.stan', line 68, column 4 to line 71, column 5  (n in 1:N)
+  S0  b4[n] = prev4;   sequential: in a dependence cycle with S1
+  S1  prev4 = a4[n];   sequential: in a dependence cycle with S0
+  edges: S0 -> S1 prev4 {<,=,>} (anti); S1 -> S0 prev4 {<,=,>} (true)
+  blocks: [S0 S1]cyclic
+
+loop at 'llvm_memdep.stan', line 24, column 4 to line 26, column 5  (n in 1:N)
+  S0  a1[n] = (a1[(n + 1)] + promote(1, real, data));   hoisted
+  edges: none
+  blocks: [S0]
+
+loop at 'llvm_memdep.stan', line 39, column 4 to line 41, column 5  (n in 1:N)
+  S0  a2[(n + 1)] = (a2[n] + promote(1, real, data));   sequential: recurrence, S0 -> S0 a2 {<} d=1 (true)
+  edges: S0 -> S0 a2 {<} d=1 (true)
+  blocks: [S0]cyclic
+
+loop at 'llvm_memdep.stan', line 53, column 4 to line 55, column 5  (n in 1:N)
+  S0  a3[(n + 2)] = (a3[n] + promote(1, real, data));   sequential: recurrence, S0 -> S0 a3 {<} d=2 (true)
+  edges: S0 -> S0 a3 {<} d=2 (true)
+  blocks: [S0]cyclic
+
+loop at 'llvm_memdep.stan', line 68, column 4 to line 71, column 5  (n in 1:N)
+  S0  b4[n] = prev4;   sequential: in a dependence cycle with S1
+  S1  prev4 = a4[n];   sequential: in a dependence cycle with S0
+  edges: S0 -> S1 prev4 {<,=,>} (anti); S1 -> S0 prev4 {<,=,>} (true)
+  blocks: [S0 S1]cyclic
+[exit 0]

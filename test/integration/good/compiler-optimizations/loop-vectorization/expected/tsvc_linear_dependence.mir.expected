@@ -1,0 +1,196 @@
+  $ stanc -fvectorize-loops --debug-optimized-mir-pretty tsvc_linear_dependence.stan
+input_vars {
+  int N;
+  int k;
+  vector[(N + 1)] a0;
+  vector[(N + k)] a0k;
+  vector[N] b; }
+
+prepare_data {
+  data int pos__;
+  pos__ = 1;
+  data int N;
+  N = FnReadData__("N")[1];
+  (FnCheck(trans(Lower 2))(var_name N)(var N))__(2);
+  data int k;
+  k = FnReadData__("k")[1];
+  (FnCheck(trans(Lower 0))(var_name k)(var k))__(0);
+  data int a0_1dim__ = (N + 1);
+  FnValidateSize__("a0", "N + 1", a0_1dim__);
+  data vector[a0_1dim__] a0;
+  {
+    array[] real a0_flat__;
+    a0_flat__ = FnReadData__("a0");
+    pos__ = 1;
+    for(sym1__ in 1:(N + 1)) {
+      a0[sym1__] = a0_flat__[pos__];
+      pos__ = (pos__ + 1);
+    }
+  }
+  data int a0k_1dim__ = (N + k);
+  FnValidateSize__("a0k", "N + k", a0k_1dim__);
+  data vector[a0k_1dim__] a0k;
+  {
+    array[] real a0k_flat__;
+    a0k_flat__ = FnReadData__("a0k");
+    pos__ = 1;
+    for(sym1__ in 1:(N + k)) {
+      a0k[sym1__] = a0k_flat__[pos__];
+      pos__ = (pos__ + 1);
+    }
+  }
+  FnValidateSize__("b", "N", N);
+  data vector[N] b;
+  {
+    array[] real b_flat__;
+    b_flat__ = FnReadData__("b");
+    pos__ = 1;
+    for(sym1__ in 1:N) {
+      b[sym1__] = b_flat__[pos__];
+      pos__ = (pos__ + 1);
+    }
+  } }
+
+log_prob {
+  {
+    {
+      data int a1_1dim__ = (N + 1);
+      FnValidateSize__("a1", "N + 1", a1_1dim__);
+      vector[a1_1dim__] a1;
+      a1 = a0;
+      for(n in 1:N) {
+        a1[(n + 1)] = (a1[n] + b[n]);
+      }
+      target += sum(a1);
+    }
+    {
+      data int a2_1dim__ = (N + 1);
+      FnValidateSize__("a2", "N + 1", a2_1dim__);
+      vector[a2_1dim__] a2;
+      a2 = a0;
+      for(n in 2:N) {
+        a2[n] = (a2[1] + b[n]);
+      }
+      target += sum(a2);
+    }
+    {
+      data int a3_1dim__ = (N + 1);
+      FnValidateSize__("a3", "N + 1", a3_1dim__);
+      vector[a3_1dim__] a3;
+      a3 = a0;
+      for(n in 1:N) {
+        a3[n] = (a3[(N %/% 2)] + b[n]);
+      }
+      target += sum(a3);
+    }
+    {
+      data int a4_1dim__ = (N + 1);
+      FnValidateSize__("a4", "N + 1", a4_1dim__);
+      vector[a4_1dim__] a4;
+      a4 = a0;
+      for(n in 1:N) {
+        a4[n] = a4[1];
+      }
+      target += sum(a4);
+    }
+    {
+      data int a5_1dim__ = (N + 1);
+      FnValidateSize__("a5", "N + 1", a5_1dim__);
+      vector[a5_1dim__] a5;
+      a5 = a0;
+      int j5;
+      j5 = 1;
+      for(n in 1:(N - 1)) {
+        a5[n] = (a5[j5] + b[n]);
+        j5 = (j5 + 1);
+      }
+      target += sum(a5);
+    }
+    {
+      data int a6_1dim__ = (N + k);
+      FnValidateSize__("a6", "N + k", a6_1dim__);
+      vector[a6_1dim__] a6;
+      a6 = a0k;
+      for(n in 1:N) {
+        a6[n] = (a6[(n + k)] + b[n]);
+      }
+      target += sum(a6);
+    }
+  } }
+
+rev_log_prob {
+  {
+    {
+      data int a1_1dim__ = (N + 1);
+      FnValidateSize__("a1", "N + 1", a1_1dim__);
+      vector[a1_1dim__] a1;
+      a1 = a0;
+      for(n in 1:N) {
+        a1[(n + 1)] = (a1[n] + b[n]);
+      }
+      target += sum(a1);
+    }
+    {
+      data int a2_1dim__ = (N + 1);
+      FnValidateSize__("a2", "N + 1", a2_1dim__);
+      vector[a2_1dim__] a2;
+      a2 = a0;
+      for(n in 2:N) {
+        a2[n] = (a2[1] + b[n]);
+      }
+      target += sum(a2);
+    }
+    {
+      data int a3_1dim__ = (N + 1);
+      FnValidateSize__("a3", "N + 1", a3_1dim__);
+      vector[a3_1dim__] a3;
+      a3 = a0;
+      for(n in 1:N) {
+        a3[n] = (a3[(N %/% 2)] + b[n]);
+      }
+      target += sum(a3);
+    }
+    {
+      data int a4_1dim__ = (N + 1);
+      FnValidateSize__("a4", "N + 1", a4_1dim__);
+      vector[a4_1dim__] a4;
+      a4 = a0;
+      for(n in 1:N) {
+        a4[n] = a4[1];
+      }
+      target += sum(a4);
+    }
+    {
+      data int a5_1dim__ = (N + 1);
+      FnValidateSize__("a5", "N + 1", a5_1dim__);
+      vector[a5_1dim__] a5;
+      a5 = a0;
+      int j5;
+      j5 = 1;
+      for(n in 1:(N - 1)) {
+        a5[n] = (a5[j5] + b[n]);
+        j5 = (j5 + 1);
+      }
+      target += sum(a5);
+    }
+    {
+      data int a6_1dim__ = (N + k);
+      FnValidateSize__("a6", "N + k", a6_1dim__);
+      vector[a6_1dim__] a6;
+      a6 = a0k;
+      for(n in 1:N) {
+        a6[n] = (a6[(n + k)] + b[n]);
+      }
+      target += sum(a6);
+    }
+  } }
+
+generate_quantities {
+  if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(PNot__(emit_generated_quantities__)) {
+    return;
+  } }
+
+[exit 0]

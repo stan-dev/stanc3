@@ -109,6 +109,83 @@ let%expect_test "Variable dependency example" =
       (4 5 9 11 13 14 16)
     |}]
 
+(* ---- Refined reaching-definition edges (L4) ---- *)
+
+(** For every node whose immediate dependencies shrink under [refine], print the
+    node, the dependencies dropped, and the ones kept. *)
+let print_refined_edges prog =
+  let map = log_prob_build_dep_info_map (Test_utils.mir_of_string prog) in
+  LabelMap.iter map ~f:(fun ~key:label ~data:_ ->
+      let plain = node_immediate_dependencies map label in
+      let refined = node_immediate_dependencies map ~refine:true label in
+      if not (Set.Poly.equal plain refined) then
+        Fmt.pr "%d: dropped %a, kept %a@." label
+          Fmt.(list ~sep:(any " ") int)
+          (Set.Poly.to_list (Set.Poly.diff plain refined))
+          Fmt.(list ~sep:(any " ") int)
+          (Set.Poly.to_list refined));
+  let all = all_node_dependencies map in
+  let all_refined = all_node_dependencies ~refine:true map in
+  if LabelMap.equal ~cmp:Set.Poly.equal all all_refined then
+    print_endline "transitive dependencies: unchanged"
+  else print_endline "transitive dependencies: changed"
+
+let%expect_test "refine: distinct literal subscripts are independent" =
+  print_refined_edges
+    {|
+      data { real y; real s; }
+      parameters { real a; real b; }
+      model {
+        vector[2] theta;
+        theta[1] = a;
+        theta[2] = b;
+        y ~ normal(theta[1], s);
+        y ~ normal(theta[2], s);
+      }
+    |};
+  [%expect
+    {|
+    8: dropped 7, kept 1 5 6
+    9: dropped 6, kept 1 5 7
+    transitive dependencies: changed
+    |}]
+
+let%expect_test "refine: same-iteration definitions inside a loop" =
+  print_refined_edges
+    {|
+      data { int N; vector[N] x; vector[N] y; }
+      parameters { real mu; real s; }
+      model {
+        vector[N] muj; vector[N] m;
+        for (n in 1:N) {
+          muj[n] = mu + x[n];
+          m[n] = muj[n] * 2;
+          y[n] ~ normal(m[n], s);
+        }
+      }
+    |};
+  [%expect {|
+    transitive dependencies: unchanged
+    |}]
+
+let%expect_test "refine: whole-variable and confused accesses are kept" =
+  print_refined_edges
+    {|
+      data { int N; vector[N] x; array[N] int<lower=1, upper=N> idx; }
+      parameters { real mu; }
+      model {
+        vector[N] v; real t;
+        for (n in 1:N) {
+          v[idx[n]] = mu + x[n];
+          t = v[n];
+        }
+        target += t + sum(v);
+      }
+    |};
+  [%expect {|
+    transitive dependencies: unchanged
+    |}]
+
 let uninitialized_var_example =
   Test_utils.mir_of_string
     {|

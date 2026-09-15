@@ -15,6 +15,9 @@ type node_dep_info =
   ; parents: label Set.Poly.t
   ; reaching_defn_entry: reaching_defn Set.Poly.t
   ; reaching_defn_exit: reaching_defn Set.Poly.t
+  ; accesses: access list
+        (** the node's own reads and writes, classified with respect to the
+            innermost enclosing loop (L4, §7.7) *)
   ; meta: Location_span.t }
 
 (** Find all of the reaching definitions of a variable in an RD set *)
@@ -22,17 +25,50 @@ let reaching_defn_lookup (rds : reaching_defn Set.Poly.t) (var : vexpr) :
     label Set.Poly.t =
   Set.Poly.map (Set.Poly.filter rds ~f:(fun (var', _) -> var' = var)) ~f:snd
 
+(** With [refine], a reaching definition [(v, l')] of a right-hand-side variable
+    [v] at [label] is dropped when every write access to [v] at [l'] is
+    [Independent] of every read access to [v] at [label] (§7.7): e.g.
+    [theta[2] = b] does not reach [normal(theta[1], s)]. A definition whose node
+    has no recorded write to [v] (a definition from outside the analysed
+    statement), or a node with no recorded read, is always kept. The per-access
+    subscripts are relative to each node's own loop, which is sound for this
+    purpose: [access_dependence] only answers [Independent] when no pair of
+    integer iteration values can make the subscripts coincide. *)
+let refined_reaching_defn_lookup
+    (statement_map :
+      ((Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) LabelMap.t)
+    (info : node_dep_info) (v : string) : label Set.Poly.t =
+  let defs = reaching_defn_lookup info.reaching_defn_entry (VVar v) in
+  let reads =
+    List.filter info.accesses ~f:(fun a ->
+        access_reads a && String.equal a.var v) in
+  Set.Poly.filter defs ~f:(fun def_label ->
+      match LabelMap.find_opt def_label statement_map with
+      | None -> true
+      | Some (_, def_info) -> (
+          let writes =
+            List.filter def_info.accesses ~f:(fun a ->
+                access_writes a && String.equal a.var v) in
+          match (writes, reads) with
+          | [], _ | _, [] -> true
+          | writes, reads ->
+              List.exists writes ~f:(fun w ->
+                  List.exists reads ~f:(fun r ->
+                      match Loop_dependence.access_dependence w r with
+                      | Independent -> false
+                      | Dependent _ -> true))))
+
 let node_immediate_dependencies
     (statement_map :
       ((Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) LabelMap.t)
-    ?(blockers : vexpr Set.Poly.t = Set.Poly.empty) (label : label) :
-    label Set.Poly.t =
+    ?(blockers : vexpr Set.Poly.t = Set.Poly.empty) ?(refine = false)
+    (label : label) : label Set.Poly.t =
   let stmt, info = LabelMap.find label statement_map in
   let rhs_set = Set.Poly.map (stmt_rhs_var_set stmt) ~f:fst in
-  let rhs_deps =
-    Set.Poly.union_map
-      (Set.Poly.diff rhs_set blockers)
-      ~f:(reaching_defn_lookup info.reaching_defn_entry) in
+  let lookup (VVar v as var) =
+    if refine then refined_reaching_defn_lookup statement_map info v
+    else reaching_defn_lookup info.reaching_defn_entry var in
+  let rhs_deps = Set.Poly.union_map (Set.Poly.diff rhs_set blockers) ~f:lookup in
   Set.Poly.union info.parents rhs_deps
 
 (* This is doing an explicit graph traversal with edges defined by
@@ -74,13 +110,13 @@ let node_vars_dependencies
    fixed-point. Since it's updating the dependencies for the whole graph at a
    time, it should be more efficient than doing a graph traversal for each
    node. *)
-let all_node_dependencies
+let all_node_dependencies ?(refine = false)
     (statement_map :
       ((Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) LabelMap.t) :
     label Set.Poly.t LabelMap.t =
   let immediate_map =
     LabelMap.mapi statement_map ~f:(fun label _ ->
-        node_immediate_dependencies statement_map label) in
+        node_immediate_dependencies statement_map ~refine label) in
   let step_node label m =
     let immediate = LabelMap.find label immediate_map in
     let updated =
@@ -193,6 +229,54 @@ let mir_uninitialized_variables (mir : Program.Typed.t) :
                    (Set.Poly.union arg_vars globals)
                    fdbody))) ]
 
+(** The own accesses of every node of a statement map (substatements are their
+    own nodes), classified with respect to the innermost enclosing [For]: its
+    loop variable, and the names assigned or declared anywhere in its body.
+    Nodes outside any loop have no loop variable, so their subscripts are
+    [Invariant] or [Varying]. *)
+let node_accesses_map
+    (statement_map : ((Expr.Typed.t, label) Stmt.Pattern.t * 'm) LabelMap.t) :
+    access list LabelMap.t =
+  let child_labels pattern =
+    Stmt.Pattern.fold (fun acc _ -> acc) (fun acc l -> l :: acc) [] pattern
+  in
+  let parent_of =
+    LabelMap.fold statement_map ~init:LabelMap.empty
+      ~f:(fun ~key ~data:(pattern, _) acc ->
+        List.fold_left (child_labels pattern) ~init:acc ~f:(fun acc child ->
+            LabelMap.add acc ~key:child ~data:key)) in
+  let own_written (pattern : (Expr.Typed.t, label) Stmt.Pattern.t) =
+    match pattern with
+    | Assignment (lhs, _, _) ->
+        Set.Poly.singleton (Stmt.Helpers.lhs_variable lhs)
+    | Decl {decl_id; _} -> Set.Poly.singleton decl_id
+    | For {loopvar; _} -> Set.Poly.singleton loopvar
+    | TargetPE _ | JacobianPE _ | NRFunApp _ | Break | Continue | Return _
+     |Skip | IfElse _ | While _ | Profile _ | Block _ | SList _ ->
+        Set.Poly.empty in
+  let rec subtree_written label =
+    let pattern, _ = LabelMap.find label statement_map in
+    List.fold_left (child_labels pattern) ~init:(own_written pattern)
+      ~f:(fun acc child -> Set.Poly.union acc (subtree_written child)) in
+  let rec enclosing_loop label =
+    match LabelMap.find_opt label parent_of with
+    | None -> None
+    | Some parent -> (
+        match fst (LabelMap.find parent statement_map) with
+        | For {loopvar; _} -> Some (loopvar, parent)
+        | Assignment _ | TargetPE _ | JacobianPE _ | NRFunApp _ | Break
+         |Continue | Return _ | Skip | IfElse _ | While _ | Profile _
+         |Block _ | SList _ | Decl _ ->
+            enclosing_loop parent) in
+  LabelMap.mapi statement_map ~f:(fun label (pattern, _) ->
+      let loopvar, written_vars =
+        match enclosing_loop label with
+        | Some (loopvar, for_label) -> (loopvar, subtree_written for_label)
+        | None -> ("", Set.Poly.empty) in
+      Loop_dependence.accesses_of_pattern ~loopvar ~written_vars ~label
+        ~sub:(fun _ -> [])
+        pattern)
+
 let build_dep_info_map (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
     ((Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) LabelMap.t =
   let statement_map =
@@ -202,6 +286,7 @@ let build_dep_info_map (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
       stmt in
   let _, preds, parents = build_cf_graphs statement_map in
   let rd_map = mir_reaching_definitions mir stmt in
+  let accesses = node_accesses_map statement_map in
   LabelMap.mapi statement_map ~f:(fun label (stmt, meta) ->
       let rds = LabelMap.find label rd_map in
       ( stmt
@@ -209,6 +294,7 @@ let build_dep_info_map (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
         ; parents= LabelMap.find label parents
         ; reaching_defn_entry= rds.entry
         ; reaching_defn_exit= rds.exit
+        ; accesses= LabelMap.find label accesses
         ; meta } ))
 
 let log_prob_build_dep_info_map (mir : Program.Typed.t) :

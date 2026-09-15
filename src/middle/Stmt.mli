@@ -159,6 +159,12 @@ module Helpers : sig
 
   val lhs_indices : 'e Pattern.lvalue -> 'e Index.t list
 
+  val assigned_or_declared_variables : Located.t -> string Std.Set.Poly.t
+  (** The names a statement assigns or declares anywhere inside it: the base
+      variable of every assignment's left-hand side, every declared name, and
+      the loop variable of every (nested) [For]. [target] increments are not
+      assignments to a name. *)
+
   val lhs_variable : 'e Pattern.lvalue -> string
   (** This gets the innermost name of the variable. It differs from
       [get_lhs_name] in that tuple projections do not add their indices here. *)

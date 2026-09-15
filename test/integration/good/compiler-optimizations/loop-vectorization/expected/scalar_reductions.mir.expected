@@ -1,0 +1,381 @@
+  $ stanc -fvectorize-loops --debug-optimized-mir-pretty scalar_reductions.stan
+functions {
+  real normal_loop1_lpdf(vector y, vector mu, real sigma) {
+    {
+      real lp1;
+      lp1 = promote(0, real, var);
+      lp1 = (lp1 + normal_lpdf(y[1:num_elements(y)], mu[1:num_elements(y)],
+                               sigma));
+      return lp1;
+    }
+  } }
+
+input_vars {
+  int N;
+  int K;
+  vector[N] x;
+  vector[N] y;
+  vector[N] a;
+  vector[N] b;
+  vector[N] w;
+  array[vector[K], N] rows; }
+
+prepare_data {
+  data int pos__;
+  pos__ = 1;
+  data int N;
+  N = FnReadData__("N")[1];
+  (FnCheck(trans(Lower 2))(var_name N)(var N))__(2);
+  data int K;
+  K = FnReadData__("K")[1];
+  (FnCheck(trans(Lower 1))(var_name K)(var K))__(1);
+  FnValidateSize__("x", "N", N);
+  data vector[N] x;
+  {
+    array[] real x_flat__;
+    x_flat__ = FnReadData__("x");
+    pos__ = 1;
+    for(sym1__ in 1:N) {
+      x[sym1__] = x_flat__[pos__];
+      pos__ = (pos__ + 1);
+    }
+  }
+  FnValidateSize__("y", "N", N);
+  data vector[N] y;
+  {
+    array[] real y_flat__;
+    y_flat__ = FnReadData__("y");
+    pos__ = 1;
+    for(sym1__ in 1:N) {
+      y[sym1__] = y_flat__[pos__];
+      pos__ = (pos__ + 1);
+    }
+  }
+  FnValidateSize__("a", "N", N);
+  data vector[N] a;
+  {
+    array[] real a_flat__;
+    a_flat__ = FnReadData__("a");
+    pos__ = 1;
+    for(sym1__ in 1:N) {
+      a[sym1__] = a_flat__[pos__];
+      pos__ = (pos__ + 1);
+    }
+  }
+  FnValidateSize__("b", "N", N);
+  data vector[N] b;
+  {
+    array[] real b_flat__;
+    b_flat__ = FnReadData__("b");
+    pos__ = 1;
+    for(sym1__ in 1:N) {
+      b[sym1__] = b_flat__[pos__];
+      pos__ = (pos__ + 1);
+    }
+  }
+  FnValidateSize__("w", "N", N);
+  data vector[N] w;
+  {
+    array[] real w_flat__;
+    w_flat__ = FnReadData__("w");
+    pos__ = 1;
+    for(sym1__ in 1:N) {
+      w[sym1__] = w_flat__[pos__];
+      pos__ = (pos__ + 1);
+    }
+  }
+  (FnCheck(trans(Lower 0))(var_name w)(var w))__(0);
+  FnValidateSize__("rows", "N", N);
+  FnValidateSize__("rows", "K", K);
+  data array[vector[K], N] rows;
+  {
+    array[] real rows_flat__;
+    rows_flat__ = FnReadData__("rows");
+    pos__ = 1;
+    for(sym1__ in 1:K) {
+      for(sym2__ in 1:N) {
+        rows[sym2__, sym1__] = rows_flat__[pos__];
+        pos__ = (pos__ + 1);
+      }
+    }
+  } }
+
+log_prob {
+  real
+    alpha = (FnReadParam(constrain Identity)(dims())(mem_pattern AoS))__(
+    );
+  real beta = (FnReadParam(constrain Identity)(dims())(mem_pattern AoS))__();
+  real
+    sigma = (FnReadParam(constrain(Lower 0))(dims())(mem_pattern AoS))__(
+    );
+  {
+    {
+      FnValidateSize__("mu1", "N", N);
+      vector[N] mu1;
+      mu1 = (alpha + (beta * x));
+      target += normal_loop1_lpdf(y, mu1, sigma);
+    }
+    {
+      real lp2;
+      lp2 = promote(0, real, var);
+      lp2 = (lp2 + normal_lpdf(y[1:N], (alpha + (beta * x[1:N])), sigma));
+      target += lp2;
+    }
+    {
+      real total3;
+      total3 = promote(0, real, var);
+      total3 = (total3 + sum(a[1:N]));
+      target += total3;
+    }
+    {
+      real dot4;
+      dot4 = promote(0, real, var);
+      dot4 = (dot4 + sum((a[1:N] .* b[1:N])));
+      target += (dot4 * alpha);
+    }
+    {
+      int count5;
+      count5 = 0;
+      count5 = (count5 + ((N - (1 - 1)) * 1));
+      target += (promote(count5, real, data) * alpha);
+    }
+    {
+      FnValidateSize__("mu6", "N", N);
+      vector[N] mu6;
+      real s6;
+      s6 = promote(0, real, var);
+      mu6[1:N] = (alpha + (beta * x[1:N]));
+      s6 = (s6 + sum(mu6[1:N]));
+      s6 = (s6 + sum(w[1:N]));
+      target += s6;
+    }
+    {
+      real neg7;
+      neg7 = promote(0, real, var);
+      neg7 = (neg7 - sum(a[1:N]));
+      target += neg7;
+    }
+    {
+      FnValidateSize__("v8", "N", N);
+      vector[N] v8;
+      v8 = w;
+      real s8;
+      s8 = promote(0, real, var);
+      for(n in 2:N) v8[n] = (v8[(n - 1)] + w[n]);
+      s8 = (s8 + sum(v8[2:N]));
+      target += (sum(v8) + s8);
+    }
+    {
+      real s9;
+      s9 = promote(0, real, var);
+      FnValidateSize__("z9", "N", N);
+      vector[N] z9;
+      for(n in 1:N) {
+        s9 = (s9 + a[n]);
+        z9[n] = s9;
+      }
+      target += sum(z9);
+    }
+    {
+      real s10;
+      s10 = promote(1, real, var);
+      for(n in 1:N) {
+        s10 = (s10 + (s10 * a[n]));
+      }
+      target += s10;
+    }
+    {
+      real s11;
+      s11 = promote(0, real, var);
+      for(n in 1:N) {
+        if((a[n] > 0)) {
+          s11 = (s11 + a[n]);
+        }
+      }
+      target += s11;
+    }
+    {
+      real lp12;
+      lp12 = promote(0, real, var);
+      for(n in 1:N) {
+        lp12 = (lp12 + (normal_lpdf(y[n], alpha, sigma) + log(w[n])));
+      }
+      target += lp12;
+    }
+    {
+      FnValidateSize__("acc13", "K", K);
+      vector[K] acc13;
+      acc13 = rep_vector(promote(0, real, data), K);
+      for(n in 1:N) {
+        acc13 = (acc13 + rows[n]);
+      }
+      target += sum(acc13);
+    }
+    {
+      real prod14;
+      prod14 = promote(1, real, var);
+      for(n in 1:N) {
+        prod14 = (prod14 * a[n]);
+      }
+      target += prod14;
+    }
+  } }
+
+rev_log_prob {
+  real
+    alpha = (FnReadParam(constrain Identity)(dims())(mem_pattern AoS))__(
+    );
+  real beta = (FnReadParam(constrain Identity)(dims())(mem_pattern AoS))__();
+  real
+    sigma = (FnReadParam(constrain(Lower 0))(dims())(mem_pattern AoS))__(
+    );
+  {
+    {
+      FnValidateSize__("mu1", "N", N);
+      vector[N] mu1;
+      mu1 = (alpha + (beta * x));
+      target += normal_loop1_lpdf(y, mu1, sigma);
+    }
+    {
+      real lp2;
+      lp2 = promote(0, real, var);
+      lp2 = (lp2 + normal_lpdf(y[1:N], (alpha + (beta * x[1:N])), sigma));
+      target += lp2;
+    }
+    {
+      real total3;
+      total3 = promote(0, real, var);
+      total3 = (total3 + sum(a[1:N]));
+      target += total3;
+    }
+    {
+      real dot4;
+      dot4 = promote(0, real, var);
+      dot4 = (dot4 + sum((a[1:N] .* b[1:N])));
+      target += (dot4 * alpha);
+    }
+    {
+      int count5;
+      count5 = 0;
+      count5 = (count5 + ((N - (1 - 1)) * 1));
+      target += (promote(count5, real, data) * alpha);
+    }
+    {
+      FnValidateSize__("mu6", "N", N);
+      vector[N] mu6;
+      real s6;
+      s6 = promote(0, real, var);
+      mu6[1:N] = (alpha + (beta * x[1:N]));
+      s6 = (s6 + sum(mu6[1:N]));
+      s6 = (s6 + sum(w[1:N]));
+      target += s6;
+    }
+    {
+      real neg7;
+      neg7 = promote(0, real, var);
+      neg7 = (neg7 - sum(a[1:N]));
+      target += neg7;
+    }
+    {
+      FnValidateSize__("v8", "N", N);
+      vector[N] v8;
+      v8 = w;
+      real s8;
+      s8 = promote(0, real, var);
+      for(n in 2:N) v8[n] = (v8[(n - 1)] + w[n]);
+      s8 = (s8 + sum(v8[2:N]));
+      target += (sum(v8) + s8);
+    }
+    {
+      real s9;
+      s9 = promote(0, real, var);
+      FnValidateSize__("z9", "N", N);
+      vector[N] z9;
+      for(n in 1:N) {
+        s9 = (s9 + a[n]);
+        z9[n] = s9;
+      }
+      target += sum(z9);
+    }
+    {
+      real s10;
+      s10 = promote(1, real, var);
+      for(n in 1:N) {
+        s10 = (s10 + (s10 * a[n]));
+      }
+      target += s10;
+    }
+    {
+      real s11;
+      s11 = promote(0, real, var);
+      for(n in 1:N) {
+        if((a[n] > 0)) {
+          s11 = (s11 + a[n]);
+        }
+      }
+      target += s11;
+    }
+    {
+      real lp12;
+      lp12 = promote(0, real, var);
+      for(n in 1:N) {
+        lp12 = (lp12 + (normal_lpdf(y[n], alpha, sigma) + log(w[n])));
+      }
+      target += lp12;
+    }
+    {
+      FnValidateSize__("acc13", "K", K);
+      vector[K] acc13;
+      acc13 = rep_vector(promote(0, real, data), K);
+      for(n in 1:N) {
+        acc13 = (acc13 + rows[n]);
+      }
+      target += sum(acc13);
+    }
+    {
+      real prod14;
+      prod14 = promote(1, real, var);
+      for(n in 1:N) {
+        prod14 = (prod14 * a[n]);
+      }
+      target += prod14;
+    }
+  } }
+
+generate_quantities {
+  data real
+    alpha = (FnReadParam(constrain Identity)(dims())(mem_pattern AoS))__(
+    );
+  data real
+    beta = (FnReadParam(constrain Identity)(dims())(mem_pattern AoS))__(
+    );
+  data real
+    sigma = (FnReadParam(constrain(Lower 0))(dims())(mem_pattern AoS))__(
+    );
+  (FnWriteParam(unconstrain_opt())(var alpha))__();
+  (FnWriteParam(unconstrain_opt())(var beta))__();
+  (FnWriteParam(unconstrain_opt())(var sigma))__();
+  if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(PNot__(emit_generated_quantities__)) {
+    return;
+  } }
+
+transform_inits {
+  real alpha;
+  alpha = FnReadData__("alpha")[1];
+  (FnWriteParam(unconstrain_opt(Identity))(var alpha))__();
+  real beta;
+  beta = FnReadData__("beta")[1];
+  (FnWriteParam(unconstrain_opt(Identity))(var beta))__();
+  real sigma;
+  sigma = FnReadData__("sigma")[1];
+  (FnWriteParam(unconstrain_opt((Lower 0)))(var sigma))__(); }
+
+output_vars {
+  parameters real alpha; //real
+  parameters real beta; //real
+  parameters real sigma; //real
+}
+[exit 0]

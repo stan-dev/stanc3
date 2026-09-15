@@ -33,9 +33,14 @@ and debug_settings =
   ; print_transformed_mir: debug_options
   ; print_optimized_mir: debug_options
   ; print_mem_patterns: bool
+  ; print_loop_vectorization: bool
+        (** print why each statement of each loop was or was not vectorized *)
   ; force_soa: bool option
         (** if None, do nothing. If Some true, force on, if Some false, force
             off *)
+  ; force_vectorize_loops: bool option
+        (** same as [force_soa], for the [vectorize_loops] pass
+            ([-fvectorize-loops] / [-fno-vectorize-loops]) *)
   ; print_lir: bool
   ; debug_generate_data: bool
   ; debug_generate_inits: bool

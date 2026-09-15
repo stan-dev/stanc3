@@ -25,16 +25,20 @@ type node_dep_info =
   ; parents: label Set.Poly.t
   ; reaching_defn_entry: reaching_defn Set.Poly.t
   ; reaching_defn_exit: reaching_defn Set.Poly.t
+  ; accesses: access list
   ; meta: Location_span.t }
 
 val node_immediate_dependencies :
      ((Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) LabelMap.t
   -> ?blockers:vexpr Set.Poly.t
+  -> ?refine:bool
   -> label
   -> label Set.Poly.t
 (** Given dependency information for each node, find the 'immediate'
     dependencies of a node, where 'immediate' means the first-degree control
-    flow parents and the reachable definitions of RHS variables. *)
+    flow parents and the reachable definitions of RHS variables. With [refine]
+    (default [false]) definitions whose subscripts can never name an element the
+    node reads are dropped; see the definition. *)
 
 val node_dependencies :
      ((Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) LabelMap.t
@@ -68,7 +72,8 @@ val log_prob_build_dep_info_map :
     program *)
 
 val all_node_dependencies :
-     ((Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) LabelMap.t
+     ?refine:bool
+  -> ((Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) LabelMap.t
   -> label Set.Poly.t LabelMap.t
 (** Given dependency information for each node, find all of the dependencies of
     all nodes, effectively building the dependency graph.
