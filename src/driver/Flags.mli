@@ -36,6 +36,9 @@ and debug_settings =
   ; force_soa: bool option
         (** if None, do nothing. If Some true, force on, if Some false, force
             off *)
+  ; force_vectorize_loops: bool option
+        (** same as [force_soa], for the [vectorize_loops] pass
+            ([-fvectorize-loops] / [-fno-vectorize-loops]) *)
   ; print_lir: bool
   ; debug_generate_data: bool
   ; debug_generate_inits: bool

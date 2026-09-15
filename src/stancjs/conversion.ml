@@ -130,6 +130,7 @@ let process_flags name code (flags : 'a Js.opt) includes :
                    else Off)
               ; print_mem_patterns= is_flag_set "debug-mem-patterns"
               ; force_soa= None
+              ; force_vectorize_loops= None
               ; print_lir= is_flag_set "debug-lir"
               ; debug_print_factor_graph= is_flag_set "debug-print-factor-graph"
               ; debug_generate_data= is_flag_set "debug-generate-data"

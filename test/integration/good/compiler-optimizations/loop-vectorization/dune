@@ -1,0 +1,44 @@
+; Loop-vectorization corpus: loops from the GCC, LLVM and TSVC test suites
+; (design-docs/active/vectorize-loop-fission.md §7.8.2, §13.3).
+;
+; mir.expected shows the vectorize_loops pass alone (-fvectorize-loops on top
+; of O0, so raw [1:N] slices survive: no partial evaluation runs).
+; cpp.expected shows its interaction with the SoA pass.
+
+(rule
+ (targets mir.output)
+ (deps
+  (package stanc)
+  (:stanfiles
+   (glob_files *.stan)))
+ (action
+  (with-stdout-to
+   %{targets}
+   (run
+    %{project_root}/test/integration/run_bin_on_args.exe
+    "%{bin:stanc} -fvectorize-loops --debug-optimized-mir-pretty"
+    %{stanfiles}))))
+
+(rule
+ (alias runtest)
+ (action
+  (diff mir.expected mir.output)))
+
+(rule
+ (targets cpp.output)
+ (deps
+  (package stanc)
+  (:stanfiles
+   (glob_files *.stan)))
+ (action
+  (with-stdout-to
+   %{targets}
+   (run
+    %{project_root}/test/integration/run_bin_on_args.exe
+    "%{bin:stanc} -fvectorize-loops -fsoa --print-cpp"
+    %{stanfiles}))))
+
+(rule
+ (alias runtest)
+ (action
+  (diff cpp.expected cpp.output)))

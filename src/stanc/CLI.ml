@@ -327,14 +327,39 @@ module Debug_Options = struct
        factor graph for the model(s) implemented in the Stan program." in
     Arg.(value & flag & info ["debug-print-factor-graph"] ~doc ~docs)
 
-  let force_soa =
+  (** One [-f] occurrence. Each pass that can be forced on or off independently
+      of the [--O*] level has its own constructor. *)
+  type force_setting = Force_soa of bool | Force_vectorize_loops of bool
+
+  let force_settings =
     let doc =
       "Debugging features. Valid values: $(b,-fsoa) to force on the Struct of \
-       Arrays optimization. $(b,-fno-soa) to force it off." in
+       Arrays optimization, $(b,-fno-soa) to force it off; \
+       $(b,-fvectorize-loops) to force on the loop vectorization pass, \
+       $(b,-fno-vectorize-loops) to force it off. May be given more than once; \
+       the last occurrence of each setting wins." in
     Arg.(
       value
-      & opt (some @@ enum [("soa", true); ("no-soa", false)]) None
+      & opt_all
+          (enum
+             [ ("soa", Force_soa true); ("no-soa", Force_soa false)
+             ; ("vectorize-loops", Force_vectorize_loops true)
+             ; ("vectorize_loops", Force_vectorize_loops true)
+             ; ("no-vectorize-loops", Force_vectorize_loops false)
+             ; ("no-vectorize_loops", Force_vectorize_loops false) ])
+          []
       & info ["f"] ~doc ~docv:"SETTING" ~docs)
+
+  (** Fold the [-f] occurrences into one [bool option] per pass. *)
+  let force_soa_of_settings settings =
+    List.fold_left settings ~init:None ~f:(fun acc -> function
+      | Force_soa b -> Some b
+      | Force_vectorize_loops _ -> acc)
+
+  let force_vectorize_loops_of_settings settings =
+    List.fold_left settings ~init:None ~f:(fun acc -> function
+      | Force_vectorize_loops b -> Some b
+      | Force_soa _ -> acc)
 end
 
 (** Flags common to all compiler drivers and those specific to the command line
@@ -372,7 +397,7 @@ module Conversion = struct
     and+ print_transformed_mir = debug_transformed_mir
     and+ print_optimized_mir = debug_optimized_mir
     and+ print_mem_patterns = debug_mem_patterns
-    and+ force_soa
+    and+ force_settings
     and+ print_lir = debug_lir
     and+ debug_generate_data
     and+ debug_generate_inits
@@ -385,7 +410,8 @@ module Conversion = struct
       ; print_transformed_mir
       ; print_optimized_mir
       ; print_mem_patterns
-      ; force_soa
+      ; force_soa= force_soa_of_settings force_settings
+      ; force_vectorize_loops= force_vectorize_loops_of_settings force_settings
       ; print_lir
       ; debug_generate_data
       ; debug_generate_inits

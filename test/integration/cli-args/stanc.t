@@ -192,7 +192,10 @@ Show help
   
          -f SETTING
              Debugging features. Valid values: -fsoa to force on the Struct of
-             Arrays optimization. -fno-soa to force it off.
+             Arrays optimization, -fno-soa to force it off; -fvectorize-loops
+             to force on the loop vectorization pass, -fno-vectorize-loops to
+             force it off. May be given more than once; the last occurrence of
+             each setting wins.
   
   EXIT STATUS
          0   on success.
@@ -252,8 +255,9 @@ Error when a folder is passed
 Error when nonsense argument is passed
   $ stanc -fno-generated-quantities
   Usage: %%NAME%% [--help] [OPTION]… [MODEL_FILE]
-  %%NAME%%: option '-f': invalid value 'no-generated-quantities', expected
-            either 'soa' or 'no-soa'
+  %%NAME%%: option '-f': invalid value 'no-generated-quantities', expected one
+            of 'soa', 'no-soa', 'vectorize-loops', 'vectorize_loops',
+            'no-vectorize-loops' or 'no-vectorize_loops'
   [124]
 
 Error when unreadable file is passed

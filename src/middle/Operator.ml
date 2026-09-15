@@ -1,7 +1,5 @@
 (** Utilities for Stan's built in operators *)
 
-open Std
-
 type t =
   | Plus
   | PPlus
@@ -58,16 +56,35 @@ let pp ppf = function
   | PNot -> Fmt.pf ppf "!"
   | Transpose -> Fmt.pf ppf "'"
 
-open Sexplib0
+(** The name under which an operator application is stored in the MIR, as a
+    [StanLib] call: the constructor name followed by [__], e.g. [Plus__]. *)
+let to_string x = Sexplib0.Sexp.to_string (sexp_of_t x) ^ "__"
 
-let to_string x = Sexp.to_string (sexp_of_t x) ^ "__"
-
-let of_string_opt x =
-  let open Option.Syntax in
-  try
-    let+ ssexp = String.chop_suffix ~suffix:"__" x in
-    let sexp = Sexp_conv.sexp_of_string ssexp in
-    t_of_sexp sexp
-  with
-  | Sexp_conv.Of_sexp_error _ -> None
-  | Invalid_argument _ -> None
+(** Inverse of [to_string]: [Some op] iff [name] is the MIR name of a built-in
+    operator. Written as an explicit table so the encoding is visible here and
+    nowhere else. *)
+let of_string_opt = function
+  | "Plus__" -> Some Plus
+  | "PPlus__" -> Some PPlus
+  | "Minus__" -> Some Minus
+  | "PMinus__" -> Some PMinus
+  | "Times__" -> Some Times
+  | "Divide__" -> Some Divide
+  | "IntDivide__" -> Some IntDivide
+  | "Modulo__" -> Some Modulo
+  | "LDivide__" -> Some LDivide
+  | "EltTimes__" -> Some EltTimes
+  | "EltDivide__" -> Some EltDivide
+  | "Pow__" -> Some Pow
+  | "EltPow__" -> Some EltPow
+  | "Or__" -> Some Or
+  | "And__" -> Some And
+  | "Equals__" -> Some Equals
+  | "NEquals__" -> Some NEquals
+  | "Less__" -> Some Less
+  | "Leq__" -> Some Leq
+  | "Greater__" -> Some Greater
+  | "Geq__" -> Some Geq
+  | "PNot__" -> Some PNot
+  | "Transpose__" -> Some Transpose
+  | _ -> None

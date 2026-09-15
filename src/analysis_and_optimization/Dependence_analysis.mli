@@ -86,3 +86,32 @@ val mir_uninitialized_variables :
   Program.Typed.t -> (Location_span.t * string) Set.Poly.t
 (** Produce a list of uninitialized variables and their label locations, from
     the flowgraph starting at the given statement *)
+
+(** {1 Loop access model and dependence test}
+
+    Data dependence analysis for one loop level (Kennedy and Allen,
+    {i Optimizing Compilers for Modern Architectures} ch. 2-3; Goff, Kennedy and
+    Tseng, PLDI 1991). See [design-docs/active/vectorize-loop-fission.md]
+    §7.3-7.4. The documentation of each function is on its definition. *)
+
+val classify_subscript :
+     loopvar:string
+  -> written:string Set.Poly.t
+  -> Expr.Typed.t Index.t
+  -> subscript
+(** How one index position varies with the loop over [loopvar]. *)
+
+val stmt_accesses :
+     loopvar:string
+  -> written:string Set.Poly.t
+  -> label:label
+  -> (Expr.Typed.t, Stmt.Located.t) Stmt.Pattern.t
+  -> access list
+(** Every read and write in a statement, in evaluation order. *)
+
+val access_dependence : access -> access -> dependence
+(** The dependence between two accesses to the same variable. *)
+
+val pp_subscript : subscript Fmt.t
+val pp_access : access Fmt.t
+val pp_dependence : dependence Fmt.t

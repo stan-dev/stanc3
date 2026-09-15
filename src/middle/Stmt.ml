@@ -375,6 +375,29 @@ module Helpers = struct
 
   let lhs_indices ((_, idxs) : 'e Pattern.lvalue) : 'e Index.t list = idxs
 
+  (** The names a statement assigns or declares anywhere inside it: the base
+      variable of every assignment's left-hand side, every declared name, and
+      the loop variable of every (nested) [For]. [target] increments are not
+      assignments to a name. *)
+  let rec assigned_or_declared_variables ({pattern; _} : Located.t) :
+      string Set.Poly.t =
+    let here =
+      match pattern with
+      | Assignment ((lbase, _), _, _) ->
+          let rec base = function
+            | Pattern.LVariable v -> v
+            | LTupleProjection ((lb, _), _) -> base lb in
+          Set.Poly.singleton (base lbase)
+      | Decl {decl_id; _} -> Set.Poly.singleton decl_id
+      | For {loopvar; _} -> Set.Poly.singleton loopvar
+      | TargetPE _ | JacobianPE _ | NRFunApp _ | Break | Continue | Return _
+       |Skip | IfElse _ | While _ | Profile _ | Block _ | SList _ ->
+          Set.Poly.empty in
+    Pattern.fold
+      (fun acc _ -> acc)
+      (fun acc s -> Set.Poly.union acc (assigned_or_declared_variables s))
+      here pattern
+
   let rec lhs_variable (lhs : 'e Pattern.lvalue) : string =
     match lhs with
     | LVariable v, _ -> v

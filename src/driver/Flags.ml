@@ -25,6 +25,7 @@ and debug_settings =
   ; print_optimized_mir: debug_options
   ; print_mem_patterns: bool
   ; force_soa: bool option
+  ; force_vectorize_loops: bool option
   ; print_lir: bool
   ; debug_generate_data: bool
   ; debug_generate_inits: bool
@@ -33,15 +34,21 @@ and debug_settings =
 
 and debug_options = Off | Basic | Pretty
 
+(** The optimization settings of the [--O*] level, with the individual passes
+    forced on or off by [-fsoa]/[-fno-soa] and
+    [-fvectorize-loops]/[-fno-vectorize-loops] overridden on top. *)
 let get_optimization_settings
-    {optimization_level; debug_settings= {force_soa; _}; _} =
+    { optimization_level
+    ; debug_settings= {force_soa; force_vectorize_loops; _}
+    ; _ } =
   let base_optims =
     Analysis_and_optimization.Optimize.level_optimizations optimization_level
   in
-  match force_soa with
-  | Some true -> {base_optims with optimize_soa= true}
-  | Some false -> {base_optims with optimize_soa= false}
-  | None -> base_optims
+  let base_optims =
+    Option.value_map force_soa ~default:base_optims ~f:(fun optimize_soa ->
+        {base_optims with optimize_soa}) in
+  Option.value_map force_vectorize_loops ~default:base_optims
+    ~f:(fun vectorize_loops -> {base_optims with vectorize_loops})
 
 let default =
   { optimization_level= Analysis_and_optimization.Optimize.O0
@@ -61,6 +68,7 @@ let default =
       ; print_optimized_mir= Off
       ; print_mem_patterns= false
       ; force_soa= None
+      ; force_vectorize_loops= None
       ; print_lir= false
       ; debug_generate_data= false
       ; debug_generate_inits= false
