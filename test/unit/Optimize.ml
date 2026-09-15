@@ -3128,8 +3128,8 @@ let%expect_test "lazy code motion name reuse" =
   [%expect
     {|
     log_prob {
-      real lcm_sym7__;
-      data array[] int lcm_sym6__;
+      data array[] int lcm_sym7__;
+      real lcm_sym6__;
       int lcm_sym5__;
       data int lcm_sym4__;
       int lcm_sym3__;
@@ -3146,8 +3146,7 @@ let%expect_test "lazy code motion name reuse" =
         {
           matrix[2, 3] vs;
           for(sym1__ in 1:rows(vs)) {
-            lcm_sym6__ = vs[sym1__];
-            lcm_sym5__ = FnLength__(lcm_sym6__);
+            lcm_sym5__ = FnLength__(vs[sym1__]);
             {
               for(sym2__ in 1:lcm_sym5__) {
                 {
