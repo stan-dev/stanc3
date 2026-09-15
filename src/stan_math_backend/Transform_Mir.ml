@@ -255,9 +255,8 @@ let rec var_context_read_inside_tuple enclosing_tuple_name origin_type
     { var with
       meta=
         { var.meta with
-          type_= origin_type
-        ; adlevel= UnsizedType.fill_adtype_for_type DataOnly origin_type } }
-  in
+          type_= flat_type
+        ; adlevel= UnsizedType.fill_adtype_for_type DataOnly flat_type } } in
   let type_size =
     Expr.Helpers.(
       binop (variable enclosing_tuple_pos) Plus (SizedType.io_size st)) in
@@ -836,12 +835,13 @@ let param_serializer_write ?(unconstrain = false)
             (FnWriteParam {unconstrain_opt= None; var})
             [] Location_span.empty ] in
   let decl_var =
+    let type_ = SizedType.to_unsized out_constrained_st in
     { Expr.pattern= Var decl_id
     ; meta=
         Expr.Typed.Meta.
           { loc= Location_span.empty
-          ; type_= SizedType.to_unsized out_constrained_st
-          ; adlevel= DataOnly } } in
+          ; type_
+          ; adlevel= UnsizedType.fill_adtype_for_type DataOnly type_ } } in
   write (decl_var, out_constrained_st, out_trans)
 
 (** Generate write instructions for unconstrained types. For scalars, matrices,
@@ -878,12 +878,13 @@ let param_unconstrained_serializer_write
             (FnWriteParam {unconstrain_opt= None; var})
             [] Location_span.empty ] in
   let var =
+    let type_ = SizedType.to_unsized out_constrained_st in
     { Expr.pattern= Var decl_id
     ; meta=
         Expr.Typed.Meta.
           { loc= Location_span.empty
-          ; type_= SizedType.to_unsized out_constrained_st
-          ; adlevel= DataOnly } } in
+          ; type_
+          ; adlevel= UnsizedType.fill_adtype_for_type DataOnly type_ } } in
   write (var, out_constrained_st)
 
 (** Reads in parameters from a var_context, the same way as is done in the

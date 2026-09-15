@@ -334,8 +334,9 @@ let fn_subst_idx m = Index.map (fn_subst_expr m)
 let fn_subst_stmt_base_helper g h b =
   Stmt.Pattern.(
     match b with
-    | Assignment ((x, l), ut, e2) -> Assignment ((x, List.map ~f:h l), ut, g e2)
-    | x -> map g (fun y -> y) x)
+    | Assignment ((x, l), ut, e2) ->
+        Assignment ((map_lbase g x, List.map ~f:h l), ut, g e2)
+    | x -> map g Fun.id x)
 
 let fn_subst_stmt_base m =
   fn_subst_stmt_base_helper (fn_subst_expr m) (fn_subst_idx m)
@@ -398,8 +399,10 @@ and idx_depth i =
 
 let rec update_expr_ad_levels autodiffable_variables (Expr.{pattern; _} as e) =
   let max_adlevel l =
-    UnsizedType.lub_ad_type (List.map ~f:Expr.Typed.adlevel_of l) |> Option.get
-  in
+    UnsizedType.fill_adtype_for_type
+      (UnsizedType.lub_ad_type (List.map ~f:Expr.Typed.adlevel_of l)
+      |> Option.get)
+      (Expr.Typed.type_of e) in
   match pattern with
   | Var x ->
       if Set.Poly.mem x autodiffable_variables then e
@@ -450,8 +453,7 @@ let rec update_expr_ad_levels autodiffable_variables (Expr.{pattern; _} as e) =
          include tuple.1 but not tuple.2 In the mean time, what's the most
          conservative? Make the whole thing AD when any part is? *)
       let e' = update_expr_ad_levels autodiffable_variables e in
-      { pattern= TupleProjection (e', ix)
-      ; meta= {e.meta with adlevel= e'.meta.adlevel} }
+      Expr.Helpers.add_tuple_index e' ix
 
 and update_idx_ad_levels autodiffable_variables =
   Index.map (update_expr_ad_levels autodiffable_variables)

@@ -253,10 +253,10 @@ let%expect_test "read data - tuple" =
                              (adlevel (TupleAD (DataOnly DataOnly))))))
                           2))
                         (meta
-                         ((type_ UVector) (loc <opaque>)
-                          (adlevel (TupleAD (DataOnly DataOnly)))))))))
+                         ((type_ UVector) (loc <opaque>) (adlevel DataOnly)))))))
                     ()))
                   (meta <opaque>)))))
               (meta <opaque>)))))
           (meta <opaque>)))))
-      (meta <opaque>))) |}]
+      (meta <opaque>)))
+    |}]
