@@ -2798,11 +2798,12 @@ namespace ad_levels_deep_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 6> locations_array__ =
+static constexpr std::array<const char*, 7> locations_array__ =
   {" (found before start of program)",
   " (in 'ad-levels-deep.stan', line 6, column 4 to column 23)",
   " (in 'ad-levels-deep.stan', line 10, column 4 to column 39)",
   " (in 'ad-levels-deep.stan', line 11, column 4 to column 38)",
+  " (in 'ad-levels-deep.stan', line 13, column 4 to column 22)",
   " (in 'ad-levels-deep.stan', line 12, column 4 to column 16)",
   " (in 'ad-levels-deep.stan', line 2, column 4 to column 26)"};
 class ad_levels_deep_model final : public model_base_crtp<ad_levels_deep_model> {
@@ -2834,7 +2835,7 @@ class ad_levels_deep_model final : public model_base_crtp<ad_levels_deep_model> 
     try {
       int pos__;
       pos__ = 1;
-      current_statement__ = 5;
+      current_statement__ = 6;
       context__.validate_dims("data initialization", "X_data", "double",
         std::vector<size_t>{static_cast<size_t>(10), static_cast<size_t>(10)});
       X_data_data__ = Eigen::Matrix<double,-1,-1>::Constant(10, 10,
@@ -2843,7 +2844,7 @@ class ad_levels_deep_model final : public model_base_crtp<ad_levels_deep_model> 
         Eigen::Map<Eigen::Matrix<double,-1,-1>>(X_data_data__.data(), 10, 10);
       {
         std::vector<double> X_data_flat__;
-        current_statement__ = 5;
+        current_statement__ = 6;
         X_data_flat__ = context__.vals_r("X_data");
         pos__ = 1;
         {
@@ -3500,8 +3501,11 @@ class ad_levels_deep_model final : public model_base_crtp<ad_levels_deep_model> 
       current_statement__ = 3;
       stan::model::assign(X_tp2, stan::math::exp(lcm_sym10__),
         "assigning variable X_tp2");
-      current_statement__ = 4;
+      current_statement__ = 5;
       stan::model::assign(X_tp1, X_p, "assigning variable X_tp1");
+      double z;
+      current_statement__ = 4;
+      z = stan::math::get_lp(lp__, lp_accum__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -3550,8 +3554,11 @@ class ad_levels_deep_model final : public model_base_crtp<ad_levels_deep_model> 
       current_statement__ = 3;
       stan::model::assign(X_tp2, stan::math::exp(lcm_sym8__),
         "assigning variable X_tp2");
-      current_statement__ = 4;
+      current_statement__ = 5;
       stan::model::assign(X_tp1, X_p, "assigning variable X_tp1");
+      double z;
+      current_statement__ = 4;
+      z = stan::math::get_lp(lp__, lp_accum__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -3606,6 +3613,7 @@ class ad_levels_deep_model final : public model_base_crtp<ad_levels_deep_model> 
       Eigen::Matrix<double,-1,-1> X_tp2 =
         Eigen::Matrix<double,-1,-1>::Constant(10, 10,
           std::numeric_limits<double>::quiet_NaN());
+      double z = std::numeric_limits<double>::quiet_NaN();
       out__.write(X_p);
       if (stan::math::logical_negation(
             (stan::math::primitive_value(emit_transformed_parameters__) ||
@@ -3618,11 +3626,14 @@ class ad_levels_deep_model final : public model_base_crtp<ad_levels_deep_model> 
       stan::model::assign(lcm_sym7__, stan::math::exp(lcm_sym6__),
         "assigning variable lcm_sym7__");
       stan::model::assign(X_tp2, lcm_sym7__, "assigning variable X_tp2");
-      current_statement__ = 4;
+      current_statement__ = 5;
       stan::model::assign(X_tp1, X_p, "assigning variable X_tp1");
+      current_statement__ = 4;
+      z = stan::math::get_lp(lp__, lp_accum__);
       if (emit_transformed_parameters__) {
         out__.write(X_p);
         out__.write(lcm_sym7__);
+        out__.write(z);
       }
       if (stan::math::logical_negation(emit_generated_quantities__)) {
         return ;
@@ -4300,7 +4311,7 @@ class ad_levels_deep_model final : public model_base_crtp<ad_levels_deep_model> 
                   emit_generated_quantities__ = true) const {
     names__ = std::vector<std::string>{"X_p"};
     if (emit_transformed_parameters__) {
-      std::vector<std::string> temp{"X_tp1", "X_tp2"};
+      std::vector<std::string> temp{"X_tp1", "X_tp2", "z"};
       names__.reserve(names__.size() + temp.size());
       names__.insert(names__.end(), temp.begin(), temp.end());
     }
@@ -4319,7 +4330,7 @@ class ad_levels_deep_model final : public model_base_crtp<ad_levels_deep_model> 
         temp{std::vector<size_t>{static_cast<size_t>(10),
                static_cast<size_t>(10)},
              std::vector<size_t>{static_cast<size_t>(10),
-               static_cast<size_t>(10)}};
+               static_cast<size_t>(10)}, std::vector<size_t>{}};
       dimss__.reserve(dimss__.size() + temp.size());
       dimss__.insert(dimss__.end(), temp.begin(), temp.end());
     }
@@ -4348,6 +4359,7 @@ class ad_levels_deep_model final : public model_base_crtp<ad_levels_deep_model> 
             std::to_string(sym16__) + '.' + std::to_string(sym15__));
         }
       }
+      param_names__.emplace_back(std::string() + "z");
     }
     if (emit_generated_quantities__) {}
   }
@@ -4374,14 +4386,15 @@ class ad_levels_deep_model final : public model_base_crtp<ad_levels_deep_model> 
             std::to_string(sym16__) + '.' + std::to_string(sym15__));
         }
       }
+      param_names__.emplace_back(std::string() + "z");
     }
     if (emit_generated_quantities__) {}
   }
   inline std::string get_constrained_sizedtypes() const {
-    return std::string("[{\"name\":\"X_p\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"X_tp1\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"X_tp2\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"}]");
+    return std::string("[{\"name\":\"X_p\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"X_tp1\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"X_tp2\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"z\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"}]");
   }
   inline std::string get_unconstrained_sizedtypes() const {
-    return std::string("[{\"name\":\"X_p\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"X_tp1\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"X_tp2\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"}]");
+    return std::string("[{\"name\":\"X_p\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"X_tp1\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"X_tp2\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"z\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"}]");
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -4392,7 +4405,7 @@ class ad_levels_deep_model final : public model_base_crtp<ad_levels_deep_model> 
               pstream = nullptr) const {
     const size_t num_params__ = (10 * 10);
     const size_t num_transformed = emit_transformed_parameters * ((10 * 10) +
-      (10 * 10));
+      (10 * 10) + 1);
     const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
@@ -4410,7 +4423,7 @@ class ad_levels_deep_model final : public model_base_crtp<ad_levels_deep_model> 
               pstream = nullptr) const {
     const size_t num_params__ = (10 * 10);
     const size_t num_transformed = emit_transformed_parameters * ((10 * 10) +
-      (10 * 10));
+      (10 * 10) + 1);
     const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
