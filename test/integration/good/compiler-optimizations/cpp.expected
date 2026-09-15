@@ -3503,7 +3503,7 @@ class ad_levels_deep_model final : public model_base_crtp<ad_levels_deep_model> 
         "assigning variable X_tp2");
       current_statement__ = 5;
       stan::model::assign(X_tp1, X_p, "assigning variable X_tp1");
-      double z;
+      local_scalar_t__ z;
       current_statement__ = 4;
       z = stan::math::get_lp(lp__, lp_accum__);
     } catch (const std::exception& e) {
@@ -3556,7 +3556,7 @@ class ad_levels_deep_model final : public model_base_crtp<ad_levels_deep_model> 
         "assigning variable X_tp2");
       current_statement__ = 5;
       stan::model::assign(X_tp1, X_p, "assigning variable X_tp1");
-      double z;
+      local_scalar_t__ z;
       current_statement__ = 4;
       z = stan::math::get_lp(lp__, lp_accum__);
     } catch (const std::exception& e) {
