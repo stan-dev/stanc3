@@ -790,37 +790,37 @@ class ad_level_deep_dependence_model final : public model_base_crtp<ad_level_dee
       stan::math::var_value<Eigen::Matrix<double,-1,-1>> X_tp1;
       current_statement__ = 2;
       stan::model::assign(X_tp1, X_d, "assigning variable X_tp1");
-      stan::math::var_value<Eigen::Matrix<double,-1,-1>> X_tp2 =
+      Eigen::Matrix<double,-1,-1> X_tp2 =
         Eigen::Matrix<double,-1,-1>::Constant(10, 10,
           std::numeric_limits<double>::quiet_NaN());
       stan::model::assign(lcm_sym12__, stan::math::exp(X_d),
         "assigning variable lcm_sym12__");
       stan::model::assign(X_tp2, lcm_sym12__, "assigning variable X_tp2");
-      stan::math::var_value<Eigen::Matrix<double,-1,-1>> X_tp3 =
+      Eigen::Matrix<double,-1,-1> X_tp3 =
         Eigen::Matrix<double,-1,-1>::Constant(10, 10,
           std::numeric_limits<double>::quiet_NaN());
       stan::model::assign(lcm_sym13__, stan::math::exp(lcm_sym12__),
         "assigning variable lcm_sym13__");
       stan::model::assign(X_tp3, lcm_sym13__, "assigning variable X_tp3");
-      stan::math::var_value<Eigen::Matrix<double,-1,-1>> X_tp4 =
+      Eigen::Matrix<double,-1,-1> X_tp4 =
         Eigen::Matrix<double,-1,-1>::Constant(10, 10,
           std::numeric_limits<double>::quiet_NaN());
       stan::model::assign(lcm_sym14__, stan::math::exp(lcm_sym13__),
         "assigning variable lcm_sym14__");
       stan::model::assign(X_tp4, lcm_sym14__, "assigning variable X_tp4");
-      stan::math::var_value<Eigen::Matrix<double,-1,-1>> X_tp5 =
+      Eigen::Matrix<double,-1,-1> X_tp5 =
         Eigen::Matrix<double,-1,-1>::Constant(10, 10,
           std::numeric_limits<double>::quiet_NaN());
       stan::model::assign(lcm_sym15__, stan::math::exp(lcm_sym14__),
         "assigning variable lcm_sym15__");
       stan::model::assign(X_tp5, lcm_sym15__, "assigning variable X_tp5");
-      stan::math::var_value<Eigen::Matrix<double,-1,-1>> X_tp6 =
+      Eigen::Matrix<double,-1,-1> X_tp6 =
         Eigen::Matrix<double,-1,-1>::Constant(10, 10,
           std::numeric_limits<double>::quiet_NaN());
       stan::model::assign(lcm_sym16__, stan::math::exp(lcm_sym15__),
         "assigning variable lcm_sym16__");
       stan::model::assign(X_tp6, lcm_sym16__, "assigning variable X_tp6");
-      stan::math::var_value<Eigen::Matrix<double,-1,-1>> X_tp7;
+      Eigen::Matrix<double,-1,-1> X_tp7;
       current_statement__ = 8;
       stan::model::assign(X_tp7, stan::math::exp(lcm_sym16__),
         "assigning variable X_tp7");
@@ -3546,7 +3546,7 @@ class ad_levels_deep_model final : public model_base_crtp<ad_levels_deep_model> 
       stan::model::assign(lcm_sym8__, stan::math::exp(X_data),
         "assigning variable lcm_sym8__");
       stan::model::assign(X_tp1, lcm_sym8__, "assigning variable X_tp1");
-      stan::math::var_value<Eigen::Matrix<double,-1,-1>> X_tp2;
+      Eigen::Matrix<double,-1,-1> X_tp2;
       current_statement__ = 3;
       stan::model::assign(X_tp2, stan::math::exp(lcm_sym8__),
         "assigning variable X_tp2");
@@ -4654,7 +4654,7 @@ class copy_prop_profile_model final : public model_base_crtp<copy_prop_profile_m
       {
         current_statement__ = 2;
         stan::math::validate_non_negative_index("vec", "N", N);
-        stan::math::var_value<Eigen::Matrix<double,1,-1>> vec =
+        Eigen::Matrix<double,1,-1> vec =
           Eigen::Matrix<double,1,-1>::Constant(N,
             std::numeric_limits<double>::quiet_NaN());
         current_statement__ = 6;
@@ -4663,7 +4663,7 @@ class copy_prop_profile_model final : public model_base_crtp<copy_prop_profile_m
             const_cast<stan::math::profile_map&>(profiles__));
           current_statement__ = 4;
           stan::math::validate_non_negative_index("vec2", "N", N);
-          stan::math::var_value<Eigen::Matrix<double,1,-1>> vec2 =
+          Eigen::Matrix<double,1,-1> vec2 =
             Eigen::Matrix<double,1,-1>::Constant(N,
               std::numeric_limits<double>::quiet_NaN());
           stan::model::assign(lcm_sym7__, stan::math::columns_dot_self(X),
@@ -4673,13 +4673,13 @@ class copy_prop_profile_model final : public model_base_crtp<copy_prop_profile_m
         lp_accum__.add(lcm_sym8__);
         current_statement__ = 7;
         stan::math::validate_non_negative_index("vec3", "N", N);
-        stan::math::var_value<Eigen::Matrix<double,1,-1>> vec3 =
+        Eigen::Matrix<double,1,-1> vec3 =
           Eigen::Matrix<double,1,-1>::Constant(N,
             std::numeric_limits<double>::quiet_NaN());
         {
           current_statement__ = 9;
           stan::math::validate_non_negative_index("vec4", "N", N);
-          stan::math::var_value<Eigen::Matrix<double,1,-1>> vec4 =
+          Eigen::Matrix<double,1,-1> vec4 =
             Eigen::Matrix<double,1,-1>::Constant(N,
               std::numeric_limits<double>::quiet_NaN());
         }
@@ -17241,8 +17241,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
           current_statement__ = 81;
           stan::math::validate_non_negative_index("qnu", "n_occasions",
             lcm_sym258__);
-          stan::math::var_value<Eigen::Matrix<double,-1,1>>
-            inline_js_super_lp_qnu_sym25__ =
+          Eigen::Matrix<double,-1,1> inline_js_super_lp_qnu_sym25__ =
             Eigen::Matrix<double,-1,1>::Constant(lcm_sym258__,
               std::numeric_limits<double>::quiet_NaN());
           stan::model::assign(lcm_sym201__, stan::math::subtract(1.0, nu),
@@ -17252,8 +17251,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
             current_statement__ = 83;
             stan::math::validate_non_negative_index("qp", "n_occasions",
               lcm_sym258__);
-            stan::math::var_value<Eigen::Matrix<double,-1,1>>
-              inline_js_super_lp_qp_sym26__ =
+            Eigen::Matrix<double,-1,1> inline_js_super_lp_qp_sym26__ =
               Eigen::Matrix<double,-1,1>::Constant(lcm_sym258__,
                 std::numeric_limits<double>::quiet_NaN());
             stan::model::assign(lcm_sym203__,
@@ -17503,8 +17501,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
               current_statement__ = 83;
               stan::math::validate_non_negative_index("qp", "n_occasions",
                 lcm_sym258__);
-              stan::math::var_value<Eigen::Matrix<double,-1,1>>
-                inline_js_super_lp_qp_sym26__ =
+              Eigen::Matrix<double,-1,1> inline_js_super_lp_qp_sym26__ =
                 Eigen::Matrix<double,-1,1>::Constant(lcm_sym258__,
                   std::numeric_limits<double>::quiet_NaN());
               stan::model::assign(lcm_sym202__,
@@ -23702,7 +23699,7 @@ class function_in_function_loops_model final : public model_base_crtp<function_i
       {
         current_statement__ = 1;
         stan::math::validate_non_negative_index("eta", "N", N);
-        stan::math::var_value<Eigen::Matrix<double,-1,1>> eta =
+        Eigen::Matrix<double,-1,1> eta =
           Eigen::Matrix<double,-1,1>::Constant(N,
             std::numeric_limits<double>::quiet_NaN());
         stan::model::assign(lcm_sym33__, stan::math::rep_vector(0.0, N),
@@ -25228,8 +25225,7 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
         stan::math::var_value<Eigen::Matrix<double,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(5,
                                                             std::numeric_limits<double>::quiet_NaN(
                                                               )));
-      stan::math::var_value<Eigen::Matrix<double,-1,1>>
-        inline_single_ret_fun_return_sym7__;
+      Eigen::Matrix<double,-1,1> inline_single_ret_fun_return_sym7__;
       stan::model::assign(tp_single_ret_vec, p_single_ret_vec,
         "assigning variable tp_single_ret_vec");
       stan::math::var_value<Eigen::Matrix<double,-1,1>> tp_multi_ret_vec =
@@ -25242,8 +25238,7 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
         std::numeric_limits<int>::min();
       for (int inline_multi_ret_fun_iterator_sym12__ = 1; inline_multi_ret_fun_iterator_sym12__
            <= 1; ++inline_multi_ret_fun_iterator_sym12__) {
-        stan::math::var_value<Eigen::Matrix<double,-1,1>>
-          inline_multi_ret_fun_B_sym10__ =
+        Eigen::Matrix<double,-1,1> inline_multi_ret_fun_B_sym10__ =
           Eigen::Matrix<double,-1,1>::Constant(5,
             std::numeric_limits<double>::quiet_NaN());
         current_statement__ = 8;
@@ -26283,21 +26278,19 @@ class inliner_same_names_model final : public model_base_crtp<inliner_same_names
     (void) function__;
     try {
       int lcm_sym17__;
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> R =
+      Eigen::Matrix<double,-1,1> R =
         Eigen::Matrix<double,-1,1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> out =
+      Eigen::Matrix<double,-1,1> out =
         Eigen::Matrix<double,-1,1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      stan::math::var_value<Eigen::Matrix<double,-1,1>>
-        inline_foo_return_sym5__;
+      Eigen::Matrix<double,-1,1> inline_foo_return_sym5__;
       {
         int inline_foo_ot_sym6__ = std::numeric_limits<int>::min();
         lcm_sym17__ = stan::math::num_elements(R);
         current_statement__ = 4;
         stan::math::validate_non_negative_index("R", "ot", lcm_sym17__);
-        stan::math::var_value<Eigen::Matrix<double,-1,1>>
-          inline_foo_R_sym7__ =
+        Eigen::Matrix<double,-1,1> inline_foo_R_sym7__ =
           Eigen::Matrix<double,-1,1>::Constant(stan::math::num_elements(R),
             std::numeric_limits<double>::quiet_NaN());
       }
@@ -29032,8 +29025,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
           current_statement__ = 80;
           stan::math::validate_non_negative_index("qgamma", "n_occasions",
             lcm_sym272__);
-          stan::math::var_value<Eigen::Matrix<double,-1,1>>
-            inline_jolly_seber_lp_qgamma_sym31__ =
+          Eigen::Matrix<double,-1,1> inline_jolly_seber_lp_qgamma_sym31__ =
             Eigen::Matrix<double,-1,1>::Constant(lcm_sym272__,
               std::numeric_limits<double>::quiet_NaN());
           stan::model::assign(lcm_sym219__, stan::math::subtract(1.0, gamma),
@@ -29043,8 +29035,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
             current_statement__ = 82;
             stan::math::validate_non_negative_index("qp", "n_occasions",
               lcm_sym272__);
-            stan::math::var_value<Eigen::Matrix<double,-1,1>>
-              inline_jolly_seber_lp_qp_sym32__ =
+            Eigen::Matrix<double,-1,1> inline_jolly_seber_lp_qp_sym32__ =
               Eigen::Matrix<double,-1,1>::Constant(lcm_sym272__,
                 std::numeric_limits<double>::quiet_NaN());
             stan::model::assign(lcm_sym221__,
@@ -29296,8 +29287,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
               current_statement__ = 82;
               stan::math::validate_non_negative_index("qp", "n_occasions",
                 lcm_sym272__);
-              stan::math::var_value<Eigen::Matrix<double,-1,1>>
-                inline_jolly_seber_lp_qp_sym32__ =
+              Eigen::Matrix<double,-1,1> inline_jolly_seber_lp_qp_sym32__ =
                 Eigen::Matrix<double,-1,1>::Constant(lcm_sym272__,
                   std::numeric_limits<double>::quiet_NaN());
               stan::model::assign(lcm_sym220__,
@@ -42091,7 +42081,7 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
         in__.template read<
           stan::math::var_value<Eigen::Matrix<double,-1,-1>>>(10, 10);
       {
-        stan::math::var_value<Eigen::Matrix<double,-1,-1>> m5 =
+        Eigen::Matrix<double,-1,-1> m5 =
           Eigen::Matrix<double,-1,-1>::Constant(10, 10,
             std::numeric_limits<double>::quiet_NaN());
         stan::model::assign(lcm_sym9__,
@@ -42101,12 +42091,12 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
                 stan::model::rvalue(m3, "m3", stan::model::index_multi(idx),
                   stan::model::index_multi(idy)))), m4),
           "assigning variable lcm_sym9__");
-        stan::math::var_value<Eigen::Matrix<double,-1,-1>> m6 =
+        Eigen::Matrix<double,-1,-1> m6 =
           Eigen::Matrix<double,-1,-1>::Constant(10, 10,
             std::numeric_limits<double>::quiet_NaN());
         stan::model::assign(lcm_sym10__, stan::math::fma(m1, m2, m4),
           "assigning variable lcm_sym10__");
-        stan::math::var_value<Eigen::Matrix<double,-1,-1>> m7 =
+        Eigen::Matrix<double,-1,-1> m7 =
           Eigen::Matrix<double,-1,-1>::Constant(10, 10,
             std::numeric_limits<double>::quiet_NaN());
         current_statement__ = 6;
@@ -47053,7 +47043,7 @@ class unenforce_initialize_should_fail_model final : public model_base_crtp<unen
       double lcm_sym12__;
       current_statement__ = 1;
       auto param = in__.template read<local_scalar_t__>();
-      std::vector<stan::math::var_value<Eigen::Matrix<double,-1,1>>> local =
+      std::vector<Eigen::Matrix<double,-1,1>> local =
         std::vector<Eigen::Matrix<double,-1,1>>(2,
           Eigen::Matrix<double,-1,1>::Constant(5,
             std::numeric_limits<double>::quiet_NaN()));
