@@ -1,6 +1,41 @@
 STANC3 RELEASE NOTES
 ======================================================================
 
+v2.40.0 (16 September 2026)
+======================================================================
+
+ - The same `.stanfunctions` file can be included multiple times, with later times being ignored. This is particularly useful when `.stanfunctions` files include other `.stanfunctions` files. (#1639)
+ - Added `student_t_qf`. (#1620)
+ - Added the `poisson_binomial` distribution. (#1690)
+ - Added new variadic functions `integrate_1d_gauss_kronrod`, `integrate_1d_gauss_kronrod_tol`, `integrate_1d_double_exponential`, `integrate_1d_double_exponential_tol`. (#1626)
+ - Added new overloads to `softmax` and `log_softmax`. In addition to vectors, they now accept row vectors, arraws of vectors, and arrays of row vectors. (#1629)
+ - Support row-vector and vector inputs for `x` in `normal_id_glm_lpdf`. (#1698)
+ - Added `laplace_latent_solve(_tol)`, which return `tuple(vector, matrix)` (posterior mean and Cholesky factor). (#1649)
+ - Added `to_vector_array(matrix)`, `to_row_vector_array(matrix)`, and new overloads for `to_matrix`. (#1693)
+ - Updated the parser to reject invalid function definitions earlier, allowing for nicer error messages in some cases. (#1630)
+ - Improved the error message for using an unnormalized function in an invalid context. (#1636)
+ - Improved error messages for when a variable has a size which depends on an illegal expression. (#1647)
+ - Improved startup time of the compiler by deferring loading of the math library signatures. (#1623)
+ - Improved handling of some edge cases when the same variable is used on both left- and right- hand side of an assignment. (#1627)
+ - The Stan compiler is now built with OCaml 5.5.0 by default. (#1631)
+ - Formated .mll and .mly files with menhirformat. (#1634)
+ - Update ocamlformat to 0.29.0. (#1653)
+ - Added debug flag `--debug-print-factor-graph` to print the compiler's conservative over-approximation of the factor graph for the model(s) implemented in the Stan program. (#1673)
+ - Reduced dependencies by leveraging new OCaml features. (#1644, #1650, #1651,
+   #1652, #1655, #1656, #1661, #1665, #1676)
+ - Update ICE handling with new Format functions. (#1645)
+ - Added a new vectorize_loops optimization (enabled at `--Oexperimental`).
+   (#1666, #1672, #1683)
+ - Optimized map operations in dataflow analyses. (#1682)
+ - Optimized the partial evaluated by avoiding a re-typecheck of unchanged functions. (#1700)
+ - Fixed the inferred type of multi-indexed expressions in the compiler's middle intermediate representation. (#1667)
+ - Fixed an issue where compiler optimizations could treat unreachable code as valid and generate problematic results. (#1687)
+ - Fixed an incorrect optimization which could rewrite the categorical distribution in incorrect situations. (#1689)
+ - Fixed an issue where `--name` could be used to generated invalid C++. (#1701)
+ - Fixed an issue with `--Oexperimental` which would change the meaning of for loops with unusual expressions in their lower bound. (#1702)
+ - Fixed several issues where `--Oexperimental` would generate invalid C++. (#1712, #1713, #1715, #1716, #1717)
+ - Improved code-generation of local variable dimensions. (#1691)
+
 v2.39.0 (19 May 2026)
 ======================================================================
 
