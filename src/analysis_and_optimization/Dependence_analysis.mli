@@ -13,7 +13,6 @@ open Dataflow_types
     - Currently, dependencies on global or uninitialized data are written as
       depending on node '0'. This should probably be option or some type that
       indicates global dependence.
-    - Indexed variables are currently handled as monoliths
     - No probabilistic dependency, I'll do that elsewhere **)
 
 (** Sufficient information about each node to build the dependency graph.
@@ -26,19 +25,21 @@ type node_dep_info =
   ; reaching_defn_entry: reaching_defn Set.Poly.t
   ; reaching_defn_exit: reaching_defn Set.Poly.t
   ; accesses: access list
+        (** the node's own reads and writes with their subscripts, classified
+            against the innermost enclosing loop *)
   ; meta: Location_span.t }
 
 val node_immediate_dependencies :
      ((Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) LabelMap.t
   -> ?blockers:vexpr Set.Poly.t
-  -> ?refine:bool
   -> label
   -> label Set.Poly.t
 (** Given dependency information for each node, find the 'immediate'
     dependencies of a node, where 'immediate' means the first-degree control
-    flow parents and the reachable definitions of RHS variables. With [refine]
-    (default [false]) definitions whose subscripts can never name an element the
-    node reads are dropped; see the definition. *)
+    flow parents and the reaching definitions of RHS variables. Definitions
+    whose subscripts can never name an element the node reads ([theta[2] = b]
+    for a read of [theta[1]]) are not dependencies; see [reaching_defns_of_read]
+    in the implementation. *)
 
 val node_dependencies :
      ((Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) LabelMap.t
@@ -72,8 +73,7 @@ val log_prob_build_dep_info_map :
     program *)
 
 val all_node_dependencies :
-     ?refine:bool
-  -> ((Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) LabelMap.t
+     ((Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) LabelMap.t
   -> label Set.Poly.t LabelMap.t
 (** Given dependency information for each node, find all of the dependencies of
     all nodes, effectively building the dependency graph.

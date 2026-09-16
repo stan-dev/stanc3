@@ -2,7 +2,7 @@
     dependence test (L2) and the loop dependence graph with its pi-blocks (L3)
     of design-docs/active/vectorize-loop-fission.md. [Loop_vectorize] is the
     client for code generation; [Dependence_analysis] uses the access model to
-    refine reaching-definition edges. *)
+    drop reaching definitions whose subscripts cannot reach a read. *)
 
 open Std
 open Middle

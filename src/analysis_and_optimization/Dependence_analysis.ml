@@ -25,16 +25,19 @@ let reaching_defn_lookup (rds : reaching_defn Set.Poly.t) (var : vexpr) :
     label Set.Poly.t =
   Set.Poly.map (Set.Poly.filter rds ~f:(fun (var', _) -> var' = var)) ~f:snd
 
-(** With [refine], a reaching definition [(v, l')] of a right-hand-side variable
-    [v] at [label] is dropped when every write access to [v] at [l'] is
-    [Independent] of every read access to [v] at [label] (§7.7): e.g.
-    [theta[2] = b] does not reach [normal(theta[1], s)]. A definition whose node
-    has no recorded write to [v] (a definition from outside the analysed
-    statement), or a node with no recorded read, is always kept. The per-access
-    subscripts are relative to each node's own loop, which is sound for this
-    purpose: [access_dependence] only answers [Independent] when no pair of
-    integer iteration values can make the subscripts coincide. *)
-let refined_reaching_defn_lookup
+(** The reaching definitions of [v] that can reach a read of [v] at the node
+    described by [info]. Reaching definitions are keyed by name, so
+    [theta[2] = b] reaches every later read of [theta]; the node's own
+    [accesses] carry subscripts, and a definition is dropped when every write
+    access to [v] at the defining node is [Independent] of every read access to
+    [v] here under [Loop_dependence.access_dependence] (design §7.7), so
+    [normal(theta[1], s)] does not depend on [theta[2] = b]. A definition whose
+    node has no recorded write to [v] (a definition from outside the analysed
+    statement), or a node with no recorded read of [v], keeps every definition.
+    The per-access subscripts are relative to each node's own loop, which is
+    sound for this purpose: [access_dependence] only answers [Independent] when
+    no pair of integer iteration values can make the subscripts coincide. *)
+let reaching_defns_of_read
     (statement_map :
       ((Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) LabelMap.t)
     (info : node_dep_info) (v : string) : label Set.Poly.t =
@@ -61,13 +64,11 @@ let refined_reaching_defn_lookup
 let node_immediate_dependencies
     (statement_map :
       ((Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) LabelMap.t)
-    ?(blockers : vexpr Set.Poly.t = Set.Poly.empty) ?(refine = false)
-    (label : label) : label Set.Poly.t =
+    ?(blockers : vexpr Set.Poly.t = Set.Poly.empty) (label : label) :
+    label Set.Poly.t =
   let stmt, info = LabelMap.find label statement_map in
   let rhs_set = Set.Poly.map (stmt_rhs_var_set stmt) ~f:fst in
-  let lookup (VVar v as var) =
-    if refine then refined_reaching_defn_lookup statement_map info v
-    else reaching_defn_lookup info.reaching_defn_entry var in
+  let lookup (VVar v) = reaching_defns_of_read statement_map info v in
   let rhs_deps = Set.Poly.union_map (Set.Poly.diff rhs_set blockers) ~f:lookup in
   Set.Poly.union info.parents rhs_deps
 
@@ -97,9 +98,8 @@ let node_vars_dependencies
     (label : label) : label Set.Poly.t =
   let _, info = LabelMap.find label statement_map in
   let var_deps =
-    Set.Poly.union_map
-      (Set.Poly.diff vars blockers)
-      ~f:(reaching_defn_lookup info.reaching_defn_entry) in
+    Set.Poly.union_map (Set.Poly.diff vars blockers) ~f:(fun (VVar v) ->
+        reaching_defns_of_read statement_map info v) in
   Set.Poly.fold
     (Set.Poly.union info.parents var_deps)
     ~init:Set.Poly.empty
@@ -110,13 +110,13 @@ let node_vars_dependencies
    fixed-point. Since it's updating the dependencies for the whole graph at a
    time, it should be more efficient than doing a graph traversal for each
    node. *)
-let all_node_dependencies ?(refine = false)
+let all_node_dependencies
     (statement_map :
       ((Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) LabelMap.t) :
     label Set.Poly.t LabelMap.t =
   let immediate_map =
     LabelMap.mapi statement_map ~f:(fun label _ ->
-        node_immediate_dependencies statement_map ~refine label) in
+        node_immediate_dependencies statement_map label) in
   let step_node label m =
     let immediate = LabelMap.find label immediate_map in
     let updated =

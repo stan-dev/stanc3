@@ -109,29 +109,38 @@ let%expect_test "Variable dependency example" =
       (4 5 9 11 13 14 16)
     |}]
 
-(* ---- Refined reaching-definition edges (L4) ---- *)
+(* ---- Subscript-aware reaching definitions (L4) ---- *)
 
-(** For every node whose immediate dependencies shrink under [refine], print the
-    node, the dependencies dropped, and the ones kept. *)
-let print_refined_edges prog =
+(** For every node whose immediate dependencies are fewer than name-level
+    reaching definitions would give, print the node, the definitions dropped
+    because their subscripts cannot reach the node's reads, and the ones kept.
+*)
+let print_pruned_edges prog =
   let map = log_prob_build_dep_info_map (Test_utils.mir_of_string prog) in
-  LabelMap.iter map ~f:(fun ~key:label ~data:_ ->
-      let plain = node_immediate_dependencies map label in
-      let refined = node_immediate_dependencies map ~refine:true label in
-      if not (Set.Poly.equal plain refined) then
-        Fmt.pr "%d: dropped %a, kept %a@." label
-          Fmt.(list ~sep:(any " ") int)
-          (Set.Poly.to_list (Set.Poly.diff plain refined))
-          Fmt.(list ~sep:(any " ") int)
-          (Set.Poly.to_list refined));
-  let all = all_node_dependencies map in
-  let all_refined = all_node_dependencies ~refine:true map in
-  if LabelMap.equal ~cmp:Set.Poly.equal all all_refined then
-    print_endline "transitive dependencies: unchanged"
-  else print_endline "transitive dependencies: changed"
+  let name_level label =
+    let stmt, info = LabelMap.find label map in
+    let rhs =
+      Analysis_and_optimization.Mir_utils.stmt_rhs_var_set stmt
+      |> Set.Poly.map ~f:fst in
+    Set.Poly.union info.parents
+      (Set.Poly.union_map rhs
+         ~f:(reaching_defn_lookup info.reaching_defn_entry)) in
+  let pruned =
+    LabelMap.fold map ~init:false ~f:(fun ~key:label ~data:_ pruned ->
+        let plain = name_level label in
+        let actual = node_immediate_dependencies map label in
+        if Set.Poly.equal plain actual then pruned
+        else (
+          Fmt.pr "%d: dropped %a, kept %a@." label
+            Fmt.(list ~sep:(any " ") int)
+            (Set.Poly.to_list (Set.Poly.diff plain actual))
+            Fmt.(list ~sep:(any " ") int)
+            (Set.Poly.to_list actual);
+          true)) in
+  if not pruned then print_endline "no definition pruned"
 
-let%expect_test "refine: distinct literal subscripts are independent" =
-  print_refined_edges
+let%expect_test "subscripts: distinct literal subscripts are independent" =
+  print_pruned_edges
     {|
       data { real y; real s; }
       parameters { real a; real b; }
@@ -143,15 +152,13 @@ let%expect_test "refine: distinct literal subscripts are independent" =
         y ~ normal(theta[2], s);
       }
     |};
-  [%expect
-    {|
+  [%expect {|
     8: dropped 7, kept 1 5 6
     9: dropped 6, kept 1 5 7
-    transitive dependencies: changed
     |}]
 
-let%expect_test "refine: same-iteration definitions inside a loop" =
-  print_refined_edges
+let%expect_test "subscripts: same-iteration definitions inside a loop" =
+  print_pruned_edges
     {|
       data { int N; vector[N] x; vector[N] y; }
       parameters { real mu; real s; }
@@ -165,11 +172,11 @@ let%expect_test "refine: same-iteration definitions inside a loop" =
       }
     |};
   [%expect {|
-    transitive dependencies: unchanged
+    no definition pruned
     |}]
 
-let%expect_test "refine: whole-variable and confused accesses are kept" =
-  print_refined_edges
+let%expect_test "subscripts: whole-variable and confused accesses are kept" =
+  print_pruned_edges
     {|
       data { int N; vector[N] x; array[N] int<lower=1, upper=N> idx; }
       parameters { real mu; }
@@ -183,7 +190,7 @@ let%expect_test "refine: whole-variable and confused accesses are kept" =
       }
     |};
   [%expect {|
-    transitive dependencies: unchanged
+    no definition pruned
     |}]
 
 let uninitialized_var_example =
