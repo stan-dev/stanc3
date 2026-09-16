@@ -146,13 +146,9 @@ let var_deps info_map label ?expr:(expr_opt : Expr.Typed.t option = None)
         let vvars = Set.Poly.map ~f:fst (expr_var_set expr) in
         ( node_vars_dependencies info_map vvars label
         , Set.Poly.map ~f:string_of_vexpr vvars ) in
-  (* expressions of dependencies *)
-  let dep_exprs =
-    Set.Poly.union_map dep_labels ~f:(fun label ->
-        let stmt, _ = LabelMap.find label info_map in
-        stmt_rhs_names_set stmt) in
   (* variable dependencies *)
-  let dep_vars = Set.Poly.map ~f:(fun (VVar v) -> v) dep_exprs in
+  let dep_vars =
+    Set.Poly.map ~f:string_of_vexpr (rhs_variables_at info_map dep_labels) in
   (* target dependencies *)
   Set.Poly.inter targets (Set.Poly.union dep_vars expr_vars)
 
