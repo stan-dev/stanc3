@@ -397,12 +397,34 @@ and idx_depth i =
   | Single e | Upfrom e | MultiIndex e -> expr_depth e
   | Between (e1, e2) -> max (expr_depth e1) (expr_depth e2)
 
-let rec update_expr_ad_levels autodiffable_variables (Expr.{pattern; _} as e) =
-  let max_adlevel l =
-    UnsizedType.fill_adtype_for_type
-      (UnsizedType.lub_ad_type (List.map ~f:Expr.Typed.adlevel_of l)
-      |> Option.get)
-      (Expr.Typed.type_of e) in
+let rec update_expr_ad_levels ?(keep_promotions = false) autodiffable_variables
+    (Expr.{pattern; _} as e) =
+  let inner = update_expr_ad_levels ~keep_promotions autodiffable_variables in
+  let all_or_nothing l =
+    (* removing promotions inside containers often leads to uncompilable C++, so
+       if any item in l is autodiffable we need to keep all of them promoted *)
+    let l_drop_promotions = List.map ~f:inner l in
+    if
+      List.exists
+        ~f:(fun e -> UnsizedType.is_autodifftype (Expr.Typed.adlevel_of e))
+        l_drop_promotions
+    then
+      List.map
+        ~f:(update_expr_ad_levels ~keep_promotions:true autodiffable_variables)
+        l
+    else l_drop_promotions in
+  let return_adlevel l =
+    let type_ = Expr.Typed.type_of e in
+    let ads = List.map ~f:Expr.Typed.adlevel_of l in
+    let ad =
+      if List.exists ~f:UnsizedType.is_autodifftype ads then
+        UnsizedType.AutoDiffable
+      else DataOnly in
+    if not (UnsizedType.contains_tuple type_) then ad
+    else
+      UnsizedType.fill_adtype_for_type
+        (UnsizedType.lub_ad_type ads |> Option.value ~default:ad)
+        type_ in
   match pattern with
   | Var x ->
       if Set.Poly.mem x autodiffable_variables then e
@@ -412,37 +434,59 @@ let rec update_expr_ad_levels autodiffable_variables (Expr.{pattern; _} as e) =
             Expr.Typed.Meta.(e.meta.type_) in
         {e with meta= {e.meta with adlevel}}
   | Lit (_, _) -> {e with meta= {e.meta with adlevel= DataOnly}}
+  | FunApp (CompilerInternal ((FnMakeArray | FnMakeRowVec) as internal), l) ->
+      let l = all_or_nothing l in
+      { pattern= FunApp (CompilerInternal internal, l)
+      ; meta= {e.meta with adlevel= return_adlevel l} }
   | FunApp (CompilerInternal FnMakeTuple, l) ->
-      let l = List.map ~f:(update_expr_ad_levels autodiffable_variables) l in
+      let l = List.map ~f:inner l in
       { pattern= FunApp (CompilerInternal FnMakeTuple, l)
       ; meta=
           {e.meta with adlevel= TupleAD (List.map ~f:Expr.Typed.adlevel_of l)}
       }
   | FunApp (kind, l) ->
-      let kind' =
-        Fun_kind.map (update_expr_ad_levels autodiffable_variables) kind in
-      let l = List.map ~f:(update_expr_ad_levels autodiffable_variables) l in
-      {pattern= FunApp (kind', l); meta= {e.meta with adlevel= max_adlevel l}}
+      let kind' = Fun_kind.map inner kind in
+      let l = List.map ~f:inner l in
+      {pattern= FunApp (kind', l); meta= {e.meta with adlevel= return_adlevel l}}
   | TernaryIf (e1, e2, e3) ->
-      let e1 = update_expr_ad_levels autodiffable_variables e1 in
-      let e2 = update_expr_ad_levels autodiffable_variables e2 in
-      let e3 = update_expr_ad_levels autodiffable_variables e3 in
+      let e1 = inner e1 in
+      let e2, e3 =
+        match all_or_nothing [e2; e3] with
+        | [e2; e3] -> (e2, e3)
+        | _ -> assert false in
+      let promote (e : Expr.Typed.t) adlevel =
+        (* both sides of a ternary if must return the same C++ type *)
+        if UnsizedType.compare_autodifftype e.meta.adlevel adlevel < 0 then
+          { e with
+            pattern=
+              Promotion (e, UnsizedType.internal_scalar e.meta.type_, adlevel)
+          }
+        else e in
+      let e2 = promote e2 e3.meta.adlevel in
+      let e3 = promote e3 e2.meta.adlevel in
       { pattern= TernaryIf (e1, e2, e3)
-      ; meta= {e.meta with adlevel= max_adlevel [e1; e2; e3]} }
+      ; meta= {e.meta with adlevel= return_adlevel [e1; e2; e3]} }
   | EAnd (e1, e2) ->
-      let e1 = update_expr_ad_levels autodiffable_variables e1 in
-      let e2 = update_expr_ad_levels autodiffable_variables e2 in
-      {pattern= EAnd (e1, e2); meta= {e.meta with adlevel= max_adlevel [e1; e2]}}
+      let e1 = inner e1 in
+      let e2 = inner e2 in
+      { pattern= EAnd (e1, e2)
+      ; meta= {e.meta with adlevel= return_adlevel [e1; e2]} }
   | EOr (e1, e2) ->
-      let e1 = update_expr_ad_levels autodiffable_variables e1 in
-      let e2 = update_expr_ad_levels autodiffable_variables e2 in
-      {pattern= EOr (e1, e2); meta= {e.meta with adlevel= max_adlevel [e1; e2]}}
-  | Promotion (expr, ut, ad) ->
-      let expr' = update_expr_ad_levels autodiffable_variables expr in
-      { pattern= Promotion (expr', ut, ad)
-      ; meta= {e.meta with adlevel= max_adlevel [expr']} }
+      let e1 = inner e1 in
+      let e2 = inner e2 in
+      { pattern= EOr (e1, e2)
+      ; meta= {e.meta with adlevel= return_adlevel [e1; e2]} }
+  | Promotion _ when keep_promotions -> e
+  | Promotion (expr, ut, _) ->
+      let expr' = inner expr in
+      let adlevel = return_adlevel [expr'] in
+      if
+        UnsizedType.equal ut
+          (UnsizedType.internal_scalar (Expr.Typed.type_of expr'))
+      then expr'
+      else {pattern= Promotion (expr', ut, adlevel); meta= {e.meta with adlevel}}
   | Indexed (ixed, i_list) ->
-      let ixed = update_expr_ad_levels autodiffable_variables ixed in
+      let ixed = inner ixed in
       let i_list =
         List.map ~f:(update_idx_ad_levels autodiffable_variables) i_list in
       { pattern= Indexed (ixed, i_list)
@@ -452,7 +496,7 @@ let rec update_expr_ad_levels autodiffable_variables (Expr.{pattern; _} as e) =
          as n Vars. So for example, autodiffable_variables should possibly
          include tuple.1 but not tuple.2 In the mean time, what's the most
          conservative? Make the whole thing AD when any part is? *)
-      let e' = update_expr_ad_levels autodiffable_variables e in
+      let e' = inner e in
       Expr.Helpers.add_tuple_index e' ix
 
 and update_idx_ad_levels autodiffable_variables =

@@ -2472,10 +2472,8 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
         std::vector<double> theta =
           std::vector<double>(5, std::numeric_limits<double>::quiet_NaN());
         stan::model::assign(lcm_sym9__,
-          std::vector<double>{beta,
-            stan::math::promote_scalar<local_scalar_t__>(
-              static_cast<double>(1000000)), gamma, xi, delta},
-          "assigning variable lcm_sym9__");
+          std::vector<double>{beta, static_cast<double>(1000000), gamma, xi,
+            delta}, "assigning variable lcm_sym9__");
         stan::model::assign(lcm_sym8__,
           stan::math::integrate_ode_rk45(simple_SIR_functor__(), y0,
             static_cast<double>(0), t, lcm_sym9__, x_r, x_i, pstream__),
@@ -23516,7 +23514,7 @@ summer(const T0__& et_arg__, std::ostream* pstream__) {
       lcm_sym26__ = stan::math::size(et);
       N = lcm_sym26__;
       local_scalar_t__ running_sum;
-      running_sum = stan::math::promote_scalar<local_scalar_t__>(0);
+      running_sum = static_cast<double>(0);
       current_statement__ = 9;
       if (stan::math::logical_gte(lcm_sym26__, 1)) {
         current_statement__ = 14;
@@ -25736,8 +25734,7 @@ foo(const T0__& N, const T1__& M, std::ostream* pstream__) {
     Eigen::Matrix<double,-1,-1> lcm_sym1__;
     {
       current_statement__ = 8;
-      return stan::math::promote_scalar<local_scalar_t__>(
-               stan::math::rep_matrix(static_cast<double>(1), N, M));
+      return stan::math::rep_matrix(static_cast<double>(1), N, M);
     }
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -36770,7 +36767,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         }
         x = static_cast<double>(3);
         current_statement__ = 35;
-        lp_accum__.add(stan::math::promote_scalar<local_scalar_t__>(3));
+        lp_accum__.add(static_cast<double>(3));
         current_statement__ = 37;
         if (stan::math::logical_gt(theta, 2)) {
           current_statement__ = 36;
@@ -36779,10 +36776,10 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         current_statement__ = 38;
         lp_accum__.add(x);
         current_statement__ = 39;
-        lp_accum__.add(stan::math::promote_scalar<local_scalar_t__>(247));
+        lp_accum__.add(static_cast<double>(247));
         x = static_cast<double>(576);
         current_statement__ = 40;
-        lp_accum__.add(stan::math::promote_scalar<local_scalar_t__>(576));
+        lp_accum__.add(static_cast<double>(576));
         lcm_sym98__ = stan::math::logical_gt(theta, 46);
         if (lcm_sym98__) {
           current_statement__ = 41;
@@ -36807,12 +36804,12 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         {
           double y = std::numeric_limits<double>::quiet_NaN();
           current_statement__ = 51;
-          lp_accum__.add(stan::math::promote_scalar<local_scalar_t__>(24));
+          lp_accum__.add(static_cast<double>(24));
         }
         {
           double y = std::numeric_limits<double>::quiet_NaN();
           current_statement__ = 54;
-          lp_accum__.add(stan::math::promote_scalar<local_scalar_t__>(245));
+          lp_accum__.add(static_cast<double>(245));
         }
         {
           current_statement__ = 56;
@@ -36890,13 +36887,13 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         }
         double temp2 = std::numeric_limits<double>::quiet_NaN();
         {
-          lp_accum__.add(stan::math::promote_scalar<local_scalar_t__>(4));
-          lp_accum__.add(stan::math::promote_scalar<local_scalar_t__>(6));
+          lp_accum__.add(static_cast<double>(4));
+          lp_accum__.add(static_cast<double>(6));
           {
             current_statement__ = 77;
-            lp_accum__.add(stan::math::promote_scalar<local_scalar_t__>(4));
+            lp_accum__.add(static_cast<double>(4));
             current_statement__ = 78;
-            lp_accum__.add(stan::math::promote_scalar<local_scalar_t__>(6));
+            lp_accum__.add(static_cast<double>(6));
           }
         }
         double dataonlyvar;
@@ -37307,7 +37304,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         }
         x = static_cast<double>(3);
         current_statement__ = 35;
-        lp_accum__.add(stan::math::promote_scalar<local_scalar_t__>(3));
+        lp_accum__.add(static_cast<double>(3));
         current_statement__ = 37;
         if (stan::math::logical_gt(theta, 2)) {
           current_statement__ = 36;
@@ -37316,10 +37313,10 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         current_statement__ = 38;
         lp_accum__.add(x);
         current_statement__ = 39;
-        lp_accum__.add(stan::math::promote_scalar<local_scalar_t__>(247));
+        lp_accum__.add(static_cast<double>(247));
         x = static_cast<double>(576);
         current_statement__ = 40;
-        lp_accum__.add(stan::math::promote_scalar<local_scalar_t__>(576));
+        lp_accum__.add(static_cast<double>(576));
         lcm_sym74__ = stan::math::logical_gt(theta, 46);
         if (lcm_sym74__) {
           current_statement__ = 41;
@@ -37344,12 +37341,12 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         {
           double y = std::numeric_limits<double>::quiet_NaN();
           current_statement__ = 51;
-          lp_accum__.add(stan::math::promote_scalar<local_scalar_t__>(24));
+          lp_accum__.add(static_cast<double>(24));
         }
         {
           double y = std::numeric_limits<double>::quiet_NaN();
           current_statement__ = 54;
-          lp_accum__.add(stan::math::promote_scalar<local_scalar_t__>(245));
+          lp_accum__.add(static_cast<double>(245));
         }
         {
           current_statement__ = 56;
@@ -37427,13 +37424,13 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         }
         double temp2 = std::numeric_limits<double>::quiet_NaN();
         {
-          lp_accum__.add(stan::math::promote_scalar<local_scalar_t__>(4));
-          lp_accum__.add(stan::math::promote_scalar<local_scalar_t__>(6));
+          lp_accum__.add(static_cast<double>(4));
+          lp_accum__.add(static_cast<double>(6));
           {
             current_statement__ = 77;
-            lp_accum__.add(stan::math::promote_scalar<local_scalar_t__>(4));
+            lp_accum__.add(static_cast<double>(4));
             current_statement__ = 78;
-            lp_accum__.add(stan::math::promote_scalar<local_scalar_t__>(6));
+            lp_accum__.add(static_cast<double>(6));
           }
         }
         double dataonlyvar;
@@ -38437,7 +38434,7 @@ double dumb(const T0__& x, std::ostream* pstream__) {
     double lcm_sym2__;
     {
       current_statement__ = 4;
-      return stan::math::promote_scalar<local_scalar_t__>((x - 0.5));
+      return (x - 0.5);
     }
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);

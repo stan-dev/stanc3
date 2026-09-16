@@ -264,7 +264,6 @@ module Helpers = struct
       match Typed.adlevel_of e with
       | TupleAD ts -> List.nth ts (i - 1)
       | t ->
-          (* UnsizedType.fill_adtype_for_type t mtype *)
           ICE.(
             internal_errorf
               "Internal error: Attempted to apply tuple index to an expression \
