@@ -73,9 +73,7 @@ let factor_rhs (factor : factor) : vexpr Set.Poly.t =
 let factor_var_dependencies statement_map blockers (label, factor) =
   let rhs = factor_rhs factor in
   let dep_labels = node_vars_dependencies statement_map ~blockers rhs label in
-  let label_vars l = stmt_rhs_names_set (fst (LabelMap.find l statement_map)) in
-  let dep_vars = Set.Poly.union_map dep_labels ~f:label_vars in
-  Set.Poly.union dep_vars rhs
+  Set.Poly.union (rhs_variables_at statement_map dep_labels) rhs
 
 (** Helper function to generate the factor graph adjacency map representation
     from a factor-adjacency list *)

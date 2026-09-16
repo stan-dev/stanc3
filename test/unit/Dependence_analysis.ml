@@ -109,6 +109,418 @@ let%expect_test "Variable dependency example" =
       (4 5 9 11 13 14 16)
     |}]
 
+let%expect_test "Dependency graph printed one label per line" =
+  Fmt.pr "%a" pp_dependency_graph (log_prob_dependency_graph example1_program);
+  [%expect
+    {|
+    1: none
+    2: none
+    3: none
+    4: none
+    5: 4
+    6: 4 5
+    7: 4 5
+    8: 4 5
+    9: 4 5 11 13
+    10: 4 5 9 11 13
+    11: 4 5 9 13
+    12: 4 5 9 11 13
+    13: 4 5 9 11
+    14: 4 5 9 11 13
+    15: 4 5 9 11 13 14
+    16: 4 5 9 11 13 14
+    17: 4 5 9 11 13 14 16
+    18: 4 5 9 11 13 14 16 17
+    19: 4 5 9 11 13 14 16 17
+    20: 4 5 9 11 13 14 16 17
+    21: 4 5 9 11 13 14 16 17
+    22: 4 5 9 11 13 14 16 17 19
+    |}]
+
+(* ---- Access model: which elements each node reads and writes ---- *)
+
+let print_node_accesses prog =
+  Fmt.pr "%a" pp_node_accesses
+    (log_prob_build_dep_info_map (Test_utils.mir_of_string prog))
+
+let%expect_test "Single indices: affine, invariant and varying" =
+  print_node_accesses
+    {|
+      data {
+        int N; int J; int k;
+        vector[N] v;
+        array[N] int<lower=1, upper=N> idx;
+      }
+      model {
+        vector[N] y;
+        int m = 1;
+        for (n in 1:N) {
+          y[n] = v[n + 1] + v[n - 2] + v[1 + n] + v[k] + v[3];
+          y[n] = v[idx[n]] + v[2 * n] + v[n + k] + v[m];
+          y[n] = v[k + n - 1] + v[n - k] + v[n + k + k] + v[n + k - k] + v[k + 1] + v[N - n] + v[n * k] + v[(n + 1) * 2];
+          m = n;
+          for (j in 1:J) y[n] = v[j];
+        }
+      }
+    |};
+  [%expect
+    {|
+    3: R N
+    4: W y
+    5: W m
+    6: W m
+    7: R N, W n
+    9: R v[i+1], R v[i-2], R v[i+1], R v[k], R k, R v[3], W y[i]
+    10: R v[?gather], R idx[i], R v[2i], R v[i+k], R k, R v[?written], R m, W y[i]
+    11: R v[i+k-1], R k, R v[i-k], R k, R v[i+2*k], R k, R k, R v[i], R k, R k, R v[k+1], R k, R v[-i+N], R N, R v[?nonlinear], R k, R v[2i+2], W y[i]
+    12: W m
+    13: R J, W j
+    15: R n, R v[i], W y[?written]
+    |}]
+
+let%expect_test "Every index kind of the language" =
+  print_node_accesses
+    {|
+      data {
+        int N; int K; int a; int b;
+        vector[N] v; matrix[N, K] m;
+        array[N] int<lower=1, upper=N> idx;
+        array[N, 2] int<lower=1, upper=N> pairs;
+      }
+      model {
+        vector[N] y; row_vector[K] r; vector[N] c;
+        for (n in 1:N) {
+          y[n] = sum(v[:]) + sum(v[a:]) + sum(v[a:b]) + sum(v[:b]) + sum(v[idx]);
+          y[n] = sum(v[n:]) + sum(v[n:n + 1]) + sum(v[idx[n]:N]) + sum(v[pairs[n]]);
+          r = m[n, :];
+          r = m[n, 1:K];
+          c = m[:, 1];
+          c = m[idx, 2];
+          c[2:N] = y[1:(N - 1)];
+        }
+      }
+    |};
+  [%expect
+    {|
+    3: R N
+    4: W y
+    5: R K
+    6: W r
+    7: R N
+    8: W c
+    9: R N, W n
+    11: R v[:], R v[a:], R a, R v[a:b], R a, R b, R v[1:b], R b, R v[{idx}], R idx, W y[i]
+    12: R v[i:], R v[i:i+1], R v[?gather:N], R idx[i], R N, R v[{?gather}], R pairs[i], W y[i]
+    13: R m[i, :], W r
+    14: R m[i, 1:K], R K, W r
+    15: R m[:, 1], W c
+    16: R m[{idx}, 2], R idx, W c
+    17: R N, R y[1:N-1], R N, W c[2:N]
+    |}]
+
+let%expect_test "Statement kinds: declarations, target, effects and nesting" =
+  print_node_accesses
+    {|
+      data { int N; vector[N] x; vector[N] w; }
+      parameters { real mu; }
+      model {
+        vector[N] v;
+        real acc = 0;
+        for (n in 1:N) {
+          real t = 2 * x[n];
+          vector[2] u;
+          v[n] = t + w[n];
+          acc += x[n] * w[n];
+          target += normal_lpdf(x[n] | v[n], mu);
+          if (v[n] > 0) print(v[n]); else v[n] = sum(v);
+          while (v[n] < 0) v[n] = 0;
+        }
+      }
+    |};
+  [%expect
+    {|
+    2: W mu
+    4: R N
+    5: W v
+    6: W acc
+    7: W acc
+    8: R N, W n
+    10: W t
+    11: R x[i], W t
+    12: W u
+    13: R t, R w[i], W v[i]
+    14: R acc, R x[i], R w[i], W acc
+    15: R x[i], R v[i], R mu, += target
+    16: R v[i]
+    17: R v[i]
+    18: R v, W v[i]
+    19: R v[i]
+    20: W v[i]
+    |}]
+
+let accesses_example =
+  Test_utils.mir_of_string
+    {|
+        data {
+          int N; int k;
+          vector[N] x;
+          array[N] int<lower=1, upper=N> idx;
+        }
+        parameters { real mu; }
+        model {
+          vector[N] v;
+          vector[2] theta;
+          int m = 1;
+          theta[1] = mu;
+          theta[2] = x[k];
+          v[m] = x[m];
+          for (n in 1:N) {
+            v[n] = x[n + 1] + theta[1] + v[idx[n]] + v[m];
+            for (j in 1:2) {
+              theta[j] = v[n] + v[k] + sum(v[n:N]);
+            }
+          }
+          target += normal_lpdf(x | v, theta[2]);
+        }
+      |}
+
+let%expect_test "Nodes outside a loop and in nested loops" =
+  let map = log_prob_build_dep_info_map accesses_example in
+  Fmt.pr "%a" pp_node_accesses map;
+  [%expect
+    {|
+    2: W mu
+    4: R N
+    5: W v
+    6: W theta
+    7: W m
+    8: W m
+    9: R mu, W theta[1]
+    10: R x[k], R k, W theta[2]
+    11: R m, R x[?written], R m, W v[?written]
+    12: R N, W n
+    14: R x[i+1], R theta[1], R v[?gather], R idx[i], R v[?written], R m, W v[i]
+    15: W j
+    17: R v[?written], R n, R v[k], R k, R v[?written:N], R n, R N, W theta[i]
+    18: R x, R v, R theta[2], += target
+    |}]
+
+let%expect_test "Right-hand-side variables of a set of labels" =
+  let map = log_prob_build_dep_info_map accesses_example in
+  print_s
+    [%sexp
+      (rhs_variables_at map (Set.Poly.of_list [10; 12]) : vexpr Set.Poly.t)];
+  [%expect {| ((VVar N) (VVar k) (VVar x)) |}]
+
+(* ---- Element test ---- *)
+
+let affine ?(coeff = 1) ?(terms = []) const =
+  Index.Single (Affine {coeff; offset= {const; terms}})
+
+let invariant ?(terms = []) const = Index.Single (Invariant {const; terms})
+let sym_k = [(1, Expr.Helpers.variable "k")]
+let sym_m = [(1, Expr.Helpers.variable "m")]
+let write_v subs = {var= "v"; subs; kind= Write; label= 0}
+let read_v subs = {var= "v"; subs; kind= Read; label= 1}
+
+let print_dependence source sink =
+  Fmt.pr "%a  /  %a  ->  %a@." pp_access source pp_access sink pp_dependence
+    (access_dependence source sink)
+
+let%expect_test "access_dependence: strong SIV" =
+  print_dependence (write_v [affine 0]) (read_v [affine 0]);
+  print_dependence (write_v [affine 1]) (read_v [affine 0]);
+  print_dependence (write_v [affine 0]) (read_v [affine 1]);
+  print_dependence (write_v [affine 8]) (read_v [affine 0]);
+  print_dependence
+    (write_v [affine ~coeff:(-1) 0])
+    (read_v [affine ~coeff:(-1) 2]);
+  print_dependence (write_v [affine ~coeff:2 1]) (read_v [affine ~coeff:2 0]);
+  [%expect
+    {|
+    W v[i]  /  R v[i]  ->  {=} d=0
+    W v[i+1]  /  R v[i]  ->  {<} d=1
+    W v[i]  /  R v[i+1]  ->  {>} d=-1
+    W v[i+8]  /  R v[i]  ->  {<} d=8
+    W v[-i]  /  R v[-i+2]  ->  {<} d=2
+    W v[2i+1]  /  R v[2i]  ->  independent
+    |}]
+
+let%expect_test "access_dependence: ZIV, weak SIV and confused pairs" =
+  print_dependence (write_v [affine ~coeff:2 0]) (read_v [affine 0]);
+  print_dependence (write_v [affine 0]) (read_v [invariant 1]);
+  print_dependence (write_v [invariant 1]) (read_v [invariant 2]);
+  print_dependence (write_v [invariant 1]) (read_v [invariant 1]);
+  print_dependence (write_v [invariant ~terms:sym_k 0]) (read_v [invariant 1]);
+  print_dependence (write_v [Single (Varying Gather)]) (read_v [affine 0]);
+  print_dependence (write_v [affine 0]) (read_v [affine 0; invariant 1]);
+  print_dependence (write_v []) (read_v []);
+  print_dependence (write_v []) (read_v [affine 0]);
+  [%expect
+    {|
+    W v[2i]  /  R v[i]  ->  {<,=,>}
+    W v[i]  /  R v[1]  ->  {<,=,>}
+    W v[1]  /  R v[2]  ->  independent
+    W v[1]  /  R v[1]  ->  {<,=,>}
+    W v[k]  /  R v[1]  ->  {<,=,>}
+    W v[?gather]  /  R v[i]  ->  {<,=,>}
+    W v[i]  /  R v[i, 1]  ->  {<,=,>}
+    W v  /  R v  ->  {<,=,>}
+    W v  /  R v[i]  ->  {<,=,>}
+    |}]
+
+let%expect_test "access_dependence: symbolic offsets" =
+  print_dependence
+    (write_v [affine ~terms:sym_k 0])
+    (read_v [affine ~terms:sym_k 0]);
+  print_dependence
+    (write_v [affine ~terms:sym_k 1])
+    (read_v [affine ~terms:sym_k 0]);
+  print_dependence (write_v [affine ~terms:sym_k 0]) (read_v [affine 0]);
+  print_dependence
+    (write_v [affine ~terms:sym_k 0])
+    (read_v [affine ~terms:sym_m 0]);
+  print_dependence
+    (write_v [invariant ~terms:sym_k 1])
+    (read_v [invariant ~terms:sym_k 2]);
+  print_dependence
+    (write_v [invariant ~terms:sym_k 0])
+    (read_v [invariant ~terms:sym_k 0]);
+  print_dependence
+    (write_v [invariant ~terms:sym_k 0])
+    (read_v [invariant ~terms:sym_m 0]);
+  [%expect
+    {|
+    W v[i+k]  /  R v[i+k]  ->  {=} d=0
+    W v[i+k+1]  /  R v[i+k]  ->  {<} d=1
+    W v[i+k]  /  R v[i]  ->  {<,=,>}
+    W v[i+k]  /  R v[i+m]  ->  {<,=,>}
+    W v[k+1]  /  R v[k+2]  ->  independent
+    W v[k]  /  R v[k]  ->  {<,=,>}
+    W v[k]  /  R v[m]  ->  {<,=,>}
+    |}]
+
+let%expect_test "access_dependence: slices and multi-indices are confused" =
+  let one = Invariant {const= 1; terms= []} in
+  print_dependence (write_v [affine 0]) (read_v [All]);
+  print_dependence (write_v [invariant 1]) (read_v [Between (one, one)]);
+  print_dependence (write_v [Upfrom one]) (read_v [invariant 3]);
+  print_dependence
+    (write_v [MultiIndex (Invariant {const= 0; terms= sym_k})])
+    (read_v [invariant 3]);
+  print_dependence (write_v [affine 0; invariant 1]) (read_v [All; invariant 2]);
+  [%expect
+    {|
+    W v[i]  /  R v[:]  ->  {<,=,>}
+    W v[1]  /  R v[1:1]  ->  {<,=,>}
+    W v[1:]  /  R v[3]  ->  {<,=,>}
+    W v[{k}]  /  R v[3]  ->  {<,=,>}
+    W v[i, 1]  /  R v[:, 2]  ->  independent
+    |}]
+
+let%expect_test "access_dependence: merging separable positions" =
+  print_dependence
+    (write_v [affine 0; invariant 1])
+    (read_v [affine 0; invariant 2]);
+  print_dependence (write_v [affine 0; affine 1]) (read_v [affine 0; affine 0]);
+  print_dependence
+    (write_v [affine 0; invariant 1])
+    (read_v [invariant 2; affine 0]);
+  print_dependence
+    (write_v [affine 0; invariant 1])
+    (read_v [affine 0; invariant 1]);
+  print_dependence (write_v [affine 1; affine 1]) (read_v [affine 0; affine 0]);
+  [%expect
+    {|
+    W v[i, 1]  /  R v[i, 2]  ->  independent
+    W v[i, i+1]  /  R v[i, i]  ->  independent
+    W v[i, 1]  /  R v[2, i]  ->  {<,=,>}
+    W v[i, 1]  /  R v[i, 1]  ->  {=} d=0
+    W v[i+1, i+1]  /  R v[i, i]  ->  {<} d=1
+    |}]
+
+(* ---- Reaching definitions pruned by subscript ---- *)
+
+(** For every node whose immediate dependencies are fewer than name-level
+    reaching definitions would give, print the node, the definitions dropped
+    because their subscripts cannot reach the node's reads, and the ones kept.
+*)
+let print_pruned_edges prog =
+  let map = log_prob_build_dep_info_map (Test_utils.mir_of_string prog) in
+  let name_level label =
+    let stmt, info = LabelMap.find label map in
+    let rhs =
+      Analysis_and_optimization.Mir_utils.stmt_rhs_var_set stmt
+      |> Set.Poly.map ~f:fst in
+    Set.Poly.union info.parents
+      (Set.Poly.union_map rhs
+         ~f:(reaching_defn_lookup info.reaching_defn_entry)) in
+  let pruned =
+    LabelMap.fold map ~init:false ~f:(fun ~key:label ~data:_ pruned ->
+        let plain = name_level label in
+        let actual = node_immediate_dependencies map label in
+        if Set.Poly.equal plain actual then pruned
+        else (
+          Fmt.pr "%d: dropped %a, kept %a@." label
+            Fmt.(list ~sep:(any " ") int)
+            (Set.Poly.to_list (Set.Poly.diff plain actual))
+            Fmt.(list ~sep:(any " ") int)
+            (Set.Poly.to_list actual);
+          true)) in
+  if not pruned then print_endline "no definition pruned"
+
+let%expect_test "Pruning: distinct literal subscripts are independent" =
+  print_pruned_edges
+    {|
+      data { real y; real s; }
+      parameters { real a; real b; }
+      model {
+        vector[2] theta;
+        theta[1] = a;
+        theta[2] = b;
+        y ~ normal(theta[1], s);
+        y ~ normal(theta[2], s);
+      }
+    |};
+  [%expect {|
+    8: dropped 7, kept 1 5 6
+    9: dropped 6, kept 1 5 7
+    |}]
+
+let%expect_test "Pruning: same-iteration definitions inside a loop are kept" =
+  print_pruned_edges
+    {|
+      data { int N; vector[N] x; vector[N] y; }
+      parameters { real mu; real s; }
+      model {
+        vector[N] muj; vector[N] m;
+        for (n in 1:N) {
+          muj[n] = mu + x[n];
+          m[n] = muj[n] * 2;
+          y[n] ~ normal(m[n], s);
+        }
+      }
+    |};
+  [%expect {| no definition pruned |}]
+
+let%expect_test "Pruning: whole-variable, gather and written symbols are kept" =
+  print_pruned_edges
+    {|
+      data { int N; vector[N] x; array[N] int<lower=1, upper=N> idx; }
+      parameters { real mu; }
+      model {
+        vector[N] v; real t; int k = 1;
+        v[k + 1] = mu;
+        k = 2;
+        for (n in 1:N) {
+          v[idx[n]] = mu + x[n];
+          t = v[n] + v[k];
+        }
+        target += t + sum(v);
+      }
+    |};
+  [%expect {| no definition pruned |}]
+
 let uninitialized_var_example =
   Test_utils.mir_of_string
     {|
