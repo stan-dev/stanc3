@@ -40,7 +40,7 @@ type dep_info_map =
 type dependency_graph = label Set.Poly.t LabelMap.t
 
 val node_immediate_dependencies :
-  dep_info_map -> ?blockers:vexpr Set.Poly.t -> label -> label Set.Poly.t
+  dep_info_map -> ?blockers:string Set.Poly.t -> label -> label Set.Poly.t
 (** Given dependency information for each node, find the 'immediate'
     dependencies of a node: the first-degree control flow parents and the
     subscript-pruned reaching definitions of RHS variables. *)
@@ -51,8 +51,8 @@ val node_dependencies : dep_info_map -> label -> label Set.Poly.t
 
 val node_vars_dependencies :
      dep_info_map
-  -> ?blockers:vexpr Set.Poly.t
-  -> vexpr Set.Poly.t
+  -> ?blockers:string Set.Poly.t
+  -> string Set.Poly.t
   -> label
   -> label Set.Poly.t
 (** Given dependency information for each node, find all of the dependencies of
@@ -79,7 +79,9 @@ val log_prob_dependency_graph : Program.Typed.t -> dependency_graph
 (** Build the dependency graph for the log_prob section of a program, where
     labels correspond to the labels built by statement_map. *)
 
-val reaching_defn_lookup : reaching_defn Set.Poly.t -> vexpr -> label Set.Poly.t
+val reaching_defn_lookup :
+  reaching_defn Set.Poly.t -> string -> label Set.Poly.t
+(** The labels at which the named variable may have been defined. *)
 
 val mir_uninitialized_variables :
   Program.Typed.t -> (Location_span.t * string) Set.Poly.t
@@ -90,7 +92,7 @@ val access_dependence : access -> access -> dependence
 (** Whether two accesses to the same variable can name the same element, and in
     which iterations (Goff, Kennedy and Tseng, PLDI 1991). *)
 
-val rhs_variables_at : dep_info_map -> label Set.Poly.t -> vexpr Set.Poly.t
+val rhs_variables_at : dep_info_map -> label Set.Poly.t -> string Set.Poly.t
 (** The right-hand-side variables of the statements at [labels]. *)
 
 val pp_access : access Fmt.t

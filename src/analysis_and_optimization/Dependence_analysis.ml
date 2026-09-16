@@ -434,15 +434,17 @@ let access_dependence (source : access) (sink : access) : dependence =
 (***********************************)
 
 (** Find all of the reaching definitions of a variable in an RD set *)
-let reaching_defn_lookup (rds : reaching_defn Set.Poly.t) (var : vexpr) :
+let reaching_defn_lookup (rds : reaching_defn Set.Poly.t) (var : string) :
     label Set.Poly.t =
-  Set.Poly.map (Set.Poly.filter rds ~f:(fun (var', _) -> var' = var)) ~f:snd
+  Set.Poly.map
+    (Set.Poly.filter rds ~f:(fun (defined, _) -> String.equal defined var))
+    ~f:snd
 
 (** The labels defining [var] that reach node [info], minus each defining label
     at which every write of [var] is [Independent] of every read in [info]. *)
 let reaching_defns_of_read (statement_map : dep_info_map) (info : node_dep_info)
     (var : string) : label Set.Poly.t =
-  let defs = reaching_defn_lookup info.reaching_defn_entry (VVar var) in
+  let defs = reaching_defn_lookup info.reaching_defn_entry var in
   let reads = reads_of ~var info.accesses in
   let may_reach def_label =
     match LabelMap.find_opt def_label statement_map with
@@ -459,18 +461,20 @@ let reaching_defns_of_read (statement_map : dep_info_map) (info : node_dep_info)
   Set.Poly.filter defs ~f:may_reach
 
 let node_immediate_dependencies (statement_map : dep_info_map)
-    ?(blockers : vexpr Set.Poly.t = Set.Poly.empty) (label : label) :
+    ?(blockers : string Set.Poly.t = Set.Poly.empty) (label : label) :
     label Set.Poly.t =
   let stmt, info = LabelMap.find label statement_map in
   let rhs_set = Set.Poly.map (stmt_rhs_var_set stmt) ~f:fst in
-  let lookup (VVar var) = reaching_defns_of_read statement_map info var in
-  let rhs_deps = Set.Poly.union_map (Set.Poly.diff rhs_set blockers) ~f:lookup in
+  let rhs_deps =
+    Set.Poly.union_map
+      (Set.Poly.diff rhs_set blockers)
+      ~f:(reaching_defns_of_read statement_map info) in
   Set.Poly.union info.parents rhs_deps
 
 (* This is doing an explicit graph traversal with edges defined by
    node_immediate_dependencies. *)
 let rec node_dependencies_rec (statement_map : dep_info_map)
-    ?(blockers : vexpr Set.Poly.t = Set.Poly.empty) (label : label)
+    ?(blockers : string Set.Poly.t = Set.Poly.empty) (label : label)
     (visited : label Set.Poly.t) : label Set.Poly.t =
   if Set.Poly.mem label visited then visited
   else
@@ -483,12 +487,13 @@ let node_dependencies (statement_map : dep_info_map) (label : label) :
   node_dependencies_rec statement_map label Set.Poly.empty
 
 let node_vars_dependencies (statement_map : dep_info_map)
-    ?(blockers : vexpr Set.Poly.t = Set.Poly.empty) (vars : vexpr Set.Poly.t)
+    ?(blockers : string Set.Poly.t = Set.Poly.empty) (vars : string Set.Poly.t)
     (label : label) : label Set.Poly.t =
   let _, info = LabelMap.find label statement_map in
   let var_deps =
-    Set.Poly.union_map (Set.Poly.diff vars blockers) ~f:(fun (VVar var) ->
-        reaching_defns_of_read statement_map info var) in
+    Set.Poly.union_map
+      (Set.Poly.diff vars blockers)
+      ~f:(reaching_defns_of_read statement_map info) in
   Set.Poly.fold
     (Set.Poly.union info.parents var_deps)
     ~init:Set.Poly.empty
@@ -525,8 +530,8 @@ let mir_reaching_definitions (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
   let rd_map =
     reaching_definitions_mfp mir (module Flowgraph) flowgraph_to_mir in
   let to_rd_set set =
-    Set.Poly.map set ~f:(fun (s, label_opt) ->
-        (VVar s, Option.value label_opt ~default:1)) in
+    Set.Poly.map set ~f:(fun (name, label_opt) ->
+        (name, Option.value label_opt ~default:1)) in
   LabelMap.map rd_map ~f:(fun {entry; exit} ->
       {entry= to_rd_set entry; exit= to_rd_set exit})
 
@@ -546,8 +551,7 @@ let prog_rhs_variables
     (flowgraph_to_mir : Stmt.Located.Non_recursive.t LabelMap.t)
     (labels : int Set.Poly.t) : string Set.Poly.t =
   let label_vars label =
-    Set.Poly.map
-      ~f:(fun (VVar s, _) -> s)
+    Set.Poly.map ~f:fst
       (stmt_rhs_var_set (LabelMap.find label flowgraph_to_mir).pattern) in
   Set.Poly.union_map labels ~f:label_vars
 
@@ -566,7 +570,7 @@ let stmt_uninitialized_variables (exceptions : string Set.Poly.t)
         let stmt = LabelMap.find label flowgraph_to_mir in
         let rhs =
           Set.Poly.map
-            ~f:(fun (VVar s, Expr.Typed.Meta.{loc; _}) -> (loc, s))
+            ~f:(fun (name, Expr.Typed.Meta.{loc; _}) -> (loc, name))
             (stmt_rhs_var_set stmt.pattern) in
         let uninitialized (_, var) = not (Set.Poly.mem var inits.entry) in
         let uninitialized_set = Set.Poly.filter ~f:uninitialized rhs in
@@ -689,7 +693,7 @@ let log_prob_dependency_graph (mir : Program.Typed.t) : dependency_graph =
 (** The variables read by the statements at [labels], where [Mir_utils.stmt_rhs]
     defines which positions of a statement count as reads. *)
 let rhs_variables_at (statement_map : dep_info_map) (labels : label Set.Poly.t)
-    : vexpr Set.Poly.t =
+    : string Set.Poly.t =
   Set.Poly.union_map labels ~f:(fun label ->
       stmt_rhs_names_set (fst (LabelMap.find label statement_map)))
 

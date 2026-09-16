@@ -56,8 +56,8 @@ let%expect_test "Reaching defns example" =
   let deps =
     LabelMap.map (log_prob_build_dep_info_map example1_program)
       ~f:(fun (_, x) ->
-        ( reaching_defn_lookup x.reaching_defn_entry (VVar "j")
-        , reaching_defn_lookup x.reaching_defn_exit (VVar "j") )) in
+        ( reaching_defn_lookup x.reaching_defn_entry "j"
+        , reaching_defn_lookup x.reaching_defn_exit "j" )) in
   print_s [%sexp (deps : (label Set.Poly.t * label Set.Poly.t) LabelMap.t)];
   [%expect
     {|
@@ -77,33 +77,23 @@ let%expect_test "Reaching defns example" =
       (deps : (reaching_defn Set.Poly.t * reaching_defn Set.Poly.t) LabelMap.t)];
   [%expect
     {|
-      ((1 (() ())) (2 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
-       (3 (() (((VVar i) 3)))) (4 ((((VVar i) 3)) (((VVar i) 4))))
-       (5 ((((VVar i) 4)) (((VVar i) 4)))) (6 ((((VVar i) 4)) (((VVar i) 4))))
-       (7 ((((VVar i) 4)) (((VVar i) 4))))
-       (8 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
-       (9 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
-       (10 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
-       (11 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
-       (12 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
-       (13 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
-       (14 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
-       (15 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
-       (16 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
-       (17 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
-       (18 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
-       (19 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
-       (20 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
-       (21 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
-       (22 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9)))))
+    ((1 (() ())) (2 (((i 4) (j 9)) ((i 4) (j 9)))) (3 (() ((i 3))))
+     (4 (((i 3)) ((i 4)))) (5 (((i 4)) ((i 4)))) (6 (((i 4)) ((i 4))))
+     (7 (((i 4)) ((i 4)))) (8 (((i 4) (j 9)) ((i 4) (j 9))))
+     (9 (((i 4) (j 9)) ((i 4) (j 9)))) (10 (((i 4) (j 9)) ((i 4) (j 9))))
+     (11 (((i 4) (j 9)) ((i 4) (j 9)))) (12 (((i 4) (j 9)) ((i 4) (j 9))))
+     (13 (((i 4) (j 9)) ((i 4) (j 9)))) (14 (((i 4) (j 9)) ((i 4) (j 9))))
+     (15 (((i 4) (j 9)) ((i 4) (j 9)))) (16 (((i 4) (j 9)) ((i 4) (j 9))))
+     (17 (((i 4) (j 9)) ((i 4) (j 9)))) (18 (((i 4) (j 9)) ((i 4) (j 9))))
+     (19 (((i 4) (j 9)) ((i 4) (j 9)))) (20 (((i 4) (j 9)) ((i 4) (j 9))))
+     (21 (((i 4) (j 9)) ((i 4) (j 9)))) (22 (((i 4) (j 9)) ((i 4) (j 9)))))
     |}]
 
 let%expect_test "Variable dependency example" =
   let deps =
     node_vars_dependencies
       (log_prob_build_dep_info_map example1_program)
-      (Set.Poly.singleton (VVar "j"))
-      17 in
+      (Set.Poly.singleton "j") 17 in
   print_s [%sexp (deps : label Set.Poly.t)];
   [%expect {|
       (4 5 9 11 13 14 16)
@@ -309,8 +299,8 @@ let%expect_test "Right-hand-side variables of a set of labels" =
   let map = log_prob_build_dep_info_map accesses_example in
   print_s
     [%sexp
-      (rhs_variables_at map (Set.Poly.of_list [10; 12]) : vexpr Set.Poly.t)];
-  [%expect {| ((VVar N) (VVar k) (VVar x)) |}]
+      (rhs_variables_at map (Set.Poly.of_list [10; 12]) : string Set.Poly.t)];
+  [%expect {| (N k x) |}]
 
 (* ---- Element test ---- *)
 

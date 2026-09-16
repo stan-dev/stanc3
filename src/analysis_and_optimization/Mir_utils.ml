@@ -255,9 +255,9 @@ let fwd_traverse_statement stmt ~init ~f =
     | Decl _ as s -> (init, s))
 
 (** See interface file *)
-let vexpr_of_expr_exn Expr.{pattern; _} =
+let var_name_of_expr_exn Expr.{pattern; _} =
   match pattern with
-  | Var s -> VVar s
+  | Var s -> s
   | _ ->
       Common.ICE.internal_error "Non-var expression found, but var expected"
       [@coverage off]
@@ -266,7 +266,7 @@ let vexpr_of_expr_exn Expr.{pattern; _} =
 let rec expr_var_set Expr.{pattern; meta} =
   let union_recur exprs = Set.Poly.union_list (List.map exprs ~f:expr_var_set) in
   match pattern with
-  | Var s -> Set.Poly.singleton (VVar s, meta)
+  | Var s -> Set.Poly.singleton (s, meta)
   | Lit _ -> Set.Poly.empty
   | FunApp (kind, exprs) -> union_recur (exprs @ Fun_kind.collect_exprs kind)
   | TernaryIf (expr1, expr2, expr3) -> union_recur [expr1; expr2; expr3]
@@ -285,9 +285,7 @@ and index_var_set ix =
       Set.Poly.union (expr_var_set expr1) (expr_var_set expr2)
   | MultiIndex expr -> expr_var_set expr
 
-let expr_var_names_set expr =
-  let get_names (VVar a, _) = a in
-  Set.Poly.map ~f:get_names (expr_var_set expr)
+let expr_var_names_set expr = Set.Poly.map ~f:fst (expr_var_set expr)
 
 let stmt_rhs stmt =
   match stmt with
@@ -311,8 +309,8 @@ let stmt_rhs_names_set s = Set.Poly.map ~f:fst (stmt_rhs_var_set s)
 (** See interface file *)
 let expr_assigned_var Expr.{pattern; _} =
   match pattern with
-  | Var s -> VVar s
-  | Indexed ({pattern= Var s; _}, _) -> VVar s
+  | Var s -> s
+  | Indexed ({pattern= Var s; _}, _) -> s
   | _ ->
       Common.ICE.internal_error
         "Unimplemented: analysis of assigning to non-var" [@coverage off]
