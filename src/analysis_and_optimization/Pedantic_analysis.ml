@@ -19,10 +19,8 @@ let list_unused_params (factor_graph : factor_graph) (mir : Program.Typed.t) :
   let param_info = parameter_set ~include_transformed:false mir in
   let params = Set.Poly.map ~f:fst3 param_info in
   let used_params =
-    Set.Poly.map
-      ~f:(fun (VVar v) -> v)
-      (Set.Poly.of_list
-         (VExprMap.to_list factor_graph.var_map |> List.map ~f:fst)) in
+    Set.Poly.of_list (VarMap.to_list factor_graph.var_map |> List.map ~f:fst)
+  in
   let unused = Set.Poly.diff params used_params in
   Set.Poly.filter_map
     ~f:(fun (pname, _, loc) ->
@@ -143,12 +141,10 @@ let var_deps info_map label ?expr:(expr_opt : Expr.Typed.t option = None)
     match expr_opt with
     | None -> (node_dependencies info_map label, Set.Poly.empty)
     | Some expr ->
-        let vvars = Set.Poly.map ~f:fst (expr_var_set expr) in
-        ( node_vars_dependencies info_map vvars label
-        , Set.Poly.map ~f:string_of_vexpr vvars ) in
+        let expr_names = Set.Poly.map ~f:fst (expr_var_set expr) in
+        (node_vars_dependencies info_map expr_names label, expr_names) in
   (* variable dependencies *)
-  let dep_vars =
-    Set.Poly.map ~f:string_of_vexpr (rhs_variables_at info_map dep_labels) in
+  let dep_vars = rhs_variables_at info_map dep_labels in
   (* target dependencies *)
   Set.Poly.inter targets (Set.Poly.union dep_vars expr_vars)
 
@@ -271,10 +267,10 @@ let list_non_one_priors (fg : factor_graph) (mir : Program.Typed.t) :
      except through P *)
   let priors = list_priors ~factor_graph:(Some fg) mir in
   let prior_set =
-    VExprMap.fold priors ~init:Set.Poly.empty
-      ~f:(fun ~key:(VVar v) ~data:(factors_opt, loc) s ->
+    VarMap.fold priors ~init:Set.Poly.empty
+      ~f:(fun ~key:param ~data:(factors_opt, loc) s ->
         Option.value_map factors_opt ~default:s ~f:(fun factors ->
-            Set.Poly.add (v, Set.Poly.cardinal factors, loc) s)) in
+            Set.Poly.add (param, Set.Poly.cardinal factors, loc) s)) in
   (* Return only multi-prior parameters *)
   Set.Poly.filter prior_set ~f:(fun (_, n, _) -> n <> 1)
 
