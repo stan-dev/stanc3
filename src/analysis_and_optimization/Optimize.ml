@@ -1589,6 +1589,12 @@ let optimization_suite ?(settings = all_optimizations) mir =
       (* Book: Machine idioms and instruction combining *)
     ; (list_collapsing, settings.list_collapsing)
       (* Book: Machine idioms and instruction combining *)
+    ; (optimize_ad_levels, settings.optimize_ad_levels)
+      (* hack: optimize_ad_levels should only need to run after optimize_soa,
+         but because it can turn variables into data (which are all AoS) it can
+         lead to compilation errors due to missing overloads in math. So we run
+         it twice to prevent variables that will interact with demoted variables
+         from ever getting tagged as SoA compatible. *)
     ; (optimize_soa, settings.optimize_soa)
     ; (optimize_ad_levels, settings.optimize_ad_levels)
       (* Remove decls immediately assigned to *)

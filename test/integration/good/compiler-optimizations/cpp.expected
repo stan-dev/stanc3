@@ -2131,7 +2131,7 @@ class ad_level_disconnected_function_model final : public model_base_crtp<ad_lev
       stan::model::assign(empty_user_func_aos,
         inline_empty_user_func_return_sym4__,
         "assigning variable empty_user_func_aos");
-      stan::math::var_value<Eigen::Matrix<double,-1,-1>> int_aos_mul_aos;
+      Eigen::Matrix<local_scalar_t__,-1,-1> int_aos_mul_aos;
       current_statement__ = 4;
       stan::model::assign(int_aos_mul_aos,
         stan::math::multiply(
