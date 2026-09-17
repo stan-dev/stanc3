@@ -285,7 +285,8 @@ and index_var_set ix =
       Set.Poly.union (expr_var_set expr1) (expr_var_set expr2)
   | MultiIndex expr -> expr_var_set expr
 
-let expr_var_names_set expr = Set.Poly.map ~f:fst (expr_var_set expr)
+let expr_var_names_set expr : string Set.Poly.t =
+  Set.Poly.map ~f:fst (expr_var_set expr)
 
 let stmt_rhs stmt =
   match stmt with

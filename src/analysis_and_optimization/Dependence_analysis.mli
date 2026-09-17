@@ -88,14 +88,5 @@ val mir_uninitialized_variables :
 (** Produce a list of uninitialized variables and their label locations, from
     the flowgraph starting at the given statement *)
 
-val access_dependence : access -> access -> dependence
-(** Whether two accesses to the same variable can name the same element, and in
-    which iterations (Goff, Kennedy and Tseng, PLDI 1991). *)
-
 val rhs_variables_at : dep_info_map -> label Set.Poly.t -> string Set.Poly.t
 (** The right-hand-side variables of the statements at [labels]. *)
-
-val pp_access : access Fmt.t
-val pp_dependence : dependence Fmt.t
-val pp_dependency_graph : dependency_graph Fmt.t
-val pp_node_accesses : dep_info_map Fmt.t
