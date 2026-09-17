@@ -1397,13 +1397,18 @@ let optimize_ad_levels (mir : Program.Typed.t) =
          mir.output_vars) in
   let initial_ad_variables fundef_opt _ =
     match (fundef_opt : Stmt.Located.t Program.fun_def option) with
-    | None -> global_initial_ad_variables
-    | Some {fdargs; _} ->
-        Set.Poly.union global_initial_ad_variables
-          (Set.Poly.of_list
-             (List.filter_map fdargs ~f:(fun (_, name, ut) ->
-                  if UnsizedType.is_autodiffable ut then Some name else None)))
-  in
+    | Some {fdargs; fdbody= Some s; _} ->
+        let autodiffable_args =
+          List.filter_map fdargs ~f:(fun (_, name, ut) ->
+              if UnsizedType.is_autodiffable ut then Some name else None) in
+        if List.is_empty autodiffable_args then Set.Poly.empty
+        else
+          (* because the return type of a function will be AD, the only safe
+             thing is to treat all variables in the function as possibly AD.
+             Note that this only really affects non-inlined functions. *)
+          Set.Poly.union (var_declarations s)
+            (Set.Poly.of_list autodiffable_args)
+    | _ -> global_initial_ad_variables in
   let extra_variables v = Set.Poly.singleton (v ^ "_in__") in
   let update_stmt stmt_pattern variable_set =
     match stmt_pattern with

@@ -1911,8 +1911,8 @@ foo(const T0__& t, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    std::vector<double> dydt =
-      std::vector<double>(0, std::numeric_limits<double>::quiet_NaN());
+    std::vector<local_scalar_t__> dydt =
+      std::vector<local_scalar_t__>(0, DUMMY_VAR__);
     current_statement__ = 5;
     return dydt;
   } catch (const std::exception& e) {
@@ -1938,14 +1938,14 @@ foo(const T0__& x_arg__, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    std::tuple<double, std::vector<double>> lcm_sym1__;
+    std::tuple<local_scalar_t__, std::vector<local_scalar_t__>> lcm_sym1__;
     {
-      std::tuple<double, std::vector<double>> y =
-        std::tuple<double, std::vector<double>>{std::numeric_limits<double>::quiet_NaN(
-                                                  ),
-          std::vector<double>(2, std::numeric_limits<double>::quiet_NaN())};
+      std::tuple<local_scalar_t__, std::vector<local_scalar_t__>> y =
+        std::tuple<local_scalar_t__, std::vector<local_scalar_t__>>{DUMMY_VAR__,
+          std::vector<local_scalar_t__>(2, DUMMY_VAR__)};
       current_statement__ = 8;
-      return stan::math::promote_scalar<std::tuple<double, double>>(y);
+      return stan::math::promote_scalar<
+               std::tuple<local_scalar_t__, local_scalar_t__>>(y);
     }
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2437,9 +2437,9 @@ simple_SIR(const T0__& t, const T1__& y, const T2__& theta, const T3__& x_r,
   (void) DUMMY_VAR__;
   try {
     local_scalar_t__ lcm_sym4__;
-    double lcm_sym3__;
-    double lcm_sym2__;
-    double lcm_sym1__;
+    local_scalar_t__ lcm_sym3__;
+    local_scalar_t__ lcm_sym2__;
+    local_scalar_t__ lcm_sym1__;
     {
       std::vector<local_scalar_t__> dydt =
         std::vector<local_scalar_t__>(4, DUMMY_VAR__);
@@ -5646,10 +5646,10 @@ prob_uncaptured(const T0__& nind, const T1__& n_occasions, const T2__&
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    double lcm_sym41__;
-    double lcm_sym40__;
-    double lcm_sym39__;
-    double lcm_sym38__;
+    local_scalar_t__ lcm_sym41__;
+    local_scalar_t__ lcm_sym40__;
+    local_scalar_t__ lcm_sym39__;
+    local_scalar_t__ lcm_sym38__;
     int lcm_sym37__;
     int lcm_sym36__;
     int lcm_sym35__;
@@ -13371,10 +13371,10 @@ prob_uncaptured(const T0__& nind, const T1__& n_occasions, const T2__&
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    double lcm_sym41__;
-    double lcm_sym40__;
-    double lcm_sym39__;
-    double lcm_sym38__;
+    local_scalar_t__ lcm_sym41__;
+    local_scalar_t__ lcm_sym40__;
+    local_scalar_t__ lcm_sym39__;
+    local_scalar_t__ lcm_sym38__;
     int lcm_sym37__;
     int lcm_sym36__;
     int lcm_sym35__;
@@ -15525,10 +15525,10 @@ prob_uncaptured(const T0__& p_arg__, const T1__& phi_arg__, std::ostream*
   (void) DUMMY_VAR__;
   try {
     int lcm_sym71__;
-    double lcm_sym70__;
-    double lcm_sym69__;
-    double lcm_sym68__;
-    double lcm_sym67__;
+    local_scalar_t__ lcm_sym70__;
+    local_scalar_t__ lcm_sym69__;
+    local_scalar_t__ lcm_sym68__;
+    local_scalar_t__ lcm_sym67__;
     int lcm_sym66__;
     int lcm_sym65__;
     int lcm_sym64__;
@@ -15695,36 +15695,36 @@ js_super_lp(const T0__& y, const T1__& first, const T2__& last, const T3__&
     int lcm_sym117__;
     int lcm_sym116__;
     int lcm_sym115__;
-    double lcm_sym114__;
-    double lcm_sym113__;
-    double lcm_sym112__;
-    double lcm_sym111__;
-    double lcm_sym110__;
-    double lcm_sym109__;
-    double lcm_sym108__;
-    double lcm_sym107__;
-    double lcm_sym106__;
-    double lcm_sym105__;
-    double lcm_sym104__;
-    double lcm_sym103__;
-    double lcm_sym102__;
+    local_scalar_t__ lcm_sym114__;
+    local_scalar_t__ lcm_sym113__;
+    local_scalar_t__ lcm_sym112__;
+    local_scalar_t__ lcm_sym111__;
+    local_scalar_t__ lcm_sym110__;
+    local_scalar_t__ lcm_sym109__;
+    local_scalar_t__ lcm_sym108__;
+    local_scalar_t__ lcm_sym107__;
+    local_scalar_t__ lcm_sym106__;
+    local_scalar_t__ lcm_sym105__;
+    local_scalar_t__ lcm_sym104__;
+    local_scalar_t__ lcm_sym103__;
+    local_scalar_t__ lcm_sym102__;
     int lcm_sym101__;
     int lcm_sym100__;
     int lcm_sym99__;
-    double lcm_sym98__;
-    double lcm_sym97__;
-    double lcm_sym96__;
-    double lcm_sym95__;
-    double lcm_sym94__;
-    double lcm_sym93__;
-    double lcm_sym92__;
-    double lcm_sym91__;
-    double lcm_sym90__;
-    double lcm_sym89__;
-    double lcm_sym88__;
-    double lcm_sym87__;
-    double lcm_sym86__;
-    double lcm_sym85__;
+    local_scalar_t__ lcm_sym98__;
+    local_scalar_t__ lcm_sym97__;
+    local_scalar_t__ lcm_sym96__;
+    local_scalar_t__ lcm_sym95__;
+    local_scalar_t__ lcm_sym94__;
+    local_scalar_t__ lcm_sym93__;
+    local_scalar_t__ lcm_sym92__;
+    local_scalar_t__ lcm_sym91__;
+    local_scalar_t__ lcm_sym90__;
+    local_scalar_t__ lcm_sym89__;
+    local_scalar_t__ lcm_sym88__;
+    local_scalar_t__ lcm_sym87__;
+    local_scalar_t__ lcm_sym86__;
+    local_scalar_t__ lcm_sym85__;
     int lcm_sym84__;
     int lcm_sym83__;
     Eigen::Matrix<local_scalar_t__,-1,1> lcm_sym82__;
@@ -15749,9 +15749,9 @@ js_super_lp(const T0__& y, const T1__& first, const T2__& last, const T3__&
       current_statement__ = 81;
       stan::math::validate_non_negative_index("qnu", "n_occasions",
         lcm_sym120__);
-      Eigen::Matrix<double,-1,1> qnu =
-        Eigen::Matrix<double,-1,1>::Constant(lcm_sym120__,
-          std::numeric_limits<double>::quiet_NaN());
+      Eigen::Matrix<local_scalar_t__,-1,1> qnu =
+        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(lcm_sym120__,
+          DUMMY_VAR__);
       stan::model::assign(lcm_sym80__, stan::math::subtract(1.0, nu),
         "assigning variable lcm_sym80__");
       current_statement__ = 110;
@@ -15759,9 +15759,9 @@ js_super_lp(const T0__& y, const T1__& first, const T2__& last, const T3__&
         current_statement__ = 83;
         stan::math::validate_non_negative_index("qp", "n_occasions",
           lcm_sym120__);
-        Eigen::Matrix<double,-1,1> qp =
-          Eigen::Matrix<double,-1,1>::Constant(lcm_sym120__,
-            std::numeric_limits<double>::quiet_NaN());
+        Eigen::Matrix<local_scalar_t__,-1,1> qp =
+          Eigen::Matrix<local_scalar_t__,-1,1>::Constant(lcm_sym120__,
+            DUMMY_VAR__);
         stan::model::assign(lcm_sym82__,
           stan::math::subtract(1.0,
             stan::math::transpose(
@@ -15971,9 +15971,9 @@ js_super_lp(const T0__& y, const T1__& first, const T2__& last, const T3__&
           current_statement__ = 83;
           stan::math::validate_non_negative_index("qp", "n_occasions",
             lcm_sym120__);
-          Eigen::Matrix<double,-1,1> qp =
-            Eigen::Matrix<double,-1,1>::Constant(lcm_sym120__,
-              std::numeric_limits<double>::quiet_NaN());
+          Eigen::Matrix<local_scalar_t__,-1,1> qp =
+            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(lcm_sym120__,
+              DUMMY_VAR__);
           stan::model::assign(lcm_sym81__,
             stan::math::subtract(1.0,
               stan::math::transpose(
@@ -21532,10 +21532,10 @@ prob_uncaptured(const T0__& nind, const T1__& n_occasions, const T2__&
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    double lcm_sym41__;
-    double lcm_sym40__;
-    double lcm_sym39__;
-    double lcm_sym38__;
+    local_scalar_t__ lcm_sym41__;
+    local_scalar_t__ lcm_sym40__;
+    local_scalar_t__ lcm_sym39__;
+    local_scalar_t__ lcm_sym38__;
     int lcm_sym37__;
     int lcm_sym36__;
     int lcm_sym35__;
@@ -23431,7 +23431,7 @@ inner_lpdf(const T0__& phi_arg__, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    double lcm_sym15__;
+    local_scalar_t__ lcm_sym15__;
     {
       current_statement__ = 4;
       return stan::math::sum(phi);
@@ -23455,7 +23455,7 @@ outer_lpdf(const T0__& phi_arg__, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    double lcm_sym16__;
+    local_scalar_t__ lcm_sym16__;
     {
       current_statement__ = 6;
       return inner_lpdf<false>(phi, pstream__);
@@ -23943,10 +23943,10 @@ summer(const T0__& et_arg__, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    double lcm_sym27__;
+    local_scalar_t__ lcm_sym27__;
     int lcm_sym26__;
-    double lcm_sym25__;
-    double lcm_sym24__;
+    local_scalar_t__ lcm_sym25__;
+    local_scalar_t__ lcm_sym24__;
     int lcm_sym23__;
     {
       int N = std::numeric_limits<int>::min();
@@ -25517,9 +25517,8 @@ multi_ret_fun(const T0__& A_arg__, std::ostream* pstream__) {
   try {
     int lcm_sym19__;
     {
-      Eigen::Matrix<double,-1,1> B =
-        Eigen::Matrix<double,-1,1>::Constant(5,
-          std::numeric_limits<double>::quiet_NaN());
+      Eigen::Matrix<local_scalar_t__,-1,1> B =
+        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(5, DUMMY_VAR__);
       current_statement__ = 8;
       if (stan::math::logical_gt(
             stan::model::rvalue(A, "A", stan::model::index_uni(0)), 1.0)) {
@@ -27325,10 +27324,10 @@ prob_uncaptured(const T0__& p_arg__, const T1__& phi_arg__, std::ostream*
   (void) DUMMY_VAR__;
   try {
     int lcm_sym77__;
-    double lcm_sym76__;
-    double lcm_sym75__;
-    double lcm_sym74__;
-    double lcm_sym73__;
+    local_scalar_t__ lcm_sym76__;
+    local_scalar_t__ lcm_sym75__;
+    local_scalar_t__ lcm_sym74__;
+    local_scalar_t__ lcm_sym73__;
     int lcm_sym72__;
     int lcm_sym71__;
     int lcm_sym70__;
@@ -27493,35 +27492,35 @@ jolly_seber_lp(const T0__& y, const T1__& first, const T2__& last,
     int lcm_sym122__;
     int lcm_sym121__;
     int lcm_sym120__;
-    double lcm_sym119__;
-    double lcm_sym118__;
-    double lcm_sym117__;
-    double lcm_sym116__;
-    double lcm_sym115__;
-    double lcm_sym114__;
-    double lcm_sym113__;
-    double lcm_sym112__;
-    double lcm_sym111__;
-    double lcm_sym110__;
-    double lcm_sym109__;
-    double lcm_sym108__;
+    local_scalar_t__ lcm_sym119__;
+    local_scalar_t__ lcm_sym118__;
+    local_scalar_t__ lcm_sym117__;
+    local_scalar_t__ lcm_sym116__;
+    local_scalar_t__ lcm_sym115__;
+    local_scalar_t__ lcm_sym114__;
+    local_scalar_t__ lcm_sym113__;
+    local_scalar_t__ lcm_sym112__;
+    local_scalar_t__ lcm_sym111__;
+    local_scalar_t__ lcm_sym110__;
+    local_scalar_t__ lcm_sym109__;
+    local_scalar_t__ lcm_sym108__;
     int lcm_sym107__;
     int lcm_sym106__;
     int lcm_sym105__;
-    double lcm_sym104__;
-    double lcm_sym103__;
-    double lcm_sym102__;
-    double lcm_sym101__;
-    double lcm_sym100__;
-    double lcm_sym99__;
-    double lcm_sym98__;
-    double lcm_sym97__;
-    double lcm_sym96__;
-    double lcm_sym95__;
-    double lcm_sym94__;
-    double lcm_sym93__;
-    double lcm_sym92__;
-    double lcm_sym91__;
+    local_scalar_t__ lcm_sym104__;
+    local_scalar_t__ lcm_sym103__;
+    local_scalar_t__ lcm_sym102__;
+    local_scalar_t__ lcm_sym101__;
+    local_scalar_t__ lcm_sym100__;
+    local_scalar_t__ lcm_sym99__;
+    local_scalar_t__ lcm_sym98__;
+    local_scalar_t__ lcm_sym97__;
+    local_scalar_t__ lcm_sym96__;
+    local_scalar_t__ lcm_sym95__;
+    local_scalar_t__ lcm_sym94__;
+    local_scalar_t__ lcm_sym93__;
+    local_scalar_t__ lcm_sym92__;
+    local_scalar_t__ lcm_sym91__;
     int lcm_sym90__;
     int lcm_sym89__;
     Eigen::Matrix<local_scalar_t__,-1,1> lcm_sym88__;
@@ -27546,9 +27545,9 @@ jolly_seber_lp(const T0__& y, const T1__& first, const T2__& last,
       current_statement__ = 80;
       stan::math::validate_non_negative_index("qgamma", "n_occasions",
         lcm_sym125__);
-      Eigen::Matrix<double,-1,1> qgamma =
-        Eigen::Matrix<double,-1,1>::Constant(lcm_sym125__,
-          std::numeric_limits<double>::quiet_NaN());
+      Eigen::Matrix<local_scalar_t__,-1,1> qgamma =
+        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(lcm_sym125__,
+          DUMMY_VAR__);
       stan::model::assign(lcm_sym86__, stan::math::subtract(1.0, gamma),
         "assigning variable lcm_sym86__");
       current_statement__ = 108;
@@ -27556,9 +27555,9 @@ jolly_seber_lp(const T0__& y, const T1__& first, const T2__& last,
         current_statement__ = 82;
         stan::math::validate_non_negative_index("qp", "n_occasions",
           lcm_sym125__);
-        Eigen::Matrix<double,-1,1> qp =
-          Eigen::Matrix<double,-1,1>::Constant(lcm_sym125__,
-            std::numeric_limits<double>::quiet_NaN());
+        Eigen::Matrix<local_scalar_t__,-1,1> qp =
+          Eigen::Matrix<local_scalar_t__,-1,1>::Constant(lcm_sym125__,
+            DUMMY_VAR__);
         stan::model::assign(lcm_sym88__,
           stan::math::subtract(1.0,
             stan::math::transpose(
@@ -27768,9 +27767,9 @@ jolly_seber_lp(const T0__& y, const T1__& first, const T2__& last,
           current_statement__ = 82;
           stan::math::validate_non_negative_index("qp", "n_occasions",
             lcm_sym125__);
-          Eigen::Matrix<double,-1,1> qp =
-            Eigen::Matrix<double,-1,1>::Constant(lcm_sym125__,
-              std::numeric_limits<double>::quiet_NaN());
+          Eigen::Matrix<local_scalar_t__,-1,1> qp =
+            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(lcm_sym125__,
+              DUMMY_VAR__);
           stan::model::assign(lcm_sym87__,
             stan::math::subtract(1.0,
               stan::math::transpose(
@@ -28002,13 +28001,13 @@ seq_cprob(const T0__& gamma_arg__, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    double lcm_sym133__;
+    local_scalar_t__ lcm_sym133__;
     int lcm_sym132__;
-    Eigen::Matrix<double,-1,1> lcm_sym131__;
-    double lcm_sym130__;
-    double lcm_sym129__;
-    double lcm_sym128__;
-    double lcm_sym127__;
+    Eigen::Matrix<local_scalar_t__,-1,1> lcm_sym131__;
+    local_scalar_t__ lcm_sym130__;
+    local_scalar_t__ lcm_sym129__;
+    local_scalar_t__ lcm_sym128__;
+    local_scalar_t__ lcm_sym127__;
     int lcm_sym126__;
     {
       int N = std::numeric_limits<int>::min();
@@ -32449,10 +32448,10 @@ prob_uncaptured(const T0__& nind, const T1__& n_occasions, const T2__&
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    double lcm_sym41__;
-    double lcm_sym40__;
-    double lcm_sym39__;
-    double lcm_sym38__;
+    local_scalar_t__ lcm_sym41__;
+    local_scalar_t__ lcm_sym40__;
+    local_scalar_t__ lcm_sym39__;
+    local_scalar_t__ lcm_sym38__;
     int lcm_sym37__;
     int lcm_sym36__;
     int lcm_sym35__;
@@ -34195,7 +34194,7 @@ foo_lpdf(const T0__& x, const T1__& mu, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    double lcm_sym30__;
+    local_scalar_t__ lcm_sym30__;
     {
       current_statement__ = 7;
       return stan::math::normal_lpdf<propto__>(x, mu, static_cast<double>(1));
@@ -34219,7 +34218,7 @@ bar_lpmf(const T0__& n, const T1__& mu, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    double lcm_sym31__;
+    local_scalar_t__ lcm_sym31__;
     {
       current_statement__ = 9;
       return stan::math::poisson_lpmf<propto__>(n, mu);
@@ -34241,7 +34240,7 @@ stan::return_type_t<T0__> baz_lpdf(const T0__& x, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    double lcm_sym32__;
+    local_scalar_t__ lcm_sym32__;
     {
       current_statement__ = 11;
       return foo_lpdf<propto__>(x, 0.5, pstream__);
@@ -38380,7 +38379,7 @@ bernoulli_lpmf(const T0__& y, const T1__& theta, const T2__& alpha,
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    double lcm_sym3__;
+    local_scalar_t__ lcm_sym3__;
     {
       current_statement__ = 7;
       return stan::math::log(theta);
@@ -38407,7 +38406,7 @@ bar_lp(const T0__& y, const T1__& t_arg__, T_lp__& lp__, T_lp_accum__&
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    double lcm_sym4__;
+    local_scalar_t__ lcm_sym4__;
     {
       current_statement__ = 2;
       lp_accum__.add(stan::math::bernoulli_lpmf<propto__>(y, t));
@@ -38847,7 +38846,7 @@ stan::return_type_t<T0__> dumb(const T0__& x, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    double lcm_sym1__;
+    local_scalar_t__ lcm_sym1__;
     {
       current_statement__ = 2;
       return (x + 0.5);
@@ -39237,7 +39236,7 @@ foo(const T0__& x_arg__, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    double lcm_sym3__;
+    local_scalar_t__ lcm_sym3__;
     {
       current_statement__ = 3;
       return stan::math::sum(x);
@@ -39284,7 +39283,7 @@ foo(const T0__& x, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    Eigen::Matrix<double,-1,1> lcm_sym5__;
+    Eigen::Matrix<local_scalar_t__,-1,1> lcm_sym5__;
     {
       current_statement__ = 6;
       return (Eigen::Matrix<local_scalar_t__,-1,1>(1) << x).finished();
@@ -44453,11 +44452,11 @@ loops_rng(const T0__& a_arg__, RNG& base_rng__, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    double lcm_sym4__;
+    local_scalar_t__ lcm_sym4__;
     int lcm_sym2__;
     int lcm_sym1__;
     {
-      double sum;
+      local_scalar_t__ sum;
       sum = static_cast<double>(0);
       {
         current_statement__ = 2;
@@ -44496,9 +44495,9 @@ loops2_rng(const T0__& a_arg__, RNG& base_rng__, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    double lcm_sym6__;
+    local_scalar_t__ lcm_sym6__;
     {
-      double sum;
+      local_scalar_t__ sum;
       sum = static_cast<double>(0);
       current_statement__ = 11;
       if (stan::math::logical_gte(stan::math::poisson_rng(10, base_rng__), 0)) {
