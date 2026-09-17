@@ -99,35 +99,57 @@ let%expect_test "Variable dependency example" =
       (4 5 9 11 13 14 16)
     |}]
 
-let%expect_test "Dependency graph printed one label per line" =
-  Fmt.pr "%a" pp_dependency_graph (log_prob_dependency_graph example1_program);
-  [%expect
-    {|
-    1: none
-    2: none
-    3: none
-    4: none
-    5: 4
-    6: 4 5
-    7: 4 5
-    8: 4 5
-    9: 4 5 11 13
-    10: 4 5 9 11 13
-    11: 4 5 9 13
-    12: 4 5 9 11 13
-    13: 4 5 9 11
-    14: 4 5 9 11 13
-    15: 4 5 9 11 13 14
-    16: 4 5 9 11 13 14
-    17: 4 5 9 11 13 14 16
-    18: 4 5 9 11 13 14 16 17
-    19: 4 5 9 11 13 14 16 17
-    20: 4 5 9 11 13 14 16 17
-    21: 4 5 9 11 13 14 16 17
-    22: 4 5 9 11 13 14 16 17 19
-    |}]
-
 (* ---- Access model: which elements each node reads and writes ---- *)
+
+(** Prints [k+1], [k], [-2]; with [leading] the symbol drops the leading [+] and
+    a bare constant is printed even when the constant is [0]. *)
+let pp_linear ~leading ppf ({const; symbol} : linear) =
+  let sign ~first value = if value < 0 then "-" else if first then "" else "+" in
+  Option.iter symbol ~f:(fun symbol ->
+      Fmt.pf ppf "%s%a" (sign ~first:leading 1) Expr.Typed.pp symbol);
+  let bare = Option.is_none symbol in
+  if const <> 0 || (leading && bare) then
+    Fmt.pf ppf "%s%d" (sign ~first:(leading && bare) const) (abs const)
+
+let pp_varying_kind ppf = function
+  | Written -> Fmt.string ppf "written"
+  | Gather -> Fmt.string ppf "gather"
+  | Nonlinear -> Fmt.string ppf "nonlinear"
+
+(** [i], [i+1], [i+k-1] for [Affine]; [3], [k+1] for [Invariant]; [?gather],
+    [?written], ... for [Varying]. *)
+let pp_point ppf = function
+  | Invariant offset -> pp_linear ~leading:true ppf offset
+  | Affine offset ->
+      Fmt.string ppf "i";
+      pp_linear ~leading:false ppf offset
+  | Varying kind -> Fmt.pf ppf "?%a" pp_varying_kind kind
+
+(** Prints [i+1], [:], [k:], [1:k]; a multi-index is braced as [{idxs}] because
+    [Index.pp] prints a multi-index like a single index. *)
+let pp_subscript ppf (index : point Index.t) =
+  match index with
+  | MultiIndex indices -> Fmt.pf ppf "{%a}" pp_point indices
+  | All | Single _ | Upfrom _ | Between _ -> Index.pp pp_point ppf index
+
+(** [W v[i+1]], [R v], [+= target]. *)
+let pp_access ppf {var; subs; kind; _} =
+  Fmt.pf ppf "%s %s"
+    (match kind with Write -> "W" | Read -> "R" | Increment -> "+=")
+    var;
+  if not (List.is_empty subs) then
+    Fmt.pf ppf "[%a]" Fmt.(list ~sep:(any ", ") pp_subscript) subs
+
+(** One line [label: accesses] per label that has accesses; labels without
+    accesses (blocks, [break], ...) are left out. *)
+let pp_node_accesses ppf (statement_map : dep_info_map) =
+  LabelMap.iter statement_map ~f:(fun ~key ~data:(_, info) ->
+      match info.accesses with
+      | [] -> ()
+      | accesses ->
+          Fmt.pf ppf "%d: %a@." key
+            Fmt.(list ~sep:(any ", ") pp_access)
+            accesses)
 
 let print_node_accesses prog =
   Fmt.pr "%a" pp_node_accesses
@@ -161,8 +183,8 @@ let%expect_test "Single indices: affine, invariant and varying" =
     6: W m
     7: R N, W n
     9: R v[i+1], R v[i-2], R v[i+1], R v[k], R k, R v[3], W y[i]
-    10: R v[?gather], R idx[i], R v[2i], R v[i+k], R k, R v[?written], R m, W y[i]
-    11: R v[i+k-1], R k, R v[i-k], R k, R v[i+2*k], R k, R k, R v[i], R k, R k, R v[k+1], R k, R v[-i+N], R N, R v[?nonlinear], R k, R v[2i+2], W y[i]
+    10: R v[?gather], R idx[i], R v[?nonlinear], R v[i+k], R k, R v[?written], R m, W y[i]
+    11: R v[i+k-1], R k, R v[?nonlinear], R k, R v[?nonlinear], R k, R k, R v[i], R k, R k, R v[k+1], R k, R v[?nonlinear], R N, R v[?nonlinear], R k, R v[?nonlinear], W y[i]
     12: W m
     13: R J, W j
     15: R n, R v[i], W y[?written]
@@ -301,133 +323,6 @@ let%expect_test "Right-hand-side variables of a set of labels" =
     [%sexp
       (rhs_variables_at map (Set.Poly.of_list [10; 12]) : string Set.Poly.t)];
   [%expect {| (N k x) |}]
-
-(* ---- Element test ---- *)
-
-let affine ?(coeff = 1) ?(terms = []) const =
-  Index.Single (Affine {coeff; offset= {const; terms}})
-
-let invariant ?(terms = []) const = Index.Single (Invariant {const; terms})
-let sym_k = [(1, Expr.Helpers.variable "k")]
-let sym_m = [(1, Expr.Helpers.variable "m")]
-let write_v subs = {var= "v"; subs; kind= Write; label= 0}
-let read_v subs = {var= "v"; subs; kind= Read; label= 1}
-
-let print_dependence source sink =
-  Fmt.pr "%a  /  %a  ->  %a@." pp_access source pp_access sink pp_dependence
-    (access_dependence source sink)
-
-let%expect_test "access_dependence: strong SIV" =
-  print_dependence (write_v [affine 0]) (read_v [affine 0]);
-  print_dependence (write_v [affine 1]) (read_v [affine 0]);
-  print_dependence (write_v [affine 0]) (read_v [affine 1]);
-  print_dependence (write_v [affine 8]) (read_v [affine 0]);
-  print_dependence
-    (write_v [affine ~coeff:(-1) 0])
-    (read_v [affine ~coeff:(-1) 2]);
-  print_dependence (write_v [affine ~coeff:2 1]) (read_v [affine ~coeff:2 0]);
-  [%expect
-    {|
-    W v[i]  /  R v[i]  ->  {=} d=0
-    W v[i+1]  /  R v[i]  ->  {<} d=1
-    W v[i]  /  R v[i+1]  ->  {>} d=-1
-    W v[i+8]  /  R v[i]  ->  {<} d=8
-    W v[-i]  /  R v[-i+2]  ->  {<} d=2
-    W v[2i+1]  /  R v[2i]  ->  independent
-    |}]
-
-let%expect_test "access_dependence: ZIV, weak SIV and confused pairs" =
-  print_dependence (write_v [affine ~coeff:2 0]) (read_v [affine 0]);
-  print_dependence (write_v [affine 0]) (read_v [invariant 1]);
-  print_dependence (write_v [invariant 1]) (read_v [invariant 2]);
-  print_dependence (write_v [invariant 1]) (read_v [invariant 1]);
-  print_dependence (write_v [invariant ~terms:sym_k 0]) (read_v [invariant 1]);
-  print_dependence (write_v [Single (Varying Gather)]) (read_v [affine 0]);
-  print_dependence (write_v [affine 0]) (read_v [affine 0; invariant 1]);
-  print_dependence (write_v []) (read_v []);
-  print_dependence (write_v []) (read_v [affine 0]);
-  [%expect
-    {|
-    W v[2i]  /  R v[i]  ->  {<,=,>}
-    W v[i]  /  R v[1]  ->  {<,=,>}
-    W v[1]  /  R v[2]  ->  independent
-    W v[1]  /  R v[1]  ->  {<,=,>}
-    W v[k]  /  R v[1]  ->  {<,=,>}
-    W v[?gather]  /  R v[i]  ->  {<,=,>}
-    W v[i]  /  R v[i, 1]  ->  {<,=,>}
-    W v  /  R v  ->  {<,=,>}
-    W v  /  R v[i]  ->  {<,=,>}
-    |}]
-
-let%expect_test "access_dependence: symbolic offsets" =
-  print_dependence
-    (write_v [affine ~terms:sym_k 0])
-    (read_v [affine ~terms:sym_k 0]);
-  print_dependence
-    (write_v [affine ~terms:sym_k 1])
-    (read_v [affine ~terms:sym_k 0]);
-  print_dependence (write_v [affine ~terms:sym_k 0]) (read_v [affine 0]);
-  print_dependence
-    (write_v [affine ~terms:sym_k 0])
-    (read_v [affine ~terms:sym_m 0]);
-  print_dependence
-    (write_v [invariant ~terms:sym_k 1])
-    (read_v [invariant ~terms:sym_k 2]);
-  print_dependence
-    (write_v [invariant ~terms:sym_k 0])
-    (read_v [invariant ~terms:sym_k 0]);
-  print_dependence
-    (write_v [invariant ~terms:sym_k 0])
-    (read_v [invariant ~terms:sym_m 0]);
-  [%expect
-    {|
-    W v[i+k]  /  R v[i+k]  ->  {=} d=0
-    W v[i+k+1]  /  R v[i+k]  ->  {<} d=1
-    W v[i+k]  /  R v[i]  ->  {<,=,>}
-    W v[i+k]  /  R v[i+m]  ->  {<,=,>}
-    W v[k+1]  /  R v[k+2]  ->  independent
-    W v[k]  /  R v[k]  ->  {<,=,>}
-    W v[k]  /  R v[m]  ->  {<,=,>}
-    |}]
-
-let%expect_test "access_dependence: slices and multi-indices are confused" =
-  let one = Invariant {const= 1; terms= []} in
-  print_dependence (write_v [affine 0]) (read_v [All]);
-  print_dependence (write_v [invariant 1]) (read_v [Between (one, one)]);
-  print_dependence (write_v [Upfrom one]) (read_v [invariant 3]);
-  print_dependence
-    (write_v [MultiIndex (Invariant {const= 0; terms= sym_k})])
-    (read_v [invariant 3]);
-  print_dependence (write_v [affine 0; invariant 1]) (read_v [All; invariant 2]);
-  [%expect
-    {|
-    W v[i]  /  R v[:]  ->  {<,=,>}
-    W v[1]  /  R v[1:1]  ->  {<,=,>}
-    W v[1:]  /  R v[3]  ->  {<,=,>}
-    W v[{k}]  /  R v[3]  ->  {<,=,>}
-    W v[i, 1]  /  R v[:, 2]  ->  independent
-    |}]
-
-let%expect_test "access_dependence: merging separable positions" =
-  print_dependence
-    (write_v [affine 0; invariant 1])
-    (read_v [affine 0; invariant 2]);
-  print_dependence (write_v [affine 0; affine 1]) (read_v [affine 0; affine 0]);
-  print_dependence
-    (write_v [affine 0; invariant 1])
-    (read_v [invariant 2; affine 0]);
-  print_dependence
-    (write_v [affine 0; invariant 1])
-    (read_v [affine 0; invariant 1]);
-  print_dependence (write_v [affine 1; affine 1]) (read_v [affine 0; affine 0]);
-  [%expect
-    {|
-    W v[i, 1]  /  R v[i, 2]  ->  independent
-    W v[i, i+1]  /  R v[i, i]  ->  independent
-    W v[i, 1]  /  R v[2, i]  ->  {<,=,>}
-    W v[i, 1]  /  R v[i, 1]  ->  {=} d=0
-    W v[i+1, i+1]  /  R v[i, i]  ->  {<} d=1
-    |}]
 
 (* ---- Reaching definitions pruned by subscript ---- *)
 

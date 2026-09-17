@@ -18,27 +18,27 @@ type reaching_defn = string * label [@@deriving sexp_of]
 (* Access model                    *)
 (***********************************)
 
-(** [const + sum_i (coeff_i * term_i)] with distinct, sorted terms and non-zero
-    coefficients; the single-loop analogue of a loop-invariant SCEV. *)
-type linear = {const: int; terms: (int * Middle.Expr.Typed.t) list}
+(** An integer constant plus at most one loop-invariant symbol, an expression
+    compared structurally; [k + 1] is [{const = 1; symbol = Some k}]. *)
+type linear = {const: int; symbol: Middle.Expr.Typed.t option}
 [@@deriving sexp_of, compare]
 
-(** Why an index expression is not affine in the loop variable. *)
+(** Why an index expression is not [loopvar + offset] or [offset]. *)
 type varying_kind =
   | Written  (** mentions a variable from the written set *)
   | Gather  (** [v[idx[n]]]: the loop variable under another index *)
-  | Nonlinear  (** [n * k], [n * n], [f(n)], ... *)
+  | Nonlinear  (** anything else: [2 * n], [n - k], [f(n)], ... *)
 [@@deriving sexp_of, compare]
 
 (** One integer index expression as a function of the loop being analysed (Goff,
-    Kennedy and Tseng 1991, restricted to one loop and a literal step). *)
+    Kennedy and Tseng 1991, restricted to one loop and stride 1). *)
 type point =
   | Invariant of linear
       (** free of the loop variable and of the written set (ZIV) *)
-  | Affine of {coeff: int; offset: linear}
-      (** [coeff * loopvar + offset] with [coeff <> 0] (SIV); [v[n]] is
-          [{coeff = 1; offset = 0}] *)
-  | Varying of varying_kind  (** anything else *)
+  | Affine of linear
+      (** [loopvar + offset] (SIV); [v[n]] is [{const = 0; symbol = None}] *)
+  | Varying of varying_kind
+      (** not comparable by the element test; any pair is [confused] *)
 [@@deriving sexp_of, compare]
 
 (** An [Increment] ([target += e]) reads and writes the incremented variable,
@@ -50,12 +50,6 @@ type access_kind = Read | Write | Increment [@@deriving sexp_of, compare]
 type access =
   {var: string; subs: point Middle.Index.t list; kind: access_kind; label: label}
 [@@deriving sexp_of, compare]
-
-let access_reads (a : access) =
-  match a.kind with Read | Increment -> true | Write -> false
-
-let access_writes (a : access) =
-  match a.kind with Write | Increment -> true | Read -> false
 
 (** Relation between the iteration of the first access and the iteration of the
     second: [Lt] means the first access happens in an earlier iteration. *)

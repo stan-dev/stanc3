@@ -19,7 +19,7 @@ let list_unused_params (factor_graph : factor_graph) (mir : Program.Typed.t) :
   let param_info = parameter_set ~include_transformed:false mir in
   let params = Set.Poly.map ~f:fst3 param_info in
   let used_params =
-    Set.Poly.of_list (VarMap.to_list factor_graph.var_map |> List.map ~f:fst)
+    Set.Poly.of_list (String.Map.to_list factor_graph.var_map |> List.map ~f:fst)
   in
   let unused = Set.Poly.diff params used_params in
   Set.Poly.filter_map
@@ -267,7 +267,7 @@ let list_non_one_priors (fg : factor_graph) (mir : Program.Typed.t) :
      except through P *)
   let priors = list_priors ~factor_graph:(Some fg) mir in
   let prior_set =
-    VarMap.fold priors ~init:Set.Poly.empty
+    String.Map.fold priors ~init:Set.Poly.empty
       ~f:(fun ~key:param ~data:(factors_opt, loc) s ->
         Option.value_map factors_opt ~default:s ~f:(fun factors ->
             Set.Poly.add (param, Set.Poly.cardinal factors, loc) s)) in

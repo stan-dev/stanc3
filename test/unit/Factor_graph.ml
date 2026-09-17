@@ -3,6 +3,17 @@ open Std
 open Std.Sexp_conv
 open Analysis_and_optimization.Dataflow_types
 
+(** Both maps as association lists, the same shape the derived sexp had. *)
+let print_factor_graph (graph : factor_graph) =
+  print_s
+    [%sexp
+      { factor_map=
+          (FactorMap.to_list graph.factor_map
+            : ((factor * label) * string Set.Poly.t) list)
+      ; var_map=
+          (String.Map.to_list graph.var_map
+            : (string * (factor * label) Set.Poly.t) list) }]
+
 let reject_example =
   Test_utils.mir_of_string
     {|
@@ -43,7 +54,7 @@ let reject_example =
 
 let%expect_test "Factor graph reject example" =
   let deps = prog_factor_graph reject_example in
-  print_s [%sexp (deps : factor_graph)];
+  print_factor_graph deps;
   [%expect
     {|
       ((factor_map
@@ -91,7 +102,7 @@ let complex_example =
 
 let%expect_test "Factor graph complex example" =
   let deps = prog_factor_graph complex_example in
-  print_s [%sexp (deps : factor_graph)];
+  print_factor_graph deps;
   [%expect
     {|
     ((factor_map
@@ -386,8 +397,10 @@ let%expect_test "Priors complex example" =
   let priors = list_priors complex_example in
   print_s
     [%sexp
-      (priors
-        : ((factor * label) Set.Poly.t option * Middle.Location_span.t) VarMap.t)];
+      (String.Map.to_list priors
+        : (string
+          * ((factor * label) Set.Poly.t option * Middle.Location_span.t))
+          list)];
   [%expect
     {|
     ((a

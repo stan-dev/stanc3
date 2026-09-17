@@ -12,30 +12,17 @@ type factor =
   | LPFunction of (string * Expr.Typed.t list)
 [@@deriving sexp_of]
 
-module FactorMap = struct
-  include Map.Make (struct
-    type t = factor * label
+module FactorMap = Map.Make (struct
+  type t = factor * label
 
-    let compare = Stdlib.compare
-  end)
+  let compare = Stdlib.compare
+end)
 
-  let sexp_of_t f t =
-    sexp_of_list
-      (sexp_of_pair (sexp_of_pair sexp_of_factor sexp_of_label) f)
-      (to_list t)
-end
-
-(** Variable names to the factors reading them. *)
-module VarMap = struct
-  include String.Map
-
-  let sexp_of_t f t = sexp_of_list (sexp_of_pair sexp_of_string f) (to_list t)
-end
-
+(** Each factor with the variables the factor reads, and each variable name with
+    the factors reading the variable. *)
 type factor_graph =
   { factor_map: string Set.Poly.t FactorMap.t
-  ; var_map: (factor * label) Set.Poly.t VarMap.t }
-[@@deriving sexp_of]
+  ; var_map: (factor * label) Set.Poly.t String.Map.t }
 
 let extract_factors_statement stmt =
   match stmt with
@@ -85,11 +72,11 @@ let build_adjacency_maps (factors : (label * factor * string Set.Poly.t) list) :
          factors) in
   let var_map =
     List.fold_left
-      ~f:(merge_set_maps (module VarMap))
-      ~init:VarMap.empty
+      ~f:(merge_set_maps (module String.Map))
+      ~init:String.Map.empty
       (List.concat_map factors ~f:(fun (l, fac, vars) ->
            List.map
-             ~f:(fun v -> VarMap.singleton v (Set.Poly.singleton (fac, l)))
+             ~f:(fun v -> String.Map.singleton v (Set.Poly.singleton (fac, l)))
              (Set.Poly.to_list vars))) in
   {factor_map; var_map}
 
@@ -100,13 +87,13 @@ let fg_remove_fac (fac : factor * cf_state) (fg : factor_graph) : factor_graph =
 let fg_remove_var (var : string) (fg : factor_graph) : factor_graph =
   let factor_map =
     FactorMap.map fg.factor_map ~f:(fun vars -> Set.Poly.remove var vars) in
-  let var_map = VarMap.remove var fg.var_map in
+  let var_map = String.Map.remove var fg.var_map in
   {factor_map; var_map}
 
 let remove_touching vars fg =
   let facs =
     Set.Poly.union_map vars ~f:(fun v ->
-        Option.value ~default:Set.Poly.empty (VarMap.find_opt v fg.var_map))
+        Option.value ~default:Set.Poly.empty (String.Map.find_opt v fg.var_map))
   in
   let without_vars = Set.Poly.fold ~f:fg_remove_var ~init:fg vars in
   let without_facs = Set.Poly.fold ~f:fg_remove_fac ~init:without_vars facs in
@@ -134,7 +121,7 @@ let prog_factor_graph ?(exclude_data_facs : bool = false) prog : factor_graph =
 let fg_reaches (starts : string Set.Poly.t) (goals : string Set.Poly.t)
     (fg : factor_graph) : bool =
   let vneighbors v =
-    let factors = VarMap.find v fg.var_map in
+    let factors = String.Map.find v fg.var_map in
     Set.Poly.union_map factors ~f:(fun f -> FactorMap.find f fg.factor_map)
   in
   let rec step (frontier : string List.t) (visited : string Set.Poly.t) =
@@ -168,7 +155,7 @@ let fg_factor_is_prior (var : string) (fac : factor * label)
     is a prior *)
 let fg_var_priors (var : string) (data : string Set.Poly.t) (fg : factor_graph)
     : (factor * label) Set.Poly.t option =
-  match VarMap.find_opt var fg.var_map with
+  match String.Map.find_opt var fg.var_map with
   | Some factors ->
       Some
         (Set.Poly.filter factors ~f:(fun fac ->
@@ -176,7 +163,7 @@ let fg_var_priors (var : string) (data : string Set.Poly.t) (fg : factor_graph)
   | None -> None
 
 let list_priors ?factor_graph:(fg_opt = None) (mir : Program.Typed.t) :
-    ((factor * label) Set.Poly.t option * Location_span.t) VarMap.t =
+    ((factor * label) Set.Poly.t option * Location_span.t) String.Map.t =
   let fg = Option.value ~default:(prog_factor_graph mir) fg_opt in
   let params =
     Set.Poly.map ~f:(fun (v, _, loc) -> (v, loc)) (parameter_set mir) in
@@ -184,8 +171,8 @@ let list_priors ?factor_graph:(fg_opt = None) (mir : Program.Typed.t) :
   let likely_sizes = Set.Poly.diff data (data_set ~exclude_ints:true mir) in
   let fg' = Set.Poly.fold ~init:fg ~f:fg_remove_var likely_sizes in
   (* for each param, apply fg_var_priors and collect results in a map *)
-  Set.Poly.fold params ~init:VarMap.empty ~f:(fun (p, loc) m ->
-      VarMap.add m ~key:p ~data:(fg_var_priors p data fg', loc))
+  Set.Poly.fold params ~init:String.Map.empty ~f:(fun (p, loc) m ->
+      String.Map.add m ~key:p ~data:(fg_var_priors p data fg', loc))
 
 let string_of_factor (factor : factor) : string =
   match factor with
