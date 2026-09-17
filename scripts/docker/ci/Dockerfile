@@ -8,22 +8,14 @@ ENV OPAMROOT=/usr/local/opam
 # Install OS dependencies
 RUN apt-get update -qq && apt-get install -y --no-install-recommends \
     build-essential ca-certificates curl gcc git m4 \
-    mingw-w64 pkg-config python3 unzip zip wget nodejs
+    mingw-w64 pkg-config python3 unzip zip wget nodejs gh
 
 # Codecov uploader
 RUN wget https://uploader.codecov.io/v0.8.0/linux/codecov -O /bin/codecov
 RUN chmod +x /bin/codecov
 
-# Github CLI
-RUN mkdir -p -m 755 /etc/apt/keyrings && wget -qO- https://cli.github.com/packages/githubcli-archive-keyring.gpg | tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null \
-    && chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg \
-    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
-    && apt update \
-    && apt install gh -y
-
-
 # opam
-RUN bash -c "printf '\n' | sh <(curl -fsSL https://opam.ocaml.org/install.sh) "
+RUN bash -c "printf '\n' | sh <(curl -fsSL https://opam.ocaml.org/install.sh)"
 
 USER ubuntu
 WORKDIR /home/ubuntu
