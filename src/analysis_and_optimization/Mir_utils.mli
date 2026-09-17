@@ -175,7 +175,8 @@ val expr_subst_stmt_base :
 val expr_depth : Expr.Typed.t -> int
 (** Calculate how deeply nested an expression is. *)
 
-val update_expr_ad_levels : string Set.Poly.t -> Expr.Typed.t -> Expr.Typed.t
+val update_expr_ad_levels :
+  ?keep_promotions:bool -> string Set.Poly.t -> Expr.Typed.t -> Expr.Typed.t
 (** Recompute all AD-levels in the metadata of an expression from the bottom up,
     making the variables in the first argument autodiffable *)
 

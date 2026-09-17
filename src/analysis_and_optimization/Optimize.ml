@@ -1384,8 +1384,9 @@ let optimize_ad_levels (mir : Program.Typed.t) =
     let mir_node = (LabelMap.find l flowgraph_to_mir).pattern in
     match mir_node with
     | Assignment (lval, _, e)
-      when UnsizedType.is_autodifftype
-           @@ Expr.Typed.adlevel_of (update_expr_ad_levels ad_variables e) ->
+      when expr_reads_target e
+           || UnsizedType.is_autodifftype
+              @@ Expr.Typed.adlevel_of (update_expr_ad_levels ad_variables e) ->
         Set.Poly.singleton (Stmt.Helpers.lhs_variable lval)
     | _ -> Set.Poly.empty in
   let global_initial_ad_variables =
@@ -1396,13 +1397,18 @@ let optimize_ad_levels (mir : Program.Typed.t) =
          mir.output_vars) in
   let initial_ad_variables fundef_opt _ =
     match (fundef_opt : Stmt.Located.t Program.fun_def option) with
-    | None -> global_initial_ad_variables
-    | Some {fdargs; _} ->
-        Set.Poly.union global_initial_ad_variables
-          (Set.Poly.of_list
-             (List.filter_map fdargs ~f:(fun (_, name, ut) ->
-                  if UnsizedType.is_autodiffable ut then Some name else None)))
-  in
+    | Some {fdargs; fdbody= Some s; _} ->
+        let autodiffable_args =
+          List.filter_map fdargs ~f:(fun (_, name, ut) ->
+              if UnsizedType.is_autodiffable ut then Some name else None) in
+        if List.is_empty autodiffable_args then Set.Poly.empty
+        else
+          (* because the return type of a function will be AD, the only safe
+             thing is to treat all variables in the function as possibly AD.
+             Note that this only really affects non-inlined functions. *)
+          Set.Poly.union (var_declarations s)
+            (Set.Poly.of_list autodiffable_args)
+    | _ -> global_initial_ad_variables in
   let extra_variables v = Set.Poly.singleton (v ^ "_in__") in
   let update_stmt stmt_pattern variable_set =
     match stmt_pattern with
@@ -1425,18 +1431,6 @@ let optimize_ad_levels (mir : Program.Typed.t) =
           ; decl_adtype=
               UnsizedType.fill_adtype_for_type UnsizedType.DataOnly
                 (Type.to_unsized decl_type) }
-    | Assignment (lval, ty, ({Expr.pattern= Promotion (e, ut, ad); _} as prom))
-      when (not (Set.Poly.mem (Stmt.Helpers.lhs_variable lval) variable_set))
-           && UnsizedType.has_autodiff ad ->
-        (* When a variable has been downcast, we need to remove any promotions
-           it was going to recieve or else C++ compilation will fail *)
-        Assignment
-          ( lval
-          , ty
-          , { prom with
-              pattern=
-                Promotion (e, ut, UnsizedType.fill_adtype_for_type DataOnly ty)
-            } )
     | s -> s in
   let transform fundef_opt stmt =
     optimize_minimal_variables ~gen_variables:gen_ad_variables
@@ -1595,6 +1589,12 @@ let optimization_suite ?(settings = all_optimizations) mir =
       (* Book: Machine idioms and instruction combining *)
     ; (list_collapsing, settings.list_collapsing)
       (* Book: Machine idioms and instruction combining *)
+    ; (optimize_ad_levels, settings.optimize_ad_levels)
+      (* hack: optimize_ad_levels should only need to run after optimize_soa,
+         but because it can turn variables into data (which are all AoS) it can
+         lead to compilation errors due to missing overloads in math. So we run
+         it twice to prevent variables that will interact with demoted variables
+         from ever getting tagged as SoA compatible. *)
     ; (optimize_soa, settings.optimize_soa)
     ; (optimize_ad_levels, settings.optimize_ad_levels)
       (* Remove decls immediately assigned to *)
