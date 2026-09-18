@@ -516,6 +516,26 @@ let mk_fun_app ~is_cond_dist ~loc kind name args ~type_ : Ast.typed_expression =
   mk_typed_expression ~expr:fn ~loc ~type_
     ~ad_level:(UnsizedType.fill_adtype_for_type ad_type type_)
 
+let get_callback_locations tenv es =
+  let rec loop es acc =
+    match es with
+    | [] -> acc
+    | {emeta= {type_= UFun _ as callback_type; _}; expr= Variable fname} :: es
+      ->
+        let acc =
+          let candidates =
+            Env.find tenv (Utils.stdlib_distribution_name fname.name) in
+          List.filter_map candidates ~f:(function
+            | Env.{kind= `UserDeclared location; type_}
+             |{kind= `UserDefined location; type_}
+              when UnsizedType.equal type_ callback_type ->
+                Some location
+            | _ -> None)
+          @ acc in
+        loop es acc
+    | _ :: es -> loop es acc in
+  loop es []
+
 let check_normal_fn ~is_cond_dist loc tenv id es =
   match Env.find tenv (Utils.normalized_name id.name) with
   | {kind= `Variable {location= prev; _}; _} :: _
@@ -529,29 +549,38 @@ let check_normal_fn ~is_cond_dist loc tenv id es =
   | [] ->
       (match Utils.split_distribution_suffix id.name with
         | Some (prefix, suffix) -> (
-            let is_known_family s =
-              Option.is_some
-                (List.assoc_opt s Stan_math_signatures.distributions) in
+            let default_error () =
+              if
+                Option.is_some
+                  (List.assoc_opt prefix Stan_math_signatures.distributions)
+                && List.mem ~set:Utils.cumulative_distribution_suffices_w_rng
+                     suffix
+              then
+                Semantic_error
+                .returning_fn_expected_undeclared_dist_suffix_found loc
+                  (prefix, suffix)
+              else
+                Semantic_error.returning_fn_expected_undeclaredident_found loc
+                  id.name
+                  (Env.nearest_ident tenv id.name) in
             match suffix with
-            | ("lpmf" | "lupmf") when Env.mem tenv (prefix ^ "_lpdf") ->
-                Semantic_error.returning_fn_expected_wrong_dist_suffix_found loc
-                  (prefix, suffix)
-            | ("lpdf" | "lupdf") when Env.mem tenv (prefix ^ "_lpmf") ->
-                Semantic_error.returning_fn_expected_wrong_dist_suffix_found loc
-                  (prefix, suffix)
-            | _ ->
-                if
-                  is_known_family prefix
-                  && List.mem ~set:Utils.cumulative_distribution_suffices_w_rng
-                       suffix
-                then
-                  Semantic_error
-                  .returning_fn_expected_undeclared_dist_suffix_found loc
-                    (prefix, suffix)
+            | "lpmf" | "lupmf" ->
+                let sugs =
+                  Env.find tenv (prefix ^ "_lpdf") |> List.map ~f:Env.location
+                in
+                if List.is_empty sugs then default_error ()
                 else
-                  Semantic_error.returning_fn_expected_undeclaredident_found loc
-                    id.name
-                    (Env.nearest_ident tenv id.name))
+                  Semantic_error.returning_fn_expected_wrong_dist_suffix_found
+                    loc (prefix, suffix, sugs)
+            | "lpdf" | "lupdf" ->
+                let sugs =
+                  Env.find tenv (prefix ^ "_lpmf") |> List.map ~f:Env.location
+                in
+                if List.is_empty sugs then default_error ()
+                else
+                  Semantic_error.returning_fn_expected_wrong_dist_suffix_found
+                    loc (prefix, suffix, sugs)
+            | _ -> default_error ())
         | None ->
             Semantic_error.returning_fn_expected_undeclaredident_found loc
               id.name
@@ -580,9 +609,9 @@ let check_normal_fn ~is_cond_dist loc tenv id es =
             sigs
           |> error
       | SignatureErrors (l, b) ->
-          es
-          |> List.map ~f:(fun e -> e.emeta.type_)
-          |> Semantic_error.illtyped_fn_app loc id.name (l, b)
+          Semantic_error.illtyped_fn_app loc id.name (l, b)
+            (List.map ~f:type_of_expr_typed es)
+            (get_callback_locations tenv es)
           |> error)
 
 (** Given a constraint function [matches], find any signature which exists
@@ -1065,7 +1094,7 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
                  operator %%/%%.@]"
                 (pp_indented_box Pretty_printing.pp_expression)
                 {expr; emeta} (pp_indented_box_t hint) in
-            add_warning x.emeta.loc s
+            add_warning emeta.loc s
         | (UArray UMatrix | UMatrix), (UInt | UReal), Pow ->
             let s =
               Fmt.str
@@ -1172,7 +1201,7 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
       else
         mk_typed_expression ~expr:(TupleExpr tes)
           ~ad_level:(TupleAD (List.map ~f:(fun e -> e.emeta.ad_level) tes))
-          ~type_:(UTuple (List.map ~f:(fun e -> e.emeta.type_) tes))
+          ~type_:(UTuple (List.map ~f:type_of_expr_typed tes))
           ~loc:emeta.loc
   | FunApp ((), id, es) ->
       es |> List.map ~f:ce |> check_funapp loc cf tenv ~is_cond_dist:false id
@@ -1235,9 +1264,9 @@ let check_nrfn loc tenv id es =
             sigs
           |> error
       | SignatureErrors (l, b) ->
-          es
-          |> List.map ~f:type_of_expr_typed
-          |> Semantic_error.illtyped_fn_app loc id.name (l, b)
+          Semantic_error.illtyped_fn_app loc id.name (l, b)
+            (List.map ~f:type_of_expr_typed es)
+            (get_callback_locations tenv es)
           |> error)
 
 let check_nr_fn_app loc cf tenv id es =
@@ -1600,9 +1629,9 @@ let check_tilde_distribution loc cf tenv id arguments =
         sigs
       |> error
   | Some (SignatureErrors (l, b), _) ->
-      arguments
-      |> List.map ~f:(fun e -> e.emeta.type_)
-      |> Semantic_error.illtyped_fn_app loc id.name (l, b)
+      Semantic_error.illtyped_fn_app loc id.name (l, b)
+        (List.map ~f:type_of_expr_typed arguments)
+        (get_callback_locations tenv arguments)
       |> error
 
 let is_cumulative_density_defined tenv id arguments =
@@ -2066,10 +2095,16 @@ and verify_pmf_fundef_first_arg_ty loc id arg_tys =
     | Some rt when UnsizedType.is_discrete_type rt -> ()
     | _ -> Semantic_error.prob_mass_non_int_variate loc rt |> error
 
-and verify_fundef_distinct_arg_ids loc arg_names =
+and verify_fundef_distinct_arg_ids arg_names =
   match List.find_a_dup ~cmp:Ast.compare_identifier arg_names with
   | None -> ()
-  | Some dup -> Semantic_error.duplicate_arg_names loc dup |> error
+  | Some dup ->
+      let dups =
+        List.filter ~f:(fun {name; _} -> String.equal dup.name name) arg_names
+      in
+      let prev = List.hd_exn dups in
+      let dup = List.nth dups 1 in
+      Semantic_error.duplicate_arg_names dup.id_loc prev |> error
 
 and verify_fundef_return_tys loc return_type body =
   if
@@ -2106,7 +2141,7 @@ and check_fundef loc cf tenv return_ty id args body =
   List.iter
     ~f:(fun id -> verify_name_fresh tenv id ~is_udf:false)
     arg_identifiers;
-  verify_fundef_distinct_arg_ids loc arg_identifiers;
+  verify_fundef_distinct_arg_ids arg_identifiers;
   (* We treat DataOnly arguments as if they are data and AutoDiffable arguments
      as if they are parameters, for the purposes of type checking. *)
   let arg_types_internal =

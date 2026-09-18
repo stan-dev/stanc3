@@ -26,11 +26,9 @@ let%expect_test "stan2mir reports frontend errors" =
       print_endline error;
       [%expect
         {|
-        Semantic error in 'string', line 1, column 18 to column 25:
-           -------------------------------------------------
-             1:  model { target += missing; }
-                                   ^
-           -------------------------------------------------
-
-        Identifier "missing" not in scope. Did you mean "is_inf"?
+        error: Identifier "missing" not in scope.
+            ┌─ string:1:19
+          1 │  model { target += missing; }
+            │                    ^^^^^^^ Identifier "missing" not in scope.
+            = Did you mean "is_inf"?
         |}]

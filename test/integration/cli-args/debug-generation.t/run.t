@@ -20,15 +20,23 @@ Output file works
 
 Don't provide any data
   $ stanc --debug-generate-inits debug.stan
-  Error in 'debug.stan', line 8, column 10 to column 25:
-    Cannot evaluate expression: (((K + N) + 1) + x.1)
-    Supplying a --debug-data-file may help
+  error: Cannot evaluate expression: (((K + N) + 1) + x.1)
+      ┌─ debug.stan:8:11
+    7 │  parameters {
+    8 │    simplex[K + N + 1 + x.1] theta;
+      │            ^^^^^^^^^^^^^^^ here
+    9 │  }
+      = Supplying a --debug-data-file may help.
   [1]
 
 Don't provide _enough_ data
   $ stanc --debug-generate-inits debug.stan --debug-data-file incomplete_data.json
-  Error in 'debug.stan', line 8, column 10 to column 25:
-    Cannot evaluate expression: (((14 + N) + 1) + x.1)
+  error: Cannot evaluate expression: (((14 + N) + 1) + x.1)
+      ┌─ debug.stan:8:11
+    7 │  parameters {
+    8 │    simplex[K + N + 1 + x.1] theta;
+      │            ^^^^^^^^^^^^^^^ here
+    9 │  }
   [1]
 
 Provide a non-existant file
@@ -39,7 +47,7 @@ Provide a non-existant file
 
 Provide an invalid JSON file
   $ stanc --debug-generate-inits debug.stan --debug-data-file bad.json
-  Error: Failed to parse 'bad.json' for debug generation:
+  error: Failed to parse 'bad.json' for debug generation:
     Line 3, bytes 10-13:
     Expected ',' or '}' but found 'a,
     '
@@ -56,6 +64,10 @@ Provide an unreadable JSON file
 
 Bad data block, cannot be partially evaluated
   $ stanc --debug-generate-data div0.stan --debug-data-file partial-div0.json
-  Error in 'div0.stan', line 4, column 9 to column 16:
-    Integer division by zero
+  error: Integer division by zero
+      ┌─ div0.stan:4:10
+    3 │    int M;
+    4 │    vector[N %/% M] x;
+      │           ^^^^^^^ here
+    5 │  }
   [1]

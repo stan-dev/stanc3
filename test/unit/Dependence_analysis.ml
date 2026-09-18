@@ -162,23 +162,31 @@ let%expect_test "Uninitialized variables example" =
   [%expect
     {|
       ((((begin_loc
-          ((filename string) (line_num 15) (col_num 16) (included_from ())))
+          ((filename string) (line_num 15) (col_num 16) (byte_num 270)
+           (included_from ())))
          (end_loc
-          ((filename string) (line_num 15) (col_num 18) (included_from ()))))
+          ((filename string) (line_num 15) (col_num 18) (byte_num 272)
+           (included_from ()))))
         wu)
        (((begin_loc
-          ((filename string) (line_num 26) (col_num 16) (included_from ())))
+          ((filename string) (line_num 26) (col_num 16) (byte_num 450)
+           (included_from ())))
          (end_loc
-          ((filename string) (line_num 26) (col_num 17) (included_from ()))))
+          ((filename string) (line_num 26) (col_num 17) (byte_num 451)
+           (included_from ()))))
         i)
        (((begin_loc
-          ((filename string) (line_num 32) (col_num 16) (included_from ())))
+          ((filename string) (line_num 32) (col_num 16) (byte_num 573)
+           (included_from ())))
          (end_loc
-          ((filename string) (line_num 32) (col_num 17) (included_from ()))))
+          ((filename string) (line_num 32) (col_num 17) (byte_num 574)
+           (included_from ()))))
         i)
        (((begin_loc
-          ((filename string) (line_num 42) (col_num 16) (included_from ())))
+          ((filename string) (line_num 42) (col_num 16) (byte_num 764)
+           (included_from ())))
          (end_loc
-          ((filename string) (line_num 42) (col_num 17) (included_from ()))))
+          ((filename string) (line_num 42) (col_num 17) (byte_num 765)
+           (included_from ()))))
         k))
     |}]

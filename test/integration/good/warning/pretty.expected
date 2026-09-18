@@ -14,13 +14,11 @@ transformed parameters {
   real beta2 = my_upper_bound_jacobian(beta_raw, ub);
 }
 
-Warning in 'data_jacobian.stan', line 14, column 14 to column 48:
-    Calling a _jacobian function without any parameter arguments still
-    applies the Jacobian adjustments, ensure this is intentional! Consider
-    using upper_bound_constrain instead.
-Warning in 'data_jacobian.stan', line 15, column 15 to column 52:
-    Calling a _jacobian function without any parameter arguments still
-    applies the Jacobian adjustments, ensure this is intentional!
+data_jacobian.stan:14:15: warning: Calling a _jacobian function without any parameter arguments still applies
+  the Jacobian adjustments, ensure this is intentional! Consider using
+  upper_bound_constrain instead.
+data_jacobian.stan:15:16: warning: Calling a _jacobian function without any parameter arguments still applies
+  the Jacobian adjustments, ensure this is intentional!
 [exit 0]
   $ stanc --auto-format deprecated_syntax.stan
 model {
@@ -29,29 +27,26 @@ model {
   }
 }
 
-Warning in 'deprecated_syntax.stan', line 2, column 6 to column 15:
-    Found chained comparison
-        1 < 2 < 3
-    This is interpreted as
-        (1 < 2) < 3
-    Consider if the intended meaning was
-        1 < 2 && 2 < 3
-    instead. You can silence this warning by adding explicit parentheses.
-    This can be automatically changed using the canonicalize flag for stanc
-Warning in 'deprecated_syntax.stan', line 2, column 6 to column 19:
-    Found chained comparison
-        1 < 2 < 3 < 4
-    This is interpreted as
-        (1 < 2 < 3) < 4
-    Consider if the intended meaning was
-        1 < 2 < 3 && 3 < 4
-    instead. You can silence this warning by adding explicit parentheses.
-    This can be automatically changed using the canonicalize flag for stanc
+deprecated_syntax.stan:2:7: warning: Found chained comparison
+      1 < 2 < 3
+  This is interpreted as
+      (1 < 2) < 3
+  Consider if the intended meaning was
+      1 < 2 && 2 < 3
+  instead. You can silence this warning by adding explicit parentheses. This
+  can be automatically changed using the canonicalize flag for stanc
+deprecated_syntax.stan:2:7: warning: Found chained comparison
+      1 < 2 < 3 < 4
+  This is interpreted as
+      (1 < 2 < 3) < 4
+  Consider if the intended meaning was
+      1 < 2 < 3 && 3 < 4
+  instead. You can silence this warning by adding explicit parentheses. This
+  can be automatically changed using the canonicalize flag for stanc
 [exit 0]
   $ stanc --auto-format empty.stan
 
-Warning in 'empty.stan', line 1, column 0 to line 5, column 0:
-    Empty model detected; this is a valid Stan model but likely unintended!
+empty.stan:1:1: warning: Empty model detected; this is a valid Stan model but likely unintended!
 [exit 0]
   $ stanc --auto-format fun_log_forward_decl.stan
 /**
@@ -74,9 +69,8 @@ model {
                    );
 }
 
-Warning in 'fun_log_forward_decl.stan', line 6, column 7 to column 13:
-    Functions do not need to be declared before definition; all user defined
-    function names are always in scope regardless of definition order.
+fun_log_forward_decl.stan:6:8: warning: Functions do not need to be declared before definition; all user defined
+  function names are always in scope regardless of definition order.
 [exit 0]
   $ stanc --auto-format functions-fwd-ref.stan
 functions {
@@ -95,9 +89,8 @@ model {
   y ~ normal(0, 1);
 }
 
-Warning in 'functions-fwd-ref.stan', line 3, column 6 to column 9:
-    Functions do not need to be declared before definition; all user defined
-    function names are always in scope regardless of definition order.
+functions-fwd-ref.stan:3:7: warning: Functions do not need to be declared before definition; all user defined
+  function names are always in scope regardless of definition order.
 [exit 0]
   $ stanc --auto-format int_div_user.stan
 data {
@@ -112,13 +105,12 @@ model {
   
 }
 
-Warning in 'int_div_user.stan', line 7, column 6 to column 10:
-    Found int division:
-        a[1] / b[2]
-    Values will be rounded towards zero. If rounding is not desired you can
-    write the division as
-        a[1] * 1.0 / b[2]
-    If rounding is intended please use the integer division operator %/%.
+int_div_user.stan:7:7: warning: Found int division:
+      a[1] / b[2]
+  Values will be rounded towards zero. If rounding is not desired you can write
+  the division as
+      a[1] * 1.0 / b[2]
+  If rounding is intended please use the integer division operator %/%.
 [exit 0]
   $ stanc --auto-format integrate_ode_adams.stan
 functions {
@@ -173,62 +165,48 @@ generated quantities {
             1e-10, 1e8);
 }
 
-Warning in 'integrate_ode_adams.stan', line 25, column 10 to column 29:
-    integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use
-    ode_adams instead. The new interface is slightly different, see:
-    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_adams.stan', line 26, column 10 to column 29:
-    integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use
-    ode_adams instead. The new interface is slightly different, see:
-    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_adams.stan', line 27, column 10 to column 29:
-    integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use
-    ode_adams instead. The new interface is slightly different, see:
-    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_adams.stan', line 29, column 10 to column 29:
-    integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use
-    ode_adams instead. The new interface is slightly different, see:
-    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_adams.stan', line 31, column 10 to column 29:
-    integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use
-    ode_adams instead. The new interface is slightly different, see:
-    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_adams.stan', line 33, column 10 to column 29:
-    integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use
-    ode_adams instead. The new interface is slightly different, see:
-    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_adams.stan', line 38, column 10 to column 29:
-    integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use
-    ode_adams instead. The new interface is slightly different, see:
-    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_adams.stan', line 39, column 10 to column 29:
-    integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use
-    ode_adams instead. The new interface is slightly different, see:
-    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_adams.stan', line 40, column 10 to column 29:
-    integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use
-    ode_adams instead. The new interface is slightly different, see:
-    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_adams.stan', line 41, column 10 to column 29:
-    integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use
-    ode_adams instead. The new interface is slightly different, see:
-    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_adams.stan', line 43, column 10 to column 29:
-    integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use
-    ode_adams instead. The new interface is slightly different, see:
-    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_adams.stan', line 45, column 10 to column 29:
-    integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use
-    ode_adams instead. The new interface is slightly different, see:
-    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_adams.stan', line 47, column 10 to column 29:
-    integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use
-    ode_adams instead. The new interface is slightly different, see:
-    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_adams.stan', line 49, column 10 to column 29:
-    integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use
-    ode_adams instead. The new interface is slightly different, see:
-    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+integrate_ode_adams.stan:25:11: warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use
+  ode_adams instead. The new interface is slightly different, see:
+  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+integrate_ode_adams.stan:26:11: warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use
+  ode_adams instead. The new interface is slightly different, see:
+  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+integrate_ode_adams.stan:27:11: warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use
+  ode_adams instead. The new interface is slightly different, see:
+  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+integrate_ode_adams.stan:29:11: warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use
+  ode_adams instead. The new interface is slightly different, see:
+  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+integrate_ode_adams.stan:31:11: warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use
+  ode_adams instead. The new interface is slightly different, see:
+  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+integrate_ode_adams.stan:33:11: warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use
+  ode_adams instead. The new interface is slightly different, see:
+  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+integrate_ode_adams.stan:38:11: warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use
+  ode_adams instead. The new interface is slightly different, see:
+  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+integrate_ode_adams.stan:39:11: warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use
+  ode_adams instead. The new interface is slightly different, see:
+  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+integrate_ode_adams.stan:40:11: warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use
+  ode_adams instead. The new interface is slightly different, see:
+  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+integrate_ode_adams.stan:41:11: warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use
+  ode_adams instead. The new interface is slightly different, see:
+  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+integrate_ode_adams.stan:43:11: warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use
+  ode_adams instead. The new interface is slightly different, see:
+  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+integrate_ode_adams.stan:45:11: warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use
+  ode_adams instead. The new interface is slightly different, see:
+  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+integrate_ode_adams.stan:47:11: warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use
+  ode_adams instead. The new interface is slightly different, see:
+  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+integrate_ode_adams.stan:49:11: warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use
+  ode_adams instead. The new interface is slightly different, see:
+  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 [exit 0]
   $ stanc --auto-format integrate_ode_bdf.stan
 functions {
@@ -286,70 +264,54 @@ generated quantities {
             1e-10, 1e8);
 }
 
-Warning in 'integrate_ode_bdf.stan', line 25, column 10 to column 27:
-    integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use
-    ode_bdf instead. The new interface is slightly different, see:
-    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_bdf.stan', line 26, column 10 to column 27:
-    integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use
-    ode_bdf instead. The new interface is slightly different, see:
-    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_bdf.stan', line 27, column 10 to column 27:
-    integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use
-    ode_bdf instead. The new interface is slightly different, see:
-    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_bdf.stan', line 28, column 10 to column 27:
-    integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use
-    ode_bdf instead. The new interface is slightly different, see:
-    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_bdf.stan', line 30, column 10 to column 27:
-    integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use
-    ode_bdf instead. The new interface is slightly different, see:
-    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_bdf.stan', line 32, column 10 to column 27:
-    integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use
-    ode_bdf instead. The new interface is slightly different, see:
-    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_bdf.stan', line 34, column 10 to column 27:
-    integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use
-    ode_bdf instead. The new interface is slightly different, see:
-    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_bdf.stan', line 36, column 10 to column 27:
-    integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use
-    ode_bdf instead. The new interface is slightly different, see:
-    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_bdf.stan', line 41, column 10 to column 27:
-    integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use
-    ode_bdf instead. The new interface is slightly different, see:
-    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_bdf.stan', line 42, column 10 to column 27:
-    integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use
-    ode_bdf instead. The new interface is slightly different, see:
-    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_bdf.stan', line 43, column 10 to column 27:
-    integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use
-    ode_bdf instead. The new interface is slightly different, see:
-    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_bdf.stan', line 44, column 10 to column 27:
-    integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use
-    ode_bdf instead. The new interface is slightly different, see:
-    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_bdf.stan', line 46, column 10 to column 27:
-    integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use
-    ode_bdf instead. The new interface is slightly different, see:
-    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_bdf.stan', line 48, column 10 to column 27:
-    integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use
-    ode_bdf instead. The new interface is slightly different, see:
-    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_bdf.stan', line 50, column 10 to column 27:
-    integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use
-    ode_bdf instead. The new interface is slightly different, see:
-    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_bdf.stan', line 52, column 10 to column 27:
-    integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use
-    ode_bdf instead. The new interface is slightly different, see:
-    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+integrate_ode_bdf.stan:25:11: warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf
+  instead. The new interface is slightly different, see:
+  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+integrate_ode_bdf.stan:26:11: warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf
+  instead. The new interface is slightly different, see:
+  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+integrate_ode_bdf.stan:27:11: warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf
+  instead. The new interface is slightly different, see:
+  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+integrate_ode_bdf.stan:28:11: warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf
+  instead. The new interface is slightly different, see:
+  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+integrate_ode_bdf.stan:30:11: warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf
+  instead. The new interface is slightly different, see:
+  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+integrate_ode_bdf.stan:32:11: warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf
+  instead. The new interface is slightly different, see:
+  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+integrate_ode_bdf.stan:34:11: warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf
+  instead. The new interface is slightly different, see:
+  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+integrate_ode_bdf.stan:36:11: warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf
+  instead. The new interface is slightly different, see:
+  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+integrate_ode_bdf.stan:41:11: warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf
+  instead. The new interface is slightly different, see:
+  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+integrate_ode_bdf.stan:42:11: warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf
+  instead. The new interface is slightly different, see:
+  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+integrate_ode_bdf.stan:43:11: warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf
+  instead. The new interface is slightly different, see:
+  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+integrate_ode_bdf.stan:44:11: warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf
+  instead. The new interface is slightly different, see:
+  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+integrate_ode_bdf.stan:46:11: warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf
+  instead. The new interface is slightly different, see:
+  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+integrate_ode_bdf.stan:48:11: warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf
+  instead. The new interface is slightly different, see:
+  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+integrate_ode_bdf.stan:50:11: warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf
+  instead. The new interface is slightly different, see:
+  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+integrate_ode_bdf.stan:52:11: warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf
+  instead. The new interface is slightly different, see:
+  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 [exit 0]
   $ stanc --auto-format integrate_ode_deprecation.stan
 functions {
@@ -386,10 +348,9 @@ generated quantities {
   }
 }
 
-Warning in 'integrate_ode_deprecation.stan', line 26, column 10 to column 23:
-    integrate_ode is deprecated and will be removed in Stan 3.0. Use ode_rk45
-    instead. The new interface is slightly different, see:
-    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+integrate_ode_deprecation.stan:26:11: warning: integrate_ode is deprecated and will be removed in Stan 3.0. Use ode_rk45
+  instead. The new interface is slightly different, see:
+  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 [exit 0]
   $ stanc --auto-format integrate_ode_rk45.stan
 functions {
@@ -429,38 +390,30 @@ generated quantities {
   y_hat = integrate_ode_rk45(sho, y0_p, t0, ts, theta_p, x, x_int);
 }
 
-Warning in 'integrate_ode_rk45.stan', line 25, column 10 to column 28:
-    integrate_ode_rk45 is deprecated and will be removed in Stan 3.0. Use
-    ode_rk45 instead. The new interface is slightly different, see:
-    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_rk45.stan', line 26, column 10 to column 28:
-    integrate_ode_rk45 is deprecated and will be removed in Stan 3.0. Use
-    ode_rk45 instead. The new interface is slightly different, see:
-    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_rk45.stan', line 27, column 10 to column 28:
-    integrate_ode_rk45 is deprecated and will be removed in Stan 3.0. Use
-    ode_rk45 instead. The new interface is slightly different, see:
-    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_rk45.stan', line 28, column 10 to column 28:
-    integrate_ode_rk45 is deprecated and will be removed in Stan 3.0. Use
-    ode_rk45 instead. The new interface is slightly different, see:
-    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_rk45.stan', line 32, column 10 to column 28:
-    integrate_ode_rk45 is deprecated and will be removed in Stan 3.0. Use
-    ode_rk45 instead. The new interface is slightly different, see:
-    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_rk45.stan', line 33, column 10 to column 28:
-    integrate_ode_rk45 is deprecated and will be removed in Stan 3.0. Use
-    ode_rk45 instead. The new interface is slightly different, see:
-    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_rk45.stan', line 34, column 10 to column 28:
-    integrate_ode_rk45 is deprecated and will be removed in Stan 3.0. Use
-    ode_rk45 instead. The new interface is slightly different, see:
-    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'integrate_ode_rk45.stan', line 35, column 10 to column 28:
-    integrate_ode_rk45 is deprecated and will be removed in Stan 3.0. Use
-    ode_rk45 instead. The new interface is slightly different, see:
-    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+integrate_ode_rk45.stan:25:11: warning: integrate_ode_rk45 is deprecated and will be removed in Stan 3.0. Use
+  ode_rk45 instead. The new interface is slightly different, see:
+  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+integrate_ode_rk45.stan:26:11: warning: integrate_ode_rk45 is deprecated and will be removed in Stan 3.0. Use
+  ode_rk45 instead. The new interface is slightly different, see:
+  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+integrate_ode_rk45.stan:27:11: warning: integrate_ode_rk45 is deprecated and will be removed in Stan 3.0. Use
+  ode_rk45 instead. The new interface is slightly different, see:
+  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+integrate_ode_rk45.stan:28:11: warning: integrate_ode_rk45 is deprecated and will be removed in Stan 3.0. Use
+  ode_rk45 instead. The new interface is slightly different, see:
+  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+integrate_ode_rk45.stan:32:11: warning: integrate_ode_rk45 is deprecated and will be removed in Stan 3.0. Use
+  ode_rk45 instead. The new interface is slightly different, see:
+  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+integrate_ode_rk45.stan:33:11: warning: integrate_ode_rk45 is deprecated and will be removed in Stan 3.0. Use
+  ode_rk45 instead. The new interface is slightly different, see:
+  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+integrate_ode_rk45.stan:34:11: warning: integrate_ode_rk45 is deprecated and will be removed in Stan 3.0. Use
+  ode_rk45 instead. The new interface is slightly different, see:
+  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+integrate_ode_rk45.stan:35:11: warning: integrate_ode_rk45 is deprecated and will be removed in Stan 3.0. Use
+  ode_rk45 instead. The new interface is slightly different, see:
+  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 [exit 0]
   $ stanc --auto-format lkj_cov_deprecation1.stan
 parameters {
@@ -473,10 +426,9 @@ model {
   Sigma ~ lkj_cov(mu, sigma, eta);
 }
 
-Warning in 'lkj_cov_deprecation1.stan', line 8, column 10 to column 17:
-    lkj_cov is deprecated and will be removed in Stan 3.0. Use lkj_corr with
-    an independent lognormal distribution on the scales, see:
-    https://mc-stan.org/docs/reference-manual/deprecations.html#lkj_cov-distribution
+lkj_cov_deprecation1.stan:8:11: warning: lkj_cov is deprecated and will be removed in Stan 3.0. Use lkj_corr with an
+  independent lognormal distribution on the scales, see:
+  https://mc-stan.org/docs/reference-manual/deprecations.html#lkj_cov-distribution
 [exit 0]
   $ stanc --auto-format lkj_cov_deprecation2.stan
 parameters {
@@ -489,10 +441,9 @@ model {
   target += lkj_cov_lpdf(Sigma | mu, sigma, eta);
 }
 
-Warning in 'lkj_cov_deprecation2.stan', line 8, column 12 to column 24:
-    lkj_cov is deprecated and will be removed in Stan 3.0. Use lkj_corr with
-    an independent lognormal distribution on the scales, see:
-    https://mc-stan.org/docs/reference-manual/deprecations.html#lkj_cov-distribution
+lkj_cov_deprecation2.stan:8:13: warning: lkj_cov is deprecated and will be removed in Stan 3.0. Use lkj_corr with an
+  independent lognormal distribution on the scales, see:
+  https://mc-stan.org/docs/reference-manual/deprecations.html#lkj_cov-distribution
 [exit 0]
   $ stanc --auto-format matrix_pow_warning.stan
 data {
@@ -505,22 +456,20 @@ transformed data {
   matrix[N, N] A_pow_r = A ^ 3.5;
 }
 
-Warning in 'matrix_pow_warning.stan', line 8, column 23 to column 24:
-    Found matrix^scalar:
-        A ^ power
-    matrix ^ number is interpreted as element-wise exponentiation. If this is
-    intended, you can silence this warning by using elementwise operator .^
-    If you intended matrix exponentiation, use
-        matrix_power(A, power)
-    instead.
-Warning in 'matrix_pow_warning.stan', line 9, column 25 to column 26:
-    Found matrix^scalar:
-        A ^ 3.5
-    matrix ^ number is interpreted as element-wise exponentiation. If this is
-    intended, you can silence this warning by using elementwise operator .^
-    If you intended matrix exponentiation, use
-        matrix_power(A, 3.5)
-    instead.
+matrix_pow_warning.stan:8:24: warning: Found matrix^scalar:
+      A ^ power
+  matrix ^ number is interpreted as element-wise exponentiation. If this is
+  intended, you can silence this warning by using elementwise operator .^
+  If you intended matrix exponentiation, use
+      matrix_power(A, power)
+  instead.
+matrix_pow_warning.stan:9:26: warning: Found matrix^scalar:
+      A ^ 3.5
+  matrix ^ number is interpreted as element-wise exponentiation. If this is
+  intended, you can silence this warning by using elementwise operator .^
+  If you intended matrix exponentiation, use
+      matrix_power(A, 3.5)
+  instead.
 [exit 0]
   $ stanc --auto-format overloaded_forward_decl.stan
 functions {
@@ -541,12 +490,10 @@ transformed data {
   }
 }
 
-Warning in 'overloaded_forward_decl.stan', line 2, column 6 to column 13:
-    Functions do not need to be declared before definition; all user defined
-    function names are always in scope regardless of definition order.
-Warning in 'overloaded_forward_decl.stan', line 3, column 6 to column 13:
-    Functions do not need to be declared before definition; all user defined
-    function names are always in scope regardless of definition order.
+overloaded_forward_decl.stan:2:7: warning: Functions do not need to be declared before definition; all user defined
+  function names are always in scope regardless of definition order.
+overloaded_forward_decl.stan:3:7: warning: Functions do not need to be declared before definition; all user defined
+  function names are always in scope regardless of definition order.
 [exit 0]
   $ stanc --auto-format self-assign.stan
 model {
@@ -586,26 +533,18 @@ model {
   int k = n[k];
 }
 
-Warning in 'self-assign.stan', line 4, column 2 to column 12:
-    Assignment of variable to itself.
-Warning in 'self-assign.stan', line 6, column 2 to column 26:
-    Assignment of variable to itself during declaration. This is almost
-    certainly a bug.
-Warning in 'self-assign.stan', line 8, column 2 to column 23:
-    Assignment of variable to itself during declaration. This is almost
-    certainly a bug.
-Warning in 'self-assign.stan', line 12, column 2 to column 18:
-    Assignment of variable to itself.
-Warning in 'self-assign.stan', line 15, column 2 to column 14:
-    Assignment of variable to itself.
-Warning in 'self-assign.stan', line 22, column 2 to column 16:
-    Assignment of variable to itself.
-Warning in 'self-assign.stan', line 24, column 2 to column 41:
-    Assignment of variable to itself during declaration. This is almost
-    certainly a bug.
-Warning in 'self-assign.stan', line 35, column 2 to column 15:
-    Assignment of variable to itself during declaration. This is almost
-    certainly a bug.
+self-assign.stan:4:3: warning: Assignment of variable to itself.
+self-assign.stan:6:3: warning: Assignment of variable to itself during declaration. This is almost certainly
+  a bug.
+self-assign.stan:8:3: warning: Assignment of variable to itself during declaration. This is almost certainly
+  a bug.
+self-assign.stan:12:3: warning: Assignment of variable to itself.
+self-assign.stan:15:3: warning: Assignment of variable to itself.
+self-assign.stan:22:3: warning: Assignment of variable to itself.
+self-assign.stan:24:3: warning: Assignment of variable to itself during declaration. This is almost certainly
+  a bug.
+self-assign.stan:35:3: warning: Assignment of variable to itself during declaration. This is almost certainly
+  a bug.
 [exit 0]
   $ stanc --auto-format unreachable_statement.stan
 functions {
@@ -622,12 +561,10 @@ functions {
   }
 }
 
-Warning in 'unreachable_statement.stan', line 5, column 5 to column 12:
-    Unreachable statement (following a reject, fatal_error, break, continue,
-    or return) found, is this intended?
-Warning in 'unreachable_statement.stan', line 10, column 4 to column 14:
-    Unreachable statement (following a reject, fatal_error, break, continue,
-    or return) found, is this intended?
+unreachable_statement.stan:5:6: warning: Unreachable statement (following a reject, fatal_error, break, continue, or
+  return) found, is this intended?
+unreachable_statement.stan:10:5: warning: Unreachable statement (following a reject, fatal_error, break, continue, or
+  return) found, is this intended?
 [exit 0]
   $ stanc --auto-format validate_division_int_warning.stan
 transformed data {
@@ -648,32 +585,28 @@ model {
   y ~ normal(0, 1);
 }
 
-Warning in 'validate_division_int_warning.stan', line 7, column 6 to column 7:
-    Found int division:
-        j / k
-    Values will be rounded towards zero. If rounding is not desired you can
-    write the division as
-        j * 1.0 / k
-    If rounding is intended please use the integer division operator %/%.
-Warning in 'validate_division_int_warning.stan', line 8, column 6 to column 7:
-    Found int division:
-        j / 3
-    Values will be rounded towards zero. If rounding is not desired you can
-    write the division as
-        j / 3.0
-    If rounding is intended please use the integer division operator %/%.
-Warning in 'validate_division_int_warning.stan', line 9, column 6 to column 7:
-    Found int division:
-        2 / k
-    Values will be rounded towards zero. If rounding is not desired you can
-    write the division as
-        2.0 / k
-    If rounding is intended please use the integer division operator %/%.
-Warning in 'validate_division_int_warning.stan', line 10, column 6 to column 7:
-    Found int division:
-        2 / 3
-    Values will be rounded towards zero. If rounding is not desired you can
-    write the division as
-        2.0 / 3
-    If rounding is intended please use the integer division operator %/%.
+validate_division_int_warning.stan:7:7: warning: Found int division:
+      j / k
+  Values will be rounded towards zero. If rounding is not desired you can write
+  the division as
+      j * 1.0 / k
+  If rounding is intended please use the integer division operator %/%.
+validate_division_int_warning.stan:8:7: warning: Found int division:
+      j / 3
+  Values will be rounded towards zero. If rounding is not desired you can write
+  the division as
+      j / 3.0
+  If rounding is intended please use the integer division operator %/%.
+validate_division_int_warning.stan:9:7: warning: Found int division:
+      2 / k
+  Values will be rounded towards zero. If rounding is not desired you can write
+  the division as
+      2.0 / k
+  If rounding is intended please use the integer division operator %/%.
+validate_division_int_warning.stan:10:7: warning: Found int division:
+      2 / 3
+  Values will be rounded towards zero. If rounding is not desired you can write
+  the division as
+      2.0 / 3
+  If rounding is intended please use the integer division operator %/%.
 [exit 0]

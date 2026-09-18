@@ -2,8 +2,9 @@ open Middle
 
 type t
 
-val pp : Format.formatter -> t -> unit
-val location : t -> Location_span.t
+val to_grace :
+  ?printed_filename:string -> ?code:string -> t -> 'a Grace.Diagnostic.t
+
 val invalid_return : Location_span.t -> UnsizedType.t -> UnsizedType.t -> t
 
 val mismatched_array_types :
@@ -49,7 +50,7 @@ val returning_fn_expected_undeclared_dist_suffix_found :
   Location_span.t -> string * string -> t
 
 val returning_fn_expected_wrong_dist_suffix_found :
-  Location_span.t -> string * string -> t
+  Location_span.t -> string * string * Location_span.t option list -> t
 
 val illtyped_reduce_sum_not_array : Location_span.t -> UnsizedType.t -> t
 val illtyped_reduce_sum_slice : Location_span.t -> UnsizedType.t -> t
@@ -144,6 +145,7 @@ val illtyped_fn_app :
   -> string
   -> SignatureMismatch.signature_error list * bool
   -> UnsizedType.t list
+  -> Location_span.t list
   -> t
 
 val illtyped_binary_op :

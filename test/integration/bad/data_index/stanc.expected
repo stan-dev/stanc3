@@ -1,181 +1,189 @@
   $ stanc non_data_index1.stan
-Semantic error in 'non_data_index1.stan', line 6, column 13 to column 14:
-   -------------------------------------------------
-     4:  }
-     5:  transformed parameters {
-     6:    array[size(y)] real z;
-                      ^
-     7:  }
-   -------------------------------------------------
-
-Top level variable sizes must be variables from the (transformed) data block or functions thereof, but this variable was declared in the parameters block.
+error: Top level variable sizes must be variables from the (transformed) data block or functions thereof.
+    ┌─ non_data_index1.stan:6:14
+  1 │  parameters {
+  2 │    array[3] real y;
+    │                  - Variable was declared in parameters block here.
+  3 │  
+  4 │  }
+  5 │  transformed parameters {
+  6 │    array[size(y)] real z;
+    │               ^ Top level variable sizes must be variables from the (transformed) data block or functions thereof.
+  7 │  }
 [exit 1]
   $ stanc non_data_index10.stan
-Semantic error in 'non_data_index10.stan', line 6, column 27 to column 28:
-   -------------------------------------------------
-     4:  }
-     5:  transformed parameters {
-     6:    cholesky_factor_cov[size(y)] z;
-                                    ^
-     7:  }
-   -------------------------------------------------
-
-Top level variable sizes must be variables from the (transformed) data block or functions thereof, but this variable was declared in the parameters block.
+error: Top level variable sizes must be variables from the (transformed) data block or functions thereof.
+    ┌─ non_data_index10.stan:6:28
+  1 │  parameters {
+  2 │    array[3] real y;
+    │                  - Variable was declared in parameters block here.
+  3 │  
+  4 │  }
+  5 │  transformed parameters {
+  6 │    cholesky_factor_cov[size(y)] z;
+    │                             ^ Top level variable sizes must be variables from the (transformed) data block or functions thereof.
+  7 │  }
 [exit 1]
   $ stanc non_data_index11.stan
-Semantic error in 'non_data_index11.stan', line 6, column 30 to column 31:
-   -------------------------------------------------
-     4:  }
-     5:  transformed parameters {
-     6:    cholesky_factor_cov[3, size(y)] z;
-                                       ^
-     7:  }
-   -------------------------------------------------
-
-Top level variable sizes must be variables from the (transformed) data block or functions thereof, but this variable was declared in the parameters block.
+error: Top level variable sizes must be variables from the (transformed) data block or functions thereof.
+    ┌─ non_data_index11.stan:6:31
+  1 │  parameters {
+  2 │    array[3] real y;
+    │                  - Variable was declared in parameters block here.
+  3 │  
+  4 │  }
+  5 │  transformed parameters {
+  6 │    cholesky_factor_cov[3, size(y)] z;
+    │                                ^ Top level variable sizes must be variables from the (transformed) data block or functions thereof.
+  7 │  }
 [exit 1]
   $ stanc non_data_index12.stan
-Semantic error in 'non_data_index12.stan', line 6, column 28 to column 29:
-   -------------------------------------------------
-     4:  }
-     5:  transformed parameters {
-     6:    cholesky_factor_corr[size(y)] z;
-                                     ^
-     7:  }
-   -------------------------------------------------
-
-Top level variable sizes must be variables from the (transformed) data block or functions thereof, but this variable was declared in the parameters block.
+error: Top level variable sizes must be variables from the (transformed) data block or functions thereof.
+    ┌─ non_data_index12.stan:6:29
+  1 │  parameters {
+  2 │    array[3] real y;
+    │                  - Variable was declared in parameters block here.
+  3 │  
+  4 │  }
+  5 │  transformed parameters {
+  6 │    cholesky_factor_corr[size(y)] z;
+    │                              ^ Top level variable sizes must be variables from the (transformed) data block or functions thereof.
+  7 │  }
 [exit 1]
   $ stanc non_data_index13.stan
-Semantic error in 'non_data_index13.stan', line 6, column 19 to column 20:
-   -------------------------------------------------
-     4:  }
-     5:  transformed parameters {
-     6:    corr_matrix[size(y)] z;
-                            ^
-     7:  }
-   -------------------------------------------------
-
-Top level variable sizes must be variables from the (transformed) data block or functions thereof, but this variable was declared in the parameters block.
+error: Top level variable sizes must be variables from the (transformed) data block or functions thereof.
+    ┌─ non_data_index13.stan:6:20
+  1 │  parameters {
+  2 │    array[3] real y;
+    │                  - Variable was declared in parameters block here.
+  3 │  
+  4 │  }
+  5 │  transformed parameters {
+  6 │    corr_matrix[size(y)] z;
+    │                     ^ Top level variable sizes must be variables from the (transformed) data block or functions thereof.
+  7 │  }
 [exit 1]
   $ stanc non_data_index14.stan
-Semantic error in 'non_data_index14.stan', line 6, column 18 to column 19:
-   -------------------------------------------------
-     4:  }
-     5:  transformed parameters {
-     6:    cov_matrix[size(y)] z;
-                           ^
-     7:  }
-   -------------------------------------------------
-
-Top level variable sizes must be variables from the (transformed) data block or functions thereof, but this variable was declared in the parameters block.
+error: Top level variable sizes must be variables from the (transformed) data block or functions thereof.
+    ┌─ non_data_index14.stan:6:19
+  1 │  parameters {
+  2 │    array[3] real y;
+    │                  - Variable was declared in parameters block here.
+  3 │  
+  4 │  }
+  5 │  transformed parameters {
+  6 │    cov_matrix[size(y)] z;
+    │                    ^ Top level variable sizes must be variables from the (transformed) data block or functions thereof.
+  7 │  }
 [exit 1]
   $ stanc non_data_index2.stan
-Semantic error in 'non_data_index2.stan', line 6, column 14 to column 15:
-   -------------------------------------------------
-     4:  }
-     5:  transformed parameters {
-     6:    vector[size(y)] z;
-                       ^
-     7:  }
-   -------------------------------------------------
-
-Top level variable sizes must be variables from the (transformed) data block or functions thereof, but this variable was declared in the parameters block.
+error: Top level variable sizes must be variables from the (transformed) data block or functions thereof.
+    ┌─ non_data_index2.stan:6:15
+  1 │  parameters {
+  2 │    array[3] real y;
+    │                  - Variable was declared in parameters block here.
+  3 │  
+  4 │  }
+  5 │  transformed parameters {
+  6 │    vector[size(y)] z;
+    │                ^ Top level variable sizes must be variables from the (transformed) data block or functions thereof.
+  7 │  }
 [exit 1]
   $ stanc non_data_index3.stan
-Semantic error in 'non_data_index3.stan', line 6, column 18 to column 19:
-   -------------------------------------------------
-     4:  }
-     5:  transformed parameters {
-     6:    row_vector[size(y)] z;
-                           ^
-     7:  }
-   -------------------------------------------------
-
-Top level variable sizes must be variables from the (transformed) data block or functions thereof, but this variable was declared in the parameters block.
+error: Top level variable sizes must be variables from the (transformed) data block or functions thereof.
+    ┌─ non_data_index3.stan:6:19
+  1 │  parameters {
+  2 │    array[3] real y;
+    │                  - Variable was declared in parameters block here.
+  3 │  
+  4 │  }
+  5 │  transformed parameters {
+  6 │    row_vector[size(y)] z;
+    │                    ^ Top level variable sizes must be variables from the (transformed) data block or functions thereof.
+  7 │  }
 [exit 1]
   $ stanc non_data_index4.stan
-Semantic error in 'non_data_index4.stan', line 5, column 14 to column 15:
-   -------------------------------------------------
-     3:  }
-     4:  transformed parameters {
-     5:    matrix[size(y), 2] m;
-                       ^
-     6:  }
-   -------------------------------------------------
-
-Top level variable sizes must be variables from the (transformed) data block or functions thereof, but this variable was declared in the parameters block.
+error: Top level variable sizes must be variables from the (transformed) data block or functions thereof.
+    ┌─ non_data_index4.stan:5:15
+  1 │  parameters {
+  2 │    array[3] real y;
+    │                  - Variable was declared in parameters block here.
+  3 │  }
+  4 │  transformed parameters {
+  5 │    matrix[size(y), 2] m;
+    │                ^ Top level variable sizes must be variables from the (transformed) data block or functions thereof.
+  6 │  }
 [exit 1]
   $ stanc non_data_index5.stan
-Semantic error in 'non_data_index5.stan', line 6, column 17 to column 18:
-   -------------------------------------------------
-     4:  }
-     5:  transformed parameters {
-     6:    matrix[2, size(y)] m;
-                          ^
-     7:  
-     8:  }
-   -------------------------------------------------
-
-Top level variable sizes must be variables from the (transformed) data block or functions thereof, but this variable was declared in the parameters block.
+error: Top level variable sizes must be variables from the (transformed) data block or functions thereof.
+    ┌─ non_data_index5.stan:6:18
+  1 │  parameters {
+  2 │    array[3] real y;
+    │                  - Variable was declared in parameters block here.
+  3 │  
+  4 │  }
+  5 │  transformed parameters {
+  6 │    matrix[2, size(y)] m;
+    │                   ^ Top level variable sizes must be variables from the (transformed) data block or functions thereof.
+  7 │  
 [exit 1]
   $ stanc non_data_index6.stan
-Semantic error in 'non_data_index6.stan', line 6, column 15 to column 16:
-   -------------------------------------------------
-     4:  }
-     5:  transformed parameters {
-     6:    simplex[size(y)] z;
-                        ^
-     7:  }
-   -------------------------------------------------
-
-Top level variable sizes must be variables from the (transformed) data block or functions thereof, but this variable was declared in the parameters block.
+error: Top level variable sizes must be variables from the (transformed) data block or functions thereof.
+    ┌─ non_data_index6.stan:6:16
+  1 │  parameters {
+  2 │    array[3] real y;
+    │                  - Variable was declared in parameters block here.
+  3 │  
+  4 │  }
+  5 │  transformed parameters {
+  6 │    simplex[size(y)] z;
+    │                 ^ Top level variable sizes must be variables from the (transformed) data block or functions thereof.
+  7 │  }
 [exit 1]
   $ stanc non_data_index7.stan
-Semantic error in 'non_data_index7.stan', line 6, column 15 to column 16:
-   -------------------------------------------------
-     4:  }
-     5:  transformed parameters {
-     6:    ordered[size(y)] z;
-                        ^
-     7:  }
-   -------------------------------------------------
-
-Top level variable sizes must be variables from the (transformed) data block or functions thereof, but this variable was declared in the parameters block.
+error: Top level variable sizes must be variables from the (transformed) data block or functions thereof.
+    ┌─ non_data_index7.stan:6:16
+  1 │  parameters {
+  2 │    array[3] real y;
+    │                  - Variable was declared in parameters block here.
+  3 │  
+  4 │  }
+  5 │  transformed parameters {
+  6 │    ordered[size(y)] z;
+    │                 ^ Top level variable sizes must be variables from the (transformed) data block or functions thereof.
+  7 │  }
 [exit 1]
   $ stanc non_data_index8.stan
-Semantic error in 'non_data_index8.stan', line 6, column 24 to column 25:
-   -------------------------------------------------
-     4:  }
-     5:  transformed parameters {
-     6:    positive_ordered[size(y)] z;
-                                 ^
-     7:  }
-   -------------------------------------------------
-
-Top level variable sizes must be variables from the (transformed) data block or functions thereof, but this variable was declared in the parameters block.
+error: Top level variable sizes must be variables from the (transformed) data block or functions thereof.
+    ┌─ non_data_index8.stan:6:25
+  1 │  parameters {
+  2 │    array[3] real y;
+    │                  - Variable was declared in parameters block here.
+  3 │  
+  4 │  }
+  5 │  transformed parameters {
+  6 │    positive_ordered[size(y)] z;
+    │                          ^ Top level variable sizes must be variables from the (transformed) data block or functions thereof.
+  7 │  }
 [exit 1]
   $ stanc non_data_index9.stan
-Semantic error in 'non_data_index9.stan', line 6, column 19 to column 20:
-   -------------------------------------------------
-     4:  }
-     5:  transformed parameters {
-     6:    unit_vector[size(y)] z;
-                            ^
-     7:  }
-   -------------------------------------------------
-
-Top level variable sizes must be variables from the (transformed) data block or functions thereof, but this variable was declared in the parameters block.
+error: Top level variable sizes must be variables from the (transformed) data block or functions thereof.
+    ┌─ non_data_index9.stan:6:20
+  1 │  parameters {
+  2 │    array[3] real y;
+    │                  - Variable was declared in parameters block here.
+  3 │  
+  4 │  }
+  5 │  transformed parameters {
+  6 │    unit_vector[size(y)] z;
+    │                     ^ Top level variable sizes must be variables from the (transformed) data block or functions thereof.
+  7 │  }
 [exit 1]
   $ stanc rng_index1.stan
-Semantic error in 'rng_index1.stan', line 6, column 8 to column 23:
-   -------------------------------------------------
-     4:  }
-     5:  transformed parameters {
-     6:    array[poisson_rng(10)] real z;
-                 ^
-     7:  }
-   -------------------------------------------------
-
-Random number generators are not allowed in top level size declarations.
+error: Random number generators are not allowed in top level size declarations.
+    ┌─ rng_index1.stan:6:9
+  5 │  transformed parameters {
+  6 │    array[poisson_rng(10)] real z;
+    │          ^^^^^^^^^^^^^^^ Random number generators are not allowed in top level size declarations.
+  7 │  }
 [exit 1]

@@ -1,732 +1,762 @@
   $ stanc bad_data_qualifer.stan
-Semantic error in 'bad_data_qualifer.stan', line 31, column 23 to column 37:
-   -------------------------------------------------
-    29:  transformed parameters {
-    30:    vector[2] y_s_p;
-    31:    y_s_p = solve_newton(algebra_system, y, theta_p, x_r, x_i, 0.01, 0.01, 10);
-                                ^
-    32:  }
-    33:  
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function "solve_newton":
-(<F1>, vector, vector, array[] real, array[] real, real, real, int)
-where F1 = (data vector, vector, array[] real, array[] int) => vector
-Available signatures:
-(<F2>, vector) => vector
-where F2 = (vector) => vector
-  The first argument must be
-   (vector) => vector
-  but got
-   (data vector, vector, array[] real, array[] int) => vector
-  These are not compatible because:
-    The first argument has an incompatible data-qualifier.
+error: Ill-typed arguments supplied to function "solve_newton".
+    ┌─ bad_data_qualifer.stan:31:24
+  1 │  functions {
+  2 │    vector algebra_system (data vector y,
+    │           -------------- Callback defined here.
+  3 │                           vector theta,
+    ⋯  
+ 30 │    vector[2] y_s_p;
+ 31 │    y_s_p = solve_newton(algebra_system, y, theta_p, x_r, x_i, 0.01, 0.01, 10);
+    │                         ^^^^^^^^^^^^^^ Function called here.
+ 32 │  }
+    = Supplied arguments:
+      (<F1>, vector, vector, array[] real, array[] real, real, real, int)
+      where F1 = (data vector, vector, array[] real, array[] int) => vector
+    = Available signatures:
+      (<F2>, vector) => vector
+      where F2 = (vector) => vector
+        The first argument must be
+         (vector) => vector
+        but got
+         (data vector, vector, array[] real, array[] int) => vector
+        These are not compatible because:
+          The first argument has an incompatible data-qualifier.
 [exit 1]
   $ stanc bad_fun_type.stan
-Semantic error in 'bad_fun_type.stan', line 31, column 10 to column 62:
-   -------------------------------------------------
-    29:  transformed parameters {
-    30:    vector[2] y_s_p;
-    31:    y_s_p = algebra_solver(algebra_system, y, theta_p, x_r, x_i);
-                   ^
-    32:  }
-    33:  
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function "algebra_solver":
-(<F1>, vector, vector, array[] real, array[] int)
-where F1 = (array[] real, vector, array[] real, array[] int) => vector
-Available signatures:
-(<F2>, vector, vector, data array[] real, data array[] int) => vector
-where F2 = (vector, vector, data array[] real, data array[] int) => vector
-  The first argument must be
-   (vector, vector, data array[] real, data array[] int) => vector
-  but got
-   (array[] real, vector, array[] real, array[] int) => vector
-  These are not compatible because:
-    The types for the first argument are incompatible: one is
-     array[] real
-    but the other is
-     vector
-(<F2>, vector, vector, data array[] real, data array[] int, data real,
- data real, data real) => vector
-  Expected 8 arguments but found 5 arguments.
+error: Ill-typed arguments supplied to function "algebra_solver".
+    ┌─ bad_fun_type.stan:31:11
+  1 │  functions {
+  2 │    vector algebra_system (array[] real y,
+    │           -------------- Callback defined here.
+  3 │                           vector theta,
+    ⋯  
+ 30 │    vector[2] y_s_p;
+ 31 │    y_s_p = algebra_solver(algebra_system, y, theta_p, x_r, x_i);
+    │            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Function called here.
+ 32 │  }
+    = Supplied arguments:
+      (<F1>, vector, vector, array[] real, array[] int)
+      where F1 = (array[] real, vector, array[] real, array[] int) => vector
+    = Available signatures:
+      (<F2>, vector, vector, data array[] real, data array[] int) => vector
+      where F2 = (vector, vector, data array[] real, data array[] int) => vector
+        The first argument must be
+         (vector, vector, data array[] real, data array[] int) => vector
+        but got
+         (array[] real, vector, array[] real, array[] int) => vector
+        These are not compatible because:
+          The types for the first argument are incompatible: one is
+           array[] real
+          but the other is
+           vector
+      (<F2>, vector, vector, data array[] real, data array[] int, data real,
+       data real, data real) => vector
+        Expected 8 arguments but found 5 arguments.
 [exit 1]
   $ stanc bad_fun_type_control.stan
-Semantic error in 'bad_fun_type_control.stan', line 31, column 10 to column 78:
-   -------------------------------------------------
-    29:  transformed parameters {
-    30:    vector[2] y_s_p;
-    31:    y_s_p = algebra_solver(algebra_system, y, theta_p, x_r, x_i, 0.01, 0.01, 10);
-                   ^
-    32:  }
-    33:  
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function "algebra_solver":
-(<F1>, vector, vector, array[] real, array[] int, real, real, int)
-where F1 = (array[] real, vector, array[] real, array[] int) => vector
-Available signatures:
-(<F2>, vector, vector, data array[] real, data array[] int, data real,
- data real, data real) => vector
-where F2 = (vector, vector, data array[] real, data array[] int) => vector
-  The first argument must be
-   (vector, vector, data array[] real, data array[] int) => vector
-  but got
-   (array[] real, vector, array[] real, array[] int) => vector
-  These are not compatible because:
-    The types for the first argument are incompatible: one is
-     array[] real
-    but the other is
-     vector
-(<F2>, vector, vector, data array[] real, data array[] int) => vector
-  Expected 5 arguments but found 8 arguments.
+error: Ill-typed arguments supplied to function "algebra_solver".
+    ┌─ bad_fun_type_control.stan:31:11
+  1 │  functions {
+  2 │    vector algebra_system (array[] real y,
+    │           -------------- Callback defined here.
+  3 │                           vector theta,
+    ⋯  
+ 30 │    vector[2] y_s_p;
+ 31 │    y_s_p = algebra_solver(algebra_system, y, theta_p, x_r, x_i, 0.01, 0.01, 10);
+    │            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Function called here.
+ 32 │  }
+    = Supplied arguments:
+      (<F1>, vector, vector, array[] real, array[] int, real, real, int)
+      where F1 = (array[] real, vector, array[] real, array[] int) => vector
+    = Available signatures:
+      (<F2>, vector, vector, data array[] real, data array[] int, data real,
+       data real, data real) => vector
+      where F2 = (vector, vector, data array[] real, data array[] int) => vector
+        The first argument must be
+         (vector, vector, data array[] real, data array[] int) => vector
+        but got
+         (array[] real, vector, array[] real, array[] int) => vector
+        These are not compatible because:
+          The types for the first argument are incompatible: one is
+           array[] real
+          but the other is
+           vector
+      (<F2>, vector, vector, data array[] real, data array[] int) => vector
+        Expected 5 arguments but found 8 arguments.
 [exit 1]
   $ stanc bad_newton_fun_type_control.stan
-Semantic error in 'bad_newton_fun_type_control.stan', line 31, column 10 to column 85:
-   -------------------------------------------------
-    29:  transformed parameters {
-    30:    vector[2] y_s_p;
-    31:    y_s_p = algebra_solver_newton(algebra_system, y, theta_p, x_r, x_i, 0.01, 0.01, 10);
-                   ^
-    32:  }
-    33:  
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function "algebra_solver_newton":
-(<F1>, vector, vector, array[] real, array[] int, real, real, int)
-where F1 = (array[] real, vector, array[] real, array[] int) => vector
-Available signatures:
-(<F2>, vector, vector, data array[] real, data array[] int, data real,
- data real, data real) => vector
-where F2 = (vector, vector, data array[] real, data array[] int) => vector
-  The first argument must be
-   (vector, vector, data array[] real, data array[] int) => vector
-  but got
-   (array[] real, vector, array[] real, array[] int) => vector
-  These are not compatible because:
-    The types for the first argument are incompatible: one is
-     array[] real
-    but the other is
-     vector
-(<F2>, vector, vector, data array[] real, data array[] int) => vector
-  Expected 5 arguments but found 8 arguments.
+error: Ill-typed arguments supplied to function "algebra_solver_newton".
+    ┌─ bad_newton_fun_type_control.stan:31:11
+  1 │  functions {
+  2 │    vector algebra_system (array[] real y,
+    │           -------------- Callback defined here.
+  3 │                           vector theta,
+    ⋯  
+ 30 │    vector[2] y_s_p;
+ 31 │    y_s_p = algebra_solver_newton(algebra_system, y, theta_p, x_r, x_i, 0.01, 0.01, 10);
+    │            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Function called here.
+ 32 │  }
+    = Supplied arguments:
+      (<F1>, vector, vector, array[] real, array[] int, real, real, int)
+      where F1 = (array[] real, vector, array[] real, array[] int) => vector
+    = Available signatures:
+      (<F2>, vector, vector, data array[] real, data array[] int, data real,
+       data real, data real) => vector
+      where F2 = (vector, vector, data array[] real, data array[] int) => vector
+        The first argument must be
+         (vector, vector, data array[] real, data array[] int) => vector
+        but got
+         (array[] real, vector, array[] real, array[] int) => vector
+        These are not compatible because:
+          The types for the first argument are incompatible: one is
+           array[] real
+          but the other is
+           vector
+      (<F2>, vector, vector, data array[] real, data array[] int) => vector
+        Expected 5 arguments but found 8 arguments.
 [exit 1]
   $ stanc bad_newton_x_i_type.stan
-Semantic error in 'bad_newton_x_i_type.stan', line 31, column 10 to column 69:
-   -------------------------------------------------
-    29:  transformed parameters {
-    30:    vector[2] y_s_p;
-    31:    y_s_p = algebra_solver_newton(algebra_system, y, theta_p, x_r, x_i);
-                   ^
-    32:  }
-    33:  
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function "algebra_solver_newton":
-(<F1>, vector, vector, array[] real, array[] real)
-where F1 = (vector, vector, array[] real, array[] int) => vector
-Available signatures:
-(<F2>, vector, vector, data array[] real, data array[] int) => vector
-where F2 = (vector, vector, data array[] real, data array[] int) => vector
-  The 5th argument must be array[] int but got array[] real
-(<F2>, vector, vector, data array[] real, data array[] int, data real,
- data real, data real) => vector
-  Expected 8 arguments but found 5 arguments.
+error: Ill-typed arguments supplied to function "algebra_solver_newton".
+    ┌─ bad_newton_x_i_type.stan:31:11
+  1 │  functions {
+  2 │    vector algebra_system (vector y,
+    │           -------------- Callback defined here.
+  3 │                           vector theta,
+    ⋯  
+ 30 │    vector[2] y_s_p;
+ 31 │    y_s_p = algebra_solver_newton(algebra_system, y, theta_p, x_r, x_i);
+    │            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Function called here.
+ 32 │  }
+    = Supplied arguments:
+      (<F1>, vector, vector, array[] real, array[] real)
+      where F1 = (vector, vector, array[] real, array[] int) => vector
+    = Available signatures:
+      (<F2>, vector, vector, data array[] real, data array[] int) => vector
+      where F2 = (vector, vector, data array[] real, data array[] int) => vector
+        The 5th argument must be array[] int but got array[] real
+      (<F2>, vector, vector, data array[] real, data array[] int, data real,
+       data real, data real) => vector
+        Expected 8 arguments but found 5 arguments.
 [exit 1]
   $ stanc bad_newton_x_i_type_control.stan
-Semantic error in 'bad_newton_x_i_type_control.stan', line 31, column 10 to column 85:
-   -------------------------------------------------
-    29:  transformed parameters {
-    30:    vector[2] y_s_p;
-    31:    y_s_p = algebra_solver_newton(algebra_system, y, theta_p, x_r, x_i, 0.01, 0.01, 10);
-                   ^
-    32:  }
-    33:  
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function "algebra_solver_newton":
-(<F1>, vector, vector, array[] real, array[] real, real, real, int)
-where F1 = (vector, vector, array[] real, array[] int) => vector
-Available signatures:
-(<F2>, vector, vector, data array[] real, data array[] int, data real,
- data real, data real) => vector
-where F2 = (vector, vector, data array[] real, data array[] int) => vector
-  The 5th argument must be array[] int but got array[] real
-(<F2>, vector, vector, data array[] real, data array[] int) => vector
-  Expected 5 arguments but found 8 arguments.
+error: Ill-typed arguments supplied to function "algebra_solver_newton".
+    ┌─ bad_newton_x_i_type_control.stan:31:11
+  1 │  functions {
+  2 │    vector algebra_system (vector y,
+    │           -------------- Callback defined here.
+  3 │                           vector theta,
+    ⋯  
+ 30 │    vector[2] y_s_p;
+ 31 │    y_s_p = algebra_solver_newton(algebra_system, y, theta_p, x_r, x_i, 0.01, 0.01, 10);
+    │            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Function called here.
+ 32 │  }
+    = Supplied arguments:
+      (<F1>, vector, vector, array[] real, array[] real, real, real, int)
+      where F1 = (vector, vector, array[] real, array[] int) => vector
+    = Available signatures:
+      (<F2>, vector, vector, data array[] real, data array[] int, data real,
+       data real, data real) => vector
+      where F2 = (vector, vector, data array[] real, data array[] int) => vector
+        The 5th argument must be array[] int but got array[] real
+      (<F2>, vector, vector, data array[] real, data array[] int) => vector
+        Expected 5 arguments but found 8 arguments.
 [exit 1]
   $ stanc bad_newton_x_r_var_type.stan
-Semantic error in 'bad_newton_x_r_var_type.stan', line 31, column 10 to column 71:
-   -------------------------------------------------
-    29:  transformed parameters {
-    30:    vector[2] y_s_p;
-    31:    y_s_p = algebra_solver_newton(algebra_system, y, theta_p, x_r_p, x_i);
-                   ^
-    32:  }
-    33:  
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function "algebra_solver_newton":
-(<F1>, vector, vector, array[] real, array[] int)
-where F1 = (vector, vector, array[] real, array[] int) => vector
-Available signatures:
-(<F2>, vector, vector, data array[] real, data array[] int) => vector
-where F2 = (vector, vector, data array[] real, data array[] int) => vector
-  The fourth argument must be data-only. (Local variables are assumed to
-  depend on parameters; same goes for function inputs unless they are marked
-  with the keyword "data".)
-(<F2>, vector, vector, data array[] real, data array[] int, data real,
- data real, data real) => vector
-  Expected 8 arguments but found 5 arguments.
+error: Ill-typed arguments supplied to function "algebra_solver_newton".
+    ┌─ bad_newton_x_r_var_type.stan:31:11
+  1 │  functions {
+  2 │    vector algebra_system (vector y,
+    │           -------------- Callback defined here.
+  3 │                           vector theta,
+    ⋯  
+ 30 │    vector[2] y_s_p;
+ 31 │    y_s_p = algebra_solver_newton(algebra_system, y, theta_p, x_r_p, x_i);
+    │            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Function called here.
+ 32 │  }
+    = Supplied arguments:
+      (<F1>, vector, vector, array[] real, array[] int)
+      where F1 = (vector, vector, array[] real, array[] int) => vector
+    = Available signatures:
+      (<F2>, vector, vector, data array[] real, data array[] int) => vector
+      where F2 = (vector, vector, data array[] real, data array[] int) => vector
+        The fourth argument must be data-only.
+        (Local variables are assumed to depend on parameters; same goes for
+        function inputs unless they are marked with the keyword "data".)
+      (<F2>, vector, vector, data array[] real, data array[] int, data real,
+       data real, data real) => vector
+        Expected 8 arguments but found 5 arguments.
 [exit 1]
   $ stanc bad_newton_x_r_var_type_control.stan
-Semantic error in 'bad_newton_x_r_var_type_control.stan', line 31, column 10 to column 87:
-   -------------------------------------------------
-    29:  transformed parameters {
-    30:    vector[2] y_s_p;
-    31:    y_s_p = algebra_solver_newton(algebra_system, y, theta_p, x_r_p, x_i, 0.01, 0.01, 10);
-                   ^
-    32:  }
-    33:  
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function "algebra_solver_newton":
-(<F1>, vector, vector, array[] real, array[] int, real, real, int)
-where F1 = (vector, vector, array[] real, array[] int) => vector
-Available signatures:
-(<F2>, vector, vector, data array[] real, data array[] int, data real,
- data real, data real) => vector
-where F2 = (vector, vector, data array[] real, data array[] int) => vector
-  The fourth argument must be data-only. (Local variables are assumed to
-  depend on parameters; same goes for function inputs unless they are marked
-  with the keyword "data".)
-(<F2>, vector, vector, data array[] real, data array[] int) => vector
-  Expected 5 arguments but found 8 arguments.
+error: Ill-typed arguments supplied to function "algebra_solver_newton".
+    ┌─ bad_newton_x_r_var_type_control.stan:31:11
+  1 │  functions {
+  2 │    vector algebra_system (vector y,
+    │           -------------- Callback defined here.
+  3 │                           vector theta,
+    ⋯  
+ 30 │    vector[2] y_s_p;
+ 31 │    y_s_p = algebra_solver_newton(algebra_system, y, theta_p, x_r_p, x_i, 0.01, 0.01, 10);
+    │            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Function called here.
+ 32 │  }
+    = Supplied arguments:
+      (<F1>, vector, vector, array[] real, array[] int, real, real, int)
+      where F1 = (vector, vector, array[] real, array[] int) => vector
+    = Available signatures:
+      (<F2>, vector, vector, data array[] real, data array[] int, data real,
+       data real, data real) => vector
+      where F2 = (vector, vector, data array[] real, data array[] int) => vector
+        The fourth argument must be data-only.
+        (Local variables are assumed to depend on parameters; same goes for
+        function inputs unless they are marked with the keyword "data".)
+      (<F2>, vector, vector, data array[] real, data array[] int) => vector
+        Expected 5 arguments but found 8 arguments.
 [exit 1]
   $ stanc bad_newton_y_type.stan
-Semantic error in 'bad_newton_y_type.stan', line 31, column 10 to column 69:
-   -------------------------------------------------
-    29:  transformed parameters {
-    30:    vector[2] y_s_p;
-    31:    y_s_p = algebra_solver_newton(algebra_system, y, theta_p, x_r, x_i);
-                   ^
-    32:  }
-    33:  
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function "algebra_solver_newton":
-(<F1>, real, vector, array[] real, array[] int)
-where F1 = (array[] real, vector, array[] real, array[] int) => vector
-Available signatures:
-(<F2>, vector, vector, data array[] real, data array[] int) => vector
-where F2 = (vector, vector, data array[] real, data array[] int) => vector
-  The first argument must be
-   (vector, vector, data array[] real, data array[] int) => vector
-  but got
-   (array[] real, vector, array[] real, array[] int) => vector
-  These are not compatible because:
-    The types for the first argument are incompatible: one is
-     array[] real
-    but the other is
-     vector
-(<F2>, vector, vector, data array[] real, data array[] int, data real,
- data real, data real) => vector
-  Expected 8 arguments but found 5 arguments.
+error: Ill-typed arguments supplied to function "algebra_solver_newton".
+    ┌─ bad_newton_y_type.stan:31:11
+  1 │  functions {
+  2 │    vector algebra_system (array[] real y,
+    │           -------------- Callback defined here.
+  3 │                           vector theta,
+    ⋯  
+ 30 │    vector[2] y_s_p;
+ 31 │    y_s_p = algebra_solver_newton(algebra_system, y, theta_p, x_r, x_i);
+    │            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Function called here.
+ 32 │  }
+    = Supplied arguments:
+      (<F1>, real, vector, array[] real, array[] int)
+      where F1 = (array[] real, vector, array[] real, array[] int) => vector
+    = Available signatures:
+      (<F2>, vector, vector, data array[] real, data array[] int) => vector
+      where F2 = (vector, vector, data array[] real, data array[] int) => vector
+        The first argument must be
+         (vector, vector, data array[] real, data array[] int) => vector
+        but got
+         (array[] real, vector, array[] real, array[] int) => vector
+        These are not compatible because:
+          The types for the first argument are incompatible: one is
+           array[] real
+          but the other is
+           vector
+      (<F2>, vector, vector, data array[] real, data array[] int, data real,
+       data real, data real) => vector
+        Expected 8 arguments but found 5 arguments.
 [exit 1]
   $ stanc bad_newton_y_type_control.stan
-Semantic error in 'bad_newton_y_type_control.stan', line 31, column 10 to column 85:
-   -------------------------------------------------
-    29:  transformed parameters {
-    30:    vector[2] y_s_p;
-    31:    y_s_p = algebra_solver_newton(algebra_system, y, theta_p, x_r, x_i, 0.01, 0.01, 10);
-                   ^
-    32:  }
-    33:  
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function "algebra_solver_newton":
-(<F1>, real, vector, array[] real, array[] int, real, real, int)
-where F1 = (array[] real, vector, array[] real, array[] int) => vector
-Available signatures:
-(<F2>, vector, vector, data array[] real, data array[] int, data real,
- data real, data real) => vector
-where F2 = (vector, vector, data array[] real, data array[] int) => vector
-  The first argument must be
-   (vector, vector, data array[] real, data array[] int) => vector
-  but got
-   (array[] real, vector, array[] real, array[] int) => vector
-  These are not compatible because:
-    The types for the first argument are incompatible: one is
-     array[] real
-    but the other is
-     vector
-(<F2>, vector, vector, data array[] real, data array[] int) => vector
-  Expected 5 arguments but found 8 arguments.
+error: Ill-typed arguments supplied to function "algebra_solver_newton".
+    ┌─ bad_newton_y_type_control.stan:31:11
+  1 │  functions {
+  2 │    vector algebra_system (array[] real y,
+    │           -------------- Callback defined here.
+  3 │                           vector theta,
+    ⋯  
+ 30 │    vector[2] y_s_p;
+ 31 │    y_s_p = algebra_solver_newton(algebra_system, y, theta_p, x_r, x_i, 0.01, 0.01, 10);
+    │            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Function called here.
+ 32 │  }
+    = Supplied arguments:
+      (<F1>, real, vector, array[] real, array[] int, real, real, int)
+      where F1 = (array[] real, vector, array[] real, array[] int) => vector
+    = Available signatures:
+      (<F2>, vector, vector, data array[] real, data array[] int, data real,
+       data real, data real) => vector
+      where F2 = (vector, vector, data array[] real, data array[] int) => vector
+        The first argument must be
+         (vector, vector, data array[] real, data array[] int) => vector
+        but got
+         (array[] real, vector, array[] real, array[] int) => vector
+        These are not compatible because:
+          The types for the first argument are incompatible: one is
+           array[] real
+          but the other is
+           vector
+      (<F2>, vector, vector, data array[] real, data array[] int) => vector
+        Expected 5 arguments but found 8 arguments.
 [exit 1]
   $ stanc bad_solve_newton_arguments_number.stan
-Semantic error in 'bad_solve_newton_arguments_number.stan', line 31, column 23 to column 37:
-   -------------------------------------------------
-    29:  transformed parameters {
-    30:    vector[2] y_s_p;
-    31:    y_s_p = solve_newton(algebra_system, y, theta_p, x_r, x_i, x_i);
-                                ^
-    32:  }
-    33:  
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function "solve_newton":
-(<F1>, vector, real, array[] real, array[] int, array[] int)
-where F1 = (array[] real, vector, array[] real, array[] int) => vector
-Available signatures:
-(<F2>, vector) => vector
-where F2 = (vector) => vector
-  The first argument must be
-   (vector) => vector
-  but got
-   (array[] real, vector, array[] real, array[] int) => vector
-  These are not compatible because:
-    The types for the first argument are incompatible: one is
-     array[] real
-    but the other is
-     vector
+error: Ill-typed arguments supplied to function "solve_newton".
+    ┌─ bad_solve_newton_arguments_number.stan:31:24
+  1 │  functions {
+  2 │    vector algebra_system (array[] real y,
+    │           -------------- Callback defined here.
+  3 │                           vector theta,
+    ⋯  
+ 30 │    vector[2] y_s_p;
+ 31 │    y_s_p = solve_newton(algebra_system, y, theta_p, x_r, x_i, x_i);
+    │                         ^^^^^^^^^^^^^^ Function called here.
+ 32 │  }
+    = Supplied arguments:
+      (<F1>, vector, real, array[] real, array[] int, array[] int)
+      where F1 = (array[] real, vector, array[] real, array[] int) => vector
+    = Available signatures:
+      (<F2>, vector) => vector
+      where F2 = (vector) => vector
+        The first argument must be
+         (vector) => vector
+        but got
+         (array[] real, vector, array[] real, array[] int) => vector
+        These are not compatible because:
+          The types for the first argument are incompatible: one is
+           array[] real
+          but the other is
+           vector
 [exit 1]
   $ stanc bad_solve_newton_arguments_type.stan
-Semantic error in 'bad_solve_newton_arguments_type.stan', line 31, column 23 to column 37:
-   -------------------------------------------------
-    29:  transformed parameters {
-    30:    vector[2] y_s_p;
-    31:    y_s_p = solve_newton(algebra_system, y, theta_p, x_i, x_i);
-                                ^
-    32:  }
-    33:  
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function "solve_newton":
-(<F1>, vector, real, array[] int, array[] int)
-where F1 = (array[] real, vector, array[] real, array[] int) => vector
-Available signatures:
-(<F2>, vector) => vector
-where F2 = (vector) => vector
-  The first argument must be
-   (vector) => vector
-  but got
-   (array[] real, vector, array[] real, array[] int) => vector
-  These are not compatible because:
-    The types for the first argument are incompatible: one is
-     array[] real
-    but the other is
-     vector
+error: Ill-typed arguments supplied to function "solve_newton".
+    ┌─ bad_solve_newton_arguments_type.stan:31:24
+  1 │  functions {
+  2 │    vector algebra_system (array[] real y,
+    │           -------------- Callback defined here.
+  3 │                           vector theta,
+    ⋯  
+ 30 │    vector[2] y_s_p;
+ 31 │    y_s_p = solve_newton(algebra_system, y, theta_p, x_i, x_i);
+    │                         ^^^^^^^^^^^^^^ Function called here.
+ 32 │  }
+    = Supplied arguments:
+      (<F1>, vector, real, array[] int, array[] int)
+      where F1 = (array[] real, vector, array[] real, array[] int) => vector
+    = Available signatures:
+      (<F2>, vector) => vector
+      where F2 = (vector) => vector
+        The first argument must be
+         (vector) => vector
+        but got
+         (array[] real, vector, array[] real, array[] int) => vector
+        These are not compatible because:
+          The types for the first argument are incompatible: one is
+           array[] real
+          but the other is
+           vector
 [exit 1]
   $ stanc bad_solve_newton_lpdf.stan
-Semantic error in 'bad_solve_newton_lpdf.stan', line 28, column 25 to column 44:
-   -------------------------------------------------
-    26:    vector[2] theta_p;
-    27:  
-    28:    theta_p = solve_newton(algebra_system_lpdf, x, y, dat, dat_int);
-                                  ^
-    29:  
-    30:  }
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function "solve_newton":
-(<F1>, vector, vector, array[] real, array[] int)
-where F1 = (vector, vector, array[] real, array[] int) => real
-Available signatures:
-(<F2>, vector) => vector
-where F2 = (vector) => vector
-  The first argument must be a pure function but got a probability density function. These function types are not compatible.
+error: Ill-typed arguments supplied to function "solve_newton".
+    ┌─ bad_solve_newton_lpdf.stan:28:26
+  2 │  
+  3 │    real algebra_system_lpdf(vector x, vector y, array[] real dat,
+    │         ------------------- Callback defined here.
+  4 │                          array[] int dat_int) {
+    ⋯  
+ 27 │  
+ 28 │    theta_p = solve_newton(algebra_system_lpdf, x, y, dat, dat_int);
+    │                           ^^^^^^^^^^^^^^^^^^^ Function called here.
+ 29 │  
+    = Supplied arguments:
+      (<F1>, vector, vector, array[] real, array[] int)
+      where F1 = (vector, vector, array[] real, array[] int) => real
+    = Available signatures:
+      (<F2>, vector) => vector
+      where F2 = (vector) => vector
+        The first argument must be a pure function but got a probability density function. These function types are not compatible.
 [exit 1]
   $ stanc bad_solve_newton_lpmf.stan
-Semantic error in 'bad_solve_newton_lpmf.stan', line 28, column 25 to column 44:
-   -------------------------------------------------
-    26:    vector[2] theta_p;
-    27:  
-    28:    theta_p = solve_newton(algebra_system_lpmf, x, y, dat, dat_int);
-                                  ^
-    29:  
-    30:  }
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function "solve_newton":
-(<F1>, vector, vector, array[] real, array[] int)
-where F1 = (array[] int, vector, array[] real, array[] int) => real
-Available signatures:
-(<F2>, vector) => vector
-where F2 = (vector) => vector
-  The first argument must be a pure function but got a probability mass function. These function types are not compatible.
+error: Ill-typed arguments supplied to function "solve_newton".
+    ┌─ bad_solve_newton_lpmf.stan:28:26
+  2 │  
+  3 │    real algebra_system_lpmf(array[] int x, vector y, array[] real dat,
+    │         ------------------- Callback defined here.
+  4 │                          array[] int dat_int) {
+    ⋯  
+ 27 │  
+ 28 │    theta_p = solve_newton(algebra_system_lpmf, x, y, dat, dat_int);
+    │                           ^^^^^^^^^^^^^^^^^^^ Function called here.
+ 29 │  
+    = Supplied arguments:
+      (<F1>, vector, vector, array[] real, array[] int)
+      where F1 = (array[] int, vector, array[] real, array[] int) => real
+    = Available signatures:
+      (<F2>, vector) => vector
+      where F2 = (vector) => vector
+        The first argument must be a pure function but got a probability mass function. These function types are not compatible.
 [exit 1]
   $ stanc bad_solve_newton_tol_arguments_number.stan
-Semantic error in 'bad_solve_newton_tol_arguments_number.stan', line 34, column 27 to column 41:
-   -------------------------------------------------
-    32:  transformed parameters {
-    33:    vector[2] y_s_p;
-    34:    y_s_p = solve_newton_tol(algebra_system, y, scale_step, fun_tol, max_steps,
-                                    ^
-    35:                             theta_p, x_r, x_i, x_i);
-    36:  }
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function "solve_newton_tol":
-(<F1>, vector, real, real, int, real, array[] real, array[] int, array[] int)
-where F1 = (array[] real, vector, array[] real, array[] int) => vector
-Available signatures:
-(<F2>, vector, data real, data real, data int) => vector
-where F2 = (vector) => vector
-  The first argument must be
-   (vector) => vector
-  but got
-   (array[] real, vector, array[] real, array[] int) => vector
-  These are not compatible because:
-    The types for the first argument are incompatible: one is
-     array[] real
-    but the other is
-     vector
+error: Ill-typed arguments supplied to function "solve_newton_tol".
+    ┌─ bad_solve_newton_tol_arguments_number.stan:34:28
+  1 │  functions {
+  2 │    vector algebra_system (array[] real y,
+    │           -------------- Callback defined here.
+  3 │                           vector theta,
+    ⋯  
+ 33 │    vector[2] y_s_p;
+ 34 │    y_s_p = solve_newton_tol(algebra_system, y, scale_step, fun_tol, max_steps,
+    │                             ^^^^^^^^^^^^^^ Function called here.
+ 35 │                             theta_p, x_r, x_i, x_i);
+    = Supplied arguments:
+      (<F1>, vector, real, real, int, real, array[] real, array[] int,
+       array[] int)
+      where F1 = (array[] real, vector, array[] real, array[] int) => vector
+    = Available signatures:
+      (<F2>, vector, data real, data real, data int) => vector
+      where F2 = (vector) => vector
+        The first argument must be
+         (vector) => vector
+        but got
+         (array[] real, vector, array[] real, array[] int) => vector
+        These are not compatible because:
+          The types for the first argument are incompatible: one is
+           array[] real
+          but the other is
+           vector
 [exit 1]
   $ stanc bad_solve_newton_tol_arguments_type.stan
-Semantic error in 'bad_solve_newton_tol_arguments_type.stan', line 34, column 23 to column 37:
-   -------------------------------------------------
-    32:  transformed parameters {
-    33:    vector[2] y_s_p;
-    34:    y_s_p = solve_newton(algebra_system, y, scaling_step, fun_tol,
-                                ^
-    35:                         max_steps, theta_p, x_i, x_i);
-    36:  }
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function "solve_newton":
-(<F1>, vector, real, real, int, real, array[] int, array[] int)
-where F1 = (array[] real, vector, array[] real, array[] int) => vector
-Available signatures:
-(<F2>, vector) => vector
-where F2 = (vector) => vector
-  The first argument must be
-   (vector) => vector
-  but got
-   (array[] real, vector, array[] real, array[] int) => vector
-  These are not compatible because:
-    The types for the first argument are incompatible: one is
-     array[] real
-    but the other is
-     vector
+error: Ill-typed arguments supplied to function "solve_newton".
+    ┌─ bad_solve_newton_tol_arguments_type.stan:34:24
+  1 │  functions {
+  2 │    vector algebra_system (array[] real y,
+    │           -------------- Callback defined here.
+  3 │                           vector theta,
+    ⋯  
+ 33 │    vector[2] y_s_p;
+ 34 │    y_s_p = solve_newton(algebra_system, y, scaling_step, fun_tol,
+    │                         ^^^^^^^^^^^^^^ Function called here.
+ 35 │                         max_steps, theta_p, x_i, x_i);
+    = Supplied arguments:
+      (<F1>, vector, real, real, int, real, array[] int, array[] int)
+      where F1 = (array[] real, vector, array[] real, array[] int) => vector
+    = Available signatures:
+      (<F2>, vector) => vector
+      where F2 = (vector) => vector
+        The first argument must be
+         (vector) => vector
+        but got
+         (array[] real, vector, array[] real, array[] int) => vector
+        These are not compatible because:
+          The types for the first argument are incompatible: one is
+           array[] real
+          but the other is
+           vector
 [exit 1]
   $ stanc bad_solve_powell_arguments_number.stan
-Semantic error in 'bad_solve_powell_arguments_number.stan', line 31, column 23 to column 37:
-   -------------------------------------------------
-    29:  transformed parameters {
-    30:    vector[2] y_s_p;
-    31:    y_s_p = solve_powell(algebra_system, y, theta_p, x_r, x_i, x_i);
-                                ^
-    32:  }
-    33:  
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function "solve_powell":
-(<F1>, vector, real, array[] real, array[] int, array[] int)
-where F1 = (array[] real, vector, array[] real, array[] int) => vector
-Available signatures:
-(<F2>, vector) => vector
-where F2 = (vector) => vector
-  The first argument must be
-   (vector) => vector
-  but got
-   (array[] real, vector, array[] real, array[] int) => vector
-  These are not compatible because:
-    The types for the first argument are incompatible: one is
-     array[] real
-    but the other is
-     vector
+error: Ill-typed arguments supplied to function "solve_powell".
+    ┌─ bad_solve_powell_arguments_number.stan:31:24
+  1 │  functions {
+  2 │    vector algebra_system (array[] real y,
+    │           -------------- Callback defined here.
+  3 │                           vector theta,
+    ⋯  
+ 30 │    vector[2] y_s_p;
+ 31 │    y_s_p = solve_powell(algebra_system, y, theta_p, x_r, x_i, x_i);
+    │                         ^^^^^^^^^^^^^^ Function called here.
+ 32 │  }
+    = Supplied arguments:
+      (<F1>, vector, real, array[] real, array[] int, array[] int)
+      where F1 = (array[] real, vector, array[] real, array[] int) => vector
+    = Available signatures:
+      (<F2>, vector) => vector
+      where F2 = (vector) => vector
+        The first argument must be
+         (vector) => vector
+        but got
+         (array[] real, vector, array[] real, array[] int) => vector
+        These are not compatible because:
+          The types for the first argument are incompatible: one is
+           array[] real
+          but the other is
+           vector
 [exit 1]
   $ stanc bad_solve_powell_arguments_type.stan
-Semantic error in 'bad_solve_powell_arguments_type.stan', line 31, column 23 to column 37:
-   -------------------------------------------------
-    29:  transformed parameters {
-    30:    vector[2] y_s_p;
-    31:    y_s_p = solve_powell(algebra_system, y, theta_p, x_i, x_i);
-                                ^
-    32:  }
-    33:  
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function "solve_powell":
-(<F1>, vector, real, array[] int, array[] int)
-where F1 = (array[] real, vector, array[] real, array[] int) => vector
-Available signatures:
-(<F2>, vector) => vector
-where F2 = (vector) => vector
-  The first argument must be
-   (vector) => vector
-  but got
-   (array[] real, vector, array[] real, array[] int) => vector
-  These are not compatible because:
-    The types for the first argument are incompatible: one is
-     array[] real
-    but the other is
-     vector
+error: Ill-typed arguments supplied to function "solve_powell".
+    ┌─ bad_solve_powell_arguments_type.stan:31:24
+  1 │  functions {
+  2 │    vector algebra_system (array[] real y,
+    │           -------------- Callback defined here.
+  3 │                           vector theta,
+    ⋯  
+ 30 │    vector[2] y_s_p;
+ 31 │    y_s_p = solve_powell(algebra_system, y, theta_p, x_i, x_i);
+    │                         ^^^^^^^^^^^^^^ Function called here.
+ 32 │  }
+    = Supplied arguments:
+      (<F1>, vector, real, array[] int, array[] int)
+      where F1 = (array[] real, vector, array[] real, array[] int) => vector
+    = Available signatures:
+      (<F2>, vector) => vector
+      where F2 = (vector) => vector
+        The first argument must be
+         (vector) => vector
+        but got
+         (array[] real, vector, array[] real, array[] int) => vector
+        These are not compatible because:
+          The types for the first argument are incompatible: one is
+           array[] real
+          but the other is
+           vector
 [exit 1]
   $ stanc bad_solve_powell_tol_arguments_number.stan
-Semantic error in 'bad_solve_powell_tol_arguments_number.stan', line 34, column 27 to column 41:
-   -------------------------------------------------
-    32:  transformed parameters {
-    33:    vector[2] y_s_p;
-    34:    y_s_p = solve_powell_tol(algebra_system, y, rel_tol, fun_tol, max_steps,
-                                    ^
-    35:                             theta_p, x_r, x_i, x_i);
-    36:  }
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function "solve_powell_tol":
-(<F1>, vector, real, real, int, real, array[] real, array[] int, array[] int)
-where F1 = (array[] real, vector, array[] real, array[] int) => vector
-Available signatures:
-(<F2>, vector, data real, data real, data int) => vector
-where F2 = (vector) => vector
-  The first argument must be
-   (vector) => vector
-  but got
-   (array[] real, vector, array[] real, array[] int) => vector
-  These are not compatible because:
-    The types for the first argument are incompatible: one is
-     array[] real
-    but the other is
-     vector
+error: Ill-typed arguments supplied to function "solve_powell_tol".
+    ┌─ bad_solve_powell_tol_arguments_number.stan:34:28
+  1 │  functions {
+  2 │    vector algebra_system (array[] real y,
+    │           -------------- Callback defined here.
+  3 │                           vector theta,
+    ⋯  
+ 33 │    vector[2] y_s_p;
+ 34 │    y_s_p = solve_powell_tol(algebra_system, y, rel_tol, fun_tol, max_steps,
+    │                             ^^^^^^^^^^^^^^ Function called here.
+ 35 │                             theta_p, x_r, x_i, x_i);
+    = Supplied arguments:
+      (<F1>, vector, real, real, int, real, array[] real, array[] int,
+       array[] int)
+      where F1 = (array[] real, vector, array[] real, array[] int) => vector
+    = Available signatures:
+      (<F2>, vector, data real, data real, data int) => vector
+      where F2 = (vector) => vector
+        The first argument must be
+         (vector) => vector
+        but got
+         (array[] real, vector, array[] real, array[] int) => vector
+        These are not compatible because:
+          The types for the first argument are incompatible: one is
+           array[] real
+          but the other is
+           vector
 [exit 1]
   $ stanc bad_solve_powell_tol_arguments_type.stan
-Semantic error in 'bad_solve_powell_tol_arguments_type.stan', line 34, column 23 to column 37:
-   -------------------------------------------------
-    32:  transformed parameters {
-    33:    vector[2] y_s_p;
-    34:    y_s_p = solve_powell(algebra_system, y, rel_tol, fun_tol, max_steps,
-                                ^
-    35:                         theta_p, x_i, x_i);
-    36:  }
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function "solve_powell":
-(<F1>, vector, real, real, int, real, array[] int, array[] int)
-where F1 = (array[] real, vector, array[] real, array[] int) => vector
-Available signatures:
-(<F2>, vector) => vector
-where F2 = (vector) => vector
-  The first argument must be
-   (vector) => vector
-  but got
-   (array[] real, vector, array[] real, array[] int) => vector
-  These are not compatible because:
-    The types for the first argument are incompatible: one is
-     array[] real
-    but the other is
-     vector
+error: Ill-typed arguments supplied to function "solve_powell".
+    ┌─ bad_solve_powell_tol_arguments_type.stan:34:24
+  1 │  functions {
+  2 │    vector algebra_system (array[] real y,
+    │           -------------- Callback defined here.
+  3 │                           vector theta,
+    ⋯  
+ 33 │    vector[2] y_s_p;
+ 34 │    y_s_p = solve_powell(algebra_system, y, rel_tol, fun_tol, max_steps,
+    │                         ^^^^^^^^^^^^^^ Function called here.
+ 35 │                         theta_p, x_i, x_i);
+    = Supplied arguments:
+      (<F1>, vector, real, real, int, real, array[] int, array[] int)
+      where F1 = (array[] real, vector, array[] real, array[] int) => vector
+    = Available signatures:
+      (<F2>, vector) => vector
+      where F2 = (vector) => vector
+        The first argument must be
+         (vector) => vector
+        but got
+         (array[] real, vector, array[] real, array[] int) => vector
+        These are not compatible because:
+          The types for the first argument are incompatible: one is
+           array[] real
+          but the other is
+           vector
 [exit 1]
   $ stanc bad_theta_type.stan
-Semantic error in 'bad_theta_type.stan', line 31, column 10 to column 62:
-   -------------------------------------------------
-    29:  transformed parameters {
-    30:    vector[2] y_s_p;
-    31:    y_s_p = algebra_solver(algebra_system, y, theta_p, x_r, x_i);
-                   ^
-    32:  }
-    33:  
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function "algebra_solver":
-(<F1>, vector, real, array[] real, array[] int)
-where F1 = (array[] real, vector, array[] real, array[] int) => vector
-Available signatures:
-(<F2>, vector, vector, data array[] real, data array[] int) => vector
-where F2 = (vector, vector, data array[] real, data array[] int) => vector
-  The first argument must be
-   (vector, vector, data array[] real, data array[] int) => vector
-  but got
-   (array[] real, vector, array[] real, array[] int) => vector
-  These are not compatible because:
-    The types for the first argument are incompatible: one is
-     array[] real
-    but the other is
-     vector
-(<F2>, vector, vector, data array[] real, data array[] int, data real,
- data real, data real) => vector
-  Expected 8 arguments but found 5 arguments.
+error: Ill-typed arguments supplied to function "algebra_solver".
+    ┌─ bad_theta_type.stan:31:11
+  1 │  functions {
+  2 │    vector algebra_system (array[] real y,
+    │           -------------- Callback defined here.
+  3 │                           vector theta,
+    ⋯  
+ 30 │    vector[2] y_s_p;
+ 31 │    y_s_p = algebra_solver(algebra_system, y, theta_p, x_r, x_i);
+    │            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Function called here.
+ 32 │  }
+    = Supplied arguments:
+      (<F1>, vector, real, array[] real, array[] int)
+      where F1 = (array[] real, vector, array[] real, array[] int) => vector
+    = Available signatures:
+      (<F2>, vector, vector, data array[] real, data array[] int) => vector
+      where F2 = (vector, vector, data array[] real, data array[] int) => vector
+        The first argument must be
+         (vector, vector, data array[] real, data array[] int) => vector
+        but got
+         (array[] real, vector, array[] real, array[] int) => vector
+        These are not compatible because:
+          The types for the first argument are incompatible: one is
+           array[] real
+          but the other is
+           vector
+      (<F2>, vector, vector, data array[] real, data array[] int, data real,
+       data real, data real) => vector
+        Expected 8 arguments but found 5 arguments.
 [exit 1]
   $ stanc bad_theta_type_control.stan
-Semantic error in 'bad_theta_type_control.stan', line 31, column 10 to column 78:
-   -------------------------------------------------
-    29:  transformed parameters {
-    30:    vector[2] y_s_p;
-    31:    y_s_p = algebra_solver(algebra_system, y, theta_p, x_r, x_i, 0.01, 0.01, 10);
-                   ^
-    32:  }
-    33:  
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function "algebra_solver":
-(<F1>, vector, real, array[] real, array[] int, real, real, int)
-where F1 = (array[] real, vector, array[] real, array[] int) => vector
-Available signatures:
-(<F2>, vector, vector, data array[] real, data array[] int, data real,
- data real, data real) => vector
-where F2 = (vector, vector, data array[] real, data array[] int) => vector
-  The first argument must be
-   (vector, vector, data array[] real, data array[] int) => vector
-  but got
-   (array[] real, vector, array[] real, array[] int) => vector
-  These are not compatible because:
-    The types for the first argument are incompatible: one is
-     array[] real
-    but the other is
-     vector
-(<F2>, vector, vector, data array[] real, data array[] int) => vector
-  Expected 5 arguments but found 8 arguments.
+error: Ill-typed arguments supplied to function "algebra_solver".
+    ┌─ bad_theta_type_control.stan:31:11
+  1 │  functions {
+  2 │    vector algebra_system (array[] real y,
+    │           -------------- Callback defined here.
+  3 │                           vector theta,
+    ⋯  
+ 30 │    vector[2] y_s_p;
+ 31 │    y_s_p = algebra_solver(algebra_system, y, theta_p, x_r, x_i, 0.01, 0.01, 10);
+    │            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Function called here.
+ 32 │  }
+    = Supplied arguments:
+      (<F1>, vector, real, array[] real, array[] int, real, real, int)
+      where F1 = (array[] real, vector, array[] real, array[] int) => vector
+    = Available signatures:
+      (<F2>, vector, vector, data array[] real, data array[] int, data real,
+       data real, data real) => vector
+      where F2 = (vector, vector, data array[] real, data array[] int) => vector
+        The first argument must be
+         (vector, vector, data array[] real, data array[] int) => vector
+        but got
+         (array[] real, vector, array[] real, array[] int) => vector
+        These are not compatible because:
+          The types for the first argument are incompatible: one is
+           array[] real
+          but the other is
+           vector
+      (<F2>, vector, vector, data array[] real, data array[] int) => vector
+        Expected 5 arguments but found 8 arguments.
 [exit 1]
   $ stanc bad_x_i_type.stan
-Semantic error in 'bad_x_i_type.stan', line 31, column 10 to column 62:
-   -------------------------------------------------
-    29:  transformed parameters {
-    30:    vector[2] y_s_p;
-    31:    y_s_p = algebra_solver(algebra_system, y, theta_p, x_r, x_i);
-                   ^
-    32:  }
-    33:  
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function "algebra_solver":
-(<F1>, vector, vector, array[] real, array[] real)
-where F1 = (vector, vector, array[] real, array[] int) => vector
-Available signatures:
-(<F2>, vector, vector, data array[] real, data array[] int) => vector
-where F2 = (vector, vector, data array[] real, data array[] int) => vector
-  The 5th argument must be array[] int but got array[] real
-(<F2>, vector, vector, data array[] real, data array[] int, data real,
- data real, data real) => vector
-  Expected 8 arguments but found 5 arguments.
+error: Ill-typed arguments supplied to function "algebra_solver".
+    ┌─ bad_x_i_type.stan:31:11
+  1 │  functions {
+  2 │    vector algebra_system (vector y,
+    │           -------------- Callback defined here.
+  3 │                           vector theta,
+    ⋯  
+ 30 │    vector[2] y_s_p;
+ 31 │    y_s_p = algebra_solver(algebra_system, y, theta_p, x_r, x_i);
+    │            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Function called here.
+ 32 │  }
+    = Supplied arguments:
+      (<F1>, vector, vector, array[] real, array[] real)
+      where F1 = (vector, vector, array[] real, array[] int) => vector
+    = Available signatures:
+      (<F2>, vector, vector, data array[] real, data array[] int) => vector
+      where F2 = (vector, vector, data array[] real, data array[] int) => vector
+        The 5th argument must be array[] int but got array[] real
+      (<F2>, vector, vector, data array[] real, data array[] int, data real,
+       data real, data real) => vector
+        Expected 8 arguments but found 5 arguments.
 [exit 1]
   $ stanc bad_x_i_type_control.stan
-Semantic error in 'bad_x_i_type_control.stan', line 31, column 10 to column 78:
-   -------------------------------------------------
-    29:  transformed parameters {
-    30:    vector[2] y_s_p;
-    31:    y_s_p = algebra_solver(algebra_system, y, theta_p, x_r, x_i, 0.01, 0.01, 10);
-                   ^
-    32:  }
-    33:  
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function "algebra_solver":
-(<F1>, vector, vector, array[] real, array[] real, real, real, int)
-where F1 = (vector, vector, array[] real, array[] int) => vector
-Available signatures:
-(<F2>, vector, vector, data array[] real, data array[] int, data real,
- data real, data real) => vector
-where F2 = (vector, vector, data array[] real, data array[] int) => vector
-  The 5th argument must be array[] int but got array[] real
-(<F2>, vector, vector, data array[] real, data array[] int) => vector
-  Expected 5 arguments but found 8 arguments.
+error: Ill-typed arguments supplied to function "algebra_solver".
+    ┌─ bad_x_i_type_control.stan:31:11
+  1 │  functions {
+  2 │    vector algebra_system (vector y,
+    │           -------------- Callback defined here.
+  3 │                           vector theta,
+    ⋯  
+ 30 │    vector[2] y_s_p;
+ 31 │    y_s_p = algebra_solver(algebra_system, y, theta_p, x_r, x_i, 0.01, 0.01, 10);
+    │            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Function called here.
+ 32 │  }
+    = Supplied arguments:
+      (<F1>, vector, vector, array[] real, array[] real, real, real, int)
+      where F1 = (vector, vector, array[] real, array[] int) => vector
+    = Available signatures:
+      (<F2>, vector, vector, data array[] real, data array[] int, data real,
+       data real, data real) => vector
+      where F2 = (vector, vector, data array[] real, data array[] int) => vector
+        The 5th argument must be array[] int but got array[] real
+      (<F2>, vector, vector, data array[] real, data array[] int) => vector
+        Expected 5 arguments but found 8 arguments.
 [exit 1]
   $ stanc bad_x_r_var_type.stan
-Semantic error in 'bad_x_r_var_type.stan', line 31, column 10 to column 64:
-   -------------------------------------------------
-    29:  transformed parameters {
-    30:    vector[2] y_s_p;
-    31:    y_s_p = algebra_solver(algebra_system, y, theta_p, x_r_p, x_i);
-                   ^
-    32:  }
-    33:  
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function "algebra_solver":
-(<F1>, vector, vector, array[] real, array[] int)
-where F1 = (vector, vector, array[] real, array[] int) => vector
-Available signatures:
-(<F2>, vector, vector, data array[] real, data array[] int) => vector
-where F2 = (vector, vector, data array[] real, data array[] int) => vector
-  The fourth argument must be data-only. (Local variables are assumed to
-  depend on parameters; same goes for function inputs unless they are marked
-  with the keyword "data".)
-(<F2>, vector, vector, data array[] real, data array[] int, data real,
- data real, data real) => vector
-  Expected 8 arguments but found 5 arguments.
+error: Ill-typed arguments supplied to function "algebra_solver".
+    ┌─ bad_x_r_var_type.stan:31:11
+  1 │  functions {
+  2 │    vector algebra_system (vector y,
+    │           -------------- Callback defined here.
+  3 │                           vector theta,
+    ⋯  
+ 30 │    vector[2] y_s_p;
+ 31 │    y_s_p = algebra_solver(algebra_system, y, theta_p, x_r_p, x_i);
+    │            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Function called here.
+ 32 │  }
+    = Supplied arguments:
+      (<F1>, vector, vector, array[] real, array[] int)
+      where F1 = (vector, vector, array[] real, array[] int) => vector
+    = Available signatures:
+      (<F2>, vector, vector, data array[] real, data array[] int) => vector
+      where F2 = (vector, vector, data array[] real, data array[] int) => vector
+        The fourth argument must be data-only.
+        (Local variables are assumed to depend on parameters; same goes for
+        function inputs unless they are marked with the keyword "data".)
+      (<F2>, vector, vector, data array[] real, data array[] int, data real,
+       data real, data real) => vector
+        Expected 8 arguments but found 5 arguments.
 [exit 1]
   $ stanc bad_x_r_var_type_control.stan
-Semantic error in 'bad_x_r_var_type_control.stan', line 31, column 10 to column 80:
-   -------------------------------------------------
-    29:  transformed parameters {
-    30:    vector[2] y_s_p;
-    31:    y_s_p = algebra_solver(algebra_system, y, theta_p, x_r_p, x_i, 0.01, 0.01, 10);
-                   ^
-    32:  }
-    33:  
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function "algebra_solver":
-(<F1>, vector, vector, array[] real, array[] int, real, real, int)
-where F1 = (vector, vector, array[] real, array[] int) => vector
-Available signatures:
-(<F2>, vector, vector, data array[] real, data array[] int, data real,
- data real, data real) => vector
-where F2 = (vector, vector, data array[] real, data array[] int) => vector
-  The fourth argument must be data-only. (Local variables are assumed to
-  depend on parameters; same goes for function inputs unless they are marked
-  with the keyword "data".)
-(<F2>, vector, vector, data array[] real, data array[] int) => vector
-  Expected 5 arguments but found 8 arguments.
+error: Ill-typed arguments supplied to function "algebra_solver".
+    ┌─ bad_x_r_var_type_control.stan:31:11
+  1 │  functions {
+  2 │    vector algebra_system (vector y,
+    │           -------------- Callback defined here.
+  3 │                           vector theta,
+    ⋯  
+ 30 │    vector[2] y_s_p;
+ 31 │    y_s_p = algebra_solver(algebra_system, y, theta_p, x_r_p, x_i, 0.01, 0.01, 10);
+    │            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Function called here.
+ 32 │  }
+    = Supplied arguments:
+      (<F1>, vector, vector, array[] real, array[] int, real, real, int)
+      where F1 = (vector, vector, array[] real, array[] int) => vector
+    = Available signatures:
+      (<F2>, vector, vector, data array[] real, data array[] int, data real,
+       data real, data real) => vector
+      where F2 = (vector, vector, data array[] real, data array[] int) => vector
+        The fourth argument must be data-only.
+        (Local variables are assumed to depend on parameters; same goes for
+        function inputs unless they are marked with the keyword "data".)
+      (<F2>, vector, vector, data array[] real, data array[] int) => vector
+        Expected 5 arguments but found 8 arguments.
 [exit 1]
   $ stanc bad_y_type.stan
-Semantic error in 'bad_y_type.stan', line 31, column 10 to column 62:
-   -------------------------------------------------
-    29:  transformed parameters {
-    30:    vector[2] y_s_p;
-    31:    y_s_p = algebra_solver(algebra_system, y, theta_p, x_r, x_i);
-                   ^
-    32:  }
-    33:  
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function "algebra_solver":
-(<F1>, real, vector, array[] real, array[] int)
-where F1 = (array[] real, vector, array[] real, array[] int) => vector
-Available signatures:
-(<F2>, vector, vector, data array[] real, data array[] int) => vector
-where F2 = (vector, vector, data array[] real, data array[] int) => vector
-  The first argument must be
-   (vector, vector, data array[] real, data array[] int) => vector
-  but got
-   (array[] real, vector, array[] real, array[] int) => vector
-  These are not compatible because:
-    The types for the first argument are incompatible: one is
-     array[] real
-    but the other is
-     vector
-(<F2>, vector, vector, data array[] real, data array[] int, data real,
- data real, data real) => vector
-  Expected 8 arguments but found 5 arguments.
+error: Ill-typed arguments supplied to function "algebra_solver".
+    ┌─ bad_y_type.stan:31:11
+  1 │  functions {
+  2 │    vector algebra_system (array[] real y,
+    │           -------------- Callback defined here.
+  3 │                           vector theta,
+    ⋯  
+ 30 │    vector[2] y_s_p;
+ 31 │    y_s_p = algebra_solver(algebra_system, y, theta_p, x_r, x_i);
+    │            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Function called here.
+ 32 │  }
+    = Supplied arguments:
+      (<F1>, real, vector, array[] real, array[] int)
+      where F1 = (array[] real, vector, array[] real, array[] int) => vector
+    = Available signatures:
+      (<F2>, vector, vector, data array[] real, data array[] int) => vector
+      where F2 = (vector, vector, data array[] real, data array[] int) => vector
+        The first argument must be
+         (vector, vector, data array[] real, data array[] int) => vector
+        but got
+         (array[] real, vector, array[] real, array[] int) => vector
+        These are not compatible because:
+          The types for the first argument are incompatible: one is
+           array[] real
+          but the other is
+           vector
+      (<F2>, vector, vector, data array[] real, data array[] int, data real,
+       data real, data real) => vector
+        Expected 8 arguments but found 5 arguments.
 [exit 1]
   $ stanc bad_y_type_control.stan
-Semantic error in 'bad_y_type_control.stan', line 31, column 10 to column 78:
-   -------------------------------------------------
-    29:  transformed parameters {
-    30:    vector[2] y_s_p;
-    31:    y_s_p = algebra_solver(algebra_system, y, theta_p, x_r, x_i, 0.01, 0.01, 10);
-                   ^
-    32:  }
-    33:  
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function "algebra_solver":
-(<F1>, real, vector, array[] real, array[] int, real, real, int)
-where F1 = (array[] real, vector, array[] real, array[] int) => vector
-Available signatures:
-(<F2>, vector, vector, data array[] real, data array[] int, data real,
- data real, data real) => vector
-where F2 = (vector, vector, data array[] real, data array[] int) => vector
-  The first argument must be
-   (vector, vector, data array[] real, data array[] int) => vector
-  but got
-   (array[] real, vector, array[] real, array[] int) => vector
-  These are not compatible because:
-    The types for the first argument are incompatible: one is
-     array[] real
-    but the other is
-     vector
-(<F2>, vector, vector, data array[] real, data array[] int) => vector
-  Expected 5 arguments but found 8 arguments.
+error: Ill-typed arguments supplied to function "algebra_solver".
+    ┌─ bad_y_type_control.stan:31:11
+  1 │  functions {
+  2 │    vector algebra_system (array[] real y,
+    │           -------------- Callback defined here.
+  3 │                           vector theta,
+    ⋯  
+ 30 │    vector[2] y_s_p;
+ 31 │    y_s_p = algebra_solver(algebra_system, y, theta_p, x_r, x_i, 0.01, 0.01, 10);
+    │            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Function called here.
+ 32 │  }
+    = Supplied arguments:
+      (<F1>, real, vector, array[] real, array[] int, real, real, int)
+      where F1 = (array[] real, vector, array[] real, array[] int) => vector
+    = Available signatures:
+      (<F2>, vector, vector, data array[] real, data array[] int, data real,
+       data real, data real) => vector
+      where F2 = (vector, vector, data array[] real, data array[] int) => vector
+        The first argument must be
+         (vector, vector, data array[] real, data array[] int) => vector
+        but got
+         (array[] real, vector, array[] real, array[] int) => vector
+        These are not compatible because:
+          The types for the first argument are incompatible: one is
+           array[] real
+          but the other is
+           vector
+      (<F2>, vector, vector, data array[] real, data array[] int) => vector
+        Expected 5 arguments but found 8 arguments.
 [exit 1]

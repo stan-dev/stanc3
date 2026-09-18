@@ -1,548 +1,399 @@
   $ stanc auto.stan
-Semantic error in 'auto.stan', line 2, column 7 to column 11:
-   -------------------------------------------------
-     1:  data {
-     2:    real auto;
-                ^
-     3:  }
-     4:  model {
-   -------------------------------------------------
-
-Identifier "auto" clashes with reserved keyword.
+error: Identifier "auto" clashes with reserved keyword.
+    ┌─ auto.stan:2:8
+  1 │  data {
+  2 │    real auto;
+    │         ^^^^ Identifier "auto" clashes with reserved keyword.
+  3 │  }
 [exit 1]
   $ stanc break.stan
-Syntax error in 'break.stan', line 2, column 7 to column 12, parsing error:
-   -------------------------------------------------
-     1:  data {
-     2:    real break;
-                ^
-     3:  }
-     4:  model {
-   -------------------------------------------------
-
-Ill-formed identifier. Expected a new identifier but found reserved keyword "break".
+error: Syntax error: Ill-formed identifier.
+    ┌─ break.stan:2:8
+  1 │  data {
+  2 │    real break;
+    │         ^^^^^ here.
+  3 │  }
+    = Expected a new identifier but found reserved keyword "break".
 [exit 1]
   $ stanc cholesky_factor_corr.stan
-Syntax error in 'cholesky_factor_corr.stan', line 2, column 7 to column 27, parsing error:
-   -------------------------------------------------
-     1:  data {
-     2:    real cholesky_factor_corr;
-                ^
-     3:  }
-     4:  model {
-   -------------------------------------------------
-
-Ill-formed identifier. Expected a new identifier but found reserved keyword "cholesky_factor_corr".
+error: Syntax error: Ill-formed identifier.
+    ┌─ cholesky_factor_corr.stan:2:8
+  1 │  data {
+  2 │    real cholesky_factor_corr;
+    │         ^^^^^^^^^^^^^^^^^^^^ here.
+  3 │  }
+    = Expected a new identifier but found reserved keyword "cholesky_factor_corr".
 [exit 1]
   $ stanc cholesky_factor_cov.stan
-Syntax error in 'cholesky_factor_cov.stan', line 2, column 7 to column 26, parsing error:
-   -------------------------------------------------
-     1:  data {
-     2:    real cholesky_factor_cov;
-                ^
-     3:  }
-     4:  model {
-   -------------------------------------------------
-
-Ill-formed identifier. Expected a new identifier but found reserved keyword "cholesky_factor_cov".
+error: Syntax error: Ill-formed identifier.
+    ┌─ cholesky_factor_cov.stan:2:8
+  1 │  data {
+  2 │    real cholesky_factor_cov;
+    │         ^^^^^^^^^^^^^^^^^^^ here.
+  3 │  }
+    = Expected a new identifier but found reserved keyword "cholesky_factor_cov".
 [exit 1]
   $ stanc column_stochastic_matrix.stan
-Syntax error in 'column_stochastic_matrix.stan', line 2, column 7 to column 31, parsing error:
-   -------------------------------------------------
-     1:  data {
-     2:    real column_stochastic_matrix;
-                ^
-     3:  }
-   -------------------------------------------------
-
-Ill-formed identifier. Expected a new identifier but found reserved keyword "column_stochastic_matrix".
+error: Syntax error: Ill-formed identifier.
+    ┌─ column_stochastic_matrix.stan:2:8
+  1 │  data {
+  2 │    real column_stochastic_matrix;
+    │         ^^^^^^^^^^^^^^^^^^^^^^^^ here.
+  3 │  }
+    = Expected a new identifier but found reserved keyword "column_stochastic_matrix".
 [exit 1]
   $ stanc continue.stan
-Syntax error in 'continue.stan', line 2, column 7 to column 15, parsing error:
-   -------------------------------------------------
-     1:  data {
-     2:    real continue;
-                ^
-     3:  }
-     4:  model {
-   -------------------------------------------------
-
-Ill-formed identifier. Expected a new identifier but found reserved keyword "continue".
+error: Syntax error: Ill-formed identifier.
+    ┌─ continue.stan:2:8
+  1 │  data {
+  2 │    real continue;
+    │         ^^^^^^^^ here.
+  3 │  }
+    = Expected a new identifier but found reserved keyword "continue".
 [exit 1]
   $ stanc corr_matrix.stan
-Syntax error in 'corr_matrix.stan', line 2, column 7 to column 18, parsing error:
-   -------------------------------------------------
-     1:  data {
-     2:    real corr_matrix;
-                ^
-     3:  }
-     4:  model {
-   -------------------------------------------------
-
-Ill-formed identifier. Expected a new identifier but found reserved keyword "corr_matrix".
+error: Syntax error: Ill-formed identifier.
+    ┌─ corr_matrix.stan:2:8
+  1 │  data {
+  2 │    real corr_matrix;
+    │         ^^^^^^^^^^^ here.
+  3 │  }
+    = Expected a new identifier but found reserved keyword "corr_matrix".
 [exit 1]
   $ stanc cov_matrix.stan
-Syntax error in 'cov_matrix.stan', line 2, column 7 to column 17, parsing error:
-   -------------------------------------------------
-     1:  data {
-     2:    real cov_matrix;
-                ^
-     3:  }
-     4:  model {
-   -------------------------------------------------
-
-Ill-formed identifier. Expected a new identifier but found reserved keyword "cov_matrix".
+error: Syntax error: Ill-formed identifier.
+    ┌─ cov_matrix.stan:2:8
+  1 │  data {
+  2 │    real cov_matrix;
+    │         ^^^^^^^^^^ here.
+  3 │  }
+    = Expected a new identifier but found reserved keyword "cov_matrix".
 [exit 1]
   $ stanc data.stan
-Syntax error in 'data.stan', line 2, column 7 to column 11, parsing error:
-   -------------------------------------------------
-     1:  data {
-     2:    real data;
-                ^
-     3:  }
-     4:  model {
-   -------------------------------------------------
-
-Ill-formed identifier. Expected a new identifier but found reserved keyword "data".
+error: Syntax error: Ill-formed identifier.
+    ┌─ data.stan:2:8
+  1 │  data {
+  2 │    real data;
+    │         ^^^^ here.
+  3 │  }
+    = Expected a new identifier but found reserved keyword "data".
 [exit 1]
   $ stanc else.stan
-Syntax error in 'else.stan', line 2, column 7 to column 11, parsing error:
-   -------------------------------------------------
-     1:  data {
-     2:    real else;
-                ^
-     3:  }
-     4:  model {
-   -------------------------------------------------
-
-Ill-formed identifier. Expected a new identifier but found reserved keyword "else".
+error: Syntax error: Ill-formed identifier.
+    ┌─ else.stan:2:8
+  1 │  data {
+  2 │    real else;
+    │         ^^^^ here.
+  3 │  }
+    = Expected a new identifier but found reserved keyword "else".
 [exit 1]
   $ stanc export.stan
-Semantic error in 'export.stan', line 2, column 7 to column 13:
-   -------------------------------------------------
-     1:  data {
-     2:    real export;
-                ^
-     3:  }
-     4:  model {
-   -------------------------------------------------
-
-Identifier "export" clashes with reserved keyword.
+error: Identifier "export" clashes with reserved keyword.
+    ┌─ export.stan:2:8
+  1 │  data {
+  2 │    real export;
+    │         ^^^^^^ Identifier "export" clashes with reserved keyword.
+  3 │  }
 [exit 1]
   $ stanc extern.stan
-Semantic error in 'extern.stan', line 2, column 7 to column 13:
-   -------------------------------------------------
-     1:  data {
-     2:    real extern;
-                ^
-     3:  }
-     4:  model {
-   -------------------------------------------------
-
-Identifier "extern" clashes with reserved keyword.
+error: Identifier "extern" clashes with reserved keyword.
+    ┌─ extern.stan:2:8
+  1 │  data {
+  2 │    real extern;
+    │         ^^^^^^ Identifier "extern" clashes with reserved keyword.
+  3 │  }
 [exit 1]
   $ stanc false.stan
-Semantic error in 'false.stan', line 2, column 7 to column 12:
-   -------------------------------------------------
-     1:  data {
-     2:    real false;
-                ^
-     3:  }
-     4:  model {
-   -------------------------------------------------
-
-Identifier "false" clashes with reserved keyword.
+error: Identifier "false" clashes with reserved keyword.
+    ┌─ false.stan:2:8
+  1 │  data {
+  2 │    real false;
+    │         ^^^^^ Identifier "false" clashes with reserved keyword.
+  3 │  }
 [exit 1]
   $ stanc for.stan
-Syntax error in 'for.stan', line 2, column 7 to column 10, parsing error:
-   -------------------------------------------------
-     1:  data {
-     2:    real for;
-                ^
-     3:  }
-     4:  model {
-   -------------------------------------------------
-
-Ill-formed identifier. Expected a new identifier but found reserved keyword "for".
+error: Syntax error: Ill-formed identifier.
+    ┌─ for.stan:2:8
+  1 │  data {
+  2 │    real for;
+    │         ^^^ here.
+  3 │  }
+    = Expected a new identifier but found reserved keyword "for".
 [exit 1]
   $ stanc generated.stan
-Semantic error in 'generated.stan', line 2, column 7 to column 16:
-   -------------------------------------------------
-     1:  data {
-     2:    real generated;
-                ^
-     3:  }
-     4:  model {
-   -------------------------------------------------
-
-Identifier "generated" clashes with reserved keyword.
+error: Identifier "generated" clashes with reserved keyword.
+    ┌─ generated.stan:2:8
+  1 │  data {
+  2 │    real generated;
+    │         ^^^^^^^^^ Identifier "generated" clashes with reserved keyword.
+  3 │  }
 [exit 1]
   $ stanc if.stan
-Syntax error in 'if.stan', line 2, column 7 to column 9, parsing error:
-   -------------------------------------------------
-     1:  data {
-     2:    real if;
-                ^
-     3:  }
-     4:  model {
-   -------------------------------------------------
-
-Ill-formed identifier. Expected a new identifier but found reserved keyword "if".
+error: Syntax error: Ill-formed identifier.
+    ┌─ if.stan:2:8
+  1 │  data {
+  2 │    real if;
+    │         ^^ here.
+  3 │  }
+    = Expected a new identifier but found reserved keyword "if".
 [exit 1]
   $ stanc in.stan
-Syntax error in 'in.stan', line 2, column 7 to column 9, parsing error:
-   -------------------------------------------------
-     1:  data {
-     2:    real in;
-                ^
-     3:  }
-     4:  model {
-   -------------------------------------------------
-
-Ill-formed identifier. Expected a new identifier but found reserved keyword "in".
+error: Syntax error: Ill-formed identifier.
+    ┌─ in.stan:2:8
+  1 │  data {
+  2 │    real in;
+    │         ^^ here.
+  3 │  }
+    = Expected a new identifier but found reserved keyword "in".
 [exit 1]
   $ stanc int.stan
-Syntax error in 'int.stan', line 2, column 7 to column 10, parsing error:
-   -------------------------------------------------
-     1:  data {
-     2:    real int;
-                ^
-     3:  }
-     4:  model {
-   -------------------------------------------------
-
-Ill-formed identifier. Expected a new identifier but found reserved keyword "int".
+error: Syntax error: Ill-formed identifier.
+    ┌─ int.stan:2:8
+  1 │  data {
+  2 │    real int;
+    │         ^^^ here.
+  3 │  }
+    = Expected a new identifier but found reserved keyword "int".
 [exit 1]
   $ stanc jacobian.stan
-Syntax error in 'jacobian.stan', line 2, column 7 to column 15, parsing error:
-   -------------------------------------------------
-     1:  data {
-     2:    real jacobian;
-                ^
-     3:  }
-     4:  model {
-   -------------------------------------------------
-
-Ill-formed identifier. Expected a new identifier but found reserved keyword "jacobian".
+error: Syntax error: Ill-formed identifier.
+    ┌─ jacobian.stan:2:8
+  1 │  data {
+  2 │    real jacobian;
+    │         ^^^^^^^^ here.
+  3 │  }
+    = Expected a new identifier but found reserved keyword "jacobian".
 [exit 1]
   $ stanc matrix.stan
-Syntax error in 'matrix.stan', line 2, column 7 to column 13, parsing error:
-   -------------------------------------------------
-     1:  data {
-     2:    real matrix;
-                ^
-     3:  }
-     4:  model {
-   -------------------------------------------------
-
-Ill-formed identifier. Expected a new identifier but found reserved keyword "matrix".
+error: Syntax error: Ill-formed identifier.
+    ┌─ matrix.stan:2:8
+  1 │  data {
+  2 │    real matrix;
+    │         ^^^^^^ here.
+  3 │  }
+    = Expected a new identifier but found reserved keyword "matrix".
 [exit 1]
   $ stanc model.stan
-Syntax error in 'model.stan', line 2, column 7 to column 12, parsing error:
-   -------------------------------------------------
-     1:  data {
-     2:    real model;
-                ^
-     3:  }
-     4:  model {
-   -------------------------------------------------
-
-Ill-formed identifier. Expected a new identifier but found reserved keyword "model".
+error: Syntax error: Ill-formed identifier.
+    ┌─ model.stan:2:8
+  1 │  data {
+  2 │    real model;
+    │         ^^^^^ here.
+  3 │  }
+    = Expected a new identifier but found reserved keyword "model".
 [exit 1]
   $ stanc ordered.stan
-Syntax error in 'ordered.stan', line 2, column 7 to column 14, parsing error:
-   -------------------------------------------------
-     1:  data {
-     2:    real ordered;
-                ^
-     3:  }
-     4:  model {
-   -------------------------------------------------
-
-Ill-formed identifier. Expected a new identifier but found reserved keyword "ordered".
+error: Syntax error: Ill-formed identifier.
+    ┌─ ordered.stan:2:8
+  1 │  data {
+  2 │    real ordered;
+    │         ^^^^^^^ here.
+  3 │  }
+    = Expected a new identifier but found reserved keyword "ordered".
 [exit 1]
   $ stanc parameters.stan
-Syntax error in 'parameters.stan', line 2, column 7 to column 17, parsing error:
-   -------------------------------------------------
-     1:  data {
-     2:    real parameters;
-                ^
-     3:  }
-     4:  model {
-   -------------------------------------------------
-
-Ill-formed identifier. Expected a new identifier but found reserved keyword "parameters".
+error: Syntax error: Ill-formed identifier.
+    ┌─ parameters.stan:2:8
+  1 │  data {
+  2 │    real parameters;
+    │         ^^^^^^^^^^ here.
+  3 │  }
+    = Expected a new identifier but found reserved keyword "parameters".
 [exit 1]
   $ stanc positive_ordered.stan
-Syntax error in 'positive_ordered.stan', line 2, column 7 to column 23, parsing error:
-   -------------------------------------------------
-     1:  data {
-     2:    real positive_ordered;
-                ^
-     3:  }
-     4:  model {
-   -------------------------------------------------
-
-Ill-formed identifier. Expected a new identifier but found reserved keyword "positive_ordered".
+error: Syntax error: Ill-formed identifier.
+    ┌─ positive_ordered.stan:2:8
+  1 │  data {
+  2 │    real positive_ordered;
+    │         ^^^^^^^^^^^^^^^^ here.
+  3 │  }
+    = Expected a new identifier but found reserved keyword "positive_ordered".
 [exit 1]
   $ stanc quantities.stan
-Semantic error in 'quantities.stan', line 2, column 7 to column 17:
-   -------------------------------------------------
-     1:  data {
-     2:    real quantities;
-                ^
-     3:  }
-     4:  model {
-   -------------------------------------------------
-
-Identifier "quantities" clashes with reserved keyword.
+error: Identifier "quantities" clashes with reserved keyword.
+    ┌─ quantities.stan:2:8
+  1 │  data {
+  2 │    real quantities;
+    │         ^^^^^^^^^^ Identifier "quantities" clashes with reserved keyword.
+  3 │  }
 [exit 1]
   $ stanc real.stan
-Syntax error in 'real.stan', line 2, column 7 to column 11, parsing error:
-   -------------------------------------------------
-     1:  data {
-     2:    real real;
-                ^
-     3:  }
-     4:  model {
-   -------------------------------------------------
-
-Ill-formed identifier. Expected a new identifier but found reserved keyword "real".
+error: Syntax error: Ill-formed identifier.
+    ┌─ real.stan:2:8
+  1 │  data {
+  2 │    real real;
+    │         ^^^^ here.
+  3 │  }
+    = Expected a new identifier but found reserved keyword "real".
 [exit 1]
   $ stanc repeat.stan
-Semantic error in 'repeat.stan', line 2, column 7 to column 13:
-   -------------------------------------------------
-     1:  data {
-     2:    real repeat;
-                ^
-     3:  }
-     4:  model {
-   -------------------------------------------------
-
-Identifier "repeat" clashes with reserved keyword.
+error: Identifier "repeat" clashes with reserved keyword.
+    ┌─ repeat.stan:2:8
+  1 │  data {
+  2 │    real repeat;
+    │         ^^^^^^ Identifier "repeat" clashes with reserved keyword.
+  3 │  }
 [exit 1]
   $ stanc return.stan
-Syntax error in 'return.stan', line 2, column 7 to column 13, parsing error:
-   -------------------------------------------------
-     1:  data {
-     2:    real return;
-                ^
-     3:  }
-     4:  model {
-   -------------------------------------------------
-
-Ill-formed identifier. Expected a new identifier but found reserved keyword "return".
+error: Syntax error: Ill-formed identifier.
+    ┌─ return.stan:2:8
+  1 │  data {
+  2 │    real return;
+    │         ^^^^^^ here.
+  3 │  }
+    = Expected a new identifier but found reserved keyword "return".
 [exit 1]
   $ stanc row_stochastic_matrix.stan
-Syntax error in 'row_stochastic_matrix.stan', line 2, column 6 to column 27, parsing error:
-   -------------------------------------------------
-     1:  generated quantities {
-     2:    int row_stochastic_matrix;
-               ^
-     3:  }
-   -------------------------------------------------
-
-Ill-formed identifier. Expected a new identifier but found reserved keyword "row_stochastic_matrix".
+error: Syntax error: Ill-formed identifier.
+    ┌─ row_stochastic_matrix.stan:2:7
+  1 │  generated quantities {
+  2 │    int row_stochastic_matrix;
+    │        ^^^^^^^^^^^^^^^^^^^^^ here.
+  3 │  }
+    = Expected a new identifier but found reserved keyword "row_stochastic_matrix".
 [exit 1]
   $ stanc row_vector.stan
-Syntax error in 'row_vector.stan', line 2, column 7 to column 17, parsing error:
-   -------------------------------------------------
-     1:  data {
-     2:    real row_vector;
-                ^
-     3:  }
-     4:  model {
-   -------------------------------------------------
-
-Ill-formed identifier. Expected a new identifier but found reserved keyword "row_vector".
+error: Syntax error: Ill-formed identifier.
+    ┌─ row_vector.stan:2:8
+  1 │  data {
+  2 │    real row_vector;
+    │         ^^^^^^^^^^ here.
+  3 │  }
+    = Expected a new identifier but found reserved keyword "row_vector".
 [exit 1]
   $ stanc simplex.stan
-Syntax error in 'simplex.stan', line 2, column 7 to column 14, parsing error:
-   -------------------------------------------------
-     1:  data {
-     2:    real simplex;
-                ^
-     3:  }
-     4:  model {
-   -------------------------------------------------
-
-Ill-formed identifier. Expected a new identifier but found reserved keyword "simplex".
+error: Syntax error: Ill-formed identifier.
+    ┌─ simplex.stan:2:8
+  1 │  data {
+  2 │    real simplex;
+    │         ^^^^^^^ here.
+  3 │  }
+    = Expected a new identifier but found reserved keyword "simplex".
 [exit 1]
   $ stanc static.stan
-Semantic error in 'static.stan', line 2, column 7 to column 13:
-   -------------------------------------------------
-     1:  data {
-     2:    real static;
-                ^
-     3:  }
-     4:  model {
-   -------------------------------------------------
-
-Identifier "static" clashes with reserved keyword.
+error: Identifier "static" clashes with reserved keyword.
+    ┌─ static.stan:2:8
+  1 │  data {
+  2 │    real static;
+    │         ^^^^^^ Identifier "static" clashes with reserved keyword.
+  3 │  }
 [exit 1]
   $ stanc struct.stan
-Semantic error in 'struct.stan', line 2, column 7 to column 13:
-   -------------------------------------------------
-     1:  data {
-     2:    real struct;
-                ^
-     3:  }
-     4:  model {
-   -------------------------------------------------
-
-Identifier "struct" clashes with reserved keyword.
+error: Identifier "struct" clashes with reserved keyword.
+    ┌─ struct.stan:2:8
+  1 │  data {
+  2 │    real struct;
+    │         ^^^^^^ Identifier "struct" clashes with reserved keyword.
+  3 │  }
 [exit 1]
   $ stanc sum_to_zero_matrix.stan
-Syntax error in 'sum_to_zero_matrix.stan', line 2, column 7 to column 25, parsing error:
-   -------------------------------------------------
-     1:  data {
-     2:    real sum_to_zero_matrix;
-                ^
-     3:  }
-   -------------------------------------------------
-
-Ill-formed identifier. Expected a new identifier but found reserved keyword "sum_to_zero_matrix".
+error: Syntax error: Ill-formed identifier.
+    ┌─ sum_to_zero_matrix.stan:2:8
+  1 │  data {
+  2 │    real sum_to_zero_matrix;
+    │         ^^^^^^^^^^^^^^^^^^ here.
+  3 │  }
+    = Expected a new identifier but found reserved keyword "sum_to_zero_matrix".
 [exit 1]
   $ stanc sum_to_zero_vector.stan
-Syntax error in 'sum_to_zero_vector.stan', line 2, column 7 to column 25, parsing error:
-   -------------------------------------------------
-     1:  data {
-     2:    real sum_to_zero_vector;
-                ^
-     3:  }
-   -------------------------------------------------
-
-Ill-formed identifier. Expected a new identifier but found reserved keyword "sum_to_zero_vector".
+error: Syntax error: Ill-formed identifier.
+    ┌─ sum_to_zero_vector.stan:2:8
+  1 │  data {
+  2 │    real sum_to_zero_vector;
+    │         ^^^^^^^^^^^^^^^^^^ here.
+  3 │  }
+    = Expected a new identifier but found reserved keyword "sum_to_zero_vector".
 [exit 1]
   $ stanc target.stan
-Syntax error in 'target.stan', line 2, column 7 to column 13, parsing error:
-   -------------------------------------------------
-     1:  data {
-     2:    real target;
-                ^
-     3:  }
-     4:  model {
-   -------------------------------------------------
-
-Ill-formed identifier. Expected a new identifier but found reserved keyword "target".
+error: Syntax error: Ill-formed identifier.
+    ┌─ target.stan:2:8
+  1 │  data {
+  2 │    real target;
+    │         ^^^^^^ here.
+  3 │  }
+    = Expected a new identifier but found reserved keyword "target".
 [exit 1]
   $ stanc then.stan
-Semantic error in 'then.stan', line 2, column 7 to column 11:
-   -------------------------------------------------
-     1:  data {
-     2:    real then;
-                ^
-     3:  }
-     4:  model {
-   -------------------------------------------------
-
-Identifier "then" clashes with reserved keyword.
+error: Identifier "then" clashes with reserved keyword.
+    ┌─ then.stan:2:8
+  1 │  data {
+  2 │    real then;
+    │         ^^^^ Identifier "then" clashes with reserved keyword.
+  3 │  }
 [exit 1]
   $ stanc transformed.stan
-Semantic error in 'transformed.stan', line 2, column 7 to column 18:
-   -------------------------------------------------
-     1:  data {
-     2:    real transformed;
-                ^
-     3:  }
-     4:  model {
-   -------------------------------------------------
-
-Identifier "transformed" clashes with reserved keyword.
+error: Identifier "transformed" clashes with reserved keyword.
+    ┌─ transformed.stan:2:8
+  1 │  data {
+  2 │    real transformed;
+    │         ^^^^^^^^^^^ Identifier "transformed" clashes with reserved keyword.
+  3 │  }
 [exit 1]
   $ stanc true.stan
-Semantic error in 'true.stan', line 2, column 7 to column 11:
-   -------------------------------------------------
-     1:  data {
-     2:    real true;
-                ^
-     3:  }
-     4:  model {
-   -------------------------------------------------
-
-Identifier "true" clashes with reserved keyword.
+error: Identifier "true" clashes with reserved keyword.
+    ┌─ true.stan:2:8
+  1 │  data {
+  2 │    real true;
+    │         ^^^^ Identifier "true" clashes with reserved keyword.
+  3 │  }
 [exit 1]
   $ stanc typedef.stan
-Semantic error in 'typedef.stan', line 2, column 7 to column 14:
-   -------------------------------------------------
-     1:  data {
-     2:    real typedef;
-                ^
-     3:  }
-     4:  model {
-   -------------------------------------------------
-
-Identifier "typedef" clashes with reserved keyword.
+error: Identifier "typedef" clashes with reserved keyword.
+    ┌─ typedef.stan:2:8
+  1 │  data {
+  2 │    real typedef;
+    │         ^^^^^^^ Identifier "typedef" clashes with reserved keyword.
+  3 │  }
 [exit 1]
   $ stanc unit_vector.stan
-Syntax error in 'unit_vector.stan', line 2, column 7 to column 18, parsing error:
-   -------------------------------------------------
-     1:  data {
-     2:    real unit_vector;
-                ^
-     3:  }
-     4:  model {
-   -------------------------------------------------
-
-Ill-formed identifier. Expected a new identifier but found reserved keyword "unit_vector".
+error: Syntax error: Ill-formed identifier.
+    ┌─ unit_vector.stan:2:8
+  1 │  data {
+  2 │    real unit_vector;
+    │         ^^^^^^^^^^^ here.
+  3 │  }
+    = Expected a new identifier but found reserved keyword "unit_vector".
 [exit 1]
   $ stanc until.stan
-Semantic error in 'until.stan', line 2, column 7 to column 12:
-   -------------------------------------------------
-     1:  data {
-     2:    real until;
-                ^
-     3:  }
-     4:  model {
-   -------------------------------------------------
-
-Identifier "until" clashes with reserved keyword.
+error: Identifier "until" clashes with reserved keyword.
+    ┌─ until.stan:2:8
+  1 │  data {
+  2 │    real until;
+    │         ^^^^^ Identifier "until" clashes with reserved keyword.
+  3 │  }
 [exit 1]
   $ stanc var.stan
-Semantic error in 'var.stan', line 2, column 7 to column 10:
-   -------------------------------------------------
-     1:  data {
-     2:    real var;
-                ^
-     3:  }
-     4:  model {
-   -------------------------------------------------
-
-Identifier "var" clashes with reserved keyword.
+error: Identifier "var" clashes with reserved keyword.
+    ┌─ var.stan:2:8
+  1 │  data {
+  2 │    real var;
+    │         ^^^ Identifier "var" clashes with reserved keyword.
+  3 │  }
 [exit 1]
   $ stanc vector.stan
-Syntax error in 'vector.stan', line 2, column 7 to column 13, parsing error:
-   -------------------------------------------------
-     1:  data {
-     2:    real vector;
-                ^
-     3:  }
-     4:  model {
-   -------------------------------------------------
-
-Ill-formed identifier. Expected a new identifier but found reserved keyword "vector".
+error: Syntax error: Ill-formed identifier.
+    ┌─ vector.stan:2:8
+  1 │  data {
+  2 │    real vector;
+    │         ^^^^^^ here.
+  3 │  }
+    = Expected a new identifier but found reserved keyword "vector".
 [exit 1]
   $ stanc void.stan
-Syntax error in 'void.stan', line 2, column 7 to column 11, parsing error:
-   -------------------------------------------------
-     1:  data {
-     2:    real void;
-                ^
-     3:  }
-     4:  model {
-   -------------------------------------------------
-
-Ill-formed identifier. Expected a new identifier but found reserved keyword "void".
+error: Syntax error: Ill-formed identifier.
+    ┌─ void.stan:2:8
+  1 │  data {
+  2 │    real void;
+    │         ^^^^ here.
+  3 │  }
+    = Expected a new identifier but found reserved keyword "void".
 [exit 1]
   $ stanc while.stan
-Syntax error in 'while.stan', line 2, column 7 to column 12, parsing error:
-   -------------------------------------------------
-     1:  data {
-     2:    real while;
-                ^
-     3:  }
-     4:  model {
-   -------------------------------------------------
-
-Ill-formed identifier. Expected a new identifier but found reserved keyword "while".
+error: Syntax error: Ill-formed identifier.
+    ┌─ while.stan:2:8
+  1 │  data {
+  2 │    real while;
+    │         ^^^^^ here.
+  3 │  }
+    = Expected a new identifier but found reserved keyword "while".
 [exit 1]

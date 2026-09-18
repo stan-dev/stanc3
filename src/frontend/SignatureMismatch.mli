@@ -92,10 +92,10 @@ val quoted : string Fmt.t
 val pp_mismatch_details :
   skipped:string list -> Format.formatter -> details -> unit
 
-val pp_signature_mismatch :
-     Format.formatter
-  -> string * UnsizedType.t list * (signature_error list * bool)
-  -> unit
+val to_grace :
+     string * UnsizedType.t list * (signature_error list * bool)
+  -> (summary:Grace.Diagnostic.Message.t
+     * notes:Grace.Diagnostic.Message.t list)
 
 val list_valid_assignmentoperator_rhs :
   UnsizedType.t -> Operator.t -> UnsizedType.t list

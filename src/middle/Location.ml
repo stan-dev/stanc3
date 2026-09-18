@@ -1,50 +1,16 @@
 open Std
 open Std.Sexp_conv
 
-type t = {filename: string; line_num: int; col_num: int; included_from: t option}
+type t =
+  { filename: string
+  ; line_num: int
+  ; col_num: int
+  ; byte_num: int
+  ; included_from: t option }
 [@@deriving sexp_of]
 
-let pp_context_for ppf (({line_num; _} as loc), lines) =
-  let faint pp = Fmt.(styled `Faint pp) in
-  let yellow pp = Fmt.(styled (`Fg (`Hi `Yellow)) pp) in
-  let bold_red pp = Fmt.(styled `Bold (styled (`Fg `Red) pp)) in
-  let bars =
-    faint (Fmt.any "   -------------------------------------------------\n")
-  in
-  let pp_number ppf num =
-    let style = if num = line_num then yellow else faint in
-    style (Fmt.fmt "%6d:") ppf num in
-  let error_at_eof = line_num = Array.length lines + 1 in
-  let get_line i =
-    let line = i - 1 in
-    (* blank line if the error is at EOF *)
-    if error_at_eof && i = line_num then Some ""
-    else if line < 0 || line >= Array.length lines then None
-    else Some (Array.get lines line) in
-  let pp_line_and_number ppf n =
-    let pp ppf line = Fmt.pf ppf "%a  %s\n" pp_number n line in
-    Fmt.option pp ppf (get_line n) in
-  let cursor_line ppf {line_num; col_num; _} =
-    let blank_line =
-      (* to get visual alignment, we copy any tabs in the line we are pointing
-         at *)
-      let highlighted_line = get_line line_num |> Option.value ~default:"" in
-      let len = Int.min col_num (String.length highlighted_line) in
-      String.sub highlighted_line ~pos:0 ~len
-      |> String.map ~f:(function '\t' -> '\t' | _ -> ' ') in
-    Fmt.pf ppf "         %s%a%a\n" blank_line (bold_red Fmt.char) '^'
-      (Fmt.if' error_at_eof @@ faint Fmt.string)
-      " (error at end of file)" in
-  bars ppf ();
-  pp_line_and_number ppf (line_num - 2);
-  pp_line_and_number ppf (line_num - 1);
-  pp_line_and_number ppf line_num;
-  cursor_line ppf loc;
-  pp_line_and_number ppf (line_num + 1);
-  pp_line_and_number ppf (line_num + 2);
-  bars ppf ()
-
-let empty = {filename= ""; line_num= -1; col_num= -1; included_from= None}
+let empty =
+  {filename= ""; line_num= -1; col_num= -1; byte_num= -1; included_from= None}
 
 (** Format the location for error messaging.
 

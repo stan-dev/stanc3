@@ -36,14 +36,20 @@ let%expect_test "Loop test" =
     {|
       ((1
         ((Block (2))
-         ((begin_loc ((filename "") (line_num -1) (col_num -1) (included_from ())))
-          (end_loc ((filename "") (line_num -1) (col_num -1) (included_from ()))))))
+         ((begin_loc
+           ((filename "") (line_num -1) (col_num -1) (byte_num -1)
+            (included_from ())))
+          (end_loc
+           ((filename "") (line_num -1) (col_num -1) (byte_num -1)
+            (included_from ()))))))
        (2
         ((Block (3))
          ((begin_loc
-           ((filename string) (line_num 3) (col_num 8) (included_from ())))
+           ((filename string) (line_num 3) (col_num 8) (byte_num 23)
+            (included_from ())))
           (end_loc
-           ((filename string) (line_num 4) (col_num 23) (included_from ()))))))
+           ((filename string) (line_num 4) (col_num 23) (byte_num 61)
+            (included_from ()))))))
        (3
         ((For (loopvar i)
           (lower
@@ -54,15 +60,19 @@ let%expect_test "Loop test" =
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
           (body 4))
          ((begin_loc
-           ((filename string) (line_num 3) (col_num 8) (included_from ())))
+           ((filename string) (line_num 3) (col_num 8) (byte_num 23)
+            (included_from ())))
           (end_loc
-           ((filename string) (line_num 4) (col_num 23) (included_from ()))))))
+           ((filename string) (line_num 4) (col_num 23) (byte_num 61)
+            (included_from ()))))))
        (4
         ((Block (5))
          ((begin_loc
-           ((filename string) (line_num 4) (col_num 10) (included_from ())))
+           ((filename string) (line_num 4) (col_num 10) (byte_num 48)
+            (included_from ())))
           (end_loc
-           ((filename string) (line_num 4) (col_num 23) (included_from ()))))))
+           ((filename string) (line_num 4) (col_num 23) (byte_num 61)
+            (included_from ()))))))
        (5
         ((NRFunApp (CompilerInternal FnPrint)
           (((pattern
@@ -73,9 +83,11 @@ let%expect_test "Loop test" =
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
          ((begin_loc
-           ((filename string) (line_num 4) (col_num 10) (included_from ())))
+           ((filename string) (line_num 4) (col_num 10) (byte_num 48)
+            (included_from ())))
           (end_loc
-           ((filename string) (line_num 4) (col_num 23) (included_from ())))))))
+           ((filename string) (line_num 4) (col_num 23) (byte_num 61)
+            (included_from ())))))))
       (1)
       ((1 (2)) (2 (3)) (3 (4)) (4 (5)) (5 (3)))
     |}]
@@ -335,41 +347,57 @@ let%expect_test "Statement label map example 3" =
     {|
       ((1
         ((SList (2))
-         ((begin_loc ((filename "") (line_num -1) (col_num -1) (included_from ())))
-          (end_loc ((filename "") (line_num -1) (col_num -1) (included_from ()))))))
+         ((begin_loc
+           ((filename "") (line_num -1) (col_num -1) (byte_num -1)
+            (included_from ())))
+          (end_loc
+           ((filename "") (line_num -1) (col_num -1) (byte_num -1)
+            (included_from ()))))))
        (2
         ((Block (3))
-         ((begin_loc ((filename "") (line_num -1) (col_num -1) (included_from ())))
-          (end_loc ((filename "") (line_num -1) (col_num -1) (included_from ()))))))
+         ((begin_loc
+           ((filename "") (line_num -1) (col_num -1) (byte_num -1)
+            (included_from ())))
+          (end_loc
+           ((filename "") (line_num -1) (col_num -1) (byte_num -1)
+            (included_from ()))))))
        (3
         ((Block (4 6))
          ((begin_loc
-           ((filename string) (line_num 3) (col_num 8) (included_from ())))
+           ((filename string) (line_num 3) (col_num 8) (byte_num 23)
+            (included_from ())))
           (end_loc
-           ((filename string) (line_num 3) (col_num 19) (included_from ()))))))
+           ((filename string) (line_num 3) (col_num 19) (byte_num 34)
+            (included_from ()))))))
        (4
         ((While
           ((pattern (Lit Int 42))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           5)
          ((begin_loc
-           ((filename string) (line_num 3) (col_num 8) (included_from ())))
+           ((filename string) (line_num 3) (col_num 8) (byte_num 23)
+            (included_from ())))
           (end_loc
-           ((filename string) (line_num 3) (col_num 19) (included_from ()))))))
+           ((filename string) (line_num 3) (col_num 19) (byte_num 34)
+            (included_from ()))))))
        (5
         (Skip
          ((begin_loc
-           ((filename string) (line_num 3) (col_num 18) (included_from ())))
+           ((filename string) (line_num 3) (col_num 18) (byte_num 33)
+            (included_from ())))
           (end_loc
-           ((filename string) (line_num 3) (col_num 19) (included_from ()))))))
+           ((filename string) (line_num 3) (col_num 19) (byte_num 34)
+            (included_from ()))))))
        (6
         ((NRFunApp (CompilerInternal FnPrint)
           (((pattern (Lit Str exit))
             (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
          ((begin_loc
-           ((filename string) (line_num 4) (col_num 8) (included_from ())))
+           ((filename string) (line_num 4) (col_num 8) (byte_num 43)
+            (included_from ())))
           (end_loc
-           ((filename string) (line_num 4) (col_num 22) (included_from ())))))))
+           ((filename string) (line_num 4) (col_num 22) (byte_num 57)
+            (included_from ())))))))
     |}]
 
 let%expect_test "Controlflow graph example 3" =
@@ -426,17 +454,28 @@ let%expect_test "Statement label map example 4" =
     {|
       ((1
         ((SList (2))
-         ((begin_loc ((filename "") (line_num -1) (col_num -1) (included_from ())))
-          (end_loc ((filename "") (line_num -1) (col_num -1) (included_from ()))))))
+         ((begin_loc
+           ((filename "") (line_num -1) (col_num -1) (byte_num -1)
+            (included_from ())))
+          (end_loc
+           ((filename "") (line_num -1) (col_num -1) (byte_num -1)
+            (included_from ()))))))
        (2
         ((Block (3))
-         ((begin_loc ((filename "") (line_num -1) (col_num -1) (included_from ())))
-          (end_loc ((filename "") (line_num -1) (col_num -1) (included_from ()))))))
+         ((begin_loc
+           ((filename "") (line_num -1) (col_num -1) (byte_num -1)
+            (included_from ())))
+          (end_loc
+           ((filename "") (line_num -1) (col_num -1) (byte_num -1)
+            (included_from ()))))))
        (3
         ((Block (4))
          ((begin_loc
-           ((filename string) (line_num 3) (col_num 8) (included_from ())))
-          (end_loc ((filename string) (line_num 6) (col_num 9) (included_from ()))))))
+           ((filename string) (line_num 3) (col_num 8) (byte_num 23)
+            (included_from ())))
+          (end_loc
+           ((filename string) (line_num 6) (col_num 9) (byte_num 81)
+            (included_from ()))))))
        (4
         ((For (loopvar i)
           (lower
@@ -447,25 +486,35 @@ let%expect_test "Statement label map example 4" =
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
           (body 5))
          ((begin_loc
-           ((filename string) (line_num 3) (col_num 8) (included_from ())))
-          (end_loc ((filename string) (line_num 6) (col_num 9) (included_from ()))))))
+           ((filename string) (line_num 3) (col_num 8) (byte_num 23)
+            (included_from ())))
+          (end_loc
+           ((filename string) (line_num 6) (col_num 9) (byte_num 81)
+            (included_from ()))))))
        (5
         ((Block (6 7))
          ((begin_loc
-           ((filename string) (line_num 3) (col_num 23) (included_from ())))
-          (end_loc ((filename string) (line_num 6) (col_num 9) (included_from ()))))))
+           ((filename string) (line_num 3) (col_num 23) (byte_num 38)
+            (included_from ())))
+          (end_loc
+           ((filename string) (line_num 6) (col_num 9) (byte_num 81)
+            (included_from ()))))))
        (6
         (Continue
          ((begin_loc
-           ((filename string) (line_num 4) (col_num 10) (included_from ())))
+           ((filename string) (line_num 4) (col_num 10) (byte_num 50)
+            (included_from ())))
           (end_loc
-           ((filename string) (line_num 4) (col_num 19) (included_from ()))))))
+           ((filename string) (line_num 4) (col_num 19) (byte_num 59)
+            (included_from ()))))))
        (7
         (Skip
          ((begin_loc
-           ((filename string) (line_num 5) (col_num 10) (included_from ())))
+           ((filename string) (line_num 5) (col_num 10) (byte_num 70)
+            (included_from ())))
           (end_loc
-           ((filename string) (line_num 5) (col_num 11) (included_from ())))))))
+           ((filename string) (line_num 5) (col_num 11) (byte_num 71)
+            (included_from ())))))))
     |}]
 
 let%expect_test "Controlflow graph example 4" =
@@ -525,17 +574,28 @@ let%expect_test "Statement label map example 5" =
     {|
       ((1
         ((SList (2))
-         ((begin_loc ((filename "") (line_num -1) (col_num -1) (included_from ())))
-          (end_loc ((filename "") (line_num -1) (col_num -1) (included_from ()))))))
+         ((begin_loc
+           ((filename "") (line_num -1) (col_num -1) (byte_num -1)
+            (included_from ())))
+          (end_loc
+           ((filename "") (line_num -1) (col_num -1) (byte_num -1)
+            (included_from ()))))))
        (2
         ((Block (3))
-         ((begin_loc ((filename "") (line_num -1) (col_num -1) (included_from ())))
-          (end_loc ((filename "") (line_num -1) (col_num -1) (included_from ()))))))
+         ((begin_loc
+           ((filename "") (line_num -1) (col_num -1) (byte_num -1)
+            (included_from ())))
+          (end_loc
+           ((filename "") (line_num -1) (col_num -1) (byte_num -1)
+            (included_from ()))))))
        (3
         ((Block (4 8))
          ((begin_loc
-           ((filename string) (line_num 3) (col_num 8) (included_from ())))
-          (end_loc ((filename string) (line_num 6) (col_num 9) (included_from ()))))))
+           ((filename string) (line_num 3) (col_num 8) (byte_num 23)
+            (included_from ())))
+          (end_loc
+           ((filename string) (line_num 6) (col_num 9) (byte_num 78)
+            (included_from ()))))))
        (4
         ((For (loopvar i)
           (lower
@@ -546,30 +606,43 @@ let%expect_test "Statement label map example 5" =
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
           (body 5))
          ((begin_loc
-           ((filename string) (line_num 3) (col_num 8) (included_from ())))
-          (end_loc ((filename string) (line_num 6) (col_num 9) (included_from ()))))))
+           ((filename string) (line_num 3) (col_num 8) (byte_num 23)
+            (included_from ())))
+          (end_loc
+           ((filename string) (line_num 6) (col_num 9) (byte_num 78)
+            (included_from ()))))))
        (5
         ((Block (6 7))
          ((begin_loc
-           ((filename string) (line_num 3) (col_num 23) (included_from ())))
-          (end_loc ((filename string) (line_num 6) (col_num 9) (included_from ()))))))
+           ((filename string) (line_num 3) (col_num 23) (byte_num 38)
+            (included_from ())))
+          (end_loc
+           ((filename string) (line_num 6) (col_num 9) (byte_num 78)
+            (included_from ()))))))
        (6
         (Break
          ((begin_loc
-           ((filename string) (line_num 4) (col_num 10) (included_from ())))
+           ((filename string) (line_num 4) (col_num 10) (byte_num 50)
+            (included_from ())))
           (end_loc
-           ((filename string) (line_num 4) (col_num 16) (included_from ()))))))
+           ((filename string) (line_num 4) (col_num 16) (byte_num 56)
+            (included_from ()))))))
        (7
         (Skip
          ((begin_loc
-           ((filename string) (line_num 5) (col_num 10) (included_from ())))
+           ((filename string) (line_num 5) (col_num 10) (byte_num 67)
+            (included_from ())))
           (end_loc
-           ((filename string) (line_num 5) (col_num 11) (included_from ()))))))
+           ((filename string) (line_num 5) (col_num 11) (byte_num 68)
+            (included_from ()))))))
        (8
         (Skip
          ((begin_loc
-           ((filename string) (line_num 7) (col_num 8) (included_from ())))
-          (end_loc ((filename string) (line_num 7) (col_num 9) (included_from ())))))))
+           ((filename string) (line_num 7) (col_num 8) (byte_num 87)
+            (included_from ())))
+          (end_loc
+           ((filename string) (line_num 7) (col_num 9) (byte_num 88)
+            (included_from ())))))))
     |}]
 
 let%expect_test "Controlflow graph example 5" =

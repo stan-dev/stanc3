@@ -589,13 +589,16 @@ Flags not used elsewhere in the tests
   }
 
   $ stanc parse_error.stan --debug-parse
-  Syntax error in 'parse_error.stan', line 1, column 0 to column 5, parsing error:
-     -------------------------------------------------
-       1:  datta {}
-           ^
-     -------------------------------------------------
-  
-  Ill-formed program. Expected "functions {", "data {", "transformed data {", "parameters {",
-  "transformed parameters {", "model {", or "generated quantities {".
-  (Parse error state 444)
+  error: Syntax error: Ill-formed program.
+      ┌─ parse_error.stan:1:1
+    1 │  datta {}
+      │  ^^^^^ here.
+    2 │  
+      = Expected "functions {", "data {", "transformed data {", "parameters {",
+        "transformed parameters {", "model {", or "generated quantities {".
+        (Parse error state 444)
   [1]
+<<<<<<< HEAD
+||||||| parent of 994559f8c (dune promote)
+=======
+>>>>>>> 994559f8c (dune promote)

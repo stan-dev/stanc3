@@ -46,6 +46,7 @@ let location_of_position {Lexing.pos_fname; pos_lnum; pos_cnum; pos_bol} =
     else (pos_fname, None) in
   { Middle.Location.line_num= pos_lnum
   ; col_num= pos_cnum - pos_bol
+  ; byte_num= pos_cnum
   ; filename
   ; included_from }
 
@@ -85,21 +86,20 @@ let restore_prior_lexbuf () =
   lexer_pos_logger old_lexbuf.lex_curr_p;
   old_lexbuf
 
-let include_error msg = Syntax_error.include_error msg (current_location ())
+let include_error ?note msg =
+  Syntax_error.include_error ?note msg (current_location ())
 
 let find_include_fs lookup_paths fname =
   let rec loop paths =
     match paths with
     | [] ->
-        let message =
+        let note =
           let pp_list ppf l =
             if List.is_empty l then Fmt.string ppf "None"
             else Fmt.(list ~sep:comma string) ppf l in
-          Fmt.str
-            "Could not find include file '%s' in specified include paths.@\n\
-             @[Current include paths: %a@]"
-            fname pp_list lookup_paths in
-        include_error message
+          Fmt.str "@[Current include paths: %a@]" pp_list lookup_paths in
+        let message = Fmt.str "Could not find include file '%s'." fname in
+        include_error ~note message
     | path :: rest_of_paths -> (
         try
           let full_path = path ^ "/" ^ fname in
@@ -113,16 +113,15 @@ let find_include_fs lookup_paths fname =
 let find_include_inmemory map fname =
   match String.Map.find_opt fname map with
   | None ->
-      let message =
+      let note =
         let pp_list ppf l =
           let keys = String.Map.to_list l |> List.map ~f:fst in
           if List.is_empty keys then Fmt.string ppf "None"
           else Fmt.(list ~sep:comma string) ppf keys in
-        Fmt.str
-          "Could not find include file '%s'.@ stanc was given information \
-           about the following files:@ %a"
-          fname pp_list map in
-      include_error message
+        Fmt.str "@[stanc was given information about the following files: %a@]"
+          pp_list map in
+      let message = Fmt.str "Could not find include file '%s'." fname in
+      include_error ~note message
   | Some s -> (Lexing.from_string s, fname)
 
 let find_include fname =
@@ -156,7 +155,7 @@ let try_get_new_lexbuf fname =
           if is_dup filename then true else go included_from in
     go included_from in
   if dup_exists prior_loc then
-    include_error (Printf.sprintf "File %s recursively included itself." fname);
+    include_error (Fmt.str "File '%s' recursively included itself." fname);
   Stack.push new_lexbuf include_stack;
   new_lexbuf
 

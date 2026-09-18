@@ -1,226 +1,192 @@
   $ stanc elt_divide_equals_prim.stan
-Semantic error in 'elt_divide_equals_prim.stan', line 4, column 8 to column 9:
-   -------------------------------------------------
-     2:    real x;
-     3:    real y;
-     4:    x ./= y;
-                 ^
-     5:  }
-   -------------------------------------------------
-
-Ill-typed assignment operator ./=.
-There are no valid right hand sides for the given left hand side (real).
+error: Ill-typed compound assignment statement.
+    ┌─ elt_divide_equals_prim.stan:4:9
+  3 │    real y;
+  4 │    x ./= y;
+    │    -     ^ Ill-typed assignment operator ./=.
+    │    │
+    │    Left hand side has type real.
+  5 │  }
+    = There are no valid right hand side types for the given left hand side.
 [exit 1]
   $ stanc elt_times_equals_prim.stan
-Semantic error in 'elt_times_equals_prim.stan', line 4, column 8 to column 9:
-   -------------------------------------------------
-     2:    real x;
-     3:    real y;
-     4:    x .*= y;
-                 ^
-     5:  }
-   -------------------------------------------------
-
-Ill-typed assignment operator .*=.
-There are no valid right hand sides for the given left hand side (real).
+error: Ill-typed compound assignment statement.
+    ┌─ elt_times_equals_prim.stan:4:9
+  3 │    real y;
+  4 │    x .*= y;
+    │    -     ^ Ill-typed assignment operator .*=.
+    │    │
+    │    Left hand side has type real.
+  5 │  }
+    = There are no valid right hand side types for the given left hand side.
 [exit 1]
   $ stanc plus_equals_bad_init.stan
-Syntax error in 'plus_equals_bad_init.stan', line 3, column 20 to column 22, parsing error:
-   -------------------------------------------------
-     1:  generated quantities {
-     2:    vector[3] gq_v3_a = [1, 2, 3]';
-     3:    vector[3] gq_v3_b += gq_v3_a;
-                             ^
-     4:  }
-   -------------------------------------------------
-
-Ill-formed declaration. Expected ";" or plain assignment after variable declaration.
+error: Syntax error: Ill-formed declaration.
+    ┌─ plus_equals_bad_init.stan:3:21
+  2 │    vector[3] gq_v3_a = [1, 2, 3]';
+  3 │    vector[3] gq_v3_b += gq_v3_a;
+    │                      ^^ here.
+  4 │  }
+    = Expected ";" or plain assignment after variable declaration.
 [exit 1]
   $ stanc plus_equals_bad_lhs_idxs.stan
-Semantic error in 'plus_equals_bad_lhs_idxs.stan', line 4, column 2 to column 8:
-   -------------------------------------------------
-     2:    vector[3] x;
-     3:    real y;
-     4:    x[3,3] += y;
-           ^
-     5:  }
-   -------------------------------------------------
-
-Too many indices. Expression only has 1 dimensions, but received 2 indices.
+error: Too many indices. Expression only has 1 dimensions, but received 2 indices.
+    ┌─ plus_equals_bad_lhs_idxs.stan:4:3
+  3 │    real y;
+  4 │    x[3,3] += y;
+    │    ^^^^^^ Too many indices. Expression only has 1 dimensions, but received 2 indices.
+  5 │  }
 [exit 1]
   $ stanc plus_equals_bad_var_lhs.stan
-Semantic error in 'plus_equals_bad_var_lhs.stan', line 3, column 11 to column 13:
-   -------------------------------------------------
-     1:  functions {
-     2:    real foo(real a1) {
-     3:      foo += a1;
-                    ^
-     4:      return foo;
-     5:    }
-   -------------------------------------------------
-
-Ill-typed assignment operator +=.
-There are no valid right hand sides for the given left hand side ((real) => real).
+error: Ill-typed compound assignment statement.
+    ┌─ plus_equals_bad_var_lhs.stan:3:12
+  2 │    real foo(real a1) {
+  3 │      foo += a1;
+    │      ---    ^^ Ill-typed assignment operator +=.
+    │      │
+    │      Left hand side has type (real) => real.
+  4 │      return foo;
+    = There are no valid right hand side types for the given left hand side.
 [exit 1]
   $ stanc plus_equals_bad_var_lhs2.stan
-Semantic error in 'plus_equals_bad_var_lhs2.stan', line 6, column 2 to column 3:
-   -------------------------------------------------
-     4:  generated quantities {
-     5:    real y;
-     6:    x += y;
-           ^
-     7:  }
-   -------------------------------------------------
-
-Cannot assign to global variable "x" declared previously in transformed data block.
+error: Cannot assign to global variable.
+    ┌─ plus_equals_bad_var_lhs2.stan:6:3
+  1 │  transformed data {
+  2 │    real x;
+    │         - Variable was declared in transformed data block here.
+  3 │  }
+  4 │  generated quantities {
+  5 │    real y;
+  6 │    x += y;
+    │    ^ "x" was declared in a previous block and cannot be assigned to.
+  7 │  }
 [exit 1]
   $ stanc plus_equals_bad_var_rhs.stan
-Semantic error in 'plus_equals_bad_var_rhs.stan', line 4, column 11 to column 13:
-   -------------------------------------------------
-     2:    void foo(real a1) {
-     3:      int lf2;
-     4:      lf2 += a2;
-                    ^
-     5:    }
-     6:  }
-   -------------------------------------------------
-
-Identifier "a2" not in scope. Did you mean "a1"?
+error: Identifier "a2" not in scope.
+    ┌─ plus_equals_bad_var_rhs.stan:4:12
+  1 │  functions {
+  2 │    void foo(real a1) {
+    │                  -- Did you mean "a1", declared here?
+  3 │      int lf2;
+  4 │      lf2 += a2;
+    │             ^^ Identifier "a2" not in scope.
+  5 │    }
 [exit 1]
   $ stanc plus_equals_matrix_array.stan
-Semantic error in 'plus_equals_matrix_array.stan', line 7, column 7 to column 8:
-   -------------------------------------------------
-     5:    x[3,1] += y[3,1];
-     6:    x[3,1,1] += y[3,1,1];
-     7:    x += y;
-                ^
-     8:  }
-   -------------------------------------------------
-
-Ill-typed assignment operator +=.
-There are no valid right hand sides for the given left hand side (array[] matrix).
+error: Ill-typed compound assignment statement.
+    ┌─ plus_equals_matrix_array.stan:7:8
+  6 │    x[3,1,1] += y[3,1,1];
+  7 │    x += y;
+    │    -    ^ Ill-typed assignment operator +=.
+    │    │
+    │    Left hand side has type array[] matrix.
+  8 │  }
+    = There are no valid right hand side types for the given left hand side.
 [exit 1]
   $ stanc plus_equals_matrix_array2.stan
-Semantic error in 'plus_equals_matrix_array2.stan', line 7, column 10 to column 16:
-   -------------------------------------------------
-     5:    x[3,1] += y[3,1];
-     6:    x[3,1,1] += y[3,1,1];
-     7:    x[3] += y[3,1];
-                   ^
-     8:  }
-   -------------------------------------------------
-
-Ill-typed assignment operator +=.
-For the given left hand side (matrix), expected the right hand side to have type
-int, real, or matrix. Instead found type row_vector.
+error: Ill-typed compound assignment statement.
+    ┌─ plus_equals_matrix_array2.stan:7:11
+  6 │    x[3,1,1] += y[3,1,1];
+  7 │    x[3] += y[3,1];
+    │    ----    ^^^^^^ Ill-typed assignment operator +=.
+    │    │
+    │    Left hand side has type matrix.
+  8 │  }
+    = For the given left hand side, expected the right hand side to have type
+      int, real, or matrix.
+      Instead found type row_vector.
 [exit 1]
   $ stanc plus_equals_matrix_shape_mismatch.stan
-Syntax error in 'plus_equals_matrix_shape_mismatch.stan', line 4, column 10 to column 11, parsing error:
-   -------------------------------------------------
-     2:  generated quantities {
-     3:    matrix[2,3] z = [[1, 2, 3], [4, 5, 6]];
-     4:    vector[2,2] ident = [[1, 0], [0, 1]];
-                   ^
-     5:    z += ident;
-     6:  }
-   -------------------------------------------------
-
-Ill-formed type. Expected "[" expression "]" for vector size.
+error: Syntax error: Ill-formed type.
+    ┌─ plus_equals_matrix_shape_mismatch.stan:4:11
+  3 │    matrix[2,3] z = [[1, 2, 3], [4, 5, 6]];
+  4 │    vector[2,2] ident = [[1, 0], [0, 1]];
+    │            ^ here.
+  5 │    z += ident;
+    = Expected "[" expression "]" for vector size.
 [exit 1]
   $ stanc plus_equals_prim_array.stan
-Semantic error in 'plus_equals_prim_array.stan', line 5, column 7 to column 8:
-   -------------------------------------------------
-     3:    array[3] real y = {4.0, 5.0, 6.0};
-     4:    x[1] += y[1];
-     5:    x += y;
-                ^
-     6:  }
-   -------------------------------------------------
-
-Ill-typed assignment operator +=.
-There are no valid right hand sides for the given left hand side (array[] real).
+error: Ill-typed compound assignment statement.
+    ┌─ plus_equals_prim_array.stan:5:8
+  4 │    x[1] += y[1];
+  5 │    x += y;
+    │    -    ^ Ill-typed assignment operator +=.
+    │    │
+    │    Left hand side has type array[] real.
+  6 │  }
+    = There are no valid right hand side types for the given left hand side.
 [exit 1]
   $ stanc plus_equals_row_vec_array.stan
-Semantic error in 'plus_equals_row_vec_array.stan', line 5, column 7 to column 8:
-   -------------------------------------------------
-     3:    array[3] row_vector[2] y = {[1,2], [3,4], [5,6]};
-     4:    x[1] += y[1];
-     5:    x += y;
-                ^
-     6:  }
-   -------------------------------------------------
-
-Ill-typed assignment operator +=.
-There are no valid right hand sides for the given left hand side (array[] row_vector).
+error: Ill-typed compound assignment statement.
+    ┌─ plus_equals_row_vec_array.stan:5:8
+  4 │    x[1] += y[1];
+  5 │    x += y;
+    │    -    ^ Ill-typed assignment operator +=.
+    │    │
+    │    Left hand side has type array[] row_vector.
+  6 │  }
+    = There are no valid right hand side types for the given left hand side.
 [exit 1]
   $ stanc plus_equals_sliced.stan
-Semantic error in 'plus_equals_sliced.stan', line 6, column 15 to column 26:
-   -------------------------------------------------
-     4:      matrix[2, 2] aa;
-     5:      matrix[3, 4] bb;
-     6:      aa[J,1] += bb[1:2,1:2];
-                        ^
-     7:    }
-     8:  }
-   -------------------------------------------------
-
-Ill-typed assignment operator +=.
-For the given left hand side (vector), expected the right hand side to have type
-int, real, or vector. Instead found type matrix.
+error: Ill-typed compound assignment statement.
+    ┌─ plus_equals_sliced.stan:6:16
+  5 │      matrix[3, 4] bb;
+  6 │      aa[J,1] += bb[1:2,1:2];
+    │      -------    ^^^^^^^^^^^ Ill-typed assignment operator +=.
+    │      │
+    │      Left hand side has type vector.
+  7 │    }
+    = For the given left hand side, expected the right hand side to have type
+      int, real, or vector.
+      Instead found type matrix.
 [exit 1]
   $ stanc plus_equals_type_mismatch.stan
-Semantic error in 'plus_equals_type_mismatch.stan', line 4, column 7 to column 8:
-   -------------------------------------------------
-     2:    int x = 5;
-     3:    real y;
-     4:    x += y;
-                ^
-     5:  }
-   -------------------------------------------------
-
-Ill-typed assignment operator +=.
-For the given left hand side (int), expected the right hand side to have type
-int. Instead found type real.
+error: Ill-typed compound assignment statement.
+    ┌─ plus_equals_type_mismatch.stan:4:8
+  3 │    real y;
+  4 │    x += y;
+    │    -    ^ Ill-typed assignment operator +=.
+    │    │
+    │    Left hand side has type int.
+  5 │  }
+    = For the given left hand side, expected the right hand side to have type
+      int.
+      Instead found type real.
 [exit 1]
   $ stanc plus_equals_type_mismatch2.stan
-Semantic error in 'plus_equals_type_mismatch2.stan', line 4, column 7 to column 8:
-   -------------------------------------------------
-     2:    real x;
-     3:    vector[2] y = [1.0, 2.0]';
-     4:    x += y;
-                ^
-     5:  }
-   -------------------------------------------------
-
-Ill-typed assignment operator +=.
-For the given left hand side (real), expected the right hand side to have type
-int or real. Instead found type vector.
+error: Ill-typed compound assignment statement.
+    ┌─ plus_equals_type_mismatch2.stan:4:8
+  3 │    vector[2] y = [1.0, 2.0]';
+  4 │    x += y;
+    │    -    ^ Ill-typed assignment operator +=.
+    │    │
+    │    Left hand side has type real.
+  5 │  }
+    = For the given left hand side, expected the right hand side to have type
+      int or real.
+      Instead found type vector.
 [exit 1]
   $ stanc plus_equals_vector_array.stan
-Semantic error in 'plus_equals_vector_array.stan', line 5, column 7 to column 8:
-   -------------------------------------------------
-     3:    array[3] vector[2] y = {[1,2]', [3,4]', [5,6]'};
-     4:    x[1] += y[1];
-     5:    x += y;
-                ^
-     6:  }
-   -------------------------------------------------
-
-Ill-typed assignment operator +=.
-There are no valid right hand sides for the given left hand side (array[] vector).
+error: Ill-typed compound assignment statement.
+    ┌─ plus_equals_vector_array.stan:5:8
+  4 │    x[1] += y[1];
+  5 │    x += y;
+    │    -    ^ Ill-typed assignment operator +=.
+    │    │
+    │    Left hand side has type array[] vector.
+  6 │  }
+    = There are no valid right hand side types for the given left hand side.
 [exit 1]
   $ stanc times_equals_matrix_array.stan
-Semantic error in 'times_equals_matrix_array.stan', line 5, column 12 to column 18:
-   -------------------------------------------------
-     3:    array[3] matrix[2,2] y = {[[4, 5], [6, 7]], [[4, 5], [6, 7]], [[4, 5], [6, 7]]};
-     4:    x[3] *= y[3];
-     5:    x[3,1] *= y[3,1];
-                     ^
-     6:    x[3,1,1] *= y[3,1,1];
-     7:    x *= y;
-   -------------------------------------------------
-
-Ill-typed assignment operator *=.
-For the given left hand side (row_vector), expected the right hand side to have type
-int, real, or matrix. Instead found type row_vector.
+error: Ill-typed compound assignment statement.
+    ┌─ times_equals_matrix_array.stan:5:13
+  4 │    x[3] *= y[3];
+  5 │    x[3,1] *= y[3,1];
+    │    ------    ^^^^^^ Ill-typed assignment operator *=.
+    │    │
+    │    Left hand side has type row_vector.
+  6 │    x[3,1,1] *= y[3,1,1];
+    = For the given left hand side, expected the right hand side to have type
+      int, real, or matrix.
+      Instead found type row_vector.
 [exit 1]

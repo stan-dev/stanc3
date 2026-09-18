@@ -1,121 +1,96 @@
   $ stanc int-bad1.stan
-Syntax error in 'int-bad1.stan', line 2, column 18 to column 19, lexing error:
-   -------------------------------------------------
-     1:  transformed data {
-     2:      int n = 10_000_;
-                           ^
-     3:  }
-   -------------------------------------------------
+error: Invalid character found.
 
-Invalid character found.
+    ┌─ int-bad1.stan:2:19
+  1 │  transformed data {
+  2 │      int n = 10_000_;
+    │                    ^ here.
+  3 │  }
 [exit 1]
   $ stanc int-bad2.stan
-Syntax error in 'int-bad2.stan', line 2, column 14 to column 15, lexing error:
-   -------------------------------------------------
-     1:  transformed data {
-     2:      int n = 10__000;
-                       ^
-     3:  }
-   -------------------------------------------------
+error: Invalid character found.
 
-Invalid character found.
+    ┌─ int-bad2.stan:2:15
+  1 │  transformed data {
+  2 │      int n = 10__000;
+    │                ^ here.
+  3 │  }
 [exit 1]
   $ stanc int-bad3.stan
-Semantic error in 'int-bad3.stan', line 2, column 12 to column 26:
-   -------------------------------------------------
-     1:  transformed data {
-     2:      int n = 10_000_000_000;
-                     ^
-     3:  }
-   -------------------------------------------------
-
-Integer literal cannot be larger than 2_147_483_647.
+error: Integer literal cannot be larger than 2_147_483_647.
+    ┌─ int-bad3.stan:2:13
+  1 │  transformed data {
+  2 │      int n = 10_000_000_000;
+    │              ^^^^^^^^^^^^^^ Integer literal cannot be larger than 2_147_483_647.
+  3 │  }
 [exit 1]
   $ stanc int-bad4.stan
-Semantic error in 'int-bad4.stan', line 2, column 12 to column 25:
-   -------------------------------------------------
-     1:  transformed data {
-     2:      int n = 2_147_483_648;
-                     ^
-     3:  }
-   -------------------------------------------------
-
-Integer literal cannot be larger than 2_147_483_647.
+error: Integer literal cannot be larger than 2_147_483_647.
+    ┌─ int-bad4.stan:2:13
+  1 │  transformed data {
+  2 │      int n = 2_147_483_648;
+    │              ^^^^^^^^^^^^^ Integer literal cannot be larger than 2_147_483_647.
+  3 │  }
 [exit 1]
   $ stanc int-bad6.stan
-Semantic error in 'int-bad6.stan', line 2, column 13 to column 23:
-   -------------------------------------------------
-     1:  transformed data {
-     2:      int n = -2147483648;
-                      ^
-     3:  }
-   -------------------------------------------------
-
-Integer literal cannot be larger than 2_147_483_647.
+error: Integer literal cannot be larger than 2_147_483_647.
+    ┌─ int-bad6.stan:2:14
+  1 │  transformed data {
+  2 │      int n = -2147483648;
+    │               ^^^^^^^^^^ Integer literal cannot be larger than 2_147_483_647.
+  3 │  }
 [exit 1]
   $ stanc real-bad1.stan
-Syntax error in 'real-bad1.stan', line 2, column 13 to column 14, lexing error:
-   -------------------------------------------------
-     1:  transformed data {
-     2:      real x = .e+44;
-                      ^
-     3:  }
-   -------------------------------------------------
+error: Invalid character found.
 
-Invalid character found.
+    ┌─ real-bad1.stan:2:14
+  1 │  transformed data {
+  2 │      real x = .e+44;
+    │               ^ here.
+  3 │  }
 [exit 1]
   $ stanc real-bad2.stan
-Syntax error in 'real-bad2.stan', line 2, column 15 to column 16, lexing error:
-   -------------------------------------------------
-     1:  transformed data {
-     2:      real x = 12_.345;
-                        ^
-     3:  }
-   -------------------------------------------------
+error: Invalid character found.
 
-Invalid character found.
+    ┌─ real-bad2.stan:2:16
+  1 │  transformed data {
+  2 │      real x = 12_.345;
+    │                 ^ here.
+  3 │  }
 [exit 1]
   $ stanc real-bad3.stan
-Syntax error in 'real-bad3.stan', line 2, column 16 to column 17, lexing error:
-   -------------------------------------------------
-     1:  transformed data {
-     2:      real x = 12._345;
-                         ^
-     3:  }
-   -------------------------------------------------
+error: Invalid character found.
 
-Invalid character found.
+    ┌─ real-bad3.stan:2:17
+  1 │  transformed data {
+  2 │      real x = 12._345;
+    │                  ^ here.
+  3 │  }
 [exit 1]
   $ stanc real-bad4.stan
-Syntax error in 'real-bad4.stan', line 2, column 19 to column 20, lexing error:
-   -------------------------------------------------
-     1:  transformed data {
-     2:      real x = 12.345_;
-                            ^
-     3:  }
-   -------------------------------------------------
+error: Invalid character found.
 
-Invalid character found.
+    ┌─ real-bad4.stan:2:20
+  1 │  transformed data {
+  2 │      real x = 12.345_;
+    │                     ^ here.
+  3 │  }
 [exit 1]
   $ stanc real-bad5.stan
-Syntax error in 'real-bad5.stan', line 2, column 17 to column 18, lexing error:
-   -------------------------------------------------
-     1:  transformed data {
-     2:      real x = 12.3_e+10;
-                          ^
-     3:  }
-   -------------------------------------------------
+error: Invalid character found.
 
-Invalid character found.
+    ┌─ real-bad5.stan:2:18
+  1 │  transformed data {
+  2 │      real x = 12.3_e+10;
+    │                   ^ here.
+  3 │  }
 [exit 1]
   $ stanc real-bad6.stan
-Syntax error in 'real-bad6.stan', line 2, column 21 to column 22, lexing error:
-   -------------------------------------------------
-     1:  transformed data {
-     2:      real x = 12.3e+10_;
-                              ^
-     3:  }
-   -------------------------------------------------
+error: Invalid character found.
 
-Invalid character found.
+    ┌─ real-bad6.stan:2:22
+  1 │  transformed data {
+  2 │      real x = 12.3e+10_;
+    │                       ^ here.
+  3 │  }
 [exit 1]
