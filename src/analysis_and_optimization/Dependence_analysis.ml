@@ -60,12 +60,9 @@ let confused =
 
 (** The constant difference when both carry the same symbol or none. *)
 let linear_difference (left : linear) (right : linear) : int option =
-  match (left.symbol, right.symbol) with
-  | None, None -> Some (left.const - right.const)
-  | Some left_symbol, Some right_symbol
-    when Expr.Typed.compare left_symbol right_symbol = 0 ->
-      Some (left.const - right.const)
-  | Some _, _ | None, Some _ -> None
+  Option.some_if
+    (Option.equal Expr.Typed.equal left.symbol right.symbol)
+    (left.const - right.const)
 
 (** The dependence between two single index expressions. *)
 let point_dependence (source : point) (sink : point) : dependence =
@@ -95,8 +92,7 @@ let point_dependence (source : point) (sink : point) : dependence =
 let intersect_dependence (merged : dependence) (position : dependence) :
     dependence =
   match (merged, position) with
-  | Independent, (Independent | Dependent _) | Dependent _, Independent ->
-      Independent
+  | Independent, _ | _, Independent -> Independent
   | ( Dependent {directions= merged_directions; distance= merged_distance}
     , Dependent {directions= position_directions; distance= position_distance} )
     ->
@@ -118,9 +114,7 @@ let union_dependence (left : dependence) (right : dependence) : dependence =
   | ( Dependent {directions= left_dirs; distance= left_d}
     , Dependent {directions= right_dirs; distance= right_d} ) ->
       let distance =
-        match (left_d, right_d) with
-        | Some a, Some b when a = b -> Some a
-        | _ -> None in
+        if Option.equal Int.equal left_d right_d then left_d else None in
       Dependent {directions= Set.Poly.union left_dirs right_dirs; distance}
 
 (** The dependence between [source] and [sink] over every index position;
@@ -183,19 +177,18 @@ let root_label : label = 1
     iterations of one loop). *)
 let pair_dependence ~same_loop (sources : access list) (sinks : access list) :
     dependence =
-  match (sources, sinks) with
-  | [], _ | _, [] -> confused
-  | _ -> (
-      let joined =
-        List.fold_left sources ~init:Independent ~f:(fun merged source ->
-            List.fold_left sinks ~init:merged ~f:(fun merged sink ->
-                match (source.kind, sink.kind) with
-                | Increment, Increment -> merged
-                | _ -> union_dependence merged (access_dependence source sink)))
-      in
-      match joined with
-      | Dependent _ when not same_loop -> confused
-      | Independent | Dependent _ -> joined)
+  if List.is_empty sources || List.is_empty sinks then confused
+  else
+    let joined =
+      List.fold_left sources ~init:Independent ~f:(fun merged source ->
+          List.fold_left sinks ~init:merged ~f:(fun merged sink ->
+              match (source.kind, sink.kind) with
+              | Increment, Increment -> merged
+              | _ -> union_dependence merged (access_dependence source sink)))
+    in
+    match joined with
+    | Dependent _ when not same_loop -> confused
+    | Independent | Dependent _ -> joined
 
 (** Every label in [sources] whose accesses (selected by [src_accesses]) can
     name an element among [dst_accesses], with the raw dependence of the pair; a
@@ -314,7 +307,7 @@ let mir_reaching_definitions (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
     reaching_definitions_mfp mir (module Flowgraph) flowgraph_to_mir in
   let to_rd_set set =
     Set.Poly.map set ~f:(fun (name, label_opt) ->
-        (name, Option.value label_opt ~default:1)) in
+        (name, Option.value label_opt ~default:root_label)) in
   LabelMap.map rd_map ~f:(fun {entry; exit} ->
       {entry= to_rd_set entry; exit= to_rd_set exit})
 
@@ -333,10 +326,8 @@ let all_labels
 let prog_rhs_variables
     (flowgraph_to_mir : Stmt.Located.Non_recursive.t LabelMap.t)
     (labels : int Set.Poly.t) : string Set.Poly.t =
-  let label_vars label =
-    Set.Poly.map ~f:fst
-      (stmt_rhs_var_set (LabelMap.find label flowgraph_to_mir).pattern) in
-  Set.Poly.union_map labels ~f:label_vars
+  Set.Poly.union_map labels ~f:(fun label ->
+      stmt_rhs_names_set (LabelMap.find label flowgraph_to_mir).pattern)
 
 let stmt_uninitialized_variables (exceptions : string Set.Poly.t)
     (stmt : Stmt.Located.t) : (Location_span.t * string) Set.Poly.t =
@@ -416,7 +407,7 @@ let linear_combine ~negate_right (left : linear) (right : linear) :
   | symbol, None -> Some {const; symbol}
   | None, Some _ when not negate_right -> Some {const; symbol= right.symbol}
   | Some left_symbol, Some right_symbol
-    when negate_right && Expr.Typed.compare left_symbol right_symbol = 0 ->
+    when negate_right && Expr.Typed.equal left_symbol right_symbol ->
       Some {const; symbol= None}
   | None, Some _ | Some _, Some _ -> None
 
@@ -443,32 +434,33 @@ let point_combine ~negate_right (left : point) (right : point) : point option =
     [written_vars]. *)
 let classify_point ~(loopvar : string option)
     ~(written_vars : string Set.Poly.t) (expr : Expr.Typed.t) : point =
+  (* [expr] as one opaque symbol when invariant, else why [expr] varies *)
+  let symbolic (expr : Expr.Typed.t) : point =
+    let names = expr_var_names_set expr in
+    if not (Set.Poly.disjoint names written_vars) then Varying Written
+    else if
+      Option.value_map loopvar ~default:false ~f:(fun loop_variable ->
+          Set.Poly.mem loop_variable names)
+    then Varying Nonlinear
+    else Invariant {const= 0; symbol= Some expr} in
   let rec classify (expr : Expr.Typed.t) : point =
-    (* [expr] as one opaque symbol when invariant, else why [expr] varies *)
-    let symbolic () =
-      let names = expr_var_names_set expr in
-      if not (Set.Poly.disjoint names written_vars) then Varying Written
-      else if
-        Option.value_map loopvar ~default:false ~f:(fun loop_variable ->
-            Set.Poly.mem loop_variable names)
-      then Varying Nonlinear
-      else Invariant {const= 0; symbol= Some expr} in
     let combine ~negate_right lhs rhs =
       match point_combine ~negate_right (classify lhs) (classify rhs) with
       | Some point -> point
-      | None -> symbolic () in
+      | None -> symbolic expr in
     match expr.pattern with
     | Var name when Option.equal String.equal loopvar (Some name) ->
         Affine {const= 0; symbol= None}
-    | Lit (Int, digits) ->
-        Option.value_map (Int.of_string_opt digits) ~default:(symbolic ())
-          ~f:(fun const -> Invariant {const; symbol= None})
+    | Lit (Int, digits) -> (
+        match Int.of_string_opt digits with
+        | Some const -> Invariant {const; symbol= None}
+        | None -> symbolic expr)
     | Promotion (inner, _, _) -> classify inner
     | FunApp (Operator Plus, [lhs; rhs]) -> combine ~negate_right:false lhs rhs
     | FunApp (Operator Minus, [lhs; rhs]) -> combine ~negate_right:true lhs rhs
     | Var _ | Lit _ | FunApp _ | TernaryIf _ | EAnd _ | EOr _ | Indexed _
      |TupleProjection _ ->
-        symbolic () in
+        symbolic expr in
   classify expr
 
 (** [index] with each index expression replaced by the expression's [point], so
@@ -479,8 +471,8 @@ let classify_subscript ~loopvar ~written_vars (index : Expr.Typed.t Index.t) :
 
 (** [Some (name, indices)] when [expr] is a variable under index lists whose
     inner lists are all [Single]: a read [x[i][j]] is [x[i, j]], as [Ast_to_Mir]
-    already writes the assignment side; [None] for a slice under another index.
-*)
+    already writes the assignment side; [None] for a slice under another index,
+    which [Expr.Helpers.collect_indices] would flatten unsoundly. *)
 let rec indexed_variable (expr : Expr.Typed.t) :
     (string * Expr.Typed.t Index.t list) option =
   match expr.pattern with
@@ -535,9 +527,7 @@ let rec enclosing_loop statement_map parents (label : label) : label option =
     List.find_opt
       (Set.Poly.to_list (LabelMap.find label parents))
       ~f:(fun parent -> is_ctrl_flow (pattern_of parent)) in
-  match ctrl_parent with
-  | None -> None
-  | Some parent -> (
+  Option.bind ctrl_parent ~f:(fun parent ->
       match pattern_of parent with
       | Stmt.Pattern.For _ | While _ -> Some parent
       | _ -> enclosing_loop statement_map parents parent)
@@ -597,9 +587,6 @@ let build_dep_info_map (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
     LabelMap.fold statement_map ~init:Set.Poly.empty
       ~f:(fun ~key:_ ~data:(pattern, _) written ->
         Set.Poly.union written (assigned_or_declared_vars_stmt pattern)) in
-  let loops =
-    LabelMap.mapi statement_map ~f:(fun label _ ->
-        enclosing_loop statement_map parents label) in
   (* the loop variable of a [For]; a [While] has none *)
   let loopvar_of loop =
     Option.bind loop ~f:(fun label ->
@@ -608,7 +595,7 @@ let build_dep_info_map (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
         | _ -> None) in
   LabelMap.mapi statement_map ~f:(fun label (pattern, meta) ->
       let rds = LabelMap.find label rd_map in
-      let loop = LabelMap.find label loops in
+      let loop = enclosing_loop statement_map parents label in
       ( pattern
       , { predecessors= LabelMap.find label preds
         ; parents= LabelMap.find label parents
