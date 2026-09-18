@@ -26,6 +26,9 @@ type node_dep_info =
         (** [(variable, label)] definitions that may reach this statement *)
   ; reaching_defn_exit: reaching_defn Set.Poly.t
         (** the definitions that may reach the next statement *)
+  ; loop: label option
+        (** the innermost enclosing [For] or [While]; a [For] classified
+            [accesses] against the loop variable *)
   ; accesses: access list  (** the statement's own indexed reads and writes *)
   ; meta: Location_span.t  (** source location, reported by pedantic mode *) }
 
@@ -43,7 +46,8 @@ val node_immediate_dependencies :
   dep_info_map -> ?blockers:string Set.Poly.t -> label -> label Set.Poly.t
 (** Given dependency information for each node, find the 'immediate'
     dependencies of a node: the first-degree control flow parents and the
-    subscript-pruned reaching definitions of RHS variables. *)
+    reaching definitions of RHS variables, minus those whose subscripts cannot
+    reach the node's reads and those that always execute after the node. *)
 
 val node_dependencies : dep_info_map -> label -> label Set.Poly.t
 (** Given dependency information for each node, find all of the dependencies of

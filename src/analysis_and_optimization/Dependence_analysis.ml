@@ -44,7 +44,9 @@ open Monotone_framework
     Node 7 reads [theta[2]]; the definitions of [theta] reaching node 7 are the
     declaration and nodes 5 and 6. The element test drops node 5, which writes
     [theta[1]], so the dependencies of node 7 are the declaration and node 6,
-    and the [if] is not reported as depending on the parameter [a]. *)
+    and the [if] is not reported as depending on the parameter [a]. A definition
+    is also dropped when the element test allows only iterations in which the
+    definition executes after the read (design §7.7). *)
 
 (* Documented in the interface. *)
 type node_dep_info =
@@ -52,6 +54,7 @@ type node_dep_info =
   ; parents: label Set.Poly.t
   ; reaching_defn_entry: reaching_defn Set.Poly.t
   ; reaching_defn_exit: reaching_defn Set.Poly.t
+  ; loop: label option
   ; accesses: access list
   ; meta: Location_span.t }
 
@@ -124,12 +127,25 @@ let intersect_dependence (merged : dependence) (position : dependence) :
       let distances_differ =
         match (merged_distance, position_distance) with
         | Some merged_d, Some position_d -> merged_d <> position_d
-        | Some _, None | None, Some _ | None, None -> false in
+        | _ -> false in
       if distances_differ || Set.Poly.is_empty directions then Independent
       else
         Dependent
           { directions
           ; distance= Option.first_some merged_distance position_distance }
+
+(** Either dependence may hold (the join over several access pairs): directions
+    are unioned, the distance survives only when both agree. *)
+let union_dependence (left : dependence) (right : dependence) : dependence =
+  match (left, right) with
+  | Independent, other | other, Independent -> other
+  | ( Dependent {directions= left_dirs; distance= left_d}
+    , Dependent {directions= right_dirs; distance= right_d} ) ->
+      let distance =
+        match (left_d, right_d) with
+        | Some a, Some b when a = b -> Some a
+        | _ -> None in
+      Dependent {directions= Set.Poly.union left_dirs right_dirs; distance}
 
 (** The dependence between [source] and [sink] over every index position;
     [confused] if index counts differ; [Independent] only when never equal. *)
@@ -140,17 +156,18 @@ let access_dependence (source : access) (sink : access) : dependence =
       ~f:(fun merged source_sub sink_sub ->
         intersect_dependence merged (subscript_dependence source_sub sink_sub))
 
-(** The accesses in [accesses] that read [var]: kind [Read] or [Increment]. *)
-let accesses_reading (var : string) (accesses : access list) : access list =
+(** The accesses in [accesses] to [var] whose kind satisfies [keep]; a read is
+    [Read] or [Increment], a write is [Write] or [Increment]. *)
+let accesses_to (var : string) ~keep (accesses : access list) : access list =
   List.filter accesses ~f:(fun access ->
-      String.equal access.var var
-      && match access.kind with Read | Increment -> true | Write -> false)
+      String.equal access.var var && keep access.kind)
+
+let accesses_reading var =
+  accesses_to var ~keep:(function Read | Increment -> true | Write -> false)
 
 (** The accesses in [accesses] that write [var]: kind [Write] or [Increment]. *)
-let accesses_writing (var : string) (accesses : access list) : access list =
-  List.filter accesses ~f:(fun access ->
-      String.equal access.var var
-      && match access.kind with Write | Increment -> true | Read -> false)
+let accesses_writing var =
+  accesses_to var ~keep:(function Write | Increment -> true | Read -> false)
 
 (***********************************)
 (* Reaching definitions, pruned by *)
@@ -164,27 +181,77 @@ let reaching_defn_lookup (rds : reaching_defn Set.Poly.t) (var : string) :
     (Set.Poly.filter rds ~f:(fun (defined, _) -> String.equal defined var))
     ~f:snd
 
-(** The labels defining [var] that reach node [info], minus each defining label
-    at which every write of [var] is [Independent] of every read of [var] in
-    [info]. *)
-let pruned_reaching_defns (statement_map : dep_info_map) (info : node_dep_info)
-    (var : string) : label Set.Poly.t =
-  let defining_labels = reaching_defn_lookup info.reaching_defn_entry var in
-  let reads_of_var = accesses_reading var info.accesses in
-  (* a definition is kept unless the subscripts rule out every read *)
-  let may_define_read_element defining_label =
-    match LabelMap.find_opt defining_label statement_map with
-    | None -> true
-    | Some (_, defining_info) -> (
-        match (accesses_writing var defining_info.accesses, reads_of_var) with
-        | [], _ | _, [] -> true
-        | writes, reads ->
-            List.exists writes ~f:(fun write ->
-                List.exists reads ~f:(fun read ->
-                    match access_dependence write read with
-                    | Independent -> false
-                    | Dependent _ -> true))) in
-  Set.Poly.filter defining_labels ~f:may_define_read_element
+(** Whether the loop at [loop] sits inside no other loop, so one iteration of
+    [loop] is one execution of the body; [true] outside any loop. *)
+let outermost (statement_map : dep_info_map) (loop : label option) =
+  match loop with
+  | None -> true
+  | Some label -> Option.is_none (snd (LabelMap.find label statement_map)).loop
+
+(** [dep] restricted to the directions under which the access at [src] executes
+    before the access at [dst] (Kennedy and Allen 2001, Definition 2.1): an
+    earlier iteration always does, the same iteration only when [src] is
+    lexically first. Labels are pre-order, so [src < dst] is lexical order.
+    Valid only when the shared innermost loop is [outermost]. *)
+let ordered_dependence ~(src : label) ~(dst : label) (dep : dependence) :
+    dependence =
+  match dep with
+  | Independent -> Independent
+  | Dependent {directions; distance} ->
+      let allowed =
+        if src < dst then Set.Poly.of_list [Lt; Eq] else Set.Poly.singleton Lt
+      in
+      let directions = Set.Poly.inter directions allowed in
+      if Set.Poly.is_empty directions then Independent
+      else Dependent {directions; distance}
+
+(** The join of [access_dependence] over each source access paired with each
+    sink access; two [Increment]s commute and are skipped (design §7.4).
+    Directions compare iterations of one loop, so the answer is [confused]
+    unless the two nodes share their innermost loop. *)
+let pair_dependence ~same_loop (sources : access list) (sinks : access list) :
+    dependence =
+  let joined =
+    List.fold_left sources ~init:Independent ~f:(fun merged source ->
+        List.fold_left sinks ~init:merged ~f:(fun merged sink ->
+            match (source.kind, sink.kind) with
+            | Increment, Increment -> merged
+            | _ -> union_dependence merged (access_dependence source sink)))
+  in
+  match joined with
+  | Dependent _ when not same_loop -> confused
+  | Independent | Dependent _ -> joined
+
+(** The definitions of [var] reaching [dst] that may produce an element [dst]
+    reads, with the surviving dependence of each. A definition from outside the
+    analysed statement, or a node with no recorded read of [var], is kept as
+    [confused]. Under an [outermost] loop a definition is dropped when [dst]
+    always executes before the definition does. *)
+let flow_edges (statement_map : dep_info_map) (dst : label) (var : string) :
+    (label * dependence) list =
+  let _, info = LabelMap.find dst statement_map in
+  let reads = accesses_reading var info.accesses in
+  let surviving src dep =
+    if outermost statement_map info.loop then ordered_dependence ~src ~dst dep
+    else dep in
+  List.filter_map
+    (Set.Poly.to_list (reaching_defn_lookup info.reaching_defn_entry var))
+    ~f:(fun src ->
+      match LabelMap.find_opt src statement_map with
+      | None -> Some (src, confused)
+      | Some (_, src_info) -> (
+          match (accesses_writing var src_info.accesses, reads) with
+          | [], _ | _, [] -> Some (src, confused)
+          | writes, reads -> (
+              let same_loop = Option.equal Int.equal src_info.loop info.loop in
+              match surviving src (pair_dependence ~same_loop writes reads) with
+              | Independent -> None
+              | Dependent _ as dep -> Some (src, dep))))
+
+(** The labels of [flow_edges]: the definitions of [var] the node at [dst]
+    depends on. *)
+let pruned_reaching_defns statement_map dst var : label Set.Poly.t =
+  Set.Poly.of_list (List.map (flow_edges statement_map dst var) ~f:fst)
 
 let node_immediate_dependencies (statement_map : dep_info_map)
     ?(blockers : string Set.Poly.t = Set.Poly.empty) (label : label) :
@@ -194,7 +261,7 @@ let node_immediate_dependencies (statement_map : dep_info_map)
   let rhs_deps =
     Set.Poly.union_map
       (Set.Poly.diff rhs_set blockers)
-      ~f:(pruned_reaching_defns statement_map info) in
+      ~f:(pruned_reaching_defns statement_map label) in
   Set.Poly.union info.parents rhs_deps
 
 (* This is doing an explicit graph traversal with edges defined by
@@ -219,7 +286,7 @@ let node_vars_dependencies (statement_map : dep_info_map)
   let var_deps =
     Set.Poly.union_map
       (Set.Poly.diff vars blockers)
-      ~f:(pruned_reaching_defns statement_map info) in
+      ~f:(pruned_reaching_defns statement_map label) in
   Set.Poly.fold
     (Set.Poly.union info.parents var_deps)
     ~init:Set.Poly.empty
@@ -445,7 +512,7 @@ let classify_subscript ~loopvar ~written_vars (index : Expr.Typed.t Index.t) :
 let rec reads_in_expr ~loopvar ~written_vars ~label (expr : Expr.Typed.t) :
     access list =
   let reads_in = reads_in_expr ~loopvar ~written_vars ~label in
-  let reads_in_all = reads_in_exprs ~loopvar ~written_vars ~label in
+  let reads_in_all exprs = List.concat_map exprs ~f:reads_in in
   match expr.pattern with
   | Var name when is_loopvar ~loopvar name -> []
   | Var name -> [{var= name; subs= []; kind= Read; label}]
@@ -465,29 +532,28 @@ let rec reads_in_expr ~loopvar ~written_vars ~label (expr : Expr.Typed.t) :
   | EAnd (lhs, rhs) | EOr (lhs, rhs) -> reads_in_all [lhs; rhs]
   | Promotion (inner, _, _) | TupleProjection (inner, _) -> reads_in inner
 
-(** The reads inside each expression of [exprs], in order. *)
-and reads_in_exprs ~loopvar ~written_vars ~label (exprs : Expr.Typed.t list) :
-    access list =
-  List.concat_map exprs ~f:(reads_in_expr ~loopvar ~written_vars ~label)
-
-(** The loop variable of the innermost [For] enclosing [label], found by
-    climbing the control-flow [parents] of [build_cf_graphs] from [label]. *)
-let rec enclosing_loopvar
-    (statement_map : ((Expr.Typed.t, label) Stmt.Pattern.t * 'm) LabelMap.t)
-    (parents : label Set.Poly.t LabelMap.t) (label : label) : string option =
-  let pattern_of (node_label : int) =
-    fst (LabelMap.find node_label statement_map) in
+(** The innermost [For] or [While] enclosing [label], found by climbing the
+    control parents of [build_cf_graphs]. *)
+let rec enclosing_loop statement_map parents (label : label) : label option =
+  let pattern_of node = fst (LabelMap.find node statement_map) in
   let ctrl_parent =
-    List.find_map
+    List.find_opt
       (Set.Poly.to_list (LabelMap.find label parents))
-      ~f:(fun parent ->
-        Option.some_if (is_ctrl_flow (pattern_of parent)) parent) in
+      ~f:(fun parent -> is_ctrl_flow (pattern_of parent)) in
   match ctrl_parent with
   | None -> None
   | Some parent -> (
       match pattern_of parent with
-      | For {loopvar; _} -> Some loopvar
-      | _ -> enclosing_loopvar statement_map parents parent)
+      | Stmt.Pattern.For _ | While _ -> Some parent
+      | _ -> enclosing_loop statement_map parents parent)
+
+(** The loop variable of the [For] at [loop]; [None] for a [While] or no loop.
+*)
+let loopvar_of statement_map (loop : label option) : string option =
+  Option.bind loop ~f:(fun label ->
+      match fst (LabelMap.find label statement_map) with
+      | Stmt.Pattern.For {loopvar; _} -> Some loopvar
+      | _ -> None)
 
 (** The accesses of the statement at [label] alone, reads before the write;
     substatements are not visited, so an [if] or a loop contributes only the
@@ -495,7 +561,7 @@ let rec enclosing_loopvar
 let node_accesses ~loopvar ~written_vars ~label
     (stmt : (Expr.Typed.t, 'substatement) Stmt.Pattern.t) : access list =
   let reads_in = reads_in_expr ~loopvar ~written_vars ~label in
-  let reads_in_all = reads_in_exprs ~loopvar ~written_vars ~label in
+  let reads_in_all exprs = List.concat_map exprs ~f:reads_in in
   match stmt with
   | Assignment ((LVariable name, indices), _, rhs) ->
       let subs =
@@ -529,25 +595,27 @@ let build_dep_info_map (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
       stmt in
   let _, preds, parents = build_cf_graphs statement_map in
   let rd_map = mir_reaching_definitions mir stmt in
-  (* every name assigned or declared in the analysed statement: a symbol outside
-     this set denotes one value for the statement's whole execution *)
+  (* a symbol outside the written set has one value for the whole statement *)
   let written_vars =
     LabelMap.fold statement_map ~init:Set.Poly.empty
       ~f:(fun ~key:_ ~data:(pattern, _) written ->
         Set.Poly.union written (assigned_or_declared_vars_stmt pattern)) in
-  let accesses : access list LabelMap.t =
-    LabelMap.mapi statement_map ~f:(fun label (pattern, _) ->
-        node_accesses
-          ~loopvar:(enclosing_loopvar statement_map parents label)
-          ~written_vars ~label pattern) in
-  LabelMap.mapi statement_map ~f:(fun label (stmt, meta) ->
+  let loops =
+    LabelMap.mapi statement_map ~f:(fun label _ ->
+        enclosing_loop statement_map parents label) in
+  LabelMap.mapi statement_map ~f:(fun label (pattern, meta) ->
       let rds = LabelMap.find label rd_map in
-      ( stmt
+      let loop = LabelMap.find label loops in
+      ( pattern
       , { predecessors= LabelMap.find label preds
         ; parents= LabelMap.find label parents
         ; reaching_defn_entry= rds.entry
         ; reaching_defn_exit= rds.exit
-        ; accesses= LabelMap.find label accesses
+        ; loop
+        ; accesses=
+            node_accesses
+              ~loopvar:(loopvar_of statement_map loop)
+              ~written_vars ~label pattern
         ; meta } ))
 
 let log_prob_build_dep_info_map (mir : Program.Typed.t) : dep_info_map =

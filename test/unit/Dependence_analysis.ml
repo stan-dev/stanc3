@@ -266,7 +266,7 @@ let%expect_test "Statement kinds: declarations, target, effects and nesting" =
     17: R v[i]
     18: R v, W v[i]
     19: R v[i]
-    20: W v[i]
+    20: R n, W v[?written]
     |}]
 
 let accesses_example =
@@ -401,6 +401,62 @@ let%expect_test "Pruning: whole-variable, gather and written symbols are kept" =
           t = v[n] + v[k];
         }
         target += t + sum(v);
+      }
+    |};
+  [%expect {| no definition pruned |}]
+
+let%expect_test "Pruning: definitions that execute after the read never flow" =
+  print_pruned_edges
+    {|
+      data { int N; }
+      parameters { real a; }
+      model {
+        vector[N] b; vector[N] c; vector[N] d;
+        for (n in 1:(N - 1)) {
+          c[n] = b[n + 1];
+          d[n] = b[n];
+          b[n] = a;
+        }
+      }
+    |};
+  [%expect
+    {|
+    12: dropped 14, kept 5 10
+    13: dropped 14, kept 5 10
+    |}]
+
+let%expect_test
+    "Pruning: an enclosing loop re-executes the body, nothing dropped" =
+  print_pruned_edges
+    {|
+      data { int N; int M; }
+      parameters { real a; }
+      model {
+        vector[N] b; vector[N] c;
+        for (m in 1:M) {
+          for (n in 1:(N - 1)) {
+            c[n] = b[n + 1];
+            b[n] = a;
+          }
+        }
+      }
+    |};
+  [%expect {| no definition pruned |}]
+
+let%expect_test "Pruning: a while loop between the For and the statements" =
+  print_pruned_edges
+    {|
+      data { int N; }
+      parameters { real a; }
+      model {
+        vector[N] b; vector[N] c; int k = 0;
+        for (n in 1:N) {
+          while (k < 2) {
+            c[n] = b[n];
+            b[n] = a;
+            k += 1;
+          }
+        }
       }
     |};
   [%expect {| no definition pruned |}]
