@@ -115,8 +115,8 @@ let pp_varying_kind ppf = function
   | Written -> Fmt.string ppf "written"
   | Nonlinear -> Fmt.string ppf "nonlinear"
 
-(** [i], [i+1], [i+k-1] for [Affine]; [3], [k+1] for [Invariant]; [?gather],
-    [?written], ... for [Varying]. *)
+(** [i], [i+1], [i+k-1] for [Affine]; [3], [k+1] for [Invariant]; [?written] and
+    [?nonlinear] for [Varying]. *)
 let pp_point ppf = function
   | Invariant offset -> pp_linear ~leading:true ppf offset
   | Affine offset ->
@@ -132,7 +132,7 @@ let pp_subscript ppf (index : point Index.t) =
   | All | Single _ | Upfrom _ | Between _ -> Index.pp pp_point ppf index
 
 (** [W v[i+1]], [R v], [+= target]. *)
-let pp_access ppf {var; subs; kind; _} =
+let pp_access ppf {var; subs; kind} =
   Fmt.pf ppf "%s %s"
     (match kind with Write -> "W" | Read -> "R" | Increment -> "+=")
     var;
@@ -314,6 +314,49 @@ let%expect_test "Nodes outside a loop and in nested loops" =
     15: W j
     17: R v[?written], R n, R v[k], R k, R v[?written:N], R n, R N, W theta[i]
     18: R x, R v, R theta[2], += target
+    |}]
+
+let%expect_test "Accesses: _lp calls increment target, target() reads it" =
+  print_node_accesses
+    {|
+      functions {
+        void add_lp(real x) { target += x; }
+        real twice_lp(real x) { target += x; return 2 * x; }
+      }
+      parameters { real mu; }
+      model {
+        add_lp(mu);
+        real t = twice_lp(mu);
+        if (target() > 0) target += 1;
+      }
+    |};
+  [%expect
+    {|
+    2: W mu
+    4: R mu, += target
+    5: W t
+    6: R mu, += target, W t
+    7: R target
+    8: += target
+    |}]
+
+let%expect_test "Accesses: nested indexing is one reference" =
+  print_node_accesses
+    {|
+      data { int N; int K; array[N] vector[K] a; array[N, K] real b; }
+      model {
+        vector[K] y;
+        for (n in 1:N) {
+          y[1] = a[n][1] + a[n, 2] + b[n][1] + a[1:2][1][1];
+        }
+      }
+    |};
+  [%expect
+    {|
+    3: R K
+    4: W y
+    5: R N, W n
+    7: R a[i, 1], R a[i, 2], R b[i, 1], R a[1:2], W y[1]
     |}]
 
 let%expect_test "Right-hand-side variables of a set of labels" =

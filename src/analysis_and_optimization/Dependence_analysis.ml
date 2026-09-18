@@ -466,25 +466,20 @@ let point_combine ~negate_right (left : point) (right : point) : point option =
   | Invariant _, Affine _ | Affine _, Affine _ | Varying _, _ | _, Varying _ ->
       None
 
-(** Whether [expr] mentions at least one variable in [names]. *)
-let mentions (names : string Set.Poly.t) (expr : Expr.Typed.t) =
-  not (Set.Poly.disjoint (expr_var_names_set expr) names)
-
 (** The [point] of [expr] with respect to [loopvar], read through [+], [-] and
-    promotions; every other sub-expression is one symbol. *)
+    promotions; every other sub-expression is one symbol. [written_vars] must
+    not contain [loopvar]. *)
 let classify_point ~(loopvar : string option)
     ~(written_vars : string Set.Poly.t) (expr : Expr.Typed.t) : point =
-  let written_vars =
-    Option.value_map loopvar ~default:written_vars ~f:(fun loop_variable ->
-        Set.Poly.remove loop_variable written_vars) in
-  let mentions_loopvar expr =
-    Option.value_map loopvar ~default:false ~f:(fun loop_variable ->
-        mentions (Set.Poly.singleton loop_variable) expr) in
   let rec classify (expr : Expr.Typed.t) : point =
     (* [expr] as one opaque symbol when invariant, else why [expr] varies *)
     let symbolic () =
-      if mentions written_vars expr then Varying Written
-      else if mentions_loopvar expr then Varying Nonlinear
+      let names = expr_var_names_set expr in
+      if not (Set.Poly.disjoint names written_vars) then Varying Written
+      else if
+        Option.value_map loopvar ~default:false ~f:(fun loop_variable ->
+            Set.Poly.mem loop_variable names)
+      then Varying Nonlinear
       else Invariant {const= 0; symbol= Some expr} in
     let combine ~negate_right lhs rhs =
       match point_combine ~negate_right (classify lhs) (classify rhs) with
@@ -511,33 +506,61 @@ let classify_subscript ~loopvar ~written_vars (index : Expr.Typed.t Index.t) :
     point Index.t =
   Index.map (classify_point ~loopvar ~written_vars) index
 
+(** [Some (name, indices)] when [expr] is a variable under one or more index
+    lists whose inner lists are all [Single], so a read [x[i][j]] is [x[i, j]],
+    the form [Ast_to_Mir] already gives the assignment side; [None] when a slice
+    sits under another index or the base is not a variable. *)
+let rec indexed_variable (expr : Expr.Typed.t) :
+    (string * Expr.Typed.t Index.t list) option =
+  match expr.pattern with
+  | Var name -> Some (name, [])
+  | Indexed (base, indices) -> (
+      match indexed_variable base with
+      | Some (name, prefix)
+        when List.for_all prefix ~f:(function
+               | Index.Single _ -> true
+               | _ -> false) ->
+          Some (name, prefix @ indices)
+      | Some _ | None -> None)
+  | _ -> None
+
 (** Every variable reference inside [expr], in evaluation order; [target()]
-    counts as a read of ["target"]; reads of the loop variable are omitted. *)
-let rec reads_in_expr ~loopvar ~written_vars ~label (expr : Expr.Typed.t) :
-    access list =
-  let reads_in = reads_in_expr ~loopvar ~written_vars ~label in
+    reads ["target"] and a [_lp] or [_jacobian] call increments the same; reads
+    of the loop variable are omitted. *)
+let rec reads_in_expr ~loopvar ~written_vars (expr : Expr.Typed.t) : access list
+    =
+  let reads_in = reads_in_expr ~loopvar ~written_vars in
   let reads_in_all exprs = List.concat_map exprs ~f:reads_in in
   match expr.pattern with
   | Var name when Option.equal String.equal loopvar (Some name) -> []
-  | Var name -> [{var= name; subs= []; kind= Read; label}]
+  | Var name -> [{var= name; subs= []; kind= Read}]
   | Lit _ -> []
-  | Indexed ({pattern= Var name; _}, indices) ->
-      let subs =
-        List.map indices ~f:(classify_subscript ~loopvar ~written_vars) in
-      {var= name; subs; kind= Read; label}
-      :: reads_in_all (List.concat_map indices ~f:Index.bounds)
-  | Indexed (base, indices) ->
-      reads_in base @ reads_in_all (List.concat_map indices ~f:Index.bounds)
-  | FunApp ((StanLib (_, FnTarget, _) | UserDefined (_, FnTarget)), args) ->
-      {var= "target"; subs= []; kind= Read; label} :: reads_in_all args
+  | Indexed (base, indices) -> (
+      match indexed_variable expr with
+      | Some (name, all_indices) ->
+          let subs =
+            List.map all_indices ~f:(classify_subscript ~loopvar ~written_vars)
+          in
+          {var= name; subs; kind= Read}
+          :: reads_in_all (List.concat_map all_indices ~f:Index.bounds)
+      | None ->
+          reads_in base @ reads_in_all (List.concat_map indices ~f:Index.bounds)
+      )
+  | FunApp (StanLib (_, FnTarget, _), []) ->
+      [{var= "target"; subs= []; kind= Read}]
+  | FunApp (UserDefined (_, (FnTarget | FnJacobian)), args) ->
+      reads_in_all args @ [{var= "target"; subs= []; kind= Increment}]
   | FunApp (kind, args) -> reads_in_all (Fun_kind.collect_exprs kind @ args)
   | TernaryIf (cond, then_expr, else_expr) ->
       reads_in_all [cond; then_expr; else_expr]
   | EAnd (lhs, rhs) | EOr (lhs, rhs) -> reads_in_all [lhs; rhs]
   | Promotion (inner, _, _) | TupleProjection (inner, _) -> reads_in inner
 
-(** The innermost [For] or [While] enclosing [label], found by climbing the
-    control parents of [build_cf_graphs]. *)
+(** The innermost [For] or [While] enclosing [label]. [parents] from
+    [build_cf_graphs] holds at most one control-flow node, the nearest [if],
+    [while] or [for] ("only control flow nodes should pass themselves down as
+    parents"); the other members are [break] and [continue] labels, so the first
+    control-flow member is the innermost. *)
 let rec enclosing_loop statement_map parents (label : label) : label option =
   let pattern_of node = fst (LabelMap.find node statement_map) in
   let ctrl_parent =
@@ -559,35 +582,47 @@ let loopvar_of statement_map (loop : label option) : string option =
       | Stmt.Pattern.For {loopvar; _} -> Some loopvar
       | _ -> None)
 
-(** The accesses of the statement at [label] alone, reads before the write;
-    substatements are not visited, so an [if] or a loop contributes only the
-    condition or bounds. [target += e] is one [Increment]. *)
-let node_accesses ~loopvar ~written_vars ~label
+(** The accesses of one statement alone, reads before the write; substatements
+    are not visited, so an [if] or a loop contributes only the condition or
+    bounds. [target += e] and a [_lp] or [_jacobian] call are one [Increment].
+*)
+let node_accesses ~loopvar ~written_vars
     (stmt : (Expr.Typed.t, 'substatement) Stmt.Pattern.t) : access list =
-  let reads_in = reads_in_expr ~loopvar ~written_vars ~label in
+  (* the loop variable is the induction variable here, not a written symbol *)
+  let written_vars =
+    Option.value_map loopvar ~default:written_vars ~f:(fun loop_variable ->
+        Set.Poly.remove loop_variable written_vars) in
+  let reads_in = reads_in_expr ~loopvar ~written_vars in
   let reads_in_all exprs = List.concat_map exprs ~f:reads_in in
+  let increment_target = {var= "target"; subs= []; kind= Increment} in
   match stmt with
   | Assignment ((LVariable name, indices), _, rhs) ->
       let subs =
         List.map indices ~f:(classify_subscript ~loopvar ~written_vars) in
       reads_in_all (List.concat_map indices ~f:Index.bounds)
       @ reads_in rhs
-      @ [{var= name; subs; kind= Write; label}]
+      @ [{var= name; subs; kind= Write}]
   | Assignment (((LTupleProjection _, _) as lhs), _, rhs) ->
       reads_in_all
         (List.concat_map (Stmt.Helpers.lhs_indices lhs) ~f:Index.bounds)
       @ reads_in rhs
-      @ [{var= Stmt.Helpers.lhs_variable lhs; subs= []; kind= Write; label}]
+      @ [{var= Stmt.Helpers.lhs_variable lhs; subs= []; kind= Write}]
   | Decl {decl_id; initialize= Assign init; _} ->
-      reads_in init @ [{var= decl_id; subs= []; kind= Write; label}]
-  | Decl {decl_id; _} -> [{var= decl_id; subs= []; kind= Write; label}]
+      reads_in init @ [{var= decl_id; subs= []; kind= Write}]
+  | Decl {decl_id; _} -> [{var= decl_id; subs= []; kind= Write}]
   | TargetPE operand | JacobianPE operand ->
-      reads_in operand @ [{var= "target"; subs= []; kind= Increment; label}]
+      reads_in operand @ [increment_target]
+  | NRFunApp
+      ( ( StanLib (_, (FnTarget | FnJacobian), _)
+        | UserDefined (_, (FnTarget | FnJacobian)) )
+      , args ) ->
+      (* the increment [Monotone_framework.assigned_vars_stmt] records too *)
+      reads_in_all args @ [increment_target]
   | Return (Some value) -> reads_in value
   | NRFunApp (kind, args) -> reads_in_all (Fun_kind.collect_exprs kind @ args)
   | IfElse (cond, _, _) | While (cond, _) -> reads_in cond
   | For {loopvar= inner; lower; upper; _} ->
-      reads_in_all [lower; upper] @ [{var= inner; subs= []; kind= Write; label}]
+      reads_in_all [lower; upper] @ [{var= inner; subs= []; kind= Write}]
   | Profile _ | Block _ | SList _ | Break | Continue | Skip | Return None -> []
 
 let build_dep_info_map (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
@@ -619,7 +654,7 @@ let build_dep_info_map (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
         ; accesses=
             node_accesses
               ~loopvar:(loopvar_of statement_map loop)
-              ~written_vars ~label pattern
+              ~written_vars pattern
         ; meta } ))
 
 let log_prob_build_dep_info_map (mir : Program.Typed.t) : dep_info_map =

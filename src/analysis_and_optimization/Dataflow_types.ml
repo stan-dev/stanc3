@@ -27,8 +27,9 @@ type linear = {const: int; symbol: Middle.Expr.Typed.t option}
 type varying_kind =
   | Written  (** mentions a variable from the written set *)
   | Nonlinear
-      (** mentions the loop variable some other way: [idx[n]], [2 * n], [f(n)]
-      *)
+      (** mentions the loop variable in a form [linear] cannot hold: a gather
+          [idx[n]], a product [2 * n], a second symbol or a negated one
+          ([n - k], [N - n]) *)
 [@@deriving sexp_of, compare]
 
 (** One integer index expression as a function of the loop being analysed (Goff,
@@ -48,8 +49,7 @@ type access_kind = Read | Write | Increment [@@deriving sexp_of, compare]
 
 (** One reference to [var]; [subs] holds the source indices as [point]s and is
     empty for a whole-variable reference ([v], a [Decl]). *)
-type access =
-  {var: string; subs: point Middle.Index.t list; kind: access_kind; label: label}
+type access = {var: string; subs: point Middle.Index.t list; kind: access_kind}
 [@@deriving sexp_of, compare]
 
 (** Relation between the iteration of the first access and the iteration of the
