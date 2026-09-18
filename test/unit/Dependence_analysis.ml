@@ -113,7 +113,6 @@ let pp_linear ~leading ppf ({const; symbol} : linear) =
 
 let pp_varying_kind ppf = function
   | Written -> Fmt.string ppf "written"
-  | Gather -> Fmt.string ppf "gather"
   | Nonlinear -> Fmt.string ppf "nonlinear"
 
 (** [i], [i+1], [i+k-1] for [Affine]; [3], [k+1] for [Invariant]; [?gather],
@@ -183,7 +182,7 @@ let%expect_test "Single indices: affine, invariant and varying" =
     6: W m
     7: R N, W n
     9: R v[i+1], R v[i-2], R v[i+1], R v[k], R k, R v[3], W y[i]
-    10: R v[?gather], R idx[i], R v[?nonlinear], R v[i+k], R k, R v[?written], R m, W y[i]
+    10: R v[?nonlinear], R idx[i], R v[?nonlinear], R v[i+k], R k, R v[?written], R m, W y[i]
     11: R v[i+k-1], R k, R v[?nonlinear], R k, R v[?nonlinear], R k, R k, R v[i], R k, R k, R v[k+1], R k, R v[?nonlinear], R N, R v[?nonlinear], R k, R v[?nonlinear], W y[i]
     12: W m
     13: R J, W j
@@ -222,7 +221,7 @@ let%expect_test "Every index kind of the language" =
     8: W c
     9: R N, W n
     11: R v[:], R v[a:], R a, R v[a:b], R a, R b, R v[1:b], R b, R v[{idx}], R idx, W y[i]
-    12: R v[i:], R v[i:i+1], R v[?gather:N], R idx[i], R N, R v[{?gather}], R pairs[i], W y[i]
+    12: R v[i:], R v[i:i+1], R v[?nonlinear:N], R idx[i], R N, R v[{?nonlinear}], R pairs[i], W y[i]
     13: R m[i, :], W r
     14: R m[i, 1:K], R K, W r
     15: R m[:, 1], W c
@@ -311,7 +310,7 @@ let%expect_test "Nodes outside a loop and in nested loops" =
     10: R x[k], R k, W theta[2]
     11: R m, R x[?written], R m, W v[?written]
     12: R N, W n
-    14: R x[i+1], R theta[1], R v[?gather], R idx[i], R v[?written], R m, W v[i]
+    14: R x[i+1], R theta[1], R v[?nonlinear], R idx[i], R v[?written], R m, W v[i]
     15: W j
     17: R v[?written], R n, R v[k], R k, R v[?written:N], R n, R N, W theta[i]
     18: R x, R v, R theta[2], += target

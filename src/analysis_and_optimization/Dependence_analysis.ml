@@ -10,25 +10,21 @@ open Monotone_framework
 (* Dependency analysis & interface *)
 (***********************************)
 
-(** Dependency analysis is used to check which statements in a block of code are
-    affected by which other statements in the block. Pedantic mode uses the
-    answer to warn when an [if] depends on a parameter; the factor graph uses
-    dependency analysis to find the data and parameters behind each [target]
-    term.
+(** Dependency analysis: which statements in a block are affected by which other
+    statements. Pedantic mode asks whether an [if] depends on a parameter; the
+    factor graph asks which data and parameters feed each [target] term.
 
-    The data structure for dependency analysis is made in four layers, each a
-    map keyed by [label], an [int] associated with one MIR statement:
+    The data structure is built in four layers, each a map keyed by [label], an
+    [int] naming one MIR statement:
     + {b Statement map} ([Dataflow_utils.build_statement_map]): every statement
-      gets a label in pre-order and is stored with the statement's children
-      replaced by the children's labels, so the block becomes a flat table.
-    + {b Control flow} ([Dataflow_utils.build_cf_graphs]): per label, which
-      statements can run before that statement, and the statement's
-      {e control parents}, the [if]/[while]/[for] nodes that decide whether the
-      statement runs at all.
+      gets a label in pre-order and is stored with the children replaced by the
+      children's labels.
+    + {b Control flow} ([Dataflow_utils.build_cf_graphs]): per label, the
+      statements that can run just before, and the {e control parents}, the
+      [if]/[while]/[for] nodes that decide whether the statement runs.
     + {b Reaching definitions} ([Monotone_framework.reaching_definitions_mfp]):
       per label, pairs [(variable, label')] meaning "the statement at [label']
-      may be the last one to have assigned [variable]". Reaching definitions are
-      keyed by name: [theta[1] = a] is a definition of [theta], with no index.
+      may be the last one to have assigned [variable]", keyed by name only.
     + {b Accesses} (this module): the elements each statement reads and writes,
       indices included, so that a definition of [theta[1]] can be ruled out as a
       source for a read of [theta[2]].
@@ -39,69 +35,29 @@ open Monotone_framework
       parameters { real a; }
       model {
         vector[2] theta;
-        theta[1] = a;
-        theta[2] = 1;
-        if (theta[2] > 0) target += 1;
+        theta[1] = a;          // label 5
+        theta[2] = 1;          // label 6
+        if (theta[2] > 0) ...  // label 7
       }
     ]}
 
-    The statement map of the program's log_prob block. The MIR constructors:
-    [SList] is the block's list of statements, [Block] a braced scope, [IfElse]
-    an [if], [TargetPE] a [target +=].
-    {v
-      1  SList [2; 3]
-      2    real a;               the parameter, declared by the block
-      3    Block [4; 5; 6; 7]    the model block
-      4      vector[2] theta;
-      5      theta[1] = a;
-      6      theta[2] = 1;
-      7      if (theta[2] > 0) then 8
-      8        Block [9]
-      9          target += 1;
-    v}
+    Node 7 reads [theta[2]]; the definitions of [theta] reaching node 7 are the
+    declaration and nodes 5 and 6. The element test drops node 5, which writes
+    [theta[1]], so the dependencies of node 7 are the declaration and node 6,
+    and the [if] is not reported as depending on the parameter [a]. *)
 
-    Node 7 is stored as the pattern [IfElse (theta[2] > 0, 8, None)] together
-    with the [node_dep_info] of node 7: predecessors [{6}], parents [{}] (top
-    level), reaching definitions on entry
-    [{(a, 2); (theta, 4); (theta, 5); (theta, 6)}], accesses [[R theta[2]]].
-    Node 9 has parents [{7}] and accesses [[+= target]].
-
-    The dependency graph. A statement depends on the statement's control parents
-    and on the definitions of the variables the statement reads, and on the
-    dependencies of the control parents and of the defining statements in turn.
-    Writing a variable adds no edge; being inside an [if] adds the dependencies
-    of the [if].
-    {v
-      5 -> {2}        reads a, declared at 2
-      6 -> {}         reads nothing
-      7 -> {4; 6}     reads theta[2]: kept the declaration at 4 (whole variable)
-                      and the write at 6; dropped 5, which writes theta[1]
-      8 -> {4; 6; 7}  the then-block: guarded by 7, so node 8 inherits the set of 7
-      9 -> {4; 6; 7}  likewise
-    v}
-    So the [if] is not reported as depending on the parameter [a]. *)
-
-(** What the analysis knows about one statement (layers 2 to 4 above). *)
+(* Documented in the interface. *)
 type node_dep_info =
-  { predecessors: label Set.Poly.t  (** statements that can run just before *)
+  { predecessors: label Set.Poly.t
   ; parents: label Set.Poly.t
-        (** control parents; each control parent is a dependency of the
-            statement *)
   ; reaching_defn_entry: reaching_defn Set.Poly.t
-        (** [(variable, label)] definitions that may reach this statement *)
   ; reaching_defn_exit: reaching_defn Set.Poly.t
-        (** the definitions that may reach the next statement *)
-  ; accesses: access list  (** the statement's own indexed reads and writes *)
-  ; meta: Location_span.t  (** source location, reported by pedantic mode *) }
+  ; accesses: access list
+  ; meta: Location_span.t }
 
-(** The block as a flat table: each label's statement, children replaced by the
-    children's labels, with the statement's [node_dep_info]. Built by
-    [build_dep_info_map]. *)
 type dep_info_map =
   ((Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) LabelMap.t
 
-(** Each label's dependencies, transitively: the statement's control parents and
-    the subscript-pruned definitions of the variables the statement reads. *)
 type dependency_graph = label Set.Poly.t LabelMap.t
 
 (***********************************)
@@ -140,10 +96,8 @@ let point_dependence (source : point) (sink : point) : dependence =
       match linear_difference source_offset sink_offset with
       | Some 0 | None -> confused
       | Some _ -> Independent)
-  | Affine _, Invariant _
-   |Invariant _, Affine _
-   |Varying _, (Affine _ | Invariant _ | Varying _)
-   |(Affine _ | Invariant _), Varying _ ->
+  | Affine _, Invariant _ | Invariant _, Affine _ | Varying _, _ | _, Varying _
+    ->
       confused
 
 (** The dependence at one index position: two [Single] indices are compared; a
@@ -153,10 +107,7 @@ let subscript_dependence (source : point Index.t) (sink : point Index.t) :
   match (source, sink) with
   | Single source_point, Single sink_point ->
       point_dependence source_point sink_point
-  | ( (Single _ | All | Upfrom _ | Between _ | MultiIndex _)
-    , (All | Upfrom _ | Between _ | MultiIndex _) )
-   |(All | Upfrom _ | Between _ | MultiIndex _), Single _ ->
-      confused
+  | _ -> confused
 
 (** The dependence that holds at both [merged] and [position]: [Independent] if
     either is, if the distances differ, or if the direction sets are disjoint.
@@ -447,26 +398,6 @@ let is_loopvar ~(loopvar : string option) name =
 let mentions (names : string Set.Poly.t) (expr : Expr.Typed.t) =
   not (Set.Poly.disjoint (expr_var_names_set expr) names)
 
-(** The loop variable sits under another index somewhere in [expr], as in
-    [idx[n]]. *)
-let is_gather ~loopvar (expr : Expr.Typed.t) =
-  match loopvar with
-  | None -> false
-  | Some loop_variable ->
-      let rec under_index (expr : Expr.Typed.t) =
-        match expr.pattern with
-        | Indexed (_, indices) ->
-            List.exists
-              (List.concat_map indices ~f:Index.bounds)
-              ~f:(mentions (Set.Poly.singleton loop_variable))
-        | Var _ | Lit _ -> false
-        | FunApp _ | TernaryIf _ | EAnd _ | EOr _ | Promotion _
-         |TupleProjection _ ->
-            Expr.Pattern.fold
-              (fun found subexpr -> found || under_index subexpr)
-              false expr.pattern in
-      under_index expr
-
 (** The [point] of [expr] with respect to [loopvar], read through [+], [-] and
     promotions; every other sub-expression is one symbol. *)
 let classify_point ~(loopvar : string option)
@@ -481,10 +412,8 @@ let classify_point ~(loopvar : string option)
     (* [expr] as one opaque symbol when invariant, else why [expr] varies *)
     let symbolic () =
       if mentions written_vars expr then Varying Written
-      else if not (mentions_loopvar expr) then
-        Invariant {const= 0; symbol= Some expr}
-      else if is_gather ~loopvar expr then Varying Gather
-      else Varying Nonlinear in
+      else if mentions_loopvar expr then Varying Nonlinear
+      else Invariant {const= 0; symbol= Some expr} in
     let combine ~negate_right lhs rhs =
       match point_combine ~negate_right (classify lhs) (classify rhs) with
       | Some point -> point
@@ -541,15 +470,6 @@ and reads_in_exprs ~loopvar ~written_vars ~label (exprs : Expr.Typed.t list) :
     access list =
   List.concat_map exprs ~f:(reads_in_expr ~loopvar ~written_vars ~label)
 
-(** The names assigned or declared anywhere inside [stmt]:
-    [Monotone_framework.assigned_or_declared_vars_stmt] on each substatement. *)
-let rec written_variables (stmt : Stmt.Located.t) : string Set.Poly.t =
-  Stmt.Pattern.fold
-    (fun written _ -> written)
-    (fun written substmt -> Set.Poly.union written (written_variables substmt))
-    (assigned_or_declared_vars_stmt stmt.pattern)
-    stmt.pattern
-
 (** The loop variable of the innermost [For] enclosing [label], found by
     climbing the control-flow [parents] of [build_cf_graphs] from [label]. *)
 let rec enclosing_loopvar
@@ -567,10 +487,7 @@ let rec enclosing_loopvar
   | Some parent -> (
       match pattern_of parent with
       | For {loopvar; _} -> Some loopvar
-      | IfElse _ | While _ | Assignment _ | TargetPE _ | JacobianPE _
-       |NRFunApp _ | Break | Continue | Return _ | Skip | Profile _ | Block _
-       |SList _ | Decl _ ->
-          enclosing_loopvar statement_map parents parent)
+      | _ -> enclosing_loopvar statement_map parents parent)
 
 (** The accesses of the statement at [label] alone, reads before the write;
     substatements are not visited, so an [if] or a loop contributes only the
@@ -612,7 +529,12 @@ let build_dep_info_map (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
       stmt in
   let _, preds, parents = build_cf_graphs statement_map in
   let rd_map = mir_reaching_definitions mir stmt in
-  let written_vars = written_variables stmt in
+  (* every name assigned or declared in the analysed statement: a symbol outside
+     this set denotes one value for the statement's whole execution *)
+  let written_vars =
+    LabelMap.fold statement_map ~init:Set.Poly.empty
+      ~f:(fun ~key:_ ~data:(pattern, _) written ->
+        Set.Poly.union written (assigned_or_declared_vars_stmt pattern)) in
   let accesses : access list LabelMap.t =
     LabelMap.mapi statement_map ~f:(fun label (pattern, _) ->
         node_accesses

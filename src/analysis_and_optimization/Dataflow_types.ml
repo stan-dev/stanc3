@@ -26,8 +26,9 @@ type linear = {const: int; symbol: Middle.Expr.Typed.t option}
 (** Why an index expression is not [loopvar + offset] or [offset]. *)
 type varying_kind =
   | Written  (** mentions a variable from the written set *)
-  | Gather  (** [v[idx[n]]]: the loop variable under another index *)
-  | Nonlinear  (** anything else: [2 * n], [n - k], [f(n)], ... *)
+  | Nonlinear
+      (** mentions the loop variable some other way: [idx[n]], [2 * n], [f(n)]
+      *)
 [@@deriving sexp_of, compare]
 
 (** One integer index expression as a function of the loop being analysed (Goff,
