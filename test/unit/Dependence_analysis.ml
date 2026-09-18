@@ -461,6 +461,35 @@ let%expect_test "Pruning: a while loop between the For and the statements" =
     |};
   [%expect {| no definition pruned |}]
 
+let%expect_test "Pruning: a definition from an earlier iteration is kept" =
+  print_pruned_edges
+    {|
+      data { int N; }
+      parameters { real a; }
+      model {
+        vector[N] b; vector[N] c;
+        for (n in 2:N) {
+          c[n] = b[n - 1];
+          b[n] = a;
+        }
+      }
+    |};
+  [%expect {| no definition pruned |}]
+
+let%expect_test "Pruning: symbolic subscripts with different constants" =
+  print_pruned_edges
+    {|
+      data { int k; }
+      parameters { real mu; }
+      model {
+        vector[k + 2] v;
+        v[k + 1] = mu;
+        v[k + 2] = 1;
+        if (v[k + 2] > 0) target += 1;
+      }
+    |};
+  [%expect {| 9: dropped 7, kept 1 6 8 |}]
+
 let uninitialized_var_example =
   Test_utils.mir_of_string
     {|

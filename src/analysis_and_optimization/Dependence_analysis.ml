@@ -71,8 +71,7 @@ type dependency_graph = label Set.Poly.t LabelMap.t
 let confused =
   Dependent {directions= Set.Poly.of_list [Lt; Eq; Gt]; distance= None}
 
-(** [Some (left.const - right.const)] when [left] and [right] carry the same
-    symbol, or none; [None] when the symbols differ, so nothing cancels. *)
+(** The constant difference when both carry the same symbol or none. *)
 let linear_difference (left : linear) (right : linear) : int option =
   match (left.symbol, right.symbol) with
   | None, None -> Some (left.const - right.const)
@@ -102,15 +101,6 @@ let point_dependence (source : point) (sink : point) : dependence =
   | Affine _, Invariant _ | Invariant _, Affine _ | Varying _, _ | _, Varying _
     ->
       confused
-
-(** The dependence at one index position: two [Single] indices are compared; a
-    slice or multi-index in [source] or in [sink] gives [confused]. *)
-let subscript_dependence (source : point Index.t) (sink : point Index.t) :
-    dependence =
-  match (source, sink) with
-  | Single source_point, Single sink_point ->
-      point_dependence source_point sink_point
-  | _ -> confused
 
 (** The dependence that holds at both [merged] and [position]: [Independent] if
     either is, if the distances differ, or if the direction sets are disjoint.
@@ -154,10 +144,15 @@ let access_dependence (source : access) (sink : access) : dependence =
   else
     List.fold_left2 source.subs sink.subs ~init:confused
       ~f:(fun merged source_sub sink_sub ->
-        intersect_dependence merged (subscript_dependence source_sub sink_sub))
+        (* a slice or multi-index at either position is [confused] *)
+        let position =
+          match (source_sub, sink_sub) with
+          | Index.Single source_point, Index.Single sink_point ->
+              point_dependence source_point sink_point
+          | _ -> confused in
+        intersect_dependence merged position)
 
-(** The accesses in [accesses] to [var] whose kind satisfies [keep]; a read is
-    [Read] or [Increment], a write is [Write] or [Increment]. *)
+(** The accesses to [var] whose kind satisfies [keep]. *)
 let accesses_to (var : string) ~keep (accesses : access list) : access list =
   List.filter accesses ~f:(fun access ->
       String.equal access.var var && keep access.kind)
@@ -181,8 +176,7 @@ let reaching_defn_lookup (rds : reaching_defn Set.Poly.t) (var : string) :
     (Set.Poly.filter rds ~f:(fun (defined, _) -> String.equal defined var))
     ~f:snd
 
-(** Whether the loop at [loop] sits inside no other loop, so one iteration of
-    [loop] is one execution of the body; [true] outside any loop. *)
+(** No loop encloses [loop], so one iteration is one execution of the body. *)
 let outermost (statement_map : dep_info_map) (loop : label option) =
   match loop with
   | None -> true
@@ -205,53 +199,77 @@ let ordered_dependence ~(src : label) ~(dst : label) (dep : dependence) :
       if Set.Poly.is_empty directions then Independent
       else Dependent {directions; distance}
 
+(** The label of the analysed statement itself. [mir_reaching_definitions]
+    records definitions from outside the statement (data, parameters, function
+    arguments) at this label; the root is an [SList], a [For] or a function body
+    and writes nothing a node reads, so a source at this label always means
+    "defined outside". *)
+let root_label : label = 1
+
 (** The join of [access_dependence] over each source access paired with each
     sink access; two [Increment]s commute and are skipped (design §7.4).
-    Directions compare iterations of one loop, so the answer is [confused]
-    unless the two nodes share their innermost loop. *)
+    [confused] when either side has no recorded access, and when the two nodes
+    do not share their innermost loop, because directions compare iterations of
+    one loop. *)
 let pair_dependence ~same_loop (sources : access list) (sinks : access list) :
     dependence =
-  let joined =
-    List.fold_left sources ~init:Independent ~f:(fun merged source ->
-        List.fold_left sinks ~init:merged ~f:(fun merged sink ->
-            match (source.kind, sink.kind) with
-            | Increment, Increment -> merged
-            | _ -> union_dependence merged (access_dependence source sink)))
-  in
-  match joined with
-  | Dependent _ when not same_loop -> confused
-  | Independent | Dependent _ -> joined
+  match (sources, sinks) with
+  | [], _ | _, [] -> confused
+  | _ -> (
+      let joined =
+        List.fold_left sources ~init:Independent ~f:(fun merged source ->
+            List.fold_left sinks ~init:merged ~f:(fun merged sink ->
+                match (source.kind, sink.kind) with
+                | Increment, Increment -> merged
+                | _ -> union_dependence merged (access_dependence source sink)))
+      in
+      match joined with
+      | Dependent _ when not same_loop -> confused
+      | Independent | Dependent _ -> joined)
+
+(** Every label in [sources] whose accesses (selected by [src_accesses]) can
+    name an element among [dst_accesses], with the raw dependence of the pair. A
+    source at [root_label], or one not in the map, is a definition from outside
+    the statement and is [confused]. *)
+let element_edges (statement_map : dep_info_map) ~(dst : label)
+    ~(sources : label Set.Poly.t) ~(src_accesses : access list -> access list)
+    ~(dst_accesses : access list) : (label * dependence) list =
+  let _, dst_info = LabelMap.find dst statement_map in
+  List.filter_map (Set.Poly.to_list sources) ~f:(fun src ->
+      match LabelMap.find_opt src statement_map with
+      | Some (_, src_info) when src <> root_label -> (
+          let same_loop = Option.equal Int.equal src_info.loop dst_info.loop in
+          match
+            pair_dependence ~same_loop
+              (src_accesses src_info.accesses)
+              dst_accesses
+          with
+          | Independent -> None
+          | Dependent _ as dep -> Some (src, dep))
+      | Some _ | None -> Some (src, confused))
+
+(** [dep] as the transitive closure sees it: under an [outermost] loop only the
+    directions in which [src] executes before [dst] survive. *)
+let executes_first (statement_map : dep_info_map) ~(src : label) ~(dst : label)
+    (dep : dependence) : dependence =
+  let _, dst_info = LabelMap.find dst statement_map in
+  if outermost statement_map dst_info.loop then ordered_dependence ~src ~dst dep
+  else dep
 
 (** The definitions of [var] reaching [dst] that may produce an element [dst]
-    reads, with the surviving dependence of each. A definition from outside the
-    analysed statement, or a node with no recorded read of [var], is kept as
-    [confused]. Under an [outermost] loop a definition is dropped when [dst]
-    always executes before the definition does. *)
-let flow_edges (statement_map : dep_info_map) (dst : label) (var : string) :
-    (label * dependence) list =
+    reads and can execute before [dst] does. *)
+let pruned_reaching_defns (statement_map : dep_info_map) (dst : label)
+    (var : string) : label Set.Poly.t =
   let _, info = LabelMap.find dst statement_map in
-  let reads = accesses_reading var info.accesses in
-  let surviving src dep =
-    if outermost statement_map info.loop then ordered_dependence ~src ~dst dep
-    else dep in
-  List.filter_map
-    (Set.Poly.to_list (reaching_defn_lookup info.reaching_defn_entry var))
-    ~f:(fun src ->
-      match LabelMap.find_opt src statement_map with
-      | None -> Some (src, confused)
-      | Some (_, src_info) -> (
-          match (accesses_writing var src_info.accesses, reads) with
-          | [], _ | _, [] -> Some (src, confused)
-          | writes, reads -> (
-              let same_loop = Option.equal Int.equal src_info.loop info.loop in
-              match surviving src (pair_dependence ~same_loop writes reads) with
-              | Independent -> None
-              | Dependent _ as dep -> Some (src, dep))))
-
-(** The labels of [flow_edges]: the definitions of [var] the node at [dst]
-    depends on. *)
-let pruned_reaching_defns statement_map dst var : label Set.Poly.t =
-  Set.Poly.of_list (List.map (flow_edges statement_map dst var) ~f:fst)
+  element_edges statement_map ~dst
+    ~sources:(reaching_defn_lookup info.reaching_defn_entry var)
+    ~src_accesses:(accesses_writing var)
+    ~dst_accesses:(accesses_reading var info.accesses)
+  |> List.filter_map ~f:(fun (src, dep) ->
+      match executes_first statement_map ~src ~dst dep with
+      | Independent -> None
+      | Dependent _ -> Some src)
+  |> Set.Poly.of_list
 
 let node_immediate_dependencies (statement_map : dep_info_map)
     ?(blockers : string Set.Poly.t = Set.Poly.empty) (label : label) :
@@ -416,11 +434,7 @@ let mir_uninitialized_variables (mir : Program.Typed.t) :
 (* Building the map                *)
 (***********************************)
 
-(** {2 Classifying subscripts} *)
-
-(** [left + right], or [left - right] with [~negate_right]; [None] when the
-    result would need two symbols or a negated symbol, which [linear] cannot
-    hold. *)
+(** [left ± right]; [None] when [linear] cannot hold the result. *)
 let linear_combine ~negate_right (left : linear) (right : linear) :
     linear option =
   let const =
@@ -434,9 +448,7 @@ let linear_combine ~negate_right (left : linear) (right : linear) :
       Some {const; symbol= None}
   | None, Some _ | Some _, Some _ -> None
 
-(** [left + right], or [left - right] with [~negate_right], when the result is
-    again [loopvar + offset] or [offset]; [None] otherwise, [Varying] included.
-*)
+(** [left ± right] when the result is again [Affine] or [Invariant]. *)
 let point_combine ~negate_right (left : point) (right : point) : point option =
   let combined wrap left_offset right_offset =
     Option.map (linear_combine ~negate_right left_offset right_offset) ~f:wrap
@@ -453,13 +465,6 @@ let point_combine ~negate_right (left : point) (right : point) : point option =
       combined (fun offset -> Invariant offset) left_offset right_offset
   | Invariant _, Affine _ | Affine _, Affine _ | Varying _, _ | _, Varying _ ->
       None
-
-(** Whether [name] is the loop variable; [loopvar] is [Some variable] inside a
-    [For] and [None] for a statement outside any loop. *)
-let is_loopvar ~(loopvar : string option) name =
-  match loopvar with
-  | Some loop_variable -> String.equal loop_variable name
-  | None -> false
 
 (** Whether [expr] mentions at least one variable in [names]. *)
 let mentions (names : string Set.Poly.t) (expr : Expr.Typed.t) =
@@ -486,7 +491,8 @@ let classify_point ~(loopvar : string option)
       | Some point -> point
       | None -> symbolic () in
     match expr.pattern with
-    | Var name when is_loopvar ~loopvar name -> Affine {const= 0; symbol= None}
+    | Var name when Option.equal String.equal loopvar (Some name) ->
+        Affine {const= 0; symbol= None}
     | Lit (Int, digits) -> (
         match Int.of_string_opt digits with
         | Some const -> Invariant {const; symbol= None}
@@ -505,8 +511,6 @@ let classify_subscript ~loopvar ~written_vars (index : Expr.Typed.t Index.t) :
     point Index.t =
   Index.map (classify_point ~loopvar ~written_vars) index
 
-(** {2 Accesses} *)
-
 (** Every variable reference inside [expr], in evaluation order; [target()]
     counts as a read of ["target"]; reads of the loop variable are omitted. *)
 let rec reads_in_expr ~loopvar ~written_vars ~label (expr : Expr.Typed.t) :
@@ -514,7 +518,7 @@ let rec reads_in_expr ~loopvar ~written_vars ~label (expr : Expr.Typed.t) :
   let reads_in = reads_in_expr ~loopvar ~written_vars ~label in
   let reads_in_all exprs = List.concat_map exprs ~f:reads_in in
   match expr.pattern with
-  | Var name when is_loopvar ~loopvar name -> []
+  | Var name when Option.equal String.equal loopvar (Some name) -> []
   | Var name -> [{var= name; subs= []; kind= Read; label}]
   | Lit _ -> []
   | Indexed ({pattern= Var name; _}, indices) ->
