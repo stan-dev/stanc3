@@ -308,15 +308,6 @@ let stmt_rhs_var_set stmt = Set.Poly.union_map (stmt_rhs stmt) ~f:expr_var_set
 let stmt_rhs_names_set s = Set.Poly.map ~f:fst (stmt_rhs_var_set s)
 
 (** See interface file *)
-let expr_assigned_var Expr.{pattern; _} =
-  match pattern with
-  | Var s -> s
-  | Indexed ({pattern= Var s; _}, _) -> s
-  | _ ->
-      Common.ICE.internal_error
-        "Unimplemented: analysis of assigning to non-var" [@coverage off]
-
-(** See interface file *)
 let rec summation_terms (Expr.{pattern; _} as rhs) =
   match pattern with
   | FunApp (Operator Plus, [e1; e2]) ->

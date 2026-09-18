@@ -446,7 +446,7 @@ let%expect_test "Pruning: whole-variable, gather and written symbols are kept" =
         target += t + sum(v);
       }
     |};
-  [%expect {| no definition pruned |}]
+  [%expect {| 9: dropped , kept 2 8 |}]
 
 let%expect_test "Pruning: definitions that execute after the read never flow" =
   print_pruned_edges
@@ -502,7 +502,7 @@ let%expect_test "Pruning: a while loop between the For and the statements" =
         }
       }
     |};
-  [%expect {| no definition pruned |}]
+  [%expect {| 15: dropped , kept 2 10 12 |}]
 
 let%expect_test "Pruning: a definition from an earlier iteration is kept" =
   print_pruned_edges
@@ -531,7 +531,13 @@ let%expect_test "Pruning: symbolic subscripts with different constants" =
         if (v[k + 2] > 0) target += 1;
       }
     |};
-  [%expect {| 9: dropped 7, kept 1 6 8 |}]
+  [%expect
+    {|
+    4: dropped , kept 1
+    7: dropped , kept 1 2
+    8: dropped , kept 1
+    9: dropped 7, kept 1 6 8
+    |}]
 
 let uninitialized_var_example =
   Test_utils.mir_of_string

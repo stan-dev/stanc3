@@ -46,8 +46,9 @@ val node_immediate_dependencies :
   dep_info_map -> ?blockers:string Set.Poly.t -> label -> label Set.Poly.t
 (** Given dependency information for each node, find the 'immediate'
     dependencies of a node: the first-degree control flow parents and the
-    reaching definitions of RHS variables, minus those whose subscripts cannot
-    reach the node's reads and those that always execute after the node. *)
+    reaching definitions of the variables the node's accesses read, minus those
+    whose subscripts cannot reach the reads and those that always execute after
+    the node. *)
 
 val node_dependencies : dep_info_map -> label -> label Set.Poly.t
 (** Given dependency information for each node, find all of the dependencies of
@@ -93,4 +94,4 @@ val mir_uninitialized_variables :
     the flowgraph starting at the given statement *)
 
 val rhs_variables_at : dep_info_map -> label Set.Poly.t -> string Set.Poly.t
-(** The right-hand-side variables of the statements at [labels]. *)
+(** The variables the statements at [labels] read, per the access model. *)

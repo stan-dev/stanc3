@@ -14,41 +14,31 @@ open Monotone_framework
     statements. Pedantic mode asks whether an [if] depends on a parameter; the
     factor graph asks which data and parameters feed each [target] term.
 
-    The data structure is built in four layers, each a map keyed by [label], an
-    [int] naming one MIR statement:
+    Four layers, each a map keyed by [label], an [int] naming one MIR statement:
     + {b Statement map} ([Dataflow_utils.build_statement_map]): every statement
-      gets a label in pre-order and is stored with the children replaced by the
-      children's labels.
-    + {b Control flow} ([Dataflow_utils.build_cf_graphs]): per label, the
-      statements that can run just before, and the {e control parents}, the
-      [if]/[while]/[for] nodes that decide whether the statement runs.
+      in pre-order, children replaced by the children's labels;
+    + {b Control flow} ([Dataflow_utils.build_cf_graphs]): the statements that
+      can run just before, and the {e control parents} ([if], [while], [for])
+      that decide whether the statement runs;
     + {b Reaching definitions} ([Monotone_framework.reaching_definitions_mfp]):
-      per label, pairs [(variable, label')] meaning "the statement at [label']
-      may be the last one to have assigned [variable]", keyed by name only.
+      pairs [(variable, label')], "the statement at [label'] may be the last to
+      have assigned [variable]", keyed by name only;
     + {b Accesses} (this module): the elements each statement reads and writes,
-      indices included, so that a definition of [theta[1]] can be ruled out as a
-      source for a read of [theta[2]].
+      indices included, so a definition of [theta[1]] is ruled out as a source
+      for a read of [theta[2]].
 
-    {2 Running example}
-
+    Running example, labels in the margin:
     {[
-      parameters { real a; }
-      model {
-        vector[2] theta;
-        theta[1] = a;          // label 5
-        theta[2] = 1;          // label 6
-        if (theta[2] > 0) ...  // label 7
-      }
+      theta[1] = a;          // 5
+      theta[2] = 1;          // 6
+      if (theta[2] > 0) ...  // 7
     ]}
-
     Node 7 reads [theta[2]]; the definitions of [theta] reaching node 7 are the
     declaration and nodes 5 and 6. The element test drops node 5, which writes
-    [theta[1]], so the dependencies of node 7 are the declaration and node 6,
-    and the [if] is not reported as depending on the parameter [a]. A definition
-    is also dropped when the element test allows only iterations in which the
-    definition executes after the read (design §7.7). *)
+    [theta[1]], so the [if] is not reported as depending on the parameter [a]. A
+    definition is also dropped when the element test allows only iterations in
+    which the definition executes after the read (design §7.7). *)
 
-(* Documented in the interface. *)
 type node_dep_info =
   { predecessors: label Set.Poly.t
   ; parents: label Set.Poly.t
@@ -63,10 +53,7 @@ type dep_info_map =
 
 type dependency_graph = label Set.Poly.t LabelMap.t
 
-(***********************************)
-(* Element test: can two accesses  *)
-(* name the same element?          *)
-(***********************************)
+(* ---- Element test: can two accesses name the same element? ---- *)
 
 let confused =
   Dependent {directions= Set.Poly.of_list [Lt; Eq; Gt]; distance= None}
@@ -124,8 +111,7 @@ let intersect_dependence (merged : dependence) (position : dependence) :
           { directions
           ; distance= Option.first_some merged_distance position_distance }
 
-(** Either dependence may hold (the join over several access pairs): directions
-    are unioned, the distance survives only when both agree. *)
+(** Either may hold: directions unioned, the distance kept only when equal. *)
 let union_dependence (left : dependence) (right : dependence) : dependence =
   match (left, right) with
   | Independent, other | other, Independent -> other
@@ -152,22 +138,16 @@ let access_dependence (source : access) (sink : access) : dependence =
           | _ -> confused in
         intersect_dependence merged position)
 
-(** The accesses to [var] whose kind satisfies [keep]. *)
+(** An [Increment] both reads and writes. *)
+let reads = function Read | Increment -> true | Write -> false
+
+let writes = function Write | Increment -> true | Read -> false
+
 let accesses_to (var : string) ~keep (accesses : access list) : access list =
   List.filter accesses ~f:(fun access ->
       String.equal access.var var && keep access.kind)
 
-let accesses_reading var =
-  accesses_to var ~keep:(function Read | Increment -> true | Write -> false)
-
-(** The accesses in [accesses] that write [var]: kind [Write] or [Increment]. *)
-let accesses_writing var =
-  accesses_to var ~keep:(function Write | Increment -> true | Read -> false)
-
-(***********************************)
-(* Reaching definitions, pruned by *)
-(* subscript                       *)
-(***********************************)
+(* ---- Reaching definitions, pruned by subscript ---- *)
 
 (** Find all of the reaching definitions of a variable in an RD set *)
 let reaching_defn_lookup (rds : reaching_defn Set.Poly.t) (var : string) :
@@ -176,17 +156,11 @@ let reaching_defn_lookup (rds : reaching_defn Set.Poly.t) (var : string) :
     (Set.Poly.filter rds ~f:(fun (defined, _) -> String.equal defined var))
     ~f:snd
 
-(** No loop encloses [loop], so one iteration is one execution of the body. *)
-let outermost (statement_map : dep_info_map) (loop : label option) =
-  match loop with
-  | None -> true
-  | Some label -> Option.is_none (snd (LabelMap.find label statement_map)).loop
-
 (** [dep] restricted to the directions under which the access at [src] executes
     before the access at [dst] (Kennedy and Allen 2001, Definition 2.1): an
     earlier iteration always does, the same iteration only when [src] is
-    lexically first. Labels are pre-order, so [src < dst] is lexical order.
-    Valid only when the shared innermost loop is [outermost]. *)
+    lexically first ([src < dst], labels being pre-order). Valid only when no
+    loop encloses the shared innermost loop. *)
 let ordered_dependence ~(src : label) ~(dst : label) (dep : dependence) :
     dependence =
   match dep with
@@ -199,18 +173,14 @@ let ordered_dependence ~(src : label) ~(dst : label) (dep : dependence) :
       if Set.Poly.is_empty directions then Independent
       else Dependent {directions; distance}
 
-(** The label of the analysed statement itself. [mir_reaching_definitions]
-    records definitions from outside the statement (data, parameters, function
-    arguments) at this label; the root is an [SList], a [For] or a function body
-    and writes nothing a node reads, so a source at this label always means
-    "defined outside". *)
+(** The analysed statement, where [mir_reaching_definitions] records definitions
+    from outside; the root writes nothing a node reads. *)
 let root_label : label = 1
 
-(** The join of [access_dependence] over each source access paired with each
-    sink access; two [Increment]s commute and are skipped (design §7.4).
-    [confused] when either side has no recorded access, and when the two nodes
-    do not share their innermost loop, because directions compare iterations of
-    one loop. *)
+(** The join of [access_dependence] over every source-sink pair, two
+    [Increment]s skipped (they commute, design §7.4); [confused] when a side has
+    no access, or the nodes' innermost loops differ (directions compare
+    iterations of one loop). *)
 let pair_dependence ~same_loop (sources : access list) (sinks : access list) :
     dependence =
   match (sources, sinks) with
@@ -228,9 +198,9 @@ let pair_dependence ~same_loop (sources : access list) (sinks : access list) :
       | Independent | Dependent _ -> joined)
 
 (** Every label in [sources] whose accesses (selected by [src_accesses]) can
-    name an element among [dst_accesses], with the raw dependence of the pair. A
-    source at [root_label], or one not in the map, is a definition from outside
-    the statement and is [confused]. *)
+    name an element among [dst_accesses], with the raw dependence of the pair; a
+    source outside the statement ([root_label], or not in the map) is
+    [confused]. *)
 let element_edges (statement_map : dep_info_map) ~(dst : label)
     ~(sources : label Set.Poly.t) ~(src_accesses : access list -> access list)
     ~(dst_accesses : access list) : (label * dependence) list =
@@ -248,37 +218,39 @@ let element_edges (statement_map : dep_info_map) ~(dst : label)
           | Dependent _ as dep -> Some (src, dep))
       | Some _ | None -> Some (src, confused))
 
-(** [dep] as the transitive closure sees it: under an [outermost] loop only the
-    directions in which [src] executes before [dst] survive. *)
-let executes_first (statement_map : dep_info_map) ~(src : label) ~(dst : label)
-    (dep : dependence) : dependence =
-  let _, dst_info = LabelMap.find dst statement_map in
-  if outermost statement_map dst_info.loop then ordered_dependence ~src ~dst dep
-  else dep
-
 (** The definitions of [var] reaching [dst] that may produce an element [dst]
-    reads and can execute before [dst] does. *)
+    reads and, when no loop encloses the node's loop, can execute first. *)
 let pruned_reaching_defns (statement_map : dep_info_map) (dst : label)
     (var : string) : label Set.Poly.t =
   let _, info = LabelMap.find dst statement_map in
+  (* one iteration of an outermost loop is one execution of the body *)
+  let ordered =
+    Option.value_map info.loop ~default:true ~f:(fun loop ->
+        Option.is_none (snd (LabelMap.find loop statement_map)).loop) in
   element_edges statement_map ~dst
     ~sources:(reaching_defn_lookup info.reaching_defn_entry var)
-    ~src_accesses:(accesses_writing var)
-    ~dst_accesses:(accesses_reading var info.accesses)
+    ~src_accesses:(accesses_to var ~keep:writes)
+    ~dst_accesses:(accesses_to var ~keep:reads info.accesses)
   |> List.filter_map ~f:(fun (src, dep) ->
-      match executes_first statement_map ~src ~dst dep with
+      match if ordered then ordered_dependence ~src ~dst dep else dep with
       | Independent -> None
       | Dependent _ -> Some src)
   |> Set.Poly.of_list
 
+(** Every variable the node reads or increments: right-hand sides, left-hand
+    side indices, declaration sizes and initializers, [target()]. *)
+let read_variables (info : node_dep_info) : string Set.Poly.t =
+  Set.Poly.of_list
+    (List.filter_map info.accesses ~f:(fun access ->
+         Option.some_if (reads access.kind) access.var))
+
 let node_immediate_dependencies (statement_map : dep_info_map)
     ?(blockers : string Set.Poly.t = Set.Poly.empty) (label : label) :
     label Set.Poly.t =
-  let stmt, info = LabelMap.find label statement_map in
-  let rhs_set = Set.Poly.map (stmt_rhs_var_set stmt) ~f:fst in
+  let _, info = LabelMap.find label statement_map in
   let rhs_deps =
     Set.Poly.union_map
-      (Set.Poly.diff rhs_set blockers)
+      (Set.Poly.diff (read_variables info) blockers)
       ~f:(pruned_reaching_defns statement_map label) in
   Set.Poly.union info.parents rhs_deps
 
@@ -467,8 +439,8 @@ let point_combine ~negate_right (left : point) (right : point) : point option =
       None
 
 (** The [point] of [expr] with respect to [loopvar], read through [+], [-] and
-    promotions; every other sub-expression is one symbol. [written_vars] must
-    not contain [loopvar]. *)
+    promotions; any other sub-expression is one symbol. [loopvar] is not in
+    [written_vars]. *)
 let classify_point ~(loopvar : string option)
     ~(written_vars : string Set.Poly.t) (expr : Expr.Typed.t) : point =
   let rec classify (expr : Expr.Typed.t) : point =
@@ -488,10 +460,9 @@ let classify_point ~(loopvar : string option)
     match expr.pattern with
     | Var name when Option.equal String.equal loopvar (Some name) ->
         Affine {const= 0; symbol= None}
-    | Lit (Int, digits) -> (
-        match Int.of_string_opt digits with
-        | Some const -> Invariant {const; symbol= None}
-        | None -> symbolic ())
+    | Lit (Int, digits) ->
+        Option.value_map (Int.of_string_opt digits) ~default:(symbolic ())
+          ~f:(fun const -> Invariant {const; symbol= None})
     | Promotion (inner, _, _) -> classify inner
     | FunApp (Operator Plus, [lhs; rhs]) -> combine ~negate_right:false lhs rhs
     | FunApp (Operator Minus, [lhs; rhs]) -> combine ~negate_right:true lhs rhs
@@ -506,10 +477,10 @@ let classify_subscript ~loopvar ~written_vars (index : Expr.Typed.t Index.t) :
     point Index.t =
   Index.map (classify_point ~loopvar ~written_vars) index
 
-(** [Some (name, indices)] when [expr] is a variable under one or more index
-    lists whose inner lists are all [Single], so a read [x[i][j]] is [x[i, j]],
-    the form [Ast_to_Mir] already gives the assignment side; [None] when a slice
-    sits under another index or the base is not a variable. *)
+(** [Some (name, indices)] when [expr] is a variable under index lists whose
+    inner lists are all [Single]: a read [x[i][j]] is [x[i, j]], as [Ast_to_Mir]
+    already writes the assignment side; [None] for a slice under another index.
+*)
 let rec indexed_variable (expr : Expr.Typed.t) :
     (string * Expr.Typed.t Index.t list) option =
   match expr.pattern with
@@ -525,8 +496,7 @@ let rec indexed_variable (expr : Expr.Typed.t) :
   | _ -> None
 
 (** Every variable reference inside [expr], in evaluation order; [target()]
-    reads ["target"] and a [_lp] or [_jacobian] call increments the same; reads
-    of the loop variable are omitted. *)
+    reads ["target"], a [_lp] call increments; the loop variable is omitted. *)
 let rec reads_in_expr ~loopvar ~written_vars (expr : Expr.Typed.t) : access list
     =
   let reads_in = reads_in_expr ~loopvar ~written_vars in
@@ -558,9 +528,7 @@ let rec reads_in_expr ~loopvar ~written_vars (expr : Expr.Typed.t) : access list
 
 (** The innermost [For] or [While] enclosing [label]. [parents] from
     [build_cf_graphs] holds at most one control-flow node, the nearest [if],
-    [while] or [for] ("only control flow nodes should pass themselves down as
-    parents"); the other members are [break] and [continue] labels, so the first
-    control-flow member is the innermost. *)
+    [while] or [for]; the other members are [break] and [continue] labels. *)
 let rec enclosing_loop statement_map parents (label : label) : label option =
   let pattern_of node = fst (LabelMap.find node statement_map) in
   let ctrl_parent =
@@ -574,18 +542,9 @@ let rec enclosing_loop statement_map parents (label : label) : label option =
       | Stmt.Pattern.For _ | While _ -> Some parent
       | _ -> enclosing_loop statement_map parents parent)
 
-(** The loop variable of the [For] at [loop]; [None] for a [While] or no loop.
-*)
-let loopvar_of statement_map (loop : label option) : string option =
-  Option.bind loop ~f:(fun label ->
-      match fst (LabelMap.find label statement_map) with
-      | Stmt.Pattern.For {loopvar; _} -> Some loopvar
-      | _ -> None)
-
-(** The accesses of one statement alone, reads before the write; substatements
-    are not visited, so an [if] or a loop contributes only the condition or
-    bounds. [target += e] and a [_lp] or [_jacobian] call are one [Increment].
-*)
+(** The accesses of one statement alone, reads before the write; an [if] or a
+    loop contributes only the condition or bounds. [target += e] and a [_lp] or
+    [_jacobian] call are one [Increment]. *)
 let node_accesses ~loopvar ~written_vars
     (stmt : (Expr.Typed.t, 'substatement) Stmt.Pattern.t) : access list =
   (* the loop variable is the induction variable here, not a written symbol *)
@@ -596,20 +555,19 @@ let node_accesses ~loopvar ~written_vars
   let reads_in_all exprs = List.concat_map exprs ~f:reads_in in
   let increment_target = {var= "target"; subs= []; kind= Increment} in
   match stmt with
-  | Assignment ((LVariable name, indices), _, rhs) ->
+  | Assignment (((lbase, indices) as lhs), _, rhs) ->
+      (* a tuple projection is a write of the whole variable *)
       let subs =
-        List.map indices ~f:(classify_subscript ~loopvar ~written_vars) in
+        match lbase with
+        | LVariable _ ->
+            List.map indices ~f:(classify_subscript ~loopvar ~written_vars)
+        | LTupleProjection _ -> [] in
       reads_in_all (List.concat_map indices ~f:Index.bounds)
       @ reads_in rhs
-      @ [{var= name; subs; kind= Write}]
-  | Assignment (((LTupleProjection _, _) as lhs), _, rhs) ->
-      reads_in_all
-        (List.concat_map (Stmt.Helpers.lhs_indices lhs) ~f:Index.bounds)
-      @ reads_in rhs
-      @ [{var= Stmt.Helpers.lhs_variable lhs; subs= []; kind= Write}]
-  | Decl {decl_id; initialize= Assign init; _} ->
-      reads_in init @ [{var= decl_id; subs= []; kind= Write}]
-  | Decl {decl_id; _} -> [{var= decl_id; subs= []; kind= Write}]
+      @ [{var= Stmt.Helpers.lhs_variable lhs; subs; kind= Write}]
+  | Decl {decl_id; initialize; _} ->
+      (match initialize with Assign init -> reads_in init | _ -> [])
+      @ [{var= decl_id; subs= []; kind= Write}]
   | TargetPE operand | JacobianPE operand ->
       reads_in operand @ [increment_target]
   | NRFunApp
@@ -642,6 +600,12 @@ let build_dep_info_map (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
   let loops =
     LabelMap.mapi statement_map ~f:(fun label _ ->
         enclosing_loop statement_map parents label) in
+  (* the loop variable of a [For]; a [While] has none *)
+  let loopvar_of loop =
+    Option.bind loop ~f:(fun label ->
+        match fst (LabelMap.find label statement_map) with
+        | Stmt.Pattern.For {loopvar; _} -> Some loopvar
+        | _ -> None) in
   LabelMap.mapi statement_map ~f:(fun label (pattern, meta) ->
       let rds = LabelMap.find label rd_map in
       let loop = LabelMap.find label loops in
@@ -652,9 +616,7 @@ let build_dep_info_map (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
         ; reaching_defn_exit= rds.exit
         ; loop
         ; accesses=
-            node_accesses
-              ~loopvar:(loopvar_of statement_map loop)
-              ~written_vars pattern
+            node_accesses ~loopvar:(loopvar_of loop) ~written_vars pattern
         ; meta } ))
 
 let log_prob_build_dep_info_map (mir : Program.Typed.t) : dep_info_map =
@@ -670,9 +632,8 @@ let log_prob_dependency_graph (mir : Program.Typed.t) : dependency_graph =
 (* Queries                         *)
 (***********************************)
 
-(** The variables read by the statements at [labels], where [Mir_utils.stmt_rhs]
-    defines which positions of a statement count as reads. *)
+(** The variables read by the statements at [labels]. *)
 let rhs_variables_at (statement_map : dep_info_map) (labels : label Set.Poly.t)
     : string Set.Poly.t =
   Set.Poly.union_map labels ~f:(fun label ->
-      stmt_rhs_names_set (fst (LabelMap.find label statement_map)))
+      read_variables (snd (LabelMap.find label statement_map)))

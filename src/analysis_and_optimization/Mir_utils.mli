@@ -115,11 +115,6 @@ val expr_var_set : Expr.Typed.t -> (string * Expr.Typed.Meta.t) Set.Poly.t
 (** The set of variables in an expression, including inside an index. For use in
     RHS sets, not LHS assignment sets, except in a target term. *)
 
-val index_var_set :
-  Expr.Typed.t Index.t -> (string * Expr.Typed.Meta.t) Set.Poly.t
-(** The set of variables in an index. For use in RHS sets, not LHS assignment
-    sets, except in a target term *)
-
 val expr_var_names_set : Expr.Typed.t -> string Set.Poly.t
 (** Return the names of the variables in an expression. *)
 
@@ -136,9 +131,6 @@ val stmt_rhs_var_set :
 val stmt_rhs_names_set : ('a Expr.t, 'b) Stmt.Pattern.t -> string Set.Poly.t
 (** The set of variable names in an expression, including inside an index. For
     use in RHS sets, not LHS assignment sets, except in a target term. *)
-
-val expr_assigned_var : Expr.Typed.t -> string
-(** The variable being assigned to when the expression is the LHS *)
 
 val summation_terms : Expr.Typed.t -> Expr.Typed.t list
 (** The list of terms in expression separated by a + *)
