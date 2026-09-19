@@ -46,10 +46,24 @@ let output_callback break output_file printed_filename :
       print_string s
   | Warnings ws -> Warnings.pp_warnings Fmt.stderr ?printed_filename ws
 
+let setup_colors tty_colors =
+  let setup channel formatter =
+    let renderer =
+      match tty_colors with
+      | Some renderer -> renderer
+      | None -> (
+          match Sys.getenv_opt "TERM" with
+          | None | Some "" | Some "dumb" -> `None
+          | Some _ -> if Out_channel.isatty channel then `Ansi_tty else `None)
+    in
+    Fmt.set_style_renderer formatter renderer in
+  setup stdout Fmt.stdout;
+  setup stderr Fmt.stderr
+
 let stanc ?tty_colors ?(debug_lex : bool = false) ?(debug_parse : bool = false)
     ?(print_cpp : bool = false) ?name ~output_file ~model_file
     (flags : Driver.Flags.t) =
-  Fmt_tty.setup_std_outputs ?style_renderer:tty_colors ();
+  setup_colors tty_colors;
   Debugging.lexer_logging := debug_lex;
   Debugging.grammar_logging := debug_parse;
   (* if we only have functions, always compile as standalone *)
