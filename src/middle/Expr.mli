@@ -71,6 +71,17 @@ module Helpers : sig
   val tuple_expr : Typed.t list -> Typed.t
   val loop_bottom : Typed.t
   val internal_funapp : 'a t Internal_fun.t -> 'a t list -> 'a -> 'a t
+
+  val stanlib_funapp :
+    ?mem_pattern:Mem_pattern.t -> string -> 'a t list -> 'a -> 'a t
+  (** Build a plain (non-suffixed) Stan Math library call. *)
+
+  val rep_like : ?mem_pattern:Mem_pattern.t -> Typed.t -> Typed.t -> Typed.t
+  (** [rep_like like fill] builds the [rep_vector], [rep_row_vector], or
+      [rep_matrix] call filling a container of the same shape as [like] (sized
+      with [rows]/[cols] of [like]) with the scalar [fill]. The result carries
+      [fill]'s metadata with [like]'s type. *)
+
   val contains_fn_kind : ('a t Fun_kind.t -> bool) -> ?init:bool -> 'a t -> bool
   val infer_type_of_indexed : UnsizedType.t -> 'a Index.t list -> UnsizedType.t
   val add_int_index : Typed.t -> Typed.t Index.t -> Typed.t

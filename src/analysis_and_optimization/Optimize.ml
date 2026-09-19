@@ -1460,6 +1460,13 @@ let optimize_ad_levels (mir : Program.Typed.t) =
     demoted to AoS as well as updating functions and objects after these
     assignment passes that then also need to be AoS.
 
+    Finally, [Memory_patterns.promote_scalars_stmts] inserts [rep_*] wrappers
+    around autodiffable scalar arguments of elementwise broadcast functions
+    (e.g. [fma(ad_scalar, data_vector, ad_scalar)]) whose final tag is SoA. The
+    initial analysis already summarized those calls as if promoted, so a call
+    that the framework kept SoA is rewritten here and a call demoted to AoS is
+    left untouched.
+
     @param mir: The program's whole MIR. *)
 let optimize_soa (mir : Program.Typed.t) =
   let gen_aos_variables
@@ -1486,7 +1493,10 @@ let optimize_soa (mir : Program.Typed.t) =
         ICE.internal_error
           "Something went wrong with program transformation packing!"
         [@coverage off] in
-  {mir with reverse_mode_log_prob= transform' mir.reverse_mode_log_prob}
+  { mir with
+    reverse_mode_log_prob=
+      Memory_patterns.promote_scalars_stmts
+        (transform' mir.reverse_mode_log_prob) }
 
 (* Apparently you need to completely copy/paste type definitions between ml and
    mli files?*)
@@ -1538,7 +1548,7 @@ let level_optimizations (lvl : optimization_level) : optimization_settings =
       { function_inlining= true
       ; static_loop_unrolling= false
       ; one_step_loop_unrolling= false
-      ; vectorize_loops= false
+      ; vectorize_loops= true
       ; list_collapsing= true
       ; block_fixing= true
       ; constant_propagation= true
