@@ -103,7 +103,7 @@ let%expect_test "Variable dependency example" =
 
 (** Prints [k+1], [k], [-2]; with [leading] the symbol drops the leading [+] and
     a bare constant is printed even when the constant is [0]. *)
-let pp_linear ~leading ppf ({const; symbol} : linear) =
+let pp_linear ~leading ppf ({const; symbol; _} : linear) =
   let sign ~first value = if value < 0 then "-" else if first then "" else "+" in
   Option.iter symbol ~f:(fun symbol ->
       Fmt.pf ppf "%s%a" (sign ~first:leading 1) Expr.Typed.pp symbol);
@@ -115,13 +115,12 @@ let pp_varying_kind ppf = function
   | Written -> Fmt.string ppf "written"
   | Nonlinear -> Fmt.string ppf "nonlinear"
 
-(** [n], [n+1], [n+k-1] for [Affine] in the loop over [n]; [3], [k+1] for
-    [Invariant]; [?written] and [?nonlinear] for [Varying]. *)
+(** [n], [n+1], [n+k-1] for [Affine] in the loop over [n]; [3], [k+1] when
+    invariant; [?written] and [?nonlinear] for [Varying]. *)
 let pp_point ppf = function
-  | Invariant offset -> pp_linear ~leading:true ppf offset
-  | Affine {loopvar; offset} ->
-      Fmt.string ppf loopvar;
-      pp_linear ~leading:false ppf offset
+  | Affine ({loopvar; _} as term) ->
+      Option.iter loopvar ~f:(Fmt.string ppf);
+      pp_linear ~leading:(Option.is_none loopvar) ppf term
   | Varying kind -> Fmt.pf ppf "?%a" pp_varying_kind kind
 
 (** Prints [n+1], [:], [k:], [1:k]; a multi-index is braced as [{idxs}] because

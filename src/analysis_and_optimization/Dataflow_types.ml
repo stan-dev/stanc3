@@ -18,9 +18,12 @@ type reaching_defn = string * label [@@deriving sexp_of]
 (* Access model                    *)
 (***********************************)
 
-(** An integer constant plus at most one loop-invariant symbol, an expression
-    compared structurally; [k + 1] is [{const = 1; symbol = Some k}]. *)
-type linear = {const: int; symbol: Middle.Expr.Typed.t option}
+(** An integer constant, at most one loop-invariant symbol (an expression
+    compared structurally) and at most one enclosing loop variable: [k + 1] is
+    [{const = 1; symbol = Some k; loopvar = None}], [n + k] is
+    [{0; Some k; Some "n"}]. *)
+type linear =
+  {const: int; symbol: Middle.Expr.Typed.t option; loopvar: string option}
 [@@deriving sexp_of, compare]
 
 (** Why an index expression is not [loopvar + offset] or [offset]. *)
@@ -35,11 +38,9 @@ type varying_kind =
 (** One integer index expression as a function of the enclosing loop variables
     (Goff, Kennedy and Tseng 1991, stride 1). *)
 type point =
-  | Invariant of linear
-      (** free of every loop variable and of the written set (ZIV) *)
-  | Affine of {loopvar: string; offset: linear}
-      (** [loopvar + offset] for one enclosing loop (SIV); [v[n]] is
-          [{loopvar = "n"; offset = {const = 0; symbol = None}}] *)
+  | Affine of linear
+      (** invariant when [loopvar] is [None] (ZIV), else [loopvar + offset] for
+          one enclosing loop (SIV); neither mentions the written set *)
   | Varying of varying_kind
       (** not comparable by the element test; any pair is [confused] *)
 [@@deriving sexp_of, compare]

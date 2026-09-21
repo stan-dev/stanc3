@@ -72,28 +72,25 @@ let linear_difference (left : linear) (right : linear) : int option =
     (Option.equal Expr.Typed.equal left.symbol right.symbol)
     (left.const - right.const)
 
-(** The dependence between two single index expressions over [frame]; a variable
-    of a loop not enclosing both ranges over many elements. *)
+(** The dependence between two single index expressions over [frame] (Goff,
+    Kennedy and Tseng 1991 §3): ZIV without a loop variable, strong SIV with a
+    shared one; a variable of a loop not enclosing both ranges over many
+    elements. *)
 let point_dependence (frame : frame) (source : point) (sink : point) :
     dependence =
   match (source, sink) with
   | Affine source_term, Affine sink_term
-    when String.equal source_term.loopvar sink_term.loopvar
-         && List.mem (Some source_term.loopvar) ~set:frame -> (
-      (* strong SIV (Goff, Kennedy and Tseng 1991 §3); shared symbols cancel *)
-      match linear_difference source_term.offset sink_term.offset with
-      | Some distance ->
+    when Option.equal String.equal source_term.loopvar sink_term.loopvar -> (
+      match (linear_difference source_term sink_term, source_term.loopvar) with
+      | None, _ | Some 0, None -> confused frame
+      | Some _, None -> Independent
+      | Some distance, Some loopvar when List.mem (Some loopvar) ~set:frame ->
           let direction =
             if distance = 0 then Eq else if distance > 0 then Lt else Gt in
-          at_level frame source_term.loopvar
+          at_level frame loopvar
             {directions= Set.Poly.singleton direction; distance= Some distance}
-      | None -> confused frame)
-  | Invariant source_offset, Invariant sink_offset -> (
-      (* ZIV: with the same symbol the elements differ iff the constants do *)
-      match linear_difference source_offset sink_offset with
-      | Some 0 | None -> confused frame
-      | Some _ -> Independent)
-  | Affine _, _ | _, Affine _ | Varying _, _ | _, Varying _ -> confused frame
+      | Some _, Some _ -> confused frame)
+  | Affine _, Affine _ | Varying _, _ | _, Varying _ -> confused frame
 
 (** The dependence at both [merged] and [position]: [Independent] if either is,
     or if at some level no direction or no distance suits both. *)
@@ -413,41 +410,26 @@ let mir_uninitialized_variables (mir : Program.Typed.t) :
 (* Building the map                *)
 (***********************************)
 
-(** [left ± right]; [None] when [linear] cannot hold the result. *)
+(** [left ± right]; [None] when [linear] cannot hold the result: two symbols,
+    two loop variables, or a negated one. *)
 let linear_combine ~negate_right (left : linear) (right : linear) :
     linear option =
+  (* one term of each kind survives; equal terms cancel under subtraction *)
+  let combine ~equal left_term right_term =
+    match (left_term, right_term) with
+    | term, None -> Some term
+    | None, Some _ when not negate_right -> Some right_term
+    | Some left_value, Some right_value
+      when negate_right && equal left_value right_value ->
+        Some None
+    | None, Some _ | Some _, Some _ -> None in
   let const =
     if negate_right then left.const - right.const else left.const + right.const
   in
-  match (left.symbol, right.symbol) with
-  | symbol, None -> Some {const; symbol}
-  | None, Some _ when not negate_right -> Some {const; symbol= right.symbol}
-  | Some left_symbol, Some right_symbol
-    when negate_right && Expr.Typed.equal left_symbol right_symbol ->
-      Some {const; symbol= None}
-  | None, Some _ | Some _, Some _ -> None
-
-(** [left ± right] when the result is again [Affine] or [Invariant]. *)
-let point_combine ~negate_right (left : point) (right : point) : point option =
-  let combined wrap left_offset right_offset =
-    Option.map (linear_combine ~negate_right left_offset right_offset) ~f:wrap
-  in
-  match (left, right) with
-  | Invariant left_offset, Invariant right_offset ->
-      combined (fun offset -> Invariant offset) left_offset right_offset
-  | Affine {loopvar; offset= left_offset}, Invariant right_offset ->
-      combined (fun offset -> Affine {loopvar; offset}) left_offset right_offset
-  | Invariant left_offset, Affine {loopvar; offset= right_offset}
-    when not negate_right ->
-      combined (fun offset -> Affine {loopvar; offset}) left_offset right_offset
-  | Affine left_term, Affine right_term
-    when negate_right && String.equal left_term.loopvar right_term.loopvar ->
-      (* [(n + o1) - (n + o2)]: the loop variable cancels *)
-      combined
-        (fun offset -> Invariant offset)
-        left_term.offset right_term.offset
-  | Invariant _, Affine _ | Affine _, Affine _ | Varying _, _ | _, Varying _ ->
-      None
+  Option.bind (combine ~equal:Expr.Typed.equal left.symbol right.symbol)
+    ~f:(fun symbol ->
+      Option.map (combine ~equal:String.equal left.loopvar right.loopvar)
+        ~f:(fun loopvar -> {const; symbol; loopvar}))
 
 (** The [point] of [expr] over the enclosing [loopvars], read through [+], [-]
     and promotions; any other sub-expression is one symbol. *)
@@ -458,18 +440,21 @@ let classify_point ~(loopvars : string Set.Poly.t)
     let names = expr_var_names_set expr in
     if not (Set.Poly.disjoint names written_vars) then Varying Written
     else if not (Set.Poly.disjoint names loopvars) then Varying Nonlinear
-    else Invariant {const= 0; symbol= Some expr} in
+    else Affine {const= 0; symbol= Some expr; loopvar= None} in
   let rec classify (expr : Expr.Typed.t) : point =
     let combine ~negate_right lhs rhs =
-      match point_combine ~negate_right (classify lhs) (classify rhs) with
-      | Some point -> point
-      | None -> symbolic expr in
+      match (classify lhs, classify rhs) with
+      | Affine left_term, Affine right_term -> (
+          match linear_combine ~negate_right left_term right_term with
+          | Some term -> Affine term
+          | None -> symbolic expr)
+      | Varying _, _ | _, Varying _ -> symbolic expr in
     match expr.pattern with
     | Var name when Set.Poly.mem name loopvars ->
-        Affine {loopvar= name; offset= {const= 0; symbol= None}}
+        Affine {const= 0; symbol= None; loopvar= Some name}
     | Lit (Int, digits) -> (
         match Int.of_string_opt digits with
-        | Some const -> Invariant {const; symbol= None}
+        | Some const -> Affine {const; symbol= None; loopvar= None}
         | None -> symbolic expr)
     | Promotion (inner, _, _) -> classify inner
     | FunApp (Operator Plus, [lhs; rhs]) -> combine ~negate_right:false lhs rhs
