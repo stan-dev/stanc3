@@ -275,21 +275,18 @@ It had type 'object' instead of 'string'.
 Warning: stanc.js failed to parse included file mapping:
 Failed to convert stanc.js argument 'includes'!
 It had type 'number' instead of 'object'.
-error: File 'include/a.stan' recursively included itself.
+error: File 'include/b.stan' recursively included itself.
 
     ┌─ include/a.stan:2:1
   1 │  // comment here
   2 │  #include <include/b.stan>
-    │  --------
-    │  │
-    │  file 'include/b.stan' included here
-    │  file 'include/b.stan' included here
-    ┌─ include/b.stan:1:1
-  1 │  #include <include/a.stan>
     │  ^^^^^^^^^^^^^^^^^^^^^^^^^
     │  │                        
     │  here.
-    │  file 'include/a.stan' included here
+    │  file 'include/b.stan' included here
+    ┌─ include/b.stan:1:1
+  1 │  #include <include/a.stan>
+    │  -------- file 'include/a.stan' included here
   2 │   // comment here
 
 $ node info.js

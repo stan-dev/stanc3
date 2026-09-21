@@ -130,9 +130,6 @@ let find_include fname =
   | InMemory map -> find_include_inmemory map fname
 
 let try_get_new_lexbuf fname =
-  let prior_loc =
-    let lexbuf = Stack.top include_stack in
-    location_of_position lexbuf.lex_start_p in
   let new_lexbuf =
     let buf, file = find_include fname in
     let buf =
@@ -145,7 +142,8 @@ let try_get_new_lexbuf fname =
         lexer_logger ("opened " ^ file);
         included_files := file :: !included_files;
         buf) in
-    new_file_start_position buf file (Some prior_loc);
+    new_file_start_position buf file
+      (Some (location_of_position (Stack.top include_stack).lex_start_p));
     buf in
   let dup_exists {Middle.Location.filename; included_from; _} =
     let is_dup = String.equal filename in
@@ -154,7 +152,7 @@ let try_get_new_lexbuf fname =
       | Some {Middle.Location.filename; included_from; _} ->
           if is_dup filename then true else go included_from in
     go included_from in
-  if dup_exists prior_loc then
+  if dup_exists (location_of_position new_lexbuf.lex_start_p) then
     include_error (Fmt.str "File '%s' recursively included itself." fname);
   Stack.push new_lexbuf include_stack;
   new_lexbuf

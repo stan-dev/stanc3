@@ -60,20 +60,15 @@ let%expect_test "recursive include" =
   print_ast_or_error a;
   [%expect
     {|
-    error: File 'include/a.stan' recursively included itself.
+    error: File 'include/b.stan' recursively included itself.
 
         ┌─ include/a.stan:3:1
-      2 │  // comment here
       3 │  #include <include/b.stan>
-        │  -------- file 'include/b.stan' included here
-      4 │
+        │  ^^^^^^^^^^^^^^^^^^^^^^^^^ here.
         ┌─ include/b.stan:2:1
       1 │
       2 │  #include <include/a.stan>
-        │  ^^^^^^^^^^^^^^^^^^^^^^^^^
-        │  │
-        │  here.
-        │  file 'include/a.stan' included here
+        │  -------- file 'include/a.stan' included here
       3 │  // comment here
         ┌─ string:3:1
       2 │  // comment here

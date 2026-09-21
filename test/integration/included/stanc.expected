@@ -3,17 +3,28 @@ error: File 'badrecurse1.stan' recursively included itself.
 
     ┌─ ../included/badrecurse1.stan:1:1
   1 │  #include badrecurse1.stan
-    │  ^^^^^^^^^^^^^^^^^^^^^^^^^
-    │  │                        
-    │  here.
-    │  file '../included/badrecurse1.stan' included here
-  2 │  
+    │  ^^^^^^^^^^^^^^^^^^^^^^^^^ here.
     ┌─ badrecurse1.stan:1:1
   1 │  #include badrecurse1.stan
     │  -------- file '../included/badrecurse1.stan' included here
   2 │  
 [exit 1]
   $ stanc --include-paths="../included"  badrecurse2.stan
+error: File 'badrecurse3.stan' recursively included itself.
+
+    ┌─ ../included/badrecurse2.stan:1:1
+  1 │  #include badrecurse3.stan
+    │  ^^^^^^^^^^^^^^^^^^^^^^^^^ here.
+    ┌─ ../included/badrecurse3.stan:1:1
+  1 │  #include badrecurse2.stan
+    │  -------- file '../included/badrecurse2.stan' included here
+  2 │  
+    ┌─ badrecurse2.stan:1:1
+  1 │  #include badrecurse3.stan
+    │  -------- file '../included/badrecurse3.stan' included here
+  2 │  
+[exit 1]
+  $ stanc --include-paths="../included"  badrecurse3.stan
 error: File 'badrecurse2.stan' recursively included itself.
 
     ┌─ ../included/badrecurse2.stan:1:1
@@ -22,30 +33,7 @@ error: File 'badrecurse2.stan' recursively included itself.
   2 │  
     ┌─ ../included/badrecurse3.stan:1:1
   1 │  #include badrecurse2.stan
-    │  ^^^^^^^^^^^^^^^^^^^^^^^^^
-    │  │                        
-    │  here.
-    │  file '../included/badrecurse2.stan' included here
-  2 │  
-    ┌─ badrecurse2.stan:1:1
-  1 │  #include badrecurse3.stan
-    │  -------- file '../included/badrecurse3.stan' included here
-  2 │  
-[exit 1]
-  $ stanc --include-paths="../included"  badrecurse3.stan
-error: File 'badrecurse3.stan' recursively included itself.
-
-    ┌─ ../included/badrecurse2.stan:1:1
-  1 │  #include badrecurse3.stan
-    │  ^^^^^^^^^^^^^^^^^^^^^^^^^
-    │  │                        
-    │  here.
-    │  file '../included/badrecurse3.stan' included here
-  2 │  
-    ┌─ ../included/badrecurse3.stan:1:1
-  1 │  #include badrecurse2.stan
-    │  -------- file '../included/badrecurse2.stan' included here
-  2 │  
+    │  ^^^^^^^^^^^^^^^^^^^^^^^^^ here.
     ┌─ badrecurse3.stan:1:1
   1 │  #include badrecurse2.stan
     │  -------- file '../included/badrecurse2.stan' included here
