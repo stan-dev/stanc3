@@ -316,15 +316,12 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
             - 1)];
           arr_tuple_tuple_dot_2_flat__pos__ = (arr_tuple_tuple_dot_2_flat__pos__
             + 1);
-          stan::model::assign(std::get<0>(arr_tuple_tuple_dot_3_temp__),
-            arr_tuple_tuple_dot_3_dot_1_flat__[(arr_tuple_tuple_dot_3_dot_1_flat__pos__
-            - 1)], "assigning variable arr_tuple_tuple_dot_3_temp__.1");
+          std::get<0>(arr_tuple_tuple_dot_3_temp__) = arr_tuple_tuple_dot_3_dot_1_flat__[(arr_tuple_tuple_dot_3_dot_1_flat__pos__
+            - 1)];
           arr_tuple_tuple_dot_3_dot_1_flat__pos__ = (arr_tuple_tuple_dot_3_dot_1_flat__pos__
             + 1);
-          stan::model::assign(
-            std::get<0>(std::get<1>(arr_tuple_tuple_dot_3_temp__)),
-            arr_tuple_tuple_dot_3_dot_2_dot_1_flat__[(arr_tuple_tuple_dot_3_dot_2_dot_1_flat__pos__
-            - 1)], "assigning variable arr_tuple_tuple_dot_3_temp__.2.1");
+          std::get<0>(std::get<1>(arr_tuple_tuple_dot_3_temp__)) = arr_tuple_tuple_dot_3_dot_2_dot_1_flat__[(arr_tuple_tuple_dot_3_dot_2_dot_1_flat__pos__
+            - 1)];
           arr_tuple_tuple_dot_3_dot_2_dot_1_flat__pos__ = (arr_tuple_tuple_dot_3_dot_2_dot_1_flat__pos__
             + 1);
           {
@@ -2138,15 +2135,12 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
             - 1)];
           arr_tuple_tuple_p_dot_2_flat__pos__ = (arr_tuple_tuple_p_dot_2_flat__pos__
             + 1);
-          stan::model::assign(std::get<0>(arr_tuple_tuple_p_dot_3_temp__),
-            arr_tuple_tuple_p_dot_3_dot_1_flat__[(arr_tuple_tuple_p_dot_3_dot_1_flat__pos__
-            - 1)], "assigning variable arr_tuple_tuple_p_dot_3_temp__.1");
+          std::get<0>(arr_tuple_tuple_p_dot_3_temp__) = arr_tuple_tuple_p_dot_3_dot_1_flat__[(arr_tuple_tuple_p_dot_3_dot_1_flat__pos__
+            - 1)];
           arr_tuple_tuple_p_dot_3_dot_1_flat__pos__ = (arr_tuple_tuple_p_dot_3_dot_1_flat__pos__
             + 1);
-          stan::model::assign(
-            std::get<0>(std::get<1>(arr_tuple_tuple_p_dot_3_temp__)),
-            arr_tuple_tuple_p_dot_3_dot_2_dot_1_flat__[(arr_tuple_tuple_p_dot_3_dot_2_dot_1_flat__pos__
-            - 1)], "assigning variable arr_tuple_tuple_p_dot_3_temp__.2.1");
+          std::get<0>(std::get<1>(arr_tuple_tuple_p_dot_3_temp__)) = arr_tuple_tuple_p_dot_3_dot_2_dot_1_flat__[(arr_tuple_tuple_p_dot_3_dot_2_dot_1_flat__pos__
+            - 1)];
           arr_tuple_tuple_p_dot_3_dot_2_dot_1_flat__pos__ = (arr_tuple_tuple_p_dot_3_dot_2_dot_1_flat__pos__
             + 2);
           {

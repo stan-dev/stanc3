@@ -20848,7 +20848,9 @@ Optimization hazard warning (Line 6): SoA warning: The right hand side of the as
                                         (meta
                                          ((type_
                                            (UTuple ((UArray UMatrix) UMatrix UMatrix)))
-                                          (loc <opaque>) (adlevel DataOnly))))
+                                          (loc <opaque>)
+                                          (adlevel
+                                           (TupleAD (DataOnly DataOnly DataOnly))))))
                                        1))
                                      (meta
                                       ((type_ (UArray UMatrix)) (loc <opaque>)
@@ -20885,7 +20887,7 @@ Optimization hazard warning (Line 6): SoA warning: The right hand side of the as
             ((pattern (Var xx))
              (meta
               ((type_ (UTuple ((UArray UMatrix) UMatrix UMatrix))) (loc <opaque>)
-               (adlevel DataOnly))))
+               (adlevel (TupleAD (DataOnly DataOnly DataOnly))))))
             2))
           (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
       ()))
@@ -20900,7 +20902,7 @@ Optimization hazard warning (Line 6): SoA warning: The right hand side of the as
             ((pattern (Var xx))
              (meta
               ((type_ (UTuple ((UArray UMatrix) UMatrix UMatrix))) (loc <opaque>)
-               (adlevel DataOnly))))
+               (adlevel (TupleAD (DataOnly DataOnly DataOnly))))))
             3))
           (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
       ()))
@@ -21258,7 +21260,7 @@ Optimization hazard warning (Line 6): SoA warning: The right hand side of the as
             ((pattern (Var xx))
              (meta
               ((type_ (UTuple ((UArray UMatrix) UMatrix UMatrix))) (loc <opaque>)
-               (adlevel DataOnly))))
+               (adlevel (TupleAD (DataOnly DataOnly DataOnly))))))
             1))
           (meta ((type_ (UArray UMatrix)) (loc <opaque>) (adlevel DataOnly)))))))
       ()))
@@ -21273,7 +21275,7 @@ Optimization hazard warning (Line 6): SoA warning: The right hand side of the as
             ((pattern (Var xx))
              (meta
               ((type_ (UTuple ((UArray UMatrix) UMatrix UMatrix))) (loc <opaque>)
-               (adlevel DataOnly))))
+               (adlevel (TupleAD (DataOnly DataOnly DataOnly))))))
             2))
           (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
       ()))
@@ -21288,7 +21290,7 @@ Optimization hazard warning (Line 6): SoA warning: The right hand side of the as
             ((pattern (Var xx))
              (meta
               ((type_ (UTuple ((UArray UMatrix) UMatrix UMatrix))) (loc <opaque>)
-               (adlevel DataOnly))))
+               (adlevel (TupleAD (DataOnly DataOnly DataOnly))))))
             3))
           (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
       ()))
@@ -21401,7 +21403,7 @@ Optimization hazard warning (Line 6): SoA warning: The right hand side of the as
             ((pattern (Var xx))
              (meta
               ((type_ (UTuple ((UArray UMatrix) UMatrix UMatrix))) (loc <opaque>)
-               (adlevel DataOnly))))
+               (adlevel (TupleAD (DataOnly DataOnly DataOnly))))))
             1))
           (meta ((type_ (UArray UMatrix)) (loc <opaque>) (adlevel DataOnly)))))))
       ()))
@@ -21416,7 +21418,7 @@ Optimization hazard warning (Line 6): SoA warning: The right hand side of the as
             ((pattern (Var xx))
              (meta
               ((type_ (UTuple ((UArray UMatrix) UMatrix UMatrix))) (loc <opaque>)
-               (adlevel DataOnly))))
+               (adlevel (TupleAD (DataOnly DataOnly DataOnly))))))
             2))
           (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
       ()))
@@ -21431,7 +21433,7 @@ Optimization hazard warning (Line 6): SoA warning: The right hand side of the as
             ((pattern (Var xx))
              (meta
               ((type_ (UTuple ((UArray UMatrix) UMatrix UMatrix))) (loc <opaque>)
-               (adlevel DataOnly))))
+               (adlevel (TupleAD (DataOnly DataOnly DataOnly))))))
             3))
           (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
       ()))
