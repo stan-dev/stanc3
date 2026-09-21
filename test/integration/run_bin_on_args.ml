@@ -26,7 +26,12 @@ let () =
       let short_cmd =
         (* when displaying the command in the output file, we clean up the
            binary name *)
-        let binary = String.split_last ~sep:"/" binary |> Option.get |> snd in
+        let binary =
+          let binary, rest =
+            String.split_first ~sep:" " binary
+            |> Option.value ~default:(binary, "") in
+          let binary = String.split_last ~sep:"/" binary |> Option.get |> snd in
+          match rest with "" -> binary | rest -> binary ^ " " ^ rest in
         let binary = String.replace_first binary ~sub:".exe" ~by:"" in
         binary ^ " " ^ arg in
       Printf.printf "  $ %s\n%s\n" short_cmd (run_capturing_output cmd))

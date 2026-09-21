@@ -1,4 +1,4 @@
-  $ included"  badrecurse1.stan
+  $ stanc --include-paths="../included"  badrecurse1.stan
 error: File 'badrecurse1.stan' recursively included itself.
 
     ┌─ ../included/badrecurse1.stan:1:1
@@ -13,7 +13,7 @@ error: File 'badrecurse1.stan' recursively included itself.
     │  -------- file '../included/badrecurse1.stan' included here
   2 │  
 [exit 1]
-  $ included"  badrecurse2.stan
+  $ stanc --include-paths="../included"  badrecurse2.stan
 error: File 'badrecurse2.stan' recursively included itself.
 
     ┌─ ../included/badrecurse2.stan:1:1
@@ -32,7 +32,7 @@ error: File 'badrecurse2.stan' recursively included itself.
     │  -------- file '../included/badrecurse3.stan' included here
   2 │  
 [exit 1]
-  $ included"  badrecurse3.stan
+  $ stanc --include-paths="../included"  badrecurse3.stan
 error: File 'badrecurse3.stan' recursively included itself.
 
     ┌─ ../included/badrecurse2.stan:1:1
@@ -51,7 +51,7 @@ error: File 'badrecurse3.stan' recursively included itself.
     │  -------- file '../included/badrecurse2.stan' included here
   2 │  
 [exit 1]
-  $ included"  error_spread_over_files.stan
+  $ stanc --include-paths="../included"  error_spread_over_files.stan
 error: Syntax error: Ill-formed program.
     ┌─ error_spread_over_files.stan:1:3
   1 │    w;
@@ -60,7 +60,7 @@ error: Syntax error: Ill-formed program.
     = Expected "functions {", "data {", "transformed data {", "parameters {",
       "transformed parameters {", "model {", or "generated quantities {".
 [exit 1]
-  $ included"  incl-err.stan
+  $ stanc --include-paths="../included"  incl-err.stan
 error: Syntax error: Ill-formed program.
     ┌─ incl-err.stan:1:3
   1 │    real z;
@@ -69,7 +69,7 @@ error: Syntax error: Ill-formed program.
     = Expected "functions {", "data {", "transformed data {", "parameters {",
       "transformed parameters {", "model {", or "generated quantities {".
 [exit 1]
-  $ included"  incl_stanc_helper.stan
+  $ stanc --include-paths="../included"  incl_stanc_helper.stan
 error: Syntax error: Ill-formed program.
     ┌─ incl_stanc_helper.stan:1:3
   1 │    real y;
@@ -78,7 +78,7 @@ error: Syntax error: Ill-formed program.
     = Expected "functions {", "data {", "transformed data {", "parameters {",
       "transformed parameters {", "model {", or "generated quantities {".
 [exit 1]
-  $ included"  incl_stanc_helper2.stan
+  $ stanc --include-paths="../included"  incl_stanc_helper2.stan
 error: Syntax error: Ill-formed program.
     ┌─ incl_stanc_helper2.stan:1:3
   1 │    real w;
@@ -87,7 +87,7 @@ error: Syntax error: Ill-formed program.
     = Expected "functions {", "data {", "transformed data {", "parameters {",
       "transformed parameters {", "model {", or "generated quantities {".
 [exit 1]
-  $ included"  incl_stanc_helper_error_spread_over_files.stan
+  $ stanc --include-paths="../included"  incl_stanc_helper_error_spread_over_files.stan
 error: Syntax error: Ill-formed program.
     ┌─ incl_stanc_helper_error_spread_over_files.stan:1:3
   1 │    real y;
@@ -96,7 +96,7 @@ error: Syntax error: Ill-formed program.
     = Expected "functions {", "data {", "transformed data {", "parameters {",
       "transformed parameters {", "model {", or "generated quantities {".
 [exit 1]
-  $ included"  incl_stanc_helper_include_error.stan
+  $ stanc --include-paths="../included"  incl_stanc_helper_include_error.stan
 error: Syntax error: Ill-formed program.
     ┌─ incl_stanc_helper_include_error.stan:1:3
   1 │    real y;
@@ -105,7 +105,7 @@ error: Syntax error: Ill-formed program.
     = Expected "functions {", "data {", "transformed data {", "parameters {",
       "transformed parameters {", "model {", or "generated quantities {".
 [exit 1]
-  $ included"  incl_stanc_helper_lex_error.stan
+  $ stanc --include-paths="../included"  incl_stanc_helper_lex_error.stan
 error: Syntax error: Ill-formed program.
     ┌─ incl_stanc_helper_lex_error.stan:1:3
   1 │    real y;
@@ -114,7 +114,7 @@ error: Syntax error: Ill-formed program.
     = Expected "functions {", "data {", "transformed data {", "parameters {",
       "transformed parameters {", "model {", or "generated quantities {".
 [exit 1]
-  $ included"  incl_stanc_helper_parse_error.stan
+  $ stanc --include-paths="../included"  incl_stanc_helper_parse_error.stan
 error: Syntax error: Ill-formed program.
     ┌─ incl_stanc_helper_parse_error.stan:1:3
   1 │    real y;
@@ -123,7 +123,7 @@ error: Syntax error: Ill-formed program.
     = Expected "functions {", "data {", "transformed data {", "parameters {",
       "transformed parameters {", "model {", or "generated quantities {".
 [exit 1]
-  $ included"  incl_stanc_helper_semantic_error.stan
+  $ stanc --include-paths="../included"  incl_stanc_helper_semantic_error.stan
 error: Syntax error: Ill-formed program.
     ┌─ incl_stanc_helper_semantic_error.stan:1:3
   1 │    real y;
@@ -132,11 +132,11 @@ error: Syntax error: Ill-formed program.
     = Expected "functions {", "data {", "transformed data {", "parameters {",
       "transformed parameters {", "model {", or "generated quantities {".
 [exit 1]
-  $ included"  included-brackets.stan
+  $ stanc --include-paths="../included"  included-brackets.stan
 [exit 0]
-  $ included"  included-quote.stan
+  $ stanc --include-paths="../included"  included-quote.stan
 [exit 0]
-  $ included"  lex-err.stan
+  $ stanc --include-paths="../included"  lex-err.stan
 error: Syntax error: Ill-formed program.
     ┌─ lex-err.stan:1:3
   1 │    real z;
@@ -145,7 +145,7 @@ error: Syntax error: Ill-formed program.
     = Expected "functions {", "data {", "transformed data {", "parameters {",
       "transformed parameters {", "model {", or "generated quantities {".
 [exit 1]
-  $ included"  parse-err.stan
+  $ stanc --include-paths="../included"  parse-err.stan
 error: Syntax error: Ill-formed program.
     ┌─ parse-err.stan:1:3
   1 │    real z;
@@ -154,7 +154,7 @@ error: Syntax error: Ill-formed program.
     = Expected "functions {", "data {", "transformed data {", "parameters {",
       "transformed parameters {", "model {", or "generated quantities {".
 [exit 1]
-  $ included"  sem-err.stan
+  $ stanc --include-paths="../included"  sem-err.stan
 error: Syntax error: Ill-formed program.
     ┌─ sem-err.stan:1:3
   1 │    real z;
@@ -163,7 +163,7 @@ error: Syntax error: Ill-formed program.
     = Expected "functions {", "data {", "transformed data {", "parameters {",
       "transformed parameters {", "model {", or "generated quantities {".
 [exit 1]
-  $ included"  stanc_helper_with_bad_include_error_spread_over_files.stan
+  $ stanc --include-paths="../included"  stanc_helper_with_bad_include_error_spread_over_files.stan
 error: Parameters cannot be integers.
     ┌─ ../included/incl_stanc_helper_error_spread_over_files.stan:2:3
   1 │    real y;
@@ -175,7 +175,7 @@ error: Parameters cannot be integers.
     │  -------- file '../included/incl_stanc_helper_error_spread_over_files.stan' included here
   3 │  }
 [exit 1]
-  $ included"  stanc_helper_with_bad_include_include_error.stan
+  $ stanc --include-paths="../included"  stanc_helper_with_bad_include_include_error.stan
 error: Could not find include file 'I'm not here.stan'.
 
     ┌─ ../included/incl-err.stan:2:3
@@ -193,7 +193,7 @@ error: Could not find include file 'I'm not here.stan'.
   3 │  }
     = Current include paths: ../included
 [exit 1]
-  $ included"  stanc_helper_with_bad_include_lex_error.stan
+  $ stanc --include-paths="../included"  stanc_helper_with_bad_include_lex_error.stan
 error: Invalid character found.
 
     ┌─ ../included/incl_stanc_helper_lex_error.stan:2:3
@@ -210,7 +210,7 @@ error: Invalid character found.
     │  -------- file '../included/incl_stanc_helper_lex_error.stan' included here
   3 │  }
 [exit 1]
-  $ included"  stanc_helper_with_bad_include_parse_error.stan
+  $ stanc --include-paths="../included"  stanc_helper_with_bad_include_parse_error.stan
 error: Syntax error: Ill-formed statement.
     ┌─ ../included/incl_stanc_helper_parse_error.stan:2:3
   1 │    real y;
@@ -227,7 +227,7 @@ error: Syntax error: Ill-formed statement.
   3 │  }
     = Only top-level variable declarations are allowed in the "data" and "parameters" blocks.
 [exit 1]
-  $ included"  stanc_helper_with_bad_include_semantic_error.stan
+  $ stanc --include-paths="../included"  stanc_helper_with_bad_include_semantic_error.stan
 error: Parameters cannot be integers.
     ┌─ ../included/incl_stanc_helper_semantic_error.stan:2:3
   1 │    real y;
@@ -244,9 +244,9 @@ error: Parameters cannot be integers.
     │  -------- file '../included/incl_stanc_helper_semantic_error.stan' included here
   3 │  }
 [exit 1]
-  $ included"  stanc_helper_with_good_include.stan
+  $ stanc --include-paths="../included"  stanc_helper_with_good_include.stan
 [exit 0]
-  $ included"  stanc_helper_with_good_include_err_after_incl.stan
+  $ stanc --include-paths="../included"  stanc_helper_with_good_include_err_after_incl.stan
 error: Identifier "ww" not in scope.
     ┌─ ../included/incl_stanc_helper.stan:2:3
   1 │    real y;
