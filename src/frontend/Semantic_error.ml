@@ -14,6 +14,20 @@ let loc_ref : Location_span.t ref = ref Location_span.empty
 
 (* grace helpers *)
 
+let compare_labels (a : Label.t) (b : Label.t) : int =
+  let open Grace in
+  let ( let*? ) a f =
+    (* helper for short-circuiting *)
+    if a <> 0 then a else f () in
+  let*? () = Source.compare (Range.source a.range) (Range.source b.range) in
+  let*? () = Range.compare a.range b.range in
+  let*? () = Priority.compare a.priority b.priority in
+  (* Materializing the labels is annoying but should be rare. Most of the time
+     that the first three compares return equal, this is a genuine duplicate *)
+  let label1 = Message.to_string a.message in
+  let label2 = Message.to_string b.message in
+  String.compare label1 label2
+
 (** This is the real workhorse function of this module. It is in charge of
     building [Grace.Diagnostic.t]s from code locations, a primary message, and
     additional labels, notes, or a summary message. *)
@@ -24,9 +38,10 @@ let make_error ?(labels = []) ?(notes = []) ?(summary : Message.t option)
   let loc = !loc_ref in
   let range, included =
     Diagnostic.range_of_loc_span ?printed_filename ?code loc in
+  let labels = List.sort_uniq (included @ labels) ~cmp:compare_labels in
   let kont (l : Label.t) =
     let summary = Option.value summary ~default:l.message in
-    let labels = (Diagnostic.unstyle l :: included) @ labels in
+    let labels = Diagnostic.unstyle l :: labels in
     create Error ~labels ~notes summary in
   Label.kprimaryf kont ~range primary
 

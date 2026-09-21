@@ -64,10 +64,7 @@ error: Ill-typed assignment statement.
   3 │  }
     ┌─ basic2.stan:1:1
   1 │  #include <basic.stan>
-    │  --------
-    │  │
-    │  file '../included/basic.stan' included here
-    │  file '../included/basic.stan' included here
+    │  -------- file '../included/basic.stan' included here
   2 │  
 [exit 1]
   $ stanc --include-paths="../included"  error_spread_over_files.stan
