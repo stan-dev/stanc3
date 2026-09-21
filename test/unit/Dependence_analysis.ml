@@ -179,12 +179,12 @@ let%expect_test "Single indices: affine, invariant and varying" =
     4: W y
     5: W m
     6: W m
-    7: R N, W n
+    7: R N
     9: R v[n+1], R v[n-2], R v[n+1], R v[k], R k, R v[3], W y[n]
     10: R v[?nonlinear], R idx[n], R v[?nonlinear], R v[n+k], R k, R v[?written], R m, W y[n]
     11: R v[n+k-1], R k, R v[?nonlinear], R k, R v[?nonlinear], R k, R k, R v[n], R k, R k, R v[k+1], R k, R v[?nonlinear], R N, R v[?nonlinear], R k, R v[?nonlinear], W y[n]
     12: W m
-    13: R J, W j
+    13: R J
     15: R v[j], W y[n]
     |}]
 
@@ -218,7 +218,7 @@ let%expect_test "Every index kind of the language" =
     6: W r
     7: R N
     8: W c
-    9: R N, W n
+    9: R N
     11: R v[:], R v[a:], R a, R v[a:b], R a, R b, R v[1:b], R b, R v[{idx}], R idx, W y[n]
     12: R v[n:], R v[n:n+1], R v[?nonlinear:N], R idx[n], R N, R v[{?nonlinear}], R pairs[n], W y[n]
     13: R m[n, :], W r
@@ -254,7 +254,7 @@ let%expect_test "Statement kinds: declarations, target, effects and nesting" =
     5: W v
     6: W acc
     7: W acc
-    8: R N, W n
+    8: R N
     10: W t
     11: R x[n], W t
     12: W u
@@ -308,9 +308,8 @@ let%expect_test "Nodes outside a loop and in nested loops" =
     9: R mu, W theta[1]
     10: R x[k], R k, W theta[2]
     11: R m, R x[?written], R m, W v[?written]
-    12: R N, W n
+    12: R N
     14: R x[n+1], R theta[1], R v[?nonlinear], R idx[n], R v[?written], R m, W v[n]
-    15: W j
     17: R v[n], R v[k], R k, R v[n:N], R N, W theta[j]
     18: R x, R v, R theta[2], += target
     |}]
@@ -354,7 +353,7 @@ let%expect_test "Accesses: nested indexing is one reference" =
     {|
     3: R K
     4: W y
-    5: R N, W n
+    5: R N
     7: R a[n, 1], R a[n, 2], R b[n, 1], R a[1:2], W y[1]
     |}]
 

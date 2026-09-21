@@ -559,8 +559,7 @@ let node_accesses ~loopvars ~written_vars
   | Return (Some value) -> reads_in value
   | NRFunApp (kind, args) -> reads_in_all (Fun_kind.collect_exprs kind @ args)
   | IfElse (cond, _, _) | While (cond, _) -> reads_in cond
-  | For {loopvar= inner; lower; upper; _} ->
-      reads_in_all [lower; upper] @ [{var= inner; subs= []; kind= Write}]
+  | For {lower; upper; _} -> reads_in_all [lower; upper]
   | Profile _ | Block _ | SList _ | Break | Continue | Skip | Return None -> []
 
 let build_dep_info_map (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
