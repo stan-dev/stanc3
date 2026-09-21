@@ -261,5 +261,5 @@ error: Could not find include file 'incl_stanc_helper.stan'.
     ┌─ stanc_helper_with_good_include.stan:2:1
   2 │  #include incl_stanc_helper.stan
     │  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ here.
-    = Current include paths: None
+    = No include paths were provided to the compiler.
 [exit 1]

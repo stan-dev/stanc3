@@ -27,7 +27,7 @@ let%expect_test "no includes" =
         ┌─ string:2:1
       2 │  #include <foo.stan>
         │  ^^^^^^^^^^^^^^^^^^^ here.
-        = stanc was given information about the following files: None
+        = stanc was not given information about any files to include.
     |}]
 
 let%expect_test "wrong include" =

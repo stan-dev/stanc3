@@ -211,7 +211,7 @@ error: Could not find include file 'foo.stan'.
     ┌─ string:2:1
   2 │  #include <foo.stan>
     │  ^^^^^^^^^^^^^^^^^^^ here.
-    = stanc was given information about the following files: None
+    = stanc was not given information about any files to include.
 
 error: Could not find include file 'foo.stan'.
 

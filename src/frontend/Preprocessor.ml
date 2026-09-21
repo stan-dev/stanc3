@@ -94,10 +94,11 @@ let find_include_fs lookup_paths fname =
     match paths with
     | [] ->
         let note =
-          let pp_list ppf l =
-            if List.is_empty l then Fmt.string ppf "None"
-            else Fmt.(list ~sep:comma string) ppf l in
-          Fmt.str "@[Current include paths: %a@]" pp_list lookup_paths in
+          if List.is_empty lookup_paths then
+            Fmt.str "@[No include paths were provided to the compiler.@]"
+          else
+            Fmt.(str "@[Current include paths: %a@]" (list ~sep:comma string))
+              lookup_paths in
         let message = Fmt.str "Could not find include file '%s'." fname in
         include_error ~note message
     | path :: rest_of_paths -> (
@@ -114,12 +115,15 @@ let find_include_inmemory map fname =
   match String.Map.find_opt fname map with
   | None ->
       let note =
-        let pp_list ppf l =
-          let keys = String.Map.to_list l |> List.map ~f:fst in
-          if List.is_empty keys then Fmt.string ppf "None"
-          else Fmt.(list ~sep:comma string) ppf keys in
-        Fmt.str "@[stanc was given information about the following files: %a@]"
-          pp_list map in
+        if String.Map.is_empty map then
+          Fmt.str
+            "@[stanc was not given information about any files to include.@]"
+        else
+          let keys = String.Map.to_list map |> List.map ~f:fst in
+          Fmt.(
+            str "@[stanc was given information about the following files: %a@]"
+              (list ~sep:comma string))
+            keys in
       let message = Fmt.str "Could not find include file '%s'." fname in
       include_error ~note message
   | Some s -> (Lexing.from_string s, fname)
