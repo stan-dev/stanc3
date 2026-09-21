@@ -2214,7 +2214,7 @@ error: Invalid character found.
 error: Syntax error: Ill-formed expression.
     ┌─ tabs_error_line.stan:5:17
   4 │    int<lower=0> some_long_line =
-  5 │                1 4;
+  5 │      				    		1 4;
     │                  ^ here.
   6 │  
     = Unexpected input after the conclusion of a valid expression.
@@ -2258,7 +2258,7 @@ error: ~ statement should refer to a distribution without its "_lpdf/_lupdf" or 
   $ stanc too-many-indices.stan
 error: Too many indices. Expression only has 3 dimensions, but received 4 indices.
     ┌─ too-many-indices.stan:4:17
-  3 │           [ [2,2,3], [2,5,6] ] };
+  3 │  		       [ [2,2,3], [2,5,6] ] };
   4 │    vector[2] b = a[1, 1, 1:2, 1];
     │                  ^^^^^^^^^^^^^^^ Too many indices. Expression only has 3 dimensions, but received 4 indices.
   5 │  }

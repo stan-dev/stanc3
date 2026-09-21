@@ -14,7 +14,7 @@ let loc_ref : Location_span.t ref = ref Location_span.empty
 
 (* grace helpers *)
 
-(** This is the real workhouse function of this module. It is in charge of
+(** This is the real workhorse function of this module. It is in charge of
     building [Grace.Diagnostic.t]s from code locations, a primary message, and
     additional labels, notes, or a summary message. *)
 let make_error ?(labels = []) ?(notes = []) ?(summary : Message.t option)

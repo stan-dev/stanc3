@@ -548,7 +548,7 @@ let check_normal_fn ~is_cond_dist loc tenv id es =
       |> error
   | [] ->
       (match Utils.split_distribution_suffix id.name with
-        | Some (prefix, suffix) -> (
+        | Some (prefix, suffix) ->
             let default_error () =
               if
                 Option.is_some
@@ -563,24 +563,15 @@ let check_normal_fn ~is_cond_dist loc tenv id es =
                 Semantic_error.returning_fn_expected_undeclaredident_found loc
                   id.name
                   (Env.nearest_ident tenv id.name) in
-            match suffix with
-            | "lpmf" | "lupmf" ->
-                let sugs =
-                  Env.find tenv (prefix ^ "_lpdf") |> List.map ~f:Env.location
-                in
-                if List.is_empty sugs then default_error ()
-                else
-                  Semantic_error.returning_fn_expected_wrong_dist_suffix_found
-                    loc (prefix, suffix, sugs)
-            | "lpdf" | "lupdf" ->
-                let sugs =
-                  Env.find tenv (prefix ^ "_lpmf") |> List.map ~f:Env.location
-                in
-                if List.is_empty sugs then default_error ()
-                else
-                  Semantic_error.returning_fn_expected_wrong_dist_suffix_found
-                    loc (prefix, suffix, sugs)
-            | _ -> default_error ())
+            let suggestions =
+              match suffix with
+              | "lpmf" | "lupmf" -> Env.find tenv (prefix ^ "_lpdf")
+              | "lpdf" | "lupdf" -> Env.find tenv (prefix ^ "_lpmf")
+              | _ -> [] in
+            if not (List.is_empty suggestions) then
+              Semantic_error.returning_fn_expected_wrong_dist_suffix_found loc
+                (prefix, suffix, List.map ~f:Env.location suggestions)
+            else default_error ()
         | None ->
             Semantic_error.returning_fn_expected_undeclaredident_found loc
               id.name
@@ -2096,15 +2087,11 @@ and verify_pmf_fundef_first_arg_ty loc id arg_tys =
     | _ -> Semantic_error.prob_mass_non_int_variate loc rt |> error
 
 and verify_fundef_distinct_arg_ids arg_names =
-  match List.find_a_dup ~cmp:Ast.compare_identifier arg_names with
-  | None -> ()
-  | Some dup ->
-      let dups =
-        List.filter ~f:(fun {name; _} -> String.equal dup.name name) arg_names
-      in
-      let prev = List.hd_exn dups in
-      let dup = List.nth dups 1 in
-      Semantic_error.duplicate_arg_names dup.id_loc prev |> error
+  List.fold_left arg_names ~init:String.Map.empty ~f:(fun seen id ->
+      match String.Map.find_opt id.name seen with
+      | None -> String.Map.add seen ~key:id.name ~data:id
+      | Some prev -> Semantic_error.duplicate_arg_names id.id_loc prev |> error)
+  |> ignore
 
 and verify_fundef_return_tys loc return_type body =
   if

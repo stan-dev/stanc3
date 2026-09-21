@@ -18,16 +18,16 @@ error: Syntax error: Ill-formed phrase.
 [exit 1]
   $ stanc --filename-in-msg=foo.stan --include-paths=.  includes.stan
 error: Syntax error: Ill-formed phrase.
-    ┌─ ./filename_syntax_error.stan:2:5
-  1 │  model {
-  2 │  rea x = 3;
-    │      ^ here.
-  3 │  
     ┌─ foo.stan:6:1
   5 │  
   6 │  #include "filename_syntax_error.stan"
     │  -------- file './filename_syntax_error.stan' included here
   7 │  
+    ┌─ ./filename_syntax_error.stan:2:5
+  1 │  model {
+  2 │  rea x = 3;
+    │      ^ here.
+  3 │  
     = Expected a statement, but found a partial value before this point.
       Did you mean for this to be the start of an assignment or "~"-statement?
 [exit 1]

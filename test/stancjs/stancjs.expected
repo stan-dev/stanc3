@@ -349,7 +349,7 @@ $ node removed.js
 error: Syntax error: Ill-formed declaration.
     ┌─ string:3:9
   2 │  parameters {
-  3 │   real y[10];
+  3 │  	real y[10];
     │          ^^ here.
   4 │  }
     = ";" expected after variable declaration.
@@ -360,7 +360,7 @@ error: Syntax error: Ill-formed declaration.
 error: Syntax error: Ill-formed declaration.
     ┌─ string:3:9
   2 │  parameters {
-  3 │   real y[10];
+  3 │  	real y[10];
     │          ^^ here.
   4 │  }
     = ";" expected after variable declaration.
