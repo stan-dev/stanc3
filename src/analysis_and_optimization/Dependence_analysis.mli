@@ -27,9 +27,11 @@ type node_dep_info =
   ; reaching_defn_exit: reaching_defn Set.Poly.t
         (** the definitions that may reach the next statement *)
   ; loop: label option
-        (** the innermost enclosing [For] or [While]; a [For] classified
-            [accesses] against the loop variable *)
-  ; accesses: access list  (** the statement's own indexed reads and writes *)
+        (** the innermost enclosing [For] or [While]; the chain of these gives
+            the levels of a dependence's direction vector *)
+  ; accesses: access list
+        (** the statement's own reads and writes, subscripts as functions of the
+            enclosing loop variables *)
   ; meta: Location_span.t  (** source location, reported by pedantic mode *) }
 
 (** The block as a flat table: each label's statement, children replaced by the

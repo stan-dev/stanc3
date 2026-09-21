@@ -27,18 +27,19 @@ type linear = {const: int; symbol: Middle.Expr.Typed.t option}
 type varying_kind =
   | Written  (** mentions a variable from the written set *)
   | Nonlinear
-      (** mentions the loop variable in a form [linear] cannot hold: a gather
-          [idx[n]], a product [2 * n], a second symbol or a negated one
-          ([n - k], [N - n]) *)
+      (** mentions a loop variable in a form [linear] cannot hold: a gather
+          [idx[n]], a product [2 * n], two loop variables or a negated one
+          ([n + m], [N - n]) *)
 [@@deriving sexp_of, compare]
 
-(** One integer index expression as a function of the loop being analysed (Goff,
-    Kennedy and Tseng 1991, restricted to one loop and stride 1). *)
+(** One integer index expression as a function of the enclosing loop variables
+    (Goff, Kennedy and Tseng 1991, stride 1). *)
 type point =
   | Invariant of linear
-      (** free of the loop variable and of the written set (ZIV) *)
-  | Affine of linear
-      (** [loopvar + offset] (SIV); [v[n]] is [{const = 0; symbol = None}] *)
+      (** free of every loop variable and of the written set (ZIV) *)
+  | Affine of {loopvar: string; offset: linear}
+      (** [loopvar + offset] for one enclosing loop (SIV); [v[n]] is
+          [{loopvar = "n"; offset = {const = 0; symbol = None}}] *)
   | Varying of varying_kind
       (** not comparable by the element test; any pair is [confused] *)
 [@@deriving sexp_of, compare]
@@ -53,16 +54,22 @@ type access = {var: string; subs: point Middle.Index.t list; kind: access_kind}
 [@@deriving sexp_of, compare]
 
 (** Relation between the iteration of the first access and the iteration of the
-    second: [Lt] means the first access happens in an earlier iteration. *)
+    second at one loop level: [Lt] means the first access happens in an earlier
+    iteration of that loop. *)
 type direction = Lt | Eq | Gt [@@deriving sexp_of, compare]
+
+(** The relation at one loop level: the possible directions and the exact
+    distance if known; [{Lt; Eq; Gt}, None] leaves the level unconstrained. *)
+type level = {directions: direction Set.Poly.t; distance: int option}
+[@@deriving sexp_of]
 
 (** Result of testing whether two accesses to the same variable can name the
     same element. *)
 type dependence =
   | Independent  (** The references can never name the same element. *)
-  | Dependent of {directions: direction Set.Poly.t; distance: int option}
-      (** possible iteration relations and the exact distance if known;
-          [{Lt; Eq; Gt}, None] is the conservative "confused" answer *)
+  | Dependent of level list
+      (** a direction vector over the loops enclosing both accesses, outermost
+          first (Allen and Kennedy 1987 §2); empty when no loop encloses both *)
 [@@deriving sexp_of]
 
 (** The most recently nested control flow (block start, if/then, or loop)

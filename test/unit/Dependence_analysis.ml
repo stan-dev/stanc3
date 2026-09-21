@@ -115,23 +115,23 @@ let pp_varying_kind ppf = function
   | Written -> Fmt.string ppf "written"
   | Nonlinear -> Fmt.string ppf "nonlinear"
 
-(** [i], [i+1], [i+k-1] for [Affine]; [3], [k+1] for [Invariant]; [?written] and
-    [?nonlinear] for [Varying]. *)
+(** [n], [n+1], [n+k-1] for [Affine] in the loop over [n]; [3], [k+1] for
+    [Invariant]; [?written] and [?nonlinear] for [Varying]. *)
 let pp_point ppf = function
   | Invariant offset -> pp_linear ~leading:true ppf offset
-  | Affine offset ->
-      Fmt.string ppf "i";
+  | Affine {loopvar; offset} ->
+      Fmt.string ppf loopvar;
       pp_linear ~leading:false ppf offset
   | Varying kind -> Fmt.pf ppf "?%a" pp_varying_kind kind
 
-(** Prints [i+1], [:], [k:], [1:k]; a multi-index is braced as [{idxs}] because
+(** Prints [n+1], [:], [k:], [1:k]; a multi-index is braced as [{idxs}] because
     [Index.pp] prints a multi-index like a single index. *)
 let pp_subscript ppf (index : point Index.t) =
   match index with
   | MultiIndex indices -> Fmt.pf ppf "{%a}" pp_point indices
   | All | Single _ | Upfrom _ | Between _ -> Index.pp pp_point ppf index
 
-(** [W v[i+1]], [R v], [+= target]. *)
+(** [W v[n+1]], [R v], [+= target]. *)
 let pp_access ppf {var; subs; kind} =
   Fmt.pf ppf "%s %s"
     (match kind with Write -> "W" | Read -> "R" | Increment -> "+=")
@@ -181,12 +181,12 @@ let%expect_test "Single indices: affine, invariant and varying" =
     5: W m
     6: W m
     7: R N, W n
-    9: R v[i+1], R v[i-2], R v[i+1], R v[k], R k, R v[3], W y[i]
-    10: R v[?nonlinear], R idx[i], R v[?nonlinear], R v[i+k], R k, R v[?written], R m, W y[i]
-    11: R v[i+k-1], R k, R v[?nonlinear], R k, R v[?nonlinear], R k, R k, R v[i], R k, R k, R v[k+1], R k, R v[?nonlinear], R N, R v[?nonlinear], R k, R v[?nonlinear], W y[i]
+    9: R v[n+1], R v[n-2], R v[n+1], R v[k], R k, R v[3], W y[n]
+    10: R v[?nonlinear], R idx[n], R v[?nonlinear], R v[n+k], R k, R v[?written], R m, W y[n]
+    11: R v[n+k-1], R k, R v[?nonlinear], R k, R v[?nonlinear], R k, R k, R v[n], R k, R k, R v[k+1], R k, R v[?nonlinear], R N, R v[?nonlinear], R k, R v[?nonlinear], W y[n]
     12: W m
     13: R J, W j
-    15: R n, R v[i], W y[?written]
+    15: R v[j], W y[n]
     |}]
 
 let%expect_test "Every index kind of the language" =
@@ -220,10 +220,10 @@ let%expect_test "Every index kind of the language" =
     7: R N
     8: W c
     9: R N, W n
-    11: R v[:], R v[a:], R a, R v[a:b], R a, R b, R v[1:b], R b, R v[{idx}], R idx, W y[i]
-    12: R v[i:], R v[i:i+1], R v[?nonlinear:N], R idx[i], R N, R v[{?nonlinear}], R pairs[i], W y[i]
-    13: R m[i, :], W r
-    14: R m[i, 1:K], R K, W r
+    11: R v[:], R v[a:], R a, R v[a:b], R a, R b, R v[1:b], R b, R v[{idx}], R idx, W y[n]
+    12: R v[n:], R v[n:n+1], R v[?nonlinear:N], R idx[n], R N, R v[{?nonlinear}], R pairs[n], W y[n]
+    13: R m[n, :], W r
+    14: R m[n, 1:K], R K, W r
     15: R m[:, 1], W c
     16: R m[{idx}, 2], R idx, W c
     17: R N, R y[1:N-1], R N, W c[2:N]
@@ -257,16 +257,16 @@ let%expect_test "Statement kinds: declarations, target, effects and nesting" =
     7: W acc
     8: R N, W n
     10: W t
-    11: R x[i], W t
+    11: R x[n], W t
     12: W u
-    13: R t, R w[i], W v[i]
-    14: R acc, R x[i], R w[i], W acc
-    15: R x[i], R v[i], R mu, += target
-    16: R v[i]
-    17: R v[i]
-    18: R v, W v[i]
-    19: R v[i]
-    20: R n, W v[?written]
+    13: R t, R w[n], W v[n]
+    14: R acc, R x[n], R w[n], W acc
+    15: R x[n], R v[n], R mu, += target
+    16: R v[n]
+    17: R v[n]
+    18: R v, W v[n]
+    19: R v[n]
+    20: W v[n]
     |}]
 
 let accesses_example =
@@ -310,9 +310,9 @@ let%expect_test "Nodes outside a loop and in nested loops" =
     10: R x[k], R k, W theta[2]
     11: R m, R x[?written], R m, W v[?written]
     12: R N, W n
-    14: R x[i+1], R theta[1], R v[?nonlinear], R idx[i], R v[?written], R m, W v[i]
+    14: R x[n+1], R theta[1], R v[?nonlinear], R idx[n], R v[?written], R m, W v[n]
     15: W j
-    17: R v[?written], R n, R v[k], R k, R v[?written:N], R n, R N, W theta[i]
+    17: R v[n], R v[k], R k, R v[n:N], R N, W theta[j]
     18: R x, R v, R theta[2], += target
     |}]
 
@@ -356,7 +356,7 @@ let%expect_test "Accesses: nested indexing is one reference" =
     3: R K
     4: W y
     5: R N, W n
-    7: R a[i, 1], R a[i, 2], R b[i, 1], R a[1:2], W y[1]
+    7: R a[n, 1], R a[n, 2], R b[n, 1], R a[1:2], W y[1]
     |}]
 
 let%expect_test "Right-hand-side variables of a set of labels" =
@@ -486,6 +486,31 @@ let%expect_test
     |};
   [%expect {| no definition pruned |}]
 
+(* the outer loop variable is one level of the direction vector: a definition in
+   a later outer iteration never flows, one in an earlier iteration does; the
+   [For] over [n] shows as dropped because a loop variable is not a read *)
+let%expect_test "Pruning: a definition in a later outer iteration never flows" =
+  print_pruned_edges
+    {|
+      data { int N; int M; }
+      parameters { real a; }
+      model {
+        vector[N] b; matrix[N, M] c; matrix[N, M] d;
+        for (n in 2:(N - 1)) {
+          for (m in 1:M) {
+            c[n, m] = b[n + 1];
+            d[n, m] = b[n - 1];
+            b[n] = a;
+          }
+        }
+      }
+    |};
+  [%expect
+    {|
+    16: dropped 12 18, kept 5 14
+    17: dropped 12, kept 5 14 18
+    |}]
+
 let%expect_test "Pruning: a while loop between the For and the statements" =
   print_pruned_edges
     {|
@@ -502,7 +527,7 @@ let%expect_test "Pruning: a while loop between the For and the statements" =
         }
       }
     |};
-  [%expect {| 15: dropped , kept 2 10 12 |}]
+  [%expect {| 14: dropped 10, kept 5 12 15 |}]
 
 let%expect_test "Pruning: a definition from an earlier iteration is kept" =
   print_pruned_edges
