@@ -187,10 +187,39 @@ val root_label : label
 val subtree_accesses : dep_info_map -> label -> point Accesses.t
 (** The accesses of the statement at the label and of every statement below. *)
 
+val statement_at : dep_info_map -> label -> Stmt.Located.t
+(** The statement at the label, children rebuilt from the map. *)
+
+val leaf_has_effects : dep_info_map -> label -> bool
+(** Whether the leaf, or a statement below, prints, rejects, calls a user
+    function as a statement, or evaluates a side-effecting or random expression.
+*)
+
 val build_loop_graph : dep_info_map -> loop:label -> loop_graph
 (** The flow, anti, output and effects edges between the leaves of the [For] at
     [loop], at that loop's level; the implementation documents the rules. *)
 
-val pp_graph : dep_info_map -> Format.formatter -> loop_graph -> unit
-(** One indented line per leaf, then the edges and the pi-blocks (Allen and
-    Kennedy 1987 §5.2) in emission order. *)
+val pi_blocks : loop_graph -> label list list
+(** The strongly connected components in emission order (Allen and Kennedy 1987
+    §5.2): a topological order of the condensation, ties to the earliest leaf.
+*)
+
+val is_cyclic : dep_info_map -> loop_graph -> label list -> bool
+(** Whether a pi-block must stay a sequential loop; a write-only scatter's self
+    output dependence does not count, since indexed assignment stores in order.
+*)
+
+val edge_between : loop_graph -> from:label list -> into:label list -> bool
+(** Whether some edge leaves a leaf of [from] for a leaf of [into]. *)
+
+val pp_edge : loop_graph -> Format.formatter -> edge -> unit
+(** [S0 -> S1 muj {=} d=0 (flow)] or [S0 -> S2 (effects)]. *)
+
+val pp_graph :
+     ?outcome:(label -> string option)
+  -> dep_info_map
+  -> Format.formatter
+  -> loop_graph
+  -> unit
+(** One indented line per leaf, with the leaf's [outcome] after it when given,
+    then the edges and the pi-blocks in emission order. *)

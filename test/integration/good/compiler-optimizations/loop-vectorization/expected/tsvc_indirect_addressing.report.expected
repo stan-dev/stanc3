@@ -7,7 +7,7 @@ loop at 'tsvc_indirect_addressing.stan', line 33, column 4 to line 35, column 5 
 loop at 'tsvc_indirect_addressing.stan', line 47, column 4 to line 49, column 5  (n in 1:N)
   S0  a2[ip[n]] = (b[ip[n]] + c[n]);
   edges: S0 -> S0 a2 unknown (output)
-  blocks: [S0]cyclic
+  blocks: [S0]
 
 loop at 'tsvc_indirect_addressing.stan', line 58, column 4 to line 60, column 5  (n in 1:N)
   S0  target += normal_lpdf(a_data[n], b[ip[n]], sigma);
@@ -17,5 +17,5 @@ loop at 'tsvc_indirect_addressing.stan', line 58, column 4 to line 60, column 5 
 loop at 'tsvc_indirect_addressing.stan', line 69, column 4 to line 71, column 5  (n in 1:N)
   S0  a4[ip[n]] = (b[n] + (c[n] .* d[n]));
   edges: S0 -> S0 a4 unknown (output)
-  blocks: [S0]cyclic
+  blocks: [S0]
 [exit 0]

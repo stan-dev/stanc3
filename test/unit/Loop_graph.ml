@@ -314,7 +314,7 @@ let%expect_test
       S1  w[n] = m[n, 2];
       S2  v[idx[n]] = x[n];
       edges: S2 -> S2 v unknown (output)
-      blocks: [S0] [S1] [S2]cyclic
+      blocks: [S0] [S1] [S2]
     |}]
 
 let%expect_test "Loop graph: a gather only reads" =
@@ -363,4 +363,47 @@ let%expect_test
       S1  b[n, m] = x[m];
       edges: none
       blocks: [S0] [S1]
+    |}]
+
+let%expect_test "Loop graph: a profile is one leaf and keeps a self anti edge" =
+  print_loop_graphs
+    {|
+      data { int N; vector[N] x; }
+      model {
+        vector[N] a; vector[N] b;
+        for (n in 1:(N - 1)) {
+          profile("p") {
+            a[n] = x[n];
+            b[n] = a[n + 1];
+          }
+        }
+      }
+    |};
+  [%expect
+    {|
+    loop (n in 1:(N - 1))
+      S0  profile("p"){ a[n] = x[n]; b[n] = a[(n + 1)]; }
+      edges: S0 -> S0 a {<} d=1 (anti)
+      blocks: [S0]cyclic
+    |}]
+
+let%expect_test "Loop graph: a declaring scope is one leaf" =
+  print_loop_graphs
+    {|
+      data { int N; vector[N] x; vector[N] y; }
+      model {
+        vector[N] v; vector[N] w;
+        for (n in 1:N) {
+          { real t; t = x[n]; v[n] = t; }
+          { real t; t = y[n]; w[n] = t; }
+        }
+      }
+    |};
+  [%expect
+    {|
+    loop (n in 1:N)
+      S0  { real t; t = x[n]; v[n] = t; }
+      S1  { real t; t = y[n]; w[n] = t; }
+      edges: S0 -> S0 t unknown (flow); S0 -> S0 t unknown (anti); S0 -> S0 t unknown (output); S0 -> S1 t unknown (flow); S0 -> S1 t unknown (anti); S0 -> S1 t unknown (output); S1 -> S0 t unknown (flow); S1 -> S0 t unknown (anti); S1 -> S0 t unknown (output); S1 -> S1 t unknown (flow); S1 -> S1 t unknown (anti); S1 -> S1 t unknown (output)
+      blocks: [S0 S1]cyclic
     |}]

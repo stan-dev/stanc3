@@ -752,20 +752,40 @@ let rec innermost_level (dep : Dependence.t) : Dependence.t =
       if Set.Poly.mem Eq outer.directions then innermost_level (Dependent inner)
       else Independent
 
-(** The statements under [label] with [Block], [SList] and [Profile] nesting
-    flattened, as [Dataflow_utils.build_cf_graphs] treats them. *)
+(** The statements under [label] with [SList] nesting and scope-free [Block]
+    nesting flattened. A [Profile] and a [Block] that declares a variable stay
+    one leaf: the vectorizer re-emits a leaf as one unit, so the profile and the
+    scope stay around their statements. *)
 let rec flattened (statement_map : dep_info_map) (label : label) : label list =
+  let declares child =
+    match fst (LabelMap.find child statement_map) with
+    | Stmt.Pattern.Decl _ -> true
+    | _ -> false in
   match fst (LabelMap.find label statement_map) with
-  | Stmt.Pattern.Block children | SList children | Profile (_, children) ->
+  | Stmt.Pattern.SList children ->
+      List.concat_map children ~f:(flattened statement_map)
+  | Block children when not (List.exists children ~f:declares) ->
       List.concat_map children ~f:(flattened statement_map)
   | _ -> [label]
 
-(** The leaf statements of the [For] at [loop], in lexical order; a nested loop
-    or an [if] is one leaf. [[]] when [loop] is not a [For]. *)
+(** The leaf statements of the [For] at [loop], in lexical order: the body's own
+    statements flattened, so a nested loop, an [if], a profile or a declaring
+    scope is one leaf. [[]] when [loop] is not a [For]. *)
 let loop_leaves (statement_map : dep_info_map) (loop : label) : label list =
   match fst (LabelMap.find loop statement_map) with
-  | Stmt.Pattern.For {body; _} -> flattened statement_map body
+  | Stmt.Pattern.For {body; _} -> (
+      match fst (LabelMap.find body statement_map) with
+      | Block children | SList children ->
+          List.concat_map children ~f:(flattened statement_map)
+      | _ -> [body])
   | _ -> []
+
+(** A leaf that is a scope or a profile around several statements, so not one
+    vector statement once widened. *)
+let compound (statement_map : dep_info_map) (leaf : label) : bool =
+  match fst (LabelMap.find leaf statement_map) with
+  | Stmt.Pattern.Block _ | Profile _ -> true
+  | _ -> false
 
 (** [label] and every label below, in pre-order. *)
 let subtree_labels (statement_map : dep_info_map) (label : label) : label list =
@@ -804,6 +824,17 @@ let has_effects (statement_map : dep_info_map) (labels : label list) : bool =
           true
       | pattern -> Set.Poly.exists (stmt_rhs pattern) ~f:(expr_any effectful))
 
+(** Whether the leaf at [leaf], or a statement below, has effects. *)
+let leaf_has_effects (statement_map : dep_info_map) (leaf : label) : bool =
+  has_effects statement_map (subtree_labels statement_map leaf)
+
+(** The statement at [label], children rebuilt from the map. *)
+let statement_at (statement_map : dep_info_map) (label : label) : Stmt.Located.t
+    =
+  build_recursive_statement
+    (fun pattern (info : node_dep_info) -> Stmt.{pattern; meta= info.meta})
+    statement_map label
+
 (** The dependence graph of the [For] at [loop]: for each destination leaf and
     variable, [overlapping_sources] over the leaves for the flow, output and
     anti pairs, each pair reduced to the analysed loop's level
@@ -813,9 +844,11 @@ let has_effects (statement_map : dep_info_map) (labels : label list) : bool =
     the level admits [Lt] or [Eq]) and as [dst = i] (edge [j -> i] when the
     reversed pair admits [Lt]); a leaf against itself keeps only a loop-carried
     [Lt], so a recurrence [v[n] = v[n-1] + u[n]] is a self flow edge with
-    distance 1 and [a[n] = a[n] + 1] has none. A leaf is not an anti source for
-    itself: a vector statement fetches every input before storing (Allen and
-    Kennedy 1987 p. 494). Effectful leaves get [Effects] edges both ways. *)
+    distance 1 and [a[n] = a[n] + 1] has none. A simple leaf is not an anti
+    source for itself: a vector statement fetches every input before storing
+    (Allen and Kennedy 1987 p. 494); a [compound] leaf is widened statement by
+    statement, so that exemption does not apply. Effectful leaves get [Effects]
+    edges both ways. *)
 let build_loop_graph (statement_map : dep_info_map) ~(loop : label) : loop_graph
     =
   let leaves = loop_leaves statement_map loop in
@@ -851,7 +884,8 @@ let build_loop_graph (statement_map : dep_info_map) ~(loop : label) : loop_graph
                     Option.some_if
                       (touches src var
                          ~uses:(Dependence.source_uses dependence_kind)
-                      && (kind <> Anti || src <> dst))
+                      && (kind <> Anti || src <> dst
+                        || compound statement_map src))
                       (src, Some (accesses_of src var))) in
               overlapping_sources statement_map ~dst
                 ~restrict:(fun ~src dep ->
@@ -920,14 +954,31 @@ let pi_blocks (graph : loop_graph) : label list list =
   emit components
 
 (** A block stays a sequential loop when two leaves depend on each other or one
-    depends on an earlier iteration of itself. *)
-let is_cyclic (graph : loop_graph) (block : label list) : bool =
+    depends on an earlier iteration of itself. One exception: a leaf whose self
+    dependences are all output dependences on a variable no leaf reads, a
+    scatter [a[idx[n]] = x[n]], is not cyclic, because Stan's indexed assignment
+    stores a multi-index in order, so one vector statement writes the elements
+    in the loop's order. *)
+let is_cyclic (statement_map : dep_info_map) (graph : loop_graph)
+    (block : label list) : bool =
   match block with
   | [] -> false
   | [leaf] ->
+      let read var =
+        List.exists graph.leaves ~f:(fun other ->
+            Set.Poly.mem var
+              (Accesses.read_vars (subtree_accesses statement_map other))) in
       List.exists graph.edges ~f:(fun (edge : edge) ->
-          edge.src = leaf && edge.dst = leaf)
+          edge.src = leaf && edge.dst = leaf
+          && (edge.kind <> Output
+             || Option.value_map edge.var ~default:true ~f:read))
   | _ :: _ :: _ -> true
+
+(** Whether some edge leaves a leaf of [from] for a leaf of [into]. *)
+let edge_between (graph : loop_graph) ~(from : label list) ~(into : label list)
+    : bool =
+  List.exists graph.edges ~f:(fun (edge : edge) ->
+      List.mem edge.src ~set:from && List.mem edge.dst ~set:into)
 
 (** [independent], [unknown], [{<,=}], [{<} d=1]; one group per level. *)
 let pp_dependence ppf (dep : Dependence.t) =
@@ -971,27 +1022,24 @@ let pp_edges ppf (graph : loop_graph) =
       Fmt.pf ppf "edges: %a" Fmt.(list ~sep:(any "; ") (pp_edge graph)) edges
 
 (** [blocks: [S0] [S1 S2]cyclic], in emission order. *)
-let pp_blocks (graph : loop_graph) ppf (blocks : label list list) =
+let pp_blocks (statement_map : dep_info_map) (graph : loop_graph) ppf
+    (blocks : label list list) =
   let pp_block ppf block =
     Fmt.pf ppf "[%a]%s"
       Fmt.(
         list ~sep:(any " ") (fun ppf leaf ->
             Fmt.pf ppf "S%d" (position graph leaf)))
       block
-      (if is_cyclic graph block then "cyclic" else "") in
+      (if is_cyclic statement_map graph block then "cyclic" else "") in
   Fmt.pf ppf "blocks: %a" Fmt.(list ~sep:(any " ") pp_block) blocks
 
-(** The statement at [label], children rebuilt from the map, on one line and
-    truncated so a leaf reads as one row. *)
+(** The statement at [label] on one line and truncated, so a leaf reads as one
+    row. *)
 let pp_leaf (statement_map : dep_info_map) ppf (label : label) =
-  let stmt =
-    build_recursive_statement
-      (fun pattern (info : node_dep_info) -> Stmt.{pattern; meta= info.meta})
-      statement_map label in
   let unbroken =
     Format.asprintf "%t" (fun ppf ->
         Format.pp_set_margin ppf 100_000;
-        Stmt.Located.pp ppf stmt) in
+        Stmt.Located.pp ppf (statement_at statement_map label)) in
   let one_line =
     String.split_on_char ~sep:'\n' unbroken
     |> List.map ~f:String.trim |> String.concat ~sep:" " in
@@ -1000,9 +1048,15 @@ let pp_leaf (statement_map : dep_info_map) ppf (label : label) =
     Fmt.pf ppf "%s..." (String.sub one_line ~pos:0 ~len:limit)
   else Fmt.string ppf one_line
 
-(** One indented line per leaf ([S0  stmt]), then the edges and the pi-blocks in
-    emission order: the body of a loop's report. *)
-let pp_graph (statement_map : dep_info_map) ppf (graph : loop_graph) =
+(** One indented line per leaf ([S0  stmt], with the leaf's [outcome] after it
+    when given), then the edges and the pi-blocks in emission order: the body of
+    a loop's report. *)
+let pp_graph ?(outcome : label -> string option = fun _ -> None)
+    (statement_map : dep_info_map) ppf (graph : loop_graph) =
   List.iteri graph.leaves ~f:(fun number leaf ->
-      Fmt.pf ppf "  S%d  %a@." number (pp_leaf statement_map) leaf);
-  Fmt.pf ppf "  %a@.  %a@." pp_edges graph (pp_blocks graph) (pi_blocks graph)
+      Fmt.pf ppf "  S%d  %a%a@." number (pp_leaf statement_map) leaf
+        Fmt.(option (fun ppf -> pf ppf "   %s"))
+        (outcome leaf));
+  Fmt.pf ppf "  %a@.  %a@." pp_edges graph
+    (pp_blocks statement_map graph)
+    (pi_blocks graph)
