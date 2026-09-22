@@ -28,16 +28,17 @@ let compare_labels (a : Label.t) (b : Label.t) : int =
   let label2 = Message.to_string b.message in
   String.compare label1 label2
 
+let range_of_loc_span loc =
+  let printed_filename = !printed_filename_ref in
+  let code = !code_ref in
+  Diagnostic.range_of_loc_span ?printed_filename ?code loc
+
 (** This is the real workhorse function of this module. It is in charge of
     building [Grace.Diagnostic.t]s from code locations, a primary message, and
     additional labels, notes, or a summary message. *)
 let make_error ?(labels = []) ?(notes = []) ?(summary : Message.t option)
     primary =
-  let printed_filename = !printed_filename_ref in
-  let code = !code_ref in
-  let loc = !loc_ref in
-  let range, included =
-    Diagnostic.range_of_loc_span ?printed_filename ?code loc in
+  let range, included = range_of_loc_span !loc_ref in
   let labels = List.sort_uniq (included @ labels) ~cmp:compare_labels in
   let kont (l : Label.t) =
     let summary = Option.value summary ~default:l.message in
@@ -46,10 +47,7 @@ let make_error ?(labels = []) ?(notes = []) ?(summary : Message.t option)
   Label.kprimaryf kont ~range primary
 
 let context loc message =
-  let printed_filename = !printed_filename_ref in
-  let code = !code_ref in
-  let range, included =
-    Diagnostic.range_of_loc_span ?printed_filename ?code loc in
+  let range, included = range_of_loc_span loc in
   Label.ksecondaryf (fun l -> l :: included) ~range message
 
 let optional f loc = match loc with Some loc -> f loc | None -> []
@@ -882,58 +880,63 @@ module StatementError = struct
     | LValueMultiIndexing ->
         make_error
           "Left hand side of an assignment cannot have nested multi-indexing."
-    | LValueTupleUnpackDuplicates lvs ->
-        (* This is a rare case where we might want to report multiple errors at
-           the same time, hence why it looks different and doesn't call
-           make_error but rather directly constructs primary labels *)
-        let rec pp_lvalue ppf (l : Ast.untyped_lval) =
+    | LValueTupleUnpackDuplicates ((duplicate :: previous) :: rest) ->
+        let pp_lvalue =
           let open Fmt in
-          match l.lval with
-          | LVariable id -> string ppf id.name
-          | LIndexed (l, _) -> pf ppf "%a[%t]" pp_lvalue l ellipsis
-          | LTupleProjection (l, ix) -> pf ppf "%a.%n" pp_lvalue l ix in
-        let pp_lvalue = Fmt.styled (`Fg `Green) Fmt.(quote pp_lvalue) in
+          let rec pp ppf (l : Ast.untyped_lval) =
+            match l.lval with
+            | LVariable id -> string ppf id.name
+            | LIndexed (l, _) -> pf ppf "%a[%t]" pp l ellipsis
+            | LTupleProjection (l, ix) -> pf ppf "%a.%n" pp l ix in
+          styled (`Fg `Green) (quote pp) in
+        let previous_assignments l =
+          List.concat_map l ~f:(fun (lv : Ast.untyped_lval) ->
+              context lv.lmeta.loc "Previous assignment to @[%a@] here."
+                pp_lvalue lv) in
         let labels =
-          List.concat_map
-            ~f:(fun (l : Ast.untyped_lval Nonempty_list.t) ->
-              let (hd :: tl) = Nonempty_list.rev l in
-              let range, included =
-                let printed_filename = !printed_filename_ref in
-                let code = !code_ref in
-                Diagnostic.range_of_loc_span ?printed_filename ?code
-                  hd.lmeta.loc in
-              Diagnostic.unstyle
-                (Label.primaryf ~range
-                   "Cannot make multiple assignments to @[%a@] in one \
-                    assignment statement."
-                   pp_lvalue hd)
-              :: included
-              @ List.concat_map tl ~f:(fun (lv : Ast.untyped_lval) ->
-                  context lv.lmeta.loc "Previous assignment to @[%a@] here."
-                    pp_lvalue lv))
-            (Nonempty_list.to_list lvs) in
-        createf Error ~labels "Ill-typed assignment statement."
-    | LValueTupleReadAndWrite ids ->
-        (* Same as above, we may report multiple errors in principle here *)
+          previous_assignments previous
+          (* handle if there were multiple bad assignments in the same
+             statement *)
+          @ List.concat_map rest
+              ~f:(fun (l : Ast.untyped_lval Nonempty_list.t) ->
+                let (duplicate :: rest) = l in
+                let range, included = range_of_loc_span duplicate.lmeta.loc in
+                Diagnostic.unstyle
+                  (Label.primaryf ~range
+                     "Cannot make multiple assignments to @[%a@] in one \
+                      assignment statement."
+                     pp_lvalue duplicate)
+                :: included
+                @ previous_assignments rest) in
+        make_error ~labels
+          ~summary:(Message.create "Ill-typed assignment statement.")
+          "Cannot make multiple assignments to @[%a@] in one assignment \
+           statement."
+          pp_lvalue duplicate
+    | LValueTupleReadAndWrite ((read :: assignments) :: rest) ->
+        let assign_context ids =
+          List.concat_map ids ~f:(fun (id : Ast.identifier) ->
+              context id.id_loc "Assigning to @[%a@] here." quoted id.name)
+        in
         let labels =
-          List.concat_map
-            ~f:(fun (l : Ast.identifier Nonempty_list.t) ->
-              let (hd :: tl) = l in
-              let range, included =
-                let printed_filename = !printed_filename_ref in
-                let code = !code_ref in
-                Diagnostic.range_of_loc_span ?printed_filename ?code hd.id_loc
-              in
+          assign_context assignments
+          (* handle if there were multiple bad assignments in the same
+             statement *)
+          @ List.concat_map rest ~f:(fun (l : Ast.identifier Nonempty_list.t) ->
+              let (read :: assignments) = l in
+              let range, included = range_of_loc_span read.id_loc in
               Diagnostic.unstyle
                 (Label.primaryf ~range
                    "The variable @[%a@] cannot be read from at the same time \
                     as it is being assigned to."
-                   quoted hd.name)
+                   quoted read.name)
               :: included
-              @ List.concat_map tl ~f:(fun (id : Ast.identifier) ->
-                  context id.id_loc "Assigning to @[%a@] here." quoted id.name))
-            (Nonempty_list.to_list ids) in
-        createf Error ~labels "Ill-typed assignment statement."
+              @ assign_context assignments) in
+        make_error ~labels
+          ~summary:(Message.create "Ill-typed assignment statement.")
+          "The variable @[%a@] cannot be read from at the same time as it is \
+           being assigned to."
+          quoted read.name
     | TargetPlusEqualsOutsideModelOrLogProb ->
         make_error
           "Target can only be accessed in the model block or in functions \

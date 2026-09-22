@@ -389,10 +389,6 @@ let type_of_arguments (l : (UnsizedType.autodifftype * UnsizedType.t * 'a) list)
     : UnsizedType.argumentlist =
   List.map ~f:(fun (a, t, _) -> (a, t)) l
 
-let get_loc_lvalue_pack lhs =
-  match lhs with
-  | LValue ({lmeta= {loc; _}; _} : typed_lval) | LTuplePack {loc; _} -> loc
-
 (* XXX: the parser produces inaccurate locations: smeta.loc.begin_loc is the
    last token before the current statement and all the whitespace between two
    statements appears as if it were part of the second statement. get_first_loc

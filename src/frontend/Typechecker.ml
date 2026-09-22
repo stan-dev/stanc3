@@ -1409,6 +1409,9 @@ let overlapping_lvalues lvals =
     | _, _ ->
         (* remaining cases are not equal, we don't care *)
         Ast.compare_untyped_lval lv1 lv2 in
+  let lvals =
+    (* useful for error messaging to put the final assignment first *)
+    List.rev lvals in
   let dupes = List.find_all_dups lvals ~cmp:compare_no_indexing in
   List.filter_map dupes ~f:(fun l ->
       List.filter ~f:(fun o -> compare_no_indexing l o = 0) lvals
@@ -1467,16 +1470,15 @@ let variables_accessed_in lv =
     to avoid reading the value of a variable which is being updated in this same
     lvalue. *)
 let verify_lvalue_unique (lv : Ast.typed_lval_pack) =
-  let loc = Ast.get_loc_lvalue_pack lv in
   let all_lvals = lvalues_written_to lv in
   let () =
     (* check that things being assigned to are all unique *)
     match overlapping_lvalues all_lvals with
     | None -> ()
-    | Some dupes ->
-        Semantic_error.cannot_assign_duplicate_unpacking loc dupes |> error
-  in
-  (* check that things being assigned to are not also being read Note: this is
+    | Some ((dupe :: _) :: _ as dupes) ->
+        Semantic_error.cannot_assign_duplicate_unpacking dupe.lmeta.loc dupes
+        |> error in
+  (* check that things being assigned to are not also being read. Note: this is
      much less refined than the above and forbids some cases that would be
      harmless, but this is also in general a very weird thing to try to do, so I
      think that is acceptable *)
@@ -1496,7 +1498,8 @@ let verify_lvalue_unique (lv : Ast.typed_lval_pack) =
     |> Nonempty_list.of_list in
   match overlap with
   | None -> ()
-  | Some dupes -> Semantic_error.cannot_access_assigning_var loc dupes |> error
+  | Some ((dupe :: _) :: _ as dupes) ->
+      Semantic_error.cannot_access_assigning_var dupe.id_loc dupes |> error
 
 let verify_assignable_id loc cf tenv assign_id =
   let block, global, readonly, decl_location =
