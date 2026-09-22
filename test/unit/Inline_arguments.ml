@@ -10,7 +10,9 @@ let inline source =
 
 let events_expr events (e : Expr.Typed.t) =
   match e.pattern with
-  | FunApp (StanLib ((("exp" | "log" | "normal_rng") as name), _, _), _) ->
+  | FunApp (StanLib (name, _, _), _)
+    when List.mem name ~set:["abs"; "exp"; "log"; "normal_rng"; "poisson_rng"]
+    ->
       events @ [name]
   | _ -> events
 
@@ -45,6 +47,32 @@ let%expect_test "evaluate a repeated scalar actual once" =
   in
   print_events mir.log_prob;
   [%expect {| exp, log |}]
+
+let%expect_test "evaluate repeated integer and complex actuals once" =
+  let mir =
+    inline
+      {|
+      functions {
+        int twice_int(int x) { return x + x; }
+        complex square_complex(complex z) { return z * z; }
+      }
+      data { int i; }
+      parameters { complex z; }
+      model {
+        target += twice_int(abs(i));
+        target += get_real(square_complex(exp(z)));
+      }
+      generated quantities {
+        int draw = twice_int(poisson_rng(2));
+        complex value = square_complex(exp(to_complex(1, 1)));
+      }
+      |}
+  in
+  print_events mir.log_prob;
+  print_events mir.generate_quantities;
+  [%expect {|
+    abs, exp
+    poisson_rng, exp |}]
 
 let%expect_test "bind scalar actuals in argument evaluation order" =
   let mir =

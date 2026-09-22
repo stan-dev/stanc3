@@ -255,7 +255,8 @@ let compute_suffix_and_name propto suffix fname =
   | _ -> (suffix, fname)
 
 (** For a user-defined call selected for inlining, introduce a local only when
-    - the argument, after recursively inlining it, has type [real];
+    - the argument, after recursively inlining it, has type [int], [real], or
+      [complex];
     - it is neither a variable nor a literal; and
     - its parameter is read at least twice in the already-inlined function body.
 
@@ -265,21 +266,22 @@ let compute_suffix_and_name propto suffix fname =
     nodes, and effects. [f(theta)], [f(2.0)], other argument types, and
     parameters used at most once retain direct substitution. Keep the binding
     with the argument's own statements to preserve the existing evaluation
-    order. *)
+    order. Container bindings would also need to preserve the original call's
+    reference handling. *)
 let bind_repeated_scalar_actual fname name body
     ((decls, stmts, (e : Expr.Typed.t)) as inlined) =
   let count_use n (e : Expr.Typed.t) =
     match e.pattern with Var v when String.equal v name -> n + 1 | _ -> n in
   match (e.pattern, e.meta.type_) with
   | (Var _ | Lit _), _ -> inlined
-  | _, UnsizedType.UReal
+  | _, UnsizedType.(UInt | UReal | UComplex)
     when fold_stmts ~take_expr:count_use ~take_stmt:Fun.const ~init:0 [body]
          >= 2 ->
       let temp = gen_inline_var fname (name ^ "_arg") in
       ( decls
         @ [ Stmt.Pattern.Decl
               { decl_adtype= e.meta.adlevel
-              ; decl_type= Type.Sized SizedType.SReal
+              ; decl_type= Type.Unsized e.meta.type_
               ; decl_id= temp
               ; initialize= Uninit } ]
       , stmts
