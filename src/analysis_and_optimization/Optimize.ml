@@ -254,6 +254,32 @@ let compute_suffix_and_name propto suffix fname =
   | FnLpmf _ -> (FnLpmf false, fname)
   | _ -> (suffix, fname)
 
+(* A function evaluates each argument once. Substituting an expression at every
+   use repeats its computation, autodiff nodes, and possible effects. *)
+let bind_repeated_scalar_actual fname name body
+    (decls, stmts, (e : Expr.Typed.t)) =
+  let rec uses_expr n (e : Expr.Typed.t) =
+    let n =
+      match e.pattern with Var v when String.equal v name -> n + 1 | _ -> n
+    in
+    Expr.Pattern.fold uses_expr n e.pattern in
+  let rec uses_stmt n (s : Stmt.Located.t) =
+    Stmt.Pattern.fold uses_expr uses_stmt n s.pattern in
+  let simple = match e.pattern with Var _ | Lit _ -> true | _ -> false in
+  if simple || e.meta.type_ <> UnsizedType.UReal || uses_stmt 0 body < 2 then
+    (decls, stmts, e)
+  else
+    let temp = gen_inline_var fname (name ^ "_arg") in
+    ( decls
+      @ [ Stmt.Pattern.Decl
+            { decl_adtype= e.meta.adlevel
+            ; decl_type= Type.Sized SizedType.SReal
+            ; decl_id= temp
+            ; initialize= Uninit } ]
+    , stmts
+      @ [Stmt.Pattern.Assignment (Stmt.Helpers.lvariable temp, e.meta.type_, e)]
+    , {e with pattern= Var temp} )
+
 (* Triple is (declaration list, statement list, return expression) *)
 let rec inline_function_expression propto adt fim (Expr.{pattern; _} as e) =
   match pattern with
@@ -263,8 +289,7 @@ let rec inline_function_expression propto adt fim (Expr.{pattern; _} as e) =
       let d, sl, expr' = inline_function_expression propto adt fim expr in
       (d, sl, {e with pattern= Promotion (expr', ut, ad)})
   | FunApp (kind, es) -> (
-      let d_list, s_list, es =
-        inline_list (inline_function_expression propto adt fim) es in
+      let d_list, s_list, es = inline_function_args propto adt fim kind es in
       match kind with
       | CompilerInternal _ ->
           (d_list, s_list, {e with pattern= FunApp (kind, es)})
@@ -357,6 +382,22 @@ let rec inline_function_expression propto adt fim (Expr.{pattern; _} as e) =
               )) ] in
       (dl1 @ dl2, sl1 @ sl2, {e with pattern= EOr (e1, e2)})
 
+and inline_function_args propto adt fim kind es =
+  let inline = inline_function_expression propto adt fim in
+  match kind with
+  | UserDefined (fname, suffix) -> (
+      let _, name = compute_suffix_and_name propto suffix fname in
+      match String.Map.find_opt name fim with
+      | Some (_, args, body) ->
+          (* Bind each actual alongside its own inlined statements, retaining
+             inline_list's right-to-left argument evaluation order. *)
+          inline_list
+            (fun (name, e) ->
+              bind_repeated_scalar_actual fname name body (inline e))
+            (List.combine args es)
+      | None -> inline_list inline es)
+  | _ -> inline_list inline es
+
 and inline_function_index propto adt fim i =
   match i with
   | All -> ([], [], All)
@@ -402,8 +443,7 @@ let rec inline_function_statement propto adt fim Stmt.{pattern; meta} =
             slist_concat_no_loc (d @ s) (JacobianPE e)
         | NRFunApp (kind, exprs) ->
             let d_list, s_list, es =
-              inline_list (inline_function_expression propto adt fim) exprs
-            in
+              inline_function_args propto adt fim kind exprs in
             slist_concat_no_loc (d_list @ s_list)
               (match kind with
               | CompilerInternal _ | StanLib _ -> NRFunApp (kind, es)
