@@ -1,0 +1,151 @@
+  $ stanc -fvectorize-loops --debug-optimized-mir-pretty tsvc_statement_reordering.stan
+
+input_vars {
+  int N;
+  vector[(N + 1)] a0;
+  vector[(N + 1)] b0;
+  vector[N] c;
+  vector[N] d;
+  vector[N] e; }
+
+prepare_data {
+  data int pos__;
+  pos__ = 1;
+  data int N;
+  N = FnReadData__("N")[1];
+  (FnCheck(trans(Lower 3))(var_name N)(var N))__(3);
+  data int a0_1dim__ = (N + 1);
+  FnValidateSize__("a0", "N + 1", a0_1dim__);
+  data vector[a0_1dim__] a0;
+  {
+    array[] real a0_flat__;
+    a0_flat__ = FnReadData__("a0");
+    pos__ = 1;
+    for(sym1__ in 1:(N + 1)) {
+      a0[sym1__] = a0_flat__[pos__];
+      pos__ = (pos__ + 1);
+    }
+  }
+  data int b0_1dim__ = (N + 1);
+  FnValidateSize__("b0", "N + 1", b0_1dim__);
+  data vector[b0_1dim__] b0;
+  {
+    array[] real b0_flat__;
+    b0_flat__ = FnReadData__("b0");
+    pos__ = 1;
+    for(sym1__ in 1:(N + 1)) {
+      b0[sym1__] = b0_flat__[pos__];
+      pos__ = (pos__ + 1);
+    }
+  }
+  FnValidateSize__("c", "N", N);
+  data vector[N] c;
+  {
+    array[] real c_flat__;
+    c_flat__ = FnReadData__("c");
+    pos__ = 1;
+    for(sym1__ in 1:N) {
+      c[sym1__] = c_flat__[pos__];
+      pos__ = (pos__ + 1);
+    }
+  }
+  FnValidateSize__("d", "N", N);
+  data vector[N] d;
+  {
+    array[] real d_flat__;
+    d_flat__ = FnReadData__("d");
+    pos__ = 1;
+    for(sym1__ in 1:N) {
+      d[sym1__] = d_flat__[pos__];
+      pos__ = (pos__ + 1);
+    }
+  }
+  FnValidateSize__("e", "N", N);
+  data vector[N] e;
+  {
+    array[] real e_flat__;
+    e_flat__ = FnReadData__("e");
+    pos__ = 1;
+    for(sym1__ in 1:N) {
+      e[sym1__] = e_flat__[pos__];
+      pos__ = (pos__ + 1);
+    }
+  } }
+
+log_prob {
+  {
+    {
+      data int a1_1dim__ = (N + 1);
+      FnValidateSize__("a1", "N + 1", a1_1dim__);
+      vector[a1_1dim__] a1;
+      a1 = a0;
+      data int b1_1dim__ = (N + 1);
+      FnValidateSize__("b1", "N + 1", b1_1dim__);
+      vector[b1_1dim__] b1;
+      b1 = b0;
+      b1[2:(N - 1)] = (b1[(2 + 1):((N - 1) + 1)] - (e[2:(N - 1)] .* d
+                                                                    [2:(N - 1)]));
+      a1[2:(N - 1)] = (b1[(2 - 1):((N - 1) - 1)] + (c[2:(N - 1)] .* d
+                                                                    [2:(N - 1)]));
+      target += sum(a1);
+      target += sum(b1);
+    }
+    {
+      data int a2_1dim__ = (N + 1);
+      FnValidateSize__("a2", "N + 1", a2_1dim__);
+      vector[a2_1dim__] a2;
+      a2 = a0;
+      data int b2_1dim__ = (N + 1);
+      FnValidateSize__("b2", "N + 1", b2_1dim__);
+      vector[b2_1dim__] b2;
+      b2 = b0;
+      b2[1:N] = (b2[1:N] + (a2[(1 + 1):(N + 1)] .* d[1:N]));
+      a2[1:N] = (a2[1:N] .* c[1:N]);
+      target += sum(a2);
+      target += sum(b2);
+    }
+  } }
+
+rev_log_prob {
+  {
+    {
+      data int a1_1dim__ = (N + 1);
+      FnValidateSize__("a1", "N + 1", a1_1dim__);
+      vector[a1_1dim__] a1;
+      a1 = a0;
+      data int b1_1dim__ = (N + 1);
+      FnValidateSize__("b1", "N + 1", b1_1dim__);
+      vector[b1_1dim__] b1;
+      b1 = b0;
+      b1[2:(N - 1)] = (b1[(2 + 1):((N - 1) + 1)] - (e[2:(N - 1)] .* d
+                                                                    [2:(N - 1)]));
+      a1[2:(N - 1)] = (b1[(2 - 1):((N - 1) - 1)] + (c[2:(N - 1)] .* d
+                                                                    [2:(N - 1)]));
+      target += sum(a1);
+      target += sum(b1);
+    }
+    {
+      data int a2_1dim__ = (N + 1);
+      FnValidateSize__("a2", "N + 1", a2_1dim__);
+      vector[a2_1dim__] a2;
+      a2 = a0;
+      data int b2_1dim__ = (N + 1);
+      FnValidateSize__("b2", "N + 1", b2_1dim__);
+      vector[b2_1dim__] b2;
+      b2 = b0;
+      b2[1:N] = (b2[1:N] + (a2[(1 + 1):(N + 1)] .* d[1:N]));
+      a2[1:N] = (a2[1:N] .* c[1:N]);
+      target += sum(a2);
+      target += sum(b2);
+    }
+  } }
+
+generate_quantities {
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+
+[exit 0]
