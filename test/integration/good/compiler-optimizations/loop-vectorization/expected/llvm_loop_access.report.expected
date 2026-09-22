@@ -1,0 +1,35 @@
+  $ stanc -fvectorize-loops --debug-loop-vectorization llvm_loop_access.stan
+loop at 'llvm_loop_access.stan', line 32, column 4 to line 35, column 5  (n in 1:N)
+  S0  a1[(n + 8)] = (b[n] + promote(2, real, data));
+  S1  c1[n] = (a1[n] * promote(2, real, data));
+  edges: S0 -> S1 a1 {<} d=8 (flow)
+  blocks: [S0] [S1]
+
+loop at 'llvm_loop_access.stan', line 47, column 4 to line 51, column 5  (n in 1:N)
+  S0  a2[(n + 1)] = (b[n] + promote(1, real, data));
+  S1  a2[n] = (b[n] + promote(2, real, data));
+  S2  c2[n] = (a2[n] * promote(2, real, data));
+  edges: S0 -> S1 a2 {<} d=1 (output); S0 -> S2 a2 {<} d=1 (flow); S1 -> S2 a2 {=} d=0 (flow)
+  blocks: [S0] [S1] [S2]
+
+loop at 'llvm_loop_access.stan', line 65, column 4 to line 68, column 5  (n in 1:N)
+  S0  a3[idx[n]] = b[n];
+  S1  c3[n] = a3[idx[n]];
+  edges: S0 -> S0 a3 unknown (output); S0 -> S1 a3 unknown (flow); S1 -> S0 a3 unknown (anti)
+  blocks: [S0 S1]cyclic
+
+loop at 'llvm_loop_access.stan', line 82, column 6 to line 84, column 7  (j in 1:J)
+  S0  v4[i] = (w[j] + v4[i]);
+  edges: S0 -> S0 v4 unknown (flow); S0 -> S0 v4 unknown (output)
+  blocks: [S0]cyclic
+
+loop at 'llvm_loop_access.stan', line 81, column 4 to line 85, column 5  (i in 1:N)
+  S0  for(j in 1:J) { v4[i] = (w[j] + v4[i]); }
+  edges: none
+  blocks: [S0]
+
+loop at 'llvm_loop_access.stan', line 97, column 4 to line 99, column 5  (n in 1:N)
+  S0  a5[(n + 4)] = (a5[n] * promote(2, real, data));
+  edges: S0 -> S0 a5 {<} d=4 (flow)
+  blocks: [S0]cyclic
+[exit 0]

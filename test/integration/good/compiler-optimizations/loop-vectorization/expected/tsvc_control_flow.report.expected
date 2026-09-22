@@ -1,0 +1,32 @@
+  $ stanc -fvectorize-loops --debug-loop-vectorization tsvc_control_flow.stan
+loop at 'tsvc_control_flow.stan', line 36, column 4 to line 40, column 5  (n in 1:N)
+  S0  x1[n] = (b1[n] + (d[n] * d[n]));
+  S1  foo();
+  S2  b1[n] = (c[n] + (d[n] * e[n]));
+  edges: S0 -> S2 b1 {=} d=0 (anti)
+  blocks: [S0] [S1] [S2]
+
+loop at 'tsvc_control_flow.stan', line 50, column 4 to line 53, column 5  (n in 1:N)
+  S0  if((d[n] < 0)) { FnReject__("neg"); }
+  S1  a2[n] = (a2[n] + (b0[n] .* c[n]));
+  edges: none
+  blocks: [S0] [S1]
+
+loop at 'tsvc_control_flow.stan', line 65, column 4 to line 67, column 5  (n in 1:N)
+  S0  if((b0[n] > 0)) { a3[n] = (a3[n] + (b0[n] * c[n])); }
+  edges: none
+  blocks: [S0]
+
+loop at 'tsvc_control_flow.stan', line 77, column 4 to line 81, column 5  (n in 1:N)
+  S0  if((d[n] < 0)) { a4[n] = (a4[n] + (b0[n] * c[n])); } else { if((d[n] == 0)) { a4[n] = (a4[n] + (...
+  edges: none
+  blocks: [S0]
+
+loop at 'tsvc_control_flow.stan', line 91, column 4 to line 93, column 5  (n in 1:N)
+  S0  a5[n] = (b0[n] + (c[n] * promote((n + 1), real, data)));
+  edges: none
+  blocks: [S0]
+
+loop at 'tsvc_control_flow.stan', line 103, column 4 to line 106, column 5  (n in 1:N)
+  loop left alone: break or continue in the loop body
+[exit 0]

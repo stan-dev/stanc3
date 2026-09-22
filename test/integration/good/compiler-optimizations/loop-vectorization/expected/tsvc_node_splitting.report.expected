@@ -1,0 +1,33 @@
+  $ stanc -fvectorize-loops --debug-loop-vectorization tsvc_node_splitting.stan
+loop at 'tsvc_node_splitting.stan', line 30, column 4 to line 33, column 5  (n in 1:N)
+  S0  a1[(n + 1)] = (b1[n] + e[n]);
+  S1  a1[n] = (b1[n] + c[n]);
+  edges: S0 -> S1 a1 {<} d=1 (output)
+  blocks: [S0] [S1]
+
+loop at 'tsvc_node_splitting.stan', line 48, column 4 to line 51, column 5  (n in 1:N)
+  S0  a2[n] = ((b2[n] .* c[n]) .* d2[n]);
+  S1  b2[n] = ((a2[n] .* a2[(n + 1)]) .* d2[n]);
+  edges: S0 -> S1 a2 {=} d=0 (flow); S0 -> S1 b2 {=} d=0 (anti); S1 -> S0 a2 {<} d=1 (anti)
+  blocks: [S0 S1]cyclic
+
+loop at 'tsvc_node_splitting.stan', line 65, column 4 to line 69, column 5  (n in 1:N)
+  S0  a3[n] = (b3[n] + (c[n] .* d3[n]));
+  S1  b3[n] = (a3[n] + (d3[n] .* e[n]));
+  S2  a3[n] = (b3[n] + (a3[(n + 1)] .* d3[n]));
+  edges: S0 -> S1 a3 {=} d=0 (flow); S0 -> S1 b3 {=} d=0 (anti); S0 -> S2 a3 {=} d=0 (output); S1 -> S2 a3 {=} d=0 (anti); S1 -> S2 b3 {=} d=0 (flow); S2 -> S0 a3 {<} d=1 (anti)
+  blocks: [S0 S1 S2]cyclic
+
+loop at 'tsvc_node_splitting.stan', line 82, column 4 to line 86, column 5  (n in 1:N)
+  S0  a4[n] = (b4[n] + (c[n] .* d4[n]));
+  S1  b4[n] = (c[n] + b4[n]);
+  S2  a4[(n + 1)] = (b4[n] + (a4[(n + 1)] .* d4[n]));
+  edges: S0 -> S1 b4 {=} d=0 (anti); S1 -> S2 b4 {=} d=0 (flow); S2 -> S0 a4 {<} d=1 (anti); S2 -> S0 a4 {<} d=1 (output)
+  blocks: [S0 S1 S2]cyclic
+
+loop at 'tsvc_node_splitting.stan', line 99, column 4 to line 102, column 5  (n in 1:N)
+  S0  a5[n] = (b5[n] + (c[n] .* c[n]));
+  S1  d5[n] = (a5[n] + a5[(n + 1)]);
+  edges: S0 -> S1 a5 {=} d=0 (flow); S1 -> S0 a5 {<} d=1 (anti)
+  blocks: [S0 S1]cyclic
+[exit 0]
