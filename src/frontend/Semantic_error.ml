@@ -835,7 +835,8 @@ module StatementError = struct
         string * Environment.originblock * Location_span.t option
     | CannotAssignFunction of string * UnsizedType.t
     | LValueMultiIndexing
-    | LValueTupleUnpackDuplicates of Ast.untyped_lval list
+    | LValueTupleUnpackDuplicates of
+        Ast.untyped_lval Nonempty_list.t Nonempty_list.t
     | LValueTupleReadAndWrite of string list
     | InvalidTildePDForPMF
     | InvalidTildeCDForCCDF of string
@@ -882,18 +883,37 @@ module StatementError = struct
         make_error
           "Left hand side of an assignment cannot have nested multi-indexing."
     | LValueTupleUnpackDuplicates lvs ->
+        (* This is a rare case where we might want to report multiple errors at
+           the same time, hence why it looks different and doesn't call
+           make_error but rather directly constructs primary labels *)
         let rec pp_lvalue ppf (l : Ast.untyped_lval) =
           let open Fmt in
           match l.lval with
           | LVariable id -> string ppf id.name
           | LIndexed (l, _) -> pf ppf "%a[%t]" pp_lvalue l ellipsis
           | LTupleProjection (l, ix) -> pf ppf "%a.%n" pp_lvalue l ix in
-        make_error
-          ~summary:(Message.create "Ill-typed assignment statement.")
-          "@[<v2>The same value cannot be assigned to multiple times in one \
-           assignment:@ @[%a@]@]"
-          Fmt.(list ~sep:comma pp_lvalue)
-          lvs
+        let pp_lvalue = Fmt.styled (`Fg `Green) Fmt.(quote pp_lvalue) in
+        let labels =
+          List.concat_map
+            ~f:(fun (l : Ast.untyped_lval Nonempty_list.t) ->
+              let (hd :: tl) = Nonempty_list.rev l in
+              let range, included =
+                let printed_filename = !printed_filename_ref in
+                let code = !code_ref in
+                Diagnostic.range_of_loc_span ?printed_filename ?code
+                  hd.lmeta.loc in
+              Diagnostic.unstyle
+                (Label.primaryf ~range
+                   "Cannot make multiple assignments to @[%a@] in one \
+                    assignment statement."
+                   pp_lvalue hd)
+              :: included
+              @ List.concat_map tl ~f:(fun (lv : Ast.untyped_lval) ->
+                  context lv.lmeta.loc "Previous assignment to @[%a@] here."
+                    pp_lvalue lv))
+            (Nonempty_list.to_list lvs) in
+        let summary = Message.create "Ill-typed assignment statement." in
+        create Error ~labels summary
     | LValueTupleReadAndWrite ids ->
         make_error
           ~summary:(Message.create "Ill-typed assignment statement.")

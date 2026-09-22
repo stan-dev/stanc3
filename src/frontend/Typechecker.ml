@@ -1407,18 +1407,30 @@ let overlapping_lvalues lvals =
     | _, _ ->
         (* remaining cases are not equal, we don't care *)
         Ast.compare_untyped_lval lv1 lv2 in
-  List.find_all_dups lvals ~cmp:compare_no_indexing
+  let dupes = List.find_all_dups lvals ~cmp:compare_no_indexing in
+  List.filter_map dupes ~f:(fun l ->
+      List.filter ~f:(fun o -> compare_no_indexing l o = 0) lvals
+      |> Nonempty_list.of_list)
+  |> Nonempty_list.of_list
 
 let lvalues_written_to lv =
   let rec add_tuple_idxs lv : typed_lval list =
     (* If we're assigning an entire tuple, we also need to prevent assigning to
        any slot in this statement. *)
-    let type_, _ = UnsizedType.unwind_array_type lv.lmeta.type_ in
+    let type_, idxes = UnsizedType.unwind_array_type lv.lmeta.type_ in
     match (lv.lval, type_) with
-    | _, UTuple ts ->
+    | _, UTuple ts when idxes = 0 ->
         List.concat_mapi ts ~f:(fun i ty ->
             add_tuple_idxs
               { lval= LTupleProjection (lv, i + 1)
+              ; lmeta= {lv.lmeta with type_= ty} })
+    | _, UTuple ts ->
+        List.concat_mapi ts ~f:(fun i ty ->
+            add_tuple_idxs
+              { lval=
+                  LTupleProjection
+                    ( {lval= LIndexed (lv, []); lmeta= {lv.lmeta with type_}}
+                    , i + 1 )
               ; lmeta= {lv.lmeta with type_= ty} })
     | _ -> [lv] in
   let rec flatten_lvalue_pack lv =
@@ -1461,8 +1473,8 @@ let verify_lvalue_unique (lv : Ast.typed_lval_pack) =
   let () =
     (* check that things being assigned to are all unique *)
     match overlapping_lvalues all_lvals with
-    | [] -> ()
-    | dupes ->
+    | None -> ()
+    | Some dupes ->
         Semantic_error.cannot_assign_duplicate_unpacking loc dupes |> error
   in
   (* check that things being assigned to are not also being read Note: this is

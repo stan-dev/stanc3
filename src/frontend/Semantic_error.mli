@@ -1,3 +1,4 @@
+open Std
 open Middle
 
 type t
@@ -193,7 +194,7 @@ val cannot_assign_function : Location_span.t -> string -> UnsizedType.t -> t
 val cannot_assign_to_multiindex : Location_span.t -> t
 
 val cannot_assign_duplicate_unpacking :
-  Location_span.t -> Ast.untyped_lval list -> t
+  Location_span.t -> Ast.untyped_lval Nonempty_list.t Nonempty_list.t -> t
 
 val cannot_access_assigning_var : Location_span.t -> string list -> t
 val invalid_tilde_pdf_or_pmf : Location_span.t -> t

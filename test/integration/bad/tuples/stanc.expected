@@ -72,11 +72,14 @@ error: Ill-typed compound assignment statement.
 [exit 1]
   $ stanc bad_unpack_duplicates.stan
 error: Ill-typed assignment statement.
-    ┌─ bad_unpack_duplicates.stan:5:3
+    ┌─ bad_unpack_duplicates.stan:5:13
   4 │  
   5 │    (x, y, x, y) = (y, x, y, x);
-    │    ^^^^^^^^^^^^ The same value cannot be assigned to multiple times in one assignment:
-    │                   x, y
+    │     -  -  ^  ^ Cannot make multiple assignments to "y" in one assignment statement.
+    │     │  │  │
+    │     │  │  Cannot make multiple assignments to "x" in one assignment statement.
+    │     │  Previous assignment to "y" here.
+    │     Previous assignment to "x" here.
   6 │  }
 [exit 1]
   $ stanc bad_unpack_fn_type.stan
@@ -112,20 +115,22 @@ error: Syntax error: Ill-formed assignment.
 [exit 1]
   $ stanc bad_unpack_overlap1.stan
 error: Ill-typed assignment statement.
-    ┌─ bad_unpack_overlap1.stan:9:3
+    ┌─ bad_unpack_overlap1.stan:9:18
   8 │    // locations are being assigned to
   9 │    (x_flat[ : 3], x_flat[3 : ]) = x;
-    │    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ The same value cannot be assigned to multiple times in one assignment:
-    │                                   x_flat[...]
+    │     ------------  ^^^^^^^^^^^^ Cannot make multiple assignments to "x_flat[...]" in one assignment statement.
+    │     │
+    │     Previous assignment to "x_flat[...]" here.
  10 │  }
 [exit 1]
   $ stanc bad_unpack_overlap2.stan
 error: Ill-typed assignment statement.
-    ┌─ bad_unpack_overlap2.stan:4:3
+    ┌─ bad_unpack_overlap2.stan:4:14
   3 │    array[1] tuple(int, int) tup;
   4 │    (tup[i].1, tup[j].1) = (1, 2);
-    │    ^^^^^^^^^^^^^^^^^^^^ The same value cannot be assigned to multiple times in one assignment:
-    │                           tup[...].1
+    │     --------  ^^^^^^^^ Cannot make multiple assignments to "tup[...].1" in one assignment statement.
+    │     │
+    │     Previous assignment to "tup[...].1" here.
   5 │  }
 [exit 1]
   $ stanc bad_unpack_read_write.stan
@@ -168,20 +173,22 @@ error: Ill-typed assignment statement.
 [exit 1]
   $ stanc bad_unpack_tuple_overlap1.stan
 error: Ill-typed assignment statement.
-    ┌─ bad_unpack_tuple_overlap1.stan:3:3
+    ┌─ bad_unpack_tuple_overlap1.stan:3:13
   2 │    tuple(real, tuple(int, real)) tup;
   3 │    (tup.2.2, tup) = (1.5, (2.3, (4,5.5)));
-    │    ^^^^^^^^^^^^^^ The same value cannot be assigned to multiple times in one assignment:
-    │                     tup.2.2
+    │     -------  ^^^ Cannot make multiple assignments to "tup.2.2" in one assignment statement.
+    │     │
+    │     Previous assignment to "tup.2.2" here.
   4 │  }
 [exit 1]
   $ stanc bad_unpack_tuple_overlap2.stan
 error: Ill-typed assignment statement.
-    ┌─ bad_unpack_tuple_overlap2.stan:3:3
+    ┌─ bad_unpack_tuple_overlap2.stan:3:9
   2 │    array[1] tuple(int, int) tup;
   3 │    (tup, tup[1].1) = ({(1, 2)}, 3);
-    │    ^^^^^^^^^^^^^^^ The same value cannot be assigned to multiple times in one assignment:
-    │                      tup[...].1
+    │     ---  ^^^^^^^^ Cannot make multiple assignments to "tup[...].1" in one assignment statement.
+    │     │
+    │     Previous assignment to "tup[...].1" here.
   4 │  }
 [exit 1]
   $ stanc bad_unpack_types.stan
