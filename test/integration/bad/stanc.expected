@@ -43,9 +43,9 @@ error: Ill-typed assignment statement.
     ┌─ array-read-write-assign.stan:3:3
   2 │  array[2] int x = {1,2};
   3 │  x[x[1]] = 2;
-    │  - ^ The variable "x" cannot be read from in the same statement as it is being assigned to.
+    │  - ^ The variable "x" cannot be read from at the same time as it is being assigned to.
     │  │
-    │  Previous assignment to "x" here.
+    │  Assigning to "x" here.
   4 │  }
 [exit 1]
   $ stanc array-read-write-assign2.stan
@@ -53,9 +53,9 @@ error: Ill-typed assignment statement.
     ┌─ array-read-write-assign2.stan:4:5
   3 │  array[2] int x = {1,2};
   4 │  x[n[x[1]]] = 2;
-    │  -   ^ The variable "x" cannot be read from in the same statement as it is being assigned to.
+    │  -   ^ The variable "x" cannot be read from at the same time as it is being assigned to.
     │  │
-    │  Previous assignment to "x" here.
+    │  Assigning to "x" here.
   5 │  }
 [exit 1]
   $ stanc array_expr_bad1.stan

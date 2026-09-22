@@ -138,9 +138,9 @@ error: Ill-typed assignment statement.
     ┌─ bad_unpack_read_write.stan:4:9
   3 │    vector[2] y = [1, 1]';
   4 │    (x, y[x]) = (2, 2);
-    │     -    ^ The variable "x" cannot be read from in the same statement as it is being assigned to.
+    │     -    ^ The variable "x" cannot be read from at the same time as it is being assigned to.
     │     │
-    │     Previous assignment to "x" here.
+    │     Assigning to "x" here.
   5 │  }
 [exit 1]
   $ stanc bad_unpack_read_write2.stan
@@ -148,9 +148,9 @@ error: Ill-typed assignment statement.
     ┌─ bad_unpack_read_write2.stan:4:10
   3 │    vector[2] y = [1, 1]';
   4 │    (x2, y[x2.1]) = ((1,1), 2);
-    │     --    ^^ The variable "x2" cannot be read from in the same statement as it is being assigned to.
+    │     --    ^^ The variable "x2" cannot be read from at the same time as it is being assigned to.
     │     │
-    │     Previous assignment to "x2" here.
+    │     Assigning to "x2" here.
   5 │  }
 [exit 1]
   $ stanc bad_unpack_read_write3.stan
@@ -158,9 +158,9 @@ error: Ill-typed assignment statement.
     ┌─ bad_unpack_read_write3.stan:6:12
   5 │    // but it is both an edge case and very complicated to do so
   6 │    (x2.1, y[x2.2]) = (2, 2);
-    │     --      ^^ The variable "x2" cannot be read from in the same statement as it is being assigned to.
+    │     --      ^^ The variable "x2" cannot be read from at the same time as it is being assigned to.
     │     │
-    │     Previous assignment to "x2" here.
+    │     Assigning to "x2" here.
   7 │  }
 [exit 1]
   $ stanc bad_unpack_shape.stan

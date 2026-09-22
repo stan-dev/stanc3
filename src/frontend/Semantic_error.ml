@@ -931,8 +931,7 @@ module StatementError = struct
                    quoted hd.name)
               :: included
               @ List.concat_map tl ~f:(fun (id : Ast.identifier) ->
-                  context id.id_loc "Previous assignment to @[%a@] here." quoted
-                    id.name))
+                  context id.id_loc "Assigning to @[%a@] here." quoted id.name))
             (Nonempty_list.to_list ids) in
         createf Error ~labels "Ill-typed assignment statement."
     | TargetPlusEqualsOutsideModelOrLogProb ->
