@@ -44,6 +44,15 @@ type dep_info_map =
     the subscript-pruned definitions of the variables the statement reads. *)
 type dependency_graph = label Set.Poly.t LabelMap.t
 
+val classify_point :
+     loopvars:string Set.Poly.t
+  -> written_vars:string Set.Poly.t
+  -> Expr.Typed.t
+  -> point
+(** The [point] of one index expression over [loopvars]: affine in a loop
+    variable, invariant, or varying. Shared by the element test and by the
+    vectorizer's widening, so both agree on what an affine subscript is. *)
+
 val node_immediate_dependencies :
   dep_info_map -> ?blockers:string Set.Poly.t -> label -> label Set.Poly.t
 (** Given dependency information for each node, find the 'immediate'
