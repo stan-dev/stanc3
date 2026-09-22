@@ -774,9 +774,7 @@ module ExpressionError = struct
           (expected_style UnsizedType.pp)
           UInt found_type ut1
     | IllTypedBinaryOperator (op, lt, rt) ->
-        let sigs =
-          Stan_math_signatures.make_assignmentoperator_stan_math_signatures op
-        in
+        let sigs = Stan_math_signatures.operator_to_stan_math_signatures op in
         make_error
           ~summary:
             (Message.createf
@@ -795,9 +793,7 @@ module ExpressionError = struct
                 rt ]
           "Operator used here."
     | IllTypedPrefixOperator (op, ut) ->
-        let sigs =
-          Stan_math_signatures.make_assignmentoperator_stan_math_signatures op
-        in
+        let sigs = Stan_math_signatures.operator_to_stan_math_signatures op in
         make_error
           ~summary:
             (Message.createf
@@ -814,9 +810,7 @@ module ExpressionError = struct
                 ut ]
           "Operator used here."
     | IllTypedPostfixOperator (op, ut) ->
-        let sigs =
-          Stan_math_signatures.make_assignmentoperator_stan_math_signatures op
-        in
+        let sigs = Stan_math_signatures.operator_to_stan_math_signatures op in
         make_error
           ~summary:
             (Message.createf

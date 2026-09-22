@@ -840,25 +840,27 @@ error: Ill-typed arguments supplied to infix operator -.
     │        ^^^^^ Operator used here.
   5 │  }
     = Available signatures for -:
-        (int, int) => void
-        (real, int) => void
-        (real, real) => void
-        (vector, int) => void
-        (vector, real) => void
-        (vector, vector) => void
-        (complex, complex) => void
-        (row_vector, int) => void
-        (row_vector, real) => void
-        (row_vector, row_vector) => void
-        (matrix, int) => void
-        (matrix, real) => void
-        (matrix, matrix) => void
-        (complex_vector, complex) => void
-        (complex_vector, complex_vector) => void
-        (complex_row_vector, complex) => void
-        (complex_row_vector, complex_row_vector) => void
-        (complex_matrix, complex) => void
-        (complex_matrix, complex_matrix) => void
+        (int, int) => int
+        (real, real) => real
+        (real, vector) => vector
+        (real, row_vector) => row_vector
+        (real, matrix) => matrix
+        (vector, real) => vector
+        (vector, vector) => vector
+        (complex, complex) => complex
+        (complex, complex_vector) => complex_vector
+        (complex, complex_row_vector) => complex_row_vector
+        (complex, complex_matrix) => complex_matrix
+        (row_vector, real) => row_vector
+        (row_vector, row_vector) => row_vector
+        (matrix, real) => matrix
+        (matrix, matrix) => matrix
+        (complex_vector, complex) => complex_vector
+        (complex_vector, complex_vector) => complex_vector
+        (complex_row_vector, complex) => complex_row_vector
+        (complex_row_vector, complex_row_vector) => complex_row_vector
+        (complex_matrix, complex) => complex_matrix
+        (complex_matrix, complex_matrix) => complex_matrix
       Instead supplied arguments of incompatible type: vector, matrix.
 [exit 1]
   $ stanc err-nested-parens-close.stan
@@ -1622,25 +1624,27 @@ error: Ill-typed arguments supplied to infix operator +.
     │        ^^^^^ Operator used here.
   8 │  }
     = Available signatures for +:
-        (int, int) => void
-        (real, int) => void
-        (real, real) => void
-        (vector, int) => void
-        (vector, real) => void
-        (vector, vector) => void
-        (complex, complex) => void
-        (row_vector, int) => void
-        (row_vector, real) => void
-        (row_vector, row_vector) => void
-        (matrix, int) => void
-        (matrix, real) => void
-        (matrix, matrix) => void
-        (complex_vector, complex) => void
-        (complex_vector, complex_vector) => void
-        (complex_row_vector, complex) => void
-        (complex_row_vector, complex_row_vector) => void
-        (complex_matrix, complex) => void
-        (complex_matrix, complex_matrix) => void
+        (int, int) => int
+        (real, real) => real
+        (real, vector) => vector
+        (real, row_vector) => row_vector
+        (real, matrix) => matrix
+        (vector, real) => vector
+        (vector, vector) => vector
+        (complex, complex) => complex
+        (complex, complex_vector) => complex_vector
+        (complex, complex_row_vector) => complex_row_vector
+        (complex, complex_matrix) => complex_matrix
+        (row_vector, real) => row_vector
+        (row_vector, row_vector) => row_vector
+        (matrix, real) => matrix
+        (matrix, matrix) => matrix
+        (complex_vector, complex) => complex_vector
+        (complex_vector, complex_vector) => complex_vector
+        (complex_row_vector, complex) => complex_row_vector
+        (complex_row_vector, complex_row_vector) => complex_row_vector
+        (complex_matrix, complex) => complex_matrix
+        (complex_matrix, complex_matrix) => complex_matrix
       Instead supplied arguments of incompatible type: matrix, vector.
 [exit 1]
   $ stanc op_divide_bad.stan
@@ -1651,19 +1655,25 @@ error: Ill-typed arguments supplied to infix operator /.
     │        ^^^^^ Operator used here.
   8 │  }
     = Available signatures for /:
-        (int, int) => void
-        (real, int) => void
-        (real, real) => void
-        (vector, int) => void
-        (vector, real) => void
-        (complex, complex) => void
-        (row_vector, int) => void
-        (row_vector, real) => void
-        (matrix, int) => void
-        (matrix, real) => void
-        (complex_vector, complex) => void
-        (complex_row_vector, complex) => void
-        (complex_matrix, complex) => void
+        (int, int) => int
+        (real, real) => real
+        (real, vector) => vector
+        (real, row_vector) => row_vector
+        (real, matrix) => matrix
+        (vector, real) => vector
+        (complex, complex) => complex
+        (complex, complex_vector) => complex_vector
+        (complex, complex_row_vector) => complex_row_vector
+        (complex, complex_matrix) => complex_matrix
+        (row_vector, real) => row_vector
+        (matrix, real) => matrix
+        (complex_vector, complex) => complex_vector
+        (complex_row_vector, complex) => complex_row_vector
+        (complex_matrix, complex) => complex_matrix
+        (row_vector, matrix) => row_vector
+        (matrix, matrix) => matrix
+        (complex_row_vector, complex_matrix) => complex_row_vector
+        (complex_matrix, complex_matrix) => complex_matrix
       Instead supplied arguments of incompatible type: array[] int, matrix.
 [exit 1]
   $ stanc op_divide_right_bad.stan
@@ -1674,19 +1684,25 @@ error: Ill-typed arguments supplied to infix operator /.
     │        ^^^^^ Operator used here.
   8 │  }
     = Available signatures for /:
-        (int, int) => void
-        (real, int) => void
-        (real, real) => void
-        (vector, int) => void
-        (vector, real) => void
-        (complex, complex) => void
-        (row_vector, int) => void
-        (row_vector, real) => void
-        (matrix, int) => void
-        (matrix, real) => void
-        (complex_vector, complex) => void
-        (complex_row_vector, complex) => void
-        (complex_matrix, complex) => void
+        (int, int) => int
+        (real, real) => real
+        (real, vector) => vector
+        (real, row_vector) => row_vector
+        (real, matrix) => matrix
+        (vector, real) => vector
+        (complex, complex) => complex
+        (complex, complex_vector) => complex_vector
+        (complex, complex_row_vector) => complex_row_vector
+        (complex, complex_matrix) => complex_matrix
+        (row_vector, real) => row_vector
+        (matrix, real) => matrix
+        (complex_vector, complex) => complex_vector
+        (complex_row_vector, complex) => complex_row_vector
+        (complex_matrix, complex) => complex_matrix
+        (row_vector, matrix) => row_vector
+        (matrix, matrix) => matrix
+        (complex_row_vector, complex_matrix) => complex_row_vector
+        (complex_matrix, complex_matrix) => complex_matrix
       Instead supplied arguments of incompatible type: array[] int, matrix.
 [exit 1]
   $ stanc op_elt_divide_bad.stan
@@ -1697,22 +1713,27 @@ error: Ill-typed arguments supplied to infix operator ./.
     │        ^^^^^^ Operator used here.
   8 │  }
     = Available signatures for ./:
-        (vector, int) => void
-        (vector, real) => void
-        (vector, vector) => void
-        (complex, complex) => void
-        (row_vector, int) => void
-        (row_vector, real) => void
-        (row_vector, row_vector) => void
-        (matrix, int) => void
-        (matrix, real) => void
-        (matrix, matrix) => void
-        (complex_vector, complex) => void
-        (complex_vector, complex_vector) => void
-        (complex_row_vector, complex) => void
-        (complex_row_vector, complex_row_vector) => void
-        (complex_matrix, complex) => void
-        (complex_matrix, complex_matrix) => void
+        (int, int) => int
+        (real, real) => real
+        (real, vector) => vector
+        (real, row_vector) => row_vector
+        (real, matrix) => matrix
+        (vector, real) => vector
+        (vector, vector) => vector
+        (complex, complex) => complex
+        (complex, complex_vector) => complex_vector
+        (complex, complex_row_vector) => complex_row_vector
+        (complex, complex_matrix) => complex_matrix
+        (row_vector, real) => row_vector
+        (row_vector, row_vector) => row_vector
+        (matrix, real) => matrix
+        (matrix, matrix) => matrix
+        (complex_vector, complex) => complex_vector
+        (complex_vector, complex_vector) => complex_vector
+        (complex_row_vector, complex) => complex_row_vector
+        (complex_row_vector, complex_row_vector) => complex_row_vector
+        (complex_matrix, complex) => complex_matrix
+        (complex_matrix, complex_matrix) => complex_matrix
       Instead supplied arguments of incompatible type: array[] int, matrix.
 [exit 1]
   $ stanc op_elt_multiply_bad.stan
@@ -1723,22 +1744,27 @@ error: Ill-typed arguments supplied to infix operator .*.
     │        ^^^^^^ Operator used here.
   8 │  }
     = Available signatures for .*:
-        (vector, int) => void
-        (vector, real) => void
-        (vector, vector) => void
-        (complex, complex) => void
-        (row_vector, int) => void
-        (row_vector, real) => void
-        (row_vector, row_vector) => void
-        (matrix, int) => void
-        (matrix, real) => void
-        (matrix, matrix) => void
-        (complex_vector, complex) => void
-        (complex_vector, complex_vector) => void
-        (complex_row_vector, complex) => void
-        (complex_row_vector, complex_row_vector) => void
-        (complex_matrix, complex) => void
-        (complex_matrix, complex_matrix) => void
+        (int, int) => int
+        (real, real) => real
+        (real, vector) => vector
+        (real, row_vector) => row_vector
+        (real, matrix) => matrix
+        (vector, real) => vector
+        (vector, vector) => vector
+        (complex, complex) => complex
+        (complex, complex_vector) => complex_vector
+        (complex, complex_row_vector) => complex_row_vector
+        (complex, complex_matrix) => complex_matrix
+        (row_vector, real) => row_vector
+        (row_vector, row_vector) => row_vector
+        (matrix, real) => matrix
+        (matrix, matrix) => matrix
+        (complex_vector, complex) => complex_vector
+        (complex_vector, complex_vector) => complex_vector
+        (complex_row_vector, complex) => complex_row_vector
+        (complex_row_vector, complex_row_vector) => complex_row_vector
+        (complex_matrix, complex) => complex_matrix
+        (complex_matrix, complex_matrix) => complex_matrix
       Instead supplied arguments of incompatible type: array[] int, matrix.
 [exit 1]
   $ stanc op_intdivide_bad.stan
@@ -1749,7 +1775,7 @@ error: Ill-typed arguments supplied to infix operator %/%.
     │        ^^^^^^^ Operator used here.
   8 │  }
     = Available signatures for %/%:
-        
+        (int, int) => int
       Instead supplied arguments of incompatible type: array[] int, matrix.
 [exit 1]
   $ stanc op_intdivide_bad_1.stan
@@ -1760,7 +1786,7 @@ error: Ill-typed arguments supplied to infix operator %/%.
     │             ^^^^^^^ Operator used here.
   7 │    real c = a %/% b;
     = Available signatures for %/%:
-        
+        (int, int) => int
       Instead supplied arguments of incompatible type: real, real.
 [exit 1]
   $ stanc op_intdivide_bad_2.stan
@@ -1771,7 +1797,7 @@ error: Ill-typed arguments supplied to infix operator %/%.
     │             ^^^^^^^ Operator used here.
   7 │    real c = a %/% b;
     = Available signatures for %/%:
-        
+        (int, int) => int
       Instead supplied arguments of incompatible type: int, real.
 [exit 1]
   $ stanc op_intdivide_bad_3.stan
@@ -1782,7 +1808,7 @@ error: Ill-typed arguments supplied to infix operator %/%.
     │             ^^^^^^^ Operator used here.
   7 │    real c = a %/% b;
     = Available signatures for %/%:
-        
+        (int, int) => int
       Instead supplied arguments of incompatible type: real, int.
 [exit 1]
   $ stanc op_logical_negation_bad.stan
@@ -1793,7 +1819,7 @@ error: Ill-typed arguments supplied to prefix operator !.
     │        ^^ Operator used here.
   8 │  }
     = Available signatures for !:
-        
+        (int) => int
       Instead supplied argument of incompatible type: array[] int.
 [exit 1]
   $ stanc op_mdivide_left_bad.stan
@@ -1804,7 +1830,8 @@ error: Ill-typed arguments supplied to infix operator \.
     │        ^^^^^ Operator used here.
   8 │  }
     = Available signatures for \:
-        (matrix, matrix) => void
+        (matrix, vector) => vector
+        (matrix, matrix) => matrix
       Instead supplied arguments of incompatible type: array[] int, matrix.
 [exit 1]
   $ stanc op_modulus_bad.stan
@@ -1815,7 +1842,7 @@ error: Ill-typed arguments supplied to infix operator %.
     │        ^^^^^ Operator used here.
   8 │  }
     = Available signatures for %:
-        (int, int) => void
+        (int, int) => int
       Instead supplied arguments of incompatible type: array[] int, matrix.
 [exit 1]
   $ stanc op_multiplication_bad.stan
@@ -1826,23 +1853,31 @@ error: Ill-typed arguments supplied to infix operator *.
     │        ^^^^^ Operator used here.
   8 │  }
     = Available signatures for *:
-        (int, int) => void
-        (real, int) => void
-        (real, real) => void
-        (vector, int) => void
-        (vector, real) => void
-        (complex, complex) => void
-        (row_vector, int) => void
-        (row_vector, real) => void
-        (row_vector, matrix) => void
-        (matrix, int) => void
-        (matrix, real) => void
-        (matrix, matrix) => void
-        (complex_vector, complex) => void
-        (complex_row_vector, complex) => void
-        (complex_row_vector, complex_matrix) => void
-        (complex_matrix, complex) => void
-        (complex_matrix, complex_matrix) => void
+        (int, int) => int
+        (real, real) => real
+        (real, vector) => vector
+        (real, row_vector) => row_vector
+        (real, matrix) => matrix
+        (vector, real) => vector
+        (vector, row_vector) => matrix
+        (complex, complex) => complex
+        (complex, complex_vector) => complex_vector
+        (complex, complex_row_vector) => complex_row_vector
+        (complex, complex_matrix) => complex_matrix
+        (row_vector, real) => row_vector
+        (row_vector, vector) => real
+        (row_vector, matrix) => row_vector
+        (matrix, real) => matrix
+        (matrix, vector) => vector
+        (matrix, matrix) => matrix
+        (complex_vector, complex) => complex_vector
+        (complex_vector, complex_row_vector) => complex_matrix
+        (complex_row_vector, complex) => complex_row_vector
+        (complex_row_vector, complex_vector) => complex
+        (complex_row_vector, complex_matrix) => complex_row_vector
+        (complex_matrix, complex) => complex_matrix
+        (complex_matrix, complex_vector) => complex_vector
+        (complex_matrix, complex_matrix) => complex_matrix
       Instead supplied arguments of incompatible type: array[] int, matrix.
 [exit 1]
   $ stanc op_subtraction_bad.stan
@@ -1853,25 +1888,27 @@ error: Ill-typed arguments supplied to infix operator -.
     │        ^^^^^ Operator used here.
   8 │  }
     = Available signatures for -:
-        (int, int) => void
-        (real, int) => void
-        (real, real) => void
-        (vector, int) => void
-        (vector, real) => void
-        (vector, vector) => void
-        (complex, complex) => void
-        (row_vector, int) => void
-        (row_vector, real) => void
-        (row_vector, row_vector) => void
-        (matrix, int) => void
-        (matrix, real) => void
-        (matrix, matrix) => void
-        (complex_vector, complex) => void
-        (complex_vector, complex_vector) => void
-        (complex_row_vector, complex) => void
-        (complex_row_vector, complex_row_vector) => void
-        (complex_matrix, complex) => void
-        (complex_matrix, complex_matrix) => void
+        (int, int) => int
+        (real, real) => real
+        (real, vector) => vector
+        (real, row_vector) => row_vector
+        (real, matrix) => matrix
+        (vector, real) => vector
+        (vector, vector) => vector
+        (complex, complex) => complex
+        (complex, complex_vector) => complex_vector
+        (complex, complex_row_vector) => complex_row_vector
+        (complex, complex_matrix) => complex_matrix
+        (row_vector, real) => row_vector
+        (row_vector, row_vector) => row_vector
+        (matrix, real) => matrix
+        (matrix, matrix) => matrix
+        (complex_vector, complex) => complex_vector
+        (complex_vector, complex_vector) => complex_vector
+        (complex_row_vector, complex) => complex_row_vector
+        (complex_row_vector, complex_row_vector) => complex_row_vector
+        (complex_matrix, complex) => complex_matrix
+        (complex_matrix, complex_matrix) => complex_matrix
       Instead supplied arguments of incompatible type: vector, matrix.
 [exit 1]
   $ stanc op_transpose_bad.stan
@@ -1882,7 +1919,12 @@ error: Ill-typed arguments supplied to postfix operator '.
     │        ^^ Operator used here.
   8 │  }
     = Available signatures for ':
-        
+        (vector) => row_vector
+        (row_vector) => vector
+        (matrix) => matrix
+        (complex_vector) => complex_row_vector
+        (complex_row_vector) => complex_vector
+        (complex_matrix) => complex_matrix
       Instead supplied argument of incompatible type: array[] int.
 [exit 1]
   $ stanc print-bad.stan
@@ -2491,7 +2533,7 @@ error: Ill-typed arguments supplied to prefix operator !.
     │        ^^ Operator used here.
   4 │  }
     = Available signatures for !:
-        
+        (int) => int
       Instead supplied argument of incompatible type: vector.
 [exit 1]
   $ stanc validate_modulus_bad.stan
@@ -2502,7 +2544,7 @@ error: Ill-typed arguments supplied to infix operator %.
     │        ^^^^^ Operator used here.
   8 │  }
     = Available signatures for %:
-        (int, int) => void
+        (int, int) => int
       Instead supplied arguments of incompatible type: real, real.
 [exit 1]
   $ stanc validate_set_double_offset_multiplier_bad1.stan

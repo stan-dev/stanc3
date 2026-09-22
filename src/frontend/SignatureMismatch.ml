@@ -516,8 +516,25 @@ let to_grace (name, arg_tys, (sigs, omitted)) =
         sigs pp_omitted () ] in
   (~summary, ~notes)
 
-let list_valid_assignmentoperator_rhs lt op =
-  Stan_math_signatures.make_assignmentoperator_stan_math_signatures op
+let list_valid_assignmentoperator_rhs lt assop =
+  (match assop with
+    | Operator.Divide -> ["divide"]
+    | assop -> Stan_math_signatures.operator_to_stan_math_fns assop)
+  |> List.concat_map ~f:Stan_math_signatures.lookup_stan_math_function
+  |> List.concat_map ~f:(function
+    | [(ad1, lhs); (ad2, rhs)], UnsizedType.ReturnType rtype, _, _
+      when rtype = lhs
+           && not
+                ((assop = Operator.EltTimes || assop = Operator.EltDivide)
+                && UnsizedType.is_scalar_type rtype) ->
+        if rhs = UReal then
+          [ ( [(ad1, lhs); (ad2, UInt)]
+            , UnsizedType.Void
+            , Fun_kind.FnPlain
+            , Mem_pattern.SoA )
+          ; ([(ad1, lhs); (ad2, UReal)], Void, FnPlain, SoA) ]
+        else [([(ad1, lhs); (ad2, rhs)], Void, FnPlain, SoA)]
+    | _ -> [])
   |> List.filter_map ~f:(fun (args, _, _, _) ->
       match args with
       | [(_, a); (_, b)] -> (
