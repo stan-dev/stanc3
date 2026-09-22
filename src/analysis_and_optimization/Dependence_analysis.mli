@@ -160,3 +160,34 @@ val mir_uninitialized_variables :
 val read_variables_at : dep_info_map -> label Set.Poly.t -> string Set.Poly.t
 (** The variables that the statements at [labels] read or increment, counting
     only the bounds of a [for] and the condition of an [if]. *)
+
+(** {2 The loop dependence graph of one [For]} *)
+
+(** How the sink depends on the source: reads what the source wrote, writes what
+    the source read, writes what the source wrote, or both have effects. *)
+type dep_kind = Flow | Anti | Output | Effects
+
+(** [src] executes no later than [dst] in the original loop (Kennedy and Allen
+    2001, Definition 2.1). [dep] is the element test between the two leaves'
+    accesses to [var] at the analysed loop's level, restricted to that order;
+    [var] is [None] for [Effects]. *)
+type edge =
+  {src: label; dst: label; var: string option; kind: dep_kind; dep: Dependence.t}
+
+(** The graph of one [For]: the leaves of the body in lexical order and the
+    edges between them. *)
+type loop_graph = {leaves: label list; edges: edge list}
+
+val root_label : label
+(** The label of the analysed statement itself, [1]. *)
+
+val subtree_accesses : dep_info_map -> label -> point Accesses.t
+(** The accesses of the statement at the label and of every statement below. *)
+
+val build_loop_graph : dep_info_map -> loop:label -> loop_graph
+(** The flow, anti, output and effects edges between the leaves of the [For] at
+    [loop], at that loop's level; the implementation documents the rules. *)
+
+val pp_graph : dep_info_map -> Format.formatter -> loop_graph -> unit
+(** One indented line per leaf, then the edges and the pi-blocks (Allen and
+    Kennedy 1987 §5.2) in emission order. *)
