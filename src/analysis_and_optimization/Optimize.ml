@@ -540,25 +540,6 @@ let function_inlining (mir : Program.Typed.t) =
   ; generate_quantities=
       dataonly_inline_function_statements mir.generate_quantities }
 
-let rec contains_top_break_or_continue Stmt.{pattern; _} =
-  match pattern with
-  | Break | Continue -> true
-  | Assignment (_, _, _)
-   |TargetPE _ | JacobianPE _
-   |NRFunApp (_, _)
-   |Return _ | Decl _
-   |While (_, _)
-   |For _ | Skip ->
-      false
-  | Profile (_, l) | Block l | SList l ->
-      List.exists l ~f:contains_top_break_or_continue
-  | IfElse (_, b1, b2) -> (
-      contains_top_break_or_continue b1
-      ||
-      match b2 with
-      | None -> false
-      | Some b -> contains_top_break_or_continue b)
-
 let unroll_static_limit = 32
 
 let unroll_static_loops_statement _ =
@@ -1575,7 +1556,8 @@ let optimization_suite ?(settings = all_optimizations) mir =
       (* Book: Dead-code elimination *)
     ; (dead_code_elimination, settings.dead_code_elimination)
       (* Vectorization needs the loops intact, so it runs before one-step
-         unrolling. *)
+         unrolling; the dependence-graph report reads the same loops. *)
+    ; (Loop_vectorize.vectorize_loops, settings.vectorize_loops)
     ; (vectorize_loops, settings.vectorize_loops)
       (* Matthijs: Before lazy code motion to get loop-invariant code motion *)
     ; (one_step_loop_unrolling, settings.one_step_loop_unrolling)

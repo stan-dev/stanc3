@@ -14,6 +14,7 @@ type other_output =
   | Formatted of string
   | DebugOutput of string
   | Memory_patterns of string
+  | Loop_vectorization of string  (** the [--debug-loop-vectorization] report *)
   | Info of string
   | Version of string
   | Generated of string

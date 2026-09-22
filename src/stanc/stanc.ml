@@ -41,7 +41,7 @@ let output_callback break output_file printed_filename code :
   | Generated s | Formatted s ->
       (* these options will use the --o flag if it was passed *)
       break (print_or_write_and_exit output_file s)
-  | DebugOutput s | Memory_patterns s ->
+  | DebugOutput s | Memory_patterns s | Loop_vectorization s ->
       (* historically, these flags didn't prevent you from continuing *)
       print_string s
   | Warnings ws -> Warnings.pp_warnings Fmt.stderr ?printed_filename ?code ws

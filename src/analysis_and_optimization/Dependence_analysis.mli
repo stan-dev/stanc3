@@ -54,6 +54,9 @@ module Accesses : sig
     ; increments: 'index access list
           (** the accesses that read and write, such as [target += ...], but
               commute with each other *) }
+
+  val written_vars : 'index t -> string Set.Poly.t
+  (** The names of the variables that the accesses write or increment. *)
 end
 
 (** {1 Dependences between two accesses} *)

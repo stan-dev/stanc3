@@ -43,6 +43,27 @@ let cannot_duplicate_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
 
 let cannot_remove_expr (e : Expr.Typed.t) = expr_any can_side_effect_top_expr e
 
+(** A [break] or [continue] that leaves this loop, not one inside a nested loop.
+*)
+let rec contains_top_break_or_continue Stmt.{pattern; _} =
+  match pattern with
+  | Break | Continue -> true
+  | Assignment (_, _, _)
+   |TargetPE _ | JacobianPE _
+   |NRFunApp (_, _)
+   |Return _ | Decl _
+   |While (_, _)
+   |For _ | Skip ->
+      false
+  | Profile (_, l) | Block l | SList l ->
+      List.exists l ~f:contains_top_break_or_continue
+  | IfElse (_, b1, b2) -> (
+      contains_top_break_or_continue b1
+      ||
+      match b2 with
+      | None -> false
+      | Some b -> contains_top_break_or_continue b)
+
 let rec fold_expr ~take_expr ~(init : 'c) (expr : Expr.Typed.t) : 'c =
   Expr.Pattern.fold
     (fun a e -> fold_expr ~take_expr ~init:(take_expr a e) e)

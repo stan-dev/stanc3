@@ -292,6 +292,15 @@ module Debug_Options = struct
        on." in
     Arg.(value & flag & info ["debug-mem-patterns"] ~doc ~docs)
 
+  let debug_loop_vectorization =
+    let doc =
+      "For debugging purposes: for every loop, print the dependence graph of \
+       the loop body and the strongly connected components (pi-blocks) in \
+       emission order. Only has an effect when the loop vectorization pass \
+       runs ($(b,-fvectorize-loops) or an optimization level that enables it)."
+    in
+    Arg.(value & flag & info ["debug-loop-vectorization"] ~doc ~docs)
+
   (** helper for paired args like --debug-mir and --debug-mir-pretty *)
   let debug_basic_or_pretty ~doc flag_name : Driver.Flags.debug_options Term.t =
     let doc_pretty = String.replace_all ~sub:"print" ~by:"pretty-print" doc in
@@ -327,14 +336,30 @@ module Debug_Options = struct
        factor graph for the model(s) implemented in the Stan program." in
     Arg.(value & flag & info ["debug-print-factor-graph"] ~doc ~docs)
 
-  let force_soa =
+  (** A pass that [-f] forces on or off apart from the [--O*] level. *)
+  type forced_pass = Soa | Vectorize_loops
+
+  let force_settings =
     let doc =
       "Debugging features. Valid values: $(b,-fsoa) to force on the Struct of \
-       Arrays optimization. $(b,-fno-soa) to force it off." in
+       Arrays optimization, $(b,-fno-soa) to force it off; \
+       $(b,-fvectorize-loops) to force on the loop vectorization pass, \
+       $(b,-fno-vectorize-loops) to force it off. May be given more than once; \
+       the last occurrence of each setting wins." in
     Arg.(
       value
-      & opt (some @@ enum [("soa", true); ("no-soa", false)]) None
+      & opt_all
+          (enum
+             [ ("soa", (Soa, true)); ("no-soa", (Soa, false))
+             ; ("vectorize-loops", (Vectorize_loops, true))
+             ; ("no-vectorize-loops", (Vectorize_loops, false)) ])
+          []
       & info ["f"] ~doc ~docv:"SETTING" ~docs)
+
+  (** The last [-f] occurrence for [pass], if any. *)
+  let last_setting settings pass =
+    List.fold_left settings ~init:None ~f:(fun last (forced, on) ->
+        if forced = pass then Some on else last)
 end
 
 (** Flags common to all compiler drivers and those specific to the command line
@@ -372,7 +397,8 @@ module Conversion = struct
     and+ print_transformed_mir = debug_transformed_mir
     and+ print_optimized_mir = debug_optimized_mir
     and+ print_mem_patterns = debug_mem_patterns
-    and+ force_soa
+    and+ print_loop_vectorization = debug_loop_vectorization
+    and+ force_settings
     and+ print_lir = debug_lir
     and+ debug_generate_data
     and+ debug_generate_inits
@@ -385,7 +411,9 @@ module Conversion = struct
       ; print_transformed_mir
       ; print_optimized_mir
       ; print_mem_patterns
-      ; force_soa
+      ; print_loop_vectorization
+      ; force_soa= last_setting force_settings Soa
+      ; force_vectorize_loops= last_setting force_settings Vectorize_loops
       ; print_lir
       ; debug_generate_data
       ; debug_generate_inits
