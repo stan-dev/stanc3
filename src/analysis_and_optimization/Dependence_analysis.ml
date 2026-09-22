@@ -157,17 +157,25 @@ let reaching_defn_lookup (rds : reaching_defn Set.Poly.t) (var : string) :
 
 (** [dep] restricted to the direction vectors where the access at [src] executes
     before the access at [dst] (Kennedy and Allen 2001, Definition 2.1): the
-    outermost non-[Eq] level is [Lt], or all are [Eq] and [src < dst]. *)
+    outermost non-[Eq] level is [Lt], or all are [Eq] and [src < dst]. [Eq]
+    survives at a level only when the levels inside allow the order. *)
 let ordered_dependence ~(src : label) ~(dst : label) (dep : dependence) :
     dependence =
   let rec restrict = function
     | [] -> Option.some_if (src < dst) []
     | level :: inner ->
-        let directions = Set.Poly.remove Gt level.directions in
+        let same_iteration =
+          if Set.Poly.mem Eq level.directions then restrict inner else None
+        in
+        let directions =
+          Set.Poly.filter level.directions ~f:(function
+            | Lt -> true
+            | Eq -> Option.is_some same_iteration
+            | Gt -> false) in
         if Set.Poly.is_empty directions then None
         else if Set.Poly.mem Lt directions then
           Some ({level with directions} :: inner)
-        else Option.map (restrict inner) ~f:(List.cons {level with directions})
+        else Option.map same_iteration ~f:(List.cons {level with directions})
   in
   match dep with
   | Independent -> Independent
