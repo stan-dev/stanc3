@@ -837,7 +837,7 @@ module StatementError = struct
     | LValueMultiIndexing
     | LValueTupleUnpackDuplicates of
         Ast.untyped_lval Nonempty_list.t Nonempty_list.t
-    | LValueTupleReadAndWrite of string list
+    | LValueTupleReadAndWrite of Ast.identifier Nonempty_list.t Nonempty_list.t
     | InvalidTildePDForPMF
     | InvalidTildeCDForCCDF of string
     | InvalidTildeNoSuchDistribution of string * bool
@@ -912,15 +912,29 @@ module StatementError = struct
                   context lv.lmeta.loc "Previous assignment to @[%a@] here."
                     pp_lvalue lv))
             (Nonempty_list.to_list lvs) in
-        let summary = Message.create "Ill-typed assignment statement." in
-        create Error ~labels summary
+        createf Error ~labels "Ill-typed assignment statement."
     | LValueTupleReadAndWrite ids ->
-        make_error
-          ~summary:(Message.create "Ill-typed assignment statement.")
-          "@[<v2>The same variable cannot be both assigned to and read from on \
-           the left hand side of an assignment:@ @[%a@]@]"
-          Fmt.(list ~sep:comma string)
-          ids
+        (* Same as above, we may report multiple errors in principle here *)
+        let labels =
+          List.concat_map
+            ~f:(fun (l : Ast.identifier Nonempty_list.t) ->
+              let (hd :: tl) = l in
+              let range, included =
+                let printed_filename = !printed_filename_ref in
+                let code = !code_ref in
+                Diagnostic.range_of_loc_span ?printed_filename ?code hd.id_loc
+              in
+              Diagnostic.unstyle
+                (Label.primaryf ~range
+                   "The variable @[%a@] cannot be read from at the same time \
+                    as it is being assigned to."
+                   quoted hd.name)
+              :: included
+              @ List.concat_map tl ~f:(fun (id : Ast.identifier) ->
+                  context id.id_loc "Previous assignment to @[%a@] here." quoted
+                    id.name))
+            (Nonempty_list.to_list ids) in
+        createf Error ~labels "Ill-typed assignment statement."
     | TargetPlusEqualsOutsideModelOrLogProb ->
         make_error
           "Target can only be accessed in the model block or in functions \

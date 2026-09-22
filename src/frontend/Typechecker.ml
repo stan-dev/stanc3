@@ -98,11 +98,13 @@ let type_of_expr_typed ue = ue.emeta.type_
 let has_int_type ue = ue.emeta.type_ = UInt
 let has_int_array_type ue = ue.emeta.type_ = UArray UInt
 
-let rec name_of_lval lv =
+let rec id_of_lval lv =
   match lv.lval with
-  | LVariable id -> id.name
-  | LTupleProjection (lv, _) -> name_of_lval lv
-  | LIndexed (lv, _) -> name_of_lval lv
+  | LVariable id -> id
+  | LTupleProjection (lv, _) -> id_of_lval lv
+  | LIndexed (lv, _) -> id_of_lval lv
+
+let name_of_lval lv = (id_of_lval lv).name
 
 let has_int_or_real_type ue =
   match ue.emeta.type_ with UInt | UReal -> true | _ -> false
@@ -1413,6 +1415,11 @@ let overlapping_lvalues lvals =
       |> Nonempty_list.of_list)
   |> Nonempty_list.of_list
 
+let rec flatten_lvalue_pack lv =
+  match lv with
+  | LTuplePack {lvals; _} -> List.concat_map ~f:flatten_lvalue_pack lvals
+  | LValue lv -> [lv]
+
 let lvalues_written_to lv =
   let rec add_tuple_idxs lv : typed_lval list =
     (* If we're assigning an entire tuple, we also need to prevent assigning to
@@ -1433,10 +1440,6 @@ let lvalues_written_to lv =
                     , i + 1 )
               ; lmeta= {lv.lmeta with type_= ty} })
     | _ -> [lv] in
-  let rec flatten_lvalue_pack lv =
-    match lv with
-    | LTuplePack {lvals; _} -> List.concat_map ~f:flatten_lvalue_pack lvals
-    | LValue lv -> [lv] in
   flatten_lvalue_pack lv
   |> List.concat_map ~f:add_tuple_idxs
   |> List.map ~f:Ast.untyped_lvalue_of_typed_lvalue
@@ -1446,18 +1449,14 @@ let variables_accessed_in lv =
      only the expressions inside of LIndexed *)
   let rec extract_indices lv =
     match lv.lval with
-    | LVariable _ -> String.Set.empty
+    | LVariable _ -> []
     | LTupleProjection (lv, _) -> extract_indices lv
     | LIndexed (lv, es) ->
-        List.concat_map ~f:exprs_in_index es
-        |> List.concat_map ~f:extract_ids
-        |> List.map ~f:(fun {name; _} -> name)
-        |> String.Set.of_list
-        |> String.Set.union (extract_indices lv) in
+        (List.concat_map ~f:exprs_in_index es |> List.concat_map ~f:extract_ids)
+        @ extract_indices lv in
   let rec extract_indices_pack lv =
     match lv with
-    | LTuplePack {lvals; _} ->
-        String.Set.union_list (List.map ~f:extract_indices_pack lvals)
+    | LTuplePack {lvals; _} -> List.concat_map ~f:extract_indices_pack lvals
     | LValue lv -> extract_indices lv in
   extract_indices_pack lv
 
@@ -1481,11 +1480,23 @@ let verify_lvalue_unique (lv : Ast.typed_lval_pack) =
      much less refined than the above and forbids some cases that would be
      harmless, but this is also in general a very weird thing to try to do, so I
      think that is acceptable *)
-  let all_variables = List.map ~f:name_of_lval all_lvals |> String.Set.of_list in
+  let all_variables = List.map ~f:id_of_lval (flatten_lvalue_pack lv) in
   let accessed_lvals = variables_accessed_in lv in
-  match String.Set.inter accessed_lvals all_variables |> String.Set.to_list with
-  | [] -> ()
-  | dupes -> Semantic_error.cannot_access_assigning_var loc dupes |> error
+  let overlap =
+    List.filter_map
+      ~f:(fun id ->
+        match
+          List.filter
+            ~f:(fun o -> Ast.compare_identifier id o = 0)
+            all_variables
+        with
+        | [] -> None
+        | l -> Some Nonempty_list.(id :: l))
+      accessed_lvals
+    |> Nonempty_list.of_list in
+  match overlap with
+  | None -> ()
+  | Some dupes -> Semantic_error.cannot_access_assigning_var loc dupes |> error
 
 let verify_assignable_id loc cf tenv assign_id =
   let block, global, readonly, decl_location =

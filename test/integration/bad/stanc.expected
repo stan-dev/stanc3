@@ -40,20 +40,22 @@ error: Syntax error: Invalid type in declaration.
 [exit 1]
   $ stanc array-read-write-assign.stan
 error: Ill-typed assignment statement.
-    ┌─ array-read-write-assign.stan:3:1
+    ┌─ array-read-write-assign.stan:3:3
   2 │  array[2] int x = {1,2};
   3 │  x[x[1]] = 2;
-    │  ^^^^^^^ The same variable cannot be both assigned to and read from on the left hand side of an assignment:
-    │            x
+    │  - ^ The variable "x" cannot be read from in the same statement as it is being assigned to.
+    │  │
+    │  Previous assignment to "x" here.
   4 │  }
 [exit 1]
   $ stanc array-read-write-assign2.stan
 error: Ill-typed assignment statement.
-    ┌─ array-read-write-assign2.stan:4:1
+    ┌─ array-read-write-assign2.stan:4:5
   3 │  array[2] int x = {1,2};
   4 │  x[n[x[1]]] = 2;
-    │  ^^^^^^^^^^ The same variable cannot be both assigned to and read from on the left hand side of an assignment:
-    │               x
+    │  -   ^ The variable "x" cannot be read from in the same statement as it is being assigned to.
+    │  │
+    │  Previous assignment to "x" here.
   5 │  }
 [exit 1]
   $ stanc array_expr_bad1.stan

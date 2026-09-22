@@ -196,7 +196,9 @@ val cannot_assign_to_multiindex : Location_span.t -> t
 val cannot_assign_duplicate_unpacking :
   Location_span.t -> Ast.untyped_lval Nonempty_list.t Nonempty_list.t -> t
 
-val cannot_access_assigning_var : Location_span.t -> string list -> t
+val cannot_access_assigning_var :
+  Location_span.t -> Ast.identifier Nonempty_list.t Nonempty_list.t -> t
+
 val invalid_tilde_pdf_or_pmf : Location_span.t -> t
 val invalid_tilde_cdf_or_ccdf : Location_span.t -> string -> t
 val invalid_tilde_no_such_dist : Location_span.t -> string -> bool -> t
