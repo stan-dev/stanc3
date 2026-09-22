@@ -179,18 +179,20 @@ let ordered_dependence ~(src : label) ~(dst : label) (dep : dependence) :
 (** The analysed statement, where definitions from outside are recorded. *)
 let root_label : label = 1
 
-(** The join of [access_dependence] over every source-sink pair, two
-    [Increment]s skipped (they commute); [confused] when a side has no access.
-*)
-let pair_dependence (frame : frame) (sources : access list)
-    (sinks : access list) : dependence =
-  if List.is_empty sources || List.is_empty sinks then confused frame
+(** The join of [access_dependence] over every source-sink pair, each pair
+    [restrict]ed first so a level or a distance is not lost in the join; two
+    [Increment]s are skipped (they commute); [confused] when a side is empty. *)
+let pair_dependence (frame : frame) ~(restrict : dependence -> dependence)
+    (sources : access list) (sinks : access list) : dependence =
+  if List.is_empty sources || List.is_empty sinks then restrict (confused frame)
   else
     List.fold_left sources ~init:Independent ~f:(fun merged source ->
         List.fold_left sinks ~init:merged ~f:(fun merged sink ->
             match (source.kind, sink.kind) with
             | Increment, Increment -> merged
-            | _ -> union_dependence merged (access_dependence frame source sink)))
+            | _ ->
+                union_dependence merged
+                  (restrict (access_dependence frame source sink))))
 
 (** The [frame] of the loops enclosing both [src] and [dst]. *)
 let common_frame (statement_map : dep_info_map) ~(src : label) ~(dst : label) :
@@ -209,24 +211,28 @@ let common_frame (statement_map : dep_info_map) ~(src : label) ~(dst : label) :
         | Stmt.Pattern.For {loopvar; _} -> Some loopvar
         | _ -> None))
 
-(** Every label in [sources] whose accesses (selected by [src_accesses]) can
-    name an element among [dst_accesses], with the raw dependence; a source
-    outside the statement is kept. *)
+let accesses_at (statement_map : dep_info_map) (label : label) : access list =
+  (snd (LabelMap.find label statement_map)).accesses
+
+(** Every label in [sources] whose accesses ([src_accesses]) can name an element
+    among [dst_accesses] once [restrict]ed per pair; a source outside the
+    statement is kept. *)
 let element_edges (statement_map : dep_info_map) ~(dst : label)
-    ~(sources : label Set.Poly.t) ~(src_accesses : access list -> access list)
-    ~(dst_accesses : access list) : (label * dependence) list =
+    ~(sources : label Set.Poly.t)
+    ~(restrict : src:label -> dependence -> dependence)
+    ~(src_accesses : label -> access list) ~(dst_accesses : access list) :
+    (label * dependence) list =
   List.filter_map (Set.Poly.to_list sources) ~f:(fun src ->
-      match LabelMap.find_opt src statement_map with
-      | Some (_, src_info) when src <> root_label -> (
-          match
-            pair_dependence
-              (common_frame statement_map ~src ~dst)
-              (src_accesses src_info.accesses)
-              dst_accesses
-          with
-          | Independent -> None
-          | Dependent _ as dep -> Some (src, dep))
-      | Some _ | None -> Some (src, confused []))
+      if src = root_label || not (LabelMap.mem src statement_map) then
+        Some (src, confused [])
+      else
+        match
+          pair_dependence
+            (common_frame statement_map ~src ~dst)
+            ~restrict:(restrict ~src) (src_accesses src) dst_accesses
+        with
+        | Independent -> None
+        | Dependent _ as dep -> Some (src, dep))
 
 (** The definitions of [var] reaching [dst] that may produce an element [dst]
     reads and can execute first. *)
@@ -235,13 +241,11 @@ let pruned_reaching_defns (statement_map : dep_info_map) (dst : label)
   let _, info = LabelMap.find dst statement_map in
   element_edges statement_map ~dst
     ~sources:(reaching_defn_lookup info.reaching_defn_entry var)
-    ~src_accesses:(accesses_to var ~keep:writes)
+    ~restrict:(fun ~src dep -> ordered_dependence ~src ~dst dep)
+    ~src_accesses:(fun src ->
+      accesses_to var ~keep:writes (accesses_at statement_map src))
     ~dst_accesses:(accesses_to var ~keep:reads info.accesses)
-  |> List.filter_map ~f:(fun (src, dep) ->
-      match ordered_dependence ~src ~dst dep with
-      | Independent -> None
-      | Dependent _ -> Some src)
-  |> Set.Poly.of_list
+  |> List.map ~f:fst |> Set.Poly.of_list
 
 (** Every variable the node reads or increments, index and size reads included.
 *)
@@ -527,7 +531,7 @@ let rec enclosing_loop statement_map parents (label : label) : label option =
 
 (** The accesses of one statement alone, reads before the write; an [if] or a
     loop contributes only the condition or bounds; [_lp] calls increment. *)
-let node_accesses ~loopvars ~written_vars
+let node_accesses ~(loopvars : string Set.Poly.t) ~written_vars
     (stmt : (Expr.Typed.t, 'substatement) Stmt.Pattern.t) : access list =
   (* the loop variables are induction variables here, not written symbols *)
   let written_vars = Set.Poly.diff written_vars loopvars in
