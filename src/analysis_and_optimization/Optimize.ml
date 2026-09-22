@@ -254,31 +254,39 @@ let compute_suffix_and_name propto suffix fname =
   | FnLpmf _ -> (FnLpmf false, fname)
   | _ -> (suffix, fname)
 
-(* A function evaluates each argument once. Substituting an expression at every
-   use repeats its computation, autodiff nodes, and possible effects. *)
+(** For a user-defined call selected for inlining, introduce a local only when
+    - the argument, after recursively inlining it, has type [real];
+    - it is neither a variable nor a literal; and
+    - its parameter is read at least twice in the already-inlined function body.
+
+    These are syntactic reads, including reads in mutually exclusive branches.
+    For example, [f(exp(theta))] with [f(x) = x * x] becomes
+    [tmp = exp(theta); tmp * tmp], avoiding duplicate computation, autodiff
+    nodes, and effects. [f(theta)], [f(2.0)], other argument types, and
+    parameters used at most once retain direct substitution. Keep the binding
+    with the argument's own statements to preserve the existing evaluation
+    order. *)
 let bind_repeated_scalar_actual fname name body
-    (decls, stmts, (e : Expr.Typed.t)) =
-  let rec uses_expr n (e : Expr.Typed.t) =
-    let n =
-      match e.pattern with Var v when String.equal v name -> n + 1 | _ -> n
-    in
-    Expr.Pattern.fold uses_expr n e.pattern in
-  let rec uses_stmt n (s : Stmt.Located.t) =
-    Stmt.Pattern.fold uses_expr uses_stmt n s.pattern in
-  let simple = match e.pattern with Var _ | Lit _ -> true | _ -> false in
-  if simple || e.meta.type_ <> UnsizedType.UReal || uses_stmt 0 body < 2 then
-    (decls, stmts, e)
-  else
-    let temp = gen_inline_var fname (name ^ "_arg") in
-    ( decls
-      @ [ Stmt.Pattern.Decl
-            { decl_adtype= e.meta.adlevel
-            ; decl_type= Type.Sized SizedType.SReal
-            ; decl_id= temp
-            ; initialize= Uninit } ]
-    , stmts
-      @ [Stmt.Pattern.Assignment (Stmt.Helpers.lvariable temp, e.meta.type_, e)]
-    , {e with pattern= Var temp} )
+    ((decls, stmts, (e : Expr.Typed.t)) as inlined) =
+  let count_use n (e : Expr.Typed.t) =
+    match e.pattern with Var v when String.equal v name -> n + 1 | _ -> n in
+  match (e.pattern, e.meta.type_) with
+  | (Var _ | Lit _), _ -> inlined
+  | _, UnsizedType.UReal
+    when fold_stmts ~take_expr:count_use ~take_stmt:Fun.const ~init:0 [body]
+         >= 2 ->
+      let temp = gen_inline_var fname (name ^ "_arg") in
+      ( decls
+        @ [ Stmt.Pattern.Decl
+              { decl_adtype= e.meta.adlevel
+              ; decl_type= Type.Sized SizedType.SReal
+              ; decl_id= temp
+              ; initialize= Uninit } ]
+      , stmts
+        @ [ Stmt.Pattern.Assignment
+              (Stmt.Helpers.lvariable temp, e.meta.type_, e) ]
+      , {e with pattern= Var temp} )
+  | _ -> inlined
 
 (* Triple is (declaration list, statement list, return expression) *)
 let rec inline_function_expression propto adt fim (Expr.{pattern; _} as e) =
@@ -384,18 +392,20 @@ let rec inline_function_expression propto adt fim (Expr.{pattern; _} as e) =
 
 and inline_function_args propto adt fim kind es =
   let inline = inline_function_expression propto adt fim in
-  match kind with
-  | UserDefined (fname, suffix) -> (
-      let _, name = compute_suffix_and_name propto suffix fname in
-      match String.Map.find_opt name fim with
-      | Some (_, args, body) ->
-          (* Bind each actual alongside its own inlined statements, retaining
-             inline_list's right-to-left argument evaluation order. *)
-          inline_list
-            (fun (name, e) ->
-              bind_repeated_scalar_actual fname name body (inline e))
-            (List.combine args es)
-      | None -> inline_list inline es)
+  let definition =
+    match kind with
+    | UserDefined (fname, suffix) ->
+        let _, name = compute_suffix_and_name propto suffix fname in
+        String.Map.find_opt name fim
+    | _ -> None in
+  match (kind, definition) with
+  | UserDefined (fname, _), Some (_, args, body) ->
+      (* Bind each actual alongside its own inlined statements, retaining
+         inline_list's right-to-left argument evaluation order. *)
+      inline_list
+        (fun (name, e) ->
+          bind_repeated_scalar_actual fname name body (inline e))
+        (List.combine args es)
   | _ -> inline_list inline es
 
 and inline_function_index propto adt fim i =

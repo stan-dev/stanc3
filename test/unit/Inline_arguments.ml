@@ -1,29 +1,26 @@
 open Std
 open Common
 open Middle
+open Analysis_and_optimization.Mir_utils
 
 let inline source =
   Gensym.reset_danger_use_cautiously ();
   Test_utils.mir_of_string source
   |> Analysis_and_optimization.Optimize.function_inlining
 
-let rec events_expr events (e : Expr.Typed.t) =
-  let events =
-    match e.pattern with
-    | FunApp (StanLib ((("exp" | "log" | "normal_rng") as name), _, _), _) ->
-        events @ [name]
-    | _ -> events in
-  Expr.Pattern.fold events_expr events e.pattern
+let events_expr events (e : Expr.Typed.t) =
+  match e.pattern with
+  | FunApp (StanLib ((("exp" | "log" | "normal_rng") as name), _, _), _) ->
+      events @ [name]
+  | _ -> events
 
-let rec events_stmt events (s : Stmt.Located.t) =
-  let events =
-    match s.pattern with
-    | NRFunApp (CompilerInternal FnPrint, _) -> events @ ["print"]
-    | _ -> events in
-  Stmt.Pattern.fold events_expr events_stmt events s.pattern
+let events_stmt events (s : Stmt.Located.t) =
+  match s.pattern with
+  | NRFunApp (CompilerInternal FnPrint, _) -> events @ ["print"]
+  | _ -> events
 
 let print_events statements =
-  List.fold_left ~f:events_stmt ~init:[] statements
+  fold_stmts ~take_expr:events_expr ~take_stmt:events_stmt ~init:[] statements
   |> String.concat ~sep:", " |> print_endline
 
 let%expect_test "evaluate a repeated scalar actual once" =
