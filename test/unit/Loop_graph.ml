@@ -266,7 +266,7 @@ let%expect_test "Loop graph: a scalar temporary in the body orders everything" =
       S0  real t;
       S1  t = a[n];
       S2  b[n] = t;
-      edges: S0 -> S0 t unknown (output); S0 -> S1 t unknown (output); S0 -> S2 t unknown (flow); S1 -> S0 t unknown (output); S1 -> S1 t unknown (output); S1 -> S2 t unknown (flow); S2 -> S0 t unknown (anti); S2 -> S1 t unknown (anti)
+      edges: S0 -> S0 t unknown (output); S0 -> S1 t unknown (output); S1 -> S0 t unknown (output); S1 -> S1 t unknown (output); S1 -> S2 t unknown (flow); S2 -> S0 t unknown (anti); S2 -> S1 t unknown (anti)
       blocks: [S0 S1 S2]cyclic
     |}]
 

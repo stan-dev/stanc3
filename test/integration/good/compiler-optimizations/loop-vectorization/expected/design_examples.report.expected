@@ -63,7 +63,7 @@ loop at 'design_examples.stan', line 163, column 4 to line 166, column 5  (n in 
   S0  real t8;   sequential: in a dependence cycle with S1 S2
   S1  t8 = (promote(2, real, data) * x[n]);   sequential: in a dependence cycle with S0 S2
   S2  mu8[n] = (t8 + promote(1, real, data));   sequential: in a dependence cycle with S0 S1
-  edges: S0 -> S0 t8 unknown (output); S0 -> S1 t8 unknown (output); S0 -> S2 t8 unknown (flow); S1 -> S0 t8 unknown (output); S1 -> S1 t8 unknown (output); S1 -> S2 t8 unknown (flow); S2 -> S0 t8 unknown (anti); S2 -> S1 t8 unknown (anti)
+  edges: S0 -> S0 t8 unknown (output); S0 -> S1 t8 unknown (output); S1 -> S0 t8 unknown (output); S1 -> S1 t8 unknown (output); S1 -> S2 t8 unknown (flow); S2 -> S0 t8 unknown (anti); S2 -> S1 t8 unknown (anti)
   blocks: [S0 S1 S2]cyclic
 
 loop at 'design_examples.stan', line 174, column 4 to line 177, column 5  (n in 1:N)

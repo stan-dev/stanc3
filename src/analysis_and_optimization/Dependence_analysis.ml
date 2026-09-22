@@ -847,14 +847,27 @@ let statement_at (statement_map : dep_info_map) (label : label) : Stmt.Located.t
     distance 1 and [a[n] = a[n] + 1] has none. A simple leaf is not an anti
     source for itself: a vector statement fetches every input before storing
     (Allen and Kennedy 1987 p. 494); a [compound] leaf is widened statement by
-    statement, so that exemption does not apply. Effectful leaves get [Effects]
-    edges both ways. *)
+    statement, so that exemption does not apply. The flow sources are the leaves
+    holding a definition of the variable that reaches a statement of the
+    destination ([reaching_defn_entry], the reaching-definitions layer), so a
+    whole-variable redefinition between two statements drops the earlier writer.
+    Effectful leaves get [Effects] edges both ways. *)
 let build_loop_graph (statement_map : dep_info_map) ~(loop : label) : loop_graph
     =
   let leaves = loop_leaves statement_map loop in
   let subtrees =
     List.map leaves ~f:(fun leaf -> (leaf, subtree_labels statement_map leaf))
   in
+  let leaf_of label =
+    List.find_map subtrees ~f:(fun (leaf, labels) ->
+        Option.some_if (List.mem label ~set:labels) leaf) in
+  (* the leaves with a definition of [var] reaching some statement of [dst] *)
+  let reaching_writers dst var =
+    List.concat_map (List.assoc dst subtrees) ~f:(fun label ->
+        Set.Poly.to_list
+          (reaching_defn_lookup
+             (snd (LabelMap.find label statement_map)).reaching_defn_entry var))
+    |> List.filter_map ~f:leaf_of in
   let accesses =
     List.map subtrees ~f:(fun (leaf, labels) ->
         (leaf, accesses_below statement_map labels)) in
@@ -871,6 +884,7 @@ let build_loop_graph (statement_map : dep_info_map) ~(loop : label) : loop_graph
          (Accesses.read_vars dst_leaf)
          (Accesses.written_vars dst_leaf))
     |> List.concat_map ~f:(fun var ->
+        let writers = reaching_writers dst var in
         List.concat_map
           [ (Flow, Dependence.Flow); (Output, Dependence.Output)
           ; (Anti, Dependence.Anti) ]
@@ -884,8 +898,11 @@ let build_loop_graph (statement_map : dep_info_map) ~(loop : label) : loop_graph
                     Option.some_if
                       (touches src var
                          ~uses:(Dependence.source_uses dependence_kind)
-                      && (kind <> Anti || src <> dst
-                        || compound statement_map src))
+                      &&
+                      match kind with
+                      | Flow -> List.mem src ~set:writers
+                      | Anti -> src <> dst || compound statement_map src
+                      | Output | Effects -> true)
                       (src, Some (accesses_of src var))) in
               overlapping_sources statement_map ~dst
                 ~restrict:(fun ~src dep ->
