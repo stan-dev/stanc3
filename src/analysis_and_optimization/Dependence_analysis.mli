@@ -37,6 +37,13 @@ type point =
   | Varying of varying_kind
       (** The index cannot be compared, so the index may equal any other. *)
 
+val classify_point :
+     loopvars:string Set.Poly.t
+  -> written_vars:string Set.Poly.t
+  -> Expr.Typed.t
+  -> point
+(** The integer index as a [point], looking through [+], [-] and promotions. *)
+
 (** One index position or tuple field of an access path. *)
 type 'index step =
   | Subscript of 'index Index.t  (** One index position, such as [n + 1]. *)

@@ -1,37 +1,38 @@
   $ stanc -fvectorize-loops --debug-loop-vectorization llvm_loop_distribute.stan
 loop at 'llvm_loop_distribute.stan', line 36, column 4 to line 38, column 5  (n in 1:N)
-  S0  a1[n] = (b[n] * d[n]);
+  S0  a1[n] = (b[n] * d[n]);   hoisted
   edges: none
   blocks: [S0]
 
 loop at 'llvm_loop_distribute.stan', line 52, column 4 to line 55, column 5  (n in 1:N)
-  S0  a2[(n + 1)] = (a2[n] * b[n]);
-  S1  c2[n] = (d[n] .* e[n]);
+  S0  a2[(n + 1)] = (a2[n] * b[n]);   sequential: recurrence, S0 -> S0 a2 {<} d=1 (flow)
+  S1  c2[n] = (d[n] .* e[n]);   hoisted
   edges: S0 -> S0 a2 {<} d=1 (flow)
   blocks: [S0]cyclic [S1]
 
 loop at 'llvm_loop_distribute.stan', line 71, column 6 to line 74, column 7  (j in 1:J)
-  S0  ma3[i, (j + 1)] = ((ma3[i, j] + mb[i, j]) + mc[i, j]);
-  S1  md3[i, j] = (me[i, j] * mf[i, j]);
+  S0  ma3[i, (j + 1)] = ((ma3[i, j] + mb[i, j]) + mc[i, j]);   sequential: recurrence, S0 -> S0 ma3 {<} d=1 (flow)
+  S1  md3[i, j] = (me[i, j] * mf[i, j]);   hoisted
   edges: S0 -> S0 ma3 {<} d=1 (flow)
   blocks: [S0]cyclic [S1]
 
 loop at 'llvm_loop_distribute.stan', line 70, column 4 to line 75, column 5  (i in 1:N)
-  S0  for(j in 1:J) { ma3[i, (j + 1)] = ((ma3[i, j] + mb[i, j]) + mc[i, j]); md3[i, j] = (me[i, j] * m...
+  S0  for(j in 1:J) ma3[i, (j + 1)] = ((ma3[i, j] + mb[i, j]) + mc[i, j]);   sequential: nested loop
+  S1  md3[i, 1:J] = (me[i, 1:J] .* mf[i, 1:J]);   sequential: index 1:J is already a slice
   edges: none
-  blocks: [S0]
+  blocks: [S0] [S1]
 
 loop at 'llvm_loop_distribute.stan', line 88, column 4 to line 91, column 5  (n in 1:N)
-  S0  a4[(n + 1)] = (a4[n] * b[n]);
-  S1  total4 = (total4 + d[n]);
+  S0  a4[(n + 1)] = (a4[n] * b[n]);   sequential: recurrence, S0 -> S0 a4 {<} d=1 (flow)
+  S1  total4 = (total4 + d[n]);   sequential: recurrence, S1 -> S1 total4 unknown (flow)
   edges: S0 -> S0 a4 {<} d=1 (flow); S1 -> S1 total4 unknown (flow); S1 -> S1 total4 unknown (output)
   blocks: [S0]cyclic [S1]cyclic
 
 loop at 'llvm_loop_distribute.stan', line 107, column 4 to line 111, column 5  (n in 1:N)
-  S0  real dd5;
-  S1  dd5 = D[n];
-  S2  a5[(n + 1)] = (a5[n] * b[n]);
-  S3  c5[n] = (dd5 * e[n]);
+  S0  real dd5;   sequential: in a dependence cycle with S1 S3
+  S1  dd5 = D[n];   sequential: in a dependence cycle with S0 S3
+  S2  a5[(n + 1)] = (a5[n] * b[n]);   sequential: recurrence, S2 -> S2 a5 {<} d=1 (flow)
+  S3  c5[n] = (dd5 * e[n]);   sequential: in a dependence cycle with S0 S1
   edges: S0 -> S0 dd5 unknown (output); S0 -> S1 dd5 unknown (output); S0 -> S3 dd5 unknown (flow); S1 -> S0 dd5 unknown (output); S1 -> S1 dd5 unknown (output); S1 -> S3 dd5 unknown (flow); S2 -> S2 a5 {<} d=1 (flow); S3 -> S0 dd5 unknown (anti); S3 -> S1 dd5 unknown (anti)
   blocks: [S0 S1 S3]cyclic [S2]cyclic
 [exit 0]

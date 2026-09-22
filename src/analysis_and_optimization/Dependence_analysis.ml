@@ -955,10 +955,11 @@ let pi_blocks (graph : loop_graph) : label list list =
 
 (** A block stays a sequential loop when two leaves depend on each other or one
     depends on an earlier iteration of itself. One exception: a leaf whose self
-    dependences are all output dependences on a variable no leaf reads, a
-    scatter [a[idx[n]] = x[n]], is not cyclic, because Stan's indexed assignment
-    stores a multi-index in order, so one vector statement writes the elements
-    in the loop's order. *)
+    dependences are all output dependences on a variable no leaf reads is not
+    cyclic. For a scatter [a[idx[n]] = x[n]] Stan's indexed assignment stores a
+    multi-index in order, so one vector statement writes the elements in the
+    loop's order; a whole-variable write has no vector form and stays in a loop
+    regardless. *)
 let is_cyclic (statement_map : dep_info_map) (graph : loop_graph)
     (block : label list) : bool =
   match block with
