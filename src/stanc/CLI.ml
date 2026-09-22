@@ -357,9 +357,7 @@ module Debug_Options = struct
       & info ["f"] ~doc ~docv:"SETTING" ~docs)
 
   (** The last [-f] occurrence for [pass], if any. *)
-  let last_setting settings pass =
-    List.fold_left settings ~init:None ~f:(fun last (forced, on) ->
-        if forced = pass then Some on else last)
+  let last_setting settings pass = List.assoc_opt pass (List.rev settings)
 end
 
 (** Flags common to all compiler drivers and those specific to the command line

@@ -14,7 +14,7 @@ let print_loop_graphs prog =
       match pattern with
       | Stmt.Pattern.For {loopvar; lower; upper; _} ->
           Fmt.pr "loop (%s in %a:%a)@.%a" loopvar Expr.Typed.pp lower
-            Expr.Typed.pp upper (pp_graph map)
+            Expr.Typed.pp upper (pp_graph map [])
             (build_loop_graph map ~loop:label)
       | _ -> ())
 

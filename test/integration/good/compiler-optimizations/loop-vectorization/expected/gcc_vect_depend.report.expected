@@ -29,7 +29,7 @@ loop at 'gcc_vect_depend.stan', line 88, column 4 to line 90, column 5  (n in 1:
   blocks: [S0]
 
 loop at 'gcc_vect_depend.stan', line 103, column 4 to line 105, column 5  (n in 1:N)
-  S0  ia6[(n + 1)] = (ia6[n] * promote(4, real, data));   sequential: recurrence, S0 -> S0 ia6 {<} d=1 (flow)
+  S0  ia6[(n + 1)] = (ia6[n] * promote(4, real, data));   sequential: recurrence
   edges: S0 -> S0 ia6 {<} d=1 (flow)
   blocks: [S0]cyclic
 [exit 0]

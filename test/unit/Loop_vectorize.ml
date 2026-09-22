@@ -11,9 +11,7 @@ let print_vectorized prog =
   Fmt.pr "@[<v>%a@]@."
     (Fmt.list ~sep:Fmt.cut Stmt.Located.pp)
     (Optimize.partial_evaluation mir).log_prob;
-  Fmt.pr "%a"
-    Fmt.(list ~sep:nop Loop_vectorize.pp_loop_report)
-    (Loop_vectorize.loop_reports ())
+  print_string (String.concat "" (Loop_vectorize.loop_reports ()))
 
 let%expect_test "Loop vectorization: an affine offset shifts the slice" =
   print_vectorized
@@ -121,120 +119,6 @@ let%expect_test "Loop vectorization: a backward anti edge reverses the order" =
       S0  b[n] = a[(n + 1)];   hoisted
       S1  a[n] = x[n];   hoisted
       edges: S0 -> S1 a {<} d=1 (anti)
-      blocks: [S0] [S1]
-    |}]
-
-let%expect_test "Loop vectorization: residual loops keep their side of an edge"
-    =
-  print_vectorized
-    {|
-      data { int N; vector[N] x; }
-      model {
-        vector[N] v; vector[N] w;
-        for (n in 1:N) {
-          v[n] = 2 * x[n];
-          print(v[n]);
-        }
-        for (n in 1:N) {
-          print(w[n]);
-          w[n] = x[n];
-        }
-      }
-    |};
-  [%expect
-    {|
-    {
-      FnValidateSize__("v", "N", N);
-      vector[N] v;
-      FnValidateSize__("w", "N", N);
-      vector[N] w;
-      v[:] = (promote(2, real, data) * x);
-      for(n in 1:N) FnPrint__(v[n]);
-      for(n in 1:N) FnPrint__(w[n]);
-      w[:] = x;
-    }
-    loop at 'string', line 5, column 8 to line 8, column 9  (n in 1:N)
-      S0  v[n] = (promote(2, real, data) * x[n]);   hoisted
-      S1  FnPrint__(v[n]);   sequential: has effects (print, reject or a user-defined function call)
-      edges: S0 -> S1 v {=} d=0 (flow)
-      blocks: [S0] [S1]
-    loop at 'string', line 9, column 8 to line 12, column 9  (n in 1:N)
-      S0  FnPrint__(w[n]);   sequential: has effects (print, reject or a user-defined function call)
-      S1  w[n] = x[n];   hoisted
-      edges: S0 -> S1 w {=} d=0 (anti)
-      blocks: [S0] [S1]
-    |}]
-
-let%expect_test
-    "Loop vectorization: a write-only scatter hoists, a read one not" =
-  print_vectorized
-    {|
-      data { int N; vector[N] b; vector[N] x; real c; array[N] int<lower=1, upper=N> idx; }
-      model {
-        vector[N] a; vector[N] s; vector[N] y;
-        for (n in 1:N) {
-          a[idx[n]] = b[idx[n]] + c;
-        }
-        for (n in 1:N) {
-          s[idx[n]] = x[n];
-          y[n] = s[idx[n]];
-        }
-      }
-    |};
-  [%expect
-    {|
-    {
-      FnValidateSize__("a", "N", N);
-      vector[N] a;
-      FnValidateSize__("s", "N", N);
-      vector[N] s;
-      FnValidateSize__("y", "N", N);
-      vector[N] y;
-      a[idx] = (b[idx] + c);
-      for(n in 1:N) {
-        s[idx[n]] = x[n];
-        y[n] = s[idx[n]];
-      }
-    }
-    loop at 'string', line 5, column 8 to line 7, column 9  (n in 1:N)
-      S0  a[idx[n]] = (b[idx[n]] + c);   hoisted
-      edges: S0 -> S0 a unknown (output)
-      blocks: [S0]
-    loop at 'string', line 8, column 8 to line 11, column 9  (n in 1:N)
-      S0  s[idx[n]] = x[n];   sequential: in a dependence cycle with S1
-      S1  y[n] = s[idx[n]];   sequential: in a dependence cycle with S0
-      edges: S0 -> S0 s unknown (output); S0 -> S1 s unknown (flow); S1 -> S0 s unknown (anti)
-      blocks: [S0 S1]cyclic
-    |}]
-
-let%expect_test "Loop vectorization: a profile hoists as one unit" =
-  print_vectorized
-    {|
-      data { int N; vector[N] x; vector[N] y; real sigma; }
-      model {
-        vector[N] v;
-        for (n in 1:N) {
-          profile("mu") {
-            v[n] = x[n] + 1;
-          }
-          target += normal_lpdf(y[n] | v[n], sigma);
-        }
-      }
-    |};
-  [%expect
-    {|
-    {
-      FnValidateSize__("v", "N", N);
-      vector[N] v;
-      profile("mu"){
-        v[:] = (x + promote(1, real, data));
-      }
-      target += normal_lpdf(y, v, sigma);
-    }
-    loop at 'string', line 5, column 8 to line 10, column 9  (n in 1:N)
-      S0  profile("mu"){ v[n] = (x[n] + promote(1, real, data)); }   hoisted
-      S1  target += normal_lpdf(y[n], v[n], sigma);   hoisted
-      edges: S0 -> S1 v {=} d=0 (flow)
       blocks: [S0] [S1]
     |}]
 

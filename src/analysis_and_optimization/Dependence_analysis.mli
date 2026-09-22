@@ -197,10 +197,9 @@ val subtree_accesses : dep_info_map -> label -> point Accesses.t
 val statement_at : dep_info_map -> label -> Stmt.Located.t
 (** The statement at the label, children rebuilt from the map. *)
 
-val leaf_has_effects : dep_info_map -> label -> bool
-(** Whether the leaf, or a statement below, prints, rejects, calls a user
-    function as a statement, or evaluates a side-effecting or random expression.
-*)
+val has_effects : dep_info_map -> label -> bool
+(** Whether the statement at the label, or one below, prints, rejects, draws
+    random numbers or calls a user function. *)
 
 val build_loop_graph : dep_info_map -> loop:label -> loop_graph
 (** The flow, anti, output and effects edges between the leaves of the [For] at
@@ -219,14 +218,11 @@ val is_cyclic : dep_info_map -> loop_graph -> label list -> bool
 val edge_between : loop_graph -> from:label list -> into:label list -> bool
 (** Whether some edge leaves a leaf of [from] for a leaf of [into]. *)
 
-val pp_edge : loop_graph -> Format.formatter -> edge -> unit
-(** [S0 -> S1 muj {=} d=0 (flow)] or [S0 -> S2 (effects)]. *)
-
 val pp_graph :
-     ?outcome:(label -> string option)
-  -> dep_info_map
+     dep_info_map
+  -> (label * string) list
   -> Format.formatter
   -> loop_graph
   -> unit
-(** One indented line per leaf, with the leaf's [outcome] after it when given,
-    then the edges and the pi-blocks in emission order. *)
+(** One indented line per leaf, with the leaf's outcome after it when the list
+    has one, then the edges and the pi-blocks in emission order. *)

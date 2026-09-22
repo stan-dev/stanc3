@@ -137,9 +137,7 @@ let stan2mir model_name model (flags : Flags.t) (output : other_output -> unit)
   if flags.debug_settings.print_loop_vectorization then
     output
       (Loop_vectorization
-         (Fmt.str "%a"
-            Fmt.(list ~sep:cut Loop_vectorize.pp_loop_report)
-            (Loop_vectorize.loop_reports ())));
+         (String.concat ~sep:"\n" (Loop_vectorize.loop_reports ())));
   debug_output_mir output opt_mir flags.debug_settings.print_optimized_mir;
   opt_mir
 

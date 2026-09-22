@@ -1,42 +1,42 @@
   $ stanc -fvectorize-loops --debug-loop-vectorization tsvc_expansion.stan
 loop at 'tsvc_expansion.stan', line 26, column 4 to line 29, column 5  (n in 1:N)
-  S0  real s1;   sequential: in a dependence cycle with S1 S2
-  S1  s1 = (b[n] + (c[n] * d[n]));   sequential: in a dependence cycle with S0 S2
-  S2  a1[n] = (s1 * s1);   sequential: in a dependence cycle with S0 S1
+  S0  real s1;   sequential: in a dependence cycle
+  S1  s1 = (b[n] + (c[n] * d[n]));   sequential: in a dependence cycle
+  S2  a1[n] = (s1 * s1);   sequential: in a dependence cycle
   edges: S0 -> S0 s1 unknown (output); S0 -> S1 s1 unknown (output); S1 -> S0 s1 unknown (output); S1 -> S1 s1 unknown (output); S1 -> S2 s1 unknown (flow); S2 -> S0 s1 unknown (anti); S2 -> S1 s1 unknown (anti)
   blocks: [S0 S1 S2]cyclic
 
 loop at 'tsvc_expansion.stan', line 40, column 4 to line 44, column 5  (n in 1:N)
-  S0  real s2;   sequential: in a dependence cycle with S1 S2 S3
-  S1  s2 = (b[n] * c[n]);   sequential: in a dependence cycle with S0 S2 S3
-  S2  a2[n] = (s2 + t2);   sequential: in a dependence cycle with S0 S1 S3
-  S3  t2 = s2;   sequential: in a dependence cycle with S0 S1 S2
+  S0  real s2;   sequential: in a dependence cycle
+  S1  s2 = (b[n] * c[n]);   sequential: in a dependence cycle
+  S2  a2[n] = (s2 + t2);   sequential: in a dependence cycle
+  S3  t2 = s2;   sequential: in a dependence cycle
   edges: S0 -> S0 s2 unknown (output); S0 -> S1 s2 unknown (output); S1 -> S0 s2 unknown (output); S1 -> S1 s2 unknown (output); S1 -> S2 s2 unknown (flow); S1 -> S3 s2 unknown (flow); S2 -> S0 s2 unknown (anti); S2 -> S1 s2 unknown (anti); S2 -> S3 t2 unknown (anti); S3 -> S0 s2 unknown (anti); S3 -> S1 s2 unknown (anti); S3 -> S2 t2 unknown (flow); S3 -> S3 t2 unknown (output)
   blocks: [S0 S1 S2 S3]cyclic
 
 loop at 'tsvc_expansion.stan', line 55, column 4 to line 58, column 5  (n in 1:N)
-  S0  a3[n] = ((b[n] + x3) * 0.5);   sequential: in a dependence cycle with S1
-  S1  x3 = b[n];   sequential: in a dependence cycle with S0
+  S0  a3[n] = ((b[n] + x3) * 0.5);   sequential: in a dependence cycle
+  S1  x3 = b[n];   sequential: in a dependence cycle
   edges: S0 -> S1 x3 unknown (anti); S1 -> S0 x3 unknown (flow); S1 -> S1 x3 unknown (output)
   blocks: [S0 S1]cyclic
 
 loop at 'tsvc_expansion.stan', line 69, column 4 to line 72, column 5  (n in 1:N)
-  S0  if((a0[n] > 0)) { s4 = (d[n] * d[n]); }   sequential: in a dependence cycle with S1
-  S1  b4[n] = ((s4 * c[n]) + d[n]);   sequential: in a dependence cycle with S0
+  S0  if((a0[n] > 0)) { s4 = (d[n] * d[n]); }   sequential: in a dependence cycle
+  S1  b4[n] = ((s4 * c[n]) + d[n]);   sequential: in a dependence cycle
   edges: S0 -> S0 s4 unknown (output); S0 -> S1 s4 unknown (flow); S1 -> S0 s4 unknown (anti)
   blocks: [S0 S1]cyclic
 
 loop at 'tsvc_expansion.stan', line 84, column 4 to line 89, column 5  (n in 2:N)
-  S0  t5 = (a5[n] + b[n]);   sequential: in a dependence cycle with S1 S2 S3
-  S1  a5[n] = (t5 + c5[(n - 1)]);   sequential: in a dependence cycle with S0 S2 S3
-  S2  t5 = (c5[n] * d[n]);   sequential: in a dependence cycle with S0 S1 S3
-  S3  c5[n] = t5;   sequential: in a dependence cycle with S0 S1 S2
+  S0  t5 = (a5[n] + b[n]);   sequential: in a dependence cycle
+  S1  a5[n] = (t5 + c5[(n - 1)]);   sequential: in a dependence cycle
+  S2  t5 = (c5[n] * d[n]);   sequential: in a dependence cycle
+  S3  c5[n] = t5;   sequential: in a dependence cycle
   edges: S0 -> S0 t5 unknown (output); S0 -> S1 a5 {=} d=0 (anti); S0 -> S1 t5 unknown (flow); S0 -> S2 t5 unknown (output); S1 -> S0 t5 unknown (anti); S1 -> S2 t5 unknown (anti); S2 -> S0 t5 unknown (output); S2 -> S2 t5 unknown (output); S2 -> S3 c5 {=} d=0 (anti); S2 -> S3 t5 unknown (flow); S3 -> S0 t5 unknown (anti); S3 -> S1 c5 {<} d=1 (flow); S3 -> S2 t5 unknown (anti)
   blocks: [S0 S1 S2 S3]cyclic
 
 loop at 'tsvc_expansion.stan', line 100, column 4 to line 103, column 5  (n in 1:N)
-  S0  s6 = (s6 + 2);   sequential: in a dependence cycle with S1
-  S1  a6[n] = (s6 * b[n]);   sequential: in a dependence cycle with S0
+  S0  s6 = (s6 + 2);   sequential: in a dependence cycle
+  S1  a6[n] = (s6 * b[n]);   sequential: in a dependence cycle
   edges: S0 -> S0 s6 unknown (flow); S0 -> S0 s6 unknown (output); S0 -> S1 s6 unknown (flow); S1 -> S0 s6 unknown (anti)
   blocks: [S0 S1]cyclic
 [exit 0]

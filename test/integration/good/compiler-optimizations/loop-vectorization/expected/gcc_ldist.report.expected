@@ -14,9 +14,9 @@ loop at 'gcc_ldist.stan', line 56, column 4 to line 59, column 5  (n in 2:N)
   blocks: [S0] [S1]
 
 loop at 'gcc_ldist.stan', line 78, column 4 to line 83, column 5  (n in 3:N)
-  S0  a3[n] = promote((k * n), real, var);   sequential: in a dependence cycle with S1 S2
-  S1  b3[n] = (a3[(n - 2)] + promote(k, real, data));   sequential: in a dependence cycle with S0 S2
-  S2  cc3[n] = (b3[n] + a3[(n + 1)]);   sequential: in a dependence cycle with S0 S1
+  S0  a3[n] = promote((k * n), real, var);   sequential: in a dependence cycle
+  S1  b3[n] = (a3[(n - 2)] + promote(k, real, data));   sequential: in a dependence cycle
+  S2  cc3[n] = (b3[n] + a3[(n + 1)]);   sequential: in a dependence cycle
   S3  d3[n] = ((cc3[(n - 1)] + promote(k, real, data)) + promote(n, real, data));   sequential: promote(n, real, data) cannot be widened
   edges: S0 -> S1 a3 {<} d=2 (flow); S1 -> S2 b3 {=} d=0 (flow); S2 -> S0 a3 {<} d=1 (anti); S2 -> S3 cc3 {<} d=1 (flow)
   blocks: [S0 S1 S2]cyclic [S3]
@@ -28,7 +28,7 @@ loop at 'gcc_ldist.stan', line 99, column 6 to line 102, column 7  (j in 2:J)
   blocks: [S0] [S1]
 
 loop at 'gcc_ldist.stan', line 98, column 4 to line 103, column 5  (i in 1:N)
-  S0  for(j in 2:J) { a4[j] = promote((k * i), real, var); b4[i, j] = (a4[(j - 1)] + promote(k, real, ...   sequential: recurrence, S0 -> S0 a4 unknown (flow)
+  S0  for(j in 2:J) { a4[j] = promote((k * i), real, var); b4[i, j] = (a4[(j - 1)] + promote(k, real, ...   sequential: recurrence
   edges: S0 -> S0 a4 unknown (flow); S0 -> S0 a4 unknown (output)
   blocks: [S0]cyclic
 [exit 0]
