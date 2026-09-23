@@ -1,5 +1,5 @@
-(** Loop vectorization by pi-block code generation (Allen and Kennedy 1987 §5.2;
-    design doc [design-docs/active/vectorize-loop-fission.md]).
+(** Loop vectorization by pi-block code generation (Allen and Kennedy 1987,
+    section 5.2; design doc [design-docs/active/vectorize-loop-fission.md]).
 
     For every source [For], innermost first: the whole-loop checks, then
     [Dependence_analysis.build_loop_graph] gives the dependence graph of the
@@ -14,7 +14,7 @@ open Mir_utils
 open Dataflow_types
 open Dependence_analysis
 
-(* ---- Widening one statement over the loop (design §7.6) ---- *)
+(* ---- Widening one statement over the loop (design section 7.6) ---- *)
 
 (** The loop a statement is widened over, and the variables the body writes. *)
 type context =
@@ -215,8 +215,8 @@ let rec widen_stmt (ctx : context) (stmt : Stmt.Located.t) : Stmt.Located.t =
         refused "not an assignment or a density increment" in
   {stmt with pattern}
 
-(* ---- Pi-block code generation (Allen and Kennedy 1987 §5.2; design §7.6)
-   ---- *)
+(* ---- Pi-block code generation (Allen and Kennedy 1987, section 5.2; design
+   section 7.6) ---- *)
 
 (** Decide one pi-block: the members and, for a single leaf without a cycle or
     effects that widens, the vector statement; with each leaf's outcome for the
@@ -237,10 +237,10 @@ let decide_block (ctx : context) (map : dep_info_map) (graph : loop_graph)
       | exception Refused reason -> sequential reason)
   | _ -> sequential "in a dependence cycle"
 
-(** Typed fusion (Kennedy and Allen 2001 §6.2.5): a sequential block moves left
-    past the vector blocks that have no edge into it, and fuses with the
-    sequential block it then meets. Swapping independent neighbours keeps every
-    edge's source ahead of its sink. *)
+(** Typed fusion (Kennedy and Allen 2001, section 6.2.5): a sequential block
+    moves left past the vector blocks that have no edge into it, and fuses with
+    the sequential block it then meets. Swapping independent neighbours keeps
+    every edge's source ahead of its sink. *)
 let fuse_sequential (graph : loop_graph)
     (blocks : (label list * Stmt.Located.t option) list) =
   let rec passed_by leaves behind = function
@@ -312,7 +312,7 @@ let decide (mir : Program.Typed.t) (loop : Stmt.Located.t) ~loopvar ~lower
           | [stmt] -> (report, stmt)
           | stmts -> (report, {loop with pattern= SList stmts}))
 
-(* ---- The walk and the report (design §7.13) ---- *)
+(* ---- The walk and the report (design section 7.13) ---- *)
 
 let reporting = ref false
 let loop_report_log : string list ref = ref []

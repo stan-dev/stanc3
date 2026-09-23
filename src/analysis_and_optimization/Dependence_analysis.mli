@@ -196,8 +196,8 @@ val build_loop_graph : dep_info_map -> loop:label -> loop_graph
 
 val pi_blocks : loop_graph -> label list list
 (** The strongly connected components (Tarjan 1972) in emission order (Allen and
-    Kennedy 1987 §5.2): a topological order of the condensation, ties to the
-    earliest leaf. *)
+    Kennedy 1987, section 5.2): a topological order of the condensation, ties to
+    the earliest leaf. *)
 
 val is_cyclic : loop_graph -> label list -> bool
 (** Whether a pi-block must stay a sequential loop; a write-only scatter's self

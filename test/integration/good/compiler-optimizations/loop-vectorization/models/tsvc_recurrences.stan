@@ -45,7 +45,7 @@ model {
   // 3. TSVC s323 (Recurrences), UoB-HPC/TSVC_2 src/tsvc.c
   // C: a[i] = b[i-1] + c[i] * d[i]; b[i] = a[i] + c[i] * e[i];
   // intent: coupled recurrence; not vectorizable
-  // graph: `S1→S2 {Eq}`, `S2→S1 {Lt,1}`: cycle   emitted: seq
+  // graph: `S1->S2 {Eq}`, `S2->S1 {Lt,1}`: cycle   emitted: seq
   {
     vector[N] a3 = a0;
     vector[N] b3 = b;

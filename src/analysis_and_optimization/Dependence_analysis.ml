@@ -725,7 +725,7 @@ let read_variables_at (statement_map : dep_info_map) (labels : label Set.Poly.t)
   Set.Poly.union_map labels ~f:(fun label ->
       read_variables (snd (LabelMap.find label statement_map)))
 
-(* ---- The loop dependence graph of one For (design §7.5) ---- *)
+(* ---- The loop dependence graph of one For (design section 7.5) ---- *)
 
 (** How the sink depends on the source: reads what the source wrote, writes what
     the source read, writes what the source wrote, or both have effects. *)
@@ -744,8 +744,8 @@ type loop_graph =
   {leaves: label list; edges: edge list; read_vars: string Set.Poly.t}
 
 (** [dep] at the innermost level alone, the outer loops held at one iteration
-    (Allen and Kennedy 1987 §5.2); [Independent] when an outer level lacks [Eq].
-*)
+    (Allen and Kennedy 1987, section 5.2); [Independent] when an outer level
+    lacks [Eq]. *)
 let rec innermost_level (dep : Dependence.t) : Dependence.t =
   match dep with
   | Independent | Unknown | Dependent ([] | [_]) -> dep
@@ -917,7 +917,7 @@ let build_loop_graph (statement_map : dep_info_map) ~(loop : label) : loop_graph
         (List.map accesses ~f:(fun (_, leaf_accesses) ->
              Accesses.read_vars leaf_accesses)) }
 
-(** The pi-blocks of [graph] (Allen and Kennedy 1987 §5.2): the strongly
+(** The pi-blocks of [graph] (Allen and Kennedy 1987, section 5.2): the strongly
     connected components by Tarjan's algorithm (Tarjan 1972, as LLVM's
     [scc_iterator]), members in lexical order, then Kahn's algorithm on the
     condensation with ties broken by the earliest first member, so a body with

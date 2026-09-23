@@ -1,8 +1,8 @@
-(** Loop vectorization by pi-block code generation (Allen and Kennedy 1987 §5.2;
-    design doc [design-docs/active/vectorize-loop-fission.md]): a statement that
-    is a pi-block of its own and widens becomes one vector statement, the rest
-    of the body stays in loops with the original header, emitted in dependence
-    order. *)
+(** Loop vectorization by pi-block code generation (Allen and Kennedy 1987,
+    section 5.2; design doc [design-docs/active/vectorize-loop-fission.md]): a
+    statement that is a pi-block of its own and widens becomes one vector
+    statement, the rest of the body stays in loops with the original header,
+    emitted in dependence order. *)
 
 open Middle
 

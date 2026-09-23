@@ -1,6 +1,6 @@
 ; Loop-vectorization corpus: loops from the GCC, LLVM and TSVC vectorizer test
 ; suites and the design examples (design-docs/active/vectorize-loop-fission.md
-; §7.8, §13.3). For every models/model.stan, two files are pinned in expected/:
+; sections 7.8 and 13.3). For every models/model.stan, two files are pinned in expected/:
 ;   model.report.expected  the --debug-loop-vectorization report: the leaves
 ;                          with their outcome, the dependence graph and the
 ;                          pi-blocks of every loop
