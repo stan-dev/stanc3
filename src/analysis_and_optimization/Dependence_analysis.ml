@@ -60,18 +60,6 @@ let free = {directions= Set.Poly.of_list [Lt; Eq; Gt]; distance= None}
 let confused (frame : frame) : dependence =
   Dependent (List.map frame ~f:(fun _ -> free))
 
-(** [level] at the level of [loopvar], every other level of [frame] free. *)
-let at_level (frame : frame) (loopvar : string) (level : level) : dependence =
-  Dependent
-    (List.map frame ~f:(fun var ->
-         if Option.equal String.equal var (Some loopvar) then level else free))
-
-(** The constant difference when both carry the same symbol or none. *)
-let linear_difference (left : linear) (right : linear) : int option =
-  Option.some_if
-    (Option.equal Expr.Typed.equal left.symbol right.symbol)
-    (left.const - right.const)
-
 (** The dependence between two single index expressions over [frame] (Goff,
     Kennedy and Tseng 1991 §3): ZIV without a loop variable, strong SIV with a
     shared one; a variable of a loop not enclosing both ranges over many
@@ -81,51 +69,29 @@ let point_dependence (frame : frame) (source : point) (sink : point) :
   match (source, sink) with
   | Affine source_term, Affine sink_term
     when Option.equal String.equal source_term.loopvar sink_term.loopvar -> (
-      match (linear_difference source_term sink_term, source_term.loopvar) with
+      (* the constant difference when both carry the same symbol or none *)
+      let difference =
+        Option.some_if
+          (Option.equal Expr.Typed.equal source_term.symbol sink_term.symbol)
+          (source_term.const - sink_term.const) in
+      match (difference, source_term.loopvar) with
       | None, _ | Some 0, None -> confused frame
       | Some _, None -> Independent
       | Some distance, Some loopvar when List.mem (Some loopvar) ~set:frame ->
           let direction =
             if distance = 0 then Eq else if distance > 0 then Lt else Gt in
-          at_level frame loopvar
-            {directions= Set.Poly.singleton direction; distance= Some distance}
+          (* the distance at the level of [loopvar], every other level free *)
+          Dependent
+            (List.map frame ~f:(fun var ->
+                 if Option.equal String.equal var (Some loopvar) then
+                   { directions= Set.Poly.singleton direction
+                   ; distance= Some distance }
+                 else free))
       | Some _, Some _ -> confused frame)
   | Affine _, Affine _ | Varying _, _ | _, Varying _ -> confused frame
 
-(** The dependence at both [merged] and [position]: [Independent] if either is,
-    or if at some level no direction or no distance suits both. *)
-let intersect_dependence (merged : dependence) (position : dependence) :
-    dependence =
-  match (merged, position) with
-  | Independent, _ | _, Independent -> Independent
-  | Dependent merged_levels, Dependent position_levels ->
-      let levels =
-        List.map2 merged_levels position_levels ~f:(fun left right ->
-            match (left.distance, right.distance) with
-            | Some left_d, Some right_d when left_d <> right_d ->
-                {free with directions= Set.Poly.empty}
-            | _ ->
-                { directions= Set.Poly.inter left.directions right.directions
-                ; distance= Option.first_some left.distance right.distance })
-      in
-      if List.exists levels ~f:(fun level -> Set.Poly.is_empty level.directions)
-      then Independent
-      else Dependent levels
-
-(** Either may hold: directions unioned per level, distance kept when equal. *)
-let union_dependence (left : dependence) (right : dependence) : dependence =
-  let union_level (left : level) (right : level) : level =
-    { directions= Set.Poly.union left.directions right.directions
-    ; distance=
-        (if Option.equal Int.equal left.distance right.distance then
-           left.distance
-         else None) } in
-  match (left, right) with
-  | Independent, other | other, Independent -> other
-  | Dependent left_levels, Dependent right_levels ->
-      Dependent (List.map2 left_levels right_levels ~f:union_level)
-
-(** [source] against [sink] per index position; [confused] if counts differ. *)
+(** [source] against [sink] per index position, every position holding at once;
+    [confused] if counts differ. *)
 let access_dependence (frame : frame) (source : access) (sink : access) :
     dependence =
   if List.length source.subs <> List.length sink.subs then confused frame
@@ -137,7 +103,26 @@ let access_dependence (frame : frame) (source : access) (sink : access) :
           | Index.Single source_point, Index.Single sink_point ->
               point_dependence frame source_point sink_point
           | _ -> confused frame in
-        intersect_dependence merged position)
+        (* [Independent] if either is, or if at some level no direction or no
+           distance suits both *)
+        match (merged, position) with
+        | Independent, _ | _, Independent -> Independent
+        | Dependent merged_levels, Dependent position_levels ->
+            let levels =
+              List.map2 merged_levels position_levels ~f:(fun left right ->
+                  match (left.distance, right.distance) with
+                  | Some left_d, Some right_d when left_d <> right_d ->
+                      {free with directions= Set.Poly.empty}
+                  | _ ->
+                      { directions=
+                          Set.Poly.inter left.directions right.directions
+                      ; distance= Option.first_some left.distance right.distance
+                      }) in
+            if
+              List.exists levels ~f:(fun level ->
+                  Set.Poly.is_empty level.directions)
+            then Independent
+            else Dependent levels)
 
 (** An [Increment] both reads and writes. *)
 let reads = function Read | Increment -> true | Write -> false
@@ -198,9 +183,25 @@ let pair_dependence (frame : frame) ~(restrict : dependence -> dependence)
         List.fold_left sinks ~init:merged ~f:(fun merged sink ->
             match (source.kind, sink.kind) with
             | Increment, Increment -> merged
-            | _ ->
-                union_dependence merged
-                  (restrict (access_dependence frame source sink))))
+            | _ -> (
+                (* either may hold: directions unioned per level, distance kept
+                   when equal *)
+                match
+                  (merged, restrict (access_dependence frame source sink))
+                with
+                | Independent, other | other, Independent -> other
+                | Dependent merged_levels, Dependent pair_levels ->
+                    Dependent
+                      (List.map2 merged_levels pair_levels
+                         ~f:(fun (left : level) right ->
+                           { directions=
+                               Set.Poly.union left.directions right.directions
+                           ; distance=
+                               (if
+                                  Option.equal Int.equal left.distance
+                                    right.distance
+                                then left.distance
+                                else None) })))))
 
 (** The [frame] of the loops enclosing both [src] and [dst]. *)
 let common_frame (statement_map : dep_info_map) ~(src : label) ~(dst : label) :
