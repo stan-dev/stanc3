@@ -98,16 +98,17 @@ let query_stan_math_mem_pattern_support (name : string)
   let open Stan_math_signatures in
   if is_special_function_name name then false
   else
-    let name =
-      string_operator_to_stan_math_fns (Utils.stdlib_distribution_name name)
-    in
-    let namematches = lookup_stan_math_function name in
+    let signatures =
+      let name = Utils.stdlib_distribution_name name in
+      match Operator.of_string_opt name with
+      | None -> lookup_stan_math_function name
+      | Some op -> operator_to_stan_math_signatures op in
     let filteredmatches =
       List.filter
         ~f:(fun (x, _, _, _) ->
           Frontend.SignatureMismatch.check_compatible_arguments_mod_conv x args
           |> Result.is_ok)
-        namematches in
+        signatures in
     let is_soa (_, _, _, p) = p = Mem_pattern.SoA in
     List.exists ~f:is_soa filteredmatches
 
