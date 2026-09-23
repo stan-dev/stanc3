@@ -254,6 +254,42 @@ let compute_suffix_and_name propto suffix fname =
   | FnLpmf _ -> (FnLpmf false, fname)
   | _ -> (suffix, fname)
 
+(** For a user-defined call selected for inlining, introduce a local only when
+    - the argument, after recursively inlining it, has type [int], [real], or
+      [complex];
+    - it is neither a variable nor a literal; and
+    - its parameter is read at least twice in the already-inlined function body.
+
+    These are syntactic reads, including reads in mutually exclusive branches.
+    For example, [f(exp(theta))] with [f(x) = x * x] becomes
+    [tmp = exp(theta); tmp * tmp], avoiding duplicate computation, autodiff
+    nodes, and effects. [f(theta)], [f(2.0)], other argument types, and
+    parameters used at most once retain direct substitution. Keep the binding
+    with the argument's own statements to preserve the existing evaluation
+    order. Containers are excluded here because an owning temporary may
+    introduce copies that the original call's argument binding avoids. *)
+let bind_repeated_scalar_argument fname name body
+    ((decls, stmts, (e : Expr.Typed.t)) as inlined) =
+  let count_use n (e : Expr.Typed.t) =
+    match e.pattern with Var v when String.equal v name -> n + 1 | _ -> n in
+  match (e.pattern, e.meta.type_) with
+  | (Var _ | Lit _), _ -> inlined
+  | _, UnsizedType.(UInt | UReal | UComplex)
+    when fold_stmts ~take_expr:count_use ~take_stmt:Fun.const ~init:0 [body]
+         >= 2 ->
+      let temp = gen_inline_var fname (name ^ "_arg") in
+      ( decls
+        @ [ Stmt.Pattern.Decl
+              { decl_adtype= e.meta.adlevel
+              ; decl_type= Type.Unsized e.meta.type_
+              ; decl_id= temp
+              ; initialize= Uninit } ]
+      , stmts
+        @ [ Stmt.Pattern.Assignment
+              (Stmt.Helpers.lvariable temp, e.meta.type_, e) ]
+      , {e with pattern= Var temp} )
+  | _ -> inlined
+
 (* Triple is (declaration list, statement list, return expression) *)
 let rec inline_function_expression propto adt fim (Expr.{pattern; _} as e) =
   match pattern with
@@ -263,8 +299,7 @@ let rec inline_function_expression propto adt fim (Expr.{pattern; _} as e) =
       let d, sl, expr' = inline_function_expression propto adt fim expr in
       (d, sl, {e with pattern= Promotion (expr', ut, ad)})
   | FunApp (kind, es) -> (
-      let d_list, s_list, es =
-        inline_list (inline_function_expression propto adt fim) es in
+      let d_list, s_list, es = inline_function_args propto adt fim kind es in
       match kind with
       | CompilerInternal _ ->
           (d_list, s_list, {e with pattern= FunApp (kind, es)})
@@ -357,6 +392,24 @@ let rec inline_function_expression propto adt fim (Expr.{pattern; _} as e) =
               )) ] in
       (dl1 @ dl2, sl1 @ sl2, {e with pattern= EOr (e1, e2)})
 
+and inline_function_args propto adt fim kind es =
+  let inline = inline_function_expression propto adt fim in
+  let definition =
+    match kind with
+    | UserDefined (fname, suffix) ->
+        let _, name = compute_suffix_and_name propto suffix fname in
+        String.Map.find_opt name fim
+    | _ -> None in
+  match (kind, definition) with
+  | UserDefined (fname, _), Some (_, args, body) ->
+      (* Bind each argument alongside its own inlined statements, retaining
+         inline_list's right-to-left argument evaluation order. *)
+      inline_list
+        (fun (name, e) ->
+          bind_repeated_scalar_argument fname name body (inline e))
+        (List.combine args es)
+  | _ -> inline_list inline es
+
 and inline_function_index propto adt fim i =
   match i with
   | All -> ([], [], All)
@@ -402,8 +455,7 @@ let rec inline_function_statement propto adt fim Stmt.{pattern; meta} =
             slist_concat_no_loc (d @ s) (JacobianPE e)
         | NRFunApp (kind, exprs) ->
             let d_list, s_list, es =
-              inline_list (inline_function_expression propto adt fim) exprs
-            in
+              inline_function_args propto adt fim kind exprs in
             slist_concat_no_loc (d_list @ s_list)
               (match kind with
               | CompilerInternal _ | StanLib _ -> NRFunApp (kind, es)
