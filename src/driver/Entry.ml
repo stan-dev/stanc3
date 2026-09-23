@@ -123,6 +123,7 @@ let stan2mir model_name model (flags : Flags.t) (output : other_output -> unit)
     else Ok () in
   let tx_mir = Transform_Mir.trans_prog ~use_opencl:flags.use_opencl mir in
   debug_output_mir output tx_mir flags.debug_settings.print_transformed_mir;
+  Loop_vectorize.reporting := flags.debug_settings.print_loop_vectorization;
   let opt_mir =
     Optimize.optimization_suite
       ~settings:(Flags.get_optimization_settings flags)

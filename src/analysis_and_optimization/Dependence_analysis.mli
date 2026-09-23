@@ -173,20 +173,9 @@ val read_variables_at : dep_info_map -> label Set.Poly.t -> string Set.Poly.t
 
 (** {2 The loop dependence graph of one [For]} *)
 
-(** How the sink depends on the source: reads what the source wrote, writes what
-    the source read, writes what the source wrote, or both have effects. *)
-type dep_kind = Flow | Anti | Output | Effects
-
-(** [src] executes no later than [dst] in the original loop (Kennedy and Allen
-    2001, Definition 2.1). [dep] is the element test between the two leaves'
-    accesses to [var] at the analysed loop's level, restricted to that order;
-    [var] is [None] for [Effects]. *)
-type edge =
-  {src: label; dst: label; var: string option; kind: dep_kind; dep: Dependence.t}
-
-(** The graph of one [For]: the leaves of the body in lexical order and the
-    edges between them. *)
-type loop_graph = {leaves: label list; edges: edge list}
+(** The leaves of one [For]'s body and the flow, anti, output and effects edges
+    between them; the implementation documents the fields. *)
+type loop_graph
 
 val root_label : label
 (** The label of the analysed statement itself, [1]. *)
@@ -206,11 +195,11 @@ val build_loop_graph : dep_info_map -> loop:label -> loop_graph
     [loop], at that loop's level; the implementation documents the rules. *)
 
 val pi_blocks : loop_graph -> label list list
-(** The strongly connected components in emission order (Allen and Kennedy 1987
-    §5.2): a topological order of the condensation, ties to the earliest leaf.
-*)
+(** The strongly connected components (Tarjan 1972) in emission order (Allen and
+    Kennedy 1987 §5.2): a topological order of the condensation, ties to the
+    earliest leaf. *)
 
-val is_cyclic : dep_info_map -> loop_graph -> label list -> bool
+val is_cyclic : loop_graph -> label list -> bool
 (** Whether a pi-block must stay a sequential loop; a write-only scatter's self
     output dependence does not count, since indexed assignment stores in order.
 *)

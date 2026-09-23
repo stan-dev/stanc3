@@ -738,9 +738,10 @@ type dep_kind = Flow | Anti | Output | Effects
 type edge =
   {src: label; dst: label; var: string option; kind: dep_kind; dep: Dependence.t}
 
-(** The graph of one [For]: the leaves of the body in lexical order and the
-    edges between them. *)
-type loop_graph = {leaves: label list; edges: edge list}
+(** The graph of one [For]: the leaves of the body in lexical order, the edges
+    between them, and the variables some leaf reads (for [is_cyclic]). *)
+type loop_graph =
+  {leaves: label list; edges: edge list; read_vars: string Set.Poly.t}
 
 (** [dep] at the innermost level alone, the outer loops held at one iteration
     (Allen and Kennedy 1987 §5.2); [Independent] when an outer level lacks [Eq].
@@ -838,12 +839,8 @@ let has_effects (statement_map : dep_info_map) (leaf : label) : bool =
 let build_loop_graph (statement_map : dep_info_map) ~(loop : label) : loop_graph
     =
   let leaves = loop_leaves statement_map loop in
-  let subtrees =
-    List.map leaves ~f:(fun leaf -> (leaf, subtree_labels statement_map leaf))
-  in
   let accesses =
-    List.map subtrees ~f:(fun (leaf, labels) ->
-        (leaf, Accesses.concat (List.map labels ~f:(accesses_at statement_map))))
+    List.map leaves ~f:(fun leaf -> (leaf, subtree_accesses statement_map leaf))
   in
   let accesses_of leaf var = Accesses.of_var var (List.assoc leaf accesses) in
   (* whether [leaf] has an access that [uses] picks or an increment of [var], so
@@ -851,16 +848,19 @@ let build_loop_graph (statement_map : dep_info_map) ~(loop : label) : loop_graph
   let touches leaf var ~uses =
     let of_var = accesses_of leaf var in
     not (List.is_empty (uses of_var @ of_var.increments)) in
-  let leaf_of label =
-    List.find_map subtrees ~f:(fun (leaf, labels) ->
-        Option.some_if (List.mem label ~set:labels) leaf) in
+  (* the leaf owning each label of the body *)
+  let leaf_of =
+    LabelMap.of_list
+      (List.concat_map leaves ~f:(fun leaf ->
+           List.map (subtree_labels statement_map leaf) ~f:(fun label ->
+               (label, leaf)))) in
   (* the leaves with a definition of [var] reaching some statement of [dst] *)
   let reaching_writers dst var =
-    List.concat_map (List.assoc dst subtrees) ~f:(fun label ->
+    List.concat_map (subtree_labels statement_map dst) ~f:(fun label ->
         Set.Poly.to_list
           (reaching_defn_lookup
              (snd (LabelMap.find label statement_map)).reaching_defn_entry var))
-    |> List.filter_map ~f:leaf_of in
+    |> List.filter_map ~f:(fun label -> LabelMap.find_opt label leaf_of) in
   let compound leaf =
     match fst (LabelMap.find leaf statement_map) with
     | Stmt.Pattern.Block _ | Profile _ -> true
@@ -911,49 +911,77 @@ let build_loop_graph (statement_map : dep_info_map) ~(loop : label) : loop_graph
   ; edges=
       List.sort
         (List.concat_map leaves ~f:edges_into @ effect_edges)
-        ~cmp:(fun left right -> compare (key left) (key right)) }
+        ~cmp:(fun left right -> compare (key left) (key right))
+  ; read_vars=
+      Set.Poly.union_list
+        (List.map accesses ~f:(fun (_, leaf_accesses) ->
+             Accesses.read_vars leaf_accesses)) }
 
 (** The pi-blocks of [graph] (Allen and Kennedy 1987 §5.2): the strongly
-    connected components, members in lexical order, in a topological order of
-    the condensation with ties broken by the earliest first member, so a body
-    with only forward edges comes back in original order. *)
+    connected components by Tarjan's algorithm (Tarjan 1972, as LLVM's
+    [scc_iterator]), members in lexical order, then Kahn's algorithm on the
+    condensation with ties broken by the earliest first member, so a body with
+    only forward edges comes back in original order. *)
 let pi_blocks (graph : loop_graph) : label list list =
-  let succs leaf =
+  let succs =
+    List.fold_left graph.edges ~init:LabelMap.empty
+      ~f:(fun succs (edge : edge) ->
+        LabelMap.add succs ~key:edge.src
+          ~data:(edge.dst :: LabelMap.find_multi edge.src succs)) in
+  (* [number] is the visit order, [low] the smallest number reachable through
+     leaves still on [stack], [block] the first member of a finished leaf's
+     component *)
+  let number = Hashtbl.create 16 and low = Hashtbl.create 16 in
+  let block = Hashtbl.create 16 and stack = ref [] and components = ref [] in
+  let lower leaf value =
+    Hashtbl.add low ~key:leaf ~data:(min (Hashtbl.find low leaf) value) in
+  let rec connect leaf =
+    let visit = Hashtbl.length number in
+    Hashtbl.add number ~key:leaf ~data:visit;
+    Hashtbl.add low ~key:leaf ~data:visit;
+    stack := leaf :: !stack;
+    List.iter (LabelMap.find_multi leaf succs) ~f:(fun next ->
+        if not (Hashtbl.mem number next) then (
+          connect next;
+          lower leaf (Hashtbl.find low next))
+        else if not (Hashtbl.mem block next) then
+          lower leaf (Hashtbl.find number next));
+    if Hashtbl.find low leaf = visit then (
+      let rec pop members =
+        match !stack with
+        | [] -> members
+        | top :: rest ->
+            stack := rest;
+            if top = leaf then top :: members else pop (top :: members) in
+      let members = List.sort (pop []) ~cmp:compare in
+      let first = List.hd_exn members in
+      components := (first, members) :: !components;
+      List.iter members ~f:(fun member ->
+          Hashtbl.add block ~key:member ~data:first)) in
+  List.iter graph.leaves ~f:(fun leaf ->
+      if not (Hashtbl.mem number leaf) then connect leaf);
+  (* the edges of the condensation, by first member *)
+  let crossing =
     List.filter_map graph.edges ~f:(fun (edge : edge) ->
-        Option.some_if (edge.src = leaf) edge.dst) in
-  (* the leaves reachable from a leaf by one or more edges *)
-  let rec visit seen next =
-    if Set.Poly.mem next seen then seen
-    else List.fold_left (succs next) ~init:(Set.Poly.add next seen) ~f:visit
-  in
-  let reach =
-    List.map graph.leaves ~f:(fun leaf ->
-        (leaf, List.fold_left (succs leaf) ~init:Set.Poly.empty ~f:visit)) in
-  let reaches from target = Set.Poly.mem target (List.assoc from reach) in
-  let mutual left right =
-    left = right || (reaches left right && reaches right left) in
-  (* one component per earliest member, paired with that member *)
-  let components =
-    List.filter_map graph.leaves ~f:(fun leaf ->
-        let members = List.filter graph.leaves ~f:(mutual leaf) in
-        Option.some_if (List.hd members = Some leaf) (leaf, members)) in
-  (* Kahn's algorithm on the condensation: a block is ready once no waiting
-     block reaches it, since a path from a waiting block ends in a waiting
-     block *)
-  let rec emit waiting =
+        let src = Hashtbl.find block edge.src
+        and dst = Hashtbl.find block edge.dst in
+        Option.some_if (src <> dst) (src, dst)) in
+  (* a block is ready once no waiting block has an edge into it; emitting a
+     block removes its outgoing edges *)
+  let rec emit waiting crossing =
     let ready =
       List.filter waiting ~f:(fun (first, _) ->
-          List.for_all waiting ~f:(fun (other, _) ->
-              other = first || not (reaches other first))) in
+          not (List.exists crossing ~f:(fun (_, dst) -> dst = first))) in
     match
       List.min_elt ready ~cmp:(fun (left, _) (right, _) -> compare left right)
     with
     | None -> []
     | Some (first, members) ->
         members
-        :: emit (List.filter waiting ~f:(fun (other, _) -> other <> first))
-  in
-  emit components
+        :: emit
+             (List.filter waiting ~f:(fun (other, _) -> other <> first))
+             (List.filter crossing ~f:(fun (src, _) -> src <> first)) in
+  emit !components crossing
 
 (** A block stays a sequential loop when two leaves depend on each other or one
     depends on an earlier iteration of itself. One exception: a leaf whose self
@@ -962,18 +990,14 @@ let pi_blocks (graph : loop_graph) : label list list =
     multi-index in order, so one vector statement writes the elements in the
     loop's order; a whole-variable write has no vector form and stays in a loop
     regardless. *)
-let is_cyclic (statement_map : dep_info_map) (graph : loop_graph)
-    (block : label list) : bool =
+let is_cyclic (graph : loop_graph) (block : label list) : bool =
   match block with
   | [leaf] ->
-      let read var =
-        List.exists graph.leaves ~f:(fun other ->
-            Set.Poly.mem var
-              (Accesses.read_vars (subtree_accesses statement_map other))) in
       List.exists graph.edges ~f:(fun (edge : edge) ->
           edge.src = leaf && edge.dst = leaf
           && (edge.kind <> Output
-             || Option.value_map edge.var ~default:true ~f:read))
+             || Option.value_map edge.var ~default:true ~f:(fun var ->
+                 Set.Poly.mem var graph.read_vars)))
   | _ -> true
 
 (** Whether some edge leaves a leaf of [from] for a leaf of [into]. *)
@@ -1048,7 +1072,7 @@ let pp_graph (statement_map : dep_info_map) (outcomes : (label * string) list)
     Fmt.pf ppf "[%a]%s"
       Fmt.(list ~sep:(any " ") (pp_position graph))
       block
-      (if is_cyclic statement_map graph block then "cyclic" else "") in
+      (if is_cyclic graph block then "cyclic" else "") in
   Fmt.pf ppf "  edges: %a@.  blocks: %a@." pp_edges graph.edges
     Fmt.(list ~sep:(any " ") pp_block)
     (pi_blocks graph)

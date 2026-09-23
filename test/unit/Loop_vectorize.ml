@@ -7,6 +7,7 @@ open Analysis_and_optimization
 (** The rewritten [log_prob] after partial evaluation, then the report. *)
 let print_vectorized prog =
   Gensym.reset_danger_use_cautiously ();
+  Loop_vectorize.reporting := true;
   let mir = Loop_vectorize.vectorize_loops (Test_utils.mir_of_string prog) in
   Fmt.pr "@[<v>%a@]@."
     (Fmt.list ~sep:Fmt.cut Stmt.Located.pp)
@@ -148,3 +149,16 @@ let%expect_test "Loop vectorization: a scalar written every iteration stays" =
       edges: S0 -> S0 t unknown (output)
       blocks: [S0]
     |}]
+
+let%expect_test "Loop vectorization: no report is kept unless requested" =
+  Loop_vectorize.reporting := false;
+  let (_ : Program.Typed.t) =
+    Loop_vectorize.vectorize_loops
+      (Test_utils.mir_of_string
+         {|
+           data { int N; vector[N] x; }
+           model { vector[N] a; for (n in 1:N) a[n] = x[n]; }
+         |})
+  in
+  Fmt.pr "%d reports@." (List.length (Loop_vectorize.loop_reports ()));
+  [%expect {| 0 reports |}]

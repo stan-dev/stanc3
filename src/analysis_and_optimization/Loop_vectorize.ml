@@ -228,7 +228,7 @@ let decide_block (ctx : context) (map : dep_info_map) (graph : loop_graph)
     ( (block, None)
     , List.map block ~f:(fun leaf -> (leaf, "sequential: " ^ reason)) ) in
   match block with
-  | [_] when is_cyclic map graph block -> sequential "recurrence"
+  | [_] when is_cyclic graph block -> sequential "recurrence"
   | [leaf] when has_effects map leaf ->
       sequential "has effects (print, reject or a user-defined function call)"
   | [leaf] -> (
@@ -314,15 +314,19 @@ let decide (mir : Program.Typed.t) (loop : Stmt.Located.t) ~loopvar ~lower
 
 (* ---- The walk and the report (design §7.13) ---- *)
 
-let loop_report_log : string Lazy.t list ref = ref []
+let reporting = ref false
+let loop_report_log : string list ref = ref []
 
-(** The reports of the last run, in program order: one block per source loop
-    with the header, then the reason the loop was left alone or one line per
-    leaf with the leaf's outcome, the edges and the pi-blocks. *)
-let loop_reports () : string list = List.rev_map !loop_report_log ~f:Lazy.force
+(** The reports recorded since the last call, in program order: one block per
+    source loop with the header, then the reason the loop was left alone or one
+    line per leaf with the leaf's outcome, the edges and the pi-blocks. *)
+let loop_reports () : string list =
+  let reports = List.rev !loop_report_log in
+  loop_report_log := [];
+  reports
 
 (** Every [For], innermost first, replaced by the emitted statements. The
-    decision is recorded when [report] is set and the loop has a source
+    decision is rendered when [report] is set and the loop has a source
     location; compiler-generated loops (data reads, parameter unpacking) have
     none. *)
 let rewrite_stmt (mir : Program.Typed.t) ~(report : bool) :
@@ -332,24 +336,23 @@ let rewrite_stmt (mir : Program.Typed.t) ~(report : bool) :
       | For {loopvar; lower; upper; body} ->
           let body_report, rewritten =
             decide mir stmt ~loopvar ~lower ~upper ~body in
-          if report && Stdlib.compare stmt.meta Location_span.empty <> 0 then
+          if report && stmt.meta <> Location_span.empty then
             loop_report_log :=
-              lazy
-                (Fmt.str "loop at %a  (%s in %a:%a)@.%s"
-                   (Location_span.pp ?printed_filename:None)
-                   stmt.meta loopvar Expr.Typed.pp lower Expr.Typed.pp upper
-                   (Lazy.force body_report))
+              Fmt.str "loop at %a  (%s in %a:%a)@.%s"
+                (Location_span.pp ?printed_filename:None)
+                stmt.meta loopvar Expr.Typed.pp lower Expr.Typed.pp upper
+                (Lazy.force body_report)
               :: !loop_report_log;
           rewritten
       | _ -> stmt)
 
-(** Every loop of the program; [reverse_mode_log_prob], a copy of [log_prob], is
-    rewritten without a report so every model loop reports once. *)
+(** Every loop of the program, reported when [reporting] is set;
+    [reverse_mode_log_prob], a copy of [log_prob], is rewritten without a report
+    so every model loop reports once. *)
 let vectorize_loops (mir : Program.Typed.t) : Program.Typed.t =
-  loop_report_log := [];
   let rewritten =
     Program.map Fun.id
-      (rewrite_stmt mir ~report:true)
+      (rewrite_stmt mir ~report:!reporting)
       Fun.id
       {mir with reverse_mode_log_prob= []} in
   { rewritten with
