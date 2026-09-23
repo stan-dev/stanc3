@@ -85,9 +85,7 @@ let rec expected_types : UnsizedType.t Nonempty_list.t Fmt.t =
     | [t] -> ust ppf t
     | [t1; t2] -> Fmt.pf ppf "%a or %a" ust t1 ust t2
     | [t1; t2; t3] -> Fmt.pf ppf "%a,@ %a,@ or %a" ust t1 ust t2 ust t3
-    | t :: ts ->
-        Fmt.pf ppf "%a,@ %a" ust t expected_types
-          (ts |> Nonempty_list.of_list_exn)
+    | t1 :: t2 :: ts -> Fmt.pf ppf "%a,@ %a" ust t1 expected_types (t2 :: ts)
 
 let suggestions s =
   match s with
@@ -194,17 +192,6 @@ module TypeError = struct
     | 6 -> "sixth element of the control parameter tuple (allow_fallthrough)"
     | n ->
         Fmt.str "%a element of the control parameter tuple" (Fmt.ordinal ()) n
-
-  let rec expected_types : UnsizedType.t Nonempty_list.t Fmt.t =
-    let ust = expected_style UnsizedType.pp in
-    fun ppf l ->
-      match l with
-      | [t] -> ust ppf t
-      | [t1; t2] -> Fmt.pf ppf "%a or %a" ust t1 ust t2
-      | [t1; t2; t3] -> Fmt.pf ppf "%a,@ %a,@ or %a" ust t1 ust t2 ust t3
-      | t :: ts ->
-          Fmt.pf ppf "%a,@ %a" ust t expected_types
-            (ts |> Nonempty_list.of_list_exn)
 
   let generic_laplace_usage note (name, supplied) =
     let req = Stan_math_signatures.laplace_helper_param_types name in
