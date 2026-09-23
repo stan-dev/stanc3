@@ -423,28 +423,31 @@ let mir_uninitialized_variables (mir : Program.Typed.t) :
                    (Set.Poly.union arg_vars globals)
                    fdbody))) ]
 
-(** [left + right], or [left - right] when [negate_right]. [None] when the
-    result is not a [linear]: two different symbols, two loop variables, or a
-    loop variable subtracted. *)
-let linear_combine ~negate_right (left : linear) (right : linear) :
-    linear option =
-  (* [symbol] and [loopvar] each hold at most one term; a term subtracted from
-     itself cancels *)
-  let combine ~equal left_term right_term =
+(** [left + right]; [None] when both have a symbol or both have a loop variable,
+    since a [linear] holds at most one of each. *)
+let linear_add (left : linear) (right : linear) : linear option =
+  let add left_term right_term =
+    match (left_term, right_term) with
+    | term, None | None, term -> Some term
+    | Some _, Some _ -> None in
+  Option.bind (add left.symbol right.symbol) ~f:(fun symbol ->
+      Option.map (add left.loopvar right.loopvar) ~f:(fun loopvar ->
+          {const= left.const + right.const; symbol; loopvar}))
+
+(** [left - right]; [None] when a symbol or loop variable of [right] is not the
+    same one in [left], since a [linear] cannot hold a subtracted term. *)
+let linear_subtract (left : linear) (right : linear) : linear option =
+  (* a term of [right] cancels only the same term of [left] *)
+  let subtract ~equal left_term right_term =
     match (left_term, right_term) with
     | term, None -> Some term
-    | None, Some _ when not negate_right -> Some right_term
-    | Some left_value, Some right_value
-      when negate_right && equal left_value right_value ->
+    | Some left_value, Some right_value when equal left_value right_value ->
         Some None
-    | None, Some _ | Some _, Some _ -> None in
-  let const =
-    if negate_right then left.const - right.const else left.const + right.const
-  in
-  Option.bind (combine ~equal:Expr.Typed.equal left.symbol right.symbol)
+    | _, Some _ -> None in
+  Option.bind (subtract ~equal:Expr.Typed.equal left.symbol right.symbol)
     ~f:(fun symbol ->
-      Option.map (combine ~equal:String.equal left.loopvar right.loopvar)
-        ~f:(fun loopvar -> {const; symbol; loopvar}))
+      Option.map (subtract ~equal:String.equal left.loopvar right.loopvar)
+        ~f:(fun loopvar -> {const= left.const - right.const; symbol; loopvar}))
 
 (** The integer index [expr] as a [point]. [+], [-] and promotions are looked
     through; any other expression is one symbol when the expression reads no
@@ -458,10 +461,10 @@ let classify_point ~(loopvars : string Set.Poly.t)
     else if not (Set.Poly.disjoint names loopvars) then Varying Nonlinear
     else Affine {const= 0; symbol= Some expr; loopvar= None} in
   let rec classify (expr : Expr.Typed.t) : point =
-    let combine ~negate_right lhs rhs =
+    let combine linear_op lhs rhs =
       match (classify lhs, classify rhs) with
       | Affine left_term, Affine right_term -> (
-          match linear_combine ~negate_right left_term right_term with
+          match linear_op left_term right_term with
           | Some term -> Affine term
           | None -> symbolic expr)
       | Varying _, _ | _, Varying _ -> symbolic expr in
@@ -473,8 +476,8 @@ let classify_point ~(loopvars : string Set.Poly.t)
         | Some const -> Affine {const; symbol= None; loopvar= None}
         | None -> symbolic expr)
     | Promotion (inner, _, _) -> classify inner
-    | FunApp (Operator Plus, [lhs; rhs]) -> combine ~negate_right:false lhs rhs
-    | FunApp (Operator Minus, [lhs; rhs]) -> combine ~negate_right:true lhs rhs
+    | FunApp (Operator Plus, [lhs; rhs]) -> combine linear_add lhs rhs
+    | FunApp (Operator Minus, [lhs; rhs]) -> combine linear_subtract lhs rhs
     | Var _ | Lit _ | FunApp _ | TernaryIf _ | EAnd _ | EOr _ | Indexed _
      |TupleProjection _ ->
         symbolic expr in
