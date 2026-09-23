@@ -211,10 +211,13 @@ let stan_math_return_type name arg_tys =
       |> match_to_rt_option
 
 let operator_stan_math_return_type op arg_tys =
-  match (op, arg_tys) with
-  | Operator.IntDivide, [(_, UnsizedType.UInt); (_, UInt)] ->
-      Some (UnsizedType.(ReturnType UInt), [Promotion.NoPromotion; NoPromotion])
-  | IntDivide, _ -> None
+  match op with
+  | Operator.(IntDivide | And | Or) -> (
+      match arg_tys with
+      | [(_, UnsizedType.UInt); (_, UInt)] ->
+          Some
+            (UnsizedType.(ReturnType UInt), [Promotion.NoPromotion; NoPromotion])
+      | _ -> None)
   | _ ->
       Stan_math_signatures.operator_to_stan_math_fns op
       |> List.filter_map ~f:(fun name ->

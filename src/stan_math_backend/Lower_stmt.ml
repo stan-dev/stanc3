@@ -330,7 +330,7 @@ let rec lower_statement Stmt.{pattern; meta} : stmt list =
   | NRFunApp (Operator op, _) ->
       Common.ICE.(
         internal_errorf "Attempted to codegen a statement of only Operator %t"
-          [Operator.pp $ op])
+          [Operator.pp $ op]) [@coverage off]
   | Skip -> []
   | IfElse (cond, ifbranch, elsebranch) ->
       [ IfElse

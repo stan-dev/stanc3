@@ -36,7 +36,7 @@ let operator_to_stan_math_fns op =
   | Times -> ["multiply"]
   | Divide -> ["divide"; "mdivide_right"]
   | Modulo -> ["modulus"]
-  | IntDivide -> []
+  | IntDivide -> ["divide"]
   | LDivide -> ["mdivide_left"]
   | EltTimes -> ["elt_multiply"]
   | EltDivide -> ["elt_divide"]
@@ -53,21 +53,20 @@ let operator_to_stan_math_fns op =
   | PNot -> ["logical_negation"]
   | Transpose -> ["transpose"]
 
-let int_divide_type =
-  UnsizedType.
-    ( [(AutoDiffable, UInt); (AutoDiffable, UInt)]
-    , ReturnType UInt
-    , Fun_kind.FnPlain
-    , Mem_pattern.AoS )
-
 let get_sigs name =
   let name = Utils.stdlib_distribution_name name in
   Hashtbl.find_multi (Lazy.force stan_math_signatures) name
   |> List.sort ~cmp:UnsizedType.compare_signature
 
 let operator_to_stan_math_signatures op =
+  let int_only_operator_type =
+    UnsizedType.
+      ( [(AutoDiffable, UInt); (AutoDiffable, UInt)]
+      , ReturnType UInt
+      , Fun_kind.FnPlain
+      , Mem_pattern.AoS ) in
   match op with
-  | Operator.IntDivide -> [int_divide_type]
+  | Operator.IntDivide | And | Or -> [int_only_operator_type]
   | _ -> operator_to_stan_math_fns op |> List.concat_map ~f:get_sigs
 
 let pretty_print_all_math_sigs ppf () =
