@@ -875,7 +875,7 @@ let rec eval_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
                                                         FunApp
                                                           ( ( Operator Transpose
                                                             | StanLib
-                                                              ( "transpose"
+                                                                ( "transpose"
                                                                 , _
                                                                 , _ ) )
                                                           , [b] )
