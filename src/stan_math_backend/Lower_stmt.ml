@@ -327,6 +327,10 @@ let rec lower_statement Stmt.{pattern; meta} : stmt list =
       Exprs.fun_call (stan_namespace_qualify fname) (lower_exprs args) |> wrap_e
   | NRFunApp (UserDefined (fname, suffix), args) ->
       lower_user_defined_fun fname suffix args |> wrap_e
+  | NRFunApp (Operator op, _) ->
+      Common.ICE.(
+        internal_errorf "Attempted to codegen a statement of only Operator %t"
+          [Operator.pp $ op])
   | Skip -> []
   | IfElse (cond, ifbranch, elsebranch) ->
       [ IfElse

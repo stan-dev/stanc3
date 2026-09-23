@@ -97,26 +97,6 @@ let%expect_test "Factor graph complex example" =
 ((factor_map
   ((((TargetTerm
       ((pattern
-        (FunApp (StanLib Times__ FnPlain AoS)
-         (((pattern (Var f))
-           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
-          ((pattern (Var f))
-           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
-       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
-     21)
-    ((VVar f)))
-   (((TargetTerm
-      ((pattern
-        (FunApp (StanLib Times__ FnPlain AoS)
-         (((pattern (Var z))
-           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
-          ((pattern (Var e))
-           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
-       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
-     21)
-    ((VVar a) (VVar b) (VVar c) (VVar d) (VVar e)))
-   (((TargetTerm
-      ((pattern
         (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
          (((pattern (Var a))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
@@ -178,19 +158,30 @@ let%expect_test "Factor graph complex example" =
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
      18)
-    ((VVar b) (VVar c) (VVar d)))))
+    ((VVar b) (VVar c) (VVar d)))
+   (((TargetTerm
+      ((pattern
+        (FunApp (Operator Times)
+         (((pattern (Var f))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+          ((pattern (Var f))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
+     21)
+    ((VVar f)))
+   (((TargetTerm
+      ((pattern
+        (FunApp (Operator Times)
+         (((pattern (Var z))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+          ((pattern (Var e))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
+     21)
+    ((VVar a) (VVar b) (VVar c) (VVar d) (VVar e)))))
  (var_map
   (((VVar a)
     (((TargetTerm
-       ((pattern
-         (FunApp (StanLib Times__ FnPlain AoS)
-          (((pattern (Var z))
-            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
-           ((pattern (Var e))
-            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
-        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
-      21)
-     ((TargetTerm
        ((pattern
          (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
           (((pattern (Var a))
@@ -219,18 +210,18 @@ let%expect_test "Factor graph complex example" =
               UReal DataOnly))
             (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
-      17)))
-   ((VVar b)
-    (((TargetTerm
+      17)
+     ((TargetTerm
        ((pattern
-         (FunApp (StanLib Times__ FnPlain AoS)
+         (FunApp (Operator Times)
           (((pattern (Var z))
             (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
            ((pattern (Var e))
             (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
-      21)
-     ((TargetTerm
+      21)))
+   ((VVar b)
+    (((TargetTerm
        ((pattern
          (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
           (((pattern (Var a))
@@ -274,18 +265,18 @@ let%expect_test "Factor graph complex example" =
            ((pattern (Var b))
             (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
-      18)))
-   ((VVar c)
-    (((TargetTerm
+      18)
+     ((TargetTerm
        ((pattern
-         (FunApp (StanLib Times__ FnPlain AoS)
+         (FunApp (Operator Times)
           (((pattern (Var z))
             (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
            ((pattern (Var e))
             (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
-      21)
-     ((TargetTerm
+      21)))
+   ((VVar c)
+    (((TargetTerm
        ((pattern
          (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
           (((pattern (Var c))
@@ -310,18 +301,18 @@ let%expect_test "Factor graph complex example" =
            ((pattern (Var b))
             (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
-      18)))
-   ((VVar d)
-    (((TargetTerm
+      18)
+     ((TargetTerm
        ((pattern
-         (FunApp (StanLib Times__ FnPlain AoS)
+         (FunApp (Operator Times)
           (((pattern (Var z))
             (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
            ((pattern (Var e))
             (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
-      21)
-     ((TargetTerm
+      21)))
+   ((VVar d)
+    (((TargetTerm
        ((pattern
          (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
           (((pattern (Var d))
@@ -331,11 +322,20 @@ let%expect_test "Factor graph complex example" =
            ((pattern (Var b))
             (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
-      18)))
+      18)
+     ((TargetTerm
+       ((pattern
+         (FunApp (Operator Times)
+          (((pattern (Var z))
+            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+           ((pattern (Var e))
+            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
+        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
+      21)))
    ((VVar e)
     (((TargetTerm
        ((pattern
-         (FunApp (StanLib Times__ FnPlain AoS)
+         (FunApp (Operator Times)
           (((pattern (Var z))
             (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
            ((pattern (Var e))
@@ -345,7 +345,7 @@ let%expect_test "Factor graph complex example" =
    ((VVar f)
     (((TargetTerm
        ((pattern
-         (FunApp (StanLib Times__ FnPlain AoS)
+         (FunApp (Operator Times)
           (((pattern (Var f))
             (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
            ((pattern (Var f))

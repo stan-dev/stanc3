@@ -41906,7 +41906,7 @@ foo(const T0__& x, const T1__& s_arg__, const T2__& y_arg__, std::ostream*
                0.0, std::vector<double>{1.0}, pstream__,
                stan::math::eval(
                  stan::model::rvalue(y, "y", stan::model::index_min(2)))),
-             "ode_rk45(foo, Transpose__(FnMakeRowVec__(promote(1, real, data))), 0.0,\n         FnMakeArray__(1.0), eval(y[2:]))",
+             "ode_rk45(foo, (FnMakeRowVec__(promote(1, real, data)) '), 0.0,\n         FnMakeArray__(1.0), eval(y[2:]))",
              stan::model::index_uni(1));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);

@@ -35,8 +35,7 @@ let rec op_to_funapp op args type_ =
     Ast.expr_ad_lub args |> Option.get
     (* correctness inherited from typechecking *) in
   Expr.
-    { pattern=
-        FunApp (StanLib (Operator.to_string op, FnPlain, AoS), trans_exprs args)
+    { pattern= FunApp (Operator op, trans_exprs args)
     ; meta= Expr.Typed.Meta.create ~type_ ~adlevel ~loc () }
 
 and trans_expr {Ast.expr; Ast.emeta} =
@@ -966,8 +965,7 @@ let trans_prog filename (p : Ast.typed_program) : Program.Typed.t =
           IfElse (cond, {pattern= Return None; meta= Location_span.empty}, None)
       ; meta= Location_span.empty } in
   let iexpr pattern = Expr.{pattern; meta= Typed.Meta.empty} in
-  let fnot e =
-    FunApp (StanLib (Operator.to_string PNot, FnPlain, AoS), [e]) |> iexpr in
+  let fnot e = FunApp (Operator PNot, [e]) |> iexpr in
   let tparam_early_return =
     let to_var fv = iexpr (Var (Flag_vars.to_string fv)) in
     let v1 = to_var EmitTransformedParameters in

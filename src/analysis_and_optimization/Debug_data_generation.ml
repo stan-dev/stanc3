@@ -91,7 +91,7 @@ let unpack_or_repeat n (e : Expr.Typed.t) : Expr.Typed.t list =
   match e.pattern with
   | FunApp (CompilerInternal (FnMakeRowVec | FnMakeArray), l) -> l
   | FunApp
-      ( StanLib ("Transpose__", FnPlain, _)
+      ( Operator Transpose
       , [{pattern= FunApp (CompilerInternal FnMakeRowVec, l); _}] ) ->
       l
   | _ -> repeat n e
@@ -388,9 +388,7 @@ let generate_json_entries (name, expr) : string * t =
     | FunApp (CompilerInternal FnMakeTuple, l) ->
         `Assoc
           (List.mapi ~f:(fun i t -> (Int.to_string (i + 1), expr_to_json t)) l)
-    | FunApp (StanLib (transpose, _, _), [e])
-      when String.equal transpose (Operator.to_string Transpose) ->
-        expr_to_json e
+    | FunApp (Operator Transpose, [e]) -> expr_to_json e
     | _ ->
         reject e.meta.Expr.Typed.Meta.loc
           (Fmt.str "Could not evaluate expression %a" Expr.Typed.pp e) in

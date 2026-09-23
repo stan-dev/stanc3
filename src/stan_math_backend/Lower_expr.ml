@@ -414,8 +414,7 @@ and lower_fun_app suffix fname es mem_pattern
     | Some (f, "unconstrain") -> f ^ "_free"
     | _ -> fname in
   let special_options =
-    [ Option.map ~f:lower_operator_app (Operator.of_string_opt fname)
-    ; lower_misc_special_math_app fname mem_pattern ret_type
+    [ lower_misc_special_math_app fname mem_pattern ret_type
     ; lower_functionals fname suffix es mem_pattern ]
     |> List.filter_map ~f:Fun.id |> List.hd in
   match special_options with
@@ -556,19 +555,18 @@ and lower_expr (Expr.{pattern; meta} : Expr.Typed.t) : Cpp.expr =
         else lower_expr e in
       Parens (TernaryIf (maybe_eval ec, maybe_eval et, maybe_eval ef))
   | FunApp
-      ( StanLib (op, _, _)
+      ( Operator Transpose
       , [ { meta= {type_= URowVector; _}
-          ; pattern= FunApp (CompilerInternal FnMakeRowVec, es) } ] )
-    when Operator.(Some Transpose = of_string_opt op) ->
+          ; pattern= FunApp (CompilerInternal FnMakeRowVec, es) } ] ) ->
       let st = local_scalar UVector (promote_adtype es) in
       vector_literal ~column:true st es
   | FunApp
-      ( StanLib (op, _, _)
+      ( Operator Transpose
       , [ { meta= {type_= UComplexRowVector; _}
-          ; pattern= FunApp (CompilerInternal FnMakeRowVec, es) } ] )
-    when Operator.(Some Transpose = of_string_opt op) ->
+          ; pattern= FunApp (CompilerInternal FnMakeRowVec, es) } ] ) ->
       let st = Types.complex (local_scalar UComplexVector (promote_adtype es)) in
       vector_literal ~column:true st es
+  | FunApp (Operator op, es) -> lower_operator_app op es
   | FunApp (CompilerInternal f, es) ->
       lower_compiler_internal meta.adlevel meta.type_ f es
   | FunApp (StanLib (f, suffix, mem_pattern), es) ->

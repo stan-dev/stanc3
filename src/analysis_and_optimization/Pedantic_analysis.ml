@@ -75,14 +75,11 @@ let list_possible_nonlinear (mir : Program.Typed.t) : Location_span.t Set.Poly.t
     =
   (* These functions are linear if all of their arguments are *)
   let linear_fnames =
-    Operator.(
-      [Plus; PPlus; Minus; PMinus; PNot; Transpose] |> List.map ~f:to_string)
-    @ [ "add"; "append_block"; "append_row"; "append_col"; "block"; "col"; "cols"
+    [ "add"; "append_block"; "append_row"; "append_col"; "block"; "col"; "cols"
       ; "row"; "rows"; "diagonal"; "head"; "tail"; "minus"; "negative_infinity"
       ; "not_a_number"; "rep_matrix"; "rep_vector"; "rep_row_vector"
       ; "positive_infinity"; "segment"; "subtract"; "sum"; "to_vector"
-      ; "to_row_vector"; "to_matrix"; "to_array_1d"; "to_array_2d"; "transpose"
-      ]
+    ; "to_row_vector"; "to_matrix"; "to_array_1d"; "to_array_2d"; "transpose" ]
     |> String.Set.of_list in
   (* A simple check of linearity of an expression. allow_var is used for
      expressions like a*b, where at most one of a and b can be a variable *)
@@ -94,6 +91,15 @@ let list_possible_nonlinear (mir : Program.Typed.t) : Location_span.t Set.Poly.t
     | TernaryIf (e1, e2, e3) ->
         is_linear allow_var e1 && is_linear allow_var e2
         && is_linear allow_var e3
+    | FunApp (Operator (Plus | PPlus | Minus | PMinus | PNot | Transpose), args)
+      ->
+        List.for_all ~f:(is_linear allow_var) args
+    | FunApp
+        (Operator (Times | Divide | IntDivide | EltDivide | EltTimes), [a; b])
+      ->
+        (* We require at least one of these operands to be a constant *)
+        (is_linear allow_var a && is_linear false b)
+        || (is_linear false a && is_linear allow_var b)
     | FunApp (StanLib (name, _, _), args) ->
         is_linear_function allow_var name args
     | FunApp (CompilerInternal (FnMakeArray | FnMakeRowVec), args) ->
@@ -105,10 +111,6 @@ let list_possible_nonlinear (mir : Program.Typed.t) : Location_span.t Set.Poly.t
         List.for_all ~f:(is_linear allow_var) args
     | _, _ when List.for_all ~f:(is_linear false) args ->
         (* A function of all constants is fine *) true
-    | ("Times__" | "Divide__" | "IntDivide__"), [a; b] ->
-        (* We require at least one of these operands to be a constant *)
-        (is_linear allow_var a && is_linear false b)
-        || (is_linear false a && is_linear allow_var b)
     | "fma", [a; b; c] ->
         (* Similar to above. Partial evaluation can create fmas where the user
            wrote Times *)
