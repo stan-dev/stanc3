@@ -93,16 +93,24 @@ type direction = Lt | Eq | Gt
     the number of iterations from the first access to the second. *)
 type level = {directions: direction Set.Poly.t; distance: int option}
 
-(** Whether two accesses can touch the same element. [Dependent levels] has one
-    [level] per loop around both accesses, outermost first; this is the
-    direction vector of Allen and Kennedy (1987). In
-    {[
-      for (n in 2:N) a[n] = a[n - 1];
-    ]}
-    the write in iteration [n - 1] and the read in iteration [n] touch the same
-    element, so the dependence from the write to the read is
-    [Dependent [{directions= {Lt}; distance= Some 1}]]. *)
-type dependence = Independent | Dependent of level list
+(** Whether two accesses can touch the same element. *)
+type dependence =
+  | Independent  (** The two accesses never touch the same element. *)
+  | Unknown
+      (** The accesses cannot be compared, for example [x[idx[n]]] against
+          [x[n]], so the two accesses may touch the same element in any
+          iterations of the loops around them. LLVM's dependence analysis calls
+          this a confused dependence. *)
+  | Dependent of level list
+      (** The two accesses may touch the same element, in the iterations the
+          levels allow: one [level] per loop around both accesses, outermost
+          first, the direction vector of Allen and Kennedy (1987). In
+          {[
+            for (n in 2:N) a[n] = a[n - 1];
+          ]}
+          the write in iteration [n - 1] and the read in iteration [n] touch the
+          same element, so the dependence from the write to the read is
+          [Dependent [{directions= {Lt}; distance= Some 1}]]. *)
 
 (** {1 The dependency information} *)
 

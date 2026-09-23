@@ -19,7 +19,7 @@ type access_kind = Read | Write | Increment
 type access = {var: string; subs: point Index.t list; kind: access_kind}
 type direction = Lt | Eq | Gt
 type level = {directions: direction Set.Poly.t; distance: int option}
-type dependence = Independent | Dependent of level list
+type dependence = Independent | Unknown | Dependent of level list
 
 type node_dep_info =
   { predecessors: label Set.Poly.t
@@ -37,23 +37,14 @@ type dependency_graph = label Set.Poly.t LabelMap.t
 
 (** The loops around both of two accesses, outermost first, each given by the
     loop variable; a [while] loop has no loop variable and is [None]. A
-    [dependence] between the two accesses has one [level] per entry. *)
+    [Dependent] result for the two accesses has one [level] per entry. *)
 type frame = string option list
-
-(** A loop about which nothing is known: any direction, no known distance. *)
-let free = {directions= Set.Poly.of_list [Lt; Eq; Gt]; distance= None}
-
-(** The dependence to assume when two accesses cannot be compared: in every loop
-    of [frame], any two iterations may touch the same element. LLVM's dependence
-    analysis calls this a confused dependence. *)
-let confused (frame : frame) : dependence =
-  Dependent (List.map frame ~f:(fun _ -> free))
 
 (** Whether two single indices can be equal (the ZIV and strong SIV tests of
     Goff, Kennedy and Tseng 1991, section 3). Without a loop variable, the two
     indices are equal in every iteration or in none. [n + a] and [n + b], for
     the variable [n] of a loop in [frame], are equal when the two iterations of
-    [n] are [a - b] apart. Any other pair is [confused]. *)
+    [n] are [a - b] apart. Any other pair is [Unknown]. *)
 let point_dependence (frame : frame) (source : point) (sink : point) :
     dependence =
   match (source, sink) with
@@ -66,46 +57,48 @@ let point_dependence (frame : frame) (source : point) (sink : point) :
           (Option.equal Expr.Typed.equal source_term.symbol sink_term.symbol)
           (source_term.const - sink_term.const) in
       match (difference, source_term.loopvar) with
-      | None, _ | Some 0, None -> confused frame
+      | None, _ | Some 0, None -> Unknown
       | Some _, None -> Independent
       | Some distance, Some loopvar when List.mem (Some loopvar) ~set:frame ->
           let direction =
             if distance = 0 then Eq else if distance > 0 then Lt else Gt in
-          (* only the level of [loopvar] is known *)
+          (* only the level of [loopvar] is known; any direction is possible at
+             the other loops *)
           Dependent
             (List.map frame ~f:(fun var ->
                  if Option.equal String.equal var (Some loopvar) then
                    { directions= Set.Poly.singleton direction
                    ; distance= Some distance }
-                 else free))
-      | Some _, Some _ -> confused frame)
-  | Affine _, Affine _ | Varying _, _ | _, Varying _ -> confused frame
+                 else {directions= Set.Poly.of_list [Lt; Eq; Gt]; distance= None}))
+      | Some _, Some _ -> Unknown)
+  | Affine _, Affine _ | Varying _, _ | _, Varying _ -> Unknown
 
 (** Whether two accesses to one variable can touch the same element. The
     elements are the same only when the indices are equal at every position, so
     the per-position results are intersected. Accesses with different numbers of
-    indices are [confused]. *)
+    indices are [Unknown]. *)
 let access_dependence (frame : frame) (source : access) (sink : access) :
     dependence =
-  if List.length source.subs <> List.length sink.subs then confused frame
+  if List.length source.subs <> List.length sink.subs then Unknown
   else
-    List.fold_left2 source.subs sink.subs ~init:(confused frame)
+    List.fold_left2 source.subs sink.subs ~init:Unknown
       ~f:(fun merged source_sub sink_sub ->
         let position =
           match (source_sub, sink_sub) with
           | Index.Single source_point, Index.Single sink_point ->
               point_dependence frame source_point sink_point
-          | _ -> confused frame in
+          | _ -> Unknown in
         (* keep what is possible at both positions; the accesses are independent
            when nothing is left at some loop *)
         match (merged, position) with
         | Independent, _ | _, Independent -> Independent
+        | Unknown, other | other, Unknown -> other
         | Dependent merged_levels, Dependent position_levels ->
             let levels =
               List.map2 merged_levels position_levels ~f:(fun left right ->
                   match (left.distance, right.distance) with
                   | Some left_d, Some right_d when left_d <> right_d ->
-                      {free with directions= Set.Poly.empty}
+                      {directions= Set.Poly.empty; distance= None}
                   | _ ->
                       { directions=
                           Set.Poly.inter left.directions right.directions
@@ -140,7 +133,7 @@ let reaching_defn_lookup (rds : reaching_defn Set.Poly.t) (var : string) :
     the outermost loop whose direction is not [Eq], the direction is [Lt]; or
     when every direction is [Eq] and [src] comes first in the program,
     [src < dst]. [Eq] is kept at a loop only if the loops inside still allow
-    [src] to run first. *)
+    [src] to run first. [Unknown] stays [Unknown]. *)
 let ordered_dependence ~(src : label) ~(dst : label) (dep : dependence) :
     dependence =
   let rec restrict = function
@@ -161,6 +154,7 @@ let ordered_dependence ~(src : label) ~(dst : label) (dep : dependence) :
   in
   match dep with
   | Independent -> Independent
+  | Unknown -> Unknown
   | Dependent levels -> (
       match restrict levels with
       | Some levels -> Dependent levels
@@ -175,10 +169,10 @@ let root_label : label = 1
     each pair before the pairs are combined, so that a direction removed for one
     pair is not added back by another. Two [Increment]s are skipped, since
     increments can run in either order. When either list is empty the accesses
-    are unknown and the result is [confused]. *)
+    are unknown and the result is [Unknown]. *)
 let pair_dependence (frame : frame) ~(restrict : dependence -> dependence)
     (sources : access list) (sinks : access list) : dependence =
-  if List.is_empty sources || List.is_empty sinks then restrict (confused frame)
+  if List.is_empty sources || List.is_empty sinks then Unknown
   else
     List.fold_left sources ~init:Independent ~f:(fun merged source ->
         List.fold_left sinks ~init:merged ~f:(fun merged sink ->
@@ -190,6 +184,7 @@ let pair_dependence (frame : frame) ~(restrict : dependence -> dependence)
                 match
                   (merged, restrict (access_dependence frame source sink))
                 with
+                | Unknown, _ | _, Unknown -> Unknown
                 | Independent, other | other, Independent -> other
                 | Dependent merged_levels, Dependent pair_levels ->
                     Dependent
@@ -237,7 +232,7 @@ let element_edges (statement_map : dep_info_map) ~(dst : label)
     (label * dependence) list =
   List.filter_map (Set.Poly.to_list sources) ~f:(fun src ->
       if src = root_label || not (LabelMap.mem src statement_map) then
-        Some (src, confused [])
+        Some (src, Unknown)
       else
         match
           pair_dependence
@@ -245,7 +240,7 @@ let element_edges (statement_map : dep_info_map) ~(dst : label)
             ~restrict:(restrict ~src) (src_accesses src) dst_accesses
         with
         | Independent -> None
-        | Dependent _ as dep -> Some (src, dep))
+        | (Unknown | Dependent _) as dep -> Some (src, dep))
 
 (** The assignments to [var] that reach [dst] and may write an element that
     [dst] reads before [dst] runs. *)
