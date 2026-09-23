@@ -98,11 +98,13 @@ let type_of_expr_typed ue = ue.emeta.type_
 let has_int_type ue = ue.emeta.type_ = UInt
 let has_int_array_type ue = ue.emeta.type_ = UArray UInt
 
-let rec name_of_lval lv =
+let rec id_of_lval lv =
   match lv.lval with
-  | LVariable id -> id.name
-  | LTupleProjection (lv, _) -> name_of_lval lv
-  | LIndexed (lv, _) -> name_of_lval lv
+  | LVariable id -> id
+  | LTupleProjection (lv, _) -> id_of_lval lv
+  | LIndexed (lv, _) -> id_of_lval lv
+
+let name_of_lval lv = (id_of_lval lv).name
 
 let has_int_or_real_type ue =
   match ue.emeta.type_ with UInt | UReal -> true | _ -> false
@@ -516,6 +518,26 @@ let mk_fun_app ~is_cond_dist ~loc kind name args ~type_ : Ast.typed_expression =
   mk_typed_expression ~expr:fn ~loc ~type_
     ~ad_level:(UnsizedType.fill_adtype_for_type ad_type type_)
 
+let get_callback_locations tenv es =
+  let rec loop es acc =
+    match es with
+    | [] -> acc
+    | {emeta= {type_= UFun _ as callback_type; _}; expr= Variable fname} :: es
+      ->
+        let acc =
+          let candidates =
+            Env.find tenv (Utils.stdlib_distribution_name fname.name) in
+          List.filter_map candidates ~f:(function
+            | Env.{kind= `UserDeclared location; type_}
+             |{kind= `UserDefined location; type_}
+              when UnsizedType.equal type_ callback_type ->
+                Some location
+            | _ -> None)
+          @ acc in
+        loop es acc
+    | _ :: es -> loop es acc in
+  loop es []
+
 let check_normal_fn ~is_cond_dist loc tenv id es =
   match Env.find tenv (Utils.normalized_name id.name) with
   | {kind= `Variable {location= prev; _}; _} :: _
@@ -528,30 +550,30 @@ let check_normal_fn ~is_cond_dist loc tenv id es =
       |> error
   | [] ->
       (match Utils.split_distribution_suffix id.name with
-        | Some (prefix, suffix) -> (
-            let is_known_family s =
-              Option.is_some
-                (List.assoc_opt s Stan_math_signatures.distributions) in
-            match suffix with
-            | ("lpmf" | "lupmf") when Env.mem tenv (prefix ^ "_lpdf") ->
-                Semantic_error.returning_fn_expected_wrong_dist_suffix_found loc
+        | Some (prefix, suffix) ->
+            let default_error () =
+              if
+                Option.is_some
+                  (List.assoc_opt prefix Stan_math_signatures.distributions)
+                && List.mem ~set:Utils.cumulative_distribution_suffices_w_rng
+                     suffix
+              then
+                Semantic_error
+                .returning_fn_expected_undeclared_dist_suffix_found loc
                   (prefix, suffix)
-            | ("lpdf" | "lupdf") when Env.mem tenv (prefix ^ "_lpmf") ->
-                Semantic_error.returning_fn_expected_wrong_dist_suffix_found loc
-                  (prefix, suffix)
-            | _ ->
-                if
-                  is_known_family prefix
-                  && List.mem ~set:Utils.cumulative_distribution_suffices_w_rng
-                       suffix
-                then
-                  Semantic_error
-                  .returning_fn_expected_undeclared_dist_suffix_found loc
-                    (prefix, suffix)
-                else
-                  Semantic_error.returning_fn_expected_undeclaredident_found loc
-                    id.name
-                    (Env.nearest_ident tenv id.name))
+              else
+                Semantic_error.returning_fn_expected_undeclaredident_found loc
+                  id.name
+                  (Env.nearest_ident tenv id.name) in
+            let suggestions =
+              match suffix with
+              | "lpmf" | "lupmf" -> Env.find tenv (prefix ^ "_lpdf")
+              | "lpdf" | "lupdf" -> Env.find tenv (prefix ^ "_lpmf")
+              | _ -> [] in
+            if not (List.is_empty suggestions) then
+              Semantic_error.returning_fn_expected_wrong_dist_suffix_found loc
+                (prefix, suffix, List.map ~f:Env.location suggestions)
+            else default_error ()
         | None ->
             Semantic_error.returning_fn_expected_undeclaredident_found loc
               id.name
@@ -580,9 +602,9 @@ let check_normal_fn ~is_cond_dist loc tenv id es =
             sigs
           |> error
       | SignatureErrors (l, b) ->
-          es
-          |> List.map ~f:(fun e -> e.emeta.type_)
-          |> Semantic_error.illtyped_fn_app loc id.name (l, b)
+          Semantic_error.illtyped_fn_app loc id.name (l, b)
+            (List.map ~f:type_of_expr_typed es)
+            (get_callback_locations tenv es)
           |> error)
 
 (** Given a constraint function [matches], find any signature which exists
@@ -1065,7 +1087,7 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
                  operator %%/%%.@]"
                 (pp_indented_box Pretty_printing.pp_expression)
                 {expr; emeta} (pp_indented_box_t hint) in
-            add_warning x.emeta.loc s
+            add_warning emeta.loc s
         | (UArray UMatrix | UMatrix), (UInt | UReal), Pow ->
             let s =
               Fmt.str
@@ -1172,7 +1194,7 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
       else
         mk_typed_expression ~expr:(TupleExpr tes)
           ~ad_level:(TupleAD (List.map ~f:(fun e -> e.emeta.ad_level) tes))
-          ~type_:(UTuple (List.map ~f:(fun e -> e.emeta.type_) tes))
+          ~type_:(UTuple (List.map ~f:type_of_expr_typed tes))
           ~loc:emeta.loc
   | FunApp ((), id, es) ->
       es |> List.map ~f:ce |> check_funapp loc cf tenv ~is_cond_dist:false id
@@ -1235,9 +1257,9 @@ let check_nrfn loc tenv id es =
             sigs
           |> error
       | SignatureErrors (l, b) ->
-          es
-          |> List.map ~f:type_of_expr_typed
-          |> Semantic_error.illtyped_fn_app loc id.name (l, b)
+          Semantic_error.illtyped_fn_app loc id.name (l, b)
+            (List.map ~f:type_of_expr_typed es)
+            (get_callback_locations tenv es)
           |> error)
 
 let check_nr_fn_app loc cf tenv id es =
@@ -1387,24 +1409,40 @@ let overlapping_lvalues lvals =
     | _, _ ->
         (* remaining cases are not equal, we don't care *)
         Ast.compare_untyped_lval lv1 lv2 in
-  List.find_all_dups lvals ~cmp:compare_no_indexing
+  let lvals =
+    (* useful for error messaging to put the final assignment first *)
+    List.rev lvals in
+  let dupes = List.find_all_dups lvals ~cmp:compare_no_indexing in
+  List.filter_map dupes ~f:(fun l ->
+      List.filter ~f:(fun o -> compare_no_indexing l o = 0) lvals
+      |> Nonempty_list.of_list)
+  |> Nonempty_list.of_list
+
+let rec flatten_lvalue_pack lv =
+  match lv with
+  | LTuplePack {lvals; _} -> List.concat_map ~f:flatten_lvalue_pack lvals
+  | LValue lv -> [lv]
 
 let lvalues_written_to lv =
   let rec add_tuple_idxs lv : typed_lval list =
     (* If we're assigning an entire tuple, we also need to prevent assigning to
        any slot in this statement. *)
-    let type_, _ = UnsizedType.unwind_array_type lv.lmeta.type_ in
+    let type_, idxes = UnsizedType.unwind_array_type lv.lmeta.type_ in
     match (lv.lval, type_) with
-    | _, UTuple ts ->
+    | _, UTuple ts when idxes = 0 ->
         List.concat_mapi ts ~f:(fun i ty ->
             add_tuple_idxs
               { lval= LTupleProjection (lv, i + 1)
               ; lmeta= {lv.lmeta with type_= ty} })
+    | _, UTuple ts ->
+        List.concat_mapi ts ~f:(fun i ty ->
+            add_tuple_idxs
+              { lval=
+                  LTupleProjection
+                    ( {lval= LIndexed (lv, []); lmeta= {lv.lmeta with type_}}
+                    , i + 1 )
+              ; lmeta= {lv.lmeta with type_= ty} })
     | _ -> [lv] in
-  let rec flatten_lvalue_pack lv =
-    match lv with
-    | LTuplePack {lvals; _} -> List.concat_map ~f:flatten_lvalue_pack lvals
-    | LValue lv -> [lv] in
   flatten_lvalue_pack lv
   |> List.concat_map ~f:add_tuple_idxs
   |> List.map ~f:Ast.untyped_lvalue_of_typed_lvalue
@@ -1414,18 +1452,14 @@ let variables_accessed_in lv =
      only the expressions inside of LIndexed *)
   let rec extract_indices lv =
     match lv.lval with
-    | LVariable _ -> String.Set.empty
+    | LVariable _ -> []
     | LTupleProjection (lv, _) -> extract_indices lv
     | LIndexed (lv, es) ->
-        List.concat_map ~f:exprs_in_index es
-        |> List.concat_map ~f:extract_ids
-        |> List.map ~f:(fun {name; _} -> name)
-        |> String.Set.of_list
-        |> String.Set.union (extract_indices lv) in
+        (List.concat_map ~f:exprs_in_index es |> List.concat_map ~f:extract_ids)
+        @ extract_indices lv in
   let rec extract_indices_pack lv =
     match lv with
-    | LTuplePack {lvals; _} ->
-        String.Set.union_list (List.map ~f:extract_indices_pack lvals)
+    | LTuplePack {lvals; _} -> List.concat_map ~f:extract_indices_pack lvals
     | LValue lv -> extract_indices lv in
   extract_indices_pack lv
 
@@ -1436,24 +1470,36 @@ let variables_accessed_in lv =
     to avoid reading the value of a variable which is being updated in this same
     lvalue. *)
 let verify_lvalue_unique (lv : Ast.typed_lval_pack) =
-  let loc = Ast.get_loc_lvalue_pack lv in
   let all_lvals = lvalues_written_to lv in
   let () =
     (* check that things being assigned to are all unique *)
     match overlapping_lvalues all_lvals with
-    | [] -> ()
-    | dupes ->
-        Semantic_error.cannot_assign_duplicate_unpacking loc dupes |> error
-  in
-  (* check that things being assigned to are not also being read Note: this is
+    | None -> ()
+    | Some ((dupe :: _) :: _ as dupes) ->
+        Semantic_error.cannot_assign_duplicate_unpacking dupe.lmeta.loc dupes
+        |> error in
+  (* check that things being assigned to are not also being read. Note: this is
      much less refined than the above and forbids some cases that would be
      harmless, but this is also in general a very weird thing to try to do, so I
      think that is acceptable *)
-  let all_variables = List.map ~f:name_of_lval all_lvals |> String.Set.of_list in
+  let all_variables = List.map ~f:id_of_lval (flatten_lvalue_pack lv) in
   let accessed_lvals = variables_accessed_in lv in
-  match String.Set.inter accessed_lvals all_variables |> String.Set.to_list with
-  | [] -> ()
-  | dupes -> Semantic_error.cannot_access_assigning_var loc dupes |> error
+  let overlap =
+    List.filter_map
+      ~f:(fun id ->
+        match
+          List.filter
+            ~f:(fun o -> Ast.compare_identifier id o = 0)
+            all_variables
+        with
+        | [] -> None
+        | l -> Some Nonempty_list.(id :: l))
+      accessed_lvals
+    |> Nonempty_list.of_list in
+  match overlap with
+  | None -> ()
+  | Some ((dupe :: _) :: _ as dupes) ->
+      Semantic_error.cannot_access_assigning_var dupe.id_loc dupes |> error
 
 let verify_assignable_id loc cf tenv assign_id =
   let block, global, readonly, decl_location =
@@ -1600,9 +1646,9 @@ let check_tilde_distribution loc cf tenv id arguments =
         sigs
       |> error
   | Some (SignatureErrors (l, b), _) ->
-      arguments
-      |> List.map ~f:(fun e -> e.emeta.type_)
-      |> Semantic_error.illtyped_fn_app loc id.name (l, b)
+      Semantic_error.illtyped_fn_app loc id.name (l, b)
+        (List.map ~f:type_of_expr_typed arguments)
+        (get_callback_locations tenv arguments)
       |> error
 
 let is_cumulative_density_defined tenv id arguments =
@@ -2066,10 +2112,12 @@ and verify_pmf_fundef_first_arg_ty loc id arg_tys =
     | Some rt when UnsizedType.is_discrete_type rt -> ()
     | _ -> Semantic_error.prob_mass_non_int_variate loc rt |> error
 
-and verify_fundef_distinct_arg_ids loc arg_names =
-  match List.find_a_dup ~cmp:Ast.compare_identifier arg_names with
-  | None -> ()
-  | Some dup -> Semantic_error.duplicate_arg_names loc dup |> error
+and verify_fundef_distinct_arg_ids arg_names =
+  List.fold_left arg_names ~init:String.Map.empty ~f:(fun seen id ->
+      match String.Map.find_opt id.name seen with
+      | None -> String.Map.add seen ~key:id.name ~data:id
+      | Some prev -> Semantic_error.duplicate_arg_names id.id_loc prev |> error)
+  |> ignore
 
 and verify_fundef_return_tys loc return_type body =
   if
@@ -2106,7 +2154,7 @@ and check_fundef loc cf tenv return_ty id args body =
   List.iter
     ~f:(fun id -> verify_name_fresh tenv id ~is_udf:false)
     arg_identifiers;
-  verify_fundef_distinct_arg_ids loc arg_identifiers;
+  verify_fundef_distinct_arg_ids arg_identifiers;
   (* We treat DataOnly arguments as if they are data and AutoDiffable arguments
      as if they are parameters, for the purposes of type checking. *)
   let arg_types_internal =

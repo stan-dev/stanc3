@@ -1,210 +1,165 @@
   $ stanc lupdf_ident.stan
-Semantic error in 'lupdf_ident.stan', line 2, column 9 to column 16:
-   -------------------------------------------------
-     1:  parameters {
-     2:      real y_lupdf;
-                  ^
-     3:  }
-     4:  model {
-   -------------------------------------------------
-
-Identifier "y_lupdf" has a _lupdf/_lupmf suffix, which is only allowed for functions.
+error: Identifier "y_lupdf" has a _lupdf/_lupmf suffix, which is only allowed for functions.
+    ┌─ lupdf_ident.stan:2:10
+  1 │  parameters {
+  2 │      real y_lupdf;
+    │           ^^^^^^^ Identifier "y_lupdf" has a _lupdf/_lupmf suffix, which is only allowed for functions.
+  3 │  }
 [exit 1]
   $ stanc lupdf_in_functions.stan
-Semantic error in 'lupdf_in_functions.stan', line 3, column 15 to column 34:
-   -------------------------------------------------
-     1:  functions {
-     2:      real test(real y) {
-     3:          return normal_lupdf(y|0,1);
-                        ^
-     4:      }
-     5:  }
-   -------------------------------------------------
-
-Unnormalized probability functions such as "normal_lupdf" can
-only be used in the model block or in user-defined functions with names
-ending in _lpdf or _lpmf. Did you mean "normal_lpdf"?
+error: Invalid call to unnormalized probability function.
+    ┌─ lupdf_in_functions.stan:3:16
+  2 │      real test(real y) {
+  3 │          return normal_lupdf(y|0,1);
+    │                 ^^^^^^^^^^^^^^^^^^^ Unnormalized probability functions such as 
+    │                                     "normal_lupdf" can
+    │                                     only be used in the model block or in user-defined functions with names
+    │                                     ending in _lpdf or _lpmf.
+    │                                     Did you mean "normal_lpdf"?
+  4 │      }
 [exit 1]
   $ stanc lupdf_in_gq.stan
-Semantic error in 'lupdf_in_gq.stan', line 8, column 13 to column 34:
-   -------------------------------------------------
-     6:  }
-     7:  generated quantities {
-     8:      real x = normal_lupdf(y| 0, 1);
-                      ^
-     9:  }
-   -------------------------------------------------
-
-Unnormalized probability functions such as "normal_lupdf" can
-only be used in the model block or in user-defined functions with names
-ending in _lpdf or _lpmf. Did you mean "normal_lpdf"?
+error: Invalid call to unnormalized probability function.
+    ┌─ lupdf_in_gq.stan:8:14
+  7 │  generated quantities {
+  8 │      real x = normal_lupdf(y| 0, 1);
+    │               ^^^^^^^^^^^^^^^^^^^^^ Unnormalized probability functions such as 
+    │                                     "normal_lupdf" can
+    │                                     only be used in the model block or in user-defined functions with names
+    │                                     ending in _lpdf or _lpmf.
+    │                                     Did you mean "normal_lpdf"?
+  9 │  }
 [exit 1]
   $ stanc lupdf_in_gq_rs.stan
-Semantic error in 'lupdf_in_gq_rs.stan', line 14, column 24 to column 33:
-   -------------------------------------------------
-    12:  }
-    13:  generated quantities {
-    14:      real x = reduce_sum(foo_lupdf,ya,1);
-                                 ^
-    15:  }
-   -------------------------------------------------
-
-Unnormalized probability functions such as "foo_lupdf" can
-only be used in the model block or in user-defined functions with names
-ending in _lpdf or _lpmf. Did you mean "foo_lpdf"?
+error: Invalid call to unnormalized probability function.
+    ┌─ lupdf_in_gq_rs.stan:14:25
+ 13 │  generated quantities {
+ 14 │      real x = reduce_sum(foo_lupdf,ya,1);
+    │                          ^^^^^^^^^ Unnormalized probability functions such as "foo_lupdf" can
+    │                                    only be used in the model block or in user-defined functions with names
+    │                                    ending in _lpdf or _lpmf.
+    │                                    Did you mean "foo_lpdf"?
+ 15 │  }
 [exit 1]
   $ stanc lupdf_in_lp.stan
-Semantic error in 'lupdf_in_lp.stan', line 3, column 18 to column 42:
-   -------------------------------------------------
-     1:  functions {
-     2:      void foo_lp(real y1, real y2) {
-     3:          target += normal_lupdf(y1| y2, y2);
-                           ^
-     4:      }
-     5:  }
-   -------------------------------------------------
-
-Unnormalized probability functions such as "normal_lupdf" can
-only be used in the model block or in user-defined functions with names
-ending in _lpdf or _lpmf. Did you mean "normal_lpdf"?
+error: Invalid call to unnormalized probability function.
+    ┌─ lupdf_in_lp.stan:3:19
+  2 │      void foo_lp(real y1, real y2) {
+  3 │          target += normal_lupdf(y1| y2, y2);
+    │                    ^^^^^^^^^^^^^^^^^^^^^^^^ Unnormalized probability functions such as 
+    │                                             "normal_lupdf" can
+    │                                             only be used in the model block or in user-defined functions with names
+    │                                             ending in _lpdf or _lpmf.
+    │                                             Did you mean "normal_lpdf"?
+  4 │      }
 [exit 1]
   $ stanc lupdf_in_trans_data.stan
-Semantic error in 'lupdf_in_trans_data.stan', line 3, column 13 to column 34:
-   -------------------------------------------------
-     1:  transformed data {
-     2:      real p;
-     3:      real y = normal_lupdf(p| 0, 1);
-                      ^
-     4:  }
-   -------------------------------------------------
-
-Unnormalized probability functions such as "normal_lupdf" can
-only be used in the model block or in user-defined functions with names
-ending in _lpdf or _lpmf. Did you mean "normal_lpdf"?
+error: Invalid call to unnormalized probability function.
+    ┌─ lupdf_in_trans_data.stan:3:14
+  2 │      real p;
+  3 │      real y = normal_lupdf(p| 0, 1);
+    │               ^^^^^^^^^^^^^^^^^^^^^ Unnormalized probability functions such as 
+    │                                     "normal_lupdf" can
+    │                                     only be used in the model block or in user-defined functions with names
+    │                                     ending in _lpdf or _lpmf.
+    │                                     Did you mean "normal_lpdf"?
+  4 │  }
 [exit 1]
   $ stanc lupdf_in_trans_params.stan
-Semantic error in 'lupdf_in_trans_params.stan', line 3, column 13 to column 34:
-   -------------------------------------------------
-     1:  transformed parameters {
-     2:      real p;
-     3:      real y = normal_lupdf(p| 0, 1);
-                      ^
-     4:  }
-   -------------------------------------------------
-
-Unnormalized probability functions such as "normal_lupdf" can
-only be used in the model block or in user-defined functions with names
-ending in _lpdf or _lpmf. Did you mean "normal_lpdf"?
+error: Invalid call to unnormalized probability function.
+    ┌─ lupdf_in_trans_params.stan:3:14
+  2 │      real p;
+  3 │      real y = normal_lupdf(p| 0, 1);
+    │               ^^^^^^^^^^^^^^^^^^^^^ Unnormalized probability functions such as 
+    │                                     "normal_lupdf" can
+    │                                     only be used in the model block or in user-defined functions with names
+    │                                     ending in _lpdf or _lpmf.
+    │                                     Did you mean "normal_lpdf"?
+  4 │  }
 [exit 1]
   $ stanc lupdf_in_trans_params_rs.stan
-Semantic error in 'lupdf_in_trans_params_rs.stan', line 9, column 24 to column 33:
-   -------------------------------------------------
-     7:      real p;
-     8:      array[5] real ya;
-     9:      real y = reduce_sum(foo_lupdf,ya,1);
-                                 ^
-    10:  }
-   -------------------------------------------------
-
-Unnormalized probability functions such as "foo_lupdf" can
-only be used in the model block or in user-defined functions with names
-ending in _lpdf or _lpmf. Did you mean "foo_lpdf"?
+error: Invalid call to unnormalized probability function.
+    ┌─ lupdf_in_trans_params_rs.stan:9:25
+  8 │      array[5] real ya;
+  9 │      real y = reduce_sum(foo_lupdf,ya,1);
+    │                          ^^^^^^^^^ Unnormalized probability functions such as "foo_lupdf" can
+    │                                    only be used in the model block or in user-defined functions with names
+    │                                    ending in _lpdf or _lpmf.
+    │                                    Did you mean "foo_lpdf"?
+ 10 │  }
 [exit 1]
   $ stanc lupmf_in_gq.stan
-Semantic error in 'lupmf_in_gq.stan', line 11, column 13 to column 33:
-   -------------------------------------------------
-     9:  }
-    10:  generated quantities {
-    11:      real x = poisson_lupmf(d | y);
-                      ^
-    12:  }
-   -------------------------------------------------
-
-Unnormalized probability functions such as "poisson_lupmf" can
-only be used in the model block or in user-defined functions with names
-ending in _lpdf or _lpmf. Did you mean "poisson_lpmf"?
+error: Invalid call to unnormalized probability function.
+    ┌─ lupmf_in_gq.stan:11:14
+ 10 │  generated quantities {
+ 11 │      real x = poisson_lupmf(d | y);
+    │               ^^^^^^^^^^^^^^^^^^^^ Unnormalized probability functions such as "poisson_lupmf" can
+    │                                    only be used in the model block or in user-defined functions with names
+    │                                    ending in _lpdf or _lpmf.
+    │                                    Did you mean "poisson_lpmf"?
+ 12 │  }
 [exit 1]
   $ stanc lupmf_in_lp.stan
-Semantic error in 'lupmf_in_lp.stan', line 3, column 18 to column 39:
-   -------------------------------------------------
-     1:  functions {
-     2:      void foo_lp(int i1, real r1) {
-     3:          target += poisson_lupmf(i1| r1);
-                           ^
-     4:      }
-     5:  }
-   -------------------------------------------------
-
-Unnormalized probability functions such as "poisson_lupmf" can
-only be used in the model block or in user-defined functions with names
-ending in _lpdf or _lpmf. Did you mean "poisson_lpmf"?
+error: Invalid call to unnormalized probability function.
+    ┌─ lupmf_in_lp.stan:3:19
+  2 │      void foo_lp(int i1, real r1) {
+  3 │          target += poisson_lupmf(i1| r1);
+    │                    ^^^^^^^^^^^^^^^^^^^^^ Unnormalized probability functions such as 
+    │                                          "poisson_lupmf" can
+    │                                          only be used in the model block or in user-defined functions with names
+    │                                          ending in _lpdf or _lpmf.
+    │                                          Did you mean "poisson_lpmf"?
+  4 │      }
 [exit 1]
   $ stanc lupmf_in_trans_data.stan
-Semantic error in 'lupmf_in_trans_data.stan', line 7, column 13 to column 33:
-   -------------------------------------------------
-     5:  transformed data {
-     6:      real y;
-     7:      real x = poisson_lupmf(d | y);
-                      ^
-     8:  }
-   -------------------------------------------------
-
-Unnormalized probability functions such as "poisson_lupmf" can
-only be used in the model block or in user-defined functions with names
-ending in _lpdf or _lpmf. Did you mean "poisson_lpmf"?
+error: Invalid call to unnormalized probability function.
+    ┌─ lupmf_in_trans_data.stan:7:14
+  6 │      real y;
+  7 │      real x = poisson_lupmf(d | y);
+    │               ^^^^^^^^^^^^^^^^^^^^ Unnormalized probability functions such as "poisson_lupmf" can
+    │                                    only be used in the model block or in user-defined functions with names
+    │                                    ending in _lpdf or _lpmf.
+    │                                    Did you mean "poisson_lpmf"?
+  8 │  }
 [exit 1]
   $ stanc lupmf_in_trans_params.stan
-Semantic error in 'lupmf_in_trans_params.stan', line 6, column 13 to column 33:
-   -------------------------------------------------
-     4:  transformed parameters {
-     5:      real y;
-     6:      real x = poisson_lupmf(d | y);
-                      ^
-     7:  }
-   -------------------------------------------------
-
-Unnormalized probability functions such as "poisson_lupmf" can
-only be used in the model block or in user-defined functions with names
-ending in _lpdf or _lpmf. Did you mean "poisson_lpmf"?
+error: Invalid call to unnormalized probability function.
+    ┌─ lupmf_in_trans_params.stan:6:14
+  5 │      real y;
+  6 │      real x = poisson_lupmf(d | y);
+    │               ^^^^^^^^^^^^^^^^^^^^ Unnormalized probability functions such as "poisson_lupmf" can
+    │                                    only be used in the model block or in user-defined functions with names
+    │                                    ending in _lpdf or _lpmf.
+    │                                    Did you mean "poisson_lpmf"?
+  7 │  }
 [exit 1]
   $ stanc not_in_scope.stan
-Semantic error in 'not_in_scope.stan', line 2, column 22 to column 31:
-   -------------------------------------------------
-     1:  generated quantities {
-     2:    real x = reduce_sum(foo_lupdf, blah, blah);
-                               ^
-     3:  }
-   -------------------------------------------------
-
-Identifier "foo_lupdf" not in scope.
+error: Identifier "foo_lupdf" not in scope.
+    ┌─ not_in_scope.stan:2:23
+  1 │  generated quantities {
+  2 │    real x = reduce_sum(foo_lupdf, blah, blah);
+    │                        ^^^^^^^^^ Identifier "foo_lupdf" not in scope.
+  3 │  }
 [exit 1]
   $ stanc udf_lupdf.stan
-Semantic error in 'udf_lupdf.stan', line 2, column 9 to column 18:
-   -------------------------------------------------
-     1:  functions {
-     2:      real foo_lupdf(real y) {
-                  ^
-     3:          return 1.0;
-     4:      }
-   -------------------------------------------------
-
-"foo_lupdf" is an invalid user-defined function name.
-User-defined probability mass and density functions must
-be defined as normalized (function names should end with
-_lpdf/_lpmf not _lupdf/_lupmf).
+error: Invalid user-defined function name.
+    ┌─ udf_lupdf.stan:2:10
+  1 │  functions {
+  2 │      real foo_lupdf(real y) {
+    │           ^^^^^^^^^ "foo_lupdf" is an invalid user-defined function name.
+    │                     User-defined probability mass and density functions must
+    │                     be defined as normalized.
+  3 │          return 1.0;
+    = Function names should end with _lpdf/_lpmf not _lupdf/_lupmf.
 [exit 1]
   $ stanc udf_lupmf.stan
-Semantic error in 'udf_lupmf.stan', line 2, column 9 to column 18:
-   -------------------------------------------------
-     1:  functions {
-     2:      real foo_lupmf(real y) {
-                  ^
-     3:          return 1.0;
-     4:      }
-   -------------------------------------------------
-
-"foo_lupmf" is an invalid user-defined function name.
-User-defined probability mass and density functions must
-be defined as normalized (function names should end with
-_lpdf/_lpmf not _lupdf/_lupmf).
+error: Invalid user-defined function name.
+    ┌─ udf_lupmf.stan:2:10
+  1 │  functions {
+  2 │      real foo_lupmf(real y) {
+    │           ^^^^^^^^^ "foo_lupmf" is an invalid user-defined function name.
+    │                     User-defined probability mass and density functions must
+    │                     be defined as normalized.
+  3 │          return 1.0;
+    = Function names should end with _lpdf/_lpmf not _lupdf/_lupmf.
 [exit 1]

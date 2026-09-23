@@ -34,7 +34,7 @@ let operator_to_stan_math_fns op =
   | Minus -> ["subtract"]
   | PMinus -> ["minus"]
   | Times -> ["multiply"]
-  | Divide -> ["mdivide_right"; "divide"]
+  | Divide -> ["divide"; "mdivide_right"]
   | Modulo -> ["modulus"]
   | IntDivide -> []
   | LDivide -> ["mdivide_left"]
@@ -65,30 +65,10 @@ let get_sigs name =
   Hashtbl.find_multi (Lazy.force stan_math_signatures) name
   |> List.sort ~cmp:UnsizedType.compare_signature
 
-let make_assignmentoperator_stan_math_signatures assop =
-  (match assop with
-    | Operator.Divide -> ["divide"]
-    | assop -> operator_to_stan_math_fns assop)
-  |> List.concat_map ~f:get_sigs
-  |> List.concat_map ~f:(function
-    | [(ad1, lhs); (ad2, rhs)], UnsizedType.ReturnType rtype, _, _
-      when rtype = lhs
-           && not
-                ((assop = Operator.EltTimes || assop = Operator.EltDivide)
-                && UnsizedType.is_scalar_type rtype) ->
-        if rhs = UReal then
-          [ ( [(ad1, lhs); (ad2, UInt)]
-            , UnsizedType.Void
-            , Fun_kind.FnPlain
-            , Mem_pattern.SoA )
-          ; ([(ad1, lhs); (ad2, UReal)], Void, FnPlain, SoA) ]
-        else [([(ad1, lhs); (ad2, rhs)], Void, FnPlain, SoA)]
-    | _ -> [])
-
-let pp_math_sigs ppf name =
-  (Fmt.list ~sep:Fmt.cut UnsizedType.pp_math_sig) ppf (get_sigs name)
-
-let pretty_print_math_sigs = Fmt.str "@[<v>@,%a@]" pp_math_sigs
+let operator_to_stan_math_signatures op =
+  match op with
+  | Operator.IntDivide -> [int_divide_type]
+  | _ -> operator_to_stan_math_fns op |> List.concat_map ~f:get_sigs
 
 let string_operator_to_stan_math_fns str =
   match str with
@@ -137,11 +117,6 @@ let pretty_print_all_math_distributions ppf () =
   let pp_dist ppf (name, kinds) =
     pf ppf "@[%s: %a@]" name (list ~sep:comma Fmt.string) kinds in
   pf ppf "@[<v>%a@]" (list ~sep:cut pp_dist) distributions
-
-let pretty_print_math_lib_operator_sigs op =
-  if op = Operator.IntDivide then
-    [Fmt.str "@[<v>@,%a@]" UnsizedType.pp_math_sig int_divide_type]
-  else operator_to_stan_math_fns op |> List.map ~f:pretty_print_math_sigs
 
 (* variadics *)
 

@@ -1,9 +1,11 @@
+open Std
 open Middle
 
 type t
 
-val pp : Format.formatter -> t -> unit
-val location : t -> Location_span.t
+val to_grace :
+  ?printed_filename:string -> ?code:string -> t -> 'a Grace.Diagnostic.t
+
 val invalid_return : Location_span.t -> UnsizedType.t -> UnsizedType.t -> t
 
 val mismatched_array_types :
@@ -49,7 +51,7 @@ val returning_fn_expected_undeclared_dist_suffix_found :
   Location_span.t -> string * string -> t
 
 val returning_fn_expected_wrong_dist_suffix_found :
-  Location_span.t -> string * string -> t
+  Location_span.t -> string * string * Location_span.t option list -> t
 
 val illtyped_reduce_sum_not_array : Location_span.t -> UnsizedType.t -> t
 val illtyped_reduce_sum_slice : Location_span.t -> UnsizedType.t -> t
@@ -144,6 +146,7 @@ val illtyped_fn_app :
   -> string
   -> SignatureMismatch.signature_error list * bool
   -> UnsizedType.t list
+  -> Location_span.t list
   -> t
 
 val illtyped_binary_op :
@@ -191,9 +194,11 @@ val cannot_assign_function : Location_span.t -> string -> UnsizedType.t -> t
 val cannot_assign_to_multiindex : Location_span.t -> t
 
 val cannot_assign_duplicate_unpacking :
-  Location_span.t -> Ast.untyped_lval list -> t
+  Location_span.t -> Ast.untyped_lval Nonempty_list.t Nonempty_list.t -> t
 
-val cannot_access_assigning_var : Location_span.t -> string list -> t
+val cannot_access_assigning_var :
+  Location_span.t -> Ast.identifier Nonempty_list.t Nonempty_list.t -> t
+
 val invalid_tilde_pdf_or_pmf : Location_span.t -> t
 val invalid_tilde_cdf_or_ccdf : Location_span.t -> string -> t
 val invalid_tilde_no_such_dist : Location_span.t -> string -> bool -> t

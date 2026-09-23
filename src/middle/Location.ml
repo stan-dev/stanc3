@@ -1,50 +1,16 @@
 open Std
 open Std.Sexp_conv
 
-type t = {filename: string; line_num: int; col_num: int; included_from: t option}
+type t =
+  { filename: string
+  ; line_num: int
+  ; col_num: int
+  ; byte_num: int
+  ; included_from: t option }
 [@@deriving sexp_of]
 
-let pp_context_for ppf (({line_num; _} as loc), lines) =
-  let faint pp = Fmt.(styled `Faint pp) in
-  let yellow pp = Fmt.(styled (`Fg (`Hi `Yellow)) pp) in
-  let bold_red pp = Fmt.(styled `Bold (styled (`Fg `Red) pp)) in
-  let bars =
-    faint (Fmt.any "   -------------------------------------------------\n")
-  in
-  let pp_number ppf num =
-    let style = if num = line_num then yellow else faint in
-    style (Fmt.fmt "%6d:") ppf num in
-  let error_at_eof = line_num = Array.length lines + 1 in
-  let get_line i =
-    let line = i - 1 in
-    (* blank line if the error is at EOF *)
-    if error_at_eof && i = line_num then Some ""
-    else if line < 0 || line >= Array.length lines then None
-    else Some (Array.get lines line) in
-  let pp_line_and_number ppf n =
-    let pp ppf line = Fmt.pf ppf "%a  %s\n" pp_number n line in
-    Fmt.option pp ppf (get_line n) in
-  let cursor_line ppf {line_num; col_num; _} =
-    let blank_line =
-      (* to get visual alignment, we copy any tabs in the line we are pointing
-         at *)
-      let highlighted_line = get_line line_num |> Option.value ~default:"" in
-      let len = Int.min col_num (String.length highlighted_line) in
-      String.sub highlighted_line ~pos:0 ~len
-      |> String.map ~f:(function '\t' -> '\t' | _ -> ' ') in
-    Fmt.pf ppf "         %s%a%a\n" blank_line (bold_red Fmt.char) '^'
-      (Fmt.if' error_at_eof @@ faint Fmt.string)
-      " (error at end of file)" in
-  bars ppf ();
-  pp_line_and_number ppf (line_num - 2);
-  pp_line_and_number ppf (line_num - 1);
-  pp_line_and_number ppf line_num;
-  cursor_line ppf loc;
-  pp_line_and_number ppf (line_num + 1);
-  pp_line_and_number ppf (line_num + 2);
-  bars ppf ()
-
-let empty = {filename= ""; line_num= -1; col_num= -1; included_from= None}
+let empty =
+  {filename= ""; line_num= -1; col_num= -1; byte_num= -1; included_from= None}
 
 (** Format the location for error messaging.
 
@@ -58,10 +24,7 @@ let rec pp ?(print_file = true) ?(print_line = true) printed_filename ppf loc =
         , loc.filename )
     | None -> (ignore, Option.value ~default:loc.filename printed_filename)
   in
-  let file =
-    Fmt.if' print_file (fun ppf s ->
-        Fmt.pf ppf "%a, " Fmt.(styled (`Fg (`Hi `Blue)) (Fmt.fmt "'%s'")) s)
-  in
+  let file = Fmt.if' print_file (fun ppf s -> Fmt.pf ppf "'%s', " s) in
   let line = Fmt.if' print_line (Fmt.fmt "line %d, ") in
   Fmt.pf ppf "%a%acolumn %d%t" file filename line loc.line_num loc.col_num incl
 
@@ -74,11 +37,8 @@ let compare loc1 loc2 =
     | [], _ -> -1
     | _, [] -> 1
     | hd1 :: tl1, hd2 :: tl2 ->
-        let x = Int.compare hd1.line_num hd2.line_num in
-        if x <> 0 then x
-        else
-          let x = Int.compare hd1.col_num hd2.col_num in
-          if x <> 0 then x else go (tl1, tl2) in
+        let x = Int.compare hd1.byte_num hd2.byte_num in
+        if x <> 0 then x else go (tl1, tl2) in
   go (List.rev (unfold loc1), List.rev (unfold loc2))
 
 let rec initial_file_loc loc =

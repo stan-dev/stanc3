@@ -350,7 +350,7 @@ let index_str = function
 
 let data_only_msg ppf () =
   let open Fmt in
-  pf ppf "(%a@ %a.)" text
+  pf ppf "@[(%a@ %a.)@]" text
     "Local variables are assumed to depend on parameters; same goes for \
      function inputs unless they are marked with the keyword"
     (styled (`Fg `Green) (quote string))
@@ -392,7 +392,7 @@ let pp_mismatch_details ~skipped ppf details =
         n_expected arguments n_expected pp_excluded_message skipped
         (actual_style int) n_found arguments n_found
   | InputMismatch (ArgError (n, DataOnlyError)) ->
-      pf ppf "@[<hov>The@ %a is marked data-only. %a@]" pp_skipped_index_str n
+      pf ppf "@[<hov>The@ %a is marked data-only.@ %a@]" pp_skipped_index_str n
         data_only_msg ()
   | InputMismatch
       (ArgError
@@ -413,7 +413,7 @@ let pp_mismatch_details ~skipped ppf details =
             found)
         ppf ()
 
-let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
+let to_grace (name, arg_tys, (sigs, omitted)) =
   let open Fmt in
   let ctx = ref Map.empty in
   let rec pp_explain_rec ppf = function
@@ -503,14 +503,38 @@ let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
   let pp_omitted =
     Fmt.if' omitted
       (Fmt.styled `Faint (any "@,(Additional signatures omitted)")) in
-  pf ppf "@[<v>Ill-typed arguments supplied to function %a:@ %a@ %a@ %a%a@]"
-    quoted name pp_args arg_tys (Fmt.styled `Bold string)
-    "Available signatures:"
-    (list ~sep:cut pp_signature)
-    sigs pp_omitted ()
+  let open Grace.Diagnostic in
+  let summary =
+    Message.createf "@[Ill-typed arguments supplied to function %a.@]" quoted
+      name in
+  let notes =
+    [ Message.createf "@[<v>%a@ %a@]" (Fmt.styled `Bold string)
+        "Supplied arguments:" pp_args arg_tys
+    ; Message.createf "@[<v>%a@ %a%a@]" (Fmt.styled `Bold string)
+        "Available signatures:"
+        (list ~sep:cut pp_signature)
+        sigs pp_omitted () ] in
+  (~summary, ~notes)
 
-let list_valid_assignmentoperator_rhs lt op =
-  Stan_math_signatures.make_assignmentoperator_stan_math_signatures op
+let list_valid_assignmentoperator_rhs lt assop =
+  (match assop with
+    | Operator.Divide -> ["divide"]
+    | assop -> Stan_math_signatures.operator_to_stan_math_fns assop)
+  |> List.concat_map ~f:Stan_math_signatures.lookup_stan_math_function
+  |> List.concat_map ~f:(function
+    | [(ad1, lhs); (ad2, rhs)], UnsizedType.ReturnType rtype, _, _
+      when rtype = lhs
+           && not
+                ((assop = Operator.EltTimes || assop = Operator.EltDivide)
+                && UnsizedType.is_scalar_type rtype) ->
+        if rhs = UReal then
+          [ ( [(ad1, lhs); (ad2, UInt)]
+            , UnsizedType.Void
+            , Fun_kind.FnPlain
+            , Mem_pattern.SoA )
+          ; ([(ad1, lhs); (ad2, UReal)], Void, FnPlain, SoA) ]
+        else [([(ad1, lhs); (ad2, rhs)], Void, FnPlain, SoA)]
+    | _ -> [])
   |> List.filter_map ~f:(fun (args, _, _, _) ->
       match args with
       | [(_, a); (_, b)] -> (

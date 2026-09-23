@@ -6,15 +6,14 @@ type t
     the [parser.messages] text file. *)
 type styled_text = (unit, Format.formatter, unit) format
 
-val location : t -> Middle.Location_span.t
-val kind : t -> string
-val pp : Format.formatter -> t -> unit
+val to_grace :
+  ?printed_filename:string -> ?code:string -> t -> 'a Grace.Diagnostic.t
 
 (** Exception-based control flow is useful during parsing/lexing. These helpers
     are used to try to keep all that logic in one place *)
 
 val unexpected_eof : Middle.Location_span.t -> 'a
 val unexpected_character : Middle.Location_span.t -> 'a
-val include_error : string -> Middle.Location_span.t -> 'a
+val include_error : ?note:string -> string -> Middle.Location_span.t -> 'a
 val parse_error : styled_text -> Middle.Location_span.t -> 'a
 val try_with : (unit -> 'a) -> ('a, t) result
