@@ -266,9 +266,9 @@ let compute_suffix_and_name propto suffix fname =
     nodes, and effects. [f(theta)], [f(2.0)], other argument types, and
     parameters used at most once retain direct substitution. Keep the binding
     with the argument's own statements to preserve the existing evaluation
-    order. Container bindings would also need to preserve the original call's
-    reference handling. *)
-let bind_repeated_scalar_actual fname name body
+    order. Containers are excluded here because an owning temporary may
+    introduce copies that the original call's argument binding avoids. *)
+let bind_repeated_scalar_argument fname name body
     ((decls, stmts, (e : Expr.Typed.t)) as inlined) =
   let count_use n (e : Expr.Typed.t) =
     match e.pattern with Var v when String.equal v name -> n + 1 | _ -> n in
@@ -402,11 +402,11 @@ and inline_function_args propto adt fim kind es =
     | _ -> None in
   match (kind, definition) with
   | UserDefined (fname, _), Some (_, args, body) ->
-      (* Bind each actual alongside its own inlined statements, retaining
+      (* Bind each argument alongside its own inlined statements, retaining
          inline_list's right-to-left argument evaluation order. *)
       inline_list
         (fun (name, e) ->
-          bind_repeated_scalar_actual fname name body (inline e))
+          bind_repeated_scalar_argument fname name body (inline e))
         (List.combine args es)
   | _ -> inline_list inline es
 
