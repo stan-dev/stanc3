@@ -6,8 +6,8 @@ val expr_any : (ExprSet.elt -> bool) -> ExprSet.elt -> bool
 val idx_any : (ExprSet.elt -> bool) -> ExprSet.elt Index.t -> bool
 
 val increments_target : 'e Fun_kind.t -> bool
-(** Whether a call of this kind adds to [target]: a user [_lp] or [_jacobian]
-    function, or a Stan Math [_jacobian] function. *)
+(** Whether a call of this kind adds to [target], as a user [_lp] or [_jacobian]
+    function or a Stan Math [_jacobian] function does. *)
 
 val cannot_duplicate_expr : ?preserve_stability:bool -> ExprSet.elt -> bool
 val cannot_remove_expr : ExprSet.elt -> bool

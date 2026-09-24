@@ -2,9 +2,8 @@ open Std
 open Middle
 open Dataflow_types
 
-(** Which statements of a block depend on which: a statement depends on the [if]
-    and loops that decide whether the statement runs, and on the assignments
-    that may have written an element the statement reads. *)
+(** Dependence analysis, where a statement depends on the [if] and loops around
+    the statement and on the assignments to the elements the statement reads. *)
 
 (** ~~~~~ TODO ~~~~~
     - [reaching_definitions_mfp] in Monotone_framework takes the whole program
@@ -23,15 +22,18 @@ type linear = {const: int; symbol: Expr.Typed.t option; loopvar: string option}
 (** Why an index expression is not a [linear]. *)
 type varying_kind =
   | Written
-      (** The index reads a variable assigned inside the analysed statement. *)
+      (** The index reads a variable assigned inside the analysed statement, so
+          the index can change between iterations. *)
   | Nonlinear
       (** The index uses a loop variable in some other form, such as [idx[n]] or
           [2 * n]. *)
 
-(** One index of an access, compared by the ZIV and SIV tests (Goff, Kennedy and
-    Tseng 1991). *)
+(** One single index of an access in the form that the ZIV and SIV tests compare
+    (Goff, Kennedy and Tseng 1991). *)
 type point =
-  | Affine of linear  (** The index is a [linear]. *)
+  | Affine of linear
+      (** The index is a [linear], which has the same value in every iteration
+          when [loopvar] is [None]. *)
   | Varying of varying_kind
       (** The index cannot be compared, so the index may equal any other. *)
 
@@ -44,15 +46,14 @@ type 'index step =
     position and tuple field. *)
 type 'index access = {var: string; path: 'index step list}
 
-(** The accesses of one statement, split by how each access uses the variable.
-*)
+(** The accesses of one statement, split into reads, writes and increments. *)
 module Accesses : sig
   type 'index t =
     { reads: 'index access list
     ; writes: 'index access list
     ; increments: 'index access list
-          (** read and write, such as [target += ...], but commute with each
-              other *) }
+          (** the accesses that read and write, such as [target += ...], but
+              commute with each other *) }
 end
 
 (** {1 Dependences between two accesses} *)
@@ -108,8 +109,8 @@ type dependency_graph = label Set.Poly.t LabelMap.t
 
 val node_immediate_dependencies :
   dep_info_map -> ?blockers:string Set.Poly.t -> label -> label Set.Poly.t
-(** The [if] and loop statements around a statement, and the assignments that
-    may have written an element the statement reads. *)
+(** The [if] and loop statements around a statement and the assignments that may
+    have written an element the statement reads outside [blockers]. *)
 
 val node_dependencies : dep_info_map -> label -> label Set.Poly.t
 (** Given dependency information for each node, find all of the dependencies of
