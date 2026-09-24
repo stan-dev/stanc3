@@ -230,6 +230,7 @@ type node_dep_info =
   ; reaching_defn_exit: reaching_defn Set.Poly.t
   ; loop: label option
   ; accesses: point Accesses.t
+  ; immediate_dependencies: label Set.Poly.t Lazy.t
   ; meta: Location_span.t }
 
 type dep_info_map =
@@ -467,15 +468,23 @@ let pruned_reaching_defns (statement_map : dep_info_map) (dst : label)
 let read_variables (info : node_dep_info) : string Set.Poly.t =
   Set.Poly.of_list (List.map info.accesses.reads ~f:(fun access -> access.var))
 
-let node_immediate_dependencies (statement_map : dep_info_map)
-    ?(blockers : string Set.Poly.t = Set.Poly.empty) (label : label) :
-    label Set.Poly.t =
+(** The [if] and loop statements around [label] and the assignments that may
+    have written an element that [label] reads, skipping [blockers]. *)
+let immediate_dependencies_in (statement_map : dep_info_map)
+    ~(blockers : string Set.Poly.t) (label : label) : label Set.Poly.t =
   let _, info = LabelMap.find label statement_map in
   let rhs_deps =
     Set.Poly.union_map
       (Set.Poly.diff (read_variables info) blockers)
       ~f:(pruned_reaching_defns statement_map label) in
   Set.Poly.union info.parents rhs_deps
+
+let node_immediate_dependencies (statement_map : dep_info_map)
+    ?(blockers : string Set.Poly.t = Set.Poly.empty) (label : label) :
+    label Set.Poly.t =
+  if Set.Poly.is_empty blockers then
+    Lazy.force (snd (LabelMap.find label statement_map)).immediate_dependencies
+  else immediate_dependencies_in statement_map ~blockers label
 
 (* This is doing an explicit graph traversal with edges defined by
    node_immediate_dependencies. *)
@@ -665,18 +674,26 @@ let build_dep_info_map (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
         let outer = loopvars_of loop in
         Option.value_map (for_loopvar statement_map loop) ~default:outer
           ~f:(fun loopvar -> Set.Poly.add loopvar outer) in
-  LabelMap.mapi statement_map ~f:(fun label (pattern, idx) ->
-      let rds = LabelMap.find label rd_map in
-      ( pattern
-      , { predecessors= LabelMap.find label preds
-        ; parents= LabelMap.find label parents
-        ; reaching_defn_entry= rds.entry
-        ; reaching_defn_exit= rds.exit
-        ; loop= enclosing_loop statement_map parents label
-        ; accesses=
-            Accesses.classify ~loopvars:(loopvars_of label) ~written_vars
-              (LabelMap.find label collected)
-        ; meta= idx } ))
+  (* the finished map, which the memoized dependencies read when forced *)
+  let built = ref LabelMap.empty in
+  let dep_info_map =
+    LabelMap.mapi statement_map ~f:(fun label (pattern, idx) ->
+        let rds = LabelMap.find label rd_map in
+        ( pattern
+        , { predecessors= LabelMap.find label preds
+          ; parents= LabelMap.find label parents
+          ; reaching_defn_entry= rds.entry
+          ; reaching_defn_exit= rds.exit
+          ; loop= enclosing_loop statement_map parents label
+          ; accesses=
+              Accesses.classify ~loopvars:(loopvars_of label) ~written_vars
+                (LabelMap.find label collected)
+          ; immediate_dependencies=
+              lazy
+                (immediate_dependencies_in !built ~blockers:Set.Poly.empty label)
+          ; meta= idx } )) in
+  built := dep_info_map;
+  dep_info_map
 
 let log_prob_build_dep_info_map (mir : Program.Typed.t) : dep_info_map =
   let log_prob_stmt =
