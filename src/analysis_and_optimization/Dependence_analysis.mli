@@ -2,92 +2,53 @@ open Std
 open Middle
 open Dataflow_types
 
-(** Which statements of a block depend on which other statements.
-
-    A statement depends on the [if] or loop that decides whether the statement
-    runs, and on the statements that may have assigned a value the statement
-    reads. Pedantic mode uses this to warn when a condition depends on a
-    parameter, and the factor graph uses this to find which data and parameters
-    each [target] term reads.
-
-    For a read of a variable, the candidate writers are the reaching definitions
-    of that variable. The analysis also records which elements each statement
-    reads and writes (the {!access} type), and drops a writer that cannot have
-    written an element the read uses. With labels on the right:
-    {[
-      theta[1] = a;          // 5
-      theta[2] = 1;          // 6
-      if (theta[2] > 0) ...  // 7
-    ]}
-    Statement 7 reads [theta[2]]. The declaration of [theta] and statements 5
-    and 6 all assign [theta] before statement 7, but statement 5 writes only
-    [theta[1]]. So statement 7 depends on the declaration and on statement 6,
-    and the [if] does not depend on [a]. *)
+(** Which statements of a block depend on which: a statement depends on the [if]
+    and loops that decide whether the statement runs, and on the assignments
+    that may have written an element the statement reads. *)
 
 (** ~~~~~ TODO ~~~~~
-    - The interfaces are currently messed up. I think part of the solution is to
-      change the signature of reaching_definitions_mfp in Monotone_framework,
-      which currently requires the full program but shouldn't need the full
-      program. As it stands, stmt_map_dependency_graph does not include data
-      dependencies at all, since it can't use reaching deps, and prog_dependency
-      graph only builds the graph for log_prob, but the user isn't guaranteed to
-      be using the same labeling scheme.
-    - Currently, dependencies on global or uninitialized data are written as
-      depending on node '0'. This should probably be option or some type that
-      indicates global dependence.
-    - No probabilistic dependency, I'll do that elsewhere **)
+    - [reaching_definitions_mfp] in Monotone_framework takes the whole program
+      but needs only the names of the variables defined before the statement.
+    - A variable defined outside the analysed statement, such as data, gets a
+      reaching definition at label 1, which is also the label of the analysed
+      statement itself, so callers must test for label 1; keeping the label a
+      [label option] in [reaching_defn] would separate the two. **)
 
 (** {1 Accesses} *)
 
-(** An integer index expression written as a constant, plus at most one
-    loop-invariant expression, plus at most one loop variable. In a loop over
-    [n], with [k] a data variable:
-    - [3] is [{const= 3; symbol= None; loopvar= None}]
-    - [k + 1] is [{const= 1; symbol= Some k; loopvar= None}]
-    - [n + k - 1] is [{const= -1; symbol= Some k; loopvar= Some "n"}]
-
-    [symbol] stands for an expression whose value is the same in every
-    iteration. Two symbols are treated as equal only when the two expressions
-    are identical. *)
+(** An integer index of the form [const + symbol + loopvar], where [symbol] is a
+    loop-invariant expression, such as [n + k - 1] in a loop over [n]. *)
 type linear = {const: int; symbol: Expr.Typed.t option; loopvar: string option}
 
 (** Why an index expression is not a [linear]. *)
 type varying_kind =
   | Written
-      (** The index reads a variable that is assigned inside the analysed
-          statement, so the index value can change between iterations. *)
+      (** The index reads a variable assigned inside the analysed statement. *)
   | Nonlinear
-      (** The index uses a loop variable in some other way, for example
-          [idx[n]], [2 * n], [n + m] or [N - n]. *)
+      (** The index uses a loop variable in some other form, such as [idx[n]] or
+          [2 * n]. *)
 
-(** One single index of an access, such as the [n + 1] in [x[n + 1]]. Two
-    [Affine] indices can be compared (the ZIV and SIV tests of Goff, Kennedy and
-    Tseng 1991, section 3). *)
+(** One index of an access, compared by the ZIV and SIV tests (Goff, Kennedy and
+    Tseng 1991). *)
 type point =
-  | Affine of linear
-      (** The index is a [linear]. With [loopvar = None] the index has the same
-          value in every iteration. *)
+  | Affine of linear  (** The index is a [linear]. *)
   | Varying of varying_kind
-      (** The index cannot be compared with another index, so the analysis
-          assumes the two indices can be equal. *)
+      (** The index cannot be compared, so the index may equal any other. *)
 
-(** How a statement uses a variable. An [Increment], such as [target += ...],
-    reads and writes the variable, but two increments of one variable can run in
-    either order. *)
+(** How a statement uses a variable; an [Increment] such as [target += ...]
+    reads and writes, and commutes with other increments. *)
 type access_kind = Read | Write | Increment
 
-(** One step from a variable toward the part an access touches. *)
+(** One index position or tuple field of an access path. *)
 type 'index step =
   | Subscript of 'index Index.t  (** One index position, such as [n + 1]. *)
   | Field of int  (** One tuple field, such as the [.2] in [t.2]. *)
 
-(** One read or write of a variable by a statement. [path] holds one step per
-    index position and tuple field, so [x[i, n + 1].2] has three steps. A use of
-    the whole variable, such as [v] or the declaration of [v], has no steps. *)
+(** One use of a variable by a statement, with one [path] step per index
+    position and tuple field. *)
 type 'index access = {var: string; path: 'index step list; kind: access_kind}
 
-(** The accesses of one statement, split by what the accesses do. An [Increment]
-    reads and writes, so an increment is in both lists. *)
+(** The accesses of one statement, with each [Increment] in both lists. *)
 module Accesses : sig
   type 'index t =
     { reads: 'index access list  (** the [Read] and [Increment] accesses *)
@@ -96,35 +57,24 @@ end
 
 (** {1 Dependences between two accesses} *)
 
-(** For two accesses inside one loop, how the iteration of the first access
-    compares with the iteration of the second: [Lt] means the first access runs
-    in an earlier iteration, [Eq] in the same iteration, [Gt] in a later one. *)
+(** Whether the first of two accesses runs in an earlier ([Lt]), the same ([Eq])
+    or a later ([Gt]) iteration of one loop than the second. *)
 type direction = Lt | Eq | Gt
 
-(** What is known about one loop for two accesses that may touch the same
-    element: the [directions] that are possible and, when known, the [distance],
-    the number of iterations from the first access to the second. *)
+(** The possible [directions] for one loop and, when known, the [distance] in
+    iterations from the first access to the second. *)
 type level = {directions: direction Set.Poly.t; distance: int option}
 
 module Dependence : sig
   (** Whether two accesses can touch the same element. *)
   type t =
-    | Independent  (** The two accesses never touch the same element. *)
+    | Independent  (** The accesses never touch the same element. *)
     | Unknown
-        (** The accesses cannot be compared, for example [x[idx[n]]] against
-            [x[n]], so the two accesses may touch the same element in any
-            iterations of the loops around them. LLVM's dependence analysis
-            calls this a confused dependence. *)
+        (** The accesses cannot be compared, as in [x[idx[n]]] against [x[n]] (a
+            confused dependence in LLVM). *)
     | Dependent of level list
-        (** The two accesses may touch the same element, in the iterations the
-            levels allow: one [level] per loop around both accesses, outermost
-            first, the direction vector of Allen and Kennedy (1987). In
-            {[
-              for (n in 2:N) a[n] = a[n - 1];
-            ]}
-            the write in iteration [n - 1] and the read in iteration [n] touch
-            the same element, so the dependence from the write to the read is
-            [Dependent [{directions= {Lt}; distance= Some 1}]]. *)
+        (** The accesses may touch the same element, with one [level] per common
+            loop, outermost first (Allen and Kennedy 1987). *)
 end
 
 (** {1 The dependency information} *)
@@ -134,8 +84,7 @@ type node_dep_info =
   { predecessors: label Set.Poly.t
         (** the statements that can run just before this one *)
   ; parents: label Set.Poly.t
-        (** the [if] and loop statements that decide whether this statement runs
-        *)
+        (** the [if] and loops that decide whether this statement runs *)
   ; reaching_defn_entry: reaching_defn Set.Poly.t
         (** the assignments that may reach the start of this statement *)
   ; reaching_defn_exit: reaching_defn Set.Poly.t
@@ -143,28 +92,24 @@ type node_dep_info =
   ; loop: label option
         (** the innermost [for] or [while] loop around this statement *)
   ; accesses: point Accesses.t
-        (** the reads and writes of this statement, not counting the statements
-            nested inside *)
+        (** the reads and writes of this statement, not of nested statements *)
   ; immediate_dependencies: label Set.Poly.t Lazy.t
         (** [node_immediate_dependencies] without blockers, computed on first
             use *)
   ; meta: Location_span.t  (** the source location *) }
 
-(** Every statement inside the analysed statement, by label, with the
-    statement's children replaced by the children's labels. *)
+(** Every statement inside the analysed statement by label, with children
+    replaced by the children's labels. *)
 type dep_info_map =
   ((Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) LabelMap.t
 
-(** For each label, every label the statement depends on, directly or through
-    other statements. *)
+(** Every label each statement depends on, directly or transitively. *)
 type dependency_graph = label Set.Poly.t LabelMap.t
 
 val node_immediate_dependencies :
   dep_info_map -> ?blockers:string Set.Poly.t -> label -> label Set.Poly.t
-(** Given dependency information for each node, find the 'immediate'
-    dependencies of a node: the [if] and loop statements around the node, and
-    the assignments that may have written an element the node reads before the
-    node runs. *)
+(** The [if] and loop statements around a statement, and the assignments that
+    may have written an element the statement reads. *)
 
 val node_dependencies : dep_info_map -> label -> label Set.Poly.t
 (** Given dependency information for each node, find all of the dependencies of
@@ -182,7 +127,7 @@ val node_vars_dependencies :
     'blockers' are variables which will not be traversed. *)
 
 val build_dep_info_map : Program.Typed.t -> Stmt.Located.t -> dep_info_map
-(** Build the dependency information for each statement inside [stmt]. *)
+(** The dependency information for each statement inside the given statement. *)
 
 val log_prob_build_dep_info_map : Program.Typed.t -> dep_info_map
 (** Build the dependency information for each node in the log_prob section of a
@@ -209,6 +154,5 @@ val mir_uninitialized_variables :
     the flowgraph starting at the given statement *)
 
 val read_variables_at : dep_info_map -> label Set.Poly.t -> string Set.Poly.t
-(** The names of the variables that the statements at [labels] read or
-    increment, including reads inside indices and sizes. A [For] or [if] adds
-    only the variables in its bounds or condition. *)
+(** The variables that the statements at [labels] read or increment, counting
+    only the bounds of a [for] and the condition of an [if]. *)
