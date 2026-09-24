@@ -84,14 +84,14 @@ type 'index step =
 (** One read or write of a variable by a statement. [path] holds one step per
     index position and tuple field, so [x[i, n + 1].2] has three steps. A use of
     the whole variable, such as [v] or the declaration of [v], has no steps. *)
-type access = {var: string; path: point step list; kind: access_kind}
+type 'index access = {var: string; path: 'index step list; kind: access_kind}
 
 (** The accesses of one statement, split by what the accesses do. An [Increment]
     reads and writes, so an increment is in both lists. *)
 module Accesses : sig
-  type t =
-    { reads: access list  (** the [Read] and [Increment] accesses *)
-    ; writes: access list  (** the [Write] and [Increment] accesses *) }
+  type 'index t =
+    { reads: 'index access list  (** the [Read] and [Increment] accesses *)
+    ; writes: 'index access list  (** the [Write] and [Increment] accesses *) }
 end
 
 (** {1 Dependences between two accesses} *)
@@ -140,7 +140,7 @@ type node_dep_info =
         (** the assignments that may reach the end of this statement *)
   ; loop: label option
         (** the innermost [for] or [while] loop around this statement *)
-  ; accesses: Accesses.t
+  ; accesses: point Accesses.t
         (** the reads and writes of this statement, not counting the statements
             nested inside *)
   ; meta: Location_span.t  (** the source location *) }
