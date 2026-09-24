@@ -451,7 +451,7 @@ let assigned_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Pattern.t) =
   | TargetPE _ | JacobianPE _ -> Set.Poly.singleton "target"
   | NRFunApp
       ( ( UserDefined (_, (FnTarget | FnJacobian))
-        | StanLib (_, (FnTarget | FnJacobian), _) )
+        | StanLib (_, (FnTarget | FnJacobian)) )
       , _ ) ->
       Set.Poly.singleton "target"
   | For {loopvar= x; _} -> Set.Poly.singleton x
@@ -496,7 +496,7 @@ let reaching_definitions_transfer
             Set.Poly.filter p ~f:(fun (y, _) -> y = "target")
         | NRFunApp
             ( ( UserDefined (_, (FnTarget | FnJacobian))
-              | StanLib (_, (FnTarget | FnJacobian), _) )
+              | StanLib (_, (FnTarget | FnJacobian)) )
             , _ ) ->
             Set.Poly.filter p ~f:(fun (y, _) -> y = "target")
         | NRFunApp (_, _)

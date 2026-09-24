@@ -352,7 +352,7 @@ let lower_fun_def (functors : Lower_expr.variadic list)
 let get_functor_requirements (p : Program.Numbered.t) =
   let open Expr in
   let rec find_functors_expr init = function
-    | {pattern= FunApp (StanLib (hof, _, _), args); _} ->
+    | {pattern= FunApp (StanLib (hof, _), args); _} ->
         let f accum = function
           | { pattern= Var name
             ; meta= {Expr.Typed.Meta.type_= UnsizedType.UFun _; _} } ->
@@ -461,8 +461,8 @@ module Testing = struct
           (Some
              (w
              @@ FunApp
-                  ( StanLib ("add", FnPlain, AoS)
-                  , [w @@ Var "x"; w @@ Lit (Int, "1")] )))
+                  (StanLib ("add", FnPlain), [w @@ Var "x"; w @@ Lit (Int, "1")])
+             ))
         |> with_no_loc |> List.singleton
         |> (fun b -> Stmt.Pattern.Block b)
         |> with_no_loc |> Option.some
@@ -523,8 +523,8 @@ module Testing = struct
           (Some
              (w
              @@ FunApp
-                  ( StanLib ("add", FnPlain, AoS)
-                  , [w @@ Var "x"; w @@ Lit (Int, "1")] )))
+                  (StanLib ("add", FnPlain), [w @@ Var "x"; w @@ Lit (Int, "1")])
+             ))
         |> with_no_loc |> List.singleton
         |> (fun b -> Stmt.Pattern.Block b)
         |> with_no_loc |> Option.some

@@ -100,8 +100,7 @@ let list_possible_nonlinear (mir : Program.Typed.t) : Location_span.t Set.Poly.t
         (* We require at least one of these operands to be a constant *)
         (is_linear allow_var a && is_linear false b)
         || (is_linear false a && is_linear allow_var b)
-    | FunApp (StanLib (name, _, _), args) ->
-        is_linear_function allow_var name args
+    | FunApp (StanLib (name, _), args) -> is_linear_function allow_var name args
     | FunApp (CompilerInternal (FnMakeArray | FnMakeRowVec), args) ->
         List.for_all ~f:(is_linear allow_var) args
     | _ -> false
@@ -124,7 +123,7 @@ let list_possible_nonlinear (mir : Program.Typed.t) : Location_span.t Set.Poly.t
     | Stmt.Pattern.TargetPE
         { pattern=
             Expr.Pattern.FunApp
-              ( ( StanLib (_, (FnLpdf _ | FnLpmf _), _)
+              ( ( StanLib (_, (FnLpdf _ | FnLpmf _))
                 | UserDefined (_, (FnLpdf _ | FnLpmf _)) )
               , e :: _ )
         ; _ }
@@ -316,7 +315,7 @@ let list_distributions (mir : Program.Typed.t) : dist_info Set.Poly.t =
   let take_dist (expr : Expr.Typed.t) =
     match expr.pattern with
     | Expr.Pattern.FunApp
-        (StanLib (fname, (FnLpdf true | FnLpmf true), _), arg_exprs) ->
+        (StanLib (fname, (FnLpdf true | FnLpmf true)), arg_exprs) ->
         let fname = chop_dist_name fname |> Option.get in
         let params = parameter_set mir in
         let data = data_set mir in

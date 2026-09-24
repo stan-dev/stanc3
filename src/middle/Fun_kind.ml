@@ -17,7 +17,7 @@ type 'propto suffix =
 let without_propto = map_suffix (Fun.const () : bool -> unit)
 
 type 'e t =
-  | StanLib of string * bool suffix * Mem_pattern.t
+  | StanLib of string * bool suffix
   | Operator of Operator.t
   | CompilerInternal of 'e Internal_fun.t
   | UserDefined of string * bool suffix
@@ -43,12 +43,12 @@ let with_unnormalized_suffix (name : string) =
 
 let pp pp_expr ppf kind =
   match kind with
-  | StanLib (s, FnLpdf true, _)
+  | StanLib (s, FnLpdf true)
    |UserDefined (s, FnLpdf true)
-   |StanLib (s, FnLpmf true, _)
+   |StanLib (s, FnLpmf true)
    |UserDefined (s, FnLpmf true) ->
       Fmt.string ppf (with_unnormalized_suffix s |> Option.value ~default:s)
-  | StanLib (s, _, _) | UserDefined (s, _) -> Fmt.string ppf s
+  | StanLib (s, _) | UserDefined (s, _) -> Fmt.string ppf s
   | Operator op -> Operator.pp ppf op
   | CompilerInternal internal -> Internal_fun.pp pp_expr ppf internal
 

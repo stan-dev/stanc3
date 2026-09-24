@@ -29,6 +29,7 @@ type 'expr t =
   | FnNaN
   | FnDeepCopy
   | FnReadWriteEventsOpenCL of string
+  | FnReturnSoA of string
 [@@deriving sexp_of, compare, map, fold]
 
 let to_string
@@ -59,5 +60,5 @@ let can_side_effect = function
       true
   | FnLength | FnMakeArray | FnMakeRowVec | FnNegInf | FnPrint | FnReject
    |FnFatalError | FnResizeToMatch | FnNaN | FnDeepCopy | FnCheck _
-   |FnMakeTuple ->
+   |FnMakeTuple | FnReturnSoA _ ->
       false
