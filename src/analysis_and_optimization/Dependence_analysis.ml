@@ -156,6 +156,18 @@ module Accesses = struct
     ; writes= keep accesses.writes
     ; increments= keep accesses.increments }
 
+  (** The variables that [accesses] read or increment. *)
+  let read_vars (accesses : 'index t) : string Set.Poly.t =
+    Set.Poly.of_list
+      (List.map (accesses.reads @ accesses.increments) ~f:(fun access ->
+           access.var))
+
+  (** The variables that [accesses] write or increment. *)
+  let written_vars (accesses : 'index t) : string Set.Poly.t =
+    Set.Poly.of_list
+      (List.map (accesses.writes @ accesses.increments) ~f:(fun access ->
+           access.var))
+
   (** The accesses of [expr], in evaluation order, with the paths as written.
       [target()] reads [target], and a call to a [_lp] function increments
       [target]. *)
@@ -493,9 +505,7 @@ let pruned_reaching_defns (statement_map : dep_info_map) (dst : label)
 (** The variables the statement reads, including the variables read inside
     indices and sizes, and the variables the statement increments. *)
 let read_variables (info : node_dep_info) : string Set.Poly.t =
-  Set.Poly.of_list
-    (List.map (info.accesses.reads @ info.accesses.increments) ~f:(fun access ->
-         access.var))
+  Accesses.read_vars info.accesses
 
 (** The [if] and loop statements around [label] and the assignments that may
     have written an element that [label] reads, skipping [blockers]. *)
@@ -691,11 +701,8 @@ let build_dep_info_map (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
      of them can change value inside [stmt] *)
   let written_vars =
     LabelMap.fold collected ~init:Set.Poly.empty
-      ~f:(fun ~key:_ ~data:(accesses : Expr.Typed.t Accesses.t) written ->
-        Set.Poly.union written
-          (Set.Poly.of_list
-             (List.map (accesses.writes @ accesses.increments) ~f:(fun access ->
-                  access.var)))) in
+      ~f:(fun ~key:_ ~data:accesses written ->
+        Set.Poly.union written (Accesses.written_vars accesses)) in
   (* the loop variables of the [for] loops around [label] *)
   let rec loopvars_of label =
     match enclosing_loop statement_map parents label with
