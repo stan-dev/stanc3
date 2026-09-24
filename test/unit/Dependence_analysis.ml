@@ -410,6 +410,30 @@ let%expect_test "Accesses: a declaration reads the sizes in its type" =
     10: R N, R K, W a
     |}]
 
+let%expect_test
+    "Reaching definitions: an _lp call in an assignment defines target" =
+  let map =
+    log_prob_build_dep_info_map
+      (Test_utils.mir_of_string
+         {|
+           functions { real foo_lp(real y) { target += y; return y; } }
+           parameters { real mu; }
+           model {
+             real x;
+             x = foo_lp(mu);
+             if (target() > 0) target += 1;
+           }
+         |})
+  in
+  LabelMap.iter map ~f:(fun ~key ~data:(stmt, _) ->
+      match stmt with
+      | Stmt.Pattern.IfElse _ ->
+          Fmt.pr "%d: %a@." key
+            Fmt.(list ~sep:(any " ") int)
+            (Set.Poly.to_list (node_immediate_dependencies map key))
+      | _ -> ());
+  [%expect {| 6: 5 |}]
+
 let%expect_test "Right-hand-side variables of a set of labels" =
   let map = log_prob_build_dep_info_map accesses_example in
   print_s
