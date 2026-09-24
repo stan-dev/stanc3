@@ -93,28 +93,38 @@ let rec is_uni_eigen_loop_indexing in_loop (ut : UnsizedType.t)
     | _ -> false
   else false
 
+let check_mem_pattern_support signatures args =
+  let filteredmatches =
+    List.filter
+      ~f:(fun (x, _, _, _) ->
+        Frontend.SignatureMismatch.check_compatible_arguments_mod_conv x args
+        |> Result.is_ok)
+      signatures in
+  let is_soa (_, _, _, p) = p = Mem_pattern.SoA in
+  List.exists ~f:is_soa filteredmatches
+
+let query_operator_mem_pattern_support op args =
+  check_mem_pattern_support
+    (Stan_math_signatures.operator_to_stan_math_signatures op)
+    args
+
 let query_stan_math_mem_pattern_support (name : string)
     (args : UnsizedType.argumentlist) =
-  let open Stan_math_signatures in
-  if is_special_function_name name then false
+  if Stan_math_signatures.is_special_function_name name then false
   else
-    let name =
-      string_operator_to_stan_math_fns (Utils.stdlib_distribution_name name)
-    in
-    let namematches = lookup_stan_math_function name in
-    let filteredmatches =
-      List.filter
-        ~f:(fun (x, _, _, _) ->
-          Frontend.SignatureMismatch.check_compatible_arguments_mod_conv x args
-          |> Result.is_ok)
-        namematches in
-    let is_soa (_, _, _, p) = p = Mem_pattern.SoA in
-    List.exists ~f:is_soa filteredmatches
+    let signatures =
+      Stan_math_signatures.lookup_stan_math_function
+        (Utils.stdlib_distribution_name name) in
+    check_mem_pattern_support signatures args
 
 (** Validate whether a function can support SoA matrices *)
 let is_fun_soa_supported name exprs =
   let fun_args = List.map ~f:Expr.Typed.fun_arg exprs in
   query_stan_math_mem_pattern_support name fun_args
+
+let is_op_soa_supported op exprs =
+  let fun_args = List.map ~f:Expr.Typed.fun_arg exprs in
+  query_operator_mem_pattern_support op fun_args
 
 (** Query to find the initial set of objects that cannot be SoA. This is mostly
     recursing over expressions, with the exceptions being functions and indexing
@@ -211,6 +221,16 @@ and query_initial_demotable_funs (in_loop : bool) (stmt_linenum : int)
               ("Function " ^ name ^ " is not supported:")
               fail_names;
             Set.Poly.union acc demoted_and_top_level_names)
+  | Operator op ->
+      if is_op_soa_supported op exprs then
+        Set.Poly.union acc demoted_eigen_names
+      else
+        let fail_names =
+          concat_set_str (Set.Poly.inter acc top_level_eigen_names) in
+        user_warning_op SoA stmt_linenum
+          (Fmt.str "Operator %a is not supported:" Operator.pp op)
+          fail_names;
+        Set.Poly.union acc demoted_and_top_level_names
   | CompilerInternal (Internal_fun.FnMakeArray | FnMakeRowVec | FnMakeTuple) ->
       let fail_names =
         concat_set_str (Set.Poly.inter acc demoted_and_top_level_names) in
@@ -275,14 +295,14 @@ and extract_nonderived_admatrix_types_fun (kind : 'a Fun_kind.t)
              | _ -> false ->
           [(UnsizedType.AutoDiffable, UnsizedType.UMatrix)]
       | _ -> List.concat_map ~f:extract_nonderived_admatrix_types exprs)
+  | Operator _ -> List.concat_map ~f:extract_nonderived_admatrix_types exprs
   (* While not "true", we need to tell the optimizer these are danger
      functions *)
   | CompilerInternal Internal_fun.FnMakeArray ->
       [(AutoDiffable, UReal); (DataOnly, UArray UReal)]
   | CompilerInternal Internal_fun.FnMakeRowVec ->
       [(AutoDiffable, UReal); (DataOnly, URowVector)]
-  | CompilerInternal (_ : 'a Internal_fun.t) -> []
-  | UserDefined ((_ : string), (_ : bool Fun_kind.suffix)) -> []
+  | CompilerInternal _ | UserDefined _ -> []
 
 (** Checks if a list of types contains at least on ad matrix or if everything is
     derived from data *)
@@ -537,6 +557,16 @@ let rec modify_kind ?force_demotion:(force = false)
         (Fun_kind.StanLib (name, sfx, Mem_pattern.AoS), exprs')
       else
         ( Fun_kind.StanLib (name, sfx, SoA)
+        , List.map ~f:(modify_expr ~force_demotion:false modifiable_set) exprs
+        )
+  | Operator op ->
+      if is_all_in_list || (not (is_op_soa_supported op exprs)) || force then
+        (* Force demotion of all subexprs *)
+        let exprs' =
+          List.map ~f:(modify_expr ~force_demotion:true expr_names) exprs in
+        (Operator op, exprs')
+      else
+        ( Operator op
         , List.map ~f:(modify_expr ~force_demotion:false modifiable_set) exprs
         )
   | UserDefined _ as udf ->

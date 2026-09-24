@@ -518,9 +518,8 @@ let to_grace (name, arg_tys, (sigs, omitted)) =
 
 let list_valid_assignmentoperator_rhs lt assop =
   (match assop with
-    | Operator.Divide -> ["divide"]
-    | assop -> Stan_math_signatures.operator_to_stan_math_fns assop)
-  |> List.concat_map ~f:Stan_math_signatures.lookup_stan_math_function
+    | Operator.Divide -> Stan_math_signatures.lookup_stan_math_function "divide"
+    | assop -> Stan_math_signatures.operator_to_stan_math_signatures assop)
   |> List.concat_map ~f:(function
     | [(ad1, lhs); (ad2, rhs)], UnsizedType.ReturnType rtype, _, _
       when rtype = lhs

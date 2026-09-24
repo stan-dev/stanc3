@@ -461,8 +461,8 @@ Flags not used elsewhere in the tests
   
   generate_quantities {
     data real theta;
-    if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
-    if(PNot__(emit_generated_quantities__)) return; }
+    if(!(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+    if(!(emit_generated_quantities__)) return; }
   output_vars {
     parameters real theta; //real
   }
@@ -507,10 +507,10 @@ Flags not used elsewhere in the tests
       theta = (FnReadParam(constrain(LowerUpper 0 1))(dims())(mem_pattern AoS))__(
       );
     (FnWriteParam(unconstrain_opt())(var theta))__();
-    if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
       return;
     }
-    if(PNot__(emit_generated_quantities__)) {
+    if(!(emit_generated_quantities__)) {
       return;
     } }
   
@@ -562,10 +562,10 @@ Flags not used elsewhere in the tests
       theta = (FnReadParam(constrain(LowerUpper 0 1))(dims())(mem_pattern AoS))__(
       );
     (FnWriteParam(unconstrain_opt())(var theta))__();
-    if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
       return;
     }
-    if(PNot__(emit_generated_quantities__)) {
+    if(!(emit_generated_quantities__)) {
       return;
     } }
   

@@ -212,7 +212,7 @@ let rec lower_logical_op op e1 e2 =
   let prim e = Exprs.fun_call "stan::math::primitive_value" [lower_expr e] in
   Parens (BinOp (prim e1, op, prim e2))
 
-and lower_binary_fun f es = Exprs.fun_call f (lower_exprs es)
+and lower_fun_call f es = Exprs.fun_call f (lower_exprs es)
 
 and vector_literal ?(column = false) scalar es =
   let open Cpp.DSL in
@@ -243,7 +243,16 @@ and read_data ut es =
 and lower_binary_op op fn es =
   if is_scalar (first es) && is_scalar (second es) then
     Parens (BinOp (lower_expr (first es), op, lower_expr (second es)))
-  else lower_binary_fun fn es
+  else lower_fun_call fn es
+
+and lower_operator = function
+  | Operator.Plus -> Some Add
+  | Minus -> Some Subtract
+  | Times | EltTimes -> Some Multiply
+  | Divide | IntDivide | EltDivide -> Some Divide
+  | And -> Some And
+  | Or -> Some Or
+  | _ -> None
 
 and lower_operator_app op es_in =
   let remove_basic_promotion (e : 'a Expr.t) =
@@ -253,25 +262,24 @@ and lower_operator_app op es_in =
     if List.for_all es_in ~f:is_scalar then
       List.map ~f:remove_basic_promotion es_in
     else es_in in
+  let fn =
+    stan_namespace_qualify
+      (List.hd_exn (Stan_math_signatures.operator_to_stan_math_fns op)) in
   match op with
-  | Operator.Plus -> lower_binary_op Add "stan::math::add" es
+  | Operator.PPlus -> lower_expr (first es)
   | PMinus ->
       if is_scalar (first es) then PMinus (lower_expr (first es))
-      else Exprs.fun_call "stan::math::minus" [lower_expr (first es)]
-  | PPlus -> lower_expr (first es)
+      else lower_fun_call fn es
   | Transpose ->
       if is_scalar (first es) then lower_expr (first es)
-      else Exprs.fun_call "stan::math::transpose" [lower_expr (first es)]
-  | PNot -> Exprs.fun_call "stan::math::logical_negation" [lower_expr (first es)]
-  | Minus -> lower_binary_op Subtract "stan::math::subtract" es
-  | Times -> lower_binary_op Multiply "stan::math::multiply" es
-  | Divide | IntDivide ->
-      (* XXX: This conditional is probably a sign that we need to rethink how we
-         store Operators in the MIR *)
+      else lower_fun_call fn es
+  | Divide ->
+      (* XXX: This conditional is a sign that we might want to reconsider
+         overloading the division operator but not the division function *)
       if
         is_matrix (second es)
         && (is_matrix (first es) || is_row_vector (first es))
-      then lower_binary_fun "stan::math::mdivide_right" es
+      then lower_fun_call "stan::math::mdivide_right" es
       else
         let f e = Expr.Typed.type_of e = UInt in
         (* NB: Not stripping promotions due to semantics of int / int *)
@@ -279,21 +287,14 @@ and lower_operator_app op es_in =
           if List.for_all ~f es && not (List.for_all ~f es_in) then es_in
           else es in
         lower_binary_op Divide "stan::math::divide" es'
-  | Modulo -> lower_binary_fun "stan::math::modulus" es
-  | LDivide -> lower_binary_fun "stan::math::mdivide_left" es
+  | Plus | Minus | Times | IntDivide | EltTimes | EltDivide | PNot | Modulo
+   |LDivide | Pow | EltPow | Equals | NEquals | Less | Leq | Greater | Geq -> (
+      match lower_operator op with
+      | Some op -> lower_binary_op op fn es
+      | None -> lower_fun_call fn es)
   | And | Or ->
       Common.ICE.internal_error
         "And/Or should have been converted to an expression" [@coverage off]
-  | EltTimes -> lower_binary_op Multiply "stan::math::elt_multiply" es
-  | EltDivide -> lower_binary_op Divide "stan::math::elt_divide" es
-  | Pow -> lower_binary_fun "stan::math::pow" es
-  | EltPow -> lower_binary_fun "stan::math::pow" es
-  | Equals -> lower_binary_fun "stan::math::logical_eq" es
-  | NEquals -> lower_binary_fun "stan::math::logical_neq" es
-  | Less -> lower_binary_fun "stan::math::logical_lt" es
-  | Leq -> lower_binary_fun "stan::math::logical_lte" es
-  | Greater -> lower_binary_fun "stan::math::logical_gt" es
-  | Geq -> lower_binary_fun "stan::math::logical_gte" es
 
 and lower_misc_special_math_app (f : string) (mem_pattern : Mem_pattern.t)
     (ret_type : UnsizedType.returntype option) =
@@ -414,8 +415,7 @@ and lower_fun_app suffix fname es mem_pattern
     | Some (f, "unconstrain") -> f ^ "_free"
     | _ -> fname in
   let special_options =
-    [ Option.map ~f:lower_operator_app (Operator.of_string_opt fname)
-    ; lower_misc_special_math_app fname mem_pattern ret_type
+    [ lower_misc_special_math_app fname mem_pattern ret_type
     ; lower_functionals fname suffix es mem_pattern ]
     |> List.filter_map ~f:Fun.id |> List.hd in
   match special_options with
@@ -556,19 +556,18 @@ and lower_expr (Expr.{pattern; meta} : Expr.Typed.t) : Cpp.expr =
         else lower_expr e in
       Parens (TernaryIf (maybe_eval ec, maybe_eval et, maybe_eval ef))
   | FunApp
-      ( StanLib (op, _, _)
+      ( Operator Transpose
       , [ { meta= {type_= URowVector; _}
-          ; pattern= FunApp (CompilerInternal FnMakeRowVec, es) } ] )
-    when Operator.(Some Transpose = of_string_opt op) ->
+          ; pattern= FunApp (CompilerInternal FnMakeRowVec, es) } ] ) ->
       let st = local_scalar UVector (promote_adtype es) in
       vector_literal ~column:true st es
   | FunApp
-      ( StanLib (op, _, _)
+      ( Operator Transpose
       , [ { meta= {type_= UComplexRowVector; _}
-          ; pattern= FunApp (CompilerInternal FnMakeRowVec, es) } ] )
-    when Operator.(Some Transpose = of_string_opt op) ->
+          ; pattern= FunApp (CompilerInternal FnMakeRowVec, es) } ] ) ->
       let st = Types.complex (local_scalar UComplexVector (promote_adtype es)) in
       vector_literal ~column:true st es
+  | FunApp (Operator op, es) -> lower_operator_app op es
   | FunApp (CompilerInternal f, es) ->
       lower_compiler_internal meta.adlevel meta.type_ f es
   | FunApp (StanLib (f, suffix, mem_pattern), es) ->

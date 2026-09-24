@@ -36,7 +36,7 @@ let operator_to_stan_math_fns op =
   | Times -> ["multiply"]
   | Divide -> ["divide"; "mdivide_right"]
   | Modulo -> ["modulus"]
-  | IntDivide -> []
+  | IntDivide -> ["divide"]
   | LDivide -> ["mdivide_left"]
   | EltTimes -> ["elt_multiply"]
   | EltDivide -> ["elt_divide"]
@@ -53,49 +53,21 @@ let operator_to_stan_math_fns op =
   | PNot -> ["logical_negation"]
   | Transpose -> ["transpose"]
 
-let int_divide_type =
-  UnsizedType.
-    ( [(AutoDiffable, UInt); (AutoDiffable, UInt)]
-    , ReturnType UInt
-    , Fun_kind.FnPlain
-    , Mem_pattern.AoS )
-
 let get_sigs name =
   let name = Utils.stdlib_distribution_name name in
   Hashtbl.find_multi (Lazy.force stan_math_signatures) name
   |> List.sort ~cmp:UnsizedType.compare_signature
 
 let operator_to_stan_math_signatures op =
+  let int_only_operator_type =
+    UnsizedType.
+      ( [(AutoDiffable, UInt); (AutoDiffable, UInt)]
+      , ReturnType UInt
+      , Fun_kind.FnPlain
+      , Mem_pattern.AoS ) in
   match op with
-  | Operator.IntDivide -> [int_divide_type]
+  | Operator.IntDivide | And | Or -> [int_only_operator_type]
   | _ -> operator_to_stan_math_fns op |> List.concat_map ~f:get_sigs
-
-let string_operator_to_stan_math_fns str =
-  match str with
-  | "Plus__" -> "add"
-  | "PPlus__" -> "plus"
-  | "Minus__" -> "subtract"
-  | "PMinus__" -> "minus"
-  | "Times__" -> "multiply"
-  | "Divide__" -> "divide"
-  | "Modulo__" -> "modulus"
-  | "IntDivide__" -> "divide"
-  | "LDivide__" -> "mdivide_left"
-  | "EltTimes__" -> "elt_multiply"
-  | "EltDivide__" -> "elt_divide"
-  | "Pow__" -> "pow"
-  | "EltPow__" -> "pow"
-  | "Or__" -> "logical_or"
-  | "And__" -> "logical_and"
-  | "Equals__" -> "logical_eq"
-  | "NEquals__" -> "logical_neq"
-  | "Less__" -> "logical_lt"
-  | "Leq__" -> "logical_lte"
-  | "Greater__" -> "logical_gt"
-  | "Geq__" -> "logical_gte"
-  | "PNot__" -> "logical_negation"
-  | "Transpose__" -> "transpose"
-  | _ -> str
 
 let pretty_print_all_math_sigs ppf () =
   let open Fmt in

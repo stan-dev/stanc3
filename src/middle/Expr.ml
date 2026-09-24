@@ -22,11 +22,11 @@ module Pattern = struct
     | Var varname -> Fmt.string ppf varname
     | Lit (Str, str) -> Fmt.pf ppf "%S" str
     | Lit (_, str) -> Fmt.string ppf str
-    | FunApp (StanLib (name, FnPlain, _), [lhs; rhs])
-      when Option.is_some (Operator.of_string_opt name) ->
-        Fmt.pf ppf "(%a %a %a)" pp_e lhs Operator.pp
-          (Option.get (Operator.of_string_opt name))
-          pp_e rhs
+    | FunApp (Operator op, [lhs; rhs]) ->
+        Fmt.pf ppf "(%a %a %a)" pp_e lhs Operator.pp op pp_e rhs
+    | FunApp (Operator (Transpose as op), [v]) ->
+        Fmt.pf ppf "(%a %a)" pp_e v Operator.pp op
+    | FunApp (Operator op, [v]) -> Fmt.pf ppf "%a(%a)" Operator.pp op pp_e v
     | FunApp (fun_kind, args) ->
         Fmt.pf ppf "%a(@[<hov>%a@])" (Fun_kind.pp pp_e) fun_kind
           Fmt.(list pp_e ~sep:Fmt.comma)
@@ -103,13 +103,10 @@ module Helpers = struct
   let one = int 1
 
   let unary_op op e =
-    { meta= Typed.Meta.empty
-    ; pattern= FunApp (StanLib (Operator.to_string op, FnPlain, AoS), [e]) }
+    {meta= Typed.Meta.empty; pattern= FunApp (Operator op, [e])}
 
   let binop e1 op e2 =
-    { meta= Typed.Meta.empty
-    ; pattern= FunApp (StanLib (Operator.to_string op, FnPlain, AoS), [e1; e2])
-    }
+    {meta= Typed.Meta.empty; pattern= FunApp (Operator op, [e1; e2])}
 
   let binop_list es op ~default =
     match es with

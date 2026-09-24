@@ -140,7 +140,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
                        ((pattern
                          (Assignment ((LVariable pos__) ()) UInt
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (Operator Plus)
                              (((pattern (Var pos__))
                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                               ((pattern (Lit Int 1))
@@ -214,7 +214,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
                ((pattern
                  (Assignment ((LVariable pos__) ()) UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 1))
@@ -293,9 +293,9 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
        ((pattern
          (Assignment ((LVariable soa_simple) ()) UVector
           ((pattern
-            (FunApp (StanLib Plus__ FnPlain AoS)
+            (FunApp (Operator Plus)
              (((pattern
-                (FunApp (StanLib Plus__ FnPlain AoS)
+                (FunApp (Operator Plus)
                  (((pattern (Var alpha))
                    (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                   ((pattern
@@ -329,9 +329,9 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
        ((pattern
          (Assignment ((LVariable aos_deep) ()) UVector
           ((pattern
-            (FunApp (StanLib Minus__ FnPlain AoS)
+            (FunApp (Operator Minus)
              (((pattern
-                (FunApp (StanLib Times__ FnPlain AoS)
+                (FunApp (Operator Times)
                  (((pattern
                     (Promotion
                      ((pattern (Lit Int 2))
@@ -341,7 +341,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
                   ((pattern
                     (FunApp (StanLib Phi FnPlain AoS)
                      (((pattern
-                        (FunApp (StanLib Divide__ FnPlain AoS)
+                        (FunApp (Operator Divide)
                          (((pattern (Var y_data))
                            (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                           ((pattern (Var sigma))
@@ -376,7 +376,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
        ((pattern
          (Assignment ((LVariable soa_dual_rep) ()) UVector
           ((pattern
-            (FunApp (StanLib Plus__ FnPlain AoS)
+            (FunApp (Operator Plus)
              (((pattern
                 (FunApp (StanLib transpose FnPlain AoS)
                  (((pattern
@@ -415,7 +415,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
        ((pattern
          (Assignment ((LVariable soa_data_rep) ()) UVector
           ((pattern
-            (FunApp (StanLib Plus__ FnPlain AoS)
+            (FunApp (Operator Plus)
              (((pattern
                 (FunApp (StanLib rep_vector FnPlain AoS)
                  (((pattern (Lit Real 0.0))
@@ -455,11 +455,11 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
        ((pattern
          (Assignment ((LVariable soa_mix) ()) UVector
           ((pattern
-            (FunApp (StanLib Plus__ FnPlain AoS)
+            (FunApp (Operator Plus)
              (((pattern
                 (FunApp (StanLib Phi FnPlain AoS)
                  (((pattern
-                    (FunApp (StanLib Divide__ FnPlain AoS)
+                    (FunApp (Operator Divide)
                      (((pattern (Var y_data))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Var sigma))
@@ -489,17 +489,17 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
        ((pattern
          (Assignment ((LVariable aos_from_data) ()) UVector
           ((pattern
-            (FunApp (StanLib Minus__ FnPlain AoS)
+            (FunApp (Operator Minus)
              (((pattern
-                (FunApp (StanLib Minus__ FnPlain AoS)
+                (FunApp (Operator Minus)
                  (((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern
-                        (FunApp (StanLib Plus__ FnPlain AoS)
+                        (FunApp (Operator Plus)
                          (((pattern (Var alpha))
                            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                           ((pattern
-                            (FunApp (StanLib Times__ FnPlain AoS)
+                            (FunApp (Operator Times)
                              (((pattern (Var sigma))
                                (meta
                                 ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
@@ -515,7 +515,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
                    (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern
-                (FunApp (StanLib Times__ FnPlain AoS)
+                (FunApp (Operator Times)
                  (((pattern (Var sigma))
                    (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                   ((pattern (Var alpha))
@@ -551,7 +551,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
        ((pattern
          (Assignment ((LVariable soa_mat_rep) ()) UMatrix
           ((pattern
-            (FunApp (StanLib Plus__ FnPlain AoS)
+            (FunApp (Operator Plus)
              (((pattern
                 (FunApp (StanLib transpose FnPlain AoS)
                  (((pattern
@@ -611,7 +611,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
        ((pattern
          (Assignment ((LVariable soa_mat_rep_vec) ()) UMatrix
           ((pattern
-            (FunApp (StanLib Plus__ FnPlain AoS)
+            (FunApp (Operator Plus)
              (((pattern
                 (FunApp (StanLib transpose FnPlain AoS)
                  (((pattern
@@ -666,7 +666,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
        ((pattern
          (Assignment ((LVariable aos_mat_rep) ()) UMatrix
           ((pattern
-            (FunApp (StanLib Plus__ FnPlain AoS)
+            (FunApp (Operator Plus)
              (((pattern
                 (FunApp (StanLib transpose FnPlain AoS)
                  (((pattern
@@ -704,7 +704,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
              (((pattern
                 (FunApp (CompilerInternal FnMakeRowVec)
                  (((pattern
-                    (FunApp (StanLib Pow__ FnPlain AoS)
+                    (FunApp (Operator Pow)
                      (((pattern (Var alpha))
                        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern (Lit Int 2))
@@ -718,7 +718,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
                  (((pattern (Var alpha))
                    (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                   ((pattern
-                    (FunApp (StanLib Pow__ FnPlain AoS)
+                    (FunApp (Operator Pow)
                      (((pattern (Var sigma))
                        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern (Lit Int 2))
@@ -867,9 +867,9 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
        ((pattern
          (Assignment ((LVariable soa_simple) ()) UVector
           ((pattern
-            (FunApp (StanLib Plus__ FnPlain SoA)
+            (FunApp (Operator Plus)
              (((pattern
-                (FunApp (StanLib Plus__ FnPlain SoA)
+                (FunApp (Operator Plus)
                  (((pattern (Var alpha))
                    (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                   ((pattern
@@ -903,9 +903,9 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
        ((pattern
          (Assignment ((LVariable aos_deep) ()) UVector
           ((pattern
-            (FunApp (StanLib Minus__ FnPlain AoS)
+            (FunApp (Operator Minus)
              (((pattern
-                (FunApp (StanLib Times__ FnPlain AoS)
+                (FunApp (Operator Times)
                  (((pattern
                     (Promotion
                      ((pattern (Lit Int 2))
@@ -915,7 +915,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
                   ((pattern
                     (FunApp (StanLib Phi FnPlain AoS)
                      (((pattern
-                        (FunApp (StanLib Divide__ FnPlain AoS)
+                        (FunApp (Operator Divide)
                          (((pattern (Var y_data))
                            (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                           ((pattern (Var sigma))
@@ -950,7 +950,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
        ((pattern
          (Assignment ((LVariable soa_dual_rep) ()) UVector
           ((pattern
-            (FunApp (StanLib Plus__ FnPlain SoA)
+            (FunApp (Operator Plus)
              (((pattern
                 (FunApp (StanLib transpose FnPlain SoA)
                  (((pattern
@@ -989,7 +989,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
        ((pattern
          (Assignment ((LVariable soa_data_rep) ()) UVector
           ((pattern
-            (FunApp (StanLib Plus__ FnPlain SoA)
+            (FunApp (Operator Plus)
              (((pattern
                 (FunApp (StanLib rep_vector FnPlain SoA)
                  (((pattern (Lit Real 0.0))
@@ -1029,11 +1029,11 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
        ((pattern
          (Assignment ((LVariable soa_mix) ()) UVector
           ((pattern
-            (FunApp (StanLib Plus__ FnPlain SoA)
+            (FunApp (Operator Plus)
              (((pattern
                 (FunApp (StanLib Phi FnPlain SoA)
                  (((pattern
-                    (FunApp (StanLib Divide__ FnPlain SoA)
+                    (FunApp (Operator Divide)
                      (((pattern (Var y_data))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Var sigma))
@@ -1063,17 +1063,17 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
        ((pattern
          (Assignment ((LVariable aos_from_data) ()) UVector
           ((pattern
-            (FunApp (StanLib Minus__ FnPlain AoS)
+            (FunApp (Operator Minus)
              (((pattern
-                (FunApp (StanLib Minus__ FnPlain AoS)
+                (FunApp (Operator Minus)
                  (((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern
-                        (FunApp (StanLib Plus__ FnPlain AoS)
+                        (FunApp (Operator Plus)
                          (((pattern (Var alpha))
                            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                           ((pattern
-                            (FunApp (StanLib Times__ FnPlain AoS)
+                            (FunApp (Operator Times)
                              (((pattern (Var sigma))
                                (meta
                                 ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
@@ -1089,7 +1089,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
                    (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern
-                (FunApp (StanLib Times__ FnPlain AoS)
+                (FunApp (Operator Times)
                  (((pattern (Var sigma))
                    (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                   ((pattern (Var alpha))
@@ -1125,7 +1125,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
        ((pattern
          (Assignment ((LVariable soa_mat_rep) ()) UMatrix
           ((pattern
-            (FunApp (StanLib Plus__ FnPlain SoA)
+            (FunApp (Operator Plus)
              (((pattern
                 (FunApp (StanLib transpose FnPlain SoA)
                  (((pattern
@@ -1185,7 +1185,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
        ((pattern
          (Assignment ((LVariable soa_mat_rep_vec) ()) UMatrix
           ((pattern
-            (FunApp (StanLib Plus__ FnPlain SoA)
+            (FunApp (Operator Plus)
              (((pattern
                 (FunApp (StanLib transpose FnPlain SoA)
                  (((pattern
@@ -1240,7 +1240,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
        ((pattern
          (Assignment ((LVariable aos_mat_rep) ()) UMatrix
           ((pattern
-            (FunApp (StanLib Plus__ FnPlain AoS)
+            (FunApp (Operator Plus)
              (((pattern
                 (FunApp (StanLib transpose FnPlain AoS)
                  (((pattern
@@ -1278,7 +1278,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
              (((pattern
                 (FunApp (CompilerInternal FnMakeRowVec)
                  (((pattern
-                    (FunApp (StanLib Pow__ FnPlain AoS)
+                    (FunApp (Operator Pow)
                      (((pattern (Var alpha))
                        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern (Lit Int 2))
@@ -1292,7 +1292,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
                  (((pattern (Var alpha))
                    (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                   ((pattern
-                    (FunApp (StanLib Pow__ FnPlain AoS)
+                    (FunApp (Operator Pow)
                      (((pattern (Var sigma))
                        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern (Lit Int 2))
@@ -1448,7 +1448,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern
             (EOr
              ((pattern (Var emit_transformed_parameters__))
@@ -1462,7 +1462,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern (Var emit_generated_quantities__))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -1584,7 +1584,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
                ((pattern
                  (Assignment ((LVariable pos__) ()) UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 1))
@@ -1810,7 +1810,7 @@ Optimization hazard warning (Line 6): SoA warning: Right hand side contains only
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern
             (EOr
              ((pattern (Var emit_transformed_parameters__))
@@ -1851,7 +1851,7 @@ Optimization hazard warning (Line 6): SoA warning: Right hand side contains only
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern (Var emit_generated_quantities__))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -1938,7 +1938,7 @@ Optimization hazard warning (Line 6): SoA warning: Right hand side contains only
                        ((pattern
                          (Assignment ((LVariable pos__) ()) UInt
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (Operator Plus)
                              (((pattern (Var pos__))
                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                               ((pattern (Lit Int 1))
@@ -2184,7 +2184,7 @@ vector[N] means_ordered: SoA
                ((pattern
                  (Assignment ((LVariable pos__) ()) UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 1))
@@ -2256,7 +2256,7 @@ vector[N] means_ordered: SoA
                ((pattern
                  (Assignment ((LVariable pos__) ()) UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 1))
@@ -2328,7 +2328,7 @@ vector[N] means_ordered: SoA
                ((pattern
                  (Assignment ((LVariable pos__) ()) UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 1))
@@ -2423,7 +2423,7 @@ vector[N] means_ordered: SoA
                        ((pattern
                          (Assignment ((LVariable pos__) ()) UInt
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (Operator Plus)
                              (((pattern (Var pos__))
                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                               ((pattern (Lit Int 1))
@@ -2615,7 +2615,7 @@ vector[N] means_ordered: SoA
    ((pattern
      (Assignment ((LVariable Nr) ()) UInt
       ((pattern
-        (FunApp (StanLib Minus__ FnPlain AoS)
+        (FunApp (Operator Minus)
          (((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
@@ -3128,12 +3128,12 @@ vector[N] means_ordered: SoA
              (constrain
               (LowerUpper
                ((pattern
-                 (FunApp (StanLib Transpose__ FnPlain AoS)
+                 (FunApp (Operator Transpose)
                   (((pattern (Var sigma_price))
                     (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
                 (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))
                ((pattern
-                 (FunApp (StanLib Transpose__ FnPlain AoS)
+                 (FunApp (Operator Transpose)
                   (((pattern (Var upper_test))
                     (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
                 (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -3155,7 +3155,7 @@ vector[N] means_ordered: SoA
        ((pattern (Lit Str lower))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern
-         (FunApp (StanLib Transpose__ FnPlain AoS)
+         (FunApp (Operator Transpose)
           (((pattern (Var sigma_price))
             (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
         (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable)))))))
@@ -3171,7 +3171,7 @@ vector[N] means_ordered: SoA
        ((pattern (Lit Str upper))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern
-         (FunApp (StanLib Transpose__ FnPlain AoS)
+         (FunApp (Operator Transpose)
           (((pattern (Var upper_test))
             (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
         (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable)))))))
@@ -3379,7 +3379,7 @@ vector[N] means_ordered: SoA
           ((pattern (Lit Real 2.0))
            (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
           ((pattern
-            (FunApp (StanLib PMinus__ FnPlain AoS)
+            (FunApp (Operator PMinus)
              (((pattern (Lit Real 1.0))
                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
            (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
@@ -3408,7 +3408,7 @@ vector[N] means_ordered: SoA
    ((pattern
      (Assignment ((LVariable prices) ()) UVector
       ((pattern
-        (FunApp (StanLib Plus__ FnPlain AoS)
+        (FunApp (Operator Plus)
          (((pattern (Var mid_price))
            (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var high_low_est))
@@ -3426,7 +3426,7 @@ vector[N] means_ordered: SoA
    ((pattern
      (Assignment ((LVariable prices_diff) ()) UVector
       ((pattern
-        (FunApp (StanLib Minus__ FnPlain AoS)
+        (FunApp (Operator Minus)
          (((pattern
             (Indexed
              ((pattern (Var prices))
@@ -3445,7 +3445,7 @@ vector[N] means_ordered: SoA
                ((pattern (Lit Int 1))
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                ((pattern
-                 (FunApp (StanLib Minus__ FnPlain AoS)
+                 (FunApp (Operator Minus)
                   (((pattern (Var N))
                     (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                    ((pattern (Lit Int 1))
@@ -3465,11 +3465,11 @@ vector[N] means_ordered: SoA
    ((pattern
      (Assignment ((LVariable mu) ()) UVector
       ((pattern
-        (FunApp (StanLib Plus__ FnPlain AoS)
+        (FunApp (Operator Plus)
          (((pattern (Var Intercept))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern
-            (FunApp (StanLib Times__ FnPlain AoS)
+            (FunApp (Operator Times)
              (((pattern (Var X_all))
                (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
               ((pattern (Var b))
@@ -3488,7 +3488,7 @@ vector[N] means_ordered: SoA
    ((pattern
      (Assignment ((LVariable err) ()) UVector
       ((pattern
-        (FunApp (StanLib Minus__ FnPlain AoS)
+        (FunApp (Operator Minus)
          (((pattern (Var prices_diff))
            (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern (Var mu))
@@ -3503,7 +3503,7 @@ vector[N] means_ordered: SoA
          ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       UVector
       ((pattern
-        (FunApp (StanLib Plus__ FnPlain AoS)
+        (FunApp (Operator Plus)
          (((pattern
             (Indexed
              ((pattern (Var mu))
@@ -3515,9 +3515,9 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
            (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern
-            (FunApp (StanLib Plus__ FnPlain AoS)
+            (FunApp (Operator Plus)
              (((pattern
-                (FunApp (StanLib Times__ FnPlain AoS)
+                (FunApp (Operator Times)
                  (((pattern
                     (Indexed
                      ((pattern (Var err))
@@ -3526,7 +3526,7 @@ vector[N] means_ordered: SoA
                        ((pattern (Lit Int 1))
                         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                        ((pattern
-                         (FunApp (StanLib Minus__ FnPlain AoS)
+                         (FunApp (Operator Minus)
                           (((pattern (Var Nr))
                             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                            ((pattern (Lit Int 1))
@@ -3537,7 +3537,7 @@ vector[N] means_ordered: SoA
                    (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern
-                (FunApp (StanLib Times__ FnPlain AoS)
+                (FunApp (Operator Times)
                  (((pattern
                     (Indexed
                      ((pattern (Var prices_diff))
@@ -3546,7 +3546,7 @@ vector[N] means_ordered: SoA
                        ((pattern (Lit Int 1))
                         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                        ((pattern
-                         (FunApp (StanLib Minus__ FnPlain AoS)
+                         (FunApp (Operator Minus)
                           (((pattern (Var Nr))
                             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                            ((pattern (Lit Int 1))
@@ -3573,7 +3573,7 @@ vector[N] means_ordered: SoA
          ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       UVector
       ((pattern
-        (FunApp (StanLib Plus__ FnPlain AoS)
+        (FunApp (Operator Plus)
          (((pattern
             (Indexed
              ((pattern (Var mu))
@@ -3585,7 +3585,7 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
            (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern
-            (FunApp (StanLib Times__ FnPlain AoS)
+            (FunApp (Operator Times)
              (((pattern
                 (Indexed
                  ((pattern (Var prices_diff))
@@ -3594,7 +3594,7 @@ vector[N] means_ordered: SoA
                    ((pattern (Lit Int 1))
                     (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                    ((pattern
-                     (FunApp (StanLib Minus__ FnPlain AoS)
+                     (FunApp (Operator Minus)
                       (((pattern (Var Nr))
                         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                        ((pattern (Lit Int 2))
@@ -3615,7 +3615,7 @@ vector[N] means_ordered: SoA
    ((pattern
      (Assignment ((LVariable err) ()) UVector
       ((pattern
-        (FunApp (StanLib Minus__ FnPlain AoS)
+        (FunApp (Operator Minus)
          (((pattern (Var prices_diff))
            (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern (Var mu))
@@ -3656,7 +3656,7 @@ vector[N] means_ordered: SoA
       ((pattern
         (FunApp (StanLib pow FnPlain AoS)
          (((pattern
-            (FunApp (StanLib Minus__ FnPlain AoS)
+            (FunApp (Operator Minus)
              (((pattern
                 (Promotion
                  ((pattern (Lit Int 1))
@@ -3670,7 +3670,7 @@ vector[N] means_ordered: SoA
                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern
-            (FunApp (StanLib PMinus__ FnPlain AoS)
+            (FunApp (Operator PMinus)
              (((pattern (Lit Real 0.5))
                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
            (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
@@ -3688,7 +3688,7 @@ vector[N] means_ordered: SoA
          (((pattern (Lit Real 1.0))
            (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
           ((pattern
-            (FunApp (StanLib Minus__ FnPlain AoS)
+            (FunApp (Operator Minus)
              (((pattern (Var Nr))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
               ((pattern (Lit Int 1))
@@ -3704,9 +3704,9 @@ vector[N] means_ordered: SoA
          ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       UVector
       ((pattern
-        (FunApp (StanLib Plus__ FnPlain AoS)
+        (FunApp (Operator Plus)
          (((pattern
-            (FunApp (StanLib Times__ FnPlain AoS)
+            (FunApp (Operator Times)
              (((pattern (Var phi))
                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern
@@ -3717,7 +3717,7 @@ vector[N] means_ordered: SoA
                    ((pattern (Lit Int 1))
                     (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                    ((pattern
-                     (FunApp (StanLib Minus__ FnPlain AoS)
+                     (FunApp (Operator Minus)
                       (((pattern (Var Nr))
                         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                        ((pattern (Lit Int 1))
@@ -3726,7 +3726,7 @@ vector[N] means_ordered: SoA
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern
-            (FunApp (StanLib Times__ FnPlain AoS)
+            (FunApp (Operator Times)
              (((pattern (Var theta))
                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern
@@ -3739,7 +3739,7 @@ vector[N] means_ordered: SoA
                        ((pattern (Lit Int 1))
                         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                        ((pattern
-                         (FunApp (StanLib Minus__ FnPlain AoS)
+                         (FunApp (Operator Minus)
                           (((pattern (Var Nr))
                             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                            ((pattern (Lit Int 1))
@@ -3761,17 +3761,17 @@ vector[N] means_ordered: SoA
    ((pattern
      (Assignment ((LVariable h_sigma) ()) UVector
       ((pattern
-        (FunApp (StanLib Plus__ FnPlain AoS)
+        (FunApp (Operator Plus)
          (((pattern
             (FunApp (StanLib exp FnPlain AoS)
              (((pattern
-                (FunApp (StanLib Plus__ FnPlain AoS)
+                (FunApp (Operator Plus)
                  (((pattern
-                    (FunApp (StanLib Times__ FnPlain AoS)
+                    (FunApp (Operator Times)
                      (((pattern (Var h))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern
-                        (FunApp (StanLib Times__ FnPlain AoS)
+                        (FunApp (Operator Times)
                          (((pattern (Lit Real 0.5))
                            (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
                           ((pattern (Var sigma))
@@ -3779,7 +3779,7 @@ vector[N] means_ordered: SoA
                        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
                    (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
                   ((pattern
-                    (FunApp (StanLib Times__ FnPlain AoS)
+                    (FunApp (Operator Times)
                      (((pattern (Lit Real 0.5))
                        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Var mu))
@@ -3814,7 +3814,7 @@ vector[N] means_ordered: SoA
         (trans
          (Lower
           ((pattern
-            (FunApp (StanLib PMinus__ FnPlain AoS)
+            (FunApp (Operator PMinus)
              (((pattern (Lit Int 1))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
@@ -3823,7 +3823,7 @@ vector[N] means_ordered: SoA
          ((pattern (Var phi))
           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
       (((pattern
-         (FunApp (StanLib PMinus__ FnPlain AoS)
+         (FunApp (Operator PMinus)
           (((pattern (Lit Int 1))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -3872,11 +3872,11 @@ vector[N] means_ordered: SoA
       (((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib Times__ FnPlain AoS)
+            (FunApp (Operator Times)
              (((pattern
                 (Promotion
                  ((pattern
-                   (FunApp (StanLib PMinus__ FnPlain AoS)
+                   (FunApp (Operator PMinus)
                     (((pattern (Lit Int 2))
                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -4339,12 +4339,12 @@ vector[N] means_ordered: SoA
              (constrain
               (LowerUpper
                ((pattern
-                 (FunApp (StanLib Transpose__ FnPlain SoA)
+                 (FunApp (Operator Transpose)
                   (((pattern (Var sigma_price))
                     (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
                 (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))
                ((pattern
-                 (FunApp (StanLib Transpose__ FnPlain SoA)
+                 (FunApp (Operator Transpose)
                   (((pattern (Var upper_test))
                     (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
                 (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -4366,7 +4366,7 @@ vector[N] means_ordered: SoA
        ((pattern (Lit Str lower))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern
-         (FunApp (StanLib Transpose__ FnPlain AoS)
+         (FunApp (Operator Transpose)
           (((pattern (Var sigma_price))
             (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
         (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable)))))))
@@ -4382,7 +4382,7 @@ vector[N] means_ordered: SoA
        ((pattern (Lit Str upper))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern
-         (FunApp (StanLib Transpose__ FnPlain AoS)
+         (FunApp (Operator Transpose)
           (((pattern (Var upper_test))
             (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
         (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable)))))))
@@ -4590,7 +4590,7 @@ vector[N] means_ordered: SoA
           ((pattern (Lit Real 2.0))
            (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
           ((pattern
-            (FunApp (StanLib PMinus__ FnPlain SoA)
+            (FunApp (Operator PMinus)
              (((pattern (Lit Real 1.0))
                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
            (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
@@ -4619,7 +4619,7 @@ vector[N] means_ordered: SoA
    ((pattern
      (Assignment ((LVariable prices) ()) UVector
       ((pattern
-        (FunApp (StanLib Plus__ FnPlain SoA)
+        (FunApp (Operator Plus)
          (((pattern (Var mid_price))
            (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var high_low_est))
@@ -4637,7 +4637,7 @@ vector[N] means_ordered: SoA
    ((pattern
      (Assignment ((LVariable prices_diff) ()) UVector
       ((pattern
-        (FunApp (StanLib Minus__ FnPlain SoA)
+        (FunApp (Operator Minus)
          (((pattern
             (Indexed
              ((pattern (Var prices))
@@ -4656,7 +4656,7 @@ vector[N] means_ordered: SoA
                ((pattern (Lit Int 1))
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                ((pattern
-                 (FunApp (StanLib Minus__ FnPlain SoA)
+                 (FunApp (Operator Minus)
                   (((pattern (Var N))
                     (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                    ((pattern (Lit Int 1))
@@ -4676,11 +4676,11 @@ vector[N] means_ordered: SoA
    ((pattern
      (Assignment ((LVariable mu) ()) UVector
       ((pattern
-        (FunApp (StanLib Plus__ FnPlain SoA)
+        (FunApp (Operator Plus)
          (((pattern (Var Intercept))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern
-            (FunApp (StanLib Times__ FnPlain SoA)
+            (FunApp (Operator Times)
              (((pattern (Var X_all))
                (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
               ((pattern (Var b))
@@ -4699,7 +4699,7 @@ vector[N] means_ordered: SoA
    ((pattern
      (Assignment ((LVariable err) ()) UVector
       ((pattern
-        (FunApp (StanLib Minus__ FnPlain SoA)
+        (FunApp (Operator Minus)
          (((pattern (Var prices_diff))
            (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern (Var mu))
@@ -4714,7 +4714,7 @@ vector[N] means_ordered: SoA
          ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       UVector
       ((pattern
-        (FunApp (StanLib Plus__ FnPlain SoA)
+        (FunApp (Operator Plus)
          (((pattern
             (Indexed
              ((pattern (Var mu))
@@ -4726,9 +4726,9 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
            (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern
-            (FunApp (StanLib Plus__ FnPlain SoA)
+            (FunApp (Operator Plus)
              (((pattern
-                (FunApp (StanLib Times__ FnPlain SoA)
+                (FunApp (Operator Times)
                  (((pattern
                     (Indexed
                      ((pattern (Var err))
@@ -4737,7 +4737,7 @@ vector[N] means_ordered: SoA
                        ((pattern (Lit Int 1))
                         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                        ((pattern
-                         (FunApp (StanLib Minus__ FnPlain SoA)
+                         (FunApp (Operator Minus)
                           (((pattern (Var Nr))
                             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                            ((pattern (Lit Int 1))
@@ -4748,7 +4748,7 @@ vector[N] means_ordered: SoA
                    (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern
-                (FunApp (StanLib Times__ FnPlain SoA)
+                (FunApp (Operator Times)
                  (((pattern
                     (Indexed
                      ((pattern (Var prices_diff))
@@ -4757,7 +4757,7 @@ vector[N] means_ordered: SoA
                        ((pattern (Lit Int 1))
                         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                        ((pattern
-                         (FunApp (StanLib Minus__ FnPlain SoA)
+                         (FunApp (Operator Minus)
                           (((pattern (Var Nr))
                             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                            ((pattern (Lit Int 1))
@@ -4784,7 +4784,7 @@ vector[N] means_ordered: SoA
          ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       UVector
       ((pattern
-        (FunApp (StanLib Plus__ FnPlain SoA)
+        (FunApp (Operator Plus)
          (((pattern
             (Indexed
              ((pattern (Var mu))
@@ -4796,7 +4796,7 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
            (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern
-            (FunApp (StanLib Times__ FnPlain SoA)
+            (FunApp (Operator Times)
              (((pattern
                 (Indexed
                  ((pattern (Var prices_diff))
@@ -4805,7 +4805,7 @@ vector[N] means_ordered: SoA
                    ((pattern (Lit Int 1))
                     (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                    ((pattern
-                     (FunApp (StanLib Minus__ FnPlain SoA)
+                     (FunApp (Operator Minus)
                       (((pattern (Var Nr))
                         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                        ((pattern (Lit Int 2))
@@ -4826,7 +4826,7 @@ vector[N] means_ordered: SoA
    ((pattern
      (Assignment ((LVariable err) ()) UVector
       ((pattern
-        (FunApp (StanLib Minus__ FnPlain SoA)
+        (FunApp (Operator Minus)
          (((pattern (Var prices_diff))
            (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern (Var mu))
@@ -4867,7 +4867,7 @@ vector[N] means_ordered: SoA
       ((pattern
         (FunApp (StanLib pow FnPlain AoS)
          (((pattern
-            (FunApp (StanLib Minus__ FnPlain AoS)
+            (FunApp (Operator Minus)
              (((pattern
                 (Promotion
                  ((pattern (Lit Int 1))
@@ -4881,7 +4881,7 @@ vector[N] means_ordered: SoA
                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern
-            (FunApp (StanLib PMinus__ FnPlain AoS)
+            (FunApp (Operator PMinus)
              (((pattern (Lit Real 0.5))
                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
            (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
@@ -4899,7 +4899,7 @@ vector[N] means_ordered: SoA
          (((pattern (Lit Real 1.0))
            (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
           ((pattern
-            (FunApp (StanLib Minus__ FnPlain SoA)
+            (FunApp (Operator Minus)
              (((pattern (Var Nr))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
               ((pattern (Lit Int 1))
@@ -4915,9 +4915,9 @@ vector[N] means_ordered: SoA
          ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       UVector
       ((pattern
-        (FunApp (StanLib Plus__ FnPlain SoA)
+        (FunApp (Operator Plus)
          (((pattern
-            (FunApp (StanLib Times__ FnPlain SoA)
+            (FunApp (Operator Times)
              (((pattern (Var phi))
                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern
@@ -4928,7 +4928,7 @@ vector[N] means_ordered: SoA
                    ((pattern (Lit Int 1))
                     (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                    ((pattern
-                     (FunApp (StanLib Minus__ FnPlain SoA)
+                     (FunApp (Operator Minus)
                       (((pattern (Var Nr))
                         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                        ((pattern (Lit Int 1))
@@ -4937,7 +4937,7 @@ vector[N] means_ordered: SoA
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern
-            (FunApp (StanLib Times__ FnPlain SoA)
+            (FunApp (Operator Times)
              (((pattern (Var theta))
                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern
@@ -4950,7 +4950,7 @@ vector[N] means_ordered: SoA
                        ((pattern (Lit Int 1))
                         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                        ((pattern
-                         (FunApp (StanLib Minus__ FnPlain SoA)
+                         (FunApp (Operator Minus)
                           (((pattern (Var Nr))
                             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                            ((pattern (Lit Int 1))
@@ -4972,17 +4972,17 @@ vector[N] means_ordered: SoA
    ((pattern
      (Assignment ((LVariable h_sigma) ()) UVector
       ((pattern
-        (FunApp (StanLib Plus__ FnPlain SoA)
+        (FunApp (Operator Plus)
          (((pattern
             (FunApp (StanLib exp FnPlain SoA)
              (((pattern
-                (FunApp (StanLib Plus__ FnPlain SoA)
+                (FunApp (Operator Plus)
                  (((pattern
-                    (FunApp (StanLib Times__ FnPlain SoA)
+                    (FunApp (Operator Times)
                      (((pattern (Var h))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern
-                        (FunApp (StanLib Times__ FnPlain SoA)
+                        (FunApp (Operator Times)
                          (((pattern (Lit Real 0.5))
                            (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
                           ((pattern (Var sigma))
@@ -4990,7 +4990,7 @@ vector[N] means_ordered: SoA
                        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
                    (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
                   ((pattern
-                    (FunApp (StanLib Times__ FnPlain SoA)
+                    (FunApp (Operator Times)
                      (((pattern (Lit Real 0.5))
                        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Var mu))
@@ -5025,7 +5025,7 @@ vector[N] means_ordered: SoA
         (trans
          (Lower
           ((pattern
-            (FunApp (StanLib PMinus__ FnPlain SoA)
+            (FunApp (Operator PMinus)
              (((pattern (Lit Int 1))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
@@ -5034,7 +5034,7 @@ vector[N] means_ordered: SoA
          ((pattern (Var phi))
           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
       (((pattern
-         (FunApp (StanLib PMinus__ FnPlain SoA)
+         (FunApp (Operator PMinus)
           (((pattern (Lit Int 1))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -5083,11 +5083,11 @@ vector[N] means_ordered: SoA
       (((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib Times__ FnPlain SoA)
+            (FunApp (Operator Times)
              (((pattern
                 (Promotion
                  ((pattern
-                   (FunApp (StanLib PMinus__ FnPlain SoA)
+                   (FunApp (Operator PMinus)
                     (((pattern (Lit Int 2))
                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -5550,12 +5550,12 @@ vector[N] means_ordered: SoA
              (constrain
               (LowerUpper
                ((pattern
-                 (FunApp (StanLib Transpose__ FnPlain AoS)
+                 (FunApp (Operator Transpose)
                   (((pattern (Var sigma_price))
                     (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
                 (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))
                ((pattern
-                 (FunApp (StanLib Transpose__ FnPlain AoS)
+                 (FunApp (Operator Transpose)
                   (((pattern (Var upper_test))
                     (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
                 (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -5577,7 +5577,7 @@ vector[N] means_ordered: SoA
        ((pattern (Lit Str lower))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern
-         (FunApp (StanLib Transpose__ FnPlain AoS)
+         (FunApp (Operator Transpose)
           (((pattern (Var sigma_price))
             (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
         (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable)))))))
@@ -5593,7 +5593,7 @@ vector[N] means_ordered: SoA
        ((pattern (Lit Str upper))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern
-         (FunApp (StanLib Transpose__ FnPlain AoS)
+         (FunApp (Operator Transpose)
           (((pattern (Var upper_test))
             (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
         (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable)))))))
@@ -6056,7 +6056,7 @@ vector[N] means_ordered: SoA
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern
             (EOr
              ((pattern (Var emit_transformed_parameters__))
@@ -6076,7 +6076,7 @@ vector[N] means_ordered: SoA
           ((pattern (Lit Real 2.0))
            (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
           ((pattern
-            (FunApp (StanLib PMinus__ FnPlain AoS)
+            (FunApp (Operator PMinus)
              (((pattern (Lit Real 1.0))
                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
            (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
@@ -6093,7 +6093,7 @@ vector[N] means_ordered: SoA
    ((pattern
      (Assignment ((LVariable prices) ()) UVector
       ((pattern
-        (FunApp (StanLib Plus__ FnPlain AoS)
+        (FunApp (Operator Plus)
          (((pattern (Var mid_price))
            (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var high_low_est))
@@ -6103,7 +6103,7 @@ vector[N] means_ordered: SoA
    ((pattern
      (Assignment ((LVariable prices_diff) ()) UVector
       ((pattern
-        (FunApp (StanLib Minus__ FnPlain AoS)
+        (FunApp (Operator Minus)
          (((pattern
             (Indexed
              ((pattern (Var prices))
@@ -6122,7 +6122,7 @@ vector[N] means_ordered: SoA
                ((pattern (Lit Int 1))
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                ((pattern
-                 (FunApp (StanLib Minus__ FnPlain AoS)
+                 (FunApp (Operator Minus)
                   (((pattern (Var N))
                     (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                    ((pattern (Lit Int 1))
@@ -6134,11 +6134,11 @@ vector[N] means_ordered: SoA
    ((pattern
      (Assignment ((LVariable mu) ()) UVector
       ((pattern
-        (FunApp (StanLib Plus__ FnPlain AoS)
+        (FunApp (Operator Plus)
          (((pattern (Var Intercept))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern
-            (FunApp (StanLib Times__ FnPlain AoS)
+            (FunApp (Operator Times)
              (((pattern (Var X_all))
                (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
               ((pattern (Var b))
@@ -6149,7 +6149,7 @@ vector[N] means_ordered: SoA
    ((pattern
      (Assignment ((LVariable err) ()) UVector
       ((pattern
-        (FunApp (StanLib Minus__ FnPlain AoS)
+        (FunApp (Operator Minus)
          (((pattern (Var prices_diff))
            (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern (Var mu))
@@ -6164,7 +6164,7 @@ vector[N] means_ordered: SoA
          ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       UVector
       ((pattern
-        (FunApp (StanLib Plus__ FnPlain AoS)
+        (FunApp (Operator Plus)
          (((pattern
             (Indexed
              ((pattern (Var mu))
@@ -6176,9 +6176,9 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
            (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern
-            (FunApp (StanLib Plus__ FnPlain AoS)
+            (FunApp (Operator Plus)
              (((pattern
-                (FunApp (StanLib Times__ FnPlain AoS)
+                (FunApp (Operator Times)
                  (((pattern
                     (Indexed
                      ((pattern (Var err))
@@ -6187,7 +6187,7 @@ vector[N] means_ordered: SoA
                        ((pattern (Lit Int 1))
                         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                        ((pattern
-                         (FunApp (StanLib Minus__ FnPlain AoS)
+                         (FunApp (Operator Minus)
                           (((pattern (Var Nr))
                             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                            ((pattern (Lit Int 1))
@@ -6198,7 +6198,7 @@ vector[N] means_ordered: SoA
                    (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern
-                (FunApp (StanLib Times__ FnPlain AoS)
+                (FunApp (Operator Times)
                  (((pattern
                     (Indexed
                      ((pattern (Var prices_diff))
@@ -6207,7 +6207,7 @@ vector[N] means_ordered: SoA
                        ((pattern (Lit Int 1))
                         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                        ((pattern
-                         (FunApp (StanLib Minus__ FnPlain AoS)
+                         (FunApp (Operator Minus)
                           (((pattern (Var Nr))
                             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                            ((pattern (Lit Int 1))
@@ -6234,7 +6234,7 @@ vector[N] means_ordered: SoA
          ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       UVector
       ((pattern
-        (FunApp (StanLib Plus__ FnPlain AoS)
+        (FunApp (Operator Plus)
          (((pattern
             (Indexed
              ((pattern (Var mu))
@@ -6246,7 +6246,7 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
            (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern
-            (FunApp (StanLib Times__ FnPlain AoS)
+            (FunApp (Operator Times)
              (((pattern
                 (Indexed
                  ((pattern (Var prices_diff))
@@ -6255,7 +6255,7 @@ vector[N] means_ordered: SoA
                    ((pattern (Lit Int 1))
                     (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                    ((pattern
-                     (FunApp (StanLib Minus__ FnPlain AoS)
+                     (FunApp (Operator Minus)
                       (((pattern (Var Nr))
                         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                        ((pattern (Lit Int 2))
@@ -6276,7 +6276,7 @@ vector[N] means_ordered: SoA
    ((pattern
      (Assignment ((LVariable err) ()) UVector
       ((pattern
-        (FunApp (StanLib Minus__ FnPlain AoS)
+        (FunApp (Operator Minus)
          (((pattern (Var prices_diff))
            (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern (Var mu))
@@ -6301,7 +6301,7 @@ vector[N] means_ordered: SoA
       ((pattern
         (FunApp (StanLib pow FnPlain AoS)
          (((pattern
-            (FunApp (StanLib Minus__ FnPlain AoS)
+            (FunApp (Operator Minus)
              (((pattern
                 (Promotion
                  ((pattern (Lit Int 1))
@@ -6315,7 +6315,7 @@ vector[N] means_ordered: SoA
                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern
-            (FunApp (StanLib PMinus__ FnPlain AoS)
+            (FunApp (Operator PMinus)
              (((pattern (Lit Real 0.5))
                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
            (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
@@ -6333,7 +6333,7 @@ vector[N] means_ordered: SoA
          (((pattern (Lit Real 1.0))
            (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
           ((pattern
-            (FunApp (StanLib Minus__ FnPlain AoS)
+            (FunApp (Operator Minus)
              (((pattern (Var Nr))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
               ((pattern (Lit Int 1))
@@ -6349,9 +6349,9 @@ vector[N] means_ordered: SoA
          ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       UVector
       ((pattern
-        (FunApp (StanLib Plus__ FnPlain AoS)
+        (FunApp (Operator Plus)
          (((pattern
-            (FunApp (StanLib Times__ FnPlain AoS)
+            (FunApp (Operator Times)
              (((pattern (Var phi))
                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern
@@ -6362,7 +6362,7 @@ vector[N] means_ordered: SoA
                    ((pattern (Lit Int 1))
                     (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                    ((pattern
-                     (FunApp (StanLib Minus__ FnPlain AoS)
+                     (FunApp (Operator Minus)
                       (((pattern (Var Nr))
                         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                        ((pattern (Lit Int 1))
@@ -6371,7 +6371,7 @@ vector[N] means_ordered: SoA
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern
-            (FunApp (StanLib Times__ FnPlain AoS)
+            (FunApp (Operator Times)
              (((pattern (Var theta))
                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern
@@ -6384,7 +6384,7 @@ vector[N] means_ordered: SoA
                        ((pattern (Lit Int 1))
                         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                        ((pattern
-                         (FunApp (StanLib Minus__ FnPlain AoS)
+                         (FunApp (Operator Minus)
                           (((pattern (Var Nr))
                             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                            ((pattern (Lit Int 1))
@@ -6398,17 +6398,17 @@ vector[N] means_ordered: SoA
    ((pattern
      (Assignment ((LVariable h_sigma) ()) UVector
       ((pattern
-        (FunApp (StanLib Plus__ FnPlain AoS)
+        (FunApp (Operator Plus)
          (((pattern
             (FunApp (StanLib exp FnPlain AoS)
              (((pattern
-                (FunApp (StanLib Plus__ FnPlain AoS)
+                (FunApp (Operator Plus)
                  (((pattern
-                    (FunApp (StanLib Times__ FnPlain AoS)
+                    (FunApp (Operator Times)
                      (((pattern (Var h))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern
-                        (FunApp (StanLib Times__ FnPlain AoS)
+                        (FunApp (Operator Times)
                          (((pattern (Lit Real 0.5))
                            (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
                           ((pattern (Var sigma))
@@ -6416,7 +6416,7 @@ vector[N] means_ordered: SoA
                        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
                    (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
                   ((pattern
-                    (FunApp (StanLib Times__ FnPlain AoS)
+                    (FunApp (Operator Times)
                      (((pattern (Lit Real 0.5))
                        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Var mu))
@@ -6443,7 +6443,7 @@ vector[N] means_ordered: SoA
         (trans
          (Lower
           ((pattern
-            (FunApp (StanLib PMinus__ FnPlain AoS)
+            (FunApp (Operator PMinus)
              (((pattern (Lit Int 1))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
@@ -6451,7 +6451,7 @@ vector[N] means_ordered: SoA
         (var
          ((pattern (Var phi)) (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
       (((pattern
-         (FunApp (StanLib PMinus__ FnPlain AoS)
+         (FunApp (Operator PMinus)
           (((pattern (Lit Int 1))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -6595,7 +6595,7 @@ vector[N] means_ordered: SoA
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern (Var emit_generated_quantities__))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -6665,7 +6665,7 @@ vector[N] means_ordered: SoA
                ((pattern
                  (Assignment ((LVariable pos__) ()) UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 1))
@@ -6745,7 +6745,7 @@ vector[N] means_ordered: SoA
                ((pattern
                  (Assignment ((LVariable pos__) ()) UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 1))
@@ -6818,7 +6818,7 @@ vector[N] means_ordered: SoA
                ((pattern
                  (Assignment ((LVariable pos__) ()) UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 1))
@@ -6892,7 +6892,7 @@ vector[N] means_ordered: SoA
                ((pattern
                  (Assignment ((LVariable pos__) ()) UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 1))
@@ -7082,7 +7082,7 @@ vector[N] means_ordered: SoA
                ((pattern
                  (Assignment ((LVariable pos__) ()) UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 1))
@@ -7156,7 +7156,7 @@ vector[N] means_ordered: SoA
                ((pattern
                  (Assignment ((LVariable pos__) ()) UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 1))
@@ -7260,7 +7260,7 @@ vector[N] means_ordered: SoA
                ((pattern
                  (Assignment ((LVariable pos__) ()) UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 1))
@@ -7338,7 +7338,7 @@ vector[N] means_ordered: SoA
                ((pattern
                  (Assignment ((LVariable pos__) ()) UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 1))
@@ -7419,7 +7419,7 @@ vector[N] means_ordered: SoA
                ((pattern
                  (Assignment ((LVariable pos__) ()) UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 1))
@@ -7436,12 +7436,12 @@ vector[N] means_ordered: SoA
         (unconstrain_opt
          ((LowerUpper
            ((pattern
-             (FunApp (StanLib Transpose__ FnPlain AoS)
+             (FunApp (Operator Transpose)
               (((pattern (Var sigma_price))
                 (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
             (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))
            ((pattern
-             (FunApp (StanLib Transpose__ FnPlain AoS)
+             (FunApp (Operator Transpose)
               (((pattern (Var upper_test))
                 (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
             (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable)))))))
@@ -7505,7 +7505,7 @@ vector[N] means_ordered: SoA
                ((pattern
                  (Assignment ((LVariable pos__) ()) UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 1))
@@ -7585,7 +7585,7 @@ vector[N] means_ordered: SoA
                ((pattern
                  (Assignment ((LVariable pos__) ()) UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 1))
@@ -7659,7 +7659,7 @@ vector[N] means_ordered: SoA
                ((pattern
                  (Assignment ((LVariable pos__) ()) UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 1))
@@ -7733,7 +7733,7 @@ vector[N] means_ordered: SoA
                ((pattern
                  (Assignment ((LVariable pos__) ()) UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 1))
@@ -7823,7 +7823,7 @@ vector[N] means_ordered: SoA
                        ((pattern
                          (Assignment ((LVariable pos__) ()) UInt
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (Operator Plus)
                              (((pattern (Var pos__))
                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                               ((pattern (Lit Int 1))
@@ -7915,7 +7915,7 @@ vector[N] means_ordered: SoA
                        ((pattern
                          (Assignment ((LVariable pos__) ()) UInt
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (Operator Plus)
                              (((pattern (Var pos__))
                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                               ((pattern (Lit Int 1))
@@ -8007,7 +8007,7 @@ vector[N] means_ordered: SoA
                        ((pattern
                          (Assignment ((LVariable pos__) ()) UInt
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (Operator Plus)
                              (((pattern (Var pos__))
                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                               ((pattern (Lit Int 1))
@@ -8099,7 +8099,7 @@ vector[N] means_ordered: SoA
                        ((pattern
                          (Assignment ((LVariable pos__) ()) UInt
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (Operator Plus)
                              (((pattern (Var pos__))
                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                               ((pattern (Lit Int 1))
@@ -8450,12 +8450,12 @@ vector[N] means_ordered: SoA
         (unconstrain_opt
          ((LowerUpper
            ((pattern
-             (FunApp (StanLib Transpose__ FnPlain AoS)
+             (FunApp (Operator Transpose)
               (((pattern (Var sigma_price))
                 (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
             (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))
            ((pattern
-             (FunApp (StanLib Transpose__ FnPlain AoS)
+             (FunApp (Operator Transpose)
               (((pattern (Var upper_test))
                 (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
             (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable)))))))
@@ -8785,12 +8785,12 @@ vector[N] means_ordered: SoA
      (out_trans
       (LowerUpper
        ((pattern
-         (FunApp (StanLib Transpose__ FnPlain AoS)
+         (FunApp (Operator Transpose)
           (((pattern (Var sigma_price))
             (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
         (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))
        ((pattern
-         (FunApp (StanLib Transpose__ FnPlain AoS)
+         (FunApp (Operator Transpose)
           (((pattern (Var upper_test))
             (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
         (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))))))
@@ -8836,13 +8836,13 @@ vector[N] means_ordered: SoA
     ((out_unconstrained_st
       (SVector AoS
        ((pattern
-         (FunApp (StanLib Divide__ FnPlain AoS)
+         (FunApp (Operator Divide)
           (((pattern
-             (FunApp (StanLib Times__ FnPlain AoS)
+             (FunApp (Operator Times)
               (((pattern (Var N))
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                ((pattern
-                 (FunApp (StanLib Minus__ FnPlain AoS)
+                 (FunApp (Operator Minus)
                   (((pattern (Var N))
                     (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                    ((pattern (Lit Int 1))
@@ -8861,16 +8861,16 @@ vector[N] means_ordered: SoA
     ((out_unconstrained_st
       (SVector AoS
        ((pattern
-         (FunApp (StanLib Plus__ FnPlain AoS)
+         (FunApp (Operator Plus)
           (((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
            ((pattern
-             (FunApp (StanLib Divide__ FnPlain AoS)
+             (FunApp (Operator Divide)
               (((pattern
-                 (FunApp (StanLib Times__ FnPlain AoS)
+                 (FunApp (Operator Times)
                   (((pattern (Var N))
                     (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                    ((pattern
-                     (FunApp (StanLib Minus__ FnPlain AoS)
+                     (FunApp (Operator Minus)
                       (((pattern (Var N))
                         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                        ((pattern (Lit Int 1))
@@ -8890,17 +8890,17 @@ vector[N] means_ordered: SoA
     ((out_unconstrained_st
       (SVector AoS
        ((pattern
-         (FunApp (StanLib Plus__ FnPlain AoS)
+         (FunApp (Operator Plus)
           (((pattern
-             (FunApp (StanLib Plus__ FnPlain AoS)
+             (FunApp (Operator Plus)
               (((pattern
-                 (FunApp (StanLib Divide__ FnPlain AoS)
+                 (FunApp (Operator Divide)
                   (((pattern
-                     (FunApp (StanLib Times__ FnPlain AoS)
+                     (FunApp (Operator Times)
                       (((pattern (Var K))
                         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                        ((pattern
-                         (FunApp (StanLib Minus__ FnPlain AoS)
+                         (FunApp (Operator Minus)
                           (((pattern (Var K))
                             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                            ((pattern (Lit Int 1))
@@ -8914,9 +8914,9 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
            ((pattern
-             (FunApp (StanLib Times__ FnPlain AoS)
+             (FunApp (Operator Times)
               (((pattern
-                 (FunApp (StanLib Minus__ FnPlain AoS)
+                 (FunApp (Operator Minus)
                   (((pattern (Var K))
                     (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                    ((pattern (Var K))
@@ -8935,13 +8935,13 @@ vector[N] means_ordered: SoA
     ((out_unconstrained_st
       (SVector AoS
        ((pattern
-         (FunApp (StanLib Divide__ FnPlain AoS)
+         (FunApp (Operator Divide)
           (((pattern
-             (FunApp (StanLib Times__ FnPlain AoS)
+             (FunApp (Operator Times)
               (((pattern (Var K))
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                ((pattern
-                 (FunApp (StanLib Minus__ FnPlain AoS)
+                 (FunApp (Operator Minus)
                   (((pattern (Var K))
                     (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                    ((pattern (Lit Int 1))
@@ -8962,7 +8962,7 @@ vector[N] means_ordered: SoA
      (out_trans
       (LowerUpper
        ((pattern
-         (FunApp (StanLib PMinus__ FnPlain AoS)
+         (FunApp (Operator PMinus)
           (((pattern (Lit Int 1))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -9543,7 +9543,7 @@ Optimization hazard warning (Line 19): SoA warning: Right hand side contains onl
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern
             (EOr
              ((pattern (Var emit_transformed_parameters__))
@@ -9735,7 +9735,7 @@ Optimization hazard warning (Line 19): SoA warning: Right hand side contains onl
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern (Var emit_generated_quantities__))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -9822,7 +9822,7 @@ Optimization hazard warning (Line 19): SoA warning: Right hand side contains onl
                        ((pattern
                          (Assignment ((LVariable pos__) ()) UInt
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (Operator Plus)
                              (((pattern (Var pos__))
                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                               ((pattern (Lit Int 1))
@@ -10174,7 +10174,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                        ((pattern
                          (Assignment ((LVariable pos__) ()) UInt
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (Operator Plus)
                              (((pattern (Var pos__))
                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                               ((pattern (Lit Int 1))
@@ -10247,7 +10247,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                ((pattern
                  (Assignment ((LVariable pos__) ()) UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 1))
@@ -11004,7 +11004,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
          (((pattern (Var tp_real_from_aos))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern
-            (FunApp (StanLib Minus__ FnPlain AoS)
+            (FunApp (Operator Minus)
              (((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
               ((pattern (Lit Int 1))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -11083,7 +11083,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
        ((pattern
          (Assignment ((LVariable tp_soa_used_with_aos_in_excluded_fun) ()) UVector
           ((pattern
-            (FunApp (StanLib Times__ FnPlain AoS)
+            (FunApp (Operator Times)
              (((pattern (Var p_soa_used_with_aos_in_excluded_fun))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern
@@ -11104,7 +11104,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
              (((pattern (Var y))
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
-                (FunApp (StanLib Plus__ FnPlain AoS)
+                (FunApp (Operator Plus)
                  (((pattern (Var alpha))
                    (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                   ((pattern
@@ -11112,7 +11112,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                      (((pattern (Var dat_x))
                        (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
-                        (FunApp (StanLib Plus__ FnPlain AoS)
+                        (FunApp (Operator Plus)
                          (((pattern (Var p_soa_vec_v))
                            (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
                           ((pattern (Var tp_soa_used_with_aos_in_excluded_fun))
@@ -11131,7 +11131,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
              (((pattern (Var y))
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
-                (FunApp (StanLib Plus__ FnPlain AoS)
+                (FunApp (Operator Plus)
                  (((pattern (Var alpha))
                    (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                   ((pattern
@@ -11464,7 +11464,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                          (((pattern (Var dat_x))
                            (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
                           ((pattern
-                            (FunApp (StanLib Transpose__ FnPlain AoS)
+                            (FunApp (Operator Transpose)
                              (((pattern
                                 (Indexed
                                  ((pattern (Var p_soa_loop_mat_uni_col_idx))
@@ -11525,7 +11525,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                          (((pattern (Var dat_x))
                            (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
                           ((pattern
-                            (FunApp (StanLib Transpose__ FnPlain AoS)
+                            (FunApp (Operator Transpose)
                              (((pattern
                                 (Indexed
                                  ((pattern (Var p_soa_loop_mat_uni_col_idx))
@@ -11556,7 +11556,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                          (((pattern (Var dat_x))
                            (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
                           ((pattern
-                            (FunApp (StanLib Transpose__ FnPlain AoS)
+                            (FunApp (Operator Transpose)
                              (((pattern
                                 (Indexed
                                  ((pattern (Var p_soa_loop_mat_multi_uni_uni_idx))
@@ -11663,7 +11663,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
                            (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                           ((pattern
-                            (FunApp (StanLib Times__ FnPlain AoS)
+                            (FunApp (Operator Times)
                              (((pattern
                                 (Indexed
                                  ((pattern (Var p_aos_mat_fail_uni_uni_idx1))
@@ -11863,7 +11863,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
-                        (FunApp (StanLib Times__ FnPlain AoS)
+                        (FunApp (Operator Times)
                          (((pattern
                             (Indexed
                              ((pattern (Var p_aos_mat_fail_uni_uni_idx1))
@@ -12380,7 +12380,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
          (((pattern (Var tp_real_from_aos))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern
-            (FunApp (StanLib Minus__ FnPlain SoA)
+            (FunApp (Operator Minus)
              (((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
               ((pattern (Lit Int 1))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -12459,7 +12459,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
        ((pattern
          (Assignment ((LVariable tp_soa_used_with_aos_in_excluded_fun) ()) UVector
           ((pattern
-            (FunApp (StanLib Times__ FnPlain SoA)
+            (FunApp (Operator Times)
              (((pattern (Var p_soa_used_with_aos_in_excluded_fun))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern
@@ -12480,7 +12480,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
              (((pattern (Var y))
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
-                (FunApp (StanLib Plus__ FnPlain SoA)
+                (FunApp (Operator Plus)
                  (((pattern (Var alpha))
                    (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                   ((pattern
@@ -12488,7 +12488,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                      (((pattern (Var dat_x))
                        (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
-                        (FunApp (StanLib Plus__ FnPlain SoA)
+                        (FunApp (Operator Plus)
                          (((pattern (Var p_soa_vec_v))
                            (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
                           ((pattern (Var tp_soa_used_with_aos_in_excluded_fun))
@@ -12507,7 +12507,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
              (((pattern (Var y))
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
-                (FunApp (StanLib Plus__ FnPlain SoA)
+                (FunApp (Operator Plus)
                  (((pattern (Var alpha))
                    (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                   ((pattern
@@ -12840,7 +12840,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                          (((pattern (Var dat_x))
                            (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
                           ((pattern
-                            (FunApp (StanLib Transpose__ FnPlain SoA)
+                            (FunApp (Operator Transpose)
                              (((pattern
                                 (Indexed
                                  ((pattern (Var p_soa_loop_mat_uni_col_idx))
@@ -12901,7 +12901,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                          (((pattern (Var dat_x))
                            (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
                           ((pattern
-                            (FunApp (StanLib Transpose__ FnPlain SoA)
+                            (FunApp (Operator Transpose)
                              (((pattern
                                 (Indexed
                                  ((pattern (Var p_soa_loop_mat_uni_col_idx))
@@ -12932,7 +12932,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                          (((pattern (Var dat_x))
                            (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
                           ((pattern
-                            (FunApp (StanLib Transpose__ FnPlain SoA)
+                            (FunApp (Operator Transpose)
                              (((pattern
                                 (Indexed
                                  ((pattern (Var p_soa_loop_mat_multi_uni_uni_idx))
@@ -13039,7 +13039,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
                            (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                           ((pattern
-                            (FunApp (StanLib Times__ FnPlain SoA)
+                            (FunApp (Operator Times)
                              (((pattern
                                 (Indexed
                                  ((pattern (Var p_aos_mat_fail_uni_uni_idx1))
@@ -13239,7 +13239,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
-                        (FunApp (StanLib Times__ FnPlain SoA)
+                        (FunApp (Operator Times)
                          (((pattern
                             (Indexed
                              ((pattern (Var p_aos_mat_fail_uni_uni_idx1))
@@ -13957,7 +13957,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern
             (EOr
              ((pattern (Var emit_transformed_parameters__))
@@ -14008,7 +14008,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
          (((pattern (Var tp_real_from_aos))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern
-            (FunApp (StanLib Minus__ FnPlain AoS)
+            (FunApp (Operator Minus)
              (((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
               ((pattern (Lit Int 1))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -14107,7 +14107,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern (Var emit_generated_quantities__))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -14203,7 +14203,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                ((pattern
                  (Assignment ((LVariable pos__) ()) UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 1))
@@ -14293,7 +14293,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                        ((pattern
                          (Assignment ((LVariable pos__) ()) UInt
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (Operator Plus)
                              (((pattern (Var pos__))
                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                               ((pattern (Lit Int 1))
@@ -14386,7 +14386,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                        ((pattern
                          (Assignment ((LVariable pos__) ()) UInt
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (Operator Plus)
                              (((pattern (Var pos__))
                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                               ((pattern (Lit Int 1))
@@ -14478,7 +14478,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                        ((pattern
                          (Assignment ((LVariable pos__) ()) UInt
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (Operator Plus)
                              (((pattern (Var pos__))
                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                               ((pattern (Lit Int 1))
@@ -14554,7 +14554,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                ((pattern
                  (Assignment ((LVariable pos__) ()) UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 1))
@@ -14645,7 +14645,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                        ((pattern
                          (Assignment ((LVariable pos__) ()) UInt
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (Operator Plus)
                              (((pattern (Var pos__))
                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                               ((pattern (Lit Int 1))
@@ -14721,7 +14721,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                ((pattern
                  (Assignment ((LVariable pos__) ()) UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 1))
@@ -14795,7 +14795,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                ((pattern
                  (Assignment ((LVariable pos__) ()) UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 1))
@@ -14871,7 +14871,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                ((pattern
                  (Assignment ((LVariable pos__) ()) UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 1))
@@ -14963,7 +14963,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                        ((pattern
                          (Assignment ((LVariable pos__) ()) UInt
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (Operator Plus)
                              (((pattern (Var pos__))
                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                               ((pattern (Lit Int 1))
@@ -15040,7 +15040,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                ((pattern
                  (Assignment ((LVariable pos__) ()) UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 1))
@@ -15115,7 +15115,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                ((pattern
                  (Assignment ((LVariable pos__) ()) UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 1))
@@ -15190,7 +15190,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                ((pattern
                  (Assignment ((LVariable pos__) ()) UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 1))
@@ -15265,7 +15265,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                ((pattern
                  (Assignment ((LVariable pos__) ()) UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 1))
@@ -15356,7 +15356,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                        ((pattern
                          (Assignment ((LVariable pos__) ()) UInt
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (Operator Plus)
                              (((pattern (Var pos__))
                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                               ((pattern (Lit Int 1))
@@ -15448,7 +15448,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                        ((pattern
                          (Assignment ((LVariable pos__) ()) UInt
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (Operator Plus)
                              (((pattern (Var pos__))
                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                               ((pattern (Lit Int 1))
@@ -15543,7 +15543,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                        ((pattern
                          (Assignment ((LVariable pos__) ()) UInt
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (Operator Plus)
                              (((pattern (Var pos__))
                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                               ((pattern (Lit Int 1))
@@ -15638,7 +15638,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                        ((pattern
                          (Assignment ((LVariable pos__) ()) UInt
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (Operator Plus)
                              (((pattern (Var pos__))
                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                               ((pattern (Lit Int 1))
@@ -15731,7 +15731,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                        ((pattern
                          (Assignment ((LVariable pos__) ()) UInt
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (Operator Plus)
                              (((pattern (Var pos__))
                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                               ((pattern (Lit Int 1))
@@ -15824,7 +15824,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                        ((pattern
                          (Assignment ((LVariable pos__) ()) UInt
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (Operator Plus)
                              (((pattern (Var pos__))
                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                               ((pattern (Lit Int 1))
@@ -16761,7 +16761,7 @@ Optimization hazard warning (Line 9): SoA warning: Right hand side contains only
               (((pattern
                  (Assignment ((LVariable tp_soa_multi_idx_assign_in_loop) ()) UVector
                   ((pattern
-                    (FunApp (StanLib Times__ FnPlain AoS)
+                    (FunApp (Operator Times)
                      (((pattern (Var tp_soa_multi_idx_assign_in_loop))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern
@@ -16896,7 +16896,7 @@ Optimization hazard warning (Line 9): SoA warning: Right hand side contains only
               (((pattern
                  (Assignment ((LVariable tp_soa_multi_idx_assign_in_loop) ()) UVector
                   ((pattern
-                    (FunApp (StanLib Times__ FnPlain SoA)
+                    (FunApp (Operator Times)
                      (((pattern (Var tp_soa_multi_idx_assign_in_loop))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern
@@ -17010,7 +17010,7 @@ Optimization hazard warning (Line 9): SoA warning: Right hand side contains only
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern
             (EOr
              ((pattern (Var emit_transformed_parameters__))
@@ -17024,7 +17024,7 @@ Optimization hazard warning (Line 9): SoA warning: Right hand side contains only
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern (Var emit_generated_quantities__))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -17121,7 +17121,7 @@ Optimization hazard warning (Line 9): SoA warning: Right hand side contains only
                ((pattern
                  (Assignment ((LVariable pos__) ()) UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 1))
@@ -17232,7 +17232,7 @@ Optimization hazard warning (Line 24): SoA warning: Used in user defined functio
          (((pattern
             (Return
              (((pattern
-                (FunApp (StanLib Plus__ FnPlain AoS)
+                (FunApp (Operator Plus)
                  (((pattern (Var sum_x))
                    (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                   ((pattern (Var y))
@@ -17337,7 +17337,7 @@ Optimization hazard warning (Line 24): SoA warning: Used in user defined functio
       ((pattern
         (TernaryIf
          ((pattern
-           (FunApp (StanLib Greater__ FnPlain AoS)
+           (FunApp (Operator Greater)
             (((pattern (Lit Int 5))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
              ((pattern (Lit Int 0))
@@ -17370,7 +17370,7 @@ Optimization hazard warning (Line 24): SoA warning: Used in user defined functio
       ((pattern
         (TernaryIf
          ((pattern
-           (FunApp (StanLib Greater__ FnPlain AoS)
+           (FunApp (Operator Greater)
             (((pattern
                (FunApp (StanLib sum FnPlain AoS)
                 (((pattern (Var soa_x))
@@ -17382,7 +17382,7 @@ Optimization hazard warning (Line 24): SoA warning: Used in user defined functio
          ((pattern
            (FunApp (UserDefined nono_func FnPlain)
             (((pattern
-               (FunApp (StanLib Plus__ FnPlain AoS)
+               (FunApp (Operator Plus)
                 (((pattern (Var aos_x))
                   (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))
                  ((pattern (Var aos_y))
@@ -17491,7 +17491,7 @@ Optimization hazard warning (Line 24): SoA warning: Used in user defined functio
       ((pattern
         (TernaryIf
          ((pattern
-           (FunApp (StanLib Greater__ FnPlain SoA)
+           (FunApp (Operator Greater)
             (((pattern (Lit Int 5))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
              ((pattern (Lit Int 0))
@@ -17524,7 +17524,7 @@ Optimization hazard warning (Line 24): SoA warning: Used in user defined functio
       ((pattern
         (TernaryIf
          ((pattern
-           (FunApp (StanLib Greater__ FnPlain AoS)
+           (FunApp (Operator Greater)
             (((pattern
                (FunApp (StanLib sum FnPlain AoS)
                 (((pattern (Var soa_x))
@@ -17536,7 +17536,7 @@ Optimization hazard warning (Line 24): SoA warning: Used in user defined functio
          ((pattern
            (FunApp (UserDefined nono_func FnPlain)
             (((pattern
-               (FunApp (StanLib Plus__ FnPlain AoS)
+               (FunApp (Operator Plus)
                 (((pattern (Var aos_x))
                   (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))
                  ((pattern (Var aos_y))
@@ -17688,7 +17688,7 @@ Optimization hazard warning (Line 24): SoA warning: Used in user defined functio
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern
             (EOr
              ((pattern (Var emit_transformed_parameters__))
@@ -17704,7 +17704,7 @@ Optimization hazard warning (Line 24): SoA warning: Used in user defined functio
       ((pattern
         (TernaryIf
          ((pattern
-           (FunApp (StanLib Greater__ FnPlain AoS)
+           (FunApp (Operator Greater)
             (((pattern (Lit Int 5))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
              ((pattern (Lit Int 0))
@@ -17728,7 +17728,7 @@ Optimization hazard warning (Line 24): SoA warning: Used in user defined functio
       ((pattern
         (TernaryIf
          ((pattern
-           (FunApp (StanLib Greater__ FnPlain AoS)
+           (FunApp (Operator Greater)
             (((pattern
                (FunApp (StanLib sum FnPlain AoS)
                 (((pattern (Var soa_x))
@@ -17740,7 +17740,7 @@ Optimization hazard warning (Line 24): SoA warning: Used in user defined functio
          ((pattern
            (FunApp (UserDefined nono_func FnPlain)
             (((pattern
-               (FunApp (StanLib Plus__ FnPlain AoS)
+               (FunApp (Operator Plus)
                 (((pattern (Var aos_x))
                   (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))
                  ((pattern (Var aos_y))
@@ -17803,7 +17803,7 @@ Optimization hazard warning (Line 24): SoA warning: Used in user defined functio
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern (Var emit_generated_quantities__))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -17890,7 +17890,7 @@ Optimization hazard warning (Line 24): SoA warning: Used in user defined functio
                        ((pattern
                          (Assignment ((LVariable pos__) ()) UInt
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (Operator Plus)
                              (((pattern (Var pos__))
                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                               ((pattern (Lit Int 1))
@@ -17983,7 +17983,7 @@ Optimization hazard warning (Line 24): SoA warning: Used in user defined functio
                        ((pattern
                          (Assignment ((LVariable pos__) ()) UInt
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (Operator Plus)
                              (((pattern (Var pos__))
                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                               ((pattern (Lit Int 1))
@@ -18076,7 +18076,7 @@ Optimization hazard warning (Line 24): SoA warning: Used in user defined functio
                        ((pattern
                          (Assignment ((LVariable pos__) ()) UInt
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (Operator Plus)
                              (((pattern (Var pos__))
                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                               ((pattern (Lit Int 1))
@@ -18401,7 +18401,7 @@ Optimization hazard warning (Line 29): SoA warning: Right hand side of assignmen
    ((pattern
      (Assignment ((LVariable int_aos_mul_aos) ()) UMatrix
       ((pattern
-        (FunApp (StanLib Times__ FnPlain AoS)
+        (FunApp (Operator Times)
          (((pattern
             (Promotion
              ((pattern
@@ -18427,9 +18427,9 @@ Optimization hazard warning (Line 29): SoA warning: Right hand side of assignmen
    ((pattern
      (Assignment ((LVariable mul_two_aos) ()) UMatrix
       ((pattern
-        (FunApp (StanLib Times__ FnPlain AoS)
+        (FunApp (Operator Times)
          (((pattern
-            (FunApp (StanLib Times__ FnPlain AoS)
+            (FunApp (Operator Times)
              (((pattern
                 (Promotion
                  ((pattern
@@ -18556,7 +18556,7 @@ Optimization hazard warning (Line 29): SoA warning: Right hand side of assignmen
    ((pattern
      (Assignment ((LVariable int_aos_mul_aos) ()) UMatrix
       ((pattern
-        (FunApp (StanLib Times__ FnPlain AoS)
+        (FunApp (Operator Times)
          (((pattern
             (Promotion
              ((pattern
@@ -18582,9 +18582,9 @@ Optimization hazard warning (Line 29): SoA warning: Right hand side of assignmen
    ((pattern
      (Assignment ((LVariable mul_two_aos) ()) UMatrix
       ((pattern
-        (FunApp (StanLib Times__ FnPlain AoS)
+        (FunApp (Operator Times)
          (((pattern
-            (FunApp (StanLib Times__ FnPlain AoS)
+            (FunApp (Operator Times)
              (((pattern
                 (Promotion
                  ((pattern
@@ -18715,7 +18715,7 @@ Optimization hazard warning (Line 29): SoA warning: Right hand side of assignmen
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern
             (EOr
              ((pattern (Var emit_transformed_parameters__))
@@ -18752,7 +18752,7 @@ Optimization hazard warning (Line 29): SoA warning: Right hand side of assignmen
    ((pattern
      (Assignment ((LVariable int_aos_mul_aos) ()) UMatrix
       ((pattern
-        (FunApp (StanLib Times__ FnPlain AoS)
+        (FunApp (Operator Times)
          (((pattern
             (Promotion
              ((pattern
@@ -18769,9 +18769,9 @@ Optimization hazard warning (Line 29): SoA warning: Right hand side of assignmen
    ((pattern
      (Assignment ((LVariable mul_two_aos) ()) UMatrix
       ((pattern
-        (FunApp (StanLib Times__ FnPlain AoS)
+        (FunApp (Operator Times)
          (((pattern
-            (FunApp (StanLib Times__ FnPlain AoS)
+            (FunApp (Operator Times)
              (((pattern
                 (Promotion
                  ((pattern
@@ -18848,7 +18848,7 @@ Optimization hazard warning (Line 29): SoA warning: Right hand side of assignmen
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern (Var emit_generated_quantities__))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -18935,7 +18935,7 @@ Optimization hazard warning (Line 29): SoA warning: Right hand side of assignmen
                        ((pattern
                          (Assignment ((LVariable pos__) ()) UInt
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (Operator Plus)
                              (((pattern (Var pos__))
                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                               ((pattern (Lit Int 1))
@@ -19028,7 +19028,7 @@ Optimization hazard warning (Line 29): SoA warning: Right hand side of assignmen
                        ((pattern
                          (Assignment ((LVariable pos__) ()) UInt
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (Operator Plus)
                              (((pattern (Var pos__))
                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                               ((pattern (Lit Int 1))
@@ -19515,7 +19515,7 @@ Optimization hazard warning (Line 6): SoA warning: Right hand side contains only
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern
             (EOr
              ((pattern (Var emit_transformed_parameters__))
@@ -19627,7 +19627,7 @@ Optimization hazard warning (Line 6): SoA warning: Right hand side contains only
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern (Var emit_generated_quantities__))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -19714,7 +19714,7 @@ Optimization hazard warning (Line 6): SoA warning: Right hand side contains only
                        ((pattern
                          (Assignment ((LVariable pos__) ()) UInt
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (Operator Plus)
                              (((pattern (Var pos__))
                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                               ((pattern (Lit Int 1))
@@ -19807,7 +19807,7 @@ Optimization hazard warning (Line 6): SoA warning: Right hand side contains only
                        ((pattern
                          (Assignment ((LVariable pos__) ()) UInt
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (Operator Plus)
                              (((pattern (Var pos__))
                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                               ((pattern (Lit Int 1))
@@ -19942,7 +19942,7 @@ Optimization hazard warning (Line 22): SoA warning: Right hand side of assignmen
          (((pattern
             (Return
              (((pattern
-                (FunApp (StanLib Plus__ FnPlain AoS)
+                (FunApp (Operator Plus)
                  (((pattern (Var sum_x))
                    (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                   ((pattern (Var y))
@@ -20180,7 +20180,7 @@ Optimization hazard warning (Line 22): SoA warning: Right hand side of assignmen
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern
             (EOr
              ((pattern (Var emit_transformed_parameters__))
@@ -20225,7 +20225,7 @@ Optimization hazard warning (Line 22): SoA warning: Right hand side of assignmen
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern (Var emit_generated_quantities__))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -20312,7 +20312,7 @@ Optimization hazard warning (Line 22): SoA warning: Right hand side of assignmen
                        ((pattern
                          (Assignment ((LVariable pos__) ()) UInt
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (Operator Plus)
                              (((pattern (Var pos__))
                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                               ((pattern (Lit Int 1))
@@ -20405,7 +20405,7 @@ Optimization hazard warning (Line 22): SoA warning: Right hand side of assignmen
                        ((pattern
                          (Assignment ((LVariable pos__) ()) UInt
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (Operator Plus)
                              (((pattern (Var pos__))
                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                               ((pattern (Lit Int 1))
@@ -20910,7 +20910,7 @@ Optimization hazard warning (Line 6): SoA warning: The right hand side of the as
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern
             (EOr
              ((pattern (Var emit_transformed_parameters__))
@@ -20959,7 +20959,7 @@ Optimization hazard warning (Line 6): SoA warning: The right hand side of the as
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern (Var emit_generated_quantities__))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -21083,7 +21083,7 @@ Optimization hazard warning (Line 6): SoA warning: The right hand side of the as
                                ((pattern
                                  (Assignment ((LVariable pos__) ()) UInt
                                   ((pattern
-                                    (FunApp (StanLib Plus__ FnPlain AoS)
+                                    (FunApp (Operator Plus)
                                      (((pattern (Var pos__))
                                        (meta
                                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -21163,7 +21163,7 @@ Optimization hazard warning (Line 6): SoA warning: The right hand side of the as
                        ((pattern
                          (Assignment ((LVariable pos__) ()) UInt
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (Operator Plus)
                              (((pattern (Var pos__))
                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                               ((pattern (Lit Int 1))
@@ -21238,7 +21238,7 @@ Optimization hazard warning (Line 6): SoA warning: The right hand side of the as
                        ((pattern
                          (Assignment ((LVariable pos__) ()) UInt
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (Operator Plus)
                              (((pattern (Var pos__))
                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                               ((pattern (Lit Int 1))
@@ -21575,7 +21575,7 @@ Optimization hazard warning (Line 8): SoA warning: Right hand side of assignment
                        ((pattern
                          (Assignment ((LVariable pos__) ()) UInt
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (Operator Plus)
                              (((pattern (Var pos__))
                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                               ((pattern (Lit Int 1))
@@ -21658,7 +21658,7 @@ Optimization hazard warning (Line 8): SoA warning: Right hand side of assignment
              (((pattern (Var x))
                (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
-                (FunApp (StanLib Times__ FnPlain AoS)
+                (FunApp (Operator Times)
                  (((pattern (Var m1))
                    (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))
                   ((pattern (Var m2))
@@ -21762,7 +21762,7 @@ Optimization hazard warning (Line 8): SoA warning: Right hand side of assignment
              (((pattern (Var x))
                (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
-                (FunApp (StanLib Times__ FnPlain AoS)
+                (FunApp (Operator Times)
                  (((pattern (Var m1))
                    (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))
                   ((pattern (Var m2))
@@ -21859,7 +21859,7 @@ Optimization hazard warning (Line 8): SoA warning: Right hand side of assignment
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern
             (EOr
              ((pattern (Var emit_transformed_parameters__))
@@ -21873,7 +21873,7 @@ Optimization hazard warning (Line 8): SoA warning: Right hand side of assignment
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern (Var emit_generated_quantities__))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -21960,7 +21960,7 @@ Optimization hazard warning (Line 8): SoA warning: Right hand side of assignment
                        ((pattern
                          (Assignment ((LVariable pos__) ()) UInt
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (Operator Plus)
                              (((pattern (Var pos__))
                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                               ((pattern (Lit Int 1))
@@ -22052,7 +22052,7 @@ Optimization hazard warning (Line 8): SoA warning: Right hand side of assignment
                        ((pattern
                          (Assignment ((LVariable pos__) ()) UInt
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (Operator Plus)
                              (((pattern (Var pos__))
                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                               ((pattern (Lit Int 1))

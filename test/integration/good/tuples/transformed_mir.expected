@@ -212,7 +212,7 @@
                ((pattern
                  (Assignment ((LVariable pos__) ()) UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 1))
@@ -353,7 +353,7 @@
                ((pattern
                  (Assignment ((LVariable arr_tuple_dot_1_flat__pos__) ()) UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var arr_tuple_dot_1_flat__pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 1))
@@ -371,9 +371,9 @@
                        ((pattern (Var arr_tuple_dot_2_flat__pos__))
                         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                        ((pattern
-                         (FunApp (StanLib Minus__ FnPlain AoS)
+                         (FunApp (Operator Minus)
                           (((pattern
-                             (FunApp (StanLib Plus__ FnPlain AoS)
+                             (FunApp (Operator Plus)
                               (((pattern (Var arr_tuple_dot_2_flat__pos__))
                                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                                ((pattern (Lit Int 4))
@@ -387,7 +387,7 @@
                ((pattern
                  (Assignment ((LVariable arr_tuple_dot_2_flat__pos__) ()) UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var arr_tuple_dot_2_flat__pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 4))
@@ -413,9 +413,9 @@
                            ((pattern (Var arr_tuple_dot_3_flat__pos__))
                             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                            ((pattern
-                             (FunApp (StanLib Minus__ FnPlain AoS)
+                             (FunApp (Operator Minus)
                               (((pattern
-                                 (FunApp (StanLib Plus__ FnPlain AoS)
+                                 (FunApp (Operator Plus)
                                   (((pattern (Var arr_tuple_dot_3_flat__pos__))
                                     (meta
                                      ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -466,7 +466,7 @@
                            ((pattern
                              (Assignment ((LVariable pos__) ()) UInt
                               ((pattern
-                                (FunApp (StanLib Plus__ FnPlain AoS)
+                                (FunApp (Operator Plus)
                                  (((pattern (Var pos__))
                                    (meta
                                     ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -480,7 +480,7 @@
                    ((pattern
                      (Assignment ((LVariable arr_tuple_dot_3_flat__pos__) ()) UInt
                       ((pattern
-                        (FunApp (StanLib Plus__ FnPlain AoS)
+                        (FunApp (Operator Plus)
                          (((pattern (Var arr_tuple_dot_3_flat__pos__))
                            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                           ((pattern (Lit Int 3))
@@ -639,7 +639,7 @@
                  (Assignment ((LVariable tuple_arr_tuple_dot_3_dot_1_flat__pos__) ())
                   UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var tuple_arr_tuple_dot_3_dot_1_flat__pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 1))
@@ -657,9 +657,9 @@
                        ((pattern (Var tuple_arr_tuple_dot_3_dot_2_flat__pos__))
                         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                        ((pattern
-                         (FunApp (StanLib Minus__ FnPlain AoS)
+                         (FunApp (Operator Minus)
                           (((pattern
-                             (FunApp (StanLib Plus__ FnPlain AoS)
+                             (FunApp (Operator Plus)
                               (((pattern (Var tuple_arr_tuple_dot_3_dot_2_flat__pos__))
                                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                                ((pattern (Lit Int 4))
@@ -674,7 +674,7 @@
                  (Assignment ((LVariable tuple_arr_tuple_dot_3_dot_2_flat__pos__) ())
                   UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var tuple_arr_tuple_dot_3_dot_2_flat__pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 4))
@@ -889,7 +889,7 @@
                ((pattern
                  (Assignment ((LVariable arr_tuple_tuple_dot_1_flat__pos__) ()) UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var arr_tuple_tuple_dot_1_flat__pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 1))
@@ -910,7 +910,7 @@
                ((pattern
                  (Assignment ((LVariable arr_tuple_tuple_dot_2_flat__pos__) ()) UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var arr_tuple_tuple_dot_2_flat__pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 1))
@@ -934,7 +934,7 @@
                  (Assignment ((LVariable arr_tuple_tuple_dot_3_dot_1_flat__pos__) ())
                   UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var arr_tuple_tuple_dot_3_dot_1_flat__pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 1))
@@ -962,7 +962,7 @@
                  (Assignment
                   ((LVariable arr_tuple_tuple_dot_3_dot_2_dot_1_flat__pos__) ()) UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var arr_tuple_tuple_dot_3_dot_2_dot_1_flat__pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 1))
@@ -989,9 +989,9 @@
                            ((pattern (Var arr_tuple_tuple_dot_3_dot_2_dot_2_flat__pos__))
                             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                            ((pattern
-                             (FunApp (StanLib Minus__ FnPlain AoS)
+                             (FunApp (Operator Minus)
                               (((pattern
-                                 (FunApp (StanLib Plus__ FnPlain AoS)
+                                 (FunApp (Operator Plus)
                                   (((pattern
                                      (Var arr_tuple_tuple_dot_3_dot_2_dot_2_flat__pos__))
                                     (meta
@@ -1048,7 +1048,7 @@
                            ((pattern
                              (Assignment ((LVariable pos__) ()) UInt
                               ((pattern
-                                (FunApp (StanLib Plus__ FnPlain AoS)
+                                (FunApp (Operator Plus)
                                  (((pattern (Var pos__))
                                    (meta
                                     ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -1063,7 +1063,7 @@
                      (Assignment
                       ((LVariable arr_tuple_tuple_dot_3_dot_2_dot_2_flat__pos__) ()) UInt
                       ((pattern
-                        (FunApp (StanLib Plus__ FnPlain AoS)
+                        (FunApp (Operator Plus)
                          (((pattern (Var arr_tuple_tuple_dot_3_dot_2_dot_2_flat__pos__))
                            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                           ((pattern (Lit Int 4))
@@ -1238,7 +1238,7 @@
                ((pattern
                  (Assignment ((LVariable arr_tuple_arr_tuple_dot_1_flat__pos__) ()) UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var arr_tuple_arr_tuple_dot_1_flat__pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 1))
@@ -1296,7 +1296,7 @@
                                ())
                               UInt
                               ((pattern
-                                (FunApp (StanLib Plus__ FnPlain AoS)
+                                (FunApp (Operator Plus)
                                  (((pattern
                                     (Var arr_tuple_arr_tuple_dot_2_dot_1_flat__pos__))
                                    (meta
@@ -1334,9 +1334,9 @@
                                         (meta
                                          ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                                        ((pattern
-                                         (FunApp (StanLib Minus__ FnPlain AoS)
+                                         (FunApp (Operator Minus)
                                           (((pattern
-                                             (FunApp (StanLib Plus__ FnPlain AoS)
+                                             (FunApp (Operator Plus)
                                               (((pattern
                                                  (Var
                                                   arr_tuple_arr_tuple_dot_2_dot_2_flat__pos__))
@@ -1409,7 +1409,7 @@
                                        ((pattern
                                          (Assignment ((LVariable pos__) ()) UInt
                                           ((pattern
-                                            (FunApp (StanLib Plus__ FnPlain AoS)
+                                            (FunApp (Operator Plus)
                                              (((pattern (Var pos__))
                                                (meta
                                                 ((type_ UInt) (loc <opaque>)
@@ -1431,7 +1431,7 @@
                                    ())
                                   UInt
                                   ((pattern
-                                    (FunApp (StanLib Plus__ FnPlain AoS)
+                                    (FunApp (Operator Plus)
                                      (((pattern
                                         (Var arr_tuple_arr_tuple_dot_2_dot_2_flat__pos__))
                                        (meta
@@ -1671,7 +1671,7 @@
                ((pattern
                  (Assignment ((LVariable very_deep_dot_1_flat__pos__) ()) UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var very_deep_dot_1_flat__pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 1))
@@ -1731,7 +1731,7 @@
                              (Assignment
                               ((LVariable very_deep_dot_2_dot_1_flat__pos__) ()) UInt
                               ((pattern
-                                (FunApp (StanLib Plus__ FnPlain AoS)
+                                (FunApp (Operator Plus)
                                  (((pattern (Var very_deep_dot_2_dot_1_flat__pos__))
                                    (meta
                                     ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -1804,7 +1804,7 @@
                                            ())
                                           UInt
                                           ((pattern
-                                            (FunApp (StanLib Plus__ FnPlain AoS)
+                                            (FunApp (Operator Plus)
                                              (((pattern
                                                 (Var
                                                  very_deep_dot_2_dot_2_dot_1_flat__pos__))
@@ -1850,11 +1850,9 @@
                                                      ((type_ UInt) (loc <opaque>)
                                                       (adlevel DataOnly))))
                                                    ((pattern
-                                                     (FunApp
-                                                      (StanLib Minus__ FnPlain AoS)
+                                                     (FunApp (Operator Minus)
                                                       (((pattern
-                                                         (FunApp
-                                                          (StanLib Plus__ FnPlain AoS)
+                                                         (FunApp (Operator Plus)
                                                           (((pattern
                                                              (Var
                                                               very_deep_dot_2_dot_2_dot_2_flat__pos__))
@@ -1863,9 +1861,8 @@
                                                               (loc <opaque>)
                                                               (adlevel DataOnly))))
                                                            ((pattern
-                                                             (FunApp
-                                                              (StanLib Times__ FnPlain
-                                                               AoS)
+                                                             (FunApp 
+                                                              (Operator Times)
                                                               (((pattern (Lit Int 6))
                                                                 (meta
                                                                  ((type_ UInt)
@@ -1977,9 +1974,8 @@
                                                              (Assignment
                                                               ((LVariable pos__) ()) UInt
                                                               ((pattern
-                                                                (FunApp
-                                                                 (StanLib Plus__ FnPlain
-                                                                  AoS)
+                                                                (FunApp 
+                                                                 (Operator Plus)
                                                                  (((pattern (Var pos__))
                                                                    (meta
                                                                     ((type_ UInt)
@@ -2006,7 +2002,7 @@
                                                ())
                                               UInt
                                               ((pattern
-                                                (FunApp (StanLib Plus__ FnPlain AoS)
+                                                (FunApp (Operator Plus)
                                                  (((pattern
                                                     (Var
                                                      very_deep_dot_2_dot_2_dot_2_flat__pos__))
@@ -2014,7 +2010,7 @@
                                                     ((type_ UInt) (loc <opaque>)
                                                      (adlevel DataOnly))))
                                                   ((pattern
-                                                    (FunApp (StanLib Times__ FnPlain AoS)
+                                                    (FunApp (Operator Times)
                                                      (((pattern (Lit Int 6))
                                                        (meta
                                                         ((type_ UInt) 
@@ -5173,7 +5169,7 @@
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern
             (EOr
              ((pattern (Var emit_transformed_parameters__))
@@ -5187,7 +5183,7 @@
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern (Var emit_generated_quantities__))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -5359,7 +5355,7 @@
                ((pattern
                  (Assignment ((LVariable pos__) ()) UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 1))
@@ -5559,7 +5555,7 @@
                ((pattern
                  (Assignment ((LVariable arr_tuple_p_dot_1_flat__pos__) ()) UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var arr_tuple_p_dot_1_flat__pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 2))
@@ -5577,9 +5573,9 @@
                        ((pattern (Var arr_tuple_p_dot_2_flat__pos__))
                         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                        ((pattern
-                         (FunApp (StanLib Minus__ FnPlain AoS)
+                         (FunApp (Operator Minus)
                           (((pattern
-                             (FunApp (StanLib Plus__ FnPlain AoS)
+                             (FunApp (Operator Plus)
                               (((pattern (Var arr_tuple_p_dot_2_flat__pos__))
                                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                                ((pattern (Lit Int 4))
@@ -5593,7 +5589,7 @@
                ((pattern
                  (Assignment ((LVariable arr_tuple_p_dot_2_flat__pos__) ()) UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var arr_tuple_p_dot_2_flat__pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 4))
@@ -5619,9 +5615,9 @@
                            ((pattern (Var arr_tuple_p_dot_3_flat__pos__))
                             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                            ((pattern
-                             (FunApp (StanLib Minus__ FnPlain AoS)
+                             (FunApp (Operator Minus)
                               (((pattern
-                                 (FunApp (StanLib Plus__ FnPlain AoS)
+                                 (FunApp (Operator Plus)
                                   (((pattern (Var arr_tuple_p_dot_3_flat__pos__))
                                     (meta
                                      ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -5672,7 +5668,7 @@
                            ((pattern
                              (Assignment ((LVariable pos__) ()) UInt
                               ((pattern
-                                (FunApp (StanLib Plus__ FnPlain AoS)
+                                (FunApp (Operator Plus)
                                  (((pattern (Var pos__))
                                    (meta
                                     ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -5686,7 +5682,7 @@
                    ((pattern
                      (Assignment ((LVariable arr_tuple_p_dot_3_flat__pos__) ()) UInt
                       ((pattern
-                        (FunApp (StanLib Plus__ FnPlain AoS)
+                        (FunApp (Operator Plus)
                          (((pattern (Var arr_tuple_p_dot_3_flat__pos__))
                            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                           ((pattern (Lit Int 3))
@@ -5930,7 +5926,7 @@
                  (Assignment ((LVariable tuple_arr_tuple_p_dot_3_dot_1_flat__pos__) ())
                   UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var tuple_arr_tuple_p_dot_3_dot_1_flat__pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 1))
@@ -5948,9 +5944,9 @@
                        ((pattern (Var tuple_arr_tuple_p_dot_3_dot_2_flat__pos__))
                         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                        ((pattern
-                         (FunApp (StanLib Minus__ FnPlain AoS)
+                         (FunApp (Operator Minus)
                           (((pattern
-                             (FunApp (StanLib Plus__ FnPlain AoS)
+                             (FunApp (Operator Plus)
                               (((pattern (Var tuple_arr_tuple_p_dot_3_dot_2_flat__pos__))
                                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                                ((pattern (Lit Int 4))
@@ -5965,7 +5961,7 @@
                  (Assignment ((LVariable tuple_arr_tuple_p_dot_3_dot_2_flat__pos__) ())
                   UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var tuple_arr_tuple_p_dot_3_dot_2_flat__pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 4))
@@ -6302,7 +6298,7 @@
                ((pattern
                  (Assignment ((LVariable arr_tuple_tuple_p_dot_1_flat__pos__) ()) UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var arr_tuple_tuple_p_dot_1_flat__pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 1))
@@ -6323,7 +6319,7 @@
                ((pattern
                  (Assignment ((LVariable arr_tuple_tuple_p_dot_2_flat__pos__) ()) UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var arr_tuple_tuple_p_dot_2_flat__pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 1))
@@ -6348,7 +6344,7 @@
                  (Assignment ((LVariable arr_tuple_tuple_p_dot_3_dot_1_flat__pos__) ())
                   UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var arr_tuple_tuple_p_dot_3_dot_1_flat__pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 1))
@@ -6377,7 +6373,7 @@
                  (Assignment
                   ((LVariable arr_tuple_tuple_p_dot_3_dot_2_dot_1_flat__pos__) ()) UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var arr_tuple_tuple_p_dot_3_dot_2_dot_1_flat__pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 2))
@@ -6405,9 +6401,9 @@
                              (Var arr_tuple_tuple_p_dot_3_dot_2_dot_2_flat__pos__))
                             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                            ((pattern
-                             (FunApp (StanLib Minus__ FnPlain AoS)
+                             (FunApp (Operator Minus)
                               (((pattern
-                                 (FunApp (StanLib Plus__ FnPlain AoS)
+                                 (FunApp (Operator Plus)
                                   (((pattern
                                      (Var
                                       arr_tuple_tuple_p_dot_3_dot_2_dot_2_flat__pos__))
@@ -6466,7 +6462,7 @@
                            ((pattern
                              (Assignment ((LVariable pos__) ()) UInt
                               ((pattern
-                                (FunApp (StanLib Plus__ FnPlain AoS)
+                                (FunApp (Operator Plus)
                                  (((pattern (Var pos__))
                                    (meta
                                     ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -6482,7 +6478,7 @@
                       ((LVariable arr_tuple_tuple_p_dot_3_dot_2_dot_2_flat__pos__) ())
                       UInt
                       ((pattern
-                        (FunApp (StanLib Plus__ FnPlain AoS)
+                        (FunApp (Operator Plus)
                          (((pattern
                             (Var arr_tuple_tuple_p_dot_3_dot_2_dot_2_flat__pos__))
                            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -6887,7 +6883,7 @@
                  (Assignment ((LVariable arr_tuple_arr_tuple_p_dot_1_flat__pos__) ())
                   UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var arr_tuple_arr_tuple_p_dot_1_flat__pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 1))
@@ -6946,7 +6942,7 @@
                                ())
                               UInt
                               ((pattern
-                                (FunApp (StanLib Plus__ FnPlain AoS)
+                                (FunApp (Operator Plus)
                                  (((pattern
                                     (Var arr_tuple_arr_tuple_p_dot_2_dot_1_flat__pos__))
                                    (meta
@@ -6985,9 +6981,9 @@
                                         (meta
                                          ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                                        ((pattern
-                                         (FunApp (StanLib Minus__ FnPlain AoS)
+                                         (FunApp (Operator Minus)
                                           (((pattern
-                                             (FunApp (StanLib Plus__ FnPlain AoS)
+                                             (FunApp (Operator Plus)
                                               (((pattern
                                                  (Var
                                                   arr_tuple_arr_tuple_p_dot_2_dot_2_flat__pos__))
@@ -7060,7 +7056,7 @@
                                        ((pattern
                                          (Assignment ((LVariable pos__) ()) UInt
                                           ((pattern
-                                            (FunApp (StanLib Plus__ FnPlain AoS)
+                                            (FunApp (Operator Plus)
                                              (((pattern (Var pos__))
                                                (meta
                                                 ((type_ UInt) (loc <opaque>)
@@ -7082,7 +7078,7 @@
                                    ())
                                   UInt
                                   ((pattern
-                                    (FunApp (StanLib Plus__ FnPlain AoS)
+                                    (FunApp (Operator Plus)
                                      (((pattern
                                         (Var
                                          arr_tuple_arr_tuple_p_dot_2_dot_2_flat__pos__))
@@ -7475,7 +7471,7 @@
                ((pattern
                  (Assignment ((LVariable very_deep_p_dot_1_flat__pos__) ()) UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var very_deep_p_dot_1_flat__pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 1))
@@ -7536,7 +7532,7 @@
                              (Assignment
                               ((LVariable very_deep_p_dot_2_dot_1_flat__pos__) ()) UInt
                               ((pattern
-                                (FunApp (StanLib Plus__ FnPlain AoS)
+                                (FunApp (Operator Plus)
                                  (((pattern (Var very_deep_p_dot_2_dot_1_flat__pos__))
                                    (meta
                                     ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -7610,7 +7606,7 @@
                                            ())
                                           UInt
                                           ((pattern
-                                            (FunApp (StanLib Plus__ FnPlain AoS)
+                                            (FunApp (Operator Plus)
                                              (((pattern
                                                 (Var
                                                  very_deep_p_dot_2_dot_2_dot_1_flat__pos__))
@@ -7656,11 +7652,9 @@
                                                      ((type_ UInt) (loc <opaque>)
                                                       (adlevel DataOnly))))
                                                    ((pattern
-                                                     (FunApp
-                                                      (StanLib Minus__ FnPlain AoS)
+                                                     (FunApp (Operator Minus)
                                                       (((pattern
-                                                         (FunApp
-                                                          (StanLib Plus__ FnPlain AoS)
+                                                         (FunApp (Operator Plus)
                                                           (((pattern
                                                              (Var
                                                               very_deep_p_dot_2_dot_2_dot_2_flat__pos__))
@@ -7669,9 +7663,8 @@
                                                               (loc <opaque>)
                                                               (adlevel DataOnly))))
                                                            ((pattern
-                                                             (FunApp
-                                                              (StanLib Times__ FnPlain
-                                                               AoS)
+                                                             (FunApp 
+                                                              (Operator Times)
                                                               (((pattern (Lit Int 6))
                                                                 (meta
                                                                  ((type_ UInt)
@@ -7783,9 +7776,8 @@
                                                              (Assignment
                                                               ((LVariable pos__) ()) UInt
                                                               ((pattern
-                                                                (FunApp
-                                                                 (StanLib Plus__ FnPlain
-                                                                  AoS)
+                                                                (FunApp 
+                                                                 (Operator Plus)
                                                                  (((pattern (Var pos__))
                                                                    (meta
                                                                     ((type_ UInt)
@@ -7812,7 +7804,7 @@
                                                ())
                                               UInt
                                               ((pattern
-                                                (FunApp (StanLib Plus__ FnPlain AoS)
+                                                (FunApp (Operator Plus)
                                                  (((pattern
                                                     (Var
                                                      very_deep_p_dot_2_dot_2_dot_2_flat__pos__))
@@ -7820,7 +7812,7 @@
                                                     ((type_ UInt) (loc <opaque>)
                                                      (adlevel DataOnly))))
                                                   ((pattern
-                                                    (FunApp (StanLib Times__ FnPlain AoS)
+                                                    (FunApp (Operator Times)
                                                      (((pattern (Lit Int 6))
                                                        (meta
                                                         ((type_ UInt) 
@@ -10236,7 +10228,7 @@
   (((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern
             (EOr
              ((pattern (Var emit_transformed_parameters__))
@@ -10250,7 +10242,7 @@
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern (Var emit_generated_quantities__))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -10416,7 +10408,7 @@
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern
             (EOr
              ((pattern (Var emit_transformed_parameters__))
@@ -10430,7 +10422,7 @@
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern (Var emit_generated_quantities__))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -10606,7 +10598,7 @@
                ((pattern
                  (Assignment ((LVariable pos__) ()) UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 1))
@@ -10999,7 +10991,7 @@
   (((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern
             (EOr
              ((pattern (Var emit_transformed_parameters__))
@@ -11013,7 +11005,7 @@
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern (Var emit_generated_quantities__))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -11054,7 +11046,7 @@
   (((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern
             (EOr
              ((pattern (Var emit_transformed_parameters__))
@@ -11068,7 +11060,7 @@
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern (Var emit_generated_quantities__))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -11089,7 +11081,7 @@
   (((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern
             (EOr
              ((pattern (Var emit_transformed_parameters__))
@@ -11103,7 +11095,7 @@
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern (Var emit_generated_quantities__))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -11134,7 +11126,7 @@
   (((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern
             (EOr
              ((pattern (Var emit_transformed_parameters__))
@@ -11148,7 +11140,7 @@
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern (Var emit_generated_quantities__))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -11291,7 +11283,7 @@
   (((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern
             (EOr
              ((pattern (Var emit_transformed_parameters__))
@@ -11305,7 +11297,7 @@
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern (Var emit_generated_quantities__))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -11505,7 +11497,7 @@
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib Plus__ FnPlain AoS)
+            (FunApp (Operator Plus)
              (((pattern
                 (FunApp (StanLib sum FnPlain AoS)
                  (((pattern (Var Q))
@@ -11653,7 +11645,7 @@
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib Plus__ FnPlain SoA)
+            (FunApp (Operator Plus)
              (((pattern
                 (FunApp (StanLib sum FnPlain AoS)
                  (((pattern (Var Q))
@@ -11704,7 +11696,7 @@
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern
             (EOr
              ((pattern (Var emit_transformed_parameters__))
@@ -11718,7 +11710,7 @@
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern (Var emit_generated_quantities__))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -11804,7 +11796,7 @@
                        ((pattern
                          (Assignment ((LVariable pos__) ()) UInt
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (Operator Plus)
                              (((pattern (Var pos__))
                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                               ((pattern (Lit Int 1))
@@ -11892,7 +11884,7 @@
   (((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern
             (EOr
              ((pattern (Var emit_transformed_parameters__))
@@ -11906,7 +11898,7 @@
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern (Var emit_generated_quantities__))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -11957,7 +11949,7 @@
   (((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern
             (EOr
              ((pattern (Var emit_transformed_parameters__))
@@ -11971,7 +11963,7 @@
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern (Var emit_generated_quantities__))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -12040,7 +12032,7 @@
   (((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern
             (EOr
              ((pattern (Var emit_transformed_parameters__))
@@ -12054,7 +12046,7 @@
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern (Var emit_generated_quantities__))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -12143,7 +12135,7 @@
   (((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern
             (EOr
              ((pattern (Var emit_transformed_parameters__))
@@ -12157,7 +12149,7 @@
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern (Var emit_generated_quantities__))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -12398,7 +12390,7 @@
                ((pattern
                  (Assignment ((LVariable pos__) ()) UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 1))
@@ -12572,7 +12564,7 @@
                        ((pattern
                          (Assignment ((LVariable z_dot_1_flat__pos__) ()) UInt
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (Operator Plus)
                              (((pattern (Var z_dot_1_flat__pos__))
                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                               ((pattern (Lit Int 1))
@@ -12600,9 +12592,9 @@
                                     (meta
                                      ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                                    ((pattern
-                                     (FunApp (StanLib Minus__ FnPlain AoS)
+                                     (FunApp (Operator Minus)
                                       (((pattern
-                                         (FunApp (StanLib Plus__ FnPlain AoS)
+                                         (FunApp (Operator Plus)
                                           (((pattern (Var z_dot_2_flat__pos__))
                                             (meta
                                              ((type_ UInt) (loc <opaque>)
@@ -12664,7 +12656,7 @@
                                    ((pattern
                                      (Assignment ((LVariable pos__) ()) UInt
                                       ((pattern
-                                        (FunApp (StanLib Plus__ FnPlain AoS)
+                                        (FunApp (Operator Plus)
                                          (((pattern (Var pos__))
                                            (meta
                                             ((type_ UInt) (loc <opaque>)
@@ -12681,7 +12673,7 @@
                            ((pattern
                              (Assignment ((LVariable z_dot_2_flat__pos__) ()) UInt
                               ((pattern
-                                (FunApp (StanLib Plus__ FnPlain AoS)
+                                (FunApp (Operator Plus)
                                  (((pattern (Var z_dot_2_flat__pos__))
                                    (meta
                                     ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -12812,7 +12804,7 @@
   (((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern
             (EOr
              ((pattern (Var emit_transformed_parameters__))
@@ -12826,7 +12818,7 @@
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern (Var emit_generated_quantities__))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -14152,7 +14144,7 @@
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern
             (EOr
              ((pattern (Var emit_transformed_parameters__))
@@ -14166,7 +14158,7 @@
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern (Var emit_generated_quantities__))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -14362,7 +14354,7 @@
                        ((pattern
                          (Assignment ((LVariable ps2_dot_1_flat__pos__) ()) UInt
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (Operator Plus)
                              (((pattern (Var ps2_dot_1_flat__pos__))
                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                               ((pattern (Lit Int 1))
@@ -14390,9 +14382,9 @@
                                     (meta
                                      ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                                    ((pattern
-                                     (FunApp (StanLib Minus__ FnPlain AoS)
+                                     (FunApp (Operator Minus)
                                       (((pattern
-                                         (FunApp (StanLib Plus__ FnPlain AoS)
+                                         (FunApp (Operator Plus)
                                           (((pattern (Var ps2_dot_2_flat__pos__))
                                             (meta
                                              ((type_ UInt) (loc <opaque>)
@@ -14454,7 +14446,7 @@
                                    ((pattern
                                      (Assignment ((LVariable pos__) ()) UInt
                                       ((pattern
-                                        (FunApp (StanLib Plus__ FnPlain AoS)
+                                        (FunApp (Operator Plus)
                                          (((pattern (Var pos__))
                                            (meta
                                             ((type_ UInt) (loc <opaque>)
@@ -14471,7 +14463,7 @@
                            ((pattern
                              (Assignment ((LVariable ps2_dot_2_flat__pos__) ()) UInt
                               ((pattern
-                                (FunApp (StanLib Plus__ FnPlain AoS)
+                                (FunApp (Operator Plus)
                                  (((pattern (Var ps2_dot_2_flat__pos__))
                                    (meta
                                     ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -14802,7 +14794,7 @@
                ((pattern
                  (Assignment ((LVariable complicated_dot_1_flat__pos__) ()) UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var complicated_dot_1_flat__pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 1))
@@ -14868,7 +14860,7 @@
                              (Assignment
                               ((LVariable complicated_dot_2_dot_1_flat__pos__) ()) UInt
                               ((pattern
-                                (FunApp (StanLib Plus__ FnPlain AoS)
+                                (FunApp (Operator Plus)
                                  (((pattern (Var complicated_dot_2_dot_1_flat__pos__))
                                    (meta
                                     ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -14901,9 +14893,9 @@
                                         (meta
                                          ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                                        ((pattern
-                                         (FunApp (StanLib Minus__ FnPlain AoS)
+                                         (FunApp (Operator Minus)
                                           (((pattern
-                                             (FunApp (StanLib Plus__ FnPlain AoS)
+                                             (FunApp (Operator Plus)
                                               (((pattern
                                                  (Var
                                                   complicated_dot_2_dot_2_flat__pos__))
@@ -14975,7 +14967,7 @@
                                        ((pattern
                                          (Assignment ((LVariable pos__) ()) UInt
                                           ((pattern
-                                            (FunApp (StanLib Plus__ FnPlain AoS)
+                                            (FunApp (Operator Plus)
                                              (((pattern (Var pos__))
                                                (meta
                                                 ((type_ UInt) (loc <opaque>)
@@ -14995,7 +14987,7 @@
                                   ((LVariable complicated_dot_2_dot_2_flat__pos__) ())
                                   UInt
                                   ((pattern
-                                    (FunApp (StanLib Plus__ FnPlain AoS)
+                                    (FunApp (Operator Plus)
                                      (((pattern
                                         (Var complicated_dot_2_dot_2_flat__pos__))
                                        (meta
@@ -15031,9 +15023,9 @@
                                         (meta
                                          ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                                        ((pattern
-                                         (FunApp (StanLib Minus__ FnPlain AoS)
+                                         (FunApp (Operator Minus)
                                           (((pattern
-                                             (FunApp (StanLib Plus__ FnPlain AoS)
+                                             (FunApp (Operator Plus)
                                               (((pattern
                                                  (Var
                                                   complicated_dot_2_dot_3_flat__pos__))
@@ -15041,7 +15033,7 @@
                                                  ((type_ UInt) (loc <opaque>)
                                                   (adlevel DataOnly))))
                                                ((pattern
-                                                 (FunApp (StanLib Times__ FnPlain AoS)
+                                                 (FunApp (Operator Times)
                                                   (((pattern (Lit Int 5))
                                                     (meta
                                                      ((type_ UInt) (loc <opaque>)
@@ -15139,7 +15131,7 @@
                                                ((pattern
                                                  (Assignment ((LVariable pos__) ()) UInt
                                                   ((pattern
-                                                    (FunApp (StanLib Plus__ FnPlain AoS)
+                                                    (FunApp (Operator Plus)
                                                      (((pattern (Var pos__))
                                                        (meta
                                                         ((type_ UInt) 
@@ -15163,13 +15155,13 @@
                                   ((LVariable complicated_dot_2_dot_3_flat__pos__) ())
                                   UInt
                                   ((pattern
-                                    (FunApp (StanLib Plus__ FnPlain AoS)
+                                    (FunApp (Operator Plus)
                                      (((pattern
                                         (Var complicated_dot_2_dot_3_flat__pos__))
                                        (meta
                                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                                       ((pattern
-                                        (FunApp (StanLib Times__ FnPlain AoS)
+                                        (FunApp (Operator Times)
                                          (((pattern (Lit Int 5))
                                            (meta
                                             ((type_ UInt) (loc <opaque>)
@@ -16043,7 +16035,7 @@
          (SReal
           (SVector AoS
            ((pattern
-             (FunApp (StanLib Minus__ FnPlain AoS)
+             (FunApp (Operator Minus)
               (((pattern (Lit Int 4))
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                ((pattern (Lit Int 1))
@@ -16097,7 +16089,7 @@
            (SReal
             (SVector AoS
              ((pattern
-               (FunApp (StanLib Minus__ FnPlain AoS)
+               (FunApp (Operator Minus)
                 (((pattern (Lit Int 5))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                  ((pattern (Lit Int 1))
@@ -16105,17 +16097,17 @@
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
             (SVector AoS
              ((pattern
-               (FunApp (StanLib Plus__ FnPlain AoS)
+               (FunApp (Operator Plus)
                 (((pattern
-                   (FunApp (StanLib Plus__ FnPlain AoS)
+                   (FunApp (Operator Plus)
                     (((pattern
-                       (FunApp (StanLib Divide__ FnPlain AoS)
+                       (FunApp (Operator Divide)
                         (((pattern
-                           (FunApp (StanLib Times__ FnPlain AoS)
+                           (FunApp (Operator Times)
                             (((pattern (Lit Int 4))
                               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                              ((pattern
-                               (FunApp (StanLib Minus__ FnPlain AoS)
+                               (FunApp (Operator Minus)
                                 (((pattern (Lit Int 4))
                                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                                  ((pattern (Lit Int 1))
@@ -16129,9 +16121,9 @@
                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                  ((pattern
-                   (FunApp (StanLib Times__ FnPlain AoS)
+                   (FunApp (Operator Times)
                     (((pattern
-                       (FunApp (StanLib Minus__ FnPlain AoS)
+                       (FunApp (Operator Minus)
                         (((pattern (Lit Int 5))
                           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                          ((pattern (Lit Int 4))
@@ -16834,7 +16826,7 @@
   (((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern
             (EOr
              ((pattern (Var emit_transformed_parameters__))
@@ -16848,7 +16840,7 @@
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern (Var emit_generated_quantities__))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -16936,7 +16928,7 @@
   (((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern
             (EOr
              ((pattern (Var emit_transformed_parameters__))
@@ -16950,7 +16942,7 @@
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern (Var emit_generated_quantities__))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -17023,7 +17015,7 @@
   (((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern
             (EOr
              ((pattern (Var emit_transformed_parameters__))
@@ -17037,7 +17029,7 @@
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern (Var emit_generated_quantities__))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -17215,9 +17207,9 @@
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib Plus__ FnPlain AoS)
+            (FunApp (Operator Plus)
              (((pattern
-                (FunApp (StanLib Plus__ FnPlain AoS)
+                (FunApp (Operator Plus)
                  (((pattern
                     (TupleProjection
                      ((pattern (Var ps))
@@ -17344,9 +17336,9 @@
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib Plus__ FnPlain SoA)
+            (FunApp (Operator Plus)
              (((pattern
-                (FunApp (StanLib Plus__ FnPlain SoA)
+                (FunApp (Operator Plus)
                  (((pattern
                     (TupleProjection
                      ((pattern (Var ps))
@@ -17478,7 +17470,7 @@
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern
             (EOr
              ((pattern (Var emit_transformed_parameters__))
@@ -17492,7 +17484,7 @@
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern (Var emit_generated_quantities__))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -17666,7 +17658,7 @@
   (((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern
             (EOr
              ((pattern (Var emit_transformed_parameters__))
@@ -17680,7 +17672,7 @@
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern (Var emit_generated_quantities__))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -17724,7 +17716,7 @@
   (((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern
             (EOr
              ((pattern (Var emit_transformed_parameters__))
@@ -17738,7 +17730,7 @@
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern (Var emit_generated_quantities__))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -17783,7 +17775,7 @@
   (((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern
             (EOr
              ((pattern (Var emit_transformed_parameters__))
@@ -17797,7 +17789,7 @@
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern (Var emit_generated_quantities__))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -17851,7 +17843,7 @@
   (((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern
             (EOr
              ((pattern (Var emit_transformed_parameters__))
@@ -17865,7 +17857,7 @@
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern (Var emit_generated_quantities__))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -18188,7 +18180,7 @@
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern
             (EOr
              ((pattern (Var emit_transformed_parameters__))
@@ -18202,7 +18194,7 @@
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern (Var emit_generated_quantities__))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -18388,7 +18380,7 @@
                        ((pattern
                          (Assignment ((LVariable pos__) ()) UInt
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (Operator Plus)
                              (((pattern (Var pos__))
                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                               ((pattern (Lit Int 1))
@@ -18747,7 +18739,7 @@
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern
             (EOr
              ((pattern (Var emit_transformed_parameters__))
@@ -18761,7 +18753,7 @@
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern (Var emit_generated_quantities__))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -18912,7 +18904,7 @@
          (((pattern
             (Return
              (((pattern
-                (FunApp (StanLib Plus__ FnPlain AoS)
+                (FunApp (Operator Plus)
                  (((pattern
                     (FunApp (StanLib sum FnPlain AoS)
                      (((pattern
@@ -19018,7 +19010,7 @@
                ((pattern
                  (Assignment ((LVariable pos__) ()) UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 1))
@@ -19649,7 +19641,7 @@
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern
             (EOr
              ((pattern (Var emit_transformed_parameters__))
@@ -20262,7 +20254,7 @@
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern (Var emit_generated_quantities__))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -20792,7 +20784,7 @@
                        ((pattern
                          (Assignment ((LVariable pos__) ()) UInt
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (Operator Plus)
                              (((pattern (Var pos__))
                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                               ((pattern (Lit Int 1))
@@ -20887,7 +20879,7 @@
                        ((pattern
                          (Assignment ((LVariable pos__) ()) UInt
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (Operator Plus)
                              (((pattern (Var pos__))
                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                               ((pattern (Lit Int 1))
@@ -20948,7 +20940,7 @@
   (((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern
             (EOr
              ((pattern (Var emit_transformed_parameters__))
@@ -20962,7 +20954,7 @@
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern (Var emit_generated_quantities__))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -20973,7 +20965,7 @@
       (((pattern
          (FunApp (CompilerInternal FnMakeTuple)
           (((pattern
-             (FunApp (StanLib Plus__ FnPlain AoS)
+             (FunApp (Operator Plus)
               (((pattern (Var m1))
                 (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
                ((pattern (Var m2))
@@ -21011,7 +21003,7 @@
           (((pattern
              (FunApp (CompilerInternal FnMakeTuple)
               (((pattern
-                 (FunApp (StanLib Plus__ FnPlain AoS)
+                 (FunApp (Operator Plus)
                   (((pattern (Var m1))
                     (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
                    ((pattern (Var m2))
@@ -21033,7 +21025,7 @@
           (((pattern
              (FunApp (CompilerInternal FnMakeArray)
               (((pattern
-                 (FunApp (StanLib Plus__ FnPlain AoS)
+                 (FunApp (Operator Plus)
                   (((pattern (Var m1))
                     (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
                    ((pattern (Var m2))
@@ -21045,7 +21037,7 @@
               (((pattern (Lit Int 1))
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                ((pattern
-                 (FunApp (StanLib Plus__ FnPlain AoS)
+                 (FunApp (Operator Plus)
                   (((pattern (Var m1))
                     (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
                    ((pattern (Var m2))
@@ -21067,7 +21059,7 @@
               (((pattern (Lit Int 1))
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                ((pattern
-                 (FunApp (StanLib Times__ FnPlain AoS)
+                 (FunApp (Operator Times)
                   (((pattern (Var m1))
                     (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
                    ((pattern
@@ -21085,7 +21077,7 @@
               (((pattern (Lit Int 2))
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                ((pattern
-                 (FunApp (StanLib Times__ FnPlain AoS)
+                 (FunApp (Operator Times)
                   (((pattern (Var m2))
                     (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
                    ((pattern
@@ -21383,7 +21375,7 @@
                        ((pattern
                          (Assignment ((LVariable pos__) ()) UInt
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (Operator Plus)
                              (((pattern (Var pos__))
                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                               ((pattern (Lit Int 1))
@@ -21497,7 +21489,7 @@
              (((pattern (Var x))
                (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
-                (FunApp (StanLib Times__ FnPlain AoS)
+                (FunApp (Operator Times)
                  (((pattern (Var m1))
                    (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))
                   ((pattern (Var m2))
@@ -21521,7 +21513,7 @@
               (((pattern (Var x))
                 (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
                ((pattern
-                 (FunApp (StanLib Times__ FnPlain AoS)
+                 (FunApp (Operator Times)
                   (((pattern (Var m1))
                     (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))
                    ((pattern (Var m2))
@@ -21553,7 +21545,7 @@
           ((pattern
             (FunApp (CompilerInternal FnMakeTuple)
              (((pattern
-                (FunApp (StanLib Plus__ FnPlain AoS)
+                (FunApp (Operator Plus)
                  (((pattern (Var m1))
                    (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))
                   ((pattern (Var m2))
@@ -21579,7 +21571,7 @@
           (((pattern
              (FunApp (CompilerInternal FnMakeTuple)
               (((pattern
-                 (FunApp (StanLib Plus__ FnPlain AoS)
+                 (FunApp (Operator Plus)
                   (((pattern (Var m1))
                     (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))
                    ((pattern (Var m2))
@@ -21754,7 +21746,7 @@
              (((pattern (Var x))
                (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
-                (FunApp (StanLib Times__ FnPlain AoS)
+                (FunApp (Operator Times)
                  (((pattern (Var m1))
                    (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))
                   ((pattern (Var m2))
@@ -21778,7 +21770,7 @@
               (((pattern (Var x))
                 (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
                ((pattern
-                 (FunApp (StanLib Times__ FnPlain AoS)
+                 (FunApp (Operator Times)
                   (((pattern (Var m1))
                     (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))
                    ((pattern (Var m2))
@@ -21810,7 +21802,7 @@
           ((pattern
             (FunApp (CompilerInternal FnMakeTuple)
              (((pattern
-                (FunApp (StanLib Plus__ FnPlain AoS)
+                (FunApp (Operator Plus)
                  (((pattern (Var m1))
                    (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))
                   ((pattern (Var m2))
@@ -21836,7 +21828,7 @@
           (((pattern
              (FunApp (CompilerInternal FnMakeTuple)
               (((pattern
-                 (FunApp (StanLib Plus__ FnPlain AoS)
+                 (FunApp (Operator Plus)
                   (((pattern (Var m1))
                     (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))
                    ((pattern (Var m2))
@@ -22004,7 +21996,7 @@
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern
             (EOr
              ((pattern (Var emit_transformed_parameters__))
@@ -22018,7 +22010,7 @@
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern (Var emit_generated_quantities__))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -22105,7 +22097,7 @@
                        ((pattern
                          (Assignment ((LVariable pos__) ()) UInt
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (Operator Plus)
                              (((pattern (Var pos__))
                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                               ((pattern (Lit Int 1))
@@ -22197,7 +22189,7 @@
                        ((pattern
                          (Assignment ((LVariable pos__) ()) UInt
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (Operator Plus)
                              (((pattern (Var pos__))
                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                               ((pattern (Lit Int 1))
@@ -22298,7 +22290,7 @@
   (((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern
             (EOr
              ((pattern (Var emit_transformed_parameters__))
@@ -22312,7 +22304,7 @@
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern (Var emit_generated_quantities__))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -22472,7 +22464,7 @@
          (((pattern
             (Return
              (((pattern
-                (FunApp (StanLib Times__ FnPlain AoS)
+                (FunApp (Operator Times)
                  (((pattern
                     (FunApp (StanLib sum FnPlain AoS)
                      (((pattern (Var y_slice))
@@ -22748,7 +22740,7 @@
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern
             (EOr
              ((pattern (Var emit_transformed_parameters__))
@@ -22801,7 +22793,7 @@
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern (Var emit_generated_quantities__))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -22965,7 +22957,7 @@
   (((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern
             (EOr
              ((pattern (Var emit_transformed_parameters__))
@@ -22979,7 +22971,7 @@
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern (Var emit_generated_quantities__))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -23049,7 +23041,7 @@
   (((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern
             (EOr
              ((pattern (Var emit_transformed_parameters__))
@@ -23063,7 +23055,7 @@
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern (Var emit_generated_quantities__))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -23082,7 +23074,7 @@
          (((pattern
             (Return
              (((pattern
-                (FunApp (StanLib Plus__ FnPlain AoS)
+                (FunApp (Operator Plus)
                  (((pattern
                     (Promotion
                      ((pattern
@@ -23096,7 +23088,7 @@
                      UReal DataOnly))
                    (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
                   ((pattern
-                    (FunApp (StanLib Times__ FnPlain AoS)
+                    (FunApp (Operator Times)
                      (((pattern
                         (Promotion
                          ((pattern
@@ -23163,7 +23155,7 @@
   (((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern
             (EOr
              ((pattern (Var emit_transformed_parameters__))
@@ -23177,7 +23169,7 @@
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern (Var emit_generated_quantities__))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -23193,7 +23185,7 @@
   (((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern
             (EOr
              ((pattern (Var emit_transformed_parameters__))
@@ -23207,7 +23199,7 @@
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern (Var emit_generated_quantities__))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -23253,7 +23245,7 @@
          (((pattern (Lit Real 1.2))
            (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
           ((pattern
-            (FunApp (StanLib Times__ FnPlain AoS)
+            (FunApp (Operator Times)
              (((pattern (Var m))
                (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
               ((pattern (Lit Real 2.0))
@@ -23514,7 +23506,7 @@
                ((pattern
                  (Assignment ((LVariable pos__) ()) UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 1))
@@ -24398,7 +24390,7 @@
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern
             (EOr
              ((pattern (Var emit_transformed_parameters__))
@@ -24412,7 +24404,7 @@
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern (Var emit_generated_quantities__))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -24507,7 +24499,7 @@
                ((pattern
                  (Assignment ((LVariable pos__) ()) UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 1))

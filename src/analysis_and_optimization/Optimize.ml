@@ -266,7 +266,7 @@ let rec inline_function_expression propto adt fim (Expr.{pattern; _} as e) =
       let d_list, s_list, es =
         inline_list (inline_function_expression propto adt fim) es in
       match kind with
-      | CompilerInternal _ ->
+      | CompilerInternal _ | Operator _ ->
           (d_list, s_list, {e with pattern= FunApp (kind, es)})
       | StanLib (fname, suffix, mem) ->
           let suffix, _ = compute_suffix_and_name propto suffix fname in
@@ -406,7 +406,8 @@ let rec inline_function_statement propto adt fim Stmt.{pattern; meta} =
             in
             slist_concat_no_loc (d_list @ s_list)
               (match kind with
-              | CompilerInternal _ | StanLib _ -> NRFunApp (kind, es)
+              | CompilerInternal _ | StanLib _ | Operator _ ->
+                  NRFunApp (kind, es)
               | UserDefined (s, _) -> (
                   match String.Map.find_opt s fim with
                   | None -> NRFunApp (kind, es)
@@ -618,10 +619,7 @@ let unroll_loop_one_step_statement _ =
           else (lower, []) in
         let unrolled =
           Stmt.Pattern.IfElse
-            ( Expr.
-                { lower with
-                  pattern=
-                    FunApp (StanLib ("Geq__", FnPlain, AoS), [upper; lower]) }
+            ( Expr.{lower with pattern= FunApp (Operator Geq, [upper; lower])}
             , { Stmt.pattern=
                   (let body_unrolled =
                      subst_args_stmt [loopvar] [lower]
@@ -636,7 +634,7 @@ let unroll_loop_one_step_statement _ =
                                { lower with
                                  pattern=
                                    FunApp
-                                     ( StanLib ("Plus__", FnPlain, AoS)
+                                     ( Operator Plus
                                      , [lower; Expr.Helpers.loop_bottom] ) } }
                      ; meta= Location_span.empty } in
                    match body_unrolled.pattern with
@@ -662,12 +660,11 @@ let one_step_loop_unrolling mir =
 
 let can_duplicate_expr e = not (cannot_duplicate_expr e)
 
-let elementwise_function name =
-  match Operator.of_string_opt name with
-  | Some Times -> Some (Operator.to_string EltTimes)
-  | Some Divide -> Some (Operator.to_string EltDivide)
-  | Some Pow -> Some (Operator.to_string EltPow)
-  | _ -> None
+let elementwise_operator = function
+  | Operator.Times -> Operator.EltTimes
+  | Divide -> EltDivide
+  | Pow -> EltPow
+  | op -> op
 
 let expr_reads_target =
   expr_any (function
@@ -731,24 +728,37 @@ let vectorized_for (meta : Stmt.Located.Meta.t) (conflict_info : conflicts)
               Expr.Helpers.infer_type_of_indexed base.meta.type_ idcs' in
             Widened
               {Expr.pattern= Indexed (base, idcs'); meta= {e.meta with type_}})
-    | FunApp (StanLib (name, FnPlain, mem), args) -> (
+    | FunApp (Operator op, args) -> (
         match widen_all args with
         | Error -> Error
         | Scalar args' | Widened args' -> (
-            let make_funcall name =
-              match Partial_evaluator.stan_math_return_type name args' with
+            let make_op op =
+              match Partial_evaluator.stan_operator_return_type op args' with
               | Some
                   (ReturnType
                      ((UVector | URowVector | UArray (UInt | UReal)) as type_))
                 ->
                   Widened
                     Expr.
-                      { pattern= FunApp (StanLib (name, FnPlain, mem), args')
+                      { pattern= FunApp (Operator op, args')
                       ; meta= {e.meta with type_} }
               | _ -> Error in
-            match (make_funcall name, elementwise_function name) with
-            | Error, Some name -> make_funcall name
-            | e, _ -> e))
+            match make_op op with
+            | Error -> make_op (elementwise_operator op)
+            | r -> r))
+    | FunApp (StanLib (name, FnPlain, mem), args) -> (
+        match widen_all args with
+        | Error -> Error
+        | Scalar args' | Widened args' -> (
+            match Partial_evaluator.stan_math_return_type name args' with
+            | Some
+                (ReturnType
+                   ((UVector | URowVector | UArray (UInt | UReal)) as type_)) ->
+                Widened
+                  Expr.
+                    { pattern= FunApp (StanLib (name, FnPlain, mem), args')
+                    ; meta= {e.meta with type_} }
+            | _ -> Error))
     | _ -> Error
   and widen_all es =
     (* functions allow widening any and all inputs*)

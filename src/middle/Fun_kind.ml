@@ -18,6 +18,7 @@ let without_propto = map_suffix (Fun.const () : bool -> unit)
 
 type 'e t =
   | StanLib of string * bool suffix * Mem_pattern.t
+  | Operator of Operator.t
   | CompilerInternal of 'e Internal_fun.t
   | UserDefined of string * bool suffix
 [@@deriving compare, sexp_of, map, fold]
@@ -48,6 +49,7 @@ let pp pp_expr ppf kind =
    |UserDefined (s, FnLpmf true) ->
       Fmt.string ppf (with_unnormalized_suffix s |> Option.value ~default:s)
   | StanLib (s, _, _) | UserDefined (s, _) -> Fmt.string ppf s
+  | Operator op -> Operator.pp ppf op
   | CompilerInternal internal -> Internal_fun.pp pp_expr ppf internal
 
 let collect_exprs fn = fold (fun accum e -> e :: accum) [] fn

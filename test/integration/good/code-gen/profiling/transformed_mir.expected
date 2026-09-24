@@ -129,7 +129,7 @@
                ((pattern
                  (Assignment ((LVariable pos__) ()) UInt
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (Operator Plus)
                      (((pattern (Var pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 1))
@@ -260,7 +260,7 @@
           (((pattern
              (Assignment ((LVariable cov) ()) UMatrix
               ((pattern
-                (FunApp (StanLib Plus__ FnPlain AoS)
+                (FunApp (Operator Plus)
                  (((pattern
                     (FunApp (StanLib gp_exp_quad_cov FnPlain AoS)
                      (((pattern (Var x))
@@ -491,7 +491,7 @@
           (((pattern
              (Assignment ((LVariable cov) ()) UMatrix
               ((pattern
-                (FunApp (StanLib Plus__ FnPlain AoS)
+                (FunApp (Operator Plus)
                  (((pattern
                     (FunApp (StanLib gp_exp_quad_cov FnPlain AoS)
                      (((pattern (Var x))
@@ -692,7 +692,7 @@
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern
             (EOr
              ((pattern (Var emit_transformed_parameters__))
@@ -706,7 +706,7 @@
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
+        (FunApp (Operator PNot)
          (((pattern (Var emit_generated_quantities__))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
