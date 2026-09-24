@@ -79,49 +79,52 @@ let classify_point ~(loopvars : string Set.Poly.t)
         symbolic subexpr in
   classify expr
 
-(** [path] with every single index classified as a [point]. *)
-let classify_path ~loopvars ~written_vars (path : Expr.Typed.t step list) :
-    point step list =
-  List.map path ~f:(function
-    | Subscript index ->
-        Subscript (Index.map (classify_point ~loopvars ~written_vars) index)
-    | Field field -> Field field)
+(** A path is the [step list] from a variable to the part an access touches. *)
+module Path = struct
+  (** [path] with every single index classified as a [point]. *)
+  let classify ~loopvars ~written_vars (path : Expr.Typed.t step list) :
+      point step list =
+    List.map path ~f:(function
+      | Subscript index ->
+          Subscript (Index.map (classify_point ~loopvars ~written_vars) index)
+      | Field field -> Field field)
 
-(** The variable and the path of [expr], when [expr] is a variable with indices
-    and tuple fields and every step before the last index list is a single index
-    or a field. [x[i][j].2] gives [x] with the path [i, j, .2], the same form as
-    the left side of an assignment. *)
-let rec access_path (expr : Expr.Typed.t) :
-    (string * Expr.Typed.t step list) option =
-  let extend base steps =
-    match access_path base with
-    | Some (name, prefix)
-      when List.for_all prefix ~f:(function
-             | Subscript (Single _) | Field _ -> true
-             | Subscript _ -> false) ->
-        Some (name, prefix @ steps)
-    | Some _ | None -> None in
-  match expr.pattern with
-  | Var name -> Some (name, [])
-  | Indexed (base, indices) ->
-      extend base (List.map indices ~f:(fun index -> Subscript index))
-  | TupleProjection (base, field) -> extend base [Field field]
-  | _ -> None
+  (** The variable and the path of [expr], when [expr] is a variable with
+      indices and tuple fields and every step before the last index list is a
+      single index or a field. [x[i][j].2] gives [x] with the path [i, j, .2],
+      the same form as the left side of an assignment. *)
+  let rec of_expr (expr : Expr.Typed.t) :
+      (string * Expr.Typed.t step list) option =
+    let extend base steps =
+      match of_expr base with
+      | Some (name, prefix)
+        when List.for_all prefix ~f:(function
+               | Subscript (Single _) | Field _ -> true
+               | Subscript _ -> false) ->
+          Some (name, prefix @ steps)
+      | Some _ | None -> None in
+    match expr.pattern with
+    | Var name -> Some (name, [])
+    | Indexed (base, indices) ->
+        extend base (List.map indices ~f:(fun index -> Subscript index))
+    | TupleProjection (base, field) -> extend base [Field field]
+    | _ -> None
 
-(** The path of the left side of an assignment: [x[i].2[j] = ...] gives
-    [i, .2, j]. *)
-let rec lvalue_path ((lbase, indices) : Expr.Typed.t Stmt.Pattern.lvalue) :
-    Expr.Typed.t step list =
-  (match lbase with
-    | LVariable _ -> []
-    | LTupleProjection (inner, field) -> lvalue_path inner @ [Field field])
-  @ List.map indices ~f:(fun index -> Subscript index)
+  (** The path of the left side of an assignment: [x[i].2[j] = ...] gives
+      [i, .2, j]. *)
+  let rec of_lvalue ((lbase, indices) : Expr.Typed.t Stmt.Pattern.lvalue) :
+      Expr.Typed.t step list =
+    (match lbase with
+      | LVariable _ -> []
+      | LTupleProjection (inner, field) -> of_lvalue inner @ [Field field])
+    @ List.map indices ~f:(fun index -> Subscript index)
 
-(** The expressions inside the indices of [path]. *)
-let path_bounds (path : Expr.Typed.t step list) : Expr.Typed.t list =
-  List.concat_map path ~f:(function
-    | Subscript index -> Index.bounds index
-    | Field _ -> [])
+  (** The expressions inside the indices of [path]. *)
+  let bounds (path : Expr.Typed.t step list) : Expr.Typed.t list =
+    List.concat_map path ~f:(function
+      | Subscript index -> Index.bounds index
+      | Field _ -> [])
+end
 
 module Accesses = struct
   type t = {reads: access list; writes: access list}
@@ -167,13 +170,13 @@ module Accesses = struct
     | Var name when Set.Poly.mem name loopvars -> empty
     | Var name -> read name []
     | Indexed _ | TupleProjection _ -> (
-        match access_path expr with
+        match Path.of_expr expr with
         | Some (name, path) ->
             (* each index is kept as written: single, [:], [a:], [a:b] or a
                multi-index *)
             concat
-              (read name (classify_path ~loopvars ~written_vars path)
-              :: List.map (path_bounds path) ~f:of_subexpr)
+              (read name (Path.classify ~loopvars ~written_vars path)
+              :: List.map (Path.bounds path) ~f:of_subexpr)
         | None -> of_children ())
     | FunApp (StanLib (_, FnTarget, _), []) -> read "target" []
     | FunApp (UserDefined (_, (FnTarget | FnJacobian)), _) ->
@@ -200,12 +203,12 @@ module Accesses = struct
               Fun.const [] stmt)) in
     match stmt with
     | Assignment (lhs, _, rhs) ->
-        let path = lvalue_path lhs in
+        let path = Path.of_lvalue lhs in
         concat
-          (List.map (path_bounds path @ [rhs]) ~f:of_subexpr
+          (List.map (Path.bounds path @ [rhs]) ~f:of_subexpr
           @ [ write
                 (Stmt.Helpers.lhs_variable lhs)
-                (classify_path ~loopvars ~written_vars:written_non_loopvars path)
+                (Path.classify ~loopvars ~written_vars:written_non_loopvars path)
             ])
     | Decl {decl_id; _} -> concat [of_children (); write decl_id []]
     | TargetPE _ | JacobianPE _
