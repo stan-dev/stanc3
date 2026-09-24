@@ -106,7 +106,10 @@ let transform_args = function
 let is_single_index = function Index.Single _ -> true | _ -> false
 
 let dont_need_range_check = function
-  | Index.Single Expr.{pattern= Var id; _} -> not (Utils.is_user_ident id)
+  | Index.Single Expr.{pattern= Var id; _}
+   |Index.Single
+      Expr.{pattern= FunApp (Operator Plus, [{pattern= Var id; _}; _]); _} ->
+      not (Utils.is_user_ident id)
   | _ -> false
 
 let promote_adtype =

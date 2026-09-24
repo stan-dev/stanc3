@@ -530,10 +530,9 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
         very_deep_dot_2_dot_1_flat__ = context__.vals_r("very_deep.2.1");
         int very_deep_dot_2_dot_1_flat__pos__;
         very_deep_dot_2_dot_1_flat__pos__ = 1;
-        std::vector<std::complex<local_scalar_t__>>
-          very_deep_dot_2_dot_2_dot_1_flat__;
+        std::vector<local_scalar_t__> very_deep_dot_2_dot_2_dot_1_flat__;
         current_statement__ = 15;
-        very_deep_dot_2_dot_2_dot_1_flat__ = context__.vals_c("very_deep.2.2.1");
+        very_deep_dot_2_dot_2_dot_1_flat__ = context__.vals_r("very_deep.2.2.1");
         int very_deep_dot_2_dot_2_dot_1_flat__pos__;
         very_deep_dot_2_dot_2_dot_1_flat__pos__ = 1;
         std::vector<local_scalar_t__> very_deep_dot_2_dot_2_dot_2_flat__;
@@ -593,10 +592,13 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                   Eigen::Matrix<double,-1,-1>::Constant(6, 7,
                     std::numeric_limits<double>::quiet_NaN());
                 for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
-                  very_deep_dot_2_dot_2_dot_1_temp__ = very_deep_dot_2_dot_2_dot_1_flat__[(very_deep_dot_2_dot_2_dot_1_flat__pos__
-                    - 1)];
+                  very_deep_dot_2_dot_2_dot_1_temp__ = stan::math::to_complex(
+                                                         very_deep_dot_2_dot_2_dot_1_flat__[(very_deep_dot_2_dot_2_dot_1_flat__pos__
+                                                         - 1)],
+                                                         very_deep_dot_2_dot_2_dot_1_flat__[((very_deep_dot_2_dot_2_dot_1_flat__pos__
+                                                         + 1) - 1)]);
                   very_deep_dot_2_dot_2_dot_1_flat__pos__ = (very_deep_dot_2_dot_2_dot_1_flat__pos__
-                    + 1);
+                    + 2);
                   {
                     std::vector<local_scalar_t__>
                       very_deep_dot_2_dot_2_dot_2_temp___flat__;
@@ -694,10 +696,9 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
         complex_vector_deep_dot_2_dot_1_flat__ = context__.vals_r("complex_vector_deep.2.1");
         int complex_vector_deep_dot_2_dot_1_flat__pos__;
         complex_vector_deep_dot_2_dot_1_flat__pos__ = 1;
-        std::vector<std::complex<local_scalar_t__>>
-          complex_vector_deep_dot_2_dot_2_flat__;
+        std::vector<local_scalar_t__> complex_vector_deep_dot_2_dot_2_flat__;
         current_statement__ = 16;
-        complex_vector_deep_dot_2_dot_2_flat__ = context__.vals_c("complex_vector_deep.2.2");
+        complex_vector_deep_dot_2_dot_2_flat__ = context__.vals_r("complex_vector_deep.2.2");
         int complex_vector_deep_dot_2_dot_2_flat__pos__;
         complex_vector_deep_dot_2_dot_2_flat__pos__ = 1;
         int complex_vector_deep_dot_1_temp__ =
@@ -745,7 +746,7 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                     stan::model::index_min_max(
                       complex_vector_deep_dot_2_dot_2_flat__pos__,
                       ((complex_vector_deep_dot_2_dot_2_flat__pos__ + (3 * (2
-                      * 1))) - 1))),
+                      * 2))) - 1))),
                   "assigning variable complex_vector_deep_dot_2_dot_2_temp___flat__");
                 pos__ = 1;
                 for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
@@ -761,7 +762,7 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                   }
                 }
                 complex_vector_deep_dot_2_dot_2_flat__pos__ = (complex_vector_deep_dot_2_dot_2_flat__pos__
-                  + (3 * (2 * 1)));
+                  + (3 * (2 * 2)));
               }
               stan::model::assign(complex_vector_deep_dot_2_temp__,
                 std::forward_as_tuple(complex_vector_deep_dot_2_dot_1_temp__,
@@ -2314,9 +2315,9 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
             std::vector<local_scalar_t__>(4, DUMMY_VAR__),
             Eigen::Matrix<local_scalar_t__,-1,1>::Constant(3, DUMMY_VAR__)});
       {
-        std::vector<std::complex<local_scalar_t__>> arr_tuple_p_dot_1_flat__;
+        std::vector<local_scalar_t__> arr_tuple_p_dot_1_flat__;
         current_statement__ = 3;
-        arr_tuple_p_dot_1_flat__ = context__.vals_c("arr_tuple_p.1");
+        arr_tuple_p_dot_1_flat__ = context__.vals_r("arr_tuple_p.1");
         int arr_tuple_p_dot_1_flat__pos__;
         arr_tuple_p_dot_1_flat__pos__ = 1;
         std::vector<local_scalar_t__> arr_tuple_p_dot_2_flat__;
@@ -2338,10 +2339,13 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
           Eigen::Matrix<double,-1,1>::Constant(3,
             std::numeric_limits<double>::quiet_NaN());
         for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          arr_tuple_p_dot_1_temp__ = arr_tuple_p_dot_1_flat__[(arr_tuple_p_dot_1_flat__pos__
-            - 1)];
+          arr_tuple_p_dot_1_temp__ = stan::math::to_complex(
+                                       arr_tuple_p_dot_1_flat__[(arr_tuple_p_dot_1_flat__pos__
+                                       - 1)],
+                                       arr_tuple_p_dot_1_flat__[((arr_tuple_p_dot_1_flat__pos__
+                                       + 1) - 1)]);
           arr_tuple_p_dot_1_flat__pos__ = (arr_tuple_p_dot_1_flat__pos__ +
-            1);
+            2);
           stan::model::assign(arr_tuple_p_dot_2_temp__,
             stan::model::rvalue(arr_tuple_p_dot_2_flat__,
               "arr_tuple_p_dot_2_flat__",
@@ -2475,10 +2479,10 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
         arr_tuple_tuple_p_dot_3_dot_1_flat__ = context__.vals_r("arr_tuple_tuple_p.3.1");
         int arr_tuple_tuple_p_dot_3_dot_1_flat__pos__;
         arr_tuple_tuple_p_dot_3_dot_1_flat__pos__ = 1;
-        std::vector<std::complex<local_scalar_t__>>
+        std::vector<local_scalar_t__>
           arr_tuple_tuple_p_dot_3_dot_2_dot_1_flat__;
         current_statement__ = 5;
-        arr_tuple_tuple_p_dot_3_dot_2_dot_1_flat__ = context__.vals_c("arr_tuple_tuple_p.3.2.1");
+        arr_tuple_tuple_p_dot_3_dot_2_dot_1_flat__ = context__.vals_r("arr_tuple_tuple_p.3.2.1");
         int arr_tuple_tuple_p_dot_3_dot_2_dot_1_flat__pos__;
         arr_tuple_tuple_p_dot_3_dot_2_dot_1_flat__pos__ = 1;
         std::vector<local_scalar_t__>
@@ -2515,10 +2519,14 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
             - 1)];
           arr_tuple_tuple_p_dot_3_dot_1_flat__pos__ = (arr_tuple_tuple_p_dot_3_dot_1_flat__pos__
             + 1);
-          std::get<0>(std::get<1>(arr_tuple_tuple_p_dot_3_temp__)) = arr_tuple_tuple_p_dot_3_dot_2_dot_1_flat__[(arr_tuple_tuple_p_dot_3_dot_2_dot_1_flat__pos__
-            - 1)];
+          std::get<0>(std::get<1>(arr_tuple_tuple_p_dot_3_temp__)) = 
+            stan::math::to_complex(
+              arr_tuple_tuple_p_dot_3_dot_2_dot_1_flat__[(arr_tuple_tuple_p_dot_3_dot_2_dot_1_flat__pos__
+              - 1)],
+              arr_tuple_tuple_p_dot_3_dot_2_dot_1_flat__[((arr_tuple_tuple_p_dot_3_dot_2_dot_1_flat__pos__
+              + 1) - 1)]);
           arr_tuple_tuple_p_dot_3_dot_2_dot_1_flat__pos__ = (arr_tuple_tuple_p_dot_3_dot_2_dot_1_flat__pos__
-            + 1);
+            + 2);
           {
             std::vector<local_scalar_t__>
               arr_tuple_tuple_p_dot_3_temp___dot_2_dot_2_flat__;
@@ -2726,10 +2734,9 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
         very_deep_p_dot_2_dot_1_flat__ = context__.vals_r("very_deep_p.2.1");
         int very_deep_p_dot_2_dot_1_flat__pos__;
         very_deep_p_dot_2_dot_1_flat__pos__ = 1;
-        std::vector<std::complex<local_scalar_t__>>
-          very_deep_p_dot_2_dot_2_dot_1_flat__;
+        std::vector<local_scalar_t__> very_deep_p_dot_2_dot_2_dot_1_flat__;
         current_statement__ = 7;
-        very_deep_p_dot_2_dot_2_dot_1_flat__ = context__.vals_c("very_deep_p.2.2.1");
+        very_deep_p_dot_2_dot_2_dot_1_flat__ = context__.vals_r("very_deep_p.2.2.1");
         int very_deep_p_dot_2_dot_2_dot_1_flat__pos__;
         very_deep_p_dot_2_dot_2_dot_1_flat__pos__ = 1;
         std::vector<local_scalar_t__> very_deep_p_dot_2_dot_2_dot_2_flat__;
@@ -2791,10 +2798,13 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                   Eigen::Matrix<double,-1,-1>::Constant(6, 7,
                     std::numeric_limits<double>::quiet_NaN());
                 for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
-                  very_deep_p_dot_2_dot_2_dot_1_temp__ = very_deep_p_dot_2_dot_2_dot_1_flat__[(very_deep_p_dot_2_dot_2_dot_1_flat__pos__
-                    - 1)];
+                  very_deep_p_dot_2_dot_2_dot_1_temp__ = stan::math::to_complex(
+                                                           very_deep_p_dot_2_dot_2_dot_1_flat__[(very_deep_p_dot_2_dot_2_dot_1_flat__pos__
+                                                           - 1)],
+                                                           very_deep_p_dot_2_dot_2_dot_1_flat__[((very_deep_p_dot_2_dot_2_dot_1_flat__pos__
+                                                           + 1) - 1)]);
                   very_deep_p_dot_2_dot_2_dot_1_flat__pos__ = (very_deep_p_dot_2_dot_2_dot_1_flat__pos__
-                    + 1);
+                    + 2);
                   {
                     std::vector<local_scalar_t__>
                       very_deep_p_dot_2_dot_2_dot_2_temp___flat__;
@@ -2902,10 +2912,10 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
         complex_vector_deep_p_dot_2_dot_1_flat__ = context__.vals_r("complex_vector_deep_p.2.1");
         int complex_vector_deep_p_dot_2_dot_1_flat__pos__;
         complex_vector_deep_p_dot_2_dot_1_flat__pos__ = 1;
-        std::vector<std::complex<local_scalar_t__>>
+        std::vector<local_scalar_t__>
           complex_vector_deep_p_dot_2_dot_2_flat__;
         current_statement__ = 8;
-        complex_vector_deep_p_dot_2_dot_2_flat__ = context__.vals_c("complex_vector_deep_p.2.2");
+        complex_vector_deep_p_dot_2_dot_2_flat__ = context__.vals_r("complex_vector_deep_p.2.2");
         int complex_vector_deep_p_dot_2_dot_2_flat__pos__;
         complex_vector_deep_p_dot_2_dot_2_flat__pos__ = 1;
         double complex_vector_deep_p_dot_1_temp__ =
@@ -2954,7 +2964,7 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                     stan::model::index_min_max(
                       complex_vector_deep_p_dot_2_dot_2_flat__pos__,
                       ((complex_vector_deep_p_dot_2_dot_2_flat__pos__ + (3 *
-                      (2 * 1))) - 1))),
+                      (2 * 2))) - 1))),
                   "assigning variable complex_vector_deep_p_dot_2_dot_2_temp___flat__");
                 pos__ = 1;
                 for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
@@ -2970,7 +2980,7 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                   }
                 }
                 complex_vector_deep_p_dot_2_dot_2_flat__pos__ = (complex_vector_deep_p_dot_2_dot_2_flat__pos__
-                  + (3 * (2 * 1)));
+                  + (3 * (2 * 2)));
               }
               stan::model::assign(complex_vector_deep_p_dot_2_temp__,
                 std::forward_as_tuple(

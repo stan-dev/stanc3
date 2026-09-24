@@ -259,18 +259,30 @@ let rec var_context_read_inside_tuple enclosing_tuple_name origin_type
         ; adlevel= UnsizedType.fill_adtype_for_type DataOnly flat_type } } in
   let type_size =
     Expr.Helpers.(
-      binop
-        (variable enclosing_tuple_pos)
-        Plus
-        (* vars_c already turns complex values into one item in the vector *)
-        (SizedType.io_size ~complex_is_scalar:true st)) in
+      binop (variable enclosing_tuple_pos) Plus (SizedType.io_size st)) in
   let end_position = Expr.Helpers.(binop type_size Minus loop_bottom) in
   let origin =
     match unsized with
-    | UInt | UReal | UComplex ->
+    | UInt | UReal ->
         (* Scalars get one index *)
         Expr.Helpers.add_int_index origin_name
           (Index.Single (Expr.Helpers.variable enclosing_tuple_pos))
+    | UComplex ->
+        (* inside tuples/array of tuples, cannot rely on .vals_c *)
+        Expr.
+          { pattern=
+              FunApp
+                ( StanLib ("to_complex", FnPlain, AoS)
+                , [ Expr.Helpers.add_int_index origin_name
+                      (Index.Single (Expr.Helpers.variable enclosing_tuple_pos))
+                  ; (* TODO need to figure something else out for when the
+                       bottom layer is a vec/matrix/rectangular. offset
+                       calculation like vals_c does *)
+                    Expr.Helpers.add_int_index origin_name
+                      (Index.Single
+                         Expr.Helpers.(
+                           binop (variable enclosing_tuple_pos) Plus one)) ] )
+          ; meta= {Expr.Typed.Meta.empty with type_= UComplex} }
     | _ ->
         Expr.Helpers.add_int_index origin_name
           (Index.Between
@@ -472,7 +484,10 @@ let rec var_context_read_internal
         List.map3
           ~f:(fun variable_name io_name st ->
             let typ = SizedType.to_unsized st in
-            let scalar_type = UnsizedType.internal_scalar typ in
+            let scalar_type =
+              match UnsizedType.internal_scalar typ with
+              | UComplex -> UnsizedType.UReal
+              | s -> s in
             let array_type = UnsizedType.UArray scalar_type in
             [ Stmt.Pattern.Decl
                 { decl_adtype= AutoDiffable

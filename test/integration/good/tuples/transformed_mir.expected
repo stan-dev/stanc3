@@ -1585,7 +1585,7 @@
         (meta <opaque>))
        ((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id very_deep_dot_2_dot_2_dot_1_flat__)
-          (decl_type (Unsized (UArray UComplex))) (initialize Default)))
+          (decl_type (Unsized (UArray UReal))) (initialize Default)))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable very_deep_dot_2_dot_2_dot_1_flat__) ())
@@ -1599,7 +1599,7 @@
                    (UTuple
                     (UInt (UArray (UTuple (UReal (UArray (UTuple (UComplex UMatrix))))))))))
                  (loc <opaque>) (adlevel DataOnly)))))))
-           (meta ((type_ (UArray UComplex)) (loc <opaque>) (adlevel DataOnly))))))
+           (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
         (meta <opaque>))
        ((pattern
          (Decl (decl_adtype DataOnly) (decl_id very_deep_dot_2_dot_2_dot_1_flat__pos__)
@@ -1795,19 +1795,54 @@
                                            ())
                                           UComplex
                                           ((pattern
-                                            (Indexed
-                                             ((pattern
-                                               (Var very_deep_dot_2_dot_2_dot_1_flat__))
-                                              (meta
-                                               ((type_ (UArray UComplex)) 
-                                                (loc <opaque>) (adlevel DataOnly))))
-                                             ((Single
-                                               ((pattern
-                                                 (Var
-                                                  very_deep_dot_2_dot_2_dot_1_flat__pos__))
-                                                (meta
-                                                 ((type_ UInt) (loc <opaque>)
-                                                  (adlevel DataOnly))))))))
+                                            (FunApp (StanLib to_complex FnPlain AoS)
+                                             (((pattern
+                                                (Indexed
+                                                 ((pattern
+                                                   (Var
+                                                    very_deep_dot_2_dot_2_dot_1_flat__))
+                                                  (meta
+                                                   ((type_ (UArray UComplex))
+                                                    (loc <opaque>) (adlevel DataOnly))))
+                                                 ((Single
+                                                   ((pattern
+                                                     (Var
+                                                      very_deep_dot_2_dot_2_dot_1_flat__pos__))
+                                                    (meta
+                                                     ((type_ UInt) (loc <opaque>)
+                                                      (adlevel DataOnly))))))))
+                                               (meta
+                                                ((type_ UComplex) (loc <opaque>)
+                                                 (adlevel DataOnly))))
+                                              ((pattern
+                                                (Indexed
+                                                 ((pattern
+                                                   (Var
+                                                    very_deep_dot_2_dot_2_dot_1_flat__))
+                                                  (meta
+                                                   ((type_ (UArray UComplex))
+                                                    (loc <opaque>) (adlevel DataOnly))))
+                                                 ((Single
+                                                   ((pattern
+                                                     (FunApp (Operator Plus)
+                                                      (((pattern
+                                                         (Var
+                                                          very_deep_dot_2_dot_2_dot_1_flat__pos__))
+                                                        (meta
+                                                         ((type_ UInt) 
+                                                          (loc <opaque>)
+                                                          (adlevel DataOnly))))
+                                                       ((pattern (Lit Int 1))
+                                                        (meta
+                                                         ((type_ UInt) 
+                                                          (loc <opaque>)
+                                                          (adlevel DataOnly)))))))
+                                                    (meta
+                                                     ((type_ UInt) (loc <opaque>)
+                                                      (adlevel DataOnly))))))))
+                                               (meta
+                                                ((type_ UComplex) (loc <opaque>)
+                                                 (adlevel DataOnly)))))))
                                            (meta
                                             ((type_ UComplex) (loc <opaque>)
                                              (adlevel DataOnly))))))
@@ -1826,7 +1861,7 @@
                                                (meta
                                                 ((type_ UInt) (loc <opaque>)
                                                  (adlevel DataOnly))))
-                                              ((pattern (Lit Int 1))
+                                              ((pattern (Lit Int 2))
                                                (meta
                                                 ((type_ UInt) (loc <opaque>)
                                                  (adlevel DataOnly)))))))
@@ -2211,7 +2246,7 @@
        ((pattern
          (Decl (decl_adtype AutoDiffable)
           (decl_id complex_vector_deep_dot_2_dot_2_flat__)
-          (decl_type (Unsized (UArray UComplex))) (initialize Default)))
+          (decl_type (Unsized (UArray UReal))) (initialize Default)))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable complex_vector_deep_dot_2_dot_2_flat__) ())
@@ -2224,7 +2259,7 @@
                   (UArray
                    (UTuple (UInt (UArray (UTuple (UReal (UArray UComplexVector))))))))
                  (loc <opaque>) (adlevel DataOnly)))))))
-           (meta ((type_ (UArray UComplex)) (loc <opaque>) (adlevel DataOnly))))))
+           (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
         (meta <opaque>))
        ((pattern
          (Decl (decl_adtype DataOnly)
@@ -2403,7 +2438,7 @@
                                                          ((type_ UInt) 
                                                           (loc <opaque>)
                                                           (adlevel DataOnly))))
-                                                       ((pattern (Lit Int 1))
+                                                       ((pattern (Lit Int 2))
                                                         (meta
                                                          ((type_ UInt) 
                                                           (loc <opaque>)
@@ -2543,7 +2578,7 @@
                                                (meta
                                                 ((type_ UInt) (loc <opaque>)
                                                  (adlevel DataOnly))))
-                                              ((pattern (Lit Int 1))
+                                              ((pattern (Lit Int 2))
                                                (meta
                                                 ((type_ UInt) (loc <opaque>)
                                                  (adlevel DataOnly)))))))
@@ -6496,7 +6531,7 @@
      (Block
       (((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id arr_tuple_p_dot_1_flat__)
-          (decl_type (Unsized (UArray UComplex))) (initialize Default)))
+          (decl_type (Unsized (UArray UReal))) (initialize Default)))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable arr_tuple_p_dot_1_flat__) ()) UComplex
@@ -6506,7 +6541,7 @@
                (meta
                 ((type_ (UArray (UTuple (UComplex (UArray UReal) UVector))))
                  (loc <opaque>) (adlevel DataOnly)))))))
-           (meta ((type_ (UArray UComplex)) (loc <opaque>) (adlevel DataOnly))))))
+           (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
         (meta <opaque>))
        ((pattern
          (Decl (decl_adtype DataOnly) (decl_id arr_tuple_p_dot_1_flat__pos__)
@@ -6596,13 +6631,30 @@
               (((pattern
                  (Assignment ((LVariable arr_tuple_p_dot_1_temp__) ()) UComplex
                   ((pattern
-                    (Indexed
-                     ((pattern (Var arr_tuple_p_dot_1_flat__))
-                      (meta
-                       ((type_ (UArray UComplex)) (loc <opaque>) (adlevel DataOnly))))
-                     ((Single
-                       ((pattern (Var arr_tuple_p_dot_1_flat__pos__))
-                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+                    (FunApp (StanLib to_complex FnPlain AoS)
+                     (((pattern
+                        (Indexed
+                         ((pattern (Var arr_tuple_p_dot_1_flat__))
+                          (meta
+                           ((type_ (UArray UComplex)) (loc <opaque>) (adlevel DataOnly))))
+                         ((Single
+                           ((pattern (Var arr_tuple_p_dot_1_flat__pos__))
+                            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+                       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))
+                      ((pattern
+                        (Indexed
+                         ((pattern (Var arr_tuple_p_dot_1_flat__))
+                          (meta
+                           ((type_ (UArray UComplex)) (loc <opaque>) (adlevel DataOnly))))
+                         ((Single
+                           ((pattern
+                             (FunApp (Operator Plus)
+                              (((pattern (Var arr_tuple_p_dot_1_flat__pos__))
+                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                               ((pattern (Lit Int 1))
+                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+                       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
                    (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
                 (meta <opaque>))
                ((pattern
@@ -6611,7 +6663,7 @@
                     (FunApp (Operator Plus)
                      (((pattern (Var arr_tuple_p_dot_1_flat__pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                      ((pattern (Lit Int 1))
+                      ((pattern (Lit Int 2))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
                 (meta <opaque>))
@@ -7253,7 +7305,7 @@
        ((pattern
          (Decl (decl_adtype AutoDiffable)
           (decl_id arr_tuple_tuple_p_dot_3_dot_2_dot_1_flat__)
-          (decl_type (Unsized (UArray UComplex))) (initialize Default)))
+          (decl_type (Unsized (UArray UReal))) (initialize Default)))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable arr_tuple_tuple_p_dot_3_dot_2_dot_1_flat__) ()) UComplex
@@ -7265,7 +7317,7 @@
                   (UArray
                    (UTuple (UReal UReal (UTuple (UReal (UTuple (UComplex UVector))))))))
                  (loc <opaque>) (adlevel DataOnly)))))))
-           (meta ((type_ (UArray UComplex)) (loc <opaque>) (adlevel DataOnly))))))
+           (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
         (meta <opaque>))
        ((pattern
          (Decl (decl_adtype DataOnly)
@@ -7413,13 +7465,32 @@
                    ())
                   UComplex
                   ((pattern
-                    (Indexed
-                     ((pattern (Var arr_tuple_tuple_p_dot_3_dot_2_dot_1_flat__))
-                      (meta
-                       ((type_ (UArray UComplex)) (loc <opaque>) (adlevel DataOnly))))
-                     ((Single
-                       ((pattern (Var arr_tuple_tuple_p_dot_3_dot_2_dot_1_flat__pos__))
-                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+                    (FunApp (StanLib to_complex FnPlain AoS)
+                     (((pattern
+                        (Indexed
+                         ((pattern (Var arr_tuple_tuple_p_dot_3_dot_2_dot_1_flat__))
+                          (meta
+                           ((type_ (UArray UComplex)) (loc <opaque>) (adlevel DataOnly))))
+                         ((Single
+                           ((pattern
+                             (Var arr_tuple_tuple_p_dot_3_dot_2_dot_1_flat__pos__))
+                            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+                       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))
+                      ((pattern
+                        (Indexed
+                         ((pattern (Var arr_tuple_tuple_p_dot_3_dot_2_dot_1_flat__))
+                          (meta
+                           ((type_ (UArray UComplex)) (loc <opaque>) (adlevel DataOnly))))
+                         ((Single
+                           ((pattern
+                             (FunApp (Operator Plus)
+                              (((pattern
+                                 (Var arr_tuple_tuple_p_dot_3_dot_2_dot_1_flat__pos__))
+                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                               ((pattern (Lit Int 1))
+                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+                       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
                    (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
                 (meta <opaque>))
                ((pattern
@@ -7429,7 +7500,7 @@
                     (FunApp (Operator Plus)
                      (((pattern (Var arr_tuple_tuple_p_dot_3_dot_2_dot_1_flat__pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                      ((pattern (Lit Int 1))
+                      ((pattern (Lit Int 2))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
                 (meta <opaque>))
@@ -8421,7 +8492,7 @@
         (meta <opaque>))
        ((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id very_deep_p_dot_2_dot_2_dot_1_flat__)
-          (decl_type (Unsized (UArray UComplex))) (initialize Default)))
+          (decl_type (Unsized (UArray UReal))) (initialize Default)))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable very_deep_p_dot_2_dot_2_dot_1_flat__) ())
@@ -8436,7 +8507,7 @@
                     (UReal
                      (UArray (UTuple (UReal (UArray (UTuple (UComplex UMatrix))))))))))
                  (loc <opaque>) (adlevel DataOnly)))))))
-           (meta ((type_ (UArray UComplex)) (loc <opaque>) (adlevel DataOnly))))))
+           (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
         (meta <opaque>))
        ((pattern
          (Decl (decl_adtype DataOnly) (decl_id very_deep_p_dot_2_dot_2_dot_1_flat__pos__)
@@ -8635,19 +8706,54 @@
                                            ())
                                           UComplex
                                           ((pattern
-                                            (Indexed
-                                             ((pattern
-                                               (Var very_deep_p_dot_2_dot_2_dot_1_flat__))
-                                              (meta
-                                               ((type_ (UArray UComplex)) 
-                                                (loc <opaque>) (adlevel DataOnly))))
-                                             ((Single
-                                               ((pattern
-                                                 (Var
-                                                  very_deep_p_dot_2_dot_2_dot_1_flat__pos__))
-                                                (meta
-                                                 ((type_ UInt) (loc <opaque>)
-                                                  (adlevel DataOnly))))))))
+                                            (FunApp (StanLib to_complex FnPlain AoS)
+                                             (((pattern
+                                                (Indexed
+                                                 ((pattern
+                                                   (Var
+                                                    very_deep_p_dot_2_dot_2_dot_1_flat__))
+                                                  (meta
+                                                   ((type_ (UArray UComplex))
+                                                    (loc <opaque>) (adlevel DataOnly))))
+                                                 ((Single
+                                                   ((pattern
+                                                     (Var
+                                                      very_deep_p_dot_2_dot_2_dot_1_flat__pos__))
+                                                    (meta
+                                                     ((type_ UInt) (loc <opaque>)
+                                                      (adlevel DataOnly))))))))
+                                               (meta
+                                                ((type_ UComplex) (loc <opaque>)
+                                                 (adlevel DataOnly))))
+                                              ((pattern
+                                                (Indexed
+                                                 ((pattern
+                                                   (Var
+                                                    very_deep_p_dot_2_dot_2_dot_1_flat__))
+                                                  (meta
+                                                   ((type_ (UArray UComplex))
+                                                    (loc <opaque>) (adlevel DataOnly))))
+                                                 ((Single
+                                                   ((pattern
+                                                     (FunApp (Operator Plus)
+                                                      (((pattern
+                                                         (Var
+                                                          very_deep_p_dot_2_dot_2_dot_1_flat__pos__))
+                                                        (meta
+                                                         ((type_ UInt) 
+                                                          (loc <opaque>)
+                                                          (adlevel DataOnly))))
+                                                       ((pattern (Lit Int 1))
+                                                        (meta
+                                                         ((type_ UInt) 
+                                                          (loc <opaque>)
+                                                          (adlevel DataOnly)))))))
+                                                    (meta
+                                                     ((type_ UInt) (loc <opaque>)
+                                                      (adlevel DataOnly))))))))
+                                               (meta
+                                                ((type_ UComplex) (loc <opaque>)
+                                                 (adlevel DataOnly)))))))
                                            (meta
                                             ((type_ UComplex) (loc <opaque>)
                                              (adlevel DataOnly))))))
@@ -8666,7 +8772,7 @@
                                                (meta
                                                 ((type_ UInt) (loc <opaque>)
                                                  (adlevel DataOnly))))
-                                              ((pattern (Lit Int 1))
+                                              ((pattern (Lit Int 2))
                                                (meta
                                                 ((type_ UInt) (loc <opaque>)
                                                  (adlevel DataOnly)))))))
@@ -9399,7 +9505,7 @@
        ((pattern
          (Decl (decl_adtype AutoDiffable)
           (decl_id complex_vector_deep_p_dot_2_dot_2_flat__)
-          (decl_type (Unsized (UArray UComplex))) (initialize Default)))
+          (decl_type (Unsized (UArray UReal))) (initialize Default)))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable complex_vector_deep_p_dot_2_dot_2_flat__) ())
@@ -9412,7 +9518,7 @@
                   (UArray
                    (UTuple (UReal (UArray (UTuple (UReal (UArray UComplexVector))))))))
                  (loc <opaque>) (adlevel DataOnly)))))))
-           (meta ((type_ (UArray UComplex)) (loc <opaque>) (adlevel DataOnly))))))
+           (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
         (meta <opaque>))
        ((pattern
          (Decl (decl_adtype DataOnly)
@@ -9594,7 +9700,7 @@
                                                          ((type_ UInt) 
                                                           (loc <opaque>)
                                                           (adlevel DataOnly))))
-                                                       ((pattern (Lit Int 1))
+                                                       ((pattern (Lit Int 2))
                                                         (meta
                                                          ((type_ UInt) 
                                                           (loc <opaque>)
@@ -9735,7 +9841,7 @@
                                                (meta
                                                 ((type_ UInt) (loc <opaque>)
                                                  (adlevel DataOnly))))
-                                              ((pattern (Lit Int 1))
+                                              ((pattern (Lit Int 2))
                                                (meta
                                                 ((type_ UInt) (loc <opaque>)
                                                  (adlevel DataOnly)))))))
