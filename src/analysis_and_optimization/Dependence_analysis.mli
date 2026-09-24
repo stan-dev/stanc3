@@ -154,15 +154,6 @@ type dep_info_map =
     other statements. *)
 type dependency_graph = label Set.Poly.t LabelMap.t
 
-val classify_point :
-     loopvars:string Set.Poly.t
-  -> written_vars:string Set.Poly.t
-  -> Expr.Typed.t
-  -> point
-(** The integer index [expr] as a [point]. [loopvars] are the variables of the
-    loops around the index, and [written_vars] the variables assigned in the
-    analysed statement. *)
-
 val node_immediate_dependencies :
   dep_info_map -> ?blockers:string Set.Poly.t -> label -> label Set.Poly.t
 (** Given dependency information for each node, find the 'immediate'
@@ -213,5 +204,6 @@ val mir_uninitialized_variables :
     the flowgraph starting at the given statement *)
 
 val read_variables_at : dep_info_map -> label Set.Poly.t -> string Set.Poly.t
-(** The variables read by the statements at [labels], including the variables
-    read inside indices. *)
+(** The names of the variables that the statements at [labels] read or
+    increment, including reads inside indices and sizes. A [For] or [if] adds
+    only the variables in its bounds or condition. *)

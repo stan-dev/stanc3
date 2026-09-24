@@ -108,7 +108,7 @@ module Path = struct
     | Indexed (base, indices) ->
         extend base (List.map indices ~f:(fun index -> Subscript index))
     | TupleProjection (base, field) -> extend base [Field field]
-    | _ -> None
+    | Lit _ | FunApp _ | TernaryIf _ | EAnd _ | EOr _ | Promotion _ -> None
 
   (** The path of the left side of an assignment: [x[i].2[j] = ...] gives
       [i, .2, j]. *)
@@ -278,45 +278,67 @@ let point_dependence (frame : frame) (source : point) (sink : point) :
       | Some _, Some _ -> Unknown)
   | Affine _, Affine _ | Varying _, _ | _, Varying _ -> Unknown
 
+(** What is possible at both of two index positions; the accesses are
+    independent when no direction is left at some loop. *)
+let meet (left : dependence) (right : dependence) : dependence =
+  match (left, right) with
+  | Independent, _ | _, Independent -> Independent
+  | Unknown, other | other, Unknown -> other
+  | Dependent left_levels, Dependent right_levels ->
+      let levels =
+        List.map2 left_levels right_levels
+          ~f:(fun (left_level : level) right_level ->
+            match (left_level.distance, right_level.distance) with
+            | Some left_distance, Some right_distance
+              when left_distance <> right_distance ->
+                {directions= Set.Poly.empty; distance= None}
+            | _ ->
+                { directions=
+                    Set.Poly.inter left_level.directions right_level.directions
+                ; distance=
+                    Option.first_some left_level.distance right_level.distance
+                }) in
+      if List.exists levels ~f:(fun level -> Set.Poly.is_empty level.directions)
+      then Independent
+      else Dependent levels
+
+(** What is possible for either of two pairs of accesses; a distance is kept
+    only when both pairs agree. *)
+let join (left : dependence) (right : dependence) : dependence =
+  match (left, right) with
+  | Unknown, _ | _, Unknown -> Unknown
+  | Independent, other | other, Independent -> other
+  | Dependent left_levels, Dependent right_levels ->
+      Dependent
+        (List.map2 left_levels right_levels
+           ~f:(fun (left_level : level) right_level ->
+             { directions=
+                 Set.Poly.union left_level.directions right_level.directions
+             ; distance=
+                 (if
+                    Option.equal Int.equal left_level.distance
+                      right_level.distance
+                  then left_level.distance
+                  else None) }))
+
 (** Whether two accesses to one variable can touch the same element. The
     elements are the same only when the paths are equal at every position, so
     the per-position results are intersected. Two different tuple fields never
     overlap. Accesses with paths of different lengths are [Unknown]. *)
 let access_dependence (frame : frame) (source : access) (sink : access) :
     dependence =
-  if List.length source.path <> List.length sink.path then Unknown
+  if List.compare_lengths source.path sink.path <> 0 then Unknown
   else
     List.fold_left2 source.path sink.path ~init:Unknown
       ~f:(fun merged source_step sink_step ->
-        let position =
-          match (source_step, sink_step) with
+        meet merged
+          (match (source_step, sink_step) with
           | Subscript (Single source_point), Subscript (Single sink_point) ->
               point_dependence frame source_point sink_point
           | Field source_field, Field sink_field when source_field <> sink_field
             ->
               Independent
-          | _ -> Unknown in
-        (* keep what is possible at both positions; the accesses are independent
-           when nothing is left at some loop *)
-        match (merged, position) with
-        | Independent, _ | _, Independent -> Independent
-        | Unknown, other | other, Unknown -> other
-        | Dependent merged_levels, Dependent position_levels ->
-            let levels =
-              List.map2 merged_levels position_levels ~f:(fun left right ->
-                  match (left.distance, right.distance) with
-                  | Some left_d, Some right_d when left_d <> right_d ->
-                      {directions= Set.Poly.empty; distance= None}
-                  | _ ->
-                      { directions=
-                          Set.Poly.inter left.directions right.directions
-                      ; distance= Option.first_some left.distance right.distance
-                      }) in
-            if
-              List.exists levels ~f:(fun level ->
-                  Set.Poly.is_empty level.directions)
-            then Independent
-            else Dependent levels)
+          | Subscript _, _ | Field _, _ -> Unknown))
 
 (** Find all of the reaching definitions of a variable in an RD set *)
 let reaching_defn_lookup (rds : reaching_defn Set.Poly.t) (var : string) :
@@ -350,8 +372,7 @@ let ordered_dependence ~(src : label) ~(dst : label) (dep : dependence) :
         else Option.map same_iteration ~f:(List.cons {level with directions})
   in
   match dep with
-  | Independent -> Independent
-  | Unknown -> Unknown
+  | (Independent | Unknown) as unchanged -> unchanged
   | Dependent levels -> (
       match restrict levels with
       | Some restricted -> Dependent restricted
@@ -371,30 +392,23 @@ let pair_dependence (frame : frame) ~(restrict : dependence -> dependence)
     (sources : access list) (sinks : access list) : dependence =
   if List.is_empty sources || List.is_empty sinks then Unknown
   else
-    List.fold_left sources ~init:Independent ~f:(fun merged_sources source ->
-        List.fold_left sinks ~init:merged_sources ~f:(fun merged sink ->
-            match (source.kind, sink.kind) with
-            | Increment, Increment -> merged
-            | _ -> (
-                (* a direction possible for either pair is possible; the
-                   distance is kept only when both pairs agree *)
-                match
-                  (merged, restrict (access_dependence frame source sink))
-                with
-                | Unknown, _ | _, Unknown -> Unknown
-                | Independent, other | other, Independent -> other
-                | Dependent merged_levels, Dependent pair_levels ->
-                    Dependent
-                      (List.map2 merged_levels pair_levels
-                         ~f:(fun (left : level) right ->
-                           { directions=
-                               Set.Poly.union left.directions right.directions
-                           ; distance=
-                               (if
-                                  Option.equal Int.equal left.distance
-                                    right.distance
-                                then left.distance
-                                else None) })))))
+    List.fold_left
+      (List.concat_map sources ~f:(fun source ->
+           List.map sinks ~f:(fun sink -> (source, sink))))
+      ~init:Independent
+      ~f:(fun merged ((source : access), (sink : access)) ->
+        match (source.kind, sink.kind) with
+        | Increment, Increment -> merged
+        | (Read | Write), _ | Increment, (Read | Write) ->
+            join merged (restrict (access_dependence frame source sink)))
+
+(** The loop variable of the loop at [loop]; a [while] loop has none. *)
+let for_loopvar
+    (statement_map : ((Expr.Typed.t, label) Stmt.Pattern.t * _) LabelMap.t)
+    (loop : label) : string option =
+  match fst (LabelMap.find loop statement_map) with
+  | Stmt.Pattern.For {loopvar; _} -> Some loopvar
+  | _ -> None
 
 (** The [frame] of the statements at [src] and [dst]. *)
 let common_frame (statement_map : dep_info_map) ~(src : label) ~(dst : label) :
@@ -409,9 +423,7 @@ let common_frame (statement_map : dep_info_map) ~(src : label) ~(dst : label) :
     ~f:(fun loop ->
       Option.some_if
         (List.mem loop ~set:dst_loops)
-        (match fst (LabelMap.find loop statement_map) with
-        | Stmt.Pattern.For {loopvar; _} -> Some loopvar
-        | _ -> None))
+        (for_loopvar statement_map loop))
 
 (** The accesses of the statement at [label]. *)
 let accesses_at (statement_map : dep_info_map) (label : label) : Accesses.t =
@@ -446,7 +458,7 @@ let pruned_reaching_defns (statement_map : dep_info_map) (dst : label)
   let _, info = LabelMap.find dst statement_map in
   element_edges statement_map ~dst
     ~sources:(reaching_defn_lookup info.reaching_defn_entry var)
-    ~restrict:(fun ~src dep -> ordered_dependence ~src ~dst dep)
+    ~restrict:(ordered_dependence ~dst)
     ~src_accesses:(fun src ->
       (Accesses.of_var var (accesses_at statement_map src)).writes)
     ~dst_accesses:(Accesses.of_var var info.accesses).reads
@@ -455,8 +467,7 @@ let pruned_reaching_defns (statement_map : dep_info_map) (dst : label)
 (** The variables the statement reads, including the variables read inside
     indices and sizes, and the variables the statement increments. *)
 let read_variables (info : node_dep_info) : string Set.Poly.t =
-  Set.Poly.of_list
-    (List.map info.accesses.reads ~f:(fun (access : access) -> access.var))
+  Set.Poly.of_list (List.map info.accesses.reads ~f:(fun access -> access.var))
 
 let node_immediate_dependencies (statement_map : dep_info_map)
     ?(blockers : string Set.Poly.t = Set.Poly.empty) (label : label) :
@@ -647,11 +658,10 @@ let build_dep_info_map (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
   let rec loopvars_of label =
     match enclosing_loop statement_map parents label with
     | None -> Set.Poly.empty
-    | Some loop -> (
+    | Some loop ->
         let outer = loopvars_of loop in
-        match fst (LabelMap.find loop statement_map) with
-        | Stmt.Pattern.For {loopvar; _} -> Set.Poly.add loopvar outer
-        | _ -> outer) in
+        Option.value_map (for_loopvar statement_map loop) ~default:outer
+          ~f:(fun loopvar -> Set.Poly.add loopvar outer) in
   LabelMap.mapi statement_map ~f:(fun label (pattern, idx) ->
       let rds = LabelMap.find label rd_map in
       ( pattern
@@ -673,9 +683,6 @@ let log_prob_dependency_graph (mir : Program.Typed.t) : dependency_graph =
   let dep_info_map = log_prob_build_dep_info_map mir in
   all_node_dependencies dep_info_map
 
-(** The names of the variables that the statements at [labels] reads or
-    increments, including reads inside indices and sizes. A [For] or [if] adds
-    only the variables in its bounds or condition, not those in its body. *)
 let read_variables_at (statement_map : dep_info_map) (labels : label Set.Poly.t)
     : string Set.Poly.t =
   Set.Poly.union_map labels ~f:(fun label ->
