@@ -301,7 +301,9 @@ let rec eval_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
                   , [{meta= {type_= UInt; _}; _}; {pattern= Lit (Int, i2); _}] )
                   when Int.of_string i2 = 0 ->
                     raise (Rejected (e.meta.loc, "Integer division by zero"))
-                | op, [{pattern= Lit (Int, i1); _}; {pattern= Lit (Int, i2); _}]
+                | ( ( Plus | Minus | Times | Divide | IntDivide | Modulo
+                    | Equals | NEquals | Less | Leq | Greater | Geq )
+                  , [{pattern= Lit (Int, i1); _}; {pattern= Lit (Int, i2); _}] )
                   ->
                     apply_operator_int op (Int.of_string i1) (Int.of_string i2)
                 | ( (Plus | Minus | Times | Divide)
