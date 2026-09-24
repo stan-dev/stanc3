@@ -173,7 +173,7 @@ module Accesses = struct
             concat (read name path :: List.map (Path.bounds path) ~f:of_expr)
         | None -> of_children ())
     | FunApp (StanLib (_, FnTarget, _), []) -> read "target" []
-    | FunApp (UserDefined (_, (FnTarget | FnJacobian)), _) ->
+    | FunApp (kind, _) when increments_target kind ->
         concat [of_children (); increment_target]
     | Lit _ | FunApp _ | TernaryIf _ | EAnd _ | EOr _ | Promotion _ ->
         of_children ()
@@ -198,11 +198,8 @@ module Accesses = struct
           (List.map (Path.bounds path @ [rhs]) ~f:of_expr
           @ [write (Stmt.Helpers.lhs_variable lhs) path])
     | Decl {decl_id; _} -> concat [of_children (); write decl_id []]
-    | TargetPE _ | JacobianPE _
-     |NRFunApp
-        ( ( StanLib (_, (FnTarget | FnJacobian), _)
-          | UserDefined (_, (FnTarget | FnJacobian)) )
-        , _ ) ->
+    | TargetPE _ | JacobianPE _ -> concat [of_children (); increment_target]
+    | NRFunApp (kind, _) when increments_target kind ->
         concat [of_children (); increment_target]
     | NRFunApp _ | Return _ | IfElse _ | While _ | For _ | Profile _ | Block _
      |SList _ | Break | Continue | Skip ->

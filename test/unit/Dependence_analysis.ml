@@ -373,6 +373,21 @@ let%expect_test "Accesses: nested indexing is one reference" =
     7: R a[n, 1], R a[n, 2], R b[n, 1], R a[1:2], W y[1]
     |}]
 
+let%expect_test "Accesses: a Stan Math _jacobian call increments target" =
+  print_node_accesses
+    {|
+      parameters { real y; }
+      transformed parameters {
+        real x;
+        x = lower_bound_jacobian(y, 0);
+      }
+    |};
+  [%expect {|
+    2: W y
+    3: W x
+    4: R y, += target, W x
+    |}]
+
 let%expect_test "Accesses: a declaration reads the sizes in its type" =
   print_node_accesses
     {|

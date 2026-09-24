@@ -449,10 +449,7 @@ let assigned_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Pattern.t) =
       Set.Poly.singleton (Middle.Stmt.Helpers.lhs_variable lhs)
   | Decl {decl_id; initialize= Assign _; _} -> Set.Poly.singleton decl_id
   | TargetPE _ | JacobianPE _ -> Set.Poly.singleton "target"
-  | NRFunApp
-      ( ( UserDefined (_, (FnTarget | FnJacobian))
-        | StanLib (_, (FnTarget | FnJacobian), _) )
-      , _ ) ->
+  | NRFunApp (kind, _) when increments_target kind ->
       Set.Poly.singleton "target"
   | For {loopvar= x; _} -> Set.Poly.singleton x
   | Decl {decl_id= _; _}
@@ -494,10 +491,7 @@ let reaching_definitions_transfer
             Set.Poly.filter p ~f:(fun (y, _) -> y = x)
         | TargetPE _ | JacobianPE _ ->
             Set.Poly.filter p ~f:(fun (y, _) -> y = "target")
-        | NRFunApp
-            ( ( UserDefined (_, (FnTarget | FnJacobian))
-              | StanLib (_, (FnTarget | FnJacobian), _) )
-            , _ ) ->
+        | NRFunApp (kind, _) when increments_target kind ->
             Set.Poly.filter p ~f:(fun (y, _) -> y = "target")
         | NRFunApp (_, _)
          |Break | Continue | Return _ | Skip

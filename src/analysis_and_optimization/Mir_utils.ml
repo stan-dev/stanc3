@@ -14,14 +14,18 @@ and idx_any pred (i : Expr.Typed.t Index.t) =
 
 and accum_any pred b e = b || expr_any pred e
 
-let can_side_effect_top_expr (e : Expr.Typed.t) =
-  (* the only StanLib FnTarget function is target() which has no side effects
-     but can return a different result every time *)
-  match e.pattern with
-  | FunApp
-      ( (UserDefined (_, (FnTarget | FnJacobian)) | StanLib (_, FnJacobian, _))
-      , _ ) ->
+let increments_target (kind : 'e Fun_kind.t) : bool =
+  (* the only StanLib FnTarget function is target(), which reads target *)
+  match kind with
+  | UserDefined (_, (FnTarget | FnJacobian)) | StanLib (_, FnJacobian, _) ->
       true
+  | UserDefined _ | StanLib _ | Operator _ | CompilerInternal _ -> false
+
+let can_side_effect_top_expr (e : Expr.Typed.t) =
+  (* target() has no side effects but can return a different result every
+     time *)
+  match e.pattern with
+  | FunApp (kind, _) when increments_target kind -> true
   | FunApp (CompilerInternal internal_fn, _) ->
       Internal_fun.can_side_effect internal_fn
   | _ -> false
