@@ -15,9 +15,8 @@ open Monotone_framework
 type linear = {const: int; symbol: Expr.Typed.t option; loopvar: string option}
 type varying_kind = Written | Nonlinear
 type point = Affine of linear | Varying of varying_kind
-type access_kind = Read | Write | Increment
 type 'index step = Subscript of 'index Index.t | Field of int
-type 'index access = {var: string; path: 'index step list; kind: access_kind}
+type 'index access = {var: string; path: 'index step list}
 
 (** [left + right]; [None] when both have a symbol or both have a loop variable,
     since a [linear] holds at most one of each. *)
@@ -127,30 +126,35 @@ module Path = struct
 end
 
 module Accesses = struct
-  type 'index t = {reads: 'index access list; writes: 'index access list}
+  type 'index t =
+    { reads: 'index access list
+    ; writes: 'index access list
+    ; increments: 'index access list }
 
   (** One read of [var] at [path]. *)
   let read (var : string) (path : 'index step list) : 'index t =
-    {reads= [{var; path; kind= Read}]; writes= []}
+    {reads= [{var; path}]; writes= []; increments= []}
 
   (** One write of [var] at [path]. *)
   let write (var : string) (path : 'index step list) : 'index t =
-    {reads= []; writes= [{var; path; kind= Write}]}
+    {reads= []; writes= [{var; path}]; increments= []}
 
-  (** An increment of [target], which reads and writes [target]. *)
+  (** An increment of [target]. *)
   let increment_target : 'index t =
-    let increment = {var= "target"; path= []; kind= Increment} in
-    {reads= [increment]; writes= [increment]}
+    {reads= []; writes= []; increments= [{var= "target"; path= []}]}
 
   (** The accesses of [parts], one part after another. *)
   let concat (parts : 'index t list) : 'index t =
     { reads= List.concat_map parts ~f:(fun part -> part.reads)
-    ; writes= List.concat_map parts ~f:(fun part -> part.writes) }
+    ; writes= List.concat_map parts ~f:(fun part -> part.writes)
+    ; increments= List.concat_map parts ~f:(fun part -> part.increments) }
 
   (** The accesses in [accesses] to [var]. *)
   let of_var (var : string) (accesses : 'index t) : 'index t =
     let keep = List.filter ~f:(fun access -> String.equal access.var var) in
-    {reads= keep accesses.reads; writes= keep accesses.writes}
+    { reads= keep accesses.reads
+    ; writes= keep accesses.writes
+    ; increments= keep accesses.increments }
 
   (** The accesses of [expr], in evaluation order, with the paths as written.
       [target()] reads [target], and a call to a [_lp] function increments
@@ -178,9 +182,8 @@ module Accesses = struct
     | Lit _ | FunApp _ | TernaryIf _ | EAnd _ | EOr _ | Promotion _ ->
         of_children ()
 
-  (** The reads and the writes of one statement, not counting the statements
-      nested inside. A declaration reads the sizes in its type. An [Increment]
-      is in both lists. *)
+  (** The accesses of one statement, not counting the statements nested inside.
+      A declaration reads the sizes in its type. *)
   let of_stmt (stmt : (Expr.Typed.t, 'substatement) Stmt.Pattern.t) :
       Expr.Typed.t t =
     (* the accesses of the expressions of [stmt], in order, skipping the
@@ -216,7 +219,8 @@ module Accesses = struct
         classify_paths
           (List.filter accesses.reads ~f:(fun access ->
                not (Set.Poly.mem access.var loopvars)))
-    ; writes= classify_paths accesses.writes }
+    ; writes= classify_paths accesses.writes
+    ; increments= classify_paths accesses.increments }
 end
 
 type direction = Lt | Eq | Gt
@@ -372,25 +376,36 @@ module Dependence = struct
         | Some restricted -> Dependent restricted
         | None -> Independent)
 
-  (** The dependence from the accesses [sources] to the accesses [sinks]:
-      [Independent] only when every pair is independent. [restrict] is applied
-      to each pair before the pairs are combined, so that a direction removed
-      for one pair is not added back by another. Two [Increment]s are skipped,
-      since increments can run in either order. When either list is empty the
-      accesses are unknown and the result is [Unknown]. *)
-  let of_access_lists (common_loops : string option list) ~(restrict : t -> t)
-      (sources : point access list) (sinks : point access list) : t =
-    if List.is_empty sources || List.is_empty sinks then Unknown
+  (** The dependence from the [source_uses] of [source] to the [sink_uses] of
+      [sink], where an increment pairs as either use but never with another
+      increment, since increments can run in either order. The result is
+      [Independent] only when every pair is independent, and [Unknown] when
+      either side has no access. [restrict] is applied to each pair before the
+      pairs are combined, so that a direction removed for one pair is not added
+      back by another. *)
+  let between (common_loops : string option list) ~(restrict : t -> t)
+      ~(source_uses : point Accesses.t -> point access list)
+      ~(sink_uses : point Accesses.t -> point access list)
+      (source : point Accesses.t) (sink : point Accesses.t) : t =
+    let pairs sources sinks =
+      List.concat_map sources ~f:(fun source_access ->
+          List.map sinks ~f:(fun sink_access -> (source_access, sink_access)))
+    in
+    let sources = source_uses source in
+    let sinks = sink_uses sink in
+    if
+      List.is_empty (sources @ source.increments)
+      || List.is_empty (sinks @ sink.increments)
+    then Unknown
     else
       List.fold_left
-        (List.concat_map sources ~f:(fun source ->
-             List.map sinks ~f:(fun sink -> (source, sink))))
+        (pairs sources sinks
+        @ pairs sources sink.increments
+        @ pairs source.increments sinks)
         ~init:Independent
-        ~f:(fun merged ((source : point access), (sink : point access)) ->
-          match (source.kind, sink.kind) with
-          | Increment, Increment -> merged
-          | (Read | Write), _ | Increment, (Read | Write) ->
-              join merged (restrict (of_accesses common_loops source sink)))
+        ~f:(fun merged (source_access, sink_access) ->
+          join merged
+            (restrict (of_accesses common_loops source_access sink_access)))
 end
 
 (** Find all of the reaching definitions of a variable in an RD set *)
@@ -435,23 +450,27 @@ let accesses_at (statement_map : dep_info_map) (label : label) :
   (snd (LabelMap.find label statement_map)).accesses
 
 (** The labels in [sources] that may touch an element that [dst_accesses] touch,
-    each with the dependence. [src_accesses] gives the accesses of a source, and
-    [restrict] limits each pair of accesses, for example to the pairs where the
-    source runs first. A source outside the analysed statement has unknown
-    accesses and is always kept. *)
+    each with the dependence. [src_accesses] gives the accesses of a source,
+    [source_uses] and [sink_uses] pick the accesses to pair, and [restrict]
+    limits each pair, for example to the pairs where the source runs first. A
+    source outside the analysed statement has unknown accesses and is always
+    kept. *)
 let element_edges (statement_map : dep_info_map) ~(dst : label)
     ~(sources : label Set.Poly.t)
     ~(restrict : src:label -> Dependence.t -> Dependence.t)
-    ~(src_accesses : label -> point access list)
-    ~(dst_accesses : point access list) : (label * Dependence.t) list =
+    ~(source_uses : point Accesses.t -> point access list)
+    ~(sink_uses : point Accesses.t -> point access list)
+    ~(src_accesses : label -> point Accesses.t)
+    ~(dst_accesses : point Accesses.t) : (label * Dependence.t) list =
   List.filter_map (Set.Poly.to_list sources) ~f:(fun src ->
       if src = root_label || not (LabelMap.mem src statement_map) then
         Some (src, Dependence.Unknown)
       else
         match
-          Dependence.of_access_lists
+          Dependence.between
             (common_loops statement_map ~src ~dst)
-            ~restrict:(restrict ~src) (src_accesses src) dst_accesses
+            ~restrict:(restrict ~src) ~source_uses ~sink_uses (src_accesses src)
+            dst_accesses
         with
         | Independent -> None
         | (Unknown | Dependent _) as dep -> Some (src, dep))
@@ -464,15 +483,19 @@ let pruned_reaching_defns (statement_map : dep_info_map) (dst : label)
   element_edges statement_map ~dst
     ~sources:(reaching_defn_lookup info.reaching_defn_entry var)
     ~restrict:(Dependence.ordered ~dst)
+    ~source_uses:(fun accesses -> accesses.writes)
+    ~sink_uses:(fun accesses -> accesses.reads)
     ~src_accesses:(fun src ->
-      (Accesses.of_var var (accesses_at statement_map src)).writes)
-    ~dst_accesses:(Accesses.of_var var info.accesses).reads
+      Accesses.of_var var (accesses_at statement_map src))
+    ~dst_accesses:(Accesses.of_var var info.accesses)
   |> List.map ~f:fst |> Set.Poly.of_list
 
 (** The variables the statement reads, including the variables read inside
     indices and sizes, and the variables the statement increments. *)
 let read_variables (info : node_dep_info) : string Set.Poly.t =
-  Set.Poly.of_list (List.map info.accesses.reads ~f:(fun access -> access.var))
+  Set.Poly.of_list
+    (List.map (info.accesses.reads @ info.accesses.increments) ~f:(fun access ->
+         access.var))
 
 (** The [if] and loop statements around [label] and the assignments that may
     have written an element that [label] reads, skipping [blockers]. *)
@@ -671,7 +694,8 @@ let build_dep_info_map (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
       ~f:(fun ~key:_ ~data:(accesses : Expr.Typed.t Accesses.t) written ->
         Set.Poly.union written
           (Set.Poly.of_list
-             (List.map accesses.writes ~f:(fun access -> access.var)))) in
+             (List.map (accesses.writes @ accesses.increments) ~f:(fun access ->
+                  access.var)))) in
   (* the loop variables of the [for] loops around [label] *)
   let rec loopvars_of label =
     match enclosing_loop statement_map parents label with

@@ -144,20 +144,18 @@ and pp_subscripts_after ppf = function
   | path -> Fmt.pf ppf "]%a" pp_path path
 
 (** [W v[n+1]], [R v], [+= target], [W t.2]. *)
-let pp_access ppf {var; path; kind} =
-  Fmt.pf ppf "%s %s%a"
-    (match kind with Write -> "W" | Read -> "R" | Increment -> "+=")
-    var pp_path path
+let pp_access ppf (use, {var; path}) = Fmt.pf ppf "%s %s%a" use var pp_path path
 
-(** One line [label: accesses] per label that has accesses, the reads and then
-    the writes, with each increment printed once; labels without accesses
-    (blocks, [break], ...) are left out. *)
+(** One line [label: accesses] per label that has accesses, the reads, then the
+    increments, then the writes; labels without accesses (blocks, [break], ...)
+    are left out. *)
 let pp_node_accesses ppf (statement_map : dep_info_map) =
   LabelMap.iter statement_map ~f:(fun ~key ~data:(_, info) ->
+      let tagged use = List.map ~f:(fun access -> (use, access)) in
       match
-        info.accesses.reads
-        @ List.filter info.accesses.writes ~f:(fun access ->
-            match access.kind with Increment -> false | Read | Write -> true)
+        tagged "R" info.accesses.reads
+        @ tagged "+=" info.accesses.increments
+        @ tagged "W" info.accesses.writes
       with
       | [] -> ()
       | accesses ->

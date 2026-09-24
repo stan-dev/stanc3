@@ -35,10 +35,6 @@ type point =
   | Varying of varying_kind
       (** The index cannot be compared, so the index may equal any other. *)
 
-(** How a statement uses a variable; an [Increment] such as [target += ...]
-    reads and writes, and commutes with other increments. *)
-type access_kind = Read | Write | Increment
-
 (** One index position or tuple field of an access path. *)
 type 'index step =
   | Subscript of 'index Index.t  (** One index position, such as [n + 1]. *)
@@ -46,13 +42,17 @@ type 'index step =
 
 (** One use of a variable by a statement, with one [path] step per index
     position and tuple field. *)
-type 'index access = {var: string; path: 'index step list; kind: access_kind}
+type 'index access = {var: string; path: 'index step list}
 
-(** The accesses of one statement, with each [Increment] in both lists. *)
+(** The accesses of one statement, split by how each access uses the variable.
+*)
 module Accesses : sig
   type 'index t =
-    { reads: 'index access list  (** the [Read] and [Increment] accesses *)
-    ; writes: 'index access list  (** the [Write] and [Increment] accesses *) }
+    { reads: 'index access list
+    ; writes: 'index access list
+    ; increments: 'index access list
+          (** read and write, such as [target += ...], but commute with each
+              other *) }
 end
 
 (** {1 Dependences between two accesses} *)
