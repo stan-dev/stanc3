@@ -1811,7 +1811,7 @@
                                                (meta
                                                 ((type_ UInt) (loc <opaque>)
                                                  (adlevel DataOnly))))
-                                              ((pattern (Lit Int 2))
+                                              ((pattern (Lit Int 1))
                                                (meta
                                                 ((type_ UInt) (loc <opaque>)
                                                  (adlevel DataOnly)))))))
@@ -5558,7 +5558,7 @@
                     (FunApp (Operator Plus)
                      (((pattern (Var arr_tuple_p_dot_1_flat__pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                      ((pattern (Lit Int 2))
+                      ((pattern (Lit Int 1))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
                 (meta <opaque>))
@@ -6376,7 +6376,7 @@
                     (FunApp (Operator Plus)
                      (((pattern (Var arr_tuple_tuple_p_dot_3_dot_2_dot_1_flat__pos__))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                      ((pattern (Lit Int 2))
+                      ((pattern (Lit Int 1))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
                 (meta <opaque>))
@@ -7613,7 +7613,7 @@
                                                (meta
                                                 ((type_ UInt) (loc <opaque>)
                                                  (adlevel DataOnly))))
-                                              ((pattern (Lit Int 2))
+                                              ((pattern (Lit Int 1))
                                                (meta
                                                 ((type_ UInt) (loc <opaque>)
                                                  (adlevel DataOnly)))))))

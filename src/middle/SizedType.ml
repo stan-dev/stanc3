@@ -77,15 +77,16 @@ let rec get_dims_io st =
           "Tried to get IO dims of a tuple, which is not rectangular: %t"
           [pp Expr.Typed.pp $ st]) [@coverage off]
 
-let rec io_size st =
+let rec io_size ?(complex_is_scalar = false) st =
   let two = Expr.Helpers.int 2 in
+  let complex_size = if complex_is_scalar then Expr.Helpers.one else two in
   match st with
   | SInt | SReal -> Expr.Helpers.one
   | STuple subtypes ->
       Expr.Helpers.binop_list
         (List.map ~f:io_size subtypes)
         Operator.Plus ~default:Expr.Helpers.zero
-  | SComplex -> two
+  | SComplex -> complex_size
   | SVector (_, d) | SRowVector (_, d) -> d
   | SMatrix (_, dim1, dim2) -> Expr.Helpers.binop dim1 Operator.Times dim2
   | SComplexVector d | SComplexRowVector d ->

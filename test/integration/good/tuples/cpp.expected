@@ -588,7 +588,7 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                   very_deep_dot_2_dot_2_dot_1_temp__ = very_deep_dot_2_dot_2_dot_1_flat__[(very_deep_dot_2_dot_2_dot_1_flat__pos__
                     - 1)];
                   very_deep_dot_2_dot_2_dot_1_flat__pos__ = (very_deep_dot_2_dot_2_dot_1_flat__pos__
-                    + 2);
+                    + 1);
                   {
                     std::vector<local_scalar_t__>
                       very_deep_dot_2_dot_2_dot_2_temp___flat__;
@@ -1965,7 +1965,7 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
           arr_tuple_p_dot_1_temp__ = arr_tuple_p_dot_1_flat__[(arr_tuple_p_dot_1_flat__pos__
             - 1)];
           arr_tuple_p_dot_1_flat__pos__ = (arr_tuple_p_dot_1_flat__pos__ +
-            2);
+            1);
           stan::model::assign(arr_tuple_p_dot_2_temp__,
             stan::model::rvalue(arr_tuple_p_dot_2_flat__,
               "arr_tuple_p_dot_2_flat__",
@@ -2142,7 +2142,7 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
           std::get<0>(std::get<1>(arr_tuple_tuple_p_dot_3_temp__)) = arr_tuple_tuple_p_dot_3_dot_2_dot_1_flat__[(arr_tuple_tuple_p_dot_3_dot_2_dot_1_flat__pos__
             - 1)];
           arr_tuple_tuple_p_dot_3_dot_2_dot_1_flat__pos__ = (arr_tuple_tuple_p_dot_3_dot_2_dot_1_flat__pos__
-            + 2);
+            + 1);
           {
             std::vector<local_scalar_t__>
               arr_tuple_tuple_p_dot_3_temp___dot_2_dot_2_flat__;
@@ -2418,7 +2418,7 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                   very_deep_p_dot_2_dot_2_dot_1_temp__ = very_deep_p_dot_2_dot_2_dot_1_flat__[(very_deep_p_dot_2_dot_2_dot_1_flat__pos__
                     - 1)];
                   very_deep_p_dot_2_dot_2_dot_1_flat__pos__ = (very_deep_p_dot_2_dot_2_dot_1_flat__pos__
-                    + 2);
+                    + 1);
                   {
                     std::vector<local_scalar_t__>
                       very_deep_p_dot_2_dot_2_dot_2_temp___flat__;

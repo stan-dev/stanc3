@@ -259,7 +259,11 @@ let rec var_context_read_inside_tuple enclosing_tuple_name origin_type
         ; adlevel= UnsizedType.fill_adtype_for_type DataOnly flat_type } } in
   let type_size =
     Expr.Helpers.(
-      binop (variable enclosing_tuple_pos) Plus (SizedType.io_size st)) in
+      binop
+        (variable enclosing_tuple_pos)
+        Plus
+        (* vars_c already turns complex values into one item in the vector *)
+        (SizedType.io_size ~complex_is_scalar:true st)) in
   let end_position = Expr.Helpers.(binop type_size Minus loop_bottom) in
   let origin =
     match unsized with
