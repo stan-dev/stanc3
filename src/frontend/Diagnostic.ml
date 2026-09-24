@@ -6,30 +6,29 @@ let get_context code Middle.Location.{filename; included_from; _} =
   | None, Some code ->
       (* If the location is not included from anywhere, and we have code
          provided, use it *)
-      `String {Source.name= Some filename; content= code}
+      code
   | _ -> (
       (* Otherwise, by the time we are printing an error, all these files are
          already resolved. *)
       match !Include_files.include_provider with
       | FileSystemPaths _ ->
           (* So we can read directly from the filesystem *)
-          `File filename
+          In_channel.with_open_bin filename In_channel.input_all
       | InMemory m ->
           (* Or, we know we can find it in the map *)
-          let content = String.Map.find filename m in
-          `String {name= Some filename; content})
+          String.Map.find filename m)
 
 let get_source ?printed_filename ?code loc : Source.t =
-  let source = get_context code loc in
-  match (loc.included_from, printed_filename) with
-  | None, Some alternative_name ->
-      let content =
-        match source with
-        | `String {content; _} -> content
-        | `File filename ->
-            In_channel.with_open_bin filename In_channel.input_all in
-      `String {name= Some alternative_name; content}
-  | _ -> source
+  let code = get_context code loc in
+  let name =
+    if Option.is_none loc.included_from then
+      Option.first_some printed_filename (Some loc.filename)
+    else Some loc.filename in
+  let content =
+    (* Tab alignment hack, c.f. https://github.com/johnyob/grace/issues/83 *)
+    String.replace_all ~sub:"\t" ~by:" " code in
+  let source : Source.t = `String {name; content} in
+  source
 
 let clamp_int ~min ~max i = if i < min then min else if i > max then max else i
 
