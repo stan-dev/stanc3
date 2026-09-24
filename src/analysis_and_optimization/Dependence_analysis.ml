@@ -237,11 +237,6 @@ type dep_info_map =
 
 type dependency_graph = label Set.Poly.t LabelMap.t
 
-(** The loops around both of two accesses, outermost first, each given by the
-    loop variable; a [while] loop has no loop variable and is [None]. A
-    [Dependent] result for the two accesses has one [level] per entry. *)
-type frame = string option list
-
 (** Whether two accesses can touch the same element, and how the answers for
     index positions and pairs of accesses combine. *)
 module Dependence = struct
@@ -250,9 +245,10 @@ module Dependence = struct
   (** Whether two single indices can be equal (the ZIV and strong SIV tests of
       Goff, Kennedy and Tseng 1991, section 3). Without a loop variable, the two
       indices are equal in every iteration or in none. [n + a] and [n + b], for
-      the variable [n] of a loop in [frame], are equal when the two iterations
-      of [n] are [a - b] apart. Any other pair is [Unknown]. *)
-  let of_points (frame : frame) (source : point) (sink : point) : t =
+      the variable [n] of a loop in [common_loops], are equal when the two
+      iterations of [n] are [a - b] apart. Any other pair is [Unknown]. *)
+  let of_points (common_loops : string option list) (source : point)
+      (sink : point) : t =
     match (source, sink) with
     | Affine source_term, Affine sink_term
       when Option.equal String.equal source_term.loopvar sink_term.loopvar -> (
@@ -265,13 +261,14 @@ module Dependence = struct
         match (difference, source_term.loopvar) with
         | None, _ | Some 0, None -> Unknown
         | Some _, None -> Independent
-        | Some distance, Some loopvar when List.mem (Some loopvar) ~set:frame ->
+        | Some distance, Some loopvar
+          when List.mem (Some loopvar) ~set:common_loops ->
             let direction =
               if distance = 0 then Eq else if distance > 0 then Lt else Gt in
             (* only the level of [loopvar] is known; any direction is possible
                at the other loops *)
             Dependent
-              (List.map frame ~f:(fun var ->
+              (List.map common_loops ~f:(fun var ->
                    if Option.equal String.equal var (Some loopvar) then
                      { directions= Set.Poly.singleton direction
                      ; distance= Some distance }
@@ -330,8 +327,8 @@ module Dependence = struct
       elements are the same only when the paths are equal at every position, so
       the per-position results are intersected. Two different tuple fields never
       overlap. Accesses with paths of different lengths are [Unknown]. *)
-  let of_accesses (frame : frame) (source : point access) (sink : point access)
-      : t =
+  let of_accesses (common_loops : string option list) (source : point access)
+      (sink : point access) : t =
     if List.compare_lengths source.path sink.path <> 0 then Unknown
     else
       List.fold_left2 source.path sink.path ~init:Unknown
@@ -339,7 +336,7 @@ module Dependence = struct
           meet merged
             (match (source_step, sink_step) with
             | Subscript (Single source_point), Subscript (Single sink_point) ->
-                of_points frame source_point sink_point
+                of_points common_loops source_point sink_point
             | Field source_field, Field sink_field
               when source_field <> sink_field ->
                 Independent
@@ -381,7 +378,7 @@ module Dependence = struct
       for one pair is not added back by another. Two [Increment]s are skipped,
       since increments can run in either order. When either list is empty the
       accesses are unknown and the result is [Unknown]. *)
-  let of_access_lists (frame : frame) ~(restrict : t -> t)
+  let of_access_lists (common_loops : string option list) ~(restrict : t -> t)
       (sources : point access list) (sinks : point access list) : t =
     if List.is_empty sources || List.is_empty sinks then Unknown
     else
@@ -393,7 +390,7 @@ module Dependence = struct
           match (source.kind, sink.kind) with
           | Increment, Increment -> merged
           | (Read | Write), _ | Increment, (Read | Write) ->
-              join merged (restrict (of_accesses frame source sink)))
+              join merged (restrict (of_accesses common_loops source sink)))
 end
 
 (** Find all of the reaching definitions of a variable in an RD set *)
@@ -415,9 +412,11 @@ let for_loopvar
   | Stmt.Pattern.For {loopvar; _} -> Some loopvar
   | _ -> None
 
-(** The [frame] of the statements at [src] and [dst]. *)
-let common_frame (statement_map : dep_info_map) ~(src : label) ~(dst : label) :
-    frame =
+(** The loops around both [src] and [dst], outermost first, each as its loop
+    variable ([None] for a [while] loop); a [Dependent] result has one [level]
+    per entry. *)
+let common_loops (statement_map : dep_info_map) ~(src : label) ~(dst : label) :
+    string option list =
   let rec loops label =
     match (snd (LabelMap.find label statement_map)).loop with
     | None -> []
@@ -451,7 +450,7 @@ let element_edges (statement_map : dep_info_map) ~(dst : label)
       else
         match
           Dependence.of_access_lists
-            (common_frame statement_map ~src ~dst)
+            (common_loops statement_map ~src ~dst)
             ~restrict:(restrict ~src) (src_accesses src) dst_accesses
         with
         | Independent -> None
