@@ -130,19 +130,35 @@ let pp_subscript ppf (index : point Index.t) =
   | MultiIndex indices -> Fmt.pf ppf "{%a}" pp_point indices
   | All | Single _ | Upfrom _ | Between _ -> Index.pp pp_point ppf index
 
-(** [W v[n+1]], [R v], [+= target]. *)
-let pp_access ppf {var; subs; kind} =
-  Fmt.pf ppf "%s %s"
-    (match kind with Write -> "W" | Read -> "R" | Increment -> "+=")
-    var;
-  if not (List.is_empty subs) then
-    Fmt.pf ppf "[%a]" Fmt.(list ~sep:(any ", ") pp_subscript) subs
+(** Prints a run of subscripts inside one pair of brackets, [[i, j]], and a
+    field as [.2]. *)
+let rec pp_path ppf = function
+  | [] -> ()
+  | Field field :: rest -> Fmt.pf ppf ".%d%a" field pp_path rest
+  | Subscript index :: rest ->
+      Fmt.pf ppf "[%a%a" pp_subscript index pp_subscripts_after rest
 
-(** One line [label: accesses] per label that has accesses; labels without
-    accesses (blocks, [break], ...) are left out. *)
+and pp_subscripts_after ppf = function
+  | Subscript index :: rest ->
+      Fmt.pf ppf ", %a%a" pp_subscript index pp_subscripts_after rest
+  | path -> Fmt.pf ppf "]%a" pp_path path
+
+(** [W v[n+1]], [R v], [+= target], [W t.2]. *)
+let pp_access ppf {var; path; kind} =
+  Fmt.pf ppf "%s %s%a"
+    (match kind with Write -> "W" | Read -> "R" | Increment -> "+=")
+    var pp_path path
+
+(** One line [label: accesses] per label that has accesses, the reads and then
+    the writes, with each increment printed once; labels without accesses
+    (blocks, [break], ...) are left out. *)
 let pp_node_accesses ppf (statement_map : dep_info_map) =
   LabelMap.iter statement_map ~f:(fun ~key ~data:(_, info) ->
-      match info.accesses with
+      match
+        info.accesses.reads
+        @ List.filter info.accesses.writes ~f:(fun access ->
+            match access.kind with Increment -> false | Read | Write -> true)
+      with
       | [] -> ()
       | accesses ->
           Fmt.pf ppf "%d: %a@." key
@@ -176,7 +192,7 @@ let%expect_test "Single indices: affine, invariant and varying" =
   [%expect
     {|
     3: R N
-    4: W y
+    4: R N, W y
     5: W m
     6: W m
     7: R N
@@ -213,11 +229,11 @@ let%expect_test "Every index kind of the language" =
   [%expect
     {|
     3: R N
-    4: W y
+    4: R N, W y
     5: R K
-    6: W r
+    6: R K, W r
     7: R N
-    8: W c
+    8: R N, W c
     9: R N
     11: R v[:], R v[a:], R a, R v[a:b], R a, R b, R v[1:b], R b, R v[{idx}], R idx, W y[n]
     12: R v[n:], R v[n:n+1], R v[?nonlinear:N], R idx[n], R N, R v[{?nonlinear}], R pairs[n], W y[n]
@@ -251,7 +267,7 @@ let%expect_test "Statement kinds: declarations, target, effects and nesting" =
     {|
     2: W mu
     4: R N
-    5: W v
+    5: R N, W v
     6: W acc
     7: W acc
     8: R N
@@ -301,7 +317,7 @@ let%expect_test "Nodes outside a loop and in nested loops" =
     {|
     2: W mu
     4: R N
-    5: W v
+    5: R N, W v
     6: W theta
     7: W m
     8: W m
@@ -352,16 +368,38 @@ let%expect_test "Accesses: nested indexing is one reference" =
   [%expect
     {|
     3: R K
-    4: W y
+    4: R K, W y
     5: R N
     7: R a[n, 1], R a[n, 2], R b[n, 1], R a[1:2], W y[1]
+    |}]
+
+let%expect_test "Accesses: a declaration reads the sizes in its type" =
+  print_node_accesses
+    {|
+      data { int N; }
+      model {
+        int K = N + 1;
+        matrix[N, K] m;
+        array[K] vector[N] a;
+      }
+    |};
+  [%expect
+    {|
+    3: W K
+    4: R N, W K
+    5: R N
+    6: R K
+    7: R N, R K, W m
+    8: R K
+    9: R N
+    10: R N, R K, W a
     |}]
 
 let%expect_test "Right-hand-side variables of a set of labels" =
   let map = log_prob_build_dep_info_map accesses_example in
   print_s
     [%sexp
-      (rhs_variables_at map (Set.Poly.of_list [10; 12]) : string Set.Poly.t)];
+      (read_variables_at map (Set.Poly.of_list [10; 12]) : string Set.Poly.t)];
   [%expect {| (N k x) |}]
 
 (* ---- Reaching definitions pruned by subscript ---- *)
@@ -384,11 +422,12 @@ let print_pruned_edges prog =
     LabelMap.fold map ~init:false ~f:(fun ~key:label ~data:_ pruned ->
         let plain = name_level label in
         let actual = node_immediate_dependencies map label in
-        if Set.Poly.equal plain actual then pruned
+        let dropped = Set.Poly.diff plain actual in
+        if Set.Poly.is_empty dropped then pruned
         else (
           Fmt.pr "%d: dropped %a, kept %a@." label
             Fmt.(list ~sep:(any " ") int)
-            (Set.Poly.to_list (Set.Poly.diff plain actual))
+            (Set.Poly.to_list dropped)
             Fmt.(list ~sep:(any " ") int)
             (Set.Poly.to_list actual);
           true)) in
@@ -444,7 +483,7 @@ let%expect_test "Pruning: whole-variable, gather and written symbols are kept" =
         target += t + sum(v);
       }
     |};
-  [%expect {| 9: dropped , kept 2 8 |}]
+  [%expect {| no definition pruned |}]
 
 let%expect_test "Pruning: definitions that execute after the read never flow" =
   print_pruned_edges
@@ -554,13 +593,7 @@ let%expect_test "Pruning: symbolic subscripts with different constants" =
         if (v[k + 2] > 0) target += 1;
       }
     |};
-  [%expect
-    {|
-    4: dropped , kept 1
-    7: dropped , kept 1 2
-    8: dropped , kept 1
-    9: dropped 7, kept 1 6 8
-    |}]
+  [%expect {| 9: dropped 7, kept 1 6 8 |}]
 
 let uninitialized_var_example =
   Test_utils.mir_of_string

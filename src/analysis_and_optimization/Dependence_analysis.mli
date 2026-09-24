@@ -76,10 +76,23 @@ type point =
     either order. *)
 type access_kind = Read | Write | Increment
 
-(** One read or write of a variable by a statement. [subs] holds one entry per
-    index position, so [x[i, n + 1]] has two entries. A use of the whole
-    variable, such as [v] or the declaration of [v], has no entries. *)
-type access = {var: string; subs: point Index.t list; kind: access_kind}
+(** One step from a variable toward the part an access touches. *)
+type 'index step =
+  | Subscript of 'index Index.t  (** One index position, such as [n + 1]. *)
+  | Field of int  (** One tuple field, such as the [.2] in [t.2]. *)
+
+(** One read or write of a variable by a statement. [path] holds one step per
+    index position and tuple field, so [x[i, n + 1].2] has three steps. A use of
+    the whole variable, such as [v] or the declaration of [v], has no steps. *)
+type access = {var: string; path: point step list; kind: access_kind}
+
+(** The accesses of one statement, split by what the accesses do. An [Increment]
+    reads and writes, so an increment is in both lists. *)
+module Accesses : sig
+  type t =
+    { reads: access list  (** the [Read] and [Increment] accesses *)
+    ; writes: access list  (** the [Write] and [Increment] accesses *) }
+end
 
 (** {1 Dependences between two accesses} *)
 
@@ -127,7 +140,7 @@ type node_dep_info =
         (** the assignments that may reach the end of this statement *)
   ; loop: label option
         (** the innermost [for] or [while] loop around this statement *)
-  ; accesses: access list
+  ; accesses: Accesses.t
         (** the reads and writes of this statement, not counting the statements
             nested inside *)
   ; meta: Location_span.t  (** the source location *) }
@@ -199,6 +212,6 @@ val mir_uninitialized_variables :
 (** Produce a list of uninitialized variables and their label locations, from
     the flowgraph starting at the given statement *)
 
-val rhs_variables_at : dep_info_map -> label Set.Poly.t -> string Set.Poly.t
+val read_variables_at : dep_info_map -> label Set.Poly.t -> string Set.Poly.t
 (** The variables read by the statements at [labels], including the variables
     read inside indices. *)

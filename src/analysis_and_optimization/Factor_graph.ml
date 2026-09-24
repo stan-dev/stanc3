@@ -57,7 +57,7 @@ let factor_rhs (factor : factor) : string Set.Poly.t =
 let factor_var_dependencies statement_map blockers (label, factor) =
   let rhs = factor_rhs factor in
   let dep_labels = node_vars_dependencies statement_map ~blockers rhs label in
-  Set.Poly.union (rhs_variables_at statement_map dep_labels) rhs
+  Set.Poly.union (read_variables_at statement_map dep_labels) rhs
 
 (** Helper function to generate the factor graph adjacency map representation
     from a factor-adjacency list *)

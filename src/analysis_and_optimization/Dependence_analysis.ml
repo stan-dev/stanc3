@@ -16,7 +16,209 @@ type linear = {const: int; symbol: Expr.Typed.t option; loopvar: string option}
 type varying_kind = Written | Nonlinear
 type point = Affine of linear | Varying of varying_kind
 type access_kind = Read | Write | Increment
-type access = {var: string; subs: point Index.t list; kind: access_kind}
+type 'index step = Subscript of 'index Index.t | Field of int
+type access = {var: string; path: point step list; kind: access_kind}
+
+(** [left + right]; [None] when both have a symbol or both have a loop variable,
+    since a [linear] holds at most one of each. *)
+let linear_add (left : linear) (right : linear) : linear option =
+  let add left_term right_term =
+    match (left_term, right_term) with
+    | term, None | None, term -> Some term
+    | Some _, Some _ -> None in
+  Option.bind (add left.symbol right.symbol) ~f:(fun symbol ->
+      Option.map (add left.loopvar right.loopvar) ~f:(fun loopvar ->
+          {const= left.const + right.const; symbol; loopvar}))
+
+(** [left - right]; [None] when a symbol or loop variable of [right] is not the
+    same one in [left], since a [linear] cannot hold a subtracted term. *)
+let linear_subtract (left : linear) (right : linear) : linear option =
+  (* a term of [right] cancels only the same term of [left] *)
+  let subtract ~equal left_term right_term =
+    match (left_term, right_term) with
+    | term, None -> Some term
+    | Some left_value, Some right_value when equal left_value right_value ->
+        Some None
+    | _, Some _ -> None in
+  Option.bind (subtract ~equal:Expr.Typed.equal left.symbol right.symbol)
+    ~f:(fun symbol ->
+      Option.map (subtract ~equal:String.equal left.loopvar right.loopvar)
+        ~f:(fun loopvar -> {const= left.const - right.const; symbol; loopvar}))
+
+(** The integer index [expr] as a [point]. [+], [-] and promotions are looked
+    through; any other expression is one symbol when the expression reads no
+    loop variable and no variable in [written_vars]. *)
+let classify_point ~(loopvars : string Set.Poly.t)
+    ~(written_vars : string Set.Poly.t) (expr : Expr.Typed.t) : point =
+  (* an expression the classification does not look inside *)
+  let symbolic (subexpr : Expr.Typed.t) : point =
+    let names = expr_var_names_set subexpr in
+    if not (Set.Poly.disjoint names written_vars) then Varying Written
+    else if not (Set.Poly.disjoint names loopvars) then Varying Nonlinear
+    else Affine {const= 0; symbol= Some subexpr; loopvar= None} in
+  let rec classify (subexpr : Expr.Typed.t) : point =
+    let combine linear_op lhs rhs =
+      match (classify lhs, classify rhs) with
+      | Affine left_term, Affine right_term -> (
+          match linear_op left_term right_term with
+          | Some term -> Affine term
+          | None -> symbolic subexpr)
+      | Varying _, _ | _, Varying _ -> symbolic subexpr in
+    match subexpr.pattern with
+    | Var name when Set.Poly.mem name loopvars ->
+        Affine {const= 0; symbol= None; loopvar= Some name}
+    | Lit (Int, digits) -> (
+        match Int.of_string_opt digits with
+        | Some const -> Affine {const; symbol= None; loopvar= None}
+        | None -> symbolic subexpr)
+    | Promotion (inner, _, _) -> classify inner
+    | FunApp (Operator Plus, [lhs; rhs]) -> combine linear_add lhs rhs
+    | FunApp (Operator Minus, [lhs; rhs]) -> combine linear_subtract lhs rhs
+    | Var _ | Lit _ | FunApp _ | TernaryIf _ | EAnd _ | EOr _ | Indexed _
+     |TupleProjection _ ->
+        symbolic subexpr in
+  classify expr
+
+(** [path] with every single index classified as a [point]. *)
+let classify_path ~loopvars ~written_vars (path : Expr.Typed.t step list) :
+    point step list =
+  List.map path ~f:(function
+    | Subscript index ->
+        Subscript (Index.map (classify_point ~loopvars ~written_vars) index)
+    | Field field -> Field field)
+
+(** The variable and the path of [expr], when [expr] is a variable with indices
+    and tuple fields and every step before the last index list is a single index
+    or a field. [x[i][j].2] gives [x] with the path [i, j, .2], the same form as
+    the left side of an assignment. *)
+let rec access_path (expr : Expr.Typed.t) :
+    (string * Expr.Typed.t step list) option =
+  let extend base steps =
+    match access_path base with
+    | Some (name, prefix)
+      when List.for_all prefix ~f:(function
+             | Subscript (Single _) | Field _ -> true
+             | Subscript _ -> false) ->
+        Some (name, prefix @ steps)
+    | Some _ | None -> None in
+  match expr.pattern with
+  | Var name -> Some (name, [])
+  | Indexed (base, indices) ->
+      extend base (List.map indices ~f:(fun index -> Subscript index))
+  | TupleProjection (base, field) -> extend base [Field field]
+  | _ -> None
+
+(** The path of the left side of an assignment: [x[i].2[j] = ...] gives
+    [i, .2, j]. *)
+let rec lvalue_path ((lbase, indices) : Expr.Typed.t Stmt.Pattern.lvalue) :
+    Expr.Typed.t step list =
+  (match lbase with
+    | LVariable _ -> []
+    | LTupleProjection (inner, field) -> lvalue_path inner @ [Field field])
+  @ List.map indices ~f:(fun index -> Subscript index)
+
+(** The expressions inside the indices of [path]. *)
+let path_bounds (path : Expr.Typed.t step list) : Expr.Typed.t list =
+  List.concat_map path ~f:(function
+    | Subscript index -> Index.bounds index
+    | Field _ -> [])
+
+module Accesses = struct
+  type t = {reads: access list; writes: access list}
+
+  let empty = {reads= []; writes= []}
+
+  (** One read of [var] at [path]. *)
+  let read (var : string) (path : point step list) : t =
+    {reads= [{var; path; kind= Read}]; writes= []}
+
+  (** One write of [var] at [path]. *)
+  let write (var : string) (path : point step list) : t =
+    {reads= []; writes= [{var; path; kind= Write}]}
+
+  (** An increment of [target], which reads and writes [target]. *)
+  let increment_target : t =
+    let increment = {var= "target"; path= []; kind= Increment} in
+    {reads= [increment]; writes= [increment]}
+
+  (** The accesses of [parts], one part after another. *)
+  let concat (parts : t list) : t =
+    { reads= List.concat_map parts ~f:(fun part -> part.reads)
+    ; writes= List.concat_map parts ~f:(fun part -> part.writes) }
+
+  (** The accesses in [accesses] to [var]. *)
+  let of_var (var : string) (accesses : t) : t =
+    let keep = List.filter ~f:(fun access -> String.equal access.var var) in
+    {reads= keep accesses.reads; writes= keep accesses.writes}
+
+  (** The accesses of [expr], in evaluation order. [target()] reads [target],
+      and a call to a [_lp] function increments [target]. A loop variable in
+      [loopvars] is not counted as a read. *)
+  let rec of_expr ~loopvars ~written_vars (expr : Expr.Typed.t) : t =
+    let of_subexpr = of_expr ~loopvars ~written_vars in
+    (* the accesses of the expressions directly inside [expr], in order *)
+    let of_children () =
+      concat
+        (List.rev
+           (Expr.Pattern.fold
+              (fun parts subexpr -> of_subexpr subexpr :: parts)
+              [] expr.pattern)) in
+    match expr.pattern with
+    | Var name when Set.Poly.mem name loopvars -> empty
+    | Var name -> read name []
+    | Indexed _ | TupleProjection _ -> (
+        match access_path expr with
+        | Some (name, path) ->
+            (* each index is kept as written: single, [:], [a:], [a:b] or a
+               multi-index *)
+            concat
+              (read name (classify_path ~loopvars ~written_vars path)
+              :: List.map (path_bounds path) ~f:of_subexpr)
+        | None -> of_children ())
+    | FunApp (StanLib (_, FnTarget, _), []) -> read "target" []
+    | FunApp (UserDefined (_, (FnTarget | FnJacobian)), _) ->
+        concat [of_children (); increment_target]
+    | Lit _ | FunApp _ | TernaryIf _ | EAnd _ | EOr _ | Promotion _ ->
+        of_children ()
+
+  (** The reads and the writes of one statement, not counting the statements
+      nested inside. A declaration reads the sizes in its type. An [Increment]
+      is in both lists. *)
+  let of_stmt ~(loopvars : string Set.Poly.t) ~written_vars
+      (stmt : (Expr.Typed.t, 'substatement) Stmt.Pattern.t) : t =
+    (* an index that uses a loop variable is classified by the loop variable, so
+       the loop variables are removed from [written_vars] *)
+    let written_non_loopvars = Set.Poly.diff written_vars loopvars in
+    let of_subexpr = of_expr ~loopvars ~written_vars:written_non_loopvars in
+    (* the accesses of the expressions of [stmt], in order, skipping the
+       statements nested inside *)
+    let of_children () =
+      concat
+        (List.rev
+           (Stmt.Pattern.fold
+              (fun parts subexpr -> of_subexpr subexpr :: parts)
+              Fun.const [] stmt)) in
+    match stmt with
+    | Assignment (lhs, _, rhs) ->
+        let path = lvalue_path lhs in
+        concat
+          (List.map (path_bounds path @ [rhs]) ~f:of_subexpr
+          @ [ write
+                (Stmt.Helpers.lhs_variable lhs)
+                (classify_path ~loopvars ~written_vars:written_non_loopvars path)
+            ])
+    | Decl {decl_id; _} -> concat [of_children (); write decl_id []]
+    | TargetPE _ | JacobianPE _
+     |NRFunApp
+        ( ( StanLib (_, (FnTarget | FnJacobian), _)
+          | UserDefined (_, (FnTarget | FnJacobian)) )
+        , _ ) ->
+        concat [of_children (); increment_target]
+    | NRFunApp _ | Return _ | IfElse _ | While _ | For _ | Profile _ | Block _
+     |SList _ | Break | Continue | Skip ->
+        of_children ()
+end
+
 type direction = Lt | Eq | Gt
 type level = {directions: direction Set.Poly.t; distance: int option}
 type dependence = Independent | Unknown | Dependent of level list
@@ -27,7 +229,7 @@ type node_dep_info =
   ; reaching_defn_entry: reaching_defn Set.Poly.t
   ; reaching_defn_exit: reaching_defn Set.Poly.t
   ; loop: label option
-  ; accesses: access list
+  ; accesses: Accesses.t
   ; meta: Location_span.t }
 
 type dep_info_map =
@@ -74,19 +276,22 @@ let point_dependence (frame : frame) (source : point) (sink : point) :
   | Affine _, Affine _ | Varying _, _ | _, Varying _ -> Unknown
 
 (** Whether two accesses to one variable can touch the same element. The
-    elements are the same only when the indices are equal at every position, so
-    the per-position results are intersected. Accesses with different numbers of
-    indices are [Unknown]. *)
+    elements are the same only when the paths are equal at every position, so
+    the per-position results are intersected. Two different tuple fields never
+    overlap. Accesses with paths of different lengths are [Unknown]. *)
 let access_dependence (frame : frame) (source : access) (sink : access) :
     dependence =
-  if List.length source.subs <> List.length sink.subs then Unknown
+  if List.length source.path <> List.length sink.path then Unknown
   else
-    List.fold_left2 source.subs sink.subs ~init:Unknown
-      ~f:(fun merged source_sub sink_sub ->
+    List.fold_left2 source.path sink.path ~init:Unknown
+      ~f:(fun merged source_step sink_step ->
         let position =
-          match (source_sub, sink_sub) with
-          | Index.Single source_point, Index.Single sink_point ->
+          match (source_step, sink_step) with
+          | Subscript (Single source_point), Subscript (Single sink_point) ->
               point_dependence frame source_point sink_point
+          | Field source_field, Field sink_field when source_field <> sink_field
+            ->
+              Independent
           | _ -> Unknown in
         (* keep what is possible at both positions; the accesses are independent
            when nothing is left at some loop *)
@@ -109,17 +314,6 @@ let access_dependence (frame : frame) (source : access) (sink : access) :
                   Set.Poly.is_empty level.directions)
             then Independent
             else Dependent levels)
-
-(** Whether an access of this kind reads the variable; an [Increment] reads and
-    writes. *)
-let reads = function Read | Increment -> true | Write -> false
-
-let writes = function Write | Increment -> true | Read -> false
-
-(** The accesses to [var] whose kind satisfies [keep]. *)
-let accesses_to (var : string) ~keep (accesses : access list) : access list =
-  List.filter accesses ~f:(fun access ->
-      String.equal access.var var && keep access.kind)
 
 (** Find all of the reaching definitions of a variable in an RD set *)
 let reaching_defn_lookup (rds : reaching_defn Set.Poly.t) (var : string) :
@@ -157,7 +351,7 @@ let ordered_dependence ~(src : label) ~(dst : label) (dep : dependence) :
   | Unknown -> Unknown
   | Dependent levels -> (
       match restrict levels with
-      | Some levels -> Dependent levels
+      | Some restricted -> Dependent restricted
       | None -> Independent)
 
 (** The label of the analysed statement. An assignment from before the analysed
@@ -174,8 +368,8 @@ let pair_dependence (frame : frame) ~(restrict : dependence -> dependence)
     (sources : access list) (sinks : access list) : dependence =
   if List.is_empty sources || List.is_empty sinks then Unknown
   else
-    List.fold_left sources ~init:Independent ~f:(fun merged source ->
-        List.fold_left sinks ~init:merged ~f:(fun merged sink ->
+    List.fold_left sources ~init:Independent ~f:(fun merged_sources source ->
+        List.fold_left sinks ~init:merged_sources ~f:(fun merged sink ->
             match (source.kind, sink.kind) with
             | Increment, Increment -> merged
             | _ -> (
@@ -217,7 +411,7 @@ let common_frame (statement_map : dep_info_map) ~(src : label) ~(dst : label) :
         | _ -> None))
 
 (** The accesses of the statement at [label]. *)
-let accesses_at (statement_map : dep_info_map) (label : label) : access list =
+let accesses_at (statement_map : dep_info_map) (label : label) : Accesses.t =
   (snd (LabelMap.find label statement_map)).accesses
 
 (** The labels in [sources] that may touch an element that [dst_accesses] touch,
@@ -251,16 +445,15 @@ let pruned_reaching_defns (statement_map : dep_info_map) (dst : label)
     ~sources:(reaching_defn_lookup info.reaching_defn_entry var)
     ~restrict:(fun ~src dep -> ordered_dependence ~src ~dst dep)
     ~src_accesses:(fun src ->
-      accesses_to var ~keep:writes (accesses_at statement_map src))
-    ~dst_accesses:(accesses_to var ~keep:reads info.accesses)
+      (Accesses.of_var var (accesses_at statement_map src)).writes)
+    ~dst_accesses:(Accesses.of_var var info.accesses).reads
   |> List.map ~f:fst |> Set.Poly.of_list
 
 (** The variables the statement reads, including the variables read inside
     indices and sizes, and the variables the statement increments. *)
 let read_variables (info : node_dep_info) : string Set.Poly.t =
   Set.Poly.of_list
-    (List.filter_map info.accesses ~f:(fun access ->
-         Option.some_if (reads access.kind) access.var))
+    (List.map info.accesses.reads ~f:(fun (access : access) -> access.var))
 
 let node_immediate_dependencies (statement_map : dep_info_map)
     ?(blockers : string Set.Poly.t = Set.Poly.empty) (label : label) :
@@ -418,122 +611,10 @@ let mir_uninitialized_variables (mir : Program.Typed.t) :
                    (Set.Poly.union arg_vars globals)
                    fdbody))) ]
 
-(** [left + right]; [None] when both have a symbol or both have a loop variable,
-    since a [linear] holds at most one of each. *)
-let linear_add (left : linear) (right : linear) : linear option =
-  let add left_term right_term =
-    match (left_term, right_term) with
-    | term, None | None, term -> Some term
-    | Some _, Some _ -> None in
-  Option.bind (add left.symbol right.symbol) ~f:(fun symbol ->
-      Option.map (add left.loopvar right.loopvar) ~f:(fun loopvar ->
-          {const= left.const + right.const; symbol; loopvar}))
-
-(** [left - right]; [None] when a symbol or loop variable of [right] is not the
-    same one in [left], since a [linear] cannot hold a subtracted term. *)
-let linear_subtract (left : linear) (right : linear) : linear option =
-  (* a term of [right] cancels only the same term of [left] *)
-  let subtract ~equal left_term right_term =
-    match (left_term, right_term) with
-    | term, None -> Some term
-    | Some left_value, Some right_value when equal left_value right_value ->
-        Some None
-    | _, Some _ -> None in
-  Option.bind (subtract ~equal:Expr.Typed.equal left.symbol right.symbol)
-    ~f:(fun symbol ->
-      Option.map (subtract ~equal:String.equal left.loopvar right.loopvar)
-        ~f:(fun loopvar -> {const= left.const - right.const; symbol; loopvar}))
-
-(** The integer index [expr] as a [point]. [+], [-] and promotions are looked
-    through; any other expression is one symbol when the expression reads no
-    loop variable and no variable in [written_vars]. *)
-let classify_point ~(loopvars : string Set.Poly.t)
-    ~(written_vars : string Set.Poly.t) (expr : Expr.Typed.t) : point =
-  (* an expression the classification does not look inside *)
-  let symbolic (expr : Expr.Typed.t) : point =
-    let names = expr_var_names_set expr in
-    if not (Set.Poly.disjoint names written_vars) then Varying Written
-    else if not (Set.Poly.disjoint names loopvars) then Varying Nonlinear
-    else Affine {const= 0; symbol= Some expr; loopvar= None} in
-  let rec classify (expr : Expr.Typed.t) : point =
-    let combine linear_op lhs rhs =
-      match (classify lhs, classify rhs) with
-      | Affine left_term, Affine right_term -> (
-          match linear_op left_term right_term with
-          | Some term -> Affine term
-          | None -> symbolic expr)
-      | Varying _, _ | _, Varying _ -> symbolic expr in
-    match expr.pattern with
-    | Var name when Set.Poly.mem name loopvars ->
-        Affine {const= 0; symbol= None; loopvar= Some name}
-    | Lit (Int, digits) -> (
-        match Int.of_string_opt digits with
-        | Some const -> Affine {const; symbol= None; loopvar= None}
-        | None -> symbolic expr)
-    | Promotion (inner, _, _) -> classify inner
-    | FunApp (Operator Plus, [lhs; rhs]) -> combine linear_add lhs rhs
-    | FunApp (Operator Minus, [lhs; rhs]) -> combine linear_subtract lhs rhs
-    | Var _ | Lit _ | FunApp _ | TernaryIf _ | EAnd _ | EOr _ | Indexed _
-     |TupleProjection _ ->
-        symbolic expr in
-  classify expr
-
-(** The variable and the indices of [expr], when [expr] is a variable with
-    indices and every index list except the last holds only single indices.
-    [x[i][j]] gives [x] with the indices [i, j], the same form as the left side
-    of an assignment. *)
-let rec indexed_variable (expr : Expr.Typed.t) :
-    (string * Expr.Typed.t Index.t list) option =
-  match expr.pattern with
-  | Var name -> Some (name, [])
-  | Indexed (base, indices) -> (
-      match indexed_variable base with
-      | Some (name, prefix)
-        when List.for_all prefix ~f:(function
-               | Index.Single _ -> true
-               | _ -> false) ->
-          Some (name, prefix @ indices)
-      | Some _ | None -> None)
-  | _ -> None
-
-(** The variables [expr] reads, in evaluation order. [target()] reads [target],
-    and a call to a [_lp] function increments [target]. A loop variable in
-    [loopvars] is not counted as a read. *)
-let rec reads_in_expr ~loopvars ~written_vars (expr : Expr.Typed.t) :
-    access list =
-  let reads_in = reads_in_expr ~loopvars ~written_vars in
-  let reads_in_all exprs = List.concat_map exprs ~f:reads_in in
-  match expr.pattern with
-  | Var name when Set.Poly.mem name loopvars -> []
-  | Var name -> [{var= name; subs= []; kind= Read}]
-  | Lit _ -> []
-  | Indexed (base, indices) -> (
-      match indexed_variable expr with
-      | Some (name, all_indices) ->
-          (* each index is kept as written: single, [:], [a:], [a:b] or a
-             multi-index *)
-          let subs =
-            List.map all_indices
-              ~f:(Index.map (classify_point ~loopvars ~written_vars)) in
-          {var= name; subs; kind= Read}
-          :: reads_in_all (List.concat_map all_indices ~f:Index.bounds)
-      | None ->
-          reads_in base @ reads_in_all (List.concat_map indices ~f:Index.bounds)
-      )
-  | FunApp (StanLib (_, FnTarget, _), []) ->
-      [{var= "target"; subs= []; kind= Read}]
-  | FunApp (UserDefined (_, (FnTarget | FnJacobian)), args) ->
-      reads_in_all args @ [{var= "target"; subs= []; kind= Increment}]
-  | FunApp (kind, args) -> reads_in_all (Fun_kind.collect_exprs kind @ args)
-  | TernaryIf (cond, then_expr, else_expr) ->
-      reads_in_all [cond; then_expr; else_expr]
-  | EAnd (lhs, rhs) | EOr (lhs, rhs) -> reads_in_all [lhs; rhs]
-  | Promotion (inner, _, _) | TupleProjection (inner, _) -> reads_in inner
-
-(** The innermost [for] or [while] loop around [label]. [parents] holds, for
-    each label, the nearest control-flow statement around the label (and the
-    labels of [break] and [continue] statements), so the search walks outward
-    one control-flow statement at a time. *)
+(** Returns an optional label for the innermost [for] or [while] loop around
+    [label]. [parents] holds, for each label, the nearest control-flow statement
+    around the label (and the labels of [break] and [continue] statements), so
+    the search walks outward one control-flow statement at a time. *)
 let rec enclosing_loop statement_map parents (label : label) : label option =
   let pattern_of node = fst (LabelMap.find node statement_map) in
   List.find_opt
@@ -544,47 +625,6 @@ let rec enclosing_loop statement_map parents (label : label) : label option =
       | Stmt.Pattern.For _ | While _ -> Some parent
       | _ -> enclosing_loop statement_map parents parent)
 
-(** The accesses of one statement, reads first and then the write, not counting
-    the statements nested inside. An [if] or a loop reads the condition or the
-    bounds. A [target +=] statement and a call to a [_lp] function increment
-    [target]. *)
-let node_accesses ~(loopvars : string Set.Poly.t) ~written_vars
-    (stmt : (Expr.Typed.t, 'substatement) Stmt.Pattern.t) : access list =
-  (* an index that uses a loop variable is classified by the loop variable, so
-     the loop variables are removed from [written_vars] *)
-  let written_vars = Set.Poly.diff written_vars loopvars in
-  let reads_in = reads_in_expr ~loopvars ~written_vars in
-  let reads_in_all exprs = List.concat_map exprs ~f:reads_in in
-  let increment_target = {var= "target"; subs= []; kind= Increment} in
-  match stmt with
-  | Assignment (((lbase, indices) as lhs), _, rhs) ->
-      (* an assignment to part of a tuple is treated as a write of the whole
-         tuple *)
-      let subs =
-        match lbase with
-        | LVariable _ ->
-            List.map indices
-              ~f:(Index.map (classify_point ~loopvars ~written_vars))
-        | LTupleProjection _ -> [] in
-      reads_in_all (List.concat_map indices ~f:Index.bounds)
-      @ reads_in rhs
-      @ [{var= Stmt.Helpers.lhs_variable lhs; subs; kind= Write}]
-  | Decl {decl_id; initialize; _} ->
-      (match initialize with Assign init -> reads_in init | _ -> [])
-      @ [{var= decl_id; subs= []; kind= Write}]
-  | TargetPE operand | JacobianPE operand ->
-      reads_in operand @ [increment_target]
-  | NRFunApp
-      ( ( StanLib (_, (FnTarget | FnJacobian), _)
-        | UserDefined (_, (FnTarget | FnJacobian)) )
-      , args ) ->
-      reads_in_all args @ [increment_target]
-  | Return (Some value) -> reads_in value
-  | NRFunApp (kind, args) -> reads_in_all (Fun_kind.collect_exprs kind @ args)
-  | IfElse (cond, _, _) | While (cond, _) -> reads_in cond
-  | For {lower; upper; _} -> reads_in_all [lower; upper]
-  | Profile _ | Block _ | SList _ | Break | Continue | Skip | Return None -> []
-
 let build_dep_info_map (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
     dep_info_map =
   let statement_map =
@@ -594,8 +634,8 @@ let build_dep_info_map (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
       stmt in
   let _, preds, parents = build_cf_graphs statement_map in
   let rd_map = mir_reaching_definitions mir stmt in
-  (* the variables assigned anywhere in [stmt]; an index that reads one of them
-     can change value inside [stmt] *)
+  (* the variables written to anywhere in [stmt]; an index that reads one of
+     them can change value inside [stmt] *)
   let written_vars =
     LabelMap.fold statement_map ~init:Set.Poly.empty
       ~f:(fun ~key:_ ~data:(pattern, _) written ->
@@ -609,7 +649,7 @@ let build_dep_info_map (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
         match fst (LabelMap.find loop statement_map) with
         | Stmt.Pattern.For {loopvar; _} -> Set.Poly.add loopvar outer
         | _ -> outer) in
-  LabelMap.mapi statement_map ~f:(fun label (pattern, meta) ->
+  LabelMap.mapi statement_map ~f:(fun label (pattern, idx) ->
       let rds = LabelMap.find label rd_map in
       ( pattern
       , { predecessors= LabelMap.find label preds
@@ -618,8 +658,8 @@ let build_dep_info_map (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
         ; reaching_defn_exit= rds.exit
         ; loop= enclosing_loop statement_map parents label
         ; accesses=
-            node_accesses ~loopvars:(loopvars_of label) ~written_vars pattern
-        ; meta } ))
+            Accesses.of_stmt ~loopvars:(loopvars_of label) ~written_vars pattern
+        ; meta= idx } ))
 
 let log_prob_build_dep_info_map (mir : Program.Typed.t) : dep_info_map =
   let log_prob_stmt =
@@ -630,8 +670,10 @@ let log_prob_dependency_graph (mir : Program.Typed.t) : dependency_graph =
   let dep_info_map = log_prob_build_dep_info_map mir in
   all_node_dependencies dep_info_map
 
-(** The variables read by the statements at [labels]. *)
-let rhs_variables_at (statement_map : dep_info_map) (labels : label Set.Poly.t)
+(** The names of the variables that the statements at [labels] reads or
+    increments, including reads inside indices and sizes. A [For] or [if] adds
+    only the variables in its bounds or condition, not those in its body. *)
+let read_variables_at (statement_map : dep_info_map) (labels : label Set.Poly.t)
     : string Set.Poly.t =
   Set.Poly.union_map labels ~f:(fun label ->
       read_variables (snd (LabelMap.find label statement_map)))

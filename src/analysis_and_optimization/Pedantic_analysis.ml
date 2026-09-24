@@ -146,7 +146,7 @@ let var_deps info_map label ?expr:(expr_opt : Expr.Typed.t option = None)
         let expr_names = Set.Poly.map ~f:fst (expr_var_set expr) in
         (node_vars_dependencies info_map expr_names label, expr_names) in
   (* variable dependencies *)
-  let dep_vars = rhs_variables_at info_map dep_labels in
+  let dep_vars = read_variables_at info_map dep_labels in
   (* target dependencies *)
   Set.Poly.inter targets (Set.Poly.union dep_vars expr_vars)
 
