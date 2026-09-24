@@ -221,7 +221,6 @@ end
 
 type direction = Lt | Eq | Gt
 type level = {directions: direction Set.Poly.t; distance: int option}
-type dependence = Independent | Unknown | Dependent of level list
 
 type node_dep_info =
   { predecessors: label Set.Poly.t
@@ -243,100 +242,159 @@ type dependency_graph = label Set.Poly.t LabelMap.t
     [Dependent] result for the two accesses has one [level] per entry. *)
 type frame = string option list
 
-(** Whether two single indices can be equal (the ZIV and strong SIV tests of
-    Goff, Kennedy and Tseng 1991, section 3). Without a loop variable, the two
-    indices are equal in every iteration or in none. [n + a] and [n + b], for
-    the variable [n] of a loop in [frame], are equal when the two iterations of
-    [n] are [a - b] apart. Any other pair is [Unknown]. *)
-let point_dependence (frame : frame) (source : point) (sink : point) :
-    dependence =
-  match (source, sink) with
-  | Affine source_term, Affine sink_term
-    when Option.equal String.equal source_term.loopvar sink_term.loopvar -> (
-      (* the symbols' values are unknown, so the difference is known only when
-         both indices have the same symbol or neither has one *)
-      let difference =
-        Option.some_if
-          (Option.equal Expr.Typed.equal source_term.symbol sink_term.symbol)
-          (source_term.const - sink_term.const) in
-      match (difference, source_term.loopvar) with
-      | None, _ | Some 0, None -> Unknown
-      | Some _, None -> Independent
-      | Some distance, Some loopvar when List.mem (Some loopvar) ~set:frame ->
-          let direction =
-            if distance = 0 then Eq else if distance > 0 then Lt else Gt in
-          (* only the level of [loopvar] is known; any direction is possible at
-             the other loops *)
-          Dependent
-            (List.map frame ~f:(fun var ->
-                 if Option.equal String.equal var (Some loopvar) then
-                   { directions= Set.Poly.singleton direction
-                   ; distance= Some distance }
-                 else {directions= Set.Poly.of_list [Lt; Eq; Gt]; distance= None}))
-      | Some _, Some _ -> Unknown)
-  | Affine _, Affine _ | Varying _, _ | _, Varying _ -> Unknown
+(** Whether two accesses can touch the same element, and how the answers for
+    index positions and pairs of accesses combine. *)
+module Dependence = struct
+  type t = Independent | Unknown | Dependent of level list
 
-(** What is possible at both of two index positions; the accesses are
-    independent when no direction is left at some loop. *)
-let meet (left : dependence) (right : dependence) : dependence =
-  match (left, right) with
-  | Independent, _ | _, Independent -> Independent
-  | Unknown, other | other, Unknown -> other
-  | Dependent left_levels, Dependent right_levels ->
-      let levels =
-        List.map2 left_levels right_levels
-          ~f:(fun (left_level : level) right_level ->
-            match (left_level.distance, right_level.distance) with
-            | Some left_distance, Some right_distance
-              when left_distance <> right_distance ->
-                {directions= Set.Poly.empty; distance= None}
-            | _ ->
-                { directions=
-                    Set.Poly.inter left_level.directions right_level.directions
-                ; distance=
-                    Option.first_some left_level.distance right_level.distance
-                }) in
-      if List.exists levels ~f:(fun level -> Set.Poly.is_empty level.directions)
-      then Independent
-      else Dependent levels
+  (** Whether two single indices can be equal (the ZIV and strong SIV tests of
+      Goff, Kennedy and Tseng 1991, section 3). Without a loop variable, the two
+      indices are equal in every iteration or in none. [n + a] and [n + b], for
+      the variable [n] of a loop in [frame], are equal when the two iterations
+      of [n] are [a - b] apart. Any other pair is [Unknown]. *)
+  let of_points (frame : frame) (source : point) (sink : point) : t =
+    match (source, sink) with
+    | Affine source_term, Affine sink_term
+      when Option.equal String.equal source_term.loopvar sink_term.loopvar -> (
+        (* the symbols' values are unknown, so the difference is known only when
+           both indices have the same symbol or neither has one *)
+        let difference =
+          Option.some_if
+            (Option.equal Expr.Typed.equal source_term.symbol sink_term.symbol)
+            (source_term.const - sink_term.const) in
+        match (difference, source_term.loopvar) with
+        | None, _ | Some 0, None -> Unknown
+        | Some _, None -> Independent
+        | Some distance, Some loopvar when List.mem (Some loopvar) ~set:frame ->
+            let direction =
+              if distance = 0 then Eq else if distance > 0 then Lt else Gt in
+            (* only the level of [loopvar] is known; any direction is possible
+               at the other loops *)
+            Dependent
+              (List.map frame ~f:(fun var ->
+                   if Option.equal String.equal var (Some loopvar) then
+                     { directions= Set.Poly.singleton direction
+                     ; distance= Some distance }
+                   else
+                     {directions= Set.Poly.of_list [Lt; Eq; Gt]; distance= None}))
+        | Some _, Some _ -> Unknown)
+    | Affine _, Affine _ | Varying _, _ | _, Varying _ -> Unknown
 
-(** What is possible for either of two pairs of accesses; a distance is kept
-    only when both pairs agree. *)
-let join (left : dependence) (right : dependence) : dependence =
-  match (left, right) with
-  | Unknown, _ | _, Unknown -> Unknown
-  | Independent, other | other, Independent -> other
-  | Dependent left_levels, Dependent right_levels ->
-      Dependent
-        (List.map2 left_levels right_levels
-           ~f:(fun (left_level : level) right_level ->
-             { directions=
-                 Set.Poly.union left_level.directions right_level.directions
-             ; distance=
-                 (if
-                    Option.equal Int.equal left_level.distance
-                      right_level.distance
-                  then left_level.distance
-                  else None) }))
+  (** What is possible at both of two index positions; the accesses are
+      independent when no direction is left at some loop. *)
+  let meet (left : t) (right : t) : t =
+    match (left, right) with
+    | Independent, _ | _, Independent -> Independent
+    | Unknown, other | other, Unknown -> other
+    | Dependent left_levels, Dependent right_levels ->
+        let levels =
+          List.map2 left_levels right_levels
+            ~f:(fun (left_level : level) right_level ->
+              match (left_level.distance, right_level.distance) with
+              | Some left_distance, Some right_distance
+                when left_distance <> right_distance ->
+                  {directions= Set.Poly.empty; distance= None}
+              | _ ->
+                  { directions=
+                      Set.Poly.inter left_level.directions
+                        right_level.directions
+                  ; distance=
+                      Option.first_some left_level.distance right_level.distance
+                  }) in
+        if
+          List.exists levels ~f:(fun level ->
+              Set.Poly.is_empty level.directions)
+        then Independent
+        else Dependent levels
 
-(** Whether two accesses to one variable can touch the same element. The
-    elements are the same only when the paths are equal at every position, so
-    the per-position results are intersected. Two different tuple fields never
-    overlap. Accesses with paths of different lengths are [Unknown]. *)
-let access_dependence (frame : frame) (source : point access)
-    (sink : point access) : dependence =
-  if List.compare_lengths source.path sink.path <> 0 then Unknown
-  else
-    List.fold_left2 source.path sink.path ~init:Unknown
-      ~f:(fun merged source_step sink_step ->
-        meet merged
-          (match (source_step, sink_step) with
-          | Subscript (Single source_point), Subscript (Single sink_point) ->
-              point_dependence frame source_point sink_point
-          | Field source_field, Field sink_field when source_field <> sink_field
-            ->
-              Independent
-          | Subscript _, _ | Field _, _ -> Unknown))
+  (** What is possible for either of two pairs of accesses; a distance is kept
+      only when both pairs agree. *)
+  let join (left : t) (right : t) : t =
+    match (left, right) with
+    | Unknown, _ | _, Unknown -> Unknown
+    | Independent, other | other, Independent -> other
+    | Dependent left_levels, Dependent right_levels ->
+        Dependent
+          (List.map2 left_levels right_levels
+             ~f:(fun (left_level : level) right_level ->
+               { directions=
+                   Set.Poly.union left_level.directions right_level.directions
+               ; distance=
+                   (if
+                      Option.equal Int.equal left_level.distance
+                        right_level.distance
+                    then left_level.distance
+                    else None) }))
+
+  (** Whether two accesses to one variable can touch the same element. The
+      elements are the same only when the paths are equal at every position, so
+      the per-position results are intersected. Two different tuple fields never
+      overlap. Accesses with paths of different lengths are [Unknown]. *)
+  let of_accesses (frame : frame) (source : point access) (sink : point access)
+      : t =
+    if List.compare_lengths source.path sink.path <> 0 then Unknown
+    else
+      List.fold_left2 source.path sink.path ~init:Unknown
+        ~f:(fun merged source_step sink_step ->
+          meet merged
+            (match (source_step, sink_step) with
+            | Subscript (Single source_point), Subscript (Single sink_point) ->
+                of_points frame source_point sink_point
+            | Field source_field, Field sink_field
+              when source_field <> sink_field ->
+                Independent
+            | Subscript _, _ | Field _, _ -> Unknown))
+
+  (** [dep] without the cases where the access at [dst] runs before the access
+      at [src] (Kennedy and Allen 2001, definition 2.1). [src] runs first when,
+      at the outermost loop whose direction is not [Eq], the direction is [Lt];
+      or when every direction is [Eq] and [src] comes first in the program,
+      [src < dst]. [Eq] is kept at a loop only if the loops inside still allow
+      [src] to run first. [Unknown] stays [Unknown]. *)
+  let ordered ~(src : label) ~(dst : label) (dep : t) : t =
+    let rec restrict = function
+      | [] -> Option.some_if (src < dst) []
+      | level :: inner ->
+          let same_iteration =
+            if Set.Poly.mem Eq level.directions then restrict inner else None
+          in
+          let directions =
+            Set.Poly.filter level.directions ~f:(function
+              | Lt -> true
+              | Eq -> Option.is_some same_iteration
+              | Gt -> false) in
+          if Set.Poly.is_empty directions then None
+          else if Set.Poly.mem Lt directions then
+            Some ({level with directions} :: inner)
+          else Option.map same_iteration ~f:(List.cons {level with directions})
+    in
+    match dep with
+    | (Independent | Unknown) as unchanged -> unchanged
+    | Dependent levels -> (
+        match restrict levels with
+        | Some restricted -> Dependent restricted
+        | None -> Independent)
+
+  (** The dependence from the accesses [sources] to the accesses [sinks]:
+      [Independent] only when every pair is independent. [restrict] is applied
+      to each pair before the pairs are combined, so that a direction removed
+      for one pair is not added back by another. Two [Increment]s are skipped,
+      since increments can run in either order. When either list is empty the
+      accesses are unknown and the result is [Unknown]. *)
+  let of_access_lists (frame : frame) ~(restrict : t -> t)
+      (sources : point access list) (sinks : point access list) : t =
+    if List.is_empty sources || List.is_empty sinks then Unknown
+    else
+      List.fold_left
+        (List.concat_map sources ~f:(fun source ->
+             List.map sinks ~f:(fun sink -> (source, sink))))
+        ~init:Independent
+        ~f:(fun merged ((source : point access), (sink : point access)) ->
+          match (source.kind, sink.kind) with
+          | Increment, Increment -> merged
+          | (Read | Write), _ | Increment, (Read | Write) ->
+              join merged (restrict (of_accesses frame source sink)))
+end
 
 (** Find all of the reaching definitions of a variable in an RD set *)
 let reaching_defn_lookup (rds : reaching_defn Set.Poly.t) (var : string) :
@@ -345,60 +403,9 @@ let reaching_defn_lookup (rds : reaching_defn Set.Poly.t) (var : string) :
     (Set.Poly.filter rds ~f:(fun (defined, _) -> String.equal defined var))
     ~f:snd
 
-(** [dep] without the cases where the access at [dst] runs before the access at
-    [src] (Kennedy and Allen 2001, definition 2.1). [src] runs first when, at
-    the outermost loop whose direction is not [Eq], the direction is [Lt]; or
-    when every direction is [Eq] and [src] comes first in the program,
-    [src < dst]. [Eq] is kept at a loop only if the loops inside still allow
-    [src] to run first. [Unknown] stays [Unknown]. *)
-let ordered_dependence ~(src : label) ~(dst : label) (dep : dependence) :
-    dependence =
-  let rec restrict = function
-    | [] -> Option.some_if (src < dst) []
-    | level :: inner ->
-        let same_iteration =
-          if Set.Poly.mem Eq level.directions then restrict inner else None
-        in
-        let directions =
-          Set.Poly.filter level.directions ~f:(function
-            | Lt -> true
-            | Eq -> Option.is_some same_iteration
-            | Gt -> false) in
-        if Set.Poly.is_empty directions then None
-        else if Set.Poly.mem Lt directions then
-          Some ({level with directions} :: inner)
-        else Option.map same_iteration ~f:(List.cons {level with directions})
-  in
-  match dep with
-  | (Independent | Unknown) as unchanged -> unchanged
-  | Dependent levels -> (
-      match restrict levels with
-      | Some restricted -> Dependent restricted
-      | None -> Independent)
-
 (** The label of the analysed statement. An assignment from before the analysed
     statement is recorded at this label. *)
 let root_label : label = 1
-
-(** The dependence from the accesses [sources] to the accesses [sinks]:
-    [Independent] only when every pair is independent. [restrict] is applied to
-    each pair before the pairs are combined, so that a direction removed for one
-    pair is not added back by another. Two [Increment]s are skipped, since
-    increments can run in either order. When either list is empty the accesses
-    are unknown and the result is [Unknown]. *)
-let pair_dependence (frame : frame) ~(restrict : dependence -> dependence)
-    (sources : point access list) (sinks : point access list) : dependence =
-  if List.is_empty sources || List.is_empty sinks then Unknown
-  else
-    List.fold_left
-      (List.concat_map sources ~f:(fun source ->
-           List.map sinks ~f:(fun sink -> (source, sink))))
-      ~init:Independent
-      ~f:(fun merged ((source : point access), (sink : point access)) ->
-        match (source.kind, sink.kind) with
-        | Increment, Increment -> merged
-        | (Read | Write), _ | Increment, (Read | Write) ->
-            join merged (restrict (access_dependence frame source sink)))
 
 (** The loop variable of the loop at [loop]; a [while] loop has none. *)
 let for_loopvar
@@ -435,15 +442,15 @@ let accesses_at (statement_map : dep_info_map) (label : label) :
     accesses and is always kept. *)
 let element_edges (statement_map : dep_info_map) ~(dst : label)
     ~(sources : label Set.Poly.t)
-    ~(restrict : src:label -> dependence -> dependence)
+    ~(restrict : src:label -> Dependence.t -> Dependence.t)
     ~(src_accesses : label -> point access list)
-    ~(dst_accesses : point access list) : (label * dependence) list =
+    ~(dst_accesses : point access list) : (label * Dependence.t) list =
   List.filter_map (Set.Poly.to_list sources) ~f:(fun src ->
       if src = root_label || not (LabelMap.mem src statement_map) then
-        Some (src, Unknown)
+        Some (src, Dependence.Unknown)
       else
         match
-          pair_dependence
+          Dependence.of_access_lists
             (common_frame statement_map ~src ~dst)
             ~restrict:(restrict ~src) (src_accesses src) dst_accesses
         with
@@ -457,7 +464,7 @@ let pruned_reaching_defns (statement_map : dep_info_map) (dst : label)
   let _, info = LabelMap.find dst statement_map in
   element_edges statement_map ~dst
     ~sources:(reaching_defn_lookup info.reaching_defn_entry var)
-    ~restrict:(ordered_dependence ~dst)
+    ~restrict:(Dependence.ordered ~dst)
     ~src_accesses:(fun src ->
       (Accesses.of_var var (accesses_at statement_map src)).writes)
     ~dst_accesses:(Accesses.of_var var info.accesses).reads
