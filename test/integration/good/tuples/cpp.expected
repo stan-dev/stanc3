@@ -5,22 +5,24 @@ namespace arrays_tuples_nested_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 15> locations_array__ =
+static constexpr std::array<const char*, 17> locations_array__ =
   {" (found before start of program)",
-  " (in 'arrays-tuples-nested.stan', line 12, column 2 to column 38)",
-  " (in 'arrays-tuples-nested.stan', line 13, column 2 to column 52)",
-  " (in 'arrays-tuples-nested.stan', line 14, column 2 to column 64)",
-  " (in 'arrays-tuples-nested.stan', line 15, column 2 to column 84)",
-  " (in 'arrays-tuples-nested.stan', line 16, column 2 to column 87)",
-  " (in 'arrays-tuples-nested.stan', line 17, column 2 to column 78)",
-  " (in 'arrays-tuples-nested.stan', line 18, column 2 to line 19, column 81)",
+  " (in 'arrays-tuples-nested.stan', line 14, column 2 to column 38)",
+  " (in 'arrays-tuples-nested.stan', line 15, column 2 to column 52)",
+  " (in 'arrays-tuples-nested.stan', line 16, column 2 to column 64)",
+  " (in 'arrays-tuples-nested.stan', line 17, column 2 to column 84)",
+  " (in 'arrays-tuples-nested.stan', line 18, column 2 to column 87)",
+  " (in 'arrays-tuples-nested.stan', line 19, column 2 to column 78)",
+  " (in 'arrays-tuples-nested.stan', line 20, column 2 to line 21, column 81)",
+  " (in 'arrays-tuples-nested.stan', line 22, column 2 to column 95)",
   " (in 'arrays-tuples-nested.stan', line 2, column 2 to column 35)",
   " (in 'arrays-tuples-nested.stan', line 3, column 2 to column 49)",
   " (in 'arrays-tuples-nested.stan', line 4, column 2 to column 58)",
   " (in 'arrays-tuples-nested.stan', line 5, column 2 to column 80)",
   " (in 'arrays-tuples-nested.stan', line 6, column 2 to column 80)",
   " (in 'arrays-tuples-nested.stan', line 7, column 2 to column 75)",
-  " (in 'arrays-tuples-nested.stan', line 8, column 2 to line 9, column 79)"};
+  " (in 'arrays-tuples-nested.stan', line 8, column 2 to line 9, column 79)",
+  " (in 'arrays-tuples-nested.stan', line 11, column 2 to column 92)"};
 class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_nested_model> {
  private:
   std::tuple<std::vector<double>, int> basic;
@@ -45,6 +47,12 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
           std::vector<
             std::tuple<std::complex<double>, Eigen::Matrix<double,-1,-1>>>>>>>
     very_deep;
+  std::vector<
+    std::tuple<int,
+      std::vector<
+        std::tuple<double,
+          std::vector<Eigen::Matrix<std::complex<double>,-1,1>>>>>>
+    complex_vector_deep;
  public:
   ~arrays_tuples_nested_model() {}
   arrays_tuples_nested_model(stan::io::var_context& context__, unsigned int
@@ -67,7 +75,7 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-      current_statement__ = 8;
+      current_statement__ = 9;
       context__.validate_dims("data initialization", "basic.1", "double",
         std::vector<size_t>{static_cast<size_t>(10)});
       context__.validate_dims("data initialization", "basic.2", "int",
@@ -76,10 +84,10 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                                                      std::numeric_limits<double>::quiet_NaN(
                                                        )),
                 std::numeric_limits<int>::min()};
-      current_statement__ = 8;
+      current_statement__ = 9;
       std::get<0>(basic) = context__.vals_r("basic.1");
       std::get<1>(basic) = context__.vals_i("basic.2")[(1 - 1)];
-      current_statement__ = 9;
+      current_statement__ = 10;
       context__.validate_dims("data initialization", "tuple_tuple.1", "int",
         std::vector<size_t>{});
       context__.validate_dims("data initialization", "tuple_tuple.2.1",
@@ -93,7 +101,7 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                         std::numeric_limits<double>::quiet_NaN(),
                         Eigen::Matrix<double,-1,1>::Constant(2,
                           std::numeric_limits<double>::quiet_NaN())}};
-      current_statement__ = 9;
+      current_statement__ = 10;
       std::get<0>(tuple_tuple) = context__.vals_i("tuple_tuple.1")[(1 - 1)];
       std::get<0>(std::get<1>(tuple_tuple)) = context__.vals_r("tuple_tuple.2.1")[(1
         - 1)];
@@ -109,7 +117,7 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
           pos__ = (pos__ + 1);
         }
       }
-      current_statement__ = 10;
+      current_statement__ = 11;
       context__.validate_dims("data initialization", "arr_tuple.1", "int",
         std::vector<size_t>{static_cast<size_t>(3)});
       context__.validate_dims("data initialization", "arr_tuple.2", "double",
@@ -128,17 +136,17 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                         std::numeric_limits<double>::quiet_NaN())});
       {
         std::vector<int> arr_tuple_dot_1_flat__;
-        current_statement__ = 10;
+        current_statement__ = 11;
         arr_tuple_dot_1_flat__ = context__.vals_i("arr_tuple.1");
         int arr_tuple_dot_1_flat__pos__;
         arr_tuple_dot_1_flat__pos__ = 1;
         std::vector<local_scalar_t__> arr_tuple_dot_2_flat__;
-        current_statement__ = 10;
+        current_statement__ = 11;
         arr_tuple_dot_2_flat__ = context__.vals_r("arr_tuple.2");
         int arr_tuple_dot_2_flat__pos__;
         arr_tuple_dot_2_flat__pos__ = 1;
         std::vector<local_scalar_t__> arr_tuple_dot_3_flat__;
-        current_statement__ = 10;
+        current_statement__ = 11;
         arr_tuple_dot_3_flat__ = context__.vals_r("arr_tuple.3");
         int arr_tuple_dot_3_flat__pos__;
         arr_tuple_dot_3_flat__pos__ = 1;
@@ -183,7 +191,7 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
             "assigning variable arr_tuple", stan::model::index_uni(sym1__));
         }
       }
-      current_statement__ = 11;
+      current_statement__ = 12;
       context__.validate_dims("data initialization", "tuple_arr_tuple.1",
         "double", std::vector<size_t>{static_cast<size_t>(2)});
       context__.validate_dims("data initialization", "tuple_arr_tuple.2",
@@ -203,7 +211,7 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                                                                    ),
                               std::vector<int>(4,
                                 std::numeric_limits<int>::min())})};
-      current_statement__ = 11;
+      current_statement__ = 12;
       std::get<0>(tuple_arr_tuple) = context__.vals_r("tuple_arr_tuple.1");
       std::get<1>(tuple_arr_tuple) = context__.vals_i("tuple_arr_tuple.2")[(1
         - 1)];
@@ -241,7 +249,7 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
             stan::model::index_uni(sym1__));
         }
       }
-      current_statement__ = 12;
+      current_statement__ = 13;
       context__.validate_dims("data initialization", "arr_tuple_tuple.1",
         "double", std::vector<size_t>{static_cast<size_t>(2)});
       context__.validate_dims("data initialization", "arr_tuple_tuple.2",
@@ -271,28 +279,28 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                                   std::numeric_limits<double>::quiet_NaN())}}});
       {
         std::vector<local_scalar_t__> arr_tuple_tuple_dot_1_flat__;
-        current_statement__ = 12;
+        current_statement__ = 13;
         arr_tuple_tuple_dot_1_flat__ = context__.vals_r("arr_tuple_tuple.1");
         int arr_tuple_tuple_dot_1_flat__pos__;
         arr_tuple_tuple_dot_1_flat__pos__ = 1;
         std::vector<int> arr_tuple_tuple_dot_2_flat__;
-        current_statement__ = 12;
+        current_statement__ = 13;
         arr_tuple_tuple_dot_2_flat__ = context__.vals_i("arr_tuple_tuple.2");
         int arr_tuple_tuple_dot_2_flat__pos__;
         arr_tuple_tuple_dot_2_flat__pos__ = 1;
         std::vector<local_scalar_t__> arr_tuple_tuple_dot_3_dot_1_flat__;
-        current_statement__ = 12;
+        current_statement__ = 13;
         arr_tuple_tuple_dot_3_dot_1_flat__ = context__.vals_r("arr_tuple_tuple.3.1");
         int arr_tuple_tuple_dot_3_dot_1_flat__pos__;
         arr_tuple_tuple_dot_3_dot_1_flat__pos__ = 1;
         std::vector<int> arr_tuple_tuple_dot_3_dot_2_dot_1_flat__;
-        current_statement__ = 12;
+        current_statement__ = 13;
         arr_tuple_tuple_dot_3_dot_2_dot_1_flat__ = context__.vals_i("arr_tuple_tuple.3.2.1");
         int arr_tuple_tuple_dot_3_dot_2_dot_1_flat__pos__;
         arr_tuple_tuple_dot_3_dot_2_dot_1_flat__pos__ = 1;
         std::vector<local_scalar_t__>
           arr_tuple_tuple_dot_3_dot_2_dot_2_flat__;
-        current_statement__ = 12;
+        current_statement__ = 13;
         arr_tuple_tuple_dot_3_dot_2_dot_2_flat__ = context__.vals_r("arr_tuple_tuple.3.2.2");
         int arr_tuple_tuple_dot_3_dot_2_dot_2_flat__pos__;
         arr_tuple_tuple_dot_3_dot_2_dot_2_flat__pos__ = 1;
@@ -354,7 +362,7 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
             stan::model::index_uni(sym1__));
         }
       }
-      current_statement__ = 13;
+      current_statement__ = 14;
       context__.validate_dims("data initialization", "arr_tuple_arr_tuple.1",
         "int", std::vector<size_t>{static_cast<size_t>(3)});
       context__.validate_dims("data initialization",
@@ -384,17 +392,17 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                                       std::numeric_limits<double>::quiet_NaN())})});
       {
         std::vector<int> arr_tuple_arr_tuple_dot_1_flat__;
-        current_statement__ = 13;
+        current_statement__ = 14;
         arr_tuple_arr_tuple_dot_1_flat__ = context__.vals_i("arr_tuple_arr_tuple.1");
         int arr_tuple_arr_tuple_dot_1_flat__pos__;
         arr_tuple_arr_tuple_dot_1_flat__pos__ = 1;
         std::vector<local_scalar_t__> arr_tuple_arr_tuple_dot_2_dot_1_flat__;
-        current_statement__ = 13;
+        current_statement__ = 14;
         arr_tuple_arr_tuple_dot_2_dot_1_flat__ = context__.vals_r("arr_tuple_arr_tuple.2.1");
         int arr_tuple_arr_tuple_dot_2_dot_1_flat__pos__;
         arr_tuple_arr_tuple_dot_2_dot_1_flat__pos__ = 1;
         std::vector<local_scalar_t__> arr_tuple_arr_tuple_dot_2_dot_2_flat__;
-        current_statement__ = 13;
+        current_statement__ = 14;
         arr_tuple_arr_tuple_dot_2_dot_2_flat__ = context__.vals_r("arr_tuple_arr_tuple.2.2");
         int arr_tuple_arr_tuple_dot_2_dot_2_flat__pos__;
         arr_tuple_arr_tuple_dot_2_dot_2_flat__pos__ = 1;
@@ -461,7 +469,7 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
             stan::model::index_uni(sym1__));
         }
       }
-      current_statement__ = 14;
+      current_statement__ = 15;
       context__.validate_dims("data initialization", "very_deep.1", "int",
         std::vector<size_t>{static_cast<size_t>(3)});
       context__.validate_dims("data initialization", "very_deep.2.1",
@@ -513,23 +521,23 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                                 std::numeric_limits<double>::quiet_NaN())})})});
       {
         std::vector<int> very_deep_dot_1_flat__;
-        current_statement__ = 14;
+        current_statement__ = 15;
         very_deep_dot_1_flat__ = context__.vals_i("very_deep.1");
         int very_deep_dot_1_flat__pos__;
         very_deep_dot_1_flat__pos__ = 1;
         std::vector<local_scalar_t__> very_deep_dot_2_dot_1_flat__;
-        current_statement__ = 14;
+        current_statement__ = 15;
         very_deep_dot_2_dot_1_flat__ = context__.vals_r("very_deep.2.1");
         int very_deep_dot_2_dot_1_flat__pos__;
         very_deep_dot_2_dot_1_flat__pos__ = 1;
         std::vector<std::complex<local_scalar_t__>>
           very_deep_dot_2_dot_2_dot_1_flat__;
-        current_statement__ = 14;
+        current_statement__ = 15;
         very_deep_dot_2_dot_2_dot_1_flat__ = context__.vals_c("very_deep.2.2.1");
         int very_deep_dot_2_dot_2_dot_1_flat__pos__;
         very_deep_dot_2_dot_2_dot_1_flat__pos__ = 1;
         std::vector<local_scalar_t__> very_deep_dot_2_dot_2_dot_2_flat__;
-        current_statement__ = 14;
+        current_statement__ = 15;
         very_deep_dot_2_dot_2_dot_2_flat__ = context__.vals_r("very_deep.2.2.2");
         int very_deep_dot_2_dot_2_dot_2_flat__pos__;
         very_deep_dot_2_dot_2_dot_2_flat__pos__ = 1;
@@ -637,12 +645,145 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
             stan::model::index_uni(sym1__));
         }
       }
+      current_statement__ = 16;
+      context__.validate_dims("data initialization", "complex_vector_deep.1",
+        "int", std::vector<size_t>{static_cast<size_t>(2)});
+      context__.validate_dims("data initialization",
+        "complex_vector_deep.2.1", "double",
+        std::vector<size_t>{static_cast<size_t>(2), static_cast<size_t>(2)});
+      context__.validate_dims("data initialization",
+        "complex_vector_deep.2.2", "double",
+        std::vector<size_t>{static_cast<size_t>(2), static_cast<size_t>(2),
+          static_cast<size_t>(3), static_cast<size_t>(2),
+          static_cast<size_t>(2)});
+      complex_vector_deep = std::vector<
+                              std::tuple<int,
+                                std::vector<
+                                  std::tuple<double,
+                                    std::vector<
+                                      Eigen::Matrix<std::complex<double>,-1,1>>>>>>(2,
+                              std::tuple<int,
+                                std::vector<
+                                  std::tuple<double,
+                                    std::vector<
+                                      Eigen::Matrix<std::complex<double>,-1,1>>>>>{
+                                std::numeric_limits<int>::min(),
+                                std::vector<
+                                  std::tuple<double,
+                                    std::vector<
+                                      Eigen::Matrix<std::complex<double>,-1,1>>>>(2,
+                                  std::tuple<double,
+                                    std::vector<
+                                      Eigen::Matrix<std::complex<double>,-1,1>>>{
+                                    std::numeric_limits<double>::quiet_NaN(),
+                                    std::vector<
+                                      Eigen::Matrix<std::complex<double>,-1,1>>(3,
+                                      Eigen::Matrix<std::complex<double>,-1,1>::Constant(2,
+                                        std::complex<double>(std::numeric_limits<double>::quiet_NaN(
+                                                               ),
+                                          std::numeric_limits<double>::quiet_NaN(
+                                            ))))})});
+      {
+        std::vector<int> complex_vector_deep_dot_1_flat__;
+        current_statement__ = 16;
+        complex_vector_deep_dot_1_flat__ = context__.vals_i("complex_vector_deep.1");
+        int complex_vector_deep_dot_1_flat__pos__;
+        complex_vector_deep_dot_1_flat__pos__ = 1;
+        std::vector<local_scalar_t__> complex_vector_deep_dot_2_dot_1_flat__;
+        current_statement__ = 16;
+        complex_vector_deep_dot_2_dot_1_flat__ = context__.vals_r("complex_vector_deep.2.1");
+        int complex_vector_deep_dot_2_dot_1_flat__pos__;
+        complex_vector_deep_dot_2_dot_1_flat__pos__ = 1;
+        std::vector<std::complex<local_scalar_t__>>
+          complex_vector_deep_dot_2_dot_2_flat__;
+        current_statement__ = 16;
+        complex_vector_deep_dot_2_dot_2_flat__ = context__.vals_c("complex_vector_deep.2.2");
+        int complex_vector_deep_dot_2_dot_2_flat__pos__;
+        complex_vector_deep_dot_2_dot_2_flat__pos__ = 1;
+        int complex_vector_deep_dot_1_temp__ =
+          std::numeric_limits<int>::min();
+        std::vector<
+          std::tuple<double,
+            std::vector<Eigen::Matrix<std::complex<double>,-1,1>>>>
+          complex_vector_deep_dot_2_temp__ =
+          std::vector<
+            std::tuple<double,
+              std::vector<Eigen::Matrix<std::complex<double>,-1,1>>>>(2,
+            std::tuple<double,
+              std::vector<Eigen::Matrix<std::complex<double>,-1,1>>>{
+              std::numeric_limits<double>::quiet_NaN(),
+              std::vector<Eigen::Matrix<std::complex<double>,-1,1>>(3,
+                Eigen::Matrix<std::complex<double>,-1,1>::Constant(2,
+                  std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
+                    std::numeric_limits<double>::quiet_NaN())))});
+        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+          complex_vector_deep_dot_1_temp__ = complex_vector_deep_dot_1_flat__[(complex_vector_deep_dot_1_flat__pos__
+            - 1)];
+          complex_vector_deep_dot_1_flat__pos__ = (complex_vector_deep_dot_1_flat__pos__
+            + 1);
+          {
+            double complex_vector_deep_dot_2_dot_1_temp__ =
+              std::numeric_limits<double>::quiet_NaN();
+            std::vector<Eigen::Matrix<std::complex<double>,-1,1>>
+              complex_vector_deep_dot_2_dot_2_temp__ =
+              std::vector<Eigen::Matrix<std::complex<double>,-1,1>>(3,
+                Eigen::Matrix<std::complex<double>,-1,1>::Constant(2,
+                  std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
+                    std::numeric_limits<double>::quiet_NaN())));
+            for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+              complex_vector_deep_dot_2_dot_1_temp__ = complex_vector_deep_dot_2_dot_1_flat__[(complex_vector_deep_dot_2_dot_1_flat__pos__
+                - 1)];
+              complex_vector_deep_dot_2_dot_1_flat__pos__ = (complex_vector_deep_dot_2_dot_1_flat__pos__
+                + 1);
+              {
+                std::vector<std::complex<local_scalar_t__>>
+                  complex_vector_deep_dot_2_dot_2_temp___flat__;
+                stan::model::assign(
+                  complex_vector_deep_dot_2_dot_2_temp___flat__,
+                  stan::model::rvalue(complex_vector_deep_dot_2_dot_2_flat__,
+                    "complex_vector_deep_dot_2_dot_2_flat__",
+                    stan::model::index_min_max(
+                      complex_vector_deep_dot_2_dot_2_flat__pos__,
+                      ((complex_vector_deep_dot_2_dot_2_flat__pos__ + (3 * (2
+                      * 1))) - 1))),
+                  "assigning variable complex_vector_deep_dot_2_dot_2_temp___flat__");
+                pos__ = 1;
+                for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
+                  for (int sym4__ = 1; sym4__ <= 3; ++sym4__) {
+                    stan::model::assign(
+                      complex_vector_deep_dot_2_dot_2_temp__,
+                      complex_vector_deep_dot_2_dot_2_temp___flat__[(pos__ -
+                      1)],
+                      "assigning variable complex_vector_deep_dot_2_dot_2_temp__",
+                      stan::model::index_uni(sym4__),
+                      stan::model::index_uni(sym3__));
+                    pos__ = (pos__ + 1);
+                  }
+                }
+                complex_vector_deep_dot_2_dot_2_flat__pos__ = (complex_vector_deep_dot_2_dot_2_flat__pos__
+                  + (3 * (2 * 1)));
+              }
+              stan::model::assign(complex_vector_deep_dot_2_temp__,
+                std::forward_as_tuple(complex_vector_deep_dot_2_dot_1_temp__,
+                  complex_vector_deep_dot_2_dot_2_temp__),
+                "assigning variable complex_vector_deep_dot_2_temp__",
+                stan::model::index_uni(sym2__));
+            }
+          }
+          stan::model::assign(complex_vector_deep,
+            std::forward_as_tuple(complex_vector_deep_dot_1_temp__,
+              complex_vector_deep_dot_2_temp__),
+            "assigning variable complex_vector_deep",
+            stan::model::index_uni(sym1__));
+        }
+      }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     num_params_r__ = (10 + 1) + (1 + (1 + 2)) + (3 * ((2 + 4) + 3)) + ((2 +
       1) + (3 * (1 + 4))) + (2 * ((1 + 1) + (1 + (2 + 4)))) + (3 * (1 + (4 *
-      (1 + 5)))) + (3 * (1 + (4 * (1 + (5 * (2 + (6 * 7)))))));
+      (1 + 5)))) + (3 * (1 + (4 * (1 + (5 * (2 + (6 * 7))))))) + (2 * (1 + (2
+      * (1 + (3 * (2 * 2))))));
   }
   inline std::string model_name() const final {
     return "arrays_tuples_nested_model";
@@ -897,6 +1038,53 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
           }
         }
       }
+      std::vector<
+        std::tuple<local_scalar_t__,
+          std::vector<
+            std::tuple<local_scalar_t__,
+              std::vector<Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>>>>>
+        complex_vector_deep_p =
+        std::vector<
+          std::tuple<local_scalar_t__,
+            std::vector<
+              std::tuple<local_scalar_t__,
+                std::vector<
+                  Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>>>>>(2,
+          std::tuple<local_scalar_t__,
+            std::vector<
+              std::tuple<local_scalar_t__,
+                std::vector<
+                  Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>>>>{DUMMY_VAR__,
+            std::vector<
+              std::tuple<local_scalar_t__,
+                std::vector<
+                  Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>>>(2,
+              std::tuple<local_scalar_t__,
+                std::vector<
+                  Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>>{DUMMY_VAR__,
+                std::vector<
+                  Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>(3,
+                  Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>::Constant(2,
+                    std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__)))})});
+      current_statement__ = 8;
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        current_statement__ = 8;
+        std::get<0>(complex_vector_deep_p[(sym1__ - 1)]) = in__.template read<
+                                                             local_scalar_t__>();
+        current_statement__ = 8;
+        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+          current_statement__ = 8;
+          std::get<0>(
+            std::get<1>(complex_vector_deep_p[(sym1__ - 1)])[(sym2__ - 1)]) = 
+            in__.template read<local_scalar_t__>();
+          current_statement__ = 8;
+          std::get<1>(
+            std::get<1>(complex_vector_deep_p[(sym1__ - 1)])[(sym2__ - 1)]) = 
+            in__.template read<
+              std::vector<Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>>(3,
+              2);
+        }
+      }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -1147,6 +1335,53 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                                         Eigen::Matrix<local_scalar_t__,-1,-1>>(6,
                                         7);
           }
+        }
+      }
+      std::vector<
+        std::tuple<local_scalar_t__,
+          std::vector<
+            std::tuple<local_scalar_t__,
+              std::vector<Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>>>>>
+        complex_vector_deep_p =
+        std::vector<
+          std::tuple<local_scalar_t__,
+            std::vector<
+              std::tuple<local_scalar_t__,
+                std::vector<
+                  Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>>>>>(2,
+          std::tuple<local_scalar_t__,
+            std::vector<
+              std::tuple<local_scalar_t__,
+                std::vector<
+                  Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>>>>{DUMMY_VAR__,
+            std::vector<
+              std::tuple<local_scalar_t__,
+                std::vector<
+                  Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>>>(2,
+              std::tuple<local_scalar_t__,
+                std::vector<
+                  Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>>{DUMMY_VAR__,
+                std::vector<
+                  Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>(3,
+                  Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>::Constant(2,
+                    std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__)))})});
+      current_statement__ = 8;
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        current_statement__ = 8;
+        std::get<0>(complex_vector_deep_p[(sym1__ - 1)]) = in__.template read<
+                                                             local_scalar_t__>();
+        current_statement__ = 8;
+        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+          current_statement__ = 8;
+          std::get<0>(
+            std::get<1>(complex_vector_deep_p[(sym1__ - 1)])[(sym2__ - 1)]) = 
+            in__.template read<local_scalar_t__>();
+          current_statement__ = 8;
+          std::get<1>(
+            std::get<1>(complex_vector_deep_p[(sym1__ - 1)])[(sym2__ - 1)]) = 
+            in__.template read<
+              std::vector<Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>>(3,
+              2);
         }
       }
     } catch (const std::exception& e) {
@@ -1412,6 +1647,52 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
           }
         }
       }
+      std::vector<
+        std::tuple<double,
+          std::vector<
+            std::tuple<double,
+              std::vector<Eigen::Matrix<std::complex<double>,-1,1>>>>>>
+        complex_vector_deep_p =
+        std::vector<
+          std::tuple<double,
+            std::vector<
+              std::tuple<double,
+                std::vector<Eigen::Matrix<std::complex<double>,-1,1>>>>>>(2,
+          std::tuple<double,
+            std::vector<
+              std::tuple<double,
+                std::vector<Eigen::Matrix<std::complex<double>,-1,1>>>>>{
+            std::numeric_limits<double>::quiet_NaN(),
+            std::vector<
+              std::tuple<double,
+                std::vector<Eigen::Matrix<std::complex<double>,-1,1>>>>(2,
+              std::tuple<double,
+                std::vector<Eigen::Matrix<std::complex<double>,-1,1>>>{
+                std::numeric_limits<double>::quiet_NaN(),
+                std::vector<Eigen::Matrix<std::complex<double>,-1,1>>(3,
+                  Eigen::Matrix<std::complex<double>,-1,1>::Constant(2,
+                    std::complex<double>(std::numeric_limits<double>::quiet_NaN(
+                                           ),
+                      std::numeric_limits<double>::quiet_NaN())))})});
+      current_statement__ = 8;
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        current_statement__ = 8;
+        std::get<0>(complex_vector_deep_p[(sym1__ - 1)]) = in__.template read<
+                                                             local_scalar_t__>();
+        current_statement__ = 8;
+        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+          current_statement__ = 8;
+          std::get<0>(
+            std::get<1>(complex_vector_deep_p[(sym1__ - 1)])[(sym2__ - 1)]) = 
+            in__.template read<local_scalar_t__>();
+          current_statement__ = 8;
+          std::get<1>(
+            std::get<1>(complex_vector_deep_p[(sym1__ - 1)])[(sym2__ - 1)]) = 
+            in__.template read<
+              std::vector<Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>>(3,
+              2);
+        }
+      }
       out__.write(std::get<0>(basic_p));
       out__.write(std::get<1>(basic_p));
       out__.write(std::get<0>(tuple_tuple_p));
@@ -1472,6 +1753,24 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                           std::get<1>(
                             std::get<1>(very_deep_p[(sym1__ - 1)])[(sym2__ -
                             1)])[(sym3__ - 1)]));
+          }
+        }
+      }
+      current_statement__ = 8;
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        out__.write(std::get<0>(complex_vector_deep_p[(sym1__ - 1)]));
+        current_statement__ = 8;
+        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+          out__.write(std::get<0>(
+                        std::get<1>(complex_vector_deep_p[(sym1__ - 1)])[(sym2__
+                        - 1)]));
+          current_statement__ = 8;
+          for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
+            for (int sym4__ = 1; sym4__ <= 3; ++sym4__) {
+              out__.write(std::get<1>(
+                            std::get<1>(complex_vector_deep_p[(sym1__ - 1)])[(sym2__
+                            - 1)])[(sym4__ - 1)][(sym3__ - 1)]);
+            }
           }
         }
       }
@@ -1790,6 +2089,71 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
           }
         }
       }
+      std::vector<
+        std::tuple<local_scalar_t__,
+          std::vector<
+            std::tuple<local_scalar_t__,
+              std::vector<Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>>>>>
+        complex_vector_deep_p =
+        std::vector<
+          std::tuple<local_scalar_t__,
+            std::vector<
+              std::tuple<local_scalar_t__,
+                std::vector<
+                  Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>>>>>(2,
+          std::tuple<local_scalar_t__,
+            std::vector<
+              std::tuple<local_scalar_t__,
+                std::vector<
+                  Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>>>>{DUMMY_VAR__,
+            std::vector<
+              std::tuple<local_scalar_t__,
+                std::vector<
+                  Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>>>(2,
+              std::tuple<local_scalar_t__,
+                std::vector<
+                  Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>>{DUMMY_VAR__,
+                std::vector<
+                  Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>(3,
+                  Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>::Constant(2,
+                    std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__)))})});
+      current_statement__ = 8;
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        current_statement__ = 8;
+        std::get<0>(complex_vector_deep_p[(sym1__ - 1)]) = in__.read<
+                                                             local_scalar_t__>();
+        current_statement__ = 8;
+        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+          current_statement__ = 8;
+          std::get<0>(
+            std::get<1>(complex_vector_deep_p[(sym1__ - 1)])[(sym2__ - 1)]) = 
+            in__.read<local_scalar_t__>();
+          current_statement__ = 8;
+          for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
+            for (int sym4__ = 1; sym4__ <= 3; ++sym4__) {
+              current_statement__ = 8;
+              stan::model::assign(
+                std::get<1>(
+                  std::get<1>(complex_vector_deep_p[(sym1__ - 1)])[(sym2__ -
+                  1)]), in__.read<std::complex<local_scalar_t__>>(),
+                "assigning variable complex_vector_deep_p.2.2",
+                stan::model::index_uni(sym4__),
+                stan::model::index_uni(sym3__));
+            }
+          }
+        }
+      }
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        out__.write(std::get<0>(complex_vector_deep_p[(sym1__ - 1)]));
+        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+          out__.write(std::get<0>(
+                        std::get<1>(complex_vector_deep_p[(sym1__ - 1)])[(sym2__
+                        - 1)]));
+          out__.write(std::get<1>(
+                        std::get<1>(complex_vector_deep_p[(sym1__ - 1)])[(sym2__
+                        - 1)]));
+        }
+      }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -1884,6 +2248,18 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
         std::vector<size_t>{static_cast<size_t>(3), static_cast<size_t>(4),
           static_cast<size_t>(5), static_cast<size_t>(6),
           static_cast<size_t>(7)});
+      current_statement__ = 8;
+      context__.validate_dims("parameter initialization",
+        "complex_vector_deep_p.1", "double",
+        std::vector<size_t>{static_cast<size_t>(2)});
+      context__.validate_dims("parameter initialization",
+        "complex_vector_deep_p.2.1", "double",
+        std::vector<size_t>{static_cast<size_t>(2), static_cast<size_t>(2)});
+      context__.validate_dims("parameter initialization",
+        "complex_vector_deep_p.2.2", "double",
+        std::vector<size_t>{static_cast<size_t>(2), static_cast<size_t>(2),
+          static_cast<size_t>(3), static_cast<size_t>(2),
+          static_cast<size_t>(2)});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       std::tuple<std::vector<local_scalar_t__>, local_scalar_t__> basic_p =
@@ -2486,6 +2862,142 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
           }
         }
       }
+      std::vector<
+        std::tuple<local_scalar_t__,
+          std::vector<
+            std::tuple<local_scalar_t__,
+              std::vector<Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>>>>>
+        complex_vector_deep_p =
+        std::vector<
+          std::tuple<local_scalar_t__,
+            std::vector<
+              std::tuple<local_scalar_t__,
+                std::vector<
+                  Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>>>>>(2,
+          std::tuple<local_scalar_t__,
+            std::vector<
+              std::tuple<local_scalar_t__,
+                std::vector<
+                  Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>>>>{DUMMY_VAR__,
+            std::vector<
+              std::tuple<local_scalar_t__,
+                std::vector<
+                  Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>>>(2,
+              std::tuple<local_scalar_t__,
+                std::vector<
+                  Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>>{DUMMY_VAR__,
+                std::vector<
+                  Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>(3,
+                  Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>::Constant(2,
+                    std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__)))})});
+      {
+        std::vector<local_scalar_t__> complex_vector_deep_p_dot_1_flat__;
+        current_statement__ = 8;
+        complex_vector_deep_p_dot_1_flat__ = context__.vals_r("complex_vector_deep_p.1");
+        int complex_vector_deep_p_dot_1_flat__pos__;
+        complex_vector_deep_p_dot_1_flat__pos__ = 1;
+        std::vector<local_scalar_t__>
+          complex_vector_deep_p_dot_2_dot_1_flat__;
+        current_statement__ = 8;
+        complex_vector_deep_p_dot_2_dot_1_flat__ = context__.vals_r("complex_vector_deep_p.2.1");
+        int complex_vector_deep_p_dot_2_dot_1_flat__pos__;
+        complex_vector_deep_p_dot_2_dot_1_flat__pos__ = 1;
+        std::vector<std::complex<local_scalar_t__>>
+          complex_vector_deep_p_dot_2_dot_2_flat__;
+        current_statement__ = 8;
+        complex_vector_deep_p_dot_2_dot_2_flat__ = context__.vals_c("complex_vector_deep_p.2.2");
+        int complex_vector_deep_p_dot_2_dot_2_flat__pos__;
+        complex_vector_deep_p_dot_2_dot_2_flat__pos__ = 1;
+        double complex_vector_deep_p_dot_1_temp__ =
+          std::numeric_limits<double>::quiet_NaN();
+        std::vector<
+          std::tuple<double,
+            std::vector<Eigen::Matrix<std::complex<double>,-1,1>>>>
+          complex_vector_deep_p_dot_2_temp__ =
+          std::vector<
+            std::tuple<double,
+              std::vector<Eigen::Matrix<std::complex<double>,-1,1>>>>(2,
+            std::tuple<double,
+              std::vector<Eigen::Matrix<std::complex<double>,-1,1>>>{
+              std::numeric_limits<double>::quiet_NaN(),
+              std::vector<Eigen::Matrix<std::complex<double>,-1,1>>(3,
+                Eigen::Matrix<std::complex<double>,-1,1>::Constant(2,
+                  std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
+                    std::numeric_limits<double>::quiet_NaN())))});
+        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+          complex_vector_deep_p_dot_1_temp__ = complex_vector_deep_p_dot_1_flat__[(complex_vector_deep_p_dot_1_flat__pos__
+            - 1)];
+          complex_vector_deep_p_dot_1_flat__pos__ = (complex_vector_deep_p_dot_1_flat__pos__
+            + 1);
+          {
+            double complex_vector_deep_p_dot_2_dot_1_temp__ =
+              std::numeric_limits<double>::quiet_NaN();
+            std::vector<Eigen::Matrix<std::complex<double>,-1,1>>
+              complex_vector_deep_p_dot_2_dot_2_temp__ =
+              std::vector<Eigen::Matrix<std::complex<double>,-1,1>>(3,
+                Eigen::Matrix<std::complex<double>,-1,1>::Constant(2,
+                  std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
+                    std::numeric_limits<double>::quiet_NaN())));
+            for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+              complex_vector_deep_p_dot_2_dot_1_temp__ = complex_vector_deep_p_dot_2_dot_1_flat__[(complex_vector_deep_p_dot_2_dot_1_flat__pos__
+                - 1)];
+              complex_vector_deep_p_dot_2_dot_1_flat__pos__ = (complex_vector_deep_p_dot_2_dot_1_flat__pos__
+                + 1);
+              {
+                std::vector<std::complex<local_scalar_t__>>
+                  complex_vector_deep_p_dot_2_dot_2_temp___flat__;
+                stan::model::assign(
+                  complex_vector_deep_p_dot_2_dot_2_temp___flat__,
+                  stan::model::rvalue(
+                    complex_vector_deep_p_dot_2_dot_2_flat__,
+                    "complex_vector_deep_p_dot_2_dot_2_flat__",
+                    stan::model::index_min_max(
+                      complex_vector_deep_p_dot_2_dot_2_flat__pos__,
+                      ((complex_vector_deep_p_dot_2_dot_2_flat__pos__ + (3 *
+                      (2 * 1))) - 1))),
+                  "assigning variable complex_vector_deep_p_dot_2_dot_2_temp___flat__");
+                pos__ = 1;
+                for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
+                  for (int sym4__ = 1; sym4__ <= 3; ++sym4__) {
+                    stan::model::assign(
+                      complex_vector_deep_p_dot_2_dot_2_temp__,
+                      complex_vector_deep_p_dot_2_dot_2_temp___flat__[(pos__
+                      - 1)],
+                      "assigning variable complex_vector_deep_p_dot_2_dot_2_temp__",
+                      stan::model::index_uni(sym4__),
+                      stan::model::index_uni(sym3__));
+                    pos__ = (pos__ + 1);
+                  }
+                }
+                complex_vector_deep_p_dot_2_dot_2_flat__pos__ = (complex_vector_deep_p_dot_2_dot_2_flat__pos__
+                  + (3 * (2 * 1)));
+              }
+              stan::model::assign(complex_vector_deep_p_dot_2_temp__,
+                std::forward_as_tuple(
+                  complex_vector_deep_p_dot_2_dot_1_temp__,
+                  complex_vector_deep_p_dot_2_dot_2_temp__),
+                "assigning variable complex_vector_deep_p_dot_2_temp__",
+                stan::model::index_uni(sym2__));
+            }
+          }
+          stan::model::assign(complex_vector_deep_p,
+            std::forward_as_tuple(complex_vector_deep_p_dot_1_temp__,
+              complex_vector_deep_p_dot_2_temp__),
+            "assigning variable complex_vector_deep_p",
+            stan::model::index_uni(sym1__));
+        }
+      }
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        out__.write(std::get<0>(complex_vector_deep_p[(sym1__ - 1)]));
+        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+          out__.write(std::get<0>(
+                        std::get<1>(complex_vector_deep_p[(sym1__ - 1)])[(sym2__
+                        - 1)]));
+          out__.write(std::get<1>(
+                        std::get<1>(complex_vector_deep_p[(sym1__ - 1)])[(sym2__
+                        - 1)]));
+        }
+      }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -2504,7 +3016,8 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                 "arr_tuple_tuple_p.3.2.2", "arr_tuple_arr_tuple_p.1",
                 "arr_tuple_arr_tuple_p.2.1", "arr_tuple_arr_tuple_p.2.2",
                 "very_deep_p.1", "very_deep_p.2.1", "very_deep_p.2.2.1",
-                "very_deep_p.2.2.2"};
+                "very_deep_p.2.2.2", "complex_vector_deep_p.1",
+                "complex_vector_deep_p.2.1", "complex_vector_deep_p.2.2"};
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
   }
@@ -2549,7 +3062,13 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                   static_cast<size_t>(2)},
                 std::vector<size_t>{static_cast<size_t>(3),
                   static_cast<size_t>(4), static_cast<size_t>(5),
-                  static_cast<size_t>(6), static_cast<size_t>(7)}};
+                  static_cast<size_t>(6), static_cast<size_t>(7)},
+                std::vector<size_t>{static_cast<size_t>(2)},
+                std::vector<size_t>{static_cast<size_t>(2),
+                  static_cast<size_t>(2)},
+                std::vector<size_t>{static_cast<size_t>(2),
+                  static_cast<size_t>(2), static_cast<size_t>(3),
+                  static_cast<size_t>(2), static_cast<size_t>(2)}};
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
   }
@@ -2664,6 +3183,29 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                 std::to_string(sym3__) + ':' + std::to_string(2) + '.' +
                 std::to_string(sym5__) + '.' + std::to_string(sym4__));
             }
+          }
+        }
+      }
+    }
+    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      param_names__.emplace_back(std::string() + "complex_vector_deep_p" +
+        '.' + std::to_string(sym1__) + ':' + std::to_string(1));
+      for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+        param_names__.emplace_back(std::string() + "complex_vector_deep_p" +
+          '.' + std::to_string(sym1__) + ':' + std::to_string(2) + '.' +
+          std::to_string(sym2__) + ':' + std::to_string(1));
+        for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
+          for (int sym4__ = 1; sym4__ <= 3; ++sym4__) {
+            param_names__.emplace_back(std::string() +
+              "complex_vector_deep_p" + '.' + std::to_string(sym1__) + ':' +
+              std::to_string(2) + '.' + std::to_string(sym2__) + ':' +
+              std::to_string(2) + '.' + std::to_string(sym4__) + '.' +
+              std::to_string(sym3__) + '.' + "real");
+            param_names__.emplace_back(std::string() +
+              "complex_vector_deep_p" + '.' + std::to_string(sym1__) + ':' +
+              std::to_string(2) + '.' + std::to_string(sym2__) + ':' +
+              std::to_string(2) + '.' + std::to_string(sym4__) + '.' +
+              std::to_string(sym3__) + '.' + "imag");
           }
         }
       }
@@ -2786,14 +3328,37 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
         }
       }
     }
+    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      param_names__.emplace_back(std::string() + "complex_vector_deep_p" +
+        '.' + std::to_string(sym1__) + ':' + std::to_string(1));
+      for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+        param_names__.emplace_back(std::string() + "complex_vector_deep_p" +
+          '.' + std::to_string(sym1__) + ':' + std::to_string(2) + '.' +
+          std::to_string(sym2__) + ':' + std::to_string(1));
+        for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
+          for (int sym4__ = 1; sym4__ <= 3; ++sym4__) {
+            param_names__.emplace_back(std::string() +
+              "complex_vector_deep_p" + '.' + std::to_string(sym1__) + ':' +
+              std::to_string(2) + '.' + std::to_string(sym2__) + ':' +
+              std::to_string(2) + '.' + std::to_string(sym4__) + '.' +
+              std::to_string(sym3__) + '.' + "real");
+            param_names__.emplace_back(std::string() +
+              "complex_vector_deep_p" + '.' + std::to_string(sym1__) + ':' +
+              std::to_string(2) + '.' + std::to_string(sym2__) + ':' +
+              std::to_string(2) + '.' + std::to_string(sym4__) + '.' +
+              std::to_string(sym3__) + '.' + "imag");
+          }
+        }
+      }
+    }
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
   }
   inline std::string get_constrained_sizedtypes() const {
-    return std::string("[{\"name\":\"basic_p\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"array\",\"length\":" + std::to_string(10) + ",\"element_type\":{\"name\":\"real\"}},{\"name\":\"real\"}]},\"block\":\"parameters\"},{\"name\":\"tuple_tuple_p\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"vector\",\"length\":" + std::to_string(2) + "}]}]},\"block\":\"parameters\"},{\"name\":\"arr_tuple_p\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"3\",\"element_types\":[{\"name\":\"complex\"},{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"real\"}},{\"name\":\"vector\",\"length\":" + std::to_string(3) + "}]}},\"block\":\"parameters\"},{\"name\":\"tuple_arr_tuple_p\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"3\",\"element_types\":[{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"real\"}},{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"real\"}}]}}]},\"block\":\"parameters\"},{\"name\":\"arr_tuple_tuple_p\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"3\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"real\"},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"complex\"},{\"name\":\"vector\",\"length\":" + std::to_string(4) + "}]}]}]}},\"block\":\"parameters\"},{\"name\":\"arr_tuple_arr_tuple_p\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"vector\",\"length\":" + std::to_string(5) + "}]}}]}},\"block\":\"parameters\"},{\"name\":\"very_deep_p\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(5) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"complex\"},{\"name\":\"matrix\",\"rows\":" + std::to_string(6) + ",\"cols\":" + std::to_string(7) + "}]}}]}}]}},\"block\":\"parameters\"}]");
+    return std::string("[{\"name\":\"basic_p\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"array\",\"length\":" + std::to_string(10) + ",\"element_type\":{\"name\":\"real\"}},{\"name\":\"real\"}]},\"block\":\"parameters\"},{\"name\":\"tuple_tuple_p\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"vector\",\"length\":" + std::to_string(2) + "}]}]},\"block\":\"parameters\"},{\"name\":\"arr_tuple_p\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"3\",\"element_types\":[{\"name\":\"complex\"},{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"real\"}},{\"name\":\"vector\",\"length\":" + std::to_string(3) + "}]}},\"block\":\"parameters\"},{\"name\":\"tuple_arr_tuple_p\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"3\",\"element_types\":[{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"real\"}},{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"real\"}}]}}]},\"block\":\"parameters\"},{\"name\":\"arr_tuple_tuple_p\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"3\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"real\"},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"complex\"},{\"name\":\"vector\",\"length\":" + std::to_string(4) + "}]}]}]}},\"block\":\"parameters\"},{\"name\":\"arr_tuple_arr_tuple_p\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"vector\",\"length\":" + std::to_string(5) + "}]}}]}},\"block\":\"parameters\"},{\"name\":\"very_deep_p\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(5) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"complex\"},{\"name\":\"matrix\",\"rows\":" + std::to_string(6) + ",\"cols\":" + std::to_string(7) + "}]}}]}}]}},\"block\":\"parameters\"},{\"name\":\"complex_vector_deep_p\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(2) + "}}]}}]}},\"block\":\"parameters\"}]");
   }
   inline std::string get_unconstrained_sizedtypes() const {
-    return std::string("[{\"name\":\"basic_p\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"array\",\"length\":" + std::to_string(10) + ",\"element_type\":{\"name\":\"real\"}},{\"name\":\"real\"}]},\"block\":\"parameters\"},{\"name\":\"tuple_tuple_p\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"vector\",\"length\":" + std::to_string(2) + "}]}]},\"block\":\"parameters\"},{\"name\":\"arr_tuple_p\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"3\",\"element_types\":[{\"name\":\"complex\"},{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"real\"}},{\"name\":\"vector\",\"length\":" + std::to_string(3) + "}]}},\"block\":\"parameters\"},{\"name\":\"tuple_arr_tuple_p\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"3\",\"element_types\":[{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"real\"}},{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"real\"}}]}}]},\"block\":\"parameters\"},{\"name\":\"arr_tuple_tuple_p\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"3\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"real\"},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"complex\"},{\"name\":\"vector\",\"length\":" + std::to_string(4) + "}]}]}]}},\"block\":\"parameters\"},{\"name\":\"arr_tuple_arr_tuple_p\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"vector\",\"length\":" + std::to_string(5) + "}]}}]}},\"block\":\"parameters\"},{\"name\":\"very_deep_p\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(5) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"complex\"},{\"name\":\"matrix\",\"rows\":" + std::to_string(6) + ",\"cols\":" + std::to_string(7) + "}]}}]}}]}},\"block\":\"parameters\"}]");
+    return std::string("[{\"name\":\"basic_p\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"array\",\"length\":" + std::to_string(10) + ",\"element_type\":{\"name\":\"real\"}},{\"name\":\"real\"}]},\"block\":\"parameters\"},{\"name\":\"tuple_tuple_p\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"vector\",\"length\":" + std::to_string(2) + "}]}]},\"block\":\"parameters\"},{\"name\":\"arr_tuple_p\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"3\",\"element_types\":[{\"name\":\"complex\"},{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"real\"}},{\"name\":\"vector\",\"length\":" + std::to_string(3) + "}]}},\"block\":\"parameters\"},{\"name\":\"tuple_arr_tuple_p\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"3\",\"element_types\":[{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"real\"}},{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"real\"}}]}}]},\"block\":\"parameters\"},{\"name\":\"arr_tuple_tuple_p\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"3\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"real\"},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"complex\"},{\"name\":\"vector\",\"length\":" + std::to_string(4) + "}]}]}]}},\"block\":\"parameters\"},{\"name\":\"arr_tuple_arr_tuple_p\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"vector\",\"length\":" + std::to_string(5) + "}]}}]}},\"block\":\"parameters\"},{\"name\":\"very_deep_p\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(5) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"complex\"},{\"name\":\"matrix\",\"rows\":" + std::to_string(6) + ",\"cols\":" + std::to_string(7) + "}]}}]}}]}},\"block\":\"parameters\"},{\"name\":\"complex_vector_deep_p\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(2) + "}}]}}]}},\"block\":\"parameters\"}]");
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -2804,7 +3369,8 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
               pstream = nullptr) const {
     const size_t num_params__ = (10 + 1) + (1 + (1 + 2)) + (3 * ((2 + 4) +
       3)) + ((2 + 1) + (3 * (1 + 4))) + (2 * ((1 + 1) + (1 + (2 + 4)))) + (3
-      * (1 + (4 * (1 + 5)))) + (3 * (1 + (4 * (1 + (5 * (2 + (6 * 7)))))));
+      * (1 + (4 * (1 + 5)))) + (3 * (1 + (4 * (1 + (5 * (2 + (6 * 7))))))) +
+      (2 * (1 + (2 * (1 + (3 * (2 * 2))))));
     const size_t num_transformed = emit_transformed_parameters * (0U);
     const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
@@ -2823,7 +3389,8 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
               pstream = nullptr) const {
     const size_t num_params__ = (10 + 1) + (1 + (1 + 2)) + (3 * ((2 + 4) +
       3)) + ((2 + 1) + (3 * (1 + 4))) + (2 * ((1 + 1) + (1 + (2 + 4)))) + (3
-      * (1 + (4 * (1 + 5)))) + (3 * (1 + (4 * (1 + (5 * (2 + (6 * 7)))))));
+      * (1 + (4 * (1 + 5)))) + (3 * (1 + (4 * (1 + (5 * (2 + (6 * 7))))))) +
+      (2 * (1 + (2 * (1 + (3 * (2 * 2))))));
     const size_t num_transformed = emit_transformed_parameters * (0U);
     const size_t num_gen_quantities = emit_generated_quantities * (0U);
     const size_t num_to_write = num_params__ + num_transformed +
