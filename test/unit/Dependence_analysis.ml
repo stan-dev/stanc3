@@ -163,7 +163,7 @@ let%expect_test "Transitive dependencies of an if and of its condition" =
     node_vars_dependencies {b} 11: 2 6 8
     node_vars_dependencies ~blockers:{b} {b} 11:
     node_vars_dependencies ~blockers:{a} {b} 11: 8
-    node_vars_dependencies ~blockers:{mu} {b} 11: 2 6 8
+    node_vars_dependencies ~blockers:{mu} {b} 11: 6 8
     |}]
 
 (* ---- Access model: which elements each node reads and writes ---- *)

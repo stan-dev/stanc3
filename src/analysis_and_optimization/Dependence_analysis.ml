@@ -516,7 +516,8 @@ let rec node_dependencies_rec (statement_map : dep_info_map)
   else
     let visited' = Set.Poly.add label visited in
     let deps = node_immediate_dependencies statement_map ~blockers label in
-    Set.Poly.fold deps ~init:visited' ~f:(node_dependencies_rec statement_map)
+    Set.Poly.fold deps ~init:visited'
+      ~f:(node_dependencies_rec statement_map ~blockers)
 
 let node_dependencies (statement_map : dep_info_map) (label : label) :
     label Set.Poly.t =
