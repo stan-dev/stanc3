@@ -11,6 +11,11 @@ val increments_target : 'e Fun_kind.t -> bool
 
 val cannot_duplicate_expr : ?preserve_stability:bool -> ExprSet.elt -> bool
 val cannot_remove_expr : ExprSet.elt -> bool
+
+val contains_top_break_or_continue : Stmt.Located.t -> bool
+(** A [break] or [continue] that leaves this loop, not one inside a nested loop.
+*)
+
 val var_declarations : ('a, 'b) Stmt.t -> string Set.Poly.t
 val num_expr_value : Expr.Typed.t -> (float * string) option
 

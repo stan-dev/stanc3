@@ -1,0 +1,163 @@
+  $ stanc -fvectorize-loops --debug-optimized-mir-pretty tsvc_indirect_addressing.stan
+
+input_vars {
+  int N;
+  array[int, N] ip;
+  vector[N] a0;
+  vector[N] b;
+  vector[N] c;
+  vector[N] d;
+  real s;
+  vector[N] a_data; }
+
+prepare_data {
+  data int pos__;
+  pos__ = 1;
+  data int N;
+  N = FnReadData__("N")[1];
+  (FnCheck(trans(Lower 1))(var_name N)(var N))__(1);
+  FnValidateSize__("ip", "N", N);
+  data array[int, N] ip;
+  ip = FnReadData__("ip");
+  (FnCheck(trans(Lower 1))(var_name ip)(var ip))__(1);
+  (FnCheck(trans(Upper N))(var_name ip)(var ip))__(N);
+  FnValidateSize__("a0", "N", N);
+  data vector[N] a0;
+  {
+    array[] real a0_flat__;
+    a0_flat__ = FnReadData__("a0");
+    pos__ = 1;
+    for(sym1__ in 1:N) {
+      a0[sym1__] = a0_flat__[pos__];
+      pos__ = (pos__ + 1);
+    }
+  }
+  FnValidateSize__("b", "N", N);
+  data vector[N] b;
+  {
+    array[] real b_flat__;
+    b_flat__ = FnReadData__("b");
+    pos__ = 1;
+    for(sym1__ in 1:N) {
+      b[sym1__] = b_flat__[pos__];
+      pos__ = (pos__ + 1);
+    }
+  }
+  FnValidateSize__("c", "N", N);
+  data vector[N] c;
+  {
+    array[] real c_flat__;
+    c_flat__ = FnReadData__("c");
+    pos__ = 1;
+    for(sym1__ in 1:N) {
+      c[sym1__] = c_flat__[pos__];
+      pos__ = (pos__ + 1);
+    }
+  }
+  FnValidateSize__("d", "N", N);
+  data vector[N] d;
+  {
+    array[] real d_flat__;
+    d_flat__ = FnReadData__("d");
+    pos__ = 1;
+    for(sym1__ in 1:N) {
+      d[sym1__] = d_flat__[pos__];
+      pos__ = (pos__ + 1);
+    }
+  }
+  data real s;
+  s = FnReadData__("s")[1];
+  FnValidateSize__("a_data", "N", N);
+  data vector[N] a_data;
+  {
+    array[] real a_data_flat__;
+    a_data_flat__ = FnReadData__("a_data");
+    pos__ = 1;
+    for(sym1__ in 1:N) {
+      a_data[sym1__] = a_data_flat__[pos__];
+      pos__ = (pos__ + 1);
+    }
+  } }
+
+log_prob {
+  real
+    sigma = (FnReadParam(constrain(Lower 0))(dims())(mem_pattern AoS))__(
+    );
+  {
+    {
+      FnValidateSize__("a1", "N", N);
+      vector[N] a1;
+      a1 = a0;
+      a1[1:N] = (a1[1:N] + (b[ip[1:N]] * s));
+      target += sum(a1);
+    }
+    {
+      FnValidateSize__("a2", "N", N);
+      vector[N] a2;
+      a2 = a0;
+      a2[ip[1:N]] = (b[ip[1:N]] + c[1:N]);
+      target += sum(a2);
+    }
+    {
+      target += normal_lpdf(a_data[1:N], b[ip[1:N]], sigma);
+    }
+    {
+      FnValidateSize__("a4", "N", N);
+      vector[N] a4;
+      a4 = a0;
+      a4[ip[1:N]] = (b[1:N] + (c[1:N] .* d[1:N]));
+      target += sum(a4);
+    }
+  } }
+
+rev_log_prob {
+  real
+    sigma = (FnReadParam(constrain(Lower 0))(dims())(mem_pattern AoS))__(
+    );
+  {
+    {
+      FnValidateSize__("a1", "N", N);
+      vector[N] a1;
+      a1 = a0;
+      a1[1:N] = (a1[1:N] + (b[ip[1:N]] * s));
+      target += sum(a1);
+    }
+    {
+      FnValidateSize__("a2", "N", N);
+      vector[N] a2;
+      a2 = a0;
+      a2[ip[1:N]] = (b[ip[1:N]] + c[1:N]);
+      target += sum(a2);
+    }
+    {
+      target += normal_lpdf(a_data[1:N], b[ip[1:N]], sigma);
+    }
+    {
+      FnValidateSize__("a4", "N", N);
+      vector[N] a4;
+      a4 = a0;
+      a4[ip[1:N]] = (b[1:N] + (c[1:N] .* d[1:N]));
+      target += sum(a4);
+    }
+  } }
+
+generate_quantities {
+  data real
+    sigma = (FnReadParam(constrain(Lower 0))(dims())(mem_pattern AoS))__(
+    );
+  (FnWriteParam(unconstrain_opt())(var sigma))__();
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+
+transform_inits {
+  real sigma;
+  sigma = FnReadData__("sigma")[1];
+  (FnWriteParam(unconstrain_opt((Lower 0)))(var sigma))__(); }
+output_vars {
+  parameters real sigma; //real
+}
+[exit 0]
