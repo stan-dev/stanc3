@@ -99,6 +99,73 @@ let%expect_test "Variable dependency example" =
       (4 5 9 11 13 14 16)
     |}]
 
+let%expect_test "Transitive dependencies of an if and of its condition" =
+  let map =
+    log_prob_build_dep_info_map
+      (Test_utils.mir_of_string
+         {|
+      parameters { real mu; real sigma; }
+      model {
+        real a = mu + 1;
+        real b = a * 2;
+        real c = sigma;
+        if (b > 0)
+          target += normal_lpdf(c | 0, 1);
+      }
+    |})
+  in
+  let if_label =
+    LabelMap.fold map ~init:0 ~f:(fun ~key ~data:(pattern, _) found ->
+        match pattern with Stmt.Pattern.IfElse _ -> key | _ -> found) in
+  let pp_labels ppf labels =
+    Fmt.(list ~sep:(any " ") int) ppf (Set.Poly.to_list labels) in
+  (* one line per statement: the label, what the statement is, and the immediate
+     dependencies *)
+  LabelMap.iter map ~f:(fun ~key ~data:(pattern, _) ->
+      let described =
+        match pattern with
+        | Stmt.Pattern.Decl {decl_id; _} -> "declare " ^ decl_id
+        | Assignment (lhs, _, _) -> "assign " ^ Stmt.Helpers.lhs_variable lhs
+        | IfElse _ -> "if"
+        | TargetPE _ -> "target +="
+        | SList _ | Block _ -> "block"
+        | _ -> "other" in
+      Fmt.pr "%d %s: %a@." key described pp_labels
+        (node_immediate_dependencies map key));
+  Fmt.pr "node_dependencies %d: %a@." if_label pp_labels
+    (node_dependencies map if_label);
+  Fmt.pr "node_vars_dependencies {b} %d: %a@." if_label pp_labels
+    (node_vars_dependencies map (Set.Poly.singleton "b") if_label);
+  Fmt.pr "node_vars_dependencies ~blockers:{b} {b} %d: %a@." if_label pp_labels
+    (node_vars_dependencies map ~blockers:(Set.Poly.singleton "b")
+       (Set.Poly.singleton "b") if_label);
+  Fmt.pr "node_vars_dependencies ~blockers:{a} {b} %d: %a@." if_label pp_labels
+    (node_vars_dependencies map ~blockers:(Set.Poly.singleton "a")
+       (Set.Poly.singleton "b") if_label);
+  Fmt.pr "node_vars_dependencies ~blockers:{mu} {b} %d: %a@." if_label pp_labels
+    (node_vars_dependencies map ~blockers:(Set.Poly.singleton "mu")
+       (Set.Poly.singleton "b") if_label);
+  [%expect
+    {|
+    1 block:
+    2 declare mu:
+    3 declare sigma:
+    4 block:
+    5 declare a:
+    6 assign a: 2
+    7 declare b:
+    8 assign b: 6
+    9 declare c:
+    10 assign c: 3
+    11 if: 8
+    12 target +=: 10 11
+    node_dependencies 11: 2 6 8 11
+    node_vars_dependencies {b} 11: 2 6 8
+    node_vars_dependencies ~blockers:{b} {b} 11:
+    node_vars_dependencies ~blockers:{a} {b} 11: 8
+    node_vars_dependencies ~blockers:{mu} {b} 11: 2 6 8
+    |}]
+
 (* ---- Access model: which elements each node reads and writes ---- *)
 
 (** Prints [k+1], [k], [-2]; with [leading] the symbol drops the leading [+] and
