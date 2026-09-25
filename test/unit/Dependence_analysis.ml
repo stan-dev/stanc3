@@ -145,6 +145,10 @@ let%expect_test "Transitive dependencies of an if and of its condition" =
   Fmt.pr "node_vars_dependencies ~blockers:{mu} {b} %d: %a@." if_label pp_labels
     (node_vars_dependencies map ~blockers:(Set.Poly.singleton "mu")
        (Set.Poly.singleton "b") if_label);
+  (* the if never reads c, so the element test has nothing to compare and keeps
+     every definition of c *)
+  Fmt.pr "node_vars_dependencies {c} %d: %a@." if_label pp_labels
+    (node_vars_dependencies map (Set.Poly.singleton "c") if_label);
   [%expect
     {|
     1 block:
@@ -164,6 +168,7 @@ let%expect_test "Transitive dependencies of an if and of its condition" =
     node_vars_dependencies ~blockers:{b} {b} 11:
     node_vars_dependencies ~blockers:{a} {b} 11: 8
     node_vars_dependencies ~blockers:{mu} {b} 11: 6 8
+    node_vars_dependencies {c} 11: 3 10
     |}]
 
 (* ---- Access model: which elements each node reads and writes ---- *)
@@ -453,6 +458,27 @@ let%expect_test "Accesses: a Stan Math _jacobian call increments target" =
     4: R y, += target, W x
     |}]
 
+let%expect_test
+    "Accesses: a user _jacobian call and jacobian += increment target" =
+  print_node_accesses
+    {|
+      functions {
+        real shift_jacobian(real x) { jacobian += x; return x + 1; }
+      }
+      parameters { real y; }
+      transformed parameters {
+        real x = shift_jacobian(y);
+        jacobian += y;
+      }
+    |};
+  [%expect
+    {|
+    2: W y
+    3: W x
+    4: R y, += target, W x
+    5: R y, += target
+    |}]
+
 let%expect_test "Accesses: a declaration reads the sizes in its type" =
   print_node_accesses
     {|
@@ -473,6 +499,40 @@ let%expect_test "Accesses: a declaration reads the sizes in its type" =
     8: R K
     9: R N
     10: R N, R K, W a
+    |}]
+
+let%expect_test "Accesses: the remaining index, base and statement forms" =
+  print_node_accesses
+    {|
+      data {
+        int N; int k;
+        vector[N] v; vector[N] w;
+        array[N] int<lower=1, upper=N> idx;
+        tuple(int, real) t;
+        tuple(array[N] real, int) tv;
+      }
+      model {
+        vector[N] y;
+        for (n in 1:N) {
+          y[n] = v[n + idx[n]] + v[k > 0 ? 1 : 2] + v[k && k];
+          y[n] = v[k || k] + v[t.1];
+          y[n] = tv.1[n] + rep_vector(0, N)[n] + (k > 0 ? v : w)[n];
+          y[n] = (k > 0 || k < 0) ? 1 : 2;
+          profile("inner") { y[n] = 0; }
+          ;
+        }
+      }
+    |};
+  [%expect
+    {|
+    3: R N
+    4: R N, W y
+    5: R N
+    7: R v[?nonlinear], R idx[n], R v[((k > 0) ? 1 : 2)], R k, R v[k && k], R k, R k, W y[n]
+    8: R v[k || k], R k, R k, R v[t.1], R t.1, W y[n]
+    9: R tv.1[n], R N, R k, R v, R w, W y[n]
+    10: R k, R k, W y[n]
+    12: W y[n]
     |}]
 
 let%expect_test
@@ -698,6 +758,90 @@ let%expect_test "Pruning: symbolic subscripts with different constants" =
       }
     |};
   [%expect {| 9: dropped 7, kept 1 6 8 |}]
+
+(* ZIV and SIV give no answer for different symbols, for a loop variable of a
+   loop around only one of the two statements, for two different loop variables,
+   for a gather read and for a slice against a single index, so every definition
+   of [b] is kept; the [For] over [n] shows as dropped because a loop variable
+   is not a read *)
+let%expect_test "Pruning: subscripts the element test cannot compare are kept" =
+  print_pruned_edges
+    {|
+      data { int N; int j; int k; array[N] int<lower=1, upper=N> idx; }
+      parameters { real a; }
+      model {
+        vector[N] b; vector[N] c; matrix[N, N] d;
+        b[k] = a;
+        if (b[j] > 0) target += 1;
+        for (n in 1:N) b[n] = a;
+        for (n in 1:N) c[n] = b[n];
+        for (n in 1:N) {
+          for (m in 1:N) {
+            b[n] = a;
+            d[n, m] = b[m] + b[idx[n]];
+          }
+        }
+        b[1:2] = c[1:2];
+        if (b[k] > 0) target += 1;
+      }
+    |};
+  [%expect {| 25: dropped 20, kept 1 5 11 16 22 24 |}]
+
+(* [meet] over two index positions: an independent position rules the pair out,
+   an unknown position leaves the other position's answer, and two dependent
+   positions keep only the iterations both allow *)
+let%expect_test "Pruning: two index positions of one pair of accesses" =
+  print_pruned_edges
+    {|
+      data { int N; array[N] int<lower=1, upper=N> idx; }
+      parameters { real a; }
+      model {
+        matrix[N, N] m; vector[N] d; vector[N] e; vector[N] f; vector[N] g;
+        for (n in 2:N) {
+          m[1, n] = a;
+          d[n] = m[2, n];
+        }
+        for (n in 2:N) {
+          m[n, 1] = a;
+          e[n] = m[n, idx[n]];
+        }
+        for (n in 2:N) {
+          m[n, n] = a;
+          f[n] = m[n - 1, n];
+        }
+        for (n in 2:N) {
+          m[n, n] = a;
+          g[n] = m[n - 1, n - 1];
+        }
+      }
+    |};
+  [%expect
+    {|
+    18: dropped 17, kept 6 15
+    26: dropped 25, kept 6 17 21 23
+    |}]
+
+(* [join] over the pairs of one statement: a later independent pair keeps the
+   earlier answer, and two dependent pairs keep a distance only when the
+   distances agree *)
+let%expect_test "Pruning: several reads of one variable in one statement" =
+  print_pruned_edges
+    {|
+      data { int N; }
+      parameters { real a; }
+      model {
+        matrix[N, 2] m; vector[N] x; vector[N] d; vector[N] e;
+        for (n in 3:N) {
+          m[n, 1] = a;
+          d[n] = m[n - 1, 1] + m[n, 2];
+        }
+        for (n in 3:N) {
+          x[n] = a;
+          e[n] = x[n - 1] + x[n - 1] + x[n - 2];
+        }
+      }
+    |};
+  [%expect {| no definition pruned |}]
 
 let uninitialized_var_example =
   Test_utils.mir_of_string
