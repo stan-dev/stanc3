@@ -259,7 +259,7 @@ module Dependence = struct
 
   (** The dependence between two single indices by the ZIV and strong SIV tests
       of Goff, Kennedy and Tseng (1991), which need the same symbol. *)
-  let of_points (common_loops : string option list) (source : point)
+  let of_points (common_loopvars : string option list) (source : point)
       (sink : point) : t =
     match (source, sink) with
     | Affine source_term, Affine sink_term
@@ -274,13 +274,13 @@ module Dependence = struct
         | None, _ | Some 0, None -> Unknown
         | Some _, None -> Independent
         | Some distance, Some loopvar
-          when List.mem (Some loopvar) ~set:common_loops ->
+          when List.mem (Some loopvar) ~set:common_loopvars ->
             let direction =
               if distance = 0 then Eq else if distance > 0 then Lt else Gt in
             (* only the level of [loopvar] is known; any direction is possible
                at the other loops *)
             Dependent
-              (List.map common_loops ~f:(fun var ->
+              (List.map common_loopvars ~f:(fun var ->
                    if Option.equal String.equal var (Some loopvar) then
                      { directions= Set.Poly.singleton direction
                      ; distance= Some distance }
@@ -337,7 +337,7 @@ module Dependence = struct
 
   (** The dependence between two accesses to one variable as the [meet] over the
       index positions, where different tuple fields are [Independent]. *)
-  let of_accesses (common_loops : string option list) (source : point access)
+  let of_accesses (common_loopvars : string option list) (source : point access)
       (sink : point access) : t =
     if List.compare_lengths source.path sink.path <> 0 then Unknown
     else
@@ -346,7 +346,7 @@ module Dependence = struct
           meet merged
             (match (source_step, sink_step) with
             | Subscript (Single source_point), Subscript (Single sink_point) ->
-                of_points common_loops source_point sink_point
+                of_points common_loopvars source_point sink_point
             | Field source_field, Field sink_field
               when source_field <> sink_field ->
                 Independent
@@ -380,7 +380,7 @@ module Dependence = struct
 
   (** The [join] of [restrict] over the pairs from [source] to [sink], where an
       increment pairs with either use but never with another increment. *)
-  let between (common_loops : string option list) ~(restrict : t -> t)
+  let between (common_loopvars : string option list) ~(restrict : t -> t)
       ~(source_uses : point Accesses.t -> point access list)
       ~(sink_uses : point Accesses.t -> point access list)
       (source : point Accesses.t) (sink : point Accesses.t) : t =
@@ -402,7 +402,7 @@ module Dependence = struct
         ~init:Independent
         ~f:(fun merged (source_access, sink_access) ->
           join merged
-            (restrict (of_accesses common_loops source_access sink_access)))
+            (restrict (of_accesses common_loopvars source_access sink_access)))
 end
 
 (** Find all of the reaching definitions of a variable in an RD set *)
@@ -426,8 +426,8 @@ let for_loopvar
 
 (** The loop variables of the loops around both [src] and [dst], outermost
     first, which give the levels of a [Dependent] result. *)
-let common_loops (statement_map : dep_info_map) ~(src : label) ~(dst : label) :
-    string option list =
+let common_loopvars (statement_map : dep_info_map) ~(src : label) ~(dst : label)
+    : string option list =
   let rec loops label =
     match (snd (LabelMap.find label statement_map)).loop with
     | None -> []
@@ -447,7 +447,7 @@ let accesses_at (statement_map : dep_info_map) (label : label) :
 
 (** The labels in [sources] that may touch an element that [dst_accesses] touch,
     each paired with the dependence. *)
-let element_edges (statement_map : dep_info_map) ~(dst : label)
+let overlapping_sources (statement_map : dep_info_map) ~(dst : label)
     ~(sources : label Set.Poly.t)
     ~(restrict : src:label -> Dependence.t -> Dependence.t)
     ~(source_uses : point Accesses.t -> point access list)
@@ -460,19 +460,19 @@ let element_edges (statement_map : dep_info_map) ~(dst : label)
       else
         match
           Dependence.between
-            (common_loops statement_map ~src ~dst)
+            (common_loopvars statement_map ~src ~dst)
             ~restrict:(restrict ~src) ~source_uses ~sink_uses (src_accesses src)
             dst_accesses
         with
         | Independent -> None
         | (Unknown | Dependent _) as dep -> Some (src, dep))
 
-(** The reaching definitions of [var] at [dst] that may write an element that
-    [dst] reads before [dst] runs. *)
-let pruned_reaching_defns (statement_map : dep_info_map) (dst : label)
-    (var : string) : label Set.Poly.t =
+(** The statements whose writes to [var] [dst] may read, the sources of the flow
+    dependences into [dst] (Allen and Kennedy 1987). *)
+let writes_read_by (statement_map : dep_info_map) ~(dst : label) (var : string)
+    : label Set.Poly.t =
   let _, info = LabelMap.find dst statement_map in
-  element_edges statement_map ~dst
+  overlapping_sources statement_map ~dst
     ~sources:(reaching_defn_lookup info.reaching_defn_entry var)
     ~restrict:(Dependence.ordered ~dst)
     ~source_uses:(fun accesses -> accesses.writes)
@@ -494,7 +494,7 @@ let node_immediate_dependencies (statement_map : dep_info_map)
   let rhs_deps =
     Set.Poly.union_map
       (Set.Poly.diff (read_variables info) blockers)
-      ~f:(pruned_reaching_defns statement_map label) in
+      ~f:(writes_read_by statement_map ~dst:label) in
   Set.Poly.union info.parents rhs_deps
 
 (* This is doing an explicit graph traversal with edges defined by
@@ -519,7 +519,7 @@ let node_vars_dependencies (statement_map : dep_info_map)
   let var_deps =
     Set.Poly.union_map
       (Set.Poly.diff vars blockers)
-      ~f:(pruned_reaching_defns statement_map label) in
+      ~f:(writes_read_by statement_map ~dst:label) in
   Set.Poly.fold
     (Set.Poly.union info.parents var_deps)
     ~init:Set.Poly.empty
@@ -674,11 +674,11 @@ let build_dep_info_map (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
       ~f:(fun ~key:_ ~data:accesses written ->
         Set.Poly.union written (Accesses.written_vars accesses)) in
   (* the loop variables of the [for] loops around [label] *)
-  let rec loopvars_of label =
+  let rec enclosing_loopvars label =
     match enclosing_loop statement_map parents label with
     | None -> Set.Poly.empty
     | Some loop ->
-        let outer = loopvars_of loop in
+        let outer = enclosing_loopvars loop in
         Option.value_map (for_loopvar statement_map loop) ~default:outer
           ~f:(fun loopvar -> Set.Poly.add loopvar outer) in
   LabelMap.mapi statement_map ~f:(fun label (pattern, idx) ->
@@ -690,7 +690,7 @@ let build_dep_info_map (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
         ; reaching_defn_exit= rds.exit
         ; loop= enclosing_loop statement_map parents label
         ; accesses=
-            Accesses.classify ~loopvars:(loopvars_of label) ~written_vars
+            Accesses.classify ~loopvars:(enclosing_loopvars label) ~written_vars
               (LabelMap.find label collected)
         ; meta= idx } ))
 
