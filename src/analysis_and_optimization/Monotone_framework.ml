@@ -442,17 +442,32 @@ let transfer_gen_kill p gen kill = Set.Poly.union gen (Set.Poly.diff p kill)
 
 (* TODO: from here *)
 
+(** Whether an expression of [s], not counting nested statements, calls a
+    function that adds to [target], such as [x = foo_lp(y)]. *)
+let exprs_increment_target (s : (Expr.Typed.t, 'a) Stmt.Pattern.t) =
+  Stmt.Pattern.fold
+    (fun found expr ->
+      found
+      || expr_any
+           (fun (subexpr : Expr.Typed.t) ->
+             match subexpr.pattern with
+             | FunApp (kind, _) -> increments_target kind
+             | _ -> false)
+           expr)
+    Fun.const false s
+
 (** Calculate the set of variables that a statement can assign to *)
 let assigned_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Pattern.t) =
+  Set.Poly.union
+    (if exprs_increment_target s then Set.Poly.singleton "target"
+     else Set.Poly.empty)
+  @@
   match s with
   | Assignment (lhs, _, _) ->
       Set.Poly.singleton (Middle.Stmt.Helpers.lhs_variable lhs)
   | Decl {decl_id; initialize= Assign _; _} -> Set.Poly.singleton decl_id
   | TargetPE _ | JacobianPE _ -> Set.Poly.singleton "target"
-  | NRFunApp
-      ( ( UserDefined (_, (FnTarget | FnJacobian))
-        | StanLib (_, (FnTarget | FnJacobian), _) )
-      , _ ) ->
+  | NRFunApp (kind, _) when increments_target kind ->
       Set.Poly.singleton "target"
   | For {loopvar= x; _} -> Set.Poly.singleton x
   | Decl {decl_id= _; _}
@@ -487,6 +502,11 @@ let reaching_definitions_transfer
           ~f:(fun x -> (x, Some l))
           (assigned_or_declared_vars_stmt mir_node) in
       let kill =
+        Set.Poly.union
+          (if exprs_increment_target mir_node then
+             Set.Poly.filter p ~f:(fun (y, _) -> y = "target")
+           else Set.Poly.empty)
+        @@
         match mir_node with
         | Decl {decl_id= x; _}
          |Assignment ((LVariable x, []), _, _)
@@ -494,10 +514,7 @@ let reaching_definitions_transfer
             Set.Poly.filter p ~f:(fun (y, _) -> y = x)
         | TargetPE _ | JacobianPE _ ->
             Set.Poly.filter p ~f:(fun (y, _) -> y = "target")
-        | NRFunApp
-            ( ( UserDefined (_, (FnTarget | FnJacobian))
-              | StanLib (_, (FnTarget | FnJacobian), _) )
-            , _ ) ->
+        | NRFunApp (kind, _) when increments_target kind ->
             Set.Poly.filter p ~f:(fun (y, _) -> y = "target")
         | NRFunApp (_, _)
          |Break | Continue | Return _ | Skip
