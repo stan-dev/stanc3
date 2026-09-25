@@ -94,9 +94,6 @@ type node_dep_info =
         (** the innermost [for] or [while] loop around this statement *)
   ; accesses: point Accesses.t
         (** the reads and writes of this statement, not of nested statements *)
-  ; immediate_dependencies: label Set.Poly.t Lazy.t
-        (** [node_immediate_dependencies] without blockers, computed on first
-            use *)
   ; meta: Location_span.t  (** the source location *) }
 
 (** Every statement inside the analysed statement by label, with children
