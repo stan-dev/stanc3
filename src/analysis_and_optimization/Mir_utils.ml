@@ -19,8 +19,8 @@ let can_side_effect_top_expr (e : Expr.Typed.t) =
      but can return a different result every time *)
   match e.pattern with
   | FunApp
-      ( (UserDefined (_, (FnTarget | FnJacobian)) | StanLib (_, FnJacobian, _))
-      , _ ) ->
+      ((UserDefined (_, (FnTarget | FnJacobian)) | StanLib (_, FnJacobian)), _)
+    ->
       true
   | FunApp (CompilerInternal internal_fn, _) ->
       Internal_fun.can_side_effect internal_fn
@@ -30,7 +30,7 @@ let cannot_duplicate_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
   let pred e =
     can_side_effect_top_expr e
     || (match e.pattern with
-      | FunApp ((UserDefined (_, FnRng) | StanLib (_, (FnRng | FnTarget), _)), _)
+      | FunApp ((UserDefined (_, FnRng) | StanLib (_, (FnRng | FnTarget))), _)
         ->
           true
       | _ -> false)

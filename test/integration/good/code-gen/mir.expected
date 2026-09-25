@@ -228,7 +228,7 @@
          (((pattern
             (Return
              (((pattern
-                (FunApp (StanLib normal_rng FnRng AoS)
+                (FunApp (StanLib normal_rng FnRng)
                  (((pattern (Var mu))
                    (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                   ((pattern (Var sigma))
@@ -245,7 +245,7 @@
          (((pattern
             (TargetPE
              ((pattern
-               (FunApp (StanLib normal_lpdf (FnLpdf false) AoS)
+               (FunApp (StanLib normal_lpdf (FnLpdf false))
                 (((pattern (Var u))
                   (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                  ((pattern
@@ -265,7 +265,7 @@
           ((pattern
             (TargetPE
              ((pattern
-               (FunApp (StanLib uniform_lpdf (FnLpdf true) AoS)
+               (FunApp (StanLib uniform_lpdf (FnLpdf true))
                 (((pattern (Var u))
                   (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                  ((pattern
@@ -639,7 +639,7 @@
                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
                     (upper
                      ((pattern
-                       (FunApp (StanLib rows FnPlain AoS)
+                       (FunApp (StanLib rows FnPlain)
                         (((pattern (Var vs))
                           (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
                       (meta ((type_ UInt) (loc <opaque>) (adlevel AutoDiffable)))))
@@ -726,7 +726,7 @@
                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
                     (upper
                      ((pattern
-                       (FunApp (StanLib rows FnPlain AoS)
+                       (FunApp (StanLib rows FnPlain)
                         (((pattern (Var vs))
                           (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
                       (meta ((type_ UInt) (loc <opaque>) (adlevel AutoDiffable)))))
@@ -1146,7 +1146,7 @@
          (((pattern
             (Return
              (((pattern
-                (FunApp (StanLib rep_array FnPlain AoS)
+                (FunApp (StanLib rep_array FnPlain)
                  (((pattern (Var t))
                    (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                   ((pattern (Var n))
@@ -1166,7 +1166,7 @@
                 (FunApp (Operator Plus)
                  (((pattern (Var x))
                    (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
-                  ((pattern (FunApp (StanLib target FnTarget AoS) ()))
+                  ((pattern (FunApp (StanLib target FnTarget) ()))
                    (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta <opaque>)))))
@@ -1214,7 +1214,7 @@
           ((pattern
             (Assignment ((LVariable abs_diff) ()) UReal
              ((pattern
-               (FunApp (StanLib abs FnPlain AoS)
+               (FunApp (StanLib abs FnPlain)
                 (((pattern
                    (FunApp (Operator Minus)
                     (((pattern (Var x))
@@ -1231,12 +1231,12 @@
                 (((pattern
                    (FunApp (Operator Plus)
                     (((pattern
-                       (FunApp (StanLib abs FnPlain AoS)
+                       (FunApp (StanLib abs FnPlain)
                         (((pattern (Var x))
                           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
                       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                      ((pattern
-                       (FunApp (StanLib abs FnPlain AoS)
+                       (FunApp (StanLib abs FnPlain)
                         (((pattern (Var y))
                           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
                       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
@@ -1401,7 +1401,7 @@
              (initialize
               (Assign
                ((pattern
-                 (FunApp (StanLib rows FnPlain AoS)
+                 (FunApp (StanLib rows FnPlain)
                   (((pattern (Var mat))
                     (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
@@ -1420,7 +1420,7 @@
              (initialize
               (Assign
                ((pattern
-                 (FunApp (StanLib cols FnPlain AoS)
+                 (FunApp (StanLib cols FnPlain)
                   (((pattern (Var mat))
                     (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
@@ -3752,7 +3752,7 @@
    ((pattern
      (Assignment ((LVariable td_1dk) ()) (UArray UInt)
       ((pattern
-        (FunApp (StanLib rep_array FnPlain AoS)
+        (FunApp (StanLib rep_array FnPlain)
          (((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly))))))
@@ -4254,9 +4254,9 @@
    ((pattern
      (Assignment ((LVariable td_cfcov_54) ()) UMatrix
       ((pattern
-        (FunApp (StanLib diag_matrix FnPlain AoS)
+        (FunApp (StanLib diag_matrix FnPlain)
          (((pattern
-            (FunApp (StanLib rep_vector FnPlain AoS)
+            (FunApp (StanLib rep_vector FnPlain)
              (((pattern
                 (Promotion
                  ((pattern (Lit Int 1))
@@ -4264,7 +4264,7 @@
                  UReal DataOnly))
                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
-                (FunApp (StanLib rows FnPlain AoS)
+                (FunApp (StanLib rows FnPlain)
                  (((pattern (Var td_cfcov_54))
                    (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -4274,9 +4274,9 @@
    ((pattern
      (Assignment ((LVariable td_cfcov_33) ()) UMatrix
       ((pattern
-        (FunApp (StanLib diag_matrix FnPlain AoS)
+        (FunApp (StanLib diag_matrix FnPlain)
          (((pattern
-            (FunApp (StanLib rep_vector FnPlain AoS)
+            (FunApp (StanLib rep_vector FnPlain)
              (((pattern
                 (Promotion
                  ((pattern (Lit Int 1))
@@ -4284,7 +4284,7 @@
                  UReal DataOnly))
                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
-                (FunApp (StanLib rows FnPlain AoS)
+                (FunApp (StanLib rows FnPlain)
                  (((pattern (Var td_cfcov_33))
                    (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -5322,7 +5322,7 @@
    ((pattern
      (Assignment ((LVariable transformed_data_vector) ()) UVector
       ((pattern
-        (FunApp (StanLib fma FnPlain AoS)
+        (FunApp (StanLib fma FnPlain)
          (((pattern (Var d_vector))
            (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var d_vector))
@@ -5334,7 +5334,7 @@
    ((pattern
      (Assignment ((LVariable transformed_data_vector) ()) UVector
       ((pattern
-        (FunApp (StanLib fma FnPlain AoS)
+        (FunApp (StanLib fma FnPlain)
          (((pattern (Var d_vector))
            (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var d_vector))
@@ -5346,7 +5346,7 @@
    ((pattern
      (Assignment ((LVariable transformed_data_vector) ()) UVector
       ((pattern
-        (FunApp (StanLib fma FnPlain AoS)
+        (FunApp (StanLib fma FnPlain)
          (((pattern (Var d_real))
            (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var d_vector))
@@ -5521,7 +5521,7 @@
    ((pattern
      (Assignment ((LVariable transformed_data_vector) ()) UVector
       ((pattern
-        (FunApp (StanLib fma FnPlain AoS)
+        (FunApp (StanLib fma FnPlain)
          (((pattern (Var d_vector))
            (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var d_vector))
@@ -5533,7 +5533,7 @@
    ((pattern
      (Assignment ((LVariable transformed_data_vector) ()) UVector
       ((pattern
-        (FunApp (StanLib fma FnPlain AoS)
+        (FunApp (StanLib fma FnPlain)
          (((pattern (Var d_vector))
            (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var d_vector))
@@ -5826,7 +5826,7 @@
    ((pattern
      (Assignment ((LVariable transformed_data_matrix) ()) UMatrix
       ((pattern
-        (FunApp (StanLib fma FnPlain AoS)
+        (FunApp (StanLib fma FnPlain)
          (((pattern (Var d_matrix))
            (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var d_matrix))
@@ -5838,7 +5838,7 @@
    ((pattern
      (Assignment ((LVariable transformed_data_matrix) ()) UMatrix
       ((pattern
-        (FunApp (StanLib fma FnPlain AoS)
+        (FunApp (StanLib fma FnPlain)
          (((pattern (Var d_matrix))
            (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var d_matrix))
@@ -6313,7 +6313,7 @@
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (StanLib check_greater_or_equal FnPlain AoS)
+     (NRFunApp (StanLib check_greater_or_equal FnPlain)
       (((pattern (Lit Str "cholesky_factor_cov p_cfcov_54"))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Str "num rows (must be greater or equal to num cols)"))
@@ -6322,7 +6322,7 @@
        ((pattern (Lit Int 4)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (StanLib check_greater_or_equal FnPlain AoS)
+     (NRFunApp (StanLib check_greater_or_equal FnPlain)
       (((pattern (Lit Str "cholesky_factor_cov p_cfcov_33"))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Str "num rows (must be greater or equal to num cols)"))
@@ -6338,7 +6338,7 @@
        ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (StanLib check_greater_or_equal FnPlain AoS)
+     (NRFunApp (StanLib check_greater_or_equal FnPlain)
       (((pattern (Lit Str "cholesky_factor_cov p_cfcov_33_ar"))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Str "num rows (must be greater or equal to num cols)"))
@@ -7171,7 +7171,7 @@
    ((pattern
      (Assignment ((LVariable tp_mat) ()) UMatrix
       ((pattern
-        (FunApp (StanLib fma FnPlain AoS)
+        (FunApp (StanLib fma FnPlain)
          (((pattern (Var d_cfcov_54))
            (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var p_mat))
@@ -7183,7 +7183,7 @@
    ((pattern
      (Assignment ((LVariable tp_vec) ()) UVector
       ((pattern
-        (FunApp (StanLib fma FnPlain AoS)
+        (FunApp (StanLib fma FnPlain)
          (((pattern (Var d_vec))
            (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var p_vec))
@@ -7334,7 +7334,7 @@
    ((pattern
      (Assignment ((LVariable theta_p) ()) UVector
       ((pattern
-        (FunApp (StanLib algebra_solver FnPlain AoS)
+        (FunApp (StanLib algebra_solver FnPlain)
          (((pattern (Var algebra_system))
            (meta
             ((type_
@@ -7354,7 +7354,7 @@
    ((pattern
      (Assignment ((LVariable theta_p) ()) UVector
       ((pattern
-        (FunApp (StanLib algebra_solver FnPlain AoS)
+        (FunApp (StanLib algebra_solver FnPlain)
          (((pattern (Var algebra_system))
            (meta
             ((type_
@@ -7384,7 +7384,7 @@
    ((pattern
      (Assignment ((LVariable theta_p) ()) UVector
       ((pattern
-        (FunApp (StanLib algebra_solver FnPlain AoS)
+        (FunApp (StanLib algebra_solver FnPlain)
          (((pattern (Var algebra_system))
            (meta
             ((type_
@@ -7415,7 +7415,7 @@
    ((pattern
      (Assignment ((LVariable theta_p) ()) UVector
       ((pattern
-        (FunApp (StanLib algebra_solver FnPlain AoS)
+        (FunApp (StanLib algebra_solver FnPlain)
          (((pattern (Var algebra_system))
            (meta
             ((type_
@@ -7436,7 +7436,7 @@
    ((pattern
      (Assignment ((LVariable theta_p) ()) UVector
       ((pattern
-        (FunApp (StanLib algebra_solver FnPlain AoS)
+        (FunApp (StanLib algebra_solver FnPlain)
          (((pattern (Var algebra_system))
            (meta
             ((type_
@@ -7467,7 +7467,7 @@
    ((pattern
      (Assignment ((LVariable theta_p) ()) UVector
       ((pattern
-        (FunApp (StanLib algebra_solver FnPlain AoS)
+        (FunApp (StanLib algebra_solver FnPlain)
          (((pattern (Var algebra_system))
            (meta
             ((type_
@@ -7489,7 +7489,7 @@
    ((pattern
      (Assignment ((LVariable theta_p) ()) UVector
       ((pattern
-        (FunApp (StanLib algebra_solver FnPlain AoS)
+        (FunApp (StanLib algebra_solver FnPlain)
          (((pattern (Var algebra_system))
            (meta
             ((type_
@@ -7713,7 +7713,7 @@
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+            (FunApp (StanLib normal_lpdf (FnLpdf true))
              (((pattern (Var p_real))
                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern
@@ -7733,7 +7733,7 @@
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+            (FunApp (StanLib normal_lpdf (FnLpdf true))
              (((pattern (Var offset_multiplier))
                (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern
@@ -7753,7 +7753,7 @@
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+            (FunApp (StanLib normal_lpdf (FnLpdf true))
              (((pattern (Var no_offset_multiplier))
                (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern
@@ -7773,7 +7773,7 @@
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+            (FunApp (StanLib normal_lpdf (FnLpdf true))
              (((pattern (Var offset_no_multiplier))
                (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern
@@ -7793,9 +7793,9 @@
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+            (FunApp (StanLib normal_lpdf (FnLpdf true))
              (((pattern
-                (FunApp (StanLib to_vector FnPlain AoS)
+                (FunApp (StanLib to_vector FnPlain)
                  (((pattern (Var p_real_1d_ar))
                    (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel AutoDiffable)))))))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
@@ -7826,9 +7826,9 @@
               (((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+                    (FunApp (StanLib normal_lpdf (FnLpdf true))
                      (((pattern
-                        (FunApp (StanLib to_vector FnPlain AoS)
+                        (FunApp (StanLib to_vector FnPlain)
                          (((pattern
                             (Indexed
                              ((pattern (Var p_1d_vec))
@@ -7857,9 +7857,9 @@
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+                    (FunApp (StanLib normal_lpdf (FnLpdf true))
                      (((pattern
-                        (FunApp (StanLib to_vector FnPlain AoS)
+                        (FunApp (StanLib to_vector FnPlain)
                          (((pattern
                             (Indexed
                              ((pattern (Var p_1d_row_vec))
@@ -7889,9 +7889,9 @@
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+                    (FunApp (StanLib normal_lpdf (FnLpdf true))
                      (((pattern
-                        (FunApp (StanLib to_vector FnPlain AoS)
+                        (FunApp (StanLib to_vector FnPlain)
                          (((pattern
                             (Indexed
                              ((pattern (Var p_1d_simplex))
@@ -7942,9 +7942,9 @@
                               (((pattern
                                  (TargetPE
                                   ((pattern
-                                    (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+                                    (FunApp (StanLib normal_lpdf (FnLpdf true))
                                      (((pattern
-                                        (FunApp (StanLib to_vector FnPlain AoS)
+                                        (FunApp (StanLib to_vector FnPlain)
                                          (((pattern
                                             (Indexed
                                              ((pattern (Var p_3d_vec))
@@ -8012,9 +8012,9 @@
                                ((pattern
                                  (TargetPE
                                   ((pattern
-                                    (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+                                    (FunApp (StanLib normal_lpdf (FnLpdf true))
                                      (((pattern
-                                        (FunApp (StanLib to_vector FnPlain AoS)
+                                        (FunApp (StanLib to_vector FnPlain)
                                          (((pattern
                                             (Indexed
                                              ((pattern (Var p_3d_row_vec))
@@ -8082,9 +8082,9 @@
                                ((pattern
                                  (TargetPE
                                   ((pattern
-                                    (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+                                    (FunApp (StanLib normal_lpdf (FnLpdf true))
                                      (((pattern
-                                        (FunApp (StanLib to_vector FnPlain AoS)
+                                        (FunApp (StanLib to_vector FnPlain)
                                          (((pattern
                                             (Indexed
                                              ((pattern (Var p_3d_simplex))
@@ -8152,7 +8152,7 @@
                                ((pattern
                                  (TargetPE
                                   ((pattern
-                                    (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+                                    (FunApp (StanLib normal_lpdf (FnLpdf true))
                                      (((pattern
                                         (Indexed
                                          ((pattern (Var p_real_3d_ar))
@@ -8244,9 +8244,9 @@
                       (((pattern
                          (TargetPE
                           ((pattern
-                            (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+                            (FunApp (StanLib normal_lpdf (FnLpdf true))
                              (((pattern
-                                (FunApp (StanLib to_vector FnPlain AoS)
+                                (FunApp (StanLib to_vector FnPlain)
                                  (((pattern
                                     (Indexed
                                      ((pattern (Var p_ar_mat))
@@ -8297,9 +8297,9 @@
               (((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+                    (FunApp (StanLib normal_lpdf (FnLpdf true))
                      (((pattern
-                        (FunApp (StanLib to_vector FnPlain AoS)
+                        (FunApp (StanLib to_vector FnPlain)
                          (((pattern
                             (Indexed
                              ((pattern (Var p_cfcov_33_ar))
@@ -8330,9 +8330,9 @@
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+            (FunApp (StanLib normal_lpdf (FnLpdf true))
              (((pattern
-                (FunApp (StanLib to_vector FnPlain AoS)
+                (FunApp (StanLib to_vector FnPlain)
                  (((pattern (Var p_vec))
                    (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
@@ -8349,9 +8349,9 @@
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+            (FunApp (StanLib normal_lpdf (FnLpdf true))
              (((pattern
-                (FunApp (StanLib to_vector FnPlain AoS)
+                (FunApp (StanLib to_vector FnPlain)
                  (((pattern (Var p_row_vec))
                    (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable)))))))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
@@ -8372,9 +8372,9 @@
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+            (FunApp (StanLib normal_lpdf (FnLpdf true))
              (((pattern
-                (FunApp (StanLib to_vector FnPlain AoS)
+                (FunApp (StanLib to_vector FnPlain)
                  (((pattern (Var p_simplex))
                    (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
@@ -8395,9 +8395,9 @@
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+            (FunApp (StanLib normal_lpdf (FnLpdf true))
              (((pattern
-                (FunApp (StanLib to_vector FnPlain AoS)
+                (FunApp (StanLib to_vector FnPlain)
                  (((pattern (Var p_cfcov_54))
                    (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
@@ -8418,9 +8418,9 @@
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+            (FunApp (StanLib normal_lpdf (FnLpdf true))
              (((pattern
-                (FunApp (StanLib to_vector FnPlain AoS)
+                (FunApp (StanLib to_vector FnPlain)
                  (((pattern (Var p_cfcov_33))
                    (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
@@ -8441,7 +8441,7 @@
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib map_rect FnPlain AoS)
+            (FunApp (StanLib map_rect FnPlain)
              (((pattern (Var binomialf))
                (meta
                 ((type_
@@ -8937,7 +8937,7 @@
    ((pattern
      (Assignment ((LVariable tp_mat) ()) UMatrix
       ((pattern
-        (FunApp (StanLib fma FnPlain AoS)
+        (FunApp (StanLib fma FnPlain)
          (((pattern (Var d_cfcov_54))
            (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var p_mat))
@@ -8949,7 +8949,7 @@
    ((pattern
      (Assignment ((LVariable tp_vec) ()) UVector
       ((pattern
-        (FunApp (StanLib fma FnPlain AoS)
+        (FunApp (StanLib fma FnPlain)
          (((pattern (Var d_vec))
            (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var p_vec))
@@ -9100,7 +9100,7 @@
    ((pattern
      (Assignment ((LVariable theta_p) ()) UVector
       ((pattern
-        (FunApp (StanLib algebra_solver FnPlain AoS)
+        (FunApp (StanLib algebra_solver FnPlain)
          (((pattern (Var algebra_system))
            (meta
             ((type_
@@ -9120,7 +9120,7 @@
    ((pattern
      (Assignment ((LVariable theta_p) ()) UVector
       ((pattern
-        (FunApp (StanLib algebra_solver FnPlain AoS)
+        (FunApp (StanLib algebra_solver FnPlain)
          (((pattern (Var algebra_system))
            (meta
             ((type_
@@ -9150,7 +9150,7 @@
    ((pattern
      (Assignment ((LVariable theta_p) ()) UVector
       ((pattern
-        (FunApp (StanLib algebra_solver FnPlain AoS)
+        (FunApp (StanLib algebra_solver FnPlain)
          (((pattern (Var algebra_system))
            (meta
             ((type_
@@ -9181,7 +9181,7 @@
    ((pattern
      (Assignment ((LVariable theta_p) ()) UVector
       ((pattern
-        (FunApp (StanLib algebra_solver FnPlain AoS)
+        (FunApp (StanLib algebra_solver FnPlain)
          (((pattern (Var algebra_system))
            (meta
             ((type_
@@ -9202,7 +9202,7 @@
    ((pattern
      (Assignment ((LVariable theta_p) ()) UVector
       ((pattern
-        (FunApp (StanLib algebra_solver FnPlain AoS)
+        (FunApp (StanLib algebra_solver FnPlain)
          (((pattern (Var algebra_system))
            (meta
             ((type_
@@ -9233,7 +9233,7 @@
    ((pattern
      (Assignment ((LVariable theta_p) ()) UVector
       ((pattern
-        (FunApp (StanLib algebra_solver FnPlain AoS)
+        (FunApp (StanLib algebra_solver FnPlain)
          (((pattern (Var algebra_system))
            (meta
             ((type_
@@ -9255,7 +9255,7 @@
    ((pattern
      (Assignment ((LVariable theta_p) ()) UVector
       ((pattern
-        (FunApp (StanLib algebra_solver FnPlain AoS)
+        (FunApp (StanLib algebra_solver FnPlain)
          (((pattern (Var algebra_system))
            (meta
             ((type_
@@ -9974,7 +9974,7 @@
                                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                               (UArray UMatrix)
                               ((pattern
-                                (FunApp (StanLib normal_rng FnRng AoS)
+                                (FunApp (StanLib normal_rng FnRng)
                                  (((pattern (Lit Int 0))
                                    (meta
                                     ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -9995,7 +9995,7 @@
        ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
       (upper
        ((pattern
-         (FunApp (StanLib size FnPlain AoS)
+         (FunApp (StanLib size FnPlain)
           (((pattern (Var indices))
             (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly)))))))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -10009,7 +10009,7 @@
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
               (upper
                ((pattern
-                 (FunApp (StanLib size FnPlain AoS)
+                 (FunApp (StanLib size FnPlain)
                   (((pattern (Var indices))
                     (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly)))))))
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -10136,7 +10136,7 @@
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
               (upper
                ((pattern
-                 (FunApp (StanLib size FnPlain AoS)
+                 (FunApp (StanLib size FnPlain)
                   (((pattern (Var indices))
                     (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly)))))))
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -10242,7 +10242,7 @@
        ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
       (upper
        ((pattern
-         (FunApp (StanLib size FnPlain AoS)
+         (FunApp (StanLib size FnPlain)
           (((pattern (Var indices))
             (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly)))))))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -10267,7 +10267,7 @@
                         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
                       (upper
                        ((pattern
-                         (FunApp (StanLib size FnPlain AoS)
+                         (FunApp (StanLib size FnPlain)
                           (((pattern (Var indices))
                             (meta
                              ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly)))))))

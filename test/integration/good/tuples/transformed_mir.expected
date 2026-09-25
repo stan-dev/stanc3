@@ -11464,7 +11464,7 @@
            ((pattern
              (Assignment ((LVariable sym1__) ()) (UTuple (UMatrix UMatrix))
               ((pattern
-                (FunApp (StanLib qr_thin FnPlain AoS)
+                (FunApp (StanLib qr_thin FnPlain)
                  (((pattern (Var A))
                    (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
                (meta
@@ -11499,14 +11499,14 @@
           ((pattern
             (FunApp (Operator Plus)
              (((pattern
-                (FunApp (StanLib sum FnPlain AoS)
+                (FunApp (StanLib sum FnPlain)
                  (((pattern (Var Q))
                    (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern
-                (FunApp (StanLib dot_self FnPlain AoS)
+                (FunApp (StanLib dot_self FnPlain)
                  (((pattern
-                    (FunApp (StanLib to_vector FnPlain AoS)
+                    (FunApp (StanLib to_vector FnPlain)
                      (((pattern (Var R))
                        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
                    (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
@@ -11612,7 +11612,7 @@
            ((pattern
              (Assignment ((LVariable sym1__) ()) (UTuple (UMatrix UMatrix))
               ((pattern
-                (FunApp (StanLib qr_thin FnPlain AoS)
+                (FunApp (StanLib qr_thin FnPlain)
                  (((pattern (Var A))
                    (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
                (meta
@@ -11647,14 +11647,14 @@
           ((pattern
             (FunApp (Operator Plus)
              (((pattern
-                (FunApp (StanLib sum FnPlain AoS)
+                (FunApp (StanLib sum FnPlain)
                  (((pattern (Var Q))
                    (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern
-                (FunApp (StanLib dot_self FnPlain AoS)
+                (FunApp (StanLib dot_self FnPlain)
                  (((pattern
-                    (FunApp (StanLib to_vector FnPlain AoS)
+                    (FunApp (StanLib to_vector FnPlain)
                      (((pattern (Var R))
                        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
                    (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
@@ -12927,7 +12927,7 @@
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (StanLib check_greater_or_equal FnPlain AoS)
+     (NRFunApp (StanLib check_greater_or_equal FnPlain)
       (((pattern (Lit Str "cholesky_factor_cov complicated[].2[].3"))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Str "num rows (must be greater or equal to num cols)"))
@@ -17184,7 +17184,7 @@
       (((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib bernoulli_lpmf (FnLpmf true) AoS)
+            (FunApp (StanLib bernoulli_lpmf (FnLpmf true))
              (((pattern
                 (TupleProjection
                  ((pattern (Var ds))
@@ -17313,7 +17313,7 @@
       (((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib bernoulli_lpmf (FnLpmf true) SoA)
+            (FunApp (StanLib bernoulli_lpmf (FnLpmf true))
              (((pattern
                 (TupleProjection
                  ((pattern (Var ds))
@@ -18906,7 +18906,7 @@
              (((pattern
                 (FunApp (Operator Plus)
                  (((pattern
-                    (FunApp (StanLib sum FnPlain AoS)
+                    (FunApp (StanLib sum FnPlain)
                      (((pattern
                         (TupleProjection
                          ((pattern (Var test))
@@ -18919,7 +18919,7 @@
                         ((type_ (UArray UReal)) (loc <opaque>) (adlevel AutoDiffable)))))))
                    (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                   ((pattern
-                    (FunApp (StanLib sum FnPlain AoS)
+                    (FunApp (StanLib sum FnPlain)
                      (((pattern
                         (TupleProjection
                          ((pattern (Var test))
@@ -20572,7 +20572,7 @@
          (((pattern
             (Return
              (((pattern
-                (FunApp (StanLib sum FnPlain AoS)
+                (FunApp (StanLib sum FnPlain)
                  (((pattern
                     (TupleProjection
                      ((pattern (Var s))
@@ -22466,7 +22466,7 @@
              (((pattern
                 (FunApp (Operator Times)
                  (((pattern
-                    (FunApp (StanLib sum FnPlain AoS)
+                    (FunApp (StanLib sum FnPlain)
                      (((pattern (Var y_slice))
                        (meta
                         ((type_ (UArray UReal)) (loc <opaque>) (adlevel AutoDiffable)))))))
@@ -22589,7 +22589,7 @@
    ((pattern
      (Assignment ((LVariable sum1) ()) UReal
       ((pattern
-        (FunApp (StanLib reduce_sum FnPlain AoS)
+        (FunApp (StanLib reduce_sum FnPlain)
          (((pattern (Var fun))
            (meta
             ((type_
@@ -22641,7 +22641,7 @@
    ((pattern
      (Assignment ((LVariable sum2) ()) UReal
       ((pattern
-        (FunApp (StanLib reduce_sum FnPlain AoS)
+        (FunApp (StanLib reduce_sum FnPlain)
          (((pattern (Var fun))
            (meta
             ((type_
@@ -22686,7 +22686,7 @@
    ((pattern
      (Assignment ((LVariable sum2) ()) UReal
       ((pattern
-        (FunApp (StanLib reduce_sum FnPlain AoS)
+        (FunApp (StanLib reduce_sum FnPlain)
          (((pattern (Var fun))
            (meta
             ((type_
@@ -22754,7 +22754,7 @@
    ((pattern
      (Assignment ((LVariable sum2) ()) UReal
       ((pattern
-        (FunApp (StanLib reduce_sum FnPlain AoS)
+        (FunApp (StanLib reduce_sum FnPlain)
          (((pattern (Var fun))
            (meta
             ((type_

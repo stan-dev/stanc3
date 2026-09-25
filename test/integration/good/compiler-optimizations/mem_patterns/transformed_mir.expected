@@ -299,7 +299,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
                  (((pattern (Var alpha))
                    (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                   ((pattern
-                    (FunApp (StanLib rep_vector FnPlain AoS)
+                    (FunApp (StanLib rep_vector FnPlain)
                      (((pattern (Lit Real 0.0))
                        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Var N))
@@ -339,7 +339,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
                      UReal DataOnly))
                    (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
                   ((pattern
-                    (FunApp (StanLib Phi FnPlain AoS)
+                    (FunApp (StanLib Phi FnPlain)
                      (((pattern
                         (FunApp (Operator Divide)
                          (((pattern (Var y_data))
@@ -378,9 +378,9 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
           ((pattern
             (FunApp (Operator Plus)
              (((pattern
-                (FunApp (StanLib transpose FnPlain AoS)
+                (FunApp (StanLib transpose FnPlain)
                  (((pattern
-                    (FunApp (StanLib rep_row_vector FnPlain AoS)
+                    (FunApp (StanLib rep_row_vector FnPlain)
                      (((pattern (Lit Real 0.0))
                        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Var N))
@@ -388,7 +388,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
                    (meta ((type_ URowVector) (loc <opaque>) (adlevel DataOnly)))))))
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
-                (FunApp (StanLib rep_vector FnPlain AoS)
+                (FunApp (StanLib rep_vector FnPlain)
                  (((pattern (Var sigma))
                    (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                   ((pattern (Var N))
@@ -417,14 +417,14 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
           ((pattern
             (FunApp (Operator Plus)
              (((pattern
-                (FunApp (StanLib rep_vector FnPlain AoS)
+                (FunApp (StanLib rep_vector FnPlain)
                  (((pattern (Lit Real 0.0))
                    (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
                   ((pattern (Var N))
                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
-                (FunApp (StanLib rep_vector FnPlain AoS)
+                (FunApp (StanLib rep_vector FnPlain)
                  (((pattern
                     (Promotion
                      ((pattern (Var N))
@@ -457,7 +457,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
           ((pattern
             (FunApp (Operator Plus)
              (((pattern
-                (FunApp (StanLib Phi FnPlain AoS)
+                (FunApp (StanLib Phi FnPlain)
                  (((pattern
                     (FunApp (Operator Divide)
                      (((pattern (Var y_data))
@@ -553,9 +553,9 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
           ((pattern
             (FunApp (Operator Plus)
              (((pattern
-                (FunApp (StanLib transpose FnPlain AoS)
+                (FunApp (StanLib transpose FnPlain)
                  (((pattern
-                    (FunApp (StanLib rep_matrix FnPlain AoS)
+                    (FunApp (StanLib rep_matrix FnPlain)
                      (((pattern (Lit Real 2.0))
                        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Var N))
@@ -565,11 +565,11 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
                    (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
                (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
-                (FunApp (StanLib rep_matrix FnPlain AoS)
+                (FunApp (StanLib rep_matrix FnPlain)
                  (((pattern
-                    (FunApp (StanLib sum FnPlain AoS)
+                    (FunApp (StanLib sum FnPlain)
                      (((pattern
-                        (FunApp (StanLib rep_vector FnPlain AoS)
+                        (FunApp (StanLib rep_vector FnPlain)
                          (((pattern (Var sigma))
                            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                           ((pattern (Var N))
@@ -613,9 +613,9 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
           ((pattern
             (FunApp (Operator Plus)
              (((pattern
-                (FunApp (StanLib transpose FnPlain AoS)
+                (FunApp (StanLib transpose FnPlain)
                  (((pattern
-                    (FunApp (StanLib rep_matrix FnPlain AoS)
+                    (FunApp (StanLib rep_matrix FnPlain)
                      (((pattern (Lit Real 2.0))
                        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Var N))
@@ -625,9 +625,9 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
                    (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
                (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
-                (FunApp (StanLib rep_matrix FnPlain AoS)
+                (FunApp (StanLib rep_matrix FnPlain)
                  (((pattern
-                    (FunApp (StanLib rep_vector FnPlain AoS)
+                    (FunApp (StanLib rep_vector FnPlain)
                      (((pattern (Var sigma))
                        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern (Var N))
@@ -668,9 +668,9 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
           ((pattern
             (FunApp (Operator Plus)
              (((pattern
-                (FunApp (StanLib transpose FnPlain AoS)
+                (FunApp (StanLib transpose FnPlain)
                  (((pattern
-                    (FunApp (StanLib rep_matrix FnPlain AoS)
+                    (FunApp (StanLib rep_matrix FnPlain)
                      (((pattern (Var aos_deep))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern (Var N))
@@ -678,7 +678,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
                    (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
                (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern
-                (FunApp (StanLib rep_matrix FnPlain AoS)
+                (FunApp (StanLib rep_matrix FnPlain)
                  (((pattern (Var aos_deep))
                    (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
                   ((pattern (Var N))
@@ -730,7 +730,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+            (FunApp (StanLib normal_lpdf (FnLpdf true))
              (((pattern (Var y_data))
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
               ((pattern (Var soa_simple))
@@ -742,7 +742,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib sum FnPlain AoS)
+            (FunApp (StanLib sum FnPlain)
              (((pattern (Var soa_dual_rep))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -750,7 +750,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib sum FnPlain AoS)
+            (FunApp (StanLib sum FnPlain)
              (((pattern (Var aos_from_data))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -758,7 +758,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib sum FnPlain AoS)
+            (FunApp (StanLib sum FnPlain)
              (((pattern (Var soa_data_rep))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -766,7 +766,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib sum FnPlain AoS)
+            (FunApp (StanLib sum FnPlain)
              (((pattern (Var soa_mix))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -774,7 +774,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib sum FnPlain AoS)
+            (FunApp (StanLib sum FnPlain)
              (((pattern (Var soa_mat_rep))
                (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -782,7 +782,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib sum FnPlain AoS)
+            (FunApp (StanLib sum FnPlain)
              (((pattern (Var soa_mat_rep_vec))
                (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -790,7 +790,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib sum FnPlain AoS)
+            (FunApp (StanLib sum FnPlain)
              (((pattern (Var aos_mat_rep))
                (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -798,7 +798,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib sum FnPlain AoS)
+            (FunApp (StanLib sum FnPlain)
              (((pattern (Var aos_mat_from_vecs))
                (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -873,7 +873,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
                  (((pattern (Var alpha))
                    (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                   ((pattern
-                    (FunApp (StanLib rep_vector FnPlain SoA)
+                    (FunApp (CompilerInternal (FnReturnSoA rep_vector))
                      (((pattern (Lit Real 0.0))
                        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Var N))
@@ -913,7 +913,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
                      UReal DataOnly))
                    (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
                   ((pattern
-                    (FunApp (StanLib Phi FnPlain AoS)
+                    (FunApp (StanLib Phi FnPlain)
                      (((pattern
                         (FunApp (Operator Divide)
                          (((pattern (Var y_data))
@@ -952,9 +952,9 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
           ((pattern
             (FunApp (Operator Plus)
              (((pattern
-                (FunApp (StanLib transpose FnPlain SoA)
+                (FunApp (StanLib transpose FnPlain)
                  (((pattern
-                    (FunApp (StanLib rep_row_vector FnPlain SoA)
+                    (FunApp (CompilerInternal (FnReturnSoA rep_row_vector))
                      (((pattern (Lit Real 0.0))
                        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Var N))
@@ -962,7 +962,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
                    (meta ((type_ URowVector) (loc <opaque>) (adlevel DataOnly)))))))
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
-                (FunApp (StanLib rep_vector FnPlain SoA)
+                (FunApp (CompilerInternal (FnReturnSoA rep_vector))
                  (((pattern (Var sigma))
                    (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                   ((pattern (Var N))
@@ -991,14 +991,14 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
           ((pattern
             (FunApp (Operator Plus)
              (((pattern
-                (FunApp (StanLib rep_vector FnPlain SoA)
+                (FunApp (CompilerInternal (FnReturnSoA rep_vector))
                  (((pattern (Lit Real 0.0))
                    (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
                   ((pattern (Var N))
                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
-                (FunApp (StanLib rep_vector FnPlain SoA)
+                (FunApp (CompilerInternal (FnReturnSoA rep_vector))
                  (((pattern
                     (Promotion
                      ((pattern (Var N))
@@ -1031,7 +1031,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
           ((pattern
             (FunApp (Operator Plus)
              (((pattern
-                (FunApp (StanLib Phi FnPlain SoA)
+                (FunApp (StanLib Phi FnPlain)
                  (((pattern
                     (FunApp (Operator Divide)
                      (((pattern (Var y_data))
@@ -1127,9 +1127,9 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
           ((pattern
             (FunApp (Operator Plus)
              (((pattern
-                (FunApp (StanLib transpose FnPlain SoA)
+                (FunApp (StanLib transpose FnPlain)
                  (((pattern
-                    (FunApp (StanLib rep_matrix FnPlain SoA)
+                    (FunApp (CompilerInternal (FnReturnSoA rep_matrix))
                      (((pattern (Lit Real 2.0))
                        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Var N))
@@ -1139,11 +1139,11 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
                    (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
                (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
-                (FunApp (StanLib rep_matrix FnPlain SoA)
+                (FunApp (CompilerInternal (FnReturnSoA rep_matrix))
                  (((pattern
-                    (FunApp (StanLib sum FnPlain SoA)
+                    (FunApp (StanLib sum FnPlain)
                      (((pattern
-                        (FunApp (StanLib rep_vector FnPlain SoA)
+                        (FunApp (CompilerInternal (FnReturnSoA rep_vector))
                          (((pattern (Var sigma))
                            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                           ((pattern (Var N))
@@ -1187,9 +1187,9 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
           ((pattern
             (FunApp (Operator Plus)
              (((pattern
-                (FunApp (StanLib transpose FnPlain SoA)
+                (FunApp (StanLib transpose FnPlain)
                  (((pattern
-                    (FunApp (StanLib rep_matrix FnPlain SoA)
+                    (FunApp (CompilerInternal (FnReturnSoA rep_matrix))
                      (((pattern (Lit Real 2.0))
                        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Var N))
@@ -1199,9 +1199,9 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
                    (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
                (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
-                (FunApp (StanLib rep_matrix FnPlain SoA)
+                (FunApp (CompilerInternal (FnReturnSoA rep_matrix))
                  (((pattern
-                    (FunApp (StanLib rep_vector FnPlain SoA)
+                    (FunApp (CompilerInternal (FnReturnSoA rep_vector))
                      (((pattern (Var sigma))
                        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern (Var N))
@@ -1242,9 +1242,9 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
           ((pattern
             (FunApp (Operator Plus)
              (((pattern
-                (FunApp (StanLib transpose FnPlain AoS)
+                (FunApp (StanLib transpose FnPlain)
                  (((pattern
-                    (FunApp (StanLib rep_matrix FnPlain AoS)
+                    (FunApp (StanLib rep_matrix FnPlain)
                      (((pattern (Var aos_deep))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern (Var N))
@@ -1252,7 +1252,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
                    (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
                (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern
-                (FunApp (StanLib rep_matrix FnPlain AoS)
+                (FunApp (StanLib rep_matrix FnPlain)
                  (((pattern (Var aos_deep))
                    (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
                   ((pattern (Var N))
@@ -1304,7 +1304,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
+            (FunApp (StanLib normal_lpdf (FnLpdf true))
              (((pattern (Var y_data))
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
               ((pattern (Var soa_simple))
@@ -1316,7 +1316,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib sum FnPlain SoA)
+            (FunApp (StanLib sum FnPlain)
              (((pattern (Var soa_dual_rep))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -1324,7 +1324,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib sum FnPlain AoS)
+            (FunApp (StanLib sum FnPlain)
              (((pattern (Var aos_from_data))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -1332,7 +1332,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib sum FnPlain SoA)
+            (FunApp (StanLib sum FnPlain)
              (((pattern (Var soa_data_rep))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -1340,7 +1340,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib sum FnPlain SoA)
+            (FunApp (StanLib sum FnPlain)
              (((pattern (Var soa_mix))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -1348,7 +1348,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib sum FnPlain SoA)
+            (FunApp (StanLib sum FnPlain)
              (((pattern (Var soa_mat_rep))
                (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -1356,7 +1356,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib sum FnPlain SoA)
+            (FunApp (StanLib sum FnPlain)
              (((pattern (Var soa_mat_rep_vec))
                (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -1364,7 +1364,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib sum FnPlain AoS)
+            (FunApp (StanLib sum FnPlain)
              (((pattern (Var aos_mat_rep))
                (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -1372,7 +1372,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib sum FnPlain AoS)
+            (FunApp (StanLib sum FnPlain)
              (((pattern (Var aos_mat_from_vecs))
                (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -2745,7 +2745,7 @@ vector[N] means_ordered: SoA
        ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (StanLib check_greater_or_equal FnPlain AoS)
+     (NRFunApp (StanLib check_greater_or_equal FnPlain)
       (((pattern (Lit Str "cholesky_factor_cov chol_fac_cov_test"))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Str "num rows (must be greater or equal to num cols)"))
@@ -2848,7 +2848,7 @@ vector[N] means_ordered: SoA
          (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (StanLib check_matching_dims FnPlain AoS)
+     (NRFunApp (StanLib check_matching_dims FnPlain)
       (((pattern (Lit Str constraint))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Str high_low_est))
@@ -2861,7 +2861,7 @@ vector[N] means_ordered: SoA
         (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (StanLib check_matching_dims FnPlain AoS)
+     (NRFunApp (StanLib check_matching_dims FnPlain)
       (((pattern (Lit Str constraint))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Str high_low_est))
@@ -3088,7 +3088,7 @@ vector[N] means_ordered: SoA
          (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (StanLib check_matching_dims FnPlain AoS)
+     (NRFunApp (StanLib check_matching_dims FnPlain)
       (((pattern (Lit Str constraint))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Str lower_upper_test))
@@ -3101,7 +3101,7 @@ vector[N] means_ordered: SoA
         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (StanLib check_matching_dims FnPlain AoS)
+     (NRFunApp (StanLib check_matching_dims FnPlain)
       (((pattern (Lit Str constraint))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Str lower_upper_test))
@@ -3145,7 +3145,7 @@ vector[N] means_ordered: SoA
          (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (StanLib check_matching_dims FnPlain AoS)
+     (NRFunApp (StanLib check_matching_dims FnPlain)
       (((pattern (Lit Str constraint))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Str row_vec_lower_upper_test))
@@ -3161,7 +3161,7 @@ vector[N] means_ordered: SoA
         (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (StanLib check_matching_dims FnPlain AoS)
+     (NRFunApp (StanLib check_matching_dims FnPlain)
       (((pattern (Lit Str constraint))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Str row_vec_lower_upper_test))
@@ -3202,7 +3202,7 @@ vector[N] means_ordered: SoA
          (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (StanLib check_matching_dims FnPlain AoS)
+     (NRFunApp (StanLib check_matching_dims FnPlain)
       (((pattern (Lit Str constraint))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Str offset_mult_test))
@@ -3215,7 +3215,7 @@ vector[N] means_ordered: SoA
         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (StanLib check_matching_dims FnPlain AoS)
+     (NRFunApp (StanLib check_matching_dims FnPlain)
       (((pattern (Lit Str constraint))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Str offset_mult_test))
@@ -3373,7 +3373,7 @@ vector[N] means_ordered: SoA
    ((pattern
      (Assignment ((LVariable phi) ()) UReal
       ((pattern
-        (FunApp (StanLib fma FnPlain AoS)
+        (FunApp (StanLib fma FnPlain)
          (((pattern (Var phi_beta))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern (Lit Real 2.0))
@@ -3392,7 +3392,7 @@ vector[N] means_ordered: SoA
    ((pattern
      (Assignment ((LVariable sigma) ()) UReal
       ((pattern
-        (FunApp (StanLib sqrt FnPlain AoS)
+        (FunApp (StanLib sqrt FnPlain)
          (((pattern (Var sigma2))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -3654,7 +3654,7 @@ vector[N] means_ordered: SoA
          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       UVector
       ((pattern
-        (FunApp (StanLib pow FnPlain AoS)
+        (FunApp (StanLib pow FnPlain)
          (((pattern
             (FunApp (Operator Minus)
              (((pattern
@@ -3664,7 +3664,7 @@ vector[N] means_ordered: SoA
                  UReal DataOnly))
                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
-                (FunApp (StanLib square FnPlain AoS)
+                (FunApp (StanLib square FnPlain)
                  (((pattern (Var phi))
                    (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
@@ -3684,7 +3684,7 @@ vector[N] means_ordered: SoA
          ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       UVector
       ((pattern
-        (FunApp (StanLib rep_vector FnPlain AoS)
+        (FunApp (StanLib rep_vector FnPlain)
          (((pattern (Lit Real 1.0))
            (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
           ((pattern
@@ -3730,7 +3730,7 @@ vector[N] means_ordered: SoA
              (((pattern (Var theta))
                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern
-                (FunApp (StanLib square FnPlain AoS)
+                (FunApp (StanLib square FnPlain)
                  (((pattern
                     (Indexed
                      ((pattern (Var err))
@@ -3763,7 +3763,7 @@ vector[N] means_ordered: SoA
       ((pattern
         (FunApp (Operator Plus)
          (((pattern
-            (FunApp (StanLib exp FnPlain AoS)
+            (FunApp (StanLib exp FnPlain)
              (((pattern
                 (FunApp (Operator Plus)
                  (((pattern
@@ -3802,7 +3802,7 @@ vector[N] means_ordered: SoA
    ((pattern
      (Assignment ((LVariable means_ordered) ()) UVector
       ((pattern
-        (FunApp (StanLib ordered_jacobian FnJacobian AoS)
+        (FunApp (StanLib ordered_jacobian FnJacobian)
          (((pattern (Var mean_price))
            (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -3883,7 +3883,7 @@ vector[N] means_ordered: SoA
                  UReal DataOnly))
                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
-                (FunApp (StanLib log FnPlain AoS)
+                (FunApp (StanLib log FnPlain)
                  (((pattern (Var sigma_price))
                    (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
@@ -3892,7 +3892,7 @@ vector[N] means_ordered: SoA
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+            (FunApp (StanLib normal_lpdf (FnLpdf true))
              (((pattern (Var Intercept))
                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern (Var mu_prior_mu))
@@ -3904,7 +3904,7 @@ vector[N] means_ordered: SoA
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib beta_lpdf (FnLpdf true) AoS)
+            (FunApp (StanLib beta_lpdf (FnLpdf true))
              (((pattern (Var phi_beta))
                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern (Var phi_prior_a))
@@ -3916,7 +3916,7 @@ vector[N] means_ordered: SoA
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib gamma_lpdf (FnLpdf true) AoS)
+            (FunApp (StanLib gamma_lpdf (FnLpdf true))
              (((pattern (Var sigma2))
                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern (Var sigma_prior_shape))
@@ -3928,7 +3928,7 @@ vector[N] means_ordered: SoA
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+            (FunApp (StanLib normal_lpdf (FnLpdf true))
              (((pattern (Var ar))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern
@@ -3944,7 +3944,7 @@ vector[N] means_ordered: SoA
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+            (FunApp (StanLib normal_lpdf (FnLpdf true))
              (((pattern (Var ma))
                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern
@@ -3960,7 +3960,7 @@ vector[N] means_ordered: SoA
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+            (FunApp (StanLib normal_lpdf (FnLpdf true))
              (((pattern (Var h))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern (Var h_i_mean))
@@ -3972,7 +3972,7 @@ vector[N] means_ordered: SoA
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib student_t_lpdf (FnLpdf true) AoS)
+            (FunApp (StanLib student_t_lpdf (FnLpdf true))
              (((pattern (Var sigma_price))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern
@@ -3998,7 +3998,7 @@ vector[N] means_ordered: SoA
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib uniform_lpdf (FnLpdf true) AoS)
+            (FunApp (StanLib uniform_lpdf (FnLpdf true))
              (((pattern (Var high_low_est))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern (Var diff_low_mid))
@@ -4010,7 +4010,7 @@ vector[N] means_ordered: SoA
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+            (FunApp (StanLib normal_lpdf (FnLpdf true))
              (((pattern (Var prices))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern (Var mean_price))
@@ -4022,7 +4022,7 @@ vector[N] means_ordered: SoA
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+            (FunApp (StanLib normal_lpdf (FnLpdf true))
              (((pattern (Var prices_diff))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern (Var mu))
@@ -4059,7 +4059,7 @@ vector[N] means_ordered: SoA
          (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (StanLib check_matching_dims FnPlain AoS)
+     (NRFunApp (StanLib check_matching_dims FnPlain)
       (((pattern (Lit Str constraint))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Str high_low_est))
@@ -4072,7 +4072,7 @@ vector[N] means_ordered: SoA
         (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (StanLib check_matching_dims FnPlain AoS)
+     (NRFunApp (StanLib check_matching_dims FnPlain)
       (((pattern (Lit Str constraint))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Str high_low_est))
@@ -4299,7 +4299,7 @@ vector[N] means_ordered: SoA
          (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (StanLib check_matching_dims FnPlain AoS)
+     (NRFunApp (StanLib check_matching_dims FnPlain)
       (((pattern (Lit Str constraint))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Str lower_upper_test))
@@ -4312,7 +4312,7 @@ vector[N] means_ordered: SoA
         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (StanLib check_matching_dims FnPlain AoS)
+     (NRFunApp (StanLib check_matching_dims FnPlain)
       (((pattern (Lit Str constraint))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Str lower_upper_test))
@@ -4356,7 +4356,7 @@ vector[N] means_ordered: SoA
          (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (StanLib check_matching_dims FnPlain AoS)
+     (NRFunApp (StanLib check_matching_dims FnPlain)
       (((pattern (Lit Str constraint))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Str row_vec_lower_upper_test))
@@ -4372,7 +4372,7 @@ vector[N] means_ordered: SoA
         (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (StanLib check_matching_dims FnPlain AoS)
+     (NRFunApp (StanLib check_matching_dims FnPlain)
       (((pattern (Lit Str constraint))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Str row_vec_lower_upper_test))
@@ -4413,7 +4413,7 @@ vector[N] means_ordered: SoA
          (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (StanLib check_matching_dims FnPlain AoS)
+     (NRFunApp (StanLib check_matching_dims FnPlain)
       (((pattern (Lit Str constraint))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Str offset_mult_test))
@@ -4426,7 +4426,7 @@ vector[N] means_ordered: SoA
         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (StanLib check_matching_dims FnPlain AoS)
+     (NRFunApp (StanLib check_matching_dims FnPlain)
       (((pattern (Lit Str constraint))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Str offset_mult_test))
@@ -4584,7 +4584,7 @@ vector[N] means_ordered: SoA
    ((pattern
      (Assignment ((LVariable phi) ()) UReal
       ((pattern
-        (FunApp (StanLib fma FnPlain SoA)
+        (FunApp (StanLib fma FnPlain)
          (((pattern (Var phi_beta))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern (Lit Real 2.0))
@@ -4603,7 +4603,7 @@ vector[N] means_ordered: SoA
    ((pattern
      (Assignment ((LVariable sigma) ()) UReal
       ((pattern
-        (FunApp (StanLib sqrt FnPlain SoA)
+        (FunApp (StanLib sqrt FnPlain)
          (((pattern (Var sigma2))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -4865,7 +4865,7 @@ vector[N] means_ordered: SoA
          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       UVector
       ((pattern
-        (FunApp (StanLib pow FnPlain AoS)
+        (FunApp (StanLib pow FnPlain)
          (((pattern
             (FunApp (Operator Minus)
              (((pattern
@@ -4875,7 +4875,7 @@ vector[N] means_ordered: SoA
                  UReal DataOnly))
                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
-                (FunApp (StanLib square FnPlain AoS)
+                (FunApp (StanLib square FnPlain)
                  (((pattern (Var phi))
                    (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
@@ -4895,7 +4895,7 @@ vector[N] means_ordered: SoA
          ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       UVector
       ((pattern
-        (FunApp (StanLib rep_vector FnPlain SoA)
+        (FunApp (CompilerInternal (FnReturnSoA rep_vector))
          (((pattern (Lit Real 1.0))
            (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
           ((pattern
@@ -4941,7 +4941,7 @@ vector[N] means_ordered: SoA
              (((pattern (Var theta))
                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern
-                (FunApp (StanLib square FnPlain SoA)
+                (FunApp (StanLib square FnPlain)
                  (((pattern
                     (Indexed
                      ((pattern (Var err))
@@ -4974,7 +4974,7 @@ vector[N] means_ordered: SoA
       ((pattern
         (FunApp (Operator Plus)
          (((pattern
-            (FunApp (StanLib exp FnPlain SoA)
+            (FunApp (StanLib exp FnPlain)
              (((pattern
                 (FunApp (Operator Plus)
                  (((pattern
@@ -5013,7 +5013,7 @@ vector[N] means_ordered: SoA
    ((pattern
      (Assignment ((LVariable means_ordered) ()) UVector
       ((pattern
-        (FunApp (StanLib ordered_jacobian FnJacobian SoA)
+        (FunApp (StanLib ordered_jacobian FnJacobian)
          (((pattern (Var mean_price))
            (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -5094,7 +5094,7 @@ vector[N] means_ordered: SoA
                  UReal DataOnly))
                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
-                (FunApp (StanLib log FnPlain SoA)
+                (FunApp (StanLib log FnPlain)
                  (((pattern (Var sigma_price))
                    (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
@@ -5103,7 +5103,7 @@ vector[N] means_ordered: SoA
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
+            (FunApp (StanLib normal_lpdf (FnLpdf true))
              (((pattern (Var Intercept))
                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern (Var mu_prior_mu))
@@ -5115,7 +5115,7 @@ vector[N] means_ordered: SoA
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib beta_lpdf (FnLpdf true) SoA)
+            (FunApp (StanLib beta_lpdf (FnLpdf true))
              (((pattern (Var phi_beta))
                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern (Var phi_prior_a))
@@ -5127,7 +5127,7 @@ vector[N] means_ordered: SoA
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib gamma_lpdf (FnLpdf true) SoA)
+            (FunApp (StanLib gamma_lpdf (FnLpdf true))
              (((pattern (Var sigma2))
                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern (Var sigma_prior_shape))
@@ -5139,7 +5139,7 @@ vector[N] means_ordered: SoA
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
+            (FunApp (StanLib normal_lpdf (FnLpdf true))
              (((pattern (Var ar))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern
@@ -5155,7 +5155,7 @@ vector[N] means_ordered: SoA
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
+            (FunApp (StanLib normal_lpdf (FnLpdf true))
              (((pattern (Var ma))
                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern
@@ -5171,7 +5171,7 @@ vector[N] means_ordered: SoA
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
+            (FunApp (StanLib normal_lpdf (FnLpdf true))
              (((pattern (Var h))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern (Var h_i_mean))
@@ -5183,7 +5183,7 @@ vector[N] means_ordered: SoA
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib student_t_lpdf (FnLpdf true) SoA)
+            (FunApp (StanLib student_t_lpdf (FnLpdf true))
              (((pattern (Var sigma_price))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern
@@ -5209,7 +5209,7 @@ vector[N] means_ordered: SoA
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib uniform_lpdf (FnLpdf true) SoA)
+            (FunApp (StanLib uniform_lpdf (FnLpdf true))
              (((pattern (Var high_low_est))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern (Var diff_low_mid))
@@ -5221,7 +5221,7 @@ vector[N] means_ordered: SoA
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
+            (FunApp (StanLib normal_lpdf (FnLpdf true))
              (((pattern (Var prices))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern (Var mean_price))
@@ -5233,7 +5233,7 @@ vector[N] means_ordered: SoA
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
+            (FunApp (StanLib normal_lpdf (FnLpdf true))
              (((pattern (Var prices_diff))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern (Var mu))
@@ -5270,7 +5270,7 @@ vector[N] means_ordered: SoA
          (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (StanLib check_matching_dims FnPlain AoS)
+     (NRFunApp (StanLib check_matching_dims FnPlain)
       (((pattern (Lit Str constraint))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Str high_low_est))
@@ -5283,7 +5283,7 @@ vector[N] means_ordered: SoA
         (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (StanLib check_matching_dims FnPlain AoS)
+     (NRFunApp (StanLib check_matching_dims FnPlain)
       (((pattern (Lit Str constraint))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Str high_low_est))
@@ -5510,7 +5510,7 @@ vector[N] means_ordered: SoA
          (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (StanLib check_matching_dims FnPlain AoS)
+     (NRFunApp (StanLib check_matching_dims FnPlain)
       (((pattern (Lit Str constraint))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Str lower_upper_test))
@@ -5523,7 +5523,7 @@ vector[N] means_ordered: SoA
         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (StanLib check_matching_dims FnPlain AoS)
+     (NRFunApp (StanLib check_matching_dims FnPlain)
       (((pattern (Lit Str constraint))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Str lower_upper_test))
@@ -5567,7 +5567,7 @@ vector[N] means_ordered: SoA
          (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (StanLib check_matching_dims FnPlain AoS)
+     (NRFunApp (StanLib check_matching_dims FnPlain)
       (((pattern (Lit Str constraint))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Str row_vec_lower_upper_test))
@@ -5583,7 +5583,7 @@ vector[N] means_ordered: SoA
         (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (StanLib check_matching_dims FnPlain AoS)
+     (NRFunApp (StanLib check_matching_dims FnPlain)
       (((pattern (Lit Str constraint))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Str row_vec_lower_upper_test))
@@ -5624,7 +5624,7 @@ vector[N] means_ordered: SoA
          (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (StanLib check_matching_dims FnPlain AoS)
+     (NRFunApp (StanLib check_matching_dims FnPlain)
       (((pattern (Lit Str constraint))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Str offset_mult_test))
@@ -5637,7 +5637,7 @@ vector[N] means_ordered: SoA
         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (StanLib check_matching_dims FnPlain AoS)
+     (NRFunApp (StanLib check_matching_dims FnPlain)
       (((pattern (Lit Str constraint))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Str offset_mult_test))
@@ -6070,7 +6070,7 @@ vector[N] means_ordered: SoA
    ((pattern
      (Assignment ((LVariable phi) ()) UReal
       ((pattern
-        (FunApp (StanLib fma FnPlain AoS)
+        (FunApp (StanLib fma FnPlain)
          (((pattern (Var phi_beta))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern (Lit Real 2.0))
@@ -6085,7 +6085,7 @@ vector[N] means_ordered: SoA
    ((pattern
      (Assignment ((LVariable sigma) ()) UReal
       ((pattern
-        (FunApp (StanLib sqrt FnPlain AoS)
+        (FunApp (StanLib sqrt FnPlain)
          (((pattern (Var sigma2))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -6299,7 +6299,7 @@ vector[N] means_ordered: SoA
          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       UVector
       ((pattern
-        (FunApp (StanLib pow FnPlain AoS)
+        (FunApp (StanLib pow FnPlain)
          (((pattern
             (FunApp (Operator Minus)
              (((pattern
@@ -6309,7 +6309,7 @@ vector[N] means_ordered: SoA
                  UReal DataOnly))
                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
-                (FunApp (StanLib square FnPlain AoS)
+                (FunApp (StanLib square FnPlain)
                  (((pattern (Var phi))
                    (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
@@ -6329,7 +6329,7 @@ vector[N] means_ordered: SoA
          ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       UVector
       ((pattern
-        (FunApp (StanLib rep_vector FnPlain AoS)
+        (FunApp (StanLib rep_vector FnPlain)
          (((pattern (Lit Real 1.0))
            (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
           ((pattern
@@ -6375,7 +6375,7 @@ vector[N] means_ordered: SoA
              (((pattern (Var theta))
                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern
-                (FunApp (StanLib square FnPlain AoS)
+                (FunApp (StanLib square FnPlain)
                  (((pattern
                     (Indexed
                      ((pattern (Var err))
@@ -6400,7 +6400,7 @@ vector[N] means_ordered: SoA
       ((pattern
         (FunApp (Operator Plus)
          (((pattern
-            (FunApp (StanLib exp FnPlain AoS)
+            (FunApp (StanLib exp FnPlain)
              (((pattern
                 (FunApp (Operator Plus)
                  (((pattern
@@ -6431,7 +6431,7 @@ vector[N] means_ordered: SoA
    ((pattern
      (Assignment ((LVariable means_ordered) ()) UVector
       ((pattern
-        (FunApp (StanLib ordered_jacobian FnJacobian AoS)
+        (FunApp (StanLib ordered_jacobian FnJacobian)
          (((pattern (Var mean_price))
            (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -9097,7 +9097,7 @@ Optimization hazard warning (Line 19): SoA warning: Right hand side contains onl
    ((pattern
      (Assignment ((LVariable X_tp1) ()) UMatrix
       ((pattern
-        (FunApp (StanLib exp FnPlain AoS)
+        (FunApp (StanLib exp FnPlain)
          (((pattern (Var X_p))
            (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -9114,7 +9114,7 @@ Optimization hazard warning (Line 19): SoA warning: Right hand side contains onl
    ((pattern
      (Assignment ((LVariable X_tp2) ()) UMatrix
       ((pattern
-        (FunApp (StanLib exp FnPlain AoS)
+        (FunApp (StanLib exp FnPlain)
          (((pattern (Var X_tp1))
            (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -9131,7 +9131,7 @@ Optimization hazard warning (Line 19): SoA warning: Right hand side contains onl
    ((pattern
      (Assignment ((LVariable X_tp3) ()) UMatrix
       ((pattern
-        (FunApp (StanLib exp FnPlain AoS)
+        (FunApp (StanLib exp FnPlain)
          (((pattern (Var X_tp2))
            (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -9148,7 +9148,7 @@ Optimization hazard warning (Line 19): SoA warning: Right hand side contains onl
    ((pattern
      (Assignment ((LVariable X_tp4) ()) UMatrix
       ((pattern
-        (FunApp (StanLib exp FnPlain AoS)
+        (FunApp (StanLib exp FnPlain)
          (((pattern (Var X_tp3))
            (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -9165,7 +9165,7 @@ Optimization hazard warning (Line 19): SoA warning: Right hand side contains onl
    ((pattern
      (Assignment ((LVariable X_tp5) ()) UMatrix
       ((pattern
-        (FunApp (StanLib exp FnPlain AoS)
+        (FunApp (StanLib exp FnPlain)
          (((pattern (Var X_tp4))
            (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -9182,7 +9182,7 @@ Optimization hazard warning (Line 19): SoA warning: Right hand side contains onl
    ((pattern
      (Assignment ((LVariable X_tp6) ()) UMatrix
       ((pattern
-        (FunApp (StanLib exp FnPlain AoS)
+        (FunApp (StanLib exp FnPlain)
          (((pattern (Var X_tp5))
            (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -9199,7 +9199,7 @@ Optimization hazard warning (Line 19): SoA warning: Right hand side contains onl
    ((pattern
      (Assignment ((LVariable X_tp7) ()) UMatrix
       ((pattern
-        (FunApp (StanLib exp FnPlain AoS)
+        (FunApp (StanLib exp FnPlain)
          (((pattern (Var X_tp6))
            (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -9235,7 +9235,7 @@ Optimization hazard warning (Line 19): SoA warning: Right hand side contains onl
                           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                       UMatrix
                       ((pattern
-                        (FunApp (StanLib exp FnPlain AoS)
+                        (FunApp (StanLib exp FnPlain)
                          (((pattern
                             (Indexed
                              ((pattern (Var X_tp7))
@@ -9289,7 +9289,7 @@ Optimization hazard warning (Line 19): SoA warning: Right hand side contains onl
    ((pattern
      (Assignment ((LVariable X_tp1) ()) UMatrix
       ((pattern
-        (FunApp (StanLib exp FnPlain AoS)
+        (FunApp (StanLib exp FnPlain)
          (((pattern (Var X_p))
            (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -9306,7 +9306,7 @@ Optimization hazard warning (Line 19): SoA warning: Right hand side contains onl
    ((pattern
      (Assignment ((LVariable X_tp2) ()) UMatrix
       ((pattern
-        (FunApp (StanLib exp FnPlain AoS)
+        (FunApp (StanLib exp FnPlain)
          (((pattern (Var X_tp1))
            (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -9323,7 +9323,7 @@ Optimization hazard warning (Line 19): SoA warning: Right hand side contains onl
    ((pattern
      (Assignment ((LVariable X_tp3) ()) UMatrix
       ((pattern
-        (FunApp (StanLib exp FnPlain AoS)
+        (FunApp (StanLib exp FnPlain)
          (((pattern (Var X_tp2))
            (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -9340,7 +9340,7 @@ Optimization hazard warning (Line 19): SoA warning: Right hand side contains onl
    ((pattern
      (Assignment ((LVariable X_tp4) ()) UMatrix
       ((pattern
-        (FunApp (StanLib exp FnPlain AoS)
+        (FunApp (StanLib exp FnPlain)
          (((pattern (Var X_tp3))
            (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -9357,7 +9357,7 @@ Optimization hazard warning (Line 19): SoA warning: Right hand side contains onl
    ((pattern
      (Assignment ((LVariable X_tp5) ()) UMatrix
       ((pattern
-        (FunApp (StanLib exp FnPlain AoS)
+        (FunApp (StanLib exp FnPlain)
          (((pattern (Var X_tp4))
            (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -9374,7 +9374,7 @@ Optimization hazard warning (Line 19): SoA warning: Right hand side contains onl
    ((pattern
      (Assignment ((LVariable X_tp6) ()) UMatrix
       ((pattern
-        (FunApp (StanLib exp FnPlain AoS)
+        (FunApp (StanLib exp FnPlain)
          (((pattern (Var X_tp5))
            (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -9391,7 +9391,7 @@ Optimization hazard warning (Line 19): SoA warning: Right hand side contains onl
    ((pattern
      (Assignment ((LVariable X_tp7) ()) UMatrix
       ((pattern
-        (FunApp (StanLib exp FnPlain AoS)
+        (FunApp (StanLib exp FnPlain)
          (((pattern (Var X_tp6))
            (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -9427,7 +9427,7 @@ Optimization hazard warning (Line 19): SoA warning: Right hand side contains onl
                           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                       UMatrix
                       ((pattern
-                        (FunApp (StanLib exp FnPlain AoS)
+                        (FunApp (StanLib exp FnPlain)
                          (((pattern
                             (Indexed
                              ((pattern (Var X_tp7))
@@ -9557,7 +9557,7 @@ Optimization hazard warning (Line 19): SoA warning: Right hand side contains onl
    ((pattern
      (Assignment ((LVariable X_tp1) ()) UMatrix
       ((pattern
-        (FunApp (StanLib exp FnPlain AoS)
+        (FunApp (StanLib exp FnPlain)
          (((pattern (Var X_p))
            (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -9565,7 +9565,7 @@ Optimization hazard warning (Line 19): SoA warning: Right hand side contains onl
    ((pattern
      (Assignment ((LVariable X_tp2) ()) UMatrix
       ((pattern
-        (FunApp (StanLib exp FnPlain AoS)
+        (FunApp (StanLib exp FnPlain)
          (((pattern (Var X_tp1))
            (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -9573,7 +9573,7 @@ Optimization hazard warning (Line 19): SoA warning: Right hand side contains onl
    ((pattern
      (Assignment ((LVariable X_tp3) ()) UMatrix
       ((pattern
-        (FunApp (StanLib exp FnPlain AoS)
+        (FunApp (StanLib exp FnPlain)
          (((pattern (Var X_tp2))
            (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -9581,7 +9581,7 @@ Optimization hazard warning (Line 19): SoA warning: Right hand side contains onl
    ((pattern
      (Assignment ((LVariable X_tp4) ()) UMatrix
       ((pattern
-        (FunApp (StanLib exp FnPlain AoS)
+        (FunApp (StanLib exp FnPlain)
          (((pattern (Var X_tp3))
            (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -9589,7 +9589,7 @@ Optimization hazard warning (Line 19): SoA warning: Right hand side contains onl
    ((pattern
      (Assignment ((LVariable X_tp5) ()) UMatrix
       ((pattern
-        (FunApp (StanLib exp FnPlain AoS)
+        (FunApp (StanLib exp FnPlain)
          (((pattern (Var X_tp4))
            (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -9597,7 +9597,7 @@ Optimization hazard warning (Line 19): SoA warning: Right hand side contains onl
    ((pattern
      (Assignment ((LVariable X_tp6) ()) UMatrix
       ((pattern
-        (FunApp (StanLib exp FnPlain AoS)
+        (FunApp (StanLib exp FnPlain)
          (((pattern (Var X_tp5))
            (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -9605,7 +9605,7 @@ Optimization hazard warning (Line 19): SoA warning: Right hand side contains onl
    ((pattern
      (Assignment ((LVariable X_tp7) ()) UMatrix
       ((pattern
-        (FunApp (StanLib exp FnPlain AoS)
+        (FunApp (StanLib exp FnPlain)
          (((pattern (Var X_tp6))
            (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -9641,7 +9641,7 @@ Optimization hazard warning (Line 19): SoA warning: Right hand side contains onl
                           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                       UMatrix
                       ((pattern
-                        (FunApp (StanLib exp FnPlain AoS)
+                        (FunApp (StanLib exp FnPlain)
                          (((pattern
                             (Indexed
                              ((pattern (Var X_tp7))
@@ -11000,7 +11000,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
          ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       UVector
       ((pattern
-        (FunApp (StanLib rep_vector FnPlain AoS)
+        (FunApp (StanLib rep_vector FnPlain)
          (((pattern (Var tp_real_from_aos))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern
@@ -11089,7 +11089,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
               ((pattern
                 (Promotion
                  ((pattern
-                   (FunApp (StanLib size FnPlain AoS)
+                   (FunApp (StanLib size FnPlain)
                     (((pattern (Var tp_aos_vec_v))
                       (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -11100,7 +11100,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+            (FunApp (StanLib normal_lpdf (FnLpdf true))
              (((pattern (Var y))
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
@@ -11108,7 +11108,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                  (((pattern (Var alpha))
                    (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                   ((pattern
-                    (FunApp (StanLib multiply FnPlain AoS)
+                    (FunApp (StanLib multiply FnPlain)
                      (((pattern (Var dat_x))
                        (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
@@ -11127,7 +11127,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+            (FunApp (StanLib normal_lpdf (FnLpdf true))
              (((pattern (Var y))
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
@@ -11135,7 +11135,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                  (((pattern (Var alpha))
                    (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                   ((pattern
-                    (FunApp (StanLib multiply FnPlain AoS)
+                    (FunApp (StanLib multiply FnPlain)
                      (((pattern (Var dat_x))
                        (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Var p_soa_vec_v))
@@ -11149,11 +11149,11 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+            (FunApp (StanLib normal_lpdf (FnLpdf true))
              (((pattern (Var y))
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
-                (FunApp (StanLib multiply FnPlain AoS)
+                (FunApp (StanLib multiply FnPlain)
                  (((pattern (Var dat_x))
                    (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
                   ((pattern
@@ -11173,11 +11173,11 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+            (FunApp (StanLib normal_lpdf (FnLpdf true))
              (((pattern (Var y))
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
-                (FunApp (StanLib multiply FnPlain AoS)
+                (FunApp (StanLib multiply FnPlain)
                  (((pattern (Var dat_x))
                    (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
                   ((pattern
@@ -11203,11 +11203,11 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+            (FunApp (StanLib normal_lpdf (FnLpdf true))
              (((pattern (Var y))
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
-                (FunApp (StanLib multiply FnPlain AoS)
+                (FunApp (StanLib multiply FnPlain)
                  (((pattern (Var dat_x))
                    (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
                   ((pattern
@@ -11229,11 +11229,11 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+            (FunApp (StanLib normal_lpdf (FnLpdf true))
              (((pattern (Var y))
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
-                (FunApp (StanLib multiply FnPlain AoS)
+                (FunApp (StanLib multiply FnPlain)
                  (((pattern (Var p_soa_mat))
                    (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))
                   ((pattern
@@ -11255,11 +11255,11 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+            (FunApp (StanLib normal_lpdf (FnLpdf true))
              (((pattern (Var y))
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
-                (FunApp (StanLib multiply FnPlain AoS)
+                (FunApp (StanLib multiply FnPlain)
                  (((pattern (Var p_soa_mat))
                    (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))
                   ((pattern
@@ -11281,17 +11281,17 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+            (FunApp (StanLib normal_lpdf (FnLpdf true))
              (((pattern (Var y))
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
-                (FunApp (StanLib multiply FnPlain AoS)
+                (FunApp (StanLib multiply FnPlain)
                  (((pattern (Var p_soa_mat))
                    (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))
                   ((pattern
                     (FunApp (UserDefined udf_fun FnPlain)
                      (((pattern
-                        (FunApp (StanLib multiply FnPlain AoS)
+                        (FunApp (StanLib multiply FnPlain)
                          (((pattern (Var p_aos_mat))
                            (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))
                           ((pattern (Var tp_aos_fail_func_vec_v))
@@ -11359,7 +11359,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
           UVector
           ((pattern
-            (FunApp (StanLib multiply FnPlain AoS)
+            (FunApp (StanLib multiply FnPlain)
              (((pattern (Var p_soa_lhs_loop_mul))
                (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern (Var p_soa_rhs_loop_mul))
@@ -11380,11 +11380,11 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
               (((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+                    (FunApp (StanLib normal_lpdf (FnLpdf true))
                      (((pattern (Var y))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
-                        (FunApp (StanLib multiply FnPlain AoS)
+                        (FunApp (StanLib multiply FnPlain)
                          (((pattern (Var dat_x))
                            (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
                           ((pattern
@@ -11405,11 +11405,11 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+                    (FunApp (StanLib normal_lpdf (FnLpdf true))
                      (((pattern (Var y))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
-                        (FunApp (StanLib multiply FnPlain AoS)
+                        (FunApp (StanLib multiply FnPlain)
                          (((pattern (Var dat_x))
                            (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
                           ((pattern
@@ -11430,11 +11430,11 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+                    (FunApp (StanLib normal_lpdf (FnLpdf true))
                      (((pattern (Var y))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
-                        (FunApp (StanLib multiply FnPlain AoS)
+                        (FunApp (StanLib multiply FnPlain)
                          (((pattern
                             (Indexed
                              ((pattern (Var p_soa_loop_mat_uni_col_idx))
@@ -11456,11 +11456,11 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+                    (FunApp (StanLib normal_lpdf (FnLpdf true))
                      (((pattern (Var y))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
-                        (FunApp (StanLib multiply FnPlain AoS)
+                        (FunApp (StanLib multiply FnPlain)
                          (((pattern (Var dat_x))
                            (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
                           ((pattern
@@ -11488,11 +11488,11 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+                    (FunApp (StanLib normal_lpdf (FnLpdf true))
                      (((pattern (Var y))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
-                        (FunApp (StanLib multiply FnPlain AoS)
+                        (FunApp (StanLib multiply FnPlain)
                          (((pattern (Var dat_x))
                            (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
                           ((pattern
@@ -11517,11 +11517,11 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+                    (FunApp (StanLib normal_lpdf (FnLpdf true))
                      (((pattern (Var y))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
-                        (FunApp (StanLib multiply FnPlain AoS)
+                        (FunApp (StanLib multiply FnPlain)
                          (((pattern (Var dat_x))
                            (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
                           ((pattern
@@ -11548,11 +11548,11 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+                    (FunApp (StanLib normal_lpdf (FnLpdf true))
                      (((pattern (Var y))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
-                        (FunApp (StanLib multiply FnPlain AoS)
+                        (FunApp (StanLib multiply FnPlain)
                          (((pattern (Var dat_x))
                            (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
                           ((pattern
@@ -11590,11 +11590,11 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+                    (FunApp (StanLib normal_lpdf (FnLpdf true))
                      (((pattern (Var y))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
-                        (FunApp (StanLib multiply FnPlain AoS)
+                        (FunApp (StanLib multiply FnPlain)
                          (((pattern
                             (Indexed
                              ((pattern (Var dat_x))
@@ -11607,9 +11607,9 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                           ((pattern
                             (Indexed
                              ((pattern
-                               (FunApp (StanLib transpose FnPlain AoS)
+                               (FunApp (StanLib transpose FnPlain)
                                 (((pattern
-                                   (FunApp (StanLib multiply FnPlain AoS)
+                                   (FunApp (StanLib multiply FnPlain)
                                     (((pattern
                                        (Var p_aos_mat_pass_func_outer_single_indexed1))
                                       (meta
@@ -11648,11 +11648,11 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+                    (FunApp (StanLib normal_lpdf (FnLpdf true))
                      (((pattern (Var y))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
-                        (FunApp (StanLib multiply FnPlain AoS)
+                        (FunApp (StanLib multiply FnPlain)
                          (((pattern
                             (Indexed
                              ((pattern (Var dat_x))
@@ -11754,7 +11754,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                   UVector
                   ((pattern
-                    (FunApp (StanLib multiply FnPlain AoS)
+                    (FunApp (StanLib multiply FnPlain)
                      (((pattern (Var p_soa_lhs_loop_mul))
                        (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern (Var p_soa_rhs_loop_mul))
@@ -11775,7 +11775,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                   UVector
                   ((pattern
-                    (FunApp (StanLib multiply FnPlain AoS)
+                    (FunApp (StanLib multiply FnPlain)
                      (((pattern (Var p_soa_lhs_loop_mul))
                        (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern (Var p_soa_rhs_loop_mul))
@@ -11785,11 +11785,11 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+                    (FunApp (StanLib normal_lpdf (FnLpdf true))
                      (((pattern (Var y))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
-                        (FunApp (StanLib multiply FnPlain AoS)
+                        (FunApp (StanLib multiply FnPlain)
                          (((pattern
                             (Indexed
                              ((pattern (Var dat_x))
@@ -11816,11 +11816,11 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+                    (FunApp (StanLib normal_lpdf (FnLpdf true))
                      (((pattern (Var y))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
-                        (FunApp (StanLib multiply FnPlain AoS)
+                        (FunApp (StanLib multiply FnPlain)
                          (((pattern
                             (Indexed
                              ((pattern (Var dat_x))
@@ -11850,7 +11850,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+                    (FunApp (StanLib normal_lpdf (FnLpdf true))
                      (((pattern (Var y))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
@@ -12376,7 +12376,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
          ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       UVector
       ((pattern
-        (FunApp (StanLib rep_vector FnPlain SoA)
+        (FunApp (CompilerInternal (FnReturnSoA rep_vector))
          (((pattern (Var tp_real_from_aos))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern
@@ -12465,7 +12465,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
               ((pattern
                 (Promotion
                  ((pattern
-                   (FunApp (StanLib size FnPlain AoS)
+                   (FunApp (StanLib size FnPlain)
                     (((pattern (Var tp_aos_vec_v))
                       (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -12476,7 +12476,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
+            (FunApp (StanLib normal_lpdf (FnLpdf true))
              (((pattern (Var y))
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
@@ -12484,7 +12484,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                  (((pattern (Var alpha))
                    (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                   ((pattern
-                    (FunApp (StanLib multiply FnPlain SoA)
+                    (FunApp (StanLib multiply FnPlain)
                      (((pattern (Var dat_x))
                        (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
@@ -12503,7 +12503,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
+            (FunApp (StanLib normal_lpdf (FnLpdf true))
              (((pattern (Var y))
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
@@ -12511,7 +12511,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                  (((pattern (Var alpha))
                    (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                   ((pattern
-                    (FunApp (StanLib multiply FnPlain SoA)
+                    (FunApp (StanLib multiply FnPlain)
                      (((pattern (Var dat_x))
                        (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Var p_soa_vec_v))
@@ -12525,11 +12525,11 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
+            (FunApp (StanLib normal_lpdf (FnLpdf true))
              (((pattern (Var y))
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
-                (FunApp (StanLib multiply FnPlain SoA)
+                (FunApp (StanLib multiply FnPlain)
                  (((pattern (Var dat_x))
                    (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
                   ((pattern
@@ -12549,11 +12549,11 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
+            (FunApp (StanLib normal_lpdf (FnLpdf true))
              (((pattern (Var y))
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
-                (FunApp (StanLib multiply FnPlain SoA)
+                (FunApp (StanLib multiply FnPlain)
                  (((pattern (Var dat_x))
                    (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
                   ((pattern
@@ -12579,11 +12579,11 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+            (FunApp (StanLib normal_lpdf (FnLpdf true))
              (((pattern (Var y))
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
-                (FunApp (StanLib multiply FnPlain AoS)
+                (FunApp (StanLib multiply FnPlain)
                  (((pattern (Var dat_x))
                    (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
                   ((pattern
@@ -12605,11 +12605,11 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
+            (FunApp (StanLib normal_lpdf (FnLpdf true))
              (((pattern (Var y))
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
-                (FunApp (StanLib multiply FnPlain SoA)
+                (FunApp (StanLib multiply FnPlain)
                  (((pattern (Var p_soa_mat))
                    (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))
                   ((pattern
@@ -12631,11 +12631,11 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
+            (FunApp (StanLib normal_lpdf (FnLpdf true))
              (((pattern (Var y))
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
-                (FunApp (StanLib multiply FnPlain SoA)
+                (FunApp (StanLib multiply FnPlain)
                  (((pattern (Var p_soa_mat))
                    (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))
                   ((pattern
@@ -12657,17 +12657,17 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
+            (FunApp (StanLib normal_lpdf (FnLpdf true))
              (((pattern (Var y))
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
-                (FunApp (StanLib multiply FnPlain SoA)
+                (FunApp (StanLib multiply FnPlain)
                  (((pattern (Var p_soa_mat))
                    (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))
                   ((pattern
                     (FunApp (UserDefined udf_fun FnPlain)
                      (((pattern
-                        (FunApp (StanLib multiply FnPlain AoS)
+                        (FunApp (StanLib multiply FnPlain)
                          (((pattern (Var p_aos_mat))
                            (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))
                           ((pattern (Var tp_aos_fail_func_vec_v))
@@ -12735,7 +12735,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
           UVector
           ((pattern
-            (FunApp (StanLib multiply FnPlain SoA)
+            (FunApp (StanLib multiply FnPlain)
              (((pattern (Var p_soa_lhs_loop_mul))
                (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern (Var p_soa_rhs_loop_mul))
@@ -12756,11 +12756,11 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
               (((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
+                    (FunApp (StanLib normal_lpdf (FnLpdf true))
                      (((pattern (Var y))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
-                        (FunApp (StanLib multiply FnPlain SoA)
+                        (FunApp (StanLib multiply FnPlain)
                          (((pattern (Var dat_x))
                            (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
                           ((pattern
@@ -12781,11 +12781,11 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
+                    (FunApp (StanLib normal_lpdf (FnLpdf true))
                      (((pattern (Var y))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
-                        (FunApp (StanLib multiply FnPlain SoA)
+                        (FunApp (StanLib multiply FnPlain)
                          (((pattern (Var dat_x))
                            (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
                           ((pattern
@@ -12806,11 +12806,11 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
+                    (FunApp (StanLib normal_lpdf (FnLpdf true))
                      (((pattern (Var y))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
-                        (FunApp (StanLib multiply FnPlain SoA)
+                        (FunApp (StanLib multiply FnPlain)
                          (((pattern
                             (Indexed
                              ((pattern (Var p_soa_loop_mat_uni_col_idx))
@@ -12832,11 +12832,11 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
+                    (FunApp (StanLib normal_lpdf (FnLpdf true))
                      (((pattern (Var y))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
-                        (FunApp (StanLib multiply FnPlain SoA)
+                        (FunApp (StanLib multiply FnPlain)
                          (((pattern (Var dat_x))
                            (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
                           ((pattern
@@ -12864,11 +12864,11 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
+                    (FunApp (StanLib normal_lpdf (FnLpdf true))
                      (((pattern (Var y))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
-                        (FunApp (StanLib multiply FnPlain SoA)
+                        (FunApp (StanLib multiply FnPlain)
                          (((pattern (Var dat_x))
                            (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
                           ((pattern
@@ -12893,11 +12893,11 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
+                    (FunApp (StanLib normal_lpdf (FnLpdf true))
                      (((pattern (Var y))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
-                        (FunApp (StanLib multiply FnPlain SoA)
+                        (FunApp (StanLib multiply FnPlain)
                          (((pattern (Var dat_x))
                            (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
                           ((pattern
@@ -12924,11 +12924,11 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
+                    (FunApp (StanLib normal_lpdf (FnLpdf true))
                      (((pattern (Var y))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
-                        (FunApp (StanLib multiply FnPlain SoA)
+                        (FunApp (StanLib multiply FnPlain)
                          (((pattern (Var dat_x))
                            (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
                           ((pattern
@@ -12966,11 +12966,11 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
+                    (FunApp (StanLib normal_lpdf (FnLpdf true))
                      (((pattern (Var y))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
-                        (FunApp (StanLib multiply FnPlain SoA)
+                        (FunApp (StanLib multiply FnPlain)
                          (((pattern
                             (Indexed
                              ((pattern (Var dat_x))
@@ -12983,9 +12983,9 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                           ((pattern
                             (Indexed
                              ((pattern
-                               (FunApp (StanLib transpose FnPlain AoS)
+                               (FunApp (StanLib transpose FnPlain)
                                 (((pattern
-                                   (FunApp (StanLib multiply FnPlain AoS)
+                                   (FunApp (StanLib multiply FnPlain)
                                     (((pattern
                                        (Var p_aos_mat_pass_func_outer_single_indexed1))
                                       (meta
@@ -13024,11 +13024,11 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
+                    (FunApp (StanLib normal_lpdf (FnLpdf true))
                      (((pattern (Var y))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
-                        (FunApp (StanLib multiply FnPlain SoA)
+                        (FunApp (StanLib multiply FnPlain)
                          (((pattern
                             (Indexed
                              ((pattern (Var dat_x))
@@ -13130,7 +13130,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                   UVector
                   ((pattern
-                    (FunApp (StanLib multiply FnPlain AoS)
+                    (FunApp (StanLib multiply FnPlain)
                      (((pattern (Var p_soa_lhs_loop_mul))
                        (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern (Var p_soa_rhs_loop_mul))
@@ -13151,7 +13151,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                   UVector
                   ((pattern
-                    (FunApp (StanLib multiply FnPlain AoS)
+                    (FunApp (StanLib multiply FnPlain)
                      (((pattern (Var p_soa_lhs_loop_mul))
                        (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern (Var p_soa_rhs_loop_mul))
@@ -13161,11 +13161,11 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
+                    (FunApp (StanLib normal_lpdf (FnLpdf true))
                      (((pattern (Var y))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
-                        (FunApp (StanLib multiply FnPlain SoA)
+                        (FunApp (StanLib multiply FnPlain)
                          (((pattern
                             (Indexed
                              ((pattern (Var dat_x))
@@ -13192,11 +13192,11 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
+                    (FunApp (StanLib normal_lpdf (FnLpdf true))
                      (((pattern (Var y))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
-                        (FunApp (StanLib multiply FnPlain SoA)
+                        (FunApp (StanLib multiply FnPlain)
                          (((pattern
                             (Indexed
                              ((pattern (Var dat_x))
@@ -13226,7 +13226,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
+                    (FunApp (StanLib normal_lpdf (FnLpdf true))
                      (((pattern (Var y))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
@@ -14004,7 +14004,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
          ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       UVector
       ((pattern
-        (FunApp (StanLib rep_vector FnPlain AoS)
+        (FunApp (StanLib rep_vector FnPlain)
          (((pattern (Var tp_real_from_aos))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern
@@ -16741,7 +16741,7 @@ Optimization hazard warning (Line 9): SoA warning: Right hand side contains only
        ((pattern
          (Assignment ((LVariable tp_soa_multi_idx_assign_in_loop) ()) UVector
           ((pattern
-            (FunApp (StanLib rep_vector FnPlain AoS)
+            (FunApp (StanLib rep_vector FnPlain)
              (((pattern (Var alpha))
                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -16876,7 +16876,7 @@ Optimization hazard warning (Line 9): SoA warning: Right hand side contains only
        ((pattern
          (Assignment ((LVariable tp_soa_multi_idx_assign_in_loop) ()) UVector
           ((pattern
-            (FunApp (StanLib rep_vector FnPlain SoA)
+            (FunApp (CompilerInternal (FnReturnSoA rep_vector))
              (((pattern (Var alpha))
                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -17350,7 +17350,7 @@ Optimization hazard warning (Line 24): SoA warning: Used in user defined functio
             UReal AutoDiffable))
           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
          ((pattern
-           (FunApp (StanLib sum FnPlain AoS)
+           (FunApp (StanLib sum FnPlain)
             (((pattern (Var soa_x))
               (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -17372,7 +17372,7 @@ Optimization hazard warning (Line 24): SoA warning: Used in user defined functio
          ((pattern
            (FunApp (Operator Greater)
             (((pattern
-               (FunApp (StanLib sum FnPlain AoS)
+               (FunApp (StanLib sum FnPlain)
                 (((pattern (Var soa_x))
                   (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
@@ -17407,7 +17407,7 @@ Optimization hazard warning (Line 24): SoA warning: Used in user defined functio
       ((pattern
         (FunApp (UserDefined okay_reduction FnPlain)
          (((pattern
-            (FunApp (StanLib sum FnPlain AoS)
+            (FunApp (StanLib sum FnPlain)
              (((pattern (Var soa_x))
                (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
@@ -17504,7 +17504,7 @@ Optimization hazard warning (Line 24): SoA warning: Used in user defined functio
             UReal AutoDiffable))
           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
          ((pattern
-           (FunApp (StanLib sum FnPlain SoA)
+           (FunApp (StanLib sum FnPlain)
             (((pattern (Var soa_x))
               (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -17526,7 +17526,7 @@ Optimization hazard warning (Line 24): SoA warning: Used in user defined functio
          ((pattern
            (FunApp (Operator Greater)
             (((pattern
-               (FunApp (StanLib sum FnPlain AoS)
+               (FunApp (StanLib sum FnPlain)
                 (((pattern (Var soa_x))
                   (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
@@ -17561,7 +17561,7 @@ Optimization hazard warning (Line 24): SoA warning: Used in user defined functio
       ((pattern
         (FunApp (UserDefined okay_reduction FnPlain)
          (((pattern
-            (FunApp (StanLib sum FnPlain AoS)
+            (FunApp (StanLib sum FnPlain)
              (((pattern (Var soa_x))
                (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
@@ -17717,7 +17717,7 @@ Optimization hazard warning (Line 24): SoA warning: Used in user defined functio
             UReal AutoDiffable))
           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
          ((pattern
-           (FunApp (StanLib sum FnPlain AoS)
+           (FunApp (StanLib sum FnPlain)
             (((pattern (Var soa_x))
               (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -17730,7 +17730,7 @@ Optimization hazard warning (Line 24): SoA warning: Used in user defined functio
          ((pattern
            (FunApp (Operator Greater)
             (((pattern
-               (FunApp (StanLib sum FnPlain AoS)
+               (FunApp (StanLib sum FnPlain)
                 (((pattern (Var soa_x))
                   (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
@@ -17756,7 +17756,7 @@ Optimization hazard warning (Line 24): SoA warning: Used in user defined functio
       ((pattern
         (FunApp (UserDefined okay_reduction FnPlain)
          (((pattern
-            (FunApp (StanLib sum FnPlain AoS)
+            (FunApp (StanLib sum FnPlain)
              (((pattern (Var soa_x))
                (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
@@ -18382,7 +18382,7 @@ Optimization hazard warning (Line 29): SoA warning: Right hand side of assignmen
    ((pattern
      (Assignment ((LVariable inner_empty_user_func_aos) ()) UMatrix
       ((pattern
-        (FunApp (StanLib multiply FnPlain AoS)
+        (FunApp (StanLib multiply FnPlain)
          (((pattern (Var udf_input_aos))
            (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern (FunApp (UserDefined empty_user_func FnPlain) ()))
@@ -18405,7 +18405,7 @@ Optimization hazard warning (Line 29): SoA warning: Right hand side of assignmen
          (((pattern
             (Promotion
              ((pattern
-               (FunApp (StanLib rows FnPlain AoS)
+               (FunApp (StanLib rows FnPlain)
                 (((pattern (Var row_soa))
                   (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -18433,14 +18433,14 @@ Optimization hazard warning (Line 29): SoA warning: Right hand side of assignmen
              (((pattern
                 (Promotion
                  ((pattern
-                   (FunApp (StanLib cols FnPlain AoS)
+                   (FunApp (StanLib cols FnPlain)
                     (((pattern (Var row_soa))
                       (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                  UReal DataOnly))
                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
-                (FunApp (StanLib transpose FnPlain AoS)
+                (FunApp (StanLib transpose FnPlain)
                  (((pattern (Var int_aos_mul_aos))
                    (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
                (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
@@ -18537,7 +18537,7 @@ Optimization hazard warning (Line 29): SoA warning: Right hand side of assignmen
    ((pattern
      (Assignment ((LVariable inner_empty_user_func_aos) ()) UMatrix
       ((pattern
-        (FunApp (StanLib multiply FnPlain AoS)
+        (FunApp (StanLib multiply FnPlain)
          (((pattern (Var udf_input_aos))
            (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern (FunApp (UserDefined empty_user_func FnPlain) ()))
@@ -18560,7 +18560,7 @@ Optimization hazard warning (Line 29): SoA warning: Right hand side of assignmen
          (((pattern
             (Promotion
              ((pattern
-               (FunApp (StanLib rows FnPlain SoA)
+               (FunApp (StanLib rows FnPlain)
                 (((pattern (Var row_soa))
                   (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -18588,14 +18588,14 @@ Optimization hazard warning (Line 29): SoA warning: Right hand side of assignmen
              (((pattern
                 (Promotion
                  ((pattern
-                   (FunApp (StanLib cols FnPlain SoA)
+                   (FunApp (StanLib cols FnPlain)
                     (((pattern (Var row_soa))
                       (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                  UReal DataOnly))
                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
-                (FunApp (StanLib transpose FnPlain AoS)
+                (FunApp (StanLib transpose FnPlain)
                  (((pattern (Var int_aos_mul_aos))
                    (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
                (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
@@ -18742,7 +18742,7 @@ Optimization hazard warning (Line 29): SoA warning: Right hand side of assignmen
    ((pattern
      (Assignment ((LVariable inner_empty_user_func_aos) ()) UMatrix
       ((pattern
-        (FunApp (StanLib multiply FnPlain AoS)
+        (FunApp (StanLib multiply FnPlain)
          (((pattern (Var udf_input_aos))
            (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern (FunApp (UserDefined empty_user_func FnPlain) ()))
@@ -18756,7 +18756,7 @@ Optimization hazard warning (Line 29): SoA warning: Right hand side of assignmen
          (((pattern
             (Promotion
              ((pattern
-               (FunApp (StanLib rows FnPlain AoS)
+               (FunApp (StanLib rows FnPlain)
                 (((pattern (Var row_soa))
                   (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -18775,14 +18775,14 @@ Optimization hazard warning (Line 29): SoA warning: Right hand side of assignmen
              (((pattern
                 (Promotion
                  ((pattern
-                   (FunApp (StanLib cols FnPlain AoS)
+                   (FunApp (StanLib cols FnPlain)
                     (((pattern (Var row_soa))
                       (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                  UReal DataOnly))
                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
-                (FunApp (StanLib transpose FnPlain AoS)
+                (FunApp (StanLib transpose FnPlain)
                  (((pattern (Var int_aos_mul_aos))
                    (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
                (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
@@ -19271,7 +19271,7 @@ Optimization hazard warning (Line 6): SoA warning: Right hand side contains only
            ((pattern
              (Assignment ((LVariable tp_row_vector_from_soa_loop) ()) URowVector
               ((pattern
-                (FunApp (StanLib multiply FnPlain AoS)
+                (FunApp (StanLib multiply FnPlain)
                  (((pattern
                     (Indexed
                      ((pattern (Var soa_p))
@@ -19298,7 +19298,7 @@ Optimization hazard warning (Line 6): SoA warning: Right hand side contains only
            ((pattern
              (Assignment ((LVariable tp_matrix_from_soa_loop) ()) UMatrix
               ((pattern
-                (FunApp (StanLib multiply FnPlain AoS)
+                (FunApp (StanLib multiply FnPlain)
                  (((pattern
                     (Indexed
                      ((pattern (Var aos_p))
@@ -19400,7 +19400,7 @@ Optimization hazard warning (Line 6): SoA warning: Right hand side contains only
            ((pattern
              (Assignment ((LVariable tp_row_vector_from_soa_loop) ()) URowVector
               ((pattern
-                (FunApp (StanLib multiply FnPlain SoA)
+                (FunApp (StanLib multiply FnPlain)
                  (((pattern
                     (Indexed
                      ((pattern (Var soa_p))
@@ -19427,7 +19427,7 @@ Optimization hazard warning (Line 6): SoA warning: Right hand side contains only
            ((pattern
              (Assignment ((LVariable tp_matrix_from_soa_loop) ()) UMatrix
               ((pattern
-                (FunApp (StanLib multiply FnPlain SoA)
+                (FunApp (StanLib multiply FnPlain)
                  (((pattern
                     (Indexed
                      ((pattern (Var aos_p))
@@ -19561,7 +19561,7 @@ Optimization hazard warning (Line 6): SoA warning: Right hand side contains only
            ((pattern
              (Assignment ((LVariable tp_row_vector_from_soa_loop) ()) URowVector
               ((pattern
-                (FunApp (StanLib multiply FnPlain AoS)
+                (FunApp (StanLib multiply FnPlain)
                  (((pattern
                     (Indexed
                      ((pattern (Var soa_p))
@@ -19588,7 +19588,7 @@ Optimization hazard warning (Line 6): SoA warning: Right hand side contains only
            ((pattern
              (Assignment ((LVariable tp_matrix_from_soa_loop) ()) UMatrix
               ((pattern
-                (FunApp (StanLib multiply FnPlain AoS)
+                (FunApp (StanLib multiply FnPlain)
                  (((pattern
                     (Indexed
                      ((pattern (Var aos_p))

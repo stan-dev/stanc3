@@ -208,7 +208,7 @@ and query_initial_demotable_funs (in_loop : bool) (stmt_linenum : int)
   let demoted_and_top_level_names =
     Set.Poly.union demoted_eigen_names top_level_eigen_names in
   match kind with
-  | Fun_kind.StanLib (name, (_ : bool Fun_kind.suffix), _) -> (
+  | Fun_kind.StanLib (name, _) | CompilerInternal (FnReturnSoA name) -> (
       match name with
       | "check_matching_dims" -> acc
       | name ->
@@ -284,7 +284,7 @@ let rec extract_nonderived_admatrix_types
 and extract_nonderived_admatrix_types_fun (kind : 'a Fun_kind.t)
     (exprs : Expr.Typed.t list) =
   match kind with
-  | Fun_kind.StanLib (name, (_ : bool Fun_kind.suffix), _) -> (
+  | Fun_kind.StanLib (name, _) | CompilerInternal (FnReturnSoA name) -> (
       match name with
       | "check_matching_dims" -> []
       | "rep_vector" -> [(UnsizedType.AutoDiffable, UnsizedType.UVector)]
@@ -390,7 +390,9 @@ let rec query_initial_demotable_stmt (in_loop : bool) (acc : string Set.Poly.t)
           let non_supported_func_name =
             match rhs.pattern with
             | FunApp (UserDefined (name, _), _) -> Some name
-            | FunApp (StanLib (name, _, _), exprs)
+            | FunApp
+                ( (StanLib (name, _) | CompilerInternal (FnReturnSoA name))
+                , exprs )
               when not
                      (query_stan_math_mem_pattern_support name
                         (List.map ~f:Expr.Typed.fun_arg exprs)) ->
@@ -528,6 +530,15 @@ let query_demotable_stmt (aos_exits : string Set.Poly.t)
   (* All other statements do not need logic here *)
   | _ -> Set.Poly.empty
 
+let maybe_soa_matrix_builder kind =
+  match kind with
+  | Fun_kind.StanLib
+      ( (( "rep_matrix" | "rep_vector" | "rep_row_vector" | "append_row"
+         | "append_col" ) as name)
+      , _ ) ->
+      Fun_kind.CompilerInternal (FnReturnSoA name)
+  | _ -> kind
+
 (** Modify a function and it's subexpressions from SoA <-> AoS and vice versa.
     This performs demotion for sub expressions recursively. The top level
     expression and it's sub expressions are demoted to SoA if
@@ -549,16 +560,22 @@ let rec modify_kind ?force_demotion:(force = false)
   let is_all_in_list =
     is_nonzero_subset ~set:modifiable_set ~subset:expr_names in
   match kind with
-  | Fun_kind.StanLib (name, sfx, (_ : Mem_pattern.t)) ->
+  | Fun_kind.StanLib (name, _) ->
       if is_all_in_list || (not (is_fun_soa_supported name exprs)) || force then
         (* Force demotion of all subexprs *)
         let exprs' =
           List.map ~f:(modify_expr ~force_demotion:true expr_names) exprs in
-        (Fun_kind.StanLib (name, sfx, Mem_pattern.AoS), exprs')
+        (kind, exprs')
       else
-        ( Fun_kind.StanLib (name, sfx, SoA)
+        let kind = maybe_soa_matrix_builder kind in
+        ( kind
         , List.map ~f:(modify_expr ~force_demotion:false modifiable_set) exprs
         )
+  | CompilerInternal (FnReturnSoA name)
+    when is_all_in_list || (not (is_fun_soa_supported name exprs)) || force ->
+      let exprs' =
+        List.map ~f:(modify_expr ~force_demotion:true expr_names) exprs in
+      (StanLib (name, FnPlain), exprs')
   | Operator op ->
       if is_all_in_list || (not (is_op_soa_supported op exprs)) || force then
         (* Force demotion of all subexprs *)

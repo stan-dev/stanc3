@@ -9,33 +9,26 @@ let stan_namespace_qualify f =
   else "stan::math::" ^ f
 
 let fn_renames =
-  List.map
-    ~f:(fun (k, v) -> (Internal_fun.to_string k, v))
-    [ (Internal_fun.FnLength, "stan::math::size")
-    ; (FnNegInf, "stan::math::negative_infinity")
-    ; (FnResizeToMatch, "stan::math::resize_to_match")
-    ; (FnNaN, "std::numeric_limits<double>::quiet_NaN") ]
-  @ [ ("lmultiply", "stan::math::multiply_log")
-    ; ("lchoose", "stan::math::binomial_coefficient_log")
-    ; ("std_normal_qf", "stan::math::inv_Phi")
-    ; ("integrate_ode", "stan::math::integrate_ode_rk45")
-      (* constraints -- originally internal functions, may be worth renaming
-         now *)
-    ; ("cholesky_factor_corr_jacobian", "stan::math::cholesky_corr_constrain")
-    ; ("cholesky_factor_corr_constrain", "stan::math::cholesky_corr_constrain")
-    ; ("cholesky_factor_corr_unconstrain", "stan::math::cholesky_corr_free")
-    ; ("cholesky_factor_cov_jacobian", "stan::math::cholesky_factor_constrain")
-    ; ("cholesky_factor_cov_constrain", "stan::math::cholesky_factor_constrain")
-    ; ("cholesky_factor_cov_unconstrain", "stan::math::cholesky_factor_free")
-    ; ("lower_bound_jacobian", "stan::math::lb_constrain")
-    ; ("lower_bound_constrain", "stan::math::lb_constrain")
-    ; ("lower_bound_unconstrain", "stan::math::lb_free")
-    ; ("upper_bound_jacobian", "stan::math::ub_constrain")
-    ; ("upper_bound_constrain", "stan::math::ub_constrain")
-    ; ("upper_bound_unconstrain", "stan::math::ub_free")
-    ; ("lower_upper_bound_jacobian", "stan::math::lub_constrain")
-    ; ("lower_upper_bound_constrain", "stan::math::lub_constrain")
-    ; ("lower_upper_bound_unconstrain", "stan::math::lub_free") ]
+  [ ("target", "get_lp"); ("lmultiply", "multiply_log")
+  ; ("lchoose", "binomial_coefficient_log"); ("std_normal_qf", "inv_Phi")
+  ; ("integrate_ode", "integrate_ode_rk45")
+    (* constraints -- originally internal functions, may be worth renaming
+       now *); ("cholesky_factor_corr_jacobian", "cholesky_corr_constrain")
+  ; ("cholesky_factor_corr_constrain", "cholesky_corr_constrain")
+  ; ("cholesky_factor_corr_unconstrain", "cholesky_corr_free")
+  ; ("cholesky_factor_cov_jacobian", "cholesky_factor_constrain")
+  ; ("cholesky_factor_cov_constrain", "cholesky_factor_constrain")
+  ; ("cholesky_factor_cov_unconstrain", "cholesky_factor_free")
+  ; ("lower_bound_jacobian", "lb_constrain")
+  ; ("lower_bound_constrain", "lb_constrain")
+  ; ("lower_bound_unconstrain", "lb_free")
+  ; ("upper_bound_jacobian", "ub_constrain")
+  ; ("upper_bound_constrain", "ub_constrain")
+  ; ("upper_bound_unconstrain", "ub_free")
+  ; ("lower_upper_bound_jacobian", "lub_constrain")
+  ; ("lower_upper_bound_constrain", "lub_constrain")
+  ; ("lower_upper_bound_unconstrain", "lub_free") ]
+  |> List.map ~f:(fun (prev, renamed) -> (prev, stan_namespace_qualify renamed))
   |> String.Map.of_list
 
 let constraint_to_string = function
@@ -296,33 +289,7 @@ and lower_operator_app op es_in =
       Common.ICE.internal_error
         "And/Or should have been converted to an expression" [@coverage off]
 
-and lower_misc_special_math_app (f : string) (mem_pattern : Mem_pattern.t)
-    (ret_type : UnsizedType.returntype option) =
-  match f with
-  | "target" ->
-      Some
-        (fun _ ->
-          Exprs.fun_call "stan::math::get_lp" [Var "lp__"; Var "lp_accum__"])
-  | "rep_matrix" | "rep_vector" | "rep_row_vector" | "append_row" | "append_col"
-    when mem_pattern = Mem_pattern.SoA -> (
-      let is_autodiffable Expr.{meta= Expr.Typed.Meta.{adlevel; _}; _} =
-        adlevel = UnsizedType.AutoDiffable in
-      match ret_type with
-      | Some (UnsizedType.ReturnType t) ->
-          Some
-            (fun es ->
-              if List.exists ~f:is_autodiffable es then
-                Exprs.templated_fun_call (stan_namespace_qualify f)
-                  [ lower_possibly_var_decl
-                      (UnsizedType.fill_adtype_for_type AutoDiffable t)
-                      t mem_pattern ]
-                  (lower_exprs es)
-              else Exprs.fun_call (stan_namespace_qualify f) (lower_exprs es))
-      | Some Void -> None
-      | None -> None)
-  | _ -> None
-
-and lower_functionals fname suffix es mem_pattern =
+and lower_functionals fname suffix es =
   let contains_hof_vars = function
     | {Expr.pattern= Var _; meta= {Expr.Typed.Meta.type_= UFun _; _}} -> true
     | _ -> false in
@@ -338,8 +305,7 @@ and lower_functionals fname suffix es mem_pattern =
                 FunApp
                   ( StanLib
                       ( name ^ functor_suffix_select (functor_type fname)
-                      , FnPlain
-                      , mem_pattern )
+                      , FnPlain )
                   , [] ) }
         | e -> e in
       let converted_es = List.map ~f:convert_hof_vars es in
@@ -364,7 +330,7 @@ and lower_functionals fname suffix es mem_pattern =
           ->
             (fname, f :: y0 :: t0 :: ts :: theta :: x :: x_int :: msgs :: tl)
         | ( x
-          , {pattern= FunApp ((UserDefined (f, _) | StanLib (f, _, _)), _); _}
+          , {pattern= FunApp ((UserDefined (f, _) | StanLib (f, _)), _); _}
             :: grainsize :: container :: tl )
           when Stan_math_signatures.is_reduce_sum_fn x ->
             let chop_functor_suffix =
@@ -390,7 +356,7 @@ and lower_functionals fname suffix es mem_pattern =
             (fname, hd @ (msgs :: tl))
         | ( "map_rect"
           , {pattern= Lit (Int, id); _}
-            :: {pattern= FunApp ((UserDefined (f, _) | StanLib (f, _, _)), _); _}
+            :: {pattern= FunApp ((UserDefined (f, _) | StanLib (f, _)), _); _}
             :: tl ) ->
             (Fmt.str "%s<%s, %s>" fname id f, tl @ [msgs])
         | _, args ->
@@ -404,8 +370,7 @@ and lower_functionals fname suffix es mem_pattern =
       Exprs.templated_fun_call fname templates (lower_exprs args) in
     Some lower_hov
 
-and lower_fun_app suffix fname es mem_pattern
-    (ret_type : UnsizedType.returntype option) =
+and lower_fun_app suffix fname es =
   let fname =
     Option.value (String.Map.find_opt fname fn_renames) ~default:fname in
   let fname =
@@ -414,11 +379,7 @@ and lower_fun_app suffix fname es mem_pattern
     | Some (f, "jacobian") -> f ^ "_constrain"
     | Some (f, "unconstrain") -> f ^ "_free"
     | _ -> fname in
-  let special_options =
-    [ lower_misc_special_math_app fname mem_pattern ret_type
-    ; lower_functionals fname suffix es mem_pattern ]
-    |> List.filter_map ~f:Fun.id |> List.hd in
-  match special_options with
+  match lower_functionals fname suffix es with
   | Some s -> s es
   | None ->
       let fname = stan_namespace_qualify fname in
@@ -489,13 +450,31 @@ and lower_compiler_internal ad ut f es =
                            , [ lower_possibly_var_decl AutoDiffable ut
                                  mem_pattern; TemplateType "jacobian__" ]
                            , lower_exprs args )))
-  | FnDeepCopy ->
-      lower_fun_app Fun_kind.FnPlain "stan::model::deep_copy" es Mem_pattern.AoS
-        (Some UnsizedType.Void)
-  | FnMakeTuple -> fun_call "std::forward_as_tuple" (lower_exprs es)
-  | _ ->
-      lower_fun_app FnPlain (Internal_fun.to_string f) es Mem_pattern.AoS
-        (Some UnsizedType.Void)
+  | FnDeepCopy -> lower_fun_call "stan::model::deep_copy" es
+  | FnMakeTuple -> lower_fun_call "std::forward_as_tuple" es
+  | FnLength -> lower_fun_call "stan::math::size" es
+  | FnResizeToMatch -> lower_fun_call "stan::math::resize_to_match" es
+  | FnNegInf -> fun_call "stan::math::negative_infinity" []
+  | FnNaN -> fun_call "std::numeric_limits<double>::quiet_NaN" []
+  | FnReturnSoA name ->
+      let name = stan_namespace_qualify name in
+      let is_autodiffable Expr.{meta= Expr.Typed.Meta.{adlevel; _}; _} =
+        adlevel = UnsizedType.AutoDiffable in
+      if List.exists ~f:is_autodiffable es then
+        Exprs.templated_fun_call name
+          [ lower_possibly_var_decl
+              (UnsizedType.fill_adtype_for_type AutoDiffable ut)
+              ut SoA ]
+          (lower_exprs es)
+      else lower_fun_call name es
+  | FnWriteParam _ | FnValidateSize | FnValidateSizePositive
+   |FnValidateSizeUnitVector | FnCheck _ | FnPrint | FnReject | FnFatalError
+   |FnReadWriteEventsOpenCL _ ->
+      Common.ICE.(
+        internal_errorf
+          "Tried to compile statement-only internal function %t in expression \
+           context!"
+          [Internal_fun.pp Expr.Typed.pp $ f]) [@coverage off]
 
 and lower_index = function
   | Index.All -> Exprs.fun_call "stan::model::index_omni" []
@@ -570,9 +549,7 @@ and lower_expr (Expr.{pattern; meta} : Expr.Typed.t) : Cpp.expr =
   | FunApp (Operator op, es) -> lower_operator_app op es
   | FunApp (CompilerInternal f, es) ->
       lower_compiler_internal meta.adlevel meta.type_ f es
-  | FunApp (StanLib (f, suffix, mem_pattern), es) ->
-      let ret_type = Some (UnsizedType.ReturnType meta.type_) in
-      lower_fun_app suffix f es mem_pattern ret_type
+  | FunApp (StanLib (f, suffix), es) -> lower_fun_app suffix f es
   | FunApp (UserDefined (f, suffix), es) -> lower_user_defined_fun f suffix es
   | Indexed (e, []) -> lower_expr e
   | Indexed (e, idx) -> (
@@ -618,21 +595,20 @@ module Testing = struct
     [%expect {| 112 |}]
 
   let%expect_test "pp_expr5" =
-    print_string (pp_unlocated (FunApp (StanLib ("pi", FnPlain, AoS), [])));
+    print_string (pp_unlocated (FunApp (StanLib ("pi", FnPlain), [])));
     [%expect {| stan::math::pi() |}]
 
   let%expect_test "pp_expr6" =
     print_string
       (pp_unlocated
-         (FunApp
-            (StanLib ("sqrt", FnPlain, AoS), [dummy_locate (Lit (Int, "123"))])));
+         (FunApp (StanLib ("sqrt", FnPlain), [dummy_locate (Lit (Int, "123"))])));
     [%expect {| stan::math::sqrt(123) |}]
 
   let%expect_test "pp_expr7" =
     print_string
       (pp_unlocated
          (FunApp
-            ( StanLib ("atan", FnPlain, AoS)
+            ( StanLib ("atan", FnPlain)
             , [dummy_locate (Lit (Int, "123")); dummy_locate (Lit (Real, "1.2"))]
             )));
     [%expect {| stan::math::atan(123, 1.2) |}]

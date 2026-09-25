@@ -268,12 +268,11 @@ let rec inline_function_expression propto adt fim (Expr.{pattern; _} as e) =
       match kind with
       | CompilerInternal _ | Operator _ ->
           (d_list, s_list, {e with pattern= FunApp (kind, es)})
-      | StanLib (fname, suffix, mem) ->
+      | StanLib (fname, suffix) ->
           let suffix, _ = compute_suffix_and_name propto suffix fname in
           ( d_list
           , s_list
-          , {e with pattern= FunApp (Fun_kind.StanLib (fname, suffix, mem), es)}
-          )
+          , {e with pattern= FunApp (Fun_kind.StanLib (fname, suffix), es)} )
       | UserDefined (fname, suffix) -> (
           let suffix, fname' = compute_suffix_and_name propto suffix fname in
           match String.Map.find_opt fname' fim with
@@ -668,8 +667,7 @@ let elementwise_operator = function
 
 let expr_reads_target =
   expr_any (function
-    | { pattern=
-          FunApp ((UserDefined (_, FnTarget) | StanLib (_, FnTarget, _)), _)
+    | { pattern= FunApp ((UserDefined (_, FnTarget) | StanLib (_, FnTarget)), _)
       ; _ } ->
         true
     | _ -> false)
@@ -746,7 +744,7 @@ let vectorized_for (meta : Stmt.Located.Meta.t) (conflict_info : conflicts)
             match make_op op with
             | Error -> make_op (elementwise_operator op)
             | r -> r))
-    | FunApp (StanLib (name, FnPlain, mem), args) -> (
+    | FunApp (StanLib (name, FnPlain), args) -> (
         match widen_all args with
         | Error -> Error
         | Scalar args' | Widened args' -> (
@@ -756,7 +754,7 @@ let vectorized_for (meta : Stmt.Located.Meta.t) (conflict_info : conflicts)
                    ((UVector | URowVector | UArray (UInt | UReal)) as type_)) ->
                 Widened
                   Expr.
-                    { pattern= FunApp (StanLib (name, FnPlain, mem), args')
+                    { pattern= FunApp (StanLib (name, FnPlain), args')
                     ; meta= {e.meta with type_} }
             | _ -> Error))
     | _ -> Error
@@ -814,16 +812,14 @@ let vectorized_for (meta : Stmt.Located.Meta.t) (conflict_info : conflicts)
           | stmts -> Profile (name, stmts) |> swrap_opt ))
     | TargetPE
         ({ pattern=
-             FunApp
-               (StanLib (name, ((FnLpdf _ | FnLpmf _) as suffix), mem), args)
+             FunApp (StanLib (name, ((FnLpdf _ | FnLpmf _) as suffix)), args)
          ; _ } as e)
       when (not conflict_info.target) && can_vectorize_expr e -> (
         match widen_all args with
         | Error -> dont_vectorize
         | Scalar args' ->
             let funapp =
-              {e with pattern= FunApp (StanLib (name, suffix, mem), args')}
-            in
+              {e with pattern= FunApp (StanLib (name, suffix), args')} in
             ( TargetPE
                 Expr.Helpers.(
                   binop (binop upper Minus (binop lower Minus one)) Times funapp)
@@ -833,8 +829,7 @@ let vectorized_for (meta : Stmt.Located.Meta.t) (conflict_info : conflicts)
             match Partial_evaluator.stan_math_return_type name args'' with
             | Some (ReturnType UReal) ->
                 ( TargetPE
-                    { e with
-                      pattern= FunApp (StanLib (name, suffix, mem), args'') }
+                    {e with pattern= FunApp (StanLib (name, suffix), args'')}
                   |> swrap_vec
                 , None )
             | _ -> dont_vectorize))

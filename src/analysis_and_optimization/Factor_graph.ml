@@ -45,7 +45,7 @@ let extract_factors_statement stmt =
   | Stmt.Pattern.TargetPE e | JacobianPE e ->
       List.map (summation_terms e) ~f:(fun x -> TargetTerm x)
   | NRFunApp (CompilerInternal (FnReject | FnFatalError), _) -> [Reject]
-  | NRFunApp ((UserDefined (s, FnTarget) | StanLib (s, FnTarget, _)), args) ->
+  | NRFunApp ((UserDefined (s, FnTarget) | StanLib (s, FnTarget)), args) ->
       [LPFunction (s, args)]
   | Assignment (_, _, _)
    |NRFunApp (_, _)

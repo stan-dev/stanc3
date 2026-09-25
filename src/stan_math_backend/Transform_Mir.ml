@@ -57,7 +57,7 @@ let break_eigen_cycles functions_block =
     let rec is_potentially_recursive = function
       | {pattern= Var name; _} -> String.Set.mem name fun_args
       | {pattern= Indexed (e, _); _} -> is_potentially_recursive e
-      | {pattern= FunApp (StanLib (fname, _, _), e :: _); _} ->
+      | {pattern= FunApp (StanLib (fname, _), e :: _); _} ->
           String.Set.mem fname eigen_block_expr_fns
           && is_potentially_recursive e
       | _ -> false in
@@ -67,9 +67,7 @@ let break_eigen_cycles functions_block =
         List.fold_left_map ~init:false
           ~f:(fun is_rec e ->
             if is_potentially_recursive e then
-              ( true
-              , {e with pattern= FunApp (StanLib ("eval", FnPlain, AoS), [e])}
-              )
+              (true, {e with pattern= FunApp (StanLib ("eval", FnPlain), [e])})
             else (is_rec, e))
           args in
       if not can_recurse then args
@@ -91,7 +89,7 @@ let break_eigen_cycles functions_block =
           {e with pattern= FunApp (kind, map_args name args)}
       | { pattern=
             FunApp
-              ( (StanLib (_, _, _) as kind)
+              ( (StanLib (_, _) as kind)
               , ({pattern= Var name; meta= {type_= UFun _; _}} as f) :: args )
         ; _ } as e ->
           (* higher-order function -- just pretend it's a direct call *)
@@ -173,7 +171,7 @@ let opencl_supported_functions =
 let opencl_suffix = "_opencl__"
 
 let to_matrix_cl e =
-  Expr.{e with pattern= FunApp (StanLib ("to_matrix_cl", FnPlain, AoS), [e])}
+  Expr.{e with pattern= FunApp (StanLib ("to_matrix_cl", FnPlain), [e])}
 
 let rec switch_expr_to_opencl available_cl_vars (Expr.{pattern; _} as e) =
   let is_avail = List.mem ~set:available_cl_vars in
@@ -193,12 +191,9 @@ let rec switch_expr_to_opencl available_cl_vars (Expr.{pattern; _} as e) =
     | None | Some _ -> List.map args ~f:to_cl in
   let is_fn_opencl_supported f = String.Set.mem f opencl_supported_functions in
   match pattern with
-  | FunApp (StanLib (f, sfx, mem_pattern), args) when is_fn_opencl_supported f
-    ->
+  | FunApp (StanLib (f, sfx), args) when is_fn_opencl_supported f ->
       let trigger = String.Map.find_opt f opencl_trigger_restrictions in
-      { e with
-        pattern=
-          FunApp (StanLib (f, sfx, mem_pattern), maybe_map_args args trigger) }
+      {e with pattern= FunApp (StanLib (f, sfx), maybe_map_args args trigger)}
   | x ->
       { e with
         pattern= Expr.Pattern.map (switch_expr_to_opencl available_cl_vars) x }
@@ -1008,7 +1003,7 @@ let%expect_test "collect vars expr" =
   let args = List.map ~f:mkvar ["y"; "x_opencl__"; "z"; "w_opencl__"] in
   let fnapp =
     Expr.
-      { pattern= FunApp (StanLib ("print", FnPlain, AoS), args)
+      { pattern= FunApp (StanLib ("print", FnPlain), args)
       ; meta= Typed.Meta.empty } in
   let open Sexp_conv in
   Stmt.{pattern= TargetPE fnapp; meta= Location_span.empty}
