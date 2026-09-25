@@ -378,18 +378,28 @@ module Dependence = struct
         | Some restricted -> Dependent restricted
         | None -> Independent)
 
-  (** The [join] of [restrict] over the pairs from [source] to [sink], where an
-      increment pairs with either use but never with another increment. *)
+  type kind = Flow | Anti | Output
+
+  (** The accesses a [kind] dependence starts from, not counting increments. *)
+  let source_uses (kind : kind) (accesses : 'index Accesses.t) :
+      'index access list =
+    match kind with Flow | Output -> accesses.writes | Anti -> accesses.reads
+
+  (** The accesses a [kind] dependence ends at, not counting increments. *)
+  let sink_uses (kind : kind) (accesses : 'index Accesses.t) :
+      'index access list =
+    match kind with Flow -> accesses.reads | Anti | Output -> accesses.writes
+
+  (** The [join] of [restrict] over the [kind] pairs from [source] to [sink],
+      where an increment pairs as either use but not with an increment. *)
   let between (common_loopvars : string option list) ~(restrict : t -> t)
-      ~(source_uses : point Accesses.t -> point access list)
-      ~(sink_uses : point Accesses.t -> point access list)
-      (source : point Accesses.t) (sink : point Accesses.t) : t =
-    let pairs sources sinks =
-      List.concat_map sources ~f:(fun source_access ->
-          List.map sinks ~f:(fun sink_access -> (source_access, sink_access)))
-    in
-    let sources = source_uses source in
-    let sinks = sink_uses sink in
+      (kind : kind) (source : point Accesses.t) (sink : point Accesses.t) : t =
+    let pairs source_list sink_list =
+      List.concat_map source_list ~f:(fun source_access ->
+          List.map sink_list ~f:(fun sink_access ->
+              (source_access, sink_access))) in
+    let sources = source_uses kind source in
+    let sinks = sink_uses kind sink in
     if
       List.is_empty (sources @ source.increments)
       || List.is_empty (sinks @ sink.increments)
@@ -445,41 +455,41 @@ let accesses_at (statement_map : dep_info_map) (label : label) :
     point Accesses.t =
   (snd (LabelMap.find label statement_map)).accesses
 
-(** The labels in [sources] that may touch an element that [dst_accesses] touch,
-    each paired with the dependence. *)
+(** The labels in [sources] with a [kind] dependence into [dst_accesses], each
+    paired with the dependence, where [None] accesses are [Unknown]. *)
 let overlapping_sources (statement_map : dep_info_map) ~(dst : label)
-    ~(sources : label Set.Poly.t)
     ~(restrict : src:label -> Dependence.t -> Dependence.t)
-    ~(source_uses : point Accesses.t -> point access list)
-    ~(sink_uses : point Accesses.t -> point access list)
-    ~(src_accesses : label -> point Accesses.t)
-    ~(dst_accesses : point Accesses.t) : (label * Dependence.t) list =
-  List.filter_map (Set.Poly.to_list sources) ~f:(fun src ->
-      if src = root_label || not (LabelMap.mem src statement_map) then
-        Some (src, Dependence.Unknown)
-      else
-        match
-          Dependence.between
-            (common_loopvars statement_map ~src ~dst)
-            ~restrict:(restrict ~src) ~source_uses ~sink_uses (src_accesses src)
-            dst_accesses
-        with
-        | Independent -> None
-        | (Unknown | Dependent _) as dep -> Some (src, dep))
+    (kind : Dependence.kind) ~(sources : (label * point Accesses.t option) list)
+    (dst_accesses : point Accesses.t) : (label * Dependence.t) list =
+  List.filter_map sources ~f:(fun (src, src_accesses) ->
+      match src_accesses with
+      | None -> Some (src, Dependence.Unknown)
+      | Some known -> (
+          match
+            Dependence.between
+              (common_loopvars statement_map ~src ~dst)
+              ~restrict:(restrict ~src) kind known dst_accesses
+          with
+          | Independent -> None
+          | (Unknown | Dependent _) as dep -> Some (src, dep)))
 
 (** The statements whose writes to [var] [dst] may read, the sources of the flow
     dependences into [dst] (Allen and Kennedy 1987). *)
 let writes_read_by (statement_map : dep_info_map) ~(dst : label) (var : string)
     : label Set.Poly.t =
   let _, info = LabelMap.find dst statement_map in
-  overlapping_sources statement_map ~dst
-    ~sources:(reaching_defn_lookup info.reaching_defn_entry var)
-    ~restrict:(Dependence.ordered ~dst)
-    ~source_uses:(fun accesses -> accesses.writes)
-    ~sink_uses:(fun accesses -> accesses.reads)
-    ~src_accesses:(fun src ->
-      Accesses.of_var var (accesses_at statement_map src))
-    ~dst_accesses:(Accesses.of_var var info.accesses)
+  (* a definition from outside the analysed statement has unknown accesses *)
+  let sources =
+    List.map
+      (Set.Poly.to_list (reaching_defn_lookup info.reaching_defn_entry var))
+      ~f:(fun src ->
+        ( src
+        , if src = root_label || not (LabelMap.mem src statement_map) then None
+          else Some (Accesses.of_var var (accesses_at statement_map src)) ))
+  in
+  overlapping_sources statement_map ~dst ~restrict:(Dependence.ordered ~dst)
+    Flow ~sources
+    (Accesses.of_var var info.accesses)
   |> List.map ~f:fst |> Set.Poly.of_list
 
 (** The variables the statement reads or increments, including the variables

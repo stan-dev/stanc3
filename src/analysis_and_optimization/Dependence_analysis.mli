@@ -76,6 +76,12 @@ module Dependence : sig
     | Dependent of level list
         (** The accesses may touch the same element, with one [level] per common
             loop, outermost first (Allen and Kennedy 1987). *)
+
+  (** Which uses a dependence connects, as named by Kuck (1978). *)
+  type kind =
+    | Flow  (** A write, then a read of the written element. *)
+    | Anti  (** A read, then a write of the read element. *)
+    | Output  (** Two writes of one element. *)
 end
 
 (** {1 The dependency information} *)
