@@ -78,23 +78,21 @@ let rec get_dims_io st =
           [pp Expr.Typed.pp $ st]) [@coverage off]
 
 let rec io_size st =
-  let two = Expr.Helpers.int 2 in
+  let open Expr.Helpers in
+  (* Complex values are size-2 for output purposes, but size-1 when reading from
+     the array from var_context, for example *)
+  let two = int 2 in
   match st with
-  | SInt | SReal -> Expr.Helpers.one
+  | SInt | SReal -> one
   | STuple subtypes ->
-      Expr.Helpers.binop_list
-        (List.map ~f:io_size subtypes)
-        Operator.Plus ~default:Expr.Helpers.zero
+      binop_list (List.map ~f:io_size subtypes) Plus ~default:zero
   | SComplex -> two
   | SVector (_, d) | SRowVector (_, d) -> d
-  | SMatrix (_, dim1, dim2) -> Expr.Helpers.binop dim1 Operator.Times dim2
-  | SComplexVector d | SComplexRowVector d ->
-      Expr.Helpers.binop d Operator.Times two
-  | SComplexMatrix (dim1, dim2) ->
-      Expr.Helpers.binop dim1 Operator.Times
-        (Expr.Helpers.binop dim2 Operator.Times two)
+  | SMatrix (_, dim1, dim2) -> binop dim1 Times dim2
+  | SComplexVector d | SComplexRowVector d -> binop d Times two
+  | SComplexMatrix (dim1, dim2) -> binop dim1 Times (binop dim2 Times two)
   | SArray ((SReal | SInt), dim) -> dim
-  | SArray (t, dim) -> Expr.Helpers.binop dim Operator.Times (io_size t)
+  | SArray (t, dim) -> binop dim Times (io_size t)
 
 (** Get the dimensions of an object. {b Note}: Tuples are treated as scalars by
     this function due to the inherent assumption of rectangularity. Carefully

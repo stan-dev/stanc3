@@ -7,6 +7,8 @@ data {
   array[3] tuple(int, array[4] tuple(real, vector[5])) arr_tuple_arr_tuple;
   array[3] tuple(int, array[4]
                  tuple(real, array[5] tuple(complex, matrix[6, 7]))) very_deep;
+
+  array[2] tuple(int, array[2] tuple(real, array[3] complex_vector[2])) complex_vector_deep;
 }
 parameters {
   tuple(array[10] real, real) basic_p;
@@ -17,4 +19,5 @@ parameters {
   array[3] tuple(real, array[4] tuple(real, vector[5])) arr_tuple_arr_tuple_p;
   array[3] tuple(real, array[4]
                  tuple(real, array[5] tuple(complex, matrix[6, 7]))) very_deep_p;
+  array[2] tuple(real, array[2] tuple(real, array[3] complex_vector[2])) complex_vector_deep_p;
 }
