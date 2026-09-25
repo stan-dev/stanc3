@@ -68,13 +68,16 @@ let classify_point ~(loopvars : string Set.Poly.t)
     | Lit (Int, digits) -> (
         match Int.of_string_opt digits with
         | Some const -> Affine {const; symbol= None; loopvar= None}
-        | None -> symbolic subexpr)
-    | Promotion (inner, _, _) -> classify inner
+        (* the frontend rejects an integer literal that does not fit an int *)
+        | None -> symbolic subexpr [@coverage off])
     | FunApp (Operator Plus, [lhs; rhs]) -> combine linear_add lhs rhs
     | FunApp (Operator Minus, [lhs; rhs]) -> combine linear_subtract lhs rhs
-    | Var _ | Lit _ | FunApp _ | TernaryIf _ | EAnd _ | EOr _ | Indexed _
+    | Var _ | FunApp _ | TernaryIf _ | EAnd _ | EOr _ | Indexed _
      |TupleProjection _ ->
-        symbolic subexpr in
+        symbolic subexpr
+    (* an integer index holds no other literal, and a promotion only makes a
+       real or a complex value *)
+    | Lit _ | Promotion _ -> symbolic subexpr [@coverage off] in
   classify expr
 
 (** Building and classifying the [step list] that leads from a variable to the
@@ -106,7 +109,9 @@ module Path = struct
     | Indexed (base, indices) ->
         extend base (List.map indices ~f:(fun index -> Subscript index))
     | TupleProjection (base, field) -> extend base [Field field]
-    | Lit _ | FunApp _ | TernaryIf _ | EAnd _ | EOr _ | Promotion _ -> None
+    | FunApp _ | TernaryIf _ -> None
+    (* a literal, a boolean and a promotion are never indexed *)
+    | Lit _ | EAnd _ | EOr _ | Promotion _ -> None [@coverage off]
 
   (** The path of the left side of an assignment, so [x[i].2[j] = ...] gives the
       steps [i], [.2] and [j]. *)
@@ -478,13 +483,14 @@ let overlapping_sources (statement_map : dep_info_map) ~(dst : label)
 let writes_read_by (statement_map : dep_info_map) ~(dst : label) (var : string)
     : label Set.Poly.t =
   let _, info = LabelMap.find dst statement_map in
-  (* a definition from outside the analysed statement has unknown accesses *)
+  (* a definition from outside the analysed statement is recorded at
+     [root_label] and has unknown accesses *)
   let sources =
     List.map
       (Set.Poly.to_list (reaching_defn_lookup info.reaching_defn_entry var))
       ~f:(fun src ->
         ( src
-        , if src = root_label || not (LabelMap.mem src statement_map) then None
+        , if src = root_label then None
           else Some (Accesses.of_var var (accesses_at statement_map src)) ))
   in
   overlapping_sources statement_map ~dst ~restrict:(Dependence.ordered ~dst)
