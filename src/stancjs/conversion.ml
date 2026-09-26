@@ -2,6 +2,12 @@ open Std
 open Frontend
 open Js_of_ocaml
 
+let throw_error s =
+  new%js Js.error_constr (Js.string s) |> Js_error.of_error |> Js_error.raise_
+
+let res_or_throw (e : ('a, string) Result.t) : 'a =
+  match e with Ok r -> r | Error s -> throw_error s
+
 let typecheck e typ = String.equal (Js.to_string (Js.typeof e)) typ
 
 let bad_arg_message ~name ~expected value =
@@ -28,7 +34,8 @@ let checked_to_array ~name value =
          (Js.typeof value |> Js.to_string))
   else Ok (Js.to_array value)
 
-let get_includes_lenient includes : string String.Map.t * string list =
+let get_includes_lenient includes :
+    string String.Map.t * 'a Grace.Diagnostic.t list =
   let open Result.Syntax in
   let map, warnings =
     match Js.Opt.to_option includes with
@@ -55,10 +62,18 @@ let get_includes_lenient includes : string String.Map.t * string list =
         , warnings ) in
   ( map
   , List.map
-      ~f:
-        (Fmt.str
-           "@[<v>Warning: stanc.js failed to parse included file mapping:@ %s@]")
+      ~f:(fun w ->
+        Grace.Diagnostic.(
+          create Warning
+            (Message.createf
+               "@[<v>stanc.js failed to parse included file mapping:@ %s@]" w)))
       warnings )
+
+let get_includes includes =
+  let includes, include_reader_warnings = get_includes_lenient includes in
+  List.iter include_reader_warnings ~f:(fun d ->
+      Fmt.str "%a" Diagnostic.pp_compact d |> throw_error);
+  includes
 
 type flags =
   {name: string; code: string; driver_flags: Driver.Flags.t; color_output: bool}
@@ -180,10 +195,12 @@ class type stancReturn = object
   method warnings : Js.js_string Js.t Js.js_array Js.t Js.readonly_prop
 end
 
-let js_of_warnings warnings =
-  warnings |> List.map ~f:Js.string |> Array.of_list |> Js.array
+let js_of_warnings ~color_output warnings =
+  let js_of_warning w =
+    Js.string (str_color ~color_output "%a" Diagnostic.pp_compact w) in
+  warnings |> List.map ~f:js_of_warning |> Array.of_list |> Js.array
 
-let wrap_error ~warnings e =
+let wrap_error ~color_output ~warnings e =
   (* NB: The "0" entry is due to a historical mistake that led the first entry
      always being a 0 (this element is a 'tag' used by jsoo internally, but was
      not meant to be exposed to the user). For backward compatibility with
@@ -192,7 +209,7 @@ let wrap_error ~warnings e =
   object%js
     val result = Js.undefined [@@optdef]
     val errors = Js.def errors [@@optdef]
-    val warnings = js_of_warnings warnings
+    val warnings = js_of_warnings ~color_output warnings
   end
 
 let wrap_result ?printed_filename ~code ~color_output ~warnings res =
@@ -201,9 +218,31 @@ let wrap_result ?printed_filename ~code ~color_output ~warnings res =
       object%js
         val result = Js.def (Js.string s) [@@optdef]
         val errors = Js.undefined [@@optdef]
-        val warnings = js_of_warnings warnings
+        val warnings = js_of_warnings ~color_output warnings
       end
   | Error e ->
       let e =
         str_color ~color_output "%a" (Errors.pp ?printed_filename ~code) e in
-      wrap_error ~warnings e
+      wrap_error ~color_output ~warnings e
+
+(* structured outputs from newer entrypoints *)
+
+let rec js_of_yojson (t : Yojson.Basic.t) : Js.Unsafe.any =
+  match t with
+  | `Null -> Js.Unsafe.pure_js_expr "null"
+  | `Int i -> i |> Js.Unsafe.inject
+  | `Bool b -> Js.bool b |> Js.Unsafe.coerce
+  | `Float f -> Js.number_of_float f |> Js.Unsafe.coerce
+  | `String s -> Js.string s |> Js.Unsafe.coerce
+  | `List l ->
+      List.map ~f:js_of_yojson l |> Array.of_list |> Js.array
+      |> Js.Unsafe.coerce
+  | `Assoc kvs ->
+      let kvs =
+        List.map ~f:(fun (k, v) -> (k, js_of_yojson v)) kvs |> Array.of_list
+      in
+      Js.Unsafe.obj kvs
+
+let json_of_diagnostics diags : 'a Js.t Js.js_array Js.t =
+  let js_of_diagnostic d = js_of_yojson (Grace_json_conv.json_of_diagnostic d) in
+  List.map ~f:js_of_diagnostic diags |> Array.of_list |> Js.array
