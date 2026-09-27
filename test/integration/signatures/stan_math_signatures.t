@@ -3693,6 +3693,8 @@ Display all Stan math signatures exposed in the language
   cumulative_sum(array[] int) => array[] int
   cumulative_sum(array[] real) => array[] real
   cumulative_sum(array[] complex) => array[] complex
+  dae(function(real, vector, vector, ...) => vector, vector, vector, real, array[] real, ...) => array[] vector
+  dae_tol(function(real, vector, vector, ...) => vector, vector, vector, real, array[] real, real, real, int, ...) => array[] vector
   determinant(matrix) => real
   diag_matrix(vector) => matrix
   diag_matrix(complex_vector) => complex_matrix
@@ -8181,6 +8183,10 @@ Display all Stan math signatures exposed in the language
   int_step(real) => int
   integrate_1d((real, real, array[] real, data array[] real, data array[] int) => real, real, real, array[] real, array[] real, array[] int) => real
   integrate_1d((real, real, array[] real, data array[] real, data array[] int) => real, real, real, array[] real, array[] real, array[] int, real) => real
+  integrate_1d_double_exponential(function(real, real, ...) => real, real, real, ...) => real
+  integrate_1d_double_exponential_tol(function(real, real, ...) => real, real, real, real, real, int, ...) => real
+  integrate_1d_gauss_kronrod(function(real, real, ...) => real, real, real, ...) => real
+  integrate_1d_gauss_kronrod_tol(function(real, real, ...) => real, real, real, real, real, int, ...) => real
   integrate_ode((real, array[] real, array[] real, data array[] real, data array[] int) => array[] real, array[] real, real, array[] real, array[] real, array[] real, array[] int) => array[,] real
   integrate_ode_adams((real, array[] real, array[] real, data array[] real, data array[] int) => array[] real, array[] real, real, array[] real, array[] real, array[] real, array[] int) => array[,] real
   integrate_ode_adams((real, array[] real, array[] real, data array[] real, data array[] int) => array[] real, array[] real, real, array[] real, array[] real, array[] real, array[] int, real, real, real) => array[,] real
@@ -8921,6 +8927,24 @@ Display all Stan math signatures exposed in the language
   lambert_wm1(array[,,,,,,] vector) => array[,,,,,,] vector
   lambert_wm1(array[,,,,,,] row_vector) => array[,,,,,,] row_vector
   lambert_wm1(array[,,,,,,] matrix) => array[,,,,,,] matrix
+  laplace_latent_bernoulli_logit_rng(array[] int, array[] int, vector, int, function(...) => matrix, tuple(...)) => vector
+  laplace_latent_neg_binomial_2_log_rng(array[] int, array[] int, vector, vector, int, function(...) => matrix, tuple(...)) => vector
+  laplace_latent_poisson_log_rng(array[] int, array[] int, vector, int, function(...) => matrix, tuple(...)) => vector
+  laplace_latent_rng(function(vector, ...) => real, tuple(...), int, function(...) => matrix, tuple(...)) => vector
+  laplace_latent_solve(function(vector, ...) => real, tuple(...), int, function(...) => matrix, tuple(...)) => tuple(vector, matrix)
+  laplace_latent_solve_tol(function(vector, ...) => real, tuple(...), int, function(...) => matrix, tuple(...), tuple(vector, real, int, int, int, int)) => tuple(vector, matrix)
+  laplace_latent_tol_bernoulli_logit_rng(array[] int, array[] int, vector, int, function(...) => matrix, tuple(...), tuple(vector, real, int, int, int, int)) => vector
+  laplace_latent_tol_neg_binomial_2_log_rng(array[] int, array[] int, vector, vector, int, function(...) => matrix, tuple(...), tuple(vector, real, int, int, int, int)) => vector
+  laplace_latent_tol_poisson_log_rng(array[] int, array[] int, vector, int, function(...) => matrix, tuple(...), tuple(vector, real, int, int, int, int)) => vector
+  laplace_latent_tol_rng(function(vector, ...) => real, tuple(...), int, function(...) => matrix, tuple(...), tuple(vector, real, int, int, int, int)) => vector
+  laplace_marginal(function(vector, ...) => real, tuple(...), int, function(...) => matrix, tuple(...)) => real
+  laplace_marginal_bernoulli_logit_lpmf(array[] int, array[] int, vector, int, function(...) => matrix, tuple(...)) => real
+  laplace_marginal_neg_binomial_2_log_lpmf(array[] int, array[] int, vector, vector, int, function(...) => matrix, tuple(...)) => real
+  laplace_marginal_poisson_log_lpmf(array[] int, array[] int, vector, int, function(...) => matrix, tuple(...)) => real
+  laplace_marginal_tol(function(vector, ...) => real, tuple(...), int, function(...) => matrix, tuple(...), tuple(vector, real, int, int, int, int)) => real
+  laplace_marginal_tol_bernoulli_logit_lpmf(array[] int, array[] int, vector, int, function(...) => matrix, tuple(...), tuple(vector, real, int, int, int, int)) => real
+  laplace_marginal_tol_neg_binomial_2_log_lpmf(array[] int, array[] int, vector, vector, int, function(...) => matrix, tuple(...), tuple(vector, real, int, int, int, int)) => real
+  laplace_marginal_tol_poisson_log_lpmf(array[] int, array[] int, vector, int, function(...) => matrix, tuple(...), tuple(vector, real, int, int, int, int)) => real
   lbeta(int, int) => real
   lbeta(int, real) => real
   lbeta(int, vector) => vector
@@ -13935,6 +13959,15 @@ Display all Stan math signatures exposed in the language
   num_elements(array[,,,,,,,,] complex_vector) => int
   num_elements(array[,,,,,,,,] complex_row_vector) => int
   num_elements(array[,,,,,,,,] complex_matrix) => int
+  ode_adams(function(real, vector, ...) => vector, vector, real, array[] real, ...) => array[] vector
+  ode_adams_tol(function(real, vector, ...) => vector, vector, real, array[] real, real, real, int, ...) => array[] vector
+  ode_adjoint_tol_ctl(function(real, vector, ...) => vector, vector, real, array[] real, real, vector, real, vector, real, real, int, int, int, int, int, ...) => array[] vector
+  ode_bdf(function(real, vector, ...) => vector, vector, real, array[] real, ...) => array[] vector
+  ode_bdf_tol(function(real, vector, ...) => vector, vector, real, array[] real, real, real, int, ...) => array[] vector
+  ode_ckrk(function(real, vector, ...) => vector, vector, real, array[] real, ...) => array[] vector
+  ode_ckrk_tol(function(real, vector, ...) => vector, vector, real, array[] real, real, real, int, ...) => array[] vector
+  ode_rk45(function(real, vector, ...) => vector, vector, real, array[] real, ...) => array[] vector
+  ode_rk45_tol(function(real, vector, ...) => vector, vector, real, array[] real, real, real, int, ...) => array[] vector
   offset_multiplier_constrain(real, real, real) => real
   offset_multiplier_constrain(vector, real, real) => vector
   offset_multiplier_constrain(vector, real, vector) => vector
@@ -16518,6 +16551,76 @@ Display all Stan math signatures exposed in the language
   rayleigh_rng(row_vector) => array[] real
   rayleigh_rng(array[] int) => array[] real
   rayleigh_rng(array[] real) => array[] real
+  reduce_sum(function(array[] real, data int, data int, ...) => real, array[] real, int, ...) => real
+  reduce_sum(function(array[] int, data int, data int, ...) => real, array[] int, int, ...) => real
+  reduce_sum(function(array[] matrix, data int, data int, ...) => real, array[] matrix, int, ...) => real
+  reduce_sum(function(array[] vector, data int, data int, ...) => real, array[] vector, int, ...) => real
+  reduce_sum(function(array[] row_vector, data int, data int, ...) => real, array[] row_vector, int, ...) => real
+  reduce_sum(function(array[,] real, data int, data int, ...) => real, array[,] real, int, ...) => real
+  reduce_sum(function(array[,] int, data int, data int, ...) => real, array[,] int, int, ...) => real
+  reduce_sum(function(array[,] matrix, data int, data int, ...) => real, array[,] matrix, int, ...) => real
+  reduce_sum(function(array[,] vector, data int, data int, ...) => real, array[,] vector, int, ...) => real
+  reduce_sum(function(array[,] row_vector, data int, data int, ...) => real, array[,] row_vector, int, ...) => real
+  reduce_sum(function(array[,,] real, data int, data int, ...) => real, array[,,] real, int, ...) => real
+  reduce_sum(function(array[,,] int, data int, data int, ...) => real, array[,,] int, int, ...) => real
+  reduce_sum(function(array[,,] matrix, data int, data int, ...) => real, array[,,] matrix, int, ...) => real
+  reduce_sum(function(array[,,] vector, data int, data int, ...) => real, array[,,] vector, int, ...) => real
+  reduce_sum(function(array[,,] row_vector, data int, data int, ...) => real, array[,,] row_vector, int, ...) => real
+  reduce_sum(function(array[,,,] real, data int, data int, ...) => real, array[,,,] real, int, ...) => real
+  reduce_sum(function(array[,,,] int, data int, data int, ...) => real, array[,,,] int, int, ...) => real
+  reduce_sum(function(array[,,,] matrix, data int, data int, ...) => real, array[,,,] matrix, int, ...) => real
+  reduce_sum(function(array[,,,] vector, data int, data int, ...) => real, array[,,,] vector, int, ...) => real
+  reduce_sum(function(array[,,,] row_vector, data int, data int, ...) => real, array[,,,] row_vector, int, ...) => real
+  reduce_sum(function(array[,,,,] real, data int, data int, ...) => real, array[,,,,] real, int, ...) => real
+  reduce_sum(function(array[,,,,] int, data int, data int, ...) => real, array[,,,,] int, int, ...) => real
+  reduce_sum(function(array[,,,,] matrix, data int, data int, ...) => real, array[,,,,] matrix, int, ...) => real
+  reduce_sum(function(array[,,,,] vector, data int, data int, ...) => real, array[,,,,] vector, int, ...) => real
+  reduce_sum(function(array[,,,,] row_vector, data int, data int, ...) => real, array[,,,,] row_vector, int, ...) => real
+  reduce_sum(function(array[,,,,,] real, data int, data int, ...) => real, array[,,,,,] real, int, ...) => real
+  reduce_sum(function(array[,,,,,] int, data int, data int, ...) => real, array[,,,,,] int, int, ...) => real
+  reduce_sum(function(array[,,,,,] matrix, data int, data int, ...) => real, array[,,,,,] matrix, int, ...) => real
+  reduce_sum(function(array[,,,,,] vector, data int, data int, ...) => real, array[,,,,,] vector, int, ...) => real
+  reduce_sum(function(array[,,,,,] row_vector, data int, data int, ...) => real, array[,,,,,] row_vector, int, ...) => real
+  reduce_sum(function(array[,,,,,,] real, data int, data int, ...) => real, array[,,,,,,] real, int, ...) => real
+  reduce_sum(function(array[,,,,,,] int, data int, data int, ...) => real, array[,,,,,,] int, int, ...) => real
+  reduce_sum(function(array[,,,,,,] matrix, data int, data int, ...) => real, array[,,,,,,] matrix, int, ...) => real
+  reduce_sum(function(array[,,,,,,] vector, data int, data int, ...) => real, array[,,,,,,] vector, int, ...) => real
+  reduce_sum(function(array[,,,,,,] row_vector, data int, data int, ...) => real, array[,,,,,,] row_vector, int, ...) => real
+  reduce_sum_static(function(array[] real, data int, data int, ...) => real, array[] real, int, ...) => real
+  reduce_sum_static(function(array[] int, data int, data int, ...) => real, array[] int, int, ...) => real
+  reduce_sum_static(function(array[] matrix, data int, data int, ...) => real, array[] matrix, int, ...) => real
+  reduce_sum_static(function(array[] vector, data int, data int, ...) => real, array[] vector, int, ...) => real
+  reduce_sum_static(function(array[] row_vector, data int, data int, ...) => real, array[] row_vector, int, ...) => real
+  reduce_sum_static(function(array[,] real, data int, data int, ...) => real, array[,] real, int, ...) => real
+  reduce_sum_static(function(array[,] int, data int, data int, ...) => real, array[,] int, int, ...) => real
+  reduce_sum_static(function(array[,] matrix, data int, data int, ...) => real, array[,] matrix, int, ...) => real
+  reduce_sum_static(function(array[,] vector, data int, data int, ...) => real, array[,] vector, int, ...) => real
+  reduce_sum_static(function(array[,] row_vector, data int, data int, ...) => real, array[,] row_vector, int, ...) => real
+  reduce_sum_static(function(array[,,] real, data int, data int, ...) => real, array[,,] real, int, ...) => real
+  reduce_sum_static(function(array[,,] int, data int, data int, ...) => real, array[,,] int, int, ...) => real
+  reduce_sum_static(function(array[,,] matrix, data int, data int, ...) => real, array[,,] matrix, int, ...) => real
+  reduce_sum_static(function(array[,,] vector, data int, data int, ...) => real, array[,,] vector, int, ...) => real
+  reduce_sum_static(function(array[,,] row_vector, data int, data int, ...) => real, array[,,] row_vector, int, ...) => real
+  reduce_sum_static(function(array[,,,] real, data int, data int, ...) => real, array[,,,] real, int, ...) => real
+  reduce_sum_static(function(array[,,,] int, data int, data int, ...) => real, array[,,,] int, int, ...) => real
+  reduce_sum_static(function(array[,,,] matrix, data int, data int, ...) => real, array[,,,] matrix, int, ...) => real
+  reduce_sum_static(function(array[,,,] vector, data int, data int, ...) => real, array[,,,] vector, int, ...) => real
+  reduce_sum_static(function(array[,,,] row_vector, data int, data int, ...) => real, array[,,,] row_vector, int, ...) => real
+  reduce_sum_static(function(array[,,,,] real, data int, data int, ...) => real, array[,,,,] real, int, ...) => real
+  reduce_sum_static(function(array[,,,,] int, data int, data int, ...) => real, array[,,,,] int, int, ...) => real
+  reduce_sum_static(function(array[,,,,] matrix, data int, data int, ...) => real, array[,,,,] matrix, int, ...) => real
+  reduce_sum_static(function(array[,,,,] vector, data int, data int, ...) => real, array[,,,,] vector, int, ...) => real
+  reduce_sum_static(function(array[,,,,] row_vector, data int, data int, ...) => real, array[,,,,] row_vector, int, ...) => real
+  reduce_sum_static(function(array[,,,,,] real, data int, data int, ...) => real, array[,,,,,] real, int, ...) => real
+  reduce_sum_static(function(array[,,,,,] int, data int, data int, ...) => real, array[,,,,,] int, int, ...) => real
+  reduce_sum_static(function(array[,,,,,] matrix, data int, data int, ...) => real, array[,,,,,] matrix, int, ...) => real
+  reduce_sum_static(function(array[,,,,,] vector, data int, data int, ...) => real, array[,,,,,] vector, int, ...) => real
+  reduce_sum_static(function(array[,,,,,] row_vector, data int, data int, ...) => real, array[,,,,,] row_vector, int, ...) => real
+  reduce_sum_static(function(array[,,,,,,] real, data int, data int, ...) => real, array[,,,,,,] real, int, ...) => real
+  reduce_sum_static(function(array[,,,,,,] int, data int, data int, ...) => real, array[,,,,,,] int, int, ...) => real
+  reduce_sum_static(function(array[,,,,,,] matrix, data int, data int, ...) => real, array[,,,,,,] matrix, int, ...) => real
+  reduce_sum_static(function(array[,,,,,,] vector, data int, data int, ...) => real, array[,,,,,,] vector, int, ...) => real
+  reduce_sum_static(function(array[,,,,,,] row_vector, data int, data int, ...) => real, array[,,,,,,] row_vector, int, ...) => real
   rep_array(int, int) => array[] int
   rep_array(int, int, int) => array[,] int
   rep_array(int, int, int, int) => array[,,] int
@@ -19822,6 +19925,10 @@ Display all Stan math signatures exposed in the language
   softmax(row_vector) => row_vector
   softmax(array[] vector) => array[] vector
   softmax(array[] row_vector) => array[] row_vector
+  solve_newton(function(vector, ...) => vector, vector, ...) => vector
+  solve_newton_tol(function(vector, ...) => vector, vector, real, real, int, ...) => vector
+  solve_powell(function(vector, ...) => vector, vector, ...) => vector
+  solve_powell_tol(function(vector, ...) => vector, vector, real, real, int, ...) => vector
   sort_asc(vector) => vector
   sort_asc(row_vector) => row_vector
   sort_asc(array[] int) => array[] int

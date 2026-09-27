@@ -42,6 +42,10 @@ val operator_to_stan_math_signatures : Operator.t -> UnsizedType.signature list
 (* reduce_sum helpers *)
 val is_reduce_sum_fn : string -> bool
 val reduce_sum_slice_types : UnsizedType.t list
+
+val reduce_sum_signature :
+  UnsizedType.autodifftype * UnsizedType.t -> UnsizedType.variadic_signature
+
 val is_embedded_laplace_fn : string -> bool
 val laplace_helper_param_types : string -> UnsizedType.argumentlist
 val laplace_tolerance_argument_types : UnsizedType.argumentlist
