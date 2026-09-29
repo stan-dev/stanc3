@@ -669,17 +669,20 @@ let mir_uninitialized_variables (mir : Program.Typed.t) :
 
 (** The innermost [for] or [while] loop around [statement_id], found by walking
     outward through the control-flow statements in [parent_ids]. *)
-let rec enclosing_loop statement_map
-    (parent_ids : label Std.Set.Poly.t LabelMap.t) (statement_id : label) :
-    label option =
+let rec enclosing_loop statement_map (parent_ids : label Set.Poly.t LabelMap.t)
+    (statement_id : label) : label option =
   let pattern_of parent_id = fst (LabelMap.find parent_id statement_map) in
-  List.find_opt
-    (Set.Poly.to_list (LabelMap.find statement_id parent_ids))
-    ~f:(fun parent_id -> is_ctrl_flow (pattern_of parent_id))
-  |> Option.bind ~f:(fun parent_id ->
-      match pattern_of parent_id with
-      | Stmt.Pattern.For _ | While _ -> Some parent_id
-      | _ -> enclosing_loop statement_map parent_ids parent_id)
+  let is_loop = function Stmt.Pattern.For _ | While _ -> true | _ -> false in
+  (* the nearest control-flow statement around [statement_id]; [parent_ids] also
+     holds the break and continue statements that affect it *)
+  let control_id =
+    Set.Poly.filter (LabelMap.find statement_id parent_ids) ~f:(fun parent_id ->
+        is_ctrl_flow (pattern_of parent_id))
+    |> Set.Poly.min_elt_opt in
+  match control_id with
+  | None -> None
+  | Some loop_id when is_loop (pattern_of loop_id) -> Some loop_id
+  | Some control_id -> enclosing_loop statement_map parent_ids control_id
 
 let build_dep_info_map (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
     dep_info_map =
