@@ -1,4 +1,4 @@
-/* $ stanc -fsoa --debug-optimized-mir --debug-mem-patterns ../complex-fails.stan : [exit 0] */
+/* $ stanc -fvectorize-loops -fsoa --debug-optimized-mir --debug-mem-patterns ../complex-fails.stan : [exit 0] */
 matrix[10, 10] A_p: AoS
 Optimization hazard warning (Line 2): SoA warning: Right hand side contains only AoS expressions: A_p
 Optimization hazard warning (Line 6): SoA warning: Complex-valued types cannot be SoA: A_complex_tp

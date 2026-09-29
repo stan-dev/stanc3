@@ -1,4 +1,4 @@
-/* $ stanc -fsoa --debug-optimized-mir --debug-mem-patterns ../ad_scalar_data_matrix.stan : [exit 0] */
+/* $ stanc -fvectorize-loops -fsoa --debug-optimized-mir --debug-mem-patterns ../ad_scalar_data_matrix.stan : [exit 0] */
 vector[N] beta: SoA
 vector[N] soa_simple: SoA
 vector[N] aos_deep: AoS

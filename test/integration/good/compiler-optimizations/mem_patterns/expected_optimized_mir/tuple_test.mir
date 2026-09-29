@@ -1,4 +1,4 @@
-/* $ stanc -fsoa --debug-optimized-mir --debug-mem-patterns ../tuple_test.stan : [exit 0] */
+/* $ stanc -fvectorize-loops -fsoa --debug-optimized-mir --debug-mem-patterns ../tuple_test.stan : [exit 0] */
 tuple(array[matrix[1, 1], 1], matrix[1, 2], matrix[1, 3]) xx: AoS
 matrix[1, 1] x: AoS
 Optimization hazard warning (Line 3): SoA warning: Right hand side contains only AoS expressions: xx

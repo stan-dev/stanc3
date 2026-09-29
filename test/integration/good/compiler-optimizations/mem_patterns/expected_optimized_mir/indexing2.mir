@@ -1,4 +1,4 @@
-/* $ stanc -fsoa --debug-optimized-mir --debug-mem-patterns ../indexing2.stan : [exit 0] */
+/* $ stanc -fvectorize-loops -fsoa --debug-optimized-mir --debug-mem-patterns ../indexing2.stan : [exit 0] */
 vector[10] p_aos_loop_single_idx: AoS
 vector[N] tp_soa_multi_idx_assign_in_loop: SoA
 vector[N] tp_soa_single_idx_in_upfrom_idx: SoA
