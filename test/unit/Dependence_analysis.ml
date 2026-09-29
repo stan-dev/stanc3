@@ -114,14 +114,17 @@ let%expect_test "Transitive dependencies of an if and of its condition" =
       }
     |})
   in
-  let if_label =
-    LabelMap.fold map ~init:0 ~f:(fun ~key ~data:(pattern, _) found ->
-        match pattern with Stmt.Pattern.IfElse _ -> key | _ -> found) in
-  let pp_labels ppf labels =
-    Fmt.(list ~sep:(any " ") int) ppf (Set.Poly.to_list labels) in
+  let if_id =
+    LabelMap.fold map ~init:0
+      ~f:(fun ~key:statement_id ~data:(pattern, _) found_id ->
+        match pattern with
+        | Stmt.Pattern.IfElse _ -> statement_id
+        | _ -> found_id) in
+  let pp_labels ppf statement_ids =
+    Fmt.(list ~sep:(any " ") int) ppf (Set.Poly.to_list statement_ids) in
   (* one line per statement: the label, what the statement is, and the immediate
      dependencies *)
-  LabelMap.iter map ~f:(fun ~key ~data:(pattern, _) ->
+  LabelMap.iter map ~f:(fun ~key:statement_id ~data:(pattern, _) ->
       let described =
         match pattern with
         | Stmt.Pattern.Decl {decl_id; _} -> "declare " ^ decl_id
@@ -130,25 +133,25 @@ let%expect_test "Transitive dependencies of an if and of its condition" =
         | TargetPE _ -> "target +="
         | SList _ | Block _ -> "block"
         | _ -> "other" in
-      Fmt.pr "%d %s: %a@." key described pp_labels
-        (node_immediate_dependencies map key));
-  Fmt.pr "node_dependencies %d: %a@." if_label pp_labels
-    (node_dependencies map if_label);
-  Fmt.pr "node_vars_dependencies {b} %d: %a@." if_label pp_labels
-    (node_vars_dependencies map (Set.Poly.singleton "b") if_label);
-  Fmt.pr "node_vars_dependencies ~blockers:{b} {b} %d: %a@." if_label pp_labels
+      Fmt.pr "%d %s: %a@." statement_id described pp_labels
+        (node_immediate_dependencies map statement_id));
+  Fmt.pr "node_dependencies %d: %a@." if_id pp_labels
+    (node_dependencies map if_id);
+  Fmt.pr "node_vars_dependencies {b} %d: %a@." if_id pp_labels
+    (node_vars_dependencies map (Set.Poly.singleton "b") if_id);
+  Fmt.pr "node_vars_dependencies ~blockers:{b} {b} %d: %a@." if_id pp_labels
     (node_vars_dependencies map ~blockers:(Set.Poly.singleton "b")
-       (Set.Poly.singleton "b") if_label);
-  Fmt.pr "node_vars_dependencies ~blockers:{a} {b} %d: %a@." if_label pp_labels
+       (Set.Poly.singleton "b") if_id);
+  Fmt.pr "node_vars_dependencies ~blockers:{a} {b} %d: %a@." if_id pp_labels
     (node_vars_dependencies map ~blockers:(Set.Poly.singleton "a")
-       (Set.Poly.singleton "b") if_label);
-  Fmt.pr "node_vars_dependencies ~blockers:{mu} {b} %d: %a@." if_label pp_labels
+       (Set.Poly.singleton "b") if_id);
+  Fmt.pr "node_vars_dependencies ~blockers:{mu} {b} %d: %a@." if_id pp_labels
     (node_vars_dependencies map ~blockers:(Set.Poly.singleton "mu")
-       (Set.Poly.singleton "b") if_label);
+       (Set.Poly.singleton "b") if_id);
   (* the if never reads c, so the element test has nothing to compare and keeps
      every definition of c *)
-  Fmt.pr "node_vars_dependencies {c} %d: %a@." if_label pp_labels
-    (node_vars_dependencies map (Set.Poly.singleton "c") if_label);
+  Fmt.pr "node_vars_dependencies {c} %d: %a@." if_id pp_labels
+    (node_vars_dependencies map (Set.Poly.singleton "c") if_id);
   [%expect
     {|
     1 block:
@@ -222,7 +225,7 @@ let pp_access ppf (use, {var; path}) = Fmt.pf ppf "%s %s%a" use var pp_path path
     increments, then the writes; labels without accesses (blocks, [break], ...)
     are left out. *)
 let pp_node_accesses ppf (statement_map : dep_info_map) =
-  LabelMap.iter statement_map ~f:(fun ~key ~data:(_, info) ->
+  LabelMap.iter statement_map ~f:(fun ~key:statement_id ~data:(_, info) ->
       let tagged use = List.map ~f:(fun access -> (use, access)) in
       match
         tagged "R" info.accesses.reads
@@ -231,7 +234,7 @@ let pp_node_accesses ppf (statement_map : dep_info_map) =
       with
       | [] -> ()
       | accesses ->
-          Fmt.pf ppf "%d: %a@." key
+          Fmt.pf ppf "%d: %a@." statement_id
             Fmt.(list ~sep:(any ", ") pp_access)
             accesses)
 
@@ -550,12 +553,12 @@ let%expect_test
            }
          |})
   in
-  LabelMap.iter map ~f:(fun ~key ~data:(stmt, _) ->
+  LabelMap.iter map ~f:(fun ~key:statement_id ~data:(stmt, _) ->
       match stmt with
       | Stmt.Pattern.IfElse _ ->
-          Fmt.pr "%d: %a@." key
+          Fmt.pr "%d: %a@." statement_id
             Fmt.(list ~sep:(any " ") int)
-            (Set.Poly.to_list (node_immediate_dependencies map key))
+            (Set.Poly.to_list (node_immediate_dependencies map statement_id))
       | _ -> ());
   [%expect {| 6: 5 |}]
 
@@ -574,8 +577,8 @@ let%expect_test "Right-hand-side variables of a set of labels" =
 *)
 let print_pruned_edges prog =
   let map = log_prob_build_dep_info_map (Test_utils.mir_of_string prog) in
-  let name_level label =
-    let stmt, info = LabelMap.find label map in
+  let name_level statement_id =
+    let stmt, info = LabelMap.find statement_id map in
     let rhs =
       Analysis_and_optimization.Mir_utils.stmt_rhs_var_set stmt
       |> Set.Poly.map ~f:fst in
@@ -583,17 +586,17 @@ let print_pruned_edges prog =
       (Set.Poly.union_map rhs
          ~f:(reaching_defn_lookup info.reaching_defn_entry)) in
   let pruned =
-    LabelMap.fold map ~init:false ~f:(fun ~key:label ~data:_ pruned ->
-        let plain = name_level label in
-        let actual = node_immediate_dependencies map label in
-        let dropped = Set.Poly.diff plain actual in
-        if Set.Poly.is_empty dropped then pruned
+    LabelMap.fold map ~init:false ~f:(fun ~key:statement_id ~data:_ pruned ->
+        let name_level_ids = name_level statement_id in
+        let kept_ids = node_immediate_dependencies map statement_id in
+        let dropped_ids = Set.Poly.diff name_level_ids kept_ids in
+        if Set.Poly.is_empty dropped_ids then pruned
         else (
-          Fmt.pr "%d: dropped %a, kept %a@." label
+          Fmt.pr "%d: dropped %a, kept %a@." statement_id
             Fmt.(list ~sep:(any " ") int)
-            (Set.Poly.to_list dropped)
+            (Set.Poly.to_list dropped_ids)
             Fmt.(list ~sep:(any " ") int)
-            (Set.Poly.to_list actual);
+            (Set.Poly.to_list kept_ids);
           true)) in
   if not pruned then print_endline "no definition pruned"
 

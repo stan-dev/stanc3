@@ -96,7 +96,7 @@ type node_dep_info =
         (** the assignments that may reach the start of this statement *)
   ; reaching_defn_exit: reaching_defn Set.Poly.t
         (** the assignments that may reach the end of this statement *)
-  ; loop: label option
+  ; loop_id: label option
         (** the innermost [for] or [while] loop around this statement *)
   ; accesses: point Accesses.t
         (** the reads and writes of this statement, not of nested statements *)

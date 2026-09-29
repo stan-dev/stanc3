@@ -248,7 +248,7 @@ type node_dep_info =
   ; parents: label Set.Poly.t
   ; reaching_defn_entry: reaching_defn Set.Poly.t
   ; reaching_defn_exit: reaching_defn Set.Poly.t
-  ; loop: label option
+  ; loop_id: label option
   ; accesses: point Accesses.t
   ; meta: Location_span.t }
 
@@ -357,11 +357,11 @@ module Dependence = struct
                 Independent
             | Subscript _, _ | Field _, _ -> Unknown))
 
-  (** [dep] restricted to the iterations where the access at [src] runs before
-      the access at [dst] (Kennedy and Allen 2001, definition 2.1). *)
-  let ordered ~(src : label) ~(dst : label) (dep : t) : t =
+  (** [dep] restricted to the iterations where the access at [src_id] runs
+      before the access at [dst_id] (Kennedy and Allen 2001, definition 2.1). *)
+  let ordered ~(src_id : label) ~(dst_id : label) (dep : t) : t =
     let rec restrict = function
-      | [] -> Option.some_if (src < dst) []
+      | [] -> Option.some_if (src_id < dst_id) []
       | level :: inner ->
           let same_iteration =
             if Set.Poly.mem Eq level.directions then restrict inner else None
@@ -385,26 +385,31 @@ module Dependence = struct
 
   type kind = Flow | Anti | Output
 
-  (** The accesses a [kind] dependence starts from, not counting increments. *)
-  let source_uses (kind : kind) (accesses : 'index Accesses.t) :
+  (** The accesses a [dependence] starts from, not counting increments. *)
+  let source_uses (dependence : kind) (accesses : 'index Accesses.t) :
       'index access list =
-    match kind with Flow | Output -> accesses.writes | Anti -> accesses.reads
+    match dependence with
+    | Flow | Output -> accesses.writes
+    | Anti -> accesses.reads
 
-  (** The accesses a [kind] dependence ends at, not counting increments. *)
-  let sink_uses (kind : kind) (accesses : 'index Accesses.t) :
+  (** The accesses a [dependence] ends at, not counting increments. *)
+  let sink_uses (dependence : kind) (accesses : 'index Accesses.t) :
       'index access list =
-    match kind with Flow -> accesses.reads | Anti | Output -> accesses.writes
+    match dependence with
+    | Flow -> accesses.reads
+    | Anti | Output -> accesses.writes
 
-  (** The [join] of [restrict] over the [kind] pairs from [source] to [sink],
-      where an increment pairs as either use but not with an increment. *)
+  (** The [join] of [restrict] over the [dependence] pairs from [source] to
+      [sink], where an increment pairs with either use but no increment. *)
   let between (common_loopvars : string option list) ~(restrict : t -> t)
-      (kind : kind) (source : point Accesses.t) (sink : point Accesses.t) : t =
+      (dependence : kind) (source : point Accesses.t) (sink : point Accesses.t)
+      : t =
     let pairs source_list sink_list =
       List.concat_map source_list ~f:(fun source_access ->
           List.map sink_list ~f:(fun sink_access ->
               (source_access, sink_access))) in
-    let sources = source_uses kind source in
-    let sinks = sink_uses kind sink in
+    let sources = source_uses dependence source in
+    let sinks = sink_uses dependence sink in
     if
       List.is_empty (sources @ source.increments)
       || List.is_empty (sinks @ sink.increments)
@@ -431,69 +436,71 @@ let reaching_defn_lookup (rds : reaching_defn Set.Poly.t) (var : string) :
     before the analysed statement. *)
 let root_label : label = 1
 
-(** The loop variable of the loop at [loop], or [None] for a [while] loop. *)
+(** The loop variable of the loop at [loop_id], or [None] for a [while] loop. *)
 let for_loopvar
     (statement_map : ((Expr.Typed.t, label) Stmt.Pattern.t * _) LabelMap.t)
-    (loop : label) : string option =
-  match fst (LabelMap.find loop statement_map) with
+    (loop_id : label) : string option =
+  match fst (LabelMap.find loop_id statement_map) with
   | Stmt.Pattern.For {loopvar; _} -> Some loopvar
   | _ -> None
 
-(** The loop variables of the loops around both [src] and [dst], outermost
+(** The loop variables of the loops around both [src_id] and [dst_id], outermost
     first, which give the levels of a [Dependent] result. *)
-let common_loopvars (statement_map : dep_info_map) ~(src : label) ~(dst : label)
-    : string option list =
-  let rec loops label =
-    match (snd (LabelMap.find label statement_map)).loop with
+let common_loopvars (statement_map : dep_info_map) ~(src_id : label)
+    ~(dst_id : label) : string option list =
+  let rec loop_ids statement_id =
+    match (snd (LabelMap.find statement_id statement_map)).loop_id with
     | None -> []
-    | Some loop -> loop :: loops loop in
-  let dst_loops = loops dst in
+    | Some loop_id -> loop_id :: loop_ids loop_id in
+  let dst_loop_ids = loop_ids dst_id in
   List.filter_map
-    (List.rev (loops src))
-    ~f:(fun loop ->
+    (List.rev (loop_ids src_id))
+    ~f:(fun loop_id ->
       Option.some_if
-        (List.mem loop ~set:dst_loops)
-        (for_loopvar statement_map loop))
+        (List.mem loop_id ~set:dst_loop_ids)
+        (for_loopvar statement_map loop_id))
 
-(** The classified accesses of the statement at [label]. *)
-let accesses_at (statement_map : dep_info_map) (label : label) :
+(** The classified accesses of the statement at [statement_id]. *)
+let accesses_at (statement_map : dep_info_map) (statement_id : label) :
     point Accesses.t =
-  (snd (LabelMap.find label statement_map)).accesses
+  (snd (LabelMap.find statement_id statement_map)).accesses
 
-(** The labels in [sources] with a [kind] dependence into [dst_accesses], each
-    paired with the dependence, where [None] accesses are [Unknown]. *)
-let overlapping_sources (statement_map : dep_info_map) ~(dst : label)
-    ~(restrict : src:label -> Dependence.t -> Dependence.t)
-    (kind : Dependence.kind) ~(sources : (label * point Accesses.t option) list)
+(** The labels in [sources] with a [dependence] into [dst_accesses], each paired
+    with the dependence, where [None] accesses are [Unknown]. *)
+let overlapping_sources (statement_map : dep_info_map) ~(dst_id : label)
+    ~(restrict : src_id:label -> Dependence.t -> Dependence.t)
+    (dependence : Dependence.kind)
+    ~(sources : (label * point Accesses.t option) list)
     (dst_accesses : point Accesses.t) : (label * Dependence.t) list =
-  List.filter_map sources ~f:(fun (src, src_accesses) ->
+  List.filter_map sources ~f:(fun (src_id, src_accesses) ->
       match src_accesses with
-      | None -> Some (src, Dependence.Unknown)
+      | None -> Some (src_id, Dependence.Unknown)
       | Some known -> (
           match
             Dependence.between
-              (common_loopvars statement_map ~src ~dst)
-              ~restrict:(restrict ~src) kind known dst_accesses
+              (common_loopvars statement_map ~src_id ~dst_id)
+              ~restrict:(restrict ~src_id) dependence known dst_accesses
           with
           | Independent -> None
-          | (Unknown | Dependent _) as dep -> Some (src, dep)))
+          | (Unknown | Dependent _) as dep -> Some (src_id, dep)))
 
-(** The statements whose writes to [var] [dst] may read, the sources of the flow
-    dependences into [dst] (Allen and Kennedy 1987). *)
-let writes_read_by (statement_map : dep_info_map) ~(dst : label) (var : string)
-    : label Set.Poly.t =
-  let _, info = LabelMap.find dst statement_map in
+(** The statements whose writes to [var] [dst_id] may read, the sources of the
+    flow dependences into [dst_id] (Allen and Kennedy 1987). *)
+let writes_read_by (statement_map : dep_info_map) ~(dst_id : label)
+    (var : string) : label Set.Poly.t =
+  let _, info = LabelMap.find dst_id statement_map in
   (* a definition from outside the analysed statement is recorded at
      [root_label] and has unknown accesses *)
   let sources =
     List.map
       (Set.Poly.to_list (reaching_defn_lookup info.reaching_defn_entry var))
-      ~f:(fun src ->
-        ( src
-        , if src = root_label then None
-          else Some (Accesses.of_var var (accesses_at statement_map src)) ))
+      ~f:(fun src_id ->
+        ( src_id
+        , if src_id = root_label then None
+          else Some (Accesses.of_var var (accesses_at statement_map src_id)) ))
   in
-  overlapping_sources statement_map ~dst ~restrict:(Dependence.ordered ~dst)
+  overlapping_sources statement_map ~dst_id
+    ~restrict:(Dependence.ordered ~dst_id)
     Flow ~sources
     (Accesses.of_var var info.accesses)
   |> List.map ~f:fst |> Set.Poly.of_list
@@ -504,39 +511,39 @@ let read_variables (info : node_dep_info) : string Set.Poly.t =
   Accesses.read_vars info.accesses
 
 let node_immediate_dependencies (statement_map : dep_info_map)
-    ?(blockers : string Set.Poly.t = Set.Poly.empty) (label : label) :
+    ?(blockers : string Set.Poly.t = Set.Poly.empty) (node_id : label) :
     label Set.Poly.t =
-  let _, info = LabelMap.find label statement_map in
+  let _, info = LabelMap.find node_id statement_map in
   let rhs_deps =
     Set.Poly.union_map
       (Set.Poly.diff (read_variables info) blockers)
-      ~f:(writes_read_by statement_map ~dst:label) in
+      ~f:(writes_read_by statement_map ~dst_id:node_id) in
   Set.Poly.union info.parents rhs_deps
 
 (* This is doing an explicit graph traversal with edges defined by
    node_immediate_dependencies. *)
 let rec node_dependencies_rec (statement_map : dep_info_map)
-    ?(blockers : string Set.Poly.t = Set.Poly.empty) (label : label)
+    ?(blockers : string Set.Poly.t = Set.Poly.empty) (node_id : label)
     (visited : label Set.Poly.t) : label Set.Poly.t =
-  if Set.Poly.mem label visited then visited
+  if Set.Poly.mem node_id visited then visited
   else
-    let visited' = Set.Poly.add label visited in
-    let deps = node_immediate_dependencies statement_map ~blockers label in
+    let visited' = Set.Poly.add node_id visited in
+    let deps = node_immediate_dependencies statement_map ~blockers node_id in
     Set.Poly.fold deps ~init:visited'
       ~f:(node_dependencies_rec statement_map ~blockers)
 
-let node_dependencies (statement_map : dep_info_map) (label : label) :
+let node_dependencies (statement_map : dep_info_map) (node_id : label) :
     label Set.Poly.t =
-  node_dependencies_rec statement_map label Set.Poly.empty
+  node_dependencies_rec statement_map node_id Set.Poly.empty
 
 let node_vars_dependencies (statement_map : dep_info_map)
     ?(blockers : string Set.Poly.t = Set.Poly.empty) (vars : string Set.Poly.t)
-    (label : label) : label Set.Poly.t =
-  let _, info = LabelMap.find label statement_map in
+    (node_id : label) : label Set.Poly.t =
+  let _, info = LabelMap.find node_id statement_map in
   let var_deps =
     Set.Poly.union_map
       (Set.Poly.diff vars blockers)
-      ~f:(writes_read_by statement_map ~dst:label) in
+      ~f:(writes_read_by statement_map ~dst_id:node_id) in
   Set.Poly.fold
     (Set.Poly.union info.parents var_deps)
     ~init:Set.Poly.empty
@@ -660,17 +667,19 @@ let mir_uninitialized_variables (mir : Program.Typed.t) :
                    (Set.Poly.union arg_vars globals)
                    fdbody))) ]
 
-(** The innermost [for] or [while] loop around [label], found by walking outward
-    through the control-flow statements in [parents]. *)
-let rec enclosing_loop statement_map parents (label : label) : label option =
-  let pattern_of node = fst (LabelMap.find node statement_map) in
+(** The innermost [for] or [while] loop around [statement_id], found by walking
+    outward through the control-flow statements in [parent_ids]. *)
+let rec enclosing_loop statement_map
+    (parent_ids : label Std.Set.Poly.t LabelMap.t) (statement_id : label) :
+    label option =
+  let pattern_of parent_id = fst (LabelMap.find parent_id statement_map) in
   List.find_opt
-    (Set.Poly.to_list (LabelMap.find label parents))
-    ~f:(fun parent -> is_ctrl_flow (pattern_of parent))
-  |> Option.bind ~f:(fun parent ->
-      match pattern_of parent with
-      | Stmt.Pattern.For _ | While _ -> Some parent
-      | _ -> enclosing_loop statement_map parents parent)
+    (Set.Poly.to_list (LabelMap.find statement_id parent_ids))
+    ~f:(fun parent_id -> is_ctrl_flow (pattern_of parent_id))
+  |> Option.bind ~f:(fun parent_id ->
+      match pattern_of parent_id with
+      | Stmt.Pattern.For _ | While _ -> Some parent_id
+      | _ -> enclosing_loop statement_map parent_ids parent_id)
 
 let build_dep_info_map (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
     dep_info_map =
@@ -679,7 +688,7 @@ let build_dep_info_map (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
       (fun Stmt.{pattern; _} -> pattern)
       (fun Stmt.{meta; _} -> meta)
       stmt in
-  let _, preds, parents = build_cf_graphs statement_map in
+  let _, predecessor_ids, parent_ids = build_cf_graphs statement_map in
   let rd_map = mir_reaching_definitions mir stmt in
   let collected =
     LabelMap.map statement_map ~f:(fun (pattern, _) -> Accesses.of_stmt pattern)
@@ -690,25 +699,27 @@ let build_dep_info_map (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
     LabelMap.fold collected ~init:Set.Poly.empty
       ~f:(fun ~key:_ ~data:accesses written ->
         Set.Poly.union written (Accesses.written_vars accesses)) in
-  (* the loop variables of the [for] loops around [label] *)
-  let rec enclosing_loopvars label =
-    match enclosing_loop statement_map parents label with
+  (* the loop variables of the [for] loops around [statement_id] *)
+  let rec enclosing_loopvars statement_id =
+    match enclosing_loop statement_map parent_ids statement_id with
     | None -> Set.Poly.empty
-    | Some loop ->
-        let outer = enclosing_loopvars loop in
-        Option.value_map (for_loopvar statement_map loop) ~default:outer
+    | Some loop_id ->
+        let outer = enclosing_loopvars loop_id in
+        Option.value_map (for_loopvar statement_map loop_id) ~default:outer
           ~f:(fun loopvar -> Set.Poly.add loopvar outer) in
-  LabelMap.mapi statement_map ~f:(fun label (pattern, idx) ->
-      let rds = LabelMap.find label rd_map in
+  LabelMap.mapi statement_map ~f:(fun statement_id (pattern, idx) ->
+      let rds = LabelMap.find statement_id rd_map in
       ( pattern
-      , { predecessors= LabelMap.find label preds
-        ; parents= LabelMap.find label parents
+      , { predecessors= LabelMap.find statement_id predecessor_ids
+        ; parents= LabelMap.find statement_id parent_ids
         ; reaching_defn_entry= rds.entry
         ; reaching_defn_exit= rds.exit
-        ; loop= enclosing_loop statement_map parents label
+        ; loop_id= enclosing_loop statement_map parent_ids statement_id
         ; accesses=
-            Accesses.classify ~loopvars:(enclosing_loopvars label) ~written_vars
-              (LabelMap.find label collected)
+            Accesses.classify
+              ~loopvars:(enclosing_loopvars statement_id)
+              ~written_vars
+              (LabelMap.find statement_id collected)
         ; meta= idx } ))
 
 let log_prob_build_dep_info_map (mir : Program.Typed.t) : dep_info_map =
