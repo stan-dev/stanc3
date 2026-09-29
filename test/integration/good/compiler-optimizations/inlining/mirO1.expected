@@ -1,0 +1,141 @@
+  $ stanc --O1 --debug-optimized-mir-pretty inline-arg-binding.stan
+functions {
+  vector elementwise_exp(vector x) {
+    {
+      int N;
+      N = rows(x);
+      FnValidateSize__("result", "N", N);
+      vector[N] result;
+      for(i in 1:N) {
+        result[i] = exp(x[i]);
+      }
+      return result;
+    }
+  }
+  real twice(real x) {
+    {
+      return (x + x);
+    }
+  } }
+input_vars {
+  int N;
+  int K;
+  matrix[N, K] X; }
+
+prepare_data {
+  data int pos__;
+  pos__ = 1;
+  data int N;
+  N = FnReadData__("N")[1];
+  (FnCheck(trans(Lower 1))(var_name N)(var N))__(1);
+  data int K;
+  K = FnReadData__("K")[1];
+  (FnCheck(trans(Lower 1))(var_name K)(var K))__(1);
+  FnValidateSize__("X", "N", N);
+  FnValidateSize__("X", "K", K);
+  data matrix[N, K] X;
+  {
+    array[] real X_flat__;
+    X_flat__ = FnReadData__("X");
+    pos__ = 1;
+    for(sym1__ in 1:K) {
+      for(sym2__ in 1:N) {
+        X[sym2__, sym1__] = X_flat__[pos__];
+        pos__ = (pos__ + 1);
+      }
+    }
+  }
+  FnValidateSize__("beta", "K", K); }
+
+log_prob {
+  vector[K]
+    beta = (FnReadParam(constrain Identity)(dims(K))(mem_pattern AoS))__(
+    );
+  {
+    FnValidateSize__("mu", "N", N);
+    vector[N] mu;
+    vector[0] inline_elementwise_exp_return_sym10__;
+    vector[0] inline_elementwise_exp_x_sym11__ = (X * beta);
+    {
+      int inline_elementwise_exp_N_sym12__;
+      inline_elementwise_exp_N_sym12__ = rows(inline_elementwise_exp_x_sym11__);
+      FnValidateSize__("result", "N", inline_elementwise_exp_N_sym12__);
+      vector[inline_elementwise_exp_N_sym12__]
+        inline_elementwise_exp_result_sym13__;
+      for(inline_elementwise_exp_i_sym14__ in 1:inline_elementwise_exp_N_sym12__) {
+        inline_elementwise_exp_result_sym13__[inline_elementwise_exp_i_sym14__] =
+         exp(inline_elementwise_exp_x_sym11__[inline_elementwise_exp_i_sym14__]);
+      }
+      inline_elementwise_exp_return_sym10__ = inline_elementwise_exp_result_sym13__;
+    }
+    target += std_normal_lupdf(beta);
+    target += normal_lpdf(inline_elementwise_exp_return_sym10__,
+                          promote(0, real, data), promote(1, real, data));
+  } }
+
+rev_log_prob {
+  vector[K]
+    beta = (FnReadParam(constrain Identity)(dims(K))(mem_pattern AoS))__(
+    );
+  {
+    FnValidateSize__("mu", "N", N);
+    vector[N] mu;
+    vector[0] inline_elementwise_exp_return_sym4__;
+    vector[0] inline_elementwise_exp_x_sym5__ = (X * beta);
+    {
+      int inline_elementwise_exp_N_sym6__;
+      inline_elementwise_exp_N_sym6__ = rows(inline_elementwise_exp_x_sym5__);
+      FnValidateSize__("result", "N", inline_elementwise_exp_N_sym6__);
+      vector[inline_elementwise_exp_N_sym6__]
+        inline_elementwise_exp_result_sym7__;
+      for(inline_elementwise_exp_i_sym8__ in 1:inline_elementwise_exp_N_sym6__) {
+        inline_elementwise_exp_result_sym7__[inline_elementwise_exp_i_sym8__] =
+         exp(inline_elementwise_exp_x_sym5__[inline_elementwise_exp_i_sym8__]);
+      }
+      inline_elementwise_exp_return_sym4__ = inline_elementwise_exp_result_sym7__;
+    }
+    target += std_normal_lupdf(beta);
+    target += normal_lpdf(inline_elementwise_exp_return_sym4__,
+                          promote(0, real, data), promote(1, real, data));
+  } }
+
+generate_quantities {
+  data vector[K]
+    beta = (FnReadParam(constrain Identity)(dims(K))(mem_pattern AoS))__(
+    );
+  (FnWriteParam(unconstrain_opt())(var beta))__();
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  }
+  data real y;
+  data real inline_twice_return_sym1__;
+  data real inline_twice_x_sym2__ = normal_rng(0, 1);
+  {
+    inline_twice_return_sym1__ = (inline_twice_x_sym2__ + inline_twice_x_sym2__);
+  }
+  y = inline_twice_return_sym1__;
+  (FnWriteParam(unconstrain_opt())(var y))__(); }
+
+transform_inits {
+  data int pos__;
+  pos__ = 1;
+  vector[K] beta;
+  {
+    array[] real beta_flat__;
+    beta_flat__ = FnReadData__("beta");
+    pos__ = 1;
+    for(sym1__ in 1:K) {
+      beta[sym1__] = beta_flat__[pos__];
+      pos__ = (pos__ + 1);
+    }
+  }
+  (FnWriteParam(unconstrain_opt(Identity))(var beta))__(); }
+
+output_vars {
+  parameters vector[K] beta; //vector[K]
+  generated_quantities real y; //real
+}
+[exit 0]

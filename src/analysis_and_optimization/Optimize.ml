@@ -112,6 +112,39 @@ let subst_args_stmt args es =
   let m = String.Map.of_list (List.combine args es) in
   subst_stmt m
 
+(** Whether an argument can be substituted for every use of a parameter without
+    repeating work or side effects, stricter than [cannot_duplicate_expr]. *)
+let rec is_trivial_inline_arg (arg : Expr.Typed.t) =
+  match arg.pattern with
+  | Var _ | Lit _ -> true
+  | Promotion (inner, _, DataOnly) ->
+      UnsizedType.is_scalar_type (Expr.Typed.type_of arg)
+      && is_trivial_inline_arg inner
+  | _ -> false
+
+(** Bind each parameter of an inlined function to its argument, evaluating any
+    nontrivial argument once into a fresh local, as call-by-value requires. *)
+let bind_inline_args (fname : string) (args : string list)
+    (es : Expr.Typed.t list) :
+    (ExprSet.elt, 'a) Stmt.Pattern.t list * ExprSet.elt list =
+  let bind arg_name (arg : Expr.Typed.t) =
+    if is_trivial_inline_arg arg then (None, arg)
+    else
+      let decl_id = gen_inline_var fname arg_name in
+      let decl_type =
+        Type.Sized
+          (unsafe_unsized_to_sized_type (Unsized (Expr.Typed.type_of arg)))
+      in
+      ( Some
+          (Stmt.Pattern.Decl
+             { decl_adtype= Expr.Typed.adlevel_of arg
+             ; decl_id
+             ; decl_type
+             ; initialize= Assign arg })
+      , {arg with pattern= Var decl_id} ) in
+  let binds, es = List.split (List.map2 ~f:bind args es) in
+  (List.filter_map ~f:Fun.id binds, es)
+
 (** Count the number of returns that happen in a statement *)
 let rec count_returns Stmt.{pattern; _} : int =
   Stmt.Pattern.fold Fun.const
@@ -284,6 +317,7 @@ let rec inline_function_expression propto adt fim (Expr.{pattern; _} as e) =
               )
           | Some (rt, args, body) ->
               let inline_return_name = gen_inline_var fname "return" in
+              let binds, es = bind_inline_args fname args es in
               let handle =
                 handle_early_returns fname (Some inline_return_name) in
               let d_list2, s_list2, (e : Expr.Typed.t) =
@@ -301,9 +335,10 @@ let rec inline_function_expression propto adt fim (Expr.{pattern; _} as e) =
                   (* We should minimize the code that's having its variables
                      replaced to avoid conflict with the (two) new dummy
                      variables introduced by inlining *)
-                , [ handle
-                      (subst_args_stmt args es
-                         (replace_fresh_local_vars fname body)) ]
+                , binds
+                  @ [ handle
+                        (subst_args_stmt args es
+                           (replace_fresh_local_vars fname body)) ]
                 , { pattern= Var inline_return_name
                   ; meta=
                       Expr.Typed.Meta.
@@ -411,11 +446,13 @@ let rec inline_function_statement propto adt fim Stmt.{pattern; meta} =
                   match String.Map.find_opt s fim with
                   | None -> NRFunApp (kind, es)
                   | Some (_, args, b) ->
+                      let binds, es = bind_inline_args s args es in
                       let b = replace_fresh_local_vars s b in
                       let b = handle_early_returns s None b in
-                      (subst_args_stmt args es
-                         {pattern= b; meta= Location_span.empty})
-                        .pattern))
+                      slist_concat_no_loc binds
+                        (subst_args_stmt args es
+                           {pattern= b; meta= Location_span.empty})
+                          .pattern))
         | Return e -> (
             match e with
             | None -> Return None
@@ -1387,12 +1424,15 @@ let optimize_ad_levels (mir : Program.Typed.t) =
       (flowgraph_to_mir : Stmt.Located.Non_recursive.t LabelMap.t) (l : int)
       (ad_variables : string Set.Poly.t) =
     let mir_node = (LabelMap.find l flowgraph_to_mir).pattern in
+    let is_ad_rhs e =
+      expr_reads_target e
+      || UnsizedType.is_autodifftype
+         @@ Expr.Typed.adlevel_of (update_expr_ad_levels ad_variables e) in
     match mir_node with
-    | Assignment (lval, _, e)
-      when expr_reads_target e
-           || UnsizedType.is_autodifftype
-              @@ Expr.Typed.adlevel_of (update_expr_ad_levels ad_variables e) ->
+    | Assignment (lval, _, e) when is_ad_rhs e ->
         Set.Poly.singleton (Stmt.Helpers.lhs_variable lval)
+    | Decl {decl_id; initialize= Assign e; _} when is_ad_rhs e ->
+        Set.Poly.singleton decl_id
     | _ -> Set.Poly.empty in
   let global_initial_ad_variables =
     Set.Poly.of_list

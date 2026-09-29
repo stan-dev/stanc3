@@ -123,47 +123,50 @@ let%expect_test "inline functions" =
   Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
   [%expect
     {|
-      functions {
-        void f(int x, matrix y) {
-          {
-            FnPrint__(x);
-            FnPrint__(y);
-          }
-        }
-        real g(int z) {
-          {
-            return promote((z ^ 2), real, var);
-          }
-        }
-      }
-
-
-
-      log_prob {
+    functions {
+      void f(int x, matrix y) {
         {
-          {
-            FnPrint__(3);
-            FnPrint__(FnMakeRowVec__(FnMakeRowVec__(promote(3, real, data),
-                                                    promote(2, real, data)),
-                                     FnMakeRowVec__(promote(4, real, data),
-                                                    promote(6, real, data))));
-          }
-          real inline_g_return_sym2__;
-          {
-            inline_g_return_sym2__ = promote((53 ^ 2), real, var);
-          }
-          FnReject__(inline_g_return_sym2__);
+          FnPrint__(x);
+          FnPrint__(y);
         }
       }
-
-
-      generate_quantities {
-        if(emit_transformed_parameters__) ; else {
-
+      real g(int z) {
+        {
+          return promote((z ^ 2), real, var);
         }
-        if(!(emit_transformed_parameters__ || emit_generated_quantities__)) return;
-        if(!(emit_generated_quantities__)) return;
-      } |}]
+      }
+    }
+
+
+
+    log_prob {
+      {
+        data matrix[0, 0]
+          inline_f_y_sym1__ = FnMakeRowVec__(FnMakeRowVec__(promote(3, real, data),
+                                                            promote(2, real, data)),
+                                             FnMakeRowVec__(promote(4, real, data),
+                                                            promote(6, real, data)));
+        {
+          FnPrint__(3);
+          FnPrint__(inline_f_y_sym1__);
+        }
+        real inline_g_return_sym3__;
+        {
+          inline_g_return_sym3__ = promote((53 ^ 2), real, var);
+        }
+        FnReject__(inline_g_return_sym3__);
+      }
+    }
+
+
+    generate_quantities {
+      if(emit_transformed_parameters__) ; else {
+
+      }
+      if(!(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+      if(!(emit_generated_quantities__)) return;
+    }
+    |}]
 
 let%expect_test "inline functions 2" =
   let mir =
@@ -239,164 +242,174 @@ let%expect_test "list collapsing" =
   print_s [%sexp (mir : Middle.Program.Typed.t)];
   [%expect
     {|
-((functions_block
-  (((fdrt Void) (fdname f) (fdsuffix FnPlain)
-    (fdargs ((AutoDiffable x UInt) (AutoDiffable y UMatrix)))
-    (fdbody
-     (((pattern
-        (Block
+    ((functions_block
+      (((fdrt Void) (fdname f) (fdsuffix FnPlain)
+        (fdargs ((AutoDiffable x UInt) (AutoDiffable y UMatrix)))
+        (fdbody
          (((pattern
-            (NRFunApp (CompilerInternal FnPrint)
-             (((pattern (Var x))
-               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-           (meta <opaque>))
-          ((pattern
-            (NRFunApp (CompilerInternal FnPrint)
-             (((pattern (Var y))
-               (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
-           (meta <opaque>)))))
-       (meta <opaque>))))
-    (fdloc <opaque>))
-   ((fdrt (ReturnType UReal)) (fdname g) (fdsuffix FnPlain)
-    (fdargs ((AutoDiffable z UInt)))
-    (fdbody
-     (((pattern
-        (Block
-         (((pattern
-            (Return
+            (Block
              (((pattern
-                (Promotion
-                 ((pattern
-                   (FunApp (Operator Pow)
-                    (((pattern (Var z))
-                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                     ((pattern (Lit Int 2))
-                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-                  (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
-                 UReal AutoDiffable))
-               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
-           (meta <opaque>)))))
-       (meta <opaque>))))
-    (fdloc <opaque>))))
- (input_vars ()) (prepare_data ())
- (log_prob
-  (((pattern
-     (Block
+                (NRFunApp (CompilerInternal FnPrint)
+                 (((pattern (Var x))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+               (meta <opaque>))
+              ((pattern
+                (NRFunApp (CompilerInternal FnPrint)
+                 (((pattern (Var y))
+                   (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
+               (meta <opaque>)))))
+           (meta <opaque>))))
+        (fdloc <opaque>))
+       ((fdrt (ReturnType UReal)) (fdname g) (fdsuffix FnPlain)
+        (fdargs ((AutoDiffable z UInt)))
+        (fdbody
+         (((pattern
+            (Block
+             (((pattern
+                (Return
+                 (((pattern
+                    (Promotion
+                     ((pattern
+                       (FunApp (Operator Pow)
+                        (((pattern (Var z))
+                          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                         ((pattern (Lit Int 2))
+                          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                      (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                     UReal AutoDiffable))
+                   (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
+               (meta <opaque>)))))
+           (meta <opaque>))))
+        (fdloc <opaque>))))
+     (input_vars ()) (prepare_data ())
+     (log_prob
       (((pattern
          (Block
           (((pattern
-             (NRFunApp (CompilerInternal FnPrint)
-              (((pattern (Lit Int 3))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+             (Decl (decl_adtype DataOnly) (decl_id inline_f_y_sym1__)
+              (decl_type
+               (Sized
+                (SMatrix AoS
+                 ((pattern (Lit Int 0))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                 ((pattern (Lit Int 0))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+              (initialize
+               (Assign
+                ((pattern
+                  (FunApp (CompilerInternal FnMakeRowVec)
+                   (((pattern
+                      (FunApp (CompilerInternal FnMakeRowVec)
+                       (((pattern
+                          (Promotion
+                           ((pattern (Lit Int 3))
+                            (meta
+                             ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                           UReal DataOnly))
+                         (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                        ((pattern
+                          (Promotion
+                           ((pattern (Lit Int 2))
+                            (meta
+                             ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                           UReal DataOnly))
+                         (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+                     (meta
+                      ((type_ URowVector) (loc <opaque>) (adlevel DataOnly))))
+                    ((pattern
+                      (FunApp (CompilerInternal FnMakeRowVec)
+                       (((pattern
+                          (Promotion
+                           ((pattern (Lit Int 4))
+                            (meta
+                             ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                           UReal DataOnly))
+                         (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                        ((pattern
+                          (Promotion
+                           ((pattern (Lit Int 6))
+                            (meta
+                             ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                           UReal DataOnly))
+                         (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+                     (meta
+                      ((type_ URowVector) (loc <opaque>) (adlevel DataOnly)))))))
+                 (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))))))
             (meta <opaque>))
            ((pattern
-             (NRFunApp (CompilerInternal FnPrint)
+             (Block
               (((pattern
-                 (FunApp (CompilerInternal FnMakeRowVec)
-                  (((pattern
-                     (FunApp (CompilerInternal FnMakeRowVec)
-                      (((pattern
-                         (Promotion
-                          ((pattern (Lit Int 3))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                          UReal DataOnly))
-                        (meta
-                         ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
-                       ((pattern
-                         (Promotion
-                          ((pattern (Lit Int 2))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                          UReal DataOnly))
-                        (meta
-                         ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
-                    (meta
-                     ((type_ URowVector) (loc <opaque>) (adlevel DataOnly))))
-                   ((pattern
-                     (FunApp (CompilerInternal FnMakeRowVec)
-                      (((pattern
-                         (Promotion
-                          ((pattern (Lit Int 4))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                          UReal DataOnly))
-                        (meta
-                         ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
-                       ((pattern
-                         (Promotion
-                          ((pattern (Lit Int 6))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                          UReal DataOnly))
-                        (meta
-                         ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
-                    (meta
-                     ((type_ URowVector) (loc <opaque>) (adlevel DataOnly)))))))
-                (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
+                 (NRFunApp (CompilerInternal FnPrint)
+                  (((pattern (Lit Int 3))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                (meta <opaque>))
+               ((pattern
+                 (NRFunApp (CompilerInternal FnPrint)
+                  (((pattern (Var inline_f_y_sym1__))
+                    (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
+                (meta <opaque>)))))
+            (meta <opaque>))
+           ((pattern
+             (Decl (decl_adtype AutoDiffable) (decl_id inline_g_return_sym3__)
+              (decl_type (Sized SReal)) (initialize Uninit)))
+            (meta <opaque>))
+           ((pattern
+             (Block
+              (((pattern
+                 (Assignment ((LVariable inline_g_return_sym3__) ()) UReal
+                  ((pattern
+                    (Promotion
+                     ((pattern
+                       (FunApp (Operator Pow)
+                        (((pattern (Lit Int 53))
+                          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                         ((pattern (Lit Int 2))
+                          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                      (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                     UReal AutoDiffable))
+                   (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+                (meta <opaque>)))))
+            (meta <opaque>))
+           ((pattern
+             (NRFunApp (CompilerInternal FnReject)
+              (((pattern (Var inline_g_return_sym3__))
+                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
             (meta <opaque>)))))
+        (meta <opaque>))))
+     (reverse_mode_log_prob ())
+     (generate_quantities
+      (((pattern
+         (IfElse
+          ((pattern (Var emit_transformed_parameters__))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern Skip) (meta <opaque>))
+          (((pattern (Block ())) (meta <opaque>)))))
         (meta <opaque>))
        ((pattern
-         (Decl (decl_adtype AutoDiffable) (decl_id inline_g_return_sym2__)
-          (decl_type (Sized SReal)) (initialize Uninit)))
+         (IfElse
+          ((pattern
+            (FunApp (Operator PNot)
+             (((pattern
+                (EOr
+                 ((pattern (Var emit_transformed_parameters__))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                 ((pattern (Var emit_generated_quantities__))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Return ())) (meta <opaque>)) ()))
         (meta <opaque>))
        ((pattern
-         (Block
-          (((pattern
-             (Assignment ((LVariable inline_g_return_sym2__) ()) UReal
-              ((pattern
-                (Promotion
-                 ((pattern
-                   (FunApp (Operator Pow)
-                    (((pattern (Lit Int 53))
-                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                     ((pattern (Lit Int 2))
-                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-                  (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
-                 UReal AutoDiffable))
-               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
-            (meta <opaque>)))))
-        (meta <opaque>))
-       ((pattern
-         (NRFunApp (CompilerInternal FnReject)
-          (((pattern (Var inline_g_return_sym2__))
-            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
-        (meta <opaque>)))))
-    (meta <opaque>))))
- (reverse_mode_log_prob ())
- (generate_quantities
-  (((pattern
-     (IfElse
-      ((pattern (Var emit_transformed_parameters__))
-       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-      ((pattern Skip) (meta <opaque>))
-      (((pattern (Block ())) (meta <opaque>)))))
-    (meta <opaque>))
-   ((pattern
-     (IfElse
-      ((pattern
-        (FunApp (Operator PNot)
-         (((pattern
-            (EOr
-             ((pattern (Var emit_transformed_parameters__))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-             ((pattern (Var emit_generated_quantities__))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-      ((pattern (Return ())) (meta <opaque>)) ()))
-    (meta <opaque>))
-   ((pattern
-     (IfElse
-      ((pattern
-        (FunApp (Operator PNot)
-         (((pattern (Var emit_generated_quantities__))
-           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-      ((pattern (Return ())) (meta <opaque>)) ()))
-    (meta <opaque>))))
- (transform_inits ()) (unconstrain_array ()) (output_vars ()) (prog_name "")
- (prog_path ""))
+         (IfElse
+          ((pattern
+            (FunApp (Operator PNot)
+             (((pattern (Var emit_generated_quantities__))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Return ())) (meta <opaque>)) ()))
+        (meta <opaque>))))
+     (transform_inits ()) (unconstrain_array ()) (output_vars ()) (prog_name "")
+     (prog_path ""))
     |}]
 
 let%expect_test "recursive functions" =
@@ -1107,6 +1120,205 @@ let%expect_test "inline function or " =
         if(!(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(!(emit_generated_quantities__)) return;
       } |}]
+
+let%expect_test "inline function binds expression argument once" =
+  let mir =
+    reset_and_mir_of_string
+      {|
+      functions {
+        vector elementwise_exp(vector x) {
+          int N = rows(x);
+          vector[N] result;
+          for (i in 1:N)
+            result[i] = exp(x[i]);
+          return result;
+        }
+      }
+      data {
+        int<lower=1> N;
+        int<lower=1> K;
+        matrix[N, K] X;
+      }
+      parameters {
+        vector[K] beta;
+      }
+      model {
+        vector[N] mu = elementwise_exp(X * beta);
+        beta ~ std_normal();
+        target += normal_lpdf(mu | 0, 1);
+      }
+      |}
+  in
+  let mir = function_inlining mir in
+  Fmt.str "@[<v>%a@]" Fmt.(list ~sep:cut Stmt.Located.pp) mir.log_prob
+  |> print_endline;
+  [%expect
+    {|
+    vector[K] beta;
+    {
+      FnValidateSize__("mu", "N", N);
+      vector[N] mu;
+      vector[0] inline_elementwise_exp_return_sym1__;
+      vector[0] inline_elementwise_exp_x_sym2__ = (X * beta);
+      {
+        int inline_elementwise_exp_N_sym3__;
+        inline_elementwise_exp_N_sym3__ = rows(inline_elementwise_exp_x_sym2__);
+        FnValidateSize__("result", "N", inline_elementwise_exp_N_sym3__);
+        vector[inline_elementwise_exp_N_sym3__]
+          inline_elementwise_exp_result_sym4__;
+        for(inline_elementwise_exp_i_sym5__ in 1:inline_elementwise_exp_N_sym3__) {
+          inline_elementwise_exp_result_sym4__[inline_elementwise_exp_i_sym5__] =
+           exp(inline_elementwise_exp_x_sym2__[inline_elementwise_exp_i_sym5__]);
+        }
+        inline_elementwise_exp_return_sym1__ = inline_elementwise_exp_result_sym4__;
+      }
+      mu = inline_elementwise_exp_return_sym1__;
+      target += std_normal_lupdf(beta);
+      target += normal_lpdf(mu, promote(0, real, data), promote(1, real, data));
+    }
+    |}]
+
+let%expect_test "inline function binds rng argument once" =
+  let mir =
+    reset_and_mir_of_string
+      {|
+      functions {
+        real twice(real x) {
+          return x + x;
+        }
+      }
+      generated quantities {
+        real y = twice(normal_rng(0, 1));
+      }
+      |}
+  in
+  let mir = function_inlining mir in
+  Fmt.str "@[<v>%a@]"
+    Fmt.(list ~sep:cut Stmt.Located.pp)
+    mir.generate_quantities
+  |> print_endline;
+  [%expect
+    {|
+    if(emit_transformed_parameters__) ; else {
+
+    }
+    if(!(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+    if(!(emit_generated_quantities__)) return;
+    data real y;
+    data real inline_twice_return_sym1__;
+    data real inline_twice_x_sym2__ = normal_rng(0, 1);
+    {
+      inline_twice_return_sym1__ = (inline_twice_x_sym2__ + inline_twice_x_sym2__);
+    }
+    y = inline_twice_return_sym1__;
+    |}]
+
+let%expect_test "inline function keeps side effect of unused argument" =
+  let mir =
+    reset_and_mir_of_string
+      {|
+      functions {
+        real incr_lp(real x) {
+          target += x;
+          return x;
+        }
+        real incr_lp(vector x) {
+          target += sum(x);
+          return sum(x);
+        }
+        real ignore(real x) {
+          return 1.0;
+        }
+      }
+      parameters {
+        real theta;
+      }
+      model {
+        target += ignore(incr_lp(theta) + 1);
+      }
+      |}
+  in
+  let mir = function_inlining mir in
+  Fmt.str "@[<v>%a@]" Fmt.(list ~sep:cut Stmt.Located.pp) mir.log_prob
+  |> print_endline;
+  [%expect
+    {|
+    real theta;
+    {
+      real inline_ignore_return_sym1__;
+      real inline_ignore_x_sym2__ = (incr_lp(theta) + promote(1, real, data));
+      {
+        inline_ignore_return_sym1__ = promote(1.0, real, var);
+      }
+      target += inline_ignore_return_sym1__;
+    }
+    |}]
+
+let%expect_test "inline void function binds expression argument once" =
+  let mir =
+    reset_and_mir_of_string
+      {|
+      functions {
+        void show(vector x) {
+          print(x);
+          print(x);
+        }
+      }
+      data {
+        vector[3] v;
+      }
+      model {
+        show(2 * v);
+      }
+      |}
+  in
+  let mir = function_inlining mir in
+  Fmt.str "@[<v>%a@]" Fmt.(list ~sep:cut Stmt.Located.pp) mir.log_prob
+  |> print_endline;
+  [%expect
+    {|
+    {
+      data vector[0] inline_show_x_sym1__ = (promote(2, real, data) * v);
+      {
+        FnPrint__(inline_show_x_sym1__);
+        FnPrint__(inline_show_x_sym1__);
+      }
+    }
+    |}]
+
+let%expect_test "inline function binds argument inside short circuit branch" =
+  let mir =
+    reset_and_mir_of_string
+      {|
+      functions {
+        int both(int z) {
+          return z * z;
+        }
+      }
+      data {
+        int a;
+      }
+      model {
+        print(a && both(a + 1));
+      }
+      |}
+  in
+  let mir = function_inlining mir in
+  Fmt.str "@[<v>%a@]" Fmt.(list ~sep:cut Stmt.Located.pp) mir.log_prob
+  |> print_endline;
+  [%expect
+    {|
+    {
+      int inline_both_return_sym1__;
+      if(a) {
+        data int inline_both_z_sym2__ = (a + 1);
+        {
+          inline_both_return_sym1__ = (inline_both_z_sym2__ * inline_both_z_sym2__);
+        }
+      }
+      FnPrint__(a && inline_both_return_sym1__);
+    }
+    |}]
 
 let%expect_test "unroll nested loop" =
   let mir =
