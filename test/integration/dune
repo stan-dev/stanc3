@@ -1,5 +1,5 @@
-(executable
- (name run_bin_on_args)
+(executables
+ (names run_bin_on_args gen_expected_rules)
  (libraries std unix))
 
 (cram

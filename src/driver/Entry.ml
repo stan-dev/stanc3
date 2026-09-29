@@ -34,6 +34,7 @@ type other_output =
   | Formatted of string
   | DebugOutput of string
   | Memory_patterns of string
+  | Loop_vectorization of string
   | Info of string
   | Version of string
   | Generated of string
@@ -122,6 +123,7 @@ let stan2mir model_name model (flags : Flags.t) (output : other_output -> unit)
     else Ok () in
   let tx_mir = Transform_Mir.trans_prog ~use_opencl:flags.use_opencl mir in
   debug_output_mir output tx_mir flags.debug_settings.print_transformed_mir;
+  Loop_vectorize.reporting := flags.debug_settings.print_loop_vectorization;
   let opt_mir =
     Optimize.optimization_suite
       ~settings:(Flags.get_optimization_settings flags)
@@ -133,6 +135,10 @@ let stan2mir model_name model (flags : Flags.t) (output : other_output -> unit)
             (* TODO should be better associated with the names from above? *)
             Fmt.(list string)
             (Memory_patterns.get_warnings ())));
+  if flags.debug_settings.print_loop_vectorization then
+    output
+      (Loop_vectorization
+         (String.concat ~sep:"\n" (Loop_vectorize.loop_reports ())));
   debug_output_mir output opt_mir flags.debug_settings.print_optimized_mir;
   opt_mir
 

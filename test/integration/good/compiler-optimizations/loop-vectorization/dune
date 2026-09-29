@@ -1,0 +1,43 @@
+; Loop-vectorization corpus: loops from the GCC, LLVM and TSVC vectorizer test
+; suites and the design examples (design-docs/active/vectorize-loop-fission.md
+; sections 7.8 and 13.3). For every models/model.stan, two files are pinned in expected/:
+;   model.report.expected  the --debug-loop-vectorization report: the leaves
+;                          with their outcome, the dependence graph and the
+;                          pi-blocks of every loop
+;   model.mir.expected     the optimized MIR with the pass alone (base O0, so
+;                          the raw slices survive): the emitted statements, and
+;                          every sequential loop unchanged
+; The header comment of each model predicts both; the expected files are
+; reviewed against that prediction before promotion. One known difference:
+; llvm_loop_distribute loop 4 accumulates total4, a reduction the pass does
+; not recognise yet, so the loop stays sequential.
+; The rules are generated at build time from the .stan files by
+; test/integration/gen_expected_rules.ml, so no model name is listed anywhere:
+; drop a .stan file into models/, touch its file in expected/, and run
+; `dune runtest` then `dune promote`.
+;
+; Layout: dune loads rules per directory, and a directory that includes
+; generated rules may not be an ancestor of the directory whose files they are
+; generated from (rule-loading cycle). So models/, rules/ and expected/ are
+; siblings, defined from this file.
+
+(subdir
+ rules
+ (rule
+  (targets dune.inc)
+  (deps
+   (:stanfiles
+    (glob_files ../models/*.stan)))
+  (action
+   (with-stdout-to
+    %{targets}
+    (run
+     %{project_root}/test/integration/gen_expected_rules.exe
+     "report:-fvectorize-loops --debug-loop-vectorization"
+     "mir:-fvectorize-loops --debug-optimized-mir-pretty"
+     --
+     %{stanfiles})))))
+
+(subdir
+ expected
+ (dynamic_include ../rules/dune.inc))

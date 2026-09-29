@@ -129,7 +129,9 @@ let process_flags name code (flags : 'a Js.opt) includes :
                    else if is_flag_set "debug-optimized-mir-pretty" then Pretty
                    else Off)
               ; print_mem_patterns= is_flag_set "debug-mem-patterns"
+              ; print_loop_vectorization= is_flag_set "debug-loop-vectorization"
               ; force_soa= None
+              ; force_vectorize_loops= None
               ; print_lir= is_flag_set "debug-lir"
               ; debug_print_factor_graph= is_flag_set "debug-print-factor-graph"
               ; debug_generate_data= is_flag_set "debug-generate-data"

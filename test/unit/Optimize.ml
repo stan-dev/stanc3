@@ -3826,13 +3826,11 @@ let%expect_test "vectorize: truncation lowers to a multi-statement body" =
     real mu;
     real sigma;
     {
-      target += normal_lupdf(y, mu, sigma);
-      for(n in 1:N) {
-        if((y[n] < 0)) target += FnNegInf__(); else target += -(normal_lccdf(promote(
+      for(n in 1:N) if((y[n] < 0)) target += FnNegInf__(); else target += -(normal_lccdf(promote(
                                                                         0, real,
                                                                         data),
                                                                         mu, sigma));
-      }
+      target += normal_lupdf(y, mu, sigma);
     }
     |}]
 
@@ -4094,7 +4092,7 @@ let%expect_test "vectorize bail: density value assigned, not summed" =
     }
     |}]
 
-let%expect_test "vectorize bail: offset index and invariant rhs" =
+let%expect_test "vectorize: offset index widens, invariant rhs stays a loop" =
   print_vectorized
     {|
       data {
@@ -4127,9 +4125,7 @@ let%expect_test "vectorize bail: offset index and invariant rhs" =
       for(n in 1:N) {
         v[n] = alpha;
       }
-      for(n in 2:N) {
-        w[n] = x[(n - 1)];
-      }
+      w[2:] = x[1:(N - 1)];
       target += normal_lpdf(v, w, promote(1, real, data));
     }
     |}]
@@ -4661,7 +4657,7 @@ let%expect_test "vectorize: independent statements in one loop" =
     }
     |}]
 
-let%expect_test "vectorize bail: statements in one loop interfere" =
+let%expect_test "vectorize: dependent statements in one loop hoist in order" =
   print_vectorized
     {|
       data {
@@ -4689,10 +4685,8 @@ let%expect_test "vectorize bail: statements in one loop interfere" =
       vector[N] v;
       FnValidateSize__("w", "N", N);
       vector[N] w;
-      for(n in 1:N) {
-        v[n] = (x[n] + alpha);
-        w[n] = (v[n] * promote(2, real, data));
-      }
+      v[:] = (x + alpha);
+      w[:] = (v * promote(2, real, data));
       target += normal_lpdf(v, w, promote(1, real, data));
     }
     |}]
@@ -4726,7 +4720,7 @@ let%expect_test "vectorize: statements inside a profile block" =
     }
     |}]
 
-let%expect_test "vectorize bail: a profile block hides an interfering write" =
+let%expect_test "vectorize: a profile block and its reader hoist in order" =
   print_vectorized
     {|
       data {
@@ -4753,12 +4747,10 @@ let%expect_test "vectorize bail: a profile block hides an interfering write" =
     {
       FnValidateSize__("v", "N", N);
       vector[N] v;
-      for(n in 1:N) {
-        profile("mu"){
-          v[n] = (x[n] + promote(1, real, data));
-        }
-        target += normal_lpdf(y[n], v[n], sigma);
+      profile("mu"){
+        v[:] = (x + promote(1, real, data));
       }
+      target += normal_lpdf(y, v, sigma);
     }
     |}]
 
@@ -4837,8 +4829,6 @@ let%expect_test "vectorize bail: strange loops" =
       row_vector[N] b;
       FnValidateSize__("c", "N", N);
       array[real, N] c;
-      target += std_normal_lupdf(x);
-      a[:] = exp(x);
       for(i in 1:N) {
         FnValidateSize__("g", "M", M);
         vector[M] g;
@@ -4851,7 +4841,8 @@ let%expect_test "vectorize bail: strange loops" =
           m = (m - 1);
         }
       }
-      c[:] = z;
+      target += std_normal_lupdf(x);
+      a[:] = exp(x);
       for(i in 1:N) {
         target += std_normal_lupdf(x[i]);
         for(j in 1:N) {
@@ -4859,6 +4850,7 @@ let%expect_test "vectorize bail: strange loops" =
           FnPrint__(target());
         }
       }
+      c[:] = z;
     }
     |}]
 
@@ -4902,10 +4894,8 @@ let%expect_test "vectorize bail: break and continue" =
       }
       FnValidateSize__("b", "N", N);
       vector[N] b;
+      for(i in 1:N) while(1) break;
       b[:] = exp(x);
-      for(i in 1:N) {
-        while(1) break;
-      }
     }
     |}]
 
@@ -5022,16 +5012,16 @@ let%expect_test "vectorize: multiple indexing" =
       FnValidateSize__("w4", "N", N);
       FnValidateSize__("w4", "N", N);
       matrix[N, N] w4;
-      a[:, 1, 1] = x;
       for(i in 1:N) {
         target += std_normal_lupdf(y[i, x[i]]);
-        w2[:, i] = y[i];
-        w3[i, :] = z[i];
-        target += ((N - 0) * std_normal_lupdf(y[i, i]));
         for(j in 1:N) {
           w1[i, j] = y[i, j];
           w4[j, i] = z[i, j];
         }
+        w2[:, i] = y[i];
+        w3[i, :] = z[i];
+        target += ((N - 0) * std_normal_lupdf(y[i, i]));
       }
+      a[:, 1, 1] = x;
     }
     |}]
