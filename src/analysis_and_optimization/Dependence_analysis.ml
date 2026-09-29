@@ -36,22 +36,22 @@ let linear_add (left : linear) (right : linear) : linear option =
 (** The [linear] form of [left - right] for [classify_point], or [None] unless
     each symbol and loop variable of [right] cancels the same one in [left]. *)
 let linear_subtract (left : linear) (right : linear) : linear option =
-  (* the term of [left] that remains once [right_term] is taken away: [left]'s
-     own term when [right] has none, [Some None] when the two cancel, and [None]
-     when [right_term] cannot be taken away *)
-  let remaining ~equal left_term right_term =
-    match (left_term, right_term) with
-    | term, None -> Some term
-    | Some left_value, Some right_value when equal left_value right_value ->
-        Some None
-    | _, Some _ -> None in
-  match
-    ( remaining ~equal:Expr.Typed.equal left.symbol right.symbol
-    , remaining ~equal:String.equal left.loopvar right.loopvar )
-  with
-  | Some symbol, Some loopvar ->
-      Some {const= left.const - right.const; symbol; loopvar}
-  | None, _ | _, None -> None
+  (* [right_term] can be taken away when [right] has no term or [left] has the
+     same one *)
+  let removable ~equal left_term right_term =
+    Option.is_none right_term || Option.equal equal left_term right_term in
+  (* [left]'s term stays when [right] has none, and cancels otherwise *)
+  let difference left_term right_term =
+    if Option.is_none right_term then left_term else None in
+  if
+    removable ~equal:Expr.Typed.equal left.symbol right.symbol
+    && removable ~equal:String.equal left.loopvar right.loopvar
+  then
+    Some
+      { const= left.const - right.const
+      ; symbol= difference left.symbol right.symbol
+      ; loopvar= difference left.loopvar right.loopvar }
+  else None
 
 (** The [point] form of the integer index [expr], which is [Varying] when [expr]
     reads [written_vars] or uses a loop variable nonlinearly. *)
