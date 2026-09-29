@@ -49,10 +49,10 @@ let linear_subtract (left : linear) (right : linear) : linear option =
 let classify_point ~(loopvars : string Set.Poly.t)
     ~(written_vars : string Set.Poly.t) (expr : Expr.Typed.t) : point =
   (* an expression the classification does not look inside *)
-  let symbolic (subexpr : Expr.Typed.t) : point =
-    let names = expr_var_names_set subexpr in
-    if not (Set.Poly.disjoint names written_vars) then Varying Written
-    else if not (Set.Poly.disjoint names loopvars) then Varying Nonlinear
+  let opaque_point (subexpr : Expr.Typed.t) : point =
+    let read_names = expr_var_names_set subexpr in
+    if not (Set.Poly.disjoint read_names written_vars) then Varying Written
+    else if not (Set.Poly.disjoint read_names loopvars) then Varying Nonlinear
     else Affine {const= 0; symbol= Some subexpr; loopvar= None} in
   let rec classify (subexpr : Expr.Typed.t) : point =
     let combine linear_op lhs rhs =
@@ -60,8 +60,8 @@ let classify_point ~(loopvars : string Set.Poly.t)
       | Affine left_term, Affine right_term -> (
           match linear_op left_term right_term with
           | Some term -> Affine term
-          | None -> symbolic subexpr)
-      | Varying _, _ | _, Varying _ -> symbolic subexpr in
+          | None -> opaque_point subexpr)
+      | Varying _, _ | _, Varying _ -> opaque_point subexpr in
     match subexpr.pattern with
     | Var name when Set.Poly.mem name loopvars ->
         Affine {const= 0; symbol= None; loopvar= Some name}
@@ -69,15 +69,15 @@ let classify_point ~(loopvars : string Set.Poly.t)
         match Int.of_string_opt digits with
         | Some const -> Affine {const; symbol= None; loopvar= None}
         (* the frontend rejects an integer literal that does not fit an int *)
-        | None -> symbolic subexpr [@coverage off])
+        | None -> opaque_point subexpr [@coverage off])
     | FunApp (Operator Plus, [lhs; rhs]) -> combine linear_add lhs rhs
     | FunApp (Operator Minus, [lhs; rhs]) -> combine linear_subtract lhs rhs
     | Var _ | FunApp _ | TernaryIf _ | EAnd _ | EOr _ | Indexed _
      |TupleProjection _ ->
-        symbolic subexpr
+        opaque_point subexpr
     (* an integer index holds no other literal, and a promotion only makes a
        real or a complex value *)
-    | Lit _ | Promotion _ -> symbolic subexpr [@coverage off] in
+    | Lit _ | Promotion _ -> opaque_point subexpr [@coverage off] in
   classify expr
 
 (** Building and classifying the [step list] that leads from a variable to the
@@ -96,7 +96,7 @@ module Path = struct
       base is not a variable or a slice comes before the last index list. *)
   let rec of_expr (expr : Expr.Typed.t) :
       (string * Expr.Typed.t step list) option =
-    let extend base steps =
+    let extend_path base steps =
       match of_expr base with
       | Some (name, prefix)
         when List.for_all prefix ~f:(function
@@ -107,8 +107,8 @@ module Path = struct
     match expr.pattern with
     | Var name -> Some (name, [])
     | Indexed (base, indices) ->
-        extend base (List.map indices ~f:(fun index -> Subscript index))
-    | TupleProjection (base, field) -> extend base [Field field]
+        extend_path base (List.map indices ~f:(fun index -> Subscript index))
+    | TupleProjection (base, field) -> extend_path base [Field field]
     | FunApp _ | TernaryIf _ -> None
     (* a literal, a boolean and a promotion are never indexed *)
     | Lit _ | EAnd _ | EOr _ | Promotion _ -> None [@coverage off]
@@ -166,10 +166,10 @@ module Accesses = struct
 
   (** The accesses in [accesses] to the variable [var] only. *)
   let of_var (var : string) (accesses : 'index t) : 'index t =
-    let keep = List.filter ~f:(fun access -> String.equal access.var var) in
-    { reads= keep accesses.reads
-    ; writes= keep accesses.writes
-    ; increments= keep accesses.increments }
+    let only_var = List.filter ~f:(fun access -> String.equal access.var var) in
+    { reads= only_var accesses.reads
+    ; writes= only_var accesses.writes
+    ; increments= only_var accesses.increments }
 
   (** The names of the variables that [accesses] read or increment. *)
   let read_vars (accesses : 'index t) : string Set.Poly.t =
@@ -189,7 +189,8 @@ module Accesses = struct
     (* the accesses of the expressions directly inside [expr], in order *)
     let of_children () =
       Expr.Pattern.fold
-        (fun before subexpr -> append before (of_expr subexpr))
+        (fun running_accesses subexpr ->
+          append running_accesses (of_expr subexpr))
         empty expr.pattern in
     match expr.pattern with
     | Var name -> read name []
@@ -214,7 +215,8 @@ module Accesses = struct
        statements nested inside *)
     let of_children () =
       Stmt.Pattern.fold
-        (fun before subexpr -> append before (of_expr subexpr))
+        (fun running_accesses subexpr ->
+          append running_accesses (of_expr subexpr))
         Fun.const empty stmt in
     match stmt with
     | Assignment (lhs, _, rhs) ->
@@ -352,8 +354,8 @@ module Dependence = struct
     if List.compare_lengths source.path sink.path <> 0 then Unknown
     else
       List.fold_left2 source.path sink.path ~init:Unknown
-        ~f:(fun merged source_step sink_step ->
-          meet merged
+        ~f:(fun running_dependence source_step sink_step ->
+          meet running_dependence
             (match (source_step, sink_step) with
             | Subscript (Single source_point), Subscript (Single sink_point) ->
                 of_points common_loopvars source_point sink_point
@@ -409,14 +411,14 @@ module Dependence = struct
   let between (common_loopvars : string option list) ~(restrict : t -> t)
       (dependence : kind) (source : point Accesses.t) (sink : point Accesses.t)
       : t =
-    (* [joined] with every pair of an access in [source_list] and an access in
-       [sink_list] joined in *)
-    let join_pairs source_list sink_list (joined : t) : t =
-      List.fold_left source_list ~init:joined
-        ~f:(fun with_sources source_access ->
-          List.fold_left sink_list ~init:with_sources
-            ~f:(fun with_pairs sink_access ->
-              join with_pairs
+    (* [running_dependence] with every pair of an access in [source_list] and an
+       access in [sink_list] joined in *)
+    let join_pairs source_list sink_list (running_dependence : t) : t =
+      List.fold_left source_list ~init:running_dependence
+        ~f:(fun running_source_dependence source_access ->
+          List.fold_left sink_list ~init:running_source_dependence
+            ~f:(fun running_pair_dependence sink_access ->
+              join running_pair_dependence
                 (restrict
                    (of_accesses common_loopvars source_access sink_access))))
     in
@@ -485,9 +487,9 @@ let dependence_from (statement_map : dep_info_map) ~(src_id : label)
     flow dependences into [dst_id] (Allen and Kennedy 1987). *)
 let writes_read_by (statement_map : dep_info_map) ~(dst_id : label)
     (var : string) : label Set.Poly.t =
-  let _, info = LabelMap.find dst_id statement_map in
-  let dst_accesses = Accesses.of_var var info.accesses in
-  Set.Poly.filter (reaching_defn_lookup info.reaching_defn_entry var)
+  let _, dst_info = LabelMap.find dst_id statement_map in
+  let dst_accesses = Accesses.of_var var dst_info.accesses in
+  Set.Poly.filter (reaching_defn_lookup dst_info.reaching_defn_entry var)
     ~f:(fun src_id ->
       (* a definition from outside the analysed statement is recorded at
          [root_label], has unknown accesses and is always kept *)
@@ -511,23 +513,24 @@ let read_variables (info : node_dep_info) : string Set.Poly.t =
 let node_immediate_dependencies (statement_map : dep_info_map)
     ?(blockers : string Set.Poly.t = Set.Poly.empty) (node_id : label) :
     label Set.Poly.t =
-  let _, info = LabelMap.find node_id statement_map in
-  let rhs_deps =
+  let _, node_info = LabelMap.find node_id statement_map in
+  let read_dependency_ids =
     Set.Poly.union_map
-      (Set.Poly.diff (read_variables info) blockers)
+      (Set.Poly.diff (read_variables node_info) blockers)
       ~f:(writes_read_by statement_map ~dst_id:node_id) in
-  Set.Poly.union info.parents rhs_deps
+  Set.Poly.union node_info.parents read_dependency_ids
 
 (* This is doing an explicit graph traversal with edges defined by
    node_immediate_dependencies. *)
 let rec node_dependencies_rec (statement_map : dep_info_map)
     ?(blockers : string Set.Poly.t = Set.Poly.empty) (node_id : label)
-    (visited : label Set.Poly.t) : label Set.Poly.t =
-  if Set.Poly.mem node_id visited then visited
+    (visited_ids : label Set.Poly.t) : label Set.Poly.t =
+  if Set.Poly.mem node_id visited_ids then visited_ids
   else
-    let visited' = Set.Poly.add node_id visited in
-    let deps = node_immediate_dependencies statement_map ~blockers node_id in
-    Set.Poly.fold deps ~init:visited'
+    let visited_with_node_ids = Set.Poly.add node_id visited_ids in
+    let dependency_ids =
+      node_immediate_dependencies statement_map ~blockers node_id in
+    Set.Poly.fold dependency_ids ~init:visited_with_node_ids
       ~f:(node_dependencies_rec statement_map ~blockers)
 
 let node_dependencies (statement_map : dep_info_map) (node_id : label) :
@@ -537,13 +540,13 @@ let node_dependencies (statement_map : dep_info_map) (node_id : label) :
 let node_vars_dependencies (statement_map : dep_info_map)
     ?(blockers : string Set.Poly.t = Set.Poly.empty) (vars : string Set.Poly.t)
     (node_id : label) : label Set.Poly.t =
-  let _, info = LabelMap.find node_id statement_map in
-  let var_deps =
+  let _, node_info = LabelMap.find node_id statement_map in
+  let var_dependency_ids =
     Set.Poly.union_map
       (Set.Poly.diff vars blockers)
       ~f:(writes_read_by statement_map ~dst_id:node_id) in
   Set.Poly.fold
-    (Set.Poly.union info.parents var_deps)
+    (Set.Poly.union node_info.parents var_dependency_ids)
     ~init:Set.Poly.empty
     ~f:(node_dependencies_rec statement_map ~blockers)
 
@@ -691,37 +694,42 @@ let build_dep_info_map (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
       stmt in
   let _, predecessor_ids, parent_ids = build_cf_graphs statement_map in
   let rd_map = mir_reaching_definitions mir stmt in
-  let collected =
+  let all_stmt_accesses =
     LabelMap.map statement_map ~f:(fun (pattern, _) -> Accesses.of_stmt pattern)
   in
-  (* the variables some statement inside [stmt] writes; an index that reads one
-     of them can change value inside [stmt] *)
+  (* the variables some statement inside [stmt] writes, from
+     [all_stmt_accesses]; an index that reads one of them can change value
+     inside [stmt] *)
   let written_vars =
-    LabelMap.fold collected ~init:Set.Poly.empty
-      ~f:(fun ~key:_ ~data:accesses written ->
-        Set.Poly.union written (Accesses.written_vars accesses)) in
+    LabelMap.fold all_stmt_accesses ~init:Set.Poly.empty
+      ~f:(fun ~key:_ ~data:stmt_accesses running_written_vars ->
+        Set.Poly.union running_written_vars
+          (Accesses.written_vars stmt_accesses)) in
   (* the loop variables of the [for] loops around [statement_id] *)
   let rec enclosing_loopvars statement_id =
     match enclosing_loop statement_map parent_ids statement_id with
     | None -> Set.Poly.empty
     | Some loop_id ->
-        let outer = enclosing_loopvars loop_id in
-        Option.value_map (for_loopvar statement_map loop_id) ~default:outer
-          ~f:(fun loopvar -> Set.Poly.add loopvar outer) in
-  LabelMap.mapi statement_map ~f:(fun statement_id (pattern, idx) ->
-      let rds = LabelMap.find statement_id rd_map in
-      ( pattern
-      , { predecessors= LabelMap.find statement_id predecessor_ids
-        ; parents= LabelMap.find statement_id parent_ids
-        ; reaching_defn_entry= rds.entry
-        ; reaching_defn_exit= rds.exit
-        ; loop_id= enclosing_loop statement_map parent_ids statement_id
-        ; accesses=
-            Accesses.classify
-              ~loopvars:(enclosing_loopvars statement_id)
-              ~written_vars
-              (LabelMap.find statement_id collected)
-        ; meta= idx } ))
+        let outer_loopvars = enclosing_loopvars loop_id in
+        Option.value_map (for_loopvar statement_map loop_id)
+          ~default:outer_loopvars ~f:(fun loopvar ->
+            Set.Poly.add loopvar outer_loopvars) in
+  let make_node_info statement_id
+      ((pattern : (Expr.Typed.t, label) Stmt.Pattern.t), meta) =
+    let rds = LabelMap.find statement_id rd_map in
+    ( pattern
+    , { predecessors= LabelMap.find statement_id predecessor_ids
+      ; parents= LabelMap.find statement_id parent_ids
+      ; reaching_defn_entry= rds.entry
+      ; reaching_defn_exit= rds.exit
+      ; loop_id= enclosing_loop statement_map parent_ids statement_id
+      ; accesses=
+          Accesses.classify
+            ~loopvars:(enclosing_loopvars statement_id)
+            ~written_vars
+            (LabelMap.find statement_id all_stmt_accesses)
+      ; meta } ) in
+  LabelMap.mapi statement_map ~f:make_node_info
 
 let log_prob_build_dep_info_map (mir : Program.Typed.t) : dep_info_map =
   let log_prob_stmt =

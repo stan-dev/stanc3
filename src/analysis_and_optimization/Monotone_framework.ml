@@ -446,8 +446,8 @@ let transfer_gen_kill p gen kill = Set.Poly.union gen (Set.Poly.diff p kill)
     function that adds to [target], such as [x = foo_lp(y)]. *)
 let exprs_increment_target (s : (Expr.Typed.t, 'a) Stmt.Pattern.t) =
   Stmt.Pattern.fold
-    (fun found expr ->
-      found
+    (fun increments_earlier expr ->
+      increments_earlier
       || expr_any
            (fun (subexpr : Expr.Typed.t) ->
              match subexpr.pattern with
