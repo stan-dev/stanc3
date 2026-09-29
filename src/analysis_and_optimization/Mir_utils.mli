@@ -4,6 +4,11 @@ open Dataflow_types
 
 val expr_any : (ExprSet.elt -> bool) -> ExprSet.elt -> bool
 val idx_any : (ExprSet.elt -> bool) -> ExprSet.elt Index.t -> bool
+
+val increments_target : 'e Fun_kind.t -> bool
+(** Whether a call of this kind adds to [target], as a user [_lp] or [_jacobian]
+    function or a Stan Math [_jacobian] function does. *)
+
 val cannot_duplicate_expr : ?preserve_stability:bool -> ExprSet.elt -> bool
 val cannot_remove_expr : ExprSet.elt -> bool
 val var_declarations : ('a, 'b) Stmt.t -> string Set.Poly.t
@@ -107,18 +112,13 @@ val fwd_traverse_statement :
     ignores branching, e.g., and if's then block is followed by the else block
     rather than branching. *)
 
-val vexpr_of_expr_exn : Expr.Typed.t -> vexpr
-(** Take a LHS expression from a general expression, throwing an exception if it
-    can't be a LHS expression. *)
+val var_name_of_expr_exn : Expr.Typed.t -> string
+(** The name of a bare variable expression, throwing an exception for any other
+    expression. *)
 
-val expr_var_set : Expr.Typed.t -> (vexpr * Expr.Typed.Meta.t) Set.Poly.t
+val expr_var_set : Expr.Typed.t -> (string * Expr.Typed.Meta.t) Set.Poly.t
 (** The set of variables in an expression, including inside an index. For use in
     RHS sets, not LHS assignment sets, except in a target term. *)
-
-val index_var_set :
-  Expr.Typed.t Index.t -> (vexpr * Expr.Typed.Meta.t) Set.Poly.t
-(** The set of variables in an index. For use in RHS sets, not LHS assignment
-    sets, except in a target term *)
 
 val expr_var_names_set : Expr.Typed.t -> string Set.Poly.t
 (** Return the names of the variables in an expression. *)
@@ -129,16 +129,13 @@ val stmt_rhs : (Expr.Typed.t, 's) Stmt.Pattern.t -> Expr.Typed.t Set.Poly.t
     polymorphic, it usually doesn't matter if there's duplication. *)
 
 val stmt_rhs_var_set :
-  (Expr.Typed.t, 's) Stmt.Pattern.t -> (vexpr * Expr.Typed.Meta.t) Set.Poly.t
+  (Expr.Typed.t, 's) Stmt.Pattern.t -> (string * Expr.Typed.Meta.t) Set.Poly.t
 (** The set of variables in an expression, including inside an index. For use in
     RHS sets, not LHS assignment sets, except in a target term. *)
 
-val stmt_rhs_names_set : ('a Expr.t, 'b) Stmt.Pattern.t -> vexpr Set.Poly.t
+val stmt_rhs_names_set : ('a Expr.t, 'b) Stmt.Pattern.t -> string Set.Poly.t
 (** The set of variable names in an expression, including inside an index. For
     use in RHS sets, not LHS assignment sets, except in a target term. *)
-
-val expr_assigned_var : Expr.Typed.t -> vexpr
-(** The variable being assigned to when the expression is the LHS *)
 
 val summation_terms : Expr.Typed.t -> Expr.Typed.t list
 (** The list of terms in expression separated by a + *)
