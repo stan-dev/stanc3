@@ -21,37 +21,32 @@ type 'index access = {var: string; path: 'index step list}
 (** The [linear] form of [left + right] for [classify_point], or [None] when
     both sides have a symbol or both have a loop variable. *)
 let linear_add (left : linear) (right : linear) : linear option =
-  let both_have term_of =
-    Option.is_some (term_of left) && Option.is_some (term_of right) in
-  if
-    both_have (fun (term : linear) -> term.symbol)
-    || both_have (fun (term : linear) -> term.loopvar)
-  then None
-  else
-    Some
-      { const= left.const + right.const
-      ; symbol= Option.first_some left.symbol right.symbol
-      ; loopvar= Option.first_some left.loopvar right.loopvar }
+  match ((left.symbol, right.symbol), (left.loopvar, right.loopvar)) with
+  (* a [linear] holds at most one symbol and at most one loop variable *)
+  | (Some _, Some _), _ | _, (Some _, Some _) -> None
+  | (left_symbol, right_symbol), (left_loopvar, right_loopvar) ->
+      Some
+        { const= left.const + right.const
+        ; symbol= Option.first_some left_symbol right_symbol
+        ; loopvar= Option.first_some left_loopvar right_loopvar }
 
 (** The [linear] form of [left - right] for [classify_point], or [None] unless
     each symbol and loop variable of [right] cancels the same one in [left]. *)
 let linear_subtract (left : linear) (right : linear) : linear option =
-  (* [right_term] can be taken away when [right] has no term or [left] has the
-     same one *)
-  let removable ~equal left_term right_term =
-    Option.is_none right_term || Option.equal equal left_term right_term in
-  (* [left]'s term stays when [right] has none, and cancels otherwise *)
-  let difference left_term right_term =
-    if Option.is_none right_term then left_term else None in
-  if
-    removable ~equal:Expr.Typed.equal left.symbol right.symbol
-    && removable ~equal:String.equal left.loopvar right.loopvar
-  then
-    Some
-      { const= left.const - right.const
-      ; symbol= difference left.symbol right.symbol
-      ; loopvar= difference left.loopvar right.loopvar }
-  else None
+  match (right.symbol, right.loopvar) with
+  (* a term of [right] can only be taken away from the same term of [left] *)
+  | Some _, _ when not (Option.equal Expr.Typed.equal left.symbol right.symbol)
+    ->
+      None
+  | _, Some _ when not (Option.equal String.equal left.loopvar right.loopvar) ->
+      None
+  (* each term of [right] is absent, so [left]'s stays, or cancels [left]'s *)
+  | right_symbol, right_loopvar ->
+      Some
+        { const= left.const - right.const
+        ; symbol= (if Option.is_none right_symbol then left.symbol else None)
+        ; loopvar= (if Option.is_none right_loopvar then left.loopvar else None)
+        }
 
 (** The [point] form of the integer index [expr], which is [Varying] when [expr]
     reads [written_vars] or uses a loop variable nonlinearly. *)
