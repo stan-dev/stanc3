@@ -1,0 +1,3 @@
+/* $ stanc --warn-pedantic ../param-depend-control-tuple.stan : [exit 0] */
+../param-depend-control-tuple.stan:4:3: warning: The parameter a has 2 priors.
+../param-depend-control-tuple.stan:15:3: warning: A control flow statement depends on parameter(s): a.
