@@ -9,7 +9,7 @@
    %{targets}
    (run
     %{project_root}/test/integration/run_bin_on_args.exe
-    "%{bin:stanc} -fsoa --print-cpp"
+    "%{bin:stanc} -fvectorize-loops -fsoa --print-cpp"
     %{stanfiles}))))
 
 (rule
@@ -28,7 +28,7 @@
    %{targets}
    (run
     %{project_root}/test/integration/run_bin_on_args.exe
-    "%{bin:stanc} -fsoa --debug-optimized-mir --debug-mem-patterns"
+    "%{bin:stanc} -fvectorize-loops -fsoa --debug-optimized-mir --debug-mem-patterns"
     %{stanfiles}))))
 
 (rule

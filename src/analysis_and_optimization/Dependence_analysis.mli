@@ -37,6 +37,13 @@ type point =
   | Varying of varying_kind
       (** The index cannot be compared, so the index may equal any other. *)
 
+val classify_point :
+     loopvars:string Set.Poly.t
+  -> written_vars:string Set.Poly.t
+  -> Expr.Typed.t
+  -> point
+(** The integer index as a [point], looking through [+], [-] and promotions. *)
+
 (** One index position or tuple field of an access path. *)
 type 'index step =
   | Subscript of 'index Index.t  (** One index position, such as [n + 1]. *)
@@ -54,6 +61,9 @@ module Accesses : sig
     ; increments: 'index access list
           (** the accesses that read and write, such as [target += ...], but
               commute with each other *) }
+
+  val written_vars : 'index t -> string Set.Poly.t
+  (** The names of the variables that the accesses write or increment. *)
 end
 
 (** {1 Dependences between two accesses} *)
@@ -160,3 +170,48 @@ val mir_uninitialized_variables :
 val read_variables_at : dep_info_map -> label Set.Poly.t -> string Set.Poly.t
 (** The variables that the statements at [labels] read or increment, counting
     only the bounds of a [for] and the condition of an [if]. *)
+
+(** {2 The loop dependence graph of one [For]} *)
+
+(** The leaves of one [For]'s body and the flow, anti, output and effects edges
+    between them; the implementation documents the fields. *)
+type loop_graph
+
+val root_label : label
+(** The label of the analysed statement itself, [1]. *)
+
+val subtree_accesses : dep_info_map -> label -> point Accesses.t
+(** The accesses of the statement at the label and of every statement below. *)
+
+val statement_at : dep_info_map -> label -> Stmt.Located.t
+(** The statement at the label, children rebuilt from the map. *)
+
+val has_effects : dep_info_map -> label -> bool
+(** Whether the statement at the label, or one below, prints, rejects, draws
+    random numbers or calls a user function. *)
+
+val build_loop_graph : dep_info_map -> loop:label -> loop_graph
+(** The flow, anti, output and effects edges between the leaves of the [For] at
+    [loop], at that loop's level; the implementation documents the rules. *)
+
+val pi_blocks : loop_graph -> label list list
+(** The strongly connected components (Tarjan 1972) in emission order (Allen and
+    Kennedy 1987, section 5.2): a topological order of the condensation, ties to
+    the earliest leaf. *)
+
+val is_cyclic : loop_graph -> label list -> bool
+(** Whether a pi-block must stay a sequential loop; a write-only scatter's self
+    output dependence does not count, since indexed assignment stores in order.
+*)
+
+val edge_between : loop_graph -> from:label list -> into:label list -> bool
+(** Whether some edge leaves a leaf of [from] for a leaf of [into]. *)
+
+val pp_graph :
+     dep_info_map
+  -> (label * string) list
+  -> Format.formatter
+  -> loop_graph
+  -> unit
+(** One indented line per leaf, with the leaf's outcome after it when the list
+    has one, then the edges and the pi-blocks in emission order. *)

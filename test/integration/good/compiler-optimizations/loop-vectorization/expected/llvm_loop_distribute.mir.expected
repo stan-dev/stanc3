@@ -1,0 +1,268 @@
+  $ stanc -fvectorize-loops --debug-optimized-mir-pretty llvm_loop_distribute.stan
+
+input_vars {
+  int N;
+  int J;
+  vector[N] b;
+  vector[N] d;
+  vector[N] e;
+  vector[N] D;
+  matrix[N, J] mb;
+  matrix[N, J] mc;
+  matrix[N, J] me;
+  matrix[N, J] mf; }
+
+prepare_data {
+  data int pos__;
+  pos__ = 1;
+  data int N;
+  N = FnReadData__("N")[1];
+  (FnCheck(trans(Lower 1))(var_name N)(var N))__(1);
+  data int J;
+  J = FnReadData__("J")[1];
+  (FnCheck(trans(Lower 1))(var_name J)(var J))__(1);
+  FnValidateSize__("b", "N", N);
+  data vector[N] b;
+  {
+    array[] real b_flat__;
+    b_flat__ = FnReadData__("b");
+    pos__ = 1;
+    for(sym1__ in 1:N) {
+      b[sym1__] = b_flat__[pos__];
+      pos__ = (pos__ + 1);
+    }
+  }
+  FnValidateSize__("d", "N", N);
+  data vector[N] d;
+  {
+    array[] real d_flat__;
+    d_flat__ = FnReadData__("d");
+    pos__ = 1;
+    for(sym1__ in 1:N) {
+      d[sym1__] = d_flat__[pos__];
+      pos__ = (pos__ + 1);
+    }
+  }
+  FnValidateSize__("e", "N", N);
+  data vector[N] e;
+  {
+    array[] real e_flat__;
+    e_flat__ = FnReadData__("e");
+    pos__ = 1;
+    for(sym1__ in 1:N) {
+      e[sym1__] = e_flat__[pos__];
+      pos__ = (pos__ + 1);
+    }
+  }
+  FnValidateSize__("D", "N", N);
+  data vector[N] D;
+  {
+    array[] real D_flat__;
+    D_flat__ = FnReadData__("D");
+    pos__ = 1;
+    for(sym1__ in 1:N) {
+      D[sym1__] = D_flat__[pos__];
+      pos__ = (pos__ + 1);
+    }
+  }
+  FnValidateSize__("mb", "N", N);
+  FnValidateSize__("mb", "J", J);
+  data matrix[N, J] mb;
+  {
+    array[] real mb_flat__;
+    mb_flat__ = FnReadData__("mb");
+    pos__ = 1;
+    for(sym1__ in 1:J) {
+      for(sym2__ in 1:N) {
+        mb[sym2__, sym1__] = mb_flat__[pos__];
+        pos__ = (pos__ + 1);
+      }
+    }
+  }
+  FnValidateSize__("mc", "N", N);
+  FnValidateSize__("mc", "J", J);
+  data matrix[N, J] mc;
+  {
+    array[] real mc_flat__;
+    mc_flat__ = FnReadData__("mc");
+    pos__ = 1;
+    for(sym1__ in 1:J) {
+      for(sym2__ in 1:N) {
+        mc[sym2__, sym1__] = mc_flat__[pos__];
+        pos__ = (pos__ + 1);
+      }
+    }
+  }
+  FnValidateSize__("me", "N", N);
+  FnValidateSize__("me", "J", J);
+  data matrix[N, J] me;
+  {
+    array[] real me_flat__;
+    me_flat__ = FnReadData__("me");
+    pos__ = 1;
+    for(sym1__ in 1:J) {
+      for(sym2__ in 1:N) {
+        me[sym2__, sym1__] = me_flat__[pos__];
+        pos__ = (pos__ + 1);
+      }
+    }
+  }
+  FnValidateSize__("mf", "N", N);
+  FnValidateSize__("mf", "J", J);
+  data matrix[N, J] mf;
+  {
+    array[] real mf_flat__;
+    mf_flat__ = FnReadData__("mf");
+    pos__ = 1;
+    for(sym1__ in 1:J) {
+      for(sym2__ in 1:N) {
+        mf[sym2__, sym1__] = mf_flat__[pos__];
+        pos__ = (pos__ + 1);
+      }
+    }
+  } }
+
+log_prob {
+  real mu = (FnReadParam(constrain Identity)(dims())(mem_pattern AoS))__();
+  {
+    {
+      FnValidateSize__("a1", "N", N);
+      vector[N] a1;
+      a1[1:N] = (b[1:N] .* d[1:N]);
+      target += sum(a1);
+    }
+    {
+      data int a2_1dim__ = (N + 1);
+      FnValidateSize__("a2", "N + 1", a2_1dim__);
+      vector[a2_1dim__] a2;
+      FnValidateSize__("c2", "N", N);
+      vector[N] c2;
+      for(n in 1:N) a2[(n + 1)] = (a2[n] * b[n]);
+      c2[1:N] = (d[1:N] .* e[1:N]);
+      target += (sum(a2) + sum(c2));
+    }
+    {
+      FnValidateSize__("ma3", "N", N);
+      data int ma3_2dim__ = (J + 1);
+      FnValidateSize__("ma3", "J + 1", ma3_2dim__);
+      matrix[N, ma3_2dim__] ma3;
+      FnValidateSize__("md3", "N", N);
+      FnValidateSize__("md3", "J", J);
+      matrix[N, J] md3;
+      for(i in 1:N) {
+        for(j in 1:J) ma3[i, (j + 1)] = ((ma3[i, j] + mb[i, j]) + mc[i, j]);
+        md3[i, 1:J] = (me[i, 1:J] .* mf[i, 1:J]);
+      }
+      target += (sum(ma3) + sum(md3));
+    }
+    {
+      data int a4_1dim__ = (N + 1);
+      FnValidateSize__("a4", "N + 1", a4_1dim__);
+      vector[a4_1dim__] a4;
+      real total4;
+      total4 = promote(0, real, var);
+      for(n in 1:N) {
+        a4[(n + 1)] = (a4[n] * b[n]);
+        total4 = (total4 + d[n]);
+      }
+      target += (sum(a4) + total4);
+    }
+    {
+      data int a5_1dim__ = (N + 1);
+      FnValidateSize__("a5", "N + 1", a5_1dim__);
+      vector[a5_1dim__] a5;
+      FnValidateSize__("c5", "N", N);
+      vector[N] c5;
+      for(n in 1:N) {
+        real dd5;
+        dd5 = D[n];
+        a5[(n + 1)] = (a5[n] * b[n]);
+        c5[n] = (dd5 * e[n]);
+      }
+      target += (sum(a5) + sum(c5));
+    }
+    target += normal_lupdf(mu, promote(0, real, data), promote(1, real, data));
+  } }
+
+rev_log_prob {
+  real mu = (FnReadParam(constrain Identity)(dims())(mem_pattern AoS))__();
+  {
+    {
+      FnValidateSize__("a1", "N", N);
+      vector[N] a1;
+      a1[1:N] = (b[1:N] .* d[1:N]);
+      target += sum(a1);
+    }
+    {
+      data int a2_1dim__ = (N + 1);
+      FnValidateSize__("a2", "N + 1", a2_1dim__);
+      vector[a2_1dim__] a2;
+      FnValidateSize__("c2", "N", N);
+      vector[N] c2;
+      for(n in 1:N) a2[(n + 1)] = (a2[n] * b[n]);
+      c2[1:N] = (d[1:N] .* e[1:N]);
+      target += (sum(a2) + sum(c2));
+    }
+    {
+      FnValidateSize__("ma3", "N", N);
+      data int ma3_2dim__ = (J + 1);
+      FnValidateSize__("ma3", "J + 1", ma3_2dim__);
+      matrix[N, ma3_2dim__] ma3;
+      FnValidateSize__("md3", "N", N);
+      FnValidateSize__("md3", "J", J);
+      matrix[N, J] md3;
+      for(i in 1:N) {
+        for(j in 1:J) ma3[i, (j + 1)] = ((ma3[i, j] + mb[i, j]) + mc[i, j]);
+        md3[i, 1:J] = (me[i, 1:J] .* mf[i, 1:J]);
+      }
+      target += (sum(ma3) + sum(md3));
+    }
+    {
+      data int a4_1dim__ = (N + 1);
+      FnValidateSize__("a4", "N + 1", a4_1dim__);
+      vector[a4_1dim__] a4;
+      real total4;
+      total4 = promote(0, real, var);
+      for(n in 1:N) {
+        a4[(n + 1)] = (a4[n] * b[n]);
+        total4 = (total4 + d[n]);
+      }
+      target += (sum(a4) + total4);
+    }
+    {
+      data int a5_1dim__ = (N + 1);
+      FnValidateSize__("a5", "N + 1", a5_1dim__);
+      vector[a5_1dim__] a5;
+      FnValidateSize__("c5", "N", N);
+      vector[N] c5;
+      for(n in 1:N) {
+        real dd5;
+        dd5 = D[n];
+        a5[(n + 1)] = (a5[n] * b[n]);
+        c5[n] = (dd5 * e[n]);
+      }
+      target += (sum(a5) + sum(c5));
+    }
+    target += normal_lupdf(mu, promote(0, real, data), promote(1, real, data));
+  } }
+
+generate_quantities {
+  data real
+    mu = (FnReadParam(constrain Identity)(dims())(mem_pattern AoS))__(
+    );
+  (FnWriteParam(unconstrain_opt())(var mu))__();
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+
+transform_inits {
+  real mu;
+  mu = FnReadData__("mu")[1];
+  (FnWriteParam(unconstrain_opt(Identity))(var mu))__(); }
+output_vars {
+  parameters real mu; //real
+}
+[exit 0]
