@@ -48,8 +48,8 @@ let rec extract_factors statement_map label =
     (fun state label -> List.append state (extract_factors statement_map label))
     this_stmt stmt
 
-let factor_rhs (factor : factor) : string Set.Poly.t =
-  match factor with
+let factor_rhs (term : factor) : string Set.Poly.t =
+  match term with
   | TargetTerm e -> Set.Poly.map (expr_var_set e) ~f:fst
   | Reject -> Set.Poly.empty
   | LPFunction (_, es) -> Set.Poly.of_list (List.map es ~f:var_name_of_expr_exn)
