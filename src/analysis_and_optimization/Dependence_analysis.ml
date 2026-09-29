@@ -136,6 +136,15 @@ module Accesses = struct
     ; writes: 'index access list
     ; increments: 'index access list }
 
+  (** No accesses. *)
+  let empty : 'index t = {reads= []; writes= []; increments= []}
+
+  (** The accesses of [first] followed by the accesses of [second]. *)
+  let append (first : 'index t) (second : 'index t) : 'index t =
+    { reads= first.reads @ second.reads
+    ; writes= first.writes @ second.writes
+    ; increments= first.increments @ second.increments }
+
   (** The accesses of one read of [var] at [path]. *)
   let read (var : string) (path : 'index step list) : 'index t =
     {reads= [{var; path}]; writes= []; increments= []}
@@ -179,11 +188,9 @@ module Accesses = struct
   let rec of_expr (expr : Expr.Typed.t) : Expr.Typed.t t =
     (* the accesses of the expressions directly inside [expr], in order *)
     let of_children () =
-      concat
-        (List.rev
-           (Expr.Pattern.fold
-              (fun parts subexpr -> of_expr subexpr :: parts)
-              [] expr.pattern)) in
+      Expr.Pattern.fold
+        (fun before subexpr -> append before (of_expr subexpr))
+        empty expr.pattern in
     match expr.pattern with
     | Var name -> read name []
     | Indexed _ | TupleProjection _ -> (
@@ -206,11 +213,9 @@ module Accesses = struct
     (* the accesses of the expressions of [stmt], in order, skipping the
        statements nested inside *)
     let of_children () =
-      concat
-        (List.rev
-           (Stmt.Pattern.fold
-              (fun parts subexpr -> of_expr subexpr :: parts)
-              Fun.const [] stmt)) in
+      Stmt.Pattern.fold
+        (fun before subexpr -> append before (of_expr subexpr))
+        Fun.const empty stmt in
     match stmt with
     | Assignment (lhs, _, rhs) ->
         let path = Path.of_lvalue lhs in
@@ -404,25 +409,27 @@ module Dependence = struct
   let between (common_loopvars : string option list) ~(restrict : t -> t)
       (dependence : kind) (source : point Accesses.t) (sink : point Accesses.t)
       : t =
-    let pairs source_list sink_list =
-      List.concat_map source_list ~f:(fun source_access ->
-          List.map sink_list ~f:(fun sink_access ->
-              (source_access, sink_access))) in
+    (* [joined] with every pair of an access in [source_list] and an access in
+       [sink_list] joined in *)
+    let join_pairs source_list sink_list (joined : t) : t =
+      List.fold_left source_list ~init:joined
+        ~f:(fun with_sources source_access ->
+          List.fold_left sink_list ~init:with_sources
+            ~f:(fun with_pairs sink_access ->
+              join with_pairs
+                (restrict
+                   (of_accesses common_loopvars source_access sink_access))))
+    in
     let sources = source_uses dependence source in
     let sinks = sink_uses dependence sink in
     if
-      List.is_empty (sources @ source.increments)
-      || List.is_empty (sinks @ sink.increments)
+      (List.is_empty sources && List.is_empty source.increments)
+      || (List.is_empty sinks && List.is_empty sink.increments)
     then Unknown
     else
-      List.fold_left
-        (pairs sources sinks
-        @ pairs sources sink.increments
-        @ pairs source.increments sinks)
-        ~init:Independent
-        ~f:(fun merged (source_access, sink_access) ->
-          join merged
-            (restrict (of_accesses common_loopvars source_access sink_access)))
+      Independent |> join_pairs sources sinks
+      |> join_pairs sources sink.increments
+      |> join_pairs source.increments sinks
 end
 
 (** Find all of the reaching definitions of a variable in an RD set *)
@@ -448,14 +455,13 @@ let for_loopvar
     first, which give the levels of a [Dependent] result. *)
 let common_loopvars (statement_map : dep_info_map) ~(src_id : label)
     ~(dst_id : label) : string option list =
+  (* the loops around [statement_id], outermost first *)
   let rec loop_ids statement_id =
     match (snd (LabelMap.find statement_id statement_map)).loop_id with
     | None -> []
-    | Some loop_id -> loop_id :: loop_ids loop_id in
+    | Some loop_id -> loop_ids loop_id @ [loop_id] in
   let dst_loop_ids = loop_ids dst_id in
-  List.filter_map
-    (List.rev (loop_ids src_id))
-    ~f:(fun loop_id ->
+  List.filter_map (loop_ids src_id) ~f:(fun loop_id ->
       Option.some_if
         (List.mem loop_id ~set:dst_loop_ids)
         (for_loopvar statement_map loop_id))
@@ -465,45 +471,37 @@ let accesses_at (statement_map : dep_info_map) (statement_id : label) :
     point Accesses.t =
   (snd (LabelMap.find statement_id statement_map)).accesses
 
-(** The labels in [sources] with a [dependence] into [dst_accesses], each paired
-    with the dependence, where [None] accesses are [Unknown]. *)
-let overlapping_sources (statement_map : dep_info_map) ~(dst_id : label)
-    ~(restrict : src_id:label -> Dependence.t -> Dependence.t)
-    (dependence : Dependence.kind)
-    ~(sources : (label * point Accesses.t option) list)
-    (dst_accesses : point Accesses.t) : (label * Dependence.t) list =
-  List.filter_map sources ~f:(fun (src_id, src_accesses) ->
-      match src_accesses with
-      | None -> Some (src_id, Dependence.Unknown)
-      | Some known -> (
-          match
-            Dependence.between
-              (common_loopvars statement_map ~src_id ~dst_id)
-              ~restrict:(restrict ~src_id) dependence known dst_accesses
-          with
-          | Independent -> None
-          | (Unknown | Dependent _) as dep -> Some (src_id, dep)))
+(** The [dependence] from [src_accesses] at [src_id] into [dst_accesses] at
+    [dst_id], with the levels of the loops around both statements. *)
+let dependence_from (statement_map : dep_info_map) ~(src_id : label)
+    ~(dst_id : label) ~(restrict : Dependence.t -> Dependence.t)
+    (dependence : Dependence.kind) (src_accesses : point Accesses.t)
+    (dst_accesses : point Accesses.t) : Dependence.t =
+  Dependence.between
+    (common_loopvars statement_map ~src_id ~dst_id)
+    ~restrict dependence src_accesses dst_accesses
 
 (** The statements whose writes to [var] [dst_id] may read, the sources of the
     flow dependences into [dst_id] (Allen and Kennedy 1987). *)
 let writes_read_by (statement_map : dep_info_map) ~(dst_id : label)
     (var : string) : label Set.Poly.t =
   let _, info = LabelMap.find dst_id statement_map in
-  (* a definition from outside the analysed statement is recorded at
-     [root_label] and has unknown accesses *)
-  let sources =
-    List.map
-      (Set.Poly.to_list (reaching_defn_lookup info.reaching_defn_entry var))
-      ~f:(fun src_id ->
-        ( src_id
-        , if src_id = root_label then None
-          else Some (Accesses.of_var var (accesses_at statement_map src_id)) ))
-  in
-  overlapping_sources statement_map ~dst_id
-    ~restrict:(Dependence.ordered ~dst_id)
-    Flow ~sources
-    (Accesses.of_var var info.accesses)
-  |> List.map ~f:fst |> Set.Poly.of_list
+  let dst_accesses = Accesses.of_var var info.accesses in
+  Set.Poly.filter (reaching_defn_lookup info.reaching_defn_entry var)
+    ~f:(fun src_id ->
+      (* a definition from outside the analysed statement is recorded at
+         [root_label], has unknown accesses and is always kept *)
+      src_id = root_label
+      ||
+      match
+        dependence_from statement_map ~src_id ~dst_id
+          ~restrict:(Dependence.ordered ~src_id ~dst_id)
+          Flow
+          (Accesses.of_var var (accesses_at statement_map src_id))
+          dst_accesses
+      with
+      | Independent -> false
+      | Unknown | Dependent _ -> true)
 
 (** The variables the statement reads or increments, including the variables
     read inside indices and sizes. *)
