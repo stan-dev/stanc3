@@ -21,28 +21,37 @@ type 'index access = {var: string; path: 'index step list}
 (** The [linear] form of [left + right] for [classify_point], or [None] when
     both sides have a symbol or both have a loop variable. *)
 let linear_add (left : linear) (right : linear) : linear option =
-  let add left_term right_term =
-    match (left_term, right_term) with
-    | term, None | None, term -> Some term
-    | Some _, Some _ -> None in
-  Option.bind (add left.symbol right.symbol) ~f:(fun symbol ->
-      Option.map (add left.loopvar right.loopvar) ~f:(fun loopvar ->
-          {const= left.const + right.const; symbol; loopvar}))
+  let both_have term_of =
+    Option.is_some (term_of left) && Option.is_some (term_of right) in
+  if
+    both_have (fun (term : linear) -> term.symbol)
+    || both_have (fun (term : linear) -> term.loopvar)
+  then None
+  else
+    Some
+      { const= left.const + right.const
+      ; symbol= Option.first_some left.symbol right.symbol
+      ; loopvar= Option.first_some left.loopvar right.loopvar }
 
 (** The [linear] form of [left - right] for [classify_point], or [None] unless
     each symbol and loop variable of [right] cancels the same one in [left]. *)
 let linear_subtract (left : linear) (right : linear) : linear option =
-  (* a term of [right] cancels only the same term of [left] *)
-  let subtract ~equal left_term right_term =
+  (* the term of [left] that remains once [right_term] is taken away: [left]'s
+     own term when [right] has none, [Some None] when the two cancel, and [None]
+     when [right_term] cannot be taken away *)
+  let remaining ~equal left_term right_term =
     match (left_term, right_term) with
     | term, None -> Some term
     | Some left_value, Some right_value when equal left_value right_value ->
         Some None
     | _, Some _ -> None in
-  Option.bind (subtract ~equal:Expr.Typed.equal left.symbol right.symbol)
-    ~f:(fun symbol ->
-      Option.map (subtract ~equal:String.equal left.loopvar right.loopvar)
-        ~f:(fun loopvar -> {const= left.const - right.const; symbol; loopvar}))
+  match
+    ( remaining ~equal:Expr.Typed.equal left.symbol right.symbol
+    , remaining ~equal:String.equal left.loopvar right.loopvar )
+  with
+  | Some symbol, Some loopvar ->
+      Some {const= left.const - right.const; symbol; loopvar}
+  | None, _ | _, None -> None
 
 (** The [point] form of the integer index [expr], which is [Varying] when [expr]
     reads [written_vars] or uses a loop variable nonlinearly. *)
@@ -276,17 +285,17 @@ module Dependence = struct
     match (source, sink) with
     | Affine source_term, Affine sink_term
       when Option.equal String.equal source_term.loopvar sink_term.loopvar -> (
-        (* the symbols' values are unknown, so the difference is known only when
+        (* the symbols' values are unknown, so the distance is known only when
            both indices have the same symbol or neither has one *)
-        let difference =
-          Option.some_if
-            (Option.equal Expr.Typed.equal source_term.symbol sink_term.symbol)
-            (source_term.const - sink_term.const) in
-        match (difference, source_term.loopvar) with
-        | None, _ | Some 0, None -> Unknown
-        | Some _, None -> Independent
-        | Some distance, Some loopvar
-          when List.mem (Some loopvar) ~set:common_loopvars ->
+        let same_symbol =
+          Option.equal Expr.Typed.equal source_term.symbol sink_term.symbol
+        in
+        let distance = source_term.const - sink_term.const in
+        match (same_symbol, source_term.loopvar) with
+        | false, _ -> Unknown
+        | true, None -> if distance = 0 then Unknown else Independent
+        | true, Some loopvar when List.mem (Some loopvar) ~set:common_loopvars
+          ->
             let direction =
               if distance = 0 then Eq else if distance > 0 then Lt else Gt in
             (* only the level of [loopvar] is known; any direction is possible
@@ -298,7 +307,7 @@ module Dependence = struct
                      ; distance= Some distance }
                    else
                      {directions= Set.Poly.of_list [Lt; Eq; Gt]; distance= None}))
-        | Some _, Some _ -> Unknown)
+        | true, Some _ -> Unknown)
     | Affine _, Affine _ | Varying _, _ | _, Varying _ -> Unknown
 
   (** The dependence at two index positions of one access pair together, which
@@ -368,21 +377,26 @@ module Dependence = struct
       before the access at [dst_id] (Kennedy and Allen 2001, definition 2.1). *)
   let ordered ~(src_id : label) ~(dst_id : label) (dep : t) : t =
     let rec restrict = function
-      | [] -> Option.some_if (src_id < dst_id) []
-      | level :: inner ->
+      | [] -> if src_id < dst_id then Some [] else None
+      | level :: inner -> (
+          (* the inner levels that let [src_id] run first when this loop is in
+             the same iteration for both accesses *)
           let same_iteration =
             if Set.Poly.mem Eq level.directions then restrict inner else None
           in
-          let directions =
-            Set.Poly.filter level.directions ~f:(function
-              | Lt -> true
-              | Eq -> Option.is_some same_iteration
-              | Gt -> false) in
-          if Set.Poly.is_empty directions then None
-          else if Set.Poly.mem Lt directions then
-            Some ({level with directions} :: inner)
-          else Option.map same_iteration ~f:(List.cons {level with directions})
-    in
+          match (Set.Poly.mem Lt level.directions, same_iteration) with
+          | true, _ ->
+              (* an earlier iteration runs first whatever the inner loops do *)
+              let directions =
+                Set.Poly.filter level.directions ~f:(function
+                  | Lt -> true
+                  | Eq -> Option.is_some same_iteration
+                  | Gt -> false) in
+              Some ({level with directions} :: inner)
+          | false, Some inner_levels ->
+              Some
+                ({level with directions= Set.Poly.singleton Eq} :: inner_levels)
+          | false, None -> None) in
     match dep with
     | (Independent | Unknown) as unchanged -> unchanged
     | Dependent levels -> (
@@ -463,10 +477,9 @@ let common_loopvars (statement_map : dep_info_map) ~(src_id : label)
     | None -> []
     | Some loop_id -> loop_ids loop_id @ [loop_id] in
   let dst_loop_ids = loop_ids dst_id in
-  List.filter_map (loop_ids src_id) ~f:(fun loop_id ->
-      Option.some_if
-        (List.mem loop_id ~set:dst_loop_ids)
-        (for_loopvar statement_map loop_id))
+  List.filter (loop_ids src_id) ~f:(fun loop_id ->
+      List.mem loop_id ~set:dst_loop_ids)
+  |> List.map ~f:(for_loopvar statement_map)
 
 (** The classified accesses of the statement at [statement_id]. *)
 let accesses_at (statement_map : dep_info_map) (statement_id : label) :
@@ -709,11 +722,12 @@ let build_dep_info_map (mir : Program.Typed.t) (stmt : Stmt.Located.t) :
   let rec enclosing_loopvars statement_id =
     match enclosing_loop statement_map parent_ids statement_id with
     | None -> Set.Poly.empty
-    | Some loop_id ->
+    | Some loop_id -> (
         let outer_loopvars = enclosing_loopvars loop_id in
-        Option.value_map (for_loopvar statement_map loop_id)
-          ~default:outer_loopvars ~f:(fun loopvar ->
-            Set.Poly.add loopvar outer_loopvars) in
+        match for_loopvar statement_map loop_id with
+        | Some loopvar -> Set.Poly.add loopvar outer_loopvars
+        (* a [while] loop has no loop variable *)
+        | None -> outer_loopvars) in
   let make_node_info statement_id
       ((pattern : (Expr.Typed.t, label) Stmt.Pattern.t), meta) =
     let rds = LabelMap.find statement_id rd_map in
