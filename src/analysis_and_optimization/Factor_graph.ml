@@ -80,7 +80,7 @@ let build_adjacency_maps (factors : (label * factor * string Set.Poly.t) list) :
              (Set.Poly.to_list vars))) in
   {factor_map; var_map}
 
-let fg_remove_fac (fac : factor * cf_state) (fg : factor_graph) : factor_graph =
+let fg_remove_fac (fac : factor * label) (fg : factor_graph) : factor_graph =
   let factor_map = FactorMap.remove fac fg.factor_map in
   {fg with factor_map}
 

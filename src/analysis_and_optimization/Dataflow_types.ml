@@ -13,12 +13,6 @@ type label = int [@@deriving sexp_of]
     the variable named v could have been affected at the label l. *)
 type reaching_defn = string * label [@@deriving sexp_of]
 
-(** The most recently nested control flow (block start, if/then, or loop)
-
-    This isn't included in the traversal_state because it only flows downward
-    through the tree, not across and up like everything else *)
-type cf_state = label
-
 module LabelMap = struct
   include Int.Map
 
