@@ -518,7 +518,7 @@ let%expect_test "Accesses: the remaining index, base and statement forms" =
         vector[N] y;
         for (n in 1:N) {
           y[n] = v[n + idx[n]] + v[k > 0 ? 1 : 2] + v[k && k];
-          y[n] = v[k || k] + v[t.1] + v[n + n];
+          y[n] = v[k || k] + v[t.1] + v[n + n] + v[n + 2 - n];
           y[n] = tv.1[n] + rep_vector(0, N)[n] + (k > 0 ? v : w)[n];
           y[n] = (k > 0 || k < 0) ? 1 : 2;
           profile("inner") { y[n] = 0; }
@@ -532,7 +532,7 @@ let%expect_test "Accesses: the remaining index, base and statement forms" =
     4: R N, W y
     5: R N
     7: R v[?nonlinear], R idx[n], R v[((k > 0) ? 1 : 2)], R k, R v[k && k], R k, R k, W y[n]
-    8: R v[k || k], R k, R k, R v[t.1], R t.1, R v[?nonlinear], W y[n]
+    8: R v[k || k], R k, R k, R v[t.1], R t.1, R v[?nonlinear], R v[2], W y[n]
     9: R tv.1[n], R N, R k, R v, R w, W y[n]
     10: R k, R k, W y[n]
     12: W y[n]
