@@ -31,7 +31,7 @@ let rec matrix_set Expr.{pattern; meta= Expr.Typed.Meta.{type_; _} as meta} =
   let union_recur exprs = Set.Poly.union_list (List.map exprs ~f:matrix_set) in
   if UnsizedType.contains_eigen_type type_ then
     match pattern with
-    | Var s -> Set.Poly.singleton (Dataflow_types.VVar s, meta)
+    | Var s -> Set.Poly.singleton (s, meta)
     | Lit _ -> Set.Poly.empty
     | FunApp (_, exprs) -> union_recur exprs
     | TernaryIf (_, expr2, expr3) -> union_recur [expr2; expr3]
@@ -43,8 +43,7 @@ let rec matrix_set Expr.{pattern; meta= Expr.Typed.Meta.{type_; _} as meta} =
 (** Return a set of all types containing autodiffable Eigen matrices in an
     expression. *)
 let query_var_eigen_names (expr : Expr.Typed.t) : string Set.Poly.t =
-  let get_expr_eigen_names
-      (Dataflow_types.VVar s, Expr.Typed.Meta.{adlevel; type_; _}) =
+  let get_expr_eigen_names (s, Expr.Typed.Meta.{adlevel; type_; _}) =
     if
       UnsizedType.contains_eigen_type type_
       && UnsizedType.is_autodifftype adlevel
