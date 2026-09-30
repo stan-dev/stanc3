@@ -160,6 +160,12 @@ let rec query_initial_demotable_expr (in_loop : bool) (stmt_linenum : int)
         else Set.Poly.union (query_expr acc expr) index_set in
       Set.Poly.union acc index_demotes
   | Var (_ : string) | Lit ((_ : Expr.Pattern.litType), (_ : string)) -> acc
+  | Promotion (expr, ut, _) when UnsizedType.is_complex_type ut ->
+      (* Stan Math cannot promote an SoA matrix to a complex one *)
+      let promoted_names = query_var_eigen_names expr in
+      user_warning_op SoA stmt_linenum "Promoting to complex requires AoS:"
+        (concat_set_str promoted_names);
+      Set.Poly.union_list [acc; promoted_names; query_expr acc expr]
   | Promotion (expr, _, _) -> query_expr acc expr
   | TupleProjection (expr, _) -> query_expr acc expr
   | TernaryIf (predicate, texpr, fexpr) ->

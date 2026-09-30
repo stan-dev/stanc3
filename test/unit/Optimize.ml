@@ -6119,7 +6119,7 @@ let%expect_test "matrix promoted to complex inside an expression is AoS" =
   [%expect
     {|
     vector[3]
-      beta = (FnReadParam(constrain Identity)(dims(3))(mem_pattern SoA))__(
+      beta = (FnReadParam(constrain Identity)(dims(3))(mem_pattern AoS))__(
       );
     {
       complex_vector[3] z;

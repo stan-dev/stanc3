@@ -1683,7 +1683,9 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
 matrix[10, 10] A_p: AoS
 Optimization hazard warning (Line 2): SoA warning: Right hand side contains only AoS expressions: A_p
 Optimization hazard warning (Line 6): SoA warning: Complex-valued types cannot be SoA: A_complex_tp
+Optimization hazard warning (Line 6): SoA warning: Promoting to complex requires AoS: A_p
 Optimization hazard warning (Line 6): SoA warning: Right hand side contains only AoS expressions: A_complex_tp
+Optimization hazard warning (Line 6): SoA warning: Right hand side of assignment is all AoS: A_complex_tp, A_p
 ((functions_block ()) (input_vars ()) (prepare_data ())
  (log_prob
   (((pattern

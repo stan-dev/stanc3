@@ -1,7 +1,9 @@
   $ stanc --Oexperimental --debug-optimized-mir-pretty --debug-mem-patterns assign-promote.stan
 vector[3] beta: AoS
 Optimization hazard warning (Line -1): SoA warning: Complex-valued types cannot be SoA: lcm_sym7__
+Optimization hazard warning (Line -1): SoA warning: Promoting to complex requires AoS: beta
 Optimization hazard warning (Line -1): SoA warning: Right hand side contains only AoS expressions: lcm_sym7__
+Optimization hazard warning (Line -1): SoA warning: Right hand side of assignment is all AoS: beta, lcm_sym7__
 Optimization hazard warning (Line 2): SoA warning: Right hand side contains only AoS expressions: beta
 Optimization hazard warning (Line 5): SoA warning: Complex-valued types cannot be SoA: z
 
@@ -47,6 +49,100 @@ transform_inits {
   data real lcm_sym3__;
   data real lcm_sym2__;
   data int lcm_sym1__;
+  data int pos__;
+  vector[3] beta;
+  {
+    data array[] real beta_flat__;
+    beta_flat__ = FnReadData__("beta");
+    {
+      beta[1] = beta_flat__[1];
+      pos__ = 2;
+      {
+        beta[2] = beta_flat__[pos__];
+        pos__ = (pos__ + 1);
+      }
+      {
+        beta[3] = beta_flat__[pos__];
+      }
+    }
+  }
+  (FnWriteParam(unconstrain_opt(Identity))(var beta))__(); }
+output_vars {
+  parameters vector[3] beta; //vector[3]
+}
+[exit 0]
+  $ stanc --Oexperimental --debug-optimized-mir-pretty --debug-mem-patterns expr-promote.stan
+vector[3] beta: AoS
+Optimization hazard warning (Line -1): SoA warning: Complex-valued types cannot be SoA: inline_czv_return_sym1__
+Optimization hazard warning (Line -1): SoA warning: Complex-valued types cannot be SoA: inline_czv_z_sym2__
+Optimization hazard warning (Line -1): SoA warning: Complex-valued types cannot be SoA: lcm_sym14__
+Optimization hazard warning (Line -1): SoA warning: Complex-valued types cannot be SoA: lcm_sym15__
+Optimization hazard warning (Line -1): SoA warning: Promoting to complex requires AoS: beta
+Optimization hazard warning (Line -1): SoA warning: Right hand side contains only AoS expressions: lcm_sym14__
+Optimization hazard warning (Line -1): SoA warning: Right hand side contains only AoS expressions: lcm_sym15__
+Optimization hazard warning (Line -1): SoA warning: Right hand side of assignment is all AoS: beta, lcm_sym15__
+Optimization hazard warning (Line -1): SoA warning: Right hand side of assignment is all AoS: lcm_sym14__, lcm_sym15__
+Optimization hazard warning (Line 7): SoA warning: Right hand side contains only AoS expressions: beta
+functions {
+  complex_vector czv(complex_vector z) {
+    complex_vector lcm_sym7__;
+    {
+      return (z * promote(2, complex, data));
+    }
+  } }
+
+log_prob {
+  complex_vector lcm_sym18__;
+  complex_vector lcm_sym17__;
+  data real lcm_sym16__;
+  vector[3]
+    beta = (FnReadParam(constrain Identity)(dims(3))(mem_pattern AoS))__(
+    );
+  {
+    data complex_vector[0] inline_czv_return_sym4__;
+    data complex_vector[0] inline_czv_z_sym5__;
+    lcm_sym18__ = promote(beta, complex, var);
+    {
+      lcm_sym17__ = (lcm_sym18__ * promote(2, complex, data));
+    }
+    target += get_real(sum(lcm_sym17__));
+  } }
+
+rev_log_prob {
+  complex_vector lcm_sym15__;
+  complex_vector lcm_sym14__;
+  data real lcm_sym13__;
+  vector[3]
+    beta = (FnReadParam(constrain Identity)(dims(3))(mem_pattern AoS))__(
+    );
+  {
+    data complex_vector[0] inline_czv_return_sym1__;
+    data complex_vector[0] inline_czv_z_sym2__;
+    lcm_sym15__ = promote(beta, complex, var);
+    {
+      lcm_sym14__ = (lcm_sym15__ * promote(2, complex, data));
+    }
+    target += get_real(sum(lcm_sym14__));
+  } }
+
+generate_quantities {
+  data int lcm_sym12__;
+  data int lcm_sym11__;
+  data vector[3]
+    beta = (FnReadParam(constrain Identity)(dims(3))(mem_pattern AoS))__(
+    );
+  (FnWriteParam(unconstrain_opt())(var beta))__();
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+
+transform_inits {
+  data real lcm_sym10__;
+  data real lcm_sym9__;
+  data int lcm_sym8__;
   data int pos__;
   vector[3] beta;
   {
