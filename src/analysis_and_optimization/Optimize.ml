@@ -1528,6 +1528,63 @@ let settings_const b =
 let all_optimizations : optimization_settings = settings_const true
 let no_optimizations : optimization_settings = settings_const false
 
+type optimization_pass =
+  | Function_inlining
+  | Static_loop_unrolling
+  | One_step_loop_unrolling
+  | Vectorize_loops
+  | List_collapsing
+  | Block_fixing
+  | Allow_uninitialized_decls
+  | Constant_propagation
+  | Expression_propagation
+  | Copy_propagation
+  | Dead_code_elimination
+  | Partial_evaluation
+  | Lazy_code_motion
+  | Optimize_ad_levels
+  | Preserve_stability
+  | Optimize_soa
+
+let set_optimization pass enabled settings =
+  match pass with
+  | Function_inlining -> {settings with function_inlining= enabled}
+  | Static_loop_unrolling -> {settings with static_loop_unrolling= enabled}
+  | One_step_loop_unrolling -> {settings with one_step_loop_unrolling= enabled}
+  | Vectorize_loops -> {settings with vectorize_loops= enabled}
+  | List_collapsing -> {settings with list_collapsing= enabled}
+  | Block_fixing -> {settings with block_fixing= enabled}
+  | Allow_uninitialized_decls ->
+      {settings with allow_uninitialized_decls= enabled}
+  | Constant_propagation -> {settings with constant_propagation= enabled}
+  | Expression_propagation -> {settings with expression_propagation= enabled}
+  | Copy_propagation -> {settings with copy_propagation= enabled}
+  | Dead_code_elimination -> {settings with dead_code_elimination= enabled}
+  | Partial_evaluation -> {settings with partial_evaluation= enabled}
+  | Lazy_code_motion -> {settings with lazy_code_motion= enabled}
+  | Optimize_ad_levels -> {settings with optimize_ad_levels= enabled}
+  | Preserve_stability -> {settings with preserve_stability= enabled}
+  | Optimize_soa -> {settings with optimize_soa= enabled}
+
+let optimization_pass_names =
+  [ ("inlining", Function_inlining)
+  ; ("static-loop-unrolling", Static_loop_unrolling)
+  ; ("one-step-loop-unrolling", One_step_loop_unrolling)
+  ; ("vectorize-loops", Vectorize_loops); ("list-collapsing", List_collapsing)
+  ; ("block-fixing", Block_fixing)
+  ; ("allow-uninitialized-decls", Allow_uninitialized_decls)
+  ; ("constant-propagation", Constant_propagation)
+  ; ("expression-propagation", Expression_propagation)
+  ; ("copy-propagation", Copy_propagation)
+  ; ("dead-code-elimination", Dead_code_elimination)
+  ; ("partial-evaluation", Partial_evaluation)
+  ; ("lazy-code-motion", Lazy_code_motion); ("ad-levels", Optimize_ad_levels)
+  ; ("preserve-stability", Preserve_stability); ("soa", Optimize_soa) ]
+
+let optimization_flags =
+  List.concat_map optimization_pass_names ~f:(fun (name, pass) ->
+      [(name, (pass, true)); ("no-" ^ name, (pass, false))])
+
 type optimization_level = O0 | O1 | Oexperimental
 
 let level_optimizations (lvl : optimization_level) : optimization_settings =
