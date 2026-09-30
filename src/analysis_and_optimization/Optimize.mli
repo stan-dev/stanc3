@@ -90,6 +90,38 @@ type optimization_settings =
 val all_optimizations : optimization_settings
 val no_optimizations : optimization_settings
 
+(** One constructor per field of [optimization_settings], used to turn a single
+    optimization on or off from the command line. *)
+type optimization_pass =
+  | Function_inlining
+  | Static_loop_unrolling
+  | One_step_loop_unrolling
+  | Vectorize_loops
+  | List_collapsing
+  | Block_fixing
+  | Allow_uninitialized_decls
+  | Constant_propagation
+  | Expression_propagation
+  | Copy_propagation
+  | Dead_code_elimination
+  | Partial_evaluation
+  | Lazy_code_motion
+  | Optimize_ad_levels
+  | Preserve_stability
+  | Optimize_soa
+
+val set_optimization :
+  optimization_pass -> bool -> optimization_settings -> optimization_settings
+(** Turn one optimization on or off, leaving the other settings unchanged. *)
+
+val optimization_pass_names : (string * optimization_pass) list
+(** The command-line name of each optimization, e.g. [inlining] for
+    [-finlining]. *)
+
+val optimization_flags : (string * (optimization_pass * bool)) list
+(** Flag names for [-f<name>] and [-fno-<name>], shared by stanc and stanc.js,
+    mapped to the optimization and whether the flag enables it. *)
+
 type optimization_level = O0 | O1 | Oexperimental
 
 val level_optimizations : optimization_level -> optimization_settings
