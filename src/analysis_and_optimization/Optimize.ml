@@ -167,7 +167,9 @@ let bind_inline_args (fname : string) (args : string list)
       , {pattern= Var decl_id; meta= {arg.meta with adlevel}} ) in
   let binds, es = List.split (List.map2 ~f:bind args es) in
   let decls, assigns = List.split (List.filter_map ~f:Fun.id binds) in
-  (decls, assigns, es)
+  (* Evaluate right to left like the hoisted statements in [inline_list]. The
+     interleaving with those statements across arguments is not preserved. *)
+  (decls, List.rev assigns, es)
 
 (** Count the number of returns that happen in a statement *)
 let rec count_returns Stmt.{pattern; _} : int =

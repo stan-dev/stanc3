@@ -1594,6 +1594,46 @@ let%expect_test "inline function binding of nested lp call is autodiff" =
     }
     |}]
 
+let%expect_test "inline function bindings evaluate right to left" =
+  let mir =
+    reset_and_mir_with_passes [Function_inlining]
+      {|
+      functions {
+        real diff(real a, real b) { return a - b; }
+      }
+      generated quantities {
+        real y = diff(uniform_rng(0, 1), uniform_rng(0, 2));
+      }
+      |}
+  in
+  Fmt.str "@[<v>%a@]"
+    Fmt.(list ~sep:cut Stmt.Located.pp)
+    mir.generate_quantities
+  |> print_endline;
+  [%expect
+    {|
+    if(emit_transformed_parameters__) ; else {
+
+    }
+    if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+      return;
+    }
+    if(!(emit_generated_quantities__)) {
+      return;
+    }
+    data real y;
+    data real inline_diff_return_sym1__;
+    data real inline_diff_a_sym2__;
+    data real inline_diff_b_sym3__;
+    inline_diff_b_sym3__ = uniform_rng(0, 2);
+    inline_diff_a_sym2__ = uniform_rng(0, 1);
+    {
+      inline_diff_return_sym1__ = (inline_diff_a_sym2__ - inline_diff_b_sym3__);
+    }
+    y = inline_diff_return_sym1__;
+    (FnWriteParam(unconstrain_opt())(var y))__();
+    |}]
+
 let%expect_test "unroll nested loop" =
   let mir =
     reset_and_mir_of_string
