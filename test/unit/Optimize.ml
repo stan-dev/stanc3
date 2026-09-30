@@ -1853,6 +1853,54 @@ let%expect_test "inline void function with early return inside a loop" =
     }
     |}]
 
+let%expect_test "inline function with early return inside a while loop" =
+  let mir =
+    reset_and_mir_with_passes [Function_inlining]
+      {|
+      functions {
+        real first_pos(real x) {
+          real y = x;
+          while (1) {
+            if (y > 0) return y;
+            y += 1;
+          }
+          return 0;
+        }
+      }
+      data { real d; }
+      model {
+        print(first_pos(d));
+      }
+      |}
+  in
+  Fmt.str "@[<v>%a@]" Fmt.(list ~sep:cut Stmt.Located.pp) mir.log_prob
+  |> print_endline;
+  [%expect
+    {|
+    {
+      real inline_first_pos_return_sym5__;
+      data int inline_first_pos_early_ret_check_sym7__;
+      inline_first_pos_early_ret_check_sym7__ = 0;
+      for(inline_first_pos_iterator_sym8__ in 1:1) {
+        real inline_first_pos_y_sym6__;
+        inline_first_pos_y_sym6__ = d;
+        while(1) {
+          if((inline_first_pos_y_sym6__ > 0)) {
+            inline_first_pos_early_ret_check_sym7__ = 1;
+            inline_first_pos_return_sym5__ = inline_first_pos_y_sym6__;
+            break;
+          }
+          inline_first_pos_y_sym6__ = (inline_first_pos_y_sym6__ + 1);
+        }
+        if(inline_first_pos_early_ret_check_sym7__) break;
+        inline_first_pos_early_ret_check_sym7__ = 1;
+        inline_first_pos_return_sym5__ = promote(0, real, var);
+        break;
+      }
+      FnPrint__(inline_first_pos_return_sym5__);
+    }
+    |}]
+
 let%expect_test "unroll nested loop" =
   let mir =
     reset_and_mir_of_string

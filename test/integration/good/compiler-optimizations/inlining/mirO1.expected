@@ -781,3 +781,93 @@ output_vars {
   parameters real theta; //real
 }
 [exit 0]
+  $ stanc --O1 --debug-optimized-mir-pretty while-return.stan
+functions {
+  real first_pos(real x) {
+    {
+      real y;
+      y = x;
+      while(1) {
+        if((y > 0)) {
+          return y;
+        }
+        y = (y + 1);
+      }
+      return promote(0, real, var);
+    }
+  } }
+
+log_prob {
+  real
+    theta = (FnReadParam(constrain Identity)(dims())(mem_pattern AoS))__(
+    );
+  {
+    real inline_first_pos_return_sym5__;
+    data int inline_first_pos_early_ret_check_sym7__;
+    inline_first_pos_early_ret_check_sym7__ = 0;
+    for(inline_first_pos_iterator_sym8__ in 1:1) {
+      real inline_first_pos_y_sym6__;
+      inline_first_pos_y_sym6__ = theta;
+      while(1) {
+        if((inline_first_pos_y_sym6__ > 0)) {
+          inline_first_pos_early_ret_check_sym7__ = 1;
+          inline_first_pos_return_sym5__ = inline_first_pos_y_sym6__;
+          break;
+        }
+        inline_first_pos_y_sym6__ = (inline_first_pos_y_sym6__ + 1);
+      }
+      if(inline_first_pos_early_ret_check_sym7__) break;
+      inline_first_pos_early_ret_check_sym7__ = 1;
+      inline_first_pos_return_sym5__ = promote(0, real, var);
+      break;
+    }
+    target += inline_first_pos_return_sym5__;
+  } }
+
+rev_log_prob {
+  real
+    theta = (FnReadParam(constrain Identity)(dims())(mem_pattern SoA))__(
+    );
+  {
+    real inline_first_pos_return_sym1__;
+    data int inline_first_pos_early_ret_check_sym3__;
+    inline_first_pos_early_ret_check_sym3__ = 0;
+    for(inline_first_pos_iterator_sym4__ in 1:1) {
+      real inline_first_pos_y_sym2__;
+      inline_first_pos_y_sym2__ = theta;
+      while(1) {
+        if((inline_first_pos_y_sym2__ > 0)) {
+          inline_first_pos_early_ret_check_sym3__ = 1;
+          inline_first_pos_return_sym1__ = inline_first_pos_y_sym2__;
+          break;
+        }
+        inline_first_pos_y_sym2__ = (inline_first_pos_y_sym2__ + 1);
+      }
+      if(inline_first_pos_early_ret_check_sym3__) break;
+      inline_first_pos_early_ret_check_sym3__ = 1;
+      inline_first_pos_return_sym1__ = promote(0, real, var);
+      break;
+    }
+    target += inline_first_pos_return_sym1__;
+  } }
+
+generate_quantities {
+  data real
+    theta = (FnReadParam(constrain Identity)(dims())(mem_pattern AoS))__(
+    );
+  (FnWriteParam(unconstrain_opt())(var theta))__();
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+
+transform_inits {
+  real theta;
+  theta = FnReadData__("theta")[1];
+  (FnWriteParam(unconstrain_opt(Identity))(var theta))__(); }
+output_vars {
+  parameters real theta; //real
+}
+[exit 0]
