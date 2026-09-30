@@ -264,7 +264,7 @@ error: Ill-typed arguments supplied to "laplace_marginal_tol_neg_binomial_2_log_
     = Expected the arguments to start with:
       (The first argument must be array[] int but got int.) array[] int,
       array[] int,
-      vector,
+      real,
       vector
 [exit 1]
   $ stanc bad_forward8.stan
@@ -278,7 +278,7 @@ error: Ill-typed arguments supplied to "laplace_marginal_tol_neg_binomial_2_log_
     = Expected the arguments to start with:
       (The first argument must be array[] int but got int.) array[] int,
       array[] int,
-      vector,
+      real,
       vector
 [exit 1]
   $ stanc bad_forward9.stan
@@ -525,15 +525,15 @@ error: Ill-typed arguments supplied to "laplace_latent_rng".
 [exit 1]
   $ stanc missing_args11.stan
 error: Ill-typed arguments supplied to "laplace_latent_neg_binomial_2_log_rng".
-    ┌─ missing_args11.stan:18:85
+    ┌─ missing_args11.stan:18:82
  17 │  
- 18 │    vector[n_obs] theta = laplace_latent_neg_binomial_2_log_rng(y, {1}, [1.0]', [0.0]'
-    │                                                                                      ^ The valid signature of this function is
-    │                                                                                       laplace_latent_neg_binomial_2_log_rng(array[] int,
-    │                                                                                         array[] int, vector,
-    │                                                                                         vector, data int,
-    │                                                                                         (T_k...) => matrix,
-    │                                                                                         tuple(T_k...))@]
+ 18 │    vector[n_obs] theta = laplace_latent_neg_binomial_2_log_rng(y, {1}, 1.0, [0.0]'
+    │                                                                                   ^ The valid signature of this function is
+    │                                                                                    laplace_latent_neg_binomial_2_log_rng(array[] int,
+    │                                                                                      array[] int, real,
+    │                                                                                      vector, data int,
+    │                                                                                      (T_k...) => matrix,
+    │                                                                                      tuple(T_k...))@]
  19 │                        );
     = Missing the hessian block size (data-only int) and remaining arguments.
 [exit 1]
@@ -582,7 +582,7 @@ error: Ill-typed arguments supplied to "laplace_marginal_tol_neg_binomial_2_log_
     = Expected the arguments to start with:
       (Expected 4 arguments but got 0 arguments.) array[] int,
       array[] int,
-      vector,
+      real,
       vector
 [exit 1]
   $ stanc missing_args4.stan
@@ -637,13 +637,13 @@ error: Ill-typed arguments supplied to "laplace_latent_rng".
 error: Ill-typed arguments supplied to "laplace_latent_neg_binomial_2_log_rng".
     ┌─ missing_args7.stan:18:25
  17 │    
- 18 │      vector[n_obs] theta = laplace_latent_neg_binomial_2_log_rng(y, {1}, [1.0]', [0.0]', 1
+ 18 │      vector[n_obs] theta = laplace_latent_neg_binomial_2_log_rng(y, {1}, 1.0, [0.0]', 1
     │ ╭──────────────────────────^
  19 │ │                        );
     │ ╰────────────────────────^ The valid signature of this function is
-    │                            laplace_latent_neg_binomial_2_log_rng(array[] int, array[] int, vector, vector, data int, (T_k...) => matrix, tuple(T_k...))
+    │                            laplace_latent_neg_binomial_2_log_rng(array[] int, array[] int, real, vector, data int, (T_k...) => matrix, tuple(T_k...))
     │                            However, we received the types:
-    │                            (data array[] int, data array[] int, data vector, data vector, data int)@]
+    │                            (data array[] int, data array[] int, data real, data vector, data int)@]
  20 │    
     = Typechecking failed after checking the first 5 arguments.
       Please ensure you are passing enough arguments and that the 6th is a function.
@@ -674,10 +674,25 @@ error: Ill-typed arguments supplied to "laplace_marginal_tol_poisson_log_lpmf".
 error: Ill-typed arguments supplied to "laplace_latent_tol_neg_binomial_2_log_rng".
     ┌─ missing_args9.stan:40:25
  39 │    
- 40 │      vector[n_obs] theta = laplace_latent_tol_neg_binomial_2_log_rng(y, {1}, [1.0]', [0]',
+ 40 │      vector[n_obs] theta = laplace_latent_tol_neg_binomial_2_log_rng(y, {1}, 1.0, [0]',
     │ ╭──────────────────────────^
  41 │ │                          1, K_function, (x, n_obs, alpha, rho));
     │ ╰───────────────────────────────────────────────────────────────^ Missing control parameter tuple at the end of the call to "laplace_latent_tol_neg_binomial_2_log_rng".
     │                                                                   Expected a tuple of 6 arguments for the control parameters.
  42 │    
+[exit 1]
+  $ stanc wrong_type_eta.stan
+error: Ill-typed arguments supplied to "laplace_marginal_neg_binomial_2_log_lpmf".
+    ┌─ wrong_type_eta.stan:18:61
+ 17 │    // the overdispersion must be a scalar, not a vector
+ 18 │    target += laplace_marginal_neg_binomial_2_log_lpmf(y | y, eta,
+    │                                                              ^^^ Ill-typed arguments supplied to function 
+    │                                                                  "laplace_marginal_neg_binomial_2_log_lpmf"
+    │                                                                  for the likelihood
+ 19 │                rep_vector(0.0, n_obs), 1, K_function, (x, n_obs, alpha, rho));
+    = Expected the arguments to start with:
+      (The third argument must be real but got vector.) array[] int,
+      array[] int,
+      real,
+      vector
 [exit 1]
