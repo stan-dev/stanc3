@@ -439,6 +439,21 @@ and inline_function_index propto adt fim i =
       let dl, sl, e = inline_function_expression propto adt fim e in
       (dl, sl, MultiIndex e)
 
+(** Re-run the statements computing an inlined loop condition or bound at the
+    end of the loop body and before every [continue] of this loop. *)
+let reevaluate_on_back_edges reeval (body : Stmt.Located.t) =
+  if List.is_empty reeval then body
+  else
+    let reeval = map_no_loc reeval in
+    let rec before_continue (stmt : Stmt.Located.t) =
+      match stmt.pattern with
+      | Continue -> {stmt with pattern= SList (reeval @ [stmt])}
+      | While _ | For _ -> stmt
+      | pattern ->
+          {stmt with pattern= Stmt.Pattern.map Fun.id before_continue pattern}
+    in
+    {pattern= Block (before_continue body :: reeval); meta= Location_span.empty}
+
 let rec inline_function_statement propto adt fim Stmt.{pattern; meta} =
   Stmt.
     { pattern=
@@ -505,14 +520,8 @@ let rec inline_function_statement propto adt fim Stmt.{pattern; meta} =
             slist_concat_no_loc (d' @ s')
               (While
                  ( e
-                 , if List.is_empty s' then
-                     inline_function_statement propto adt fim stmt
-                   else
-                     { pattern=
-                         Block
-                           ([inline_function_statement propto adt fim stmt]
-                           @ map_no_loc s')
-                     ; meta= Location_span.empty } ))
+                 , reevaluate_on_back_edges s'
+                     (inline_function_statement propto adt fim stmt) ))
         | For {loopvar; lower; upper; body} ->
             let d_lower, s_lower, lower =
               inline_function_expression propto adt fim lower in
@@ -525,14 +534,8 @@ let rec inline_function_statement propto adt fim Stmt.{pattern; meta} =
                  ; lower
                  ; upper
                  ; body=
-                     (if List.is_empty s_upper then
-                        inline_function_statement propto adt fim body
-                      else
-                        { pattern=
-                            Block
-                              ([inline_function_statement propto adt fim body]
-                              @ map_no_loc s_upper)
-                        ; meta= Location_span.empty }) })
+                     reevaluate_on_back_edges s_upper
+                       (inline_function_statement propto adt fim body) })
         | Profile (name, l) ->
             Profile
               (name, List.map l ~f:(inline_function_statement propto adt fim))

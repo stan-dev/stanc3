@@ -1634,6 +1634,112 @@ let%expect_test "inline function bindings evaluate right to left" =
     (FnWriteParam(unconstrain_opt())(var y))__();
     |}]
 
+let%expect_test "inline function in while condition is re-evaluated on continue"
+    =
+  let mir =
+    reset_and_mir_with_passes [Function_inlining]
+      {|
+      functions {
+        int inc(int n) { return n + 1; }
+      }
+      data { int N; }
+      model {
+        int k = 0;
+        while (inc(k) < N) {
+          k += 1;
+          if (k > 3) continue;
+          print(k);
+        }
+      }
+      |}
+  in
+  Fmt.str "@[<v>%a@]" Fmt.(list ~sep:cut Stmt.Located.pp) mir.log_prob
+  |> print_endline;
+  [%expect
+    {|
+    {
+      int k;
+      k = 0;
+      int inline_inc_return_sym3__;
+      {
+        inline_inc_return_sym3__ = (k + 1);
+      }
+      while((inline_inc_return_sym3__ < N)) {
+        {
+          k = (k + 1);
+          if((k > 3)) {
+            {
+              inline_inc_return_sym3__ = (k + 1);
+            }
+            continue;
+          }
+          FnPrint__(k);
+        }
+        {
+          inline_inc_return_sym3__ = (k + 1);
+        }
+      }
+    }
+    |}]
+
+let%expect_test "inline function in for upper bound is re-evaluated on continue"
+    =
+  let mir =
+    reset_and_mir_with_passes [Function_inlining]
+      {|
+      functions {
+        int inc(int n) { return n + 1; }
+      }
+      data { int N; }
+      model {
+        int m = N;
+        for (i in 1:inc(m)) {
+          if (i == 2) {
+            m = 1;
+            continue;
+          }
+          for (j in 1:2) {
+            if (j == 1) continue;
+          }
+          print(i);
+        }
+      }
+      |}
+  in
+  Fmt.str "@[<v>%a@]" Fmt.(list ~sep:cut Stmt.Located.pp) mir.log_prob
+  |> print_endline;
+  [%expect
+    {|
+    {
+      int m;
+      m = N;
+      int inline_inc_return_sym3__;
+      {
+        inline_inc_return_sym3__ = (m + 1);
+      }
+      for(i in 1:inline_inc_return_sym3__) {
+        {
+          if((i == 2)) {
+            m = 1;
+            {
+              inline_inc_return_sym3__ = (m + 1);
+            }
+            continue;
+          }
+          for(j in 1:2) {
+            if((j == 1)) {
+              continue;
+            }
+          }
+          FnPrint__(i);
+        }
+        {
+          inline_inc_return_sym3__ = (m + 1);
+        }
+      }
+    }
+    |}]
+
 let%expect_test "unroll nested loop" =
   let mir =
     reset_and_mir_of_string
