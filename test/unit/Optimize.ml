@@ -1740,6 +1740,78 @@ let%expect_test "inline function in for upper bound is re-evaluated on continue"
     }
     |}]
 
+let%expect_test "inline void function with early return" =
+  let mir =
+    reset_and_mir_with_passes [Function_inlining]
+      {|
+      functions {
+        void pv(real x) {
+          if (x > 0.5) {
+            print("big");
+            return;
+          }
+          print("small");
+        }
+      }
+      data { real d; }
+      model {
+        pv(d);
+      }
+      |}
+  in
+  Fmt.str "@[<v>%a@]" Fmt.(list ~sep:cut Stmt.Located.pp) mir.log_prob
+  |> print_endline;
+  [%expect
+    {|
+    {
+      data int inline_pv_early_ret_check_sym3__;
+      inline_pv_early_ret_check_sym3__ = 0;
+      for(inline_pv_iterator_sym4__ in 1:1) {
+        if((d > 0.5)) {
+          FnPrint__("big");
+          break;
+        }
+        FnPrint__("small");
+      }
+    }
+    |}]
+
+let%expect_test "inline function with early return before reject" =
+  let mir =
+    reset_and_mir_with_passes [Function_inlining]
+      {|
+      functions {
+        real pos(real x) {
+          if (x > 0) return x;
+          reject("negative ", x);
+        }
+      }
+      data { real d; }
+      model {
+        target += pos(d);
+      }
+      |}
+  in
+  Fmt.str "@[<v>%a@]" Fmt.(list ~sep:cut Stmt.Located.pp) mir.log_prob
+  |> print_endline;
+  [%expect
+    {|
+    {
+      real inline_pos_return_sym4__;
+      data int inline_pos_early_ret_check_sym5__;
+      inline_pos_early_ret_check_sym5__ = 0;
+      for(inline_pos_iterator_sym6__ in 1:1) {
+        if((d > 0)) {
+          inline_pos_early_ret_check_sym5__ = 1;
+          inline_pos_return_sym4__ = d;
+          break;
+        }
+        FnReject__("negative ", d);
+      }
+      target += inline_pos_return_sym4__;
+    }
+    |}]
+
 let%expect_test "unroll nested loop" =
   let mir =
     reset_and_mir_of_string

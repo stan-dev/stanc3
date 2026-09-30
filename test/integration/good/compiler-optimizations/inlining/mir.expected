@@ -172,6 +172,110 @@ output_vars {
   parameters real theta; //real
 }
 [exit 0]
+  $ stanc --Oexperimental --debug-optimized-mir-pretty early-return.stan
+functions {
+  void pv(real x) {
+    int lcm_sym13__;
+    {
+      if((x > 0.5)) {
+        FnPrint__("big");
+        return;
+      }
+      FnPrint__("small");
+    }
+  }
+  real pos(real x) {
+    int lcm_sym14__;
+    {
+      if((x > 0)) {
+        return x;
+      }
+      FnReject__("negative ", x);
+    }
+  } }
+
+log_prob {
+  data int lcm_sym22__;
+  data int lcm_sym21__;
+  real lcm_sym20__;
+  real
+    theta = (FnReadParam(constrain Identity)(dims())(mem_pattern AoS))__(
+    );
+  {
+    data int inline_pv_early_ret_check_sym7__;
+    for(inline_pv_iterator_sym8__ in 1:1) {
+      if((theta > 0.5)) {
+        FnPrint__("big");
+        break;
+      }
+      FnPrint__("small");
+    }
+    real inline_pos_return_sym9__;
+    data real inline_pos_x_sym10__;
+    lcm_sym20__ = (theta + promote(1, real, data));
+    data int inline_pos_early_ret_check_sym11__;
+    for(inline_pos_iterator_sym12__ in 1:1) {
+      if((lcm_sym20__ > 0)) {
+        inline_pos_return_sym9__ = lcm_sym20__;
+        break;
+      }
+      FnReject__("negative ", lcm_sym20__);
+    }
+    target += inline_pos_return_sym9__;
+  } }
+
+rev_log_prob {
+  data int lcm_sym19__;
+  data int lcm_sym18__;
+  real lcm_sym17__;
+  real
+    theta = (FnReadParam(constrain Identity)(dims())(mem_pattern SoA))__(
+    );
+  {
+    data int inline_pv_early_ret_check_sym1__;
+    for(inline_pv_iterator_sym2__ in 1:1) {
+      if((theta > 0.5)) {
+        FnPrint__("big");
+        break;
+      }
+      FnPrint__("small");
+    }
+    real inline_pos_return_sym3__;
+    data real inline_pos_x_sym4__;
+    lcm_sym17__ = (theta + promote(1, real, data));
+    data int inline_pos_early_ret_check_sym5__;
+    for(inline_pos_iterator_sym6__ in 1:1) {
+      if((lcm_sym17__ > 0)) {
+        inline_pos_return_sym3__ = lcm_sym17__;
+        break;
+      }
+      FnReject__("negative ", lcm_sym17__);
+    }
+    target += inline_pos_return_sym3__;
+  } }
+
+generate_quantities {
+  data int lcm_sym16__;
+  data int lcm_sym15__;
+  data real
+    theta = (FnReadParam(constrain Identity)(dims())(mem_pattern AoS))__(
+    );
+  (FnWriteParam(unconstrain_opt())(var theta))__();
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+
+transform_inits {
+  real theta;
+  theta = FnReadData__("theta")[1];
+  (FnWriteParam(unconstrain_opt(Identity))(var theta))__(); }
+output_vars {
+  parameters real theta; //real
+}
+[exit 0]
   $ stanc --Oexperimental --debug-optimized-mir-pretty for-upper-bound.stan
 functions {
   int inc(int n) {

@@ -179,6 +179,15 @@ let rec count_returns Stmt.{pattern; _} : int =
       | stmt -> acc + count_returns stmt)
     0 pattern
 
+(** Whether the last statement of [stmt], looking through blocks, is a return.
+*)
+let rec ends_in_return Stmt.{pattern; _} =
+  match pattern with
+  | Return _ -> true
+  | Block l | SList l | Profile (_, l) ->
+      List.rev l |> List.hd |> Option.value_map ~default:false ~f:ends_in_return
+  | _ -> false
+
 (* The strategy here is to wrap the function body in a dummy loop, then replace
    returns with breaks. One issue is early return from internal loops - in those
    cases, a break would only break out of the inner loop. The solution is a flag
@@ -188,13 +197,13 @@ let rec count_returns Stmt.{pattern; _} : int =
    dummy loop. *)
 let handle_early_returns (fname : string) opt_var stmt =
   let returned = gen_inline_var fname "early_ret_check" in
-  let generate_inner_breaks num_returns stmt_pattern =
+  let generate_inner_breaks needs_loop stmt_pattern =
     match stmt_pattern with
     | Stmt.Pattern.Return opt_ret -> (
         match (opt_var, opt_ret) with
-        | None, None when num_returns > 1 -> Stmt.Pattern.Break
+        | None, None when needs_loop -> Stmt.Pattern.Break
         | None, None -> Stmt.Pattern.Block []
-        | Some name, Some e when num_returns > 1 ->
+        | Some name, Some e when needs_loop ->
             SList
               [ Stmt.
                   { pattern=
@@ -225,7 +234,7 @@ let handle_early_returns (fname : string) opt_var stmt =
             ICE.internal_error
               "Expected a void function but found a non-empty return statement."
             [@coverage off])
-    | Stmt.Pattern.For _ as loop when num_returns > 1 ->
+    | Stmt.Pattern.For _ as loop when needs_loop ->
         Stmt.Pattern.SList
           [ Stmt.{pattern= loop; meta= Location_span.empty}
           ; Stmt.
@@ -242,8 +251,14 @@ let handle_early_returns (fname : string) opt_var stmt =
                     , None )
               ; meta= Location_span.empty } ]
     | x -> x in
-  let num_returns = count_returns stmt in
-  if num_returns > 1 then
+  (* A single return that is the last statement can become an assignment; any
+     other return has to skip the rest of the body. *)
+  let needs_loop =
+    match count_returns stmt with
+    | 0 -> false
+    | 1 -> not (ends_in_return stmt)
+    | _ -> true in
+  if needs_loop then
     Stmt.Pattern.SList
       [ Stmt.
           { pattern=
@@ -284,10 +299,10 @@ let handle_early_returns (fname : string) opt_var stmt =
                         { type_= UInt
                         ; adlevel= DataOnly
                         ; loc= Location_span.empty } }
-                ; body=
-                    map_rec_stmt_loc (generate_inner_breaks num_returns) stmt }
+                ; body= map_rec_stmt_loc (generate_inner_breaks needs_loop) stmt
+                }
           ; meta= Location_span.empty } ]
-  else (map_rec_stmt_loc (generate_inner_breaks num_returns) stmt).pattern
+  else (map_rec_stmt_loc (generate_inner_breaks needs_loop) stmt).pattern
 
 let inline_list f es =
   let dse_list = List.map ~f es in
