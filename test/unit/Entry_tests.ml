@@ -1,11 +1,6 @@
 open Middle
 
-let compile_mir code flags =
-  match
-    Driver.Entry.stan2mir "entry_test_model" (`Code code) flags (fun _ -> ())
-  with
-  | Ok mir -> mir
-  | Error error -> failwith (Test_utils.error_to_string ~code error)
+let compile_mir = Test_utils.compile_mir
 
 let%expect_test "stan2mir returns transformed and optimized MIR" =
   let flags =
