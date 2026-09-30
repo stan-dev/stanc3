@@ -444,6 +444,17 @@ let rec update_expr_ad_levels ?(keep_promotions = false) autodiffable_variables
       ; meta=
           {e.meta with adlevel= TupleAD (List.map ~f:Expr.Typed.adlevel_of l)}
       }
+  | FunApp (((UserDefined (_, FnTarget) | StanLib (_, FnTarget)) as kind), l)
+    when not (UnsizedType.is_discrete_type (Expr.Typed.type_of e)) ->
+      (* target() and _lp functions are autodiff whatever their arguments are *)
+      let kind' = Fun_kind.map inner kind in
+      let l = List.map ~f:inner l in
+      { pattern= FunApp (kind', l)
+      ; meta=
+          { e.meta with
+            adlevel=
+              UnsizedType.fill_adtype_for_type AutoDiffable
+                (Expr.Typed.type_of e) } }
   | FunApp (kind, l) ->
       let kind' = Fun_kind.map inner kind in
       let l = List.map ~f:inner l in

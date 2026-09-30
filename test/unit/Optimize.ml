@@ -1793,6 +1793,40 @@ let%expect_test "tuple containing inlined data call is autodiff" =
     }
     |}]
 
+(* The overloaded _lp function is not inlined, so the binding takes the level of
+   the call itself, which reads target() whatever its arguments are. *)
+let%expect_test "binding of lp call with data argument is autodiff" =
+  reset_and_mir_with_passes [Function_inlining]
+    {|
+      functions {
+        real twice(real x) { return x + x; }
+        real tlp_lp(real x) { return target() + x; }
+        real tlp_lp(vector x) { return target() + sum(x); }
+      }
+      data { real d; }
+      parameters { real theta; }
+      model {
+        theta ~ normal(0, 1);
+        target += twice(tlp_lp(d));
+      }
+      |}
+  |> print_log_prob;
+  [%expect
+    {|
+    real theta = (FnReadParam(constrain Identity)(dims())(mem_pattern AoS))__();
+    {
+      target += normal_lupdf(theta, promote(0, real, data),
+                             promote(1, real, data));
+      real inline_twice_return_sym4__;
+      real inline_twice_x_sym5__;
+      inline_twice_x_sym5__ = tlp_lp(d);
+      {
+        inline_twice_return_sym4__ = (inline_twice_x_sym5__ + inline_twice_x_sym5__);
+      }
+      target += inline_twice_return_sym4__;
+    }
+    |}]
+
 let%expect_test "inline function bindings evaluate right to left" =
   let mir =
     reset_and_mir_with_passes [Function_inlining]

@@ -512,10 +512,16 @@ let mk_fun_app ~is_cond_dist ~loc kind name args ~type_ : Ast.typed_expression =
   let fn =
     if is_cond_dist then CondDistApp (kind, name, args)
     else FunApp (kind, name, args) in
+  let reads_target =
+    (* An _lp function can read target(), whatever its arguments are *)
+    match kind with
+    | Ast.UserDefined FnTarget | StanLib FnTarget -> true
+    | UserDefined _ | StanLib _ -> false in
   let ad_type =
     if UnsizedType.is_discrete_type type_ then UnsizedType.DataOnly
     else if
-      UnsizedType.any_autodiff (List.map ~f:(fun x -> x.emeta.ad_level) args)
+      reads_target
+      || UnsizedType.any_autodiff (List.map ~f:(fun x -> x.emeta.ad_level) args)
     then AutoDiffable
     else DataOnly in
   mk_typed_expression ~expr:fn ~loc ~type_
