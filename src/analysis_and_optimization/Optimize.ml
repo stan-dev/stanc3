@@ -122,23 +122,48 @@ let rec is_trivial_inline_arg (arg : Expr.Typed.t) =
       && is_trivial_inline_arg inner
   | _ -> false
 
-(** The autodiff level of an argument after inlining, which can replace a
-    data-only call inside it with an autodiff return variable. *)
-let inline_arg_adlevel (arg : Expr.Typed.t) =
-  let adlevel = Expr.Typed.adlevel_of arg in
-  let type_ = Expr.Typed.type_of arg in
-  let has_autodiff_part =
-    expr_any
-      (fun e ->
-        (not (UnsizedType.is_discrete_type (Expr.Typed.type_of e)))
-        && UnsizedType.has_autodiff (Expr.Typed.adlevel_of e))
-      arg in
-  if
-    UnsizedType.is_discrete_type type_
-    || UnsizedType.has_autodiff adlevel
-    || not has_autodiff_part
-  then adlevel
-  else UnsizedType.fill_adtype_for_type AutoDiffable type_
+(** Raise the autodiff level of an expression rebuilt by the inliner to cover
+    its children, which inlining can turn into autodiff return variables. *)
+let raise_adlevel_for_children (e : Expr.Typed.t) =
+  let adlevel = Expr.Typed.adlevel_of e in
+  let type_ = Expr.Typed.type_of e in
+  let with_adlevel adlevel = {e with meta= {e.meta with adlevel}} in
+  let lub_with_own ads =
+    Option.value ~default:adlevel (UnsizedType.lub_ad_type (adlevel :: ads))
+  in
+  let is_autodiff (child : Expr.Typed.t) =
+    (not (UnsizedType.is_discrete_type (Expr.Typed.type_of child)))
+    && UnsizedType.has_autodiff (Expr.Typed.adlevel_of child) in
+  match e.pattern with
+  | _ when UnsizedType.is_discrete_type type_ -> e
+  | TupleProjection (tuple, index) -> (
+      (* Not [Expr.Helpers.add_tuple_index]: the tuple's metadata is not always
+         a tuple type, e.g. a projected lvalue read *)
+      match Expr.Typed.adlevel_of tuple with
+      | TupleAD elements ->
+          with_adlevel (lub_with_own [List.nth elements (index - 1)])
+      | tuple_adlevel -> with_adlevel (lub_with_own [tuple_adlevel]))
+  | FunApp (CompilerInternal FnMakeTuple, elements) ->
+      with_adlevel (TupleAD (List.map ~f:Expr.Typed.adlevel_of elements))
+  | Promotion (inner, ut, ad) when is_autodiff inner ->
+      (* Lowering reads the promotion's own level, so raise both *)
+      let ad =
+        Option.value ~default:ad
+          (UnsizedType.lub_ad_type [ad; Expr.Typed.adlevel_of inner]) in
+      {pattern= Promotion (inner, ut, ad); meta= {e.meta with adlevel= ad}}
+  | Promotion _ -> e
+  | TernaryIf (_, if_true, if_false) ->
+      with_adlevel
+        (lub_with_own (List.map ~f:Expr.Typed.adlevel_of [if_true; if_false]))
+  | Indexed (indexed, _) ->
+      with_adlevel (lub_with_own [Expr.Typed.adlevel_of indexed])
+  | pattern
+    when (not (UnsizedType.has_autodiff adlevel))
+         && Expr.Pattern.fold
+              (fun found child -> found || is_autodiff child)
+              false pattern ->
+      with_adlevel (UnsizedType.fill_adtype_for_type AutoDiffable type_)
+  | _ -> e
 
 (** Bind each parameter of an inlined function to its argument, evaluating any
     nontrivial argument once into a fresh local, as call-by-value requires.
@@ -158,13 +183,15 @@ let bind_inline_args (fname : string) (args : string list)
         Type.Sized
           (unsafe_unsized_to_sized_type (Unsized (Expr.Typed.type_of arg)))
       in
-      let adlevel = inline_arg_adlevel arg in
       ( Some
           ( Stmt.Pattern.Decl
-              {decl_adtype= adlevel; decl_id; decl_type; initialize= Uninit}
+              { decl_adtype= Expr.Typed.adlevel_of arg
+              ; decl_id
+              ; decl_type
+              ; initialize= Uninit }
           , Stmt.Pattern.Assignment
               (Stmt.Helpers.lvariable decl_id, Expr.Typed.type_of arg, arg) )
-      , {pattern= Var decl_id; meta= {arg.meta with adlevel}} ) in
+      , {arg with pattern= Var decl_id} ) in
   let binds, es = List.split (List.map2 ~f:bind args es) in
   let decls, assigns = List.split (List.filter_map ~f:Fun.id binds) in
   (* Evaluate right to left like the hoisted statements in [inline_list]. The
@@ -337,32 +364,33 @@ let compute_suffix_and_name propto suffix fname =
    re-evaluated at the end of the body), so it must not declare variables;
    declarations go in the declaration list. *)
 let rec inline_function_expression propto adt fim (Expr.{pattern; _} as e) =
+  (* Children may now hold autodiff return variables, see
+     [raise_adlevel_for_children] *)
+  let rebuilt pattern = raise_adlevel_for_children {e with pattern} in
   match pattern with
   | Var _ -> ([], [], e)
   | Lit (_, _) -> ([], [], e)
   | Promotion (expr, ut, ad) ->
       let d, sl, expr' = inline_function_expression propto adt fim expr in
-      (d, sl, {e with pattern= Promotion (expr', ut, ad)})
+      (d, sl, rebuilt (Promotion (expr', ut, ad)))
   | FunApp (kind, es) -> (
       let d_list, s_list, es =
         inline_list (inline_function_expression propto adt fim) es in
       match kind with
       | CompilerInternal _ | Operator _ ->
-          (d_list, s_list, {e with pattern= FunApp (kind, es)})
+          (d_list, s_list, rebuilt (FunApp (kind, es)))
       | StanLib (fname, suffix) ->
           let suffix, _ = compute_suffix_and_name propto suffix fname in
           ( d_list
           , s_list
-          , {e with pattern= FunApp (Fun_kind.StanLib (fname, suffix), es)} )
+          , rebuilt (FunApp (Fun_kind.StanLib (fname, suffix), es)) )
       | UserDefined (fname, suffix) -> (
           let suffix, fname' = compute_suffix_and_name propto suffix fname in
           match String.Map.find_opt fname' fim with
           | None ->
               ( d_list
               , s_list
-              , { e with
-                  pattern= FunApp (Fun_kind.UserDefined (fname, suffix), es) }
-              )
+              , rebuilt (FunApp (Fun_kind.UserDefined (fname, suffix), es)) )
           | Some (rt, args, body) ->
               let inline_return_name = gen_inline_var fname "return" in
               let bind_decls, bind_assigns, es =
@@ -410,15 +438,15 @@ let rec inline_function_expression propto adt fim (Expr.{pattern; _} as e) =
                 , {pattern= block_no_loc sl2; meta= Location_span.empty}
                 , Some {pattern= block_no_loc sl3; meta= Location_span.empty} ))
           ]
-      , {e with pattern= TernaryIf (e1, e2, e3)} )
+      , rebuilt (TernaryIf (e1, e2, e3)) )
   | Indexed (e', i_list) ->
       let dl, sl, e' = inline_function_expression propto adt fim e' in
       let d_list, s_list, i_list =
         inline_list (inline_function_index propto adt fim) i_list in
-      (d_list @ dl, s_list @ sl, {e with pattern= Indexed (e', i_list)})
+      (d_list @ dl, s_list @ sl, rebuilt (Indexed (e', i_list)))
   | TupleProjection (e', ix) ->
       let dl, sl, e' = inline_function_expression propto adt fim e' in
-      (dl, sl, {e with pattern= TupleProjection (e', ix)})
+      (dl, sl, rebuilt (TupleProjection (e', ix)))
   | EAnd (e1, e2) ->
       let dl1, sl1, e1 = inline_function_expression propto adt fim e1 in
       let dl2, sl2, e2 = inline_function_expression propto adt fim e2 in
@@ -428,7 +456,7 @@ let rec inline_function_expression propto adt fim (Expr.{pattern; _} as e) =
               ( e1
               , {pattern= Block (map_no_loc sl2); meta= Location_span.empty}
               , None )) ] in
-      (dl1 @ dl2, sl1 @ sl2, {e with pattern= EAnd (e1, e2)})
+      (dl1 @ dl2, sl1 @ sl2, rebuilt (EAnd (e1, e2)))
   | EOr (e1, e2) ->
       let dl1, sl1, e1 = inline_function_expression propto adt fim e1 in
       let dl2, sl2, e2 = inline_function_expression propto adt fim e2 in
@@ -439,7 +467,7 @@ let rec inline_function_expression propto adt fim (Expr.{pattern; _} as e) =
               , {pattern= Skip; meta= Location_span.empty}
               , Some {pattern= Block (map_no_loc sl2); meta= Location_span.empty}
               )) ] in
-      (dl1 @ dl2, sl1 @ sl2, {e with pattern= EOr (e1, e2)})
+      (dl1 @ dl2, sl1 @ sl2, rebuilt (EOr (e1, e2)))
 
 and inline_function_index propto adt fim i =
   match i with

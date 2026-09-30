@@ -686,7 +686,7 @@ prepare_data {
 
 log_prob {
   data real lcm_sym29__;
-  data real lcm_sym28__;
+  real lcm_sym28__;
   real lcm_sym27__;
   data real lcm_sym26__;
   real lcm_sym25__;
@@ -719,7 +719,7 @@ log_prob {
 
 rev_log_prob {
   data real lcm_sym24__;
-  data real lcm_sym23__;
+  real lcm_sym23__;
   real lcm_sym22__;
   data real lcm_sym21__;
   real lcm_sym20__;
@@ -753,6 +753,185 @@ rev_log_prob {
 generate_quantities {
   data int lcm_sym19__;
   data int lcm_sym18__;
+  data real
+    theta = (FnReadParam(constrain Identity)(dims())(mem_pattern AoS))__(
+    );
+  (FnWriteParam(unconstrain_opt())(var theta))__();
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+
+transform_inits {
+  real theta;
+  theta = FnReadData__("theta")[1];
+  (FnWriteParam(unconstrain_opt(Identity))(var theta))__(); }
+output_vars {
+  parameters real theta; //real
+}
+[exit 0]
+  $ stanc --Oexperimental --debug-optimized-mir-pretty stale-parent-adlevel.stan
+functions {
+  real g(real x) {
+    real lcm_sym33__;
+    {
+      return (x * promote(3, real, data));
+    }
+  }
+  real tlp_lp(real x) {
+    {
+      return (target() + x);
+    }
+  }
+  complex cz(complex z) {
+    complex lcm_sym34__;
+    {
+      return (z * promote(2, complex, data));
+    }
+  }
+  real tf(tuple(real, int) t) {
+    real lcm_sym35__;
+    {
+      return fma(t.1, promote(10, real, data), promote(t.2, real, data));
+    }
+  } }
+input_vars {
+  real d;
+  int c; }
+
+prepare_data {
+  data real d;
+  d = FnReadData__("d")[1];
+  data int c;
+  c = FnReadData__("c")[1]; }
+
+log_prob {
+  data complex lcm_sym63__;
+  tuple_ad(data, data)tuple(real, int) lcm_sym62__;
+  data complex lcm_sym61__;
+  data real lcm_sym60__;
+  data real lcm_sym59__;
+  data real lcm_sym58__;
+  data real lcm_sym57__;
+  data real lcm_sym56__;
+  data real lcm_sym55__;
+  real lcm_sym54__;
+  data real lcm_sym53__;
+  data real lcm_sym52__;
+  data real lcm_sym51__;
+  real
+    theta = (FnReadParam(constrain Identity)(dims())(mem_pattern AoS))__(
+    );
+  {
+    target += normal_lupdf(theta, promote(0, real, data),
+                           promote(1, real, data));
+    data real y1;
+    data real inline_g_return_sym17__;
+    {
+      lcm_sym53__ = (d * promote(3, real, data));
+    }
+    lcm_sym57__ = (lcm_sym53__ * promote(2, real, data));
+    target += (lcm_sym57__ * theta);
+    data real y2;
+    real inline_tlp_lp_return_sym19__;
+    {
+      inline_tlp_lp_return_sym19__ = (target() + d);
+    }
+    lcm_sym54__ = (inline_tlp_lp_return_sym19__ * promote(2, real, data));
+    target += lcm_sym54__;
+    data real inline_g_return_sym21__;
+    data complex inline_cz_return_sym23__;
+    data complex inline_cz_z_sym24__;
+    lcm_sym63__ = promote(lcm_sym53__, complex, data);
+    {
+      lcm_sym61__ = (lcm_sym63__ * promote(2, complex, data));
+    }
+    target += (get_real(lcm_sym61__) * theta);
+    data real y3;
+    data real inline_g_return_sym26__;
+    if(c) {
+      {
+        inline_g_return_sym26__ = lcm_sym53__;
+      }
+    } else ;
+    lcm_sym60__ = ((c ? inline_g_return_sym26__ : d) * promote(2, real, data));
+    target += (lcm_sym60__ * theta);
+    data real inline_g_return_sym28__;
+    data real inline_tf_return_sym30__;
+    tuple_ad(data, data)tuple(real, int) inline_tf_t_sym31__;
+    {
+      lcm_sym51__ = fma(lcm_sym53__, promote(10, real, data),
+                        promote(1, real, data));
+    }
+    target += (lcm_sym51__ * theta);
+  } }
+
+rev_log_prob {
+  data complex lcm_sym50__;
+  tuple_ad(data, data)tuple(real, int) lcm_sym49__;
+  data complex lcm_sym48__;
+  data real lcm_sym47__;
+  data real lcm_sym46__;
+  data real lcm_sym45__;
+  data real lcm_sym44__;
+  data real lcm_sym43__;
+  data real lcm_sym42__;
+  real lcm_sym41__;
+  data real lcm_sym40__;
+  data real lcm_sym39__;
+  data real lcm_sym38__;
+  real
+    theta = (FnReadParam(constrain Identity)(dims())(mem_pattern SoA))__(
+    );
+  {
+    target += normal_lupdf(theta, promote(0, real, data),
+                           promote(1, real, data));
+    data real y1;
+    data real inline_g_return_sym1__;
+    {
+      lcm_sym40__ = (d * promote(3, real, data));
+    }
+    lcm_sym44__ = (lcm_sym40__ * promote(2, real, data));
+    target += (lcm_sym44__ * theta);
+    data real y2;
+    real inline_tlp_lp_return_sym3__;
+    {
+      inline_tlp_lp_return_sym3__ = (target() + d);
+    }
+    lcm_sym41__ = (inline_tlp_lp_return_sym3__ * promote(2, real, data));
+    target += lcm_sym41__;
+    data real inline_g_return_sym5__;
+    data complex inline_cz_return_sym7__;
+    data complex inline_cz_z_sym8__;
+    lcm_sym50__ = promote(lcm_sym40__, complex, data);
+    {
+      lcm_sym48__ = (lcm_sym50__ * promote(2, complex, data));
+    }
+    target += (get_real(lcm_sym48__) * theta);
+    data real y3;
+    data real inline_g_return_sym10__;
+    if(c) {
+      {
+        inline_g_return_sym10__ = lcm_sym40__;
+      }
+    } else ;
+    lcm_sym47__ = ((c ? inline_g_return_sym10__ : d) * promote(2, real, data));
+    target += (lcm_sym47__ * theta);
+    data real inline_g_return_sym12__;
+    data real inline_tf_return_sym14__;
+    tuple_ad(data, data)tuple(real, int) inline_tf_t_sym15__;
+    {
+      lcm_sym38__ = fma(lcm_sym40__, promote(10, real, data),
+                        promote(1, real, data));
+    }
+    target += (lcm_sym38__ * theta);
+  } }
+
+generate_quantities {
+  data int lcm_sym37__;
+  data int lcm_sym36__;
   data real
     theta = (FnReadParam(constrain Identity)(dims())(mem_pattern AoS))__(
     );

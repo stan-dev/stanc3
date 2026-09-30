@@ -638,6 +638,174 @@ output_vars {
   parameters real theta; //real
 }
 [exit 0]
+  $ stanc --O1 --debug-optimized-mir-pretty stale-parent-adlevel.stan
+functions {
+  real g(real x) {
+    {
+      return (x * promote(3, real, data));
+    }
+  }
+  real tlp_lp(real x) {
+    {
+      return (target() + x);
+    }
+  }
+  complex cz(complex z) {
+    {
+      return (z * promote(2, complex, data));
+    }
+  }
+  real tf(tuple(real, int) t) {
+    {
+      return fma(t.1, promote(10, real, data), promote(t.2, real, data));
+    }
+  } }
+input_vars {
+  real d;
+  int c; }
+
+prepare_data {
+  data real d;
+  d = FnReadData__("d")[1];
+  data int c;
+  c = FnReadData__("c")[1]; }
+
+log_prob {
+  real
+    theta = (FnReadParam(constrain Identity)(dims())(mem_pattern AoS))__(
+    );
+  {
+    target += normal_lupdf(theta, promote(0, real, data),
+                           promote(1, real, data));
+    real y1;
+    real inline_g_return_sym17__;
+    {
+      inline_g_return_sym17__ = (d * promote(3, real, data));
+    }
+    y1 = (inline_g_return_sym17__ * promote(2, real, data));
+    target += (y1 * theta);
+    real y2;
+    real inline_tlp_lp_return_sym19__;
+    {
+      inline_tlp_lp_return_sym19__ = (target() + d);
+    }
+    y2 = (inline_tlp_lp_return_sym19__ * promote(2, real, data));
+    target += y2;
+    real inline_g_return_sym21__;
+    complex inline_cz_return_sym23__;
+    complex inline_cz_z_sym24__;
+    {
+      inline_g_return_sym21__ = (d * promote(3, real, data));
+    }
+    inline_cz_z_sym24__ = promote(inline_g_return_sym21__, complex, var);
+    {
+      inline_cz_return_sym23__ = (inline_cz_z_sym24__ * promote(2, complex,
+                                                                data));
+    }
+    target += (get_real(inline_cz_return_sym23__) * theta);
+    real y3;
+    real inline_g_return_sym26__;
+    if(c) {
+      {
+        inline_g_return_sym26__ = (d * promote(3, real, data));
+      }
+    } else ;
+    y3 = ((c ? inline_g_return_sym26__ : d) * promote(2, real, data));
+    target += (y3 * theta);
+    real inline_g_return_sym28__;
+    real inline_tf_return_sym30__;
+    tuple_ad(var, data)tuple(real, int) inline_tf_t_sym31__;
+    {
+      inline_g_return_sym28__ = (d * promote(3, real, data));
+    }
+    inline_tf_t_sym31__ = FnMakeTuple__(inline_g_return_sym28__, 1);
+    {
+      inline_tf_return_sym30__ = fma(inline_tf_t_sym31__.1,
+                                     promote(10, real, data),
+                                     promote(inline_tf_t_sym31__.2, real,
+                                             data));
+    }
+    target += (inline_tf_return_sym30__ * theta);
+  } }
+
+rev_log_prob {
+  real
+    theta = (FnReadParam(constrain Identity)(dims())(mem_pattern SoA))__(
+    );
+  {
+    target += normal_lupdf(theta, promote(0, real, data),
+                           promote(1, real, data));
+    real y1;
+    real inline_g_return_sym1__;
+    {
+      inline_g_return_sym1__ = (d * promote(3, real, data));
+    }
+    y1 = (inline_g_return_sym1__ * promote(2, real, data));
+    target += (y1 * theta);
+    real y2;
+    real inline_tlp_lp_return_sym3__;
+    {
+      inline_tlp_lp_return_sym3__ = (target() + d);
+    }
+    y2 = (inline_tlp_lp_return_sym3__ * promote(2, real, data));
+    target += y2;
+    real inline_g_return_sym5__;
+    complex inline_cz_return_sym7__;
+    complex inline_cz_z_sym8__;
+    {
+      inline_g_return_sym5__ = (d * promote(3, real, data));
+    }
+    inline_cz_z_sym8__ = promote(inline_g_return_sym5__, complex, var);
+    {
+      inline_cz_return_sym7__ = (inline_cz_z_sym8__ * promote(2, complex,
+                                                              data));
+    }
+    target += (get_real(inline_cz_return_sym7__) * theta);
+    real y3;
+    real inline_g_return_sym10__;
+    if(c) {
+      {
+        inline_g_return_sym10__ = (d * promote(3, real, data));
+      }
+    } else ;
+    y3 = ((c ? inline_g_return_sym10__ : d) * promote(2, real, data));
+    target += (y3 * theta);
+    real inline_g_return_sym12__;
+    real inline_tf_return_sym14__;
+    tuple_ad(var, data)tuple(real, int) inline_tf_t_sym15__;
+    {
+      inline_g_return_sym12__ = (d * promote(3, real, data));
+    }
+    inline_tf_t_sym15__ = FnMakeTuple__(inline_g_return_sym12__, 1);
+    {
+      inline_tf_return_sym14__ = fma(inline_tf_t_sym15__.1,
+                                     promote(10, real, data),
+                                     promote(inline_tf_t_sym15__.2, real,
+                                             data));
+    }
+    target += (inline_tf_return_sym14__ * theta);
+  } }
+
+generate_quantities {
+  data real
+    theta = (FnReadParam(constrain Identity)(dims())(mem_pattern AoS))__(
+    );
+  (FnWriteParam(unconstrain_opt())(var theta))__();
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+
+transform_inits {
+  real theta;
+  theta = FnReadData__("theta")[1];
+  (FnWriteParam(unconstrain_opt(Identity))(var theta))__(); }
+output_vars {
+  parameters real theta; //real
+}
+[exit 0]
   $ stanc --O1 --debug-optimized-mir-pretty void-return-loop.stan
 functions {
   void f(int n) {

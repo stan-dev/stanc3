@@ -10,15 +10,18 @@ let reset_and_mir_of_string s =
   Gensym.reset_danger_use_cautiously ();
   Test_utils.mir_of_string s
 
-(** Compile through the stanc driver with only [passes] enabled, the same as
-    running [stanc -f<pass> ...] on the program. *)
-let reset_and_mir_with_passes passes s =
+(** Compile through the stanc driver with [overrides] applied to O0, the same as
+    running [stanc -f<pass> -fno-<pass> ...] on the program. *)
+let reset_and_mir_with_overrides optimization_overrides s =
   Gensym.reset_danger_use_cautiously ();
   let debug_settings =
-    { Driver.Flags.default.debug_settings with
-      optimization_overrides= List.map ~f:(fun pass -> (pass, true)) passes }
-  in
+    {Driver.Flags.default.debug_settings with optimization_overrides} in
   Test_utils.compile_mir s {Driver.Flags.default with debug_settings}
+
+(** Compile through the stanc driver with only [passes] enabled, the same as
+    running [stanc -f<pass> ...] on the program. *)
+let reset_and_mir_with_passes passes =
+  reset_and_mir_with_overrides (List.map ~f:(fun pass -> (pass, true)) passes)
 
 let%expect_test "map_rec_stmt_loc" =
   let mir =
@@ -1591,6 +1594,202 @@ let%expect_test "inline function binding of nested lp call is autodiff" =
         inline_twice_return_sym8__ = (inline_twice_x_sym9__ + inline_twice_x_sym9__);
       }
       target += inline_twice_return_sym8__;
+    }
+    |}]
+
+(* Minimal settings found by delta debugging from --Oexperimental: dropping any
+   one of these hides the stale autodiff level of an expression that contains an
+   inlined call. Lazy code motion declares its temporaries from the expression's
+   autodiff level, and expression propagation exposes the inlined return value
+   to it. *)
+let stale_adlevel_overrides =
+  [ (Function_inlining, true); (Expression_propagation, true)
+  ; (Lazy_code_motion, true); (Preserve_stability, false) ]
+
+let print_log_prob (mir : Program.Typed.t) =
+  Fmt.str "@[<v>%a@]" Fmt.(list ~sep:cut Stmt.Located.pp) mir.log_prob
+  |> print_endline
+
+let%expect_test "expression containing inlined data call is autodiff" =
+  reset_and_mir_with_overrides stale_adlevel_overrides
+    {|
+      functions {
+        real g(real x) { return x * 3; }
+      }
+      data { real d; }
+      parameters { real theta; }
+      model {
+        real y = g(d) * 2;
+        target += y * theta;
+      }
+      |}
+  |> print_log_prob;
+  [%expect
+    {|
+    real lcm_sym13__;
+    real lcm_sym12__;
+    real lcm_sym11__;
+    real theta = (FnReadParam(constrain Identity)(dims())(mem_pattern AoS))__();
+    {
+      real y;
+      real inline_g_return_sym3__;
+      {
+        lcm_sym11__ = (d * promote(3, real, data));
+        inline_g_return_sym3__ = lcm_sym11__;
+      }
+      lcm_sym12__ = (lcm_sym11__ * promote(2, real, data));
+      y = lcm_sym12__;
+      target += (lcm_sym12__ * theta);
+    }
+    |}]
+
+let%expect_test "expression containing inlined lp call is autodiff" =
+  reset_and_mir_with_overrides stale_adlevel_overrides
+    {|
+      functions {
+        real tlp_lp(real x) { return target() + x; }
+      }
+      data { real d; }
+      parameters { real theta; }
+      model {
+        theta ~ normal(0, 1);
+        real y = tlp_lp(d) * 2;
+        target += y;
+      }
+      |}
+  |> print_log_prob;
+  [%expect
+    {|
+    real lcm_sym10__;
+    real lcm_sym9__;
+    real theta = (FnReadParam(constrain Identity)(dims())(mem_pattern AoS))__();
+    {
+      target += normal_lupdf(theta, promote(0, real, data),
+                             promote(1, real, data));
+      real y;
+      real inline_tlp_lp_return_sym3__;
+      {
+        inline_tlp_lp_return_sym3__ = (target() + d);
+      }
+      lcm_sym10__ = (inline_tlp_lp_return_sym3__ * promote(2, real, data));
+      y = lcm_sym10__;
+      target += lcm_sym10__;
+    }
+    |}]
+
+let%expect_test "promotion of inlined data call is autodiff" =
+  reset_and_mir_with_overrides stale_adlevel_overrides
+    {|
+      functions {
+        real g(real x) { return x * 3; }
+        complex cz(complex z) { return z * 2; }
+      }
+      data { real d; }
+      parameters { real theta; }
+      model {
+        target += get_real(cz(g(d))) * theta;
+      }
+      |}
+  |> print_log_prob;
+  [%expect
+    {|
+    complex lcm_sym22__;
+    complex lcm_sym21__;
+    real lcm_sym20__;
+    real lcm_sym19__;
+    real theta = (FnReadParam(constrain Identity)(dims())(mem_pattern AoS))__();
+    {
+      real inline_g_return_sym6__;
+      complex inline_cz_return_sym8__;
+      complex inline_cz_z_sym9__;
+      {
+        lcm_sym19__ = (d * promote(3, real, data));
+        inline_g_return_sym6__ = lcm_sym19__;
+      }
+      lcm_sym22__ = promote(lcm_sym19__, complex, var);
+      inline_cz_z_sym9__ = lcm_sym22__;
+      {
+        lcm_sym21__ = (lcm_sym22__ * promote(2, complex, data));
+        inline_cz_return_sym8__ = lcm_sym21__;
+      }
+      target += (get_real(lcm_sym21__) * theta);
+    }
+    |}]
+
+let%expect_test "ternary containing inlined data call is autodiff" =
+  reset_and_mir_with_overrides stale_adlevel_overrides
+    {|
+      functions {
+        real g(real x) { return x * 3; }
+      }
+      data { real d; int c; }
+      parameters { real theta; }
+      model {
+        real y = (c ? g(d) : d) * 2;
+        target += y * theta;
+      }
+      |}
+  |> print_log_prob;
+  [%expect
+    {|
+    real lcm_sym13__;
+    real lcm_sym12__;
+    real lcm_sym11__;
+    real theta = (FnReadParam(constrain Identity)(dims())(mem_pattern AoS))__();
+    {
+      real y;
+      real inline_g_return_sym3__;
+      if(c) {
+        {
+          inline_g_return_sym3__ = (d * promote(3, real, data));
+        }
+      } else {
+
+      }
+      lcm_sym13__ = ((c ? inline_g_return_sym3__ : d) * promote(2, real, data));
+      y = lcm_sym13__;
+      target += (lcm_sym13__ * theta);
+    }
+    |}]
+
+let%expect_test "tuple containing inlined data call is autodiff" =
+  reset_and_mir_with_overrides stale_adlevel_overrides
+    {|
+      functions {
+        real g(real x) { return x * 3; }
+        real tf(tuple(real, int) t) { return t.1 * 10 + t.2; }
+      }
+      data { real d; }
+      parameters { real theta; }
+      model {
+        target += tf((g(d), 1)) * theta;
+      }
+      |}
+  |> print_log_prob;
+  [%expect
+    {|
+    tuple_ad(var, data)tuple(real, int) lcm_sym22__;
+    real lcm_sym21__;
+    real lcm_sym20__;
+    real lcm_sym19__;
+    real theta = (FnReadParam(constrain Identity)(dims())(mem_pattern AoS))__();
+    {
+      real inline_g_return_sym6__;
+      real inline_tf_return_sym8__;
+      tuple_ad(var, data)tuple(real, int) inline_tf_t_sym9__;
+      {
+        lcm_sym20__ = (d * promote(3, real, data));
+        inline_g_return_sym6__ = lcm_sym20__;
+      }
+      lcm_sym22__ = FnMakeTuple__(lcm_sym20__, 1);
+      inline_tf_t_sym9__ = lcm_sym22__;
+      {
+        lcm_sym19__ = ((lcm_sym22__.1 * promote(10, real, data)) + promote(lcm_sym22__.2,
+                                                                        real,
+                                                                        data));
+        inline_tf_return_sym8__ = lcm_sym19__;
+      }
+      target += (lcm_sym19__ * theta);
     }
     |}]
 
