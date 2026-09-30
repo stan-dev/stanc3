@@ -10,6 +10,16 @@ let reset_and_mir_of_string s =
   Gensym.reset_danger_use_cautiously ();
   Test_utils.mir_of_string s
 
+(** Compile through the stanc driver with only [passes] enabled, the same as
+    running [stanc -f<pass> ...] on the program. *)
+let reset_and_mir_with_passes passes s =
+  Gensym.reset_danger_use_cautiously ();
+  let debug_settings =
+    { Driver.Flags.default.debug_settings with
+      optimization_overrides= List.map ~f:(fun pass -> (pass, true)) passes }
+  in
+  Test_utils.compile_mir s {Driver.Flags.default with debug_settings}
+
 let%expect_test "map_rec_stmt_loc" =
   let mir =
     reset_and_mir_of_string
@@ -141,11 +151,11 @@ let%expect_test "inline functions" =
 
     log_prob {
       {
-        data matrix[0, 0]
-          inline_f_y_sym1__ = FnMakeRowVec__(FnMakeRowVec__(promote(3, real, data),
-                                                            promote(2, real, data)),
-                                             FnMakeRowVec__(promote(4, real, data),
-                                                            promote(6, real, data)));
+        data matrix[0, 0] inline_f_y_sym1__;
+        inline_f_y_sym1__ = FnMakeRowVec__(FnMakeRowVec__(promote(3, real, data),
+                                                          promote(2, real, data)),
+                                           FnMakeRowVec__(promote(4, real, data),
+                                                          promote(6, real, data)));
         {
           FnPrint__(3);
           FnPrint__(inline_f_y_sym1__);
@@ -294,47 +304,43 @@ let%expect_test "list collapsing" =
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                  ((pattern (Lit Int 0))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-              (initialize
-               (Assign
-                ((pattern
-                  (FunApp (CompilerInternal FnMakeRowVec)
-                   (((pattern
-                      (FunApp (CompilerInternal FnMakeRowVec)
-                       (((pattern
-                          (Promotion
-                           ((pattern (Lit Int 3))
-                            (meta
-                             ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                           UReal DataOnly))
-                         (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
-                        ((pattern
-                          (Promotion
-                           ((pattern (Lit Int 2))
-                            (meta
-                             ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                           UReal DataOnly))
-                         (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
-                     (meta
-                      ((type_ URowVector) (loc <opaque>) (adlevel DataOnly))))
-                    ((pattern
-                      (FunApp (CompilerInternal FnMakeRowVec)
-                       (((pattern
-                          (Promotion
-                           ((pattern (Lit Int 4))
-                            (meta
-                             ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                           UReal DataOnly))
-                         (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
-                        ((pattern
-                          (Promotion
-                           ((pattern (Lit Int 6))
-                            (meta
-                             ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                           UReal DataOnly))
-                         (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
-                     (meta
-                      ((type_ URowVector) (loc <opaque>) (adlevel DataOnly)))))))
-                 (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))))))
+              (initialize Uninit)))
+            (meta <opaque>))
+           ((pattern
+             (Assignment ((LVariable inline_f_y_sym1__) ()) UMatrix
+              ((pattern
+                (FunApp (CompilerInternal FnMakeRowVec)
+                 (((pattern
+                    (FunApp (CompilerInternal FnMakeRowVec)
+                     (((pattern
+                        (Promotion
+                         ((pattern (Lit Int 3))
+                          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                         UReal DataOnly))
+                       (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                      ((pattern
+                        (Promotion
+                         ((pattern (Lit Int 2))
+                          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                         UReal DataOnly))
+                       (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+                   (meta ((type_ URowVector) (loc <opaque>) (adlevel DataOnly))))
+                  ((pattern
+                    (FunApp (CompilerInternal FnMakeRowVec)
+                     (((pattern
+                        (Promotion
+                         ((pattern (Lit Int 4))
+                          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                         UReal DataOnly))
+                       (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                      ((pattern
+                        (Promotion
+                         ((pattern (Lit Int 6))
+                          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                         UReal DataOnly))
+                       (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+                   (meta ((type_ URowVector) (loc <opaque>) (adlevel DataOnly)))))))
+               (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))))
             (meta <opaque>))
            ((pattern
              (Block
@@ -1159,7 +1165,8 @@ let%expect_test "inline function binds expression argument once" =
       FnValidateSize__("mu", "N", N);
       vector[N] mu;
       vector[0] inline_elementwise_exp_return_sym1__;
-      vector[0] inline_elementwise_exp_x_sym2__ = (X * beta);
+      vector[0] inline_elementwise_exp_x_sym2__;
+      inline_elementwise_exp_x_sym2__ = (X * beta);
       {
         int inline_elementwise_exp_N_sym3__;
         inline_elementwise_exp_N_sym3__ = rows(inline_elementwise_exp_x_sym2__);
@@ -1206,7 +1213,8 @@ let%expect_test "inline function binds rng argument once" =
     if(!(emit_generated_quantities__)) return;
     data real y;
     data real inline_twice_return_sym1__;
-    data real inline_twice_x_sym2__ = normal_rng(0, 1);
+    data real inline_twice_x_sym2__;
+    inline_twice_x_sym2__ = normal_rng(0, 1);
     {
       inline_twice_return_sym1__ = (inline_twice_x_sym2__ + inline_twice_x_sym2__);
     }
@@ -1246,7 +1254,8 @@ let%expect_test "inline function keeps side effect of unused argument" =
     real theta;
     {
       real inline_ignore_return_sym1__;
-      real inline_ignore_x_sym2__ = (incr_lp(theta) + promote(1, real, data));
+      real inline_ignore_x_sym2__;
+      inline_ignore_x_sym2__ = (incr_lp(theta) + promote(1, real, data));
       {
         inline_ignore_return_sym1__ = promote(1.0, real, var);
       }
@@ -1278,7 +1287,8 @@ let%expect_test "inline void function binds expression argument once" =
   [%expect
     {|
     {
-      data vector[0] inline_show_x_sym1__ = (promote(2, real, data) * v);
+      data vector[0] inline_show_x_sym1__;
+      inline_show_x_sym1__ = (promote(2, real, data) * v);
       {
         FnPrint__(inline_show_x_sym1__);
         FnPrint__(inline_show_x_sym1__);
@@ -1310,13 +1320,200 @@ let%expect_test "inline function binds argument inside short circuit branch" =
     {|
     {
       int inline_both_return_sym1__;
+      data int inline_both_z_sym2__;
       if(a) {
-        data int inline_both_z_sym2__ = (a + 1);
+        inline_both_z_sym2__ = (a + 1);
         {
           inline_both_return_sym1__ = (inline_both_z_sym2__ * inline_both_z_sym2__);
         }
       }
       FnPrint__(a && inline_both_return_sym1__);
+    }
+    |}]
+
+let%expect_test "inline function in while condition declares binding once" =
+  let mir =
+    reset_and_mir_of_string
+      {|
+      functions {
+        int inc(int n) { return n + 1; }
+      }
+      data { int N; }
+      model {
+        int k = 0;
+        while (inc(k * 2) < N) { k += 1; }
+      }
+      |}
+  in
+  let mir = function_inlining mir in
+  Fmt.str "@[<v>%a@]" Fmt.(list ~sep:cut Stmt.Located.pp) mir.log_prob
+  |> print_endline;
+  [%expect
+    {|
+    {
+      int k;
+      k = 0;
+      int inline_inc_return_sym1__;
+      data int inline_inc_n_sym2__;
+      inline_inc_n_sym2__ = (k * 2);
+      {
+        inline_inc_return_sym1__ = (inline_inc_n_sym2__ + 1);
+      }
+      while((inline_inc_return_sym1__ < N)) {
+        {
+          k = (k + 1);
+        }
+        inline_inc_n_sym2__ = (k * 2);
+        {
+          inline_inc_return_sym1__ = (inline_inc_n_sym2__ + 1);
+        }
+      }
+    }
+    |}]
+
+(* Minimal pass set found by delta debugging from --Oexperimental: dropping any
+   one of these passes hides the bug. *)
+let loop_bound_passes =
+  [ Function_inlining; One_step_loop_unrolling; Expression_propagation
+  ; Dead_code_elimination; Lazy_code_motion ]
+
+let%expect_test "inline function in while condition is re-evaluated" =
+  let mir =
+    reset_and_mir_with_passes loop_bound_passes
+      {|
+      functions {
+        int inc(int n) { return n + 1; }
+      }
+      data { int N; }
+      parameters { real theta; }
+      model {
+        int k = 0;
+        while (inc(k * 2) < N) {
+          k += 1;
+          target += -square(theta - k);
+        }
+      }
+      |}
+  in
+  Fmt.str "@[<v>%a@]" Fmt.(list ~sep:cut Stmt.Located.pp) mir.log_prob
+  |> print_endline;
+  [%expect
+    {|
+    data int lcm_sym31__;
+    data int lcm_sym30__;
+    data int lcm_sym29__;
+    data int lcm_sym28__;
+    data int lcm_sym27__;
+    data int lcm_sym25__;
+    data int lcm_sym24__;
+    data int lcm_sym23__;
+    data int lcm_sym26__;
+    data int lcm_sym21__;
+    real theta = (FnReadParam(constrain Identity)(dims())(mem_pattern AoS))__();
+    {
+      int k;
+      int inline_inc_return_sym4__;
+      data int inline_inc_n_sym5__;
+      lcm_sym28__ = (0 * 2);
+      {
+        lcm_sym24__ = (lcm_sym28__ + 1);
+      }
+      if((lcm_sym24__ < N)) {
+        {
+          {
+            lcm_sym26__ = (0 + 1);
+            k = lcm_sym26__;
+            target += -(square((theta - promote(lcm_sym26__, real, data))));
+          }
+
+          {
+            lcm_sym27__ = (k * 2);
+            lcm_sym23__ = (lcm_sym27__ + 1);
+          }
+        }
+        while((lcm_sym23__ < N)) {
+          {
+            k = (k + 1);
+            target += -(square((theta - promote(k, real, data))));
+          }
+          lcm_sym27__ = (k * 2);
+          {
+            lcm_sym23__ = (lcm_sym27__ + 1);
+          }
+        }
+      }
+    }
+    |}]
+
+let%expect_test "inline function in for upper bound is re-evaluated" =
+  let mir =
+    reset_and_mir_with_passes loop_bound_passes
+      {|
+      functions {
+        int inc(int n) { return n + 1; }
+      }
+      data { int N; }
+      parameters { real theta; }
+      model {
+        int m = N;
+        for (i in 1:inc(m * 1)) {
+          if (i == 2) m = 1;
+          target += -square(theta - i);
+        }
+      }
+      |}
+  in
+  Fmt.str "@[<v>%a@]" Fmt.(list ~sep:cut Stmt.Located.pp) mir.log_prob
+  |> print_endline;
+  [%expect
+    {|
+    data int lcm_sym25__;
+    data int lcm_sym24__;
+    data int lcm_sym23__;
+    data int lcm_sym22__;
+    data int lcm_sym21__;
+    data int lcm_sym20__;
+    data int lcm_sym19__;
+    data int lcm_sym18__;
+    real theta = (FnReadParam(constrain Identity)(dims())(mem_pattern AoS))__();
+    {
+      int m;
+      m = N;
+      int inline_inc_return_sym4__;
+      data int inline_inc_n_sym5__;
+      lcm_sym21__ = (N * 1);
+      {
+        lcm_sym20__ = (lcm_sym21__ + 1);
+      }
+      if((lcm_sym20__ >= 1)) {
+        {
+          if((1 == 2)) {
+            m = 1;
+          }
+          target += -(square((theta - promote(1, real, data))));
+        }
+        lcm_sym22__ = (m * 1);
+        inline_inc_n_sym5__ = lcm_sym22__;
+        {
+          lcm_sym19__ = (1 + 1);
+          inline_inc_return_sym4__ = (inline_inc_n_sym5__ + 1);
+        }
+        for(i in lcm_sym19__:inline_inc_return_sym4__) {
+          {
+            if((i == 2)) {
+              {
+                m = 1;
+              }
+              lcm_sym22__ = (m * 1);
+            } else ;
+            target += -(square((theta - promote(i, real, data))));
+          }
+          inline_inc_n_sym5__ = lcm_sym22__;
+          {
+            inline_inc_return_sym4__ = (inline_inc_n_sym5__ + 1);
+          }
+        }
+      }
     }
     |}]
 

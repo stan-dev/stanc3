@@ -1,0 +1,409 @@
+  $ stanc --Oexperimental --debug-optimized-mir-pretty for-upper-bound.stan
+functions {
+  int inc(int n) {
+    data int lcm_sym7__;
+    {
+      return (n + 1);
+    }
+  } }
+input_vars {
+  int N; }
+prepare_data {
+  data int N;
+  N = FnReadData__("N")[1]; }
+
+log_prob {
+  data int lcm_sym25__;
+  data int lcm_sym24__;
+  data int lcm_sym23__;
+  data int lcm_sym22__;
+  data real lcm_sym21__;
+  data real lcm_sym20__;
+  data int lcm_sym19__;
+  data int lcm_sym18__;
+  real
+    theta = (FnReadParam(constrain Identity)(dims())(mem_pattern AoS))__(
+    );
+  {
+    data int m;
+    m = N;
+    data int inline_inc_return_sym4__;
+    data int inline_inc_n_sym5__;
+    {
+      lcm_sym18__ = fma(N, 1, 1);
+    }
+    if((lcm_sym18__ >= 1)) {
+      {
+        target += -(square((theta - promote(1, real, data))));
+      }
+      lcm_sym23__ = (m * 1);
+      {
+        inline_inc_return_sym4__ = (lcm_sym23__ + 1);
+      }
+      for(i in 2:inline_inc_return_sym4__) {
+        {
+          if((i == 2)) {
+            lcm_sym23__ = (1 * 1);
+          } else ;
+          target += -(square((theta - promote(i, real, data))));
+        }
+        {
+          inline_inc_return_sym4__ = (lcm_sym23__ + 1);
+        }
+      }
+    }
+  } }
+
+rev_log_prob {
+  data int lcm_sym17__;
+  data int lcm_sym16__;
+  data int lcm_sym15__;
+  data int lcm_sym14__;
+  data real lcm_sym13__;
+  data real lcm_sym12__;
+  data int lcm_sym11__;
+  data int lcm_sym10__;
+  real
+    theta = (FnReadParam(constrain Identity)(dims())(mem_pattern SoA))__(
+    );
+  {
+    data int m;
+    m = N;
+    data int inline_inc_return_sym1__;
+    data int inline_inc_n_sym2__;
+    {
+      lcm_sym10__ = fma(N, 1, 1);
+    }
+    if((lcm_sym10__ >= 1)) {
+      {
+        target += -(square((theta - promote(1, real, data))));
+      }
+      lcm_sym15__ = (m * 1);
+      {
+        inline_inc_return_sym1__ = (lcm_sym15__ + 1);
+      }
+      for(i in 2:inline_inc_return_sym1__) {
+        {
+          if((i == 2)) {
+            lcm_sym15__ = (1 * 1);
+          } else ;
+          target += -(square((theta - promote(i, real, data))));
+        }
+        {
+          inline_inc_return_sym1__ = (lcm_sym15__ + 1);
+        }
+      }
+    }
+  } }
+
+generate_quantities {
+  data int lcm_sym9__;
+  data int lcm_sym8__;
+  data real
+    theta = (FnReadParam(constrain Identity)(dims())(mem_pattern AoS))__(
+    );
+  (FnWriteParam(unconstrain_opt())(var theta))__();
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+
+transform_inits {
+  real theta;
+  theta = FnReadData__("theta")[1];
+  (FnWriteParam(unconstrain_opt(Identity))(var theta))__(); }
+output_vars {
+  parameters real theta; //real
+}
+[exit 0]
+  $ stanc --Oexperimental --debug-optimized-mir-pretty inline-arg-binding.stan
+functions {
+  vector elementwise_exp(vector x) {
+    data int lcm_sym17__;
+    vector lcm_sym16__;
+    {
+      int N;
+      lcm_sym17__ = rows(x);
+      N = lcm_sym17__;
+      FnValidateSize__("result", "N", lcm_sym17__);
+      vector[lcm_sym17__] result;
+      result[:] = exp(x[1:lcm_sym17__]);
+      return result;
+    }
+  }
+  real twice(real x) {
+    real lcm_sym18__;
+    {
+      return (x + x);
+    }
+  } }
+input_vars {
+  int N;
+  int K;
+  matrix[N, K] X; }
+
+prepare_data {
+  data real lcm_sym40__;
+  data real lcm_sym39__;
+  data int lcm_sym38__;
+  data int lcm_sym37__;
+  data int lcm_sym36__;
+  data int pos__;
+  pos__ = 1;
+  data int N;
+  N = FnReadData__("N")[1];
+  (FnCheck(trans(Lower 1))(var_name N)(var N))__(1);
+  data int K;
+  K = FnReadData__("K")[1];
+  (FnCheck(trans(Lower 1))(var_name K)(var K))__(1);
+  FnValidateSize__("X", "N", N);
+  FnValidateSize__("X", "K", K);
+  data matrix[N, K] X;
+  {
+    data array[] real X_flat__;
+    X_flat__ = FnReadData__("X");
+    pos__ = 1;
+    if((K >= 1)) {
+      lcm_sym38__ = (N >= 1);
+      if(lcm_sym38__) {
+        X[1, 1] = X_flat__[1];
+        pos__ = 2;
+        for(sym2__ in 2:N) {
+          X[sym2__, 1] = X_flat__[pos__];
+          pos__ = (pos__ + 1);
+        }
+      }
+      for(sym1__ in 2:K) {
+        if(lcm_sym38__) {
+          X[1, sym1__] = X_flat__[pos__];
+          pos__ = (pos__ + 1);
+          for(sym2__ in 2:N) {
+            X[sym2__, sym1__] = X_flat__[pos__];
+            pos__ = (pos__ + 1);
+          }
+        }
+      }
+    }
+  }
+  FnValidateSize__("beta", "K", K); }
+
+log_prob {
+  vector lcm_sym35__;
+  data real lcm_sym34__;
+  data int lcm_sym33__;
+  data real lcm_sym32__;
+  data vector lcm_sym31__;
+  vector[K]
+    beta = (FnReadParam(constrain Identity)(dims(K))(mem_pattern AoS))__(
+    );
+  {
+    FnValidateSize__("mu", "N", N);
+    data vector[N] mu;
+    vector[0] inline_elementwise_exp_return_sym10__;
+    data vector[0] inline_elementwise_exp_x_sym11__;
+    lcm_sym35__ = (X * beta);
+    {
+      data int inline_elementwise_exp_N_sym12__;
+      lcm_sym33__ = rows(lcm_sym35__);
+      FnValidateSize__("result", "N", lcm_sym33__);
+      vector[lcm_sym33__] inline_elementwise_exp_result_sym13__;
+      inline_elementwise_exp_result_sym13__[:] = exp(lcm_sym35__[1:lcm_sym33__]);
+      inline_elementwise_exp_return_sym10__ = inline_elementwise_exp_result_sym13__;
+    }
+    target += std_normal_lupdf(beta);
+    target += normal_lpdf(inline_elementwise_exp_return_sym10__,
+                          promote(0, real, data), promote(1, real, data));
+  } }
+
+rev_log_prob {
+  vector[0] lcm_sym30__;
+  data real lcm_sym29__;
+  data int lcm_sym28__;
+  data real lcm_sym27__;
+  data vector[0] lcm_sym26__;
+  vector[K]
+    beta = (FnReadParam(constrain Identity)(dims(K))(mem_pattern SoA))__(
+    );
+  {
+    FnValidateSize__("mu", "N", N);
+    data vector[N] mu;
+    vector[0] inline_elementwise_exp_return_sym4__;
+    data vector[0] inline_elementwise_exp_x_sym5__;
+    lcm_sym30__ = (X * beta);
+    {
+      data int inline_elementwise_exp_N_sym6__;
+      lcm_sym28__ = rows(lcm_sym30__);
+      FnValidateSize__("result", "N", lcm_sym28__);
+      vector[lcm_sym28__] inline_elementwise_exp_result_sym7__;
+      inline_elementwise_exp_result_sym7__[:] = exp(lcm_sym30__[1:lcm_sym28__]);
+      inline_elementwise_exp_return_sym4__ = inline_elementwise_exp_result_sym7__;
+    }
+    target += std_normal_lupdf(beta);
+    target += normal_lpdf(inline_elementwise_exp_return_sym4__,
+                          promote(0, real, data), promote(1, real, data));
+  } }
+
+generate_quantities {
+  data int lcm_sym25__;
+  data int lcm_sym24__;
+  data real lcm_sym23__;
+  data vector[K]
+    beta = (FnReadParam(constrain Identity)(dims(K))(mem_pattern AoS))__(
+    );
+  (FnWriteParam(unconstrain_opt())(var beta))__();
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  }
+  data real y;
+  data real inline_twice_return_sym1__;
+  data real inline_twice_x_sym2__;
+  inline_twice_x_sym2__ = normal_rng(0, 1);
+  {
+    lcm_sym23__ = (inline_twice_x_sym2__ + inline_twice_x_sym2__);
+  }
+  y = lcm_sym23__;
+  (FnWriteParam(unconstrain_opt())(var lcm_sym23__))__(); }
+
+transform_inits {
+  data real lcm_sym22__;
+  data real lcm_sym21__;
+  data int lcm_sym20__;
+  data int lcm_sym19__;
+  data int pos__;
+  pos__ = 1;
+  vector[K] beta;
+  {
+    data array[] real beta_flat__;
+    beta_flat__ = FnReadData__("beta");
+    pos__ = 1;
+    if((K >= 1)) {
+      beta[1] = beta_flat__[1];
+      pos__ = 2;
+      for(sym1__ in 2:K) {
+        beta[sym1__] = beta_flat__[pos__];
+        pos__ = (pos__ + 1);
+      }
+    }
+  }
+  (FnWriteParam(unconstrain_opt(Identity))(var beta))__(); }
+
+output_vars {
+  parameters vector[K] beta; //vector[K]
+  generated_quantities real y; //real
+}
+[exit 0]
+  $ stanc --Oexperimental --debug-optimized-mir-pretty while-condition.stan
+functions {
+  int inc(int n) {
+    data int lcm_sym7__;
+    {
+      return (n + 1);
+    }
+  } }
+input_vars {
+  int N; }
+prepare_data {
+  data int N;
+  N = FnReadData__("N")[1]; }
+
+log_prob {
+  data int lcm_sym23__;
+  data int lcm_sym22__;
+  data int lcm_sym21__;
+  data real lcm_sym20__;
+  data real lcm_sym19__;
+  data int lcm_sym18__;
+  data int lcm_sym17__;
+  real
+    theta = (FnReadParam(constrain Identity)(dims())(mem_pattern AoS))__(
+    );
+  {
+    data int k;
+    data int inline_inc_return_sym4__;
+    data int inline_inc_n_sym5__;
+    if((1 < N)) {
+      {
+        {
+          k = 1;
+          target += -(square((theta - promote(1, real, data))));
+        }
+        {
+          lcm_sym17__ = fma(1, 2, 1);
+        }
+      }
+      while((lcm_sym17__ < N)) {
+        {
+          k = (k + 1);
+          target += -(square((theta - promote(k, real, data))));
+        }
+        {
+          lcm_sym17__ = fma(k, 2, 1);
+        }
+      }
+    }
+  } }
+
+rev_log_prob {
+  data int lcm_sym16__;
+  data int lcm_sym15__;
+  data int lcm_sym14__;
+  data real lcm_sym13__;
+  data real lcm_sym12__;
+  data int lcm_sym11__;
+  data int lcm_sym10__;
+  real
+    theta = (FnReadParam(constrain Identity)(dims())(mem_pattern SoA))__(
+    );
+  {
+    data int k;
+    data int inline_inc_return_sym1__;
+    data int inline_inc_n_sym2__;
+    if((1 < N)) {
+      {
+        {
+          k = 1;
+          target += -(square((theta - promote(1, real, data))));
+        }
+        {
+          lcm_sym10__ = fma(1, 2, 1);
+        }
+      }
+      while((lcm_sym10__ < N)) {
+        {
+          k = (k + 1);
+          target += -(square((theta - promote(k, real, data))));
+        }
+        {
+          lcm_sym10__ = fma(k, 2, 1);
+        }
+      }
+    }
+  } }
+
+generate_quantities {
+  data int lcm_sym9__;
+  data int lcm_sym8__;
+  data real
+    theta = (FnReadParam(constrain Identity)(dims())(mem_pattern AoS))__(
+    );
+  (FnWriteParam(unconstrain_opt())(var theta))__();
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+
+transform_inits {
+  real theta;
+  theta = FnReadData__("theta")[1];
+  (FnWriteParam(unconstrain_opt(Identity))(var theta))__(); }
+output_vars {
+  parameters real theta; //real
+}
+[exit 0]

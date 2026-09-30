@@ -123,10 +123,15 @@ let rec is_trivial_inline_arg (arg : Expr.Typed.t) =
   | _ -> false
 
 (** Bind each parameter of an inlined function to its argument, evaluating any
-    nontrivial argument once into a fresh local, as call-by-value requires. *)
+    nontrivial argument once into a fresh local, as call-by-value requires.
+    Returns the declarations, the assignments and the substituted arguments. The
+    declarations are kept apart because the assignments may be repeated, e.g.
+    when a call in a loop condition is re-evaluated at the end of the body. *)
 let bind_inline_args (fname : string) (args : string list)
     (es : Expr.Typed.t list) :
-    (ExprSet.elt, 'a) Stmt.Pattern.t list * ExprSet.elt list =
+    (Expr.Typed.t, 'a) Stmt.Pattern.t list
+    * (Expr.Typed.t, 'a) Stmt.Pattern.t list
+    * Expr.Typed.t list =
   let bind arg_name (arg : Expr.Typed.t) =
     if is_trivial_inline_arg arg then (None, arg)
     else
@@ -136,14 +141,17 @@ let bind_inline_args (fname : string) (args : string list)
           (unsafe_unsized_to_sized_type (Unsized (Expr.Typed.type_of arg)))
       in
       ( Some
-          (Stmt.Pattern.Decl
-             { decl_adtype= Expr.Typed.adlevel_of arg
-             ; decl_id
-             ; decl_type
-             ; initialize= Assign arg })
+          ( Stmt.Pattern.Decl
+              { decl_adtype= Expr.Typed.adlevel_of arg
+              ; decl_id
+              ; decl_type
+              ; initialize= Uninit }
+          , Stmt.Pattern.Assignment
+              (Stmt.Helpers.lvariable decl_id, Expr.Typed.type_of arg, arg) )
       , {arg with pattern= Var decl_id} ) in
   let binds, es = List.split (List.map2 ~f:bind args es) in
-  (List.filter_map ~f:Fun.id binds, es)
+  let decls, assigns = List.split (List.filter_map ~f:Fun.id binds) in
+  (decls, assigns, es)
 
 (** Count the number of returns that happen in a statement *)
 let rec count_returns Stmt.{pattern; _} : int =
@@ -287,7 +295,10 @@ let compute_suffix_and_name propto suffix fname =
   | FnLpmf _ -> (FnLpmf false, fname)
   | _ -> (suffix, fname)
 
-(* Triple is (declaration list, statement list, return expression) *)
+(* Triple is (declaration list, statement list, return expression). The
+   statement list may be executed more than once (loop conditions are
+   re-evaluated at the end of the body), so it must not declare variables;
+   declarations go in the declaration list. *)
 let rec inline_function_expression propto adt fim (Expr.{pattern; _} as e) =
   match pattern with
   | Var _ -> ([], [], e)
@@ -317,7 +328,8 @@ let rec inline_function_expression propto adt fim (Expr.{pattern; _} as e) =
               )
           | Some (rt, args, body) ->
               let inline_return_name = gen_inline_var fname "return" in
-              let binds, es = bind_inline_args fname args es in
+              let bind_decls, bind_assigns, es =
+                bind_inline_args fname args es in
               let handle =
                 handle_early_returns fname (Some inline_return_name) in
               let d_list2, s_list2, (e : Expr.Typed.t) =
@@ -332,10 +344,11 @@ let rec inline_function_expression propto adt fim (Expr.{pattern; _} as e) =
                       ; decl_id= inline_return_name
                       ; decl_type
                       ; initialize= Uninit } ]
+                  @ bind_decls
                   (* We should minimize the code that's having its variables
                      replaced to avoid conflict with the (two) new dummy
                      variables introduced by inlining *)
-                , binds
+                , bind_assigns
                   @ [ handle
                         (subst_args_stmt args es
                            (replace_fresh_local_vars fname body)) ]
@@ -446,10 +459,12 @@ let rec inline_function_statement propto adt fim Stmt.{pattern; meta} =
                   match String.Map.find_opt s fim with
                   | None -> NRFunApp (kind, es)
                   | Some (_, args, b) ->
-                      let binds, es = bind_inline_args s args es in
+                      let bind_decls, bind_assigns, es =
+                        bind_inline_args s args es in
                       let b = replace_fresh_local_vars s b in
                       let b = handle_early_returns s None b in
-                      slist_concat_no_loc binds
+                      slist_concat_no_loc
+                        (bind_decls @ bind_assigns)
                         (subst_args_stmt args es
                            {pattern= b; meta= Location_span.empty})
                           .pattern))
@@ -1424,15 +1439,12 @@ let optimize_ad_levels (mir : Program.Typed.t) =
       (flowgraph_to_mir : Stmt.Located.Non_recursive.t LabelMap.t) (l : int)
       (ad_variables : string Set.Poly.t) =
     let mir_node = (LabelMap.find l flowgraph_to_mir).pattern in
-    let is_ad_rhs e =
-      expr_reads_target e
-      || UnsizedType.is_autodifftype
-         @@ Expr.Typed.adlevel_of (update_expr_ad_levels ad_variables e) in
     match mir_node with
-    | Assignment (lval, _, e) when is_ad_rhs e ->
+    | Assignment (lval, _, e)
+      when expr_reads_target e
+           || UnsizedType.is_autodifftype
+              @@ Expr.Typed.adlevel_of (update_expr_ad_levels ad_variables e) ->
         Set.Poly.singleton (Stmt.Helpers.lhs_variable lval)
-    | Decl {decl_id; initialize= Assign e; _} when is_ad_rhs e ->
-        Set.Poly.singleton decl_id
     | _ -> Set.Poly.empty in
   let global_initial_ad_variables =
     Set.Poly.of_list

@@ -12749,8 +12749,10 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
         for (int i = 1; i <= M; ++i) {
           int f = std::numeric_limits<int>::min();
           int inline_first_capture_return_sym10__;
-          std::vector<int> inline_first_capture_y_i_sym11__ =
-            stan::model::rvalue(z, "z", stan::model::index_uni(i));
+          std::vector<int> inline_first_capture_y_i_sym11__;
+          stan::model::assign(inline_first_capture_y_i_sym11__,
+            stan::model::rvalue(z, "z", stan::model::index_uni(i)),
+            "assigning variable inline_first_capture_y_i_sym11__");
           int inline_first_capture_early_ret_check_sym13__;
           inline_first_capture_early_ret_check_sym13__ = 0;
           for (int inline_first_capture_iterator_sym14__ = 1; inline_first_capture_iterator_sym14__
@@ -16528,9 +16530,9 @@ class function_in_function_loops_model final : public model_base_crtp<function_i
              inline_summer_N_sym19__; ++inline_summer_n_sym25__) {
           local_scalar_t__
             inline_summer_inline_do_something_return_sym5___sym21__;
-          local_scalar_t__
-            inline_summer_inline_do_something_x_sym6___sym22__ =
-            eta[(inline_summer_n_sym25__ - 1)];
+          local_scalar_t__ inline_summer_inline_do_something_x_sym6___sym22__;
+          inline_summer_inline_do_something_x_sym6___sym22__ = eta[(inline_summer_n_sym25__
+            - 1)];
           int
             inline_summer_inline_do_something_early_ret_check_sym7___sym23__ =
             std::numeric_limits<int>::min();
@@ -16601,9 +16603,9 @@ class function_in_function_loops_model final : public model_base_crtp<function_i
              inline_summer_N_sym10__; ++inline_summer_n_sym16__) {
           local_scalar_t__
             inline_summer_inline_do_something_return_sym5___sym12__;
-          local_scalar_t__
-            inline_summer_inline_do_something_x_sym6___sym13__ =
-            eta[(inline_summer_n_sym16__ - 1)];
+          local_scalar_t__ inline_summer_inline_do_something_x_sym6___sym13__;
+          inline_summer_inline_do_something_x_sym6___sym13__ = eta[(inline_summer_n_sym16__
+            - 1)];
           int
             inline_summer_inline_do_something_early_ret_check_sym7___sym14__ =
             std::numeric_limits<int>::min();
@@ -21104,8 +21106,10 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         for (int i = 1; i <= M; ++i) {
           int f = std::numeric_limits<int>::min();
           int inline_first_capture_return_sym16__;
-          std::vector<int> inline_first_capture_y_i_sym17__ =
-            stan::model::rvalue(z, "z", stan::model::index_uni(i));
+          std::vector<int> inline_first_capture_y_i_sym17__;
+          stan::model::assign(inline_first_capture_y_i_sym17__,
+            stan::model::rvalue(z, "z", stan::model::index_uni(i)),
+            "assigning variable inline_first_capture_y_i_sym17__");
           int inline_first_capture_early_ret_check_sym19__;
           inline_first_capture_early_ret_check_sym19__ = 0;
           for (int inline_first_capture_iterator_sym20__ = 1; inline_first_capture_iterator_sym20__

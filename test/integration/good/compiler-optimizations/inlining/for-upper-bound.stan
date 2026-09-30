@@ -1,0 +1,12 @@
+functions {
+  int inc(int n) { return n + 1; }
+}
+data { int N; }
+parameters { real theta; }
+model {
+  int m = N;
+  for (i in 1:inc(m * 1)) {
+    if (i == 2) m = 1;
+    target += -square(theta - i);
+  }
+}
