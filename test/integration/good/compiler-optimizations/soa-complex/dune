@@ -1,0 +1,37 @@
+(rule
+ (targets cpp.output)
+ (deps
+  (package stanc)
+  (:stanfiles
+   (glob_files *.stan)))
+ (action
+  (with-stdout-to
+   %{targets}
+   (run
+    %{project_root}/test/integration/run_bin_on_args.exe
+    "%{bin:stanc} --Oexperimental --print-cpp"
+    %{stanfiles}))))
+
+(rule
+ (alias runtest)
+ (action
+  (diff cpp.expected cpp.output)))
+
+(rule
+ (targets mir.output)
+ (deps
+  (package stanc)
+  (:stanfiles
+   (glob_files *.stan)))
+ (action
+  (with-stdout-to
+   %{targets}
+   (run
+    %{project_root}/test/integration/run_bin_on_args.exe
+    "%{bin:stanc} --Oexperimental --debug-optimized-mir-pretty --debug-mem-patterns"
+    %{stanfiles}))))
+
+(rule
+ (alias runtest)
+ (action
+  (diff mir.expected mir.output)))

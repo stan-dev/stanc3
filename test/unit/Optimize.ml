@@ -6061,3 +6061,69 @@ let%expect_test "vectorize: multiple indexing" =
       }
     }
     |}]
+
+let print_reverse_mode_log_prob (mir : Program.Typed.t) =
+  Fmt.str "@[<v>%a@]"
+    Fmt.(list ~sep:cut Stmt.Located.pp)
+    mir.reverse_mode_log_prob
+  |> print_endline
+
+(* Minimal settings found by delta debugging from --Oexperimental: expression
+   propagation and lazy code motion move the promotion into an unsized
+   temporary, and dead code elimination removes the sized complex local that
+   would otherwise demote beta. *)
+let%expect_test "complex temporary assigned from a matrix is AoS" =
+  reset_and_mir_with_overrides
+    [ (Expression_propagation, true); (Lazy_code_motion, true)
+    ; (Dead_code_elimination, true); (Optimize_soa, true)
+    ; (Preserve_stability, false) ]
+    {|
+      parameters { vector[3] beta; }
+      model {
+        complex_vector[3] z;
+        z = beta;
+        target += get_real(sum(z * 2));
+      }
+      |}
+  |> print_reverse_mode_log_prob;
+  [%expect
+    {|
+    complex_vector lcm_sym6__;
+    real lcm_sym5__;
+    vector[3]
+      beta = (FnReadParam(constrain Identity)(dims(3))(mem_pattern AoS))__(
+      );
+    {
+      complex_vector[3] z;
+      lcm_sym6__ = promote(beta, complex, var);
+      target += get_real(sum((lcm_sym6__ * promote(2, complex, data))));
+    }
+    |}]
+
+(* Minimal settings found by delta debugging from --Oexperimental: expression
+   propagation moves the promotion into the expression, and dead code
+   elimination removes the complex local. *)
+let%expect_test "matrix promoted to complex inside an expression is AoS" =
+  reset_and_mir_with_overrides
+    [ (Expression_propagation, true); (Dead_code_elimination, true)
+    ; (Optimize_soa, true); (Preserve_stability, false) ]
+    {|
+      parameters { vector[3] beta; }
+      model {
+        complex_vector[3] z;
+        z = beta;
+        target += get_real(sum(z * 2));
+      }
+      |}
+  |> print_reverse_mode_log_prob;
+  [%expect
+    {|
+    vector[3]
+      beta = (FnReadParam(constrain Identity)(dims(3))(mem_pattern SoA))__(
+      );
+    {
+      complex_vector[3] z;
+      target += get_real(sum((promote(beta, complex, var) * promote(2, complex,
+                                                                    data))));
+    }
+    |}]

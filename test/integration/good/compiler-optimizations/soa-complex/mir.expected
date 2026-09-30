@@ -1,0 +1,71 @@
+  $ stanc --Oexperimental --debug-optimized-mir-pretty --debug-mem-patterns assign-promote.stan
+vector[3] beta: AoS
+Optimization hazard warning (Line -1): SoA warning: Complex-valued types cannot be SoA: lcm_sym7__
+Optimization hazard warning (Line -1): SoA warning: Right hand side contains only AoS expressions: lcm_sym7__
+Optimization hazard warning (Line 2): SoA warning: Right hand side contains only AoS expressions: beta
+Optimization hazard warning (Line 5): SoA warning: Complex-valued types cannot be SoA: z
+
+log_prob {
+  complex_vector lcm_sym9__;
+  data real lcm_sym8__;
+  vector[3]
+    beta = (FnReadParam(constrain Identity)(dims(3))(mem_pattern AoS))__(
+    );
+  {
+    data complex_vector[3] z;
+    lcm_sym9__ = promote(beta, complex, var);
+    target += get_real(sum((lcm_sym9__ * promote(2, complex, data))));
+  } }
+
+rev_log_prob {
+  complex_vector lcm_sym7__;
+  data real lcm_sym6__;
+  vector[3]
+    beta = (FnReadParam(constrain Identity)(dims(3))(mem_pattern AoS))__(
+    );
+  {
+    data complex_vector[3] z;
+    lcm_sym7__ = promote(beta, complex, var);
+    target += get_real(sum((lcm_sym7__ * promote(2, complex, data))));
+  } }
+
+generate_quantities {
+  data int lcm_sym5__;
+  data int lcm_sym4__;
+  data vector[3]
+    beta = (FnReadParam(constrain Identity)(dims(3))(mem_pattern AoS))__(
+    );
+  (FnWriteParam(unconstrain_opt())(var beta))__();
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+
+transform_inits {
+  data real lcm_sym3__;
+  data real lcm_sym2__;
+  data int lcm_sym1__;
+  data int pos__;
+  vector[3] beta;
+  {
+    data array[] real beta_flat__;
+    beta_flat__ = FnReadData__("beta");
+    {
+      beta[1] = beta_flat__[1];
+      pos__ = 2;
+      {
+        beta[2] = beta_flat__[pos__];
+        pos__ = (pos__ + 1);
+      }
+      {
+        beta[3] = beta_flat__[pos__];
+      }
+    }
+  }
+  (FnWriteParam(unconstrain_opt(Identity))(var beta))__(); }
+output_vars {
+  parameters vector[3] beta; //vector[3]
+}
+[exit 0]

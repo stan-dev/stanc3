@@ -467,9 +467,11 @@ let rec query_initial_demotable_stmt (in_loop : bool) (acc : string Set.Poly.t)
       Set.Poly.union_list
         [ acc; query_expr acc predicate
         ; query_initial_demotable_stmt true acc body ]
-  | Decl {decl_type= Type.Sized st; decl_id; initialize; _} ->
+  | Decl {decl_type; decl_id; initialize; _} ->
+      (* Unsized declarations come from optimizations, e.g. lazy code motion
+         temporaries *)
       let complex_name =
-        if SizedType.is_complex_type st then (
+        if UnsizedType.is_complex_type (Type.to_unsized decl_type) then (
           user_warning_op SoA linenum "Complex-valued types cannot be SoA:"
             decl_id;
           Set.Poly.singleton decl_id)
@@ -479,7 +481,7 @@ let rec query_initial_demotable_stmt (in_loop : bool) (acc : string Set.Poly.t)
         | Assign e -> query_expr acc e
         | _ -> Set.Poly.empty in
       Set.Poly.union acc (Set.Poly.union complex_name init_names)
-  | Skip | Break | Continue | Decl _ -> acc
+  | Skip | Break | Continue -> acc
 
 (** Look through a statement to see whether the objects used in it need to be
     modified from SoA to AoS. Returns the set of object names that need demoted
