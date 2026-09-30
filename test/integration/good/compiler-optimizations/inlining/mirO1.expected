@@ -229,6 +229,178 @@ output_vars {
   generated_quantities real y; //real
 }
 [exit 0]
+  $ stanc --O1 --debug-optimized-mir-pretty nested-data-call.stan
+functions {
+  real twice(real x) {
+    {
+      return (x + x);
+    }
+  }
+  real g(real x) {
+    {
+      return (x * promote(3, real, data));
+    }
+  } }
+input_vars {
+  real d; }
+prepare_data {
+  data real d;
+  d = FnReadData__("d")[1]; }
+
+log_prob {
+  real
+    theta = (FnReadParam(constrain Identity)(dims())(mem_pattern AoS))__(
+    );
+  {
+    target += normal_lupdf(theta, promote(0, real, data),
+                           promote(1, real, data));
+    real inline_g_return_sym6__;
+    real inline_twice_return_sym8__;
+    real inline_twice_x_sym9__;
+    {
+      inline_g_return_sym6__ = (d * promote(3, real, data));
+    }
+    inline_twice_x_sym9__ = (inline_g_return_sym6__ * promote(2, real, data));
+    {
+      inline_twice_return_sym8__ = (inline_twice_x_sym9__ + inline_twice_x_sym9__);
+    }
+    target += inline_twice_return_sym8__;
+  } }
+
+rev_log_prob {
+  real
+    theta = (FnReadParam(constrain Identity)(dims())(mem_pattern SoA))__(
+    );
+  {
+    target += normal_lupdf(theta, promote(0, real, data),
+                           promote(1, real, data));
+    real inline_g_return_sym1__;
+    real inline_twice_return_sym3__;
+    real inline_twice_x_sym4__;
+    {
+      inline_g_return_sym1__ = (d * promote(3, real, data));
+    }
+    inline_twice_x_sym4__ = (inline_g_return_sym1__ * promote(2, real, data));
+    {
+      inline_twice_return_sym3__ = (inline_twice_x_sym4__ + inline_twice_x_sym4__);
+    }
+    target += inline_twice_return_sym3__;
+  } }
+
+generate_quantities {
+  data real
+    theta = (FnReadParam(constrain Identity)(dims())(mem_pattern AoS))__(
+    );
+  (FnWriteParam(unconstrain_opt())(var theta))__();
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+
+transform_inits {
+  real theta;
+  theta = FnReadData__("theta")[1];
+  (FnWriteParam(unconstrain_opt(Identity))(var theta))__(); }
+output_vars {
+  parameters real theta; //real
+}
+[exit 0]
+  $ stanc --O1 --debug-optimized-mir-pretty nested-lp-call.stan
+functions {
+  real twice(real x) {
+    {
+      return (x + x);
+    }
+  }
+  real tlp_lp(real x) {
+    {
+      return (target() + x);
+    }
+  } }
+input_vars {
+  real d; }
+prepare_data {
+  data real d;
+  d = FnReadData__("d")[1]; }
+
+log_prob {
+  real
+    theta = (FnReadParam(constrain Identity)(dims())(mem_pattern AoS))__(
+    );
+  {
+    target += normal_lupdf(theta, promote(0, real, data),
+                           promote(1, real, data));
+    real inline_tlp_lp_return_sym9__;
+    real inline_twice_return_sym11__;
+    real inline_twice_x_sym12__;
+    {
+      inline_tlp_lp_return_sym9__ = (target() + d);
+    }
+    inline_twice_x_sym12__ = (inline_tlp_lp_return_sym9__ * promote(2, real,
+                                                                    data));
+    {
+      inline_twice_return_sym11__ = (inline_twice_x_sym12__ + inline_twice_x_sym12__);
+    }
+    target += inline_twice_return_sym11__;
+    real inline_twice_return_sym14__;
+    real inline_twice_x_sym15__;
+    inline_twice_x_sym15__ = (target() * promote(2, real, data));
+    {
+      inline_twice_return_sym14__ = (inline_twice_x_sym15__ + inline_twice_x_sym15__);
+    }
+    target += inline_twice_return_sym14__;
+  } }
+
+rev_log_prob {
+  real
+    theta = (FnReadParam(constrain Identity)(dims())(mem_pattern SoA))__(
+    );
+  {
+    target += normal_lupdf(theta, promote(0, real, data),
+                           promote(1, real, data));
+    real inline_tlp_lp_return_sym1__;
+    real inline_twice_return_sym3__;
+    real inline_twice_x_sym4__;
+    {
+      inline_tlp_lp_return_sym1__ = (target() + d);
+    }
+    inline_twice_x_sym4__ = (inline_tlp_lp_return_sym1__ * promote(2, real,
+                                                                   data));
+    {
+      inline_twice_return_sym3__ = (inline_twice_x_sym4__ + inline_twice_x_sym4__);
+    }
+    target += inline_twice_return_sym3__;
+    real inline_twice_return_sym6__;
+    real inline_twice_x_sym7__;
+    inline_twice_x_sym7__ = (target() * promote(2, real, data));
+    {
+      inline_twice_return_sym6__ = (inline_twice_x_sym7__ + inline_twice_x_sym7__);
+    }
+    target += inline_twice_return_sym6__;
+  } }
+
+generate_quantities {
+  data real
+    theta = (FnReadParam(constrain Identity)(dims())(mem_pattern AoS))__(
+    );
+  (FnWriteParam(unconstrain_opt())(var theta))__();
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+
+transform_inits {
+  real theta;
+  theta = FnReadData__("theta")[1];
+  (FnWriteParam(unconstrain_opt(Identity))(var theta))__(); }
+output_vars {
+  parameters real theta; //real
+}
+[exit 0]
   $ stanc --O1 --debug-optimized-mir-pretty while-condition.stan
 functions {
   int inc(int n) {

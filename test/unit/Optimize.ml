@@ -1517,6 +1517,83 @@ let%expect_test "inline function in for upper bound is re-evaluated" =
     }
     |}]
 
+let%expect_test "inline function binding of nested data call is autodiff" =
+  let mir =
+    reset_and_mir_with_passes [Function_inlining]
+      {|
+      functions {
+        real twice(real x) { return x + x; }
+        real g(real x) { return x * 3; }
+      }
+      data { real d; }
+      parameters { real theta; }
+      model {
+        theta ~ normal(0, 1);
+        target += twice(g(d) * 2);
+      }
+      |}
+  in
+  Fmt.str "@[<v>%a@]" Fmt.(list ~sep:cut Stmt.Located.pp) mir.log_prob
+  |> print_endline;
+  [%expect
+    {|
+    real theta = (FnReadParam(constrain Identity)(dims())(mem_pattern AoS))__();
+    {
+      target += normal_lupdf(theta, promote(0, real, data),
+                             promote(1, real, data));
+      real inline_g_return_sym6__;
+      real inline_twice_return_sym8__;
+      real inline_twice_x_sym9__;
+      {
+        inline_g_return_sym6__ = (d * promote(3, real, data));
+      }
+      inline_twice_x_sym9__ = (inline_g_return_sym6__ * promote(2, real, data));
+      {
+        inline_twice_return_sym8__ = (inline_twice_x_sym9__ + inline_twice_x_sym9__);
+      }
+      target += inline_twice_return_sym8__;
+    }
+    |}]
+
+let%expect_test "inline function binding of nested lp call is autodiff" =
+  let mir =
+    reset_and_mir_with_passes [Function_inlining]
+      {|
+      functions {
+        real twice(real x) { return x + x; }
+        real tlp_lp(real x) { return target() + x; }
+      }
+      data { real d; }
+      parameters { real theta; }
+      model {
+        theta ~ normal(0, 1);
+        target += twice(tlp_lp(d) * 2);
+      }
+      |}
+  in
+  Fmt.str "@[<v>%a@]" Fmt.(list ~sep:cut Stmt.Located.pp) mir.log_prob
+  |> print_endline;
+  [%expect
+    {|
+    real theta = (FnReadParam(constrain Identity)(dims())(mem_pattern AoS))__();
+    {
+      target += normal_lupdf(theta, promote(0, real, data),
+                             promote(1, real, data));
+      real inline_tlp_lp_return_sym6__;
+      real inline_twice_return_sym8__;
+      real inline_twice_x_sym9__;
+      {
+        inline_tlp_lp_return_sym6__ = (target() + d);
+      }
+      inline_twice_x_sym9__ = (inline_tlp_lp_return_sym6__ * promote(2, real,
+                                                                     data));
+      {
+        inline_twice_return_sym8__ = (inline_twice_x_sym9__ + inline_twice_x_sym9__);
+      }
+      target += inline_twice_return_sym8__;
+    }
+    |}]
+
 let%expect_test "unroll nested loop" =
   let mir =
     reset_and_mir_of_string

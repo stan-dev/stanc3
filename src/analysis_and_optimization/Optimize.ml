@@ -122,6 +122,24 @@ let rec is_trivial_inline_arg (arg : Expr.Typed.t) =
       && is_trivial_inline_arg inner
   | _ -> false
 
+(** The autodiff level of an argument after inlining, which can replace a
+    data-only call inside it with an autodiff return variable. *)
+let inline_arg_adlevel (arg : Expr.Typed.t) =
+  let adlevel = Expr.Typed.adlevel_of arg in
+  let type_ = Expr.Typed.type_of arg in
+  let has_autodiff_part =
+    expr_any
+      (fun e ->
+        (not (UnsizedType.is_discrete_type (Expr.Typed.type_of e)))
+        && UnsizedType.has_autodiff (Expr.Typed.adlevel_of e))
+      arg in
+  if
+    UnsizedType.is_discrete_type type_
+    || UnsizedType.has_autodiff adlevel
+    || not has_autodiff_part
+  then adlevel
+  else UnsizedType.fill_adtype_for_type AutoDiffable type_
+
 (** Bind each parameter of an inlined function to its argument, evaluating any
     nontrivial argument once into a fresh local, as call-by-value requires.
     Returns the declarations, the assignments and the substituted arguments. The
@@ -140,15 +158,13 @@ let bind_inline_args (fname : string) (args : string list)
         Type.Sized
           (unsafe_unsized_to_sized_type (Unsized (Expr.Typed.type_of arg)))
       in
+      let adlevel = inline_arg_adlevel arg in
       ( Some
           ( Stmt.Pattern.Decl
-              { decl_adtype= Expr.Typed.adlevel_of arg
-              ; decl_id
-              ; decl_type
-              ; initialize= Uninit }
+              {decl_adtype= adlevel; decl_id; decl_type; initialize= Uninit}
           , Stmt.Pattern.Assignment
               (Stmt.Helpers.lvariable decl_id, Expr.Typed.type_of arg, arg) )
-      , {arg with pattern= Var decl_id} ) in
+      , {pattern= Var decl_id; meta= {arg.meta with adlevel}} ) in
   let binds, es = List.split (List.map2 ~f:bind args es) in
   let decls, assigns = List.split (List.filter_map ~f:Fun.id binds) in
   (decls, assigns, es)
