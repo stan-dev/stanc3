@@ -638,6 +638,68 @@ output_vars {
   parameters real theta; //real
 }
 [exit 0]
+  $ stanc --O1 --debug-optimized-mir-pretty void-return-loop.stan
+functions {
+  void f(int n) {
+    {
+      for(i in 1:n) {
+        if((i == 2)) {
+          return;
+        }
+        FnPrint__(i);
+      }
+      FnPrint__("after");
+    }
+  } }
+input_vars {
+  int N; }
+prepare_data {
+  data int N;
+  N = FnReadData__("N")[1]; }
+
+log_prob {
+  {
+    data int inline_f_early_ret_check_sym5__;
+    inline_f_early_ret_check_sym5__ = 0;
+    for(inline_f_iterator_sym6__ in 1:1) {
+      for(inline_f_i_sym4__ in 1:N) {
+        if((inline_f_i_sym4__ == 2)) {
+          inline_f_early_ret_check_sym5__ = 1;
+          break;
+        }
+        FnPrint__(inline_f_i_sym4__);
+      }
+      if(inline_f_early_ret_check_sym5__) break;
+      FnPrint__("after");
+    }
+  } }
+
+rev_log_prob {
+  {
+    data int inline_f_early_ret_check_sym2__;
+    inline_f_early_ret_check_sym2__ = 0;
+    for(inline_f_iterator_sym3__ in 1:1) {
+      for(inline_f_i_sym1__ in 1:N) {
+        if((inline_f_i_sym1__ == 2)) {
+          inline_f_early_ret_check_sym2__ = 1;
+          break;
+        }
+        FnPrint__(inline_f_i_sym1__);
+      }
+      if(inline_f_early_ret_check_sym2__) break;
+      FnPrint__("after");
+    }
+  } }
+
+generate_quantities {
+  if(!(emit_transformed_parameters__ || emit_generated_quantities__)) {
+    return;
+  }
+  if(!(emit_generated_quantities__)) {
+    return;
+  } }
+
+[exit 0]
   $ stanc --O1 --debug-optimized-mir-pretty while-condition.stan
 functions {
   int inc(int n) {

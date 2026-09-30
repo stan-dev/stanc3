@@ -197,27 +197,31 @@ let rec ends_in_return Stmt.{pattern; _} =
    dummy loop. *)
 let handle_early_returns (fname : string) opt_var stmt =
   let returned = gen_inline_var fname "early_ret_check" in
+  (* Set before every break that returns, so the loops around it also break *)
+  let set_returned =
+    Stmt.
+      { pattern=
+          Assignment
+            ( Stmt.Helpers.lvariable returned
+            , UInt
+            , Expr.
+                { pattern= Lit (Int, "1")
+                ; meta=
+                    Expr.Typed.Meta.
+                      {type_= UInt; adlevel= DataOnly; loc= Location_span.empty}
+                } )
+      ; meta= Location_span.empty } in
   let generate_inner_breaks needs_loop stmt_pattern =
     match stmt_pattern with
     | Stmt.Pattern.Return opt_ret -> (
         match (opt_var, opt_ret) with
-        | None, None when needs_loop -> Stmt.Pattern.Break
+        | None, None when needs_loop ->
+            Stmt.Pattern.SList
+              [set_returned; {pattern= Break; meta= Location_span.empty}]
         | None, None -> Stmt.Pattern.Block []
         | Some name, Some e when needs_loop ->
             SList
-              [ Stmt.
-                  { pattern=
-                      Assignment
-                        ( Stmt.Helpers.lvariable returned
-                        , UInt
-                        , Expr.
-                            { pattern= Lit (Int, "1")
-                            ; meta=
-                                Expr.Typed.Meta.
-                                  { type_= UInt
-                                  ; adlevel= DataOnly
-                                  ; loc= Location_span.empty } } )
-                  ; meta= Location_span.empty }
+              [ set_returned
               ; Stmt.
                   { pattern=
                       Assignment

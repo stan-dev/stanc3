@@ -1769,6 +1769,7 @@ let%expect_test "inline void function with early return" =
       for(inline_pv_iterator_sym4__ in 1:1) {
         if((d > 0.5)) {
           FnPrint__("big");
+          inline_pv_early_ret_check_sym3__ = 1;
           break;
         }
         FnPrint__("small");
@@ -1809,6 +1810,46 @@ let%expect_test "inline function with early return before reject" =
         FnReject__("negative ", d);
       }
       target += inline_pos_return_sym4__;
+    }
+    |}]
+
+let%expect_test "inline void function with early return inside a loop" =
+  let mir =
+    reset_and_mir_with_passes [Function_inlining]
+      {|
+      functions {
+        void f(int n) {
+          for (i in 1:n) {
+            if (i == 2) return;
+            print(i);
+          }
+          print("after");
+        }
+      }
+      data { int N; }
+      model {
+        f(N);
+      }
+      |}
+  in
+  Fmt.str "@[<v>%a@]" Fmt.(list ~sep:cut Stmt.Located.pp) mir.log_prob
+  |> print_endline;
+  [%expect
+    {|
+    {
+      data int inline_f_early_ret_check_sym5__;
+      inline_f_early_ret_check_sym5__ = 0;
+      for(inline_f_iterator_sym6__ in 1:1) {
+        for(inline_f_i_sym4__ in 1:N) {
+          if((inline_f_i_sym4__ == 2)) {
+            inline_f_early_ret_check_sym5__ = 1;
+            break;
+          }
+          FnPrint__(inline_f_i_sym4__);
+        }
+        if(inline_f_early_ret_check_sym5__) break;
+        FnPrint__("after");
+      }
     }
     |}]
 
