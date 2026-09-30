@@ -990,7 +990,9 @@
           ((TypeTrait stan::is_autodiff_scalar ((TemplateType T0__)))
            (TypeTrait stan::is_floating_point ((TemplateType T0__)))))))
        true))
-     (inline false) (return_type (TypeTrait stan::return_type_t ((TemplateType T0__))))
+     (inline false)
+     (return_type
+      (TypeTrait stan::return_type_t ((TemplateType T0__) (TemplateType T_lp__))))
      (name foo_lp)
      (args
       (((Const (Ref (TemplateType T0__))) x) ((Ref (TemplateType T_lp__)) lp__)
@@ -1119,7 +1121,8 @@
      (return_type
       (TypeTrait stan::return_type_t
        ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__) (TemplateType T3__)
-        (TemplateType T4__) (TypeTrait stan::return_type_t ((TemplateType T5__))))))
+        (TemplateType T4__)
+        (TypeTrait stan::return_type_t ((TemplateType T5__) (TemplateType T_lp__))))))
      (name foo_five_args_lp)
      (args
       (((Const (Ref (TemplateType T0__))) x1) ((Const (Ref (TemplateType T1__))) x2)
@@ -2896,7 +2899,8 @@
        ((Pointer (TypeLiteral std::ostream)) pstream__)))
      (cv_qualifiers ())
      (body
-      (((Using local_scalar_t__ ((TypeTrait stan::return_type_t ((TemplateType T0__)))))
+      (((Using local_scalar_t__
+         ((TypeTrait stan::return_type_t ((TemplateType T0__) (TemplateType T_lp__)))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
@@ -3393,7 +3397,9 @@
           ((TypeTrait stan::is_autodiff_scalar ((TemplateType T0__)))
            (TypeTrait stan::is_floating_point ((TemplateType T0__)))))))
        false))
-     (inline false) (return_type (TypeTrait stan::return_type_t ((TemplateType T0__))))
+     (inline false)
+     (return_type
+      (TypeTrait stan::return_type_t ((TemplateType T0__) (TemplateType T_lp__))))
      (name foo_lp)
      (args
       (((Const (Ref (TemplateType T0__))) x) ((Ref (TemplateType T_lp__)) lp__)
@@ -3401,7 +3407,8 @@
        ((Pointer (TypeLiteral std::ostream)) pstream__)))
      (cv_qualifiers ())
      (body
-      (((Using local_scalar_t__ ((TypeTrait stan::return_type_t ((TemplateType T0__)))))
+      (((Using local_scalar_t__
+         ((TypeTrait stan::return_type_t ((TemplateType T0__) (TemplateType T_lp__)))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
@@ -3772,7 +3779,8 @@
      (return_type
       (TypeTrait stan::return_type_t
        ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__) (TemplateType T3__)
-        (TemplateType T4__) (TypeTrait stan::return_type_t ((TemplateType T5__))))))
+        (TemplateType T4__)
+        (TypeTrait stan::return_type_t ((TemplateType T5__) (TemplateType T_lp__))))))
      (name foo_five_args_lp)
      (args
       (((Const (Ref (TemplateType T0__))) x1) ((Const (Ref (TemplateType T1__))) x2)
@@ -3786,7 +3794,7 @@
          ((TypeTrait stan::return_type_t
            ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__)
             (TemplateType T3__) (TemplateType T4__)
-            (TypeTrait stan::return_type_t ((TemplateType T5__)))))))
+            (TypeTrait stan::return_type_t ((TemplateType T5__) (TemplateType T_lp__)))))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))

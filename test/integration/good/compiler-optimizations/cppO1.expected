@@ -11185,7 +11185,8 @@ js_super_lp(const T0__& y, const T1__& first, const T2__& last, const T3__&
   using local_scalar_t__ = stan::return_type_t<stan::base_type_t<T3__>,
                              stan::base_type_t<T4__>, T5__,
                              stan::base_type_t<T6__>,
-                             stan::base_type_t<T7__>>;
+                             stan::base_type_t<T7__>,
+                             stan::return_type_t<T_lp__>>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -19558,7 +19559,7 @@ jolly_seber_lp(const T0__& y, const T1__& first, const T2__& last,
   using local_scalar_t__ = stan::return_type_t<stan::base_type_t<T3__>,
                              stan::base_type_t<T4__>,
                              stan::base_type_t<T5__>,
-                             stan::base_type_t<T6__>>;
+                             stan::base_type_t<T6__>, T_lp__>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -26170,7 +26171,7 @@ template <bool propto__, typename T0__, typename T1__, typename T_lp__,
 void
 nrfun_lp(const T0__& x, const T1__& y, T_lp__& lp__, T_lp_accum__&
          lp_accum__, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::return_type_t<T0__>;
+  using local_scalar_t__ = stan::return_type_t<T0__, T_lp__>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -26217,7 +26218,7 @@ rfun(const T0__& y, std::ostream* pstream__) {
 // int rfun_lp()
 template <bool propto__, typename T_lp__, typename T_lp_accum__> int
 rfun_lp(T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__) {
-  using local_scalar_t__ = double;
+  using local_scalar_t__ = stan::return_type_t<T_lp__>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -27395,7 +27396,8 @@ template <bool propto__, typename T0__, typename T1__, typename T_lp__,
 void
 bar_lp(const T0__& y, const T1__& t_arg__, T_lp__& lp__, T_lp_accum__&
        lp_accum__, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::return_type_t<stan::base_type_t<T1__>>;
+  using local_scalar_t__ = stan::return_type_t<stan::base_type_t<T1__>,
+                             T_lp__>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -28212,7 +28214,7 @@ foo(const T0__& x_arg__, std::ostream* pstream__) {
 // void bar_lp()
 template <bool propto__, typename T_lp__, typename T_lp_accum__> void
 bar_lp(T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__) {
-  using local_scalar_t__ = double;
+  using local_scalar_t__ = stan::return_type_t<T_lp__>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;

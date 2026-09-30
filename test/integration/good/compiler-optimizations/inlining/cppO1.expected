@@ -2538,7 +2538,7 @@ template <bool propto__, typename T0__, typename T_lp__,
           typename T_lp_accum__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff_scalar<T0__>,
                                 stan::is_floating_point<T0__>>>* = nullptr>
-stan::return_type_t<T0__>
+stan::return_type_t<T0__, T_lp__>
 tlp_lp(const T0__& x, T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream*
        pstream__);
 // real twice(real)
@@ -2568,10 +2568,10 @@ template <bool propto__, typename T0__, typename T_lp__,
           typename T_lp_accum__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff_scalar<T0__>,
                                 stan::is_floating_point<T0__>>>*>
-stan::return_type_t<T0__>
+stan::return_type_t<T0__, T_lp__>
 tlp_lp(const T0__& x, T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream*
        pstream__) {
-  using local_scalar_t__ = stan::return_type_t<T0__>;
+  using local_scalar_t__ = stan::return_type_t<T0__, T_lp__>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -3015,7 +3015,7 @@ template <bool propto__, typename T0__, typename T_lp__,
           typename T_lp_accum__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff_scalar<T0__>,
                                 stan::is_floating_point<T0__>>>* = nullptr>
-stan::return_type_t<T0__>
+stan::return_type_t<T0__, T_lp__>
 tlp_lp(const T0__& x, T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream*
        pstream__);
 template <typename T0__,
@@ -3063,10 +3063,10 @@ template <bool propto__, typename T0__, typename T_lp__,
           typename T_lp_accum__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff_scalar<T0__>,
                                 stan::is_floating_point<T0__>>>*>
-stan::return_type_t<T0__>
+stan::return_type_t<T0__, T_lp__>
 tlp_lp(const T0__& x, T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream*
        pstream__) {
-  using local_scalar_t__ = stan::return_type_t<T0__>;
+  using local_scalar_t__ = stan::return_type_t<T0__, T_lp__>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;

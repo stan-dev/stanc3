@@ -187,7 +187,13 @@ let%expect_test "arg types tuple template" =
        (TypeTrait stan::value_type_t ((TemplateType T0__))))))))
   T0__ |}]
 
-let lower_promoted_scalar args =
+(** The scalar type of a function's return value and locals. An [_lp] function
+    can read [target()], so it also depends on [T_lp__]. *)
+let lower_promoted_scalar fdsuffix args =
+  let lp_template =
+    match fdsuffix with
+    | Fun_kind.FnTarget -> [TemplateType "T_lp__"]
+    | FnPlain | FnRng | FnLpdf _ | FnLpmf _ | FnJacobian -> [] in
   let rec promote_args_chunked args =
     let chunk_till_empty list_tail =
       if List.is_empty list_tail then [] else [promote_args_chunked list_tail]
@@ -197,12 +203,12 @@ let lower_promoted_scalar args =
     | hd :: list_tail ->
         TypeTrait ("stan::return_type_t", hd @ chunk_till_empty list_tail) in
   promote_args_chunked
-    (List.chunks_of ~length:5 (return_optional_arg_types args))
+    (List.chunks_of ~length:5 (return_optional_arg_types args @ lp_template))
 
 (** Pretty-prints a function's return-type, taking into account templated
     argument promotion.*)
-let lower_returntype arg_types rt =
-  let scalar = lower_promoted_scalar arg_types in
+let lower_returntype fdsuffix arg_types rt =
+  let scalar = lower_promoted_scalar fdsuffix arg_types in
   match rt with
   | UnsizedType.ReturnType ut -> lower_type ut scalar
   | Void -> Void
@@ -240,7 +246,8 @@ let templates_and_args (is_possibly_eigen_expr : bool)
     block. *)
 let lower_fun_body fdargs fdsuffix fdbody =
   let local_scalar =
-    Using ("local_scalar_t__", Some (lower_promoted_scalar fdargs)) in
+    Using ("local_scalar_t__", Some (lower_promoted_scalar fdsuffix fdargs))
+  in
   let to_refs = lower_eigen_args_to_ref fdargs in
   let propto =
     match fdsuffix with
@@ -309,7 +316,7 @@ let lower_fun_def (functors : Lower_expr.variadic list)
   let cpp_args = cpp_arg_gen templated_args FixedArgs in
   let almost_fn =
     make_fun_defn ~templates_init:([template_params], true) ~name:fdname
-      ~return_type:(lower_returntype fdargs fdrt)
+      ~return_type:(lower_returntype fdsuffix fdargs fdrt)
       ~args:cpp_args in
   let fd =
     match Option.map ~f:(lower_fun_body fdargs fdsuffix) fdbody with
@@ -343,7 +350,7 @@ let lower_fun_def (functors : Lower_expr.variadic list)
     in
     let functor_decl =
       make_fun_defn ~templates_init:([arg_templates], true) ~name:"operator()"
-        ~return_type:(lower_returntype fdargs fdrt)
+        ~return_type:(lower_returntype fdsuffix fdargs fdrt)
         ~args:cpp_args ~cv_qualifiers:[Const] ~body:defn_body () in
     make_struct_defn ~param:struct_template ~name:functor_name
       ~body:[FunDef functor_decl] () in

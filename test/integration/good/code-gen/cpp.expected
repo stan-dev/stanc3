@@ -17652,7 +17652,7 @@ template <bool propto__, typename T0__, typename T_lp__,
           typename T_lp_accum__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff_scalar<T0__>,
                                 stan::is_floating_point<T0__>>>* = nullptr>
-stan::return_type_t<T0__>
+stan::return_type_t<T0__, T_lp__>
 foo_lp(const T0__& x, T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream*
        pstream__);
 template <typename T0__,
@@ -17713,7 +17713,8 @@ template <bool propto__, typename T0__, typename T1__, typename T2__,
                                 stan::is_floating_point<T4__>>,
                               stan::math::disjunction<stan::is_autodiff_scalar<T5__>,
                                 stan::is_floating_point<T5__>>>* = nullptr>
-stan::return_type_t<T0__, T1__, T2__, T3__, T4__, stan::return_type_t<T5__>>
+stan::return_type_t<T0__, T1__, T2__, T3__, T4__,
+  stan::return_type_t<T5__, T_lp__>>
 foo_five_args_lp(const T0__& x1, const T1__& x2, const T2__& x3, const T3__&
                  x4, const T4__& x5, const T5__& x6, T_lp__& lp__,
                  T_lp_accum__& lp_accum__, std::ostream* pstream__);
@@ -18723,7 +18724,7 @@ template <bool propto__, typename T0__, typename T_lp__,
 void
 unit_normal_lp(const T0__& u, T_lp__& lp__, T_lp_accum__& lp_accum__,
                std::ostream* pstream__) {
-  using local_scalar_t__ = stan::return_type_t<T0__>;
+  using local_scalar_t__ = stan::return_type_t<T0__, T_lp__>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -19010,10 +19011,10 @@ template <bool propto__, typename T0__, typename T_lp__,
           typename T_lp_accum__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff_scalar<T0__>,
                                 stan::is_floating_point<T0__>>>*>
-stan::return_type_t<T0__>
+stan::return_type_t<T0__, T_lp__>
 foo_lp(const T0__& x, T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream*
        pstream__) {
-  using local_scalar_t__ = stan::return_type_t<T0__>;
+  using local_scalar_t__ = stan::return_type_t<T0__, T_lp__>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -19208,12 +19209,13 @@ template <bool propto__, typename T0__, typename T1__, typename T2__,
                                 stan::is_floating_point<T4__>>,
                               stan::math::disjunction<stan::is_autodiff_scalar<T5__>,
                                 stan::is_floating_point<T5__>>>*>
-stan::return_type_t<T0__, T1__, T2__, T3__, T4__, stan::return_type_t<T5__>>
+stan::return_type_t<T0__, T1__, T2__, T3__, T4__,
+  stan::return_type_t<T5__, T_lp__>>
 foo_five_args_lp(const T0__& x1, const T1__& x2, const T2__& x3, const T3__&
                  x4, const T4__& x5, const T5__& x6, T_lp__& lp__,
                  T_lp_accum__& lp_accum__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::return_type_t<T0__, T1__, T2__, T3__, T4__,
-                             stan::return_type_t<T5__>>;
+                             stan::return_type_t<T5__, T_lp__>>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -53682,7 +53684,7 @@ double foo1_lpmf(const T0__& y, std::ostream* pstream__);
 template <bool propto__, typename T0__, typename T_lp__,
           typename T_lp_accum__,
           stan::require_all_t<stan::is_integral<T0__>>* = nullptr>
-double
+stan::return_type_t<T_lp__>
 foo4_lp(const T0__& y, T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream*
         pstream__);
 template <bool propto__, typename T0__,
@@ -53697,7 +53699,7 @@ template <bool propto__, typename T0__, typename T_lp__,
           typename T_lp_accum__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff_scalar<T0__>,
                                 stan::is_floating_point<T0__>>>* = nullptr>
-stan::return_type_t<T0__>
+stan::return_type_t<T0__, T_lp__>
 foo5_lp(const T0__& y, T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream*
         pstream__);
 // real foo0_lpmf(int)
@@ -53740,10 +53742,10 @@ double foo1_lpmf(const T0__& y, std::ostream* pstream__) {
 template <bool propto__, typename T0__, typename T_lp__,
           typename T_lp_accum__,
           stan::require_all_t<stan::is_integral<T0__>>*>
-double
+stan::return_type_t<T_lp__>
 foo4_lp(const T0__& y, T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream*
         pstream__) {
-  using local_scalar_t__ = double;
+  using local_scalar_t__ = stan::return_type_t<T_lp__>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -53800,10 +53802,10 @@ template <bool propto__, typename T0__, typename T_lp__,
           typename T_lp_accum__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff_scalar<T0__>,
                                 stan::is_floating_point<T0__>>>*>
-stan::return_type_t<T0__>
+stan::return_type_t<T0__, T_lp__>
 foo5_lp(const T0__& y, T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream*
         pstream__) {
-  using local_scalar_t__ = stan::return_type_t<T0__>;
+  using local_scalar_t__ = stan::return_type_t<T0__, T_lp__>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
