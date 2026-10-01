@@ -114,6 +114,10 @@ val set_optimization :
   optimization_pass -> bool -> optimization_settings -> optimization_settings
 (** Turn one optimization on or off, leaving the other settings unchanged. *)
 
+val optimization_pass_names : (string * optimization_pass) list
+(** The command-line name of each optimization, e.g. [inlining] for
+    [-finlining]. *)
+
 val optimization_flags : (string * (optimization_pass * bool)) list
 (** Flag names for [-f<name>] and [-fno-<name>], shared by stanc and stanc.js,
     mapped to the optimization and whether the flag enables it. *)

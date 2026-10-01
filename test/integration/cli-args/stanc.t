@@ -193,12 +193,14 @@ Show help
          -f SETTING
              Debugging features. Turn a single optimization on with -fNAME or
              off with -fno-NAME, on top of the --O level. May be given more
-             than once and applies in order. Valid names: inlining,
+             than once and applies in order. NAME is one of inlining,
              static-loop-unrolling, one-step-loop-unrolling, vectorize-loops,
              list-collapsing, block-fixing, allow-uninitialized-decls,
              constant-propagation, expression-propagation, copy-propagation,
              dead-code-elimination, partial-evaluation, lazy-code-motion,
-             ad-levels, preserve-stability, soa.
+             ad-levels, preserve-stability or soa. preserve-stability is on at
+             --O0 and off when optimizing; -fno-preserve-stability allows
+             rewrites that can change numerical stability.
   
   EXIT STATUS
          0   on success.

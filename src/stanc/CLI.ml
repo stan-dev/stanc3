@@ -328,17 +328,20 @@ module Debug_Options = struct
     Arg.(value & flag & info ["debug-print-factor-graph"] ~doc ~docs)
 
   let optimization_overrides =
-    let flags = Analysis_and_optimization.Optimize.optimization_flags in
+    let open Analysis_and_optimization.Optimize in
     let doc =
       Fmt.str
         "Debugging features. Turn a single optimization on with $(b,-f)NAME or \
          off with $(b,-fno-)NAME, on top of the $(b,--O) level. May be given \
-         more than once and applies in order. Valid names: %s."
-        (flags
-        |> List.filter ~f:(fun (_, (_, enabled)) -> enabled)
-        |> List.map ~f:fst |> String.concat ~sep:", ") in
+         more than once and applies in order. NAME is %s. \
+         $(b,preserve-stability) is on at $(b,--O0) and off when optimizing; \
+         $(b,-fno-preserve-stability) allows rewrites that can change \
+         numerical stability."
+        (Arg.doc_alts_enum optimization_pass_names) in
     Arg.(
-      value & opt_all (enum flags) [] & info ["f"] ~doc ~docv:"SETTING" ~docs)
+      value
+      & opt_all (enum optimization_flags) []
+      & info ["f"] ~doc ~docv:"SETTING" ~docs)
 end
 
 (** Flags common to all compiler drivers and those specific to the command line
