@@ -10,6 +10,48 @@ let reset_and_mir_of_string s =
   Gensym.reset_danger_use_cautiously ();
   Test_utils.mir_of_string s
 
+(** Compile through the stanc driver with [overrides] applied to O0, the same as
+    running [stanc -f<pass> -fno-<pass> ...] on the program. *)
+let reset_and_mir_with_overrides optimization_overrides s =
+  Gensym.reset_danger_use_cautiously ();
+  let debug_settings =
+    {Driver.Flags.default.debug_settings with optimization_overrides} in
+  Test_utils.compile_mir s {Driver.Flags.default with debug_settings}
+
+(** Compile through the stanc driver with only [passes] enabled, the same as
+    running [stanc -f<pass> ...] on the program. *)
+let reset_and_mir_with_passes passes =
+  reset_and_mir_with_overrides (List.map ~f:(fun pass -> (pass, true)) passes)
+
+let print_log_prob (mir : Program.Typed.t) =
+  Fmt.str "@[<v>%a@]" Fmt.(list ~sep:cut Stmt.Located.pp) mir.log_prob
+  |> print_endline
+
+let%expect_test "only the requested passes run" =
+  reset_and_mir_with_passes [Function_inlining]
+    {|
+      functions {
+        real add_one(real x) { return x + 1; }
+      }
+      model {
+        real unused = 5;
+        target += add_one(2.0);
+      }
+      |}
+  |> print_log_prob;
+  [%expect
+    {|
+    {
+      real unused;
+      unused = promote(5, real, var);
+      real inline_add_one_return_sym3__;
+      {
+        inline_add_one_return_sym3__ = (2.0 + promote(1, real, data));
+      }
+      target += inline_add_one_return_sym3__;
+    }
+    |}]
+
 let%expect_test "map_rec_stmt_loc" =
   let mir =
     reset_and_mir_of_string

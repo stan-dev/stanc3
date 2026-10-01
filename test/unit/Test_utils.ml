@@ -22,8 +22,15 @@ let mir_of_string s = typed_ast_of_string_exn s |> Ast_to_Mir.trans_prog ""
 (** Compile a program to optimized MIR through the same driver path as stanc, so
     [flags] selects the optimizations exactly like the command line does. *)
 let compile_mir code flags =
-  match
-    Driver.Entry.stan2mir "entry_test_model" (`Code code) flags (fun _ -> ())
-  with
-  | Ok mir -> mir
-  | Error error -> failwith (error_to_string ~code error)
+  (* stan2mir sets the global model name, which later mir_of_string calls
+     read *)
+  let model_name = !Typechecker.model_name in
+  Fun.protect
+    ~finally:(fun () -> Typechecker.model_name := model_name)
+    (fun () ->
+      match
+        Driver.Entry.stan2mir "entry_test_model" (`Code code) flags (fun _ ->
+            ())
+      with
+      | Ok mir -> mir
+      | Error error -> failwith (error_to_string ~code error))
