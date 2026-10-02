@@ -9395,33 +9395,33 @@ class laplace_neg_binomial_2_log_model final : public model_base_crtp<laplace_ne
                          static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 9;
         lp_accum__.add(stan::math::laplace_marginal_neg_binomial_2_log_lpmf<
-                         propto__>(y, y, log_ye, prior_mean,
-                         hessian_block_size, K_function_functor__(),
+                         propto__>(y, y, eta, prior_mean, hessian_block_size,
+                         K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          pstream__));
         current_statement__ = 10;
         lp_accum__.add(stan::math::laplace_marginal_neg_binomial_2_log_lpmf<
-                         false>(y, y, log_ye, prior_mean, hessian_block_size,
+                         false>(y, y, eta, prior_mean, hessian_block_size,
                          K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          pstream__));
         current_statement__ = 11;
         lp_accum__.add(stan::math::laplace_marginal_neg_binomial_2_log_lpmf<
-                         propto__>(y, y, log_ye, prior_mean,
-                         hessian_block_size, K_function_functor__(),
+                         propto__>(y, y, eta, prior_mean, hessian_block_size,
+                         K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          pstream__));
         current_statement__ = 12;
         lp_accum__.add(stan::math::laplace_marginal_tol_neg_binomial_2_log_lpmf<
-                         propto__>(y, y, log_ye, prior_mean,
-                         hessian_block_size, K_function_functor__(),
+                         propto__>(y, y, eta, prior_mean, hessian_block_size,
+                         K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          std::forward_as_tuple(theta_0, tolerance,
                            max_num_steps, solver, max_steps_line_search,
                            allow_fallthrough), pstream__));
         current_statement__ = 13;
         lp_accum__.add(stan::math::laplace_marginal_tol_neg_binomial_2_log_lpmf<
-                         false>(y, y, log_ye, prior_mean, hessian_block_size,
+                         false>(y, y, eta, prior_mean, hessian_block_size,
                          K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          std::forward_as_tuple(theta_0, tolerance,
@@ -9429,8 +9429,8 @@ class laplace_neg_binomial_2_log_model final : public model_base_crtp<laplace_ne
                            allow_fallthrough), pstream__));
         current_statement__ = 14;
         lp_accum__.add(stan::math::laplace_marginal_tol_neg_binomial_2_log_lpmf<
-                         propto__>(y, y, log_ye, prior_mean,
-                         hessian_block_size, K_function_functor__(),
+                         propto__>(y, y, eta, prior_mean, hessian_block_size,
+                         K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          std::forward_as_tuple(theta_0, tolerance,
                            max_num_steps, solver, max_steps_line_search,
@@ -9490,33 +9490,33 @@ class laplace_neg_binomial_2_log_model final : public model_base_crtp<laplace_ne
                          static_cast<double>(0), static_cast<double>(1)));
         current_statement__ = 9;
         lp_accum__.add(stan::math::laplace_marginal_neg_binomial_2_log_lpmf<
-                         propto__>(y, y, log_ye, prior_mean,
-                         hessian_block_size, K_function_functor__(),
+                         propto__>(y, y, eta, prior_mean, hessian_block_size,
+                         K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          pstream__));
         current_statement__ = 10;
         lp_accum__.add(stan::math::laplace_marginal_neg_binomial_2_log_lpmf<
-                         false>(y, y, log_ye, prior_mean, hessian_block_size,
+                         false>(y, y, eta, prior_mean, hessian_block_size,
                          K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          pstream__));
         current_statement__ = 11;
         lp_accum__.add(stan::math::laplace_marginal_neg_binomial_2_log_lpmf<
-                         propto__>(y, y, log_ye, prior_mean,
-                         hessian_block_size, K_function_functor__(),
+                         propto__>(y, y, eta, prior_mean, hessian_block_size,
+                         K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          pstream__));
         current_statement__ = 12;
         lp_accum__.add(stan::math::laplace_marginal_tol_neg_binomial_2_log_lpmf<
-                         propto__>(y, y, log_ye, prior_mean,
-                         hessian_block_size, K_function_functor__(),
+                         propto__>(y, y, eta, prior_mean, hessian_block_size,
+                         K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          std::forward_as_tuple(theta_0, tolerance,
                            max_num_steps, solver, max_steps_line_search,
                            allow_fallthrough), pstream__));
         current_statement__ = 13;
         lp_accum__.add(stan::math::laplace_marginal_tol_neg_binomial_2_log_lpmf<
-                         false>(y, y, log_ye, prior_mean, hessian_block_size,
+                         false>(y, y, eta, prior_mean, hessian_block_size,
                          K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          std::forward_as_tuple(theta_0, tolerance,
@@ -9524,8 +9524,8 @@ class laplace_neg_binomial_2_log_model final : public model_base_crtp<laplace_ne
                            allow_fallthrough), pstream__));
         current_statement__ = 14;
         lp_accum__.add(stan::math::laplace_marginal_tol_neg_binomial_2_log_lpmf<
-                         propto__>(y, y, log_ye, prior_mean,
-                         hessian_block_size, K_function_functor__(),
+                         propto__>(y, y, eta, prior_mean, hessian_block_size,
+                         K_function_functor__(),
                          std::forward_as_tuple(x, n_obs, alpha, rho),
                          std::forward_as_tuple(theta_0, tolerance,
                            max_num_steps, solver, max_steps_line_search,
@@ -9600,7 +9600,7 @@ class laplace_neg_binomial_2_log_model final : public model_base_crtp<laplace_ne
           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 4;
       stan::model::assign(theta,
-        stan::math::laplace_latent_neg_binomial_2_log_rng(y, y, log_ye,
+        stan::math::laplace_latent_neg_binomial_2_log_rng(y, y, eta,
           prior_mean, hessian_block_size, K_function_functor__(),
           std::forward_as_tuple(x, n_obs, alpha, rho), base_rng__, pstream__),
         "assigning variable theta");
@@ -9609,7 +9609,7 @@ class laplace_neg_binomial_2_log_model final : public model_base_crtp<laplace_ne
           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 5;
       stan::model::assign(theta2,
-        stan::math::laplace_latent_tol_neg_binomial_2_log_rng(y, y, log_ye,
+        stan::math::laplace_latent_tol_neg_binomial_2_log_rng(y, y, eta,
           prior_mean, hessian_block_size, K_function_functor__(),
           std::forward_as_tuple(x, n_obs, alpha, rho),
           std::forward_as_tuple(theta_0, tolerance, max_num_steps, solver,
@@ -10445,7 +10445,7 @@ class laplace_nested_tuple_model final : public model_base_crtp<laplace_nested_t
       {
         current_statement__ = 6;
         lp_accum__.add(stan::math::laplace_marginal_neg_binomial_2_log_lpmf<
-                         propto__>(y, y, ye,
+                         propto__>(y, y, 1.0,
                          stan::math::rep_vector(0.0, n_obs), 1,
                          scalar_tuple_functor__(),
                          std::forward_as_tuple(x,
@@ -10453,14 +10453,14 @@ class laplace_nested_tuple_model final : public model_base_crtp<laplace_nested_t
                              std::forward_as_tuple(alpha, rho))), pstream__));
         current_statement__ = 7;
         lp_accum__.add(stan::math::laplace_marginal_neg_binomial_2_log_lpmf<
-                         propto__>(y, y, ye,
+                         propto__>(y, y, 1.0,
                          stan::math::rep_vector(0.0, n_obs), 1,
                          arr_vec_tuple_functor__(),
                          std::forward_as_tuple(std::forward_as_tuple(x, x),
                            n_obs, alpha, rho), pstream__));
         current_statement__ = 8;
         lp_accum__.add(stan::math::laplace_marginal_neg_binomial_2_log_lpmf<
-                         propto__>(y, y, ye,
+                         propto__>(y, y, 1.0,
                          stan::math::rep_vector(0.0, n_obs), 1,
                          arr_and_vec_tuple_functor__(),
                          std::forward_as_tuple(
@@ -10509,7 +10509,7 @@ class laplace_nested_tuple_model final : public model_base_crtp<laplace_nested_t
       {
         current_statement__ = 6;
         lp_accum__.add(stan::math::laplace_marginal_neg_binomial_2_log_lpmf<
-                         propto__>(y, y, ye,
+                         propto__>(y, y, 1.0,
                          stan::math::rep_vector(0.0, n_obs), 1,
                          scalar_tuple_functor__(),
                          std::forward_as_tuple(x,
@@ -10517,14 +10517,14 @@ class laplace_nested_tuple_model final : public model_base_crtp<laplace_nested_t
                              std::forward_as_tuple(alpha, rho))), pstream__));
         current_statement__ = 7;
         lp_accum__.add(stan::math::laplace_marginal_neg_binomial_2_log_lpmf<
-                         propto__>(y, y, ye,
+                         propto__>(y, y, 1.0,
                          stan::math::rep_vector(0.0, n_obs), 1,
                          arr_vec_tuple_functor__(),
                          std::forward_as_tuple(std::forward_as_tuple(x, x),
                            n_obs, alpha, rho), pstream__));
         current_statement__ = 8;
         lp_accum__.add(stan::math::laplace_marginal_neg_binomial_2_log_lpmf<
-                         propto__>(y, y, ye,
+                         propto__>(y, y, 1.0,
                          stan::math::rep_vector(0.0, n_obs), 1,
                          arr_and_vec_tuple_functor__(),
                          std::forward_as_tuple(
@@ -10596,7 +10596,7 @@ class laplace_nested_tuple_model final : public model_base_crtp<laplace_nested_t
           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 3;
       stan::model::assign(theta,
-        stan::math::laplace_latent_neg_binomial_2_log_rng(y, y, ye,
+        stan::math::laplace_latent_neg_binomial_2_log_rng(y, y, 1.0,
           stan::math::rep_vector(0.0, n_obs), 1, scalar_tuple_functor__(),
           std::forward_as_tuple(x,
             std::forward_as_tuple(n_obs, std::forward_as_tuple(alpha, rho))),
@@ -10606,7 +10606,7 @@ class laplace_nested_tuple_model final : public model_base_crtp<laplace_nested_t
           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 4;
       stan::model::assign(theta2,
-        stan::math::laplace_latent_neg_binomial_2_log_rng(y, y, ye,
+        stan::math::laplace_latent_neg_binomial_2_log_rng(y, y, 1.0,
           stan::math::rep_vector(0.0, n_obs), 1, arr_vec_tuple_functor__(),
           std::forward_as_tuple(std::forward_as_tuple(x, x), n_obs, alpha,
             rho), base_rng__, pstream__), "assigning variable theta2");
@@ -10615,7 +10615,7 @@ class laplace_nested_tuple_model final : public model_base_crtp<laplace_nested_t
           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 5;
       stan::model::assign(theta3,
-        stan::math::laplace_latent_neg_binomial_2_log_rng(y, y, ye,
+        stan::math::laplace_latent_neg_binomial_2_log_rng(y, y, 1.0,
           stan::math::rep_vector(0.0, n_obs), 1,
           arr_and_vec_tuple_functor__(),
           std::forward_as_tuple(
