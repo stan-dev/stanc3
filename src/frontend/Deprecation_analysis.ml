@@ -98,6 +98,7 @@ let rec collect_deprecated_stmt fundefs (acc : (Location_span.t * string) list)
 let collect_warnings (program : typed_program) =
   let fundefs = userdef_functions program in
   fold_program (collect_deprecated_stmt fundefs) [] program
+  |> List.map ~f:(fun (x, y) -> Warnings.Deprecation (x, y))
 
 let remove_unneeded_forward_decls program =
   let fundefs = userdef_functions program in

@@ -373,10 +373,13 @@ $ node version.js
 %%NAME%%3 %%VERSION%%
 %%NAME%%3 %%VERSION%%
 $ node warnings.js
-string:10:12: warning: Found int division:
-      x / w
-  Values will be rounded towards zero. If rounding is not desired you can write
-  the division as
-      x * 1.0 / w
-  If rounding is intended please use the integer division operator %/%.
+warning: Found integer division. The value will be rounded towards zero.
+    ┌─ string:10:12
+  9 │      int x, w;
+ 10 │     int z = x / w;
+    │             ^^^^^ If rounding is not desired you can write the division as
+    │                   x * 1.0 / w
+ 11 │  }
+    = If rounding is intended please use the integer division operator
+      %%/%%.
 

@@ -70,6 +70,45 @@ let unstyle (l : Diagnostic.Label.t) =
     message= (fun ppf -> (Fmt.styled `None Diagnostic.Message.pp) ppf l.message)
   }
 
+let compare_labels (a : Grace.Diagnostic.Label.t) (b : Grace.Diagnostic.Label.t)
+    : int =
+  let open Grace in
+  let ( let*? ) a f =
+    (* helper for short-circuiting *)
+    if a <> 0 then a else f () in
+  let*? () = Source.compare (Range.source a.range) (Range.source b.range) in
+  let*? () = Range.compare a.range b.range in
+  let*? () = Grace.Diagnostic.Priority.compare a.priority b.priority in
+  (* Materializing the labels is annoying but should be rare. Most of the time
+     that the first three compares return equal, this is a genuine duplicate *)
+  let label1 = Grace.Diagnostic.Message.to_string a.message in
+  let label2 = Grace.Diagnostic.Message.to_string b.message in
+  String.compare label1 label2
+
+let dedup_labels labels =
+  let prim, sec =
+    List.partition labels ~f:(function
+      | {Grace.Diagnostic.Label.priority= Primary; _} -> true
+      | {priority= Secondary; _} -> false) in
+  prim @ List.sort_uniq sec ~cmp:compare_labels
+
+let make ?printed_filename ?code ?(labels = []) ?(notes = [])
+    ?(summary : Grace.Diagnostic.Message.t option) span severity primary =
+  let range, included = range_of_loc_span ?printed_filename ?code span in
+  let labels = dedup_labels (included @ labels) in
+  let kont (l : Grace.Diagnostic.Label.t) =
+    let summary = Option.value summary ~default:l.message in
+    let labels = unstyle l :: labels in
+    Grace.Diagnostic.create severity ~labels ~notes summary in
+  Grace.Diagnostic.Label.kprimaryf kont ~range primary
+
+let context ?(priority : Grace.Diagnostic.Priority.t = Secondary)
+    ?printed_filename ?code loc message =
+  let range, included = range_of_loc_span ?printed_filename ?code loc in
+  Grace.Diagnostic.Label.kcreatef ~priority
+    (fun l -> l :: included)
+    ~range message
+
 open Grace_ansi_renderer
 
 let config =

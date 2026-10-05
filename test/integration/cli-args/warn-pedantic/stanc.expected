@@ -417,10 +417,15 @@ jacobian_warning_user.stan:5:3: warning: Left-hand side of distribution statemen
   jacobian += in the transformed parameters block.
 [exit 0]
   $ stanc --warn-pedantic  lp_fun.stan
-lp_fun.stan:10:3: warning: Using _lp functions in transformed parameters is deprecated and will be
-  disallowed in Stan 2.40. Use an _jacobian function instead, as this allows
-  change of variable adjustments which are conditionally enabled by the
-  algorithms.
+warning: Using _lp functions in transformed parameters is deprecated and will be disallowed in the future.
+    ┌─ lp_fun.stan:10:3
+  9 │  transformed parameters {
+ 10 │    test_lp(y);
+    │    ^^^^^^^^^^^ _lp function call in transformed parameters.
+ 11 │  }
+    = Use an _jacobian function instead, as this allows change of variable
+      adjustments which are conditionally enabled by the
+      algorithms.
 lp_fun.stan:7:3: warning: The parameter y has 2 priors.
 [exit 0]
   $ stanc --warn-pedantic  missing-prior-false-alarm.stan

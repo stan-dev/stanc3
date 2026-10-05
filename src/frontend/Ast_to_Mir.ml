@@ -732,7 +732,11 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
 and trans_packed_assign loc trans_stmt lvals rhs assign_op =
   (* TODO tuple-unpacking: could be more efficient in case where rhs is a tuple
      expr and names don't overlap *)
-  let smeta = Ast.{loc; return_type= Incomplete} in
+  let smeta =
+    Ast.
+      { loc
+      ; flow_type= {controlflow= Incomplete Next; breaks= []; continues= false}
+      } in
   let sym, reset = Common.Gensym.enter () in
   let rhs_type = rhs.emeta.type_ in
   let temp =

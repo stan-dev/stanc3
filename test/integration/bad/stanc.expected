@@ -60,14 +60,13 @@ error: Ill-typed assignment statement.
 [exit 1]
   $ stanc array_expr_bad1.stan
 error: Ill-typed assignment statement.
-    ┌─ array_expr_bad1.stan:2:3
+    ┌─ array_expr_bad1.stan:2:30
   1 │  transformed data {
   2 │    array[3,2] real td_arr32 = { 1, 3 };
-    │    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    │    │
-    │    Expected the right hand side to have a type matching the destination.
-    │    Instead found type array[] int.
-    │    Left hand side has type array[,] real.
+    │                    --------   ^^^^^^^^ Expected the right hand side to have a type matching the destination.
+    │                    │                   Instead found type array[] int.
+    │                    │
+    │                    Left hand side has type array[,] real.
   3 │  }
 [exit 1]
   $ stanc array_expr_bad2.stan
@@ -150,17 +149,7 @@ error: Invalid return statement.
   6 │    }
 [exit 1]
   $ stanc bad_fundef_returntypes4.stan
-error: Function bodies must contain a return statement of correct type in every branch.
-    ┌─ bad_fundef_returntypes4.stan:2:3
-  1 │    functions{
-  2 │ ╭    real foo(){
-  3 │ │      if (1){
-  4 │ │        return 1.0;
-  5 │ │      }
-  6 │ │    }
-    │ ╰────^ Function bodies must contain a return statement of correct type in every branch.
-  7 │    }
-[exit 1]
+[exit 0]
   $ stanc bad_prob_fun_suffix.stan
 error: Ill-typed "~"-statement.
     ┌─ bad_prob_fun_suffix.stan:10:11
@@ -362,14 +351,13 @@ error: CDF and CCDF functions may not be used with distribution notation (~).
 [exit 1]
   $ stanc complex_mat_bad.stan
 error: Ill-typed assignment statement.
-    ┌─ complex_mat_bad.stan:7:3
+    ┌─ complex_mat_bad.stan:7:12
   6 │  model {
   7 │    real x = Z[1,1];
-    │    ^^^^^^^^^^^^^^^^
-    │    │
-    │    Expected the right hand side to have a type matching the destination.
-    │    Instead found type complex.
-    │    Left hand side has type real.
+    │         -   ^^^^^^ Expected the right hand side to have a type matching the destination.
+    │         │          Instead found type complex.
+    │         │
+    │         Left hand side has type real.
   8 │    target += x;
 [exit 1]
   $ stanc conditional_condition_bad_1.stan
@@ -460,26 +448,24 @@ error: Syntax error: Ill-formed declaration.
 [exit 1]
   $ stanc declare-define-var-double-1.stan
 error: Ill-typed assignment statement.
-    ┌─ declare-define-var-double-1.stan:5:3
+    ┌─ declare-define-var-double-1.stan:5:16
   4 │  transformed data {
   5 │    real td_a1 = a1;   // scalar = array - bad
-    │    ^^^^^^^^^^^^^^^^
-    │    │
-    │    Expected the right hand side to have a type matching the destination.
-    │    Instead found type array[] real.
-    │    Left hand side has type real.
+    │         -----   ^^ Expected the right hand side to have a type matching the destination.
+    │         │          Instead found type array[] real.
+    │         │
+    │         Left hand side has type real.
   6 │  }
 [exit 1]
   $ stanc declare-define-var-double-2.stan
 error: Ill-typed assignment statement.
-    ┌─ declare-define-var-double-2.stan:5:3
+    ┌─ declare-define-var-double-2.stan:5:21
   4 │  transformed data {
   5 │    vector[2] td_a1 = a1;   // vector = array - bad
-    │    ^^^^^^^^^^^^^^^^^^^^^
-    │    │
-    │    Expected the right hand side to have a type matching the destination.
-    │    Instead found type array[] real.
-    │    Left hand side has type vector.
+    │              -----   ^^ Expected the right hand side to have a type matching the destination.
+    │              │          Instead found type array[] real.
+    │              │
+    │              Left hand side has type vector.
   6 │  }
 [exit 1]
   $ stanc declare-define-var-double-3.stan
@@ -504,74 +490,68 @@ error: Syntax error: Ill-formed declaration.
 [exit 1]
   $ stanc declare-define-var-int-1.stan
 error: Ill-typed assignment statement.
-    ┌─ declare-define-var-int-1.stan:5:3
+    ┌─ declare-define-var-int-1.stan:5:15
   4 │  transformed data {
   5 │    int td_a1 = a1;   // int_d = real_d - bad
-    │    ^^^^^^^^^^^^^^^
-    │    │
-    │    Expected the right hand side to have a type matching the destination.
-    │    Instead found type real.
-    │    Left hand side has type int.
+    │        -----   ^^ Expected the right hand side to have a type matching the destination.
+    │        │          Instead found type real.
+    │        │
+    │        Left hand side has type int.
   6 │  }
 [exit 1]
   $ stanc declare-define-var-int-2.stan
 error: Ill-typed assignment statement.
-    ┌─ declare-define-var-int-2.stan:5:3
+    ┌─ declare-define-var-int-2.stan:5:15
   4 │  transformed data {
   5 │    int td_a1 = 4.1;    // int_d = real val - bad
-    │    ^^^^^^^^^^^^^^^^
-    │    │
-    │    Expected the right hand side to have a type matching the destination.
-    │    Instead found type real.
-    │    Left hand side has type int.
+    │        -----   ^^^ Expected the right hand side to have a type matching the destination.
+    │        │           Instead found type real.
+    │        │
+    │        Left hand side has type int.
   6 │  }
 [exit 1]
   $ stanc declare-define-var-int-3.stan
 error: Ill-typed assignment statement.
-    ┌─ declare-define-var-int-3.stan:2:3
+    ┌─ declare-define-var-int-3.stan:2:24
   1 │  transformed data {
   2 │    array[2] int td_a1 = 1;   // array = scalar - bad
-    │    ^^^^^^^^^^^^^^^^^^^^^^^
-    │    │
-    │    Expected the right hand side to have a type matching the destination.
-    │    Instead found type int.
-    │    Left hand side has type array[] int.
+    │                 -----   ^ Expected the right hand side to have a type matching the destination.
+    │                 │         Instead found type int.
+    │                 │
+    │                 Left hand side has type array[] int.
   3 │  }
 [exit 1]
   $ stanc declare-define-var-int-4.stan
 error: Ill-typed assignment statement.
-    ┌─ declare-define-var-int-4.stan:5:3
+    ┌─ declare-define-var-int-4.stan:5:15
   4 │  transformed data {
   5 │    int td_a1 = a1;   // scalar = array - bad
-    │    ^^^^^^^^^^^^^^^
-    │    │
-    │    Expected the right hand side to have a type matching the destination.
-    │    Instead found type array[] int.
-    │    Left hand side has type int.
+    │        -----   ^^ Expected the right hand side to have a type matching the destination.
+    │        │          Instead found type array[] int.
+    │        │
+    │        Left hand side has type int.
   6 │  }
 [exit 1]
   $ stanc declare-define-var-matrix-1.stan
 error: Ill-typed assignment statement.
-    ┌─ declare-define-var-matrix-1.stan:5:3
+    ┌─ declare-define-var-matrix-1.stan:5:21
   4 │  transformed data {
   5 │    vector[7] td_b1 = b0;  // base type mismatch
-    │    ^^^^^^^^^^^^^^^^^^^^^
-    │    │
-    │    Expected the right hand side to have a type matching the destination.
-    │    Instead found type matrix.
-    │    Left hand side has type vector.
+    │              -----   ^^ Expected the right hand side to have a type matching the destination.
+    │              │          Instead found type matrix.
+    │              │
+    │              Left hand side has type vector.
   6 │  }
 [exit 1]
   $ stanc declare-define-var-vec-1.stan
 error: Ill-typed assignment statement.
-    ┌─ declare-define-var-vec-1.stan:6:3
+    ┌─ declare-define-var-vec-1.stan:6:21
   5 │  transformed data {
   6 │    vector[7] td_b1 = c0;  // base type mismatch
-    │    ^^^^^^^^^^^^^^^^^^^^^
-    │    │
-    │    Expected the right hand side to have a type matching the destination.
-    │    Instead found type row_vector.
-    │    Left hand side has type vector.
+    │              -----   ^^ Expected the right hand side to have a type matching the destination.
+    │              │          Instead found type row_vector.
+    │              │
+    │              Left hand side has type vector.
   7 │  }
 [exit 1]
   $ stanc err-bare-type-close-square.stan
@@ -1505,14 +1485,13 @@ error: Left hand side of an assignment cannot have nested multi-indexing.
 [exit 1]
   $ stanc matrix_expr_bad1.stan
 error: Ill-typed assignment statement.
-    ┌─ matrix_expr_bad1.stan:2:3
+    ┌─ matrix_expr_bad1.stan:2:26
   1 │  transformed data {
   2 │    matrix[3,2] td_mat32 = [ 1, 3 ];
-    │    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    │    │
-    │    Expected the right hand side to have a type matching the destination.
-    │    Instead found type row_vector.
-    │    Left hand side has type matrix.
+    │                --------   ^^^^^^^^ Expected the right hand side to have a type matching the destination.
+    │                │                   Instead found type row_vector.
+    │                │
+    │                Left hand side has type matrix.
   3 │  }
 [exit 1]
   $ stanc matrix_expr_bad2.stan
@@ -1593,7 +1572,10 @@ error: Function bodies must contain a return statement of correct type in every 
   1 │    functions {
   2 │ ╭    real not_endless() {
   3 │ │      while (1) {
-    ⋯ │  
+  4 │ │        if (0) return 1.0;
+  5 │ │        if (1) break;
+    │ │               ------ The loop may end here
+  6 │ │        return 2.0;
   7 │ │      }
   8 │ │    }
     │ ╰────^ Function bodies must contain a return statement of correct type in every branch.
@@ -1605,11 +1587,41 @@ error: Function bodies must contain a return statement of correct type in every 
   1 │    functions {
   2 │ ╭    real not_endless() {
   3 │ │      for (i in 1:10){
-    ⋯ │  
+  4 │ │        while (1) {
+  5 │ │          if (0) return 1.0;
+  6 │ │          if (1) break;
+    │ │                 ------ The loop may end here
+  7 │ │          return 2.0;
+  8 │ │        }
   9 │ │      }
  10 │ │    }
     │ ╰────^ Function bodies must contain a return statement of correct type in every branch.
  11 │    }
+[exit 1]
+  $ stanc noninfinite_loop_return5.stan
+error: Function bodies must contain a return statement of correct type in every branch.
+    ┌─ noninfinite_loop_return5.stan:2:3
+  1 │    functions {
+  2 │ ╭    real not_endless() {
+  3 │ │      for (i in 1:0){
+    │ │                --- The range may be empty
+  4 │ │        return 2.0;
+  5 │ │      }
+  6 │ │    }
+    │ ╰────^ Function bodies must contain a return statement of correct type in every branch.
+  7 │    }
+[exit 1]
+  $ stanc noninfinite_loop_return6.stan
+error: Function bodies must contain a return statement of correct type in every branch.
+    ┌─ noninfinite_loop_return6.stan:2:3
+  1 │    functions {
+  2 │ ╭    real not_endless() {
+  3 │ │      while (1 < 0) {
+  4 │ │        return 2.0;
+  5 │ │      }
+  6 │ │    }
+    │ ╰────^ Function bodies must contain a return statement of correct type in every branch.
+  7 │    }
 [exit 1]
   $ stanc oneline-error.stan
 error: Syntax error: Ill-formed type.
@@ -2110,14 +2122,13 @@ error: Invalid call to random number generator.
 [exit 1]
   $ stanc row_vector_expr_bad1.stan
 error: Ill-typed assignment statement.
-    ┌─ row_vector_expr_bad1.stan:4:3
+    ┌─ row_vector_expr_bad1.stan:4:21
   3 │    row_vector[3] B;
   4 │    row_vector[2] X = [ A, B ];
-    │    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    │    │
-    │    Expected the right hand side to have a type matching the destination.
-    │    Instead found type matrix.
-    │    Left hand side has type row_vector.
+    │                  -   ^^^^^^^^ Expected the right hand side to have a type matching the destination.
+    │                  │            Instead found type matrix.
+    │                  │
+    │                  Left hand side has type row_vector.
   5 │  }
 [exit 1]
   $ stanc row_vector_expr_bad2.stan

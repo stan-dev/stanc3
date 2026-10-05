@@ -964,6 +964,49 @@ generated quantities {
   }
 }
 
+warning: Unreachable statement found, is this intended?
+    ┌─ .//functions/bernoulli_likelihoods.stan:16:5
+  9 │    vector linkinv_bern(vector eta, int link) {
+ 10 │      if (link == 1)      return(inv_logit(eta)); // logit
+    │                          ----------------------- exits the function
+ 11 │      else if (link == 2) return(Phi(eta)); // probit
+    │                          ----------------- exits the function
+ 12 │      else if (link == 3) return(atan(eta) / pi() + 0.5);  // cauchit
+    │                          ------------------------------- exits the function
+ 13 │      else if (link == 4) return(exp(eta)); // log
+    │                          ----------------- exits the function
+ 14 │      else if (link == 5) return(inv_cloglog(eta)); // cloglog
+    │                          ------------------------- exits the function
+ 15 │      else reject("Invalid link");
+    │           ----------------------- stops this sample evaluation
+ 16 │      return eta; // never reached
+    │      ^ Never reached
+ 17 │    }
+    ┌─ bernoulli.stan:7:3
+  6 │    #include </functions/common_functions.stan>
+  7 │    #include </functions/bernoulli_likelihoods.stan>
+    │    -------- file './/functions/bernoulli_likelihoods.stan' included here
+  8 │  }
+warning: Unreachable statement found, is this intended?
+    ┌─ .//functions/bernoulli_likelihoods.stan:97:5
+ 89 │          if (D_j == 1) return eta_j[N_j];
+ 90 │          return sum(segment(eta_j, N_j - 1, 2));
+    │          --------------------------------------- exits the function
+ 91 │        }
+ 92 │        else {
+ 93 │          int N_jm1 = N_j - 1;
+ 94 │ ╭        return log_sum_exp(log_clogit_denom(N_jm1, D_j, eta_j),
+ 95 │ │                           log_clogit_denom(N_jm1, D_j - 1, eta_j) + eta_j[N_j]);
+    │ ╰────────────────────────────────────────────────────────────────────────────────' exits the function
+ 96 │        }
+ 97 │        return not_a_number();  // never reaches
+    │        ^ Never reached
+ 98 │      }
+    ┌─ bernoulli.stan:7:3
+  6 │      #include </functions/common_functions.stan>
+  7 │      #include </functions/bernoulli_likelihoods.stan>
+    │      -------- file './/functions/bernoulli_likelihoods.stan' included here
+  8 │    }
 .//functions/bernoulli_likelihoods.stan:84:8: warning: Functions do not need to be declared before definition; all user defined
   function names are always in scope regardless of definition order.
 bernoulli.stan:7:3: warning: Functions do not need to be declared before definition; all user defined
@@ -1798,6 +1841,29 @@ generated quantities {
   }
 }
 
+warning: Unreachable statement found, is this intended?
+    ┌─ .//functions/binomial_likelihoods.stan:15:5
+  8 │    vector linkinv_binom(vector eta, int link) {
+  9 │      if (link == 1)      return(inv_logit(eta)); // logit
+    │                          ----------------------- exits the function
+ 10 │      else if (link == 2) return(Phi(eta)); // probit
+    │                          ----------------- exits the function
+ 11 │      else if (link == 3) return(atan(eta) / pi() + 0.5);  // cauchit
+    │                          ------------------------------- exits the function
+ 12 │      else if (link == 4) return(exp(eta)); // log
+    │                          ----------------- exits the function
+ 13 │      else if (link == 5) return(inv_cloglog(eta)); // cloglog
+    │                          ------------------------- exits the function
+ 14 │      else reject("Invalid link");
+    │           ----------------------- stops this sample evaluation
+ 15 │      return eta; // never reached
+    │      ^ Never reached
+ 16 │    }
+    ┌─ binomial.stan:7:3
+  6 │    #include </functions/common_functions.stan>
+  7 │    #include </functions/binomial_likelihoods.stan>
+    │    -------- file './/functions/binomial_likelihoods.stan' included here
+  8 │  }
 [exit 0]
   $ stanc --include-paths="." --auto-format --canonicalize=includes --allow-undefined continuous.stan
 //    This file is part of rstanarm.
@@ -3367,6 +3433,109 @@ generated quantities {
   }
 }
 
+warning: Unreachable statement found, is this intended?
+    ┌─ .//functions/continuous_likelihoods.stan:13:5
+  8 │    vector linkinv_gauss(vector eta, int link) {
+  9 │      if (link == 1)      return eta;
+    │                          ----------- exits the function
+ 10 │      else if (link == 2) return exp(eta); 
+    │                          ---------------- exits the function
+ 11 │      else if (link == 3) return inv(eta);
+    │                          ---------------- exits the function
+ 12 │      else reject("Invalid link");
+    │           ----------------------- stops this sample evaluation
+ 13 │      return eta; // never reached
+    │      ^ Never reached
+ 14 │    }
+    ┌─ continuous.stan:7:3
+  6 │    #include </functions/common_functions.stan>
+  7 │    #include </functions/continuous_likelihoods.stan>
+    │    -------- file './/functions/continuous_likelihoods.stan' included here
+  8 │    
+warning: Unreachable statement found, is this intended?
+    ┌─ .//functions/continuous_likelihoods.stan:40:5
+ 35 │    vector linkinv_gamma(vector eta, int link) {
+ 36 │      if (link == 1)      return eta;
+    │                          ----------- exits the function
+ 37 │      else if (link == 2) return exp(eta);
+    │                          ---------------- exits the function
+ 38 │      else if (link == 3) return inv(eta);
+    │                          ---------------- exits the function
+ 39 │      else reject("Invalid link");
+    │           ----------------------- stops this sample evaluation
+ 40 │      return eta; // never reached
+    │      ^ Never reached
+ 41 │    }
+    ┌─ continuous.stan:7:3
+  6 │    #include </functions/common_functions.stan>
+  7 │    #include </functions/continuous_likelihoods.stan>
+    │    -------- file './/functions/continuous_likelihoods.stan' included here
+  8 │    
+warning: Unreachable statement found, is this intended?
+    ┌─ .//functions/continuous_likelihoods.stan:110:5
+104 │    vector linkinv_inv_gaussian(vector eta, int link) {
+105 │      if (link == 1)      return eta;
+    │                          ----------- exits the function
+106 │      else if (link == 2) return exp(eta);
+    │                          ---------------- exits the function
+107 │      else if (link == 3) return inv(eta);
+    │                          ---------------- exits the function
+108 │      else if (link == 4) return inv_sqrt(eta);
+    │                          --------------------- exits the function
+109 │      else reject("Invalid link");
+    │           ----------------------- stops this sample evaluation
+110 │      return eta; // never reached
+    │      ^ Never reached
+111 │    }
+    ┌─ continuous.stan:7:3
+  6 │    #include </functions/common_functions.stan>
+  7 │    #include </functions/continuous_likelihoods.stan>
+    │    -------- file './/functions/continuous_likelihoods.stan' included here
+  8 │    
+warning: Unreachable statement found, is this intended?
+    ┌─ .//functions/continuous_likelihoods.stan:182:5
+174 │    vector linkinv_beta(vector eta, int link) {
+175 │      if (link == 1) return inv_logit(eta);  // logit
+    │                     ---------------------- exits the function
+176 │      else if (link == 2) return Phi(eta);   // probit
+    │                          ---------------- exits the function
+177 │      else if (link == 3) return inv_cloglog(eta);  // cloglog
+    │                          ------------------------ exits the function
+178 │      else if (link == 4) return 0.5 + atan(eta) / pi(); // cauchy
+    │                          ------------------------------ exits the function
+179 │      else if (link == 5) return exp(eta); // log 
+    │                          ---------------- exits the function
+180 │      else if (link == 6) return 1 - inv_cloglog(-eta); // loglog
+    │                          ----------------------------- exits the function
+181 │      else reject("invalid link");
+    │           ----------------------- stops this sample evaluation
+182 │      return eta; // never reached
+    │      ^ Never reached
+183 │    }
+    ┌─ continuous.stan:7:3
+  6 │    #include </functions/common_functions.stan>
+  7 │    #include </functions/continuous_likelihoods.stan>
+    │    -------- file './/functions/continuous_likelihoods.stan' included here
+  8 │    
+warning: Unreachable statement found, is this intended?
+    ┌─ .//functions/continuous_likelihoods.stan:197:5
+192 │    vector linkinv_beta_z(vector eta, int link) {
+193 │      if (link == 1) return exp(eta);         // log
+    │                     ---------------- exits the function
+194 │      else if (link == 2) return eta;         // identity
+    │                          ----------- exits the function
+195 │      else if (link == 3) return square(eta); // sqrt
+    │                          ------------------- exits the function
+196 │      else reject("Invalid link");
+    │           ----------------------- stops this sample evaluation
+197 │      return eta; // never reached
+    │      ^ Never reached
+198 │    }
+    ┌─ continuous.stan:7:3
+  6 │    #include </functions/common_functions.stan>
+  7 │    #include </functions/continuous_likelihoods.stan>
+    │    -------- file './/functions/continuous_likelihoods.stan' included here
+  8 │    
 .//functions/SSfunctions.stan:1:8: warning: Functions do not need to be declared before definition; all user defined
   function names are always in scope regardless of definition order.
 continuous.stan:9:3: warning: Functions do not need to be declared before definition; all user defined
@@ -4299,6 +4468,25 @@ generated quantities {
   }
 }
 
+warning: Unreachable statement found, is this intended?
+    ┌─ .//functions/count_likelihoods.stan:14:5
+  9 │    vector linkinv_count(vector eta, int link) {
+ 10 │      if (link == 1)      return exp(eta);     // log
+    │                          ---------------- exits the function
+ 11 │      else if (link == 2) return eta;          // identity
+    │                          ----------- exits the function
+ 12 │      else if (link == 3) return(square(eta)); // sqrt
+    │                          -------------------- exits the function
+ 13 │      else reject("Invalid link");
+    │           ----------------------- stops this sample evaluation
+ 14 │      return eta; // never reached
+    │      ^ Never reached
+ 15 │    }
+    ┌─ count.stan:7:3
+  6 │    #include </functions/common_functions.stan>
+  7 │    #include </functions/count_likelihoods.stan>
+    │    -------- file './/functions/count_likelihoods.stan' included here
+  8 │  }
 [exit 0]
   $ stanc --include-paths="." --auto-format --canonicalize=includes --allow-undefined jm.stan
 //    This file is part of rstanarm.
@@ -7410,6 +7598,194 @@ generated quantities {
               - dot_product(a_xbar, a_beta);
 }
 
+warning: Unreachable statement found, is this intended?
+    ┌─ .//functions/bernoulli_likelihoods.stan:16:5
+  9 │    vector linkinv_bern(vector eta, int link) {
+ 10 │      if (link == 1)      return(inv_logit(eta)); // logit
+    │                          ----------------------- exits the function
+ 11 │      else if (link == 2) return(Phi(eta)); // probit
+    │                          ----------------- exits the function
+ 12 │      else if (link == 3) return(atan(eta) / pi() + 0.5);  // cauchit
+    │                          ------------------------------- exits the function
+ 13 │      else if (link == 4) return(exp(eta)); // log
+    │                          ----------------- exits the function
+ 14 │      else if (link == 5) return(inv_cloglog(eta)); // cloglog
+    │                          ------------------------- exits the function
+ 15 │      else reject("Invalid link");
+    │           ----------------------- stops this sample evaluation
+ 16 │      return eta; // never reached
+    │      ^ Never reached
+ 17 │    }
+    ┌─ jm.stan:8:1
+  7 │  #include /functions/common_functions.stan
+  8 │  #include /functions/bernoulli_likelihoods.stan
+    │  -------- file './/functions/bernoulli_likelihoods.stan' included here
+  9 │  #include /functions/binomial_likelihoods.stan
+warning: Unreachable statement found, is this intended?
+    ┌─ .//functions/bernoulli_likelihoods.stan:97:5
+ 89 │          if (D_j == 1) return eta_j[N_j];
+ 90 │          return sum(segment(eta_j, N_j - 1, 2));
+    │          --------------------------------------- exits the function
+ 91 │        }
+ 92 │        else {
+ 93 │          int N_jm1 = N_j - 1;
+ 94 │ ╭        return log_sum_exp(log_clogit_denom(N_jm1, D_j, eta_j),
+ 95 │ │                           log_clogit_denom(N_jm1, D_j - 1, eta_j) + eta_j[N_j]);
+    │ ╰────────────────────────────────────────────────────────────────────────────────' exits the function
+ 96 │        }
+ 97 │        return not_a_number();  // never reaches
+    │        ^ Never reached
+ 98 │      }
+    ┌─ jm.stan:8:1
+  7 │    #include /functions/common_functions.stan
+  8 │    #include /functions/bernoulli_likelihoods.stan
+    │    -------- file './/functions/bernoulli_likelihoods.stan' included here
+  9 │    #include /functions/binomial_likelihoods.stan
+warning: Unreachable statement found, is this intended?
+    ┌─ .//functions/binomial_likelihoods.stan:15:5
+  8 │    vector linkinv_binom(vector eta, int link) {
+  9 │      if (link == 1)      return(inv_logit(eta)); // logit
+    │                          ----------------------- exits the function
+ 10 │      else if (link == 2) return(Phi(eta)); // probit
+    │                          ----------------- exits the function
+ 11 │      else if (link == 3) return(atan(eta) / pi() + 0.5);  // cauchit
+    │                          ------------------------------- exits the function
+ 12 │      else if (link == 4) return(exp(eta)); // log
+    │                          ----------------- exits the function
+ 13 │      else if (link == 5) return(inv_cloglog(eta)); // cloglog
+    │                          ------------------------- exits the function
+ 14 │      else reject("Invalid link");
+    │           ----------------------- stops this sample evaluation
+ 15 │      return eta; // never reached
+    │      ^ Never reached
+ 16 │    }
+    ┌─ jm.stan:9:1
+  8 │  #include /functions/bernoulli_likelihoods.stan
+  9 │  #include /functions/binomial_likelihoods.stan
+    │  -------- file './/functions/binomial_likelihoods.stan' included here
+ 10 │  #include /functions/continuous_likelihoods.stan
+warning: Unreachable statement found, is this intended?
+    ┌─ .//functions/continuous_likelihoods.stan:13:5
+  8 │    vector linkinv_gauss(vector eta, int link) {
+  9 │      if (link == 1)      return eta;
+    │                          ----------- exits the function
+ 10 │      else if (link == 2) return exp(eta); 
+    │                          ---------------- exits the function
+ 11 │      else if (link == 3) return inv(eta);
+    │                          ---------------- exits the function
+ 12 │      else reject("Invalid link");
+    │           ----------------------- stops this sample evaluation
+ 13 │      return eta; // never reached
+    │      ^ Never reached
+ 14 │    }
+    ┌─ jm.stan:10:1
+  9 │  #include /functions/binomial_likelihoods.stan
+ 10 │  #include /functions/continuous_likelihoods.stan
+    │  -------- file './/functions/continuous_likelihoods.stan' included here
+ 11 │  #include /functions/count_likelihoods.stan
+warning: Unreachable statement found, is this intended?
+    ┌─ .//functions/continuous_likelihoods.stan:40:5
+ 35 │    vector linkinv_gamma(vector eta, int link) {
+ 36 │      if (link == 1)      return eta;
+    │                          ----------- exits the function
+ 37 │      else if (link == 2) return exp(eta);
+    │                          ---------------- exits the function
+ 38 │      else if (link == 3) return inv(eta);
+    │                          ---------------- exits the function
+ 39 │      else reject("Invalid link");
+    │           ----------------------- stops this sample evaluation
+ 40 │      return eta; // never reached
+    │      ^ Never reached
+ 41 │    }
+    ┌─ jm.stan:10:1
+  9 │  #include /functions/binomial_likelihoods.stan
+ 10 │  #include /functions/continuous_likelihoods.stan
+    │  -------- file './/functions/continuous_likelihoods.stan' included here
+ 11 │  #include /functions/count_likelihoods.stan
+warning: Unreachable statement found, is this intended?
+    ┌─ .//functions/continuous_likelihoods.stan:110:5
+104 │    vector linkinv_inv_gaussian(vector eta, int link) {
+105 │      if (link == 1)      return eta;
+    │                          ----------- exits the function
+106 │      else if (link == 2) return exp(eta);
+    │                          ---------------- exits the function
+107 │      else if (link == 3) return inv(eta);
+    │                          ---------------- exits the function
+108 │      else if (link == 4) return inv_sqrt(eta);
+    │                          --------------------- exits the function
+109 │      else reject("Invalid link");
+    │           ----------------------- stops this sample evaluation
+110 │      return eta; // never reached
+    │      ^ Never reached
+111 │    }
+    ┌─ jm.stan:10:1
+  9 │  #include /functions/binomial_likelihoods.stan
+ 10 │  #include /functions/continuous_likelihoods.stan
+    │  -------- file './/functions/continuous_likelihoods.stan' included here
+ 11 │  #include /functions/count_likelihoods.stan
+warning: Unreachable statement found, is this intended?
+    ┌─ .//functions/continuous_likelihoods.stan:182:5
+174 │    vector linkinv_beta(vector eta, int link) {
+175 │      if (link == 1) return inv_logit(eta);  // logit
+    │                     ---------------------- exits the function
+176 │      else if (link == 2) return Phi(eta);   // probit
+    │                          ---------------- exits the function
+177 │      else if (link == 3) return inv_cloglog(eta);  // cloglog
+    │                          ------------------------ exits the function
+178 │      else if (link == 4) return 0.5 + atan(eta) / pi(); // cauchy
+    │                          ------------------------------ exits the function
+179 │      else if (link == 5) return exp(eta); // log 
+    │                          ---------------- exits the function
+180 │      else if (link == 6) return 1 - inv_cloglog(-eta); // loglog
+    │                          ----------------------------- exits the function
+181 │      else reject("invalid link");
+    │           ----------------------- stops this sample evaluation
+182 │      return eta; // never reached
+    │      ^ Never reached
+183 │    }
+    ┌─ jm.stan:10:1
+  9 │  #include /functions/binomial_likelihoods.stan
+ 10 │  #include /functions/continuous_likelihoods.stan
+    │  -------- file './/functions/continuous_likelihoods.stan' included here
+ 11 │  #include /functions/count_likelihoods.stan
+warning: Unreachable statement found, is this intended?
+    ┌─ .//functions/continuous_likelihoods.stan:197:5
+192 │    vector linkinv_beta_z(vector eta, int link) {
+193 │      if (link == 1) return exp(eta);         // log
+    │                     ---------------- exits the function
+194 │      else if (link == 2) return eta;         // identity
+    │                          ----------- exits the function
+195 │      else if (link == 3) return square(eta); // sqrt
+    │                          ------------------- exits the function
+196 │      else reject("Invalid link");
+    │           ----------------------- stops this sample evaluation
+197 │      return eta; // never reached
+    │      ^ Never reached
+198 │    }
+    ┌─ jm.stan:10:1
+  9 │  #include /functions/binomial_likelihoods.stan
+ 10 │  #include /functions/continuous_likelihoods.stan
+    │  -------- file './/functions/continuous_likelihoods.stan' included here
+ 11 │  #include /functions/count_likelihoods.stan
+warning: Unreachable statement found, is this intended?
+    ┌─ .//functions/count_likelihoods.stan:14:5
+  9 │    vector linkinv_count(vector eta, int link) {
+ 10 │      if (link == 1)      return exp(eta);     // log
+    │                          ---------------- exits the function
+ 11 │      else if (link == 2) return eta;          // identity
+    │                          ----------- exits the function
+ 12 │      else if (link == 3) return(square(eta)); // sqrt
+    │                          -------------------- exits the function
+ 13 │      else reject("Invalid link");
+    │           ----------------------- stops this sample evaluation
+ 14 │      return eta; // never reached
+    │      ^ Never reached
+ 15 │    }
+    ┌─ jm.stan:11:1
+ 10 │  #include /functions/continuous_likelihoods.stan
+ 11 │  #include /functions/count_likelihoods.stan
+    │  -------- file './/functions/count_likelihoods.stan' included here
+ 12 │  #include /functions/mvmer_functions.stan
 .//functions/bernoulli_likelihoods.stan:84:8: warning: Functions do not need to be declared before definition; all user defined
   function names are always in scope regardless of definition order.
 jm.stan:8:1: warning: Functions do not need to be declared before definition; all user defined
@@ -9531,6 +9907,194 @@ generated quantities {
   }
 }
 
+warning: Unreachable statement found, is this intended?
+    ┌─ .//functions/bernoulli_likelihoods.stan:16:5
+  9 │    vector linkinv_bern(vector eta, int link) {
+ 10 │      if (link == 1)      return(inv_logit(eta)); // logit
+    │                          ----------------------- exits the function
+ 11 │      else if (link == 2) return(Phi(eta)); // probit
+    │                          ----------------- exits the function
+ 12 │      else if (link == 3) return(atan(eta) / pi() + 0.5);  // cauchit
+    │                          ------------------------------- exits the function
+ 13 │      else if (link == 4) return(exp(eta)); // log
+    │                          ----------------- exits the function
+ 14 │      else if (link == 5) return(inv_cloglog(eta)); // cloglog
+    │                          ------------------------- exits the function
+ 15 │      else reject("Invalid link");
+    │           ----------------------- stops this sample evaluation
+ 16 │      return eta; // never reached
+    │      ^ Never reached
+ 17 │    }
+    ┌─ mvmer.stan:8:1
+  7 │  #include /functions/common_functions.stan
+  8 │  #include /functions/bernoulli_likelihoods.stan
+    │  -------- file './/functions/bernoulli_likelihoods.stan' included here
+  9 │  #include /functions/binomial_likelihoods.stan
+warning: Unreachable statement found, is this intended?
+    ┌─ .//functions/bernoulli_likelihoods.stan:97:5
+ 89 │          if (D_j == 1) return eta_j[N_j];
+ 90 │          return sum(segment(eta_j, N_j - 1, 2));
+    │          --------------------------------------- exits the function
+ 91 │        }
+ 92 │        else {
+ 93 │          int N_jm1 = N_j - 1;
+ 94 │ ╭        return log_sum_exp(log_clogit_denom(N_jm1, D_j, eta_j),
+ 95 │ │                           log_clogit_denom(N_jm1, D_j - 1, eta_j) + eta_j[N_j]);
+    │ ╰────────────────────────────────────────────────────────────────────────────────' exits the function
+ 96 │        }
+ 97 │        return not_a_number();  // never reaches
+    │        ^ Never reached
+ 98 │      }
+    ┌─ mvmer.stan:8:1
+  7 │    #include /functions/common_functions.stan
+  8 │    #include /functions/bernoulli_likelihoods.stan
+    │    -------- file './/functions/bernoulli_likelihoods.stan' included here
+  9 │    #include /functions/binomial_likelihoods.stan
+warning: Unreachable statement found, is this intended?
+    ┌─ .//functions/binomial_likelihoods.stan:15:5
+  8 │    vector linkinv_binom(vector eta, int link) {
+  9 │      if (link == 1)      return(inv_logit(eta)); // logit
+    │                          ----------------------- exits the function
+ 10 │      else if (link == 2) return(Phi(eta)); // probit
+    │                          ----------------- exits the function
+ 11 │      else if (link == 3) return(atan(eta) / pi() + 0.5);  // cauchit
+    │                          ------------------------------- exits the function
+ 12 │      else if (link == 4) return(exp(eta)); // log
+    │                          ----------------- exits the function
+ 13 │      else if (link == 5) return(inv_cloglog(eta)); // cloglog
+    │                          ------------------------- exits the function
+ 14 │      else reject("Invalid link");
+    │           ----------------------- stops this sample evaluation
+ 15 │      return eta; // never reached
+    │      ^ Never reached
+ 16 │    }
+    ┌─ mvmer.stan:9:1
+  8 │  #include /functions/bernoulli_likelihoods.stan
+  9 │  #include /functions/binomial_likelihoods.stan
+    │  -------- file './/functions/binomial_likelihoods.stan' included here
+ 10 │  #include /functions/continuous_likelihoods.stan
+warning: Unreachable statement found, is this intended?
+    ┌─ .//functions/continuous_likelihoods.stan:13:5
+  8 │    vector linkinv_gauss(vector eta, int link) {
+  9 │      if (link == 1)      return eta;
+    │                          ----------- exits the function
+ 10 │      else if (link == 2) return exp(eta); 
+    │                          ---------------- exits the function
+ 11 │      else if (link == 3) return inv(eta);
+    │                          ---------------- exits the function
+ 12 │      else reject("Invalid link");
+    │           ----------------------- stops this sample evaluation
+ 13 │      return eta; // never reached
+    │      ^ Never reached
+ 14 │    }
+    ┌─ mvmer.stan:10:1
+  9 │  #include /functions/binomial_likelihoods.stan
+ 10 │  #include /functions/continuous_likelihoods.stan
+    │  -------- file './/functions/continuous_likelihoods.stan' included here
+ 11 │  #include /functions/count_likelihoods.stan
+warning: Unreachable statement found, is this intended?
+    ┌─ .//functions/continuous_likelihoods.stan:40:5
+ 35 │    vector linkinv_gamma(vector eta, int link) {
+ 36 │      if (link == 1)      return eta;
+    │                          ----------- exits the function
+ 37 │      else if (link == 2) return exp(eta);
+    │                          ---------------- exits the function
+ 38 │      else if (link == 3) return inv(eta);
+    │                          ---------------- exits the function
+ 39 │      else reject("Invalid link");
+    │           ----------------------- stops this sample evaluation
+ 40 │      return eta; // never reached
+    │      ^ Never reached
+ 41 │    }
+    ┌─ mvmer.stan:10:1
+  9 │  #include /functions/binomial_likelihoods.stan
+ 10 │  #include /functions/continuous_likelihoods.stan
+    │  -------- file './/functions/continuous_likelihoods.stan' included here
+ 11 │  #include /functions/count_likelihoods.stan
+warning: Unreachable statement found, is this intended?
+    ┌─ .//functions/continuous_likelihoods.stan:110:5
+104 │    vector linkinv_inv_gaussian(vector eta, int link) {
+105 │      if (link == 1)      return eta;
+    │                          ----------- exits the function
+106 │      else if (link == 2) return exp(eta);
+    │                          ---------------- exits the function
+107 │      else if (link == 3) return inv(eta);
+    │                          ---------------- exits the function
+108 │      else if (link == 4) return inv_sqrt(eta);
+    │                          --------------------- exits the function
+109 │      else reject("Invalid link");
+    │           ----------------------- stops this sample evaluation
+110 │      return eta; // never reached
+    │      ^ Never reached
+111 │    }
+    ┌─ mvmer.stan:10:1
+  9 │  #include /functions/binomial_likelihoods.stan
+ 10 │  #include /functions/continuous_likelihoods.stan
+    │  -------- file './/functions/continuous_likelihoods.stan' included here
+ 11 │  #include /functions/count_likelihoods.stan
+warning: Unreachable statement found, is this intended?
+    ┌─ .//functions/continuous_likelihoods.stan:182:5
+174 │    vector linkinv_beta(vector eta, int link) {
+175 │      if (link == 1) return inv_logit(eta);  // logit
+    │                     ---------------------- exits the function
+176 │      else if (link == 2) return Phi(eta);   // probit
+    │                          ---------------- exits the function
+177 │      else if (link == 3) return inv_cloglog(eta);  // cloglog
+    │                          ------------------------ exits the function
+178 │      else if (link == 4) return 0.5 + atan(eta) / pi(); // cauchy
+    │                          ------------------------------ exits the function
+179 │      else if (link == 5) return exp(eta); // log 
+    │                          ---------------- exits the function
+180 │      else if (link == 6) return 1 - inv_cloglog(-eta); // loglog
+    │                          ----------------------------- exits the function
+181 │      else reject("invalid link");
+    │           ----------------------- stops this sample evaluation
+182 │      return eta; // never reached
+    │      ^ Never reached
+183 │    }
+    ┌─ mvmer.stan:10:1
+  9 │  #include /functions/binomial_likelihoods.stan
+ 10 │  #include /functions/continuous_likelihoods.stan
+    │  -------- file './/functions/continuous_likelihoods.stan' included here
+ 11 │  #include /functions/count_likelihoods.stan
+warning: Unreachable statement found, is this intended?
+    ┌─ .//functions/continuous_likelihoods.stan:197:5
+192 │    vector linkinv_beta_z(vector eta, int link) {
+193 │      if (link == 1) return exp(eta);         // log
+    │                     ---------------- exits the function
+194 │      else if (link == 2) return eta;         // identity
+    │                          ----------- exits the function
+195 │      else if (link == 3) return square(eta); // sqrt
+    │                          ------------------- exits the function
+196 │      else reject("Invalid link");
+    │           ----------------------- stops this sample evaluation
+197 │      return eta; // never reached
+    │      ^ Never reached
+198 │    }
+    ┌─ mvmer.stan:10:1
+  9 │  #include /functions/binomial_likelihoods.stan
+ 10 │  #include /functions/continuous_likelihoods.stan
+    │  -------- file './/functions/continuous_likelihoods.stan' included here
+ 11 │  #include /functions/count_likelihoods.stan
+warning: Unreachable statement found, is this intended?
+    ┌─ .//functions/count_likelihoods.stan:14:5
+  9 │    vector linkinv_count(vector eta, int link) {
+ 10 │      if (link == 1)      return exp(eta);     // log
+    │                          ---------------- exits the function
+ 11 │      else if (link == 2) return eta;          // identity
+    │                          ----------- exits the function
+ 12 │      else if (link == 3) return(square(eta)); // sqrt
+    │                          -------------------- exits the function
+ 13 │      else reject("Invalid link");
+    │           ----------------------- stops this sample evaluation
+ 14 │      return eta; // never reached
+    │      ^ Never reached
+ 15 │    }
+    ┌─ mvmer.stan:11:1
+ 10 │  #include /functions/continuous_likelihoods.stan
+ 11 │  #include /functions/count_likelihoods.stan
+    │  -------- file './/functions/count_likelihoods.stan' included here
+ 12 │  #include /functions/mvmer_functions.stan
 .//functions/bernoulli_likelihoods.stan:84:8: warning: Functions do not need to be declared before definition; all user defined
   function names are always in scope regardless of definition order.
 mvmer.stan:8:1: warning: Functions do not need to be declared before definition; all user defined
@@ -9926,4 +10490,27 @@ generated quantities {
   }
 }
 
+warning: Unreachable statement found, is this intended?
+    ┌─ polr.stan:28:5
+ 16 │      if (link == 1)
+ 17 │        return (inv_logit(x));
+    │        ---------------------- exits the function
+ 18 │      else if (link == 2)
+ 19 │        return (Phi(x));
+    │        ---------------- exits the function
+ 20 │      else if (link == 3)
+ 21 │        return (gumbel_cdf(x | 0, 1));
+    │        ------------------------------ exits the function
+ 22 │      else if (link == 4)
+ 23 │        return (inv_cloglog(x));
+    │        ------------------------ exits the function
+ 24 │      else if (link == 5)
+ 25 │        return (cauchy_cdf(x | 0, 1));
+    │        ------------------------------ exits the function
+ 26 │      else
+ 27 │        reject("Invalid link");
+    │        ----------------------- stops this sample evaluation
+ 28 │      return x; // never reached
+    │      ^ Never reached
+ 29 │    }
 [exit 0]

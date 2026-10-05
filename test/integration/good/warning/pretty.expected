@@ -14,11 +14,19 @@ transformed parameters {
   real beta2 = my_upper_bound_jacobian(beta_raw, ub);
 }
 
-data_jacobian.stan:14:15: warning: Calling a _jacobian function without any parameter arguments still applies
-  the Jacobian adjustments, ensure this is intentional! Consider using
-  upper_bound_constrain instead.
-data_jacobian.stan:15:16: warning: Calling a _jacobian function without any parameter arguments still applies
-  the Jacobian adjustments, ensure this is intentional!
+warning: Calling a _jacobian function without any parameter arguments still applies the Jacobian adjustments, ensure this is intentional?
+    ┌─ data_jacobian.stan:14:15
+ 13 │  transformed parameters {
+ 14 │    real beta = upper_bound_jacobian(beta_raw, ub);
+    │                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ _jacobian with no parameters
+ 15 │    real beta2 = my_upper_bound_jacobian(beta_raw, ub);
+    = Consider using upper_bound_constrain instead
+warning: Calling a _jacobian function without any parameter arguments still applies the Jacobian adjustments, ensure this is intentional?
+    ┌─ data_jacobian.stan:15:16
+ 14 │    real beta = upper_bound_jacobian(beta_raw, ub);
+ 15 │    real beta2 = my_upper_bound_jacobian(beta_raw, ub);
+    │                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ _jacobian with no parameters
+ 16 │  }
 [exit 0]
   $ stanc --auto-format deprecated_syntax.stan
 model {
@@ -27,26 +35,30 @@ model {
   }
 }
 
-deprecated_syntax.stan:2:7: warning: Found chained comparison
-      1 < 2 < 3
-  This is interpreted as
-      (1 < 2) < 3
-  Consider if the intended meaning was
-      1 < 2 && 2 < 3
-  instead. You can silence this warning by adding explicit parentheses. This
-  can be automatically changed using the canonicalize flag for stanc
-deprecated_syntax.stan:2:7: warning: Found chained comparison
-      1 < 2 < 3 < 4
-  This is interpreted as
-      (1 < 2 < 3) < 4
-  Consider if the intended meaning was
-      1 < 2 < 3 && 3 < 4
-  instead. You can silence this warning by adding explicit parentheses. This
-  can be automatically changed using the canonicalize flag for stanc
+warning: Found chained comparison.
+    ┌─ deprecated_syntax.stan:2:7
+  1 │  model {
+  2 │    if (1 < 2 < 3 < 4) {
+    │        ^^^^^^^^^ This is interpreted as (1 < 2) < 3 Consider if the intended meaning was (1 < 2) && (2 < 3) instead.
+  3 │      // multiple comparisons
+    = You can silence this warning by adding explicit
+      parentheses.
+    = This can be automatically changed using the canonicalize flag for
+      stanc.
+warning: Found chained comparison.
+    ┌─ deprecated_syntax.stan:2:7
+  1 │  model {
+  2 │    if (1 < 2 < 3 < 4) {
+    │        ^^^^^^^^^^^^^ This is interpreted as (1 < 2 < 3) < 4 Consider if the intended meaning was (1 < 2 < 3) && (3 < 4) instead.
+  3 │      // multiple comparisons
+    = You can silence this warning by adding explicit
+      parentheses.
+    = This can be automatically changed using the canonicalize flag for
+      stanc.
 [exit 0]
   $ stanc --auto-format empty.stan
 
-empty.stan:1:1: warning: Empty model detected; this is a valid Stan model but likely unintended!
+warning: Empty model detected; this is a valid Stan model but likely unintended!
 [exit 0]
   $ stanc --auto-format fun_log_forward_decl.stan
 /**
@@ -105,12 +117,15 @@ model {
   
 }
 
-int_div_user.stan:7:7: warning: Found int division:
-      a[1] / b[2]
-  Values will be rounded towards zero. If rounding is not desired you can write
-  the division as
-      a[1] * 1.0 / b[2]
-  If rounding is intended please use the integer division operator %/%.
+warning: Found integer division. The value will be rounded towards zero.
+    ┌─ int_div_user.stan:7:7
+  6 │    int c;
+  7 │    c = a[1] / b[2];
+    │        ^^^^^^^^^^^ If rounding is not desired you can write the division as
+    │                    a[1] * 1.0 / b[2]
+  8 │  }
+    = If rounding is intended please use the integer division operator
+      %%/%%.
 [exit 0]
   $ stanc --auto-format integrate_ode_adams.stan
 functions {
@@ -456,20 +471,18 @@ transformed data {
   matrix[N, N] A_pow_r = A ^ 3.5;
 }
 
-matrix_pow_warning.stan:8:24: warning: Found matrix^scalar:
-      A ^ power
-  matrix ^ number is interpreted as element-wise exponentiation. If this is
-  intended, you can silence this warning by using elementwise operator .^
-  If you intended matrix exponentiation, use
-      matrix_power(A, power)
-  instead.
-matrix_pow_warning.stan:9:26: warning: Found matrix^scalar:
-      A ^ 3.5
-  matrix ^ number is interpreted as element-wise exponentiation. If this is
-  intended, you can silence this warning by using elementwise operator .^
-  If you intended matrix exponentiation, use
-      matrix_power(A, 3.5)
-  instead.
+warning: Found matrix^scalar. matrix ^ number is interpreted as element-wise exponentiation. If this is intended, you can silence this warning by using elementwise operator .^
+    ┌─ matrix_pow_warning.stan:8:24
+  7 │  transformed data {
+  8 │     matrix[N,N] A_pow = A ^ power;
+    │                         ^^^^^^^^^ If you intended matrix exponentiation, use matrix_power(A, power) instead.
+  9 │     matrix[N,N] A_pow_r = A ^ 3.5;
+warning: Found matrix^scalar. matrix ^ number is interpreted as element-wise exponentiation. If this is intended, you can silence this warning by using elementwise operator .^
+    ┌─ matrix_pow_warning.stan:9:26
+  8 │     matrix[N,N] A_pow = A ^ power;
+  9 │     matrix[N,N] A_pow_r = A ^ 3.5;
+    │                           ^^^^^^^ If you intended matrix exponentiation, use matrix_power(A, 3.5) instead.
+ 10 │  
 [exit 0]
   $ stanc --auto-format overloaded_forward_decl.stan
 functions {
@@ -533,18 +546,70 @@ model {
   int k = n[k];
 }
 
-self-assign.stan:4:3: warning: Assignment of variable to itself.
-self-assign.stan:6:3: warning: Assignment of variable to itself during declaration. This is almost certainly
-  a bug.
-self-assign.stan:8:3: warning: Assignment of variable to itself during declaration. This is almost certainly
-  a bug.
-self-assign.stan:12:3: warning: Assignment of variable to itself.
-self-assign.stan:15:3: warning: Assignment of variable to itself.
-self-assign.stan:22:3: warning: Assignment of variable to itself.
-self-assign.stan:24:3: warning: Assignment of variable to itself during declaration. This is almost certainly
-  a bug.
-self-assign.stan:35:3: warning: Assignment of variable to itself during declaration. This is almost certainly
-  a bug.
+warning: Assignment of variable to itself.
+    ┌─ self-assign.stan:4:9
+  3 │    // line 4: should warn
+  4 │    foo = foo;
+    │    ---   ^^^ Value here.
+    │    │
+    │    Assigned to itself.
+  5 │    // line 6: should warn (decl)
+warning: Assignment of variable to itself during declaration. This is almost certainly a bug.
+    ┌─ self-assign.stan:6:23
+  5 │    // line 6: should warn (decl)
+  6 │    array[2] real bar = bar;
+    │                  ---   ^^^ Value here.
+    │                  │
+    │                  Assigned to itself.
+  7 │    // line 8: should warn (decl)
+warning: Assignment of variable to itself during declaration. This is almost certainly a bug.
+    ┌─ self-assign.stan:8:20
+  7 │    // line 8: should warn (decl)
+  8 │    real baz = foo + baz;
+    │         ---         ^^^ Value here.
+    │         │
+    │         Assigned to itself.
+  9 │    // no warnings
+warning: Assignment of variable to itself.
+    ┌─ self-assign.stan:12:12
+ 11 │    //line 12: should warn
+ 12 │    bar[1] = bar[1];
+    │    ------   ^^^^^^ Value here.
+    │    │
+    │    Assigned to itself.
+ 13 │  
+warning: Assignment of variable to itself.
+    ┌─ self-assign.stan:15:10
+ 14 │    // line 15: should warn
+ 15 │    foo = (foo);
+    │    ---    ^^^ Value here.
+    │    │
+    │    Assigned to itself.
+ 16 │    // no warnings
+warning: Assignment of variable to itself.
+    ┌─ self-assign.stan:22:11
+ 21 │    // line 22: should warn
+ 22 │    tup.1 = tup.1;
+    │    -----   ^^^^^ Value here.
+    │    │
+    │    Assigned to itself.
+ 23 │    // line 24: should warn (decl)
+warning: Assignment of variable to itself during declaration. This is almost certainly a bug.
+    ┌─ self-assign.stan:24:34
+ 23 │    // line 24: should warn (decl)
+ 24 │    tuple(real, real) tup2 = (0.5, tup2.1);
+    │                      ----         ^^^^ Value here.
+    │                      │
+    │                      Assigned to itself.
+ 25 │    // line 26: could warn, currently does not
+warning: Assignment of variable to itself during declaration. This is almost certainly a bug.
+    ┌─ self-assign.stan:35:13
+ 34 │    //line 35: should warn
+ 35 │    int k = n[k];
+    │        -     ^ Value here.
+    │        │
+    │        Assigned to itself.
+ 36 │  }
 [exit 0]
   $ stanc --auto-format unreachable_statement.stan
 functions {
@@ -561,10 +626,22 @@ functions {
   }
 }
 
-unreachable_statement.stan:5:6: warning: Unreachable statement (following a reject, fatal_error, break, continue, or
-  return) found, is this intended?
-unreachable_statement.stan:10:5: warning: Unreachable statement (following a reject, fatal_error, break, continue, or
-  return) found, is this intended?
+warning: Unreachable statement found, is this intended?
+    ┌─ unreachable_statement.stan:5:6
+  3 │       if(x == 0.0) ; // bug - misplaced ; makes the next statement unconditional
+  4 │         reject("Cannot be 0");
+    │         ---------------------- stops this sample evaluation
+  5 │       return;
+    │       ^ Never reached
+  6 │     }
+warning: Unreachable statement found, is this intended?
+    ┌─ unreachable_statement.stan:10:5
+  8 │    real bar(real x){
+  9 │      fatal_error("don't call this function");
+    │      ---------------------------------------- stops sampling
+ 10 │      return x ;
+    │      ^ Never reached
+ 11 │    }
 [exit 0]
   $ stanc --auto-format validate_division_int_warning.stan
 transformed data {
@@ -585,28 +662,40 @@ model {
   y ~ normal(0, 1);
 }
 
-validate_division_int_warning.stan:7:7: warning: Found int division:
-      j / k
-  Values will be rounded towards zero. If rounding is not desired you can write
-  the division as
-      j * 1.0 / k
-  If rounding is intended please use the integer division operator %/%.
-validate_division_int_warning.stan:8:7: warning: Found int division:
-      j / 3
-  Values will be rounded towards zero. If rounding is not desired you can write
-  the division as
-      j / 3.0
-  If rounding is intended please use the integer division operator %/%.
-validate_division_int_warning.stan:9:7: warning: Found int division:
-      2 / k
-  Values will be rounded towards zero. If rounding is not desired you can write
-  the division as
-      2.0 / k
-  If rounding is intended please use the integer division operator %/%.
-validate_division_int_warning.stan:10:7: warning: Found int division:
-      2 / 3
-  Values will be rounded towards zero. If rounding is not desired you can write
-  the division as
-      2.0 / 3
-  If rounding is intended please use the integer division operator %/%.
+warning: Found integer division. The value will be rounded towards zero.
+    ┌─ validate_division_int_warning.stan:7:7
+  6 │    k = 3;
+  7 │    u = j / k;
+    │        ^^^^^ If rounding is not desired you can write the division as
+    │              j * 1.0 / k
+  8 │    u = j / 3;
+    = If rounding is intended please use the integer division operator
+      %%/%%.
+warning: Found integer division. The value will be rounded towards zero.
+    ┌─ validate_division_int_warning.stan:8:7
+  7 │    u = j / k;
+  8 │    u = j / 3;
+    │        ^^^^^ If rounding is not desired you can write the division as
+    │              j / 3.0
+  9 │    u = 2 / k;
+    = If rounding is intended please use the integer division operator
+      %%/%%.
+warning: Found integer division. The value will be rounded towards zero.
+    ┌─ validate_division_int_warning.stan:9:7
+  8 │    u = j / 3;
+  9 │    u = 2 / k;
+    │        ^^^^^ If rounding is not desired you can write the division as
+    │              2.0 / k
+ 10 │    u = 2 / 3;
+    = If rounding is intended please use the integer division operator
+      %%/%%.
+warning: Found integer division. The value will be rounded towards zero.
+    ┌─ validate_division_int_warning.stan:10:7
+  9 │    u = 2 / k;
+ 10 │    u = 2 / 3;
+    │        ^^^^^ If rounding is not desired you can write the division as
+    │              2.0 / 3
+ 11 │  }
+    = If rounding is intended please use the integer division operator
+      %%/%%.
 [exit 0]
