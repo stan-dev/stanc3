@@ -8025,8 +8025,8 @@ class tuple_constraints_data_model final : public model_base_crtp<tuple_constrai
         Eigen::Matrix<double,-1,1> z_dot_2_temp__ =
           Eigen::Matrix<double,-1,1>::Constant(4,
             std::numeric_limits<double>::quiet_NaN());
-        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
             z_dot_1_temp__ = z_dot_1_flat__[(z_dot_1_flat__pos__ - 1)];
             z_dot_1_flat__pos__ = (z_dot_1_flat__pos__ + 1);
             {
@@ -8048,8 +8048,8 @@ class tuple_constraints_data_model final : public model_base_crtp<tuple_constrai
             }
             stan::model::assign(z,
               std::forward_as_tuple(z_dot_1_temp__, z_dot_2_temp__),
-              "assigning variable z", stan::model::index_uni(sym2__),
-              stan::model::index_uni(sym1__));
+              "assigning variable z", stan::model::index_uni(sym1__),
+              stan::model::index_uni(sym2__));
           }
         }
       }
@@ -9049,8 +9049,8 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
         Eigen::Matrix<double,-1,1> ps2_dot_2_temp__ =
           Eigen::Matrix<double,-1,1>::Constant(4,
             std::numeric_limits<double>::quiet_NaN());
-        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
             ps2_dot_1_temp__ = ps2_dot_1_flat__[(ps2_dot_1_flat__pos__ - 1)];
             ps2_dot_1_flat__pos__ = (ps2_dot_1_flat__pos__ + 1);
             {
@@ -9072,8 +9072,8 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
             }
             stan::model::assign(ps2,
               std::forward_as_tuple(ps2_dot_1_temp__, ps2_dot_2_temp__),
-              "assigning variable ps2", stan::model::index_uni(sym2__),
-              stan::model::index_uni(sym1__));
+              "assigning variable ps2", stan::model::index_uni(sym1__),
+              stan::model::index_uni(sym2__));
           }
         }
       }

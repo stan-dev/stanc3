@@ -357,9 +357,7 @@ let rec var_context_read_inside_tuple enclosing_tuple_name origin_type
         let final_assignment loopvars =
           let assign_lval =
             let lbase, idxs = decl_id_lval in
-            ( lbase
-            , idxs @ List.map ~f:(fun e -> Index.Single e) (List.rev loopvars)
-            ) in
+            (lbase, idxs @ List.map ~f:(fun e -> Index.Single e) loopvars) in
           [ Stmt.Pattern.Assignment
               ( assign_lval
               , unsized
@@ -371,7 +369,7 @@ let rec var_context_read_inside_tuple enclosing_tuple_name origin_type
                          ; meta= meta_from_sizedtype st })
                      tuple_component_names tuple_types) )
             |> swrap ] in
-        [ Stmt.Helpers.mk_nested_for (List.rev dims)
+        [ Stmt.Helpers.mk_nested_for dims
             (fun loopvars ->
               Stmt.
                 { meta= smeta
@@ -556,9 +554,7 @@ let rec var_context_read_internal
         let final_assignment loopvars =
           let assign_lval =
             let lbase, idxs = decl_id_lval in
-            ( lbase
-            , idxs @ List.map ~f:(fun e -> Index.Single e) (List.rev loopvars)
-            ) in
+            (lbase, idxs @ List.map ~f:(fun e -> Index.Single e) loopvars) in
           [ Stmt.Pattern.Assignment
               ( assign_lval
               , unsized
@@ -570,7 +566,7 @@ let rec var_context_read_internal
                          ; meta= meta_from_sizedtype st })
                      tuple_component_names tuple_types) )
             |> swrap_noloc ] in
-        [ Stmt.Helpers.mk_nested_for (List.rev dims)
+        [ Stmt.Helpers.mk_nested_for dims
             (fun loopvars ->
               SList
                 ((List.map2
