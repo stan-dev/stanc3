@@ -500,5 +500,5 @@ let info =
       ; info ~doc:"on internal compiler errors. Please file a bug!" exit_ice ]
   in
   Cmd.info "%%NAME%%"
-    ~version:("%%NAME%%3 %%VERSION%%" ^ " (" ^ Sys.os_type ^ ")")
+    ~version:(Driver.Entry.version ^ " (" ^ Sys.os_type ^ ")")
     ~sdocs:Manpage.s_options ~doc ~man ~exits

@@ -23,7 +23,7 @@ and autodifftype = DataOnly | AutoDiffable | TupleAD of autodifftype list
 and argumentlist = (autodifftype * t) list
 and returntype = Void | ReturnType of t
 
-and signature = argumentlist * returntype * bool Fun_kind.suffix * Mem_pattern.t
+and signature = argumentlist * returntype * Fun_kind.suffix * Mem_pattern.t
 [@@deriving compare, sexp_of, equal]
 
 type variadic_signature =

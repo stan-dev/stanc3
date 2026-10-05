@@ -9,7 +9,8 @@
   middle
   stan_math_signatures
   grace
-  grace.ansi_renderer)
+  grace.ansi_renderer
+  grace.json_conv)
  (instrumentation
   (backend bisect_ppx))
  (modules :standard \ parser_messages_add_type parser_strip_redundant_state)

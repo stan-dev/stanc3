@@ -14,4 +14,4 @@
     containing the name of the standard library functions called and
     distributions used. *)
 
-val info : Ast.typed_program -> string
+val info : Ast.typed_program -> Yojson.Basic.t

@@ -59,9 +59,9 @@ let rec get_function_calls_stmt ud_dists (funs, distrs) stmt =
     | Print _ -> (String.Set.add "print" funs, distrs)
     | Reject _ -> (String.Set.add "reject" funs, distrs)
     | FatalError _ -> (String.Set.add "fatal_error" funs, distrs)
-    | Tilde {distribution; kind= StanLib (FnLpdf _); _} ->
+    | Tilde {distribution; kind= StanLib (FnDist (Density, _)); _} ->
         (funs, String.Set.add (distribution.name ^ "_lupdf") distrs)
-    | Tilde {distribution; kind= StanLib (FnLpmf _); _} ->
+    | Tilde {distribution; kind= StanLib (FnDist (Mass, _)); _} ->
         (funs, String.Set.add (distribution.name ^ "_lupmf") distrs)
     | _ -> (funs, distrs) in
   fold_statement get_function_calls_expr
@@ -95,12 +95,10 @@ let includes_json () =
           (Preprocessor.included_files ()
           |> List.map ~f:(fun str -> `String str)) ) ]
 
-let info_json ast =
+let info ast =
   List.fold_left ~f:Util.combine ~init:(`Assoc [])
     [ block_info_json "inputs" ast.datablock
     ; block_info_json "parameters" ast.parametersblock
     ; block_info_json "transformed parameters" ast.transformedparametersblock
     ; block_info_json "generated quantities" ast.generatedquantitiesblock
     ; function_calls_json ast; includes_json () ]
-
-let info ast = pretty_to_string (info_json ast)

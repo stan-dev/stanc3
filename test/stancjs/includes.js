@@ -41,6 +41,9 @@ var include_info_test = stanc.stanc("include-testtest", include_model, ["info"],
 utils.print_error(include_info_test)
 utils.print_result(include_info_test)
 
+var includes_info_structure_test = stanc.model_info("include-testtest", include_model, [],  {...bar_includes, "foo.stan":foo_code});
+utils.print_json(includes_info_structure_test);
+
 // test that undefined and null are fine
 var missing_test = stanc.stanc("empty", "model {}", ["auto-format"], null);
 utils.print_error(missing_test)

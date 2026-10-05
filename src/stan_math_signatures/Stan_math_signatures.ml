@@ -125,7 +125,7 @@ let laplace_helper_lik_args =
       ; (AutoDiffable, UVector) ] )
   ; ( "neg_binomial_2_log"
     , [ (AutoDiffable, UArray UInt); (AutoDiffable, UArray UInt)
-      ; (AutoDiffable, UVector); (AutoDiffable, UVector) ] )
+      ; (AutoDiffable, UReal); (AutoDiffable, UVector) ] )
   ; ( "poisson_log"
     , [ (AutoDiffable, UArray UInt); (AutoDiffable, UArray UInt)
       ; (AutoDiffable, UVector) ] ) ]
