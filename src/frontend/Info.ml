@@ -95,12 +95,10 @@ let includes_json () =
           (Preprocessor.included_files ()
           |> List.map ~f:(fun str -> `String str)) ) ]
 
-let info_json ast =
+let info ast =
   List.fold_left ~f:Util.combine ~init:(`Assoc [])
     [ block_info_json "inputs" ast.datablock
     ; block_info_json "parameters" ast.parametersblock
     ; block_info_json "transformed parameters" ast.transformedparametersblock
     ; block_info_json "generated quantities" ast.generatedquantitiesblock
     ; function_calls_json ast; includes_json () ]
-
-let info ast = pretty_to_string (info_json ast)

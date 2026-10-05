@@ -34,7 +34,7 @@ type other_output =
   | Formatted of string
   | DebugOutput of string
   | Memory_patterns of string
-  | Info of string
+  | Info of Yojson.Basic.t
   | Version of string
   | Generated of string
   | Warnings of Warnings.t list
@@ -67,11 +67,11 @@ let stan2mir model_name model (flags : Flags.t) (output : other_output -> unit)
   if flags.debug_settings.print_typed_ast then
     output (DebugOutput (fmt_sexp (Ast.sexp_of_typed_program typed_ast)));
   output (Warnings type_warnings);
-  if flags.info then output (Info (Info.info typed_ast));
   let deprecation_warnings =
     if flags.canonicalizer_settings.deprecations then []
     else Deprecation_analysis.collect_warnings typed_ast in
   output (Warnings deprecation_warnings);
+  if flags.info then output (Info (Info.info typed_ast));
   if flags.auto_format then
     output
       (Formatted
