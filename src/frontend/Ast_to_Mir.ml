@@ -625,8 +625,9 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
   | Ast.Tilde {arg; distribution; args; truncation; kind} ->
       let sfx =
         match kind with
-        | UserDefined (FnLpdf _) | StanLib (FnLpdf _) -> "_lpdf"
-        | UserDefined (FnLpmf _) | StanLib (FnLpmf _) -> "_lpmf"
+        | UserDefined (FnLpxf (Density, _)) | StanLib (FnLpxf (Density, _)) ->
+            "_lpdf"
+        | UserDefined (FnLpxf (Mass, _)) | StanLib (FnLpxf (Mass, _)) -> "_lpmf"
         | _ ->
             Common.ICE.internal_errorf
               "Impossible: tilde with non-distribution after typechecking, \

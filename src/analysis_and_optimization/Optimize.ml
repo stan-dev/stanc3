@@ -241,18 +241,21 @@ let inline_list f es =
   let es = List.map ~f:(function _, _, x -> x) dse_list in
   (d_list, s_list, es)
 
-let compute_suffix_and_name propto suffix fname =
+type function_inline_map =
+  { plain:
+      (ExprSet.elt Middle.Type.t option * string list * Stmt.Located.t)
+      Std.String.Map.t
+  ; unnormalized:
+      (ExprSet.elt Middle.Type.t option * string list * Stmt.Located.t)
+      Std.String.Map.t }
+
+let compute_suffix_and_map propto suffix fim =
   let open Fun_kind in
   match suffix with
-  | FnLpdf propto' when propto' && propto ->
-      ( FnLpdf true
-      , with_unnormalized_suffix fname |> Option.value ~default:fname )
-  | FnLpdf _ -> (FnLpdf false, fname)
-  | FnLpmf propto' when propto' && propto ->
-      ( FnLpmf true
-      , with_unnormalized_suffix fname |> Option.value ~default:fname )
-  | FnLpmf _ -> (FnLpmf false, fname)
-  | _ -> (suffix, fname)
+  | FnLpxf (x, Unnormalized) when propto = Unnormalized ->
+      (FnLpxf (x, Unnormalized), fim.unnormalized)
+  | FnLpxf (x, _) -> (FnLpxf (x, Normalized), fim.plain)
+  | _ -> (suffix, fim.plain)
 
 (* Triple is (declaration list, statement list, return expression) *)
 let rec inline_function_expression propto adt fim (Expr.{pattern; _} as e) =
@@ -269,13 +272,13 @@ let rec inline_function_expression propto adt fim (Expr.{pattern; _} as e) =
       | CompilerInternal _ | Operator _ ->
           (d_list, s_list, {e with pattern= FunApp (kind, es)})
       | StanLib (fname, suffix) ->
-          let suffix, _ = compute_suffix_and_name propto suffix fname in
+          let suffix, _ = compute_suffix_and_map propto suffix fim in
           ( d_list
           , s_list
           , {e with pattern= FunApp (Fun_kind.StanLib (fname, suffix), es)} )
       | UserDefined (fname, suffix) -> (
-          let suffix, fname' = compute_suffix_and_name propto suffix fname in
-          match String.Map.find_opt fname' fim with
+          let suffix, fim' = compute_suffix_and_map propto suffix fim in
+          match String.Map.find_opt fname fim' with
           | None ->
               ( d_list
               , s_list
@@ -407,9 +410,10 @@ let rec inline_function_statement propto adt fim Stmt.{pattern; meta} =
               (match kind with
               | CompilerInternal _ | StanLib _ | Operator _ ->
                   NRFunApp (kind, es)
-              | UserDefined (s, _) -> (
-                  match String.Map.find_opt s fim with
-                  | None -> NRFunApp (kind, es)
+              | UserDefined (s, sfx) -> (
+                  let sfx, fim' = compute_suffix_and_map propto sfx fim in
+                  match String.Map.find_opt s fim' with
+                  | None -> NRFunApp (UserDefined (s, sfx), es)
                   | Some (_, args, b) ->
                       let b = replace_fresh_local_vars s b in
                       let b = handle_early_returns s None b in
@@ -491,17 +495,21 @@ let create_function_inline_map adt l =
               (UnsizedType.returntype_to_type_opt fdrt)
           , List.map ~f:(fun (_, name, _) -> name) fdargs
           , inline_function_statement propto adt accum fdbody ) in
-        match Fun_kind.with_unnormalized_suffix fdname with
-        | None ->
-            let data = create_data true in
-            if String.Map.mem fdname accum then accum
-            else String.Map.add accum ~key:fdname ~data
-        | Some fdname' ->
-            let data = create_data false in
-            let data' = create_data true in
-            let m = String.Map.of_list [(fdname, data); (fdname', data')] in
-            String.Map.union accum m ~f:(fun _ v1 _ -> Some v1)) in
-  List.fold_left l ~init:String.Map.empty ~f
+        match Middle.Fun_kind.suffix_from_name fdname with
+        | FnLpxf _ ->
+            let data = create_data Normalized in
+            let data' = create_data Unnormalized in
+            { plain= String.Map.add ~key:fdname ~data accum.plain
+            ; unnormalized=
+                String.Map.add ~key:fdname ~data:data' accum.unnormalized }
+        | _ ->
+            let data = create_data Unnormalized in
+            if String.Map.mem fdname accum.plain then accum
+            else {accum with plain= String.Map.add accum.plain ~key:fdname ~data}
+        ) in
+  List.fold_left l
+    ~init:{plain= String.Map.empty; unnormalized= String.Map.empty}
+    ~f
 
 let function_inlining (mir : Program.Typed.t) =
   (* We add only the functions with a single definition to the inline map.
@@ -522,12 +530,12 @@ let function_inlining (mir : Program.Typed.t) =
   let dataonly_inline_function_statements =
     List.map
       ~f:
-        (inline_function_statement true UnsizedType.DataOnly dataonly_inline_map)
-  in
+        (inline_function_statement Unnormalized UnsizedType.DataOnly
+           dataonly_inline_map) in
   let autodiffable_inline_function_statements =
     List.map
       ~f:
-        (inline_function_statement true UnsizedType.AutoDiffable
+        (inline_function_statement Unnormalized UnsizedType.AutoDiffable
            autodiff_inline_map) in
   { mir with
     transform_inits= autodiffable_inline_function_statements mir.transform_inits
@@ -811,9 +819,7 @@ let vectorized_for (meta : Stmt.Located.Meta.t) (conflict_info : conflicts)
           | [] -> None
           | stmts -> Profile (name, stmts) |> swrap_opt ))
     | TargetPE
-        ({ pattern=
-             FunApp (StanLib (name, ((FnLpdf _ | FnLpmf _) as suffix)), args)
-         ; _ } as e)
+        ({pattern= FunApp (StanLib (name, (FnLpxf _ as suffix)), args); _} as e)
       when (not conflict_info.target) && can_vectorize_expr e -> (
         match widen_all args with
         | Error -> dont_vectorize

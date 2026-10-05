@@ -172,7 +172,7 @@
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
-   ((fdrt (ReturnType UReal)) (fdname foo_lpmf) (fdsuffix (FnLpmf ()))
+   ((fdrt (ReturnType UReal)) (fdname foo_lpmf) (fdsuffix (FnLpxf Mass ()))
     (fdargs ((AutoDiffable y UInt) (AutoDiffable lambda UReal)))
     (fdbody
      (((pattern
@@ -245,7 +245,7 @@
          (((pattern
             (TargetPE
              ((pattern
-               (FunApp (StanLib normal_lpdf (FnLpdf false))
+               (FunApp (StanLib normal_lpdf (FnLpxf Density Normalized))
                 (((pattern (Var u))
                   (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                  ((pattern
@@ -265,7 +265,7 @@
           ((pattern
             (TargetPE
              ((pattern
-               (FunApp (StanLib uniform_lpdf (FnLpdf true))
+               (FunApp (StanLib uniform_lpdf (FnLpxf Density Unnormalized))
                 (((pattern (Var u))
                   (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                  ((pattern
@@ -7713,7 +7713,7 @@
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true))
+            (FunApp (StanLib normal_lpdf (FnLpxf Density Unnormalized))
              (((pattern (Var p_real))
                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern
@@ -7733,7 +7733,7 @@
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true))
+            (FunApp (StanLib normal_lpdf (FnLpxf Density Unnormalized))
              (((pattern (Var offset_multiplier))
                (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern
@@ -7753,7 +7753,7 @@
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true))
+            (FunApp (StanLib normal_lpdf (FnLpxf Density Unnormalized))
              (((pattern (Var no_offset_multiplier))
                (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern
@@ -7773,7 +7773,7 @@
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true))
+            (FunApp (StanLib normal_lpdf (FnLpxf Density Unnormalized))
              (((pattern (Var offset_no_multiplier))
                (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern
@@ -7793,7 +7793,7 @@
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true))
+            (FunApp (StanLib normal_lpdf (FnLpxf Density Unnormalized))
              (((pattern
                 (FunApp (StanLib to_vector FnPlain)
                  (((pattern (Var p_real_1d_ar))
@@ -7826,7 +7826,7 @@
               (((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true))
+                    (FunApp (StanLib normal_lpdf (FnLpxf Density Unnormalized))
                      (((pattern
                         (FunApp (StanLib to_vector FnPlain)
                          (((pattern
@@ -7857,7 +7857,7 @@
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true))
+                    (FunApp (StanLib normal_lpdf (FnLpxf Density Unnormalized))
                      (((pattern
                         (FunApp (StanLib to_vector FnPlain)
                          (((pattern
@@ -7889,7 +7889,7 @@
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true))
+                    (FunApp (StanLib normal_lpdf (FnLpxf Density Unnormalized))
                      (((pattern
                         (FunApp (StanLib to_vector FnPlain)
                          (((pattern
@@ -7942,7 +7942,8 @@
                               (((pattern
                                  (TargetPE
                                   ((pattern
-                                    (FunApp (StanLib normal_lpdf (FnLpdf true))
+                                    (FunApp
+                                     (StanLib normal_lpdf (FnLpxf Density Unnormalized))
                                      (((pattern
                                         (FunApp (StanLib to_vector FnPlain)
                                          (((pattern
@@ -8012,7 +8013,8 @@
                                ((pattern
                                  (TargetPE
                                   ((pattern
-                                    (FunApp (StanLib normal_lpdf (FnLpdf true))
+                                    (FunApp
+                                     (StanLib normal_lpdf (FnLpxf Density Unnormalized))
                                      (((pattern
                                         (FunApp (StanLib to_vector FnPlain)
                                          (((pattern
@@ -8082,7 +8084,8 @@
                                ((pattern
                                  (TargetPE
                                   ((pattern
-                                    (FunApp (StanLib normal_lpdf (FnLpdf true))
+                                    (FunApp
+                                     (StanLib normal_lpdf (FnLpxf Density Unnormalized))
                                      (((pattern
                                         (FunApp (StanLib to_vector FnPlain)
                                          (((pattern
@@ -8152,7 +8155,8 @@
                                ((pattern
                                  (TargetPE
                                   ((pattern
-                                    (FunApp (StanLib normal_lpdf (FnLpdf true))
+                                    (FunApp
+                                     (StanLib normal_lpdf (FnLpxf Density Unnormalized))
                                      (((pattern
                                         (Indexed
                                          ((pattern (Var p_real_3d_ar))
@@ -8244,7 +8248,7 @@
                       (((pattern
                          (TargetPE
                           ((pattern
-                            (FunApp (StanLib normal_lpdf (FnLpdf true))
+                            (FunApp (StanLib normal_lpdf (FnLpxf Density Unnormalized))
                              (((pattern
                                 (FunApp (StanLib to_vector FnPlain)
                                  (((pattern
@@ -8297,7 +8301,7 @@
               (((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true))
+                    (FunApp (StanLib normal_lpdf (FnLpxf Density Unnormalized))
                      (((pattern
                         (FunApp (StanLib to_vector FnPlain)
                          (((pattern
@@ -8330,7 +8334,7 @@
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true))
+            (FunApp (StanLib normal_lpdf (FnLpxf Density Unnormalized))
              (((pattern
                 (FunApp (StanLib to_vector FnPlain)
                  (((pattern (Var p_vec))
@@ -8349,7 +8353,7 @@
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true))
+            (FunApp (StanLib normal_lpdf (FnLpxf Density Unnormalized))
              (((pattern
                 (FunApp (StanLib to_vector FnPlain)
                  (((pattern (Var p_row_vec))
@@ -8372,7 +8376,7 @@
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true))
+            (FunApp (StanLib normal_lpdf (FnLpxf Density Unnormalized))
              (((pattern
                 (FunApp (StanLib to_vector FnPlain)
                  (((pattern (Var p_simplex))
@@ -8395,7 +8399,7 @@
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true))
+            (FunApp (StanLib normal_lpdf (FnLpxf Density Unnormalized))
              (((pattern
                 (FunApp (StanLib to_vector FnPlain)
                  (((pattern (Var p_cfcov_54))
@@ -8418,7 +8422,7 @@
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true))
+            (FunApp (StanLib normal_lpdf (FnLpxf Density Unnormalized))
              (((pattern
                 (FunApp (StanLib to_vector FnPlain)
                  (((pattern (Var p_cfcov_33))

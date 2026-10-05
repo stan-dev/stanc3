@@ -29,7 +29,7 @@ type ('unique, 'error) generic_match_result =
 (** The match result for general (non-variadic) functions *)
 type match_result =
   ( UnsizedType.returntype
-    * (bool Middle.Fun_kind.suffix -> Ast.fun_kind)
+    * Middle.Fun_kind.(propto suffix -> Ast.fun_kind)
     * Promotion.t list
     * Location_span.t option
   , signature_error list * bool )

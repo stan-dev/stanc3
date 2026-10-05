@@ -301,7 +301,7 @@
               (((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib gamma_lpdf (FnLpdf true))
+                    (FunApp (StanLib gamma_lpdf (FnLpxf Density Unnormalized))
                      (((pattern (Var rho))
                        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern
@@ -321,7 +321,7 @@
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true))
+                    (FunApp (StanLib normal_lpdf (FnLpxf Density Unnormalized))
                      (((pattern (Var alpha))
                        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern
@@ -341,7 +341,7 @@
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true))
+                    (FunApp (StanLib normal_lpdf (FnLpxf Density Unnormalized))
                      (((pattern (Var sigma))
                        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern
@@ -364,7 +364,8 @@
               (((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib multi_normal_cholesky_lpdf (FnLpdf true))
+                    (FunApp
+                     (StanLib multi_normal_cholesky_lpdf (FnLpxf Density Unnormalized))
                      (((pattern (Var y))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
@@ -532,7 +533,7 @@
               (((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib gamma_lpdf (FnLpdf true))
+                    (FunApp (StanLib gamma_lpdf (FnLpxf Density Unnormalized))
                      (((pattern (Var rho))
                        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern
@@ -552,7 +553,7 @@
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true))
+                    (FunApp (StanLib normal_lpdf (FnLpxf Density Unnormalized))
                      (((pattern (Var alpha))
                        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern
@@ -572,7 +573,7 @@
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true))
+                    (FunApp (StanLib normal_lpdf (FnLpxf Density Unnormalized))
                      (((pattern (Var sigma))
                        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern
@@ -595,7 +596,8 @@
               (((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib multi_normal_cholesky_lpdf (FnLpdf true))
+                    (FunApp
+                     (StanLib multi_normal_cholesky_lpdf (FnLpxf Density Unnormalized))
                      (((pattern (Var y))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern

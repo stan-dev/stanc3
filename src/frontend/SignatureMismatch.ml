@@ -92,7 +92,7 @@ type ('unique, 'error) generic_match_result =
 
 type match_result =
   ( UnsizedType.returntype
-    * (bool Middle.Fun_kind.suffix -> Ast.fun_kind)
+    * Middle.Fun_kind.(propto suffix -> Ast.fun_kind)
     * Promotion.t list
     * Location_span.t option
   , signature_error list * bool )
@@ -312,7 +312,8 @@ let check_variadic_args ~allow_lpdf mandatory_arg_tys mandatory_fun_arg_tys
       let suffix = Fun_kind.without_propto suffix in
       if
         suffix = FnPlain
-        || (allow_lpdf && (suffix = FnLpdf () || suffix = FnLpmf ()))
+        || allow_lpdf
+           && (suffix = FnLpxf (Density, ()) || suffix = FnLpxf (Mass, ()))
       then
         match check_compatible_arguments 1 mandatory mandatory_fun_arg_tys with
         | Error x -> wrap_func_error (InputMismatch x)
@@ -336,8 +337,8 @@ let check_variadic_args ~allow_lpdf mandatory_arg_tys mandatory_fun_arg_tys
 let suffix_str = function
   | Fun_kind.FnPlain -> "a pure function"
   | FnRng -> "an rng function"
-  | FnLpdf () -> "a probability density function"
-  | FnLpmf () -> "a probability mass function"
+  | FnLpxf (Density, ()) -> "a probability density function"
+  | FnLpxf (Mass, ()) -> "a probability mass function"
   | FnTarget -> "an _lp function"
   | FnJacobian -> "a _jacobian function"
 

@@ -59,9 +59,9 @@ let rec get_function_calls_stmt ud_dists (funs, distrs) stmt =
     | Print _ -> (String.Set.add "print" funs, distrs)
     | Reject _ -> (String.Set.add "reject" funs, distrs)
     | FatalError _ -> (String.Set.add "fatal_error" funs, distrs)
-    | Tilde {distribution; kind= StanLib (FnLpdf _); _} ->
+    | Tilde {distribution; kind= StanLib (FnLpxf (Density, _)); _} ->
         (funs, String.Set.add (distribution.name ^ "_lupdf") distrs)
-    | Tilde {distribution; kind= StanLib (FnLpmf _); _} ->
+    | Tilde {distribution; kind= StanLib (FnLpxf (Mass, _)); _} ->
         (funs, String.Set.add (distribution.name ^ "_lupmf") distrs)
     | _ -> (funs, distrs) in
   fold_statement get_function_calls_expr
