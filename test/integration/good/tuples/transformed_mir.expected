@@ -22866,7 +22866,7 @@
 [exit 0]
   $ stanc -fsoa --debug-optimized-mir tuple_lpdf.stan
 ((functions_block
-  (((fdrt (ReturnType UReal)) (fdname foo_lpdf) (fdsuffix (FnLpxf Density ()))
+  (((fdrt (ReturnType UReal)) (fdname foo_lpdf) (fdsuffix (FnLpxf Density Normalized))
     (fdargs
      ((AutoDiffable x (UTuple (UReal UReal)))
       (AutoDiffable y (UTuple (UReal UReal UReal)))))
@@ -22982,7 +22982,7 @@
 [exit 0]
   $ stanc -fsoa --debug-optimized-mir tuple_lpdf2.stan
 ((functions_block
-  (((fdrt (ReturnType UReal)) (fdname foo_lpdf) (fdsuffix (FnLpxf Density ()))
+  (((fdrt (ReturnType UReal)) (fdname foo_lpdf) (fdsuffix (FnLpxf Density Normalized))
     (fdargs ((AutoDiffable x (UTuple (UReal UInt)))))
     (fdbody
      (((pattern
@@ -23066,7 +23066,7 @@
 [exit 0]
   $ stanc -fsoa --debug-optimized-mir tuple_lpmf.stan
 ((functions_block
-  (((fdrt (ReturnType UReal)) (fdname foo_lpmf) (fdsuffix (FnLpxf Mass ()))
+  (((fdrt (ReturnType UReal)) (fdname foo_lpmf) (fdsuffix (FnLpxf Mass Normalized))
     (fdargs ((AutoDiffable x (UTuple (UInt UInt))) (AutoDiffable y UReal)))
     (fdbody
      (((pattern

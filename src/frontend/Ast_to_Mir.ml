@@ -810,7 +810,7 @@ let trans_fun_def ud_dists (ts : Ast.typed_statement) =
       [ Program.
           { fdrt= returntype
           ; fdname= funname.name
-          ; fdsuffix= Fun_kind.(suffix_from_name funname.name |> without_propto)
+          ; fdsuffix= Fun_kind.(suffix_from_name funname.name)
           ; fdargs= List.map ~f:trans_arg arguments
           ; fdbody=
               trans_stmt ud_dists

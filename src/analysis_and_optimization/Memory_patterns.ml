@@ -239,7 +239,7 @@ and query_initial_demotable_funs (in_loop : bool) (stmt_linenum : int)
         fail_names;
       Set.Poly.union acc demoted_and_top_level_names
   | CompilerInternal (_ : 'a Internal_fun.t) -> acc
-  | UserDefined ((_ : string), (_ : Fun_kind.(propto suffix))) ->
+  | UserDefined ((_ : string), (_ : Fun_kind.suffix)) ->
       let fail_names =
         concat_set_str (Set.Poly.inter acc demoted_and_top_level_names) in
       user_warning_op SoA stmt_linenum "Used in user defined function:"

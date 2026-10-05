@@ -41,8 +41,8 @@ let model_name = ref ""
 
 type function_indicator =
   | NotInFunction
-  | NonReturning of unit Fun_kind.suffix
-  | Returning of unit Fun_kind.suffix * UnsizedType.t
+  | NonReturning of Fun_kind.suffix
+  | Returning of Fun_kind.suffix * UnsizedType.t
 
 (* Record structure holding flags and other markers about context to be used for
    error reporting. *)
@@ -69,7 +69,7 @@ let in_jacobian_function cf =
 
 let in_udf_distribution cf =
   match cf.containing_function with
-  | NonReturning (FnLpxf (_, ())) | Returning (FnLpxf (_, ()), _) -> true
+  | NonReturning (FnLpxf (_, _)) | Returning (FnLpxf (_, _), _) -> true
   | _ -> false
 
 let context block =
@@ -707,9 +707,7 @@ let check_function_callable_with_tuple cf tenv caller_id fname
                ( ReturnTypeMismatch (required_fn_return_type, return_type)
                , location ))
         else if sfx <> FnPlain then
-          Error
-            (`FnRequirementsError
-               (SuffixMismatch (FnPlain, Fun_kind.without_propto sfx), location))
+          Error (`FnRequirementsError (SuffixMismatch (FnPlain, sfx), location))
         else
           let no_prom_args, _ =
             List.split_n args (List.length required_arg_types) in
@@ -2175,7 +2173,7 @@ and check_fundef loc cf tenv return_ty id args body =
           (`Variable {origin; readonly= true; global= false; location= id.id_loc}))
   in
   let context =
-    let kind = Fun_kind.suffix_from_name id.name |> Fun_kind.without_propto in
+    let kind = Fun_kind.suffix_from_name id.name in
     { cf with
       containing_function=
         UnsizedType.returntype_to_type_opt return_ty

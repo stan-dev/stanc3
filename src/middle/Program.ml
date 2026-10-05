@@ -7,7 +7,7 @@ type fun_arg_decl = (UnsizedType.autodifftype * string * UnsizedType.t) list
 type 'a fun_def =
   { fdrt: UnsizedType.returntype
   ; fdname: string
-  ; fdsuffix: unit Fun_kind.suffix
+  ; fdsuffix: Fun_kind.suffix
   ; fdargs: (UnsizedType.autodifftype * string * UnsizedType.t) list
   ; fdbody: 'a option
         (* If fdbody is None, this is an external function declaration (forward

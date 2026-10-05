@@ -8,21 +8,25 @@ open Std.Sexp_conv
 type propto = Normalized | Unnormalized
 and lpxf = Density | Mass [@@deriving compare, map, sexp_of, equal]
 
-type 'propto suffix =
+type suffix =
   | FnPlain
   | FnRng
-  | FnLpxf of lpxf * 'propto
+  | FnLpxf of lpxf * propto
   | FnTarget
   | FnJacobian
 [@@deriving compare, map, sexp_of, equal]
 
-let without_propto = map_suffix (Fun.const () : propto -> unit)
+let compare_no_propto a b =
+  match (a, b) with
+  | FnLpxf (a, _), FnLpxf (b, _) ->
+      compare (FnLpxf (a, Normalized)) (FnLpxf (b, Normalized))
+  | _ -> compare a b
 
 type 'e t =
-  | StanLib of string * propto suffix
+  | StanLib of string * suffix
   | Operator of Operator.t
   | CompilerInternal of 'e Internal_fun.t
-  | UserDefined of string * propto suffix
+  | UserDefined of string * suffix
 [@@deriving compare, sexp_of, map, fold]
 
 let suffix_from_name fname =
