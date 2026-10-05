@@ -5505,7 +5505,7 @@ warning: Unreachable statement found, is this intended?
     ┌─ double-reject.stan:4:3
   1 │  model {
   2 │    reject("hi there");
-    │    ------------------- stops this sample evaluation
+    │    ------------------- stops this model evaluation
   3 │    // a bit silly, but shouldn't cause compilation to fail!
   4 │    reject("bye there");
     │    ^ Never reached

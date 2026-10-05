@@ -1051,32 +1051,31 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
       let binop_type_warnings x y =
         match (x.emeta.type_, y.emeta.type_, op) with
         | UInt, UInt, Divide ->
-            let hint =
+            let hint ppf =
               match (x.expr, y.expr) with
               | IntNumeral x, _ ->
-                  Fmt.str "%s.0 / %a" x Pretty_printing.pp_typed_expression y
+                  Fmt.pf ppf "%s.0 / %a" x Pretty_printing.pp_typed_expression y
               | _, Ast.IntNumeral y ->
-                  Fmt.str "%a / %s.0" Pretty_printing.pp_typed_expression x y
+                  Fmt.pf ppf "%a / %s.0" Pretty_printing.pp_typed_expression x y
               | _ ->
-                  Fmt.str "%a * 1.0 / %a" Pretty_printing.pp_typed_expression x
-                    Pretty_printing.pp_typed_expression y in
+                  Fmt.pf ppf "%a * 1.0 / %a" Pretty_printing.pp_typed_expression
+                    x Pretty_printing.pp_typed_expression y in
             add_warning (Warnings.IntDivide (loc, hint))
         | (UArray UMatrix | UMatrix), (UInt | UReal), Pow ->
-            let s =
-              Fmt.str "matrix_power(%a, %a)" Pretty_printing.pp_expression e1
+            let hint ppf =
+              Fmt.pf ppf "matrix_power(%a, %a)" Pretty_printing.pp_expression e1
                 Pretty_printing.pp_expression e2 in
-            add_warning (Warnings.MatrixPower (loc, s))
+            add_warning (Warnings.MatrixPower (loc, hint))
         | _ when Operator.is_cmp op -> (
             match le.expr with
             | BinOp (e1, op2, e2) when Operator.is_cmp op2 ->
                 let pp_e = Pretty_printing.pp_typed_expression in
                 let pp = Operator.pp in
-                add_warning
-                  (Warnings.ChainedCompare
-                     ( loc
-                     , Fmt.str "(%a) %a %a" pp_e le pp op pp_e re
-                     , Fmt.str "(%a %a %a) && (%a %a %a)" pp_e e1 pp op2 pp_e e2
-                         pp_e e2 pp op pp_e re ))
+                let hint1 ppf = Fmt.pf ppf "(%a) %a %a" pp_e le pp op pp_e re in
+                let hint2 ppf =
+                  Fmt.pf ppf "(%a %a %a) && (%a %a %a)" pp_e e1 pp op2 pp_e e2
+                    pp_e e2 pp op pp_e re in
+                add_warning (Warnings.ChainedCompare (loc, hint1, hint2))
             | _ -> ())
         | _ -> () in
       binop_type_warnings le re;
@@ -2104,13 +2103,12 @@ and verify_fundef_distinct_arg_ids arg_names =
   |> ignore
 
 and verify_fundef_return_tys loc return_type (body : typed_statement) =
-  if body.stmt = Skip then ()
+  if body.stmt = Skip || return_type = UnsizedType.Void then ()
   else
-    UnsizedType.(
-      match (return_type, body.smeta.flow_type.controlflow) with
-      | Void, _ | ReturnType _, Complete _ -> ()
-      | ReturnType _, Incomplete info ->
-          error (Semantic_error.incompatible_return_types loc info))
+    match body.smeta.flow_type.controlflow with
+    | Complete _ -> ()
+    | Incomplete info ->
+        error (Semantic_error.incompatible_return_types loc info)
 
 and add_function tenv id type_ defined =
   (* if we're providing a definition, we remove prior declarations to simplify

@@ -5,9 +5,10 @@ module Location_span = Middle.Location_span
 type t =
   | JacobianFunCallDataOnly of Location_span.t * string option
   | LpInTransformedParam of Location_span.t
-  | IntDivide of Location_span.t * string
-  | MatrixPower of Location_span.t * string
-  | ChainedCompare of Location_span.t * string * string
+  | IntDivide of Location_span.t * (Format.formatter -> unit)
+  | MatrixPower of Location_span.t * (Format.formatter -> unit)
+  | ChainedCompare of
+      Location_span.t * (Format.formatter -> unit) * (Format.formatter -> unit)
   | AssignToSelf of Location_span.t * Location_span.t
   | InitializeWithSelf of Location_span.t * Location_span.t
   | Unreachable of Location_span.t * Ast.complete

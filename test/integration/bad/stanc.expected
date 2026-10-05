@@ -148,8 +148,6 @@ error: Invalid return statement.
     │      ^^^^^^^^^^^^ Function is declared to return real, but this statement returns array[] int instead.
   6 │    }
 [exit 1]
-  $ stanc bad_fundef_returntypes4.stan
-[exit 0]
   $ stanc bad_prob_fun_suffix.stan
 error: Ill-typed "~"-statement.
     ┌─ bad_prob_fun_suffix.stan:10:11

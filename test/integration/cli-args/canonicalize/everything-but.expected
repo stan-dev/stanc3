@@ -266,7 +266,8 @@ warning: Found chained comparison.
     ┌─ parenthesize.stan:27:14
  26 │  
  27 │    int bool = 1 < 2 > 3 < 4;
-    │               ^^^^^^^^^ This is interpreted as (1 < 2) > 3 Consider if the intended meaning was (1 < 2) && (2 > 3) instead.
+    │               ^^^^^^^^^ This is interpreted as (1 < 2) > 3.
+    │                         Consider if the intended meaning was (1 < 2) && (2 > 3) instead.
  28 │  
     = You can silence this warning by adding explicit
       parentheses.
@@ -276,7 +277,8 @@ warning: Found chained comparison.
     ┌─ parenthesize.stan:27:14
  26 │  
  27 │    int bool = 1 < 2 > 3 < 4;
-    │               ^^^^^^^^^^^^^ This is interpreted as (1 < 2 > 3) < 4 Consider if the intended meaning was (1 < 2 > 3) && (3 < 4) instead.
+    │               ^^^^^^^^^^^^^ This is interpreted as (1 < 2 > 3) < 4.
+    │                             Consider if the intended meaning was (1 < 2 > 3) && (3 < 4) instead.
  28 │  
     = You can silence this warning by adding explicit
       parentheses.

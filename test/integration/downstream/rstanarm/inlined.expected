@@ -978,7 +978,7 @@ warning: Unreachable statement found, is this intended?
  14 │      else if (link == 5) return(inv_cloglog(eta)); // cloglog
     │                          ------------------------- exits the function
  15 │      else reject("Invalid link");
-    │           ----------------------- stops this sample evaluation
+    │           ----------------------- stops this model evaluation
  16 │      return eta; // never reached
     │      ^ Never reached
  17 │    }
@@ -1855,7 +1855,7 @@ warning: Unreachable statement found, is this intended?
  13 │      else if (link == 5) return(inv_cloglog(eta)); // cloglog
     │                          ------------------------- exits the function
  14 │      else reject("Invalid link");
-    │           ----------------------- stops this sample evaluation
+    │           ----------------------- stops this model evaluation
  15 │      return eta; // never reached
     │      ^ Never reached
  16 │    }
@@ -3443,7 +3443,7 @@ warning: Unreachable statement found, is this intended?
  11 │      else if (link == 3) return inv(eta);
     │                          ---------------- exits the function
  12 │      else reject("Invalid link");
-    │           ----------------------- stops this sample evaluation
+    │           ----------------------- stops this model evaluation
  13 │      return eta; // never reached
     │      ^ Never reached
  14 │    }
@@ -3462,7 +3462,7 @@ warning: Unreachable statement found, is this intended?
  38 │      else if (link == 3) return inv(eta);
     │                          ---------------- exits the function
  39 │      else reject("Invalid link");
-    │           ----------------------- stops this sample evaluation
+    │           ----------------------- stops this model evaluation
  40 │      return eta; // never reached
     │      ^ Never reached
  41 │    }
@@ -3483,7 +3483,7 @@ warning: Unreachable statement found, is this intended?
 108 │      else if (link == 4) return inv_sqrt(eta);
     │                          --------------------- exits the function
 109 │      else reject("Invalid link");
-    │           ----------------------- stops this sample evaluation
+    │           ----------------------- stops this model evaluation
 110 │      return eta; // never reached
     │      ^ Never reached
 111 │    }
@@ -3508,7 +3508,7 @@ warning: Unreachable statement found, is this intended?
 180 │      else if (link == 6) return 1 - inv_cloglog(-eta); // loglog
     │                          ----------------------------- exits the function
 181 │      else reject("invalid link");
-    │           ----------------------- stops this sample evaluation
+    │           ----------------------- stops this model evaluation
 182 │      return eta; // never reached
     │      ^ Never reached
 183 │    }
@@ -3527,7 +3527,7 @@ warning: Unreachable statement found, is this intended?
 195 │      else if (link == 3) return square(eta); // sqrt
     │                          ------------------- exits the function
 196 │      else reject("Invalid link");
-    │           ----------------------- stops this sample evaluation
+    │           ----------------------- stops this model evaluation
 197 │      return eta; // never reached
     │      ^ Never reached
 198 │    }
@@ -4478,7 +4478,7 @@ warning: Unreachable statement found, is this intended?
  12 │      else if (link == 3) return(square(eta)); // sqrt
     │                          -------------------- exits the function
  13 │      else reject("Invalid link");
-    │           ----------------------- stops this sample evaluation
+    │           ----------------------- stops this model evaluation
  14 │      return eta; // never reached
     │      ^ Never reached
  15 │    }
@@ -7612,7 +7612,7 @@ warning: Unreachable statement found, is this intended?
  14 │      else if (link == 5) return(inv_cloglog(eta)); // cloglog
     │                          ------------------------- exits the function
  15 │      else reject("Invalid link");
-    │           ----------------------- stops this sample evaluation
+    │           ----------------------- stops this model evaluation
  16 │      return eta; // never reached
     │      ^ Never reached
  17 │    }
@@ -7655,7 +7655,7 @@ warning: Unreachable statement found, is this intended?
  13 │      else if (link == 5) return(inv_cloglog(eta)); // cloglog
     │                          ------------------------- exits the function
  14 │      else reject("Invalid link");
-    │           ----------------------- stops this sample evaluation
+    │           ----------------------- stops this model evaluation
  15 │      return eta; // never reached
     │      ^ Never reached
  16 │    }
@@ -7674,7 +7674,7 @@ warning: Unreachable statement found, is this intended?
  11 │      else if (link == 3) return inv(eta);
     │                          ---------------- exits the function
  12 │      else reject("Invalid link");
-    │           ----------------------- stops this sample evaluation
+    │           ----------------------- stops this model evaluation
  13 │      return eta; // never reached
     │      ^ Never reached
  14 │    }
@@ -7693,7 +7693,7 @@ warning: Unreachable statement found, is this intended?
  38 │      else if (link == 3) return inv(eta);
     │                          ---------------- exits the function
  39 │      else reject("Invalid link");
-    │           ----------------------- stops this sample evaluation
+    │           ----------------------- stops this model evaluation
  40 │      return eta; // never reached
     │      ^ Never reached
  41 │    }
@@ -7714,7 +7714,7 @@ warning: Unreachable statement found, is this intended?
 108 │      else if (link == 4) return inv_sqrt(eta);
     │                          --------------------- exits the function
 109 │      else reject("Invalid link");
-    │           ----------------------- stops this sample evaluation
+    │           ----------------------- stops this model evaluation
 110 │      return eta; // never reached
     │      ^ Never reached
 111 │    }
@@ -7739,7 +7739,7 @@ warning: Unreachable statement found, is this intended?
 180 │      else if (link == 6) return 1 - inv_cloglog(-eta); // loglog
     │                          ----------------------------- exits the function
 181 │      else reject("invalid link");
-    │           ----------------------- stops this sample evaluation
+    │           ----------------------- stops this model evaluation
 182 │      return eta; // never reached
     │      ^ Never reached
 183 │    }
@@ -7758,7 +7758,7 @@ warning: Unreachable statement found, is this intended?
 195 │      else if (link == 3) return square(eta); // sqrt
     │                          ------------------- exits the function
 196 │      else reject("Invalid link");
-    │           ----------------------- stops this sample evaluation
+    │           ----------------------- stops this model evaluation
 197 │      return eta; // never reached
     │      ^ Never reached
 198 │    }
@@ -7777,7 +7777,7 @@ warning: Unreachable statement found, is this intended?
  12 │      else if (link == 3) return(square(eta)); // sqrt
     │                          -------------------- exits the function
  13 │      else reject("Invalid link");
-    │           ----------------------- stops this sample evaluation
+    │           ----------------------- stops this model evaluation
  14 │      return eta; // never reached
     │      ^ Never reached
  15 │    }
@@ -9921,7 +9921,7 @@ warning: Unreachable statement found, is this intended?
  14 │      else if (link == 5) return(inv_cloglog(eta)); // cloglog
     │                          ------------------------- exits the function
  15 │      else reject("Invalid link");
-    │           ----------------------- stops this sample evaluation
+    │           ----------------------- stops this model evaluation
  16 │      return eta; // never reached
     │      ^ Never reached
  17 │    }
@@ -9964,7 +9964,7 @@ warning: Unreachable statement found, is this intended?
  13 │      else if (link == 5) return(inv_cloglog(eta)); // cloglog
     │                          ------------------------- exits the function
  14 │      else reject("Invalid link");
-    │           ----------------------- stops this sample evaluation
+    │           ----------------------- stops this model evaluation
  15 │      return eta; // never reached
     │      ^ Never reached
  16 │    }
@@ -9983,7 +9983,7 @@ warning: Unreachable statement found, is this intended?
  11 │      else if (link == 3) return inv(eta);
     │                          ---------------- exits the function
  12 │      else reject("Invalid link");
-    │           ----------------------- stops this sample evaluation
+    │           ----------------------- stops this model evaluation
  13 │      return eta; // never reached
     │      ^ Never reached
  14 │    }
@@ -10002,7 +10002,7 @@ warning: Unreachable statement found, is this intended?
  38 │      else if (link == 3) return inv(eta);
     │                          ---------------- exits the function
  39 │      else reject("Invalid link");
-    │           ----------------------- stops this sample evaluation
+    │           ----------------------- stops this model evaluation
  40 │      return eta; // never reached
     │      ^ Never reached
  41 │    }
@@ -10023,7 +10023,7 @@ warning: Unreachable statement found, is this intended?
 108 │      else if (link == 4) return inv_sqrt(eta);
     │                          --------------------- exits the function
 109 │      else reject("Invalid link");
-    │           ----------------------- stops this sample evaluation
+    │           ----------------------- stops this model evaluation
 110 │      return eta; // never reached
     │      ^ Never reached
 111 │    }
@@ -10048,7 +10048,7 @@ warning: Unreachable statement found, is this intended?
 180 │      else if (link == 6) return 1 - inv_cloglog(-eta); // loglog
     │                          ----------------------------- exits the function
 181 │      else reject("invalid link");
-    │           ----------------------- stops this sample evaluation
+    │           ----------------------- stops this model evaluation
 182 │      return eta; // never reached
     │      ^ Never reached
 183 │    }
@@ -10067,7 +10067,7 @@ warning: Unreachable statement found, is this intended?
 195 │      else if (link == 3) return square(eta); // sqrt
     │                          ------------------- exits the function
 196 │      else reject("Invalid link");
-    │           ----------------------- stops this sample evaluation
+    │           ----------------------- stops this model evaluation
 197 │      return eta; // never reached
     │      ^ Never reached
 198 │    }
@@ -10086,7 +10086,7 @@ warning: Unreachable statement found, is this intended?
  12 │      else if (link == 3) return(square(eta)); // sqrt
     │                          -------------------- exits the function
  13 │      else reject("Invalid link");
-    │           ----------------------- stops this sample evaluation
+    │           ----------------------- stops this model evaluation
  14 │      return eta; // never reached
     │      ^ Never reached
  15 │    }
@@ -10509,7 +10509,7 @@ warning: Unreachable statement found, is this intended?
     │        ------------------------------ exits the function
  26 │      else
  27 │        reject("Invalid link");
-    │        ----------------------- stops this sample evaluation
+    │        ----------------------- stops this model evaluation
  28 │      return x; // never reached
     │      ^ Never reached
  29 │    }

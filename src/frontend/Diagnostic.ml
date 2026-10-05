@@ -102,10 +102,9 @@ let make ?printed_filename ?code ?(labels = []) ?(notes = [])
     Grace.Diagnostic.create severity ~labels ~notes summary in
   Grace.Diagnostic.Label.kprimaryf kont ~range primary
 
-let context ?(priority : Grace.Diagnostic.Priority.t = Secondary)
-    ?printed_filename ?code loc message =
+let context ?printed_filename ?code loc message =
   let range, included = range_of_loc_span ?printed_filename ?code loc in
-  Grace.Diagnostic.Label.kcreatef ~priority
+  Grace.Diagnostic.Label.kcreatef ~priority:Secondary
     (fun l -> l :: included)
     ~range message
 

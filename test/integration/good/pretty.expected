@@ -2842,7 +2842,7 @@ warning: Unreachable statement found, is this intended?
   2 │    real foo() { if(1) reject(""); reject("");}
     │                       ----------- ^ Never reached
     │                       │
-    │                       stops this sample evaluation
+    │                       stops this model evaluation
   3 │  }
 [exit 0]
   $ stanc --auto-format fun-return-typ4.stan
@@ -2866,8 +2866,18 @@ warning: Unreachable statement found, is this intended?
   2 │    real foo() { if (1) reject(""); else {if (1) ; else reject("");} reject("");}
     │                        -----------                                  ^ Never reached
     │                        │
-    │                        stops this sample evaluation
+    │                        stops this model evaluation
   3 │  }
+[exit 0]
+  $ stanc --auto-format fun-return-typ5.stan
+functions {
+  real foo() {
+    if (1) {
+      return 1.0;
+    }
+  }
+}
+
 [exit 0]
   $ stanc --auto-format fun-var-constraints.stan
 functions {

@@ -5,9 +5,10 @@ type t =
   | JacobianFunCallDataOnly of Location_span.t * string option
   | LpInTransformedParam of
       Location_span.t (* https://github.com/stan-dev/stanc3/issues/1482 *)
-  | IntDivide of Location_span.t * string
-  | MatrixPower of Location_span.t * string
-  | ChainedCompare of Location_span.t * string * string
+  | IntDivide of Location_span.t * (Format.formatter -> unit)
+  | MatrixPower of Location_span.t * (Format.formatter -> unit)
+  | ChainedCompare of
+      Location_span.t * (Format.formatter -> unit) * (Format.formatter -> unit)
   | AssignToSelf of Location_span.t * Location_span.t
   | InitializeWithSelf of Location_span.t * Location_span.t
   | Unreachable of Location_span.t * Ast.complete
@@ -15,7 +16,7 @@ type t =
   | Deprecation of Location_span.t * string
   | Pedantic of Location_span.t * string
 
-let canonicalize () =
+let canonicalize =
   Grace.Diagnostic.Message.createf "%a" Fmt.text
     "This can be automatically changed using the canonicalize flag for stanc."
 
@@ -26,13 +27,13 @@ let to_grace ?printed_filename ?code warn =
     make ?printed_filename ?code ?labels ?notes ?summary loc Severity.Warning
       primary in
   match warn with
-  | Deprecation (x, y) | Pedantic (x, y) ->
-      make_warning x "%a" Fmt.lines (Fmt.str "@[%a@]" Fmt.text y)
+  | Deprecation (loc, msg) | Pedantic (loc, msg) ->
+      make_warning loc "%a" Fmt.lines (Fmt.str "@[%a@]" Fmt.text msg)
   | EmptyFile ->
       createf Warning "%a" Fmt.text
         "Empty model detected; this is a valid Stan model but likely \
          unintended!"
-  | IntDivide (x, y) ->
+  | IntDivide (loc, hint) ->
       let notes =
         [ Message.createf "%a" Fmt.text
             "If rounding is intended please use the integer division operator \
@@ -41,26 +42,26 @@ let to_grace ?printed_filename ?code warn =
         Message.createf
           "@[<v>Found integer division. The value will be rounded towards \
            zero.@]" in
-      make_warning ~notes ~summary x
-        "If rounding is not desired you can write the division as@ @[%s@]" y
-  | MatrixPower (x, y) ->
+      make_warning ~notes ~summary loc
+        "If rounding is not desired you can write the division as@ @[%t@]" hint
+  | MatrixPower (loc, hint) ->
       let summary =
         Message.createf
           "@[<v>Found matrix^scalar. matrix ^ number is interpreted as \
            element-wise exponentiation. If this is intended, you can silence \
            this warning by using elementwise operator .^@]" in
-      make_warning ~summary x
-        "If you intended matrix exponentiation, use %s instead." y
-  | ChainedCompare (x, y, z) ->
+      make_warning ~summary loc
+        "If you intended matrix exponentiation, use @[%t@] instead." hint
+  | ChainedCompare (loc, this, alt) ->
       let notes =
         [ Message.createf "%a" Fmt.text
             "You can silence this warning by adding explicit parentheses."
-        ; canonicalize () ] in
+        ; canonicalize ] in
       let summary = Message.createf "@[<v>Found chained comparison.@]" in
-      make_warning ~notes ~summary x
-        "This is interpreted as %s Consider if the intended meaning was %s \
-         instead."
-        y z
+      make_warning ~notes ~summary loc
+        "This is interpreted as @[%t@].@ Consider if the intended meaning was \
+         @[%t@] instead."
+        this alt
   | LpInTransformedParam loc ->
       let notes =
         [ Message.createf "%a" Fmt.text
@@ -101,8 +102,8 @@ let to_grace ?printed_filename ?code warn =
         | CBreak span -> sec span "exits the loop"
         | CContinue span -> sec span "returns to the beginning of the loop"
         | CReturn span -> sec span "exits the function"
-        | CReject span -> sec span "stops this sample evaluation"
-        | CFatalError span -> sec span "stops sampling"
+        | CReject span -> sec span "stops this model evaluation"
+        | CFatalError span -> sec span "halts the algorithm"
         | CWhile span -> sec span "endless loop" in
       let labels = dedup (labels @ get cont) in
       create Warning ~labels message
