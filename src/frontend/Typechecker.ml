@@ -454,7 +454,7 @@ let verify_fn_conditioning loc id =
 let verify_fn_target_plus_equals cf loc id =
   if String.ends_with id.name ~suffix:"_lp" then
     if cf.current_block = TParam then
-      add_warning (Warnings.LpInTransformedParam loc)
+      add_warning (Warnings.lp_in_transparam loc)
     else if in_lp_function cf || cf.current_block = Model then ()
     else Semantic_error.target_plusequals_outside_model_or_logprob loc |> error
 
@@ -470,8 +470,7 @@ let verify_fn_jacobian_plus_equals cf loc tenv id args =
       let alt =
         String.chop_suffix_exn ~suffix:"_jacobian" id.name ^ "_constrain" in
       add_warning
-        (Warnings.JacobianFunCallDataOnly
-           (loc, Option.some_if (Env.mem tenv alt) alt))
+        (Warnings.jacobian_dataonly loc (Option.some_if (Env.mem tenv alt) alt))
 
 (** Rng functions cannot be used in Tp or Model and only in function defs with
     the right suffix *)
@@ -1060,12 +1059,12 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
               | _ ->
                   Fmt.pf ppf "%a * 1.0 / %a" Pretty_printing.pp_typed_expression
                     x Pretty_printing.pp_typed_expression y in
-            add_warning (Warnings.IntDivide (loc, hint))
+            add_warning (Warnings.int_divide loc hint)
         | (UArray UMatrix | UMatrix), (UInt | UReal), Pow ->
             let hint ppf =
               Fmt.pf ppf "matrix_power(%a, %a)" Pretty_printing.pp_expression e1
                 Pretty_printing.pp_expression e2 in
-            add_warning (Warnings.MatrixPower (loc, hint))
+            add_warning (Warnings.matrix_power loc hint)
         | _ when Operator.is_cmp op -> (
             match le.expr with
             | BinOp (e1, op2, e2) when Operator.is_cmp op2 ->
@@ -1075,7 +1074,7 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
                 let hint2 ppf =
                   Fmt.pf ppf "(%a %a %a) && (%a %a %a)" pp_e e1 pp op2 pp_e e2
                     pp_e e2 pp op pp_e re in
-                add_warning (Warnings.ChainedCompare (loc, hint1, hint2))
+                add_warning (Warnings.compare_chain loc hint1 hint2)
             | _ -> ())
         | _ -> () in
       binop_type_warnings le re;
@@ -1287,7 +1286,7 @@ let warn_self_declare variable rhs_opt =
       with
       | None -> ()
       | Some r ->
-          add_warning (Warnings.InitializeWithSelf (variable.id_loc, r.id_loc)))
+          add_warning (Warnings.initialize_with_self variable.id_loc r.id_loc))
 
 (** For general assignments, we only warn if we believe the lhs and rhs are
     exactly the same value *)
@@ -1301,7 +1300,7 @@ let warn_self_assignment lhs rhs =
       let lhs = lhs |> Ast.untyped_lvalue_of_typed_lvalue_pack in
       let maybe_warn lhs rhs =
         if Ast.compare_untyped_lval lhs rhs = 0 then
-          add_warning (Warnings.AssignToSelf (lhs.lmeta.loc, rhs.lmeta.loc))
+          add_warning (Warnings.assign_to_self lhs.lmeta.loc rhs.lmeta.loc)
       in
       let rec go = function
         | LValue l, LValue r -> maybe_warn l r
@@ -1743,7 +1742,7 @@ and list_until_escape xs =
   let rec aux accu = function
     | ({smeta= {flow_type= {controlflow= Complete c; _}; _}; _} as next')
       :: unreachable :: _ ->
-        add_warning (Warnings.Unreachable (unreachable.smeta.loc, c));
+        add_warning (Warnings.unreachable_statement unreachable.smeta.loc c);
         List.rev (next' :: accu)
     | next :: rest -> aux (next :: accu) rest
     | [] -> List.rev accu in

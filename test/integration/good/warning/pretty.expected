@@ -60,7 +60,7 @@ warning: Found chained comparison.
 [exit 0]
   $ stanc --auto-format empty.stan
 
-warning: Empty model detected; this is a valid Stan model but likely unintended!
+empty.stan:1:1: warning: Empty model detected; this is a valid Stan model but likely unintended!
 [exit 0]
   $ stanc --auto-format fun_log_forward_decl.stan
 /**

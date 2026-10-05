@@ -85,14 +85,12 @@ let stan2mir model_name model (flags : Flags.t) (output : other_output -> unit)
   if flags.warn_uninitialized then
     output
       (Warnings
-         (List.map
-            ~f:(fun (span, msg) -> Warnings.Pedantic (span, msg))
+         (List.map ~f:Warnings.pedantic_warning
             (Pedantic_analysis.warn_uninitialized mir)));
   if flags.warn_pedantic then
     output
       (Warnings
-         (List.map
-            ~f:(fun (span, msg) -> Warnings.Pedantic (span, msg))
+         (List.map ~f:Warnings.pedantic_warning
             (Pedantic_analysis.warn_pedantic mir)));
   if flags.debug_settings.debug_print_factor_graph then
     print_endline

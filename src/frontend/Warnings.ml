@@ -12,9 +12,21 @@ type t =
   | AssignToSelf of Location_span.t * Location_span.t
   | InitializeWithSelf of Location_span.t * Location_span.t
   | Unreachable of Location_span.t * Ast.complete
-  | EmptyFile
+  | EmptyFile of Location_span.t
   | Deprecation of Location_span.t * string
   | Pedantic of Location_span.t * string
+
+let jacobian_dataonly loc alt = JacobianFunCallDataOnly (loc, alt)
+let lp_in_transparam loc = LpInTransformedParam loc
+let int_divide loc hint = IntDivide (loc, hint)
+let matrix_power loc hint = MatrixPower (loc, hint)
+let compare_chain loc hint1 hint2 = ChainedCompare (loc, hint1, hint2)
+let assign_to_self lhs rhs = AssignToSelf (lhs, rhs)
+let initialize_with_self lhs rhs = InitializeWithSelf (lhs, rhs)
+let unreachable_statement loc c = Unreachable (loc, c)
+let empty_file loc = EmptyFile loc
+let deprecation_warning (span, msg) = Deprecation (span, msg)
+let pedantic_warning (span, msg) = Pedantic (span, msg)
 
 let canonicalize =
   Grace.Diagnostic.Message.createf "%a" Fmt.text
@@ -29,10 +41,12 @@ let to_grace ?printed_filename ?code warn =
   match warn with
   | Deprecation (loc, msg) | Pedantic (loc, msg) ->
       make_warning loc "%a" Fmt.lines (Fmt.str "@[%a@]" Fmt.text msg)
-  | EmptyFile ->
-      createf Warning "%a" Fmt.text
-        "Empty model detected; this is a valid Stan model but likely \
-         unintended!"
+  | EmptyFile loc ->
+      let summary =
+        Message.create
+          "Empty model detected; this is a valid Stan model but likely \
+           unintended!" in
+      make_warning loc ~summary "Empty model."
   | IntDivide (loc, hint) ->
       let notes =
         [ Message.createf "%a" Fmt.text
@@ -126,7 +140,7 @@ let to_grace ?printed_filename ?code warn =
 let pp ?printed_filename ?code ppf warn =
   let diagnostic = to_grace ?printed_filename ?code warn in
   match warn with
-  | Pedantic _ | Deprecation _ ->
+  | EmptyFile _ | Pedantic _ | Deprecation _ ->
       Fmt.pf ppf "%a@." Diagnostic.pp_compact diagnostic
   | _ -> Fmt.pf ppf "%a@." Diagnostic.pp diagnostic
 
