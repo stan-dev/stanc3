@@ -1795,7 +1795,7 @@
                                            ())
                                           UComplex
                                           ((pattern
-                                            (FunApp (StanLib to_complex FnPlain AoS)
+                                            (FunApp (StanLib to_complex FnPlain)
                                              (((pattern
                                                 (Indexed
                                                  ((pattern
@@ -2403,7 +2403,7 @@
                                    ())
                                   (UArray UComplex)
                                   ((pattern
-                                    (FunApp (StanLib to_complex FnPlain AoS)
+                                    (FunApp (StanLib to_complex FnPlain)
                                      (((pattern
                                         (Indexed
                                          ((pattern
@@ -6755,7 +6755,7 @@
               (((pattern
                  (Assignment ((LVariable arr_tuple_p_dot_1_temp__) ()) UComplex
                   ((pattern
-                    (FunApp (StanLib to_complex FnPlain AoS)
+                    (FunApp (StanLib to_complex FnPlain)
                      (((pattern
                         (Indexed
                          ((pattern (Var arr_tuple_p_dot_1_flat__))
@@ -7589,7 +7589,7 @@
                    ())
                   UComplex
                   ((pattern
-                    (FunApp (StanLib to_complex FnPlain AoS)
+                    (FunApp (StanLib to_complex FnPlain)
                      (((pattern
                         (Indexed
                          ((pattern (Var arr_tuple_tuple_p_dot_3_dot_2_dot_1_flat__))
@@ -8830,7 +8830,7 @@
                                            ())
                                           UComplex
                                           ((pattern
-                                            (FunApp (StanLib to_complex FnPlain AoS)
+                                            (FunApp (StanLib to_complex FnPlain)
                                              (((pattern
                                                 (Indexed
                                                  ((pattern
@@ -9789,7 +9789,7 @@
                                    ())
                                   (UArray UComplex)
                                   ((pattern
-                                    (FunApp (StanLib to_complex FnPlain AoS)
+                                    (FunApp (StanLib to_complex FnPlain)
                                      (((pattern
                                         (Indexed
                                          ((pattern

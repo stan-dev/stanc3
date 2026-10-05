@@ -267,7 +267,7 @@ let rec var_context_read_inside_tuple enclosing_tuple_name origin_type
         Expr.
           { pattern=
               FunApp
-                ( StanLib ("to_complex", FnPlain, AoS)
+                ( StanLib ("to_complex", FnPlain)
                 , [ Expr.Helpers.add_int_index origin_name
                       (Index.Single (Expr.Helpers.variable enclosing_tuple_pos))
                   ; Expr.Helpers.add_int_index origin_name
@@ -280,7 +280,7 @@ let rec var_context_read_inside_tuple enclosing_tuple_name origin_type
         Expr.
           { pattern=
               FunApp
-                ( StanLib ("to_complex", FnPlain, AoS)
+                ( StanLib ("to_complex", FnPlain)
                 , [ Expr.Helpers.add_int_index origin_name
                       (Index.Between
                          ( Expr.Helpers.variable enclosing_tuple_pos
