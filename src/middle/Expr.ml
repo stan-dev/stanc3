@@ -94,8 +94,7 @@ module Helpers = struct
 
   let complex (r, i) =
     { meta= {Typed.Meta.empty with type_= UComplex}
-    ; pattern= FunApp (StanLib ("to_complex", FnPlain, AoS), [float r; float i])
-    }
+    ; pattern= FunApp (StanLib ("to_complex", FnPlain), [float r; float i]) }
 
   let str i = {meta= Typed.Meta.empty; pattern= Lit (Str, i)}
   let variable v = {meta= Typed.Meta.empty; pattern= Var v}

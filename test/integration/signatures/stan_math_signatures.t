@@ -3695,7 +3695,9 @@ Display all Stan math signatures exposed in the language
   cumulative_sum(array[] complex) => array[] complex
   determinant(matrix) => real
   diag_matrix(vector) => matrix
+  diag_matrix(row_vector) => matrix
   diag_matrix(complex_vector) => complex_matrix
+  diag_matrix(complex_row_vector) => complex_matrix
   diag_post_multiply(matrix, vector) => matrix
   diag_post_multiply(matrix, row_vector) => matrix
   diag_post_multiply(complex_matrix, complex_vector) => complex_matrix

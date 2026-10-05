@@ -250,8 +250,7 @@ module Helpers = struct
         let rows =
           Expr.
             { meta= emeta'
-            ; pattern= FunApp (StanLib ("rows", FnPlain, AoS), [iteratee]) }
-        in
+            ; pattern= FunApp (StanLib ("rows", FnPlain), [iteratee]) } in
         mk_for_iteratee rows (fun e -> for_each bodyfn e smeta) iteratee smeta
     | UArray _ -> mk_for_iteratee (len iteratee) bodyfn iteratee smeta
     | UMathLibraryFunction | UFun _ | UTuple _ ->

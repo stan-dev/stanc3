@@ -4,7 +4,7 @@ open Middle
 let trans_fn_kind kind name =
   let fname = Utils.stdlib_distribution_name name in
   match kind with
-  | Ast.StanLib suffix -> Fun_kind.StanLib (fname, suffix, AoS)
+  | Ast.StanLib suffix -> Fun_kind.StanLib (fname, suffix)
   | UserDefined suffix -> UserDefined (fname, suffix)
 
 let without_underscores s =
@@ -62,7 +62,7 @@ and trans_expr {Ast.expr; Ast.emeta} =
   | FunApp (fn_kind, {name; _}, args) | CondDistApp (fn_kind, {name; _}, args)
     ->
       FunApp (trans_fn_kind fn_kind name, trans_exprs args) |> ewrap
-  | GetTarget -> FunApp (StanLib ("target", FnTarget, AoS), []) |> ewrap
+  | GetTarget -> FunApp (StanLib ("target", FnTarget), []) |> ewrap
   | ArrayExpr eles ->
       FunApp (CompilerInternal FnMakeArray, trans_exprs eles) |> ewrap
   | RowVectorExpr eles ->
@@ -253,7 +253,7 @@ let same_shape decl_id decl_var id var meta =
     [ Stmt.
         { pattern=
             NRFunApp
-              ( StanLib ("check_matching_dims", FnPlain, AoS)
+              ( StanLib ("check_matching_dims", FnPlain)
               , Expr.Helpers.
                   [str "constraint"; str decl_id; decl_var; str id; var] )
         ; meta } ]
@@ -506,7 +506,7 @@ let rec check_transformed_sizedtype transform_action tr name st =
           | Constrain, CholeskyCov ->
               [ { Stmt.pattern=
                     NRFunApp
-                      ( StanLib ("check_greater_or_equal", FnPlain, AoS)
+                      ( StanLib ("check_greater_or_equal", FnPlain)
                       , Expr.Helpers.
                           [ str ("cholesky_factor_cov " ^ name)
                           ; str

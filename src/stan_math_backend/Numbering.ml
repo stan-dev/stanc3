@@ -35,20 +35,18 @@ let prepare_prog (mir : Program.Typed.t) :
       =
     let pattern = Expr.Pattern.map number_map_rect_calls_expr pattern in
     match pattern with
-    | FunApp
-        ( StanLib ("map_rect", suffix, mem_pattern)
-        , ({pattern= Var f; _} :: _ as es) ) ->
+    | FunApp (StanLib ("map_rect", suffix), ({pattern= Var f; _} :: _ as es)) ->
         let next_map_rect_id = Queue.length map_rect_calls + 1 in
         Queue.push
           (next_map_rect_id, f ^ Lower_expr.functor_suffix)
           map_rect_calls;
         let pattern =
           Expr.Pattern.FunApp
-            ( StanLib ("map_rect", suffix, mem_pattern)
+            ( StanLib ("map_rect", suffix)
             , List.map ~f:number_map_rect_calls_expr
                 (Expr.Helpers.int next_map_rect_id :: es) ) in
         {meta; pattern}
-    | FunApp (StanLib (name, _, _), _)
+    | FunApp (StanLib (name, _), _)
       when (not !needs_mix_header)
            && Stan_math_signatures.is_embedded_laplace_fn name ->
         needs_mix_header := true;

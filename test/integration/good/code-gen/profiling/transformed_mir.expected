@@ -148,7 +148,7 @@
       (((pattern
          (Assignment ((LVariable sum_y) ()) UReal
           ((pattern
-            (FunApp (StanLib sum FnPlain AoS)
+            (FunApp (StanLib sum FnPlain)
              (((pattern (Var y))
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly)))))))
            (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
@@ -262,7 +262,7 @@
               ((pattern
                 (FunApp (Operator Plus)
                  (((pattern
-                    (FunApp (StanLib gp_exp_quad_cov FnPlain AoS)
+                    (FunApp (StanLib gp_exp_quad_cov FnPlain)
                      (((pattern (Var x))
                        (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Var alpha))
@@ -271,9 +271,9 @@
                        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
                    (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))
                   ((pattern
-                    (FunApp (StanLib diag_matrix FnPlain AoS)
+                    (FunApp (StanLib diag_matrix FnPlain)
                      (((pattern
-                        (FunApp (StanLib rep_vector FnPlain AoS)
+                        (FunApp (StanLib rep_vector FnPlain)
                          (((pattern (Var sigma))
                            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                           ((pattern (Var N))
@@ -288,7 +288,7 @@
           (((pattern
              (Assignment ((LVariable L_cov) ()) UMatrix
               ((pattern
-                (FunApp (StanLib cholesky_decompose FnPlain AoS)
+                (FunApp (StanLib cholesky_decompose FnPlain)
                  (((pattern (Var cov))
                    (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
                (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -301,7 +301,7 @@
               (((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib gamma_lpdf (FnLpdf true) AoS)
+                    (FunApp (StanLib gamma_lpdf (FnLpdf true))
                      (((pattern (Var rho))
                        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern
@@ -321,7 +321,7 @@
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+                    (FunApp (StanLib normal_lpdf (FnLpdf true))
                      (((pattern (Var alpha))
                        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern
@@ -341,7 +341,7 @@
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+                    (FunApp (StanLib normal_lpdf (FnLpdf true))
                      (((pattern (Var sigma))
                        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern
@@ -364,11 +364,11 @@
               (((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib multi_normal_cholesky_lpdf (FnLpdf true) AoS)
+                    (FunApp (StanLib multi_normal_cholesky_lpdf (FnLpdf true))
                      (((pattern (Var y))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
-                        (FunApp (StanLib rep_vector FnPlain AoS)
+                        (FunApp (StanLib rep_vector FnPlain)
                          (((pattern
                             (Promotion
                              ((pattern (Lit Int 0))
@@ -493,7 +493,7 @@
               ((pattern
                 (FunApp (Operator Plus)
                  (((pattern
-                    (FunApp (StanLib gp_exp_quad_cov FnPlain AoS)
+                    (FunApp (StanLib gp_exp_quad_cov FnPlain)
                      (((pattern (Var x))
                        (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Var alpha))
@@ -502,9 +502,9 @@
                        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
                    (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))
                   ((pattern
-                    (FunApp (StanLib diag_matrix FnPlain AoS)
+                    (FunApp (StanLib diag_matrix FnPlain)
                      (((pattern
-                        (FunApp (StanLib rep_vector FnPlain AoS)
+                        (FunApp (StanLib rep_vector FnPlain)
                          (((pattern (Var sigma))
                            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                           ((pattern (Var N))
@@ -519,7 +519,7 @@
           (((pattern
              (Assignment ((LVariable L_cov) ()) UMatrix
               ((pattern
-                (FunApp (StanLib cholesky_decompose FnPlain AoS)
+                (FunApp (StanLib cholesky_decompose FnPlain)
                  (((pattern (Var cov))
                    (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
                (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -532,7 +532,7 @@
               (((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib gamma_lpdf (FnLpdf true) AoS)
+                    (FunApp (StanLib gamma_lpdf (FnLpdf true))
                      (((pattern (Var rho))
                        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern
@@ -552,7 +552,7 @@
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+                    (FunApp (StanLib normal_lpdf (FnLpdf true))
                      (((pattern (Var alpha))
                        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern
@@ -572,7 +572,7 @@
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+                    (FunApp (StanLib normal_lpdf (FnLpdf true))
                      (((pattern (Var sigma))
                        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern
@@ -595,11 +595,11 @@
               (((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib multi_normal_cholesky_lpdf (FnLpdf true) AoS)
+                    (FunApp (StanLib multi_normal_cholesky_lpdf (FnLpdf true))
                      (((pattern (Var y))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
-                        (FunApp (StanLib rep_vector FnPlain AoS)
+                        (FunApp (StanLib rep_vector FnPlain)
                          (((pattern
                             (Promotion
                              ((pattern (Lit Int 0))

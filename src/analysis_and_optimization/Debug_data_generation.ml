@@ -383,7 +383,7 @@ let generate_json_entries (name, expr) : string * t =
     | Lit (Int, s) -> `Intlit s
     | Lit (Real, s) -> `Floatlit s
     | FunApp (CompilerInternal (FnMakeRowVec | FnMakeArray), l)
-     |FunApp (StanLib ("to_complex", _, _), l) ->
+     |FunApp (StanLib ("to_complex", _), l) ->
         `List (List.map ~f:expr_to_json l)
     | FunApp (CompilerInternal FnMakeTuple, l) ->
         `Assoc

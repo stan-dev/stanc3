@@ -323,7 +323,7 @@ let rec lower_statement Stmt.{pattern; meta} : stmt list =
   | NRFunApp (CompilerInternal f, args) ->
       let fname = trans_math_fn f in
       Exprs.fun_call fname (lower_exprs args) |> wrap_e
-  | NRFunApp (StanLib (fname, _, _), args) ->
+  | NRFunApp (StanLib (fname, _), args) ->
       Exprs.fun_call (stan_namespace_qualify fname) (lower_exprs args) |> wrap_e
   | NRFunApp (UserDefined (fname, suffix), args) ->
       lower_user_defined_fun fname suffix args |> wrap_e
