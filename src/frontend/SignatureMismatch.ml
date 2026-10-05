@@ -68,7 +68,7 @@ type type_mismatch =
   | TypeMismatch of UnsizedType.t * UnsizedType.t * details option
 
 and details =
-  | SuffixMismatch of unit Fun_kind.suffix * unit Fun_kind.suffix
+  | SuffixMismatch of Fun_kind.suffix * Fun_kind.suffix
   | ReturnTypeMismatch of UnsizedType.returntype * UnsizedType.returntype
   | InputMismatch of function_mismatch
 
@@ -92,7 +92,7 @@ type ('unique, 'error) generic_match_result =
 
 type match_result =
   ( UnsizedType.returntype
-    * (bool Middle.Fun_kind.suffix -> Ast.fun_kind)
+    * (Middle.Fun_kind.suffix -> Ast.fun_kind)
     * Promotion.t list
     * Location_span.t option
   , signature_error list * bool )
@@ -193,10 +193,8 @@ let rec check_same_type depth t1 t2 =
           | Error (TypeMismatch _) -> Error (TypeMismatch (t1, t2, None))
           | Error e -> Error e))
   | UFun (_, _, s1, _), UFun (_, _, s2, _)
-    when Fun_kind.without_propto s1 <> Fun_kind.without_propto s2 ->
-      Error
-        (SuffixMismatch (Fun_kind.without_propto s1, Fun_kind.without_propto s2))
-      |> wrap_func
+    when Fun_kind.compare_no_propto s1 s2 <> 0 ->
+      Error (SuffixMismatch (s1, s2)) |> wrap_func
   | UFun (_, rt1, _, _), UFun (_, rt2, _, _) when rt1 <> rt2 ->
       Error (ReturnTypeMismatch (rt1, rt2)) |> wrap_func
   | UFun (l1, _, _, _), UFun (l2, _, _, _) -> (
@@ -309,10 +307,11 @@ let check_variadic_args ~allow_lpdf mandatory_arg_tys mandatory_fun_arg_tys
         List.split_n fun_args (List.length mandatory_fun_arg_tys) in
       let wrap_func_error x =
         TypeMismatch (minimal_func_type, func_type, Some x) |> wrap_err in
-      let suffix = Fun_kind.without_propto suffix in
       if
-        suffix = FnPlain
-        || (allow_lpdf && (suffix = FnLpdf () || suffix = FnLpmf ()))
+        match suffix with
+        | FnPlain -> true
+        | (FnDist (Density, _) | FnDist (Mass, _)) when allow_lpdf -> true
+        | _ -> false
       then
         match check_compatible_arguments 1 mandatory mandatory_fun_arg_tys with
         | Error x -> wrap_func_error (InputMismatch x)
@@ -336,8 +335,8 @@ let check_variadic_args ~allow_lpdf mandatory_arg_tys mandatory_fun_arg_tys
 let suffix_str = function
   | Fun_kind.FnPlain -> "a pure function"
   | FnRng -> "an rng function"
-  | FnLpdf () -> "a probability density function"
-  | FnLpmf () -> "a probability mass function"
+  | FnDist (Density, _) -> "a probability density function"
+  | FnDist (Mass, _) -> "a probability mass function"
   | FnTarget -> "an _lp function"
   | FnJacobian -> "a _jacobian function"
 

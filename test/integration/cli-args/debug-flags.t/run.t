@@ -406,7 +406,8 @@ Flags not used elsewhere in the tests
            (arg
             ((expr (Variable ((name theta) (id_loc <opaque>))))
              (emeta ((loc <opaque>) (ad_level AutoDiffable) (type_ UReal)))))
-           (distribution ((name beta) (id_loc <opaque>))) (kind (StanLib (FnLpdf true)))
+           (distribution ((name beta) (id_loc <opaque>)))
+           (kind (StanLib (FnDist Density Unnormalized)))
            (args
             (((expr
                (Promotion
@@ -428,7 +429,7 @@ Flags not used elsewhere in the tests
             ((expr (Variable ((name y) (id_loc <opaque>))))
              (emeta ((loc <opaque>) (ad_level DataOnly) (type_ (UArray UInt))))))
            (distribution ((name bernoulli) (id_loc <opaque>)))
-           (kind (StanLib (FnLpmf true)))
+           (kind (StanLib (FnDist Mass Unnormalized)))
            (args
             (((expr (Variable ((name theta) (id_loc <opaque>))))
               (emeta ((loc <opaque>) (ad_level AutoDiffable) (type_ UReal))))))

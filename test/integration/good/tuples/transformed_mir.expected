@@ -17184,7 +17184,7 @@
       (((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib bernoulli_lpmf (FnLpmf true))
+            (FunApp (StanLib bernoulli_lpmf (FnDist Mass Unnormalized))
              (((pattern
                 (TupleProjection
                  ((pattern (Var ds))
@@ -17313,7 +17313,7 @@
       (((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib bernoulli_lpmf (FnLpmf true))
+            (FunApp (StanLib bernoulli_lpmf (FnDist Mass Unnormalized))
              (((pattern
                 (TupleProjection
                  ((pattern (Var ds))
@@ -22866,7 +22866,7 @@
 [exit 0]
   $ stanc -fsoa --debug-optimized-mir tuple_lpdf.stan
 ((functions_block
-  (((fdrt (ReturnType UReal)) (fdname foo_lpdf) (fdsuffix (FnLpdf ()))
+  (((fdrt (ReturnType UReal)) (fdname foo_lpdf) (fdsuffix (FnDist Density Normalized))
     (fdargs
      ((AutoDiffable x (UTuple (UReal UReal)))
       (AutoDiffable y (UTuple (UReal UReal UReal)))))
@@ -22891,7 +22891,7 @@
       (((pattern
          (TargetPE
           ((pattern
-            (FunApp (UserDefined foo_lpdf (FnLpdf true))
+            (FunApp (UserDefined foo_lpdf (FnDist Density Unnormalized))
              (((pattern
                 (FunApp (CompilerInternal FnMakeTuple)
                  (((pattern (Lit Real 1.5))
@@ -22925,7 +22925,7 @@
       (((pattern
          (TargetPE
           ((pattern
-            (FunApp (UserDefined foo_lpdf (FnLpdf true))
+            (FunApp (UserDefined foo_lpdf (FnDist Density Unnormalized))
              (((pattern
                 (FunApp (CompilerInternal FnMakeTuple)
                  (((pattern (Lit Real 1.5))
@@ -22982,7 +22982,7 @@
 [exit 0]
   $ stanc -fsoa --debug-optimized-mir tuple_lpdf2.stan
 ((functions_block
-  (((fdrt (ReturnType UReal)) (fdname foo_lpdf) (fdsuffix (FnLpdf ()))
+  (((fdrt (ReturnType UReal)) (fdname foo_lpdf) (fdsuffix (FnDist Density Normalized))
     (fdargs ((AutoDiffable x (UTuple (UReal UInt)))))
     (fdbody
      (((pattern
@@ -23005,7 +23005,7 @@
       (((pattern
          (TargetPE
           ((pattern
-            (FunApp (UserDefined foo_lpdf (FnLpdf true))
+            (FunApp (UserDefined foo_lpdf (FnDist Density Unnormalized))
              (((pattern
                 (FunApp (CompilerInternal FnMakeTuple)
                  (((pattern (Lit Real 1.5))
@@ -23024,7 +23024,7 @@
       (((pattern
          (TargetPE
           ((pattern
-            (FunApp (UserDefined foo_lpdf (FnLpdf true))
+            (FunApp (UserDefined foo_lpdf (FnDist Density Unnormalized))
              (((pattern
                 (FunApp (CompilerInternal FnMakeTuple)
                  (((pattern (Lit Real 1.5))
@@ -23066,7 +23066,7 @@
 [exit 0]
   $ stanc -fsoa --debug-optimized-mir tuple_lpmf.stan
 ((functions_block
-  (((fdrt (ReturnType UReal)) (fdname foo_lpmf) (fdsuffix (FnLpmf ()))
+  (((fdrt (ReturnType UReal)) (fdname foo_lpmf) (fdsuffix (FnDist Mass Normalized))
     (fdargs ((AutoDiffable x (UTuple (UInt UInt))) (AutoDiffable y UReal)))
     (fdbody
      (((pattern
@@ -23115,7 +23115,7 @@
       (((pattern
          (TargetPE
           ((pattern
-            (FunApp (UserDefined foo_lpmf (FnLpmf true))
+            (FunApp (UserDefined foo_lpmf (FnDist Mass Unnormalized))
              (((pattern
                 (FunApp (CompilerInternal FnMakeTuple)
                  (((pattern (Lit Int 1))
@@ -23136,7 +23136,7 @@
       (((pattern
          (TargetPE
           ((pattern
-            (FunApp (UserDefined foo_lpmf (FnLpmf true))
+            (FunApp (UserDefined foo_lpmf (FnDist Mass Unnormalized))
              (((pattern
                 (FunApp (CompilerInternal FnMakeTuple)
                  (((pattern (Lit Int 1))

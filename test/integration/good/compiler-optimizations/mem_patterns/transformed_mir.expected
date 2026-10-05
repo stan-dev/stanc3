@@ -730,7 +730,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true))
+            (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
              (((pattern (Var y_data))
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
               ((pattern (Var soa_simple))
@@ -1304,7 +1304,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true))
+            (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
              (((pattern (Var y_data))
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
               ((pattern (Var soa_simple))
@@ -3892,7 +3892,7 @@ vector[N] means_ordered: SoA
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true))
+            (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
              (((pattern (Var Intercept))
                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern (Var mu_prior_mu))
@@ -3904,7 +3904,7 @@ vector[N] means_ordered: SoA
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib beta_lpdf (FnLpdf true))
+            (FunApp (StanLib beta_lpdf (FnDist Density Unnormalized))
              (((pattern (Var phi_beta))
                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern (Var phi_prior_a))
@@ -3916,7 +3916,7 @@ vector[N] means_ordered: SoA
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib gamma_lpdf (FnLpdf true))
+            (FunApp (StanLib gamma_lpdf (FnDist Density Unnormalized))
              (((pattern (Var sigma2))
                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern (Var sigma_prior_shape))
@@ -3928,7 +3928,7 @@ vector[N] means_ordered: SoA
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true))
+            (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
              (((pattern (Var ar))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern
@@ -3944,7 +3944,7 @@ vector[N] means_ordered: SoA
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true))
+            (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
              (((pattern (Var ma))
                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern
@@ -3960,7 +3960,7 @@ vector[N] means_ordered: SoA
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true))
+            (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
              (((pattern (Var h))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern (Var h_i_mean))
@@ -3972,7 +3972,7 @@ vector[N] means_ordered: SoA
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib student_t_lpdf (FnLpdf true))
+            (FunApp (StanLib student_t_lpdf (FnDist Density Unnormalized))
              (((pattern (Var sigma_price))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern
@@ -3998,7 +3998,7 @@ vector[N] means_ordered: SoA
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib uniform_lpdf (FnLpdf true))
+            (FunApp (StanLib uniform_lpdf (FnDist Density Unnormalized))
              (((pattern (Var high_low_est))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern (Var diff_low_mid))
@@ -4010,7 +4010,7 @@ vector[N] means_ordered: SoA
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true))
+            (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
              (((pattern (Var prices))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern (Var mean_price))
@@ -4022,7 +4022,7 @@ vector[N] means_ordered: SoA
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true))
+            (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
              (((pattern (Var prices_diff))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern (Var mu))
@@ -5103,7 +5103,7 @@ vector[N] means_ordered: SoA
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true))
+            (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
              (((pattern (Var Intercept))
                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern (Var mu_prior_mu))
@@ -5115,7 +5115,7 @@ vector[N] means_ordered: SoA
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib beta_lpdf (FnLpdf true))
+            (FunApp (StanLib beta_lpdf (FnDist Density Unnormalized))
              (((pattern (Var phi_beta))
                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern (Var phi_prior_a))
@@ -5127,7 +5127,7 @@ vector[N] means_ordered: SoA
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib gamma_lpdf (FnLpdf true))
+            (FunApp (StanLib gamma_lpdf (FnDist Density Unnormalized))
              (((pattern (Var sigma2))
                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern (Var sigma_prior_shape))
@@ -5139,7 +5139,7 @@ vector[N] means_ordered: SoA
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true))
+            (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
              (((pattern (Var ar))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern
@@ -5155,7 +5155,7 @@ vector[N] means_ordered: SoA
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true))
+            (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
              (((pattern (Var ma))
                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern
@@ -5171,7 +5171,7 @@ vector[N] means_ordered: SoA
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true))
+            (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
              (((pattern (Var h))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern (Var h_i_mean))
@@ -5183,7 +5183,7 @@ vector[N] means_ordered: SoA
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib student_t_lpdf (FnLpdf true))
+            (FunApp (StanLib student_t_lpdf (FnDist Density Unnormalized))
              (((pattern (Var sigma_price))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern
@@ -5209,7 +5209,7 @@ vector[N] means_ordered: SoA
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib uniform_lpdf (FnLpdf true))
+            (FunApp (StanLib uniform_lpdf (FnDist Density Unnormalized))
              (((pattern (Var high_low_est))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern (Var diff_low_mid))
@@ -5221,7 +5221,7 @@ vector[N] means_ordered: SoA
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true))
+            (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
              (((pattern (Var prices))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern (Var mean_price))
@@ -5233,7 +5233,7 @@ vector[N] means_ordered: SoA
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true))
+            (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
              (((pattern (Var prices_diff))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern (Var mu))
@@ -11100,7 +11100,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true))
+            (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
              (((pattern (Var y))
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
@@ -11127,7 +11127,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true))
+            (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
              (((pattern (Var y))
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
@@ -11149,7 +11149,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true))
+            (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
              (((pattern (Var y))
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
@@ -11173,7 +11173,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true))
+            (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
              (((pattern (Var y))
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
@@ -11203,7 +11203,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true))
+            (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
              (((pattern (Var y))
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
@@ -11229,7 +11229,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true))
+            (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
              (((pattern (Var y))
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
@@ -11255,7 +11255,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true))
+            (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
              (((pattern (Var y))
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
@@ -11281,7 +11281,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true))
+            (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
              (((pattern (Var y))
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
@@ -11380,7 +11380,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
               (((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true))
+                    (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
                      (((pattern (Var y))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
@@ -11405,7 +11405,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true))
+                    (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
                      (((pattern (Var y))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
@@ -11430,7 +11430,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true))
+                    (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
                      (((pattern (Var y))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
@@ -11456,7 +11456,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true))
+                    (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
                      (((pattern (Var y))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
@@ -11488,7 +11488,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true))
+                    (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
                      (((pattern (Var y))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
@@ -11517,7 +11517,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true))
+                    (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
                      (((pattern (Var y))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
@@ -11548,7 +11548,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true))
+                    (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
                      (((pattern (Var y))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
@@ -11590,7 +11590,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true))
+                    (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
                      (((pattern (Var y))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
@@ -11648,7 +11648,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true))
+                    (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
                      (((pattern (Var y))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
@@ -11785,7 +11785,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true))
+                    (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
                      (((pattern (Var y))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
@@ -11816,7 +11816,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true))
+                    (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
                      (((pattern (Var y))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
@@ -11850,7 +11850,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true))
+                    (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
                      (((pattern (Var y))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
@@ -12476,7 +12476,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true))
+            (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
              (((pattern (Var y))
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
@@ -12503,7 +12503,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true))
+            (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
              (((pattern (Var y))
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
@@ -12525,7 +12525,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true))
+            (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
              (((pattern (Var y))
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
@@ -12549,7 +12549,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true))
+            (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
              (((pattern (Var y))
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
@@ -12579,7 +12579,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true))
+            (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
              (((pattern (Var y))
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
@@ -12605,7 +12605,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true))
+            (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
              (((pattern (Var y))
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
@@ -12631,7 +12631,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true))
+            (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
              (((pattern (Var y))
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
@@ -12657,7 +12657,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true))
+            (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
              (((pattern (Var y))
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
@@ -12756,7 +12756,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
               (((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true))
+                    (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
                      (((pattern (Var y))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
@@ -12781,7 +12781,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true))
+                    (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
                      (((pattern (Var y))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
@@ -12806,7 +12806,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true))
+                    (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
                      (((pattern (Var y))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
@@ -12832,7 +12832,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true))
+                    (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
                      (((pattern (Var y))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
@@ -12864,7 +12864,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true))
+                    (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
                      (((pattern (Var y))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
@@ -12893,7 +12893,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true))
+                    (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
                      (((pattern (Var y))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
@@ -12924,7 +12924,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true))
+                    (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
                      (((pattern (Var y))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
@@ -12966,7 +12966,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true))
+                    (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
                      (((pattern (Var y))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
@@ -13024,7 +13024,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true))
+                    (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
                      (((pattern (Var y))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
@@ -13161,7 +13161,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true))
+                    (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
                      (((pattern (Var y))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
@@ -13192,7 +13192,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true))
+                    (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
                      (((pattern (Var y))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
@@ -13226,7 +13226,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true))
+                    (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
                      (((pattern (Var y))
                        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern

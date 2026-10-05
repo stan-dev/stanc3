@@ -41,8 +41,8 @@ let model_name = ref ""
 
 type function_indicator =
   | NotInFunction
-  | NonReturning of unit Fun_kind.suffix
-  | Returning of unit Fun_kind.suffix * UnsizedType.t
+  | NonReturning of Fun_kind.suffix
+  | Returning of Fun_kind.suffix * UnsizedType.t
 
 (* Record structure holding flags and other markers about context to be used for
    error reporting. *)
@@ -69,11 +69,7 @@ let in_jacobian_function cf =
 
 let in_udf_distribution cf =
   match cf.containing_function with
-  | NonReturning (FnLpdf ())
-   |Returning (FnLpdf (), _)
-   |NonReturning (FnLpmf ())
-   |Returning (FnLpmf (), _) ->
-      true
+  | NonReturning (FnDist (_, _)) | Returning (FnDist (_, _), _) -> true
   | _ -> false
 
 let context block =
@@ -306,7 +302,7 @@ let check_id cf tenv id =
   | {kind= `Variable {origin; _}; type_; _} ->
       (calculate_autodifftype cf origin type_, type_)
   | { kind= `UserDefined _ | `UserDeclared _
-    ; type_= UFun (args, rt, (FnLpdf _ | FnLpmf _), mem_pattern)
+    ; type_= UFun (args, rt, FnDist _, mem_pattern)
     ; _ } ->
       let type_ =
         UnsizedType.UFun
@@ -628,7 +624,7 @@ let find_matching_first_order_fn tenv matches fname =
   | Error None -> SignatureMismatch.SignatureErrors (List.hd_exn errs)
 
 let make_function_variable cf loc id = function
-  | UnsizedType.UFun (args, rt, (FnLpdf _ | FnLpmf _), mem_pattern) ->
+  | UnsizedType.UFun (args, rt, FnDist _, mem_pattern) ->
       let type_ =
         UnsizedType.UFun
           (args, rt, Fun_kind.suffix_from_name id.name, mem_pattern) in
@@ -711,9 +707,7 @@ let check_function_callable_with_tuple cf tenv caller_id fname
                ( ReturnTypeMismatch (required_fn_return_type, return_type)
                , location ))
         else if sfx <> FnPlain then
-          Error
-            (`FnRequirementsError
-               (SuffixMismatch (FnPlain, Fun_kind.without_propto sfx), location))
+          Error (`FnRequirementsError (SuffixMismatch (FnPlain, sfx), location))
         else
           let no_prom_args, _ =
             List.split_n args (List.length required_arg_types) in
@@ -2179,7 +2173,7 @@ and check_fundef loc cf tenv return_ty id args body =
           (`Variable {origin; readonly= true; global= false; location= id.id_loc}))
   in
   let context =
-    let kind = Fun_kind.suffix_from_name id.name |> Fun_kind.without_propto in
+    let kind = Fun_kind.suffix_from_name id.name in
     { cf with
       containing_function=
         UnsizedType.returntype_to_type_opt return_ty

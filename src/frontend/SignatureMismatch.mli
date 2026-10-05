@@ -5,7 +5,7 @@ type type_mismatch = private
   | TypeMismatch of UnsizedType.t * UnsizedType.t * details option
 
 and details =
-  | SuffixMismatch of unit Fun_kind.suffix * unit Fun_kind.suffix
+  | SuffixMismatch of Fun_kind.suffix * Fun_kind.suffix
   | ReturnTypeMismatch of UnsizedType.returntype * UnsizedType.returntype
   | InputMismatch of function_mismatch
 
@@ -29,7 +29,7 @@ type ('unique, 'error) generic_match_result =
 (** The match result for general (non-variadic) functions *)
 type match_result =
   ( UnsizedType.returntype
-    * (bool Middle.Fun_kind.suffix -> Ast.fun_kind)
+    * (Middle.Fun_kind.suffix -> Ast.fun_kind)
     * Promotion.t list
     * Location_span.t option
   , signature_error list * bool )
