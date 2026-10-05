@@ -252,9 +252,9 @@ type function_inline_map =
 let compute_suffix_and_map propto suffix fim =
   let open Fun_kind in
   match suffix with
-  | FnLpxf (x, Unnormalized) when propto = Unnormalized ->
-      (FnLpxf (x, Unnormalized), fim.unnormalized)
-  | FnLpxf (x, _) -> (FnLpxf (x, Normalized), fim.plain)
+  | FnDist (x, Unnormalized) when propto = Unnormalized ->
+      (FnDist (x, Unnormalized), fim.unnormalized)
+  | FnDist (x, _) -> (FnDist (x, Normalized), fim.plain)
   | _ -> (suffix, fim.plain)
 
 (* Triple is (declaration list, statement list, return expression) *)
@@ -496,7 +496,7 @@ let create_function_inline_map adt l =
           , List.map ~f:(fun (_, name, _) -> name) fdargs
           , inline_function_statement propto adt accum fdbody ) in
         match Middle.Fun_kind.suffix_from_name fdname with
-        | FnLpxf _ ->
+        | FnDist _ ->
             let data = create_data Normalized in
             let data' = create_data Unnormalized in
             { plain= String.Map.add ~key:fdname ~data accum.plain
@@ -819,7 +819,7 @@ let vectorized_for (meta : Stmt.Located.Meta.t) (conflict_info : conflicts)
           | [] -> None
           | stmts -> Profile (name, stmts) |> swrap_opt ))
     | TargetPE
-        ({pattern= FunApp (StanLib (name, (FnLpxf _ as suffix)), args); _} as e)
+        ({pattern= FunApp (StanLib (name, (FnDist _ as suffix)), args); _} as e)
       when (not conflict_info.target) && can_vectorize_expr e -> (
         match widen_all args with
         | Error -> dont_vectorize

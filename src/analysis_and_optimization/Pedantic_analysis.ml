@@ -123,7 +123,7 @@ let list_possible_nonlinear (mir : Program.Typed.t) : Location_span.t Set.Poly.t
     | Stmt.Pattern.TargetPE
         { pattern=
             Expr.Pattern.FunApp
-              ((StanLib (_, FnLpxf _) | UserDefined (_, FnLpxf _)), e :: _)
+              ((StanLib (_, FnDist _) | UserDefined (_, FnDist _)), e :: _)
         ; _ }
       when not (is_linear true e) ->
         Set.Poly.singleton stmt.meta
@@ -312,7 +312,7 @@ let compiletime_value_of_expr
 let list_distributions (mir : Program.Typed.t) : dist_info Set.Poly.t =
   let take_dist (expr : Expr.Typed.t) =
     match expr.pattern with
-    | Expr.Pattern.FunApp (StanLib (fname, FnLpxf (_, Unnormalized)), arg_exprs)
+    | Expr.Pattern.FunApp (StanLib (fname, FnDist (_, Unnormalized)), arg_exprs)
       ->
         let fname = chop_dist_name fname |> Option.get in
         let params = parameter_set mir in

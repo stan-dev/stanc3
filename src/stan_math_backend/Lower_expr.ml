@@ -115,7 +115,7 @@ let suffix_args udf = function
   | FnTarget -> ["lp__"; "lp_accum__"]
   | FnJacobian when udf -> ["lp__"; "lp_accum__"]
   | FnJacobian -> ["lp__"]
-  | FnPlain | FnLpxf _ -> []
+  | FnPlain | FnDist _ -> []
 
 let rec stantype_prim = function
   | UnsizedType.UInt -> Int
@@ -124,8 +124,8 @@ let rec stantype_prim = function
 
 let templates udf suffix =
   match suffix with
-  | Fun_kind.FnLpxf (_, Fun_kind.Unnormalized) -> [TemplateType "propto__"]
-  | FnLpxf (_, Normalized) -> [TemplateType "false"]
+  | Fun_kind.FnDist (_, Fun_kind.Unnormalized) -> [TemplateType "propto__"]
+  | FnDist (_, Normalized) -> [TemplateType "false"]
   | FnTarget when udf -> [TemplateType "propto__"]
   | FnJacobian -> [TemplateType "jacobian__"]
   | _ -> []

@@ -6,20 +6,20 @@ open Std.Compare
 open Std.Sexp_conv
 
 type propto = Normalized | Unnormalized
-and lpxf = Density | Mass [@@deriving compare, map, sexp_of, equal]
+and support = Density | Mass [@@deriving compare, map, sexp_of, equal]
 
 type suffix =
   | FnPlain
   | FnRng
-  | FnLpxf of lpxf * propto
+  | FnDist of support * propto
   | FnTarget
   | FnJacobian
 [@@deriving compare, map, sexp_of, equal]
 
 let compare_no_propto a b =
   match (a, b) with
-  | FnLpxf (a, _), FnLpxf (b, _) ->
-      compare (FnLpxf (a, Normalized)) (FnLpxf (b, Normalized))
+  | FnDist (a, _), FnDist (b, _) ->
+      compare (FnDist (a, Normalized)) (FnDist (b, Normalized))
   | _ -> compare a b
 
 type 'e t =
@@ -34,10 +34,10 @@ let suffix_from_name fname =
   if is_suffix "_rng" then FnRng
   else if is_suffix "_lp" then FnTarget
   else if is_suffix "_jacobian" then FnJacobian
-  else if is_suffix "_lupdf" then FnLpxf (Density, Unnormalized)
-  else if is_suffix "_lupmf" then FnLpxf (Mass, Unnormalized)
-  else if is_suffix "_lpdf" then FnLpxf (Density, Normalized)
-  else if is_suffix "_lpmf" then FnLpxf (Mass, Normalized)
+  else if is_suffix "_lupdf" then FnDist (Density, Unnormalized)
+  else if is_suffix "_lupmf" then FnDist (Mass, Unnormalized)
+  else if is_suffix "_lpdf" then FnDist (Density, Normalized)
+  else if is_suffix "_lpmf" then FnDist (Mass, Normalized)
   else FnPlain
 
 let with_unnormalized_suffix (name : string) =
@@ -49,8 +49,8 @@ let with_unnormalized_suffix (name : string) =
 
 let pp pp_expr ppf kind =
   match kind with
-  | StanLib (s, FnLpxf (_, Unnormalized))
-   |UserDefined (s, FnLpxf (_, Unnormalized)) ->
+  | StanLib (s, FnDist (_, Unnormalized))
+   |UserDefined (s, FnDist (_, Unnormalized)) ->
       Fmt.string ppf (with_unnormalized_suffix s |> Option.value ~default:s)
   | StanLib (s, _) | UserDefined (s, _) -> Fmt.string ppf s
   | Operator op -> Operator.pp ppf op

@@ -310,7 +310,7 @@ let check_variadic_args ~allow_lpdf mandatory_arg_tys mandatory_fun_arg_tys
       if
         match suffix with
         | FnPlain -> true
-        | (FnLpxf (Density, _) | FnLpxf (Mass, _)) when allow_lpdf -> true
+        | (FnDist (Density, _) | FnDist (Mass, _)) when allow_lpdf -> true
         | _ -> false
       then
         match check_compatible_arguments 1 mandatory mandatory_fun_arg_tys with
@@ -335,8 +335,8 @@ let check_variadic_args ~allow_lpdf mandatory_arg_tys mandatory_fun_arg_tys
 let suffix_str = function
   | Fun_kind.FnPlain -> "a pure function"
   | FnRng -> "an rng function"
-  | FnLpxf (Density, _) -> "a probability density function"
-  | FnLpxf (Mass, _) -> "a probability mass function"
+  | FnDist (Density, _) -> "a probability density function"
+  | FnDist (Mass, _) -> "a probability mass function"
   | FnTarget -> "an _lp function"
   | FnJacobian -> "a _jacobian function"
 

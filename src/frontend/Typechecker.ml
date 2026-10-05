@@ -69,7 +69,7 @@ let in_jacobian_function cf =
 
 let in_udf_distribution cf =
   match cf.containing_function with
-  | NonReturning (FnLpxf (_, _)) | Returning (FnLpxf (_, _), _) -> true
+  | NonReturning (FnDist (_, _)) | Returning (FnDist (_, _), _) -> true
   | _ -> false
 
 let context block =
@@ -302,7 +302,7 @@ let check_id cf tenv id =
   | {kind= `Variable {origin; _}; type_; _} ->
       (calculate_autodifftype cf origin type_, type_)
   | { kind= `UserDefined _ | `UserDeclared _
-    ; type_= UFun (args, rt, FnLpxf _, mem_pattern)
+    ; type_= UFun (args, rt, FnDist _, mem_pattern)
     ; _ } ->
       let type_ =
         UnsizedType.UFun
@@ -624,7 +624,7 @@ let find_matching_first_order_fn tenv matches fname =
   | Error None -> SignatureMismatch.SignatureErrors (List.hd_exn errs)
 
 let make_function_variable cf loc id = function
-  | UnsizedType.UFun (args, rt, FnLpxf _, mem_pattern) ->
+  | UnsizedType.UFun (args, rt, FnDist _, mem_pattern) ->
       let type_ =
         UnsizedType.UFun
           (args, rt, Fun_kind.suffix_from_name id.name, mem_pattern) in

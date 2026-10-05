@@ -244,7 +244,7 @@ let lower_fun_body fdargs fdsuffix fdbody =
   let to_refs = lower_eigen_args_to_ref fdargs in
   let propto =
     match fdsuffix with
-    | Fun_kind.FnLpxf _ | FnTarget | FnJacobian -> []
+    | Fun_kind.FnDist _ | FnTarget | FnJacobian -> []
     | FnPlain | FnRng ->
         VariableDefn
           (make_variable_defn ~static:true ~constexpr:true ~type_:Types.bool
@@ -277,7 +277,7 @@ let extra_suffix_args fdsuffix =
   | Fun_kind.FnTarget | FnJacobian ->
       (["lp__"; "lp_accum__"], ["T_lp__"; "T_lp_accum__"])
   | FnRng -> (["base_rng__"], ["RNG"])
-  | FnLpxf _ | FnPlain -> ([], [])
+  | FnDist _ | FnPlain -> ([], [])
 
 let signature_comment Program.{fdrt; fdname; fdargs; _} =
   GlobalComment
@@ -299,7 +299,7 @@ let lower_fun_def (functors : Lower_expr.variadic list)
       List.(map ~f:typename (template_param_names @ extra_template_names))
       @ template_require_checks in
     match (fdsuffix, variadic_fun_type) with
-    | (FnLpxf _ | FnTarget), FixedArgs ->
+    | (FnDist _ | FnTarget), FixedArgs ->
         (Bool "propto__" :: template_params, args)
     | FnJacobian, FixedArgs -> (Bool "jacobian__" :: template_params, args)
     | _ -> (template_params, args) in
@@ -320,14 +320,14 @@ let lower_fun_def (functors : Lower_expr.variadic list)
     let functor_name = fdname ^ suffix in
     let struct_template =
       match (fdsuffix, variadic_fun_type) with
-      | FnLpxf _, ReduceSum -> Some (Bool "propto__")
+      | FnDist _, ReduceSum -> Some (Bool "propto__")
       | _ -> None in
     let arg_templates, templated_args =
       template_parameter_and_arg_names false variadic_fun_type in
     let cpp_args = cpp_arg_gen templated_args variadic_fun_type in
     let defn_template =
       match fdsuffix with
-      | FnLpxf _ | FnTarget -> [TemplateType "propto__"]
+      | FnDist _ | FnTarget -> [TemplateType "propto__"]
       | FnJacobian -> [TemplateType "jacobian__"]
       | _ -> [] in
     let defn_args =
@@ -408,7 +408,7 @@ let lower_standalone_fun_def namespace_fun
     | Fun_kind.FnTarget | FnJacobian ->
         (["lp__"; "lp_accum__"], ["double"; "stan::math::accumulator<double>"])
     | FnRng -> (["base_rng__"], ["stan::rng_t"])
-    | FnLpxf _ | FnPlain -> ([], []) in
+    | FnDist _ | FnPlain -> ([], []) in
   let args =
     List.map
       ~f:(fun (_, name, ut) ->
@@ -427,7 +427,7 @@ let lower_standalone_fun_def namespace_fun
   let internal_fname = namespace_fun ^ "::" ^ fdname in
   let template =
     match fdsuffix with
-    | FnLpxf _ | FnTarget -> [TypeLiteral "false"]
+    | FnDist _ | FnTarget -> [TypeLiteral "false"]
     | FnJacobian -> [TypeLiteral "true"]
     | FnRng | FnPlain -> [] in
   let call_args =
