@@ -150,8 +150,6 @@ let model_info name code flags includes =
     val warnings = json_of_diagnostics warnings
   end
 
-let version () = Js.string Driver.Entry.version
-
 let dump_stan_math_signatures () =
   Js.string @@ Fmt.str "%a" Stan_math_signatures.pretty_print_all_math_sigs ()
 
@@ -172,4 +170,4 @@ let () =
   Js.export "check_model" (Js.Unsafe.callback check_model);
   Js.export "format_model" (Js.Unsafe.callback format_model);
   Js.export "model_info" (Js.Unsafe.callback model_info);
-  Js.export "version" (Js.wrap_callback version)
+  Js.export "version" (Js.string Driver.Entry.version)
