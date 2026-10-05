@@ -232,7 +232,7 @@ let rec js_of_yojson (t : Yojson.Basic.t) : Js.Unsafe.any =
   | `Null -> Js.Unsafe.pure_js_expr "null"
   | `Int i -> i |> Js.Unsafe.inject
   | `Bool b -> Js.bool b |> Js.Unsafe.coerce
-  | `Float f -> Js.number_of_float f |> Js.Unsafe.coerce
+  | `Float f -> Js.float f |> Js.Unsafe.coerce
   | `String s -> Js.string s |> Js.Unsafe.coerce
   | `List l ->
       List.map ~f:js_of_yojson l |> Array.of_list |> Js.array

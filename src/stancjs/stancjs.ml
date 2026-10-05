@@ -91,14 +91,12 @@ let format_model name code flags includes =
     ; debug_settings= Driver.Flags.default.debug_settings } in
   let warnings = ref [] in
   let run () =
-    let res =
-      Return.with_return @@ fun return ->
-      let output : Driver.Entry.other_output -> unit = function
-        | Warnings w -> warnings := !warnings @ w
-        | Formatted s -> return (Ok s)
-        | _ -> () in
-      Driver.Entry.stan2cpp name (`Code code) driver_flags output in
-    res in
+    Return.with_return @@ fun return ->
+    let output = function
+      | Driver.Entry.Warnings w -> warnings := !warnings @ w
+      | Formatted s -> return (Ok s)
+      | _ -> () in
+    Driver.Entry.stan2cpp name (`Code code) driver_flags output in
   let result = Common.ICE.with_exn_message run |> res_or_throw in
   let printed_filename = driver_flags.filename_in_msg in
   let warnings =
