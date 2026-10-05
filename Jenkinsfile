@@ -170,7 +170,7 @@ catchError {
               dir('performance-tests-cmdstan') {
                 checkout scmGit(
                   userRemoteConfigs: [[url: 'https://github.com/stan-dev/performance-tests-cmdstan']],
-                  branches: [[name: 'refs/heads/master']],
+                  branches: [[name: 'refs/heads/compiler-stress-tests']],
                   extensions: [
                     cloneOption(noTags: true, shallow: true, depth: 50),
                     submodule(shallow: true, depth: 8, recursiveSubmodules: true)])
@@ -191,6 +191,24 @@ catchError {
 
                 if (!params.skip_end_to_end) {
                   stage("Model end-to-end tests") {
+                    // todo cleanup
+                    dir('cmdstan') {
+                      def local = """\
+                                    CXX=$CXX
+                                    O=0
+                                    CXXFLAGS+=-Wall -Wp,-D_GLIBCXX_ASSERTIONS
+                                  """
+                      writeFile(file: "make/local", text: local.stripIndent())
+                      sh '''
+                             make clean-all
+                             make -j$PARALLEL build
+                         '''
+                    }
+                    sh """
+                       ./runPerformanceTests.py -j8 --check-golds --runj 8 compiler-stress-models/
+                       """
+                    // end todo
+
                     endToEnd(false)
                   }
                 }
