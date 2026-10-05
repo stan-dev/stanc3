@@ -2403,37 +2403,57 @@
                                    ())
                                   (UArray UComplex)
                                   ((pattern
-                                    (Indexed
-                                     ((pattern
-                                       (Var complex_vector_deep_dot_2_dot_2_flat__))
-                                      (meta
-                                       ((type_ (UArray UComplex)) (loc <opaque>)
-                                        (adlevel DataOnly))))
-                                     ((Between
-                                       ((pattern
-                                         (Var
-                                          complex_vector_deep_dot_2_dot_2_flat__pos__))
-                                        (meta
-                                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                                       ((pattern
-                                         (FunApp (Operator Minus)
-                                          (((pattern
-                                             (FunApp (Operator Plus)
+                                    (FunApp (StanLib to_complex FnPlain AoS)
+                                     (((pattern
+                                        (Indexed
+                                         ((pattern
+                                           (Var complex_vector_deep_dot_2_dot_2_flat__))
+                                          (meta
+                                           ((type_ (UArray UComplex)) 
+                                            (loc <opaque>) (adlevel DataOnly))))
+                                         ((Between
+                                           ((pattern
+                                             (Var
+                                              complex_vector_deep_dot_2_dot_2_flat__pos__))
+                                            (meta
+                                             ((type_ UInt) (loc <opaque>)
+                                              (adlevel DataOnly))))
+                                           ((pattern
+                                             (FunApp (Operator Minus)
                                               (((pattern
-                                                 (Var
-                                                  complex_vector_deep_dot_2_dot_2_flat__pos__))
-                                                (meta
-                                                 ((type_ UInt) (loc <opaque>)
-                                                  (adlevel DataOnly))))
-                                               ((pattern
-                                                 (FunApp (Operator Times)
-                                                  (((pattern (Lit Int 3))
+                                                 (FunApp (Operator Plus)
+                                                  (((pattern
+                                                     (Var
+                                                      complex_vector_deep_dot_2_dot_2_flat__pos__))
                                                     (meta
                                                      ((type_ UInt) (loc <opaque>)
                                                       (adlevel DataOnly))))
                                                    ((pattern
-                                                     (FunApp (Operator Times)
-                                                      (((pattern (Lit Int 2))
+                                                     (FunApp (Operator Divide)
+                                                      (((pattern
+                                                         (FunApp (Operator Times)
+                                                          (((pattern (Lit Int 3))
+                                                            (meta
+                                                             ((type_ UInt) 
+                                                              (loc <opaque>)
+                                                              (adlevel DataOnly))))
+                                                           ((pattern
+                                                             (FunApp 
+                                                              (Operator Times)
+                                                              (((pattern (Lit Int 2))
+                                                                (meta
+                                                                 ((type_ UInt)
+                                                                  (loc <opaque>)
+                                                                  (adlevel DataOnly))))
+                                                               ((pattern (Lit Int 2))
+                                                                (meta
+                                                                 ((type_ UInt)
+                                                                  (loc <opaque>)
+                                                                  (adlevel DataOnly)))))))
+                                                            (meta
+                                                             ((type_ UInt) 
+                                                              (loc <opaque>)
+                                                              (adlevel DataOnly)))))))
                                                         (meta
                                                          ((type_ UInt) 
                                                           (loc <opaque>)
@@ -2448,19 +2468,123 @@
                                                       (adlevel DataOnly)))))))
                                                 (meta
                                                  ((type_ UInt) (loc <opaque>)
+                                                  (adlevel DataOnly))))
+                                               ((pattern (Lit Int 1))
+                                                (meta
+                                                 ((type_ UInt) (loc <opaque>)
+                                                  (adlevel DataOnly)))))))
+                                            (meta
+                                             ((type_ UInt) (loc <opaque>)
+                                              (adlevel DataOnly))))))))
+                                       (meta
+                                        ((type_ (UArray UComplex)) (loc <opaque>)
+                                         (adlevel DataOnly))))
+                                      ((pattern
+                                        (Indexed
+                                         ((pattern
+                                           (Var complex_vector_deep_dot_2_dot_2_flat__))
+                                          (meta
+                                           ((type_ (UArray UComplex)) 
+                                            (loc <opaque>) (adlevel DataOnly))))
+                                         ((Between
+                                           ((pattern
+                                             (FunApp (Operator Plus)
+                                              (((pattern
+                                                 (Var
+                                                  complex_vector_deep_dot_2_dot_2_flat__pos__))
+                                                (meta
+                                                 ((type_ UInt) (loc <opaque>)
+                                                  (adlevel DataOnly))))
+                                               ((pattern
+                                                 (FunApp (Operator Divide)
+                                                  (((pattern
+                                                     (FunApp (Operator Times)
+                                                      (((pattern (Lit Int 3))
+                                                        (meta
+                                                         ((type_ UInt) 
+                                                          (loc <opaque>)
+                                                          (adlevel DataOnly))))
+                                                       ((pattern
+                                                         (FunApp (Operator Times)
+                                                          (((pattern (Lit Int 2))
+                                                            (meta
+                                                             ((type_ UInt) 
+                                                              (loc <opaque>)
+                                                              (adlevel DataOnly))))
+                                                           ((pattern (Lit Int 2))
+                                                            (meta
+                                                             ((type_ UInt) 
+                                                              (loc <opaque>)
+                                                              (adlevel DataOnly)))))))
+                                                        (meta
+                                                         ((type_ UInt) 
+                                                          (loc <opaque>)
+                                                          (adlevel DataOnly)))))))
+                                                    (meta
+                                                     ((type_ UInt) (loc <opaque>)
+                                                      (adlevel DataOnly))))
+                                                   ((pattern (Lit Int 2))
+                                                    (meta
+                                                     ((type_ UInt) (loc <opaque>)
+                                                      (adlevel DataOnly)))))))
+                                                (meta
+                                                 ((type_ UInt) (loc <opaque>)
                                                   (adlevel DataOnly)))))))
                                             (meta
                                              ((type_ UInt) (loc <opaque>)
                                               (adlevel DataOnly))))
-                                           ((pattern (Lit Int 1))
+                                           ((pattern
+                                             (FunApp (Operator Minus)
+                                              (((pattern
+                                                 (FunApp (Operator Plus)
+                                                  (((pattern
+                                                     (Var
+                                                      complex_vector_deep_dot_2_dot_2_flat__pos__))
+                                                    (meta
+                                                     ((type_ UInt) (loc <opaque>)
+                                                      (adlevel DataOnly))))
+                                                   ((pattern
+                                                     (FunApp (Operator Times)
+                                                      (((pattern (Lit Int 3))
+                                                        (meta
+                                                         ((type_ UInt) 
+                                                          (loc <opaque>)
+                                                          (adlevel DataOnly))))
+                                                       ((pattern
+                                                         (FunApp (Operator Times)
+                                                          (((pattern (Lit Int 2))
+                                                            (meta
+                                                             ((type_ UInt) 
+                                                              (loc <opaque>)
+                                                              (adlevel DataOnly))))
+                                                           ((pattern (Lit Int 2))
+                                                            (meta
+                                                             ((type_ UInt) 
+                                                              (loc <opaque>)
+                                                              (adlevel DataOnly)))))))
+                                                        (meta
+                                                         ((type_ UInt) 
+                                                          (loc <opaque>)
+                                                          (adlevel DataOnly)))))))
+                                                    (meta
+                                                     ((type_ UInt) (loc <opaque>)
+                                                      (adlevel DataOnly)))))))
+                                                (meta
+                                                 ((type_ UInt) (loc <opaque>)
+                                                  (adlevel DataOnly))))
+                                               ((pattern (Lit Int 1))
+                                                (meta
+                                                 ((type_ UInt) (loc <opaque>)
+                                                  (adlevel DataOnly)))))))
                                             (meta
                                              ((type_ UInt) (loc <opaque>)
-                                              (adlevel DataOnly)))))))
-                                        (meta
-                                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+                                              (adlevel DataOnly))))))))
+                                       (meta
+                                        ((type_ (UArray UComplex)) (loc <opaque>)
+                                         (adlevel DataOnly)))))))
                                    (meta
-                                    ((type_ (UArray UComplex)) (loc <opaque>)
-                                     (adlevel DataOnly))))))
+                                    ((type_ (UArray UComplexVector)) 
+                                     (loc <opaque>) (adlevel DataOnly))))))
                                 (meta <opaque>))
                                ((pattern
                                  (Assignment ((LVariable pos__) ()) UInt
@@ -9665,37 +9789,57 @@
                                    ())
                                   (UArray UComplex)
                                   ((pattern
-                                    (Indexed
-                                     ((pattern
-                                       (Var complex_vector_deep_p_dot_2_dot_2_flat__))
-                                      (meta
-                                       ((type_ (UArray UComplex)) (loc <opaque>)
-                                        (adlevel DataOnly))))
-                                     ((Between
-                                       ((pattern
-                                         (Var
-                                          complex_vector_deep_p_dot_2_dot_2_flat__pos__))
-                                        (meta
-                                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                                       ((pattern
-                                         (FunApp (Operator Minus)
-                                          (((pattern
-                                             (FunApp (Operator Plus)
+                                    (FunApp (StanLib to_complex FnPlain AoS)
+                                     (((pattern
+                                        (Indexed
+                                         ((pattern
+                                           (Var complex_vector_deep_p_dot_2_dot_2_flat__))
+                                          (meta
+                                           ((type_ (UArray UComplex)) 
+                                            (loc <opaque>) (adlevel DataOnly))))
+                                         ((Between
+                                           ((pattern
+                                             (Var
+                                              complex_vector_deep_p_dot_2_dot_2_flat__pos__))
+                                            (meta
+                                             ((type_ UInt) (loc <opaque>)
+                                              (adlevel DataOnly))))
+                                           ((pattern
+                                             (FunApp (Operator Minus)
                                               (((pattern
-                                                 (Var
-                                                  complex_vector_deep_p_dot_2_dot_2_flat__pos__))
-                                                (meta
-                                                 ((type_ UInt) (loc <opaque>)
-                                                  (adlevel DataOnly))))
-                                               ((pattern
-                                                 (FunApp (Operator Times)
-                                                  (((pattern (Lit Int 3))
+                                                 (FunApp (Operator Plus)
+                                                  (((pattern
+                                                     (Var
+                                                      complex_vector_deep_p_dot_2_dot_2_flat__pos__))
                                                     (meta
                                                      ((type_ UInt) (loc <opaque>)
                                                       (adlevel DataOnly))))
                                                    ((pattern
-                                                     (FunApp (Operator Times)
-                                                      (((pattern (Lit Int 2))
+                                                     (FunApp (Operator Divide)
+                                                      (((pattern
+                                                         (FunApp (Operator Times)
+                                                          (((pattern (Lit Int 3))
+                                                            (meta
+                                                             ((type_ UInt) 
+                                                              (loc <opaque>)
+                                                              (adlevel DataOnly))))
+                                                           ((pattern
+                                                             (FunApp 
+                                                              (Operator Times)
+                                                              (((pattern (Lit Int 2))
+                                                                (meta
+                                                                 ((type_ UInt)
+                                                                  (loc <opaque>)
+                                                                  (adlevel DataOnly))))
+                                                               ((pattern (Lit Int 2))
+                                                                (meta
+                                                                 ((type_ UInt)
+                                                                  (loc <opaque>)
+                                                                  (adlevel DataOnly)))))))
+                                                            (meta
+                                                             ((type_ UInt) 
+                                                              (loc <opaque>)
+                                                              (adlevel DataOnly)))))))
                                                         (meta
                                                          ((type_ UInt) 
                                                           (loc <opaque>)
@@ -9710,19 +9854,123 @@
                                                       (adlevel DataOnly)))))))
                                                 (meta
                                                  ((type_ UInt) (loc <opaque>)
+                                                  (adlevel DataOnly))))
+                                               ((pattern (Lit Int 1))
+                                                (meta
+                                                 ((type_ UInt) (loc <opaque>)
+                                                  (adlevel DataOnly)))))))
+                                            (meta
+                                             ((type_ UInt) (loc <opaque>)
+                                              (adlevel DataOnly))))))))
+                                       (meta
+                                        ((type_ (UArray UComplex)) (loc <opaque>)
+                                         (adlevel DataOnly))))
+                                      ((pattern
+                                        (Indexed
+                                         ((pattern
+                                           (Var complex_vector_deep_p_dot_2_dot_2_flat__))
+                                          (meta
+                                           ((type_ (UArray UComplex)) 
+                                            (loc <opaque>) (adlevel DataOnly))))
+                                         ((Between
+                                           ((pattern
+                                             (FunApp (Operator Plus)
+                                              (((pattern
+                                                 (Var
+                                                  complex_vector_deep_p_dot_2_dot_2_flat__pos__))
+                                                (meta
+                                                 ((type_ UInt) (loc <opaque>)
+                                                  (adlevel DataOnly))))
+                                               ((pattern
+                                                 (FunApp (Operator Divide)
+                                                  (((pattern
+                                                     (FunApp (Operator Times)
+                                                      (((pattern (Lit Int 3))
+                                                        (meta
+                                                         ((type_ UInt) 
+                                                          (loc <opaque>)
+                                                          (adlevel DataOnly))))
+                                                       ((pattern
+                                                         (FunApp (Operator Times)
+                                                          (((pattern (Lit Int 2))
+                                                            (meta
+                                                             ((type_ UInt) 
+                                                              (loc <opaque>)
+                                                              (adlevel DataOnly))))
+                                                           ((pattern (Lit Int 2))
+                                                            (meta
+                                                             ((type_ UInt) 
+                                                              (loc <opaque>)
+                                                              (adlevel DataOnly)))))))
+                                                        (meta
+                                                         ((type_ UInt) 
+                                                          (loc <opaque>)
+                                                          (adlevel DataOnly)))))))
+                                                    (meta
+                                                     ((type_ UInt) (loc <opaque>)
+                                                      (adlevel DataOnly))))
+                                                   ((pattern (Lit Int 2))
+                                                    (meta
+                                                     ((type_ UInt) (loc <opaque>)
+                                                      (adlevel DataOnly)))))))
+                                                (meta
+                                                 ((type_ UInt) (loc <opaque>)
                                                   (adlevel DataOnly)))))))
                                             (meta
                                              ((type_ UInt) (loc <opaque>)
                                               (adlevel DataOnly))))
-                                           ((pattern (Lit Int 1))
+                                           ((pattern
+                                             (FunApp (Operator Minus)
+                                              (((pattern
+                                                 (FunApp (Operator Plus)
+                                                  (((pattern
+                                                     (Var
+                                                      complex_vector_deep_p_dot_2_dot_2_flat__pos__))
+                                                    (meta
+                                                     ((type_ UInt) (loc <opaque>)
+                                                      (adlevel DataOnly))))
+                                                   ((pattern
+                                                     (FunApp (Operator Times)
+                                                      (((pattern (Lit Int 3))
+                                                        (meta
+                                                         ((type_ UInt) 
+                                                          (loc <opaque>)
+                                                          (adlevel DataOnly))))
+                                                       ((pattern
+                                                         (FunApp (Operator Times)
+                                                          (((pattern (Lit Int 2))
+                                                            (meta
+                                                             ((type_ UInt) 
+                                                              (loc <opaque>)
+                                                              (adlevel DataOnly))))
+                                                           ((pattern (Lit Int 2))
+                                                            (meta
+                                                             ((type_ UInt) 
+                                                              (loc <opaque>)
+                                                              (adlevel DataOnly)))))))
+                                                        (meta
+                                                         ((type_ UInt) 
+                                                          (loc <opaque>)
+                                                          (adlevel DataOnly)))))))
+                                                    (meta
+                                                     ((type_ UInt) (loc <opaque>)
+                                                      (adlevel DataOnly)))))))
+                                                (meta
+                                                 ((type_ UInt) (loc <opaque>)
+                                                  (adlevel DataOnly))))
+                                               ((pattern (Lit Int 1))
+                                                (meta
+                                                 ((type_ UInt) (loc <opaque>)
+                                                  (adlevel DataOnly)))))))
                                             (meta
                                              ((type_ UInt) (loc <opaque>)
-                                              (adlevel DataOnly)))))))
-                                        (meta
-                                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+                                              (adlevel DataOnly))))))))
+                                       (meta
+                                        ((type_ (UArray UComplex)) (loc <opaque>)
+                                         (adlevel DataOnly)))))))
                                    (meta
-                                    ((type_ (UArray UComplex)) (loc <opaque>)
-                                     (adlevel DataOnly))))))
+                                    ((type_ (UArray UComplexVector)) 
+                                     (loc <opaque>) (adlevel DataOnly))))))
                                 (meta <opaque>))
                                ((pattern
                                  (Assignment ((LVariable pos__) ()) UInt

@@ -275,14 +275,36 @@ let rec var_context_read_inside_tuple enclosing_tuple_name origin_type
                 ( StanLib ("to_complex", FnPlain, AoS)
                 , [ Expr.Helpers.add_int_index origin_name
                       (Index.Single (Expr.Helpers.variable enclosing_tuple_pos))
-                  ; (* TODO need to figure something else out for when the
-                       bottom layer is a vec/matrix/rectangular. offset
-                       calculation like vals_c does *)
-                    Expr.Helpers.add_int_index origin_name
+                  ; Expr.Helpers.add_int_index origin_name
                       (Index.Single
                          Expr.Helpers.(
                            binop (variable enclosing_tuple_pos) Plus one)) ] )
           ; meta= {Expr.Typed.Meta.empty with type_= UComplex} }
+    | b when UnsizedType.internal_scalar b = UnsizedType.UComplex ->
+        (* TODO verify on things deeper than 1d? *)
+        Expr.
+          { pattern=
+              FunApp
+                ( StanLib ("to_complex", FnPlain, AoS)
+                , [ Expr.Helpers.add_int_index origin_name
+                      (Index.Between
+                         ( Expr.Helpers.variable enclosing_tuple_pos
+                         , Expr.Helpers.(
+                             binop
+                               (binop
+                                  (variable enclosing_tuple_pos)
+                                  Plus
+                                  (binop (SizedType.io_size st) Divide (int 2)))
+                               Minus one) ))
+                  ; Expr.Helpers.add_int_index origin_name
+                      (Index.Between
+                         ( Expr.Helpers.(
+                             binop
+                               (variable enclosing_tuple_pos)
+                               Plus
+                               (binop (SizedType.io_size st) Divide (int 2)))
+                         , end_position )) ] )
+          ; meta= {Expr.Typed.Meta.empty with type_= b (* WRONG *)} }
     | _ ->
         Expr.Helpers.add_int_index origin_name
           (Index.Between

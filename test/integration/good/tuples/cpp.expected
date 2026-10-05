@@ -741,12 +741,22 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                   complex_vector_deep_dot_2_dot_2_temp___flat__;
                 stan::model::assign(
                   complex_vector_deep_dot_2_dot_2_temp___flat__,
-                  stan::model::rvalue(complex_vector_deep_dot_2_dot_2_flat__,
-                    "complex_vector_deep_dot_2_dot_2_flat__",
-                    stan::model::index_min_max(
-                      complex_vector_deep_dot_2_dot_2_flat__pos__,
-                      ((complex_vector_deep_dot_2_dot_2_flat__pos__ + (3 * (2
-                      * 2))) - 1))),
+                  stan::math::to_complex(
+                    stan::model::rvalue(
+                      complex_vector_deep_dot_2_dot_2_flat__,
+                      "complex_vector_deep_dot_2_dot_2_flat__",
+                      stan::model::index_min_max(
+                        complex_vector_deep_dot_2_dot_2_flat__pos__,
+                        ((complex_vector_deep_dot_2_dot_2_flat__pos__ + ((3 *
+                        (2 * 2)) / 2)) - 1))),
+                    stan::model::rvalue(
+                      complex_vector_deep_dot_2_dot_2_flat__,
+                      "complex_vector_deep_dot_2_dot_2_flat__",
+                      stan::model::index_min_max(
+                        (complex_vector_deep_dot_2_dot_2_flat__pos__ + ((3 *
+                        (2 * 2)) / 2)),
+                        ((complex_vector_deep_dot_2_dot_2_flat__pos__ + (3 *
+                        (2 * 2))) - 1)))),
                   "assigning variable complex_vector_deep_dot_2_dot_2_temp___flat__");
                 pos__ = 1;
                 for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
@@ -2958,13 +2968,22 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                   complex_vector_deep_p_dot_2_dot_2_temp___flat__;
                 stan::model::assign(
                   complex_vector_deep_p_dot_2_dot_2_temp___flat__,
-                  stan::model::rvalue(
-                    complex_vector_deep_p_dot_2_dot_2_flat__,
-                    "complex_vector_deep_p_dot_2_dot_2_flat__",
-                    stan::model::index_min_max(
-                      complex_vector_deep_p_dot_2_dot_2_flat__pos__,
-                      ((complex_vector_deep_p_dot_2_dot_2_flat__pos__ + (3 *
-                      (2 * 2))) - 1))),
+                  stan::math::to_complex(
+                    stan::model::rvalue(
+                      complex_vector_deep_p_dot_2_dot_2_flat__,
+                      "complex_vector_deep_p_dot_2_dot_2_flat__",
+                      stan::model::index_min_max(
+                        complex_vector_deep_p_dot_2_dot_2_flat__pos__,
+                        ((complex_vector_deep_p_dot_2_dot_2_flat__pos__ + ((3
+                        * (2 * 2)) / 2)) - 1))),
+                    stan::model::rvalue(
+                      complex_vector_deep_p_dot_2_dot_2_flat__,
+                      "complex_vector_deep_p_dot_2_dot_2_flat__",
+                      stan::model::index_min_max(
+                        (complex_vector_deep_p_dot_2_dot_2_flat__pos__ + ((3
+                        * (2 * 2)) / 2)),
+                        ((complex_vector_deep_p_dot_2_dot_2_flat__pos__ + (3
+                        * (2 * 2))) - 1)))),
                   "assigning variable complex_vector_deep_p_dot_2_dot_2_temp___flat__");
                 pos__ = 1;
                 for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
