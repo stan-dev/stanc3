@@ -1,6 +1,5 @@
 open Std
 open Ast
-open Middle
 
 let current_removal_version = (2, 40)
 
@@ -38,55 +37,35 @@ let userdef_functions program =
 let is_redundant_forwarddecl fundefs funname arguments =
   Hashtbl.mem fundefs (funname.name, Ast.type_of_arguments arguments)
 
-let lkj_cov_message =
-  "lkj_cov is deprecated and will be removed in Stan 3.0. Use lkj_corr with an \
-   independent lognormal distribution on the scales, see: \
-   https://mc-stan.org/docs/reference-manual/deprecations.html#lkj_cov-distribution"
-
-let rec collect_deprecated_expr (acc : (Location_span.t * string) list)
-    ({expr; _} : Ast.typed_expression) : (Location_span.t * string) list =
+let rec collect_deprecated_expr (acc : Warnings.t list)
+    ({expr; _} : Ast.typed_expression) : Warnings.t list =
   match expr with
   | CondDistApp ((StanLib _ | UserDefined _), {name; id_loc}, l)
    |FunApp ((StanLib _ | UserDefined _), {name; id_loc}, l) ->
       let w =
         match String.Map.find_opt name stan_lib_deprecations with
         | Some (rename, (major, minor)) when not (expired (major, minor)) ->
-            let version = Int.to_string major ^ "." ^ Int.to_string minor in
-            [ ( id_loc
-              , name ^ " is deprecated and will be removed in Stan " ^ version
-                ^ ". Use " ^ rename
-                ^ " instead. This can be automatically changed using the \
-                   canonicalize flag for stanc" ) ]
+            [Warnings.function_deprecation id_loc name (major, minor) rename]
         | _ -> (
             match String.Map.find_opt name deprecated_odes with
             | Some (rename, (major, minor)) ->
-                let version = Int.to_string major ^ "." ^ Int.to_string minor in
-                [ ( id_loc
-                  , name ^ " is deprecated and will be removed in Stan "
-                    ^ version ^ ". Use " ^ rename
-                    ^ " instead. The new interface is slightly different, see: \
-                       https://mc-stan.org/users/documentation/case-studies/convert_odes.html"
-                  ) ]
+                [Warnings.ode_deprecation id_loc name (major, minor) rename]
             | _ when String.equal name "lkj_cov_lpdf" ->
-                [(id_loc, lkj_cov_message)]
+                [Warnings.lkj_cov_deprecation id_loc]
             | _ -> []) in
       acc @ w @ List.concat_map l ~f:(fun e -> collect_deprecated_expr [] e)
   | _ -> fold_expression collect_deprecated_expr acc expr
 
 let collect_deprecated_lval acc l = fold_lval_with collect_deprecated_expr acc l
 
-let rec collect_deprecated_stmt fundefs (acc : (Location_span.t * string) list)
-    {stmt; _} : (Location_span.t * string) list =
+let rec collect_deprecated_stmt fundefs (acc : Warnings.t list) {stmt; _} :
+    Warnings.t list =
   match stmt with
   | FunDef {body= {stmt= Skip; _}; funname; arguments; _}
     when is_redundant_forwarddecl fundefs funname arguments ->
-      acc
-      @ [ ( funname.id_loc
-          , "Functions do not need to be declared before definition; all user \
-             defined function names are always in scope regardless of \
-             definition order." ) ]
+      acc @ [Warnings.forward_declaration funname.id_loc]
   | Tilde {distribution; _} when String.equal distribution.name "lkj_cov" ->
-      let acc = (distribution.id_loc, lkj_cov_message) :: acc in
+      let acc = Warnings.lkj_cov_deprecation distribution.id_loc :: acc in
       fold_statement collect_deprecated_expr
         (collect_deprecated_stmt fundefs)
         collect_deprecated_lval acc stmt

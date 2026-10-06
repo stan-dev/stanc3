@@ -41,26 +41,24 @@ error: File 'badrecurse2.stan' recursively included itself.
 [exit 1]
   $ stanc --include-paths="../included"  basic.stan
 error: Ill-typed assignment statement.
-    ┌─ basic.stan:2:5
+    ┌─ basic.stan:2:13
   1 │  model {
   2 │      int x = 1.5;
-    │      ^^^^^^^^^^^^
-    │      │
-    │      Expected the right hand side to have a type matching the destination.
-    │      Instead found type real.
-    │      Left hand side has type int.
+    │          -   ^^^ Expected the right hand side to have a type matching the destination.
+    │          │       Instead found type real.
+    │          │
+    │          Left hand side has type int.
   3 │  }
 [exit 1]
   $ stanc --include-paths="../included"  basic2.stan
 error: Ill-typed assignment statement.
-    ┌─ ../included/basic.stan:2:5
+    ┌─ ../included/basic.stan:2:13
   1 │  model {
   2 │      int x = 1.5;
-    │      ^^^^^^^^^^^^
-    │      │
-    │      Expected the right hand side to have a type matching the destination.
-    │      Instead found type real.
-    │      Left hand side has type int.
+    │          -   ^^^ Expected the right hand side to have a type matching the destination.
+    │          │       Instead found type real.
+    │          │
+    │          Left hand side has type int.
   3 │  }
     ┌─ basic2.stan:1:1
   1 │  #include <basic.stan>

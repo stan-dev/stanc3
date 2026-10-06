@@ -34,9 +34,7 @@ let stan2cpp_wrapped name code flags includes : stancReturn Js.t =
     (result, warnings, driver_flags.filename_in_msg, code, color_output) in
   match compilation_result with
   | Ok (result, warnings, printed_filename, code, color_output) ->
-      let warnings =
-        include_reader_warnings
-        @ List.map ~f:(Warnings.to_grace ?printed_filename ~code) warnings in
+      let warnings = include_reader_warnings @ warnings in
       wrap_result ?printed_filename ~color_output ~code result ~warnings
   | Error non_compilation_error (* either an ICE or malformed JS input *) ->
       wrap_error ~color_output:false ~warnings:include_reader_warnings
@@ -123,16 +121,14 @@ let model_info name code flags includes =
     ; debug_settings= Driver.Flags.default.debug_settings } in
   let warnings = ref [] in
   let run () =
-    let res =
-      Return.with_return @@ fun return ->
-      let output : Driver.Entry.other_output -> unit = function
-        | Warnings w -> warnings := !warnings @ w
-        | Info i -> return (Ok i)
-        | _ -> () in
-      let _ = Driver.Entry.stan2cpp name (`Code code) driver_flags output in
-      (* impossible, but needed for typing *)
-      return (Ok `Null) in
-    res in
+    Return.with_return @@ fun return ->
+    let output : Driver.Entry.other_output -> unit = function
+      | Warnings w -> warnings := !warnings @ w
+      | Info i -> return (Ok i)
+      | _ -> () in
+    let _ = Driver.Entry.stan2cpp name (`Code code) driver_flags output in
+    (* impossible, but needed for typing *)
+    return (Ok `Null) in
   let result = Common.ICE.with_exn_message run |> res_or_throw in
   let printed_filename = driver_flags.filename_in_msg in
   let warnings =

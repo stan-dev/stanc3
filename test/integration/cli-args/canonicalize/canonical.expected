@@ -192,7 +192,14 @@ generated quantities {
                                    x_r, x_i);
 }
 
-deprecated.stan:24:3: warning: Assignment of variable to itself.
+warning: Assignment of variable to itself.
+    ┌─ deprecated.stan:24:16
+ 23 │    array[5,5] real idxs;
+ 24 │    idxs[1][:] = idxs[1][:];
+    │    ----------   ^^^^^^^^^^ Value here.
+    │    │
+    │    Assigned to itself.
+ 25 │   }
 [exit 0]
   $ stanc --print-canonical funs.stanfunctions
 // comment test comment
@@ -239,22 +246,28 @@ model {
   t.2 = (3, 4).1;
 }
 
-parenthesize.stan:27:14: warning: Found chained comparison
-      1 < 2 > 3
-  This is interpreted as
-      (1 < 2) > 3
-  Consider if the intended meaning was
-      1 < 2 && 2 > 3
-  instead. You can silence this warning by adding explicit parentheses. This
-  can be automatically changed using the canonicalize flag for stanc
-parenthesize.stan:27:14: warning: Found chained comparison
-      1 < 2 > 3 < 4
-  This is interpreted as
-      (1 < 2 > 3) < 4
-  Consider if the intended meaning was
-      1 < 2 > 3 && 3 < 4
-  instead. You can silence this warning by adding explicit parentheses. This
-  can be automatically changed using the canonicalize flag for stanc
+warning: Found chained comparison.
+    ┌─ parenthesize.stan:27:14
+ 26 │  
+ 27 │    int bool = 1 < 2 > 3 < 4;
+    │               ^^^^^^^^^ This is interpreted as (1 < 2) > 3.
+    │                         Consider if the intended meaning was (1 < 2) && (2 > 3) instead.
+ 28 │  
+    = You can silence this warning by adding explicit
+      parentheses.
+    = This can be automatically changed using the canonicalize flag for
+      stanc.
+warning: Found chained comparison.
+    ┌─ parenthesize.stan:27:14
+ 26 │  
+ 27 │    int bool = 1 < 2 > 3 < 4;
+    │               ^^^^^^^^^^^^^ This is interpreted as (1 < 2 > 3) < 4.
+    │                             Consider if the intended meaning was (1 < 2 > 3) && (3 < 4) instead.
+ 28 │  
+    = You can silence this warning by adding explicit
+      parentheses.
+    = This can be automatically changed using the canonicalize flag for
+      stanc.
 [exit 0]
   $ stanc --print-canonical squaremc.stan
 /*

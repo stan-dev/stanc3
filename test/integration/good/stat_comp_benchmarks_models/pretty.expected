@@ -376,9 +376,14 @@ generated quantities {
     C_ppc[n] = lognormal_rng(log(C[n, 1]), sigma);
 }
 
-one_comp_mm_elim_abs.stan:49:9: warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf
-  instead. The new interface is slightly different, see:
-  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
+    ┌─ one_comp_mm_elim_abs.stan:49:9
+ 48 │      array[3] real theta = {k_a, K_m, V_m};
+ 49 │      C = integrate_ode_bdf(one_comp_mm_elim_abs, C0, t0, times, theta, x_r,
+    │          ^^^^^^^^^^^^^^^^^ Use ode_bdf instead.
+ 50 │                            x_i);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 [exit 0]
   $ stanc --auto-format sim_one_comp_mm_elim_abs.stan
 functions {
@@ -441,9 +446,14 @@ generated quantities {
     C_hat[n] = lognormal_rng(log(C[n, 1]), sigma);
 }
 
-sim_one_comp_mm_elim_abs.stan:55:7: warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf
-  instead. The new interface is slightly different, see:
-  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
+    ┌─ sim_one_comp_mm_elim_abs.stan:55:7
+ 54 │    
+ 55 │    C = integrate_ode_bdf(one_comp_mm_elim_abs, C0, t0, times, theta, x_r, x_i);
+    │        ^^^^^^^^^^^^^^^^^ Use ode_bdf instead.
+ 56 │    
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 [exit 0]
   $ stanc --auto-format sir.stan
 // Simple SIR model inspired by the presentation in
@@ -507,7 +517,12 @@ model {
   B_hat ~ lognormal(log(col(to_matrix(y), 4)), 0.15);
 }
 
-sir.stan:46:9: warning: integrate_ode_rk45 is deprecated and will be removed in Stan 3.0. Use
-  ode_rk45 instead. The new interface is slightly different, see:
-  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_rk45 is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead.
+    ┌─ sir.stan:46:9
+ 45 │      array[5] real theta = {beta, kappa, gamma, xi, delta};
+ 46 │      y = integrate_ode_rk45(simple_SIR, y0, t0, t, theta, x_r, x_i);
+    │          ^^^^^^^^^^^^^^^^^^ Use ode_rk45 instead.
+ 47 │    }
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 [exit 0]

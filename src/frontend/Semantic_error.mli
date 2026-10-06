@@ -238,4 +238,4 @@ val non_real_prob_fn_def : Location_span.t -> UnsizedType.returntype -> t
 val prob_density_non_real_variate : Location_span.t -> UnsizedType.t option -> t
 val prob_mass_non_int_variate : Location_span.t -> UnsizedType.t option -> t
 val duplicate_arg_names : Location_span.t -> Ast.identifier -> t
-val incompatible_return_types : Location_span.t -> t
+val incompatible_return_types : Location_span.t -> Ast.incomplete -> t

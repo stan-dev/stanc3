@@ -26,10 +26,7 @@ let error e = raise (TypecheckerException e)
 
 (* warnings are built up in a list *)
 let warnings : Warnings.t list ref = ref []
-
-let add_warning (span : Location_span.t) (message : string) =
-  warnings := (span, message) :: !warnings
-
+let add_warning (w : Warnings.t) = warnings := w :: !warnings
 let attach_warnings x = (x, List.rev !warnings)
 let requires_higher_order_autodiff = ref []
 
@@ -160,13 +157,6 @@ let verify_name_fresh_udf loc tenv name =
 let verify_name_fresh tenv id ~is_udf =
   if is_udf then verify_name_fresh_udf id.id_loc tenv id.name
   else verify_name_fresh_var id.id_loc tenv id.name
-
-let is_of_compatible_return_type rt1 srt2 =
-  UnsizedType.(
-    match (rt1, srt2) with
-    | Void, _ -> true
-    | ReturnType _, Complete -> true
-    | _ -> false)
 
 (* -- Expressions ------------------------------------------------- *)
 let check_ternary_if loc pe te fe =
@@ -460,13 +450,7 @@ let verify_fn_conditioning loc id =
 let verify_fn_target_plus_equals cf loc id =
   if String.ends_with id.name ~suffix:"_lp" then
     if cf.current_block = TParam then
-      add_warning loc
-        (* resolve https://github.com/stan-dev/stanc3/issues/1482 before
-           removal *)
-        "Using _lp functions in transformed parameters is deprecated and will \
-         be disallowed in Stan 2.40. Use an _jacobian function instead, as \
-         this allows change of variable adjustments which are conditionally \
-         enabled by the algorithms."
+      add_warning (Warnings.lp_in_transparam loc)
     else if in_lp_function cf || cf.current_block = Model then ()
     else Semantic_error.target_plusequals_outside_model_or_logprob loc |> error
 
@@ -481,13 +465,8 @@ let verify_fn_jacobian_plus_equals cf loc tenv id args =
     then
       let alt =
         String.chop_suffix_exn ~suffix:"_jacobian" id.name ^ "_constrain" in
-      let message =
-        "Calling a _jacobian function without any parameter arguments still \
-         applies the Jacobian adjustments, ensure this is intentional!"
-        ^
-        if Env.mem tenv alt then " Consider using " ^ alt ^ " instead." else ""
-      in
-      warnings := (loc, message) :: !warnings
+      add_warning
+        (Warnings.jacobian_dataonly loc (Option.some_if (Env.mem tenv alt) alt))
 
 (** Rng functions cannot be used in Tp or Model and only in function defs with
     the right suffix *)
@@ -1063,8 +1042,6 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
       let le = ce e1 in
       let re = ce e2 in
       let binop_type_warnings x y =
-        let pp_indented_box pp ppf = Fmt.pf ppf "@,    @[<hov 2>%a@]@," pp in
-        let pp_indented_box_t pp ppf = pp_indented_box (Fmt.fmt "%t") ppf pp in
         match (x.emeta.type_, y.emeta.type_, op) with
         | UInt, UInt, Divide ->
             let hint ppf =
@@ -1076,48 +1053,22 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
               | _ ->
                   Fmt.pf ppf "%a * 1.0 / %a" Pretty_printing.pp_typed_expression
                     x Pretty_printing.pp_typed_expression y in
-            let s =
-              Fmt.str
-                "@[<v>Found int division:%aValues will be rounded towards \
-                 zero. If rounding is not desired you can write the division \
-                 as%tIf rounding is intended please use the integer division \
-                 operator %%/%%.@]"
-                (pp_indented_box Pretty_printing.pp_expression)
-                {expr; emeta} (pp_indented_box_t hint) in
-            add_warning emeta.loc s
+            add_warning (Warnings.int_divide loc hint)
         | (UArray UMatrix | UMatrix), (UInt | UReal), Pow ->
-            let s =
-              Fmt.str
-                "@[<v>Found matrix^scalar:%amatrix ^ number is interpreted as \
-                 element-wise exponentiation. If this is intended, you can \
-                 silence this warning by using elementwise operator .^@ If you \
-                 intended matrix exponentiation, use%tinstead.@]"
-                (pp_indented_box Pretty_printing.pp_expression)
-                {expr; emeta}
-                (pp_indented_box_t
-                   (Format.dprintf "matrix_power(%a, %a)"
-                      Pretty_printing.pp_expression e1
-                      Pretty_printing.pp_expression e2)) in
-            add_warning x.emeta.loc s
+            let hint ppf =
+              Fmt.pf ppf "matrix_power(%a, %a)" Pretty_printing.pp_expression e1
+                Pretty_printing.pp_expression e2 in
+            add_warning (Warnings.matrix_power loc hint)
         | _ when Operator.is_cmp op -> (
             match le.expr with
             | BinOp (e1, op2, e2) when Operator.is_cmp op2 ->
                 let pp_e = Pretty_printing.pp_typed_expression in
                 let pp = Operator.pp in
-                add_warning loc
-                  (Fmt.str
-                     "@[<v>Found chained comparison%aThis is interpreted \
-                      as%tConsider if the intended meaning was%tinstead. You \
-                      can silence this warning by adding explicit parentheses. \
-                      This can be automatically changed using the canonicalize \
-                      flag for stanc@]"
-                     (pp_indented_box Pretty_printing.pp_expression)
-                     {expr; emeta}
-                     (pp_indented_box_t
-                        (Format.dprintf "(%a) %a %a" pp_e le pp op pp_e re))
-                     (pp_indented_box_t
-                        (Format.dprintf "%a %a %a && %a %a %a" pp_e e1 pp op2
-                           pp_e e2 pp_e e2 pp op pp_e re)))
+                let hint1 ppf = Fmt.pf ppf "(%a) %a %a" pp_e le pp op pp_e re in
+                let hint2 ppf =
+                  Fmt.pf ppf "(%a %a %a) && (%a %a %a)" pp_e e1 pp op2 pp_e e2
+                    pp_e e2 pp op pp_e re in
+                add_warning (Warnings.compare_chain loc hint1 hint2)
             | _ -> ())
         | _ -> () in
       binop_type_warnings le re;
@@ -1221,6 +1172,10 @@ let check_expression_of_scalar_or_type cf tenv t e name =
 (* -- Statements ------------------------------------------------- *)
 (* non returning functions *)
 
+let incomplete = {breaks= []; continues= false; controlflow= Incomplete Next}
+let incomplete_with i = {incomplete with controlflow= Incomplete i}
+let complete c = {breaks= []; continues= false; controlflow= Complete c}
+
 let check_nrfn loc tenv id es =
   match Env.find tenv id.name with
   | {kind= `Variable {location; _}; _} :: _
@@ -1243,7 +1198,7 @@ let check_nrfn loc tenv id es =
                  ( fnk (Fun_kind.suffix_from_name id.name)
                  , id
                  , Promotion.promote_list es promotions ))
-            ~return_type:Incomplete ~loc
+            ~flow_type:incomplete ~loc
       | UniqueMatch (ReturnType _, _, _, prev) ->
           Semantic_error.nonreturning_fn_expected_returning_found loc id.name
             prev
@@ -1281,7 +1236,7 @@ let check_target_pe loc cf tenv e =
   let te = check_expression cf tenv e in
   verify_target_pe_usage loc cf;
   verify_target_pe_expr_type loc te;
-  mk_typed_statement ~stmt:(TargetPE te) ~return_type:Incomplete ~loc
+  mk_typed_statement ~stmt:(TargetPE te) ~flow_type:incomplete ~loc
 
 let verify_jacobian_pe_usage loc cf =
   if in_jacobian_function cf || cf.current_block = TParam then ()
@@ -1291,7 +1246,7 @@ let check_jacobian_pe loc cf tenv e =
   let te = check_expression cf tenv e in
   verify_jacobian_pe_usage loc cf;
   verify_target_pe_expr_type loc te;
-  mk_typed_statement ~stmt:(JacobianPE te) ~return_type:Incomplete ~loc
+  mk_typed_statement ~stmt:(JacobianPE te) ~flow_type:incomplete ~loc
 
 (* assignments *)
 let verify_assignment_read_only loc is_readonly id decl_location =
@@ -1317,18 +1272,19 @@ let rec verify_assignment_non_function loc id ut =
 
 (** We issue a warning if the initial value for a declaration contains any
     reference to the variable being declared *)
-let warn_self_declare loc variable_name rhs_opt =
+let warn_self_declare variable rhs_opt =
   Option.iter rhs_opt ~f:(fun rhs ->
       let rhs_ids = Ast.extract_ids rhs in
-      if List.exists rhs_ids ~f:(fun id -> String.equal id.name variable_name)
-      then
-        add_warning loc
-          "Assignment of variable to itself during declaration. This is almost \
-           certainly a bug.")
+      match
+        List.find_opt rhs_ids ~f:(fun id -> String.equal id.name variable.name)
+      with
+      | None -> ()
+      | Some r ->
+          add_warning (Warnings.initialize_with_self variable.id_loc r.id_loc))
 
 (** For general assignments, we only warn if we believe the lhs and rhs are
     exactly the same value *)
-let warn_self_assignment loc lhs rhs =
+let warn_self_assignment lhs rhs =
   let rec strip_parens e =
     match e.expr with Paren e -> strip_parens e | _ -> e in
   let rhs_opt =
@@ -1336,8 +1292,17 @@ let warn_self_assignment loc lhs rhs =
     |> Ast.lvalue_of_expr_opt in
   Option.iter rhs_opt ~f:(fun rhs ->
       let lhs = lhs |> Ast.untyped_lvalue_of_typed_lvalue_pack in
-      if Ast.compare_untyped_lval_pack lhs rhs = 0 then
-        add_warning loc "Assignment of variable to itself.")
+      let maybe_warn lhs rhs =
+        if Ast.compare_untyped_lval lhs rhs = 0 then
+          add_warning (Warnings.assign_to_self lhs.lmeta.loc rhs.lmeta.loc)
+      in
+      let rec go = function
+        | LValue l, LValue r -> maybe_warn l r
+        | LTuplePack {lvals= l; _}, LTuplePack {lvals= r; _}
+          when List.length l = List.length r ->
+            List.iter2 l r ~f:(fun l r -> go (l, r))
+        | _ -> () in
+      go (lhs, rhs))
 
 let check_assignment_operator loc assop lhs rhs =
   let rec meta_of_lvalue lv : Ast.typed_expr_meta =
@@ -1353,7 +1318,7 @@ let check_assignment_operator loc assop lhs rhs =
     |> error in
   match assop with
   | Assign ->
-      warn_self_assignment loc lhs rhs;
+      warn_self_assignment lhs rhs;
       let rec typechk lhs (rhs : Ast.typed_expr_meta) =
         match (lhs, rhs) with
         | LValue ({lmeta= {type_; ad_level; _}; _} as lval), _ -> (
@@ -1575,7 +1540,7 @@ let check_assignment loc cf tenv assign_lhs assign_op assign_rhs =
   verify_lvalue_unique lhs;
   let rhs = check_expression cf tenv assign_rhs in
   let rhs' = check_assignment_operator loc assign_op lhs rhs in
-  mk_typed_statement ~return_type:Incomplete ~loc
+  mk_typed_statement ~flow_type:incomplete ~loc
     ~stmt:(Assignment {assign_lhs= lhs; assign_op; assign_rhs= rhs'})
 
 (* tilde/distribution notation *)
@@ -1695,16 +1660,22 @@ let check_tilde loc cf tenv distribution truncation arg args =
   verify_distribution_cdf_defined loc tenv distribution ttrunc tes;
   let stmt =
     Tilde {arg= te; distribution; args= tes; truncation= ttrunc; kind} in
-  mk_typed_statement ~stmt ~loc ~return_type:Incomplete
+  mk_typed_statement ~stmt ~loc ~flow_type:incomplete
 
 (* Break and continue only occur in loops. *)
 let check_break loc cf =
   if cf.loop_depth = 0 then Semantic_error.break_outside_loop loc |> error
-  else mk_typed_statement ~stmt:Break ~return_type:NonlocalControlFlow ~loc
+  else
+    mk_typed_statement ~stmt:Break
+      ~flow_type:{(complete (CBreak loc)) with breaks= [loc]}
+      ~loc
 
 let check_continue loc cf =
   if cf.loop_depth = 0 then Semantic_error.continue_outside_loop loc |> error
-  else mk_typed_statement ~stmt:Continue ~return_type:Incomplete ~loc
+  else
+    mk_typed_statement ~stmt:Continue
+      ~flow_type:{(complete (CContinue loc)) with continues= true}
+      ~loc
 
 let check_return loc cf tenv e =
   match cf.containing_function with
@@ -1724,13 +1695,15 @@ let check_return loc cf tenv e =
               , expected )
               (te.emeta.ad_level, actual) in
           let promoted = Promotion.promote te promotions in
-          mk_typed_statement ~stmt:(Return promoted) ~return_type:Complete ~loc
+          mk_typed_statement ~stmt:(Return promoted)
+            ~flow_type:(complete (CReturn loc)) ~loc
       | _ -> Semantic_error.invalid_return loc expected actual |> error)
 
 let check_returnvoid loc cf =
   match cf.containing_function with
   | NonReturning _ ->
-      mk_typed_statement ~stmt:ReturnVoid ~return_type:Complete ~loc
+      mk_typed_statement ~stmt:ReturnVoid ~flow_type:(complete (CReturn loc))
+        ~loc
   | _ -> Semantic_error.void_outside_nonreturning_fn loc |> error
 
 let check_printable cf tenv = function
@@ -1745,51 +1718,34 @@ let check_printable cf tenv = function
 
 let check_print loc cf tenv ps =
   let tps = List.map ~f:(check_printable cf tenv) ps in
-  mk_typed_statement ~stmt:(Print tps) ~return_type:Incomplete ~loc
+  mk_typed_statement ~stmt:(Print tps) ~flow_type:incomplete ~loc
 
 let check_reject loc cf tenv ps =
   let tps = List.map ~f:(check_printable cf tenv) ps in
-  mk_typed_statement ~stmt:(Reject tps) ~return_type:Complete ~loc
+  mk_typed_statement ~stmt:(Reject tps) ~flow_type:(complete (CReject loc)) ~loc
 
 let check_fatal_error loc cf tenv ps =
   let tps = List.map ~f:(check_printable cf tenv) ps in
-  mk_typed_statement ~stmt:(FatalError tps) ~return_type:Complete ~loc
+  mk_typed_statement ~stmt:(FatalError tps)
+    ~flow_type:(complete (CFatalError loc))
+    ~loc
 
-let check_skip loc = mk_typed_statement ~stmt:Skip ~return_type:Incomplete ~loc
-
-let rec stmt_is_escape {stmt; _} =
-  match stmt with
-  | Break | Continue | Reject _ | FatalError _ | Return _ | ReturnVoid -> true
-  | _ -> false
+let check_skip loc = mk_typed_statement ~stmt:Skip ~flow_type:incomplete ~loc
 
 and list_until_escape xs =
   let rec aux accu = function
-    | next' :: unreachable :: _ when stmt_is_escape next' ->
-        add_warning unreachable.smeta.loc
-          "Unreachable statement (following a reject, fatal_error, break, \
-           continue, or return) found, is this intended?";
+    | ({smeta= {flow_type= {controlflow= Complete c; _}; _}; _} as next')
+      :: unreachable :: _ ->
+        add_warning (Warnings.unreachable_statement unreachable.smeta.loc c);
         List.rev (next' :: accu)
     | next :: rest -> aux (next :: accu) rest
     | [] -> List.rev accu in
   aux [] xs
 
 let compute_block_statement_returntype srt1 srt2 =
-  match (srt1, srt2) with
-  | Complete, Complete | Incomplete, Complete -> Complete
-  | NonlocalControlFlow, _ | _, NonlocalControlFlow -> NonlocalControlFlow
-  | _ -> Incomplete
-
-let compute_ifthenelse_statement_returntype srt1 srt2 =
-  match (srt1, srt2) with
-  | Complete, Complete -> Complete
-  | NonlocalControlFlow, _ | _, NonlocalControlFlow -> NonlocalControlFlow
-  | _ -> Incomplete
-
-(* when we exit a loop, the loop's entire return type is either complete or
-   not *)
-let compute_loop_statement_returntype = function
-  | Complete -> Complete
-  | Incomplete | NonlocalControlFlow -> Incomplete
+  { srt2 with
+    breaks= srt2.breaks @ srt1.breaks
+  ; continues= srt2.continues || srt1.continues }
 
 (* statements which contain statements, and therefore need to be mutually
    recursive with check_statement *)
@@ -1802,33 +1758,40 @@ let rec check_if_then_else loc cf tenv pred_e s_true s_false_opt =
     s_false_opt |> Option.map ~f:(check_statement cf tenv) |> Option.map ~f:snd
   in
   let stmt = IfThenElse (te, ts_true, ts_false_opt) in
-  let srt1 = ts_true.smeta.return_type in
+  let srt1 = ts_true.smeta.flow_type in
   let srt2 =
     ts_false_opt
-    |> Option.map ~f:(fun s -> s.smeta.return_type)
-    |> Option.value ~default:Incomplete in
-  let return_type = compute_ifthenelse_statement_returntype srt1 srt2 in
-  mk_typed_statement ~stmt ~return_type ~loc
+    |> Option.map ~f:(fun s -> s.smeta.flow_type)
+    |> Option.value ~default:incomplete in
+  let flow_type =
+    match te.expr with
+    | IntNumeral x when int_of_string x = 0 -> srt2
+    | IntNumeral _ -> srt1
+    | _ ->
+        { breaks= srt1.breaks @ srt2.breaks
+        ; continues= srt1.continues || srt2.continues
+        ; controlflow=
+            (match (srt1.controlflow, srt2.controlflow) with
+            | Complete c1, Complete c2 -> Complete (CIfElse (c1, c2))
+            | _ -> Incomplete Next) } in
+  mk_typed_statement ~stmt ~flow_type ~loc
 
 and check_while loc cf tenv cond_e loop_body =
-  let hardcoded_true e =
-    (* heuristic for "will this loop forever" *)
-    match e.expr with
-    | Ast.IntNumeral s -> String.exists s ~f:(fun c -> c > '0' && c <= '9')
-    | _ -> false in
+  let hardcoded_true s = String.exists s ~f:(fun c -> c > '0' && c <= '9') in
   let te =
     check_expression_of_int_type cf tenv cond_e "Condition in while-loop" in
   let _, ts =
     check_statement {cf with loop_depth= cf.loop_depth + 1} tenv loop_body in
-  let return_type =
-    match ts.smeta.return_type with
-    | Complete -> Complete
-    | Incomplete when hardcoded_true te ->
-        (* if the only way out of the loop is a return or reject, we can
-           consider that like a return statement *)
-        Complete
-    | Incomplete | NonlocalControlFlow -> Incomplete in
-  mk_typed_statement ~stmt:(While (te, ts)) ~return_type ~loc
+  let flow_type =
+    match te.expr with
+    | IntNumeral x when hardcoded_true x -> (
+        match ts.smeta.flow_type with
+        | {breaks= []; _} -> complete (CWhile te.emeta.loc)
+        | {controlflow= Complete _; breaks; _} ->
+            incomplete_with (LoopBreaks breaks)
+        | _ -> incomplete)
+    | _ -> incomplete in
+  mk_typed_statement ~stmt:(While (te, ts)) ~flow_type ~loc
 
 and check_for loc cf tenv loop_var lower_bound_e upper_bound_e loop_body =
   let te1 =
@@ -1838,6 +1801,19 @@ and check_for loc cf tenv loop_var lower_bound_e upper_bound_e loop_body =
   in
   verify_identifier loop_var;
   let ts = check_loop_body cf tenv loop_var UnsizedType.UInt loop_body in
+  let flow_type =
+    let ft = ts.smeta.flow_type in
+    match (te1.expr, te2.expr) with
+    | IntNumeral x, IntNumeral y
+      when int_of_string x <= int_of_string y && not ft.continues ->
+        if List.is_empty ft.breaks then ts.smeta.flow_type
+        else incomplete_with (LoopBreaks ft.breaks)
+    | _ -> (
+        match ts.smeta.flow_type.controlflow with
+        | Complete _ when not ft.continues ->
+            incomplete_with
+              (EmptyRange {te1.emeta.loc with end_loc= te2.emeta.loc.end_loc})
+        | _ -> incomplete) in
   mk_typed_statement
     ~stmt:
       (For
@@ -1845,8 +1821,7 @@ and check_for loc cf tenv loop_var lower_bound_e upper_bound_e loop_body =
          ; lower_bound= te1
          ; upper_bound= te2
          ; loop_body= ts })
-    ~return_type:(compute_loop_statement_returntype ts.smeta.return_type)
-    ~loc
+    ~flow_type ~loc
 
 and check_foreach_loop_identifier_type loc ty =
   match ty with
@@ -1860,10 +1835,12 @@ and check_foreach loc cf tenv loop_var foreach_e loop_body =
   let loop_var_ty =
     check_foreach_loop_identifier_type te.emeta.loc te.emeta.type_ in
   let ts = check_loop_body cf tenv loop_var loop_var_ty loop_body in
-  mk_typed_statement
-    ~stmt:(ForEach (loop_var, te, ts))
-    ~return_type:(compute_loop_statement_returntype ts.smeta.return_type)
-    ~loc
+  let flow_type =
+    match ts.smeta.flow_type with
+    | {controlflow= Complete _; breaks= []; continues= false} ->
+        incomplete_with (EmptyContainer te.emeta.loc)
+    | _ -> incomplete in
+  mk_typed_statement ~stmt:(ForEach (loop_var, te, ts)) ~flow_type ~loc
 
 and check_loop_body cf tenv loop_var loop_var_ty loop_body =
   verify_name_fresh tenv loop_var ~is_udf:false;
@@ -1881,22 +1858,22 @@ and check_loop_body cf tenv loop_var loop_var_ty loop_body =
 and check_block loc cf tenv stmts =
   let _, checked_stmts =
     List.fold_left_map stmts ~init:tenv ~f:(check_statement cf) in
-  let return_type =
+  let flow_type =
     checked_stmts |> list_until_escape
-    |> List.map ~f:(fun s -> s.smeta.return_type)
-    |> List.fold_left ~init:Incomplete ~f:compute_block_statement_returntype
+    |> List.map ~f:(fun s -> s.smeta.flow_type)
+    |> List.fold_left ~init:incomplete ~f:compute_block_statement_returntype
   in
-  mk_typed_statement ~stmt:(Block checked_stmts) ~return_type ~loc
+  mk_typed_statement ~stmt:(Block checked_stmts) ~flow_type ~loc
 
 and check_profile loc cf tenv name stmts =
   let _, checked_stmts =
     List.fold_left_map stmts ~init:tenv ~f:(check_statement cf) in
-  let return_type =
+  let flow_type =
     checked_stmts |> list_until_escape
-    |> List.map ~f:(fun s -> s.smeta.return_type)
-    |> List.fold_left ~init:Incomplete ~f:compute_block_statement_returntype
+    |> List.map ~f:(fun s -> s.smeta.flow_type)
+    |> List.fold_left ~init:incomplete ~f:compute_block_statement_returntype
   in
-  mk_typed_statement ~stmt:(Profile (name, checked_stmts)) ~return_type ~loc
+  mk_typed_statement ~stmt:(Profile (name, checked_stmts)) ~flow_type ~loc
 
 (* variable declarations *)
 and verify_valid_transformation_for_type loc is_global sized_ty trans =
@@ -1955,11 +1932,12 @@ and check_sizedtype cf tenv sizedty =
       let typed_subtypes = List.map ~f:(check_sizedtype cf tenv) subtypes in
       STuple typed_subtypes
 
-and check_var_decl_initial_value loc cf tenv {identifier; initial_value} =
+and check_var_decl_initial_value cf tenv {identifier; initial_value} =
   match initial_value with
   | Some e -> (
       let lhs =
-        check_lvalue cf tenv {lval= LVariable identifier; lmeta= {loc}} in
+        check_lvalue cf tenv
+          {lval= LVariable identifier; lmeta= {loc= identifier.id_loc}} in
       let rhs = check_expression cf tenv e in
       let rhs =
         (* Hack: need the RHS to be promoted correctly to vars if needed *)
@@ -1970,7 +1948,8 @@ and check_var_decl_initial_value loc cf tenv {identifier; initial_value} =
       with
       | Ok p -> Ast.{identifier; initial_value= Some (Promotion.promote rhs p)}
       | Error _ ->
-          Semantic_error.illtyped_assignment loc Equals lhs.lmeta rhs.emeta
+          Semantic_error.illtyped_assignment rhs.emeta.loc Equals lhs.lmeta
+            rhs.emeta
           |> error)
   | None -> Ast.{identifier; initial_value= None}
 
@@ -2022,8 +2001,8 @@ and check_var_decl loc cf tenv sized_ty trans
                ; global= is_global
                ; readonly= false
                ; location= identifier.id_loc }) in
-        warn_self_declare loc identifier.name initial_value;
-        (tenv'', check_var_decl_initial_value loc cf tenv'' var))
+        warn_self_declare identifier initial_value;
+        (tenv'', check_var_decl_initial_value cf tenv'' var))
       variables in
   verify_valid_transformation_for_type loc is_global checked_type checked_trans;
   verify_transformed_param_ty loc cf is_global unsized_type;
@@ -2033,7 +2012,7 @@ and check_var_decl loc cf tenv sized_ty trans
       ; transformation= checked_trans
       ; variables= tvariables
       ; is_global } in
-  (tenv, mk_typed_statement ~stmt ~loc ~return_type:Incomplete)
+  (tenv, mk_typed_statement ~stmt ~loc ~flow_type:incomplete)
 
 (* function definitions *)
 and exists_matching_fn_declared tenv id arg_tys rt =
@@ -2116,12 +2095,13 @@ and verify_fundef_distinct_arg_ids arg_names =
       | Some prev -> Semantic_error.duplicate_arg_names id.id_loc prev |> error)
   |> ignore
 
-and verify_fundef_return_tys loc return_type body =
-  if
-    body.stmt = Skip
-    || is_of_compatible_return_type return_type body.smeta.return_type
-  then ()
-  else Semantic_error.incompatible_return_types loc |> error
+and verify_fundef_return_tys loc return_type (body : typed_statement) =
+  if body.stmt = Skip || return_type = UnsizedType.Void then ()
+  else
+    match body.smeta.flow_type.controlflow with
+    | Complete _ -> ()
+    | Incomplete info ->
+        error (Semantic_error.incompatible_return_types loc info)
 
 and add_function tenv id type_ defined =
   (* if we're providing a definition, we remove prior declarations to simplify
@@ -2186,7 +2166,7 @@ and check_fundef loc cf tenv return_ty id args body =
       {returntype= return_ty; funname= id; arguments= args; body= checked_body}
   in
   (* NB: **not** tenv_body, so args don't leak out *)
-  (tenv, mk_typed_statement ~return_type:Incomplete ~loc ~stmt)
+  (tenv, mk_typed_statement ~flow_type:incomplete ~loc ~stmt)
 
 and check_statement (cf : context_flags_record) (tenv : Env.t)
     (s : Ast.untyped_statement) : Env.t * typed_statement =

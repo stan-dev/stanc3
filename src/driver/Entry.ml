@@ -83,9 +83,15 @@ let stan2mir model_name model (flags : Flags.t) (output : other_output -> unit)
                flags.canonicalizer_settings)));
   let mir = Ast_to_Mir.trans_prog model_name typed_ast in
   if flags.warn_uninitialized then
-    output (Warnings (Pedantic_analysis.warn_uninitialized mir));
+    output
+      (Warnings
+         (List.map ~f:Warnings.pedantic_warning
+            (Pedantic_analysis.warn_uninitialized mir)));
   if flags.warn_pedantic then
-    output (Warnings (Pedantic_analysis.warn_pedantic mir));
+    output
+      (Warnings
+         (List.map ~f:Warnings.pedantic_warning
+            (Pedantic_analysis.warn_pedantic mir)));
   if flags.debug_settings.debug_print_factor_graph then
     print_endline
       (Factor_graph.factor_graph_to_dot (Factor_graph.prog_factor_graph mir));

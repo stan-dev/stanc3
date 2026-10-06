@@ -14,41 +14,21 @@ let loc_ref : Location_span.t ref = ref Location_span.empty
 
 (* grace helpers *)
 
-let compare_labels (a : Label.t) (b : Label.t) : int =
-  let open Grace in
-  let ( let*? ) a f =
-    (* helper for short-circuiting *)
-    if a <> 0 then a else f () in
-  let*? () = Source.compare (Range.source a.range) (Range.source b.range) in
-  let*? () = Range.compare a.range b.range in
-  let*? () = Priority.compare a.priority b.priority in
-  (* Materializing the labels is annoying but should be rare. Most of the time
-     that the first three compares return equal, this is a genuine duplicate *)
-  let label1 = Message.to_string a.message in
-  let label2 = Message.to_string b.message in
-  String.compare label1 label2
-
 let range_of_loc_span loc =
   let printed_filename = !printed_filename_ref in
   let code = !code_ref in
   Diagnostic.range_of_loc_span ?printed_filename ?code loc
 
-(** This is the real workhorse function of this module. It is in charge of
-    building [Grace.Diagnostic.t]s from code locations, a primary message, and
-    additional labels, notes, or a summary message. *)
-let make_error ?(labels = []) ?(notes = []) ?(summary : Message.t option)
-    primary =
-  let range, included = range_of_loc_span !loc_ref in
-  let labels = List.sort_uniq (included @ labels) ~cmp:compare_labels in
-  let kont (l : Label.t) =
-    let summary = Option.value summary ~default:l.message in
-    let labels = Diagnostic.unstyle l :: labels in
-    create Error ~labels ~notes summary in
-  Label.kprimaryf kont ~range primary
+let make_error ?labels ?notes ?(summary : Message.t option) primary =
+  let printed_filename = !printed_filename_ref in
+  let code = !code_ref in
+  Diagnostic.make ?printed_filename ?code ?labels ?notes ?summary !loc_ref
+    Severity.Error primary
 
 let context loc message =
-  let range, included = range_of_loc_span loc in
-  Label.ksecondaryf (fun l -> l :: included) ~range message
+  let printed_filename = !printed_filename_ref in
+  let code = !code_ref in
+  Diagnostic.context ?printed_filename ?code loc message
 
 let optional f loc = match loc with Some loc -> f loc | None -> []
 let function_defined loc = context loc "Function defined here."
@@ -174,7 +154,7 @@ module TypeError = struct
     | NonRealProbFunDef of UnsizedType.returntype
     | ProbDensityNonRealVariate of UnsizedType.t option
     | ProbMassNonIntVariate of UnsizedType.t option
-    | IncompatibleReturnType
+    | IncompatibleReturnType of Ast.incomplete
     | IllTypedFunctionApp of
         string
         * UnsizedType.t list
@@ -578,8 +558,16 @@ module TypeError = struct
           UInt
           Fmt.(option found_type)
           ut
-    | IncompatibleReturnType ->
-        make_error
+    | IncompatibleReturnType info ->
+        let labels =
+          match info with
+          | Next -> []
+          | EmptyRange loc -> context loc "The range may be empty"
+          | EmptyContainer loc -> context loc "The container may be empty"
+          | LoopBreaks locs ->
+              List.concat_map locs ~f:(fun l ->
+                  context l "The loop may end here") in
+        make_error ~labels
           "Function bodies must contain a return statement of correct type in \
            every branch."
 end
@@ -1346,5 +1334,5 @@ let prob_mass_non_int_variate loc ut_opt =
 let duplicate_arg_names loc id =
   (loc, IdentifierError (IdentifierError.DuplicateArgNames id))
 
-let incompatible_return_types loc =
-  (loc, TypeError TypeError.IncompatibleReturnType)
+let incompatible_return_types loc inc =
+  (loc, TypeError (TypeError.IncompatibleReturnType inc))

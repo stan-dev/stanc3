@@ -361,6 +361,7 @@ model {
 warning: stanc.js failed to parse included file mapping:
   Failed to convert stanc.js argument 'includes["baz"]'!
 It had type 'number' instead of 'string'.
+
 {
   "inputs": { "a": { "type": "int", "dimensions": 0 } },
   "parameters": {},
@@ -373,9 +374,11 @@ It had type 'number' instead of 'string'.
 warning: stanc.js failed to parse included file mapping:
   Failed to convert stanc.js argument 'includes["foo.stan"]'!
 It had type 'object' instead of 'string'.
+
 warning: stanc.js failed to parse included file mapping:
   Failed to convert stanc.js argument 'includes'!
 It had type 'number' instead of 'object'.
+
 error: File 'include/b.stan' recursively included itself.
 
     ┌─ include/a.stan:2:1
@@ -436,10 +439,13 @@ error: Function "foo" is declared without specifying a definition.
 "stancflags = --use-opencl --allow-undefined"
 $ node pedantic.js
 string:4:2: warning: The parameter k was declared but was not used in the density calculation.
+
 string:7:18: warning: Argument 10000 suggests there may be parameters that are not unit scale;
   consider rescaling with a multiplier, see:
   https://mc-stan.org/docs/stan-users-guide/efficiency-tuning.html#standardizing-predictors
+
 string:4:10: warning: The variable tt may not have been assigned a value before its first use.
+
 $ node removed.js
 error: Syntax error: Ill-formed declaration.
     ┌─ string:3:9
@@ -472,9 +478,13 @@ $ node version.js
 %%NAME%%3 %%VERSION%%
 %%NAME%%3 %%VERSION%%
 $ node warnings.js
-string:10:12: warning: Found int division:
-      x / w
-  Values will be rounded towards zero. If rounding is not desired you can write
-  the division as
-      x * 1.0 / w
-  If rounding is intended please use the integer division operator %/%.
+warning: Found integer division. The value will be rounded towards zero.
+    ┌─ string:10:12
+  9 │      int x, w;
+ 10 │     int z = x / w;
+    │             ^^^^^ If rounding is not desired you can write the division as
+    │                   x * 1.0 / w
+ 11 │  }
+    = If rounding is intended please use the integer division operator
+      %%/%%.
+

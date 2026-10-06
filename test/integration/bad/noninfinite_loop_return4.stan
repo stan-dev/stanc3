@@ -3,7 +3,7 @@ functions {
     for (i in 1:10){
       while (1) {
         if (0) return 1.0;
-        if (0) break;
+        if (1) break;
         return 2.0;
       }
     }

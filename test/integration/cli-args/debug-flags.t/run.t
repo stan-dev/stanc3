@@ -366,7 +366,9 @@ Flags not used elsewhere in the tests
               (emeta ((loc <opaque>) (ad_level DataOnly) (type_ UInt))))))
            (is_global true)
            (variables (((identifier ((name N) (id_loc <opaque>))) (initial_value ()))))))
-         (smeta ((loc <opaque>) (return_type Incomplete))))
+         (smeta
+          ((loc <opaque>)
+           (flow_type ((controlflow (Incomplete Next)) (breaks ()) (continues false))))))
         ((stmt
           (VarDecl
            (decl_type
@@ -381,7 +383,9 @@ Flags not used elsewhere in the tests
               (emeta ((loc <opaque>) (ad_level DataOnly) (type_ UInt))))))
            (is_global true)
            (variables (((identifier ((name y) (id_loc <opaque>))) (initial_value ()))))))
-         (smeta ((loc <opaque>) (return_type Incomplete))))))
+         (smeta
+          ((loc <opaque>)
+           (flow_type ((controlflow (Incomplete Next)) (breaks ()) (continues false))))))))
       (xloc <opaque>))))
    (transformeddatablock ())
    (parametersblock
@@ -396,7 +400,9 @@ Flags not used elsewhere in the tests
               (emeta ((loc <opaque>) (ad_level DataOnly) (type_ UInt))))))
            (is_global true)
            (variables (((identifier ((name theta) (id_loc <opaque>))) (initial_value ()))))))
-         (smeta ((loc <opaque>) (return_type Incomplete))))))
+         (smeta
+          ((loc <opaque>)
+           (flow_type ((controlflow (Incomplete Next)) (breaks ()) (continues false))))))))
       (xloc <opaque>))))
    (transformedparametersblock ())
    (modelblock
@@ -422,7 +428,9 @@ Flags not used elsewhere in the tests
                 (UReal DataOnly)))
               (emeta ((loc <opaque>) (ad_level DataOnly) (type_ UReal))))))
            (truncation NoTruncate)))
-         (smeta ((loc <opaque>) (return_type Incomplete))))
+         (smeta
+          ((loc <opaque>)
+           (flow_type ((controlflow (Incomplete Next)) (breaks ()) (continues false))))))
         ((stmt
           (Tilde
            (arg
@@ -434,7 +442,9 @@ Flags not used elsewhere in the tests
             (((expr (Variable ((name theta) (id_loc <opaque>))))
               (emeta ((loc <opaque>) (ad_level AutoDiffable) (type_ UReal))))))
            (truncation NoTruncate)))
-         (smeta ((loc <opaque>) (return_type Incomplete))))))
+         (smeta
+          ((loc <opaque>)
+           (flow_type ((controlflow (Incomplete Next)) (breaks ()) (continues false))))))))
       (xloc <opaque>))))
    (generatedquantitiesblock ()) (comments <opaque>))
 

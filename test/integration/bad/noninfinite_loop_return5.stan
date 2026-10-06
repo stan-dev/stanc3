@@ -1,8 +1,6 @@
 functions {
   real not_endless() {
-    while (1) {
-      if (0) return 1.0;
-      if (1) break;
+    for (i in 1:0){
       return 2.0;
     }
   }
