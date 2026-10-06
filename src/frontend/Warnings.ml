@@ -14,7 +14,10 @@ type t =
   | InitializeWithSelf of Location_span.t * Location_span.t
   | Unreachable of Location_span.t * Ast.complete
   | EmptyFile of Location_span.t
-  | Deprecation of Location_span.t * string
+  | ForwardDecl of Location_span.t
+  | LkjCov of Location_span.t
+  | FunctionDeprecation of Location_span.t * string * (int * int) * string
+  | OdeDeprecation of Location_span.t * string * (int * int) * string
   | Pedantic of Location_span.t * string
 
 let stancjs_bad_include msg = StancJsInclude msg
@@ -27,7 +30,15 @@ let assign_to_self lhs rhs = AssignToSelf (lhs, rhs)
 let initialize_with_self lhs rhs = InitializeWithSelf (lhs, rhs)
 let unreachable_statement loc c = Unreachable (loc, c)
 let empty_file loc = EmptyFile loc
-let deprecation_warning (span, msg) = Deprecation (span, msg)
+let forward_declaration loc = ForwardDecl loc
+let lkj_cov_deprecation loc = LkjCov loc
+
+let function_deprecation loc name version rename =
+  FunctionDeprecation (loc, name, version, rename)
+
+let ode_deprecation loc name version rename =
+  OdeDeprecation (loc, name, version, rename)
+
 let pedantic_warning (span, msg) = Pedantic (span, msg)
 
 let canonicalize =
@@ -45,7 +56,7 @@ let to_grace ?printed_filename ?code warn =
       create Warning
         (Message.createf
            "@[<v>stanc.js failed to parse included file mapping:@ %s@]" msg)
-  | Deprecation (loc, msg) | Pedantic (loc, msg) ->
+  | Pedantic (loc, msg) ->
       make_warning loc "%a" Fmt.lines (Fmt.str "@[%a@]" Fmt.text msg)
   | EmptyFile loc ->
       let summary =
@@ -142,11 +153,46 @@ let to_grace ?printed_filename ?code warn =
           "Assignment of variable to itself during declaration. This is almost \
            certainly a bug." in
       make_warning ~labels ~summary rhs "Value here."
+  | ForwardDecl loc ->
+      let summary =
+        Message.createf "%a" Fmt.lines
+          (Fmt.str "@[%a@]" Fmt.text
+             "Functions do not need to be declared before definition; all user \
+              defined function names are always in scope regardless of \
+              definition order.") in
+      make_warning ~summary loc "Forward declaration."
+  | LkjCov loc ->
+      let notes =
+        [ Message.createf
+            "Use lkj_corr with an independent lognormal distribution on the \
+             scales, see:@ \
+             https://mc-stan.org/docs/reference-manual/deprecations.html#lkj_cov-distribution"
+        ] in
+      make_warning ~notes loc
+        "lkj_cov is deprecated and will be removed in Stan 3.0."
+  | FunctionDeprecation (loc, name, (major, minor), rename) ->
+      let notes = [canonicalize] in
+      let summary =
+        Message.createf
+          "%s is deprecated and will be removed in Stan %d.%d. Use %s instead."
+          name major minor rename in
+      make_warning ~notes ~summary loc "Use %s instead." rename
+  | OdeDeprecation (loc, name, (major, minor), rename) ->
+      let notes =
+        [ Message.createf
+            "The new interface is slightly different, see:@ \
+             https://mc-stan.org/users/documentation/case-studies/convert_odes.html"
+        ] in
+      let summary =
+        Message.createf
+          "%s is deprecated and will be removed in Stan %d.%d. Use %s instead."
+          name major minor rename in
+      make_warning ~notes ~summary loc "Use %s instead." rename
 
 let pp ?printed_filename ?code ppf warn =
   let diagnostic = to_grace ?printed_filename ?code warn in
   match warn with
-  | EmptyFile _ | Pedantic _ | Deprecation _ ->
+  | EmptyFile _ | Pedantic _ ->
       Fmt.pf ppf "%a@." Diagnostic.pp_compact diagnostic
   | _ -> Fmt.pf ppf "%a@." Diagnostic.pp diagnostic
 

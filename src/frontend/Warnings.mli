@@ -20,7 +20,10 @@ val assign_to_self : Location_span.t -> Location_span.t -> t
 val initialize_with_self : Location_span.t -> Location_span.t -> t
 val unreachable_statement : Location_span.t -> Ast.complete -> t
 val empty_file : Location_span.t -> t
-val deprecation_warning : Location_span.t * string -> t
+val forward_declaration : Location_span.t -> t
+val lkj_cov_deprecation : Location_span.t -> t
+val function_deprecation : Location_span.t -> string -> int * int -> string -> t
+val ode_deprecation : Location_span.t -> string -> int * int -> string -> t
 val pedantic_warning : Location_span.t * string -> t
 val pp : ?printed_filename:string -> ?code:string -> t Fmt.t
 val pp_warnings : ?printed_filename:string -> ?code:string -> t list Fmt.t

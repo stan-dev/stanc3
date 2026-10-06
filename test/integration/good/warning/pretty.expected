@@ -83,8 +83,13 @@ model {
                    );
 }
 
-fun_log_forward_decl.stan:6:8: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
+warning: Functions do not need to be declared before definition; all user defined
+function names are always in scope regardless of definition order.
+    ┌─ fun_log_forward_decl.stan:6:8
+  5 │  functions {
+  6 │    real n_lpdf(real y);
+    │         ^^^^^^ Forward declaration.
+  7 │  
 [exit 0]
   $ stanc --auto-format functions-fwd-ref.stan
 functions {
@@ -103,8 +108,13 @@ model {
   y ~ normal(0, 1);
 }
 
-functions-fwd-ref.stan:3:7: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
+warning: Functions do not need to be declared before definition; all user defined
+function names are always in scope regardless of definition order.
+    ┌─ functions-fwd-ref.stan:3:7
+  2 │  
+  3 │    int foo(int n);
+    │        ^^^ Forward declaration.
+  4 │    
 [exit 0]
   $ stanc --auto-format int_div_user.stan
 data {
@@ -182,48 +192,118 @@ generated quantities {
             1e-10, 1e8);
 }
 
-integrate_ode_adams.stan:25:11: warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use
-  ode_adams instead. The new interface is slightly different, see:
-  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-integrate_ode_adams.stan:26:11: warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use
-  ode_adams instead. The new interface is slightly different, see:
-  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-integrate_ode_adams.stan:27:11: warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use
-  ode_adams instead. The new interface is slightly different, see:
-  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-integrate_ode_adams.stan:29:11: warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use
-  ode_adams instead. The new interface is slightly different, see:
-  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-integrate_ode_adams.stan:31:11: warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use
-  ode_adams instead. The new interface is slightly different, see:
-  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-integrate_ode_adams.stan:33:11: warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use
-  ode_adams instead. The new interface is slightly different, see:
-  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-integrate_ode_adams.stan:38:11: warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use
-  ode_adams instead. The new interface is slightly different, see:
-  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-integrate_ode_adams.stan:39:11: warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use
-  ode_adams instead. The new interface is slightly different, see:
-  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-integrate_ode_adams.stan:40:11: warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use
-  ode_adams instead. The new interface is slightly different, see:
-  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-integrate_ode_adams.stan:41:11: warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use
-  ode_adams instead. The new interface is slightly different, see:
-  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-integrate_ode_adams.stan:43:11: warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use
-  ode_adams instead. The new interface is slightly different, see:
-  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-integrate_ode_adams.stan:45:11: warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use
-  ode_adams instead. The new interface is slightly different, see:
-  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-integrate_ode_adams.stan:47:11: warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use
-  ode_adams instead. The new interface is slightly different, see:
-  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-integrate_ode_adams.stan:49:11: warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use
-  ode_adams instead. The new interface is slightly different, see:
-  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use ode_adams instead.
+    ┌─ integrate_ode_adams.stan:25:11
+ 24 │    array[T, 2] real y_hat;
+ 25 │    y_hat = integrate_ode_adams(sho, y0_d, t0, ts, theta_p, x, x_int);
+    │            ^^^^^^^^^^^^^^^^^^^ Use ode_adams instead.
+ 26 │    y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_d, x, x_int);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use ode_adams instead.
+    ┌─ integrate_ode_adams.stan:26:11
+ 25 │    y_hat = integrate_ode_adams(sho, y0_d, t0, ts, theta_p, x, x_int);
+ 26 │    y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_d, x, x_int);
+    │            ^^^^^^^^^^^^^^^^^^^ Use ode_adams instead.
+ 27 │    y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_p, x, x_int);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use ode_adams instead.
+    ┌─ integrate_ode_adams.stan:27:11
+ 26 │    y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_d, x, x_int);
+ 27 │    y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_p, x, x_int);
+    │            ^^^^^^^^^^^^^^^^^^^ Use ode_adams instead.
+ 28 │    
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use ode_adams instead.
+    ┌─ integrate_ode_adams.stan:29:11
+ 28 │    
+ 29 │    y_hat = integrate_ode_adams(sho, y0_d, t0, ts, theta_p, x, x_int, 1e-10,
+    │            ^^^^^^^^^^^^^^^^^^^ Use ode_adams instead.
+ 30 │                                1e-10, 1e8);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use ode_adams instead.
+    ┌─ integrate_ode_adams.stan:31:11
+ 30 │                                1e-10, 1e8);
+ 31 │    y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_d, x, x_int, 1e-10,
+    │            ^^^^^^^^^^^^^^^^^^^ Use ode_adams instead.
+ 32 │                                1e-10, 1e8);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use ode_adams instead.
+    ┌─ integrate_ode_adams.stan:33:11
+ 32 │                                1e-10, 1e8);
+ 33 │    y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_p, x, x_int, 1e-10,
+    │            ^^^^^^^^^^^^^^^^^^^ Use ode_adams instead.
+ 34 │                                1e-10, 1e8);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use ode_adams instead.
+    ┌─ integrate_ode_adams.stan:38:11
+ 37 │    array[T, 2] real y_hat;
+ 38 │    y_hat = integrate_ode_adams(sho, y0_d, t0, ts, theta_d, x, x_int);
+    │            ^^^^^^^^^^^^^^^^^^^ Use ode_adams instead.
+ 39 │    y_hat = integrate_ode_adams(sho, y0_d, t0, ts, theta_p, x, x_int);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use ode_adams instead.
+    ┌─ integrate_ode_adams.stan:39:11
+ 38 │    y_hat = integrate_ode_adams(sho, y0_d, t0, ts, theta_d, x, x_int);
+ 39 │    y_hat = integrate_ode_adams(sho, y0_d, t0, ts, theta_p, x, x_int);
+    │            ^^^^^^^^^^^^^^^^^^^ Use ode_adams instead.
+ 40 │    y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_d, x, x_int);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use ode_adams instead.
+    ┌─ integrate_ode_adams.stan:40:11
+ 39 │    y_hat = integrate_ode_adams(sho, y0_d, t0, ts, theta_p, x, x_int);
+ 40 │    y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_d, x, x_int);
+    │            ^^^^^^^^^^^^^^^^^^^ Use ode_adams instead.
+ 41 │    y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_p, x, x_int);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use ode_adams instead.
+    ┌─ integrate_ode_adams.stan:41:11
+ 40 │    y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_d, x, x_int);
+ 41 │    y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_p, x, x_int);
+    │            ^^^^^^^^^^^^^^^^^^^ Use ode_adams instead.
+ 42 │    
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use ode_adams instead.
+    ┌─ integrate_ode_adams.stan:43:11
+ 42 │    
+ 43 │    y_hat = integrate_ode_adams(sho, y0_d, t0, ts, theta_d, x, x_int, 1e-10,
+    │            ^^^^^^^^^^^^^^^^^^^ Use ode_adams instead.
+ 44 │                                1e-10, 1e8);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use ode_adams instead.
+    ┌─ integrate_ode_adams.stan:45:11
+ 44 │                                1e-10, 1e8);
+ 45 │    y_hat = integrate_ode_adams(sho, y0_d, t0, ts, theta_p, x, x_int, 1e-10,
+    │            ^^^^^^^^^^^^^^^^^^^ Use ode_adams instead.
+ 46 │                                1e-10, 1e8);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use ode_adams instead.
+    ┌─ integrate_ode_adams.stan:47:11
+ 46 │                                1e-10, 1e8);
+ 47 │    y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_d, x, x_int, 1e-10,
+    │            ^^^^^^^^^^^^^^^^^^^ Use ode_adams instead.
+ 48 │                                1e-10, 1e8);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use ode_adams instead.
+    ┌─ integrate_ode_adams.stan:49:11
+ 48 │                                1e-10, 1e8);
+ 49 │    y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_p, x, x_int, 1e-10,
+    │            ^^^^^^^^^^^^^^^^^^^ Use ode_adams instead.
+ 50 │                                1e-10, 1e8);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 [exit 0]
   $ stanc --auto-format integrate_ode_bdf.stan
 functions {
@@ -281,54 +361,134 @@ generated quantities {
             1e-10, 1e8);
 }
 
-integrate_ode_bdf.stan:25:11: warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf
-  instead. The new interface is slightly different, see:
-  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-integrate_ode_bdf.stan:26:11: warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf
-  instead. The new interface is slightly different, see:
-  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-integrate_ode_bdf.stan:27:11: warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf
-  instead. The new interface is slightly different, see:
-  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-integrate_ode_bdf.stan:28:11: warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf
-  instead. The new interface is slightly different, see:
-  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-integrate_ode_bdf.stan:30:11: warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf
-  instead. The new interface is slightly different, see:
-  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-integrate_ode_bdf.stan:32:11: warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf
-  instead. The new interface is slightly different, see:
-  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-integrate_ode_bdf.stan:34:11: warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf
-  instead. The new interface is slightly different, see:
-  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-integrate_ode_bdf.stan:36:11: warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf
-  instead. The new interface is slightly different, see:
-  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-integrate_ode_bdf.stan:41:11: warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf
-  instead. The new interface is slightly different, see:
-  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-integrate_ode_bdf.stan:42:11: warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf
-  instead. The new interface is slightly different, see:
-  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-integrate_ode_bdf.stan:43:11: warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf
-  instead. The new interface is slightly different, see:
-  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-integrate_ode_bdf.stan:44:11: warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf
-  instead. The new interface is slightly different, see:
-  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-integrate_ode_bdf.stan:46:11: warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf
-  instead. The new interface is slightly different, see:
-  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-integrate_ode_bdf.stan:48:11: warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf
-  instead. The new interface is slightly different, see:
-  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-integrate_ode_bdf.stan:50:11: warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf
-  instead. The new interface is slightly different, see:
-  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-integrate_ode_bdf.stan:52:11: warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf
-  instead. The new interface is slightly different, see:
-  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
+    ┌─ integrate_ode_bdf.stan:25:11
+ 24 │    array[T, 2] real y_hat;
+ 25 │    y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_d, x, x_int);
+    │            ^^^^^^^^^^^^^^^^^ Use ode_bdf instead.
+ 26 │    y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_p, x, x_int);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
+    ┌─ integrate_ode_bdf.stan:26:11
+ 25 │    y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_d, x, x_int);
+ 26 │    y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_p, x, x_int);
+    │            ^^^^^^^^^^^^^^^^^ Use ode_bdf instead.
+ 27 │    y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_d, x, x_int);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
+    ┌─ integrate_ode_bdf.stan:27:11
+ 26 │    y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_p, x, x_int);
+ 27 │    y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_d, x, x_int);
+    │            ^^^^^^^^^^^^^^^^^ Use ode_bdf instead.
+ 28 │    y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_p, x, x_int);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
+    ┌─ integrate_ode_bdf.stan:28:11
+ 27 │    y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_d, x, x_int);
+ 28 │    y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_p, x, x_int);
+    │            ^^^^^^^^^^^^^^^^^ Use ode_bdf instead.
+ 29 │    
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
+    ┌─ integrate_ode_bdf.stan:30:11
+ 29 │    
+ 30 │    y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_d, x, x_int, 1e-10,
+    │            ^^^^^^^^^^^^^^^^^ Use ode_bdf instead.
+ 31 │                              1e-10, 1e8);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
+    ┌─ integrate_ode_bdf.stan:32:11
+ 31 │                              1e-10, 1e8);
+ 32 │    y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_p, x, x_int, 1e-10,
+    │            ^^^^^^^^^^^^^^^^^ Use ode_bdf instead.
+ 33 │                              1e-10, 1e8);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
+    ┌─ integrate_ode_bdf.stan:34:11
+ 33 │                              1e-10, 1e8);
+ 34 │    y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_d, x, x_int, 1e-10,
+    │            ^^^^^^^^^^^^^^^^^ Use ode_bdf instead.
+ 35 │                              1e-10, 1e8);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
+    ┌─ integrate_ode_bdf.stan:36:11
+ 35 │                              1e-10, 1e8);
+ 36 │    y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_p, x, x_int, 1e-10,
+    │            ^^^^^^^^^^^^^^^^^ Use ode_bdf instead.
+ 37 │                              1e-10, 1e8);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
+    ┌─ integrate_ode_bdf.stan:41:11
+ 40 │    array[T, 2] real y_hat;
+ 41 │    y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_d, x, x_int);
+    │            ^^^^^^^^^^^^^^^^^ Use ode_bdf instead.
+ 42 │    y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_p, x, x_int);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
+    ┌─ integrate_ode_bdf.stan:42:11
+ 41 │    y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_d, x, x_int);
+ 42 │    y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_p, x, x_int);
+    │            ^^^^^^^^^^^^^^^^^ Use ode_bdf instead.
+ 43 │    y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_d, x, x_int);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
+    ┌─ integrate_ode_bdf.stan:43:11
+ 42 │    y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_p, x, x_int);
+ 43 │    y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_d, x, x_int);
+    │            ^^^^^^^^^^^^^^^^^ Use ode_bdf instead.
+ 44 │    y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_p, x, x_int);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
+    ┌─ integrate_ode_bdf.stan:44:11
+ 43 │    y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_d, x, x_int);
+ 44 │    y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_p, x, x_int);
+    │            ^^^^^^^^^^^^^^^^^ Use ode_bdf instead.
+ 45 │    
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
+    ┌─ integrate_ode_bdf.stan:46:11
+ 45 │    
+ 46 │    y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_d, x, x_int, 1e-10,
+    │            ^^^^^^^^^^^^^^^^^ Use ode_bdf instead.
+ 47 │                              1e-10, 1e8);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
+    ┌─ integrate_ode_bdf.stan:48:11
+ 47 │                              1e-10, 1e8);
+ 48 │    y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_p, x, x_int, 1e-10,
+    │            ^^^^^^^^^^^^^^^^^ Use ode_bdf instead.
+ 49 │                              1e-10, 1e8);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
+    ┌─ integrate_ode_bdf.stan:50:11
+ 49 │                              1e-10, 1e8);
+ 50 │    y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_d, x, x_int, 1e-10,
+    │            ^^^^^^^^^^^^^^^^^ Use ode_bdf instead.
+ 51 │                              1e-10, 1e8);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
+    ┌─ integrate_ode_bdf.stan:52:11
+ 51 │                              1e-10, 1e8);
+ 52 │    y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_p, x, x_int, 1e-10,
+    │            ^^^^^^^^^^^^^^^^^ Use ode_bdf instead.
+ 53 │                              1e-10, 1e8);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 [exit 0]
   $ stanc --auto-format integrate_ode_deprecation.stan
 functions {
@@ -365,9 +525,14 @@ generated quantities {
   }
 }
 
-integrate_ode_deprecation.stan:26:11: warning: integrate_ode is deprecated and will be removed in Stan 3.0. Use ode_rk45
-  instead. The new interface is slightly different, see:
-  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead.
+    ┌─ integrate_ode_deprecation.stan:26:11
+ 25 │    array[T, 2] real y_hat;
+ 26 │    y_hat = integrate_ode(sho, y0, t0, ts, theta, x, x_int);
+    │            ^^^^^^^^^^^^^ Use ode_rk45 instead.
+ 27 │    
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 [exit 0]
   $ stanc --auto-format integrate_ode_rk45.stan
 functions {
@@ -407,30 +572,70 @@ generated quantities {
   y_hat = integrate_ode_rk45(sho, y0_p, t0, ts, theta_p, x, x_int);
 }
 
-integrate_ode_rk45.stan:25:11: warning: integrate_ode_rk45 is deprecated and will be removed in Stan 3.0. Use
-  ode_rk45 instead. The new interface is slightly different, see:
-  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-integrate_ode_rk45.stan:26:11: warning: integrate_ode_rk45 is deprecated and will be removed in Stan 3.0. Use
-  ode_rk45 instead. The new interface is slightly different, see:
-  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-integrate_ode_rk45.stan:27:11: warning: integrate_ode_rk45 is deprecated and will be removed in Stan 3.0. Use
-  ode_rk45 instead. The new interface is slightly different, see:
-  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-integrate_ode_rk45.stan:28:11: warning: integrate_ode_rk45 is deprecated and will be removed in Stan 3.0. Use
-  ode_rk45 instead. The new interface is slightly different, see:
-  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-integrate_ode_rk45.stan:32:11: warning: integrate_ode_rk45 is deprecated and will be removed in Stan 3.0. Use
-  ode_rk45 instead. The new interface is slightly different, see:
-  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-integrate_ode_rk45.stan:33:11: warning: integrate_ode_rk45 is deprecated and will be removed in Stan 3.0. Use
-  ode_rk45 instead. The new interface is slightly different, see:
-  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-integrate_ode_rk45.stan:34:11: warning: integrate_ode_rk45 is deprecated and will be removed in Stan 3.0. Use
-  ode_rk45 instead. The new interface is slightly different, see:
-  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-integrate_ode_rk45.stan:35:11: warning: integrate_ode_rk45 is deprecated and will be removed in Stan 3.0. Use
-  ode_rk45 instead. The new interface is slightly different, see:
-  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_rk45 is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead.
+    ┌─ integrate_ode_rk45.stan:25:11
+ 24 │    array[T, 2] real y_hat;
+ 25 │    y_hat = integrate_ode_rk45(sho, y0_d, t0, ts, theta_d, x, x_int);
+    │            ^^^^^^^^^^^^^^^^^^ Use ode_rk45 instead.
+ 26 │    y_hat = integrate_ode_rk45(sho, y0_d, t0, ts, theta_p, x, x_int);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_rk45 is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead.
+    ┌─ integrate_ode_rk45.stan:26:11
+ 25 │    y_hat = integrate_ode_rk45(sho, y0_d, t0, ts, theta_d, x, x_int);
+ 26 │    y_hat = integrate_ode_rk45(sho, y0_d, t0, ts, theta_p, x, x_int);
+    │            ^^^^^^^^^^^^^^^^^^ Use ode_rk45 instead.
+ 27 │    y_hat = integrate_ode_rk45(sho, y0_p, t0, ts, theta_d, x, x_int);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_rk45 is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead.
+    ┌─ integrate_ode_rk45.stan:27:11
+ 26 │    y_hat = integrate_ode_rk45(sho, y0_d, t0, ts, theta_p, x, x_int);
+ 27 │    y_hat = integrate_ode_rk45(sho, y0_p, t0, ts, theta_d, x, x_int);
+    │            ^^^^^^^^^^^^^^^^^^ Use ode_rk45 instead.
+ 28 │    y_hat = integrate_ode_rk45(sho, y0_p, t0, ts, theta_p, x, x_int);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_rk45 is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead.
+    ┌─ integrate_ode_rk45.stan:28:11
+ 27 │    y_hat = integrate_ode_rk45(sho, y0_p, t0, ts, theta_d, x, x_int);
+ 28 │    y_hat = integrate_ode_rk45(sho, y0_p, t0, ts, theta_p, x, x_int);
+    │            ^^^^^^^^^^^^^^^^^^ Use ode_rk45 instead.
+ 29 │  }
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_rk45 is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead.
+    ┌─ integrate_ode_rk45.stan:32:11
+ 31 │    array[T, 2] real y_hat;
+ 32 │    y_hat = integrate_ode_rk45(sho, y0_d, t0, ts, theta_d, x, x_int);
+    │            ^^^^^^^^^^^^^^^^^^ Use ode_rk45 instead.
+ 33 │    y_hat = integrate_ode_rk45(sho, y0_d, t0, ts, theta_p, x, x_int);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_rk45 is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead.
+    ┌─ integrate_ode_rk45.stan:33:11
+ 32 │    y_hat = integrate_ode_rk45(sho, y0_d, t0, ts, theta_d, x, x_int);
+ 33 │    y_hat = integrate_ode_rk45(sho, y0_d, t0, ts, theta_p, x, x_int);
+    │            ^^^^^^^^^^^^^^^^^^ Use ode_rk45 instead.
+ 34 │    y_hat = integrate_ode_rk45(sho, y0_p, t0, ts, theta_d, x, x_int);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_rk45 is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead.
+    ┌─ integrate_ode_rk45.stan:34:11
+ 33 │    y_hat = integrate_ode_rk45(sho, y0_d, t0, ts, theta_p, x, x_int);
+ 34 │    y_hat = integrate_ode_rk45(sho, y0_p, t0, ts, theta_d, x, x_int);
+    │            ^^^^^^^^^^^^^^^^^^ Use ode_rk45 instead.
+ 35 │    y_hat = integrate_ode_rk45(sho, y0_p, t0, ts, theta_p, x, x_int);
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_rk45 is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead.
+    ┌─ integrate_ode_rk45.stan:35:11
+ 34 │    y_hat = integrate_ode_rk45(sho, y0_p, t0, ts, theta_d, x, x_int);
+ 35 │    y_hat = integrate_ode_rk45(sho, y0_p, t0, ts, theta_p, x, x_int);
+    │            ^^^^^^^^^^^^^^^^^^ Use ode_rk45 instead.
+ 36 │  }
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 [exit 0]
   $ stanc --auto-format lkj_cov_deprecation1.stan
 parameters {
@@ -443,9 +648,14 @@ model {
   Sigma ~ lkj_cov(mu, sigma, eta);
 }
 
-lkj_cov_deprecation1.stan:8:11: warning: lkj_cov is deprecated and will be removed in Stan 3.0. Use lkj_corr with an
-  independent lognormal distribution on the scales, see:
-  https://mc-stan.org/docs/reference-manual/deprecations.html#lkj_cov-distribution
+warning: lkj_cov is deprecated and will be removed in Stan 3.0.
+    ┌─ lkj_cov_deprecation1.stan:8:11
+  7 │  model {
+  8 │    Sigma ~ lkj_cov(mu,sigma,eta);
+    │            ^^^^^^^ lkj_cov is deprecated and will be removed in Stan 3.0.
+  9 │  }
+    = Use lkj_corr with an independent lognormal distribution on the scales, see:
+      https://mc-stan.org/docs/reference-manual/deprecations.html#lkj_cov-distribution
 [exit 0]
   $ stanc --auto-format lkj_cov_deprecation2.stan
 parameters {
@@ -458,9 +668,14 @@ model {
   target += lkj_cov_lpdf(Sigma | mu, sigma, eta);
 }
 
-lkj_cov_deprecation2.stan:8:13: warning: lkj_cov is deprecated and will be removed in Stan 3.0. Use lkj_corr with an
-  independent lognormal distribution on the scales, see:
-  https://mc-stan.org/docs/reference-manual/deprecations.html#lkj_cov-distribution
+warning: lkj_cov is deprecated and will be removed in Stan 3.0.
+    ┌─ lkj_cov_deprecation2.stan:8:13
+  7 │  model {
+  8 │    target += lkj_cov_lpdf(Sigma | mu, sigma, eta);
+    │              ^^^^^^^^^^^^ lkj_cov is deprecated and will be removed in Stan 3.0.
+  9 │  }
+    = Use lkj_corr with an independent lognormal distribution on the scales, see:
+      https://mc-stan.org/docs/reference-manual/deprecations.html#lkj_cov-distribution
 [exit 0]
   $ stanc --auto-format matrix_pow_warning.stan
 data {
@@ -505,10 +720,20 @@ transformed data {
   }
 }
 
-overloaded_forward_decl.stan:2:7: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
-overloaded_forward_decl.stan:3:7: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
+warning: Functions do not need to be declared before definition; all user defined
+function names are always in scope regardless of definition order.
+    ┌─ overloaded_forward_decl.stan:2:7
+  1 │  functions {
+  2 │    int is_real(int x);
+    │        ^^^^^^^ Forward declaration.
+  3 │    int is_real(real x);
+warning: Functions do not need to be declared before definition; all user defined
+function names are always in scope regardless of definition order.
+    ┌─ overloaded_forward_decl.stan:3:7
+  2 │    int is_real(int x);
+  3 │    int is_real(real x);
+    │        ^^^^^^^ Forward declaration.
+  4 │  
 [exit 0]
   $ stanc --auto-format self-assign.stan
 model {

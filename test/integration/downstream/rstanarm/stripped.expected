@@ -773,10 +773,18 @@ warning: Unreachable statement found, is this intended?
   7 │      #include </functions/bernoulli_likelihoods.stan>
     │      -------- file './/functions/bernoulli_likelihoods.stan' included here
   8 │    }
-.//functions/bernoulli_likelihoods.stan:84:8: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
-bernoulli.stan:7:3: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
+warning: Functions do not need to be declared before definition; all user defined
+function names are always in scope regardless of definition order.
+    ┌─ .//functions/bernoulli_likelihoods.stan:84:8
+ 83 │     */
+ 84 │    real log_clogit_denom(int N_j, int D_j, vector eta_j);
+    │         ^^^^^^^^^^^^^^^^ Forward declaration.
+ 85 │    real log_clogit_denom(int N_j, int D_j, vector eta_j) {
+    ┌─ bernoulli.stan:7:3
+  6 │    #include </functions/common_functions.stan>
+  7 │    #include </functions/bernoulli_likelihoods.stan>
+    │    -------- file './/functions/bernoulli_likelihoods.stan' included here
+  8 │  }
 [exit 0]
   $ stanc --include-paths="." --auto-format --canonicalize=includes,strip-comments --allow-undefined binomial.stan
 functions {
@@ -2732,46 +2740,125 @@ warning: Unreachable statement found, is this intended?
   7 │    #include </functions/continuous_likelihoods.stan>
     │    -------- file './/functions/continuous_likelihoods.stan' included here
   8 │    
-.//functions/SSfunctions.stan:1:8: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
-continuous.stan:9:3: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
-.//functions/SSfunctions.stan:2:8: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
-continuous.stan:9:3: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
-.//functions/SSfunctions.stan:3:8: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
-continuous.stan:9:3: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
-.//functions/SSfunctions.stan:4:8: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
-continuous.stan:9:3: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
-.//functions/SSfunctions.stan:5:8: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
-continuous.stan:9:3: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
-.//functions/SSfunctions.stan:6:8: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
-continuous.stan:9:3: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
-.//functions/SSfunctions.stan:7:8: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
-continuous.stan:9:3: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
-.//functions/SSfunctions.stan:8:8: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
-continuous.stan:9:3: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
-.//functions/SSfunctions.stan:9:8: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
-continuous.stan:9:3: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
-.//functions/SSfunctions.stan:10:8: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
-continuous.stan:9:3: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
+warning: Functions do not need to be declared before definition; all user defined
+function names are always in scope regardless of definition order.
+    ┌─ .//functions/SSfunctions.stan:1:8
+  1 │  vector SS_asymp(vector input, matrix Phi_);
+    │         ^^^^^^^^ Forward declaration.
+  2 │  vector SS_asympOff(vector input, matrix Phi_);
+    ┌─ continuous.stan:9:3
+  8 │    
+  9 │    #include </functions/SSfunctions.stan>
+    │    -------- file './/functions/SSfunctions.stan' included here
+ 10 │    
+warning: Functions do not need to be declared before definition; all user defined
+function names are always in scope regardless of definition order.
+    ┌─ .//functions/SSfunctions.stan:2:8
+  1 │  vector SS_asymp(vector input, matrix Phi_);
+  2 │  vector SS_asympOff(vector input, matrix Phi_);
+    │         ^^^^^^^^^^^ Forward declaration.
+  3 │  vector SS_asympOrig(vector input, matrix Phi_);
+    ┌─ continuous.stan:9:3
+  8 │    
+  9 │    #include </functions/SSfunctions.stan>
+    │    -------- file './/functions/SSfunctions.stan' included here
+ 10 │    
+warning: Functions do not need to be declared before definition; all user defined
+function names are always in scope regardless of definition order.
+    ┌─ .//functions/SSfunctions.stan:3:8
+  2 │  vector SS_asympOff(vector input, matrix Phi_);
+  3 │  vector SS_asympOrig(vector input, matrix Phi_);
+    │         ^^^^^^^^^^^^ Forward declaration.
+  4 │  vector SS_biexp(vector input, matrix Phi_);
+    ┌─ continuous.stan:9:3
+  8 │    
+  9 │    #include </functions/SSfunctions.stan>
+    │    -------- file './/functions/SSfunctions.stan' included here
+ 10 │    
+warning: Functions do not need to be declared before definition; all user defined
+function names are always in scope regardless of definition order.
+    ┌─ .//functions/SSfunctions.stan:4:8
+  3 │  vector SS_asympOrig(vector input, matrix Phi_);
+  4 │  vector SS_biexp(vector input, matrix Phi_);
+    │         ^^^^^^^^ Forward declaration.
+  5 │  vector SS_fol(vector Dose, vector input, matrix Phi_);
+    ┌─ continuous.stan:9:3
+  8 │    
+  9 │    #include </functions/SSfunctions.stan>
+    │    -------- file './/functions/SSfunctions.stan' included here
+ 10 │    
+warning: Functions do not need to be declared before definition; all user defined
+function names are always in scope regardless of definition order.
+    ┌─ .//functions/SSfunctions.stan:5:8
+  4 │  vector SS_biexp(vector input, matrix Phi_);
+  5 │  vector SS_fol(vector Dose, vector input, matrix Phi_);
+    │         ^^^^^^ Forward declaration.
+  6 │  vector SS_fpl(vector input, matrix Phi_);
+    ┌─ continuous.stan:9:3
+  8 │    
+  9 │    #include </functions/SSfunctions.stan>
+    │    -------- file './/functions/SSfunctions.stan' included here
+ 10 │    
+warning: Functions do not need to be declared before definition; all user defined
+function names are always in scope regardless of definition order.
+    ┌─ .//functions/SSfunctions.stan:6:8
+  5 │  vector SS_fol(vector Dose, vector input, matrix Phi_);
+  6 │  vector SS_fpl(vector input, matrix Phi_);
+    │         ^^^^^^ Forward declaration.
+  7 │  vector SS_gompertz(vector x, matrix Phi_);
+    ┌─ continuous.stan:9:3
+  8 │    
+  9 │    #include </functions/SSfunctions.stan>
+    │    -------- file './/functions/SSfunctions.stan' included here
+ 10 │    
+warning: Functions do not need to be declared before definition; all user defined
+function names are always in scope regardless of definition order.
+    ┌─ .//functions/SSfunctions.stan:7:8
+  6 │  vector SS_fpl(vector input, matrix Phi_);
+  7 │  vector SS_gompertz(vector x, matrix Phi_);
+    │         ^^^^^^^^^^^ Forward declaration.
+  8 │  vector SS_logis(vector input, matrix Phi_);
+    ┌─ continuous.stan:9:3
+  8 │    
+  9 │    #include </functions/SSfunctions.stan>
+    │    -------- file './/functions/SSfunctions.stan' included here
+ 10 │    
+warning: Functions do not need to be declared before definition; all user defined
+function names are always in scope regardless of definition order.
+    ┌─ .//functions/SSfunctions.stan:8:8
+  7 │  vector SS_gompertz(vector x, matrix Phi_);
+  8 │  vector SS_logis(vector input, matrix Phi_);
+    │         ^^^^^^^^ Forward declaration.
+  9 │  vector SS_micmen(vector input, matrix Phi_);
+    ┌─ continuous.stan:9:3
+  8 │    
+  9 │    #include </functions/SSfunctions.stan>
+    │    -------- file './/functions/SSfunctions.stan' included here
+ 10 │    
+warning: Functions do not need to be declared before definition; all user defined
+function names are always in scope regardless of definition order.
+    ┌─ .//functions/SSfunctions.stan:9:8
+  8 │  vector SS_logis(vector input, matrix Phi_);
+  9 │  vector SS_micmen(vector input, matrix Phi_);
+    │         ^^^^^^^^^ Forward declaration.
+ 10 │  vector SS_weibull(vector x, matrix Phi_);
+    ┌─ continuous.stan:9:3
+  8 │    
+  9 │    #include </functions/SSfunctions.stan>
+    │    -------- file './/functions/SSfunctions.stan' included here
+ 10 │    
+warning: Functions do not need to be declared before definition; all user defined
+function names are always in scope regardless of definition order.
+    ┌─ .//functions/SSfunctions.stan:10:8
+  9 │  vector SS_micmen(vector input, matrix Phi_);
+ 10 │  vector SS_weibull(vector x, matrix Phi_);
+    │         ^^^^^^^^^^ Forward declaration.
+ 11 │  
+    ┌─ continuous.stan:9:3
+  8 │    
+  9 │    #include </functions/SSfunctions.stan>
+    │    -------- file './/functions/SSfunctions.stan' included here
+ 10 │    
 [exit 0]
   $ stanc --include-paths="." --auto-format --canonicalize=includes,strip-comments --allow-undefined count.stan
 functions {
@@ -5892,10 +5979,18 @@ warning: Unreachable statement found, is this intended?
  11 │  #include /functions/count_likelihoods.stan
     │  -------- file './/functions/count_likelihoods.stan' included here
  12 │  #include /functions/mvmer_functions.stan
-.//functions/bernoulli_likelihoods.stan:84:8: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
-jm.stan:8:1: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
+warning: Functions do not need to be declared before definition; all user defined
+function names are always in scope regardless of definition order.
+    ┌─ .//functions/bernoulli_likelihoods.stan:84:8
+ 83 │     */
+ 84 │    real log_clogit_denom(int N_j, int D_j, vector eta_j);
+    │         ^^^^^^^^^^^^^^^^ Forward declaration.
+ 85 │    real log_clogit_denom(int N_j, int D_j, vector eta_j) {
+    ┌─ jm.stan:8:1
+  7 │  #include /functions/common_functions.stan
+  8 │  #include /functions/bernoulli_likelihoods.stan
+    │  -------- file './/functions/bernoulli_likelihoods.stan' included here
+  9 │  #include /functions/binomial_likelihoods.stan
 [exit 0]
   $ stanc --include-paths="." --auto-format --canonicalize=includes,strip-comments --allow-undefined lm.stan
 functions {
@@ -7541,10 +7636,18 @@ warning: Unreachable statement found, is this intended?
  11 │  #include /functions/count_likelihoods.stan
     │  -------- file './/functions/count_likelihoods.stan' included here
  12 │  #include /functions/mvmer_functions.stan
-.//functions/bernoulli_likelihoods.stan:84:8: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
-mvmer.stan:8:1: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
+warning: Functions do not need to be declared before definition; all user defined
+function names are always in scope regardless of definition order.
+    ┌─ .//functions/bernoulli_likelihoods.stan:84:8
+ 83 │     */
+ 84 │    real log_clogit_denom(int N_j, int D_j, vector eta_j);
+    │         ^^^^^^^^^^^^^^^^ Forward declaration.
+ 85 │    real log_clogit_denom(int N_j, int D_j, vector eta_j) {
+    ┌─ mvmer.stan:8:1
+  7 │  #include /functions/common_functions.stan
+  8 │  #include /functions/bernoulli_likelihoods.stan
+    │  -------- file './/functions/bernoulli_likelihoods.stan' included here
+  9 │  #include /functions/binomial_likelihoods.stan
 [exit 0]
   $ stanc --include-paths="." --auto-format --canonicalize=includes,strip-comments --allow-undefined polr.stan
 functions {
@@ -8103,10 +8206,18 @@ warning: Unreachable statement found, is this intended?
   7 │      #include </functions/bernoulli_likelihoods.stan>
     │      -------- file './/functions/bernoulli_likelihoods.stan' included here
   8 │    }
-.//functions/bernoulli_likelihoods.stan:84:8: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
-bernoulli.stan:7:3: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
+warning: Functions do not need to be declared before definition; all user defined
+function names are always in scope regardless of definition order.
+    ┌─ .//functions/bernoulli_likelihoods.stan:84:8
+ 83 │     */
+ 84 │    real log_clogit_denom(int N_j, int D_j, vector eta_j);
+    │         ^^^^^^^^^^^^^^^^ Forward declaration.
+ 85 │    real log_clogit_denom(int N_j, int D_j, vector eta_j) {
+    ┌─ bernoulli.stan:7:3
+  6 │    #include </functions/common_functions.stan>
+  7 │    #include </functions/bernoulli_likelihoods.stan>
+    │    -------- file './/functions/bernoulli_likelihoods.stan' included here
+  8 │  }
 [exit 0]
   $ stanc --include-paths="." --auto-format --canonicalize=strip-comments --allow-undefined binomial.stan
 #include /pre/Columbia_copyright.stan
@@ -8715,46 +8826,125 @@ warning: Unreachable statement found, is this intended?
   7 │    #include </functions/continuous_likelihoods.stan>
     │    -------- file './/functions/continuous_likelihoods.stan' included here
   8 │    
-.//functions/SSfunctions.stan:1:8: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
-continuous.stan:9:3: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
-.//functions/SSfunctions.stan:2:8: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
-continuous.stan:9:3: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
-.//functions/SSfunctions.stan:3:8: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
-continuous.stan:9:3: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
-.//functions/SSfunctions.stan:4:8: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
-continuous.stan:9:3: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
-.//functions/SSfunctions.stan:5:8: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
-continuous.stan:9:3: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
-.//functions/SSfunctions.stan:6:8: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
-continuous.stan:9:3: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
-.//functions/SSfunctions.stan:7:8: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
-continuous.stan:9:3: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
-.//functions/SSfunctions.stan:8:8: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
-continuous.stan:9:3: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
-.//functions/SSfunctions.stan:9:8: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
-continuous.stan:9:3: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
-.//functions/SSfunctions.stan:10:8: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
-continuous.stan:9:3: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
+warning: Functions do not need to be declared before definition; all user defined
+function names are always in scope regardless of definition order.
+    ┌─ .//functions/SSfunctions.stan:1:8
+  1 │  vector SS_asymp(vector input, matrix Phi_);
+    │         ^^^^^^^^ Forward declaration.
+  2 │  vector SS_asympOff(vector input, matrix Phi_);
+    ┌─ continuous.stan:9:3
+  8 │    
+  9 │    #include </functions/SSfunctions.stan>
+    │    -------- file './/functions/SSfunctions.stan' included here
+ 10 │    
+warning: Functions do not need to be declared before definition; all user defined
+function names are always in scope regardless of definition order.
+    ┌─ .//functions/SSfunctions.stan:2:8
+  1 │  vector SS_asymp(vector input, matrix Phi_);
+  2 │  vector SS_asympOff(vector input, matrix Phi_);
+    │         ^^^^^^^^^^^ Forward declaration.
+  3 │  vector SS_asympOrig(vector input, matrix Phi_);
+    ┌─ continuous.stan:9:3
+  8 │    
+  9 │    #include </functions/SSfunctions.stan>
+    │    -------- file './/functions/SSfunctions.stan' included here
+ 10 │    
+warning: Functions do not need to be declared before definition; all user defined
+function names are always in scope regardless of definition order.
+    ┌─ .//functions/SSfunctions.stan:3:8
+  2 │  vector SS_asympOff(vector input, matrix Phi_);
+  3 │  vector SS_asympOrig(vector input, matrix Phi_);
+    │         ^^^^^^^^^^^^ Forward declaration.
+  4 │  vector SS_biexp(vector input, matrix Phi_);
+    ┌─ continuous.stan:9:3
+  8 │    
+  9 │    #include </functions/SSfunctions.stan>
+    │    -------- file './/functions/SSfunctions.stan' included here
+ 10 │    
+warning: Functions do not need to be declared before definition; all user defined
+function names are always in scope regardless of definition order.
+    ┌─ .//functions/SSfunctions.stan:4:8
+  3 │  vector SS_asympOrig(vector input, matrix Phi_);
+  4 │  vector SS_biexp(vector input, matrix Phi_);
+    │         ^^^^^^^^ Forward declaration.
+  5 │  vector SS_fol(vector Dose, vector input, matrix Phi_);
+    ┌─ continuous.stan:9:3
+  8 │    
+  9 │    #include </functions/SSfunctions.stan>
+    │    -------- file './/functions/SSfunctions.stan' included here
+ 10 │    
+warning: Functions do not need to be declared before definition; all user defined
+function names are always in scope regardless of definition order.
+    ┌─ .//functions/SSfunctions.stan:5:8
+  4 │  vector SS_biexp(vector input, matrix Phi_);
+  5 │  vector SS_fol(vector Dose, vector input, matrix Phi_);
+    │         ^^^^^^ Forward declaration.
+  6 │  vector SS_fpl(vector input, matrix Phi_);
+    ┌─ continuous.stan:9:3
+  8 │    
+  9 │    #include </functions/SSfunctions.stan>
+    │    -------- file './/functions/SSfunctions.stan' included here
+ 10 │    
+warning: Functions do not need to be declared before definition; all user defined
+function names are always in scope regardless of definition order.
+    ┌─ .//functions/SSfunctions.stan:6:8
+  5 │  vector SS_fol(vector Dose, vector input, matrix Phi_);
+  6 │  vector SS_fpl(vector input, matrix Phi_);
+    │         ^^^^^^ Forward declaration.
+  7 │  vector SS_gompertz(vector x, matrix Phi_);
+    ┌─ continuous.stan:9:3
+  8 │    
+  9 │    #include </functions/SSfunctions.stan>
+    │    -------- file './/functions/SSfunctions.stan' included here
+ 10 │    
+warning: Functions do not need to be declared before definition; all user defined
+function names are always in scope regardless of definition order.
+    ┌─ .//functions/SSfunctions.stan:7:8
+  6 │  vector SS_fpl(vector input, matrix Phi_);
+  7 │  vector SS_gompertz(vector x, matrix Phi_);
+    │         ^^^^^^^^^^^ Forward declaration.
+  8 │  vector SS_logis(vector input, matrix Phi_);
+    ┌─ continuous.stan:9:3
+  8 │    
+  9 │    #include </functions/SSfunctions.stan>
+    │    -------- file './/functions/SSfunctions.stan' included here
+ 10 │    
+warning: Functions do not need to be declared before definition; all user defined
+function names are always in scope regardless of definition order.
+    ┌─ .//functions/SSfunctions.stan:8:8
+  7 │  vector SS_gompertz(vector x, matrix Phi_);
+  8 │  vector SS_logis(vector input, matrix Phi_);
+    │         ^^^^^^^^ Forward declaration.
+  9 │  vector SS_micmen(vector input, matrix Phi_);
+    ┌─ continuous.stan:9:3
+  8 │    
+  9 │    #include </functions/SSfunctions.stan>
+    │    -------- file './/functions/SSfunctions.stan' included here
+ 10 │    
+warning: Functions do not need to be declared before definition; all user defined
+function names are always in scope regardless of definition order.
+    ┌─ .//functions/SSfunctions.stan:9:8
+  8 │  vector SS_logis(vector input, matrix Phi_);
+  9 │  vector SS_micmen(vector input, matrix Phi_);
+    │         ^^^^^^^^^ Forward declaration.
+ 10 │  vector SS_weibull(vector x, matrix Phi_);
+    ┌─ continuous.stan:9:3
+  8 │    
+  9 │    #include </functions/SSfunctions.stan>
+    │    -------- file './/functions/SSfunctions.stan' included here
+ 10 │    
+warning: Functions do not need to be declared before definition; all user defined
+function names are always in scope regardless of definition order.
+    ┌─ .//functions/SSfunctions.stan:10:8
+  9 │  vector SS_micmen(vector input, matrix Phi_);
+ 10 │  vector SS_weibull(vector x, matrix Phi_);
+    │         ^^^^^^^^^^ Forward declaration.
+ 11 │  
+    ┌─ continuous.stan:9:3
+  8 │    
+  9 │    #include </functions/SSfunctions.stan>
+    │    -------- file './/functions/SSfunctions.stan' included here
+ 10 │    
 [exit 0]
   $ stanc --include-paths="." --auto-format --canonicalize=strip-comments --allow-undefined count.stan
 #include /pre/Columbia_copyright.stan
@@ -9272,10 +9462,18 @@ warning: Unreachable statement found, is this intended?
  11 │  #include /functions/count_likelihoods.stan
     │  -------- file './/functions/count_likelihoods.stan' included here
  12 │  #include /functions/mvmer_functions.stan
-.//functions/bernoulli_likelihoods.stan:84:8: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
-jm.stan:8:1: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
+warning: Functions do not need to be declared before definition; all user defined
+function names are always in scope regardless of definition order.
+    ┌─ .//functions/bernoulli_likelihoods.stan:84:8
+ 83 │     */
+ 84 │    real log_clogit_denom(int N_j, int D_j, vector eta_j);
+    │         ^^^^^^^^^^^^^^^^ Forward declaration.
+ 85 │    real log_clogit_denom(int N_j, int D_j, vector eta_j) {
+    ┌─ jm.stan:8:1
+  7 │  #include /functions/common_functions.stan
+  8 │  #include /functions/bernoulli_likelihoods.stan
+    │  -------- file './/functions/bernoulli_likelihoods.stan' included here
+  9 │  #include /functions/binomial_likelihoods.stan
 [exit 0]
   $ stanc --include-paths="." --auto-format --canonicalize=strip-comments --allow-undefined lm.stan
 #include /pre/Columbia_copyright.stan
@@ -9612,10 +9810,18 @@ warning: Unreachable statement found, is this intended?
  11 │  #include /functions/count_likelihoods.stan
     │  -------- file './/functions/count_likelihoods.stan' included here
  12 │  #include /functions/mvmer_functions.stan
-.//functions/bernoulli_likelihoods.stan:84:8: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
-mvmer.stan:8:1: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
+warning: Functions do not need to be declared before definition; all user defined
+function names are always in scope regardless of definition order.
+    ┌─ .//functions/bernoulli_likelihoods.stan:84:8
+ 83 │     */
+ 84 │    real log_clogit_denom(int N_j, int D_j, vector eta_j);
+    │         ^^^^^^^^^^^^^^^^ Forward declaration.
+ 85 │    real log_clogit_denom(int N_j, int D_j, vector eta_j) {
+    ┌─ mvmer.stan:8:1
+  7 │  #include /functions/common_functions.stan
+  8 │  #include /functions/bernoulli_likelihoods.stan
+    │  -------- file './/functions/bernoulli_likelihoods.stan' included here
+  9 │  #include /functions/binomial_likelihoods.stan
 [exit 0]
   $ stanc --include-paths="." --auto-format --canonicalize=strip-comments --allow-undefined polr.stan
 #include /pre/Columbia_copyright.stan
