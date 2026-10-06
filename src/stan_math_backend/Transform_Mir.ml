@@ -206,12 +206,10 @@ let var_context_read_internal ((decl_id_lval : 'a Stmt.Pattern.lvalue), meta, st
     let adlevel = UnsizedType.fill_adtype_for_type DataOnly type_ in
     Expr.{pattern= Var decl_id; meta= Typed.Meta.{loc= meta; type_; adlevel}}
   in
-  [ { Stmt.pattern=
-        NRFunApp
-          ( CompilerInternal FnReadData
-          , [ decl_var; Expr.Helpers.variable "context__"
-            ; {decl_var with pattern= Lit (Str, remove_prefix decl_id)} ] )
-    ; meta } ]
+  [ Stmt.Helpers.internal_nrfunapp FnReadData
+      [ decl_var; Expr.Helpers.variable "context__"
+      ; {decl_var with pattern= Lit (Str, remove_prefix decl_id)} ]
+      meta ]
 
 let var_context_read p =
   (* this never uses the declare-define fast path at the moment *)
