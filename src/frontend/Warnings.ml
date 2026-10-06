@@ -2,6 +2,7 @@ module Location_span = Middle.Location_span
 module Location = Middle.Location
 
 type t =
+  | StancJsInclude of string
   | JacobianFunCallDataOnly of Location_span.t * string option
   | LpInTransformedParam of
       Location_span.t (* https://github.com/stan-dev/stanc3/issues/1482 *)
@@ -16,6 +17,7 @@ type t =
   | Deprecation of Location_span.t * string
   | Pedantic of Location_span.t * string
 
+let stancjs_bad_include msg = StancJsInclude msg
 let jacobian_dataonly loc alt = JacobianFunCallDataOnly (loc, alt)
 let lp_in_transparam loc = LpInTransformedParam loc
 let int_divide loc hint = IntDivide (loc, hint)
@@ -39,6 +41,10 @@ let to_grace ?printed_filename ?code warn =
     make ?printed_filename ?code ?labels ?notes ?summary loc Severity.Warning
       primary in
   match warn with
+  | StancJsInclude msg ->
+      create Warning
+        (Message.createf
+           "@[<v>stanc.js failed to parse included file mapping:@ %s@]" msg)
   | Deprecation (loc, msg) | Pedantic (loc, msg) ->
       make_warning loc "%a" Fmt.lines (Fmt.str "@[%a@]" Fmt.text msg)
   | EmptyFile loc ->

@@ -4,6 +4,7 @@ module Location_span = Middle.Location_span
 
 type t
 
+val stancjs_bad_include : string -> t
 val jacobian_dataonly : Location_span.t -> string option -> t
 val lp_in_transparam : Location_span.t -> t
 val int_divide : Location_span.t -> (Format.formatter -> unit) -> t
