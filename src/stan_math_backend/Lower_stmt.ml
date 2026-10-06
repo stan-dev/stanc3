@@ -25,6 +25,7 @@ let math_fn_translations = function
       Some "stan::math::validate_non_negative_index"
   | FnValidateSizePositive -> Some "stan::math::validate_positive_index"
   | FnValidateSizeUnitVector -> Some "stan::math::validate_unit_vector_index"
+  | FnReadData -> Some "stan::io::read_from_context"
   | FnReadWriteEventsOpenCL x -> Some (x ^ ".wait_for_read_write_events")
   | _ -> None
 
@@ -236,8 +237,8 @@ let rec lower_statement Stmt.{pattern; meta} : stmt list =
       ( (((LVariable _ | LTupleProjection _) as lhs), [])
       , _
       , (( {meta= {Expr.Typed.Meta.type_= UInt | UReal | UComplex; _}; _}
-         | { pattern= FunApp (CompilerInternal (FnReadData | FnReadParam _), _)
-           ; _ } ) as rhs) ) ->
+         | {pattern= FunApp (CompilerInternal (FnReadParam _), _); _} ) as rhs)
+      ) ->
       Assign (lower_nonrange_lbase lhs, lower_expr rhs) |> wrap_e
   | Assignment ((LVariable assignee, idcs), (UInt | UReal | UComplex), rhs)
     when List.for_all ~f:is_single_index idcs ->

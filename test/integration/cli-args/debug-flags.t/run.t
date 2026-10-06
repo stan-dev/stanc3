@@ -475,11 +475,11 @@ Flags not used elsewhere in the tests
   
   prepare_data {
     data int N;
-    N = FnReadData__("N")[1];
+    FnReadData__(N, context__, "N");
     (FnCheck(trans(Lower 0))(var_name N)(var N))__(0);
     FnValidateSize__("y", "N", N);
     data array[int, N] y;
-    y = FnReadData__("y");
+    FnReadData__(y, context__, "y");
     (FnCheck(trans(Lower 0))(var_name y)(var y))__(0);
     (FnCheck(trans(Upper 1))(var_name y)(var y))__(1); }
   
@@ -517,7 +517,7 @@ Flags not used elsewhere in the tests
   
   transform_inits {
     real theta;
-    theta = FnReadData__("theta")[1];
+    FnReadData__(theta, context__, "theta");
     (FnWriteParam(unconstrain_opt((LowerUpper 0 1)))(var theta))__(); }
   output_vars {
     parameters real theta; //real
@@ -530,11 +530,11 @@ Flags not used elsewhere in the tests
   
   prepare_data {
     data int N;
-    N = FnReadData__("N")[1];
+    FnReadData__(N, context__, "N");
     (FnCheck(trans(Lower 0))(var_name N)(var N))__(0);
     FnValidateSize__("y", "N", N);
     data array[int, N] y;
-    y = FnReadData__("y");
+    FnReadData__(y, context__, "y");
     (FnCheck(trans(Lower 0))(var_name y)(var y))__(0);
     (FnCheck(trans(Upper 1))(var_name y)(var y))__(1); }
   
@@ -572,7 +572,7 @@ Flags not used elsewhere in the tests
   
   transform_inits {
     real theta;
-    theta = FnReadData__("theta")[1];
+    FnReadData__(theta, context__, "theta");
     (FnWriteParam(unconstrain_opt((LowerUpper 0 1)))(var theta))__(); }
   output_vars {
     parameters real theta; //real

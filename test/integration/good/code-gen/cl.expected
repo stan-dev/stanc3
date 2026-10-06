@@ -283,7 +283,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
         std::vector<size_t>{});
       k = std::numeric_limits<int>::min();
       current_statement__ = 176;
-      k = context__.vals_i("k")[(1 - 1)];
+      stan::io::read_from_context(k, context__, "k");
       current_statement__ = 176;
       stan::math::check_greater_or_equal(function__, "k", k, 1);
       current_statement__ = 177;
@@ -291,7 +291,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
         std::vector<size_t>{});
       n = std::numeric_limits<int>::min();
       current_statement__ = 177;
-      n = context__.vals_i("n")[(1 - 1)];
+      stan::io::read_from_context(n, context__, "n");
       current_statement__ = 177;
       stan::math::check_greater_or_equal(function__, "n", n, 0);
       current_statement__ = 178;
@@ -305,20 +305,8 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
                      std::numeric_limits<double>::quiet_NaN());
       new (&X_d) Eigen::Map<Eigen::Matrix<double,-1,-1>>(X_d_data__.data(),
         n, k);
-      {
-        std::vector<local_scalar_t__> X_d_flat__;
-        current_statement__ = 180;
-        X_d_flat__ = context__.vals_r("X_d");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= n; ++sym2__) {
-            stan::model::assign(X_d, X_d_flat__[(pos__ - 1)],
-              "assigning variable X_d", stan::model::index_uni(sym2__),
-              stan::model::index_uni(sym1__));
-            pos__ = (pos__ + 1);
-          }
-        }
-      }
+      current_statement__ = 180;
+      stan::io::read_from_context(X_d, context__, "X_d");
       current_statement__ = 181;
       stan::math::validate_non_negative_index("X_d_a", "n", n);
       current_statement__ = 182;
@@ -330,23 +318,8 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       X_d_a = std::vector<Eigen::Matrix<double,-1,-1>>(2,
                 Eigen::Matrix<double,-1,-1>::Constant(n, k,
                   std::numeric_limits<double>::quiet_NaN()));
-      {
-        std::vector<local_scalar_t__> X_d_a_flat__;
-        current_statement__ = 183;
-        X_d_a_flat__ = context__.vals_r("X_d_a");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= n; ++sym2__) {
-            for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
-              stan::model::assign(X_d_a, X_d_a_flat__[(pos__ - 1)],
-                "assigning variable X_d_a", stan::model::index_uni(sym3__),
-                stan::model::index_uni(sym2__),
-                stan::model::index_uni(sym1__));
-              pos__ = (pos__ + 1);
-            }
-          }
-        }
-      }
+      current_statement__ = 183;
+      stan::io::read_from_context(X_d_a, context__, "X_d_a");
       current_statement__ = 184;
       stan::math::validate_non_negative_index("y_v_d", "n", n);
       current_statement__ = 185;
@@ -356,17 +329,8 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
                        std::numeric_limits<double>::quiet_NaN());
       new (&y_v_d)
         Eigen::Map<Eigen::Matrix<double,-1,1>>(y_v_d_data__.data(), n);
-      {
-        std::vector<local_scalar_t__> y_v_d_flat__;
-        current_statement__ = 185;
-        y_v_d_flat__ = context__.vals_r("y_v_d");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
-          stan::model::assign(y_v_d, y_v_d_flat__[(pos__ - 1)],
-            "assigning variable y_v_d", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 185;
+      stan::io::read_from_context(y_v_d, context__, "y_v_d");
       current_statement__ = 186;
       stan::math::validate_non_negative_index("X_rv_d", "n", n);
       current_statement__ = 187;
@@ -376,17 +340,8 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
                         std::numeric_limits<double>::quiet_NaN());
       new (&X_rv_d)
         Eigen::Map<Eigen::Matrix<double,1,-1>>(X_rv_d_data__.data(), n);
-      {
-        std::vector<local_scalar_t__> X_rv_d_flat__;
-        current_statement__ = 187;
-        X_rv_d_flat__ = context__.vals_r("X_rv_d");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
-          stan::model::assign(X_rv_d, X_rv_d_flat__[(pos__ - 1)],
-            "assigning variable X_rv_d", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 187;
+      stan::io::read_from_context(X_rv_d, context__, "X_rv_d");
       current_statement__ = 188;
       stan::math::validate_non_negative_index("y_vi_d", "n", n);
       current_statement__ = 189;
@@ -394,7 +349,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
         std::vector<size_t>{static_cast<size_t>(n)});
       y_vi_d = std::vector<int>(n, std::numeric_limits<int>::min());
       current_statement__ = 189;
-      y_vi_d = context__.vals_i("y_vi_d");
+      stan::io::read_from_context(y_vi_d, context__, "y_vi_d");
       current_statement__ = 190;
       stan::math::validate_non_negative_index("y2_vi_d", "n", n);
       current_statement__ = 191;
@@ -402,19 +357,19 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
         std::vector<size_t>{static_cast<size_t>(n)});
       y2_vi_d = std::vector<int>(n, std::numeric_limits<int>::min());
       current_statement__ = 191;
-      y2_vi_d = context__.vals_i("y2_vi_d");
+      stan::io::read_from_context(y2_vi_d, context__, "y2_vi_d");
       current_statement__ = 192;
       context__.validate_dims("data initialization", "y_s_d", "int",
         std::vector<size_t>{});
       y_s_d = std::numeric_limits<int>::min();
       current_statement__ = 192;
-      y_s_d = context__.vals_i("y_s_d")[(1 - 1)];
+      stan::io::read_from_context(y_s_d, context__, "y_s_d");
       current_statement__ = 193;
       context__.validate_dims("data initialization", "y_r_d", "double",
         std::vector<size_t>{});
       y_r_d = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 193;
-      y_r_d = context__.vals_r("y_r_d")[(1 - 1)];
+      stan::io::read_from_context(y_r_d, context__, "y_r_d");
       current_statement__ = 194;
       k_td = std::numeric_limits<int>::min();
       current_statement__ = 195;
@@ -2102,105 +2057,45 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,1> alpha_v =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(k, DUMMY_VAR__);
-      {
-        std::vector<local_scalar_t__> alpha_v_flat__;
-        current_statement__ = 1;
-        alpha_v_flat__ = context__.vals_r("alpha_v");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          stan::model::assign(alpha_v, alpha_v_flat__[(pos__ - 1)],
-            "assigning variable alpha_v", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 1;
+      stan::io::read_from_context(alpha_v, context__, "alpha_v");
       out__.write(alpha_v);
       Eigen::Matrix<local_scalar_t__,-1,1> beta =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(k, DUMMY_VAR__);
-      {
-        std::vector<local_scalar_t__> beta_flat__;
-        current_statement__ = 2;
-        beta_flat__ = context__.vals_r("beta");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          stan::model::assign(beta, beta_flat__[(pos__ - 1)],
-            "assigning variable beta", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 2;
+      stan::io::read_from_context(beta, context__, "beta");
       out__.write(beta);
       Eigen::Matrix<local_scalar_t__,-1,1> cuts =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(k, DUMMY_VAR__);
-      {
-        std::vector<local_scalar_t__> cuts_flat__;
-        current_statement__ = 3;
-        cuts_flat__ = context__.vals_r("cuts");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          stan::model::assign(cuts, cuts_flat__[(pos__ - 1)],
-            "assigning variable cuts", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 3;
+      stan::io::read_from_context(cuts, context__, "cuts");
       out__.write(cuts);
       local_scalar_t__ sigma = DUMMY_VAR__;
       current_statement__ = 4;
-      sigma = context__.vals_r("sigma")[(1 - 1)];
+      stan::io::read_from_context(sigma, context__, "sigma");
       out__.write_free_lb(0, sigma);
       local_scalar_t__ alpha = DUMMY_VAR__;
       current_statement__ = 5;
-      alpha = context__.vals_r("alpha")[(1 - 1)];
+      stan::io::read_from_context(alpha, context__, "alpha");
       out__.write(alpha);
       local_scalar_t__ phi = DUMMY_VAR__;
       current_statement__ = 6;
-      phi = context__.vals_r("phi")[(1 - 1)];
+      stan::io::read_from_context(phi, context__, "phi");
       out__.write(phi);
       Eigen::Matrix<local_scalar_t__,-1,-1> X_p =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(n, k, DUMMY_VAR__);
-      {
-        std::vector<local_scalar_t__> X_p_flat__;
-        current_statement__ = 7;
-        X_p_flat__ = context__.vals_r("X_p");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= n; ++sym2__) {
-            stan::model::assign(X_p, X_p_flat__[(pos__ - 1)],
-              "assigning variable X_p", stan::model::index_uni(sym2__),
-              stan::model::index_uni(sym1__));
-            pos__ = (pos__ + 1);
-          }
-        }
-      }
+      current_statement__ = 7;
+      stan::io::read_from_context(X_p, context__, "X_p");
       out__.write(X_p);
       Eigen::Matrix<local_scalar_t__,-1,-1> beta_m =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(n, k, DUMMY_VAR__);
-      {
-        std::vector<local_scalar_t__> beta_m_flat__;
-        current_statement__ = 8;
-        beta_m_flat__ = context__.vals_r("beta_m");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= n; ++sym2__) {
-            stan::model::assign(beta_m, beta_m_flat__[(pos__ - 1)],
-              "assigning variable beta_m", stan::model::index_uni(sym2__),
-              stan::model::index_uni(sym1__));
-            pos__ = (pos__ + 1);
-          }
-        }
-      }
+      current_statement__ = 8;
+      stan::io::read_from_context(beta_m, context__, "beta_m");
       out__.write(beta_m);
       Eigen::Matrix<local_scalar_t__,1,-1> X_rv_p =
         Eigen::Matrix<local_scalar_t__,1,-1>::Constant(n, DUMMY_VAR__);
-      {
-        std::vector<local_scalar_t__> X_rv_p_flat__;
-        current_statement__ = 9;
-        X_rv_p_flat__ = context__.vals_r("X_rv_p");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
-          stan::model::assign(X_rv_p, X_rv_p_flat__[(pos__ - 1)],
-            "assigning variable X_rv_p", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 9;
+      stan::io::read_from_context(X_rv_p, context__, "X_rv_p");
       out__.write(X_rv_p);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
