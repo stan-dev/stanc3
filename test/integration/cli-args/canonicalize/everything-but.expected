@@ -194,21 +194,53 @@ generated quantities {
                                    x_r, x_i);
 }
 
-deprecated.stan:24:3: warning: Assignment of variable to itself.
-deprecated.stan:2:16: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
-deprecated.stan:36:27: warning: integrate_ode is deprecated and will be removed in Stan 3.0. Use ode_rk45
-  instead. The new interface is slightly different, see:
-  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-deprecated.stan:37:30: warning: integrate_ode_rk45 is deprecated and will be removed in Stan 3.0. Use
-  ode_rk45 instead. The new interface is slightly different, see:
-  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-deprecated.stan:38:31: warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf
-  instead. The new interface is slightly different, see:
-  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-deprecated.stan:39:33: warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use
-  ode_adams instead. The new interface is slightly different, see:
-  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: Assignment of variable to itself.
+    ┌─ deprecated.stan:24:16
+ 23 │    array[5,5] real idxs;
+ 24 │    idxs[1][:] = idxs[1][:];
+    │    ----------   ^^^^^^^^^^ Value here.
+    │    │
+    │    Assigned to itself.
+ 25 │   }
+warning: Functions do not need to be declared before definition; all user defined
+function names are always in scope regardless of definition order.
+    ┌─ deprecated.stan:2:16
+  1 │  functions {
+  2 │    array[] real sho(real t, array[] real y, array[] real theta,
+    │                 ^^^ Forward declaration.
+  3 │                     array[] real x, array[] int x_int);
+warning: integrate_ode is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead.
+    ┌─ deprecated.stan:36:27
+ 35 │    array[3] real ts = {0.5, 1.0, 2.0};
+ 36 │    array[3,2] real y_hat = integrate_ode(sho, y0, 0.0, ts, theta, x_r, x_i );
+    │                            ^^^^^^^^^^^^^ Use ode_rk45 instead.
+ 37 │    array[3,2] real y_hat_45 = integrate_ode_rk45(sho, y0, 0.0, ts, theta, x_r, x_i );
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_rk45 is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead.
+    ┌─ deprecated.stan:37:30
+ 36 │    array[3,2] real y_hat = integrate_ode(sho, y0, 0.0, ts, theta, x_r, x_i );
+ 37 │    array[3,2] real y_hat_45 = integrate_ode_rk45(sho, y0, 0.0, ts, theta, x_r, x_i );
+    │                               ^^^^^^^^^^^^^^^^^^ Use ode_rk45 instead.
+ 38 │    array[3,2] real y_hat_bdf = integrate_ode_bdf(sho, y0, 0.0, ts, theta, x_r, x_i );
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
+    ┌─ deprecated.stan:38:31
+ 37 │    array[3,2] real y_hat_45 = integrate_ode_rk45(sho, y0, 0.0, ts, theta, x_r, x_i );
+ 38 │    array[3,2] real y_hat_bdf = integrate_ode_bdf(sho, y0, 0.0, ts, theta, x_r, x_i );
+    │                                ^^^^^^^^^^^^^^^^^ Use ode_bdf instead.
+ 39 │    array[3,2] real y_hat_adams = integrate_ode_adams(sho, y0, 0.0, ts, theta, x_r, x_i );
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use ode_adams instead.
+    ┌─ deprecated.stan:39:33
+ 38 │    array[3,2] real y_hat_bdf = integrate_ode_bdf(sho, y0, 0.0, ts, theta, x_r, x_i );
+ 39 │    array[3,2] real y_hat_adams = integrate_ode_adams(sho, y0, 0.0, ts, theta, x_r, x_i );
+    │                                  ^^^^^^^^^^^^^^^^^^^ Use ode_adams instead.
+ 40 │  }
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 [exit 0]
   $ stanc --auto-format --canonicalize braces,parentheses funs.stanfunctions
 // comment test comment
@@ -255,22 +287,28 @@ model {
   t.2 = (3, 4).1;
 }
 
-parenthesize.stan:27:14: warning: Found chained comparison
-      1 < 2 > 3
-  This is interpreted as
-      (1 < 2) > 3
-  Consider if the intended meaning was
-      1 < 2 && 2 > 3
-  instead. You can silence this warning by adding explicit parentheses. This
-  can be automatically changed using the canonicalize flag for stanc
-parenthesize.stan:27:14: warning: Found chained comparison
-      1 < 2 > 3 < 4
-  This is interpreted as
-      (1 < 2 > 3) < 4
-  Consider if the intended meaning was
-      1 < 2 > 3 && 3 < 4
-  instead. You can silence this warning by adding explicit parentheses. This
-  can be automatically changed using the canonicalize flag for stanc
+warning: Found chained comparison.
+    ┌─ parenthesize.stan:27:14
+ 26 │  
+ 27 │    int bool = 1 < 2 > 3 < 4;
+    │               ^^^^^^^^^ This is interpreted as (1 < 2) > 3.
+    │                         Consider if the intended meaning was (1 < 2) && (2 > 3) instead.
+ 28 │  
+    = You can silence this warning by adding explicit
+      parentheses.
+    = This can be automatically changed using the canonicalize flag for
+      stanc.
+warning: Found chained comparison.
+    ┌─ parenthesize.stan:27:14
+ 26 │  
+ 27 │    int bool = 1 < 2 > 3 < 4;
+    │               ^^^^^^^^^^^^^ This is interpreted as (1 < 2 > 3) < 4.
+    │                             Consider if the intended meaning was (1 < 2 > 3) && (3 < 4) instead.
+ 28 │  
+    = You can silence this warning by adding explicit
+      parentheses.
+    = This can be automatically changed using the canonicalize flag for
+      stanc.
 [exit 0]
   $ stanc --auto-format --canonicalize braces,parentheses squaremc.stan
 /*

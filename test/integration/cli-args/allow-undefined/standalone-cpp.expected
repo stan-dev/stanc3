@@ -71,6 +71,11 @@ internal_fun(const std::vector<std::vector<double>>& a,
              pstream__ = nullptr) {
   return external_model_namespace::internal_fun(a, d, pstream__);
 }
-external.stan:7:8: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
+warning: Functions do not need to be declared before definition; all user defined
+function names are always in scope regardless of definition order.
+    ┌─ external.stan:7:8
+  6 │  
+  7 │    real internal_fun(data array[,] real a, data array[,] int d);
+    │         ^^^^^^^^^^^^ Forward declaration.
+  8 │    // forward decl, shouldn't duplicate in output
 [exit 0]

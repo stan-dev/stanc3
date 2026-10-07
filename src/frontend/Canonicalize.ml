@@ -88,7 +88,7 @@ let rec blocks_stmt ({stmt; smeta} : typed_statement) : typed_statement =
         blocks_stmt
         @@ mk_typed_statement
              ~stmt:(Block [{stmt; smeta}])
-             ~return_type:smeta.return_type ~loc:smeta.loc in
+             ~flow_type:smeta.flow_type ~loc:smeta.loc in
   let stmt =
     match stmt with
     | While (e, s) -> While (e, stmt_to_block s)

@@ -342,6 +342,11 @@ stan::math::profile_map& get_stan_profile_data() {
 }
 #endif
 STAN_REGISTER_MAP_RECT(1, external_model_namespace::external_map_rectable_functor__)
-external.stan:7:8: warning: Functions do not need to be declared before definition; all user defined
-  function names are always in scope regardless of definition order.
+warning: Functions do not need to be declared before definition; all user defined
+function names are always in scope regardless of definition order.
+    ┌─ external.stan:7:8
+  6 │  
+  7 │    real internal_fun(data array[,] real a, data array[,] int d);
+    │         ^^^^^^^^^^^^ Forward declaration.
+  8 │    // forward decl, shouldn't duplicate in output
 [exit 0]

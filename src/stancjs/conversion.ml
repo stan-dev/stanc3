@@ -18,12 +18,12 @@ let bad_arg_message ~name ~expected value =
     (Js.typeof value |> Js.to_string)
     expected
 
-let checked_to_string ~name value =
+let checked_to_string ~name (value : 'a Js.t) =
   if not (typecheck value "string") then
     Error (bad_arg_message ~name ~expected:"string" value)
-  else Ok (Js.to_string value)
+  else Ok (Js.to_string (Js.Unsafe.coerce value))
 
-let checked_to_array ~name value =
+let checked_to_array ~name (value : 'a Js.t) =
   let is_array a = Js.Unsafe.global##._Array##isArray a |> Js.to_bool in
   if not (is_array value) then
     Error
@@ -32,10 +32,10 @@ let checked_to_array ~name value =
           false for value of type '%s'."
          name
          (Js.typeof value |> Js.to_string))
-  else Ok (Js.to_array value)
+  else Ok (Js.to_array (Js.Unsafe.coerce value))
 
 let get_includes_lenient includes :
-    string String.Map.t * 'a Grace.Diagnostic.t list =
+    string String.Map.t * Frontend.Warnings.t list =
   let open Result.Syntax in
   let map, warnings =
     match Js.Opt.to_option includes with
@@ -44,9 +44,7 @@ let get_includes_lenient includes :
         ( String.Map.empty
         , [bad_arg_message ~name:"includes" ~expected:"object" includes] )
     | Some includes ->
-        let keys =
-          Js.object_keys includes |> Js.to_array |> Array.to_seq |> List.of_seq
-        in
+        let keys = Js.object_keys includes |> Js.to_array |> Array.to_list in
         let lookup k =
           let value_js = Js.Unsafe.get includes k in
           let k_str = Js.to_string k in
@@ -60,19 +58,12 @@ let get_includes_lenient includes :
         ( (* JS objects cannot have duplicate keys *)
           String.Map.of_list alist
         , warnings ) in
-  ( map
-  , List.map
-      ~f:(fun w ->
-        Grace.Diagnostic.(
-          create Warning
-            (Message.createf
-               "@[<v>stanc.js failed to parse included file mapping:@ %s@]" w)))
-      warnings )
+  (map, List.map ~f:Frontend.Warnings.stancjs_bad_include warnings)
 
 let get_includes includes =
   let includes, include_reader_warnings = get_includes_lenient includes in
   List.iter include_reader_warnings ~f:(fun d ->
-      Fmt.str "%a" Diagnostic.pp_compact d |> throw_error);
+      Fmt.str "%a" (fun ppf -> Warnings.pp ppf) d |> throw_error);
   includes
 
 type flags =
@@ -195,12 +186,15 @@ class type stancReturn = object
   method warnings : Js.js_string Js.t Js.js_array Js.t Js.readonly_prop
 end
 
-let js_of_warnings ~color_output warnings =
+let js_of_warnings ?printed_filename ?code ~color_output warnings =
   let js_of_warning w =
-    Js.string (str_color ~color_output "%a" Diagnostic.pp_compact w) in
+    Js.string
+      (str_color ~color_output "%a"
+         (Frontend.Warnings.pp ?printed_filename ?code)
+         w) in
   warnings |> List.map ~f:js_of_warning |> Array.of_list |> Js.array
 
-let wrap_error ~color_output ~warnings e =
+let wrap_error ?printed_filename ?code ~color_output ~warnings e =
   (* NB: The "0" entry is due to a historical mistake that led the first entry
      always being a 0 (this element is a 'tag' used by jsoo internally, but was
      not meant to be exposed to the user). For backward compatibility with
@@ -209,7 +203,7 @@ let wrap_error ~color_output ~warnings e =
   object%js
     val result = Js.undefined [@@optdef]
     val errors = Js.def errors [@@optdef]
-    val warnings = js_of_warnings ~color_output warnings
+    val warnings = js_of_warnings ?printed_filename ?code ~color_output warnings
   end
 
 let wrap_result ?printed_filename ~code ~color_output ~warnings res =
@@ -218,12 +212,14 @@ let wrap_result ?printed_filename ~code ~color_output ~warnings res =
       object%js
         val result = Js.def (Js.string s) [@@optdef]
         val errors = Js.undefined [@@optdef]
-        val warnings = js_of_warnings ~color_output warnings
+
+        val warnings =
+          js_of_warnings ?printed_filename ~code ~color_output warnings
       end
   | Error e ->
       let e =
         str_color ~color_output "%a" (Errors.pp ?printed_filename ~code) e in
-      wrap_error ~color_output ~warnings e
+      wrap_error ?printed_filename ~code ~color_output ~warnings e
 
 (* structured outputs from newer entrypoints *)
 

@@ -125,7 +125,12 @@ model {
   
 }
 
-integrate.stan:21:13: warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf
-  instead. The new interface is slightly different, see:
-  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
+    ┌─ integrate.stan:21:13
+ 20 │      // not ok
+ 21 │      return (integrate_ode_bdf(integrand_ode, rep_array(0.0, 1), 1E-5,
+    │              ^^^^^^^^^^^^^^^^^ Use ode_bdf instead.
+ 22 │                                rep_array(1.0 - 1E-5, 1), rep_array(0.0, 0),
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 [exit 0]

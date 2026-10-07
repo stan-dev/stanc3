@@ -1341,6 +1341,36 @@ generated quantities {
   while (0) continue;
 }
 
+warning: Unreachable statement found, is this intended?
+    ┌─ break-continue.stan:119:7
+115 │      while (1) {
+116 │        while (1) {
+    │               - endless loop
+117 │          
+118 │        }
+119 │        break;
+    │        ^ Never reached
+120 │      }
+warning: Unreachable statement found, is this intended?
+    ┌─ break-continue.stan:125:7
+121 │      while (1) {
+122 │        while (1) {
+    │               - endless loop
+123 │          
+124 │        }
+125 │        continue;
+    │        ^ Never reached
+126 │      }
+warning: Unreachable statement found, is this intended?
+    ┌─ break-continue.stan:35:5
+ 31 │      // nested while
+ 32 │      while (1) while (0) break;
+    │             - endless loop
+ 33 │      
+ 34 │      // nested for
+ 35 │      while (1) {
+    │      ^ Never reached
+ 36 │        for (i in 1 : 10) 
 [exit 0]
   $ stanc --auto-format comments.stan
 // this is a line comment */ should stay // /**/
@@ -2806,6 +2836,14 @@ functions {
   }
 }
 
+warning: Unreachable statement found, is this intended?
+    ┌─ fun-return-typ2.stan:2:34
+  1 │  functions {
+  2 │    real foo() { if(1) reject(""); reject("");}
+    │                       ----------- ^ Never reached
+    │                       │
+    │                       stops this model evaluation
+  3 │  }
 [exit 0]
   $ stanc --auto-format fun-return-typ4.stan
 functions {
@@ -2819,6 +2857,24 @@ functions {
         reject("");
     }
     reject("");
+  }
+}
+
+warning: Unreachable statement found, is this intended?
+    ┌─ fun-return-typ4.stan:2:68
+  1 │  functions {
+  2 │    real foo() { if (1) reject(""); else {if (1) ; else reject("");} reject("");}
+    │                        -----------                                  ^ Never reached
+    │                        │
+    │                        stops this model evaluation
+  3 │  }
+[exit 0]
+  $ stanc --auto-format fun-return-typ5.stan
+functions {
+  real foo() {
+    if (1) {
+      return 1.0;
+    }
   }
 }
 
@@ -3437,6 +3493,14 @@ functions {
   }
 }
 
+warning: Unreachable statement found, is this intended?
+    ┌─ good_fundef_returntypes1.stan:5:5
+  3 │      if (215)
+  4 │        return 24;
+    │        ---------- exits the function
+  5 │      return 24;
+    │      ^ Never reached
+  6 │    }
 [exit 0]
   $ stanc --auto-format good_fundef_returntypes2.stan
 functions {
@@ -3456,6 +3520,14 @@ functions {
   }
 }
 
+warning: Unreachable statement found, is this intended?
+    ┌─ good_fundef_returntypes3.stan:5:5
+  3 │      if (215)
+  4 │        return 24;
+    │        ---------- exits the function
+  5 │      reject("");
+    │      ^ Never reached
+  6 │    }
 [exit 0]
   $ stanc --auto-format good_fundef_returntypes4.stan
 functions {
@@ -4188,14 +4260,24 @@ model {
   y ~ normal(0, 1);
 }
 
-lp_transformed_param.stan:14:16: warning: Using _lp functions in transformed parameters is deprecated and will be
-  disallowed in Stan 2.40. Use an _jacobian function instead, as this allows
-  change of variable adjustments which are conditionally enabled by the
-  algorithms.
-lp_transformed_param.stan:15:3: warning: Using _lp functions in transformed parameters is deprecated and will be
-  disallowed in Stan 2.40. Use an _jacobian function instead, as this allows
-  change of variable adjustments which are conditionally enabled by the
-  algorithms.
+warning: Using _lp functions in transformed parameters is deprecated and will be disallowed in the future.
+    ┌─ lp_transformed_param.stan:14:16
+ 13 │  transformed parameters { 
+ 14 │    real alpha = test_lp(5.0);
+    │                 ^^^^^^^^^^^^ _lp function call in transformed parameters.
+ 15 │    nr_test_lp(5.0);
+    = Use an _jacobian function instead, as this allows change of variable
+      adjustments which are conditionally enabled by the
+      algorithms.
+warning: Using _lp functions in transformed parameters is deprecated and will be disallowed in the future.
+    ┌─ lp_transformed_param.stan:15:3
+ 14 │    real alpha = test_lp(5.0);
+ 15 │    nr_test_lp(5.0);
+    │    ^^^^^^^^^^^^^^^^ _lp function call in transformed parameters.
+ 16 │  }
+    = Use an _jacobian function instead, as this allows change of variable
+      adjustments which are conditionally enabled by the
+      algorithms.
 [exit 0]
   $ stanc --auto-format map_rect.stan
 functions {
@@ -4559,9 +4641,14 @@ model {
   
 }
 
-ode-int-segments.stan:26:13: warning: integrate_ode is deprecated and will be removed in Stan 3.0. Use ode_rk45
-  instead. The new interface is slightly different, see:
-  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead.
+    ┌─ ode-int-segments.stan:26:13
+ 25 │      int N = 0;
+ 26 │      y_hat = integrate_ode(ode, y0, t0, segment(ts, 0, N), theta, x, x_int);
+    │              ^^^^^^^^^^^^^ Use ode_rk45 instead.
+ 27 │    }
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 [exit 0]
   $ stanc --auto-format ode-nested-quotes.stan
 /**
@@ -4584,9 +4671,14 @@ model {
   
 }
 
-ode-nested-quotes.stan:14:7: warning: integrate_ode is deprecated and will be removed in Stan 3.0. Use ode_rk45
-  instead. The new interface is slightly different, see:
-  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead.
+    ┌─ ode-nested-quotes.stan:14:7
+ 13 │    array[2, 2] real t;
+ 14 │    y = integrate_ode(foo, rep_array(1.0, 1), 1.0, t[1], rep_array(1.0, 1),
+    │        ^^^^^^^^^^^^^ Use ode_rk45 instead.
+ 15 │                      rep_array(1.0, 1), rep_array(1, 1))[1, 1];
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 [exit 0]
   $ stanc --auto-format ode_good.stan
 functions {
@@ -4678,27 +4770,62 @@ model {
     y[t] ~ normal(y_hat[t], sigma); // independent normal noise
 }
 
-ode_good.stan:28:11: warning: integrate_ode is deprecated and will be removed in Stan 3.0. Use ode_rk45
-  instead. The new interface is slightly different, see:
-  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-ode_good.stan:35:11: warning: integrate_ode_rk45 is deprecated and will be removed in Stan 3.0. Use
-  ode_rk45 instead. The new interface is slightly different, see:
-  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-ode_good.stan:42:11: warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf
-  instead. The new interface is slightly different, see:
-  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-ode_good.stan:49:11: warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use
-  ode_adams instead. The new interface is slightly different, see:
-  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-ode_good.stan:56:11: warning: integrate_ode_rk45 is deprecated and will be removed in Stan 3.0. Use
-  ode_rk45 instead. The new interface is slightly different, see:
-  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-ode_good.stan:63:11: warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf
-  instead. The new interface is slightly different, see:
-  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-ode_good.stan:70:11: warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use
-  ode_adams instead. The new interface is slightly different, see:
-  https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead.
+    ┌─ ode_good.stan:28:11
+ 27 │    array[10, 2] real y_hat;
+ 28 │    y_hat = integrate_ode(harm_osc_ode, // system
+    │            ^^^^^^^^^^^^^ Use ode_rk45 instead.
+ 29 │                          y0, // initial state
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_rk45 is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead.
+    ┌─ ode_good.stan:35:11
+ 34 │                          x_int); // integer data
+ 35 │    y_hat = integrate_ode_rk45(harm_osc_ode, // system
+    │            ^^^^^^^^^^^^^^^^^^ Use ode_rk45 instead.
+ 36 │                               y0, // initial state
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
+    ┌─ ode_good.stan:42:11
+ 41 │                               x_int); // integer data
+ 42 │    y_hat = integrate_ode_bdf(harm_osc_ode, // system
+    │            ^^^^^^^^^^^^^^^^^ Use ode_bdf instead.
+ 43 │                              y0, // initial state
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use ode_adams instead.
+    ┌─ ode_good.stan:49:11
+ 48 │                              x_int); // integer data
+ 49 │    y_hat = integrate_ode_adams(harm_osc_ode, // system
+    │            ^^^^^^^^^^^^^^^^^^^ Use ode_adams instead.
+ 50 │                                y0, // initial state
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_rk45 is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead.
+    ┌─ ode_good.stan:56:11
+ 55 │                                x_int); // integer data
+ 56 │    y_hat = integrate_ode_rk45(harm_osc_ode, // system
+    │            ^^^^^^^^^^^^^^^^^^ Use ode_rk45 instead.
+ 57 │                               y0, // initial state
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_bdf is deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
+    ┌─ ode_good.stan:63:11
+ 62 │                               x_int, 0.01, 0.01, 10); // integer data
+ 63 │    y_hat = integrate_ode_bdf(harm_osc_ode, // system
+    │            ^^^^^^^^^^^^^^^^^ Use ode_bdf instead.
+ 64 │                              y0, // initial state
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+warning: integrate_ode_adams is deprecated and will be removed in Stan 3.0. Use ode_adams instead.
+    ┌─ ode_good.stan:70:11
+ 69 │                              x_int, 0.01, 0.01, 10); // integer data
+ 70 │    y_hat = integrate_ode_adams(harm_osc_ode, // system
+    │            ^^^^^^^^^^^^^^^^^^^ Use ode_adams instead.
+ 71 │                                y0, // initial state
+    = The new interface is slightly different, see:
+      https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 [exit 0]
   $ stanc --auto-format poisson_log_glm_old_performance.stan
 transformed data {

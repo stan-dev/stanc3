@@ -183,21 +183,25 @@ type ('e, 's, 'l, 'f) statement =
       ; body: 's }
 [@@deriving sexp_of, compare, map, fold]
 
-(** Statement return types which we will decorate statements with during type
-    checking:
-    - [Complete] corresponds to statements that exit the function (return or
-      error) in every branch
-    - [Incomplete] corresponds to statements which pass control flow to
-      following statements in at least some branches
-    - [NonlocalControlFlow] is simila to [Incomplete] but specifically used when
-      breaks are present in loops. Normally, an infinite loop with [Incomplete]
-      return type is fine (and considered [Complete]), since it either returns
-      or diverges. However, in the presence of break statements, control flow
-      may jump to the end of the loop. *)
-type statement_returntype =
-  | Incomplete
-  | NonlocalControlFlow (* is any break present *)
-  | Complete
+type statement_type =
+  {controlflow: completeness; breaks: Location_span.t list; continues: bool}
+
+and completeness = Incomplete of incomplete | Complete of complete
+
+and incomplete =
+  | Next
+  | LoopBreaks of Location_span.t list
+  | EmptyRange of Location_span.t
+  | EmptyContainer of Location_span.t
+
+and complete =
+  | CWhile of Location_span.t
+  | CIfElse of complete * complete
+  | CContinue of Location_span.t
+  | CBreak of Location_span.t
+  | CReturn of Location_span.t
+  | CReject of Location_span.t
+  | CFatalError of Location_span.t
 [@@deriving sexp_of]
 
 type ('e, 'm, 'l, 'f) statement_with =
@@ -212,8 +216,7 @@ type untyped_statement =
 let mk_untyped_statement ~stmt ~loc : untyped_statement = {stmt; smeta= {loc}}
 
 type stmt_typed_located_meta =
-  { loc: (Middle.Location_span.t[@sexp.opaque])
-  ; return_type: statement_returntype }
+  {loc: (Middle.Location_span.t[@sexp.opaque]); flow_type: statement_type}
 [@@deriving sexp_of]
 
 (** Typed statements also have meta-data after type checking: a location_span,
@@ -227,8 +230,7 @@ type typed_statement =
   statement_with
 [@@deriving sexp_of]
 
-let mk_typed_statement ~stmt ~loc ~return_type =
-  {stmt; smeta= {loc; return_type}}
+let mk_typed_statement ~stmt ~loc ~flow_type = {stmt; smeta= {loc; flow_type}}
 
 (** Program shapes, where we obtain types of programs if we substitute typed or
     untyped statements for 's *)

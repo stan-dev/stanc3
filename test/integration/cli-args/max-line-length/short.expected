@@ -883,4 +883,15 @@ generated quantities {
   idx_res5 = indexing_mat[4 : , 2 : 3, 1];
 }
 
+warning: Unreachable statement found, is this intended?
+    ┌─ mother.stan:101:5
+ 93 │      // nested while
+ 94 │      while (1) {
+    │             - endless loop
+ 95 │        while (0) {
+    ⋯  
+100 │      // nested for
+101 │      while (1) {
+    │      ^ Never reached
+102 │        for (i in 1 : 10) {
 [exit 0]
