@@ -2545,7 +2545,9 @@ let () =
   add_unqualified ("zeros_int_array", ReturnType (UArray UInt), [UInt], SoA);
   add_unqualified ("zeros_array", ReturnType (UArray UReal), [UInt], SoA);
   add_unqualified ("zeros_row_vector", ReturnType URowVector, [UInt], SoA);
-  add_unqualified ("zeros_vector", ReturnType UVector, [UInt], SoA)
+  add_unqualified ("zeros_vector", ReturnType UVector, [UInt], SoA);
+  add_unqualified
+    ("zip_index", ReturnType UVector, [UMatrix; UArray UInt; UArray UInt], SoA)
 
 (* variadics *)
 
