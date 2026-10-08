@@ -3,6 +3,17 @@ open Std
 open Std.Sexp_conv
 open Analysis_and_optimization.Dataflow_types
 
+(** Both maps as association lists, the same shape the derived sexp had. *)
+let print_factor_graph (graph : factor_graph) =
+  print_s
+    [%sexp
+      { factor_map=
+          (FactorMap.to_list graph.factor_map
+            : ((factor * label) * string Set.Poly.t) list)
+      ; var_map=
+          (String.Map.to_list graph.var_map
+            : (string * (factor * label) Set.Poly.t) list) }]
+
 let reject_example =
   Test_utils.mir_of_string
     {|
@@ -43,7 +54,7 @@ let reject_example =
 
 let%expect_test "Factor graph reject example" =
   let deps = prog_factor_graph reject_example in
-  print_s [%sexp (deps : factor_graph)];
+  print_factor_graph deps;
   [%expect
     {|
       ((factor_map
@@ -91,7 +102,7 @@ let complex_example =
 
 let%expect_test "Factor graph complex example" =
   let deps = prog_factor_graph complex_example in
-  print_s [%sexp (deps : factor_graph)];
+  print_factor_graph deps;
   [%expect
     {|
     ((factor_map
@@ -110,7 +121,7 @@ let%expect_test "Factor graph complex example" =
                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
          10)
-        ((VVar a) (VVar b)))
+        (a b))
        (((TargetTerm
           ((pattern
             (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
@@ -130,7 +141,7 @@ let%expect_test "Factor graph complex example" =
                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
          9)
-        ((VVar b)))
+        (b))
        (((TargetTerm
           ((pattern
             (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
@@ -146,7 +157,7 @@ let%expect_test "Factor graph complex example" =
                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
          17)
-        ((VVar a) (VVar c)))
+        (a c))
        (((TargetTerm
           ((pattern
             (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
@@ -158,7 +169,7 @@ let%expect_test "Factor graph complex example" =
                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
          18)
-        ((VVar b) (VVar c) (VVar d)))
+        (b c d))
        (((TargetTerm
           ((pattern
             (FunApp (Operator Times)
@@ -168,7 +179,7 @@ let%expect_test "Factor graph complex example" =
                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
          21)
-        ((VVar f)))
+        (f))
        (((TargetTerm
           ((pattern
             (FunApp (Operator Times)
@@ -178,9 +189,9 @@ let%expect_test "Factor graph complex example" =
                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
          21)
-        ((VVar a) (VVar b) (VVar c) (VVar d) (VVar e)))))
+        (a b c d e))))
      (var_map
-      (((VVar a)
+      ((a
         (((TargetTerm
            ((pattern
              (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
@@ -220,7 +231,7 @@ let%expect_test "Factor graph complex example" =
                 (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
             (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
           21)))
-       ((VVar b)
+       (b
         (((TargetTerm
            ((pattern
              (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
@@ -275,7 +286,7 @@ let%expect_test "Factor graph complex example" =
                 (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
             (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
           21)))
-       ((VVar c)
+       (c
         (((TargetTerm
            ((pattern
              (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
@@ -311,7 +322,7 @@ let%expect_test "Factor graph complex example" =
                 (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
             (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
           21)))
-       ((VVar d)
+       (d
         (((TargetTerm
            ((pattern
              (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
@@ -332,7 +343,7 @@ let%expect_test "Factor graph complex example" =
                 (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
             (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
           21)))
-       ((VVar e)
+       (e
         (((TargetTerm
            ((pattern
              (FunApp (Operator Times)
@@ -342,7 +353,7 @@ let%expect_test "Factor graph complex example" =
                 (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
             (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
           21)))
-       ((VVar f)
+       (f
         (((TargetTerm
            ((pattern
              (FunApp (Operator Times)
@@ -386,12 +397,13 @@ let%expect_test "Priors complex example" =
   let priors = list_priors complex_example in
   print_s
     [%sexp
-      (priors
-        : ((factor * label) Set.Poly.t option * Middle.Location_span.t)
-          VExprMap.t)];
+      (String.Map.to_list priors
+        : (string
+          * ((factor * label) Set.Poly.t option * Middle.Location_span.t))
+          list)];
   [%expect
     {|
-    (((VVar a)
+    ((a
       (((((TargetTerm
            ((pattern
              (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
@@ -447,7 +459,7 @@ let%expect_test "Priors complex example" =
         (end_loc
          ((filename string) (line_num 7) (col_num 17) (byte_num 100)
           (included_from ()))))))
-     ((VVar b)
+     (b
       (((((TargetTerm
            ((pattern
              (FunApp (StanLib normal_lpdf (FnDist Density Unnormalized))
@@ -484,7 +496,7 @@ let%expect_test "Priors complex example" =
         (end_loc
          ((filename string) (line_num 8) (col_num 17) (byte_num 118)
           (included_from ()))))))
-     ((VVar c)
+     (c
       ((())
        ((begin_loc
          ((filename string) (line_num 9) (col_num 10) (byte_num 129)
@@ -492,7 +504,7 @@ let%expect_test "Priors complex example" =
         (end_loc
          ((filename string) (line_num 9) (col_num 17) (byte_num 136)
           (included_from ()))))))
-     ((VVar d)
+     (d
       ((())
        ((begin_loc
          ((filename string) (line_num 10) (col_num 10) (byte_num 147)
@@ -500,7 +512,7 @@ let%expect_test "Priors complex example" =
         (end_loc
          ((filename string) (line_num 10) (col_num 17) (byte_num 154)
           (included_from ()))))))
-     ((VVar e)
+     (e
       ((())
        ((begin_loc
          ((filename string) (line_num 11) (col_num 10) (byte_num 165)
@@ -508,7 +520,7 @@ let%expect_test "Priors complex example" =
         (end_loc
          ((filename string) (line_num 11) (col_num 17) (byte_num 172)
           (included_from ()))))))
-     ((VVar f)
+     (f
       ((())
        ((begin_loc
          ((filename string) (line_num 12) (col_num 10) (byte_num 183)
