@@ -24,7 +24,8 @@ and debug_settings =
   ; print_transformed_mir: debug_options
   ; print_optimized_mir: debug_options
   ; print_mem_patterns: bool
-  ; force_soa: bool option
+  ; optimization_overrides:
+      (Analysis_and_optimization.Optimize.optimization_pass * bool) list
   ; print_lir: bool
   ; debug_generate_data: bool
   ; debug_generate_inits: bool
@@ -34,14 +35,11 @@ and debug_settings =
 and debug_options = Off | Basic | Pretty
 
 let get_optimization_settings
-    {optimization_level; debug_settings= {force_soa; _}; _} =
-  let base_optims =
-    Analysis_and_optimization.Optimize.level_optimizations optimization_level
-  in
-  match force_soa with
-  | Some true -> {base_optims with optimize_soa= true}
-  | Some false -> {base_optims with optimize_soa= false}
-  | None -> base_optims
+    {optimization_level; debug_settings= {optimization_overrides; _}; _} =
+  let open Analysis_and_optimization.Optimize in
+  List.fold_left optimization_overrides
+    ~init:(level_optimizations optimization_level)
+    ~f:(fun settings (pass, enabled) -> set_optimization pass enabled settings)
 
 let default =
   { optimization_level= Analysis_and_optimization.Optimize.O0
@@ -60,7 +58,7 @@ let default =
       ; print_transformed_mir= Off
       ; print_optimized_mir= Off
       ; print_mem_patterns= false
-      ; force_soa= None
+      ; optimization_overrides= []
       ; print_lir= false
       ; debug_generate_data= false
       ; debug_generate_inits= false

@@ -100,6 +100,12 @@ let process_flags name code (flags : 'a Js.opt) includes :
       let flag_val flag =
         let prefix = flag ^ "=" in
         Array.find_map flags ~f:(String.chop_prefix ~prefix) in
+      let optimization_overrides =
+        let override flag =
+          Option.bind (String.chop_prefix ~prefix:"f" flag) ~f:(fun name ->
+              List.assoc_opt name
+                Analysis_and_optimization.Optimize.optimization_flags) in
+        Array.to_list flags |> List.filter_map ~f:override in
       { name
       ; code
       ; driver_flags=
@@ -135,7 +141,7 @@ let process_flags name code (flags : 'a Js.opt) includes :
                    else if is_flag_set "debug-optimized-mir-pretty" then Pretty
                    else Off)
               ; print_mem_patterns= is_flag_set "debug-mem-patterns"
-              ; force_soa= None
+              ; optimization_overrides
               ; print_lir= is_flag_set "debug-lir"
               ; debug_print_factor_graph= is_flag_set "debug-print-factor-graph"
               ; debug_generate_data= is_flag_set "debug-generate-data"
