@@ -217,22 +217,6 @@ and vector_literal ?(column = false) scalar es =
     let values = lower_exprs es in
     (vector << values).@!("finished")
 
-and read_data ut es =
-  let val_method =
-    match ut with
-    | UnsizedType.UArray UInt -> "vals_i"
-    | UArray UReal -> "vals_r"
-    | UArray UComplex -> "vals_c"
-    | UInt | UReal | UComplex | UVector | URowVector | UMatrix | UTuple _
-     |UComplexMatrix | UComplexRowVector | UComplexVector | UArray _ | UFun _
-     |UMathLibraryFunction ->
-        Common.ICE.(
-          internal_errorf "Can't ReadData of %t" [UnsizedType.pp $ ut])
-        [@coverage off] in
-  let open Cpp.DSL in
-  let data_context = Var "context__" in
-  data_context.@?(val_method, [lower_expr (List.hd_exn es)])
-
 and lower_binary_op op fn es =
   if is_scalar (first es) && is_scalar (second es) then
     Parens (BinOp (lower_expr (first es), op, lower_expr (second es)))
@@ -429,7 +413,6 @@ and lower_compiler_internal ad ut f es =
           Common.ICE.(
             internal_errorf "Unexpected type for row vector literal %t"
               [UnsizedType.pp $ ut]) [@coverage off])
-  | FnReadData -> read_data ut es
   | FnReadDeserializer ->
       deserializer.@<>(( "read"
                        , [lower_unsizedtype_local AutoDiffable ut]
@@ -467,7 +450,7 @@ and lower_compiler_internal ad ut f es =
               ut SoA ]
           (lower_exprs es)
       else lower_fun_call name es
-  | FnWriteParam _ | FnValidateSize | FnValidateSizePositive
+  | FnReadData | FnWriteParam _ | FnValidateSize | FnValidateSizePositive
    |FnValidateSizeUnitVector | FnCheck _ | FnPrint | FnReject | FnFatalError
    |FnReadWriteEventsOpenCL _ ->
       Common.ICE.(
@@ -552,16 +535,12 @@ and lower_expr (Expr.{pattern; meta} : Expr.Typed.t) : Cpp.expr =
   | FunApp (StanLib (f, suffix), es) -> lower_fun_app suffix f es
   | FunApp (UserDefined (f, suffix), es) -> lower_user_defined_fun f suffix es
   | Indexed (e, []) -> lower_expr e
-  | Indexed (e, idx) -> (
-      match e.pattern with
-      | FunApp (CompilerInternal FnReadData, _) ->
-          lower_indexed_simple (lower_expr e) idx
-      | _
-        when List.for_all ~f:dont_need_range_check idx
-             && not (UnsizedType.is_indexing_matrix (Expr.Typed.type_of e, idx))
-        ->
-          lower_indexed_simple (lower_expr e) idx
-      | _ -> lower_indexed e idx (Fmt.to_to_string Expr.Typed.pp e))
+  | Indexed (e, idx) ->
+      if
+        List.for_all ~f:dont_need_range_check idx
+        && not (UnsizedType.is_indexing_matrix (Expr.Typed.type_of e, idx))
+      then lower_indexed_simple (lower_expr e) idx
+      else lower_indexed e idx (Fmt.to_to_string Expr.Typed.pp e)
   | TupleProjection (t, ix) -> tuple_get (ix - 1) (lower_expr t)
 
 and lower_exprs es = List.map ~f:lower_expr es

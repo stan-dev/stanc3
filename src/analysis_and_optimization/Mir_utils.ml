@@ -541,19 +541,18 @@ let unsafe_unsized_to_sized_type (rt : Expr.Typed.t Type.t) =
   | Type.Sized ret_type -> ret_type
   | Unsized ut ->
       let rec to_sized a =
+        let open Expr.Helpers in
         match a with
         | UnsizedType.UReal -> SizedType.SReal
         | UInt -> SInt
         | UComplex -> SComplex
-        | UArray t -> SArray (to_sized t, Expr.Helpers.int 0)
-        | UMatrix ->
-            SMatrix (Mem_pattern.AoS, Expr.Helpers.int 0, Expr.Helpers.int 0)
-        | UVector -> SVector (AoS, Expr.Helpers.int 0)
-        | URowVector -> SRowVector (AoS, Expr.Helpers.int 0)
-        | UComplexMatrix ->
-            SComplexMatrix (Expr.Helpers.int 0, Expr.Helpers.int 0)
-        | UComplexVector -> SComplexVector (Expr.Helpers.int 0)
-        | UComplexRowVector -> SComplexRowVector (Expr.Helpers.int 0)
+        | UArray t -> SArray (to_sized t, zero)
+        | UMatrix -> SMatrix (Mem_pattern.AoS, zero, zero)
+        | UVector -> SVector (AoS, zero)
+        | URowVector -> SRowVector (AoS, zero)
+        | UComplexMatrix -> SComplexMatrix (zero, zero)
+        | UComplexVector -> SComplexVector zero
+        | UComplexRowVector -> SComplexRowVector zero
         | UTuple ts -> STuple (List.map ~f:to_sized ts)
         | UFun (_, UnsizedType.ReturnType inner_ut, _, _) -> to_sized inner_ut
         | UFun (_, Void, _, _) | UMathLibraryFunction ->

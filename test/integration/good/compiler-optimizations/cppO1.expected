@@ -51,20 +51,8 @@ class ad_level_deep_dependence_model final : public model_base_crtp<ad_level_dee
                      std::numeric_limits<double>::quiet_NaN());
       new (&X_d) Eigen::Map<Eigen::Matrix<double,-1,-1>>(X_d_data__.data(),
         10, 10);
-      {
-        std::vector<local_scalar_t__> X_d_flat__;
-        current_statement__ = 10;
-        X_d_flat__ = context__.vals_r("X_d");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-            stan::model::assign(X_d, X_d_flat__[(pos__ - 1)],
-              "assigning variable X_d", stan::model::index_uni(sym2__),
-              stan::model::index_uni(sym1__));
-            pos__ = (pos__ + 1);
-          }
-        }
-      }
+      current_statement__ = 10;
+      stan::io::read_from_context(X_d, context__, "X_d");
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -351,20 +339,8 @@ class ad_level_deep_dependence_model final : public model_base_crtp<ad_level_dee
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,-1> X_p =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10, DUMMY_VAR__);
-      {
-        std::vector<local_scalar_t__> X_p_flat__;
-        current_statement__ = 1;
-        X_p_flat__ = context__.vals_r("X_p");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-            stan::model::assign(X_p, X_p_flat__[(pos__ - 1)],
-              "assigning variable X_p", stan::model::index_uni(sym2__),
-              stan::model::index_uni(sym1__));
-            pos__ = (pos__ + 1);
-          }
-        }
-      }
+      current_statement__ = 1;
+      stan::io::read_from_context(X_p, context__, "X_p");
       out__.write(X_p);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1046,24 +1022,12 @@ class ad_level_disconnected_function_model final : public model_base_crtp<ad_lev
       int pos__ = std::numeric_limits<int>::min();
       Eigen::Matrix<local_scalar_t__,-1,-1> row_soa =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10, DUMMY_VAR__);
-      {
-        std::vector<local_scalar_t__> row_soa_flat__;
-        current_statement__ = 1;
-        row_soa_flat__ = context__.vals_r("row_soa");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-            stan::model::assign(row_soa, row_soa_flat__[(pos__ - 1)],
-              "assigning variable row_soa", stan::model::index_uni(sym2__),
-              stan::model::index_uni(sym1__));
-            pos__ = (pos__ + 1);
-          }
-        }
-      }
+      current_statement__ = 1;
+      stan::io::read_from_context(row_soa, context__, "row_soa");
       out__.write(row_soa);
-      local_scalar_t__ theta;
+      local_scalar_t__ theta = DUMMY_VAR__;
       current_statement__ = 2;
-      theta = context__.vals_r("theta")[(1 - 1)];
+      stan::io::read_from_context(theta, context__, "theta");
       out__.write(theta);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1466,8 +1430,9 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
       current_statement__ = 17;
       context__.validate_dims("data initialization", "N_t", "int",
         std::vector<size_t>{});
+      N_t = std::numeric_limits<int>::min();
       current_statement__ = 17;
-      N_t = context__.vals_i("N_t")[(1 - 1)];
+      stan::io::read_from_context(N_t, context__, "N_t");
       current_statement__ = 17;
       stan::math::check_greater_or_equal(function__, "N_t", N_t, 0);
       current_statement__ = 18;
@@ -1477,13 +1442,13 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
         std::vector<size_t>{static_cast<size_t>(N_t)});
       t = std::vector<double>(N_t, std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 19;
-      t = context__.vals_r("t");
+      stan::io::read_from_context(t, context__, "t");
       current_statement__ = 20;
       context__.validate_dims("data initialization", "y0", "double",
         std::vector<size_t>{static_cast<size_t>(4)});
       y0 = std::vector<double>(4, std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 20;
-      y0 = context__.vals_r("y0");
+      stan::io::read_from_context(y0, context__, "y0");
       current_statement__ = 21;
       stan::math::validate_non_negative_index("stoi_hat", "N_t", N_t);
       current_statement__ = 22;
@@ -1491,7 +1456,7 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
         std::vector<size_t>{static_cast<size_t>(N_t)});
       stoi_hat = std::vector<int>(N_t, std::numeric_limits<int>::min());
       current_statement__ = 22;
-      stoi_hat = context__.vals_i("stoi_hat");
+      stan::io::read_from_context(stoi_hat, context__, "stoi_hat");
       current_statement__ = 23;
       stan::math::validate_non_negative_index("B_hat", "N_t", N_t);
       current_statement__ = 24;
@@ -1500,7 +1465,7 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
       B_hat = std::vector<double>(N_t,
                 std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 24;
-      B_hat = context__.vals_r("B_hat");
+      stan::io::read_from_context(B_hat, context__, "B_hat");
       current_statement__ = 25;
       current_statement__ = 25;
       t0 = static_cast<double>(0);
@@ -1895,21 +1860,21 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
       current_statement__ = 4;
       context__.validate_dims("parameter initialization", "delta", "double",
         std::vector<size_t>{});
-      local_scalar_t__ beta;
+      local_scalar_t__ beta = DUMMY_VAR__;
       current_statement__ = 1;
-      beta = context__.vals_r("beta")[(1 - 1)];
+      stan::io::read_from_context(beta, context__, "beta");
       out__.write_free_lb(0, beta);
-      local_scalar_t__ gamma;
+      local_scalar_t__ gamma = DUMMY_VAR__;
       current_statement__ = 2;
-      gamma = context__.vals_r("gamma")[(1 - 1)];
+      stan::io::read_from_context(gamma, context__, "gamma");
       out__.write_free_lb(0, gamma);
-      local_scalar_t__ xi;
+      local_scalar_t__ xi = DUMMY_VAR__;
       current_statement__ = 3;
-      xi = context__.vals_r("xi")[(1 - 1)];
+      stan::io::read_from_context(xi, context__, "xi");
       out__.write_free_lb(0, xi);
-      local_scalar_t__ delta;
+      local_scalar_t__ delta = DUMMY_VAR__;
       current_statement__ = 4;
-      delta = context__.vals_r("delta")[(1 - 1)];
+      stan::io::read_from_context(delta, context__, "delta");
       out__.write_free_lb(0, delta);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2138,20 +2103,8 @@ class ad_levels_deep_model final : public model_base_crtp<ad_levels_deep_model> 
                         std::numeric_limits<double>::quiet_NaN());
       new (&X_data)
         Eigen::Map<Eigen::Matrix<double,-1,-1>>(X_data_data__.data(), 10, 10);
-      {
-        std::vector<local_scalar_t__> X_data_flat__;
-        current_statement__ = 6;
-        X_data_flat__ = context__.vals_r("X_data");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-            stan::model::assign(X_data, X_data_flat__[(pos__ - 1)],
-              "assigning variable X_data", stan::model::index_uni(sym2__),
-              stan::model::index_uni(sym1__));
-            pos__ = (pos__ + 1);
-          }
-        }
-      }
+      current_statement__ = 6;
+      stan::io::read_from_context(X_data, context__, "X_data");
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -2376,20 +2329,8 @@ class ad_levels_deep_model final : public model_base_crtp<ad_levels_deep_model> 
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,-1> X_p =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10, DUMMY_VAR__);
-      {
-        std::vector<local_scalar_t__> X_p_flat__;
-        current_statement__ = 1;
-        X_p_flat__ = context__.vals_r("X_p");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-            stan::model::assign(X_p, X_p_flat__[(pos__ - 1)],
-              "assigning variable X_p", stan::model::index_uni(sym2__),
-              stan::model::index_uni(sym1__));
-            pos__ = (pos__ + 1);
-          }
-        }
-      }
+      current_statement__ = 1;
+      stan::io::read_from_context(X_p, context__, "X_p");
       out__.write(X_p);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2638,8 +2579,9 @@ class copy_prop_profile_model final : public model_base_crtp<copy_prop_profile_m
       current_statement__ = 16;
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
+      N = std::numeric_limits<int>::min();
       current_statement__ = 16;
-      N = context__.vals_i("N")[(1 - 1)];
+      stan::io::read_from_context(N, context__, "N");
       current_statement__ = 16;
       stan::math::check_greater_or_equal(function__, "N", N, 0);
       current_statement__ = 17;
@@ -2894,20 +2836,8 @@ class copy_prop_profile_model final : public model_base_crtp<copy_prop_profile_m
       int pos__ = std::numeric_limits<int>::min();
       Eigen::Matrix<local_scalar_t__,-1,-1> X =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(N, N, DUMMY_VAR__);
-      {
-        std::vector<local_scalar_t__> X_flat__;
-        current_statement__ = 1;
-        X_flat__ = context__.vals_r("X");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            stan::model::assign(X, X_flat__[(pos__ - 1)],
-              "assigning variable X", stan::model::index_uni(sym2__),
-              stan::model::index_uni(sym1__));
-            pos__ = (pos__ + 1);
-          }
-        }
-      }
+      current_statement__ = 1;
+      stan::io::read_from_context(X, context__, "X");
       out__.write(X);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -3327,15 +3257,17 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
       current_statement__ = 37;
       context__.validate_dims("data initialization", "nind", "int",
         std::vector<size_t>{});
+      nind = std::numeric_limits<int>::min();
       current_statement__ = 37;
-      nind = context__.vals_i("nind")[(1 - 1)];
+      stan::io::read_from_context(nind, context__, "nind");
       current_statement__ = 37;
       stan::math::check_greater_or_equal(function__, "nind", nind, 0);
       current_statement__ = 38;
       context__.validate_dims("data initialization", "n_occasions", "int",
         std::vector<size_t>{});
+      n_occasions = std::numeric_limits<int>::min();
       current_statement__ = 38;
-      n_occasions = context__.vals_i("n_occasions")[(1 - 1)];
+      stan::io::read_from_context(n_occasions, context__, "n_occasions");
       current_statement__ = 38;
       stan::math::check_greater_or_equal(function__, "n_occasions",
         n_occasions, 2);
@@ -3349,20 +3281,8 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
           static_cast<size_t>(n_occasions)});
       y = std::vector<std::vector<int>>(nind,
             std::vector<int>(n_occasions, std::numeric_limits<int>::min()));
-      {
-        std::vector<int> y_flat__;
-        current_statement__ = 41;
-        y_flat__ = context__.vals_i("y");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= n_occasions; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= nind; ++sym2__) {
-            stan::model::assign(y, y_flat__[(pos__ - 1)],
-              "assigning variable y", stan::model::index_uni(sym2__),
-              stan::model::index_uni(sym1__));
-            pos__ = (pos__ + 1);
-          }
-        }
-      }
+      current_statement__ = 41;
+      stan::io::read_from_context(y, context__, "y");
       current_statement__ = 41;
       stan::math::check_greater_or_equal(function__, "y", y, 0);
       current_statement__ = 41;
@@ -3370,8 +3290,9 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
       current_statement__ = 42;
       context__.validate_dims("data initialization", "max_age", "int",
         std::vector<size_t>{});
+      max_age = std::numeric_limits<int>::min();
       current_statement__ = 42;
-      max_age = context__.vals_i("max_age")[(1 - 1)];
+      stan::io::read_from_context(max_age, context__, "max_age");
       current_statement__ = 42;
       stan::math::check_greater_or_equal(function__, "max_age", max_age, 1);
       current_statement__ = 43;
@@ -3387,20 +3308,8 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
           static_cast<size_t>(x_2dim__)});
       x = std::vector<std::vector<int>>(nind,
             std::vector<int>(x_2dim__, std::numeric_limits<int>::min()));
-      {
-        std::vector<int> x_flat__;
-        current_statement__ = 45;
-        x_flat__ = context__.vals_i("x");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= (n_occasions - 1); ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= nind; ++sym2__) {
-            stan::model::assign(x, x_flat__[(pos__ - 1)],
-              "assigning variable x", stan::model::index_uni(sym2__),
-              stan::model::index_uni(sym1__));
-            pos__ = (pos__ + 1);
-          }
-        }
-      }
+      current_statement__ = 45;
+      stan::io::read_from_context(x, context__, "x");
       current_statement__ = 45;
       stan::math::check_greater_or_equal(function__, "x", x, 0);
       current_statement__ = 45;
@@ -4070,23 +3979,14 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
         std::vector<size_t>{static_cast<size_t>(max_age)});
       int pos__;
       pos__ = 1;
-      local_scalar_t__ mean_p;
+      local_scalar_t__ mean_p = DUMMY_VAR__;
       current_statement__ = 1;
-      mean_p = context__.vals_r("mean_p")[(1 - 1)];
+      stan::io::read_from_context(mean_p, context__, "mean_p");
       out__.write_free_lub(0, 1, mean_p);
       Eigen::Matrix<local_scalar_t__,-1,1> beta =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(max_age, DUMMY_VAR__);
-      {
-        std::vector<local_scalar_t__> beta_flat__;
-        current_statement__ = 2;
-        beta_flat__ = context__.vals_r("beta");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= max_age; ++sym1__) {
-          stan::model::assign(beta, beta_flat__[(pos__ - 1)],
-            "assigning variable beta", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 2;
+      stan::io::read_from_context(beta, context__, "beta");
       out__.write_free_lub(0, 1, beta);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -4405,36 +4305,41 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       current_statement__ = 39;
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
+      N = std::numeric_limits<int>::min();
       current_statement__ = 39;
-      N = context__.vals_i("N")[(1 - 1)];
+      stan::io::read_from_context(N, context__, "N");
       current_statement__ = 39;
       stan::math::check_greater_or_equal(function__, "N", N, 0);
       current_statement__ = 40;
       context__.validate_dims("data initialization", "n_age", "int",
         std::vector<size_t>{});
+      n_age = std::numeric_limits<int>::min();
       current_statement__ = 40;
-      n_age = context__.vals_i("n_age")[(1 - 1)];
+      stan::io::read_from_context(n_age, context__, "n_age");
       current_statement__ = 40;
       stan::math::check_greater_or_equal(function__, "n_age", n_age, 0);
       current_statement__ = 41;
       context__.validate_dims("data initialization", "n_edu", "int",
         std::vector<size_t>{});
+      n_edu = std::numeric_limits<int>::min();
       current_statement__ = 41;
-      n_edu = context__.vals_i("n_edu")[(1 - 1)];
+      stan::io::read_from_context(n_edu, context__, "n_edu");
       current_statement__ = 41;
       stan::math::check_greater_or_equal(function__, "n_edu", n_edu, 0);
       current_statement__ = 42;
       context__.validate_dims("data initialization", "n_region", "int",
         std::vector<size_t>{});
+      n_region = std::numeric_limits<int>::min();
       current_statement__ = 42;
-      n_region = context__.vals_i("n_region")[(1 - 1)];
+      stan::io::read_from_context(n_region, context__, "n_region");
       current_statement__ = 42;
       stan::math::check_greater_or_equal(function__, "n_region", n_region, 0);
       current_statement__ = 43;
       context__.validate_dims("data initialization", "n_state", "int",
         std::vector<size_t>{});
+      n_state = std::numeric_limits<int>::min();
       current_statement__ = 43;
-      n_state = context__.vals_i("n_state")[(1 - 1)];
+      stan::io::read_from_context(n_state, context__, "n_state");
       current_statement__ = 43;
       stan::math::check_greater_or_equal(function__, "n_state", n_state, 0);
       current_statement__ = 44;
@@ -4444,7 +4349,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
         std::vector<size_t>{static_cast<size_t>(N)});
       female = std::vector<int>(N, std::numeric_limits<int>::min());
       current_statement__ = 45;
-      female = context__.vals_i("female");
+      stan::io::read_from_context(female, context__, "female");
       current_statement__ = 45;
       stan::math::check_greater_or_equal(function__, "female", female, 0);
       current_statement__ = 45;
@@ -4456,7 +4361,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
         std::vector<size_t>{static_cast<size_t>(N)});
       black = std::vector<int>(N, std::numeric_limits<int>::min());
       current_statement__ = 47;
-      black = context__.vals_i("black");
+      stan::io::read_from_context(black, context__, "black");
       current_statement__ = 47;
       stan::math::check_greater_or_equal(function__, "black", black, 0);
       current_statement__ = 47;
@@ -4468,7 +4373,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
         std::vector<size_t>{static_cast<size_t>(N)});
       age = std::vector<int>(N, std::numeric_limits<int>::min());
       current_statement__ = 49;
-      age = context__.vals_i("age");
+      stan::io::read_from_context(age, context__, "age");
       current_statement__ = 49;
       stan::math::check_greater_or_equal(function__, "age", age, 0);
       current_statement__ = 49;
@@ -4480,7 +4385,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
         std::vector<size_t>{static_cast<size_t>(N)});
       edu = std::vector<int>(N, std::numeric_limits<int>::min());
       current_statement__ = 51;
-      edu = context__.vals_i("edu");
+      stan::io::read_from_context(edu, context__, "edu");
       current_statement__ = 51;
       stan::math::check_greater_or_equal(function__, "edu", edu, 0);
       current_statement__ = 51;
@@ -4492,7 +4397,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
         std::vector<size_t>{static_cast<size_t>(n_state)});
       region = std::vector<int>(n_state, std::numeric_limits<int>::min());
       current_statement__ = 53;
-      region = context__.vals_i("region");
+      stan::io::read_from_context(region, context__, "region");
       current_statement__ = 53;
       stan::math::check_greater_or_equal(function__, "region", region, 0);
       current_statement__ = 53;
@@ -4504,7 +4409,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
         std::vector<size_t>{static_cast<size_t>(N)});
       state = std::vector<int>(N, std::numeric_limits<int>::min());
       current_statement__ = 55;
-      state = context__.vals_i("state");
+      stan::io::read_from_context(state, context__, "state");
       current_statement__ = 55;
       stan::math::check_greater_or_equal(function__, "state", state, 0);
       current_statement__ = 55;
@@ -4516,7 +4421,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
         std::vector<size_t>{static_cast<size_t>(N)});
       y = std::vector<int>(N, std::numeric_limits<int>::min());
       current_statement__ = 57;
-      y = context__.vals_i("y");
+      stan::io::read_from_context(y, context__, "y");
       current_statement__ = 57;
       stan::math::check_greater_or_equal(function__, "y", y, 0);
       current_statement__ = 57;
@@ -4530,17 +4435,8 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
                         std::numeric_limits<double>::quiet_NaN());
       new (&v_prev)
         Eigen::Map<Eigen::Matrix<double,-1,1>>(v_prev_data__.data(), n_state);
-      {
-        std::vector<local_scalar_t__> v_prev_flat__;
-        current_statement__ = 59;
-        v_prev_flat__ = context__.vals_r("v_prev");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= n_state; ++sym1__) {
-          stan::model::assign(v_prev, v_prev_flat__[(pos__ - 1)],
-            "assigning variable v_prev", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 59;
+      stan::io::read_from_context(v_prev, context__, "v_prev");
       current_statement__ = 60;
       stan::math::validate_non_negative_index("b_age", "n_age", n_age);
       current_statement__ = 61;
@@ -5213,123 +5109,75 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
         std::vector<size_t>{static_cast<size_t>(n_state)});
       int pos__;
       pos__ = 1;
-      local_scalar_t__ sigma;
+      local_scalar_t__ sigma = DUMMY_VAR__;
       current_statement__ = 1;
-      sigma = context__.vals_r("sigma")[(1 - 1)];
+      stan::io::read_from_context(sigma, context__, "sigma");
       out__.write_free_lb(0, sigma);
-      local_scalar_t__ sigma_age;
+      local_scalar_t__ sigma_age = DUMMY_VAR__;
       current_statement__ = 2;
-      sigma_age = context__.vals_r("sigma_age")[(1 - 1)];
+      stan::io::read_from_context(sigma_age, context__, "sigma_age");
       out__.write_free_lb(0, sigma_age);
-      local_scalar_t__ sigma_edu;
+      local_scalar_t__ sigma_edu = DUMMY_VAR__;
       current_statement__ = 3;
-      sigma_edu = context__.vals_r("sigma_edu")[(1 - 1)];
+      stan::io::read_from_context(sigma_edu, context__, "sigma_edu");
       out__.write_free_lb(0, sigma_edu);
-      local_scalar_t__ sigma_state;
+      local_scalar_t__ sigma_state = DUMMY_VAR__;
       current_statement__ = 4;
-      sigma_state = context__.vals_r("sigma_state")[(1 - 1)];
+      stan::io::read_from_context(sigma_state, context__, "sigma_state");
       out__.write_free_lb(0, sigma_state);
-      local_scalar_t__ sigma_region;
+      local_scalar_t__ sigma_region = DUMMY_VAR__;
       current_statement__ = 5;
-      sigma_region = context__.vals_r("sigma_region")[(1 - 1)];
+      stan::io::read_from_context(sigma_region, context__, "sigma_region");
       out__.write_free_lb(0, sigma_region);
-      local_scalar_t__ sigma_age_edu;
+      local_scalar_t__ sigma_age_edu = DUMMY_VAR__;
       current_statement__ = 6;
-      sigma_age_edu = context__.vals_r("sigma_age_edu")[(1 - 1)];
+      stan::io::read_from_context(sigma_age_edu, context__, "sigma_age_edu");
       out__.write_free_lb(0, sigma_age_edu);
-      local_scalar_t__ b_0;
+      local_scalar_t__ b_0 = DUMMY_VAR__;
       current_statement__ = 7;
-      b_0 = context__.vals_r("b_0")[(1 - 1)];
+      stan::io::read_from_context(b_0, context__, "b_0");
       out__.write(b_0);
-      local_scalar_t__ b_female;
+      local_scalar_t__ b_female = DUMMY_VAR__;
       current_statement__ = 8;
-      b_female = context__.vals_r("b_female")[(1 - 1)];
+      stan::io::read_from_context(b_female, context__, "b_female");
       out__.write(b_female);
-      local_scalar_t__ b_black;
+      local_scalar_t__ b_black = DUMMY_VAR__;
       current_statement__ = 9;
-      b_black = context__.vals_r("b_black")[(1 - 1)];
+      stan::io::read_from_context(b_black, context__, "b_black");
       out__.write(b_black);
-      local_scalar_t__ b_female_black;
+      local_scalar_t__ b_female_black = DUMMY_VAR__;
       current_statement__ = 10;
-      b_female_black = context__.vals_r("b_female_black")[(1 - 1)];
+      stan::io::read_from_context(b_female_black, context__, "b_female_black");
       out__.write(b_female_black);
-      local_scalar_t__ b_v_prev;
+      local_scalar_t__ b_v_prev = DUMMY_VAR__;
       current_statement__ = 11;
-      b_v_prev = context__.vals_r("b_v_prev")[(1 - 1)];
+      stan::io::read_from_context(b_v_prev, context__, "b_v_prev");
       out__.write(b_v_prev);
       Eigen::Matrix<local_scalar_t__,-1,1> b_age =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(n_age, DUMMY_VAR__);
-      {
-        std::vector<local_scalar_t__> b_age_flat__;
-        current_statement__ = 12;
-        b_age_flat__ = context__.vals_r("b_age");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= n_age; ++sym1__) {
-          stan::model::assign(b_age, b_age_flat__[(pos__ - 1)],
-            "assigning variable b_age", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 12;
+      stan::io::read_from_context(b_age, context__, "b_age");
       out__.write(b_age);
       Eigen::Matrix<local_scalar_t__,-1,1> b_edu =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(n_edu, DUMMY_VAR__);
-      {
-        std::vector<local_scalar_t__> b_edu_flat__;
-        current_statement__ = 13;
-        b_edu_flat__ = context__.vals_r("b_edu");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= n_edu; ++sym1__) {
-          stan::model::assign(b_edu, b_edu_flat__[(pos__ - 1)],
-            "assigning variable b_edu", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 13;
+      stan::io::read_from_context(b_edu, context__, "b_edu");
       out__.write(b_edu);
       Eigen::Matrix<local_scalar_t__,-1,1> b_region =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(n_region, DUMMY_VAR__);
-      {
-        std::vector<local_scalar_t__> b_region_flat__;
-        current_statement__ = 14;
-        b_region_flat__ = context__.vals_r("b_region");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= n_region; ++sym1__) {
-          stan::model::assign(b_region, b_region_flat__[(pos__ - 1)],
-            "assigning variable b_region", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 14;
+      stan::io::read_from_context(b_region, context__, "b_region");
       out__.write(b_region);
       Eigen::Matrix<local_scalar_t__,-1,-1> b_age_edu =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(n_age, n_edu,
           DUMMY_VAR__);
-      {
-        std::vector<local_scalar_t__> b_age_edu_flat__;
-        current_statement__ = 15;
-        b_age_edu_flat__ = context__.vals_r("b_age_edu");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= n_edu; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= n_age; ++sym2__) {
-            stan::model::assign(b_age_edu, b_age_edu_flat__[(pos__ - 1)],
-              "assigning variable b_age_edu", stan::model::index_uni(sym2__),
-              stan::model::index_uni(sym1__));
-            pos__ = (pos__ + 1);
-          }
-        }
-      }
+      current_statement__ = 15;
+      stan::io::read_from_context(b_age_edu, context__, "b_age_edu");
       out__.write(b_age_edu);
       Eigen::Matrix<local_scalar_t__,-1,1> b_hat =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(n_state, DUMMY_VAR__);
-      {
-        std::vector<local_scalar_t__> b_hat_flat__;
-        current_statement__ = 16;
-        b_hat_flat__ = context__.vals_r("b_hat");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= n_state; ++sym1__) {
-          stan::model::assign(b_hat, b_hat_flat__[(pos__ - 1)],
-            "assigning variable b_hat", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 16;
+      stan::io::read_from_context(b_hat, context__, "b_hat");
       out__.write(b_hat);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -5773,9 +5621,9 @@ class empty_loop_model final : public model_base_crtp<empty_loop_model> {
       current_statement__ = 1;
       context__.validate_dims("parameter initialization", "y", "double",
         std::vector<size_t>{});
-      local_scalar_t__ y;
+      local_scalar_t__ y = DUMMY_VAR__;
       current_statement__ = 1;
-      y = context__.vals_r("y")[(1 - 1)];
+      stan::io::read_from_context(y, context__, "y");
       out__.write(y);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -5964,8 +5812,9 @@ class expr_prop_experiment_model final : public model_base_crtp<expr_prop_experi
       current_statement__ = 1;
       context__.validate_dims("data initialization", "j", "int",
         std::vector<size_t>{});
+      j = std::numeric_limits<int>::min();
       current_statement__ = 1;
-      j = context__.vals_i("j")[(1 - 1)];
+      stan::io::read_from_context(j, context__, "j");
       current_statement__ = 2;
       z = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 3;
@@ -6301,8 +6150,9 @@ class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_exper
       current_statement__ = 1;
       context__.validate_dims("data initialization", "j", "int",
         std::vector<size_t>{});
+      j = std::numeric_limits<int>::min();
       current_statement__ = 1;
-      j = context__.vals_i("j")[(1 - 1)];
+      stan::io::read_from_context(j, context__, "j");
       current_statement__ = 2;
       current_statement__ = 2;
       z = static_cast<double>(1);
@@ -6642,8 +6492,9 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
       current_statement__ = 9;
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
+      N = std::numeric_limits<int>::min();
       current_statement__ = 9;
-      N = context__.vals_i("N")[(1 - 1)];
+      stan::io::read_from_context(N, context__, "N");
       current_statement__ = 9;
       stan::math::check_greater_or_equal(function__, "N", N, 0);
       current_statement__ = 10;
@@ -6654,17 +6505,8 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
       y_data__ = Eigen::Matrix<double,-1,1>::Constant(N,
                    std::numeric_limits<double>::quiet_NaN());
       new (&y) Eigen::Map<Eigen::Matrix<double,-1,1>>(y_data__.data(), N);
-      {
-        std::vector<local_scalar_t__> y_flat__;
-        current_statement__ = 11;
-        y_flat__ = context__.vals_r("y");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          stan::model::assign(y, y_flat__[(pos__ - 1)],
-            "assigning variable y", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 11;
+      stan::io::read_from_context(y, context__, "y");
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -6944,26 +6786,17 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,1> mu =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__);
-      {
-        std::vector<local_scalar_t__> mu_flat__;
-        current_statement__ = 1;
-        mu_flat__ = context__.vals_r("mu");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          stan::model::assign(mu, mu_flat__[(pos__ - 1)],
-            "assigning variable mu", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 1;
+      stan::io::read_from_context(mu, context__, "mu");
       out__.write_free_ordered(mu);
       std::vector<local_scalar_t__> sigma =
         std::vector<local_scalar_t__>(2, DUMMY_VAR__);
       current_statement__ = 2;
-      sigma = context__.vals_r("sigma");
+      stan::io::read_from_context(sigma, context__, "sigma");
       out__.write_free_lb(0, sigma);
-      local_scalar_t__ theta;
+      local_scalar_t__ theta = DUMMY_VAR__;
       current_statement__ = 3;
-      theta = context__.vals_r("theta")[(1 - 1)];
+      stan::io::read_from_context(theta, context__, "theta");
       out__.write_free_lub(0, 1, theta);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7171,8 +7004,9 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
       current_statement__ = 6;
       context__.validate_dims("data initialization", "J", "int",
         std::vector<size_t>{});
+      J = std::numeric_limits<int>::min();
       current_statement__ = 6;
-      J = context__.vals_i("J")[(1 - 1)];
+      stan::io::read_from_context(J, context__, "J");
       current_statement__ = 6;
       stan::math::check_greater_or_equal(function__, "J", J, 0);
       current_statement__ = 7;
@@ -7182,7 +7016,7 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
         std::vector<size_t>{static_cast<size_t>(J)});
       y = std::vector<double>(J, std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 8;
-      y = context__.vals_r("y");
+      stan::io::read_from_context(y, context__, "y");
       current_statement__ = 9;
       stan::math::validate_non_negative_index("sigma", "J", J);
       current_statement__ = 10;
@@ -7191,7 +7025,7 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
       sigma = std::vector<double>(J,
                 std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 10;
-      sigma = context__.vals_r("sigma");
+      stan::io::read_from_context(sigma, context__, "sigma");
       current_statement__ = 10;
       stan::math::check_greater_or_equal(function__, "sigma", sigma, 0);
       current_statement__ = 11;
@@ -7409,18 +7243,18 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
       current_statement__ = 3;
       context__.validate_dims("parameter initialization", "tau", "double",
         std::vector<size_t>{});
-      local_scalar_t__ mu;
+      local_scalar_t__ mu = DUMMY_VAR__;
       current_statement__ = 1;
-      mu = context__.vals_r("mu")[(1 - 1)];
+      stan::io::read_from_context(mu, context__, "mu");
       out__.write(mu);
       std::vector<local_scalar_t__> theta =
         std::vector<local_scalar_t__>(J, DUMMY_VAR__);
       current_statement__ = 2;
-      theta = context__.vals_r("theta");
+      stan::io::read_from_context(theta, context__, "theta");
       out__.write(theta);
-      local_scalar_t__ tau;
+      local_scalar_t__ tau = DUMMY_VAR__;
       current_statement__ = 3;
-      tau = context__.vals_r("tau")[(1 - 1)];
+      stan::io::read_from_context(tau, context__, "tau");
       out__.write_free_lb(0, tau);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7678,45 +7512,51 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       current_statement__ = 22;
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
+      N = std::numeric_limits<int>::min();
       current_statement__ = 22;
-      N = context__.vals_i("N")[(1 - 1)];
+      stan::io::read_from_context(N, context__, "N");
       current_statement__ = 22;
       stan::math::check_greater_or_equal(function__, "N", N, 0);
       current_statement__ = 23;
       context__.validate_dims("data initialization", "n_age", "int",
         std::vector<size_t>{});
+      n_age = std::numeric_limits<int>::min();
       current_statement__ = 23;
-      n_age = context__.vals_i("n_age")[(1 - 1)];
+      stan::io::read_from_context(n_age, context__, "n_age");
       current_statement__ = 23;
       stan::math::check_greater_or_equal(function__, "n_age", n_age, 0);
       current_statement__ = 24;
       context__.validate_dims("data initialization", "n_age_edu", "int",
         std::vector<size_t>{});
+      n_age_edu = std::numeric_limits<int>::min();
       current_statement__ = 24;
-      n_age_edu = context__.vals_i("n_age_edu")[(1 - 1)];
+      stan::io::read_from_context(n_age_edu, context__, "n_age_edu");
       current_statement__ = 24;
       stan::math::check_greater_or_equal(function__, "n_age_edu", n_age_edu,
         0);
       current_statement__ = 25;
       context__.validate_dims("data initialization", "n_edu", "int",
         std::vector<size_t>{});
+      n_edu = std::numeric_limits<int>::min();
       current_statement__ = 25;
-      n_edu = context__.vals_i("n_edu")[(1 - 1)];
+      stan::io::read_from_context(n_edu, context__, "n_edu");
       current_statement__ = 25;
       stan::math::check_greater_or_equal(function__, "n_edu", n_edu, 0);
       current_statement__ = 26;
       context__.validate_dims("data initialization", "n_region_full", "int",
         std::vector<size_t>{});
+      n_region_full = std::numeric_limits<int>::min();
       current_statement__ = 26;
-      n_region_full = context__.vals_i("n_region_full")[(1 - 1)];
+      stan::io::read_from_context(n_region_full, context__, "n_region_full");
       current_statement__ = 26;
       stan::math::check_greater_or_equal(function__, "n_region_full",
         n_region_full, 0);
       current_statement__ = 27;
       context__.validate_dims("data initialization", "n_state", "int",
         std::vector<size_t>{});
+      n_state = std::numeric_limits<int>::min();
       current_statement__ = 27;
-      n_state = context__.vals_i("n_state")[(1 - 1)];
+      stan::io::read_from_context(n_state, context__, "n_state");
       current_statement__ = 27;
       stan::math::check_greater_or_equal(function__, "n_state", n_state, 0);
       current_statement__ = 28;
@@ -7726,7 +7566,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
         std::vector<size_t>{static_cast<size_t>(N)});
       age = std::vector<int>(N, std::numeric_limits<int>::min());
       current_statement__ = 29;
-      age = context__.vals_i("age");
+      stan::io::read_from_context(age, context__, "age");
       current_statement__ = 29;
       stan::math::check_greater_or_equal(function__, "age", age, 0);
       current_statement__ = 29;
@@ -7738,7 +7578,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
         std::vector<size_t>{static_cast<size_t>(N)});
       age_edu = std::vector<int>(N, std::numeric_limits<int>::min());
       current_statement__ = 31;
-      age_edu = context__.vals_i("age_edu");
+      stan::io::read_from_context(age_edu, context__, "age_edu");
       current_statement__ = 31;
       stan::math::check_greater_or_equal(function__, "age_edu", age_edu, 0);
       current_statement__ = 31;
@@ -7753,17 +7593,8 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
                        std::numeric_limits<double>::quiet_NaN());
       new (&black)
         Eigen::Map<Eigen::Matrix<double,-1,1>>(black_data__.data(), N);
-      {
-        std::vector<local_scalar_t__> black_flat__;
-        current_statement__ = 33;
-        black_flat__ = context__.vals_r("black");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          stan::model::assign(black, black_flat__[(pos__ - 1)],
-            "assigning variable black", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 33;
+      stan::io::read_from_context(black, context__, "black");
       current_statement__ = 33;
       stan::math::check_greater_or_equal(function__, "black", black, 0);
       current_statement__ = 33;
@@ -7775,7 +7606,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
         std::vector<size_t>{static_cast<size_t>(N)});
       edu = std::vector<int>(N, std::numeric_limits<int>::min());
       current_statement__ = 35;
-      edu = context__.vals_i("edu");
+      stan::io::read_from_context(edu, context__, "edu");
       current_statement__ = 35;
       stan::math::check_greater_or_equal(function__, "edu", edu, 0);
       current_statement__ = 35;
@@ -7789,17 +7620,8 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
                         std::numeric_limits<double>::quiet_NaN());
       new (&female)
         Eigen::Map<Eigen::Matrix<double,-1,1>>(female_data__.data(), N);
-      {
-        std::vector<local_scalar_t__> female_flat__;
-        current_statement__ = 37;
-        female_flat__ = context__.vals_r("female");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          stan::model::assign(female, female_flat__[(pos__ - 1)],
-            "assigning variable female", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 37;
+      stan::io::read_from_context(female, context__, "female");
       current_statement__ = 37;
       stan::math::check_greater_or_equal(function__, "female", female, 0);
       current_statement__ = 37;
@@ -7811,7 +7633,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
         std::vector<size_t>{static_cast<size_t>(N)});
       region_full = std::vector<int>(N, std::numeric_limits<int>::min());
       current_statement__ = 39;
-      region_full = context__.vals_i("region_full");
+      stan::io::read_from_context(region_full, context__, "region_full");
       current_statement__ = 39;
       stan::math::check_greater_or_equal(function__, "region_full",
         region_full, 0);
@@ -7825,7 +7647,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
         std::vector<size_t>{static_cast<size_t>(N)});
       state = std::vector<int>(N, std::numeric_limits<int>::min());
       current_statement__ = 41;
-      state = context__.vals_i("state");
+      stan::io::read_from_context(state, context__, "state");
       current_statement__ = 41;
       stan::math::check_greater_or_equal(function__, "state", state, 0);
       current_statement__ = 41;
@@ -7839,17 +7661,8 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
                              std::numeric_limits<double>::quiet_NaN());
       new (&v_prev_full)
         Eigen::Map<Eigen::Matrix<double,-1,1>>(v_prev_full_data__.data(), N);
-      {
-        std::vector<local_scalar_t__> v_prev_full_flat__;
-        current_statement__ = 43;
-        v_prev_full_flat__ = context__.vals_r("v_prev_full");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          stan::model::assign(v_prev_full, v_prev_full_flat__[(pos__ - 1)],
-            "assigning variable v_prev_full", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 43;
+      stan::io::read_from_context(v_prev_full, context__, "v_prev_full");
       current_statement__ = 44;
       stan::math::validate_non_negative_index("y", "N", N);
       current_statement__ = 45;
@@ -7857,7 +7670,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
         std::vector<size_t>{static_cast<size_t>(N)});
       y = std::vector<int>(N, std::numeric_limits<int>::min());
       current_statement__ = 45;
-      y = context__.vals_i("y");
+      stan::io::read_from_context(y, context__, "y");
       current_statement__ = 45;
       stan::math::check_greater_or_equal(function__, "y", y, 0);
       current_statement__ = 45;
@@ -8441,109 +8254,55 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,1> a =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(n_age, DUMMY_VAR__);
-      {
-        std::vector<local_scalar_t__> a_flat__;
-        current_statement__ = 1;
-        a_flat__ = context__.vals_r("a");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= n_age; ++sym1__) {
-          stan::model::assign(a, a_flat__[(pos__ - 1)],
-            "assigning variable a", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 1;
+      stan::io::read_from_context(a, context__, "a");
       out__.write(a);
       Eigen::Matrix<local_scalar_t__,-1,1> b =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(n_edu, DUMMY_VAR__);
-      {
-        std::vector<local_scalar_t__> b_flat__;
-        current_statement__ = 2;
-        b_flat__ = context__.vals_r("b");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= n_edu; ++sym1__) {
-          stan::model::assign(b, b_flat__[(pos__ - 1)],
-            "assigning variable b", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 2;
+      stan::io::read_from_context(b, context__, "b");
       out__.write(b);
       Eigen::Matrix<local_scalar_t__,-1,1> c =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(n_age_edu,
           DUMMY_VAR__);
-      {
-        std::vector<local_scalar_t__> c_flat__;
-        current_statement__ = 3;
-        c_flat__ = context__.vals_r("c");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= n_age_edu; ++sym1__) {
-          stan::model::assign(c, c_flat__[(pos__ - 1)],
-            "assigning variable c", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 3;
+      stan::io::read_from_context(c, context__, "c");
       out__.write(c);
       Eigen::Matrix<local_scalar_t__,-1,1> d =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(n_state, DUMMY_VAR__);
-      {
-        std::vector<local_scalar_t__> d_flat__;
-        current_statement__ = 4;
-        d_flat__ = context__.vals_r("d");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= n_state; ++sym1__) {
-          stan::model::assign(d, d_flat__[(pos__ - 1)],
-            "assigning variable d", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 4;
+      stan::io::read_from_context(d, context__, "d");
       out__.write(d);
       Eigen::Matrix<local_scalar_t__,-1,1> e =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(n_region_full,
           DUMMY_VAR__);
-      {
-        std::vector<local_scalar_t__> e_flat__;
-        current_statement__ = 5;
-        e_flat__ = context__.vals_r("e");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= n_region_full; ++sym1__) {
-          stan::model::assign(e, e_flat__[(pos__ - 1)],
-            "assigning variable e", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 5;
+      stan::io::read_from_context(e, context__, "e");
       out__.write(e);
       Eigen::Matrix<local_scalar_t__,-1,1> beta =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(5, DUMMY_VAR__);
-      {
-        std::vector<local_scalar_t__> beta_flat__;
-        current_statement__ = 6;
-        beta_flat__ = context__.vals_r("beta");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
-          stan::model::assign(beta, beta_flat__[(pos__ - 1)],
-            "assigning variable beta", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 6;
+      stan::io::read_from_context(beta, context__, "beta");
       out__.write(beta);
-      local_scalar_t__ sigma_a;
+      local_scalar_t__ sigma_a = DUMMY_VAR__;
       current_statement__ = 7;
-      sigma_a = context__.vals_r("sigma_a")[(1 - 1)];
+      stan::io::read_from_context(sigma_a, context__, "sigma_a");
       out__.write_free_lub(0, 100, sigma_a);
-      local_scalar_t__ sigma_b;
+      local_scalar_t__ sigma_b = DUMMY_VAR__;
       current_statement__ = 8;
-      sigma_b = context__.vals_r("sigma_b")[(1 - 1)];
+      stan::io::read_from_context(sigma_b, context__, "sigma_b");
       out__.write_free_lub(0, 100, sigma_b);
-      local_scalar_t__ sigma_c;
+      local_scalar_t__ sigma_c = DUMMY_VAR__;
       current_statement__ = 9;
-      sigma_c = context__.vals_r("sigma_c")[(1 - 1)];
+      stan::io::read_from_context(sigma_c, context__, "sigma_c");
       out__.write_free_lub(0, 100, sigma_c);
-      local_scalar_t__ sigma_d;
+      local_scalar_t__ sigma_d = DUMMY_VAR__;
       current_statement__ = 10;
-      sigma_d = context__.vals_r("sigma_d")[(1 - 1)];
+      stan::io::read_from_context(sigma_d, context__, "sigma_d");
       out__.write_free_lub(0, 100, sigma_d);
-      local_scalar_t__ sigma_e;
+      local_scalar_t__ sigma_e = DUMMY_VAR__;
       current_statement__ = 11;
-      sigma_e = context__.vals_r("sigma_e")[(1 - 1)];
+      stan::io::read_from_context(sigma_e, context__, "sigma_e");
       out__.write_free_lub(0, 100, sigma_e);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -8862,15 +8621,17 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       current_statement__ = 30;
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
+      N = std::numeric_limits<int>::min();
       current_statement__ = 30;
-      N = context__.vals_i("N")[(1 - 1)];
+      stan::io::read_from_context(N, context__, "N");
       current_statement__ = 30;
       stan::math::check_greater_or_equal(function__, "N", N, 0);
       current_statement__ = 31;
       context__.validate_dims("data initialization", "N_edges", "int",
         std::vector<size_t>{});
+      N_edges = std::numeric_limits<int>::min();
       current_statement__ = 31;
-      N_edges = context__.vals_i("N_edges")[(1 - 1)];
+      stan::io::read_from_context(N_edges, context__, "N_edges");
       current_statement__ = 31;
       stan::math::check_greater_or_equal(function__, "N_edges", N_edges, 0);
       current_statement__ = 32;
@@ -8880,7 +8641,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
         std::vector<size_t>{static_cast<size_t>(N_edges)});
       node1 = std::vector<int>(N_edges, std::numeric_limits<int>::min());
       current_statement__ = 33;
-      node1 = context__.vals_i("node1");
+      stan::io::read_from_context(node1, context__, "node1");
       current_statement__ = 33;
       stan::math::check_greater_or_equal(function__, "node1", node1, 1);
       current_statement__ = 33;
@@ -8892,7 +8653,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
         std::vector<size_t>{static_cast<size_t>(N_edges)});
       node2 = std::vector<int>(N_edges, std::numeric_limits<int>::min());
       current_statement__ = 35;
-      node2 = context__.vals_i("node2");
+      stan::io::read_from_context(node2, context__, "node2");
       current_statement__ = 35;
       stan::math::check_greater_or_equal(function__, "node2", node2, 1);
       current_statement__ = 35;
@@ -8905,17 +8666,8 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       E_data__ = Eigen::Matrix<double,-1,1>::Constant(N,
                    std::numeric_limits<double>::quiet_NaN());
       new (&E) Eigen::Map<Eigen::Matrix<double,-1,1>>(E_data__.data(), N);
-      {
-        std::vector<local_scalar_t__> E_flat__;
-        current_statement__ = 37;
-        E_flat__ = context__.vals_r("E");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          stan::model::assign(E, E_flat__[(pos__ - 1)],
-            "assigning variable E", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 37;
+      stan::io::read_from_context(E, context__, "E");
       current_statement__ = 37;
       stan::math::check_greater_or_equal(function__, "E", E, 0);
       current_statement__ = 38;
@@ -9287,24 +9039,15 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
         std::vector<size_t>{static_cast<size_t>(phi_std_raw_1dim__)});
       int pos__;
       pos__ = 1;
-      local_scalar_t__ tau_phi;
+      local_scalar_t__ tau_phi = DUMMY_VAR__;
       current_statement__ = 1;
-      tau_phi = context__.vals_r("tau_phi")[(1 - 1)];
+      stan::io::read_from_context(tau_phi, context__, "tau_phi");
       out__.write_free_lb(0, tau_phi);
       Eigen::Matrix<local_scalar_t__,-1,1> phi_std_raw =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(phi_std_raw_1dim__,
           DUMMY_VAR__);
-      {
-        std::vector<local_scalar_t__> phi_std_raw_flat__;
-        current_statement__ = 2;
-        phi_std_raw_flat__ = context__.vals_r("phi_std_raw");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= phi_std_raw_1dim__; ++sym1__) {
-          stan::model::assign(phi_std_raw, phi_std_raw_flat__[(pos__ - 1)],
-            "assigning variable phi_std_raw", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 2;
+      stan::io::read_from_context(phi_std_raw, context__, "phi_std_raw");
       out__.write(phi_std_raw);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -9805,15 +9548,17 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       current_statement__ = 46;
       context__.validate_dims("data initialization", "nind", "int",
         std::vector<size_t>{});
+      nind = std::numeric_limits<int>::min();
       current_statement__ = 46;
-      nind = context__.vals_i("nind")[(1 - 1)];
+      stan::io::read_from_context(nind, context__, "nind");
       current_statement__ = 46;
       stan::math::check_greater_or_equal(function__, "nind", nind, 0);
       current_statement__ = 47;
       context__.validate_dims("data initialization", "n_occasions", "int",
         std::vector<size_t>{});
+      n_occasions = std::numeric_limits<int>::min();
       current_statement__ = 47;
-      n_occasions = context__.vals_i("n_occasions")[(1 - 1)];
+      stan::io::read_from_context(n_occasions, context__, "n_occasions");
       current_statement__ = 47;
       stan::math::check_greater_or_equal(function__, "n_occasions",
         n_occasions, 2);
@@ -9827,20 +9572,8 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
           static_cast<size_t>(n_occasions)});
       y = std::vector<std::vector<int>>(nind,
             std::vector<int>(n_occasions, std::numeric_limits<int>::min()));
-      {
-        std::vector<int> y_flat__;
-        current_statement__ = 50;
-        y_flat__ = context__.vals_i("y");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= n_occasions; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= nind; ++sym2__) {
-            stan::model::assign(y, y_flat__[(pos__ - 1)],
-              "assigning variable y", stan::model::index_uni(sym2__),
-              stan::model::index_uni(sym1__));
-            pos__ = (pos__ + 1);
-          }
-        }
-      }
+      current_statement__ = 50;
+      stan::io::read_from_context(y, context__, "y");
       current_statement__ = 50;
       stan::math::check_greater_or_equal(function__, "y", y, 0);
       current_statement__ = 50;
@@ -10569,31 +10302,22 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
         std::vector<size_t>{});
       int pos__;
       pos__ = 1;
-      local_scalar_t__ mean_phi;
+      local_scalar_t__ mean_phi = DUMMY_VAR__;
       current_statement__ = 1;
-      mean_phi = context__.vals_r("mean_phi")[(1 - 1)];
+      stan::io::read_from_context(mean_phi, context__, "mean_phi");
       out__.write_free_lub(0, 1, mean_phi);
-      local_scalar_t__ mean_p;
+      local_scalar_t__ mean_p = DUMMY_VAR__;
       current_statement__ = 2;
-      mean_p = context__.vals_r("mean_p")[(1 - 1)];
+      stan::io::read_from_context(mean_p, context__, "mean_p");
       out__.write_free_lub(0, 1, mean_p);
       Eigen::Matrix<local_scalar_t__,-1,1> epsilon =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(nind, DUMMY_VAR__);
-      {
-        std::vector<local_scalar_t__> epsilon_flat__;
-        current_statement__ = 3;
-        epsilon_flat__ = context__.vals_r("epsilon");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= nind; ++sym1__) {
-          stan::model::assign(epsilon, epsilon_flat__[(pos__ - 1)],
-            "assigning variable epsilon", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 3;
+      stan::io::read_from_context(epsilon, context__, "epsilon");
       out__.write(epsilon);
-      local_scalar_t__ sigma;
+      local_scalar_t__ sigma = DUMMY_VAR__;
       current_statement__ = 4;
-      sigma = context__.vals_r("sigma")[(1 - 1)];
+      stan::io::read_from_context(sigma, context__, "sigma");
       out__.write_free_lub(0, 5, sigma);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -11438,15 +11162,17 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       current_statement__ = 119;
       context__.validate_dims("data initialization", "M", "int",
         std::vector<size_t>{});
+      M = std::numeric_limits<int>::min();
       current_statement__ = 119;
-      M = context__.vals_i("M")[(1 - 1)];
+      stan::io::read_from_context(M, context__, "M");
       current_statement__ = 119;
       stan::math::check_greater_or_equal(function__, "M", M, 0);
       current_statement__ = 120;
       context__.validate_dims("data initialization", "n_occasions", "int",
         std::vector<size_t>{});
+      n_occasions = std::numeric_limits<int>::min();
       current_statement__ = 120;
-      n_occasions = context__.vals_i("n_occasions")[(1 - 1)];
+      stan::io::read_from_context(n_occasions, context__, "n_occasions");
       current_statement__ = 120;
       stan::math::check_greater_or_equal(function__, "n_occasions",
         n_occasions, 0);
@@ -11460,20 +11186,8 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
           static_cast<size_t>(n_occasions)});
       y = std::vector<std::vector<int>>(M,
             std::vector<int>(n_occasions, std::numeric_limits<int>::min()));
-      {
-        std::vector<int> y_flat__;
-        current_statement__ = 123;
-        y_flat__ = context__.vals_i("y");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= n_occasions; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
-            stan::model::assign(y, y_flat__[(pos__ - 1)],
-              "assigning variable y", stan::model::index_uni(sym2__),
-              stan::model::index_uni(sym1__));
-            pos__ = (pos__ + 1);
-          }
-        }
-      }
+      current_statement__ = 123;
+      stan::io::read_from_context(y, context__, "y");
       current_statement__ = 123;
       stan::math::check_greater_or_equal(function__, "y", y, 0);
       current_statement__ = 123;
@@ -12923,50 +12637,32 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
         std::vector<size_t>{});
       int pos__;
       pos__ = 1;
-      local_scalar_t__ mean_phi;
+      local_scalar_t__ mean_phi = DUMMY_VAR__;
       current_statement__ = 1;
-      mean_phi = context__.vals_r("mean_phi")[(1 - 1)];
+      stan::io::read_from_context(mean_phi, context__, "mean_phi");
       out__.write_free_lub(0, 1, mean_phi);
-      local_scalar_t__ mean_p;
+      local_scalar_t__ mean_p = DUMMY_VAR__;
       current_statement__ = 2;
-      mean_p = context__.vals_r("mean_p")[(1 - 1)];
+      stan::io::read_from_context(mean_p, context__, "mean_p");
       out__.write_free_lub(0, 1, mean_p);
-      local_scalar_t__ psi;
+      local_scalar_t__ psi = DUMMY_VAR__;
       current_statement__ = 3;
-      psi = context__.vals_r("psi")[(1 - 1)];
+      stan::io::read_from_context(psi, context__, "psi");
       out__.write_free_lub(0, 1, psi);
       Eigen::Matrix<local_scalar_t__,-1,1> beta =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(n_occasions,
           DUMMY_VAR__);
-      {
-        std::vector<local_scalar_t__> beta_flat__;
-        current_statement__ = 4;
-        beta_flat__ = context__.vals_r("beta");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= n_occasions; ++sym1__) {
-          stan::model::assign(beta, beta_flat__[(pos__ - 1)],
-            "assigning variable beta", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 4;
+      stan::io::read_from_context(beta, context__, "beta");
       out__.write_free_lb(0, beta);
       Eigen::Matrix<local_scalar_t__,-1,1> epsilon =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(M, DUMMY_VAR__);
-      {
-        std::vector<local_scalar_t__> epsilon_flat__;
-        current_statement__ = 5;
-        epsilon_flat__ = context__.vals_r("epsilon");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
-          stan::model::assign(epsilon, epsilon_flat__[(pos__ - 1)],
-            "assigning variable epsilon", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 5;
+      stan::io::read_from_context(epsilon, context__, "epsilon");
       out__.write(epsilon);
-      local_scalar_t__ sigma;
+      local_scalar_t__ sigma = DUMMY_VAR__;
       current_statement__ = 6;
-      sigma = context__.vals_r("sigma")[(1 - 1)];
+      stan::io::read_from_context(sigma, context__, "sigma");
       out__.write_free_lub(0, 5, sigma);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -13338,22 +13034,25 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       current_statement__ = 22;
       context__.validate_dims("data initialization", "K", "int",
         std::vector<size_t>{});
+      K = std::numeric_limits<int>::min();
       current_statement__ = 22;
-      K = context__.vals_i("K")[(1 - 1)];
+      stan::io::read_from_context(K, context__, "K");
       current_statement__ = 22;
       stan::math::check_greater_or_equal(function__, "K", K, 2);
       current_statement__ = 23;
       context__.validate_dims("data initialization", "I", "int",
         std::vector<size_t>{});
+      I = std::numeric_limits<int>::min();
       current_statement__ = 23;
-      I = context__.vals_i("I")[(1 - 1)];
+      stan::io::read_from_context(I, context__, "I");
       current_statement__ = 23;
       stan::math::check_greater_or_equal(function__, "I", I, 1);
       current_statement__ = 24;
       context__.validate_dims("data initialization", "J", "int",
         std::vector<size_t>{});
+      J = std::numeric_limits<int>::min();
       current_statement__ = 24;
-      J = context__.vals_i("J")[(1 - 1)];
+      stan::io::read_from_context(J, context__, "J");
       current_statement__ = 24;
       stan::math::check_greater_or_equal(function__, "J", J, 1);
       current_statement__ = 25;
@@ -13365,20 +13064,8 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
         std::vector<size_t>{static_cast<size_t>(I), static_cast<size_t>(J)});
       y = std::vector<std::vector<int>>(I,
             std::vector<int>(J, std::numeric_limits<int>::min()));
-      {
-        std::vector<int> y_flat__;
-        current_statement__ = 27;
-        y_flat__ = context__.vals_i("y");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= J; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= I; ++sym2__) {
-            stan::model::assign(y, y_flat__[(pos__ - 1)],
-              "assigning variable y", stan::model::index_uni(sym2__),
-              stan::model::index_uni(sym1__));
-            pos__ = (pos__ + 1);
-          }
-        }
-      }
+      current_statement__ = 27;
+      stan::io::read_from_context(y, context__, "y");
       current_statement__ = 27;
       stan::math::check_greater_or_equal(function__, "y", y, 1);
       current_statement__ = 27;
@@ -13392,17 +13079,8 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
                        std::numeric_limits<double>::quiet_NaN());
       new (&alpha)
         Eigen::Map<Eigen::Matrix<double,-1,1>>(alpha_data__.data(), K);
-      {
-        std::vector<local_scalar_t__> alpha_flat__;
-        current_statement__ = 29;
-        alpha_flat__ = context__.vals_r("alpha");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
-          stan::model::assign(alpha, alpha_flat__[(pos__ - 1)],
-            "assigning variable alpha", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 29;
+      stan::io::read_from_context(alpha, context__, "alpha");
       current_statement__ = 29;
       stan::math::check_greater_or_equal(function__, "alpha", alpha, 0);
       current_statement__ = 30;
@@ -13415,20 +13093,8 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       beta = std::vector<Eigen::Matrix<double,-1,1>>(K,
                Eigen::Matrix<double,-1,1>::Constant(K,
                  std::numeric_limits<double>::quiet_NaN()));
-      {
-        std::vector<local_scalar_t__> beta_flat__;
-        current_statement__ = 32;
-        beta_flat__ = context__.vals_r("beta");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-            stan::model::assign(beta, beta_flat__[(pos__ - 1)],
-              "assigning variable beta", stan::model::index_uni(sym2__),
-              stan::model::index_uni(sym1__));
-            pos__ = (pos__ + 1);
-          }
-        }
-      }
+      current_statement__ = 32;
+      stan::io::read_from_context(beta, context__, "beta");
       current_statement__ = 32;
       stan::math::check_greater_or_equal(function__, "beta", beta, 0);
       current_statement__ = 33;
@@ -13788,39 +13454,15 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,1> pi =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(K, DUMMY_VAR__);
-      {
-        std::vector<local_scalar_t__> pi_flat__;
-        current_statement__ = 1;
-        pi_flat__ = context__.vals_r("pi");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
-          stan::model::assign(pi, pi_flat__[(pos__ - 1)],
-            "assigning variable pi", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 1;
+      stan::io::read_from_context(pi, context__, "pi");
       out__.write_free_simplex(pi);
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>> theta =
         std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>(J,
           std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>(K,
             Eigen::Matrix<local_scalar_t__,-1,1>::Constant(K, DUMMY_VAR__)));
-      {
-        std::vector<local_scalar_t__> theta_flat__;
-        current_statement__ = 2;
-        theta_flat__ = context__.vals_r("theta");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-            for (int sym3__ = 1; sym3__ <= J; ++sym3__) {
-              stan::model::assign(theta, theta_flat__[(pos__ - 1)],
-                "assigning variable theta", stan::model::index_uni(sym3__),
-                stan::model::index_uni(sym2__),
-                stan::model::index_uni(sym1__));
-              pos__ = (pos__ + 1);
-            }
-          }
-        }
-      }
+      current_statement__ = 2;
+      stan::io::read_from_context(theta, context__, "theta");
       out__.write_free_simplex(theta);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -14079,15 +13721,17 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       current_statement__ = 12;
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
+      N = std::numeric_limits<int>::min();
       current_statement__ = 12;
-      N = context__.vals_i("N")[(1 - 1)];
+      stan::io::read_from_context(N, context__, "N");
       current_statement__ = 12;
       stan::math::check_greater_or_equal(function__, "N", N, 0);
       current_statement__ = 13;
       context__.validate_dims("data initialization", "N_edges", "int",
         std::vector<size_t>{});
+      N_edges = std::numeric_limits<int>::min();
       current_statement__ = 13;
-      N_edges = context__.vals_i("N_edges")[(1 - 1)];
+      stan::io::read_from_context(N_edges, context__, "N_edges");
       current_statement__ = 13;
       stan::math::check_greater_or_equal(function__, "N_edges", N_edges, 0);
       current_statement__ = 14;
@@ -14097,7 +13741,7 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
         std::vector<size_t>{static_cast<size_t>(N_edges)});
       node1 = std::vector<int>(N_edges, std::numeric_limits<int>::min());
       current_statement__ = 15;
-      node1 = context__.vals_i("node1");
+      stan::io::read_from_context(node1, context__, "node1");
       current_statement__ = 15;
       stan::math::check_greater_or_equal(function__, "node1", node1, 1);
       current_statement__ = 15;
@@ -14109,7 +13753,7 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
         std::vector<size_t>{static_cast<size_t>(N_edges)});
       node2 = std::vector<int>(N_edges, std::numeric_limits<int>::min());
       current_statement__ = 17;
-      node2 = context__.vals_i("node2");
+      stan::io::read_from_context(node2, context__, "node2");
       current_statement__ = 17;
       stan::math::check_greater_or_equal(function__, "node2", node2, 1);
       current_statement__ = 17;
@@ -14121,7 +13765,7 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
         std::vector<size_t>{static_cast<size_t>(N)});
       y = std::vector<int>(N, std::numeric_limits<int>::min());
       current_statement__ = 19;
-      y = context__.vals_i("y");
+      stan::io::read_from_context(y, context__, "y");
       current_statement__ = 19;
       stan::math::check_greater_or_equal(function__, "y", y, 0);
       current_statement__ = 20;
@@ -14132,17 +13776,8 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       x_data__ = Eigen::Matrix<double,-1,1>::Constant(N,
                    std::numeric_limits<double>::quiet_NaN());
       new (&x) Eigen::Map<Eigen::Matrix<double,-1,1>>(x_data__.data(), N);
-      {
-        std::vector<local_scalar_t__> x_flat__;
-        current_statement__ = 21;
-        x_flat__ = context__.vals_r("x");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          stan::model::assign(x, x_flat__[(pos__ - 1)],
-            "assigning variable x", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 21;
+      stan::io::read_from_context(x, context__, "x");
       current_statement__ = 22;
       stan::math::validate_non_negative_index("theta_std", "N", N);
       current_statement__ = 23;
@@ -14468,49 +14103,31 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
         "double", std::vector<size_t>{static_cast<size_t>(N)});
       int pos__;
       pos__ = 1;
-      local_scalar_t__ beta0;
+      local_scalar_t__ beta0 = DUMMY_VAR__;
       current_statement__ = 1;
-      beta0 = context__.vals_r("beta0")[(1 - 1)];
+      stan::io::read_from_context(beta0, context__, "beta0");
       out__.write(beta0);
-      local_scalar_t__ beta1;
+      local_scalar_t__ beta1 = DUMMY_VAR__;
       current_statement__ = 2;
-      beta1 = context__.vals_r("beta1")[(1 - 1)];
+      stan::io::read_from_context(beta1, context__, "beta1");
       out__.write(beta1);
-      local_scalar_t__ tau_theta;
+      local_scalar_t__ tau_theta = DUMMY_VAR__;
       current_statement__ = 3;
-      tau_theta = context__.vals_r("tau_theta")[(1 - 1)];
+      stan::io::read_from_context(tau_theta, context__, "tau_theta");
       out__.write_free_lb(0, tau_theta);
-      local_scalar_t__ tau_phi;
+      local_scalar_t__ tau_phi = DUMMY_VAR__;
       current_statement__ = 4;
-      tau_phi = context__.vals_r("tau_phi")[(1 - 1)];
+      stan::io::read_from_context(tau_phi, context__, "tau_phi");
       out__.write_free_lb(0, tau_phi);
       Eigen::Matrix<local_scalar_t__,-1,1> theta_std =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-      {
-        std::vector<local_scalar_t__> theta_std_flat__;
-        current_statement__ = 5;
-        theta_std_flat__ = context__.vals_r("theta_std");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          stan::model::assign(theta_std, theta_std_flat__[(pos__ - 1)],
-            "assigning variable theta_std", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 5;
+      stan::io::read_from_context(theta_std, context__, "theta_std");
       out__.write(theta_std);
       Eigen::Matrix<local_scalar_t__,-1,1> phi_std_raw =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-      {
-        std::vector<local_scalar_t__> phi_std_raw_flat__;
-        current_statement__ = 6;
-        phi_std_raw_flat__ = context__.vals_r("phi_std_raw");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          stan::model::assign(phi_std_raw, phi_std_raw_flat__[(pos__ - 1)],
-            "assigning variable phi_std_raw", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 6;
+      stan::io::read_from_context(phi_std_raw, context__, "phi_std_raw");
       out__.write(phi_std_raw);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -14967,15 +14584,17 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
       current_statement__ = 37;
       context__.validate_dims("data initialization", "nind", "int",
         std::vector<size_t>{});
+      nind = std::numeric_limits<int>::min();
       current_statement__ = 37;
-      nind = context__.vals_i("nind")[(1 - 1)];
+      stan::io::read_from_context(nind, context__, "nind");
       current_statement__ = 37;
       stan::math::check_greater_or_equal(function__, "nind", nind, 0);
       current_statement__ = 38;
       context__.validate_dims("data initialization", "n_occasions", "int",
         std::vector<size_t>{});
+      n_occasions = std::numeric_limits<int>::min();
       current_statement__ = 38;
-      n_occasions = context__.vals_i("n_occasions")[(1 - 1)];
+      stan::io::read_from_context(n_occasions, context__, "n_occasions");
       current_statement__ = 38;
       stan::math::check_greater_or_equal(function__, "n_occasions",
         n_occasions, 2);
@@ -14989,20 +14608,8 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
           static_cast<size_t>(n_occasions)});
       y = std::vector<std::vector<int>>(nind,
             std::vector<int>(n_occasions, std::numeric_limits<int>::min()));
-      {
-        std::vector<int> y_flat__;
-        current_statement__ = 41;
-        y_flat__ = context__.vals_i("y");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= n_occasions; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= nind; ++sym2__) {
-            stan::model::assign(y, y_flat__[(pos__ - 1)],
-              "assigning variable y", stan::model::index_uni(sym2__),
-              stan::model::index_uni(sym1__));
-            pos__ = (pos__ + 1);
-          }
-        }
-      }
+      current_statement__ = 41;
+      stan::io::read_from_context(y, context__, "y");
       current_statement__ = 41;
       stan::math::check_greater_or_equal(function__, "y", y, 0);
       current_statement__ = 41;
@@ -15010,8 +14617,9 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
       current_statement__ = 42;
       context__.validate_dims("data initialization", "max_age", "int",
         std::vector<size_t>{});
+      max_age = std::numeric_limits<int>::min();
       current_statement__ = 42;
-      max_age = context__.vals_i("max_age")[(1 - 1)];
+      stan::io::read_from_context(max_age, context__, "max_age");
       current_statement__ = 42;
       stan::math::check_greater_or_equal(function__, "max_age", max_age, 1);
       current_statement__ = 43;
@@ -15027,20 +14635,8 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
           static_cast<size_t>(x_2dim__)});
       x = std::vector<std::vector<int>>(nind,
             std::vector<int>(x_2dim__, std::numeric_limits<int>::min()));
-      {
-        std::vector<int> x_flat__;
-        current_statement__ = 45;
-        x_flat__ = context__.vals_i("x");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= (n_occasions - 1); ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= nind; ++sym2__) {
-            stan::model::assign(x, x_flat__[(pos__ - 1)],
-              "assigning variable x", stan::model::index_uni(sym2__),
-              stan::model::index_uni(sym1__));
-            pos__ = (pos__ + 1);
-          }
-        }
-      }
+      current_statement__ = 45;
+      stan::io::read_from_context(x, context__, "x");
       current_statement__ = 45;
       stan::math::check_greater_or_equal(function__, "x", x, 0);
       current_statement__ = 45;
@@ -15710,23 +15306,14 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
         std::vector<size_t>{static_cast<size_t>(max_age)});
       int pos__;
       pos__ = 1;
-      local_scalar_t__ mean_p;
+      local_scalar_t__ mean_p = DUMMY_VAR__;
       current_statement__ = 1;
-      mean_p = context__.vals_r("mean_p")[(1 - 1)];
+      stan::io::read_from_context(mean_p, context__, "mean_p");
       out__.write_free_lub(0, 1, mean_p);
       Eigen::Matrix<local_scalar_t__,-1,1> beta =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(max_age, DUMMY_VAR__);
-      {
-        std::vector<local_scalar_t__> beta_flat__;
-        current_statement__ = 2;
-        beta_flat__ = context__.vals_r("beta");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= max_age; ++sym1__) {
-          stan::model::assign(beta, beta_flat__[(pos__ - 1)],
-            "assigning variable beta", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 2;
+      stan::io::read_from_context(beta, context__, "beta");
       out__.write_free_lub(0, 1, beta);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -16032,17 +15619,8 @@ class function_in_function_inline_model final : public model_base_crtp<function_
                      std::numeric_limits<double>::quiet_NaN());
       new (&phi) Eigen::Map<Eigen::Matrix<double,-1,1>>(phi_data__.data(),
         10);
-      {
-        std::vector<local_scalar_t__> phi_flat__;
-        current_statement__ = 4;
-        phi_flat__ = context__.vals_r("phi");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-          stan::model::assign(phi, phi_flat__[(pos__ - 1)],
-            "assigning variable phi", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 4;
+      stan::io::read_from_context(phi, context__, "phi");
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -16473,8 +16051,9 @@ class function_in_function_loops_model final : public model_base_crtp<function_i
       current_statement__ = 12;
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
+      N = std::numeric_limits<int>::min();
       current_statement__ = 12;
-      N = context__.vals_i("N")[(1 - 1)];
+      stan::io::read_from_context(N, context__, "N");
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -17479,35 +17058,14 @@ class initialize_SoA_model final : public model_base_crtp<initialize_SoA_model> 
       int pos__ = std::numeric_limits<int>::min();
       Eigen::Matrix<local_scalar_t__,-1,1> y =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(3, DUMMY_VAR__);
-      {
-        std::vector<local_scalar_t__> y_flat__;
-        current_statement__ = 1;
-        y_flat__ = context__.vals_r("y");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          stan::model::assign(y, y_flat__[(pos__ - 1)],
-            "assigning variable y", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 1;
+      stan::io::read_from_context(y, context__, "y");
       out__.write(y);
       std::vector<Eigen::Matrix<local_scalar_t__,-1,1>> arr_vec =
         std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>(3,
           Eigen::Matrix<local_scalar_t__,-1,1>::Constant(4, DUMMY_VAR__));
-      {
-        std::vector<local_scalar_t__> arr_vec_flat__;
-        current_statement__ = 2;
-        arr_vec_flat__ = context__.vals_r("arr_vec");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-            stan::model::assign(arr_vec, arr_vec_flat__[(pos__ - 1)],
-              "assigning variable arr_vec", stan::model::index_uni(sym2__),
-              stan::model::index_uni(sym1__));
-            pos__ = (pos__ + 1);
-          }
-        }
-      }
+      current_statement__ = 2;
+      stan::io::read_from_context(arr_vec, context__, "arr_vec");
       out__.write(arr_vec);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -18104,34 +17662,15 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
       int pos__ = std::numeric_limits<int>::min();
       Eigen::Matrix<local_scalar_t__,-1,1> p_single_ret_vec =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(5, DUMMY_VAR__);
-      {
-        std::vector<local_scalar_t__> p_single_ret_vec_flat__;
-        current_statement__ = 1;
-        p_single_ret_vec_flat__ = context__.vals_r("p_single_ret_vec");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
-          stan::model::assign(p_single_ret_vec,
-            p_single_ret_vec_flat__[(pos__ - 1)],
-            "assigning variable p_single_ret_vec",
-            stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 1;
+      stan::io::read_from_context(p_single_ret_vec, context__,
+        "p_single_ret_vec");
       out__.write(p_single_ret_vec);
       Eigen::Matrix<local_scalar_t__,-1,1> p_multi_ret_vec =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(5, DUMMY_VAR__);
-      {
-        std::vector<local_scalar_t__> p_multi_ret_vec_flat__;
-        current_statement__ = 2;
-        p_multi_ret_vec_flat__ = context__.vals_r("p_multi_ret_vec");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
-          stan::model::assign(p_multi_ret_vec, p_multi_ret_vec_flat__[(pos__
-            - 1)], "assigning variable p_multi_ret_vec",
-            stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 2;
+      stan::io::read_from_context(p_multi_ret_vec, context__,
+        "p_multi_ret_vec");
       out__.write(p_multi_ret_vec);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -18585,9 +18124,9 @@ class inline_tdata_model final : public model_base_crtp<inline_tdata_model> {
       current_statement__ = 1;
       context__.validate_dims("parameter initialization", "alpha", "double",
         std::vector<size_t>{});
-      local_scalar_t__ alpha;
+      local_scalar_t__ alpha = DUMMY_VAR__;
       current_statement__ = 1;
-      alpha = context__.vals_r("alpha")[(1 - 1)];
+      stan::io::read_from_context(alpha, context__, "alpha");
       out__.write(alpha);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -18810,8 +18349,9 @@ class inliner_same_names_model final : public model_base_crtp<inliner_same_names
       current_statement__ = 6;
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
+      N = std::numeric_limits<int>::min();
       current_statement__ = 6;
-      N = context__.vals_i("N")[(1 - 1)];
+      stan::io::read_from_context(N, context__, "N");
       current_statement__ = 7;
       stan::math::validate_non_negative_index("R", "N", N);
       current_statement__ = 8;
@@ -19860,15 +19400,17 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       current_statement__ = 119;
       context__.validate_dims("data initialization", "M", "int",
         std::vector<size_t>{});
+      M = std::numeric_limits<int>::min();
       current_statement__ = 119;
-      M = context__.vals_i("M")[(1 - 1)];
+      stan::io::read_from_context(M, context__, "M");
       current_statement__ = 119;
       stan::math::check_greater_or_equal(function__, "M", M, 0);
       current_statement__ = 120;
       context__.validate_dims("data initialization", "n_occasions", "int",
         std::vector<size_t>{});
+      n_occasions = std::numeric_limits<int>::min();
       current_statement__ = 120;
-      n_occasions = context__.vals_i("n_occasions")[(1 - 1)];
+      stan::io::read_from_context(n_occasions, context__, "n_occasions");
       current_statement__ = 120;
       stan::math::check_greater_or_equal(function__, "n_occasions",
         n_occasions, 0);
@@ -19882,20 +19424,8 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
           static_cast<size_t>(n_occasions)});
       y = std::vector<std::vector<int>>(M,
             std::vector<int>(n_occasions, std::numeric_limits<int>::min()));
-      {
-        std::vector<int> y_flat__;
-        current_statement__ = 123;
-        y_flat__ = context__.vals_i("y");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= n_occasions; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
-            stan::model::assign(y, y_flat__[(pos__ - 1)],
-              "assigning variable y", stan::model::index_uni(sym2__),
-              stan::model::index_uni(sym1__));
-            pos__ = (pos__ + 1);
-          }
-        }
-      }
+      current_statement__ = 123;
+      stan::io::read_from_context(y, context__, "y");
       current_statement__ = 123;
       stan::math::check_greater_or_equal(function__, "y", y, 0);
       current_statement__ = 123;
@@ -21262,47 +20792,29 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         std::vector<size_t>{});
       int pos__;
       pos__ = 1;
-      local_scalar_t__ mean_phi;
+      local_scalar_t__ mean_phi = DUMMY_VAR__;
       current_statement__ = 1;
-      mean_phi = context__.vals_r("mean_phi")[(1 - 1)];
+      stan::io::read_from_context(mean_phi, context__, "mean_phi");
       out__.write_free_lub(0, 1, mean_phi);
-      local_scalar_t__ mean_p;
+      local_scalar_t__ mean_p = DUMMY_VAR__;
       current_statement__ = 2;
-      mean_p = context__.vals_r("mean_p")[(1 - 1)];
+      stan::io::read_from_context(mean_p, context__, "mean_p");
       out__.write_free_lub(0, 1, mean_p);
       Eigen::Matrix<local_scalar_t__,-1,1> gamma =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(n_occasions,
           DUMMY_VAR__);
-      {
-        std::vector<local_scalar_t__> gamma_flat__;
-        current_statement__ = 3;
-        gamma_flat__ = context__.vals_r("gamma");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= n_occasions; ++sym1__) {
-          stan::model::assign(gamma, gamma_flat__[(pos__ - 1)],
-            "assigning variable gamma", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 3;
+      stan::io::read_from_context(gamma, context__, "gamma");
       out__.write_free_lub(0, 1, gamma);
       Eigen::Matrix<local_scalar_t__,-1,1> epsilon =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(epsilon_1dim__,
           DUMMY_VAR__);
-      {
-        std::vector<local_scalar_t__> epsilon_flat__;
-        current_statement__ = 4;
-        epsilon_flat__ = context__.vals_r("epsilon");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= epsilon_1dim__; ++sym1__) {
-          stan::model::assign(epsilon, epsilon_flat__[(pos__ - 1)],
-            "assigning variable epsilon", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 4;
+      stan::io::read_from_context(epsilon, context__, "epsilon");
       out__.write(epsilon);
-      local_scalar_t__ sigma;
+      local_scalar_t__ sigma = DUMMY_VAR__;
       current_statement__ = 5;
-      sigma = context__.vals_r("sigma")[(1 - 1)];
+      stan::io::read_from_context(sigma, context__, "sigma");
       out__.write_free_lub(0, 5, sigma);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -21629,8 +21141,9 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
       current_statement__ = 1;
       context__.validate_dims("data initialization", "j", "int",
         std::vector<size_t>{});
+      j = std::numeric_limits<int>::min();
       current_statement__ = 1;
-      j = context__.vals_i("j")[(1 - 1)];
+      stan::io::read_from_context(j, context__, "j");
       current_statement__ = 2;
       current_statement__ = 2;
       z = static_cast<double>(1);
@@ -22156,9 +21669,9 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
       current_statement__ = 1;
       context__.validate_dims("parameter initialization", "x", "double",
         std::vector<size_t>{});
-      local_scalar_t__ x;
+      local_scalar_t__ x = DUMMY_VAR__;
       current_statement__ = 1;
-      x = context__.vals_r("x")[(1 - 1)];
+      stan::io::read_from_context(x, context__, "x");
       out__.write(x);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -22341,8 +21854,9 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
       current_statement__ = 3;
       context__.validate_dims("data initialization", "J", "int",
         std::vector<size_t>{});
+      J = std::numeric_limits<int>::min();
       current_statement__ = 3;
-      J = context__.vals_i("J")[(1 - 1)];
+      stan::io::read_from_context(J, context__, "J");
       current_statement__ = 3;
       stan::math::check_greater_or_equal(function__, "J", J, 0);
       current_statement__ = 4;
@@ -22352,7 +21866,7 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
         std::vector<size_t>{static_cast<size_t>(J)});
       y = std::vector<double>(J, std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 5;
-      y = context__.vals_r("y");
+      stan::io::read_from_context(y, context__, "y");
       current_statement__ = 6;
       stan::math::validate_non_negative_index("theta", "J", J);
     } catch (const std::exception& e) {
@@ -22535,7 +22049,7 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
       std::vector<local_scalar_t__> theta =
         std::vector<local_scalar_t__>(J, DUMMY_VAR__);
       current_statement__ = 1;
-      theta = context__.vals_r("theta");
+      stan::io::read_from_context(theta, context__, "theta");
       out__.write(theta);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -22942,15 +22456,17 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
       current_statement__ = 37;
       context__.validate_dims("data initialization", "nind", "int",
         std::vector<size_t>{});
+      nind = std::numeric_limits<int>::min();
       current_statement__ = 37;
-      nind = context__.vals_i("nind")[(1 - 1)];
+      stan::io::read_from_context(nind, context__, "nind");
       current_statement__ = 37;
       stan::math::check_greater_or_equal(function__, "nind", nind, 0);
       current_statement__ = 38;
       context__.validate_dims("data initialization", "n_occasions", "int",
         std::vector<size_t>{});
+      n_occasions = std::numeric_limits<int>::min();
       current_statement__ = 38;
-      n_occasions = context__.vals_i("n_occasions")[(1 - 1)];
+      stan::io::read_from_context(n_occasions, context__, "n_occasions");
       current_statement__ = 38;
       stan::math::check_greater_or_equal(function__, "n_occasions",
         n_occasions, 2);
@@ -22964,20 +22480,8 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
           static_cast<size_t>(n_occasions)});
       y = std::vector<std::vector<int>>(nind,
             std::vector<int>(n_occasions, std::numeric_limits<int>::min()));
-      {
-        std::vector<int> y_flat__;
-        current_statement__ = 41;
-        y_flat__ = context__.vals_i("y");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= n_occasions; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= nind; ++sym2__) {
-            stan::model::assign(y, y_flat__[(pos__ - 1)],
-              "assigning variable y", stan::model::index_uni(sym2__),
-              stan::model::index_uni(sym1__));
-            pos__ = (pos__ + 1);
-          }
-        }
-      }
+      current_statement__ = 41;
+      stan::io::read_from_context(y, context__, "y");
       current_statement__ = 41;
       stan::math::check_greater_or_equal(function__, "y", y, 0);
       current_statement__ = 41;
@@ -23626,13 +23130,13 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
       current_statement__ = 2;
       context__.validate_dims("parameter initialization", "mean_p", "double",
         std::vector<size_t>{});
-      local_scalar_t__ mean_phi;
+      local_scalar_t__ mean_phi = DUMMY_VAR__;
       current_statement__ = 1;
-      mean_phi = context__.vals_r("mean_phi")[(1 - 1)];
+      stan::io::read_from_context(mean_phi, context__, "mean_phi");
       out__.write_free_lub(0, 1, mean_phi);
-      local_scalar_t__ mean_p;
+      local_scalar_t__ mean_p = DUMMY_VAR__;
       current_statement__ = 2;
-      mean_p = context__.vals_r("mean_p")[(1 - 1)];
+      stan::io::read_from_context(mean_p, context__, "mean_p");
       out__.write_free_lub(0, 1, mean_p);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -23956,8 +23460,9 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
       current_statement__ = 8;
       context__.validate_dims("data initialization", "n", "int",
         std::vector<size_t>{});
+      n = std::numeric_limits<int>::min();
       current_statement__ = 8;
-      n = context__.vals_i("n")[(1 - 1)];
+      stan::io::read_from_context(n, context__, "n");
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -24224,9 +23729,9 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
       current_statement__ = 1;
       context__.validate_dims("parameter initialization", "mu", "double",
         std::vector<size_t>{});
-      local_scalar_t__ mu;
+      local_scalar_t__ mu = DUMMY_VAR__;
       current_statement__ = 1;
-      mu = context__.vals_r("mu")[(1 - 1)];
+      stan::io::read_from_context(mu, context__, "mu");
       out__.write(mu);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -24491,15 +23996,17 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
       current_statement__ = 34;
       context__.validate_dims("data initialization", "R", "int",
         std::vector<size_t>{});
+      R = std::numeric_limits<int>::min();
       current_statement__ = 34;
-      R = context__.vals_i("R")[(1 - 1)];
+      stan::io::read_from_context(R, context__, "R");
       current_statement__ = 34;
       stan::math::check_greater_or_equal(function__, "R", R, 1);
       current_statement__ = 35;
       context__.validate_dims("data initialization", "T", "int",
         std::vector<size_t>{});
+      T = std::numeric_limits<int>::min();
       current_statement__ = 35;
-      T = context__.vals_i("T")[(1 - 1)];
+      stan::io::read_from_context(T, context__, "T");
       current_statement__ = 35;
       stan::math::check_greater_or_equal(function__, "T", T, 1);
       current_statement__ = 36;
@@ -24511,20 +24018,8 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
         std::vector<size_t>{static_cast<size_t>(R), static_cast<size_t>(T)});
       y = std::vector<std::vector<int>>(R,
             std::vector<int>(T, std::numeric_limits<int>::min()));
-      {
-        std::vector<int> y_flat__;
-        current_statement__ = 38;
-        y_flat__ = context__.vals_i("y");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= T; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= R; ++sym2__) {
-            stan::model::assign(y, y_flat__[(pos__ - 1)],
-              "assigning variable y", stan::model::index_uni(sym2__),
-              stan::model::index_uni(sym1__));
-            pos__ = (pos__ + 1);
-          }
-        }
-      }
+      current_statement__ = 38;
+      stan::io::read_from_context(y, context__, "y");
       current_statement__ = 38;
       stan::math::check_greater_or_equal(function__, "y", y, 0);
       current_statement__ = 38;
@@ -24537,17 +24032,8 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
       X_data__ = Eigen::Matrix<double,-1,1>::Constant(R,
                    std::numeric_limits<double>::quiet_NaN());
       new (&X) Eigen::Map<Eigen::Matrix<double,-1,1>>(X_data__.data(), R);
-      {
-        std::vector<local_scalar_t__> X_flat__;
-        current_statement__ = 40;
-        X_flat__ = context__.vals_r("X");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= R; ++sym1__) {
-          stan::model::assign(X, X_flat__[(pos__ - 1)],
-            "assigning variable X", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 40;
+      stan::io::read_from_context(X, context__, "X");
       current_statement__ = 41;
       stan::math::validate_non_negative_index("sum_y", "R", R);
       current_statement__ = 42;
@@ -24946,21 +24432,21 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
       current_statement__ = 4;
       context__.validate_dims("parameter initialization", "beta_p", "double",
         std::vector<size_t>{});
-      local_scalar_t__ alpha_occ;
+      local_scalar_t__ alpha_occ = DUMMY_VAR__;
       current_statement__ = 1;
-      alpha_occ = context__.vals_r("alpha_occ")[(1 - 1)];
+      stan::io::read_from_context(alpha_occ, context__, "alpha_occ");
       out__.write(alpha_occ);
-      local_scalar_t__ beta_occ;
+      local_scalar_t__ beta_occ = DUMMY_VAR__;
       current_statement__ = 2;
-      beta_occ = context__.vals_r("beta_occ")[(1 - 1)];
+      stan::io::read_from_context(beta_occ, context__, "beta_occ");
       out__.write(beta_occ);
-      local_scalar_t__ alpha_p;
+      local_scalar_t__ alpha_p = DUMMY_VAR__;
       current_statement__ = 3;
-      alpha_p = context__.vals_r("alpha_p")[(1 - 1)];
+      stan::io::read_from_context(alpha_p, context__, "alpha_p");
       out__.write(alpha_p);
-      local_scalar_t__ beta_p;
+      local_scalar_t__ beta_p = DUMMY_VAR__;
       current_statement__ = 4;
-      beta_p = context__.vals_r("beta_p")[(1 - 1)];
+      stan::io::read_from_context(beta_p, context__, "beta_p");
       out__.write(beta_p);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -25257,15 +24743,17 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       current_statement__ = 22;
       context__.validate_dims("data initialization", "J", "int",
         std::vector<size_t>{});
+      J = std::numeric_limits<int>::min();
       current_statement__ = 22;
-      J = context__.vals_i("J")[(1 - 1)];
+      stan::io::read_from_context(J, context__, "J");
       current_statement__ = 22;
       stan::math::check_greater_or_equal(function__, "J", J, 0);
       current_statement__ = 23;
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
+      N = std::numeric_limits<int>::min();
       current_statement__ = 23;
-      N = context__.vals_i("N")[(1 - 1)];
+      stan::io::read_from_context(N, context__, "N");
       current_statement__ = 23;
       stan::math::check_greater_or_equal(function__, "N", N, 0);
       current_statement__ = 24;
@@ -25275,7 +24763,7 @@ class off_small_model final : public model_base_crtp<off_small_model> {
         std::vector<size_t>{static_cast<size_t>(N)});
       person = std::vector<int>(N, std::numeric_limits<int>::min());
       current_statement__ = 25;
-      person = context__.vals_i("person");
+      stan::io::read_from_context(person, context__, "person");
       current_statement__ = 25;
       stan::math::check_greater_or_equal(function__, "person", person, 1);
       current_statement__ = 25;
@@ -25289,17 +24777,8 @@ class off_small_model final : public model_base_crtp<off_small_model> {
                       std::numeric_limits<double>::quiet_NaN());
       new (&time) Eigen::Map<Eigen::Matrix<double,-1,1>>(time_data__.data(),
         N);
-      {
-        std::vector<local_scalar_t__> time_flat__;
-        current_statement__ = 27;
-        time_flat__ = context__.vals_r("time");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          stan::model::assign(time, time_flat__[(pos__ - 1)],
-            "assigning variable time", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 27;
+      stan::io::read_from_context(time, context__, "time");
       current_statement__ = 28;
       stan::math::validate_non_negative_index("treatment", "N", N);
       current_statement__ = 29;
@@ -25309,17 +24788,8 @@ class off_small_model final : public model_base_crtp<off_small_model> {
                            std::numeric_limits<double>::quiet_NaN());
       new (&treatment)
         Eigen::Map<Eigen::Matrix<double,-1,1>>(treatment_data__.data(), N);
-      {
-        std::vector<local_scalar_t__> treatment_flat__;
-        current_statement__ = 29;
-        treatment_flat__ = context__.vals_r("treatment");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          stan::model::assign(treatment, treatment_flat__[(pos__ - 1)],
-            "assigning variable treatment", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 29;
+      stan::io::read_from_context(treatment, context__, "treatment");
       current_statement__ = 30;
       stan::math::validate_non_negative_index("y", "N", N);
       current_statement__ = 31;
@@ -25328,17 +24798,8 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       y_data__ = Eigen::Matrix<double,-1,1>::Constant(N,
                    std::numeric_limits<double>::quiet_NaN());
       new (&y) Eigen::Map<Eigen::Matrix<double,-1,1>>(y_data__.data(), N);
-      {
-        std::vector<local_scalar_t__> y_flat__;
-        current_statement__ = 31;
-        y_flat__ = context__.vals_r("y");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          stan::model::assign(y, y_flat__[(pos__ - 1)],
-            "assigning variable y", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 31;
+      stan::io::read_from_context(y, context__, "y");
       current_statement__ = 32;
       stan::math::validate_non_negative_index("eta1", "J", J);
       current_statement__ = 33;
@@ -25785,57 +25246,39 @@ class off_small_model final : public model_base_crtp<off_small_model> {
         "double", std::vector<size_t>{});
       int pos__;
       pos__ = 1;
-      local_scalar_t__ beta;
+      local_scalar_t__ beta = DUMMY_VAR__;
       current_statement__ = 1;
-      beta = context__.vals_r("beta")[(1 - 1)];
+      stan::io::read_from_context(beta, context__, "beta");
       out__.write(beta);
       Eigen::Matrix<local_scalar_t__,-1,1> eta1 =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(J, DUMMY_VAR__);
-      {
-        std::vector<local_scalar_t__> eta1_flat__;
-        current_statement__ = 2;
-        eta1_flat__ = context__.vals_r("eta1");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= J; ++sym1__) {
-          stan::model::assign(eta1, eta1_flat__[(pos__ - 1)],
-            "assigning variable eta1", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 2;
+      stan::io::read_from_context(eta1, context__, "eta1");
       out__.write(eta1);
       Eigen::Matrix<local_scalar_t__,-1,1> eta2 =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(J, DUMMY_VAR__);
-      {
-        std::vector<local_scalar_t__> eta2_flat__;
-        current_statement__ = 3;
-        eta2_flat__ = context__.vals_r("eta2");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= J; ++sym1__) {
-          stan::model::assign(eta2, eta2_flat__[(pos__ - 1)],
-            "assigning variable eta2", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 3;
+      stan::io::read_from_context(eta2, context__, "eta2");
       out__.write(eta2);
-      local_scalar_t__ mu_a1;
+      local_scalar_t__ mu_a1 = DUMMY_VAR__;
       current_statement__ = 4;
-      mu_a1 = context__.vals_r("mu_a1")[(1 - 1)];
+      stan::io::read_from_context(mu_a1, context__, "mu_a1");
       out__.write(mu_a1);
-      local_scalar_t__ mu_a2;
+      local_scalar_t__ mu_a2 = DUMMY_VAR__;
       current_statement__ = 5;
-      mu_a2 = context__.vals_r("mu_a2")[(1 - 1)];
+      stan::io::read_from_context(mu_a2, context__, "mu_a2");
       out__.write(mu_a2);
-      local_scalar_t__ sigma_a1;
+      local_scalar_t__ sigma_a1 = DUMMY_VAR__;
       current_statement__ = 6;
-      sigma_a1 = context__.vals_r("sigma_a1")[(1 - 1)];
+      stan::io::read_from_context(sigma_a1, context__, "sigma_a1");
       out__.write_free_lub(0, 100, sigma_a1);
-      local_scalar_t__ sigma_a2;
+      local_scalar_t__ sigma_a2 = DUMMY_VAR__;
       current_statement__ = 7;
-      sigma_a2 = context__.vals_r("sigma_a2")[(1 - 1)];
+      stan::io::read_from_context(sigma_a2, context__, "sigma_a2");
       out__.write_free_lub(0, 100, sigma_a2);
-      local_scalar_t__ sigma_y;
+      local_scalar_t__ sigma_y = DUMMY_VAR__;
       current_statement__ = 8;
-      sigma_y = context__.vals_r("sigma_y")[(1 - 1)];
+      stan::io::read_from_context(sigma_y, context__, "sigma_y");
       out__.write_free_lub(0, 100, sigma_y);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -27068,61 +26511,28 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
       context__.validate_dims("parameter initialization", "x_cov", "double",
         std::vector<size_t>{static_cast<size_t>(2), static_cast<size_t>(2)});
       int pos__ = std::numeric_limits<int>::min();
-      local_scalar_t__ theta;
+      local_scalar_t__ theta = DUMMY_VAR__;
       current_statement__ = 1;
-      theta = context__.vals_r("theta")[(1 - 1)];
+      stan::io::read_from_context(theta, context__, "theta");
       out__.write(theta);
-      local_scalar_t__ phi;
+      local_scalar_t__ phi = DUMMY_VAR__;
       current_statement__ = 2;
-      phi = context__.vals_r("phi")[(1 - 1)];
+      stan::io::read_from_context(phi, context__, "phi");
       out__.write(phi);
       Eigen::Matrix<local_scalar_t__,-1,-1> x_matrix =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(3, 2, DUMMY_VAR__);
-      {
-        std::vector<local_scalar_t__> x_matrix_flat__;
-        current_statement__ = 3;
-        x_matrix_flat__ = context__.vals_r("x_matrix");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-            stan::model::assign(x_matrix, x_matrix_flat__[(pos__ - 1)],
-              "assigning variable x_matrix", stan::model::index_uni(sym2__),
-              stan::model::index_uni(sym1__));
-            pos__ = (pos__ + 1);
-          }
-        }
-      }
+      current_statement__ = 3;
+      stan::io::read_from_context(x_matrix, context__, "x_matrix");
       out__.write(x_matrix);
       Eigen::Matrix<local_scalar_t__,-1,1> x_vector =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__);
-      {
-        std::vector<local_scalar_t__> x_vector_flat__;
-        current_statement__ = 4;
-        x_vector_flat__ = context__.vals_r("x_vector");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          stan::model::assign(x_vector, x_vector_flat__[(pos__ - 1)],
-            "assigning variable x_vector", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 4;
+      stan::io::read_from_context(x_vector, context__, "x_vector");
       out__.write(x_vector);
       Eigen::Matrix<local_scalar_t__,-1,-1> x_cov =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(2, 2, DUMMY_VAR__);
-      {
-        std::vector<local_scalar_t__> x_cov_flat__;
-        current_statement__ = 5;
-        x_cov_flat__ = context__.vals_r("x_cov");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-            stan::model::assign(x_cov, x_cov_flat__[(pos__ - 1)],
-              "assigning variable x_cov", stan::model::index_uni(sym2__),
-              stan::model::index_uni(sym1__));
-            pos__ = (pos__ + 1);
-          }
-        }
-      }
+      current_statement__ = 5;
+      stan::io::read_from_context(x_cov, context__, "x_cov");
       out__.write_free_cov_matrix(x_cov);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -27412,13 +26822,15 @@ class overload_tilde_stanlib_model final : public model_base_crtp<overload_tilde
       current_statement__ = 4;
       context__.validate_dims("data initialization", "y", "int",
         std::vector<size_t>{});
+      y = std::numeric_limits<int>::min();
       current_statement__ = 4;
-      y = context__.vals_i("y")[(1 - 1)];
+      stan::io::read_from_context(y, context__, "y");
       current_statement__ = 5;
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
+      N = std::numeric_limits<int>::min();
       current_statement__ = 5;
-      N = context__.vals_i("N")[(1 - 1)];
+      stan::io::read_from_context(N, context__, "N");
       current_statement__ = 6;
       stan::math::validate_non_negative_index("theta", "N", N);
     } catch (const std::exception& e) {
@@ -27607,17 +27019,8 @@ class overload_tilde_stanlib_model final : public model_base_crtp<overload_tilde
       int pos__ = std::numeric_limits<int>::min();
       Eigen::Matrix<local_scalar_t__,-1,1> theta =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-      {
-        std::vector<local_scalar_t__> theta_flat__;
-        current_statement__ = 1;
-        theta_flat__ = context__.vals_r("theta");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          stan::model::assign(theta, theta_flat__[(pos__ - 1)],
-            "assigning variable theta", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 1;
+      stan::io::read_from_context(theta, context__, "theta");
       out__.write_free_lub(0, 1, theta);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -29314,15 +28717,17 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       current_statement__ = 17;
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
+      N = std::numeric_limits<int>::min();
       current_statement__ = 17;
-      N = context__.vals_i("N")[(1 - 1)];
+      stan::io::read_from_context(N, context__, "N");
       current_statement__ = 17;
       stan::math::check_greater_or_equal(function__, "N", N, 0);
       current_statement__ = 18;
       context__.validate_dims("data initialization", "n_pair", "int",
         std::vector<size_t>{});
+      n_pair = std::numeric_limits<int>::min();
       current_statement__ = 18;
-      n_pair = context__.vals_i("n_pair")[(1 - 1)];
+      stan::io::read_from_context(n_pair, context__, "n_pair");
       current_statement__ = 18;
       stan::math::check_greater_or_equal(function__, "n_pair", n_pair, 0);
       current_statement__ = 19;
@@ -29332,7 +28737,7 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
         std::vector<size_t>{static_cast<size_t>(N)});
       pair = std::vector<int>(N, std::numeric_limits<int>::min());
       current_statement__ = 20;
-      pair = context__.vals_i("pair");
+      stan::io::read_from_context(pair, context__, "pair");
       current_statement__ = 20;
       stan::math::check_greater_or_equal(function__, "pair", pair, 1);
       current_statement__ = 20;
@@ -29346,17 +28751,8 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
                           std::numeric_limits<double>::quiet_NaN());
       new (&pre_test)
         Eigen::Map<Eigen::Matrix<double,-1,1>>(pre_test_data__.data(), N);
-      {
-        std::vector<local_scalar_t__> pre_test_flat__;
-        current_statement__ = 22;
-        pre_test_flat__ = context__.vals_r("pre_test");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          stan::model::assign(pre_test, pre_test_flat__[(pos__ - 1)],
-            "assigning variable pre_test", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 22;
+      stan::io::read_from_context(pre_test, context__, "pre_test");
       current_statement__ = 23;
       stan::math::validate_non_negative_index("treatment", "N", N);
       current_statement__ = 24;
@@ -29366,17 +28762,8 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
                            std::numeric_limits<double>::quiet_NaN());
       new (&treatment)
         Eigen::Map<Eigen::Matrix<double,-1,1>>(treatment_data__.data(), N);
-      {
-        std::vector<local_scalar_t__> treatment_flat__;
-        current_statement__ = 24;
-        treatment_flat__ = context__.vals_r("treatment");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          stan::model::assign(treatment, treatment_flat__[(pos__ - 1)],
-            "assigning variable treatment", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 24;
+      stan::io::read_from_context(treatment, context__, "treatment");
       current_statement__ = 24;
       stan::math::check_greater_or_equal(function__, "treatment", treatment,
         0);
@@ -29390,17 +28777,8 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       y_data__ = Eigen::Matrix<double,-1,1>::Constant(N,
                    std::numeric_limits<double>::quiet_NaN());
       new (&y) Eigen::Map<Eigen::Matrix<double,-1,1>>(y_data__.data(), N);
-      {
-        std::vector<local_scalar_t__> y_flat__;
-        current_statement__ = 26;
-        y_flat__ = context__.vals_r("y");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          stan::model::assign(y, y_flat__[(pos__ - 1)],
-            "assigning variable y", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 26;
+      stan::io::read_from_context(y, context__, "y");
       current_statement__ = 27;
       stan::math::validate_non_negative_index("a", "n_pair", n_pair);
       current_statement__ = 28;
@@ -29769,43 +29147,25 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,1> a =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(n_pair, DUMMY_VAR__);
-      {
-        std::vector<local_scalar_t__> a_flat__;
-        current_statement__ = 1;
-        a_flat__ = context__.vals_r("a");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= n_pair; ++sym1__) {
-          stan::model::assign(a, a_flat__[(pos__ - 1)],
-            "assigning variable a", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 1;
+      stan::io::read_from_context(a, context__, "a");
       out__.write(a);
       Eigen::Matrix<local_scalar_t__,-1,1> beta =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__);
-      {
-        std::vector<local_scalar_t__> beta_flat__;
-        current_statement__ = 2;
-        beta_flat__ = context__.vals_r("beta");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          stan::model::assign(beta, beta_flat__[(pos__ - 1)],
-            "assigning variable beta", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 2;
+      stan::io::read_from_context(beta, context__, "beta");
       out__.write(beta);
-      local_scalar_t__ mu_a;
+      local_scalar_t__ mu_a = DUMMY_VAR__;
       current_statement__ = 3;
-      mu_a = context__.vals_r("mu_a")[(1 - 1)];
+      stan::io::read_from_context(mu_a, context__, "mu_a");
       out__.write(mu_a);
-      local_scalar_t__ sigma_a;
+      local_scalar_t__ sigma_a = DUMMY_VAR__;
       current_statement__ = 4;
-      sigma_a = context__.vals_r("sigma_a")[(1 - 1)];
+      stan::io::read_from_context(sigma_a, context__, "sigma_a");
       out__.write_free_lub(0, 100, sigma_a);
-      local_scalar_t__ sigma_y;
+      local_scalar_t__ sigma_y = DUMMY_VAR__;
       current_statement__ = 5;
-      sigma_y = context__.vals_r("sigma_y")[(1 - 1)];
+      stan::io::read_from_context(sigma_y, context__, "sigma_y");
       out__.write_free_lub(0, 100, sigma_y);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -30047,20 +29407,8 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
                     std::numeric_limits<double>::quiet_NaN());
       new (&m1) Eigen::Map<Eigen::Matrix<double,-1,-1>>(m1_data__.data(), 10,
         10);
-      {
-        std::vector<local_scalar_t__> m1_flat__;
-        current_statement__ = 7;
-        m1_flat__ = context__.vals_r("m1");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-            stan::model::assign(m1, m1_flat__[(pos__ - 1)],
-              "assigning variable m1", stan::model::index_uni(sym2__),
-              stan::model::index_uni(sym1__));
-            pos__ = (pos__ + 1);
-          }
-        }
-      }
+      current_statement__ = 7;
+      stan::io::read_from_context(m1, context__, "m1");
       current_statement__ = 8;
       context__.validate_dims("data initialization", "m4", "double",
         std::vector<size_t>{static_cast<size_t>(10), static_cast<size_t>(10)});
@@ -30068,32 +29416,20 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
                     std::numeric_limits<double>::quiet_NaN());
       new (&m4) Eigen::Map<Eigen::Matrix<double,-1,-1>>(m4_data__.data(), 10,
         10);
-      {
-        std::vector<local_scalar_t__> m4_flat__;
-        current_statement__ = 8;
-        m4_flat__ = context__.vals_r("m4");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-            stan::model::assign(m4, m4_flat__[(pos__ - 1)],
-              "assigning variable m4", stan::model::index_uni(sym2__),
-              stan::model::index_uni(sym1__));
-            pos__ = (pos__ + 1);
-          }
-        }
-      }
+      current_statement__ = 8;
+      stan::io::read_from_context(m4, context__, "m4");
       current_statement__ = 9;
       context__.validate_dims("data initialization", "idx", "int",
         std::vector<size_t>{static_cast<size_t>(10)});
       idx = std::vector<int>(10, std::numeric_limits<int>::min());
       current_statement__ = 9;
-      idx = context__.vals_i("idx");
+      stan::io::read_from_context(idx, context__, "idx");
       current_statement__ = 10;
       context__.validate_dims("data initialization", "idy", "int",
         std::vector<size_t>{static_cast<size_t>(10)});
       idy = std::vector<int>(10, std::numeric_limits<int>::min());
       current_statement__ = 10;
-      idy = context__.vals_i("idy");
+      stan::io::read_from_context(idy, context__, "idy");
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -30334,37 +29670,13 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,-1> m2 =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10, DUMMY_VAR__);
-      {
-        std::vector<local_scalar_t__> m2_flat__;
-        current_statement__ = 1;
-        m2_flat__ = context__.vals_r("m2");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-            stan::model::assign(m2, m2_flat__[(pos__ - 1)],
-              "assigning variable m2", stan::model::index_uni(sym2__),
-              stan::model::index_uni(sym1__));
-            pos__ = (pos__ + 1);
-          }
-        }
-      }
+      current_statement__ = 1;
+      stan::io::read_from_context(m2, context__, "m2");
       out__.write(m2);
       Eigen::Matrix<local_scalar_t__,-1,-1> m3 =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10, DUMMY_VAR__);
-      {
-        std::vector<local_scalar_t__> m3_flat__;
-        current_statement__ = 2;
-        m3_flat__ = context__.vals_r("m3");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-            stan::model::assign(m3, m3_flat__[(pos__ - 1)],
-              "assigning variable m3", stan::model::index_uni(sym2__),
-              stan::model::index_uni(sym1__));
-            pos__ = (pos__ + 1);
-          }
-        }
-      }
+      current_statement__ = 2;
+      stan::io::read_from_context(m3, context__, "m3");
       out__.write(m3);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -31334,8 +30646,9 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       current_statement__ = 18;
       context__.validate_dims("data initialization", "I", "int",
         std::vector<size_t>{});
+      I = std::numeric_limits<int>::min();
       current_statement__ = 18;
-      I = context__.vals_i("I")[(1 - 1)];
+      stan::io::read_from_context(I, context__, "I");
       current_statement__ = 18;
       stan::math::check_greater_or_equal(function__, "I", I, 0);
       current_statement__ = 19;
@@ -31345,7 +30658,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
         std::vector<size_t>{static_cast<size_t>(I)});
       n = std::vector<int>(I, std::numeric_limits<int>::min());
       current_statement__ = 20;
-      n = context__.vals_i("n");
+      stan::io::read_from_context(n, context__, "n");
       current_statement__ = 20;
       stan::math::check_greater_or_equal(function__, "n", n, 0);
       current_statement__ = 21;
@@ -31355,7 +30668,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
         std::vector<size_t>{static_cast<size_t>(I)});
       N = std::vector<int>(I, std::numeric_limits<int>::min());
       current_statement__ = 22;
-      N = context__.vals_i("N");
+      stan::io::read_from_context(N, context__, "N");
       current_statement__ = 22;
       stan::math::check_greater_or_equal(function__, "N", N, 0);
       current_statement__ = 23;
@@ -31366,17 +30679,8 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       x1_data__ = Eigen::Matrix<double,-1,1>::Constant(I,
                     std::numeric_limits<double>::quiet_NaN());
       new (&x1) Eigen::Map<Eigen::Matrix<double,-1,1>>(x1_data__.data(), I);
-      {
-        std::vector<local_scalar_t__> x1_flat__;
-        current_statement__ = 24;
-        x1_flat__ = context__.vals_r("x1");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= I; ++sym1__) {
-          stan::model::assign(x1, x1_flat__[(pos__ - 1)],
-            "assigning variable x1", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 24;
+      stan::io::read_from_context(x1, context__, "x1");
       current_statement__ = 25;
       stan::math::validate_non_negative_index("x2", "I", I);
       current_statement__ = 26;
@@ -31385,17 +30689,8 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       x2_data__ = Eigen::Matrix<double,-1,1>::Constant(I,
                     std::numeric_limits<double>::quiet_NaN());
       new (&x2) Eigen::Map<Eigen::Matrix<double,-1,1>>(x2_data__.data(), I);
-      {
-        std::vector<local_scalar_t__> x2_flat__;
-        current_statement__ = 26;
-        x2_flat__ = context__.vals_r("x2");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= I; ++sym1__) {
-          stan::model::assign(x2, x2_flat__[(pos__ - 1)],
-            "assigning variable x2", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 26;
+      stan::io::read_from_context(x2, context__, "x2");
       current_statement__ = 27;
       K = std::numeric_limits<int>::min();
       current_statement__ = 28;
@@ -31765,43 +31060,31 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
         std::vector<size_t>{static_cast<size_t>(I), static_cast<size_t>(K)});
       int pos__;
       pos__ = 1;
-      local_scalar_t__ alpha0;
+      local_scalar_t__ alpha0 = DUMMY_VAR__;
       current_statement__ = 1;
-      alpha0 = context__.vals_r("alpha0")[(1 - 1)];
+      stan::io::read_from_context(alpha0, context__, "alpha0");
       out__.write(alpha0);
-      local_scalar_t__ alpha1;
+      local_scalar_t__ alpha1 = DUMMY_VAR__;
       current_statement__ = 2;
-      alpha1 = context__.vals_r("alpha1")[(1 - 1)];
+      stan::io::read_from_context(alpha1, context__, "alpha1");
       out__.write(alpha1);
-      local_scalar_t__ alpha2;
+      local_scalar_t__ alpha2 = DUMMY_VAR__;
       current_statement__ = 3;
-      alpha2 = context__.vals_r("alpha2")[(1 - 1)];
+      stan::io::read_from_context(alpha2, context__, "alpha2");
       out__.write(alpha2);
-      local_scalar_t__ alpha12;
+      local_scalar_t__ alpha12 = DUMMY_VAR__;
       current_statement__ = 4;
-      alpha12 = context__.vals_r("alpha12")[(1 - 1)];
+      stan::io::read_from_context(alpha12, context__, "alpha12");
       out__.write(alpha12);
-      local_scalar_t__ tau;
+      local_scalar_t__ tau = DUMMY_VAR__;
       current_statement__ = 5;
-      tau = context__.vals_r("tau")[(1 - 1)];
+      stan::io::read_from_context(tau, context__, "tau");
       out__.write_free_lb(0, tau);
       std::vector<Eigen::Matrix<local_scalar_t__,-1,1>> b =
         std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>(I,
           Eigen::Matrix<local_scalar_t__,-1,1>::Constant(8, DUMMY_VAR__));
-      {
-        std::vector<local_scalar_t__> b_flat__;
-        current_statement__ = 6;
-        b_flat__ = context__.vals_r("b");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= 8; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= I; ++sym2__) {
-            stan::model::assign(b, b_flat__[(pos__ - 1)],
-              "assigning variable b", stan::model::index_uni(sym2__),
-              stan::model::index_uni(sym1__));
-            pos__ = (pos__ + 1);
-          }
-        }
-      }
+      current_statement__ = 6;
+      stan::io::read_from_context(b, context__, "b");
       out__.write(b);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -32023,20 +31306,8 @@ class tuple_adlevels_model final : public model_base_crtp<tuple_adlevels_model> 
       x_data__ = Eigen::Matrix<double,-1,-1>::Constant(3, 4,
                    std::numeric_limits<double>::quiet_NaN());
       new (&x) Eigen::Map<Eigen::Matrix<double,-1,-1>>(x_data__.data(), 3, 4);
-      {
-        std::vector<local_scalar_t__> x_flat__;
-        current_statement__ = 3;
-        x_flat__ = context__.vals_r("x");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-            stan::model::assign(x, x_flat__[(pos__ - 1)],
-              "assigning variable x", stan::model::index_uni(sym2__),
-              stan::model::index_uni(sym1__));
-            pos__ = (pos__ + 1);
-          }
-        }
-      }
+      current_statement__ = 3;
+      stan::io::read_from_context(x, context__, "x");
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -32236,9 +31507,9 @@ class tuple_adlevels_model final : public model_base_crtp<tuple_adlevels_model> 
       current_statement__ = 1;
       context__.validate_dims("parameter initialization", "w", "double",
         std::vector<size_t>{});
-      local_scalar_t__ w;
+      local_scalar_t__ w = DUMMY_VAR__;
       current_statement__ = 1;
-      w = context__.vals_r("w")[(1 - 1)];
+      stan::io::read_from_context(w, context__, "w");
       out__.write(w);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -32719,39 +31990,15 @@ class unenforce_initialize_omni_model final : public model_base_crtp<unenforce_i
       int pos__ = std::numeric_limits<int>::min();
       Eigen::Matrix<local_scalar_t__,-1,1> y =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__);
-      {
-        std::vector<local_scalar_t__> y_flat__;
-        current_statement__ = 1;
-        y_flat__ = context__.vals_r("y");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          stan::model::assign(y, y_flat__[(pos__ - 1)],
-            "assigning variable y", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 1;
+      stan::io::read_from_context(y, context__, "y");
       out__.write(y);
       std::vector<std::vector<std::vector<local_scalar_t__>>> arr =
         std::vector<std::vector<std::vector<local_scalar_t__>>>(3,
           std::vector<std::vector<local_scalar_t__>>(4,
             std::vector<local_scalar_t__>(5, DUMMY_VAR__)));
-      {
-        std::vector<local_scalar_t__> arr_flat__;
-        current_statement__ = 2;
-        arr_flat__ = context__.vals_r("arr");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
-            for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
-              stan::model::assign(arr, arr_flat__[(pos__ - 1)],
-                "assigning variable arr", stan::model::index_uni(sym3__),
-                stan::model::index_uni(sym2__),
-                stan::model::index_uni(sym1__));
-              pos__ = (pos__ + 1);
-            }
-          }
-        }
-      }
+      current_statement__ = 2;
+      stan::io::read_from_context(arr, context__, "arr");
       out__.write(arr);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -33198,9 +32445,9 @@ class unenforce_initialize_should_fail_model final : public model_base_crtp<unen
       current_statement__ = 1;
       context__.validate_dims("parameter initialization", "param", "double",
         std::vector<size_t>{});
-      local_scalar_t__ param;
+      local_scalar_t__ param = DUMMY_VAR__;
       current_statement__ = 1;
-      param = context__.vals_r("param")[(1 - 1)];
+      stan::io::read_from_context(param, context__, "param");
       out__.write(param);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -33642,9 +32889,9 @@ class unenforce_initialize_model final : public model_base_crtp<unenforce_initia
       current_statement__ = 1;
       context__.validate_dims("parameter initialization", "y", "double",
         std::vector<size_t>{});
-      local_scalar_t__ y;
+      local_scalar_t__ y = DUMMY_VAR__;
       current_statement__ = 1;
-      y = context__.vals_r("y")[(1 - 1)];
+      stan::io::read_from_context(y, context__, "y");
       out__.write(y);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -34298,15 +33545,17 @@ class vectorize_loops_model final : public model_base_crtp<vectorize_loops_model
       current_statement__ = 51;
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
+      N = std::numeric_limits<int>::min();
       current_statement__ = 51;
-      N = context__.vals_i("N")[(1 - 1)];
+      stan::io::read_from_context(N, context__, "N");
       current_statement__ = 51;
       stan::math::check_greater_or_equal(function__, "N", N, 0);
       current_statement__ = 52;
       context__.validate_dims("data initialization", "J", "int",
         std::vector<size_t>{});
+      J = std::numeric_limits<int>::min();
       current_statement__ = 52;
-      J = context__.vals_i("J")[(1 - 1)];
+      stan::io::read_from_context(J, context__, "J");
       current_statement__ = 52;
       stan::math::check_greater_or_equal(function__, "J", J, 1);
       current_statement__ = 53;
@@ -34317,17 +33566,8 @@ class vectorize_loops_model final : public model_base_crtp<vectorize_loops_model
       x_data__ = Eigen::Matrix<double,-1,1>::Constant(N,
                    std::numeric_limits<double>::quiet_NaN());
       new (&x) Eigen::Map<Eigen::Matrix<double,-1,1>>(x_data__.data(), N);
-      {
-        std::vector<local_scalar_t__> x_flat__;
-        current_statement__ = 54;
-        x_flat__ = context__.vals_r("x");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          stan::model::assign(x, x_flat__[(pos__ - 1)],
-            "assigning variable x", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 54;
+      stan::io::read_from_context(x, context__, "x");
       current_statement__ = 55;
       stan::math::validate_non_negative_index("y", "N", N);
       current_statement__ = 56;
@@ -34336,17 +33576,8 @@ class vectorize_loops_model final : public model_base_crtp<vectorize_loops_model
       y_data__ = Eigen::Matrix<double,-1,1>::Constant(N,
                    std::numeric_limits<double>::quiet_NaN());
       new (&y) Eigen::Map<Eigen::Matrix<double,-1,1>>(y_data__.data(), N);
-      {
-        std::vector<local_scalar_t__> y_flat__;
-        current_statement__ = 56;
-        y_flat__ = context__.vals_r("y");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          stan::model::assign(y, y_flat__[(pos__ - 1)],
-            "assigning variable y", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 56;
+      stan::io::read_from_context(y, context__, "y");
       current_statement__ = 57;
       stan::math::validate_non_negative_index("z", "N", N);
       current_statement__ = 58;
@@ -34354,7 +33585,7 @@ class vectorize_loops_model final : public model_base_crtp<vectorize_loops_model
         std::vector<size_t>{static_cast<size_t>(N)});
       z = std::vector<int>(N, std::numeric_limits<int>::min());
       current_statement__ = 58;
-      z = context__.vals_i("z");
+      stan::io::read_from_context(z, context__, "z");
       current_statement__ = 58;
       stan::math::check_greater_or_equal(function__, "z", z, 0);
       current_statement__ = 58;
@@ -34366,7 +33597,7 @@ class vectorize_loops_model final : public model_base_crtp<vectorize_loops_model
         std::vector<size_t>{static_cast<size_t>(N)});
       county = std::vector<int>(N, std::numeric_limits<int>::min());
       current_statement__ = 60;
-      county = context__.vals_i("county");
+      stan::io::read_from_context(county, context__, "county");
       current_statement__ = 60;
       stan::math::check_greater_or_equal(function__, "county", county, 1);
       current_statement__ = 60;
@@ -34895,45 +34126,27 @@ class vectorize_loops_model final : public model_base_crtp<vectorize_loops_model
         std::vector<size_t>{static_cast<size_t>(J)});
       int pos__;
       pos__ = 1;
-      local_scalar_t__ alpha;
+      local_scalar_t__ alpha = DUMMY_VAR__;
       current_statement__ = 1;
-      alpha = context__.vals_r("alpha")[(1 - 1)];
+      stan::io::read_from_context(alpha, context__, "alpha");
       out__.write(alpha);
-      local_scalar_t__ beta;
+      local_scalar_t__ beta = DUMMY_VAR__;
       current_statement__ = 2;
-      beta = context__.vals_r("beta")[(1 - 1)];
+      stan::io::read_from_context(beta, context__, "beta");
       out__.write(beta);
-      local_scalar_t__ sigma;
+      local_scalar_t__ sigma = DUMMY_VAR__;
       current_statement__ = 3;
-      sigma = context__.vals_r("sigma")[(1 - 1)];
+      stan::io::read_from_context(sigma, context__, "sigma");
       out__.write_free_lb(0, sigma);
       Eigen::Matrix<local_scalar_t__,-1,1> eta =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-      {
-        std::vector<local_scalar_t__> eta_flat__;
-        current_statement__ = 4;
-        eta_flat__ = context__.vals_r("eta");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          stan::model::assign(eta, eta_flat__[(pos__ - 1)],
-            "assigning variable eta", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 4;
+      stan::io::read_from_context(eta, context__, "eta");
       out__.write(eta);
       Eigen::Matrix<local_scalar_t__,-1,1> a =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(J, DUMMY_VAR__);
-      {
-        std::vector<local_scalar_t__> a_flat__;
-        current_statement__ = 5;
-        a_flat__ = context__.vals_r("a");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= J; ++sym1__) {
-          stan::model::assign(a, a_flat__[(pos__ - 1)],
-            "assigning variable a", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 5;
+      stan::io::read_from_context(a, context__, "a");
       out__.write(a);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);

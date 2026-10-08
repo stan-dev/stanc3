@@ -69,7 +69,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
         std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
       current_statement__ = 21;
-      N = context__.vals_i("N")[(1 - 1)];
+      stan::io::read_from_context(N, context__, "N");
       current_statement__ = 21;
       stan::math::check_greater_or_equal(function__, "N", N, 1);
       current_statement__ = 22;
@@ -79,7 +79,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
         std::vector<size_t>{static_cast<size_t>(N)});
       x = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 23;
-      x = context__.vals_r("x");
+      stan::io::read_from_context(x, context__, "x");
       current_statement__ = 24;
       stan::math::validate_non_negative_index("y", "N", N);
       current_statement__ = 25;
@@ -88,17 +88,8 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       y_data__ = Eigen::Matrix<double,-1,1>::Constant(N,
                    std::numeric_limits<double>::quiet_NaN());
       new (&y) Eigen::Map<Eigen::Matrix<double,-1,1>>(y_data__.data(), N);
-      {
-        std::vector<local_scalar_t__> y_flat__;
-        current_statement__ = 25;
-        y_flat__ = context__.vals_r("y");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          stan::model::assign(y, y_flat__[(pos__ - 1)],
-            "assigning variable y", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
+      current_statement__ = 25;
+      stan::io::read_from_context(y, context__, "y");
       current_statement__ = 26;
       sum_y = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 28;
@@ -448,15 +439,15 @@ class simple_function_model final : public model_base_crtp<simple_function_model
         std::vector<size_t>{});
       local_scalar_t__ rho = DUMMY_VAR__;
       current_statement__ = 1;
-      rho = context__.vals_r("rho")[(1 - 1)];
+      stan::io::read_from_context(rho, context__, "rho");
       out__.write_free_lb(0, rho);
       local_scalar_t__ alpha = DUMMY_VAR__;
       current_statement__ = 2;
-      alpha = context__.vals_r("alpha")[(1 - 1)];
+      stan::io::read_from_context(alpha, context__, "alpha");
       out__.write_free_lb(0, alpha);
       local_scalar_t__ sigma = DUMMY_VAR__;
       current_statement__ = 3;
-      sigma = context__.vals_r("sigma")[(1 - 1)];
+      stan::io::read_from_context(sigma, context__, "sigma");
       out__.write_free_lb(0, sigma);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);

@@ -268,61 +268,6 @@ module Helpers = struct
             aux accu stmt_pattern in
     aux init stmt
 
-  (** [for_scalar unsizedtype...] generates a For statement that loops over the
-      scalars in the underlying [unsizedtype].
-
-      We can call [bodyfn] directly on scalars, make a direct For loop around
-      Eigen types, or for Arrays we call mk_for_iteratee but inserting a
-      recursive call into the [bodyfn] that will operate on the nested type. In
-      this way we recursively create for loops that loop over the outermost
-      layers first. *)
-  let rec for_scalar st bodyfn var smeta =
-    match st with
-    | SizedType.SInt | SReal | SComplex -> bodyfn st var
-    | SVector (_, d)
-     |SRowVector (_, d)
-     |SComplexVector d
-     |SComplexRowVector d ->
-        mk_for_iteratee d (bodyfn st) var smeta
-    | SMatrix (mem_pattern, d1, d2) ->
-        mk_for_iteratee d1
-          (fun e -> for_scalar (SRowVector (mem_pattern, d2)) bodyfn e smeta)
-          var smeta
-    | SComplexMatrix (d1, d2) ->
-        mk_for_iteratee d1
-          (fun e -> for_scalar (SComplexRowVector d2) bodyfn e smeta)
-          var smeta
-    | SArray (t, d) ->
-        mk_for_iteratee d (fun e -> for_scalar t bodyfn e smeta) var smeta
-    | STuple _ -> bodyfn st var
-
-  (** Exactly like for_scalar, but iterating through array dimensions in the
-      inverted order.*)
-  let for_scalar_inv st bodyfn (var : Expr.Typed.t) smeta =
-    let var = {var with pattern= Indexed (var, [])} in
-    let invert_index_order (Expr.{pattern; _} as e) =
-      match pattern with
-      | Indexed (obj, []) -> obj
-      | Indexed (obj, idxs) -> {e with pattern= Indexed (obj, List.rev idxs)}
-      | _ -> e in
-    let rec go st bodyfn var smeta =
-      match st with
-      | SizedType.SArray (t, d) ->
-          let bodyfn' _ var = mk_for_iteratee d (bodyfn st) var smeta in
-          go t bodyfn' var smeta
-      | SMatrix (mem_pattern, d1, d2) ->
-          let bodyfn' _ var = mk_for_iteratee d1 (bodyfn st) var smeta in
-          go (SRowVector (mem_pattern, d2)) bodyfn' var smeta
-      | SComplexMatrix (d1, d2) ->
-          let bodyfn' _ var = mk_for_iteratee d1 (bodyfn st) var smeta in
-          go (SComplexRowVector d2) bodyfn' var smeta
-      | _ -> for_scalar st bodyfn var smeta in
-    go st (fun st var -> bodyfn st (invert_index_order var)) var smeta
-
-  let assign_indexed decl_type (lval, idxs) meta varfn var =
-    let indices = Expr.Helpers.collect_indices var in
-    {meta; pattern= Assignment ((lval, idxs @ indices), decl_type, varfn var)}
-
   let lvariable v = (Pattern.LVariable v, [])
 
   let rec get_lhs_name (lval : 'a Pattern.lvalue) =

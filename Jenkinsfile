@@ -120,7 +120,7 @@ catchError {
             def local = """\
               CXX=$CXX
               O=0
-              CXXFLAGS+=-Wall
+              CXXFLAGS+=-Wall -Wp,-D_GLIBCXX_ASSERTIONS
             """
             if (stancFlags) local += """
               STANCFLAGS=$stancFlags
@@ -138,6 +138,13 @@ catchError {
           """
         }
         def endToEnd = { optimize ->
+
+          if (!optimize) {
+            sh '''
+               ./runPerformanceTests.py -j$PARALLEL --check-golds --runj $PARALLEL --num-samples=10 compiler-stress-models/
+            '''
+          }
+
           sh '''
               git show HEAD --stat
               echo "example-models/regression_tests/mother.stan" > all.tests
