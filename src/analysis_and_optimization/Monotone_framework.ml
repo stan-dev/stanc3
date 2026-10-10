@@ -274,7 +274,8 @@ let powerset_lattice_empty_initial (type v) (module T : TYPE with type vals = v)
       let initial = Set.Poly.empty
     end)
 
-(** The specific powerset lattice we use for reaching definitions analysis *)
+(** Reaching definitions use union at joins and [None] for external definitions.
+*)
 let reaching_definitions_lattice (type v l)
     (module Variables : INITIALTYPE with type vals = v)
     (module Labels : TYPE with type vals = l) =
@@ -437,13 +438,15 @@ let copy_propagation_transfer (globals : string Set.Poly.t)
     with type labels = int
      and type properties = Expr.Typed.t String.Map.t option)
 
-(** A helper function for building transfer functions from gen and kill sets *)
 let transfer_gen_kill p gen kill = Set.Poly.union gen (Set.Poly.diff p kill)
 
-(* TODO: from here *)
+(* Assignment tracking supplies both possible definitions and variables known to
+   be assigned. Reaching definitions union candidates at joins; initialized
+   variables intersect assigned-name sets to require assignments on every
+   path. *)
 
-(** Whether an expression of [s], not counting nested statements, calls a
-    function that adds to [target], such as [x = foo_lp(y)]. *)
+(* Expression calls can write target even in an assignment such as x =
+   foo_lp(y). *)
 let exprs_increment_target (s : (Expr.Typed.t, 'a) Stmt.Pattern.t) =
   Stmt.Pattern.fold
     (fun increments_earlier expr ->
@@ -456,7 +459,7 @@ let exprs_increment_target (s : (Expr.Typed.t, 'a) Stmt.Pattern.t) =
            expr)
     Fun.const false s
 
-(** Calculate the set of variables that a statement can assign to *)
+(** Names assigned by the statement itself, including accumulator updates. *)
 let assigned_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Pattern.t) =
   let assigned =
     match s with
@@ -476,17 +479,18 @@ let assigned_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Pattern.t) =
         Set.Poly.empty in
   if exprs_increment_target s then Set.Poly.add "target" assigned else assigned
 
-(** Calculate the set of variables that a statement can declare *)
 let declared_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Pattern.t) =
   match s with
   | Decl {decl_id= x; _} -> Set.Poly.singleton x
   | _ -> Set.Poly.empty
 
-(** Calculate the set of variables that a statement can assign to or declare *)
+(* An uninitialized declaration is a reaching-definition candidate, but does not
+   initialize the variable. *)
 let assigned_or_declared_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Pattern.t) =
   Set.Poly.union (assigned_vars_stmt s) (declared_vars_stmt s)
 
-(** The transfer function for a reaching definitions analysis *)
+(** Generates definitions for assigned or declared names. Whole-variable writes
+    replace earlier definitions; indexed and tuple-field writes retain them. *)
 let reaching_definitions_transfer
     (flowgraph_to_mir : Stmt.Located.Non_recursive.t LabelMap.t) =
   (module struct
@@ -523,7 +527,8 @@ let reaching_definitions_transfer
     with type labels = int
      and type properties = (string * int option) Set.Poly.t)
 
-(** The transfer function for an initialized variables analysis *)
+(** Adds assigned names. Intersection at joins requires an assignment on every
+    path. *)
 let initialized_vars_transfer
     (flowgraph_to_mir : Stmt.Located.Non_recursive.t LabelMap.t) =
   (module struct
@@ -932,6 +937,8 @@ let propagation_mfp (prog : Program.Typed.t)
   in
   Mf.mfp ()
 
+(** Computes reaching definitions, seeding external definitions from program
+    input and output names. *)
 let reaching_definitions_mfp (mir : Program.Typed.t)
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
       with type labels = int)
@@ -958,6 +965,8 @@ let reaching_definitions_mfp (mir : Program.Typed.t)
   in
   Mf.mfp ()
 
+(** Computes names assigned on every path, starting with no assigned names.
+    Reporting handles values supplied by the program context. *)
 let initialized_vars_mfp (total : string Set.Poly.t)
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
       with type labels = int)

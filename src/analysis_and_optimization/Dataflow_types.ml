@@ -1,17 +1,14 @@
 open Std
 open Std.Sexp_conv
 
-(***********************************)
-(* Basic datatypes                 *)
-(***********************************)
-
-(** A label is a unique identifier for a node in the dataflow/dependency graph,
-    and often corresponds to one node in the Mir. *)
+(** Statement identifier, unique within a map or graph. Labels from separate
+    maps are not interchangeable. *)
 type label = int [@@deriving sexp_of]
 
-(** A 'reaching definition' (or reaching_defn or RD) statement (v, l) says that
-    the variable named v could have been affected at the label l. *)
-type reaching_defn = string * label [@@deriving sexp_of]
+(** Candidate value source by variable name: [Some label] identifies a
+    statement; [None] identifies an external definition. Element checks use
+    access records. *)
+type reaching_defn = string * label option [@@deriving sexp_of]
 
 module LabelMap = struct
   include Int.Map

@@ -3,7 +3,9 @@ open Std
 open Std.Sexp_conv
 open Analysis_and_optimization.Dataflow_types
 
-(** Both maps as association lists, the same shape the derived sexp had. *)
+(** Prints both adjacency maps as association lists for expected-output checks.
+    A factor [F] at label [2] reading [mu] appears as a forward entry from
+    [(F, 2)] to [{"mu"}] and a reverse entry from ["mu"] to [{(F, 2)}]. *)
 let print_factor_graph (graph : factor_graph) =
   print_s
     [%sexp

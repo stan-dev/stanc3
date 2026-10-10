@@ -1,7 +1,7 @@
 // Control flow that depends on one element of a container must not be
 // reported as depending on a parameter written to a different element.
 // Reaching definitions are keyed by name; the dependency graph consults the
-// subscripts (design-docs/active/vectorize-loop-fission.md section 7.7).
+// subscripts.
 parameters {
   real a;
 }
