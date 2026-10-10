@@ -18,8 +18,6 @@ module FactorMap = Map.Make (struct
   let compare = Stdlib.compare
 end)
 
-(** Each factor with the variables the factor reads, and each variable name with
-    the factors reading the variable. *)
 type factor_graph =
   { factor_map: string Set.Poly.t FactorMap.t
   ; var_map: (factor * label) Set.Poly.t String.Map.t }
@@ -55,12 +53,15 @@ let factor_rhs (term : factor) : string Set.Poly.t =
   | LPFunction (_, es) -> Set.Poly.of_list (List.map es ~f:var_name_of_expr_exn)
 
 let factor_var_dependencies statement_map blockers (label, factor) =
-  let rhs = factor_rhs factor in
-  let dep_labels = node_vars_dependencies statement_map ~blockers rhs label in
-  Set.Poly.union (read_variables_at statement_map dep_labels) rhs
+  let term_read_names = factor_rhs factor in
+  let dependency_labels =
+    node_vars_dependencies statement_map ~blockers term_read_names label in
+  let dependency_read_names =
+    read_variables_at statement_map dependency_labels in
+  (* A direct input such as mu needs no further traversal. Preserve the term's
+     own read even when the returned dependency-label set is empty. *)
+  Set.Poly.union dependency_read_names term_read_names
 
-(** Helper function to generate the factor graph adjacency map representation
-    from a factor-adjacency list *)
 let build_adjacency_maps (factors : (label * factor * string Set.Poly.t) list) :
     factor_graph =
   let factor_map =
@@ -99,7 +100,6 @@ let remove_touching vars fg =
   let without_facs = Set.Poly.fold ~f:fg_remove_fac ~init:without_vars facs in
   without_facs
 
-(** Build a factor graph from prog.log_prob using dependency analysis *)
 let prog_factor_graph ?(exclude_data_facs : bool = false) prog : factor_graph =
   let statement_map = log_prob_build_dep_info_map prog in
   let factors = extract_factors statement_map 1 in
@@ -116,8 +116,6 @@ let prog_factor_graph ?(exclude_data_facs : bool = false) prog : factor_graph =
   let fg = build_adjacency_maps factor_list in
   if exclude_data_facs then remove_touching data_vars fg else fg
 
-(** BFS on 'fg' with initial frontier 'starts' and terminating at any element of
-    'goals' *)
 let fg_reaches (starts : string Set.Poly.t) (goals : string Set.Poly.t)
     (fg : factor_graph) : bool =
   let vneighbors v =
@@ -144,15 +142,9 @@ let fg_factor_reaches (start : factor * label) (goals : string Set.Poly.t)
 
 let fg_factor_is_prior (var : string) (fac : factor * label)
     (data : string Set.Poly.t) (fg : factor_graph) : bool =
-  (* build G'=G\V *)
   let fg' = fg_remove_var var fg in
-  (* Check if the data is now unreachable *)
   not (fg_factor_reaches fac data fg')
 
-(** Priors of V are neighbors of V which have no connection to any data except
-    though V So for graph G and each parameter V: G' = G\V; For each neighbor F:
-    Use BFS starting from F in G' and search for any data, if there is none, F
-    is a prior *)
 let fg_var_priors (var : string) (data : string Set.Poly.t) (fg : factor_graph)
     : (factor * label) Set.Poly.t option =
   match String.Map.find_opt var fg.var_map with
@@ -170,7 +162,6 @@ let list_priors ?factor_graph:(fg_opt = None) (mir : Program.Typed.t) :
   let data = data_set mir in
   let likely_sizes = Set.Poly.diff data (data_set ~exclude_ints:true mir) in
   let fg' = Set.Poly.fold ~init:fg ~f:fg_remove_var likely_sizes in
-  (* for each param, apply fg_var_priors and collect results in a map *)
   Set.Poly.fold params ~init:String.Map.empty ~f:(fun (p, loc) m ->
       String.Map.add m ~key:p ~data:(fg_var_priors p data fg', loc))
 
@@ -180,8 +171,6 @@ let string_of_factor (factor : factor) : string =
   | Reject -> "reject"
   | LPFunction (s, _) -> s
 
-(** Utility to print a factor graph to the Graphviz dot language for
-    visualization *)
 let factor_graph_to_dot (fg : factor_graph) : string =
   let factors = FactorMap.to_list fg.factor_map in
   let names =

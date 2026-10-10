@@ -15,18 +15,15 @@ and idx_any pred (i : Expr.Typed.t Index.t) =
 and accum_any pred b e = b || expr_any pred e
 
 let increments_target (kind : 'e Fun_kind.t) : bool =
-  (* the only StanLib FnTarget function is target(), which reads target *)
   match kind with
   | UserDefined (_, (FnTarget | FnJacobian)) | StanLib (_, FnJacobian) -> true
   | UserDefined _ | StanLib _ | Operator _ | CompilerInternal _ -> false
 
 let can_side_effect_top_expr (e : Expr.Typed.t) =
-  (* target() has no side effects but can return a different result every
-     time *)
   match e.pattern with
-  | FunApp (kind, _) when increments_target kind -> true
   | FunApp (CompilerInternal internal_fn, _) ->
       Internal_fun.can_side_effect internal_fn
+  | FunApp (kind, _) when increments_target kind -> true
   | _ -> false
 
 let cannot_duplicate_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
@@ -202,11 +199,9 @@ let statement_stmt_loc_of_statement_stmt_loc_num flowgraph_to_mir pattern =
      Stmt.Located.{Non_recursive.pattern; meta= Meta.empty})
     .pattern
 
-(** Forgetful function from numbered to unnumbered programs *)
 let unnumbered_prog_of_numbered_prog flowgraph_to_mir p =
   Program.map (stmt_loc_of_stmt_loc_num flowgraph_to_mir) p Fun.id
 
-(** See interface file *)
 let fwd_traverse_statement stmt ~init ~f =
   Stmt.Pattern.(
     match stmt with
@@ -257,7 +252,6 @@ let fwd_traverse_statement stmt ~init ~f =
     | Skip as s -> (init, s)
     | Decl _ as s -> (init, s))
 
-(** See interface file *)
 let var_name_of_expr_exn Expr.{pattern; _} =
   match pattern with
   | Var s -> s
@@ -265,7 +259,6 @@ let var_name_of_expr_exn Expr.{pattern; _} =
       Common.ICE.internal_error "Non-var expression found, but var expected"
       [@coverage off]
 
-(** See interface file *)
 let rec expr_var_set Expr.{pattern; meta} =
   let union_recur exprs = Set.Poly.union_list (List.map exprs ~f:expr_var_set) in
   match pattern with
@@ -310,7 +303,6 @@ let stmt_rhs stmt =
 let stmt_rhs_var_set stmt = Set.Poly.union_map (stmt_rhs stmt) ~f:expr_var_set
 let stmt_rhs_names_set s = Set.Poly.map ~f:fst (stmt_rhs_var_set s)
 
-(** See interface file *)
 let rec summation_terms (Expr.{pattern; _} as rhs) =
   match pattern with
   | FunApp (Operator Plus, [e1; e2]) ->
@@ -495,8 +487,6 @@ let rec update_expr_ad_levels ?(keep_promotions = false) autodiffable_variables
 and update_idx_ad_levels autodiffable_variables =
   Index.map (update_expr_ad_levels autodiffable_variables)
 
-(** [cleanup_stmts statements] will do a few simple transformations like
-    removing Skips, collapsing empty blocks and SLists, etc. *)
 let cleanup_empty_stmts stmts =
   let open Stmt in
   let open Stmt.Pattern in
@@ -520,15 +510,6 @@ let cleanup_empty_stmts stmts =
   |> List.concat_map ~f:flatten_block
   |> List.concat_map ~f:ellide_skip
 
-(** Convert a Type.Unsized to a Type.Sized. This function is useful in the
-    inlining scheme as the Mem_patterns optimization cannot work with decl types
-    for unsized types. (Steve: tmk the inline optimization is the only place we
-    create Decl's with unsized types.)
-
-    Note that there is no true mapping from Sized types to Unsized types. Any
-    sizes are set to 0 and it is assumed that the intent of Types.Unsized with
-    inner UFun types is to size the return type of the UFun. Any Decl that uses
-    this type should have initialize set to false. *)
 let unsafe_unsized_to_sized_type (rt : Expr.Typed.t Type.t) =
   match rt with
   | Type.Sized ret_type -> ret_type

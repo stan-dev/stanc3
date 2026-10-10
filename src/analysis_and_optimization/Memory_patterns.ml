@@ -25,7 +25,8 @@ let concat_set_str (set : string Set.Poly.t) =
     ~f:(fun elem acc -> if acc = "" then acc ^ elem else acc ^ ", " ^ elem)
     ~init:"" set
 
-(** Return a Var expression of the name for each type containing an eigen matrix
+(** Collects [(name, metadata)] pairs through expressions with Eigen result
+    types. Scalar selections, index inputs and conditional guards are excluded.
 *)
 let rec matrix_set Expr.{pattern; meta= Expr.Typed.Meta.{type_; _} as meta} =
   let union_recur exprs = Set.Poly.union_list (List.map exprs ~f:matrix_set) in
@@ -40,8 +41,7 @@ let rec matrix_set Expr.{pattern; meta= Expr.Typed.Meta.{type_; _} as meta} =
     | EAnd (expr1, expr2) | EOr (expr1, expr2) -> union_recur [expr1; expr2]
   else Set.Poly.empty
 
-(** Return a set of all types containing autodiffable Eigen matrices in an
-    expression. *)
+(** Names of autodiffable Eigen variables collected by {!matrix_set}. *)
 let query_var_eigen_names (expr : Expr.Typed.t) : string Set.Poly.t =
   let get_expr_eigen_names (s, Expr.Typed.Meta.{adlevel; type_; _}) =
     if
