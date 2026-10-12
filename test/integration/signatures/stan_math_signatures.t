@@ -24293,3 +24293,4 @@ Display all Stan math signatures exposed in the language
   zeros_int_array(int) => array[] int
   zeros_row_vector(int) => row_vector
   zeros_vector(int) => vector
+  zip_index(matrix, array[] int, array[] int) => vector
