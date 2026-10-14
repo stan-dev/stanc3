@@ -2000,6 +2000,12 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"basic_p\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"array\",\"length\":" + std::to_string(10) + ",\"element_type\":{\"name\":\"real\"}},{\"name\":\"real\"}]},\"block\":\"parameters\"},{\"name\":\"tuple_tuple_p\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"vector\",\"length\":" + std::to_string(2) + "}]}]},\"block\":\"parameters\"},{\"name\":\"arr_tuple_p\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"3\",\"element_types\":[{\"name\":\"complex\"},{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"real\"}},{\"name\":\"vector\",\"length\":" + std::to_string(3) + "}]}},\"block\":\"parameters\"},{\"name\":\"tuple_arr_tuple_p\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"3\",\"element_types\":[{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"real\"}},{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"real\"}}]}}]},\"block\":\"parameters\"},{\"name\":\"arr_tuple_tuple_p\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"3\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"real\"},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"complex\"},{\"name\":\"vector\",\"length\":" + std::to_string(4) + "}]}]}]}},\"block\":\"parameters\"},{\"name\":\"arr_tuple_arr_tuple_p\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"vector\",\"length\":" + std::to_string(5) + "}]}}]}},\"block\":\"parameters\"},{\"name\":\"very_deep_p\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(5) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"complex\"},{\"name\":\"matrix\",\"rows\":" + std::to_string(6) + ",\"cols\":" + std::to_string(7) + "}]}}]}}]}},\"block\":\"parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -2389,6 +2395,19 @@ class basic_unpacking_model final : public model_base_crtp<basic_unpacking_model
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"x\"";
+    json_stream << ":";
+    json_stream << std::to_string(x);
+    json_stream << ",\n";
+    json_stream << "\"y\"";
+    json_stream << ":";
+    json_stream << std::to_string(y);
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -2759,6 +2778,12 @@ class infer_tuple_ad_model final : public model_base_crtp<infer_tuple_ad_model> 
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"x\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -3177,6 +3202,12 @@ class nested_unpacking_model final : public model_base_crtp<nested_unpacking_mod
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -3496,6 +3527,12 @@ class onepl_expr_model final : public model_base_crtp<onepl_expr_model> {
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -3834,6 +3871,12 @@ class onepl_type_model final : public model_base_crtp<onepl_type_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -4147,6 +4190,12 @@ class onepl_type2_model final : public model_base_crtp<onepl_type2_model> {
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -4588,6 +4637,51 @@ class overloading_model final : public model_base_crtp<overloading_model> {
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"x3\"";
+    json_stream << ":";
+    json_stream << "{";
+    json_stream << "\"1\"";
+    json_stream << ":";
+    json_stream << std::to_string(std::get<0>(x3));
+    json_stream << ",\n";
+    json_stream << "\"2\"";
+    json_stream << ":";
+    json_stream << std::to_string(std::get<1>(x3));
+    json_stream << ",\n";
+    json_stream << "\"3\"";
+    json_stream << ":";
+    json_stream << std::to_string(std::get<2>(x3));
+    json_stream << "}";
+    json_stream << ",\n";
+    json_stream << "\"x2\"";
+    json_stream << ":";
+    json_stream << "{";
+    json_stream << "\"1\"";
+    json_stream << ":";
+    json_stream << std::to_string(std::get<0>(x2));
+    json_stream << ",\n";
+    json_stream << "\"2\"";
+    json_stream << ":";
+    json_stream << std::to_string(std::get<1>(x2));
+    json_stream << "}";
+    json_stream << ",\n";
+    json_stream << "\"y3\"";
+    json_stream << ":";
+    json_stream << std::to_string(y3);
+    json_stream << ",\n";
+    json_stream << "\"y2\"";
+    json_stream << ":";
+    json_stream << std::to_string(y2);
+    json_stream << ",\n";
+    json_stream << "\"y4\"";
+    json_stream << ":";
+    json_stream << std::to_string(y4);
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -5042,6 +5136,12 @@ class qr_unpack_model final : public model_base_crtp<qr_unpack_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"A\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -5412,6 +5512,12 @@ class reconstruct_model final : public model_base_crtp<reconstruct_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -5731,6 +5837,23 @@ class simple_model final : public model_base_crtp<simple_model> {
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"x\"";
+    json_stream << ":";
+    json_stream << "{";
+    json_stream << "\"1\"";
+    json_stream << ":";
+    json_stream << std::to_string(std::get<0>(x));
+    json_stream << ",\n";
+    json_stream << "\"2\"";
+    json_stream << ":";
+    json_stream << std::to_string(std::get<1>(x));
+    json_stream << "}";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -6056,6 +6179,30 @@ class simple2_model final : public model_base_crtp<simple2_model> {
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"x\"";
+    json_stream << ":";
+    json_stream << "{";
+    json_stream << "\"1\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(std::get<0>(x)[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"2\"";
+    json_stream << ":";
+    json_stream << std::to_string(std::get<1>(x));
+    json_stream << "}";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -6387,6 +6534,39 @@ class simple3_model final : public model_base_crtp<simple3_model> {
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"x\"";
+    json_stream << ":";
+    json_stream << "{";
+    json_stream << "\"1\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "[";
+      for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+        if (sym2__ > 1) {
+          json_stream << ",";
+        }
+        json_stream <<
+                      std::to_string(std::get<0>(x)[(sym1__ - 1)][(sym2__ -
+                        1)]);
+      }
+      json_stream << "]";
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"2\"";
+    json_stream << ":";
+    json_stream << std::to_string(std::get<1>(x));
+    json_stream << "}";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -6767,6 +6947,12 @@ class tuple_constraints_data_model final : public model_base_crtp<tuple_constrai
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -7755,6 +7941,12 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"ps\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"real\"}]},\"block\":\"parameters\"},{\"name\":\"ps2\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"vector\",\"length\":" + std::to_string((4 -1)) + "}]}}},\"block\":\"parameters\"},{\"name\":\"t\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"complicated\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(complicated_brack_dot2_1dim__) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"3\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"vector\",\"length\":" + std::to_string((5 -1)) + "},{\"name\":\"vector\",\"length\":" + std::to_string(((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) *4))) + "}]}}]}},\"block\":\"parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -8410,6 +8602,166 @@ class tuple_dataonly_model final : public model_base_crtp<tuple_dataonly_model> 
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"d2\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "{";
+      json_stream << "\"1\"";
+      json_stream << ":";
+      json_stream << std::to_string(std::get<0>(d2[(sym1__ - 1)]));
+      json_stream << ",\n";
+      json_stream << "\"2\"";
+      json_stream << ":";
+      json_stream << std::to_string(std::get<1>(d2[(sym1__ - 1)]));
+      json_stream << "}";
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"m\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= 1; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "[";
+      for (int sym2__ = 1; sym2__ <= 1; ++sym2__) {
+        if (sym2__ > 1) {
+          json_stream << ",";
+        }
+        json_stream <<
+                      std::to_string(
+                        stan::model::rvalue(m, "m",
+                          stan::model::index_uni(sym1__),
+                          stan::model::index_uni(sym2__)));
+      }
+      json_stream << "]";
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"m2\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= 1; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "[";
+      for (int sym2__ = 1; sym2__ <= 1; ++sym2__) {
+        if (sym2__ > 1) {
+          json_stream << ",";
+        }
+        json_stream << "[";
+        for (int sym3__ = 1; sym3__ <= 1; ++sym3__) {
+          if (sym3__ > 1) {
+            json_stream << ",";
+          }
+          json_stream <<
+                        std::to_string(
+                          stan::model::rvalue(m2, "m2",
+                            stan::model::index_uni(sym1__),
+                            stan::model::index_uni(sym2__),
+                            stan::model::index_uni(sym3__)));
+        }
+        json_stream << "]";
+      }
+      json_stream << "]";
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"x\"";
+    json_stream << ":";
+    json_stream << "{";
+    json_stream << "\"1\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= 1; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "[";
+      for (int sym2__ = 1; sym2__ <= 1; ++sym2__) {
+        if (sym2__ > 1) {
+          json_stream << ",";
+        }
+        json_stream << "[";
+        for (int sym3__ = 1; sym3__ <= 1; ++sym3__) {
+          if (sym3__ > 1) {
+            json_stream << ",";
+          }
+          json_stream <<
+                        std::to_string(
+                          stan::model::rvalue(std::get<0>(x), "x.1",
+                            stan::model::index_uni(sym1__),
+                            stan::model::index_uni(sym2__),
+                            stan::model::index_uni(sym3__)));
+        }
+        json_stream << "]";
+      }
+      json_stream << "]";
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"2\"";
+    json_stream << ":";
+    json_stream << std::to_string(std::get<1>(x));
+    json_stream << "}";
+    json_stream << ",\n";
+    json_stream << "\"x2\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= 1; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "{";
+      json_stream << "\"1\"";
+      json_stream << ":";
+      json_stream << "[";
+      for (int sym2__ = 1; sym2__ <= 1; ++sym2__) {
+        if (sym2__ > 1) {
+          json_stream << ",";
+        }
+        json_stream << "[";
+        for (int sym3__ = 1; sym3__ <= 1; ++sym3__) {
+          if (sym3__ > 1) {
+            json_stream << ",";
+          }
+          json_stream << "[";
+          for (int sym4__ = 1; sym4__ <= 1; ++sym4__) {
+            if (sym4__ > 1) {
+              json_stream << ",";
+            }
+            json_stream <<
+                          std::to_string(
+                            stan::model::rvalue(
+                              std::get<0>(x2[(sym1__ - 1)]), "x2[sym1__].1",
+                              stan::model::index_uni(sym2__),
+                              stan::model::index_uni(sym3__),
+                              stan::model::index_uni(sym4__)));
+          }
+          json_stream << "]";
+        }
+        json_stream << "]";
+      }
+      json_stream << "]";
+      json_stream << ",\n";
+      json_stream << "\"2\"";
+      json_stream << ":";
+      json_stream << std::to_string(std::get<1>(x2[(sym1__ - 1)]));
+      json_stream << "}";
+    }
+    json_stream << "]";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -8784,6 +9136,12 @@ class tuple_dataonly2_model final : public model_base_crtp<tuple_dataonly2_model
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -9103,6 +9461,30 @@ class tuple_foreach_model final : public model_base_crtp<tuple_foreach_model> {
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"arr\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= 100; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "{";
+      json_stream << "\"1\"";
+      json_stream << ":";
+      json_stream << std::to_string(std::get<0>(arr[(sym1__ - 1)]));
+      json_stream << ",\n";
+      json_stream << "\"2\"";
+      json_stream << ":";
+      json_stream << std::to_string(std::get<1>(arr[(sym1__ - 1)]));
+      json_stream << "}";
+    }
+    json_stream << "]";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -9534,6 +9916,12 @@ class tuple_full_model final : public model_base_crtp<tuple_full_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"ps\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"real\"}]},\"block\":\"parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -9847,6 +10235,23 @@ class tuple_ix_assign_model final : public model_base_crtp<tuple_ix_assign_model
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"x\"";
+    json_stream << ":";
+    json_stream << "{";
+    json_stream << "\"1\"";
+    json_stream << ":";
+    json_stream << std::to_string(std::get<0>(x));
+    json_stream << ",\n";
+    json_stream << "\"2\"";
+    json_stream << ":";
+    json_stream << std::to_string(std::get<1>(x));
+    json_stream << "}";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -10164,6 +10569,30 @@ class tuple_ix_assign2_model final : public model_base_crtp<tuple_ix_assign2_mod
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"x\"";
+    json_stream << ":";
+    json_stream << "{";
+    json_stream << "\"1\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(std::get<0>(x)[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"2\"";
+    json_stream << ":";
+    json_stream << std::to_string(std::get<1>(x));
+    json_stream << "}";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -10478,6 +10907,30 @@ class tuple_ix_assign3_model final : public model_base_crtp<tuple_ix_assign3_mod
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"x\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "{";
+      json_stream << "\"1\"";
+      json_stream << ":";
+      json_stream << std::to_string(std::get<0>(x[(sym1__ - 1)]));
+      json_stream << ",\n";
+      json_stream << "\"2\"";
+      json_stream << ":";
+      json_stream << std::to_string(std::get<1>(x[(sym1__ - 1)]));
+      json_stream << "}";
+    }
+    json_stream << "]";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -10797,6 +11250,49 @@ class tuple_ix_assign4_model final : public model_base_crtp<tuple_ix_assign4_mod
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"x\"";
+    json_stream << ":";
+    json_stream << "{";
+    json_stream << "\"1\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "{";
+      json_stream << "\"1\"";
+      json_stream << ":";
+      json_stream <<
+                    std::to_string(std::get<0>(std::get<0>(x)[(sym1__ - 1)]));
+      json_stream << ",\n";
+      json_stream << "\"2\"";
+      json_stream << ":";
+      json_stream << "[";
+      for (int sym2__ = 1; sym2__ <= 100; ++sym2__) {
+        if (sym2__ > 1) {
+          json_stream << ",";
+        }
+        json_stream <<
+                      std::to_string(
+                        std::get<1>(std::get<0>(x)[(sym1__ - 1)])[(sym2__ -
+                        1)]);
+      }
+      json_stream << "]";
+      json_stream << "}";
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"2\"";
+    json_stream << ":";
+    json_stream << std::to_string(std::get<1>(x));
+    json_stream << "}";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -11289,6 +11785,12 @@ class tuple_nested_param_model final : public model_base_crtp<tuple_nested_param
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"ps\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"real\"}]},\"block\":\"parameters\"},{\"name\":\"ps2\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "}]}]},\"block\":\"parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -11664,6 +12166,12 @@ class tuple_params_model final : public model_base_crtp<tuple_params_model> {
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"ps\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"real\"}]},\"block\":\"parameters\"}]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -12725,6 +13233,162 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"d2\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"complex\"}},{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"complex\"}}]},\"block\":\"transformed_parameters\"},{\"name\":\"V3\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"vector\",\"length\":" + std::to_string(3) + "},{\"name\":\"real\"}]},\"block\":\"transformed_parameters\"},{\"name\":\"arrs2\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex\"}}]}},\"block\":\"transformed_parameters\"},{\"name\":\"nested2\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"3\",\"element_types\":[{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex\"}}]},{\"name\":\"real\"},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"vector\",\"length\":" + std::to_string(3) + "},{\"name\":\"real\"}]}]},\"block\":\"transformed_parameters\"},{\"name\":\"nested3\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"3\",\"element_types\":[{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex\"}}]},{\"name\":\"real\"},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"vector\",\"length\":" + std::to_string(3) + "},{\"name\":\"real\"}]}]},\"block\":\"transformed_parameters\"},{\"name\":\"y\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"x\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"real\"}]},\"block\":\"generated_quantities\"},{\"name\":\"z\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"complex\"},{\"name\":\"real\"}]},\"block\":\"generated_quantities\"},{\"name\":\"z2\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"complex\"},{\"name\":\"real\"}]},\"block\":\"generated_quantities\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"arrs\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "{";
+      json_stream << "\"1\"";
+      json_stream << ":";
+      json_stream << std::to_string(std::get<0>(arrs[(sym1__ - 1)]));
+      json_stream << ",\n";
+      json_stream << "\"2\"";
+      json_stream << ":";
+      json_stream << "[";
+      for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+        if (sym2__ > 1) {
+          json_stream << ",";
+        }
+        json_stream <<
+                      std::to_string(std::get<1>(arrs[(sym1__ - 1)])[(sym2__
+                        - 1)]);
+      }
+      json_stream << "]";
+      json_stream << "}";
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"nested\"";
+    json_stream << ":";
+    json_stream << "{";
+    json_stream << "\"1\"";
+    json_stream << ":";
+    json_stream << "{";
+    json_stream << "\"1\"";
+    json_stream << ":";
+    json_stream << std::to_string(std::get<0>(std::get<0>(nested)));
+    json_stream << ",\n";
+    json_stream << "\"2\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream <<
+                    std::to_string(std::get<1>(std::get<0>(nested))[(sym1__ -
+                      1)]);
+    }
+    json_stream << "]";
+    json_stream << "}";
+    json_stream << ",\n";
+    json_stream << "\"2\"";
+    json_stream << ":";
+    json_stream << std::to_string(std::get<1>(nested));
+    json_stream << ",\n";
+    json_stream << "\"3\"";
+    json_stream << ":";
+    json_stream << "{";
+    json_stream << "\"1\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream <<
+                    std::to_string(std::get<0>(std::get<2>(nested))[(sym1__ -
+                      1)]);
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"2\"";
+    json_stream << ":";
+    json_stream << std::to_string(std::get<1>(std::get<2>(nested)));
+    json_stream << "}";
+    json_stream << "}";
+    json_stream << ",\n";
+    json_stream << "\"basic\"";
+    json_stream << ":";
+    json_stream << "{";
+    json_stream << "\"1\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(std::get<0>(basic)[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"2\"";
+    json_stream << ":";
+    json_stream << "[";
+    json_stream << std::to_string(stan::math::get_real(std::get<1>(basic)));
+    json_stream << ",";
+    json_stream << std::to_string(stan::math::get_imag(std::get<1>(basic)));
+    json_stream << "]";
+    json_stream << "}";
+    json_stream << ",\n";
+    json_stream << "\"CV\"";
+    json_stream << ":";
+    json_stream << "{";
+    json_stream << "\"1\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "[";
+      json_stream <<
+                    std::to_string(
+                      stan::math::get_real(std::get<0>(CV)[(sym1__ - 1)]));
+      json_stream << ",";
+      json_stream <<
+                    std::to_string(
+                      stan::math::get_imag(std::get<0>(CV)[(sym1__ - 1)]));
+      json_stream << "]";
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"2\"";
+    json_stream << ":";
+    json_stream << std::to_string(std::get<1>(CV));
+    json_stream << "}";
+    json_stream << ",\n";
+    json_stream << "\"V2\"";
+    json_stream << ":";
+    json_stream << "{";
+    json_stream << "\"1\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(std::get<0>(V2)[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"2\"";
+    json_stream << ":";
+    json_stream << std::to_string(std::get<1>(V2));
+    json_stream << "}";
+    json_stream << ",\n";
+    json_stream << "\"t\"";
+    json_stream << ":";
+    json_stream << std::to_string(t);
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -13454,6 +14118,12 @@ class tuple_templating_model final : public model_base_crtp<tuple_templating_mod
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"s\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"}]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -14232,6 +14902,48 @@ class tuple_copying_model final : public model_base_crtp<tuple_copying_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"m1\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(3) + ",\"cols\":" + std::to_string(3) + "},\"block\":\"parameters\"},{\"name\":\"m2\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(3) + ",\"cols\":" + std::to_string(3) + "},\"block\":\"parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"data_tuple\"";
+    json_stream << ":";
+    json_stream << "{";
+    json_stream << "\"1\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "[";
+      for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+        if (sym2__ > 1) {
+          json_stream << ",";
+        }
+        json_stream <<
+                      std::to_string(
+                        stan::model::rvalue(std::get<0>(data_tuple),
+                          "data_tuple.1", stan::model::index_uni(sym1__),
+                          stan::model::index_uni(sym2__)));
+      }
+      json_stream << "]";
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"2\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(std::get<1>(data_tuple)[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << "}";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -14607,6 +15319,12 @@ class tuple_exprs_model final : public model_base_crtp<tuple_exprs_model> {
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"x\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"y\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"z\",\"type\":{\"name\":\"complex\"},\"block\":\"generated_quantities\"},{\"name\":\"foo\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(2) + ",\"cols\":" + std::to_string(4) + "},\"block\":\"generated_quantities\"}]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -15124,6 +15842,15 @@ class tuple_hof_model final : public model_base_crtp<tuple_hof_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"param_y\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"sum2\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"sum1\"";
+    json_stream << ":";
+    json_stream << std::to_string(sum1);
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -15527,6 +16254,12 @@ class tuple_lpdf_model final : public model_base_crtp<tuple_lpdf_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -15882,6 +16615,12 @@ class tuple_lpdf2_model final : public model_base_crtp<tuple_lpdf2_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -16234,6 +16973,12 @@ class tuple_lpmf_model final : public model_base_crtp<tuple_lpmf_model> {
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -16633,6 +17378,12 @@ class tuple_temporary_model final : public model_base_crtp<tuple_temporary_model
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"m\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(1) + ",\"cols\":" + std::to_string(1) + "},\"block\":\"generated_quantities\"},{\"name\":\"t\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"matrix\",\"rows\":" + std::to_string(1) + ",\"cols\":" + std::to_string(1) + "}]},\"block\":\"generated_quantities\"},{\"name\":\"s\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"matrix\",\"rows\":" + std::to_string(1) + ",\"cols\":" + std::to_string(1) + "}]},\"block\":\"generated_quantities\"}]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -17324,6 +18075,37 @@ class unpack_promote_model final : public model_base_crtp<unpack_promote_model> 
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"alpha\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"}]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"td\"";
+    json_stream << ":";
+    json_stream << "{";
+    json_stream << "\"1\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(std::get<0>(td)[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"2\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(std::get<1>(td)[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << "}";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void

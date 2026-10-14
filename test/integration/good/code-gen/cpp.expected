@@ -420,6 +420,12 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"mu\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"tau\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"theta_tilde\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(J) + "},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(J) + "},\"block\":\"transformed_parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -768,6 +774,12 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"bar\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -1265,6 +1277,12 @@ class builtin_constraint_model final : public model_base_crtp<builtin_constraint
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"beta_raw\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(beta_raw_1dim__) + "},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string((K -1)) + "},\"block\":\"transformed_parameters\"},{\"name\":\"beta_recovered\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(beta_recovered_1dim__) + "},\"block\":\"generated_quantities\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -1757,6 +1775,149 @@ class complex_tuples_model final : public model_base_crtp<complex_tuples_model> 
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"x\"";
+    json_stream << ":";
+    json_stream << "{";
+    json_stream << "\"1\"";
+    json_stream << ":";
+    json_stream << std::to_string(std::get<0>(x));
+    json_stream << ",\n";
+    json_stream << "\"2\"";
+    json_stream << ":";
+    json_stream << std::to_string(std::get<1>(x));
+    json_stream << "}";
+    json_stream << ",\n";
+    json_stream << "\"y\"";
+    json_stream << ":";
+    json_stream << "{";
+    json_stream << "\"1\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(std::get<0>(y)[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"2\"";
+    json_stream << ":";
+    json_stream << std::to_string(std::get<1>(y));
+    json_stream << "}";
+    json_stream << ",\n";
+    json_stream << "\"y2\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "{";
+      json_stream << "\"1\"";
+      json_stream << ":";
+      json_stream << "[";
+      for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+        if (sym2__ > 1) {
+          json_stream << ",";
+        }
+        json_stream << "{";
+        json_stream << "\"1\"";
+        json_stream << ":";
+        json_stream <<
+                      std::to_string(
+                        std::get<0>(std::get<0>(y2[(sym1__ - 1)])[(sym2__ -
+                          1)]));
+        json_stream << ",\n";
+        json_stream << "\"2\"";
+        json_stream << ":";
+        json_stream << "[";
+        for (int sym3__ = 1; sym3__ <= 1; ++sym3__) {
+          if (sym3__ > 1) {
+            json_stream << ",";
+          }
+          json_stream << "[";
+          for (int sym4__ = 1; sym4__ <= 2; ++sym4__) {
+            if (sym4__ > 1) {
+              json_stream << ",";
+            }
+            json_stream << "[";
+            for (int sym5__ = 1; sym5__ <= 3; ++sym5__) {
+              if (sym5__ > 1) {
+                json_stream << ",";
+              }
+              json_stream <<
+                            std::to_string(
+                              std::get<1>(
+                                std::get<0>(y2[(sym1__ - 1)])[(sym2__ - 1)])[(sym3__
+                              - 1)][(sym4__ - 1)][(sym5__ - 1)]);
+            }
+            json_stream << "]";
+          }
+          json_stream << "]";
+        }
+        json_stream << "]";
+        json_stream << "}";
+      }
+      json_stream << "]";
+      json_stream << ",\n";
+      json_stream << "\"2\"";
+      json_stream << ":";
+      json_stream << std::to_string(std::get<1>(y2[(sym1__ - 1)]));
+      json_stream << "}";
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"z\"";
+    json_stream << ":";
+    json_stream << std::to_string(z);
+    json_stream << ",\n";
+    json_stream << "\"b\"";
+    json_stream << ":";
+    json_stream << std::to_string(b);
+    json_stream << ",\n";
+    json_stream << "\"c\"";
+    json_stream << ":";
+    json_stream << std::to_string(c);
+    json_stream << ",\n";
+    json_stream << "\"d\"";
+    json_stream << ":";
+    json_stream << "{";
+    json_stream << "\"1\"";
+    json_stream << ":";
+    json_stream << std::to_string(std::get<0>(d));
+    json_stream << ",\n";
+    json_stream << "\"2\"";
+    json_stream << ":";
+    json_stream << std::to_string(std::get<1>(d));
+    json_stream << ",\n";
+    json_stream << "\"3\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "{";
+      json_stream << "\"1\"";
+      json_stream << ":";
+      json_stream <<
+                    std::to_string(std::get<0>(std::get<2>(d)[(sym1__ - 1)]));
+      json_stream << ",\n";
+      json_stream << "\"2\"";
+      json_stream << ":";
+      json_stream <<
+                    std::to_string(std::get<1>(std::get<2>(d)[(sym1__ - 1)]));
+      json_stream << "}";
+    }
+    json_stream << "]";
+    json_stream << "}";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -2676,6 +2837,29 @@ class container_promotion_model final : public model_base_crtp<container_promoti
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"y\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"V\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"arRV\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "}},\"block\":\"transformed_parameters\"},{\"name\":\"Mar\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"transformed_parameters\"},{\"name\":\"M\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(2) + ",\"cols\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"deep_Mar\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"real\"}}}},\"block\":\"transformed_parameters\"},{\"name\":\"deep_M\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(2) + ",\"cols\":" + std::to_string(2) + "}},\"block\":\"transformed_parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"Arr\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "[";
+      for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+        if (sym2__ > 1) {
+          json_stream << ",";
+        }
+        json_stream << std::to_string(Arr[(sym1__ - 1)][(sym2__ - 1)]);
+      }
+      json_stream << "]";
+    }
+    json_stream << "]";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -3154,6 +3338,23 @@ class cpp_overload_stdlib_model final : public model_base_crtp<cpp_overload_stdl
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"m1\"";
+    json_stream << ":";
+    json_stream << std::to_string(m1);
+    json_stream << ",\n";
+    json_stream << "\"m2\"";
+    json_stream << ":";
+    json_stream << std::to_string(m2);
+    json_stream << ",\n";
+    json_stream << "\"m3\"";
+    json_stream << ":";
+    json_stream << std::to_string(m3);
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -4357,6 +4558,12 @@ class cpp_reserved_words_model final : public model_base_crtp<cpp_reserved_words
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"explicit\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"float\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"friend\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"goto\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"inline\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"long\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mutable\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"namespace\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"new\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"noexcept\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"not\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"not_eq\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"nullptr\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"operator\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"or\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"throw\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"try\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"typeid\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"typename\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"union\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"unsigned\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"using\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"virtual\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"volatile\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"wchar_t\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"xor\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"xor_eq\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"fvar\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"STAN_MATH_MAJOR\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"STAN_MATH_MINOR\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"STAN_MATH_PATCH\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"BSD\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"BSD4_2\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"BSD4_3\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"BSD4_4\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"EMSCRIPTEN\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"hpux\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"sun\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"linux\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"VMS\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"i386\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"mips\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -5029,6 +5236,12 @@ class data_only_functions_model final : public model_base_crtp<data_only_functio
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"p\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "},\"block\":\"parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -5363,6 +5576,12 @@ class double_reject_model final : public model_base_crtp<double_reject_model> {
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -5892,6 +6111,12 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"mu\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"tau\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"theta_tilde\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(J) + "},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(J) + "},\"block\":\"transformed_parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -6313,6 +6538,15 @@ class funcall_type_promotion_model final : public model_base_crtp<funcall_type_p
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"x\"";
+    json_stream << ":";
+    json_stream << std::to_string(x);
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -6950,6 +7184,12 @@ class jacobian_pe_model final : public model_base_crtp<jacobian_pe_model> {
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"b_raw\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b_vec_raw\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"b_direct_raw\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"bvec\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"b_direct\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"b_raw_recovered\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"}]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -7774,6 +8014,57 @@ class laplace_bernoulli_logit_model final : public model_base_crtp<laplace_berno
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"rho\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"eta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_obs) + "},\"block\":\"generated_quantities\"},{\"name\":\"theta2\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_obs) + "},\"block\":\"generated_quantities\"}]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"theta_0\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= n_obs; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(theta_0[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"tolerance\"";
+    json_stream << ":";
+    json_stream << std::to_string(tolerance);
+    json_stream << ",\n";
+    json_stream << "\"max_num_steps\"";
+    json_stream << ":";
+    json_stream << std::to_string(max_num_steps);
+    json_stream << ",\n";
+    json_stream << "\"hessian_block_size\"";
+    json_stream << ":";
+    json_stream << std::to_string(hessian_block_size);
+    json_stream << ",\n";
+    json_stream << "\"solver\"";
+    json_stream << ":";
+    json_stream << std::to_string(solver);
+    json_stream << ",\n";
+    json_stream << "\"max_steps_line_search\"";
+    json_stream << ":";
+    json_stream << std::to_string(max_steps_line_search);
+    json_stream << ",\n";
+    json_stream << "\"allow_fallthrough\"";
+    json_stream << ":";
+    json_stream << std::to_string(allow_fallthrough);
+    json_stream << ",\n";
+    json_stream << "\"prior_mean\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= n_obs; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(prior_mean[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -8815,6 +9106,57 @@ class laplace_functionals_model final : public model_base_crtp<laplace_functiona
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"rho\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"eta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_obs) + "},\"block\":\"generated_quantities\"},{\"name\":\"theta2\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_obs) + "},\"block\":\"generated_quantities\"},{\"name\":\"mean_chol\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"vector\",\"length\":" + std::to_string(n_obs) + "},{\"name\":\"matrix\",\"rows\":" + std::to_string(n_obs) + ",\"cols\":" + std::to_string(n_obs) + "}]},\"block\":\"generated_quantities\"},{\"name\":\"mean_chol_tol\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"vector\",\"length\":" + std::to_string(n_obs) + "},{\"name\":\"matrix\",\"rows\":" + std::to_string(n_obs) + ",\"cols\":" + std::to_string(n_obs) + "}]},\"block\":\"generated_quantities\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"log_ye\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= n_obs; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(log_ye[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"theta_0\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= n_obs; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(theta_0[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"tolerance\"";
+    json_stream << ":";
+    json_stream << std::to_string(tolerance);
+    json_stream << ",\n";
+    json_stream << "\"max_num_steps\"";
+    json_stream << ":";
+    json_stream << std::to_string(max_num_steps);
+    json_stream << ",\n";
+    json_stream << "\"hessian_block_size\"";
+    json_stream << ":";
+    json_stream << std::to_string(hessian_block_size);
+    json_stream << ",\n";
+    json_stream << "\"solver\"";
+    json_stream << ":";
+    json_stream << std::to_string(solver);
+    json_stream << ",\n";
+    json_stream << "\"max_steps_line_search\"";
+    json_stream << ":";
+    json_stream << std::to_string(max_steps_line_search);
+    json_stream << ",\n";
+    json_stream << "\"allow_fallthrough\"";
+    json_stream << ":";
+    json_stream << std::to_string(allow_fallthrough);
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -9655,6 +9997,68 @@ class laplace_neg_binomial_2_log_model final : public model_base_crtp<laplace_ne
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"rho\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"eta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_obs) + "},\"block\":\"generated_quantities\"},{\"name\":\"theta2\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_obs) + "},\"block\":\"generated_quantities\"}]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"log_ye\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= n_obs; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(log_ye[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"theta_0\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= n_obs; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(theta_0[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"tolerance\"";
+    json_stream << ":";
+    json_stream << std::to_string(tolerance);
+    json_stream << ",\n";
+    json_stream << "\"max_num_steps\"";
+    json_stream << ":";
+    json_stream << std::to_string(max_num_steps);
+    json_stream << ",\n";
+    json_stream << "\"hessian_block_size\"";
+    json_stream << ":";
+    json_stream << std::to_string(hessian_block_size);
+    json_stream << ",\n";
+    json_stream << "\"solver\"";
+    json_stream << ":";
+    json_stream << std::to_string(solver);
+    json_stream << ",\n";
+    json_stream << "\"max_steps_line_search\"";
+    json_stream << ":";
+    json_stream << std::to_string(max_steps_line_search);
+    json_stream << ",\n";
+    json_stream << "\"allow_fallthrough\"";
+    json_stream << ":";
+    json_stream << std::to_string(allow_fallthrough);
+    json_stream << ",\n";
+    json_stream << "\"prior_mean\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= n_obs; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(prior_mean[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -10637,6 +11041,12 @@ class laplace_nested_tuple_model final : public model_base_crtp<laplace_nested_t
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"rho\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_obs) + "},\"block\":\"generated_quantities\"},{\"name\":\"theta2\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_obs) + "},\"block\":\"generated_quantities\"},{\"name\":\"theta3\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_obs) + "},\"block\":\"generated_quantities\"}]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -11739,6 +12149,42 @@ class laplace_nested_tuple2_model final : public model_base_crtp<laplace_nested_
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"rho\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"eta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_obs) + "},\"block\":\"generated_quantities\"},{\"name\":\"theta2\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_obs) + "},\"block\":\"generated_quantities\"},{\"name\":\"theta3\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_obs) + "},\"block\":\"generated_quantities\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"log_ye\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= n_obs; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(log_ye[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"tolerance\"";
+    json_stream << ":";
+    json_stream << std::to_string(tolerance);
+    json_stream << ",\n";
+    json_stream << "\"max_num_steps\"";
+    json_stream << ":";
+    json_stream << std::to_string(max_num_steps);
+    json_stream << ",\n";
+    json_stream << "\"hessian_block_size\"";
+    json_stream << ":";
+    json_stream << std::to_string(hessian_block_size);
+    json_stream << ",\n";
+    json_stream << "\"solver\"";
+    json_stream << ":";
+    json_stream << std::to_string(solver);
+    json_stream << ",\n";
+    json_stream << "\"max_steps_line_search\"";
+    json_stream << ":";
+    json_stream << std::to_string(max_steps_line_search);
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -12794,6 +13240,42 @@ class laplace_nested_tuple3_model final : public model_base_crtp<laplace_nested_
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"rho\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"eta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"theta3\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_obs) + "},\"block\":\"generated_quantities\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"log_ye\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= n_obs; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(log_ye[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"tolerance\"";
+    json_stream << ":";
+    json_stream << std::to_string(tolerance);
+    json_stream << ",\n";
+    json_stream << "\"max_num_steps\"";
+    json_stream << ":";
+    json_stream << std::to_string(max_num_steps);
+    json_stream << ",\n";
+    json_stream << "\"hessian_block_size\"";
+    json_stream << ":";
+    json_stream << std::to_string(hessian_block_size);
+    json_stream << ",\n";
+    json_stream << "\"solver\"";
+    json_stream << ":";
+    json_stream << std::to_string(solver);
+    json_stream << ",\n";
+    json_stream << "\"max_steps_line_search\"";
+    json_stream << ":";
+    json_stream << std::to_string(max_steps_line_search);
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -13607,6 +14089,57 @@ class laplace_onepl_model final : public model_base_crtp<laplace_onepl_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"rho\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"eta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_obs) + "},\"block\":\"generated_quantities\"},{\"name\":\"theta2\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_obs) + "},\"block\":\"generated_quantities\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"log_ye\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= n_obs; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(log_ye[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"theta_0\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= n_obs; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(theta_0[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"tolerance\"";
+    json_stream << ":";
+    json_stream << std::to_string(tolerance);
+    json_stream << ",\n";
+    json_stream << "\"max_num_steps\"";
+    json_stream << ":";
+    json_stream << std::to_string(max_num_steps);
+    json_stream << ",\n";
+    json_stream << "\"hessian_block_size\"";
+    json_stream << ":";
+    json_stream << std::to_string(hessian_block_size);
+    json_stream << ",\n";
+    json_stream << "\"solver\"";
+    json_stream << ":";
+    json_stream << std::to_string(solver);
+    json_stream << ",\n";
+    json_stream << "\"max_steps_line_search\"";
+    json_stream << ":";
+    json_stream << std::to_string(max_steps_line_search);
+    json_stream << ",\n";
+    json_stream << "\"allow_fallthrough\"";
+    json_stream << ":";
+    json_stream << std::to_string(allow_fallthrough);
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -14339,6 +14872,42 @@ class laplace_overload_weird_model final : public model_base_crtp<laplace_overlo
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"rho\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"eta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"log_ye\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= n_obs; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(log_ye[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"tolerance\"";
+    json_stream << ":";
+    json_stream << std::to_string(tolerance);
+    json_stream << ",\n";
+    json_stream << "\"max_num_steps\"";
+    json_stream << ":";
+    json_stream << std::to_string(max_num_steps);
+    json_stream << ",\n";
+    json_stream << "\"hessian_block_size\"";
+    json_stream << ":";
+    json_stream << std::to_string(hessian_block_size);
+    json_stream << ",\n";
+    json_stream << "\"solver\"";
+    json_stream << ":";
+    json_stream << std::to_string(solver);
+    json_stream << ",\n";
+    json_stream << "\"max_steps_line_search\"";
+    json_stream << ":";
+    json_stream << std::to_string(max_steps_line_search);
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -15054,6 +15623,35 @@ class laplace_poisson_model final : public model_base_crtp<laplace_poisson_model
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(P) + "},\"block\":\"parameters\"},{\"name\":\"z\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"sigmaz\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"log_lik_sum\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"}]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"tolerance\"";
+    json_stream << ":";
+    json_stream << std::to_string(tolerance);
+    json_stream << ",\n";
+    json_stream << "\"max_num_steps\"";
+    json_stream << ":";
+    json_stream << std::to_string(max_num_steps);
+    json_stream << ",\n";
+    json_stream << "\"hessian_block_size\"";
+    json_stream << ":";
+    json_stream << std::to_string(hessian_block_size);
+    json_stream << ",\n";
+    json_stream << "\"solver\"";
+    json_stream << ":";
+    json_stream << std::to_string(solver);
+    json_stream << ",\n";
+    json_stream << "\"max_steps_line_search\"";
+    json_stream << ":";
+    json_stream << std::to_string(max_steps_line_search);
+    json_stream << ",\n";
+    json_stream << "\"allow_fallthrough\"";
+    json_stream << ":";
+    json_stream << std::to_string(allow_fallthrough);
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -15879,6 +16477,57 @@ class laplace_poisson_log_model final : public model_base_crtp<laplace_poisson_l
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"rho\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"eta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_obs) + "},\"block\":\"generated_quantities\"},{\"name\":\"theta2\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_obs) + "},\"block\":\"generated_quantities\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"theta_0\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= n_obs; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(theta_0[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"tolerance\"";
+    json_stream << ":";
+    json_stream << std::to_string(tolerance);
+    json_stream << ",\n";
+    json_stream << "\"max_num_steps\"";
+    json_stream << ":";
+    json_stream << std::to_string(max_num_steps);
+    json_stream << ",\n";
+    json_stream << "\"hessian_block_size\"";
+    json_stream << ":";
+    json_stream << std::to_string(hessian_block_size);
+    json_stream << ",\n";
+    json_stream << "\"solver\"";
+    json_stream << ":";
+    json_stream << std::to_string(solver);
+    json_stream << ",\n";
+    json_stream << "\"max_steps_line_search\"";
+    json_stream << ":";
+    json_stream << std::to_string(max_steps_line_search);
+    json_stream << ",\n";
+    json_stream << "\"allow_fallthrough\"";
+    json_stream << ":";
+    json_stream << std::to_string(allow_fallthrough);
+    json_stream << ",\n";
+    json_stream << "\"prior_mean\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= n_obs; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(prior_mean[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -16421,6 +17070,22 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"xx\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"y\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"transformed_parameters\"},{\"name\":\"w\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"transformed_parameters\"},{\"name\":\"td_arr33\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"transformed_parameters\"}]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"x\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(x[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -25880,6 +26545,701 @@ class mother_model final : public model_base_crtp<mother_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"p_real\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"p_upper\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"p_lower\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"offset_multiplier\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(5) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"no_offset_multiplier\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(5) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"offset_no_multiplier\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(5) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_real_1d_ar\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_real_3d_ar\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(M) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(K) + ",\"element_type\":{\"name\":\"real\"}}}},\"block\":\"parameters\"},{\"name\":\"p_vec\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"p_1d_vec\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}},\"block\":\"parameters\"},{\"name\":\"p_3d_vec\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(M) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(K) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}}}},\"block\":\"parameters\"},{\"name\":\"p_row_vec\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"p_1d_row_vec\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}},\"block\":\"parameters\"},{\"name\":\"p_3d_row_vec\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(M) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(K) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}}}},\"block\":\"parameters\"},{\"name\":\"p_mat\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(5) + ",\"cols\":" + std::to_string(4) + "},\"block\":\"parameters\"},{\"name\":\"p_ar_mat\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(5) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(2) + ",\"cols\":" + std::to_string(3) + "}}},\"block\":\"parameters\"},{\"name\":\"p_simplex\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string((N -1)) + "},\"block\":\"parameters\"},{\"name\":\"p_1d_simplex\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string((N -1)) + "}},\"block\":\"parameters\"},{\"name\":\"p_3d_simplex\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(M) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(K) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string((N -1)) + "}}}},\"block\":\"parameters\"},{\"name\":\"p_cfcov_54\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) *4))) + "},\"block\":\"parameters\"},{\"name\":\"p_cfcov_33\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) *3))) + "},\"block\":\"parameters\"},{\"name\":\"p_cfcov_33_ar\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(K) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) *3))) + "}},\"block\":\"parameters\"},{\"name\":\"x_p\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"parameters\"},{\"name\":\"y_p\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"parameters\"},{\"name\":\"tp_real_1d_ar\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_real_3d_ar\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(M) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(K) + ",\"element_type\":{\"name\":\"real\"}}}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_vec\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_1d_vec\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_3d_vec\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(M) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(K) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}}}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_row_vec\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_1d_row_vec\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_3d_row_vec\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(M) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(K) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}}}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_mat\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(5) + ",\"cols\":" + std::to_string(4) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_ar_mat\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(5) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(2) + ",\"cols\":" + std::to_string(3) + "}}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_simplex\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string((N -1)) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_1d_simplex\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string((N -1)) + "}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_3d_simplex\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(M) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(K) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string((N -1)) + "}}}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_cfcov_54\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) *4))) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_cfcov_33\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) *3))) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_cfcov_33_ar\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(K) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) *3))) + "}},\"block\":\"transformed_parameters\"},{\"name\":\"theta_p\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_real\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"gq_r1\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"gq_r2\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"gq_real_1d_ar\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"generated_quantities\"},{\"name\":\"gq_real_3d_ar\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(M) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(K) + ",\"element_type\":{\"name\":\"real\"}}}},\"block\":\"generated_quantities\"},{\"name\":\"gq_vec\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"generated_quantities\"},{\"name\":\"gq_1d_vec\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}},\"block\":\"generated_quantities\"},{\"name\":\"gq_3d_vec\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(M) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(K) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}}}},\"block\":\"generated_quantities\"},{\"name\":\"gq_row_vec\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"generated_quantities\"},{\"name\":\"gq_1d_row_vec\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}},\"block\":\"generated_quantities\"},{\"name\":\"gq_3d_row_vec\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(M) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(K) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}}}},\"block\":\"generated_quantities\"},{\"name\":\"gq_ar_mat\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(5) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(2) + ",\"cols\":" + std::to_string(3) + "}}},\"block\":\"generated_quantities\"},{\"name\":\"gq_simplex\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string((N -1)) + "},\"block\":\"generated_quantities\"},{\"name\":\"gq_1d_simplex\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string((N -1)) + "}},\"block\":\"generated_quantities\"},{\"name\":\"gq_3d_simplex\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(M) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(K) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string((N -1)) + "}}}},\"block\":\"generated_quantities\"},{\"name\":\"gq_cfcov_54\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) *4))) + "},\"block\":\"generated_quantities\"},{\"name\":\"gq_cfcov_33\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) *3))) + "},\"block\":\"generated_quantities\"},{\"name\":\"gq_cfcov_33_ar\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(K) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) *3))) + "}},\"block\":\"generated_quantities\"},{\"name\":\"indices\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"},{\"name\":\"indexing_mat\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(5) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(3) + ",\"cols\":" + std::to_string(4) + "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res1\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(3) + ",\"cols\":" + std::to_string(4) + "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res2\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(5) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(3) + ",\"cols\":" + std::to_string(4) + "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res3\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(3) + ",\"cols\":" + std::to_string(3) + "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res11\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(3) + ",\"cols\":" + std::to_string(4) + "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res21\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(5) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(3) + ",\"cols\":" + std::to_string(4) + "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res31\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(3) + ",\"cols\":" + std::to_string(3) + "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res4\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(4) + "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res5\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "}},\"block\":\"generated_quantities\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"td_int\"";
+    json_stream << ":";
+    json_stream << std::to_string(td_int);
+    json_stream << ",\n";
+    json_stream << "\"td_1d\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(td_1d[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"td_1dk\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(td_1dk[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"td_a\"";
+    json_stream << ":";
+    json_stream << std::to_string(td_a);
+    json_stream << ",\n";
+    json_stream << "\"td_b\"";
+    json_stream << ":";
+    json_stream << std::to_string(td_b);
+    json_stream << ",\n";
+    json_stream << "\"td_c\"";
+    json_stream << ":";
+    json_stream << std::to_string(td_c);
+    json_stream << ",\n";
+    json_stream << "\"td_ar_mat\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "[";
+      for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
+        if (sym2__ > 1) {
+          json_stream << ",";
+        }
+        json_stream << "[";
+        for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
+          if (sym3__ > 1) {
+            json_stream << ",";
+          }
+          json_stream << "[";
+          for (int sym4__ = 1; sym4__ <= 2; ++sym4__) {
+            if (sym4__ > 1) {
+              json_stream << ",";
+            }
+            json_stream <<
+                          std::to_string(
+                            stan::model::rvalue(td_ar_mat, "td_ar_mat",
+                              stan::model::index_uni(sym1__),
+                              stan::model::index_uni(sym2__),
+                              stan::model::index_uni(sym3__),
+                              stan::model::index_uni(sym4__)));
+          }
+          json_stream << "]";
+        }
+        json_stream << "]";
+      }
+      json_stream << "]";
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"td_simplex\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(td_simplex[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"td_1d_simplex\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "[";
+      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+        if (sym2__ > 1) {
+          json_stream << ",";
+        }
+        json_stream <<
+                      std::to_string(td_1d_simplex[(sym1__ - 1)][(sym2__ -
+                        1)]);
+      }
+      json_stream << "]";
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"td_3d_simplex\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "[";
+      for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
+        if (sym2__ > 1) {
+          json_stream << ",";
+        }
+        json_stream << "[";
+        for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
+          if (sym3__ > 1) {
+            json_stream << ",";
+          }
+          json_stream << "[";
+          for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
+            if (sym4__ > 1) {
+              json_stream << ",";
+            }
+            json_stream <<
+                          std::to_string(td_3d_simplex[(sym1__ - 1)][(sym2__
+                            - 1)][(sym3__ - 1)][(sym4__ - 1)]);
+          }
+          json_stream << "]";
+        }
+        json_stream << "]";
+      }
+      json_stream << "]";
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"td_cfcov_54\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "[";
+      for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
+        if (sym2__ > 1) {
+          json_stream << ",";
+        }
+        json_stream <<
+                      std::to_string(
+                        stan::model::rvalue(td_cfcov_54, "td_cfcov_54",
+                          stan::model::index_uni(sym1__),
+                          stan::model::index_uni(sym2__)));
+      }
+      json_stream << "]";
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"td_cfcov_33\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "[";
+      for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+        if (sym2__ > 1) {
+          json_stream << ",";
+        }
+        json_stream <<
+                      std::to_string(
+                        stan::model::rvalue(td_cfcov_33, "td_cfcov_33",
+                          stan::model::index_uni(sym1__),
+                          stan::model::index_uni(sym2__)));
+      }
+      json_stream << "]";
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"x\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(x[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"y\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(y[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"dat\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= 0; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(dat[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"dat_int\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= 0; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(dat_int[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"x_r\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= 0; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "[";
+      for (int sym2__ = 1; sym2__ <= 0; ++sym2__) {
+        if (sym2__ > 1) {
+          json_stream << ",";
+        }
+        json_stream << std::to_string(x_r[(sym1__ - 1)][(sym2__ - 1)]);
+      }
+      json_stream << "]";
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"x_i\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= 0; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "[";
+      for (int sym2__ = 1; sym2__ <= 0; ++sym2__) {
+        if (sym2__ > 1) {
+          json_stream << ",";
+        }
+        json_stream << std::to_string(x_i[(sym1__ - 1)][(sym2__ - 1)]);
+      }
+      json_stream << "]";
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"arr_mul_ind\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "[";
+      for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+        if (sym2__ > 1) {
+          json_stream << ",";
+        }
+        json_stream <<
+                      std::to_string(arr_mul_ind[(sym1__ - 1)][(sym2__ - 1)]);
+      }
+      json_stream << "]";
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"x_mul_ind\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(x_mul_ind[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"transformed_data_real\"";
+    json_stream << ":";
+    json_stream << std::to_string(transformed_data_real);
+    json_stream << ",\n";
+    json_stream << "\"transformed_data_real_array\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream <<
+                    std::to_string(transformed_data_real_array[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"transformed_data_real_array_2d\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "[";
+      for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+        if (sym2__ > 1) {
+          json_stream << ",";
+        }
+        json_stream <<
+                      std::to_string(transformed_data_real_array_2d[(sym1__ -
+                        1)][(sym2__ - 1)]);
+      }
+      json_stream << "]";
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"transformed_data_real_array_3d\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "[";
+      for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+        if (sym2__ > 1) {
+          json_stream << ",";
+        }
+        json_stream << "[";
+        for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
+          if (sym3__ > 1) {
+            json_stream << ",";
+          }
+          json_stream <<
+                        std::to_string(transformed_data_real_array_3d[(sym1__
+                          - 1)][(sym2__ - 1)][(sym3__ - 1)]);
+        }
+        json_stream << "]";
+      }
+      json_stream << "]";
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"transformed_data_matrix\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "[";
+      for (int sym2__ = 1; sym2__ <= d_int; ++sym2__) {
+        if (sym2__ > 1) {
+          json_stream << ",";
+        }
+        json_stream <<
+                      std::to_string(
+                        stan::model::rvalue(transformed_data_matrix,
+                          "transformed_data_matrix",
+                          stan::model::index_uni(sym1__),
+                          stan::model::index_uni(sym2__)));
+      }
+      json_stream << "]";
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"transformed_data_matrix_array\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "[";
+      for (int sym2__ = 1; sym2__ <= d_int; ++sym2__) {
+        if (sym2__ > 1) {
+          json_stream << ",";
+        }
+        json_stream << "[";
+        for (int sym3__ = 1; sym3__ <= d_int; ++sym3__) {
+          if (sym3__ > 1) {
+            json_stream << ",";
+          }
+          json_stream <<
+                        std::to_string(
+                          stan::model::rvalue(transformed_data_matrix_array,
+                            "transformed_data_matrix_array",
+                            stan::model::index_uni(sym1__),
+                            stan::model::index_uni(sym2__),
+                            stan::model::index_uni(sym3__)));
+        }
+        json_stream << "]";
+      }
+      json_stream << "]";
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"transformed_data_matrix_array_2d\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "[";
+      for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+        if (sym2__ > 1) {
+          json_stream << ",";
+        }
+        json_stream << "[";
+        for (int sym3__ = 1; sym3__ <= d_int; ++sym3__) {
+          if (sym3__ > 1) {
+            json_stream << ",";
+          }
+          json_stream << "[";
+          for (int sym4__ = 1; sym4__ <= d_int; ++sym4__) {
+            if (sym4__ > 1) {
+              json_stream << ",";
+            }
+            json_stream <<
+                          std::to_string(
+                            stan::model::rvalue(
+                              transformed_data_matrix_array_2d,
+                              "transformed_data_matrix_array_2d",
+                              stan::model::index_uni(sym1__),
+                              stan::model::index_uni(sym2__),
+                              stan::model::index_uni(sym3__),
+                              stan::model::index_uni(sym4__)));
+          }
+          json_stream << "]";
+        }
+        json_stream << "]";
+      }
+      json_stream << "]";
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"transformed_data_matrix_array_3d\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "[";
+      for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+        if (sym2__ > 1) {
+          json_stream << ",";
+        }
+        json_stream << "[";
+        for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
+          if (sym3__ > 1) {
+            json_stream << ",";
+          }
+          json_stream << "[";
+          for (int sym4__ = 1; sym4__ <= d_int; ++sym4__) {
+            if (sym4__ > 1) {
+              json_stream << ",";
+            }
+            json_stream << "[";
+            for (int sym5__ = 1; sym5__ <= d_int; ++sym5__) {
+              if (sym5__ > 1) {
+                json_stream << ",";
+              }
+              json_stream <<
+                            std::to_string(
+                              stan::model::rvalue(
+                                transformed_data_matrix_array_3d,
+                                "transformed_data_matrix_array_3d",
+                                stan::model::index_uni(sym1__),
+                                stan::model::index_uni(sym2__),
+                                stan::model::index_uni(sym3__),
+                                stan::model::index_uni(sym4__),
+                                stan::model::index_uni(sym5__)));
+            }
+            json_stream << "]";
+          }
+          json_stream << "]";
+        }
+        json_stream << "]";
+      }
+      json_stream << "]";
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"transformed_data_vector\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(transformed_data_vector[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"transformed_data_vector_array\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "[";
+      for (int sym2__ = 1; sym2__ <= d_int; ++sym2__) {
+        if (sym2__ > 1) {
+          json_stream << ",";
+        }
+        json_stream <<
+                      std::to_string(transformed_data_vector_array[(sym1__ -
+                        1)][(sym2__ - 1)]);
+      }
+      json_stream << "]";
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"transformed_data_vector_array_2d\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "[";
+      for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+        if (sym2__ > 1) {
+          json_stream << ",";
+        }
+        json_stream << "[";
+        for (int sym3__ = 1; sym3__ <= d_int; ++sym3__) {
+          if (sym3__ > 1) {
+            json_stream << ",";
+          }
+          json_stream <<
+                        std::to_string(
+                          transformed_data_vector_array_2d[(sym1__ -
+                          1)][(sym2__ - 1)][(sym3__ - 1)]);
+        }
+        json_stream << "]";
+      }
+      json_stream << "]";
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"transformed_data_vector_array_3d\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "[";
+      for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+        if (sym2__ > 1) {
+          json_stream << ",";
+        }
+        json_stream << "[";
+        for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
+          if (sym3__ > 1) {
+            json_stream << ",";
+          }
+          json_stream << "[";
+          for (int sym4__ = 1; sym4__ <= d_int; ++sym4__) {
+            if (sym4__ > 1) {
+              json_stream << ",";
+            }
+            json_stream <<
+                          std::to_string(
+                            transformed_data_vector_array_3d[(sym1__ -
+                            1)][(sym2__ - 1)][(sym3__ - 1)][(sym4__ - 1)]);
+          }
+          json_stream << "]";
+        }
+        json_stream << "]";
+      }
+      json_stream << "]";
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"transformed_data_row_vector\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream <<
+                    std::to_string(transformed_data_row_vector[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"transformed_data_row_vector_array\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "[";
+      for (int sym2__ = 1; sym2__ <= d_int; ++sym2__) {
+        if (sym2__ > 1) {
+          json_stream << ",";
+        }
+        json_stream <<
+                      std::to_string(
+                        transformed_data_row_vector_array[(sym1__ -
+                        1)][(sym2__ - 1)]);
+      }
+      json_stream << "]";
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"transformed_data_row_vector_array_2d\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "[";
+      for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+        if (sym2__ > 1) {
+          json_stream << ",";
+        }
+        json_stream << "[";
+        for (int sym3__ = 1; sym3__ <= d_int; ++sym3__) {
+          if (sym3__ > 1) {
+            json_stream << ",";
+          }
+          json_stream <<
+                        std::to_string(
+                          transformed_data_row_vector_array_2d[(sym1__ -
+                          1)][(sym2__ - 1)][(sym3__ - 1)]);
+        }
+        json_stream << "]";
+      }
+      json_stream << "]";
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"transformed_data_row_vector_array_3d\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "[";
+      for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+        if (sym2__ > 1) {
+          json_stream << ",";
+        }
+        json_stream << "[";
+        for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
+          if (sym3__ > 1) {
+            json_stream << ",";
+          }
+          json_stream << "[";
+          for (int sym4__ = 1; sym4__ <= d_int; ++sym4__) {
+            if (sym4__ > 1) {
+              json_stream << ",";
+            }
+            json_stream <<
+                          std::to_string(
+                            transformed_data_row_vector_array_3d[(sym1__ -
+                            1)][(sym2__ - 1)][(sym3__ - 1)][(sym4__ - 1)]);
+          }
+          json_stream << "]";
+        }
+        json_stream << "]";
+      }
+      json_stream << "]";
+    }
+    json_stream << "]";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -28199,6 +29559,12 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"y0_p\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"theta_p\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(1) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"x_p\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(1) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"x_p_v\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"parameters\"},{\"name\":\"shared_params_p\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(3) + "},\"block\":\"parameters\"},{\"name\":\"job_params_p\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(3) + "}},\"block\":\"parameters\"},{\"name\":\"x_r\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"abc1_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"abc2_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"abc3_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp1\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(3) + "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp2\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(3) + "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp3\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(3) + "},\"block\":\"transformed_parameters\"},{\"name\":\"theta_p_as\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"x_v\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"y_v\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"y_p\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(T) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"generated_quantities\"},{\"name\":\"y_1d\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"z_1d\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"abc1_gq\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"abc2_gq\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"y_hat_gq\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(3) + "},\"block\":\"generated_quantities\"},{\"name\":\"yy_hat_gq\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(3) + "},\"block\":\"generated_quantities\"},{\"name\":\"theta_dbl\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"generated_quantities\"}]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -34623,6 +35989,29 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"r\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"ra\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"v\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"z\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}},\"block\":\"transformed_parameters\"},{\"name\":\"zg\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}},\"block\":\"generated_quantities\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"zd\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "[";
+      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+        if (sym2__ > 1) {
+          json_stream << ",";
+        }
+        json_stream << std::to_string(zd[(sym1__ - 1)][(sym2__ - 1)]);
+      }
+      json_stream << "]";
+    }
+    json_stream << "]";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -35461,6 +36850,12 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"gamma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"delta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"z_init\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"z\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"transformed_parameters\"}]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -37467,6 +38862,93 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"alpha_v\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(k) + "},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(k) + "},\"block\":\"parameters\"},{\"name\":\"cuts\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(k) + "},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"X_p\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(n) + ",\"cols\":" + std::to_string(k) + "},\"block\":\"parameters\"},{\"name\":\"beta_m\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(n) + ",\"cols\":" + std::to_string(k) + "},\"block\":\"parameters\"},{\"name\":\"X_rv_p\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n) + "},\"block\":\"parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"k_td\"";
+    json_stream << ":";
+    json_stream << std::to_string(k_td);
+    json_stream << ",\n";
+    json_stream << "\"n_td\"";
+    json_stream << ":";
+    json_stream << std::to_string(n_td);
+    json_stream << ",\n";
+    json_stream << "\"X_d_td\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "[";
+      for (int sym2__ = 1; sym2__ <= n; ++sym2__) {
+        if (sym2__ > 1) {
+          json_stream << ",";
+        }
+        json_stream <<
+                      std::to_string(
+                        stan::model::rvalue(X_d_td, "X_d_td",
+                          stan::model::index_uni(sym1__),
+                          stan::model::index_uni(sym2__)));
+      }
+      json_stream << "]";
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"y_v_d_td\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(y_v_d_td[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"X_rv_d_td\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(X_rv_d_td[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"y_vi_d_td\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(y_vi_d_td[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"y2_vi_d_td\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(y2_vi_d_td[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"y_s_d_td\"";
+    json_stream << ":";
+    json_stream << std::to_string(y_s_d_td);
+    json_stream << ",\n";
+    json_stream << "\"y_r_d_td\"";
+    json_stream << ":";
+    json_stream << std::to_string(y_r_d_td);
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -37865,6 +39347,12 @@ class overload_tilde_stanlib_model final : public model_base_crtp<overload_tilde
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"theta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -38342,6 +39830,12 @@ class overload_tilde_udfs_model final : public model_base_crtp<overload_tilde_ud
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"mu\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -39208,6 +40702,44 @@ class overloading_templating_model final : public model_base_crtp<overloading_te
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"y\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"z\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"a\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(a[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"M\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "[";
+      for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
+        if (sym2__ > 1) {
+          json_stream << ",";
+        }
+        json_stream <<
+                      std::to_string(
+                        stan::model::rvalue(M, "M",
+                          stan::model::index_uni(sym1__),
+                          stan::model::index_uni(sym2__)));
+      }
+      json_stream << "]";
+    }
+    json_stream << "]";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -39674,6 +41206,12 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"L_Omega\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(nt) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(((2 * (2 - 1)) /2)) + "}},\"block\":\"parameters\"},{\"name\":\"z1\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(NS) + "},\"block\":\"parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -39991,6 +41529,12 @@ class print_unicode_model final : public model_base_crtp<print_unicode_model> {
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -40414,6 +41958,12 @@ class promotion_model final : public model_base_crtp<promotion_model> {
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"z\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"zi\",\"type\":{\"name\":\"complex\"},\"block\":\"generated_quantities\"},{\"name\":\"zs\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"},{\"name\":\"x\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"}]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -41283,6 +42833,12 @@ class recursive_slicing_model final : public model_base_crtp<recursive_slicing_m
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"gamma\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(times) + "},\"block\":\"parameters\"},{\"name\":\"z_hat\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"z\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(3) + "},\"block\":\"transformed_parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -41938,6 +43494,15 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"y1\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"y2\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"y3\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"}]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"N\"";
+    json_stream << ":";
+    json_stream << std::to_string(N);
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -44788,6 +46353,26 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"a8\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "}}},\"block\":\"parameters\"},{\"name\":\"a7\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}}},\"block\":\"parameters\"},{\"name\":\"a6\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}}},\"block\":\"parameters\"},{\"name\":\"a5\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"parameters\"},{\"name\":\"a4\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "}},\"block\":\"parameters\"},{\"name\":\"a3\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}},\"block\":\"parameters\"},{\"name\":\"a2\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}},\"block\":\"parameters\"},{\"name\":\"a1\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"y8\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "}}},\"block\":\"parameters\"},{\"name\":\"y7\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}}},\"block\":\"parameters\"},{\"name\":\"y6\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}}},\"block\":\"parameters\"},{\"name\":\"y5\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"parameters\"},{\"name\":\"y4\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "}},\"block\":\"parameters\"},{\"name\":\"y3\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}},\"block\":\"parameters\"},{\"name\":\"y2\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}},\"block\":\"parameters\"},{\"name\":\"y1\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"}]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"N\"";
+    json_stream << ":";
+    json_stream << std::to_string(N);
+    json_stream << ",\n";
+    json_stream << "\"x\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(x[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -49031,6 +50616,115 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"y1\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"y2\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}},\"block\":\"parameters\"},{\"name\":\"y3\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}},\"block\":\"parameters\"},{\"name\":\"y4\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "}},\"block\":\"parameters\"},{\"name\":\"y5\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"parameters\"},{\"name\":\"y6\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}}},\"block\":\"parameters\"},{\"name\":\"y7\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}}},\"block\":\"parameters\"},{\"name\":\"y8\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "}}},\"block\":\"parameters\"},{\"name\":\"y9\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"y10\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"y11\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"y12\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"y17\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"real\"}}}},\"block\":\"parameters\"},{\"name\":\"t1\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t1a\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t2\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t3\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t4\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t5\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t6\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t7\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t8\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t9\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t10\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t11\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t12\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg1\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg2\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg3\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg4\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg5\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg6\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg7\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg8\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg9\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg10\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg11\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg12\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tgs\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"td1\"";
+    json_stream << ":";
+    json_stream << std::to_string(td1);
+    json_stream << ",\n";
+    json_stream << "\"td1a\"";
+    json_stream << ":";
+    json_stream << std::to_string(td1a);
+    json_stream << ",\n";
+    json_stream << "\"td2\"";
+    json_stream << ":";
+    json_stream << std::to_string(td2);
+    json_stream << ",\n";
+    json_stream << "\"td3\"";
+    json_stream << ":";
+    json_stream << std::to_string(td3);
+    json_stream << ",\n";
+    json_stream << "\"td4\"";
+    json_stream << ":";
+    json_stream << std::to_string(td4);
+    json_stream << ",\n";
+    json_stream << "\"td5\"";
+    json_stream << ":";
+    json_stream << std::to_string(td5);
+    json_stream << ",\n";
+    json_stream << "\"td6\"";
+    json_stream << ":";
+    json_stream << std::to_string(td6);
+    json_stream << ",\n";
+    json_stream << "\"td7\"";
+    json_stream << ":";
+    json_stream << std::to_string(td7);
+    json_stream << ",\n";
+    json_stream << "\"td8\"";
+    json_stream << ":";
+    json_stream << std::to_string(td8);
+    json_stream << ",\n";
+    json_stream << "\"td9\"";
+    json_stream << ":";
+    json_stream << std::to_string(td9);
+    json_stream << ",\n";
+    json_stream << "\"td10\"";
+    json_stream << ":";
+    json_stream << std::to_string(td10);
+    json_stream << ",\n";
+    json_stream << "\"td11\"";
+    json_stream << ":";
+    json_stream << std::to_string(td11);
+    json_stream << ",\n";
+    json_stream << "\"td12\"";
+    json_stream << ":";
+    json_stream << std::to_string(td12);
+    json_stream << ",\n";
+    json_stream << "\"tgd1\"";
+    json_stream << ":";
+    json_stream << std::to_string(tgd1);
+    json_stream << ",\n";
+    json_stream << "\"tgd2\"";
+    json_stream << ":";
+    json_stream << std::to_string(tgd2);
+    json_stream << ",\n";
+    json_stream << "\"tgd3\"";
+    json_stream << ":";
+    json_stream << std::to_string(tgd3);
+    json_stream << ",\n";
+    json_stream << "\"tgd4\"";
+    json_stream << ":";
+    json_stream << std::to_string(tgd4);
+    json_stream << ",\n";
+    json_stream << "\"tgd5\"";
+    json_stream << ":";
+    json_stream << std::to_string(tgd5);
+    json_stream << ",\n";
+    json_stream << "\"tgd6\"";
+    json_stream << ":";
+    json_stream << std::to_string(tgd6);
+    json_stream << ",\n";
+    json_stream << "\"tgd7\"";
+    json_stream << ":";
+    json_stream << std::to_string(tgd7);
+    json_stream << ",\n";
+    json_stream << "\"tgd8\"";
+    json_stream << ":";
+    json_stream << std::to_string(tgd8);
+    json_stream << ",\n";
+    json_stream << "\"tgd9\"";
+    json_stream << ":";
+    json_stream << std::to_string(tgd9);
+    json_stream << ",\n";
+    json_stream << "\"tgd10\"";
+    json_stream << ":";
+    json_stream << std::to_string(tgd10);
+    json_stream << ",\n";
+    json_stream << "\"tgd11\"";
+    json_stream << ":";
+    json_stream << std::to_string(tgd11);
+    json_stream << ",\n";
+    json_stream << "\"tgd12\"";
+    json_stream << ":";
+    json_stream << std::to_string(tgd12);
+    json_stream << ",\n";
+    json_stream << "\"tsd\"";
+    json_stream << ":";
+    json_stream << std::to_string(tsd);
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -49446,6 +51140,12 @@ class reject_exit_model final : public model_base_crtp<reject_exit_model> {
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"x\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -49918,6 +51618,12 @@ class return_position_types_model final : public model_base_crtp<return_position
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"a\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -50267,6 +51973,12 @@ class rng_local_size_model final : public model_base_crtp<rng_local_size_model> 
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -50636,6 +52348,12 @@ class self_assign_model final : public model_base_crtp<self_assign_model> {
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"i\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"x\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"int\"}]},\"block\":\"generated_quantities\"},{\"name\":\"r\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(20) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"generated_quantities\"}]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -52048,6 +53766,12 @@ class shadowing_model final : public model_base_crtp<shadowing_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"e\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"pi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"log2\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"log10\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sqrt2\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"not_a_number\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"positive_infinity\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"negative_infinity\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"machine_precision\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"inv_logit\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"logit\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"num_elements\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"pow\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"add\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sub\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"multiply\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"lchoose\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"binomial_coefficient_log\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"read_constrain_lb\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"read\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"validate_non_negative_index\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"length\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"validate_positive_index\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string((5 -1)) + "},\"block\":\"parameters\"},{\"name\":\"profile_map\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"assign\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"rvalue\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"stan_print\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"model_base_crtp\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"index_uni\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"bernoulli_logit_glm_lpmf\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"reduce_sum\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"segment\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(4) + "},\"block\":\"parameters\"},{\"name\":\"ode_bdf\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"ode_bdf_tol\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mu\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"called\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(1) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(4) + "}},\"block\":\"transformed_parameters\"},{\"name\":\"result\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(result_1dim__) + "},\"block\":\"transformed_parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -52510,6 +54234,12 @@ class single_argument_lpmf_model final : public model_base_crtp<single_argument_
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -53385,6 +55115,101 @@ class stochastic_matrices_model final : public model_base_crtp<stochastic_matric
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"p_csm\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string((ROWS -1)) + ",\"cols\":" + std::to_string(COLS) + "},\"block\":\"parameters\"},{\"name\":\"p_rsm\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(ROWS) + ",\"cols\":" + std::to_string((COLS -1)) + "},\"block\":\"parameters\"},{\"name\":\"p_arsm\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(ROWS) + ",\"cols\":" + std::to_string((COLS -1)) + "}}},\"block\":\"parameters\"},{\"name\":\"tp_csm\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string((10 -1)) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_rsm\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string((10 -1)) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_arsm\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string((10 -1)) + "}}},\"block\":\"transformed_parameters\"},{\"name\":\"gq_csm\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string((10 -1)) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"generated_quantities\"},{\"name\":\"gq_rsm\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string((10 -1)) + "},\"block\":\"generated_quantities\"},{\"name\":\"gq_arsm\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string((10 -1)) + "}}},\"block\":\"generated_quantities\"}]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"ROWS\"";
+    json_stream << ":";
+    json_stream << std::to_string(ROWS);
+    json_stream << ",\n";
+    json_stream << "\"COLS\"";
+    json_stream << ":";
+    json_stream << std::to_string(COLS);
+    json_stream << ",\n";
+    json_stream << "\"td_csm\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "[";
+      for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+        if (sym2__ > 1) {
+          json_stream << ",";
+        }
+        json_stream <<
+                      std::to_string(
+                        stan::model::rvalue(td_csm, "td_csm",
+                          stan::model::index_uni(sym1__),
+                          stan::model::index_uni(sym2__)));
+      }
+      json_stream << "]";
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"td_rsm\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "[";
+      for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+        if (sym2__ > 1) {
+          json_stream << ",";
+        }
+        json_stream <<
+                      std::to_string(
+                        stan::model::rvalue(td_rsm, "td_rsm",
+                          stan::model::index_uni(sym1__),
+                          stan::model::index_uni(sym2__)));
+      }
+      json_stream << "]";
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"td_arsm\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "[";
+      for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+        if (sym2__ > 1) {
+          json_stream << ",";
+        }
+        json_stream << "[";
+        for (int sym3__ = 1; sym3__ <= 10; ++sym3__) {
+          if (sym3__ > 1) {
+            json_stream << ",";
+          }
+          json_stream << "[";
+          for (int sym4__ = 1; sym4__ <= 10; ++sym4__) {
+            if (sym4__ > 1) {
+              json_stream << ",";
+            }
+            json_stream <<
+                          std::to_string(
+                            stan::model::rvalue(td_arsm, "td_arsm",
+                              stan::model::index_uni(sym1__),
+                              stan::model::index_uni(sym2__),
+                              stan::model::index_uni(sym3__),
+                              stan::model::index_uni(sym4__)));
+          }
+          json_stream << "]";
+        }
+        json_stream << "]";
+      }
+      json_stream << "]";
+    }
+    json_stream << "]";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -54446,6 +56271,117 @@ class sum_to_zero_model final : public model_base_crtp<sum_to_zero_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"p_stzv\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string((v -1)) + "},\"block\":\"parameters\"},{\"name\":\"p_astzv\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string((v -1)) + "}}},\"block\":\"parameters\"},{\"name\":\"p_stzm\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string((N -1)) + ",\"cols\":" + std::to_string((p_stzm_2dim__ -1)) + "},\"block\":\"parameters\"},{\"name\":\"p_astzm\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string((N -1)) + ",\"cols\":" + std::to_string((p_astzm_4dim__ -1)) + "}}},\"block\":\"parameters\"},{\"name\":\"tp_stzv\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string((10 -1)) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_astzv\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string((10 -1)) + "}}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_stzm\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string((4 -1)) + ",\"cols\":" + std::to_string((5 -1)) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_astzm\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string((4 -1)) + ",\"cols\":" + std::to_string((5 -1)) + "}}},\"block\":\"transformed_parameters\"},{\"name\":\"gq_stzv\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string((10 -1)) + "},\"block\":\"generated_quantities\"},{\"name\":\"gq_astzv\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string((10 -1)) + "}}},\"block\":\"generated_quantities\"},{\"name\":\"gq_stzm\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string((4 -1)) + ",\"cols\":" + std::to_string((5 -1)) + "},\"block\":\"generated_quantities\"},{\"name\":\"gq_astzm\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string((4 -1)) + ",\"cols\":" + std::to_string((5 -1)) + "}}},\"block\":\"generated_quantities\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"v\"";
+    json_stream << ":";
+    json_stream << std::to_string(v);
+    json_stream << ",\n";
+    json_stream << "\"N\"";
+    json_stream << ":";
+    json_stream << std::to_string(N);
+    json_stream << ",\n";
+    json_stream << "\"td_stzv\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(td_stzv[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"td_astzv\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "[";
+      for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+        if (sym2__ > 1) {
+          json_stream << ",";
+        }
+        json_stream << "[";
+        for (int sym3__ = 1; sym3__ <= 10; ++sym3__) {
+          if (sym3__ > 1) {
+            json_stream << ",";
+          }
+          json_stream <<
+                        std::to_string(td_astzv[(sym1__ - 1)][(sym2__ -
+                          1)][(sym3__ - 1)]);
+        }
+        json_stream << "]";
+      }
+      json_stream << "]";
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"td_stzm\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "[";
+      for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
+        if (sym2__ > 1) {
+          json_stream << ",";
+        }
+        json_stream <<
+                      std::to_string(
+                        stan::model::rvalue(td_stzm, "td_stzm",
+                          stan::model::index_uni(sym1__),
+                          stan::model::index_uni(sym2__)));
+      }
+      json_stream << "]";
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"td_astzm\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "[";
+      for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+        if (sym2__ > 1) {
+          json_stream << ",";
+        }
+        json_stream << "[";
+        for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
+          if (sym3__ > 1) {
+            json_stream << ",";
+          }
+          json_stream << "[";
+          for (int sym4__ = 1; sym4__ <= 4; ++sym4__) {
+            if (sym4__ > 1) {
+              json_stream << ",";
+            }
+            json_stream <<
+                          std::to_string(
+                            stan::model::rvalue(td_astzm, "td_astzm",
+                              stan::model::index_uni(sym1__),
+                              stan::model::index_uni(sym2__),
+                              stan::model::index_uni(sym3__),
+                              stan::model::index_uni(sym4__)));
+          }
+          json_stream << "]";
+        }
+        json_stream << "]";
+      }
+      json_stream << "]";
+    }
+    json_stream << "]";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -54877,6 +56813,12 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"x\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -57790,6 +59732,12 @@ class transform_model final : public model_base_crtp<transform_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"p_1\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(k) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_2\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(k) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_3\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(k) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_4\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(k) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_5\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(k) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_6\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(k) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_7\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(k) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_8\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(k) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_9\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(m) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(k) + ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"parameters\"},{\"name\":\"p_10\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(n) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(m) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(k) + ",\"element_type\":{\"name\":\"real\"}}}},\"block\":\"parameters\"},{\"name\":\"pv_1\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(k) + "},\"block\":\"parameters\"},{\"name\":\"pv_2\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(m) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(k) + "}},\"block\":\"parameters\"},{\"name\":\"pv_3\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(n) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(m) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(k) + "}}},\"block\":\"parameters\"},{\"name\":\"pr_1\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(k) + "},\"block\":\"parameters\"},{\"name\":\"pr_2\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(m) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(k) + "}},\"block\":\"parameters\"},{\"name\":\"pr_3\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(n) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(m) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(k) + "}}},\"block\":\"parameters\"},{\"name\":\"pm_1\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(m) + ",\"cols\":" + std::to_string(k) + "},\"block\":\"parameters\"},{\"name\":\"pm_2\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(n) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(m) + ",\"cols\":" + std::to_string(k) + "}},\"block\":\"parameters\"},{\"name\":\"tp_1\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(k) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_2\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(k) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_3\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(k) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_4\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(k) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_5\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(k) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_6\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(k) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_7\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(k) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_8\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(k) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_9\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(m) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(k) + ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_10\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(n) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(m) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(k) + ",\"element_type\":{\"name\":\"real\"}}}},\"block\":\"transformed_parameters\"},{\"name\":\"tpv_1\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(k) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tpv_2\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(m) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(k) + "}},\"block\":\"transformed_parameters\"},{\"name\":\"tpv_3\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(n) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(m) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(k) + "}}},\"block\":\"transformed_parameters\"},{\"name\":\"tpr_1\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(k) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tpr_2\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(m) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(k) + "}},\"block\":\"transformed_parameters\"},{\"name\":\"tpr_3\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(n) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(m) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(k) + "}}},\"block\":\"transformed_parameters\"},{\"name\":\"tpm_1\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(m) + ",\"cols\":" + std::to_string(k) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tpm_2\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(n) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(m) + ",\"cols\":" + std::to_string(k) + "}},\"block\":\"transformed_parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -58379,6 +60327,12 @@ class truncate_model final : public model_base_crtp<truncate_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"m\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"y\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -58755,6 +60709,12 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"x\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -59142,6 +61102,12 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"x\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -59547,6 +61513,12 @@ class variable_named_context_model final : public model_base_crtp<variable_named
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"mu\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -61080,6 +63052,12 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"mu\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"vector_mu\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"vector_sigma\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"}]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void

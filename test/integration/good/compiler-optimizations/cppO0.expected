@@ -520,6 +520,12 @@ class ad_level_deep_dependence_model final : public model_base_crtp<ad_level_dee
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"X_p\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"X_tp1\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"X_tp2\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"X_tp3\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"X_tp4\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"X_tp5\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"X_tp6\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"X_tp7\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -1100,6 +1106,12 @@ class ad_level_disconnected_function_model final : public model_base_crtp<ad_lev
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"row_soa\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"empty_user_func_aos\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"int_aos_mul_aos\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"}]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -1924,6 +1936,41 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"beta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"gamma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"xi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"delta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"y\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N_t) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"transformed_parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"t0\"";
+    json_stream << ":";
+    json_stream << std::to_string(t0);
+    json_stream << ",\n";
+    json_stream << "\"kappa\"";
+    json_stream << ":";
+    json_stream << std::to_string(kappa);
+    json_stream << ",\n";
+    json_stream << "\"x_r\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= 0; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(x_r[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"x_i\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= 0; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(x_i[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -2405,6 +2452,12 @@ class ad_levels_deep_model final : public model_base_crtp<ad_levels_deep_model> 
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"X_p\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"X_tp1\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"X_tp2\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"z\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -2876,6 +2929,12 @@ class copy_prop_profile_model final : public model_base_crtp<copy_prop_profile_m
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"X\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "},\"block\":\"parameters\"}]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -3901,6 +3960,37 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"mean_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(max_age) + "},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(nind) + ",\"cols\":" + std::to_string(n_occ_minus_1) + "},\"block\":\"transformed_parameters\"},{\"name\":\"p\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(nind) + ",\"cols\":" + std::to_string(n_occ_minus_1) + "},\"block\":\"transformed_parameters\"},{\"name\":\"chi\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(nind) + ",\"cols\":" + std::to_string(n_occasions) + "},\"block\":\"transformed_parameters\"}]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"n_occ_minus_1\"";
+    json_stream << ":";
+    json_stream << std::to_string(n_occ_minus_1);
+    json_stream << ",\n";
+    json_stream << "\"first\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= nind; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(first[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"last\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= nind; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(last[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -5102,6 +5192,12 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_age\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_edu\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_state\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_region\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_age_edu\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b_0\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b_female\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b_black\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b_female_black\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b_v_prev\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b_age\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_age) + "},\"block\":\"parameters\"},{\"name\":\"b_edu\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_edu) + "},\"block\":\"parameters\"},{\"name\":\"b_region\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_region) + "},\"block\":\"parameters\"},{\"name\":\"b_age_edu\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(n_age) + ",\"cols\":" + std::to_string(n_edu) + "},\"block\":\"parameters\"},{\"name\":\"b_hat\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_state) + "},\"block\":\"parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -5470,6 +5566,12 @@ class empty_loop_model final : public model_base_crtp<empty_loop_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"y\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -5812,6 +5914,27 @@ class expr_prop_experiment_model final : public model_base_crtp<expr_prop_experi
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"z\"";
+    json_stream << ":";
+    json_stream << std::to_string(z);
+    json_stream << ",\n";
+    json_stream << "\"x\"";
+    json_stream << ":";
+    json_stream << std::to_string(x);
+    json_stream << ",\n";
+    json_stream << "\"y\"";
+    json_stream << ":";
+    json_stream << std::to_string(y);
+    json_stream << ",\n";
+    json_stream << "\"i\"";
+    json_stream << ":";
+    json_stream << std::to_string(i);
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -6149,6 +6272,19 @@ class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_exper
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"z\"";
+    json_stream << ":";
+    json_stream << std::to_string(z);
+    json_stream << ",\n";
+    json_stream << "\"y\"";
+    json_stream << ":";
+    json_stream << std::to_string(y);
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -6666,6 +6802,12 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"mu\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -7117,6 +7259,12 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"mu\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(J) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"tau\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -8215,6 +8363,12 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"a\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_age) + "},\"block\":\"parameters\"},{\"name\":\"b\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_edu) + "},\"block\":\"parameters\"},{\"name\":\"c\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_age_edu) + "},\"block\":\"parameters\"},{\"name\":\"d\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_state) + "},\"block\":\"parameters\"},{\"name\":\"e\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_region_full) + "},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(5) + "},\"block\":\"parameters\"},{\"name\":\"sigma_a\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_b\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_c\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_d\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_e\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"y_hat\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -8961,6 +9115,22 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"tau_phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi_std_raw\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(phi_std_raw_1dim__) + "},\"block\":\"parameters\"},{\"name\":\"sigma_phi\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"beta0\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"beta1\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tau_theta\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"sigma_theta\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"theta\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"generated_quantities\"},{\"name\":\"theta_std\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"generated_quantities\"},{\"name\":\"x\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"generated_quantities\"},{\"name\":\"y\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"}]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"log_E\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(log_E[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -10049,6 +10219,37 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"mean_phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mean_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"epsilon\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(nind) + "},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(nind) + ",\"cols\":" + std::to_string(n_occ_minus_1) + "},\"block\":\"transformed_parameters\"},{\"name\":\"p\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(nind) + ",\"cols\":" + std::to_string(n_occ_minus_1) + "},\"block\":\"transformed_parameters\"},{\"name\":\"chi\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(nind) + ",\"cols\":" + std::to_string(n_occasions) + "},\"block\":\"transformed_parameters\"},{\"name\":\"mu\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"sigma2\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"}]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"n_occ_minus_1\"";
+    json_stream << ":";
+    json_stream << std::to_string(n_occ_minus_1);
+    json_stream << ",\n";
+    json_stream << "\"first\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= nind; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(first[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"last\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= nind; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(last[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -11747,6 +11948,33 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"mean_phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mean_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"psi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_occasions) + "},\"block\":\"parameters\"},{\"name\":\"epsilon\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(M) + ",\"cols\":" + std::to_string(phi_2dim__) + "},\"block\":\"transformed_parameters\"},{\"name\":\"p\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(M) + ",\"cols\":" + std::to_string(n_occasions) + "},\"block\":\"transformed_parameters\"},{\"name\":\"b\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string((n_occasions -1)) + "},\"block\":\"transformed_parameters\"},{\"name\":\"nu\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_occasions) + "},\"block\":\"transformed_parameters\"},{\"name\":\"chi\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(M) + ",\"cols\":" + std::to_string(n_occasions) + "},\"block\":\"transformed_parameters\"},{\"name\":\"sigma2\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"Nsuper\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"N\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(n_occasions) + ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"},{\"name\":\"B\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(n_occasions) + ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"},{\"name\":\"z\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(M) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(n_occasions) + ",\"element_type\":{\"name\":\"int\"}}},\"block\":\"generated_quantities\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"first\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(first[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"last\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(last[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -12458,6 +12686,12 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"pi\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string((K -1)) + "},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(J) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(K) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string((K -1)) + "}}},\"block\":\"parameters\"},{\"name\":\"log_Pr_z\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(I) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(K) + "}},\"block\":\"generated_quantities\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -13125,6 +13359,12 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"beta0\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta1\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"tau_theta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"tau_phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"theta_std\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"phi_std_raw\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"sigma_phi\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"}]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -14151,6 +14391,37 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"mean_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(max_age) + "},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(nind) + ",\"cols\":" + std::to_string(n_occ_minus_1) + "},\"block\":\"transformed_parameters\"},{\"name\":\"p\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(nind) + ",\"cols\":" + std::to_string(n_occ_minus_1) + "},\"block\":\"transformed_parameters\"},{\"name\":\"chi\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(nind) + ",\"cols\":" + std::to_string(n_occasions) + "},\"block\":\"transformed_parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"n_occ_minus_1\"";
+    json_stream << ":";
+    json_stream << std::to_string(n_occ_minus_1);
+    json_stream << ",\n";
+    json_stream << "\"first\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= nind; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(first[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"last\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= nind; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(last[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -14547,6 +14818,12 @@ class function_in_function_inline_model final : public model_base_crtp<function_
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -14984,6 +15261,12 @@ class function_in_function_loops_model final : public model_base_crtp<function_i
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -15329,6 +15612,12 @@ class fuzz_div0_model final : public model_base_crtp<fuzz_div0_model> {
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -15822,6 +16111,12 @@ class initialize_SoA_model final : public model_base_crtp<initialize_SoA_model> 
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"y\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(3) + "},\"block\":\"parameters\"},{\"name\":\"arr_vec\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(4) + "}},\"block\":\"parameters\"},{\"name\":\"x\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(3) + "},\"block\":\"transformed_parameters\"}]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -16362,6 +16657,12 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"p_single_ret_vec\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(5) + "},\"block\":\"parameters\"},{\"name\":\"p_multi_ret_vec\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(5) + "},\"block\":\"parameters\"},{\"name\":\"tp_single_ret_vec\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(5) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_multi_ret_vec\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(5) + "},\"block\":\"transformed_parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -16774,6 +17075,41 @@ class inline_tdata_model final : public model_base_crtp<inline_tdata_model> {
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"N\"";
+    json_stream << ":";
+    json_stream << std::to_string(N);
+    json_stream << ",\n";
+    json_stream << "\"M\"";
+    json_stream << ":";
+    json_stream << std::to_string(M);
+    json_stream << ",\n";
+    json_stream << "\"bar\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "[";
+      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+        if (sym2__ > 1) {
+          json_stream << ",";
+        }
+        json_stream <<
+                      std::to_string(
+                        stan::model::rvalue(bar, "bar",
+                          stan::model::index_uni(sym1__),
+                          stan::model::index_uni(sym2__)));
+      }
+      json_stream << "]";
+    }
+    json_stream << "]";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -17198,6 +17534,12 @@ class inliner_same_names_model final : public model_base_crtp<inliner_same_names
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"R\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"out\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"}]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -18812,6 +19154,33 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"mean_phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mean_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"gamma\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_occasions) + "},\"block\":\"parameters\"},{\"name\":\"epsilon\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(epsilon_1dim__) + "},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(M) + ",\"cols\":" + std::to_string(phi_2dim__) + "},\"block\":\"transformed_parameters\"},{\"name\":\"p\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(M) + ",\"cols\":" + std::to_string(n_occasions) + "},\"block\":\"transformed_parameters\"},{\"name\":\"chi\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(M) + ",\"cols\":" + std::to_string(n_occasions) + "},\"block\":\"transformed_parameters\"},{\"name\":\"sigma2\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"psi\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"b\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_occasions) + "},\"block\":\"generated_quantities\"},{\"name\":\"Nsuper\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"N\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(n_occasions) + ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"},{\"name\":\"B\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(n_occasions) + ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"},{\"name\":\"z\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(M) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(n_occasions) + ",\"element_type\":{\"name\":\"int\"}}},\"block\":\"generated_quantities\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"first\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(first[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"last\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(last[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -19154,6 +19523,23 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"z\"";
+    json_stream << ":";
+    json_stream << std::to_string(z);
+    json_stream << ",\n";
+    json_stream << "\"x\"";
+    json_stream << ":";
+    json_stream << std::to_string(x);
+    json_stream << ",\n";
+    json_stream << "\"i\"";
+    json_stream << ":";
+    json_stream << std::to_string(i);
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -19533,6 +19919,12 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"x\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -19919,6 +20311,12 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"theta\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(J) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"}]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -20881,6 +21279,37 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"mean_phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mean_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(nind) + ",\"cols\":" + std::to_string(n_occ_minus_1) + "},\"block\":\"transformed_parameters\"},{\"name\":\"p\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(nind) + ",\"cols\":" + std::to_string(n_occ_minus_1) + "},\"block\":\"transformed_parameters\"},{\"name\":\"chi\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(nind) + ",\"cols\":" + std::to_string(n_occasions) + "},\"block\":\"transformed_parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"n_occ_minus_1\"";
+    json_stream << ":";
+    json_stream << std::to_string(n_occ_minus_1);
+    json_stream << ",\n";
+    json_stream << "\"first\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= nind; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(first[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"last\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= nind; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(last[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -21380,6 +21809,12 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"mu\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"tp\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"lbaz\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"lbar\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"}]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -22150,6 +22585,26 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"alpha_occ\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta_occ\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"logit_psi\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(R) + "},\"block\":\"transformed_parameters\"},{\"name\":\"logit_p\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(R) + ",\"cols\":" + std::to_string(T) + "},\"block\":\"transformed_parameters\"},{\"name\":\"occ_fs\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"psi_con\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(R) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"generated_quantities\"},{\"name\":\"z\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(R) + ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"}]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"sum_y\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= R; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(sum_y[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"occ_obs\"";
+    json_stream << ":";
+    json_stream << std::to_string(occ_obs);
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -22974,6 +23429,12 @@ class off_small_model final : public model_base_crtp<off_small_model> {
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"beta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"eta1\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(J) + "},\"block\":\"parameters\"},{\"name\":\"eta2\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(J) + "},\"block\":\"parameters\"},{\"name\":\"mu_a1\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mu_a2\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_a1\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_a2\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_y\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"a1\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(J) + "},\"block\":\"transformed_parameters\"},{\"name\":\"a2\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(J) + "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"}]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -24172,6 +24633,12 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"theta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"x_matrix\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(3) + ",\"cols\":" + std::to_string(2) + "},\"block\":\"parameters\"},{\"name\":\"x_vector\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"parameters\"},{\"name\":\"x_cov\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string((2 + ((2 * (2 - 1)) /2))) + "},\"block\":\"parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -24629,6 +25096,12 @@ class overload_tilde_stanlib_model final : public model_base_crtp<overload_tilde
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"theta\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -24995,6 +25468,12 @@ class overloaded_fn_model final : public model_base_crtp<overloaded_fn_model> {
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -25393,6 +25872,12 @@ class overloaded_fn2_model final : public model_base_crtp<overloaded_fn2_model> 
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -25761,6 +26246,12 @@ class partial_eval_conditions_model final : public model_base_crtp<partial_eval_
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -26140,6 +26631,12 @@ class partial_eval_tuple_model final : public model_base_crtp<partial_eval_tuple
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"x\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "}]},\"block\":\"transformed_parameters\"}]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -26852,6 +27349,12 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"a\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_pair) + "},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"parameters\"},{\"name\":\"mu_a\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_a\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_y\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"y_hat\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -27361,6 +27864,12 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"m2\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"m3\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(10) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -27697,6 +28206,26 @@ class partial_eval_zeros_model final : public model_base_crtp<partial_eval_zeros
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"v\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= 0; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(v[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"y\"";
+    json_stream << ":";
+    json_stream << std::to_string(y);
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -28084,6 +28613,12 @@ class rng_for_loop_bound_model final : public model_base_crtp<rng_for_loop_bound
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -28773,6 +29308,26 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"alpha0\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha1\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha2\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha12\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"tau\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(I) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(K) + "}},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"K\"";
+    json_stream << ":";
+    json_stream << std::to_string(K);
+    json_stream << ",\n";
+    json_stream << "\"x1x2\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= I; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(x1x2[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -29160,6 +29715,12 @@ class tuple_adlevels_model final : public model_base_crtp<tuple_adlevels_model> 
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"w\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -29685,6 +30246,12 @@ class unenforce_initialize_omni_model final : public model_base_crtp<unenforce_i
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"y\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"parameters\"},{\"name\":\"arr\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(5) + ",\"element_type\":{\"name\":\"real\"}}}},\"block\":\"parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -30134,6 +30701,29 @@ class unenforce_initialize_should_fail_model final : public model_base_crtp<unen
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"param\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"local\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(5) + "}},\"block\":\"transformed_parameters\"}]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"inputs\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "[";
+      for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
+        if (sym2__ > 1) {
+          json_stream << ",";
+        }
+        json_stream << std::to_string(inputs[(sym1__ - 1)][(sym2__ - 1)]);
+      }
+      json_stream << "]";
+    }
+    json_stream << "]";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -30586,6 +31176,12 @@ class unenforce_initialize_model final : public model_base_crtp<unenforce_initia
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"y\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"no_init\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"init_from_param\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"dependent_no_init\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"used_on_lhs\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"no_init_if\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"for_loop_var\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -30951,6 +31547,12 @@ class unroll_limit_model final : public model_base_crtp<unroll_limit_model> {
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"x\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"}]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -31837,6 +32439,37 @@ class vectorize_loops_model final : public model_base_crtp<vectorize_loops_model
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"eta\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"a\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(J) + "},\"block\":\"parameters\"}]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"M\"";
+    json_stream << ":";
+    json_stream << std::to_string(M);
+    json_stream << ",\n";
+    json_stream << "\"copied\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(copied[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"shorter\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << std::to_string(shorter[(sym1__ - 1)]);
+    }
+    json_stream << "]";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void

@@ -2219,6 +2219,12 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"cmat\",\"type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"cvec\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"crowvec\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"z\",\"type\":{\"name\":\"complex\"},\"block\":\"parameters\"},{\"name\":\"mat\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"vec\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"rowvec\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"r\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"tp_c_matrix\",\"type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_c_vector\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_c_rowvector\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_c\",\"type\":{\"name\":\"complex\"},\"block\":\"transformed_parameters\"},{\"name\":\"carray\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"complex\"}}},\"block\":\"transformed_parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -3347,6 +3353,12 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"gq_c_matrix\",\"type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "},\"block\":\"generated_quantities\"},{\"name\":\"gq_c_vector\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(N) + "},\"block\":\"generated_quantities\"},{\"name\":\"gq_c_rowvector\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(N) + "},\"block\":\"generated_quantities\"},{\"name\":\"gq_c\",\"type\":{\"name\":\"complex\"},\"block\":\"generated_quantities\"},{\"name\":\"carray\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"complex\"}}},\"block\":\"generated_quantities\"}]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -6077,6 +6089,12 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"cvmat\",\"type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"cvvec\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"cvrowvec\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"zv\",\"type\":{\"name\":\"complex\"},\"block\":\"parameters\"},{\"name\":\"vmat\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"vvec\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"vrowvec\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"v\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"tp_c_matrix\",\"type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_c_vector\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_c_rowvector\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_c\",\"type\":{\"name\":\"complex\"},\"block\":\"transformed_parameters\"},{\"name\":\"carray\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(N) + ",\"element_type\":{\"name\":\"complex\"}}},\"block\":\"transformed_parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -6561,6 +6579,12 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -9564,6 +9588,74 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"p_r\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"p_complex\",\"type\":{\"name\":\"complex\"},\"block\":\"parameters\"},{\"name\":\"p_complex_array\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex\"}},\"block\":\"parameters\"},{\"name\":\"p_complex_array_2d\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"complex\"}}},\"block\":\"parameters\"},{\"name\":\"tp_r\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"tp_complex\",\"type\":{\"name\":\"complex\"},\"block\":\"transformed_parameters\"},{\"name\":\"tp_complex_array\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex\"}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_complex_array_2d\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"complex\"}}},\"block\":\"transformed_parameters\"},{\"name\":\"gq_i\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"gq_r\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"gq_complex\",\"type\":{\"name\":\"complex\"},\"block\":\"generated_quantities\"},{\"name\":\"gq_complex_array\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex\"}},\"block\":\"generated_quantities\"},{\"name\":\"gq_complex_array_2d\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"complex\"}}},\"block\":\"generated_quantities\"},{\"name\":\"z\",\"type\":{\"name\":\"complex\"},\"block\":\"generated_quantities\"},{\"name\":\"y\",\"type\":{\"name\":\"complex\"},\"block\":\"generated_quantities\"},{\"name\":\"i_arr\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(0) + ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"},{\"name\":\"i_arr_1\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(1) + ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"},{\"name\":\"zi\",\"type\":{\"name\":\"complex\"},\"block\":\"generated_quantities\"},{\"name\":\"yi\",\"type\":{\"name\":\"complex\"},\"block\":\"generated_quantities\"},{\"name\":\"x\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"td_i\"";
+    json_stream << ":";
+    json_stream << std::to_string(td_i);
+    json_stream << ",\n";
+    json_stream << "\"td_r\"";
+    json_stream << ":";
+    json_stream << std::to_string(td_r);
+    json_stream << ",\n";
+    json_stream << "\"td_complex\"";
+    json_stream << ":";
+    json_stream << "[";
+    json_stream << std::to_string(stan::math::get_real(td_complex));
+    json_stream << ",";
+    json_stream << std::to_string(stan::math::get_imag(td_complex));
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"td_complex_array\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "[";
+      json_stream <<
+                    std::to_string(
+                      stan::math::get_real(td_complex_array[(sym1__ - 1)]));
+      json_stream << ",";
+      json_stream <<
+                    std::to_string(
+                      stan::math::get_imag(td_complex_array[(sym1__ - 1)]));
+      json_stream << "]";
+    }
+    json_stream << "]";
+    json_stream << ",\n";
+    json_stream << "\"td_complex_array_2d\"";
+    json_stream << ":";
+    json_stream << "[";
+    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      if (sym1__ > 1) {
+        json_stream << ",";
+      }
+      json_stream << "[";
+      for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+        if (sym2__ > 1) {
+          json_stream << ",";
+        }
+        json_stream << "[";
+        json_stream <<
+                      std::to_string(
+                        stan::math::get_real(td_complex_array_2d[(sym1__ -
+                          1)][(sym2__ - 1)]));
+        json_stream << ",";
+        json_stream <<
+                      std::to_string(
+                        stan::math::get_imag(td_complex_array_2d[(sym1__ -
+                          1)][(sym2__ - 1)]));
+        json_stream << "]";
+      }
+      json_stream << "]";
+    }
+    json_stream << "]";
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -10401,6 +10493,15 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[{\"name\":\"z\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(3) + "},\"block\":\"transformed_parameters\"},{\"name\":\"zs\",\"type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(2) + ",\"cols\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"x\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"zx\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"cm\",\"type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(cm_1dim__) + ",\"cols\":" + std::to_string(cm_2dim__) + "},\"block\":\"transformed_parameters\"},{\"name\":\"acm\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(2) + ",\"cols\":" + std::to_string(2) + "}},\"block\":\"transformed_parameters\"},{\"name\":\"az\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(3) + "}},\"block\":\"transformed_parameters\"}]");
   }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"n\"";
+    json_stream << ":";
+    json_stream << std::to_string(n);
+    json_stream << "}";
+    return json_stream.str();
+  }
   // Begin method overload boilerplate
   template <typename RNG> inline void
   write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
@@ -11084,6 +11185,15 @@ class user_function_templating_model final : public model_base_crtp<user_functio
   }
   inline std::string get_unconstrained_sizedtypes() const {
     return std::string("[]");
+  }
+  inline std::string get_transformed_data_json() const {
+    std::stringstream json_stream;
+    json_stream << "{";
+    json_stream << "\"N\"";
+    json_stream << ":";
+    json_stream << std::to_string(N);
+    json_stream << "}";
+    return json_stream.str();
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void

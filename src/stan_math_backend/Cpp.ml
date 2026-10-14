@@ -139,6 +139,7 @@ module Exprs = struct
 
   let fun_call name args = FunCall (name, [], args)
   let templated_fun_call name templates args = FunCall (name, templates, args)
+  let to_string e = fun_call "std::to_string" [e]
 
   (** Helper for [std::numeric_limits<double>::quiet_NaN()] *)
   let quiet_NaN = fun_call "std::numeric_limits<double>::quiet_NaN" []
@@ -290,6 +291,8 @@ module Statement_syntax = struct
 
   (** Shorthand for assignment *)
   let ( := ) a b = Expression (Assign (Var a, b))
+
+  let ( <<: ) a b = Expression (StreamInsertion (Var a, [b]))
 end
 
 (**/**)
