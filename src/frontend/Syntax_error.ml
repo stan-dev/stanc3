@@ -92,9 +92,6 @@ let pp_styled_text : styled_text Fmt.t =
 
 let to_grace ?printed_filename ?code ((loc, err) : t) =
   let open Grace.Diagnostic in
-  let range, included =
-    Diagnostic.range_of_loc_span ?printed_filename ?code loc in
-  let primary = Label.primaryf ~range "here." in
   let summary, notes =
     match err with
     | Parsing message ->
@@ -122,7 +119,7 @@ let to_grace ?printed_filename ?code ((loc, err) : t) =
         , Option.map ~f:Message.create note |> Option.to_list )
     | Lexing -> (Message.createf "Invalid character found.@.", [])
     | UnexpectedEOF -> (Message.createf "Unexpected end of input.@.", []) in
-  create Error ~labels:(Diagnostic.unstyle primary :: included) ~notes summary
+  Diagnostic.make ?printed_filename ?code ~notes ~summary loc Error "here."
 
 exception ParserException of styled_text * Middle.Location_span.t
 exception UnexpectedEOF of Middle.Location_span.t
