@@ -602,7 +602,7 @@ module IdentifierError = struct
         make_error "Identifier %a clashes with reserved keyword." quoted name
     | NotInScope (name, sug) ->
         let notes, labels = suggestions sug in
-        make_error ~notes ~labels "@[Identifier %a not in scope.@]" quoted name
+        make_error ~notes ~labels "Identifier %a not in scope." quoted name
     | ReturningFnExpectedUndeclaredIdentFound (fn_name, sug) ->
         let notes, labels = suggestions sug in
         make_error ~notes ~labels

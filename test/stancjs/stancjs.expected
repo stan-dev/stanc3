@@ -129,7 +129,7 @@ $ node check.js
   "errors": [
     {
       "severity": "error",
-      "message": "Identifier \"z\" not in scope.",
+      "message": "Identifier \n\"z\" not in scope.",
       "notes": [],
       "labels": [
         {
@@ -145,7 +145,7 @@ $ node check.js
             }
           },
           "priority": "primary",
-          "message": "Identifier \"z\" not in scope."
+          "message": "Identifier \n\"z\" not in scope."
         }
       ]
     }
