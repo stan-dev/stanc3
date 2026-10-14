@@ -399,8 +399,8 @@ module TypeError = struct
         make_error
           ~summary:
             (Message.createf "Ill-typed arguments supplied to %a." quoted name)
-          "Missing control parameter tuple at the end of the call to %a.@ \
-           Expected a tuple of %a arguments for the control parameters."
+          "@[<v>Missing control parameter tuple at the end of the call to %a.@ \
+           Expected a tuple of %a arguments for the control parameters.@]"
           quoted name (expected_style Fmt.int)
           (List.length Stan_math_signatures.laplace_tolerance_argument_types)
     | IlltypedLaplaceTolArgs (name, ArgNumMismatch (_, found)) ->

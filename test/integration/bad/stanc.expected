@@ -935,8 +935,7 @@ error: Invalid call to random number generator.
   8 │      foo_rng(1.0);
     │      ^^^^^^^^^^^^^ Random number generators are only allowed in transformed
     │                    data block, generated quantities block or user-defined
-    │                    functions with names ending in
-    │                    _rng.
+    │                    functions with names ending in _rng.
   9 │  }
 [exit 1]
   $ stanc expect_statement_seq_close_brace.stan
@@ -2056,8 +2055,7 @@ error: Invalid call to random number generator.
     │             ^^^^^^^^^^^^^^^^^^ Random number generators are only allowed in
     │                                transformed data block, generated quantities
     │                                block or user-defined functions with names
-    │                                ending in
-    │                                _rng.
+    │                                ending in _rng.
   4 │    }
 [exit 1]
   $ stanc rng_loc2.stan
@@ -2068,8 +2066,7 @@ error: Invalid call to random number generator.
     │             ^^^^^^^^^^^^^^^^^^ Random number generators are only allowed in
     │                                transformed data block, generated quantities
     │                                block or user-defined functions with names
-    │                                ending in
-    │                                _rng.
+    │                                ending in _rng.
   4 │    }
 [exit 1]
   $ stanc rng_loc3.stan
@@ -2080,8 +2077,7 @@ error: Invalid call to random number generator.
     │             ^^^^^^^^^^^^^^^^^^ Random number generators are only allowed in
     │                                transformed data block, generated quantities
     │                                block or user-defined functions with names
-    │                                ending in
-    │                                _rng.
+    │                                ending in _rng.
   4 │    }
 [exit 1]
   $ stanc rng_loc4.stan
@@ -2092,8 +2088,7 @@ error: Invalid call to random number generator.
     │             ^^^^^^^^^^^^^^^^^^ Random number generators are only allowed in
     │                                transformed data block, generated quantities
     │                                block or user-defined functions with names
-    │                                ending in
-    │                                _rng.
+    │                                ending in _rng.
   4 │    }
 [exit 1]
   $ stanc rng_loc5.stan
@@ -2103,8 +2098,7 @@ error: Invalid call to random number generator.
   6 │    z = normal_rng(0, 1);
     │        ^^^^^^^^^^^^^^^^ Random number generators are only allowed in
     │                         transformed data block, generated quantities block or
-    │                         user-defined functions with names ending in
-    │                         _rng.
+    │                         user-defined functions with names ending in _rng.
   7 │  }
 [exit 1]
   $ stanc rng_loc6.stan
@@ -2114,8 +2108,7 @@ error: Invalid call to random number generator.
   6 │    z = normal_rng(0, 1);
     │        ^^^^^^^^^^^^^^^^ Random number generators are only allowed in
     │                         transformed data block, generated quantities block or
-    │                         user-defined functions with names ending in
-    │                         _rng.
+    │                         user-defined functions with names ending in _rng.
   7 │  
 [exit 1]
   $ stanc row_vector_expr_bad1.stan
