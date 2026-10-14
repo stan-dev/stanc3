@@ -902,8 +902,7 @@ warning: Found integer division. The value will be rounded towards zero.
     ┌─ validate_division_int_warning.stan:8:7
   7 │    u = j / k;
   8 │    u = j / 3;
-    │        ^^^^^ If rounding is not desired you can write the division as
-    │              j / 3.0
+    │        ^^^^^ If rounding is not desired you can write the division as j / 3.0
   9 │    u = 2 / k;
     = If rounding is intended please use the integer division operator
       %%/%%.
@@ -911,8 +910,7 @@ warning: Found integer division. The value will be rounded towards zero.
     ┌─ validate_division_int_warning.stan:9:7
   8 │    u = j / 3;
   9 │    u = 2 / k;
-    │        ^^^^^ If rounding is not desired you can write the division as
-    │              2.0 / k
+    │        ^^^^^ If rounding is not desired you can write the division as 2.0 / k
  10 │    u = 2 / 3;
     = If rounding is intended please use the integer division operator
       %%/%%.
@@ -920,8 +918,7 @@ warning: Found integer division. The value will be rounded towards zero.
     ┌─ validate_division_int_warning.stan:10:7
   9 │    u = 2 / k;
  10 │    u = 2 / 3;
-    │        ^^^^^ If rounding is not desired you can write the division as
-    │              2.0 / 3
+    │        ^^^^^ If rounding is not desired you can write the division as 2.0 / 3
  11 │  }
     = If rounding is intended please use the integer division operator
       %%/%%.

@@ -217,40 +217,39 @@ module TypeError = struct
           (actual_style UnsizedType.pp)
           t2
     | InvalidRowVectorTypes ty ->
-        make_error "@[Row vector expression must have all %a entries.%a@]"
+        make_error "Row vector expression must have all %a entries.%a"
           expected_types [UInt; UReal; UComplex] found_type ty
     | InvalidMatrixTypes ty ->
-        make_error "@[Matrix expression must have all %a entries.%a@]"
+        make_error "Matrix expression must have all %a entries.%a"
           expected_types
           [URowVector; UComplexRowVector]
           found_type ty
     | IntExpected (name, ut) ->
-        make_error "@[%s must be of type %a.%a@]" name expected_types [UInt]
+        make_error "%s must be of type %a.%a" name expected_types [UInt]
           found_type ut
     | IntOrRealExpected (name, ut) ->
-        make_error "@[%s must be of type %a.%a@]" name expected_types
-          [UInt; UReal] found_type ut
+        make_error "%s must be of type %a.%a" name expected_types [UInt; UReal]
+          found_type ut
     | TupleExpected (name, ut) ->
-        make_error "@[%s must be a %a.%a@]" name
+        make_error "%s must be a %a.%a" name
           (expected_style Fmt.string)
           "tuple" found_type ut
     | TypeExpected (name, (UInt | UReal | UComplex), ut) ->
-        make_error "@[%s must be a %a.%a@]" name
+        make_error "%s must be a %a.%a" name
           (expected_style Fmt.string)
           "scalar" found_type ut
     | TypeExpected (name, et, ut) ->
-        make_error "@[%s must be a %a or of type %a.%a@]" name
+        make_error "%s must be a %a or of type %a.%a" name
           (expected_style Fmt.string)
           "scalar" expected_types [et] found_type ut
     | IntOrRealContainerExpected ut ->
-        make_error "@[A (container of) %a was expected.%a@]" expected_types
+        make_error "A (container of) %a was expected.%a" expected_types
           [UReal; UInt] found_type ut
     | IntIntArrayOrRangeExpected ut ->
-        make_error
-          "@[Index must be of type %a or must be a range (int:int).%a@]"
+        make_error "Index must be of type %a or must be a range (int:int).%a"
           expected_types [UInt; UArray UInt] found_type ut
     | ArrayVectorRowVectorMatrixExpected ut ->
-        make_error "@[Foreach-loop must be over %a, %a.%a@]"
+        make_error "Foreach-loop must be over %a, %a.%a"
           (expected_style Fmt.string)
           "array" expected_types
           [UVector; URowVector; UMatrix]
@@ -399,8 +398,8 @@ module TypeError = struct
         make_error
           ~summary:
             (Message.createf "Ill-typed arguments supplied to %a." quoted name)
-          "Missing control parameter tuple at the end of the call to %a.@ \
-           Expected a tuple of %a arguments for the control parameters."
+          "@[<v>Missing control parameter tuple at the end of the call to %a.@ \
+           Expected a tuple of %a arguments for the control parameters.@]"
           quoted name (expected_style Fmt.int)
           (List.length Stan_math_signatures.laplace_tolerance_argument_types)
     | IlltypedLaplaceTolArgs (name, ArgNumMismatch (_, found)) ->
@@ -529,31 +528,30 @@ module TypeError = struct
           quoted name
     | NonRealProbFunDef Void ->
         make_error
-          "@[%a return type required for probability functions ending in \
-           _lpdf, _lupdf, _lpmf, _lupmf, _cdf, _lcdf, or _lccdf.@ Instead \
-           found a %a function.@]"
+          "%a return type required for probability functions ending in _lpdf, \
+           _lupdf, _lpmf, _lupmf, _cdf, _lcdf, or _lccdf.@ Instead found a %a \
+           function."
           (expected_style UnsizedType.pp)
           UReal
           (actual_style UnsizedType.pp_returntype)
           Void
     | NonRealProbFunDef (ReturnType t) ->
         make_error
-          "@[%a return type required for probability functions ending in \
-           _lpdf, _lupdf, _lpmf, _lupmf, _cdf, _lcdf, or _lccdf.%a@]"
+          "%a return type required for probability functions ending in _lpdf, \
+           _lupdf, _lpmf, _lupmf, _cdf, _lcdf, or _lccdf.%a"
           (expected_style UnsizedType.pp)
           UReal found_type t
     | ProbDensityNonRealVariate ut ->
         make_error
-          "@[Probability density functions require %a variates (first \
-           argument).%a@]"
+          "Probability density functions require %a variates (first \
+           argument).%a"
           (expected_style UnsizedType.pp)
           UReal
           Fmt.(option found_type)
           ut
     | ProbMassNonIntVariate ut ->
         make_error
-          "@[Probability mass functions require %a variates (first \
-           argument).%a@]"
+          "Probability mass functions require %a variates (first argument).%a"
           (expected_style UnsizedType.pp)
           UInt
           Fmt.(option found_type)
@@ -602,18 +600,18 @@ module IdentifierError = struct
         make_error "Identifier %a clashes with reserved keyword." quoted name
     | NotInScope (name, sug) ->
         let notes, labels = suggestions sug in
-        make_error ~notes ~labels "@[Identifier %a not in scope.@]" quoted name
+        make_error ~notes ~labels "Identifier %a not in scope." quoted name
     | ReturningFnExpectedUndeclaredIdentFound (fn_name, sug) ->
         let notes, labels = suggestions sug in
         make_error ~notes ~labels
-          "@[A returning function was expected but an undeclared identifier %a \
-           was supplied.@]"
+          "A returning function was expected but an undeclared identifier %a \
+           was supplied."
           quoted fn_name
     | NonReturningFnExpectedUndeclaredIdentFound (fn_name, sug) ->
         let notes, labels = suggestions sug in
         make_error ~notes ~labels
-          "@[A non-returning function was expected but an undeclared \
-           identifier %a was supplied.@]"
+          "A non-returning function was expected but an undeclared identifier \
+           %a was supplied."
           quoted fn_name
     | UnnormalizedSuffix name ->
         make_error
@@ -626,7 +624,7 @@ module IdentifierError = struct
             (Message.create
                "All function arguments must have distinct identifiers.")
           ~labels:(previous_declaration id.id_loc)
-          "@[Argument %a is duplicated.@]" quoted id.name
+          "Argument %a is duplicated." quoted id.name
 end
 
 module ExpressionError = struct
@@ -665,9 +663,9 @@ module ExpressionError = struct
         make_error
           ~summary:
             (Message.create "Invalid call to unnormalized probability function.")
-          "@[Unnormalized probability functions such as %a can@ only be used \
-           in the model block or in user-defined functions with names@ ending \
-           in _lpdf or _lpmf.@ Did you mean %a?@]"
+          "Unnormalized probability functions such as %a can@ only be used in \
+           the model block or in user-defined functions with names@ ending in \
+           _lpdf or _lpmf.@ Did you mean %a?"
           quoted name quoted
           (Utils.normalized_name name)
     | InvalidUnnormalizedUDF fname ->
@@ -677,23 +675,23 @@ module ExpressionError = struct
             [ Message.createf
                 "Function names should end with _lpdf/_lpmf not _lupdf/_lupmf."
             ]
-          "@[%a is an invalid user-defined function name.@ User-defined \
+          "%a is an invalid user-defined function name.@ User-defined \
            probability mass and density functions must@ be defined as \
-           normalized.@]"
+           normalized."
           quoted fname
     | ConditionalNotationNotAllowed ->
         make_error
           ~summary:(Message.create "Invalid conditioning in function.")
-          "@[Only functions with names ending in _lpdf,@ _lupdf,@ _lpmf,@ \
+          "Only functions with names ending in _lpdf,@ _lupdf,@ _lpmf,@ \
            _lupmf,@ _cdf,@ _lcdf,@ _lccdf can make use of@ conditional \
-           notation (%a).@]"
+           notation (%a)."
           quoted "|"
     | ConditioningRequired ->
         make_error
           ~summary:(Message.create "Conditioning required for function.")
-          "@[Probability functions with suffixes _lpdf,@ _lupdf,@ _lpmf,@ \
+          "Probability functions with suffixes _lpdf,@ _lupdf,@ _lpmf,@ \
            _lupmf,@ _cdf,@ _lcdf,@ and _lccdf,@ require a vertical bar@ (%a) \
-           between@ the first@ two arguments.@]"
+           between@ the first@ two arguments."
           quoted "|"
     | NotPrintable -> make_error "Functions cannot be printed."
     | EmptyArray ->
@@ -735,15 +733,15 @@ module ExpressionError = struct
     | IllTypedTernaryIf (UInt, ut2, ut3) ->
         make_error
           ~summary:(Message.create "Type mismatch in ternary expression.")
-          "@[Expression when true is:@;\
+          "Expression when true is:@;\
            <1 2>@[<h>%a@];@ Expression when false is:@;\
-           <1 2>@[<h>%a@]@]"
+           <1 2>@[<h>%a@]"
           (actual_style UnsizedType.pp)
           ut2
           (actual_style UnsizedType.pp)
           ut3
     | IllTypedTernaryIf (ut1, _, _) ->
-        make_error "@[Condition in ternary expression must be type %a.%a@]"
+        make_error "Condition in ternary expression must be type %a.%a"
           (expected_style UnsizedType.pp)
           UInt found_type ut1
     | IllTypedBinaryOperator (op, lt, rt) ->
@@ -980,7 +978,7 @@ module StatementError = struct
           "Top level variable sizes must be variables from the (transformed) \
            data block or functions thereof."
     | NonIntBounds ->
-        make_error "@[Bounds of integer variable must be of type %a.%a@]"
+        make_error "Bounds of integer variable must be of type %a.%a"
           (expected_style UnsizedType.pp)
           UInt found_type UReal
     | ComplexTransform ->
@@ -995,8 +993,8 @@ module StatementError = struct
             (context lt.loc "Left hand side has type %a."
                (expected_style UnsizedType.pp)
                lt.type_)
-          "@[Expected the right hand side to have a type matching the \
-           destination.%a@]"
+          "Expected the right hand side to have a type matching the \
+           destination.%a"
           found_type rt.type_
     | IllTypedAssignment (op, lt, rt) ->
         let pp_expected_types ppf signatures =
@@ -1019,7 +1017,7 @@ module StatementError = struct
                (expected_style UnsizedType.pp)
                lt.type_)
           ~notes:[(fun ppf -> pp_expected_types ppf sigs)]
-          "@[Ill-typed assignment operator %a=.@]" Operator.pp op
+          "Ill-typed assignment operator %a=." Operator.pp op
 end
 
 type err =
