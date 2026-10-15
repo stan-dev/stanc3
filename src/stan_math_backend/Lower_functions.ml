@@ -208,18 +208,25 @@ let lower_returntype arg_types rt =
   | Void -> Void
 
 let lower_eigen_args_to_ref arg_types =
-  let lower_ref name =
-    VariableDefn
-      (make_variable_defn ~type_:(Types.const_ref Auto) ~name
-         ~init:
-           (Assignment
-              (Exprs.fun_call "stan::math::to_ref" [Var (name ^ "_arg__")]))
-         ()) in
+  let lower_ref (name, ut) =
+    let arg =
+      let v = Expr.Helpers.variable (name ^ "_arg__") in
+      {v with meta= {v.meta with type_= ut}} in
+    Stmt.
+      { pattern=
+          Decl
+            { decl_adtype= AutoDiffable
+            ; decl_type= Unsized ut
+            ; decl_id= name
+            ; initialize=
+                Assign (Expr.Helpers.internal_funapp FnToRef [arg] arg.meta) }
+      ; meta= Stmt.Numbered.Meta.empty } in
   List.map ~f:lower_ref
     (List.filter_map
        ~f:(fun (_, name, ut) ->
-         if UnsizedType.is_eigen_type ut then Some name else None)
+         if UnsizedType.is_eigen_type ut then Some (name, ut) else None)
        arg_types)
+  |> lower_statements
 
 let typename parameter_name = Typename parameter_name
 

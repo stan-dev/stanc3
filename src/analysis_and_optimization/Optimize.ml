@@ -271,8 +271,7 @@ let bind_inlined_argument fname name
         @ [ Stmt.Pattern.Decl
               { decl_adtype= e.meta.adlevel
               ; decl_type=
-                  Sized
-                    (unsafe_unsized_to_sized_type (Type.Unsized e.meta.type_))
+                  Sized (unsafe_unsized_to_sized_type (Unsized e.meta.type_))
               ; decl_id= temp
               ; initialize= Assign e } ]
       , stmts
