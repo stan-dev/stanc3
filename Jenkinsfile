@@ -211,7 +211,7 @@ catchError {
               dir('performance-tests-cmdstan') {
                 checkout scmGit(
                   userRemoteConfigs: [[url: 'https://github.com/stan-dev/performance-tests-cmdstan']],
-                  branches: [[name: 'refs/heads/master']],
+                  branches: [[name: 'refs/heads/more-inline-tests']],
                   extensions: [
                     cloneOption(noTags: true, shallow: true, depth: 50),
                     submodule(shallow: true, depth: 8, recursiveSubmodules: true)])
