@@ -12467,21 +12467,21 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
         current_statement__ = 70;
         for (int i = 1; i <= M; ++i) {
           int f = std::numeric_limits<int>::min();
-          const std::vector<int>& inline_first_capture_y_i_arg_sym10__ =
+          const std::vector<int>& inline_first_capture_y_i_arg_sym11__ =
             stan::model::rvalue(z, "z", stan::model::index_uni(i));
-          int inline_first_capture_return_sym11__;
+          int inline_first_capture_return_sym10__;
           int inline_first_capture_early_ret_check_sym13__;
           inline_first_capture_early_ret_check_sym13__ = 0;
           for (int inline_first_capture_iterator_sym14__ = 1; inline_first_capture_iterator_sym14__
                <= 1; ++inline_first_capture_iterator_sym14__) {
             for (int inline_first_capture_k_sym12__ = 1; inline_first_capture_k_sym12__
                  <=
-                 stan::math::size(inline_first_capture_y_i_arg_sym10__); ++inline_first_capture_k_sym12__) {
+                 stan::math::size(inline_first_capture_y_i_arg_sym11__); ++inline_first_capture_k_sym12__) {
               current_statement__ = 65;
-              if (inline_first_capture_y_i_arg_sym10__[(inline_first_capture_k_sym12__
+              if (inline_first_capture_y_i_arg_sym11__[(inline_first_capture_k_sym12__
                   - 1)]) {
                 inline_first_capture_early_ret_check_sym13__ = 1;
-                inline_first_capture_return_sym11__ = inline_first_capture_k_sym12__;
+                inline_first_capture_return_sym10__ = inline_first_capture_k_sym12__;
                 break;
               }
             }
@@ -12489,15 +12489,15 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
               break;
             }
             inline_first_capture_early_ret_check_sym13__ = 1;
-            inline_first_capture_return_sym11__ = 0;
+            inline_first_capture_return_sym10__ = 0;
             break;
           }
           current_statement__ = 68;
-          if (stan::math::logical_gt(inline_first_capture_return_sym11__, 0)) {
+          if (stan::math::logical_gt(inline_first_capture_return_sym10__, 0)) {
             current_statement__ = 67;
             stan::model::assign(recruit, 1, "assigning variable recruit",
               stan::model::index_uni(i),
-              stan::model::index_uni(inline_first_capture_return_sym11__));
+              stan::model::index_uni(inline_first_capture_return_sym10__));
           }
         }
         current_statement__ = 74;
@@ -16111,10 +16111,10 @@ class function_in_function_loops_model final : public model_base_crtp<function_i
         for (int inline_summer_n_sym25__ = 1; inline_summer_n_sym25__ <=
              inline_summer_N_sym19__; ++inline_summer_n_sym25__) {
           local_scalar_t__
-            inline_summer_inline_do_something_x_arg_sym5___sym21__ =
+            inline_summer_inline_do_something_x_arg_sym6___sym21__ =
             eta[(inline_summer_n_sym25__ - 1)];
           local_scalar_t__
-            inline_summer_inline_do_something_return_sym6___sym22__;
+            inline_summer_inline_do_something_return_sym5___sym22__;
           int
             inline_summer_inline_do_something_early_ret_check_sym7___sym23__ =
             std::numeric_limits<int>::min();
@@ -16123,11 +16123,11 @@ class function_in_function_loops_model final : public model_base_crtp<function_i
                  1; inline_summer_inline_do_something_iterator_sym8___sym24__
                <=
                1; ++inline_summer_inline_do_something_iterator_sym8___sym24__) {
-            inline_summer_inline_do_something_return_sym6___sym22__ = inline_summer_inline_do_something_x_arg_sym5___sym21__;
+            inline_summer_inline_do_something_return_sym5___sym22__ = inline_summer_inline_do_something_x_arg_sym6___sym21__;
             break;
           }
           inline_summer_running_sum_sym20__ = (inline_summer_running_sum_sym20__
-            + inline_summer_inline_do_something_return_sym6___sym22__);
+            + inline_summer_inline_do_something_return_sym5___sym22__);
         }
         current_statement__ = 10;
         inline_summer_return_sym18__ = inline_summer_running_sum_sym20__;
@@ -16184,10 +16184,10 @@ class function_in_function_loops_model final : public model_base_crtp<function_i
         for (int inline_summer_n_sym16__ = 1; inline_summer_n_sym16__ <=
              inline_summer_N_sym10__; ++inline_summer_n_sym16__) {
           local_scalar_t__
-            inline_summer_inline_do_something_x_arg_sym5___sym12__ =
+            inline_summer_inline_do_something_x_arg_sym6___sym12__ =
             eta[(inline_summer_n_sym16__ - 1)];
           local_scalar_t__
-            inline_summer_inline_do_something_return_sym6___sym13__;
+            inline_summer_inline_do_something_return_sym5___sym13__;
           int
             inline_summer_inline_do_something_early_ret_check_sym7___sym14__ =
             std::numeric_limits<int>::min();
@@ -16196,11 +16196,11 @@ class function_in_function_loops_model final : public model_base_crtp<function_i
                  1; inline_summer_inline_do_something_iterator_sym8___sym15__
                <=
                1; ++inline_summer_inline_do_something_iterator_sym8___sym15__) {
-            inline_summer_inline_do_something_return_sym6___sym13__ = inline_summer_inline_do_something_x_arg_sym5___sym12__;
+            inline_summer_inline_do_something_return_sym5___sym13__ = inline_summer_inline_do_something_x_arg_sym6___sym12__;
             break;
           }
           inline_summer_running_sum_sym11__ = (inline_summer_running_sum_sym11__
-            + inline_summer_inline_do_something_return_sym6___sym13__);
+            + inline_summer_inline_do_something_return_sym5___sym13__);
         }
         current_statement__ = 10;
         inline_summer_return_sym9__ = inline_summer_running_sum_sym11__;
@@ -19019,26 +19019,26 @@ class inliner_temps_model final : public model_base_crtp<inliner_temps_model> {
         return ;
       }
       double z = std::numeric_limits<double>::quiet_NaN();
-      double inline_self_diff_x_arg_sym1__ =
+      double inline_self_diff_x_arg_sym2__ =
         stan::math::normal_rng(0, 1, base_rng__);
-      double inline_self_diff_return_sym2__;
+      double inline_self_diff_return_sym1__;
       {
         current_statement__ = 3;
-        inline_self_diff_return_sym2__ = (inline_self_diff_x_arg_sym1__ -
-          inline_self_diff_x_arg_sym1__);
+        inline_self_diff_return_sym1__ = (inline_self_diff_x_arg_sym2__ -
+          inline_self_diff_x_arg_sym2__);
       }
-      z = inline_self_diff_return_sym2__;
+      z = inline_self_diff_return_sym1__;
       Eigen::Matrix<double,-1,-1> a =
         Eigen::Matrix<double,-1,-1>::Constant(d, d,
           std::numeric_limits<double>::quiet_NaN());
-      const auto& inline_sign_fix_a_arg_sym4__ =
+      const auto& inline_sign_fix_a_arg_sym5__ =
         stan::math::to_ref(stan::math::multiply(L, U));
-      Eigen::Matrix<double,-1,-1> inline_sign_fix_return_sym5__;
+      Eigen::Matrix<double,-1,-1> inline_sign_fix_return_sym4__;
       {
         int inline_sign_fix_d_sym6__;
         current_statement__ = 4;
         inline_sign_fix_d_sym6__ = stan::math::rows(
-                                     inline_sign_fix_a_arg_sym4__);
+                                     inline_sign_fix_a_arg_sym5__);
         current_statement__ = 5;
         stan::math::validate_non_negative_index("out", "d",
           inline_sign_fix_d_sym6__);
@@ -19048,21 +19048,21 @@ class inliner_temps_model final : public model_base_crtp<inliner_temps_model> {
         Eigen::Matrix<local_scalar_t__,-1,-1> inline_sign_fix_out_sym7__;
         current_statement__ = 7;
         stan::model::assign(inline_sign_fix_out_sym7__,
-          inline_sign_fix_a_arg_sym4__,
+          inline_sign_fix_a_arg_sym5__,
           "assigning variable inline_sign_fix_out_sym7__");
         current_statement__ = 12;
         for (int inline_sign_fix_j_sym8__ = 1; inline_sign_fix_j_sym8__ <=
              inline_sign_fix_d_sym6__; ++inline_sign_fix_j_sym8__) {
           current_statement__ = 10;
           if (stan::math::logical_lt(
-                stan::model::rvalue(inline_sign_fix_a_arg_sym4__,
-                  "inline_sign_fix_a_arg_sym4__", stan::model::index_uni(1),
+                stan::model::rvalue(inline_sign_fix_a_arg_sym5__,
+                  "inline_sign_fix_a_arg_sym5__", stan::model::index_uni(1),
                   stan::model::index_uni(inline_sign_fix_j_sym8__)), 0)) {
             current_statement__ = 8;
             stan::model::assign(inline_sign_fix_out_sym7__,
               stan::math::minus(
-                stan::model::rvalue(inline_sign_fix_a_arg_sym4__,
-                  "inline_sign_fix_a_arg_sym4__", stan::model::index_omni(),
+                stan::model::rvalue(inline_sign_fix_a_arg_sym5__,
+                  "inline_sign_fix_a_arg_sym5__", stan::model::index_omni(),
                   stan::model::index_uni(inline_sign_fix_j_sym8__))),
               "assigning variable inline_sign_fix_out_sym7__",
               stan::model::index_omni(),
@@ -19070,11 +19070,11 @@ class inliner_temps_model final : public model_base_crtp<inliner_temps_model> {
           }
         }
         current_statement__ = 13;
-        stan::model::assign(inline_sign_fix_return_sym5__,
+        stan::model::assign(inline_sign_fix_return_sym4__,
           inline_sign_fix_out_sym7__,
-          "assigning variable inline_sign_fix_return_sym5__");
+          "assigning variable inline_sign_fix_return_sym4__");
       }
-      stan::model::assign(a, inline_sign_fix_return_sym5__,
+      stan::model::assign(a, inline_sign_fix_return_sym4__,
         "assigning variable a");
       out__.write(z);
       out__.write(a);
@@ -21183,21 +21183,21 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         current_statement__ = 72;
         for (int i = 1; i <= M; ++i) {
           int f = std::numeric_limits<int>::min();
-          const std::vector<int>& inline_first_capture_y_i_arg_sym16__ =
+          const std::vector<int>& inline_first_capture_y_i_arg_sym17__ =
             stan::model::rvalue(z, "z", stan::model::index_uni(i));
-          int inline_first_capture_return_sym17__;
+          int inline_first_capture_return_sym16__;
           int inline_first_capture_early_ret_check_sym19__;
           inline_first_capture_early_ret_check_sym19__ = 0;
           for (int inline_first_capture_iterator_sym20__ = 1; inline_first_capture_iterator_sym20__
                <= 1; ++inline_first_capture_iterator_sym20__) {
             for (int inline_first_capture_k_sym18__ = 1; inline_first_capture_k_sym18__
                  <=
-                 stan::math::size(inline_first_capture_y_i_arg_sym16__); ++inline_first_capture_k_sym18__) {
+                 stan::math::size(inline_first_capture_y_i_arg_sym17__); ++inline_first_capture_k_sym18__) {
               current_statement__ = 67;
-              if (inline_first_capture_y_i_arg_sym16__[(inline_first_capture_k_sym18__
+              if (inline_first_capture_y_i_arg_sym17__[(inline_first_capture_k_sym18__
                   - 1)]) {
                 inline_first_capture_early_ret_check_sym19__ = 1;
-                inline_first_capture_return_sym17__ = inline_first_capture_k_sym18__;
+                inline_first_capture_return_sym16__ = inline_first_capture_k_sym18__;
                 break;
               }
             }
@@ -21205,15 +21205,15 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
               break;
             }
             inline_first_capture_early_ret_check_sym19__ = 1;
-            inline_first_capture_return_sym17__ = 0;
+            inline_first_capture_return_sym16__ = 0;
             break;
           }
           current_statement__ = 70;
-          if (stan::math::logical_gt(inline_first_capture_return_sym17__, 0)) {
+          if (stan::math::logical_gt(inline_first_capture_return_sym16__, 0)) {
             current_statement__ = 69;
             stan::model::assign(recruit, 1, "assigning variable recruit",
               stan::model::index_uni(i),
-              stan::model::index_uni(inline_first_capture_return_sym17__));
+              stan::model::index_uni(inline_first_capture_return_sym16__));
           }
         }
         current_statement__ = 76;
@@ -26293,7 +26293,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           Eigen::Matrix<local_scalar_t__,-1,-1>, jacobian__>(lp__, 2);
       {
         local_scalar_t__ x = DUMMY_VAR__;
-        double inline_nrfun_lp_x_arg_sym30__;
+        double inline_nrfun_lp_x_arg_sym31__;
         {
           current_statement__ = 7;
           lp_accum__.add(3);
@@ -26373,7 +26373,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
               break;
             }
             lp_accum__.add(inline_rfun_return_sym44__);
-            double inline_nrfun_lp_x_arg_sym47__;
+            double inline_nrfun_lp_x_arg_sym48__;
             {
               current_statement__ = 7;
               lp_accum__.add(3);
@@ -26626,7 +26626,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           jacobian__>(lp__, 2);
       {
         local_scalar_t__ x = DUMMY_VAR__;
-        double inline_nrfun_lp_x_arg_sym1__;
+        double inline_nrfun_lp_x_arg_sym2__;
         {
           current_statement__ = 7;
           lp_accum__.add(3);
@@ -26706,7 +26706,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
               break;
             }
             lp_accum__.add(inline_rfun_return_sym15__);
-            double inline_nrfun_lp_x_arg_sym18__;
+            double inline_nrfun_lp_x_arg_sym19__;
             {
               current_statement__ = 7;
               lp_accum__.add(3);

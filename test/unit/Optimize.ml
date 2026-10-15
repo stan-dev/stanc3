@@ -142,7 +142,7 @@ let%expect_test "inline functions" =
     log_prob {
       {
         data matrix[0, 0]
-          inline_f_y_arg_sym1__ = FnToRef__(FnMakeRowVec__(FnMakeRowVec__(
+          inline_f_y_arg_sym2__ = FnToRef__(FnMakeRowVec__(FnMakeRowVec__(
                                                            promote(3, real, data),
                                                            promote(2, real, data)),
                                                            FnMakeRowVec__(
@@ -150,7 +150,7 @@ let%expect_test "inline functions" =
                                                            promote(6, real, data))));
         {
           FnPrint__(3);
-          FnPrint__(inline_f_y_arg_sym1__);
+          FnPrint__(inline_f_y_arg_sym2__);
         }
         real inline_g_return_sym3__;
         {
@@ -288,7 +288,7 @@ let%expect_test "list collapsing" =
       (((pattern
          (Block
           (((pattern
-             (Decl (decl_adtype DataOnly) (decl_id inline_f_y_arg_sym1__)
+             (Decl (decl_adtype DataOnly) (decl_id inline_f_y_arg_sym2__)
               (decl_type
                (Sized
                 (SMatrix AoS
@@ -354,7 +354,7 @@ let%expect_test "list collapsing" =
                 (meta <opaque>))
                ((pattern
                  (NRFunApp (CompilerInternal FnPrint)
-                  (((pattern (Var inline_f_y_arg_sym1__))
+                  (((pattern (Var inline_f_y_arg_sym2__))
                     (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
                 (meta <opaque>)))))
             (meta <opaque>))

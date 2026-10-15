@@ -231,7 +231,8 @@ and query_initial_demotable_funs (in_loop : bool) (stmt_linenum : int)
           (Fmt.str "Operator %a is not supported:" Operator.pp op)
           fail_names;
         Set.Poly.union acc demoted_and_top_level_names
-  | CompilerInternal (Internal_fun.FnMakeArray | FnMakeRowVec | FnMakeTuple) ->
+  | CompilerInternal
+      (Internal_fun.FnMakeArray | FnMakeRowVec | FnMakeTuple | FnToRef) ->
       let fail_names =
         concat_set_str (Set.Poly.inter acc demoted_and_top_level_names) in
       user_warning_op SoA stmt_linenum
@@ -467,18 +468,22 @@ let rec query_initial_demotable_stmt (in_loop : bool) (acc : string Set.Poly.t)
       Set.Poly.union_list
         [ acc; query_expr acc predicate
         ; query_initial_demotable_stmt true acc body ]
-  | Decl {decl_type= Type.Sized st; decl_id; initialize; _} ->
-      let complex_name =
-        if SizedType.is_complex_type st then (
-          user_warning_op SoA linenum "Complex-valued types cannot be SoA:"
-            decl_id;
-          Set.Poly.singleton decl_id)
-        else Set.Poly.empty in
-      let init_names =
-        match initialize with
-        | Assign e -> query_expr acc e
-        | _ -> Set.Poly.empty in
-      Set.Poly.union acc (Set.Poly.union complex_name init_names)
+  | Decl {decl_type= Type.Sized st; decl_id; initialize; decl_adtype} ->
+      if not (UnsizedType.is_autodifftype decl_adtype) then
+        (* generated e.g. by inlining a `data` function argument *)
+        Set.Poly.singleton decl_id
+      else
+        let complex_name =
+          if SizedType.is_complex_type st then (
+            user_warning_op SoA linenum "Complex-valued types cannot be SoA:"
+              decl_id;
+            Set.Poly.singleton decl_id)
+          else Set.Poly.empty in
+        let init_names =
+          match initialize with
+          | Assign e -> query_expr acc e
+          | _ -> Set.Poly.empty in
+        Set.Poly.union acc (Set.Poly.union complex_name init_names)
   | Skip | Break | Continue | Decl _ -> acc
 
 (** Look through a statement to see whether the objects used in it need to be
