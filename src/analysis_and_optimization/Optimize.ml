@@ -257,6 +257,27 @@ let compute_suffix_and_map propto suffix fim =
   | FnDist (x, _) -> (FnDist (x, Normalized), fim.plain)
   | _ -> (suffix, fim.plain)
 
+let bind_inlined_argument fname name
+    ((decls, stmts, (e : Expr.Typed.t)) as inlined) =
+  match e.pattern with
+  | Var _ | Lit _ -> inlined
+  | _ ->
+      let temp = gen_inline_var fname (name ^ "_arg") in
+      let e =
+        if UnsizedType.is_container e.meta.type_ then
+          Expr.Helpers.internal_funapp FnToRef [e] e.meta
+        else e in
+      ( decls
+        @ [ Stmt.Pattern.Decl
+              { decl_adtype= e.meta.adlevel
+              ; decl_type=
+                  Sized
+                    (unsafe_unsized_to_sized_type (Type.Unsized e.meta.type_))
+              ; decl_id= temp
+              ; initialize= Assign e } ]
+      , stmts
+      , {e with pattern= Var temp} )
+
 (* Triple is (declaration list, statement list, return expression) *)
 let rec inline_function_expression propto adt fim (Expr.{pattern; _} as e) =
   match pattern with
@@ -266,8 +287,7 @@ let rec inline_function_expression propto adt fim (Expr.{pattern; _} as e) =
       let d, sl, expr' = inline_function_expression propto adt fim expr in
       (d, sl, {e with pattern= Promotion (expr', ut, ad)})
   | FunApp (kind, es) -> (
-      let d_list, s_list, es =
-        inline_list (inline_function_expression propto adt fim) es in
+      let d_list, s_list, es = inline_function_args propto adt fim kind es in
       match kind with
       | CompilerInternal _ | Operator _ ->
           (d_list, s_list, {e with pattern= FunApp (kind, es)})
@@ -359,6 +379,19 @@ let rec inline_function_expression propto adt fim (Expr.{pattern; _} as e) =
               )) ] in
       (dl1 @ dl2, sl1 @ sl2, {e with pattern= EOr (e1, e2)})
 
+and inline_function_args propto adt fim kind es =
+  let inline = inline_function_expression propto adt fim in
+  match kind with
+  | UserDefined (fname, suffix) -> (
+      let _, fim' = compute_suffix_and_map propto suffix fim in
+      match String.Map.find_opt fname fim' with
+      | Some (_, args, _) ->
+          inline_list
+            (fun (name, e) -> bind_inlined_argument fname name (inline e))
+            (List.combine args es)
+      | _ -> inline_list inline es)
+  | _ -> inline_list inline es
+
 and inline_function_index propto adt fim i =
   match i with
   | All -> ([], [], All)
@@ -404,8 +437,7 @@ let rec inline_function_statement propto adt fim Stmt.{pattern; meta} =
             slist_concat_no_loc (d @ s) (JacobianPE e)
         | NRFunApp (kind, exprs) ->
             let d_list, s_list, es =
-              inline_list (inline_function_expression propto adt fim) exprs
-            in
+              inline_function_args propto adt fim kind exprs in
             slist_concat_no_loc (d_list @ s_list)
               (match kind with
               | CompilerInternal _ | StanLib _ | Operator _ ->

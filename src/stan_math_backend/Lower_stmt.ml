@@ -125,6 +125,10 @@ let lower_possibly_opencl_decl name st adtype
             ; _ } ->
           (* Peephole optimization for param reads, avoids copying *)
           Auto
+      | Assign Expr.{pattern= FunApp (CompilerInternal FnToRef, _); _} ->
+          (* Peephole optimization for function arguments *)
+          if UnsizedType.is_eigen_type ut then Types.const_ref Auto
+          else Types.const_ref (lower_possibly_var_decl adtype ut mem_pattern)
       | _ -> lower_possibly_var_decl adtype ut mem_pattern)
   | true, UArray UInt -> TypeLiteral "matrix_cl<int>"
   | true, _ -> TypeLiteral "matrix_cl<double>"
