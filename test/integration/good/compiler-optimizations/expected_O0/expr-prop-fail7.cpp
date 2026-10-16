@@ -378,11 +378,11 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
           jacobian__>(lp__, J, K, K);
       out__.write(pi);
       current_statement__ = 2;
-      for (int loop_sym1__ = 1; loop_sym1__ <= K; ++loop_sym1__) {
-        for (int loop_sym2__ = 1; loop_sym2__ <= K; ++loop_sym2__) {
-          for (int loop_sym3__ = 1; loop_sym3__ <= J; ++loop_sym3__) {
-            out__.write(theta[(loop_sym3__ - 1)][(loop_sym2__ -
-              1)][(loop_sym1__ - 1)]);
+      for (int idx_sym1__ = 1; idx_sym1__ <= K; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= K; ++idx_sym2__) {
+          for (int idx_sym3__ = 1; idx_sym3__ <= J; ++idx_sym3__) {
+            out__.write(theta[(idx_sym3__ - 1)][(idx_sym2__ - 1)][(idx_sym1__
+              - 1)]);
           }
         }
       }
@@ -428,9 +428,9 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
           "assigning variable log_Pr_z", stan::model::index_uni(i));
       }
       current_statement__ = 3;
-      for (int loop_sym1__ = 1; loop_sym1__ <= K; ++loop_sym1__) {
-        for (int loop_sym2__ = 1; loop_sym2__ <= I; ++loop_sym2__) {
-          out__.write(log_Pr_z[(loop_sym2__ - 1)][(loop_sym1__ - 1)]);
+      for (int idx_sym1__ = 1; idx_sym1__ <= K; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= I; ++idx_sym2__) {
+          out__.write(log_Pr_z[(idx_sym2__ - 1)][(idx_sym1__ - 1)]);
         }
       }
     } catch (const std::exception& e) {
@@ -465,15 +465,14 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
           std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>(K,
             Eigen::Matrix<local_scalar_t__,-1,1>::Constant(K, DUMMY_VAR__)));
       current_statement__ = 2;
-      for (int loop_sym1__ = 1; loop_sym1__ <= K; ++loop_sym1__) {
-        for (int loop_sym2__ = 1; loop_sym2__ <= K; ++loop_sym2__) {
-          for (int loop_sym3__ = 1; loop_sym3__ <= J; ++loop_sym3__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= K; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= K; ++idx_sym2__) {
+          for (int idx_sym3__ = 1; idx_sym3__ <= J; ++idx_sym3__) {
             current_statement__ = 2;
             stan::model::assign(theta, in__.read<local_scalar_t__>(),
-              "assigning variable theta",
-              stan::model::index_uni(loop_sym3__),
-              stan::model::index_uni(loop_sym2__),
-              stan::model::index_uni(loop_sym1__));
+              "assigning variable theta", stan::model::index_uni(idx_sym3__),
+              stan::model::index_uni(idx_sym2__),
+              stan::model::index_uni(idx_sym1__));
           }
         }
       }
@@ -553,33 +552,25 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         K; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= K; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "pi" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         K; ++names_loop_sym1__) {
-      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-           K; ++names_loop_sym2__) {
-        for (int names_loop_sym3__ = 1; names_loop_sym3__ <=
-             J; ++names_loop_sym3__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= K; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= K; ++idx_sym2__) {
+        for (int idx_sym3__ = 1; idx_sym3__ <= J; ++idx_sym3__) {
           param_names__.emplace_back(std::string() + "theta" + '.' +
-            std::to_string(names_loop_sym3__) + '.' +
-            std::to_string(names_loop_sym2__) + '.' +
-            std::to_string(names_loop_sym1__));
+            std::to_string(idx_sym3__) + '.' + std::to_string(idx_sym2__) +
+            '.' + std::to_string(idx_sym1__));
         }
       }
     }
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           K; ++names_loop_sym1__) {
-        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-             I; ++names_loop_sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= K; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= I; ++idx_sym2__) {
           param_names__.emplace_back(std::string() + "log_Pr_z" + '.' +
-            std::to_string(names_loop_sym2__) + '.' +
-            std::to_string(names_loop_sym1__));
+            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
         }
       }
     }
@@ -588,33 +579,25 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <= (K -
-         1); ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= (K - 1); ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "pi" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <= (K -
-         1); ++names_loop_sym1__) {
-      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-           K; ++names_loop_sym2__) {
-        for (int names_loop_sym3__ = 1; names_loop_sym3__ <=
-             J; ++names_loop_sym3__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= (K - 1); ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= K; ++idx_sym2__) {
+        for (int idx_sym3__ = 1; idx_sym3__ <= J; ++idx_sym3__) {
           param_names__.emplace_back(std::string() + "theta" + '.' +
-            std::to_string(names_loop_sym3__) + '.' +
-            std::to_string(names_loop_sym2__) + '.' +
-            std::to_string(names_loop_sym1__));
+            std::to_string(idx_sym3__) + '.' + std::to_string(idx_sym2__) +
+            '.' + std::to_string(idx_sym1__));
         }
       }
     }
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           K; ++names_loop_sym1__) {
-        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-             I; ++names_loop_sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= K; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= I; ++idx_sym2__) {
           param_names__.emplace_back(std::string() + "log_Pr_z" + '.' +
-            std::to_string(names_loop_sym2__) + '.' +
-            std::to_string(names_loop_sym1__));
+            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
         }
       }
     }

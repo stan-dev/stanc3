@@ -639,29 +639,23 @@ class restricted_model final : public model_base_crtp<restricted_model> {
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
     param_names__.emplace_back(std::string() + "p_real");
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         d_int; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= d_int; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "p_real_array" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         d_int; ++names_loop_sym1__) {
-      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-           d_int; ++names_loop_sym2__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= d_int; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= d_int; ++idx_sym2__) {
         param_names__.emplace_back(std::string() + "p_matrix" + '.' +
-          std::to_string(names_loop_sym2__) + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
       }
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         d_int; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= d_int; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "p_vector" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         d_int; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= d_int; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "p_row_vector" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
     param_names__.emplace_back(std::string() + "y_p");
     if (emit_transformed_parameters__) {
@@ -674,29 +668,23 @@ class restricted_model final : public model_base_crtp<restricted_model> {
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
     param_names__.emplace_back(std::string() + "p_real");
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         d_int; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= d_int; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "p_real_array" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         d_int; ++names_loop_sym1__) {
-      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-           d_int; ++names_loop_sym2__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= d_int; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= d_int; ++idx_sym2__) {
         param_names__.emplace_back(std::string() + "p_matrix" + '.' +
-          std::to_string(names_loop_sym2__) + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
       }
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         d_int; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= d_int; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "p_vector" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         d_int; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= d_int; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "p_row_vector" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
     param_names__.emplace_back(std::string() + "y_p");
     if (emit_transformed_parameters__) {

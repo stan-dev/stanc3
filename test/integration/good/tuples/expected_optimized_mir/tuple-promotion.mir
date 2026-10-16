@@ -800,7 +800,7 @@
       ((pattern
         (Block
          (((pattern
-            (For (loopvar loop_sym1__)
+            (For (loopvar idx_sym1__)
              (lower
               ((pattern (Lit Int 1))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -828,7 +828,7 @@
                              ((type_ (UArray UComplex)) (loc <opaque>)
                               (adlevel DataOnly))))
                            ((Single
-                             ((pattern (Var loop_sym1__))
+                             ((pattern (Var idx_sym1__))
                               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
                          (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
                      ()))
@@ -836,7 +836,7 @@
                (meta <opaque>)))))
            (meta <opaque>))
           ((pattern
-            (For (loopvar loop_sym1__)
+            (For (loopvar idx_sym1__)
              (lower
               ((pattern (Lit Int 1))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -864,7 +864,7 @@
                              ((type_ (UArray UComplex)) (loc <opaque>)
                               (adlevel DataOnly))))
                            ((Single
-                             ((pattern (Var loop_sym1__))
+                             ((pattern (Var idx_sym1__))
                               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
                          (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
                      ()))
@@ -902,7 +902,7 @@
              ()))
            (meta <opaque>))
           ((pattern
-            (For (loopvar loop_sym1__)
+            (For (loopvar idx_sym1__)
              (lower
               ((pattern (Lit Int 1))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -926,7 +926,7 @@
                                 ((type_ (UArray (UTuple (UReal (UArray UComplex)))))
                                  (loc <opaque>) (adlevel (TupleAD (DataOnly DataOnly))))))
                               ((Single
-                                ((pattern (Var loop_sym1__))
+                                ((pattern (Var idx_sym1__))
                                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
                             (meta
                              ((type_ (UTuple (UReal (UArray UComplex)))) 
@@ -936,7 +936,7 @@
                      ()))
                    (meta <opaque>))
                   ((pattern
-                    (For (loopvar loop_sym2__)
+                    (For (loopvar idx_sym2__)
                      (lower
                       ((pattern (Lit Int 1))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -964,7 +964,7 @@
                                             (loc <opaque>)
                                             (adlevel (TupleAD (DataOnly DataOnly))))))
                                          ((Single
-                                           ((pattern (Var loop_sym1__))
+                                           ((pattern (Var idx_sym1__))
                                             (meta
                                              ((type_ UInt) (loc <opaque>)
                                               (adlevel DataOnly))))))))
@@ -977,7 +977,7 @@
                                      ((type_ (UArray UComplex)) (loc <opaque>)
                                       (adlevel DataOnly))))
                                    ((Single
-                                     ((pattern (Var loop_sym2__))
+                                     ((pattern (Var idx_sym2__))
                                       (meta
                                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
                                  (meta
@@ -1017,7 +1017,7 @@
              ()))
            (meta <opaque>))
           ((pattern
-            (For (loopvar loop_sym1__)
+            (For (loopvar idx_sym1__)
              (lower
               ((pattern (Lit Int 1))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -1058,7 +1058,7 @@
                              ((type_ (UArray UComplex)) (loc <opaque>)
                               (adlevel DataOnly))))
                            ((Single
-                             ((pattern (Var loop_sym1__))
+                             ((pattern (Var idx_sym1__))
                               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
                          (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
                      ()))
@@ -1172,7 +1172,7 @@
              ()))
            (meta <opaque>))
           ((pattern
-            (For (loopvar loop_sym1__)
+            (For (loopvar idx_sym1__)
              (lower
               ((pattern (Lit Int 1))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -1213,7 +1213,7 @@
                              ((type_ (UArray UComplex)) (loc <opaque>)
                               (adlevel DataOnly))))
                            ((Single
-                             ((pattern (Var loop_sym1__))
+                             ((pattern (Var idx_sym1__))
                               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
                          (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
                      ()))

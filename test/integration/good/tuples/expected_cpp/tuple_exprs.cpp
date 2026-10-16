@@ -245,13 +245,10 @@ class tuple_exprs_model final : public model_base_crtp<tuple_exprs_model> {
       param_names__.emplace_back(std::string() + "y");
       param_names__.emplace_back(std::string() + "z" + '.' + "real");
       param_names__.emplace_back(std::string() + "z" + '.' + "imag");
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           4; ++names_loop_sym1__) {
-        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-             2; ++names_loop_sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 4; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 2; ++idx_sym2__) {
           param_names__.emplace_back(std::string() + "foo" + '.' +
-            std::to_string(names_loop_sym2__) + '.' +
-            std::to_string(names_loop_sym1__));
+            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
         }
       }
     }
@@ -266,13 +263,10 @@ class tuple_exprs_model final : public model_base_crtp<tuple_exprs_model> {
       param_names__.emplace_back(std::string() + "y");
       param_names__.emplace_back(std::string() + "z" + '.' + "real");
       param_names__.emplace_back(std::string() + "z" + '.' + "imag");
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           4; ++names_loop_sym1__) {
-        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-             2; ++names_loop_sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 4; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 2; ++idx_sym2__) {
           param_names__.emplace_back(std::string() + "foo" + '.' +
-            std::to_string(names_loop_sym2__) + '.' +
-            std::to_string(names_loop_sym1__));
+            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
         }
       }
     }

@@ -462,52 +462,38 @@ class reductions_allowed_model final : public model_base_crtp<reductions_allowed
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         10; ++names_loop_sym1__) {
-      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-           5; ++names_loop_sym2__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= 5; ++idx_sym2__) {
         param_names__.emplace_back(std::string() + "soa_x" + '.' +
-          std::to_string(names_loop_sym2__) + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
       }
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         10; ++names_loop_sym1__) {
-      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-           5; ++names_loop_sym2__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= 5; ++idx_sym2__) {
         param_names__.emplace_back(std::string() + "aos_x" + '.' +
-          std::to_string(names_loop_sym2__) + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
       }
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         10; ++names_loop_sym1__) {
-      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-           5; ++names_loop_sym2__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= 5; ++idx_sym2__) {
         param_names__.emplace_back(std::string() + "aos_y" + '.' +
-          std::to_string(names_loop_sym2__) + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
       }
     }
     if (emit_transformed_parameters__) {
       param_names__.emplace_back(std::string() + "tp_real_from_soa");
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           10; ++names_loop_sym1__) {
-        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-             5; ++names_loop_sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 5; ++idx_sym2__) {
           param_names__.emplace_back(std::string() + "tp_matrix_aos_from_mix"
-            + '.' + std::to_string(names_loop_sym2__) + '.' +
-            std::to_string(names_loop_sym1__));
+            + '.' + std::to_string(idx_sym2__) + '.' +
+            std::to_string(idx_sym1__));
         }
       }
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           10; ++names_loop_sym1__) {
-        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-             5; ++names_loop_sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 5; ++idx_sym2__) {
           param_names__.emplace_back(std::string() +
             "tp_matrix_from_udf_reduced_soa" + '.' +
-            std::to_string(names_loop_sym2__) + '.' +
-            std::to_string(names_loop_sym1__));
+            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
         }
       }
     }
@@ -517,52 +503,38 @@ class reductions_allowed_model final : public model_base_crtp<reductions_allowed
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         10; ++names_loop_sym1__) {
-      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-           5; ++names_loop_sym2__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= 5; ++idx_sym2__) {
         param_names__.emplace_back(std::string() + "soa_x" + '.' +
-          std::to_string(names_loop_sym2__) + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
       }
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         10; ++names_loop_sym1__) {
-      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-           5; ++names_loop_sym2__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= 5; ++idx_sym2__) {
         param_names__.emplace_back(std::string() + "aos_x" + '.' +
-          std::to_string(names_loop_sym2__) + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
       }
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         10; ++names_loop_sym1__) {
-      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-           5; ++names_loop_sym2__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= 5; ++idx_sym2__) {
         param_names__.emplace_back(std::string() + "aos_y" + '.' +
-          std::to_string(names_loop_sym2__) + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
       }
     }
     if (emit_transformed_parameters__) {
       param_names__.emplace_back(std::string() + "tp_real_from_soa");
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           10; ++names_loop_sym1__) {
-        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-             5; ++names_loop_sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 5; ++idx_sym2__) {
           param_names__.emplace_back(std::string() + "tp_matrix_aos_from_mix"
-            + '.' + std::to_string(names_loop_sym2__) + '.' +
-            std::to_string(names_loop_sym1__));
+            + '.' + std::to_string(idx_sym2__) + '.' +
+            std::to_string(idx_sym1__));
         }
       }
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           10; ++names_loop_sym1__) {
-        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-             5; ++names_loop_sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 5; ++idx_sym2__) {
           param_names__.emplace_back(std::string() +
             "tp_matrix_from_udf_reduced_soa" + '.' +
-            std::to_string(names_loop_sym2__) + '.' +
-            std::to_string(names_loop_sym1__));
+            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
         }
       }
     }

@@ -165,7 +165,7 @@ end
 module Helpers = struct
   let temp_vars count exprs :
       Located.t list * Expr.Typed.t list * (unit -> unit) =
-    let sym, reset = Gensym.enter count ~prefix:"temp_" in
+    let sym, reset = Gensym.enter count ~prefix:"tmp_" in
     let rec loop es sym inits vars =
       match es with
       | [] -> (inits, vars)
@@ -184,7 +184,7 @@ module Helpers = struct
               pattern= Assignment ((LVariable sym, []), Expr.Typed.type_of e, e)
             } in
           loop es
-            (Gensym.next count ~prefix:"temp_")
+            (Gensym.next count ~prefix:"tmp_")
             (decl :: assign :: inits)
             ({e with pattern= Var sym} :: vars) in
     let setups, exprs = loop (List.rev exprs) sym [] [] in
@@ -205,7 +205,7 @@ module Helpers = struct
   (** [mk_for] returns a MIR For statement from 0 to [upper] that calls the
       [bodyfn] with the loop variable inside the loop. *)
   let mk_for count upper bodyfn meta =
-    let loopvar, reset = Gensym.enter count ~prefix:"loop_" in
+    let loopvar, reset = Gensym.enter count ~prefix:"idx_" in
     let loopvar_expr =
       Expr.
         { meta= Expr.Typed.Meta.create ~type_:UInt ~loc:meta ~adlevel:DataOnly ()

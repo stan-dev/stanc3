@@ -374,10 +374,9 @@ class indexing2_model final : public model_base_crtp<indexing2_model> {
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
     param_names__.emplace_back(std::string() + "alpha");
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         10; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "p_aos_loop_single_idx" +
-        '.' + std::to_string(names_loop_sym1__));
+        '.' + std::to_string(idx_sym1__));
     }
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
@@ -387,10 +386,9 @@ class indexing2_model final : public model_base_crtp<indexing2_model> {
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
     param_names__.emplace_back(std::string() + "alpha");
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         10; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "p_aos_loop_single_idx" +
-        '.' + std::to_string(names_loop_sym1__));
+        '.' + std::to_string(idx_sym1__));
     }
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}

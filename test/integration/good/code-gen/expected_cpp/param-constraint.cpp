@@ -194,13 +194,13 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
                         stan::model::index_uni(1), stan::model::index_uni(1),
                         stan::model::index_uni(2)), lp__, NS);
       current_statement__ = 1;
-      for (int loop_sym1__ = 1; loop_sym1__ <= 2; ++loop_sym1__) {
-        for (int loop_sym2__ = 1; loop_sym2__ <= 2; ++loop_sym2__) {
-          for (int loop_sym3__ = 1; loop_sym3__ <= nt; ++loop_sym3__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 2; ++idx_sym2__) {
+          for (int idx_sym3__ = 1; idx_sym3__ <= nt; ++idx_sym3__) {
             out__.write(stan::model::rvalue(L_Omega, "L_Omega",
-                          stan::model::index_uni(loop_sym3__),
-                          stan::model::index_uni(loop_sym2__),
-                          stan::model::index_uni(loop_sym1__)));
+                          stan::model::index_uni(idx_sym3__),
+                          stan::model::index_uni(idx_sym2__),
+                          stan::model::index_uni(idx_sym1__)));
           }
         }
       }
@@ -237,15 +237,15 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
         std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>(nt,
           Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(2, 2, DUMMY_VAR__));
       current_statement__ = 1;
-      for (int loop_sym1__ = 1; loop_sym1__ <= 2; ++loop_sym1__) {
-        for (int loop_sym2__ = 1; loop_sym2__ <= 2; ++loop_sym2__) {
-          for (int loop_sym3__ = 1; loop_sym3__ <= nt; ++loop_sym3__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 2; ++idx_sym2__) {
+          for (int idx_sym3__ = 1; idx_sym3__ <= nt; ++idx_sym3__) {
             current_statement__ = 1;
             stan::model::assign(L_Omega, in__.read<local_scalar_t__>(),
               "assigning variable L_Omega",
-              stan::model::index_uni(loop_sym3__),
-              stan::model::index_uni(loop_sym2__),
-              stan::model::index_uni(loop_sym1__));
+              stan::model::index_uni(idx_sym3__),
+              stan::model::index_uni(idx_sym2__),
+              stan::model::index_uni(idx_sym1__));
           }
         }
       }
@@ -330,23 +330,18 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         2; ++names_loop_sym1__) {
-      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-           2; ++names_loop_sym2__) {
-        for (int names_loop_sym3__ = 1; names_loop_sym3__ <=
-             nt; ++names_loop_sym3__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= 2; ++idx_sym2__) {
+        for (int idx_sym3__ = 1; idx_sym3__ <= nt; ++idx_sym3__) {
           param_names__.emplace_back(std::string() + "L_Omega" + '.' +
-            std::to_string(names_loop_sym3__) + '.' +
-            std::to_string(names_loop_sym2__) + '.' +
-            std::to_string(names_loop_sym1__));
+            std::to_string(idx_sym3__) + '.' + std::to_string(idx_sym2__) +
+            '.' + std::to_string(idx_sym1__));
         }
       }
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         NS; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= NS; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "z1" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
@@ -355,19 +350,15 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <= ((2 * (2 - 1)) /
-         2); ++names_loop_sym1__) {
-      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-           nt; ++names_loop_sym2__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= ((2 * (2 - 1)) / 2); ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= nt; ++idx_sym2__) {
         param_names__.emplace_back(std::string() + "L_Omega" + '.' +
-          std::to_string(names_loop_sym2__) + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
       }
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         NS; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= NS; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "z1" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}

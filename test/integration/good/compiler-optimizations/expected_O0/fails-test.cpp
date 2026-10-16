@@ -863,37 +863,27 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
     param_names__.emplace_back(std::string() + "mean_p");
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         max_age; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= max_age; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "beta" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
     if (emit_transformed_parameters__) {
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           n_occ_minus_1; ++names_loop_sym1__) {
-        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-             nind; ++names_loop_sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= n_occ_minus_1; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= nind; ++idx_sym2__) {
           param_names__.emplace_back(std::string() + "phi" + '.' +
-            std::to_string(names_loop_sym2__) + '.' +
-            std::to_string(names_loop_sym1__));
+            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
         }
       }
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           n_occ_minus_1; ++names_loop_sym1__) {
-        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-             nind; ++names_loop_sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= n_occ_minus_1; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= nind; ++idx_sym2__) {
           param_names__.emplace_back(std::string() + "p" + '.' +
-            std::to_string(names_loop_sym2__) + '.' +
-            std::to_string(names_loop_sym1__));
+            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
         }
       }
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           n_occasions; ++names_loop_sym1__) {
-        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-             nind; ++names_loop_sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= n_occasions; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= nind; ++idx_sym2__) {
           param_names__.emplace_back(std::string() + "chi" + '.' +
-            std::to_string(names_loop_sym2__) + '.' +
-            std::to_string(names_loop_sym1__));
+            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
         }
       }
     }
@@ -904,37 +894,27 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
     param_names__.emplace_back(std::string() + "mean_p");
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         max_age; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= max_age; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "beta" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
     if (emit_transformed_parameters__) {
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           n_occ_minus_1; ++names_loop_sym1__) {
-        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-             nind; ++names_loop_sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= n_occ_minus_1; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= nind; ++idx_sym2__) {
           param_names__.emplace_back(std::string() + "phi" + '.' +
-            std::to_string(names_loop_sym2__) + '.' +
-            std::to_string(names_loop_sym1__));
+            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
         }
       }
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           n_occ_minus_1; ++names_loop_sym1__) {
-        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-             nind; ++names_loop_sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= n_occ_minus_1; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= nind; ++idx_sym2__) {
           param_names__.emplace_back(std::string() + "p" + '.' +
-            std::to_string(names_loop_sym2__) + '.' +
-            std::to_string(names_loop_sym1__));
+            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
         }
       }
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           n_occasions; ++names_loop_sym1__) {
-        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-             nind; ++names_loop_sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= n_occasions; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= nind; ++idx_sym2__) {
           param_names__.emplace_back(std::string() + "chi" + '.' +
-            std::to_string(names_loop_sym2__) + '.' +
-            std::to_string(names_loop_sym1__));
+            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
         }
       }
     }

@@ -1666,154 +1666,121 @@ class constraints_model final : public model_base_crtp<constraints_model> {
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         N; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "high_low_est" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         K; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= K; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "b" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         Nr; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= Nr; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "h" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         2; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "ar" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
     param_names__.emplace_back(std::string() + "ma");
     param_names__.emplace_back(std::string() + "phi_beta");
     param_names__.emplace_back(std::string() + "sigma2");
     param_names__.emplace_back(std::string() + "Intercept");
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         N; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "mean_price" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         N; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "sigma_price" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
     param_names__.emplace_back(std::string() + "theta");
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         N; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "upper_test" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         N; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "lower_upper_test" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         N; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "row_vec_lower_upper_test" +
-        '.' + std::to_string(names_loop_sym1__));
+        '.' + std::to_string(idx_sym1__));
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         N; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "offset_mult_test" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         N; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "ordered_test" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         N; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "unit_vec_test" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         N; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "pos_ordered_test" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         N; ++names_loop_sym1__) {
-      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-           N; ++names_loop_sym2__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
         param_names__.emplace_back(std::string() + "corr_matrix_test" + '.' +
-          std::to_string(names_loop_sym2__) + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
       }
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         N; ++names_loop_sym1__) {
-      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-           N; ++names_loop_sym2__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
         param_names__.emplace_back(std::string() + "cov_matrix_test" + '.' +
-          std::to_string(names_loop_sym2__) + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
       }
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         K; ++names_loop_sym1__) {
-      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-           K; ++names_loop_sym2__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= K; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= K; ++idx_sym2__) {
         param_names__.emplace_back(std::string() + "chol_fac_cov_test" + '.'
-          + std::to_string(names_loop_sym2__) + '.' +
-          std::to_string(names_loop_sym1__));
+          + std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
       }
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         K; ++names_loop_sym1__) {
-      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-           K; ++names_loop_sym2__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= K; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= K; ++idx_sym2__) {
         param_names__.emplace_back(std::string() + "chol_fac_corr_test" + '.'
-          + std::to_string(names_loop_sym2__) + '.' +
-          std::to_string(names_loop_sym1__));
+          + std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
       }
     }
     if (emit_transformed_parameters__) {
       param_names__.emplace_back(std::string() + "phi");
       param_names__.emplace_back(std::string() + "sigma");
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           N; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "prices" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           Nr; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= Nr; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "prices_diff" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           Nr; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= Nr; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "mu" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           Nr; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= Nr; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "err" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           Nr; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= Nr; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "h_i_mean" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           Nr; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= Nr; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "h_i_sigma" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           Nr; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= Nr; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "h_sigma" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           N; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "means_ordered" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
     }
     if (emit_generated_quantities__) {}
@@ -1822,138 +1789,115 @@ class constraints_model final : public model_base_crtp<constraints_model> {
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         N; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "high_low_est" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         K; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= K; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "b" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         Nr; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= Nr; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "h" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         2; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "ar" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
     param_names__.emplace_back(std::string() + "ma");
     param_names__.emplace_back(std::string() + "phi_beta");
     param_names__.emplace_back(std::string() + "sigma2");
     param_names__.emplace_back(std::string() + "Intercept");
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         N; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "mean_price" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         N; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "sigma_price" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
     param_names__.emplace_back(std::string() + "theta");
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         N; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "upper_test" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         N; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "lower_upper_test" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         N; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "row_vec_lower_upper_test" +
-        '.' + std::to_string(names_loop_sym1__));
+        '.' + std::to_string(idx_sym1__));
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         N; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "offset_mult_test" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         N; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "ordered_test" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         N; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "unit_vec_test" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         N; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "pos_ordered_test" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <= ((N * (N - 1)) /
-         2); ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= ((N * (N - 1)) / 2); ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "corr_matrix_test" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <= (N + ((N * (N - 1))
-         / 2)); ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= (N + ((N * (N - 1)) /
+         2)); ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "cov_matrix_test" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <= ((((K * (K - 1)) /
-         2) + K) + ((K - K) * K)); ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= ((((K * (K - 1)) / 2) + K) + ((K -
+         K) * K)); ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "chol_fac_cov_test" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <= ((K * (K - 1)) /
-         2); ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= ((K * (K - 1)) / 2); ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "chol_fac_corr_test" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
     if (emit_transformed_parameters__) {
       param_names__.emplace_back(std::string() + "phi");
       param_names__.emplace_back(std::string() + "sigma");
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           N; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "prices" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           Nr; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= Nr; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "prices_diff" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           Nr; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= Nr; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "mu" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           Nr; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= Nr; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "err" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           Nr; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= Nr; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "h_i_mean" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           Nr; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= Nr; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "h_i_sigma" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           Nr; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= Nr; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "h_sigma" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           N; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "means_ordered" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
     }
     if (emit_generated_quantities__) {}
