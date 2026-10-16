@@ -259,19 +259,20 @@ let compute_suffix_and_map propto suffix fim =
 
 (* Triple is (declaration list, statement list, return expression) *)
 let rec inline_function_expression propto adt fim (Expr.{pattern; _} as e) =
+  let inline_expr = inline_function_expression propto adt fim in
   match pattern with
   | Var _ -> ([], [], e)
   | Lit (_, _) -> ([], [], e)
   | Promotion (expr, ut, ad) ->
-      let d, sl, expr' = inline_function_expression propto adt fim expr in
+      let d, sl, expr' = inline_expr expr in
       (d, sl, {e with pattern= Promotion (expr', ut, ad)})
   | FunApp (kind, es) -> (
-      let d_list, s_list, es =
-        inline_list (inline_function_expression propto adt fim) es in
       match kind with
       | CompilerInternal _ | Operator _ ->
+          let d_list, s_list, es = inline_list inline_expr es in
           (d_list, s_list, {e with pattern= FunApp (kind, es)})
       | StanLib (fname, suffix) ->
+          let d_list, s_list, es = inline_list inline_expr es in
           let suffix, _ = compute_suffix_and_map propto suffix fim in
           ( d_list
           , s_list
@@ -280,6 +281,7 @@ let rec inline_function_expression propto adt fim (Expr.{pattern; _} as e) =
           let suffix, fim' = compute_suffix_and_map propto suffix fim in
           match String.Map.find_opt fname fim' with
           | None ->
+              let d_list, s_list, es = inline_list inline_expr es in
               ( d_list
               , s_list
               , { e with
@@ -287,6 +289,8 @@ let rec inline_function_expression propto adt fim (Expr.{pattern; _} as e) =
               )
           | Some (rt, args, body) ->
               let inline_return_name = gen_inline_var fname "return" in
+              let d_list, s_list, es =
+                inline_function_arguments fname propto adt fim args es in
               let handle =
                 handle_early_returns fname (Some inline_return_name) in
               let d_list2, s_list2, (e : Expr.Typed.t) =
@@ -317,9 +321,9 @@ let rec inline_function_expression propto adt fim (Expr.{pattern; _} as e) =
               let s_list = s_list @ s_list2 in
               (d_list, s_list, e)))
   | TernaryIf (e1, e2, e3) ->
-      let dl1, sl1, e1 = inline_function_expression propto adt fim e1 in
-      let dl2, sl2, e2 = inline_function_expression propto adt fim e2 in
-      let dl3, sl3, e3 = inline_function_expression propto adt fim e3 in
+      let dl1, sl1, e1 = inline_expr e1 in
+      let dl2, sl2, e2 = inline_expr e2 in
+      let dl3, sl3, e3 = inline_expr e3 in
       ( dl1 @ dl2 @ dl3
       , sl1
         @ [ Stmt.(
@@ -330,16 +334,16 @@ let rec inline_function_expression propto adt fim (Expr.{pattern; _} as e) =
           ]
       , {e with pattern= TernaryIf (e1, e2, e3)} )
   | Indexed (e', i_list) ->
-      let dl, sl, e' = inline_function_expression propto adt fim e' in
+      let dl, sl, e' = inline_expr e' in
       let d_list, s_list, i_list =
         inline_list (inline_function_index propto adt fim) i_list in
       (d_list @ dl, s_list @ sl, {e with pattern= Indexed (e', i_list)})
   | TupleProjection (e', ix) ->
-      let dl, sl, e' = inline_function_expression propto adt fim e' in
+      let dl, sl, e' = inline_expr e' in
       (dl, sl, {e with pattern= TupleProjection (e', ix)})
   | EAnd (e1, e2) ->
-      let dl1, sl1, e1 = inline_function_expression propto adt fim e1 in
-      let dl2, sl2, e2 = inline_function_expression propto adt fim e2 in
+      let dl1, sl1, e1 = inline_expr e1 in
+      let dl2, sl2, e2 = inline_expr e2 in
       let sl2 =
         [ Stmt.(
             Pattern.IfElse
@@ -348,8 +352,8 @@ let rec inline_function_expression propto adt fim (Expr.{pattern; _} as e) =
               , None )) ] in
       (dl1 @ dl2, sl1 @ sl2, {e with pattern= EAnd (e1, e2)})
   | EOr (e1, e2) ->
-      let dl1, sl1, e1 = inline_function_expression propto adt fim e1 in
-      let dl2, sl2, e2 = inline_function_expression propto adt fim e2 in
+      let dl1, sl1, e1 = inline_expr e1 in
+      let dl2, sl2, e2 = inline_expr e2 in
       let sl2 =
         [ Stmt.(
             Pattern.IfElse
@@ -359,24 +363,51 @@ let rec inline_function_expression propto adt fim (Expr.{pattern; _} as e) =
               )) ] in
       (dl1 @ dl2, sl1 @ sl2, {e with pattern= EOr (e1, e2)})
 
+and inline_function_arguments fname propto adt fim args es =
+  let inline_function_argument (name, e) =
+    let decls, stmts, e = inline_function_expression propto adt fim e in
+    match e.pattern with
+    | Var _ | Lit _ -> (decls, stmts, e)
+    | _ ->
+        (* nontrivial function arguments get bound to a variable to avoid
+           re-evaluation *)
+        let temp = gen_inline_var fname (name ^ "_arg") in
+        let e =
+          if UnsizedType.is_container e.meta.type_ then
+            (* Avoid copies *)
+            Expr.Helpers.internal_funapp FnToRef [e] e.meta
+          else e in
+        ( decls
+          @ [ Stmt.Pattern.Decl
+                { decl_adtype= e.meta.adlevel
+                ; decl_type=
+                    Sized (unsafe_unsized_to_sized_type (Unsized e.meta.type_))
+                ; decl_id= temp
+                ; initialize= Assign e } ]
+        , stmts
+        , {e with pattern= Var temp} ) in
+  inline_list inline_function_argument (List.combine args es)
+
 and inline_function_index propto adt fim i =
+  let inline_expr = inline_function_expression propto adt fim in
   match i with
   | All -> ([], [], All)
   | Single e ->
-      let dl, sl, e = inline_function_expression propto adt fim e in
+      let dl, sl, e = inline_expr e in
       (dl, sl, Single e)
   | Upfrom e ->
-      let dl, sl, e = inline_function_expression propto adt fim e in
+      let dl, sl, e = inline_expr e in
       (dl, sl, Upfrom e)
   | Between (e1, e2) ->
-      let dl1, sl1, e1 = inline_function_expression propto adt fim e1 in
-      let dl2, sl2, e2 = inline_function_expression propto adt fim e2 in
+      let dl1, sl1, e1 = inline_expr e1 in
+      let dl2, sl2, e2 = inline_expr e2 in
       (dl1 @ dl2, sl1 @ sl2, Between (e1, e2))
   | MultiIndex e ->
-      let dl, sl, e = inline_function_expression propto adt fim e in
+      let dl, sl, e = inline_expr e in
       (dl, sl, MultiIndex e)
 
 let rec inline_function_statement propto adt fim Stmt.{pattern; meta} =
+  let inline_expr = inline_function_expression propto adt fim in
   Stmt.
     { pattern=
         (match pattern with
@@ -384,8 +415,8 @@ let rec inline_function_statement propto adt fim Stmt.{pattern; meta} =
             let e1 = Stmt.Helpers.expr_of_lvalue lhs ~meta:e2.meta in
             (* This inner e2 is wrong. We are giving the wrong type to Var x.
                But it doesn't really matter as we discard it later. *)
-            let dl1, sl1, e1 = inline_function_expression propto adt fim e1 in
-            let dl2, sl2, e2 = inline_function_expression propto adt fim e2 in
+            let dl1, sl1, e1 = inline_expr e1 in
+            let dl2, sl2, e2 = inline_expr e2 in
             let lhs' =
               match Stmt.Helpers.lvalue_of_expr_opt e1 with
               | Some x -> x
@@ -397,37 +428,38 @@ let rec inline_function_statement propto adt fim Stmt.{pattern; meta} =
               (dl2 @ dl1 @ sl2 @ sl1)
               (Assignment (lhs', ut, e2))
         | TargetPE e ->
-            let d, s, e = inline_function_expression propto adt fim e in
+            let d, s, e = inline_expr e in
             slist_concat_no_loc (d @ s) (TargetPE e)
         | JacobianPE e ->
-            let d, s, e = inline_function_expression propto adt fim e in
+            let d, s, e = inline_expr e in
             slist_concat_no_loc (d @ s) (JacobianPE e)
-        | NRFunApp (kind, exprs) ->
-            let d_list, s_list, es =
-              inline_list (inline_function_expression propto adt fim) exprs
-            in
-            slist_concat_no_loc (d_list @ s_list)
-              (match kind with
-              | CompilerInternal _ | StanLib _ | Operator _ ->
-                  NRFunApp (kind, es)
-              | UserDefined (s, sfx) -> (
-                  let sfx, fim' = compute_suffix_and_map propto sfx fim in
-                  match String.Map.find_opt s fim' with
-                  | None -> NRFunApp (UserDefined (s, sfx), es)
-                  | Some (_, args, b) ->
-                      let b = replace_fresh_local_vars s b in
-                      let b = handle_early_returns s None b in
-                      (subst_args_stmt args es
-                         {pattern= b; meta= Location_span.empty})
-                        .pattern))
-        | Return e -> (
-            match e with
-            | None -> Return None
-            | Some expr ->
-                let d, s, e = inline_function_expression propto adt fim expr in
-                slist_concat_no_loc (d @ s) (Return (Some e)))
+        | NRFunApp
+            (((CompilerInternal _ | StanLib _ | Operator _) as kind), exprs) ->
+            let d, s, es = inline_list inline_expr exprs in
+            slist_concat_no_loc (d @ s) (NRFunApp (kind, es))
+        | NRFunApp (UserDefined (fname, sfx), exprs) -> (
+            let sfx, fim' = compute_suffix_and_map propto sfx fim in
+            match String.Map.find_opt fname fim' with
+            | None ->
+                let d, s, es = inline_list inline_expr exprs in
+                slist_concat_no_loc (d @ s)
+                  (NRFunApp (UserDefined (fname, sfx), es))
+            | Some (_, args, b) ->
+                let b = replace_fresh_local_vars fname b in
+                let b = handle_early_returns fname None b in
+                let d, s, es =
+                  inline_function_arguments fname propto adt fim args exprs
+                in
+                slist_concat_no_loc (d @ s)
+                  (subst_args_stmt args es
+                     {pattern= b; meta= Location_span.empty})
+                    .pattern)
+        | Return None -> Return None
+        | Return (Some expr) ->
+            let d, s, e = inline_expr expr in
+            slist_concat_no_loc (d @ s) (Return (Some e))
         | IfElse (expr, s1, s2) ->
-            let d, s, e = inline_function_expression propto adt fim expr in
+            let d, s, e = inline_expr expr in
             slist_concat_no_loc (d @ s)
               (IfElse
                  ( e
@@ -435,7 +467,7 @@ let rec inline_function_statement propto adt fim Stmt.{pattern; meta} =
                  , Option.map ~f:(inline_function_statement propto adt fim) s2
                  ))
         | While (expr, stmt) ->
-            let d', s', e = inline_function_expression propto adt fim expr in
+            let d', s', e = inline_expr expr in
             slist_concat_no_loc (d' @ s')
               (While
                  ( e
@@ -448,10 +480,8 @@ let rec inline_function_statement propto adt fim Stmt.{pattern; meta} =
                            @ map_no_loc s')
                      ; meta= Location_span.empty } ))
         | For {loopvar; lower; upper; body} ->
-            let d_lower, s_lower, lower =
-              inline_function_expression propto adt fim lower in
-            let d_upper, s_upper, upper =
-              inline_function_expression propto adt fim upper in
+            let d_lower, s_lower, lower = inline_expr lower in
+            let d_upper, s_upper, upper = inline_expr upper in
             slist_concat_no_loc
               (d_lower @ d_upper @ s_lower @ s_upper)
               (For
@@ -475,7 +505,7 @@ let rec inline_function_statement propto adt fim Stmt.{pattern; meta} =
         | SList l ->
             SList (List.map l ~f:(inline_function_statement propto adt fim))
         | Decl {decl_adtype; decl_id; decl_type; initialize= Assign expr} ->
-            let d, s, e = inline_function_expression propto adt fim expr in
+            let d, s, e = inline_expr expr in
             slist_concat_no_loc (d @ s)
               (Decl {decl_adtype; decl_id; decl_type; initialize= Assign e})
         | Decl r -> Decl r

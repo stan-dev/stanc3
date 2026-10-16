@@ -96,26 +96,8 @@ let rec initialize_value st adtype =
           [SizedType.pp Expr.Typed.pp $ st; UnsizedType.pp_autodifftype $ adtype])
       [@coverage off]
 
-(** Initialize an object of a given size.*)
-let lower_assign_sized st adtype (initialize : 'a Stmt.Pattern.decl_init) =
-  match initialize with
-  | Assign e -> Some (lower_expr e)
-  | Default -> Some (initialize_value st adtype)
-  | Uninit -> None
-
-let lower_unsized_decl name ut adtype =
-  let type_ =
-    match (Transform_Mir.is_opencl_var name, ut) with
-    | _, UnsizedType.(UInt | UReal) | false, _ ->
-        lower_unsizedtype_local adtype ut
-    | true, UArray UInt -> TypeLiteral "matrix_cl<int>"
-    | true, _ -> TypeLiteral "matrix_cl<double>" in
-  make_variable_defn ~type_ ~name ()
-
-let lower_possibly_opencl_decl name st adtype
+let lower_possibly_opencl_decl name ut default
     (initialize : 'a Stmt.Pattern.decl_init) =
-  let ut = SizedType.to_unsized st in
-  let mem_pattern = SizedType.get_mem_pattern st in
   match (Transform_Mir.is_opencl_var name, ut) with
   | _, UnsizedType.(UInt | UReal) | false, _ -> (
       match initialize with
@@ -125,12 +107,38 @@ let lower_possibly_opencl_decl name st adtype
             ; _ } ->
           (* Peephole optimization for param reads, avoids copying *)
           Auto
-      | _ -> lower_possibly_var_decl adtype ut mem_pattern)
+      | Assign Expr.{pattern= FunApp (CompilerInternal FnToRef, _); _} ->
+          (* Peephole optimization for function arguments *)
+          if UnsizedType.is_eigen_type ut then Types.const_ref Auto
+          else Types.const_ref default
+      | _ -> default)
   | true, UArray UInt -> TypeLiteral "matrix_cl<int>"
   | true, _ -> TypeLiteral "matrix_cl<double>"
 
+let lower_unsized_decl name ut adtype (initialize : 'a Stmt.Pattern.decl_init) =
+  let type_ =
+    lower_possibly_opencl_decl name ut
+      (lower_unsizedtype_local adtype ut)
+      initialize in
+  let init =
+    match initialize with
+    | Assign e -> Assignment (lower_expr e)
+    | _ -> Uninitialized in
+  make_variable_defn ~type_ ~name ~init ()
+
+(** Initialize an object of a given size.*)
+let lower_assign_sized st adtype (initialize : 'a Stmt.Pattern.decl_init) =
+  match initialize with
+  | Assign e -> Some (lower_expr e)
+  | Default -> Some (initialize_value st adtype)
+  | Uninit -> None
+
 let lower_sized_decl name st adtype initialize =
-  let type_ = lower_possibly_opencl_decl name st adtype initialize in
+  let ut = SizedType.to_unsized st in
+  let type_ =
+    lower_possibly_opencl_decl name ut
+      (lower_possibly_var_decl adtype ut (SizedType.get_mem_pattern st))
+      initialize in
   let init =
     lower_assign_sized st adtype initialize
     |> Option.value_map ~default:Uninitialized ~f:(fun i -> Assignment i) in
@@ -139,7 +147,7 @@ let lower_sized_decl name st adtype initialize =
 let lower_decl vident pst adtype initialize =
   match pst with
   | Type.Sized st -> VariableDefn (lower_sized_decl vident st adtype initialize)
-  | Unsized ut -> VariableDefn (lower_unsized_decl vident ut adtype)
+  | Unsized ut -> VariableDefn (lower_unsized_decl vident ut adtype initialize)
 
 let lower_profile name body =
   let profile =

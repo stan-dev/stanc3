@@ -38,7 +38,8 @@ let lower_data_decl (vident, ut) : defn =
     else vident in
   GlobalVariableDefn
     (lower_unsized_decl data_vident ut
-       (UnsizedType.fill_adtype_for_type DataOnly ut))
+       (UnsizedType.fill_adtype_for_type DataOnly ut)
+       Uninit)
 
 (** Create maps of Eigen types *)
 let lower_map_decl (vident, ut) : defn =

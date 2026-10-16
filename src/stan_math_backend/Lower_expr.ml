@@ -434,6 +434,11 @@ and lower_compiler_internal ad ut f es =
                                  mem_pattern; TemplateType "jacobian__" ]
                            , lower_exprs args )))
   | FnDeepCopy -> lower_fun_call "stan::model::deep_copy" es
+  | FnToRef ->
+      let container = first es in
+      if UnsizedType.is_eigen_type container.meta.type_ then
+        lower_fun_call "stan::math::to_ref" [container]
+      else lower_expr container
   | FnMakeTuple -> lower_fun_call "std::forward_as_tuple" es
   | FnLength -> lower_fun_call "stan::math::size" es
   | FnResizeToMatch -> lower_fun_call "stan::math::resize_to_match" es
