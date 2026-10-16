@@ -478,42 +478,43 @@ module Testing = struct
     |> print_endline;
     [%expect
       {|
-    template <typename T0__, typename T1__,
-              stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
-                                  stan::is_vt_not_complex<T0__>,
-                                  stan::is_row_vector<T1__>,
-                                  stan::is_vt_not_complex<T1__>>* = nullptr>
-    void sars(const T0__& x_arg__, const T1__& y_arg__, std::ostream* pstream__) {
-      using local_scalar_t__ = stan::return_type_t<stan::base_type_t<T0__>,
-                                 stan::base_type_t<T1__>>;
-      int current_statement__ = 0;
-      // suppress unused var warning
-      (void) current_statement__;
-      const auto& x = stan::math::to_ref(x_arg__);
-      const auto& y = stan::math::to_ref(y_arg__);
-      static constexpr bool propto__ = true;
-      // suppress unused var warning
-      (void) propto__;
-      local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-      // suppress unused var warning
-      (void) DUMMY_VAR__;
-      try {
-        return stan::math::add(x, 1);
-      } catch (const std::exception& e) {
-        stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      }
-    }
-    struct sars_functor__ {
       template <typename T0__, typename T1__,
                 stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
                                     stan::is_vt_not_complex<T0__>,
                                     stan::is_row_vector<T1__>,
                                     stan::is_vt_not_complex<T1__>>* = nullptr>
-      void
-      operator()(const T0__& x, const T1__& y, std::ostream* pstream__) const {
-        return sars(x, y, pstream__);
+      void sars(const T0__& x_arg__, const T1__& y_arg__, std::ostream* pstream__) {
+        using local_scalar_t__ = stan::return_type_t<stan::base_type_t<T0__>,
+                                   stan::base_type_t<T1__>>;
+        int current_statement__ = 0;
+        // suppress unused var warning
+        (void) current_statement__;
+        decltype(auto) x = stan::math::to_ref(x_arg__);
+        decltype(auto) y = stan::math::to_ref(y_arg__);
+        static constexpr bool propto__ = true;
+        // suppress unused var warning
+        (void) propto__;
+        local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+        // suppress unused var warning
+        (void) DUMMY_VAR__;
+        try {
+          return stan::math::add(x, 1);
+        } catch (const std::exception& e) {
+          stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+        }
       }
-    }; |}]
+      struct sars_functor__ {
+        template <typename T0__, typename T1__,
+                  stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
+                                      stan::is_vt_not_complex<T0__>,
+                                      stan::is_row_vector<T1__>,
+                                      stan::is_vt_not_complex<T1__>>* = nullptr>
+        void
+        operator()(const T0__& x, const T1__& y, std::ostream* pstream__) const {
+          return sars(x, y, pstream__);
+        }
+      };
+      |}]
 
   let%expect_test "udf-expressions" =
     let with_no_loc stmt = Stmt.{pattern= stmt; meta= Numbering.no_span_num} in
@@ -540,44 +541,6 @@ module Testing = struct
     |> print_endline;
     [%expect
       {|
-    template <typename T0__, typename T1__, typename T2__, typename T3__,
-              stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
-                                  stan::is_vt_not_complex<T0__>,
-                                  stan::is_row_vector<T1__>,
-                                  stan::is_vt_not_complex<T1__>,
-                                  stan::is_row_vector<T2__>,
-                                  stan::is_vt_not_complex<T2__>,
-                                  stan::is_std_vector<T3__>,
-                                  stan::is_eigen_matrix_dynamic<stan::value_type_t<T3__>>,
-                                  stan::is_vt_not_complex<stan::value_type_t<T3__>>>* = nullptr>
-    Eigen::Matrix<stan::return_type_t<stan::base_type_t<T0__>,
-                    stan::base_type_t<T1__>, stan::base_type_t<T2__>,
-                    stan::base_type_t<T3__>>,-1,-1>
-    sars(const T0__& x_arg__, const T1__& y_arg__, const T2__& z_arg__,
-         const T3__& w, std::ostream* pstream__) {
-      using local_scalar_t__ = stan::return_type_t<stan::base_type_t<T0__>,
-                                 stan::base_type_t<T1__>,
-                                 stan::base_type_t<T2__>,
-                                 stan::base_type_t<T3__>>;
-      int current_statement__ = 0;
-      // suppress unused var warning
-      (void) current_statement__;
-      const auto& x = stan::math::to_ref(x_arg__);
-      const auto& y = stan::math::to_ref(y_arg__);
-      const auto& z = stan::math::to_ref(z_arg__);
-      static constexpr bool propto__ = true;
-      // suppress unused var warning
-      (void) propto__;
-      local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-      // suppress unused var warning
-      (void) DUMMY_VAR__;
-      try {
-        return stan::math::add(x, 1);
-      } catch (const std::exception& e) {
-        stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      }
-    }
-    struct sars_functor__ {
       template <typename T0__, typename T1__, typename T2__, typename T3__,
                 stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
                                     stan::is_vt_not_complex<T0__>,
@@ -591,9 +554,48 @@ module Testing = struct
       Eigen::Matrix<stan::return_type_t<stan::base_type_t<T0__>,
                       stan::base_type_t<T1__>, stan::base_type_t<T2__>,
                       stan::base_type_t<T3__>>,-1,-1>
-      operator()(const T0__& x, const T1__& y, const T2__& z, const T3__& w,
-                 std::ostream* pstream__) const {
-        return sars(x, y, z, w, pstream__);
+      sars(const T0__& x_arg__, const T1__& y_arg__, const T2__& z_arg__,
+           const T3__& w, std::ostream* pstream__) {
+        using local_scalar_t__ = stan::return_type_t<stan::base_type_t<T0__>,
+                                   stan::base_type_t<T1__>,
+                                   stan::base_type_t<T2__>,
+                                   stan::base_type_t<T3__>>;
+        int current_statement__ = 0;
+        // suppress unused var warning
+        (void) current_statement__;
+        decltype(auto) x = stan::math::to_ref(x_arg__);
+        decltype(auto) y = stan::math::to_ref(y_arg__);
+        decltype(auto) z = stan::math::to_ref(z_arg__);
+        static constexpr bool propto__ = true;
+        // suppress unused var warning
+        (void) propto__;
+        local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+        // suppress unused var warning
+        (void) DUMMY_VAR__;
+        try {
+          return stan::math::add(x, 1);
+        } catch (const std::exception& e) {
+          stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+        }
       }
-    }; |}]
+      struct sars_functor__ {
+        template <typename T0__, typename T1__, typename T2__, typename T3__,
+                  stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
+                                      stan::is_vt_not_complex<T0__>,
+                                      stan::is_row_vector<T1__>,
+                                      stan::is_vt_not_complex<T1__>,
+                                      stan::is_row_vector<T2__>,
+                                      stan::is_vt_not_complex<T2__>,
+                                      stan::is_std_vector<T3__>,
+                                      stan::is_eigen_matrix_dynamic<stan::value_type_t<T3__>>,
+                                      stan::is_vt_not_complex<stan::value_type_t<T3__>>>* = nullptr>
+        Eigen::Matrix<stan::return_type_t<stan::base_type_t<T0__>,
+                        stan::base_type_t<T1__>, stan::base_type_t<T2__>,
+                        stan::base_type_t<T3__>>,-1,-1>
+        operator()(const T0__& x, const T1__& y, const T2__& z, const T3__& w,
+                   std::ostream* pstream__) const {
+          return sars(x, y, z, w, pstream__);
+        }
+      };
+      |}]
 end

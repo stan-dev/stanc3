@@ -109,7 +109,7 @@ let lower_possibly_opencl_decl name ut default
           Auto
       | Assign Expr.{pattern= FunApp (CompilerInternal FnToRef, _); _} ->
           (* Peephole optimization for function arguments *)
-          if UnsizedType.is_eigen_type ut then Types.const_ref Auto
+          if UnsizedType.is_eigen_type ut then TypeLiteral "decltype(auto)"
           else Types.const_ref default
       | _ -> default)
   | true, UArray UInt -> TypeLiteral "matrix_cl<int>"

@@ -639,9 +639,9 @@ foo1(const T0__& a, const T1__& b, const T2__& c, const T3__& d_arg__,
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& d = stan::math::to_ref(d_arg__);
-  const auto& e = stan::math::to_ref(e_arg__);
-  const auto& f = stan::math::to_ref(f_arg__);
+  decltype(auto) d = stan::math::to_ref(d_arg__);
+  decltype(auto) e = stan::math::to_ref(e_arg__);
+  decltype(auto) f = stan::math::to_ref(f_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -675,7 +675,7 @@ foo2(const T0__& a_arg__, const T1__& b, const T2__& c, std::ostream*
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& a = stan::math::to_ref(a_arg__);
+  decltype(auto) a = stan::math::to_ref(a_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -703,8 +703,8 @@ foo3(const T0__& a_arg__, const T1__& b_arg__, std::ostream* pstream__) {
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& a = stan::math::to_ref(a_arg__);
-  const auto& b = stan::math::to_ref(b_arg__);
+  decltype(auto) a = stan::math::to_ref(a_arg__);
+  decltype(auto) b = stan::math::to_ref(b_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -732,8 +732,8 @@ add_udf(const T0__& a_arg__, const T1__& b_arg__, std::ostream* pstream__) {
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& a = stan::math::to_ref(a_arg__);
-  const auto& b = stan::math::to_ref(b_arg__);
+  decltype(auto) a = stan::math::to_ref(a_arg__);
+  decltype(auto) b = stan::math::to_ref(b_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;

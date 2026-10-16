@@ -10595,7 +10595,7 @@ foo(const T0__& Z_arg__, std::ostream* pstream__) {
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& Z = stan::math::to_ref(Z_arg__);
+  decltype(auto) Z = stan::math::to_ref(Z_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -10619,7 +10619,7 @@ foo(const T0__& A_arg__, std::ostream* pstream__) {
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& A = stan::math::to_ref(A_arg__);
+  decltype(auto) A = stan::math::to_ref(A_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -10647,7 +10647,7 @@ foo(const T0__& Z_arg__, std::ostream* pstream__) {
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& Z = stan::math::to_ref(Z_arg__);
+  decltype(auto) Z = stan::math::to_ref(Z_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -10671,7 +10671,7 @@ foo(const T0__& A_arg__, std::ostream* pstream__) {
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& A = stan::math::to_ref(A_arg__);
+  decltype(auto) A = stan::math::to_ref(A_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -10699,7 +10699,7 @@ foo(const T0__& Z_arg__, std::ostream* pstream__) {
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& Z = stan::math::to_ref(Z_arg__);
+  decltype(auto) Z = stan::math::to_ref(Z_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -10723,7 +10723,7 @@ foo(const T0__& A_arg__, std::ostream* pstream__) {
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& A = stan::math::to_ref(A_arg__);
+  decltype(auto) A = stan::math::to_ref(A_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;

@@ -5179,7 +5179,7 @@ do_something_reconstruct(const std::vector<int>& indices, const T1__&
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& mem = stan::math::to_ref(mem_arg__);
+  decltype(auto) mem = stan::math::to_ref(mem_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;

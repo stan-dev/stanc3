@@ -197,7 +197,7 @@ my_vector_mul_by_5(const T0__& x_arg__, std::ostream* pstream__) {
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& x = stan::math::to_ref(x_arg__);
+  decltype(auto) x = stan::math::to_ref(x_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -345,7 +345,7 @@ test_complex(const T0__& a_arg__, std::ostream* pstream__) {
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& a = stan::math::to_ref(a_arg__);
+  decltype(auto) a = stan::math::to_ref(a_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -411,7 +411,7 @@ my_upper_bound_jacobian(const T0__& x_arg__, const T1__& ub, T_lp__& lp__,
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& x = stan::math::to_ref(x_arg__);
+  decltype(auto) x = stan::math::to_ref(x_arg__);
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   // suppress unused var warning
   (void) DUMMY_VAR__;
@@ -653,7 +653,7 @@ my_vector_mul_by_5(const T0__& x_arg__, std::ostream* pstream__) {
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& x = stan::math::to_ref(x_arg__);
+  decltype(auto) x = stan::math::to_ref(x_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -925,7 +925,7 @@ integrand(const T0__& x_arg__, std::ostream* pstream__) {
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& x = stan::math::to_ref(x_arg__);
+  decltype(auto) x = stan::math::to_ref(x_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
