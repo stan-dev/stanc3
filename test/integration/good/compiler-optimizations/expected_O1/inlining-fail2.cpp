@@ -847,74 +847,76 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       stan::model::assign(p, stan::math::rep_matrix(mean_p, M, n_occasions),
         "assigning variable p");
       Eigen::Matrix<local_scalar_t__,-1,-1>
-        inline_prob_uncaptured_return_sym3__;
+        inline_prob_uncaptured_return_sym39__;
       {
-        int inline_prob_uncaptured_n_ind_sym3__;
+        int inline_prob_uncaptured_n_ind_sym40__;
         current_statement__ = 20;
-        inline_prob_uncaptured_n_ind_sym3__ = stan::math::rows(p);
-        int inline_prob_uncaptured_n_occasions_sym3__;
+        inline_prob_uncaptured_n_ind_sym40__ = stan::math::rows(p);
+        int inline_prob_uncaptured_n_occasions_sym41__;
         current_statement__ = 21;
-        inline_prob_uncaptured_n_occasions_sym3__ = stan::math::cols(p);
+        inline_prob_uncaptured_n_occasions_sym41__ = stan::math::cols(p);
         current_statement__ = 22;
         stan::math::validate_non_negative_index("chi", "n_ind",
-          inline_prob_uncaptured_n_ind_sym3__);
+          inline_prob_uncaptured_n_ind_sym40__);
         current_statement__ = 23;
         stan::math::validate_non_negative_index("chi", "n_occasions",
-          inline_prob_uncaptured_n_occasions_sym3__);
+          inline_prob_uncaptured_n_occasions_sym41__);
         Eigen::Matrix<local_scalar_t__,-1,-1>
-          inline_prob_uncaptured_chi_sym3__ =
-          Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(inline_prob_uncaptured_n_ind_sym3__,
-            inline_prob_uncaptured_n_occasions_sym3__, DUMMY_VAR__);
+          inline_prob_uncaptured_chi_sym42__ =
+          Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(inline_prob_uncaptured_n_ind_sym40__,
+            inline_prob_uncaptured_n_occasions_sym41__, DUMMY_VAR__);
         current_statement__ = 32;
-        for (int inline_prob_uncaptured_i_sym3__ = 1; inline_prob_uncaptured_i_sym3__
+        for (int inline_prob_uncaptured_i_sym46__ = 1; inline_prob_uncaptured_i_sym46__
              <=
-             inline_prob_uncaptured_n_ind_sym3__; ++inline_prob_uncaptured_i_sym3__) {
+             inline_prob_uncaptured_n_ind_sym40__; ++inline_prob_uncaptured_i_sym46__) {
           current_statement__ = 25;
-          stan::model::assign(inline_prob_uncaptured_chi_sym3__, 1.0,
-            "assigning variable inline_prob_uncaptured_chi_sym3__",
-            stan::model::index_uni(inline_prob_uncaptured_i_sym3__),
-            stan::model::index_uni(inline_prob_uncaptured_n_occasions_sym3__));
+          stan::model::assign(inline_prob_uncaptured_chi_sym42__, 1.0,
+            "assigning variable inline_prob_uncaptured_chi_sym42__",
+            stan::model::index_uni(inline_prob_uncaptured_i_sym46__),
+            stan::model::index_uni(inline_prob_uncaptured_n_occasions_sym41__));
           current_statement__ = 30;
-          for (int inline_prob_uncaptured_t_sym3__ = 1; inline_prob_uncaptured_t_sym3__
-               <= (inline_prob_uncaptured_n_occasions_sym3__ -
-               1); ++inline_prob_uncaptured_t_sym3__) {
-            int inline_prob_uncaptured_t_curr_sym3__;
+          for (int inline_prob_uncaptured_t_sym45__ = 1; inline_prob_uncaptured_t_sym45__
+               <= (inline_prob_uncaptured_n_occasions_sym41__ -
+               1); ++inline_prob_uncaptured_t_sym45__) {
+            int inline_prob_uncaptured_t_curr_sym43__;
             current_statement__ = 26;
-            inline_prob_uncaptured_t_curr_sym3__ = (inline_prob_uncaptured_n_occasions_sym3__
-              - inline_prob_uncaptured_t_sym3__);
-            int inline_prob_uncaptured_t_next_sym3__;
+            inline_prob_uncaptured_t_curr_sym43__ = (inline_prob_uncaptured_n_occasions_sym41__
+              - inline_prob_uncaptured_t_sym45__);
+            int inline_prob_uncaptured_t_next_sym44__;
             current_statement__ = 27;
-            inline_prob_uncaptured_t_next_sym3__ = (inline_prob_uncaptured_t_curr_sym3__
+            inline_prob_uncaptured_t_next_sym44__ = (inline_prob_uncaptured_t_curr_sym43__
               + 1);
             current_statement__ = 28;
-            stan::model::assign(inline_prob_uncaptured_chi_sym3__,
+            stan::model::assign(inline_prob_uncaptured_chi_sym42__,
               stan::math::fma(
                 (stan::model::rvalue(phi, "phi",
-                   stan::model::index_uni(inline_prob_uncaptured_i_sym3__),
+                   stan::model::index_uni(inline_prob_uncaptured_i_sym46__),
                    stan::model::index_uni(
-                     inline_prob_uncaptured_t_curr_sym3__)) * (1 -
+                     inline_prob_uncaptured_t_curr_sym43__)) * (1 -
                 stan::model::rvalue(p, "p",
-                  stan::model::index_uni(inline_prob_uncaptured_i_sym3__),
-                  stan::model::index_uni(inline_prob_uncaptured_t_next_sym3__)))),
-                stan::model::rvalue(inline_prob_uncaptured_chi_sym3__,
-                  "inline_prob_uncaptured_chi_sym3__",
-                  stan::model::index_uni(inline_prob_uncaptured_i_sym3__),
-                  stan::model::index_uni(inline_prob_uncaptured_t_next_sym3__)),
-                (1 -
+                  stan::model::index_uni(inline_prob_uncaptured_i_sym46__),
+                  stan::model::index_uni(
+                    inline_prob_uncaptured_t_next_sym44__)))),
+                stan::model::rvalue(inline_prob_uncaptured_chi_sym42__,
+                  "inline_prob_uncaptured_chi_sym42__",
+                  stan::model::index_uni(inline_prob_uncaptured_i_sym46__),
+                  stan::model::index_uni(
+                    inline_prob_uncaptured_t_next_sym44__)), (1 -
                 stan::model::rvalue(phi, "phi",
-                  stan::model::index_uni(inline_prob_uncaptured_i_sym3__),
-                  stan::model::index_uni(inline_prob_uncaptured_t_curr_sym3__)))),
-              "assigning variable inline_prob_uncaptured_chi_sym3__",
-              stan::model::index_uni(inline_prob_uncaptured_i_sym3__),
-              stan::model::index_uni(inline_prob_uncaptured_t_curr_sym3__));
+                  stan::model::index_uni(inline_prob_uncaptured_i_sym46__),
+                  stan::model::index_uni(
+                    inline_prob_uncaptured_t_curr_sym43__)))),
+              "assigning variable inline_prob_uncaptured_chi_sym42__",
+              stan::model::index_uni(inline_prob_uncaptured_i_sym46__),
+              stan::model::index_uni(inline_prob_uncaptured_t_curr_sym43__));
           }
         }
         current_statement__ = 33;
-        stan::model::assign(inline_prob_uncaptured_return_sym3__,
-          inline_prob_uncaptured_chi_sym3__,
-          "assigning variable inline_prob_uncaptured_return_sym3__");
+        stan::model::assign(inline_prob_uncaptured_return_sym39__,
+          inline_prob_uncaptured_chi_sym42__,
+          "assigning variable inline_prob_uncaptured_return_sym39__");
       }
-      stan::model::assign(chi, inline_prob_uncaptured_return_sym3__,
+      stan::model::assign(chi, inline_prob_uncaptured_return_sym39__,
         "assigning variable chi");
       current_statement__ = 6;
       stan::math::check_greater_or_equal(function__, "phi", phi, 0);
@@ -933,252 +935,255 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         lp_accum__.add(stan::math::normal_lpdf<propto__>(epsilon,
                          static_cast<double>(0), sigma));
         {
-          int inline_jolly_seber_lp_n_ind_sym2__;
+          int inline_jolly_seber_lp_n_ind_sym48__;
           current_statement__ = 84;
-          inline_jolly_seber_lp_n_ind_sym2__ = stan::model::rvalue(
-                                                 stan::math::dims(y),
-                                                 "dims(y)",
-                                                 stan::model::index_uni(1));
-          int inline_jolly_seber_lp_n_occasions_sym2__;
+          inline_jolly_seber_lp_n_ind_sym48__ = stan::model::rvalue(
+                                                  stan::math::dims(y),
+                                                  "dims(y)",
+                                                  stan::model::index_uni(1));
+          int inline_jolly_seber_lp_n_occasions_sym49__;
           current_statement__ = 85;
-          inline_jolly_seber_lp_n_occasions_sym2__ = stan::model::rvalue(
-                                                       stan::math::dims(y),
-                                                       "dims(y)",
-                                                       stan::model::index_uni(
-                                                         2));
+          inline_jolly_seber_lp_n_occasions_sym49__ = stan::model::rvalue(
+                                                        stan::math::dims(y),
+                                                        "dims(y)",
+                                                        stan::model::index_uni(
+                                                          2));
           current_statement__ = 86;
           stan::math::validate_non_negative_index("qgamma", "n_occasions",
-            inline_jolly_seber_lp_n_occasions_sym2__);
+            inline_jolly_seber_lp_n_occasions_sym49__);
           Eigen::Matrix<local_scalar_t__,-1,1>
-            inline_jolly_seber_lp_qgamma_sym2__;
+            inline_jolly_seber_lp_qgamma_sym50__;
           current_statement__ = 87;
-          stan::model::assign(inline_jolly_seber_lp_qgamma_sym2__,
+          stan::model::assign(inline_jolly_seber_lp_qgamma_sym50__,
             stan::math::subtract(1.0, gamma),
-            "assigning variable inline_jolly_seber_lp_qgamma_sym2__");
+            "assigning variable inline_jolly_seber_lp_qgamma_sym50__");
           current_statement__ = 117;
-          for (int inline_jolly_seber_lp_i_sym2__ = 1; inline_jolly_seber_lp_i_sym2__
+          for (int inline_jolly_seber_lp_i_sym55__ = 1; inline_jolly_seber_lp_i_sym55__
                <=
-               inline_jolly_seber_lp_n_ind_sym2__; ++inline_jolly_seber_lp_i_sym2__) {
+               inline_jolly_seber_lp_n_ind_sym48__; ++inline_jolly_seber_lp_i_sym55__) {
             current_statement__ = 88;
             stan::math::validate_non_negative_index("qp", "n_occasions",
-              inline_jolly_seber_lp_n_occasions_sym2__);
+              inline_jolly_seber_lp_n_occasions_sym49__);
             Eigen::Matrix<local_scalar_t__,-1,1>
-              inline_jolly_seber_lp_qp_sym2__;
+              inline_jolly_seber_lp_qp_sym51__;
             current_statement__ = 89;
-            stan::model::assign(inline_jolly_seber_lp_qp_sym2__,
+            stan::model::assign(inline_jolly_seber_lp_qp_sym51__,
               stan::math::subtract(1.0,
                 stan::math::transpose(
                   stan::model::rvalue(p, "p",
-                    stan::model::index_uni(inline_jolly_seber_lp_i_sym2__)))),
-              "assigning variable inline_jolly_seber_lp_qp_sym2__");
+                    stan::model::index_uni(inline_jolly_seber_lp_i_sym55__)))),
+              "assigning variable inline_jolly_seber_lp_qp_sym51__");
             current_statement__ = 115;
-            if (first[(inline_jolly_seber_lp_i_sym2__ - 1)]) {
+            if (first[(inline_jolly_seber_lp_i_sym55__ - 1)]) {
               current_statement__ = 108;
               if (stan::math::logical_eq(
-                    first[(inline_jolly_seber_lp_i_sym2__ - 1)], 1)) {
+                    first[(inline_jolly_seber_lp_i_sym55__ - 1)], 1)) {
                 current_statement__ = 106;
                 lp_accum__.add(stan::math::bernoulli_lpmf<propto__>(1,
                                  (stan::model::rvalue(gamma, "gamma",
                                     stan::model::index_uni(1)) *
                                  stan::model::rvalue(p, "p",
                                    stan::model::index_uni(
-                                     inline_jolly_seber_lp_i_sym2__),
+                                     inline_jolly_seber_lp_i_sym55__),
                                    stan::model::index_uni(1)))));
               } else {
                 current_statement__ = 98;
-                int inline_jolly_seber_lp_lp_1dim___sym2__ =
-                  first[(inline_jolly_seber_lp_i_sym2__ - 1)];
+                int inline_jolly_seber_lp_lp_1dim___sym52__ =
+                  first[(inline_jolly_seber_lp_i_sym55__ - 1)];
                 current_statement__ = 98;
                 stan::math::validate_non_negative_index("lp", "first[i]",
-                  inline_jolly_seber_lp_lp_1dim___sym2__);
+                  inline_jolly_seber_lp_lp_1dim___sym52__);
                 Eigen::Matrix<local_scalar_t__,-1,1>
-                  inline_jolly_seber_lp_lp_sym2__ =
-                  Eigen::Matrix<local_scalar_t__,-1,1>::Constant(inline_jolly_seber_lp_lp_1dim___sym2__,
+                  inline_jolly_seber_lp_lp_sym53__ =
+                  Eigen::Matrix<local_scalar_t__,-1,1>::Constant(inline_jolly_seber_lp_lp_1dim___sym52__,
                     DUMMY_VAR__);
                 current_statement__ = 100;
-                stan::model::assign(inline_jolly_seber_lp_lp_sym2__,
+                stan::model::assign(inline_jolly_seber_lp_lp_sym53__,
                   (((stan::math::bernoulli_lpmf<false>(1,
                        stan::model::rvalue(gamma, "gamma",
                          stan::model::index_uni(1))) +
                   stan::math::bernoulli_lpmf<false>(1,
                     stan::math::prod(
-                      stan::model::rvalue(inline_jolly_seber_lp_qp_sym2__,
-                        "inline_jolly_seber_lp_qp_sym2__",
+                      stan::model::rvalue(inline_jolly_seber_lp_qp_sym51__,
+                        "inline_jolly_seber_lp_qp_sym51__",
                         stan::model::index_min_max(1,
-                          (first[(inline_jolly_seber_lp_i_sym2__ - 1)] - 1))))))
+                          (first[(inline_jolly_seber_lp_i_sym55__ - 1)] - 1))))))
                   +
                   stan::math::bernoulli_lpmf<false>(1,
                     stan::math::prod(
                       stan::model::rvalue(phi, "phi",
-                        stan::model::index_uni(inline_jolly_seber_lp_i_sym2__),
+                        stan::model::index_uni(
+                          inline_jolly_seber_lp_i_sym55__),
                         stan::model::index_min_max(1,
-                          (first[(inline_jolly_seber_lp_i_sym2__ - 1)] - 1))))))
+                          (first[(inline_jolly_seber_lp_i_sym55__ - 1)] - 1))))))
                   +
                   stan::math::bernoulli_lpmf<false>(1,
                     stan::model::rvalue(p, "p",
-                      stan::model::index_uni(inline_jolly_seber_lp_i_sym2__),
+                      stan::model::index_uni(inline_jolly_seber_lp_i_sym55__),
                       stan::model::index_uni(
-                        first[(inline_jolly_seber_lp_i_sym2__ - 1)])))),
-                  "assigning variable inline_jolly_seber_lp_lp_sym2__",
+                        first[(inline_jolly_seber_lp_i_sym55__ - 1)])))),
+                  "assigning variable inline_jolly_seber_lp_lp_sym53__",
                   stan::model::index_uni(1));
                 current_statement__ = 102;
-                for (int inline_jolly_seber_lp_t_sym2__ = 2; inline_jolly_seber_lp_t_sym2__
-                     <= (first[(inline_jolly_seber_lp_i_sym2__ - 1)] -
-                     1); ++inline_jolly_seber_lp_t_sym2__) {
+                for (int inline_jolly_seber_lp_t_sym54__ = 2; inline_jolly_seber_lp_t_sym54__
+                     <= (first[(inline_jolly_seber_lp_i_sym55__ - 1)] -
+                     1); ++inline_jolly_seber_lp_t_sym54__) {
                   current_statement__ = 101;
-                  stan::model::assign(inline_jolly_seber_lp_lp_sym2__,
+                  stan::model::assign(inline_jolly_seber_lp_lp_sym53__,
                     ((((stan::math::bernoulli_lpmf<false>(1,
                           stan::math::prod(
                             stan::model::rvalue(
-                              inline_jolly_seber_lp_qgamma_sym2__,
-                              "inline_jolly_seber_lp_qgamma_sym2__",
+                              inline_jolly_seber_lp_qgamma_sym50__,
+                              "inline_jolly_seber_lp_qgamma_sym50__",
                               stan::model::index_min_max(1,
-                                (inline_jolly_seber_lp_t_sym2__ - 1))))) +
+                                (inline_jolly_seber_lp_t_sym54__ - 1))))) +
                     stan::math::bernoulli_lpmf<false>(1,
-                      gamma[(inline_jolly_seber_lp_t_sym2__ - 1)])) +
+                      gamma[(inline_jolly_seber_lp_t_sym54__ - 1)])) +
                     stan::math::bernoulli_lpmf<false>(1,
                       stan::math::prod(
-                        stan::model::rvalue(inline_jolly_seber_lp_qp_sym2__,
-                          "inline_jolly_seber_lp_qp_sym2__",
+                        stan::model::rvalue(inline_jolly_seber_lp_qp_sym51__,
+                          "inline_jolly_seber_lp_qp_sym51__",
                           stan::model::index_min_max(
-                            inline_jolly_seber_lp_t_sym2__,
-                            (first[(inline_jolly_seber_lp_i_sym2__ - 1)] - 1))))))
-                    +
+                            inline_jolly_seber_lp_t_sym54__,
+                            (first[(inline_jolly_seber_lp_i_sym55__ - 1)] -
+                            1)))))) +
                     stan::math::bernoulli_lpmf<false>(1,
                       stan::math::prod(
                         stan::model::rvalue(phi, "phi",
                           stan::model::index_uni(
-                            inline_jolly_seber_lp_i_sym2__),
+                            inline_jolly_seber_lp_i_sym55__),
                           stan::model::index_min_max(
-                            inline_jolly_seber_lp_t_sym2__,
-                            (first[(inline_jolly_seber_lp_i_sym2__ - 1)] - 1))))))
-                    +
+                            inline_jolly_seber_lp_t_sym54__,
+                            (first[(inline_jolly_seber_lp_i_sym55__ - 1)] -
+                            1)))))) +
                     stan::math::bernoulli_lpmf<false>(1,
                       stan::model::rvalue(p, "p",
-                        stan::model::index_uni(inline_jolly_seber_lp_i_sym2__),
                         stan::model::index_uni(
-                          first[(inline_jolly_seber_lp_i_sym2__ - 1)])))),
-                    "assigning variable inline_jolly_seber_lp_lp_sym2__",
-                    stan::model::index_uni(inline_jolly_seber_lp_t_sym2__));
+                          inline_jolly_seber_lp_i_sym55__),
+                        stan::model::index_uni(
+                          first[(inline_jolly_seber_lp_i_sym55__ - 1)])))),
+                    "assigning variable inline_jolly_seber_lp_lp_sym53__",
+                    stan::model::index_uni(inline_jolly_seber_lp_t_sym54__));
                 }
                 current_statement__ = 103;
-                stan::model::assign(inline_jolly_seber_lp_lp_sym2__,
+                stan::model::assign(inline_jolly_seber_lp_lp_sym53__,
                   ((stan::math::bernoulli_lpmf<false>(1,
                       stan::math::prod(
                         stan::model::rvalue(
-                          inline_jolly_seber_lp_qgamma_sym2__,
-                          "inline_jolly_seber_lp_qgamma_sym2__",
+                          inline_jolly_seber_lp_qgamma_sym50__,
+                          "inline_jolly_seber_lp_qgamma_sym50__",
                           stan::model::index_min_max(1,
-                            (first[(inline_jolly_seber_lp_i_sym2__ - 1)] - 1)))))
-                  +
+                            (first[(inline_jolly_seber_lp_i_sym55__ - 1)] -
+                            1))))) +
                   stan::math::bernoulli_lpmf<false>(1,
                     stan::model::rvalue(gamma, "gamma",
                       stan::model::index_uni(
-                        first[(inline_jolly_seber_lp_i_sym2__ - 1)])))) +
+                        first[(inline_jolly_seber_lp_i_sym55__ - 1)])))) +
                   stan::math::bernoulli_lpmf<false>(1,
                     stan::model::rvalue(p, "p",
-                      stan::model::index_uni(inline_jolly_seber_lp_i_sym2__),
+                      stan::model::index_uni(inline_jolly_seber_lp_i_sym55__),
                       stan::model::index_uni(
-                        first[(inline_jolly_seber_lp_i_sym2__ - 1)])))),
-                  "assigning variable inline_jolly_seber_lp_lp_sym2__",
+                        first[(inline_jolly_seber_lp_i_sym55__ - 1)])))),
+                  "assigning variable inline_jolly_seber_lp_lp_sym53__",
                   stan::model::index_uni(
-                    first[(inline_jolly_seber_lp_i_sym2__ - 1)]));
+                    first[(inline_jolly_seber_lp_i_sym55__ - 1)]));
                 current_statement__ = 104;
                 lp_accum__.add(stan::math::log_sum_exp(
-                                 inline_jolly_seber_lp_lp_sym2__));
+                                 inline_jolly_seber_lp_lp_sym53__));
               }
               current_statement__ = 112;
-              for (int inline_jolly_seber_lp_t_sym2__ =
-                     (first[(inline_jolly_seber_lp_i_sym2__ - 1)] + 1); inline_jolly_seber_lp_t_sym2__
-                   <= last[(inline_jolly_seber_lp_i_sym2__ -
-                   1)]; ++inline_jolly_seber_lp_t_sym2__) {
+              for (int inline_jolly_seber_lp_t_sym54__ =
+                     (first[(inline_jolly_seber_lp_i_sym55__ - 1)] + 1); inline_jolly_seber_lp_t_sym54__
+                   <= last[(inline_jolly_seber_lp_i_sym55__ -
+                   1)]; ++inline_jolly_seber_lp_t_sym54__) {
                 current_statement__ = 109;
                 lp_accum__.add(stan::math::bernoulli_lpmf<propto__>(1,
                                  stan::model::rvalue(phi, "phi",
                                    stan::model::index_uni(
-                                     inline_jolly_seber_lp_i_sym2__),
+                                     inline_jolly_seber_lp_i_sym55__),
                                    stan::model::index_uni(
-                                     (inline_jolly_seber_lp_t_sym2__ - 1)))));
+                                     (inline_jolly_seber_lp_t_sym54__ - 1)))));
                 current_statement__ = 110;
                 lp_accum__.add(stan::math::bernoulli_lpmf<propto__>(
-                                 y[(inline_jolly_seber_lp_i_sym2__ -
-                                 1)][(inline_jolly_seber_lp_t_sym2__ - 1)],
+                                 y[(inline_jolly_seber_lp_i_sym55__ -
+                                 1)][(inline_jolly_seber_lp_t_sym54__ - 1)],
                                  stan::model::rvalue(p, "p",
                                    stan::model::index_uni(
-                                     inline_jolly_seber_lp_i_sym2__),
+                                     inline_jolly_seber_lp_i_sym55__),
                                    stan::model::index_uni(
-                                     inline_jolly_seber_lp_t_sym2__))));
+                                     inline_jolly_seber_lp_t_sym54__))));
               }
               current_statement__ = 113;
               lp_accum__.add(stan::math::bernoulli_lpmf<propto__>(1,
                                stan::model::rvalue(chi, "chi",
                                  stan::model::index_uni(
-                                   inline_jolly_seber_lp_i_sym2__),
+                                   inline_jolly_seber_lp_i_sym55__),
                                  stan::model::index_uni(
-                                   last[(inline_jolly_seber_lp_i_sym2__ - 1)]))));
+                                   last[(inline_jolly_seber_lp_i_sym55__ -
+                                   1)]))));
             } else {
               current_statement__ = 90;
-              int inline_jolly_seber_lp_lp_1dim___sym2__ =
-                (inline_jolly_seber_lp_n_occasions_sym2__ + 1);
+              int inline_jolly_seber_lp_lp_1dim___sym52__ =
+                (inline_jolly_seber_lp_n_occasions_sym49__ + 1);
               current_statement__ = 90;
               stan::math::validate_non_negative_index("lp",
-                "n_occasions + 1", inline_jolly_seber_lp_lp_1dim___sym2__);
+                "n_occasions + 1", inline_jolly_seber_lp_lp_1dim___sym52__);
               Eigen::Matrix<local_scalar_t__,-1,1>
-                inline_jolly_seber_lp_lp_sym2__ =
-                Eigen::Matrix<local_scalar_t__,-1,1>::Constant(inline_jolly_seber_lp_lp_1dim___sym2__,
+                inline_jolly_seber_lp_lp_sym53__ =
+                Eigen::Matrix<local_scalar_t__,-1,1>::Constant(inline_jolly_seber_lp_lp_1dim___sym52__,
                   DUMMY_VAR__);
               current_statement__ = 92;
-              stan::model::assign(inline_jolly_seber_lp_lp_sym2__,
+              stan::model::assign(inline_jolly_seber_lp_lp_sym53__,
                 ((stan::math::bernoulli_lpmf<false>(1,
                     stan::model::rvalue(gamma, "gamma",
                       stan::model::index_uni(1))) +
                 stan::math::bernoulli_lpmf<false>(0,
                   stan::model::rvalue(p, "p",
-                    stan::model::index_uni(inline_jolly_seber_lp_i_sym2__),
+                    stan::model::index_uni(inline_jolly_seber_lp_i_sym55__),
                     stan::model::index_uni(1)))) +
                 stan::math::bernoulli_lpmf<false>(1,
                   stan::model::rvalue(chi, "chi",
-                    stan::model::index_uni(inline_jolly_seber_lp_i_sym2__),
+                    stan::model::index_uni(inline_jolly_seber_lp_i_sym55__),
                     stan::model::index_uni(1)))),
-                "assigning variable inline_jolly_seber_lp_lp_sym2__",
+                "assigning variable inline_jolly_seber_lp_lp_sym53__",
                 stan::model::index_uni(1));
               current_statement__ = 94;
-              for (int inline_jolly_seber_lp_t_sym2__ = 2; inline_jolly_seber_lp_t_sym2__
+              for (int inline_jolly_seber_lp_t_sym54__ = 2; inline_jolly_seber_lp_t_sym54__
                    <=
-                   inline_jolly_seber_lp_n_occasions_sym2__; ++inline_jolly_seber_lp_t_sym2__) {
+                   inline_jolly_seber_lp_n_occasions_sym49__; ++inline_jolly_seber_lp_t_sym54__) {
                 current_statement__ = 93;
-                stan::model::assign(inline_jolly_seber_lp_lp_sym2__,
+                stan::model::assign(inline_jolly_seber_lp_lp_sym53__,
                   (((stan::math::bernoulli_lpmf<false>(1,
                        stan::math::prod(
                          stan::model::rvalue(
-                           inline_jolly_seber_lp_qgamma_sym2__,
-                           "inline_jolly_seber_lp_qgamma_sym2__",
+                           inline_jolly_seber_lp_qgamma_sym50__,
+                           "inline_jolly_seber_lp_qgamma_sym50__",
                            stan::model::index_min_max(1,
-                             (inline_jolly_seber_lp_t_sym2__ - 1))))) +
+                             (inline_jolly_seber_lp_t_sym54__ - 1))))) +
                   stan::math::bernoulli_lpmf<false>(1,
-                    gamma[(inline_jolly_seber_lp_t_sym2__ - 1)])) +
+                    gamma[(inline_jolly_seber_lp_t_sym54__ - 1)])) +
                   stan::math::bernoulli_lpmf<false>(0,
                     stan::model::rvalue(p, "p",
-                      stan::model::index_uni(inline_jolly_seber_lp_i_sym2__),
-                      stan::model::index_uni(inline_jolly_seber_lp_t_sym2__))))
+                      stan::model::index_uni(inline_jolly_seber_lp_i_sym55__),
+                      stan::model::index_uni(inline_jolly_seber_lp_t_sym54__))))
                   +
                   stan::math::bernoulli_lpmf<false>(1,
                     stan::model::rvalue(chi, "chi",
-                      stan::model::index_uni(inline_jolly_seber_lp_i_sym2__),
-                      stan::model::index_uni(inline_jolly_seber_lp_t_sym2__)))),
-                  "assigning variable inline_jolly_seber_lp_lp_sym2__",
-                  stan::model::index_uni(inline_jolly_seber_lp_t_sym2__));
+                      stan::model::index_uni(inline_jolly_seber_lp_i_sym55__),
+                      stan::model::index_uni(inline_jolly_seber_lp_t_sym54__)))),
+                  "assigning variable inline_jolly_seber_lp_lp_sym53__",
+                  stan::model::index_uni(inline_jolly_seber_lp_t_sym54__));
               }
               current_statement__ = 95;
-              stan::model::assign(inline_jolly_seber_lp_lp_sym2__,
+              stan::model::assign(inline_jolly_seber_lp_lp_sym53__,
                 stan::math::bernoulli_lpmf<false>(1,
-                  stan::math::prod(inline_jolly_seber_lp_qgamma_sym2__)),
-                "assigning variable inline_jolly_seber_lp_lp_sym2__",
+                  stan::math::prod(inline_jolly_seber_lp_qgamma_sym50__)),
+                "assigning variable inline_jolly_seber_lp_lp_sym53__",
                 stan::model::index_uni(
-                  (inline_jolly_seber_lp_n_occasions_sym2__ + 1)));
+                  (inline_jolly_seber_lp_n_occasions_sym49__ + 1)));
               current_statement__ = 96;
               lp_accum__.add(stan::math::log_sum_exp(
-                               inline_jolly_seber_lp_lp_sym2__));
+                               inline_jolly_seber_lp_lp_sym53__));
             }
           }
         }
@@ -1259,74 +1264,76 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       stan::model::assign(p, stan::math::rep_matrix(mean_p, M, n_occasions),
         "assigning variable p");
       Eigen::Matrix<local_scalar_t__,-1,-1>
-        inline_prob_uncaptured_return_sym2__;
+        inline_prob_uncaptured_return_sym21__;
       {
-        int inline_prob_uncaptured_n_ind_sym2__;
+        int inline_prob_uncaptured_n_ind_sym22__;
         current_statement__ = 20;
-        inline_prob_uncaptured_n_ind_sym2__ = stan::math::rows(p);
-        int inline_prob_uncaptured_n_occasions_sym2__;
+        inline_prob_uncaptured_n_ind_sym22__ = stan::math::rows(p);
+        int inline_prob_uncaptured_n_occasions_sym23__;
         current_statement__ = 21;
-        inline_prob_uncaptured_n_occasions_sym2__ = stan::math::cols(p);
+        inline_prob_uncaptured_n_occasions_sym23__ = stan::math::cols(p);
         current_statement__ = 22;
         stan::math::validate_non_negative_index("chi", "n_ind",
-          inline_prob_uncaptured_n_ind_sym2__);
+          inline_prob_uncaptured_n_ind_sym22__);
         current_statement__ = 23;
         stan::math::validate_non_negative_index("chi", "n_occasions",
-          inline_prob_uncaptured_n_occasions_sym2__);
+          inline_prob_uncaptured_n_occasions_sym23__);
         Eigen::Matrix<local_scalar_t__,-1,-1>
-          inline_prob_uncaptured_chi_sym2__ =
-          Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(inline_prob_uncaptured_n_ind_sym2__,
-            inline_prob_uncaptured_n_occasions_sym2__, DUMMY_VAR__);
+          inline_prob_uncaptured_chi_sym24__ =
+          Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(inline_prob_uncaptured_n_ind_sym22__,
+            inline_prob_uncaptured_n_occasions_sym23__, DUMMY_VAR__);
         current_statement__ = 32;
-        for (int inline_prob_uncaptured_i_sym2__ = 1; inline_prob_uncaptured_i_sym2__
+        for (int inline_prob_uncaptured_i_sym28__ = 1; inline_prob_uncaptured_i_sym28__
              <=
-             inline_prob_uncaptured_n_ind_sym2__; ++inline_prob_uncaptured_i_sym2__) {
+             inline_prob_uncaptured_n_ind_sym22__; ++inline_prob_uncaptured_i_sym28__) {
           current_statement__ = 25;
-          stan::model::assign(inline_prob_uncaptured_chi_sym2__, 1.0,
-            "assigning variable inline_prob_uncaptured_chi_sym2__",
-            stan::model::index_uni(inline_prob_uncaptured_i_sym2__),
-            stan::model::index_uni(inline_prob_uncaptured_n_occasions_sym2__));
+          stan::model::assign(inline_prob_uncaptured_chi_sym24__, 1.0,
+            "assigning variable inline_prob_uncaptured_chi_sym24__",
+            stan::model::index_uni(inline_prob_uncaptured_i_sym28__),
+            stan::model::index_uni(inline_prob_uncaptured_n_occasions_sym23__));
           current_statement__ = 30;
-          for (int inline_prob_uncaptured_t_sym2__ = 1; inline_prob_uncaptured_t_sym2__
-               <= (inline_prob_uncaptured_n_occasions_sym2__ -
-               1); ++inline_prob_uncaptured_t_sym2__) {
-            int inline_prob_uncaptured_t_curr_sym2__;
+          for (int inline_prob_uncaptured_t_sym27__ = 1; inline_prob_uncaptured_t_sym27__
+               <= (inline_prob_uncaptured_n_occasions_sym23__ -
+               1); ++inline_prob_uncaptured_t_sym27__) {
+            int inline_prob_uncaptured_t_curr_sym25__;
             current_statement__ = 26;
-            inline_prob_uncaptured_t_curr_sym2__ = (inline_prob_uncaptured_n_occasions_sym2__
-              - inline_prob_uncaptured_t_sym2__);
-            int inline_prob_uncaptured_t_next_sym2__;
+            inline_prob_uncaptured_t_curr_sym25__ = (inline_prob_uncaptured_n_occasions_sym23__
+              - inline_prob_uncaptured_t_sym27__);
+            int inline_prob_uncaptured_t_next_sym26__;
             current_statement__ = 27;
-            inline_prob_uncaptured_t_next_sym2__ = (inline_prob_uncaptured_t_curr_sym2__
+            inline_prob_uncaptured_t_next_sym26__ = (inline_prob_uncaptured_t_curr_sym25__
               + 1);
             current_statement__ = 28;
-            stan::model::assign(inline_prob_uncaptured_chi_sym2__,
+            stan::model::assign(inline_prob_uncaptured_chi_sym24__,
               stan::math::fma(
                 (stan::model::rvalue(phi, "phi",
-                   stan::model::index_uni(inline_prob_uncaptured_i_sym2__),
+                   stan::model::index_uni(inline_prob_uncaptured_i_sym28__),
                    stan::model::index_uni(
-                     inline_prob_uncaptured_t_curr_sym2__)) * (1 -
+                     inline_prob_uncaptured_t_curr_sym25__)) * (1 -
                 stan::model::rvalue(p, "p",
-                  stan::model::index_uni(inline_prob_uncaptured_i_sym2__),
-                  stan::model::index_uni(inline_prob_uncaptured_t_next_sym2__)))),
-                stan::model::rvalue(inline_prob_uncaptured_chi_sym2__,
-                  "inline_prob_uncaptured_chi_sym2__",
-                  stan::model::index_uni(inline_prob_uncaptured_i_sym2__),
-                  stan::model::index_uni(inline_prob_uncaptured_t_next_sym2__)),
-                (1 -
+                  stan::model::index_uni(inline_prob_uncaptured_i_sym28__),
+                  stan::model::index_uni(
+                    inline_prob_uncaptured_t_next_sym26__)))),
+                stan::model::rvalue(inline_prob_uncaptured_chi_sym24__,
+                  "inline_prob_uncaptured_chi_sym24__",
+                  stan::model::index_uni(inline_prob_uncaptured_i_sym28__),
+                  stan::model::index_uni(
+                    inline_prob_uncaptured_t_next_sym26__)), (1 -
                 stan::model::rvalue(phi, "phi",
-                  stan::model::index_uni(inline_prob_uncaptured_i_sym2__),
-                  stan::model::index_uni(inline_prob_uncaptured_t_curr_sym2__)))),
-              "assigning variable inline_prob_uncaptured_chi_sym2__",
-              stan::model::index_uni(inline_prob_uncaptured_i_sym2__),
-              stan::model::index_uni(inline_prob_uncaptured_t_curr_sym2__));
+                  stan::model::index_uni(inline_prob_uncaptured_i_sym28__),
+                  stan::model::index_uni(
+                    inline_prob_uncaptured_t_curr_sym25__)))),
+              "assigning variable inline_prob_uncaptured_chi_sym24__",
+              stan::model::index_uni(inline_prob_uncaptured_i_sym28__),
+              stan::model::index_uni(inline_prob_uncaptured_t_curr_sym25__));
           }
         }
         current_statement__ = 33;
-        stan::model::assign(inline_prob_uncaptured_return_sym2__,
-          inline_prob_uncaptured_chi_sym2__,
-          "assigning variable inline_prob_uncaptured_return_sym2__");
+        stan::model::assign(inline_prob_uncaptured_return_sym21__,
+          inline_prob_uncaptured_chi_sym24__,
+          "assigning variable inline_prob_uncaptured_return_sym21__");
       }
-      stan::model::assign(chi, inline_prob_uncaptured_return_sym2__,
+      stan::model::assign(chi, inline_prob_uncaptured_return_sym21__,
         "assigning variable chi");
       current_statement__ = 6;
       stan::math::check_greater_or_equal(function__, "phi", phi, 0);
@@ -1345,252 +1352,255 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         lp_accum__.add(stan::math::normal_lpdf<propto__>(epsilon,
                          static_cast<double>(0), sigma));
         {
-          int inline_jolly_seber_lp_n_ind_sym1__;
+          int inline_jolly_seber_lp_n_ind_sym30__;
           current_statement__ = 84;
-          inline_jolly_seber_lp_n_ind_sym1__ = stan::model::rvalue(
-                                                 stan::math::dims(y),
-                                                 "dims(y)",
-                                                 stan::model::index_uni(1));
-          int inline_jolly_seber_lp_n_occasions_sym1__;
+          inline_jolly_seber_lp_n_ind_sym30__ = stan::model::rvalue(
+                                                  stan::math::dims(y),
+                                                  "dims(y)",
+                                                  stan::model::index_uni(1));
+          int inline_jolly_seber_lp_n_occasions_sym31__;
           current_statement__ = 85;
-          inline_jolly_seber_lp_n_occasions_sym1__ = stan::model::rvalue(
-                                                       stan::math::dims(y),
-                                                       "dims(y)",
-                                                       stan::model::index_uni(
-                                                         2));
+          inline_jolly_seber_lp_n_occasions_sym31__ = stan::model::rvalue(
+                                                        stan::math::dims(y),
+                                                        "dims(y)",
+                                                        stan::model::index_uni(
+                                                          2));
           current_statement__ = 86;
           stan::math::validate_non_negative_index("qgamma", "n_occasions",
-            inline_jolly_seber_lp_n_occasions_sym1__);
+            inline_jolly_seber_lp_n_occasions_sym31__);
           Eigen::Matrix<local_scalar_t__,-1,1>
-            inline_jolly_seber_lp_qgamma_sym1__;
+            inline_jolly_seber_lp_qgamma_sym32__;
           current_statement__ = 87;
-          stan::model::assign(inline_jolly_seber_lp_qgamma_sym1__,
+          stan::model::assign(inline_jolly_seber_lp_qgamma_sym32__,
             stan::math::subtract(1.0, gamma),
-            "assigning variable inline_jolly_seber_lp_qgamma_sym1__");
+            "assigning variable inline_jolly_seber_lp_qgamma_sym32__");
           current_statement__ = 117;
-          for (int inline_jolly_seber_lp_i_sym1__ = 1; inline_jolly_seber_lp_i_sym1__
+          for (int inline_jolly_seber_lp_i_sym37__ = 1; inline_jolly_seber_lp_i_sym37__
                <=
-               inline_jolly_seber_lp_n_ind_sym1__; ++inline_jolly_seber_lp_i_sym1__) {
+               inline_jolly_seber_lp_n_ind_sym30__; ++inline_jolly_seber_lp_i_sym37__) {
             current_statement__ = 88;
             stan::math::validate_non_negative_index("qp", "n_occasions",
-              inline_jolly_seber_lp_n_occasions_sym1__);
+              inline_jolly_seber_lp_n_occasions_sym31__);
             Eigen::Matrix<local_scalar_t__,-1,1>
-              inline_jolly_seber_lp_qp_sym1__;
+              inline_jolly_seber_lp_qp_sym33__;
             current_statement__ = 89;
-            stan::model::assign(inline_jolly_seber_lp_qp_sym1__,
+            stan::model::assign(inline_jolly_seber_lp_qp_sym33__,
               stan::math::subtract(1.0,
                 stan::math::transpose(
                   stan::model::rvalue(p, "p",
-                    stan::model::index_uni(inline_jolly_seber_lp_i_sym1__)))),
-              "assigning variable inline_jolly_seber_lp_qp_sym1__");
+                    stan::model::index_uni(inline_jolly_seber_lp_i_sym37__)))),
+              "assigning variable inline_jolly_seber_lp_qp_sym33__");
             current_statement__ = 115;
-            if (first[(inline_jolly_seber_lp_i_sym1__ - 1)]) {
+            if (first[(inline_jolly_seber_lp_i_sym37__ - 1)]) {
               current_statement__ = 108;
               if (stan::math::logical_eq(
-                    first[(inline_jolly_seber_lp_i_sym1__ - 1)], 1)) {
+                    first[(inline_jolly_seber_lp_i_sym37__ - 1)], 1)) {
                 current_statement__ = 106;
                 lp_accum__.add(stan::math::bernoulli_lpmf<propto__>(1,
                                  (stan::model::rvalue(gamma, "gamma",
                                     stan::model::index_uni(1)) *
                                  stan::model::rvalue(p, "p",
                                    stan::model::index_uni(
-                                     inline_jolly_seber_lp_i_sym1__),
+                                     inline_jolly_seber_lp_i_sym37__),
                                    stan::model::index_uni(1)))));
               } else {
                 current_statement__ = 98;
-                int inline_jolly_seber_lp_lp_1dim___sym1__ =
-                  first[(inline_jolly_seber_lp_i_sym1__ - 1)];
+                int inline_jolly_seber_lp_lp_1dim___sym34__ =
+                  first[(inline_jolly_seber_lp_i_sym37__ - 1)];
                 current_statement__ = 98;
                 stan::math::validate_non_negative_index("lp", "first[i]",
-                  inline_jolly_seber_lp_lp_1dim___sym1__);
+                  inline_jolly_seber_lp_lp_1dim___sym34__);
                 Eigen::Matrix<local_scalar_t__,-1,1>
-                  inline_jolly_seber_lp_lp_sym1__ =
-                  Eigen::Matrix<local_scalar_t__,-1,1>::Constant(inline_jolly_seber_lp_lp_1dim___sym1__,
+                  inline_jolly_seber_lp_lp_sym35__ =
+                  Eigen::Matrix<local_scalar_t__,-1,1>::Constant(inline_jolly_seber_lp_lp_1dim___sym34__,
                     DUMMY_VAR__);
                 current_statement__ = 100;
-                stan::model::assign(inline_jolly_seber_lp_lp_sym1__,
+                stan::model::assign(inline_jolly_seber_lp_lp_sym35__,
                   (((stan::math::bernoulli_lpmf<false>(1,
                        stan::model::rvalue(gamma, "gamma",
                          stan::model::index_uni(1))) +
                   stan::math::bernoulli_lpmf<false>(1,
                     stan::math::prod(
-                      stan::model::rvalue(inline_jolly_seber_lp_qp_sym1__,
-                        "inline_jolly_seber_lp_qp_sym1__",
+                      stan::model::rvalue(inline_jolly_seber_lp_qp_sym33__,
+                        "inline_jolly_seber_lp_qp_sym33__",
                         stan::model::index_min_max(1,
-                          (first[(inline_jolly_seber_lp_i_sym1__ - 1)] - 1))))))
+                          (first[(inline_jolly_seber_lp_i_sym37__ - 1)] - 1))))))
                   +
                   stan::math::bernoulli_lpmf<false>(1,
                     stan::math::prod(
                       stan::model::rvalue(phi, "phi",
-                        stan::model::index_uni(inline_jolly_seber_lp_i_sym1__),
+                        stan::model::index_uni(
+                          inline_jolly_seber_lp_i_sym37__),
                         stan::model::index_min_max(1,
-                          (first[(inline_jolly_seber_lp_i_sym1__ - 1)] - 1))))))
+                          (first[(inline_jolly_seber_lp_i_sym37__ - 1)] - 1))))))
                   +
                   stan::math::bernoulli_lpmf<false>(1,
                     stan::model::rvalue(p, "p",
-                      stan::model::index_uni(inline_jolly_seber_lp_i_sym1__),
+                      stan::model::index_uni(inline_jolly_seber_lp_i_sym37__),
                       stan::model::index_uni(
-                        first[(inline_jolly_seber_lp_i_sym1__ - 1)])))),
-                  "assigning variable inline_jolly_seber_lp_lp_sym1__",
+                        first[(inline_jolly_seber_lp_i_sym37__ - 1)])))),
+                  "assigning variable inline_jolly_seber_lp_lp_sym35__",
                   stan::model::index_uni(1));
                 current_statement__ = 102;
-                for (int inline_jolly_seber_lp_t_sym1__ = 2; inline_jolly_seber_lp_t_sym1__
-                     <= (first[(inline_jolly_seber_lp_i_sym1__ - 1)] -
-                     1); ++inline_jolly_seber_lp_t_sym1__) {
+                for (int inline_jolly_seber_lp_t_sym36__ = 2; inline_jolly_seber_lp_t_sym36__
+                     <= (first[(inline_jolly_seber_lp_i_sym37__ - 1)] -
+                     1); ++inline_jolly_seber_lp_t_sym36__) {
                   current_statement__ = 101;
-                  stan::model::assign(inline_jolly_seber_lp_lp_sym1__,
+                  stan::model::assign(inline_jolly_seber_lp_lp_sym35__,
                     ((((stan::math::bernoulli_lpmf<false>(1,
                           stan::math::prod(
                             stan::model::rvalue(
-                              inline_jolly_seber_lp_qgamma_sym1__,
-                              "inline_jolly_seber_lp_qgamma_sym1__",
+                              inline_jolly_seber_lp_qgamma_sym32__,
+                              "inline_jolly_seber_lp_qgamma_sym32__",
                               stan::model::index_min_max(1,
-                                (inline_jolly_seber_lp_t_sym1__ - 1))))) +
+                                (inline_jolly_seber_lp_t_sym36__ - 1))))) +
                     stan::math::bernoulli_lpmf<false>(1,
-                      gamma[(inline_jolly_seber_lp_t_sym1__ - 1)])) +
+                      gamma[(inline_jolly_seber_lp_t_sym36__ - 1)])) +
                     stan::math::bernoulli_lpmf<false>(1,
                       stan::math::prod(
-                        stan::model::rvalue(inline_jolly_seber_lp_qp_sym1__,
-                          "inline_jolly_seber_lp_qp_sym1__",
+                        stan::model::rvalue(inline_jolly_seber_lp_qp_sym33__,
+                          "inline_jolly_seber_lp_qp_sym33__",
                           stan::model::index_min_max(
-                            inline_jolly_seber_lp_t_sym1__,
-                            (first[(inline_jolly_seber_lp_i_sym1__ - 1)] - 1))))))
-                    +
+                            inline_jolly_seber_lp_t_sym36__,
+                            (first[(inline_jolly_seber_lp_i_sym37__ - 1)] -
+                            1)))))) +
                     stan::math::bernoulli_lpmf<false>(1,
                       stan::math::prod(
                         stan::model::rvalue(phi, "phi",
                           stan::model::index_uni(
-                            inline_jolly_seber_lp_i_sym1__),
+                            inline_jolly_seber_lp_i_sym37__),
                           stan::model::index_min_max(
-                            inline_jolly_seber_lp_t_sym1__,
-                            (first[(inline_jolly_seber_lp_i_sym1__ - 1)] - 1))))))
-                    +
+                            inline_jolly_seber_lp_t_sym36__,
+                            (first[(inline_jolly_seber_lp_i_sym37__ - 1)] -
+                            1)))))) +
                     stan::math::bernoulli_lpmf<false>(1,
                       stan::model::rvalue(p, "p",
-                        stan::model::index_uni(inline_jolly_seber_lp_i_sym1__),
                         stan::model::index_uni(
-                          first[(inline_jolly_seber_lp_i_sym1__ - 1)])))),
-                    "assigning variable inline_jolly_seber_lp_lp_sym1__",
-                    stan::model::index_uni(inline_jolly_seber_lp_t_sym1__));
+                          inline_jolly_seber_lp_i_sym37__),
+                        stan::model::index_uni(
+                          first[(inline_jolly_seber_lp_i_sym37__ - 1)])))),
+                    "assigning variable inline_jolly_seber_lp_lp_sym35__",
+                    stan::model::index_uni(inline_jolly_seber_lp_t_sym36__));
                 }
                 current_statement__ = 103;
-                stan::model::assign(inline_jolly_seber_lp_lp_sym1__,
+                stan::model::assign(inline_jolly_seber_lp_lp_sym35__,
                   ((stan::math::bernoulli_lpmf<false>(1,
                       stan::math::prod(
                         stan::model::rvalue(
-                          inline_jolly_seber_lp_qgamma_sym1__,
-                          "inline_jolly_seber_lp_qgamma_sym1__",
+                          inline_jolly_seber_lp_qgamma_sym32__,
+                          "inline_jolly_seber_lp_qgamma_sym32__",
                           stan::model::index_min_max(1,
-                            (first[(inline_jolly_seber_lp_i_sym1__ - 1)] - 1)))))
-                  +
+                            (first[(inline_jolly_seber_lp_i_sym37__ - 1)] -
+                            1))))) +
                   stan::math::bernoulli_lpmf<false>(1,
                     stan::model::rvalue(gamma, "gamma",
                       stan::model::index_uni(
-                        first[(inline_jolly_seber_lp_i_sym1__ - 1)])))) +
+                        first[(inline_jolly_seber_lp_i_sym37__ - 1)])))) +
                   stan::math::bernoulli_lpmf<false>(1,
                     stan::model::rvalue(p, "p",
-                      stan::model::index_uni(inline_jolly_seber_lp_i_sym1__),
+                      stan::model::index_uni(inline_jolly_seber_lp_i_sym37__),
                       stan::model::index_uni(
-                        first[(inline_jolly_seber_lp_i_sym1__ - 1)])))),
-                  "assigning variable inline_jolly_seber_lp_lp_sym1__",
+                        first[(inline_jolly_seber_lp_i_sym37__ - 1)])))),
+                  "assigning variable inline_jolly_seber_lp_lp_sym35__",
                   stan::model::index_uni(
-                    first[(inline_jolly_seber_lp_i_sym1__ - 1)]));
+                    first[(inline_jolly_seber_lp_i_sym37__ - 1)]));
                 current_statement__ = 104;
                 lp_accum__.add(stan::math::log_sum_exp(
-                                 inline_jolly_seber_lp_lp_sym1__));
+                                 inline_jolly_seber_lp_lp_sym35__));
               }
               current_statement__ = 112;
-              for (int inline_jolly_seber_lp_t_sym1__ =
-                     (first[(inline_jolly_seber_lp_i_sym1__ - 1)] + 1); inline_jolly_seber_lp_t_sym1__
-                   <= last[(inline_jolly_seber_lp_i_sym1__ -
-                   1)]; ++inline_jolly_seber_lp_t_sym1__) {
+              for (int inline_jolly_seber_lp_t_sym36__ =
+                     (first[(inline_jolly_seber_lp_i_sym37__ - 1)] + 1); inline_jolly_seber_lp_t_sym36__
+                   <= last[(inline_jolly_seber_lp_i_sym37__ -
+                   1)]; ++inline_jolly_seber_lp_t_sym36__) {
                 current_statement__ = 109;
                 lp_accum__.add(stan::math::bernoulli_lpmf<propto__>(1,
                                  stan::model::rvalue(phi, "phi",
                                    stan::model::index_uni(
-                                     inline_jolly_seber_lp_i_sym1__),
+                                     inline_jolly_seber_lp_i_sym37__),
                                    stan::model::index_uni(
-                                     (inline_jolly_seber_lp_t_sym1__ - 1)))));
+                                     (inline_jolly_seber_lp_t_sym36__ - 1)))));
                 current_statement__ = 110;
                 lp_accum__.add(stan::math::bernoulli_lpmf<propto__>(
-                                 y[(inline_jolly_seber_lp_i_sym1__ -
-                                 1)][(inline_jolly_seber_lp_t_sym1__ - 1)],
+                                 y[(inline_jolly_seber_lp_i_sym37__ -
+                                 1)][(inline_jolly_seber_lp_t_sym36__ - 1)],
                                  stan::model::rvalue(p, "p",
                                    stan::model::index_uni(
-                                     inline_jolly_seber_lp_i_sym1__),
+                                     inline_jolly_seber_lp_i_sym37__),
                                    stan::model::index_uni(
-                                     inline_jolly_seber_lp_t_sym1__))));
+                                     inline_jolly_seber_lp_t_sym36__))));
               }
               current_statement__ = 113;
               lp_accum__.add(stan::math::bernoulli_lpmf<propto__>(1,
                                stan::model::rvalue(chi, "chi",
                                  stan::model::index_uni(
-                                   inline_jolly_seber_lp_i_sym1__),
+                                   inline_jolly_seber_lp_i_sym37__),
                                  stan::model::index_uni(
-                                   last[(inline_jolly_seber_lp_i_sym1__ - 1)]))));
+                                   last[(inline_jolly_seber_lp_i_sym37__ -
+                                   1)]))));
             } else {
               current_statement__ = 90;
-              int inline_jolly_seber_lp_lp_1dim___sym1__ =
-                (inline_jolly_seber_lp_n_occasions_sym1__ + 1);
+              int inline_jolly_seber_lp_lp_1dim___sym34__ =
+                (inline_jolly_seber_lp_n_occasions_sym31__ + 1);
               current_statement__ = 90;
               stan::math::validate_non_negative_index("lp",
-                "n_occasions + 1", inline_jolly_seber_lp_lp_1dim___sym1__);
+                "n_occasions + 1", inline_jolly_seber_lp_lp_1dim___sym34__);
               Eigen::Matrix<local_scalar_t__,-1,1>
-                inline_jolly_seber_lp_lp_sym1__ =
-                Eigen::Matrix<local_scalar_t__,-1,1>::Constant(inline_jolly_seber_lp_lp_1dim___sym1__,
+                inline_jolly_seber_lp_lp_sym35__ =
+                Eigen::Matrix<local_scalar_t__,-1,1>::Constant(inline_jolly_seber_lp_lp_1dim___sym34__,
                   DUMMY_VAR__);
               current_statement__ = 92;
-              stan::model::assign(inline_jolly_seber_lp_lp_sym1__,
+              stan::model::assign(inline_jolly_seber_lp_lp_sym35__,
                 ((stan::math::bernoulli_lpmf<false>(1,
                     stan::model::rvalue(gamma, "gamma",
                       stan::model::index_uni(1))) +
                 stan::math::bernoulli_lpmf<false>(0,
                   stan::model::rvalue(p, "p",
-                    stan::model::index_uni(inline_jolly_seber_lp_i_sym1__),
+                    stan::model::index_uni(inline_jolly_seber_lp_i_sym37__),
                     stan::model::index_uni(1)))) +
                 stan::math::bernoulli_lpmf<false>(1,
                   stan::model::rvalue(chi, "chi",
-                    stan::model::index_uni(inline_jolly_seber_lp_i_sym1__),
+                    stan::model::index_uni(inline_jolly_seber_lp_i_sym37__),
                     stan::model::index_uni(1)))),
-                "assigning variable inline_jolly_seber_lp_lp_sym1__",
+                "assigning variable inline_jolly_seber_lp_lp_sym35__",
                 stan::model::index_uni(1));
               current_statement__ = 94;
-              for (int inline_jolly_seber_lp_t_sym1__ = 2; inline_jolly_seber_lp_t_sym1__
+              for (int inline_jolly_seber_lp_t_sym36__ = 2; inline_jolly_seber_lp_t_sym36__
                    <=
-                   inline_jolly_seber_lp_n_occasions_sym1__; ++inline_jolly_seber_lp_t_sym1__) {
+                   inline_jolly_seber_lp_n_occasions_sym31__; ++inline_jolly_seber_lp_t_sym36__) {
                 current_statement__ = 93;
-                stan::model::assign(inline_jolly_seber_lp_lp_sym1__,
+                stan::model::assign(inline_jolly_seber_lp_lp_sym35__,
                   (((stan::math::bernoulli_lpmf<false>(1,
                        stan::math::prod(
                          stan::model::rvalue(
-                           inline_jolly_seber_lp_qgamma_sym1__,
-                           "inline_jolly_seber_lp_qgamma_sym1__",
+                           inline_jolly_seber_lp_qgamma_sym32__,
+                           "inline_jolly_seber_lp_qgamma_sym32__",
                            stan::model::index_min_max(1,
-                             (inline_jolly_seber_lp_t_sym1__ - 1))))) +
+                             (inline_jolly_seber_lp_t_sym36__ - 1))))) +
                   stan::math::bernoulli_lpmf<false>(1,
-                    gamma[(inline_jolly_seber_lp_t_sym1__ - 1)])) +
+                    gamma[(inline_jolly_seber_lp_t_sym36__ - 1)])) +
                   stan::math::bernoulli_lpmf<false>(0,
                     stan::model::rvalue(p, "p",
-                      stan::model::index_uni(inline_jolly_seber_lp_i_sym1__),
-                      stan::model::index_uni(inline_jolly_seber_lp_t_sym1__))))
+                      stan::model::index_uni(inline_jolly_seber_lp_i_sym37__),
+                      stan::model::index_uni(inline_jolly_seber_lp_t_sym36__))))
                   +
                   stan::math::bernoulli_lpmf<false>(1,
                     stan::model::rvalue(chi, "chi",
-                      stan::model::index_uni(inline_jolly_seber_lp_i_sym1__),
-                      stan::model::index_uni(inline_jolly_seber_lp_t_sym1__)))),
-                  "assigning variable inline_jolly_seber_lp_lp_sym1__",
-                  stan::model::index_uni(inline_jolly_seber_lp_t_sym1__));
+                      stan::model::index_uni(inline_jolly_seber_lp_i_sym37__),
+                      stan::model::index_uni(inline_jolly_seber_lp_t_sym36__)))),
+                  "assigning variable inline_jolly_seber_lp_lp_sym35__",
+                  stan::model::index_uni(inline_jolly_seber_lp_t_sym36__));
               }
               current_statement__ = 95;
-              stan::model::assign(inline_jolly_seber_lp_lp_sym1__,
+              stan::model::assign(inline_jolly_seber_lp_lp_sym35__,
                 stan::math::bernoulli_lpmf<false>(1,
-                  stan::math::prod(inline_jolly_seber_lp_qgamma_sym1__)),
-                "assigning variable inline_jolly_seber_lp_lp_sym1__",
+                  stan::math::prod(inline_jolly_seber_lp_qgamma_sym32__)),
+                "assigning variable inline_jolly_seber_lp_lp_sym35__",
                 stan::model::index_uni(
-                  (inline_jolly_seber_lp_n_occasions_sym1__ + 1)));
+                  (inline_jolly_seber_lp_n_occasions_sym31__ + 1)));
               current_statement__ = 96;
               lp_accum__.add(stan::math::log_sum_exp(
-                               inline_jolly_seber_lp_lp_sym1__));
+                               inline_jolly_seber_lp_lp_sym35__));
             }
           }
         }
@@ -1693,69 +1703,69 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         "assigning variable p");
       Eigen::Matrix<double,-1,-1> inline_prob_uncaptured_return_sym1__;
       {
-        int inline_prob_uncaptured_n_ind_sym1__;
+        int inline_prob_uncaptured_n_ind_sym2__;
         current_statement__ = 20;
-        inline_prob_uncaptured_n_ind_sym1__ = stan::math::rows(p);
-        int inline_prob_uncaptured_n_occasions_sym1__;
+        inline_prob_uncaptured_n_ind_sym2__ = stan::math::rows(p);
+        int inline_prob_uncaptured_n_occasions_sym3__;
         current_statement__ = 21;
-        inline_prob_uncaptured_n_occasions_sym1__ = stan::math::cols(p);
+        inline_prob_uncaptured_n_occasions_sym3__ = stan::math::cols(p);
         current_statement__ = 22;
         stan::math::validate_non_negative_index("chi", "n_ind",
-          inline_prob_uncaptured_n_ind_sym1__);
+          inline_prob_uncaptured_n_ind_sym2__);
         current_statement__ = 23;
         stan::math::validate_non_negative_index("chi", "n_occasions",
-          inline_prob_uncaptured_n_occasions_sym1__);
+          inline_prob_uncaptured_n_occasions_sym3__);
         Eigen::Matrix<local_scalar_t__,-1,-1>
-          inline_prob_uncaptured_chi_sym1__ =
-          Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(inline_prob_uncaptured_n_ind_sym1__,
-            inline_prob_uncaptured_n_occasions_sym1__, DUMMY_VAR__);
+          inline_prob_uncaptured_chi_sym4__ =
+          Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(inline_prob_uncaptured_n_ind_sym2__,
+            inline_prob_uncaptured_n_occasions_sym3__, DUMMY_VAR__);
         current_statement__ = 32;
-        for (int inline_prob_uncaptured_i_sym1__ = 1; inline_prob_uncaptured_i_sym1__
+        for (int inline_prob_uncaptured_i_sym8__ = 1; inline_prob_uncaptured_i_sym8__
              <=
-             inline_prob_uncaptured_n_ind_sym1__; ++inline_prob_uncaptured_i_sym1__) {
+             inline_prob_uncaptured_n_ind_sym2__; ++inline_prob_uncaptured_i_sym8__) {
           current_statement__ = 25;
-          stan::model::assign(inline_prob_uncaptured_chi_sym1__, 1.0,
-            "assigning variable inline_prob_uncaptured_chi_sym1__",
-            stan::model::index_uni(inline_prob_uncaptured_i_sym1__),
-            stan::model::index_uni(inline_prob_uncaptured_n_occasions_sym1__));
+          stan::model::assign(inline_prob_uncaptured_chi_sym4__, 1.0,
+            "assigning variable inline_prob_uncaptured_chi_sym4__",
+            stan::model::index_uni(inline_prob_uncaptured_i_sym8__),
+            stan::model::index_uni(inline_prob_uncaptured_n_occasions_sym3__));
           current_statement__ = 30;
-          for (int inline_prob_uncaptured_t_sym1__ = 1; inline_prob_uncaptured_t_sym1__
-               <= (inline_prob_uncaptured_n_occasions_sym1__ -
-               1); ++inline_prob_uncaptured_t_sym1__) {
-            int inline_prob_uncaptured_t_curr_sym1__;
+          for (int inline_prob_uncaptured_t_sym7__ = 1; inline_prob_uncaptured_t_sym7__
+               <= (inline_prob_uncaptured_n_occasions_sym3__ -
+               1); ++inline_prob_uncaptured_t_sym7__) {
+            int inline_prob_uncaptured_t_curr_sym5__;
             current_statement__ = 26;
-            inline_prob_uncaptured_t_curr_sym1__ = (inline_prob_uncaptured_n_occasions_sym1__
-              - inline_prob_uncaptured_t_sym1__);
-            int inline_prob_uncaptured_t_next_sym1__;
+            inline_prob_uncaptured_t_curr_sym5__ = (inline_prob_uncaptured_n_occasions_sym3__
+              - inline_prob_uncaptured_t_sym7__);
+            int inline_prob_uncaptured_t_next_sym6__;
             current_statement__ = 27;
-            inline_prob_uncaptured_t_next_sym1__ = (inline_prob_uncaptured_t_curr_sym1__
+            inline_prob_uncaptured_t_next_sym6__ = (inline_prob_uncaptured_t_curr_sym5__
               + 1);
             current_statement__ = 28;
-            stan::model::assign(inline_prob_uncaptured_chi_sym1__,
+            stan::model::assign(inline_prob_uncaptured_chi_sym4__,
               stan::math::fma(
                 (stan::model::rvalue(phi, "phi",
-                   stan::model::index_uni(inline_prob_uncaptured_i_sym1__),
+                   stan::model::index_uni(inline_prob_uncaptured_i_sym8__),
                    stan::model::index_uni(
-                     inline_prob_uncaptured_t_curr_sym1__)) * (1 -
+                     inline_prob_uncaptured_t_curr_sym5__)) * (1 -
                 stan::model::rvalue(p, "p",
-                  stan::model::index_uni(inline_prob_uncaptured_i_sym1__),
-                  stan::model::index_uni(inline_prob_uncaptured_t_next_sym1__)))),
-                stan::model::rvalue(inline_prob_uncaptured_chi_sym1__,
-                  "inline_prob_uncaptured_chi_sym1__",
-                  stan::model::index_uni(inline_prob_uncaptured_i_sym1__),
-                  stan::model::index_uni(inline_prob_uncaptured_t_next_sym1__)),
+                  stan::model::index_uni(inline_prob_uncaptured_i_sym8__),
+                  stan::model::index_uni(inline_prob_uncaptured_t_next_sym6__)))),
+                stan::model::rvalue(inline_prob_uncaptured_chi_sym4__,
+                  "inline_prob_uncaptured_chi_sym4__",
+                  stan::model::index_uni(inline_prob_uncaptured_i_sym8__),
+                  stan::model::index_uni(inline_prob_uncaptured_t_next_sym6__)),
                 (1 -
                 stan::model::rvalue(phi, "phi",
-                  stan::model::index_uni(inline_prob_uncaptured_i_sym1__),
-                  stan::model::index_uni(inline_prob_uncaptured_t_curr_sym1__)))),
-              "assigning variable inline_prob_uncaptured_chi_sym1__",
-              stan::model::index_uni(inline_prob_uncaptured_i_sym1__),
-              stan::model::index_uni(inline_prob_uncaptured_t_curr_sym1__));
+                  stan::model::index_uni(inline_prob_uncaptured_i_sym8__),
+                  stan::model::index_uni(inline_prob_uncaptured_t_curr_sym5__)))),
+              "assigning variable inline_prob_uncaptured_chi_sym4__",
+              stan::model::index_uni(inline_prob_uncaptured_i_sym8__),
+              stan::model::index_uni(inline_prob_uncaptured_t_curr_sym5__));
           }
         }
         current_statement__ = 33;
         stan::model::assign(inline_prob_uncaptured_return_sym1__,
-          inline_prob_uncaptured_chi_sym1__,
+          inline_prob_uncaptured_chi_sym4__,
           "assigning variable inline_prob_uncaptured_return_sym1__");
       }
       stan::model::assign(chi, inline_prob_uncaptured_return_sym1__,
@@ -1833,39 +1843,39 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         Eigen::Matrix<double,-1,1> cprob =
           Eigen::Matrix<double,-1,1>::Constant(n_occasions,
             std::numeric_limits<double>::quiet_NaN());
-        Eigen::Matrix<double,-1,1> inline_seq_cprob_return_sym1__;
+        Eigen::Matrix<double,-1,1> inline_seq_cprob_return_sym10__;
         {
-          int inline_seq_cprob_N_sym1__;
+          int inline_seq_cprob_N_sym11__;
           current_statement__ = 46;
-          inline_seq_cprob_N_sym1__ = stan::math::rows(gamma);
+          inline_seq_cprob_N_sym11__ = stan::math::rows(gamma);
           current_statement__ = 47;
           stan::math::validate_non_negative_index("log_cprob", "N",
-            inline_seq_cprob_N_sym1__);
+            inline_seq_cprob_N_sym11__);
           Eigen::Matrix<local_scalar_t__,-1,1>
-            inline_seq_cprob_log_cprob_sym1__ =
-            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(inline_seq_cprob_N_sym1__,
+            inline_seq_cprob_log_cprob_sym12__ =
+            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(inline_seq_cprob_N_sym11__,
               DUMMY_VAR__);
-          local_scalar_t__ inline_seq_cprob_log_residual_prob_sym1__;
+          local_scalar_t__ inline_seq_cprob_log_residual_prob_sym13__;
           current_statement__ = 49;
-          inline_seq_cprob_log_residual_prob_sym1__ = stan::math::promote_scalar<
-                                                        local_scalar_t__>(0);
+          inline_seq_cprob_log_residual_prob_sym13__ = stan::math::promote_scalar<
+                                                         local_scalar_t__>(0);
           current_statement__ = 53;
-          for (int inline_seq_cprob_n_sym1__ = 1; inline_seq_cprob_n_sym1__
-               <= inline_seq_cprob_N_sym1__; ++inline_seq_cprob_n_sym1__) {
+          for (int inline_seq_cprob_n_sym14__ = 1; inline_seq_cprob_n_sym14__
+               <= inline_seq_cprob_N_sym11__; ++inline_seq_cprob_n_sym14__) {
             current_statement__ = 50;
-            stan::model::assign(inline_seq_cprob_log_cprob_sym1__,
-              (stan::math::log(gamma[(inline_seq_cprob_n_sym1__ - 1)]) +
-              inline_seq_cprob_log_residual_prob_sym1__),
-              "assigning variable inline_seq_cprob_log_cprob_sym1__",
-              stan::model::index_uni(inline_seq_cprob_n_sym1__));
+            stan::model::assign(inline_seq_cprob_log_cprob_sym12__,
+              (stan::math::log(gamma[(inline_seq_cprob_n_sym14__ - 1)]) +
+              inline_seq_cprob_log_residual_prob_sym13__),
+              "assigning variable inline_seq_cprob_log_cprob_sym12__",
+              stan::model::index_uni(inline_seq_cprob_n_sym14__));
             current_statement__ = 51;
-            inline_seq_cprob_log_residual_prob_sym1__ = (inline_seq_cprob_log_residual_prob_sym1__
-              + stan::math::log1m(gamma[(inline_seq_cprob_n_sym1__ - 1)]));
+            inline_seq_cprob_log_residual_prob_sym13__ = (inline_seq_cprob_log_residual_prob_sym13__
+              + stan::math::log1m(gamma[(inline_seq_cprob_n_sym14__ - 1)]));
           }
           current_statement__ = 54;
-          stan::model::assign(inline_seq_cprob_return_sym1__,
-            stan::math::exp(inline_seq_cprob_log_cprob_sym1__),
-            "assigning variable inline_seq_cprob_return_sym1__");
+          stan::model::assign(inline_seq_cprob_return_sym10__,
+            stan::math::exp(inline_seq_cprob_log_cprob_sym12__),
+            "assigning variable inline_seq_cprob_return_sym10__");
         }
         current_statement__ = 55;
         stan::math::validate_non_negative_index("recruit", "M", M);
@@ -1890,45 +1900,45 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         current_statement__ = 62;
         sigma2 = stan::math::square(sigma);
         current_statement__ = 63;
-        psi = stan::math::sum(inline_seq_cprob_return_sym1__);
+        psi = stan::math::sum(inline_seq_cprob_return_sym10__);
         current_statement__ = 64;
         stan::model::assign(b,
-          stan::math::divide(inline_seq_cprob_return_sym1__, psi),
+          stan::math::divide(inline_seq_cprob_return_sym10__, psi),
           "assigning variable b");
         current_statement__ = 72;
         for (int i = 1; i <= M; ++i) {
           int f = std::numeric_limits<int>::min();
-          const std::vector<int>& inline_first_capture_y_i_arg_sym1__ =
+          const std::vector<int>& inline_first_capture_y_i_arg_sym17__ =
             stan::model::rvalue(z, "z", stan::model::index_uni(i));
-          int inline_first_capture_return_sym1__;
-          int inline_first_capture_early_ret_check_sym1__;
-          inline_first_capture_early_ret_check_sym1__ = 0;
-          for (int inline_first_capture_iterator_sym1__ = 1; inline_first_capture_iterator_sym1__
-               <= 1; ++inline_first_capture_iterator_sym1__) {
-            for (int inline_first_capture_k_sym1__ = 1; inline_first_capture_k_sym1__
+          int inline_first_capture_return_sym16__;
+          int inline_first_capture_early_ret_check_sym19__;
+          inline_first_capture_early_ret_check_sym19__ = 0;
+          for (int inline_first_capture_iterator_sym20__ = 1; inline_first_capture_iterator_sym20__
+               <= 1; ++inline_first_capture_iterator_sym20__) {
+            for (int inline_first_capture_k_sym18__ = 1; inline_first_capture_k_sym18__
                  <=
-                 stan::math::size(inline_first_capture_y_i_arg_sym1__); ++inline_first_capture_k_sym1__) {
+                 stan::math::size(inline_first_capture_y_i_arg_sym17__); ++inline_first_capture_k_sym18__) {
               current_statement__ = 67;
-              if (inline_first_capture_y_i_arg_sym1__[(inline_first_capture_k_sym1__
+              if (inline_first_capture_y_i_arg_sym17__[(inline_first_capture_k_sym18__
                   - 1)]) {
-                inline_first_capture_early_ret_check_sym1__ = 1;
-                inline_first_capture_return_sym1__ = inline_first_capture_k_sym1__;
+                inline_first_capture_early_ret_check_sym19__ = 1;
+                inline_first_capture_return_sym16__ = inline_first_capture_k_sym18__;
                 break;
               }
             }
-            if (inline_first_capture_early_ret_check_sym1__) {
+            if (inline_first_capture_early_ret_check_sym19__) {
               break;
             }
-            inline_first_capture_early_ret_check_sym1__ = 1;
-            inline_first_capture_return_sym1__ = 0;
+            inline_first_capture_early_ret_check_sym19__ = 1;
+            inline_first_capture_return_sym16__ = 0;
             break;
           }
           current_statement__ = 70;
-          if (stan::math::logical_gt(inline_first_capture_return_sym1__, 0)) {
+          if (stan::math::logical_gt(inline_first_capture_return_sym16__, 0)) {
             current_statement__ = 69;
             stan::model::assign(recruit, 1, "assigning variable recruit",
               stan::model::index_uni(i),
-              stan::model::index_uni(inline_first_capture_return_sym1__));
+              stan::model::index_uni(inline_first_capture_return_sym16__));
           }
         }
         current_statement__ = 76;

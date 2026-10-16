@@ -139,19 +139,19 @@ class function_in_function_inline_model final : public model_base_crtp<function_
     (void) function__;
     try {
       local_scalar_t__ ret = DUMMY_VAR__;
-      local_scalar_t__ inline_outer_lpdf_return_sym2__;
+      local_scalar_t__ inline_outer_lpdf_return_sym12__;
       {
         local_scalar_t__
-          inline_outer_lpdf_inline_inner_lpdf_return_sym3___sym2__;
+          inline_outer_lpdf_inline_inner_lpdf_return_sym5___sym13__;
         {
           current_statement__ = 2;
-          inline_outer_lpdf_inline_inner_lpdf_return_sym3___sym2__ = 
+          inline_outer_lpdf_inline_inner_lpdf_return_sym5___sym13__ = 
             stan::math::sum(phi);
         }
-        inline_outer_lpdf_return_sym2__ = inline_outer_lpdf_inline_inner_lpdf_return_sym3___sym2__;
+        inline_outer_lpdf_return_sym12__ = inline_outer_lpdf_inline_inner_lpdf_return_sym5___sym13__;
       }
       current_statement__ = 3;
-      lp_accum__.add(inline_outer_lpdf_return_sym2__);
+      lp_accum__.add(inline_outer_lpdf_return_sym12__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -183,19 +183,19 @@ class function_in_function_inline_model final : public model_base_crtp<function_
     (void) function__;
     try {
       local_scalar_t__ ret = DUMMY_VAR__;
-      local_scalar_t__ inline_outer_lpdf_return_sym1__;
+      local_scalar_t__ inline_outer_lpdf_return_sym9__;
       {
         local_scalar_t__
-          inline_outer_lpdf_inline_inner_lpdf_return_sym3___sym1__;
+          inline_outer_lpdf_inline_inner_lpdf_return_sym5___sym10__;
         {
           current_statement__ = 2;
-          inline_outer_lpdf_inline_inner_lpdf_return_sym3___sym1__ = 
+          inline_outer_lpdf_inline_inner_lpdf_return_sym5___sym10__ = 
             stan::math::sum(phi);
         }
-        inline_outer_lpdf_return_sym1__ = inline_outer_lpdf_inline_inner_lpdf_return_sym3___sym1__;
+        inline_outer_lpdf_return_sym9__ = inline_outer_lpdf_inline_inner_lpdf_return_sym5___sym10__;
       }
       current_statement__ = 3;
-      lp_accum__.add(inline_outer_lpdf_return_sym1__);
+      lp_accum__.add(inline_outer_lpdf_return_sym9__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }

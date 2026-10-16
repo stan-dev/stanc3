@@ -683,7 +683,7 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
         }
       }
       Eigen::Matrix<local_scalar_t__,-1,-1>
-        inline_prob_uncaptured_return_sym3__;
+        inline_prob_uncaptured_return_sym15__;
       {
         current_statement__ = 14;
         stan::math::validate_non_negative_index("chi", "nind", nind);
@@ -691,135 +691,137 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
         stan::math::validate_non_negative_index("chi", "n_occasions",
           n_occasions);
         Eigen::Matrix<local_scalar_t__,-1,-1>
-          inline_prob_uncaptured_chi_sym3__ =
+          inline_prob_uncaptured_chi_sym16__ =
           Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(nind, n_occasions,
             DUMMY_VAR__);
         current_statement__ = 24;
         if (lcm_sym117__) {
           current_statement__ = 17;
-          stan::model::assign(inline_prob_uncaptured_chi_sym3__, 1.0,
-            "assigning variable inline_prob_uncaptured_chi_sym3__",
+          stan::model::assign(inline_prob_uncaptured_chi_sym16__, 1.0,
+            "assigning variable inline_prob_uncaptured_chi_sym16__",
             stan::model::index_uni(1), stan::model::index_uni(n_occasions));
           lcm_sym112__ = (n_occasions - 1);
           lcm_sym118__ = stan::math::logical_gte(lcm_sym112__, 1);
           if (lcm_sym118__) {
-            int inline_prob_uncaptured_t_curr_sym3__ =
+            int inline_prob_uncaptured_t_curr_sym17__ =
               std::numeric_limits<int>::min();
-            int inline_prob_uncaptured_t_next_sym3__ =
+            int inline_prob_uncaptured_t_next_sym18__ =
               std::numeric_limits<int>::min();
             lcm_sym108__ = (lcm_sym112__ + 1);
             current_statement__ = 20;
-            stan::model::assign(inline_prob_uncaptured_chi_sym3__,
+            stan::model::assign(inline_prob_uncaptured_chi_sym16__,
               stan::math::fma(
                 (stan::model::rvalue(phi, "phi", stan::model::index_uni(1),
                    stan::model::index_uni(lcm_sym112__)) * (1 -
                 stan::model::rvalue(p, "p", stan::model::index_uni(1),
                   stan::model::index_uni((lcm_sym108__ - 1))))),
-                stan::model::rvalue(inline_prob_uncaptured_chi_sym3__,
-                  "inline_prob_uncaptured_chi_sym3__",
+                stan::model::rvalue(inline_prob_uncaptured_chi_sym16__,
+                  "inline_prob_uncaptured_chi_sym16__",
                   stan::model::index_uni(1),
                   stan::model::index_uni(lcm_sym108__)), (1 -
                 stan::model::rvalue(phi, "phi", stan::model::index_uni(1),
                   stan::model::index_uni(lcm_sym112__)))),
-              "assigning variable inline_prob_uncaptured_chi_sym3__",
+              "assigning variable inline_prob_uncaptured_chi_sym16__",
               stan::model::index_uni(1), stan::model::index_uni(lcm_sym112__));
-            for (int inline_prob_uncaptured_t_sym3__ = 2; inline_prob_uncaptured_t_sym3__
-                 <= lcm_sym112__; ++inline_prob_uncaptured_t_sym3__) {
-              int inline_prob_uncaptured_t_curr_sym3__ =
+            for (int inline_prob_uncaptured_t_sym19__ = 2; inline_prob_uncaptured_t_sym19__
+                 <= lcm_sym112__; ++inline_prob_uncaptured_t_sym19__) {
+              int inline_prob_uncaptured_t_curr_sym17__ =
                 std::numeric_limits<int>::min();
-              lcm_sym111__ = (n_occasions - inline_prob_uncaptured_t_sym3__);
-              int inline_prob_uncaptured_t_next_sym3__ =
+              lcm_sym111__ = (n_occasions -
+                inline_prob_uncaptured_t_sym19__);
+              int inline_prob_uncaptured_t_next_sym18__ =
                 std::numeric_limits<int>::min();
               lcm_sym107__ = (lcm_sym111__ + 1);
               current_statement__ = 20;
-              stan::model::assign(inline_prob_uncaptured_chi_sym3__,
+              stan::model::assign(inline_prob_uncaptured_chi_sym16__,
                 stan::math::fma(
                   (stan::model::rvalue(phi, "phi", stan::model::index_uni(1),
                      stan::model::index_uni(lcm_sym111__)) * (1 -
                   stan::model::rvalue(p, "p", stan::model::index_uni(1),
                     stan::model::index_uni((lcm_sym107__ - 1))))),
-                  stan::model::rvalue(inline_prob_uncaptured_chi_sym3__,
-                    "inline_prob_uncaptured_chi_sym3__",
+                  stan::model::rvalue(inline_prob_uncaptured_chi_sym16__,
+                    "inline_prob_uncaptured_chi_sym16__",
                     stan::model::index_uni(1),
                     stan::model::index_uni(lcm_sym107__)), (1 -
                   stan::model::rvalue(phi, "phi", stan::model::index_uni(1),
                     stan::model::index_uni(lcm_sym111__)))),
-                "assigning variable inline_prob_uncaptured_chi_sym3__",
+                "assigning variable inline_prob_uncaptured_chi_sym16__",
                 stan::model::index_uni(1),
                 stan::model::index_uni(lcm_sym111__));
             }
           }
-          for (int inline_prob_uncaptured_i_sym3__ = 2; inline_prob_uncaptured_i_sym3__
-               <= nind; ++inline_prob_uncaptured_i_sym3__) {
+          for (int inline_prob_uncaptured_i_sym20__ = 2; inline_prob_uncaptured_i_sym20__
+               <= nind; ++inline_prob_uncaptured_i_sym20__) {
             current_statement__ = 17;
-            stan::model::assign(inline_prob_uncaptured_chi_sym3__, 1.0,
-              "assigning variable inline_prob_uncaptured_chi_sym3__",
-              stan::model::index_uni(inline_prob_uncaptured_i_sym3__),
+            stan::model::assign(inline_prob_uncaptured_chi_sym16__, 1.0,
+              "assigning variable inline_prob_uncaptured_chi_sym16__",
+              stan::model::index_uni(inline_prob_uncaptured_i_sym20__),
               stan::model::index_uni(n_occasions));
             current_statement__ = 22;
             if (lcm_sym118__) {
-              int inline_prob_uncaptured_t_curr_sym3__ =
+              int inline_prob_uncaptured_t_curr_sym17__ =
                 std::numeric_limits<int>::min();
-              int inline_prob_uncaptured_t_next_sym3__ =
+              int inline_prob_uncaptured_t_next_sym18__ =
                 std::numeric_limits<int>::min();
               lcm_sym108__ = (lcm_sym112__ + 1);
               current_statement__ = 20;
-              stan::model::assign(inline_prob_uncaptured_chi_sym3__,
+              stan::model::assign(inline_prob_uncaptured_chi_sym16__,
                 stan::math::fma(
                   (stan::model::rvalue(phi, "phi",
-                     stan::model::index_uni(inline_prob_uncaptured_i_sym3__),
+                     stan::model::index_uni(inline_prob_uncaptured_i_sym20__),
                      stan::model::index_uni(lcm_sym112__)) * (1 -
                   stan::model::rvalue(p, "p",
-                    stan::model::index_uni(inline_prob_uncaptured_i_sym3__),
+                    stan::model::index_uni(inline_prob_uncaptured_i_sym20__),
                     stan::model::index_uni((lcm_sym108__ - 1))))),
-                  stan::model::rvalue(inline_prob_uncaptured_chi_sym3__,
-                    "inline_prob_uncaptured_chi_sym3__",
-                    stan::model::index_uni(inline_prob_uncaptured_i_sym3__),
+                  stan::model::rvalue(inline_prob_uncaptured_chi_sym16__,
+                    "inline_prob_uncaptured_chi_sym16__",
+                    stan::model::index_uni(inline_prob_uncaptured_i_sym20__),
                     stan::model::index_uni(lcm_sym108__)), (1 -
                   stan::model::rvalue(phi, "phi",
-                    stan::model::index_uni(inline_prob_uncaptured_i_sym3__),
+                    stan::model::index_uni(inline_prob_uncaptured_i_sym20__),
                     stan::model::index_uni(lcm_sym112__)))),
-                "assigning variable inline_prob_uncaptured_chi_sym3__",
-                stan::model::index_uni(inline_prob_uncaptured_i_sym3__),
+                "assigning variable inline_prob_uncaptured_chi_sym16__",
+                stan::model::index_uni(inline_prob_uncaptured_i_sym20__),
                 stan::model::index_uni(lcm_sym112__));
-              for (int inline_prob_uncaptured_t_sym3__ = 2; inline_prob_uncaptured_t_sym3__
-                   <= lcm_sym112__; ++inline_prob_uncaptured_t_sym3__) {
-                int inline_prob_uncaptured_t_curr_sym3__ =
+              for (int inline_prob_uncaptured_t_sym19__ = 2; inline_prob_uncaptured_t_sym19__
+                   <= lcm_sym112__; ++inline_prob_uncaptured_t_sym19__) {
+                int inline_prob_uncaptured_t_curr_sym17__ =
                   std::numeric_limits<int>::min();
                 lcm_sym111__ = (n_occasions -
-                  inline_prob_uncaptured_t_sym3__);
-                int inline_prob_uncaptured_t_next_sym3__ =
+                  inline_prob_uncaptured_t_sym19__);
+                int inline_prob_uncaptured_t_next_sym18__ =
                   std::numeric_limits<int>::min();
                 lcm_sym107__ = (lcm_sym111__ + 1);
                 current_statement__ = 20;
-                stan::model::assign(inline_prob_uncaptured_chi_sym3__,
+                stan::model::assign(inline_prob_uncaptured_chi_sym16__,
                   stan::math::fma(
                     (stan::model::rvalue(phi, "phi",
-                       stan::model::index_uni(inline_prob_uncaptured_i_sym3__),
+                       stan::model::index_uni(
+                         inline_prob_uncaptured_i_sym20__),
                        stan::model::index_uni(lcm_sym111__)) * (1 -
                     stan::model::rvalue(p, "p",
-                      stan::model::index_uni(inline_prob_uncaptured_i_sym3__),
+                      stan::model::index_uni(inline_prob_uncaptured_i_sym20__),
                       stan::model::index_uni((lcm_sym107__ - 1))))),
-                    stan::model::rvalue(inline_prob_uncaptured_chi_sym3__,
-                      "inline_prob_uncaptured_chi_sym3__",
-                      stan::model::index_uni(inline_prob_uncaptured_i_sym3__),
+                    stan::model::rvalue(inline_prob_uncaptured_chi_sym16__,
+                      "inline_prob_uncaptured_chi_sym16__",
+                      stan::model::index_uni(inline_prob_uncaptured_i_sym20__),
                       stan::model::index_uni(lcm_sym107__)), (1 -
                     stan::model::rvalue(phi, "phi",
-                      stan::model::index_uni(inline_prob_uncaptured_i_sym3__),
+                      stan::model::index_uni(inline_prob_uncaptured_i_sym20__),
                       stan::model::index_uni(lcm_sym111__)))),
-                  "assigning variable inline_prob_uncaptured_chi_sym3__",
-                  stan::model::index_uni(inline_prob_uncaptured_i_sym3__),
+                  "assigning variable inline_prob_uncaptured_chi_sym16__",
+                  stan::model::index_uni(inline_prob_uncaptured_i_sym20__),
                   stan::model::index_uni(lcm_sym111__));
               }
             }
           }
         }
         current_statement__ = 25;
-        stan::model::assign(inline_prob_uncaptured_return_sym3__,
-          inline_prob_uncaptured_chi_sym3__,
-          "assigning variable inline_prob_uncaptured_return_sym3__");
+        stan::model::assign(inline_prob_uncaptured_return_sym15__,
+          inline_prob_uncaptured_chi_sym16__,
+          "assigning variable inline_prob_uncaptured_return_sym15__");
       }
-      stan::model::assign(chi, inline_prob_uncaptured_return_sym3__,
+      stan::model::assign(chi, inline_prob_uncaptured_return_sym15__,
         "assigning variable chi");
       current_statement__ = 3;
       stan::math::check_greater_or_equal(function__, "phi", phi, 0);
@@ -831,10 +833,10 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
       stan::math::check_less_or_equal(function__, "p", p, 1);
       current_statement__ = 5;
       stan::math::check_greater_or_equal(function__, "chi",
-        inline_prob_uncaptured_return_sym3__, 0);
+        inline_prob_uncaptured_return_sym15__, 0);
       current_statement__ = 5;
       stan::math::check_less_or_equal(function__, "chi",
-        inline_prob_uncaptured_return_sym3__, 1);
+        inline_prob_uncaptured_return_sym15__, 1);
       {
         current_statement__ = 32;
         if (lcm_sym117__) {
@@ -877,8 +879,8 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
             current_statement__ = 29;
             lp_accum__.add(stan::math::bernoulli_lpmf<propto__>(1,
                              stan::model::rvalue(
-                               inline_prob_uncaptured_return_sym3__,
-                               "inline_prob_uncaptured_return_sym3__",
+                               inline_prob_uncaptured_return_sym15__,
+                               "inline_prob_uncaptured_return_sym15__",
                                stan::model::index_uni(1),
                                stan::model::index_uni(lcm_sym132__))));
           }
@@ -922,8 +924,8 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
               current_statement__ = 29;
               lp_accum__.add(stan::math::bernoulli_lpmf<propto__>(1,
                                stan::model::rvalue(
-                                 inline_prob_uncaptured_return_sym3__,
-                                 "inline_prob_uncaptured_return_sym3__",
+                                 inline_prob_uncaptured_return_sym15__,
+                                 "inline_prob_uncaptured_return_sym15__",
                                  stan::model::index_uni(i),
                                  stan::model::index_uni(lcm_sym131__))));
             }
@@ -1115,7 +1117,7 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
         }
       }
       Eigen::Matrix<local_scalar_t__,-1,-1>
-        inline_prob_uncaptured_return_sym2__;
+        inline_prob_uncaptured_return_sym8__;
       {
         current_statement__ = 14;
         stan::math::validate_non_negative_index("chi", "nind", nind);
@@ -1123,135 +1125,136 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
         stan::math::validate_non_negative_index("chi", "n_occasions",
           n_occasions);
         Eigen::Matrix<local_scalar_t__,-1,-1>
-          inline_prob_uncaptured_chi_sym2__ =
+          inline_prob_uncaptured_chi_sym9__ =
           Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(nind, n_occasions,
             DUMMY_VAR__);
         current_statement__ = 24;
         if (lcm_sym74__) {
           current_statement__ = 17;
-          stan::model::assign(inline_prob_uncaptured_chi_sym2__, 1.0,
-            "assigning variable inline_prob_uncaptured_chi_sym2__",
+          stan::model::assign(inline_prob_uncaptured_chi_sym9__, 1.0,
+            "assigning variable inline_prob_uncaptured_chi_sym9__",
             stan::model::index_uni(1), stan::model::index_uni(n_occasions));
           lcm_sym69__ = (n_occasions - 1);
           lcm_sym75__ = stan::math::logical_gte(lcm_sym69__, 1);
           if (lcm_sym75__) {
-            int inline_prob_uncaptured_t_curr_sym2__ =
+            int inline_prob_uncaptured_t_curr_sym10__ =
               std::numeric_limits<int>::min();
-            int inline_prob_uncaptured_t_next_sym2__ =
+            int inline_prob_uncaptured_t_next_sym11__ =
               std::numeric_limits<int>::min();
             lcm_sym65__ = (lcm_sym69__ + 1);
             current_statement__ = 20;
-            stan::model::assign(inline_prob_uncaptured_chi_sym2__,
+            stan::model::assign(inline_prob_uncaptured_chi_sym9__,
               stan::math::fma(
                 (stan::model::rvalue(phi, "phi", stan::model::index_uni(1),
                    stan::model::index_uni(lcm_sym69__)) * (1 -
                 stan::model::rvalue(p, "p", stan::model::index_uni(1),
                   stan::model::index_uni((lcm_sym65__ - 1))))),
-                stan::model::rvalue(inline_prob_uncaptured_chi_sym2__,
-                  "inline_prob_uncaptured_chi_sym2__",
+                stan::model::rvalue(inline_prob_uncaptured_chi_sym9__,
+                  "inline_prob_uncaptured_chi_sym9__",
                   stan::model::index_uni(1),
                   stan::model::index_uni(lcm_sym65__)), (1 -
                 stan::model::rvalue(phi, "phi", stan::model::index_uni(1),
                   stan::model::index_uni(lcm_sym69__)))),
-              "assigning variable inline_prob_uncaptured_chi_sym2__",
+              "assigning variable inline_prob_uncaptured_chi_sym9__",
               stan::model::index_uni(1), stan::model::index_uni(lcm_sym69__));
-            for (int inline_prob_uncaptured_t_sym2__ = 2; inline_prob_uncaptured_t_sym2__
-                 <= lcm_sym69__; ++inline_prob_uncaptured_t_sym2__) {
-              int inline_prob_uncaptured_t_curr_sym2__ =
+            for (int inline_prob_uncaptured_t_sym12__ = 2; inline_prob_uncaptured_t_sym12__
+                 <= lcm_sym69__; ++inline_prob_uncaptured_t_sym12__) {
+              int inline_prob_uncaptured_t_curr_sym10__ =
                 std::numeric_limits<int>::min();
-              lcm_sym68__ = (n_occasions - inline_prob_uncaptured_t_sym2__);
-              int inline_prob_uncaptured_t_next_sym2__ =
+              lcm_sym68__ = (n_occasions - inline_prob_uncaptured_t_sym12__);
+              int inline_prob_uncaptured_t_next_sym11__ =
                 std::numeric_limits<int>::min();
               lcm_sym64__ = (lcm_sym68__ + 1);
               current_statement__ = 20;
-              stan::model::assign(inline_prob_uncaptured_chi_sym2__,
+              stan::model::assign(inline_prob_uncaptured_chi_sym9__,
                 stan::math::fma(
                   (stan::model::rvalue(phi, "phi", stan::model::index_uni(1),
                      stan::model::index_uni(lcm_sym68__)) * (1 -
                   stan::model::rvalue(p, "p", stan::model::index_uni(1),
                     stan::model::index_uni((lcm_sym64__ - 1))))),
-                  stan::model::rvalue(inline_prob_uncaptured_chi_sym2__,
-                    "inline_prob_uncaptured_chi_sym2__",
+                  stan::model::rvalue(inline_prob_uncaptured_chi_sym9__,
+                    "inline_prob_uncaptured_chi_sym9__",
                     stan::model::index_uni(1),
                     stan::model::index_uni(lcm_sym64__)), (1 -
                   stan::model::rvalue(phi, "phi", stan::model::index_uni(1),
                     stan::model::index_uni(lcm_sym68__)))),
-                "assigning variable inline_prob_uncaptured_chi_sym2__",
+                "assigning variable inline_prob_uncaptured_chi_sym9__",
                 stan::model::index_uni(1),
                 stan::model::index_uni(lcm_sym68__));
             }
           }
-          for (int inline_prob_uncaptured_i_sym2__ = 2; inline_prob_uncaptured_i_sym2__
-               <= nind; ++inline_prob_uncaptured_i_sym2__) {
+          for (int inline_prob_uncaptured_i_sym13__ = 2; inline_prob_uncaptured_i_sym13__
+               <= nind; ++inline_prob_uncaptured_i_sym13__) {
             current_statement__ = 17;
-            stan::model::assign(inline_prob_uncaptured_chi_sym2__, 1.0,
-              "assigning variable inline_prob_uncaptured_chi_sym2__",
-              stan::model::index_uni(inline_prob_uncaptured_i_sym2__),
+            stan::model::assign(inline_prob_uncaptured_chi_sym9__, 1.0,
+              "assigning variable inline_prob_uncaptured_chi_sym9__",
+              stan::model::index_uni(inline_prob_uncaptured_i_sym13__),
               stan::model::index_uni(n_occasions));
             current_statement__ = 22;
             if (lcm_sym75__) {
-              int inline_prob_uncaptured_t_curr_sym2__ =
+              int inline_prob_uncaptured_t_curr_sym10__ =
                 std::numeric_limits<int>::min();
-              int inline_prob_uncaptured_t_next_sym2__ =
+              int inline_prob_uncaptured_t_next_sym11__ =
                 std::numeric_limits<int>::min();
               lcm_sym65__ = (lcm_sym69__ + 1);
               current_statement__ = 20;
-              stan::model::assign(inline_prob_uncaptured_chi_sym2__,
+              stan::model::assign(inline_prob_uncaptured_chi_sym9__,
                 stan::math::fma(
                   (stan::model::rvalue(phi, "phi",
-                     stan::model::index_uni(inline_prob_uncaptured_i_sym2__),
+                     stan::model::index_uni(inline_prob_uncaptured_i_sym13__),
                      stan::model::index_uni(lcm_sym69__)) * (1 -
                   stan::model::rvalue(p, "p",
-                    stan::model::index_uni(inline_prob_uncaptured_i_sym2__),
+                    stan::model::index_uni(inline_prob_uncaptured_i_sym13__),
                     stan::model::index_uni((lcm_sym65__ - 1))))),
-                  stan::model::rvalue(inline_prob_uncaptured_chi_sym2__,
-                    "inline_prob_uncaptured_chi_sym2__",
-                    stan::model::index_uni(inline_prob_uncaptured_i_sym2__),
+                  stan::model::rvalue(inline_prob_uncaptured_chi_sym9__,
+                    "inline_prob_uncaptured_chi_sym9__",
+                    stan::model::index_uni(inline_prob_uncaptured_i_sym13__),
                     stan::model::index_uni(lcm_sym65__)), (1 -
                   stan::model::rvalue(phi, "phi",
-                    stan::model::index_uni(inline_prob_uncaptured_i_sym2__),
+                    stan::model::index_uni(inline_prob_uncaptured_i_sym13__),
                     stan::model::index_uni(lcm_sym69__)))),
-                "assigning variable inline_prob_uncaptured_chi_sym2__",
-                stan::model::index_uni(inline_prob_uncaptured_i_sym2__),
+                "assigning variable inline_prob_uncaptured_chi_sym9__",
+                stan::model::index_uni(inline_prob_uncaptured_i_sym13__),
                 stan::model::index_uni(lcm_sym69__));
-              for (int inline_prob_uncaptured_t_sym2__ = 2; inline_prob_uncaptured_t_sym2__
-                   <= lcm_sym69__; ++inline_prob_uncaptured_t_sym2__) {
-                int inline_prob_uncaptured_t_curr_sym2__ =
+              for (int inline_prob_uncaptured_t_sym12__ = 2; inline_prob_uncaptured_t_sym12__
+                   <= lcm_sym69__; ++inline_prob_uncaptured_t_sym12__) {
+                int inline_prob_uncaptured_t_curr_sym10__ =
                   std::numeric_limits<int>::min();
                 lcm_sym68__ = (n_occasions -
-                  inline_prob_uncaptured_t_sym2__);
-                int inline_prob_uncaptured_t_next_sym2__ =
+                  inline_prob_uncaptured_t_sym12__);
+                int inline_prob_uncaptured_t_next_sym11__ =
                   std::numeric_limits<int>::min();
                 lcm_sym64__ = (lcm_sym68__ + 1);
                 current_statement__ = 20;
-                stan::model::assign(inline_prob_uncaptured_chi_sym2__,
+                stan::model::assign(inline_prob_uncaptured_chi_sym9__,
                   stan::math::fma(
                     (stan::model::rvalue(phi, "phi",
-                       stan::model::index_uni(inline_prob_uncaptured_i_sym2__),
+                       stan::model::index_uni(
+                         inline_prob_uncaptured_i_sym13__),
                        stan::model::index_uni(lcm_sym68__)) * (1 -
                     stan::model::rvalue(p, "p",
-                      stan::model::index_uni(inline_prob_uncaptured_i_sym2__),
+                      stan::model::index_uni(inline_prob_uncaptured_i_sym13__),
                       stan::model::index_uni((lcm_sym64__ - 1))))),
-                    stan::model::rvalue(inline_prob_uncaptured_chi_sym2__,
-                      "inline_prob_uncaptured_chi_sym2__",
-                      stan::model::index_uni(inline_prob_uncaptured_i_sym2__),
+                    stan::model::rvalue(inline_prob_uncaptured_chi_sym9__,
+                      "inline_prob_uncaptured_chi_sym9__",
+                      stan::model::index_uni(inline_prob_uncaptured_i_sym13__),
                       stan::model::index_uni(lcm_sym64__)), (1 -
                     stan::model::rvalue(phi, "phi",
-                      stan::model::index_uni(inline_prob_uncaptured_i_sym2__),
+                      stan::model::index_uni(inline_prob_uncaptured_i_sym13__),
                       stan::model::index_uni(lcm_sym68__)))),
-                  "assigning variable inline_prob_uncaptured_chi_sym2__",
-                  stan::model::index_uni(inline_prob_uncaptured_i_sym2__),
+                  "assigning variable inline_prob_uncaptured_chi_sym9__",
+                  stan::model::index_uni(inline_prob_uncaptured_i_sym13__),
                   stan::model::index_uni(lcm_sym68__));
               }
             }
           }
         }
         current_statement__ = 25;
-        stan::model::assign(inline_prob_uncaptured_return_sym2__,
-          inline_prob_uncaptured_chi_sym2__,
-          "assigning variable inline_prob_uncaptured_return_sym2__");
+        stan::model::assign(inline_prob_uncaptured_return_sym8__,
+          inline_prob_uncaptured_chi_sym9__,
+          "assigning variable inline_prob_uncaptured_return_sym8__");
       }
-      stan::model::assign(chi, inline_prob_uncaptured_return_sym2__,
+      stan::model::assign(chi, inline_prob_uncaptured_return_sym8__,
         "assigning variable chi");
       current_statement__ = 3;
       stan::math::check_greater_or_equal(function__, "phi", phi, 0);
@@ -1263,10 +1266,10 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
       stan::math::check_less_or_equal(function__, "p", p, 1);
       current_statement__ = 5;
       stan::math::check_greater_or_equal(function__, "chi",
-        inline_prob_uncaptured_return_sym2__, 0);
+        inline_prob_uncaptured_return_sym8__, 0);
       current_statement__ = 5;
       stan::math::check_less_or_equal(function__, "chi",
-        inline_prob_uncaptured_return_sym2__, 1);
+        inline_prob_uncaptured_return_sym8__, 1);
       {
         current_statement__ = 32;
         if (lcm_sym74__) {
@@ -1309,8 +1312,8 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
             current_statement__ = 29;
             lp_accum__.add(stan::math::bernoulli_lpmf<propto__>(1,
                              stan::model::rvalue(
-                               inline_prob_uncaptured_return_sym2__,
-                               "inline_prob_uncaptured_return_sym2__",
+                               inline_prob_uncaptured_return_sym8__,
+                               "inline_prob_uncaptured_return_sym8__",
                                stan::model::index_uni(1),
                                stan::model::index_uni(lcm_sym89__))));
           }
@@ -1354,8 +1357,8 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
               current_statement__ = 29;
               lp_accum__.add(stan::math::bernoulli_lpmf<propto__>(1,
                                stan::model::rvalue(
-                                 inline_prob_uncaptured_return_sym2__,
-                                 "inline_prob_uncaptured_return_sym2__",
+                                 inline_prob_uncaptured_return_sym8__,
+                                 "inline_prob_uncaptured_return_sym8__",
                                  stan::model::index_uni(i),
                                  stan::model::index_uni(lcm_sym88__))));
             }
@@ -1555,124 +1558,124 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
         current_statement__ = 15;
         stan::math::validate_non_negative_index("chi", "n_occasions",
           n_occasions);
-        Eigen::Matrix<double,-1,-1> inline_prob_uncaptured_chi_sym1__ =
+        Eigen::Matrix<double,-1,-1> inline_prob_uncaptured_chi_sym2__ =
           Eigen::Matrix<double,-1,-1>::Constant(nind, n_occasions,
             std::numeric_limits<double>::quiet_NaN());
         current_statement__ = 24;
         if (lcm_sym33__) {
           current_statement__ = 17;
-          stan::model::assign(inline_prob_uncaptured_chi_sym1__, 1.0,
-            "assigning variable inline_prob_uncaptured_chi_sym1__",
+          stan::model::assign(inline_prob_uncaptured_chi_sym2__, 1.0,
+            "assigning variable inline_prob_uncaptured_chi_sym2__",
             stan::model::index_uni(1), stan::model::index_uni(n_occasions));
           lcm_sym30__ = (n_occasions - 1);
           lcm_sym34__ = stan::math::logical_gte(lcm_sym30__, 1);
           if (lcm_sym34__) {
-            int inline_prob_uncaptured_t_curr_sym1__ =
+            int inline_prob_uncaptured_t_curr_sym3__ =
               std::numeric_limits<int>::min();
-            int inline_prob_uncaptured_t_next_sym1__ =
+            int inline_prob_uncaptured_t_next_sym4__ =
               std::numeric_limits<int>::min();
             lcm_sym26__ = (lcm_sym30__ + 1);
             current_statement__ = 20;
-            stan::model::assign(inline_prob_uncaptured_chi_sym1__,
+            stan::model::assign(inline_prob_uncaptured_chi_sym2__,
               stan::math::fma(
                 (stan::model::rvalue(phi, "phi", stan::model::index_uni(1),
                    stan::model::index_uni(lcm_sym30__)) * (1 -
                 stan::model::rvalue(p, "p", stan::model::index_uni(1),
                   stan::model::index_uni((lcm_sym26__ - 1))))),
-                stan::model::rvalue(inline_prob_uncaptured_chi_sym1__,
-                  "inline_prob_uncaptured_chi_sym1__",
+                stan::model::rvalue(inline_prob_uncaptured_chi_sym2__,
+                  "inline_prob_uncaptured_chi_sym2__",
                   stan::model::index_uni(1),
                   stan::model::index_uni(lcm_sym26__)), (1 -
                 stan::model::rvalue(phi, "phi", stan::model::index_uni(1),
                   stan::model::index_uni(lcm_sym30__)))),
-              "assigning variable inline_prob_uncaptured_chi_sym1__",
+              "assigning variable inline_prob_uncaptured_chi_sym2__",
               stan::model::index_uni(1), stan::model::index_uni(lcm_sym30__));
-            for (int inline_prob_uncaptured_t_sym1__ = 2; inline_prob_uncaptured_t_sym1__
-                 <= lcm_sym30__; ++inline_prob_uncaptured_t_sym1__) {
-              int inline_prob_uncaptured_t_curr_sym1__ =
+            for (int inline_prob_uncaptured_t_sym5__ = 2; inline_prob_uncaptured_t_sym5__
+                 <= lcm_sym30__; ++inline_prob_uncaptured_t_sym5__) {
+              int inline_prob_uncaptured_t_curr_sym3__ =
                 std::numeric_limits<int>::min();
-              lcm_sym29__ = (n_occasions - inline_prob_uncaptured_t_sym1__);
-              int inline_prob_uncaptured_t_next_sym1__ =
+              lcm_sym29__ = (n_occasions - inline_prob_uncaptured_t_sym5__);
+              int inline_prob_uncaptured_t_next_sym4__ =
                 std::numeric_limits<int>::min();
               lcm_sym25__ = (lcm_sym29__ + 1);
               current_statement__ = 20;
-              stan::model::assign(inline_prob_uncaptured_chi_sym1__,
+              stan::model::assign(inline_prob_uncaptured_chi_sym2__,
                 stan::math::fma(
                   (stan::model::rvalue(phi, "phi", stan::model::index_uni(1),
                      stan::model::index_uni(lcm_sym29__)) * (1 -
                   stan::model::rvalue(p, "p", stan::model::index_uni(1),
                     stan::model::index_uni((lcm_sym25__ - 1))))),
-                  stan::model::rvalue(inline_prob_uncaptured_chi_sym1__,
-                    "inline_prob_uncaptured_chi_sym1__",
+                  stan::model::rvalue(inline_prob_uncaptured_chi_sym2__,
+                    "inline_prob_uncaptured_chi_sym2__",
                     stan::model::index_uni(1),
                     stan::model::index_uni(lcm_sym25__)), (1 -
                   stan::model::rvalue(phi, "phi", stan::model::index_uni(1),
                     stan::model::index_uni(lcm_sym29__)))),
-                "assigning variable inline_prob_uncaptured_chi_sym1__",
+                "assigning variable inline_prob_uncaptured_chi_sym2__",
                 stan::model::index_uni(1),
                 stan::model::index_uni(lcm_sym29__));
             }
           }
-          for (int inline_prob_uncaptured_i_sym1__ = 2; inline_prob_uncaptured_i_sym1__
-               <= nind; ++inline_prob_uncaptured_i_sym1__) {
+          for (int inline_prob_uncaptured_i_sym6__ = 2; inline_prob_uncaptured_i_sym6__
+               <= nind; ++inline_prob_uncaptured_i_sym6__) {
             current_statement__ = 17;
-            stan::model::assign(inline_prob_uncaptured_chi_sym1__, 1.0,
-              "assigning variable inline_prob_uncaptured_chi_sym1__",
-              stan::model::index_uni(inline_prob_uncaptured_i_sym1__),
+            stan::model::assign(inline_prob_uncaptured_chi_sym2__, 1.0,
+              "assigning variable inline_prob_uncaptured_chi_sym2__",
+              stan::model::index_uni(inline_prob_uncaptured_i_sym6__),
               stan::model::index_uni(n_occasions));
             current_statement__ = 22;
             if (lcm_sym34__) {
-              int inline_prob_uncaptured_t_curr_sym1__ =
+              int inline_prob_uncaptured_t_curr_sym3__ =
                 std::numeric_limits<int>::min();
-              int inline_prob_uncaptured_t_next_sym1__ =
+              int inline_prob_uncaptured_t_next_sym4__ =
                 std::numeric_limits<int>::min();
               lcm_sym26__ = (lcm_sym30__ + 1);
               current_statement__ = 20;
-              stan::model::assign(inline_prob_uncaptured_chi_sym1__,
+              stan::model::assign(inline_prob_uncaptured_chi_sym2__,
                 stan::math::fma(
                   (stan::model::rvalue(phi, "phi",
-                     stan::model::index_uni(inline_prob_uncaptured_i_sym1__),
+                     stan::model::index_uni(inline_prob_uncaptured_i_sym6__),
                      stan::model::index_uni(lcm_sym30__)) * (1 -
                   stan::model::rvalue(p, "p",
-                    stan::model::index_uni(inline_prob_uncaptured_i_sym1__),
+                    stan::model::index_uni(inline_prob_uncaptured_i_sym6__),
                     stan::model::index_uni((lcm_sym26__ - 1))))),
-                  stan::model::rvalue(inline_prob_uncaptured_chi_sym1__,
-                    "inline_prob_uncaptured_chi_sym1__",
-                    stan::model::index_uni(inline_prob_uncaptured_i_sym1__),
+                  stan::model::rvalue(inline_prob_uncaptured_chi_sym2__,
+                    "inline_prob_uncaptured_chi_sym2__",
+                    stan::model::index_uni(inline_prob_uncaptured_i_sym6__),
                     stan::model::index_uni(lcm_sym26__)), (1 -
                   stan::model::rvalue(phi, "phi",
-                    stan::model::index_uni(inline_prob_uncaptured_i_sym1__),
+                    stan::model::index_uni(inline_prob_uncaptured_i_sym6__),
                     stan::model::index_uni(lcm_sym30__)))),
-                "assigning variable inline_prob_uncaptured_chi_sym1__",
-                stan::model::index_uni(inline_prob_uncaptured_i_sym1__),
+                "assigning variable inline_prob_uncaptured_chi_sym2__",
+                stan::model::index_uni(inline_prob_uncaptured_i_sym6__),
                 stan::model::index_uni(lcm_sym30__));
-              for (int inline_prob_uncaptured_t_sym1__ = 2; inline_prob_uncaptured_t_sym1__
-                   <= lcm_sym30__; ++inline_prob_uncaptured_t_sym1__) {
-                int inline_prob_uncaptured_t_curr_sym1__ =
+              for (int inline_prob_uncaptured_t_sym5__ = 2; inline_prob_uncaptured_t_sym5__
+                   <= lcm_sym30__; ++inline_prob_uncaptured_t_sym5__) {
+                int inline_prob_uncaptured_t_curr_sym3__ =
                   std::numeric_limits<int>::min();
                 lcm_sym29__ = (n_occasions -
-                  inline_prob_uncaptured_t_sym1__);
-                int inline_prob_uncaptured_t_next_sym1__ =
+                  inline_prob_uncaptured_t_sym5__);
+                int inline_prob_uncaptured_t_next_sym4__ =
                   std::numeric_limits<int>::min();
                 lcm_sym25__ = (lcm_sym29__ + 1);
                 current_statement__ = 20;
-                stan::model::assign(inline_prob_uncaptured_chi_sym1__,
+                stan::model::assign(inline_prob_uncaptured_chi_sym2__,
                   stan::math::fma(
                     (stan::model::rvalue(phi, "phi",
-                       stan::model::index_uni(inline_prob_uncaptured_i_sym1__),
+                       stan::model::index_uni(inline_prob_uncaptured_i_sym6__),
                        stan::model::index_uni(lcm_sym29__)) * (1 -
                     stan::model::rvalue(p, "p",
-                      stan::model::index_uni(inline_prob_uncaptured_i_sym1__),
+                      stan::model::index_uni(inline_prob_uncaptured_i_sym6__),
                       stan::model::index_uni((lcm_sym25__ - 1))))),
-                    stan::model::rvalue(inline_prob_uncaptured_chi_sym1__,
-                      "inline_prob_uncaptured_chi_sym1__",
-                      stan::model::index_uni(inline_prob_uncaptured_i_sym1__),
+                    stan::model::rvalue(inline_prob_uncaptured_chi_sym2__,
+                      "inline_prob_uncaptured_chi_sym2__",
+                      stan::model::index_uni(inline_prob_uncaptured_i_sym6__),
                       stan::model::index_uni(lcm_sym25__)), (1 -
                     stan::model::rvalue(phi, "phi",
-                      stan::model::index_uni(inline_prob_uncaptured_i_sym1__),
+                      stan::model::index_uni(inline_prob_uncaptured_i_sym6__),
                       stan::model::index_uni(lcm_sym29__)))),
-                  "assigning variable inline_prob_uncaptured_chi_sym1__",
-                  stan::model::index_uni(inline_prob_uncaptured_i_sym1__),
+                  "assigning variable inline_prob_uncaptured_chi_sym2__",
+                  stan::model::index_uni(inline_prob_uncaptured_i_sym6__),
                   stan::model::index_uni(lcm_sym29__));
               }
             }
@@ -1680,7 +1683,7 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
         }
         current_statement__ = 25;
         stan::model::assign(inline_prob_uncaptured_return_sym1__,
-          inline_prob_uncaptured_chi_sym1__,
+          inline_prob_uncaptured_chi_sym2__,
           "assigning variable inline_prob_uncaptured_return_sym1__");
       }
       stan::model::assign(chi, inline_prob_uncaptured_return_sym1__,

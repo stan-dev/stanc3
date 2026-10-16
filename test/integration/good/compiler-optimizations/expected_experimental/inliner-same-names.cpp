@@ -132,13 +132,13 @@ class inliner_same_names_model final : public model_base_crtp<inliner_same_names
       Eigen::Matrix<double,-1,1> out =
         Eigen::Matrix<double,-1,1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<double,-1,1> inline_foo_return_sym3__;
+      Eigen::Matrix<double,-1,1> inline_foo_return_sym9__;
       {
-        int inline_foo_ot_sym3__ = std::numeric_limits<int>::min();
+        int inline_foo_ot_sym10__ = std::numeric_limits<int>::min();
         lcm_sym6__ = stan::math::num_elements(R);
         current_statement__ = 4;
         stan::math::validate_non_negative_index("R", "ot", lcm_sym6__);
-        Eigen::Matrix<double,-1,1> inline_foo_R_sym3__ =
+        Eigen::Matrix<double,-1,1> inline_foo_R_sym11__ =
           Eigen::Matrix<double,-1,1>::Constant(stan::math::num_elements(R),
             std::numeric_limits<double>::quiet_NaN());
       }
@@ -180,13 +180,13 @@ class inliner_same_names_model final : public model_base_crtp<inliner_same_names
       Eigen::Matrix<double,-1,1> out =
         Eigen::Matrix<double,-1,1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<double,-1,1> inline_foo_return_sym2__;
+      Eigen::Matrix<double,-1,1> inline_foo_return_sym5__;
       {
-        int inline_foo_ot_sym2__ = std::numeric_limits<int>::min();
+        int inline_foo_ot_sym6__ = std::numeric_limits<int>::min();
         lcm_sym5__ = stan::math::num_elements(R);
         current_statement__ = 4;
         stan::math::validate_non_negative_index("R", "ot", lcm_sym5__);
-        Eigen::Matrix<double,-1,1> inline_foo_R_sym2__ =
+        Eigen::Matrix<double,-1,1> inline_foo_R_sym7__ =
           Eigen::Matrix<double,-1,1>::Constant(stan::math::num_elements(R),
             std::numeric_limits<double>::quiet_NaN());
       }
@@ -248,11 +248,11 @@ class inliner_same_names_model final : public model_base_crtp<inliner_same_names
       }
       Eigen::Matrix<double,-1,1> inline_foo_return_sym1__;
       {
-        int inline_foo_ot_sym1__ = std::numeric_limits<int>::min();
+        int inline_foo_ot_sym2__ = std::numeric_limits<int>::min();
         lcm_sym2__ = stan::math::num_elements(R);
         current_statement__ = 4;
         stan::math::validate_non_negative_index("R", "ot", lcm_sym2__);
-        Eigen::Matrix<double,-1,1> inline_foo_R_sym1__ =
+        Eigen::Matrix<double,-1,1> inline_foo_R_sym3__ =
           Eigen::Matrix<double,-1,1>::Constant(stan::math::num_elements(R),
             std::numeric_limits<double>::quiet_NaN());
       }
