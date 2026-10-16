@@ -164,7 +164,7 @@ end
 
 module Helpers = struct
   let temp_vars exprs : Located.t list * Expr.Typed.t list * (unit -> unit) =
-    let sym, reset = Gensym.enter () in
+    let sym, reset = Gensym.enter ~prefix:"" () in
     let rec loop es sym inits vars =
       match es with
       | [] -> (inits, vars)
@@ -202,7 +202,7 @@ module Helpers = struct
   (** [mk_for] returns a MIR For statement from 0 to [upper] that calls the
       [bodyfn] with the loop variable inside the loop. *)
   let mk_for upper bodyfn meta =
-    let loopvar, reset = Gensym.enter () in
+    let loopvar, reset = Gensym.enter ~prefix:"" () in
     let loopvar_expr =
       Expr.
         { meta= Expr.Typed.Meta.create ~type_:UInt ~loc:meta ~adlevel:DataOnly ()

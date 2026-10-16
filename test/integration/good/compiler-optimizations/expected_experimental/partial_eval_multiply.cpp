@@ -364,16 +364,16 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int sym9__ = 1; sym9__ <= 10; ++sym9__) {
-      for (int sym10__ = 1; sym10__ <= 10; ++sym10__) {
+    for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
         param_names__.emplace_back(std::string() + "m2" + '.' +
-          std::to_string(sym10__) + '.' + std::to_string(sym9__));
+          std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
-    for (int sym9__ = 1; sym9__ <= 10; ++sym9__) {
-      for (int sym10__ = 1; sym10__ <= 10; ++sym10__) {
+    for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
         param_names__.emplace_back(std::string() + "m3" + '.' +
-          std::to_string(sym10__) + '.' + std::to_string(sym9__));
+          std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
     if (emit_transformed_parameters__) {}
@@ -383,16 +383,16 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int sym9__ = 1; sym9__ <= 10; ++sym9__) {
-      for (int sym10__ = 1; sym10__ <= 10; ++sym10__) {
+    for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
         param_names__.emplace_back(std::string() + "m2" + '.' +
-          std::to_string(sym10__) + '.' + std::to_string(sym9__));
+          std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
-    for (int sym9__ = 1; sym9__ <= 10; ++sym9__) {
-      for (int sym10__ = 1; sym10__ <= 10; ++sym10__) {
+    for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
         param_names__.emplace_back(std::string() + "m3" + '.' +
-          std::to_string(sym10__) + '.' + std::to_string(sym9__));
+          std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
     if (emit_transformed_parameters__) {}

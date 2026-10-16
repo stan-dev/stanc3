@@ -173,19 +173,19 @@ class ad_level_disconnected_function_model final : public model_base_crtp<ad_lev
       Eigen::Matrix<local_scalar_t__,-1,-1> empty_user_func_aos =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10, DUMMY_VAR__);
       Eigen::Matrix<local_scalar_t__,-1,-1>
-        inline_empty_user_func_return_sym7__;
+        inline_empty_user_func_return_sym3__;
       {
         Eigen::Matrix<local_scalar_t__,-1,-1>
-          inline_empty_user_func_some_mat_sym8__ =
+          inline_empty_user_func_some_mat_sym3__ =
           Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10,
             DUMMY_VAR__);
         current_statement__ = 6;
-        stan::model::assign(inline_empty_user_func_return_sym7__,
-          inline_empty_user_func_some_mat_sym8__,
-          "assigning variable inline_empty_user_func_return_sym7__");
+        stan::model::assign(inline_empty_user_func_return_sym3__,
+          inline_empty_user_func_some_mat_sym3__,
+          "assigning variable inline_empty_user_func_return_sym3__");
       }
       stan::model::assign(empty_user_func_aos,
-        inline_empty_user_func_return_sym7__,
+        inline_empty_user_func_return_sym3__,
         "assigning variable empty_user_func_aos");
       Eigen::Matrix<local_scalar_t__,-1,-1> int_aos_mul_aos;
       current_statement__ = 4;
@@ -244,21 +244,21 @@ class ad_level_disconnected_function_model final : public model_base_crtp<ad_lev
                                                              std::numeric_limits<double>::quiet_NaN(
                                                                )));
       stan::math::var_value<Eigen::Matrix<double,-1,-1>>
-        inline_empty_user_func_return_sym4__;
+        inline_empty_user_func_return_sym2__;
       {
         stan::math::var_value<Eigen::Matrix<double,-1,-1>>
-          inline_empty_user_func_some_mat_sym5__ =
+          inline_empty_user_func_some_mat_sym2__ =
           stan::math::var_value<Eigen::Matrix<double,-1,-1>>(Eigen::Matrix<double,-1,-1>::Constant(10,
                                                                10,
                                                                std::numeric_limits<double>::quiet_NaN(
                                                                  )));
         current_statement__ = 6;
-        stan::model::assign(inline_empty_user_func_return_sym4__,
-          inline_empty_user_func_some_mat_sym5__,
-          "assigning variable inline_empty_user_func_return_sym4__");
+        stan::model::assign(inline_empty_user_func_return_sym2__,
+          inline_empty_user_func_some_mat_sym2__,
+          "assigning variable inline_empty_user_func_return_sym2__");
       }
       stan::model::assign(empty_user_func_aos,
-        inline_empty_user_func_return_sym4__,
+        inline_empty_user_func_return_sym2__,
         "assigning variable empty_user_func_aos");
       stan::math::var_value<Eigen::Matrix<double,-1,-1>> int_aos_mul_aos;
       current_statement__ = 4;
@@ -336,12 +336,12 @@ class ad_level_disconnected_function_model final : public model_base_crtp<ad_lev
       Eigen::Matrix<double,-1,-1> inline_empty_user_func_return_sym1__;
       {
         Eigen::Matrix<local_scalar_t__,-1,-1>
-          inline_empty_user_func_some_mat_sym2__ =
+          inline_empty_user_func_some_mat_sym1__ =
           Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10,
             DUMMY_VAR__);
         current_statement__ = 6;
         stan::model::assign(inline_empty_user_func_return_sym1__,
-          inline_empty_user_func_some_mat_sym2__,
+          inline_empty_user_func_some_mat_sym1__,
           "assigning variable inline_empty_user_func_return_sym1__");
       }
       stan::model::assign(empty_user_func_aos,
@@ -462,24 +462,24 @@ class ad_level_disconnected_function_model final : public model_base_crtp<ad_lev
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int sym10__ = 1; sym10__ <= 10; ++sym10__) {
-      for (int sym11__ = 1; sym11__ <= 10; ++sym11__) {
+    for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
         param_names__.emplace_back(std::string() + "row_soa" + '.' +
-          std::to_string(sym11__) + '.' + std::to_string(sym10__));
+          std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
     param_names__.emplace_back(std::string() + "theta");
     if (emit_transformed_parameters__) {
-      for (int sym10__ = 1; sym10__ <= 10; ++sym10__) {
-        for (int sym11__ = 1; sym11__ <= 10; ++sym11__) {
+      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
           param_names__.emplace_back(std::string() + "empty_user_func_aos" +
-            '.' + std::to_string(sym11__) + '.' + std::to_string(sym10__));
+            '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
         }
       }
-      for (int sym10__ = 1; sym10__ <= 10; ++sym10__) {
-        for (int sym11__ = 1; sym11__ <= 10; ++sym11__) {
+      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
           param_names__.emplace_back(std::string() + "int_aos_mul_aos" + '.'
-            + std::to_string(sym11__) + '.' + std::to_string(sym10__));
+            + std::to_string(sym2__) + '.' + std::to_string(sym1__));
         }
       }
     }
@@ -489,24 +489,24 @@ class ad_level_disconnected_function_model final : public model_base_crtp<ad_lev
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int sym10__ = 1; sym10__ <= 10; ++sym10__) {
-      for (int sym11__ = 1; sym11__ <= 10; ++sym11__) {
+    for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
         param_names__.emplace_back(std::string() + "row_soa" + '.' +
-          std::to_string(sym11__) + '.' + std::to_string(sym10__));
+          std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
     param_names__.emplace_back(std::string() + "theta");
     if (emit_transformed_parameters__) {
-      for (int sym10__ = 1; sym10__ <= 10; ++sym10__) {
-        for (int sym11__ = 1; sym11__ <= 10; ++sym11__) {
+      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
           param_names__.emplace_back(std::string() + "empty_user_func_aos" +
-            '.' + std::to_string(sym11__) + '.' + std::to_string(sym10__));
+            '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
         }
       }
-      for (int sym10__ = 1; sym10__ <= 10; ++sym10__) {
-        for (int sym11__ = 1; sym11__ <= 10; ++sym11__) {
+      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
           param_names__.emplace_back(std::string() + "int_aos_mul_aos" + '.'
-            + std::to_string(sym11__) + '.' + std::to_string(sym10__));
+            + std::to_string(sym2__) + '.' + std::to_string(sym1__));
         }
       }
     }

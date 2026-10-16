@@ -445,7 +445,7 @@ let gen_get_dims {Program.output_vars; _} =
 
 let rec gen_indexing_loop ?(index_ids = []) iteratee dims gen_body =
   let iter d gen_body =
-    let loopvar, gensym_exit = Common.Gensym.enter () in
+    let loopvar, gensym_exit = Common.Gensym.enter ~prefix:"" () in
     let forloop =
       Stmts.fori loopvar
         (lower_expr Expr.Helpers.loop_bottom)

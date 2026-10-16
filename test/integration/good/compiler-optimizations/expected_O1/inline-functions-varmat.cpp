@@ -151,36 +151,35 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
       Eigen::Matrix<local_scalar_t__,-1,1> tp_single_ret_vec =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(5, DUMMY_VAR__);
       Eigen::Matrix<local_scalar_t__,-1,1>
-        inline_single_ret_fun_return_sym13__;
+        inline_single_ret_fun_return_sym3__;
       stan::model::assign(tp_single_ret_vec, p_single_ret_vec,
         "assigning variable tp_single_ret_vec");
       Eigen::Matrix<local_scalar_t__,-1,1> tp_multi_ret_vec =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(5, DUMMY_VAR__);
-      Eigen::Matrix<local_scalar_t__,-1,1>
-        inline_multi_ret_fun_return_sym15__;
-      int inline_multi_ret_fun_early_ret_check_sym17__ =
+      Eigen::Matrix<local_scalar_t__,-1,1> inline_multi_ret_fun_return_sym3__;
+      int inline_multi_ret_fun_early_ret_check_sym3__ =
         std::numeric_limits<int>::min();
-      for (int inline_multi_ret_fun_iterator_sym18__ = 1; inline_multi_ret_fun_iterator_sym18__
-           <= 1; ++inline_multi_ret_fun_iterator_sym18__) {
-        Eigen::Matrix<local_scalar_t__,-1,1> inline_multi_ret_fun_B_sym16__ =
+      for (int inline_multi_ret_fun_iterator_sym3__ = 1; inline_multi_ret_fun_iterator_sym3__
+           <= 1; ++inline_multi_ret_fun_iterator_sym3__) {
+        Eigen::Matrix<local_scalar_t__,-1,1> inline_multi_ret_fun_B_sym3__ =
           Eigen::Matrix<local_scalar_t__,-1,1>::Constant(5, DUMMY_VAR__);
         current_statement__ = 8;
         if (stan::math::logical_gt(
               stan::model::rvalue(p_multi_ret_vec, "p_multi_ret_vec",
                 stan::model::index_uni(0)), 1.0)) {
-          stan::model::assign(inline_multi_ret_fun_return_sym15__,
-            inline_multi_ret_fun_B_sym16__,
-            "assigning variable inline_multi_ret_fun_return_sym15__");
+          stan::model::assign(inline_multi_ret_fun_return_sym3__,
+            inline_multi_ret_fun_B_sym3__,
+            "assigning variable inline_multi_ret_fun_return_sym3__");
           break;
         } else {
-          stan::model::assign(inline_multi_ret_fun_return_sym15__,
+          stan::model::assign(inline_multi_ret_fun_return_sym3__,
             p_multi_ret_vec,
-            "assigning variable inline_multi_ret_fun_return_sym15__");
+            "assigning variable inline_multi_ret_fun_return_sym3__");
           break;
         }
       }
       stan::model::assign(tp_multi_ret_vec,
-        inline_multi_ret_fun_return_sym15__,
+        inline_multi_ret_fun_return_sym3__,
         "assigning variable tp_multi_ret_vec");
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -225,7 +224,7 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
                                                             std::numeric_limits<double>::quiet_NaN(
                                                               )));
       stan::math::var_value<Eigen::Matrix<double,-1,1>>
-        inline_single_ret_fun_return_sym7__;
+        inline_single_ret_fun_return_sym2__;
       stan::model::assign(tp_single_ret_vec, p_single_ret_vec,
         "assigning variable tp_single_ret_vec");
       stan::math::var_value<Eigen::Matrix<double,-1,1>> tp_multi_ret_vec =
@@ -233,13 +232,13 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
                                                             std::numeric_limits<double>::quiet_NaN(
                                                               )));
       stan::math::var_value<Eigen::Matrix<double,-1,1>>
-        inline_multi_ret_fun_return_sym9__;
-      int inline_multi_ret_fun_early_ret_check_sym11__ =
+        inline_multi_ret_fun_return_sym2__;
+      int inline_multi_ret_fun_early_ret_check_sym2__ =
         std::numeric_limits<int>::min();
-      for (int inline_multi_ret_fun_iterator_sym12__ = 1; inline_multi_ret_fun_iterator_sym12__
-           <= 1; ++inline_multi_ret_fun_iterator_sym12__) {
+      for (int inline_multi_ret_fun_iterator_sym2__ = 1; inline_multi_ret_fun_iterator_sym2__
+           <= 1; ++inline_multi_ret_fun_iterator_sym2__) {
         stan::math::var_value<Eigen::Matrix<double,-1,1>>
-          inline_multi_ret_fun_B_sym10__ =
+          inline_multi_ret_fun_B_sym2__ =
           stan::math::var_value<Eigen::Matrix<double,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(5,
                                                               std::numeric_limits<double>::quiet_NaN(
                                                                 )));
@@ -247,19 +246,19 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
         if (stan::math::logical_gt(
               stan::model::rvalue(p_multi_ret_vec, "p_multi_ret_vec",
                 stan::model::index_uni(0)), 1.0)) {
-          stan::model::assign(inline_multi_ret_fun_return_sym9__,
-            inline_multi_ret_fun_B_sym10__,
-            "assigning variable inline_multi_ret_fun_return_sym9__");
+          stan::model::assign(inline_multi_ret_fun_return_sym2__,
+            inline_multi_ret_fun_B_sym2__,
+            "assigning variable inline_multi_ret_fun_return_sym2__");
           break;
         } else {
-          stan::model::assign(inline_multi_ret_fun_return_sym9__,
+          stan::model::assign(inline_multi_ret_fun_return_sym2__,
             p_multi_ret_vec,
-            "assigning variable inline_multi_ret_fun_return_sym9__");
+            "assigning variable inline_multi_ret_fun_return_sym2__");
           break;
         }
       }
       stan::model::assign(tp_multi_ret_vec,
-        inline_multi_ret_fun_return_sym9__,
+        inline_multi_ret_fun_return_sym2__,
         "assigning variable tp_multi_ret_vec");
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -324,30 +323,30 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
       Eigen::Matrix<double,-1,1> inline_single_ret_fun_return_sym1__;
       stan::model::assign(tp_single_ret_vec, p_single_ret_vec,
         "assigning variable tp_single_ret_vec");
-      Eigen::Matrix<double,-1,1> inline_multi_ret_fun_return_sym3__;
-      int inline_multi_ret_fun_early_ret_check_sym5__ =
+      Eigen::Matrix<double,-1,1> inline_multi_ret_fun_return_sym1__;
+      int inline_multi_ret_fun_early_ret_check_sym1__ =
         std::numeric_limits<int>::min();
-      for (int inline_multi_ret_fun_iterator_sym6__ = 1; inline_multi_ret_fun_iterator_sym6__
-           <= 1; ++inline_multi_ret_fun_iterator_sym6__) {
-        Eigen::Matrix<local_scalar_t__,-1,1> inline_multi_ret_fun_B_sym4__ =
+      for (int inline_multi_ret_fun_iterator_sym1__ = 1; inline_multi_ret_fun_iterator_sym1__
+           <= 1; ++inline_multi_ret_fun_iterator_sym1__) {
+        Eigen::Matrix<local_scalar_t__,-1,1> inline_multi_ret_fun_B_sym1__ =
           Eigen::Matrix<local_scalar_t__,-1,1>::Constant(5, DUMMY_VAR__);
         current_statement__ = 8;
         if (stan::math::logical_gt(
               stan::model::rvalue(p_multi_ret_vec, "p_multi_ret_vec",
                 stan::model::index_uni(0)), 1.0)) {
-          stan::model::assign(inline_multi_ret_fun_return_sym3__,
-            inline_multi_ret_fun_B_sym4__,
-            "assigning variable inline_multi_ret_fun_return_sym3__");
+          stan::model::assign(inline_multi_ret_fun_return_sym1__,
+            inline_multi_ret_fun_B_sym1__,
+            "assigning variable inline_multi_ret_fun_return_sym1__");
           break;
         } else {
-          stan::model::assign(inline_multi_ret_fun_return_sym3__,
+          stan::model::assign(inline_multi_ret_fun_return_sym1__,
             p_multi_ret_vec,
-            "assigning variable inline_multi_ret_fun_return_sym3__");
+            "assigning variable inline_multi_ret_fun_return_sym1__");
           break;
         }
       }
       stan::model::assign(tp_multi_ret_vec,
-        inline_multi_ret_fun_return_sym3__,
+        inline_multi_ret_fun_return_sym1__,
         "assigning variable tp_multi_ret_vec");
       if (emit_transformed_parameters__) {
         out__.write(tp_single_ret_vec);
@@ -460,22 +459,22 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int sym19__ = 1; sym19__ <= 5; ++sym19__) {
+    for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
       param_names__.emplace_back(std::string() + "p_single_ret_vec" + '.' +
-        std::to_string(sym19__));
+        std::to_string(sym1__));
     }
-    for (int sym19__ = 1; sym19__ <= 5; ++sym19__) {
+    for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
       param_names__.emplace_back(std::string() + "p_multi_ret_vec" + '.' +
-        std::to_string(sym19__));
+        std::to_string(sym1__));
     }
     if (emit_transformed_parameters__) {
-      for (int sym19__ = 1; sym19__ <= 5; ++sym19__) {
+      for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
         param_names__.emplace_back(std::string() + "tp_single_ret_vec" + '.'
-          + std::to_string(sym19__));
+          + std::to_string(sym1__));
       }
-      for (int sym19__ = 1; sym19__ <= 5; ++sym19__) {
+      for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
         param_names__.emplace_back(std::string() + "tp_multi_ret_vec" + '.' +
-          std::to_string(sym19__));
+          std::to_string(sym1__));
       }
     }
     if (emit_generated_quantities__) {}
@@ -484,22 +483,22 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int sym19__ = 1; sym19__ <= 5; ++sym19__) {
+    for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
       param_names__.emplace_back(std::string() + "p_single_ret_vec" + '.' +
-        std::to_string(sym19__));
+        std::to_string(sym1__));
     }
-    for (int sym19__ = 1; sym19__ <= 5; ++sym19__) {
+    for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
       param_names__.emplace_back(std::string() + "p_multi_ret_vec" + '.' +
-        std::to_string(sym19__));
+        std::to_string(sym1__));
     }
     if (emit_transformed_parameters__) {
-      for (int sym19__ = 1; sym19__ <= 5; ++sym19__) {
+      for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
         param_names__.emplace_back(std::string() + "tp_single_ret_vec" + '.'
-          + std::to_string(sym19__));
+          + std::to_string(sym1__));
       }
-      for (int sym19__ = 1; sym19__ <= 5; ++sym19__) {
+      for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
         param_names__.emplace_back(std::string() + "tp_multi_ret_vec" + '.' +
-          std::to_string(sym19__));
+          std::to_string(sym1__));
       }
     }
     if (emit_generated_quantities__) {}

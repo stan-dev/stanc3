@@ -892,25 +892,25 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int sym52__ = 1; sym52__ <= K; ++sym52__) {
+    for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
       param_names__.emplace_back(std::string() + "pi" + '.' +
-        std::to_string(sym52__));
+        std::to_string(sym1__));
     }
-    for (int sym52__ = 1; sym52__ <= K; ++sym52__) {
-      for (int sym53__ = 1; sym53__ <= K; ++sym53__) {
-        for (int sym54__ = 1; sym54__ <= J; ++sym54__) {
+    for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
+        for (int sym3__ = 1; sym3__ <= J; ++sym3__) {
           param_names__.emplace_back(std::string() + "theta" + '.' +
-            std::to_string(sym54__) + '.' + std::to_string(sym53__) + '.' +
-            std::to_string(sym52__));
+            std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
+            std::to_string(sym1__));
         }
       }
     }
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {
-      for (int sym52__ = 1; sym52__ <= K; ++sym52__) {
-        for (int sym53__ = 1; sym53__ <= I; ++sym53__) {
+      for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= I; ++sym2__) {
           param_names__.emplace_back(std::string() + "log_Pr_z" + '.' +
-            std::to_string(sym53__) + '.' + std::to_string(sym52__));
+            std::to_string(sym2__) + '.' + std::to_string(sym1__));
         }
       }
     }
@@ -919,25 +919,25 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int sym52__ = 1; sym52__ <= (K - 1); ++sym52__) {
+    for (int sym1__ = 1; sym1__ <= (K - 1); ++sym1__) {
       param_names__.emplace_back(std::string() + "pi" + '.' +
-        std::to_string(sym52__));
+        std::to_string(sym1__));
     }
-    for (int sym52__ = 1; sym52__ <= (K - 1); ++sym52__) {
-      for (int sym53__ = 1; sym53__ <= K; ++sym53__) {
-        for (int sym54__ = 1; sym54__ <= J; ++sym54__) {
+    for (int sym1__ = 1; sym1__ <= (K - 1); ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
+        for (int sym3__ = 1; sym3__ <= J; ++sym3__) {
           param_names__.emplace_back(std::string() + "theta" + '.' +
-            std::to_string(sym54__) + '.' + std::to_string(sym53__) + '.' +
-            std::to_string(sym52__));
+            std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
+            std::to_string(sym1__));
         }
       }
     }
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {
-      for (int sym52__ = 1; sym52__ <= K; ++sym52__) {
-        for (int sym53__ = 1; sym53__ <= I; ++sym53__) {
+      for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= I; ++sym2__) {
           param_names__.emplace_back(std::string() + "log_Pr_z" + '.' +
-            std::to_string(sym53__) + '.' + std::to_string(sym52__));
+            std::to_string(sym2__) + '.' + std::to_string(sym1__));
         }
       }
     }

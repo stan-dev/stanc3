@@ -1,11 +1,16 @@
-let _counter = ref 0
+let _counters : (string, int) Hashtbl.t = Hashtbl.create 16
 
 let generate ?(prefix : string = "") () =
-  _counter := !_counter + 1;
-  Format.sprintf "%ssym%d__" prefix !_counter
+  let count = 1 + Option.value ~default:0 (Hashtbl.find_opt _counters prefix) in
+  Hashtbl.replace _counters prefix count;
+  Format.sprintf "%ssym%d__" prefix count
 
-let enter () =
-  let old_counter = !_counter in
-  (generate (), fun () -> _counter := old_counter)
+let enter ~prefix () =
+  let old_counter = Hashtbl.find_opt _counters prefix in
+  ( generate ~prefix ()
+  , fun () ->
+      match old_counter with
+      | Some count -> Hashtbl.replace _counters prefix count
+      | None -> Hashtbl.remove _counters prefix )
 
-let reset_danger_use_cautiously () = _counter := 0
+let reset_danger_use_cautiously () = Hashtbl.reset _counters
