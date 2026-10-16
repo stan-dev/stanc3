@@ -231,8 +231,7 @@ and query_initial_demotable_funs (in_loop : bool) (stmt_linenum : int)
           (Fmt.str "Operator %a is not supported:" Operator.pp op)
           fail_names;
         Set.Poly.union acc demoted_and_top_level_names
-  | CompilerInternal
-      (Internal_fun.FnMakeArray | FnMakeRowVec | FnMakeTuple | FnToRef) ->
+  | CompilerInternal (Internal_fun.FnMakeArray | FnMakeRowVec | FnMakeTuple) ->
       let fail_names =
         concat_set_str (Set.Poly.inter acc demoted_and_top_level_names) in
       user_warning_op SoA stmt_linenum
