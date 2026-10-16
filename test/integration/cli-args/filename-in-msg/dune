@@ -17,20 +17,22 @@
   (diff filename_error.expected filename_error.output)))
 
 (rule
- (targets filename_good.output)
+ (targets cpp.inc.gen)
  (deps
-  (package stanc)
-  also_empty.stan
   (:stanfiles filename_good.stan empty.stan))
  (action
   (with-stdout-to
    %{targets}
    (run
-    %{project_root}/test/integration/run_bin_on_args.exe
-    "%{bin:stanc} --filename-in-msg=foo.stan --include-paths=. --print-cpp "
+    %{project_root}/test/integration/gen_expected_rules.exe
+    cpp
+    cpp
+    "--filename-in-msg=foo.stan --include-paths=. --print-cpp "
     %{stanfiles}))))
 
 (rule
- (alias runtest)
+ (alias update-rules)
  (action
-  (diff filename_good.expected filename_good.output)))
+  (diff expected_cpp/dune.inc cpp.inc.gen)))
+
+(include expected_cpp/dune.inc)

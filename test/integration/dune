@@ -1,6 +1,26 @@
 (executable
  (name run_bin_on_args)
+ (modules run_bin_on_args)
  (libraries std unix))
+
+(executable
+ (name gen_expected_rules)
+ (modules gen_expected_rules)
+ (libraries std))
+
+; The generated expected_*/dune.inc files are checked by @update-rules, which
+; make update-rules promotes before every make test. Plain dune runtest (as in
+; CI) also checks them, so a stale dune.inc fails there. The empty rule keeps
+; the alias defined even when no directory generates rules.
+
+(rule
+ (alias update-rules)
+ (action (progn)))
+
+(alias
+ (name runtest)
+ (deps
+  (alias_rec update-rules)))
 
 (cram
  (applies_to :whole_subtree)

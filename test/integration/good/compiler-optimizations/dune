@@ -1,56 +1,65 @@
 (rule
- (targets cpp.output)
+ (targets experimental.inc.gen)
  (deps
-  (package stanc)
   (:stanfiles
    (glob_files *.stan)))
  (action
   (with-stdout-to
    %{targets}
    (run
-    %{project_root}/test/integration/run_bin_on_args.exe
-    "%{bin:stanc} --Oexperimental --print-cpp"
+    %{project_root}/test/integration/gen_expected_rules.exe
+    experimental
+    cpp
+    "--Oexperimental --print-cpp"
     %{stanfiles}))))
 
 (rule
- (alias runtest)
+ (alias update-rules)
  (action
-  (diff cpp.expected cpp.output)))
+  (diff expected_experimental/dune.inc experimental.inc.gen)))
+
+(include expected_experimental/dune.inc)
 
 (rule
- (targets cppO1.output)
+ (targets O1.inc.gen)
  (deps
-  (package stanc)
   (:stanfiles
    (glob_files *.stan)))
  (action
   (with-stdout-to
    %{targets}
    (run
-    %{project_root}/test/integration/run_bin_on_args.exe
-    "%{bin:stanc} --O1 --print-cpp"
+    %{project_root}/test/integration/gen_expected_rules.exe
+    O1
+    cpp
+    "--O1 --print-cpp"
     %{stanfiles}))))
 
 (rule
- (alias runtest)
+ (alias update-rules)
  (action
-  (diff cppO1.expected cppO1.output)))
+  (diff expected_O1/dune.inc O1.inc.gen)))
+
+(include expected_O1/dune.inc)
 
 (rule
- (targets cppO0.output)
+ (targets O0.inc.gen)
  (deps
-  (package stanc)
   (:stanfiles
    (glob_files *.stan)))
  (action
   (with-stdout-to
    %{targets}
    (run
-    %{project_root}/test/integration/run_bin_on_args.exe
-    "%{bin:stanc} --print-cpp --O0"
+    %{project_root}/test/integration/gen_expected_rules.exe
+    O0
+    cpp
+    "--print-cpp --O0"
     %{stanfiles}))))
 
 (rule
- (alias runtest)
+ (alias update-rules)
  (action
-  (diff cppO0.expected cppO0.output)))
+  (diff expected_O0/dune.inc O0.inc.gen)))
+
+(include expected_O0/dune.inc)

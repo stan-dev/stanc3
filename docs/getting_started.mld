@@ -49,6 +49,13 @@ failures. If you are knowingly changing the output, and the differences highligh
 [dune runtest] look correct, you can run [dune promote] to change the expected output to match
 your current tests.
 
+Integration tests that generate C++ or MIR keep one expected file per model in
+[expected_<kind>/] folders next to the [.stan] files. The rules that check them are generated
+into [expected_<kind>/dune.inc] by [test/integration/gen_expected_rules.ml]. [make test] first
+runs [make update-rules], which updates these [dune.inc] files for added or removed models and
+deletes the expected files of removed models, so a new model's output shows up directly in the
+[make test] diff. Plain [dune runtest] does not update them and fails if one is out of date.
+
 {4 Test coverage}
 
 We have support for computing test coverage using the {{:https://github.com/aantron/bisect_ppx}bisect_ppx}

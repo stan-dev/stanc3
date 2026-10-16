@@ -1,0 +1,47 @@
+/* $ stanc -fsoa --debug-optimized-mir onepl_type2.stan */
+((functions_block ()) (input_vars ()) (prepare_data ())
+ (log_prob
+  (((pattern
+     (Block
+      (((pattern
+         (Decl (decl_adtype (TupleAD (AutoDiffable))) (decl_id x)
+          (decl_type (Sized (STuple (SReal)))) (initialize Default)))
+        (meta <opaque>)))))
+    (meta <opaque>))))
+ (reverse_mode_log_prob
+  (((pattern
+     (Block
+      (((pattern
+         (Decl (decl_adtype (TupleAD (AutoDiffable))) (decl_id x)
+          (decl_type (Sized (STuple (SReal)))) (initialize Default)))
+        (meta <opaque>)))))
+    (meta <opaque>))))
+ (generate_quantities
+  (((pattern
+     (IfElse
+      ((pattern
+        (FunApp (Operator PNot)
+         (((pattern
+            (EOr
+             ((pattern (Var emit_transformed_parameters__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+             ((pattern (Var emit_generated_quantities__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+      ((pattern (Block (((pattern (Return ())) (meta <opaque>))))) (meta <opaque>)) ()))
+    (meta <opaque>))
+   ((pattern
+     (IfElse
+      ((pattern
+        (FunApp (Operator PNot)
+         (((pattern (Var emit_generated_quantities__))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+      ((pattern (Block (((pattern (Return ())) (meta <opaque>))))) (meta <opaque>)) ()))
+    (meta <opaque>))))
+ (transform_inits ()) (unconstrain_array ()) (output_vars ())
+ (prog_name onepl_type2_model) (prog_path onepl_type2.stan))
+/*
+[exit 0]
+*/
