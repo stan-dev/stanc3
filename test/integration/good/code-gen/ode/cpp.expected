@@ -122,7 +122,7 @@ f_0_arg(const T0__& t, const T1__& z_arg__, std::ostream* pstream__) {
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& z = stan::math::to_ref(z_arg__);
+  decltype(auto) z = stan::math::to_ref(z_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -152,7 +152,7 @@ f_1_arg(const T0__& t, const T1__& z_arg__, const T2__& a, std::ostream*
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& z = stan::math::to_ref(z_arg__);
+  decltype(auto) z = stan::math::to_ref(z_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -183,7 +183,7 @@ f_2_arg(const T0__& t, const T1__& z_arg__, const T2__& b, const T3__& a,
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& z = stan::math::to_ref(z_arg__);
+  decltype(auto) z = stan::math::to_ref(z_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -986,7 +986,7 @@ simple_SIR(const T0__& t, const T1__& y_arg__, const T2__& beta, const T3__&
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& y = stan::math::to_ref(y_arg__);
+  decltype(auto) y = stan::math::to_ref(y_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -1053,7 +1053,7 @@ simple_SIR(const T0__& t, const T1__& y_arg__, const T2__& beta, const T3__&
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& y = stan::math::to_ref(y_arg__);
+  decltype(auto) y = stan::math::to_ref(y_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;

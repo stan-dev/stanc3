@@ -3651,11 +3651,11 @@
         (Comment "suppress unused var warning")
         (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
-         ((static false) (constexpr false) (type_ (Const (Ref Auto)))
+         ((static false) (constexpr false) (type_ (TypeLiteral "decltype(auto)"))
           (name shared_params)
           (init (Assignment (FunCall stan::math::to_ref () ((Var shared_params_arg__)))))))
         (VariableDefn
-         ((static false) (constexpr false) (type_ (Const (Ref Auto))) 
+         ((static false) (constexpr false) (type_ (TypeLiteral "decltype(auto)"))
           (name job_params)
           (init (Assignment (FunCall stan::math::to_ref () ((Var job_params_arg__)))))))
         (VariableDefn
@@ -3835,7 +3835,7 @@
         (Comment "suppress unused var warning")
         (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
-         ((static false) (constexpr false) (type_ (Const (Ref Auto))) 
+         ((static false) (constexpr false) (type_ (TypeLiteral "decltype(auto)"))
           (name mat)
           (init (Assignment (FunCall stan::math::to_ref () ((Var mat_arg__)))))))
         (VariableDefn
@@ -4004,10 +4004,10 @@
         (Comment "suppress unused var warning")
         (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
-         ((static false) (constexpr false) (type_ (Const (Ref Auto))) 
+         ((static false) (constexpr false) (type_ (TypeLiteral "decltype(auto)"))
           (name a7) (init (Assignment (FunCall stan::math::to_ref () ((Var a7_arg__)))))))
         (VariableDefn
-         ((static false) (constexpr false) (type_ (Const (Ref Auto))) 
+         ((static false) (constexpr false) (type_ (TypeLiteral "decltype(auto)"))
           (name a10)
           (init (Assignment (FunCall stan::math::to_ref () ((Var a10_arg__)))))))
         (VariableDefn
@@ -4133,10 +4133,10 @@
         (Comment "suppress unused var warning")
         (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
-         ((static false) (constexpr false) (type_ (Const (Ref Auto))) 
+         ((static false) (constexpr false) (type_ (TypeLiteral "decltype(auto)"))
           (name a7) (init (Assignment (FunCall stan::math::to_ref () ((Var a7_arg__)))))))
         (VariableDefn
-         ((static false) (constexpr false) (type_ (Const (Ref Auto))) 
+         ((static false) (constexpr false) (type_ (TypeLiteral "decltype(auto)"))
           (name a10)
           (init (Assignment (FunCall stan::math::to_ref () ((Var a10_arg__)))))))
         (VariableDefn
@@ -4257,10 +4257,10 @@
         (Comment "suppress unused var warning")
         (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
-         ((static false) (constexpr false) (type_ (Const (Ref Auto))) 
+         ((static false) (constexpr false) (type_ (TypeLiteral "decltype(auto)"))
           (name a7) (init (Assignment (FunCall stan::math::to_ref () ((Var a7_arg__)))))))
         (VariableDefn
-         ((static false) (constexpr false) (type_ (Const (Ref Auto))) 
+         ((static false) (constexpr false) (type_ (TypeLiteral "decltype(auto)"))
           (name a10)
           (init (Assignment (FunCall stan::math::to_ref () ((Var a10_arg__)))))))
         (VariableDefn
@@ -4381,10 +4381,10 @@
         (Comment "suppress unused var warning")
         (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
-         ((static false) (constexpr false) (type_ (Const (Ref Auto))) 
+         ((static false) (constexpr false) (type_ (TypeLiteral "decltype(auto)"))
           (name a7) (init (Assignment (FunCall stan::math::to_ref () ((Var a7_arg__)))))))
         (VariableDefn
-         ((static false) (constexpr false) (type_ (Const (Ref Auto))) 
+         ((static false) (constexpr false) (type_ (TypeLiteral "decltype(auto)"))
           (name a10)
           (init (Assignment (FunCall stan::math::to_ref () ((Var a10_arg__)))))))
         (VariableDefn
@@ -4517,10 +4517,10 @@
         (Comment "suppress unused var warning")
         (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
-         ((static false) (constexpr false) (type_ (Const (Ref Auto))) 
+         ((static false) (constexpr false) (type_ (TypeLiteral "decltype(auto)"))
           (name a7) (init (Assignment (FunCall stan::math::to_ref () ((Var a7_arg__)))))))
         (VariableDefn
-         ((static false) (constexpr false) (type_ (Const (Ref Auto))) 
+         ((static false) (constexpr false) (type_ (TypeLiteral "decltype(auto)"))
           (name a10)
           (init (Assignment (FunCall stan::math::to_ref () ((Var a10_arg__)))))))
         (VariableDefn
@@ -4654,10 +4654,10 @@
         (Comment "suppress unused var warning")
         (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
-         ((static false) (constexpr false) (type_ (Const (Ref Auto))) 
+         ((static false) (constexpr false) (type_ (TypeLiteral "decltype(auto)"))
           (name a7) (init (Assignment (FunCall stan::math::to_ref () ((Var a7_arg__)))))))
         (VariableDefn
-         ((static false) (constexpr false) (type_ (Const (Ref Auto))) 
+         ((static false) (constexpr false) (type_ (TypeLiteral "decltype(auto)"))
           (name a10)
           (init (Assignment (FunCall stan::math::to_ref () ((Var a10_arg__)))))))
         (VariableDefn
@@ -4792,10 +4792,10 @@
         (Comment "suppress unused var warning")
         (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
-         ((static false) (constexpr false) (type_ (Const (Ref Auto))) 
+         ((static false) (constexpr false) (type_ (TypeLiteral "decltype(auto)"))
           (name a7) (init (Assignment (FunCall stan::math::to_ref () ((Var a7_arg__)))))))
         (VariableDefn
-         ((static false) (constexpr false) (type_ (Const (Ref Auto))) 
+         ((static false) (constexpr false) (type_ (TypeLiteral "decltype(auto)"))
           (name a10)
           (init (Assignment (FunCall stan::math::to_ref () ((Var a10_arg__)))))))
         (VariableDefn
@@ -4930,10 +4930,10 @@
         (Comment "suppress unused var warning")
         (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
-         ((static false) (constexpr false) (type_ (Const (Ref Auto))) 
+         ((static false) (constexpr false) (type_ (TypeLiteral "decltype(auto)"))
           (name a7) (init (Assignment (FunCall stan::math::to_ref () ((Var a7_arg__)))))))
         (VariableDefn
-         ((static false) (constexpr false) (type_ (Const (Ref Auto))) 
+         ((static false) (constexpr false) (type_ (TypeLiteral "decltype(auto)"))
           (name a10)
           (init (Assignment (FunCall stan::math::to_ref () ((Var a10_arg__)))))))
         (VariableDefn
@@ -5069,10 +5069,10 @@
         (Comment "suppress unused var warning")
         (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
-         ((static false) (constexpr false) (type_ (Const (Ref Auto))) 
+         ((static false) (constexpr false) (type_ (TypeLiteral "decltype(auto)"))
           (name a7) (init (Assignment (FunCall stan::math::to_ref () ((Var a7_arg__)))))))
         (VariableDefn
-         ((static false) (constexpr false) (type_ (Const (Ref Auto))) 
+         ((static false) (constexpr false) (type_ (TypeLiteral "decltype(auto)"))
           (name a10)
           (init (Assignment (FunCall stan::math::to_ref () ((Var a10_arg__)))))))
         (VariableDefn
@@ -5209,10 +5209,10 @@
         (Comment "suppress unused var warning")
         (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
-         ((static false) (constexpr false) (type_ (Const (Ref Auto))) 
+         ((static false) (constexpr false) (type_ (TypeLiteral "decltype(auto)"))
           (name a7) (init (Assignment (FunCall stan::math::to_ref () ((Var a7_arg__)))))))
         (VariableDefn
-         ((static false) (constexpr false) (type_ (Const (Ref Auto))) 
+         ((static false) (constexpr false) (type_ (TypeLiteral "decltype(auto)"))
           (name a10)
           (init (Assignment (FunCall stan::math::to_ref () ((Var a10_arg__)))))))
         (VariableDefn
@@ -5347,10 +5347,10 @@
         (Comment "suppress unused var warning")
         (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
-         ((static false) (constexpr false) (type_ (Const (Ref Auto))) 
+         ((static false) (constexpr false) (type_ (TypeLiteral "decltype(auto)"))
           (name a7) (init (Assignment (FunCall stan::math::to_ref () ((Var a7_arg__)))))))
         (VariableDefn
-         ((static false) (constexpr false) (type_ (Const (Ref Auto))) 
+         ((static false) (constexpr false) (type_ (TypeLiteral "decltype(auto)"))
           (name a10)
           (init (Assignment (FunCall stan::math::to_ref () ((Var a10_arg__)))))))
         (VariableDefn
@@ -5486,10 +5486,10 @@
         (Comment "suppress unused var warning")
         (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
-         ((static false) (constexpr false) (type_ (Const (Ref Auto))) 
+         ((static false) (constexpr false) (type_ (TypeLiteral "decltype(auto)"))
           (name a7) (init (Assignment (FunCall stan::math::to_ref () ((Var a7_arg__)))))))
         (VariableDefn
-         ((static false) (constexpr false) (type_ (Const (Ref Auto))) 
+         ((static false) (constexpr false) (type_ (TypeLiteral "decltype(auto)"))
           (name a10)
           (init (Assignment (FunCall stan::math::to_ref () ((Var a10_arg__)))))))
         (VariableDefn
@@ -5626,10 +5626,10 @@
         (Comment "suppress unused var warning")
         (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
-         ((static false) (constexpr false) (type_ (Const (Ref Auto))) 
+         ((static false) (constexpr false) (type_ (TypeLiteral "decltype(auto)"))
           (name a7) (init (Assignment (FunCall stan::math::to_ref () ((Var a7_arg__)))))))
         (VariableDefn
-         ((static false) (constexpr false) (type_ (Const (Ref Auto))) 
+         ((static false) (constexpr false) (type_ (TypeLiteral "decltype(auto)"))
           (name a10)
           (init (Assignment (FunCall stan::math::to_ref () ((Var a10_arg__)))))))
         (VariableDefn
@@ -6044,10 +6044,10 @@
         (Comment "suppress unused var warning")
         (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
-         ((static false) (constexpr false) (type_ (Const (Ref Auto))) 
+         ((static false) (constexpr false) (type_ (TypeLiteral "decltype(auto)"))
           (name x) (init (Assignment (FunCall stan::math::to_ref () ((Var x_arg__)))))))
         (VariableDefn
-         ((static false) (constexpr false) (type_ (Const (Ref Auto))) 
+         ((static false) (constexpr false) (type_ (TypeLiteral "decltype(auto)"))
           (name y) (init (Assignment (FunCall stan::math::to_ref () ((Var y_arg__)))))))
         (VariableDefn
          ((static true) (constexpr true) (type_ (TypeLiteral bool)) (name propto__)
@@ -6139,11 +6139,11 @@
         (Comment "suppress unused var warning")
         (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
-         ((static false) (constexpr false) (type_ (Const (Ref Auto))) 
+         ((static false) (constexpr false) (type_ (TypeLiteral "decltype(auto)"))
           (name phi)
           (init (Assignment (FunCall stan::math::to_ref () ((Var phi_arg__)))))))
         (VariableDefn
-         ((static false) (constexpr false) (type_ (Const (Ref Auto))) 
+         ((static false) (constexpr false) (type_ (TypeLiteral "decltype(auto)"))
           (name theta)
           (init (Assignment (FunCall stan::math::to_ref () ((Var theta_arg__)))))))
         (VariableDefn

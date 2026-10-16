@@ -3450,7 +3450,7 @@ void _stan_asm(const T0__& _stan_class_arg__, std::ostream* pstream__) {
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& _stan_class = stan::math::to_ref(_stan_class_arg__);
+  decltype(auto) _stan_class = stan::math::to_ref(_stan_class_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -4543,7 +4543,7 @@ baz(const T0__& y_arg__, std::ostream* pstream__) {
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& y = stan::math::to_ref(y_arg__);
+  decltype(auto) y = stan::math::to_ref(y_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -4616,7 +4616,7 @@ baz_param(const T0__& y_arg__, std::ostream* pstream__) {
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& y = stan::math::to_ref(y_arg__);
+  decltype(auto) y = stan::math::to_ref(y_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -6505,7 +6505,7 @@ my_upper_bound_jacobian(const T0__& x_arg__, const T1__& ub, T_lp__& lp__,
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& x = stan::math::to_ref(x_arg__);
+  decltype(auto) x = stan::math::to_ref(x_arg__);
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   // suppress unused var warning
   (void) DUMMY_VAR__;
@@ -8019,8 +8019,8 @@ ll_function(const T0__& theta_arg__, const T1__& eta, const T2__&
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& theta = stan::math::to_ref(theta_arg__);
-  const auto& log_ye = stan::math::to_ref(log_ye_arg__);
+  decltype(auto) theta = stan::math::to_ref(theta_arg__);
+  decltype(auto) log_ye = stan::math::to_ref(log_ye_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -11014,8 +11014,8 @@ scalar_tuple(const T0__& theta_arg__, const T1__& eta, const T2__&
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& theta = stan::math::to_ref(theta_arg__);
-  const auto& log_ye = stan::math::to_ref(log_ye_arg__);
+  decltype(auto) theta = stan::math::to_ref(theta_arg__);
+  decltype(auto) log_ye = stan::math::to_ref(log_ye_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -11055,7 +11055,7 @@ arr_vec_tuple(const T0__& theta_arg__, const T1__& eta, const T2__& p,
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& theta = stan::math::to_ref(theta_arg__);
+  decltype(auto) theta = stan::math::to_ref(theta_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -11113,7 +11113,7 @@ nested(const T0__& theta_arg__, const T1__& p, const T2__& unused,
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& theta = stan::math::to_ref(theta_arg__);
+  decltype(auto) theta = stan::math::to_ref(theta_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -12123,7 +12123,7 @@ ll_nested(const T0__& theta_arg__, const T1__& p, const T2__& unused,
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& theta = stan::math::to_ref(theta_arg__);
+  decltype(auto) theta = stan::math::to_ref(theta_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -13009,8 +13009,8 @@ ll_function(const T0__& theta_arg__, const T1__& eta, const T2__&
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& theta = stan::math::to_ref(theta_arg__);
-  const auto& log_ye = stan::math::to_ref(log_ye_arg__);
+  decltype(auto) theta = stan::math::to_ref(theta_arg__);
+  decltype(auto) log_ye = stan::math::to_ref(log_ye_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -13825,8 +13825,8 @@ my_fun(const T0__& theta_arg__, const T1__& eta, const T2__& log_ye_arg__,
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& theta = stan::math::to_ref(theta_arg__);
-  const auto& log_ye = stan::math::to_ref(log_ye_arg__);
+  decltype(auto) theta = stan::math::to_ref(theta_arg__);
+  decltype(auto) log_ye = stan::math::to_ref(log_ye_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -14529,8 +14529,8 @@ poisson_re_log_ll(const T0__& theta_arg__, const T1__& y, const T2__&
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& theta = stan::math::to_ref(theta_arg__);
-  const auto& mu = stan::math::to_ref(mu_arg__);
+  decltype(auto) theta = stan::math::to_ref(theta_arg__);
+  decltype(auto) mu = stan::math::to_ref(mu_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -18886,8 +18886,8 @@ foo_5(const T0__& shared_params_arg__, const T1__& job_params_arg__,
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& shared_params = stan::math::to_ref(shared_params_arg__);
-  const auto& job_params = stan::math::to_ref(job_params_arg__);
+  decltype(auto) shared_params = stan::math::to_ref(shared_params_arg__);
+  decltype(auto) job_params = stan::math::to_ref(job_params_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -18984,7 +18984,7 @@ covsqrt2corsqrt(const T0__& mat_arg__, const T1__& invert, std::ostream*
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& mat = stan::math::to_ref(mat_arg__);
+  decltype(auto) mat = stan::math::to_ref(mat_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -19086,8 +19086,8 @@ f0(const T0__& a1, const T1__& a2, const T2__& a3, const T3__& a4,
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& a7 = stan::math::to_ref(a7_arg__);
-  const auto& a10 = stan::math::to_ref(a10_arg__);
+  decltype(auto) a7 = stan::math::to_ref(a7_arg__);
+  decltype(auto) a10 = stan::math::to_ref(a10_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -19169,8 +19169,8 @@ f1(const T0__& a1, const T1__& a2, const T2__& a3, const T3__& a4,
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& a7 = stan::math::to_ref(a7_arg__);
-  const auto& a10 = stan::math::to_ref(a10_arg__);
+  decltype(auto) a7 = stan::math::to_ref(a7_arg__);
+  decltype(auto) a10 = stan::math::to_ref(a10_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -19249,8 +19249,8 @@ f2(const T0__& a1, const T1__& a2, const T2__& a3, const T3__& a4,
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& a7 = stan::math::to_ref(a7_arg__);
-  const auto& a10 = stan::math::to_ref(a10_arg__);
+  decltype(auto) a7 = stan::math::to_ref(a7_arg__);
+  decltype(auto) a10 = stan::math::to_ref(a10_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -19329,8 +19329,8 @@ f3(const T0__& a1, const T1__& a2, const T2__& a3, const T3__& a4,
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& a7 = stan::math::to_ref(a7_arg__);
-  const auto& a10 = stan::math::to_ref(a10_arg__);
+  decltype(auto) a7 = stan::math::to_ref(a7_arg__);
+  decltype(auto) a10 = stan::math::to_ref(a10_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -19412,8 +19412,8 @@ f4(const T0__& a1, const T1__& a2, const T2__& a3, const T3__& a4,
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& a7 = stan::math::to_ref(a7_arg__);
-  const auto& a10 = stan::math::to_ref(a10_arg__);
+  decltype(auto) a7 = stan::math::to_ref(a7_arg__);
+  decltype(auto) a10 = stan::math::to_ref(a10_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -19496,8 +19496,8 @@ f5(const T0__& a1, const T1__& a2, const T2__& a3, const T3__& a4,
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& a7 = stan::math::to_ref(a7_arg__);
-  const auto& a10 = stan::math::to_ref(a10_arg__);
+  decltype(auto) a7 = stan::math::to_ref(a7_arg__);
+  decltype(auto) a10 = stan::math::to_ref(a10_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -19582,8 +19582,8 @@ f6(const T0__& a1, const T1__& a2, const T2__& a3, const T3__& a4,
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& a7 = stan::math::to_ref(a7_arg__);
-  const auto& a10 = stan::math::to_ref(a10_arg__);
+  decltype(auto) a7 = stan::math::to_ref(a7_arg__);
+  decltype(auto) a10 = stan::math::to_ref(a10_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -19667,8 +19667,8 @@ f7(const T0__& a1, const T1__& a2, const T2__& a3, const T3__& a4,
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& a7 = stan::math::to_ref(a7_arg__);
-  const auto& a10 = stan::math::to_ref(a10_arg__);
+  decltype(auto) a7 = stan::math::to_ref(a7_arg__);
+  decltype(auto) a10 = stan::math::to_ref(a10_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -19753,8 +19753,8 @@ f8(const T0__& a1, const T1__& a2, const T2__& a3, const T3__& a4,
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& a7 = stan::math::to_ref(a7_arg__);
-  const auto& a10 = stan::math::to_ref(a10_arg__);
+  decltype(auto) a7 = stan::math::to_ref(a7_arg__);
+  decltype(auto) a10 = stan::math::to_ref(a10_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -19840,8 +19840,8 @@ f9(const T0__& a1, const T1__& a2, const T2__& a3, const T3__& a4,
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& a7 = stan::math::to_ref(a7_arg__);
-  const auto& a10 = stan::math::to_ref(a10_arg__);
+  decltype(auto) a7 = stan::math::to_ref(a7_arg__);
+  decltype(auto) a10 = stan::math::to_ref(a10_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -19925,8 +19925,8 @@ f10(const T0__& a1, const T1__& a2, const T2__& a3, const T3__& a4,
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& a7 = stan::math::to_ref(a7_arg__);
-  const auto& a10 = stan::math::to_ref(a10_arg__);
+  decltype(auto) a7 = stan::math::to_ref(a7_arg__);
+  decltype(auto) a10 = stan::math::to_ref(a10_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -20011,8 +20011,8 @@ f11(const T0__& a1, const T1__& a2, const T2__& a3, const T3__& a4,
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& a7 = stan::math::to_ref(a7_arg__);
-  const auto& a10 = stan::math::to_ref(a10_arg__);
+  decltype(auto) a7 = stan::math::to_ref(a7_arg__);
+  decltype(auto) a10 = stan::math::to_ref(a10_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -20098,8 +20098,8 @@ f12(const T0__& a1, const T1__& a2, const T2__& a3, const T3__& a4,
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& a7 = stan::math::to_ref(a7_arg__);
-  const auto& a10 = stan::math::to_ref(a10_arg__);
+  decltype(auto) a7 = stan::math::to_ref(a7_arg__);
+  decltype(auto) a10 = stan::math::to_ref(a10_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -20406,8 +20406,8 @@ algebra_system(const T0__& x_arg__, const T1__& y_arg__, const T2__& dat,
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& x = stan::math::to_ref(x_arg__);
-  const auto& y = stan::math::to_ref(y_arg__);
+  decltype(auto) x = stan::math::to_ref(x_arg__);
+  decltype(auto) y = stan::math::to_ref(y_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -20449,8 +20449,8 @@ binomialf(const T0__& phi_arg__, const T1__& theta_arg__,
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& phi = stan::math::to_ref(phi_arg__);
-  const auto& theta = stan::math::to_ref(theta_arg__);
+  decltype(auto) phi = stan::math::to_ref(phi_arg__);
+  decltype(auto) theta = stan::math::to_ref(theta_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -26493,8 +26493,8 @@ foo(const T0__& shared_params_arg__, const T1__& job_params_arg__,
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& shared_params = stan::math::to_ref(shared_params_arg__);
-  const auto& job_params = stan::math::to_ref(job_params_arg__);
+  decltype(auto) shared_params = stan::math::to_ref(shared_params_arg__);
+  decltype(auto) job_params = stan::math::to_ref(job_params_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -26533,8 +26533,8 @@ goo(const T0__& shared_params_arg__, const T1__& job_params_arg__,
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& shared_params = stan::math::to_ref(shared_params_arg__);
-  const auto& job_params = stan::math::to_ref(job_params_arg__);
+  decltype(auto) shared_params = stan::math::to_ref(shared_params_arg__);
+  decltype(auto) job_params = stan::math::to_ref(job_params_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -26596,8 +26596,8 @@ algebra_system(const T0__& x_arg__, const T1__& y_arg__, const T2__& dat,
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& x = stan::math::to_ref(x_arg__);
-  const auto& y = stan::math::to_ref(y_arg__);
+  decltype(auto) x = stan::math::to_ref(x_arg__);
+  decltype(auto) y = stan::math::to_ref(y_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -29304,8 +29304,8 @@ f(const T0__& t, const T1__& z_arg__, const T2__& a, const T3__& b_arg__,
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& z = stan::math::to_ref(z_arg__);
-  const auto& b = stan::math::to_ref(b_arg__);
+  decltype(auto) z = stan::math::to_ref(z_arg__);
+  decltype(auto) b = stan::math::to_ref(b_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -38016,7 +38016,7 @@ distribution_lpdf(const T0__& y_arg__, const T1__& mu, const T2__& sigma,
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& y = stan::math::to_ref(y_arg__);
+  decltype(auto) y = stan::math::to_ref(y_arg__);
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   // suppress unused var warning
   (void) DUMMY_VAR__;
@@ -38600,7 +38600,7 @@ foo(const T0__& p_arg__, std::ostream* pstream__) {
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& p = stan::math::to_ref(p_arg__);
+  decltype(auto) p = stan::math::to_ref(p_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -38624,7 +38624,7 @@ foo(const T0__& p_arg__, std::ostream* pstream__) {
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& p = stan::math::to_ref(p_arg__);
+  decltype(auto) p = stan::math::to_ref(p_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -38648,7 +38648,7 @@ foo(const T0__& p_arg__, std::ostream* pstream__) {
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& p = stan::math::to_ref(p_arg__);
+  decltype(auto) p = stan::math::to_ref(p_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -40654,7 +40654,7 @@ test2(const T0__& gamma_arg__, std::ostream* pstream__) {
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& gamma = stan::math::to_ref(gamma_arg__);
+  decltype(auto) gamma = stan::math::to_ref(gamma_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -40692,7 +40692,7 @@ matrix_pow(const T0__& a_arg__, const T1__& n, std::ostream* pstream__) {
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& a = stan::math::to_ref(a_arg__);
+  decltype(auto) a = stan::math::to_ref(a_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -40731,7 +40731,7 @@ foo(const T0__& a_arg__, std::ostream* pstream__) {
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& a = stan::math::to_ref(a_arg__);
+  decltype(auto) a = stan::math::to_ref(a_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -40784,7 +40784,7 @@ test4(const T0__& gamma_arg__, std::ostream* pstream__) {
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& gamma = stan::math::to_ref(gamma_arg__);
+  decltype(auto) gamma = stan::math::to_ref(gamma_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -40820,7 +40820,7 @@ test3(const T0__& gamma_arg__, std::ostream* pstream__) {
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& gamma = stan::math::to_ref(gamma_arg__);
+  decltype(auto) gamma = stan::math::to_ref(gamma_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -40843,7 +40843,7 @@ void test6(const T0__& alpha_arg__, std::ostream* pstream__) {
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& alpha = stan::math::to_ref(alpha_arg__);
+  decltype(auto) alpha = stan::math::to_ref(alpha_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -40883,7 +40883,7 @@ test7(const T0__& gamma_arg__, std::ostream* pstream__) {
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& gamma = stan::math::to_ref(gamma_arg__);
+  decltype(auto) gamma = stan::math::to_ref(gamma_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -40925,8 +40925,8 @@ foo(const T0__& x, const T1__& s_arg__, const T2__& y_arg__, std::ostream*
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& s = stan::math::to_ref(s_arg__);
-  const auto& y = stan::math::to_ref(y_arg__);
+  decltype(auto) s = stan::math::to_ref(s_arg__);
+  decltype(auto) y = stan::math::to_ref(y_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -46578,7 +46578,7 @@ g2(const T0__& y_slice, const T1__& start, const T2__& end, const T3__&
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& a = stan::math::to_ref(a_arg__);
+  decltype(auto) a = stan::math::to_ref(a_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -46610,7 +46610,7 @@ g3(const T0__& y_slice, const T1__& start, const T2__& end, const T3__&
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& a = stan::math::to_ref(a_arg__);
+  decltype(auto) a = stan::math::to_ref(a_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -46642,7 +46642,7 @@ g4(const T0__& y_slice, const T1__& start, const T2__& end, const T3__&
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& a = stan::math::to_ref(a_arg__);
+  decltype(auto) a = stan::math::to_ref(a_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -47041,9 +47041,9 @@ s(const T0__& y_slice, const T1__& start, const T2__& end, const T3__& a,
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& c = stan::math::to_ref(c_arg__);
-  const auto& d = stan::math::to_ref(d_arg__);
-  const auto& e = stan::math::to_ref(e_arg__);
+  decltype(auto) c = stan::math::to_ref(c_arg__);
+  decltype(auto) d = stan::math::to_ref(d_arg__);
+  decltype(auto) e = stan::math::to_ref(e_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -50046,7 +50046,7 @@ loops_rng(const T0__& a_arg__, RNG& base_rng__, std::ostream* pstream__) {
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& a = stan::math::to_ref(a_arg__);
+  decltype(auto) a = stan::math::to_ref(a_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -50860,7 +50860,7 @@ rhs(const T0__& t, const T1__& y_arg__, const T2__& alpha, std::ostream*
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
-  const auto& y = stan::math::to_ref(y_arg__);
+  decltype(auto) y = stan::math::to_ref(y_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
