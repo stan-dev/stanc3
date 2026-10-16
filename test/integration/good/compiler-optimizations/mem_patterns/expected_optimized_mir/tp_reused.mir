@@ -1,0 +1,466 @@
+/* $ stanc -fsoa --debug-optimized-mir --debug-mem-patterns tp_reused.stan */
+matrix[5, 10] first_pass_soa_x: AoS
+matrix[5, 10] aos_x: AoS
+matrix[5, 10] tp_matrix_aos: AoS
+Optimization hazard warning (Line 16): SoA warning: Right hand side contains only AoS expressions: first_pass_soa_x
+Optimization hazard warning (Line 17): SoA warning: Right hand side contains only AoS expressions: aos_x
+Optimization hazard warning (Line 21): SoA warning: Right hand side contains only AoS expressions: tp_matrix_aos
+Optimization hazard warning (Line 22): SoA warning: Function 'nono_func' on right hand side of assignment is not supported by SoA: aos_x, tp_matrix_aos
+Optimization hazard warning (Line 22): SoA warning: Right hand side contains only AoS expressions: tp_matrix_aos
+Optimization hazard warning (Line 22): SoA warning: Right hand side of assignment is all AoS: aos_x, tp_matrix_aos
+((functions_block
+  (((fdrt (ReturnType UMatrix)) (fdname nono_func) (fdsuffix FnPlain)
+    (fdargs ((AutoDiffable x UMatrix)))
+    (fdbody
+     (((pattern
+        (Block
+         (((pattern
+            (Return
+             (((pattern (Var x))
+               (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
+           (meta <opaque>)))))
+       (meta <opaque>))))
+    (fdloc <opaque>))
+   ((fdrt (ReturnType UMatrix)) (fdname okay_reduction) (fdsuffix FnPlain)
+    (fdargs ((AutoDiffable sum_x UReal) (AutoDiffable y UMatrix)))
+    (fdbody
+     (((pattern
+        (Block
+         (((pattern
+            (Return
+             (((pattern
+                (FunApp (Operator Plus)
+                 (((pattern (Var sum_x))
+                   (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+                  ((pattern (Var y))
+                   (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
+               (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
+           (meta <opaque>)))))
+       (meta <opaque>))))
+    (fdloc <opaque>))))
+ (input_vars ((data_r <opaque> SReal)))
+ (prepare_data
+  (((pattern
+     (Decl (decl_adtype DataOnly) (decl_id data_r) (decl_type (Sized SReal))
+      (initialize Default)))
+    (meta <opaque>))
+   ((pattern
+     (NRFunApp (CompilerInternal FnReadData)
+      (((pattern (Var data_r)) (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+       ((pattern (Var context__))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+       ((pattern (Lit Str data_r))
+        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+    (meta <opaque>))))
+ (log_prob
+  (((pattern
+     (Decl (decl_adtype AutoDiffable) (decl_id first_pass_soa_x)
+      (decl_type
+       (Sized
+        (SMatrix AoS
+         ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam (constrain Identity)
+             (dims
+              (((pattern (Lit Int 5))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+               ((pattern (Lit Int 10))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern AoS)))
+           ()))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype AutoDiffable) (decl_id aos_x)
+      (decl_type
+       (Sized
+        (SMatrix AoS
+         ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam (constrain Identity)
+             (dims
+              (((pattern (Lit Int 5))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+               ((pattern (Lit Int 10))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern AoS)))
+           ()))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype AutoDiffable) (decl_id tp_matrix_aos)
+      (decl_type
+       (Sized
+        (SMatrix AoS
+         ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment ((LVariable tp_matrix_aos) ()) UMatrix
+      ((pattern (Var first_pass_soa_x))
+       (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment ((LVariable tp_matrix_aos) ()) UMatrix
+      ((pattern
+        (FunApp (UserDefined nono_func FnPlain)
+         (((pattern (Var aos_x))
+           (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
+       (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))))
+ (reverse_mode_log_prob
+  (((pattern
+     (Decl (decl_adtype AutoDiffable) (decl_id first_pass_soa_x)
+      (decl_type
+       (Sized
+        (SMatrix AoS
+         ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam (constrain Identity)
+             (dims
+              (((pattern (Lit Int 5))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+               ((pattern (Lit Int 10))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern AoS)))
+           ()))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype AutoDiffable) (decl_id aos_x)
+      (decl_type
+       (Sized
+        (SMatrix AoS
+         ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam (constrain Identity)
+             (dims
+              (((pattern (Lit Int 5))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+               ((pattern (Lit Int 10))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern AoS)))
+           ()))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype AutoDiffable) (decl_id tp_matrix_aos)
+      (decl_type
+       (Sized
+        (SMatrix AoS
+         ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment ((LVariable tp_matrix_aos) ()) UMatrix
+      ((pattern (Var first_pass_soa_x))
+       (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment ((LVariable tp_matrix_aos) ()) UMatrix
+      ((pattern
+        (FunApp (UserDefined nono_func FnPlain)
+         (((pattern (Var aos_x))
+           (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
+       (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))))
+ (generate_quantities
+  (((pattern
+     (Decl (decl_adtype DataOnly) (decl_id first_pass_soa_x)
+      (decl_type
+       (Sized
+        (SMatrix AoS
+         ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam (constrain Identity)
+             (dims
+              (((pattern (Lit Int 5))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+               ((pattern (Lit Int 10))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern AoS)))
+           ()))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype DataOnly) (decl_id aos_x)
+      (decl_type
+       (Sized
+        (SMatrix AoS
+         ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize
+       (Assign
+        ((pattern
+          (FunApp
+           (CompilerInternal
+            (FnReadParam (constrain Identity)
+             (dims
+              (((pattern (Lit Int 5))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+               ((pattern (Lit Int 10))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+             (mem_pattern AoS)))
+           ()))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype DataOnly) (decl_id tp_matrix_aos)
+      (decl_type
+       (Sized
+        (SMatrix AoS
+         ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
+    (meta <opaque>))
+   ((pattern
+     (NRFunApp
+      (CompilerInternal
+       (FnWriteParam (unconstrain_opt ())
+        (var
+         ((pattern (Var first_pass_soa_x))
+          (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
+      ()))
+    (meta <opaque>))
+   ((pattern
+     (NRFunApp
+      (CompilerInternal
+       (FnWriteParam (unconstrain_opt ())
+        (var
+         ((pattern (Var aos_x))
+          (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
+      ()))
+    (meta <opaque>))
+   ((pattern
+     (IfElse
+      ((pattern
+        (FunApp (Operator PNot)
+         (((pattern
+            (EOr
+             ((pattern (Var emit_transformed_parameters__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+             ((pattern (Var emit_generated_quantities__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+      ((pattern (Block (((pattern (Return ())) (meta <opaque>))))) (meta <opaque>)) ()))
+    (meta <opaque>))
+   ((pattern
+     (Assignment ((LVariable tp_matrix_aos) ()) UMatrix
+      ((pattern (Var first_pass_soa_x))
+       (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment ((LVariable tp_matrix_aos) ()) UMatrix
+      ((pattern
+        (FunApp (UserDefined nono_func FnPlain)
+         (((pattern (Var aos_x))
+           (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
+       (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (IfElse
+      ((pattern (Var emit_transformed_parameters__))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+      ((pattern
+        (Block
+         (((pattern
+            (NRFunApp
+             (CompilerInternal
+              (FnWriteParam (unconstrain_opt ())
+               (var
+                ((pattern (Var tp_matrix_aos))
+                 (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
+             ()))
+           (meta <opaque>)))))
+       (meta <opaque>))
+      ()))
+    (meta <opaque>))
+   ((pattern
+     (IfElse
+      ((pattern
+        (FunApp (Operator PNot)
+         (((pattern (Var emit_generated_quantities__))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+      ((pattern (Block (((pattern (Return ())) (meta <opaque>))))) (meta <opaque>)) ()))
+    (meta <opaque>))))
+ (transform_inits
+  (((pattern
+     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
+      (initialize Default)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment ((LVariable pos__) ()) UInt
+      ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype AutoDiffable) (decl_id first_pass_soa_x)
+      (decl_type
+       (Sized
+        (SMatrix AoS
+         ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
+    (meta <opaque>))
+   ((pattern
+     (NRFunApp (CompilerInternal FnReadData)
+      (((pattern (Var first_pass_soa_x))
+        (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
+       ((pattern (Var context__))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+       ((pattern (Lit Str first_pass_soa_x))
+        (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
+    (meta <opaque>))
+   ((pattern
+     (NRFunApp
+      (CompilerInternal
+       (FnWriteParam (unconstrain_opt (Identity))
+        (var
+         ((pattern (Var first_pass_soa_x))
+          (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
+      ()))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype AutoDiffable) (decl_id aos_x)
+      (decl_type
+       (Sized
+        (SMatrix AoS
+         ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
+    (meta <opaque>))
+   ((pattern
+     (NRFunApp (CompilerInternal FnReadData)
+      (((pattern (Var aos_x)) (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
+       ((pattern (Var context__))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+       ((pattern (Lit Str aos_x))
+        (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
+    (meta <opaque>))
+   ((pattern
+     (NRFunApp
+      (CompilerInternal
+       (FnWriteParam (unconstrain_opt (Identity))
+        (var
+         ((pattern (Var aos_x))
+          (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
+      ()))
+    (meta <opaque>))))
+ (unconstrain_array
+  (((pattern
+     (Decl (decl_adtype AutoDiffable) (decl_id first_pass_soa_x)
+      (decl_type
+       (Sized
+        (SMatrix AoS
+         ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment ((LVariable first_pass_soa_x) ()) UMatrix
+      ((pattern
+        (FunApp (CompilerInternal FnReadDeserializer)
+         (((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (NRFunApp
+      (CompilerInternal
+       (FnWriteParam (unconstrain_opt (Identity))
+        (var
+         ((pattern (Var first_pass_soa_x))
+          (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
+      ()))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype AutoDiffable) (decl_id aos_x)
+      (decl_type
+       (Sized
+        (SMatrix AoS
+         ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment ((LVariable aos_x) ()) UMatrix
+      ((pattern
+        (FunApp (CompilerInternal FnReadDeserializer)
+         (((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (NRFunApp
+      (CompilerInternal
+       (FnWriteParam (unconstrain_opt (Identity))
+        (var
+         ((pattern (Var aos_x))
+          (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
+      ()))
+    (meta <opaque>))))
+ (output_vars
+  ((first_pass_soa_x <opaque>
+    ((out_unconstrained_st
+      (SMatrix AoS
+       ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+       ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+     (out_constrained_st
+      (SMatrix AoS
+       ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+       ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+     (out_block Parameters) (out_trans Identity)))
+   (aos_x <opaque>
+    ((out_unconstrained_st
+      (SMatrix AoS
+       ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+       ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+     (out_constrained_st
+      (SMatrix AoS
+       ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+       ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+     (out_block Parameters) (out_trans Identity)))
+   (tp_matrix_aos <opaque>
+    ((out_unconstrained_st
+      (SMatrix AoS
+       ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+       ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+     (out_constrained_st
+      (SMatrix AoS
+       ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+       ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+     (out_block TransformedParameters) (out_trans Identity)))))
+ (prog_name tp_reused_model) (prog_path tp_reused.stan))
+/*
+[exit 0]
+*/
