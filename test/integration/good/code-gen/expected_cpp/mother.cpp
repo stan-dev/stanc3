@@ -4882,11 +4882,11 @@ class mother_model final : public model_base_crtp<mother_model> {
               stan::model::index_min_max(1, 3)),
             "assigning variable temp_sym1__");
           current_statement__ = 355;
-          for (int loop_sym1__ = 1; loop_sym1__ <=
-               stan::math::size(temp_sym1__); ++loop_sym1__) {
+          for (int loop_sym3__ = 1; loop_sym3__ <=
+               stan::math::size(temp_sym1__); ++loop_sym3__) {
             int i;
             current_statement__ = 355;
-            i = temp_sym1__[(loop_sym1__ - 1)];
+            i = temp_sym1__[(loop_sym3__ - 1)];
             current_statement__ = 356;
             z = static_cast<double>(i);
           }

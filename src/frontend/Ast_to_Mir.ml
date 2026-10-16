@@ -101,7 +101,7 @@ let neg_inf =
 
 let trans_arg (adtype, ut, ident) = (adtype, ident.Ast.name, ut)
 
-let truncate_dist ud_dists (id : Ast.identifier)
+let truncate_dist count ud_dists (id : Ast.identifier)
     (ast_obs : Ast.typed_expression) ast_args t =
   let cdf_suffix = "_lcdf" in
   let ccdf_suffix = "_lccdf" in
@@ -202,7 +202,7 @@ let truncate_dist ud_dists (id : Ast.identifier)
             let ast_args = trans_exprs ast_args in
             (* avoid recomputing in each iteration of the loop *)
             let temp_decls, ast_args, symbol_reset =
-              Stmt.Helpers.temp_vars ast_args in
+              Stmt.Helpers.temp_vars count ast_args in
             let bound =
               let e = List.nth ast_args i in
               Expr.Helpers.internal_funapp FnLength [e]
@@ -216,7 +216,7 @@ let truncate_dist ud_dists (id : Ast.identifier)
                     else e)
                   ast_args in
               targetme ub.meta.loc (size_adjust (expr args)) in
-            let loop = Stmt.Helpers.mk_for bound bodyfn ub.meta.loc in
+            let loop = Stmt.Helpers.mk_for count bound bodyfn ub.meta.loc in
             symbol_reset ();
             Stmt.{pattern= Block (temp_decls @ [loop]); meta= loop.meta}
         | None ->
@@ -387,24 +387,24 @@ let rec transform_sizedtype transformation sizedtype =
               (binop (binop m Minus n) Times n)))
         sizedtype
 
-let rec check_decl var decl_type' decl_trans smeta adlevel =
+let rec check_decl count var decl_type' decl_trans smeta adlevel =
   let check_tuple var trans_subtypes =
     List.concat_mapi
       ~f:(fun i (decl_type', decl_trans) ->
         let var = Expr.Helpers.add_tuple_index var (i + 1) in
-        check_decl var decl_type' decl_trans smeta adlevel)
+        check_decl count var decl_type' decl_trans smeta adlevel)
       trans_subtypes in
   match decl_trans with
   | Transformation.LowerUpper (lb, ub) ->
-      check_decl var decl_type' (Lower lb) smeta adlevel
-      @ check_decl var decl_type' (Upper ub) smeta adlevel
+      check_decl count var decl_type' (Lower lb) smeta adlevel
+      @ check_decl count var decl_type' (Upper ub) smeta adlevel
   | TupleTransformation transforms when Transformation.has_check decl_trans ->
       let _, dims = SizedType.get_array_dims decl_type' in
       let subtypes_transforms =
         Utils.zip_stuple_trans_exn decl_type' transforms in
       if List.is_empty dims then check_tuple var subtypes_transforms
       else
-        [ Stmt.Helpers.mk_nested_for (List.rev dims)
+        [ Stmt.Helpers.mk_nested_for count (List.rev dims)
             (fun loopvars ->
               let var =
                 List.fold_left ~f:Expr.Helpers.add_int_index ~init:var
@@ -542,18 +542,18 @@ let check_sizedtype name st =
   check_transformed_sizedtype IgnoreTransform Transformation.Identity name st
 
 (* The statements that constrain and check a variable, given its context *)
-let var_constrain_check_stmts dconstrain loc adlevel decl_id decl_var trans
-    type_ =
+let var_constrain_check_stmts count dconstrain loc adlevel decl_id decl_var
+    trans type_ =
   match (dconstrain, type_) with
   | Some Constrain, Type.Sized _ ->
       check_transform_shape decl_id decl_var loc trans
   | Some Check, Type.Sized st ->
       check_transform_shape decl_id decl_var loc trans
-      @ check_decl decl_var st trans loc adlevel
+      @ check_decl count decl_var st trans loc adlevel
   | _ -> []
 
-let create_decl_with_assign decl_id declc decl_type initial_value transform
-    smeta =
+let create_decl_with_assign count decl_id declc decl_type initial_value
+    transform smeta =
   let rhs = Option.map ~f:trans_expr initial_value in
   let decl_adtype =
     UnsizedType.fill_adtype_for_type declc.dadlevel (Type.to_unsized decl_type)
@@ -579,8 +579,8 @@ let create_decl_with_assign decl_id declc decl_type initial_value transform
     |> Option.to_list in
   if Utils.is_user_ident decl_id then
     (decl :: rhs_assignment)
-    @ var_constrain_check_stmts (Some declc.transform_action) smeta decl_adtype
-        decl_id decl_var transform decl_type
+    @ var_constrain_check_stmts count (Some declc.transform_action) smeta
+        decl_adtype decl_id decl_var transform decl_type
   else decl :: rhs_assignment
 
 let unwrap_block_or_skip = function
@@ -603,10 +603,12 @@ let index_tuple (e : Ast.typed_expression) i =
             [Pretty_printing.pp_typed_expression $ e]) [@coverage off] in
   Ast.{expr= TupleProjection (e, i + 1); emeta}
 
-let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
+let rec trans_stmt count ud_dists (declc : decl_context)
+    (ts : Ast.typed_statement) =
   let stmt_typed = ts.stmt and smeta = ts.smeta.loc in
   let trans_stmt =
-    trans_stmt ud_dists {declc with transform_action= IgnoreTransform} in
+    trans_stmt count ud_dists {declc with transform_action= IgnoreTransform}
+  in
   let trans_single_stmt s =
     match trans_stmt s with
     | [s] -> s
@@ -615,7 +617,7 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
   let mloc = smeta in
   match stmt_typed with
   | Ast.Assignment {assign_lhs= LTuplePack {lvals; _}; assign_rhs; assign_op} ->
-      trans_packed_assign smeta trans_stmt lvals assign_rhs assign_op
+      trans_packed_assign count smeta trans_stmt lvals assign_rhs assign_op
   | Ast.Assignment {assign_lhs= LValue lhs; assign_rhs; assign_op} ->
       trans_single_assignment smeta lhs assign_rhs assign_op
   | Ast.NRFunApp (fn_kind, {name; _}, args) ->
@@ -650,7 +652,8 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
             { pattern=
                 FunApp (trans_fn_kind kind name, trans_exprs (arg :: args))
             ; meta= Typed.Meta.create ~type_:UReal ~loc:mloc ~adlevel () } in
-      swrap add_dist @ truncate_dist ud_dists distribution arg args truncation
+      swrap add_dist
+      @ truncate_dist count ud_dists distribution arg args truncation
   | Ast.Print ps ->
       NRFunApp (CompilerInternal FnPrint, trans_printables smeta ps) |> swrap
   | Ast.Reject ps ->
@@ -706,7 +709,7 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
         Stmt.
           { pattern= Block (decl_loopvar :: assignment var :: body_stmts)
           ; meta= smeta } in
-      Stmt.Helpers.[ensure_var (for_each bodyfn) iteratee' smeta]
+      Stmt.Helpers.[ensure_var count (for_each count bodyfn) iteratee' smeta]
   | Ast.FunDef _ ->
       Common.ICE.internal_error
         "Found function definition statement outside of function block"
@@ -718,8 +721,8 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
           let decl_id = identifier.Ast.name in
           let size_checks, dt = check_sizedtype decl_id decl_type in
           size_checks
-          @ create_decl_with_assign decl_id declc (Type.Sized dt) initial_value
-              transform smeta)
+          @ create_decl_with_assign count decl_id declc (Type.Sized dt)
+              initial_value transform smeta)
         variables
   | Ast.Block stmts -> Block (List.concat_map ~f:trans_stmt stmts) |> swrap
   | Ast.Profile (name, stmts) ->
@@ -730,7 +733,7 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
   | Ast.Continue -> Continue |> swrap
   | Ast.Skip -> Skip |> swrap
 
-and trans_packed_assign loc trans_stmt lvals rhs assign_op =
+and trans_packed_assign count loc trans_stmt lvals rhs assign_op =
   (* TODO tuple-unpacking: could be more efficient in case where rhs is a tuple
      expr and names don't overlap *)
   let smeta =
@@ -738,7 +741,7 @@ and trans_packed_assign loc trans_stmt lvals rhs assign_op =
       { loc
       ; flow_type= {controlflow= Incomplete Next; breaks= []; continues= false}
       } in
-  let sym, reset = Common.Gensym.enter ~prefix:"unpack_" () in
+  let sym, reset = Common.Gensym.enter count ~prefix:"unpack_" in
   let rhs_type = rhs.emeta.type_ in
   let temp =
     { Stmt.pattern=
@@ -808,7 +811,7 @@ and trans_single_assignment smeta assign_lhs assign_rhs assign_op =
         op_to_funapp op [assignee; assign_rhs] assignee.emeta.type_ in
   [{pattern= Assignment (lhs, unindexed_type, rhs); meta= smeta}]
 
-let trans_fun_def ud_dists (ts : Ast.typed_statement) =
+let trans_fun_def count ud_dists (ts : Ast.typed_statement) =
   match ts.stmt with
   | Ast.FunDef {returntype; funname; arguments; body} ->
       [ Program.
@@ -817,7 +820,7 @@ let trans_fun_def ud_dists (ts : Ast.typed_statement) =
           ; fdsuffix= Fun_kind.(suffix_from_name funname.name)
           ; fdargs= List.map ~f:trans_arg arguments
           ; fdbody=
-              trans_stmt ud_dists
+              trans_stmt count ud_dists
                 {transform_action= IgnoreTransform; dadlevel= AutoDiffable}
                 body
               |> unwrap_block_or_skip
@@ -833,7 +836,7 @@ let get_block block prog =
   | TransformedParameters -> prog.transformedparametersblock
   | GeneratedQuantities -> prog.generatedquantitiesblock
 
-let trans_block ud_dists declc block prog =
+let trans_block count ud_dists declc block prog =
   let f stmt (accum1, accum2, accum3) =
     match stmt with
     | { Ast.stmt=
@@ -858,14 +861,15 @@ let trans_block ud_dists declc block prog =
                        ; out_block= block
                        ; out_trans= transform } ) in
                  let stmts =
-                   create_decl_with_assign decl_id declc (Sized type_)
+                   create_decl_with_assign count decl_id declc (Sized type_)
                      initial_value transform smeta.loc in
                  (outvar, size, stmts))
                variables in
         ( outvars @ accum1
         , List.concat sizes @ accum2
         , List.concat stmts @ accum3 )
-    | stmt -> (accum1, accum2, trans_stmt ud_dists declc stmt @ accum3) in
+    | stmt -> (accum1, accum2, trans_stmt count ud_dists declc stmt @ accum3)
+  in
   Ast.get_stmts (get_block block prog) |> List.fold_right ~f ~init:([], [], [])
 
 let stmt_contains_check stmt =
@@ -903,7 +907,9 @@ let trans_prog filename (p : Ast.typed_program) : Program.Typed.t =
         [(funname.name, type_)]
     | _ -> [] in
   let ud_dists = map grab_fundef_names_and_types functionblock in
-  let trans_stmt = trans_stmt ud_dists in
+  let count = ref 0 in
+  let trans_stmt = trans_stmt count ud_dists in
+  let trans_block = trans_block count ud_dists in
   let get_name_size (s : Ast.typed_statement) =
     match s.Ast.stmt with
     | Ast.VarDecl {decl_type= st; variables; transformation; _} ->
@@ -921,27 +927,23 @@ let trans_prog filename (p : Ast.typed_program) : Program.Typed.t =
   let declc = {transform_action= IgnoreTransform; dadlevel= DataOnly} in
   let datab = map (trans_stmt {declc with transform_action= Check}) datablock in
   let _, _, param =
-    trans_block ud_dists
+    trans_block
       {transform_action= Constrain; dadlevel= AutoDiffable}
       Parameters p in
   (* Backends will add to transform_inits and unconstrain_array as needed *)
   let transform_inits = [] in
   let unconstrain_array = [] in
   let out_param, paramsizes, param_gq =
-    trans_block ud_dists {declc with transform_action= Constrain} Parameters p
-  in
+    trans_block {declc with transform_action= Constrain} Parameters p in
   let _, _, txparam =
-    trans_block ud_dists
+    trans_block
       {transform_action= Check; dadlevel= AutoDiffable}
       TransformedParameters p in
   let out_tparam, tparamsizes, txparam_gq =
-    trans_block ud_dists
-      {declc with transform_action= Check}
-      TransformedParameters p in
+    trans_block {declc with transform_action= Check} TransformedParameters p
+  in
   let out_gq, gq_sizes, gq_stmts =
-    trans_block ud_dists
-      {declc with transform_action= Check}
-      GeneratedQuantities p in
+    trans_block {declc with transform_action= Check} GeneratedQuantities p in
   let output_vars = out_param @ out_tparam @ out_gq in
   let prepare_data =
     datab
@@ -984,7 +986,7 @@ let trans_prog filename (p : Ast.typed_program) : Program.Typed.t =
     param_gq @ txparam_decls @ tparam_early_return @ txparam_stmts
     @ txparam_checks @ gq_early_return
     @ migrate_checks_to_end_of_block gq_stmts in
-  { functions_block= map (trans_fun_def ud_dists) functionblock
+  { functions_block= map (trans_fun_def count ud_dists) functionblock
   ; input_vars
   ; prepare_data
   ; log_prob

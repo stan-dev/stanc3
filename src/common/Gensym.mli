@@ -1,16 +1,13 @@
-(** Generate fresh (never before used) symbols.
+(** Generate fresh symbols.
 
-    Uses an internal (mutable) counter per prefix, so symbols generated with one
-    prefix do not shift the numbering of symbols with another prefix. *)
-
-val generate : ?prefix:string -> unit -> string
+    There is no global counter: each pass or translation stage creates its own
+    [int ref] and passes it down, so symbols from one stage never shift the
+    numbering of another. *)
 
 val next : int ref -> prefix:string -> string
-(** Increment [counter] and return a symbol with [prefix] numbered by the new
-    value, so a pass can number symbols with a counter local to one run. *)
+(** Increment [count] and return a symbol with [prefix] numbered by the new
+    value. *)
 
-val enter : prefix:string -> unit -> string * (unit -> unit)
-(** Generate a symbol with [prefix] and return a function that restores the
-    counter for [prefix] to its value before the call. *)
-
-val reset_danger_use_cautiously : unit -> unit
+val enter : int ref -> prefix:string -> string * (unit -> unit)
+(** Generate a symbol like [next] and return a function that restores [count] to
+    its value before the call. *)
