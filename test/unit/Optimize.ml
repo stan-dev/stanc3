@@ -2,18 +2,12 @@ open Std
 open Std.Sexp_conv
 open Analysis_and_optimization.Optimize
 open Middle
-open Common
 open Analysis_and_optimization.Mir_utils
 open Analysis_and_optimization.Dataflow_types
-
-let reset_and_mir_of_string s =
-  Gensym.reset_danger_use_cautiously ();
-  Test_utils.mir_of_string s
 
 (** Compile through the stanc driver with [overrides] applied to O0, the same as
     running [stanc -f<pass> -fno-<pass> ...] on the program. *)
 let reset_and_mir_with_overrides optimization_overrides s =
-  Gensym.reset_danger_use_cautiously ();
   let debug_settings =
     {Driver.Flags.default.debug_settings with optimization_overrides} in
   Test_utils.compile_mir s {Driver.Flags.default with debug_settings}
@@ -47,17 +41,17 @@ let%expect_test "only the requested passes run" =
     {
       real unused;
       unused = promote(5, real, var);
-      real inline_add_one_return_sym2__;
+      real inline_add_one_return_sym3__;
       {
-        inline_add_one_return_sym2__ = (2.0 + promote(1, real, data));
+        inline_add_one_return_sym3__ = (2.0 + promote(1, real, data));
       }
-      target += inline_add_one_return_sym2__;
+      target += inline_add_one_return_sym3__;
     }
     |}]
 
 let%expect_test "map_rec_stmt_loc" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       model {
         print(24);
@@ -98,7 +92,7 @@ let%expect_test "map_rec_stmt_loc" =
 
 let%expect_test "map_rec_state_stmt_loc" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       model {
         print(24);
@@ -147,7 +141,7 @@ let%expect_test "map_rec_state_stmt_loc" =
 
 let%expect_test "inline functions" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       functions {
         void f(int x, matrix y) {
@@ -217,7 +211,7 @@ let%expect_test "inline functions" =
 
 let%expect_test "inline functions 2" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       functions {
         void f() {
@@ -267,7 +261,7 @@ let%expect_test "inline functions 2" =
 
 let%expect_test "list collapsing" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       functions {
         void f(int x, matrix y) {
@@ -468,7 +462,7 @@ let%expect_test "list collapsing" =
 
 let%expect_test "recursive functions" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       functions {
         int fib(int n) {
@@ -534,7 +528,7 @@ let%expect_test "recursive functions" =
 
 let%expect_test "do not try to inline extern functions" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
             functions {
               int fib(int n);
@@ -571,7 +565,7 @@ let%expect_test "do not try to inline extern functions" =
 
 let%expect_test "inline function in for loop" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       functions {
         int f(int z) {
@@ -647,7 +641,7 @@ let%expect_test "inline function in for loop" =
 
 let%expect_test "inline function in for loop 2" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       functions {
         int f(int z) {
@@ -731,7 +725,7 @@ let%expect_test "inline function in for loop 2" =
 
 let%expect_test "inline function in while loop" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       functions {
         int f(int z) {
@@ -797,7 +791,7 @@ let%expect_test "inline function in while loop" =
 
 let%expect_test "inline function in if then else" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       functions {
         int f(int z) {
@@ -859,7 +853,7 @@ let%expect_test "inline function in if then else" =
 
 let%expect_test "inline function in ternary if " =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       functions {
         int f(int z) {
@@ -944,7 +938,7 @@ let%expect_test "inline function in ternary if " =
 
 let%expect_test "inline function multiple returns " =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       functions {
         int f(int z) {
@@ -1010,7 +1004,7 @@ let%expect_test "inline function multiple returns " =
 
 let%expect_test "inline function indices " =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       functions {
         int f(int z) {
@@ -1068,7 +1062,7 @@ let%expect_test "inline function indices " =
 
 let%expect_test "inline function and " =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       functions {
         int f(int z) {
@@ -1127,7 +1121,7 @@ let%expect_test "inline function and " =
 
 let%expect_test "inline function or " =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       functions {
         int f(int z) {
@@ -1185,7 +1179,7 @@ let%expect_test "inline function or " =
 
 let%expect_test "unroll nested loop" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|      model {
                 for (i in 1:2)
                   for (j in 3:4)
@@ -1226,7 +1220,7 @@ let%expect_test "unroll nested loop" =
 
 let%expect_test "unroll nested loop 2" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|      model {
                 for (i in 1:2)
                   for (j in i:4)
@@ -1423,7 +1417,7 @@ let%expect_test "unroll nested loop 2" =
 
 let%expect_test "unroll nested loop 3" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|      model {
                 for (i in 1:2)
                   for (j in i:4)
@@ -1518,7 +1512,7 @@ let%expect_test "unroll nested loop 3" =
 
 let%expect_test "unroll nested loop with break" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|      model {
                 for (i in 1:2)
                   for (j in 3:4) {
@@ -1557,7 +1551,7 @@ let%expect_test "unroll nested loop with break" =
 
 let%expect_test "constant propagation" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       transformed data {
         int i;
@@ -1599,7 +1593,7 @@ let%expect_test "constant propagation" =
 
 let%expect_test "constant propagation, local scope" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       transformed data {
         int i;
@@ -1647,7 +1641,7 @@ let%expect_test "constant propagation, local scope" =
 
 let%expect_test "constant propagation, model block local scope" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       model {
         int i;
@@ -1696,7 +1690,7 @@ let%expect_test "constant propagation, model block local scope" =
 
 let%expect_test "expression propagation" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       transformed data {
         int i;
@@ -1736,7 +1730,7 @@ let%expect_test "expression propagation" =
 
 let%expect_test "copy propagation" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       model {
         int i;
@@ -1775,7 +1769,7 @@ let%expect_test "copy propagation" =
 
 let%expect_test "dead code elimination" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       transformed data {
         array[2] int i;
@@ -1819,7 +1813,7 @@ let%expect_test "dead code elimination" =
 
 let%expect_test "dead code elimination decl" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       model {
         int i;
@@ -1855,7 +1849,7 @@ let%expect_test "dead code elimination decl" =
 
 let%expect_test "dead code elimination, for loop" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       model {
         int i;
@@ -1883,7 +1877,7 @@ let%expect_test "dead code elimination, for loop" =
 
 let%expect_test "dead code elimination, while loop" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       model {
         int i;
@@ -1916,7 +1910,7 @@ let%expect_test "dead code elimination, while loop" =
 
 let%expect_test "dead code elimination, if then" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       model {
         int i;
@@ -1964,7 +1958,7 @@ let%expect_test "dead code elimination, if then" =
 
 let%expect_test "dead code elimination, nested" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       model {
         int i;
@@ -1996,7 +1990,7 @@ let%expect_test "dead code elimination, real zero if (direct MIR)" =
   (* Construct MIR directly because Stan's type checker rejects real in
      if-conditions, but optimization passes can produce Lit(Real, "0.") there.
      Expr.Helpers.float 0.0 produces Lit(Real, "0.") via Float.to_string. *)
-  let mir = reset_and_mir_of_string {|
+  let mir = Test_utils.mir_of_string {|
       model {}
       |} in
   let real_zero = Expr.Helpers.float 0.0 in
@@ -2030,7 +2024,7 @@ let%expect_test "dead code elimination, real zero if (direct MIR)" =
       } |}]
 
 let%expect_test "dead code elimination, real zero while (direct MIR)" =
-  let mir = reset_and_mir_of_string {|
+  let mir = Test_utils.mir_of_string {|
       model {}
       |} in
   let real_zero = Expr.Helpers.float 0.0 in
@@ -2055,7 +2049,7 @@ let%expect_test "dead code elimination, real zero while (direct MIR)" =
 
 let%expect_test "dead code elimination, real zero if no else (direct MIR)" =
   (* Test Lit(Real, "0.") in if with no else branch *)
-  let mir = reset_and_mir_of_string {|
+  let mir = Test_utils.mir_of_string {|
       model {}
       |} in
   let real_zero = Expr.Helpers.float 0.0 in
@@ -2080,7 +2074,7 @@ let%expect_test "dead code elimination, real zero if no else (direct MIR)" =
 
 let%expect_test "partial evaluation" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       model {
         if (1 > 2) {
@@ -2115,7 +2109,7 @@ let%expect_test "partial evaluation" =
 
 let%expect_test "partial evaluate reject" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       model {
         int x = 5 %/% 0;
@@ -2140,7 +2134,7 @@ let%expect_test "partial evaluate reject" =
 
 let%expect_test "try partially evaluate" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       model {
         real x;
@@ -2175,7 +2169,7 @@ let%expect_test "try partially evaluate" =
 
 let%expect_test "partially evaluate with equality check" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       model {
         vector[2] x;
@@ -2206,7 +2200,7 @@ let%expect_test "partially evaluate with equality check" =
 
 let%expect_test "partially evaluate functions" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
 parameters {
     matrix[3, 2] x_matrix;
@@ -2563,7 +2557,7 @@ model {
 
 let%expect_test "lazy code motion" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       model {
         print({3.0});
@@ -2595,9 +2589,9 @@ let%expect_test "lazy code motion" =
       if(!(emit_generated_quantities__)) return;
     } |}]
 
-let%expect_test "pass symbols do not depend on global gensym state" =
+let%expect_test "each pass run numbers its own symbols" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       functions {
         real g(real z) {
@@ -2611,8 +2605,6 @@ let%expect_test "pass symbols do not depend on global gensym state" =
       }
       |}
   in
-  let _ = Gensym.generate ~prefix:"inline_g_w_" () in
-  let _ = Gensym.generate ~prefix:"lcm_" () in
   let mir = function_inlining mir in
   let mir = lazy_code_motion mir in
   Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
@@ -2678,7 +2670,7 @@ let%expect_test "pass symbols do not depend on global gensym state" =
 
 let%expect_test "lazy code motion, 2" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       model {
         for (i in 1:2)
@@ -2710,7 +2702,7 @@ let%expect_test "lazy code motion, 2" =
 
 let%expect_test "lazy code motion, 3" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       model {
         print(3);
@@ -2745,7 +2737,7 @@ let%expect_test "lazy code motion, 3" =
 
 let%expect_test "lazy code motion, 4" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       model {
         int b;
@@ -2810,7 +2802,7 @@ let%expect_test "lazy code motion, 4" =
 
 let%expect_test "lazy code motion, 5" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       model {
         int b;
@@ -2877,7 +2869,7 @@ let%expect_test "lazy code motion, 5" =
 
 let%expect_test "lazy code motion, 6" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       model {
         int x;
@@ -2914,7 +2906,7 @@ let%expect_test "lazy code motion, 6" =
 
 let%expect_test "lazy code motion, 7" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       model {
         int a;
@@ -2989,7 +2981,7 @@ let%expect_test "lazy code motion, 7" =
 
 let%expect_test "lazy code motion, 8, _lp functions not optimized" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       functions {
         int foo_lp(int x) { target += 1; return 24; }
@@ -3045,7 +3037,7 @@ let%expect_test "lazy code motion, 8, _lp functions not optimized" =
 
 let%expect_test "lazy code motion, 9" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       model {
         int x;
@@ -3076,7 +3068,7 @@ let%expect_test "lazy code motion, 9" =
 
 let%expect_test "lazy code motion, 10" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       model {
         int x;
@@ -3113,7 +3105,7 @@ let%expect_test "lazy code motion, 10" =
 
 let%expect_test "lazy code motion, 11" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       model {
         {
@@ -3156,7 +3148,7 @@ let%expect_test "lazy code motion, 11" =
 
 let%expect_test "lazy code motion, 12" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       model {
         int x;
@@ -3193,7 +3185,7 @@ let%expect_test "lazy code motion, 12" =
 
 let%expect_test "lazy code motion, 13" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       model {
         real temp;
@@ -3262,7 +3254,7 @@ let%expect_test "lazy code motion, 13" =
 
 let%expect_test "lazy code motion name reuse" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       model {
         {
@@ -3330,7 +3322,7 @@ let%expect_test
     "cool example: expression propagation + partial evaluation + lazy code \
      motion + dead code elimination" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       model {
         real x;
@@ -3381,7 +3373,7 @@ let%expect_test
       } |}]
 
 let%expect_test "block fixing" =
-  let mir = reset_and_mir_of_string {|
+  let mir = Test_utils.mir_of_string {|
       model {
       }
       |} in
@@ -3447,7 +3439,7 @@ let%expect_test "block fixing" =
 
 let%expect_test "one-step loop unrolling" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       transformed data {
         int x;
@@ -3500,7 +3492,7 @@ let%expect_test "one-step loop unrolling" =
 
 let%expect_test "adlevel_optimization" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       parameters {
         real w;
@@ -3569,7 +3561,7 @@ let%expect_test "adlevel_optimization" =
 
 let%expect_test "adlevel_optimization expressions" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       parameters {
         real w;
@@ -3704,7 +3696,7 @@ let%expect_test "adlevel_optimization expressions" =
 
 let%expect_test "adlevel_optimization 2" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       parameters {
         real w;
@@ -3793,7 +3785,7 @@ let%expect_test "Mapping acts recursively" =
 (* ---- loop vectorization ---- *)
 
 let print_vectorized s =
-  let mir = vectorize_loops (reset_and_mir_of_string s) |> partial_evaluation in
+  let mir = vectorize_loops (Test_utils.mir_of_string s) |> partial_evaluation in
   List.iter mir.functions_block ~f:(fun fd ->
       Fmt.str "@[<v>%a@]" (Program.pp_fun_def Stmt.Located.pp) fd
       |> print_endline);

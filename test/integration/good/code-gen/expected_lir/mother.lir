@@ -17966,11 +17966,11 @@
                   (Literal "\"assigning variable temp_sym1__\""))))
                (Expression (Assign (Var current_statement__) (Literal 355)))
                (For
-                ((static false) (constexpr false) (type_ Int) (name loop_sym1__)
+                ((static false) (constexpr false) (type_ Int) (name loop_sym3__)
                  (init (Assignment (Literal 1))))
-                (BinOp (Var loop_sym1__) LEq
+                (BinOp (Var loop_sym3__) LEq
                  (FunCall stan::math::size () ((Var temp_sym1__))))
-                (Increment (Var loop_sym1__))
+                (Increment (Var loop_sym3__))
                 (Block
                  ((VariableDefn
                    ((static false) (constexpr false) (type_ Int) (name i)
@@ -17979,7 +17979,7 @@
                   (Expression
                    (Assign (Var i)
                     (Subscript (Var temp_sym1__)
-                     (Parens (BinOp (Var loop_sym1__) Subtract (Literal 1))))))
+                     (Parens (BinOp (Var loop_sym3__) Subtract (Literal 1))))))
                   (Expression (Assign (Var current_statement__) (Literal 356)))
                   (Expression (Assign (Var z) (FunCall static_cast (Double) ((Var i))))))))))))
            (Expression (Assign (Var current_statement__) (Literal 358)))

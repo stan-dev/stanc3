@@ -443,9 +443,9 @@ let gen_get_dims {Program.output_vars; _} =
     (make_fun_defn ~inline:true ~return_type:Void ~name:"get_dims" ~args ~body
        ~cv_qualifiers:[Const] ())
 
-let rec gen_indexing_loop ?(index_ids = []) iteratee dims gen_body =
+let rec gen_indexing_loop ?(index_ids = []) count iteratee dims gen_body =
   let iter d gen_body =
-    let loopvar, gensym_exit = Common.Gensym.enter ~prefix:"names_loop_" () in
+    let loopvar, gensym_exit = Common.Gensym.enter count ~prefix:"names_loop_" in
     let forloop =
       Stmts.fori loopvar
         (lower_expr Expr.Helpers.loop_bottom)
@@ -458,7 +458,7 @@ let rec gen_indexing_loop ?(index_ids = []) iteratee dims gen_body =
   | [] -> gen_body iteratee index_ids
   | dim :: dims ->
       [ iter dim (fun i idcs ->
-            gen_indexing_loop ~index_ids:idcs i dims gen_body) ]
+            gen_indexing_loop ~index_ids:idcs count i dims gen_body) ]
 
 let emplace_name_stmt name idcs =
   let null_string = Constructor (Types.string, []) in
@@ -475,7 +475,7 @@ let emplace_name_stmt name idcs =
                                acc + sep typ + to_string idx)
                              idcs ] ))
 
-let rec gen_param_names ?(outer_idcs = []) (decl_id, st) =
+let rec gen_param_names ?(outer_idcs = []) count (decl_id, st) =
   let gen_name name idcs =
     let idcs = outer_idcs @ idcs in
     let idcs_vars = List.map ~f:(fun (t, i) -> (t, Exprs.to_var i)) idcs in
@@ -486,12 +486,13 @@ let rec gen_param_names ?(outer_idcs = []) (decl_id, st) =
             ~f:(fun i typ -> ((`Tuple, Int.to_string (i + 1)), (name, typ)))
             subtypes in
         List.concat_map
-          ~f:(fun (idx, sub) -> gen_param_names ~outer_idcs:(idcs @ [idx]) sub)
+          ~f:(fun (idx, sub) ->
+            gen_param_names ~outer_idcs:(idcs @ [idx]) count sub)
           idxes_subtypes
     (* same name, different idcs going forward. would also cover the above case
        but generate worse code? *)
     | SizedType.SArray _ when SizedType.contains_tuple st ->
-        gen_param_names ~outer_idcs:idcs
+        gen_param_names ~outer_idcs:idcs count
           (name, fst (SizedType.get_array_dims st))
     | _ when SizedType.is_complex_type st ->
         [ emplace_name_stmt name
@@ -502,13 +503,15 @@ let rec gen_param_names ?(outer_idcs = []) (decl_id, st) =
         let name = Mangle.remove_prefix name in
         [emplace_name_stmt name idcs_vars] in
   let dims = lower_exprs (List.rev (SizedType.get_dims st)) in
-  gen_indexing_loop decl_id dims gen_name
+  gen_indexing_loop count decl_id dims gen_name
 
 let gen_param_names_fn name (paramvars, tparamvars, gqvars) =
   let args =
     [ (Ref (Types.std_vector Types.string), "param_names__")
     ; (Types.bool, "emit_transformed_parameters__ = true")
     ; (Types.bool, "emit_generated_quantities__ = true") ] in
+  let count = ref 0 in
+  let gen_param_names = gen_param_names count in
   let body =
     List.concat_map ~f:gen_param_names paramvars
     @ [ IfElse
@@ -924,7 +927,7 @@ module Testing = struct
         #endif |}]
 
   let%expect_test "complex names" =
-    gen_param_names
+    gen_param_names (ref 0)
       ("foo", SizedType.SArray (SComplex, Middle.Expr.Helpers.variable "N"))
     |> str "@[<v>%a" (list ~sep:cut Cpp.Printing.pp_stmt)
     |> print_endline;
@@ -939,7 +942,7 @@ module Testing = struct
       |}]
 
   let%expect_test "tuple names" =
-    gen_param_names
+    gen_param_names (ref 0)
       ( "tuple"
       , SizedType.(
           STuple [SInt; SArray (SReal, Middle.Expr.Helpers.variable "nested")])
@@ -957,7 +960,7 @@ module Testing = struct
       |}]
 
   let%expect_test "array of tuple names" =
-    gen_param_names
+    gen_param_names (ref 0)
       ( "arr_tuple"
       , SizedType.(
           SArray

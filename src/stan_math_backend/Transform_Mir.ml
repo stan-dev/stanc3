@@ -244,7 +244,7 @@ let plain_deserializer_read loc out_constrained_st =
     Helpers.(
       internal_funapp FnReadDeserializer dims Typed.Meta.{emeta with type_= ut}))
 
-let param_deserializer_read
+let param_deserializer_read count
     ( decl_id_lval
     , smeta
     , Program.{out_constrained_st= cst; out_block; out_trans; _} ) =
@@ -267,7 +267,7 @@ let param_deserializer_read
       match cst with
       | SizedType.SArray _ when SizedType.contains_tuple cst ->
           let tupl, array_dims = SizedType.get_array_dims cst in
-          ( [ Stmt.Helpers.mk_nested_for (List.rev array_dims)
+          ( [ Stmt.Helpers.mk_nested_for count (List.rev array_dims)
                 (fun loopvars ->
                   Stmt.
                     { meta= smeta
@@ -412,7 +412,7 @@ let add_reads vars mkread stmts =
     | _ -> [stmt] in
   List.concat_map ~f:add_read_to_decl stmts
 
-let param_serializer_write ?(unconstrain = false)
+let param_serializer_write ?(unconstrain = false) count
     (decl_id, Program.{out_constrained_st; out_trans; _}) =
   let rec write (var, st, trans) =
     match (unconstrain, st, trans) with
@@ -427,7 +427,7 @@ let param_serializer_write ?(unconstrain = false)
         List.concat_map ~f:write tuple_elements
     | true, SArray _, TupleTransformation _ ->
         let tupl, array_dims = SizedType.get_array_dims st in
-        [ Stmt.Helpers.mk_nested_for (List.rev array_dims)
+        [ Stmt.Helpers.mk_nested_for count (List.rev array_dims)
             (fun loopvars ->
               Stmt.
                 { meta= Location_span.empty
@@ -463,7 +463,7 @@ let param_serializer_write ?(unconstrain = false)
     vectors, and arrays with one dimension we can write these directly, but for
     arrays of arrays/vectors/matrices we need to write them in "column major
     order" *)
-let param_unconstrained_serializer_write
+let param_unconstrained_serializer_write count
     (decl_id, smeta, Program.{out_constrained_st; _}) =
   let rec write (var, st) =
     match st with
@@ -475,7 +475,7 @@ let param_unconstrained_serializer_write
         List.concat_map ~f:write elements
     | _ when SizedType.is_recursive_container st ->
         let nonarray_st, array_dims = SizedType.get_scalar_and_dims st in
-        [ Stmt.Helpers.mk_nested_for (List.rev array_dims)
+        [ Stmt.Helpers.mk_nested_for count (List.rev array_dims)
             (fun loopvars ->
               Stmt.
                 { meta= Location_span.empty
@@ -504,7 +504,7 @@ let param_unconstrained_serializer_write
 
 (** Reads in parameters from a var_context, the same way as is done in the
     constructor, and then writes out the unconstrained versions *)
-let var_context_unconstrain_transform (decl_id, smeta, outvar) =
+let var_context_unconstrain_transform count (decl_id, smeta, outvar) =
   let st = outvar.Program.out_constrained_st in
   Stmt.
     { pattern=
@@ -517,11 +517,11 @@ let var_context_unconstrain_transform (decl_id, smeta, outvar) =
           ; initialize= Default }
     ; meta= smeta }
   :: var_context_read_internal (Stmt.Helpers.lvariable decl_id, smeta, st)
-  @ param_serializer_write ~unconstrain:true (decl_id, outvar)
+  @ param_serializer_write ~unconstrain:true count (decl_id, outvar)
 
 (** Reads in parameters from a serializer and then writes out the unconstrained
     versions *)
-let array_unconstrain_transform (decl_id, smeta, outvar) =
+let array_unconstrain_transform count (decl_id, smeta, outvar) =
   let decl =
     Stmt.
       { pattern=
@@ -544,7 +544,7 @@ let array_unconstrain_transform (decl_id, smeta, outvar) =
         List.concat_map ~f:read elements
     | _ when SizedType.contains_tuple st ->
         let tupl, array_dims = SizedType.get_scalar_and_dims st in
-        [ Stmt.Helpers.mk_nested_for (List.rev array_dims)
+        [ Stmt.Helpers.mk_nested_for count (List.rev array_dims)
             (fun loopvars ->
               Stmt.
                 { meta= Location_span.empty
@@ -562,7 +562,7 @@ let array_unconstrain_transform (decl_id, smeta, outvar) =
     | _ when SizedType.is_recursive_container st ->
         (* non-tuple containing array *)
         let nonarray_st, array_dims = SizedType.get_scalar_and_dims st in
-        [ Stmt.Helpers.mk_nested_for (List.rev array_dims)
+        [ Stmt.Helpers.mk_nested_for count (List.rev array_dims)
             (fun loopvars ->
               let assign_lval =
                 let lbase, idxs = lval in
@@ -589,7 +589,7 @@ let array_unconstrain_transform (decl_id, smeta, outvar) =
                   , plain_deserializer_read smeta st ) } ] in
   decl
   :: read (Stmt.Helpers.lvariable decl_id, outvar.Program.out_constrained_st)
-  @ param_serializer_write ~unconstrain:true (decl_id, outvar)
+  @ param_serializer_write ~unconstrain:true count (decl_id, outvar)
 
 let rec contains_var_expr is_vident accum Expr.{pattern; _} =
   accum
@@ -648,6 +648,7 @@ let map_prog_stmt_lists f (p : ('a, 'b, 'c) Program.t) =
   ; unconstrain_array= f p.unconstrain_array }
 
 let trans_prog ?(use_opencl = false) (p : Program.Typed.t) =
+  let count = ref 0 in
   (* name mangling of c++ keywords *)
   let rec map_stmt {Stmt.pattern; meta} =
     { Stmt.pattern= Stmt.Pattern.map translate_funapps_and_kwrds map_stmt pattern
@@ -693,7 +694,7 @@ let trans_prog ?(use_opencl = false) (p : Program.Typed.t) =
     then init_pos @ stmts
     else stmts in
   let param_writes, tparam_writes, gq_writes =
-    List.map p.output_vars ~f:param_unconstrained_serializer_write
+    List.map p.output_vars ~f:(param_unconstrained_serializer_write count)
     |> List.map2 p.output_vars ~f:(fun (_, meta, outvar) writes ->
         (outvar.Program.out_block, Stmt.{pattern= SList writes; meta}))
     |> List.partition3_map ~f:(fun (b, x) ->
@@ -750,14 +751,14 @@ let trans_prog ?(use_opencl = false) (p : Program.Typed.t) =
           ; meta= Location_span.empty } ] in
   let generate_quantities =
     (p.generate_quantities
-    |> add_reads p.output_vars param_deserializer_read
+    |> add_reads p.output_vars (param_deserializer_read count)
     |> translate_to_open_cl
     |> insert_before tparam_start param_writes
     |> insert_before gq_start tparam_writes_cond)
     @ gq_writes in
   let log_prob =
     p.log_prob
-    |> add_reads p.output_vars param_deserializer_read
+    |> add_reads p.output_vars (param_deserializer_read count)
     |> translate_to_open_cl in
   let opencl_vars =
     String.Set.union_list
@@ -815,9 +816,10 @@ let trans_prog ?(use_opencl = false) (p : Program.Typed.t) =
         @ to_matrix_cl_stmts
         |> maybe_add_pos
     ; transform_inits=
-        List.concat_map ~f:var_context_unconstrain_transform params
+        List.concat_map ~f:(var_context_unconstrain_transform count) params
         |> maybe_add_pos
-    ; unconstrain_array= List.concat_map ~f:array_unconstrain_transform params
+    ; unconstrain_array=
+        List.concat_map ~f:(array_unconstrain_transform count) params
     ; generate_quantities } in
   Program.(
     p

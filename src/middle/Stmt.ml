@@ -163,8 +163,9 @@ module Numbered = struct
 end
 
 module Helpers = struct
-  let temp_vars exprs : Located.t list * Expr.Typed.t list * (unit -> unit) =
-    let sym, reset = Gensym.enter ~prefix:"temp_" () in
+  let temp_vars count exprs :
+      Located.t list * Expr.Typed.t list * (unit -> unit) =
+    let sym, reset = Gensym.enter count ~prefix:"temp_" in
     let rec loop es sym inits vars =
       match es with
       | [] -> (inits, vars)
@@ -183,17 +184,17 @@ module Helpers = struct
               pattern= Assignment ((LVariable sym, []), Expr.Typed.type_of e, e)
             } in
           loop es
-            (Gensym.generate ~prefix:"temp_" ())
+            (Gensym.next count ~prefix:"temp_")
             (decl :: assign :: inits)
             ({e with pattern= Var sym} :: vars) in
     let setups, exprs = loop (List.rev exprs) sym [] [] in
     (setups, exprs, reset)
 
-  let ensure_var bodyfn (expr : Expr.Typed.t) meta =
+  let ensure_var count bodyfn (expr : Expr.Typed.t) meta =
     match expr with
     | {pattern= Var _; _} -> bodyfn expr meta
     | _ ->
-        let preamble, temp, reset = temp_vars [expr] in
+        let preamble, temp, reset = temp_vars count [expr] in
         let body = bodyfn (List.hd_exn temp) meta in
         reset ();
         {body with pattern= Block (preamble @ [body])}
@@ -203,8 +204,8 @@ module Helpers = struct
 
   (** [mk_for] returns a MIR For statement from 0 to [upper] that calls the
       [bodyfn] with the loop variable inside the loop. *)
-  let mk_for upper bodyfn meta =
-    let loopvar, reset = Gensym.enter ~prefix:"loop_" () in
+  let mk_for count upper bodyfn meta =
+    let loopvar, reset = Gensym.enter count ~prefix:"loop_" in
     let loopvar_expr =
       Expr.
         { meta= Expr.Typed.Meta.create ~type_:UInt ~loc:meta ~adlevel:DataOnly ()
@@ -218,26 +219,26 @@ module Helpers = struct
   (** [mk_nested_for] returns nested MIR For statements with ranges from 0 to
       each element of [uppers], and calls the [bodyfn] in the innermost loop
       with the list of loop variables. *)
-  let rec mk_nested_for uppers bodyfn meta =
+  let rec mk_nested_for count uppers bodyfn meta =
     match uppers with
     | [] -> bodyfn []
     | upper :: uppers' ->
-        mk_for upper
+        mk_for count upper
           (fun loopvar ->
-            mk_nested_for uppers'
+            mk_nested_for count uppers'
               (fun loopvars -> bodyfn (loopvar :: loopvars))
               Location_span.empty)
           meta
 
   (** [mk_for_iteratee] returns a MIR For statement that iterates over the given
       expression [iteratee]. *)
-  let mk_for_iteratee upper iteratee_bodyfn iteratee meta =
+  let mk_for_iteratee count upper iteratee_bodyfn iteratee meta =
     let bodyfn loopvar =
       iteratee_bodyfn
         (Expr.Helpers.add_int_index iteratee (Index.Single loopvar)) in
-    mk_for upper bodyfn meta
+    mk_for count upper bodyfn meta
 
-  let rec for_each bodyfn iteratee smeta =
+  let rec for_each count bodyfn iteratee smeta =
     let len (e : Expr.Typed.t) =
       let emeta = e.meta in
       let emeta' = {emeta with Expr.Typed.Meta.type_= UInt} in
@@ -245,7 +246,7 @@ module Helpers = struct
     match Expr.Typed.type_of iteratee with
     | UInt | UReal | UComplex -> bodyfn iteratee
     | UVector | URowVector | UComplexVector | UComplexRowVector ->
-        mk_for_iteratee (len iteratee) bodyfn iteratee smeta
+        mk_for_iteratee count (len iteratee) bodyfn iteratee smeta
     | UMatrix | UComplexMatrix ->
         let emeta = iteratee.meta in
         let emeta' = {emeta with Expr.Typed.Meta.type_= UInt} in
@@ -253,8 +254,10 @@ module Helpers = struct
           Expr.
             { meta= emeta'
             ; pattern= FunApp (StanLib ("rows", FnPlain), [iteratee]) } in
-        mk_for_iteratee rows (fun e -> for_each bodyfn e smeta) iteratee smeta
-    | UArray _ -> mk_for_iteratee (len iteratee) bodyfn iteratee smeta
+        mk_for_iteratee count rows
+          (fun e -> for_each count bodyfn e smeta)
+          iteratee smeta
+    | UArray _ -> mk_for_iteratee count (len iteratee) bodyfn iteratee smeta
     | UMathLibraryFunction | UFun _ | UTuple _ ->
         ICE.(internal_errorf "Can't iterate over %t" [Expr.Typed.pp $ iteratee])
         [@coverage off]

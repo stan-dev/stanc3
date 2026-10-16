@@ -4392,7 +4392,7 @@
                (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly))))))
             (meta <opaque>))
            ((pattern
-             (For (loopvar loop_sym1__)
+             (For (loopvar loop_sym3__)
               (lower
                ((pattern (Lit Int 1))
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -4419,7 +4419,7 @@
                               (meta
                                ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly))))
                              ((Single
-                               ((pattern (Var loop_sym1__))
+                               ((pattern (Var loop_sym3__))
                                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
                            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
                         (meta <opaque>))
