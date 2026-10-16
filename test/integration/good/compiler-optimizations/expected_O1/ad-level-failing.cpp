@@ -560,9 +560,9 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
       stan::math::check_greater_or_equal(function__, "y", y, 0);
       if (emit_transformed_parameters__) {
         current_statement__ = 5;
-        for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= N_t; ++sym2__) {
-            out__.write(y[(sym2__ - 1)][(sym1__ - 1)]);
+        for (int loop_sym1__ = 1; loop_sym1__ <= 4; ++loop_sym1__) {
+          for (int loop_sym2__ = 1; loop_sym2__ <= N_t; ++loop_sym2__) {
+            out__.write(y[(loop_sym2__ - 1)][(loop_sym1__ - 1)]);
           }
         }
       }
@@ -691,10 +691,13 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
     param_names__.emplace_back(std::string() + "xi");
     param_names__.emplace_back(std::string() + "delta");
     if (emit_transformed_parameters__) {
-      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N_t; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           4; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             N_t; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "y" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
     }
@@ -709,10 +712,13 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
     param_names__.emplace_back(std::string() + "xi");
     param_names__.emplace_back(std::string() + "delta");
     if (emit_transformed_parameters__) {
-      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N_t; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           4; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             N_t; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "y" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
     }

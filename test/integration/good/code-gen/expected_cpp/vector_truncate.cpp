@@ -384,14 +384,14 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
             lp_accum__.add(stan::math::negative_infinity());
           } else {
             current_statement__ = 38;
-            for (int sym2__ = 1; sym2__ <=
-                 stan::math::size(vector_mu); ++sym2__) {
+            for (int loop_sym1__ = 1; loop_sym1__ <=
+                 stan::math::size(vector_mu); ++loop_sym1__) {
               current_statement__ = 38;
               lp_accum__.add(-(stan::math::log_diff_exp(
-                                 stan::math::normal_lcdf(U, vector_mu[(sym2__
-                                   - 1)], sigma),
-                                 stan::math::normal_lcdf(L, vector_mu[(sym2__
-                                   - 1)], sigma))));
+                                 stan::math::normal_lcdf(U,
+                                   vector_mu[(loop_sym1__ - 1)], sigma),
+                                 stan::math::normal_lcdf(L,
+                                   vector_mu[(loop_sym1__ - 1)], sigma))));
             }
           }
         }
@@ -501,14 +501,14 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
             lp_accum__.add(stan::math::negative_infinity());
           } else {
             current_statement__ = 58;
-            for (int sym2__ = 1; sym2__ <=
-                 stan::math::size(vector_sigma); ++sym2__) {
+            for (int loop_sym1__ = 1; loop_sym1__ <=
+                 stan::math::size(vector_sigma); ++loop_sym1__) {
               current_statement__ = 58;
               lp_accum__.add(-(stan::math::log_diff_exp(
                                  stan::math::normal_lcdf(U, mu,
-                                   vector_sigma[(sym2__ - 1)]),
+                                   vector_sigma[(loop_sym1__ - 1)]),
                                  stan::math::normal_lcdf(L, mu,
-                                   vector_sigma[(sym2__ - 1)]))));
+                                   vector_sigma[(loop_sym1__ - 1)]))));
             }
           }
         }
@@ -631,24 +631,27 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
             current_statement__ = 80;
             lp_accum__.add(stan::math::negative_infinity());
           } else {
-            Eigen::Matrix<local_scalar_t__,-1,1> sym2__;
+            Eigen::Matrix<local_scalar_t__,-1,1> temp_sym2__;
             current_statement__ = 78;
-            stan::model::assign(sym2__,
+            stan::model::assign(temp_sym2__,
               stan::math::multiply(vector_mu, static_cast<double>(4)),
-              "assigning variable sym2__");
-            Eigen::Matrix<local_scalar_t__,1,-1> sym1__;
+              "assigning variable temp_sym2__");
+            Eigen::Matrix<local_scalar_t__,1,-1> temp_sym1__;
             current_statement__ = 79;
-            stan::model::assign(sym1__,
+            stan::model::assign(temp_sym1__,
               stan::math::add(vector_sigma, static_cast<double>(1)),
-              "assigning variable sym1__");
+              "assigning variable temp_sym1__");
             current_statement__ = 80;
-            for (int sym4__ = 1; sym4__ <= stan::math::size(sym2__); ++sym4__) {
+            for (int loop_sym1__ = 1; loop_sym1__ <=
+                 stan::math::size(temp_sym2__); ++loop_sym1__) {
               current_statement__ = 80;
               lp_accum__.add(-(stan::math::log_diff_exp(
-                                 stan::math::normal_lcdf(U, sym2__[(sym4__ -
-                                   1)], sym1__[(sym4__ - 1)]),
-                                 stan::math::normal_lcdf(L, sym2__[(sym4__ -
-                                   1)], sym1__[(sym4__ - 1)]))));
+                                 stan::math::normal_lcdf(U,
+                                   temp_sym2__[(loop_sym1__ - 1)],
+                                   temp_sym1__[(loop_sym1__ - 1)]),
+                                 stan::math::normal_lcdf(L,
+                                   temp_sym2__[(loop_sym1__ - 1)],
+                                   temp_sym1__[(loop_sym1__ - 1)]))));
             }
           }
         }
@@ -906,14 +909,14 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
             lp_accum__.add(stan::math::negative_infinity());
           } else {
             current_statement__ = 38;
-            for (int sym2__ = 1; sym2__ <=
-                 stan::math::size(vector_mu); ++sym2__) {
+            for (int loop_sym1__ = 1; loop_sym1__ <=
+                 stan::math::size(vector_mu); ++loop_sym1__) {
               current_statement__ = 38;
               lp_accum__.add(-(stan::math::log_diff_exp(
-                                 stan::math::normal_lcdf(U, vector_mu[(sym2__
-                                   - 1)], sigma),
-                                 stan::math::normal_lcdf(L, vector_mu[(sym2__
-                                   - 1)], sigma))));
+                                 stan::math::normal_lcdf(U,
+                                   vector_mu[(loop_sym1__ - 1)], sigma),
+                                 stan::math::normal_lcdf(L,
+                                   vector_mu[(loop_sym1__ - 1)], sigma))));
             }
           }
         }
@@ -1023,14 +1026,14 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
             lp_accum__.add(stan::math::negative_infinity());
           } else {
             current_statement__ = 58;
-            for (int sym2__ = 1; sym2__ <=
-                 stan::math::size(vector_sigma); ++sym2__) {
+            for (int loop_sym1__ = 1; loop_sym1__ <=
+                 stan::math::size(vector_sigma); ++loop_sym1__) {
               current_statement__ = 58;
               lp_accum__.add(-(stan::math::log_diff_exp(
                                  stan::math::normal_lcdf(U, mu,
-                                   vector_sigma[(sym2__ - 1)]),
+                                   vector_sigma[(loop_sym1__ - 1)]),
                                  stan::math::normal_lcdf(L, mu,
-                                   vector_sigma[(sym2__ - 1)]))));
+                                   vector_sigma[(loop_sym1__ - 1)]))));
             }
           }
         }
@@ -1153,24 +1156,27 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
             current_statement__ = 80;
             lp_accum__.add(stan::math::negative_infinity());
           } else {
-            Eigen::Matrix<local_scalar_t__,-1,1> sym2__;
+            Eigen::Matrix<local_scalar_t__,-1,1> temp_sym2__;
             current_statement__ = 78;
-            stan::model::assign(sym2__,
+            stan::model::assign(temp_sym2__,
               stan::math::multiply(vector_mu, static_cast<double>(4)),
-              "assigning variable sym2__");
-            Eigen::Matrix<local_scalar_t__,1,-1> sym1__;
+              "assigning variable temp_sym2__");
+            Eigen::Matrix<local_scalar_t__,1,-1> temp_sym1__;
             current_statement__ = 79;
-            stan::model::assign(sym1__,
+            stan::model::assign(temp_sym1__,
               stan::math::add(vector_sigma, static_cast<double>(1)),
-              "assigning variable sym1__");
+              "assigning variable temp_sym1__");
             current_statement__ = 80;
-            for (int sym4__ = 1; sym4__ <= stan::math::size(sym2__); ++sym4__) {
+            for (int loop_sym1__ = 1; loop_sym1__ <=
+                 stan::math::size(temp_sym2__); ++loop_sym1__) {
               current_statement__ = 80;
               lp_accum__.add(-(stan::math::log_diff_exp(
-                                 stan::math::normal_lcdf(U, sym2__[(sym4__ -
-                                   1)], sym1__[(sym4__ - 1)]),
-                                 stan::math::normal_lcdf(L, sym2__[(sym4__ -
-                                   1)], sym1__[(sym4__ - 1)]))));
+                                 stan::math::normal_lcdf(U,
+                                   temp_sym2__[(loop_sym1__ - 1)],
+                                   temp_sym1__[(loop_sym1__ - 1)]),
+                                 stan::math::normal_lcdf(L,
+                                   temp_sym2__[(loop_sym1__ - 1)],
+                                   temp_sym1__[(loop_sym1__ - 1)]))));
             }
           }
         }
@@ -1400,13 +1406,15 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
                           emit_generated_quantities__ = true) const final {
     param_names__.emplace_back(std::string() + "mu");
     param_names__.emplace_back(std::string() + "sigma");
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         N; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "vector_mu" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         N; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "vector_sigma" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
@@ -1417,13 +1425,15 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
                             emit_generated_quantities__ = true) const final {
     param_names__.emplace_back(std::string() + "mu");
     param_names__.emplace_back(std::string() + "sigma");
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         N; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "vector_mu" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         N; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "vector_sigma" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}

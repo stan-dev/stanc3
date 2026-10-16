@@ -103,14 +103,14 @@
                (TupleAD
                 (AutoDiffable (TupleAD (AutoDiffable AutoDiffable AutoDiffable))
                  DataOnly)))
-              (decl_id sym1__)
+              (decl_id unpack_sym1__)
               (decl_type
                (Unsized
                 (UTuple ((UArray UReal) (UTuple (UReal UVector (UArray UReal))) UInt))))
               (initialize Uninit)))
             (meta <opaque>))
            ((pattern
-             (Assignment ((LVariable sym1__) ())
+             (Assignment ((LVariable unpack_sym1__) ())
               (UTuple ((UArray UReal) (UTuple (UReal UVector (UArray UReal))) UInt))
               ((pattern (Var complicated))
                (meta
@@ -126,7 +126,7 @@
              (Assignment ((LVariable x) ()) (UArray UReal)
               ((pattern
                 (TupleProjection
-                 ((pattern (Var sym1__))
+                 ((pattern (Var unpack_sym1__))
                   (meta
                    ((type_
                      (UTuple
@@ -143,16 +143,16 @@
              (Block
               (((pattern
                  (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable AutoDiffable)))
-                  (decl_id sym2__)
+                  (decl_id unpack_sym2__)
                   (decl_type (Unsized (UTuple (UReal UVector (UArray UReal)))))
                   (initialize Uninit)))
                 (meta <opaque>))
                ((pattern
-                 (Assignment ((LVariable sym2__) ())
+                 (Assignment ((LVariable unpack_sym2__) ())
                   (UTuple (UReal UVector (UArray UReal)))
                   ((pattern
                     (TupleProjection
-                     ((pattern (Var sym1__))
+                     ((pattern (Var unpack_sym1__))
                       (meta
                        ((type_
                          (UTuple
@@ -172,7 +172,7 @@
                  (Assignment ((LVariable y) ()) UReal
                   ((pattern
                     (TupleProjection
-                     ((pattern (Var sym2__))
+                     ((pattern (Var unpack_sym2__))
                       (meta
                        ((type_ (UTuple (UReal UVector (UArray UReal)))) 
                         (loc <opaque>)
@@ -184,7 +184,7 @@
                  (Assignment ((LVariable z) ()) UVector
                   ((pattern
                     (TupleProjection
-                     ((pattern (Var sym2__))
+                     ((pattern (Var unpack_sym2__))
                       (meta
                        ((type_ (UTuple (UReal UVector (UArray UReal)))) 
                         (loc <opaque>)
@@ -196,7 +196,7 @@
                  (Assignment ((LVariable w) ()) (UArray UReal)
                   ((pattern
                     (TupleProjection
-                     ((pattern (Var sym2__))
+                     ((pattern (Var unpack_sym2__))
                       (meta
                        ((type_ (UTuple (UReal UVector (UArray UReal)))) 
                         (loc <opaque>)
@@ -209,7 +209,7 @@
              (Assignment ((LVariable i) ()) UInt
               ((pattern
                 (TupleProjection
-                 ((pattern (Var sym1__))
+                 ((pattern (Var unpack_sym1__))
                   (meta
                    ((type_
                      (UTuple
@@ -270,7 +270,7 @@
                (TupleAD
                 (AutoDiffable (TupleAD (AutoDiffable AutoDiffable AutoDiffable))
                  DataOnly)))
-              (decl_id sym1__)
+              (decl_id unpack_sym1__)
               (decl_type
                (Sized
                 (STuple
@@ -289,7 +289,7 @@
               (initialize Uninit)))
             (meta <opaque>))
            ((pattern
-             (Assignment ((LVariable sym1__) ())
+             (Assignment ((LVariable unpack_sym1__) ())
               (UTuple ((UArray UReal) (UTuple (UReal UVector (UArray UReal))) UInt))
               ((pattern (Var complicated))
                (meta
@@ -305,7 +305,7 @@
              (Assignment ((LVariable x) ()) (UArray UReal)
               ((pattern
                 (TupleProjection
-                 ((pattern (Var sym1__))
+                 ((pattern (Var unpack_sym1__))
                   (meta
                    ((type_
                      (UTuple
@@ -322,7 +322,7 @@
              (Block
               (((pattern
                  (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable AutoDiffable)))
-                  (decl_id sym2__)
+                  (decl_id unpack_sym2__)
                   (decl_type
                    (Sized
                     (STuple
@@ -336,11 +336,11 @@
                   (initialize Uninit)))
                 (meta <opaque>))
                ((pattern
-                 (Assignment ((LVariable sym2__) ())
+                 (Assignment ((LVariable unpack_sym2__) ())
                   (UTuple (UReal UVector (UArray UReal)))
                   ((pattern
                     (TupleProjection
-                     ((pattern (Var sym1__))
+                     ((pattern (Var unpack_sym1__))
                       (meta
                        ((type_
                          (UTuple
@@ -360,7 +360,7 @@
                  (Assignment ((LVariable y) ()) UReal
                   ((pattern
                     (TupleProjection
-                     ((pattern (Var sym2__))
+                     ((pattern (Var unpack_sym2__))
                       (meta
                        ((type_ (UTuple (UReal UVector (UArray UReal)))) 
                         (loc <opaque>)
@@ -372,7 +372,7 @@
                  (Assignment ((LVariable z) ()) UVector
                   ((pattern
                     (TupleProjection
-                     ((pattern (Var sym2__))
+                     ((pattern (Var unpack_sym2__))
                       (meta
                        ((type_ (UTuple (UReal UVector (UArray UReal)))) 
                         (loc <opaque>)
@@ -384,7 +384,7 @@
                  (Assignment ((LVariable w) ()) (UArray UReal)
                   ((pattern
                     (TupleProjection
-                     ((pattern (Var sym2__))
+                     ((pattern (Var unpack_sym2__))
                       (meta
                        ((type_ (UTuple (UReal UVector (UArray UReal)))) 
                         (loc <opaque>)
@@ -397,7 +397,7 @@
              (Assignment ((LVariable i) ()) UInt
               ((pattern
                 (TupleProjection
-                 ((pattern (Var sym1__))
+                 ((pattern (Var unpack_sym1__))
                   (meta
                    ((type_
                      (UTuple

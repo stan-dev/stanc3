@@ -994,17 +994,18 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
         }
       }
       current_statement__ = 384;
-      for (int sym1__ = 1; sym1__ <=
-           stan::math::size(td_complex_array_2d); ++sym1__) {
+      for (int loop_sym1__ = 1; loop_sym1__ <=
+           stan::math::size(td_complex_array_2d); ++loop_sym1__) {
         std::vector<std::complex<double>> td_j;
         current_statement__ = 384;
-        stan::model::assign(td_j, td_complex_array_2d[(sym1__ - 1)],
+        stan::model::assign(td_j, td_complex_array_2d[(loop_sym1__ - 1)],
           "assigning variable td_j");
         current_statement__ = 385;
-        for (int sym1__ = 1; sym1__ <= stan::math::size(td_j); ++sym1__) {
+        for (int loop_sym1__ = 1; loop_sym1__ <=
+             stan::math::size(td_j); ++loop_sym1__) {
           std::complex<double> td_k;
           current_statement__ = 385;
-          td_k = td_j[(sym1__ - 1)];
+          td_k = td_j[(loop_sym1__ - 1)];
           current_statement__ = 386;
           td_complex = td_k;
         }
@@ -1239,17 +1240,18 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
         }
       }
       current_statement__ = 54;
-      for (int sym1__ = 1; sym1__ <=
-           stan::math::size(tp_complex_array_2d); ++sym1__) {
+      for (int loop_sym1__ = 1; loop_sym1__ <=
+           stan::math::size(tp_complex_array_2d); ++loop_sym1__) {
         std::vector<std::complex<local_scalar_t__>> tp_j;
         current_statement__ = 54;
-        stan::model::assign(tp_j, tp_complex_array_2d[(sym1__ - 1)],
+        stan::model::assign(tp_j, tp_complex_array_2d[(loop_sym1__ - 1)],
           "assigning variable tp_j");
         current_statement__ = 55;
-        for (int sym1__ = 1; sym1__ <= stan::math::size(tp_j); ++sym1__) {
+        for (int loop_sym1__ = 1; loop_sym1__ <=
+             stan::math::size(tp_j); ++loop_sym1__) {
           std::complex<local_scalar_t__> tp_k;
           current_statement__ = 55;
-          tp_k = tp_j[(sym1__ - 1)];
+          tp_k = tp_j[(loop_sym1__ - 1)];
           current_statement__ = 56;
           tp_complex = tp_k;
         }
@@ -1494,17 +1496,18 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
         }
       }
       current_statement__ = 54;
-      for (int sym1__ = 1; sym1__ <=
-           stan::math::size(tp_complex_array_2d); ++sym1__) {
+      for (int loop_sym1__ = 1; loop_sym1__ <=
+           stan::math::size(tp_complex_array_2d); ++loop_sym1__) {
         std::vector<std::complex<local_scalar_t__>> tp_j;
         current_statement__ = 54;
-        stan::model::assign(tp_j, tp_complex_array_2d[(sym1__ - 1)],
+        stan::model::assign(tp_j, tp_complex_array_2d[(loop_sym1__ - 1)],
           "assigning variable tp_j");
         current_statement__ = 55;
-        for (int sym1__ = 1; sym1__ <= stan::math::size(tp_j); ++sym1__) {
+        for (int loop_sym1__ = 1; loop_sym1__ <=
+             stan::math::size(tp_j); ++loop_sym1__) {
           std::complex<local_scalar_t__> tp_k;
           current_statement__ = 55;
-          tp_k = tp_j[(sym1__ - 1)];
+          tp_k = tp_j[(loop_sym1__ - 1)];
           current_statement__ = 56;
           tp_complex = tp_k;
         }
@@ -1644,13 +1647,14 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
       out__.write(p_r);
       out__.write(p_complex);
       current_statement__ = 3;
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        out__.write(p_complex_array[(sym1__ - 1)]);
+      for (int loop_sym1__ = 1; loop_sym1__ <= 2; ++loop_sym1__) {
+        out__.write(p_complex_array[(loop_sym1__ - 1)]);
       }
       current_statement__ = 4;
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-          out__.write(p_complex_array_2d[(sym2__ - 1)][(sym1__ - 1)]);
+      for (int loop_sym1__ = 1; loop_sym1__ <= 3; ++loop_sym1__) {
+        for (int loop_sym2__ = 1; loop_sym2__ <= 2; ++loop_sym2__) {
+          out__.write(p_complex_array_2d[(loop_sym2__ - 1)][(loop_sym1__ -
+            1)]);
         }
       }
       if (stan::math::logical_negation(
@@ -1779,17 +1783,18 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
         }
       }
       current_statement__ = 54;
-      for (int sym1__ = 1; sym1__ <=
-           stan::math::size(tp_complex_array_2d); ++sym1__) {
+      for (int loop_sym1__ = 1; loop_sym1__ <=
+           stan::math::size(tp_complex_array_2d); ++loop_sym1__) {
         std::vector<std::complex<local_scalar_t__>> tp_j;
         current_statement__ = 54;
-        stan::model::assign(tp_j, tp_complex_array_2d[(sym1__ - 1)],
+        stan::model::assign(tp_j, tp_complex_array_2d[(loop_sym1__ - 1)],
           "assigning variable tp_j");
         current_statement__ = 55;
-        for (int sym1__ = 1; sym1__ <= stan::math::size(tp_j); ++sym1__) {
+        for (int loop_sym1__ = 1; loop_sym1__ <=
+             stan::math::size(tp_j); ++loop_sym1__) {
           std::complex<local_scalar_t__> tp_k;
           current_statement__ = 55;
-          tp_k = tp_j[(sym1__ - 1)];
+          tp_k = tp_j[(loop_sym1__ - 1)];
           current_statement__ = 56;
           tp_complex = tp_k;
         }
@@ -1849,13 +1854,14 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
         out__.write(tp_r);
         out__.write(tp_complex);
         current_statement__ = 7;
-        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          out__.write(tp_complex_array[(sym1__ - 1)]);
+        for (int loop_sym1__ = 1; loop_sym1__ <= 2; ++loop_sym1__) {
+          out__.write(tp_complex_array[(loop_sym1__ - 1)]);
         }
         current_statement__ = 8;
-        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-            out__.write(tp_complex_array_2d[(sym2__ - 1)][(sym1__ - 1)]);
+        for (int loop_sym1__ = 1; loop_sym1__ <= 3; ++loop_sym1__) {
+          for (int loop_sym2__ = 1; loop_sym2__ <= 2; ++loop_sym2__) {
+            out__.write(tp_complex_array_2d[(loop_sym2__ - 1)][(loop_sym1__ -
+              1)]);
           }
         }
       }
@@ -1983,17 +1989,18 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
         }
       }
       current_statement__ = 108;
-      for (int sym1__ = 1; sym1__ <=
-           stan::math::size(gq_complex_array_2d); ++sym1__) {
+      for (int loop_sym1__ = 1; loop_sym1__ <=
+           stan::math::size(gq_complex_array_2d); ++loop_sym1__) {
         std::vector<std::complex<double>> gq_j;
         current_statement__ = 108;
-        stan::model::assign(gq_j, gq_complex_array_2d[(sym1__ - 1)],
+        stan::model::assign(gq_j, gq_complex_array_2d[(loop_sym1__ - 1)],
           "assigning variable gq_j");
         current_statement__ = 109;
-        for (int sym1__ = 1; sym1__ <= stan::math::size(gq_j); ++sym1__) {
+        for (int loop_sym1__ = 1; loop_sym1__ <=
+             stan::math::size(gq_j); ++loop_sym1__) {
           std::complex<double> gq_k;
           current_statement__ = 109;
-          gq_k = gq_j[(sym1__ - 1)];
+          gq_k = gq_j[(loop_sym1__ - 1)];
           current_statement__ = 110;
           gq_complex = gq_k;
         }
@@ -2536,13 +2543,14 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
       out__.write(gq_r);
       out__.write(gq_complex);
       current_statement__ = 12;
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        out__.write(gq_complex_array[(sym1__ - 1)]);
+      for (int loop_sym1__ = 1; loop_sym1__ <= 2; ++loop_sym1__) {
+        out__.write(gq_complex_array[(loop_sym1__ - 1)]);
       }
       current_statement__ = 13;
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-          out__.write(gq_complex_array_2d[(sym2__ - 1)][(sym1__ - 1)]);
+      for (int loop_sym1__ = 1; loop_sym1__ <= 3; ++loop_sym1__) {
+        for (int loop_sym2__ = 1; loop_sym2__ <= 2; ++loop_sym2__) {
+          out__.write(gq_complex_array_2d[(loop_sym2__ - 1)][(loop_sym1__ -
+            1)]);
         }
       }
       out__.write(z);
@@ -2585,9 +2593,9 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
         std::vector<std::complex<local_scalar_t__>>(2,
           std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
       current_statement__ = 3;
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int loop_sym1__ = 1; loop_sym1__ <= 2; ++loop_sym1__) {
         current_statement__ = 3;
-        p_complex_array[(sym1__ -
+        p_complex_array[(loop_sym1__ -
           1)] = in__.read<std::complex<local_scalar_t__>>();
       }
       out__.write(p_complex_array);
@@ -2597,10 +2605,10 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
           std::vector<std::complex<local_scalar_t__>>(3,
             std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__)));
       current_statement__ = 4;
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+      for (int loop_sym1__ = 1; loop_sym1__ <= 3; ++loop_sym1__) {
+        for (int loop_sym2__ = 1; loop_sym2__ <= 2; ++loop_sym2__) {
           current_statement__ = 4;
-          p_complex_array_2d[(sym2__ - 1)][(sym1__ -
+          p_complex_array_2d[(loop_sym2__ - 1)][(loop_sym1__ -
             1)] = in__.read<std::complex<local_scalar_t__>>();
         }
       }
@@ -2736,40 +2744,46 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
     param_names__.emplace_back(std::string() + "p_r");
     param_names__.emplace_back(std::string() + "p_complex" + '.' + "real");
     param_names__.emplace_back(std::string() + "p_complex" + '.' + "imag");
-    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         2; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "p_complex_array" + '.' +
-        std::to_string(sym1__) + '.' + "real");
+        std::to_string(names_loop_sym1__) + '.' + "real");
       param_names__.emplace_back(std::string() + "p_complex_array" + '.' +
-        std::to_string(sym1__) + '.' + "imag");
+        std::to_string(names_loop_sym1__) + '.' + "imag");
     }
-    for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         3; ++names_loop_sym1__) {
+      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+           2; ++names_loop_sym2__) {
         param_names__.emplace_back(std::string() + "p_complex_array_2d" + '.'
-          + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-          "real");
+          + std::to_string(names_loop_sym2__) + '.' +
+          std::to_string(names_loop_sym1__) + '.' + "real");
         param_names__.emplace_back(std::string() + "p_complex_array_2d" + '.'
-          + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-          "imag");
+          + std::to_string(names_loop_sym2__) + '.' +
+          std::to_string(names_loop_sym1__) + '.' + "imag");
       }
     }
     if (emit_transformed_parameters__) {
       param_names__.emplace_back(std::string() + "tp_r");
       param_names__.emplace_back(std::string() + "tp_complex" + '.' + "real");
       param_names__.emplace_back(std::string() + "tp_complex" + '.' + "imag");
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           2; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "tp_complex_array" + '.' +
-          std::to_string(sym1__) + '.' + "real");
+          std::to_string(names_loop_sym1__) + '.' + "real");
         param_names__.emplace_back(std::string() + "tp_complex_array" + '.' +
-          std::to_string(sym1__) + '.' + "imag");
+          std::to_string(names_loop_sym1__) + '.' + "imag");
       }
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           3; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             2; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "tp_complex_array_2d" +
-            '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.'
-            + "real");
+            '.' + std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__) + '.' + "real");
           param_names__.emplace_back(std::string() + "tp_complex_array_2d" +
-            '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.'
-            + "imag");
+            '.' + std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__) + '.' + "imag");
         }
       }
     }
@@ -2778,33 +2792,38 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
       param_names__.emplace_back(std::string() + "gq_r");
       param_names__.emplace_back(std::string() + "gq_complex" + '.' + "real");
       param_names__.emplace_back(std::string() + "gq_complex" + '.' + "imag");
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           2; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "gq_complex_array" + '.' +
-          std::to_string(sym1__) + '.' + "real");
+          std::to_string(names_loop_sym1__) + '.' + "real");
         param_names__.emplace_back(std::string() + "gq_complex_array" + '.' +
-          std::to_string(sym1__) + '.' + "imag");
+          std::to_string(names_loop_sym1__) + '.' + "imag");
       }
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           3; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             2; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "gq_complex_array_2d" +
-            '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.'
-            + "real");
+            '.' + std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__) + '.' + "real");
           param_names__.emplace_back(std::string() + "gq_complex_array_2d" +
-            '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.'
-            + "imag");
+            '.' + std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__) + '.' + "imag");
         }
       }
       param_names__.emplace_back(std::string() + "z" + '.' + "real");
       param_names__.emplace_back(std::string() + "z" + '.' + "imag");
       param_names__.emplace_back(std::string() + "y" + '.' + "real");
       param_names__.emplace_back(std::string() + "y" + '.' + "imag");
-      for (int sym1__ = 1; sym1__ <= 0; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           0; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "i_arr" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= 1; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           1; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "i_arr_1" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
       param_names__.emplace_back(std::string() + "zi" + '.' + "real");
       param_names__.emplace_back(std::string() + "zi" + '.' + "imag");
@@ -2820,40 +2839,46 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
     param_names__.emplace_back(std::string() + "p_r");
     param_names__.emplace_back(std::string() + "p_complex" + '.' + "real");
     param_names__.emplace_back(std::string() + "p_complex" + '.' + "imag");
-    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         2; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "p_complex_array" + '.' +
-        std::to_string(sym1__) + '.' + "real");
+        std::to_string(names_loop_sym1__) + '.' + "real");
       param_names__.emplace_back(std::string() + "p_complex_array" + '.' +
-        std::to_string(sym1__) + '.' + "imag");
+        std::to_string(names_loop_sym1__) + '.' + "imag");
     }
-    for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         3; ++names_loop_sym1__) {
+      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+           2; ++names_loop_sym2__) {
         param_names__.emplace_back(std::string() + "p_complex_array_2d" + '.'
-          + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-          "real");
+          + std::to_string(names_loop_sym2__) + '.' +
+          std::to_string(names_loop_sym1__) + '.' + "real");
         param_names__.emplace_back(std::string() + "p_complex_array_2d" + '.'
-          + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-          "imag");
+          + std::to_string(names_loop_sym2__) + '.' +
+          std::to_string(names_loop_sym1__) + '.' + "imag");
       }
     }
     if (emit_transformed_parameters__) {
       param_names__.emplace_back(std::string() + "tp_r");
       param_names__.emplace_back(std::string() + "tp_complex" + '.' + "real");
       param_names__.emplace_back(std::string() + "tp_complex" + '.' + "imag");
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           2; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "tp_complex_array" + '.' +
-          std::to_string(sym1__) + '.' + "real");
+          std::to_string(names_loop_sym1__) + '.' + "real");
         param_names__.emplace_back(std::string() + "tp_complex_array" + '.' +
-          std::to_string(sym1__) + '.' + "imag");
+          std::to_string(names_loop_sym1__) + '.' + "imag");
       }
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           3; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             2; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "tp_complex_array_2d" +
-            '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.'
-            + "real");
+            '.' + std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__) + '.' + "real");
           param_names__.emplace_back(std::string() + "tp_complex_array_2d" +
-            '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.'
-            + "imag");
+            '.' + std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__) + '.' + "imag");
         }
       }
     }
@@ -2862,33 +2887,38 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
       param_names__.emplace_back(std::string() + "gq_r");
       param_names__.emplace_back(std::string() + "gq_complex" + '.' + "real");
       param_names__.emplace_back(std::string() + "gq_complex" + '.' + "imag");
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           2; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "gq_complex_array" + '.' +
-          std::to_string(sym1__) + '.' + "real");
+          std::to_string(names_loop_sym1__) + '.' + "real");
         param_names__.emplace_back(std::string() + "gq_complex_array" + '.' +
-          std::to_string(sym1__) + '.' + "imag");
+          std::to_string(names_loop_sym1__) + '.' + "imag");
       }
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           3; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             2; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "gq_complex_array_2d" +
-            '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.'
-            + "real");
+            '.' + std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__) + '.' + "real");
           param_names__.emplace_back(std::string() + "gq_complex_array_2d" +
-            '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.'
-            + "imag");
+            '.' + std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__) + '.' + "imag");
         }
       }
       param_names__.emplace_back(std::string() + "z" + '.' + "real");
       param_names__.emplace_back(std::string() + "z" + '.' + "imag");
       param_names__.emplace_back(std::string() + "y" + '.' + "real");
       param_names__.emplace_back(std::string() + "y" + '.' + "imag");
-      for (int sym1__ = 1; sym1__ <= 0; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           0; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "i_arr" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= 1; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           1; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "i_arr_1" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
       param_names__.emplace_back(std::string() + "zi" + '.' + "real");
       param_names__.emplace_back(std::string() + "zi" + '.' + "imag");

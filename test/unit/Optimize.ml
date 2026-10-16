@@ -3167,22 +3167,22 @@ let%expect_test "lazy code motion name reuse" =
       {
         {
           array[array[int, 3], 2] vs;
-          for(sym1__ in 1:FnLength__(vs)) {
+          for(loop_sym1__ in 1:FnLength__(vs)) {
             {
               data array[] int v;
-              v = vs[sym1__];
+              v = vs[loop_sym1__];
             }
           }
         }
         {
           matrix[2, 3] vs;
-          for(sym1__ in 1:rows(vs)) {
-            lcm_sym5__ = FnLength__(vs[sym1__]);
+          for(loop_sym1__ in 1:rows(vs)) {
+            lcm_sym5__ = FnLength__(vs[loop_sym1__]);
             {
-              for(sym2__ in 1:lcm_sym5__) {
+              for(loop_sym2__ in 1:lcm_sym5__) {
                 {
                   real v;
-                  v = vs[sym1__, sym2__];
+                  v = vs[loop_sym1__, loop_sym2__];
                 }
               }
             }

@@ -454,48 +454,69 @@ class return_types_and_udfs_demotes_model final : public model_base_crtp<return_
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         10; ++names_loop_sym1__) {
+      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+           10; ++names_loop_sym2__) {
         param_names__.emplace_back(std::string() + "row_soa" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          std::to_string(names_loop_sym2__) + '.' +
+          std::to_string(names_loop_sym1__));
       }
     }
-    for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         10; ++names_loop_sym1__) {
+      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+           10; ++names_loop_sym2__) {
         param_names__.emplace_back(std::string() + "udf_input_aos" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          std::to_string(names_loop_sym2__) + '.' +
+          std::to_string(names_loop_sym1__));
       }
     }
     if (emit_transformed_parameters__) {
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           10; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             10; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "user_func_aos" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           10; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             10; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "empty_user_func_aos" +
-            '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            '.' + std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           10; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             10; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() +
-            "inner_empty_user_func_aos" + '.' + std::to_string(sym2__) + '.'
-            + std::to_string(sym1__));
+            "inner_empty_user_func_aos" + '.' +
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           10; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             10; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "int_aos_mul_aos" + '.'
-            + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            + std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           10; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             10; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "mul_two_aos" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
     }
@@ -505,48 +526,69 @@ class return_types_and_udfs_demotes_model final : public model_base_crtp<return_
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         10; ++names_loop_sym1__) {
+      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+           10; ++names_loop_sym2__) {
         param_names__.emplace_back(std::string() + "row_soa" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          std::to_string(names_loop_sym2__) + '.' +
+          std::to_string(names_loop_sym1__));
       }
     }
-    for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         10; ++names_loop_sym1__) {
+      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+           10; ++names_loop_sym2__) {
         param_names__.emplace_back(std::string() + "udf_input_aos" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          std::to_string(names_loop_sym2__) + '.' +
+          std::to_string(names_loop_sym1__));
       }
     }
     if (emit_transformed_parameters__) {
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           10; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             10; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "user_func_aos" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           10; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             10; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "empty_user_func_aos" +
-            '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            '.' + std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           10; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             10; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() +
-            "inner_empty_user_func_aos" + '.' + std::to_string(sym2__) + '.'
-            + std::to_string(sym1__));
+            "inner_empty_user_func_aos" + '.' +
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           10; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             10; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "int_aos_mul_aos" + '.'
-            + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            + std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           10; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             10; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "mul_two_aos" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
     }

@@ -557,21 +557,24 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int sym1__ = 1; sym1__ <= n_pair; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         n_pair; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "a" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         2; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "beta" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
     param_names__.emplace_back(std::string() + "mu_a");
     param_names__.emplace_back(std::string() + "sigma_a");
     param_names__.emplace_back(std::string() + "sigma_y");
     if (emit_transformed_parameters__) {
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           N; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "y_hat" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
     }
     if (emit_generated_quantities__) {}
@@ -580,21 +583,24 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int sym1__ = 1; sym1__ <= n_pair; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         n_pair; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "a" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         2; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "beta" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
     param_names__.emplace_back(std::string() + "mu_a");
     param_names__.emplace_back(std::string() + "sigma_a");
     param_names__.emplace_back(std::string() + "sigma_y");
     if (emit_transformed_parameters__) {
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           N; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "y_hat" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
     }
     if (emit_generated_quantities__) {}

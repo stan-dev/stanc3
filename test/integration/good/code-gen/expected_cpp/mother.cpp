@@ -2035,33 +2035,37 @@ foo_1(const T0__& a, std::ostream* pstream__) {
           std::vector<int>(3, std::numeric_limits<int>::min()));
       int z = std::numeric_limits<int>::min();
       current_statement__ = 648;
-      for (int sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
+      for (int loop_sym1__ = 1; loop_sym1__ <=
+           stan::math::size(vs); ++loop_sym1__) {
         std::vector<int> v;
         current_statement__ = 648;
-        stan::model::assign(v, vs[(sym1__ - 1)], "assigning variable v");
+        stan::model::assign(v, vs[(loop_sym1__ - 1)], "assigning variable v");
         current_statement__ = 649;
         z = 0;
         break;
       }
       current_statement__ = 651;
-      for (int sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
+      for (int loop_sym1__ = 1; loop_sym1__ <=
+           stan::math::size(vs); ++loop_sym1__) {
         std::vector<int> v;
         current_statement__ = 651;
-        stan::model::assign(v, vs[(sym1__ - 1)], "assigning variable v");
+        stan::model::assign(v, vs[(loop_sym1__ - 1)], "assigning variable v");
         current_statement__ = 652;
         z = 0;
         continue;
       }
       current_statement__ = 654;
-      for (int sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
+      for (int loop_sym1__ = 1; loop_sym1__ <=
+           stan::math::size(vs); ++loop_sym1__) {
         std::vector<int> v;
         current_statement__ = 654;
-        stan::model::assign(v, vs[(sym1__ - 1)], "assigning variable v");
+        stan::model::assign(v, vs[(loop_sym1__ - 1)], "assigning variable v");
         current_statement__ = 655;
-        for (int sym1__ = 1; sym1__ <= stan::math::size(v); ++sym1__) {
+        for (int loop_sym1__ = 1; loop_sym1__ <=
+             stan::math::size(v); ++loop_sym1__) {
           int vv;
           current_statement__ = 655;
-          vv = v[(sym1__ - 1)];
+          vv = v[(loop_sym1__ - 1)];
           current_statement__ = 656;
           z = 0;
           break;
@@ -2076,30 +2080,36 @@ foo_1(const T0__& a, std::ostream* pstream__) {
       Eigen::Matrix<local_scalar_t__,-1,-1> vs =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(2, 3, DUMMY_VAR__);
       current_statement__ = 663;
-      for (int sym1__ = 1; sym1__ <= stan::math::rows(vs); ++sym1__) {
+      for (int loop_sym1__ = 1; loop_sym1__ <=
+           stan::math::rows(vs); ++loop_sym1__) {
         current_statement__ = 663;
-        for (int sym2__ = 1; sym2__ <=
+        for (int loop_sym2__ = 1; loop_sym2__ <=
              stan::math::size(
-               stan::model::rvalue(vs, "vs", stan::model::index_uni(sym1__))); ++sym2__) {
+               stan::model::rvalue(vs, "vs",
+                 stan::model::index_uni(loop_sym1__))); ++loop_sym2__) {
           local_scalar_t__ v;
           current_statement__ = 663;
-          v = stan::model::rvalue(vs, "vs", stan::model::index_uni(sym1__),
-                stan::model::index_uni(sym2__));
+          v = stan::model::rvalue(vs, "vs",
+                stan::model::index_uni(loop_sym1__),
+                stan::model::index_uni(loop_sym2__));
           current_statement__ = 664;
           z = stan::math::promote_scalar<local_scalar_t__>(0);
           break;
         }
       }
       current_statement__ = 666;
-      for (int sym1__ = 1; sym1__ <= stan::math::rows(vs); ++sym1__) {
+      for (int loop_sym1__ = 1; loop_sym1__ <=
+           stan::math::rows(vs); ++loop_sym1__) {
         current_statement__ = 666;
-        for (int sym2__ = 1; sym2__ <=
+        for (int loop_sym2__ = 1; loop_sym2__ <=
              stan::math::size(
-               stan::model::rvalue(vs, "vs", stan::model::index_uni(sym1__))); ++sym2__) {
+               stan::model::rvalue(vs, "vs",
+                 stan::model::index_uni(loop_sym1__))); ++loop_sym2__) {
           local_scalar_t__ v;
           current_statement__ = 666;
-          v = stan::model::rvalue(vs, "vs", stan::model::index_uni(sym1__),
-                stan::model::index_uni(sym2__));
+          v = stan::model::rvalue(vs, "vs",
+                stan::model::index_uni(loop_sym1__),
+                stan::model::index_uni(loop_sym2__));
           current_statement__ = 667;
           z = 3.1;
           continue;
@@ -2112,19 +2122,21 @@ foo_1(const T0__& a, std::ostream* pstream__) {
       Eigen::Matrix<local_scalar_t__,-1,1> vs =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__);
       current_statement__ = 673;
-      for (int sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
+      for (int loop_sym1__ = 1; loop_sym1__ <=
+           stan::math::size(vs); ++loop_sym1__) {
         local_scalar_t__ v;
         current_statement__ = 673;
-        v = vs[(sym1__ - 1)];
+        v = vs[(loop_sym1__ - 1)];
         current_statement__ = 674;
         z = stan::math::promote_scalar<local_scalar_t__>(0);
         break;
       }
       current_statement__ = 676;
-      for (int sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
+      for (int loop_sym1__ = 1; loop_sym1__ <=
+           stan::math::size(vs); ++loop_sym1__) {
         local_scalar_t__ v;
         current_statement__ = 676;
-        v = vs[(sym1__ - 1)];
+        v = vs[(loop_sym1__ - 1)];
         current_statement__ = 677;
         z = 3.2;
         continue;
@@ -2136,19 +2148,21 @@ foo_1(const T0__& a, std::ostream* pstream__) {
       Eigen::Matrix<local_scalar_t__,1,-1> vs =
         Eigen::Matrix<local_scalar_t__,1,-1>::Constant(2, DUMMY_VAR__);
       current_statement__ = 683;
-      for (int sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
+      for (int loop_sym1__ = 1; loop_sym1__ <=
+           stan::math::size(vs); ++loop_sym1__) {
         local_scalar_t__ v;
         current_statement__ = 683;
-        v = vs[(sym1__ - 1)];
+        v = vs[(loop_sym1__ - 1)];
         current_statement__ = 684;
         z = stan::math::promote_scalar<local_scalar_t__>(0);
         break;
       }
       current_statement__ = 686;
-      for (int sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
+      for (int loop_sym1__ = 1; loop_sym1__ <=
+           stan::math::size(vs); ++loop_sym1__) {
         local_scalar_t__ v;
         current_statement__ = 686;
-        v = vs[(sym1__ - 1)];
+        v = vs[(loop_sym1__ - 1)];
         current_statement__ = 687;
         z = 3.3;
         continue;
@@ -2190,10 +2204,11 @@ foo_2(const T0__& a, std::ostream* pstream__) {
       std::vector<int>(2, std::numeric_limits<int>::min());
     int y = std::numeric_limits<int>::min();
     current_statement__ = 703;
-    for (int sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
+    for (int loop_sym1__ = 1; loop_sym1__ <=
+         stan::math::size(vs); ++loop_sym1__) {
       int v;
       current_statement__ = 703;
-      v = vs[(sym1__ - 1)];
+      v = vs[(loop_sym1__ - 1)];
       current_statement__ = 704;
       y = v;
     }
@@ -4846,11 +4861,11 @@ class mother_model final : public model_base_crtp<mother_model> {
           Eigen::Matrix<double,1,-1>::Constant(2,
             std::numeric_limits<double>::quiet_NaN());
         current_statement__ = 351;
-        for (int sym1__ = 1; sym1__ <=
-             stan::math::size(blocked_tdata_vs); ++sym1__) {
+        for (int loop_sym1__ = 1; loop_sym1__ <=
+             stan::math::size(blocked_tdata_vs); ++loop_sym1__) {
           double v;
           current_statement__ = 351;
-          v = blocked_tdata_vs[(sym1__ - 1)];
+          v = blocked_tdata_vs[(loop_sym1__ - 1)];
           current_statement__ = 352;
           z = static_cast<double>(0);
         }
@@ -4860,16 +4875,18 @@ class mother_model final : public model_base_crtp<mother_model> {
         stan::model::assign(indices, std::vector<int>{1, 2, 3, 4},
           "assigning variable indices");
         {
-          std::vector<int> sym1__;
+          std::vector<int> temp_sym1__;
           current_statement__ = 354;
-          stan::model::assign(sym1__,
+          stan::model::assign(temp_sym1__,
             stan::model::rvalue(indices, "indices",
-              stan::model::index_min_max(1, 3)), "assigning variable sym1__");
+              stan::model::index_min_max(1, 3)),
+            "assigning variable temp_sym1__");
           current_statement__ = 355;
-          for (int sym3__ = 1; sym3__ <= stan::math::size(sym1__); ++sym3__) {
+          for (int loop_sym1__ = 1; loop_sym1__ <=
+               stan::math::size(temp_sym1__); ++loop_sym1__) {
             int i;
             current_statement__ = 355;
-            i = sym1__[(sym3__ - 1)];
+            i = temp_sym1__[(loop_sym1__ - 1)];
             current_statement__ = 356;
             z = static_cast<double>(i);
           }
@@ -6876,79 +6893,79 @@ class mother_model final : public model_base_crtp<mother_model> {
       out__.write(offset_no_multiplier);
       out__.write(p_real_1d_ar);
       current_statement__ = 8;
-      for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
-            out__.write(p_real_3d_ar[(sym3__ - 1)][(sym2__ - 1)][(sym1__ -
-              1)]);
+      for (int loop_sym1__ = 1; loop_sym1__ <= K; ++loop_sym1__) {
+        for (int loop_sym2__ = 1; loop_sym2__ <= M; ++loop_sym2__) {
+          for (int loop_sym3__ = 1; loop_sym3__ <= N; ++loop_sym3__) {
+            out__.write(p_real_3d_ar[(loop_sym3__ - 1)][(loop_sym2__ -
+              1)][(loop_sym1__ - 1)]);
           }
         }
       }
       out__.write(p_vec);
       current_statement__ = 10;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          out__.write(p_1d_vec[(sym2__ - 1)][(sym1__ - 1)]);
+      for (int loop_sym1__ = 1; loop_sym1__ <= N; ++loop_sym1__) {
+        for (int loop_sym2__ = 1; loop_sym2__ <= N; ++loop_sym2__) {
+          out__.write(p_1d_vec[(loop_sym2__ - 1)][(loop_sym1__ - 1)]);
         }
       }
       current_statement__ = 11;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
-              out__.write(p_3d_vec[(sym4__ - 1)][(sym3__ - 1)][(sym2__ -
-                1)][(sym1__ - 1)]);
+      for (int loop_sym1__ = 1; loop_sym1__ <= N; ++loop_sym1__) {
+        for (int loop_sym2__ = 1; loop_sym2__ <= K; ++loop_sym2__) {
+          for (int loop_sym3__ = 1; loop_sym3__ <= M; ++loop_sym3__) {
+            for (int loop_sym4__ = 1; loop_sym4__ <= N; ++loop_sym4__) {
+              out__.write(p_3d_vec[(loop_sym4__ - 1)][(loop_sym3__ -
+                1)][(loop_sym2__ - 1)][(loop_sym1__ - 1)]);
             }
           }
         }
       }
       out__.write(p_row_vec);
       current_statement__ = 13;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          out__.write(p_1d_row_vec[(sym2__ - 1)][(sym1__ - 1)]);
+      for (int loop_sym1__ = 1; loop_sym1__ <= N; ++loop_sym1__) {
+        for (int loop_sym2__ = 1; loop_sym2__ <= N; ++loop_sym2__) {
+          out__.write(p_1d_row_vec[(loop_sym2__ - 1)][(loop_sym1__ - 1)]);
         }
       }
       current_statement__ = 14;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
-              out__.write(p_3d_row_vec[(sym4__ - 1)][(sym3__ - 1)][(sym2__ -
-                1)][(sym1__ - 1)]);
+      for (int loop_sym1__ = 1; loop_sym1__ <= N; ++loop_sym1__) {
+        for (int loop_sym2__ = 1; loop_sym2__ <= K; ++loop_sym2__) {
+          for (int loop_sym3__ = 1; loop_sym3__ <= M; ++loop_sym3__) {
+            for (int loop_sym4__ = 1; loop_sym4__ <= N; ++loop_sym4__) {
+              out__.write(p_3d_row_vec[(loop_sym4__ - 1)][(loop_sym3__ -
+                1)][(loop_sym2__ - 1)][(loop_sym1__ - 1)]);
             }
           }
         }
       }
       out__.write(p_mat);
       current_statement__ = 16;
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= 4; ++sym4__) {
+      for (int loop_sym1__ = 1; loop_sym1__ <= 3; ++loop_sym1__) {
+        for (int loop_sym2__ = 1; loop_sym2__ <= 2; ++loop_sym2__) {
+          for (int loop_sym3__ = 1; loop_sym3__ <= 5; ++loop_sym3__) {
+            for (int loop_sym4__ = 1; loop_sym4__ <= 4; ++loop_sym4__) {
               out__.write(stan::model::rvalue(p_ar_mat, "p_ar_mat",
-                            stan::model::index_uni(sym4__),
-                            stan::model::index_uni(sym3__),
-                            stan::model::index_uni(sym2__),
-                            stan::model::index_uni(sym1__)));
+                            stan::model::index_uni(loop_sym4__),
+                            stan::model::index_uni(loop_sym3__),
+                            stan::model::index_uni(loop_sym2__),
+                            stan::model::index_uni(loop_sym1__)));
             }
           }
         }
       }
       out__.write(p_simplex);
       current_statement__ = 18;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          out__.write(p_1d_simplex[(sym2__ - 1)][(sym1__ - 1)]);
+      for (int loop_sym1__ = 1; loop_sym1__ <= N; ++loop_sym1__) {
+        for (int loop_sym2__ = 1; loop_sym2__ <= N; ++loop_sym2__) {
+          out__.write(p_1d_simplex[(loop_sym2__ - 1)][(loop_sym1__ - 1)]);
         }
       }
       current_statement__ = 19;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
-              out__.write(p_3d_simplex[(sym4__ - 1)][(sym3__ - 1)][(sym2__ -
-                1)][(sym1__ - 1)]);
+      for (int loop_sym1__ = 1; loop_sym1__ <= N; ++loop_sym1__) {
+        for (int loop_sym2__ = 1; loop_sym2__ <= K; ++loop_sym2__) {
+          for (int loop_sym3__ = 1; loop_sym3__ <= M; ++loop_sym3__) {
+            for (int loop_sym4__ = 1; loop_sym4__ <= N; ++loop_sym4__) {
+              out__.write(p_3d_simplex[(loop_sym4__ - 1)][(loop_sym3__ -
+                1)][(loop_sym2__ - 1)][(loop_sym1__ - 1)]);
             }
           }
         }
@@ -6956,13 +6973,13 @@ class mother_model final : public model_base_crtp<mother_model> {
       out__.write(p_cfcov_54);
       out__.write(p_cfcov_33);
       current_statement__ = 22;
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
+      for (int loop_sym1__ = 1; loop_sym1__ <= 3; ++loop_sym1__) {
+        for (int loop_sym2__ = 1; loop_sym2__ <= 3; ++loop_sym2__) {
+          for (int loop_sym3__ = 1; loop_sym3__ <= K; ++loop_sym3__) {
             out__.write(stan::model::rvalue(p_cfcov_33_ar, "p_cfcov_33_ar",
-                          stan::model::index_uni(sym3__),
-                          stan::model::index_uni(sym2__),
-                          stan::model::index_uni(sym1__)));
+                          stan::model::index_uni(loop_sym3__),
+                          stan::model::index_uni(loop_sym2__),
+                          stan::model::index_uni(loop_sym1__)));
           }
         }
       }
@@ -7109,79 +7126,79 @@ class mother_model final : public model_base_crtp<mother_model> {
       if (emit_transformed_parameters__) {
         out__.write(tp_real_1d_ar);
         current_statement__ = 26;
-        for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
-            for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
-              out__.write(tp_real_3d_ar[(sym3__ - 1)][(sym2__ - 1)][(sym1__ -
-                1)]);
+        for (int loop_sym1__ = 1; loop_sym1__ <= K; ++loop_sym1__) {
+          for (int loop_sym2__ = 1; loop_sym2__ <= M; ++loop_sym2__) {
+            for (int loop_sym3__ = 1; loop_sym3__ <= N; ++loop_sym3__) {
+              out__.write(tp_real_3d_ar[(loop_sym3__ - 1)][(loop_sym2__ -
+                1)][(loop_sym1__ - 1)]);
             }
           }
         }
         out__.write(tp_vec);
         current_statement__ = 28;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            out__.write(tp_1d_vec[(sym2__ - 1)][(sym1__ - 1)]);
+        for (int loop_sym1__ = 1; loop_sym1__ <= N; ++loop_sym1__) {
+          for (int loop_sym2__ = 1; loop_sym2__ <= N; ++loop_sym2__) {
+            out__.write(tp_1d_vec[(loop_sym2__ - 1)][(loop_sym1__ - 1)]);
           }
         }
         current_statement__ = 29;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-            for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
-              for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
-                out__.write(tp_3d_vec[(sym4__ - 1)][(sym3__ - 1)][(sym2__ -
-                  1)][(sym1__ - 1)]);
+        for (int loop_sym1__ = 1; loop_sym1__ <= N; ++loop_sym1__) {
+          for (int loop_sym2__ = 1; loop_sym2__ <= K; ++loop_sym2__) {
+            for (int loop_sym3__ = 1; loop_sym3__ <= M; ++loop_sym3__) {
+              for (int loop_sym4__ = 1; loop_sym4__ <= N; ++loop_sym4__) {
+                out__.write(tp_3d_vec[(loop_sym4__ - 1)][(loop_sym3__ -
+                  1)][(loop_sym2__ - 1)][(loop_sym1__ - 1)]);
               }
             }
           }
         }
         out__.write(tp_row_vec);
         current_statement__ = 31;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            out__.write(tp_1d_row_vec[(sym2__ - 1)][(sym1__ - 1)]);
+        for (int loop_sym1__ = 1; loop_sym1__ <= N; ++loop_sym1__) {
+          for (int loop_sym2__ = 1; loop_sym2__ <= N; ++loop_sym2__) {
+            out__.write(tp_1d_row_vec[(loop_sym2__ - 1)][(loop_sym1__ - 1)]);
           }
         }
         current_statement__ = 32;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-            for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
-              for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
-                out__.write(tp_3d_row_vec[(sym4__ - 1)][(sym3__ - 1)][(sym2__
-                  - 1)][(sym1__ - 1)]);
+        for (int loop_sym1__ = 1; loop_sym1__ <= N; ++loop_sym1__) {
+          for (int loop_sym2__ = 1; loop_sym2__ <= K; ++loop_sym2__) {
+            for (int loop_sym3__ = 1; loop_sym3__ <= M; ++loop_sym3__) {
+              for (int loop_sym4__ = 1; loop_sym4__ <= N; ++loop_sym4__) {
+                out__.write(tp_3d_row_vec[(loop_sym4__ - 1)][(loop_sym3__ -
+                  1)][(loop_sym2__ - 1)][(loop_sym1__ - 1)]);
               }
             }
           }
         }
         out__.write(tp_mat);
         current_statement__ = 34;
-        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-            for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
-              for (int sym4__ = 1; sym4__ <= 4; ++sym4__) {
+        for (int loop_sym1__ = 1; loop_sym1__ <= 3; ++loop_sym1__) {
+          for (int loop_sym2__ = 1; loop_sym2__ <= 2; ++loop_sym2__) {
+            for (int loop_sym3__ = 1; loop_sym3__ <= 5; ++loop_sym3__) {
+              for (int loop_sym4__ = 1; loop_sym4__ <= 4; ++loop_sym4__) {
                 out__.write(stan::model::rvalue(tp_ar_mat, "tp_ar_mat",
-                              stan::model::index_uni(sym4__),
-                              stan::model::index_uni(sym3__),
-                              stan::model::index_uni(sym2__),
-                              stan::model::index_uni(sym1__)));
+                              stan::model::index_uni(loop_sym4__),
+                              stan::model::index_uni(loop_sym3__),
+                              stan::model::index_uni(loop_sym2__),
+                              stan::model::index_uni(loop_sym1__)));
               }
             }
           }
         }
         out__.write(tp_simplex);
         current_statement__ = 36;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            out__.write(tp_1d_simplex[(sym2__ - 1)][(sym1__ - 1)]);
+        for (int loop_sym1__ = 1; loop_sym1__ <= N; ++loop_sym1__) {
+          for (int loop_sym2__ = 1; loop_sym2__ <= N; ++loop_sym2__) {
+            out__.write(tp_1d_simplex[(loop_sym2__ - 1)][(loop_sym1__ - 1)]);
           }
         }
         current_statement__ = 37;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-            for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
-              for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
-                out__.write(tp_3d_simplex[(sym4__ - 1)][(sym3__ - 1)][(sym2__
-                  - 1)][(sym1__ - 1)]);
+        for (int loop_sym1__ = 1; loop_sym1__ <= N; ++loop_sym1__) {
+          for (int loop_sym2__ = 1; loop_sym2__ <= K; ++loop_sym2__) {
+            for (int loop_sym3__ = 1; loop_sym3__ <= M; ++loop_sym3__) {
+              for (int loop_sym4__ = 1; loop_sym4__ <= N; ++loop_sym4__) {
+                out__.write(tp_3d_simplex[(loop_sym4__ - 1)][(loop_sym3__ -
+                  1)][(loop_sym2__ - 1)][(loop_sym1__ - 1)]);
               }
             }
           }
@@ -7189,13 +7206,14 @@ class mother_model final : public model_base_crtp<mother_model> {
         out__.write(tp_cfcov_54);
         out__.write(tp_cfcov_33);
         current_statement__ = 40;
-        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-            for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
+        for (int loop_sym1__ = 1; loop_sym1__ <= 3; ++loop_sym1__) {
+          for (int loop_sym2__ = 1; loop_sym2__ <= 3; ++loop_sym2__) {
+            for (int loop_sym3__ = 1; loop_sym3__ <= K; ++loop_sym3__) {
               out__.write(stan::model::rvalue(tp_cfcov_33_ar,
-                            "tp_cfcov_33_ar", stan::model::index_uni(sym3__),
-                            stan::model::index_uni(sym2__),
-                            stan::model::index_uni(sym1__)));
+                            "tp_cfcov_33_ar",
+                            stan::model::index_uni(loop_sym3__),
+                            stan::model::index_uni(loop_sym2__),
+                            stan::model::index_uni(loop_sym1__)));
             }
           }
         }
@@ -7556,78 +7574,78 @@ class mother_model final : public model_base_crtp<mother_model> {
       out__.write(gq_r2);
       out__.write(gq_real_1d_ar);
       current_statement__ = 46;
-      for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
-            out__.write(gq_real_3d_ar[(sym3__ - 1)][(sym2__ - 1)][(sym1__ -
-              1)]);
+      for (int loop_sym1__ = 1; loop_sym1__ <= K; ++loop_sym1__) {
+        for (int loop_sym2__ = 1; loop_sym2__ <= M; ++loop_sym2__) {
+          for (int loop_sym3__ = 1; loop_sym3__ <= N; ++loop_sym3__) {
+            out__.write(gq_real_3d_ar[(loop_sym3__ - 1)][(loop_sym2__ -
+              1)][(loop_sym1__ - 1)]);
           }
         }
       }
       out__.write(gq_vec);
       current_statement__ = 48;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          out__.write(gq_1d_vec[(sym2__ - 1)][(sym1__ - 1)]);
+      for (int loop_sym1__ = 1; loop_sym1__ <= N; ++loop_sym1__) {
+        for (int loop_sym2__ = 1; loop_sym2__ <= N; ++loop_sym2__) {
+          out__.write(gq_1d_vec[(loop_sym2__ - 1)][(loop_sym1__ - 1)]);
         }
       }
       current_statement__ = 49;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
-              out__.write(gq_3d_vec[(sym4__ - 1)][(sym3__ - 1)][(sym2__ -
-                1)][(sym1__ - 1)]);
+      for (int loop_sym1__ = 1; loop_sym1__ <= N; ++loop_sym1__) {
+        for (int loop_sym2__ = 1; loop_sym2__ <= K; ++loop_sym2__) {
+          for (int loop_sym3__ = 1; loop_sym3__ <= M; ++loop_sym3__) {
+            for (int loop_sym4__ = 1; loop_sym4__ <= N; ++loop_sym4__) {
+              out__.write(gq_3d_vec[(loop_sym4__ - 1)][(loop_sym3__ -
+                1)][(loop_sym2__ - 1)][(loop_sym1__ - 1)]);
             }
           }
         }
       }
       out__.write(gq_row_vec);
       current_statement__ = 51;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          out__.write(gq_1d_row_vec[(sym2__ - 1)][(sym1__ - 1)]);
+      for (int loop_sym1__ = 1; loop_sym1__ <= N; ++loop_sym1__) {
+        for (int loop_sym2__ = 1; loop_sym2__ <= N; ++loop_sym2__) {
+          out__.write(gq_1d_row_vec[(loop_sym2__ - 1)][(loop_sym1__ - 1)]);
         }
       }
       current_statement__ = 52;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
-              out__.write(gq_3d_row_vec[(sym4__ - 1)][(sym3__ - 1)][(sym2__ -
-                1)][(sym1__ - 1)]);
+      for (int loop_sym1__ = 1; loop_sym1__ <= N; ++loop_sym1__) {
+        for (int loop_sym2__ = 1; loop_sym2__ <= K; ++loop_sym2__) {
+          for (int loop_sym3__ = 1; loop_sym3__ <= M; ++loop_sym3__) {
+            for (int loop_sym4__ = 1; loop_sym4__ <= N; ++loop_sym4__) {
+              out__.write(gq_3d_row_vec[(loop_sym4__ - 1)][(loop_sym3__ -
+                1)][(loop_sym2__ - 1)][(loop_sym1__ - 1)]);
             }
           }
         }
       }
       current_statement__ = 53;
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= 4; ++sym4__) {
+      for (int loop_sym1__ = 1; loop_sym1__ <= 3; ++loop_sym1__) {
+        for (int loop_sym2__ = 1; loop_sym2__ <= 2; ++loop_sym2__) {
+          for (int loop_sym3__ = 1; loop_sym3__ <= 5; ++loop_sym3__) {
+            for (int loop_sym4__ = 1; loop_sym4__ <= 4; ++loop_sym4__) {
               out__.write(stan::model::rvalue(gq_ar_mat, "gq_ar_mat",
-                            stan::model::index_uni(sym4__),
-                            stan::model::index_uni(sym3__),
-                            stan::model::index_uni(sym2__),
-                            stan::model::index_uni(sym1__)));
+                            stan::model::index_uni(loop_sym4__),
+                            stan::model::index_uni(loop_sym3__),
+                            stan::model::index_uni(loop_sym2__),
+                            stan::model::index_uni(loop_sym1__)));
             }
           }
         }
       }
       out__.write(gq_simplex);
       current_statement__ = 55;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          out__.write(gq_1d_simplex[(sym2__ - 1)][(sym1__ - 1)]);
+      for (int loop_sym1__ = 1; loop_sym1__ <= N; ++loop_sym1__) {
+        for (int loop_sym2__ = 1; loop_sym2__ <= N; ++loop_sym2__) {
+          out__.write(gq_1d_simplex[(loop_sym2__ - 1)][(loop_sym1__ - 1)]);
         }
       }
       current_statement__ = 56;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
-              out__.write(gq_3d_simplex[(sym4__ - 1)][(sym3__ - 1)][(sym2__ -
-                1)][(sym1__ - 1)]);
+      for (int loop_sym1__ = 1; loop_sym1__ <= N; ++loop_sym1__) {
+        for (int loop_sym2__ = 1; loop_sym2__ <= K; ++loop_sym2__) {
+          for (int loop_sym3__ = 1; loop_sym3__ <= M; ++loop_sym3__) {
+            for (int loop_sym4__ = 1; loop_sym4__ <= N; ++loop_sym4__) {
+              out__.write(gq_3d_simplex[(loop_sym4__ - 1)][(loop_sym3__ -
+                1)][(loop_sym2__ - 1)][(loop_sym1__ - 1)]);
             }
           }
         }
@@ -7635,104 +7653,104 @@ class mother_model final : public model_base_crtp<mother_model> {
       out__.write(gq_cfcov_54);
       out__.write(gq_cfcov_33);
       current_statement__ = 59;
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
+      for (int loop_sym1__ = 1; loop_sym1__ <= 3; ++loop_sym1__) {
+        for (int loop_sym2__ = 1; loop_sym2__ <= 3; ++loop_sym2__) {
+          for (int loop_sym3__ = 1; loop_sym3__ <= K; ++loop_sym3__) {
             out__.write(stan::model::rvalue(gq_cfcov_33_ar, "gq_cfcov_33_ar",
-                          stan::model::index_uni(sym3__),
-                          stan::model::index_uni(sym2__),
-                          stan::model::index_uni(sym1__)));
+                          stan::model::index_uni(loop_sym3__),
+                          stan::model::index_uni(loop_sym2__),
+                          stan::model::index_uni(loop_sym1__)));
           }
         }
       }
       out__.write(indices);
       current_statement__ = 61;
-      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
+      for (int loop_sym1__ = 1; loop_sym1__ <= 4; ++loop_sym1__) {
+        for (int loop_sym2__ = 1; loop_sym2__ <= 3; ++loop_sym2__) {
+          for (int loop_sym3__ = 1; loop_sym3__ <= 5; ++loop_sym3__) {
             out__.write(stan::model::rvalue(indexing_mat, "indexing_mat",
-                          stan::model::index_uni(sym3__),
-                          stan::model::index_uni(sym2__),
-                          stan::model::index_uni(sym1__)));
+                          stan::model::index_uni(loop_sym3__),
+                          stan::model::index_uni(loop_sym2__),
+                          stan::model::index_uni(loop_sym1__)));
           }
         }
       }
       current_statement__ = 62;
-      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
+      for (int loop_sym1__ = 1; loop_sym1__ <= 4; ++loop_sym1__) {
+        for (int loop_sym2__ = 1; loop_sym2__ <= 3; ++loop_sym2__) {
+          for (int loop_sym3__ = 1; loop_sym3__ <= 3; ++loop_sym3__) {
             out__.write(stan::model::rvalue(idx_res1, "idx_res1",
-                          stan::model::index_uni(sym3__),
-                          stan::model::index_uni(sym2__),
-                          stan::model::index_uni(sym1__)));
+                          stan::model::index_uni(loop_sym3__),
+                          stan::model::index_uni(loop_sym2__),
+                          stan::model::index_uni(loop_sym1__)));
           }
         }
       }
       current_statement__ = 63;
-      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
+      for (int loop_sym1__ = 1; loop_sym1__ <= 4; ++loop_sym1__) {
+        for (int loop_sym2__ = 1; loop_sym2__ <= 3; ++loop_sym2__) {
+          for (int loop_sym3__ = 1; loop_sym3__ <= 5; ++loop_sym3__) {
             out__.write(stan::model::rvalue(idx_res2, "idx_res2",
-                          stan::model::index_uni(sym3__),
-                          stan::model::index_uni(sym2__),
-                          stan::model::index_uni(sym1__)));
+                          stan::model::index_uni(loop_sym3__),
+                          stan::model::index_uni(loop_sym2__),
+                          stan::model::index_uni(loop_sym1__)));
           }
         }
       }
       current_statement__ = 64;
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
+      for (int loop_sym1__ = 1; loop_sym1__ <= 3; ++loop_sym1__) {
+        for (int loop_sym2__ = 1; loop_sym2__ <= 3; ++loop_sym2__) {
+          for (int loop_sym3__ = 1; loop_sym3__ <= 3; ++loop_sym3__) {
             out__.write(stan::model::rvalue(idx_res3, "idx_res3",
-                          stan::model::index_uni(sym3__),
-                          stan::model::index_uni(sym2__),
-                          stan::model::index_uni(sym1__)));
+                          stan::model::index_uni(loop_sym3__),
+                          stan::model::index_uni(loop_sym2__),
+                          stan::model::index_uni(loop_sym1__)));
           }
         }
       }
       current_statement__ = 65;
-      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
+      for (int loop_sym1__ = 1; loop_sym1__ <= 4; ++loop_sym1__) {
+        for (int loop_sym2__ = 1; loop_sym2__ <= 3; ++loop_sym2__) {
+          for (int loop_sym3__ = 1; loop_sym3__ <= 3; ++loop_sym3__) {
             out__.write(stan::model::rvalue(idx_res11, "idx_res11",
-                          stan::model::index_uni(sym3__),
-                          stan::model::index_uni(sym2__),
-                          stan::model::index_uni(sym1__)));
+                          stan::model::index_uni(loop_sym3__),
+                          stan::model::index_uni(loop_sym2__),
+                          stan::model::index_uni(loop_sym1__)));
           }
         }
       }
       current_statement__ = 66;
-      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
+      for (int loop_sym1__ = 1; loop_sym1__ <= 4; ++loop_sym1__) {
+        for (int loop_sym2__ = 1; loop_sym2__ <= 3; ++loop_sym2__) {
+          for (int loop_sym3__ = 1; loop_sym3__ <= 5; ++loop_sym3__) {
             out__.write(stan::model::rvalue(idx_res21, "idx_res21",
-                          stan::model::index_uni(sym3__),
-                          stan::model::index_uni(sym2__),
-                          stan::model::index_uni(sym1__)));
+                          stan::model::index_uni(loop_sym3__),
+                          stan::model::index_uni(loop_sym2__),
+                          stan::model::index_uni(loop_sym1__)));
           }
         }
       }
       current_statement__ = 67;
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
+      for (int loop_sym1__ = 1; loop_sym1__ <= 3; ++loop_sym1__) {
+        for (int loop_sym2__ = 1; loop_sym2__ <= 3; ++loop_sym2__) {
+          for (int loop_sym3__ = 1; loop_sym3__ <= 3; ++loop_sym3__) {
             out__.write(stan::model::rvalue(idx_res31, "idx_res31",
-                          stan::model::index_uni(sym3__),
-                          stan::model::index_uni(sym2__),
-                          stan::model::index_uni(sym1__)));
+                          stan::model::index_uni(loop_sym3__),
+                          stan::model::index_uni(loop_sym2__),
+                          stan::model::index_uni(loop_sym1__)));
           }
         }
       }
       current_statement__ = 68;
-      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          out__.write(idx_res4[(sym2__ - 1)][(sym1__ - 1)]);
+      for (int loop_sym1__ = 1; loop_sym1__ <= 4; ++loop_sym1__) {
+        for (int loop_sym2__ = 1; loop_sym2__ <= 3; ++loop_sym2__) {
+          out__.write(idx_res4[(loop_sym2__ - 1)][(loop_sym1__ - 1)]);
         }
       }
       current_statement__ = 69;
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-          out__.write(idx_res5[(sym2__ - 1)][(sym1__ - 1)]);
+      for (int loop_sym1__ = 1; loop_sym1__ <= 2; ++loop_sym1__) {
+        for (int loop_sym2__ = 1; loop_sym2__ <= 2; ++loop_sym2__) {
+          out__.write(idx_res5[(loop_sym2__ - 1)][(loop_sym1__ - 1)]);
         }
       }
     } catch (const std::exception& e) {
@@ -7800,11 +7818,11 @@ class mother_model final : public model_base_crtp<mother_model> {
           std::vector<std::vector<local_scalar_t__>>(M,
             std::vector<local_scalar_t__>(K, DUMMY_VAR__)));
       current_statement__ = 8;
-      for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
+      for (int loop_sym1__ = 1; loop_sym1__ <= K; ++loop_sym1__) {
+        for (int loop_sym2__ = 1; loop_sym2__ <= M; ++loop_sym2__) {
+          for (int loop_sym3__ = 1; loop_sym3__ <= N; ++loop_sym3__) {
             current_statement__ = 8;
-            p_real_3d_ar[(sym3__ - 1)][(sym2__ - 1)][(sym1__ -
+            p_real_3d_ar[(loop_sym3__ - 1)][(loop_sym2__ - 1)][(loop_sym1__ -
               1)] = in__.read<local_scalar_t__>();
           }
         }
@@ -7821,12 +7839,13 @@ class mother_model final : public model_base_crtp<mother_model> {
         std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>(N,
           Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__));
       current_statement__ = 10;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+      for (int loop_sym1__ = 1; loop_sym1__ <= N; ++loop_sym1__) {
+        for (int loop_sym2__ = 1; loop_sym2__ <= N; ++loop_sym2__) {
           current_statement__ = 10;
           stan::model::assign(p_1d_vec, in__.read<local_scalar_t__>(),
-            "assigning variable p_1d_vec", stan::model::index_uni(sym2__),
-            stan::model::index_uni(sym1__));
+            "assigning variable p_1d_vec",
+            stan::model::index_uni(loop_sym2__),
+            stan::model::index_uni(loop_sym1__));
         }
       }
       out__.write(p_1d_vec);
@@ -7839,17 +7858,17 @@ class mother_model final : public model_base_crtp<mother_model> {
             std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>(K,
               Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__))));
       current_statement__ = 11;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
+      for (int loop_sym1__ = 1; loop_sym1__ <= N; ++loop_sym1__) {
+        for (int loop_sym2__ = 1; loop_sym2__ <= K; ++loop_sym2__) {
+          for (int loop_sym3__ = 1; loop_sym3__ <= M; ++loop_sym3__) {
+            for (int loop_sym4__ = 1; loop_sym4__ <= N; ++loop_sym4__) {
               current_statement__ = 11;
               stan::model::assign(p_3d_vec, in__.read<local_scalar_t__>(),
                 "assigning variable p_3d_vec",
-                stan::model::index_uni(sym4__),
-                stan::model::index_uni(sym3__),
-                stan::model::index_uni(sym2__),
-                stan::model::index_uni(sym1__));
+                stan::model::index_uni(loop_sym4__),
+                stan::model::index_uni(loop_sym3__),
+                stan::model::index_uni(loop_sym2__),
+                stan::model::index_uni(loop_sym1__));
             }
           }
         }
@@ -7866,12 +7885,13 @@ class mother_model final : public model_base_crtp<mother_model> {
         std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>(N,
           Eigen::Matrix<local_scalar_t__,1,-1>::Constant(N, DUMMY_VAR__));
       current_statement__ = 13;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+      for (int loop_sym1__ = 1; loop_sym1__ <= N; ++loop_sym1__) {
+        for (int loop_sym2__ = 1; loop_sym2__ <= N; ++loop_sym2__) {
           current_statement__ = 13;
           stan::model::assign(p_1d_row_vec, in__.read<local_scalar_t__>(),
             "assigning variable p_1d_row_vec",
-            stan::model::index_uni(sym2__), stan::model::index_uni(sym1__));
+            stan::model::index_uni(loop_sym2__),
+            stan::model::index_uni(loop_sym1__));
         }
       }
       out__.write(p_1d_row_vec);
@@ -7884,18 +7904,18 @@ class mother_model final : public model_base_crtp<mother_model> {
             std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>(K,
               Eigen::Matrix<local_scalar_t__,1,-1>::Constant(N, DUMMY_VAR__))));
       current_statement__ = 14;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
+      for (int loop_sym1__ = 1; loop_sym1__ <= N; ++loop_sym1__) {
+        for (int loop_sym2__ = 1; loop_sym2__ <= K; ++loop_sym2__) {
+          for (int loop_sym3__ = 1; loop_sym3__ <= M; ++loop_sym3__) {
+            for (int loop_sym4__ = 1; loop_sym4__ <= N; ++loop_sym4__) {
               current_statement__ = 14;
               stan::model::assign(p_3d_row_vec,
                 in__.read<local_scalar_t__>(),
                 "assigning variable p_3d_row_vec",
-                stan::model::index_uni(sym4__),
-                stan::model::index_uni(sym3__),
-                stan::model::index_uni(sym2__),
-                stan::model::index_uni(sym1__));
+                stan::model::index_uni(loop_sym4__),
+                stan::model::index_uni(loop_sym3__),
+                stan::model::index_uni(loop_sym2__),
+                stan::model::index_uni(loop_sym1__));
             }
           }
         }
@@ -7915,17 +7935,17 @@ class mother_model final : public model_base_crtp<mother_model> {
             Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(2, 3,
               DUMMY_VAR__)));
       current_statement__ = 16;
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= 4; ++sym4__) {
+      for (int loop_sym1__ = 1; loop_sym1__ <= 3; ++loop_sym1__) {
+        for (int loop_sym2__ = 1; loop_sym2__ <= 2; ++loop_sym2__) {
+          for (int loop_sym3__ = 1; loop_sym3__ <= 5; ++loop_sym3__) {
+            for (int loop_sym4__ = 1; loop_sym4__ <= 4; ++loop_sym4__) {
               current_statement__ = 16;
               stan::model::assign(p_ar_mat, in__.read<local_scalar_t__>(),
                 "assigning variable p_ar_mat",
-                stan::model::index_uni(sym4__),
-                stan::model::index_uni(sym3__),
-                stan::model::index_uni(sym2__),
-                stan::model::index_uni(sym1__));
+                stan::model::index_uni(loop_sym4__),
+                stan::model::index_uni(loop_sym3__),
+                stan::model::index_uni(loop_sym2__),
+                stan::model::index_uni(loop_sym1__));
             }
           }
         }
@@ -7942,12 +7962,13 @@ class mother_model final : public model_base_crtp<mother_model> {
         std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>(N,
           Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__));
       current_statement__ = 18;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+      for (int loop_sym1__ = 1; loop_sym1__ <= N; ++loop_sym1__) {
+        for (int loop_sym2__ = 1; loop_sym2__ <= N; ++loop_sym2__) {
           current_statement__ = 18;
           stan::model::assign(p_1d_simplex, in__.read<local_scalar_t__>(),
             "assigning variable p_1d_simplex",
-            stan::model::index_uni(sym2__), stan::model::index_uni(sym1__));
+            stan::model::index_uni(loop_sym2__),
+            stan::model::index_uni(loop_sym1__));
         }
       }
       out__.write_free_simplex(p_1d_simplex);
@@ -7960,18 +7981,18 @@ class mother_model final : public model_base_crtp<mother_model> {
             std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>(K,
               Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__))));
       current_statement__ = 19;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
+      for (int loop_sym1__ = 1; loop_sym1__ <= N; ++loop_sym1__) {
+        for (int loop_sym2__ = 1; loop_sym2__ <= K; ++loop_sym2__) {
+          for (int loop_sym3__ = 1; loop_sym3__ <= M; ++loop_sym3__) {
+            for (int loop_sym4__ = 1; loop_sym4__ <= N; ++loop_sym4__) {
               current_statement__ = 19;
               stan::model::assign(p_3d_simplex,
                 in__.read<local_scalar_t__>(),
                 "assigning variable p_3d_simplex",
-                stan::model::index_uni(sym4__),
-                stan::model::index_uni(sym3__),
-                stan::model::index_uni(sym2__),
-                stan::model::index_uni(sym1__));
+                stan::model::index_uni(loop_sym4__),
+                stan::model::index_uni(loop_sym3__),
+                stan::model::index_uni(loop_sym2__),
+                stan::model::index_uni(loop_sym1__));
             }
           }
         }
@@ -7995,14 +8016,15 @@ class mother_model final : public model_base_crtp<mother_model> {
         std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>(K,
           Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(3, 3, DUMMY_VAR__));
       current_statement__ = 22;
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
+      for (int loop_sym1__ = 1; loop_sym1__ <= 3; ++loop_sym1__) {
+        for (int loop_sym2__ = 1; loop_sym2__ <= 3; ++loop_sym2__) {
+          for (int loop_sym3__ = 1; loop_sym3__ <= K; ++loop_sym3__) {
             current_statement__ = 22;
             stan::model::assign(p_cfcov_33_ar, in__.read<local_scalar_t__>(),
               "assigning variable p_cfcov_33_ar",
-              stan::model::index_uni(sym3__), stan::model::index_uni(sym2__),
-              stan::model::index_uni(sym1__));
+              stan::model::index_uni(loop_sym3__),
+              stan::model::index_uni(loop_sym2__),
+              stan::model::index_uni(loop_sym1__));
           }
         }
       }
@@ -8462,449 +8484,649 @@ class mother_model final : public model_base_crtp<mother_model> {
     param_names__.emplace_back(std::string() + "p_real");
     param_names__.emplace_back(std::string() + "p_upper");
     param_names__.emplace_back(std::string() + "p_lower");
-    for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         5; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "offset_multiplier" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         5; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "no_offset_multiplier" + '.'
-        + std::to_string(sym1__));
+        + std::to_string(names_loop_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         5; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "offset_no_multiplier" + '.'
-        + std::to_string(sym1__));
+        + std::to_string(names_loop_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         N; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "p_real_1d_ar" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
-        for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         K; ++names_loop_sym1__) {
+      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+           M; ++names_loop_sym2__) {
+        for (int names_loop_sym3__ = 1; names_loop_sym3__ <=
+             N; ++names_loop_sym3__) {
           param_names__.emplace_back(std::string() + "p_real_3d_ar" + '.' +
-            std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
-            std::to_string(sym1__));
+            std::to_string(names_loop_sym3__) + '.' +
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         N; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "p_vec" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         N; ++names_loop_sym1__) {
+      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+           N; ++names_loop_sym2__) {
         param_names__.emplace_back(std::string() + "p_1d_vec" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          std::to_string(names_loop_sym2__) + '.' +
+          std::to_string(names_loop_sym1__));
       }
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-        for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
-          for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         N; ++names_loop_sym1__) {
+      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+           K; ++names_loop_sym2__) {
+        for (int names_loop_sym3__ = 1; names_loop_sym3__ <=
+             M; ++names_loop_sym3__) {
+          for (int names_loop_sym4__ = 1; names_loop_sym4__ <=
+               N; ++names_loop_sym4__) {
             param_names__.emplace_back(std::string() + "p_3d_vec" + '.' +
-              std::to_string(sym4__) + '.' + std::to_string(sym3__) + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__));
+              std::to_string(names_loop_sym4__) + '.' +
+              std::to_string(names_loop_sym3__) + '.' +
+              std::to_string(names_loop_sym2__) + '.' +
+              std::to_string(names_loop_sym1__));
           }
         }
       }
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         N; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "p_row_vec" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         N; ++names_loop_sym1__) {
+      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+           N; ++names_loop_sym2__) {
         param_names__.emplace_back(std::string() + "p_1d_row_vec" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          std::to_string(names_loop_sym2__) + '.' +
+          std::to_string(names_loop_sym1__));
       }
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-        for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
-          for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         N; ++names_loop_sym1__) {
+      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+           K; ++names_loop_sym2__) {
+        for (int names_loop_sym3__ = 1; names_loop_sym3__ <=
+             M; ++names_loop_sym3__) {
+          for (int names_loop_sym4__ = 1; names_loop_sym4__ <=
+               N; ++names_loop_sym4__) {
             param_names__.emplace_back(std::string() + "p_3d_row_vec" + '.' +
-              std::to_string(sym4__) + '.' + std::to_string(sym3__) + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__));
+              std::to_string(names_loop_sym4__) + '.' +
+              std::to_string(names_loop_sym3__) + '.' +
+              std::to_string(names_loop_sym2__) + '.' +
+              std::to_string(names_loop_sym1__));
           }
         }
       }
     }
-    for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         4; ++names_loop_sym1__) {
+      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+           5; ++names_loop_sym2__) {
         param_names__.emplace_back(std::string() + "p_mat" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          std::to_string(names_loop_sym2__) + '.' +
+          std::to_string(names_loop_sym1__));
       }
     }
-    for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-        for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
-          for (int sym4__ = 1; sym4__ <= 4; ++sym4__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         3; ++names_loop_sym1__) {
+      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+           2; ++names_loop_sym2__) {
+        for (int names_loop_sym3__ = 1; names_loop_sym3__ <=
+             5; ++names_loop_sym3__) {
+          for (int names_loop_sym4__ = 1; names_loop_sym4__ <=
+               4; ++names_loop_sym4__) {
             param_names__.emplace_back(std::string() + "p_ar_mat" + '.' +
-              std::to_string(sym4__) + '.' + std::to_string(sym3__) + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__));
+              std::to_string(names_loop_sym4__) + '.' +
+              std::to_string(names_loop_sym3__) + '.' +
+              std::to_string(names_loop_sym2__) + '.' +
+              std::to_string(names_loop_sym1__));
           }
         }
       }
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         N; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "p_simplex" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         N; ++names_loop_sym1__) {
+      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+           N; ++names_loop_sym2__) {
         param_names__.emplace_back(std::string() + "p_1d_simplex" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          std::to_string(names_loop_sym2__) + '.' +
+          std::to_string(names_loop_sym1__));
       }
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-        for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
-          for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         N; ++names_loop_sym1__) {
+      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+           K; ++names_loop_sym2__) {
+        for (int names_loop_sym3__ = 1; names_loop_sym3__ <=
+             M; ++names_loop_sym3__) {
+          for (int names_loop_sym4__ = 1; names_loop_sym4__ <=
+               N; ++names_loop_sym4__) {
             param_names__.emplace_back(std::string() + "p_3d_simplex" + '.' +
-              std::to_string(sym4__) + '.' + std::to_string(sym3__) + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__));
+              std::to_string(names_loop_sym4__) + '.' +
+              std::to_string(names_loop_sym3__) + '.' +
+              std::to_string(names_loop_sym2__) + '.' +
+              std::to_string(names_loop_sym1__));
           }
         }
       }
     }
-    for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         4; ++names_loop_sym1__) {
+      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+           5; ++names_loop_sym2__) {
         param_names__.emplace_back(std::string() + "p_cfcov_54" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          std::to_string(names_loop_sym2__) + '.' +
+          std::to_string(names_loop_sym1__));
       }
     }
-    for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         3; ++names_loop_sym1__) {
+      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+           3; ++names_loop_sym2__) {
         param_names__.emplace_back(std::string() + "p_cfcov_33" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          std::to_string(names_loop_sym2__) + '.' +
+          std::to_string(names_loop_sym1__));
       }
     }
-    for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-        for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         3; ++names_loop_sym1__) {
+      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+           3; ++names_loop_sym2__) {
+        for (int names_loop_sym3__ = 1; names_loop_sym3__ <=
+             K; ++names_loop_sym3__) {
           param_names__.emplace_back(std::string() + "p_cfcov_33_ar" + '.' +
-            std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
-            std::to_string(sym1__));
+            std::to_string(names_loop_sym3__) + '.' +
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
     }
-    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         2; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "x_p" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         2; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "y_p" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
     if (emit_transformed_parameters__) {
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           N; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "tp_real_1d_ar" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           K; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             M; ++names_loop_sym2__) {
+          for (int names_loop_sym3__ = 1; names_loop_sym3__ <=
+               N; ++names_loop_sym3__) {
             param_names__.emplace_back(std::string() + "tp_real_3d_ar" + '.'
-              + std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
-              std::to_string(sym1__));
+              + std::to_string(names_loop_sym3__) + '.' +
+              std::to_string(names_loop_sym2__) + '.' +
+              std::to_string(names_loop_sym1__));
           }
         }
       }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           N; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "tp_vec" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           N; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             N; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "tp_1d_vec" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           N; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             K; ++names_loop_sym2__) {
+          for (int names_loop_sym3__ = 1; names_loop_sym3__ <=
+               M; ++names_loop_sym3__) {
+            for (int names_loop_sym4__ = 1; names_loop_sym4__ <=
+                 N; ++names_loop_sym4__) {
               param_names__.emplace_back(std::string() + "tp_3d_vec" + '.' +
-                std::to_string(sym4__) + '.' + std::to_string(sym3__) + '.' +
-                std::to_string(sym2__) + '.' + std::to_string(sym1__));
+                std::to_string(names_loop_sym4__) + '.' +
+                std::to_string(names_loop_sym3__) + '.' +
+                std::to_string(names_loop_sym2__) + '.' +
+                std::to_string(names_loop_sym1__));
             }
           }
         }
       }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           N; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "tp_row_vec" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           N; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             N; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "tp_1d_row_vec" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           N; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             K; ++names_loop_sym2__) {
+          for (int names_loop_sym3__ = 1; names_loop_sym3__ <=
+               M; ++names_loop_sym3__) {
+            for (int names_loop_sym4__ = 1; names_loop_sym4__ <=
+                 N; ++names_loop_sym4__) {
               param_names__.emplace_back(std::string() + "tp_3d_row_vec" +
-                '.' + std::to_string(sym4__) + '.' + std::to_string(sym3__) +
-                '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+                '.' + std::to_string(names_loop_sym4__) + '.' +
+                std::to_string(names_loop_sym3__) + '.' +
+                std::to_string(names_loop_sym2__) + '.' +
+                std::to_string(names_loop_sym1__));
             }
           }
         }
       }
-      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           4; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             5; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "tp_mat" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= 4; ++sym4__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           3; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             2; ++names_loop_sym2__) {
+          for (int names_loop_sym3__ = 1; names_loop_sym3__ <=
+               5; ++names_loop_sym3__) {
+            for (int names_loop_sym4__ = 1; names_loop_sym4__ <=
+                 4; ++names_loop_sym4__) {
               param_names__.emplace_back(std::string() + "tp_ar_mat" + '.' +
-                std::to_string(sym4__) + '.' + std::to_string(sym3__) + '.' +
-                std::to_string(sym2__) + '.' + std::to_string(sym1__));
+                std::to_string(names_loop_sym4__) + '.' +
+                std::to_string(names_loop_sym3__) + '.' +
+                std::to_string(names_loop_sym2__) + '.' +
+                std::to_string(names_loop_sym1__));
             }
           }
         }
       }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           N; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "tp_simplex" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           N; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             N; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "tp_1d_simplex" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           N; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             K; ++names_loop_sym2__) {
+          for (int names_loop_sym3__ = 1; names_loop_sym3__ <=
+               M; ++names_loop_sym3__) {
+            for (int names_loop_sym4__ = 1; names_loop_sym4__ <=
+                 N; ++names_loop_sym4__) {
               param_names__.emplace_back(std::string() + "tp_3d_simplex" +
-                '.' + std::to_string(sym4__) + '.' + std::to_string(sym3__) +
-                '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+                '.' + std::to_string(names_loop_sym4__) + '.' +
+                std::to_string(names_loop_sym3__) + '.' +
+                std::to_string(names_loop_sym2__) + '.' +
+                std::to_string(names_loop_sym1__));
             }
           }
         }
       }
-      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           4; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             5; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "tp_cfcov_54" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           3; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             3; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "tp_cfcov_33" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           3; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             3; ++names_loop_sym2__) {
+          for (int names_loop_sym3__ = 1; names_loop_sym3__ <=
+               K; ++names_loop_sym3__) {
             param_names__.emplace_back(std::string() + "tp_cfcov_33_ar" + '.'
-              + std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
-              std::to_string(sym1__));
+              + std::to_string(names_loop_sym3__) + '.' +
+              std::to_string(names_loop_sym2__) + '.' +
+              std::to_string(names_loop_sym1__));
           }
         }
       }
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           2; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "theta_p" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
       param_names__.emplace_back(std::string() + "tp_real");
     }
     if (emit_generated_quantities__) {
       param_names__.emplace_back(std::string() + "gq_r1");
       param_names__.emplace_back(std::string() + "gq_r2");
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           N; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "gq_real_1d_ar" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           K; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             M; ++names_loop_sym2__) {
+          for (int names_loop_sym3__ = 1; names_loop_sym3__ <=
+               N; ++names_loop_sym3__) {
             param_names__.emplace_back(std::string() + "gq_real_3d_ar" + '.'
-              + std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
-              std::to_string(sym1__));
+              + std::to_string(names_loop_sym3__) + '.' +
+              std::to_string(names_loop_sym2__) + '.' +
+              std::to_string(names_loop_sym1__));
           }
         }
       }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           N; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "gq_vec" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           N; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             N; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "gq_1d_vec" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           N; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             K; ++names_loop_sym2__) {
+          for (int names_loop_sym3__ = 1; names_loop_sym3__ <=
+               M; ++names_loop_sym3__) {
+            for (int names_loop_sym4__ = 1; names_loop_sym4__ <=
+                 N; ++names_loop_sym4__) {
               param_names__.emplace_back(std::string() + "gq_3d_vec" + '.' +
-                std::to_string(sym4__) + '.' + std::to_string(sym3__) + '.' +
-                std::to_string(sym2__) + '.' + std::to_string(sym1__));
+                std::to_string(names_loop_sym4__) + '.' +
+                std::to_string(names_loop_sym3__) + '.' +
+                std::to_string(names_loop_sym2__) + '.' +
+                std::to_string(names_loop_sym1__));
             }
           }
         }
       }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           N; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "gq_row_vec" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           N; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             N; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "gq_1d_row_vec" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           N; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             K; ++names_loop_sym2__) {
+          for (int names_loop_sym3__ = 1; names_loop_sym3__ <=
+               M; ++names_loop_sym3__) {
+            for (int names_loop_sym4__ = 1; names_loop_sym4__ <=
+                 N; ++names_loop_sym4__) {
               param_names__.emplace_back(std::string() + "gq_3d_row_vec" +
-                '.' + std::to_string(sym4__) + '.' + std::to_string(sym3__) +
-                '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+                '.' + std::to_string(names_loop_sym4__) + '.' +
+                std::to_string(names_loop_sym3__) + '.' +
+                std::to_string(names_loop_sym2__) + '.' +
+                std::to_string(names_loop_sym1__));
             }
           }
         }
       }
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= 4; ++sym4__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           3; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             2; ++names_loop_sym2__) {
+          for (int names_loop_sym3__ = 1; names_loop_sym3__ <=
+               5; ++names_loop_sym3__) {
+            for (int names_loop_sym4__ = 1; names_loop_sym4__ <=
+                 4; ++names_loop_sym4__) {
               param_names__.emplace_back(std::string() + "gq_ar_mat" + '.' +
-                std::to_string(sym4__) + '.' + std::to_string(sym3__) + '.' +
-                std::to_string(sym2__) + '.' + std::to_string(sym1__));
+                std::to_string(names_loop_sym4__) + '.' +
+                std::to_string(names_loop_sym3__) + '.' +
+                std::to_string(names_loop_sym2__) + '.' +
+                std::to_string(names_loop_sym1__));
             }
           }
         }
       }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           N; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "gq_simplex" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           N; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             N; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "gq_1d_simplex" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           N; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             K; ++names_loop_sym2__) {
+          for (int names_loop_sym3__ = 1; names_loop_sym3__ <=
+               M; ++names_loop_sym3__) {
+            for (int names_loop_sym4__ = 1; names_loop_sym4__ <=
+                 N; ++names_loop_sym4__) {
               param_names__.emplace_back(std::string() + "gq_3d_simplex" +
-                '.' + std::to_string(sym4__) + '.' + std::to_string(sym3__) +
-                '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+                '.' + std::to_string(names_loop_sym4__) + '.' +
+                std::to_string(names_loop_sym3__) + '.' +
+                std::to_string(names_loop_sym2__) + '.' +
+                std::to_string(names_loop_sym1__));
             }
           }
         }
       }
-      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           4; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             5; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "gq_cfcov_54" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           3; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             3; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "gq_cfcov_33" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           3; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             3; ++names_loop_sym2__) {
+          for (int names_loop_sym3__ = 1; names_loop_sym3__ <=
+               K; ++names_loop_sym3__) {
             param_names__.emplace_back(std::string() + "gq_cfcov_33_ar" + '.'
-              + std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
-              std::to_string(sym1__));
+              + std::to_string(names_loop_sym3__) + '.' +
+              std::to_string(names_loop_sym2__) + '.' +
+              std::to_string(names_loop_sym1__));
           }
         }
       }
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           3; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "indices" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           4; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             3; ++names_loop_sym2__) {
+          for (int names_loop_sym3__ = 1; names_loop_sym3__ <=
+               5; ++names_loop_sym3__) {
             param_names__.emplace_back(std::string() + "indexing_mat" + '.' +
-              std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
-              std::to_string(sym1__));
+              std::to_string(names_loop_sym3__) + '.' +
+              std::to_string(names_loop_sym2__) + '.' +
+              std::to_string(names_loop_sym1__));
           }
         }
       }
-      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           4; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             3; ++names_loop_sym2__) {
+          for (int names_loop_sym3__ = 1; names_loop_sym3__ <=
+               3; ++names_loop_sym3__) {
             param_names__.emplace_back(std::string() + "idx_res1" + '.' +
-              std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
-              std::to_string(sym1__));
+              std::to_string(names_loop_sym3__) + '.' +
+              std::to_string(names_loop_sym2__) + '.' +
+              std::to_string(names_loop_sym1__));
           }
         }
       }
-      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           4; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             3; ++names_loop_sym2__) {
+          for (int names_loop_sym3__ = 1; names_loop_sym3__ <=
+               5; ++names_loop_sym3__) {
             param_names__.emplace_back(std::string() + "idx_res2" + '.' +
-              std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
-              std::to_string(sym1__));
+              std::to_string(names_loop_sym3__) + '.' +
+              std::to_string(names_loop_sym2__) + '.' +
+              std::to_string(names_loop_sym1__));
           }
         }
       }
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           3; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             3; ++names_loop_sym2__) {
+          for (int names_loop_sym3__ = 1; names_loop_sym3__ <=
+               3; ++names_loop_sym3__) {
             param_names__.emplace_back(std::string() + "idx_res3" + '.' +
-              std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
-              std::to_string(sym1__));
+              std::to_string(names_loop_sym3__) + '.' +
+              std::to_string(names_loop_sym2__) + '.' +
+              std::to_string(names_loop_sym1__));
           }
         }
       }
-      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           4; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             3; ++names_loop_sym2__) {
+          for (int names_loop_sym3__ = 1; names_loop_sym3__ <=
+               3; ++names_loop_sym3__) {
             param_names__.emplace_back(std::string() + "idx_res11" + '.' +
-              std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
-              std::to_string(sym1__));
+              std::to_string(names_loop_sym3__) + '.' +
+              std::to_string(names_loop_sym2__) + '.' +
+              std::to_string(names_loop_sym1__));
           }
         }
       }
-      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           4; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             3; ++names_loop_sym2__) {
+          for (int names_loop_sym3__ = 1; names_loop_sym3__ <=
+               5; ++names_loop_sym3__) {
             param_names__.emplace_back(std::string() + "idx_res21" + '.' +
-              std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
-              std::to_string(sym1__));
+              std::to_string(names_loop_sym3__) + '.' +
+              std::to_string(names_loop_sym2__) + '.' +
+              std::to_string(names_loop_sym1__));
           }
         }
       }
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           3; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             3; ++names_loop_sym2__) {
+          for (int names_loop_sym3__ = 1; names_loop_sym3__ <=
+               3; ++names_loop_sym3__) {
             param_names__.emplace_back(std::string() + "idx_res31" + '.' +
-              std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
-              std::to_string(sym1__));
+              std::to_string(names_loop_sym3__) + '.' +
+              std::to_string(names_loop_sym2__) + '.' +
+              std::to_string(names_loop_sym1__));
           }
         }
       }
-      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           4; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             3; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "idx_res4" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           2; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             2; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "idx_res5" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
     }
@@ -8916,437 +9138,613 @@ class mother_model final : public model_base_crtp<mother_model> {
     param_names__.emplace_back(std::string() + "p_real");
     param_names__.emplace_back(std::string() + "p_upper");
     param_names__.emplace_back(std::string() + "p_lower");
-    for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         5; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "offset_multiplier" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         5; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "no_offset_multiplier" + '.'
-        + std::to_string(sym1__));
+        + std::to_string(names_loop_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         5; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "offset_no_multiplier" + '.'
-        + std::to_string(sym1__));
+        + std::to_string(names_loop_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         N; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "p_real_1d_ar" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
-        for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         K; ++names_loop_sym1__) {
+      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+           M; ++names_loop_sym2__) {
+        for (int names_loop_sym3__ = 1; names_loop_sym3__ <=
+             N; ++names_loop_sym3__) {
           param_names__.emplace_back(std::string() + "p_real_3d_ar" + '.' +
-            std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
-            std::to_string(sym1__));
+            std::to_string(names_loop_sym3__) + '.' +
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         N; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "p_vec" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         N; ++names_loop_sym1__) {
+      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+           N; ++names_loop_sym2__) {
         param_names__.emplace_back(std::string() + "p_1d_vec" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          std::to_string(names_loop_sym2__) + '.' +
+          std::to_string(names_loop_sym1__));
       }
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-        for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
-          for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         N; ++names_loop_sym1__) {
+      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+           K; ++names_loop_sym2__) {
+        for (int names_loop_sym3__ = 1; names_loop_sym3__ <=
+             M; ++names_loop_sym3__) {
+          for (int names_loop_sym4__ = 1; names_loop_sym4__ <=
+               N; ++names_loop_sym4__) {
             param_names__.emplace_back(std::string() + "p_3d_vec" + '.' +
-              std::to_string(sym4__) + '.' + std::to_string(sym3__) + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__));
+              std::to_string(names_loop_sym4__) + '.' +
+              std::to_string(names_loop_sym3__) + '.' +
+              std::to_string(names_loop_sym2__) + '.' +
+              std::to_string(names_loop_sym1__));
           }
         }
       }
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         N; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "p_row_vec" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         N; ++names_loop_sym1__) {
+      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+           N; ++names_loop_sym2__) {
         param_names__.emplace_back(std::string() + "p_1d_row_vec" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          std::to_string(names_loop_sym2__) + '.' +
+          std::to_string(names_loop_sym1__));
       }
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-        for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
-          for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         N; ++names_loop_sym1__) {
+      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+           K; ++names_loop_sym2__) {
+        for (int names_loop_sym3__ = 1; names_loop_sym3__ <=
+             M; ++names_loop_sym3__) {
+          for (int names_loop_sym4__ = 1; names_loop_sym4__ <=
+               N; ++names_loop_sym4__) {
             param_names__.emplace_back(std::string() + "p_3d_row_vec" + '.' +
-              std::to_string(sym4__) + '.' + std::to_string(sym3__) + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__));
+              std::to_string(names_loop_sym4__) + '.' +
+              std::to_string(names_loop_sym3__) + '.' +
+              std::to_string(names_loop_sym2__) + '.' +
+              std::to_string(names_loop_sym1__));
           }
         }
       }
     }
-    for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         4; ++names_loop_sym1__) {
+      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+           5; ++names_loop_sym2__) {
         param_names__.emplace_back(std::string() + "p_mat" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          std::to_string(names_loop_sym2__) + '.' +
+          std::to_string(names_loop_sym1__));
       }
     }
-    for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-        for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
-          for (int sym4__ = 1; sym4__ <= 4; ++sym4__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         3; ++names_loop_sym1__) {
+      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+           2; ++names_loop_sym2__) {
+        for (int names_loop_sym3__ = 1; names_loop_sym3__ <=
+             5; ++names_loop_sym3__) {
+          for (int names_loop_sym4__ = 1; names_loop_sym4__ <=
+               4; ++names_loop_sym4__) {
             param_names__.emplace_back(std::string() + "p_ar_mat" + '.' +
-              std::to_string(sym4__) + '.' + std::to_string(sym3__) + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__));
+              std::to_string(names_loop_sym4__) + '.' +
+              std::to_string(names_loop_sym3__) + '.' +
+              std::to_string(names_loop_sym2__) + '.' +
+              std::to_string(names_loop_sym1__));
           }
         }
       }
     }
-    for (int sym1__ = 1; sym1__ <= (N - 1); ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <= (N -
+         1); ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "p_simplex" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= (N - 1); ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <= (N -
+         1); ++names_loop_sym1__) {
+      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+           N; ++names_loop_sym2__) {
         param_names__.emplace_back(std::string() + "p_1d_simplex" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          std::to_string(names_loop_sym2__) + '.' +
+          std::to_string(names_loop_sym1__));
       }
     }
-    for (int sym1__ = 1; sym1__ <= (N - 1); ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-        for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
-          for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <= (N -
+         1); ++names_loop_sym1__) {
+      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+           K; ++names_loop_sym2__) {
+        for (int names_loop_sym3__ = 1; names_loop_sym3__ <=
+             M; ++names_loop_sym3__) {
+          for (int names_loop_sym4__ = 1; names_loop_sym4__ <=
+               N; ++names_loop_sym4__) {
             param_names__.emplace_back(std::string() + "p_3d_simplex" + '.' +
-              std::to_string(sym4__) + '.' + std::to_string(sym3__) + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__));
+              std::to_string(names_loop_sym4__) + '.' +
+              std::to_string(names_loop_sym3__) + '.' +
+              std::to_string(names_loop_sym2__) + '.' +
+              std::to_string(names_loop_sym1__));
           }
         }
       }
     }
-    for (int sym1__ = 1; sym1__ <= ((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) *
-         4)); ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <= ((((4 * (4 - 1)) /
+         2) + 4) + ((5 - 4) * 4)); ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "p_cfcov_54" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) *
-         3)); ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <= ((((3 * (3 - 1)) /
+         2) + 3) + ((3 - 3) * 3)); ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "p_cfcov_33" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) *
-         3)); ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <= ((((3 * (3 - 1)) /
+         2) + 3) + ((3 - 3) * 3)); ++names_loop_sym1__) {
+      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+           K; ++names_loop_sym2__) {
         param_names__.emplace_back(std::string() + "p_cfcov_33_ar" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          std::to_string(names_loop_sym2__) + '.' +
+          std::to_string(names_loop_sym1__));
       }
     }
-    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         2; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "x_p" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         2; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "y_p" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
     if (emit_transformed_parameters__) {
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           N; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "tp_real_1d_ar" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           K; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             M; ++names_loop_sym2__) {
+          for (int names_loop_sym3__ = 1; names_loop_sym3__ <=
+               N; ++names_loop_sym3__) {
             param_names__.emplace_back(std::string() + "tp_real_3d_ar" + '.'
-              + std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
-              std::to_string(sym1__));
+              + std::to_string(names_loop_sym3__) + '.' +
+              std::to_string(names_loop_sym2__) + '.' +
+              std::to_string(names_loop_sym1__));
           }
         }
       }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           N; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "tp_vec" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           N; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             N; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "tp_1d_vec" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           N; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             K; ++names_loop_sym2__) {
+          for (int names_loop_sym3__ = 1; names_loop_sym3__ <=
+               M; ++names_loop_sym3__) {
+            for (int names_loop_sym4__ = 1; names_loop_sym4__ <=
+                 N; ++names_loop_sym4__) {
               param_names__.emplace_back(std::string() + "tp_3d_vec" + '.' +
-                std::to_string(sym4__) + '.' + std::to_string(sym3__) + '.' +
-                std::to_string(sym2__) + '.' + std::to_string(sym1__));
+                std::to_string(names_loop_sym4__) + '.' +
+                std::to_string(names_loop_sym3__) + '.' +
+                std::to_string(names_loop_sym2__) + '.' +
+                std::to_string(names_loop_sym1__));
             }
           }
         }
       }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           N; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "tp_row_vec" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           N; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             N; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "tp_1d_row_vec" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           N; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             K; ++names_loop_sym2__) {
+          for (int names_loop_sym3__ = 1; names_loop_sym3__ <=
+               M; ++names_loop_sym3__) {
+            for (int names_loop_sym4__ = 1; names_loop_sym4__ <=
+                 N; ++names_loop_sym4__) {
               param_names__.emplace_back(std::string() + "tp_3d_row_vec" +
-                '.' + std::to_string(sym4__) + '.' + std::to_string(sym3__) +
-                '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+                '.' + std::to_string(names_loop_sym4__) + '.' +
+                std::to_string(names_loop_sym3__) + '.' +
+                std::to_string(names_loop_sym2__) + '.' +
+                std::to_string(names_loop_sym1__));
             }
           }
         }
       }
-      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           4; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             5; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "tp_mat" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= 4; ++sym4__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           3; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             2; ++names_loop_sym2__) {
+          for (int names_loop_sym3__ = 1; names_loop_sym3__ <=
+               5; ++names_loop_sym3__) {
+            for (int names_loop_sym4__ = 1; names_loop_sym4__ <=
+                 4; ++names_loop_sym4__) {
               param_names__.emplace_back(std::string() + "tp_ar_mat" + '.' +
-                std::to_string(sym4__) + '.' + std::to_string(sym3__) + '.' +
-                std::to_string(sym2__) + '.' + std::to_string(sym1__));
+                std::to_string(names_loop_sym4__) + '.' +
+                std::to_string(names_loop_sym3__) + '.' +
+                std::to_string(names_loop_sym2__) + '.' +
+                std::to_string(names_loop_sym1__));
             }
           }
         }
       }
-      for (int sym1__ = 1; sym1__ <= (N - 1); ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <= (N -
+           1); ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "tp_simplex" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= (N - 1); ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <= (N -
+           1); ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             N; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "tp_1d_simplex" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= (N - 1); ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <= (N -
+           1); ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             K; ++names_loop_sym2__) {
+          for (int names_loop_sym3__ = 1; names_loop_sym3__ <=
+               M; ++names_loop_sym3__) {
+            for (int names_loop_sym4__ = 1; names_loop_sym4__ <=
+                 N; ++names_loop_sym4__) {
               param_names__.emplace_back(std::string() + "tp_3d_simplex" +
-                '.' + std::to_string(sym4__) + '.' + std::to_string(sym3__) +
-                '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+                '.' + std::to_string(names_loop_sym4__) + '.' +
+                std::to_string(names_loop_sym3__) + '.' +
+                std::to_string(names_loop_sym2__) + '.' +
+                std::to_string(names_loop_sym1__));
             }
           }
         }
       }
-      for (int sym1__ = 1; sym1__ <= ((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) *
-           4)); ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <= ((((4 * (4 - 1)) /
+           2) + 4) + ((5 - 4) * 4)); ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "tp_cfcov_54" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) *
-           3)); ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <= ((((3 * (3 - 1)) /
+           2) + 3) + ((3 - 3) * 3)); ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "tp_cfcov_33" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) *
-           3)); ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <= ((((3 * (3 - 1)) /
+           2) + 3) + ((3 - 3) * 3)); ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             K; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "tp_cfcov_33_ar" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           2; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "theta_p" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
       param_names__.emplace_back(std::string() + "tp_real");
     }
     if (emit_generated_quantities__) {
       param_names__.emplace_back(std::string() + "gq_r1");
       param_names__.emplace_back(std::string() + "gq_r2");
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           N; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "gq_real_1d_ar" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           K; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             M; ++names_loop_sym2__) {
+          for (int names_loop_sym3__ = 1; names_loop_sym3__ <=
+               N; ++names_loop_sym3__) {
             param_names__.emplace_back(std::string() + "gq_real_3d_ar" + '.'
-              + std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
-              std::to_string(sym1__));
+              + std::to_string(names_loop_sym3__) + '.' +
+              std::to_string(names_loop_sym2__) + '.' +
+              std::to_string(names_loop_sym1__));
           }
         }
       }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           N; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "gq_vec" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           N; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             N; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "gq_1d_vec" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           N; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             K; ++names_loop_sym2__) {
+          for (int names_loop_sym3__ = 1; names_loop_sym3__ <=
+               M; ++names_loop_sym3__) {
+            for (int names_loop_sym4__ = 1; names_loop_sym4__ <=
+                 N; ++names_loop_sym4__) {
               param_names__.emplace_back(std::string() + "gq_3d_vec" + '.' +
-                std::to_string(sym4__) + '.' + std::to_string(sym3__) + '.' +
-                std::to_string(sym2__) + '.' + std::to_string(sym1__));
+                std::to_string(names_loop_sym4__) + '.' +
+                std::to_string(names_loop_sym3__) + '.' +
+                std::to_string(names_loop_sym2__) + '.' +
+                std::to_string(names_loop_sym1__));
             }
           }
         }
       }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           N; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "gq_row_vec" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           N; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             N; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "gq_1d_row_vec" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           N; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             K; ++names_loop_sym2__) {
+          for (int names_loop_sym3__ = 1; names_loop_sym3__ <=
+               M; ++names_loop_sym3__) {
+            for (int names_loop_sym4__ = 1; names_loop_sym4__ <=
+                 N; ++names_loop_sym4__) {
               param_names__.emplace_back(std::string() + "gq_3d_row_vec" +
-                '.' + std::to_string(sym4__) + '.' + std::to_string(sym3__) +
-                '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+                '.' + std::to_string(names_loop_sym4__) + '.' +
+                std::to_string(names_loop_sym3__) + '.' +
+                std::to_string(names_loop_sym2__) + '.' +
+                std::to_string(names_loop_sym1__));
             }
           }
         }
       }
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= 4; ++sym4__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           3; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             2; ++names_loop_sym2__) {
+          for (int names_loop_sym3__ = 1; names_loop_sym3__ <=
+               5; ++names_loop_sym3__) {
+            for (int names_loop_sym4__ = 1; names_loop_sym4__ <=
+                 4; ++names_loop_sym4__) {
               param_names__.emplace_back(std::string() + "gq_ar_mat" + '.' +
-                std::to_string(sym4__) + '.' + std::to_string(sym3__) + '.' +
-                std::to_string(sym2__) + '.' + std::to_string(sym1__));
+                std::to_string(names_loop_sym4__) + '.' +
+                std::to_string(names_loop_sym3__) + '.' +
+                std::to_string(names_loop_sym2__) + '.' +
+                std::to_string(names_loop_sym1__));
             }
           }
         }
       }
-      for (int sym1__ = 1; sym1__ <= (N - 1); ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <= (N -
+           1); ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "gq_simplex" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= (N - 1); ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <= (N -
+           1); ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             N; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "gq_1d_simplex" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= (N - 1); ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <= (N -
+           1); ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             K; ++names_loop_sym2__) {
+          for (int names_loop_sym3__ = 1; names_loop_sym3__ <=
+               M; ++names_loop_sym3__) {
+            for (int names_loop_sym4__ = 1; names_loop_sym4__ <=
+                 N; ++names_loop_sym4__) {
               param_names__.emplace_back(std::string() + "gq_3d_simplex" +
-                '.' + std::to_string(sym4__) + '.' + std::to_string(sym3__) +
-                '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+                '.' + std::to_string(names_loop_sym4__) + '.' +
+                std::to_string(names_loop_sym3__) + '.' +
+                std::to_string(names_loop_sym2__) + '.' +
+                std::to_string(names_loop_sym1__));
             }
           }
         }
       }
-      for (int sym1__ = 1; sym1__ <= ((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) *
-           4)); ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <= ((((4 * (4 - 1)) /
+           2) + 4) + ((5 - 4) * 4)); ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "gq_cfcov_54" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) *
-           3)); ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <= ((((3 * (3 - 1)) /
+           2) + 3) + ((3 - 3) * 3)); ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "gq_cfcov_33" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) *
-           3)); ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <= ((((3 * (3 - 1)) /
+           2) + 3) + ((3 - 3) * 3)); ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             K; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "gq_cfcov_33_ar" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           3; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "indices" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           4; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             3; ++names_loop_sym2__) {
+          for (int names_loop_sym3__ = 1; names_loop_sym3__ <=
+               5; ++names_loop_sym3__) {
             param_names__.emplace_back(std::string() + "indexing_mat" + '.' +
-              std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
-              std::to_string(sym1__));
+              std::to_string(names_loop_sym3__) + '.' +
+              std::to_string(names_loop_sym2__) + '.' +
+              std::to_string(names_loop_sym1__));
           }
         }
       }
-      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           4; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             3; ++names_loop_sym2__) {
+          for (int names_loop_sym3__ = 1; names_loop_sym3__ <=
+               3; ++names_loop_sym3__) {
             param_names__.emplace_back(std::string() + "idx_res1" + '.' +
-              std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
-              std::to_string(sym1__));
+              std::to_string(names_loop_sym3__) + '.' +
+              std::to_string(names_loop_sym2__) + '.' +
+              std::to_string(names_loop_sym1__));
           }
         }
       }
-      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           4; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             3; ++names_loop_sym2__) {
+          for (int names_loop_sym3__ = 1; names_loop_sym3__ <=
+               5; ++names_loop_sym3__) {
             param_names__.emplace_back(std::string() + "idx_res2" + '.' +
-              std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
-              std::to_string(sym1__));
+              std::to_string(names_loop_sym3__) + '.' +
+              std::to_string(names_loop_sym2__) + '.' +
+              std::to_string(names_loop_sym1__));
           }
         }
       }
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           3; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             3; ++names_loop_sym2__) {
+          for (int names_loop_sym3__ = 1; names_loop_sym3__ <=
+               3; ++names_loop_sym3__) {
             param_names__.emplace_back(std::string() + "idx_res3" + '.' +
-              std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
-              std::to_string(sym1__));
+              std::to_string(names_loop_sym3__) + '.' +
+              std::to_string(names_loop_sym2__) + '.' +
+              std::to_string(names_loop_sym1__));
           }
         }
       }
-      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           4; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             3; ++names_loop_sym2__) {
+          for (int names_loop_sym3__ = 1; names_loop_sym3__ <=
+               3; ++names_loop_sym3__) {
             param_names__.emplace_back(std::string() + "idx_res11" + '.' +
-              std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
-              std::to_string(sym1__));
+              std::to_string(names_loop_sym3__) + '.' +
+              std::to_string(names_loop_sym2__) + '.' +
+              std::to_string(names_loop_sym1__));
           }
         }
       }
-      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           4; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             3; ++names_loop_sym2__) {
+          for (int names_loop_sym3__ = 1; names_loop_sym3__ <=
+               5; ++names_loop_sym3__) {
             param_names__.emplace_back(std::string() + "idx_res21" + '.' +
-              std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
-              std::to_string(sym1__));
+              std::to_string(names_loop_sym3__) + '.' +
+              std::to_string(names_loop_sym2__) + '.' +
+              std::to_string(names_loop_sym1__));
           }
         }
       }
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           3; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             3; ++names_loop_sym2__) {
+          for (int names_loop_sym3__ = 1; names_loop_sym3__ <=
+               3; ++names_loop_sym3__) {
             param_names__.emplace_back(std::string() + "idx_res31" + '.' +
-              std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
-              std::to_string(sym1__));
+              std::to_string(names_loop_sym3__) + '.' +
+              std::to_string(names_loop_sym2__) + '.' +
+              std::to_string(names_loop_sym1__));
           }
         }
       }
-      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           4; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             3; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "idx_res4" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           2; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             2; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "idx_res5" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
     }

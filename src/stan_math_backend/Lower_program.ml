@@ -445,7 +445,7 @@ let gen_get_dims {Program.output_vars; _} =
 
 let rec gen_indexing_loop ?(index_ids = []) iteratee dims gen_body =
   let iter d gen_body =
-    let loopvar, gensym_exit = Common.Gensym.enter ~prefix:"" () in
+    let loopvar, gensym_exit = Common.Gensym.enter ~prefix:"names_loop_" () in
     let forloop =
       Stmts.fori loopvar
         (lower_expr Expr.Helpers.loop_bottom)
@@ -930,12 +930,13 @@ module Testing = struct
     |> print_endline;
     [%expect
       {|
-          for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-            param_names__.emplace_back(std::string() + "foo" + '.' +
-              std::to_string(sym1__) + '.' + "real");
-            param_names__.emplace_back(std::string() + "foo" + '.' +
-              std::to_string(sym1__) + '.' + "imag");
-          } |}]
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <= N; ++names_loop_sym1__) {
+        param_names__.emplace_back(std::string() + "foo" + '.' +
+          std::to_string(names_loop_sym1__) + '.' + "real");
+        param_names__.emplace_back(std::string() + "foo" + '.' +
+          std::to_string(names_loop_sym1__) + '.' + "imag");
+      }
+      |}]
 
   let%expect_test "tuple names" =
     gen_param_names
@@ -948,10 +949,12 @@ module Testing = struct
     [%expect
       {|
       param_names__.emplace_back(std::string() + "tuple" + ':' + std::to_string(1));
-      for (int sym1__ = 1; sym1__ <= nested; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           nested; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "tuple" + ':' +
-          std::to_string(2) + '.' + std::to_string(sym1__));
-      } |}]
+          std::to_string(2) + '.' + std::to_string(names_loop_sym1__));
+      }
+      |}]
 
   let%expect_test "array of tuple names" =
     gen_param_names
@@ -965,13 +968,15 @@ module Testing = struct
     |> print_endline;
     [%expect
       {|
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <= N; ++names_loop_sym1__) {
+        param_names__.emplace_back(std::string() + "arr_tuple" + '.' +
+          std::to_string(names_loop_sym1__) + ':' + std::to_string(1));
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             nested; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "arr_tuple" + '.' +
-            std::to_string(sym1__) + ':' + std::to_string(1));
-          for (int sym2__ = 1; sym2__ <= nested; ++sym2__) {
-            param_names__.emplace_back(std::string() + "arr_tuple" + '.' +
-              std::to_string(sym1__) + ':' + std::to_string(2) + '.' +
-              std::to_string(sym2__));
-          }
-        } |}]
+            std::to_string(names_loop_sym1__) + ':' + std::to_string(2) + '.' +
+            std::to_string(names_loop_sym2__));
+        }
+      }
+      |}]
 end

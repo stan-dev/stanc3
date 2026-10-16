@@ -1079,20 +1079,27 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
                           emit_generated_quantities__ = true) const final {
     param_names__.emplace_back(std::string() + "theta");
     param_names__.emplace_back(std::string() + "phi");
-    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         2; ++names_loop_sym1__) {
+      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+           3; ++names_loop_sym2__) {
         param_names__.emplace_back(std::string() + "x_matrix" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          std::to_string(names_loop_sym2__) + '.' +
+          std::to_string(names_loop_sym1__));
       }
     }
-    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         2; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "x_vector" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         2; ++names_loop_sym1__) {
+      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+           2; ++names_loop_sym2__) {
         param_names__.emplace_back(std::string() + "x_cov" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          std::to_string(names_loop_sym2__) + '.' +
+          std::to_string(names_loop_sym1__));
       }
     }
     if (emit_transformed_parameters__) {}
@@ -1104,19 +1111,24 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
                             emit_generated_quantities__ = true) const final {
     param_names__.emplace_back(std::string() + "theta");
     param_names__.emplace_back(std::string() + "phi");
-    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         2; ++names_loop_sym1__) {
+      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+           3; ++names_loop_sym2__) {
         param_names__.emplace_back(std::string() + "x_matrix" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          std::to_string(names_loop_sym2__) + '.' +
+          std::to_string(names_loop_sym1__));
       }
     }
-    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         2; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "x_vector" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         3; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "x_cov" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}

@@ -119,14 +119,16 @@ class qr_unpack_model final : public model_base_crtp<qr_unpack_model> {
           Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(M, M, DUMMY_VAR__);
         {
           std::tuple<Eigen::Matrix<local_scalar_t__,-1,-1>,
-            Eigen::Matrix<local_scalar_t__,-1,-1>> sym1__;
+            Eigen::Matrix<local_scalar_t__,-1,-1>> unpack_sym1__;
           current_statement__ = 8;
-          stan::model::assign(sym1__, stan::math::qr_thin(A),
-            "assigning variable sym1__");
+          stan::model::assign(unpack_sym1__, stan::math::qr_thin(A),
+            "assigning variable unpack_sym1__");
           current_statement__ = 9;
-          stan::model::assign(Q, std::get<0>(sym1__), "assigning variable Q");
+          stan::model::assign(Q, std::get<0>(unpack_sym1__),
+            "assigning variable Q");
           current_statement__ = 9;
-          stan::model::assign(R, std::get<1>(sym1__), "assigning variable R");
+          stan::model::assign(R, std::get<1>(unpack_sym1__),
+            "assigning variable R");
         }
         current_statement__ = 10;
         lp_accum__.add((stan::math::sum(Q) +
@@ -180,14 +182,16 @@ class qr_unpack_model final : public model_base_crtp<qr_unpack_model> {
           Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(M, M, DUMMY_VAR__);
         {
           std::tuple<Eigen::Matrix<local_scalar_t__,-1,-1>,
-            Eigen::Matrix<local_scalar_t__,-1,-1>> sym1__;
+            Eigen::Matrix<local_scalar_t__,-1,-1>> unpack_sym1__;
           current_statement__ = 8;
-          stan::model::assign(sym1__, stan::math::qr_thin(A),
-            "assigning variable sym1__");
+          stan::model::assign(unpack_sym1__, stan::math::qr_thin(A),
+            "assigning variable unpack_sym1__");
           current_statement__ = 9;
-          stan::model::assign(Q, std::get<0>(sym1__), "assigning variable Q");
+          stan::model::assign(Q, std::get<0>(unpack_sym1__),
+            "assigning variable Q");
           current_statement__ = 9;
-          stan::model::assign(R, std::get<1>(sym1__), "assigning variable R");
+          stan::model::assign(R, std::get<1>(unpack_sym1__),
+            "assigning variable R");
         }
         current_statement__ = 10;
         lp_accum__.add((stan::math::sum(Q) +
@@ -326,10 +330,13 @@ class qr_unpack_model final : public model_base_crtp<qr_unpack_model> {
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         M; ++names_loop_sym1__) {
+      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+           N; ++names_loop_sym2__) {
         param_names__.emplace_back(std::string() + "A" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          std::to_string(names_loop_sym2__) + '.' +
+          std::to_string(names_loop_sym1__));
       }
     }
     if (emit_transformed_parameters__) {}
@@ -339,10 +346,13 @@ class qr_unpack_model final : public model_base_crtp<qr_unpack_model> {
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         M; ++names_loop_sym1__) {
+      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+           N; ++names_loop_sym2__) {
         param_names__.emplace_back(std::string() + "A" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          std::to_string(names_loop_sym2__) + '.' +
+          std::to_string(names_loop_sym1__));
       }
     }
     if (emit_transformed_parameters__) {}

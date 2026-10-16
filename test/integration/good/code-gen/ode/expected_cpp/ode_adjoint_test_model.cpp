@@ -520,9 +520,9 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
         "assigning variable z");
       if (emit_transformed_parameters__) {
         current_statement__ = 5;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
-            out__.write(z[(sym2__ - 1)][(sym1__ - 1)]);
+        for (int loop_sym1__ = 1; loop_sym1__ <= N; ++loop_sym1__) {
+          for (int loop_sym2__ = 1; loop_sym2__ <= M; ++loop_sym2__) {
+            out__.write(z[(loop_sym2__ - 1)][(loop_sym1__ - 1)]);
           }
         }
       }
@@ -657,20 +657,25 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
     param_names__.emplace_back(std::string() + "y");
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         N; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "y0" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
     param_names__.emplace_back(std::string() + "t0");
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         N; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "times" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
     if (emit_transformed_parameters__) {
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           N; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             M; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "z" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
     }
@@ -681,20 +686,25 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
     param_names__.emplace_back(std::string() + "y");
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         N; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "y0" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
     param_names__.emplace_back(std::string() + "t0");
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         N; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "times" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
     if (emit_transformed_parameters__) {
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           N; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             M; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "z" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
     }
