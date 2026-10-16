@@ -283,62 +283,62 @@ class inliner_temps_model final : public model_base_crtp<inliner_temps_model> {
         return ;
       }
       double z = std::numeric_limits<double>::quiet_NaN();
-      double inline_self_diff_x_arg_sym2__ =
+      double inline_self_diff_x_arg_sym1__ =
         stan::math::normal_rng(0, 1, base_rng__);
       double inline_self_diff_return_sym1__;
       {
         current_statement__ = 3;
-        inline_self_diff_return_sym1__ = (inline_self_diff_x_arg_sym2__ -
-          inline_self_diff_x_arg_sym2__);
+        inline_self_diff_return_sym1__ = (inline_self_diff_x_arg_sym1__ -
+          inline_self_diff_x_arg_sym1__);
       }
       z = inline_self_diff_return_sym1__;
       Eigen::Matrix<double,-1,-1> a =
         Eigen::Matrix<double,-1,-1>::Constant(d, d,
           std::numeric_limits<double>::quiet_NaN());
-      decltype(auto) inline_sign_fix_a_arg_sym5__ =
+      decltype(auto) inline_sign_fix_a_arg_sym1__ =
         stan::math::to_ref(stan::math::multiply(L, U));
-      Eigen::Matrix<double,-1,-1> inline_sign_fix_return_sym4__;
+      Eigen::Matrix<double,-1,-1> inline_sign_fix_return_sym1__;
       {
-        int inline_sign_fix_d_sym6__;
+        int inline_sign_fix_d_sym1__;
         current_statement__ = 4;
-        inline_sign_fix_d_sym6__ = stan::math::rows(
-                                     inline_sign_fix_a_arg_sym5__);
+        inline_sign_fix_d_sym1__ = stan::math::rows(
+                                     inline_sign_fix_a_arg_sym1__);
         current_statement__ = 5;
         stan::math::validate_non_negative_index("out", "d",
-          inline_sign_fix_d_sym6__);
+          inline_sign_fix_d_sym1__);
         current_statement__ = 6;
         stan::math::validate_non_negative_index("out", "d",
-          inline_sign_fix_d_sym6__);
-        Eigen::Matrix<local_scalar_t__,-1,-1> inline_sign_fix_out_sym7__;
+          inline_sign_fix_d_sym1__);
+        Eigen::Matrix<local_scalar_t__,-1,-1> inline_sign_fix_out_sym1__;
         current_statement__ = 7;
-        stan::model::assign(inline_sign_fix_out_sym7__,
-          inline_sign_fix_a_arg_sym5__,
-          "assigning variable inline_sign_fix_out_sym7__");
+        stan::model::assign(inline_sign_fix_out_sym1__,
+          inline_sign_fix_a_arg_sym1__,
+          "assigning variable inline_sign_fix_out_sym1__");
         current_statement__ = 12;
-        for (int inline_sign_fix_j_sym8__ = 1; inline_sign_fix_j_sym8__ <=
-             inline_sign_fix_d_sym6__; ++inline_sign_fix_j_sym8__) {
+        for (int inline_sign_fix_j_sym1__ = 1; inline_sign_fix_j_sym1__ <=
+             inline_sign_fix_d_sym1__; ++inline_sign_fix_j_sym1__) {
           current_statement__ = 10;
           if (stan::math::logical_lt(
-                stan::model::rvalue(inline_sign_fix_a_arg_sym5__,
-                  "inline_sign_fix_a_arg_sym5__", stan::model::index_uni(1),
-                  stan::model::index_uni(inline_sign_fix_j_sym8__)), 0)) {
+                stan::model::rvalue(inline_sign_fix_a_arg_sym1__,
+                  "inline_sign_fix_a_arg_sym1__", stan::model::index_uni(1),
+                  stan::model::index_uni(inline_sign_fix_j_sym1__)), 0)) {
             current_statement__ = 8;
-            stan::model::assign(inline_sign_fix_out_sym7__,
+            stan::model::assign(inline_sign_fix_out_sym1__,
               stan::math::minus(
-                stan::model::rvalue(inline_sign_fix_a_arg_sym5__,
-                  "inline_sign_fix_a_arg_sym5__", stan::model::index_omni(),
-                  stan::model::index_uni(inline_sign_fix_j_sym8__))),
-              "assigning variable inline_sign_fix_out_sym7__",
+                stan::model::rvalue(inline_sign_fix_a_arg_sym1__,
+                  "inline_sign_fix_a_arg_sym1__", stan::model::index_omni(),
+                  stan::model::index_uni(inline_sign_fix_j_sym1__))),
+              "assigning variable inline_sign_fix_out_sym1__",
               stan::model::index_omni(),
-              stan::model::index_uni(inline_sign_fix_j_sym8__));
+              stan::model::index_uni(inline_sign_fix_j_sym1__));
           }
         }
         current_statement__ = 13;
-        stan::model::assign(inline_sign_fix_return_sym4__,
-          inline_sign_fix_out_sym7__,
-          "assigning variable inline_sign_fix_return_sym4__");
+        stan::model::assign(inline_sign_fix_return_sym1__,
+          inline_sign_fix_out_sym1__,
+          "assigning variable inline_sign_fix_return_sym1__");
       }
-      stan::model::assign(a, inline_sign_fix_return_sym4__,
+      stan::model::assign(a, inline_sign_fix_return_sym1__,
         "assigning variable a");
       out__.write(z);
       out__.write(a);
@@ -409,10 +409,10 @@ class inliner_temps_model final : public model_base_crtp<inliner_temps_model> {
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {
       param_names__.emplace_back(std::string() + "z");
-      for (int sym10__ = 1; sym10__ <= d; ++sym10__) {
-        for (int sym11__ = 1; sym11__ <= d; ++sym11__) {
+      for (int sym1__ = 1; sym1__ <= d; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= d; ++sym2__) {
           param_names__.emplace_back(std::string() + "a" + '.' +
-            std::to_string(sym11__) + '.' + std::to_string(sym10__));
+            std::to_string(sym2__) + '.' + std::to_string(sym1__));
         }
       }
     }
@@ -424,10 +424,10 @@ class inliner_temps_model final : public model_base_crtp<inliner_temps_model> {
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {
       param_names__.emplace_back(std::string() + "z");
-      for (int sym10__ = 1; sym10__ <= d; ++sym10__) {
-        for (int sym11__ = 1; sym11__ <= d; ++sym11__) {
+      for (int sym1__ = 1; sym1__ <= d; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= d; ++sym2__) {
           param_names__.emplace_back(std::string() + "a" + '.' +
-            std::to_string(sym11__) + '.' + std::to_string(sym10__));
+            std::to_string(sym2__) + '.' + std::to_string(sym1__));
         }
       }
     }

@@ -576,10 +576,10 @@ class unenforce_initialize_should_fail_model final : public model_base_crtp<unen
                           emit_generated_quantities__ = true) const final {
     param_names__.emplace_back(std::string() + "param");
     if (emit_transformed_parameters__) {
-      for (int sym25__ = 1; sym25__ <= 5; ++sym25__) {
-        for (int sym26__ = 1; sym26__ <= 2; ++sym26__) {
+      for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
           param_names__.emplace_back(std::string() + "local" + '.' +
-            std::to_string(sym26__) + '.' + std::to_string(sym25__));
+            std::to_string(sym2__) + '.' + std::to_string(sym1__));
         }
       }
     }
@@ -591,10 +591,10 @@ class unenforce_initialize_should_fail_model final : public model_base_crtp<unen
                             emit_generated_quantities__ = true) const final {
     param_names__.emplace_back(std::string() + "param");
     if (emit_transformed_parameters__) {
-      for (int sym25__ = 1; sym25__ <= 5; ++sym25__) {
-        for (int sym26__ = 1; sym26__ <= 2; ++sym26__) {
+      for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
           param_names__.emplace_back(std::string() + "local" + '.' +
-            std::to_string(sym26__) + '.' + std::to_string(sym25__));
+            std::to_string(sym2__) + '.' + std::to_string(sym1__));
         }
       }
     }

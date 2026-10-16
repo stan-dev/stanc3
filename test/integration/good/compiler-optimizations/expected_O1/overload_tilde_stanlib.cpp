@@ -333,9 +333,9 @@ class overload_tilde_stanlib_model final : public model_base_crtp<overload_tilde
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
       param_names__.emplace_back(std::string() + "theta" + '.' +
-        std::to_string(sym3__));
+        std::to_string(sym1__));
     }
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
@@ -344,9 +344,9 @@ class overload_tilde_stanlib_model final : public model_base_crtp<overload_tilde
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
       param_names__.emplace_back(std::string() + "theta" + '.' +
-        std::to_string(sym3__));
+        std::to_string(sym1__));
     }
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}

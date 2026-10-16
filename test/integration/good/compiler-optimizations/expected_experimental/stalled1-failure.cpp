@@ -732,10 +732,10 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
     param_names__.emplace_back(std::string() + "alpha2");
     param_names__.emplace_back(std::string() + "alpha12");
     param_names__.emplace_back(std::string() + "tau");
-    for (int sym32__ = 1; sym32__ <= K; ++sym32__) {
-      for (int sym33__ = 1; sym33__ <= I; ++sym33__) {
+    for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= I; ++sym2__) {
         param_names__.emplace_back(std::string() + "b" + '.' +
-          std::to_string(sym33__) + '.' + std::to_string(sym32__));
+          std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
     if (emit_transformed_parameters__) {
@@ -752,10 +752,10 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
     param_names__.emplace_back(std::string() + "alpha2");
     param_names__.emplace_back(std::string() + "alpha12");
     param_names__.emplace_back(std::string() + "tau");
-    for (int sym32__ = 1; sym32__ <= K; ++sym32__) {
-      for (int sym33__ = 1; sym33__ <= I; ++sym33__) {
+    for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= I; ++sym2__) {
         param_names__.emplace_back(std::string() + "b" + '.' +
-          std::to_string(sym33__) + '.' + std::to_string(sym32__));
+          std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
     if (emit_transformed_parameters__) {

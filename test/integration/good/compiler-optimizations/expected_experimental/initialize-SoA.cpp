@@ -415,20 +415,20 @@ class initialize_SoA_model final : public model_base_crtp<initialize_SoA_model> 
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int sym16__ = 1; sym16__ <= 3; ++sym16__) {
+    for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
       param_names__.emplace_back(std::string() + "y" + '.' +
-        std::to_string(sym16__));
+        std::to_string(sym1__));
     }
-    for (int sym16__ = 1; sym16__ <= 4; ++sym16__) {
-      for (int sym17__ = 1; sym17__ <= 3; ++sym17__) {
+    for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
         param_names__.emplace_back(std::string() + "arr_vec" + '.' +
-          std::to_string(sym17__) + '.' + std::to_string(sym16__));
+          std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
     if (emit_transformed_parameters__) {
-      for (int sym16__ = 1; sym16__ <= 3; ++sym16__) {
+      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
         param_names__.emplace_back(std::string() + "x" + '.' +
-          std::to_string(sym16__));
+          std::to_string(sym1__));
       }
     }
     if (emit_generated_quantities__) {}
@@ -437,20 +437,20 @@ class initialize_SoA_model final : public model_base_crtp<initialize_SoA_model> 
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int sym16__ = 1; sym16__ <= 3; ++sym16__) {
+    for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
       param_names__.emplace_back(std::string() + "y" + '.' +
-        std::to_string(sym16__));
+        std::to_string(sym1__));
     }
-    for (int sym16__ = 1; sym16__ <= 4; ++sym16__) {
-      for (int sym17__ = 1; sym17__ <= 3; ++sym17__) {
+    for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
         param_names__.emplace_back(std::string() + "arr_vec" + '.' +
-          std::to_string(sym17__) + '.' + std::to_string(sym16__));
+          std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
     if (emit_transformed_parameters__) {
-      for (int sym16__ = 1; sym16__ <= 3; ++sym16__) {
+      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
         param_names__.emplace_back(std::string() + "x" + '.' +
-          std::to_string(sym16__));
+          std::to_string(sym1__));
       }
     }
     if (emit_generated_quantities__) {}

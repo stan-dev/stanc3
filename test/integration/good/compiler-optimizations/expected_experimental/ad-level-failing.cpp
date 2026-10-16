@@ -789,10 +789,10 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
     param_names__.emplace_back(std::string() + "xi");
     param_names__.emplace_back(std::string() + "delta");
     if (emit_transformed_parameters__) {
-      for (int sym38__ = 1; sym38__ <= 4; ++sym38__) {
-        for (int sym39__ = 1; sym39__ <= N_t; ++sym39__) {
+      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N_t; ++sym2__) {
           param_names__.emplace_back(std::string() + "y" + '.' +
-            std::to_string(sym39__) + '.' + std::to_string(sym38__));
+            std::to_string(sym2__) + '.' + std::to_string(sym1__));
         }
       }
     }
@@ -807,10 +807,10 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
     param_names__.emplace_back(std::string() + "xi");
     param_names__.emplace_back(std::string() + "delta");
     if (emit_transformed_parameters__) {
-      for (int sym38__ = 1; sym38__ <= 4; ++sym38__) {
-        for (int sym39__ = 1; sym39__ <= N_t; ++sym39__) {
+      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N_t; ++sym2__) {
           param_names__.emplace_back(std::string() + "y" + '.' +
-            std::to_string(sym39__) + '.' + std::to_string(sym38__));
+            std::to_string(sym2__) + '.' + std::to_string(sym1__));
         }
       }
     }

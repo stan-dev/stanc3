@@ -900,16 +900,16 @@ class unenforce_initialize_omni_model final : public model_base_crtp<unenforce_i
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int sym27__ = 1; sym27__ <= 2; ++sym27__) {
+    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
       param_names__.emplace_back(std::string() + "y" + '.' +
-        std::to_string(sym27__));
+        std::to_string(sym1__));
     }
-    for (int sym27__ = 1; sym27__ <= 5; ++sym27__) {
-      for (int sym28__ = 1; sym28__ <= 4; ++sym28__) {
-        for (int sym29__ = 1; sym29__ <= 3; ++sym29__) {
+    for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
+        for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
           param_names__.emplace_back(std::string() + "arr" + '.' +
-            std::to_string(sym29__) + '.' + std::to_string(sym28__) + '.' +
-            std::to_string(sym27__));
+            std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
+            std::to_string(sym1__));
         }
       }
     }
@@ -920,16 +920,16 @@ class unenforce_initialize_omni_model final : public model_base_crtp<unenforce_i
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int sym27__ = 1; sym27__ <= 2; ++sym27__) {
+    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
       param_names__.emplace_back(std::string() + "y" + '.' +
-        std::to_string(sym27__));
+        std::to_string(sym1__));
     }
-    for (int sym27__ = 1; sym27__ <= 5; ++sym27__) {
-      for (int sym28__ = 1; sym28__ <= 4; ++sym28__) {
-        for (int sym29__ = 1; sym29__ <= 3; ++sym29__) {
+    for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
+        for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
           param_names__.emplace_back(std::string() + "arr" + '.' +
-            std::to_string(sym29__) + '.' + std::to_string(sym28__) + '.' +
-            std::to_string(sym27__));
+            std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
+            std::to_string(sym1__));
         }
       }
     }

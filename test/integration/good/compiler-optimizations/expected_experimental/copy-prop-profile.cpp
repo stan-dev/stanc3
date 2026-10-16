@@ -336,10 +336,10 @@ class copy_prop_profile_model final : public model_base_crtp<copy_prop_profile_m
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int sym7__ = 1; sym7__ <= N; ++sym7__) {
-      for (int sym8__ = 1; sym8__ <= N; ++sym8__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
         param_names__.emplace_back(std::string() + "X" + '.' +
-          std::to_string(sym8__) + '.' + std::to_string(sym7__));
+          std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
     if (emit_transformed_parameters__) {}
@@ -349,10 +349,10 @@ class copy_prop_profile_model final : public model_base_crtp<copy_prop_profile_m
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int sym7__ = 1; sym7__ <= N; ++sym7__) {
-      for (int sym8__ = 1; sym8__ <= N; ++sym8__) {
+    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
         param_names__.emplace_back(std::string() + "X" + '.' +
-          std::to_string(sym8__) + '.' + std::to_string(sym7__));
+          std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
     if (emit_transformed_parameters__) {}

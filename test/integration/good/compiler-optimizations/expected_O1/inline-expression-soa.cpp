@@ -99,18 +99,18 @@ class inline_expression_soa_model final : public model_base_crtp<inline_expressi
       auto p =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(10, 10);
       {
-        decltype(auto) inline_foo_i_arg_sym5__ =
+        decltype(auto) inline_foo_i_arg_sym2__ =
           stan::math::to_ref(stan::math::add(p, p));
-        Eigen::Matrix<local_scalar_t__,-1,-1> inline_foo_return_sym4__;
+        Eigen::Matrix<local_scalar_t__,-1,-1> inline_foo_return_sym2__;
         {
           current_statement__ = 2;
-          stan::model::assign(inline_foo_return_sym4__,
-            stan::math::multiply(inline_foo_i_arg_sym5__,
-              inline_foo_i_arg_sym5__),
-            "assigning variable inline_foo_return_sym4__");
+          stan::model::assign(inline_foo_return_sym2__,
+            stan::math::multiply(inline_foo_i_arg_sym2__,
+              inline_foo_i_arg_sym2__),
+            "assigning variable inline_foo_return_sym2__");
         }
         lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
-                         stan::math::to_vector(inline_foo_return_sym4__)));
+                         stan::math::to_vector(inline_foo_return_sym2__)));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -147,15 +147,15 @@ class inline_expression_soa_model final : public model_base_crtp<inline_expressi
         in__.template read<
           stan::math::var_value<Eigen::Matrix<double,-1,-1>>>(10, 10);
       {
-        decltype(auto) inline_foo_i_arg_sym2__ =
+        decltype(auto) inline_foo_i_arg_sym1__ =
           stan::math::to_ref(stan::math::add(p, p));
         stan::math::var_value<Eigen::Matrix<double,-1,-1>>
           inline_foo_return_sym1__;
         {
           current_statement__ = 2;
           stan::model::assign(inline_foo_return_sym1__,
-            stan::math::multiply(inline_foo_i_arg_sym2__,
-              inline_foo_i_arg_sym2__),
+            stan::math::multiply(inline_foo_i_arg_sym1__,
+              inline_foo_i_arg_sym1__),
             "assigning variable inline_foo_return_sym1__");
         }
         lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
@@ -293,10 +293,10 @@ class inline_expression_soa_model final : public model_base_crtp<inline_expressi
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int sym7__ = 1; sym7__ <= 10; ++sym7__) {
-      for (int sym8__ = 1; sym8__ <= 10; ++sym8__) {
+    for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
         param_names__.emplace_back(std::string() + "p" + '.' +
-          std::to_string(sym8__) + '.' + std::to_string(sym7__));
+          std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
     if (emit_transformed_parameters__) {}
@@ -306,10 +306,10 @@ class inline_expression_soa_model final : public model_base_crtp<inline_expressi
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int sym7__ = 1; sym7__ <= 10; ++sym7__) {
-      for (int sym8__ = 1; sym8__ <= 10; ++sym8__) {
+    for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
         param_names__.emplace_back(std::string() + "p" + '.' +
-          std::to_string(sym8__) + '.' + std::to_string(sym7__));
+          std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
     if (emit_transformed_parameters__) {}
