@@ -58,25 +58,25 @@ sign_fix(const T0__& a_arg__, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    int lcm_sym15__;
-    int lcm_sym14__;
-    int lcm_sym13__;
-    Eigen::Matrix<local_scalar_t__,-1,1> lcm_sym12__;
-    Eigen::Matrix<local_scalar_t__,-1,1> lcm_sym11__;
-    int lcm_sym10__;
+    int lcm_sym6__;
+    int lcm_sym5__;
+    int lcm_sym4__;
+    Eigen::Matrix<local_scalar_t__,-1,1> lcm_sym3__;
+    Eigen::Matrix<local_scalar_t__,-1,1> lcm_sym2__;
+    int lcm_sym1__;
     {
       int d = std::numeric_limits<int>::min();
-      lcm_sym10__ = stan::math::rows(a);
-      d = lcm_sym10__;
+      lcm_sym1__ = stan::math::rows(a);
+      d = lcm_sym1__;
       current_statement__ = 4;
-      stan::math::validate_non_negative_index("out", "d", lcm_sym10__);
+      stan::math::validate_non_negative_index("out", "d", lcm_sym1__);
       current_statement__ = 5;
-      stan::math::validate_non_negative_index("out", "d", lcm_sym10__);
+      stan::math::validate_non_negative_index("out", "d", lcm_sym1__);
       Eigen::Matrix<local_scalar_t__,-1,-1> out;
       current_statement__ = 6;
       stan::model::assign(out, a, "assigning variable out");
       current_statement__ = 11;
-      if (stan::math::logical_gte(lcm_sym10__, 1)) {
+      if (stan::math::logical_gte(lcm_sym1__, 1)) {
         current_statement__ = 9;
         if (stan::math::logical_lt(
               stan::model::rvalue(a, "a", stan::model::index_uni(1),
@@ -88,7 +88,7 @@ sign_fix(const T0__& a_arg__, std::ostream* pstream__) {
                 stan::model::index_uni(1))), "assigning variable out",
             stan::model::index_omni(), stan::model::index_uni(1));
         }
-        for (int j = 2; j <= lcm_sym10__; ++j) {
+        for (int j = 2; j <= lcm_sym1__; ++j) {
           current_statement__ = 9;
           if (stan::math::logical_lt(
                 stan::model::rvalue(a, "a", stan::model::index_uni(1),
@@ -125,7 +125,7 @@ stan::return_type_t<T0__> self_diff(const T0__& x, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    local_scalar_t__ lcm_sym16__;
+    local_scalar_t__ lcm_sym7__;
     {
       current_statement__ = 23;
       return (x - x);
@@ -298,16 +298,16 @@ class inliner_temps_model final : public model_base_crtp<inliner_temps_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<double,-1,-1> lcm_sym26__;
-      int lcm_sym25__;
-      int lcm_sym24__;
-      int lcm_sym23__;
-      int lcm_sym22__;
-      int lcm_sym21__;
-      Eigen::Matrix<double,-1,1> lcm_sym20__;
-      Eigen::Matrix<double,-1,1> lcm_sym19__;
-      double lcm_sym18__;
-      int lcm_sym17__;
+      Eigen::Matrix<double,-1,-1> lcm_sym17__;
+      int lcm_sym16__;
+      int lcm_sym15__;
+      int lcm_sym14__;
+      int lcm_sym13__;
+      int lcm_sym12__;
+      Eigen::Matrix<double,-1,1> lcm_sym11__;
+      Eigen::Matrix<double,-1,1> lcm_sym10__;
+      double lcm_sym9__;
+      int lcm_sym8__;
       if (stan::math::logical_negation(
             (stan::math::primitive_value(emit_transformed_parameters__) ||
             stan::math::primitive_value(emit_generated_quantities__)))) {
@@ -321,10 +321,10 @@ class inliner_temps_model final : public model_base_crtp<inliner_temps_model> {
         stan::math::normal_rng(0, 1, base_rng__);
       double inline_self_diff_return_sym1__;
       {
-        lcm_sym18__ = (inline_self_diff_x_arg_sym2__ -
+        lcm_sym9__ = (inline_self_diff_x_arg_sym2__ -
           inline_self_diff_x_arg_sym2__);
       }
-      z = lcm_sym18__;
+      z = lcm_sym9__;
       Eigen::Matrix<double,-1,-1> a =
         Eigen::Matrix<double,-1,-1>::Constant(d, d,
           std::numeric_limits<double>::quiet_NaN());
@@ -333,18 +333,18 @@ class inliner_temps_model final : public model_base_crtp<inliner_temps_model> {
       Eigen::Matrix<double,-1,-1> inline_sign_fix_return_sym4__;
       {
         int inline_sign_fix_d_sym6__ = std::numeric_limits<int>::min();
-        lcm_sym17__ = stan::math::rows(inline_sign_fix_a_arg_sym5__);
+        lcm_sym8__ = stan::math::rows(inline_sign_fix_a_arg_sym5__);
         current_statement__ = 4;
-        stan::math::validate_non_negative_index("out", "d", lcm_sym17__);
+        stan::math::validate_non_negative_index("out", "d", lcm_sym8__);
         current_statement__ = 5;
-        stan::math::validate_non_negative_index("out", "d", lcm_sym17__);
+        stan::math::validate_non_negative_index("out", "d", lcm_sym8__);
         Eigen::Matrix<double,-1,-1> inline_sign_fix_out_sym7__;
         current_statement__ = 6;
         stan::model::assign(inline_sign_fix_out_sym7__,
           inline_sign_fix_a_arg_sym5__,
           "assigning variable inline_sign_fix_out_sym7__");
         current_statement__ = 11;
-        if (stan::math::logical_gte(lcm_sym17__, 1)) {
+        if (stan::math::logical_gte(lcm_sym8__, 1)) {
           current_statement__ = 9;
           if (stan::math::logical_lt(
                 stan::model::rvalue(inline_sign_fix_a_arg_sym5__,
@@ -360,7 +360,7 @@ class inliner_temps_model final : public model_base_crtp<inliner_temps_model> {
               stan::model::index_omni(), stan::model::index_uni(1));
           }
           for (int inline_sign_fix_j_sym8__ = 2; inline_sign_fix_j_sym8__ <=
-               lcm_sym17__; ++inline_sign_fix_j_sym8__) {
+               lcm_sym8__; ++inline_sign_fix_j_sym8__) {
             current_statement__ = 9;
             if (stan::math::logical_lt(
                   stan::model::rvalue(inline_sign_fix_a_arg_sym5__,
@@ -387,7 +387,7 @@ class inliner_temps_model final : public model_base_crtp<inliner_temps_model> {
       }
       stan::model::assign(a, inline_sign_fix_return_sym4__,
         "assigning variable a");
-      out__.write(lcm_sym18__);
+      out__.write(lcm_sym9__);
       out__.write(a);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -456,10 +456,10 @@ class inliner_temps_model final : public model_base_crtp<inliner_temps_model> {
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {
       param_names__.emplace_back(std::string() + "z");
-      for (int sym27__ = 1; sym27__ <= d; ++sym27__) {
-        for (int sym28__ = 1; sym28__ <= d; ++sym28__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= d; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= d; ++idx_sym2__) {
           param_names__.emplace_back(std::string() + "a" + '.' +
-            std::to_string(sym28__) + '.' + std::to_string(sym27__));
+            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
         }
       }
     }
@@ -471,10 +471,10 @@ class inliner_temps_model final : public model_base_crtp<inliner_temps_model> {
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {
       param_names__.emplace_back(std::string() + "z");
-      for (int sym27__ = 1; sym27__ <= d; ++sym27__) {
-        for (int sym28__ = 1; sym28__ <= d; ++sym28__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= d; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= d; ++idx_sym2__) {
           param_names__.emplace_back(std::string() + "a" + '.' +
-            std::to_string(sym28__) + '.' + std::to_string(sym27__));
+            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
         }
       }
     }

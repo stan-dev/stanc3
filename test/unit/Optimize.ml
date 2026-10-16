@@ -2,17 +2,12 @@ open Std
 open Std.Sexp_conv
 open Analysis_and_optimization.Optimize
 open Middle
-open Common
 open Analysis_and_optimization.Mir_utils
 open Analysis_and_optimization.Dataflow_types
 
-let reset_and_mir_of_string s =
-  Gensym.reset_danger_use_cautiously ();
-  Test_utils.mir_of_string s
-
 let%expect_test "map_rec_stmt_loc" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       model {
         print(24);
@@ -53,7 +48,7 @@ let%expect_test "map_rec_stmt_loc" =
 
 let%expect_test "map_rec_state_stmt_loc" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       model {
         print(24);
@@ -102,7 +97,7 @@ let%expect_test "map_rec_state_stmt_loc" =
 
 let%expect_test "inline functions" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       functions {
         void f(int x, matrix y) {
@@ -172,7 +167,7 @@ let%expect_test "inline functions" =
 
 let%expect_test "inline functions 2" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       functions {
         void f() {
@@ -222,7 +217,7 @@ let%expect_test "inline functions 2" =
 
 let%expect_test "list collapsing" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       functions {
         void f(int x, matrix y) {
@@ -423,7 +418,7 @@ let%expect_test "list collapsing" =
 
 let%expect_test "recursive functions" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       functions {
         int fib(int n) {
@@ -442,53 +437,54 @@ let%expect_test "recursive functions" =
   Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
   [%expect
     {|
-      functions {
-        int fib(int n) {
-          {
-            if((n == 0) || (n == 1)) {
-              return n;
-            }
-            return (fib((n - 1)) + fib((n - 2)));
+    functions {
+      int fib(int n) {
+        {
+          if((n == 0) || (n == 1)) {
+            return n;
           }
+          return (fib((n - 1)) + fib((n - 2)));
         }
       }
+    }
 
 
 
-      log_prob {
-        {
-          int inline_fib_return_sym1__;
-          data int inline_fib_early_ret_check_sym2__;
-          inline_fib_early_ret_check_sym2__ = 0;
-          for(inline_fib_iterator_sym3__ in 1:1) {
-            if((5 == 0)) ; else {
+    log_prob {
+      {
+        int inline_fib_return_sym1__;
+        data int inline_fib_early_ret_check_sym2__;
+        inline_fib_early_ret_check_sym2__ = 0;
+        for(inline_fib_iterator_sym3__ in 1:1) {
+          if((5 == 0)) ; else {
 
-            }
-            if((5 == 0) || (5 == 1)) {
-              inline_fib_early_ret_check_sym2__ = 1;
-              inline_fib_return_sym1__ = 5;
-              break;
-            }
+          }
+          if((5 == 0) || (5 == 1)) {
             inline_fib_early_ret_check_sym2__ = 1;
-            inline_fib_return_sym1__ = (fib((5 - 1)) + fib((5 - 2)));
+            inline_fib_return_sym1__ = 5;
             break;
           }
-          FnReject__(inline_fib_return_sym1__);
+          inline_fib_early_ret_check_sym2__ = 1;
+          inline_fib_return_sym1__ = (fib((5 - 1)) + fib((5 - 2)));
+          break;
         }
+        FnReject__(inline_fib_return_sym1__);
       }
+    }
 
 
-      generate_quantities {
-        if(emit_transformed_parameters__) ; else {
+    generate_quantities {
+      if(emit_transformed_parameters__) ; else {
 
-        }
-        if(!(emit_transformed_parameters__ || emit_generated_quantities__)) return;
-        if(!(emit_generated_quantities__)) return;
-      } |}]
+      }
+      if(!(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+      if(!(emit_generated_quantities__)) return;
+    }
+    |}]
 
 let%expect_test "do not try to inline extern functions" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
             functions {
               int fib(int n);
@@ -525,7 +521,7 @@ let%expect_test "do not try to inline extern functions" =
 
 let%expect_test "inline function in for loop" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       functions {
         int f(int z) {
@@ -546,61 +542,62 @@ let%expect_test "inline function in for loop" =
   Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
   [%expect
     {|
-      functions {
-        int f(int z) {
-          {
-            FnPrint__("f");
-            return 42;
-          }
-        }
-        int g(int z) {
-          {
-            FnPrint__("g");
-            return (z + 24);
-          }
+    functions {
+      int f(int z) {
+        {
+          FnPrint__("f");
+          return 42;
         }
       }
-
-
-
-      log_prob {
+      int g(int z) {
         {
-          int inline_f_return_sym1__;
-          int inline_g_return_sym3__;
+          FnPrint__("g");
+          return (z + 24);
+        }
+      }
+    }
+
+
+
+    log_prob {
+      {
+        int inline_f_return_sym1__;
+        int inline_g_return_sym3__;
+        {
+          FnPrint__("f");
+          inline_f_return_sym1__ = 42;
+        }
+        {
+          FnPrint__("g");
+          inline_g_return_sym3__ = (3 + 24);
+        }
+        for(i in inline_f_return_sym1__:inline_g_return_sym3__) {
           {
-            FnPrint__("f");
-            inline_f_return_sym1__ = 42;
+            FnPrint__("body");
           }
           {
             FnPrint__("g");
             inline_g_return_sym3__ = (3 + 24);
           }
-          for(i in inline_f_return_sym1__:inline_g_return_sym3__) {
-            {
-              FnPrint__("body");
-            }
-            {
-              FnPrint__("g");
-              inline_g_return_sym3__ = (3 + 24);
-            }
-          }
         }
       }
+    }
 
 
-      generate_quantities {
-        if(emit_transformed_parameters__) ; else {
+    generate_quantities {
+      if(emit_transformed_parameters__) ; else {
 
-        }
-        if(!(emit_transformed_parameters__ || emit_generated_quantities__)) return;
-        if(!(emit_generated_quantities__)) return;
-      } |}]
+      }
+      if(!(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+      if(!(emit_generated_quantities__)) return;
+    }
+    |}]
 
 (* TODO: check test results from here *)
 
 let%expect_test "inline function in for loop 2" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       functions {
         int f(int z) {
@@ -621,30 +618,43 @@ let%expect_test "inline function in for loop 2" =
   Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
   [%expect
     {|
-      functions {
-        int f(int z) {
-          {
-            FnPrint__("f");
-            return 42;
-          }
-        }
-        int g(int z) {
-          {
-            FnPrint__("g");
-            return (f(z) + 24);
-          }
+    functions {
+      int f(int z) {
+        {
+          FnPrint__("f");
+          return 42;
         }
       }
-
-
-
-      log_prob {
+      int g(int z) {
         {
-          int inline_f_return_sym5__;
-          int inline_g_return_sym7__;
+          FnPrint__("g");
+          return (f(z) + 24);
+        }
+      }
+    }
+
+
+
+    log_prob {
+      {
+        int inline_f_return_sym5__;
+        int inline_g_return_sym7__;
+        {
+          FnPrint__("f");
+          inline_f_return_sym5__ = 42;
+        }
+        {
+          FnPrint__("g");
+          int inline_g_inline_f_return_sym3___sym8__;
           {
             FnPrint__("f");
-            inline_f_return_sym5__ = 42;
+            inline_g_inline_f_return_sym3___sym8__ = 42;
+          }
+          inline_g_return_sym7__ = (inline_g_inline_f_return_sym3___sym8__ + 24);
+        }
+        for(i in inline_f_return_sym5__:inline_g_return_sym7__) {
+          {
+            FnPrint__("body");
           }
           {
             FnPrint__("g");
@@ -655,35 +665,23 @@ let%expect_test "inline function in for loop 2" =
             }
             inline_g_return_sym7__ = (inline_g_inline_f_return_sym3___sym8__ + 24);
           }
-          for(i in inline_f_return_sym5__:inline_g_return_sym7__) {
-            {
-              FnPrint__("body");
-            }
-            {
-              FnPrint__("g");
-              int inline_g_inline_f_return_sym3___sym8__;
-              {
-                FnPrint__("f");
-                inline_g_inline_f_return_sym3___sym8__ = 42;
-              }
-              inline_g_return_sym7__ = (inline_g_inline_f_return_sym3___sym8__ + 24);
-            }
-          }
         }
       }
+    }
 
 
-      generate_quantities {
-        if(emit_transformed_parameters__) ; else {
+    generate_quantities {
+      if(emit_transformed_parameters__) ; else {
 
-        }
-        if(!(emit_transformed_parameters__ || emit_generated_quantities__)) return;
-        if(!(emit_generated_quantities__)) return;
-      } |}]
+      }
+      if(!(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+      if(!(emit_generated_quantities__)) return;
+    }
+    |}]
 
 let%expect_test "inline function in while loop" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       functions {
         int f(int z) {
@@ -749,7 +747,7 @@ let%expect_test "inline function in while loop" =
 
 let%expect_test "inline function in if then else" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       functions {
         int f(int z) {
@@ -811,7 +809,7 @@ let%expect_test "inline function in if then else" =
 
 let%expect_test "inline function in ternary if " =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       functions {
         int f(int z) {
@@ -836,66 +834,67 @@ let%expect_test "inline function in ternary if " =
   Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
   [%expect
     {|
-      functions {
-        int f(int z) {
-          {
-            FnPrint__("f");
-            return 42;
-          }
+    functions {
+      int f(int z) {
+        {
+          FnPrint__("f");
+          return 42;
         }
-        int g(int z) {
+      }
+      int g(int z) {
+        {
+          FnPrint__("g");
+          return (z + 24);
+        }
+      }
+      int h(int z) {
+        {
+          FnPrint__("h");
+          return (z + 4);
+        }
+      }
+    }
+
+
+
+    log_prob {
+      {
+        int inline_f_return_sym1__;
+        int inline_g_return_sym3__;
+        int inline_h_return_sym5__;
+        {
+          FnPrint__("f");
+          inline_f_return_sym1__ = 42;
+        }
+        if(inline_f_return_sym1__) {
           {
             FnPrint__("g");
-            return (z + 24);
+            inline_g_return_sym3__ = (3 + 24);
           }
-        }
-        int h(int z) {
+        } else {
           {
             FnPrint__("h");
-            return (z + 4);
+            inline_h_return_sym5__ = (4 + 4);
           }
         }
+        FnPrint__((inline_f_return_sym1__ ? inline_g_return_sym3__ :
+                   inline_h_return_sym5__));
       }
+    }
 
 
+    generate_quantities {
+      if(emit_transformed_parameters__) ; else {
 
-      log_prob {
-        {
-          int inline_f_return_sym1__;
-          int inline_g_return_sym3__;
-          int inline_h_return_sym5__;
-          {
-            FnPrint__("f");
-            inline_f_return_sym1__ = 42;
-          }
-          if(inline_f_return_sym1__) {
-            {
-              FnPrint__("g");
-              inline_g_return_sym3__ = (3 + 24);
-            }
-          } else {
-            {
-              FnPrint__("h");
-              inline_h_return_sym5__ = (4 + 4);
-            }
-          }
-          FnPrint__((inline_f_return_sym1__ ? inline_g_return_sym3__ :
-                     inline_h_return_sym5__));
-        }
       }
-
-
-      generate_quantities {
-        if(emit_transformed_parameters__) ; else {
-
-        }
-        if(!(emit_transformed_parameters__ || emit_generated_quantities__)) return;
-        if(!(emit_generated_quantities__)) return;
-      } |}]
+      if(!(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+      if(!(emit_generated_quantities__)) return;
+    }
+    |}]
 
 let%expect_test "inline function multiple returns " =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       functions {
         int f(int z) {
@@ -915,52 +914,53 @@ let%expect_test "inline function multiple returns " =
   Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
   [%expect
     {|
-      functions {
-        int f(int z) {
-          {
-            if(2) {
-              FnPrint__("f");
-              return 42;
-            }
-            return 6;
+    functions {
+      int f(int z) {
+        {
+          if(2) {
+            FnPrint__("f");
+            return 42;
           }
+          return 6;
         }
       }
+    }
 
 
 
-      log_prob {
-        {
-          int inline_f_return_sym1__;
-          data int inline_f_early_ret_check_sym2__;
-          inline_f_early_ret_check_sym2__ = 0;
-          for(inline_f_iterator_sym3__ in 1:1) {
-            if(2) {
-              FnPrint__("f");
-              inline_f_early_ret_check_sym2__ = 1;
-              inline_f_return_sym1__ = 42;
-              break;
-            }
+    log_prob {
+      {
+        int inline_f_return_sym1__;
+        data int inline_f_early_ret_check_sym2__;
+        inline_f_early_ret_check_sym2__ = 0;
+        for(inline_f_iterator_sym3__ in 1:1) {
+          if(2) {
+            FnPrint__("f");
             inline_f_early_ret_check_sym2__ = 1;
-            inline_f_return_sym1__ = 6;
+            inline_f_return_sym1__ = 42;
             break;
           }
-          FnPrint__(inline_f_return_sym1__);
+          inline_f_early_ret_check_sym2__ = 1;
+          inline_f_return_sym1__ = 6;
+          break;
         }
+        FnPrint__(inline_f_return_sym1__);
       }
+    }
 
 
-      generate_quantities {
-        if(emit_transformed_parameters__) ; else {
+    generate_quantities {
+      if(emit_transformed_parameters__) ; else {
 
-        }
-        if(!(emit_transformed_parameters__ || emit_generated_quantities__)) return;
-        if(!(emit_generated_quantities__)) return;
-      } |}]
+      }
+      if(!(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+      if(!(emit_generated_quantities__)) return;
+    }
+    |}]
 
 let%expect_test "inline function indices " =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       functions {
         int f(int z) {
@@ -978,46 +978,47 @@ let%expect_test "inline function indices " =
   Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
   [%expect
     {|
-      functions {
-        int f(int z) {
-          {
-            FnPrint__(z);
-            return 42;
-          }
-        }
-      }
-
-
-
-      log_prob {
+    functions {
+      int f(int z) {
         {
-          array[array[int, 2], 2] a;
-          int inline_f_return_sym3__;
-          int inline_f_return_sym1__;
-          {
-            FnPrint__(2);
-            inline_f_return_sym3__ = 42;
-          }
-          {
-            FnPrint__(1);
-            inline_f_return_sym1__ = 42;
-          }
-          FnPrint__(a[inline_f_return_sym1__, inline_f_return_sym3__]);
+          FnPrint__(z);
+          return 42;
         }
       }
+    }
 
 
-      generate_quantities {
-        if(emit_transformed_parameters__) ; else {
 
+    log_prob {
+      {
+        array[array[int, 2], 2] a;
+        int inline_f_return_sym3__;
+        int inline_f_return_sym1__;
+        {
+          FnPrint__(2);
+          inline_f_return_sym3__ = 42;
         }
-        if(!(emit_transformed_parameters__ || emit_generated_quantities__)) return;
-        if(!(emit_generated_quantities__)) return;
-      } |}]
+        {
+          FnPrint__(1);
+          inline_f_return_sym1__ = 42;
+        }
+        FnPrint__(a[inline_f_return_sym1__, inline_f_return_sym3__]);
+      }
+    }
+
+
+    generate_quantities {
+      if(emit_transformed_parameters__) ; else {
+
+      }
+      if(!(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+      if(!(emit_generated_quantities__)) return;
+    }
+    |}]
 
 let%expect_test "inline function and " =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       functions {
         int f(int z) {
@@ -1035,47 +1036,48 @@ let%expect_test "inline function and " =
   Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
   [%expect
     {|
-      functions {
-        int f(int z) {
-          {
-            FnPrint__(z);
-            return 42;
-          }
-        }
-      }
-
-
-
-      log_prob {
+    functions {
+      int f(int z) {
         {
-          int inline_f_return_sym1__;
-          int inline_f_return_sym3__;
-          {
-            FnPrint__(1);
-            inline_f_return_sym1__ = 42;
-          }
-          if(inline_f_return_sym1__) {
-            {
-              FnPrint__(2);
-              inline_f_return_sym3__ = 42;
-            }
-          }
-          FnPrint__(inline_f_return_sym1__ && inline_f_return_sym3__);
+          FnPrint__(z);
+          return 42;
         }
       }
+    }
 
 
-      generate_quantities {
-        if(emit_transformed_parameters__) ; else {
 
+    log_prob {
+      {
+        int inline_f_return_sym1__;
+        int inline_f_return_sym3__;
+        {
+          FnPrint__(1);
+          inline_f_return_sym1__ = 42;
         }
-        if(!(emit_transformed_parameters__ || emit_generated_quantities__)) return;
-        if(!(emit_generated_quantities__)) return;
-      } |}]
+        if(inline_f_return_sym1__) {
+          {
+            FnPrint__(2);
+            inline_f_return_sym3__ = 42;
+          }
+        }
+        FnPrint__(inline_f_return_sym1__ && inline_f_return_sym3__);
+      }
+    }
+
+
+    generate_quantities {
+      if(emit_transformed_parameters__) ; else {
+
+      }
+      if(!(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+      if(!(emit_generated_quantities__)) return;
+    }
+    |}]
 
 let%expect_test "inline function or " =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       functions {
         int f(int z) {
@@ -1092,47 +1094,48 @@ let%expect_test "inline function or " =
   Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
   [%expect
     {|
-      functions {
-        int f(int z) {
-          {
-            FnPrint__(z);
-            return 42;
-          }
-        }
-      }
-
-
-
-      log_prob {
+    functions {
+      int f(int z) {
         {
-          int inline_f_return_sym1__;
-          int inline_f_return_sym3__;
-          {
-            FnPrint__(1);
-            inline_f_return_sym1__ = 42;
-          }
-          if(inline_f_return_sym1__) ; else {
-            {
-              FnPrint__(2);
-              inline_f_return_sym3__ = 42;
-            }
-          }
-          FnPrint__(inline_f_return_sym1__ || inline_f_return_sym3__);
+          FnPrint__(z);
+          return 42;
         }
       }
+    }
 
 
-      generate_quantities {
-        if(emit_transformed_parameters__) ; else {
 
+    log_prob {
+      {
+        int inline_f_return_sym1__;
+        int inline_f_return_sym3__;
+        {
+          FnPrint__(1);
+          inline_f_return_sym1__ = 42;
         }
-        if(!(emit_transformed_parameters__ || emit_generated_quantities__)) return;
-        if(!(emit_generated_quantities__)) return;
-      } |}]
+        if(inline_f_return_sym1__) ; else {
+          {
+            FnPrint__(2);
+            inline_f_return_sym3__ = 42;
+          }
+        }
+        FnPrint__(inline_f_return_sym1__ || inline_f_return_sym3__);
+      }
+    }
+
+
+    generate_quantities {
+      if(emit_transformed_parameters__) ; else {
+
+      }
+      if(!(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+      if(!(emit_generated_quantities__)) return;
+    }
+    |}]
 
 let%expect_test "unroll nested loop" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|      model {
                 for (i in 1:2)
                   for (j in 3:4)
@@ -1173,7 +1176,7 @@ let%expect_test "unroll nested loop" =
 
 let%expect_test "unroll nested loop 2" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|      model {
                 for (i in 1:2)
                   for (j in i:4)
@@ -1370,7 +1373,7 @@ let%expect_test "unroll nested loop 2" =
 
 let%expect_test "unroll nested loop 3" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|      model {
                 for (i in 1:2)
                   for (j in i:4)
@@ -1465,7 +1468,7 @@ let%expect_test "unroll nested loop 3" =
 
 let%expect_test "unroll nested loop with break" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|      model {
                 for (i in 1:2)
                   for (j in 3:4) {
@@ -1504,7 +1507,7 @@ let%expect_test "unroll nested loop with break" =
 
 let%expect_test "constant propagation" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       transformed data {
         int i;
@@ -1546,7 +1549,7 @@ let%expect_test "constant propagation" =
 
 let%expect_test "constant propagation, local scope" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       transformed data {
         int i;
@@ -1594,7 +1597,7 @@ let%expect_test "constant propagation, local scope" =
 
 let%expect_test "constant propagation, model block local scope" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       model {
         int i;
@@ -1643,7 +1646,7 @@ let%expect_test "constant propagation, model block local scope" =
 
 let%expect_test "expression propagation" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       transformed data {
         int i;
@@ -1683,7 +1686,7 @@ let%expect_test "expression propagation" =
 
 let%expect_test "copy propagation" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       model {
         int i;
@@ -1722,7 +1725,7 @@ let%expect_test "copy propagation" =
 
 let%expect_test "dead code elimination" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       transformed data {
         array[2] int i;
@@ -1766,7 +1769,7 @@ let%expect_test "dead code elimination" =
 
 let%expect_test "dead code elimination decl" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       model {
         int i;
@@ -1802,7 +1805,7 @@ let%expect_test "dead code elimination decl" =
 
 let%expect_test "dead code elimination, for loop" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       model {
         int i;
@@ -1830,7 +1833,7 @@ let%expect_test "dead code elimination, for loop" =
 
 let%expect_test "dead code elimination, while loop" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       model {
         int i;
@@ -1863,7 +1866,7 @@ let%expect_test "dead code elimination, while loop" =
 
 let%expect_test "dead code elimination, if then" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       model {
         int i;
@@ -1911,7 +1914,7 @@ let%expect_test "dead code elimination, if then" =
 
 let%expect_test "dead code elimination, nested" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       model {
         int i;
@@ -1943,7 +1946,7 @@ let%expect_test "dead code elimination, real zero if (direct MIR)" =
   (* Construct MIR directly because Stan's type checker rejects real in
      if-conditions, but optimization passes can produce Lit(Real, "0.") there.
      Expr.Helpers.float 0.0 produces Lit(Real, "0.") via Float.to_string. *)
-  let mir = reset_and_mir_of_string {|
+  let mir = Test_utils.mir_of_string {|
       model {}
       |} in
   let real_zero = Expr.Helpers.float 0.0 in
@@ -1977,7 +1980,7 @@ let%expect_test "dead code elimination, real zero if (direct MIR)" =
       } |}]
 
 let%expect_test "dead code elimination, real zero while (direct MIR)" =
-  let mir = reset_and_mir_of_string {|
+  let mir = Test_utils.mir_of_string {|
       model {}
       |} in
   let real_zero = Expr.Helpers.float 0.0 in
@@ -2002,7 +2005,7 @@ let%expect_test "dead code elimination, real zero while (direct MIR)" =
 
 let%expect_test "dead code elimination, real zero if no else (direct MIR)" =
   (* Test Lit(Real, "0.") in if with no else branch *)
-  let mir = reset_and_mir_of_string {|
+  let mir = Test_utils.mir_of_string {|
       model {}
       |} in
   let real_zero = Expr.Helpers.float 0.0 in
@@ -2027,7 +2030,7 @@ let%expect_test "dead code elimination, real zero if no else (direct MIR)" =
 
 let%expect_test "partial evaluation" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       model {
         if (1 > 2) {
@@ -2062,7 +2065,7 @@ let%expect_test "partial evaluation" =
 
 let%expect_test "partial evaluate reject" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       model {
         int x = 5 %/% 0;
@@ -2087,7 +2090,7 @@ let%expect_test "partial evaluate reject" =
 
 let%expect_test "try partially evaluate" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       model {
         real x;
@@ -2122,7 +2125,7 @@ let%expect_test "try partially evaluate" =
 
 let%expect_test "partially evaluate with equality check" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       model {
         vector[2] x;
@@ -2153,7 +2156,7 @@ let%expect_test "partially evaluate with equality check" =
 
 let%expect_test "partially evaluate functions" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
 parameters {
     matrix[3, 2] x_matrix;
@@ -2510,7 +2513,7 @@ model {
 
 let%expect_test "lazy code motion" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       model {
         print({3.0});
@@ -2542,9 +2545,88 @@ let%expect_test "lazy code motion" =
       if(!(emit_generated_quantities__)) return;
     } |}]
 
+let%expect_test "each pass run numbers its own symbols" =
+  let mir =
+    Test_utils.mir_of_string
+      {|
+      functions {
+        real g(real z) {
+          real w = z ^ 2;
+          return w;
+        }
+      }
+      model {
+        print({g(3.0)});
+        print({g(3.0)});
+      }
+      |}
+  in
+  let mir = function_inlining mir in
+  let mir = lazy_code_motion mir in
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  [%expect
+    {|
+    functions {
+      real g(real z) {
+        real lcm_sym1__;
+        {
+          real w;
+          w = (z ^ 2);
+          return w;
+        }
+      }
+    }
+
+
+    prepare_data {
+
+    }
+
+    log_prob {
+      data array[] real lcm_sym6__;
+      data array[] real lcm_sym5__;
+      real lcm_sym4__;
+      {
+        real inline_g_return_sym1__;
+        {
+          real inline_g_w_sym2__;
+          lcm_sym4__ = (3.0 ^ 2);
+          inline_g_w_sym2__ = lcm_sym4__;
+          inline_g_return_sym1__ = inline_g_w_sym2__;
+        }
+        FnPrint__(FnMakeArray__(inline_g_return_sym1__));
+        real inline_g_return_sym4__;
+        {
+          real inline_g_w_sym5__;
+          inline_g_w_sym5__ = lcm_sym4__;
+          inline_g_return_sym4__ = inline_g_w_sym5__;
+        }
+        FnPrint__(FnMakeArray__(inline_g_return_sym4__));
+      }
+    }
+
+    rev_log_prob {
+
+    }
+
+    generate_quantities {
+      data int lcm_sym3__;
+      data int lcm_sym2__;
+      if(emit_transformed_parameters__) ; else {
+
+      }
+      if(!(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+      if(!(emit_generated_quantities__)) return;
+    }
+
+    transform_inits {
+
+    }
+    |}]
+
 let%expect_test "lazy code motion, 2" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       model {
         for (i in 1:2)
@@ -2576,7 +2658,7 @@ let%expect_test "lazy code motion, 2" =
 
 let%expect_test "lazy code motion, 3" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       model {
         print(3);
@@ -2611,7 +2693,7 @@ let%expect_test "lazy code motion, 3" =
 
 let%expect_test "lazy code motion, 4" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       model {
         int b;
@@ -2676,7 +2758,7 @@ let%expect_test "lazy code motion, 4" =
 
 let%expect_test "lazy code motion, 5" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       model {
         int b;
@@ -2743,7 +2825,7 @@ let%expect_test "lazy code motion, 5" =
 
 let%expect_test "lazy code motion, 6" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       model {
         int x;
@@ -2780,7 +2862,7 @@ let%expect_test "lazy code motion, 6" =
 
 let%expect_test "lazy code motion, 7" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       model {
         int a;
@@ -2855,7 +2937,7 @@ let%expect_test "lazy code motion, 7" =
 
 let%expect_test "lazy code motion, 8, _lp functions not optimized" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       functions {
         int foo_lp(int x) { target += 1; return 24; }
@@ -2911,7 +2993,7 @@ let%expect_test "lazy code motion, 8, _lp functions not optimized" =
 
 let%expect_test "lazy code motion, 9" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       model {
         int x;
@@ -2942,7 +3024,7 @@ let%expect_test "lazy code motion, 9" =
 
 let%expect_test "lazy code motion, 10" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       model {
         int x;
@@ -2979,7 +3061,7 @@ let%expect_test "lazy code motion, 10" =
 
 let%expect_test "lazy code motion, 11" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       model {
         {
@@ -3022,7 +3104,7 @@ let%expect_test "lazy code motion, 11" =
 
 let%expect_test "lazy code motion, 12" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       model {
         int x;
@@ -3059,7 +3141,7 @@ let%expect_test "lazy code motion, 12" =
 
 let%expect_test "lazy code motion, 13" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       model {
         real temp;
@@ -3128,7 +3210,7 @@ let%expect_test "lazy code motion, 13" =
 
 let%expect_test "lazy code motion name reuse" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       model {
         {
@@ -3159,22 +3241,22 @@ let%expect_test "lazy code motion name reuse" =
       {
         {
           array[array[int, 3], 2] vs;
-          for(sym1__ in 1:FnLength__(vs)) {
+          for(idx_sym1__ in 1:FnLength__(vs)) {
             {
               data array[] int v;
-              v = vs[sym1__];
+              v = vs[idx_sym1__];
             }
           }
         }
         {
           matrix[2, 3] vs;
-          for(sym1__ in 1:rows(vs)) {
-            lcm_sym5__ = FnLength__(vs[sym1__]);
+          for(idx_sym1__ in 1:rows(vs)) {
+            lcm_sym5__ = FnLength__(vs[idx_sym1__]);
             {
-              for(sym2__ in 1:lcm_sym5__) {
+              for(idx_sym2__ in 1:lcm_sym5__) {
                 {
                   real v;
-                  v = vs[sym1__, sym2__];
+                  v = vs[idx_sym1__, idx_sym2__];
                 }
               }
             }
@@ -3196,7 +3278,7 @@ let%expect_test
     "cool example: expression propagation + partial evaluation + lazy code \
      motion + dead code elimination" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       model {
         real x;
@@ -3247,7 +3329,7 @@ let%expect_test
       } |}]
 
 let%expect_test "block fixing" =
-  let mir = reset_and_mir_of_string {|
+  let mir = Test_utils.mir_of_string {|
       model {
       }
       |} in
@@ -3313,7 +3395,7 @@ let%expect_test "block fixing" =
 
 let%expect_test "one-step loop unrolling" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       transformed data {
         int x;
@@ -3366,7 +3448,7 @@ let%expect_test "one-step loop unrolling" =
 
 let%expect_test "adlevel_optimization" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       parameters {
         real w;
@@ -3435,7 +3517,7 @@ let%expect_test "adlevel_optimization" =
 
 let%expect_test "adlevel_optimization expressions" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       parameters {
         real w;
@@ -3570,7 +3652,7 @@ let%expect_test "adlevel_optimization expressions" =
 
 let%expect_test "adlevel_optimization 2" =
   let mir =
-    reset_and_mir_of_string
+    Test_utils.mir_of_string
       {|
       parameters {
         real w;
@@ -3659,7 +3741,7 @@ let%expect_test "Mapping acts recursively" =
 (* ---- loop vectorization ---- *)
 
 let print_vectorized s =
-  let mir = vectorize_loops (reset_and_mir_of_string s) |> partial_evaluation in
+  let mir = vectorize_loops (Test_utils.mir_of_string s) |> partial_evaluation in
   List.iter mir.functions_block ~f:(fun fd ->
       Fmt.str "@[<v>%a@]" (Program.pp_fun_def Stmt.Located.pp) fd
       |> print_endline);

@@ -1,7 +1,13 @@
-(** Generate fresh (never before used) symbols.
+(** Generate fresh symbols.
 
-    Uses an internal (mutable) counter *)
+    There is no global counter: each pass or translation stage creates its own
+    [int ref] and passes it down, so symbols from one stage never shift the
+    numbering of another. *)
 
-val generate : ?prefix:string -> unit -> string
-val enter : unit -> string * (unit -> unit)
-val reset_danger_use_cautiously : unit -> unit
+val next : int ref -> prefix:string -> string
+(** Increment [count] and return a symbol with [prefix] numbered by the new
+    value. *)
+
+val enter : int ref -> prefix:string -> string * (unit -> unit)
+(** Generate a symbol like [next] and return a function that restores [count] to
+    its value before the call. *)

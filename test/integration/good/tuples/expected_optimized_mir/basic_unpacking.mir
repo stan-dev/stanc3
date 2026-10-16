@@ -25,11 +25,11 @@
    ((pattern
      (Block
       (((pattern
-         (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id sym1__)
+         (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id unpack_sym1__)
           (decl_type (Unsized (UTuple (UInt UInt)))) (initialize Uninit)))
         (meta <opaque>))
        ((pattern
-         (Assignment ((LVariable sym1__) ()) (UTuple (UInt UInt))
+         (Assignment ((LVariable unpack_sym1__) ()) (UTuple (UInt UInt))
           ((pattern
             (FunApp (CompilerInternal FnMakeTuple)
              (((pattern (Lit Int 5))
@@ -44,7 +44,7 @@
          (Assignment ((LVariable x) ()) UInt
           ((pattern
             (TupleProjection
-             ((pattern (Var sym1__))
+             ((pattern (Var unpack_sym1__))
               (meta
                ((type_ (UTuple (UInt UInt))) (loc <opaque>)
                 (adlevel (TupleAD (DataOnly DataOnly))))))
@@ -55,7 +55,7 @@
          (Assignment ((LVariable y) ()) UInt
           ((pattern
             (TupleProjection
-             ((pattern (Var sym1__))
+             ((pattern (Var unpack_sym1__))
               (meta
                ((type_ (UTuple (UInt UInt))) (loc <opaque>)
                 (adlevel (TupleAD (DataOnly DataOnly))))))
@@ -71,11 +71,11 @@
    ((pattern
      (Block
       (((pattern
-         (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id sym1__)
+         (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id unpack_sym1__)
           (decl_type (Unsized (UTuple (UInt UInt)))) (initialize Uninit)))
         (meta <opaque>))
        ((pattern
-         (Assignment ((LVariable sym1__) ()) (UTuple (UInt UInt))
+         (Assignment ((LVariable unpack_sym1__) ()) (UTuple (UInt UInt))
           ((pattern
             (FunApp (CompilerInternal FnMakeTuple)
              (((pattern (Var y)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -88,7 +88,7 @@
          (Assignment ((LVariable x) ()) UInt
           ((pattern
             (TupleProjection
-             ((pattern (Var sym1__))
+             ((pattern (Var unpack_sym1__))
               (meta
                ((type_ (UTuple (UInt UInt))) (loc <opaque>)
                 (adlevel (TupleAD (DataOnly DataOnly))))))
@@ -99,7 +99,7 @@
          (Assignment ((LVariable y) ()) UInt
           ((pattern
             (TupleProjection
-             ((pattern (Var sym1__))
+             ((pattern (Var unpack_sym1__))
               (meta
                ((type_ (UTuple (UInt UInt))) (loc <opaque>)
                 (adlevel (TupleAD (DataOnly DataOnly))))))
@@ -115,11 +115,11 @@
    ((pattern
      (Block
       (((pattern
-         (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id sym1__)
+         (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id unpack_sym1__)
           (decl_type (Unsized (UTuple (UInt UInt)))) (initialize Uninit)))
         (meta <opaque>))
        ((pattern
-         (Assignment ((LVariable sym1__) ()) (UTuple (UInt UInt))
+         (Assignment ((LVariable unpack_sym1__) ()) (UTuple (UInt UInt))
           ((pattern
             (FunApp (CompilerInternal FnMakeTuple)
              (((pattern (Var y)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -132,7 +132,7 @@
          (Assignment ((LVariable x) ()) UInt
           ((pattern
             (TupleProjection
-             ((pattern (Var sym1__))
+             ((pattern (Var unpack_sym1__))
               (meta
                ((type_ (UTuple (UInt UInt))) (loc <opaque>)
                 (adlevel (TupleAD (DataOnly DataOnly))))))
@@ -143,7 +143,7 @@
          (Assignment ((LVariable y) ()) UInt
           ((pattern
             (TupleProjection
-             ((pattern (Var sym1__))
+             ((pattern (Var unpack_sym1__))
               (meta
                ((type_ (UTuple (UInt UInt))) (loc <opaque>)
                 (adlevel (TupleAD (DataOnly DataOnly))))))
@@ -154,11 +154,11 @@
    ((pattern
      (Block
       (((pattern
-         (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id sym1__)
+         (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id unpack_sym1__)
           (decl_type (Unsized (UTuple (UInt UInt)))) (initialize Uninit)))
         (meta <opaque>))
        ((pattern
-         (Assignment ((LVariable sym1__) ()) (UTuple (UInt UInt))
+         (Assignment ((LVariable unpack_sym1__) ()) (UTuple (UInt UInt))
           ((pattern
             (FunApp (CompilerInternal FnMakeTuple)
              (((pattern (Var y)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -171,7 +171,7 @@
          (Assignment ((LVariable x) ()) UInt
           ((pattern
             (TupleProjection
-             ((pattern (Var sym1__))
+             ((pattern (Var unpack_sym1__))
               (meta
                ((type_ (UTuple (UInt UInt))) (loc <opaque>)
                 (adlevel (TupleAD (DataOnly DataOnly))))))
@@ -182,7 +182,7 @@
          (Assignment ((LVariable y) ()) UInt
           ((pattern
             (TupleProjection
-             ((pattern (Var sym1__))
+             ((pattern (Var unpack_sym1__))
               (meta
                ((type_ (UTuple (UInt UInt))) (loc <opaque>)
                 (adlevel (TupleAD (DataOnly DataOnly))))))

@@ -505,20 +505,20 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
         out__.write(zx);
         out__.write(cm);
         current_statement__ = 6;
-        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-            for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
+        for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
+          for (int idx_sym2__ = 1; idx_sym2__ <= 2; ++idx_sym2__) {
+            for (int idx_sym3__ = 1; idx_sym3__ <= 2; ++idx_sym3__) {
               out__.write(stan::model::rvalue(acm, "acm",
-                            stan::model::index_uni(sym3__),
-                            stan::model::index_uni(sym2__),
-                            stan::model::index_uni(sym1__)));
+                            stan::model::index_uni(idx_sym3__),
+                            stan::model::index_uni(idx_sym2__),
+                            stan::model::index_uni(idx_sym1__)));
             }
           }
         }
         current_statement__ = 7;
-        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-            out__.write(az[(sym2__ - 1)][(sym1__ - 1)]);
+        for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
+          for (int idx_sym2__ = 1; idx_sym2__ <= 2; ++idx_sym2__) {
+            out__.write(az[(idx_sym2__ - 1)][(idx_sym1__ - 1)]);
           }
         }
       }
@@ -601,62 +601,62 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
     if (emit_transformed_parameters__) {
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "z" + '.' +
-          std::to_string(sym1__) + '.' + "real");
+          std::to_string(idx_sym1__) + '.' + "real");
         param_names__.emplace_back(std::string() + "z" + '.' +
-          std::to_string(sym1__) + '.' + "imag");
+          std::to_string(idx_sym1__) + '.' + "imag");
       }
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 2; ++idx_sym2__) {
           param_names__.emplace_back(std::string() + "zs" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-            "real");
+            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__) +
+            '.' + "real");
           param_names__.emplace_back(std::string() + "zs" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-            "imag");
+            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__) +
+            '.' + "imag");
         }
       }
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "x" + '.' +
-          std::to_string(sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "zx" + '.' +
-          std::to_string(sym1__) + '.' + "real");
+          std::to_string(idx_sym1__) + '.' + "real");
         param_names__.emplace_back(std::string() + "zx" + '.' +
-          std::to_string(sym1__) + '.' + "imag");
+          std::to_string(idx_sym1__) + '.' + "imag");
       }
-      for (int sym1__ = 1; sym1__ <= cm_2dim__; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= cm_1dim__; ++sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= cm_2dim__; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= cm_1dim__; ++idx_sym2__) {
           param_names__.emplace_back(std::string() + "cm" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-            "real");
+            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__) +
+            '.' + "real");
           param_names__.emplace_back(std::string() + "cm" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-            "imag");
+            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__) +
+            '.' + "imag");
         }
       }
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 2; ++idx_sym2__) {
+          for (int idx_sym3__ = 1; idx_sym3__ <= 2; ++idx_sym3__) {
             param_names__.emplace_back(std::string() + "acm" + '.' +
-              std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
-              std::to_string(sym1__) + '.' + "real");
+              std::to_string(idx_sym3__) + '.' + std::to_string(idx_sym2__) +
+              '.' + std::to_string(idx_sym1__) + '.' + "real");
             param_names__.emplace_back(std::string() + "acm" + '.' +
-              std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
-              std::to_string(sym1__) + '.' + "imag");
+              std::to_string(idx_sym3__) + '.' + std::to_string(idx_sym2__) +
+              '.' + std::to_string(idx_sym1__) + '.' + "imag");
           }
         }
       }
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 2; ++idx_sym2__) {
           param_names__.emplace_back(std::string() + "az" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-            "real");
+            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__) +
+            '.' + "real");
           param_names__.emplace_back(std::string() + "az" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-            "imag");
+            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__) +
+            '.' + "imag");
         }
       }
     }
@@ -667,62 +667,62 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
     if (emit_transformed_parameters__) {
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "z" + '.' +
-          std::to_string(sym1__) + '.' + "real");
+          std::to_string(idx_sym1__) + '.' + "real");
         param_names__.emplace_back(std::string() + "z" + '.' +
-          std::to_string(sym1__) + '.' + "imag");
+          std::to_string(idx_sym1__) + '.' + "imag");
       }
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 2; ++idx_sym2__) {
           param_names__.emplace_back(std::string() + "zs" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-            "real");
+            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__) +
+            '.' + "real");
           param_names__.emplace_back(std::string() + "zs" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-            "imag");
+            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__) +
+            '.' + "imag");
         }
       }
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "x" + '.' +
-          std::to_string(sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "zx" + '.' +
-          std::to_string(sym1__) + '.' + "real");
+          std::to_string(idx_sym1__) + '.' + "real");
         param_names__.emplace_back(std::string() + "zx" + '.' +
-          std::to_string(sym1__) + '.' + "imag");
+          std::to_string(idx_sym1__) + '.' + "imag");
       }
-      for (int sym1__ = 1; sym1__ <= cm_2dim__; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= cm_1dim__; ++sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= cm_2dim__; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= cm_1dim__; ++idx_sym2__) {
           param_names__.emplace_back(std::string() + "cm" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-            "real");
+            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__) +
+            '.' + "real");
           param_names__.emplace_back(std::string() + "cm" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-            "imag");
+            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__) +
+            '.' + "imag");
         }
       }
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 2; ++idx_sym2__) {
+          for (int idx_sym3__ = 1; idx_sym3__ <= 2; ++idx_sym3__) {
             param_names__.emplace_back(std::string() + "acm" + '.' +
-              std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
-              std::to_string(sym1__) + '.' + "real");
+              std::to_string(idx_sym3__) + '.' + std::to_string(idx_sym2__) +
+              '.' + std::to_string(idx_sym1__) + '.' + "real");
             param_names__.emplace_back(std::string() + "acm" + '.' +
-              std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
-              std::to_string(sym1__) + '.' + "imag");
+              std::to_string(idx_sym3__) + '.' + std::to_string(idx_sym2__) +
+              '.' + std::to_string(idx_sym1__) + '.' + "imag");
           }
         }
       }
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 2; ++idx_sym2__) {
           param_names__.emplace_back(std::string() + "az" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-            "real");
+            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__) +
+            '.' + "real");
           param_names__.emplace_back(std::string() + "az" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-            "imag");
+            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__) +
+            '.' + "imag");
         }
       }
     }

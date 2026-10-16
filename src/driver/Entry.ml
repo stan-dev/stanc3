@@ -26,7 +26,6 @@ let set_model_name model_name =
     Typechecker.model_name := model_name_munged ^ "_model"
 
 let reset_mutable_states model_name (flags : Flags.t) =
-  Common.Gensym.reset_danger_use_cautiously ();
   Include_files.include_provider := flags.include_source;
   set_model_name model_name
 

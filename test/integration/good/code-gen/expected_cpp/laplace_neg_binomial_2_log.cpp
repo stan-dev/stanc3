@@ -705,13 +705,13 @@ class laplace_neg_binomial_2_log_model final : public model_base_crtp<laplace_ne
     param_names__.emplace_back(std::string() + "eta");
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {
-      for (int sym1__ = 1; sym1__ <= n_obs; ++sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= n_obs; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "theta" + '.' +
-          std::to_string(sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= n_obs; ++sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= n_obs; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "theta2" + '.' +
-          std::to_string(sym1__));
+          std::to_string(idx_sym1__));
       }
     }
   }
@@ -724,13 +724,13 @@ class laplace_neg_binomial_2_log_model final : public model_base_crtp<laplace_ne
     param_names__.emplace_back(std::string() + "eta");
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {
-      for (int sym1__ = 1; sym1__ <= n_obs; ++sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= n_obs; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "theta" + '.' +
-          std::to_string(sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= n_obs; ++sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= n_obs; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "theta2" + '.' +
-          std::to_string(sym1__));
+          std::to_string(idx_sym1__));
       }
     }
   }

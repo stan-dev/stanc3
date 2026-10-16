@@ -289,7 +289,7 @@ Optimization hazard warning (Line 6): SoA warning: The right hand side of the as
       (initialize Default)))
     (meta <opaque>))
    ((pattern
-     (For (loopvar sym1__)
+     (For (loopvar idx_sym1__)
       (lower
        ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
       (upper
@@ -298,7 +298,7 @@ Optimization hazard warning (Line 6): SoA warning: The right hand side of the as
        ((pattern
          (Block
           (((pattern
-             (For (loopvar sym2__)
+             (For (loopvar idx_sym2__)
               (lower
                ((pattern (Lit Int 1))
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -309,7 +309,7 @@ Optimization hazard warning (Line 6): SoA warning: The right hand side of the as
                ((pattern
                  (Block
                   (((pattern
-                     (For (loopvar sym3__)
+                     (For (loopvar idx_sym3__)
                       (lower
                        ((pattern (Lit Int 1))
                         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -340,15 +340,15 @@ Optimization hazard warning (Line 6): SoA warning: The right hand side of the as
                                       ((type_ (UArray UMatrix)) (loc <opaque>)
                                        (adlevel DataOnly))))
                                     ((Single
-                                      ((pattern (Var sym3__))
+                                      ((pattern (Var idx_sym3__))
                                        (meta
                                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
                                      (Single
-                                      ((pattern (Var sym2__))
+                                      ((pattern (Var idx_sym2__))
                                        (meta
                                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
                                      (Single
-                                      ((pattern (Var sym1__))
+                                      ((pattern (Var idx_sym1__))
                                        (meta
                                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
                                   (meta
@@ -570,7 +570,7 @@ Optimization hazard warning (Line 6): SoA warning: The right hand side of the as
       (initialize Default)))
     (meta <opaque>))
    ((pattern
-     (For (loopvar sym1__)
+     (For (loopvar idx_sym1__)
       (lower
        ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
       (upper
@@ -579,7 +579,7 @@ Optimization hazard warning (Line 6): SoA warning: The right hand side of the as
        ((pattern
          (Block
           (((pattern
-             (For (loopvar sym2__)
+             (For (loopvar idx_sym2__)
               (lower
                ((pattern (Lit Int 1))
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -590,7 +590,7 @@ Optimization hazard warning (Line 6): SoA warning: The right hand side of the as
                ((pattern
                  (Block
                   (((pattern
-                     (For (loopvar sym3__)
+                     (For (loopvar idx_sym3__)
                       (lower
                        ((pattern (Lit Int 1))
                         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -604,13 +604,13 @@ Optimization hazard warning (Line 6): SoA warning: The right hand side of the as
                              (Assignment
                               ((LTupleProjection ((LVariable xx) ()) 1)
                                ((Single
-                                 ((pattern (Var sym3__))
+                                 ((pattern (Var idx_sym3__))
                                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
                                 (Single
-                                 ((pattern (Var sym2__))
+                                 ((pattern (Var idx_sym2__))
                                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
                                 (Single
-                                 ((pattern (Var sym1__))
+                                 ((pattern (Var idx_sym1__))
                                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                               UMatrix
                               ((pattern

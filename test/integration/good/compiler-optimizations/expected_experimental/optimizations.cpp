@@ -127,7 +127,7 @@ nrfun_lp(const T0__& x, const T1__& y, T_lp__& lp__, T_lp_accum__&
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    int lcm_sym59__;
+    int lcm_sym1__;
     {
       current_statement__ = 85;
       if (stan::math::logical_gt(x, 342)) {
@@ -155,9 +155,9 @@ rfun(const T0__& y, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    int lcm_sym62__;
-    int lcm_sym61__;
-    int lcm_sym60__;
+    int lcm_sym4__;
+    int lcm_sym3__;
+    int lcm_sym2__;
     {
       current_statement__ = 8;
       if (stan::math::logical_gt(y, 2)) {
@@ -245,30 +245,30 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm_sym112__;
-      double lcm_sym111__;
-      double lcm_sym110__;
-      double lcm_sym109__;
-      double lcm_sym108__;
-      double lcm_sym107__;
-      double lcm_sym106__;
-      double lcm_sym105__;
-      double lcm_sym104__;
-      double lcm_sym103__;
-      int lcm_sym102__;
-      int lcm_sym101__;
-      int lcm_sym100__;
-      int lcm_sym99__;
-      int lcm_sym98__;
-      int lcm_sym97__;
-      int lcm_sym96__;
-      double lcm_sym95__;
-      int lcm_sym94__;
-      int lcm_sym93__;
-      int lcm_sym92__;
-      int lcm_sym91__;
-      int lcm_sym90__;
-      int lcm_sym89__;
+      double lcm_sym54__;
+      double lcm_sym53__;
+      double lcm_sym52__;
+      double lcm_sym51__;
+      double lcm_sym50__;
+      double lcm_sym49__;
+      double lcm_sym48__;
+      double lcm_sym47__;
+      double lcm_sym46__;
+      double lcm_sym45__;
+      int lcm_sym44__;
+      int lcm_sym43__;
+      int lcm_sym42__;
+      int lcm_sym41__;
+      int lcm_sym40__;
+      int lcm_sym39__;
+      int lcm_sym38__;
+      double lcm_sym37__;
+      int lcm_sym36__;
+      int lcm_sym35__;
+      int lcm_sym34__;
+      int lcm_sym33__;
+      int lcm_sym32__;
+      int lcm_sym31__;
       current_statement__ = 1;
       auto theta = in__.template read<local_scalar_t__>();
       current_statement__ = 2;
@@ -373,19 +373,19 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           }
           int inline_rfun_early_ret_check_sym42__ =
             std::numeric_limits<int>::min();
-          lcm_sym91__ = (inline_rfun_return_sym38__ + 1);
+          lcm_sym33__ = (inline_rfun_return_sym38__ + 1);
           for (int inline_rfun_iterator_sym43__ = 1; inline_rfun_iterator_sym43__
                <= 1; ++inline_rfun_iterator_sym43__) {
             {
               inline_rfun_return_sym41__ = 29;
-              lcm_sym91__ = (inline_rfun_return_sym38__ + 1);
+              lcm_sym33__ = (inline_rfun_return_sym38__ + 1);
               break;
             }
             inline_rfun_return_sym41__ = 7;
-            lcm_sym91__ = (inline_rfun_return_sym38__ + 1);
+            lcm_sym33__ = (inline_rfun_return_sym38__ + 1);
             break;
           }
-          for (int i = lcm_sym91__; i <= inline_rfun_return_sym41__; ++i) {
+          for (int i = lcm_sym33__; i <= inline_rfun_return_sym41__; ++i) {
             {
               int inline_rfun_return_sym44__;
               int inline_rfun_early_ret_check_sym45__ =
@@ -450,22 +450,22 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
               }
             }
             {
-              lcm_sym94__ = (2 * 2);
-              if (stan::math::logical_gte(lcm_sym94__, 2)) {
-                lcm_sym92__ = (2 + 1);
+              lcm_sym36__ = (2 * 2);
+              if (stan::math::logical_gte(lcm_sym36__, 2)) {
+                lcm_sym34__ = (2 + 1);
                 lp_accum__.add(53);
-                for (int k = lcm_sym92__; k <= lcm_sym94__; ++k) {
+                for (int k = lcm_sym34__; k <= lcm_sym36__; ++k) {
                   current_statement__ = 14;
                   lp_accum__.add(53);
                 }
               }
             }
             {
-              lcm_sym94__ = (3 * 2);
-              if (stan::math::logical_gte(lcm_sym94__, 3)) {
-                lcm_sym92__ = (3 + 1);
+              lcm_sym36__ = (3 * 2);
+              if (stan::math::logical_gte(lcm_sym36__, 3)) {
+                lcm_sym34__ = (3 + 1);
                 lp_accum__.add(53);
-                for (int k = lcm_sym92__; k <= lcm_sym94__; ++k) {
+                for (int k = lcm_sym34__; k <= lcm_sym36__; ++k) {
                   current_statement__ = 14;
                   lp_accum__.add(53);
                 }
@@ -473,25 +473,25 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
             }
           }
           {
-            lcm_sym90__ = (2 + 2);
-            if (stan::math::logical_gte(lcm_sym90__, 2)) {
-              lcm_sym93__ = (2 * 2);
-              if (stan::math::logical_gte(lcm_sym93__, 2)) {
-                lcm_sym89__ = (2 + 1);
+            lcm_sym32__ = (2 + 2);
+            if (stan::math::logical_gte(lcm_sym32__, 2)) {
+              lcm_sym35__ = (2 * 2);
+              if (stan::math::logical_gte(lcm_sym35__, 2)) {
+                lcm_sym31__ = (2 + 1);
                 lp_accum__.add(53);
-                for (int k = lcm_sym89__; k <= lcm_sym93__; ++k) {
+                for (int k = lcm_sym31__; k <= lcm_sym35__; ++k) {
                   current_statement__ = 14;
                   lp_accum__.add(53);
                 }
               } else {
-                lcm_sym89__ = (2 + 1);
+                lcm_sym31__ = (2 + 1);
               }
-              for (int j = lcm_sym89__; j <= lcm_sym90__; ++j) {
-                lcm_sym94__ = (j * 2);
-                if (stan::math::logical_gte(lcm_sym94__, j)) {
-                  lcm_sym92__ = (j + 1);
+              for (int j = lcm_sym31__; j <= lcm_sym32__; ++j) {
+                lcm_sym36__ = (j * 2);
+                if (stan::math::logical_gte(lcm_sym36__, j)) {
+                  lcm_sym34__ = (j + 1);
                   lp_accum__.add(53);
-                  for (int k = lcm_sym92__; k <= lcm_sym94__; ++k) {
+                  for (int k = lcm_sym34__; k <= lcm_sym36__; ++k) {
                     current_statement__ = 14;
                     lp_accum__.add(53);
                   }
@@ -500,25 +500,25 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
             }
           }
           {
-            lcm_sym90__ = (3 + 2);
-            if (stan::math::logical_gte(lcm_sym90__, 3)) {
-              lcm_sym93__ = (3 * 2);
-              if (stan::math::logical_gte(lcm_sym93__, 3)) {
-                lcm_sym89__ = (3 + 1);
+            lcm_sym32__ = (3 + 2);
+            if (stan::math::logical_gte(lcm_sym32__, 3)) {
+              lcm_sym35__ = (3 * 2);
+              if (stan::math::logical_gte(lcm_sym35__, 3)) {
+                lcm_sym31__ = (3 + 1);
                 lp_accum__.add(53);
-                for (int k = lcm_sym89__; k <= lcm_sym93__; ++k) {
+                for (int k = lcm_sym31__; k <= lcm_sym35__; ++k) {
                   current_statement__ = 14;
                   lp_accum__.add(53);
                 }
               } else {
-                lcm_sym89__ = (3 + 1);
+                lcm_sym31__ = (3 + 1);
               }
-              for (int j = lcm_sym89__; j <= lcm_sym90__; ++j) {
-                lcm_sym94__ = (j * 2);
-                if (stan::math::logical_gte(lcm_sym94__, j)) {
-                  lcm_sym92__ = (j + 1);
+              for (int j = lcm_sym31__; j <= lcm_sym32__; ++j) {
+                lcm_sym36__ = (j * 2);
+                if (stan::math::logical_gte(lcm_sym36__, j)) {
+                  lcm_sym34__ = (j + 1);
                   lp_accum__.add(53);
-                  for (int k = lcm_sym92__; k <= lcm_sym94__; ++k) {
+                  for (int k = lcm_sym34__; k <= lcm_sym36__; ++k) {
                     current_statement__ = 14;
                     lp_accum__.add(53);
                   }
@@ -527,25 +527,25 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
             }
           }
           {
-            lcm_sym90__ = (4 + 2);
-            if (stan::math::logical_gte(lcm_sym90__, 4)) {
-              lcm_sym93__ = (4 * 2);
-              if (stan::math::logical_gte(lcm_sym93__, 4)) {
-                lcm_sym89__ = (4 + 1);
+            lcm_sym32__ = (4 + 2);
+            if (stan::math::logical_gte(lcm_sym32__, 4)) {
+              lcm_sym35__ = (4 * 2);
+              if (stan::math::logical_gte(lcm_sym35__, 4)) {
+                lcm_sym31__ = (4 + 1);
                 lp_accum__.add(53);
-                for (int k = lcm_sym89__; k <= lcm_sym93__; ++k) {
+                for (int k = lcm_sym31__; k <= lcm_sym35__; ++k) {
                   current_statement__ = 14;
                   lp_accum__.add(53);
                 }
               } else {
-                lcm_sym89__ = (4 + 1);
+                lcm_sym31__ = (4 + 1);
               }
-              for (int j = lcm_sym89__; j <= lcm_sym90__; ++j) {
-                lcm_sym94__ = (j * 2);
-                if (stan::math::logical_gte(lcm_sym94__, j)) {
-                  lcm_sym92__ = (j + 1);
+              for (int j = lcm_sym31__; j <= lcm_sym32__; ++j) {
+                lcm_sym36__ = (j * 2);
+                if (stan::math::logical_gte(lcm_sym36__, j)) {
+                  lcm_sym34__ = (j + 1);
                   lp_accum__.add(53);
-                  for (int k = lcm_sym92__; k <= lcm_sym94__; ++k) {
+                  for (int k = lcm_sym34__; k <= lcm_sym36__; ++k) {
                     current_statement__ = 14;
                     lp_accum__.add(53);
                   }
@@ -554,25 +554,25 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
             }
           }
           {
-            lcm_sym90__ = (5 + 2);
-            if (stan::math::logical_gte(lcm_sym90__, 5)) {
-              lcm_sym93__ = (5 * 2);
-              if (stan::math::logical_gte(lcm_sym93__, 5)) {
-                lcm_sym89__ = (5 + 1);
+            lcm_sym32__ = (5 + 2);
+            if (stan::math::logical_gte(lcm_sym32__, 5)) {
+              lcm_sym35__ = (5 * 2);
+              if (stan::math::logical_gte(lcm_sym35__, 5)) {
+                lcm_sym31__ = (5 + 1);
                 lp_accum__.add(53);
-                for (int k = lcm_sym89__; k <= lcm_sym93__; ++k) {
+                for (int k = lcm_sym31__; k <= lcm_sym35__; ++k) {
                   current_statement__ = 14;
                   lp_accum__.add(53);
                 }
               } else {
-                lcm_sym89__ = (5 + 1);
+                lcm_sym31__ = (5 + 1);
               }
-              for (int j = lcm_sym89__; j <= lcm_sym90__; ++j) {
-                lcm_sym94__ = (j * 2);
-                if (stan::math::logical_gte(lcm_sym94__, j)) {
-                  lcm_sym92__ = (j + 1);
+              for (int j = lcm_sym31__; j <= lcm_sym32__; ++j) {
+                lcm_sym36__ = (j * 2);
+                if (stan::math::logical_gte(lcm_sym36__, j)) {
+                  lcm_sym34__ = (j + 1);
                   lp_accum__.add(53);
-                  for (int k = lcm_sym92__; k <= lcm_sym94__; ++k) {
+                  for (int k = lcm_sym34__; k <= lcm_sym36__; ++k) {
                     current_statement__ = 14;
                     lp_accum__.add(53);
                   }
@@ -623,8 +623,8 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         x = static_cast<double>(576);
         current_statement__ = 38;
         lp_accum__.add(static_cast<double>(576));
-        lcm_sym98__ = stan::math::logical_gt(theta, 46);
-        if (lcm_sym98__) {
+        lcm_sym40__ = stan::math::logical_gt(theta, 46);
+        if (lcm_sym40__) {
           current_statement__ = 39;
           x = static_cast<double>(5880);
         }
@@ -636,7 +636,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         current_statement__ = 43;
         lp_accum__.add(x);
         current_statement__ = 45;
-        if (lcm_sym98__) {
+        if (lcm_sym40__) {
           current_statement__ = 44;
           z = x;
         }
@@ -782,30 +782,30 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm_sym88__;
-      double lcm_sym87__;
-      double lcm_sym86__;
-      double lcm_sym85__;
-      double lcm_sym84__;
-      double lcm_sym83__;
-      double lcm_sym82__;
-      double lcm_sym81__;
-      double lcm_sym80__;
-      double lcm_sym79__;
-      int lcm_sym78__;
-      int lcm_sym77__;
-      int lcm_sym76__;
-      int lcm_sym75__;
-      int lcm_sym74__;
-      int lcm_sym73__;
-      int lcm_sym72__;
-      double lcm_sym71__;
-      int lcm_sym70__;
-      int lcm_sym69__;
-      int lcm_sym68__;
-      int lcm_sym67__;
-      int lcm_sym66__;
-      int lcm_sym65__;
+      double lcm_sym30__;
+      double lcm_sym29__;
+      double lcm_sym28__;
+      double lcm_sym27__;
+      double lcm_sym26__;
+      double lcm_sym25__;
+      double lcm_sym24__;
+      double lcm_sym23__;
+      double lcm_sym22__;
+      double lcm_sym21__;
+      int lcm_sym20__;
+      int lcm_sym19__;
+      int lcm_sym18__;
+      int lcm_sym17__;
+      int lcm_sym16__;
+      int lcm_sym15__;
+      int lcm_sym14__;
+      double lcm_sym13__;
+      int lcm_sym12__;
+      int lcm_sym11__;
+      int lcm_sym10__;
+      int lcm_sym9__;
+      int lcm_sym8__;
+      int lcm_sym7__;
       current_statement__ = 1;
       auto theta = in__.template read<local_scalar_t__>();
       current_statement__ = 2;
@@ -913,19 +913,19 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           }
           int inline_rfun_early_ret_check_sym13__ =
             std::numeric_limits<int>::min();
-          lcm_sym67__ = (inline_rfun_return_sym9__ + 1);
+          lcm_sym9__ = (inline_rfun_return_sym9__ + 1);
           for (int inline_rfun_iterator_sym14__ = 1; inline_rfun_iterator_sym14__
                <= 1; ++inline_rfun_iterator_sym14__) {
             {
               inline_rfun_return_sym12__ = 29;
-              lcm_sym67__ = (inline_rfun_return_sym9__ + 1);
+              lcm_sym9__ = (inline_rfun_return_sym9__ + 1);
               break;
             }
             inline_rfun_return_sym12__ = 7;
-            lcm_sym67__ = (inline_rfun_return_sym9__ + 1);
+            lcm_sym9__ = (inline_rfun_return_sym9__ + 1);
             break;
           }
-          for (int i = lcm_sym67__; i <= inline_rfun_return_sym12__; ++i) {
+          for (int i = lcm_sym9__; i <= inline_rfun_return_sym12__; ++i) {
             {
               int inline_rfun_return_sym15__;
               int inline_rfun_early_ret_check_sym16__ =
@@ -990,22 +990,22 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
               }
             }
             {
-              lcm_sym70__ = (2 * 2);
-              if (stan::math::logical_gte(lcm_sym70__, 2)) {
-                lcm_sym68__ = (2 + 1);
+              lcm_sym12__ = (2 * 2);
+              if (stan::math::logical_gte(lcm_sym12__, 2)) {
+                lcm_sym10__ = (2 + 1);
                 lp_accum__.add(53);
-                for (int k = lcm_sym68__; k <= lcm_sym70__; ++k) {
+                for (int k = lcm_sym10__; k <= lcm_sym12__; ++k) {
                   current_statement__ = 14;
                   lp_accum__.add(53);
                 }
               }
             }
             {
-              lcm_sym70__ = (3 * 2);
-              if (stan::math::logical_gte(lcm_sym70__, 3)) {
-                lcm_sym68__ = (3 + 1);
+              lcm_sym12__ = (3 * 2);
+              if (stan::math::logical_gte(lcm_sym12__, 3)) {
+                lcm_sym10__ = (3 + 1);
                 lp_accum__.add(53);
-                for (int k = lcm_sym68__; k <= lcm_sym70__; ++k) {
+                for (int k = lcm_sym10__; k <= lcm_sym12__; ++k) {
                   current_statement__ = 14;
                   lp_accum__.add(53);
                 }
@@ -1013,25 +1013,25 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
             }
           }
           {
-            lcm_sym66__ = (2 + 2);
-            if (stan::math::logical_gte(lcm_sym66__, 2)) {
-              lcm_sym69__ = (2 * 2);
-              if (stan::math::logical_gte(lcm_sym69__, 2)) {
-                lcm_sym65__ = (2 + 1);
+            lcm_sym8__ = (2 + 2);
+            if (stan::math::logical_gte(lcm_sym8__, 2)) {
+              lcm_sym11__ = (2 * 2);
+              if (stan::math::logical_gte(lcm_sym11__, 2)) {
+                lcm_sym7__ = (2 + 1);
                 lp_accum__.add(53);
-                for (int k = lcm_sym65__; k <= lcm_sym69__; ++k) {
+                for (int k = lcm_sym7__; k <= lcm_sym11__; ++k) {
                   current_statement__ = 14;
                   lp_accum__.add(53);
                 }
               } else {
-                lcm_sym65__ = (2 + 1);
+                lcm_sym7__ = (2 + 1);
               }
-              for (int j = lcm_sym65__; j <= lcm_sym66__; ++j) {
-                lcm_sym70__ = (j * 2);
-                if (stan::math::logical_gte(lcm_sym70__, j)) {
-                  lcm_sym68__ = (j + 1);
+              for (int j = lcm_sym7__; j <= lcm_sym8__; ++j) {
+                lcm_sym12__ = (j * 2);
+                if (stan::math::logical_gte(lcm_sym12__, j)) {
+                  lcm_sym10__ = (j + 1);
                   lp_accum__.add(53);
-                  for (int k = lcm_sym68__; k <= lcm_sym70__; ++k) {
+                  for (int k = lcm_sym10__; k <= lcm_sym12__; ++k) {
                     current_statement__ = 14;
                     lp_accum__.add(53);
                   }
@@ -1040,25 +1040,25 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
             }
           }
           {
-            lcm_sym66__ = (3 + 2);
-            if (stan::math::logical_gte(lcm_sym66__, 3)) {
-              lcm_sym69__ = (3 * 2);
-              if (stan::math::logical_gte(lcm_sym69__, 3)) {
-                lcm_sym65__ = (3 + 1);
+            lcm_sym8__ = (3 + 2);
+            if (stan::math::logical_gte(lcm_sym8__, 3)) {
+              lcm_sym11__ = (3 * 2);
+              if (stan::math::logical_gte(lcm_sym11__, 3)) {
+                lcm_sym7__ = (3 + 1);
                 lp_accum__.add(53);
-                for (int k = lcm_sym65__; k <= lcm_sym69__; ++k) {
+                for (int k = lcm_sym7__; k <= lcm_sym11__; ++k) {
                   current_statement__ = 14;
                   lp_accum__.add(53);
                 }
               } else {
-                lcm_sym65__ = (3 + 1);
+                lcm_sym7__ = (3 + 1);
               }
-              for (int j = lcm_sym65__; j <= lcm_sym66__; ++j) {
-                lcm_sym70__ = (j * 2);
-                if (stan::math::logical_gte(lcm_sym70__, j)) {
-                  lcm_sym68__ = (j + 1);
+              for (int j = lcm_sym7__; j <= lcm_sym8__; ++j) {
+                lcm_sym12__ = (j * 2);
+                if (stan::math::logical_gte(lcm_sym12__, j)) {
+                  lcm_sym10__ = (j + 1);
                   lp_accum__.add(53);
-                  for (int k = lcm_sym68__; k <= lcm_sym70__; ++k) {
+                  for (int k = lcm_sym10__; k <= lcm_sym12__; ++k) {
                     current_statement__ = 14;
                     lp_accum__.add(53);
                   }
@@ -1067,25 +1067,25 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
             }
           }
           {
-            lcm_sym66__ = (4 + 2);
-            if (stan::math::logical_gte(lcm_sym66__, 4)) {
-              lcm_sym69__ = (4 * 2);
-              if (stan::math::logical_gte(lcm_sym69__, 4)) {
-                lcm_sym65__ = (4 + 1);
+            lcm_sym8__ = (4 + 2);
+            if (stan::math::logical_gte(lcm_sym8__, 4)) {
+              lcm_sym11__ = (4 * 2);
+              if (stan::math::logical_gte(lcm_sym11__, 4)) {
+                lcm_sym7__ = (4 + 1);
                 lp_accum__.add(53);
-                for (int k = lcm_sym65__; k <= lcm_sym69__; ++k) {
+                for (int k = lcm_sym7__; k <= lcm_sym11__; ++k) {
                   current_statement__ = 14;
                   lp_accum__.add(53);
                 }
               } else {
-                lcm_sym65__ = (4 + 1);
+                lcm_sym7__ = (4 + 1);
               }
-              for (int j = lcm_sym65__; j <= lcm_sym66__; ++j) {
-                lcm_sym70__ = (j * 2);
-                if (stan::math::logical_gte(lcm_sym70__, j)) {
-                  lcm_sym68__ = (j + 1);
+              for (int j = lcm_sym7__; j <= lcm_sym8__; ++j) {
+                lcm_sym12__ = (j * 2);
+                if (stan::math::logical_gte(lcm_sym12__, j)) {
+                  lcm_sym10__ = (j + 1);
                   lp_accum__.add(53);
-                  for (int k = lcm_sym68__; k <= lcm_sym70__; ++k) {
+                  for (int k = lcm_sym10__; k <= lcm_sym12__; ++k) {
                     current_statement__ = 14;
                     lp_accum__.add(53);
                   }
@@ -1094,25 +1094,25 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
             }
           }
           {
-            lcm_sym66__ = (5 + 2);
-            if (stan::math::logical_gte(lcm_sym66__, 5)) {
-              lcm_sym69__ = (5 * 2);
-              if (stan::math::logical_gte(lcm_sym69__, 5)) {
-                lcm_sym65__ = (5 + 1);
+            lcm_sym8__ = (5 + 2);
+            if (stan::math::logical_gte(lcm_sym8__, 5)) {
+              lcm_sym11__ = (5 * 2);
+              if (stan::math::logical_gte(lcm_sym11__, 5)) {
+                lcm_sym7__ = (5 + 1);
                 lp_accum__.add(53);
-                for (int k = lcm_sym65__; k <= lcm_sym69__; ++k) {
+                for (int k = lcm_sym7__; k <= lcm_sym11__; ++k) {
                   current_statement__ = 14;
                   lp_accum__.add(53);
                 }
               } else {
-                lcm_sym65__ = (5 + 1);
+                lcm_sym7__ = (5 + 1);
               }
-              for (int j = lcm_sym65__; j <= lcm_sym66__; ++j) {
-                lcm_sym70__ = (j * 2);
-                if (stan::math::logical_gte(lcm_sym70__, j)) {
-                  lcm_sym68__ = (j + 1);
+              for (int j = lcm_sym7__; j <= lcm_sym8__; ++j) {
+                lcm_sym12__ = (j * 2);
+                if (stan::math::logical_gte(lcm_sym12__, j)) {
+                  lcm_sym10__ = (j + 1);
                   lp_accum__.add(53);
-                  for (int k = lcm_sym68__; k <= lcm_sym70__; ++k) {
+                  for (int k = lcm_sym10__; k <= lcm_sym12__; ++k) {
                     current_statement__ = 14;
                     lp_accum__.add(53);
                   }
@@ -1163,8 +1163,8 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         x = static_cast<double>(576);
         current_statement__ = 38;
         lp_accum__.add(static_cast<double>(576));
-        lcm_sym74__ = stan::math::logical_gt(theta, 46);
-        if (lcm_sym74__) {
+        lcm_sym16__ = stan::math::logical_gt(theta, 46);
+        if (lcm_sym16__) {
           current_statement__ = 39;
           x = static_cast<double>(5880);
         }
@@ -1176,7 +1176,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         current_statement__ = 43;
         lp_accum__.add(x);
         current_statement__ = 45;
-        if (lcm_sym74__) {
+        if (lcm_sym16__) {
           current_statement__ = 44;
           z = x;
         }
@@ -1333,8 +1333,8 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm_sym64__;
-      int lcm_sym63__;
+      int lcm_sym6__;
+      int lcm_sym5__;
       current_statement__ = 1;
       auto theta = in__.template read<local_scalar_t__>();
       current_statement__ = 2;
@@ -1498,20 +1498,20 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
                           emit_generated_quantities__ = true) const final {
     param_names__.emplace_back(std::string() + "theta");
     param_names__.emplace_back(std::string() + "phi");
-    for (int sym113__ = 1; sym113__ <= 2; ++sym113__) {
-      for (int sym114__ = 1; sym114__ <= 3; ++sym114__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= 3; ++idx_sym2__) {
         param_names__.emplace_back(std::string() + "x_matrix" + '.' +
-          std::to_string(sym114__) + '.' + std::to_string(sym113__));
+          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
       }
     }
-    for (int sym113__ = 1; sym113__ <= 2; ++sym113__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "x_vector" + '.' +
-        std::to_string(sym113__));
+        std::to_string(idx_sym1__));
     }
-    for (int sym113__ = 1; sym113__ <= 2; ++sym113__) {
-      for (int sym114__ = 1; sym114__ <= 2; ++sym114__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= 2; ++idx_sym2__) {
         param_names__.emplace_back(std::string() + "x_cov" + '.' +
-          std::to_string(sym114__) + '.' + std::to_string(sym113__));
+          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
       }
     }
     if (emit_transformed_parameters__) {}
@@ -1523,19 +1523,19 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
                             emit_generated_quantities__ = true) const final {
     param_names__.emplace_back(std::string() + "theta");
     param_names__.emplace_back(std::string() + "phi");
-    for (int sym113__ = 1; sym113__ <= 2; ++sym113__) {
-      for (int sym114__ = 1; sym114__ <= 3; ++sym114__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= 3; ++idx_sym2__) {
         param_names__.emplace_back(std::string() + "x_matrix" + '.' +
-          std::to_string(sym114__) + '.' + std::to_string(sym113__));
+          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
       }
     }
-    for (int sym113__ = 1; sym113__ <= 2; ++sym113__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "x_vector" + '.' +
-        std::to_string(sym113__));
+        std::to_string(idx_sym1__));
     }
-    for (int sym113__ = 1; sym113__ <= 3; ++sym113__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "x_cov" + '.' +
-        std::to_string(sym113__));
+        std::to_string(idx_sym1__));
     }
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}

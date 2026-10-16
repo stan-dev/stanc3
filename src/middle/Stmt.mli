@@ -92,10 +92,16 @@ end
 
 module Helpers : sig
   val temp_vars :
-    Expr.Typed.t list -> Located.t list * Expr.Typed.t list * (unit -> unit)
+       int ref
+    -> Expr.Typed.t list
+    -> Located.t list * Expr.Typed.t list * (unit -> unit)
 
   val ensure_var :
-    (Expr.Typed.t -> 'a -> Located.t) -> Expr.Typed.t -> 'a -> Located.t
+       int ref
+    -> (Expr.Typed.t -> 'a -> Located.t)
+    -> Expr.Typed.t
+    -> 'a
+    -> Located.t
 
   val internal_nrfunapp :
     'a Expr.t Internal_fun.t -> 'a Expr.t list -> 'b -> ('a, 'b) t
@@ -104,16 +110,25 @@ module Helpers : sig
     ('a Expr.t Fun_kind.t -> bool) -> ?init:bool -> ('a, 'b) t -> bool
 
   val mk_for :
-    Expr.Typed.t -> (Expr.Typed.t -> Located.t) -> Location_span.t -> Located.t
+       int ref
+    -> Expr.Typed.t
+    -> (Expr.Typed.t -> Located.t)
+    -> Location_span.t
+    -> Located.t
 
   val mk_nested_for :
-       Expr.Typed.t list
+       int ref
+    -> Expr.Typed.t list
     -> (Expr.Typed.t list -> Located.t)
     -> Location_span.t
     -> Located.t
 
   val for_each :
-    (Expr.Typed.t -> Located.t) -> Expr.Typed.t -> Location_span.t -> Located.t
+       int ref
+    -> (Expr.Typed.t -> Located.t)
+    -> Expr.Typed.t
+    -> Location_span.t
+    -> Located.t
 
   val get_lhs_name : 'a Pattern.lvalue -> string
   (** The name of the lhs. This adds "." and an index to tuple projections *)

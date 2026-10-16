@@ -1891,122 +1891,126 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
       current_statement__ = 16;
       auto y1 = in__.template read<std::vector<local_scalar_t__>>(N);
       current_statement__ = 1;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
+          for (int idx_sym3__ = 1; idx_sym3__ <= N; ++idx_sym3__) {
+            for (int idx_sym4__ = 1; idx_sym4__ <= N; ++idx_sym4__) {
               out__.write(stan::model::rvalue(a8, "a8",
-                            stan::model::index_uni(sym4__),
-                            stan::model::index_uni(sym3__),
-                            stan::model::index_uni(sym2__),
-                            stan::model::index_uni(sym1__)));
+                            stan::model::index_uni(idx_sym4__),
+                            stan::model::index_uni(idx_sym3__),
+                            stan::model::index_uni(idx_sym2__),
+                            stan::model::index_uni(idx_sym1__)));
             }
           }
         }
       }
       current_statement__ = 2;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
-            out__.write(a7[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);
+      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
+          for (int idx_sym3__ = 1; idx_sym3__ <= N; ++idx_sym3__) {
+            out__.write(a7[(idx_sym3__ - 1)][(idx_sym2__ - 1)][(idx_sym1__ -
+              1)]);
           }
         }
       }
       current_statement__ = 3;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
-            out__.write(a6[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);
+      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
+          for (int idx_sym3__ = 1; idx_sym3__ <= N; ++idx_sym3__) {
+            out__.write(a6[(idx_sym3__ - 1)][(idx_sym2__ - 1)][(idx_sym1__ -
+              1)]);
           }
         }
       }
       current_statement__ = 4;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          out__.write(a5[(sym2__ - 1)][(sym1__ - 1)]);
+      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
+          out__.write(a5[(idx_sym2__ - 1)][(idx_sym1__ - 1)]);
         }
       }
       current_statement__ = 5;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
+          for (int idx_sym3__ = 1; idx_sym3__ <= N; ++idx_sym3__) {
             out__.write(stan::model::rvalue(a4, "a4",
-                          stan::model::index_uni(sym3__),
-                          stan::model::index_uni(sym2__),
-                          stan::model::index_uni(sym1__)));
+                          stan::model::index_uni(idx_sym3__),
+                          stan::model::index_uni(idx_sym2__),
+                          stan::model::index_uni(idx_sym1__)));
           }
         }
       }
       current_statement__ = 6;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          out__.write(a3[(sym2__ - 1)][(sym1__ - 1)]);
+      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
+          out__.write(a3[(idx_sym2__ - 1)][(idx_sym1__ - 1)]);
         }
       }
       current_statement__ = 7;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          out__.write(a2[(sym2__ - 1)][(sym1__ - 1)]);
+      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
+          out__.write(a2[(idx_sym2__ - 1)][(idx_sym1__ - 1)]);
         }
       }
       out__.write(a1);
       current_statement__ = 9;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
+          for (int idx_sym3__ = 1; idx_sym3__ <= N; ++idx_sym3__) {
+            for (int idx_sym4__ = 1; idx_sym4__ <= N; ++idx_sym4__) {
               out__.write(stan::model::rvalue(y8, "y8",
-                            stan::model::index_uni(sym4__),
-                            stan::model::index_uni(sym3__),
-                            stan::model::index_uni(sym2__),
-                            stan::model::index_uni(sym1__)));
+                            stan::model::index_uni(idx_sym4__),
+                            stan::model::index_uni(idx_sym3__),
+                            stan::model::index_uni(idx_sym2__),
+                            stan::model::index_uni(idx_sym1__)));
             }
           }
         }
       }
       current_statement__ = 10;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
-            out__.write(y7[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);
+      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
+          for (int idx_sym3__ = 1; idx_sym3__ <= N; ++idx_sym3__) {
+            out__.write(y7[(idx_sym3__ - 1)][(idx_sym2__ - 1)][(idx_sym1__ -
+              1)]);
           }
         }
       }
       current_statement__ = 11;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
-            out__.write(y6[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);
+      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
+          for (int idx_sym3__ = 1; idx_sym3__ <= N; ++idx_sym3__) {
+            out__.write(y6[(idx_sym3__ - 1)][(idx_sym2__ - 1)][(idx_sym1__ -
+              1)]);
           }
         }
       }
       current_statement__ = 12;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          out__.write(y5[(sym2__ - 1)][(sym1__ - 1)]);
+      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
+          out__.write(y5[(idx_sym2__ - 1)][(idx_sym1__ - 1)]);
         }
       }
       current_statement__ = 13;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
+          for (int idx_sym3__ = 1; idx_sym3__ <= N; ++idx_sym3__) {
             out__.write(stan::model::rvalue(y4, "y4",
-                          stan::model::index_uni(sym3__),
-                          stan::model::index_uni(sym2__),
-                          stan::model::index_uni(sym1__)));
+                          stan::model::index_uni(idx_sym3__),
+                          stan::model::index_uni(idx_sym2__),
+                          stan::model::index_uni(idx_sym1__)));
           }
         }
       }
       current_statement__ = 14;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          out__.write(y3[(sym2__ - 1)][(sym1__ - 1)]);
+      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
+          out__.write(y3[(idx_sym2__ - 1)][(idx_sym1__ - 1)]);
         }
       }
       current_statement__ = 15;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          out__.write(y2[(sym2__ - 1)][(sym1__ - 1)]);
+      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
+          out__.write(y2[(idx_sym2__ - 1)][(idx_sym1__ - 1)]);
         }
       }
       out__.write(y1);
@@ -2044,16 +2048,16 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
             Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(N, N,
               DUMMY_VAR__)));
       current_statement__ = 1;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
+          for (int idx_sym3__ = 1; idx_sym3__ <= N; ++idx_sym3__) {
+            for (int idx_sym4__ = 1; idx_sym4__ <= N; ++idx_sym4__) {
               current_statement__ = 1;
               stan::model::assign(a8, in__.read<local_scalar_t__>(),
-                "assigning variable a8", stan::model::index_uni(sym4__),
-                stan::model::index_uni(sym3__),
-                stan::model::index_uni(sym2__),
-                stan::model::index_uni(sym1__));
+                "assigning variable a8", stan::model::index_uni(idx_sym4__),
+                stan::model::index_uni(idx_sym3__),
+                stan::model::index_uni(idx_sym2__),
+                stan::model::index_uni(idx_sym1__));
             }
           }
         }
@@ -2064,13 +2068,14 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
           std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>(N,
             Eigen::Matrix<local_scalar_t__,1,-1>::Constant(N, DUMMY_VAR__)));
       current_statement__ = 2;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
+          for (int idx_sym3__ = 1; idx_sym3__ <= N; ++idx_sym3__) {
             current_statement__ = 2;
             stan::model::assign(a7, in__.read<local_scalar_t__>(),
-              "assigning variable a7", stan::model::index_uni(sym3__),
-              stan::model::index_uni(sym2__), stan::model::index_uni(sym1__));
+              "assigning variable a7", stan::model::index_uni(idx_sym3__),
+              stan::model::index_uni(idx_sym2__),
+              stan::model::index_uni(idx_sym1__));
           }
         }
       }
@@ -2080,13 +2085,14 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
           std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>(N,
             Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__)));
       current_statement__ = 3;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
+          for (int idx_sym3__ = 1; idx_sym3__ <= N; ++idx_sym3__) {
             current_statement__ = 3;
             stan::model::assign(a6, in__.read<local_scalar_t__>(),
-              "assigning variable a6", stan::model::index_uni(sym3__),
-              stan::model::index_uni(sym2__), stan::model::index_uni(sym1__));
+              "assigning variable a6", stan::model::index_uni(idx_sym3__),
+              stan::model::index_uni(idx_sym2__),
+              stan::model::index_uni(idx_sym1__));
           }
         }
       }
@@ -2095,10 +2101,11 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
         std::vector<std::vector<local_scalar_t__>>(N,
           std::vector<local_scalar_t__>(N, DUMMY_VAR__));
       current_statement__ = 4;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
           current_statement__ = 4;
-          a5[(sym2__ - 1)][(sym1__ - 1)] = in__.read<local_scalar_t__>();
+          a5[(idx_sym2__ - 1)][(idx_sym1__ -
+            1)] = in__.read<local_scalar_t__>();
         }
       }
       out__.write(a5);
@@ -2106,13 +2113,14 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
         std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>(N,
           Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(N, N, DUMMY_VAR__));
       current_statement__ = 5;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
+          for (int idx_sym3__ = 1; idx_sym3__ <= N; ++idx_sym3__) {
             current_statement__ = 5;
             stan::model::assign(a4, in__.read<local_scalar_t__>(),
-              "assigning variable a4", stan::model::index_uni(sym3__),
-              stan::model::index_uni(sym2__), stan::model::index_uni(sym1__));
+              "assigning variable a4", stan::model::index_uni(idx_sym3__),
+              stan::model::index_uni(idx_sym2__),
+              stan::model::index_uni(idx_sym1__));
           }
         }
       }
@@ -2121,12 +2129,12 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
         std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>(N,
           Eigen::Matrix<local_scalar_t__,1,-1>::Constant(N, DUMMY_VAR__));
       current_statement__ = 6;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
           current_statement__ = 6;
           stan::model::assign(a3, in__.read<local_scalar_t__>(),
-            "assigning variable a3", stan::model::index_uni(sym2__),
-            stan::model::index_uni(sym1__));
+            "assigning variable a3", stan::model::index_uni(idx_sym2__),
+            stan::model::index_uni(idx_sym1__));
         }
       }
       out__.write(a3);
@@ -2134,12 +2142,12 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
         std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>(N,
           Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__));
       current_statement__ = 7;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
           current_statement__ = 7;
           stan::model::assign(a2, in__.read<local_scalar_t__>(),
-            "assigning variable a2", stan::model::index_uni(sym2__),
-            stan::model::index_uni(sym1__));
+            "assigning variable a2", stan::model::index_uni(idx_sym2__),
+            stan::model::index_uni(idx_sym1__));
         }
       }
       out__.write(a2);
@@ -2155,16 +2163,16 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
             Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(N, N,
               DUMMY_VAR__)));
       current_statement__ = 9;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
+          for (int idx_sym3__ = 1; idx_sym3__ <= N; ++idx_sym3__) {
+            for (int idx_sym4__ = 1; idx_sym4__ <= N; ++idx_sym4__) {
               current_statement__ = 9;
               stan::model::assign(y8, in__.read<local_scalar_t__>(),
-                "assigning variable y8", stan::model::index_uni(sym4__),
-                stan::model::index_uni(sym3__),
-                stan::model::index_uni(sym2__),
-                stan::model::index_uni(sym1__));
+                "assigning variable y8", stan::model::index_uni(idx_sym4__),
+                stan::model::index_uni(idx_sym3__),
+                stan::model::index_uni(idx_sym2__),
+                stan::model::index_uni(idx_sym1__));
             }
           }
         }
@@ -2175,13 +2183,14 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
           std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>(N,
             Eigen::Matrix<local_scalar_t__,1,-1>::Constant(N, DUMMY_VAR__)));
       current_statement__ = 10;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
+          for (int idx_sym3__ = 1; idx_sym3__ <= N; ++idx_sym3__) {
             current_statement__ = 10;
             stan::model::assign(y7, in__.read<local_scalar_t__>(),
-              "assigning variable y7", stan::model::index_uni(sym3__),
-              stan::model::index_uni(sym2__), stan::model::index_uni(sym1__));
+              "assigning variable y7", stan::model::index_uni(idx_sym3__),
+              stan::model::index_uni(idx_sym2__),
+              stan::model::index_uni(idx_sym1__));
           }
         }
       }
@@ -2191,13 +2200,14 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
           std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>(N,
             Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__)));
       current_statement__ = 11;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
+          for (int idx_sym3__ = 1; idx_sym3__ <= N; ++idx_sym3__) {
             current_statement__ = 11;
             stan::model::assign(y6, in__.read<local_scalar_t__>(),
-              "assigning variable y6", stan::model::index_uni(sym3__),
-              stan::model::index_uni(sym2__), stan::model::index_uni(sym1__));
+              "assigning variable y6", stan::model::index_uni(idx_sym3__),
+              stan::model::index_uni(idx_sym2__),
+              stan::model::index_uni(idx_sym1__));
           }
         }
       }
@@ -2206,10 +2216,11 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
         std::vector<std::vector<local_scalar_t__>>(N,
           std::vector<local_scalar_t__>(N, DUMMY_VAR__));
       current_statement__ = 12;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
           current_statement__ = 12;
-          y5[(sym2__ - 1)][(sym1__ - 1)] = in__.read<local_scalar_t__>();
+          y5[(idx_sym2__ - 1)][(idx_sym1__ -
+            1)] = in__.read<local_scalar_t__>();
         }
       }
       out__.write(y5);
@@ -2217,13 +2228,14 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
         std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>(N,
           Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(N, N, DUMMY_VAR__));
       current_statement__ = 13;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
+          for (int idx_sym3__ = 1; idx_sym3__ <= N; ++idx_sym3__) {
             current_statement__ = 13;
             stan::model::assign(y4, in__.read<local_scalar_t__>(),
-              "assigning variable y4", stan::model::index_uni(sym3__),
-              stan::model::index_uni(sym2__), stan::model::index_uni(sym1__));
+              "assigning variable y4", stan::model::index_uni(idx_sym3__),
+              stan::model::index_uni(idx_sym2__),
+              stan::model::index_uni(idx_sym1__));
           }
         }
       }
@@ -2232,12 +2244,12 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
         std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>(N,
           Eigen::Matrix<local_scalar_t__,1,-1>::Constant(N, DUMMY_VAR__));
       current_statement__ = 14;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
           current_statement__ = 14;
           stan::model::assign(y3, in__.read<local_scalar_t__>(),
-            "assigning variable y3", stan::model::index_uni(sym2__),
-            stan::model::index_uni(sym1__));
+            "assigning variable y3", stan::model::index_uni(idx_sym2__),
+            stan::model::index_uni(idx_sym1__));
         }
       }
       out__.write(y3);
@@ -2245,12 +2257,12 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
         std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>(N,
           Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__));
       current_statement__ = 15;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
           current_statement__ = 15;
           stan::model::assign(y2, in__.read<local_scalar_t__>(),
-            "assigning variable y2", stan::model::index_uni(sym2__),
-            stan::model::index_uni(sym1__));
+            "assigning variable y2", stan::model::index_uni(idx_sym2__),
+            stan::model::index_uni(idx_sym1__));
         }
       }
       out__.write(y2);
@@ -2495,125 +2507,127 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-        for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
-          for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
+        for (int idx_sym3__ = 1; idx_sym3__ <= N; ++idx_sym3__) {
+          for (int idx_sym4__ = 1; idx_sym4__ <= N; ++idx_sym4__) {
             param_names__.emplace_back(std::string() + "a8" + '.' +
-              std::to_string(sym4__) + '.' + std::to_string(sym3__) + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__));
+              std::to_string(idx_sym4__) + '.' + std::to_string(idx_sym3__) +
+              '.' + std::to_string(idx_sym2__) + '.' +
+              std::to_string(idx_sym1__));
           }
         }
       }
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-        for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
+        for (int idx_sym3__ = 1; idx_sym3__ <= N; ++idx_sym3__) {
           param_names__.emplace_back(std::string() + "a7" + '.' +
-            std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
-            std::to_string(sym1__));
+            std::to_string(idx_sym3__) + '.' + std::to_string(idx_sym2__) +
+            '.' + std::to_string(idx_sym1__));
         }
       }
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-        for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
+        for (int idx_sym3__ = 1; idx_sym3__ <= N; ++idx_sym3__) {
           param_names__.emplace_back(std::string() + "a6" + '.' +
-            std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
-            std::to_string(sym1__));
+            std::to_string(idx_sym3__) + '.' + std::to_string(idx_sym2__) +
+            '.' + std::to_string(idx_sym1__));
         }
       }
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
         param_names__.emplace_back(std::string() + "a5" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
       }
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-        for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
+        for (int idx_sym3__ = 1; idx_sym3__ <= N; ++idx_sym3__) {
           param_names__.emplace_back(std::string() + "a4" + '.' +
-            std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
-            std::to_string(sym1__));
+            std::to_string(idx_sym3__) + '.' + std::to_string(idx_sym2__) +
+            '.' + std::to_string(idx_sym1__));
         }
       }
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
         param_names__.emplace_back(std::string() + "a3" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
       }
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
         param_names__.emplace_back(std::string() + "a2" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
       }
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "a1" + '.' +
-        std::to_string(sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-        for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
-          for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
+        for (int idx_sym3__ = 1; idx_sym3__ <= N; ++idx_sym3__) {
+          for (int idx_sym4__ = 1; idx_sym4__ <= N; ++idx_sym4__) {
             param_names__.emplace_back(std::string() + "y8" + '.' +
-              std::to_string(sym4__) + '.' + std::to_string(sym3__) + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__));
+              std::to_string(idx_sym4__) + '.' + std::to_string(idx_sym3__) +
+              '.' + std::to_string(idx_sym2__) + '.' +
+              std::to_string(idx_sym1__));
           }
         }
       }
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-        for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
+        for (int idx_sym3__ = 1; idx_sym3__ <= N; ++idx_sym3__) {
           param_names__.emplace_back(std::string() + "y7" + '.' +
-            std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
-            std::to_string(sym1__));
+            std::to_string(idx_sym3__) + '.' + std::to_string(idx_sym2__) +
+            '.' + std::to_string(idx_sym1__));
         }
       }
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-        for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
+        for (int idx_sym3__ = 1; idx_sym3__ <= N; ++idx_sym3__) {
           param_names__.emplace_back(std::string() + "y6" + '.' +
-            std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
-            std::to_string(sym1__));
+            std::to_string(idx_sym3__) + '.' + std::to_string(idx_sym2__) +
+            '.' + std::to_string(idx_sym1__));
         }
       }
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
         param_names__.emplace_back(std::string() + "y5" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
       }
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-        for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
+        for (int idx_sym3__ = 1; idx_sym3__ <= N; ++idx_sym3__) {
           param_names__.emplace_back(std::string() + "y4" + '.' +
-            std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
-            std::to_string(sym1__));
+            std::to_string(idx_sym3__) + '.' + std::to_string(idx_sym2__) +
+            '.' + std::to_string(idx_sym1__));
         }
       }
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
         param_names__.emplace_back(std::string() + "y3" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
       }
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
         param_names__.emplace_back(std::string() + "y2" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
       }
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "y1" + '.' +
-        std::to_string(sym1__));
+        std::to_string(idx_sym1__));
     }
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
@@ -2622,125 +2636,127 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-        for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
-          for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
+        for (int idx_sym3__ = 1; idx_sym3__ <= N; ++idx_sym3__) {
+          for (int idx_sym4__ = 1; idx_sym4__ <= N; ++idx_sym4__) {
             param_names__.emplace_back(std::string() + "a8" + '.' +
-              std::to_string(sym4__) + '.' + std::to_string(sym3__) + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__));
+              std::to_string(idx_sym4__) + '.' + std::to_string(idx_sym3__) +
+              '.' + std::to_string(idx_sym2__) + '.' +
+              std::to_string(idx_sym1__));
           }
         }
       }
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-        for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
+        for (int idx_sym3__ = 1; idx_sym3__ <= N; ++idx_sym3__) {
           param_names__.emplace_back(std::string() + "a7" + '.' +
-            std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
-            std::to_string(sym1__));
+            std::to_string(idx_sym3__) + '.' + std::to_string(idx_sym2__) +
+            '.' + std::to_string(idx_sym1__));
         }
       }
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-        for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
+        for (int idx_sym3__ = 1; idx_sym3__ <= N; ++idx_sym3__) {
           param_names__.emplace_back(std::string() + "a6" + '.' +
-            std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
-            std::to_string(sym1__));
+            std::to_string(idx_sym3__) + '.' + std::to_string(idx_sym2__) +
+            '.' + std::to_string(idx_sym1__));
         }
       }
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
         param_names__.emplace_back(std::string() + "a5" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
       }
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-        for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
+        for (int idx_sym3__ = 1; idx_sym3__ <= N; ++idx_sym3__) {
           param_names__.emplace_back(std::string() + "a4" + '.' +
-            std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
-            std::to_string(sym1__));
+            std::to_string(idx_sym3__) + '.' + std::to_string(idx_sym2__) +
+            '.' + std::to_string(idx_sym1__));
         }
       }
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
         param_names__.emplace_back(std::string() + "a3" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
       }
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
         param_names__.emplace_back(std::string() + "a2" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
       }
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "a1" + '.' +
-        std::to_string(sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-        for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
-          for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
+        for (int idx_sym3__ = 1; idx_sym3__ <= N; ++idx_sym3__) {
+          for (int idx_sym4__ = 1; idx_sym4__ <= N; ++idx_sym4__) {
             param_names__.emplace_back(std::string() + "y8" + '.' +
-              std::to_string(sym4__) + '.' + std::to_string(sym3__) + '.' +
-              std::to_string(sym2__) + '.' + std::to_string(sym1__));
+              std::to_string(idx_sym4__) + '.' + std::to_string(idx_sym3__) +
+              '.' + std::to_string(idx_sym2__) + '.' +
+              std::to_string(idx_sym1__));
           }
         }
       }
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-        for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
+        for (int idx_sym3__ = 1; idx_sym3__ <= N; ++idx_sym3__) {
           param_names__.emplace_back(std::string() + "y7" + '.' +
-            std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
-            std::to_string(sym1__));
+            std::to_string(idx_sym3__) + '.' + std::to_string(idx_sym2__) +
+            '.' + std::to_string(idx_sym1__));
         }
       }
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-        for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
+        for (int idx_sym3__ = 1; idx_sym3__ <= N; ++idx_sym3__) {
           param_names__.emplace_back(std::string() + "y6" + '.' +
-            std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
-            std::to_string(sym1__));
+            std::to_string(idx_sym3__) + '.' + std::to_string(idx_sym2__) +
+            '.' + std::to_string(idx_sym1__));
         }
       }
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
         param_names__.emplace_back(std::string() + "y5" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
       }
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-        for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
+        for (int idx_sym3__ = 1; idx_sym3__ <= N; ++idx_sym3__) {
           param_names__.emplace_back(std::string() + "y4" + '.' +
-            std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
-            std::to_string(sym1__));
+            std::to_string(idx_sym3__) + '.' + std::to_string(idx_sym2__) +
+            '.' + std::to_string(idx_sym1__));
         }
       }
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
         param_names__.emplace_back(std::string() + "y3" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
       }
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
         param_names__.emplace_back(std::string() + "y2" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
       }
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "y1" + '.' +
-        std::to_string(sym1__));
+        std::to_string(idx_sym1__));
     }
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}

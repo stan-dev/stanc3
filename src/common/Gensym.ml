@@ -1,11 +1,7 @@
-let _counter = ref 0
+let next (count : int ref) ~prefix =
+  incr count;
+  Format.sprintf "%ssym%d__" prefix !count
 
-let generate ?(prefix : string = "") () =
-  _counter := !_counter + 1;
-  Format.sprintf "%ssym%d__" prefix !_counter
-
-let enter () =
-  let old_counter = !_counter in
-  (generate (), fun () -> _counter := old_counter)
-
-let reset_danger_use_cautiously () = _counter := 0
+let enter (count : int ref) ~prefix =
+  let old_count = !count in
+  (next count ~prefix, fun () -> count := old_count)
