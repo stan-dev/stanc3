@@ -191,8 +191,15 @@ Show help
              transformed it.
   
          -f SETTING
-             Debugging features. Valid values: -fsoa to force on the Struct of
-             Arrays optimization. -fno-soa to force it off.
+             Debugging features. Turn a single optimization on or off. On with
+             -fNAME or off with -fno-NAME. Option may be given more than once.
+             When a pass is named twice the last setting wins. NAME is one of
+             inlining, static-loop-unrolling, one-step-loop-unrolling,
+             vectorize-loops, list-collapsing, block-fixing,
+             allow-uninitialized-decls, constant-propagation,
+             expression-propagation, copy-propagation, dead-code-elimination,
+             partial-evaluation, lazy-code-motion, ad-levels,
+             preserve-stability or soa.
   
   EXIT STATUS
          0   on success.
@@ -248,13 +255,6 @@ Error when a folder is passed
   %%NAME%%: MODEL_FILE argument: 'foo.d' is a directory
   [124]
   $ rm -r foo.d
-
-Error when nonsense argument is passed
-  $ stanc -fno-generated-quantities
-  Usage: %%NAME%% [--help] [OPTION]… [MODEL_FILE]
-  %%NAME%%: option '-f': invalid value 'no-generated-quantities', expected
-            either 'soa' or 'no-soa'
-  [124]
 
 Error when unreadable file is passed
   $ touch unreadable.stan

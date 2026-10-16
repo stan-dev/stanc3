@@ -327,14 +327,27 @@ module Debug_Options = struct
        factor graph for the model(s) implemented in the Stan program." in
     Arg.(value & flag & info ["debug-print-factor-graph"] ~doc ~docs)
 
-  let force_soa =
+  let optimization_overrides =
+    let open Analysis_and_optimization.Optimize in
     let doc =
-      "Debugging features. Valid values: $(b,-fsoa) to force on the Struct of \
-       Arrays optimization. $(b,-fno-soa) to force it off." in
-    Arg.(
-      value
-      & opt (some @@ enum [("soa", true); ("no-soa", false)]) None
-      & info ["f"] ~doc ~docv:"SETTING" ~docs)
+      Fmt.str
+        "Debugging features. Turn a single optimization on or off. On with \
+         $(b,-f)NAME or off with $(b,-fno-)NAME. Option may be given more than \
+         once. When a pass is named twice the last setting wins. NAME is %s."
+        (Arg.doc_alts_enum optimization_pass_names) in
+    (* errors list only the [no-] names for a [no-] setting, else only the
+       enabling names *)
+    let setting =
+      let disabling, enabling =
+        List.partition optimization_flags ~f:(fun (name, _) ->
+            String.starts_with ~prefix:"no-" name) in
+      let parser setting =
+        let names =
+          if String.starts_with ~prefix:"no-" setting then disabling
+          else enabling in
+        Arg.Conv.parser (Arg.enum names) setting in
+      Arg.Conv.of_conv ~parser (Arg.enum optimization_flags) in
+    Arg.(value & opt_all setting [] & info ["f"] ~doc ~docv:"SETTING" ~docs)
 end
 
 (** Flags common to all compiler drivers and those specific to the command line
@@ -372,7 +385,7 @@ module Conversion = struct
     and+ print_transformed_mir = debug_transformed_mir
     and+ print_optimized_mir = debug_optimized_mir
     and+ print_mem_patterns = debug_mem_patterns
-    and+ force_soa
+    and+ optimization_overrides
     and+ print_lir = debug_lir
     and+ debug_generate_data
     and+ debug_generate_inits
@@ -385,7 +398,7 @@ module Conversion = struct
       ; print_transformed_mir
       ; print_optimized_mir
       ; print_mem_patterns
-      ; force_soa
+      ; optimization_overrides
       ; print_lir
       ; debug_generate_data
       ; debug_generate_inits
