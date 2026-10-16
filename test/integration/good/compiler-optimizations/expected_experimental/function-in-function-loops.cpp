@@ -189,56 +189,56 @@ class function_in_function_loops_model final : public model_base_crtp<function_i
         stan::model::assign(lcm_sym16__, stan::math::rep_vector(0.0, N),
           "assigning variable lcm_sym16__");
         double out = std::numeric_limits<double>::quiet_NaN();
-        double inline_summer_return_sym2__;
+        double inline_summer_return_sym18__;
         {
-          int inline_summer_N_sym2__ = std::numeric_limits<int>::min();
+          int inline_summer_N_sym19__ = std::numeric_limits<int>::min();
           lcm_sym17__ = stan::math::size(lcm_sym16__);
-          double inline_summer_running_sum_sym2__;
-          inline_summer_running_sum_sym2__ = static_cast<double>(0);
+          double inline_summer_running_sum_sym20__;
+          inline_summer_running_sum_sym20__ = static_cast<double>(0);
           current_statement__ = 9;
           if (stan::math::logical_gte(lcm_sym17__, 1)) {
-            double inline_summer_inline_do_something_x_arg_sym2___sym2__ =
+            double inline_summer_inline_do_something_x_arg_sym6___sym21__ =
               stan::model::rvalue(lcm_sym16__, "lcm_sym16__",
                 stan::model::index_uni(1));
-            double inline_summer_inline_do_something_return_sym2___sym2__;
+            double inline_summer_inline_do_something_return_sym5___sym22__;
             int
-              inline_summer_inline_do_something_early_ret_check_sym2___sym2__ =
+              inline_summer_inline_do_something_early_ret_check_sym7___sym23__ =
               std::numeric_limits<int>::min();
             for (int
-                   inline_summer_inline_do_something_iterator_sym2___sym2__ =
-                   1; inline_summer_inline_do_something_iterator_sym2___sym2__
+                   inline_summer_inline_do_something_iterator_sym8___sym24__ =
+                   1; inline_summer_inline_do_something_iterator_sym8___sym24__
                  <=
-                 1; ++inline_summer_inline_do_something_iterator_sym2___sym2__) {
-              inline_summer_inline_do_something_return_sym2___sym2__ = inline_summer_inline_do_something_x_arg_sym2___sym2__;
+                 1; ++inline_summer_inline_do_something_iterator_sym8___sym24__) {
+              inline_summer_inline_do_something_return_sym5___sym22__ = inline_summer_inline_do_something_x_arg_sym6___sym21__;
               break;
             }
-            inline_summer_running_sum_sym2__ = (0 +
-              inline_summer_inline_do_something_return_sym2___sym2__);
-            for (int inline_summer_n_sym2__ = 2; inline_summer_n_sym2__ <=
-                 lcm_sym17__; ++inline_summer_n_sym2__) {
-              double inline_summer_inline_do_something_x_arg_sym2___sym2__ =
-                lcm_sym16__[(inline_summer_n_sym2__ - 1)];
-              double inline_summer_inline_do_something_return_sym2___sym2__;
+            inline_summer_running_sum_sym20__ = (0 +
+              inline_summer_inline_do_something_return_sym5___sym22__);
+            for (int inline_summer_n_sym25__ = 2; inline_summer_n_sym25__ <=
+                 lcm_sym17__; ++inline_summer_n_sym25__) {
+              double inline_summer_inline_do_something_x_arg_sym6___sym21__ =
+                lcm_sym16__[(inline_summer_n_sym25__ - 1)];
+              double inline_summer_inline_do_something_return_sym5___sym22__;
               int
-                inline_summer_inline_do_something_early_ret_check_sym2___sym2__ =
+                inline_summer_inline_do_something_early_ret_check_sym7___sym23__ =
                 std::numeric_limits<int>::min();
               for (int
-                     inline_summer_inline_do_something_iterator_sym2___sym2__ =
-                     1; inline_summer_inline_do_something_iterator_sym2___sym2__
+                     inline_summer_inline_do_something_iterator_sym8___sym24__ =
+                     1; inline_summer_inline_do_something_iterator_sym8___sym24__
                    <=
-                   1; ++inline_summer_inline_do_something_iterator_sym2___sym2__) {
-                inline_summer_inline_do_something_return_sym2___sym2__ = inline_summer_inline_do_something_x_arg_sym2___sym2__;
+                   1; ++inline_summer_inline_do_something_iterator_sym8___sym24__) {
+                inline_summer_inline_do_something_return_sym5___sym22__ = inline_summer_inline_do_something_x_arg_sym6___sym21__;
                 break;
               }
-              inline_summer_running_sum_sym2__ = (inline_summer_running_sum_sym2__
-                + inline_summer_inline_do_something_return_sym2___sym2__);
+              inline_summer_running_sum_sym20__ = (inline_summer_running_sum_sym20__
+                + inline_summer_inline_do_something_return_sym5___sym22__);
             }
           }
           current_statement__ = 10;
-          inline_summer_return_sym2__ = inline_summer_running_sum_sym2__;
+          inline_summer_return_sym18__ = inline_summer_running_sum_sym20__;
         }
         current_statement__ = 11;
-        lp_accum__.add(inline_summer_return_sym2__);
+        lp_accum__.add(inline_summer_return_sym18__);
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -287,56 +287,56 @@ class function_in_function_loops_model final : public model_base_crtp<function_i
         stan::model::assign(lcm_sym8__, stan::math::rep_vector(0.0, N),
           "assigning variable lcm_sym8__");
         double out = std::numeric_limits<double>::quiet_NaN();
-        double inline_summer_return_sym1__;
+        double inline_summer_return_sym9__;
         {
-          int inline_summer_N_sym1__ = std::numeric_limits<int>::min();
+          int inline_summer_N_sym10__ = std::numeric_limits<int>::min();
           lcm_sym9__ = stan::math::size(lcm_sym8__);
-          double inline_summer_running_sum_sym1__;
-          inline_summer_running_sum_sym1__ = static_cast<double>(0);
+          double inline_summer_running_sum_sym11__;
+          inline_summer_running_sum_sym11__ = static_cast<double>(0);
           current_statement__ = 9;
           if (stan::math::logical_gte(lcm_sym9__, 1)) {
-            double inline_summer_inline_do_something_x_arg_sym2___sym1__ =
+            double inline_summer_inline_do_something_x_arg_sym6___sym12__ =
               stan::model::rvalue(lcm_sym8__, "lcm_sym8__",
                 stan::model::index_uni(1));
-            double inline_summer_inline_do_something_return_sym2___sym1__;
+            double inline_summer_inline_do_something_return_sym5___sym13__;
             int
-              inline_summer_inline_do_something_early_ret_check_sym2___sym1__ =
+              inline_summer_inline_do_something_early_ret_check_sym7___sym14__ =
               std::numeric_limits<int>::min();
             for (int
-                   inline_summer_inline_do_something_iterator_sym2___sym1__ =
-                   1; inline_summer_inline_do_something_iterator_sym2___sym1__
+                   inline_summer_inline_do_something_iterator_sym8___sym15__ =
+                   1; inline_summer_inline_do_something_iterator_sym8___sym15__
                  <=
-                 1; ++inline_summer_inline_do_something_iterator_sym2___sym1__) {
-              inline_summer_inline_do_something_return_sym2___sym1__ = inline_summer_inline_do_something_x_arg_sym2___sym1__;
+                 1; ++inline_summer_inline_do_something_iterator_sym8___sym15__) {
+              inline_summer_inline_do_something_return_sym5___sym13__ = inline_summer_inline_do_something_x_arg_sym6___sym12__;
               break;
             }
-            inline_summer_running_sum_sym1__ = (0 +
-              inline_summer_inline_do_something_return_sym2___sym1__);
-            for (int inline_summer_n_sym1__ = 2; inline_summer_n_sym1__ <=
-                 lcm_sym9__; ++inline_summer_n_sym1__) {
-              double inline_summer_inline_do_something_x_arg_sym2___sym1__ =
-                lcm_sym8__[(inline_summer_n_sym1__ - 1)];
-              double inline_summer_inline_do_something_return_sym2___sym1__;
+            inline_summer_running_sum_sym11__ = (0 +
+              inline_summer_inline_do_something_return_sym5___sym13__);
+            for (int inline_summer_n_sym16__ = 2; inline_summer_n_sym16__ <=
+                 lcm_sym9__; ++inline_summer_n_sym16__) {
+              double inline_summer_inline_do_something_x_arg_sym6___sym12__ =
+                lcm_sym8__[(inline_summer_n_sym16__ - 1)];
+              double inline_summer_inline_do_something_return_sym5___sym13__;
               int
-                inline_summer_inline_do_something_early_ret_check_sym2___sym1__ =
+                inline_summer_inline_do_something_early_ret_check_sym7___sym14__ =
                 std::numeric_limits<int>::min();
               for (int
-                     inline_summer_inline_do_something_iterator_sym2___sym1__ =
-                     1; inline_summer_inline_do_something_iterator_sym2___sym1__
+                     inline_summer_inline_do_something_iterator_sym8___sym15__ =
+                     1; inline_summer_inline_do_something_iterator_sym8___sym15__
                    <=
-                   1; ++inline_summer_inline_do_something_iterator_sym2___sym1__) {
-                inline_summer_inline_do_something_return_sym2___sym1__ = inline_summer_inline_do_something_x_arg_sym2___sym1__;
+                   1; ++inline_summer_inline_do_something_iterator_sym8___sym15__) {
+                inline_summer_inline_do_something_return_sym5___sym13__ = inline_summer_inline_do_something_x_arg_sym6___sym12__;
                 break;
               }
-              inline_summer_running_sum_sym1__ = (inline_summer_running_sum_sym1__
-                + inline_summer_inline_do_something_return_sym2___sym1__);
+              inline_summer_running_sum_sym11__ = (inline_summer_running_sum_sym11__
+                + inline_summer_inline_do_something_return_sym5___sym13__);
             }
           }
           current_statement__ = 10;
-          inline_summer_return_sym1__ = inline_summer_running_sum_sym1__;
+          inline_summer_return_sym9__ = inline_summer_running_sum_sym11__;
         }
         current_statement__ = 11;
-        lp_accum__.add(inline_summer_return_sym1__);
+        lp_accum__.add(inline_summer_return_sym9__);
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);

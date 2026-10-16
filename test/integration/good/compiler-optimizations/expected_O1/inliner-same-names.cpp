@@ -127,16 +127,16 @@ class inliner_same_names_model final : public model_base_crtp<inliner_same_names
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
       Eigen::Matrix<local_scalar_t__,-1,1> out =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-      Eigen::Matrix<local_scalar_t__,-1,1> inline_foo_return_sym3__;
+      Eigen::Matrix<local_scalar_t__,-1,1> inline_foo_return_sym9__;
       {
-        int inline_foo_ot_sym3__;
+        int inline_foo_ot_sym10__;
         current_statement__ = 3;
-        inline_foo_ot_sym3__ = stan::math::num_elements(R);
+        inline_foo_ot_sym10__ = stan::math::num_elements(R);
         current_statement__ = 4;
         stan::math::validate_non_negative_index("R", "ot",
-          inline_foo_ot_sym3__);
-        Eigen::Matrix<local_scalar_t__,-1,1> inline_foo_R_sym3__ =
-          Eigen::Matrix<local_scalar_t__,-1,1>::Constant(inline_foo_ot_sym3__,
+          inline_foo_ot_sym10__);
+        Eigen::Matrix<local_scalar_t__,-1,1> inline_foo_R_sym11__ =
+          Eigen::Matrix<local_scalar_t__,-1,1>::Constant(inline_foo_ot_sym10__,
             DUMMY_VAR__);
       }
       stan::model::assign(out, R, "assigning variable out");
@@ -179,17 +179,17 @@ class inliner_same_names_model final : public model_base_crtp<inliner_same_names
                                                             std::numeric_limits<double>::quiet_NaN(
                                                               )));
       stan::math::var_value<Eigen::Matrix<double,-1,1>>
-        inline_foo_return_sym2__;
+        inline_foo_return_sym5__;
       {
-        int inline_foo_ot_sym2__;
+        int inline_foo_ot_sym6__;
         current_statement__ = 3;
-        inline_foo_ot_sym2__ = stan::math::num_elements(R);
+        inline_foo_ot_sym6__ = stan::math::num_elements(R);
         current_statement__ = 4;
         stan::math::validate_non_negative_index("R", "ot",
-          inline_foo_ot_sym2__);
+          inline_foo_ot_sym6__);
         stan::math::var_value<Eigen::Matrix<double,-1,1>>
-          inline_foo_R_sym2__ =
-          stan::math::var_value<Eigen::Matrix<double,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(inline_foo_ot_sym2__,
+          inline_foo_R_sym7__ =
+          stan::math::var_value<Eigen::Matrix<double,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(inline_foo_ot_sym6__,
                                                               std::numeric_limits<double>::quiet_NaN(
                                                                 )));
       }
@@ -248,14 +248,14 @@ class inliner_same_names_model final : public model_base_crtp<inliner_same_names
       }
       Eigen::Matrix<double,-1,1> inline_foo_return_sym1__;
       {
-        int inline_foo_ot_sym1__;
+        int inline_foo_ot_sym2__;
         current_statement__ = 3;
-        inline_foo_ot_sym1__ = stan::math::num_elements(R);
+        inline_foo_ot_sym2__ = stan::math::num_elements(R);
         current_statement__ = 4;
         stan::math::validate_non_negative_index("R", "ot",
-          inline_foo_ot_sym1__);
-        Eigen::Matrix<local_scalar_t__,-1,1> inline_foo_R_sym1__ =
-          Eigen::Matrix<local_scalar_t__,-1,1>::Constant(inline_foo_ot_sym1__,
+          inline_foo_ot_sym2__);
+        Eigen::Matrix<local_scalar_t__,-1,1> inline_foo_R_sym3__ =
+          Eigen::Matrix<local_scalar_t__,-1,1>::Constant(inline_foo_ot_sym2__,
             DUMMY_VAR__);
       }
       stan::model::assign(out, R, "assigning variable out");

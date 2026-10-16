@@ -77,16 +77,17 @@ let block_no_loc l = Stmt.Pattern.Block (map_no_loc l)
 let slist_concat_no_loc l stmt =
   match l with [] -> stmt | l -> slist_no_loc (l @ [stmt])
 
-let gen_inline_var (name : string) (id_var : string) =
-  Gensym.generate ~prefix:("inline_" ^ name ^ "_" ^ id_var ^ "_") ()
+(** [count] numbers the symbols of one [function_inlining] run *)
+let gen_inline_var (count : int ref) (name : string) (id_var : string) =
+  Gensym.next count ~prefix:("inline_" ^ name ^ "_" ^ id_var ^ "_")
 
-let replace_fresh_local_vars (fname : string) stmt =
+let replace_fresh_local_vars count (fname : string) stmt =
   let f (m : string String.Map.t) = function
     | Stmt.Pattern.Decl {decl_adtype; decl_type; decl_id; initialize} ->
         let new_name =
           match String.Map.find_opt decl_id m with
           | Some existing -> existing
-          | None -> gen_inline_var fname decl_id in
+          | None -> gen_inline_var count fname decl_id in
         ( Stmt.Pattern.Decl
             {decl_adtype; decl_id= new_name; decl_type; initialize}
         , String.Map.add m ~key:decl_id ~data:new_name )
@@ -94,7 +95,7 @@ let replace_fresh_local_vars (fname : string) stmt =
         let new_name =
           match String.Map.find_opt loopvar m with
           | Some existing -> existing
-          | None -> gen_inline_var fname loopvar in
+          | None -> gen_inline_var count fname loopvar in
         ( Stmt.Pattern.For {loopvar= new_name; lower; upper; body}
         , String.Map.add m ~key:loopvar ~data:new_name )
     | Assignment (lhs, type_, e) ->
@@ -127,8 +128,8 @@ let rec count_returns Stmt.{pattern; _} : int =
    check if that flag is set after each loop. Then, if a 'return' break is
    called from an inner loop, there's a cascade of breaks all the way out of the
    dummy loop. *)
-let handle_early_returns (fname : string) opt_var stmt =
-  let returned = gen_inline_var fname "early_ret_check" in
+let handle_early_returns count (fname : string) opt_var stmt =
+  let returned = gen_inline_var count fname "early_ret_check" in
   let generate_inner_breaks num_returns stmt_pattern =
     match stmt_pattern with
     | Stmt.Pattern.Return opt_ret -> (
@@ -210,7 +211,7 @@ let handle_early_returns (fname : string) opt_var stmt =
       ; Stmt.
           { pattern=
               Stmt.Pattern.For
-                { loopvar= gen_inline_var fname "iterator"
+                { loopvar= gen_inline_var count fname "iterator"
                 ; lower=
                     Expr.
                       { pattern= Lit (Int, "1")
@@ -258,8 +259,9 @@ let compute_suffix_and_map propto suffix fim =
   | _ -> (suffix, fim.plain)
 
 (* Triple is (declaration list, statement list, return expression) *)
-let rec inline_function_expression propto adt fim (Expr.{pattern; _} as e) =
-  let inline_expr = inline_function_expression propto adt fim in
+let rec inline_function_expression count propto adt fim (Expr.{pattern; _} as e)
+    =
+  let inline_expr = inline_function_expression count propto adt fim in
   match pattern with
   | Var _ -> ([], [], e)
   | Lit (_, _) -> ([], [], e)
@@ -288,11 +290,12 @@ let rec inline_function_expression propto adt fim (Expr.{pattern; _} as e) =
                   pattern= FunApp (Fun_kind.UserDefined (fname, suffix), es) }
               )
           | Some (rt, args, body) ->
-              let inline_return_name = gen_inline_var fname "return" in
+              let inline_return_name = gen_inline_var count fname "return" in
               let d_list, s_list, es =
-                inline_function_arguments fname propto adt fim args es in
+                inline_function_arguments count fname propto adt fim args es
+              in
               let handle =
-                handle_early_returns fname (Some inline_return_name) in
+                handle_early_returns count fname (Some inline_return_name) in
               let d_list2, s_list2, (e : Expr.Typed.t) =
                 let decl_type =
                   Option.map ~f:unsafe_unsized_to_sized_type rt
@@ -310,7 +313,7 @@ let rec inline_function_expression propto adt fim (Expr.{pattern; _} as e) =
                      variables introduced by inlining *)
                 , [ handle
                       (subst_args_stmt args es
-                         (replace_fresh_local_vars fname body)) ]
+                         (replace_fresh_local_vars count fname body)) ]
                 , { pattern= Var inline_return_name
                   ; meta=
                       Expr.Typed.Meta.
@@ -336,7 +339,7 @@ let rec inline_function_expression propto adt fim (Expr.{pattern; _} as e) =
   | Indexed (e', i_list) ->
       let dl, sl, e' = inline_expr e' in
       let d_list, s_list, i_list =
-        inline_list (inline_function_index propto adt fim) i_list in
+        inline_list (inline_function_index count propto adt fim) i_list in
       (d_list @ dl, s_list @ sl, {e with pattern= Indexed (e', i_list)})
   | TupleProjection (e', ix) ->
       let dl, sl, e' = inline_expr e' in
@@ -363,15 +366,15 @@ let rec inline_function_expression propto adt fim (Expr.{pattern; _} as e) =
               )) ] in
       (dl1 @ dl2, sl1 @ sl2, {e with pattern= EOr (e1, e2)})
 
-and inline_function_arguments fname propto adt fim args es =
+and inline_function_arguments count fname propto adt fim args es =
   let inline_function_argument (name, e) =
-    let decls, stmts, e = inline_function_expression propto adt fim e in
+    let decls, stmts, e = inline_function_expression count propto adt fim e in
     match e.pattern with
     | Var _ | Lit _ -> (decls, stmts, e)
     | _ ->
         (* nontrivial function arguments get bound to a variable to avoid
            re-evaluation *)
-        let temp = gen_inline_var fname (name ^ "_arg") in
+        let temp = gen_inline_var count fname (name ^ "_arg") in
         let e =
           if UnsizedType.is_container e.meta.type_ then
             (* Avoid copies *)
@@ -388,8 +391,8 @@ and inline_function_arguments fname propto adt fim args es =
         , {e with pattern= Var temp} ) in
   inline_list inline_function_argument (List.combine args es)
 
-and inline_function_index propto adt fim i =
-  let inline_expr = inline_function_expression propto adt fim in
+and inline_function_index count propto adt fim i =
+  let inline_expr = inline_function_expression count propto adt fim in
   match i with
   | All -> ([], [], All)
   | Single e ->
@@ -406,8 +409,8 @@ and inline_function_index propto adt fim i =
       let dl, sl, e = inline_expr e in
       (dl, sl, MultiIndex e)
 
-let rec inline_function_statement propto adt fim Stmt.{pattern; meta} =
-  let inline_expr = inline_function_expression propto adt fim in
+let rec inline_function_statement count propto adt fim Stmt.{pattern; meta} =
+  let inline_expr = inline_function_expression count propto adt fim in
   Stmt.
     { pattern=
         (match pattern with
@@ -445,11 +448,11 @@ let rec inline_function_statement propto adt fim Stmt.{pattern; meta} =
                 slist_concat_no_loc (d @ s)
                   (NRFunApp (UserDefined (fname, sfx), es))
             | Some (_, args, b) ->
-                let b = replace_fresh_local_vars fname b in
-                let b = handle_early_returns fname None b in
+                let b = replace_fresh_local_vars count fname b in
+                let b = handle_early_returns count fname None b in
                 let d, s, es =
-                  inline_function_arguments fname propto adt fim args exprs
-                in
+                  inline_function_arguments count fname propto adt fim args
+                    exprs in
                 slist_concat_no_loc (d @ s)
                   (subst_args_stmt args es
                      {pattern= b; meta= Location_span.empty})
@@ -463,20 +466,21 @@ let rec inline_function_statement propto adt fim Stmt.{pattern; meta} =
             slist_concat_no_loc (d @ s)
               (IfElse
                  ( e
-                 , inline_function_statement propto adt fim s1
-                 , Option.map ~f:(inline_function_statement propto adt fim) s2
-                 ))
+                 , inline_function_statement count propto adt fim s1
+                 , Option.map
+                     ~f:(inline_function_statement count propto adt fim)
+                     s2 ))
         | While (expr, stmt) ->
             let d', s', e = inline_expr expr in
             slist_concat_no_loc (d' @ s')
               (While
                  ( e
                  , if List.is_empty s' then
-                     inline_function_statement propto adt fim stmt
+                     inline_function_statement count propto adt fim stmt
                    else
                      { pattern=
                          Block
-                           ([inline_function_statement propto adt fim stmt]
+                           ([inline_function_statement count propto adt fim stmt]
                            @ map_no_loc s')
                      ; meta= Location_span.empty } ))
         | For {loopvar; lower; upper; body} ->
@@ -490,20 +494,25 @@ let rec inline_function_statement propto adt fim Stmt.{pattern; meta} =
                  ; upper
                  ; body=
                      (if List.is_empty s_upper then
-                        inline_function_statement propto adt fim body
+                        inline_function_statement count propto adt fim body
                       else
                         { pattern=
                             Block
-                              ([inline_function_statement propto adt fim body]
+                              ([ inline_function_statement count propto adt fim
+                                   body ]
                               @ map_no_loc s_upper)
                         ; meta= Location_span.empty }) })
         | Profile (name, l) ->
             Profile
-              (name, List.map l ~f:(inline_function_statement propto adt fim))
+              ( name
+              , List.map l ~f:(inline_function_statement count propto adt fim)
+              )
         | Block l ->
-            Block (List.map l ~f:(inline_function_statement propto adt fim))
+            Block
+              (List.map l ~f:(inline_function_statement count propto adt fim))
         | SList l ->
-            SList (List.map l ~f:(inline_function_statement propto adt fim))
+            SList
+              (List.map l ~f:(inline_function_statement count propto adt fim))
         | Decl {decl_adtype; decl_id; decl_type; initialize= Assign expr} ->
             let d, s, e = inline_expr expr in
             slist_concat_no_loc (d @ s)
@@ -514,7 +523,7 @@ let rec inline_function_statement propto adt fim Stmt.{pattern; meta} =
         | Continue -> Continue)
     ; meta }
 
-let create_function_inline_map adt l =
+let create_function_inline_map count adt l =
   let f accum Program.{fdname; fdargs; fdbody; fdrt; _} =
     match fdbody with
     | None -> accum
@@ -524,7 +533,7 @@ let create_function_inline_map adt l =
               ~f:(fun x -> Type.Unsized x)
               (UnsizedType.returntype_to_type_opt fdrt)
           , List.map ~f:(fun (_, name, _) -> name) fdargs
-          , inline_function_statement propto adt accum fdbody ) in
+          , inline_function_statement count propto adt accum fdbody ) in
         match Middle.Fun_kind.suffix_from_name fdname with
         | FnDist _ ->
             let data = create_data Normalized in
@@ -552,20 +561,22 @@ let function_inlining (mir : Program.Typed.t) =
   let inlineable_functions =
     List.filter mir.functions_block ~f:(fun Program.{fdname; _} ->
         String.Map.find fdname can_inline) in
+  let count = ref 0 in
   let dataonly_inline_map =
-    create_function_inline_map UnsizedType.DataOnly inlineable_functions in
-  let autodiff_inline_map =
-    create_function_inline_map UnsizedType.AutoDiffable inlineable_functions
+    create_function_inline_map count UnsizedType.DataOnly inlineable_functions
   in
+  let autodiff_inline_map =
+    create_function_inline_map count UnsizedType.AutoDiffable
+      inlineable_functions in
   let dataonly_inline_function_statements =
     List.map
       ~f:
-        (inline_function_statement Unnormalized UnsizedType.DataOnly
+        (inline_function_statement count Unnormalized UnsizedType.DataOnly
            dataonly_inline_map) in
   let autodiffable_inline_function_statements =
     List.map
       ~f:
-        (inline_function_statement Unnormalized UnsizedType.AutoDiffable
+        (inline_function_statement count Unnormalized UnsizedType.AutoDiffable
            autodiff_inline_map) in
   { mir with
     transform_inits= autodiffable_inline_function_statements mir.transform_inits
@@ -1184,6 +1195,7 @@ let lazy_code_motion ?(preserve_stability = false) (mir : Program.Typed.t) =
   (* TODO: clean up this code. It is not very pretty. *)
   (* TODO: make lazy code motion operate on transformed parameters and models blocks
      simultaneously *)
+  let count = ref 0 in
   let preprocess_flowgraph =
     let preprocess_flowgraph_base
         (stmt : (Expr.Typed.t, Stmt.Located.t) Stmt.Pattern.t) =
@@ -1235,8 +1247,7 @@ let lazy_code_motion ?(preserve_stability = false) (mir : Program.Typed.t) =
         | _ when cannot_duplicate_expr ~preserve_stability e ->
             (* Immovable expressions might have movable subexpressions *)
             Expr.Pattern.fold collect_expressions accum e.pattern
-        | _ ->
-            ExprMap.add accum ~key:e ~data:(Gensym.generate ~prefix:"lcm_" ())
+        | _ -> ExprMap.add accum ~key:e ~data:(Gensym.next count ~prefix:"lcm_")
       in
       ExprSet.fold
         (Monotone_framework.used_expressions_stmt s.pattern)

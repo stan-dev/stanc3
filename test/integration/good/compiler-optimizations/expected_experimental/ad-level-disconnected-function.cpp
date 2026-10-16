@@ -180,25 +180,25 @@ class ad_level_disconnected_function_model final : public model_base_crtp<ad_lev
       Eigen::Matrix<double,-1,-1> empty_user_func_aos =
         Eigen::Matrix<double,-1,-1>::Constant(10, 10,
           std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<double,-1,-1> inline_empty_user_func_return_sym3__;
+      Eigen::Matrix<double,-1,-1> inline_empty_user_func_return_sym7__;
       {
-        Eigen::Matrix<double,-1,-1> inline_empty_user_func_some_mat_sym3__ =
+        Eigen::Matrix<double,-1,-1> inline_empty_user_func_some_mat_sym8__ =
           Eigen::Matrix<double,-1,-1>::Constant(10, 10,
             std::numeric_limits<double>::quiet_NaN());
         current_statement__ = 6;
-        stan::model::assign(inline_empty_user_func_return_sym3__,
-          inline_empty_user_func_some_mat_sym3__,
-          "assigning variable inline_empty_user_func_return_sym3__");
+        stan::model::assign(inline_empty_user_func_return_sym7__,
+          inline_empty_user_func_some_mat_sym8__,
+          "assigning variable inline_empty_user_func_return_sym7__");
       }
       stan::model::assign(empty_user_func_aos,
-        inline_empty_user_func_return_sym3__,
+        inline_empty_user_func_return_sym7__,
         "assigning variable empty_user_func_aos");
       Eigen::Matrix<local_scalar_t__,-1,-1> int_aos_mul_aos;
       current_statement__ = 4;
       stan::model::assign(int_aos_mul_aos,
         stan::math::multiply(
           stan::math::promote_scalar<local_scalar_t__>(
-            stan::math::rows(row_soa)), inline_empty_user_func_return_sym3__),
+            stan::math::rows(row_soa)), inline_empty_user_func_return_sym7__),
         "assigning variable int_aos_mul_aos");
       {
         current_statement__ = 7;
@@ -251,25 +251,25 @@ class ad_level_disconnected_function_model final : public model_base_crtp<ad_lev
       Eigen::Matrix<double,-1,-1> empty_user_func_aos =
         Eigen::Matrix<double,-1,-1>::Constant(10, 10,
           std::numeric_limits<double>::quiet_NaN());
-      Eigen::Matrix<double,-1,-1> inline_empty_user_func_return_sym2__;
+      Eigen::Matrix<double,-1,-1> inline_empty_user_func_return_sym4__;
       {
-        Eigen::Matrix<double,-1,-1> inline_empty_user_func_some_mat_sym2__ =
+        Eigen::Matrix<double,-1,-1> inline_empty_user_func_some_mat_sym5__ =
           Eigen::Matrix<double,-1,-1>::Constant(10, 10,
             std::numeric_limits<double>::quiet_NaN());
         current_statement__ = 6;
-        stan::model::assign(inline_empty_user_func_return_sym2__,
-          inline_empty_user_func_some_mat_sym2__,
-          "assigning variable inline_empty_user_func_return_sym2__");
+        stan::model::assign(inline_empty_user_func_return_sym4__,
+          inline_empty_user_func_some_mat_sym5__,
+          "assigning variable inline_empty_user_func_return_sym4__");
       }
       stan::model::assign(empty_user_func_aos,
-        inline_empty_user_func_return_sym2__,
+        inline_empty_user_func_return_sym4__,
         "assigning variable empty_user_func_aos");
       Eigen::Matrix<local_scalar_t__,-1,-1> int_aos_mul_aos;
       current_statement__ = 4;
       stan::model::assign(int_aos_mul_aos,
         stan::math::multiply(
           stan::math::promote_scalar<local_scalar_t__>(
-            stan::math::rows(row_soa)), inline_empty_user_func_return_sym2__),
+            stan::math::rows(row_soa)), inline_empty_user_func_return_sym4__),
         "assigning variable int_aos_mul_aos");
       {
         current_statement__ = 7;
@@ -344,12 +344,12 @@ class ad_level_disconnected_function_model final : public model_base_crtp<ad_lev
       }
       Eigen::Matrix<double,-1,-1> inline_empty_user_func_return_sym1__;
       {
-        Eigen::Matrix<double,-1,-1> inline_empty_user_func_some_mat_sym1__ =
+        Eigen::Matrix<double,-1,-1> inline_empty_user_func_some_mat_sym2__ =
           Eigen::Matrix<double,-1,-1>::Constant(10, 10,
             std::numeric_limits<double>::quiet_NaN());
         current_statement__ = 6;
         stan::model::assign(inline_empty_user_func_return_sym1__,
-          inline_empty_user_func_some_mat_sym1__,
+          inline_empty_user_func_some_mat_sym2__,
           "assigning variable inline_empty_user_func_return_sym1__");
       }
       stan::model::assign(empty_user_func_aos,

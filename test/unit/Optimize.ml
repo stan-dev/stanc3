@@ -187,7 +187,7 @@ let%expect_test "inline functions" =
     log_prob {
       {
         data matrix[0, 0]
-          inline_f_y_arg_sym1__ = FnToRef__(FnMakeRowVec__(FnMakeRowVec__(
+          inline_f_y_arg_sym2__ = FnToRef__(FnMakeRowVec__(FnMakeRowVec__(
                                                            promote(3, real, data),
                                                            promote(2, real, data)),
                                                            FnMakeRowVec__(
@@ -195,13 +195,13 @@ let%expect_test "inline functions" =
                                                            promote(6, real, data))));
         {
           FnPrint__(3);
-          FnPrint__(inline_f_y_arg_sym1__);
+          FnPrint__(inline_f_y_arg_sym2__);
         }
-        real inline_g_return_sym1__;
+        real inline_g_return_sym3__;
         {
-          inline_g_return_sym1__ = promote((53 ^ 2), real, var);
+          inline_g_return_sym3__ = promote((53 ^ 2), real, var);
         }
-        FnReject__(inline_g_return_sym1__);
+        FnReject__(inline_g_return_sym3__);
       }
     }
 
@@ -333,7 +333,7 @@ let%expect_test "list collapsing" =
       (((pattern
          (Block
           (((pattern
-             (Decl (decl_adtype DataOnly) (decl_id inline_f_y_arg_sym1__)
+             (Decl (decl_adtype DataOnly) (decl_id inline_f_y_arg_sym2__)
               (decl_type
                (Sized
                 (SMatrix AoS
@@ -399,18 +399,18 @@ let%expect_test "list collapsing" =
                 (meta <opaque>))
                ((pattern
                  (NRFunApp (CompilerInternal FnPrint)
-                  (((pattern (Var inline_f_y_arg_sym1__))
+                  (((pattern (Var inline_f_y_arg_sym2__))
                     (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
                 (meta <opaque>)))))
             (meta <opaque>))
            ((pattern
-             (Decl (decl_adtype AutoDiffable) (decl_id inline_g_return_sym1__)
+             (Decl (decl_adtype AutoDiffable) (decl_id inline_g_return_sym3__)
               (decl_type (Sized SReal)) (initialize Uninit)))
             (meta <opaque>))
            ((pattern
              (Block
               (((pattern
-                 (Assignment ((LVariable inline_g_return_sym1__) ()) UReal
+                 (Assignment ((LVariable inline_g_return_sym3__) ()) UReal
                   ((pattern
                     (Promotion
                      ((pattern
@@ -426,7 +426,7 @@ let%expect_test "list collapsing" =
             (meta <opaque>))
            ((pattern
              (NRFunApp (CompilerInternal FnReject)
-              (((pattern (Var inline_g_return_sym1__))
+              (((pattern (Var inline_g_return_sym3__))
                 (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
             (meta <opaque>)))))
         (meta <opaque>))))
@@ -503,18 +503,18 @@ let%expect_test "recursive functions" =
     log_prob {
       {
         int inline_fib_return_sym1__;
-        data int inline_fib_early_ret_check_sym1__;
-        inline_fib_early_ret_check_sym1__ = 0;
-        for(inline_fib_iterator_sym1__ in 1:1) {
+        data int inline_fib_early_ret_check_sym2__;
+        inline_fib_early_ret_check_sym2__ = 0;
+        for(inline_fib_iterator_sym3__ in 1:1) {
           if((5 == 0)) ; else {
 
           }
           if((5 == 0) || (5 == 1)) {
-            inline_fib_early_ret_check_sym1__ = 1;
+            inline_fib_early_ret_check_sym2__ = 1;
             inline_fib_return_sym1__ = 5;
             break;
           }
-          inline_fib_early_ret_check_sym1__ = 1;
+          inline_fib_early_ret_check_sym2__ = 1;
           inline_fib_return_sym1__ = (fib((5 - 1)) + fib((5 - 2)));
           break;
         }
@@ -612,22 +612,22 @@ let%expect_test "inline function in for loop" =
     log_prob {
       {
         int inline_f_return_sym1__;
-        int inline_g_return_sym1__;
+        int inline_g_return_sym3__;
         {
           FnPrint__("f");
           inline_f_return_sym1__ = 42;
         }
         {
           FnPrint__("g");
-          inline_g_return_sym1__ = (3 + 24);
+          inline_g_return_sym3__ = (3 + 24);
         }
-        for(i in inline_f_return_sym1__:inline_g_return_sym1__) {
+        for(i in inline_f_return_sym1__:inline_g_return_sym3__) {
           {
             FnPrint__("body");
           }
           {
             FnPrint__("g");
-            inline_g_return_sym1__ = (3 + 24);
+            inline_g_return_sym3__ = (3 + 24);
           }
         }
       }
@@ -687,33 +687,33 @@ let%expect_test "inline function in for loop 2" =
 
     log_prob {
       {
-        int inline_f_return_sym3__;
-        int inline_g_return_sym1__;
+        int inline_f_return_sym5__;
+        int inline_g_return_sym7__;
         {
           FnPrint__("f");
-          inline_f_return_sym3__ = 42;
+          inline_f_return_sym5__ = 42;
         }
         {
           FnPrint__("g");
-          int inline_g_inline_f_return_sym2___sym1__;
+          int inline_g_inline_f_return_sym3___sym8__;
           {
             FnPrint__("f");
-            inline_g_inline_f_return_sym2___sym1__ = 42;
+            inline_g_inline_f_return_sym3___sym8__ = 42;
           }
-          inline_g_return_sym1__ = (inline_g_inline_f_return_sym2___sym1__ + 24);
+          inline_g_return_sym7__ = (inline_g_inline_f_return_sym3___sym8__ + 24);
         }
-        for(i in inline_f_return_sym3__:inline_g_return_sym1__) {
+        for(i in inline_f_return_sym5__:inline_g_return_sym7__) {
           {
             FnPrint__("body");
           }
           {
             FnPrint__("g");
-            int inline_g_inline_f_return_sym2___sym1__;
+            int inline_g_inline_f_return_sym3___sym8__;
             {
               FnPrint__("f");
-              inline_g_inline_f_return_sym2___sym1__ = 42;
+              inline_g_inline_f_return_sym3___sym8__ = 42;
             }
-            inline_g_return_sym1__ = (inline_g_inline_f_return_sym2___sym1__ + 24);
+            inline_g_return_sym7__ = (inline_g_inline_f_return_sym3___sym8__ + 24);
           }
         }
       }
@@ -910,8 +910,8 @@ let%expect_test "inline function in ternary if " =
     log_prob {
       {
         int inline_f_return_sym1__;
-        int inline_g_return_sym1__;
-        int inline_h_return_sym1__;
+        int inline_g_return_sym3__;
+        int inline_h_return_sym5__;
         {
           FnPrint__("f");
           inline_f_return_sym1__ = 42;
@@ -919,16 +919,16 @@ let%expect_test "inline function in ternary if " =
         if(inline_f_return_sym1__) {
           {
             FnPrint__("g");
-            inline_g_return_sym1__ = (3 + 24);
+            inline_g_return_sym3__ = (3 + 24);
           }
         } else {
           {
             FnPrint__("h");
-            inline_h_return_sym1__ = (4 + 4);
+            inline_h_return_sym5__ = (4 + 4);
           }
         }
-        FnPrint__((inline_f_return_sym1__ ? inline_g_return_sym1__ :
-                   inline_h_return_sym1__));
+        FnPrint__((inline_f_return_sym1__ ? inline_g_return_sym3__ :
+                   inline_h_return_sym5__));
       }
     }
 
@@ -981,16 +981,16 @@ let%expect_test "inline function multiple returns " =
     log_prob {
       {
         int inline_f_return_sym1__;
-        data int inline_f_early_ret_check_sym1__;
-        inline_f_early_ret_check_sym1__ = 0;
-        for(inline_f_iterator_sym1__ in 1:1) {
+        data int inline_f_early_ret_check_sym2__;
+        inline_f_early_ret_check_sym2__ = 0;
+        for(inline_f_iterator_sym3__ in 1:1) {
           if(2) {
             FnPrint__("f");
-            inline_f_early_ret_check_sym1__ = 1;
+            inline_f_early_ret_check_sym2__ = 1;
             inline_f_return_sym1__ = 42;
             break;
           }
-          inline_f_early_ret_check_sym1__ = 1;
+          inline_f_early_ret_check_sym2__ = 1;
           inline_f_return_sym1__ = 6;
           break;
         }
@@ -1042,17 +1042,17 @@ let%expect_test "inline function indices " =
     log_prob {
       {
         array[array[int, 2], 2] a;
-        int inline_f_return_sym2__;
+        int inline_f_return_sym3__;
         int inline_f_return_sym1__;
         {
           FnPrint__(2);
-          inline_f_return_sym2__ = 42;
+          inline_f_return_sym3__ = 42;
         }
         {
           FnPrint__(1);
           inline_f_return_sym1__ = 42;
         }
-        FnPrint__(a[inline_f_return_sym1__, inline_f_return_sym2__]);
+        FnPrint__(a[inline_f_return_sym1__, inline_f_return_sym3__]);
       }
     }
 
@@ -1100,7 +1100,7 @@ let%expect_test "inline function and " =
     log_prob {
       {
         int inline_f_return_sym1__;
-        int inline_f_return_sym2__;
+        int inline_f_return_sym3__;
         {
           FnPrint__(1);
           inline_f_return_sym1__ = 42;
@@ -1108,10 +1108,10 @@ let%expect_test "inline function and " =
         if(inline_f_return_sym1__) {
           {
             FnPrint__(2);
-            inline_f_return_sym2__ = 42;
+            inline_f_return_sym3__ = 42;
           }
         }
-        FnPrint__(inline_f_return_sym1__ && inline_f_return_sym2__);
+        FnPrint__(inline_f_return_sym1__ && inline_f_return_sym3__);
       }
     }
 
@@ -1158,7 +1158,7 @@ let%expect_test "inline function or " =
     log_prob {
       {
         int inline_f_return_sym1__;
-        int inline_f_return_sym2__;
+        int inline_f_return_sym3__;
         {
           FnPrint__(1);
           inline_f_return_sym1__ = 42;
@@ -1166,10 +1166,10 @@ let%expect_test "inline function or " =
         if(inline_f_return_sym1__) ; else {
           {
             FnPrint__(2);
-            inline_f_return_sym2__ = 42;
+            inline_f_return_sym3__ = 42;
           }
         }
-        FnPrint__(inline_f_return_sym1__ || inline_f_return_sym2__);
+        FnPrint__(inline_f_return_sym1__ || inline_f_return_sym3__);
       }
     }
 
@@ -2594,6 +2594,87 @@ let%expect_test "lazy code motion" =
       if(!(emit_transformed_parameters__ || emit_generated_quantities__)) return;
       if(!(emit_generated_quantities__)) return;
     } |}]
+
+let%expect_test "pass symbols do not depend on global gensym state" =
+  let mir =
+    reset_and_mir_of_string
+      {|
+      functions {
+        real g(real z) {
+          real w = z ^ 2;
+          return w;
+        }
+      }
+      model {
+        print({g(3.0)});
+        print({g(3.0)});
+      }
+      |}
+  in
+  let _ = Gensym.generate ~prefix:"inline_g_w_" () in
+  let _ = Gensym.generate ~prefix:"lcm_" () in
+  let mir = function_inlining mir in
+  let mir = lazy_code_motion mir in
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline;
+  [%expect
+    {|
+    functions {
+      real g(real z) {
+        real lcm_sym1__;
+        {
+          real w;
+          w = (z ^ 2);
+          return w;
+        }
+      }
+    }
+
+
+    prepare_data {
+
+    }
+
+    log_prob {
+      data array[] real lcm_sym6__;
+      data array[] real lcm_sym5__;
+      real lcm_sym4__;
+      {
+        real inline_g_return_sym1__;
+        {
+          real inline_g_w_sym2__;
+          lcm_sym4__ = (3.0 ^ 2);
+          inline_g_w_sym2__ = lcm_sym4__;
+          inline_g_return_sym1__ = inline_g_w_sym2__;
+        }
+        FnPrint__(FnMakeArray__(inline_g_return_sym1__));
+        real inline_g_return_sym4__;
+        {
+          real inline_g_w_sym5__;
+          inline_g_w_sym5__ = lcm_sym4__;
+          inline_g_return_sym4__ = inline_g_w_sym5__;
+        }
+        FnPrint__(FnMakeArray__(inline_g_return_sym4__));
+      }
+    }
+
+    rev_log_prob {
+
+    }
+
+    generate_quantities {
+      data int lcm_sym3__;
+      data int lcm_sym2__;
+      if(emit_transformed_parameters__) ; else {
+
+      }
+      if(!(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+      if(!(emit_generated_quantities__)) return;
+    }
+
+    transform_inits {
+
+    }
+    |}]
 
 let%expect_test "lazy code motion, 2" =
   let mir =

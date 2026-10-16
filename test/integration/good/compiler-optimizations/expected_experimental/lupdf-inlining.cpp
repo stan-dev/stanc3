@@ -178,23 +178,23 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
       current_statement__ = 1;
       auto mu = in__.template read<local_scalar_t__>();
       local_scalar_t__ tp = DUMMY_VAR__;
-      double inline_foo_lpdf_return_sym7__;
+      double inline_foo_lpdf_return_sym23__;
       {
         lcm_sym12__ = stan::math::normal_lpdf<false>(mu, 1.0,
                         static_cast<double>(1));
       }
       tp = lcm_sym12__;
       {
-        double inline_baz_lpdf_return_sym3__;
+        double inline_baz_lpdf_return_sym25__;
         {
-          double inline_baz_lpdf_inline_foo_lpdf_return_sym4___sym2__;
+          double inline_baz_lpdf_inline_foo_lpdf_return_sym7___sym26__;
           {
             lcm_sym13__ = stan::math::normal_lpdf<propto__>(mu, 0.5,
                             static_cast<double>(1));
           }
         }
         lp_accum__.add(lcm_sym13__);
-        double inline_bar_lpmf_return_sym3__;
+        double inline_bar_lpmf_return_sym28__;
         {
           lcm_sym14__ = stan::math::poisson_lpmf<propto__>(n, mu);
         }
@@ -236,23 +236,23 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
       current_statement__ = 1;
       auto mu = in__.template read<local_scalar_t__>();
       local_scalar_t__ tp = DUMMY_VAR__;
-      double inline_foo_lpdf_return_sym6__;
+      double inline_foo_lpdf_return_sym16__;
       {
         lcm_sym9__ = stan::math::normal_lpdf<false>(mu, 1.0,
                        static_cast<double>(1));
       }
       tp = lcm_sym9__;
       {
-        double inline_baz_lpdf_return_sym2__;
+        double inline_baz_lpdf_return_sym18__;
         {
-          double inline_baz_lpdf_inline_foo_lpdf_return_sym4___sym1__;
+          double inline_baz_lpdf_inline_foo_lpdf_return_sym7___sym19__;
           {
             lcm_sym10__ = stan::math::normal_lpdf<propto__>(mu, 0.5,
                             static_cast<double>(1));
           }
         }
         lp_accum__.add(lcm_sym10__);
-        double inline_bar_lpmf_return_sym2__;
+        double inline_bar_lpmf_return_sym21__;
         {
           lcm_sym11__ = stan::math::poisson_lpmf<propto__>(n, mu);
         }
@@ -313,7 +313,7 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
             stan::math::primitive_value(emit_generated_quantities__)))) {
         return ;
       }
-      double inline_foo_lpdf_return_sym5__;
+      double inline_foo_lpdf_return_sym9__;
       {
         lcm_sym5__ = stan::math::normal_lpdf<false>(mu, 1.0,
                        static_cast<double>(1));
@@ -326,9 +326,9 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
         return ;
       }
       double lbaz = std::numeric_limits<double>::quiet_NaN();
-      double inline_baz_lpdf_return_sym1__;
+      double inline_baz_lpdf_return_sym11__;
       {
-        double inline_baz_lpdf_inline_foo_lpdf_return_sym1___sym1__;
+        double inline_baz_lpdf_inline_foo_lpdf_return_sym1___sym12__;
         {
           lcm_sym4__ = stan::math::normal_lpdf<false>(mu, 0.5,
                          static_cast<double>(1));
@@ -336,7 +336,7 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
       }
       lbaz = lcm_sym4__;
       double lbar = std::numeric_limits<double>::quiet_NaN();
-      double inline_bar_lpmf_return_sym1__;
+      double inline_bar_lpmf_return_sym14__;
       {
         lcm_sym6__ = stan::math::poisson_lpmf<false>(n, mu);
       }

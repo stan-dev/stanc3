@@ -99,18 +99,18 @@ class inline_expression_soa_model final : public model_base_crtp<inline_expressi
       auto p =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(10, 10);
       {
-        decltype(auto) inline_foo_i_arg_sym2__ =
+        decltype(auto) inline_foo_i_arg_sym5__ =
           stan::math::to_ref(stan::math::add(p, p));
-        Eigen::Matrix<local_scalar_t__,-1,-1> inline_foo_return_sym2__;
+        Eigen::Matrix<local_scalar_t__,-1,-1> inline_foo_return_sym4__;
         {
           current_statement__ = 2;
-          stan::model::assign(inline_foo_return_sym2__,
-            stan::math::multiply(inline_foo_i_arg_sym2__,
-              inline_foo_i_arg_sym2__),
-            "assigning variable inline_foo_return_sym2__");
+          stan::model::assign(inline_foo_return_sym4__,
+            stan::math::multiply(inline_foo_i_arg_sym5__,
+              inline_foo_i_arg_sym5__),
+            "assigning variable inline_foo_return_sym4__");
         }
         lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
-                         stan::math::to_vector(inline_foo_return_sym2__)));
+                         stan::math::to_vector(inline_foo_return_sym4__)));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -147,15 +147,15 @@ class inline_expression_soa_model final : public model_base_crtp<inline_expressi
         in__.template read<
           stan::math::var_value<Eigen::Matrix<double,-1,-1>>>(10, 10);
       {
-        decltype(auto) inline_foo_i_arg_sym1__ =
+        decltype(auto) inline_foo_i_arg_sym2__ =
           stan::math::to_ref(stan::math::add(p, p));
         stan::math::var_value<Eigen::Matrix<double,-1,-1>>
           inline_foo_return_sym1__;
         {
           current_statement__ = 2;
           stan::model::assign(inline_foo_return_sym1__,
-            stan::math::multiply(inline_foo_i_arg_sym1__,
-              inline_foo_i_arg_sym1__),
+            stan::math::multiply(inline_foo_i_arg_sym2__,
+              inline_foo_i_arg_sym2__),
             "assigning variable inline_foo_return_sym1__");
         }
         lp_accum__.add(stan::math::std_normal_lpdf<propto__>(

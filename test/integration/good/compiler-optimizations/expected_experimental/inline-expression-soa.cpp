@@ -105,13 +105,13 @@ class inline_expression_soa_model final : public model_base_crtp<inline_expressi
       auto p =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(10, 10);
       {
-        decltype(auto) inline_foo_i_arg_sym2__ =
+        decltype(auto) inline_foo_i_arg_sym5__ =
           stan::math::to_ref(stan::math::add(p, p));
-        Eigen::Matrix<double,-1,-1> inline_foo_return_sym2__;
+        Eigen::Matrix<double,-1,-1> inline_foo_return_sym4__;
         {
           stan::model::assign(lcm_sym8__,
-            stan::math::multiply(inline_foo_i_arg_sym2__,
-              inline_foo_i_arg_sym2__), "assigning variable lcm_sym8__");
+            stan::math::multiply(inline_foo_i_arg_sym5__,
+              inline_foo_i_arg_sym5__), "assigning variable lcm_sym8__");
         }
         lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
                          stan::math::to_vector(lcm_sym8__)));
@@ -153,13 +153,13 @@ class inline_expression_soa_model final : public model_base_crtp<inline_expressi
       auto p =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(10, 10);
       {
-        decltype(auto) inline_foo_i_arg_sym1__ =
+        decltype(auto) inline_foo_i_arg_sym2__ =
           stan::math::to_ref(stan::math::add(p, p));
         Eigen::Matrix<double,-1,-1> inline_foo_return_sym1__;
         {
           stan::model::assign(lcm_sym5__,
-            stan::math::multiply(inline_foo_i_arg_sym1__,
-              inline_foo_i_arg_sym1__), "assigning variable lcm_sym5__");
+            stan::math::multiply(inline_foo_i_arg_sym2__,
+              inline_foo_i_arg_sym2__), "assigning variable lcm_sym5__");
         }
         lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
                          stan::math::to_vector(lcm_sym5__)));

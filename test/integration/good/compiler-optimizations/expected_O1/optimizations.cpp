@@ -258,101 +258,101 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           Eigen::Matrix<local_scalar_t__,-1,-1>, jacobian__>(lp__, 2);
       {
         local_scalar_t__ x = DUMMY_VAR__;
-        double inline_nrfun_lp_x_arg_sym3__;
+        double inline_nrfun_lp_x_arg_sym31__;
         {
           current_statement__ = 7;
           lp_accum__.add(3);
         }
-        int inline_rfun_return_sym6__;
-        int inline_rfun_early_ret_check_sym6__ =
+        int inline_rfun_return_sym32__;
+        int inline_rfun_early_ret_check_sym33__ =
           std::numeric_limits<int>::min();
-        for (int inline_rfun_iterator_sym6__ = 1; inline_rfun_iterator_sym6__
-             <= 1; ++inline_rfun_iterator_sym6__) {
+        for (int inline_rfun_iterator_sym34__ = 1; inline_rfun_iterator_sym34__
+             <= 1; ++inline_rfun_iterator_sym34__) {
           {
-            inline_rfun_return_sym6__ = 27;
+            inline_rfun_return_sym32__ = 27;
             break;
           }
-          inline_rfun_return_sym6__ = 5;
+          inline_rfun_return_sym32__ = 5;
           break;
         }
         if (pstream__) {
-          stan::math::stan_print(pstream__, inline_rfun_return_sym6__);
+          stan::math::stan_print(pstream__, inline_rfun_return_sym32__);
           *(pstream__) << std::endl;
         }
-        int inline_rfun_return_sym7__;
-        int inline_rfun_early_ret_check_sym7__ =
+        int inline_rfun_return_sym35__;
+        int inline_rfun_early_ret_check_sym36__ =
           std::numeric_limits<int>::min();
-        for (int inline_rfun_iterator_sym7__ = 1; inline_rfun_iterator_sym7__
-             <= 1; ++inline_rfun_iterator_sym7__) {
+        for (int inline_rfun_iterator_sym37__ = 1; inline_rfun_iterator_sym37__
+             <= 1; ++inline_rfun_iterator_sym37__) {
           {
-            inline_rfun_return_sym7__ = 28;
+            inline_rfun_return_sym35__ = 28;
             break;
           }
-          inline_rfun_return_sym7__ = 6;
+          inline_rfun_return_sym35__ = 6;
           break;
         }
-        if (inline_rfun_return_sym7__) {
+        if (inline_rfun_return_sym35__) {
           current_statement__ = 10;
           if (pstream__) {
             stan::math::stan_print(pstream__, "a");
             *(pstream__) << std::endl;
           }
         }
-        int inline_rfun_return_sym8__;
-        int inline_rfun_return_sym9__;
-        int inline_rfun_early_ret_check_sym8__ =
+        int inline_rfun_return_sym38__;
+        int inline_rfun_return_sym41__;
+        int inline_rfun_early_ret_check_sym39__ =
           std::numeric_limits<int>::min();
-        for (int inline_rfun_iterator_sym8__ = 1; inline_rfun_iterator_sym8__
-             <= 1; ++inline_rfun_iterator_sym8__) {
+        for (int inline_rfun_iterator_sym40__ = 1; inline_rfun_iterator_sym40__
+             <= 1; ++inline_rfun_iterator_sym40__) {
           {
-            inline_rfun_return_sym8__ = 31;
+            inline_rfun_return_sym38__ = 31;
             break;
           }
-          inline_rfun_return_sym8__ = 9;
+          inline_rfun_return_sym38__ = 9;
           break;
         }
-        int inline_rfun_early_ret_check_sym9__ =
+        int inline_rfun_early_ret_check_sym42__ =
           std::numeric_limits<int>::min();
-        for (int inline_rfun_iterator_sym9__ = 1; inline_rfun_iterator_sym9__
-             <= 1; ++inline_rfun_iterator_sym9__) {
+        for (int inline_rfun_iterator_sym43__ = 1; inline_rfun_iterator_sym43__
+             <= 1; ++inline_rfun_iterator_sym43__) {
           {
-            inline_rfun_return_sym9__ = 29;
+            inline_rfun_return_sym41__ = 29;
             break;
           }
-          inline_rfun_return_sym9__ = 7;
+          inline_rfun_return_sym41__ = 7;
           break;
         }
-        for (int i = inline_rfun_return_sym8__; i <=
-             inline_rfun_return_sym9__; ++i) {
+        for (int i = inline_rfun_return_sym38__; i <=
+             inline_rfun_return_sym41__; ++i) {
           {
-            int inline_rfun_return_sym10__;
-            int inline_rfun_early_ret_check_sym10__ =
+            int inline_rfun_return_sym44__;
+            int inline_rfun_early_ret_check_sym45__ =
               std::numeric_limits<int>::min();
-            for (int inline_rfun_iterator_sym10__ = 1; inline_rfun_iterator_sym10__
-                 <= 1; ++inline_rfun_iterator_sym10__) {
+            for (int inline_rfun_iterator_sym46__ = 1; inline_rfun_iterator_sym46__
+                 <= 1; ++inline_rfun_iterator_sym46__) {
               {
-                inline_rfun_return_sym10__ = 32;
+                inline_rfun_return_sym44__ = 32;
                 break;
               }
-              inline_rfun_return_sym10__ = 10;
+              inline_rfun_return_sym44__ = 10;
               break;
             }
-            lp_accum__.add(inline_rfun_return_sym10__);
-            double inline_nrfun_lp_x_arg_sym4__;
+            lp_accum__.add(inline_rfun_return_sym44__);
+            double inline_nrfun_lp_x_arg_sym48__;
             {
               current_statement__ = 7;
               lp_accum__.add(3);
             }
           }
-          int inline_rfun_early_ret_check_sym9__ =
+          int inline_rfun_early_ret_check_sym42__ =
             std::numeric_limits<int>::min();
-          for (int inline_rfun_iterator_sym9__ = 1; inline_rfun_iterator_sym9__
-               <= 1; ++inline_rfun_iterator_sym9__) {
+          for (int inline_rfun_iterator_sym43__ = 1; inline_rfun_iterator_sym43__
+               <= 1; ++inline_rfun_iterator_sym43__) {
             {
-              inline_rfun_return_sym9__ = 29;
+              inline_rfun_return_sym41__ = 29;
               break;
             }
-            inline_rfun_return_sym9__ = 7;
+            inline_rfun_return_sym41__ = 7;
             break;
           }
         }
@@ -451,7 +451,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           current_statement__ = 58;
           lp_accum__.add(2);
         }
-        int inline_rfun_lp_return_sym6__;
+        int inline_rfun_lp_return_sym49__;
         {
           current_statement__ = 60;
           lp_accum__.add(2);
@@ -460,7 +460,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         while (576) {
           break;
         }
-        int inline_rfun_lp_return_sym7__;
+        int inline_rfun_lp_return_sym51__;
         {
           current_statement__ = 60;
           lp_accum__.add(2);
@@ -482,7 +482,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         for (int i = 31; i <= 225; ++i) {
           break;
         }
-        int inline_rfun_lp_return_sym8__;
+        int inline_rfun_lp_return_sym53__;
         {
           current_statement__ = 60;
           lp_accum__.add(2);
@@ -490,7 +490,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         for (int i = 24; i <= 225; ++i) {
           continue;
         }
-        int inline_rfun_lp_return_sym9__;
+        int inline_rfun_lp_return_sym55__;
         {
           current_statement__ = 60;
           lp_accum__.add(2);
@@ -498,7 +498,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         for (int i = 24; i <= 225; ++i) {
           break;
         }
-        int inline_rfun_lp_return_sym10__;
+        int inline_rfun_lp_return_sym57__;
         {
           current_statement__ = 60;
           lp_accum__.add(2);
@@ -591,101 +591,101 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           jacobian__>(lp__, 2);
       {
         local_scalar_t__ x = DUMMY_VAR__;
-        double inline_nrfun_lp_x_arg_sym1__;
+        double inline_nrfun_lp_x_arg_sym2__;
         {
           current_statement__ = 7;
           lp_accum__.add(3);
         }
-        int inline_rfun_return_sym1__;
-        int inline_rfun_early_ret_check_sym1__ =
+        int inline_rfun_return_sym3__;
+        int inline_rfun_early_ret_check_sym4__ =
           std::numeric_limits<int>::min();
-        for (int inline_rfun_iterator_sym1__ = 1; inline_rfun_iterator_sym1__
-             <= 1; ++inline_rfun_iterator_sym1__) {
+        for (int inline_rfun_iterator_sym5__ = 1; inline_rfun_iterator_sym5__
+             <= 1; ++inline_rfun_iterator_sym5__) {
           {
-            inline_rfun_return_sym1__ = 27;
+            inline_rfun_return_sym3__ = 27;
             break;
           }
-          inline_rfun_return_sym1__ = 5;
+          inline_rfun_return_sym3__ = 5;
           break;
         }
         if (pstream__) {
-          stan::math::stan_print(pstream__, inline_rfun_return_sym1__);
+          stan::math::stan_print(pstream__, inline_rfun_return_sym3__);
           *(pstream__) << std::endl;
         }
-        int inline_rfun_return_sym2__;
-        int inline_rfun_early_ret_check_sym2__ =
+        int inline_rfun_return_sym6__;
+        int inline_rfun_early_ret_check_sym7__ =
           std::numeric_limits<int>::min();
-        for (int inline_rfun_iterator_sym2__ = 1; inline_rfun_iterator_sym2__
-             <= 1; ++inline_rfun_iterator_sym2__) {
+        for (int inline_rfun_iterator_sym8__ = 1; inline_rfun_iterator_sym8__
+             <= 1; ++inline_rfun_iterator_sym8__) {
           {
-            inline_rfun_return_sym2__ = 28;
+            inline_rfun_return_sym6__ = 28;
             break;
           }
-          inline_rfun_return_sym2__ = 6;
+          inline_rfun_return_sym6__ = 6;
           break;
         }
-        if (inline_rfun_return_sym2__) {
+        if (inline_rfun_return_sym6__) {
           current_statement__ = 10;
           if (pstream__) {
             stan::math::stan_print(pstream__, "a");
             *(pstream__) << std::endl;
           }
         }
-        int inline_rfun_return_sym3__;
-        int inline_rfun_return_sym4__;
-        int inline_rfun_early_ret_check_sym3__ =
+        int inline_rfun_return_sym9__;
+        int inline_rfun_return_sym12__;
+        int inline_rfun_early_ret_check_sym10__ =
           std::numeric_limits<int>::min();
-        for (int inline_rfun_iterator_sym3__ = 1; inline_rfun_iterator_sym3__
-             <= 1; ++inline_rfun_iterator_sym3__) {
+        for (int inline_rfun_iterator_sym11__ = 1; inline_rfun_iterator_sym11__
+             <= 1; ++inline_rfun_iterator_sym11__) {
           {
-            inline_rfun_return_sym3__ = 31;
+            inline_rfun_return_sym9__ = 31;
             break;
           }
-          inline_rfun_return_sym3__ = 9;
+          inline_rfun_return_sym9__ = 9;
           break;
         }
-        int inline_rfun_early_ret_check_sym4__ =
+        int inline_rfun_early_ret_check_sym13__ =
           std::numeric_limits<int>::min();
-        for (int inline_rfun_iterator_sym4__ = 1; inline_rfun_iterator_sym4__
-             <= 1; ++inline_rfun_iterator_sym4__) {
+        for (int inline_rfun_iterator_sym14__ = 1; inline_rfun_iterator_sym14__
+             <= 1; ++inline_rfun_iterator_sym14__) {
           {
-            inline_rfun_return_sym4__ = 29;
+            inline_rfun_return_sym12__ = 29;
             break;
           }
-          inline_rfun_return_sym4__ = 7;
+          inline_rfun_return_sym12__ = 7;
           break;
         }
-        for (int i = inline_rfun_return_sym3__; i <=
-             inline_rfun_return_sym4__; ++i) {
+        for (int i = inline_rfun_return_sym9__; i <=
+             inline_rfun_return_sym12__; ++i) {
           {
-            int inline_rfun_return_sym5__;
-            int inline_rfun_early_ret_check_sym5__ =
+            int inline_rfun_return_sym15__;
+            int inline_rfun_early_ret_check_sym16__ =
               std::numeric_limits<int>::min();
-            for (int inline_rfun_iterator_sym5__ = 1; inline_rfun_iterator_sym5__
-                 <= 1; ++inline_rfun_iterator_sym5__) {
+            for (int inline_rfun_iterator_sym17__ = 1; inline_rfun_iterator_sym17__
+                 <= 1; ++inline_rfun_iterator_sym17__) {
               {
-                inline_rfun_return_sym5__ = 32;
+                inline_rfun_return_sym15__ = 32;
                 break;
               }
-              inline_rfun_return_sym5__ = 10;
+              inline_rfun_return_sym15__ = 10;
               break;
             }
-            lp_accum__.add(inline_rfun_return_sym5__);
-            double inline_nrfun_lp_x_arg_sym2__;
+            lp_accum__.add(inline_rfun_return_sym15__);
+            double inline_nrfun_lp_x_arg_sym19__;
             {
               current_statement__ = 7;
               lp_accum__.add(3);
             }
           }
-          int inline_rfun_early_ret_check_sym4__ =
+          int inline_rfun_early_ret_check_sym13__ =
             std::numeric_limits<int>::min();
-          for (int inline_rfun_iterator_sym4__ = 1; inline_rfun_iterator_sym4__
-               <= 1; ++inline_rfun_iterator_sym4__) {
+          for (int inline_rfun_iterator_sym14__ = 1; inline_rfun_iterator_sym14__
+               <= 1; ++inline_rfun_iterator_sym14__) {
             {
-              inline_rfun_return_sym4__ = 29;
+              inline_rfun_return_sym12__ = 29;
               break;
             }
-            inline_rfun_return_sym4__ = 7;
+            inline_rfun_return_sym12__ = 7;
             break;
           }
         }
@@ -784,7 +784,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           current_statement__ = 58;
           lp_accum__.add(2);
         }
-        int inline_rfun_lp_return_sym1__;
+        int inline_rfun_lp_return_sym20__;
         {
           current_statement__ = 60;
           lp_accum__.add(2);
@@ -793,7 +793,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         while (576) {
           break;
         }
-        int inline_rfun_lp_return_sym2__;
+        int inline_rfun_lp_return_sym22__;
         {
           current_statement__ = 60;
           lp_accum__.add(2);
@@ -815,7 +815,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         for (int i = 31; i <= 225; ++i) {
           break;
         }
-        int inline_rfun_lp_return_sym3__;
+        int inline_rfun_lp_return_sym24__;
         {
           current_statement__ = 60;
           lp_accum__.add(2);
@@ -823,7 +823,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         for (int i = 24; i <= 225; ++i) {
           continue;
         }
-        int inline_rfun_lp_return_sym4__;
+        int inline_rfun_lp_return_sym26__;
         {
           current_statement__ = 60;
           lp_accum__.add(2);
@@ -831,7 +831,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         for (int i = 24; i <= 225; ++i) {
           break;
         }
-        int inline_rfun_lp_return_sym5__;
+        int inline_rfun_lp_return_sym28__;
         {
           current_statement__ = 60;
           lp_accum__.add(2);
