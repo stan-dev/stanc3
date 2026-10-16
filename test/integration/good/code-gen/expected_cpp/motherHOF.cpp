@@ -1465,9 +1465,9 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       out__.write(x_p_v);
       out__.write(shared_params_p);
       current_statement__ = 6;
-      for (int loop_sym1__ = 1; loop_sym1__ <= 3; ++loop_sym1__) {
-        for (int loop_sym2__ = 1; loop_sym2__ <= 3; ++loop_sym2__) {
-          out__.write(job_params_p[(loop_sym2__ - 1)][(loop_sym1__ - 1)]);
+      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 3; ++idx_sym2__) {
+          out__.write(job_params_p[(idx_sym2__ - 1)][(idx_sym1__ - 1)]);
         }
       }
       out__.write(x_r);
@@ -1780,9 +1780,9 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
           y_p, x_d_r, x_d_i, pstream__, 0.01, 0.01, static_cast<double>(10)),
         "assigning variable theta_dbl");
       current_statement__ = 18;
-      for (int loop_sym1__ = 1; loop_sym1__ <= 2; ++loop_sym1__) {
-        for (int loop_sym2__ = 1; loop_sym2__ <= T; ++loop_sym2__) {
-          out__.write(y_hat[(loop_sym2__ - 1)][(loop_sym1__ - 1)]);
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= T; ++idx_sym2__) {
+          out__.write(y_hat[(idx_sym2__ - 1)][(idx_sym1__ - 1)]);
         }
       }
       out__.write(y_1d);
@@ -1849,13 +1849,13 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
         std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>(3,
           Eigen::Matrix<local_scalar_t__,-1,1>::Constant(3, DUMMY_VAR__));
       current_statement__ = 6;
-      for (int loop_sym1__ = 1; loop_sym1__ <= 3; ++loop_sym1__) {
-        for (int loop_sym2__ = 1; loop_sym2__ <= 3; ++loop_sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 3; ++idx_sym2__) {
           current_statement__ = 6;
           stan::model::assign(job_params_p, in__.read<local_scalar_t__>(),
             "assigning variable job_params_p",
-            stan::model::index_uni(loop_sym2__),
-            stan::model::index_uni(loop_sym1__));
+            stan::model::index_uni(idx_sym2__),
+            stan::model::index_uni(idx_sym1__));
         }
       }
       out__.write(job_params_p);
@@ -2008,38 +2008,30 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         2; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "y0_p" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         1; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 1; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "theta_p" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         1; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 1; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "x_p" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         2; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "x_p_v" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         3; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "shared_params_p" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         3; ++names_loop_sym1__) {
-      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-           3; ++names_loop_sym2__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= 3; ++idx_sym2__) {
         param_names__.emplace_back(std::string() + "job_params_p" + '.' +
-          std::to_string(names_loop_sym2__) + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
       }
     }
     param_names__.emplace_back(std::string() + "x_r");
@@ -2047,70 +2039,57 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       param_names__.emplace_back(std::string() + "abc1_p");
       param_names__.emplace_back(std::string() + "abc2_p");
       param_names__.emplace_back(std::string() + "abc3_p");
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           3; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "y_hat_tp1" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           3; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "y_hat_tp2" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           3; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "y_hat_tp3" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           2; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "theta_p_as" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           2; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "x_v" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           2; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "y_v" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           2; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "y_p" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
     }
     if (emit_generated_quantities__) {
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           2; ++names_loop_sym1__) {
-        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-             T; ++names_loop_sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= T; ++idx_sym2__) {
           param_names__.emplace_back(std::string() + "y_hat" + '.' +
-            std::to_string(names_loop_sym2__) + '.' +
-            std::to_string(names_loop_sym1__));
+            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
         }
       }
       param_names__.emplace_back(std::string() + "y_1d");
       param_names__.emplace_back(std::string() + "z_1d");
       param_names__.emplace_back(std::string() + "abc1_gq");
       param_names__.emplace_back(std::string() + "abc2_gq");
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           3; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "y_hat_gq" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           3; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "yy_hat_gq" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           2; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "theta_dbl" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
     }
   }
@@ -2118,38 +2097,30 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         2; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "y0_p" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         1; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 1; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "theta_p" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         1; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 1; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "x_p" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         2; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "x_p_v" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         3; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "shared_params_p" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         3; ++names_loop_sym1__) {
-      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-           3; ++names_loop_sym2__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= 3; ++idx_sym2__) {
         param_names__.emplace_back(std::string() + "job_params_p" + '.' +
-          std::to_string(names_loop_sym2__) + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
       }
     }
     param_names__.emplace_back(std::string() + "x_r");
@@ -2157,70 +2128,57 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       param_names__.emplace_back(std::string() + "abc1_p");
       param_names__.emplace_back(std::string() + "abc2_p");
       param_names__.emplace_back(std::string() + "abc3_p");
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           3; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "y_hat_tp1" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           3; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "y_hat_tp2" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           3; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "y_hat_tp3" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           2; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "theta_p_as" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           2; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "x_v" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           2; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "y_v" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           2; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "y_p" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
     }
     if (emit_generated_quantities__) {
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           2; ++names_loop_sym1__) {
-        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-             T; ++names_loop_sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= T; ++idx_sym2__) {
           param_names__.emplace_back(std::string() + "y_hat" + '.' +
-            std::to_string(names_loop_sym2__) + '.' +
-            std::to_string(names_loop_sym1__));
+            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
         }
       }
       param_names__.emplace_back(std::string() + "y_1d");
       param_names__.emplace_back(std::string() + "z_1d");
       param_names__.emplace_back(std::string() + "abc1_gq");
       param_names__.emplace_back(std::string() + "abc2_gq");
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           3; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "y_hat_gq" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           3; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "yy_hat_gq" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           2; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "theta_dbl" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
     }
   }

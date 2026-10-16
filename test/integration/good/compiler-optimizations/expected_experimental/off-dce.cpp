@@ -761,32 +761,26 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
     param_names__.emplace_back(std::string() + "alpha_p");
     param_names__.emplace_back(std::string() + "beta_p");
     if (emit_transformed_parameters__) {
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           R; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= R; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "logit_psi" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           T; ++names_loop_sym1__) {
-        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-             R; ++names_loop_sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= T; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= R; ++idx_sym2__) {
           param_names__.emplace_back(std::string() + "logit_p" + '.' +
-            std::to_string(names_loop_sym2__) + '.' +
-            std::to_string(names_loop_sym1__));
+            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
         }
       }
     }
     if (emit_generated_quantities__) {
       param_names__.emplace_back(std::string() + "occ_fs");
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           R; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= R; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "psi_con" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           R; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= R; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "z" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
     }
   }
@@ -799,32 +793,26 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
     param_names__.emplace_back(std::string() + "alpha_p");
     param_names__.emplace_back(std::string() + "beta_p");
     if (emit_transformed_parameters__) {
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           R; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= R; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "logit_psi" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           T; ++names_loop_sym1__) {
-        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-             R; ++names_loop_sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= T; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= R; ++idx_sym2__) {
           param_names__.emplace_back(std::string() + "logit_p" + '.' +
-            std::to_string(names_loop_sym2__) + '.' +
-            std::to_string(names_loop_sym1__));
+            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
         }
       }
     }
     if (emit_generated_quantities__) {
       param_names__.emplace_back(std::string() + "occ_fs");
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           R; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= R; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "psi_con" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           R; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= R; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "z" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
     }
   }

@@ -2004,9 +2004,9 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       out__.write(N);
       out__.write(B);
       current_statement__ = 16;
-      for (int loop_sym1__ = 1; loop_sym1__ <= n_occasions; ++loop_sym1__) {
-        for (int loop_sym2__ = 1; loop_sym2__ <= M; ++loop_sym2__) {
-          out__.write(z[(loop_sym2__ - 1)][(loop_sym1__ - 1)]);
+      for (int idx_sym1__ = 1; idx_sym1__ <= n_occasions; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= M; ++idx_sym2__) {
+          out__.write(z[(idx_sym2__ - 1)][(idx_sym1__ - 1)]);
         }
       }
     } catch (const std::exception& e) {
@@ -2182,76 +2182,58 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
     param_names__.emplace_back(std::string() + "mean_phi");
     param_names__.emplace_back(std::string() + "mean_p");
     param_names__.emplace_back(std::string() + "psi");
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         n_occasions; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= n_occasions; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "beta" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         M; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= M; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "epsilon" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
     param_names__.emplace_back(std::string() + "sigma");
     if (emit_transformed_parameters__) {
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           phi_2dim__; ++names_loop_sym1__) {
-        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-             M; ++names_loop_sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= phi_2dim__; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= M; ++idx_sym2__) {
           param_names__.emplace_back(std::string() + "phi" + '.' +
-            std::to_string(names_loop_sym2__) + '.' +
-            std::to_string(names_loop_sym1__));
+            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
         }
       }
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           n_occasions; ++names_loop_sym1__) {
-        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-             M; ++names_loop_sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= n_occasions; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= M; ++idx_sym2__) {
           param_names__.emplace_back(std::string() + "p" + '.' +
-            std::to_string(names_loop_sym2__) + '.' +
-            std::to_string(names_loop_sym1__));
+            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
         }
       }
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           n_occasions; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= n_occasions; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "b" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           n_occasions; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= n_occasions; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "nu" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           n_occasions; ++names_loop_sym1__) {
-        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-             M; ++names_loop_sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= n_occasions; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= M; ++idx_sym2__) {
           param_names__.emplace_back(std::string() + "chi" + '.' +
-            std::to_string(names_loop_sym2__) + '.' +
-            std::to_string(names_loop_sym1__));
+            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
         }
       }
     }
     if (emit_generated_quantities__) {
       param_names__.emplace_back(std::string() + "sigma2");
       param_names__.emplace_back(std::string() + "Nsuper");
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           n_occasions; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= n_occasions; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "N" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           n_occasions; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= n_occasions; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "B" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           n_occasions; ++names_loop_sym1__) {
-        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-             M; ++names_loop_sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= n_occasions; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= M; ++idx_sym2__) {
           param_names__.emplace_back(std::string() + "z" + '.' +
-            std::to_string(names_loop_sym2__) + '.' +
-            std::to_string(names_loop_sym1__));
+            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
         }
       }
     }
@@ -2263,76 +2245,58 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
     param_names__.emplace_back(std::string() + "mean_phi");
     param_names__.emplace_back(std::string() + "mean_p");
     param_names__.emplace_back(std::string() + "psi");
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         n_occasions; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= n_occasions; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "beta" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         M; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= M; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "epsilon" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
     param_names__.emplace_back(std::string() + "sigma");
     if (emit_transformed_parameters__) {
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           phi_2dim__; ++names_loop_sym1__) {
-        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-             M; ++names_loop_sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= phi_2dim__; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= M; ++idx_sym2__) {
           param_names__.emplace_back(std::string() + "phi" + '.' +
-            std::to_string(names_loop_sym2__) + '.' +
-            std::to_string(names_loop_sym1__));
+            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
         }
       }
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           n_occasions; ++names_loop_sym1__) {
-        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-             M; ++names_loop_sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= n_occasions; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= M; ++idx_sym2__) {
           param_names__.emplace_back(std::string() + "p" + '.' +
-            std::to_string(names_loop_sym2__) + '.' +
-            std::to_string(names_loop_sym1__));
+            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
         }
       }
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <= (n_occasions -
-           1); ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= (n_occasions - 1); ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "b" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           n_occasions; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= n_occasions; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "nu" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           n_occasions; ++names_loop_sym1__) {
-        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-             M; ++names_loop_sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= n_occasions; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= M; ++idx_sym2__) {
           param_names__.emplace_back(std::string() + "chi" + '.' +
-            std::to_string(names_loop_sym2__) + '.' +
-            std::to_string(names_loop_sym1__));
+            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
         }
       }
     }
     if (emit_generated_quantities__) {
       param_names__.emplace_back(std::string() + "sigma2");
       param_names__.emplace_back(std::string() + "Nsuper");
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           n_occasions; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= n_occasions; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "N" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           n_occasions; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= n_occasions; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "B" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           n_occasions; ++names_loop_sym1__) {
-        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-             M; ++names_loop_sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= n_occasions; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= M; ++idx_sym2__) {
           param_names__.emplace_back(std::string() + "z" + '.' +
-            std::to_string(names_loop_sym2__) + '.' +
-            std::to_string(names_loop_sym1__));
+            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
         }
       }
     }

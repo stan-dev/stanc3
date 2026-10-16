@@ -328,17 +328,17 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
             std::vector<local_scalar_t__>(4, DUMMY_VAR__),
             Eigen::Matrix<local_scalar_t__,-1,1>::Constant(3, DUMMY_VAR__)});
       current_statement__ = 3;
-      for (int loop_sym1__ = 1; loop_sym1__ <= 3; ++loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
         current_statement__ = 3;
-        std::get<0>(arr_tuple_p[(loop_sym1__ - 1)]) = in__.template read<
-                                                        std::complex<local_scalar_t__>>();
+        std::get<0>(arr_tuple_p[(idx_sym1__ - 1)]) = in__.template read<
+                                                       std::complex<local_scalar_t__>>();
         current_statement__ = 3;
-        std::get<1>(arr_tuple_p[(loop_sym1__ - 1)]) = in__.template read<
-                                                        std::vector<
-                                                          local_scalar_t__>>(4);
+        std::get<1>(arr_tuple_p[(idx_sym1__ - 1)]) = in__.template read<
+                                                       std::vector<
+                                                         local_scalar_t__>>(4);
         current_statement__ = 3;
-        std::get<2>(arr_tuple_p[(loop_sym1__ - 1)]) = in__.template read<
-                                                        Eigen::Matrix<local_scalar_t__,-1,1>>(3);
+        std::get<2>(arr_tuple_p[(idx_sym1__ - 1)]) = in__.template read<
+                                                       Eigen::Matrix<local_scalar_t__,-1,1>>(3);
       }
       std::tuple<std::vector<local_scalar_t__>, local_scalar_t__,
         std::vector<
@@ -358,12 +358,12 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
       current_statement__ = 4;
       std::get<1>(tuple_arr_tuple_p) = in__.template read<local_scalar_t__>();
       current_statement__ = 4;
-      for (int loop_sym1__ = 1; loop_sym1__ <= 3; ++loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
         current_statement__ = 4;
-        std::get<0>(std::get<2>(tuple_arr_tuple_p)[(loop_sym1__ - 1)]) = 
+        std::get<0>(std::get<2>(tuple_arr_tuple_p)[(idx_sym1__ - 1)]) = 
           in__.template read<local_scalar_t__>();
         current_statement__ = 4;
-        std::get<1>(std::get<2>(tuple_arr_tuple_p)[(loop_sym1__ - 1)]) = 
+        std::get<1>(std::get<2>(tuple_arr_tuple_p)[(idx_sym1__ - 1)]) = 
           in__.template read<std::vector<local_scalar_t__>>(4);
       }
       std::vector<
@@ -390,23 +390,23 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                 Eigen::Matrix<local_scalar_t__,-1,1>::Constant(4,
                   DUMMY_VAR__)}}});
       current_statement__ = 5;
-      for (int loop_sym1__ = 1; loop_sym1__ <= 2; ++loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
         current_statement__ = 5;
-        std::get<0>(arr_tuple_tuple_p[(loop_sym1__ - 1)]) = in__.template read<
-                                                              local_scalar_t__>();
+        std::get<0>(arr_tuple_tuple_p[(idx_sym1__ - 1)]) = in__.template read<
+                                                             local_scalar_t__>();
         current_statement__ = 5;
-        std::get<1>(arr_tuple_tuple_p[(loop_sym1__ - 1)]) = in__.template read<
-                                                              local_scalar_t__>();
+        std::get<1>(arr_tuple_tuple_p[(idx_sym1__ - 1)]) = in__.template read<
+                                                             local_scalar_t__>();
         current_statement__ = 5;
-        std::get<0>(std::get<2>(arr_tuple_tuple_p[(loop_sym1__ - 1)])) = 
+        std::get<0>(std::get<2>(arr_tuple_tuple_p[(idx_sym1__ - 1)])) = 
           in__.template read<local_scalar_t__>();
         current_statement__ = 5;
         std::get<0>(
-          std::get<1>(std::get<2>(arr_tuple_tuple_p[(loop_sym1__ - 1)]))) = 
+          std::get<1>(std::get<2>(arr_tuple_tuple_p[(idx_sym1__ - 1)]))) = 
           in__.template read<std::complex<local_scalar_t__>>();
         current_statement__ = 5;
         std::get<1>(
-          std::get<1>(std::get<2>(arr_tuple_tuple_p[(loop_sym1__ - 1)]))) = 
+          std::get<1>(std::get<2>(arr_tuple_tuple_p[(idx_sym1__ - 1)]))) = 
           in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(4);
       }
       std::vector<
@@ -432,19 +432,19 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                 Eigen::Matrix<local_scalar_t__,-1,1>::Constant(5,
                   DUMMY_VAR__)})});
       current_statement__ = 6;
-      for (int loop_sym1__ = 1; loop_sym1__ <= 3; ++loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
         current_statement__ = 6;
-        std::get<0>(arr_tuple_arr_tuple_p[(loop_sym1__ - 1)]) = in__.template read<
-                                                                  local_scalar_t__>();
+        std::get<0>(arr_tuple_arr_tuple_p[(idx_sym1__ - 1)]) = in__.template read<
+                                                                 local_scalar_t__>();
         current_statement__ = 6;
-        for (int loop_sym2__ = 1; loop_sym2__ <= 4; ++loop_sym2__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 4; ++idx_sym2__) {
           current_statement__ = 6;
           std::get<0>(
-            std::get<1>(arr_tuple_arr_tuple_p[(loop_sym1__ - 1)])[(loop_sym2__
+            std::get<1>(arr_tuple_arr_tuple_p[(idx_sym1__ - 1)])[(idx_sym2__
             - 1)]) = in__.template read<local_scalar_t__>();
           current_statement__ = 6;
           std::get<1>(
-            std::get<1>(arr_tuple_arr_tuple_p[(loop_sym1__ - 1)])[(loop_sym2__
+            std::get<1>(arr_tuple_arr_tuple_p[(idx_sym1__ - 1)])[(idx_sym2__
             - 1)]) = in__.template read<
                        Eigen::Matrix<local_scalar_t__,-1,1>>(5);
         }
@@ -487,31 +487,28 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                     Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(6, 7,
                       DUMMY_VAR__)})})});
       current_statement__ = 7;
-      for (int loop_sym1__ = 1; loop_sym1__ <= 3; ++loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
         current_statement__ = 7;
-        std::get<0>(very_deep_p[(loop_sym1__ - 1)]) = in__.template read<
-                                                        local_scalar_t__>();
+        std::get<0>(very_deep_p[(idx_sym1__ - 1)]) = in__.template read<
+                                                       local_scalar_t__>();
         current_statement__ = 7;
-        for (int loop_sym2__ = 1; loop_sym2__ <= 4; ++loop_sym2__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 4; ++idx_sym2__) {
           current_statement__ = 7;
-          std::get<0>(
-            std::get<1>(very_deep_p[(loop_sym1__ - 1)])[(loop_sym2__ - 1)]) = 
-            in__.template read<local_scalar_t__>();
+          std::get<0>(std::get<1>(very_deep_p[(idx_sym1__ - 1)])[(idx_sym2__
+            - 1)]) = in__.template read<local_scalar_t__>();
           current_statement__ = 7;
-          for (int loop_sym3__ = 1; loop_sym3__ <= 5; ++loop_sym3__) {
+          for (int idx_sym3__ = 1; idx_sym3__ <= 5; ++idx_sym3__) {
             current_statement__ = 7;
             std::get<0>(
               std::get<1>(
-                std::get<1>(very_deep_p[(loop_sym1__ - 1)])[(loop_sym2__ -
-                1)])[(loop_sym3__ - 1)]) = in__.template read<
-                                             std::complex<local_scalar_t__>>();
+                std::get<1>(very_deep_p[(idx_sym1__ - 1)])[(idx_sym2__ - 1)])[(idx_sym3__
+              - 1)]) = in__.template read<std::complex<local_scalar_t__>>();
             current_statement__ = 7;
             std::get<1>(
               std::get<1>(
-                std::get<1>(very_deep_p[(loop_sym1__ - 1)])[(loop_sym2__ -
-                1)])[(loop_sym3__ - 1)]) = in__.template read<
-                                             Eigen::Matrix<local_scalar_t__,-1,-1>>(6,
-                                             7);
+                std::get<1>(very_deep_p[(idx_sym1__ - 1)])[(idx_sym2__ - 1)])[(idx_sym3__
+              - 1)]) = in__.template read<
+                         Eigen::Matrix<local_scalar_t__,-1,-1>>(6, 7);
           }
         }
       }
@@ -585,17 +582,17 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
             std::vector<local_scalar_t__>(4, DUMMY_VAR__),
             Eigen::Matrix<local_scalar_t__,-1,1>::Constant(3, DUMMY_VAR__)});
       current_statement__ = 3;
-      for (int loop_sym1__ = 1; loop_sym1__ <= 3; ++loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
         current_statement__ = 3;
-        std::get<0>(arr_tuple_p[(loop_sym1__ - 1)]) = in__.template read<
-                                                        std::complex<local_scalar_t__>>();
+        std::get<0>(arr_tuple_p[(idx_sym1__ - 1)]) = in__.template read<
+                                                       std::complex<local_scalar_t__>>();
         current_statement__ = 3;
-        std::get<1>(arr_tuple_p[(loop_sym1__ - 1)]) = in__.template read<
-                                                        std::vector<
-                                                          local_scalar_t__>>(4);
+        std::get<1>(arr_tuple_p[(idx_sym1__ - 1)]) = in__.template read<
+                                                       std::vector<
+                                                         local_scalar_t__>>(4);
         current_statement__ = 3;
-        std::get<2>(arr_tuple_p[(loop_sym1__ - 1)]) = in__.template read<
-                                                        Eigen::Matrix<local_scalar_t__,-1,1>>(3);
+        std::get<2>(arr_tuple_p[(idx_sym1__ - 1)]) = in__.template read<
+                                                       Eigen::Matrix<local_scalar_t__,-1,1>>(3);
       }
       std::tuple<std::vector<local_scalar_t__>, local_scalar_t__,
         std::vector<
@@ -615,12 +612,12 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
       current_statement__ = 4;
       std::get<1>(tuple_arr_tuple_p) = in__.template read<local_scalar_t__>();
       current_statement__ = 4;
-      for (int loop_sym1__ = 1; loop_sym1__ <= 3; ++loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
         current_statement__ = 4;
-        std::get<0>(std::get<2>(tuple_arr_tuple_p)[(loop_sym1__ - 1)]) = 
+        std::get<0>(std::get<2>(tuple_arr_tuple_p)[(idx_sym1__ - 1)]) = 
           in__.template read<local_scalar_t__>();
         current_statement__ = 4;
-        std::get<1>(std::get<2>(tuple_arr_tuple_p)[(loop_sym1__ - 1)]) = 
+        std::get<1>(std::get<2>(tuple_arr_tuple_p)[(idx_sym1__ - 1)]) = 
           in__.template read<std::vector<local_scalar_t__>>(4);
       }
       std::vector<
@@ -647,23 +644,23 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                 Eigen::Matrix<local_scalar_t__,-1,1>::Constant(4,
                   DUMMY_VAR__)}}});
       current_statement__ = 5;
-      for (int loop_sym1__ = 1; loop_sym1__ <= 2; ++loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
         current_statement__ = 5;
-        std::get<0>(arr_tuple_tuple_p[(loop_sym1__ - 1)]) = in__.template read<
-                                                              local_scalar_t__>();
+        std::get<0>(arr_tuple_tuple_p[(idx_sym1__ - 1)]) = in__.template read<
+                                                             local_scalar_t__>();
         current_statement__ = 5;
-        std::get<1>(arr_tuple_tuple_p[(loop_sym1__ - 1)]) = in__.template read<
-                                                              local_scalar_t__>();
+        std::get<1>(arr_tuple_tuple_p[(idx_sym1__ - 1)]) = in__.template read<
+                                                             local_scalar_t__>();
         current_statement__ = 5;
-        std::get<0>(std::get<2>(arr_tuple_tuple_p[(loop_sym1__ - 1)])) = 
+        std::get<0>(std::get<2>(arr_tuple_tuple_p[(idx_sym1__ - 1)])) = 
           in__.template read<local_scalar_t__>();
         current_statement__ = 5;
         std::get<0>(
-          std::get<1>(std::get<2>(arr_tuple_tuple_p[(loop_sym1__ - 1)]))) = 
+          std::get<1>(std::get<2>(arr_tuple_tuple_p[(idx_sym1__ - 1)]))) = 
           in__.template read<std::complex<local_scalar_t__>>();
         current_statement__ = 5;
         std::get<1>(
-          std::get<1>(std::get<2>(arr_tuple_tuple_p[(loop_sym1__ - 1)]))) = 
+          std::get<1>(std::get<2>(arr_tuple_tuple_p[(idx_sym1__ - 1)]))) = 
           in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(4);
       }
       std::vector<
@@ -689,19 +686,19 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                 Eigen::Matrix<local_scalar_t__,-1,1>::Constant(5,
                   DUMMY_VAR__)})});
       current_statement__ = 6;
-      for (int loop_sym1__ = 1; loop_sym1__ <= 3; ++loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
         current_statement__ = 6;
-        std::get<0>(arr_tuple_arr_tuple_p[(loop_sym1__ - 1)]) = in__.template read<
-                                                                  local_scalar_t__>();
+        std::get<0>(arr_tuple_arr_tuple_p[(idx_sym1__ - 1)]) = in__.template read<
+                                                                 local_scalar_t__>();
         current_statement__ = 6;
-        for (int loop_sym2__ = 1; loop_sym2__ <= 4; ++loop_sym2__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 4; ++idx_sym2__) {
           current_statement__ = 6;
           std::get<0>(
-            std::get<1>(arr_tuple_arr_tuple_p[(loop_sym1__ - 1)])[(loop_sym2__
+            std::get<1>(arr_tuple_arr_tuple_p[(idx_sym1__ - 1)])[(idx_sym2__
             - 1)]) = in__.template read<local_scalar_t__>();
           current_statement__ = 6;
           std::get<1>(
-            std::get<1>(arr_tuple_arr_tuple_p[(loop_sym1__ - 1)])[(loop_sym2__
+            std::get<1>(arr_tuple_arr_tuple_p[(idx_sym1__ - 1)])[(idx_sym2__
             - 1)]) = in__.template read<
                        Eigen::Matrix<local_scalar_t__,-1,1>>(5);
         }
@@ -744,31 +741,28 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                     Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(6, 7,
                       DUMMY_VAR__)})})});
       current_statement__ = 7;
-      for (int loop_sym1__ = 1; loop_sym1__ <= 3; ++loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
         current_statement__ = 7;
-        std::get<0>(very_deep_p[(loop_sym1__ - 1)]) = in__.template read<
-                                                        local_scalar_t__>();
+        std::get<0>(very_deep_p[(idx_sym1__ - 1)]) = in__.template read<
+                                                       local_scalar_t__>();
         current_statement__ = 7;
-        for (int loop_sym2__ = 1; loop_sym2__ <= 4; ++loop_sym2__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 4; ++idx_sym2__) {
           current_statement__ = 7;
-          std::get<0>(
-            std::get<1>(very_deep_p[(loop_sym1__ - 1)])[(loop_sym2__ - 1)]) = 
-            in__.template read<local_scalar_t__>();
+          std::get<0>(std::get<1>(very_deep_p[(idx_sym1__ - 1)])[(idx_sym2__
+            - 1)]) = in__.template read<local_scalar_t__>();
           current_statement__ = 7;
-          for (int loop_sym3__ = 1; loop_sym3__ <= 5; ++loop_sym3__) {
+          for (int idx_sym3__ = 1; idx_sym3__ <= 5; ++idx_sym3__) {
             current_statement__ = 7;
             std::get<0>(
               std::get<1>(
-                std::get<1>(very_deep_p[(loop_sym1__ - 1)])[(loop_sym2__ -
-                1)])[(loop_sym3__ - 1)]) = in__.template read<
-                                             std::complex<local_scalar_t__>>();
+                std::get<1>(very_deep_p[(idx_sym1__ - 1)])[(idx_sym2__ - 1)])[(idx_sym3__
+              - 1)]) = in__.template read<std::complex<local_scalar_t__>>();
             current_statement__ = 7;
             std::get<1>(
               std::get<1>(
-                std::get<1>(very_deep_p[(loop_sym1__ - 1)])[(loop_sym2__ -
-                1)])[(loop_sym3__ - 1)]) = in__.template read<
-                                             Eigen::Matrix<local_scalar_t__,-1,-1>>(6,
-                                             7);
+                std::get<1>(very_deep_p[(idx_sym1__ - 1)])[(idx_sym2__ - 1)])[(idx_sym3__
+              - 1)]) = in__.template read<
+                         Eigen::Matrix<local_scalar_t__,-1,-1>>(6, 7);
           }
         }
       }
@@ -854,17 +848,17 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
             Eigen::Matrix<double,-1,1>::Constant(3,
               std::numeric_limits<double>::quiet_NaN())});
       current_statement__ = 3;
-      for (int loop_sym1__ = 1; loop_sym1__ <= 3; ++loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
         current_statement__ = 3;
-        std::get<0>(arr_tuple_p[(loop_sym1__ - 1)]) = in__.template read<
-                                                        std::complex<local_scalar_t__>>();
+        std::get<0>(arr_tuple_p[(idx_sym1__ - 1)]) = in__.template read<
+                                                       std::complex<local_scalar_t__>>();
         current_statement__ = 3;
-        std::get<1>(arr_tuple_p[(loop_sym1__ - 1)]) = in__.template read<
-                                                        std::vector<
-                                                          local_scalar_t__>>(4);
+        std::get<1>(arr_tuple_p[(idx_sym1__ - 1)]) = in__.template read<
+                                                       std::vector<
+                                                         local_scalar_t__>>(4);
         current_statement__ = 3;
-        std::get<2>(arr_tuple_p[(loop_sym1__ - 1)]) = in__.template read<
-                                                        Eigen::Matrix<local_scalar_t__,-1,1>>(3);
+        std::get<2>(arr_tuple_p[(idx_sym1__ - 1)]) = in__.template read<
+                                                       Eigen::Matrix<local_scalar_t__,-1,1>>(3);
       }
       std::tuple<std::vector<double>, double,
         std::vector<std::tuple<double, std::vector<double>>>>
@@ -886,12 +880,12 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
       current_statement__ = 4;
       std::get<1>(tuple_arr_tuple_p) = in__.template read<local_scalar_t__>();
       current_statement__ = 4;
-      for (int loop_sym1__ = 1; loop_sym1__ <= 3; ++loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
         current_statement__ = 4;
-        std::get<0>(std::get<2>(tuple_arr_tuple_p)[(loop_sym1__ - 1)]) = 
+        std::get<0>(std::get<2>(tuple_arr_tuple_p)[(idx_sym1__ - 1)]) = 
           in__.template read<local_scalar_t__>();
         current_statement__ = 4;
-        std::get<1>(std::get<2>(tuple_arr_tuple_p)[(loop_sym1__ - 1)]) = 
+        std::get<1>(std::get<2>(tuple_arr_tuple_p)[(idx_sym1__ - 1)]) = 
           in__.template read<std::vector<local_scalar_t__>>(4);
       }
       std::vector<
@@ -917,23 +911,23 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                 Eigen::Matrix<double,-1,1>::Constant(4,
                   std::numeric_limits<double>::quiet_NaN())}}});
       current_statement__ = 5;
-      for (int loop_sym1__ = 1; loop_sym1__ <= 2; ++loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
         current_statement__ = 5;
-        std::get<0>(arr_tuple_tuple_p[(loop_sym1__ - 1)]) = in__.template read<
-                                                              local_scalar_t__>();
+        std::get<0>(arr_tuple_tuple_p[(idx_sym1__ - 1)]) = in__.template read<
+                                                             local_scalar_t__>();
         current_statement__ = 5;
-        std::get<1>(arr_tuple_tuple_p[(loop_sym1__ - 1)]) = in__.template read<
-                                                              local_scalar_t__>();
+        std::get<1>(arr_tuple_tuple_p[(idx_sym1__ - 1)]) = in__.template read<
+                                                             local_scalar_t__>();
         current_statement__ = 5;
-        std::get<0>(std::get<2>(arr_tuple_tuple_p[(loop_sym1__ - 1)])) = 
+        std::get<0>(std::get<2>(arr_tuple_tuple_p[(idx_sym1__ - 1)])) = 
           in__.template read<local_scalar_t__>();
         current_statement__ = 5;
         std::get<0>(
-          std::get<1>(std::get<2>(arr_tuple_tuple_p[(loop_sym1__ - 1)]))) = 
+          std::get<1>(std::get<2>(arr_tuple_tuple_p[(idx_sym1__ - 1)]))) = 
           in__.template read<std::complex<local_scalar_t__>>();
         current_statement__ = 5;
         std::get<1>(
-          std::get<1>(std::get<2>(arr_tuple_tuple_p[(loop_sym1__ - 1)]))) = 
+          std::get<1>(std::get<2>(arr_tuple_tuple_p[(idx_sym1__ - 1)]))) = 
           in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(4);
       }
       std::vector<
@@ -952,19 +946,19 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                 Eigen::Matrix<double,-1,1>::Constant(5,
                   std::numeric_limits<double>::quiet_NaN())})});
       current_statement__ = 6;
-      for (int loop_sym1__ = 1; loop_sym1__ <= 3; ++loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
         current_statement__ = 6;
-        std::get<0>(arr_tuple_arr_tuple_p[(loop_sym1__ - 1)]) = in__.template read<
-                                                                  local_scalar_t__>();
+        std::get<0>(arr_tuple_arr_tuple_p[(idx_sym1__ - 1)]) = in__.template read<
+                                                                 local_scalar_t__>();
         current_statement__ = 6;
-        for (int loop_sym2__ = 1; loop_sym2__ <= 4; ++loop_sym2__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 4; ++idx_sym2__) {
           current_statement__ = 6;
           std::get<0>(
-            std::get<1>(arr_tuple_arr_tuple_p[(loop_sym1__ - 1)])[(loop_sym2__
+            std::get<1>(arr_tuple_arr_tuple_p[(idx_sym1__ - 1)])[(idx_sym2__
             - 1)]) = in__.template read<local_scalar_t__>();
           current_statement__ = 6;
           std::get<1>(
-            std::get<1>(arr_tuple_arr_tuple_p[(loop_sym1__ - 1)])[(loop_sym2__
+            std::get<1>(arr_tuple_arr_tuple_p[(idx_sym1__ - 1)])[(idx_sym2__
             - 1)]) = in__.template read<
                        Eigen::Matrix<local_scalar_t__,-1,1>>(5);
         }
@@ -1012,31 +1006,28 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                     Eigen::Matrix<double,-1,-1>::Constant(6, 7,
                       std::numeric_limits<double>::quiet_NaN())})})});
       current_statement__ = 7;
-      for (int loop_sym1__ = 1; loop_sym1__ <= 3; ++loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
         current_statement__ = 7;
-        std::get<0>(very_deep_p[(loop_sym1__ - 1)]) = in__.template read<
-                                                        local_scalar_t__>();
+        std::get<0>(very_deep_p[(idx_sym1__ - 1)]) = in__.template read<
+                                                       local_scalar_t__>();
         current_statement__ = 7;
-        for (int loop_sym2__ = 1; loop_sym2__ <= 4; ++loop_sym2__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 4; ++idx_sym2__) {
           current_statement__ = 7;
-          std::get<0>(
-            std::get<1>(very_deep_p[(loop_sym1__ - 1)])[(loop_sym2__ - 1)]) = 
-            in__.template read<local_scalar_t__>();
+          std::get<0>(std::get<1>(very_deep_p[(idx_sym1__ - 1)])[(idx_sym2__
+            - 1)]) = in__.template read<local_scalar_t__>();
           current_statement__ = 7;
-          for (int loop_sym3__ = 1; loop_sym3__ <= 5; ++loop_sym3__) {
+          for (int idx_sym3__ = 1; idx_sym3__ <= 5; ++idx_sym3__) {
             current_statement__ = 7;
             std::get<0>(
               std::get<1>(
-                std::get<1>(very_deep_p[(loop_sym1__ - 1)])[(loop_sym2__ -
-                1)])[(loop_sym3__ - 1)]) = in__.template read<
-                                             std::complex<local_scalar_t__>>();
+                std::get<1>(very_deep_p[(idx_sym1__ - 1)])[(idx_sym2__ - 1)])[(idx_sym3__
+              - 1)]) = in__.template read<std::complex<local_scalar_t__>>();
             current_statement__ = 7;
             std::get<1>(
               std::get<1>(
-                std::get<1>(very_deep_p[(loop_sym1__ - 1)])[(loop_sym2__ -
-                1)])[(loop_sym3__ - 1)]) = in__.template read<
-                                             Eigen::Matrix<local_scalar_t__,-1,-1>>(6,
-                                             7);
+                std::get<1>(very_deep_p[(idx_sym1__ - 1)])[(idx_sym2__ - 1)])[(idx_sym3__
+              - 1)]) = in__.template read<
+                         Eigen::Matrix<local_scalar_t__,-1,-1>>(6, 7);
           }
         }
       }
@@ -1046,64 +1037,64 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
       out__.write(std::get<0>(std::get<1>(tuple_tuple_p)));
       out__.write(std::get<1>(std::get<1>(tuple_tuple_p)));
       current_statement__ = 3;
-      for (int loop_sym1__ = 1; loop_sym1__ <= 3; ++loop_sym1__) {
-        out__.write(std::get<0>(arr_tuple_p[(loop_sym1__ - 1)]));
-        out__.write(std::get<1>(arr_tuple_p[(loop_sym1__ - 1)]));
-        out__.write(std::get<2>(arr_tuple_p[(loop_sym1__ - 1)]));
+      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
+        out__.write(std::get<0>(arr_tuple_p[(idx_sym1__ - 1)]));
+        out__.write(std::get<1>(arr_tuple_p[(idx_sym1__ - 1)]));
+        out__.write(std::get<2>(arr_tuple_p[(idx_sym1__ - 1)]));
       }
       out__.write(std::get<0>(tuple_arr_tuple_p));
       out__.write(std::get<1>(tuple_arr_tuple_p));
       current_statement__ = 4;
-      for (int loop_sym1__ = 1; loop_sym1__ <= 3; ++loop_sym1__) {
-        out__.write(std::get<0>(std::get<2>(tuple_arr_tuple_p)[(loop_sym1__ -
+      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
+        out__.write(std::get<0>(std::get<2>(tuple_arr_tuple_p)[(idx_sym1__ -
                       1)]));
-        out__.write(std::get<1>(std::get<2>(tuple_arr_tuple_p)[(loop_sym1__ -
+        out__.write(std::get<1>(std::get<2>(tuple_arr_tuple_p)[(idx_sym1__ -
                       1)]));
       }
       current_statement__ = 5;
-      for (int loop_sym1__ = 1; loop_sym1__ <= 2; ++loop_sym1__) {
-        out__.write(std::get<0>(arr_tuple_tuple_p[(loop_sym1__ - 1)]));
-        out__.write(std::get<1>(arr_tuple_tuple_p[(loop_sym1__ - 1)]));
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
+        out__.write(std::get<0>(arr_tuple_tuple_p[(idx_sym1__ - 1)]));
+        out__.write(std::get<1>(arr_tuple_tuple_p[(idx_sym1__ - 1)]));
         out__.write(std::get<0>(
-                      std::get<2>(arr_tuple_tuple_p[(loop_sym1__ - 1)])));
+                      std::get<2>(arr_tuple_tuple_p[(idx_sym1__ - 1)])));
         out__.write(std::get<0>(
                       std::get<1>(
-                        std::get<2>(arr_tuple_tuple_p[(loop_sym1__ - 1)]))));
+                        std::get<2>(arr_tuple_tuple_p[(idx_sym1__ - 1)]))));
         out__.write(std::get<1>(
                       std::get<1>(
-                        std::get<2>(arr_tuple_tuple_p[(loop_sym1__ - 1)]))));
+                        std::get<2>(arr_tuple_tuple_p[(idx_sym1__ - 1)]))));
       }
       current_statement__ = 6;
-      for (int loop_sym1__ = 1; loop_sym1__ <= 3; ++loop_sym1__) {
-        out__.write(std::get<0>(arr_tuple_arr_tuple_p[(loop_sym1__ - 1)]));
+      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
+        out__.write(std::get<0>(arr_tuple_arr_tuple_p[(idx_sym1__ - 1)]));
         current_statement__ = 6;
-        for (int loop_sym2__ = 1; loop_sym2__ <= 4; ++loop_sym2__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 4; ++idx_sym2__) {
           out__.write(std::get<0>(
-                        std::get<1>(arr_tuple_arr_tuple_p[(loop_sym1__ - 1)])[(loop_sym2__
+                        std::get<1>(arr_tuple_arr_tuple_p[(idx_sym1__ - 1)])[(idx_sym2__
                         - 1)]));
           out__.write(std::get<1>(
-                        std::get<1>(arr_tuple_arr_tuple_p[(loop_sym1__ - 1)])[(loop_sym2__
+                        std::get<1>(arr_tuple_arr_tuple_p[(idx_sym1__ - 1)])[(idx_sym2__
                         - 1)]));
         }
       }
       current_statement__ = 7;
-      for (int loop_sym1__ = 1; loop_sym1__ <= 3; ++loop_sym1__) {
-        out__.write(std::get<0>(very_deep_p[(loop_sym1__ - 1)]));
+      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
+        out__.write(std::get<0>(very_deep_p[(idx_sym1__ - 1)]));
         current_statement__ = 7;
-        for (int loop_sym2__ = 1; loop_sym2__ <= 4; ++loop_sym2__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 4; ++idx_sym2__) {
           out__.write(std::get<0>(
-                        std::get<1>(very_deep_p[(loop_sym1__ - 1)])[(loop_sym2__
+                        std::get<1>(very_deep_p[(idx_sym1__ - 1)])[(idx_sym2__
                         - 1)]));
           current_statement__ = 7;
-          for (int loop_sym3__ = 1; loop_sym3__ <= 5; ++loop_sym3__) {
+          for (int idx_sym3__ = 1; idx_sym3__ <= 5; ++idx_sym3__) {
             out__.write(std::get<0>(
                           std::get<1>(
-                            std::get<1>(very_deep_p[(loop_sym1__ - 1)])[(loop_sym2__
-                            - 1)])[(loop_sym3__ - 1)]));
+                            std::get<1>(very_deep_p[(idx_sym1__ - 1)])[(idx_sym2__
+                            - 1)])[(idx_sym3__ - 1)]));
             out__.write(std::get<1>(
                           std::get<1>(
-                            std::get<1>(very_deep_p[(loop_sym1__ - 1)])[(loop_sym2__
-                            - 1)])[(loop_sym3__ - 1)]));
+                            std::get<1>(very_deep_p[(idx_sym1__ - 1)])[(idx_sym2__
+                            - 1)])[(idx_sym3__ - 1)]));
           }
         }
       }
@@ -1181,23 +1172,23 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
             std::vector<local_scalar_t__>(4, DUMMY_VAR__),
             Eigen::Matrix<local_scalar_t__,-1,1>::Constant(3, DUMMY_VAR__)});
       current_statement__ = 3;
-      for (int loop_sym1__ = 1; loop_sym1__ <= 3; ++loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
         current_statement__ = 3;
-        std::get<0>(arr_tuple_p[(loop_sym1__ - 1)]) = in__.read<
-                                                        std::complex<local_scalar_t__>>();
+        std::get<0>(arr_tuple_p[(idx_sym1__ - 1)]) = in__.read<
+                                                       std::complex<local_scalar_t__>>();
         current_statement__ = 3;
-        stan::model::assign(std::get<1>(arr_tuple_p[(loop_sym1__ - 1)]),
+        stan::model::assign(std::get<1>(arr_tuple_p[(idx_sym1__ - 1)]),
           in__.read<std::vector<local_scalar_t__>>(4),
           "assigning variable arr_tuple_p.2");
         current_statement__ = 3;
-        stan::model::assign(std::get<2>(arr_tuple_p[(loop_sym1__ - 1)]),
+        stan::model::assign(std::get<2>(arr_tuple_p[(idx_sym1__ - 1)]),
           in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(3),
           "assigning variable arr_tuple_p.3");
       }
-      for (int loop_sym1__ = 1; loop_sym1__ <= 3; ++loop_sym1__) {
-        out__.write(std::get<0>(arr_tuple_p[(loop_sym1__ - 1)]));
-        out__.write(std::get<1>(arr_tuple_p[(loop_sym1__ - 1)]));
-        out__.write(std::get<2>(arr_tuple_p[(loop_sym1__ - 1)]));
+      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
+        out__.write(std::get<0>(arr_tuple_p[(idx_sym1__ - 1)]));
+        out__.write(std::get<1>(arr_tuple_p[(idx_sym1__ - 1)]));
+        out__.write(std::get<2>(arr_tuple_p[(idx_sym1__ - 1)]));
       }
       std::tuple<std::vector<local_scalar_t__>, local_scalar_t__,
         std::vector<
@@ -1218,22 +1209,22 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
       current_statement__ = 4;
       std::get<1>(tuple_arr_tuple_p) = in__.read<local_scalar_t__>();
       current_statement__ = 4;
-      for (int loop_sym1__ = 1; loop_sym1__ <= 3; ++loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
         current_statement__ = 4;
-        std::get<0>(std::get<2>(tuple_arr_tuple_p)[(loop_sym1__ - 1)]) = 
+        std::get<0>(std::get<2>(tuple_arr_tuple_p)[(idx_sym1__ - 1)]) = 
           in__.read<local_scalar_t__>();
         current_statement__ = 4;
         stan::model::assign(
-          std::get<1>(std::get<2>(tuple_arr_tuple_p)[(loop_sym1__ - 1)]),
+          std::get<1>(std::get<2>(tuple_arr_tuple_p)[(idx_sym1__ - 1)]),
           in__.read<std::vector<local_scalar_t__>>(4),
           "assigning variable tuple_arr_tuple_p.3.2");
       }
       out__.write(std::get<0>(tuple_arr_tuple_p));
       out__.write(std::get<1>(tuple_arr_tuple_p));
-      for (int loop_sym1__ = 1; loop_sym1__ <= 3; ++loop_sym1__) {
-        out__.write(std::get<0>(std::get<2>(tuple_arr_tuple_p)[(loop_sym1__ -
+      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
+        out__.write(std::get<0>(std::get<2>(tuple_arr_tuple_p)[(idx_sym1__ -
                       1)]));
-        out__.write(std::get<1>(std::get<2>(tuple_arr_tuple_p)[(loop_sym1__ -
+        out__.write(std::get<1>(std::get<2>(tuple_arr_tuple_p)[(idx_sym1__ -
                       1)]));
       }
       std::vector<
@@ -1260,38 +1251,38 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                 Eigen::Matrix<local_scalar_t__,-1,1>::Constant(4,
                   DUMMY_VAR__)}}});
       current_statement__ = 5;
-      for (int loop_sym1__ = 1; loop_sym1__ <= 2; ++loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
         current_statement__ = 5;
-        std::get<0>(arr_tuple_tuple_p[(loop_sym1__ - 1)]) = in__.read<
-                                                              local_scalar_t__>();
+        std::get<0>(arr_tuple_tuple_p[(idx_sym1__ - 1)]) = in__.read<
+                                                             local_scalar_t__>();
         current_statement__ = 5;
-        std::get<1>(arr_tuple_tuple_p[(loop_sym1__ - 1)]) = in__.read<
-                                                              local_scalar_t__>();
+        std::get<1>(arr_tuple_tuple_p[(idx_sym1__ - 1)]) = in__.read<
+                                                             local_scalar_t__>();
         current_statement__ = 5;
-        std::get<0>(std::get<2>(arr_tuple_tuple_p[(loop_sym1__ - 1)])) = 
+        std::get<0>(std::get<2>(arr_tuple_tuple_p[(idx_sym1__ - 1)])) = 
           in__.read<local_scalar_t__>();
         current_statement__ = 5;
         std::get<0>(
-          std::get<1>(std::get<2>(arr_tuple_tuple_p[(loop_sym1__ - 1)]))) = 
+          std::get<1>(std::get<2>(arr_tuple_tuple_p[(idx_sym1__ - 1)]))) = 
           in__.read<std::complex<local_scalar_t__>>();
         current_statement__ = 5;
         stan::model::assign(
           std::get<1>(
-            std::get<1>(std::get<2>(arr_tuple_tuple_p[(loop_sym1__ - 1)]))),
+            std::get<1>(std::get<2>(arr_tuple_tuple_p[(idx_sym1__ - 1)]))),
           in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(4),
           "assigning variable arr_tuple_tuple_p.3.2.2");
       }
-      for (int loop_sym1__ = 1; loop_sym1__ <= 2; ++loop_sym1__) {
-        out__.write(std::get<0>(arr_tuple_tuple_p[(loop_sym1__ - 1)]));
-        out__.write(std::get<1>(arr_tuple_tuple_p[(loop_sym1__ - 1)]));
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
+        out__.write(std::get<0>(arr_tuple_tuple_p[(idx_sym1__ - 1)]));
+        out__.write(std::get<1>(arr_tuple_tuple_p[(idx_sym1__ - 1)]));
         out__.write(std::get<0>(
-                      std::get<2>(arr_tuple_tuple_p[(loop_sym1__ - 1)])));
+                      std::get<2>(arr_tuple_tuple_p[(idx_sym1__ - 1)])));
         out__.write(std::get<0>(
                       std::get<1>(
-                        std::get<2>(arr_tuple_tuple_p[(loop_sym1__ - 1)]))));
+                        std::get<2>(arr_tuple_tuple_p[(idx_sym1__ - 1)]))));
         out__.write(std::get<1>(
                       std::get<1>(
-                        std::get<2>(arr_tuple_tuple_p[(loop_sym1__ - 1)]))));
+                        std::get<2>(arr_tuple_tuple_p[(idx_sym1__ - 1)]))));
       }
       std::vector<
         std::tuple<local_scalar_t__,
@@ -1316,32 +1307,32 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                 Eigen::Matrix<local_scalar_t__,-1,1>::Constant(5,
                   DUMMY_VAR__)})});
       current_statement__ = 6;
-      for (int loop_sym1__ = 1; loop_sym1__ <= 3; ++loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
         current_statement__ = 6;
-        std::get<0>(arr_tuple_arr_tuple_p[(loop_sym1__ - 1)]) = in__.read<
-                                                                  local_scalar_t__>();
+        std::get<0>(arr_tuple_arr_tuple_p[(idx_sym1__ - 1)]) = in__.read<
+                                                                 local_scalar_t__>();
         current_statement__ = 6;
-        for (int loop_sym2__ = 1; loop_sym2__ <= 4; ++loop_sym2__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 4; ++idx_sym2__) {
           current_statement__ = 6;
           std::get<0>(
-            std::get<1>(arr_tuple_arr_tuple_p[(loop_sym1__ - 1)])[(loop_sym2__
+            std::get<1>(arr_tuple_arr_tuple_p[(idx_sym1__ - 1)])[(idx_sym2__
             - 1)]) = in__.read<local_scalar_t__>();
           current_statement__ = 6;
           stan::model::assign(
             std::get<1>(
-              std::get<1>(arr_tuple_arr_tuple_p[(loop_sym1__ - 1)])[(loop_sym2__
+              std::get<1>(arr_tuple_arr_tuple_p[(idx_sym1__ - 1)])[(idx_sym2__
               - 1)]), in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(5),
             "assigning variable arr_tuple_arr_tuple_p.2.2");
         }
       }
-      for (int loop_sym1__ = 1; loop_sym1__ <= 3; ++loop_sym1__) {
-        out__.write(std::get<0>(arr_tuple_arr_tuple_p[(loop_sym1__ - 1)]));
-        for (int loop_sym2__ = 1; loop_sym2__ <= 4; ++loop_sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
+        out__.write(std::get<0>(arr_tuple_arr_tuple_p[(idx_sym1__ - 1)]));
+        for (int idx_sym2__ = 1; idx_sym2__ <= 4; ++idx_sym2__) {
           out__.write(std::get<0>(
-                        std::get<1>(arr_tuple_arr_tuple_p[(loop_sym1__ - 1)])[(loop_sym2__
+                        std::get<1>(arr_tuple_arr_tuple_p[(idx_sym1__ - 1)])[(idx_sym2__
                         - 1)]));
           out__.write(std::get<1>(
-                        std::get<1>(arr_tuple_arr_tuple_p[(loop_sym1__ - 1)])[(loop_sym2__
+                        std::get<1>(arr_tuple_arr_tuple_p[(idx_sym1__ - 1)])[(idx_sym2__
                         - 1)]));
         }
       }
@@ -1383,50 +1374,48 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                     Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(6, 7,
                       DUMMY_VAR__)})})});
       current_statement__ = 7;
-      for (int loop_sym1__ = 1; loop_sym1__ <= 3; ++loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
         current_statement__ = 7;
-        std::get<0>(very_deep_p[(loop_sym1__ - 1)]) = in__.read<
-                                                        local_scalar_t__>();
+        std::get<0>(very_deep_p[(idx_sym1__ - 1)]) = in__.read<
+                                                       local_scalar_t__>();
         current_statement__ = 7;
-        for (int loop_sym2__ = 1; loop_sym2__ <= 4; ++loop_sym2__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 4; ++idx_sym2__) {
           current_statement__ = 7;
-          std::get<0>(
-            std::get<1>(very_deep_p[(loop_sym1__ - 1)])[(loop_sym2__ - 1)]) = 
-            in__.read<local_scalar_t__>();
+          std::get<0>(std::get<1>(very_deep_p[(idx_sym1__ - 1)])[(idx_sym2__
+            - 1)]) = in__.read<local_scalar_t__>();
           current_statement__ = 7;
-          for (int loop_sym3__ = 1; loop_sym3__ <= 5; ++loop_sym3__) {
+          for (int idx_sym3__ = 1; idx_sym3__ <= 5; ++idx_sym3__) {
             current_statement__ = 7;
             std::get<0>(
               std::get<1>(
-                std::get<1>(very_deep_p[(loop_sym1__ - 1)])[(loop_sym2__ -
-                1)])[(loop_sym3__ - 1)]) = in__.read<
-                                             std::complex<local_scalar_t__>>();
+                std::get<1>(very_deep_p[(idx_sym1__ - 1)])[(idx_sym2__ - 1)])[(idx_sym3__
+              - 1)]) = in__.read<std::complex<local_scalar_t__>>();
             current_statement__ = 7;
             stan::model::assign(
               std::get<1>(
                 std::get<1>(
-                  std::get<1>(very_deep_p[(loop_sym1__ - 1)])[(loop_sym2__ -
-                  1)])[(loop_sym3__ - 1)]),
+                  std::get<1>(very_deep_p[(idx_sym1__ - 1)])[(idx_sym2__ -
+                  1)])[(idx_sym3__ - 1)]),
               in__.read<Eigen::Matrix<local_scalar_t__,-1,-1>>(6, 7),
               "assigning variable very_deep_p.2.2.2");
           }
         }
       }
-      for (int loop_sym1__ = 1; loop_sym1__ <= 3; ++loop_sym1__) {
-        out__.write(std::get<0>(very_deep_p[(loop_sym1__ - 1)]));
-        for (int loop_sym2__ = 1; loop_sym2__ <= 4; ++loop_sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
+        out__.write(std::get<0>(very_deep_p[(idx_sym1__ - 1)]));
+        for (int idx_sym2__ = 1; idx_sym2__ <= 4; ++idx_sym2__) {
           out__.write(std::get<0>(
-                        std::get<1>(very_deep_p[(loop_sym1__ - 1)])[(loop_sym2__
+                        std::get<1>(very_deep_p[(idx_sym1__ - 1)])[(idx_sym2__
                         - 1)]));
-          for (int loop_sym3__ = 1; loop_sym3__ <= 5; ++loop_sym3__) {
+          for (int idx_sym3__ = 1; idx_sym3__ <= 5; ++idx_sym3__) {
             out__.write(std::get<0>(
                           std::get<1>(
-                            std::get<1>(very_deep_p[(loop_sym1__ - 1)])[(loop_sym2__
-                            - 1)])[(loop_sym3__ - 1)]));
+                            std::get<1>(very_deep_p[(idx_sym1__ - 1)])[(idx_sym2__
+                            - 1)])[(idx_sym3__ - 1)]));
             out__.write(std::get<1>(
                           std::get<1>(
-                            std::get<1>(very_deep_p[(loop_sym1__ - 1)])[(loop_sym2__
-                            - 1)])[(loop_sym3__ - 1)]));
+                            std::get<1>(very_deep_p[(idx_sym1__ - 1)])[(idx_sym2__
+                            - 1)])[(idx_sym3__ - 1)]));
           }
         }
       }
@@ -1563,10 +1552,10 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
             Eigen::Matrix<local_scalar_t__,-1,1>::Constant(3, DUMMY_VAR__)});
       current_statement__ = 3;
       stan::io::read_from_context(arr_tuple_p, context__, "arr_tuple_p");
-      for (int loop_sym1__ = 1; loop_sym1__ <= 3; ++loop_sym1__) {
-        out__.write(std::get<0>(arr_tuple_p[(loop_sym1__ - 1)]));
-        out__.write(std::get<1>(arr_tuple_p[(loop_sym1__ - 1)]));
-        out__.write(std::get<2>(arr_tuple_p[(loop_sym1__ - 1)]));
+      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
+        out__.write(std::get<0>(arr_tuple_p[(idx_sym1__ - 1)]));
+        out__.write(std::get<1>(arr_tuple_p[(idx_sym1__ - 1)]));
+        out__.write(std::get<2>(arr_tuple_p[(idx_sym1__ - 1)]));
       }
       std::tuple<std::vector<local_scalar_t__>, local_scalar_t__,
         std::vector<
@@ -1585,10 +1574,10 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
         "tuple_arr_tuple_p");
       out__.write(std::get<0>(tuple_arr_tuple_p));
       out__.write(std::get<1>(tuple_arr_tuple_p));
-      for (int loop_sym1__ = 1; loop_sym1__ <= 3; ++loop_sym1__) {
-        out__.write(std::get<0>(std::get<2>(tuple_arr_tuple_p)[(loop_sym1__ -
+      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
+        out__.write(std::get<0>(std::get<2>(tuple_arr_tuple_p)[(idx_sym1__ -
                       1)]));
-        out__.write(std::get<1>(std::get<2>(tuple_arr_tuple_p)[(loop_sym1__ -
+        out__.write(std::get<1>(std::get<2>(tuple_arr_tuple_p)[(idx_sym1__ -
                       1)]));
       }
       std::vector<
@@ -1617,17 +1606,17 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
       current_statement__ = 5;
       stan::io::read_from_context(arr_tuple_tuple_p, context__,
         "arr_tuple_tuple_p");
-      for (int loop_sym1__ = 1; loop_sym1__ <= 2; ++loop_sym1__) {
-        out__.write(std::get<0>(arr_tuple_tuple_p[(loop_sym1__ - 1)]));
-        out__.write(std::get<1>(arr_tuple_tuple_p[(loop_sym1__ - 1)]));
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
+        out__.write(std::get<0>(arr_tuple_tuple_p[(idx_sym1__ - 1)]));
+        out__.write(std::get<1>(arr_tuple_tuple_p[(idx_sym1__ - 1)]));
         out__.write(std::get<0>(
-                      std::get<2>(arr_tuple_tuple_p[(loop_sym1__ - 1)])));
+                      std::get<2>(arr_tuple_tuple_p[(idx_sym1__ - 1)])));
         out__.write(std::get<0>(
                       std::get<1>(
-                        std::get<2>(arr_tuple_tuple_p[(loop_sym1__ - 1)]))));
+                        std::get<2>(arr_tuple_tuple_p[(idx_sym1__ - 1)]))));
         out__.write(std::get<1>(
                       std::get<1>(
-                        std::get<2>(arr_tuple_tuple_p[(loop_sym1__ - 1)]))));
+                        std::get<2>(arr_tuple_tuple_p[(idx_sym1__ - 1)]))));
       }
       std::vector<
         std::tuple<local_scalar_t__,
@@ -1654,14 +1643,14 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
       current_statement__ = 6;
       stan::io::read_from_context(arr_tuple_arr_tuple_p, context__,
         "arr_tuple_arr_tuple_p");
-      for (int loop_sym1__ = 1; loop_sym1__ <= 3; ++loop_sym1__) {
-        out__.write(std::get<0>(arr_tuple_arr_tuple_p[(loop_sym1__ - 1)]));
-        for (int loop_sym2__ = 1; loop_sym2__ <= 4; ++loop_sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
+        out__.write(std::get<0>(arr_tuple_arr_tuple_p[(idx_sym1__ - 1)]));
+        for (int idx_sym2__ = 1; idx_sym2__ <= 4; ++idx_sym2__) {
           out__.write(std::get<0>(
-                        std::get<1>(arr_tuple_arr_tuple_p[(loop_sym1__ - 1)])[(loop_sym2__
+                        std::get<1>(arr_tuple_arr_tuple_p[(idx_sym1__ - 1)])[(idx_sym2__
                         - 1)]));
           out__.write(std::get<1>(
-                        std::get<1>(arr_tuple_arr_tuple_p[(loop_sym1__ - 1)])[(loop_sym2__
+                        std::get<1>(arr_tuple_arr_tuple_p[(idx_sym1__ - 1)])[(idx_sym2__
                         - 1)]));
         }
       }
@@ -1704,21 +1693,21 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                       DUMMY_VAR__)})})});
       current_statement__ = 7;
       stan::io::read_from_context(very_deep_p, context__, "very_deep_p");
-      for (int loop_sym1__ = 1; loop_sym1__ <= 3; ++loop_sym1__) {
-        out__.write(std::get<0>(very_deep_p[(loop_sym1__ - 1)]));
-        for (int loop_sym2__ = 1; loop_sym2__ <= 4; ++loop_sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
+        out__.write(std::get<0>(very_deep_p[(idx_sym1__ - 1)]));
+        for (int idx_sym2__ = 1; idx_sym2__ <= 4; ++idx_sym2__) {
           out__.write(std::get<0>(
-                        std::get<1>(very_deep_p[(loop_sym1__ - 1)])[(loop_sym2__
+                        std::get<1>(very_deep_p[(idx_sym1__ - 1)])[(idx_sym2__
                         - 1)]));
-          for (int loop_sym3__ = 1; loop_sym3__ <= 5; ++loop_sym3__) {
+          for (int idx_sym3__ = 1; idx_sym3__ <= 5; ++idx_sym3__) {
             out__.write(std::get<0>(
                           std::get<1>(
-                            std::get<1>(very_deep_p[(loop_sym1__ - 1)])[(loop_sym2__
-                            - 1)])[(loop_sym3__ - 1)]));
+                            std::get<1>(very_deep_p[(idx_sym1__ - 1)])[(idx_sym2__
+                            - 1)])[(idx_sym3__ - 1)]));
             out__.write(std::get<1>(
                           std::get<1>(
-                            std::get<1>(very_deep_p[(loop_sym1__ - 1)])[(loop_sym2__
-                            - 1)])[(loop_sym3__ - 1)]));
+                            std::get<1>(very_deep_p[(idx_sym1__ - 1)])[(idx_sym2__
+                            - 1)])[(idx_sym3__ - 1)]));
           }
         }
       }
@@ -1793,10 +1782,9 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         10; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "basic_p" + ':' +
-        std::to_string(1) + '.' + std::to_string(names_loop_sym1__));
+        std::to_string(1) + '.' + std::to_string(idx_sym1__));
     }
     param_names__.emplace_back(std::string() + "basic_p" + ':' +
       std::to_string(2));
@@ -1804,125 +1792,105 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
       std::to_string(1));
     param_names__.emplace_back(std::string() + "tuple_tuple_p" + ':' +
       std::to_string(2) + ':' + std::to_string(1));
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         2; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "tuple_tuple_p" + ':' +
         std::to_string(2) + ':' + std::to_string(2) + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         3; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "arr_tuple_p" + '.' +
-        std::to_string(names_loop_sym1__) + ':' + std::to_string(1) + '.' +
-        "real");
+        std::to_string(idx_sym1__) + ':' + std::to_string(1) + '.' + "real");
       param_names__.emplace_back(std::string() + "arr_tuple_p" + '.' +
-        std::to_string(names_loop_sym1__) + ':' + std::to_string(1) + '.' +
-        "imag");
-      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-           4; ++names_loop_sym2__) {
+        std::to_string(idx_sym1__) + ':' + std::to_string(1) + '.' + "imag");
+      for (int idx_sym2__ = 1; idx_sym2__ <= 4; ++idx_sym2__) {
         param_names__.emplace_back(std::string() + "arr_tuple_p" + '.' +
-          std::to_string(names_loop_sym1__) + ':' + std::to_string(2) + '.' +
-          std::to_string(names_loop_sym2__));
+          std::to_string(idx_sym1__) + ':' + std::to_string(2) + '.' +
+          std::to_string(idx_sym2__));
       }
-      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-           3; ++names_loop_sym2__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= 3; ++idx_sym2__) {
         param_names__.emplace_back(std::string() + "arr_tuple_p" + '.' +
-          std::to_string(names_loop_sym1__) + ':' + std::to_string(3) + '.' +
-          std::to_string(names_loop_sym2__));
+          std::to_string(idx_sym1__) + ':' + std::to_string(3) + '.' +
+          std::to_string(idx_sym2__));
       }
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         2; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "tuple_arr_tuple_p" + ':' +
-        std::to_string(1) + '.' + std::to_string(names_loop_sym1__));
+        std::to_string(1) + '.' + std::to_string(idx_sym1__));
     }
     param_names__.emplace_back(std::string() + "tuple_arr_tuple_p" + ':' +
       std::to_string(2));
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         3; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "tuple_arr_tuple_p" + ':' +
-        std::to_string(3) + '.' + std::to_string(names_loop_sym1__) + ':' +
+        std::to_string(3) + '.' + std::to_string(idx_sym1__) + ':' +
         std::to_string(1));
-      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-           4; ++names_loop_sym2__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= 4; ++idx_sym2__) {
         param_names__.emplace_back(std::string() + "tuple_arr_tuple_p" + ':'
-          + std::to_string(3) + '.' + std::to_string(names_loop_sym1__) + ':'
-          + std::to_string(2) + '.' + std::to_string(names_loop_sym2__));
+          + std::to_string(3) + '.' + std::to_string(idx_sym1__) + ':' +
+          std::to_string(2) + '.' + std::to_string(idx_sym2__));
       }
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         2; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "arr_tuple_tuple_p" + '.' +
-        std::to_string(names_loop_sym1__) + ':' + std::to_string(1));
+        std::to_string(idx_sym1__) + ':' + std::to_string(1));
       param_names__.emplace_back(std::string() + "arr_tuple_tuple_p" + '.' +
-        std::to_string(names_loop_sym1__) + ':' + std::to_string(2));
+        std::to_string(idx_sym1__) + ':' + std::to_string(2));
       param_names__.emplace_back(std::string() + "arr_tuple_tuple_p" + '.' +
-        std::to_string(names_loop_sym1__) + ':' + std::to_string(3) + ':' +
+        std::to_string(idx_sym1__) + ':' + std::to_string(3) + ':' +
         std::to_string(1));
       param_names__.emplace_back(std::string() + "arr_tuple_tuple_p" + '.' +
-        std::to_string(names_loop_sym1__) + ':' + std::to_string(3) + ':' +
+        std::to_string(idx_sym1__) + ':' + std::to_string(3) + ':' +
         std::to_string(2) + ':' + std::to_string(1) + '.' + "real");
       param_names__.emplace_back(std::string() + "arr_tuple_tuple_p" + '.' +
-        std::to_string(names_loop_sym1__) + ':' + std::to_string(3) + ':' +
+        std::to_string(idx_sym1__) + ':' + std::to_string(3) + ':' +
         std::to_string(2) + ':' + std::to_string(1) + '.' + "imag");
-      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-           4; ++names_loop_sym2__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= 4; ++idx_sym2__) {
         param_names__.emplace_back(std::string() + "arr_tuple_tuple_p" + '.'
-          + std::to_string(names_loop_sym1__) + ':' + std::to_string(3) + ':'
-          + std::to_string(2) + ':' + std::to_string(2) + '.' +
-          std::to_string(names_loop_sym2__));
+          + std::to_string(idx_sym1__) + ':' + std::to_string(3) + ':' +
+          std::to_string(2) + ':' + std::to_string(2) + '.' +
+          std::to_string(idx_sym2__));
       }
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         3; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "arr_tuple_arr_tuple_p" +
-        '.' + std::to_string(names_loop_sym1__) + ':' + std::to_string(1));
-      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-           4; ++names_loop_sym2__) {
+        '.' + std::to_string(idx_sym1__) + ':' + std::to_string(1));
+      for (int idx_sym2__ = 1; idx_sym2__ <= 4; ++idx_sym2__) {
         param_names__.emplace_back(std::string() + "arr_tuple_arr_tuple_p" +
-          '.' + std::to_string(names_loop_sym1__) + ':' + std::to_string(2) +
-          '.' + std::to_string(names_loop_sym2__) + ':' + std::to_string(1));
-        for (int names_loop_sym3__ = 1; names_loop_sym3__ <=
-             5; ++names_loop_sym3__) {
+          '.' + std::to_string(idx_sym1__) + ':' + std::to_string(2) + '.' +
+          std::to_string(idx_sym2__) + ':' + std::to_string(1));
+        for (int idx_sym3__ = 1; idx_sym3__ <= 5; ++idx_sym3__) {
           param_names__.emplace_back(std::string() + "arr_tuple_arr_tuple_p"
-            + '.' + std::to_string(names_loop_sym1__) + ':' +
-            std::to_string(2) + '.' + std::to_string(names_loop_sym2__) + ':'
-            + std::to_string(2) + '.' + std::to_string(names_loop_sym3__));
+            + '.' + std::to_string(idx_sym1__) + ':' + std::to_string(2) +
+            '.' + std::to_string(idx_sym2__) + ':' + std::to_string(2) + '.'
+            + std::to_string(idx_sym3__));
         }
       }
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         3; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "very_deep_p" + '.' +
-        std::to_string(names_loop_sym1__) + ':' + std::to_string(1));
-      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-           4; ++names_loop_sym2__) {
+        std::to_string(idx_sym1__) + ':' + std::to_string(1));
+      for (int idx_sym2__ = 1; idx_sym2__ <= 4; ++idx_sym2__) {
         param_names__.emplace_back(std::string() + "very_deep_p" + '.' +
-          std::to_string(names_loop_sym1__) + ':' + std::to_string(2) + '.' +
-          std::to_string(names_loop_sym2__) + ':' + std::to_string(1));
-        for (int names_loop_sym3__ = 1; names_loop_sym3__ <=
-             5; ++names_loop_sym3__) {
+          std::to_string(idx_sym1__) + ':' + std::to_string(2) + '.' +
+          std::to_string(idx_sym2__) + ':' + std::to_string(1));
+        for (int idx_sym3__ = 1; idx_sym3__ <= 5; ++idx_sym3__) {
           param_names__.emplace_back(std::string() + "very_deep_p" + '.' +
-            std::to_string(names_loop_sym1__) + ':' + std::to_string(2) + '.'
-            + std::to_string(names_loop_sym2__) + ':' + std::to_string(2) +
-            '.' + std::to_string(names_loop_sym3__) + ':' + std::to_string(1)
-            + '.' + "real");
+            std::to_string(idx_sym1__) + ':' + std::to_string(2) + '.' +
+            std::to_string(idx_sym2__) + ':' + std::to_string(2) + '.' +
+            std::to_string(idx_sym3__) + ':' + std::to_string(1) + '.' +
+            "real");
           param_names__.emplace_back(std::string() + "very_deep_p" + '.' +
-            std::to_string(names_loop_sym1__) + ':' + std::to_string(2) + '.'
-            + std::to_string(names_loop_sym2__) + ':' + std::to_string(2) +
-            '.' + std::to_string(names_loop_sym3__) + ':' + std::to_string(1)
-            + '.' + "imag");
-          for (int names_loop_sym4__ = 1; names_loop_sym4__ <=
-               7; ++names_loop_sym4__) {
-            for (int names_loop_sym5__ = 1; names_loop_sym5__ <=
-                 6; ++names_loop_sym5__) {
+            std::to_string(idx_sym1__) + ':' + std::to_string(2) + '.' +
+            std::to_string(idx_sym2__) + ':' + std::to_string(2) + '.' +
+            std::to_string(idx_sym3__) + ':' + std::to_string(1) + '.' +
+            "imag");
+          for (int idx_sym4__ = 1; idx_sym4__ <= 7; ++idx_sym4__) {
+            for (int idx_sym5__ = 1; idx_sym5__ <= 6; ++idx_sym5__) {
               param_names__.emplace_back(std::string() + "very_deep_p" + '.'
-                + std::to_string(names_loop_sym1__) + ':' + std::to_string(2)
-                + '.' + std::to_string(names_loop_sym2__) + ':' +
-                std::to_string(2) + '.' + std::to_string(names_loop_sym3__) +
-                ':' + std::to_string(2) + '.' +
-                std::to_string(names_loop_sym5__) + '.' +
-                std::to_string(names_loop_sym4__));
+                + std::to_string(idx_sym1__) + ':' + std::to_string(2) + '.'
+                + std::to_string(idx_sym2__) + ':' + std::to_string(2) + '.'
+                + std::to_string(idx_sym3__) + ':' + std::to_string(2) + '.'
+                + std::to_string(idx_sym5__) + '.' +
+                std::to_string(idx_sym4__));
             }
           }
         }
@@ -1935,10 +1903,9 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         10; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "basic_p" + ':' +
-        std::to_string(1) + '.' + std::to_string(names_loop_sym1__));
+        std::to_string(1) + '.' + std::to_string(idx_sym1__));
     }
     param_names__.emplace_back(std::string() + "basic_p" + ':' +
       std::to_string(2));
@@ -1946,125 +1913,105 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
       std::to_string(1));
     param_names__.emplace_back(std::string() + "tuple_tuple_p" + ':' +
       std::to_string(2) + ':' + std::to_string(1));
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         2; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "tuple_tuple_p" + ':' +
         std::to_string(2) + ':' + std::to_string(2) + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         3; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "arr_tuple_p" + '.' +
-        std::to_string(names_loop_sym1__) + ':' + std::to_string(1) + '.' +
-        "real");
+        std::to_string(idx_sym1__) + ':' + std::to_string(1) + '.' + "real");
       param_names__.emplace_back(std::string() + "arr_tuple_p" + '.' +
-        std::to_string(names_loop_sym1__) + ':' + std::to_string(1) + '.' +
-        "imag");
-      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-           4; ++names_loop_sym2__) {
+        std::to_string(idx_sym1__) + ':' + std::to_string(1) + '.' + "imag");
+      for (int idx_sym2__ = 1; idx_sym2__ <= 4; ++idx_sym2__) {
         param_names__.emplace_back(std::string() + "arr_tuple_p" + '.' +
-          std::to_string(names_loop_sym1__) + ':' + std::to_string(2) + '.' +
-          std::to_string(names_loop_sym2__));
+          std::to_string(idx_sym1__) + ':' + std::to_string(2) + '.' +
+          std::to_string(idx_sym2__));
       }
-      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-           3; ++names_loop_sym2__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= 3; ++idx_sym2__) {
         param_names__.emplace_back(std::string() + "arr_tuple_p" + '.' +
-          std::to_string(names_loop_sym1__) + ':' + std::to_string(3) + '.' +
-          std::to_string(names_loop_sym2__));
+          std::to_string(idx_sym1__) + ':' + std::to_string(3) + '.' +
+          std::to_string(idx_sym2__));
       }
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         2; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "tuple_arr_tuple_p" + ':' +
-        std::to_string(1) + '.' + std::to_string(names_loop_sym1__));
+        std::to_string(1) + '.' + std::to_string(idx_sym1__));
     }
     param_names__.emplace_back(std::string() + "tuple_arr_tuple_p" + ':' +
       std::to_string(2));
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         3; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "tuple_arr_tuple_p" + ':' +
-        std::to_string(3) + '.' + std::to_string(names_loop_sym1__) + ':' +
+        std::to_string(3) + '.' + std::to_string(idx_sym1__) + ':' +
         std::to_string(1));
-      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-           4; ++names_loop_sym2__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= 4; ++idx_sym2__) {
         param_names__.emplace_back(std::string() + "tuple_arr_tuple_p" + ':'
-          + std::to_string(3) + '.' + std::to_string(names_loop_sym1__) + ':'
-          + std::to_string(2) + '.' + std::to_string(names_loop_sym2__));
+          + std::to_string(3) + '.' + std::to_string(idx_sym1__) + ':' +
+          std::to_string(2) + '.' + std::to_string(idx_sym2__));
       }
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         2; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "arr_tuple_tuple_p" + '.' +
-        std::to_string(names_loop_sym1__) + ':' + std::to_string(1));
+        std::to_string(idx_sym1__) + ':' + std::to_string(1));
       param_names__.emplace_back(std::string() + "arr_tuple_tuple_p" + '.' +
-        std::to_string(names_loop_sym1__) + ':' + std::to_string(2));
+        std::to_string(idx_sym1__) + ':' + std::to_string(2));
       param_names__.emplace_back(std::string() + "arr_tuple_tuple_p" + '.' +
-        std::to_string(names_loop_sym1__) + ':' + std::to_string(3) + ':' +
+        std::to_string(idx_sym1__) + ':' + std::to_string(3) + ':' +
         std::to_string(1));
       param_names__.emplace_back(std::string() + "arr_tuple_tuple_p" + '.' +
-        std::to_string(names_loop_sym1__) + ':' + std::to_string(3) + ':' +
+        std::to_string(idx_sym1__) + ':' + std::to_string(3) + ':' +
         std::to_string(2) + ':' + std::to_string(1) + '.' + "real");
       param_names__.emplace_back(std::string() + "arr_tuple_tuple_p" + '.' +
-        std::to_string(names_loop_sym1__) + ':' + std::to_string(3) + ':' +
+        std::to_string(idx_sym1__) + ':' + std::to_string(3) + ':' +
         std::to_string(2) + ':' + std::to_string(1) + '.' + "imag");
-      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-           4; ++names_loop_sym2__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= 4; ++idx_sym2__) {
         param_names__.emplace_back(std::string() + "arr_tuple_tuple_p" + '.'
-          + std::to_string(names_loop_sym1__) + ':' + std::to_string(3) + ':'
-          + std::to_string(2) + ':' + std::to_string(2) + '.' +
-          std::to_string(names_loop_sym2__));
+          + std::to_string(idx_sym1__) + ':' + std::to_string(3) + ':' +
+          std::to_string(2) + ':' + std::to_string(2) + '.' +
+          std::to_string(idx_sym2__));
       }
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         3; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "arr_tuple_arr_tuple_p" +
-        '.' + std::to_string(names_loop_sym1__) + ':' + std::to_string(1));
-      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-           4; ++names_loop_sym2__) {
+        '.' + std::to_string(idx_sym1__) + ':' + std::to_string(1));
+      for (int idx_sym2__ = 1; idx_sym2__ <= 4; ++idx_sym2__) {
         param_names__.emplace_back(std::string() + "arr_tuple_arr_tuple_p" +
-          '.' + std::to_string(names_loop_sym1__) + ':' + std::to_string(2) +
-          '.' + std::to_string(names_loop_sym2__) + ':' + std::to_string(1));
-        for (int names_loop_sym3__ = 1; names_loop_sym3__ <=
-             5; ++names_loop_sym3__) {
+          '.' + std::to_string(idx_sym1__) + ':' + std::to_string(2) + '.' +
+          std::to_string(idx_sym2__) + ':' + std::to_string(1));
+        for (int idx_sym3__ = 1; idx_sym3__ <= 5; ++idx_sym3__) {
           param_names__.emplace_back(std::string() + "arr_tuple_arr_tuple_p"
-            + '.' + std::to_string(names_loop_sym1__) + ':' +
-            std::to_string(2) + '.' + std::to_string(names_loop_sym2__) + ':'
-            + std::to_string(2) + '.' + std::to_string(names_loop_sym3__));
+            + '.' + std::to_string(idx_sym1__) + ':' + std::to_string(2) +
+            '.' + std::to_string(idx_sym2__) + ':' + std::to_string(2) + '.'
+            + std::to_string(idx_sym3__));
         }
       }
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         3; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "very_deep_p" + '.' +
-        std::to_string(names_loop_sym1__) + ':' + std::to_string(1));
-      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-           4; ++names_loop_sym2__) {
+        std::to_string(idx_sym1__) + ':' + std::to_string(1));
+      for (int idx_sym2__ = 1; idx_sym2__ <= 4; ++idx_sym2__) {
         param_names__.emplace_back(std::string() + "very_deep_p" + '.' +
-          std::to_string(names_loop_sym1__) + ':' + std::to_string(2) + '.' +
-          std::to_string(names_loop_sym2__) + ':' + std::to_string(1));
-        for (int names_loop_sym3__ = 1; names_loop_sym3__ <=
-             5; ++names_loop_sym3__) {
+          std::to_string(idx_sym1__) + ':' + std::to_string(2) + '.' +
+          std::to_string(idx_sym2__) + ':' + std::to_string(1));
+        for (int idx_sym3__ = 1; idx_sym3__ <= 5; ++idx_sym3__) {
           param_names__.emplace_back(std::string() + "very_deep_p" + '.' +
-            std::to_string(names_loop_sym1__) + ':' + std::to_string(2) + '.'
-            + std::to_string(names_loop_sym2__) + ':' + std::to_string(2) +
-            '.' + std::to_string(names_loop_sym3__) + ':' + std::to_string(1)
-            + '.' + "real");
+            std::to_string(idx_sym1__) + ':' + std::to_string(2) + '.' +
+            std::to_string(idx_sym2__) + ':' + std::to_string(2) + '.' +
+            std::to_string(idx_sym3__) + ':' + std::to_string(1) + '.' +
+            "real");
           param_names__.emplace_back(std::string() + "very_deep_p" + '.' +
-            std::to_string(names_loop_sym1__) + ':' + std::to_string(2) + '.'
-            + std::to_string(names_loop_sym2__) + ':' + std::to_string(2) +
-            '.' + std::to_string(names_loop_sym3__) + ':' + std::to_string(1)
-            + '.' + "imag");
-          for (int names_loop_sym4__ = 1; names_loop_sym4__ <=
-               7; ++names_loop_sym4__) {
-            for (int names_loop_sym5__ = 1; names_loop_sym5__ <=
-                 6; ++names_loop_sym5__) {
+            std::to_string(idx_sym1__) + ':' + std::to_string(2) + '.' +
+            std::to_string(idx_sym2__) + ':' + std::to_string(2) + '.' +
+            std::to_string(idx_sym3__) + ':' + std::to_string(1) + '.' +
+            "imag");
+          for (int idx_sym4__ = 1; idx_sym4__ <= 7; ++idx_sym4__) {
+            for (int idx_sym5__ = 1; idx_sym5__ <= 6; ++idx_sym5__) {
               param_names__.emplace_back(std::string() + "very_deep_p" + '.'
-                + std::to_string(names_loop_sym1__) + ':' + std::to_string(2)
-                + '.' + std::to_string(names_loop_sym2__) + ':' +
-                std::to_string(2) + '.' + std::to_string(names_loop_sym3__) +
-                ':' + std::to_string(2) + '.' +
-                std::to_string(names_loop_sym5__) + '.' +
-                std::to_string(names_loop_sym4__));
+                + std::to_string(idx_sym1__) + ':' + std::to_string(2) + '.'
+                + std::to_string(idx_sym2__) + ':' + std::to_string(2) + '.'
+                + std::to_string(idx_sym3__) + ':' + std::to_string(2) + '.'
+                + std::to_string(idx_sym5__) + '.' +
+                std::to_string(idx_sym4__));
             }
           }
         }

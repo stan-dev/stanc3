@@ -343,13 +343,10 @@ class copy_prop_profile_model final : public model_base_crtp<copy_prop_profile_m
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         N; ++names_loop_sym1__) {
-      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-           N; ++names_loop_sym2__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
         param_names__.emplace_back(std::string() + "X" + '.' +
-          std::to_string(names_loop_sym2__) + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
       }
     }
     if (emit_transformed_parameters__) {}
@@ -359,13 +356,10 @@ class copy_prop_profile_model final : public model_base_crtp<copy_prop_profile_m
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         N; ++names_loop_sym1__) {
-      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-           N; ++names_loop_sym2__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= N; ++idx_sym2__) {
         param_names__.emplace_back(std::string() + "X" + '.' +
-          std::to_string(names_loop_sym2__) + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
       }
     }
     if (emit_transformed_parameters__) {}

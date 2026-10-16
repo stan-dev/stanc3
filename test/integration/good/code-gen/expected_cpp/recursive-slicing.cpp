@@ -725,21 +725,18 @@ class recursive_slicing_model final : public model_base_crtp<recursive_slicing_m
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         times; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= times; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "gamma" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
     if (emit_transformed_parameters__) {
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           N; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "z_hat" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           3; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "z" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
     }
     if (emit_generated_quantities__) {}
@@ -748,21 +745,18 @@ class recursive_slicing_model final : public model_base_crtp<recursive_slicing_m
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         times; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= times; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "gamma" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
     if (emit_transformed_parameters__) {
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           N; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "z_hat" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           3; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "z" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
     }
     if (emit_generated_quantities__) {}

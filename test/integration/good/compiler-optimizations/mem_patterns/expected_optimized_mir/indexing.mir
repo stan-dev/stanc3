@@ -3675,7 +3675,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
       ()))
     (meta <opaque>))
    ((pattern
-     (For (loopvar loop_sym1__)
+     (For (loopvar idx_sym1__)
       (lower
        ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
       (upper ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -3683,7 +3683,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
        ((pattern
          (Block
           (((pattern
-             (For (loopvar loop_sym2__)
+             (For (loopvar idx_sym2__)
               (lower
                ((pattern (Lit Int 1))
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -3705,10 +3705,10 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                               ((type_ (UArray UVector)) (loc <opaque>)
                                (adlevel DataOnly))))
                             ((Single
-                              ((pattern (Var loop_sym2__))
+                              ((pattern (Var idx_sym2__))
                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
                              (Single
-                              ((pattern (Var loop_sym1__))
+                              ((pattern (Var idx_sym1__))
                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
                           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
                       ()))
@@ -4669,7 +4669,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
       (initialize Default)))
     (meta <opaque>))
    ((pattern
-     (For (loopvar loop_sym1__)
+     (For (loopvar idx_sym1__)
       (lower
        ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
       (upper ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -4677,7 +4677,7 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
        ((pattern
          (Block
           (((pattern
-             (For (loopvar loop_sym2__)
+             (For (loopvar idx_sym2__)
               (lower
                ((pattern (Lit Int 1))
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -4691,10 +4691,10 @@ Optimization hazard warning (Line 112): SoA warning: Right hand side contains on
                      (Assignment
                       ((LVariable p_soa_arr_vec_v)
                        ((Single
-                         ((pattern (Var loop_sym2__))
+                         ((pattern (Var idx_sym2__))
                           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
                         (Single
-                         ((pattern (Var loop_sym1__))
+                         ((pattern (Var idx_sym1__))
                           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                       UVector
                       ((pattern (FunApp (CompilerInternal FnReadDeserializer) ()))

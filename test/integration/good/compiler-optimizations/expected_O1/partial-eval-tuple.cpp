@@ -241,13 +241,11 @@ class partial_eval_tuple_model final : public model_base_crtp<partial_eval_tuple
     if (emit_transformed_parameters__) {
       param_names__.emplace_back(std::string() + "x" + ':' +
         std::to_string(1));
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           10; ++names_loop_sym1__) {
-        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-             10; ++names_loop_sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 10; ++idx_sym2__) {
           param_names__.emplace_back(std::string() + "x" + ':' +
-            std::to_string(2) + '.' + std::to_string(names_loop_sym2__) + '.'
-            + std::to_string(names_loop_sym1__));
+            std::to_string(2) + '.' + std::to_string(idx_sym2__) + '.' +
+            std::to_string(idx_sym1__));
         }
       }
     }
@@ -260,13 +258,11 @@ class partial_eval_tuple_model final : public model_base_crtp<partial_eval_tuple
     if (emit_transformed_parameters__) {
       param_names__.emplace_back(std::string() + "x" + ':' +
         std::to_string(1));
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           10; ++names_loop_sym1__) {
-        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-             10; ++names_loop_sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 10; ++idx_sym2__) {
           param_names__.emplace_back(std::string() + "x" + ':' +
-            std::to_string(2) + '.' + std::to_string(names_loop_sym2__) + '.'
-            + std::to_string(names_loop_sym1__));
+            std::to_string(2) + '.' + std::to_string(idx_sym2__) + '.' +
+            std::to_string(idx_sym1__));
         }
       }
     }

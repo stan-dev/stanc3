@@ -927,10 +927,9 @@ class laplace_nested_tuple3_model final : public model_base_crtp<laplace_nested_
     param_names__.emplace_back(std::string() + "eta");
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           n_obs; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= n_obs; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "theta3" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
     }
   }
@@ -943,10 +942,9 @@ class laplace_nested_tuple3_model final : public model_base_crtp<laplace_nested_
     param_names__.emplace_back(std::string() + "eta");
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           n_obs; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= n_obs; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "theta3" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
     }
   }

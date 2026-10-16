@@ -255,11 +255,11 @@ class unenforce_initialize_omni_model final : public model_base_crtp<unenforce_i
           std::vector<std::vector<std::vector<local_scalar_t__>>>>(3, 4, 5);
       out__.write(y);
       current_statement__ = 2;
-      for (int loop_sym1__ = 1; loop_sym1__ <= 5; ++loop_sym1__) {
-        for (int loop_sym2__ = 1; loop_sym2__ <= 4; ++loop_sym2__) {
-          for (int loop_sym3__ = 1; loop_sym3__ <= 3; ++loop_sym3__) {
-            out__.write(arr[(loop_sym3__ - 1)][(loop_sym2__ -
-              1)][(loop_sym1__ - 1)]);
+      for (int idx_sym1__ = 1; idx_sym1__ <= 5; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 4; ++idx_sym2__) {
+          for (int idx_sym3__ = 1; idx_sym3__ <= 3; ++idx_sym3__) {
+            out__.write(arr[(idx_sym3__ - 1)][(idx_sym2__ - 1)][(idx_sym1__ -
+              1)]);
           }
         }
       }
@@ -302,11 +302,11 @@ class unenforce_initialize_omni_model final : public model_base_crtp<unenforce_i
           std::vector<std::vector<local_scalar_t__>>(4,
             std::vector<local_scalar_t__>(5, DUMMY_VAR__)));
       current_statement__ = 2;
-      for (int loop_sym1__ = 1; loop_sym1__ <= 5; ++loop_sym1__) {
-        for (int loop_sym2__ = 1; loop_sym2__ <= 4; ++loop_sym2__) {
-          for (int loop_sym3__ = 1; loop_sym3__ <= 3; ++loop_sym3__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 5; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 4; ++idx_sym2__) {
+          for (int idx_sym3__ = 1; idx_sym3__ <= 3; ++idx_sym3__) {
             current_statement__ = 2;
-            arr[(loop_sym3__ - 1)][(loop_sym2__ - 1)][(loop_sym1__ -
+            arr[(idx_sym3__ - 1)][(idx_sym2__ - 1)][(idx_sym1__ -
               1)] = in__.read<local_scalar_t__>();
           }
         }
@@ -376,21 +376,16 @@ class unenforce_initialize_omni_model final : public model_base_crtp<unenforce_i
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         2; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "y" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         5; ++names_loop_sym1__) {
-      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-           4; ++names_loop_sym2__) {
-        for (int names_loop_sym3__ = 1; names_loop_sym3__ <=
-             3; ++names_loop_sym3__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 5; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= 4; ++idx_sym2__) {
+        for (int idx_sym3__ = 1; idx_sym3__ <= 3; ++idx_sym3__) {
           param_names__.emplace_back(std::string() + "arr" + '.' +
-            std::to_string(names_loop_sym3__) + '.' +
-            std::to_string(names_loop_sym2__) + '.' +
-            std::to_string(names_loop_sym1__));
+            std::to_string(idx_sym3__) + '.' + std::to_string(idx_sym2__) +
+            '.' + std::to_string(idx_sym1__));
         }
       }
     }
@@ -401,21 +396,16 @@ class unenforce_initialize_omni_model final : public model_base_crtp<unenforce_i
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         2; ++names_loop_sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "y" + '.' +
-        std::to_string(names_loop_sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-         5; ++names_loop_sym1__) {
-      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
-           4; ++names_loop_sym2__) {
-        for (int names_loop_sym3__ = 1; names_loop_sym3__ <=
-             3; ++names_loop_sym3__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 5; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= 4; ++idx_sym2__) {
+        for (int idx_sym3__ = 1; idx_sym3__ <= 3; ++idx_sym3__) {
           param_names__.emplace_back(std::string() + "arr" + '.' +
-            std::to_string(names_loop_sym3__) + '.' +
-            std::to_string(names_loop_sym2__) + '.' +
-            std::to_string(names_loop_sym1__));
+            std::to_string(idx_sym3__) + '.' + std::to_string(idx_sym2__) +
+            '.' + std::to_string(idx_sym1__));
         }
       }
     }

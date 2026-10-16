@@ -295,10 +295,9 @@ class promotion_model final : public model_base_crtp<promotion_model> {
       param_names__.emplace_back(std::string() + "z");
       param_names__.emplace_back(std::string() + "zi" + '.' + "real");
       param_names__.emplace_back(std::string() + "zi" + '.' + "imag");
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           4; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 4; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "zs" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
       param_names__.emplace_back(std::string() + "x");
     }
@@ -312,10 +311,9 @@ class promotion_model final : public model_base_crtp<promotion_model> {
       param_names__.emplace_back(std::string() + "z");
       param_names__.emplace_back(std::string() + "zi" + '.' + "real");
       param_names__.emplace_back(std::string() + "zi" + '.' + "imag");
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           4; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 4; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "zs" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
       param_names__.emplace_back(std::string() + "x");
     }

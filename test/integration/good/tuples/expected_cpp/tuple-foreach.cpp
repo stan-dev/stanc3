@@ -40,11 +40,11 @@ class tuple_foreach_model final : public model_base_crtp<tuple_foreach_model> {
                                            ),
                 std::numeric_limits<double>::quiet_NaN()});
       current_statement__ = 2;
-      for (int loop_sym1__ = 1; loop_sym1__ <=
-           stan::math::size(arr); ++loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <=
+           stan::math::size(arr); ++idx_sym1__) {
         std::tuple<double, double> t;
         current_statement__ = 2;
-        stan::model::assign(t, arr[(loop_sym1__ - 1)], "assigning variable t");
+        stan::model::assign(t, arr[(idx_sym1__ - 1)], "assigning variable t");
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);

@@ -292,15 +292,13 @@ class inliner_same_names_model final : public model_base_crtp<inliner_same_names
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
     if (emit_transformed_parameters__) {
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           N; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "R" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           N; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "out" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
     }
     if (emit_generated_quantities__) {}
@@ -310,15 +308,13 @@ class inliner_same_names_model final : public model_base_crtp<inliner_same_names
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
     if (emit_transformed_parameters__) {
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           N; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "R" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
-           N; ++names_loop_sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "out" + '.' +
-          std::to_string(names_loop_sym1__));
+          std::to_string(idx_sym1__));
       }
     }
     if (emit_generated_quantities__) {}
