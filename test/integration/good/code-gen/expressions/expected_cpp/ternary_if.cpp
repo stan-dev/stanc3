@@ -427,25 +427,29 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         2; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "a" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         2; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "b" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
     param_names__.emplace_back(std::string() + "r");
     param_names__.emplace_back(std::string() + "zp" + '.' + "real");
     param_names__.emplace_back(std::string() + "zp" + '.' + "imag");
     if (emit_transformed_parameters__) {
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           2; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "c" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           2; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "d" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
       param_names__.emplace_back(std::string() + "z" + '.' + "real");
       param_names__.emplace_back(std::string() + "z" + '.' + "imag");
@@ -456,25 +460,29 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         2; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "a" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         2; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "b" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
     param_names__.emplace_back(std::string() + "r");
     param_names__.emplace_back(std::string() + "zp" + '.' + "real");
     param_names__.emplace_back(std::string() + "zp" + '.' + "imag");
     if (emit_transformed_parameters__) {
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           2; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "c" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           2; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "d" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
       param_names__.emplace_back(std::string() + "z" + '.' + "real");
       param_names__.emplace_back(std::string() + "z" + '.' + "imag");

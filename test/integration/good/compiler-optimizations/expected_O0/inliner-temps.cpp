@@ -361,10 +361,13 @@ class inliner_temps_model final : public model_base_crtp<inliner_temps_model> {
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {
       param_names__.emplace_back(std::string() + "z");
-      for (int sym1__ = 1; sym1__ <= d; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= d; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           d; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             d; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "a" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
     }
@@ -376,10 +379,13 @@ class inliner_temps_model final : public model_base_crtp<inliner_temps_model> {
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {
       param_names__.emplace_back(std::string() + "z");
-      for (int sym1__ = 1; sym1__ <= d; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= d; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           d; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             d; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "a" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
     }

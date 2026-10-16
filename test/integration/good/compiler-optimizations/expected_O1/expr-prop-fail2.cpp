@@ -325,9 +325,10 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
     param_names__.emplace_back(std::string() + "mu");
-    for (int sym1__ = 1; sym1__ <= J; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         J; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "theta" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
     param_names__.emplace_back(std::string() + "tau");
     if (emit_transformed_parameters__) {}
@@ -338,9 +339,10 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
     param_names__.emplace_back(std::string() + "mu");
-    for (int sym1__ = 1; sym1__ <= J; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         J; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "theta" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
     param_names__.emplace_back(std::string() + "tau");
     if (emit_transformed_parameters__) {}

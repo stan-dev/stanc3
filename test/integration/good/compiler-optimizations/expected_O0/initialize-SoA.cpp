@@ -197,9 +197,9 @@ class initialize_SoA_model final : public model_base_crtp<initialize_SoA_model> 
           std::numeric_limits<double>::quiet_NaN());
       out__.write(y);
       current_statement__ = 2;
-      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          out__.write(arr_vec[(sym2__ - 1)][(sym1__ - 1)]);
+      for (int loop_sym1__ = 1; loop_sym1__ <= 4; ++loop_sym1__) {
+        for (int loop_sym2__ = 1; loop_sym2__ <= 3; ++loop_sym2__) {
+          out__.write(arr_vec[(loop_sym2__ - 1)][(loop_sym1__ - 1)]);
         }
       }
       if (stan::math::logical_negation(
@@ -248,12 +248,13 @@ class initialize_SoA_model final : public model_base_crtp<initialize_SoA_model> 
         std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>(3,
           Eigen::Matrix<local_scalar_t__,-1,1>::Constant(4, DUMMY_VAR__));
       current_statement__ = 2;
-      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+      for (int loop_sym1__ = 1; loop_sym1__ <= 4; ++loop_sym1__) {
+        for (int loop_sym2__ = 1; loop_sym2__ <= 3; ++loop_sym2__) {
           current_statement__ = 2;
           stan::model::assign(arr_vec, in__.read<local_scalar_t__>(),
-            "assigning variable arr_vec", stan::model::index_uni(sym2__),
-            stan::model::index_uni(sym1__));
+            "assigning variable arr_vec",
+            stan::model::index_uni(loop_sym2__),
+            stan::model::index_uni(loop_sym1__));
         }
       }
       out__.write(arr_vec);
@@ -330,20 +331,25 @@ class initialize_SoA_model final : public model_base_crtp<initialize_SoA_model> 
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         3; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "y" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         4; ++names_loop_sym1__) {
+      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+           3; ++names_loop_sym2__) {
         param_names__.emplace_back(std::string() + "arr_vec" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          std::to_string(names_loop_sym2__) + '.' +
+          std::to_string(names_loop_sym1__));
       }
     }
     if (emit_transformed_parameters__) {
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           3; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "x" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
     }
     if (emit_generated_quantities__) {}
@@ -352,20 +358,25 @@ class initialize_SoA_model final : public model_base_crtp<initialize_SoA_model> 
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         3; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "y" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         4; ++names_loop_sym1__) {
+      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+           3; ++names_loop_sym2__) {
         param_names__.emplace_back(std::string() + "arr_vec" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          std::to_string(names_loop_sym2__) + '.' +
+          std::to_string(names_loop_sym1__));
       }
     }
     if (emit_transformed_parameters__) {
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           3; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "x" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
     }
     if (emit_generated_quantities__) {}

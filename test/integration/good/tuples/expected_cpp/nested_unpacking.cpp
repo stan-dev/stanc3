@@ -116,26 +116,30 @@ class nested_unpacking_model final : public model_base_crtp<nested_unpacking_mod
         std::tuple<std::vector<local_scalar_t__>,
           std::tuple<local_scalar_t__, Eigen::Matrix<local_scalar_t__,-1,1>,
             std::vector<local_scalar_t__>>,
-          int> sym1__;
+          int> unpack_sym1__;
         current_statement__ = 6;
-        stan::model::assign(sym1__, complicated, "assigning variable sym1__");
+        stan::model::assign(unpack_sym1__, complicated,
+          "assigning variable unpack_sym1__");
         current_statement__ = 7;
-        stan::model::assign(x, std::get<0>(sym1__), "assigning variable x");
+        stan::model::assign(x, std::get<0>(unpack_sym1__),
+          "assigning variable x");
         {
           std::tuple<local_scalar_t__, Eigen::Matrix<local_scalar_t__,-1,1>,
-            std::vector<local_scalar_t__>> sym2__;
+            std::vector<local_scalar_t__>> unpack_sym2__;
           current_statement__ = 6;
-          stan::model::assign(sym2__, std::get<1>(sym1__),
-            "assigning variable sym2__");
+          stan::model::assign(unpack_sym2__, std::get<1>(unpack_sym1__),
+            "assigning variable unpack_sym2__");
           current_statement__ = 7;
-          y = std::get<0>(sym2__);
+          y = std::get<0>(unpack_sym2__);
           current_statement__ = 7;
-          stan::model::assign(z, std::get<1>(sym2__), "assigning variable z");
+          stan::model::assign(z, std::get<1>(unpack_sym2__),
+            "assigning variable z");
           current_statement__ = 7;
-          stan::model::assign(w, std::get<2>(sym2__), "assigning variable w");
+          stan::model::assign(w, std::get<2>(unpack_sym2__),
+            "assigning variable w");
         }
         current_statement__ = 7;
-        i = std::get<2>(sym1__);
+        i = std::get<2>(unpack_sym1__);
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -179,26 +183,30 @@ class nested_unpacking_model final : public model_base_crtp<nested_unpacking_mod
         std::tuple<std::vector<local_scalar_t__>,
           std::tuple<local_scalar_t__, Eigen::Matrix<local_scalar_t__,-1,1>,
             std::vector<local_scalar_t__>>,
-          int> sym1__;
+          int> unpack_sym1__;
         current_statement__ = 6;
-        stan::model::assign(sym1__, complicated, "assigning variable sym1__");
+        stan::model::assign(unpack_sym1__, complicated,
+          "assigning variable unpack_sym1__");
         current_statement__ = 7;
-        stan::model::assign(x, std::get<0>(sym1__), "assigning variable x");
+        stan::model::assign(x, std::get<0>(unpack_sym1__),
+          "assigning variable x");
         {
           std::tuple<local_scalar_t__, Eigen::Matrix<local_scalar_t__,-1,1>,
-            std::vector<local_scalar_t__>> sym2__;
+            std::vector<local_scalar_t__>> unpack_sym2__;
           current_statement__ = 6;
-          stan::model::assign(sym2__, std::get<1>(sym1__),
-            "assigning variable sym2__");
+          stan::model::assign(unpack_sym2__, std::get<1>(unpack_sym1__),
+            "assigning variable unpack_sym2__");
           current_statement__ = 7;
-          y = std::get<0>(sym2__);
+          y = std::get<0>(unpack_sym2__);
           current_statement__ = 7;
-          stan::model::assign(z, std::get<1>(sym2__), "assigning variable z");
+          stan::model::assign(z, std::get<1>(unpack_sym2__),
+            "assigning variable z");
           current_statement__ = 7;
-          stan::model::assign(w, std::get<2>(sym2__), "assigning variable w");
+          stan::model::assign(w, std::get<2>(unpack_sym2__),
+            "assigning variable w");
         }
         current_statement__ = 7;
-        i = std::get<2>(sym1__);
+        i = std::get<2>(unpack_sym1__);
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);

@@ -860,34 +860,42 @@ class laplace_functionals_model final : public model_base_crtp<laplace_functiona
     param_names__.emplace_back(std::string() + "eta");
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {
-      for (int sym1__ = 1; sym1__ <= n_obs; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           n_obs; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "theta" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= n_obs; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           n_obs; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "theta2" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= n_obs; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           n_obs; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "mean_chol" + ':' +
-          std::to_string(1) + '.' + std::to_string(sym1__));
+          std::to_string(1) + '.' + std::to_string(names_loop_sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= n_obs; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= n_obs; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           n_obs; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             n_obs; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "mean_chol" + ':' +
-            std::to_string(2) + '.' + std::to_string(sym2__) + '.' +
-            std::to_string(sym1__));
+            std::to_string(2) + '.' + std::to_string(names_loop_sym2__) + '.'
+            + std::to_string(names_loop_sym1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= n_obs; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           n_obs; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "mean_chol_tol" + ':' +
-          std::to_string(1) + '.' + std::to_string(sym1__));
+          std::to_string(1) + '.' + std::to_string(names_loop_sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= n_obs; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= n_obs; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           n_obs; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             n_obs; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "mean_chol_tol" + ':' +
-            std::to_string(2) + '.' + std::to_string(sym2__) + '.' +
-            std::to_string(sym1__));
+            std::to_string(2) + '.' + std::to_string(names_loop_sym2__) + '.'
+            + std::to_string(names_loop_sym1__));
         }
       }
     }
@@ -901,34 +909,42 @@ class laplace_functionals_model final : public model_base_crtp<laplace_functiona
     param_names__.emplace_back(std::string() + "eta");
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {
-      for (int sym1__ = 1; sym1__ <= n_obs; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           n_obs; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "theta" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= n_obs; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           n_obs; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "theta2" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= n_obs; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           n_obs; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "mean_chol" + ':' +
-          std::to_string(1) + '.' + std::to_string(sym1__));
+          std::to_string(1) + '.' + std::to_string(names_loop_sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= n_obs; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= n_obs; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           n_obs; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             n_obs; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "mean_chol" + ':' +
-            std::to_string(2) + '.' + std::to_string(sym2__) + '.' +
-            std::to_string(sym1__));
+            std::to_string(2) + '.' + std::to_string(names_loop_sym2__) + '.'
+            + std::to_string(names_loop_sym1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= n_obs; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           n_obs; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "mean_chol_tol" + ':' +
-          std::to_string(1) + '.' + std::to_string(sym1__));
+          std::to_string(1) + '.' + std::to_string(names_loop_sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= n_obs; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= n_obs; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           n_obs; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             n_obs; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "mean_chol_tol" + ':' +
-            std::to_string(2) + '.' + std::to_string(sym2__) + '.' +
-            std::to_string(sym1__));
+            std::to_string(2) + '.' + std::to_string(names_loop_sym2__) + '.'
+            + std::to_string(names_loop_sym1__));
         }
       }
     }

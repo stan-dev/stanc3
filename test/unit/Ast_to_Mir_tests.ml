@@ -218,7 +218,7 @@ let%expect_test "read data - tuple" =
         (initialize Default)))
       (meta <opaque>))
      ((pattern
-       (For (loopvar sym1__)
+       (For (loopvar loop_sym1__)
         (lower
          ((pattern (Lit Int 1))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -233,7 +233,7 @@ let%expect_test "read data - tuple" =
                 (((pattern
                    (NRFunApp
                     (CompilerInternal
-                     (FnCheck (trans Simplex) (var_name x[sym1__].2)
+                     (FnCheck (trans Simplex) (var_name x[loop_sym1__].2)
                       (var
                        ((pattern
                          (TupleProjection
@@ -245,7 +245,7 @@ let%expect_test "read data - tuple" =
                                 (loc <opaque>)
                                 (adlevel (TupleAD (DataOnly DataOnly))))))
                              ((Single
-                               ((pattern (Var sym1__))
+                               ((pattern (Var loop_sym1__))
                                 (meta
                                  ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
                            (meta

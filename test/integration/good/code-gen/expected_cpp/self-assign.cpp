@@ -241,9 +241,10 @@ class self_assign_model final : public model_base_crtp<self_assign_model> {
         std::to_string(1));
       param_names__.emplace_back(std::string() + "x" + ':' +
         std::to_string(2));
-      for (int sym1__ = 1; sym1__ <= 20; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           20; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "r" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
     }
   }
@@ -258,9 +259,10 @@ class self_assign_model final : public model_base_crtp<self_assign_model> {
         std::to_string(1));
       param_names__.emplace_back(std::string() + "x" + ':' +
         std::to_string(2));
-      for (int sym1__ = 1; sym1__ <= 20; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           20; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "r" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
     }
   }

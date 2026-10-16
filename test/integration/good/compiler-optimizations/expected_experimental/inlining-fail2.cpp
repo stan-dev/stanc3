@@ -3623,19 +3623,19 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         if (lcm_sym127__) {
           out__.write(stan::model::rvalue(z, "z", stan::model::index_uni(1),
                         stan::model::index_uni(1)));
-          for (int sym2__ = 2; sym2__ <= M; ++sym2__) {
+          for (int loop_sym2__ = 2; loop_sym2__ <= M; ++loop_sym2__) {
             out__.write(stan::model::rvalue(z, "z",
-                          stan::model::index_uni(sym2__),
+                          stan::model::index_uni(loop_sym2__),
                           stan::model::index_uni(1)));
           }
         }
-        for (int sym1__ = 2; sym1__ <= n_occasions; ++sym1__) {
+        for (int loop_sym1__ = 2; loop_sym1__ <= n_occasions; ++loop_sym1__) {
           if (lcm_sym127__) {
             out__.write(stan::model::rvalue(z, "z",
                           stan::model::index_uni(1),
-                          stan::model::index_uni(sym1__)));
-            for (int sym2__ = 2; sym2__ <= M; ++sym2__) {
-              out__.write(z[(sym2__ - 1)][(sym1__ - 1)]);
+                          stan::model::index_uni(loop_sym1__)));
+            for (int loop_sym2__ = 2; loop_sym2__ <= M; ++loop_sym2__) {
+              out__.write(z[(loop_sym2__ - 1)][(loop_sym1__ - 1)]);
             }
           }
         }
@@ -3803,55 +3803,72 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
                           emit_generated_quantities__ = true) const final {
     param_names__.emplace_back(std::string() + "mean_phi");
     param_names__.emplace_back(std::string() + "mean_p");
-    for (int sym1__ = 1; sym1__ <= n_occasions; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         n_occasions; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "gamma" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= epsilon_1dim__; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         epsilon_1dim__; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "epsilon" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
     param_names__.emplace_back(std::string() + "sigma");
     if (emit_transformed_parameters__) {
-      for (int sym1__ = 1; sym1__ <= phi_2dim__; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           phi_2dim__; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             M; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "phi" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= n_occasions; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           n_occasions; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             M; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "p" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= n_occasions; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           n_occasions; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             M; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "chi" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
     }
     if (emit_generated_quantities__) {
       param_names__.emplace_back(std::string() + "sigma2");
       param_names__.emplace_back(std::string() + "psi");
-      for (int sym1__ = 1; sym1__ <= n_occasions; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           n_occasions; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "b" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
       param_names__.emplace_back(std::string() + "Nsuper");
-      for (int sym1__ = 1; sym1__ <= n_occasions; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           n_occasions; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "N" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= n_occasions; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           n_occasions; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "B" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= n_occasions; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           n_occasions; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             M; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "z" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
     }
@@ -3862,55 +3879,72 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
                             emit_generated_quantities__ = true) const final {
     param_names__.emplace_back(std::string() + "mean_phi");
     param_names__.emplace_back(std::string() + "mean_p");
-    for (int sym1__ = 1; sym1__ <= n_occasions; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         n_occasions; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "gamma" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= epsilon_1dim__; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         epsilon_1dim__; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "epsilon" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
     param_names__.emplace_back(std::string() + "sigma");
     if (emit_transformed_parameters__) {
-      for (int sym1__ = 1; sym1__ <= phi_2dim__; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           phi_2dim__; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             M; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "phi" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= n_occasions; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           n_occasions; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             M; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "p" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= n_occasions; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           n_occasions; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             M; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "chi" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
     }
     if (emit_generated_quantities__) {
       param_names__.emplace_back(std::string() + "sigma2");
       param_names__.emplace_back(std::string() + "psi");
-      for (int sym1__ = 1; sym1__ <= n_occasions; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           n_occasions; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "b" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
       param_names__.emplace_back(std::string() + "Nsuper");
-      for (int sym1__ = 1; sym1__ <= n_occasions; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           n_occasions; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "N" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= n_occasions; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           n_occasions; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "B" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= n_occasions; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           n_occasions; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             M; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "z" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
     }

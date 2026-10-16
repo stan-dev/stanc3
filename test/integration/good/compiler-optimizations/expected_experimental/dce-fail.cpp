@@ -1148,27 +1148,34 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
     param_names__.emplace_back(std::string() + "b_black");
     param_names__.emplace_back(std::string() + "b_female_black");
     param_names__.emplace_back(std::string() + "b_v_prev");
-    for (int sym1__ = 1; sym1__ <= n_age; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         n_age; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "b_age" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= n_edu; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         n_edu; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "b_edu" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= n_region; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         n_region; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "b_region" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= n_edu; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= n_age; ++sym2__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         n_edu; ++names_loop_sym1__) {
+      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+           n_age; ++names_loop_sym2__) {
         param_names__.emplace_back(std::string() + "b_age_edu" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          std::to_string(names_loop_sym2__) + '.' +
+          std::to_string(names_loop_sym1__));
       }
     }
-    for (int sym1__ = 1; sym1__ <= n_state; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         n_state; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "b_hat" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
@@ -1188,27 +1195,34 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
     param_names__.emplace_back(std::string() + "b_black");
     param_names__.emplace_back(std::string() + "b_female_black");
     param_names__.emplace_back(std::string() + "b_v_prev");
-    for (int sym1__ = 1; sym1__ <= n_age; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         n_age; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "b_age" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= n_edu; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         n_edu; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "b_edu" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= n_region; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         n_region; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "b_region" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= n_edu; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= n_age; ++sym2__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         n_edu; ++names_loop_sym1__) {
+      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+           n_age; ++names_loop_sym2__) {
         param_names__.emplace_back(std::string() + "b_age_edu" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          std::to_string(names_loop_sym2__) + '.' +
+          std::to_string(names_loop_sym1__));
       }
     }
-    for (int sym1__ = 1; sym1__ <= n_state; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         n_state; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "b_hat" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}

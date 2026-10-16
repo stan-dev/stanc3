@@ -654,13 +654,15 @@ class off_small_model final : public model_base_crtp<off_small_model> {
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
     param_names__.emplace_back(std::string() + "beta");
-    for (int sym1__ = 1; sym1__ <= J; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         J; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "eta1" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= J; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         J; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "eta2" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
     param_names__.emplace_back(std::string() + "mu_a1");
     param_names__.emplace_back(std::string() + "mu_a2");
@@ -668,17 +670,20 @@ class off_small_model final : public model_base_crtp<off_small_model> {
     param_names__.emplace_back(std::string() + "sigma_a2");
     param_names__.emplace_back(std::string() + "sigma_y");
     if (emit_transformed_parameters__) {
-      for (int sym1__ = 1; sym1__ <= J; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           J; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "a1" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= J; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           J; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "a2" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           N; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "y_hat" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
     }
     if (emit_generated_quantities__) {}
@@ -688,13 +693,15 @@ class off_small_model final : public model_base_crtp<off_small_model> {
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
     param_names__.emplace_back(std::string() + "beta");
-    for (int sym1__ = 1; sym1__ <= J; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         J; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "eta1" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= J; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         J; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "eta2" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
     param_names__.emplace_back(std::string() + "mu_a1");
     param_names__.emplace_back(std::string() + "mu_a2");
@@ -702,17 +709,20 @@ class off_small_model final : public model_base_crtp<off_small_model> {
     param_names__.emplace_back(std::string() + "sigma_a2");
     param_names__.emplace_back(std::string() + "sigma_y");
     if (emit_transformed_parameters__) {
-      for (int sym1__ = 1; sym1__ <= J; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           J; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "a1" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= J; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           J; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "a2" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           N; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "y_hat" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
     }
     if (emit_generated_quantities__) {}

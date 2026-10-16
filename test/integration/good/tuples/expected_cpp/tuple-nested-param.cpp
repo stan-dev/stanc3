@@ -354,11 +354,14 @@ class tuple_nested_param_model final : public model_base_crtp<tuple_nested_param
       std::to_string(1));
     param_names__.emplace_back(std::string() + "ps2" + ':' +
       std::to_string(2) + ':' + std::to_string(1));
-    for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         10; ++names_loop_sym1__) {
+      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+           10; ++names_loop_sym2__) {
         param_names__.emplace_back(std::string() + "ps2" + ':' +
           std::to_string(2) + ':' + std::to_string(2) + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          std::to_string(names_loop_sym2__) + '.' +
+          std::to_string(names_loop_sym1__));
       }
     }
     if (emit_transformed_parameters__) {}
@@ -376,11 +379,14 @@ class tuple_nested_param_model final : public model_base_crtp<tuple_nested_param
       std::to_string(1));
     param_names__.emplace_back(std::string() + "ps2" + ':' +
       std::to_string(2) + ':' + std::to_string(1));
-    for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         10; ++names_loop_sym1__) {
+      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+           10; ++names_loop_sym2__) {
         param_names__.emplace_back(std::string() + "ps2" + ':' +
           std::to_string(2) + ':' + std::to_string(2) + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          std::to_string(names_loop_sym2__) + '.' +
+          std::to_string(names_loop_sym1__));
       }
     }
     if (emit_transformed_parameters__) {}

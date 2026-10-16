@@ -269,21 +269,21 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
         "assigning variable td_arr33");
       if (emit_transformed_parameters__) {
         current_statement__ = 2;
-        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-            out__.write(y[(sym2__ - 1)][(sym1__ - 1)]);
+        for (int loop_sym1__ = 1; loop_sym1__ <= 3; ++loop_sym1__) {
+          for (int loop_sym2__ = 1; loop_sym2__ <= 3; ++loop_sym2__) {
+            out__.write(y[(loop_sym2__ - 1)][(loop_sym1__ - 1)]);
           }
         }
         current_statement__ = 3;
-        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-            out__.write(w[(sym2__ - 1)][(sym1__ - 1)]);
+        for (int loop_sym1__ = 1; loop_sym1__ <= 3; ++loop_sym1__) {
+          for (int loop_sym2__ = 1; loop_sym2__ <= 3; ++loop_sym2__) {
+            out__.write(w[(loop_sym2__ - 1)][(loop_sym1__ - 1)]);
           }
         }
         current_statement__ = 4;
-        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-            out__.write(td_arr33[(sym2__ - 1)][(sym1__ - 1)]);
+        for (int loop_sym1__ = 1; loop_sym1__ <= 3; ++loop_sym1__) {
+          for (int loop_sym2__ = 1; loop_sym2__ <= 3; ++loop_sym2__) {
+            out__.write(td_arr33[(loop_sym2__ - 1)][(loop_sym1__ - 1)]);
           }
         }
       }
@@ -380,27 +380,37 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         3; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "xx" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
     if (emit_transformed_parameters__) {
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           3; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             3; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "y" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           3; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             3; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "w" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           3; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             3; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "td_arr33" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
     }
@@ -410,27 +420,37 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         3; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "xx" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
     if (emit_transformed_parameters__) {
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           3; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             3; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "y" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           3; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             3; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "w" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           3; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             3; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "td_arr33" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
     }

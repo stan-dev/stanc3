@@ -376,18 +376,23 @@ class operators_model final : public model_base_crtp<operators_model> {
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         N; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "v" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         N; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "rv" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         N; ++names_loop_sym1__) {
+      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+           N; ++names_loop_sym2__) {
         param_names__.emplace_back(std::string() + "A" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          std::to_string(names_loop_sym2__) + '.' +
+          std::to_string(names_loop_sym1__));
       }
     }
     if (emit_transformed_parameters__) {}
@@ -395,13 +400,15 @@ class operators_model final : public model_base_crtp<operators_model> {
       param_names__.emplace_back(std::string() + "i");
       param_names__.emplace_back(std::string() + "x");
       param_names__.emplace_back(std::string() + "b");
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           N; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "drv" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           N; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "dv" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
     }
   }
@@ -409,18 +416,23 @@ class operators_model final : public model_base_crtp<operators_model> {
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         N; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "v" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         N; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "rv" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         N; ++names_loop_sym1__) {
+      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+           N; ++names_loop_sym2__) {
         param_names__.emplace_back(std::string() + "A" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          std::to_string(names_loop_sym2__) + '.' +
+          std::to_string(names_loop_sym1__));
       }
     }
     if (emit_transformed_parameters__) {}
@@ -428,13 +440,15 @@ class operators_model final : public model_base_crtp<operators_model> {
       param_names__.emplace_back(std::string() + "i");
       param_names__.emplace_back(std::string() + "x");
       param_names__.emplace_back(std::string() + "b");
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           N; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "drv" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           N; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "dv" + '.' +
-          std::to_string(sym1__));
+          std::to_string(names_loop_sym1__));
       }
     }
   }

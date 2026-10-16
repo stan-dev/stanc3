@@ -979,22 +979,31 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
     param_names__.emplace_back(std::string() + "mean_phi");
     param_names__.emplace_back(std::string() + "mean_p");
     if (emit_transformed_parameters__) {
-      for (int sym1__ = 1; sym1__ <= n_occ_minus_1; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= nind; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           n_occ_minus_1; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             nind; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "phi" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= n_occ_minus_1; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= nind; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           n_occ_minus_1; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             nind; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "p" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= n_occasions; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= nind; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           n_occasions; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             nind; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "chi" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
     }
@@ -1007,22 +1016,31 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
     param_names__.emplace_back(std::string() + "mean_phi");
     param_names__.emplace_back(std::string() + "mean_p");
     if (emit_transformed_parameters__) {
-      for (int sym1__ = 1; sym1__ <= n_occ_minus_1; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= nind; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           n_occ_minus_1; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             nind; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "phi" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= n_occ_minus_1; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= nind; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           n_occ_minus_1; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             nind; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "p" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= n_occasions; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= nind; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           n_occasions; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             nind; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "chi" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__));
         }
       }
     }

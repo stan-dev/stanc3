@@ -47,11 +47,11 @@ let%expect_test "only the requested passes run" =
     {
       real unused;
       unused = promote(5, real, var);
-      real inline_add_one_return_sym3__;
+      real inline_add_one_return_sym2__;
       {
-        inline_add_one_return_sym3__ = (2.0 + promote(1, real, data));
+        inline_add_one_return_sym2__ = (2.0 + promote(1, real, data));
       }
-      target += inline_add_one_return_sym3__;
+      target += inline_add_one_return_sym2__;
     }
     |}]
 
@@ -3212,22 +3212,22 @@ let%expect_test "lazy code motion name reuse" =
       {
         {
           array[array[int, 3], 2] vs;
-          for(sym1__ in 1:FnLength__(vs)) {
+          for(loop_sym1__ in 1:FnLength__(vs)) {
             {
               data array[] int v;
-              v = vs[sym1__];
+              v = vs[loop_sym1__];
             }
           }
         }
         {
           matrix[2, 3] vs;
-          for(sym1__ in 1:rows(vs)) {
-            lcm_sym5__ = FnLength__(vs[sym1__]);
+          for(loop_sym1__ in 1:rows(vs)) {
+            lcm_sym5__ = FnLength__(vs[loop_sym1__]);
             {
-              for(sym2__ in 1:lcm_sym5__) {
+              for(loop_sym2__ in 1:lcm_sym5__) {
                 {
                   real v;
-                  v = vs[sym1__, sym2__];
+                  v = vs[loop_sym1__, loop_sym2__];
                 }
               }
             }

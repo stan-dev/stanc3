@@ -1829,9 +1829,9 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
         out__.write(tp_c_rowvector);
         out__.write(tp_c);
         current_statement__ = 13;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            out__.write(carray[(sym2__ - 1)][(sym1__ - 1)]);
+        for (int loop_sym1__ = 1; loop_sym1__ <= N; ++loop_sym1__) {
+          for (int loop_sym2__ = 1; loop_sym2__ <= N; ++loop_sym2__) {
+            out__.write(carray[(loop_sym2__ - 1)][(loop_sym1__ - 1)]);
           }
         }
       }
@@ -2055,78 +2055,93 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         N; ++names_loop_sym1__) {
+      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+           N; ++names_loop_sym2__) {
         param_names__.emplace_back(std::string() + "cmat" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-          "real");
+          std::to_string(names_loop_sym2__) + '.' +
+          std::to_string(names_loop_sym1__) + '.' + "real");
         param_names__.emplace_back(std::string() + "cmat" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-          "imag");
+          std::to_string(names_loop_sym2__) + '.' +
+          std::to_string(names_loop_sym1__) + '.' + "imag");
       }
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         N; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "cvec" + '.' +
-        std::to_string(sym1__) + '.' + "real");
+        std::to_string(names_loop_sym1__) + '.' + "real");
       param_names__.emplace_back(std::string() + "cvec" + '.' +
-        std::to_string(sym1__) + '.' + "imag");
+        std::to_string(names_loop_sym1__) + '.' + "imag");
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         N; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "crowvec" + '.' +
-        std::to_string(sym1__) + '.' + "real");
+        std::to_string(names_loop_sym1__) + '.' + "real");
       param_names__.emplace_back(std::string() + "crowvec" + '.' +
-        std::to_string(sym1__) + '.' + "imag");
+        std::to_string(names_loop_sym1__) + '.' + "imag");
     }
     param_names__.emplace_back(std::string() + "z" + '.' + "real");
     param_names__.emplace_back(std::string() + "z" + '.' + "imag");
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         N; ++names_loop_sym1__) {
+      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+           N; ++names_loop_sym2__) {
         param_names__.emplace_back(std::string() + "mat" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          std::to_string(names_loop_sym2__) + '.' +
+          std::to_string(names_loop_sym1__));
       }
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         N; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "vec" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         N; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "rowvec" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
     param_names__.emplace_back(std::string() + "r");
     if (emit_transformed_parameters__) {
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           N; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             N; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "tp_c_matrix" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-            "real");
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__) + '.' + "real");
           param_names__.emplace_back(std::string() + "tp_c_matrix" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-            "imag");
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__) + '.' + "imag");
         }
       }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           N; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "tp_c_vector" + '.' +
-          std::to_string(sym1__) + '.' + "real");
+          std::to_string(names_loop_sym1__) + '.' + "real");
         param_names__.emplace_back(std::string() + "tp_c_vector" + '.' +
-          std::to_string(sym1__) + '.' + "imag");
+          std::to_string(names_loop_sym1__) + '.' + "imag");
       }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           N; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "tp_c_rowvector" + '.' +
-          std::to_string(sym1__) + '.' + "real");
+          std::to_string(names_loop_sym1__) + '.' + "real");
         param_names__.emplace_back(std::string() + "tp_c_rowvector" + '.' +
-          std::to_string(sym1__) + '.' + "imag");
+          std::to_string(names_loop_sym1__) + '.' + "imag");
       }
       param_names__.emplace_back(std::string() + "tp_c" + '.' + "real");
       param_names__.emplace_back(std::string() + "tp_c" + '.' + "imag");
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           N; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             N; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "carray" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-            "real");
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__) + '.' + "real");
           param_names__.emplace_back(std::string() + "carray" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-            "imag");
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__) + '.' + "imag");
         }
       }
     }
@@ -2136,78 +2151,93 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         N; ++names_loop_sym1__) {
+      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+           N; ++names_loop_sym2__) {
         param_names__.emplace_back(std::string() + "cmat" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-          "real");
+          std::to_string(names_loop_sym2__) + '.' +
+          std::to_string(names_loop_sym1__) + '.' + "real");
         param_names__.emplace_back(std::string() + "cmat" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-          "imag");
+          std::to_string(names_loop_sym2__) + '.' +
+          std::to_string(names_loop_sym1__) + '.' + "imag");
       }
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         N; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "cvec" + '.' +
-        std::to_string(sym1__) + '.' + "real");
+        std::to_string(names_loop_sym1__) + '.' + "real");
       param_names__.emplace_back(std::string() + "cvec" + '.' +
-        std::to_string(sym1__) + '.' + "imag");
+        std::to_string(names_loop_sym1__) + '.' + "imag");
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         N; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "crowvec" + '.' +
-        std::to_string(sym1__) + '.' + "real");
+        std::to_string(names_loop_sym1__) + '.' + "real");
       param_names__.emplace_back(std::string() + "crowvec" + '.' +
-        std::to_string(sym1__) + '.' + "imag");
+        std::to_string(names_loop_sym1__) + '.' + "imag");
     }
     param_names__.emplace_back(std::string() + "z" + '.' + "real");
     param_names__.emplace_back(std::string() + "z" + '.' + "imag");
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         N; ++names_loop_sym1__) {
+      for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+           N; ++names_loop_sym2__) {
         param_names__.emplace_back(std::string() + "mat" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          std::to_string(names_loop_sym2__) + '.' +
+          std::to_string(names_loop_sym1__));
       }
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         N; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "vec" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+         N; ++names_loop_sym1__) {
       param_names__.emplace_back(std::string() + "rowvec" + '.' +
-        std::to_string(sym1__));
+        std::to_string(names_loop_sym1__));
     }
     param_names__.emplace_back(std::string() + "r");
     if (emit_transformed_parameters__) {
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           N; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             N; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "tp_c_matrix" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-            "real");
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__) + '.' + "real");
           param_names__.emplace_back(std::string() + "tp_c_matrix" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-            "imag");
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__) + '.' + "imag");
         }
       }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           N; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "tp_c_vector" + '.' +
-          std::to_string(sym1__) + '.' + "real");
+          std::to_string(names_loop_sym1__) + '.' + "real");
         param_names__.emplace_back(std::string() + "tp_c_vector" + '.' +
-          std::to_string(sym1__) + '.' + "imag");
+          std::to_string(names_loop_sym1__) + '.' + "imag");
       }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           N; ++names_loop_sym1__) {
         param_names__.emplace_back(std::string() + "tp_c_rowvector" + '.' +
-          std::to_string(sym1__) + '.' + "real");
+          std::to_string(names_loop_sym1__) + '.' + "real");
         param_names__.emplace_back(std::string() + "tp_c_rowvector" + '.' +
-          std::to_string(sym1__) + '.' + "imag");
+          std::to_string(names_loop_sym1__) + '.' + "imag");
       }
       param_names__.emplace_back(std::string() + "tp_c" + '.' + "real");
       param_names__.emplace_back(std::string() + "tp_c" + '.' + "imag");
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+      for (int names_loop_sym1__ = 1; names_loop_sym1__ <=
+           N; ++names_loop_sym1__) {
+        for (int names_loop_sym2__ = 1; names_loop_sym2__ <=
+             N; ++names_loop_sym2__) {
           param_names__.emplace_back(std::string() + "carray" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-            "real");
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__) + '.' + "real");
           param_names__.emplace_back(std::string() + "carray" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
-            "imag");
+            std::to_string(names_loop_sym2__) + '.' +
+            std::to_string(names_loop_sym1__) + '.' + "imag");
         }
       }
     }
