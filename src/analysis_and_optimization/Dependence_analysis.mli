@@ -2,369 +2,265 @@ open Std
 open Middle
 open Dataflow_types
 
-(** {1 Purpose and compiler uses}
+(** {1 Purpose}
 
-    Dependency analysis identifies the inputs that affect a statement. The Stan
-    compiler uses the identified inputs for pedantic checks and factor-graph
-    construction. Pedantic mode checks whether a parameter affects an [if]
-    condition or loop. The factor graph connects each [target +=] term to the
-    parameters and data used to compute the term.
+    Dependency analysis finds the earlier statements that each statement depends
+    on. A statement can depend on an earlier statement in two ways.
 
-    Both uses require following values through assignments and conditions.
-    Dependence Analysis first gathers possible value sources and the statements
-    that control execution. A query then follows the dependencies and collects
-    the input names needed by the compiler.
+    - A {e data dependency} exists when the earlier statement writes a value
+      that this statement reads.
+    - A {e control dependency} exists when the earlier statement decides whether
+      this statement runs. The earlier statement is an enclosing [if] or loop,
+      or a [break], [continue] or [return] that can skip this statement.
 
-    The examples below use the following statements to follow an [if] condition
-    through preparation, dependency checks and the final parameter check. The
-    assignments supply values, and the [if] controls whether the target
-    increment executes. Analyze a block containing the following statements.
-    Assume [a] is a parameter and [theta] is a local vector declared before the
-    block:
+    Pedantic mode uses dependencies to warn when a parameter decides an [if] or
+    a loop. The factor graph uses them to connect each [target +=] term to its
+    parameters and data. A planned loop optimization will use them to decide
+    which loops it can vectorize (see {{!section-distances}Loop distances}). No
+    optimization uses them yet.
+
+    {1 Running example}
+
+    The analysis gives each statement a {e label}, an integer that identifies
+    it. A test in [test/unit/Dependence_analysis.ml] prints the labels and
+    dependencies that this file quotes.
     {@stan[
-      theta[1] = a;
-      theta[2] = 1;
-      if (theta[2] > 0) target += 1;
+      data { int N; vector[N] x; }
+      parameters { real a; }
+      model {
+        matrix[N, 2] theta;
+        for (n in 1:N) {
+          theta[n, 1] = a;
+          theta[n, 2] = x[n];
+          if (theta[n, 2] > 0) target += 1;
+        }
+      }
     ]}
-
-    {1 Identify value sources and controlling statements}
-
-    A statement can depend on values supplied by assignments and on control flow
-    that determines whether the statement executes. Following both relationships
-    accounts for computed values and execution conditions.
-
-    A {e data dependency} is a statement whose write can supply a value read by
-    another statement. In the example, the condition [theta[2] > 0] has a data
-    dependency on [theta[2] = 1] because the condition reads the assigned
-    element.
-
-    A {e control dependency} is a statement that controls whether another
-    statement executes, such as an enclosing [if] or loop. In the example,
-    [target += 1] has a control dependency on the [if] statement because the
-    increment executes only when [theta[2] > 0] is true.
-
-    Both relationships identify direct dependencies. Following dependencies of
-    the supplying or controlling statements finds transitive dependencies. For
-    [target += 1], following the condition's data dependency also reaches
-    [theta[2] = 1].
-
-    The resulting relationships are shown below. Each arrow points from the
-    dependent statement to the statement on which execution or a read depends:
+    The table below lists the dependencies of the [if] and of [target += 1]. A
+    transitive dependency is a dependency of a dependency.
     {@text[
-      if (theta[2] > 0)  --data-->       theta[2] = 1
-      target += 1       --control-->    if (theta[2] > 0)
-      target += 1       --transitive--> theta[2] = 1
+      if (theta[n, 2] > 0)  --data-->       matrix[N, 2] theta;
+      if (theta[n, 2] > 0)  --data-->       theta[n, 2] = x[n]
+      if (theta[n, 2] > 0)  --control-->    for (n in 1:N)
+      target += 1           --control-->    if (theta[n, 2] > 0)
+      target += 1           --transitive--> matrix[N, 2] theta;
+      target += 1           --transitive--> theta[n, 2] = x[n]
+      target += 1           --transitive--> for (n in 1:N)
     ]}
+    The table leaves out the definitions of the data [N] and [x], because they
+    come from outside the model block. Step 3 of {e Finding data dependencies}
+    explains why the declaration of [theta] is a data dependency.
 
-    The selected element matters when finding value sources. The assignment
-    [theta[1] = a] writes a different element from the condition's read of
-    [theta[2]] and cannot supply the read. Comparing variable names alone would
-    introduce a false dependency on the parameter [a].
+    {1 Finding data dependencies}
 
-    {1 Prepare statement information}
+    A data dependency connects a read to each write that can supply the value
+    that it reads. The analysis finds these writes in three steps.
 
-    Before checking the condition, analysis gathers possible sources of values
-    and the information needed to compare them. Each statement receives an
-    identifier so a query can locate assignments and follow dependencies.
+    {ol
+     {- Step 1 of 3, record the elements: {!Accesses} records the element that
+        each write and read selects. Step 2 and step 3 need these elements to
+        decide whether a write can supply a value to a read.
+     }
+     {- Step 2 of 3, reaching definitions: The reaching definitions analysis
+        records each write as a {e definition}. A definition holds the name of
+        the written variable and the label of the statement that writes it. The
+        analysis finds the writes that {e reach} each read. A write reaches a
+        read if the program can go from the write to the read, and no other
+        write overwrites the same element between them.
 
-    Analysis records the statements that can precede each statement and the
-    statements that control execution. To trace values through the preceding
-    statements, analysis records possible sources called
-    {e reaching definitions}. The initial candidates are found by variable name;
-    element comparisons happen later.
+        In the running example, the read is [theta[n, 2]] in the condition
+        [if (theta[n, 2] > 0)]. Three writes reach the read. These writes are
+        the declaration of [theta], [theta[n, 1] = a], and [theta[n, 2] = x[n]].
+        They are the candidate sources for the read.
 
-    Analysis also records each statement's reads, writes and increments,
-    including the selected elements and tuple fields. Comparing the recorded
-    indices requires knowing which index inputs can change. Enclosing loops
-    identify inputs that change between iterations. Writes across the analyzed
-    statements identify other inputs that cannot be treated as invariant.
+        The analysis removes a write when a later write always overwrites the
+        same element. For example, [theta[1] = 1] removes an earlier
+        [theta[1] = a]. In the running example, [theta[n, 1] = a] writes column
+        1, and [theta[n, 2] = x[n]] writes column 2. Because the two writes
+        change different elements, neither write overwrites the other. Thus both
+        assignments stay candidate sources for the read.
 
-    The prepared information connects candidate sources to the elements written
-    and read. In the example, both assignments to [theta] are candidates until
-    the query compares their writes with the condition's read.
+        Step 2 never asks whether a write selects the element that the read
+        selects. It only removes writes that a later write overwrites. So
+        [theta[n, 1] = a] stays a candidate source, although it never writes
+        column 2. Step 3 exists to close this gap.
+     }
+     {- Step 3 of 3, compare elements and order: {!Dependence} asks two
+        questions about each candidate source and the read.
+        - Question 1: Can the write select the element that the read selects?
+          {!Dependence} compares the indices of the write with the indices of
+          the read. If the numbers of indices differ, the comparison cannot
+          decide, and the answer is yes.
+        - Question 2: Can the write run before the read? Inside one loop, two
+          accesses in the same iteration pass question 2 when the write comes
+          first in the loop body.
 
-    The following view of the stored condition record shows the information
-    available after preparation. Only candidate definitions of [theta] are
-    shown:
+        The analysis rejects the candidate source if the answer to a question is
+        no. "Reject" means the analysis has proved that the write can never
+        supply the value the read uses, so it drops that write from the read's
+        data dependencies. i.e. in our example the [if] no longer depends on
+        [theta[n, 1] = a], and therefore not on the parameter [a]. The
+        declaration writes the whole of [theta] with no indices. The read
+        [theta[n, 2]] has two indices, so question 1 cannot decide.
+        {@text[
+          candidate source     question 1 (element)   question 2 (order)  result
+          matrix[N, 2] theta;  cannot decide, so yes  yes, runs before    keep
+                                                      the loop
+          theta[n, 1] = a      no, column 1 is        not needed          reject
+                               never column 2
+          theta[n, 2] = x[n]   yes, same element      yes, same           keep
+                                                      iteration, and the
+                                                      write runs first
+        ]}
+     }
+    }
+
+    If the analysis kept [theta[n, 1] = a], pedantic mode would falsely warn
+    that [a] decides the [if]. Question 1 and question 2 of step 3 reject a
+    candidate source only when they prove that it never supplies the value. Some
+    cases are too hard for question 1 and question 2, and {!Dependence} lists
+    these cases. In these cases the candidate source stays, so the result can
+    contain extra dependencies. But the result never misses a dependency.
+
+    {1:distances Loop distances}
+
+    Question 2 of step 3 needs the execution order of a write and a read in a
+    loop. {!Dependence} answers question 2 with a {e distance} for each
+    dependency. The distance is the number of iterations from the write to the
+    read that uses its value. The words "same iteration" in the step 3 table
+    mean distance [0]. In the running example, each distance is [0]. Then no
+    value passes from one iteration to another. Thus the iterations can run in
+    any order, and a loop optimization can vectorize them. In
+    [for (n in 2:N) b[n] = b[n - 1] + a;] the distance is [1], so the iterations
+    must run in order. *)
+
+(** {1 API reference} *)
+
+(** The data that a dependency query needs about one statement. The fields hold
+    the statements that run immediately before this statement, and the
+    statements that control it. These are its enclosing ifs and loops, and the
+    jumps that can skip it. They also hold the definitions that reach this
+    statement and the accesses of its expressions.
+
+    The example record below is for the condition (label [10]) of the running
+    example. It shows only the entry definitions of [theta].
+    [reaching_definitions.entry] contains [Some 8] ([theta[n, 1] = a]), because
+    step 2 of {e Finding data dependencies} keeps that write. Step 3 rejects it
+    later, when a query runs in {!node_immediate_dependencies}.
     {@text[
-      statement:                  if (theta[2] > 0)
-      preceding statement:        theta[2] = 1
-      controlling statements:     none
-      enclosing loops:            none
-      candidate sources at entry: theta[1] = a; theta[2] = 1
-      candidate sources at exit:  theta[1] = a; theta[2] = 1
-      reads:                      theta[2], constant index 2
-      writes and increments:      none
-    ]}
-    The assignment records store each assignment's reads and prepared write. The
-    query will compare those writes with the condition's read:
-    {@text[
-      statement       stored reads   stored write   prepared index
-      theta[1] = a    a              theta[1]       constant 1
-      theta[2] = 1    none           theta[2]       constant 2
-    ]}
-    The target increment's record stores the [if] statement as a controlling
-    statement and an increment of the log-density accumulator.
-
-    {1 Find direct dependencies}
-
-    Preparation identifies candidates; dependency checks determine which
-    candidates can supply a value. A candidate remains only when the analysis
-    cannot rule out the required value flow.
-
-    For each variable read, the query compares candidate writes with the read.
-    The accesses must permit a value flow, select the same element or field, and
-    allow the write to execute before the read. Inside a loop, the write can
-    occur in an earlier iteration.
-
-    In the example, the write to [theta[1]] is rejected because the condition
-    reads [theta[2]]. The assignment [theta[2] = 1] remains a data dependency.
-    Adding the condition as a control dependency of the target increment
-    accounts for whether the increment executes.
-
-    The candidate checks produce the following results for the condition:
-    {@text[
-      candidate       element check    result
-      theta[1] = a    1 differs from 2  reject
-      theta[2] = 1    2 matches 2       keep
-    ]}
-    The resulting direct dependencies refer to statements. The following view
-    names the statements in each dependency set:
-    {@text[
-      dependent statement     direct dependencies
-      if (theta[2] > 0)       {theta[2] = 1}
-      target += 1            {if (theta[2] > 0)}
-    ]}
-
-    Some comparisons lack enough information to reject a candidate. Keeping
-    uncertain candidates preserves possible dependencies, although the result
-    can include assignments that never supply a read.
-
-    {1 Follow dependencies to program inputs}
-
-    Direct dependencies identify supplying assignments and controlling
-    statements. The compiler follows those dependencies until the visited
-    statements reveal the program inputs used in the computation.
-
-    For the original condition, traversal visits the condition and its supplying
-    assignment. Collecting reads from those statements and comparing the read
-    names with the parameter names produces:
-    {@text[
-      visited statements:   if (theta[2] > 0); theta[2] = 1
-      collected read names: {theta}
-      parameter names:      {a}
-      parameters found:     {}
-    ]}
-    The supplying assignment reads no parameter, so the condition has no
-    dependency on [a]. Changing only the condition to [theta[1] > 0] makes
-    traversal follow [theta[1] = a] to the external input [a]. The resulting
-    names now reveal a parameter dependency:
-    {@text[
-      collected read names: {theta, a}
-      parameter names:      {a}
-      parameters found:     {a}
-    ]}
-
-    Pedantic mode compares the collected input names with parameter names. The
-    factor graph starts from the reads in a density term and follows the same
-    process. Traversal stops at data and parameters so the graph connects the
-    term to program inputs. For [target += 1], the term itself reads no inputs,
-    but traversal follows the controlling condition. The original condition
-    yields no connection to [a]; the changed condition yields a connection from
-    the term to [a]. *)
-
-(** {1 API reference}
-
-    The declarations below specify how statement information is stored and how
-    callers build records, select candidates and query dependencies.
-
-    {2 Statement information}
-
-    Statement records hold the facts needed to identify dependencies. A map
-    locates records by statement label; a graph stores dependency sets. *)
-
-(** The facts used by dependency queries for one statement. {!dep_info_map}
-    stores the facts with the statement pattern under the statement's label.
-
-    The following excerpt shows the fields used to check a condition reading
-    [theta[2]]. Assume [theta[1] = a] and [theta[2] = 1] have labels [2] and
-    [3], and the condition has label [4]. Only definitions of [theta] are shown:
-    {@text[
-      node_dep_info for statement 4
-        predecessors:        {3}      (theta[2] = 1)
-        parents:             {}       (no enclosing if or loop)
-        loops:               []       (no enclosing loops)
-        reaching_defn_entry: {("theta", Some 2), ("theta", Some 3)}
-        reaching_defn_exit:  {("theta", Some 2), ("theta", Some 3)}
-        accesses:            Read theta[2], with constant index 2
-    ]}
-    A query uses the candidate labels to locate the assignments, then compares
-    their writes with the read in [accesses]. The field contracts below describe
-    the remaining control-flow, definition and source-location information. *)
+      predecessors:        {9}         (theta[n, 2] = x[n])
+      controls:            [Enclosing_loop {id = 6; var = Some "n"}]
+      reaching_definitions.entry:
+                           {("theta", Some 5), ("theta", Some 8),
+                            ("theta", Some 9)}
+      accesses:            R theta[n, 2]
+    ]} *)
 type node_dep_info =
   { predecessors: label Set.Poly.t
-        (** Labels of statements that can execute immediately before the
-            recorded statement. *)
-  ; parents: label Set.Poly.t
-        (** Labels of statements that control whether the recorded statement
-            executes. Includes the nearest enclosing [if] or loop, and earlier
-            [continue] or [return] statements that can skip the recorded
-            statement. For a loop, [parents] also includes [break] or [return]
-            statements in the loop body that can end the loop. *)
-  ; reaching_defn_entry: reaching_defn Set.Poly.t
-        (** Candidate definitions at statement entry, stored as pairs of
-            variable names and optional definition labels. [None] identifies an
-            external definition; [Some label] identifies a statement in the map.
-            Subscripts are not considered. *)
-  ; reaching_defn_exit: reaching_defn Set.Poly.t
-        (** Candidate definitions at statement exit, in the same form as
-            [reaching_defn_entry]. *)
-  ; loops: Dependence.loop list
-        (** Enclosing [for] and [while] loops, outermost first. *)
+        (** The labels of the statements that can run immediately before this
+            statement. *)
+  ; controls: control list
+        (** The statements that control this statement
+            ({!Dataflow_types.control}). The list holds the enclosing ifs and
+            loops, outermost first, and then the jumps. A jump is an earlier
+            [continue] or [return] that can skip this statement, or, for a loop,
+            a [break] or [return] in its body that can end the loop. A loop
+            statement does not list itself. {!Dataflow_utils.control_parents}
+            and {!Dataflow_utils.loops_around} give the two views that queries
+            use. *)
+  ; reaching_definitions:
+      reaching_defn Set.Poly.t Monotone_framework_sigs.entry_exit
+        (** The result of the reaching definitions analysis for this statement.
+            [entry] holds the definitions that can reach the start of the
+            statement, and [exit] holds those that can reach its end. Each
+            definition is a (variable name, label) pair. [Some label] is a
+            statement in the map. [None] is a definition from outside the
+            analyzed statement, such as data. *)
   ; accesses: Accesses.index Accesses.t
-        (** Accesses made by the statement itself. Nested statements have
-            separate access records. *)
-  ; meta: Location_span.t  (** The source location used in pedantic warnings. *)
-  }
+        (** The reads, writes and increments in the expressions of this
+            statement. Each nested statement has its own record. *)
+  ; meta: Location_span.t  (** The source location for pedantic warnings. *) }
 
-(** Stores statement patterns and {!node_dep_info} records by label. Includes
-    the analyzed statement and all nested statements. Patterns refer to child
-    statements by label; for example, a [for] pattern holds the body's label.
+(** Maps the label of each statement to its statement pattern and its
+    {!node_dep_info}. A {e statement pattern} is the statement with each child
+    statement replaced by the label of the child. For example, the [if] at key
+    [10] refers to its body by key [11].
 
-    The following diagram shows how map keys locate statements and records. The
-    enclosing block contains two assignments and an [if] with a target
-    increment:
+    The {e log density} is the sum that [target] accumulates. Its statements are
+    in the parameters, transformed parameters and model blocks.
+    {!log_prob_build_dep_info_map} builds this map from the statements of the
+    log density in the running example.
     {@text[
-      map key   statement pattern                node_dep_info
-      1         block containing 2, 3, 4         info1
-      2         theta[1] = a                     info2
-      3         theta[2] = 1                     info3
-      4         if (theta[2] > 0) then 5          info4
-      5         target += 1                      info5
+      map key   statement pattern
+      1         block of 2, 3 (the whole log density)
+      2         real a;
+      3         block of 4, 5, 6 (the model block)
+      4         FnValidateSize__("theta", "N", N);
+      5         matrix[N, 2] theta;
+      6         for (n in 1:N) 7
+      7         block of 8, 9, 10
+      8         theta[n, 1] = a;
+      9         theta[n, 2] = x[n];
+      10        if (theta[n, 2] > 0) 11
+      11        target += 1;
     ]}
-    Key [4] locates the condition's pattern and [info4] record. The condition's
-    pattern refers to the target increment at key [5]. [info5.parents] contains
-    [4] because the condition controls whether the increment executes. *)
+    - Label [1] is the root statement of the map. Queries also use label [1] to
+      stand for definitions from outside the analyzed statement, such as data
+      (see {!node_immediate_dependencies} and {!node_dependencies}).
+    - Label [4] is [FnValidateSize__], a size check. The compiler adds this
+      check before a sized declaration, such as [matrix[N, 2] theta]. *)
 type dep_info_map =
   ((Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) LabelMap.t
 
-(** Dependency queries produce a graph mapping each statement label to the
-    labels of the statement's direct and transitive dependencies. *)
+(** Maps the label of each statement to the labels of all the statements that it
+    depends on, directly or transitively. *)
 type dependency_graph = label Set.Poly.t LabelMap.t
 
-(** {2 Map builders}
-
-    Builders select the statements to analyze and prepare records for queries.
-    The analyzed region can be one statement or the program's log density. *)
-
 val build_dep_info_map : Program.Typed.t -> Stmt.Located.t -> dep_info_map
-(** Builds records for the given statement and all nested statements. The
-    program's input and output variable names initialize definitions from
-    outside the analyzed statement. External definitions have label [None];
-    statements in the map have labels [Some label].
-
-    Numbering starts at [1] for the given statement, then visits nested
-    statements in source order. Blocks receive labels because a block is also a
-    statement. Labels join the facts collected by the following stages:
-
-    + Build the labeled statement patterns and source locations.
-    + Compute control flow and reaching definitions, then find enclosing loops.
-      Control flow supplies [predecessors] and [parents]. Definitions supply
-      [reaching_defn_entry] and [reaching_defn_exit]; enclosing loops supply
-      [loops].
-    + Collect each statement's accesses with {!Accesses.of_stmt}. Combine
-      written variable names across all access lists, including declarations and
-      increments.
-    + Prepare each access list with {!Accesses.classify}, using the combined
-      write set and the statement's enclosing loop variables.
-    + Store the pattern and completed {!node_dep_info} under each label.
-
-    Declarations and writes introduce reaching definitions. A whole-variable
-    assignment replaces earlier definitions of that variable. Indexed
-    assignments keep earlier definitions as candidates because other elements
-    can retain their values. The builder records candidates by name; queries
-    perform element and execution-order checks. For the running example, the
-    resulting map has the five entries shown in {!dep_info_map}; the condition's
-    stored fields are shown in {!node_dep_info}. *)
+(** Builds the map for the given statement and each statement nested in it. The
+    given statement gets label [1]. The nested statements, blocks included, get
+    the next labels in source order. The function has five steps. *)
 
 val log_prob_build_dep_info_map : Program.Typed.t -> dep_info_map
-(** Applies {!build_dep_info_map} to the program's [log_prob] statements:
-    parameters, transformed parameters and the model block. *)
-
-(** {2 Candidate checks}
-
-    Candidate selection starts with variable names. Access-kind checks identify
-    write/read pairs eligible for element and execution-order comparisons. *)
+(** Builds the map for the statements of the log density. These statements are
+    in the parameters, transformed parameters and model blocks. *)
 
 val reaching_defn_lookup :
   reaching_defn Set.Poly.t -> string -> label option Set.Poly.t
-(** Returns optional definition labels for the named variable. [None] identifies
-    an external definition. Lookup selects definitions by variable name, so
-    subscripts do not affect the result. For example, a lookup for [theta] in
-    [{("theta", Some 2); ("theta", Some 3); ("a", None)}] returns
-    [{Some 2; Some 3}]. *)
+(** Returns the labels of the definitions of the named variable. The lookup
+    compares names only. For example, [theta] in
+    [{("theta", Some 5); ("theta", Some 8); ("a", None)}] gives
+    [{Some 5; Some 8}]. *)
 
 val flows_into : 'index Accesses.access -> 'index Accesses.access -> bool
-(** Tests whether the access kinds permit a value to flow from the source (first
-    argument) to the sink (second argument). {!flows_into} returns false when
-    the source and sink name different variables.
-
-    For matching names, a [Write] or [Increment] can supply a [Read]. A [Write]
-    can also supply an [Increment]. All other access-kind pairs cause
-    {!flows_into} to return false.
-
-    Two increments are treated as a reduction: [target += b] does not depend on
-    an earlier [target += a].
-
-    For example, comparing [W theta[1]] with [R theta[2]] returns true because
-    the names and access kinds permit a flow. Comparing two [Increment] accesses
-    to [target] returns false.
-
-    An allowed pair of access kinds still needs an element and execution-order
-    check. {!Dependence} performs the element and execution-order checks. *)
-
-(** {2 Dependency queries}
-
-    Queries return dependency labels for a statement or selected variables.
-    Graph queries collect results for every statement. Read-name collection
-    supplies the inputs needed by the parameter check or factor graph. *)
+(** Whether the first access (the source) can pass a value to the second access
+    (the sink). The check uses only the variable names and the access kinds. The
+    names must be equal. An [Increment] is an addition to [target], as in
+    [target +=] or a call to an [_lp] function. A [Write] or an [Increment] can
+    pass a value to a [Read], and a [Write] can pass a value to an [Increment].
+    A read of [target], as in [target()], depends on each earlier increment,
+    because the read sees their sum. Two increments of [target] do not depend on
+    each other, because the additions can occur in any order. {!Dependence}
+    compares the elements later. *)
 
 val node_immediate_dependencies :
-  dep_info_map -> ?blockers:string Set.Poly.t -> label -> label Set.Poly.t
-(** Returns labels of the statement's direct dependencies. Includes [parents]
-    and definitions that can supply values read or incremented by the statement.
-    Reads of variables in [blockers] are not followed; the default is an empty
-    set.
-
-    {!reaching_defn_lookup} selects candidates by variable name. External
-    definitions remain possible sources and contribute the root label [1]. A
-    candidate without a recorded write or increment is also kept by name; a
-    [for] defining its loop variable is one such candidate.
-
-    Candidates with recorded writes or increments undergo access comparisons.
-    {!flows_into} checks names and kinds, {!Dependence.compare_paths} checks
-    elements, and {!Dependence.may_exist} checks execution order. A candidate
-    survives if any access pair passes all three checks.
-
-    For the map shown in {!dep_info_map}, querying label [4] returns [{3}], the
-    assignment to [theta[2]]. Querying label [5] returns [{4}], the controlling
-    [if] statement. *)
+     dep_info_map
+  -> ?blockers:string Set.Poly.t
+  -> ?vars:string Set.Poly.t
+  -> label
+  -> label Set.Poly.t
+(** Returns the labels of the statements that this statement depends on
+    directly. These are its control dependencies
+    ({!Dataflow_utils.control_parents}), and each statement whose write can
+    supply a value of [vars] that this statement reads or increments. By
+    default, [vars] holds every variable that the statement reads or increments.
+    [blockers] are names whose definitions the query does not follow. For
+    example, the factor graph passes data and parameter names as [blockers]. By
+    default, [blockers] is empty. *)
 
 val node_dependencies : dep_info_map -> label -> label Set.Poly.t
-(** Returns dependency labels by following {!node_immediate_dependencies}
-    transitively from the given label. The result includes the starting label.
-
-    The following calls show how to obtain input names for the condition in the
-    {!dep_info_map} example. [program] supplies the compiler's program
-    representation, and [block] contains the statements shown in the map:
-    {[
-    let statement_map = build_dep_info_map program block
-    let dependency_labels = node_dependencies statement_map 4
-    let read_names = read_variables_at statement_map dependency_labels
-    ]}
-    The result is [dependency_labels = {3; 4}] and [read_names = {"theta"}].
-    Comparing [read_names] with the parameter names [{"a"}] gives an empty set,
-    so the condition has no parameter dependency. *)
+(** Returns the labels of the direct and transitive dependencies of the given
+    statement. The result also includes the given label.*)
 
 val node_vars_dependencies :
      dep_info_map
@@ -372,40 +268,25 @@ val node_vars_dependencies :
   -> string Set.Poly.t
   -> label
   -> label Set.Poly.t
-(** Returns dependency labels for the requested variables at the starting
-    statement. The first step follows definitions of the requested variables and
-    the statement's [parents]. If the statement does not read a requested
-    variable, all reaching definitions of that variable are kept by name.
-
-    From the initial dependencies, traversal follows all reads, increments and
-    [parents] at each visited statement. The starting label is included only if
-    traversal returns to the starting statement. Definitions of variables in
-    [blockers] are not followed at any step; the default is an empty set.
-
-    The factor graph passes data and parameter names as [blockers] to stop
-    traversal at program inputs. The caller combines names read at the returned
-    labels with the density term's own read names because the starting statement
-    can be absent from the result. Combining both sets preserves the term's
-    inputs. *)
+(** Like {!node_dependencies}, but from the given statement it follows only its
+    control dependencies and the definitions of the given variables. The factor
+    graph and pedantic mode pass the names of a factor or an expression. *)
 
 val all_node_dependencies : dep_info_map -> dependency_graph
-(** Returns transitive dependencies for every statement. Each dependency set
-    excludes the statement's own label. {!node_dependencies} includes the
-    starting label. *)
+(** Returns the direct and transitive dependencies of each statement. Unlike in
+    {!node_dependencies}, a set does not contain its own label. *)
 
 val log_prob_dependency_graph : Program.Typed.t -> dependency_graph
-(** Applies {!all_node_dependencies} to {!log_prob_build_dep_info_map}. *)
+(** Returns {!all_node_dependencies} for the statements of the log density. *)
 
 val read_variables_at : dep_info_map -> label Set.Poly.t -> string Set.Poly.t
-(** Returns the variables read or incremented at the given labels. A [for]
-    contributes reads from the loop bounds. An [if] or [while] contributes reads
-    from the condition. Statements in a loop or branch body have separate labels
-    and access records. Reads of enclosing loop variables have been removed by
-    {!Accesses.classify}. *)
+(** Returns the names of the variables that the statements at the given labels
+    read or increment. For a [for], [if] or [while], these are the reads in its
+    bounds or condition, because the body has its own labels. Enclosing loop
+    variables are not included, because {!Accesses.classify} removes them. *)
 
 (* TODO: [reaching_definitions_mfp] takes the whole program but needs only the
    names of variables defined before the analyzed statement. *)
 
-(* TODO: Cache immediate dependencies and reaching-definition lookups per map.
-   [node_dependencies_rec] recomputes immediate dependencies on each query;
-   [reaching_defn_lookup] scans the whole set for each variable. *)
+(* TODO: Cache the results of [node_immediate_dependencies] and
+   [reaching_defn_lookup] per map. Each query computes them again. *)

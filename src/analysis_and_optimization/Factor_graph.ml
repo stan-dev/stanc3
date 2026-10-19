@@ -58,8 +58,8 @@ let factor_var_dependencies statement_map blockers (label, factor) =
     node_vars_dependencies statement_map ~blockers term_read_names label in
   let dependency_read_names =
     read_variables_at statement_map dependency_labels in
-  (* A direct input such as mu needs no further traversal. Preserve the term's
-     own read even when the returned dependency-label set is empty. *)
+  (* The traversal result can omit the starting statement. Add the term's own
+     reads, such as [mu], so that the result keeps them. *)
   Set.Poly.union dependency_read_names term_read_names
 
 let build_adjacency_maps (factors : (label * factor * string Set.Poly.t) list) :

@@ -1,317 +1,264 @@
 open Std
 open Middle
 
-(** {1 Purpose of access analysis}
+(** {1 Purpose}
 
-    Access analysis identifies the values a statement reads and updates.
-    Dependency checks need the selected elements as well as variable names: a
-    write to [theta[1]] cannot supply a read of [theta[2]].
+    This module records the accesses of each statement. An access is one read,
+    write or increment of a variable. Each access has a path. The path lists the
+    subscripts and tuple fields that select an element of the variable.
 
-    Analysis first collects accesses from each statement, then prepares index
-    expressions for comparison across loop iterations. The resulting access
-    information lets a dependency query compare candidate writes with reads.
+    {!Dependence_analysis} uses the paths in two ways.
+    - Reaching definitions find the writes that can reach a read. They use
+      {!must_overwrite} to remove a write when a later write replaces the same
+      element.
+    - {!Dependence} compares each such write with the read. It uses the paths to
+      reject a write and a read that never select the same element, such as
+      [theta[1]] and [theta[2]].
 
-    The stages below use one assignment to show the collected and prepared
-    access information. Assume the analyzed block contains a loop over [n] and
-    the following assignment, with [k] an invariant input defined outside the
-    block:
+    {1 Running example}
+
+    {!Dependence_analysis} analyzes one statement, such as the whole log
+    density, with all statements nested in it. This documentation calls that
+    statement the analyzed block.
+
+    In this example, the analyzed block has a loop over [n], and the loop holds
+    this assignment. The analyzed block does not write [k].
     {@stan[
       y[n] = v[n + 1] + v[k];
     ]}
+    The output below prints each access as its kind, then the variable and the
+    path. [R] is a read, [W] is a write and [+=] is an increment.
 
-    {1 Collect statement inputs and updates}
+    The example has 3 steps.
+    {ul
+     {- Step 1 of 3: {!of_stmt} collects the accesses. The two reads of [n] come
+        from the index of [y[n]] and the index of [v[n + 1]].
+     }
+     {- Step 2 of 3: {!classify} removes the reads of the loop variable [n]. }
+     {- Step 3 of 3: {!classify} splits each index into a loop variable, a
+        symbol and a constant. A symbol is an expression that has the same value
+        in every iteration.
+        {@text[
+          Step 1 of 3, of_stmt:            R n, R v[n+1], R n, R v[k], R k, W y[n]
+          Step 2 of 3, classify removes n: R v[n+1], R v[k], R k, W y[n]
+          Step 3 of 3, classify splits each index:
+            v[n+1]: loop variable n, no symbol, constant 1
+            v[k]:   no loop variable, symbol k, constant 0
+            k:      the whole variable (empty path)
+            y[n]:   loop variable n, no symbol, constant 0
+        ]}
+        Step 2 of 3 loses no dependency. The statement has a control dependency
+        on its loop, because the loop decides whether the statement runs. So a
+        query for the dependencies of the statement reaches the loop and its
+        bounds. No statement in the analyzed block writes [n], so a separate
+        search for writes to [n] finds nothing. The read of [k] stays, because
+        [k] decides which element [v[k]] selects.
+     }
+    }
 
-    Collection preserves the selected elements and the expressions used to
-    select them. Reading [v[k]] also reads [k], so dependencies must account for
-    both the vector element and the input that selects the element.
+    An index that splits into the three parts is [Sequential]. With a loop
+    variable, consecutive iterations select consecutive elements, up or down.
+    Without a loop variable, as in [v[k]] or [v[3]], the index selects the same
+    element in every iteration. {!Dependence} compares two [Sequential] indices
+    and computes the distance between them in iterations. Every other index is
+    [Varying], such as [idx[n]] or [2 * n]. *)
 
-    For the example assignment, collection produces the following access list.
-    Indices still contain the original program expressions:
-    {@text[
-      position   kind    selected value
-      1          read    n
-      2          read    v[n + 1]
-      3          read    n
-      4          read    v[k]
-      5          read    k
-      6          write   y[n]
-    ]}
-    The first read of [n] comes from the destination index; the second comes
-    from selecting [v[n + 1]]. The read of [k] comes from selecting [v[k]].
+(** {1 API reference} *)
 
-    Each statement's own expressions are collected separately from nested
-    statements. Separate access lists identify which statement reads or updates
-    a value. For a loop or conditional statement, the list contains reads from
-    the bounds or condition. Queries reach those reads by following control
-    dependencies from the body statements.
+(** The way an index moves when its loop variable increases. [n + 1] is
+    [Ascending], and [N - n] is [Descending]. *)
+type direction = Ascending | Descending [@@deriving equal]
 
-    Collection also distinguishes adding to the log density from reading the
-    accumulated log density. Distinguishing additions from reads prevents
-    separate additions from creating dependencies on each other merely because
-    both update the same accumulator. For example, [target += 1] contributes an
-    increment of [target], whereas [target()] contributes a read of [target].
+(** The loop-variable part of an index. It stands for [loopvar] when [direction]
+    is [Ascending], and for [-loopvar] when [direction] is [Descending]. *)
+type loop_term = {loopvar: string; direction: direction} [@@deriving equal]
 
-    {1 Prepare indices for comparison}
+(** An index of the form [loop_term + symbol + const]. A missing part counts as
+    zero. [symbol] reads no loop variable and no variable that the analyzed
+    block writes. So [symbol] has the same value in every iteration.
 
-    Collected indices are still program expressions. Comparing an index across
-    iterations requires distinguishing the changing loop variable from invariant
-    inputs and constant offsets.
+    These examples are in a loop over [n]. [N] and [k] are not written.
 
-    Analysis uses the enclosing loops and writes across the analyzed statements
-    to identify those parts. A written input can change within the analyzed
-    region, so comparisons cannot assume that input remains invariant.
+    - [n + k - 1] has [loop_term = Some {loopvar = "n"; direction = Ascending}],
+      [symbol = Some k] and [const = -1].
+    - [N - n + 1] has
+      [loop_term = Some {loopvar = "n"; direction = Descending}],
+      [symbol = Some N] and [const = 1].
 
-    When an index's parts can be identified, the parts constrain element
-    comparisons. An unresolved index supplies no constraint. Other subscripts or
-    tuple fields can still prove that two accesses select different elements.
-
-    Reads of enclosing loop variables are accounted for through dependencies on
-    the loops. Removing separate loop-variable reads lets queries follow the
-    loop bounds instead of searching for assignments to loop variables.
-
-    For the example assignment, preparation removes both explicit reads of [n]
-    and stores the following access list:
-    {@text[
-      reads:      v[n + 1], v[k], k
-      writes:     y[n]
-      increments: none
-    ]}
-    The subscripts now hold the parts used for comparisons rather than the
-    original expressions. The following table shows the prepared index at each
-    selected element:
-    {@text[
-      selected value   loop variable   invariant expression   constant offset
-      v[n + 1]         n               none                   1
-      v[k]             none            k                      0
-      y[n]             n               none                   0
-    ]}
-    The access to [k] has no subscript because the read selects the whole
-    variable. Keeping the read of [k] lets a query follow the input that selects
-    [v[k]].
-
-    {1 Use prepared accesses in dependency checks}
-
-    Prepared accesses supply variable names for candidate selection and element
-    paths for comparisons. The example assignment yields the following name
-    sets:
-    {@text[
-      names read:    {v, k}
-      names written: {y}
-    ]}
-    A dependency query uses [{v, k}] to find candidate value sources. For a
-    candidate write to [v], the query compares the write with both [v[n + 1]]
-    and [v[k]]. For a candidate write to [k], the query compares the write with
-    the whole-variable read of [k]. The separate control dependency on the loop
-    accounts for [n] and the loop bounds. *)
-
-(** {1 API reference}
-
-    The declarations below specify access representations, collection and
-    classification inputs, and operations for querying or printing accesses.
-
-    {2 Representation types}
-
-    Access paths hold program expressions before classification and classified
-    indices afterwards. The type parameter permits both representations. *)
-
-(** An index represented as [loopvar + symbol + const]. Absent terms contribute
-    zero. When present, [loopvar] has coefficient one and [symbol] is an
-    expression that reads neither an enclosing loop variable nor a variable
-    written in the analyzed block.
-
-    The examples below show how loop variables, symbolic expressions and
-    constants populate the record fields. Assume a loop over [n], with [k] not
-    written in the analyzed block:
-
-    - [n + k - 1] has [loopvar = Some "n"], [symbol = Some k] and [const = -1].
-    - [k] has [loopvar = None], [symbol = Some k] and [const = 0].
-    - [3] has [loopvar = None], [symbol = None] and [const = 3].
-
-    At most one symbolic expression is stored. For invariant inputs [k] and [j],
-    the whole sum [k + j] becomes the symbol. Dependence tests require identical
-    stored expressions for matching symbols. The comparison does not rearrange
-    terms, so [k + j] and [j + k] are different symbols even though the sums are
-    equal.
-
-    Indices with matching [loopvar] and [symbol] fields differ only by their
-    [const] fields. *)
+    The index stores one symbol, and the symbol is always added. So [n - k] is
+    not [Sequential]. In [k + j], the whole sum becomes the symbol. Symbols are
+    compared as expressions, so [k + j] and [j + k] are different symbols. *)
 type sequential =
-  {const: int; symbol: Expr.Typed.t option; loopvar: string option}
+  {const: int; symbol: Expr.Typed.t option; loop_term: loop_term option}
 
-(** The reason classification produced a [Varying] index. Only the printer uses
-    the reason. *)
+(** The reason that an index is [Varying]. The reason is only for printing. *)
 type varying_kind =
   | Written
-      (** The index reads a variable written in the analyzed block, other than a
-          recognized loop variable. For example, [v[m]] has a written index when
-          the block contains [m = n]. A declaration also counts as a write, even
-          if the variable is assigned only once. *)
-  | Nonsequential
-      (** The index uses a loop variable in a form the classifier cannot
-          represent, such as [idx[n]], [2 * n] or [N - n]. The classifier cannot
-          combine two symbolic terms with a loop variable, so [n + k + k] is
-          also rejected. *)
+      (** The index reads a variable that the analyzed block writes, so its
+          value can change between iterations. For example, [v[m]] is [Written]
+          when the block contains [m = n]. *)
+  | Unhandled
+      (** The index uses a loop variable in a form that the tests in
+          {!Dependence} do not handle, such as [idx[n]], [2 * n] or [n + n].
+          Sums are read left to right, so [n + k + k] is [(n + k) + k]. An index
+          stores only one symbol. So after [n + k], the second [k] cannot be
+          added, and the sum is [Unhandled]. In [k + k + n], [k + k] has no loop
+          variable, so it becomes one symbol. So [k + k + n] is [Sequential]
+          with the symbol [k + k]. *)
 
-(** A classified expression at one subscript position. *)
+(** One classified subscript. *)
 type index =
   | Sequential of sequential
-      (** The index has the form described by {!sequential}. *)
+      (** The index has the form that {!sequential} describes. *)
   | Varying of varying_kind
-      (** The index cannot constrain a subscript comparison. *)
+      (** The index has any other form. The tests in {!Dependence} cannot use
+          it. *)
 
-(** One subscript position or tuple field in an access path. The path
-    [x[i].2[j]] has the steps [i], [.2] and [j]. *)
+(** One position in a path. A step is a subscript or a tuple field. The path of
+    [x[i].2[j]] has the three steps [i], [.2] and [j]. *)
 type 'index step =
-  | Subscript of 'index Index.t  (** One index position, such as [n + 1]. *)
-  | Field of int  (** One tuple field, such as the [.2] in [t.2]. *)
+  | Subscript of 'index Index.t  (** One subscript, such as [n + 1]. *)
+  | Field of int  (** One tuple field, such as [.2] in [t.2]. *)
 
-(** Whether an access reads, writes or increments a variable. [Increment] models
-    a read and write of [target]. The represented operations are
-    [target += ...], [jacobian += ...] and calls to [_lp] or [_jacobian]
-    functions.
+(** Whether an access reads, writes or increments a variable.
 
-    Dependency queries treat increments as a reduction: [target += b] does not
-    depend on an earlier [target += a] merely because both update [target]. A
-    read through [target()] can still depend on preceding increments.
-    {!Dependence_analysis.flows_into} specifies the access-kind rules. *)
+    An [Increment] adds to [target], as [target += ...], [jacobian += ...] and
+    [_lp] or [_jacobian] calls do. Two increments do not depend on each other,
+    because the additions can happen in any order. *)
 type kind = Read | Write | Increment [@@deriving equal]
 
-(** One access to [var] by a statement. [kind] distinguishes reads, writes and
-    increments. [path] identifies the selected element or tuple field, with one
-    step per position. An empty path accesses the whole variable, as in [sum(v)]
-    or a declaration of [v].
-
-    The following example separates the variable name from the selected element
-    in the read [v[n + 1]]. Before classification, the subscript holds the
-    program expression [n + 1]:
-    {@text[
-      var:   v
-      kind:  Read
-      path:  one subscript, n + 1
-    ]}
-    {!pp_access} prints [R] for reads, [W] for writes and [+=] for increments.
-    In that notation, [W theta[1]] and [R theta[2]] share a variable name but
-    have different paths. *)
+(** One access by a statement. [var] is the variable, [kind] tells how the
+    statement uses it, and [path] selects the element. An empty path means the
+    whole variable, as in [sum(v)] or the declaration of [v]. *)
 type 'index access = {var: string; path: 'index step list; kind: kind}
 
-(** The accesses collected from one statement. For an assignment, the list
-    contains reads in the left-hand indices, accesses in the right-hand
-    expression, then the write. An indexed read precedes reads of variables in
-    the index expressions: [v[k]] gives [R v[k], R k]. *)
+(** All the accesses of one statement. For an assignment, the list holds the
+    reads in the left-hand indices, then the accesses in the right-hand side,
+    then the write. *)
 type 'index t = 'index access list
 
-(** {2 Collection and classification}
-
-    Collection records a statement's accesses. Classification prepares their
-    paths using the enclosing loop variables and the analyzed block's writes. *)
+(** {2 Collecting and classifying} *)
 
 val of_stmt : (Expr.Typed.t, 'substatement) Stmt.Pattern.t -> Expr.Typed.t t
-(** Collects accesses with indices represented as program expressions. Processes
-    only the statement's own expressions; nested statements are collected
-    separately.
+(** Collects the accesses in the own expressions of a statement. Nested
+    statements are collected separately. The list order is the order that {!t}
+    gives, not the run-time order.
 
-    Accesses are collected in the order specified by {!t}. The collected order
-    does not establish a runtime evaluation order.
-
-    Assignments contribute accesses from destination indices and the right-hand
-    expression, then a write to the destination. Indexed reads include accesses
-    from their index expressions. For example, reading [v[k]] gives
-    [R v[k], R k] because selecting the element requires reading [k].
-
-    Declarations read size expressions and the optional initializer, then write
-    the declared variable. For example, [vector[N] y;] gives [R N, W y].
-
-    For control statements, collection records the expressions that control
-    execution. A [for] contributes accesses from its bounds; an [if] or [while]
-    contributes accesses from its condition.
-
-    Log-density updates record increments as described by {!kind}. [target()]
-    records a read of [target], so a query can distinguish reading the
-    accumulator from adding to it. *)
+    - An assignment gives the accesses in the left-hand indices and the
+      right-hand side, then a write to the left-hand side.
+    - A declaration gives the reads in the sizes and the initial value, then a
+      write to the whole variable. [vector[N] y;] gives [R N, W y].
+    - A loop, an [if] or a [while] gives the accesses in its bounds or its
+      condition.
+    - An addition to the log density gives an increment of [target]. [target()]
+      gives a read of [target]. *)
 
 val classify :
      loopvars:string Set.Poly.t
   -> written_vars:string Set.Poly.t
   -> Expr.Typed.t t
   -> index t
-(** Removes reads of [loopvars], then classifies the remaining access paths.
-    [loopvars] contains the enclosing loop variables. [written_vars] contains
-    all variables written or incremented in the analyzed block, including
-    declarations. Access kinds and remaining access order are preserved.
+(** Prepares the accesses of a statement for the tests in {!Dependence}.
+    [loopvars] holds the variables of the loops around the statement.
+    [written_vars] holds each variable that the analyzed block writes,
+    increments or declares. The function removes the reads of [loopvars]. Then
+    it splits each index into the form that {!sequential} describes. If an index
+    does not split, the variables that it reads decide the result.
 
-    Reads of enclosing loop variables are removed because control dependencies
-    lead to the loops and their bound expressions. The remaining indices are
-    decomposed into the form described by {!sequential} where possible.
+    - If it reads a variable in [written_vars], it is [Varying Written].
+    - Else, if it reads a variable in [loopvars], it is [Varying Unhandled].
+    - Else, the whole expression becomes the symbol of a [Sequential] index.
 
-    When decomposition fails, the whole expression's reads determine the
-    fallback. Reading a written variable gives [Varying Written]. Otherwise,
-    reading an enclosing loop variable gives [Varying Nonsequential]. If neither
-    check applies, the whole expression becomes an invariant symbol.
+    For example, with [loopvars = {n}] and [written_vars = {m}], [v[m]] gives
+    [Varying Written], and [v[2 * n]] gives [Varying Unhandled]. *)
 
-    The following diagram shows collection and both classification operations
-    for [y[n] = v[n + 1] + v[k]]. Assume the analyzed block contains only the
-    enclosing loop and assignment, with [k] defined outside the block:
-    {@text[
-      of_stmt: collect accesses
-        R n, R v[n+1], R n, R v[k], R k, W y[n]
-                             |
-                             v
-      classify: remove reads of loopvars = {n}
-        R v[n+1], R v[k], R k, W y[n]
-                             |
-                             v
-      classify: prepare paths using loopvars = {n}, written_vars = {y}
-        v[n+1]: loopvar n, no symbol, constant 1
-        v[k]:   no loopvar, symbol k, constant 0
-        k:      empty path (the whole variable)
-        y[n]:   loopvar n, no symbol, constant 0
-    ]}
-    The two reads of [n] come from the destination index and [v[n+1]]. Both are
-    removed; the read of [k] remains because selecting [v[k]] depends on the
-    invariant input.
+(** {2 Comparing paths}
 
-    For varying examples, take [loopvars = {n}] and [written_vars = {m}]. The
-    index in [v[m]] becomes [Varying Written], and the index in [v[2 * n]]
-    becomes [Varying Nonsequential]. The stored reasons are used by printers. *)
+    These functions compare two paths of one variable, one step at a time.
 
-(** {2 Access queries}
+    Reaching definitions use {!must_overwrite}. A later write kills an earlier
+    write when it overwrites each element that the earlier write wrote. Reaching
+    definitions call the later write the killer and the earlier write the killed
+    write. The killed write no longer reaches later reads.
 
-    Queries select accesses by variable name or collect the names read and
-    written. The results support candidate selection and index classification.
-*)
+    No code calls {!may_overlap} and {!fixed_path} yet. They are for planned
+    element-aware warnings for uninitialized variables, and for planned value
+    propagation. *)
+
+(** The result of a comparison of two classified steps. *)
+type step_comparison =
+  | Same_every_iteration
+      (** The steps always select the same element. Examples are [[1]] and
+          [[1]], [[k + 1]] and [[k + 1]], and two equal tuple fields. *)
+  | Same_in_one_iteration
+      (** The steps select the same element in one loop iteration, as [[n]] and
+          [[n]] do. In different iterations, [n] has different values. *)
+  | Different
+      (** The steps never select the same element, as [[1]] and [[2]], or [.1]
+          and [.2]. *)
+  | May_differ
+      (** Any other pair, as [[n]] and [[n - 1]], or [[idx[n]]] and [[1]]. *)
+
+val compare_steps : index step -> index step -> step_comparison
+(** Compares two steps at the same position of two paths. *)
+
+val must_overwrite :
+     same_iteration:bool
+  -> killer:index step list
+  -> killed:index step list
+  -> bool
+(** Whether a write to [killer] overwrites each element that a write to [killed]
+    wrote. [killer] can be shorter than [killed], so [m[1]] covers [m[1, 2]].
+    Each step of [killer] must compare as [Same_every_iteration] with the step
+    of [killed] at the same position. If [same_iteration] is true,
+    [Same_in_one_iteration] also passes. So [m[n, 1]] overwrites [m[n, 1]] only
+    when the caller knows that both writes run in the same iteration. *)
+
+val may_overlap : index step list -> index step list -> bool
+(** Whether a write to the first path can change an element that the second path
+    selects. The result is false only when one position that both paths have
+    compares as [Different]. For example, [m[2, 2]] does not overlap [m[1, 2]].
+    [m[n, 1]] does not overlap [m[1, 2]], because the second subscripts differ.
+    Column 1 and column 2 are always different elements. [m[n, 1]] can overlap
+    [m[n - 1, 1]]. *)
+
+(** One step of a path that has only constant indices and tuple fields. *)
+type fixed_step = Fixed_index of int | Fixed_field of int
+[@@deriving compare, sexp_of]
+
+val fixed_path : index step list -> fixed_step list option
+(** Converts a path to {!fixed_step} values. The result is [None] if a step is
+    not a constant index or a tuple field. [t.2[3]] gives
+    [Some [Fixed_field 2; Fixed_index 3]], and [m[k, 1]] gives [None]. *)
+
+(** {2 Queries} *)
 
 val of_var : string -> 'index t -> 'index t
-(** Keeps only accesses to the named variable, preserving access order. For the
-    prepared assignment example, selecting ["v"] gives [R v[n+1], R v[k]]. *)
+(** Keeps the accesses to the named variable, in their original order. In the
+    running example, ["v"] gives [R v[n+1], R v[k]]. *)
 
 val read_vars : 'index t -> string Set.Poly.t
-(** Returns the names of variables read or incremented. Dependency queries use
-    the names to look up candidate reaching definitions. The prepared assignment
-    example gives [{"v"; "k"}]. *)
+(** Returns the names of the variables that the accesses read or increment. In
+    the running example, the result is [{"v"; "k"}]. *)
 
 val written_vars : 'index t -> string Set.Poly.t
-(** Returns the names of variables written or incremented. A map builder
-    combines the sets from all analyzed statements to prepare [written_vars] for
-    {!classify}. The assignment example gives [{"y"}]. *)
+(** Returns the names of the variables that the accesses write or increment. In
+    the running example, the result is [{"y"}]. *)
 
-(** {2 Printers}
-
-    Printers display access paths and reasons for unresolved indices. Grouping
-    by access kind makes statement inputs and updates easy to find. *)
+(** {2 Printers} *)
 
 val pp_index : index Fmt.t
-(** Prints sequential indices as [n], [n+1], [n+k-1], [3] or [k+1]. Varying
-    indices print as [?written] or [?nonsequential]. *)
-
-val pp_path : 'index Fmt.t -> 'index step list Fmt.t
-(** Prints consecutive subscripts in one pair of brackets, as [[i, j]]. Slices
-    print as [[1:k]], multi-indices as [[{idx}]] and tuple fields as [.2]. *)
+(** Prints a [Sequential] index as [n], [n+1], [n+k-1], [-n+N+1], [3] or [k+1].
+    A [Descending] loop variable prints first, as [-n]. A [Varying] index prints
+    as [?written] or [?unhandled]. *)
 
 val pp_access : 'index Fmt.t -> 'index access Fmt.t
-(** Prints the kind, variable and path, as [W v[n+1]], [R k], [+= target] or
-    [W t.2]. *)
+(** Prints the kind, the variable and the path, as in [W v[n+1]], [R k],
+    [+= target] or [W t.2]. Consecutive subscripts share one pair of brackets,
+    as in [[i, j]]. A slice prints as [[1:k]], a multi-index as [[{idx}]], and a
+    tuple field as [.2]. *)
 
 val pp : 'index Fmt.t -> 'index t Fmt.t
-(** Prints accesses grouped by kind: reads, increments, then writes. Order
-    within each group is preserved. For example,
+(** Prints the accesses grouped by kind, with reads first, then increments, then
+    writes. Each group keeps the original order. For example,
     [R v[n+1], R k, += target, W y[n]]. *)

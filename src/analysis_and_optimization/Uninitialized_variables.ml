@@ -66,8 +66,8 @@ let mir_uninitialized_variables (mir : Program.Typed.t) :
   let check_against_data_params b =
     let globals_data_prep = Set.Poly.union globals_data parameters in
     stmt_uninitialized_variables globals_data_prep
-      (* Include transformed-data assignments so later reads are checked against
-         the paths that compute their values. *)
+      (* Run transformed data first, so that its assignments initialize later
+         reads. *)
       {pattern= SList (mir.prepare_data @ b); meta= Location_span.empty} in
   Set.Poly.union_list
     [ check_against_data mir.prepare_data; check_against_data_params mir.log_prob

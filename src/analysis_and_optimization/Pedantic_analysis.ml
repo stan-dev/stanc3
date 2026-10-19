@@ -129,7 +129,7 @@ let list_possible_nonlinear (mir : Program.Typed.t) : Location_span.t Set.Poly.t
       ~take_expr:Fun.const ~init:Set.Poly.empty mir.log_prob in
   bad_tildes
 
-(* [targets] contains variable names of interest, typically parameters. *)
+(* Returns the names in [targets] that the statement at [label] depends on. *)
 let var_deps info_map label ?expr:(expr_opt : Expr.Typed.t option = None)
     (targets : string Set.Poly.t) : string Set.Poly.t =
   let dependency_labels, expression_read_names =
@@ -139,8 +139,8 @@ let var_deps info_map label ?expr:(expr_opt : Expr.Typed.t option = None)
         let expr_names = Set.Poly.map ~f:fst (expr_var_set expr) in
         (node_vars_dependencies info_map expr_names label, expr_names) in
   let dependency_read_names = read_variables_at info_map dependency_labels in
-  (* Preserve direct expression inputs such as a in a > 0. The variable query
-     can omit the starting statement that contains the expression's read. *)
+  (* The variable query can omit the starting statement. Add the reads of
+     [expr], such as [a] in [a > 0], so that the result keeps them. *)
   let all_read_names =
     Set.Poly.union dependency_read_names expression_read_names in
   Set.Poly.inter targets all_read_names
@@ -171,8 +171,7 @@ let list_param_dependant_cf (mir : Program.Typed.t) :
   let info_map = log_prob_build_dep_info_map mir in
   list_target_dependant_cf info_map params
 
-(* Argument positions are zero-based so callers can select the corresponding
-   expression. *)
+(* Argument positions in the result are zero-based. *)
 let list_arg_dependant_fundef_cf (mir : Program.Typed.t)
     (fun_def : 'a Program.fun_def) : (Location_span.t * int * string) Set.Poly.t
     =

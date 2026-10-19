@@ -1,7 +1,6 @@
-// Stan loops only count up, so a loop that walks a vector downwards goes
-// through an index assigned in the loop or an index that is not the loop
-// variable plus a constant. Neither index is compared, so the write of
-// b[n + 1] in the previous iteration is kept and both ifs depend on a.
+// This test runs the loop of param-depend-control-loop-order.stan from N - 1
+// down to 2. A Stan loop only counts up, so the index is N - m.
+
 data {
   int N;
 }
@@ -12,15 +11,12 @@ model {
   vector[N] b;
   vector[N] c;
   vector[N] d;
-  for (m in 1:(N - 1)) {
-    int n = N - m;                // n counts down from N - 1 to 1
-    c[n] = b[n + 1];              // b[n + 1] was written in the previous iteration
-    b[n] = a;
-    if (c[n] > 0) target += 1;    // warns: depends on a
-  }
-  for (m in 1:(N - 1)) {
-    d[N - m] = b[N - m + 1];      // b[N - m + 1] was written in the previous iteration
+  for (m in 1:(N - 2)) {
+    c[N - m] = b[N - m - 1];          // a later iteration writes b[N - m - 1]
+    d[N - m] = b[N - m];              // b[N - m] = a runs after this read
     b[N - m] = a;
-    if (d[N - m] > 0) target += 1;    // warns: depends on a
+    if (c[N - m] > 0) target += 1;    // no warning, because c[N - m] does not depend on a
+    if (d[N - m] > 0) target += 1;    // no warning, because d[N - m] does not depend on a
+    if (b[N - m] > 0) target += 1;    // warning, because b[N - m] = a
   }
 }

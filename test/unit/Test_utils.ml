@@ -19,9 +19,8 @@ let typed_ast_of_string_exn code =
 
 let mir_of_string s = typed_ast_of_string_exn s |> Ast_to_Mir.trans_prog ""
 
-(** Adapts [pp] for compact expected output. A large formatting margin reduces
-    wrapping; remaining lines are trimmed and joined with spaces. A printer
-    producing [A] and [B] on separate lines therefore prints [A B]. *)
+(** Prints the output of [pp] on one line. If [pp] prints [A] and [B] on two
+    lines, [one_line pp] prints [A B]. *)
 let one_line (pp : 'a Fmt.t) : 'a Fmt.t =
  fun ppf x ->
   let buffer = Buffer.create 128 in
@@ -31,13 +30,12 @@ let one_line (pp : 'a Fmt.t) : 'a Fmt.t =
   Buffer.contents buffer |> String.split_lines |> List.map ~f:String.trim
   |> String.concat ~sep:" " |> Fmt.string ppf
 
-(** Prints one statement pattern with child labels instead of child bodies. For
-    a loop whose body has label [8], the output is [for(n in 1:N) 8]. Other
-    output rows show the statement stored at label [8]. *)
+(** Prints a statement with the labels of its child statements in place of the
+    child statements. A loop with body label 8 prints as [for(n in 1:N) 8]. *)
 let pp_stmt : (Middle.Expr.Typed.t, int) Middle.Stmt.Pattern.t Fmt.t =
   one_line (Middle.Stmt.Pattern.pp Middle.Expr.Typed.pp Fmt.int)
 
-(** Prints a label set in ascending order, separated by spaces. A set containing
-    [3] and [1] prints as [1 3]; an empty set prints nothing. *)
+(** Prints a label set in ascending order, with a space between labels. The set
+    of 3 and 1 prints as [1 3]. An empty set prints nothing. *)
 let pp_labels ppf (labels : int Set.Poly.t) =
   Fmt.(list ~sep:(any " ") int) ppf (Set.Poly.to_list labels)
