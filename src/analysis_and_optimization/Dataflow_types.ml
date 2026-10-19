@@ -1,27 +1,36 @@
 open Std
 open Std.Sexp_conv
 
-(***********************************)
-(* Basic datatypes                 *)
-(***********************************)
-
-(** A label is a unique identifier for a node in the dataflow/dependency graph,
-    and often corresponds to one node in the Mir. *)
+(** A label identifies one statement in a statement map or graph. Labels from
+    different maps do not match. *)
 type label = int [@@deriving sexp_of]
 
-(** Representation of an expression that can be assigned to. This should also be
-    able to represent indexed variables, but we don't support that yet. *)
-type vexpr = VVar of string [@@deriving sexp_of]
+(** A possible source of the value of a variable. [(x, Some l)] means that the
+    statement with label [l] can write [x]. [(x, None)] means that [x] gets a
+    value from outside the analyzed statement. *)
+type reaching_defn = string * label option [@@deriving sexp_of]
 
-(** A 'reaching definition' (or reaching_defn or RD) statement (v, l) says that
-    the variable v could have been affected at the label l. *)
-type reaching_defn = vexpr * label [@@deriving sexp_of]
+(** A [for] or [while] loop around a statement. [id] is the label of the loop
+    statement. [var] is the loop variable of a [for], or [None] for a [while].
+*)
+type loop = {id: label; var: string option}
 
-(** The most recently nested control flow (block start, if/then, or loop)
+(** A statement that controls whether, or how often, another statement runs.
+    {!Dataflow_utils.build_cf_graphs} gives each statement a list of controls.
+    The list holds the enclosing ifs and loops, outermost first, and then the
+    jumps. *)
+(** The branch of an [if] that holds a statement. *)
+type branch = Then | Else
 
-    This isn't included in the traversal_state because it only flows downward
-    through the tree, not across and up like everything else *)
-type cf_state = label
+type control =
+  | Enclosing_if of {id: label; branch: branch}
+      (** An [if] around the statement. [id] is the label of the [if], and
+          [branch] is the branch that holds the statement. *)
+  | Enclosing_loop of loop  (** A [for] or [while] around the statement. *)
+  | Jump of label
+      (** A [break], [continue] or [return] that can skip the statement. For a
+          loop statement, a [break] or [return] in its body that can end the
+          loop. *)
 
 module LabelMap = struct
   include Int.Map

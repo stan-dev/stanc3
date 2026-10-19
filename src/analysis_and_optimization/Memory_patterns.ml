@@ -25,13 +25,13 @@ let concat_set_str (set : string Set.Poly.t) =
     ~f:(fun elem acc -> if acc = "" then acc ^ elem else acc ^ ", " ^ elem)
     ~init:"" set
 
-(** Return a Var expression of the name for each type containing an eigen matrix
-*)
+(** Collects [(name, metadata)] for variables in subexpressions of Eigen type.
+    It skips scalar results, indices and the condition of a ternary [if]. *)
 let rec matrix_set Expr.{pattern; meta= Expr.Typed.Meta.{type_; _} as meta} =
   let union_recur exprs = Set.Poly.union_list (List.map exprs ~f:matrix_set) in
   if UnsizedType.contains_eigen_type type_ then
     match pattern with
-    | Var s -> Set.Poly.singleton (Dataflow_types.VVar s, meta)
+    | Var s -> Set.Poly.singleton (s, meta)
     | Lit _ -> Set.Poly.empty
     | FunApp (_, exprs) -> union_recur exprs
     | TernaryIf (_, expr2, expr3) -> union_recur [expr2; expr3]
@@ -40,11 +40,9 @@ let rec matrix_set Expr.{pattern; meta= Expr.Typed.Meta.{type_; _} as meta} =
     | EAnd (expr1, expr2) | EOr (expr1, expr2) -> union_recur [expr1; expr2]
   else Set.Poly.empty
 
-(** Return a set of all types containing autodiffable Eigen matrices in an
-    expression. *)
+(** Names of autodiffable Eigen variables collected by {!matrix_set}. *)
 let query_var_eigen_names (expr : Expr.Typed.t) : string Set.Poly.t =
-  let get_expr_eigen_names
-      (Dataflow_types.VVar s, Expr.Typed.Meta.{adlevel; type_; _}) =
+  let get_expr_eigen_names (s, Expr.Typed.Meta.{adlevel; type_; _}) =
     if
       UnsizedType.contains_eigen_type type_
       && UnsizedType.is_autodifftype adlevel

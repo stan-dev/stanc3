@@ -11,18 +11,14 @@ open Pedantic_dist_warnings
 
 type warning_span = Location_span.t * string
 
-(********************* Pattern collection functions ********************)
-
 let list_unused_params (factor_graph : factor_graph) (mir : Program.Typed.t) :
     (string * Location_span.t) Set.Poly.t =
   (* Build a factor graph of the program, check for missing parameters *)
   let param_info = parameter_set ~include_transformed:false mir in
   let params = Set.Poly.map ~f:fst3 param_info in
   let used_params =
-    Set.Poly.map
-      ~f:(fun (VVar v) -> v)
-      (Set.Poly.of_list
-         (VExprMap.to_list factor_graph.var_map |> List.map ~f:fst)) in
+    Set.Poly.of_list (String.Map.to_list factor_graph.var_map |> List.map ~f:fst)
+  in
   let unused = Set.Poly.diff params used_params in
   Set.Poly.filter_map
     ~f:(fun (pname, _, loc) ->
@@ -69,8 +65,7 @@ let list_multi_tildes (mir : Program.Typed.t) :
     ~f:(fun ~key ~data s -> Set.Poly.add (key, data) s)
     multi_tildes
 
-(** Collect statements of the form "target += Dist(param, ...)" where param has
-    possibly been transformed non-linearly *)
+(* Looks for nonlinear transformations in distribution arguments. *)
 let list_possible_nonlinear (mir : Program.Typed.t) : Location_span.t Set.Poly.t
     =
   (* These functions are linear if all of their arguments are *)
@@ -134,33 +129,27 @@ let list_possible_nonlinear (mir : Program.Typed.t) : Location_span.t Set.Poly.t
       ~take_expr:Fun.const ~init:Set.Poly.empty mir.log_prob in
   bad_tildes
 
-(* Find all of the targets which are dependencies for a given label *)
+(* Returns the names in [targets] that the statement at [label] depends on. *)
 let var_deps info_map label ?expr:(expr_opt : Expr.Typed.t option = None)
     (targets : string Set.Poly.t) : string Set.Poly.t =
-  (* Labels of dependencies *)
-  let dep_labels, expr_vars =
+  let dependency_labels, expression_read_names =
     match expr_opt with
     | None -> (node_dependencies info_map label, Set.Poly.empty)
     | Some expr ->
-        let vvars = Set.Poly.map ~f:fst (expr_var_set expr) in
-        ( node_vars_dependencies info_map vvars label
-        , Set.Poly.map ~f:string_of_vexpr vvars ) in
-  (* expressions of dependencies *)
-  let dep_exprs =
-    Set.Poly.union_map dep_labels ~f:(fun label ->
-        let stmt, _ = LabelMap.find label info_map in
-        stmt_rhs_names_set stmt) in
-  (* variable dependencies *)
-  let dep_vars = Set.Poly.map ~f:(fun (VVar v) -> v) dep_exprs in
-  (* target dependencies *)
-  Set.Poly.inter targets (Set.Poly.union dep_vars expr_vars)
+        let expr_names = Set.Poly.map ~f:fst (expr_var_set expr) in
+        (node_vars_dependencies info_map expr_names label, expr_names) in
+  let dependency_read_names = read_variables_at info_map dependency_labels in
+  (* The variable query can omit the starting statement. Add the reads of
+     [expr], such as [a] in [a > 0], so that the result keeps them. *)
+  let all_read_names =
+    Set.Poly.union dependency_read_names expression_read_names in
+  Set.Poly.inter targets all_read_names
 
 let list_target_dependant_cf
     (info_map :
       ((Expr.Typed.t, label) Stmt.Pattern.t * node_dep_info) LabelMap.t)
     (targets : string Set.Poly.t) :
     (Location_span.t * string Set.Poly.t) Set.Poly.t =
-  (* Find all the control flow nodes *)
   let cf_labels =
     Set.Poly.of_list
       (List.map ~f:fst
@@ -179,17 +168,15 @@ let list_target_dependant_cf
 let list_param_dependant_cf (mir : Program.Typed.t) :
     (Location_span.t * string Set.Poly.t) Set.Poly.t =
   let params = parameter_names_set mir in
-  (* build dataflow data structure *)
   let info_map = log_prob_build_dep_info_map mir in
   list_target_dependant_cf info_map params
 
+(* Argument positions in the result are zero-based. *)
 let list_arg_dependant_fundef_cf (mir : Program.Typed.t)
     (fun_def : 'a Program.fun_def) : (Location_span.t * int * string) Set.Poly.t
     =
   let args = List.map ~f:(fun (_, name, _) -> name) fun_def.fdargs in
-  (* Only look for control flow if this function definition has a body *)
   Option.value_map fun_def.fdbody ~default:Set.Poly.empty ~f:(fun body ->
-      (* build dataflow data structure *)
       let info_map = build_dep_info_map mir body in
       let cf_deps = list_target_dependant_cf info_map (Set.Poly.of_list args) in
       Set.Poly.union_map cf_deps ~f:(fun (loc, names) ->
@@ -274,10 +261,10 @@ let list_non_one_priors (fg : factor_graph) (mir : Program.Typed.t) :
      except through P *)
   let priors = list_priors ~factor_graph:(Some fg) mir in
   let prior_set =
-    VExprMap.fold priors ~init:Set.Poly.empty
-      ~f:(fun ~key:(VVar v) ~data:(factors_opt, loc) s ->
+    String.Map.fold priors ~init:Set.Poly.empty
+      ~f:(fun ~key:param ~data:(factors_opt, loc) s ->
         Option.value_map factors_opt ~default:s ~f:(fun factors ->
-            Set.Poly.add (v, Set.Poly.cardinal factors, loc) s)) in
+            Set.Poly.add (param, Set.Poly.cardinal factors, loc) s)) in
   (* Return only multi-prior parameters *)
   Set.Poly.filter prior_set ~f:(fun (_, n, _) -> n <> 1)
 
@@ -475,7 +462,7 @@ let uninitialized_warnings (mir : Program.Typed.t) =
   let uninit_vars =
     Set.Poly.filter
       ~f:(fun (span, _) -> span <> Location_span.empty)
-      (Dependence_analysis.mir_uninitialized_variables mir) in
+      (Uninitialized_variables.mir_uninitialized_variables mir) in
   let vars = Hash_set.create 32 in
   let deduplicated =
     Set.Poly.filter_map uninit_vars ~f:(fun (loc, var) ->
@@ -490,8 +477,6 @@ let uninitialized_warnings (mir : Program.Typed.t) =
 let to_list warning_set =
   Set.Poly.to_list warning_set |> List.sort ~cmp:Stdlib.compare
 
-(* String-print uninitialized warnings. In case a user wants only this
-   warning *)
 let warn_uninitialized mir = uninitialized_warnings mir |> to_list
 
 (* Optimization settings for constant propagation and partial evaluation *)
@@ -501,7 +486,6 @@ let settings_constant_prop =
   ; copy_propagation= true
   ; partial_evaluation= true }
 
-(* Collect all pedantic mode warnings, sorted, to stderr *)
 let warn_pedantic (mir_unopt : Program.Typed.t) =
   (* Some warnings will be stronger when constants are propagated *)
   let mir =

@@ -18,3 +18,24 @@ let typed_ast_of_string_exn code =
   ast |> Result.map_error ~f:(error_to_string ~code) |> Result.get_ok' |> fst
 
 let mir_of_string s = typed_ast_of_string_exn s |> Ast_to_Mir.trans_prog ""
+
+(** Prints the output of [pp] on one line. If [pp] prints [A] and [B] on two
+    lines, [one_line pp] prints [A B]. *)
+let one_line (pp : 'a Fmt.t) : 'a Fmt.t =
+ fun ppf x ->
+  let buffer = Buffer.create 128 in
+  let line_ppf = Format.formatter_of_buffer buffer in
+  Format.pp_set_margin line_ppf 1_000_000;
+  Fmt.pf line_ppf "%a@?" pp x;
+  Buffer.contents buffer |> String.split_lines |> List.map ~f:String.trim
+  |> String.concat ~sep:" " |> Fmt.string ppf
+
+(** Prints a statement with the labels of its child statements in place of the
+    child statements. A loop with body label 8 prints as [for(n in 1:N) 8]. *)
+let pp_stmt : (Middle.Expr.Typed.t, int) Middle.Stmt.Pattern.t Fmt.t =
+  one_line (Middle.Stmt.Pattern.pp Middle.Expr.Typed.pp Fmt.int)
+
+(** Prints a label set in ascending order, with a space between labels. The set
+    of 3 and 1 prints as [1 3]. An empty set prints nothing. *)
+let pp_labels ppf (labels : int Set.Poly.t) =
+  Fmt.(list ~sep:(any " ") int) ppf (Set.Poly.to_list labels)
