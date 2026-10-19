@@ -1,5 +1,3 @@
 /* $ stanc --warn-pedantic ../param-depend-control-loop-countdown.stan : [exit 0] */
-../param-depend-control-loop-countdown.stan:9:3: warning: The parameter a has 2 priors.
-../param-depend-control-loop-countdown.stan:17:12: warning: The variable b may not have been assigned a value before its first use.
-../param-depend-control-loop-countdown.stan:19:5: warning: A control flow statement depends on parameter(s): a.
-../param-depend-control-loop-countdown.stan:24:5: warning: A control flow statement depends on parameter(s): a.
+../param-depend-control-loop-countdown.stan:15:16: warning: The variable b may not have been assigned a value before its first use.
+../param-depend-control-loop-countdown.stan:20:5: warning: A control flow statement depends on parameter(s): a.

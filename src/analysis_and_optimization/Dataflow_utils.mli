@@ -6,19 +6,37 @@ val build_cf_graphs :
      ?flatten_loops:bool
   -> ?blocks_after_body:bool
   -> ((Expr.Typed.t, label) Stmt.Pattern.t * 'm) LabelMap.t
-  -> label Set.Poly.t
-     * label Set.Poly.t LabelMap.t
-     * label Set.Poly.t LabelMap.t
-(** Simultaneously builds the controlflow parent graph, the predecessor graph
-    and the exit set of a statement. It's advantageous to build them together
-    because they both rely on some of the same Break, Continue and Return
-    bookkeeping.
+  -> label Set.Poly.t * label Set.Poly.t LabelMap.t * control list LabelMap.t
+(** Builds the exit set, the predecessor graph and the controls of each
+    statement in one traversal. They share the bookkeeping of [break],
+    [continue] and [return].
 
-    Takes a statement map and returns the triple: (exit set, predecessor graph,
-    controlflow parent graph) where
-    - (exit set, predecessor graph) is the return value of
-      build_predecessor_graph
-    - (controlflow parent graph) is the return value of build_cf_graph *)
+    The result is a triple. The exit set and the predecessor graph are the
+    result of {!build_predecessor_graph}. The third part maps each label to its
+    controls. A control is an enclosing [if], an enclosing loop, or a jump that
+    can skip the statement ({!Dataflow_types.control}). The enclosing ifs and
+    loops come first, outermost first. A loop statement does not list itself. *)
+
+val loop_of_statement : label -> ('e, 's) Stmt.Pattern.t -> loop option
+(** Returns the loop that a [for] or [while] statement at the label forms. Any
+    other statement gives [None]. [for (n in 1:N) ...] at label [6] gives
+    [Some {id = 6; var = Some "n"}]. *)
+
+val control_parents : control list -> label Set.Poly.t
+(** Returns the statements that directly decide whether a statement runs. These
+    are the nearest enclosing [if] or loop, and each jump. In
+    [for (n in 1:N) if (c) x = 1;], the controls of [x = 1] are the loop and the
+    [if], and the result holds only the [if]. *)
+
+val loops_around :
+  statement_id:label -> ('e, 's) Stmt.Pattern.t -> control list -> loop list
+(** Returns the [for] and [while] loops around a statement, outermost first.
+    [controls] are the controls of the statement. A loop statement also counts
+    as inside its own loop, so its list ends with the loop itself. The reason is
+    that the loop checks its condition, or its upper bound, again after each
+    iteration, so writes in the body can reach it. LLVM also puts the loop
+    header inside the loop. In [for (n in 1:N) if (c) x = 1;], [x = 1] and the
+    [for] statement both give the loop over [n]. *)
 
 val build_cf_graph :
      ((Expr.Typed.t, label) Stmt.Pattern.t * 'm) LabelMap.t

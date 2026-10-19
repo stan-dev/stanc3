@@ -5,13 +5,20 @@ open Dependence_analysis
 
 (** {1 Purpose of the factor graph}
 
-    The factor graph connects density terms to the data and parameters that
-    affect the terms. Pedantic mode uses the connections to find unused
-    parameters and terms that may act as priors.
+    A density term is one term that [target +=] adds to the log density. The
+    factor graph links each density term to the data and parameters that it
+    depends on. Pedantic mode uses the graph for two warnings. Both warnings use
+    factors, which step 1 defines.
 
-    The following example shows how a local computation connects a density term
-    to program inputs. The sections below trace the terms and classify a
-    possible prior:
+    - An unused parameter is a parameter that no factor uses. Thus the parameter
+      does not change the density.
+    - A prior of a parameter is a factor that uses the parameter but no data.
+      Step 4 gives the exact test. Pedantic mode warns when a used parameter has
+      no prior or more than one prior, because each case can be a modeling
+      error.
+
+    The graph comes from four steps. The sections below show each step for the
+    following model.
     {@stan[
       data { real y; }
       parameters { real mu; }
@@ -22,211 +29,198 @@ open Dependence_analysis
       }
     ]}
 
-    {1 Extract density terms}
+    {1 Step 1 of 4: extract factors}
 
-    Each density term becomes a factor associated with its statement. Separate
-    factors let the graph distinguish terms with different input dependencies.
-    The example produces:
+    A factor is a part of a statement that changes the log density. A density
+    term adds to [target]. An [_lp] call can also add to [target]. A rejection
+    that runs stops the evaluation, so the sampler does not accept the sample.
+    Thus a factor is a density term, a rejection or an [_lp] call.
+
+    A label is the integer that identifies a statement in the statement map of
+    {!Dependence_analysis}. Each factor stores the label of its statement. The
+    label keeps equal terms in different statements apart. The example has two
+    factors.
     {@text[
       factor   term
       F1       normal_lpdf(centered | 0, 1)
       F2       normal_lpdf(mu | 0, 1)
     ]}
 
-    {1 Follow dependencies to program inputs}
+    {1 Step 2 of 4: find the inputs of each factor}
 
-    For each factor, traversal starts from the term's read names and controlling
-    statements. Traversal stops at data and parameters. The term's own reads are
-    combined with reads from visited dependencies because the starting statement
-    can be absent from the traversal result.
+    The inputs of a factor are the data and parameters that its value depends
+    on. A dependency of a statement is another statement that can supply a value
+    that it reads, or that controls whether it runs. The second kind is a
+    control dependency. {!Dependence_analysis} finds both kinds.
 
-    For the example, following the assignment to [centered] produces:
+    To find the inputs, a traversal starts from the names that the term reads.
+    It follows the dependencies of the statement and collects their reads. It
+    does not follow data or parameter names, which are its blockers. The goal is
+    the direct inputs of the factor. The definitions of a blocker lead to other
+    names, which are not direct inputs of this factor. A write is not a
+    dependency if a later write always replaces the same element. Thus a factor
+    does not get the inputs of an overwritten value. For [F1], the assignment to
+    [centered] reads [y] and [mu].
     {@text[
       factor   term reads   dependency reads   combined names
       F1       {centered}   {y, mu}            {centered, y, mu}
       F2       {mu}         {}                 {mu}
     ]}
-    Keeping only data and parameter names removes [centered], yielding inputs
-    [{y, mu}] for [F1] and [{mu}] for [F2].
+    The graph keeps only data and parameter names. The inputs are [{y, mu}] for
+    [F1] and [{mu}] for [F2].
 
-    {1 Store connections in both directions}
+    {1 Step 3 of 4: store links in both directions}
 
-    Construction stores inputs by factor and factors by input name. The first
-    direction supplies a factor's neighbors; the reverse direction supplies a
-    variable's neighbors. For the example, the completed maps contain:
+    The graph stores the inputs of each factor and the factors of each input. A
+    factor and its inputs are neighbors. A path goes from neighbor to neighbor.
+    The example has the following links.
     {@text[
       factor -> inputs        input -> factors
       F1 -> {y, mu}           y  -> {F1}
       F2 -> {mu}              mu -> {F1, F2}
     ]}
 
-    {1 Find possible priors}
+    {1 Step 4 of 4: find priors}
 
-    A factor touching a parameter is a possible prior when removing that
-    parameter leaves no path from the factor to data. Removing the parameter
-    prevents its other density terms from creating a path to data.
-
-    For [mu], the example's checks produce:
+    A prior of a parameter is a factor that links to the parameter and has no
+    path to data after the removal of the parameter. The removal is necessary,
+    because every factor of [mu] links to [mu]. Without the removal, [F2]
+    reaches [y] through [mu] and [F1], so [mu] has no prior. After the removal,
+    a path can start only at the other inputs of the factor. For [mu], the test
+    gives the following results.
     {@text[
-      factor   inputs after removing mu   reaches data y   possible prior
-      F1       {y}                        yes              no
-      F2       {}                         no               yes
+      factor   inputs without mu   reaches y   prior of mu
+      F1       {y}                 yes         no
+      F2       {}                  no          yes
     ]}
-    The result is the possible-prior set [{F2}] for [mu]. Graph connectivity
-    supplies a heuristic classification rather than a proof about the density.
-*)
+    The priors of [mu] are [{F2}]. *)
 
-(** {1 API reference}
+(** {1 API reference} *)
 
-    The declarations below describe factor identity, adjacency maps, graph
-    construction and reachability queries. *)
-
-(** A density contribution or statement that affects whether evaluation
-    continues. Each factor is paired with a statement label in {!FactorMap}, so
-    identical expressions in different statements remain distinct. *)
+(** A factor without its label. {!FactorMap} keys add the label. *)
 type factor =
   | TargetTerm of Expr.Typed.t
-      (** One additive term from a [target +=] or [jacobian +=] expression. *)
+      (** One additive term of a [target +=] or [jacobian +=] expression. *)
   | Reject
-      (** A reject or fatal-error statement. Dependencies come from the
-          statements controlling whether evaluation reaches the rejection. *)
+      (** A reject or fatal-error statement. Its inputs come from the statements
+          that control whether it runs. *)
   | LPFunction of (string * Expr.Typed.t list)
-      (** A call classified as [FnTarget], stored as its name and arguments. *)
+      (** A call to an [_lp] function, stored as its name and arguments. *)
 [@@deriving sexp_of]
 
 module FactorMap : Map.S with type key = factor * label
 
-(** Adjacency maps produced by graph construction. [factor_map] maps each
-    factor/label pair to input names; [var_map] maps each input name to the
-    factors using that input. The example's [F1] maps to [{"y"; "mu"}], and
-    ["mu"] maps to both [F1] and [F2]. *)
+(** The two link maps. [factor_map] maps each factor and label to its input
+    names. [var_map] maps each input name to the factors that use it. In the
+    overview, [F1] maps to [{"y"; "mu"}], and ["mu"] maps to [F1] and [F2]. *)
 type factor_graph =
   { factor_map: string Set.Poly.t FactorMap.t
   ; var_map: (factor * label) Set.Poly.t String.Map.t }
 
-(** {2 Factor extraction and input collection}
-
-    Extraction selects density terms and rejection statements. Input collection
-    follows their statement dependencies and retains the factor's own reads. *)
+(** {2 Factor extraction and input collection} *)
 
 val extract_factors_statement : (Expr.Typed.t, 'a) Stmt.Pattern.t -> factor list
-(** Extracts factors from [stmt] without visiting nested statements. An update
+(** Returns the factors of [stmt] without visiting nested statements.
     [target += a + b] gives [TargetTerm a] and [TargetTerm b]. Other statements
-    give no factors unless they are rejections or [FnTarget] calls. *)
+    give no factors, unless they are rejections or [_lp] calls. *)
 
 val extract_factors :
      ((Expr.Typed.t, label) Stmt.Pattern.t * 'a) LabelMap.t
   -> label
   -> (label * factor) list
-(** Collects factors from the statement at [label] and all nested statements.
-    Results pair each factor with its containing statement's label. *)
+(** Returns the factors of the statement at [label] and of all nested
+    statements. Each factor is paired with the label of its statement. *)
 
 val factor_rhs : factor -> string Set.Poly.t
-(** Returns the factor's own read names before dependency traversal. The
-    overview's first term gives [{"centered"}]; the second gives [{"mu"}].
-    Rejection factors give an empty set. [LPFunction] arguments must be bare
-    variable expressions because {!Mir_utils.var_name_of_expr_exn} extracts
-    their names. *)
+(** Returns the names that a factor reads itself. In the overview, [F1] gives
+    [{"centered"}] and [F2] gives [{"mu"}]. A rejection gives an empty set. Each
+    [LPFunction] argument must be a bare variable, because
+    {!Mir_utils.var_name_of_expr_exn} reads its name. *)
 
 val factor_var_dependencies :
   dep_info_map -> string Set.Poly.t -> label * factor -> string Set.Poly.t
-(** Combines a factor's own reads with reads at dependency labels. [blockers]
-    stops traversal at program inputs but does not remove their names from the
-    combined result. For the overview's [F1], the result is
-    [{"centered"; "y"; "mu"}]; graph construction later selects only inputs. *)
+(** Returns the names that a factor reads, joined with the names read by its
+    dependencies. The second argument holds the blockers. The result can still
+    contain blocker names. In the overview, [F1] gives
+    [{"centered"; "y"; "mu"}]. {!prog_factor_graph} then keeps only inputs. *)
 
-(** {2 Graph construction}
-
-    Construction converts factor/input triples into adjacency maps. Removal
-    helpers update selected entries for data exclusion and prior queries. *)
+(** {2 Graph construction} *)
 
 val build_adjacency_maps :
   (label * factor * string Set.Poly.t) list -> factor_graph
-(** Builds both adjacency directions from [(label, factor, input_names)]
-    triples. Repeated keys union their sets. Two factors reading [mu] produce
-    one [var_map] entry for [mu] containing both factor/label pairs. *)
+(** Builds both link maps from [(label, factor, input_names)] triples. Equal
+    keys join their sets. *)
 
 val fg_remove_fac : factor * label -> factor_graph -> factor_graph
-(** Removes [fac] from [factor_map]. The reverse [var_map] entries are retained.
-*)
+(** Removes [fac] from [factor_map]. The [var_map] entries keep [fac]. Thus a
+    later lookup through [var_map] can still return [fac]. {!fg_reaches} then
+    raises [Not_found], because [fac] has no [factor_map] entry. *)
 
 val fg_remove_var : string -> factor_graph -> factor_graph
-(** Removes [var] from every factor's input set and removes the variable's
-    [var_map] entry. Removing [mu] in the overview leaves [F1] with [{"y"}] and
-    [F2] with an empty input set. *)
+(** Removes [var] from the inputs of each factor and removes its [var_map]
+    entry. In the overview, removing [mu] leaves [F1] with [{"y"}] and [F2] with
+    no inputs. *)
 
 val remove_touching : string Set.Poly.t -> factor_graph -> factor_graph
-(** Removes names in [vars] and removes directly touching factors from
-    [factor_map]. Other variable entries retain their factor sets, including
-    references to removed factors. For the overview with [vars = {"y"}],
-    [factor_map] retains only [F2], while [var_map["mu"]] still lists both
-    factors. *)
+(** Removes the names in [vars], and removes their neighbor factors from
+    [factor_map]. The [var_map] entries of other names can still hold the
+    removed factors. For [vars = {"y"}], [var_map["mu"]] still holds [F1]. *)
 
 val prog_factor_graph :
   ?exclude_data_facs:bool -> Program.Typed.t -> factor_graph
-(** Builds adjacency maps for factors in [prog.log_prob]. Keeps data names,
-    including transformed data, and parameters from the parameters block.
-    Dependency traversal stops at the input names; local names are removed from
-    the resulting input sets.
+(** Builds the factor graph of [prog.log_prob]. The inputs are the data names,
+    including transformed data, and the names in the parameters block. These
+    inputs are the blockers. The input sets do not contain local names.
 
-    [exclude_data_facs] defaults to false. When true, {!remove_touching} removes
-    data variables and directly touching [factor_map] entries. Remaining
-    [var_map] entries can retain references to the removed factors. *)
+    [exclude_data_facs] is false by default. When it is true, {!remove_touching}
+    removes the data names and their neighbor factors. The result then holds
+    only the factors that use no data. No caller in the compiler sets this
+    option. Pedantic mode needs the data factors, because the prior test in step
+    4 looks for paths to data. *)
 
-(** {2 Reachability and prior queries}
-
-    Reachability alternates variable-to-factor and factor-to-variable links.
-    Prior queries remove a parameter's links before looking for paths to data.
-*)
+(** {2 Reachability and prior queries} *)
 
 val fg_reaches : string Set.Poly.t -> string Set.Poly.t -> factor_graph -> bool
-(** Searches from variable names in [starts] for a connection to [goals]. Visits
-    each expanded variable once and returns true when an expansion reaches a
-    goal. Starting names must have [var_map] entries. In the overview graph,
-    starting at [{"mu"}] reaches [{"y"}] through [F1]. *)
+(** Returns true if a path goes from a name in [starts] to a name in [goals].
+    The search expands each variable once. Each start name must have a [var_map]
+    entry. In the overview, [{"mu"}] reaches [{"y"}] through [F1]. *)
 
 val fg_factor_reaches :
   factor * label -> string Set.Poly.t -> factor_graph -> bool
-(** Starts reachability from the inputs of [start]. In the overview, [F1]
-    reaches [{"y"}]. After removing [mu], [F2] has no inputs and returns false.
-*)
+(** Like {!fg_reaches}, but starts from the inputs of [start]. *)
 
 val fg_factor_is_prior :
   string -> factor * label -> string Set.Poly.t -> factor_graph -> bool
-(** Tests whether [fac] has no path to [data] after removing [var]. For the
-    overview's [mu], the result is false for [F1] and true for [F2]. *)
+(** Returns true if [fac] has no path to [data] after the removal of [var]. In
+    the overview with [var = "mu"], [F1] gives false and [F2] gives true. *)
 
 val fg_var_priors :
      string
   -> string Set.Poly.t
   -> factor_graph
   -> (factor * label) Set.Poly.t option
-(** Returns [Some] with the touching factors classified as possible priors.
-    Returns [None] when [var] has no [var_map] entry. An existing variable with
-    no qualifying factor gives [Some] with an empty set. For [mu] in the
-    overview, the result is [Some {F2}]. *)
+(** Returns [Some] set of the priors of [var]. The set is empty if no neighbor
+    factor of [var] is a prior. Returns [None] if [var] has no [var_map] entry.
+    In the overview, [mu] gives [Some {F2}]. *)
 
 val list_priors :
      ?factor_graph:factor_graph option
   -> Program.Typed.t
   -> ((factor * label) Set.Poly.t option * Location_span.t) String.Map.t
-(** Maps each parameter name to its possible-prior set and declaration location.
-    Uses the supplied graph or constructs one from [mir]. Scalar integer data
-    names are removed from reachability checks because they often represent
-    sizes. For the overview, [mu] maps to [Some {F2}] and its declaration span.
-*)
+(** Maps each parameter name to its priors and its declaration location. Uses
+    [factor_graph] if given, and otherwise builds a graph from [mir]. The search
+    removes scalar integer data from the graph, because these names are often
+    sizes. Without the removal, a factor that uses a size such as [N] reaches
+    data and fails the prior test in step 4. That result is wrong, because [N]
+    gives only a size and no observed values. *)
 
-(** {2 Graph display}
-
-    Display names describe factor expressions. DOT output draws factors as boxes
-    and connects each factor to the input names in [factor_map]. *)
+(** {2 Graph display} *)
 
 val string_of_factor : factor -> string
-(** Returns the density expression in quotes, ["reject"] for a rejection, or the
-    function name for a call factor. Display names omit statement labels. *)
+(** Returns the term in quotes, ["reject"] for a rejection, or the function name
+    for an [LPFunction]. The name does not contain the label. *)
 
 val factor_graph_to_dot : factor_graph -> string
-(** Emits Graphviz DOT text using the forward adjacency map. For the overview,
-    edges connect [F1]'s expression to [y] and [mu], and [F2]'s expression to
-    [mu]. The displayed factor names come from {!string_of_factor}, so identical
-    names share a DOT node even when their statement labels differ. *)
+(** Returns [factor_map] as Graphviz DOT text. Each factor is a box with an edge
+    to each of its inputs. Nodes take names from {!string_of_factor}, so equal
+    terms at different labels share one node. *)

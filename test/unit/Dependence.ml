@@ -1,15 +1,20 @@
-(* Checks element comparisons and execution order for reaching definitions. Each
-   read statement precedes its candidate source/sink pairs. For example:
-
-   13: c[n] = b[(n - 1)]; 12 W b[n] --> R b[n-1]: constrained [n:1] flows
-
-   Statement 12 writes the element read by statement 13 one iteration later.
-   Distances print outermost first; * means unknown. Pairs are printed when
-   names and kinds permit flow, even if later checks reject the pair. External
-   definitions have no access record and are not printed. *)
+(* Each test prints the reads of one variable, with the label of each read.
+   Under a read, each line compares the read with one write that reaches it. The
+   parts of a line are, in order: - the label of the write, - the access of the
+   write, - [-->] and the access of the read, - the result, - the last word. The
+   result is independent, unknown, or one iteration distance for each common
+   loop, outermost first. Independent means the two accesses never select the
+   same element. Unknown means they can select the same element, but no distance
+   is known. A * distance is unknown. The last word is [flows] or [cannot flow].
+   [flows] means the written value can reach the read. [cannot flow] means the
+   distances put the read before the write. An independent line has no last
+   word. A definition from outside the log density, such as data, has no access
+   record. The test does not print it. Thus a read can show fewer lines than the
+   writes that reach it. *)
 
 open Std
 open Analysis_and_optimization.Dependence_analysis
+open Analysis_and_optimization.Dataflow_utils
 open Analysis_and_optimization.Dataflow_types
 module Accesses = Analysis_and_optimization.Accesses
 module Dependence = Analysis_and_optimization.Dependence
@@ -28,11 +33,16 @@ let print_verdicts ~var prog =
       if not (List.is_empty sinks) then (
         Fmt.pr "%d: %a@." sink_id Test_utils.pp_stmt pattern;
         let reaching_ids =
-          reaching_defn_lookup sink_info.reaching_defn_entry var in
-        LabelMap.iter map ~f:(fun ~key:source_id ~data:(_, source_info) ->
+          reaching_defn_lookup sink_info.reaching_definitions.entry var in
+        LabelMap.iter map
+          ~f:(fun ~key:source_id ~data:(source_pattern, source_info) ->
             if Set.Poly.mem (Some source_id) reaching_ids then
               let loops =
-                Dependence.common_loops source_info.loops sink_info.loops in
+                Dependence.common_loops
+                  (loops_around ~statement_id:source_id source_pattern
+                     source_info.controls)
+                  (loops_around ~statement_id:sink_id pattern sink_info.controls)
+              in
               List.iter (accesses_of source_id) ~f:(fun source ->
                   List.iter sinks ~f:(fun sink ->
                       if flows_into source sink then
@@ -41,9 +51,9 @@ let print_verdicts ~var prog =
                         let outcome =
                           match dependence with
                           | Dependence.Independent -> ""
-                          | Unknown | Constrained _ ->
+                          | Unknown | Distances _ ->
                               if
-                                Dependence.may_exist
+                                Dependence.is_plausible
                                   ~source_first_in_text:(source_id < sink_id)
                                   dependence
                               then "  flows"
@@ -60,8 +70,8 @@ let%expect_test "Strong SIV: loop-carried and loop-independent" =
         vector[N] b; vector[N] c; vector[N] d;
         for (n in 2:N) {
           b[n] = a;
-          c[n] = b[n - 1];   // loop-carried: the read is one iteration after the write
-          d[n] = b[n];       // loop-independent: the same iteration, the write first
+          c[n] = b[n - 1];   // the read gets the write from the previous iteration
+          d[n] = b[n];       // the write runs first in the same iteration
         }
       }
     |};
@@ -69,10 +79,10 @@ let%expect_test "Strong SIV: loop-carried and loop-independent" =
     {|
     13: c[n] = b[(n - 1)];
       5 W b --> R b[n-1]: unknown  flows
-      12 W b[n] --> R b[n-1]: constrained [n:1]  flows
+      12 W b[n] --> R b[n-1]: distances [n:1]  flows
     14: d[n] = b[n];
       5 W b --> R b[n]: unknown  flows
-      12 W b[n] --> R b[n]: constrained [n:0]  flows
+      12 W b[n] --> R b[n]: distances [n:0]  flows
     |}]
 
 let%expect_test "Strong SIV: self pairs" =
@@ -83,7 +93,7 @@ let%expect_test "Strong SIV: self pairs" =
       model {
         vector[N] x;
         for (n in 2:N) {
-          x[n] = x[n - 1] + x[n] + a;   // x[n - 1]: flows; x[n]: the write runs after the read
+          x[n] = x[n - 1] + x[n] + a;   // x[n] cannot flow because the write runs after the read
         }
       }
     |};
@@ -92,8 +102,8 @@ let%expect_test "Strong SIV: self pairs" =
     8: x[n] = ((x[(n - 1)] + x[n]) + a);
       5 W x --> R x[n-1]: unknown  flows
       5 W x --> R x[n]: unknown  flows
-      8 W x[n] --> R x[n-1]: constrained [n:1]  flows
-      8 W x[n] --> R x[n]: constrained [n:0]  cannot flow
+      8 W x[n] --> R x[n-1]: distances [n:1]  flows
+      8 W x[n] --> R x[n]: distances [n:0]  cannot flow
     |}]
 
 let%expect_test "Sink runs first" =
@@ -104,8 +114,8 @@ let%expect_test "Sink runs first" =
       model {
         vector[N] b; vector[N] c; vector[N] d;
         for (n in 1:(N - 1)) {
-          c[n] = b[n + 1];   // the element b[n] writes in the next iteration
-          d[n] = b[n];       // the element b[n] writes later in this iteration
+          c[n] = b[n + 1];   // b[n] writes this element in the next iteration
+          d[n] = b[n];       // b[n] writes this element later in this iteration
           b[n] = a;
         }
       }
@@ -114,10 +124,10 @@ let%expect_test "Sink runs first" =
     {|
     12: c[n] = b[(n + 1)];
       5 W b --> R b[n+1]: unknown  flows
-      14 W b[n] --> R b[n+1]: constrained [n:-1]  cannot flow
+      14 W b[n] --> R b[n+1]: distances [n:-1]  cannot flow
     13: d[n] = b[n];
       5 W b --> R b[n]: unknown  flows
-      14 W b[n] --> R b[n]: constrained [n:0]  cannot flow
+      14 W b[n] --> R b[n]: distances [n:0]  cannot flow
     |}]
 
 let%expect_test "ZIV: literal constants" =
@@ -129,7 +139,7 @@ let%expect_test "ZIV: literal constants" =
         vector[2] theta;
         theta[1] = a;
         theta[2] = b;
-        y ~ normal(theta[1], s);   // theta[2] = b never touches theta[1]
+        y ~ normal(theta[1], s);   // theta[2] = b never writes theta[1]
         y ~ normal(theta[2], s);
       }
     |};
@@ -154,7 +164,7 @@ let%expect_test "ZIV: symbolic constants" =
         vector[k + 2] v;
         v[k + 1] = mu;
         v[k + 2] = 1;
-        if (v[k + 2] > 0) target += 1;   // same symbol k, constants one apart
+        if (v[k + 2] > 0) target += 1;   // the indices k + 1 and k + 2 always differ
       }
     |};
   [%expect
@@ -174,7 +184,7 @@ let%expect_test "Nested loops: the outer loop re-executes the body" =
         vector[N] b; vector[N] c;
         for (m in 1:M) {
           for (n in 1:(N - 1)) {
-            c[n] = b[n + 1];   // carried by m: written in an earlier m iteration
+            c[n] = b[n + 1];   // an earlier m iteration writes this element
             b[n] = a;
           }
         }
@@ -184,7 +194,7 @@ let%expect_test "Nested loops: the outer loop re-executes the body" =
     {|
     12: c[n] = b[(n + 1)];
       5 W b --> R b[n+1]: unknown  flows
-      13 W b[n] --> R b[n+1]: constrained [m:*][n:-1]  flows
+      13 W b[n] --> R b[n+1]: distances [m:*][n:-1]  flows
     |}]
 
 let%expect_test "Nested loops: direction at the outer level" =
@@ -196,8 +206,8 @@ let%expect_test "Nested loops: direction at the outer level" =
         vector[N] b; matrix[N, M] c; matrix[N, M] d;
         for (n in 2:(N - 1)) {
           for (m in 1:M) {
-            c[n, m] = b[n + 1];   // written in a later n iteration: cannot flow
-            d[n, m] = b[n - 1];   // written in an earlier n iteration: flows
+            c[n, m] = b[n + 1];   // a later n iteration writes this element
+            d[n, m] = b[n - 1];   // an earlier n iteration writes this element
             b[n] = a;
           }
         }
@@ -207,10 +217,10 @@ let%expect_test "Nested loops: direction at the outer level" =
     {|
     16: c[n, m] = b[(n + 1)];
       5 W b --> R b[n+1]: unknown  flows
-      18 W b[n] --> R b[n+1]: constrained [n:-1][m:*]  cannot flow
+      18 W b[n] --> R b[n+1]: distances [n:-1][m:*]  cannot flow
     17: d[n, m] = b[(n - 1)];
       5 W b --> R b[n-1]: unknown  flows
-      18 W b[n] --> R b[n-1]: constrained [n:1][m:*]  flows
+      18 W b[n] --> R b[n-1]: distances [n:1][m:*]  flows
     |}]
 
 let%expect_test "Nested loops: a while loop between the for and the statements"
@@ -223,7 +233,7 @@ let%expect_test "Nested loops: a while loop between the for and the statements"
         vector[N] b; vector[N] c; int k = 0;
         for (n in 1:N) {
           while (k < 2) {
-            c[n] = b[n];   // the write below reaches it through the while loop
+            c[n] = b[n];   // the next while iteration reads the write below
             b[n] = a;
             k += 1;
           }
@@ -234,7 +244,7 @@ let%expect_test "Nested loops: a while loop between the for and the statements"
     {|
     14: c[n] = b[n];
       5 W b --> R b[n]: unknown  flows
-      15 W b[n] --> R b[n]: constrained [n:0][while:*]  flows
+      15 W b[n] --> R b[n]: distances [n:0][while:*]  flows
     |}]
 
 let%expect_test "Indices the test cannot compare" =
@@ -245,16 +255,16 @@ let%expect_test "Indices the test cannot compare" =
       model {
         vector[N] b; vector[N] c; matrix[N, N] d;
         b[k] = a;
-        if (b[j] > 0) target += 1;        // different symbols
+        if (b[j] > 0) target += 1;        // j and k can be equal
         for (n in 1:N) b[n] = a;
-        for (n in 1:N) c[n] = b[n];       // sibling loops over the same name n
+        for (n in 1:N) c[n] = b[n];       // the n of another loop is a different variable
         for (n in 1:N) {
           for (m in 1:N) {
             b[n] = a;
-            d[n, m] = b[m] + b[idx[n]];   // a different loop variable; a gather
+            d[n, m] = b[m] + b[idx[n]];   // m is another loop variable, and idx[n] is unhandled
           }
         }
-        b[1:2] = c[1:2];                  // a slice
+        b[1:2] = c[1:2];                  // the analysis does not compare slices
         if (b[k] > 0) target += 1;
       }
     |};
@@ -269,13 +279,13 @@ let%expect_test "Indices the test cannot compare" =
       16 W b[n] --> R b[n]: unknown  flows
     25: d[n, m] = (b[m] + b[idx[n]]);
       5 W b --> R b[m]: unknown  flows
-      5 W b --> R b[?nonsequential]: unknown  flows
+      5 W b --> R b[?unhandled]: unknown  flows
       11 W b[k] --> R b[m]: unknown  flows
-      11 W b[k] --> R b[?nonsequential]: unknown  flows
+      11 W b[k] --> R b[?unhandled]: unknown  flows
       16 W b[n] --> R b[m]: unknown  flows
-      16 W b[n] --> R b[?nonsequential]: unknown  flows
+      16 W b[n] --> R b[?unhandled]: unknown  flows
       24 W b[n] --> R b[m]: unknown  flows
-      24 W b[n] --> R b[?nonsequential]: unknown  flows
+      24 W b[n] --> R b[?unhandled]: unknown  flows
     27: if((b[k] > 0)) 28
       5 W b --> R b[k]: unknown  flows
       11 W b[k] --> R b[k]: unknown  flows
@@ -293,7 +303,7 @@ let%expect_test "Indices that read a variable assigned in the block" =
         vector[N] v; int m = 1;
         v[m] = mu;
         for (n in 1:N) {
-          v[n] = v[m] + x[n];   // m changes below, so v[m] may be any element
+          v[n] = v[m] + x[n];   // the loop writes m, so v[m] can be any element
           m = n;
         }
       }
@@ -312,27 +322,36 @@ let%expect_test "A loop that walks down" =
       data { int N; }
       parameters { real a; }
       model {
-        vector[N] b; vector[N] c; vector[N] d;
+        vector[N] b; vector[N] c; vector[N] d; vector[N] e;
         for (m in 1:(N - 1)) {
           int n = N - m;
           c[n] = b[n + 1];           // n is assigned in the loop
           b[n] = a;
         }
         for (m in 1:(N - 1)) {
-          d[N - m] = b[N - m + 1];   // N - m is not the loop variable plus a constant
+          d[N - m] = b[N - m + 1];   // the previous iteration writes b[N - m + 1]
           b[N - m] = a;
+        }
+        for (m in 2:N) {
+          e[N - m + 1] = b[N - m];   // the next iteration writes b[N - m]
+          b[N - m + 1] = a;
         }
       }
     |};
   [%expect
     {|
-    14: c[n] = b[(n + 1)];
+    16: c[n] = b[(n + 1)];
       5 W b --> R b[?written]: unknown  flows
-      15 W b[?written] --> R b[?written]: unknown  flows
-    18: d[(N - m)] = b[((N - m) + 1)];
-      5 W b --> R b[?nonsequential]: unknown  flows
-      15 W b[?written] --> R b[?nonsequential]: unknown  flows
-      19 W b[?nonsequential] --> R b[?nonsequential]: unknown  flows
+      17 W b[?written] --> R b[?written]: unknown  flows
+    20: d[(N - m)] = b[((N - m) + 1)];
+      5 W b --> R b[-m+N+1]: unknown  flows
+      17 W b[?written] --> R b[-m+N+1]: unknown  flows
+      21 W b[-m+N] --> R b[-m+N+1]: distances [m:1]  flows
+    24: e[((N - m) + 1)] = b[(N - m)];
+      5 W b --> R b[-m+N]: unknown  flows
+      17 W b[?written] --> R b[-m+N]: unknown  flows
+      21 W b[-m+N] --> R b[-m+N]: unknown  flows
+      25 W b[-m+N+1] --> R b[-m+N]: distances [m:-1]  cannot flow
     |}]
 
 let%expect_test "Tuple fields" =
@@ -343,7 +362,7 @@ let%expect_test "Tuple fields" =
         tuple(real, real) t;
         t.1 = a;
         t.2 = 1;
-        if (t.2 > 0) target += 1;   // a different field
+        if (t.2 > 0) target += 1;   // t.1 = a writes a different field
         if (t.1 > 0) target += 1;
       }
     |};
@@ -368,7 +387,7 @@ let%expect_test "Paths of different length" =
         array[N] vector[K] a; real y;
         for (n in 1:N) {
           a[n] = rep_vector(mu, K);
-          y = a[n, 1];   // one index against two
+          y = a[n, 1];
         }
       }
     |};
@@ -388,19 +407,19 @@ let%expect_test "Two index positions of one pair of accesses" =
         matrix[N, N] m; vector[N] d; vector[N] e; vector[N] f; vector[N] g;
         for (n in 2:N) {
           m[1, n] = a;
-          d[n] = m[2, n];           // the first position rules the pair out
+          d[n] = m[2, n];           // row 1 and row 2 never match
         }
         for (n in 2:N) {
           m[n, 1] = a;
-          e[n] = m[n, idx[n]];      // the second position cannot be compared, so the first decides
+          e[n] = m[n, idx[n]];      // the first index decides, because idx[n] is unhandled
         }
         for (n in 2:N) {
           m[n, n] = a;
-          f[n] = m[n - 1, n];       // distances 1 and 0 at once: no iteration
+          f[n] = m[n - 1, n];       // no iteration gives distance 1 and distance 0
         }
         for (n in 2:N) {
           m[n, n] = a;
-          g[n] = m[n - 1, n - 1];   // both positions agree on distance 1
+          g[n] = m[n - 1, n - 1];   // both indices give distance 1
         }
       }
     |};
@@ -410,9 +429,9 @@ let%expect_test "Two index positions of one pair of accesses" =
       6 W m --> R m[2, n]: unknown  flows
       17 W m[1, n] --> R m[2, n]: independent
     22: e[n] = m[n, idx[n]];
-      6 W m --> R m[n, ?nonsequential]: unknown  flows
-      17 W m[1, n] --> R m[n, ?nonsequential]: unknown  flows
-      21 W m[n, 1] --> R m[n, ?nonsequential]: constrained [n:0]  flows
+      6 W m --> R m[n, ?unhandled]: unknown  flows
+      17 W m[1, n] --> R m[n, ?unhandled]: unknown  flows
+      21 W m[n, 1] --> R m[n, ?unhandled]: distances [n:0]  flows
     26: f[n] = m[(n - 1), n];
       6 W m --> R m[n-1, n]: unknown  flows
       17 W m[1, n] --> R m[n-1, n]: unknown  flows
@@ -423,7 +442,7 @@ let%expect_test "Two index positions of one pair of accesses" =
       17 W m[1, n] --> R m[n-1, n-1]: unknown  flows
       21 W m[n, 1] --> R m[n-1, n-1]: unknown  flows
       25 W m[n, n] --> R m[n-1, n-1]: unknown  flows
-      29 W m[n, n] --> R m[n-1, n-1]: constrained [n:1]  flows
+      29 W m[n, n] --> R m[n-1, n-1]: distances [n:1]  flows
     |}]
 
 let%expect_test "Several reads of one variable in one statement" =
@@ -435,7 +454,7 @@ let%expect_test "Several reads of one variable in one statement" =
         vector[N] x; vector[N] e;
         for (n in 3:N) {
           x[n] = a;
-          e[n] = x[n - 1] + x[n - 2];   // one verdict per pair, no merge
+          e[n] = x[n - 1] + x[n - 2];
         }
       }
     |};
@@ -444,6 +463,40 @@ let%expect_test "Several reads of one variable in one statement" =
     11: e[n] = (x[(n - 1)] + x[(n - 2)]);
       5 W x --> R x[n-1]: unknown  flows
       5 W x --> R x[n-2]: unknown  flows
-      10 W x[n] --> R x[n-1]: constrained [n:1]  flows
-      10 W x[n] --> R x[n-2]: constrained [n:2]  flows
+      10 W x[n] --> R x[n-1]: distances [n:1]  flows
+      10 W x[n] --> R x[n-2]: distances [n:2]  flows
+    |}]
+
+let%expect_test "Loop headers run in every iteration of their own loop" =
+  let prog =
+    {|
+      data { int N; array[N] int<lower=0> K; }
+      parameters { real a; }
+      model {
+        vector[N] v; array[N] int k = K;
+        for (n in 1:N) {
+          while (v[n] < 0) v[n] = v[n] + a;   // the write reaches the next condition check
+        }
+        for (n in 1:N) {
+          for (i in 1:k[n]) k[n] = k[n] - 1;  // the write reaches the next bound check
+        }
+      }
+    |}
+  in
+  print_verdicts ~var:"v" prog;
+  print_verdicts ~var:"k" prog;
+  [%expect
+    {|
+    11: while((v[n] < 0)) 12
+      5 W v --> R v[n]: unknown  flows
+      12 W v[n] --> R v[n]: distances [n:0][while:*]  flows
+    12: v[n] = (v[n] + a);
+      5 W v --> R v[n]: unknown  flows
+      12 W v[n] --> R v[n]: distances [n:0][while:*]  flows
+    15: for(i in 1:k[n]) 16
+      8 W k --> R k[n]: unknown  flows
+      17 W k[n] --> R k[n]: distances [n:0][i:*]  flows
+    17: k[n] = (k[n] - 1);
+      8 W k --> R k[n]: unknown  flows
+      17 W k[n] --> R k[n]: distances [n:0][i:*]  flows
     |}]

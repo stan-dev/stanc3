@@ -1,14 +1,36 @@
 open Std
 open Std.Sexp_conv
 
-(** Statement identifier, unique within a map or graph. Labels from separate
-    maps are not interchangeable. *)
+(** A label identifies one statement in a statement map or graph. Labels from
+    different maps do not match. *)
 type label = int [@@deriving sexp_of]
 
-(** Candidate value source by variable name: [Some label] identifies a
-    statement; [None] identifies an external definition. Element checks use
-    access records. *)
+(** A possible source of the value of a variable. [(x, Some l)] means that the
+    statement with label [l] can write [x]. [(x, None)] means that [x] gets a
+    value from outside the analyzed statement. *)
 type reaching_defn = string * label option [@@deriving sexp_of]
+
+(** A [for] or [while] loop around a statement. [id] is the label of the loop
+    statement. [var] is the loop variable of a [for], or [None] for a [while].
+*)
+type loop = {id: label; var: string option}
+
+(** A statement that controls whether, or how often, another statement runs.
+    {!Dataflow_utils.build_cf_graphs} gives each statement a list of controls.
+    The list holds the enclosing ifs and loops, outermost first, and then the
+    jumps. *)
+(** The branch of an [if] that holds a statement. *)
+type branch = Then | Else
+
+type control =
+  | Enclosing_if of {id: label; branch: branch}
+      (** An [if] around the statement. [id] is the label of the [if], and
+          [branch] is the branch that holds the statement. *)
+  | Enclosing_loop of loop  (** A [for] or [while] around the statement. *)
+  | Jump of label
+      (** A [break], [continue] or [return] that can skip the statement. For a
+          loop statement, a [break] or [return] in its body that can end the
+          loop. *)
 
 module LabelMap = struct
   include Int.Map

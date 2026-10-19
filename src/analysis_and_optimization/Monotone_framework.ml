@@ -274,8 +274,8 @@ let powerset_lattice_empty_initial (type v) (module T : TYPE with type vals = v)
       let initial = Set.Poly.empty
     end)
 
-(** Reaching definitions use union at joins and [None] for external definitions.
-*)
+(** Lattice for reaching definitions. A join takes the set union. [(x, None)] is
+    a definition of [x] from outside the analyzed statement. *)
 let reaching_definitions_lattice (type v l)
     (module Variables : INITIALTYPE with type vals = v)
     (module Labels : TYPE with type vals = l) =
@@ -440,13 +440,11 @@ let copy_propagation_transfer (globals : string Set.Poly.t)
 
 let transfer_gen_kill p gen kill = Set.Poly.union gen (Set.Poly.diff p kill)
 
-(* Assignment tracking supplies both possible definitions and variables known to
-   be assigned. Reaching definitions union candidates at joins; initialized
-   variables intersect assigned-name sets to require assignments on every
-   path. *)
+(* The functions below find the variables that a statement assigns. Reaching
+   definitions and the initialized-variables analysis both use them. *)
 
-(* Expression calls can write target even in an assignment such as x =
-   foo_lp(y). *)
+(* True if an expression in the statement calls a function that adds to
+   [target], for example [x = foo_lp(y)]. *)
 let exprs_increment_target (s : (Expr.Typed.t, 'a) Stmt.Pattern.t) =
   Stmt.Pattern.fold
     (fun increments_earlier expr ->
@@ -459,7 +457,7 @@ let exprs_increment_target (s : (Expr.Typed.t, 'a) Stmt.Pattern.t) =
            expr)
     Fun.const false s
 
-(** Names assigned by the statement itself, including accumulator updates. *)
+(** Variables the statement assigns. An update to [target] is an assignment. *)
 let assigned_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Pattern.t) =
   let assigned =
     match s with
@@ -484,14 +482,27 @@ let declared_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Pattern.t) =
   | Decl {decl_id= x; _} -> Set.Poly.singleton x
   | _ -> Set.Poly.empty
 
-(* An uninitialized declaration is a reaching-definition candidate, but does not
+(* A declaration without a value is a reaching definition, but it does not
    initialize the variable. *)
 let assigned_or_declared_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Pattern.t) =
   Set.Poly.union (assigned_vars_stmt s) (declared_vars_stmt s)
 
-(** Generates definitions for assigned or declared names. Whole-variable writes
-    replace earlier definitions; indexed and tuple-field writes retain them. *)
+(** A definition [(x, Some l)] means that the statement with label [l] can write
+    [x]. A statement adds a definition for each variable it assigns or declares.
+    A write to a whole variable removes the earlier definitions of that
+    variable. An indexed or tuple-field write keeps them, because this function
+    sees only variable names. It does not see which element a write selects. So
+    it cannot tell when an element write overwrites an earlier one.
+
+    A caller that knows the elements, such as
+    [Dependence_analysis.element_kills], passes [kills] to remove these
+    definitions too. At label [killer], [kills ~killer ~killed x] removes each
+    definition [(x, Some killed)] for which it is true. It must be true only if
+    [killer] overwrites every value that [killed] can leave in [x], on every
+    path to [killer]. The default removes nothing extra. *)
 let reaching_definitions_transfer
+    ?(kills : killer:int -> killed:int -> string -> bool =
+      fun ~killer:_ ~killed:_ _ -> false)
     (flowgraph_to_mir : Stmt.Located.Non_recursive.t LabelMap.t) =
   (module struct
     type labels = int
@@ -499,10 +510,8 @@ let reaching_definitions_transfer
 
     let transfer_function l p =
       let mir_node = (LabelMap.find l flowgraph_to_mir).pattern in
-      let gen =
-        Set.Poly.map
-          ~f:(fun x -> (x, Some l))
-          (assigned_or_declared_vars_stmt mir_node) in
+      let written = assigned_or_declared_vars_stmt mir_node in
+      let gen = Set.Poly.map ~f:(fun x -> (x, Some l)) written in
       let target_defns = Set.Poly.filter p ~f:(fun (y, _) -> y = "target") in
       let killed =
         match mir_node with
@@ -518,17 +527,24 @@ let reaching_definitions_transfer
          |While (_, _)
          |Profile _ | Block _ | SList _ | Assignment _ ->
             Set.Poly.empty in
+      let element_killed =
+        Set.Poly.filter p ~f:(fun (var, definition) ->
+            match definition with
+            | Some killed ->
+                Set.Poly.mem var written && kills ~killer:l ~killed var
+            | None -> false) in
       let kill =
-        if exprs_increment_target mir_node then
-          Set.Poly.union killed target_defns
-        else killed in
+        Set.Poly.union_list
+          [ killed; element_killed
+          ; (if exprs_increment_target mir_node then target_defns
+             else Set.Poly.empty) ] in
       transfer_gen_kill p gen kill
   end : TRANSFER_FUNCTION
     with type labels = int
      and type properties = (string * int option) Set.Poly.t)
 
-(** Adds assigned names. Intersection at joins requires an assignment on every
-    path. *)
+(** Adds each variable that the statement assigns. A write to one element counts
+    as an assignment to the whole variable. *)
 let initialized_vars_transfer
     (flowgraph_to_mir : Stmt.Located.Non_recursive.t LabelMap.t) =
   (module struct
@@ -937,9 +953,11 @@ let propagation_mfp (prog : Program.Typed.t)
   in
   Mf.mfp ()
 
-(** Computes reaching definitions, seeding external definitions from program
-    input and output names. *)
-let reaching_definitions_mfp (mir : Program.Typed.t)
+(** Computes reaching definitions. Each input and output variable starts with
+    the definition [(x, None)]. *)
+let reaching_definitions_mfp
+    ?(kills : killer:int -> killed:int -> string -> bool =
+      fun ~killer:_ ~killed:_ _ -> false) (mir : Program.Typed.t)
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
       with type labels = int)
     (flowgraph_to_mir : Stmt.Located.Non_recursive.t LabelMap.t) =
@@ -959,14 +977,15 @@ let reaching_definitions_mfp (mir : Program.Typed.t)
     end : TYPE
       with type vals = int) in
   let (module Lattice) = reaching_definitions_lattice variables labels in
-  let (module Transfer) = reaching_definitions_transfer flowgraph_to_mir in
+  let (module Transfer) =
+    reaching_definitions_transfer ~kills flowgraph_to_mir in
   let (module Mf) =
     monotone_framework (module Flowgraph) (module Lattice) (module Transfer)
   in
   Mf.mfp ()
 
-(** Computes names assigned on every path, starting with no assigned names.
-    Reporting handles values supplied by the program context. *)
+(** Computes the variables that are assigned on every path to each statement. A
+    join takes the set intersection. The start set is empty. *)
 let initialized_vars_mfp (total : string Set.Poly.t)
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
       with type labels = int)

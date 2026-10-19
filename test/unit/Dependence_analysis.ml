@@ -1,24 +1,27 @@
 open Std
 open Std.Sexp_conv
 open Analysis_and_optimization.Dependence_analysis
+open Analysis_and_optimization.Dataflow_utils
 open Middle
 open Analysis_and_optimization.Dataflow_types
 
-(* These tests check statement dependencies used by pedantic mode and the factor
-   graph. Expected results show whether element and execution-order checks
-   retain the correct candidate definitions.
-
-   Comments in the first program identify statement labels. Label 1 identifies
-   the analyzed log-density statement, which contains the nested statements.
-   Later tests print direct results as [label: statement // dependency
-   labels]. *)
+(* These tests check the statement dependencies that pedantic mode and the
+   factor graph use. Each test builds a map from labels to statements. A label
+   is the number of a statement. The // comments in the first program give the
+   labels. Label 1 is the root statement of the map, the list of all statements.
+   Later tests print [label: statement // labels]. The labels after // are the
+   writes that the statement reads and the statements that control it.
+   Dependency results contain only labels. Thus the analysis uses the root label
+   as a marker for definitions from outside the analyzed statement, for example
+   data and parameters. Every map has the root, so the marker is always a valid
+   label. *)
 
 let example1_program =
   Test_utils.mir_of_string
     {|
         model
-        {                                // 1
-          int i                          // 2: 3
+        {                                // 2
+          int i                          // 3
               = 0;                       //    4
           if (i < 0)                     // 5
           {                              // 6
@@ -65,8 +68,8 @@ let%expect_test "Reaching definition labels for the loop variable" =
   let deps =
     LabelMap.map (log_prob_build_dep_info_map example1_program)
       ~f:(fun (_, x) ->
-        ( reaching_defn_lookup x.reaching_defn_entry "j"
-        , reaching_defn_lookup x.reaching_defn_exit "j" )) in
+        ( reaching_defn_lookup x.reaching_definitions.entry "j"
+        , reaching_defn_lookup x.reaching_definitions.exit "j" )) in
   print_s
     [%sexp
       (deps : (label option Set.Poly.t * label option Set.Poly.t) LabelMap.t)];
@@ -83,7 +86,8 @@ let%expect_test "Reaching definition labels for the loop variable" =
 let%expect_test "Reaching definition records at statement entry and exit" =
   let deps =
     LabelMap.map (log_prob_build_dep_info_map example1_program)
-      ~f:(fun (_, x) -> (x.reaching_defn_entry, x.reaching_defn_exit)) in
+      ~f:(fun (_, x) ->
+        (x.reaching_definitions.entry, x.reaching_definitions.exit)) in
   print_s
     [%sexp
       (deps : (reaching_defn Set.Poly.t * reaching_defn Set.Poly.t) LabelMap.t)];
@@ -141,7 +145,7 @@ let%expect_test "External inputs remain dependencies after map construction" =
       | Stmt.Pattern.IfElse _ ->
           print_s
             [%sexp
-              (reaching_defn_lookup info.reaching_defn_entry "N"
+              (reaching_defn_lookup info.reaching_definitions.entry "N"
                 : label option Set.Poly.t)];
           Fmt.pr "dependencies: %a@." Test_utils.pp_labels
             (node_immediate_dependencies map statement_id)
@@ -151,9 +155,7 @@ let%expect_test "External inputs remain dependencies after map construction" =
     dependencies: 1
     |}]
 
-(** Prints each statement beside the labels returned by its direct-dependency
-    query. For a condition at label [4] supplied only by assignment [3], the
-    dependency column contains [3]. *)
+(** Prints each statement and the labels of its direct dependencies. *)
 let pp_immediate_dependencies ppf (map : dep_info_map) =
   LabelMap.iter map ~f:(fun ~key:statement_id ~data:(pattern, _) ->
       Fmt.pf ppf "%d: %a  // %a@." statement_id Test_utils.pp_stmt pattern
@@ -202,9 +204,8 @@ let%expect_test "Transitive dependencies of an if and of its condition" =
     Test_utils.pp_labels
     (node_vars_dependencies map ~blockers:(Set.Poly.singleton "mu")
        (Set.Poly.singleton "b") if_id);
-  (* The condition does not read c. A query explicitly requesting c therefore
-     has no sink access to compare and retains every reaching definition of
-     c. *)
+  (* The condition does not read c. Thus a query for c keeps each write of c
+     that reaches the condition. *)
   Fmt.pr "node_vars_dependencies {c} %d: %a@." if_id Test_utils.pp_labels
     (node_vars_dependencies map (Set.Poly.singleton "c") if_id);
   [%expect
@@ -252,12 +253,9 @@ let%expect_test
       | _ -> ());
   [%expect {| 6: 5 |}]
 
-(* Check element and ordering results in the statement graph.
-
-   The same programs in test/unit/Dependence.ml print individual access-pair
-   verdicts. Here the dependency-label column checks the resulting graph edges.
-   Matching variable names supply candidates; incompatible elements or execution
-   order must remove the corresponding assignment labels. *)
+(* The Graph tests use programs from test/unit/Dependence.ml. A write is not a
+   dependency of a read if it writes a different element, or if it runs after
+   the read. *)
 
 let%expect_test "Graph: definitions that execute after the read never flow" =
   print_immediate_dependencies
@@ -355,10 +353,8 @@ let%expect_test "Graph: distinct literal subscripts are independent" =
     9: target += normal_lupdf(y, theta[2], s);  // 1 5 7
     |}]
 
-(* Check candidate fallback separately from access-kind filtering. A source
-   without a write or a sink without a read is retained by name. Recorded
-   accesses must form an eligible pair, so separate target increments cannot
-   introduce dependencies on each other. *)
+(* An increment of target does not use the value of an earlier increment. Thus
+   the second increment does not depend on the first. *)
 let%expect_test "Graph: increments of target do not depend on each other" =
   print_immediate_dependencies
     {|
@@ -408,4 +404,393 @@ let%expect_test "Variables read at a set of labels" =
     7: for(n in 1:N) 8  // N
     8: { 9 }  //
     9: v[n] = x[n];  // x
+    |}]
+
+let%expect_test "Running example of the Dependence_analysis interface" =
+  let program =
+    {|
+      data { int N; vector[N] x; }
+      parameters { real a; }
+      model {
+        matrix[N, 2] theta;
+        for (n in 1:N) {
+          theta[n, 1] = a;
+          theta[n, 2] = x[n];
+          if (theta[n, 2] > 0) target += 1;
+        }
+      }
+    |}
+  in
+  print_immediate_dependencies program;
+  let map = log_prob_build_dep_info_map (Test_utils.mir_of_string program) in
+  let condition_info = snd (LabelMap.find 10 map) in
+  let dependency_labels = node_dependencies map 10 in
+  Fmt.pr "theta definitions reaching 10: %a@.dependencies of 10: %a@.read: %a@."
+    Fmt.(list ~sep:(any " ") (option ~none:(any "None") int))
+    (Set.Poly.to_list
+       (reaching_defn_lookup condition_info.reaching_definitions.entry "theta"))
+    Test_utils.pp_labels dependency_labels
+    Fmt.(list ~sep:(any " ") string)
+    (Set.Poly.to_list (read_variables_at map dependency_labels));
+  [%expect
+    {|
+    1: 2 3  //
+    2: real a;  //
+    3: { 4 5 6 }  //
+    4: FnValidateSize__("theta", "N", N);  // 1
+    5: matrix[N, 2] theta;  // 1
+    6: for(n in 1:N) 7  // 1
+    7: { 8 9 10 }  // 6
+    8: theta[n, 1] = a;  // 2 6
+    9: theta[n, 2] = x[n];  // 1 6
+    10: if((theta[n, 2] > 0)) 11  // 5 6 9
+    11: target += 1;  // 10
+    theta definitions reaching 10: 5 8 9
+    dependencies of 10: 1 5 6 9 10
+    read: N theta x
+    |}]
+
+(* A later write kills an earlier write when it always replaces the element of
+   the earlier write. The Kills tests check that a killed write is not a
+   dependency of a read after the later write. *)
+
+let%expect_test "Kills: the same element in every iteration" =
+  print_immediate_dependencies
+    {|
+      data { int N; int k; }
+      parameters { real a; row_vector[N] r; }
+      model {
+        vector[N] theta; matrix[N, N] m; tuple(real, real) t; int j = k;
+        theta[1] = a;
+        theta[1] = 1;
+        if (theta[1] > 0) target += 1;   // theta[1] = 1 removes theta[1] = a
+        theta[k] = a;
+        theta[k] = 1;
+        if (theta[k] > 0) target += 1;   // k does not change, so theta[k] = a is removed
+        theta[j] = a;
+        j = 2;
+        theta[j] = 1;
+        if (theta[1] > 0) target += 1;   // j changes, so theta[j] = a remains
+        t.1 = a;
+        t.1 = 1;
+        if (t.1 > 0) target += 1;        // the same field, so t.1 = a is removed
+        m[1, 2] = a;
+        m[1] = r;
+        if (m[1, 2] > 0) target += 1;    // m[1] contains m[1, 2], so m[1, 2] = a is removed
+        m[2] = r;
+        m[2, 2] = 1;
+        if (m[2, 3] > 0) target += 1;    // m[2, 2] is part of the row, so m[2] = r remains
+      }
+    |};
+  [%expect
+    {|
+    1: 2 3 4  //
+    2: real a;  //
+    3: row_vector[N] r;  // 1
+    4: { 5 6 7 8 9 10 11 12 13 14 15 17 18 19 21 22 23 24 26 27 28 30 31 32 34 35 36 }  //
+    5: FnValidateSize__("theta", "N", N);  // 1
+    6: vector[N] theta;  // 1
+    7: FnValidateSize__("m", "N", N);  // 1
+    8: FnValidateSize__("m", "N", N);  // 1
+    9: matrix[N, N] m;  // 1
+    10: tuple_ad(var, var)tuple(real, real) t;  //
+    11: int j;  //
+    12: j = k;  // 1
+    13: theta[1] = a;  // 2
+    14: theta[1] = promote(1, real, var);  //
+    15: if((theta[1] > 0)) 16  // 6 14
+    16: target += 1;  // 15
+    17: theta[k] = a;  // 1 2
+    18: theta[k] = promote(1, real, var);  // 1
+    19: if((theta[k] > 0)) 20  // 1 6 14 18
+    20: target += 1;  // 19
+    21: theta[j] = a;  // 2 12
+    22: j = 2;  //
+    23: theta[j] = promote(1, real, var);  // 22
+    24: if((theta[1] > 0)) 25  // 6 14 18 21 23
+    25: target += 1;  // 24
+    26: t.1 = a;  // 2
+    27: t.1 = promote(1, real, var);  //
+    28: if((t.1 > 0)) 29  // 10 27
+    29: target += 1;  // 28
+    30: m[1, 2] = a;  // 2
+    31: m[1] = r;  // 3
+    32: if((m[1, 2] > 0)) 33  // 9 31
+    33: target += 1;  // 32
+    34: m[2] = r;  // 3
+    35: m[2, 2] = promote(1, real, var);  //
+    36: if((m[2, 3] > 0)) 37  // 9 31 34
+    37: target += 1;  // 36
+    |}]
+
+let%expect_test "Kills: control flow between the writes" =
+  print_immediate_dependencies
+    {|
+      data { int N; int c; }
+      parameters { real a; }
+      model {
+        vector[N] theta;
+        theta[1] = a;
+        if (c > 0) target += 1;
+        theta[1] = 1;
+        if (theta[1] > 0) target += 1;   // replaced after the if, so removed
+        theta[2] = a;
+        if (c > 0) theta[2] = 1; else theta[2] = 2;
+        if (theta[2] > 0) target += 1;   // replaced in both branches, so removed
+        theta[3] = a;
+        if (c > 0) theta[3] = 1;
+        if (theta[3] > 0) target += 1;   // replaced in one branch only, so it remains
+        theta[1:2] = [a, a]';
+        theta[1:2] = [1, 1]';
+        if (theta[1] > 0) target += 1;   // a slice never removes a write, so it remains
+      }
+    |};
+  [%expect
+    {|
+    1: 2 3  //
+    2: real a;  //
+    3: { 4 5 6 7 9 10 12 13 16 18 19 21 23 24 25 }  //
+    4: FnValidateSize__("theta", "N", N);  // 1
+    5: vector[N] theta;  // 1
+    6: theta[1] = a;  // 2
+    7: if((c > 0)) 8  // 1
+    8: target += 1;  // 7
+    9: theta[1] = promote(1, real, var);  //
+    10: if((theta[1] > 0)) 11  // 5 9
+    11: target += 1;  // 10
+    12: theta[2] = a;  // 2
+    13: if((c > 0)) 14 else 15  // 1
+    14: theta[2] = promote(1, real, var);  // 13
+    15: theta[2] = promote(2, real, var);  // 13
+    16: if((theta[2] > 0)) 17  // 5 14 15
+    17: target += 1;  // 16
+    18: theta[3] = a;  // 2
+    19: if((c > 0)) 20  // 1
+    20: theta[3] = promote(1, real, var);  // 19
+    21: if((theta[3] > 0)) 22  // 5 18 20
+    22: target += 1;  // 21
+    23: theta[1:2] = (FnMakeRowVec__(a, a) ');  // 2
+    24: theta[1:2] = (FnMakeRowVec__(promote(1, real, data), promote(1, real, data)) ');  //
+    25: if((theta[1] > 0)) 26  // 5 9 23 24
+    26: target += 1;  // 25
+    |}]
+
+let%expect_test "Kills: jumps and branches between the two writes" =
+  print_immediate_dependencies
+    {|
+      data { int N; int c; }
+      parameters { real a; }
+      model {
+        vector[N] theta;
+        for (n in 2:N) {
+          theta[n] = a;
+          while (c > 0) break;
+          theta[n] = 1;
+          if (theta[n - 1] > 0) target += 1;  // the break leaves only the while, so removed
+        }
+        for (n in 2:N) {
+          if (c > 0) theta[n] = a;
+          theta[n] = 1;
+          if (theta[n - 1] > 0) target += 1;  // replaced after the if, so removed
+        }
+        for (n in 2:N) {
+          theta[n] = a;
+          if (c > 0) theta[n] = 1; else theta[n] = 2;
+          if (theta[n - 1] > 0) target += 1;  // killer must not be inside an if, so it remains
+        }
+        for (n in 2:N) {
+          theta[n] = a;
+          if (c > 0) theta[n] = 1;
+          if (theta[n - 1] > 0) target += 1;  // only one branch replaces it, so it remains
+        }
+      }
+    |};
+  [%expect
+    {|
+    1: 2 3  //
+    2: real a;  //
+    3: { 4 5 6 14 21 29 }  //
+    4: FnValidateSize__("theta", "N", N);  // 1
+    5: vector[N] theta;  // 1
+    6: for(n in 2:N) 7  // 1
+    7: { 8 9 11 12 }  // 6
+    8: theta[n] = a;  // 2 6
+    9: while((c > 0)) 10  // 1 6 10
+    10: break;  // 9
+    11: theta[n] = promote(1, real, var);  // 6
+    12: if((theta[(n - 1)] > 0)) 13  // 5 6 11
+    13: target += 1;  // 12
+    14: for(n in 2:N) 15  // 1
+    15: { 16 18 19 }  // 14
+    16: if((c > 0)) 17  // 1 14
+    17: theta[n] = a;  // 2 16
+    18: theta[n] = promote(1, real, var);  // 14
+    19: if((theta[(n - 1)] > 0)) 20  // 5 11 14 18
+    20: target += 1;  // 19
+    21: for(n in 2:N) 22  // 1
+    22: { 23 24 27 }  // 21
+    23: theta[n] = a;  // 2 21
+    24: if((c > 0)) 25 else 26  // 1 21
+    25: theta[n] = promote(1, real, var);  // 24
+    26: theta[n] = promote(2, real, var);  // 24
+    27: if((theta[(n - 1)] > 0)) 28  // 5 11 18 21 23 25 26
+    28: target += 1;  // 27
+    29: for(n in 2:N) 30  // 1
+    30: { 31 32 34 }  // 29
+    31: theta[n] = a;  // 2 29
+    32: if((c > 0)) 33  // 1 29
+    33: theta[n] = promote(1, real, var);  // 32
+    34: if((theta[(n - 1)] > 0)) 35  // 5 11 18 23 25 26 29 31 33
+    35: target += 1;  // 34
+    |}]
+
+let%expect_test "Kills: loop-variable indices within one iteration" =
+  print_immediate_dependencies
+    {|
+      data { int N; int c; }
+      parameters { real a; }
+      model {
+        vector[N] theta; vector[N] y;
+        for (n in 2:N) {
+          theta[n] = a;
+          theta[n] = 1;
+          if (theta[n] > 0) target += 1;    // replaced in the same iteration, so removed
+        }
+        for (n in 2:N) {
+          theta[n] = a;
+          if (c > 0) y[n] = 1; else y[n] = 2;
+          theta[n] = 1;
+          if (theta[n] > 0) target += 1;    // replaced after the if, so removed
+        }
+        for (n in 2:N) {
+          theta[n] = 1;
+          theta[n] = a;
+          y[n] = theta[n - 1];              // theta[n] = a of the previous iteration remains
+        }
+        for (n in 2:N) {
+          theta[n] = a;
+          if (c > 0) continue;
+          theta[n] = 1;
+          if (theta[n - 1] > 0) target += 1;  // continue can skip theta[n] = 1, so theta[n] = a remains
+        }
+        for (n in 2:N) {
+          theta[n] = a;
+          for (m in 1:N) theta[n] = 1;
+          if (theta[n - 1] > 0) target += 1;  // the inner loop can run zero times, so it remains
+        }
+      }
+    |};
+  [%expect
+    {|
+    1: 2 3  //
+    2: real a;  //
+    3: { 4 5 6 7 8 14 23 28 36 }  //
+    4: FnValidateSize__("theta", "N", N);  // 1
+    5: vector[N] theta;  // 1
+    6: FnValidateSize__("y", "N", N);  // 1
+    7: vector[N] y;  // 1
+    8: for(n in 2:N) 9  // 1
+    9: { 10 11 12 }  // 8
+    10: theta[n] = a;  // 2 8
+    11: theta[n] = promote(1, real, var);  // 8
+    12: if((theta[n] > 0)) 13  // 5 8 11
+    13: target += 1;  // 12
+    14: for(n in 2:N) 15  // 1
+    15: { 16 17 20 21 }  // 14
+    16: theta[n] = a;  // 2 14
+    17: if((c > 0)) 18 else 19  // 1 14
+    18: y[n] = promote(1, real, var);  // 17
+    19: y[n] = promote(2, real, var);  // 17
+    20: theta[n] = promote(1, real, var);  // 14
+    21: if((theta[n] > 0)) 22  // 5 11 14 20
+    22: target += 1;  // 21
+    23: for(n in 2:N) 24  // 1
+    24: { 25 26 27 }  // 23
+    25: theta[n] = promote(1, real, var);  // 23
+    26: theta[n] = a;  // 2 23
+    27: y[n] = theta[(n - 1)];  // 5 11 20 23 26
+    28: for(n in 2:N) 29  // 1
+    29: { 30 31 33 34 }  // 28
+    30: theta[n] = a;  // 2 28
+    31: if((c > 0)) 32  // 1 28
+    32: continue;  // 31
+    33: theta[n] = promote(1, real, var);  // 28 32
+    34: if((theta[(n - 1)] > 0)) 35  // 5 11 20 26 28 30 32 33
+    35: target += 1;  // 32 34
+    36: for(n in 2:N) 37  // 1
+    37: { 38 39 42 }  // 36
+    38: theta[n] = a;  // 2 36
+    39: for(m in 1:N) 40  // 1 36
+    40: { 41 }  // 39
+    41: theta[n] = promote(1, real, var);  // 39
+    42: if((theta[(n - 1)] > 0)) 43  // 5 11 20 26 30 33 36 38 41
+    43: target += 1;  // 42
+    |}]
+
+(* Each statement prints its controls, then the two views that queries use. The
+   controls list the enclosing ifs and loops, outermost first, then the jumps.
+   [control_parents] keeps the nearest enclosing if or loop and the jumps.
+   [loops_around] keeps the loops, and a loop statement adds itself. *)
+let%expect_test "Controls and the two views derived from them" =
+  let map =
+    log_prob_build_dep_info_map
+      (Test_utils.mir_of_string
+         {|
+      data { int N; int c; }
+      parameters { real a; }
+      model {
+        vector[N] v;
+        for (n in 1:N) {
+          if (c > 0) continue;
+          while (v[n] < 0) {
+            if (c > 1) v[n] = a;
+          }
+        }
+      }
+    |})
+  in
+  let pp_control ppf = function
+    | Enclosing_if {id; branch= Then} -> Fmt.pf ppf "if %d then" id
+    | Enclosing_if {id; branch= Else} -> Fmt.pf ppf "if %d else" id
+    | Enclosing_loop {id; var} ->
+        Fmt.pf ppf "loop %d (%s)" id (Option.value var ~default:"while")
+    | Jump label -> Fmt.pf ppf "jump %d" label in
+  let pp_loop ppf (loop : Analysis_and_optimization.Dependence.loop) =
+    Fmt.int ppf loop.id in
+  LabelMap.iter map ~f:(fun ~key:statement_id ~data:(pattern, info) ->
+      Fmt.pr "%d: %a@.   controls [%a]  dependencies %a  loops [%a]@."
+        statement_id Test_utils.pp_stmt pattern
+        Fmt.(list ~sep:(any "; ") pp_control)
+        info.controls Test_utils.pp_labels
+        (control_parents info.controls)
+        Fmt.(list ~sep:(any "; ") pp_loop)
+        (loops_around ~statement_id pattern info.controls));
+  [%expect
+    {|
+    1: 2 3
+       controls []  dependencies   loops []
+    2: real a;
+       controls []  dependencies   loops []
+    3: { 4 5 6 }
+       controls []  dependencies   loops []
+    4: FnValidateSize__("v", "N", N);
+       controls []  dependencies   loops []
+    5: vector[N] v;
+       controls []  dependencies   loops []
+    6: for(n in 1:N) 7
+       controls []  dependencies   loops [6]
+    7: { 8 10 }
+       controls [loop 6 (n)]  dependencies 6  loops [6]
+    8: if((c > 0)) 9
+       controls [loop 6 (n)]  dependencies 6  loops [6]
+    9: continue;
+       controls [loop 6 (n); if 8 then]  dependencies 8  loops [6]
+    10: while((v[n] < 0)) 11
+       controls [loop 6 (n); jump 9]  dependencies 6 9  loops [6; 10]
+    11: { 12 }
+       controls [loop 6 (n); loop 10 (while); jump 9]  dependencies 9 10  loops [6; 10]
+    12: if((c > 1)) 13
+       controls [loop 6 (n); loop 10 (while); jump 9]  dependencies 9 10  loops [6; 10]
+    13: v[n] = a;
+       controls [loop 6 (n); loop 10 (while); if 12 then; jump 9]  dependencies 9 12  loops [6; 10]
     |}]

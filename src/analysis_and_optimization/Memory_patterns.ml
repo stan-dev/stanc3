@@ -25,9 +25,8 @@ let concat_set_str (set : string Set.Poly.t) =
     ~f:(fun elem acc -> if acc = "" then acc ^ elem else acc ^ ", " ^ elem)
     ~init:"" set
 
-(** Collects [(name, metadata)] pairs through expressions with Eigen result
-    types. Scalar selections, index inputs and conditional guards are excluded.
-*)
+(** Collects [(name, metadata)] for variables in subexpressions of Eigen type.
+    It skips scalar results, indices and the condition of a ternary [if]. *)
 let rec matrix_set Expr.{pattern; meta= Expr.Typed.Meta.{type_; _} as meta} =
   let union_recur exprs = Set.Poly.union_list (List.map exprs ~f:matrix_set) in
   if UnsizedType.contains_eigen_type type_ then

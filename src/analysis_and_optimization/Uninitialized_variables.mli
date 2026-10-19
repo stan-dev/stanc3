@@ -3,13 +3,13 @@ open Middle
 
 (** {1 Purpose of uninitialized-variable analysis}
 
-    Uninitialized-variable analysis finds reads that lack an assignment on at
-    least one path to the read. Pedantic mode uses the results to warn about
-    variables that may be used before receiving a value.
+    A read of a variable is uninitialized if at least one path to the read has
+    no assignment to the variable. This analysis finds uninitialized reads for
+    pedantic mode. The code moved here from {!Dependence_analysis}.
 
-    The following example shows why an assignment in only one branch does not
-    initialize a variable at a later read. The sections below follow the read of
-    [x] through read collection, assignment tracking and reporting:
+    The analysis has three steps. Each section below describes one step with the
+    following model. Only one branch assigns [x], so the read in [print(x)] is
+    uninitialized.
     {@stan[
       data { int use_x; }
       model {
@@ -19,83 +19,71 @@ open Middle
       }
     ]}
 
-    {1 Collect reads and execution paths}
+    {1 Step 1 of 3: Collect reads and paths}
 
-    Analysis records the variable names and source locations read by each
-    statement. A control-flow graph connects statements along the paths that can
-    reach a read. Assignment tracking uses the collected names as the set of
-    variables to analyze.
-
-    For the example, collection produces:
+    The analysis records the names that each statement reads, with their source
+    locations. It checks each name that a statement reads. A control-flow graph
+    links each statement to the statements that can run after it. The analysis
+    uses this graph to follow every path to each read. The example gives the
+    following reads.
     {@text[
       statement       names read
       real x;         {}
       if (use_x)      {use_x}
       x = 1;          {}
       print(x);       {x}
-
-      names to analyze: {use_x, x}
     ]}
-    Both branches of the [if] lead to [print(x)]. The path through the body
-    includes [x = 1]; the path that skips the body has no assignment to [x].
+    Two paths go from the [if] to [print(x)]. One path runs [x = 1]. The other
+    path skips the body and has no assignment to [x].
 
-    {1 Find assignments present on every path}
+    {1 Step 2 of 3: Find the names assigned on every path}
 
-    Each statement has an entry set of variables already assigned on every
-    incoming path and an exit set that also includes assignments made by the
-    statement. At a join, intersection keeps only names assigned on all paths.
-    Analysis repeats the updates until the sets stop changing.
-
-    The following sets show the result for [x] at the example's branch join:
+    Each statement has an entry set and an exit set. The entry set holds the
+    names that every path into the statement assigns. The exit set adds the
+    names that the statement assigns to the entry set. Where paths join, the
+    entry set is the intersection of the exit sets before it. A loop can lead a
+    path back to an earlier statement. Then one pass does not give the final
+    sets, so the analysis repeats the updates until no set changes. A read is a
+    candidate if its name is not in the entry set of its statement. The example
+    gives the following sets.
     {@text[
-      path through x = 1: assigned names {x}
-      path skipping body: assigned names {}
-      entry to print(x):  intersection = {}
+      entry of if (use_x):  {}
+      exit of if (use_x):   {}
+      exit of x = 1:        {x}
+      entry of print(x):    {x} intersect {} = {}
     ]}
-    The read of [x] is absent from the entry set, so the read is a candidate for
-    reporting.
+    The entry of [print(x)] joins the path through [x = 1] and the path that
+    skips the body. No statement assigns [use_x], so the read of [use_x] in the
+    [if] is a candidate. [x] is not in the entry set of [print(x)], so this read
+    is also a candidate.
 
-    {1 Report reads using the program context}
+    {1 Step 3 of 3: Remove names that the program supplies}
 
-    Some values come from outside the analyzed statements. Analysis removes
-    candidates already supplied by the program context, such as data variables
-    and function arguments. The remaining results pair each read's source
-    location with the variable name.
+    Some names get a value from outside the analyzed statements, for example
+    data variables and function arguments. The analysis removes the candidates
+    with these names. Each result pairs the location of a read with the name.
+    Step 2 gives two candidates in the example. [use_x] is data, so this step
+    removes it. The only result is the read of [x] in [print(x)]. *)
 
-    In the example, assignment tracking also finds no assignment to [use_x]. The
-    program context supplies [use_x] as data, so reporting produces:
-    {@text[
-      candidate reads: (location of use_x in the condition, use_x)
-                       (location of x in print(x), x)
-      supplied by context: {use_x}
-      reported reads:  {(location of x in print(x), x)}
-    ]}
-    Pedantic mode turns the reported read into a warning about [x]. *)
-
-(** {1 API reference}
-
-    The query below selects program regions and returns read locations. Warning
-    formatting and deduplication are handled by pedantic analysis. *)
+(** {1 API reference} *)
 
 val mir_uninitialized_variables :
   Program.Typed.t -> (Location_span.t * string) Set.Poly.t
-(** Returns [(read_location, variable_name)] pairs for reads not known to have
-    an assigned value. Runs {!Monotone_framework.initialized_vars_mfp} on
-    transformed data, both log-density versions, generated quantities and each
-    function body.
+(** Returns [(read_location, variable_name)] pairs for the uninitialized reads.
+    Runs {!Monotone_framework.initialized_vars_mfp} on transformed data, both
+    versions of the log density, generated quantities and each function body.
 
-    Function names and compiler flag variables are excluded in every region.
-    Data names are also excluded in program blocks; parameter names are excluded
-    outside transformed data. Function bodies instead exclude their argument
-    names. Transformed-data statements are prepended when checking the log
-    density and generated quantities, so assignments in transformed data can
-    initialize later reads.
+    Each of these parts is a region, and the analysis checks each region
+    separately. Each region ignores function names and compiler flag variables.
+    Program blocks also ignore data names. Blocks after transformed data also
+    ignore parameter names. Function bodies ignore their argument names. The log
+    density and generated quantities checks run transformed data first, so its
+    assignments can initialize later reads.
 
-    The analysis tracks variable names, not individual elements. An assignment
-    to [v[1]] marks [v] as assigned without checking other elements. Read
-    collection uses {!Mir_utils.stmt_rhs_var_set}; declaration expressions and
-    assignment destination indices are not included.
+    The analysis tracks whole variables, not elements. An assignment to [v[1]]
+    marks all of [v] as assigned. Reads come from {!Mir_utils.stmt_rhs_var_set}.
+    They do not include declaration expressions or the indices of an assignment
+    target.
 
-    Pedantic analysis removes results with an empty location and reports each
-    variable once. For the overview example, the result contains only the
-    location and name of [x] in [print(x)]. *)
+    Pedantic mode drops results with an empty location, and reports each name
+    once. *)

@@ -3,9 +3,9 @@ open Std
 open Std.Sexp_conv
 open Analysis_and_optimization.Dataflow_types
 
-(** Prints both adjacency maps as association lists for expected-output checks.
-    A factor [F] at label [2] reading [mu] appears as a forward entry from
-    [(F, 2)] to [{"mu"}] and a reverse entry from ["mu"] to [{(F, 2)}]. *)
+(** Prints the factor map and the variable map of [graph]. The factor map links
+    each factor and its statement label to the variables that the factor reads.
+    The variable map links each variable to the factors that read it. *)
 let print_factor_graph (graph : factor_graph) =
   print_s
     [%sexp
@@ -16,6 +16,8 @@ let print_factor_graph (graph : factor_graph) =
           (String.Map.to_list graph.var_map
             : (string * (factor * label) Set.Poly.t) list) }]
 
+(* The two // comments give the labels of the two factors in the output. No
+   factor reads a parameter, so each factor maps to an empty variable set. *)
 let reject_example =
   Test_utils.mir_of_string
     {|
@@ -23,32 +25,32 @@ let reject_example =
           real x;
         }
         model
-        {                                // 1
-          int i                          // 2: 3
-              = 0;                       //    4
-          if (i < 0)                     // 5
-          {                              // 6
-            print(i);                    // 7
+        {
+          int i
+              = 0;
+          if (i < 0)
+          {
+            print(i);
           } else
-          {                              // 8
-            for (j in 1:10)              // 9
-            {                            // 10
-              if (j > 9)                 // 11
-              {                          // 12
-                break;                   // 13
+          {
+            for (j in 1:10)
+            {
+              if (j > 9)
+              {
+                break;
               }
-              if (j > 8 && i < -1)       // 14
-              {                          // 15
-                continue;                // 16
+              if (j > 8 && i < -1)
+              {
+                continue;
               }
-              if (j > 5)                 // 17
-              {                          // 18
-                reject(0);               // 19
+              if (j > 5)
+              {
+                reject(0);               // 20
               } else
-              {                          // 20
-                target += 1 + 1;         // 21
+              {
+                target += 1 + 1;         // 22
               }
-              print("Fin");              // 22
+              print("Fin");
             }
           }
         }
