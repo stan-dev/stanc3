@@ -1,4 +1,4 @@
-  $ stanc --auto-format --canonicalize strip-comments,braces,parentheses,deprecations blocks.stan
+/* $ stanc --auto-format --canonicalize strip-comments,braces,parentheses,deprecations blocks.stan : [exit 0] */
 data {
   int N;
   vector[N] y;
@@ -137,8 +137,7 @@ model {
   }
 }
 
-[exit 0]
-  $ stanc --auto-format --canonicalize strip-comments,braces,parentheses,deprecations deprecated.stan
+/* $ stanc --auto-format --canonicalize strip-comments,braces,parentheses,deprecations deprecated.stan : [exit 0] */
 functions {
   array[] real sho(real t, array[] real y, array[] real theta,
                    array[] real x, array[] int x_int) {
@@ -181,6 +180,7 @@ generated quantities {
                                    x_r, x_i);
 }
 
+/*
 warning: Assignment of variable to itself.
     ┌─ deprecated.stan:24:16
  23 │    array[5,5] real idxs;
@@ -189,8 +189,8 @@ warning: Assignment of variable to itself.
     │    │
     │    Assigned to itself.
  25 │   }
-[exit 0]
-  $ stanc --auto-format --canonicalize strip-comments,braces,parentheses,deprecations funs.stanfunctions
+*/
+/* $ stanc --auto-format --canonicalize strip-comments,braces,parentheses,deprecations funs.stanfunctions : [exit 0] */
 void test(int x, int y) {
   print(x, y);
 }
@@ -198,8 +198,7 @@ void test(int x, int y) {
 real return_lp() {
   return target();
 }
-[exit 0]
-  $ stanc --auto-format --canonicalize strip-comments,braces,parentheses,deprecations parenthesize.stan
+/* $ stanc --auto-format --canonicalize strip-comments,braces,parentheses,deprecations parenthesize.stan : [exit 0] */
 transformed data {
   int N = 12;
   real b = 1.5;
@@ -234,6 +233,7 @@ model {
   t.2 = (3, 4).1;
 }
 
+/*
 warning: Found chained comparison.
     ┌─ parenthesize.stan:27:14
  26 │  
@@ -256,8 +256,8 @@ warning: Found chained comparison.
       parentheses.
     = This can be automatically changed using the canonicalize flag for
       stanc.
-[exit 0]
-  $ stanc --auto-format --canonicalize strip-comments,braces,parentheses,deprecations squaremc.stan
+*/
+/* $ stanc --auto-format --canonicalize strip-comments,braces,parentheses,deprecations squaremc.stan : [exit 0] */
 parameters {
   real<lower=-1, upper=1> x_raw;
   real<lower=-(1 - sqrt(1 - square(1 - abs(x_raw)))),
@@ -273,4 +273,3 @@ model {
   target += log1m(sqrt(1 - square(1 - abs(x_raw))));
 }
 
-[exit 0]

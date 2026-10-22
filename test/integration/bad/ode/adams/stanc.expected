@@ -1,4 +1,4 @@
-  $ stanc bad_adams_control_function_return.stan
+/* $ stanc bad_adams_control_function_return.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "integrate_ode_adams".
     ┌─ bad_adams_control_function_return.stan:13:7
   1 │    functions{
@@ -31,8 +31,7 @@ error: Ill-typed arguments supplied to function "integrate_ode_adams".
       (<F2>, array[] real, real, array[] real, array[] real,
        data array[] real, data array[] int) => array[,] real
         Expected 7 arguments but found 10 arguments.
-[exit 1]
-  $ stanc bad_control_function_return.stan
+/* $ stanc bad_control_function_return.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "integrate_ode_adams".
     ┌─ bad_control_function_return.stan:13:7
   1 │    functions{
@@ -65,8 +64,7 @@ error: Ill-typed arguments supplied to function "integrate_ode_adams".
       (<F2>, array[] real, real, array[] real, array[] real,
        data array[] real, data array[] int) => array[,] real
         Expected 7 arguments but found 10 arguments.
-[exit 1]
-  $ stanc bad_fun_type.stan
+/* $ stanc bad_fun_type.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "integrate_ode_adams".
     ┌─ bad_fun_type.stan:27:11
   1 │    functions {
@@ -106,8 +104,7 @@ error: Ill-typed arguments supplied to function "integrate_ode_adams".
       (<F2>, array[] real, real, array[] real, array[] real,
        data array[] real, data array[] int, data real, data real, data real) => array[,] real
         Expected 10 arguments but found 7 arguments.
-[exit 1]
-  $ stanc bad_fun_type_control.stan
+/* $ stanc bad_fun_type_control.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "integrate_ode_adams".
     ┌─ bad_fun_type_control.stan:27:11
   1 │    functions {
@@ -147,8 +144,7 @@ error: Ill-typed arguments supplied to function "integrate_ode_adams".
       (<F2>, array[] real, real, array[] real, array[] real,
        data array[] real, data array[] int) => array[,] real
         Expected 7 arguments but found 10 arguments.
-[exit 1]
-  $ stanc bad_t_type.stan
+/* $ stanc bad_t_type.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "integrate_ode_adams".
     ┌─ bad_t_type.stan:26:11
   1 │    functions {
@@ -178,8 +174,7 @@ error: Ill-typed arguments supplied to function "integrate_ode_adams".
       (<F2>, array[] real, real, array[] real, array[] real,
        data array[] real, data array[] int, data real, data real, data real) => array[,] real
         Expected 10 arguments but found 7 arguments.
-[exit 1]
-  $ stanc bad_t_type_control.stan
+/* $ stanc bad_t_type_control.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "integrate_ode_adams".
     ┌─ bad_t_type_control.stan:26:11
   1 │    functions {
@@ -209,8 +204,7 @@ error: Ill-typed arguments supplied to function "integrate_ode_adams".
       (<F2>, array[] real, real, array[] real, array[] real,
        data array[] real, data array[] int) => array[,] real
         Expected 7 arguments but found 10 arguments.
-[exit 1]
-  $ stanc bad_theta_type.stan
+/* $ stanc bad_theta_type.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "integrate_ode_adams".
     ┌─ bad_theta_type.stan:27:11
   1 │    functions {
@@ -240,8 +234,7 @@ error: Ill-typed arguments supplied to function "integrate_ode_adams".
       (<F2>, array[] real, real, array[] real, array[] real,
        data array[] real, data array[] int, data real, data real, data real) => array[,] real
         Expected 10 arguments but found 7 arguments.
-[exit 1]
-  $ stanc bad_theta_type_control.stan
+/* $ stanc bad_theta_type_control.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "integrate_ode_adams".
     ┌─ bad_theta_type_control.stan:27:11
   1 │    functions {
@@ -271,8 +264,7 @@ error: Ill-typed arguments supplied to function "integrate_ode_adams".
       (<F2>, array[] real, real, array[] real, array[] real,
        data array[] real, data array[] int) => array[,] real
         Expected 7 arguments but found 10 arguments.
-[exit 1]
-  $ stanc bad_ts_type.stan
+/* $ stanc bad_ts_type.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "integrate_ode_adams".
     ┌─ bad_ts_type.stan:26:11
   1 │    functions {
@@ -302,8 +294,7 @@ error: Ill-typed arguments supplied to function "integrate_ode_adams".
       (<F2>, array[] real, real, array[] real, array[] real,
        data array[] real, data array[] int, data real, data real, data real) => array[,] real
         Expected 10 arguments but found 7 arguments.
-[exit 1]
-  $ stanc bad_ts_type_control.stan
+/* $ stanc bad_ts_type_control.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "integrate_ode_adams".
     ┌─ bad_ts_type_control.stan:26:11
   1 │    functions {
@@ -333,8 +324,7 @@ error: Ill-typed arguments supplied to function "integrate_ode_adams".
       (<F2>, array[] real, real, array[] real, array[] real,
        data array[] real, data array[] int) => array[,] real
         Expected 7 arguments but found 10 arguments.
-[exit 1]
-  $ stanc bad_x_int_type.stan
+/* $ stanc bad_x_int_type.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "integrate_ode_adams".
     ┌─ bad_x_int_type.stan:26:11
   1 │    functions {
@@ -364,8 +354,7 @@ error: Ill-typed arguments supplied to function "integrate_ode_adams".
       (<F2>, array[] real, real, array[] real, array[] real,
        data array[] real, data array[] int, data real, data real, data real) => array[,] real
         Expected 10 arguments but found 7 arguments.
-[exit 1]
-  $ stanc bad_x_int_type_control.stan
+/* $ stanc bad_x_int_type_control.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "integrate_ode_adams".
     ┌─ bad_x_int_type_control.stan:26:11
   1 │    functions {
@@ -395,8 +384,7 @@ error: Ill-typed arguments supplied to function "integrate_ode_adams".
       (<F2>, array[] real, real, array[] real, array[] real,
        data array[] real, data array[] int) => array[,] real
         Expected 7 arguments but found 10 arguments.
-[exit 1]
-  $ stanc bad_x_type.stan
+/* $ stanc bad_x_type.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "integrate_ode_adams".
     ┌─ bad_x_type.stan:27:11
   1 │    functions {
@@ -426,8 +414,7 @@ error: Ill-typed arguments supplied to function "integrate_ode_adams".
       (<F2>, array[] real, real, array[] real, array[] real,
        data array[] real, data array[] int, data real, data real, data real) => array[,] real
         Expected 10 arguments but found 7 arguments.
-[exit 1]
-  $ stanc bad_x_type_control.stan
+/* $ stanc bad_x_type_control.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "integrate_ode_adams".
     ┌─ bad_x_type_control.stan:27:11
   1 │    functions {
@@ -457,8 +444,7 @@ error: Ill-typed arguments supplied to function "integrate_ode_adams".
       (<F2>, array[] real, real, array[] real, array[] real,
        data array[] real, data array[] int) => array[,] real
         Expected 7 arguments but found 10 arguments.
-[exit 1]
-  $ stanc bad_x_var_type.stan
+/* $ stanc bad_x_var_type.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "integrate_ode_adams".
     ┌─ bad_x_var_type.stan:26:11
   1 │    functions {
@@ -490,8 +476,7 @@ error: Ill-typed arguments supplied to function "integrate_ode_adams".
       (<F2>, array[] real, real, array[] real, array[] real,
        data array[] real, data array[] int, data real, data real, data real) => array[,] real
         Expected 10 arguments but found 7 arguments.
-[exit 1]
-  $ stanc bad_x_var_type_adams_control.stan
+/* $ stanc bad_x_var_type_adams_control.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "integrate_ode_adams".
     ┌─ bad_x_var_type_adams_control.stan:26:11
   1 │    functions {
@@ -523,8 +508,7 @@ error: Ill-typed arguments supplied to function "integrate_ode_adams".
       (<F2>, array[] real, real, array[] real, array[] real,
        data array[] real, data array[] int) => array[,] real
         Expected 7 arguments but found 10 arguments.
-[exit 1]
-  $ stanc bad_x_var_type_control.stan
+/* $ stanc bad_x_var_type_control.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "integrate_ode_bdf".
     ┌─ bad_x_var_type_control.stan:26:11
   1 │    functions {
@@ -556,8 +540,7 @@ error: Ill-typed arguments supplied to function "integrate_ode_bdf".
       (<F2>, array[] real, real, array[] real, array[] real,
        data array[] real, data array[] int) => array[,] real
         Expected 7 arguments but found 10 arguments.
-[exit 1]
-  $ stanc bad_y_type.stan
+/* $ stanc bad_y_type.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "integrate_ode_adams".
     ┌─ bad_y_type.stan:26:11
   1 │    functions {
@@ -587,8 +570,7 @@ error: Ill-typed arguments supplied to function "integrate_ode_adams".
       (<F2>, array[] real, real, array[] real, array[] real,
        data array[] real, data array[] int, data real, data real, data real) => array[,] real
         Expected 10 arguments but found 7 arguments.
-[exit 1]
-  $ stanc bad_y_type_control.stan
+/* $ stanc bad_y_type_control.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "integrate_ode_adams".
     ┌─ bad_y_type_control.stan:26:11
   1 │    functions {
@@ -618,4 +600,3 @@ error: Ill-typed arguments supplied to function "integrate_ode_adams".
       (<F2>, array[] real, real, array[] real, array[] real,
        data array[] real, data array[] int) => array[,] real
         Expected 7 arguments but found 10 arguments.
-[exit 1]

@@ -1,12 +1,11 @@
-  $ stanc --auto-format --include-paths=. --canonicalize=includes a.stanfunctions
+/* $ stanc --auto-format --include-paths=. --canonicalize=includes a.stanfunctions : [exit 0] */
 // line comment a
 /*weird block a*/
 void foo(real x) {
   return;
 }
 // another line comment a
-[exit 0]
-  $ stanc --auto-format --include-paths=. --canonicalize=includes b.stanfunctions
+/* $ stanc --auto-format --include-paths=. --canonicalize=includes b.stanfunctions : [exit 0] */
 // line comment a
 /*weird block a*/
 void foo(real x) {
@@ -21,8 +20,7 @@ void bar(real y) {
   return;
 }
 // another line comment b
-[exit 0]
-  $ stanc --auto-format --include-paths=. --canonicalize=includes blocks-issue-1614.stan
+/* $ stanc --auto-format --include-paths=. --canonicalize=includes blocks-issue-1614.stan : [exit 0] */
 functions {
   real foo() {
     return 1.0;
@@ -35,8 +33,7 @@ data {
   int N;
 }
 
-[exit 0]
-  $ stanc --auto-format --include-paths=. --canonicalize=includes c.stanfunctions
+/* $ stanc --auto-format --include-paths=. --canonicalize=includes c.stanfunctions : [exit 0] */
 /**
   A documentation comment
 */
@@ -54,28 +51,24 @@ void foo(real x) {
   return;
 }
 // another line comment a
-[exit 0]
-  $ stanc --auto-format --include-paths=. --canonicalize=includes data.stan
+/* $ stanc --auto-format --include-paths=. --canonicalize=includes data.stan : [exit 0] */
 data {
   int N;
 }
 
-[exit 0]
-  $ stanc --auto-format --include-paths=. --canonicalize=includes first.stanfunctions
+/* $ stanc --auto-format --include-paths=. --canonicalize=includes first.stanfunctions : [exit 0] */
 real bar(matrix x) {
   print(x);
   return sum(x);
 }
-[exit 0]
-  $ stanc --auto-format --include-paths=. --canonicalize=includes functions.stan
+/* $ stanc --auto-format --include-paths=. --canonicalize=includes functions.stan : [exit 0] */
 functions {
   real foo() {
     return 1.0;
   }
 }
 
-[exit 0]
-  $ stanc --auto-format --include-paths=. --canonicalize=includes main.stan
+/* $ stanc --auto-format --include-paths=. --canonicalize=includes main.stan : [exit 0] */
 functions {
   // line comment a
   /*weird block a*/
@@ -144,8 +137,7 @@ generated quantities {
   }
 }
 
-[exit 0]
-  $ stanc --auto-format --include-paths=. --canonicalize=includes main2.stan
+/* $ stanc --auto-format --include-paths=. --canonicalize=includes main2.stan : [exit 0] */
 functions {
   void foo(data array[,] real x) {
     print(x);
@@ -159,18 +151,15 @@ functions {
   }
 }
 
-[exit 0]
-  $ stanc --auto-format --include-paths=. --canonicalize=includes second.stanfunctions
+/* $ stanc --auto-format --include-paths=. --canonicalize=includes second.stanfunctions : [exit 0] */
 real bar(matrix x) {
   print(x);
   return sum(x);
 }
-[exit 0]
-  $ stanc --auto-format --include-paths=. --canonicalize=includes tdata.stan
+/* $ stanc --auto-format --include-paths=. --canonicalize=includes tdata.stan : [exit 0] */
 // I'm in another file!
 
 transformed data {
   int x = 30;
 }
 
-[exit 0]

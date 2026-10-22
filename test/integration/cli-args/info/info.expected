@@ -1,4 +1,4 @@
-  $ stanc --include-paths=.,includes --info  info.stan
+/* $ stanc --include-paths=.,includes --info  info.stan : [exit 0] */
 {
   "inputs": {
     "a": { "type": "int", "dimensions": 0 },
@@ -56,4 +56,3 @@
     "includes/another_include.stan", "includes/foo.stanfunctions"
   ]
 }
-[exit 0]

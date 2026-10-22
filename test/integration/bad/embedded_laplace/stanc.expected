@@ -1,4 +1,4 @@
-  $ stanc autodiff_incompatibility1.stan
+/* $ stanc autodiff_incompatibility1.stan : [exit 1] */
 error: Incompatible function used in embedded Laplace approximation.
     ┌─ autodiff_incompatibility1.stan:56:30
  14 │      if (0) {
@@ -13,8 +13,7 @@ error: Incompatible function used in embedded Laplace approximation.
     │                                           which does not currently support higher-order derivatives and
     │                                           cannot be used in an embedded Laplace approximation.
  57 │                                    K_function, (x, n_obs, alpha, rho));
-[exit 1]
-  $ stanc autodiff_incompatibility2.stan
+/* $ stanc autodiff_incompatibility2.stan : [exit 1] */
 error: Incompatible function used in embedded Laplace approximation.
     ┌─ autodiff_incompatibility2.stan:59:44
  18 │      if (0) {
@@ -29,8 +28,7 @@ error: Incompatible function used in embedded Laplace approximation.
     │                                                         which does not currently support higher-order derivatives and
     │                                                         cannot be used in an embedded Laplace approximation.
  60 │                          1, K_function, (x, n_obs, alpha, rho));
-[exit 1]
-  $ stanc autodiff_incompatibility3.stan
+/* $ stanc autodiff_incompatibility3.stan : [exit 1] */
 error: Incompatible function used in embedded Laplace approximation.
     ┌─ autodiff_incompatibility3.stan:51:44
  10 │      if (0) {
@@ -45,8 +43,7 @@ error: Incompatible function used in embedded Laplace approximation.
     │                                                         which does not currently support higher-order derivatives and
     │                                                         cannot be used in an embedded Laplace approximation.
  52 │                          1, K_function, (x, n_obs, alpha, rho));
-[exit 1]
-  $ stanc autodiff_incompatibility4.stan
+/* $ stanc autodiff_incompatibility4.stan : [exit 1] */
 error: Incompatible function used in embedded Laplace approximation.
     ┌─ autodiff_incompatibility4.stan:51:44
  21 │          // but there is a bug: https://github.com/stan-dev/math/issues/3280
@@ -61,8 +58,7 @@ error: Incompatible function used in embedded Laplace approximation.
     │                                                         which does not currently support higher-order derivatives and
     │                                                         cannot be used in an embedded Laplace approximation.
  52 │                          1, K_function, (x, n_obs, alpha, rho));
-[exit 1]
-  $ stanc autodiff_incompatibility5.stan
+/* $ stanc autodiff_incompatibility5.stan : [exit 1] */
 error: Incompatible function used in embedded Laplace approximation.
     ┌─ autodiff_incompatibility5.stan:54:44
  13 │      array[3] real dat = {eta, 0.2, 0.3};
@@ -77,8 +73,7 @@ error: Incompatible function used in embedded Laplace approximation.
     │                                                         which does not currently support higher-order derivatives and
     │                                                         cannot be used in an embedded Laplace approximation.
  55 │                          1, K_function, (x, n_obs, alpha, rho));
-[exit 1]
-  $ stanc bad_callback1.stan
+/* $ stanc bad_callback1.stan : [exit 1] */
 error: Invalid signature for forwarded function "ll_function" in "laplace_marginal".
     ┌─ bad_callback1.stan:36:30
   2 │    // specify negative binomial likelihood with mean offset
@@ -92,8 +87,7 @@ error: Invalid signature for forwarded function "ll_function" in "laplace_margin
     │                                           "laplace_marginal"
  37 │                                    K_function, (x, n_obs, alpha, rho));
     = Expected function returning real but got function returning void.
-[exit 1]
-  $ stanc bad_callback2.stan
+/* $ stanc bad_callback2.stan : [exit 1] */
 error: Invalid signature for forwarded function "ll_function_jacobian" in "laplace_marginal".
     ┌─ bad_callback2.stan:38:30
   2 │    // specify negative binomial likelihood with mean offset
@@ -107,8 +101,7 @@ error: Invalid signature for forwarded function "ll_function_jacobian" in "lapla
     │                                                    "laplace_marginal"
  39 │                                    K_function, (x, n_obs, alpha, rho));
     = Expected a pure function but got a _jacobian function.
-[exit 1]
-  $ stanc bad_callback3.stan
+/* $ stanc bad_callback3.stan : [exit 1] */
 error: A returning function was expected but a non-function value "ll_function" was supplied.
     ┌─ bad_callback3.stan:28:30
  26 │  model {
@@ -118,8 +111,7 @@ error: A returning function was expected but a non-function value "ll_function" 
     │                               ^^^^^^^^^^^ A returning function was expected but a non-function value 
     │                                           "ll_function" was supplied.
  29 │                                    K_function, (x, n_obs, alpha, rho));
-[exit 1]
-  $ stanc bad_callback4.stan
+/* $ stanc bad_callback4.stan : [exit 1] */
 error: Invalid signature for forwarded function "ll_function" in "laplace_marginal".
     ┌─ bad_callback4.stan:37:30
   2 │    // specify negative binomial likelihood with mean offset
@@ -135,8 +127,7 @@ error: Invalid signature for forwarded function "ll_function" in "laplace_margin
     = The first argument is marked data-only.
       (Local variables are assumed to depend on parameters; same goes for
       function inputs unless they are marked with the keyword "data".)
-[exit 1]
-  $ stanc bad_callback5.stan
+/* $ stanc bad_callback5.stan : [exit 1] */
 error: Invalid signature for forwarded function "ll_function" in "laplace_marginal".
     ┌─ bad_callback5.stan:37:30
   2 │    // specify negative binomial likelihood with mean offset
@@ -150,8 +141,7 @@ error: Invalid signature for forwarded function "ll_function" in "laplace_margin
     │                                           "laplace_marginal"
  38 │                                    K_function, (x, n_obs, alpha, rho));
     = The first argument must be vector but got complex_vector.
-[exit 1]
-  $ stanc bad_forward1.stan
+/* $ stanc bad_forward1.stan : [exit 1] */
 error: Forwarded arguments to 'll_function' in call to 'laplace_marginal' must be a tuple. Instead found type array[] real.
     ┌─ bad_forward1.stan:37:43
  36 │  
@@ -159,8 +149,7 @@ error: Forwarded arguments to 'll_function' in call to 'laplace_marginal' must b
     │                                            ^^^^^ Forwarded arguments to 'll_function' in call to 'laplace_marginal' must be a tuple.
     │                                                  Instead found type array[] real.
  38 │                                   1, K_function, (x, n_obs, alpha, rho));
-[exit 1]
-  $ stanc bad_forward2.stan
+/* $ stanc bad_forward2.stan : [exit 1] */
 error: Ill-typed arguments forwarded to "ll_function" in "laplace_marginal".
     ┌─ bad_forward2.stan:37:43
   2 │    // specify negative binomial likelihood with mean offset
@@ -176,8 +165,7 @@ error: Ill-typed arguments forwarded to "ll_function" in "laplace_marginal".
  38 │                                   1, K_function, (x, n_obs, alpha, rho));
     = The second argument (excluding the latent gaussian vector argument) must be
       vector but got array[] int.
-[exit 1]
-  $ stanc bad_forward3.stan
+/* $ stanc bad_forward3.stan : [exit 1] */
 error: Ill-typed arguments forwarded to "ll_function" in "laplace_marginal".
     ┌─ bad_forward3.stan:36:43
   2 │    // specify negative binomial likelihood with mean offset
@@ -193,8 +181,7 @@ error: Ill-typed arguments forwarded to "ll_function" in "laplace_marginal".
  37 │                                    1, K_function, (x, n_obs, alpha, rho));
     = Expected 3 arguments (excluding the latent gaussian vector argument)
       but got 2 arguments.
-[exit 1]
-  $ stanc bad_forward4.stan
+/* $ stanc bad_forward4.stan : [exit 1] */
 error: Ill-typed arguments forwarded to "K_function" in "laplace_marginal".
     ┌─ bad_forward4.stan:37:50
  11 │    // specify covariance function
@@ -209,8 +196,7 @@ error: Ill-typed arguments forwarded to "K_function" in "laplace_marginal".
     │                                                                             call to "laplace_marginal"
  38 │  }
     = Expected 4 arguments but got 5 arguments.
-[exit 1]
-  $ stanc bad_forward5.stan
+/* $ stanc bad_forward5.stan : [exit 1] */
 error: Ill-typed arguments forwarded to "K_function" in "laplace_latent_rng".
     ┌─ bad_forward5.stan:38:36
  11 │    // specify covariance function
@@ -225,8 +211,7 @@ error: Ill-typed arguments forwarded to "K_function" in "laplace_latent_rng".
     │                                                              call to "laplace_latent_rng"
  39 │  }
     = The fourth argument must be real but got array[] real.
-[exit 1]
-  $ stanc bad_forward6.stan
+/* $ stanc bad_forward6.stan : [exit 1] */
 error: No unique minimum promotion found for function "ll_function".
     ┌─ bad_forward6.stan:49:44
   2 │    // specify negative binomial likelihood with mean offset
@@ -251,8 +236,7 @@ error: No unique minimum promotion found for function "ll_function".
     = Consider defining a new signature for the exact types needed or
       re-thinking
       existing definitions.
-[exit 1]
-  $ stanc bad_forward7.stan
+/* $ stanc bad_forward7.stan : [exit 1] */
 error: Ill-typed arguments supplied to "laplace_marginal_tol_neg_binomial_2_log_lpmf".
     ┌─ bad_forward7.stan:2:58
   1 │  model {
@@ -266,8 +250,7 @@ error: Ill-typed arguments supplied to "laplace_marginal_tol_neg_binomial_2_log_
       array[] int,
       real,
       vector
-[exit 1]
-  $ stanc bad_forward8.stan
+/* $ stanc bad_forward8.stan : [exit 1] */
 error: Ill-typed arguments supplied to "laplace_marginal_tol_neg_binomial_2_log_lupmf".
     ┌─ bad_forward8.stan:2:3
   1 │  model {
@@ -280,8 +263,7 @@ error: Ill-typed arguments supplied to "laplace_marginal_tol_neg_binomial_2_log_
       array[] int,
       real,
       vector
-[exit 1]
-  $ stanc bad_forward9.stan
+/* $ stanc bad_forward9.stan : [exit 1] */
 error: Ill-typed arguments forwarded to "K_function" in "laplace_marginal".
     ┌─ bad_forward9.stan:37:35
  11 │    // specify covariance function
@@ -298,8 +280,7 @@ error: Ill-typed arguments forwarded to "K_function" in "laplace_marginal".
     = The fourth argument is marked data-only.
       (Local variables are assumed to depend on parameters; same goes for
       function inputs unless they are marked with the keyword "data".)
-[exit 1]
-  $ stanc bad_hessian_block_size1.stan
+/* $ stanc bad_hessian_block_size1.stan : [exit 1] */
 error: The hessian block size argument to "laplace_latent_tol_rng" must be a data-only int. Instead found type complex.
     ┌─ bad_hessian_block_size1.stan:38:79
  37 │  generated quantities {
@@ -308,8 +289,7 @@ error: The hessian block size argument to "laplace_latent_tol_rng" must be a dat
     │                                                                                   "laplace_latent_tol_rng" must be a data-only int.
     │                                                                                   Instead found type complex.
  39 │                      K_function, (x, n_obs, alpha, rho), (theta_0, 1,2,4,5, 0));
-[exit 1]
-  $ stanc bad_hessian_block_size2.stan
+/* $ stanc bad_hessian_block_size2.stan : [exit 1] */
 error: The hessian block size argument to "laplace_marginal" must be a data-only int. Instead found type real. (Local variables are assumed to depend on parameters; same goes for function inputs unless they are marked with the keyword "data".)
     ┌─ bad_hessian_block_size2.stan:38:61
  37 │  model {
@@ -325,16 +305,14 @@ error: The hessian block size argument to "laplace_marginal" must be a data-only
     │                                                                  with the keyword
     │                                                                  "data".)
  39 │                      K_function, (x, n_obs, alpha, rho));
-[exit 1]
-  $ stanc bad_overload.stan
+/* $ stanc bad_overload.stan : [exit 1] */
 error: Identifier "laplace_marginal_tol_neg_binomial_2_log_lpmf" clashes with a non-overloadable Stan Math library function.
     ┌─ bad_overload.stan:2:8
   1 │  functions {
   2 │    real laplace_marginal_tol_neg_binomial_2_log_lpmf(int y) {
     │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Identifier "laplace_marginal_tol_neg_binomial_2_log_lpmf" clashes with a non-overloadable Stan Math library function.
   3 │      return 1.0;
-[exit 1]
-  $ stanc bad_solve_cov.stan
+/* $ stanc bad_solve_cov.stan : [exit 1] */
 error: Ill-typed arguments supplied to "laplace_latent_solve".
     ┌─ bad_solve_cov.stan:39:53
  38 │        = laplace_latent_solve(ll_function, (1.0, log_ye, y), 1,
@@ -345,8 +323,7 @@ error: Ill-typed arguments supplied to "laplace_latent_solve".
  40 │  }
     = (Local variables are assumed to depend on parameters; same goes for
       function inputs unless they are marked with the keyword "data".)
-[exit 1]
-  $ stanc bad_solve_lik.stan
+/* $ stanc bad_solve_lik.stan : [exit 1] */
 error: Ill-typed arguments supplied to "laplace_latent_solve".
     ┌─ bad_solve_lik.stan:38:44
  37 │     tuple(vector[n_obs], matrix[n_obs, n_obs]) mean_chol
@@ -357,8 +334,7 @@ error: Ill-typed arguments supplied to "laplace_latent_solve".
  39 │                               K_function, (x, n_obs, alpha, rho));
     = (Local variables are assumed to depend on parameters; same goes for
       function inputs unless they are marked with the keyword "data".)
-[exit 1]
-  $ stanc bad_solve_tol.stan
+/* $ stanc bad_solve_tol.stan : [exit 1] */
 error: Ill-typed arguments supplied to "laplace_latent_solve_tol".
     ┌─ bad_solve_tol.stan:38:9
  37 │      tuple(vector[n_obs], matrix[n_obs, n_obs]) mean_chol
@@ -368,8 +344,7 @@ error: Ill-typed arguments supplied to "laplace_latent_solve_tol".
     │ ╰─────────────────────────────────────────────────────────^ Missing control parameter tuple at the end of the call to "laplace_latent_solve_tol".
     │                                                             Expected a tuple of 6 arguments for the control parameters.
  40 │    }
-[exit 1]
-  $ stanc bad_theta0.stan
+/* $ stanc bad_theta0.stan : [exit 1] */
 error: The first element of the control parameter tuple (initial guess) to "laplace_marginal_tol" must be vector. Instead found type array[] real.
     ┌─ bad_theta0.stan:43:10
  42 │                                   hessian_block_size, K_function, (x, n_obs, alpha, rho),
@@ -378,8 +353,7 @@ error: The first element of the control parameter tuple (initial guess) to "lapl
     │                   "laplace_marginal_tol" must be vector.
     │                   Instead found type array[] real.
  44 │          solver, max_steps_line_search, allow_fallthrough));
-[exit 1]
-  $ stanc bad_tol0.stan
+/* $ stanc bad_tol0.stan : [exit 1] */
 error: Ill-typed arguments supplied to "laplace_latent_rng".
     ┌─ bad_tol0.stan:40:60
  39 │    vector[n_obs] theta = laplace_latent_rng(ll_function, (eta, log_ye, y),
@@ -388,8 +362,7 @@ error: Ill-typed arguments supplied to "laplace_latent_rng".
     │                                                                     "laplace_latent_rng".
     │                                                                     Did you mean to call the _tol version?
  41 │  }
-[exit 1]
-  $ stanc bad_tol1.stan
+/* $ stanc bad_tol1.stan : [exit 1] */
 error: Ill-typed arguments supplied to "laplace_latent_rng".
     ┌─ bad_tol1.stan:40:57
  39 │    vector[n_obs] theta = laplace_latent_rng(ll_function, (eta, log_ye, y), 1,
@@ -398,8 +371,7 @@ error: Ill-typed arguments supplied to "laplace_latent_rng".
     │                                                                  "laplace_latent_rng".
     │                                                                  Did you mean to call the _tol version with a tuple of these?
  41 │  }
-[exit 1]
-  $ stanc bad_tol10.stan
+/* $ stanc bad_tol10.stan : [exit 1] */
 error: The sixth element of the control parameter tuple (allow_fallthrough) to "laplace_latent_tol_rng" must be int. Instead found type real.
     ┌─ bad_tol10.stan:39:75
  38 │    vector[n_obs] theta = laplace_latent_tol_rng(ll_function, (eta, log_ye, y), 1,
@@ -409,8 +381,7 @@ error: The sixth element of the control parameter tuple (allow_fallthrough) to "
     │                                                                                must be int.
     │                                                                                Instead found type real.
  40 │  }
-[exit 1]
-  $ stanc bad_tol11.stan
+/* $ stanc bad_tol11.stan : [exit 1] */
 error: Ill-typed arguments supplied to "laplace_latent_tol_rng".
     ┌─ bad_tol11.stan:39:81
  38 │    vector[n_obs] theta = laplace_latent_tol_rng(ll_function, (eta, log_ye, y),
@@ -419,8 +390,7 @@ error: Ill-typed arguments supplied to "laplace_latent_tol_rng".
     │                                                                                    "laplace_latent_tol_rng".
     │                                                                                    Only a single tuple of control parameters is expected.
  40 │  }
-[exit 1]
-  $ stanc bad_tol2.stan
+/* $ stanc bad_tol2.stan : [exit 1] */
 error: Ill-typed arguments supplied to "laplace_latent_rng".
     ┌─ bad_tol2.stan:39:57
  38 │    vector[n_obs] theta = laplace_latent_rng(ll_function, (eta, log_ye, y), 1,
@@ -429,8 +399,7 @@ error: Ill-typed arguments supplied to "laplace_latent_rng".
     │                                                                  "laplace_latent_rng".
     │                                                                  Did you mean to call the _tol version with a tuple of these?
  40 │  }
-[exit 1]
-  $ stanc bad_tol3.stan
+/* $ stanc bad_tol3.stan : [exit 1] */
 error: Ill-typed arguments supplied to "laplace_latent_tol_rng".
     ┌─ bad_tol3.stan:39:73
  38 │    vector[n_obs] theta = laplace_latent_tol_rng(ll_function, (eta, log_ye, y),1,
@@ -439,8 +408,7 @@ error: Ill-typed arguments supplied to "laplace_latent_tol_rng".
     │                                                                            "laplace_latent_tol_rng".
     │                                                                            Expected tuple of 6 arguments for the control parameters instead.
  40 │  }
-[exit 1]
-  $ stanc bad_tol4.stan
+/* $ stanc bad_tol4.stan : [exit 1] */
 error: Ill-typed arguments supplied to "laplace_marginal_tol".
     ┌─ bad_tol4.stan:47:33
  46 │                                  hessian_block_size, K_function, (x, n_obs, alpha, rho), (theta_0,
@@ -451,8 +419,7 @@ error: Ill-typed arguments supplied to "laplace_marginal_tol".
  48 │                                  solver, max_steps_line_search, allow_fallthrough));
     = (Local variables are assumed to depend on parameters; same goes for
       function inputs unless they are marked with the keyword "data".)
-[exit 1]
-  $ stanc bad_tol5.stan
+/* $ stanc bad_tol5.stan : [exit 1] */
 error: The fifth element of the control parameter tuple (max_steps_line_search) to "laplace_latent_tol_rng" must be int. Instead found type real.
     ┌─ bad_tol5.stan:39:73
  38 │    vector[n_obs] theta = laplace_latent_tol_rng(ll_function, (eta, log_ye, y),1,
@@ -462,8 +429,7 @@ error: The fifth element of the control parameter tuple (max_steps_line_search) 
     │                                                                              must be int.
     │                                                                              Instead found type real.
  40 │  }
-[exit 1]
-  $ stanc bad_tol6.stan
+/* $ stanc bad_tol6.stan : [exit 1] */
 error: Ill-typed arguments supplied to "laplace_latent_tol_rng".
     ┌─ bad_tol6.stan:39:77
  38 │    vector[n_obs] theta = laplace_latent_tol_rng(ll_function, (eta, log_ye, y), 1,
@@ -472,8 +438,7 @@ error: Ill-typed arguments supplied to "laplace_latent_tol_rng".
     │                                                                                "laplace_latent_tol_rng".
     │                                                                                Expected tuple of 6 arguments for the control parameters instead.
  40 │  }
-[exit 1]
-  $ stanc bad_tol7.stan
+/* $ stanc bad_tol7.stan : [exit 1] */
 error: The fourth element of the control parameter tuple (solver) to "laplace_latent_tol_rng" must be int. Instead found type real.
     ┌─ bad_tol7.stan:39:72
  38 │    vector[n_obs] theta = laplace_latent_tol_rng(ll_function, (eta, log_ye, y), 1,
@@ -483,8 +448,7 @@ error: The fourth element of the control parameter tuple (solver) to "laplace_la
     │                                                                             must be int.
     │                                                                             Instead found type real.
  40 │  }
-[exit 1]
-  $ stanc bad_tol9.stan
+/* $ stanc bad_tol9.stan : [exit 1] */
 error: The third element of the control parameter tuple (max_num_steps) to "laplace_latent_tol_rng" must be int. Instead found type array[] int.
     ┌─ bad_tol9.stan:39:69
  38 │    vector[n_obs] theta = laplace_latent_tol_rng(ll_function, (eta, log_ye, y),1,
@@ -494,8 +458,7 @@ error: The third element of the control parameter tuple (max_num_steps) to "lapl
     │                                                                          must be int.
     │                                                                          Instead found type array[] int.
  40 │  }
-[exit 1]
-  $ stanc missing_args1.stan
+/* $ stanc missing_args1.stan : [exit 1] */
 error: Ill-typed arguments supplied to "laplace_marginal".
     ┌─ missing_args1.stan:2:13
   1 │  model {
@@ -508,8 +471,7 @@ error: Ill-typed arguments supplied to "laplace_marginal".
     = We were unable to start more in-depth checking. Please ensure you
       are passing enough arguments and that the first argument is
       a function.
-[exit 1]
-  $ stanc missing_args10.stan
+/* $ stanc missing_args10.stan : [exit 1] */
 error: Ill-typed arguments supplied to "laplace_latent_rng".
     ┌─ missing_args10.stan:40:71
  39 │  
@@ -522,8 +484,7 @@ error: Ill-typed arguments supplied to "laplace_latent_rng".
     │                                                                           tuple(T_k...))@]
  41 │  
     = Missing the hessian block size (data-only int) and remaining arguments.
-[exit 1]
-  $ stanc missing_args11.stan
+/* $ stanc missing_args11.stan : [exit 1] */
 error: Ill-typed arguments supplied to "laplace_latent_neg_binomial_2_log_rng".
     ┌─ missing_args11.stan:18:82
  17 │  
@@ -536,8 +497,7 @@ error: Ill-typed arguments supplied to "laplace_latent_neg_binomial_2_log_rng".
     │                                                                                      tuple(T_k...))@]
  19 │                        );
     = Missing the hessian block size (data-only int) and remaining arguments.
-[exit 1]
-  $ stanc missing_args12.stan
+/* $ stanc missing_args12.stan : [exit 1] */
 error: Ill-typed arguments supplied to "laplace_marginal_tol_poisson_log_lpmf".
     ┌─ missing_args12.stan:2:65
   1 │  model {
@@ -553,8 +513,7 @@ error: Ill-typed arguments supplied to "laplace_marginal_tol_poisson_log_lpmf".
     │                                                                     data int)@]
   3 │  }
     = Missing the hessian block size (data-only int) and remaining arguments.
-[exit 1]
-  $ stanc missing_args2.stan
+/* $ stanc missing_args2.stan : [exit 1] */
 error: Ill-typed arguments supplied to "laplace_marginal_tol".
     ┌─ missing_args2.stan:2:13
   1 │  model {
@@ -569,8 +528,7 @@ error: Ill-typed arguments supplied to "laplace_marginal_tol".
     = We were unable to start more in-depth checking. Please ensure you
       are passing enough arguments and that the first argument is
       a function.
-[exit 1]
-  $ stanc missing_args3.stan
+/* $ stanc missing_args3.stan : [exit 1] */
 error: Ill-typed arguments supplied to "laplace_marginal_tol_neg_binomial_2_log_lpmf".
     ┌─ missing_args3.stan:2:13
   1 │  model {
@@ -584,8 +542,7 @@ error: Ill-typed arguments supplied to "laplace_marginal_tol_neg_binomial_2_log_
       array[] int,
       real,
       vector
-[exit 1]
-  $ stanc missing_args4.stan
+/* $ stanc missing_args4.stan : [exit 1] */
 error: Ill-typed arguments supplied to "laplace_marginal".
     ┌─ missing_args4.stan:29:59
  28 │  model {
@@ -598,8 +555,7 @@ error: Ill-typed arguments supplied to "laplace_marginal".
     │                                                               tuple(T_k...))@]
  30 │  
     = Missing the hessian block size (data-only int) and remaining arguments.
-[exit 1]
-  $ stanc missing_args5.stan
+/* $ stanc missing_args5.stan : [exit 1] */
 error: Ill-typed arguments supplied to "laplace_latent_rng".
     ┌─ missing_args5.stan:3:21
   2 │  generated quantities {
@@ -612,8 +568,7 @@ error: Ill-typed arguments supplied to "laplace_latent_rng".
     = We were unable to start more in-depth checking. Please ensure you
       are passing enough arguments and that the first argument is
       a function.
-[exit 1]
-  $ stanc missing_args6.stan
+/* $ stanc missing_args6.stan : [exit 1] */
 error: Ill-typed arguments supplied to "laplace_latent_rng".
     ┌─ missing_args6.stan:40:23
  39 │  
@@ -632,8 +587,7 @@ error: Ill-typed arguments supplied to "laplace_latent_rng".
  41 │  
     = Typechecking failed after checking the first 3 arguments.
       Please ensure you are passing enough arguments and that the 4th is a function.
-[exit 1]
-  $ stanc missing_args7.stan
+/* $ stanc missing_args7.stan : [exit 1] */
 error: Ill-typed arguments supplied to "laplace_latent_neg_binomial_2_log_rng".
     ┌─ missing_args7.stan:18:25
  17 │    
@@ -647,8 +601,7 @@ error: Ill-typed arguments supplied to "laplace_latent_neg_binomial_2_log_rng".
  20 │    
     = Typechecking failed after checking the first 5 arguments.
       Please ensure you are passing enough arguments and that the 6th is a function.
-[exit 1]
-  $ stanc missing_args8.stan
+/* $ stanc missing_args8.stan : [exit 1] */
 error: Ill-typed arguments supplied to "laplace_marginal_tol_poisson_log_lpmf".
     ┌─ missing_args8.stan:2:13
   1 │  model {
@@ -669,8 +622,7 @@ error: Ill-typed arguments supplied to "laplace_marginal_tol_poisson_log_lpmf".
   3 │  }
     = Typechecking failed after checking the first 4 arguments.
       Please ensure you are passing enough arguments and that the 5th is a function.
-[exit 1]
-  $ stanc missing_args9.stan
+/* $ stanc missing_args9.stan : [exit 1] */
 error: Ill-typed arguments supplied to "laplace_latent_tol_neg_binomial_2_log_rng".
     ┌─ missing_args9.stan:40:25
  39 │    
@@ -680,8 +632,7 @@ error: Ill-typed arguments supplied to "laplace_latent_tol_neg_binomial_2_log_rn
     │ ╰───────────────────────────────────────────────────────────────^ Missing control parameter tuple at the end of the call to "laplace_latent_tol_neg_binomial_2_log_rng".
     │                                                                   Expected a tuple of 6 arguments for the control parameters.
  42 │    
-[exit 1]
-  $ stanc wrong_type_eta.stan
+/* $ stanc wrong_type_eta.stan : [exit 1] */
 error: Ill-typed arguments supplied to "laplace_marginal_neg_binomial_2_log_lpmf".
     ┌─ wrong_type_eta.stan:18:61
  17 │    // the overdispersion must be a scalar, not a vector
@@ -695,4 +646,3 @@ error: Ill-typed arguments supplied to "laplace_marginal_neg_binomial_2_log_lpmf
       array[] int,
       real,
       vector
-[exit 1]

@@ -1,0 +1,67 @@
+/* $ stanc -fsoa --debug-optimized-mir ../tuple-ix-assign4.stan : [exit 0] */
+((functions_block ()) (input_vars ())
+ (prepare_data
+  (((pattern
+     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
+      (initialize Default)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment ((LVariable pos__) ()) UInt
+      ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype (TupleAD ((TupleAD (DataOnly DataOnly)) DataOnly))) 
+      (decl_id x)
+      (decl_type
+       (Sized
+        (STuple
+         ((SArray
+           (STuple
+            (SInt
+             (SArray SReal
+              ((pattern (Lit Int 100))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+           ((pattern (Lit Int 10))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          SInt))))
+      (initialize Default)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment
+      ((LTupleProjection
+        ((LTupleProjection ((LVariable x) ()) 1)
+         ((Single
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+        1)
+       ())
+      UInt
+      ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))))
+ (log_prob ()) (reverse_mode_log_prob ())
+ (generate_quantities
+  (((pattern
+     (IfElse
+      ((pattern
+        (FunApp (Operator PNot)
+         (((pattern
+            (EOr
+             ((pattern (Var emit_transformed_parameters__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+             ((pattern (Var emit_generated_quantities__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+      ((pattern (Block (((pattern (Return ())) (meta <opaque>))))) (meta <opaque>)) ()))
+    (meta <opaque>))
+   ((pattern
+     (IfElse
+      ((pattern
+        (FunApp (Operator PNot)
+         (((pattern (Var emit_generated_quantities__))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+      ((pattern (Block (((pattern (Return ())) (meta <opaque>))))) (meta <opaque>)) ()))
+    (meta <opaque>))))
+ (transform_inits ()) (unconstrain_array ()) (output_vars ())
+ (prog_name tuple_ix_assign4_model) (prog_path ../tuple-ix-assign4.stan))

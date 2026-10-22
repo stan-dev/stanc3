@@ -1,4 +1,4 @@
-  $ stanc abs-deprecate.stan
+/* $ stanc abs-deprecate.stan : [exit 1] */
 error: A returning function was expected but an undeclared identifier "fabs" was supplied.
     ┌─ abs-deprecate.stan:3:8
   2 │    real mu;
@@ -7,8 +7,7 @@ error: A returning function was expected but an undeclared identifier "fabs" was
     │                    "fabs" was supplied.
   4 │  }
     = Did you mean "abs"?
-[exit 1]
-  $ stanc binomial_coefficient_log.stan
+/* $ stanc binomial_coefficient_log.stan : [exit 1] */
 error: A returning function was expected but an undeclared identifier "binomial_coefficient_log" was supplied.
     ┌─ binomial_coefficient_log.stan:12:27
  11 │  
@@ -16,8 +15,7 @@ error: A returning function was expected but an undeclared identifier "binomial_
     │                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ A returning function was expected but an undeclared identifier 
     │                                                                     "binomial_coefficient_log" was supplied.
  13 │    transformed_data_real = binomial_coefficient_log(d_int, r_real);
-[exit 1]
-  $ stanc cdf_conditioning.stan
+/* $ stanc cdf_conditioning.stan : [exit 1] */
 error: Conditioning required for function.
     ┌─ cdf_conditioning.stan:7:13
   6 │  model {
@@ -27,8 +25,7 @@ error: Conditioning required for function.
     │                               require a vertical bar ("|") between the first
     │                               two arguments.
   8 │  }
-[exit 1]
-  $ stanc cov_exp_quad.stan
+/* $ stanc cov_exp_quad.stan : [exit 1] */
 error: A returning function was expected but an undeclared identifier "cov_exp_quad" was supplied.
     ┌─ cov_exp_quad.stan:17:29
  16 │  
@@ -36,8 +33,7 @@ error: A returning function was expected but an undeclared identifier "cov_exp_q
     │                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ A returning function was expected but an undeclared identifier 
     │                                                                    "cov_exp_quad" was supplied.
  18 │    transformed_data_matrix = cov_exp_quad(d_arr_1, d_arr_2, d_sigma, d_len);
-[exit 1]
-  $ stanc decl.stan
+/* $ stanc decl.stan : [exit 1] */
 error: Syntax error: Ill-formed identifier.
     ┌─ decl.stan:2:8
   1 │  data {
@@ -45,8 +41,7 @@ error: Syntax error: Ill-formed identifier.
     │         ^^^^^ here.
   3 │     array[5] int array2;
     = Expected a new identifier but found reserved keyword "array".
-[exit 1]
-  $ stanc declarations.stan
+/* $ stanc declarations.stan : [exit 1] */
 error: Syntax error: Ill-formed declaration.
     ┌─ declarations.stan:3:19
   2 │    int a0;
@@ -57,8 +52,7 @@ error: Syntax error: Ill-formed declaration.
         It looks like you are trying to use the old array syntax.
         Please use the new syntax:
         array[1] int<lower=0> a1;
-[exit 1]
-  $ stanc deprecated_tilde.stan
+/* $ stanc deprecated_tilde.stan : [exit 1] */
 error: ~ statement should refer to a distribution without its "_lpdf/_lupdf" or "_lpmf/_lupmf" suffix.
     ┌─ deprecated_tilde.stan:12:7
  11 │  model {
@@ -66,8 +60,7 @@ error: ~ statement should refer to a distribution without its "_lpdf/_lupdf" or 
     │        ^^^^^^^^^^^^^ ~ statement should refer to a distribution without its "_lpdf/_lupdf" or "_lpmf/_lupmf" suffix.
  13 │    1.2 ~ test_log_lpdf(2.5);
     = For example, "y ~ normal_lpdf(0, 1)" should become "y ~ normal(0, 1)".
-[exit 1]
-  $ stanc duplicate-warns.stan
+/* $ stanc duplicate-warns.stan : [exit 1] */
 error: A non-returning function was expected but an undeclared identifier "increment_log_prob" was supplied.
     ┌─ duplicate-warns.stan:4:3
   3 │    foo = 1;
@@ -75,8 +68,7 @@ error: A non-returning function was expected but an undeclared identifier "incre
     │    ^^^^^^^^^^^^^^^^^^^^^^ A non-returning function was expected but an undeclared identifier 
     │                           "increment_log_prob" was supplied.
   5 │    foo = get_lp();
-[exit 1]
-  $ stanc get-lp-deprecate.stan
+/* $ stanc get-lp-deprecate.stan : [exit 1] */
 error: A returning function was expected but an undeclared identifier "get_lp" was supplied.
     ┌─ get-lp-deprecate.stan:5:20
   4 │  model {
@@ -84,8 +76,7 @@ error: A returning function was expected but an undeclared identifier "get_lp" w
     │                     ^^^^^^^^ A returning function was expected but an undeclared identifier 
     │                              "get_lp" was supplied.
   6 │    y ~ normal(0, 1);
-[exit 1]
-  $ stanc get_lp_target.stan
+/* $ stanc get_lp_target.stan : [exit 1] */
 error: A returning function was expected but an undeclared identifier "get_lp" was supplied.
     ┌─ get_lp_target.stan:6:22
   5 │    print("target = ", target());
@@ -93,8 +84,7 @@ error: A returning function was expected but an undeclared identifier "get_lp" w
     │                       ^^^^^^^^ A returning function was expected but an undeclared identifier 
     │                                "get_lp" was supplied.
   7 │  }
-[exit 1]
-  $ stanc identifiers.stan
+/* $ stanc identifiers.stan : [exit 1] */
 error: Syntax error: Ill-formed identifier.
     ┌─ identifiers.stan:2:7
   1 │  data {
@@ -102,8 +92,7 @@ error: Syntax error: Ill-formed identifier.
     │        ^^^^^ here.
   3 │    int lower;
     = Expected a new identifier but found reserved keyword "upper".
-[exit 1]
-  $ stanc if_else.stan
+/* $ stanc if_else.stan : [exit 1] */
 error: A returning function was expected but an undeclared identifier "if_else" was supplied.
     ┌─ if_else.stan:9:27
   8 │  
@@ -112,8 +101,7 @@ error: A returning function was expected but an undeclared identifier "if_else" 
     │                                                         "if_else" was supplied.
  10 │    transformed_data_real = if_else(d_int, d_int, d_real);
     = Did you mean "inverse"?
-[exit 1]
-  $ stanc increment_log_prob.stan
+/* $ stanc increment_log_prob.stan : [exit 1] */
 error: A non-returning function was expected but an undeclared identifier "increment_log_prob" was supplied.
     ┌─ increment_log_prob.stan:42:3
  41 │  model {
@@ -121,16 +109,14 @@ error: A non-returning function was expected but an undeclared identifier "incre
     │    ^^^^^^^^^^^^^^^^^^^^^^ A non-returning function was expected but an undeclared identifier 
     │                           "increment_log_prob" was supplied.
  43 │    increment_log_prob(nn);
-[exit 1]
-  $ stanc lvalue_multiindex.stan
+/* $ stanc lvalue_multiindex.stan : [exit 1] */
 error: Left hand side of an assignment cannot have nested multi-indexing.
     ┌─ lvalue_multiindex.stan:6:4
   5 │     matrix[5,5] y;
   6 │     y[:][:] = x[1][:][:];
     │     ^^^^^^^ Left hand side of an assignment cannot have nested multi-indexing.
   7 │     y[:][1] = x[1][:][2];
-[exit 1]
-  $ stanc multiply_log.stan
+/* $ stanc multiply_log.stan : [exit 1] */
 error: A returning function was expected but an undeclared identifier "multiply_log" was supplied.
     ┌─ multiply_log.stan:11:27
  10 │  
@@ -139,8 +125,7 @@ error: A returning function was expected but an undeclared identifier "multiply_
     │                                                         "multiply_log" was supplied.
  12 │    transformed_data_real = multiply_log(d_int, r_real);
     = Did you mean "multiply"?
-[exit 1]
-  $ stanc old-log-funs.stan
+/* $ stanc old-log-funs.stan : [exit 1] */
 error: A returning function was expected but an undeclared identifier "multiply_log" was supplied.
     ┌─ old-log-funs.stan:3:7
   2 │    real x;
@@ -149,8 +134,7 @@ error: A returning function was expected but an undeclared identifier "multiply_
     │                           "multiply_log" was supplied.
   4 │    x = binomial_coefficient_log(x, x);  // ditto
     = Did you mean "multiply"?
-[exit 1]
-  $ stanc pound-comment-deprecated.stan
+/* $ stanc pound-comment-deprecated.stan : [exit 1] */
 error: Invalid character found.
 
     ┌─ pound-comment-deprecated.stan:2:3
@@ -158,8 +142,7 @@ error: Invalid character found.
   2 │    # hey, this is the old way to do things, should raise warning
     │    ^ here.
   3 │    int N;
-[exit 1]
-  $ stanc real-bools.stan
+/* $ stanc real-bools.stan : [exit 1] */
 error: Condition in while-loop must be of type int. Instead found type real.
     ┌─ real-bools.stan:6:10
   5 │  
@@ -167,8 +150,7 @@ error: Condition in while-loop must be of type int. Instead found type real.
     │           ^ Condition in while-loop must be of type int.
     │             Instead found type real.
   7 │      // real as boolean value
-[exit 1]
-  $ stanc removed_deprecated_syntax.stan
+/* $ stanc removed_deprecated_syntax.stan : [exit 1] */
 error: Syntax error: Ill-formed declaration.
     ┌─ removed_deprecated_syntax.stan:10:10
   9 │    vector[3] b;
@@ -179,8 +161,7 @@ error: Syntax error: Ill-formed declaration.
         It looks like you are trying to use the old array syntax.
         Please use the new syntax:
         array[7] real c;
-[exit 1]
-  $ stanc unreserved-array-keyword.stan
+/* $ stanc unreserved-array-keyword.stan : [exit 1] */
 error: Syntax error: Ill-formed identifier.
     ┌─ unreserved-array-keyword.stan:2:25
   1 │  functions {
@@ -188,8 +169,7 @@ error: Syntax error: Ill-formed identifier.
     │                          ^^^^^ here.
   3 │  }
     = Expected a new identifier but found reserved keyword "array".
-[exit 1]
-  $ stanc unsized-old-array.stan
+/* $ stanc unsized-old-array.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ unsized-old-array.stan:2:18
   1 │  functions{
@@ -201,8 +181,7 @@ error: Syntax error: Ill-formed type.
         If you are trying to use the old array syntax, you will need to use
         the new syntax, see:
         https://mc-stan.org/docs/reference-manual/types.html#array-data-types.section
-[exit 1]
-  $ stanc unsized-old-array2.stan
+/* $ stanc unsized-old-array2.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ unsized-old-array2.stan:2:7
   1 │  functions{
@@ -214,4 +193,3 @@ error: Syntax error: Ill-formed type.
         If you are trying to use the old array syntax, you will need to use
         the new syntax, see:
         https://mc-stan.org/docs/reference-manual/types.html#array-data-types.section
-[exit 1]

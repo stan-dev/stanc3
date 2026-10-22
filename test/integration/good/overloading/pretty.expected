@@ -1,4 +1,4 @@
-  $ stanc --auto-format dae_overloaded.stan
+/* $ stanc --auto-format dae_overloaded.stan : [exit 0] */
 functions {
   vector chem_dae(real t, vector yy, vector yp, array[] real p,
                   array[] real x, int unused1) {
@@ -49,8 +49,7 @@ model {
     y[t] ~ normal(y_hat[t], sigma); // independent normal noise
 }
 
-[exit 0]
-  $ stanc --auto-format is_real.stan
+/* $ stanc --auto-format is_real.stan : [exit 0] */
 functions {
   int is_real(real x) {
     return 1;
@@ -66,8 +65,7 @@ transformed data {
   }
 }
 
-[exit 0]
-  $ stanc --auto-format minimum_promotion.stan
+/* $ stanc --auto-format minimum_promotion.stan : [exit 0] */
 functions {
   real something(int x) {
     return 1.0;
@@ -92,8 +90,7 @@ generated quantities {
   print(something(1i));
 }
 
-[exit 0]
-  $ stanc --auto-format multi_fun.stan
+/* $ stanc --auto-format multi_fun.stan : [exit 0] */
 functions {
   int foo(int a) {
     return a;
@@ -109,8 +106,7 @@ model {
   y ~ normal(0, 1);
 }
 
-[exit 0]
-  $ stanc --auto-format num_args.stan
+/* $ stanc --auto-format num_args.stan : [exit 0] */
 functions {
   real foo(real one) {
     return 1.0;
@@ -121,8 +117,7 @@ functions {
   }
 }
 
-[exit 0]
-  $ stanc --auto-format redefine-prob1.stan
+/* $ stanc --auto-format redefine-prob1.stan : [exit 0] */
 functions {
   real poisson_lpdf(real n, real x) {
     return -x ^ 2;
@@ -135,8 +130,7 @@ model {
   y ~ normal(0, 1);
 }
 
-[exit 0]
-  $ stanc --auto-format reduce_sum_multiple.stan
+/* $ stanc --auto-format reduce_sum_multiple.stan : [exit 0] */
 functions {
   real fun(array[] real y_slice, int start, int end, real m) {
     return sum(y_slice) * m;
@@ -170,8 +164,7 @@ model {
   y ~ std_normal();
 }
 
-[exit 0]
-  $ stanc --auto-format reduce_sum_ordering.stan
+/* $ stanc --auto-format reduce_sum_ordering.stan : [exit 0] */
 functions {
   real s(array[] real y_slice, int start, int end) {
     return reduce_sum(s, y_slice, 1);
@@ -191,8 +184,7 @@ transformed data {
   real tsd = reduce_sum(s, y1d, 1);
 }
 
-[exit 0]
-  $ stanc --auto-format sir_overloaded_odes.stan
+/* $ stanc --auto-format sir_overloaded_odes.stan : [exit 0] */
 // Simple SIR model inspired by the presentation in
 // http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3380087/pdf/nihms372789.pdf
 
@@ -287,8 +279,7 @@ model {
   B ~ lognormal(log(y2[ : , 4]), 0.15);
 }
 
-[exit 0]
-  $ stanc --auto-format stan_math.stan
+/* $ stanc --auto-format stan_math.stan : [exit 0] */
 functions {
   vector to_vector(real one, real two, real three) {
     vector[3] r = [one, two, three]';
@@ -305,8 +296,7 @@ transformed data {
   to_vector(3);
 }
 
-[exit 0]
-  $ stanc --auto-format tilde_resolve.stan
+/* $ stanc --auto-format tilde_resolve.stan : [exit 0] */
 // different than test/bad's no_minimum_tilde because of lpdf/lpmf checks
 
 functions {
@@ -322,4 +312,3 @@ model {
   1 ~ foo(3);
 }
 
-[exit 0]

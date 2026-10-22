@@ -1,43 +1,38 @@
-  $ stanc bad1.stan
+/* $ stanc bad1.stan : [exit 1] */
 error: Syntax error: Ill-formed block.
     ┌─ bad1.stan:1:9
   1 │  model { 
     │          ^ here.
     = Expected unconstrained variable declaration, statement, or "}".
-[exit 1]
-  $ stanc bad1.stanfunctions
+/* $ stanc bad1.stanfunctions : [exit 1] */
 error: Syntax error: Ill-formed function.
     ┌─ bad1.stanfunctions:1:6
   1 │  int x;
     │       ^ here.
   2 │  
     = Expected "(" after function name.
-[exit 1]
-  $ stanc bad10.stan
+/* $ stanc bad10.stan : [exit 1] */
 error: Identifier "y__" clashes with reserved keyword.
     ┌─ bad10.stan:2:9
   1 │  data {
   2 │     real y__;
     │          ^^^ Identifier "y__" clashes with reserved keyword.
   3 │  }
-[exit 1]
-  $ stanc bad11.stan
+/* $ stanc bad11.stan : [exit 1] */
 error: Parameters cannot be integers.
     ┌─ bad11.stan:2:3
   1 │  parameters {
   2 │    int theta;
     │    ^^^^^^^^^^ Parameters cannot be integers.
   3 │  }
-[exit 1]
-  $ stanc bad12.stan
+/* $ stanc bad12.stan : [exit 1] */
 error: Cannot assign to global variable.
     ┌─ bad12.stan:2:3
   1 │  generated quantities {
   2 │    beta = 1;
     │    ^^^^ "beta" was declared in the Stan Math library and cannot be assigned to.
   3 │  }
-[exit 1]
-  $ stanc bad2.stan
+/* $ stanc bad2.stan : [exit 1] */
 error: Cannot assign to global variable.
     ┌─ bad2.stan:1:35
   1 │  data { array[3] real a; } model { a = 2.0; }
@@ -45,38 +40,33 @@ error: Cannot assign to global variable.
     │                       │
     │                       Variable was declared in data block here.
   2 │  
-[exit 1]
-  $ stanc bad2.stanfunctions
+/* $ stanc bad2.stanfunctions : [exit 1] */
 error: Syntax error: Ill-formed program.
     ┌─ bad2.stanfunctions:5:1
   5 │  }
     │  ^ here.
     = Only function definitions/declarations are expected in '.stanfunctions' files.
-[exit 1]
-  $ stanc bad3.stan
+/* $ stanc bad3.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ bad3.stan:1:22
   1 │  data { real a; matrix(2,3) b; } model { a = b; }
     │                       ^ here.
     = Expected "[" expression "," expression "]" for matrix sizes.
-[exit 1]
-  $ stanc bad3.stanfunctions
+/* $ stanc bad3.stanfunctions : [exit 1] */
 error: Syntax error: Ill-formed program.
     ┌─ bad3.stanfunctions:1:1
   1 │  while;
     │  ^^^^^ here.
   2 │  
     = Only function definitions/declarations are expected in '.stanfunctions' files.
-[exit 1]
-  $ stanc bad4.stan
+/* $ stanc bad4.stan : [exit 1] */
 error: Lower bound of for-loop must be of type int. Instead found type real.
     ┌─ bad4.stan:1:45
   1 │  data { array[5] real a; } model { for (n in a[1]:5) a[n] = n; }
     │                                              ^^^^ Lower bound of for-loop must be of type int.
     │                                                   Instead found type real.
   2 │  
-[exit 1]
-  $ stanc bad4.stanfunctions
+/* $ stanc bad4.stanfunctions : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ bad4.stanfunctions:1:11
   1 │  array[,,] x() {
@@ -86,16 +76,14 @@ error: Syntax error: Ill-formed type.
         For example, this means a type like "matrix", not "corr_matrix" or "matrix[3,4]".
         See the complete table of types at:
         https://mc-stan.org/docs/reference-manual/types.html#variable-declaration.section
-[exit 1]
-  $ stanc bad5.stan
+/* $ stanc bad5.stan : [exit 1] */
 error: Identifier "lp__" clashes with reserved keyword.
     ┌─ bad5.stan:3:7
   2 │    real y;
   3 │    y = lp__;
     │        ^^^^ Identifier "lp__" clashes with reserved keyword.
   4 │  }
-[exit 1]
-  $ stanc bad6.stan
+/* $ stanc bad6.stan : [exit 1] */
 error: Cannot assign to global variable.
     ┌─ bad6.stan:7:4
   1 │  data {
@@ -107,8 +95,7 @@ error: Cannot assign to global variable.
   7 │     y = 10.0;
     │     ^ "y" was declared in a previous block and cannot be assigned to.
   8 │  }
-[exit 1]
-  $ stanc bad7.stan
+/* $ stanc bad7.stan : [exit 1] */
 error: Cannot assign to global variable.
     ┌─ bad7.stan:7:3
   1 │  data {
@@ -120,8 +107,7 @@ error: Cannot assign to global variable.
   7 │    y = 10.0;
     │    ^ "y" was declared in a previous block and cannot be assigned to.
   8 │  }
-[exit 1]
-  $ stanc bad8.stan
+/* $ stanc bad8.stan : [exit 1] */
 error: Cannot assign to global variable.
     ┌─ bad8.stan:5:5
   1 │  data {
@@ -132,16 +118,14 @@ error: Cannot assign to global variable.
   5 │      y = 10.0;
     │      ^ "y" was declared in a previous block and cannot be assigned to.
   6 │  }
-[exit 1]
-  $ stanc bad9.stan
+/* $ stanc bad9.stan : [exit 1] */
 error: Parameters cannot be integers.
     ┌─ bad9.stan:5:4
   4 │  parameters {
   5 │     int N;
     │     ^^^^^^ Parameters cannot be integers.
   6 │     array[N] real z;
-[exit 1]
-  $ stanc bad_bar.stan
+/* $ stanc bad_bar.stan : [exit 1] */
 error: Invalid conditioning in function.
     ┌─ bad_bar.stan:3:10
   2 │     vector[3] foo;
@@ -151,8 +135,7 @@ error: Invalid conditioning in function.
     │                               _lccdf can make use of
     │                               conditional notation ("|").
   4 │  }
-[exit 1]
-  $ stanc bad_bounds1.stan
+/* $ stanc bad_bounds1.stan : [exit 1] */
 error: Syntax error: Ill-formed constraint.
     ┌─ bad_bounds1.stan:2:16
   1 │  data {
@@ -160,8 +143,7 @@ error: Syntax error: Ill-formed constraint.
     │                 ^^ here.
   3 │  }
     = Expected an expression (not containing binary logical operators).
-[exit 1]
-  $ stanc bad_decl1.stan
+/* $ stanc bad_decl1.stan : [exit 1] */
 error: Syntax error: Ill-formed identifier.
     ┌─ bad_decl1.stan:2:11
   1 │  data {
@@ -170,8 +152,7 @@ error: Syntax error: Ill-formed identifier.
   3 │  }
     = Found a type ("int") where an identifier was expected.
       All variables declared in a comma-separated list must be of the same type.
-[exit 1]
-  $ stanc bad_decl2.stan
+/* $ stanc bad_decl2.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ bad_decl2.stan:2:14
   1 │  data {
@@ -179,8 +160,7 @@ error: Syntax error: Ill-formed type.
     │               ^ here.
   3 │  }
     = Expected a non-array type after "array" declaration.
-[exit 1]
-  $ stanc bad_decl3.stan
+/* $ stanc bad_decl3.stan : [exit 1] */
 error: Syntax error: Ill-formed declaration.
     ┌─ bad_decl3.stan:3:29
   2 │      void test(real alpha, real tau, real beta, real delta) {
@@ -189,8 +169,7 @@ error: Syntax error: Ill-formed declaration.
   4 │        return;
     = Expected a new identifier after comma in declaration.
       All variables declared must be of the same type, and any initializing assignment must follow the identifier before the next comma.
-[exit 1]
-  $ stanc bad_decl4.stan
+/* $ stanc bad_decl4.stan : [exit 1] */
 error: Syntax error: Ill-formed identifier.
     ┌─ bad_decl4.stan:2:11
   1 │  data {
@@ -198,8 +177,7 @@ error: Syntax error: Ill-formed identifier.
     │            ^^^^^^ here.
   3 │  }
     = Expected a new identifier but found reserved keyword "reject".
-[exit 1]
-  $ stanc bad_decl5.stan
+/* $ stanc bad_decl5.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ bad_decl5.stan:2:14
   1 │  model {
@@ -210,8 +188,7 @@ error: Syntax error: Ill-formed type.
         For example, this means a type like "matrix", not "corr_matrix".
         See the complete table of types at:
         https://mc-stan.org/docs/reference-manual/types.html#variable-declaration.section
-[exit 1]
-  $ stanc bad_decl6.stan
+/* $ stanc bad_decl6.stan : [exit 1] */
 error: Syntax error: Ill-formed type.
     ┌─ bad_decl6.stan:2:9
   1 │  model {
@@ -219,8 +196,7 @@ error: Syntax error: Ill-formed type.
     │          ^^^^ here.
   3 │  }
     = Expected "[" array sizes "]" followed by type after "array".
-[exit 1]
-  $ stanc bad_function.stan
+/* $ stanc bad_function.stan : [exit 1] */
 error: A non-returning function was expected but a non-function value "x" was supplied.
     ┌─ bad_function.stan:3:4
   1 │  generated quantities {
@@ -229,16 +205,14 @@ error: A non-returning function was expected but a non-function value "x" was su
   3 │     x();
     │     ^^^^ A non-returning function was expected but a non-function value "x" was supplied.
   4 │  }
-[exit 1]
-  $ stanc bad_function2.stan
+/* $ stanc bad_function2.stan : [exit 1] */
 error: A non-returning function was expected but an undeclared identifier "y" was supplied.
     ┌─ bad_function2.stan:3:4
   2 │     real x;
   3 │     y();
     │     ^^^^ A non-returning function was expected but an undeclared identifier "y" was supplied.
   4 │  }
-[exit 1]
-  $ stanc bad_jacobian.stan
+/* $ stanc bad_jacobian.stan : [exit 1] */
 error: Syntax error: Ill-formed statement.
     ┌─ bad_jacobian.stan:2:17
   1 │  transformed parameters {
@@ -246,8 +220,7 @@ error: Syntax error: Ill-formed statement.
     │                  ^^^^^ here.
   3 │  }
     = Expected an expression followed by ";" after "jacobian +=".
-[exit 1]
-  $ stanc bad_lmpf.stan
+/* $ stanc bad_lmpf.stan : [exit 1] */
 error: Probability mass functions require int variates (first argument). Instead found type real.
     ┌─ bad_lmpf.stan:2:3
   1 │    functions {
@@ -256,8 +229,7 @@ error: Probability mass functions require int variates (first argument). Instead
   4 │ │    }
     │ ╰────^ Probability mass functions require int variates (first argument). Instead found type real.
   5 │    }
-[exit 1]
-  $ stanc bad_lpdf.stan
+/* $ stanc bad_lpdf.stan : [exit 1] */
 error: Probability density functions require real variates (first argument).
     ┌─ bad_lpdf.stan:2:3
   1 │    functions {
@@ -266,8 +238,7 @@ error: Probability density functions require real variates (first argument).
   4 │ │    }
     │ ╰────^ Probability density functions require real variates (first argument).
   5 │    }
-[exit 1]
-  $ stanc bad_periods_data.stan
+/* $ stanc bad_periods_data.stan : [exit 1] */
 error: Invalid character found.
 
     ┌─ bad_periods_data.stan:2:9
@@ -275,8 +246,7 @@ error: Invalid character found.
   2 │    real x.y;
     │          ^ here.
   3 │  }
-[exit 1]
-  $ stanc bad_periods_gqs.stan
+/* $ stanc bad_periods_gqs.stan : [exit 1] */
 error: Invalid character found.
 
     ┌─ bad_periods_gqs.stan:8:9
@@ -284,8 +254,7 @@ error: Invalid character found.
   8 │    real x.y;
     │          ^ here.
   9 │    x.y = z * 2;
-[exit 1]
-  $ stanc bad_periods_local.stan
+/* $ stanc bad_periods_local.stan : [exit 1] */
 error: Invalid character found.
 
     ┌─ bad_periods_local.stan:5:9
@@ -293,8 +262,7 @@ error: Invalid character found.
   5 │    real x.y;
     │          ^ here.
   6 │    z ~ normal(x.y,1);
-[exit 1]
-  $ stanc bad_periods_params.stan
+/* $ stanc bad_periods_params.stan : [exit 1] */
 error: Invalid character found.
 
     ┌─ bad_periods_params.stan:2:9
@@ -302,8 +270,7 @@ error: Invalid character found.
   2 │    real x.y;
     │          ^ here.
   3 │  }
-[exit 1]
-  $ stanc bad_periods_tdata.stan
+/* $ stanc bad_periods_tdata.stan : [exit 1] */
 error: Invalid character found.
 
     ┌─ bad_periods_tdata.stan:2:9
@@ -311,8 +278,7 @@ error: Invalid character found.
   2 │    real x.y;
     │          ^ here.
   3 │  }
-[exit 1]
-  $ stanc bad_periods_tparams.stan
+/* $ stanc bad_periods_tparams.stan : [exit 1] */
 error: Invalid character found.
 
     ┌─ bad_periods_tparams.stan:2:9
@@ -320,8 +286,7 @@ error: Invalid character found.
   2 │    real x.;
     │          ^ here.
   3 │    x. = 1.0;
-[exit 1]
-  $ stanc bad_promotion1.stan
+/* $ stanc bad_promotion1.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "printer".
     ┌─ bad_promotion1.stan:9:3
   1 │  functions {
@@ -338,8 +303,7 @@ error: Ill-typed arguments supplied to function "printer".
     = Available signatures:
       (array[] vector) => void
         The first argument must be array[] vector but got array[] int
-[exit 1]
-  $ stanc bad_promotions2.stan
+/* $ stanc bad_promotions2.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "nested".
     ┌─ bad_promotions2.stan:9:9
   1 │  functions {
@@ -356,8 +320,7 @@ error: Ill-typed arguments supplied to function "nested".
     = Available signatures:
       (array[,] complex) => real
         The first argument must be array[,] complex but got array[] int
-[exit 1]
-  $ stanc bad_promotions3.stan
+/* $ stanc bad_promotions3.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "printer".
     ┌─ bad_promotions3.stan:9:3
   1 │  functions {
@@ -374,8 +337,7 @@ error: Ill-typed arguments supplied to function "printer".
     = Available signatures:
       (array[] real) => void
         The first argument must be array[] real but got array[,] int
-[exit 1]
-  $ stanc bad_promotions4.stan
+/* $ stanc bad_promotions4.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "printer".
     ┌─ bad_promotions4.stan:9:3
   1 │  functions {
@@ -392,8 +354,7 @@ error: Ill-typed arguments supplied to function "printer".
     = Available signatures:
       (array[] int) => void
         The first argument must be array[] int but got array[] real
-[exit 1]
-  $ stanc good_all.stan
+/* $ stanc good_all.stan : [exit 1] */
 error: Cannot assign to global variable.
     ┌─ good_all.stan:25:3
   6 │  data {
@@ -405,8 +366,7 @@ error: Cannot assign to global variable.
  25 │    m = m;
     │    ^ "m" was declared in a previous block and cannot be assigned to.
  26 │    rv = m[1];
-[exit 1]
-  $ stanc incomplete.stan
+/* $ stanc incomplete.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ incomplete.stan:2:19
   1 │  transformed data {
@@ -415,8 +375,7 @@ error: Syntax error: Ill-formed expression.
   3 │  }
     = Found an incomplete binary expression.
       Are you missing the right hand side?
-[exit 1]
-  $ stanc incomplete10.stan
+/* $ stanc incomplete10.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ incomplete10.stan:2:21
   1 │  transformed data {
@@ -424,8 +383,7 @@ error: Syntax error: Ill-formed expression.
     │                      ^ here.
   3 │  }
     = Expected a comma separated list of expressions followed by "]" after "[".
-[exit 1]
-  $ stanc incomplete11.stan
+/* $ stanc incomplete11.stan : [exit 1] */
 error: Syntax error: Ill-formed declaration.
     ┌─ incomplete11.stan:2:7
   1 │  model {
@@ -433,8 +391,7 @@ error: Syntax error: Ill-formed declaration.
     │        ^ here.
   3 │  }
     = Expected an identifier after type in local (or model block) variable declaration.
-[exit 1]
-  $ stanc incomplete12.stan
+/* $ stanc incomplete12.stan : [exit 1] */
 error: Syntax error: Ill-formed function.
     ┌─ incomplete12.stan:2:8
   1 │  functions {
@@ -442,8 +399,7 @@ error: Syntax error: Ill-formed function.
     │         ^ here.
   3 │      return x + 1.0;
     = Expected an identifier after the type.
-[exit 1]
-  $ stanc incomplete13.stan
+/* $ stanc incomplete13.stan : [exit 1] */
 error: Syntax error: Ill-formed function.
     ┌─ incomplete13.stan:2:8
   1 │  functions {
@@ -451,8 +407,7 @@ error: Syntax error: Ill-formed function.
     │         ^ here.
   3 │      return x + 1.0;
     = Expected an identifier after the type.
-[exit 1]
-  $ stanc incomplete14.stan
+/* $ stanc incomplete14.stan : [exit 1] */
 error: Syntax error: Ill-formed function.
     ┌─ incomplete14.stan:2:16
   1 │  functions {
@@ -460,8 +415,7 @@ error: Syntax error: Ill-formed function.
     │                 ^ here.
   3 │      return y + x;
     = Expected an identifier after the type.
-[exit 1]
-  $ stanc incomplete2.stan
+/* $ stanc incomplete2.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ incomplete2.stan:2:16
   1 │  transformed data {
@@ -470,8 +424,7 @@ error: Syntax error: Ill-formed expression.
   3 │  }
     = Unexpected input after the conclusion of a valid expression.
       You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
-[exit 1]
-  $ stanc incomplete3.stan
+/* $ stanc incomplete3.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ incomplete3.stan:2:11
   1 │  transformed data {
@@ -480,8 +433,7 @@ error: Syntax error: Ill-formed expression.
   3 │  }
     = Found an incomplete binary expression.
       Are you missing the right hand side?
-[exit 1]
-  $ stanc incomplete4.stan
+/* $ stanc incomplete4.stan : [exit 1] */
 error: Syntax error: Ill-formed phrase.
     ┌─ incomplete4.stan:2:14
   1 │  transformed data {
@@ -490,16 +442,14 @@ error: Syntax error: Ill-formed phrase.
   3 │  }
     = Expected a statement, but found a partial value before this point.
       Did you mean for this to be the start of an assignment or "~"-statement?
-[exit 1]
-  $ stanc incomplete5.stan
+/* $ stanc incomplete5.stan : [exit 1] */
 error: Syntax error: Ill-formed statement.
     ┌─ incomplete5.stan:3:1
   2 │    if (2.0) ;
   3 │  
     │  ^ here.
     = Expected "else", a statement, or "}" to end the block.
-[exit 1]
-  $ stanc incomplete6.stan
+/* $ stanc incomplete6.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ incomplete6.stan:3:17
   2 │    print(foo[2.0]);
@@ -507,24 +457,21 @@ error: Syntax error: Ill-formed expression.
     │                  ^^^^^ here.
   4 │  }
     = Expected a comma separated list of expressions, followed by "]".
-[exit 1]
-  $ stanc incomplete7.stan
+/* $ stanc incomplete7.stan : [exit 1] */
 error: Syntax error: Ill-formed compound assignment statement.
     ┌─ incomplete7.stan:1:31
   1 │  transformed data { foo += foo ~
     │                                ^ here.
   2 │  
     = Expected a ";" after the value being assigned.
-[exit 1]
-  $ stanc incomplete8.stan
+/* $ stanc incomplete8.stan : [exit 1] */
 error: Syntax error: Ill-formed assignment statement.
     ┌─ incomplete8.stan:1:30
   1 │  transformed data { foo = bar ~
     │                               ^ here.
   2 │  
     = Expected a ";" after the value being assigned.
-[exit 1]
-  $ stanc incomplete9.stan
+/* $ stanc incomplete9.stan : [exit 1] */
 error: Syntax error: Ill-formed expression.
     ┌─ incomplete9.stan:3:29
   2 │    vector[2] foo;
@@ -532,8 +479,7 @@ error: Syntax error: Ill-formed expression.
     │                              ^^^^^ here.
   4 │  }
     = Found an expression. Expected an infix or postfix operator or "["
-[exit 1]
-  $ stanc reused_name.stan
+/* $ stanc reused_name.stan : [exit 1] */
 error: Identifier "e" is already in use.
     ┌─ reused_name.stan:4:15
   1 │  generated quantities {
@@ -543,28 +489,24 @@ error: Identifier "e" is already in use.
   4 │      vector[3] e;
     │                ^ Identifier "e" is already in use.
   5 │  }
-[exit 1]
-  $ stanc tparam_array_int.stan
+/* $ stanc tparam_array_int.stan : [exit 1] */
 error: Transformed parameters cannot be integers.
     ┌─ tparam_array_int.stan:2:3
   1 │  transformed parameters {
   2 │    array[1,2,3] int x;
     │    ^^^^^^^^^^^^^^^^^^^ Transformed parameters cannot be integers.
   3 │  }
-[exit 1]
-  $ stanc tparam_tuple_int.stan
+/* $ stanc tparam_tuple_int.stan : [exit 1] */
 error: Transformed parameters cannot be integers.
     ┌─ tparam_tuple_int.stan:2:3
   1 │  transformed parameters {
   2 │    tuple(real, int) x;
     │    ^^^^^^^^^^^^^^^^^^^ Transformed parameters cannot be integers.
   3 │  }
-[exit 1]
-  $ stanc unterminated_comment.stan
+/* $ stanc unterminated_comment.stan : [exit 1] */
 error: Unexpected end of input.
 
     ┌─ unterminated_comment.stan:4:1
   3 │  ends
   4 │  
     │  ^ here.
-[exit 1]

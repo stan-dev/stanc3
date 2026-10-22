@@ -1,4 +1,4 @@
-  $ stanc bad_gamma_var.stan
+/* $ stanc bad_gamma_var.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "hmm_hidden_state_prob".
     ┌─ bad_gamma_var.stan:19:10
  18 │    matrix[K, N + 1] prob;
@@ -12,8 +12,7 @@ error: Ill-typed arguments supplied to function "hmm_hidden_state_prob".
         The second argument must be data-only.
         (Local variables are assumed to depend on parameters; same goes for
         function inputs unless they are marked with the keyword "data".)
-[exit 1]
-  $ stanc bad_log_omega_var.stan
+/* $ stanc bad_log_omega_var.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "hmm_hidden_state_prob".
     ┌─ bad_log_omega_var.stan:19:10
  18 │    matrix[K, N + 1] prob;
@@ -27,8 +26,7 @@ error: Ill-typed arguments supplied to function "hmm_hidden_state_prob".
         The first argument must be data-only.
         (Local variables are assumed to depend on parameters; same goes for
         function inputs unless they are marked with the keyword "data".)
-[exit 1]
-  $ stanc bad_rho_var.stan
+/* $ stanc bad_rho_var.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "hmm_hidden_state_prob".
     ┌─ bad_rho_var.stan:19:10
  18 │    matrix[K, N + 1] prob;
@@ -42,4 +40,3 @@ error: Ill-typed arguments supplied to function "hmm_hidden_state_prob".
         The third argument must be data-only.
         (Local variables are assumed to depend on parameters; same goes for
         function inputs unless they are marked with the keyword "data".)
-[exit 1]

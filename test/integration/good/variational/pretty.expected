@@ -1,4 +1,4 @@
-  $ stanc --auto-format eta_should_be_big.stan
+/* $ stanc --auto-format eta_should_be_big.stan : [exit 0] */
 transformed data {
   array[2] vector[2] y;
   vector[2] mu0;
@@ -28,8 +28,7 @@ model {
     y[n] ~ multi_normal(mu, sigma);
 }
 
-[exit 0]
-  $ stanc --auto-format eta_should_be_small.stan
+/* $ stanc --auto-format eta_should_be_small.stan : [exit 0] */
 transformed data {
   array[2] vector[2] y;
   vector[2] mu0;
@@ -59,8 +58,7 @@ model {
     y[n] ~ multi_normal(mu, sigma);
 }
 
-[exit 0]
-  $ stanc --auto-format eta_should_fail.stan
+/* $ stanc --auto-format eta_should_fail.stan : [exit 0] */
 transformed data {
   vector[2] y;
   matrix[2, 2] sigma;
@@ -80,8 +78,7 @@ model {
   y ~ multi_normal(mu, sigma);
 }
 
-[exit 0]
-  $ stanc --auto-format gradient_warn.stan
+/* $ stanc --auto-format gradient_warn.stan : [exit 0] */
 data {
   int N;
   vector[N] p;
@@ -101,8 +98,7 @@ model {
   ;
 }
 
-[exit 0]
-  $ stanc --auto-format hier_logistic.stan
+/* $ stanc --auto-format hier_logistic.stan : [exit 0] */
 data {
   int N;
   array[N] int ids;
@@ -128,8 +124,7 @@ model {
   L ~ lkj_corr_cholesky(0.5);
 }
 
-[exit 0]
-  $ stanc --auto-format hier_logistic_cp.stan
+/* $ stanc --auto-format hier_logistic_cp.stan : [exit 0] */
 data {
   int N;
   array[N] int ids;
@@ -158,8 +153,7 @@ model {
   L ~ lkj_corr_cholesky(1);
 }
 
-[exit 0]
-  $ stanc --auto-format multivariate_no_constraint.stan
+/* $ stanc --auto-format multivariate_no_constraint.stan : [exit 0] */
 transformed data {
   array[2] vector[2] y;
   vector[2] mu0;
@@ -189,8 +183,7 @@ model {
     y[n] ~ multi_normal(mu, sigma);
 }
 
-[exit 0]
-  $ stanc --auto-format multivariate_with_constraint.stan
+/* $ stanc --auto-format multivariate_with_constraint.stan : [exit 0] */
 transformed data {
   array[2] vector[2] y;
   vector[2] mu0;
@@ -220,8 +213,7 @@ model {
     y[n] ~ multi_normal(mu, sigma);
 }
 
-[exit 0]
-  $ stanc --auto-format univariate_no_constraint.stan
+/* $ stanc --auto-format univariate_no_constraint.stan : [exit 0] */
 transformed data {
   array[2] real y;
   real mu0;
@@ -243,8 +235,7 @@ model {
     y[n] ~ normal(mu, 1.0);
 }
 
-[exit 0]
-  $ stanc --auto-format univariate_with_constraint.stan
+/* $ stanc --auto-format univariate_with_constraint.stan : [exit 0] */
 transformed data {
   array[2] real y;
   real mu0;
@@ -266,4 +257,3 @@ model {
     y[n] ~ normal(mu, 1.0);
 }
 
-[exit 0]

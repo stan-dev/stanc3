@@ -1,4 +1,4 @@
-  $ stanc duplicate-args.stan
+/* $ stanc duplicate-args.stan : [exit 1] */
 error: All function arguments must have distinct identifiers.
     ┌─ duplicate-args.stan:2:26
   1 │  functions {
@@ -7,8 +7,7 @@ error: All function arguments must have distinct identifiers.
     │                 │
     │                 Previous declaration here.
   3 │      ;
-[exit 1]
-  $ stanc falling_factorial.stan
+/* $ stanc falling_factorial.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "falling_factorial".
     ┌─ falling_factorial.stan:7:27
   6 │    real transformed_data_real;
@@ -29,8 +28,7 @@ error: Ill-typed arguments supplied to function "falling_factorial".
       (real, array[,,,] int) => array[,,,] real
         The second argument must be array[,,,] int but got real
       (Additional signatures omitted)
-[exit 1]
-  $ stanc rising_factorial.stan
+/* $ stanc rising_factorial.stan : [exit 1] */
 error: Ill-typed arguments supplied to function "rising_factorial".
     ┌─ rising_factorial.stan:7:29
   6 │    real transformed_param_real;
@@ -51,4 +49,3 @@ error: Ill-typed arguments supplied to function "rising_factorial".
       (real, array[,,,] int) => array[,,,] real
         The second argument must be array[,,,] int but got real
       (Additional signatures omitted)
-[exit 1]

@@ -1,4 +1,4 @@
-  $ stanc --auto-format arrays-tuples-nested.stan
+/* $ stanc --auto-format arrays-tuples-nested.stan : [exit 0] */
 data {
   tuple(array[10] real, int) basic;
   tuple(int, tuple(real, vector[2])) tuple_tuple;
@@ -20,8 +20,7 @@ parameters {
                  tuple(real, array[5] tuple(complex, matrix[6, 7]))) very_deep_p;
 }
 
-[exit 0]
-  $ stanc --auto-format basic_unpacking.stan
+/* $ stanc --auto-format basic_unpacking.stan : [exit 0] */
 transformed data {
   int x = 3;
   int y = 4;
@@ -53,8 +52,7 @@ transformed data {
   // ^^^: comment 6
 }
 
-[exit 0]
-  $ stanc --auto-format infer_tuple_ad.stan
+/* $ stanc --auto-format infer_tuple_ad.stan : [exit 0] */
 parameters {
   real x;
 }
@@ -62,8 +60,7 @@ model {
   array[2] tuple(real, real) z = {(1, x), (x, 1)};
 }
 
-[exit 0]
-  $ stanc --auto-format nested_unpacking.stan
+/* $ stanc --auto-format nested_unpacking.stan : [exit 0] */
 data {
   tuple(array[3] real, tuple(real, vector[4], array[4] real), int) complicated;
 }
@@ -77,28 +74,24 @@ model {
   (x, (y, z, w), i) = complicated;
 }
 
-[exit 0]
-  $ stanc --auto-format onepl_expr.stan
+/* $ stanc --auto-format onepl_expr.stan : [exit 0] */
 model {
   print((3.5,));
 }
 
-[exit 0]
-  $ stanc --auto-format onepl_type.stan
+/* $ stanc --auto-format onepl_type.stan : [exit 0] */
 functions {
   void foo(tuple(real,) x) {
     return;
   }
 }
 
-[exit 0]
-  $ stanc --auto-format onepl_type2.stan
+/* $ stanc --auto-format onepl_type2.stan : [exit 0] */
 model {
   tuple(real,) x;
 }
 
-[exit 0]
-  $ stanc --auto-format overloading.stan
+/* $ stanc --auto-format overloading.stan : [exit 0] */
 functions {
   int f(tuple(int, int, int) x) {
     return x.3;
@@ -118,8 +111,7 @@ transformed data {
   int y4 = f(4.5);
 }
 
-[exit 0]
-  $ stanc --auto-format qr_unpack.stan
+/* $ stanc --auto-format qr_unpack.stan : [exit 0] */
 data {
   int<lower=1> N;
   int<lower=1> M;
@@ -137,8 +129,7 @@ model {
   target += sum(Q) + dot_self(to_vector(R));
 }
 
-[exit 0]
-  $ stanc --auto-format reconstruct.stan
+/* $ stanc --auto-format reconstruct.stan : [exit 0] */
 functions {
   void do_something_reconstruct(data array[] int indices, data vector mem) {
     do_something((indices, mem));
@@ -148,22 +139,19 @@ functions {
   }
 }
 
-[exit 0]
-  $ stanc --auto-format simple.stan
+/* $ stanc --auto-format simple.stan : [exit 0] */
 transformed data {
   tuple(real, int) x = (3.14, 2);
   print(x.1);
 }
 
-[exit 0]
-  $ stanc --auto-format simple2.stan
+/* $ stanc --auto-format simple2.stan : [exit 0] */
 transformed data {
   tuple(array[2] real, int) x = ({1.01, 3.14}, 2);
   print(x.1[2]);
 }
 
-[exit 0]
-  $ stanc --auto-format simple3.stan
+/* $ stanc --auto-format simple3.stan : [exit 0] */
 transformed data {
   tuple(array[2, 3] real, int) x = ({{1.01, 3.14}, {1.01, 3.14},
                                      {1.01, 3.14}},
@@ -171,16 +159,14 @@ transformed data {
   print(x.1[2]);
 }
 
-[exit 0]
-  $ stanc --auto-format tuple-constraints-data.stan
+/* $ stanc --auto-format tuple-constraints-data.stan : [exit 0] */
 data {
   tuple(int<lower=0>, tuple(real<lower=1>, int<upper=2>)) y;
   tuple(int<lower=0>, real<lower=1>, simplex[2]) x;
   array[3, 2] tuple(real<lower=0>, simplex[4]) z;
 }
 
-[exit 0]
-  $ stanc --auto-format tuple-constraints-params.stan
+/* $ stanc --auto-format tuple-constraints-params.stan : [exit 0] */
 functions {
   tuple(real, real) foo() {
     return (1.0, 2.0);
@@ -198,8 +184,7 @@ parameters {
                  tuple(real, simplex[5], cholesky_factor_cov[5, 4])) complicated;
 }
 
-[exit 0]
-  $ stanc --auto-format tuple-dataonly.stan
+/* $ stanc --auto-format tuple-dataonly.stan : [exit 0] */
 functions {
   real foo(data tuple(real, real) x) {
     return x.1;
@@ -233,8 +218,7 @@ model {
   target += baz({({[[1]]}, d.2)});
 }
 
-[exit 0]
-  $ stanc --auto-format tuple-dataonly2.stan
+/* $ stanc --auto-format tuple-dataonly2.stan : [exit 0] */
 functions {
   real tuple_tester(data tuple(array[] real, int) x) {
     return x.1[1];
@@ -244,8 +228,7 @@ model {
   print(tuple_tester(({1.0}, 2)));
 }
 
-[exit 0]
-  $ stanc --auto-format tuple-foreach.stan
+/* $ stanc --auto-format tuple-foreach.stan : [exit 0] */
 transformed data {
   array[100] tuple(real, real) arr;
   for (t in arr) {
@@ -253,8 +236,7 @@ transformed data {
   }
 }
 
-[exit 0]
-  $ stanc --auto-format tuple-full.stan
+/* $ stanc --auto-format tuple-full.stan : [exit 0] */
 data {
   tuple(int<lower=0, upper=1>, tuple(array[2] int, array[2] int)) ds;
 }
@@ -267,49 +249,42 @@ model {
   target += ps.2 + ds.2.1[1] + ds.2.2[2];
 }
 
-[exit 0]
-  $ stanc --auto-format tuple-ix-assign.stan
+/* $ stanc --auto-format tuple-ix-assign.stan : [exit 0] */
 transformed data {
   tuple(int, int) x;
   x.1 = 5;
 }
 
-[exit 0]
-  $ stanc --auto-format tuple-ix-assign2.stan
+/* $ stanc --auto-format tuple-ix-assign2.stan : [exit 0] */
 transformed data {
   tuple(array[10] int, int) x;
   x.1[1] = 5;
 }
 
-[exit 0]
-  $ stanc --auto-format tuple-ix-assign3.stan
+/* $ stanc --auto-format tuple-ix-assign3.stan : [exit 0] */
 transformed data {
   array[10] tuple(int, int) x;
   x[1].1 = 5;
 }
 
-[exit 0]
-  $ stanc --auto-format tuple-ix-assign4.stan
+/* $ stanc --auto-format tuple-ix-assign4.stan : [exit 0] */
 transformed data {
   tuple(array[10] tuple(int, array[100] real), int) x;
   x.1[1].1 = 5;
 }
 
-[exit 0]
-  $ stanc --auto-format tuple-nested-param.stan
+/* $ stanc --auto-format tuple-nested-param.stan : [exit 0] */
 parameters {
   tuple(real, real) ps;
   tuple(real, tuple(real, matrix[10, 10])) ps2;
 }
 
-[exit 0]
-  $ stanc --auto-format tuple-params.stan
+/* $ stanc --auto-format tuple-params.stan : [exit 0] */
 parameters {
   tuple(real, real<lower=0>) ps;
 }
 
-[exit 0]
-  $ stanc --auto-format tuple-promotion.stan
+/* $ stanc --auto-format tuple-promotion.stan : [exit 0] */
 functions {
   real dummy(tuple(array[] real, array[] real) test) {
     return sum(test.1) + sum(test.2);
@@ -349,8 +324,7 @@ generated quantities {
   tuple(complex, real) z2 = z;
 }
 
-[exit 0]
-  $ stanc --auto-format tuple-templating.stan
+/* $ stanc --auto-format tuple-templating.stan : [exit 0] */
 functions {
   void foo(tuple(matrix, int) test) {
     print(test.1);
@@ -394,8 +368,7 @@ generated quantities {
   overly_complicated(({m1}, (1, m1), 3.5), {(1, m1), (2, m2)});
 }
 
-[exit 0]
-  $ stanc --auto-format tuple_copying.stan
+/* $ stanc --auto-format tuple_copying.stan : [exit 0] */
 functions {
   void f(tuple(matrix, matrix) x) {
     print(x.1);
@@ -442,8 +415,7 @@ model {
   h((1, (x, y)));
 }
 
-[exit 0]
-  $ stanc --auto-format tuple_exprs.stan
+/* $ stanc --auto-format tuple_exprs.stan : [exit 0] */
 generated quantities {
   int x = 3;
   int y = 4;
@@ -455,8 +427,7 @@ generated quantities {
   print((foo, 2, 3, x));
 }
 
-[exit 0]
-  $ stanc --auto-format tuple_hof.stan
+/* $ stanc --auto-format tuple_hof.stan : [exit 0] */
 functions {
   real fun(array[] real y_slice, int start, int end,
            tuple(real, array[] int) m) {
@@ -478,8 +449,7 @@ transformed parameters {
   real sum2 = reduce_sum(fun, param_y, 1, data_m);
 }
 
-[exit 0]
-  $ stanc --auto-format tuple_lpdf.stan
+/* $ stanc --auto-format tuple_lpdf.stan : [exit 0] */
 functions {
   real foo_lpdf(tuple(real, real) x, tuple(real, real, real) y) {
     return 0;
@@ -489,8 +459,7 @@ model {
   (1.5, 2) ~ foo((1.2, 1.5, 4.5));
 }
 
-[exit 0]
-  $ stanc --auto-format tuple_lpdf2.stan
+/* $ stanc --auto-format tuple_lpdf2.stan : [exit 0] */
 functions {
   real foo_lpdf(tuple(real, int) x) {
     return 0;
@@ -500,8 +469,7 @@ model {
   (1.5, 2) ~ foo();
 }
 
-[exit 0]
-  $ stanc --auto-format tuple_lpmf.stan
+/* $ stanc --auto-format tuple_lpmf.stan : [exit 0] */
 functions {
   real foo_lpmf(tuple(int, int) x, real y) {
     return x.1 + x.2 * y;
@@ -511,8 +479,7 @@ model {
   (1, 3) ~ foo(0.5);
 }
 
-[exit 0]
-  $ stanc --auto-format tuple_temporary.stan
+/* $ stanc --auto-format tuple_temporary.stan : [exit 0] */
 generated quantities {
   matrix[1, 1] m = [[1.5]];
   // m * 2.0 is a temporary:
@@ -521,8 +488,7 @@ generated quantities {
   tuple(real, matrix[1, 1]) s = (t.1, m);
 }
 
-[exit 0]
-  $ stanc --auto-format unpack_promote.stan
+/* $ stanc --auto-format unpack_promote.stan : [exit 0] */
 data {
   int<lower=0> N;
   vector[N] x;
@@ -553,4 +519,3 @@ model {
   print(tup);
 }
 
-[exit 0]

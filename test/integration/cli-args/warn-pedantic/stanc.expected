@@ -1,4 +1,4 @@
-  $ stanc --warn-pedantic  distribution-warnings.stan
+/* $ stanc --warn-pedantic  distribution-warnings.stan : [exit 0] */
 distribution-warnings.stan:10:3: warning: The parameter x has no priors. This means either no prior is provided, or the
   prior(s) depend on data variables. In the later case, this may be a false
   positive.
@@ -273,22 +273,19 @@ distribution-warnings.stan:141:30: warning: A inv_wishart_cholesky distribution 
 distribution-warnings.stan:141:37: warning: A inv_wishart_cholesky distribution is given parameter cov as a scale matrix
   (argument 2), but cov was not constrained to be Cholesky factor of
   covariance.
-[exit 0]
-  $ stanc --warn-pedantic  distribution_bounds.stan
+/* $ stanc --warn-pedantic  distribution_bounds.stan : [exit 0] */
 distribution_bounds.stan:8:3: warning: Parameter a is given a gamma distribution, which has strictly positive
   support, but a was not constrained to be strictly positive.
 distribution_bounds.stan:10:3: warning: Parameter c is given a lognormal distribution, which has strictly positive
   support, but c was not constrained to be strictly positive.
-[exit 0]
-  $ stanc --warn-pedantic  function-param-control-flow.stan
+/* $ stanc --warn-pedantic  function-param-control-flow.stan : [exit 0] */
 function-param-control-flow.stan:3:5: warning: A control flow statement inside function func depends on argument b. At
   'function-param-control-flow.stan', line 18, column 21 to column 26, the
   value of b depends on parameter(s): sigma.
 function-param-control-flow.stan:15:3: warning: The parameter sigma has no priors. This means either no prior is provided, or
   the prior(s) depend on data variables. In the later case, this may be a false
   positive.
-[exit 0]
-  $ stanc --warn-pedantic  gamma-args.stan
+/* $ stanc --warn-pedantic  gamma-args.stan : [exit 0] */
 gamma-args.stan:2:3: warning: The parameter a has 4 priors.
 gamma-args.stan:3:3: warning: The parameter b has 2 priors.
 gamma-args.stan:8:3: warning: The parameter a is on the left-hand side of more than one tilde statement.
@@ -310,8 +307,7 @@ gamma-args.stan:10:17: warning: There is a gamma or inverse-gamma distribution w
   or student_t(4,0,1), with parameter constrained to be positive.
 gamma-args.stan:11:22: warning: A inv_gamma distribution is given parameter b as a scale parameter (argument
   2), but b was not constrained to be strictly positive.
-[exit 0]
-  $ stanc --warn-pedantic  hard-constraint.stan
+/* $ stanc --warn-pedantic  hard-constraint.stan : [exit 0] */
 hard-constraint.stan:2:3: warning: The parameter a was declared but was not used in the density calculation.
 hard-constraint.stan:3:3: warning: The parameter b was declared but was not used in the density calculation.
 hard-constraint.stan:4:3: warning: The parameter c was declared but was not used in the density calculation.
@@ -340,15 +336,13 @@ hard-constraint.stan:6:3: warning: The parameter e was declared but was not used
 hard-constraint.stan:7:3: warning: Parameter f has constraints that don't make sense. The lower bound should be
   strictly less than the upper bound.
 hard-constraint.stan:7:3: warning: The parameter f was declared but was not used in the density calculation.
-[exit 0]
-  $ stanc --warn-pedantic  jacobian_false_alarm.stan
+/* $ stanc --warn-pedantic  jacobian_false_alarm.stan : [exit 0] */
 jacobian_false_alarm.stan:6:3: warning: The parameter v has 8 priors.
 jacobian_false_alarm.stan:7:3: warning: The parameter a has 2 priors.
 jacobian_false_alarm.stan:8:3: warning: The parameter m has 12 priors.
 jacobian_false_alarm.stan:9:3: warning: The parameter y has 9 priors.
 jacobian_false_alarm.stan:10:3: warning: The parameter z has 7 priors.
-[exit 0]
-  $ stanc --warn-pedantic  jacobian_warning1.stan
+/* $ stanc --warn-pedantic  jacobian_warning1.stan : [exit 0] */
 jacobian_warning1.stan:2:3: warning: The parameter y has 2 priors.
 jacobian_warning1.stan:5:3: warning: Left-hand side of distribution statement (~) may contain a non-linear
   transform of a parameter or local variable. If it does, you need to include a
@@ -360,43 +354,37 @@ jacobian_warning1.stan:7:3: warning: Left-hand side of distribution statement (~
   target += statement with the log absolute determinant of the Jacobian of the
   transform. You could also consider defining a transformed parameter and using
   jacobian += in the transformed parameters block.
-[exit 0]
-  $ stanc --warn-pedantic  jacobian_warning2.stan
+/* $ stanc --warn-pedantic  jacobian_warning2.stan : [exit 0] */
 jacobian_warning2.stan:5:3: warning: Left-hand side of distribution statement (~) may contain a non-linear
   transform of a parameter or local variable. If it does, you need to include a
   target += statement with the log absolute determinant of the Jacobian of the
   transform. You could also consider defining a transformed parameter and using
   jacobian += in the transformed parameters block.
-[exit 0]
-  $ stanc --warn-pedantic  jacobian_warning3.stan
+/* $ stanc --warn-pedantic  jacobian_warning3.stan : [exit 0] */
 jacobian_warning3.stan:5:3: warning: Left-hand side of distribution statement (~) may contain a non-linear
   transform of a parameter or local variable. If it does, you need to include a
   target += statement with the log absolute determinant of the Jacobian of the
   transform. You could also consider defining a transformed parameter and using
   jacobian += in the transformed parameters block.
-[exit 0]
-  $ stanc --warn-pedantic  jacobian_warning4.stan
+/* $ stanc --warn-pedantic  jacobian_warning4.stan : [exit 0] */
 jacobian_warning4.stan:5:3: warning: Left-hand side of distribution statement (~) may contain a non-linear
   transform of a parameter or local variable. If it does, you need to include a
   target += statement with the log absolute determinant of the Jacobian of the
   transform. You could also consider defining a transformed parameter and using
   jacobian += in the transformed parameters block.
-[exit 0]
-  $ stanc --warn-pedantic  jacobian_warning5.stan
+/* $ stanc --warn-pedantic  jacobian_warning5.stan : [exit 0] */
 jacobian_warning5.stan:5:3: warning: Left-hand side of distribution statement (~) may contain a non-linear
   transform of a parameter or local variable. If it does, you need to include a
   target += statement with the log absolute determinant of the Jacobian of the
   transform. You could also consider defining a transformed parameter and using
   jacobian += in the transformed parameters block.
-[exit 0]
-  $ stanc --warn-pedantic  jacobian_warning6.stan
+/* $ stanc --warn-pedantic  jacobian_warning6.stan : [exit 0] */
 jacobian_warning6.stan:5:3: warning: Left-hand side of distribution statement (~) may contain a non-linear
   transform of a parameter or local variable. If it does, you need to include a
   target += statement with the log absolute determinant of the Jacobian of the
   transform. You could also consider defining a transformed parameter and using
   jacobian += in the transformed parameters block.
-[exit 0]
-  $ stanc --warn-pedantic  jacobian_warning7.stan
+/* $ stanc --warn-pedantic  jacobian_warning7.stan : [exit 0] */
 jacobian_warning7.stan:2:3: warning: The parameter y has 2 priors.
 jacobian_warning7.stan:5:3: warning: Left-hand side of distribution statement (~) may contain a non-linear
   transform of a parameter or local variable. If it does, you need to include a
@@ -408,15 +396,13 @@ jacobian_warning7.stan:6:3: warning: Left-hand side of distribution statement (~
   target += statement with the log absolute determinant of the Jacobian of the
   transform. You could also consider defining a transformed parameter and using
   jacobian += in the transformed parameters block.
-[exit 0]
-  $ stanc --warn-pedantic  jacobian_warning_user.stan
+/* $ stanc --warn-pedantic  jacobian_warning_user.stan : [exit 0] */
 jacobian_warning_user.stan:5:3: warning: Left-hand side of distribution statement (~) may contain a non-linear
   transform of a parameter or local variable. If it does, you need to include a
   target += statement with the log absolute determinant of the Jacobian of the
   transform. You could also consider defining a transformed parameter and using
   jacobian += in the transformed parameters block.
-[exit 0]
-  $ stanc --warn-pedantic  lp_fun.stan
+/* $ stanc --warn-pedantic  lp_fun.stan : [exit 0] */
 warning: Using _lp functions in transformed parameters is deprecated and will be disallowed in the future.
     ┌─ lp_fun.stan:10:3
   9 │  transformed parameters {
@@ -427,32 +413,27 @@ warning: Using _lp functions in transformed parameters is deprecated and will be
       adjustments which are conditionally enabled by the
       algorithms.
 lp_fun.stan:7:3: warning: The parameter y has 2 priors.
-[exit 0]
-  $ stanc --warn-pedantic  missing-prior-false-alarm.stan
+/* $ stanc --warn-pedantic  missing-prior-false-alarm.stan : [exit 0] */
 missing-prior-false-alarm.stan:9:3: warning: The parameter theta has no priors. This means either no prior is provided, or
   the prior(s) depend on data variables. In the later case, this may be a false
   positive.
-[exit 0]
-  $ stanc --warn-pedantic  missing_priors.stan
+/* $ stanc --warn-pedantic  missing_priors.stan : [exit 0] */
 missing_priors.stan:7:3: warning: The parameter mu has no priors. This means either no prior is provided, or
   the prior(s) depend on data variables. In the later case, this may be a false
   positive.
 missing_priors.stan:8:3: warning: The parameter tau has no priors. This means either no prior is provided, or
   the prior(s) depend on data variables. In the later case, this may be a false
   positive.
-[exit 0]
-  $ stanc --warn-pedantic  multi-tilde.stan
+/* $ stanc --warn-pedantic  multi-tilde.stan : [exit 0] */
 multi-tilde.stan:2:3: warning: The parameter x has 2 priors.
 multi-tilde.stan:3:3: warning: The parameter y has 2 priors.
 multi-tilde.stan:6:3: warning: The parameter x is on the left-hand side of more than one tilde statement.
-[exit 0]
-  $ stanc --warn-pedantic  non-one-priors.stan
+/* $ stanc --warn-pedantic  non-one-priors.stan : [exit 0] */
 non-one-priors.stan:14:17: warning: A normal distribution is given parameter b as a scale parameter (argument 2),
   but b was not constrained to be strictly positive.
 non-one-priors.stan:16:17: warning: A normal distribution is given parameter d as a scale parameter (argument 2),
   but d was not constrained to be strictly positive.
-[exit 0]
-  $ stanc --warn-pedantic  non-one-priors2.stan
+/* $ stanc --warn-pedantic  non-one-priors2.stan : [exit 0] */
 non-one-priors2.stan:6:3: warning: The parameter a has 3 priors.
 non-one-priors2.stan:7:3: warning: The parameter b has 2 priors.
 non-one-priors2.stan:8:3: warning: The parameter c has no priors. This means either no prior is provided, or the
@@ -468,13 +449,11 @@ non-one-priors2.stan:11:3: warning: The parameter f has no priors. This means ei
   prior(s) depend on data variables. In the later case, this may be a false
   positive.
 non-one-priors2.stan:21:3: warning: The parameter f is on the left-hand side of more than one tilde statement.
-[exit 0]
-  $ stanc --warn-pedantic  param-depend-control.stan
+/* $ stanc --warn-pedantic  param-depend-control.stan : [exit 0] */
 param-depend-control.stan:8:3: warning: A control flow statement depends on parameter(s): a.
 param-depend-control.stan:13:3: warning: A control flow statement depends on parameter(s): a.
 param-depend-control.stan:16:3: warning: A control flow statement depends on parameter(s): a.
-[exit 0]
-  $ stanc --warn-pedantic  unbounded-sigma.stan
+/* $ stanc --warn-pedantic  unbounded-sigma.stan : [exit 0] */
 unbounded-sigma.stan:2:3: warning: The parameter x has 6 priors.
 unbounded-sigma.stan:7:3: warning: Your Stan program has a parameter sigma_e with a lower and upper bound in its
   declaration. These hard constraints are not recommended, for two reasons: (a)
@@ -490,8 +469,7 @@ unbounded-sigma.stan:10:18: warning: A normal distribution is given parameter si
   (argument 2), but sigma_a was not constrained to be strictly positive.
 unbounded-sigma.stan:12:18: warning: A normal distribution is given parameter sigma_c as a scale parameter
   (argument 2), but sigma_c was not constrained to be strictly positive.
-[exit 0]
-  $ stanc --warn-pedantic  uniform.stan
+/* $ stanc --warn-pedantic  uniform.stan : [exit 0] */
 uniform.stan:2:3: warning: The parameter a has 2 priors.
 uniform.stan:8:3: warning: Parameter a is given a uniform distribution. The uniform distribution is not
   recommended, for two reasons: (a) Except when there are logical or physical
@@ -517,18 +495,15 @@ uniform.stan:12:3: warning: Parameter d is given a uniform distribution. The uni
   consequence, we recommend soft constraints rather than hard constraints; for
   example, instead of giving an elasticity parameter a uniform(0,1)
   distribution, try normal(0.5,0.5).
-[exit 0]
-  $ stanc --warn-pedantic  unscaled.stan
+/* $ stanc --warn-pedantic  unscaled.stan : [exit 0] */
 unscaled.stan:10:14: warning: Argument 0.001 suggests there may be parameters that are not unit scale;
   consider rescaling with a multiplier, see:
   https://mc-stan.org/docs/stan-users-guide/efficiency-tuning.html#standardizing-predictors
 unscaled.stan:10:21: warning: Argument 10000 suggests there may be parameters that are not unit scale;
   consider rescaling with a multiplier, see:
   https://mc-stan.org/docs/stan-users-guide/efficiency-tuning.html#standardizing-predictors
-[exit 0]
-  $ stanc --warn-pedantic  unused-param.stan
+/* $ stanc --warn-pedantic  unused-param.stan : [exit 0] */
 unused-param.stan:3:3: warning: The parameter b has 2 priors.
 unused-param.stan:4:3: warning: The parameter c was declared but was not used in the density calculation.
 unused-param.stan:5:3: warning: The parameter d was declared but was not used in the density calculation.
 unused-param.stan:6:3: warning: The parameter e was declared but was not used in the density calculation.
-[exit 0]
