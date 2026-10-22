@@ -1,0 +1,10 @@
+/* $ stanc --include-paths=../../included  ../badrecurse1.stan : [exit 1] */
+error: File 'badrecurse1.stan' recursively included itself.
+
+    ┌─ ../../included/badrecurse1.stan:1:1
+  1 │  #include badrecurse1.stan
+    │  ^^^^^^^^^^^^^^^^^^^^^^^^^ here.
+    ┌─ ../badrecurse1.stan:1:1
+  1 │  #include badrecurse1.stan
+    │  -------- file '../../included/badrecurse1.stan' included here
+  2 │  

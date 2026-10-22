@@ -1,0 +1,16 @@
+/* $ stanc --include-paths=../../included  ../stanc_helper_with_bad_include_lex_error.stan : [exit 1] */
+error: Invalid character found.
+
+    ┌─ ../../included/incl_stanc_helper_lex_error.stan:2:3
+  1 │    real y;
+  2 │    #include lex-err.stan
+    │    -------- file '../../included/lex-err.stan' included here
+    ┌─ ../../included/lex-err.stan:2:10
+  1 │    real z;
+  2 │    real w;$
+    │           ^ here.
+    ┌─ ../stanc_helper_with_bad_include_lex_error.stan:2:1
+  1 │  parameters {
+  2 │  #include incl_stanc_helper_lex_error.stan
+    │  -------- file '../../included/incl_stanc_helper_lex_error.stan' included here
+  3 │  }

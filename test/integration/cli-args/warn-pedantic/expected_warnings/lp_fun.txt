@@ -1,0 +1,11 @@
+/* $ stanc --warn-pedantic ../lp_fun.stan : [exit 0] */
+warning: Using _lp functions in transformed parameters is deprecated and will be disallowed in the future.
+    ┌─ ../lp_fun.stan:10:3
+  9 │  transformed parameters {
+ 10 │    test_lp(y);
+    │    ^^^^^^^^^^^ _lp function call in transformed parameters.
+ 11 │  }
+    = Use an _jacobian function instead, as this allows change of variable
+      adjustments which are conditionally enabled by the
+      algorithms.
+../lp_fun.stan:7:3: warning: The parameter y has 2 priors.

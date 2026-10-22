@@ -1,0 +1,5 @@
+/* $ stanc --warn-pedantic ../distribution_bounds.stan : [exit 0] */
+../distribution_bounds.stan:8:3: warning: Parameter a is given a gamma distribution, which has strictly positive
+  support, but a was not constrained to be strictly positive.
+../distribution_bounds.stan:10:3: warning: Parameter c is given a lognormal distribution, which has strictly positive
+  support, but c was not constrained to be strictly positive.

@@ -1,0 +1,5 @@
+/* $ stanc --auto-format --include-paths=.. ../second.stanfunctions : [exit 0] */
+real bar(matrix x) {
+  print(x);
+  return sum(x);
+}

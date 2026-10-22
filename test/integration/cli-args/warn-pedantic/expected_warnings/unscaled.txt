@@ -1,0 +1,7 @@
+/* $ stanc --warn-pedantic ../unscaled.stan : [exit 0] */
+../unscaled.stan:10:14: warning: Argument 0.001 suggests there may be parameters that are not unit scale;
+  consider rescaling with a multiplier, see:
+  https://mc-stan.org/docs/stan-users-guide/efficiency-tuning.html#standardizing-predictors
+../unscaled.stan:10:21: warning: Argument 10000 suggests there may be parameters that are not unit scale;
+  consider rescaling with a multiplier, see:
+  https://mc-stan.org/docs/stan-users-guide/efficiency-tuning.html#standardizing-predictors

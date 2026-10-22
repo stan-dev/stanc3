@@ -1,0 +1,6 @@
+/* $ stanc --warn-pedantic ../jacobian_warning6.stan : [exit 0] */
+../jacobian_warning6.stan:5:3: warning: Left-hand side of distribution statement (~) may contain a non-linear
+  transform of a parameter or local variable. If it does, you need to include a
+  target += statement with the log absolute determinant of the Jacobian of the
+  transform. You could also consider defining a transformed parameter and using
+  jacobian += in the transformed parameters block.

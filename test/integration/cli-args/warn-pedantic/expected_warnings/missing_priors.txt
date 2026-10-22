@@ -1,0 +1,7 @@
+/* $ stanc --warn-pedantic ../missing_priors.stan : [exit 0] */
+../missing_priors.stan:7:3: warning: The parameter mu has no priors. This means either no prior is provided, or
+  the prior(s) depend on data variables. In the later case, this may be a false
+  positive.
+../missing_priors.stan:8:3: warning: The parameter tau has no priors. This means either no prior is provided, or
+  the prior(s) depend on data variables. In the later case, this may be a false
+  positive.

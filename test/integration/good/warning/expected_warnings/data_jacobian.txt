@@ -1,0 +1,14 @@
+/* $ stanc ../data_jacobian.stan : [exit 0] */
+warning: Calling a _jacobian function without any parameter arguments still applies the Jacobian adjustments, ensure this is intentional?
+    ┌─ ../data_jacobian.stan:14:15
+ 13 │  transformed parameters {
+ 14 │    real beta = upper_bound_jacobian(beta_raw, ub);
+    │                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ _jacobian with no parameters
+ 15 │    real beta2 = my_upper_bound_jacobian(beta_raw, ub);
+    = Consider using upper_bound_constrain instead
+warning: Calling a _jacobian function without any parameter arguments still applies the Jacobian adjustments, ensure this is intentional?
+    ┌─ ../data_jacobian.stan:15:16
+ 14 │    real beta = upper_bound_jacobian(beta_raw, ub);
+ 15 │    real beta2 = my_upper_bound_jacobian(beta_raw, ub);
+    │                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ _jacobian with no parameters
+ 16 │  }

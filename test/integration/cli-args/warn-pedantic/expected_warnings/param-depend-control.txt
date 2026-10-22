@@ -1,0 +1,4 @@
+/* $ stanc --warn-pedantic ../param-depend-control.stan : [exit 0] */
+../param-depend-control.stan:8:3: warning: A control flow statement depends on parameter(s): a.
+../param-depend-control.stan:13:3: warning: A control flow statement depends on parameter(s): a.
+../param-depend-control.stan:16:3: warning: A control flow statement depends on parameter(s): a.

@@ -1,0 +1,20 @@
+/* $ stanc --include-paths=../../included  ../stanc_helper_with_good_include_err_after_incl.stan : [exit 1] */
+error: Identifier "ww" not in scope.
+    ┌─ ../../included/incl_stanc_helper.stan:2:3
+  1 │    real y;
+  2 │    #include incl_stanc_helper2.stan
+    │    -------- file '../../included/incl_stanc_helper2.stan' included here
+    ┌─ ../../included/incl_stanc_helper2.stan:1:8
+  1 │    real w;
+    │         - Did you mean "w", declared here?
+  2 │    real x;
+    ┌─ ../stanc_helper_with_good_include_err_after_incl.stan:9:9
+  1 │  parameters {
+  2 │  #include incl_stanc_helper.stan
+    │  -------- file '../../included/incl_stanc_helper.stan' included here
+  3 │  }
+    ⋯  
+  8 │  generated quantities {
+  9 │    print(ww);
+    │          ^^ Identifier "ww" not in scope.
+ 10 │  }

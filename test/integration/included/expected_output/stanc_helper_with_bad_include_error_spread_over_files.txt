@@ -1,0 +1,11 @@
+/* $ stanc --include-paths=../../included  ../stanc_helper_with_bad_include_error_spread_over_files.stan : [exit 1] */
+error: Parameters cannot be integers.
+    ┌─ ../../included/incl_stanc_helper_error_spread_over_files.stan:2:3
+  1 │    real y;
+  2 │    int #include error_spread_over_files.stan
+    │    ^ Parameters cannot be integers.
+    ┌─ ../stanc_helper_with_bad_include_error_spread_over_files.stan:2:1
+  1 │  parameters {
+  2 │  #include incl_stanc_helper_error_spread_over_files.stan
+    │  -------- file '../../included/incl_stanc_helper_error_spread_over_files.stan' included here
+  3 │  }

@@ -1,0 +1,15 @@
+/* $ stanc ../overloaded_forward_decl.stan : [exit 0] */
+warning: Functions do not need to be declared before definition; all user defined
+function names are always in scope regardless of definition order.
+    ┌─ ../overloaded_forward_decl.stan:2:7
+  1 │  functions {
+  2 │    int is_real(int x);
+    │        ^^^^^^^ Forward declaration.
+  3 │    int is_real(real x);
+warning: Functions do not need to be declared before definition; all user defined
+function names are always in scope regardless of definition order.
+    ┌─ ../overloaded_forward_decl.stan:3:7
+  2 │    int is_real(int x);
+  3 │    int is_real(real x);
+    │        ^^^^^^^ Forward declaration.
+  4 │  

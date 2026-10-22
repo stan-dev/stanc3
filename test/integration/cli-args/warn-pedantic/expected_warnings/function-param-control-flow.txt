@@ -1,0 +1,7 @@
+/* $ stanc --warn-pedantic ../function-param-control-flow.stan : [exit 0] */
+../function-param-control-flow.stan:3:5: warning: A control flow statement inside function func depends on argument b. At
+  '../function-param-control-flow.stan', line 18, column 21 to column 26, the
+  value of b depends on parameter(s): sigma.
+../function-param-control-flow.stan:15:3: warning: The parameter sigma has no priors. This means either no prior is provided, or
+  the prior(s) depend on data variables. In the later case, this may be a false
+  positive.

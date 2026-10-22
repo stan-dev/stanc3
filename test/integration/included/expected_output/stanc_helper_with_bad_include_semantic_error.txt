@@ -1,0 +1,16 @@
+/* $ stanc --include-paths=../../included  ../stanc_helper_with_bad_include_semantic_error.stan : [exit 1] */
+error: Parameters cannot be integers.
+    ┌─ ../../included/incl_stanc_helper_semantic_error.stan:2:3
+  1 │    real y;
+  2 │    #include sem-err.stan
+    │    -------- file '../../included/sem-err.stan' included here
+    ┌─ ../../included/sem-err.stan:2:3
+  1 │    real z;
+  2 │    int w;
+    │    ^^^^^^ Parameters cannot be integers.
+  3 │  
+    ┌─ ../stanc_helper_with_bad_include_semantic_error.stan:2:1
+  1 │  parameters {
+  2 │  #include incl_stanc_helper_semantic_error.stan
+    │  -------- file '../../included/incl_stanc_helper_semantic_error.stan' included here
+  3 │  }

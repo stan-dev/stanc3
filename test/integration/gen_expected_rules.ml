@@ -19,7 +19,7 @@ let print_rules ~ext ~flags input_file =
   let deps =
     (* depend on sibling files when the test has #includes *)
     if String.includes ~affix:"include-paths" flags then
-      "\n (deps (glob_files_rec ../*.*))"
+      "\n (deps (glob_files_rec ../*.{stan,stanfunctions,inc}))"
     else "" in
   Printf.printf
     {|

@@ -1,0 +1,65 @@
+/* $ stanc ../self-assign.stan : [exit 0] */
+warning: Assignment of variable to itself.
+    ┌─ ../self-assign.stan:4:9
+  3 │    // line 4: should warn
+  4 │    foo = foo;
+    │    ---   ^^^ Value here.
+    │    │
+    │    Assigned to itself.
+  5 │    // line 6: should warn (decl)
+warning: Assignment of variable to itself during declaration. This is almost certainly a bug.
+    ┌─ ../self-assign.stan:6:23
+  5 │    // line 6: should warn (decl)
+  6 │    array[2] real bar = bar;
+    │                  ---   ^^^ Value here.
+    │                  │
+    │                  Assigned to itself.
+  7 │    // line 8: should warn (decl)
+warning: Assignment of variable to itself during declaration. This is almost certainly a bug.
+    ┌─ ../self-assign.stan:8:20
+  7 │    // line 8: should warn (decl)
+  8 │    real baz = foo + baz;
+    │         ---         ^^^ Value here.
+    │         │
+    │         Assigned to itself.
+  9 │    // no warnings
+warning: Assignment of variable to itself.
+    ┌─ ../self-assign.stan:12:12
+ 11 │    //line 12: should warn
+ 12 │    bar[1] = bar[1];
+    │    ------   ^^^^^^ Value here.
+    │    │
+    │    Assigned to itself.
+ 13 │  
+warning: Assignment of variable to itself.
+    ┌─ ../self-assign.stan:15:10
+ 14 │    // line 15: should warn
+ 15 │    foo = (foo);
+    │    ---    ^^^ Value here.
+    │    │
+    │    Assigned to itself.
+ 16 │    // no warnings
+warning: Assignment of variable to itself.
+    ┌─ ../self-assign.stan:22:11
+ 21 │    // line 22: should warn
+ 22 │    tup.1 = tup.1;
+    │    -----   ^^^^^ Value here.
+    │    │
+    │    Assigned to itself.
+ 23 │    // line 24: should warn (decl)
+warning: Assignment of variable to itself during declaration. This is almost certainly a bug.
+    ┌─ ../self-assign.stan:24:34
+ 23 │    // line 24: should warn (decl)
+ 24 │    tuple(real, real) tup2 = (0.5, tup2.1);
+    │                      ----         ^^^^ Value here.
+    │                      │
+    │                      Assigned to itself.
+ 25 │    // line 26: could warn, currently does not
+warning: Assignment of variable to itself during declaration. This is almost certainly a bug.
+    ┌─ ../self-assign.stan:35:13
+ 34 │    //line 35: should warn
+ 35 │    int k = n[k];
+    │        -     ^ Value here.
+    │        │
+    │        Assigned to itself.
+ 36 │  }

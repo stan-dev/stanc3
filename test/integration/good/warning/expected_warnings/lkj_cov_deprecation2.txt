@@ -1,0 +1,9 @@
+/* $ stanc ../lkj_cov_deprecation2.stan : [exit 0] */
+warning: lkj_cov is deprecated and will be removed in Stan 3.0.
+    ┌─ ../lkj_cov_deprecation2.stan:8:13
+  7 │  model {
+  8 │    target += lkj_cov_lpdf(Sigma | mu, sigma, eta);
+    │              ^^^^^^^^^^^^ lkj_cov is deprecated and will be removed in Stan 3.0.
+  9 │  }
+    = Use lkj_corr with an independent lognormal distribution on the scales, see:
+      https://mc-stan.org/docs/reference-manual/deprecations.html#lkj_cov-distribution

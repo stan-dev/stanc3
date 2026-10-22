@@ -1,0 +1,17 @@
+/* $ stanc ../unreachable_statement.stan : [exit 0] */
+warning: Unreachable statement found, is this intended?
+    ┌─ ../unreachable_statement.stan:5:6
+  3 │       if(x == 0.0) ; // bug - misplaced ; makes the next statement unconditional
+  4 │         reject("Cannot be 0");
+    │         ---------------------- stops this model evaluation
+  5 │       return;
+    │       ^ Never reached
+  6 │     }
+warning: Unreachable statement found, is this intended?
+    ┌─ ../unreachable_statement.stan:10:5
+  8 │    real bar(real x){
+  9 │      fatal_error("don't call this function");
+    │      ---------------------------------------- halts the algorithm
+ 10 │      return x ;
+    │      ^ Never reached
+ 11 │    }

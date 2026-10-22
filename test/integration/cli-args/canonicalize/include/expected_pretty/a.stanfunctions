@@ -1,0 +1,7 @@
+/* $ stanc --auto-format --include-paths=.. ../a.stanfunctions : [exit 0] */
+// line comment a
+/*weird block a*/
+void foo(real x) {
+  return;
+}
+// another line comment a

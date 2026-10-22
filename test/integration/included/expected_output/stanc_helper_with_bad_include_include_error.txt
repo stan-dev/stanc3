@@ -1,0 +1,17 @@
+/* $ stanc --include-paths=../../included  ../stanc_helper_with_bad_include_include_error.stan : [exit 1] */
+error: Could not find include file 'I'm not here.stan'.
+
+    ┌─ ../../included/incl-err.stan:2:3
+  1 │    real z;
+  2 │    #include "I'm not here.stan"
+    │    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ here.
+    ┌─ ../../included/incl_stanc_helper_include_error.stan:2:3
+  1 │    real y;
+  2 │    #include incl-err.stan
+    │    -------- file '../../included/incl-err.stan' included here
+    ┌─ ../stanc_helper_with_bad_include_include_error.stan:2:1
+  1 │  parameters {
+  2 │  #include incl_stanc_helper_include_error.stan
+    │  -------- file '../../included/incl_stanc_helper_include_error.stan' included here
+  3 │  }
+    = Current include paths: ../../included

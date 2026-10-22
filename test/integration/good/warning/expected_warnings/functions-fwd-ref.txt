@@ -1,0 +1,8 @@
+/* $ stanc ../functions-fwd-ref.stan : [exit 0] */
+warning: Functions do not need to be declared before definition; all user defined
+function names are always in scope regardless of definition order.
+    ┌─ ../functions-fwd-ref.stan:3:7
+  2 │  
+  3 │    int foo(int n);
+    │        ^^^ Forward declaration.
+  4 │    
