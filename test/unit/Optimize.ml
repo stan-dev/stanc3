@@ -21,14 +21,17 @@ let reset_and_mir_with_overrides optimization_overrides s =
 (** Compile through the stanc driver with only [passes] enabled, the same as
     running [stanc -f<pass> ...] on the program. *)
 let reset_and_mir_with_passes passes =
-  reset_and_mir_with_overrides (List.map ~f:(fun pass -> (pass, true)) passes)
+  reset_and_mir_with_overrides
+    (List.filter_map
+       ~f:(fun pass -> List.assoc_opt pass optimization_flags)
+       passes)
 
 let print_log_prob (mir : Program.Typed.t) =
   Fmt.str "@[<v>%a@]" Fmt.(list ~sep:cut Stmt.Located.pp) mir.log_prob
   |> print_endline
 
 let%expect_test "only the requested passes run" =
-  reset_and_mir_with_passes [Function_inlining]
+  reset_and_mir_with_passes ["inlining"]
     {|
       functions {
         real add_one(real x) { return x + 1; }

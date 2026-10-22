@@ -337,17 +337,10 @@ module Debug_Options = struct
         (Arg.doc_alts_enum optimization_pass_names) in
     (* errors list only the [no-] names for a [no-] setting, else only the
        enabling names *)
-    let setting =
-      let disabling, enabling =
-        List.partition optimization_flags ~f:(fun (name, _) ->
-            String.starts_with ~prefix:"no-" name) in
-      let parser setting =
-        let names =
-          if String.starts_with ~prefix:"no-" setting then disabling
-          else enabling in
-        Arg.Conv.parser (Arg.enum names) setting in
-      Arg.Conv.of_conv ~parser (Arg.enum optimization_flags) in
-    Arg.(value & opt_all setting [] & info ["f"] ~doc ~docv:"SETTING" ~docs)
+    Arg.(
+      value
+      & opt_all (enum optimization_flags) []
+      & info ["f"] ~doc ~docv:"SETTING" ~docs)
 end
 
 (** Flags common to all compiler drivers and those specific to the command line
