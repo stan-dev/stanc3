@@ -28,18 +28,17 @@ let () =
   let binary = args.(1) in
   let dirs = Array.(sub args ~pos:2 ~len:(length args - 2)) in
   Array.stable_sort ~cmp:String.compare dirs;
+  let short_binary =
+    (* when displaying the command in the output file, we clean up the binary
+       name *)
+    let binary, rest =
+      String.split_first ~sep:" " binary |> Option.value ~default:(binary, "")
+    in
+    let binary = String.split_last ~sep:"/" binary |> Option.get |> snd in
+    let binary = match rest with "" -> binary | rest -> binary ^ " " ^ rest in
+    String.replace_first binary ~sub:".exe" ~by:"" in
   Array.iter dirs ~f:(fun arg ->
       let arg = String.chop_prefix_if_exists arg ~prefix:"./" in
       let cmd = binary ^ " " ^ arg in
-      let short_cmd =
-        (* when displaying the command in the output file, we clean up the
-           binary name *)
-        let binary =
-          let binary, rest =
-            String.split_first ~sep:" " binary
-            |> Option.value ~default:(binary, "") in
-          let binary = String.split_last ~sep:"/" binary |> Option.get |> snd in
-          match rest with "" -> binary | rest -> binary ^ " " ^ rest in
-        let binary = String.replace_first binary ~sub:".exe" ~by:"" in
-        binary ^ " " ^ arg in
+      let short_cmd = short_binary ^ " " ^ arg in
       print_run short_cmd (run_capturing_output cmd))
