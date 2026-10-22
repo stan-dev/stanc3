@@ -1,11 +1,37 @@
-let _counter = ref 0
+module type Gensym = sig
+  val next : ?infix:string -> unit -> string
+  val enter : unit -> string * (unit -> unit)
+end
 
-let generate ?(prefix : string = "") () =
-  _counter := !_counter + 1;
-  Format.sprintf "%ssym%d__" prefix !_counter
+module type Internal = sig
+  val reset : unit -> unit
 
-let enter () =
-  let old_counter = !_counter in
-  (generate (), fun () -> _counter := old_counter)
+  include Gensym
+end
 
-let reset_danger_use_cautiously () = _counter := 0
+let callbacks : (string * (module Internal)) list ref = ref []
+
+let make ~prefix =
+  let gen =
+    match List.assoc_opt prefix !callbacks with
+    | Some gen -> gen
+    | None ->
+        let gen =
+          (module struct
+            let counter = ref 0
+            let reset () = counter := 0
+
+            let next ?(infix = "") () =
+              counter := !counter + 1;
+              prefix ^ infix ^ "_sym" ^ string_of_int !counter ^ "__"
+
+            let enter () =
+              let old_counter = !counter in
+              (next (), fun () -> counter := old_counter)
+          end : Internal) in
+        callbacks := (prefix, gen) :: !callbacks;
+        gen in
+  (module (val gen) : Gensym)
+
+let reset_danger_use_cautiously () =
+  List.iter (fun (_, (module Gen : Internal)) -> Gen.reset ()) !callbacks

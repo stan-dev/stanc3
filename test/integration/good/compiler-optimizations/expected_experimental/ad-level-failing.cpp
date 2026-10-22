@@ -621,9 +621,9 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
         if (lcm_sym6__) {
           out__.write(stan::model::rvalue(lcm_sym5__, "lcm_sym5__",
                         stan::model::index_uni(1), stan::model::index_uni(1)));
-          for (int sym2__ = 2; sym2__ <= N_t; ++sym2__) {
+          for (int idx_sym2__ = 2; idx_sym2__ <= N_t; ++idx_sym2__) {
             out__.write(stan::model::rvalue(lcm_sym5__, "lcm_sym5__",
-                          stan::model::index_uni(sym2__),
+                          stan::model::index_uni(idx_sym2__),
                           stan::model::index_uni(1)));
           }
         }
@@ -632,9 +632,9 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
             out__.write(stan::model::rvalue(lcm_sym5__, "lcm_sym5__",
                           stan::model::index_uni(1),
                           stan::model::index_uni(2)));
-            for (int sym2__ = 2; sym2__ <= N_t; ++sym2__) {
+            for (int idx_sym2__ = 2; idx_sym2__ <= N_t; ++idx_sym2__) {
               out__.write(stan::model::rvalue(lcm_sym5__, "lcm_sym5__",
-                            stan::model::index_uni(sym2__),
+                            stan::model::index_uni(idx_sym2__),
                             stan::model::index_uni(2)));
             }
           }
@@ -644,9 +644,9 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
             out__.write(stan::model::rvalue(lcm_sym5__, "lcm_sym5__",
                           stan::model::index_uni(1),
                           stan::model::index_uni(3)));
-            for (int sym2__ = 2; sym2__ <= N_t; ++sym2__) {
+            for (int idx_sym2__ = 2; idx_sym2__ <= N_t; ++idx_sym2__) {
               out__.write(stan::model::rvalue(lcm_sym5__, "lcm_sym5__",
-                            stan::model::index_uni(sym2__),
+                            stan::model::index_uni(idx_sym2__),
                             stan::model::index_uni(3)));
             }
           }
@@ -656,9 +656,9 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
             out__.write(stan::model::rvalue(lcm_sym5__, "lcm_sym5__",
                           stan::model::index_uni(1),
                           stan::model::index_uni(4)));
-            for (int sym2__ = 2; sym2__ <= N_t; ++sym2__) {
+            for (int idx_sym2__ = 2; idx_sym2__ <= N_t; ++idx_sym2__) {
               out__.write(stan::model::rvalue(lcm_sym5__, "lcm_sym5__",
-                            stan::model::index_uni(sym2__),
+                            stan::model::index_uni(idx_sym2__),
                             stan::model::index_uni(4)));
             }
           }
@@ -789,10 +789,10 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
     param_names__.emplace_back(std::string() + "xi");
     param_names__.emplace_back(std::string() + "delta");
     if (emit_transformed_parameters__) {
-      for (int sym38__ = 1; sym38__ <= 4; ++sym38__) {
-        for (int sym39__ = 1; sym39__ <= N_t; ++sym39__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 4; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= N_t; ++idx_sym2__) {
           param_names__.emplace_back(std::string() + "y" + '.' +
-            std::to_string(sym39__) + '.' + std::to_string(sym38__));
+            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
         }
       }
     }
@@ -807,10 +807,10 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
     param_names__.emplace_back(std::string() + "xi");
     param_names__.emplace_back(std::string() + "delta");
     if (emit_transformed_parameters__) {
-      for (int sym38__ = 1; sym38__ <= 4; ++sym38__) {
-        for (int sym39__ = 1; sym39__ <= N_t; ++sym39__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 4; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= N_t; ++idx_sym2__) {
           param_names__.emplace_back(std::string() + "y" + '.' +
-            std::to_string(sym39__) + '.' + std::to_string(sym38__));
+            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
         }
       }
     }

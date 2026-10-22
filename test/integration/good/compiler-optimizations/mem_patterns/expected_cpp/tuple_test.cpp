@@ -216,13 +216,13 @@ class tuple_test_model final : public model_base_crtp<tuple_test_model> {
         Eigen::Matrix<double,-1,-1>::Constant(1, 1,
           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 1;
-      for (int sym1__ = 1; sym1__ <= 1; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 1; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 1; ++sym3__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 1; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 1; ++idx_sym2__) {
+          for (int idx_sym3__ = 1; idx_sym3__ <= 1; ++idx_sym3__) {
             out__.write(stan::model::rvalue(std::get<0>(xx), "xx.1",
-                          stan::model::index_uni(sym3__),
-                          stan::model::index_uni(sym2__),
-                          stan::model::index_uni(sym1__)));
+                          stan::model::index_uni(idx_sym3__),
+                          stan::model::index_uni(idx_sym2__),
+                          stan::model::index_uni(idx_sym1__)));
           }
         }
       }
@@ -275,14 +275,15 @@ class tuple_test_model final : public model_base_crtp<tuple_test_model> {
           Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(1, 2, DUMMY_VAR__),
           Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(1, 3, DUMMY_VAR__)};
       current_statement__ = 1;
-      for (int sym1__ = 1; sym1__ <= 1; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 1; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 1; ++sym3__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 1; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 1; ++idx_sym2__) {
+          for (int idx_sym3__ = 1; idx_sym3__ <= 1; ++idx_sym3__) {
             current_statement__ = 1;
             stan::model::assign(std::get<0>(xx),
               in__.read<local_scalar_t__>(), "assigning variable xx.1",
-              stan::model::index_uni(sym3__), stan::model::index_uni(sym2__),
-              stan::model::index_uni(sym1__));
+              stan::model::index_uni(idx_sym3__),
+              stan::model::index_uni(idx_sym2__),
+              stan::model::index_uni(idx_sym1__));
           }
         }
       }
@@ -381,34 +382,34 @@ class tuple_test_model final : public model_base_crtp<tuple_test_model> {
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int sym1__ = 1; sym1__ <= 1; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= 1; ++sym2__) {
-        for (int sym3__ = 1; sym3__ <= 1; ++sym3__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 1; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= 1; ++idx_sym2__) {
+        for (int idx_sym3__ = 1; idx_sym3__ <= 1; ++idx_sym3__) {
           param_names__.emplace_back(std::string() + "xx" + ':' +
-            std::to_string(1) + '.' + std::to_string(sym3__) + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(1) + '.' + std::to_string(idx_sym3__) + '.' +
+            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
         }
       }
     }
-    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= 1; ++sym2__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= 1; ++idx_sym2__) {
         param_names__.emplace_back(std::string() + "xx" + ':' +
-          std::to_string(2) + '.' + std::to_string(sym2__) + '.' +
-          std::to_string(sym1__));
+          std::to_string(2) + '.' + std::to_string(idx_sym2__) + '.' +
+          std::to_string(idx_sym1__));
       }
     }
-    for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= 1; ++sym2__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= 1; ++idx_sym2__) {
         param_names__.emplace_back(std::string() + "xx" + ':' +
-          std::to_string(3) + '.' + std::to_string(sym2__) + '.' +
-          std::to_string(sym1__));
+          std::to_string(3) + '.' + std::to_string(idx_sym2__) + '.' +
+          std::to_string(idx_sym1__));
       }
     }
     if (emit_transformed_parameters__) {
-      for (int sym1__ = 1; sym1__ <= 1; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 1; ++sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 1; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 1; ++idx_sym2__) {
           param_names__.emplace_back(std::string() + "x" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
         }
       }
     }
@@ -418,34 +419,34 @@ class tuple_test_model final : public model_base_crtp<tuple_test_model> {
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int sym1__ = 1; sym1__ <= 1; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= 1; ++sym2__) {
-        for (int sym3__ = 1; sym3__ <= 1; ++sym3__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 1; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= 1; ++idx_sym2__) {
+        for (int idx_sym3__ = 1; idx_sym3__ <= 1; ++idx_sym3__) {
           param_names__.emplace_back(std::string() + "xx" + ':' +
-            std::to_string(1) + '.' + std::to_string(sym3__) + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(1) + '.' + std::to_string(idx_sym3__) + '.' +
+            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
         }
       }
     }
-    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= 1; ++sym2__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= 1; ++idx_sym2__) {
         param_names__.emplace_back(std::string() + "xx" + ':' +
-          std::to_string(2) + '.' + std::to_string(sym2__) + '.' +
-          std::to_string(sym1__));
+          std::to_string(2) + '.' + std::to_string(idx_sym2__) + '.' +
+          std::to_string(idx_sym1__));
       }
     }
-    for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= 1; ++sym2__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 3; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= 1; ++idx_sym2__) {
         param_names__.emplace_back(std::string() + "xx" + ':' +
-          std::to_string(3) + '.' + std::to_string(sym2__) + '.' +
-          std::to_string(sym1__));
+          std::to_string(3) + '.' + std::to_string(idx_sym2__) + '.' +
+          std::to_string(idx_sym1__));
       }
     }
     if (emit_transformed_parameters__) {
-      for (int sym1__ = 1; sym1__ <= 1; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 1; ++sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 1; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 1; ++idx_sym2__) {
           param_names__.emplace_back(std::string() + "x" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
         }
       }
     }

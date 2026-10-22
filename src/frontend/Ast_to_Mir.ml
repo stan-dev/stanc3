@@ -603,6 +603,8 @@ let index_tuple (e : Ast.typed_expression) i =
             [Pretty_printing.pp_typed_expression $ e]) [@coverage off] in
   Ast.{expr= TupleProjection (e, i + 1); emeta}
 
+module GenSymUnpack = (val Common.Gensym.make ~prefix:"unpack")
+
 let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
   let stmt_typed = ts.stmt and smeta = ts.smeta.loc in
   let trans_stmt =
@@ -738,7 +740,7 @@ and trans_packed_assign loc trans_stmt lvals rhs assign_op =
       { loc
       ; flow_type= {controlflow= Incomplete Next; breaks= []; continues= false}
       } in
-  let sym, reset = Common.Gensym.enter () in
+  let sym, reset = GenSymUnpack.enter () in
   let rhs_type = rhs.emeta.type_ in
   let temp =
     { Stmt.pattern=

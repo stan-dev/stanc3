@@ -460,22 +460,22 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int sym19__ = 1; sym19__ <= 5; ++sym19__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 5; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "p_single_ret_vec" + '.' +
-        std::to_string(sym19__));
+        std::to_string(idx_sym1__));
     }
-    for (int sym19__ = 1; sym19__ <= 5; ++sym19__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 5; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "p_multi_ret_vec" + '.' +
-        std::to_string(sym19__));
+        std::to_string(idx_sym1__));
     }
     if (emit_transformed_parameters__) {
-      for (int sym19__ = 1; sym19__ <= 5; ++sym19__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 5; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "tp_single_ret_vec" + '.'
-          + std::to_string(sym19__));
+          + std::to_string(idx_sym1__));
       }
-      for (int sym19__ = 1; sym19__ <= 5; ++sym19__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 5; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "tp_multi_ret_vec" + '.' +
-          std::to_string(sym19__));
+          std::to_string(idx_sym1__));
       }
     }
     if (emit_generated_quantities__) {}
@@ -484,22 +484,22 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int sym19__ = 1; sym19__ <= 5; ++sym19__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 5; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "p_single_ret_vec" + '.' +
-        std::to_string(sym19__));
+        std::to_string(idx_sym1__));
     }
-    for (int sym19__ = 1; sym19__ <= 5; ++sym19__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 5; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "p_multi_ret_vec" + '.' +
-        std::to_string(sym19__));
+        std::to_string(idx_sym1__));
     }
     if (emit_transformed_parameters__) {
-      for (int sym19__ = 1; sym19__ <= 5; ++sym19__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 5; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "tp_single_ret_vec" + '.'
-          + std::to_string(sym19__));
+          + std::to_string(idx_sym1__));
       }
-      for (int sym19__ = 1; sym19__ <= 5; ++sym19__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 5; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "tp_multi_ret_vec" + '.' +
-          std::to_string(sym19__));
+          std::to_string(idx_sym1__));
       }
     }
     if (emit_generated_quantities__) {}

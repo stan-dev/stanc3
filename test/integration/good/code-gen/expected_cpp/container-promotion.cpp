@@ -592,34 +592,35 @@ class container_promotion_model final : public model_base_crtp<container_promoti
       if (emit_transformed_parameters__) {
         out__.write(V);
         current_statement__ = 3;
-        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-            out__.write(arRV[(sym2__ - 1)][(sym1__ - 1)]);
+        for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
+          for (int idx_sym2__ = 1; idx_sym2__ <= 2; ++idx_sym2__) {
+            out__.write(arRV[(idx_sym2__ - 1)][(idx_sym1__ - 1)]);
           }
         }
         current_statement__ = 4;
-        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-            out__.write(Mar[(sym2__ - 1)][(sym1__ - 1)]);
+        for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
+          for (int idx_sym2__ = 1; idx_sym2__ <= 2; ++idx_sym2__) {
+            out__.write(Mar[(idx_sym2__ - 1)][(idx_sym1__ - 1)]);
           }
         }
         out__.write(M);
         current_statement__ = 6;
-        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-            for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
-              out__.write(deep_Mar[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);
+        for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
+          for (int idx_sym2__ = 1; idx_sym2__ <= 2; ++idx_sym2__) {
+            for (int idx_sym3__ = 1; idx_sym3__ <= 2; ++idx_sym3__) {
+              out__.write(deep_Mar[(idx_sym3__ - 1)][(idx_sym2__ -
+                1)][(idx_sym1__ - 1)]);
             }
           }
         }
         current_statement__ = 7;
-        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-            for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
+        for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
+          for (int idx_sym2__ = 1; idx_sym2__ <= 2; ++idx_sym2__) {
+            for (int idx_sym3__ = 1; idx_sym3__ <= 2; ++idx_sym3__) {
               out__.write(stan::model::rvalue(deep_M, "deep_M",
-                            stan::model::index_uni(sym3__),
-                            stan::model::index_uni(sym2__),
-                            stan::model::index_uni(sym1__)));
+                            stan::model::index_uni(idx_sym3__),
+                            stan::model::index_uni(idx_sym2__),
+                            stan::model::index_uni(idx_sym1__)));
             }
           }
         }
@@ -721,43 +722,43 @@ class container_promotion_model final : public model_base_crtp<container_promoti
                           emit_generated_quantities__ = true) const final {
     param_names__.emplace_back(std::string() + "y");
     if (emit_transformed_parameters__) {
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "V" + '.' +
-          std::to_string(sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 2; ++idx_sym2__) {
           param_names__.emplace_back(std::string() + "arRV" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 2; ++idx_sym2__) {
           param_names__.emplace_back(std::string() + "Mar" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 2; ++idx_sym2__) {
           param_names__.emplace_back(std::string() + "M" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 2; ++idx_sym2__) {
+          for (int idx_sym3__ = 1; idx_sym3__ <= 2; ++idx_sym3__) {
             param_names__.emplace_back(std::string() + "deep_Mar" + '.' +
-              std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
-              std::to_string(sym1__));
+              std::to_string(idx_sym3__) + '.' + std::to_string(idx_sym2__) +
+              '.' + std::to_string(idx_sym1__));
           }
         }
       }
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 2; ++idx_sym2__) {
+          for (int idx_sym3__ = 1; idx_sym3__ <= 2; ++idx_sym3__) {
             param_names__.emplace_back(std::string() + "deep_M" + '.' +
-              std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
-              std::to_string(sym1__));
+              std::to_string(idx_sym3__) + '.' + std::to_string(idx_sym2__) +
+              '.' + std::to_string(idx_sym1__));
           }
         }
       }
@@ -770,43 +771,43 @@ class container_promotion_model final : public model_base_crtp<container_promoti
                             emit_generated_quantities__ = true) const final {
     param_names__.emplace_back(std::string() + "y");
     if (emit_transformed_parameters__) {
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "V" + '.' +
-          std::to_string(sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 2; ++idx_sym2__) {
           param_names__.emplace_back(std::string() + "arRV" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 2; ++idx_sym2__) {
           param_names__.emplace_back(std::string() + "Mar" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 2; ++idx_sym2__) {
           param_names__.emplace_back(std::string() + "M" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
         }
       }
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 2; ++idx_sym2__) {
+          for (int idx_sym3__ = 1; idx_sym3__ <= 2; ++idx_sym3__) {
             param_names__.emplace_back(std::string() + "deep_Mar" + '.' +
-              std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
-              std::to_string(sym1__));
+              std::to_string(idx_sym3__) + '.' + std::to_string(idx_sym2__) +
+              '.' + std::to_string(idx_sym1__));
           }
         }
       }
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 2; ++idx_sym2__) {
+          for (int idx_sym3__ = 1; idx_sym3__ <= 2; ++idx_sym3__) {
             param_names__.emplace_back(std::string() + "deep_M" + '.' +
-              std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
-              std::to_string(sym1__));
+              std::to_string(idx_sym3__) + '.' + std::to_string(idx_sym2__) +
+              '.' + std::to_string(idx_sym1__));
           }
         }
       }

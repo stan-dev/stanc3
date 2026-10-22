@@ -236,28 +236,28 @@ class tuple_temporary_model final : public model_base_crtp<tuple_temporary_model
                           emit_generated_quantities__ = true) const final {
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {
-      for (int sym1__ = 1; sym1__ <= 1; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 1; ++sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 1; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 1; ++idx_sym2__) {
           param_names__.emplace_back(std::string() + "m" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
         }
       }
       param_names__.emplace_back(std::string() + "t" + ':' +
         std::to_string(1));
-      for (int sym1__ = 1; sym1__ <= 1; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 1; ++sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 1; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 1; ++idx_sym2__) {
           param_names__.emplace_back(std::string() + "t" + ':' +
-            std::to_string(2) + '.' + std::to_string(sym2__) + '.' +
-            std::to_string(sym1__));
+            std::to_string(2) + '.' + std::to_string(idx_sym2__) + '.' +
+            std::to_string(idx_sym1__));
         }
       }
       param_names__.emplace_back(std::string() + "s" + ':' +
         std::to_string(1));
-      for (int sym1__ = 1; sym1__ <= 1; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 1; ++sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 1; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 1; ++idx_sym2__) {
           param_names__.emplace_back(std::string() + "s" + ':' +
-            std::to_string(2) + '.' + std::to_string(sym2__) + '.' +
-            std::to_string(sym1__));
+            std::to_string(2) + '.' + std::to_string(idx_sym2__) + '.' +
+            std::to_string(idx_sym1__));
         }
       }
     }
@@ -268,28 +268,28 @@ class tuple_temporary_model final : public model_base_crtp<tuple_temporary_model
                             emit_generated_quantities__ = true) const final {
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {
-      for (int sym1__ = 1; sym1__ <= 1; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 1; ++sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 1; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 1; ++idx_sym2__) {
           param_names__.emplace_back(std::string() + "m" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
         }
       }
       param_names__.emplace_back(std::string() + "t" + ':' +
         std::to_string(1));
-      for (int sym1__ = 1; sym1__ <= 1; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 1; ++sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 1; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 1; ++idx_sym2__) {
           param_names__.emplace_back(std::string() + "t" + ':' +
-            std::to_string(2) + '.' + std::to_string(sym2__) + '.' +
-            std::to_string(sym1__));
+            std::to_string(2) + '.' + std::to_string(idx_sym2__) + '.' +
+            std::to_string(idx_sym1__));
         }
       }
       param_names__.emplace_back(std::string() + "s" + ':' +
         std::to_string(1));
-      for (int sym1__ = 1; sym1__ <= 1; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 1; ++sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 1; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 1; ++idx_sym2__) {
           param_names__.emplace_back(std::string() + "s" + ':' +
-            std::to_string(2) + '.' + std::to_string(sym2__) + '.' +
-            std::to_string(sym1__));
+            std::to_string(2) + '.' + std::to_string(idx_sym2__) + '.' +
+            std::to_string(idx_sym1__));
         }
       }
     }

@@ -568,15 +568,15 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
     param_names__.emplace_back(std::string() + "tau_phi");
-    for (int sym1__ = 1; sym1__ <= phi_std_raw_1dim__; ++sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= phi_std_raw_1dim__; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "phi_std_raw" + '.' +
-        std::to_string(sym1__));
+        std::to_string(idx_sym1__));
     }
     if (emit_transformed_parameters__) {
       param_names__.emplace_back(std::string() + "sigma_phi");
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "phi" + '.' +
-          std::to_string(sym1__));
+          std::to_string(idx_sym1__));
       }
     }
     if (emit_generated_quantities__) {
@@ -584,21 +584,21 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       param_names__.emplace_back(std::string() + "beta1");
       param_names__.emplace_back(std::string() + "tau_theta");
       param_names__.emplace_back(std::string() + "sigma_theta");
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "theta" + '.' +
-          std::to_string(sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "theta_std" + '.' +
-          std::to_string(sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "x" + '.' +
-          std::to_string(sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "y" + '.' +
-          std::to_string(sym1__));
+          std::to_string(idx_sym1__));
       }
     }
   }
@@ -607,15 +607,15 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
     param_names__.emplace_back(std::string() + "tau_phi");
-    for (int sym1__ = 1; sym1__ <= phi_std_raw_1dim__; ++sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= phi_std_raw_1dim__; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "phi_std_raw" + '.' +
-        std::to_string(sym1__));
+        std::to_string(idx_sym1__));
     }
     if (emit_transformed_parameters__) {
       param_names__.emplace_back(std::string() + "sigma_phi");
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "phi" + '.' +
-          std::to_string(sym1__));
+          std::to_string(idx_sym1__));
       }
     }
     if (emit_generated_quantities__) {
@@ -623,21 +623,21 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       param_names__.emplace_back(std::string() + "beta1");
       param_names__.emplace_back(std::string() + "tau_theta");
       param_names__.emplace_back(std::string() + "sigma_theta");
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "theta" + '.' +
-          std::to_string(sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "theta_std" + '.' +
-          std::to_string(sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "x" + '.' +
-          std::to_string(sym1__));
+          std::to_string(idx_sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "y" + '.' +
-          std::to_string(sym1__));
+          std::to_string(idx_sym1__));
       }
     }
   }

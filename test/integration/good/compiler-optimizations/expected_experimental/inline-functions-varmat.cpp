@@ -72,7 +72,7 @@ multi_ret_fun(const T0__& A_arg__, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    int lcm_sym19__;
+    int lcm_sym1__;
     {
       Eigen::Matrix<local_scalar_t__,-1,1> B =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(5, DUMMY_VAR__);
@@ -145,7 +145,7 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm_sym24__;
+      int lcm_sym6__;
       current_statement__ = 1;
       auto p_single_ret_vec =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(5);
@@ -216,7 +216,7 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm_sym23__;
+      int lcm_sym5__;
       current_statement__ = 1;
       auto p_single_ret_vec =
         in__.template read<
@@ -304,9 +304,9 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm_sym22__;
-      int lcm_sym21__;
-      int lcm_sym20__;
+      int lcm_sym4__;
+      int lcm_sym3__;
+      int lcm_sym2__;
       current_statement__ = 1;
       auto p_single_ret_vec =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(5);
@@ -466,22 +466,22 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int sym25__ = 1; sym25__ <= 5; ++sym25__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 5; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "p_single_ret_vec" + '.' +
-        std::to_string(sym25__));
+        std::to_string(idx_sym1__));
     }
-    for (int sym25__ = 1; sym25__ <= 5; ++sym25__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 5; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "p_multi_ret_vec" + '.' +
-        std::to_string(sym25__));
+        std::to_string(idx_sym1__));
     }
     if (emit_transformed_parameters__) {
-      for (int sym25__ = 1; sym25__ <= 5; ++sym25__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 5; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "tp_single_ret_vec" + '.'
-          + std::to_string(sym25__));
+          + std::to_string(idx_sym1__));
       }
-      for (int sym25__ = 1; sym25__ <= 5; ++sym25__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 5; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "tp_multi_ret_vec" + '.' +
-          std::to_string(sym25__));
+          std::to_string(idx_sym1__));
       }
     }
     if (emit_generated_quantities__) {}
@@ -490,22 +490,22 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int sym25__ = 1; sym25__ <= 5; ++sym25__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 5; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "p_single_ret_vec" + '.' +
-        std::to_string(sym25__));
+        std::to_string(idx_sym1__));
     }
-    for (int sym25__ = 1; sym25__ <= 5; ++sym25__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 5; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "p_multi_ret_vec" + '.' +
-        std::to_string(sym25__));
+        std::to_string(idx_sym1__));
     }
     if (emit_transformed_parameters__) {
-      for (int sym25__ = 1; sym25__ <= 5; ++sym25__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 5; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "tp_single_ret_vec" + '.'
-          + std::to_string(sym25__));
+          + std::to_string(idx_sym1__));
       }
-      for (int sym25__ = 1; sym25__ <= 5; ++sym25__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 5; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "tp_multi_ret_vec" + '.' +
-          std::to_string(sym25__));
+          std::to_string(idx_sym1__));
       }
     }
     if (emit_generated_quantities__) {}

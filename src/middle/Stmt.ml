@@ -163,8 +163,10 @@ module Numbered = struct
 end
 
 module Helpers = struct
+  module GenSymTmp = (val Gensym.make ~prefix:"tmp")
+
   let temp_vars exprs : Located.t list * Expr.Typed.t list * (unit -> unit) =
-    let sym, reset = Gensym.enter () in
+    let sym, reset = GenSymTmp.enter () in
     let rec loop es sym inits vars =
       match es with
       | [] -> (inits, vars)
@@ -182,7 +184,7 @@ module Helpers = struct
             { decl with
               pattern= Assignment ((LVariable sym, []), Expr.Typed.type_of e, e)
             } in
-          loop es (Gensym.generate ()) (decl :: assign :: inits)
+          loop es (GenSymTmp.next ()) (decl :: assign :: inits)
             ({e with pattern= Var sym} :: vars) in
     let setups, exprs = loop (List.rev exprs) sym [] [] in
     (setups, exprs, reset)
@@ -199,10 +201,12 @@ module Helpers = struct
   let internal_nrfunapp fn args meta =
     {pattern= NRFunApp (CompilerInternal fn, args); meta}
 
+  module GenSymIdx = (val Common.Gensym.make ~prefix:"idx")
+
   (** [mk_for] returns a MIR For statement from 0 to [upper] that calls the
       [bodyfn] with the loop variable inside the loop. *)
   let mk_for upper bodyfn meta =
-    let loopvar, reset = Gensym.enter () in
+    let loopvar, reset = GenSymIdx.enter () in
     let loopvar_expr =
       Expr.
         { meta= Expr.Typed.Meta.create ~type_:UInt ~loc:meta ~adlevel:DataOnly ()

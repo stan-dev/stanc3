@@ -1,7 +1,9 @@
-(** Generate fresh (never before used) symbols.
+(** Generate fresh (never before used) symbols. *)
 
-    Uses an internal (mutable) counter *)
+module type Gensym = sig
+  val next : ?infix:string -> unit -> string
+  val enter : unit -> string * (unit -> unit)
+end
 
-val generate : ?prefix:string -> unit -> string
-val enter : unit -> string * (unit -> unit)
+val make : prefix:string -> (module Gensym)
 val reset_danger_use_cautiously : unit -> unit

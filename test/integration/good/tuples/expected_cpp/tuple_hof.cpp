@@ -387,9 +387,9 @@ class tuple_hof_model final : public model_base_crtp<tuple_hof_model> {
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "param_y" + '.' +
-        std::to_string(sym1__));
+        std::to_string(idx_sym1__));
     }
     if (emit_transformed_parameters__) {
       param_names__.emplace_back(std::string() + "sum2");
@@ -400,9 +400,9 @@ class tuple_hof_model final : public model_base_crtp<tuple_hof_model> {
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "param_y" + '.' +
-        std::to_string(sym1__));
+        std::to_string(idx_sym1__));
     }
     if (emit_transformed_parameters__) {
       param_names__.emplace_back(std::string() + "sum2");

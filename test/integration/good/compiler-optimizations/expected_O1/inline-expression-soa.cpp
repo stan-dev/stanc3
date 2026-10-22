@@ -293,10 +293,10 @@ class inline_expression_soa_model final : public model_base_crtp<inline_expressi
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int sym7__ = 1; sym7__ <= 10; ++sym7__) {
-      for (int sym8__ = 1; sym8__ <= 10; ++sym8__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= 10; ++idx_sym2__) {
         param_names__.emplace_back(std::string() + "p" + '.' +
-          std::to_string(sym8__) + '.' + std::to_string(sym7__));
+          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
       }
     }
     if (emit_transformed_parameters__) {}
@@ -306,10 +306,10 @@ class inline_expression_soa_model final : public model_base_crtp<inline_expressi
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int sym7__ = 1; sym7__ <= 10; ++sym7__) {
-      for (int sym8__ = 1; sym8__ <= 10; ++sym8__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= 10; ++idx_sym2__) {
         param_names__.emplace_back(std::string() + "p" + '.' +
-          std::to_string(sym8__) + '.' + std::to_string(sym7__));
+          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
       }
     }
     if (emit_transformed_parameters__) {}

@@ -462,24 +462,25 @@ class ad_level_disconnected_function_model final : public model_base_crtp<ad_lev
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int sym10__ = 1; sym10__ <= 10; ++sym10__) {
-      for (int sym11__ = 1; sym11__ <= 10; ++sym11__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= 10; ++idx_sym2__) {
         param_names__.emplace_back(std::string() + "row_soa" + '.' +
-          std::to_string(sym11__) + '.' + std::to_string(sym10__));
+          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
       }
     }
     param_names__.emplace_back(std::string() + "theta");
     if (emit_transformed_parameters__) {
-      for (int sym10__ = 1; sym10__ <= 10; ++sym10__) {
-        for (int sym11__ = 1; sym11__ <= 10; ++sym11__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 10; ++idx_sym2__) {
           param_names__.emplace_back(std::string() + "empty_user_func_aos" +
-            '.' + std::to_string(sym11__) + '.' + std::to_string(sym10__));
+            '.' + std::to_string(idx_sym2__) + '.' +
+            std::to_string(idx_sym1__));
         }
       }
-      for (int sym10__ = 1; sym10__ <= 10; ++sym10__) {
-        for (int sym11__ = 1; sym11__ <= 10; ++sym11__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 10; ++idx_sym2__) {
           param_names__.emplace_back(std::string() + "int_aos_mul_aos" + '.'
-            + std::to_string(sym11__) + '.' + std::to_string(sym10__));
+            + std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
         }
       }
     }
@@ -489,24 +490,25 @@ class ad_level_disconnected_function_model final : public model_base_crtp<ad_lev
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int sym10__ = 1; sym10__ <= 10; ++sym10__) {
-      for (int sym11__ = 1; sym11__ <= 10; ++sym11__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= 10; ++idx_sym2__) {
         param_names__.emplace_back(std::string() + "row_soa" + '.' +
-          std::to_string(sym11__) + '.' + std::to_string(sym10__));
+          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
       }
     }
     param_names__.emplace_back(std::string() + "theta");
     if (emit_transformed_parameters__) {
-      for (int sym10__ = 1; sym10__ <= 10; ++sym10__) {
-        for (int sym11__ = 1; sym11__ <= 10; ++sym11__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 10; ++idx_sym2__) {
           param_names__.emplace_back(std::string() + "empty_user_func_aos" +
-            '.' + std::to_string(sym11__) + '.' + std::to_string(sym10__));
+            '.' + std::to_string(idx_sym2__) + '.' +
+            std::to_string(idx_sym1__));
         }
       }
-      for (int sym10__ = 1; sym10__ <= 10; ++sym10__) {
-        for (int sym11__ = 1; sym11__ <= 10; ++sym11__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 10; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 10; ++idx_sym2__) {
           param_names__.emplace_back(std::string() + "int_aos_mul_aos" + '.'
-            + std::to_string(sym11__) + '.' + std::to_string(sym10__));
+            + std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__));
         }
       }
     }

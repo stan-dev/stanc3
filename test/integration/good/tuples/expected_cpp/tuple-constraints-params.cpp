@@ -145,18 +145,18 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
               Eigen::Matrix<local_scalar_t__,-1,1>>{DUMMY_VAR__,
               Eigen::Matrix<local_scalar_t__,-1,1>::Constant(4, DUMMY_VAR__)}));
       current_statement__ = 2;
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 3; ++idx_sym2__) {
           current_statement__ = 2;
-          std::get<0>(ps2[(sym2__ - 1)][(sym1__ - 1)]) = in__.template read_constrain_lb<
-                                                           local_scalar_t__,
-                                                           jacobian__>(0,
-                                                           lp__);
+          std::get<0>(ps2[(idx_sym2__ - 1)][(idx_sym1__ - 1)]) = in__.template read_constrain_lb<
+                                                                   local_scalar_t__,
+                                                                   jacobian__>(0,
+                                                                   lp__);
           current_statement__ = 2;
-          std::get<1>(ps2[(sym2__ - 1)][(sym1__ - 1)]) = in__.template read_constrain_simplex<
-                                                           Eigen::Matrix<local_scalar_t__,-1,1>,
-                                                           jacobian__>(lp__,
-                                                           4);
+          std::get<1>(ps2[(idx_sym2__ - 1)][(idx_sym1__ - 1)]) = in__.template read_constrain_simplex<
+                                                                   Eigen::Matrix<local_scalar_t__,-1,1>,
+                                                                   jacobian__>(lp__,
+                                                                   4);
         }
       }
       current_statement__ = 3;
@@ -192,24 +192,26 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
                 Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(5, 4,
                   DUMMY_VAR__)})});
       current_statement__ = 4;
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
         current_statement__ = 4;
-        std::get<0>(complicated[(sym1__ - 1)]) = in__.template read<
-                                                   local_scalar_t__>();
+        std::get<0>(complicated[(idx_sym1__ - 1)]) = in__.template read<
+                                                       local_scalar_t__>();
         current_statement__ = 4;
-        for (int sym2__ = 1; sym2__ <=
-             complicated_brack_dot2_1dim__; ++sym2__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <=
+             complicated_brack_dot2_1dim__; ++idx_sym2__) {
           current_statement__ = 4;
-          std::get<0>(std::get<1>(complicated[(sym1__ - 1)])[(sym2__ - 1)]) = 
-            in__.template read<local_scalar_t__>();
+          std::get<0>(std::get<1>(complicated[(idx_sym1__ - 1)])[(idx_sym2__
+            - 1)]) = in__.template read<local_scalar_t__>();
           current_statement__ = 4;
-          std::get<1>(std::get<1>(complicated[(sym1__ - 1)])[(sym2__ - 1)]) = 
-            in__.template read_constrain_simplex<
-              Eigen::Matrix<local_scalar_t__,-1,1>, jacobian__>(lp__, 5);
+          std::get<1>(std::get<1>(complicated[(idx_sym1__ - 1)])[(idx_sym2__
+            - 1)]) = in__.template read_constrain_simplex<
+                       Eigen::Matrix<local_scalar_t__,-1,1>,
+                       jacobian__>(lp__, 5);
           current_statement__ = 4;
-          std::get<2>(std::get<1>(complicated[(sym1__ - 1)])[(sym2__ - 1)]) = 
-            in__.template read_constrain_cholesky_factor_cov<
-              Eigen::Matrix<local_scalar_t__,-1,-1>, jacobian__>(lp__, 5, 4);
+          std::get<2>(std::get<1>(complicated[(idx_sym1__ - 1)])[(idx_sym2__
+            - 1)]) = in__.template read_constrain_cholesky_factor_cov<
+                       Eigen::Matrix<local_scalar_t__,-1,-1>,
+                       jacobian__>(lp__, 5, 4);
         }
       }
     } catch (const std::exception& e) {
@@ -266,18 +268,18 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
               Eigen::Matrix<local_scalar_t__,-1,1>>{DUMMY_VAR__,
               Eigen::Matrix<local_scalar_t__,-1,1>::Constant(4, DUMMY_VAR__)}));
       current_statement__ = 2;
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 3; ++idx_sym2__) {
           current_statement__ = 2;
-          std::get<0>(ps2[(sym2__ - 1)][(sym1__ - 1)]) = in__.template read_constrain_lb<
-                                                           local_scalar_t__,
-                                                           jacobian__>(0,
-                                                           lp__);
+          std::get<0>(ps2[(idx_sym2__ - 1)][(idx_sym1__ - 1)]) = in__.template read_constrain_lb<
+                                                                   local_scalar_t__,
+                                                                   jacobian__>(0,
+                                                                   lp__);
           current_statement__ = 2;
-          std::get<1>(ps2[(sym2__ - 1)][(sym1__ - 1)]) = in__.template read_constrain_simplex<
-                                                           Eigen::Matrix<local_scalar_t__,-1,1>,
-                                                           jacobian__>(lp__,
-                                                           4);
+          std::get<1>(ps2[(idx_sym2__ - 1)][(idx_sym1__ - 1)]) = in__.template read_constrain_simplex<
+                                                                   Eigen::Matrix<local_scalar_t__,-1,1>,
+                                                                   jacobian__>(lp__,
+                                                                   4);
         }
       }
       current_statement__ = 3;
@@ -313,24 +315,26 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
                 Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(5, 4,
                   DUMMY_VAR__)})});
       current_statement__ = 4;
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
         current_statement__ = 4;
-        std::get<0>(complicated[(sym1__ - 1)]) = in__.template read<
-                                                   local_scalar_t__>();
+        std::get<0>(complicated[(idx_sym1__ - 1)]) = in__.template read<
+                                                       local_scalar_t__>();
         current_statement__ = 4;
-        for (int sym2__ = 1; sym2__ <=
-             complicated_brack_dot2_1dim__; ++sym2__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <=
+             complicated_brack_dot2_1dim__; ++idx_sym2__) {
           current_statement__ = 4;
-          std::get<0>(std::get<1>(complicated[(sym1__ - 1)])[(sym2__ - 1)]) = 
-            in__.template read<local_scalar_t__>();
+          std::get<0>(std::get<1>(complicated[(idx_sym1__ - 1)])[(idx_sym2__
+            - 1)]) = in__.template read<local_scalar_t__>();
           current_statement__ = 4;
-          std::get<1>(std::get<1>(complicated[(sym1__ - 1)])[(sym2__ - 1)]) = 
-            in__.template read_constrain_simplex<
-              Eigen::Matrix<local_scalar_t__,-1,1>, jacobian__>(lp__, 5);
+          std::get<1>(std::get<1>(complicated[(idx_sym1__ - 1)])[(idx_sym2__
+            - 1)]) = in__.template read_constrain_simplex<
+                       Eigen::Matrix<local_scalar_t__,-1,1>,
+                       jacobian__>(lp__, 5);
           current_statement__ = 4;
-          std::get<2>(std::get<1>(complicated[(sym1__ - 1)])[(sym2__ - 1)]) = 
-            in__.template read_constrain_cholesky_factor_cov<
-              Eigen::Matrix<local_scalar_t__,-1,-1>, jacobian__>(lp__, 5, 4);
+          std::get<2>(std::get<1>(complicated[(idx_sym1__ - 1)])[(idx_sym2__
+            - 1)]) = in__.template read_constrain_cholesky_factor_cov<
+                       Eigen::Matrix<local_scalar_t__,-1,-1>,
+                       jacobian__>(lp__, 5, 4);
         }
       }
     } catch (const std::exception& e) {
@@ -393,18 +397,18 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
               Eigen::Matrix<double,-1,1>::Constant(4,
                 std::numeric_limits<double>::quiet_NaN())}));
       current_statement__ = 2;
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 3; ++idx_sym2__) {
           current_statement__ = 2;
-          std::get<0>(ps2[(sym2__ - 1)][(sym1__ - 1)]) = in__.template read_constrain_lb<
-                                                           local_scalar_t__,
-                                                           jacobian__>(0,
-                                                           lp__);
+          std::get<0>(ps2[(idx_sym2__ - 1)][(idx_sym1__ - 1)]) = in__.template read_constrain_lb<
+                                                                   local_scalar_t__,
+                                                                   jacobian__>(0,
+                                                                   lp__);
           current_statement__ = 2;
-          std::get<1>(ps2[(sym2__ - 1)][(sym1__ - 1)]) = in__.template read_constrain_simplex<
-                                                           Eigen::Matrix<local_scalar_t__,-1,1>,
-                                                           jacobian__>(lp__,
-                                                           4);
+          std::get<1>(ps2[(idx_sym2__ - 1)][(idx_sym1__ - 1)]) = in__.template read_constrain_simplex<
+                                                                   Eigen::Matrix<local_scalar_t__,-1,1>,
+                                                                   jacobian__>(lp__,
+                                                                   4);
         }
       }
       current_statement__ = 3;
@@ -437,48 +441,53 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
                 Eigen::Matrix<double,-1,-1>::Constant(5, 4,
                   std::numeric_limits<double>::quiet_NaN())})});
       current_statement__ = 4;
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
         current_statement__ = 4;
-        std::get<0>(complicated[(sym1__ - 1)]) = in__.template read<
-                                                   local_scalar_t__>();
+        std::get<0>(complicated[(idx_sym1__ - 1)]) = in__.template read<
+                                                       local_scalar_t__>();
         current_statement__ = 4;
-        for (int sym2__ = 1; sym2__ <=
-             complicated_brack_dot2_1dim__; ++sym2__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <=
+             complicated_brack_dot2_1dim__; ++idx_sym2__) {
           current_statement__ = 4;
-          std::get<0>(std::get<1>(complicated[(sym1__ - 1)])[(sym2__ - 1)]) = 
-            in__.template read<local_scalar_t__>();
+          std::get<0>(std::get<1>(complicated[(idx_sym1__ - 1)])[(idx_sym2__
+            - 1)]) = in__.template read<local_scalar_t__>();
           current_statement__ = 4;
-          std::get<1>(std::get<1>(complicated[(sym1__ - 1)])[(sym2__ - 1)]) = 
-            in__.template read_constrain_simplex<
-              Eigen::Matrix<local_scalar_t__,-1,1>, jacobian__>(lp__, 5);
+          std::get<1>(std::get<1>(complicated[(idx_sym1__ - 1)])[(idx_sym2__
+            - 1)]) = in__.template read_constrain_simplex<
+                       Eigen::Matrix<local_scalar_t__,-1,1>,
+                       jacobian__>(lp__, 5);
           current_statement__ = 4;
-          std::get<2>(std::get<1>(complicated[(sym1__ - 1)])[(sym2__ - 1)]) = 
-            in__.template read_constrain_cholesky_factor_cov<
-              Eigen::Matrix<local_scalar_t__,-1,-1>, jacobian__>(lp__, 5, 4);
+          std::get<2>(std::get<1>(complicated[(idx_sym1__ - 1)])[(idx_sym2__
+            - 1)]) = in__.template read_constrain_cholesky_factor_cov<
+                       Eigen::Matrix<local_scalar_t__,-1,-1>,
+                       jacobian__>(lp__, 5, 4);
         }
       }
       out__.write(std::get<0>(ps));
       out__.write(std::get<1>(ps));
       current_statement__ = 2;
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          out__.write(std::get<0>(ps2[(sym2__ - 1)][(sym1__ - 1)]));
-          out__.write(std::get<1>(ps2[(sym2__ - 1)][(sym1__ - 1)]));
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 3; ++idx_sym2__) {
+          out__.write(std::get<0>(ps2[(idx_sym2__ - 1)][(idx_sym1__ - 1)]));
+          out__.write(std::get<1>(ps2[(idx_sym2__ - 1)][(idx_sym1__ - 1)]));
         }
       }
       out__.write(t);
       current_statement__ = 4;
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        out__.write(std::get<0>(complicated[(sym1__ - 1)]));
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
+        out__.write(std::get<0>(complicated[(idx_sym1__ - 1)]));
         current_statement__ = 4;
-        for (int sym2__ = 1; sym2__ <=
-             complicated_brack_dot2_1dim__; ++sym2__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <=
+             complicated_brack_dot2_1dim__; ++idx_sym2__) {
           out__.write(std::get<0>(
-                        std::get<1>(complicated[(sym1__ - 1)])[(sym2__ - 1)]));
+                        std::get<1>(complicated[(idx_sym1__ - 1)])[(idx_sym2__
+                        - 1)]));
           out__.write(std::get<1>(
-                        std::get<1>(complicated[(sym1__ - 1)])[(sym2__ - 1)]));
+                        std::get<1>(complicated[(idx_sym1__ - 1)])[(idx_sym2__
+                        - 1)]));
           out__.write(std::get<2>(
-                        std::get<1>(complicated[(sym1__ - 1)])[(sym2__ - 1)]));
+                        std::get<1>(complicated[(idx_sym1__ - 1)])[(idx_sym2__
+                        - 1)]));
         }
       }
       if (stan::math::logical_negation(
@@ -533,23 +542,24 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
               Eigen::Matrix<local_scalar_t__,-1,1>>{DUMMY_VAR__,
               Eigen::Matrix<local_scalar_t__,-1,1>::Constant(4, DUMMY_VAR__)}));
       current_statement__ = 2;
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 3; ++idx_sym2__) {
           current_statement__ = 2;
-          std::get<0>(ps2[(sym2__ - 1)][(sym1__ - 1)]) = in__.read<
-                                                           local_scalar_t__>();
+          std::get<0>(ps2[(idx_sym2__ - 1)][(idx_sym1__ - 1)]) = in__.read<
+                                                                   local_scalar_t__>();
           current_statement__ = 2;
-          stan::model::assign(std::get<1>(ps2[(sym2__ - 1)][(sym1__ - 1)]),
+          stan::model::assign(
+            std::get<1>(ps2[(idx_sym2__ - 1)][(idx_sym1__ - 1)]),
             in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(4),
             "assigning variable ps2.2");
         }
       }
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 3; ++idx_sym2__) {
           out__.write_free_lb(0,
-            std::get<0>(ps2[(sym2__ - 1)][(sym1__ - 1)]));
-          out__.write_free_simplex(std::get<1>(ps2[(sym2__ - 1)][(sym1__ -
-                                     1)]));
+            std::get<0>(ps2[(idx_sym2__ - 1)][(idx_sym1__ - 1)]));
+          out__.write_free_simplex(std::get<1>(ps2[(idx_sym2__ -
+                                     1)][(idx_sym1__ - 1)]));
         }
       }
       local_scalar_t__ t = DUMMY_VAR__;
@@ -585,41 +595,44 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
                 Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(5, 4,
                   DUMMY_VAR__)})});
       current_statement__ = 4;
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
         current_statement__ = 4;
-        std::get<0>(complicated[(sym1__ - 1)]) = in__.read<
-                                                   local_scalar_t__>();
+        std::get<0>(complicated[(idx_sym1__ - 1)]) = in__.read<
+                                                       local_scalar_t__>();
         current_statement__ = 4;
-        for (int sym2__ = 1; sym2__ <=
-             complicated_brack_dot2_1dim__; ++sym2__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <=
+             complicated_brack_dot2_1dim__; ++idx_sym2__) {
           current_statement__ = 4;
-          std::get<0>(std::get<1>(complicated[(sym1__ - 1)])[(sym2__ - 1)]) = 
-            in__.read<local_scalar_t__>();
+          std::get<0>(std::get<1>(complicated[(idx_sym1__ - 1)])[(idx_sym2__
+            - 1)]) = in__.read<local_scalar_t__>();
           current_statement__ = 4;
           stan::model::assign(
-            std::get<1>(std::get<1>(complicated[(sym1__ - 1)])[(sym2__ - 1)]),
+            std::get<1>(
+              std::get<1>(complicated[(idx_sym1__ - 1)])[(idx_sym2__ - 1)]),
             in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(5),
             "assigning variable complicated.2.2");
           current_statement__ = 4;
           stan::model::assign(
-            std::get<2>(std::get<1>(complicated[(sym1__ - 1)])[(sym2__ - 1)]),
+            std::get<2>(
+              std::get<1>(complicated[(idx_sym1__ - 1)])[(idx_sym2__ - 1)]),
             in__.read<Eigen::Matrix<local_scalar_t__,-1,-1>>(5, 4),
             "assigning variable complicated.2.3");
         }
       }
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        out__.write(std::get<0>(complicated[(sym1__ - 1)]));
-        for (int sym2__ = 1; sym2__ <=
-             complicated_brack_dot2_1dim__; ++sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
+        out__.write(std::get<0>(complicated[(idx_sym1__ - 1)]));
+        for (int idx_sym2__ = 1; idx_sym2__ <=
+             complicated_brack_dot2_1dim__; ++idx_sym2__) {
           out__.write(std::get<0>(
-                        std::get<1>(complicated[(sym1__ - 1)])[(sym2__ - 1)]));
+                        std::get<1>(complicated[(idx_sym1__ - 1)])[(idx_sym2__
+                        - 1)]));
           out__.write_free_simplex(std::get<1>(
-                                     std::get<1>(complicated[(sym1__ - 1)])[(sym2__
-                                     - 1)]));
+                                     std::get<1>(complicated[(idx_sym1__ -
+                                       1)])[(idx_sym2__ - 1)]));
           out__.write_free_cholesky_factor_cov(std::get<2>(
                                                  std::get<1>(
-                                                   complicated[(sym1__ - 1)])[(sym2__
-                                                 - 1)]));
+                                                   complicated[(idx_sym1__ -
+                                                   1)])[(idx_sym2__ - 1)]));
         }
       }
     } catch (const std::exception& e) {
@@ -695,12 +708,12 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
               Eigen::Matrix<local_scalar_t__,-1,1>::Constant(4, DUMMY_VAR__)}));
       current_statement__ = 2;
       stan::io::read_from_context(ps2, context__, "ps2");
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 3; ++idx_sym2__) {
           out__.write_free_lb(0,
-            std::get<0>(ps2[(sym2__ - 1)][(sym1__ - 1)]));
-          out__.write_free_simplex(std::get<1>(ps2[(sym2__ - 1)][(sym1__ -
-                                     1)]));
+            std::get<0>(ps2[(idx_sym2__ - 1)][(idx_sym1__ - 1)]));
+          out__.write_free_simplex(std::get<1>(ps2[(idx_sym2__ -
+                                     1)][(idx_sym1__ - 1)]));
         }
       }
       local_scalar_t__ t = DUMMY_VAR__;
@@ -737,19 +750,20 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
                   DUMMY_VAR__)})});
       current_statement__ = 4;
       stan::io::read_from_context(complicated, context__, "complicated");
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        out__.write(std::get<0>(complicated[(sym1__ - 1)]));
-        for (int sym2__ = 1; sym2__ <=
-             complicated_brack_dot2_1dim__; ++sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
+        out__.write(std::get<0>(complicated[(idx_sym1__ - 1)]));
+        for (int idx_sym2__ = 1; idx_sym2__ <=
+             complicated_brack_dot2_1dim__; ++idx_sym2__) {
           out__.write(std::get<0>(
-                        std::get<1>(complicated[(sym1__ - 1)])[(sym2__ - 1)]));
+                        std::get<1>(complicated[(idx_sym1__ - 1)])[(idx_sym2__
+                        - 1)]));
           out__.write_free_simplex(std::get<1>(
-                                     std::get<1>(complicated[(sym1__ - 1)])[(sym2__
-                                     - 1)]));
+                                     std::get<1>(complicated[(idx_sym1__ -
+                                       1)])[(idx_sym2__ - 1)]));
           out__.write_free_cholesky_factor_cov(std::get<2>(
                                                  std::get<1>(
-                                                   complicated[(sym1__ - 1)])[(sym2__
-                                                 - 1)]));
+                                                   complicated[(idx_sym1__ -
+                                                   1)])[(idx_sym2__ - 1)]));
         }
       }
     } catch (const std::exception& e) {
@@ -797,38 +811,39 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
       std::to_string(1));
     param_names__.emplace_back(std::string() + "ps" + ':' +
       std::to_string(2));
-    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= 3; ++idx_sym2__) {
         param_names__.emplace_back(std::string() + "ps2" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__) + ':' +
-          std::to_string(1));
-        for (int sym3__ = 1; sym3__ <= 4; ++sym3__) {
+          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__) + ':'
+          + std::to_string(1));
+        for (int idx_sym3__ = 1; idx_sym3__ <= 4; ++idx_sym3__) {
           param_names__.emplace_back(std::string() + "ps2" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__) + ':' +
-            std::to_string(2) + '.' + std::to_string(sym3__));
+            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__) +
+            ':' + std::to_string(2) + '.' + std::to_string(idx_sym3__));
         }
       }
     }
     param_names__.emplace_back(std::string() + "t");
-    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "complicated" + '.' +
-        std::to_string(sym1__) + ':' + std::to_string(1));
-      for (int sym2__ = 1; sym2__ <= complicated_brack_dot2_1dim__; ++sym2__) {
+        std::to_string(idx_sym1__) + ':' + std::to_string(1));
+      for (int idx_sym2__ = 1; idx_sym2__ <=
+           complicated_brack_dot2_1dim__; ++idx_sym2__) {
         param_names__.emplace_back(std::string() + "complicated" + '.' +
-          std::to_string(sym1__) + ':' + std::to_string(2) + '.' +
-          std::to_string(sym2__) + ':' + std::to_string(1));
-        for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
+          std::to_string(idx_sym1__) + ':' + std::to_string(2) + '.' +
+          std::to_string(idx_sym2__) + ':' + std::to_string(1));
+        for (int idx_sym3__ = 1; idx_sym3__ <= 5; ++idx_sym3__) {
           param_names__.emplace_back(std::string() + "complicated" + '.' +
-            std::to_string(sym1__) + ':' + std::to_string(2) + '.' +
-            std::to_string(sym2__) + ':' + std::to_string(2) + '.' +
-            std::to_string(sym3__));
+            std::to_string(idx_sym1__) + ':' + std::to_string(2) + '.' +
+            std::to_string(idx_sym2__) + ':' + std::to_string(2) + '.' +
+            std::to_string(idx_sym3__));
         }
-        for (int sym3__ = 1; sym3__ <= 4; ++sym3__) {
-          for (int sym4__ = 1; sym4__ <= 5; ++sym4__) {
+        for (int idx_sym3__ = 1; idx_sym3__ <= 4; ++idx_sym3__) {
+          for (int idx_sym4__ = 1; idx_sym4__ <= 5; ++idx_sym4__) {
             param_names__.emplace_back(std::string() + "complicated" + '.' +
-              std::to_string(sym1__) + ':' + std::to_string(2) + '.' +
-              std::to_string(sym2__) + ':' + std::to_string(3) + '.' +
-              std::to_string(sym4__) + '.' + std::to_string(sym3__));
+              std::to_string(idx_sym1__) + ':' + std::to_string(2) + '.' +
+              std::to_string(idx_sym2__) + ':' + std::to_string(3) + '.' +
+              std::to_string(idx_sym4__) + '.' + std::to_string(idx_sym3__));
           }
         }
       }
@@ -844,38 +859,39 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
       std::to_string(1));
     param_names__.emplace_back(std::string() + "ps" + ':' +
       std::to_string(2));
-    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
+      for (int idx_sym2__ = 1; idx_sym2__ <= 3; ++idx_sym2__) {
         param_names__.emplace_back(std::string() + "ps2" + '.' +
-          std::to_string(sym2__) + '.' + std::to_string(sym1__) + ':' +
-          std::to_string(1));
-        for (int sym3__ = 1; sym3__ <= (4 - 1); ++sym3__) {
+          std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__) + ':'
+          + std::to_string(1));
+        for (int idx_sym3__ = 1; idx_sym3__ <= (4 - 1); ++idx_sym3__) {
           param_names__.emplace_back(std::string() + "ps2" + '.' +
-            std::to_string(sym2__) + '.' + std::to_string(sym1__) + ':' +
-            std::to_string(2) + '.' + std::to_string(sym3__));
+            std::to_string(idx_sym2__) + '.' + std::to_string(idx_sym1__) +
+            ':' + std::to_string(2) + '.' + std::to_string(idx_sym3__));
         }
       }
     }
     param_names__.emplace_back(std::string() + "t");
-    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "complicated" + '.' +
-        std::to_string(sym1__) + ':' + std::to_string(1));
-      for (int sym2__ = 1; sym2__ <= complicated_brack_dot2_1dim__; ++sym2__) {
+        std::to_string(idx_sym1__) + ':' + std::to_string(1));
+      for (int idx_sym2__ = 1; idx_sym2__ <=
+           complicated_brack_dot2_1dim__; ++idx_sym2__) {
         param_names__.emplace_back(std::string() + "complicated" + '.' +
-          std::to_string(sym1__) + ':' + std::to_string(2) + '.' +
-          std::to_string(sym2__) + ':' + std::to_string(1));
-        for (int sym3__ = 1; sym3__ <= (5 - 1); ++sym3__) {
+          std::to_string(idx_sym1__) + ':' + std::to_string(2) + '.' +
+          std::to_string(idx_sym2__) + ':' + std::to_string(1));
+        for (int idx_sym3__ = 1; idx_sym3__ <= (5 - 1); ++idx_sym3__) {
           param_names__.emplace_back(std::string() + "complicated" + '.' +
-            std::to_string(sym1__) + ':' + std::to_string(2) + '.' +
-            std::to_string(sym2__) + ':' + std::to_string(2) + '.' +
-            std::to_string(sym3__));
+            std::to_string(idx_sym1__) + ':' + std::to_string(2) + '.' +
+            std::to_string(idx_sym2__) + ':' + std::to_string(2) + '.' +
+            std::to_string(idx_sym3__));
         }
-        for (int sym3__ = 1; sym3__ <= ((((4 * (4 - 1)) / 2) + 4) + ((5 - 4)
-             * 4)); ++sym3__) {
+        for (int idx_sym3__ = 1; idx_sym3__ <= ((((4 * (4 - 1)) / 2) + 4) +
+             ((5 - 4) * 4)); ++idx_sym3__) {
           param_names__.emplace_back(std::string() + "complicated" + '.' +
-            std::to_string(sym1__) + ':' + std::to_string(2) + '.' +
-            std::to_string(sym2__) + ':' + std::to_string(3) + '.' +
-            std::to_string(sym3__));
+            std::to_string(idx_sym1__) + ':' + std::to_string(2) + '.' +
+            std::to_string(idx_sym2__) + ':' + std::to_string(3) + '.' +
+            std::to_string(idx_sym3__));
         }
       }
     }

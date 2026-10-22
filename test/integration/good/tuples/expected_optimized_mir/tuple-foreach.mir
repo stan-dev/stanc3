@@ -19,7 +19,7 @@
       (initialize Default)))
     (meta <opaque>))
    ((pattern
-     (For (loopvar sym1__)
+     (For (loopvar idx_sym1__)
       (lower
        ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
       (upper
@@ -48,7 +48,7 @@
                        ((type_ (UArray (UTuple (UReal UReal)))) (loc <opaque>)
                         (adlevel (TupleAD (DataOnly DataOnly))))))
                      ((Single
-                       ((pattern (Var sym1__))
+                       ((pattern (Var idx_sym1__))
                         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
                    (meta
                     ((type_ (UTuple (UReal UReal))) (loc <opaque>)

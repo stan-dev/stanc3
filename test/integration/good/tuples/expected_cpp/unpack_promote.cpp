@@ -170,16 +170,18 @@ class unpack_promote_model final : public model_base_crtp<unpack_promote_model> 
             std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
         {
           std::tuple<std::vector<local_scalar_t__>,
-            Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>> sym1__;
+            Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>> unpack_sym1__;
           current_statement__ = 9;
-          stan::model::assign(sym1__,
+          stan::model::assign(unpack_sym1__,
             stan::math::promote_scalar<
               std::tuple<local_scalar_t__, std::complex<local_scalar_t__>>>(
-              td), "assigning variable sym1__");
+              td), "assigning variable unpack_sym1__");
           current_statement__ = 10;
-          stan::model::assign(r, std::get<0>(sym1__), "assigning variable r");
+          stan::model::assign(r, std::get<0>(unpack_sym1__),
+            "assigning variable r");
           current_statement__ = 10;
-          stan::model::assign(v, std::get<1>(sym1__), "assigning variable v");
+          stan::model::assign(v, std::get<1>(unpack_sym1__),
+            "assigning variable v");
         }
         current_statement__ = 11;
         if (pstream__) {
@@ -189,19 +191,22 @@ class unpack_promote_model final : public model_base_crtp<unpack_promote_model> 
         }
         {
           std::tuple<std::vector<double>, std::vector<std::complex<double>>,
-            Eigen::Matrix<std::complex<double>,-1,1>> sym1__;
+            Eigen::Matrix<std::complex<double>,-1,1>> unpack_sym1__;
           current_statement__ = 12;
-          stan::model::assign(sym1__,
+          stan::model::assign(unpack_sym1__,
             std::forward_as_tuple(stan::math::promote_scalar<double>(y),
               stan::math::promote_scalar<std::complex<double>>(y),
               stan::math::promote_scalar<std::complex<double>>(x)),
-            "assigning variable sym1__");
+            "assigning variable unpack_sym1__");
           current_statement__ = 13;
-          stan::model::assign(r, std::get<0>(sym1__), "assigning variable r");
+          stan::model::assign(r, std::get<0>(unpack_sym1__),
+            "assigning variable r");
           current_statement__ = 13;
-          stan::model::assign(z, std::get<1>(sym1__), "assigning variable z");
+          stan::model::assign(z, std::get<1>(unpack_sym1__),
+            "assigning variable z");
           current_statement__ = 13;
-          stan::model::assign(v, std::get<2>(sym1__), "assigning variable v");
+          stan::model::assign(v, std::get<2>(unpack_sym1__),
+            "assigning variable v");
         }
         current_statement__ = 14;
         if (pstream__) {
@@ -213,20 +218,23 @@ class unpack_promote_model final : public model_base_crtp<unpack_promote_model> 
         {
           std::tuple<std::vector<local_scalar_t__>,
             std::vector<std::complex<local_scalar_t__>>,
-            Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>> sym1__;
+            Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>> unpack_sym1__;
           current_statement__ = 15;
-          stan::model::assign(sym1__,
+          stan::model::assign(unpack_sym1__,
             std::forward_as_tuple(alpha,
               stan::math::promote_scalar<std::complex<local_scalar_t__>>(
                 alpha),
               stan::math::promote_scalar<std::complex<local_scalar_t__>>(
-                theta)), "assigning variable sym1__");
+                theta)), "assigning variable unpack_sym1__");
           current_statement__ = 16;
-          stan::model::assign(r, std::get<0>(sym1__), "assigning variable r");
+          stan::model::assign(r, std::get<0>(unpack_sym1__),
+            "assigning variable r");
           current_statement__ = 16;
-          stan::model::assign(z, std::get<1>(sym1__), "assigning variable z");
+          stan::model::assign(z, std::get<1>(unpack_sym1__),
+            "assigning variable z");
           current_statement__ = 16;
-          stan::model::assign(v, std::get<2>(sym1__), "assigning variable v");
+          stan::model::assign(v, std::get<2>(unpack_sym1__),
+            "assigning variable v");
         }
         current_statement__ = 17;
         if (pstream__) {
@@ -245,17 +253,17 @@ class unpack_promote_model final : public model_base_crtp<unpack_promote_model> 
             std::numeric_limits<int>::min()};
         {
           std::tuple<Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>, int>
-            sym1__;
+            unpack_sym1__;
           current_statement__ = 20;
-          stan::model::assign(sym1__,
+          stan::model::assign(unpack_sym1__,
             std::forward_as_tuple(
               stan::math::promote_scalar<std::complex<local_scalar_t__>>(
-                theta), 1), "assigning variable sym1__");
+                theta), 1), "assigning variable unpack_sym1__");
           current_statement__ = 21;
-          stan::model::assign(std::get<0>(tup), std::get<0>(sym1__),
+          stan::model::assign(std::get<0>(tup), std::get<0>(unpack_sym1__),
             "assigning variable tup.1");
           current_statement__ = 21;
-          std::get<1>(tup) = std::get<1>(sym1__);
+          std::get<1>(tup) = std::get<1>(unpack_sym1__);
         }
         current_statement__ = 22;
         if (pstream__) {
@@ -315,16 +323,18 @@ class unpack_promote_model final : public model_base_crtp<unpack_promote_model> 
             std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
         {
           std::tuple<std::vector<local_scalar_t__>,
-            Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>> sym1__;
+            Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>> unpack_sym1__;
           current_statement__ = 9;
-          stan::model::assign(sym1__,
+          stan::model::assign(unpack_sym1__,
             stan::math::promote_scalar<
               std::tuple<local_scalar_t__, std::complex<local_scalar_t__>>>(
-              td), "assigning variable sym1__");
+              td), "assigning variable unpack_sym1__");
           current_statement__ = 10;
-          stan::model::assign(r, std::get<0>(sym1__), "assigning variable r");
+          stan::model::assign(r, std::get<0>(unpack_sym1__),
+            "assigning variable r");
           current_statement__ = 10;
-          stan::model::assign(v, std::get<1>(sym1__), "assigning variable v");
+          stan::model::assign(v, std::get<1>(unpack_sym1__),
+            "assigning variable v");
         }
         current_statement__ = 11;
         if (pstream__) {
@@ -334,19 +344,22 @@ class unpack_promote_model final : public model_base_crtp<unpack_promote_model> 
         }
         {
           std::tuple<std::vector<double>, std::vector<std::complex<double>>,
-            Eigen::Matrix<std::complex<double>,-1,1>> sym1__;
+            Eigen::Matrix<std::complex<double>,-1,1>> unpack_sym1__;
           current_statement__ = 12;
-          stan::model::assign(sym1__,
+          stan::model::assign(unpack_sym1__,
             std::forward_as_tuple(stan::math::promote_scalar<double>(y),
               stan::math::promote_scalar<std::complex<double>>(y),
               stan::math::promote_scalar<std::complex<double>>(x)),
-            "assigning variable sym1__");
+            "assigning variable unpack_sym1__");
           current_statement__ = 13;
-          stan::model::assign(r, std::get<0>(sym1__), "assigning variable r");
+          stan::model::assign(r, std::get<0>(unpack_sym1__),
+            "assigning variable r");
           current_statement__ = 13;
-          stan::model::assign(z, std::get<1>(sym1__), "assigning variable z");
+          stan::model::assign(z, std::get<1>(unpack_sym1__),
+            "assigning variable z");
           current_statement__ = 13;
-          stan::model::assign(v, std::get<2>(sym1__), "assigning variable v");
+          stan::model::assign(v, std::get<2>(unpack_sym1__),
+            "assigning variable v");
         }
         current_statement__ = 14;
         if (pstream__) {
@@ -358,20 +371,23 @@ class unpack_promote_model final : public model_base_crtp<unpack_promote_model> 
         {
           std::tuple<std::vector<local_scalar_t__>,
             std::vector<std::complex<local_scalar_t__>>,
-            Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>> sym1__;
+            Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>> unpack_sym1__;
           current_statement__ = 15;
-          stan::model::assign(sym1__,
+          stan::model::assign(unpack_sym1__,
             std::forward_as_tuple(alpha,
               stan::math::promote_scalar<std::complex<local_scalar_t__>>(
                 alpha),
               stan::math::promote_scalar<std::complex<local_scalar_t__>>(
-                theta)), "assigning variable sym1__");
+                theta)), "assigning variable unpack_sym1__");
           current_statement__ = 16;
-          stan::model::assign(r, std::get<0>(sym1__), "assigning variable r");
+          stan::model::assign(r, std::get<0>(unpack_sym1__),
+            "assigning variable r");
           current_statement__ = 16;
-          stan::model::assign(z, std::get<1>(sym1__), "assigning variable z");
+          stan::model::assign(z, std::get<1>(unpack_sym1__),
+            "assigning variable z");
           current_statement__ = 16;
-          stan::model::assign(v, std::get<2>(sym1__), "assigning variable v");
+          stan::model::assign(v, std::get<2>(unpack_sym1__),
+            "assigning variable v");
         }
         current_statement__ = 17;
         if (pstream__) {
@@ -390,17 +406,17 @@ class unpack_promote_model final : public model_base_crtp<unpack_promote_model> 
             std::numeric_limits<int>::min()};
         {
           std::tuple<Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>, int>
-            sym1__;
+            unpack_sym1__;
           current_statement__ = 20;
-          stan::model::assign(sym1__,
+          stan::model::assign(unpack_sym1__,
             std::forward_as_tuple(
               stan::math::promote_scalar<std::complex<local_scalar_t__>>(
-                theta), 1), "assigning variable sym1__");
+                theta), 1), "assigning variable unpack_sym1__");
           current_statement__ = 21;
-          stan::model::assign(std::get<0>(tup), std::get<0>(sym1__),
+          stan::model::assign(std::get<0>(tup), std::get<0>(unpack_sym1__),
             "assigning variable tup.1");
           current_statement__ = 21;
-          std::get<1>(tup) = std::get<1>(sym1__);
+          std::get<1>(tup) = std::get<1>(unpack_sym1__);
         }
         current_statement__ = 22;
         if (pstream__) {
@@ -558,13 +574,13 @@ class unpack_promote_model final : public model_base_crtp<unpack_promote_model> 
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "alpha" + '.' +
-        std::to_string(sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "theta" + '.' +
-        std::to_string(sym1__));
+        std::to_string(idx_sym1__));
     }
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
@@ -573,13 +589,13 @@ class unpack_promote_model final : public model_base_crtp<unpack_promote_model> 
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "alpha" + '.' +
-        std::to_string(sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "theta" + '.' +
-        std::to_string(sym1__));
+        std::to_string(idx_sym1__));
     }
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}

@@ -94,15 +94,16 @@ class tuple_constraints_data_model final : public model_base_crtp<tuple_constrai
       current_statement__ = 3;
       stan::io::read_from_context(z, context__, "z");
       current_statement__ = 3;
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= 2; ++idx_sym1__) {
+        for (int idx_sym2__ = 1; idx_sym2__ <= 3; ++idx_sym2__) {
           current_statement__ = 3;
           stan::math::check_greater_or_equal(function__,
-            "z[sym2__, sym1__].1",
-            std::get<0>(z[(sym2__ - 1)][(sym1__ - 1)]), 0);
+            "z[idx_sym2__, idx_sym1__].1",
+            std::get<0>(z[(idx_sym2__ - 1)][(idx_sym1__ - 1)]), 0);
           current_statement__ = 3;
-          stan::math::check_simplex(function__, "z[sym2__, sym1__].2",
-            std::get<1>(z[(sym2__ - 1)][(sym1__ - 1)]));
+          stan::math::check_simplex(function__,
+            "z[idx_sym2__, idx_sym1__].2",
+            std::get<1>(z[(idx_sym2__ - 1)][(idx_sym1__ - 1)]));
         }
       }
     } catch (const std::exception& e) {

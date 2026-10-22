@@ -914,29 +914,29 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int sym1__ = 1; sym1__ <= n_age; ++sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= n_age; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "a" + '.' +
-        std::to_string(sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= n_edu; ++sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= n_edu; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "b" + '.' +
-        std::to_string(sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= n_age_edu; ++sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= n_age_edu; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "c" + '.' +
-        std::to_string(sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= n_state; ++sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= n_state; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "d" + '.' +
-        std::to_string(sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= n_region_full; ++sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= n_region_full; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "e" + '.' +
-        std::to_string(sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 5; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "beta" + '.' +
-        std::to_string(sym1__));
+        std::to_string(idx_sym1__));
     }
     param_names__.emplace_back(std::string() + "sigma_a");
     param_names__.emplace_back(std::string() + "sigma_b");
@@ -944,9 +944,9 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
     param_names__.emplace_back(std::string() + "sigma_d");
     param_names__.emplace_back(std::string() + "sigma_e");
     if (emit_transformed_parameters__) {
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "y_hat" + '.' +
-          std::to_string(sym1__));
+          std::to_string(idx_sym1__));
       }
     }
     if (emit_generated_quantities__) {}
@@ -955,29 +955,29 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int sym1__ = 1; sym1__ <= n_age; ++sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= n_age; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "a" + '.' +
-        std::to_string(sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= n_edu; ++sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= n_edu; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "b" + '.' +
-        std::to_string(sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= n_age_edu; ++sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= n_age_edu; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "c" + '.' +
-        std::to_string(sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= n_state; ++sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= n_state; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "d" + '.' +
-        std::to_string(sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= n_region_full; ++sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= n_region_full; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "e" + '.' +
-        std::to_string(sym1__));
+        std::to_string(idx_sym1__));
     }
-    for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
+    for (int idx_sym1__ = 1; idx_sym1__ <= 5; ++idx_sym1__) {
       param_names__.emplace_back(std::string() + "beta" + '.' +
-        std::to_string(sym1__));
+        std::to_string(idx_sym1__));
     }
     param_names__.emplace_back(std::string() + "sigma_a");
     param_names__.emplace_back(std::string() + "sigma_b");
@@ -985,9 +985,9 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
     param_names__.emplace_back(std::string() + "sigma_d");
     param_names__.emplace_back(std::string() + "sigma_e");
     if (emit_transformed_parameters__) {
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (int idx_sym1__ = 1; idx_sym1__ <= N; ++idx_sym1__) {
         param_names__.emplace_back(std::string() + "y_hat" + '.' +
-          std::to_string(sym1__));
+          std::to_string(idx_sym1__));
       }
     }
     if (emit_generated_quantities__) {}
